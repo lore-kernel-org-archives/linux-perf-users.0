@@ -1,19 +1,17 @@
-From: y@cisco.com
+From: David Ahern <daahern@cisco.com>
 Subject: [PATCH] perf tools: Add rootfs option for off-box analysis using specified tree
-Date: Sun, 21 Nov 2010 09:17:55 -0700
-Message-ID: <2302.1979410716$1290356284@news.gmane.org>
+Date: Sun, 21 Nov 2010 09:19:16 -0700
+Message-ID: <1290356356-10008-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:30012 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753416Ab0KUQR6 (ORCPT
+Received: from sj-iport-1.cisco.com ([171.71.176.70]:10596 "EHLO
+	sj-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753416Ab0KUQTi (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 21 Nov 2010 11:17:58 -0500
+	Sun, 21 Nov 2010 11:19:38 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 Cc: David Ahern <daahern@cisco.com>
-
-From: David Ahern <daahern@cisco.com>
 
 The rootfs argument allows analysis of perf.data file using a locally
 accessible filesystem tree with debug symbols - e.g.,  loop mounted
