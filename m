@@ -1,92 +1,80 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: perf adjusting symbols incorrectly with split debuginfo?
-Date: Tue, 23 Nov 2010 10:53:37 -0200
-Message-ID: <20101123125337.GB11101@ghostprotocols.net>
-References: <20101123065029.GG18897@glaurung.lavos.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH] Allow user to specify path to kallsyms file
+Date: Mon, 29 Nov 2010 09:47:40 -0700
+Message-ID: <1291049260-8098-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:36655 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753237Ab0KWMxn (ORCPT
+Received: from sj-iport-6.cisco.com ([171.71.176.117]:29843 "EHLO
+	sj-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754974Ab0K2Qrw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 23 Nov 2010 07:53:43 -0500
-Received: by ywl5 with SMTP id 5so317401ywl.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2010 04:53:43 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <20101123065029.GG18897@glaurung.lavos.net>
+	Mon, 29 Nov 2010 11:47:52 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Brian Downing <bdowning@lavos.net>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Ahern <daahern@cisco.com>
 
-Em Tue, Nov 23, 2010 at 06:50:30AM +0000, Brian Downing escreveu:
-> I am trying to run perf on a system with split debuginfo.  I'm creating the
-> debuginfo by:
-> 
-> objcopy --only-keep-debug file /usr/lib/debug/path/to/file
-> strip file
-> objcopy --add-gnu-debuglink=/usr/lib/debug/path/to/file file
-> 
-> The problem is that perf seems to want to use the section header's load
-> address and file offset fields to figure out what to adjust the symbol
-> by, in this code:
+This is useful for analyzing a perf data file on a different system
+than the one data was collected on and still include symbols from
+loaded kernel modules in the output.
 
-There is a patch that deals with split debuginfo:
+Signed-off-by: David Ahern <daahern@cisco.com>
+---
+ tools/perf/builtin-report.c |    2 ++
+ tools/perf/util/symbol.c    |    9 +++++++--
+ tools/perf/util/symbol.h    |    1 +
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-"perf symbols: fix symbol offset breakage with separated debug"
-https://patchwork.kernel.org/patch/347491/
-
-Can you please try it and report your results?
-
-- Arnaldo
- 
-> 		if (curr_dso->adjust_symbols) {
-> 			pr_debug4("%s: adjusting symbol: st_value: %#Lx "
-> 				  "sh_addr: %#Lx sh_offset: %#Lx\n", __func__,
-> 				  (u64)sym.st_value, (u64)shdr.sh_addr,
-> 				  (u64)shdr.sh_offset);
-> 			sym.st_value -= shdr.sh_addr - shdr.sh_offset;
-> 		}
-> 
-> If it were reading the real binary this would work fine:
-> 
-> $ powerpc-unknown-linux-gnu-readelf --sections ./ppc5lua
-> There are 29 section headers, starting at offset 0x2712c:
-> 
-> Section Headers:
->   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
->   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
->   [ 1] .interp           PROGBITS        10000174 000174 00000d 00   A  0   0  1
->   [ 2] .note.ABI-tag     NOTE            10000184 000184 000020 00   A  0   0  4
-> ...
->   [12] .text             PROGBITS        10003410 003410 0207c0 00  AX  0   0  4
-> 
-> 10003410 - 3410 = 10000000, which is correct.
-> 
-> Unfortunately it instead finds and reads the debuginfo, where this is:
-> 
-> $ powerpc-unknown-linux-gnu-readelf --sections ./ppc5luadebug
-> There are 31 section headers, starting at offset 0x2ec:
-> 
-> Section Headers:
->   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
->   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
->   [ 1] .interp           NOBITS          10000174 000174 00000d 00   A  0   0  1
->   [ 2] .note.ABI-tag     NOTE            10000184 000177 000020 00   A  0   0  4
-> ...
->   [12] .text             NOBITS          10003410 000197 0207c0 00  AX  0   0  4
-> 
-> Needless to say it's not okay if adjusted with that offset.
-> 
-> Fixing this seems like it would be rather hard, since it currently only
-> reads one ELF file, namely, the one with the symbols.  Is there another
-> way I can do split debuginfo that will make perf work, yet not duplicate
-> the actual code in two places?
-> 
-> Thanks,
-> -bcd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 5de405d..b0c6995 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -442,6 +442,8 @@ static const struct option options[] = {
+ 		    "dump raw trace in ASCII"),
+ 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+ 		   "file", "vmlinux pathname"),
++	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
++		   "file", "kallsyms pathname"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+ 	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
+ 		    "load module symbols - WARNING: use only with -k and LIVE kernel"),
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index a348906..f40c076 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1830,8 +1830,8 @@ static int dso__load_kernel_sym(struct dso *self, struct map *map,
+ 	const char *kallsyms_filename = NULL;
+ 	char *kallsyms_allocated_filename = NULL;
+ 	/*
+-	 * Step 1: if the user specified a vmlinux filename, use it and only
+-	 * it, reporting errors to the user if it cannot be used.
++	 * Step 1: if the user specified a kallsyms or vmlinux filename, use
++	 * it and only it, reporting errors to the user if it cannot be used.
+ 	 *
+ 	 * For instance, try to analyse an ARM perf.data file _without_ a
+ 	 * build-id, or if the user specifies the wrong path to the right
+@@ -1844,6 +1844,11 @@ static int dso__load_kernel_sym(struct dso *self, struct map *map,
+ 	 * validation in dso__load_vmlinux and will bail out if they don't
+ 	 * match.
+ 	 */
++	if (symbol_conf.kallsyms_name != NULL) {
++		kallsyms_filename = symbol_conf.kallsyms_name;
++		goto do_kallsyms;
++	}
++
+ 	if (symbol_conf.vmlinux_name != NULL) {
+ 		err = dso__load_vmlinux(self, map,
+ 					symbol_conf.vmlinux_name, filter);
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 038f220..12defbe 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -72,6 +72,7 @@ struct symbol_conf {
+ 			show_cpu_utilization,
+ 			initialized;
+ 	const char	*vmlinux_name,
++			*kallsyms_name,
+ 			*source_prefix,
+ 			*field_sep;
+ 	const char	*default_guest_vmlinux_name,
+-- 
+1.7.2.3
