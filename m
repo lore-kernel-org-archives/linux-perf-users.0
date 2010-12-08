@@ -1,380 +1,295 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: [PATCH 2/2] perf tools: Add option to show time history of event
- samples
-Date: Wed, 8 Dec 2010 19:06:05 -0200
-Message-ID: <20101208210605.GE10353@ghostprotocols.net>
-References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
- <1291773285-16254-3-git-send-email-daahern@cisco.com>
+From: "David S. Ahern" <daahern@cisco.com>
+Subject: Re: [PATCH] perf tools: Add symfs option for off-box analysis using
+ specified tree
+Date: Wed, 08 Dec 2010 15:22:37 -0700
+Message-ID: <4D00052D.1020206@cisco.com>
+References: <1291776174-16535-1-git-send-email-daahern@cisco.com> <20101208205614.GD10353@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gw0-f42.google.com ([74.125.83.42]:61058 "EHLO
-	mail-gw0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752164Ab0LHVGM (ORCPT
+Received: from sj-iport-6.cisco.com ([171.71.176.117]:27457 "EHLO
+	sj-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756137Ab0LHWWi (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 8 Dec 2010 16:06:12 -0500
-Content-Disposition: inline
-In-Reply-To: <1291773285-16254-3-git-send-email-daahern@cisco.com>
+	Wed, 8 Dec 2010 17:22:38 -0500
+In-Reply-To: <20101208205614.GD10353@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Tue, Dec 07, 2010 at 06:54:45PM -0700, David Ahern escreveu:
-> Add a timehist option to perf record to save cpu and kernel timestamp
-> with each sample.
-> 
-> Add timehist option to perf report to display a pretty-print format
-> of the timestamp, cpu, and event data each event rather than
-> generating a histogram. The timehist option leverages the reference
-> timestamp from the perf header to correlate kernel timestamps to
-> time-of-day which allows correlating with external (non-perf)
-> log files.
-> 
-> As an example, consider recording context switches:
->     perf record -e cs -c 1 -ga --timehist
-> 
-> Today the 'perf report -D' option gives output in the form
-> 0 182392227877 0x17d8f8 [0xd8]: PERF_RECORD_SAMPLE(IP, 1): \
-> 	1861/1861: 0xffffffff810348d2 period: 2057672
-> ... chain: nr:21
-> .....  0: ffffffffffffff80
-> .....  1: ffffffff810348d2
-> .....  2: ffffffff8139c02b
-> .....  3: ffffffffa004b4a3
-> .....  4: ffffffff8139c79c
-> .....  5: ffffffff8139c83d
-> .....  6: ffffffffa004b43f
-> .....  7: ffffffffa00ec135
-> .....  8: ffffffffa00ec214
-> .....  9: ffffffffa00f01ec
-> ..... 10: ffffffffa00f0439
-> ..... 11: ffffffffa00d6e8b
-> ..... 12: ffffffff8110b763
-> ..... 13: ffffffff8110b883
-> ..... 14: ffffffff8110ddcd
-> ..... 15: ffffffff8110e45d
-> ..... 16: ffffffff81101f36
-> ..... 17: ffffffff81101ff3
-> ..... 18: ffffffff81002c82
-> ..... 19: fffffffffffffe00
-> ..... 20: 00002acfd31ce050
->  ... thread: cc1:1861
->  ...... dso: /lib/modules/2.6.37-rc5/build/vmlinux
-> 
-> With the timehist option 'perf report --timehist' displays the same sample as
-> (lines wrapped to < 80 and truncated here):
 
-You can instead compress the same info as:
 
--------------------------------
-
-With the timehist option 'perf report --timehist' displays the same
-sample as (some fields removed/compressed to make it fit under 80 columns)
-
-17:11:10.1 cc1 61 ff810348d2 perf_event_task_sched_out ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff8139c02b schedule ([kernel.kallsyms])
-17:11:10.1 cc1 61 ffa004b4a3 rpc_wait_bit_killable (/lib/modules/2.6.37-rc5/...
-17:11:10.1 cc1 61 ff8139c79c __wait_on_bit ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff8139c83d out_of_line_wait_on_bit ([kernel.kallsyms])
-17:11:10.1 cc1 61 ffa004b43f __rpc_wait_for_completion_task (/lib/modules/...
-17:11:10.1 cc1 61 ffa00ec135 nfs4_wait_for_completion_rpc_task (/lib/modules/...
-17:11:10.1 cc1 61 ffa00ec214 nfs4_run_open_task (/lib/modules/2.6.37-rc5/...
-17:11:10.1 cc1 61 ffa00f01ec nfs4_do_open.clone.21 (/lib/modules/2.6.37-rc5/...
-17:11:10.1 cc1 61 ffa00f0439 nfs4_atomic_open (/lib/modules/2.6.37-rc5/...
-17:11:10.1 cc1 61 ffa00d6e8b nfs_open_revalidate (/lib/modules/2.6.37-rc5/...
-17:11:10.1 cc1 61 ff8110b763 do_revalidate ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff8110b883 do_lookup ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff8110ddcd do_last ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff8110e45d do_filp_open ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff81101f36 do_sys_open ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff81101ff3 sys_open ([kernel.kallsyms])
-17:11:10.1 cc1 61 ff81002c82 system_call ([kernel.kallsyms])
-17:11:10.1 cc1 61 1ce050 __GI___libc_open (/lib64/libc-2.12.90.so)
-
-It allows you to see each schedule out point, where the process is when
-it gets scheduled out and, with additional processing on the timehist
-output, time between schedule-in events and time on the processor.
-
------------------------------
-
-changing the PID and addresses on the  'perf record -D' output to match the
-shorter PID, etc, helps too.
-
-will continue reviewing later, thanks
- 
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff810348d2  perf_event_task_sched_out ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8139c02b  schedule ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa004b4a3  rpc_wait_bit_killable (/lib/modules/2.6.37-rc5/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8139c79c  __wait_on_bit ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8139c83d  out_of_line_wait_on_bit ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa004b43f  __rpc_wait_for_completion_task (/lib/modules/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa00ec135  nfs4_wait_for_completion_rpc_task (/lib/modules/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa00ec214  nfs4_run_open_task (/lib/modules/2.6.37-rc5/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa00f01ec  nfs4_do_open.clone.21 (/lib/modules/2.6.37-rc5/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
->  	ffffffffa00f0439  nfs4_atomic_open (/lib/modules/2.6.37-rc5/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffffa00d6e8b  nfs_open_revalidate (/lib/modules/2.6.37-rc5/...
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8110b763  do_revalidate ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8110b883  do_lookup ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8110ddcd  do_last ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff8110e45d  do_filp_open ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff81101f36  do_sys_open ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff81101ff3  sys_open ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	ffffffff81002c82  system_call ([kernel.kallsyms])
-> 17:11:10.174502     182392227877    0  cc1   1861  \
-> 	    2acfd31ce050  __GI___libc_open (/lib64/libc-2.12.90.so)
+On 12/08/10 13:56, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 07, 2010 at 07:42:54PM -0700, David Ahern escreveu:
+>> The symfs argument allows analysis of perf.data file using a locally
+>> accessible filesystem tree with debug symbols - e.g., tree created
+>> during image builds, sshfs mount, loop mounted KVM disk images,
+>> USB keys, initrds, etc. Anything with an OS tree can be analyzed from
+>> anywhere without the need to populate a local data store with
+>> build-ids.
+>>
+>> Signed-off-by: David Ahern <daahern@cisco.com>
+>> ---
+>>  tools/perf/builtin-annotate.c  |   16 +++++--
+>>  tools/perf/builtin-diff.c      |    2 +
+>>  tools/perf/builtin-report.c    |    2 +
+>>  tools/perf/builtin-timechart.c |    2 +
+>>  tools/perf/util/hist.c         |   14 +++++-
+>>  tools/perf/util/symbol.c       |   82 +++++++++++++++++++++++++---------------
+>>  tools/perf/util/symbol.h       |    1 +
+>>  7 files changed, 80 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+>> index 569a276..0c47bee 100644
+>> --- a/tools/perf/builtin-annotate.c
+>> +++ b/tools/perf/builtin-annotate.c
+>> @@ -280,7 +280,8 @@ static int hist_entry__tty_annotate(struct hist_entry *he)
+>>  	struct map *map = he->ms.map;
+>>  	struct dso *dso = map->dso;
+>>  	struct symbol *sym = he->ms.sym;
+>> -	const char *filename = dso->long_name, *d_filename;
+>> +	const char *filename = dso->long_name;
+>> +	char d_filename[PATH_MAX];
+>>  	u64 len;
+>>  	LIST_HEAD(head);
+>>  	struct objdump_line *pos, *n;
+>> @@ -288,10 +289,13 @@ static int hist_entry__tty_annotate(struct hist_entry *he)
+>>  	if (hist_entry__annotate(he, &head, 0) < 0)
+>>  		return -1;
+>>  
+>> -	if (full_paths)
+>> -		d_filename = filename;
+>> -	else
+>> -		d_filename = basename(filename);
+>> +	if (full_paths) {
+>> +		snprintf(d_filename, sizeof(d_filename), "%s%s",
+>> +			 symbol_conf.symfs, filename);
+>> +	} else {
+>> +		snprintf(d_filename, sizeof(d_filename), "%s/%s",
+>> +			 symbol_conf.symfs, basename(filename));
+>> +	}
 > 
-> While the line lengths are horrible for a git commit message and email,
-> the data is indispensable. It allows you to see each schedule out point,
-> where the process is when it gets scheduled out and, with additional
-> processing on the timehist output, time between schedule-in events and
-> time on the processor.
+> Are you sure about the one above? I guess you don't need to concat here,
+> its just informative message, if you're using --symfs, you know
+> everything is from there, and in the !full_paths case the resulting
+> filename will be bogus, right?
+
+Ok. I removed.
+
+>   
+>>  	len = sym->end - sym->start;
+>>  
+>> @@ -437,6 +441,8 @@ static const struct option options[] = {
+>>  		    "print matching source lines (may be slow)"),
+>>  	OPT_BOOLEAN('P', "full-paths", &full_paths,
+>>  		    "Don't shorten the displayed pathnames"),
+>> +	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+>> +		    "Look for files with symbols relative to this directory"),
+>>  	OPT_END()
+>>  };
+
+In which case the above is not needed.
+
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index 2022e87..b24ae53 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -1092,6 +1092,12 @@ int hist_entry__annotate(struct hist_entry *self, struct list_head *head,
+>>  	FILE *file;
+>>  	int err = 0;
+>>  	u64 len;
+>> +	char symfs_filename[PATH_MAX];
+>> +
+>> +	if (filename) {
+>> +		snprintf(symfs_filename, sizeof(symfs_filename), "%s%s",
+>> +		 symbol_conf.symfs, filename);
 > 
-> Signed-off-by: David Ahern <daahern@cisco.com>
-> ---
->  tools/perf/builtin-record.c |    8 +++
->  tools/perf/builtin-report.c |  131 ++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 137 insertions(+), 2 deletions(-)
+> Above you have tab/space damage
+
+fixed
+
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 699dd21..cf30c98 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -51,6 +51,7 @@ static int			realtime_prio			=      0;
->  static bool			raw_samples			=  false;
->  static bool			sample_id_all_avail		=   true;
->  static bool			system_wide			=  false;
-> +static bool			time_history			=  false;
->  static pid_t			target_pid			=     -1;
->  static pid_t			target_tid			=     -1;
->  static pid_t			*all_tids			=      NULL;
-> @@ -288,6 +289,11 @@ static void create_counter(int counter, int cpu)
->  	if (sample_time)
->  		attr->sample_type	|= PERF_SAMPLE_TIME;
->  
-> +	if (time_history) {
-> +		attr->sample_type	|= PERF_SAMPLE_TIME;
-> +		attr->sample_type	|= PERF_SAMPLE_CPU;
-> +	}
-> +
->  	if (raw_samples) {
->  		attr->sample_type	|= PERF_SAMPLE_TIME;
->  		attr->sample_type	|= PERF_SAMPLE_RAW;
-> @@ -863,6 +869,8 @@ const struct option record_options[] = {
->  		    "do not update the buildid cache"),
->  	OPT_BOOLEAN('B', "no-buildid", &no_buildid,
->  		    "do not collect buildids in perf.data"),
-> +	OPT_BOOLEAN(0, "timehist", &time_history,
-> +		    "collect data for time history report"),
->  	OPT_END()
->  };
->  
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 904519f..bcde3c2 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -35,6 +35,7 @@ static char		const *input_name = "perf.data";
->  static bool		force, use_tui, use_stdio;
->  static bool		hide_unresolved;
->  static bool		dont_use_callchains;
-> +static bool		time_history;
->  
->  static bool		show_threads;
->  static struct perf_read_values	show_threads_values;
-> @@ -124,6 +125,117 @@ out_free_syms:
->  	return err;
->  }
->  
-> +static const char *timestr(u64 timestamp, struct perf_session *session)
-> +{
-> +	struct tm ltime;
-> +	u64 dt;
-> +	struct timeval tv_dt, tv_res;
-> +	static char tstr[64];
-> +
-> +	dt = timestamp - session->header.nsec_ref;
-> +	tv_dt.tv_sec = (time_t) (dt / NSEC_PER_SEC);
-> +	tv_dt.tv_usec = (suseconds_t) ((dt - tv_dt.tv_sec * NSEC_PER_SEC) / 1000);
-> +
-> +	timeradd(&session->header.tv_ref, &tv_dt, &tv_res);
-> +
-> +	if ((session->header.nsec_ref == 0) ||
-> +		(localtime_r(&tv_res.tv_sec, &ltime) == NULL)) {
-> +		snprintf(tstr, sizeof(tstr), "00:00:00.000000 %16Ld", timestamp);
-> +	} else {
-> +		char date[64];
-> +		strftime(date, sizeof(date), "%H:%M:%S", &ltime);
-> +		snprintf(tstr, sizeof(tstr), "%s.%06ld %16Ld",
-> +		         date, tv_res.tv_usec, timestamp);
-> +	}
-> +
-> +	return tstr;
-> +}
-> +
-> +#define TIMEHIST_FMT  "%32s  %3d  %-16s %5d  %16Lx  %s (%s)\n"
-> +
-> +static void timehist_header(void)
-> +{
-> +	printf("%32s  %3s  %-16s %5s  %16s  %s (%s)\n",
-> +		   "  Time-of-Day   Kernel Timestamp",
-> +	       "cpu", "Command Name", "PID",
-> +	       "    IP    ", "Symbol Name", "DSO Name");
-> +}
-> +
-> +static int perf_session__print_sample(struct perf_session *session,
-> +					struct addr_location *al,
-> +					struct sample_data *data)
-> +{
-> +	static int show_timehist_error = 1;
-> +	u64 timestamp = 0;
-> +	struct map_symbol *syms = NULL;
-> +	struct symbol *parent = NULL;
-> +	const char *tstr;
-> +	bool need_spacer = false;
-> +
-> +	if (show_timehist_error && ((data->cpu == (u32) -1) ||
-> +		 !(session->sample_type & PERF_SAMPLE_TIME))) {
-> +		pr_err("Data for time history missing in perf event samples.\n"
-> +		       "Did you record with --timehist option?\n");
-> +		show_timehist_error = 0;
-> +	}
-> +
-> +	if (session->sample_type & PERF_SAMPLE_TIME)
-> +		timestamp = data->time;
-> +
-> +	tstr = timestr(timestamp, session);
-> +
-> +
-> +	if ((symbol_conf.use_callchain) && data->callchain) {
-> +		u64 i;
-> +
-> +		syms = perf_session__resolve_callchain(session, al->thread,
-> +						   data->callchain, &parent);
-> +		if (syms == NULL)
-> +			return -ENOMEM;
-> +
-> +		for (i = 0; i < data->callchain->nr; ++i) {
-> +			const char *symname = "", *dsoname = "";
-> +
-> +			if (data->callchain->ips[i] >= PERF_CONTEXT_MAX)
-> +				continue;
-> +
-> +			if (syms[i].sym && syms[i].sym->name)
-> +				symname = syms[i].sym->name;
-> +			else if (hide_unresolved)
-> +				continue;
-> +
-> +			if (syms[i].map && syms[i].map->dso &&
-> +					syms[i].map->dso->name)
-> +				dsoname = syms[i].map->dso->name;
-> +			else if (hide_unresolved)
-> +				continue;
-> +
-> +			printf(TIMEHIST_FMT,
-> +				   tstr, data->cpu,
-> +				   al->thread->comm, al->thread->pid,
-> +				   data->callchain->ips[i], symname, dsoname);
-> +
-> +			need_spacer = true;
-> +		}
-> +
-> +		free(syms);
-> +
-> +	} else {
-> +		printf(TIMEHIST_FMT,
-> +			   tstr, data->cpu,
-> +			   al->thread->comm, al->thread->pid, al->addr,
-> +			   al->sym->name, al->map->dso->name);
-> +
-> +		need_spacer = true;
-> +	}
-> +
-> +	/* put a gap between records */
-> +	if (need_spacer)
-> +		printf("\n");
-> +
-> +	return 0;
-> +}
-> +
->  static int add_event_total(struct perf_session *session,
->  			   struct sample_data *data,
->  			   struct perf_event_attr *attr)
-> @@ -165,7 +277,9 @@ static int process_sample_event(event_t *event, struct sample_data *sample,
->  	if (al.filtered || (hide_unresolved && al.sym == NULL))
->  		return 0;
->  
-> -	if (perf_session__add_hist_entry(session, &al, sample)) {
-> +	if (time_history) {
-> +		perf_session__print_sample(session, &al, sample);
-> +	} else if (perf_session__add_hist_entry(session, &al, sample)) {
->  		pr_debug("problem incrementing symbol period, skipping event\n");
->  		return -1;
->  	}
-> @@ -319,6 +433,14 @@ static int __cmd_report(void)
->  	if (ret)
->  		goto out_delete;
->  
-> +	if (time_history) {
-> +		if (!session->header.nsec_ref) {
-> +			pr_err("Reference timestamp missing in perf.data file.\n"
-> +			  "Cannot convert kernel timestamps to time-of-day.\n");
-> +		}
-> +		timehist_header();
-> +	}
-> +
->  	ret = perf_session__process_events(session, &event_ops);
->  	if (ret)
->  		goto out_delete;
-> @@ -334,6 +456,9 @@ static int __cmd_report(void)
->  	if (verbose > 2)
->  		perf_session__fprintf_dsos(session, stdout);
->  
-> +	if (time_history)
-> +		goto out_delete;
-> +
->  	next = rb_first(&session->hists_tree);
->  	while (next) {
->  		struct hists *hists;
-> @@ -479,6 +604,8 @@ static const struct option options[] = {
->  		   "columns '.' is reserved."),
->  	OPT_BOOLEAN('U', "hide-unresolved", &hide_unresolved,
->  		    "Only display entries resolved to a symbol"),
-> +	OPT_BOOLEAN(0, "timehist", &time_history,
-> +		    "Dump time history of event samples"),
->  	OPT_END()
->  };
->  
-> @@ -486,7 +613,7 @@ int cmd_report(int argc, const char **argv, const char *prefix __used)
->  {
->  	argc = parse_options(argc, argv, options, report_usage, 0);
->  
-> -	if (use_stdio)
-> +	if (use_stdio || time_history)
->  		use_browser = 0;
->  	else if (use_tui)
->  		use_browser = 1;
-> -- 
-> 1.7.2.3
+>> +	}
+>>  
+>>  	if (filename == NULL) {
+>>  		if (dso->has_build_id) {
+>> @@ -1100,9 +1106,9 @@ int hist_entry__annotate(struct hist_entry *self, struct list_head *head,
+>>  			return -ENOMEM;
+>>  		}
+>>  		goto fallback;
+>> -	} else if (readlink(filename, command, sizeof(command)) < 0 ||
+>> +	} else if (readlink(symfs_filename, command, sizeof(command)) < 0 ||
+>>  		   strstr(command, "[kernel.kallsyms]") ||
+>> -		   access(filename, R_OK)) {
+>> +		   access(symfs_filename, R_OK)) {
+>>  		free(filename);
+>>  fallback:
+>>  		/*
+>> @@ -1111,6 +1117,8 @@ fallback:
+>>  		 * DSO is the same as when 'perf record' ran.
+>>  		 */
+>>  		filename = dso->long_name;
+>> +		snprintf(symfs_filename, sizeof(symfs_filename), "%s%s",
+>> +		 symbol_conf.symfs, filename);
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Ditto above
+
+fixed
+
+> 
+>>  		free_filename = false;
+>>  	}
+>>  
+>> @@ -1137,7 +1145,7 @@ fallback:
+>>  		 "objdump --start-address=0x%016Lx --stop-address=0x%016Lx -dS -C %s|grep -v %s|expand",
+>>  		 map__rip_2objdump(map, sym->start),
+>>  		 map__rip_2objdump(map, sym->end),
+>> -		 filename, filename);
+>> +		 symfs_filename, filename);
+>>  
+>>  	pr_debug("Executing: %s\n", command);
+>>  
+>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>> index a348906..7a0d284 100644
+>> --- a/tools/perf/util/symbol.c
+>> +++ b/tools/perf/util/symbol.c
+>> @@ -41,6 +41,7 @@ struct symbol_conf symbol_conf = {
+>>  	.exclude_other	  = true,
+>>  	.use_modules	  = true,
+>>  	.try_vmlinux_path = true,
+>> +	.symfs           = "",
+>>  };
+>>  
+>>  int dso__name_len(const struct dso *self)
+>> @@ -833,8 +834,11 @@ static int dso__synthesize_plt_symbols(struct  dso *self, struct map *map,
+>>  	char sympltname[1024];
+>>  	Elf *elf;
+>>  	int nr = 0, symidx, fd, err = 0;
+>> +	char name[PATH_MAX];
+>>  
+>> -	fd = open(self->long_name, O_RDONLY);
+>> +	snprintf(name, sizeof(name), "%s%s",
+>> +		 symbol_conf.symfs, self->long_name);
+>> +	fd = open(name, O_RDONLY);
+>>  	if (fd < 0)
+>>  		goto out;
+>>  
+>> @@ -1446,16 +1450,19 @@ int dso__load(struct dso *self, struct map *map, symbol_filter_t filter)
+>>  	     self->origin++) {
+>>  		switch (self->origin) {
+>>  		case DSO__ORIG_BUILD_ID_CACHE:
+>> -			if (dso__build_id_filename(self, name, size) == NULL)
+>> +			/* skip the locally configured cache if a symfs is given */
+>> +			if ((strlen(symbol_conf.symfs) != 0) ||
+> 
+> I suggest you use:
+> 
+> 			if (symbol_conf.symfs[1] ||
+> 
+> cheaper :)
+
+Changed. I presume you meant: symbol_conf.symfs[0]  -- ie., element 0
+has something other than '\0' which means strlen > 0
+
+...
+
+>> @@ -1778,17 +1786,20 @@ static int dso__load_vmlinux(struct dso *self, struct map *map,
+>>  			     const char *vmlinux, symbol_filter_t filter)
+>>  {
+>>  	int err = -1, fd;
+>> +	char symfs_vmlinux[PATH_MAX];
+>> -	fd = open(vmlinux, O_RDONLY);
+>> +	snprintf(symfs_vmlinux, sizeof(symfs_vmlinux), "%s/%s",
+>> +		 symbol_conf.symfs, vmlinux);
+> 
+> Its userspace, so stack is plenty, but I guess if using asprintf
+> wouldn't be better...
+> 
+> I.e. if we were programming some kernel module, creating a 4K stack
+> variable would be considered bad practice, so I think it is here as
+> well.
+
+Declaring symfs_vmlinux on the stack is consistent with other PATH_MAX
+declarations within perf, and especially within util/symbol.c.
+
+>   
+>> +	fd = open(symfs_vmlinux, O_RDONLY);
+>>  	if (fd < 0)
+>>  		return -1;
+>>  
+>>  	dso__set_loaded(self, map->type);
+>> -	err = dso__load_sym(self, map, vmlinux, fd, filter, 0, 0);
+>> +	err = dso__load_sym(self, map, symfs_vmlinux, fd, filter, 0, 0);
+>>  	close(fd);
+>>  
+>>  	if (err > 0)
+>> -		pr_debug("Using %s for symbols\n", vmlinux);
+>> +		pr_debug("Using %s for symbols\n", symfs_vmlinux);
+>>  
+>>  	return err;
+>>  }
+>> @@ -1861,6 +1872,10 @@ static int dso__load_kernel_sym(struct dso *self, struct map *map,
+>>  			goto out_fixup;
+>>  	}
+>>  
+>> +	/* do not try local files if a symfs was given */
+>> +	if (strlen(symbol_conf.symfs) != 0)
+>> +		return -1;
+>> +
+
+changed that strlen as well.
+
+
+>>  	/*
+>>  	 * Say the kernel DSO was created when processing the build-id header table,
+>>  	 * we have a build-id, so check if it is the same as the running kernel,
+>> @@ -2210,9 +2225,6 @@ static int vmlinux_path__init(void)
+>>  	struct utsname uts;
+>>  	char bf[PATH_MAX];
+>>  
+>> -	if (uname(&uts) < 0)
+>> -		return -1;
+>> -
+>>  	vmlinux_path = malloc(sizeof(char *) * 5);
+>>  	if (vmlinux_path == NULL)
+>>  		return -1;
+>> @@ -2225,22 +2237,30 @@ static int vmlinux_path__init(void)
+>>  	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
+>>  		goto out_fail;
+>>  	++vmlinux_path__nr_entries;
+>> -	snprintf(bf, sizeof(bf), "/boot/vmlinux-%s", uts.release);
+>> -	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
+>> -	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
+>> -		goto out_fail;
+>> -	++vmlinux_path__nr_entries;
+>> -	snprintf(bf, sizeof(bf), "/lib/modules/%s/build/vmlinux", uts.release);
+>> -	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
+>> -	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
+>> -		goto out_fail;
+>> -	++vmlinux_path__nr_entries;
+>> -	snprintf(bf, sizeof(bf), "/usr/lib/debug/lib/modules/%s/vmlinux",
+>> -		 uts.release);
+>> -	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
+>> -	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
+>> -		goto out_fail;
+>> -	++vmlinux_path__nr_entries;
+>> +
+>> +	/* if no symfs has been given try running kernel version too */
+>> +	if (strlen(symbol_conf.symfs) == 0) {
+> 
+> Do it as:
+> 
+> 	if (!symbol_conf.symfs[1])
+> 		return 0;
+> 
+> And then the patch can be made smaller.
+
+Done.
+
+
+I also added the symfs option to the Documentation files. Will send an
+updated patch.
+
+David
