@@ -1,53 +1,74 @@
 From: Franck Bui-Huu <vagabon.xyz@gmail.com>
-Subject: [PATCH 2/2] perf-probe: fail if the kernel image contains no symbol
-Date: Fri, 10 Dec 2010 14:07:14 +0100
-Message-ID: <m3d3p9ydx9.fsf_-_@gmail.com>
-References: <m2pqtb9ekn.fsf@gmail.com>
-	<20101209153548.GA11820@ghostprotocols.net> <m2k4jiewhi.fsf@gmail.com>
-	<4D019E3F.4040902@hitachi.com> <m3pqtaxdv8.fsf@gmail.com>
-	<4D01E453.3000208@hitachi.com> <m3lj3xye9a.fsf@gmail.com>
+Subject: [PATCH] perf-tools: fix perf-buildid-cache when passing a symbolic link
+Date: Fri, 10 Dec 2010 22:06:26 +0100
+Message-ID: <m38vzxxrql.fsf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:64150 "EHLO
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:61981 "EHLO
 	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756292Ab0LJNHS (ORCPT
+	with ESMTP id S1750962Ab0LJVGc (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 10 Dec 2010 08:07:18 -0500
-Received: by wwa36 with SMTP id 36so3688977wwa.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2010 05:07:17 -0800 (PST)
-In-Reply-To: <m3lj3xye9a.fsf@gmail.com> (Franck Bui-Huu's message of "Fri, 10
-	Dec 2010 14:00:01 +0100")
+	Fri, 10 Dec 2010 16:06:32 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Franck Bui-Huu <vagabon.xyz@gmail.com>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Francis Moreau <francis.moro@gmail.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org, 2nddept-manager@sdl.hitachi.co.jp
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: lkml <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 
 From: Franck Bui-Huu <fbuihuu@gmail.com>
 
-This fix is for kernel images found in the standard paths.
+This was broken since link(2) doesn't dereference symbolic
+links. Instead 'filename' becomes a symbolic link to the same file
+that 'name' refers to.
+
+This had the bad effect to create dangling symlinks in the case that
+even can't be removed with perf-buildid-cache(1).
 
 Signed-off-by: Franck Bui-Huu <fbuihuu@gmail.com>
 ---
- tools/perf/util/probe-event.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ tools/perf/util/header.c |   10 ++++++----
+ 1 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 99f9933..fc2b0b4 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -135,7 +135,7 @@ const char *kernel_get_module_path(const char *module)
- 		if (dso__load_vmlinux(dso, map, vmlinux_name, NULL) <= 0)
- 			return NULL;
- 	} else {
--		if (dso__load_vmlinux_path(dso, map, NULL) < 0) {
-+		if (dso__load_vmlinux_path(dso, map, NULL) <= 0) {
- 			pr_debug("Failed to load kernel map.\n");
- 			return NULL;
- 		}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 64a85ba..7cba055 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -265,15 +265,16 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+ 			  const char *name, bool is_kallsyms)
+ {
+ 	const size_t size = PATH_MAX;
+-	char *filename = malloc(size),
++	char *realname = realpath(name, NULL),
++	     *filename = malloc(size),
+ 	     *linkname = malloc(size), *targetname;
+ 	int len, err = -1;
+ 
+-	if (filename == NULL || linkname == NULL)
++	if (realname == NULL || filename == NULL || linkname == NULL)
+ 		goto out_free;
+ 
+ 	len = snprintf(filename, size, "%s%s%s",
+-		       debugdir, is_kallsyms ? "/" : "", name);
++		       debugdir, is_kallsyms ? "/" : "", realname);
+ 	if (mkdir_p(filename, 0755))
+ 		goto out_free;
+ 
+@@ -283,7 +284,7 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+ 		if (is_kallsyms) {
+ 			 if (copyfile("/proc/kallsyms", filename))
+ 				goto out_free;
+-		} else if (link(name, filename) && copyfile(name, filename))
++		} else if (link(realname, filename) && copyfile(name, filename))
+ 			goto out_free;
+ 	}
+ 
+@@ -300,6 +301,7 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+ 	if (symlink(targetname, linkname) == 0)
+ 		err = 0;
+ out_free:
++	free(realname);
+ 	free(filename);
+ 	free(linkname);
+ 	return err;
 -- 
 1.7.3.2
-
-
--- 
-		Franck
