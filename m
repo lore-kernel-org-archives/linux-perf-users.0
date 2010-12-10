@@ -1,93 +1,149 @@
 From: Franck Bui-Huu <vagabon.xyz@gmail.com>
 Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Fri, 10 Dec 2010 08:30:19 +0100
-Message-ID: <m3tyimxeyc.fsf@gmail.com>
+Date: Fri, 10 Dec 2010 08:53:47 +0100
+Message-ID: <m3pqtaxdv8.fsf@gmail.com>
 References: <m2pqtb9ekn.fsf@gmail.com>
-	<20101209153548.GA11820@ghostprotocols.net>
+	<20101209153548.GA11820@ghostprotocols.net> <m2k4jiewhi.fsf@gmail.com>
+	<4D019E3F.4040902@hitachi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:39396 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750966Ab0LJHaY (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:46802 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751136Ab0LJHxy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 10 Dec 2010 02:30:24 -0500
-Received: by wyb28 with SMTP id 28so3143077wyb.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Dec 2010 23:30:23 -0800 (PST)
-In-Reply-To: <20101209153548.GA11820@ghostprotocols.net> (Arnaldo Carvalho de
-	Melo's message of "Thu, 9 Dec 2010 13:35:48 -0200")
+	Fri, 10 Dec 2010 02:53:54 -0500
+Received: by wwa36 with SMTP id 36so3415579wwa.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Dec 2010 23:53:53 -0800 (PST)
+In-Reply-To: <4D019E3F.4040902@hitachi.com> (Masami Hiramatsu's message of
+	"Fri, 10 Dec 2010 12:27:59 +0900")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: Francis Moreau <francis.moro@gmail.com>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Francis Moreau <francis.moro@gmail.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org, 2nddept-manager@sdl.hitachi.co.jp
 
-Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
+Hi,
 
-> Em Thu, Dec 09, 2010 at 04:00:08PM +0100, Francis Moreau escreveu:
->> I'm trying to use perf-probe(1) with the latest F14 kernel
->> (2.6.35.9-64.fc14.x86_64).
+Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com> writes:
+
+> (2010/12/10 1:34), Francis Moreau wrote:
+
+[...]
+
 >> 
->
->> I also installed kernel-debug-debuginfo-2.6.35.9-64.fc14.x86_64 which
->> contains the running vmlinux image AFAICT.
+>> Well that still fail:
 >> 
->> I added it to the buildid cache:
->> 
->> $ perf buildid-cache -v -a /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux
->> Adding 4d89e23415d8ab491cfc8ef8aa67764b91cc6787 /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux: OK
->> 
->> But when running perf-probe(1) like the following:
->> 
->>   $ perf probe schedule cpu
->>   Failed to find path of kernel moduleFailed to open debuginfo file.
+>> $ perf probe -k /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux schedule cpu
+>> Failed to find path of kernel moduleFailed to open debuginfo file.
 >>   Error: Failed to add events. (-2)
 >> 
->> it fails.
+>> but that's not really suprising if perf checks that the running kernel
+>> build-id is the same as the one in:
+>> /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux
 >> 
->> One strange thing is that when perf read the running kernel build id, it
->> get: 882b1b53eb1d65320e8fa710273aa8493896c4.
->> 
->> Could anybody tell me what I'm doing wrong ?
+>> It really looks like something is broken in the F14 kernel-debuginfo
+>> package.
 >
-> Can you try using:
->
-> $ perf probe -k /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux <rest of the probe definition>
->
-> So that it tries it directly instead of looking into the buildid cache?
->
-> I'll check if perf probe actually looks in the buildid cache, till then,
-> please try specifying it directly,
+> Hmm, curious. I'll check it after setting up Fedora 14.
+> Thank you for reporting :-)
 
-Looks like a standard path is missing...
+BTW, it seems to me that perf-probe(1) is ignoring the kernel path given
+by '-k' switch.
 
-What about adding the one above since it looks like Fedora is installing
-their debug kernel images at this place ?
+Looking at kernel_get_module_path(), it only considers the standard
+paths given by vmlinux_path[].
 
+I would have seen this, no ?
+
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 2e000c0..add163c 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -249,6 +249,11 @@ int cmd_probe(int argc, const char **argv, const char *prefix __used)
+ 	     !params.show_lines))
+ 		usage_with_options(probe_usage, options);
+ 
++	/*
++	 * Only consider the user's kernel image path if given.
++	 */
++	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
++
+ 	if (params.list_events) {
+ 		if (params.mod_events) {
+ 			pr_err("  Error: Don't use --list with --add/--del.\n");
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 694f04b..558545e 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -114,6 +114,8 @@ static struct symbol *__find_kernel_function_by_name(const char *name,
+ const char *kernel_get_module_path(const char *module)
+ {
+ 	struct dso *dso;
++	struct map *map;
++	const char *vmlinux_name;
+ 
+ 	if (module) {
+ 		list_for_each_entry(dso, &machine.kernel_dsos, node) {
+@@ -123,14 +125,23 @@ const char *kernel_get_module_path(const char *module)
+ 		}
+ 		pr_debug("Failed to find module %s.\n", module);
+ 		return NULL;
+-	} else {
+-		dso = machine.vmlinux_maps[MAP__FUNCTION]->dso;
+-		if (dso__load_vmlinux_path(dso,
+-			 machine.vmlinux_maps[MAP__FUNCTION], NULL) < 0) {
+-			pr_debug("Failed to load kernel map.\n");
+-			return NULL;
+-		}
+ 	}
++
++	map = machine.vmlinux_maps[MAP__FUNCTION];
++	dso = map->dso;
++
++	vmlinux_name = symbol_conf.vmlinux_name;
++	if (vmlinux_name) {
++		if (dso__load_vmlinux(dso, map, vmlinux_name, NULL) == 0)
++			goto found;
++		return NULL;
++	}
++
++	if (dso__load_vmlinux_path(dso, map, NULL) < 0) {
++		pr_debug("Failed to load kernel map.\n");
++		return NULL;
++	}
++
+ found:
+ 	return dso->long_name;
+ }
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index d628c8d..0f914c7 100644
+index a3a0c43..4e42e0d 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -2260,7 +2262,7 @@ static int vmlinux_path__init(void)
- 	if (uname(&uts) < 0)
- 		return -1;
+@@ -1780,8 +1780,8 @@ out_failure:
+ 	return -1;
+ }
  
--	vmlinux_path = malloc(sizeof(char *) * 5);
-+	vmlinux_path = malloc(sizeof(char *) * 6);
- 	if (vmlinux_path == NULL)
- 		return -1;
+-static int dso__load_vmlinux(struct dso *self, struct map *map,
+-			     const char *vmlinux, symbol_filter_t filter)
++int dso__load_vmlinux(struct dso *self, struct map *map,
++		      const char *vmlinux, symbol_filter_t filter)
+ {
+ 	int err = -1, fd;
  
-@@ -2288,6 +2290,12 @@ static int vmlinux_path__init(void)
- 	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
- 		goto out_fail;
- 	++vmlinux_path__nr_entries;
-+	snprintf(bf, sizeof(bf), "/usr/lib/debug/lib/modules/%s.debug/vmlinux",
-+		 uts.release);
-+	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
-+	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
-+		goto out_fail;
-+	++vmlinux_path__nr_entries;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 038f220..6c6eafd 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -166,6 +166,8 @@ void dso__sort_by_name(struct dso *self, enum map_type type);
+ struct dso *__dsos__findnew(struct list_head *head, const char *name);
  
- 	return 0;
- 
+ int dso__load(struct dso *self, struct map *map, symbol_filter_t filter);
++int dso__load_vmlinux(struct dso *self, struct map *map,
++		      const char *vmlinux, symbol_filter_t filter);
+ int dso__load_vmlinux_path(struct dso *self, struct map *map,
+ 			   symbol_filter_t filter);
+ int dso__load_kallsyms(struct dso *self, const char *filename, struct map *map,
+
+
 -- 
 		Franck
