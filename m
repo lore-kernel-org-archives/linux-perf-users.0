@@ -1,52 +1,77 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 0/2] perf tools: add reference timestamp and use it in
- time history dump
-Date: Sun, 12 Dec 2010 22:39:50 +0100
-Message-ID: <20101212213948.GD1784@nowhere>
-References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
- <20101209171853.GC13027@ghostprotocols.net>
+From: Franck Bui-Huu <vagabon.xyz@gmail.com>
+Subject: Re: perf-probe: issue with latest fedora kernel
+Date: Sun, 12 Dec 2010 23:15:26 +0100
+Message-ID: <m3ei9mfxj5.fsf@gmail.com>
+References: <m2pqtb9ekn.fsf@gmail.com>
+	<20101209153548.GA11820@ghostprotocols.net> <m3tyimxeyc.fsf@gmail.com>
+	<20101212140851.GA2343@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-fx0-f43.google.com ([209.85.161.43]:43350 "EHLO
-	mail-fx0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751510Ab0LLVjy (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:64048 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752057Ab0LLWPc (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 12 Dec 2010 16:39:54 -0500
-Received: by fxm18 with SMTP id 18so5631982fxm.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2010 13:39:53 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <20101209171853.GC13027@ghostprotocols.net>
+	Sun, 12 Dec 2010 17:15:32 -0500
+Received: by wyb28 with SMTP id 28so5302382wyb.19
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2010 14:15:31 -0800 (PST)
+In-Reply-To: <20101212140851.GA2343@ghostprotocols.net> (Arnaldo Carvalho de
+	Melo's message of "Sun, 12 Dec 2010 12:08:52 -0200")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org
+Cc: Franck Bui-Huu <vagabon.xyz@gmail.com>, Francis Moreau <francis.moro@gmail.com>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-On Thu, Dec 09, 2010 at 03:18:53PM -0200, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 07, 2010 at 06:54:43PM -0700, David Ahern escreveu:
-> > David Ahern (2):
-> >   perf tools: Add reference timestamp to perf header
-> >   perf tools: Add option to show time history of event samples
-> > 
-> >  tools/perf/builtin-record.c |    8 +++
-> >  tools/perf/builtin-report.c |  131 ++++++++++++++++++++++++++++++++++++++++++-
-> >  tools/perf/util/header.c    |   51 +++++++++++++++++
-> >  tools/perf/util/header.h    |    3 +
-> >  tools/perf/util/session.c   |   26 +++++++++
-> >  5 files changed, 217 insertions(+), 2 deletions(-)
-> 
-> I'll go to a business trip today/tomorrow, will try to check these while
-> at the hotel.
-> 
-> Frederic, if you have some time, could you take a look? I touches the
-> HEADER_FEAT stuff, the feature has a huge potential, merging app
-> specific logs with perf report output helps correlating counter to app
-> specific events, great stuff.
-> 
-> I would just love to have at least one more person reviewing this,
-> thanks,
+Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
 
+> Em Fri, Dec 10, 2010 at 08:30:19AM +0100, Franck Bui-Huu escreveu:
+>> Looks like a standard path is missing...
+>> 
+>> What about adding the one above since it looks like Fedora is installing
+>> their debug kernel images at this place ?
+>
+> Can I get your signed-off-by on this one?
+>
 
-It looks mostly ok, except few nits I noticed.
+Of course.
 
-Thanks!
+[PATCH] perf-tools: add one more default search path for kernel image
+
+From: Franck Bui-Huu <fbuihuu@gmail.com>
+
+It looks like Fedora is using this one.
+
+Reported-by: Francis Moreau <francis.moro@gmail.com>
+Signed-off-by: Franck Bui-Huu <fbuihuu@gmail.com>
+---
+ tools/perf/util/symbol.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index d628c8d..a3a0c43 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2260,7 +2260,7 @@ static int vmlinux_path__init(void)
+ 	if (uname(&uts) < 0)
+ 		return -1;
+ 
+-	vmlinux_path = malloc(sizeof(char *) * 5);
++	vmlinux_path = malloc(sizeof(char *) * 6);
+ 	if (vmlinux_path == NULL)
+ 		return -1;
+ 
+@@ -2288,6 +2288,12 @@ static int vmlinux_path__init(void)
+ 	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
+ 		goto out_fail;
+ 	++vmlinux_path__nr_entries;
++	snprintf(bf, sizeof(bf), "/usr/lib/debug/lib/modules/%s.debug/vmlinux",
++		 uts.release);
++	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
++	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
++		goto out_fail;
++	++vmlinux_path__nr_entries;
+ 
+ 	return 0;
+ 
+-- 
+1.7.3.2
