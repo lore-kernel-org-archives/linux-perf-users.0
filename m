@@ -1,62 +1,188 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Sun, 12 Dec 2010 12:08:52 -0200
-Message-ID: <20101212140851.GA2343@ghostprotocols.net>
-References: <m2pqtb9ekn.fsf@gmail.com>
- <20101209153548.GA11820@ghostprotocols.net>
- <m3tyimxeyc.fsf@gmail.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
+Date: Sun, 12 Dec 2010 21:16:16 +0100
+Message-ID: <20101212201613.GA1784@nowhere>
+References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
+ <1291773285-16254-2-git-send-email-daahern@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f180.google.com ([209.85.161.180]:43731 "EHLO
-	mail-gx0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752892Ab0LLOOc (ORCPT
+Received: from mail-bw0-f45.google.com ([209.85.214.45]:38424 "EHLO
+	mail-bw0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753950Ab0LLUQX (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 12 Dec 2010 09:14:32 -0500
-Received: by gxk19 with SMTP id 19so3399065gxk.11
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2010 06:14:32 -0800 (PST)
+	Sun, 12 Dec 2010 15:16:23 -0500
 Content-Disposition: inline
-In-Reply-To: <m3tyimxeyc.fsf@gmail.com>
+In-Reply-To: <1291773285-16254-2-git-send-email-daahern@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Franck Bui-Huu <vagabon.xyz@gmail.com>
-Cc: Francis Moreau <francis.moro@gmail.com>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+To: David Ahern <daahern@cisco.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Fri, Dec 10, 2010 at 08:30:19AM +0100, Franck Bui-Huu escreveu:
-> Looks like a standard path is missing...
+On Tue, Dec 07, 2010 at 06:54:44PM -0700, David Ahern wrote:
+> Add a reference timestamp to the perf header - snapshotting kernel
+> time to gettimeofday. This allows 'perf report' to convert kernel
+> timestamps to time-of-day which is convenient for comparing to other
+> (non perf related) log files.
 > 
-> What about adding the one above since it looks like Fedora is installing
-> their debug kernel images at this place ?
+> The timestamp is added using a feature bit for compatibility with
+> older binaries and data files.
+> 
+> Signed-off-by: David Ahern <daahern@cisco.com>
+> ---
+>  tools/perf/util/header.c  |   51 +++++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/header.h  |    3 ++
+>  tools/perf/util/session.c |   26 +++++++++++++++++++++++
+>  3 files changed, 80 insertions(+), 0 deletions(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 76e949a..2fe893b 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -191,6 +191,40 @@ static int write_padded(int fd, const void *bf, size_t count,
+>  	return err;
+>  }
+>  
+> +static int perf_header__read_ref_time(struct perf_header *header,
+> +			int fd, u64 offset, u64 size)
+> +{
+> +	size_t sz_nsec = sizeof(header->nsec_ref);
+> +	size_t sz_tv   = sizeof(header->tv_ref);
+> +	int err = -1;
+> +
+> +	if (((size - offset) < (sz_nsec + sz_tv)) ||
+> +	    (read(fd, &header->nsec_ref, sz_nsec) != (ssize_t) sz_nsec) ||
+> +	    (read(fd, &header->tv_ref, sz_tv) != (ssize_t) sz_tv))
+> +		goto out;
 
-Can I get your signed-off-by on this one?
+Hmm, could we have endianness related troubles if we write the timespec on
+an arch and cross read from another, or other cross read issues?
 
-- Arnaldo
- 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index d628c8d..0f914c7 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -2260,7 +2262,7 @@ static int vmlinux_path__init(void)
->  	if (uname(&uts) < 0)
->  		return -1;
+> +
+> +	err = 0;
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +static int perf_header__write_ref_time(struct perf_header *header, int fd)
+> +{
+> +	size_t sz_nsec = sizeof(header->nsec_ref);
+> +	size_t sz_tv   = sizeof(header->tv_ref);
+> +	int err = -1;
+> +
+> +	if ((write(fd, &header->nsec_ref, sz_nsec) != (ssize_t) sz_nsec) ||
+> +	    (write(fd, &header->tv_ref, sz_tv) != (ssize_t) sz_tv))
+> +		goto out;
+> +
+> +	err = 0;
+> +
+> +out:
+> +	return err;
+> +}
+> +
+>  #define dsos__for_each_with_build_id(pos, head)	\
+>  	list_for_each_entry(pos, head, node)	\
+>  		if (!pos->has_build_id)		\
+> @@ -483,6 +517,19 @@ static int perf_header__adds_write(struct perf_header *self, int fd)
+>  			perf_session__cache_build_ids(session);
+>  	}
 >  
-> -	vmlinux_path = malloc(sizeof(char *) * 5);
-> +	vmlinux_path = malloc(sizeof(char *) * 6);
->  	if (vmlinux_path == NULL)
->  		return -1;
+> +	if (perf_header__has_feat(self, HEADER_REFERENCE_TIME)) {
+> +		struct perf_file_section *tref_sec;
+> +
+> +		tref_sec = &feat_sec[idx++];
+> +		tref_sec->offset = lseek(fd, 0, SEEK_CUR);
+> +		err = perf_header__write_ref_time(self, fd);
+> +		if (err < 0) {
+> +			pr_debug("failed to write reference time\n");
+> +			goto out_free;
+> +		}
+> +		tref_sec->size = lseek(fd, 0, SEEK_CUR) - tref_sec->offset;
+> +	}
+> +
+>  	lseek(fd, sec_start, SEEK_SET);
+>  	err = do_write(fd, feat_sec, sec_size);
+>  	if (err < 0)
+> @@ -810,6 +857,10 @@ static int perf_file_section__process(struct perf_file_section *self,
+>  		if (perf_header__read_build_ids(ph, fd, self->offset, self->size))
+>  			pr_debug("Failed to read buildids, continuing...\n");
+>  		break;
+> +	case HEADER_REFERENCE_TIME:
+> +		if (perf_header__read_ref_time(ph, fd, self->offset, self->size))
+> +			pr_debug("Failed to read reference time, continuing...\n");
+> +		break;
+>  	default:
+>  		pr_debug("unknown feature %d, continuing...\n", feat);
+>  	}
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index 6335965..0721c78 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -19,6 +19,7 @@ struct perf_header_attr {
+>  enum {
+>  	HEADER_TRACE_INFO = 1,
+>  	HEADER_BUILD_ID,
+> +	HEADER_REFERENCE_TIME,
+>  	HEADER_LAST_FEATURE,
+>  };
 >  
-> @@ -2288,6 +2290,12 @@ static int vmlinux_path__init(void)
->  	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
->  		goto out_fail;
->  	++vmlinux_path__nr_entries;
-> +	snprintf(bf, sizeof(bf), "/usr/lib/debug/lib/modules/%s.debug/vmlinux",
-> +		 uts.release);
-> +	vmlinux_path[vmlinux_path__nr_entries] = strdup(bf);
-> +	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
-> +		goto out_fail;
-> +	++vmlinux_path__nr_entries;
+> @@ -59,6 +60,8 @@ struct perf_header {
+>  	u64			data_size;
+>  	u64			event_offset;
+>  	u64			event_size;
+> +	u64			nsec_ref;
+> +	struct timeval		tv_ref;
+>  	DECLARE_BITMAP(adds_features, HEADER_FEAT_BITS);
+>  };
 >  
->  	return 0;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 3074d38..720838e 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -110,6 +110,29 @@ void perf_session__update_sample_type(struct perf_session *self)
+>  	perf_session__id_header_size(self);
+>  }
 >  
-> -- 
-> 		Franck
+> +static int perf_session__create_ref_time(struct perf_session *session)
+> +{
+> +	struct timespec tp;
+> +
+> +	/* race here between successive calls, but should be close enough */
+> +	if (gettimeofday(&session->header.tv_ref, NULL) != 0) {
+> +		pr_err("gettimeofday failed. Cannot set reference time.\n");
+> +		return -1;
+> +	}
+> +
+> +	if (clock_gettime(CLOCK_MONOTONIC, &tp) != 0) {
+> +		pr_err("clock_gettime failed. Cannot set reference time.\n");
+> +		return -1;
+> +	}
+> +
+> +	session->header.nsec_ref = (u64) tp.tv_sec * NSEC_PER_SEC
+> +		                       + (u64) tp.tv_nsec;
+> +
+> +	perf_header__set_feat(&session->header, HEADER_REFERENCE_TIME);
+> +
+> +	return 0;
+> +}
+> +
+>  int perf_session__create_kernel_maps(struct perf_session *self)
+>  {
+>  	int ret = machine__create_kernel_maps(&self->host_machine);
+> @@ -167,6 +190,9 @@ struct perf_session *perf_session__new(const char *filename, int mode, bool forc
+>  		 */
+>  		if (perf_session__create_kernel_maps(self) < 0)
+>  			goto out_delete;
+> +
+> +		if (perf_session__create_ref_time(self) < 0)
+> +			goto out_delete;
+
+So, it does record it anytime?
+
+>  	}
+>  
+>  	perf_session__update_sample_type(self);
+
+
+Other than that, looks good!
