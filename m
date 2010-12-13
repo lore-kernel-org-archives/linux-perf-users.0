@@ -1,92 +1,38 @@
-From: Francis Moreau <francis.moro@gmail.com>
-Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Mon, 13 Dec 2010 20:08:33 +0100
-Message-ID: <m27hfdsd72.fsf@gmail.com>
-References: <m2pqtb9ekn.fsf@gmail.com>
-	<20101209153548.GA11820@ghostprotocols.net> <m2wrnernw3.fsf@gmail.com>
-	<20101213125837.GB5407@ghostprotocols.net> <m2sjy1stuf.fsf@gmail.com>
-	<4D0627F4.1030605@hitachi.com> <m2oc8psqqi.fsf@gmail.com>
+From: "David S. Ahern" <daahern@cisco.com>
+Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
+Date: Mon, 13 Dec 2010 12:15:11 -0700
+Message-ID: <4D0670BF.6050403@cisco.com>
+References: <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins> <20101213171537.GC1691@nowhere> <1292260699.6803.305.camel@twins> <20101213172216.GB7417@ghostprotocols.net> <1292261716.6803.332.camel@twins> <1292262433.6803.351.camel@twins> <4D065CB2.7050104@cisco.com> <1292263024.6803.370.camel@twins> <4D065F69.7080707@cisco.com> <20101213190831.GA7984@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ww0-f42.google.com ([74.125.82.42]:47059 "EHLO
-	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751678Ab0LMTIi (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 14:08:38 -0500
-Received: by wwi17 with SMTP id 17so3893241wwi.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2010 11:08:37 -0800 (PST)
-In-Reply-To: <m2oc8psqqi.fsf@gmail.com> (Francis Moreau's message of "Mon, 13
-	Dec 2010 15:16:05 +0100")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org, 2nddept-manager@sdl.hitachi.co.jp
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20101213190831.GA7984@ghostprotocols.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Francis Moreau <francis.moro@gmail.com> writes:
 
-> Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com> writes:
->
->> (2010/12/13 22:08), Francis Moreau wrote:
->>> Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
->>> 
->>>> Em Mon, Dec 13, 2010 at 11:02:52AM +0100, Francis Moreau escreveu:
->>
->>>>> Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
->>>>>> Em Thu, Dec 09, 2010 at 04:00:08PM +0100, Francis Moreau escreveu:
->>>>>>> I'm trying to use perf-probe(1) with the latest F14 kernel
->>>>>>> (2.6.35.9-64.fc14.x86_64).
->>>>
->>>>>>> I also installed kernel-debug-debuginfo-2.6.35.9-64.fc14.x86_64 which
->>>>>>> contains the running vmlinux image AFAICT.
->>>>
->>>>>> Can you try using:
->>>>
->>>>>> $ perf probe -k /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux <rest of the probe definition>
->>>>
->>>>>> So that it tries it directly instead of looking into the buildid cache?
->>>>
->>>>> Does anybody know where I can report this issue to Fedora community ?
->>>>
->>>> Please create a ticket at:
->>>>
->>>> http://bugzilla.redhat.com
->>>>
->>>> More specifically:
->>>>
->>>> https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora
->>>>
->>>> Mention this changeset:
->>>>
->>>> http://git.kernel.org/?p=linux/kernel/git/acme/linux-2.6.git;a=commit;h=34d2ea084a3bce03d73ffe64350db2813f07260c
->>>>
->>>> It will make the -k argument work.
->>>>
->>>> There is another that will look automatically at this location, but I
->>>> haven't merged yet, will post here when done.
->>> 
->>> Hmm, I don't think that any patches recently posted in response of this
->>> thread will solve the problem.
->>
->> I agree with you.
->>
->>> The primarily concern here, is that the running kernel has a different
->>> build-id than the debug image installed by the corresponding debug
->>> package.
->>> 
->>> I think it's a distrib issue, hence my question about Fedora report.
->>
->> Yes, that is just for fedora people who can easily check
->> how to reproduce and make sure the problem is here.
->> Then they can try to solve the problem until the issue
->> is resolved.
->
-> I created this report: 
->
-> https://bugzilla.redhat.com/show_bug.cgi?id=662653
->
+> We have:
+> 
+> [acme@mica linux]$ perf list | grep -- -clock
+>   cpu-clock                                  [Software event]
+>   task-clock                                 [Software event]
+> [acme@mica linux]$ 
+> 
+> So we would have a new one:
+> 
+>   monotonic-clock
 
-Now closed.
+Name seems off. The 'event' is to grab time-of-day and have the 'time'
+attribute set which gives the correlation between wall-clock and perf
+timestamps.
 
--- 
-Francis
+David
+
+> 
+> Peter, agreed? I'll try to implement it now, good opportunity to learn a
+> bit more about soft pmus, I'd have to do that anyway for NIC stats, etc.
+> 
+> - Arnaldo
