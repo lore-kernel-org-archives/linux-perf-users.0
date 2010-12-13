@@ -1,90 +1,56 @@
-From: "David S. Ahern" <daahern@cisco.com>
+From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 10:36:39 -0700
-Message-ID: <4D0659A7.9030608@cisco.com>
-References: <1291773285-16254-1-git-send-email-daahern@cisco.com> <1291773285-16254-2-git-send-email-daahern@cisco.com> <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com> <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>
+Date: Mon, 13 Dec 2010 18:37:40 +0100
+Message-ID: <1292261860.6803.338.camel@twins>
+References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
+	 <1291773285-16254-2-git-send-email-daahern@cisco.com>
+	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>
+	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>
+	 <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins>
+	 <1292260419.6803.300.camel@twins>  <20101213172349.GD1691@nowhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-1.cisco.com ([171.71.176.70]:58021 "EHLO
-	sj-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757393Ab0LMRgq (ORCPT
+Received: from canuck.infradead.org ([134.117.69.58]:60068 "EHLO
+	canuck.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757393Ab0LMRiK convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 12:36:46 -0500
-In-Reply-To: <20101213164854.GL5407@ghostprotocols.net>
+	Mon, 13 Dec 2010 12:38:10 -0500
+In-Reply-To: <20101213172349.GD1691@nowhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On Mon, 2010-12-13 at 18:23 +0100, Frederic Weisbecker wrote:
+> On Mon, Dec 13, 2010 at 06:13:39PM +0100, Peter Zijlstra wrote:
+> > On Mon, 2010-12-13 at 18:11 +0100, Peter Zijlstra wrote:
+> > > 
+> > > Preferably, yes, but I don't see why we can't break the data file format
+> > > if we've got good reasons to. 
+> > 
+> > I mean, we pretty much _have_ to break data file format when we want to
+> > do splice() support.
+> 
+> Because we'll have one file per-cpu?
 
+Right.
 
-On 12/13/10 09:48, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Dec 13, 2010 at 04:54:56PM +0100, Frederic Weisbecker escreveu:
->> On Mon, Dec 13, 2010 at 07:39:24AM -0700, David S. Ahern wrote:
->>> On 12/12/10 13:16, Frederic Weisbecker wrote:
->>>>>  int perf_session__create_kernel_maps(struct perf_session *self)
->>>>>  {
->>>>>  	int ret = machine__create_kernel_maps(&self->host_machine);
->>>>> @@ -167,6 +190,9 @@ struct perf_session *perf_session__new(const char *filename, int mode, bool forc
->>>>>  		 */
->>>>>  		if (perf_session__create_kernel_maps(self) < 0)
->>>>>  			goto out_delete;
->>>>> +
->>>>> +		if (perf_session__create_ref_time(self) < 0)
->>>>> +			goto out_delete;
-> 
->>>> So, it does record it anytime?
-> 
->>> Simplest to always add it the header as it does no harm if not used.
->>> To make it conditional means adding an input parameter to
->>> perf_session__new() and then updating all the callers.
-> 
->>> Is the preference to make it conditional?
-> 
->> No, I suspect the overhead is plain unnoticeable. And if it becomes
->> any problem one day, we can still make that conditional later.
-> 
-> Right, but it just ocurred to me, can't we encode this in the file stat?
+> But perf.data on UP will be sensibly the same as today so I suspect
+> we won't need to be compatible.
 
-I would not want to rely on stat output for timestamps. eg., copy that
-file off box and not have the timestamp preserved.
+Nope, since one file simply doesn't scale, data-streams will have to
+live outside of the main file.
 
-> Also, how do we deal with:
-> 
-> $ perf record --help
-> <SNIP>
->        -A, --append
->            Append to the output file to do incremental profiling.
-> <SNIP>
-> 
-> ?
+And when you have to make that happen, there is no reason to maintain
+any kind of compatibility. The only thing you could do is provide some
+script to convert old data files to the new format.
 
-Is it realistic to expect/allow an append using different perf binaries?
-That just seems plain odd. Then, if one invocation used --timehist and
-another did not output would be bizarre. Of course an append with a
-reboot between tests would cause problems as well.
+> But I guess I am missing something, in which case that probably doesn't
+> change much the picture. It's not because one day we'll need to break
+> the format that we can happily do so everyday. Backward compatibility
+> is important and we should preserve it when it's possible.
 
-
-> 
-> I now think this should be implemented as a PERF_RECORD_WALL_CLOCK
-> synthesized event, to be inserted just before we start collecting the
-> other events.
-> 
-> That way, when --appending, we just insert another and use that from
-> that point on.
-> 
-> Look at tools/perf/util/event.h, enum perf_user_event_type and look how
-> those are synthesized.
-
-I see the thread on this part. I don't have preference; just let me know
-what the final decision is. ie., synthesized event versus header entry.
-
-David
-
-
-> 
-> Thanks,
-> 
-> - Arnaldo
+But since you're all so focused on adding warts to the thing, maybe
+possible has sailed. But see my email to acme.
