@@ -1,43 +1,44 @@
-From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+From: "David S. Ahern" <daahern@cisco.com>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 19:10:24 +0100
-Message-ID: <1292263824.6803.391.camel@twins>
-References: <20101213155451.GA1691@nowhere>
-	 <20101213164854.GL5407@ghostprotocols.net> <20101213170923.GB1691@nowhere>
-	 <1292260289.6803.297.camel@twins> <20101213171537.GC1691@nowhere>
-	 <1292260699.6803.305.camel@twins>
-	 <20101213172216.GB7417@ghostprotocols.net>
-	 <1292261716.6803.332.camel@twins>
-	 <20101213174330.GC7417@ghostprotocols.net>
-	 <1292262673.6803.359.camel@twins>  <20101213180548.GF1691@nowhere>
+Date: Mon, 13 Dec 2010 11:20:55 -0700
+Message-ID: <4D066407.3040707@cisco.com>
+References: <1291773285-16254-1-git-send-email-daahern@cisco.com>	 <1291773285-16254-2-git-send-email-daahern@cisco.com>	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>	 <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins>	 <20101213171537.GC1691@nowhere> <1292260699.6803.305.camel@twins>	 <20101213172216.GB7417@ghostprotocols.net>	 <1292261716.6803.332.camel@twins> <1292262433.6803.351.camel@twins>	 <4D065CB2.7050104@cisco.com> <1292263024.6803.370.camel@twins>	 <4D065F69.7080707@cisco.com> <1292263573.6803.381.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:35939 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756553Ab0LMSKx convert rfc822-to-8bit (ORCPT
+Received: from sj-iport-1.cisco.com ([171.71.176.70]:49112 "EHLO
+	sj-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757654Ab0LMSU7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 13:10:53 -0500
-In-Reply-To: <20101213180548.GF1691@nowhere>
+	Mon, 13 Dec 2010 13:20:59 -0500
+In-Reply-To: <1292263573.6803.381.camel@twins>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, 2010-12-13 at 19:05 +0100, Frederic Weisbecker wrote:
+
+
+On 12/13/10 11:06, Peter Zijlstra wrote:
+> On Mon, 2010-12-13 at 11:01 -0700, David S. Ahern wrote:
+>>> Another problem with this approach is things like flight-recorder mode
+>>> where you constantly over-write your old data, you'd have to build some
+>>> trigger to always output a new record before you over-write the old one,
+>>> so there's always one consistent record around. Drift is an even more
+>>> serious problem here since flight-record more could be running for days
+>>> before (if ever) you dump it.
+>>
+>> Ok. I was not aware flight-recorder mode was an option today.
 > 
-> There is one writer per cpu and a (stupid) multiplexing at report time.
-> It was working. Just the sorting on report time was (stupidly) slow.
+> You get it when you mmap the fd RO -- the only thing is you don't get a
+> consistent tail pointer so you have to fudge a bit.
+
+Awesome. Flight recorder mode is on our wish list. I'll try it out when
+I get some time.
+
+David
+
 > 
-> I should perhaps rebase that branch and try to make something with it. 
-
-Right, so we need to have a small ~16 events sort window per file [*],
-and then a merge-sort over all files, simply consumer the most recent
-event across all files.
-
-We can have out-of-order events on a single cpu due to nesting and
-taking the time-stamp _before_ we reserve the buffer. We could cure some
-of this by moving the perf_clock() call from
-__perf_event_header__init_id()/perf_prepare_sample() to
-__perf_event_output_id_sample()/perf_output_sample().
+> But even if we didn't have it, we'd need a solution that would work once
+> we did grow it ;-)
