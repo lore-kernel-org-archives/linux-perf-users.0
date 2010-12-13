@@ -1,72 +1,45 @@
-From: Francis Moreau <francis.moro@gmail.com>
-Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Mon, 13 Dec 2010 14:08:56 +0100
-Message-ID: <m2sjy1stuf.fsf@gmail.com>
-References: <m2pqtb9ekn.fsf@gmail.com>
-	<20101209153548.GA11820@ghostprotocols.net> <m2wrnernw3.fsf@gmail.com>
-	<20101213125837.GB5407@ghostprotocols.net>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
+Date: Mon, 13 Dec 2010 11:15:57 -0200
+Message-ID: <20101213131557.GD5407@ghostprotocols.net>
+References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
+ <1291773285-16254-2-git-send-email-daahern@cisco.com>
+ <20101212201613.GA1784@nowhere>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:54579 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757530Ab0LMNJB (ORCPT
+Received: from mail-gx0-f180.google.com ([209.85.161.180]:60277 "EHLO
+	mail-gx0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757653Ab0LMNQD (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 08:09:01 -0500
-Received: by wyb28 with SMTP id 28so5871741wyb.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2010 05:09:00 -0800 (PST)
-In-Reply-To: <20101213125837.GB5407@ghostprotocols.net> (Arnaldo Carvalho de
-	Melo's message of "Mon, 13 Dec 2010 10:58:37 -0200")
+	Mon, 13 Dec 2010 08:16:03 -0500
+Content-Disposition: inline
+In-Reply-To: <20101212201613.GA1784@nowhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
+Em Sun, Dec 12, 2010 at 09:16:16PM +0100, Frederic Weisbecker escreveu:
+> On Tue, Dec 07, 2010 at 06:54:44PM -0700, David Ahern wrote:
+> > +++ b/tools/perf/util/header.c
+> > @@ -191,6 +191,40 @@ static int write_padded(int fd, const void *bf, size_t count,
+> > +static int perf_header__read_ref_time(struct perf_header *header,
+> > +			int fd, u64 offset, u64 size)
+> > +{
+> > +	size_t sz_nsec = sizeof(header->nsec_ref);
+> > +	size_t sz_tv   = sizeof(header->tv_ref);
+> > +	int err = -1;
+> > +
+> > +	if (((size - offset) < (sz_nsec + sz_tv)) ||
+> > +	    (read(fd, &header->nsec_ref, sz_nsec) != (ssize_t) sz_nsec) ||
+> > +	    (read(fd, &header->tv_ref, sz_tv) != (ssize_t) sz_tv))
+> > +		goto out;
+> 
+> Hmm, could we have endianness related troubles if we write the timespec on
+> an arch and cross read from another, or other cross read issues?
 
-> Em Mon, Dec 13, 2010 at 11:02:52AM +0100, Francis Moreau escreveu:
->> Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
->> > Em Thu, Dec 09, 2010 at 04:00:08PM +0100, Francis Moreau escreveu:
->> >> I'm trying to use perf-probe(1) with the latest F14 kernel
->> >> (2.6.35.9-64.fc14.x86_64).
->
->> >> I also installed kernel-debug-debuginfo-2.6.35.9-64.fc14.x86_64 which
->> >> contains the running vmlinux image AFAICT.
->
->> > Can you try using:
->
->> > $ perf probe -k /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64.debug/vmlinux <rest of the probe definition>
->
->> > So that it tries it directly instead of looking into the buildid cache?
->
->> Does anybody know where I can report this issue to Fedora community ?
->
-> Please create a ticket at:
->
-> http://bugzilla.redhat.com
->
-> More specifically:
->
-> https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora
->
-> Mention this changeset:
->
-> http://git.kernel.org/?p=linux/kernel/git/acme/linux-2.6.git;a=commit;h=34d2ea084a3bce03d73ffe64350db2813f07260c
->
-> It will make the -k argument work.
->
-> There is another that will look automatically at this location, but I
-> haven't merged yet, will post here when done.
-
-Hmm, I don't think that any patches recently posted in response of this
-thread will solve the problem.
-
-The primarily concern here, is that the running kernel has a different
-build-id than the debug image installed by the corresponding debug
-package.
-
-I think it's a distrib issue, hence my question about Fedora report.
-
-Thanks
--- 
-Francis
+Well spotted, it needs to use perf_header__getbuffer64 and make sure
+that nsec_ref, etc are u64 fields.
+ 
+- Arnaldo
