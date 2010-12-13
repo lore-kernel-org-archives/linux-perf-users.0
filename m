@@ -1,44 +1,51 @@
-From: "David S. Ahern" <daahern@cisco.com>
-Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 11:20:55 -0700
-Message-ID: <4D066407.3040707@cisco.com>
-References: <1291773285-16254-1-git-send-email-daahern@cisco.com>	 <1291773285-16254-2-git-send-email-daahern@cisco.com>	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>	 <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins>	 <20101213171537.GC1691@nowhere> <1292260699.6803.305.camel@twins>	 <20101213172216.GB7417@ghostprotocols.net>	 <1292261716.6803.332.camel@twins> <1292262433.6803.351.camel@twins>	 <4D065CB2.7050104@cisco.com> <1292263024.6803.370.camel@twins>	 <4D065F69.7080707@cisco.com> <1292263573.6803.381.camel@twins>
+From: Francis Moreau <francis.moro@gmail.com>
+Subject: Re: perf-probe: issue with latest fedora kernel
+Date: Mon, 13 Dec 2010 20:08:08 +0100
+Message-ID: <m2bp4psd7r.fsf@gmail.com>
+References: <m2pqtb9ekn.fsf@gmail.com>
+	<20101209153548.GA11820@ghostprotocols.net> <m2wrnernw3.fsf@gmail.com>
+	<20101213125837.GB5407@ghostprotocols.net> <m2sjy1stuf.fsf@gmail.com>
+	<20101213142159.GF5407@ghostprotocols.net> <m2fwu1so6j.fsf@gmail.com>
+	<20101213164009.GJ5407@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-1.cisco.com ([171.71.176.70]:49112 "EHLO
-	sj-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757654Ab0LMSU7 (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:35222 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751560Ab0LMTIP (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 13:20:59 -0500
-In-Reply-To: <1292263573.6803.381.camel@twins>
+	Mon, 13 Dec 2010 14:08:15 -0500
+Received: by wyb28 with SMTP id 28so6216254wyb.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2010 11:08:14 -0800 (PST)
+In-Reply-To: <20101213164009.GJ5407@ghostprotocols.net> (Arnaldo Carvalho de
+	Melo's message of "Mon, 13 Dec 2010 14:40:09 -0200")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
+Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
 
+> Em Mon, Dec 13, 2010 at 04:11:16PM +0100, Francis Moreau escreveu:
+>> But as I said, there's no matching build-id. I understand that -k is
+>> currently broken but suppose that it works, which vmlinux should I use
+>> then ?
+>
+>> 
+>> $ rpm -qa | grep kernel
+>> kernel-debuginfo-common-x86_64-2.6.35.9-64.fc14.x86_64
+>> kernel-debug-debuginfo-2.6.35.9-64.fc14.x86_64
+>> kernel-headers-2.6.35.6-48.fc14.x86_64
+>> kernel-devel-2.6.35.9-64.fc14.x86_64
+>> kernel-2.6.35.9-64.fc14.x86_64
+>
+> Bzzt, here is the problem: you're not using the right package,
+> kernel-debug-debuginfo is for the kernel-debug package, a kernel built
+> with lots of CONFIG_DEBUG_ options turned on, please install the right
+> package, which is kernel-debuginfo-2.6.35.9-64.fc14.x86_64
 
-On 12/13/10 11:06, Peter Zijlstra wrote:
-> On Mon, 2010-12-13 at 11:01 -0700, David S. Ahern wrote:
->>> Another problem with this approach is things like flight-recorder mode
->>> where you constantly over-write your old data, you'd have to build some
->>> trigger to always output a new record before you over-write the old one,
->>> so there's always one consistent record around. Drift is an even more
->>> serious problem here since flight-record more could be running for days
->>> before (if ever) you dump it.
->>
->> Ok. I was not aware flight-recorder mode was an option today.
-> 
-> You get it when you mmap the fd RO -- the only thing is you don't get a
-> consistent tail pointer so you have to fudge a bit.
+Ah, that's it.
 
-Awesome. Flight recorder mode is on our wish list. I'll try it out when
-I get some time.
-
-David
-
-> 
-> But even if we didn't have it, we'd need a solution that would work once
-> we did grow it ;-)
+Thanks !
+-- 
+Francis
