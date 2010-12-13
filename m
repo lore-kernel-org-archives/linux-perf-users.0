@@ -1,44 +1,31 @@
-From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 18:11:29 +0100
-Message-ID: <1292260289.6803.297.camel@twins>
+Date: Mon, 13 Dec 2010 18:13:39 +0100
+Message-ID: <1292260419.6803.300.camel@twins>
 References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
 	 <1291773285-16254-2-git-send-email-daahern@cisco.com>
 	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>
 	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>
-	 <20101213170923.GB1691@nowhere>
+	 <20101213170923.GB1691@nowhere>  <1292260289.6803.297.camel@twins>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:44898 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751374Ab0LMRMA convert rfc822-to-8bit (ORCPT
+Received: from canuck.infradead.org ([134.117.69.58]:38729 "EHLO
+	canuck.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758270Ab0LMROO convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 12:12:00 -0500
-In-Reply-To: <20101213170923.GB1691@nowhere>
+	Mon, 13 Dec 2010 12:14:14 -0500
+In-Reply-To: <1292260289.6803.297.camel@twins>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, 2010-12-13 at 18:09 +0100, Frederic Weisbecker wrote:
+On Mon, 2010-12-13 at 18:11 +0100, Peter Zijlstra wrote:
 > 
-> 
-> Right, but Peter wanted us to get rid of these user events types.
+> Preferably, yes, but I don't see why we can't break the data file format
+> if we've got good reasons to. 
 
-Yes they suck.
-
-> I guess we can't really do this as new perf tools must be able
-> to support old perf files.
-
-Preferably, yes, but I don't see why we can't break the data file format
-if we've got good reasons to.
-
-> So this should be the last one to add. Something like PERF_RECORD_GEN_EVT
-> that has a field in its headers containing a sub-type which can be this
-> wall clock but can also host about everything in the future.
-> 
-> This way we don't propagate more the possible overlap with the kernel. 
-
-I don't see why we should add more, that's going the wrong direction.
+I mean, we pretty much _have_ to break data file format when we want to
+do splice() support.
