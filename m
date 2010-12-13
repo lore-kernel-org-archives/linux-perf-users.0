@@ -1,73 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 14:48:54 -0200
-Message-ID: <20101213164854.GL5407@ghostprotocols.net>
+Date: Mon, 13 Dec 2010 14:58:15 -0200
+Message-ID: <20101213165815.GN5407@ghostprotocols.net>
 References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
  <1291773285-16254-2-git-send-email-daahern@cisco.com>
  <20101212201613.GA1784@nowhere>
- <4D06301C.2090309@cisco.com>
- <20101213155451.GA1691@nowhere>
+ <20101213131557.GD5407@ghostprotocols.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f180.google.com ([209.85.161.180]:64354 "EHLO
+Received: from mail-gx0-f180.google.com ([209.85.161.180]:64961 "EHLO
 	mail-gx0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754535Ab0LMQtA (ORCPT
+	with ESMTP id S1758135Ab0LMQ6V (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 11:49:00 -0500
+	Mon, 13 Dec 2010 11:58:21 -0500
 Content-Disposition: inline
-In-Reply-To: <20101213155451.GA1691@nowhere>
+In-Reply-To: <20101213131557.GD5407@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Mon, Dec 13, 2010 at 04:54:56PM +0100, Frederic Weisbecker escreveu:
-> On Mon, Dec 13, 2010 at 07:39:24AM -0700, David S. Ahern wrote:
-> > On 12/12/10 13:16, Frederic Weisbecker wrote:
-> > >>  int perf_session__create_kernel_maps(struct perf_session *self)
-> > >>  {
-> > >>  	int ret = machine__create_kernel_maps(&self->host_machine);
-> > >> @@ -167,6 +190,9 @@ struct perf_session *perf_session__new(const char *filename, int mode, bool forc
-> > >>  		 */
-> > >>  		if (perf_session__create_kernel_maps(self) < 0)
-> > >>  			goto out_delete;
-> > >> +
-> > >> +		if (perf_session__create_ref_time(self) < 0)
-> > >> +			goto out_delete;
+Em Mon, Dec 13, 2010 at 11:15:57AM -0200, Arnaldo Carvalho de Melo escreveu:
+> Em Sun, Dec 12, 2010 at 09:16:16PM +0100, Frederic Weisbecker escreveu:
+> > On Tue, Dec 07, 2010 at 06:54:44PM -0700, David Ahern wrote:
+> > > +++ b/tools/perf/util/header.c
+> > > @@ -191,6 +191,40 @@ static int write_padded(int fd, const void *bf, size_t count,
+> > > +static int perf_header__read_ref_time(struct perf_header *header,
+> > > +			int fd, u64 offset, u64 size)
+> > > +{
+> > > +	size_t sz_nsec = sizeof(header->nsec_ref);
+> > > +	size_t sz_tv   = sizeof(header->tv_ref);
+> > > +	int err = -1;
+> > > +
+> > > +	if (((size - offset) < (sz_nsec + sz_tv)) ||
+> > > +	    (read(fd, &header->nsec_ref, sz_nsec) != (ssize_t) sz_nsec) ||
+> > > +	    (read(fd, &header->tv_ref, sz_tv) != (ssize_t) sz_tv))
+> > > +		goto out;
+> > 
+> > Hmm, could we have endianness related troubles if we write the timespec on
+> > an arch and cross read from another, or other cross read issues?
+> 
+> Well spotted, it needs to use perf_header__getbuffer64 and make sure
+> that nsec_ref, etc are u64 fields.
 
-> > > So, it does record it anytime?
-
-> > Simplest to always add it the header as it does no harm if not used.
-> > To make it conditional means adding an input parameter to
-> > perf_session__new() and then updating all the callers.
-
-> > Is the preference to make it conditional?
-
-> No, I suspect the overhead is plain unnoticeable. And if it becomes
-> any problem one day, we can still make that conditional later.
-
-Right, but it just ocurred to me, can't we encode this in the file stat?
-Also, how do we deal with:
-
-$ perf record --help
-<SNIP>
-       -A, --append
-           Append to the output file to do incremental profiling.
-<SNIP>
-
-?
-
-I now think this should be implemented as a PERF_RECORD_WALL_CLOCK
-synthesized event, to be inserted just before we start collecting the
-other events.
-
-That way, when --appending, we just insert another and use that from
-that point on.
-
-Look at tools/perf/util/event.h, enum perf_user_event_type and look how
-those are synthesized.
-
-Thanks,
+When implemented as a PERF_RECORD_REF_TIME or PERF_RECORD_WALL_CLOCK
+this will be handled in perf_session__process_event, implementing a
+event__ref_time_swap routine, etc.
 
 - Arnaldo
