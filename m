@@ -1,40 +1,55 @@
-From: "David S. Ahern" <daahern@cisco.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 10:49:38 -0700
-Message-ID: <4D065CB2.7050104@cisco.com>
-References: <1291773285-16254-1-git-send-email-daahern@cisco.com>	 <1291773285-16254-2-git-send-email-daahern@cisco.com>	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>	 <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins>	 <20101213171537.GC1691@nowhere> <1292260699.6803.305.camel@twins>	 <20101213172216.GB7417@ghostprotocols.net>	 <1292261716.6803.332.camel@twins> <1292262433.6803.351.camel@twins>
+Date: Mon, 13 Dec 2010 18:50:06 +0100
+Message-ID: <20101213174959.GE1691@nowhere>
+References: <1291773285-16254-2-git-send-email-daahern@cisco.com>
+ <20101212201613.GA1784@nowhere>
+ <4D06301C.2090309@cisco.com>
+ <20101213155451.GA1691@nowhere>
+ <20101213164854.GL5407@ghostprotocols.net>
+ <20101213170923.GB1691@nowhere>
+ <1292260289.6803.297.camel@twins>
+ <1292260419.6803.300.camel@twins>
+ <20101213172349.GD1691@nowhere>
+ <1292261860.6803.338.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:37450 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757910Ab0LMRtk (ORCPT
+Received: from mail-fx0-f43.google.com ([209.85.161.43]:53167 "EHLO
+	mail-fx0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758497Ab0LMRuL (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 12:49:40 -0500
-In-Reply-To: <1292262433.6803.351.camel@twins>
+	Mon, 13 Dec 2010 12:50:11 -0500
+Content-Disposition: inline
+In-Reply-To: <1292261860.6803.338.camel@twins>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-
-
-On 12/13/10 10:47, Peter Zijlstra wrote:
-> On Mon, 2010-12-13 at 18:35 +0100, Peter Zijlstra wrote:
->>         * this CLOCK_MONOTONIC offset (for what little good that does, since
->> our clock isn't strictly sync'ed to CLOCK_MONOTONIC so we can incur
->> arbitrary drift). 
+On Mon, Dec 13, 2010 at 06:37:40PM +0100, Peter Zijlstra wrote:
+> On Mon, 2010-12-13 at 18:23 +0100, Frederic Weisbecker wrote:
+> > On Mon, Dec 13, 2010 at 06:13:39PM +0100, Peter Zijlstra wrote:
+> > > On Mon, 2010-12-13 at 18:11 +0100, Peter Zijlstra wrote:
+> > > > 
+> > > > Preferably, yes, but I don't see why we can't break the data file format
+> > > > if we've got good reasons to. 
+> > > 
+> > > I mean, we pretty much _have_ to break data file format when we want to
+> > > do splice() support.
+> > 
+> > Because we'll have one file per-cpu?
 > 
-> In fact, the only sane way to do that is by creating a software counter
-> that represents CLOCK_MONOTONIC and sample that say once a minute (or
-> more often if you want smaller drift).
+> Right.
 > 
+> > But perf.data on UP will be sensibly the same as today so I suspect
+> > we won't need to be compatible.
 > 
+> Nope, since one file simply doesn't scale, data-streams will have to
+> live outside of the main file.
+> 
+> And when you have to make that happen, there is no reason to maintain
+> any kind of compatibility. The only thing you could do is provide some
+> script to convert old data files to the new format.
 
-What about creating a PERF_RECORD_TIME and generate an event when the
-counter is opened? It contains a PERF_SAMPLE_TIME and say
-PERF_SAMPLE_TOD (time-of-day)? We're not sending rockets to saturn; we
-just need the timestamps to match other log files.
-
-David
+Right, a script should do the trick.
