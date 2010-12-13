@@ -1,46 +1,63 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
-Date: Mon, 13 Dec 2010 18:23:52 +0100
-Message-ID: <20101213172349.GD1691@nowhere>
+Date: Mon, 13 Dec 2010 18:35:16 +0100
+Message-ID: <1292261716.6803.332.camel@twins>
 References: <1291773285-16254-1-git-send-email-daahern@cisco.com>
- <1291773285-16254-2-git-send-email-daahern@cisco.com>
- <20101212201613.GA1784@nowhere>
- <4D06301C.2090309@cisco.com>
- <20101213155451.GA1691@nowhere>
- <20101213164854.GL5407@ghostprotocols.net>
- <20101213170923.GB1691@nowhere>
- <1292260289.6803.297.camel@twins>
- <1292260419.6803.300.camel@twins>
+	 <1291773285-16254-2-git-send-email-daahern@cisco.com>
+	 <20101212201613.GA1784@nowhere> <4D06301C.2090309@cisco.com>
+	 <20101213155451.GA1691@nowhere> <20101213164854.GL5407@ghostprotocols.net>
+	 <20101213170923.GB1691@nowhere> <1292260289.6803.297.camel@twins>
+	 <20101213171537.GC1691@nowhere> <1292260699.6803.305.camel@twins>
+	 <20101213172216.GB7417@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-fx0-f43.google.com ([209.85.161.43]:57344 "EHLO
-	mail-fx0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752611Ab0LMRX5 (ORCPT
+Received: from casper.infradead.org ([85.118.1.10]:38832 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753995Ab0LMRfo convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 12:23:57 -0500
-Content-Disposition: inline
-In-Reply-To: <1292260419.6803.300.camel@twins>
+	Mon, 13 Dec 2010 12:35:44 -0500
+In-Reply-To: <20101213172216.GB7417@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, "David S. Ahern" <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Dec 13, 2010 at 06:13:39PM +0100, Peter Zijlstra wrote:
-> On Mon, 2010-12-13 at 18:11 +0100, Peter Zijlstra wrote:
-> > 
-> > Preferably, yes, but I don't see why we can't break the data file format
-> > if we've got good reasons to. 
+On Mon, 2010-12-13 at 15:22 -0200, Arnaldo Carvalho de Melo wrote:
+> > No, the last one already happened, you cannot postpone the last one,
+> > there will always be another excuse.
 > 
-> I mean, we pretty much _have_ to break data file format when we want to
-> do splice() support.
+> Did you understand the use case? How to have multiple reference times
+> when appending?
 
-Because we'll have one file per-cpu?
+Yes, I understood it perfectly, I just detest the existence of these
+pure user records, they need to die ASAP.
 
-But perf.data on UP will be sensibly the same as today so I suspect
-we won't need to be compatible.
+> "last one" means adding a multiplexor, PERF_RECORD_LAST_ONE if you will,
+> and inside it we add new events if the need arises. Then never again we
+> add a PERF_RECORD_ event in userspace. 
 
-But I guess I am missing something, in which case that probably doesn't
-change much the picture. It's not because one day we'll need to break
-the format that we can happily do so everyday. Backward compatibility
-is important and we should preserve it when it's possible.
+Nah, that sucks too, the whole concept of pure user-space events in that
+stream sucks.
+
+There's multiple things you can do, you could:
+
+ - create a kernel event PERF_RECORD_NEW_BUFFER and stuff that into each
+fresh buffer when its created, it could contain all kinds of 1-time
+information, like:
+	* this CLOCK_MONOTONIC offset (for what little good that does, since
+our clock isn't strictly sync'ed to CLOCK_MONOTONIC so we can incur
+arbitrary drift).
+ 	* architecture details, like 64/32 host info needed for the
+PERF_SAMPLE_REGS stuff.
+
+ - extend the existing header infrastructure to write a new header in
+front of the new stream. The main header already has a data section that
+points to the end of the stream, add a continuation header section that
+points to a continuation-header used to appends and record the clock
+offset data in there.
+
+ - something else entirely.
+
+Just stop using these stupid fake events and be somewhat creative.
