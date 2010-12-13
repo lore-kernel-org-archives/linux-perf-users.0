@@ -1,57 +1,57 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Mon, 13 Dec 2010 12:25:03 -0200
-Message-ID: <20101213142503.GG5407@ghostprotocols.net>
-References: <m2pqtb9ekn.fsf@gmail.com>
- <20101209153548.GA11820@ghostprotocols.net>
- <m2wrnernw3.fsf@gmail.com>
- <20101213125837.GB5407@ghostprotocols.net>
- <m2sjy1stuf.fsf@gmail.com>
- <4D0627F4.1030605@hitachi.com>
+From: "David S. Ahern" <daahern@cisco.com>
+Subject: Re: [PATCH 1/2] perf tools: Add reference timestamp to perf header
+Date: Mon, 13 Dec 2010 07:39:24 -0700
+Message-ID: <4D06301C.2090309@cisco.com>
+References: <1291773285-16254-1-git-send-email-daahern@cisco.com> <1291773285-16254-2-git-send-email-daahern@cisco.com> <20101212201613.GA1784@nowhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:44224 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750840Ab0LMOZK (ORCPT
+Received: from sj-iport-5.cisco.com ([171.68.10.87]:45682 "EHLO
+	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751307Ab0LMOjY (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Dec 2010 09:25:10 -0500
-Received: by yxt3 with SMTP id 3so3271353yxt.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2010 06:25:09 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <4D0627F4.1030605@hitachi.com>
+	Mon, 13 Dec 2010 09:39:24 -0500
+In-Reply-To: <20101212201613.GA1784@nowhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: Francis Moreau <francis.moro@gmail.com>, linux-perf-users@vger.kernel.org, 2nddept-manager@sdl.hitachi.co.jp
+To: Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Mon, Dec 13, 2010 at 11:04:36PM +0900, Masami Hiramatsu escreveu:
-> (2010/12/13 22:08), Francis Moreau wrote:
-> > Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
-> > 
-> >> Em Mon, Dec 13, 2010 at 11:02:52AM +0100, Francis Moreau escreveu:
-> >>> Arnaldo Carvalho de Melo <acme@ghostprotocols.net> writes:
-> >>>> Em Thu, Dec 09, 2010 at 04:00:08PM +0100, Francis Moreau escreveu:
-> >>>>> I'm trying to use perf-probe(1) with the latest F14 kernel
-> >>>>> (2.6.35.9-64.fc14.x86_64).
-> >>
-> >>>>> I also installed kernel-debug-debuginfo-2.6.35.9-64.fc14.x86_64 which
-> >>>>> contains the running vmlinux image AFAICT.
 
-> > The primarily concern here, is that the running kernel has a different
-> > build-id than the debug image installed by the corresponding debug
-> > package.
-> > 
-> > I think it's a distrib issue, hence my question about Fedora report.
+
+On 12/12/10 13:16, Frederic Weisbecker wrote:
+
+>>  int perf_session__create_kernel_maps(struct perf_session *self)
+>>  {
+>>  	int ret = machine__create_kernel_maps(&self->host_machine);
+>> @@ -167,6 +190,9 @@ struct perf_session *perf_session__new(const char *filename, int mode, bool forc
+>>  		 */
+>>  		if (perf_session__create_kernel_maps(self) < 0)
+>>  			goto out_delete;
+>> +
+>> +		if (perf_session__create_ref_time(self) < 0)
+>> +			goto out_delete;
 > 
-> Yes, that is just for fedora people who can easily check
-> how to reproduce and make sure the problem is here.
-> Then they can try to solve the problem until the issue
-> is resolved.
+> So, it does record it anytime?
 
-I just tried it, works for me.
+Simplest to always add it the header as it does no harm if not used. To
+make it conditional means adding an input parameter to
+perf_session__new() and then updating all the callers.
 
-I added the sequence of commands, perhaps he can find where the problem
-lies following them.
+Is the preference to make it conditional?
 
-- Arnaldo
+David
+
+
+> 
+>>  	}
+>>  
+>>  	perf_session__update_sample_type(self);
+> 
+> 
+> Other than that, looks good!
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
