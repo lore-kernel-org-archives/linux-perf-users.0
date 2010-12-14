@@ -1,51 +1,79 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+From: "David S. Ahern" <daahern@cisco.com>
 Subject: Re: [PATCH v3] perf tools: Add symfs option for off-box analysis
  using specified tree
-Date: Tue, 14 Dec 2010 12:06:04 -0200
-Message-ID: <20101214140604.GC13425@ghostprotocols.net>
-References: <1291926427-28846-1-git-send-email-daahern@cisco.com>
- <20101214122428.GA13425@ghostprotocols.net>
- <20101214125245.GB13425@ghostprotocols.net>
+Date: Tue, 14 Dec 2010 07:27:42 -0700
+Message-ID: <4D077EDE.8090005@cisco.com>
+References: <1291926427-28846-1-git-send-email-daahern@cisco.com> <20101214122428.GA13425@ghostprotocols.net> <20101214125245.GB13425@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:49920 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750994Ab0LNOGK (ORCPT
+Received: from sj-iport-4.cisco.com ([171.68.10.86]:44554 "EHLO
+	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751474Ab0LNO1m (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 14 Dec 2010 09:06:10 -0500
-Content-Disposition: inline
+	Tue, 14 Dec 2010 09:27:42 -0500
 In-Reply-To: <20101214125245.GB13425@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Tue, Dec 14, 2010 at 10:52:45AM -0200, Arnaldo Carvalho de Melo escreveu:
+
+
+On 12/14/10 05:52, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 14, 2010 at 10:24:28AM -0200, Arnaldo Carvalho de Melo escreveu:
+>> Em Thu, Dec 09, 2010 at 01:27:07PM -0700, David Ahern escreveu:
+>>> The symfs argument allows analysis of perf.data file using a locally
+>>> accessible filesystem tree with debug symbols - e.g., tree created
+>>> during image builds, sshfs mount, loop mounted KVM disk images,
+>>> USB keys, initrds, etc. Anything with an OS tree can be analyzed from
+>>> anywhere without the need to populate a local data store with
+>>> build-ids.
+>>>
+>>> Signed-off-by: David Ahern <daahern@cisco.com>
+>>>
+>>> v2 --> v3: handle symfs="/"
+>>
+>> [acme@felicio ~]$ ./realpath /..//.
+>> /
+>> [acme@felicio ~]$
+>>
+>> I'll fix this up and merge, thanks!
+
+I was not aware of realpath. Simple change to symbol__init?
+
+> 
 > Ok, there are still some problems:
 > 
 > It is escaping the symfs jail for /home/acme/bin/perf, /lib64/libpthread-2.5.so
 > and kernel modules, investigating...
 
-Those 'G' signals means DSO__ORIG_GUEST_KMODULE, since you were not
-prefixing that case with symfs, it was the jail leak point, fixed, doing
-some more testing before merging.
-
+> 
+> - Arnaldo
+> 
 > [acme@mica linux]$ find /tmp/bla
 > /tmp/bla
 > /tmp/bla/lib64
 > /tmp/bla/lib64/libc-2.5.so
-> [acme@mica linux]$ perf report -v -g none --stdio --symfs /tmp/bla
+> [acme@mica linux]$ perf report -v -g none --stdio --symfs /tmp/bla > /tmp/out
+> Looking at the vmlinux_path (3 entries long)
 > Failed to open [kernel.kallsyms], continuing without symbols
-> # Events: 503  cycles
-> #
-> # Overhead Command    Shared Object                                Symbol
-> # ........ .......... .....................................        ....................
-> #
->    0.84%        perf  /home/acme/bin/perf                  0x26bf1 G [.] die_builtin
->    0.21%        perf  /home/acme/bin/perf                  0x1db4b G [.] event__synthesize_kernel_mmap
->    0.21%        perf  /home/acme/bin/perf                  0x4700  G [.] _init
->    0.21%        perf  /home/acme/bin/perf                  0x1deca G [.] event__synthesize_comm
->    0.21%        perf  /lib64/libpthread-2.5.so             0xd210  G [.] __write_nocancel
->    0.21%        perf  /home/acme/bin/perf                  0xddbd  G [.] atexit_header
->    0.03% kworker/0:1  /lib/modules/2.6.37-rc3/.../ixgbe.ko 0x605   G [k] ixgbe_update_stats
+> dso__synthesize_plt_symbols: problems reading /home/acme/bin/perf PLT info.
+> dso__synthesize_plt_symbols: problems reading /lib64/libpthread-2.5.so PLT info.
+> dso__synthesize_plt_symbols: problems reading /lib/modules/2.6.37-rc3-00084-gd937616/kernel/drivers/net/ixgbe/ixgbe.ko PLT info.
+> [acme@mica linux]$ cat /tmp/out
+
+strace -e trace=open /tmp/build-perf/perf report -v --symfs /tmp/f14-mnt
+-i /tmp/perf-cs.data
+
+does not show any attempts to open a file not starting with the symfs path.
+
+At the top of dso__synthesize_plt_symbols() is:
+	snprintf(name, sizeof(name), "%s%s",
+		 symbol_conf.symfs, self->long_name);
+	fd = open(name, O_RDONLY);
+
+so the open only gets the relative path.
+
+David
