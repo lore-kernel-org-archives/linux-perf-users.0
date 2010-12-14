@@ -1,60 +1,53 @@
-From: "David S. Ahern" <daahern@cisco.com>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Subject: Re: [PATCH v3] perf tools: Add symfs option for off-box analysis
  using specified tree
-Date: Tue, 14 Dec 2010 07:33:27 -0700
-Message-ID: <4D078037.9060207@cisco.com>
-References: <1291926427-28846-1-git-send-email-daahern@cisco.com> <20101214122428.GA13425@ghostprotocols.net> <20101214125245.GB13425@ghostprotocols.net> <20101214140604.GC13425@ghostprotocols.net>
+Date: Tue, 14 Dec 2010 12:35:51 -0200
+Message-ID: <20101214143551.GD13425@ghostprotocols.net>
+References: <1291926427-28846-1-git-send-email-daahern@cisco.com>
+ <20101214122428.GA13425@ghostprotocols.net>
+ <20101214125245.GB13425@ghostprotocols.net>
+ <4D077EDE.8090005@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:46343 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752106Ab0LNOd1 (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:50063 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753594Ab0LNOf5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 14 Dec 2010 09:33:27 -0500
-In-Reply-To: <20101214140604.GC13425@ghostprotocols.net>
+	Tue, 14 Dec 2010 09:35:57 -0500
+Content-Disposition: inline
+In-Reply-To: <4D077EDE.8090005@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+To: "David S. Ahern" <daahern@cisco.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
+Em Tue, Dec 14, 2010 at 07:27:42AM -0700, David S. Ahern escreveu:
+> On 12/14/10 05:52, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 14, 2010 at 10:24:28AM -0200, Arnaldo Carvalho de Melo escreveu:
+> I was not aware of realpath. Simple change to symbol__init?
 
+I made symbol__init use realpath to reduce the arg to --symfs.
+ 
+> > [acme@mica linux]$ find /tmp/bla
+> > /tmp/bla
+> > /tmp/bla/lib64
+> > /tmp/bla/lib64/libc-2.5.so
+> > [acme@mica linux]$ perf report -v -g none --stdio --symfs /tmp/bla > /tmp/out
+> > Looking at the vmlinux_path (3 entries long)
+> > Failed to open [kernel.kallsyms], continuing without symbols
+> > dso__synthesize_plt_symbols: problems reading /home/acme/bin/perf PLT info.
+> > [acme@mica linux]$ cat /tmp/out
 
-On 12/14/10 07:06, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 14, 2010 at 10:52:45AM -0200, Arnaldo Carvalho de Melo escreveu:
->> Ok, there are still some problems:
->>
->> It is escaping the symfs jail for /home/acme/bin/perf, /lib64/libpthread-2.5.so
->> and kernel modules, investigating...
-> 
-> Those 'G' signals means DSO__ORIG_GUEST_KMODULE, since you were not
-> prefixing that case with symfs, it was the jail leak point, fixed, doing
-> some more testing before merging.
+> strace -e trace=open /tmp/build-perf/perf report -v --symfs /tmp/f14-mnt
+> -i /tmp/perf-cs.data
 
-yuk. I did not touch the hypervisor paths.
+> does not show any attempts to open a file not starting with the symfs path.
 
-So the 'guest' route is tried all the time because of the origin list --
-even when it's not applicable.
+Probably because all the files you need are in the directories you
+passed to --symfs, remove one and it will leak.
 
-David
+Anyway, fixed in my perf/core branch, still not propagated from
+master.k.o to git.k.o :-\
 
-> 
->> [acme@mica linux]$ find /tmp/bla
->> /tmp/bla
->> /tmp/bla/lib64
->> /tmp/bla/lib64/libc-2.5.so
->> [acme@mica linux]$ perf report -v -g none --stdio --symfs /tmp/bla
->> Failed to open [kernel.kallsyms], continuing without symbols
->> # Events: 503  cycles
->> #
->> # Overhead Command    Shared Object                                Symbol
->> # ........ .......... .....................................        ....................
->> #
->>    0.84%        perf  /home/acme/bin/perf                  0x26bf1 G [.] die_builtin
->>    0.21%        perf  /home/acme/bin/perf                  0x1db4b G [.] event__synthesize_kernel_mmap
->>    0.21%        perf  /home/acme/bin/perf                  0x4700  G [.] _init
->>    0.21%        perf  /home/acme/bin/perf                  0x1deca G [.] event__synthesize_comm
->>    0.21%        perf  /lib64/libpthread-2.5.so             0xd210  G [.] __write_nocancel
->>    0.21%        perf  /home/acme/bin/perf                  0xddbd  G [.] atexit_header
->>    0.03% kworker/0:1  /lib/modules/2.6.37-rc3/.../ixgbe.ko 0x605   G [k] ixgbe_update_stats
+- Arnaldo
