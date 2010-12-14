@@ -1,53 +1,48 @@
 From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Subject: Re: [PATCH v3] perf tools: Add symfs option for off-box analysis
  using specified tree
-Date: Tue, 14 Dec 2010 12:35:51 -0200
-Message-ID: <20101214143551.GD13425@ghostprotocols.net>
+Date: Tue, 14 Dec 2010 12:39:29 -0200
+Message-ID: <20101214143929.GE13425@ghostprotocols.net>
 References: <1291926427-28846-1-git-send-email-daahern@cisco.com>
  <20101214122428.GA13425@ghostprotocols.net>
  <20101214125245.GB13425@ghostprotocols.net>
- <4D077EDE.8090005@cisco.com>
+ <20101214140604.GC13425@ghostprotocols.net>
+ <4D078037.9060207@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:50063 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753594Ab0LNOf5 (ORCPT
+Received: from mail-gw0-f42.google.com ([74.125.83.42]:58493 "EHLO
+	mail-gw0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753859Ab0LNOjf (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 14 Dec 2010 09:35:57 -0500
+	Tue, 14 Dec 2010 09:39:35 -0500
 Content-Disposition: inline
-In-Reply-To: <4D077EDE.8090005@cisco.com>
+In-Reply-To: <4D078037.9060207@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: "David S. Ahern" <daahern@cisco.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Tue, Dec 14, 2010 at 07:27:42AM -0700, David S. Ahern escreveu:
-> On 12/14/10 05:52, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Dec 14, 2010 at 10:24:28AM -0200, Arnaldo Carvalho de Melo escreveu:
-> I was not aware of realpath. Simple change to symbol__init?
+Em Tue, Dec 14, 2010 at 07:33:27AM -0700, David S. Ahern escreveu:
+> On 12/14/10 07:06, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 14, 2010 at 10:52:45AM -0200, Arnaldo Carvalho de Melo escreveu:
+> >> Ok, there are still some problems:
 
-I made symbol__init use realpath to reduce the arg to --symfs.
- 
-> > [acme@mica linux]$ find /tmp/bla
-> > /tmp/bla
-> > /tmp/bla/lib64
-> > /tmp/bla/lib64/libc-2.5.so
-> > [acme@mica linux]$ perf report -v -g none --stdio --symfs /tmp/bla > /tmp/out
-> > Looking at the vmlinux_path (3 entries long)
-> > Failed to open [kernel.kallsyms], continuing without symbols
-> > dso__synthesize_plt_symbols: problems reading /home/acme/bin/perf PLT info.
-> > [acme@mica linux]$ cat /tmp/out
+> >> It is escaping the symfs jail for /home/acme/bin/perf, /lib64/libpthread-2.5.so
+> >> and kernel modules, investigating...
 
-> strace -e trace=open /tmp/build-perf/perf report -v --symfs /tmp/f14-mnt
-> -i /tmp/perf-cs.data
+> > Those 'G' signals means DSO__ORIG_GUEST_KMODULE, since you were not
+> > prefixing that case with symfs, it was the jail leak point, fixed, doing
+> > some more testing before merging.
 
-> does not show any attempts to open a file not starting with the symfs path.
+> yuk. I did not touch the hypervisor paths.
 
-Probably because all the files you need are in the directories you
-passed to --symfs, remove one and it will leak.
+> So the 'guest' route is tried all the time because of the origin list --
+> even when it's not applicable.
 
-Anyway, fixed in my perf/core branch, still not propagated from
-master.k.o to git.k.o :-\
+Right, I don't like the way kvm is supported, will revisit this at some
+point.
+
+If build-ids were first class citizens, all this would be moot :-\
 
 - Arnaldo
