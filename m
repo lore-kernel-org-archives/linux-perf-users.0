@@ -1,157 +1,61 @@
-From: Franck Bui-Huu <vagabon.xyz@gmail.com>
-Subject: Re: perf-probe: issue with latest fedora kernel
-Date: Mon, 27 Dec 2010 21:50:41 +0100
-Message-ID: <m3y67bvt26.fsf@gmail.com>
-References: <m2pqtb9ekn.fsf@gmail.com>
-	<20101209153548.GA11820@ghostprotocols.net> <m2wrnernw3.fsf@gmail.com>
-	<20101213125837.GB5407@ghostprotocols.net> <m2sjy1stuf.fsf@gmail.com>
-	<20101213142159.GF5407@ghostprotocols.net>
-	<4D0882E7.8090805@hitachi.com> <m37hf08u9h.fsf@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Thomas Renninger <trenn@suse.de>
+Subject: [PATCH 1/3] perf: Do not export power_frequency, but power_start event
+Date: Mon,  3 Jan 2011 17:50:43 +0100
+Message-ID: <1294073445-14812-2-git-send-email-trenn@suse.de>
+References: <1294073445-14812-1-git-send-email-trenn@suse.de>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ww0-f42.google.com ([74.125.82.42]:51880 "EHLO
-	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750958Ab0L0Uuw (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 27 Dec 2010 15:50:52 -0500
-Received: by wwi17 with SMTP id 17so9050509wwi.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Dec 2010 12:50:48 -0800 (PST)
-In-Reply-To: <m37hf08u9h.fsf@gmail.com> (Franck Bui-Huu's message of "Thu, 23
-	Dec 2010 14:59:38 +0100")
+Received: from cantor.suse.de ([195.135.220.2]:51983 "EHLO mx1.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932349Ab1ACQu6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 3 Jan 2011 11:50:58 -0500
+In-Reply-To: <1294073445-14812-1-git-send-email-trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org
+Cc: Thomas Renninger <trenn@suse.de>, Ingo Molnar <mingo@elte.hu>, Jean Pihet <j-pihet@ti.com>, Arjan van de Ven <arjan@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, rjw@sisk.pl
 
-Masami,
+power_frequency moved to drivers/cpufreq/cpufreq.c which has
+to be compiled in, no need to export it.
 
-It seems you forget this one ....
+intel_idle can a be module though...
 
-Thanks
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+Acked-by: Jean Pihet <jean.pihet@newoldbits.com>
+CC: Jean Pihet <j-pihet@ti.com>
+CC: Arjan van de Ven <arjan@linux.intel.com>
+CC: linux-kernel@vger.kernel.org
+CC: linux-perf-users@vger.kernel.org
+Cc: rjw@sisk.pl
+LKML-Reference: <1290072314-31155-2-git-send-email-trenn@suse.de>
+---
+ drivers/idle/intel_idle.c   |    2 --
+ kernel/trace/power-traces.c |    2 +-
+ 2 files changed, 1 insertions(+), 3 deletions(-)
 
-Franck Bui-Huu <vagabon.xyz@gmail.com> writes:
-
-> Hello Masami,
->
-> Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com> writes:
->
->> (2010/12/13 23:21), Arnaldo Carvalho de Melo wrote:
->>
->>> There are two problems here:
->>> 
->>> on the 'report' header, as we didn't collect "cycles", but
->>> "probe:icmp_rcv" events, that is another fix that needs to be backported to
->>> fedora, but a minor one.
->>> 
->>> Also 'perf probe -L' should look use
->>> /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64 as a prefix to look for
->>> sources.
->>> 
->>> That can be found using:
->>> 
->>> [root@felicio linux-2.6.35.x86_64]# readelf -wi /usr/lib/debug/lib/modules/2.6.35.9-64.fc14.x86_64/vmlinux | grep DW_AT_comp_dir | head -5
->>>     <2e>   DW_AT_comp_dir    : /usr/src/debug////////kernel-2.6.35.fc14/linux-2.6.35.x86_64	
->>>     <95>   DW_AT_comp_dir    : (indirect string, offset: 0x24d0): /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64	
->>>     <75e8>   DW_AT_comp_dir    : (indirect string, offset: 0x24d0): /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64	
->>>     <900e>   DW_AT_comp_dir    : (indirect string, offset: 0x24d0): /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64	
->>>     <16670>   DW_AT_comp_dir    : (indirect string, offset: 0x24d0): /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64	
->>> [root@felicio linux-2.6.35.x86_64]# 
->>> 
->>>  <0><8b>: Abbrev Number: 1 (DW_TAG_compile_unit)
->>>     <8c>   DW_AT_producer    : (indirect string, offset: 0x22f4): GNU C 4.5.1 20100924 (Red Hat 4.5.1-4)        
->>>     <90>   DW_AT_language    : 1        (ANSI C)
->>>     <91>   DW_AT_name        : (indirect string, offset: 0x37a): arch/x86/kernel/head64.c       
->>>     <95>   DW_AT_comp_dir    : (indirect string, offset: 0x24d0): /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64 
->>>     <99>   DW_AT_low_pc      : 0x0      
->>>     <a1>   DW_AT_entry_pc    : 0x0      
->>>     <a9>   DW_AT_ranges      : 0x340    
->>>     <ad>   DW_AT_stmt_list   : 0x114
->>> 
->>> I.e. using the DW_AT_comp_dir attribute in the DW_TAG_compile_unit DWARF tags,
->>> Masami?
->>
->> It already supports DW_AT_comp_dir on upstream kernel,
->> see find_line_range() in utils/probe-finder.c ;-)
->>
->
-> It looks like adding probe with lazy matching pattern does not:
->
->    $ cd /dev
->    $ perf probe -n -a "icmp.c;sk=*"
->    Failed to open net/ipv4/icmp.c: Operation not permitted
->      Error: Failed to add events. (-2)
->    $ cd /usr/src/debug/kernel-2.6.35.fc14/linux-2.6.35.x86_64/
->    $ perf probe -n -a "icmp.c;sk=*"
->    Add new events:
->      probe:icmp_push_reply (on @cmp.c)
->      probe:icmp_reply     (on @cmp.c)
->      probe:icmp_reply_1   (on @cmp.c)
->      probe:icmp_send      (on @cmp.c)
->      probe:icmp_send_1    (on @cmp.c)
->      probe:icmp_error     (on @cmp.c)
->      probe:icmp_error_1   (on @cmp.c)
->      probe:icmp_error_2   (on @cmp.c)
->      probe:icmp_error_3   (on @cmp.c)
->    
->    You can now use it on all perf tools, such as:
->    
->    	perf record -e probe:icmp_error_3 -aR sleep 1
->
-> Below is a quick and dirty fix (sorry, I don't have any time to make it
-> better for now), also note that the note of the file (icmp.c) reported
-> is screwed...
->
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 10ad1ad..53c2f97 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -241,7 +241,7 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
->   * a newly allocated path on success.
->   * Return 0 if file was found and readable, -errno otherwise.
->   */
-> -static int get_real_path(const char *raw_path, const char *comp_dir,
-> +int get_real_path(const char *raw_path, const char *comp_dir,
->  			 char **new_path)
->  {
->  	const char *prefix = symbol_conf.source_prefix;
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 3991d73..88829ef 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1126,9 +1126,17 @@ static int find_probe_point_lazy(Dwarf_Die *sp_die, struct probe_finder *pf)
->  	int ret = 0;
->  
->  	if (list_empty(&pf->lcache)) {
-> +		const char *comp_dir = cu_get_comp_dir(&pf->cu_die);
-> +		char *fullpath;
-> +
-> +		ret = get_real_path(pf->fname, comp_dir, &fullpath);
-> +		if (ret < 0)
-> +			return ret;
-> +
->  		/* Matching lazy line pattern */
-> -		ret = find_lazy_match_lines(&pf->lcache, pf->fname,
-> +		ret = find_lazy_match_lines(&pf->lcache, fullpath,
->  					    pf->pev->point.lazy_line);
-> +		free(fullpath);
->  		if (ret == 0) {
->  			pr_debug("No matched lines found in %s.\n", pf->fname);
->  			return 0;
-> diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-> index bba69d4..665938a 100644
-> --- a/tools/perf/util/probe-finder.h
-> +++ b/tools/perf/util/probe-finder.h
-> @@ -15,6 +15,9 @@ static inline int is_c_varname(const char *name)
->  	return isalpha(name[0]) || name[0] == '_';
->  }
->  
-> +extern int get_real_path(const char *raw_path, const char *comp_dir,
-> +		  char **new_path);
-> +
->  #ifdef DWARF_SUPPORT
->  /* Find probe_trace_events specified by perf_probe_event from debuginfo */
->  extern int find_probe_trace_events(int fd, struct perf_probe_event *pev,
-
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index c131d58..15783d5 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -220,9 +220,7 @@ static int intel_idle(struct cpuidle_device *dev, struct cpuidle_state *state)
+ 	kt_before = ktime_get_real();
+ 
+ 	stop_critical_timings();
+-#ifndef MODULE
+ 	trace_power_start(POWER_CSTATE, (eax >> 4) + 1, cpu);
+-#endif
+ 	if (!need_resched()) {
+ 
+ 		__monitor((void *)&current_thread_info()->flags, 0, 0);
+diff --git a/kernel/trace/power-traces.c b/kernel/trace/power-traces.c
+index a22582a..0e0497d 100644
+--- a/kernel/trace/power-traces.c
++++ b/kernel/trace/power-traces.c
+@@ -13,5 +13,5 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/power.h>
+ 
+-EXPORT_TRACEPOINT_SYMBOL_GPL(power_frequency);
++EXPORT_TRACEPOINT_SYMBOL_GPL(power_start);
+ 
 -- 
-		Franck
+1.7.3.1
