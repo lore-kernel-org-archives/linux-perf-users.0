@@ -1,99 +1,62 @@
-From: Jean Pihet <jean.pihet@newoldbits.com>
-Subject: Re: [PATCH 1/3] perf: add calls to suspend trace point
-Date: Tue, 4 Jan 2011 16:00:05 +0100
-Message-ID: <AANLkTim_ekCNw6xhC_MGY7=gfXUCfinXkLeXtttpHaGc@mail.gmail.com>
-References: <1294136263-24020-1-git-send-email-j-pihet@ti.com>
-	<1294138109-24679-1-git-send-email-j-pihet@ti.com>
-	<20110104112919.GB9879@atrey.karlin.mff.cuni.cz>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/3] perf: add OMAP support for the new power events
+Date: Tue, 04 Jan 2011 12:03:56 -0600
+Message-ID: <4D23610C.1060009@ti.com>
+References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <1294136263-24020-3-git-send-email-j-pihet@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110104112919.GB9879@atrey.karlin.mff.cuni.cz>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mingo@elte.hu, trenn@suse.de, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, Jean Pihet <j-pihet@ti.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from na3sys009aog103.obsmtp.com ([74.125.149.71]:45107 "EHLO
+	na3sys009aog103.obsmtp.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750954Ab1ADSED (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 4 Jan 2011 13:04:03 -0500
+In-Reply-To: <1294136263-24020-3-git-send-email-j-pihet@ti.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: jean.pihet@newoldbits.com
+Cc: mingo@elte.hu, linux-kernel@vger.kernel.org, trenn@suse.de, linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, rjw@sisk.pl, Jean Pihet <j-pihet@ti.com>
 
-Hi,
+jean.pihet@newoldbits.com had written, on 01/04/2011 04:17 AM, the 
+following:
+[..]
+> diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
+> index 0ec8a04..0ee0b0e 100644
+> --- a/arch/arm/mach-omap2/pm34xx.c
+> +++ b/arch/arm/mach-omap2/pm34xx.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/slab.h>
+>  #include <linux/console.h>
+> +#include <trace/events/power.h>
+>  
+>  #include <plat/sram.h>
+>  #include <plat/clockdomain.h>
+> @@ -506,8 +507,14 @@ static void omap3_pm_idle(void)
+>  	if (omap_irq_pending() || need_resched())
+>  		goto out;
+>  
+> +	trace_power_start(POWER_CSTATE, 1, smp_processor_id());
+> +	trace_cpu_idle(1, smp_processor_id());
+> +
+>  	omap_sram_idle();
+>  
+> +	trace_power_end(smp_processor_id());
+> +	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
 
-On Tue, Jan 4, 2011 at 12:29 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
->
->> Uses the machine_suspend trace point, called from the
->> generic kernel suspend_enter function.
->>
->> Signed-off-by: Jean Pihet <j-pihet@ti.com>
->> CC: Thomas Renninger <trenn@suse.de>
->> ---
->> =A0kernel/power/suspend.c | =A0 =A03 +++
->> =A01 files changed, 3 insertions(+), 0 deletions(-)
->>
->> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
->> index ecf7705..0650596 100644
->> --- a/kernel/power/suspend.c
->> +++ b/kernel/power/suspend.c
->> @@ -22,6 +22,7 @@
->> =A0#include <linux/mm.h>
->> =A0#include <linux/slab.h>
->> =A0#include <linux/suspend.h>
->> +#include <trace/events/power.h>
->>
->> =A0#include "power.h"
->>
->> @@ -164,7 +165,9 @@ static int suspend_enter(suspend_state_t state)
->> =A0 =A0 =A0 error =3D sysdev_suspend(PMSG_SUSPEND);
->> =A0 =A0 =A0 if (!error) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!suspend_test(TEST_CORE) && pm_check=
-_wakeup_events()) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trace_machine_suspend(stat=
-e);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 error =3D suspend_ops->e=
-nter(state);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 trace_machine_suspend(PWR_=
-EVENT_EXIT);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 events_check_enabled =3D=
- false;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 sysdev_resume();
->
-> Ok... why this place?
-This trace has been placed here because it traces the machine low
-level mode enter.
+Dumb question: it just tells me which C state was attempted - not if 
+actually succeeded in hitting it rt? Does'nt this give us a false data?
 
-> I mean, perhaps suspend time should include
-> device suspend?
-That makes sense. We have a few options here:
-1) keep the traces as proposed to trace the low level machine code only=
-,
-2) move the traces to the entry and exit of suspend_enter so that it
-includes the prepare and late_prepare (+ the associated wake-up)
-callbacks as well,
-3) move the traces to suspend_devices_and_enter so that it includes 2)
-and the handling of the console and the devices,
-4) move the traces to enter_state do that it includes 3), the call to
-sys_sync and the user space freeze.
+[..]
+> diff --git a/arch/arm/plat-omap/clock.c b/arch/arm/plat-omap/clock.c
+> index fc62fb5..7cbb09b 100644
+> --- a/arch/arm/plat-omap/clock.c
+> +++ b/arch/arm/plat-omap/clock.c
+(from an offline discussion on a related topic): Would it also be nice 
+to hook on mach-omap2/clock.c points as well to hook on indirect changes?
+[..]
 
-Note that the the SNAPSHOT_2RAM ioctl code also calls
-suspend_devices_and_enter, so if only 4) is used no trace will be
-generated in that case.
-
-I am in favor of 3) of 4).
-What do you think?
-
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/hors=
-es/blog.html
->
-
-Thanks,
-Jean
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
