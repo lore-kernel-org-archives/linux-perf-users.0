@@ -1,157 +1,86 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 2/3] perf: add OMAP support for the new power events
-Date: Tue, 4 Jan 2011 11:48:53 -0700 (MST)
-Message-ID: <alpine.DEB.2.00.1101041146160.19319@utopia.booyaka.com>
-References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <1294138484-24729-1-git-send-email-j-pihet@ti.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 1/3] perf: add calls to suspend trace point
+Date: Wed, 5 Jan 2011 00:01:23 +0100
+Message-ID: <201101050001.23979.rjw@sisk.pl>
+References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <20110104112919.GB9879@atrey.karlin.mff.cuni.cz> <AANLkTim_ekCNw6xhC_MGY7=gfXUCfinXkLeXtttpHaGc@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from utopia.booyaka.com ([72.9.107.138]:51009 "EHLO
-	utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751226Ab1ADSsy (ORCPT
+Received: from ogre.sisk.pl ([217.79.144.158]:60350 "EHLO ogre.sisk.pl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750801Ab1ADXBq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Jan 2011 13:48:54 -0500
-In-Reply-To: <1294138484-24729-1-git-send-email-j-pihet@ti.com>
+	Tue, 4 Jan 2011 18:01:46 -0500
+In-Reply-To: <AANLkTim_ekCNw6xhC_MGY7=gfXUCfinXkLeXtttpHaGc@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: jean.pihet@newoldbits.com
-Cc: mingo@elte.hu, trenn@suse.de, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, rjw@sisk.pl, Jean Pihet <j-pihet@ti.com>
+To: Jean Pihet <jean.pihet@newoldbits.com>
+Cc: Pavel Machek <pavel@ucw.cz>, mingo@elte.hu, trenn@suse.de, Len Brown <len.brown@intel.com>, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, Jean Pihet <j-pihet@ti.com>
 
-Hello Jean,
-
-On Tue, 4 Jan 2011, jean.pihet@newoldbits.com wrote:
-
-> From: Jean Pihet <j-pihet@ti.com>
+On Tuesday, January 04, 2011, Jean Pihet wrote:
+> Hi,
 > 
-> The patch adds the new power management trace points for
-> the OMAP architecture.
+> On Tue, Jan 4, 2011 at 12:29 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> > Hi!
+> >
+> >> Uses the machine_suspend trace point, called from the
+> >> generic kernel suspend_enter function.
+> >>
+> >> Signed-off-by: Jean Pihet <j-pihet@ti.com>
+> >> CC: Thomas Renninger <trenn@suse.de>
+> >> ---
+> >>  kernel/power/suspend.c |    3 +++
+> >>  1 files changed, 3 insertions(+), 0 deletions(-)
+> >>
+> >> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> >> index ecf7705..0650596 100644
+> >> --- a/kernel/power/suspend.c
+> >> +++ b/kernel/power/suspend.c
+> >> @@ -22,6 +22,7 @@
+> >>  #include <linux/mm.h>
+> >>  #include <linux/slab.h>
+> >>  #include <linux/suspend.h>
+> >> +#include <trace/events/power.h>
+> >>
+> >>  #include "power.h"
+> >>
+> >> @@ -164,7 +165,9 @@ static int suspend_enter(suspend_state_t state)
+> >>       error = sysdev_suspend(PMSG_SUSPEND);
+> >>       if (!error) {
+> >>               if (!suspend_test(TEST_CORE) && pm_check_wakeup_events()) {
+> >> +                     trace_machine_suspend(state);
+> >>                       error = suspend_ops->enter(state);
+> >> +                     trace_machine_suspend(PWR_EVENT_EXIT);
+> >>                       events_check_enabled = false;
+> >>               }
+> >>               sysdev_resume();
+> >
+> > Ok... why this place?
+> This trace has been placed here because it traces the machine low
+> level mode enter.
 > 
-> The trace points are for:
-> - default idle handler. Since the cpuidle framework is
->   instrumented in the generic way there is no need to
->   add trace points in the OMAP specific cpuidle handler;
-> - cpufreq (DVFS),
-> - clocks changes (enable, disable, set_rate),
-
-A question about these.  Are these only meant to track calls to these 
-functions from outside the clock code?  Or meant to track actual hardware 
-clock changes?  If the latter, then it might make sense to put these 
-trace points into the functions that actually change the hardware 
-registers, e.g., omap2_dflt_clk_{enable,disable}(), etc., since a 
-clk_enable() on a leaf clock may result in many internal system clocks 
-being enabled up the clock tree.
-
-
-- Paul
-
-> - change of power domains next power states.
+> > I mean, perhaps suspend time should include
+> > device suspend?
+> That makes sense. We have a few options here:
+> 1) keep the traces as proposed to trace the low level machine code only,
+> 2) move the traces to the entry and exit of suspend_enter so that it
+> includes the prepare and late_prepare (+ the associated wake-up)
+> callbacks as well,
+> 3) move the traces to suspend_devices_and_enter so that it includes 2)
+> and the handling of the console and the devices,
+> 4) move the traces to enter_state do that it includes 3), the call to
+> sys_sync and the user space freeze.
 > 
-> Signed-off-by: Jean Pihet <j-pihet@ti.com>
-> ---
->  arch/arm/mach-omap2/pm34xx.c      |    7 +++++++
->  arch/arm/mach-omap2/powerdomain.c |    3 +++
->  arch/arm/plat-omap/clock.c        |   13 ++++++++++---
->  3 files changed, 20 insertions(+), 3 deletions(-)
+> Note that the the SNAPSHOT_2RAM ioctl code also calls
+> suspend_devices_and_enter, so if only 4) is used no trace will be
+> generated in that case.
 > 
-> diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
-> index 0ec8a04..0ee0b0e 100644
-> --- a/arch/arm/mach-omap2/pm34xx.c
-> +++ b/arch/arm/mach-omap2/pm34xx.c
-> @@ -29,6 +29,7 @@
->  #include <linux/delay.h>
->  #include <linux/slab.h>
->  #include <linux/console.h>
-> +#include <trace/events/power.h>
->  
->  #include <plat/sram.h>
->  #include <plat/clockdomain.h>
-> @@ -506,8 +507,14 @@ static void omap3_pm_idle(void)
->  	if (omap_irq_pending() || need_resched())
->  		goto out;
->  
-> +	trace_power_start(POWER_CSTATE, 1, smp_processor_id());
-> +	trace_cpu_idle(1, smp_processor_id());
-> +
->  	omap_sram_idle();
->  
-> +	trace_power_end(smp_processor_id());
-> +	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
-> +
->  out:
->  	local_fiq_enable();
->  	local_irq_enable();
-> diff --git a/arch/arm/mach-omap2/powerdomain.c b/arch/arm/mach-omap2/powerdomain.c
-> index 6527ec3..73cbe9a 100644
-> --- a/arch/arm/mach-omap2/powerdomain.c
-> +++ b/arch/arm/mach-omap2/powerdomain.c
-> @@ -23,6 +23,7 @@
->  #include <linux/errno.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <trace/events/power.h>
->  
->  #include <asm/atomic.h>
->  
-> @@ -440,6 +441,8 @@ int pwrdm_set_next_pwrst(struct powerdomain *pwrdm, u8 pwrst)
->  	pr_debug("powerdomain: setting next powerstate for %s to %0x\n",
->  		 pwrdm->name, pwrst);
->  
-> +	trace_power_domain_target(pwrdm->name, pwrst, smp_processor_id());
-> +
->  	prm_rmw_mod_reg_bits(OMAP_POWERSTATE_MASK,
->  			     (pwrst << OMAP_POWERSTATE_SHIFT),
->  			     pwrdm->prcm_offs, pwrstctrl_reg_offs);
-> diff --git a/arch/arm/plat-omap/clock.c b/arch/arm/plat-omap/clock.c
-> index fc62fb5..7cbb09b 100644
-> --- a/arch/arm/plat-omap/clock.c
-> +++ b/arch/arm/plat-omap/clock.c
-> @@ -21,6 +21,7 @@
->  #include <linux/cpufreq.h>
->  #include <linux/debugfs.h>
->  #include <linux/io.h>
-> +#include <trace/events/power.h>
->  
->  #include <plat/clock.h>
->  
-> @@ -43,8 +44,10 @@ int clk_enable(struct clk *clk)
->  		return -EINVAL;
->  
->  	spin_lock_irqsave(&clockfw_lock, flags);
-> -	if (arch_clock->clk_enable)
-> +	if (arch_clock->clk_enable) {
-> +		trace_clock_enable(clk->name, 1, smp_processor_id());
->  		ret = arch_clock->clk_enable(clk);
-> +	}
->  	spin_unlock_irqrestore(&clockfw_lock, flags);
->  
->  	return ret;
-> @@ -66,8 +69,10 @@ void clk_disable(struct clk *clk)
->  		goto out;
->  	}
->  
-> -	if (arch_clock->clk_disable)
-> +	if (arch_clock->clk_disable) {
-> +		trace_clock_disable(clk->name, 0, smp_processor_id());
->  		arch_clock->clk_disable(clk);
-> +	}
->  
->  out:
->  	spin_unlock_irqrestore(&clockfw_lock, flags);
-> @@ -120,8 +125,10 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
->  		return ret;
->  
->  	spin_lock_irqsave(&clockfw_lock, flags);
-> -	if (arch_clock->clk_set_rate)
-> +	if (arch_clock->clk_set_rate) {
-> +		trace_clock_set_rate(clk->name, rate, smp_processor_id());
->  		ret = arch_clock->clk_set_rate(clk, rate);
-> +	}
->  	if (ret == 0) {
->  		if (clk->recalc)
->  			clk->rate = clk->recalc(clk);
-> -- 
-> 1.7.2.3
-> 
+> I am in favor of 3) of 4).
+> What do you think?
 
+Why don't we keep the tracepoints as proposed _and_ add two additional
+tracepoints around device suspend-resume?
 
-- Paul
+Rafael
