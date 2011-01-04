@@ -1,26 +1,58 @@
-From: Nishanth Menon <nm@ti.com>
+From: Paul Walmsley <paul@pwsan.com>
 Subject: Re: [PATCH 2/3] perf: add OMAP support for the new power events
-Date: Tue, 04 Jan 2011 12:03:56 -0600
-Message-ID: <4D23610C.1060009@ti.com>
-References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <1294136263-24020-3-git-send-email-j-pihet@ti.com>
+Date: Tue, 4 Jan 2011 11:48:53 -0700 (MST)
+Message-ID: <alpine.DEB.2.00.1101041146160.19319@utopia.booyaka.com>
+References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <1294138484-24729-1-git-send-email-j-pihet@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from na3sys009aog103.obsmtp.com ([74.125.149.71]:45107 "EHLO
-	na3sys009aog103.obsmtp.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750954Ab1ADSED (ORCPT
+Received: from utopia.booyaka.com ([72.9.107.138]:51009 "EHLO
+	utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751226Ab1ADSsy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Jan 2011 13:04:03 -0500
-In-Reply-To: <1294136263-24020-3-git-send-email-j-pihet@ti.com>
+	Tue, 4 Jan 2011 13:48:54 -0500
+In-Reply-To: <1294138484-24729-1-git-send-email-j-pihet@ti.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: jean.pihet@newoldbits.com
-Cc: mingo@elte.hu, linux-kernel@vger.kernel.org, trenn@suse.de, linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, rjw@sisk.pl, Jean Pihet <j-pihet@ti.com>
+Cc: mingo@elte.hu, trenn@suse.de, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, rjw@sisk.pl, Jean Pihet <j-pihet@ti.com>
 
-jean.pihet@newoldbits.com had written, on 01/04/2011 04:17 AM, the 
-following:
-[..]
+Hello Jean,
+
+On Tue, 4 Jan 2011, jean.pihet@newoldbits.com wrote:
+
+> From: Jean Pihet <j-pihet@ti.com>
+> 
+> The patch adds the new power management trace points for
+> the OMAP architecture.
+> 
+> The trace points are for:
+> - default idle handler. Since the cpuidle framework is
+>   instrumented in the generic way there is no need to
+>   add trace points in the OMAP specific cpuidle handler;
+> - cpufreq (DVFS),
+> - clocks changes (enable, disable, set_rate),
+
+A question about these.  Are these only meant to track calls to these 
+functions from outside the clock code?  Or meant to track actual hardware 
+clock changes?  If the latter, then it might make sense to put these 
+trace points into the functions that actually change the hardware 
+registers, e.g., omap2_dflt_clk_{enable,disable}(), etc., since a 
+clk_enable() on a leaf clock may result in many internal system clocks 
+being enabled up the clock tree.
+
+
+- Paul
+
+> - change of power domains next power states.
+> 
+> Signed-off-by: Jean Pihet <j-pihet@ti.com>
+> ---
+>  arch/arm/mach-omap2/pm34xx.c      |    7 +++++++
+>  arch/arm/mach-omap2/powerdomain.c |    3 +++
+>  arch/arm/plat-omap/clock.c        |   13 ++++++++++---
+>  3 files changed, 20 insertions(+), 3 deletions(-)
+> 
 > diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
 > index 0ec8a04..0ee0b0e 100644
 > --- a/arch/arm/mach-omap2/pm34xx.c
@@ -44,19 +76,82 @@ following:
 >  
 > +	trace_power_end(smp_processor_id());
 > +	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
-
-Dumb question: it just tells me which C state was attempted - not if 
-actually succeeded in hitting it rt? Does'nt this give us a false data?
-
-[..]
+> +
+>  out:
+>  	local_fiq_enable();
+>  	local_irq_enable();
+> diff --git a/arch/arm/mach-omap2/powerdomain.c b/arch/arm/mach-omap2/powerdomain.c
+> index 6527ec3..73cbe9a 100644
+> --- a/arch/arm/mach-omap2/powerdomain.c
+> +++ b/arch/arm/mach-omap2/powerdomain.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+> +#include <trace/events/power.h>
+>  
+>  #include <asm/atomic.h>
+>  
+> @@ -440,6 +441,8 @@ int pwrdm_set_next_pwrst(struct powerdomain *pwrdm, u8 pwrst)
+>  	pr_debug("powerdomain: setting next powerstate for %s to %0x\n",
+>  		 pwrdm->name, pwrst);
+>  
+> +	trace_power_domain_target(pwrdm->name, pwrst, smp_processor_id());
+> +
+>  	prm_rmw_mod_reg_bits(OMAP_POWERSTATE_MASK,
+>  			     (pwrst << OMAP_POWERSTATE_SHIFT),
+>  			     pwrdm->prcm_offs, pwrstctrl_reg_offs);
 > diff --git a/arch/arm/plat-omap/clock.c b/arch/arm/plat-omap/clock.c
 > index fc62fb5..7cbb09b 100644
 > --- a/arch/arm/plat-omap/clock.c
 > +++ b/arch/arm/plat-omap/clock.c
-(from an offline discussion on a related topic): Would it also be nice 
-to hook on mach-omap2/clock.c points as well to hook on indirect changes?
-[..]
+> @@ -21,6 +21,7 @@
+>  #include <linux/cpufreq.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/io.h>
+> +#include <trace/events/power.h>
+>  
+>  #include <plat/clock.h>
+>  
+> @@ -43,8 +44,10 @@ int clk_enable(struct clk *clk)
+>  		return -EINVAL;
+>  
+>  	spin_lock_irqsave(&clockfw_lock, flags);
+> -	if (arch_clock->clk_enable)
+> +	if (arch_clock->clk_enable) {
+> +		trace_clock_enable(clk->name, 1, smp_processor_id());
+>  		ret = arch_clock->clk_enable(clk);
+> +	}
+>  	spin_unlock_irqrestore(&clockfw_lock, flags);
+>  
+>  	return ret;
+> @@ -66,8 +69,10 @@ void clk_disable(struct clk *clk)
+>  		goto out;
+>  	}
+>  
+> -	if (arch_clock->clk_disable)
+> +	if (arch_clock->clk_disable) {
+> +		trace_clock_disable(clk->name, 0, smp_processor_id());
+>  		arch_clock->clk_disable(clk);
+> +	}
+>  
+>  out:
+>  	spin_unlock_irqrestore(&clockfw_lock, flags);
+> @@ -120,8 +125,10 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
+>  		return ret;
+>  
+>  	spin_lock_irqsave(&clockfw_lock, flags);
+> -	if (arch_clock->clk_set_rate)
+> +	if (arch_clock->clk_set_rate) {
+> +		trace_clock_set_rate(clk->name, rate, smp_processor_id());
+>  		ret = arch_clock->clk_set_rate(clk, rate);
+> +	}
+>  	if (ret == 0) {
+>  		if (clk->recalc)
+>  			clk->rate = clk->recalc(clk);
+> -- 
+> 1.7.2.3
+> 
 
--- 
-Regards,
-Nishanth Menon
+
+- Paul
