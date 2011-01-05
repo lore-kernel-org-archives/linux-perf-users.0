@@ -1,37 +1,37 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/3] perf: add calls to suspend trace point
-Date: Wed, 5 Jan 2011 12:23:13 +0100
-Message-ID: <20110105112313.GA18546@atrey.karlin.mff.cuni.cz>
-References: <1294136263-24020-1-git-send-email-j-pihet@ti.com> <201101050001.23979.rjw@sisk.pl> <AANLkTimRvZs2QBZ4y+AEO7CWUudwBSM6-K0ZQxFTF+Fm@mail.gmail.com> <201101051115.55528.rjw@sisk.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201101051115.55528.rjw@sisk.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Jean Pihet <jean.pihet@newoldbits.com>, mingo@elte.hu, trenn@suse.de, Len Brown <len.brown@intel.com>, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, Jean Pihet <j-pihet@ti.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: jean.pihet@newoldbits.com
+Subject: [PATCH 0/2] tools, perf: new power trace API
+Date: Wed,  5 Jan 2011 19:49:00 +0100
+Message-ID: <1294253342-29056-1-git-send-email-j-pihet@ti.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:65328 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751780Ab1AEStm (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 5 Jan 2011 13:49:42 -0500
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: mingo@elte.hu, trenn@suse.de, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, linux-perf-users@vger.kernel.org, Jean Pihet <j-pihet@ti.com>
 
-Hi!
+From: Jean Pihet <j-pihet@ti.com>
 
-> > >> I am in favor of 3) of 4).
-> > >> What do you think?
-> > >
-> > > Why don't we keep the tracepoints as proposed _and_ add two additional
-> > > tracepoints around device suspend-resume?
-> > I like the idea but that requires to extend the current API with
-> > additional suspend tracepoints or device state change tracepoints.
-> > That can be done once the current API is firmly in place.
-> > Today the only trace API for suspend is machine_suspend(unsigned int
-> > state), so I think the best option is 3) here above.
-> > 
-> > Unless there is an objection I am pushing 3) asap.
-> 
-> Fine by me.
+Provides:
+. calls to machine_suspend trace point,
+. API Documentation
 
-Why not...
+The OMAP specific changes will be submitted separately on
+the linux-omap ML because:
+- the OMAP changes need to be rebased on the latest linux-omap 2.6.37 tree,
+- more feedback is needed from the linux-omap folks.
+
+Jean Pihet (2):
+  perf: add calls to suspend trace point
+  tools, perf: Documentation for the power events API
+
+ Documentation/trace/events-power.txt |   90 ++++++++++++++++++++++++++++++++++
+ kernel/power/suspend.c               |    3 +
+ 2 files changed, 93 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/trace/events-power.txt
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.7.2.3
