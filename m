@@ -1,86 +1,46 @@
 From: Thomas Renninger <trenn@suse.de>
-Subject: perf timechart broken
-Date: Fri, 7 Jan 2011 11:04:37 +0100
-Message-ID: <201101071104.37576.trenn@suse.de>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 6/9] perf (userspace): Fix variable clash with glibc time() func
+Date: Fri,  7 Jan 2011 11:29:47 +0100
+Message-ID: <1294396190-23031-7-git-send-email-trenn@suse.de>
+References: <1294396190-23031-1-git-send-email-trenn@suse.de>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:38309 "EHLO mx2.suse.de"
+Received: from cantor.suse.de ([195.135.220.2]:43268 "EHLO mx1.suse.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752602Ab1AGKEj (ORCPT
+	id S1751129Ab1AGKaI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 7 Jan 2011 05:04:39 -0500
+	Fri, 7 Jan 2011 05:30:08 -0500
+In-Reply-To: <1294396190-23031-1-git-send-email-trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org
-
-Hi,
-
-Latest x86 tip has another perf timechart issue introduce
-by latest commits.
-
-./perf timechart
-gives me:
-"no trace data in the file"
-
-I reverted  the latest changes and things seem to break
-between d854861c4292a4e675a5d3bfd862c5f7421c81e8
-and
-69aad6f1ee69546dea8535ab8f3da9f445d57328
-(linux-2.6-x86 tree ids)
-
-Be aware that ./perf timechart is currently broken
-and segfaults on idle events (in 2.6.36 and 2.6.37).
-I submitted a patch to stable@ but it did not get accepted,
-becaust it's not mainline yet.
-I concentrated on my latest patches instead of making sure
-the tiny fix gets into 2.6.37 first.
-
-Ingo: It's a bit late for 2.6.37, if there is any chance
-to still get it in, the patch below is against linus master...
-otherwise I'll submit it for stable 36+37 asap.
-
-Anyway to test above regression this mail is about, first
-apply below patch otherwise you get a segfault if idle
-(power_start/end) events got logged.
-
-Thanks,
-
-   Thomas
-
----
-perf timechart: Fix segfault on cpu idle (power_start/end) events
-
-power_end event does not have type and other attributes and thus does
-not match struct power_event.
-Another struct could be created, but data.cpu is fine for fixing the segfault
-and will work as long as C-states got initiated on the same CPU the idle state
-takes place which is the case for all recent HW.
-
-The power_start/end events get deprecated anyway, thus this is an easy,
-riskless and sufficient solution for the segfault problem.
+Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, lenb@kernel.org, j-pihet@ti.com, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org
 
 Signed-off-by: Thomas Renninger <trenn@suse.de>
-CC: mingo@elte.hu
-CC: arjan@linux.intel.com
-
+CC: Arjan van de Ven <arjan@linux.intel.com>
+CC: Ingo Molnar <mingo@elte.hu>
+CC: linux-kernel@vger.kernel.org
+CC: linux-perf-users@vger.kernel.org
 ---
- tools/perf/builtin-timechart.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ tools/perf/util/svghelper.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 9bcc38f..b3028eb 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -502,7 +502,7 @@ static int process_sample_event(event_t *event, struct perf_session *session)
- 			c_state_start(pe->cpu_id, data.time, pe->value);
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index b3637db..38b9e40 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -43,11 +43,12 @@ static double cpu2y(int cpu)
+ 	return cpu2slot(cpu) * SLOT_MULT;
+ }
  
- 		if (strcmp(event_str, "power:power_end") == 0)
--			c_state_end(pe->cpu_id, data.time);
-+			c_state_end(data.cpu, data.time);
+-static double time2pixels(u64 time)
++static double time2pixels(u64 __time)
+ {
+ 	double X;
  
- 		if (strcmp(event_str, "power:power_frequency") == 0)
- 			p_state_change(pe->cpu_id, data.time, pe->value);
+-	X = 1.0 * svg_page_width * (time - first_time) / (last_time - first_time);
++	X = 1.0 * svg_page_width *
++		(__time - first_time) / (last_time - first_time);
+ 	return X;
+ }
+ 
+-- 
+1.7.3.1
