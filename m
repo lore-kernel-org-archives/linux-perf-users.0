@@ -1,49 +1,31 @@
-From: David Ahern <daahern@cisco.com>
-Subject: [PATCH] perf stat: better error message for unsupported events
-Date: Sun,  9 Jan 2011 11:21:12 -0700
-Message-ID: <1294597272-17335-1-git-send-email-daahern@cisco.com>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] perf stat: fix scale option
+Date: Sun, 9 Jan 2011 20:49:19 +0100
+Message-ID: <20110109194919.GC28554@elte.hu>
+References: <1294595425-16791-1-git-send-email-daahern@cisco.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-5.cisco.com ([171.68.10.87]:30745 "EHLO
-	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751895Ab1AISVP (ORCPT
+Received: from mx2.mail.elte.hu ([157.181.151.9]:58419 "EHLO mx2.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751564Ab1AITte (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 9 Jan 2011 13:21:15 -0500
+	Sun, 9 Jan 2011 14:49:34 -0500
+Content-Disposition: inline
+In-Reply-To: <1294595425-16791-1-git-send-email-daahern@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, acme@ghostprotocols.net
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Ahern <daahern@cisco.com>
+To: David Ahern <daahern@cisco.com>
+Cc: a.p.zijlstra@chello.nl, paulus@samba.org, acme@ghostprotocols.net, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-For unsupported events (e.g., H/W events when running in a VM)
-perf stat currently fails with the error message:
 
-      Error: open_counter returned with 2 (No such file or directory).
-    /bin/dmesg may provide additional information.
+* David Ahern <daahern@cisco.com> wrote:
 
-      Fatal: Not all events could be opened.
+> The scale option defaults to true and the command line option only
+> allows it to be set to true. ie. the option is a no-op.
 
-dmesg is of no help and it is not clear as to why it fails to
-open the counter. This patch changes the error message to
+Hm, the option parser should already allow --no-scale. Does that not work for you?
 
-      Error: cache-misses event is not supported.
-      Fatal: Not all events could be opened.
+Thanks,
 
-Signed-off-by: David Ahern <daahern@cisco.com>
----
- tools/perf/builtin-stat.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 42dfeec..a1e3a04 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -316,6 +316,8 @@ static int run_perf_stat(int argc __used, const char **argv)
- 				      "\t Consider tweaking"
- 				      " /proc/sys/kernel/perf_event_paranoid or running as root.",
- 				      system_wide ? "system-wide " : "");
-+			} else if (errno == ENOENT) {
-+				error("%s event is not supported. ", event_name(counter));
- 			} else {
- 				error("open_counter returned with %d (%s). "
- 				      "/bin/dmesg may provide additional information.\n",
--- 
-1.7.3.4
+	Ingo
