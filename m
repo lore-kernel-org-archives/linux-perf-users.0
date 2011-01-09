@@ -1,160 +1,79 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 1/9] acpi: Use ACPI C-state type instead of enumeration value to export cpuidle state name
-Date: Sun, 9 Jan 2011 13:30:11 +0100
-Message-ID: <201101091330.12027.trenn@suse.de>
-References: <1294396190-23031-1-git-send-email-trenn@suse.de> <1294396190-23031-2-git-send-email-trenn@suse.de> <alpine.LFD.2.02.1101071529100.20609@x980>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1101071529100.20609@x980>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Len Brown <lenb@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH] perf stat: fix scale option
+Date: Sun,  9 Jan 2011 10:50:25 -0700
+Message-ID: <1294595425-16791-1-git-send-email-daahern@cisco.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from sj-iport-5.cisco.com ([171.68.10.87]:40354 "EHLO
+	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751848Ab1AIRub (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sun, 9 Jan 2011 12:50:31 -0500
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, acme@ghostprotocols.net
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Ahern <daahern@cisco.com>
 
-On Friday 07 January 2011 21:45:18 Len Brown wrote:
-> On Fri, 7 Jan 2011, Thomas Renninger wrote:
-> 
-> > In the former /proc/acpi/processor/power/* there were Cx showing the
-> > enumerated number/amount of C-states and type[Cy] which is
-> > what should get shown as the cpuidle state name.
-> > 
-> > Typically on latest Nehalem and later CPUs, BIOS vendors miss
-> > out C2 and C3 wrongly shows up as C2.
-> 
-> I think this patch will cause more confusion than it will fix.
-> 
-> It assumes that all states of type C2 should have the name "C2"
-> and all the states of type "C3" should have the name "C3".
-Right.
-> But some systems may have more than one state of each type...
-Exported through ACPI tables?
+The scale option defaults to true and the command line option only
+allows it to be set to true. ie. the option is a no-op.
+
+Changes the scale option to no_scale to maintain current default
+of scaling enabled; no_scale set to true then disables scaling.
+
+Signed-off-by: David Ahern <daahern@cisco.com>
+---
+ tools/perf/builtin-stat.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 02b2d80..42dfeec 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -77,7 +77,7 @@ static int			run_idx				=  0;
  
-> also, the state->name is somewhat arbitrary.
-> 
-> You'll notice that intel_idle uses the hardware C-state names
-> such as NHM-C1, NHM-C3, NHM-C6 - to match the (arbitrary)
-> names in the hardware documentation.  We could call those
-> states Moe/Larry/Curley just as well.
-That works out with HW specific intel_idle.c driver, but not
-with the generic acpi/processor one.
-
-> If somebody wants to know what the state _is_,
-> then the state->desc field shows them in un-ambiguous
-> terms, "MWAIT 0x10" etc.
-Right, people can/should use it for additional info.
-
-> if somebody wants to simply enumerate the states,
-> so they can use acpi.max_cstate=N, for example, then
-> cpuidle already enumerates them in 
-> /sys/devices/system/cpu/cpu0/cpuidle/state%d
-Not sure I get this.
-Currently you have:
-/sys/../stateX/...
-/sys/devices/system/cpu/cpu0/cpuidle/state%d/name
-and stateX (the directory name) and stateX/name contain
-duplicate info:
-X and CX.
-in acpi cpuidle driver case.
-While the C-state type as exported by BIOS may not always
-be correct, it contains more info as the current approach, which
-has zero info.
-
-The other ACPI related patches are ok?
-What do you think of cpu_idle events thrown as real cpuidle
-subsystem events to make them architecture independent and
-break up the unnecessary complexity (intel_idle throws the
-idle start and cpuidle the end event, etc.).
-
-> thanks,
-> Len Brown, Intel Open Source Technology Center
-> 
-> ps. the thing about "mising C2".  That isn't a bug.
-> That is actually BIOS writer's attempt to not break
-> the installed base of Linux.  NHM doesn't actually
-> have any ACPI C3-type states, just C2-type states.
-> But in NHM, the LAPIC timer stops in C2-type states,
-> so the BIOS advertises them as C2-type to make sure
-> that an old version of Linux doesn't attempt to
-> use the LAPIC timer in those states.
-> (we switched to not trusting the LAPIC timer even
-> in C2-type states a while back, but the installed
-> base never gets updated)
-> 
-> pps. I do think we need to be able to dump
-> the _CST, as we lost the ACPI type info that
-> was in /proc/acpi/processor/*/power and we
-> may need it to debug some systems.
-?
-I restore the ACPI type info as exported by ACPI tables
-with this patch, should be the same as done with
-/proc/acpi/processor/*/power
-Do I miss something?
-Do you want to export additional ACPI table C-state
-info?
-
-Something else, but related:
-You recently said that it might be a good idea to get
-C-/P- state ACPI tables which are often in a separate
-SSDT loaded at runtime via "load" ACPI command, dumped
-with the acpidump  tool. This would be a cool feature.
-Does dynamically loaded SSDT dumping
-via acpidump work already or is/has someone looked at this?
-
-Thanks,
-
-     Thomas
-
-> 
-> > Signed-off-by: Thomas Renninger <trenn@suse.de>
-> > CC: arjan@linux.intel.com
-> > CC: lenb@kernel.org
-> > CC: linux-acpi@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/acpi/processor_idle.c |    4 +++-
-> >  1 files changed, 3 insertions(+), 1 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> > index dcb38f8..104ae77 100644
-> > --- a/drivers/acpi/processor_idle.c
-> > +++ b/drivers/acpi/processor_idle.c
-> > @@ -1008,7 +1008,6 @@ static int acpi_processor_setup_cpuidle(struct acpi_processor *pr)
-> >  #endif
-> >  		cpuidle_set_statedata(state, cx);
-> >  
-> > -		snprintf(state->name, CPUIDLE_NAME_LEN, "C%d", i);
-> >  		strncpy(state->desc, cx->desc, CPUIDLE_DESC_LEN);
-> >  		state->exit_latency = cx->latency;
-> >  		state->target_residency = cx->latency * latency_factor;
-> > @@ -1016,6 +1015,7 @@ static int acpi_processor_setup_cpuidle(struct acpi_processor *pr)
-> >  		state->flags = 0;
-> >  		switch (cx->type) {
-> >  			case ACPI_STATE_C1:
-> > +			snprintf(state->name, CPUIDLE_NAME_LEN, "C1");
-> >  			state->flags |= CPUIDLE_FLAG_SHALLOW;
-> >  			if (cx->entry_method == ACPI_CSTATE_FFH)
-> >  				state->flags |= CPUIDLE_FLAG_TIME_VALID;
-> > @@ -1025,6 +1025,7 @@ static int acpi_processor_setup_cpuidle(struct acpi_processor *pr)
-> >  			break;
-> >  
-> >  			case ACPI_STATE_C2:
-> > +			snprintf(state->name, CPUIDLE_NAME_LEN, "C2");
-> >  			state->flags |= CPUIDLE_FLAG_BALANCED;
-> >  			state->flags |= CPUIDLE_FLAG_TIME_VALID;
-> >  			state->enter = acpi_idle_enter_simple;
-> > @@ -1032,6 +1033,7 @@ static int acpi_processor_setup_cpuidle(struct acpi_processor *pr)
-> >  			break;
-> >  
-> >  			case ACPI_STATE_C3:
-> > +			snprintf(state->name, CPUIDLE_NAME_LEN, "C3");
-> >  			state->flags |= CPUIDLE_FLAG_DEEP;
-> >  			state->flags |= CPUIDLE_FLAG_TIME_VALID;
-> >  			state->flags |= CPUIDLE_FLAG_CHECK_BM;
-> > -- 
-> > 1.7.3.1
-> > 
-> 
-
+ static int			run_count			=  1;
+ static bool			no_inherit			= false;
+-static bool			scale				=  true;
++static bool			no_scale			= false;
+ static bool			no_aggr				= false;
+ static pid_t			target_pid			= -1;
+ static pid_t			target_tid			= -1;
+@@ -161,7 +161,7 @@ static int create_perf_stat_counter(struct perf_evsel *evsel)
+ {
+ 	struct perf_event_attr *attr = &evsel->attr;
+ 
+-	if (scale)
++	if (!no_scale)
+ 		attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+ 				    PERF_FORMAT_TOTAL_TIME_RUNNING;
+ 
+@@ -199,7 +199,7 @@ static int read_counter_aggr(struct perf_evsel *counter)
+ 	u64 *count = counter->counts->aggr.values;
+ 	int i;
+ 
+-	if (__perf_evsel__read(counter, cpus->nr, threads->nr, scale) < 0)
++	if (__perf_evsel__read(counter, cpus->nr, threads->nr, !no_scale) < 0)
+ 		return -1;
+ 
+ 	for (i = 0; i < 3; i++)
+@@ -233,7 +233,7 @@ static int read_counter(struct perf_evsel *counter)
+ 	int cpu;
+ 
+ 	for (cpu = 0; cpu < cpus->nr; cpu++) {
+-		if (__perf_evsel__read_on_cpu(counter, cpu, 0, scale) < 0)
++		if (__perf_evsel__read_on_cpu(counter, cpu, 0, !no_scale) < 0)
+ 			return -1;
+ 
+ 		count = counter->counts->cpu[cpu].values;
+@@ -619,8 +619,8 @@ static const struct option options[] = {
+ 		    "stat events on existing thread id"),
+ 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+ 		    "system-wide collection from all CPUs"),
+-	OPT_BOOLEAN('c', "scale", &scale,
+-		    "scale/normalize counters"),
++	OPT_BOOLEAN('c', "no-scale", &no_scale,
++		    "disable scaling / normalization of counters"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show counter open errors, etc)"),
+ 	OPT_INTEGER('r', "repeat", &run_count,
+-- 
+1.7.3.4
