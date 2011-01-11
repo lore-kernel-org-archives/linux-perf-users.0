@@ -1,46 +1,37 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: perf: commit 55b4462 causes perf record to hang
-Date: Tue, 11 Jan 2011 09:35:02 -0200
-Message-ID: <20110111113502.GC20234@ghostprotocols.net>
-References: <4D2B544F.1050803@cisco.com>
- <20110110200032.GA19703@ghostprotocols.net>
- <alpine.LFD.2.00.1101110927290.12146@localhost6.localdomain6>
+From: Arnaldo Carvalho de Melo <acme@infradead.org>
+Subject: Re: perf timechart broken
+Date: Tue, 11 Jan 2011 09:49:51 -0200
+Message-ID: <20110111114951.GA8564@ghostprotocols.net>
+References: <201101071104.37576.trenn@suse.de> <20110111013625.GE2570@nowhere> <201101110955.37560.trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:44239 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751491Ab1AKLfJ (ORCPT
+Received: from canuck.infradead.org ([134.117.69.58]:39318 "EHLO
+	canuck.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755564Ab1AKLt5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 11 Jan 2011 06:35:09 -0500
+	Tue, 11 Jan 2011 06:49:57 -0500
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1101110927290.12146@localhost6.localdomain6>
+In-Reply-To: <201101110955.37560.trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Ahern <daahern@cisco.com>, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <peterz@infradead.org>, tzanussi@gmail.com, Paul Mackerras <paulus@samba.org>, imunsie@au1.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-Em Tue, Jan 11, 2011 at 09:28:25AM +0100, Thomas Gleixner escreveu:
-> On Mon, 10 Jan 2011, Arnaldo Carvalho de Melo wrote:
-> > Can you try with this patch, not reverting tglx's patch?
-> > 
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 6fb4694..313dac2 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1007,7 +1007,7 @@ more:
-> >  	if (size == 0)
-> >  		size = 8;
-> >  
-> > -	if (head + event->header.size >= mmap_size) {
-> > +	if (head + event->header.size > mmap_size) {
-> >  		if (mmaps[map_idx]) {
-> >  			munmap(mmaps[map_idx], mmap_size);
-> >  			mmaps[map_idx] = NULL;
-> > 
-> 
-> /me feels stupid
+Em Tue, Jan 11, 2011 at 09:55:36AM +0100, Thomas Renninger escreveu:
+> On Tuesday 11 January 2011 02:36:28 Frederic Weisbecker wrote:
+> > It's too late for .37, but it's fine, we just need to add
+> > a "Cc: stable@kernel.org" tag in the patch for it to be
+> > backported.
+> I'll submit it to stable@ (it wasn't taken because
+> the patch which included the fix wasn't mainline yet and I
+> forgot to submit it for 2.6.37-rcX). 
+ 
+> I can take care of that, but it would be great if someone could look
+> at the issue that perf timechart shows: "no trace data in the file" in
+> x86/tip which seems introduced by one of Arnaldo's latest commits.
+> Reverting some of his latest patches, solved it for me.
 
-I feel like that sometimes too, probably more often than you :-P
+Looking at it now.
 
 - Arnaldo
