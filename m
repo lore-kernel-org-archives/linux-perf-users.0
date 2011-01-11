@@ -1,111 +1,59 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: perf timechart broken
-Date: Tue, 11 Jan 2011 02:36:28 +0100
-Message-ID: <20110111013625.GE2570@nowhere>
-References: <201101071104.37576.trenn@suse.de>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: perf: commit 55b4462 causes perf record to hang
+Date: Tue, 11 Jan 2011 09:28:25 +0100 (CET)
+Message-ID: <alpine.LFD.2.00.1101110927290.12146@localhost6.localdomain6>
+References: <4D2B544F.1050803@cisco.com> <20110110200032.GA19703@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:41100 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752391Ab1AKBgc (ORCPT
+Received: from www.tglx.de ([62.245.132.106]:42909 "EHLO www.tglx.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752515Ab1AKI2z (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 10 Jan 2011 20:36:32 -0500
-Content-Disposition: inline
-In-Reply-To: <201101071104.37576.trenn@suse.de>
+	Tue, 11 Jan 2011 03:28:55 -0500
+In-Reply-To: <20110110200032.GA19703@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: David Ahern <daahern@cisco.com>, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <peterz@infradead.org>, tzanussi@gmail.com, Paul Mackerras <paulus@samba.org>, imunsie@au1.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Fri, Jan 07, 2011 at 11:04:37AM +0100, Thomas Renninger wrote:
-> Hi,
-> 
-> Latest x86 tip has another perf timechart issue introduce
-> by latest commits.
-> 
-> ./perf timechart
-> gives me:
-> "no trace data in the file"
-> 
-> I reverted  the latest changes and things seem to break
-> between d854861c4292a4e675a5d3bfd862c5f7421c81e8
-> and
-> 69aad6f1ee69546dea8535ab8f3da9f445d57328
-> (linux-2.6-x86 tree ids)
-> 
-> Be aware that ./perf timechart is currently broken
-> and segfaults on idle events (in 2.6.36 and 2.6.37).
+On Mon, 10 Jan 2011, Arnaldo Carvalho de Melo wrote:
 
-You mean .36 perf tools faults on .37 kernel? or the opposite?
-Is it because power_idle events weren't present on old tools?
-
-Do you have a pointer to those patches?
-
-> I submitted a patch to stable@ but it did not get accepted,
-> becaust it's not mainline yet.
-> I concentrated on my latest patches instead of making sure
-> the tiny fix gets into 2.6.37 first.
-> 
-> Ingo: It's a bit late for 2.6.37, if there is any chance
-> to still get it in, the patch below is against linus master...
-> otherwise I'll submit it for stable 36+37 asap.
-
-It's too late for .37, but it's fine, we just need to add
-a "Cc: stable@kernel.org" tag in the patch for it to be
-backported.
-
-> 
-> Anyway to test above regression this mail is about, first
-> apply below patch otherwise you get a segfault if idle
-> (power_start/end) events got logged.
-> 
-> Thanks,
-> 
->    Thomas
-> 
-> ---
-> perf timechart: Fix segfault on cpu idle (power_start/end) events
-> 
-> power_end event does not have type and other attributes and thus does
-> not match struct power_event.
-> Another struct could be created, but data.cpu is fine for fixing the segfault
-> and will work as long as C-states got initiated on the same CPU the idle state
-> takes place which is the case for all recent HW.
-> 
-> The power_start/end events get deprecated anyway, thus this is an easy,
-> riskless and sufficient solution for the segfault problem.
-> 
-> Signed-off-by: Thomas Renninger <trenn@suse.de>
-> CC: mingo@elte.hu
-> CC: arjan@linux.intel.com
-> 
-> ---
->  tools/perf/builtin-timechart.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> index 9bcc38f..b3028eb 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-> @@ -502,7 +502,7 @@ static int process_sample_event(event_t *event, struct perf_session *session)
->  			c_state_start(pe->cpu_id, data.time, pe->value);
+> Em Mon, Jan 10, 2011 at 11:47:43AM -0700, David Ahern escreveu:
+> > With latest version of perf-core branch, a variant of perf record hangs:
+> > # /tmp/build-perf/perf record -v -e cs -fo /tmp/perf.data  -- sleep 1
+> > [ perf record: Captured and wrote 0.003 MB /tmp/perf.data (~120 samples) ]
+> > 
+> > It sits there forever. Back trace is:
+> > 
+> > (gdb) bt
+> > #0  0x0000000000447658 in __perf_session__process_events (session=0xab9500, data_offset=208, data_size=2896, file_size=3104, ops=0x685580) at util/session.c:1006
+> > #1  0x00000000004107dd in process_buildids () at builtin-record.c:466
+> > #2  0x000000000041084d in atexit_header () at builtin-record.c:477
 >  
->  		if (strcmp(event_str, "power:power_end") == 0)
-> -			c_state_end(pe->cpu_id, data.time);
-> +			c_state_end(data.cpu, data.time);
-
-On which tree is this based of?
-
-What I have by looking at tip/master is:
-
-		else if (strcmp(event_str, "power:power_end") == 0)
-			c_state_end(sample->cpu, sample->time);
-
+> > git bisect traced the hang to
+> > 
+> > commit 55b44629f599a2305265ae9c77f9d9bcfd6ddc17
+> > Author: Thomas Gleixner <tglx@linutronix.de>
+> > Date:   Tue Nov 30 17:49:46 2010 +0000
+> 
+> Can you try with this patch, not reverting tglx's patch?
+> 
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 6fb4694..313dac2 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1007,7 +1007,7 @@ more:
+>  	if (size == 0)
+>  		size = 8;
 >  
->  		if (strcmp(event_str, "power:power_frequency") == 0)
->  			p_state_change(pe->cpu_id, data.time, pe->value);
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -	if (head + event->header.size >= mmap_size) {
+> +	if (head + event->header.size > mmap_size) {
+>  		if (mmaps[map_idx]) {
+>  			munmap(mmaps[map_idx], mmap_size);
+>  			mmaps[map_idx] = NULL;
+> 
+
+/me feels stupid
+
+      tglx
