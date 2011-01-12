@@ -1,41 +1,104 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 3/9] X86/perf: fix power:cpu_idle double end events and throw cpu_idle events from the cpuidle layer
-Date: Wed, 12 Jan 2011 16:16:54 +0100
-Message-ID: <201101121616.54613.trenn@suse.de>
-References: <1294396190-23031-1-git-send-email-trenn@suse.de> <1294396190-23031-4-git-send-email-trenn@suse.de> <alpine.LFD.2.02.1101120141330.19140@x980>
+From: Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 4/9] cpuidle: Introduce .abbr (abbrevation) for cpuidle
+ states
+Date: Wed, 12 Jan 2011 17:25:12 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1101121705130.19754@x980>
+References: <1294396190-23031-1-git-send-email-trenn@suse.de>
+ <1294396190-23031-5-git-send-email-trenn@suse.de>
+ <alpine.LFD.2.02.1101120150570.19140@x980> <201101121437.51122.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:53422 "EHLO mx1.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752171Ab1ALPQ5 (ORCPT
+Received: from vms173009pub.verizon.net ([206.46.173.9]:38435 "EHLO
+	vms173009pub.verizon.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753686Ab1ALWZZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 12 Jan 2011 10:16:57 -0500
-In-Reply-To: <alpine.LFD.2.02.1101120141330.19140@x980>
+	Wed, 12 Jan 2011 17:25:25 -0500
+In-reply-to: <201101121437.51122.trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Len Brown <lenb@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, Robert Schoene <robert.schoene@tu-dresden.de>, Frederic Weisbecker <fweisbec@gmail.com>, linux-pm@lists.linux-foundation.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-pm@lists.linux-foundation.org, Frederic Weisbecker <fweisbec@gmail.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 
-On Wednesday 12 January 2011 07:42:59 Len Brown wrote:
-> I'm happy to see the trace point move up into cpuidle from intel_idle.
+> > If the display tools can only handle 3 characters,
+> > then why not have them simply use the 1st 3 characters
+> > of the existing name field?
+
+> You mean use:
+> C3 NHM
+> instead of
+> NHM-C3
+> for intel_idle?
+
+Yes.
+is there a reason that would be a problem?
+
+If only 3 characters are useful,
+then I'd rather see you simly do this:
+
+#define CPUIDLE_NAME_LEN 3
+
+> Then userspace has to parse the two informations glued
+> together, get rid of the whitespace, etc.
+
+what "two informations"?
+why is kernel bloat the instrument of choice
+to avoid the expense of string truncation
+in user-space tools?
+
+> But by sysfs convention a separate file must be used
+> if two data are passed to userspace which is the case here.
+
+what two data?
+
+It is fine for a string to include space characters.
+
+> > If that is not unique,
+> > then re-arrange the strings so that it is unique...
+
+> See above, it would unnecessarily make life hard for
+> userspace.
+> Afaik sysfs entries do not consume resources as long as
+> they do not get accessed.
+
+they clutter the source code,
+they create  an additional name for something
+that arguably already has 3 names --
+the state #, the name, and the description.
+I'd rather delete a few of the fields than add a 4th...
+
+> >Of course the ACPI part of this patch will not apply,
+> > as it depends on patch 1 in this series, which was erroneous.
+> > For ACPI, the existing name field is already fine,
+> > as C%d fits into 3 characters.
+
+> For acpi_idle only it would work, but this is (nearly) the only
+> one.
+> For example for sh arch:
+> name: SuperH
+> "SH SuperH" contains two data and should get split up into:
+> name: SuperH
+> abbr: SH
+
+acpi/arch/sh/kernel/cpu/shmobile/cpuidle.c
+already uses state->name = "C0", "C1", "C2".
+
+Just use them and be done.
+
+> By convention the first characters of "description" could be
+> used, but you would again end up in userspace parsing and
+> double info in one sysfs file.
 > 
-> If somebody is picking this up in a perf tree,
-> Acked-by: Len Brown <len.brown@intel.com>
-> 
-> else I can put it in the idle tree, let me know.
-I didn't know you have an idle tree.
+> I hope that's enough for convincing, I'd really like to go
+> the .abbr way. Do you give me an acked-by for that one?
 
-If you can push this one through the idle tree that would be great.
+No.
 
-I'll go through the rest of my patches and resubmit
-in some days as soon as some things are clarified.
+We should not invent an additional abbreviation field.
+The tools should use the existing name field.
+If the existing name field is not sufficient, then
+the states should simply be enumerated and numbers
+be shown in the GUI.
 
-But I need this one to still be included in .38.
-Please tell me if this could be a problem.
-
-Thanks,
-
-  Thomas
+thanks,
+Len Brown, Intel Open Source Technology Center
