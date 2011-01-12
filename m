@@ -1,37 +1,65 @@
 From: Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 4/9] cpuidle: Introduce .abbr (abbrevation) for cpuidle
- states
-Date: Wed, 12 Jan 2011 01:56:45 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1101120150570.19140@x980>
+Subject: Re: [PATCH 5/9] acpi: processor->cpuidle: Only set cpuidle check_bm
+ flag if pr->flags.bm_check is set
+Date: Wed, 12 Jan 2011 02:17:18 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1101120159400.19140@x980>
 References: <1294396190-23031-1-git-send-email-trenn@suse.de>
- <1294396190-23031-5-git-send-email-trenn@suse.de>
+ <1294396190-23031-6-git-send-email-trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from vms173011pub.verizon.net ([206.46.173.11]:48155 "EHLO
-	vms173011pub.verizon.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751368Ab1ALG4w (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 12 Jan 2011 01:56:52 -0500
-In-reply-to: <1294396190-23031-5-git-send-email-trenn@suse.de>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1294396190-23031-6-git-send-email-trenn@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Renninger <trenn@suse.de>
-Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-pm@lists.linux-foundation.org, Frederic Weisbecker <fweisbec@gmail.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-I'm not fond of inventing a new 3-character abbreviation field
-for every state because display tools can't handle the existing
-16-character name field.
+On Fri, 7 Jan 2011, Thomas Renninger wrote:
 
-If the display tools can only handle 3 characters,
-then why not have them simply use the 1st 3 characters
-of the existing name field?  If that is not unique,
-then re-arrange the strings so that it is unique...
+>  drivers/acpi/processor_idle.c |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index b28693e..82f74c9 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -1039,7 +1039,8 @@ static int acpi_processor_setup_cpuidle(struct acpi_processor *pr)
+>  			snprintf(state->abbr, CPUIDLE_ABBR_LEN, "C3");
+>  			state->flags |= CPUIDLE_FLAG_DEEP;
+>  			state->flags |= CPUIDLE_FLAG_TIME_VALID;
+> -			state->flags |= CPUIDLE_FLAG_CHECK_BM;
+> +			if (pr->flags.bm_check)
+> +				state->flags |= CPUIDLE_FLAG_CHECK_BM;
+>  			state->enter = pr->flags.bm_check ?
+>  					acpi_idle_enter_bm :
+>  					acpi_idle_enter_simple;
+> -- 
 
-Of course the ACPI part of this patch will not apply,
-as it depends on patch 1 in this series, which was erroneous.
-For ACPI, the existing name field is already fine,
-as C%d fits into 3 characters.
+While it is logical, this patch is a NO-OP, since nobody
+ever checks for state->flags |= CPUIDLE_FLAG_CHECK_BM --
+not cpuidle, and not the platform driver.
+
+ie. it would be better to delete use of this flag from this file.
+
+This points out a problem w/ cpuidle, of course.
+Who owns and defines state->flags -- cpuidle and its governors,
+or the cpuidle drivers?
+
+cpuidle and its governors look only at...
+CPUIDLE_FLAG_TIME_VALID and CPUIDLE_FLAG_IGNORE
+
+cpuidle sets, but never looks at, CPUIDLE_FLAG_POLL
+
+only intel_idle uses CPUIDLE_FLAG_TLB_FLUSHED,
+so it should probably define it.
+
+only OMAP uses CPUIDLE_FLAG_CHECK_BM,
+so it should define it (or create a flag
+that actually says what they mean here)
+
+CPUIDLE_FLAG_SHALLOW, CPUIDLE_FLAG_BALANCED, CPUIDLE_FLAG_DEEP
+are set in various architectures, but never checked,
+so they should be deleted.
 
 thanks,
 Len Brown, Intel Open Source Technology Center
