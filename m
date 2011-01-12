@@ -1,60 +1,123 @@
-From: Len Brown <lenb@kernel.org>
-Subject: [PATCH] cpuidle: CPUIDLE_FLAG_CHECK_BM is omap3_idle specific
-Date: Wed, 12 Jan 2011 03:04:03 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1101120303160.19140@x980>
-References: <1294396190-23031-1-git-send-email-trenn@suse.de>
- <1294396190-23031-6-git-send-email-trenn@suse.de>
- <alpine.LFD.2.02.1101120159400.19140@x980>
- <alpine.LFD.2.02.1101120229060.19140@x980>
- <alpine.LFD.2.02.1101120235390.19140@x980>
- <alpine.LFD.2.02.1101120258550.19140@x980>
- <alpine.LFD.2.02.1101120301530.19140@x980>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 1/9] acpi: Use ACPI C-state type instead of enumeration value to export cpuidle state name
+Date: Wed, 12 Jan 2011 13:33:23 +0100
+Message-ID: <201101121333.24240.trenn@suse.de>
+References: <1294396190-23031-1-git-send-email-trenn@suse.de> <201101091330.12027.trenn@suse.de> <alpine.LFD.2.02.1101120130110.19140@x980>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from vms173017pub.verizon.net ([206.46.173.17]:51972 "EHLO
-	vms173017pub.verizon.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754898Ab1ALIEI (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:36184 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754054Ab1ALMd2 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 12 Jan 2011 03:04:08 -0500
-In-reply-to: <alpine.LFD.2.02.1101120301530.19140@x980>
+	Wed, 12 Jan 2011 07:33:28 -0500
+In-Reply-To: <alpine.LFD.2.02.1101120130110.19140@x980>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-pm@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+To: Len Brown <lenb@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+On Wednesday 12 January 2011 07:36:17 Len Brown wrote:
+> > > But some systems may have more than one state of each type...
+> 
+> > Exported through ACPI tables?
+> 
+> Yes.
+> 
+> It is quite common, for example in the Pentium M
+> generations, for a BIOS to export C3 and C4 -
+> both of which are ACPI  C3-type.
+Then you have two C3 types/names, this doesn't hurt.
+It's even "more" correct than enumeration (expecting
+that C2 is missing which can happen, right?):
+C1 -> C1
+C2 -> C3
+C3 -> C4
 
-Signed-off-by: Len Brown <len.brown@intel.com>
----
- arch/arm/mach-omap2/cpuidle34xx.c |    2 ++
- include/linux/cpuidle.h           |    1 -
- 2 files changed, 2 insertions(+), 1 deletions(-)
+As you already said, people have to look closer at
+the description file anyway. There is not much we can/should
+do about that in the generic acpi_idle driver (beside
+a note in Documentation/...).
+ 
+> > > also, the state->name is somewhat arbitrary.
+> > > 
+> > > You'll notice that intel_idle uses the hardware C-state names
+> > > such as NHM-C1, NHM-C3, NHM-C6 - to match the (arbitrary)
+> > > names in the hardware documentation.  We could call those
+> > > states Moe/Larry/Curley just as well.
+> 
+> > That works out with HW specific intel_idle.c driver, but not
+> > with the generic acpi/processor one.
+> 
+> Actually, C0..Cn work out fine for the acpi/processor driver.
+> the names are unique, and they also correspond to max_cstate
+> if somebody wants to use that.
+I do not like the fact that the name contains zero info
+and still is wrong and will still cause confusion
+(enumerating from C0-Cx will also not match
+C-states as described in documentations, but at least match
+the type as exported by BIOS vendors).
 
-diff --git a/arch/arm/mach-omap2/cpuidle34xx.c b/arch/arm/mach-omap2/cpuidle34xx.c
-index 0d50b45..f9be4e3 100644
---- a/arch/arm/mach-omap2/cpuidle34xx.c
-+++ b/arch/arm/mach-omap2/cpuidle34xx.c
-@@ -47,6 +47,8 @@
+if [ `cat /sys/devices/system/cpu/cpuidle/current_driver` = "acpi_idle" ];then
+  for ((x=1; x<10; x++));do
+    [ ! -d /sys/devices/system/cpu/cpu0/cpuidle/state${x} ] && break
+    if [ `cat /sys/devices/system/cpu/cpu0/cpuidle/state${x}/name` = C${x} ];then
+        echo "The same"
+    fi
+  done
+fi
+The same
+The same
+The same
+Currently it will always be "The same".
+
+> > I restore the ACPI type info as exported by ACPI tables
+> > with this patch, should be the same as done with
+> > /proc/acpi/processor/*/power
+> > Do I miss something?
+> 
+> /proc/acpi/processor/*/power had a type field.
+> Per the example above, the type field didn't always
+> match the C-state number.
+But compared to plain enumeration it has at least
+some use (see your own comment below).
+And if OEMs care (and some probably would) they can
+export the type they like to see and it gets passed
+from the BIOS tables up to the very high end
+userspace/customer tools.
+
+I know Intel uses intel_idle, but there are others
+which make use of ACPI C-states.
  
- #define OMAP3_STATE_MAX OMAP3_STATE_C7
- 
-+#define CPUIDLE_FLAG_CHECK_BM	0x10000	/* use omap3_enter_idle_bm() */
-+
- struct omap3_processor_cx {
- 	u8 valid;
- 	u8 type;
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 6be722c..36719ea 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -47,7 +47,6 @@ struct cpuidle_state {
- 
- /* Idle State Flags */
- #define CPUIDLE_FLAG_TIME_VALID	(0x01) /* is residency time measurable? */
--#define CPUIDLE_FLAG_CHECK_BM	(0x02) /* BM activity will exit state */
- #define CPUIDLE_FLAG_IGNORE	(0x100) /* ignore during this idle period */
- 
- #define CPUIDLE_DRIVER_FLAGS_MASK (0xFFFF0000)
--- 
-1.7.4.rc1.7.g2cf08
+> > Do you want to export additional ACPI table C-state
+> > info?
+> 
+> I have a 1 line patch someplace to print out the type
+> for debug info when needed, that should be sufficient
+> for debugging, which is the only time we care about type.
+To be honest I do not care about this detail that much.
+I think it would be nicer to export the C-state type in
+the name. Name and description is cpuidle driver (in this case
+acpi_idle) specific info, why shouldn't processor_idle
+fill it with something which has at least some meaning.
+
+> > Something else, but related:
+> > You recently said that it might be a good idea to get
+> > C-/P- state ACPI tables which are often in a separate
+> > SSDT loaded at runtime via "load" ACPI command, dumped
+> > with the acpidump  tool. This would be a cool feature.
+> > Does dynamically loaded SSDT dumping
+> > via acpidump work already or is/has someone looked at this?
+> 
+> Yakui fixed this a while back.
+> acpidump in the latest pmtools in
+> http://userweb.kernel.org/~lenb/acpi/utils/
+> picks up the dynamic tables from /sys/firmware/acpi/tables.
+Great!
+I didn't update acpidump for quite some time as I hoped it
+shows up in the acpica project and also did some adjustance
+for this already. I'll grab it for 11.4.
+
+     Thomas
