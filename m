@@ -1,47 +1,64 @@
 From: Thomas Renninger <trenn@suse.de>
 Subject: Re: perf timechart broken
-Date: Fri, 14 Jan 2011 17:49:36 +0100
-Message-ID: <201101141749.36716.trenn@suse.de>
-References: <201101071104.37576.trenn@suse.de> <20110111114951.GA8564@ghostprotocols.net> <20110111145134.GA11968@ghostprotocols.net>
+Date: Fri, 14 Jan 2011 18:00:18 +0100
+Message-ID: <201101141800.18913.trenn@suse.de>
+References: <201101071104.37576.trenn@suse.de> <201101110955.37560.trenn@suse.de> <4D2CA7D6.2070203@cisco.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:46964 "EHLO mx1.suse.de"
+Received: from cantor.suse.de ([195.135.220.2]:47834 "EHLO mx1.suse.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757650Ab1ANQtj (ORCPT
+	id S1757177Ab1ANRAV (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 14 Jan 2011 11:49:39 -0500
-In-Reply-To: <20110111145134.GA11968@ghostprotocols.net>
+	Fri, 14 Jan 2011 12:00:21 -0500
+In-Reply-To: <4D2CA7D6.2070203@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: David Ahern <daahern@cisco.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-On Tuesday 11 January 2011 15:51:34 Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jan 11, 2011 at 09:49:51AM -0200, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Jan 11, 2011 at 09:55:36AM +0100, Thomas Renninger escreveu:
-> > > On Tuesday 11 January 2011 02:36:28 Frederic Weisbecker wrote:
-> > > > It's too late for .37, but it's fine, we just need to add
-> > > > a "Cc: stable@kernel.org" tag in the patch for it to be
-> > > > backported.
-> > > I'll submit it to stable@ (it wasn't taken because
-> > > the patch which included the fix wasn't mainline yet and I
-> > > forgot to submit it for 2.6.37-rcX). 
-> >  
-> > > I can take care of that, but it would be great if someone could look
-> > > at the issue that perf timechart shows: "no trace data in the file" in
-> > > x86/tip which seems introduced by one of Arnaldo's latest commits.
-> > > Reverting some of his latest patches, solved it for me.
-> > 
-> > Looking at it now.
+On Tuesday 11 January 2011 19:56:22 David Ahern wrote:
 > 
-> Can you try with this patch applied? We need a better way of specifying
-> ordering of __exit and __init routines :-\
-I tested on x86/tip and it is fixed.
-I explicitly reverted your fix and run into it again.
+> On 01/11/11 01:55, Thomas Renninger wrote:
+> > On Tuesday 11 January 2011 02:36:28 Frederic Weisbecker wrote:
+> >> On Fri, Jan 07, 2011 at 11:04:37AM +0100, Thomas Renninger wrote:
+> >>> Hi,
+> >>>
+> >>> Latest x86 tip has another perf timechart issue introduce
+> >>> by latest commits.
+> >>>
+> >>> ./perf timechart
+> >>> gives me:
+> >>> "no trace data in the file"
+> >>>
+> >>> I reverted  the latest changes and things seem to break
+> >>> between d854861c4292a4e675a5d3bfd862c5f7421c81e8
+> >>> and
+> >>> 69aad6f1ee69546dea8535ab8f3da9f445d57328
+> >>> (linux-2.6-x86 tree ids)
+> >>>
+> >>> Be aware that ./perf timechart is currently broken
+> >>> and segfaults on idle events (in 2.6.36 and 2.6.37).
+> >>
+> >> You mean .36 perf tools faults on .37 kernel? or the opposite?
+> >> Is it because power_idle events weren't present on old tools?
+> >> Do you have a pointer to those patches?
+> > perf timechart
+> > will segfault if perf.data has power_{start,end} events included
+> > on 2.6.36 and 2.6.37 kernels.
+> 
+> Is this the same segfault you are seeing?
+> 
+> http://www.mail-archive.com/linux-perf-
+users@vger.kernel.org/msg00057.html
+Looks slightly different, the segfault should happen in:
+process_sample_event
+But looks very much related, possibly it has not been made/make with 
+DEBUG=1
+and -O6 was added and the backtrace is not 100% correct?
 
-Thanks!
+I still did not have time to send it out, will do so on Mo.
 
-   Thomas
+    Thomas
