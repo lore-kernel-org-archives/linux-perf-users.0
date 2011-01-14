@@ -1,55 +1,47 @@
-From: Valdis.Kletnieks@vt.edu
-Subject: Re: [PATCH 4/9] cpuidle: Introduce .abbr (abbrevation) for cpuidle states
-Date: Thu, 13 Jan 2011 10:42:29 -0500
-Message-ID: <13258.1294933349@localhost>
-References: <1294396190-23031-1-git-send-email-trenn@suse.de> <1294396190-23031-5-git-send-email-trenn@suse.de> <alpine.LFD.2.02.1101120150570.19140@x980> <201101121437.51122.trenn@suse.de>
-            <alpine.LFD.2.02.1101121705130.19754@x980>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: perf timechart broken
+Date: Fri, 14 Jan 2011 17:49:36 +0100
+Message-ID: <201101141749.36716.trenn@suse.de>
+References: <201101071104.37576.trenn@suse.de> <20110111114951.GA8564@ghostprotocols.net> <20110111145134.GA11968@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1294933349_5688P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: Your message of "Wed, 12 Jan 2011 17:25:12 EST."
-             <alpine.LFD.2.02.1101121705130.19754@x980>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Len Brown <lenb@kernel.org>
-Cc: Thomas Renninger <trenn@suse.de>, linux-perf-users@vger.kernel.org, mingo@elte.hu, arjan@linux.intel.com, j-pihet@ti.com, linux-acpi@vger.kernel.org, linux-pm@lists.linux-foundation.org, Frederic Weisbecker <fweisbec@gmail.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from cantor.suse.de ([195.135.220.2]:46964 "EHLO mx1.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757650Ab1ANQtj (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 14 Jan 2011 11:49:39 -0500
+In-Reply-To: <20110111145134.GA11968@ghostprotocols.net>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
---==_Exmh_1294933349_5688P
-Content-Type: text/plain; charset=us-ascii
-
-On Wed, 12 Jan 2011 17:25:12 EST, Len Brown said:
-
-> > But by sysfs convention a separate file must be used
-> > if two data are passed to userspace which is the case here.
+On Tuesday 11 January 2011 15:51:34 Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jan 11, 2011 at 09:49:51AM -0200, Arnaldo Carvalho de Melo escreveu:
+> > Em Tue, Jan 11, 2011 at 09:55:36AM +0100, Thomas Renninger escreveu:
+> > > On Tuesday 11 January 2011 02:36:28 Frederic Weisbecker wrote:
+> > > > It's too late for .37, but it's fine, we just need to add
+> > > > a "Cc: stable@kernel.org" tag in the patch for it to be
+> > > > backported.
+> > > I'll submit it to stable@ (it wasn't taken because
+> > > the patch which included the fix wasn't mainline yet and I
+> > > forgot to submit it for 2.6.37-rcX). 
+> >  
+> > > I can take care of that, but it would be great if someone could look
+> > > at the issue that perf timechart shows: "no trace data in the file" in
+> > > x86/tip which seems introduced by one of Arnaldo's latest commits.
+> > > Reverting some of his latest patches, solved it for me.
+> > 
+> > Looking at it now.
 > 
-> what two data?
-> 
-> It is fine for a string to include space characters.
+> Can you try with this patch applied? We need a better way of specifying
+> ordering of __exit and __init routines :-\
+I tested on x86/tip and it is fixed.
+I explicitly reverted your fix and run into it again.
 
-I think Thomas is concerned that although when you actually read a /sys
-file, you know it's one string, that fact can get easily lost and cause issues
-down the road. Consider this code:
+Thanks!
 
-foo=`cat /sys/some/file`
-bar=`cat /sys/other/file`
-baz=`cat /sys/third/file`
-echo $foo $bar $baz | awk '{print $2 $3}'
-
-Suddenly your output isn't what you expected...
-
---==_Exmh_1294933349_5688P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Exmh version 2.5 07/13/2001
-
-iD8DBQFNLx1lcC3lWbTT17ARAh+5AKDO3njvfdeLwHRolBhga5tdWk17GQCfQjna
-5NRZO5tAIu4zmvbxJ2zLUe4=
-=B2BS
------END PGP SIGNATURE-----
-
---==_Exmh_1294933349_5688P--
-
+   Thomas
