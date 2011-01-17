@@ -1,38 +1,52 @@
-From: Arnaldo Carvalho de Melo <acme@infradead.org>
+From: Thomas Renninger <trenn@suse.de>
 Subject: Re: perf timechart broken
-Date: Fri, 14 Jan 2011 15:37:40 -0200
-Message-ID: <20110114173739.GA29318@ghostprotocols.net>
-References: <201101071104.37576.trenn@suse.de>
- <20110111114951.GA8564@ghostprotocols.net>
- <20110111145134.GA11968@ghostprotocols.net>
- <201101141749.36716.trenn@suse.de>
+Date: Mon, 17 Jan 2011 11:50:04 +0100
+Message-ID: <201101171150.05444.trenn@suse.de>
+References: <201101071104.37576.trenn@suse.de> <201101141800.18913.trenn@suse.de> <4D308331.6010106@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:38267 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752019Ab1ANRiW (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 14 Jan 2011 12:38:22 -0500
-Content-Disposition: inline
-In-Reply-To: <201101141749.36716.trenn@suse.de>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4D308331.6010106@cisco.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Jan 14, 2011 at 05:49:36PM +0100, Thomas Renninger escreveu:
-> On Tuesday 11 January 2011 15:51:34 Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jan 11, 2011 at 09:49:51AM -0200, Arnaldo Carvalho de Melo escreveu:
-> > > Looking at it now.
-> > 
-> > Can you try with this patch applied? We need a better way of specifying
-> > ordering of __exit and __init routines :-\
-> I tested on x86/tip and it is fixed.
-> I explicitly reverted your fix and run into it again.
+On Friday 14 January 2011 18:09:05 David Ahern wrote:
 > 
-> Thanks!
+> On 01/14/11 10:00, Thomas Renninger wrote:
+> >> http://www.mail-archive.com/linux-perf-
+> > users@vger.kernel.org/msg00057.html
+> > Looks slightly different, the segfault should happen in:
+> > process_sample_event
+> > But looks very much related, possibly it has not been made/make with 
+> > DEBUG=1
+> > and -O6 was added and the backtrace is not 100% correct?
+> 
+> perf was built with DEBUG=1; that's how I got the pretty backtrace
+> versus having the arguments optimized out. The cpu=6291457 is the
+> garbage causing the segfault
+Then it's the same issue.
 
-Thanks a lot for reporting and retesting,
+> (there are only 2 cores in the system).
+> 6291457 = 0x600001. Perhaps a mask is missing?
+No, the power_start and power_end event have different kernel
+structures, but in builtin-timechart.c the same struct is used.
+cpu is at the end.
+Therefore pe->cpu_id (in power_end case) accesses uninitialized
+data.
 
-- Arnaldo
+But using the cpu data from the event itself (data.cpu, the cpu on
+which the event got emited) for fixing this is fine.
+It's the way it was done before the bug got introduced.
+As said, this won't work if the kernel code triggering the C-state
+is executed on a different CPU than the CPU which is affected by
+the C-state change. But such HW does not yet exist on X86 afaik and the
+power_start event dies out anyway.
+
+I resubmitted the fix for 2.6.3{6,7} stable kernels and added you
+to CC.
+
+   Thomas
