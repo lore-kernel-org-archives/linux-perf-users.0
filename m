@@ -1,52 +1,52 @@
 From: Thomas Renninger <trenn@suse.de>
-Subject: Re: perf timechart broken
-Date: Mon, 17 Jan 2011 11:50:04 +0100
-Message-ID: <201101171150.05444.trenn@suse.de>
-References: <201101071104.37576.trenn@suse.de> <201101141800.18913.trenn@suse.de> <4D308331.6010106@cisco.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4D308331.6010106@cisco.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Ahern <daahern@cisco.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Subject: [PATCH] perf: Fix time function double declaration with glibc
+Date: Fri, 21 Jan 2011 15:30:09 +0100
+Message-ID: <1295620209-13859-2-git-send-email-trenn@suse.de>
+References: <1295620209-13859-1-git-send-email-trenn@suse.de>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:57114 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752941Ab1AUOaU (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 21 Jan 2011 09:30:20 -0500
+In-Reply-To: <1295620209-13859-1-git-send-email-trenn@suse.de>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: mingo@elte.hu
+Cc: Thomas Renninger <trenn@suse.de>, arjan@infradead.org, linux-perf-users@vger.kernel.org
 
-On Friday 14 January 2011 18:09:05 David Ahern wrote:
-> 
-> On 01/14/11 10:00, Thomas Renninger wrote:
-> >> http://www.mail-archive.com/linux-perf-
-> > users@vger.kernel.org/msg00057.html
-> > Looks slightly different, the segfault should happen in:
-> > process_sample_event
-> > But looks very much related, possibly it has not been made/make with 
-> > DEBUG=1
-> > and -O6 was added and the backtrace is not 100% correct?
-> 
-> perf was built with DEBUG=1; that's how I got the pretty backtrace
-> versus having the arguments optimized out. The cpu=6291457 is the
-> garbage causing the segfault
-Then it's the same issue.
+It's enough to include the local "debug.h" file to
+trigger it.
+man time reveals this is already declared in glibc:
+time - get time in seconds
+#include <time.h>
+-> rename the variable.
 
-> (there are only 2 cores in the system).
-> 6291457 = 0x600001. Perhaps a mask is missing?
-No, the power_start and power_end event have different kernel
-structures, but in builtin-timechart.c the same struct is used.
-cpu is at the end.
-Therefore pe->cpu_id (in power_end case) accesses uninitialized
-data.
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+CC: arjan@infradead.org
+CC: mingo@elte.hu
+CC: linux-perf-users@vger.kernel.org
+---
+ tools/perf/util/svghelper.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-But using the cpu data from the event itself (data.cpu, the cpu on
-which the event got emited) for fixing this is fine.
-It's the way it was done before the bug got introduced.
-As said, this won't work if the kernel code triggering the C-state
-is executed on a different CPU than the CPU which is affected by
-the C-state change. But such HW does not yet exist on X86 afaik and the
-power_start event dies out anyway.
-
-I resubmitted the fix for 2.6.3{6,7} stable kernels and added you
-to CC.
-
-   Thomas
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 8ee5d11..e40a00d 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -43,11 +43,11 @@ static double cpu2y(int cpu)
+ 	return cpu2slot(cpu) * SLOT_MULT;
+ }
+ 
+-static double time2pixels(u64 time)
++static double time2pixels(u64 __time)
+ {
+ 	double X;
+ 
+-	X = 1.0 * svg_page_width * (time - first_time) / (last_time - first_time);
++	X = 1.0 * svg_page_width * (__time - first_time) / (last_time - first_time);
+ 	return X;
+ }
+ 
+-- 
+1.7.3.4
