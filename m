@@ -1,67 +1,56 @@
-From: Thomas Renninger <trenn@suse.de>
+From: Pierre Tardy <tardyp@gmail.com>
 Subject: Re: Perf ABI versioning
-Date: Mon, 24 Jan 2011 17:18:25 +0100
-Message-ID: <201101241718.25627.trenn@suse.de>
+Date: Mon, 24 Jan 2011 18:26:55 +0100
+Message-ID: <AANLkTinKfCxE1MYb6Am2kh98mS5K430egGqPTu1fwErD@mail.gmail.com>
 References: <201101241704.01021.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:46556 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752918Ab1AXQS1 (ORCPT
+Received: from mail-qw0-f46.google.com ([209.85.216.46]:62918 "EHLO
+	mail-qw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753318Ab1AXR04 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 24 Jan 2011 11:18:27 -0500
+	Mon, 24 Jan 2011 12:26:56 -0500
 In-Reply-To: <201101241704.01021.trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: tardyp@gmail.com
+To: Thomas Renninger <trenn@suse.de>
 Cc: jean.pihet@newoldbits.com, acme@ghostprotocols.net, fweisbec@gmail.com, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org
 
-and the tiny (untested) patch which should
-add a version on top of /sys/kernel/debug/trace:
+On Mon, Jan 24, 2011 at 5:04 PM, Thomas Renninger <trenn@suse.de> wrote:
+> Hi,
+>
+> as I recently cleaned up the power events with
+> some format/abi adjustings...
+>
+> I realized that it was rather easy to adjust
+> the stuff in drivers/tools/perf, because there
+> are some nice facilities to query which events
+> are available.
+>
+> I looked at pytimechart, there it's not that nice
+> and convenient would be some kind of version number.
 
----
- Documentation/trace/events.changes |    6 ++++++
- kernel/trace/trace.c               |    1 +
- kernel/trace/trace.h               |    2 ++
- 3 files changed, 9 insertions(+), 0 deletions(-)
+pytimechart does pattern matching to be able to work with different
+version of the ftrace formats.
+For a same trace type, it will try different trace format, until it
+finds a match.
+e.g.:
+    ('irq_handler_entry', 'irq=%d handler=%s','irq','name'),
+    ('irq_handler_entry', 'irq=%d name=%s','irq','name'),
 
-diff --git a/Documentation/trace/events.changes b/Documentation/trace/events.changes
-new file mode 100644
-index 0000000..bd29abc
---- /dev/null
-+++ b/Documentation/trace/events.changes
-@@ -0,0 +1,6 @@
-+Version 2:
-+<Modifications are tracked here>
-+
-+Version 1:
-+Initial version.
-+Available events and their formats:
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dc53ecb..602885a 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2043,6 +2043,7 @@ void trace_default_header(struct seq_file *m)
- {
- 	struct trace_iterator *iter = m->private;
- 
-+	seq_puts(m, "# Perf ABI Version %d\n", PERF_ABI_VERSION);
- 	if (iter->iter_flags & TRACE_FILE_LAT_FMT) {
- 		/* print nothing if the buffers are empty */
- 		if (trace_empty(iter))
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 9021f8c..c23a7a2 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -13,6 +13,8 @@
- #include <linux/trace_seq.h>
- #include <linux/ftrace_event.h>
- 
-+#define PERF_ABI_VERSION 1
-+
- enum trace_type {
- 	__TRACE_FIRST_TYPE = 0,
- 
+The problem of this approach is obviously that you have to modify
+pytimechart each time there is a new format, it cannot just look at
+the trace format and just ignore new fields that it dont care of.
+
+Please also note, that pytimechart also have a perf-python backend
+that may not have such issues in dealing with new events fields, but
+is actually sensible to event fields renaming.
+
+> Would it make sense to introduce a trace
+> ABI version number?
+So as soon as pytimechart is the only user of this versionning, I'm
+not sure it is really needed.
+
+Regards,
+Pierre
