@@ -1,38 +1,40 @@
-From: Thomas Renninger <trenn@suse.de>
+From: Frederic Weisbecker <fweisbec@gmail.com>
 Subject: Re: Perf ABI versioning
-Date: Mon, 24 Jan 2011 23:30:01 +0100
-Message-ID: <201101242330.03008.trenn@suse.de>
-References: <201101241704.01021.trenn@suse.de> <201101242249.14471.trenn@suse.de> <20110124215755.GE6367@ghostprotocols.net>
+Date: Mon, 24 Jan 2011 23:46:12 +0100
+Message-ID: <20110124224610.GF2318@nowhere>
+References: <201101241704.01021.trenn@suse.de>
+ <201101242249.14471.trenn@suse.de>
+ <20110124215755.GE6367@ghostprotocols.net>
+ <201101242330.03008.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:47626 "EHLO mx1.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751339Ab1AXW3n (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 24 Jan 2011 17:29:43 -0500
-In-Reply-To: <20110124215755.GE6367@ghostprotocols.net>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: Ingo Molnar <mingo@elte.hu>, Frederic Weisbecker <fweisbec@gmail.com>, tardyp@gmail.com, jean.pihet@newoldbits.com, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-trace-users-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201101242330.03008.trenn@suse.de>
+Sender: linux-trace-users-owner@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>, tardyp@gmail.com, jean.pihet@newoldbits.com, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Monday 24 January 2011 22:57:55 Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jan 24, 2011 at 10:49:13PM +0100, Thomas Renninger escreveu:
-... 
-> Using the /format file hashed as peterz said is elegant, fine grained
-> content based ABI number :-)
-Ok thanks, I should have had a closer look at the binary format.
+On Mon, Jan 24, 2011 at 11:30:01PM +0100, Thomas Renninger wrote:
+> On Monday 24 January 2011 22:57:55 Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Jan 24, 2011 at 10:49:13PM +0100, Thomas Renninger escreveu:
+> ... 
+> > Using the /format file hashed as peterz said is elegant, fine grained
+> > content based ABI number :-)
+> Ok thanks, I should have had a closer look at the binary format.
+> 
+> It may make sense at some time to provide a library so that other tools
+> can make use of the most convenient functions in tools/perf/utils/*
+> as well?
 
-It may make sense at some time to provide a library so that other tools
-can make use of the most convenient functions in tools/perf/utils/*
-as well?
+I personally wish the other way around: having Pytimechart merged in perf :)
+If I remember correctly, the problem was that we don't have support for
+trace_printk with perf?
 
-I'll have a look at the powertop perf implementations I wanted to
-look at anyway and try to understand the stuff a bit better.
+But sure if more out of tree tools show up and want to use tracepoints,
+we can think about librarizing it.
 
-Thanks,
-
-       Thomas
+(Even though my secret hope is that
+we build a nice one tool that can answer most tracing needs together rather
+than many scattered ad hoc pieces.)
