@@ -1,62 +1,55 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Perf ABI versioning
-Date: Mon, 24 Jan 2011 17:04:00 +0100
-Message-ID: <201101241704.01021.trenn@suse.de>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: Thermal kernel events API to userspace - Was: Re: thermal:
+ Avoid CONFIG_NET compile dependency
+Date: Mon, 24 Jan 2011 14:07:47 -0200
+Message-ID: <20110124160747.GD6424@khazad-dum.debian.net>
+References: <D6D887BA8C9DFF48B5233887EF046541094482F511@bgsmsx502.gar.corp.intel.com>
+ <D6D887BA8C9DFF48B5233887EF046541094488B86F@bgsmsx502.gar.corp.intel.com>
+ <201101241135.23576.trenn@suse.de>
+ <201101241407.28376.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:46188 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752906Ab1AXQED (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 24 Jan 2011 11:04:03 -0500
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: tardyp@gmail.com
-Cc: jean.pihet@newoldbits.com, acme@ghostprotocols.net, fweisbec@gmail.com, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201101241407.28376.trenn@suse.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: "R, Durgadoss" <durgadoss.r@intel.com>, jdelvare@novell.com, "Zhang, Rui" <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Kay Sievers <kay.sievers@vrfy.org>, linux-perf-users@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-trace-users@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
+On Mon, 24 Jan 2011, Thomas Renninger wrote:
+> I wonder whether netlink is the way to go for thermal
+> events at all.
+> Sending an udev event would already contain the sysfs
+> path to the thermal device. A variable which thermal event
+> got thrown could get added and userspace can read out the rest
+> easily from sysfs files. But I expect udev is not intended
+> for such general events?
 
-as I recently cleaned up the power events with
-some format/abi adjustings...
+udev is heavyweight in the userspace side, we'd be much better off using the
+ACPI event interface (which is netlink), or a new one to deliver system
+status events, instead of continously abusing udev for this stuff.
 
-I realized that it was rather easy to adjust
-the stuff in drivers/tools/perf, because there
-are some nice facilities to query which events
-are available.
+> > > Also, the thermal_aux0 and _aux1, we can use the final format specified by you.
+> > > enum events {
+> > >  	THERMAL_CRITICAL,
+> > >  	/* user defined thermal events */
+> > >  	THERMAL_USER_AUX0,
+> > >  	THERMAL_USER_AUX1,
+> > >  	THERMAL_DEV_FAULT,
+> > >  };
 
-I looked at pytimechart, there it's not that nice
-and convenient would be some kind of version number.
+Please give us at least two levels of thermal alarm: critical and emergency
+(or warning and critical -- it doesn't matter much, as long as there are at
+least two levels, and which one comes first is defined by the
+specification).  I'd have immediate use for them on thinkpads.
 
-pytimechart can parse traces which are simply copied
-away from /sys/kernel/debug/trace and to check for
-available events and their format, one would have to
-do a separate, ugly to implement, iteration of parsing.
+It is probably best to have three levels (warning, critical, emergency).
+Best not to tie the API/ABI to the notion of "too hot", one can also alarm
+when it starts to get to cold.
 
-Would it make sense to introduce a trace
-ABI version number?
-It would be enough to increase it by one every time
-any event (don't know about other perf facilities) is
-added, removed or modified.
-Ideally the modifications are tracked with a short
-description in a file like Documentation/trace/format.changes
-
-Untested, but the patch at the end should simply add
-a version number on top of
-/sys/kernel/debug/trace file
-
-While this should be enough for the kernel, perf record
-would need to include it into it's binary perf.data format
-as well?
-
-Then userspace apps could easily test whether supported
-events would be included at all, whether only a subset of
-supported events were made available and which format they have.
-
-Does this make sense?
-
-Thanks,
-
-    Thomas
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
