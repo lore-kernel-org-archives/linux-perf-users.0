@@ -1,26 +1,26 @@
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
 Subject: Re: Perf ABI versioning
-Date: Mon, 24 Jan 2011 15:12:25 -0500
-Message-ID: <20110124201225.GA14635@Krystal>
+Date: Mon, 24 Jan 2011 21:34:51 +0100
+Message-ID: <20110124203449.GC2318@nowhere>
 References: <201101241704.01021.trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.openrapids.net ([64.15.138.104]:37114 "EHLO
-	blackscsi.openrapids.net" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1752444Ab1AXUM1 (ORCPT
+Received: from mail-bw0-f46.google.com ([209.85.214.46]:59650 "EHLO
+	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751477Ab1AXUe6 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 24 Jan 2011 15:12:27 -0500
+	Mon, 24 Jan 2011 15:34:58 -0500
 Content-Disposition: inline
 In-Reply-To: <201101241704.01021.trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Thomas Renninger <trenn@suse.de>
-Cc: tardyp@gmail.com, jean.pihet@newoldbits.com, acme@ghostprotocols.net, fweisbec@gmail.com, linux-perf-users@vger.kernel.org, linux-trace-users@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
+Cc: tardyp@gmail.com, jean.pihet@newoldbits.com, acme@ghostprotocols.net, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>
 
-[ added Ingo, Steven, Thomas and Peter to CC list ]
+(Adding LKML and more tracing people in Cc)
 
-* Thomas Renninger (trenn@suse.de) wrote:
+On Mon, Jan 24, 2011 at 05:04:00PM +0100, Thomas Renninger wrote:
 > Hi,
 > 
 > as I recently cleaned up the power events with
@@ -61,36 +61,35 @@ Cc: tardyp@gmail.com, jean.pihet@newoldbits.com, acme@ghostprotocols.net, fweisb
 > 
 > Does this make sense?
 
-Hi Thomas,
+This may be generally useful to help dealing with tracepoint ABI
+changes.
 
-I think it might make more sense to make pytimechart read the
-/sys/kernel/debug/tracing/events/*/*/format files to find out if the
-print-format for the events are as expected. I think this is much more adapted
-to a development scheme where subsystem maintainers are responsible for changing
-the content of their own events than a single global version number that needs
-to be bumped synchronously for everything.
+But instead of a global tracing ABI number, I would rather suggest
+one number per tracepoint subsystem (sched, power, etc...).
 
-I would agree, though, about the need for a version number on the way
-/sys/kernel/debug/tracing/events exports the binary event type and text-output
-formatting information: in order to cope with changes to the way this metadata
-is exported, we'd need such a versioning number.
+Ideally it would be per event, but sometimes those events tend to be
+renamed or a whole tracepoint subsystem refactored (see workqueue
+lately). Hence it might be better per subsystem.
 
-But again, trying to version every tiny change to the fields per se won't scale
-with the development process given that we pull instrumentation changes from
-many different repository concurrently. The field layout information is there to
-deal with this problem, pytimechart should perhaps start using it.
+Now these numbers can be increased in the case of new fields added,
+fields removed, fields renamed, new tracepoints, removed tracepoints,
+renamed tracepoints.
 
-Thanks,
+But I think we shouldn't do that for pure ascii format changes, because
+we created the format to avoid fixing that on the rock. I know that
+would help Pytimechart, and it's a precious tool that I wish we can help
+the development. But we shouldn't encourage the pattern match way of
+parsing events, instead of using the format file.
 
-Mathieu
+Also, tracking the changes in the Documentation is going to be a
+nightmare. I suggest developers who want to dig into details of
+an ABI change to check the code or the format themselves.
 
-> 
-> Thanks,
-> 
->     Thomas
+And BTW we can probably provide more granularity in the versioning
+with a major number for ABI changes that may break tools (field or
+tracepoint removal, rename, etc...) and a minor number for changes
+that probably won't break tools but could bring them more informations:
+new tracepoint fields, new tracepoints, etc... so we can tell the tools
+about that.
 
--- 
-Mathieu Desnoyers
-Operating System Efficiency R&D Consultant
-EfficiOS Inc.
-http://www.efficios.com
+Hm?
