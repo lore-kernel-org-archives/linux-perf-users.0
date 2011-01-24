@@ -1,50 +1,38 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: Thomas Renninger <trenn@suse.de>
 Subject: Re: Perf ABI versioning
-Date: Mon, 24 Jan 2011 22:59:38 +0100
-Message-ID: <20110124215935.GE2318@nowhere>
-References: <201101241704.01021.trenn@suse.de>
- <20110124203449.GC2318@nowhere>
- <20110124212838.GB13724@elte.hu>
+Date: Mon, 24 Jan 2011 23:30:01 +0100
+Message-ID: <201101242330.03008.trenn@suse.de>
+References: <201101241704.01021.trenn@suse.de> <201101242249.14471.trenn@suse.de> <20110124215755.GE6367@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-trace-users-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110124212838.GB13724@elte.hu>
-Sender: linux-trace-users-owner@vger.kernel.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Thomas Renninger <trenn@suse.de>, tardyp@gmail.com, jean.pihet@newoldbits.com, acme@ghostprotocols.net, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from cantor.suse.de ([195.135.220.2]:47626 "EHLO mx1.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751339Ab1AXW3n (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 24 Jan 2011 17:29:43 -0500
+In-Reply-To: <20110124215755.GE6367@ghostprotocols.net>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Ingo Molnar <mingo@elte.hu>, Frederic Weisbecker <fweisbec@gmail.com>, tardyp@gmail.com, jean.pihet@newoldbits.com, linux-perf-users@vger.kernel.org, mathieu.desnoyers@efficios.com, linux-trace-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
 
-On Mon, Jan 24, 2011 at 10:28:38PM +0100, Ingo Molnar wrote:
-> 
-> * Frederic Weisbecker <fweisbec@gmail.com> wrote:
-> 
-> > This may be generally useful to help dealing with tracepoint ABI changes.
-> > 
-> > But instead of a global tracing ABI number, I would rather suggest one number per 
-> > tracepoint subsystem (sched, power, etc...).
-> 
-> Nooooooooooo ... !!! :-)
-> 
-> Please lets stop this madness before it gets too serious: we dont do ABI version 
-> numbering in Linux, full stop.
-> 
-> We use 'natural' ABIs where the lack of an ABI component triggers some sort of 
-> clean, finegrained error. Like a -EINVAL on a not-yet-implemented ABI component, a 
-> non-existent file entry, or -ENOSYS on a non-existent syscall.
-> 
-> Such a design is arbitrarily backportable or forward portable, it's extensible and 
-> it is actually maintainable.
-> 
-> In the ABI version numbering direction lies Windows madness ...
-> 
-> Thanks,
-> 
-> 	Ingo
+On Monday 24 January 2011 22:57:55 Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jan 24, 2011 at 10:49:13PM +0100, Thomas Renninger escreveu:
+... 
+> Using the /format file hashed as peterz said is elegant, fine grained
+> content based ABI number :-)
+Ok thanks, I should have had a closer look at the binary format.
 
-Yeah. But the tracepoint case looked to me quite special as sometimes
-the ABI doesn't evolved smoothly like in the scheme you describe (see
-the power events case).
+It may make sense at some time to provide a library so that other tools
+can make use of the most convenient functions in tools/perf/utils/*
+as well?
 
-OTOH, checking the format file if we have lost or gained fields must be enough
-already to, indeed, avoid a versioning madness :)
+I'll have a look at the powertop perf implementations I wanted to
+look at anyway and try to understand the stuff a bit better.
+
+Thanks,
+
+       Thomas
