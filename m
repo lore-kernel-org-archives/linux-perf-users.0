@@ -1,74 +1,38 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: Thermal kernel events API to userspace - Was: Re: thermal: Avoid CONFIG_NET compile dependency
-Date: Tue, 25 Jan 2011 11:12:28 +0100
-Message-ID: <201101251112.28340.trenn@suse.de>
-References: <D6D887BA8C9DFF48B5233887EF046541094482F511@bgsmsx502.gar.corp.intel.com> <20110124160747.GD6424@khazad-dum.debian.net> <1295942269.1866.1201.camel@rui>
+From: "R, Durgadoss" <durgadoss.r@intel.com>
+Subject: RE: Thermal kernel events API to userspace - Was: Re: thermal:
+ Avoid CONFIG_NET compile dependency
+Date: Tue, 25 Jan 2011 16:44:54 +0530
+Message-ID: <D6D887BA8C9DFF48B5233887EF046541094488C0CB@bgsmsx502.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:34561 "EHLO mx1.suse.de"
+Received: from mga02.intel.com ([134.134.136.20]:15749 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752354Ab1AYKMc (ORCPT
+	id S1751025Ab1AYLPA (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 25 Jan 2011 05:12:32 -0500
-In-Reply-To: <1295942269.1866.1201.camel@rui>
+	Tue, 25 Jan 2011 06:15:00 -0500
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "R, Durgadoss" <durgadoss.r@intel.com>, "jdelvare@novell.com" <jdelvare@novell.com>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Kay Sievers <kay.sievers@vrfy.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>
+To: Thomas Renninger <trenn@suse.de>, "Zhang, Rui" <rui.zhang@intel.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "jdelvare@novell.com" <jdelvare@novell.com>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Kay Sievers <kay.sievers@vrfy.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>
 
-On Tuesday, January 25, 2011 08:57:49 AM Zhang Rui wrote:
-> On Tue, 2011-01-25 at 00:07 +0800, Henrique de Moraes Holschuh wrote:
-> > On Mon, 24 Jan 2011, Thomas Renninger wrote:
-> > > I wonder whether netlink is the way to go for thermal
-> > > events at all.
-> > > Sending an udev event would already contain the sysfs
-> > > path to the thermal device. A variable which thermal event
-> > > got thrown could get added and userspace can read out the rest
-> > > easily from sysfs files. But I expect udev is not intended
-> > > for such general events?
-> > 
-> > udev is heavyweight in the userspace side, we'd be much better off using the
-> > ACPI event interface (which is netlink), or a new one to deliver system
-> > status events, instead of continously abusing udev for this stuff.
-> > 
-> > > > > Also, the thermal_aux0 and _aux1, we can use the final format specified by you.
-> > > > > enum events {
-> > > > >  	THERMAL_CRITICAL,
-> > > > >  	/* user defined thermal events */
-> > > > >  	THERMAL_USER_AUX0,
-> > > > >  	THERMAL_USER_AUX1,
-> > > > >  	THERMAL_DEV_FAULT,
-> > > > >  };
-> > 
-> > Please give us at least two levels of thermal alarm: critical and emergency
-> > (or warning and critical -- it doesn't matter much, as long as there are at
-> > least two levels, and which one comes first is defined by the
-> > specification).  I'd have immediate use for them on thinkpads.
-What kind of thinkpad specific events are these and what actions
-should be taken if they happen?
- 
-> > It is probably best to have three levels (warning, critical, emergency).
-> > Best not to tie the API/ABI to the notion of "too hot", one can also alarm
-> > when it starts to get to cold.
-> > 
-> when it's the "too hot" case, what kind of action should be taken upon
-> the warning/critical/emergency events?
-> I mean what's the difference between these three levels.
-I could imagine there is quite some HW out there
-with quite different thermal events.
-What other actions userspace would take beside logging the event,
-telling the user that a fan is switched on, CPU or whatever device
-gets throttled. Logging such specific info can only be implemented
-in the driver itself and would get lost when exporting things through
-a generic thermal interface.
-
-I wonder which events would need userspace to take specific
-(configured) actions at all and what kind of action it could be.
-
-What is THERMAL_USER_AUX0?
-When will it get thrown and what is userspace expected to do?
-
-    Thomas
+SGkgVGhvbWFzLA0KDQo+IA0KPiBJIHdvbmRlciB3aGljaCBldmVudHMgd291bGQgbmVlZCB1c2Vy
+c3BhY2UgdG8gdGFrZSBzcGVjaWZpYw0KPiAoY29uZmlndXJlZCkgYWN0aW9ucyBhdCBhbGwgYW5k
+IHdoYXQga2luZCBvZiBhY3Rpb24gaXQgY291bGQgYmUuDQo+IA0KPiBXaGF0IGlzIFRIRVJNQUxf
+VVNFUl9BVVgwPw0KPiBXaGVuIHdpbGwgaXQgZ2V0IHRocm93biBhbmQgd2hhdCBpcyB1c2Vyc3Bh
+Y2UgZXhwZWN0ZWQgdG8gZG8/DQo+IA0KDQpUaGlzIFRIRVJNQUxfVVNFUl9BVVgwIGlzIG1lYW50
+IGZvciB0aGUgRFRTIGNvcmUgdGhyZXNob2xkcy4NCkluIEFDUEkgY29tcGxpYW50IHN5c3RlbXMs
+IFRoZXJlIGFyZSB0d28gY29yZSB0aHJlc2hvbGRzLCB0aGF0DQpDYW4gYmUgcHJvZ3JhbW1lZCBh
+bmQgcmVhZCB2aWEgSUEzMl9USEVSTV9JTlRFUlJVUFQgTVNSLiBPbmUgaXMgdGhlDQpMb3dlciB0
+aHJlc2hvbGQgKEFVWDApIGFuZCB0aGUgb3RoZXIgb25lIGlzIHRoZSBoaWdoZXIgdGhyZXNob2xk
+KEFVWDEpLg0KDQpXaGVuIHRoZSBDdXJyZW50IHRlbXBlcmF0dXJlIGdvZXMgYmVsb3cgdGhlIGxv
+d2VyIHRocmVzaG9sZCwgb3IgYWJvdmUNCnRoZSBoaWdoZXIgdGhyZXNob2xkLCB0aGUgSFcgZ2Vu
+ZXJhdGVzIGFuIGludGVycnVwdC4gVGhpcyBpcyB3aGF0IGlzDQpmb3J3YXJkZWQgdG8gdGhlIHVz
+ZXIgc3BhY2UgdGhyb3VnaCB0aGUgbmV0bGluayBldmVudHMuDQoNClRoZSB1c2VyIGFwcCBjYW4g
+aW5jcmVhc2UgcGVyZm9ybWFuY2UoaW5jcmVhc2UgQ1BVIHNwZWVkLi4pDQpvbiByZWNlaXZpbmcg
+QVVYMCBldmVudHMsIGFuZCB0cnkgdG8gcmVkdWNlIHBlcmZvcm1hbmNlDQoobGlrZSBDUFUgZnJl
+cXVlbmN5IHJlZHVjdGlvbiwgZGlzcGxheSBjb250cm9sLi4pb24gZ2V0dGluZyBBVVgxIGV2ZW50
+cy4NCkJhc2ljYWxseSwgdGhlIGFwcCBjYW4gZG8gYW55dGhpbmcgdG8gcmVkdWNlIHRoZSB0ZW1w
+ZXJhdHVyZSBvZiB0aGUNClBsYXRmb3JtLg0KDQpUaGFua3MsDQpEdXJnYQ0K
