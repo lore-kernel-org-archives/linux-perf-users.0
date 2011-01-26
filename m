@@ -1,72 +1,140 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: Thermal kernel events API to userspace - Was: Re: thermal:
- Avoid CONFIG_NET compile dependency
-Date: Tue, 25 Jan 2011 14:10:59 -0200
-Message-ID: <20110125161059.GD14803@khazad-dum.debian.net>
-References: <D6D887BA8C9DFF48B5233887EF046541094482F511@bgsmsx502.gar.corp.intel.com>
- <20110124160747.GD6424@khazad-dum.debian.net>
- <1295942269.1866.1201.camel@rui>
- <201101251112.28340.trenn@suse.de>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: [RFC] --dump-sym-trace
+Date: Tue, 25 Jan 2011 17:47:40 -0800
+Message-ID: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary=000325575c96bb0137049ab604cb
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from out1.smtp.messagingengine.com ([66.111.4.25]:40299 "EHLO
-	out1.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751236Ab1AYQLD (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:63937 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751769Ab1AZBrl (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 25 Jan 2011 11:11:03 -0500
-Content-Disposition: inline
-In-Reply-To: <201101251112.28340.trenn@suse.de>
+	Tue, 25 Jan 2011 20:47:41 -0500
+Received: by iyj18 with SMTP id 18so5715393iyj.19
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jan 2011 17:47:41 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: Zhang Rui <rui.zhang@intel.com>, "R, Durgadoss" <durgadoss.r@intel.com>, "jdelvare@novell.com" <jdelvare@novell.com>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Kay Sievers <kay.sievers@vrfy.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-On Tue, 25 Jan 2011, Thomas Renninger wrote:
-> > > Please give us at least two levels of thermal alarm: critical and emergency
-> > > (or warning and critical -- it doesn't matter much, as long as there are at
-> > > least two levels, and which one comes first is defined by the
-> > > specification).  I'd have immediate use for them on thinkpads.
-> What kind of thinkpad specific events are these and what actions
-> should be taken if they happen?
+--000325575c96bb0137049ab604cb
+Content-Type: text/plain; charset=UTF-8
 
-So far:  Battery temperature critical and emergency, Generic system sensor
-temperature critical and emergency.
+Some of my coworkers want to build tools to aggregate perf.data files
+from many different machines and provide web front ends and possibly
+other ways of visualizing the data (graphviz dot format comes to
+mind). One potential path is to use perf report -D (raw dump) and
+analyze that. But it made no sense to duplicate the functionality
+already in perf.
 
-In all cases, the recommended actions are imediate notification for the
-user, and in the case of the emergency level, immediate action, where action
-is "suspend to ram" or shutdown.
+Attached is a preliminary patch that dumps the trace, but also
+symbolizes the addresses. It's probably not terribly efficient - but I
+wanted to post it anyway to figure out if this is a good starting
+point or there are other ways of getting perf to report call graphs
+that are easy to parse in another program.
 
-Right now all they do is to prinkt at suitable "horrible things are about to
-happen" severity levels (KERN_CRIT for critical, and KERN_ALERT for
-emergency).  In a few sensible desktop environments and distros, this causes
-a notification to show up on the user's screen.
+ -Arun
 
-Oh, and it also relays the thinkpad-specific event through the ACPI event
-pipe, but I don't know of any userspace application doing something with it,
-and nobody ever tried to bribe me into writing one by suppling me with a new
-T-series thinkpad :)
+--000325575c96bb0137049ab604cb
+Content-Type: application/octet-stream; name="dump-sym-trace.patch"
+Content-Disposition: attachment; filename="dump-sym-trace.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_gjdkql2u0
 
-> I wonder which events would need userspace to take specific
-> (configured) actions at all and what kind of action it could be.
-
-All of them can have sensible generic actions.  See my other email.
-
-> What is THERMAL_USER_AUX0?
-> When will it get thrown and what is userspace expected to do?
-
-Good question.  What use are those "user defined" events in a generic
-interface, anyway?  You will have to know exactly what device is issuing the
-"generic user defined" event, and what it means for that device.
-
-When you need a device-specific interface, you design one that is well
-defined, such as thinkpad-acpi's thinkpad-specific "acpi" events.  If you
-get any thinkpad-acpi specific event, you know exactly what it is, and
-nothing else ever issues those events, so you will never get them from
-somewhere else with a different meaning.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1yZXBvcnQuYyBiL3Rvb2xzL3BlcmYvYnVp
+bHRpbi1yZXBvcnQuYwppbmRleCA3NTE4M2E0Li4xOWMzZDFiIDEwMDY0NAotLS0gYS90b29scy9w
+ZXJmL2J1aWx0aW4tcmVwb3J0LmMKKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXJlcG9ydC5jCkBA
+IC00NDMsNiArNDQzLDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvcHRpb24gb3B0aW9uc1tdID0g
+ewogCQkgICAgImJlIG1vcmUgdmVyYm9zZSAoc2hvdyBzeW1ib2wgYWRkcmVzcywgZXRjKSIpLAog
+CU9QVF9CT09MRUFOKCdEJywgImR1bXAtcmF3LXRyYWNlIiwgJmR1bXBfdHJhY2UsCiAJCSAgICAi
+ZHVtcCByYXcgdHJhY2UgaW4gQVNDSUkiKSwKKwlPUFRfQk9PTEVBTigwLCAiZHVtcC1zeW0tdHJh
+Y2UiLCAmZHVtcF9zeW1fdHJhY2UsCisJCSAgICAiU2ltaWxhciB0byBkdW1wLXJhdy10cmFjZSwg
+YnV0IHN5bWJvbGl6ZWQiKSwKIAlPUFRfU1RSSU5HKCdrJywgInZtbGludXgiLCAmc3ltYm9sX2Nv
+bmYudm1saW51eF9uYW1lLAogCQkgICAiZmlsZSIsICJ2bWxpbnV4IHBhdGhuYW1lIiksCiAJT1BU
+X1NUUklORygwLCAia2FsbHN5bXMiLCAmc3ltYm9sX2NvbmYua2FsbHN5bXNfbmFtZSwKQEAgLTUw
+MSw2ICs1MDMsMTAgQEAgaW50IGNtZF9yZXBvcnQoaW50IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2
+LCBjb25zdCBjaGFyICpwcmVmaXggX191c2VkKQogCQlzZXR1cF9icm93c2VyKCk7CiAJZWxzZQog
+CQl1c2VfYnJvd3NlciA9IDA7CisKKwlpZiAoZHVtcF9zeW1fdHJhY2UpCisJCWR1bXBfdHJhY2Ug
+PSAxOworCiAJLyoKIAkgKiBPbmx5IGluIHRoZSBuZXd0IGJyb3dzZXIgd2UgYXJlIGRvaW5nIGlu
+dGVncmF0ZWQgYW5ub3RhdGlvbiwKIAkgKiBzbyBkb24ndCBhbGxvY2F0ZSBleHRyYSBzcGFjZSB0
+aGF0IHdvbid0IGJlIHVzZWQgaW4gdGhlIHN0ZGlvCmRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0
+aWwvZGVidWcuYyBiL3Rvb2xzL3BlcmYvdXRpbC9kZWJ1Zy5jCmluZGV4IDAxYmJlOGUuLmQ2NDU2
+NTQgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9kZWJ1Zy5jCisrKyBiL3Rvb2xzL3BlcmYv
+dXRpbC9kZWJ1Zy5jCkBAIC0xMyw3ICsxMyw3IEBACiAjaW5jbHVkZSAidXRpbC5oIgogCiBpbnQg
+dmVyYm9zZTsKLWJvb2wgZHVtcF90cmFjZSA9IGZhbHNlLCBxdWlldCA9IGZhbHNlOworYm9vbCBk
+dW1wX3RyYWNlID0gZmFsc2UsIGR1bXBfc3ltX3RyYWNlID0gZmFsc2UsIHF1aWV0ID0gZmFsc2U7
+CiAKIGludCBlcHJpbnRmKGludCBsZXZlbCwgY29uc3QgY2hhciAqZm10LCAuLi4pCiB7CmRpZmYg
+LS1naXQgYS90b29scy9wZXJmL3V0aWwvZGVidWcuaCBiL3Rvb2xzL3BlcmYvdXRpbC9kZWJ1Zy5o
+CmluZGV4IGNhMzVmZDYuLjljYzRiN2EgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9kZWJ1
+Zy5oCisrKyBiL3Rvb2xzL3BlcmYvdXRpbC9kZWJ1Zy5oCkBAIC02LDcgKzYsNyBAQAogI2luY2x1
+ZGUgImV2ZW50LmgiCiAKIGV4dGVybiBpbnQgdmVyYm9zZTsKLWV4dGVybiBib29sIHF1aWV0LCBk
+dW1wX3RyYWNlOworZXh0ZXJuIGJvb2wgcXVpZXQsIGR1bXBfdHJhY2UsIGR1bXBfc3ltX3RyYWNl
+OwogCiBpbnQgZHVtcF9wcmludGYoY29uc3QgY2hhciAqZm10LCAuLi4pIF9fYXR0cmlidXRlX18o
+KGZvcm1hdChwcmludGYsIDEsIDIpKSk7CiB2b2lkIHRyYWNlX2V2ZW50KGV2ZW50X3QgKmV2ZW50
+KTsKZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9ldmVudC5jIGIvdG9vbHMvcGVyZi91dGls
+L2V2ZW50LmMKaW5kZXggMjMwMmVjMC4uNGVmM2EwNSAxMDA2NDQKLS0tIGEvdG9vbHMvcGVyZi91
+dGlsL2V2ZW50LmMKKysrIGIvdG9vbHMvcGVyZi91dGlsL2V2ZW50LmMKQEAgLTc1Myw2ICs3NTMs
+MjIgQEAgc3RhdGljIHZvaWQgZHNvX19jYWxjX2NvbF93aWR0aChzdHJ1Y3QgZHNvICpzZWxmLCBz
+dHJ1Y3QgaGlzdHMgKmhpc3RzKQogCXNlbGYtPnNsZW5fY2FsY3VsYXRlZCA9IDE7CiB9CiAKK2lu
+dCBzeW1ib2xpemUoY29uc3QgZXZlbnRfdCAqc2VsZiwgc3RydWN0IHBlcmZfc2Vzc2lvbiAqc2Vz
+c2lvbiwKKwkgICAgICBzdHJ1Y3QgYWRkcl9sb2NhdGlvbiAqYWwsIHU2NCBhZGRyKSB7CisJc3Ry
+dWN0IHRocmVhZCAqdGhyZWFkID0gcGVyZl9zZXNzaW9uX19maW5kbmV3KHNlc3Npb24sIHNlbGYt
+PmlwLnBpZCk7CisJdTggY3B1bW9kZSA9IHNlbGYtPmhlYWRlci5taXNjICYgUEVSRl9SRUNPUkRf
+TUlTQ19DUFVNT0RFX01BU0s7CisKKwlpZiAodGhyZWFkID09IE5VTEwpCisJCXJldHVybiAtMTsK
+KworCXRocmVhZF9fZmluZF9hZGRyX21hcCh0aHJlYWQsIHNlc3Npb24sIGNwdW1vZGUsIE1BUF9f
+RlVOQ1RJT04sCisJCQkgICAgICBzZWxmLT5pcC5waWQsIGFkZHIsIGFsKTsKKwlpZiAoYWwtPm1h
+cCkgeworCQlhbC0+c3ltID0gbWFwX19maW5kX3N5bWJvbChhbC0+bWFwLCBhbC0+YWRkciwgTlVM
+TCk7CisJfQorCXJldHVybiAwOworfQorCiBpbnQgZXZlbnRfX3ByZXByb2Nlc3Nfc2FtcGxlKGNv
+bnN0IGV2ZW50X3QgKnNlbGYsIHN0cnVjdCBwZXJmX3Nlc3Npb24gKnNlc3Npb24sCiAJCQkgICAg
+IHN0cnVjdCBhZGRyX2xvY2F0aW9uICphbCwgc3RydWN0IHNhbXBsZV9kYXRhICpkYXRhLAogCQkJ
+ICAgICBzeW1ib2xfZmlsdGVyX3QgZmlsdGVyKQpkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGls
+L2V2ZW50LmggYi90b29scy9wZXJmL3V0aWwvZXZlbnQuaAppbmRleCAyYjdlOTE5Li5mNmE2Yzk5
+IDEwMDY0NAotLS0gYS90b29scy9wZXJmL3V0aWwvZXZlbnQuaAorKysgYi90b29scy9wZXJmL3V0
+aWwvZXZlbnQuaApAQCAtMTY2LDYgKzE2Niw4IEBAIGludCBldmVudF9fcHJvY2VzcyhldmVudF90
+ICpldmVudCwgc3RydWN0IHNhbXBsZV9kYXRhICpzYW1wbGUsCiAJCSAgIHN0cnVjdCBwZXJmX3Nl
+c3Npb24gKnNlc3Npb24pOwogCiBzdHJ1Y3QgYWRkcl9sb2NhdGlvbjsKK2ludCBzeW1ib2xpemUo
+Y29uc3QgZXZlbnRfdCAqc2VsZiwgc3RydWN0IHBlcmZfc2Vzc2lvbiAqc2Vzc2lvbiwKKwkgICAg
+ICBzdHJ1Y3QgYWRkcl9sb2NhdGlvbiAqYWwsIHU2NCBhZGRyKTsKIGludCBldmVudF9fcHJlcHJv
+Y2Vzc19zYW1wbGUoY29uc3QgZXZlbnRfdCAqc2VsZiwgc3RydWN0IHBlcmZfc2Vzc2lvbiAqc2Vz
+c2lvbiwKIAkJCSAgICAgc3RydWN0IGFkZHJfbG9jYXRpb24gKmFsLCBzdHJ1Y3Qgc2FtcGxlX2Rh
+dGEgKmRhdGEsCiAJCQkgICAgIHN5bWJvbF9maWx0ZXJfdCBmaWx0ZXIpOwpkaWZmIC0tZ2l0IGEv
+dG9vbHMvcGVyZi91dGlsL3Nlc3Npb24uYyBiL3Rvb2xzL3BlcmYvdXRpbC9zZXNzaW9uLmMKaW5k
+ZXggMzEzZGFjMi4uZTRiMjQ4OSAxMDA2NDQKLS0tIGEvdG9vbHMvcGVyZi91dGlsL3Nlc3Npb24u
+YworKysgYi90b29scy9wZXJmL3V0aWwvc2Vzc2lvbi5jCkBAIC02NDgsMTQgKzY0OCwyOSBAQCBz
+dGF0aWMgaW50IHBlcmZfc2Vzc2lvbl9xdWV1ZV9ldmVudChzdHJ1Y3QgcGVyZl9zZXNzaW9uICpz
+LCBldmVudF90ICpldmVudCwKIAlyZXR1cm4gMDsKIH0KIAotc3RhdGljIHZvaWQgY2FsbGNoYWlu
+X19wcmludGYoc3RydWN0IHNhbXBsZV9kYXRhICpzYW1wbGUpCitzdGF0aWMgdm9pZCBjYWxsY2hh
+aW5fX3ByaW50ZihzdHJ1Y3QgcGVyZl9zZXNzaW9uICpzZXNzaW9uLCBldmVudF90ICpldmVudCwK
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBzYW1wbGVfZGF0YSAqc2FtcGxl
+KQogewogCXVuc2lnbmVkIGludCBpOwogCiAJcHJpbnRmKCIuLi4gY2hhaW46IG5yOiVMdVxuIiwg
+c2FtcGxlLT5jYWxsY2hhaW4tPm5yKTsKIAotCWZvciAoaSA9IDA7IGkgPCBzYW1wbGUtPmNhbGxj
+aGFpbi0+bnI7IGkrKykKLQkJcHJpbnRmKCIuLi4uLiAlMmQ6ICUwMTZMeFxuIiwgaSwgc2FtcGxl
+LT5jYWxsY2hhaW4tPmlwc1tpXSk7CisJZm9yIChpID0gMDsgaSA8IHNhbXBsZS0+Y2FsbGNoYWlu
+LT5ucjsgaSsrKSB7CisJCWludCByZXQgPSAwOworCQlzdHJ1Y3QgYWRkcl9sb2NhdGlvbiBhbDsK
+KworCQlpZiAoZHVtcF9zeW1fdHJhY2UpIHsKKwkJCXJldCA9IHN5bWJvbGl6ZShldmVudCwgc2Vz
+c2lvbiwgJmFsLAorCQkJCQlzYW1wbGUtPmNhbGxjaGFpbi0+aXBzW2ldKTsJCisJCX0KKworCQlp
+ZiAoZHVtcF9zeW1fdHJhY2UgJiYgIXJldCAmJiBhbC5zeW0gJiYgYWwuc3ltLT5uYW1lKSB7CisJ
+CQlwcmludGYoIi4uLi4uICUyZDogJTE2c1xuIiwgaSwgYWwuc3ltLT5uYW1lKTsKKwkJfSBlbHNl
+IHsKKwkJCXByaW50ZigiLi4uLi4gJTJkOiAlMDE2THhcbiIsIGksCisJCQkgICAgICAgc2FtcGxl
+LT5jYWxsY2hhaW4tPmlwc1tpXSk7CisJCX0KKwl9CiB9CiAKIHN0YXRpYyB2b2lkIHBlcmZfc2Vz
+c2lvbl9fcHJpbnRfdHN0YW1wKHN0cnVjdCBwZXJmX3Nlc3Npb24gKnNlc3Npb24sCkBAIC02OTYs
+MTQgKzcxMSwyOCBAQCBzdGF0aWMgdm9pZCBkdW1wX2V2ZW50KHN0cnVjdCBwZXJmX3Nlc3Npb24g
+KnNlc3Npb24sIGV2ZW50X3QgKmV2ZW50LAogc3RhdGljIHZvaWQgZHVtcF9zYW1wbGUoc3RydWN0
+IHBlcmZfc2Vzc2lvbiAqc2Vzc2lvbiwgZXZlbnRfdCAqZXZlbnQsCiAJCQlzdHJ1Y3Qgc2FtcGxl
+X2RhdGEgKnNhbXBsZSkKIHsKKwlzdHJ1Y3QgYWRkcl9sb2NhdGlvbiBhbDsKKwlpbnQgcmV0Owor
+CiAJaWYgKCFkdW1wX3RyYWNlKQogCQlyZXR1cm47CiAKLQlwcmludGYoIihJUCwgJWQpOiAlZC8l
+ZDogJSNMeCBwZXJpb2Q6ICVMZFxuIiwgZXZlbnQtPmhlYWRlci5taXNjLAotCSAgICAgICBzYW1w
+bGUtPnBpZCwgc2FtcGxlLT50aWQsIHNhbXBsZS0+aXAsIHNhbXBsZS0+cGVyaW9kKTsKKwlpZiAo
+ZHVtcF9zeW1fdHJhY2UpIHsKKwkJLyogVHJ5IHRvIHN5bWJvbGl6ZSAqLworCQlyZXQgPSBzeW1i
+b2xpemUoZXZlbnQsIHNlc3Npb24sICZhbCwgc2FtcGxlLT5pcCk7CQorCX0KKworCWlmIChkdW1w
+X3N5bV90cmFjZSAmJiAhcmV0ICYmIGFsLnN5bSAmJiBhbC5zeW0tPm5hbWUpIHsKKwkJcHJpbnRm
+KCIoSVAsICVkKTogJWQvJWQ6ICVzIHBlcmlvZDogJUxkXG4iLCBldmVudC0+aGVhZGVyLm1pc2Ms
+CisJICAgICAgIAkgICAgICAgc2FtcGxlLT5waWQsIHNhbXBsZS0+dGlkLCBhbC5zeW0tPm5hbWUs
+IHNhbXBsZS0+cGVyaW9kKTsKKyAJfSBlbHNlIHsKKwkJcHJpbnRmKCIoSVAsICVkKTogJWQvJWQ6
+ICUjTHggcGVyaW9kOiAlTGRcbiIsCisgICAgICAgICAgICAgICAgICAgICAgIGV2ZW50LT5oZWFk
+ZXIubWlzYywKKwkgICAgICAgCSAgICAgICBzYW1wbGUtPnBpZCwgc2FtcGxlLT50aWQsIHNhbXBs
+ZS0+aXAsIHNhbXBsZS0+cGVyaW9kKTsKKwl9CiAKIAlpZiAoc2Vzc2lvbi0+c2FtcGxlX3R5cGUg
+JiBQRVJGX1NBTVBMRV9DQUxMQ0hBSU4pCi0JCWNhbGxjaGFpbl9fcHJpbnRmKHNhbXBsZSk7CisJ
+CWNhbGxjaGFpbl9fcHJpbnRmKHNlc3Npb24sIGV2ZW50LCBzYW1wbGUpOwogfQogCiBzdGF0aWMg
+aW50IHBlcmZfc2Vzc2lvbl9kZWxpdmVyX2V2ZW50KHN0cnVjdCBwZXJmX3Nlc3Npb24gKnNlc3Np
+b24sCg==
+--000325575c96bb0137049ab604cb--
