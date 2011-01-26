@@ -1,51 +1,109 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [RFC] --dump-sym-trace
-Date: Tue, 25 Jan 2011 19:29:47 -0700
-Message-ID: <4D3F871B.3060906@cisco.com>
-References: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>
+From: "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: Thermal kernel events API to userspace - Was: Re: thermal:
+ Avoid CONFIG_NET compile dependency
+Date: Wed, 26 Jan 2011 15:14:16 +0800
+Message-ID: <CF2F38D4AE21BB4CB845318E4C5ECB6731CC866A@shsmsx501.ccr.corp.intel.com>
+References: <D6D887BA8C9DFF48B5233887EF046541094482F511@bgsmsx502.gar.corp.intel.com>
+ <20110124160747.GD6424@khazad-dum.debian.net>
+ <1295942269.1866.1201.camel@rui> <201101251112.28340.trenn@suse.de>
+ <20110125161059.GD14803@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-5.cisco.com ([171.68.10.87]:52865 "EHLO
-	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751940Ab1AZC3t (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 25 Jan 2011 21:29:49 -0500
-In-Reply-To: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <arun@sharma-home.net>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-trace-users-owner@vger.kernel.org>
+In-Reply-To: <20110125161059.GD14803@khazad-dum.debian.net>
+Content-Language: en-US
+Sender: linux-trace-users-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Thomas Renninger <trenn@suse.de>
+Cc: "R, Durgadoss" <durgadoss.r@intel.com>, "jdelvare@novell.com" <jdelvare@novell.com>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Kay Sievers <kay.sievers@vrfy.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
 
 
-On 01/25/11 18:47, Arun Sharma wrote:
-> Some of my coworkers want to build tools to aggregate perf.data files
-> from many different machines and provide web front ends and possibly
-> other ways of visualizing the data (graphviz dot format comes to
-> mind). One potential path is to use perf report -D (raw dump) and
-> analyze that. But it made no sense to duplicate the functionality
-> already in perf.
+> -----Original Message-----
+> From: Henrique de Moraes Holschuh [mailto:hmh@hmh.eng.br]
+> Sent: Wednesday, January 26, 2011 12:11 AM
+> To: Thomas Renninger
+> Cc: Zhang, Rui; R, Durgadoss; jdelvare@novell.com; Len Brown; linux-
+> acpi@vger.kernel.org; Kay Sievers; linux-perf-users@vger.kernel.org;
+> linux-kernel@vger.kernel.org; linux-trace-users@vger.kernel.org
+> Subject: Re: Thermal kernel events API to userspace - Was: Re: thermal:
+> Avoid CONFIG_NET compile dependency
+> Importance: High
 > 
-> Attached is a preliminary patch that dumps the trace, but also
-> symbolizes the addresses. It's probably not terribly efficient - but I
-> wanted to post it anyway to figure out if this is a good starting
-> point or there are other ways of getting perf to report call graphs
-> that are easy to parse in another program.
+> On Tue, 25 Jan 2011, Thomas Renninger wrote:
+> > > > Please give us at least two levels of thermal alarm: critical and
+> emergency
+> > > > (or warning and critical -- it doesn't matter much, as long as
+> there are at
+> > > > least two levels, and which one comes first is defined by the
+> > > > specification).  I'd have immediate use for them on thinkpads.
+> > What kind of thinkpad specific events are these and what actions
+> > should be taken if they happen?
 > 
->  -Arun
+> So far:  Battery temperature critical and emergency, Generic system
+> sensor
+> temperature critical and emergency.
+> 
+> In all cases, the recommended actions are imediate notification for the
+> user, and in the case of the emergency level, immediate action, where
+> action
+> is "suspend to ram" or shutdown.
+> 
+> Right now all they do is to prinkt at suitable "horrible things are
+> about to
+> happen" severity levels (KERN_CRIT for critical, and KERN_ALERT for
+> emergency).  In a few sensible desktop environments and distros, this
+> causes
+> a notification to show up on the user's screen.
+> 
+> Oh, and it also relays the thinkpad-specific event through the ACPI
+> event
+> pipe, but I don't know of any userspace application doing something
+> with it,
+> and nobody ever tried to bribe me into writing one by suppling me with
+> a new
+> T-series thinkpad :)
+> 
+> > I wonder which events would need userspace to take specific
+> > (configured) actions at all and what kind of action it could be.
+> 
+> All of them can have sensible generic actions.  See my other email.
+> 
+> > What is THERMAL_USER_AUX0?
+> > When will it get thrown and what is userspace expected to do?
+> 
+> Good question.  What use are those "user defined" events in a generic
+> interface, anyway?  You will have to know exactly what device is
+> issuing the
+> "generic user defined" event, and what it means for that device.
+> 
+> When you need a device-specific interface, you design one that is well
+> defined, such as thinkpad-acpi's thinkpad-specific "acpi" events.  If
+> you
+> get any thinkpad-acpi specific event, you know exactly what it is, and
+> nothing else ever issues those events, so you will never get them from
+> somewhere else with a different meaning.
+>
+I think you are talking about something like this:
+enum events {
+	/* generic thermal event */
+	THERMAL_WARN,
+	THERMAL_EMERG,
+	THERMAL_CRIT,
+	/* coretemp thermal events */
+	TEHRMAL_CT_AUX0,
+	TEHRMAL_CT_AUX1,
+	/* Thinkpad battery thermal events */
+	THERMAL_TP_BAT_CRIT,
+	THERMAL_TP_BAT_EMERG,
+	THERMAL_DEV_FAULT,
+};
+Right?
 
-From a brief glance seems similar to the timehist patch I proposed. See:
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00049.html
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00047.html
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00048.html
 
-The last URL shows an example of the output (abbreviated for email;
-unwind the continuation lines for a better display).
-
-That essentially dumps each sample point with the address-to-symbol
-conversions done. The output of that is then fed to homegrown commands
-to visualize/process the data.
-
-David
+> --
+>   "One disk to rule them all, One disk to find them. One disk to bring
+>   them all and in the darkness grind them. In the Land of Redmond
+>   where the shadows lie." -- The Silicon Valley Tarot
+>   Henrique Holschuh
