@@ -1,52 +1,75 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [RFC] --dump-sym-trace
-Date: Fri, 28 Jan 2011 14:41:37 -0700
-Message-ID: <4D433811.7020904@cisco.com>
-References: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>	<4D3F871B.3060906@cisco.com> <AANLkTinik0+Zp7N54bkh5fBzF1hb2XoubRbuMXwBeYGZ@mail.gmail.com>
+From: Vince Weaver <vweaver1@eecs.utk.edu>
+Subject: Re: How to check perf commands are producing proper output or not?
+Date: Fri, 28 Jan 2011 17:03:06 -0500 (EST)
+Message-ID: <alpine.DEB.2.00.1101281650230.10620@cl320.eecs.utk.edu>
+References: <AANLkTikZc4L=-xzmOvqLC00qNHLuqCBOdcD3hofBNfFN@mail.gmail.com> <20110128134811.GB6345@ghostprotocols.net> <alpine.DEB.2.00.1101280929240.10620@cl320.eecs.utk.edu> <20110128154314.GC6345@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:22642 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752874Ab1A1Vlj (ORCPT
+Received: from leopard.mail.utk.edu ([160.36.0.85]:33864 "EHLO
+	leopard.mail.utk.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752023Ab1A1WDJ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Jan 2011 16:41:39 -0500
-In-Reply-To: <AANLkTinik0+Zp7N54bkh5fBzF1hb2XoubRbuMXwBeYGZ@mail.gmail.com>
+	Fri, 28 Jan 2011 17:03:09 -0500
+In-Reply-To: <20110128154314.GC6345@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <arun@sharma-home.net>
-Cc: linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: nelakurthi koteswararao <koteswararao18@gmail.com>, linux-perf-users@vger.kernel.org
 
-
-
-On 01/28/11 14:18, Arun Sharma wrote:
-> On Tue, Jan 25, 2011 at 6:29 PM, David Ahern <daahern@cisco.com> wrote:
->> From a brief glance seems similar to the timehist patch I proposed. See:
->> http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00049.html
->> http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00047.html
->> http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00048.html
+On Fri, 28 Jan 2011, Arnaldo Carvalho de Melo wrote:
 > 
-> The output could be a bit more compact (eg: print some info once per
-> stack trace rather than once per frame). Also, it doesn't seem to
-> print the DSO name when symbol lookup fails?
+> My expectation so far, for basic tests, is not to precisely detect each
+> and every event, but to make sure that if a big number of cache misses
+> is being provoked, a big number of cache misses is being detected, to
+> test the basic working of the system.
 
-I am certainly interested in ideas on how to improve the output.
+So do you want to just check for a non-zero number for the various counts?
+That can be easily done.
 
-That version was derived from a local patch; in our case I wanted a
-simple format for the output. Essentially, the timehist output is a
-'text' version of the samples, with timestamps and address conversions
-where possible.
+If you want something closer, such as if something like branches match
+to within 10% you end up needing assembly-coded benchmarks, as compiler
+variation can make it hard to tell if the results you are getting are 
+right or just coincidence.
 
-Arnaldo has started a new version of it wherein the wall clock is a new
-event that can be sampled (e.g., perf top) or generated at given rate. I
-spent time looking at the changes to perf command, but have been
-sidetracked with other priorities.
+> After basic tests are in place, we go on trying to make them more
+> precise as is practical.
 
-David
+You do have to be careful in situations like this.  The in-kernel AMD 
+branches count was wrong for a few kernel releases.  The count returned
+a roughly plausible number of branches, but it turns out it was only 
+counting retired-taken not retired-total branches.  Only a fairly exact 
+assembly-language test I was working on showed this problem.
 
+Another problem is with cache results.  This is why I wrote these tests to 
+begin with.  I had users of PAPI/perf_events tell me that our tool was 
+"broken" because they got implausibly low results for L2 cache misses (on 
+the order of maybe 20 misses for walking an array the size of L2 cache).
+It turns out that the HW prefetchers on modern machines are so good that
+unless you do random walks of the cache it will look like the counter is 
+broken.
 
+> > Even things you might think are simple, like retired-instructions can vary 
+> > wildly.  There are enough differences caused by Linux and processor errata 
+> > with retired-instructions that I wrote a whole 10 page paper about the 
+> > differences you see.
 > 
-> Otherwise looks great. I'll drop the other patch.
+> Cool, can I get the paper URL? I'd love to read it
+
+Sure, it's:
+   http://web.eecs.utk.edu/~vweaver1/projects/deterministic/fhpm2010_weaver.pdf
+
+> > I have started writing some validation tests, though they use the PAPI 
+> > library which runs on top of perf-events.  You can see that and other 
+> > validation work linked to here:
+> >    http://web.eecs.utk.edu/~vweaver1/projects/validation-tests/
 > 
->  -Arun
+> Will look at it, thanks for the pointer, thanks for working on it!
+
+I'd be glad to help a bit with this, as I think it's an important topic.
+I should check out the current perf regression tests to see what's there.
+I've been working at higher levels with libpfm4 and PAPI because a lot of 
+the events I have problems with aren't necessarily the ones exposed by 
+perf (without using raw events).
+
+Vince
