@@ -1,45 +1,45 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+From: Vince Weaver <vweaver1@eecs.utk.edu>
 Subject: Re: How to check perf commands are producing proper output or not?
-Date: Fri, 28 Jan 2011 11:48:11 -0200
-Message-ID: <20110128134811.GB6345@ghostprotocols.net>
-References: <AANLkTikZc4L=-xzmOvqLC00qNHLuqCBOdcD3hofBNfFN@mail.gmail.com>
+Date: Fri, 28 Jan 2011 09:37:03 -0500 (EST)
+Message-ID: <alpine.DEB.2.00.1101280929240.10620@cl320.eecs.utk.edu>
+References: <AANLkTikZc4L=-xzmOvqLC00qNHLuqCBOdcD3hofBNfFN@mail.gmail.com> <20110128134811.GB6345@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:34928 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753417Ab1A1NsR (ORCPT
+Received: from leopard.mail.utk.edu ([160.36.0.85]:36226 "EHLO
+	leopard.mail.utk.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754518Ab1A1OyP (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Jan 2011 08:48:17 -0500
-Received: by gwj20 with SMTP id 20so1076392gwj.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jan 2011 05:48:16 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <AANLkTikZc4L=-xzmOvqLC00qNHLuqCBOdcD3hofBNfFN@mail.gmail.com>
+	Fri, 28 Jan 2011 09:54:15 -0500
+In-Reply-To: <20110128134811.GB6345@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: nelakurthi koteswararao <koteswararao18@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: nelakurthi koteswararao <koteswararao18@gmail.com>, linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 28, 2011 at 05:49:00PM +0530, nelakurthi koteswararao escreveu:
->    I run the Perftest commands on 2.6.35 tree .
->    I want to test perf commands itself whether
->    they are producing the correct results or not.
->     
->    That means..suppose if i have following perf commands
->     
->    How to write test to test the above commands whether they are producing
->    the proper results specific to perf commands or not?
->     
->    Some tests like checking the processor registers at regular intervals to
->    validate
->    the perf results ? Any inputs regarding this query...?
+On Fri, 28 Jan 2011, Arnaldo Carvalho de Melo wrote:
+> 
+> So far I wrote some that generate tracepoint events, but I can envision
+> for instance, figuring out the size of the L2 processor cache, creating
+> an array that is of that size, then go on touching it till it trashes
+> the cache while measuring the relevant event.
 
-That is a good question, we need more tests in tools/perf/builtin-test.c
-that do this kinds of validations.
+Unfortunately it is harder to validate perf events than you might guess.
 
-So far I wrote some that generate tracepoint events, but I can envision
-for instance, figuring out the size of the L2 processor cache, creating
-an array that is of that size, then go on touching it till it trashes
-the cache while measuring the relevant event.
+For your L2 example, most processors do hardware prefetch in very hard to 
+model way, so the "expected" value never matches anything that you get 
+with the counters.  This is even if you write the tests in assembly
+language to avoid any weird behavior from the C compilers (and there can 
+be, even on something as simple as an array walk).
 
-- Arnaldo
+Even things you might think are simple, like retired-instructions can vary 
+wildly.  There are enough differences caused by Linux and processor errata 
+with retired-instructions that I wrote a whole 10 page paper about the 
+differences you see.
+
+I have started writing some validation tests, though they use the PAPI 
+library which runs on top of perf-events.  You can see that and other 
+validation work linked to here:
+   http://web.eecs.utk.edu/~vweaver1/projects/validation-tests/
+
+Vince
