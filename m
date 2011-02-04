@@ -1,125 +1,93 @@
-From: "Maucci, Cyrille" <cyrille.maucci@hp.com>
-Subject: RE: Profiling a program's runtime
-Date: Fri, 4 Feb 2011 18:33:36 +0000
-Message-ID: <0E02F16954AF394BB163AEE50FDF548568FE033612@GVW1121EXC.americas.hpqcorp.net>
-References: <ukft18-pba.ln1@burns.bruehl.pontohonk.de>
- <20110204171604.GB1808@nowhere> <6cqt18-1lh.ln1@burns.bruehl.pontohonk.de>
- <20110204174750.GD1808@nowhere> <4D4C4105.3050002@cisco.com>
+From: Christoph Bartoschek <bartoschek@gmx.de>
+Subject: Re: Profiling a program's runtime
+Date: Fri, 04 Feb 2011 20:24:27 +0100
+Message-ID: <cc0u18-hgq.ln1@homer.bruehl.pontohonk.de>
+References: <ukft18-pba.ln1@burns.bruehl.pontohonk.de> <20110204171604.GB1808@nowhere> <6cqt18-1lh.ln1@burns.bruehl.pontohonk.de> <20110204174750.GD1808@nowhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from g1t0029.austin.hp.com ([15.216.28.36]:13562 "EHLO
-	g1t0029.austin.hp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751167Ab1BDSdk convert rfc822-to-8bit (ORCPT
+Received: from lo.gmane.org ([80.91.229.12]:51479 "EHLO lo.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751787Ab1BDTXw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 4 Feb 2011 13:33:40 -0500
-In-Reply-To: <4D4C4105.3050002@cisco.com>
-Content-Language: en-US
+	Fri, 4 Feb 2011 14:23:52 -0500
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1PlRG2-0006D0-6P
+	for linux-perf-users@vger.kernel.org; Fri, 04 Feb 2011 20:23:50 +0100
+Received: from p3e9bb949.dip.t-dialin.net ([62.155.185.73])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2011 20:23:50 +0100
+Received: from bartoschek by p3e9bb949.dip.t-dialin.net with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2011 20:23:50 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>, Frederic Weisbecker <fweisbec@gmail.com>, Christoph Bartoschek <bartoschek@gmx.de>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-perf-users@vger.kernel.org
 
-I'd think that what he's looking for is a bit what caliper cstack would provide.
+Frederic Weisbecker wrote:
 
-
-So something like showing 'running' (consuming CPU) and 'blocked' (I/O, passive wait, etc...)...
-
-
-Function Summary 
--------------------------------------------------------------------------------------------------------
-% Total  Cumulat                          Sample         Sample                                    
-   IP      % of              IP            Hits           Hits                                     
-Samples    Total          Samples        Running        Blocked  Function                          File
--------------------------------------------------------------------------------------------------------
-  42.11    42.11             1456           1456              0  libc.so.1::__lseek_sys            
-  38.09    80.19             1317            592            725  libc.so.1::_read_sys              
-   9.43    89.62              326            326              0  libc.so.1::memset                 
-   1.59    91.21               55             55              0  libc.so.1::_write_sys             
-Etc...
-
-On the flat summary side
-
-
-And something presented like this in the call graph part
-
-
-Call Graph
---------------------------------------------------------------------
-       --% Total Hits In / Under--    % Func Hits    
-       Run +     Run       Block        Under Parent     Parents
-Index  Block     Hits      Hits       In Func        Name     Index
-       Hits      Only      Only         In Children      Children
---------------------------------------------------------------------
-[1]    100.0      78.0      22.0        0.00         *ROOT* [1]
-                                           79.47         dld.so::main_opd_entry [5]
-                                           20.04         *unknown_0x600000000e0a7608* [52]
-                                            0.20         DDENV::main [4]
-                                            0.09         DDENV::Bffo_BILLproc [25]
-                                            0.06         DDENV::bffe_Root [46]
-                                            0.03         *unknown_0x6000000008f9c6e8* [364]
-                                            0.03         DDENV::bfen_EXECproc [2]
-                                            0.03         DDENV::F1_RootObject [63]
-                                            0.03         *unknown_0x134* [451]
-                                            0.03         *unknown_0xc0000000000087a0* [456]
---------------------------------------------------------------------
-                                           99.97         DDENV::main [4]
-                                            0.03         *ROOT* [1]
-[2]     99.8      77.8      22.0        0.00         DDENV::bfen_EXECproc [2]
-                                          100.00         DDENV::bfen_INPUTproc [3]
-
-Etc...
-
-
-
-
-Sorry, I'm new to this list and have never used perf before but am planning to do so verysoon.
-Did anyone answer his initial question "I would like to get a callgraph for the whole time a program runs. Is this possible with perf?"?
-
-
-Thanks
-++Cyrille
-
-
------Original Message-----
-From: linux-perf-users-owner@vger.kernel.org [mailto:linux-perf-users-owner@vger.kernel.org] On Behalf Of David Ahern
-Sent: Friday, February 04, 2011 7:10 PM
-To: Frederic Weisbecker; Christoph Bartoschek
-Cc: linux-perf-users@vger.kernel.org; Arnaldo Carvalho de Melo
-Subject: Re: Profiling a program's runtime
-
-
-
-On 02/04/11 10:47, Frederic Weisbecker wrote:
-
->> I want that not only the CPU time is counted that my task uses, but 
->> also the time my task waits.
+>> For example, if my task waits for network packets in a read() then the
+>> time should be added to the read() function. Other profilers I know would
+>> not count the time when the process is blocked.
 > 
-> The time your task waits, other tasks executes :-/  (including idle in 
-> the scheme)
->  
->> For example, if my task waits for network packets in a read() then 
->> the time should be added to the read() function. Other profilers I 
->> know would not count the time when the process is blocked.
+> What do you mean by adding time to read?
+> 
+> I'm very confused with what you want.
 
-You can determine time blocked on read (and other system calls) by acquiring all context switches:
+Take for example the following program:
 
-    perf record -e cs -c 1 -a
+#include <unistd.h>
 
-From there you'll want to generate a time history output. To use unmodified perf code use the -D option to dump raw samples (perf report -D). You can find the process of interest and the kernel timestamp between schedule out events -- and the sched out event before your process. Together you can piece together the time you blocked on read.
+int compute(int start) {
+   for (int i = 0; i < 10000000; ++i) {
+      start += i;
+   }
+   return start;
+}
 
-Alternatively, there are add-on patches which dump the timehistory in a pretty print format:
+int main(int argc, char **) {
+   int ret = 0;
+   for (int i = 0; i != 5; ++i) {
+      sleep(argc == 1 ? 0 : 1);
+      ret += compute(argc);
+   }
+   return ret;
+}
 
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00049.html
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00047.html
-http://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg00048.html
+Here is what I get by default:
 
+ponto@homer:~/software/perf> g++ small.C -Wall -W -pedantic
+ponto@homer:~/software/perf> time ./a.out 
 
-That output can be manipulated much easier to determine time on the processor and time between schedule-in events.
+real    0m0.113s
+user    0m0.111s
+sys     0m0.001s
+ponto@homer:~/software/perf> time perf record -f ./a.out 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.016 MB perf.data (~691 samples) ]
 
-Not the complete picture of what I think you are looking for -- but a way to get the time blocked on syscall stats via perf.
+real    0m5.147s
+user    0m0.012s
+sys     0m0.008s
+ponto@homer:~/software/perf> perf report | cat
+[kernel.kallsyms] with build id 361b85a57658c9ebfa686878cc821250aaff28e2 not 
+found, continuing without symbols
+# Samples: 335743554
+#
+# Overhead  Command      Shared Object  Symbol
+# ........  .......  .................  ......
+#
+    98.20%    a.out  a.out              [.] compute(int)
+     1.51%    a.out  [kernel.kallsyms]  [k] page_remove_rmap
+     0.25%    a.out  [kernel.kallsyms]  [k] page_fault
+     0.03%    a.out  [kernel.kallsyms]  [k] _raw_spin_lock_irq
+     0.00%    a.out  [kernel.kallsyms]  [k] intel_pmu_enable_all
+     0.00%    a.out  [kernel.kallsyms]  [k] 0xffffffff810123cc
 
-David
---
-To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in the body of a message to majordomo@vger.kernel.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The report is clearly wrong. The program was only 2% in the compute function 
+and 98% in the sleep() function.
+
+Christoph
