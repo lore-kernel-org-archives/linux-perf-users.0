@@ -1,63 +1,46 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [RFC] --dump-sym-trace
-Date: Fri, 04 Feb 2011 19:38:50 -0700
-Message-ID: <4D4CB83A.2030400@cisco.com>
-References: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>	<4D3F871B.3060906@cisco.com>	<AANLkTinik0+Zp7N54bkh5fBzF1hb2XoubRbuMXwBeYGZ@mail.gmail.com>	<4D433811.7020904@cisco.com>	<20110129205050.GH6345@ghostprotocols.net> <AANLkTi=QdnJ2R-9bn4r+njwAnNewvWvBO2GRw6W4qwnj@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Subject: Re: Profiling a program's runtime
+Date: Mon, 7 Feb 2011 18:38:31 -0200
+Message-ID: <20110207203831.GE4470@ghostprotocols.net>
+References: <ukft18-pba.ln1@burns.bruehl.pontohonk.de>
+ <4D4C4105.3050002@cisco.com>
+ <0E02F16954AF394BB163AEE50FDF548568FE033612@GVW1121EXC.americas.hpqcorp.net>
+ <201102042048.09677.bartoschek@gmx.de>
+ <0E02F16954AF394BB163AEE50FDF548568FE033642@GVW1121EXC.americas.hpqcorp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-1.cisco.com ([171.71.176.70]:7742 "EHLO
-	sj-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753047Ab1BECiw (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:61255 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752038Ab1BGUig (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 4 Feb 2011 21:38:52 -0500
-In-Reply-To: <AANLkTi=QdnJ2R-9bn4r+njwAnNewvWvBO2GRw6W4qwnj@mail.gmail.com>
+	Mon, 7 Feb 2011 15:38:36 -0500
+Received: by gwj20 with SMTP id 20so1893226gwj.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Feb 2011 12:38:36 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <0E02F16954AF394BB163AEE50FDF548568FE033642@GVW1121EXC.americas.hpqcorp.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <arun@sharma-home.net>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org
+To: "Maucci, Cyrille" <cyrille.maucci@hp.com>
+Cc: Christoph Bartoschek <bartoschek@gmx.de>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@elte.hu>, Thomas Gleixner <tglx@linutronix.de>
 
+Em Fri, Feb 04, 2011 at 07:57:00PM +0000, Maucci, Cyrille escreveu:
+> Yep. I was not promoting caliper here.
+> I was just referring to it so that we may get an idea of what he'd like to see in 'perf' reports.
 
+Right, useful pointers, thanks, barring patents, I think we can get that
+with perf at some point.
 
-On 02/04/11 18:48, Arun Sharma wrote:
-> On Sat, Jan 29, 2011 at 12:50 PM, Arnaldo Carvalho de Melo
-> <acme@ghostprotocols.net> wrote:
->> /me too
->>
->> I have to get back to that, it is definetely a feature we need to have.
-> 
-> There are a couple of more minor nits I found in David's patch:
-> 
-> * perf record --timehist doesn't seem to be doing anything. I used
-> perf record -T -a.
+Catering to I/O bound workloads is something that is in the radar, has
+been experimented with and should resume development soon, please take a
+look at the 'trace' description at:
 
-For record the the --timehist flag adds the timestamp and cpu to the IP
-samples -- hidden attributes from a 'perf report' perspective unless you
-add the --timehist flag on the report as well in which case the output
-is completely different.
+http://lwn.net/Articles/415728/
 
-I take it your mileage varied from the above.
+The discussion also has lots of useful suggestions and insights.
 
-David
+It is an area that badly needs help to get the perf infrastructure to
+the next level, beyong the current state of good (excellent?) CPU bound
+profiling.
 
-
-
-> * Some of the printfs are missing checks along the lines of:
-> 
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -228,6 +228,7 @@ static int perf_session__print_sample(struct
-> perf_session *session,
->                 free(syms);
-> 
->         } else {
-> +               if (!data || !al || !al->thread || !al->sym ||
-> !al->map) return 0;
->                 printf(TIMEHIST_FMT,
->                            tstr, data->cpu,
->                            al->thread->comm, al->thread->pid, al->addr,
-> 
-> to avoid SIGSEGVs when the information in the sample is incomplete.
-> 
->  -Arun
+- Arnaldo
