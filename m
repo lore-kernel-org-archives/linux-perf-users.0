@@ -1,46 +1,52 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: Profiling a program's runtime
-Date: Mon, 7 Feb 2011 18:38:31 -0200
-Message-ID: <20110207203831.GE4470@ghostprotocols.net>
-References: <ukft18-pba.ln1@burns.bruehl.pontohonk.de>
- <4D4C4105.3050002@cisco.com>
- <0E02F16954AF394BB163AEE50FDF548568FE033612@GVW1121EXC.americas.hpqcorp.net>
- <201102042048.09677.bartoschek@gmx.de>
- <0E02F16954AF394BB163AEE50FDF548568FE033642@GVW1121EXC.americas.hpqcorp.net>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: 2.6.37 kernel warning in perf_events code
+Date: Wed, 9 Feb 2011 18:50:09 -0800
+Message-ID: <AANLkTi=4_p73eHhQbj5DDDEzTWaLou+u2igiY+yNiPQ9@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:61255 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752038Ab1BGUig (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:59124 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752287Ab1BJCuK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 7 Feb 2011 15:38:36 -0500
-Received: by gwj20 with SMTP id 20so1893226gwj.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Feb 2011 12:38:36 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <0E02F16954AF394BB163AEE50FDF548568FE033642@GVW1121EXC.americas.hpqcorp.net>
+	Wed, 9 Feb 2011 21:50:10 -0500
+Received: by iwn9 with SMTP id 9so829584iwn.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Feb 2011 18:50:09 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Maucci, Cyrille" <cyrille.maucci@hp.com>
-Cc: Christoph Bartoschek <bartoschek@gmx.de>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@elte.hu>, Thomas Gleixner <tglx@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Em Fri, Feb 04, 2011 at 07:57:00PM +0000, Maucci, Cyrille escreveu:
-> Yep. I was not promoting caliper here.
-> I was just referring to it so that we may get an idea of what he'd like to see in 'perf' reports.
+[ Not sure if this is known and fixed in newer kernels. My machine
+becomes unusable after this warning triggers ]
 
-Right, useful pointers, thanks, barring patents, I think we can get that
-with perf at some point.
+perf record -g -p <pid> cs -o csw.data -- sleep 3
 
-Catering to I/O bound workloads is something that is in the radar, has
-been experimented with and should resume development soon, please take a
-look at the 'trace' description at:
+Feb 7 15:28:36 localhost kernel: WARNING: at kernel/perf_event.c:1302
+task_ctx_sched_out+0x45/0x67()
+..
+Feb 7 15:28:36 localhost kernel: [<ffffffff8103c60d>]
+warn_slowpath_null+0x15/0x17
+Feb 7 15:28:36 localhost kernel: [<ffffffff8109e3b6>]
+task_ctx_sched_out+0x45/0x67
+Feb 7 15:28:36 localhost kernel: [<ffffffff8109e3b6>]
+task_ctx_sched_out+0x45/0x67
+Feb 7 15:28:36 localhost kernel: [<ffffffff810a207f>]
+perf_event_exit_task+0xca/0x196
+Feb 7 15:28:36 localhost kernel: [<ffffffff810a207f>]
+perf_event_exit_task+0xca/0x196
+Feb 7 15:28:36 localhost kernel: [<ffffffff8103fb3f>] do_exit+0x2c5/0x6e6
+Feb 7 15:28:36 localhost kernel: [<ffffffff8103fb3f>] do_exit+0x2c5/0x6e6
+Feb 7 15:28:36 localhost kernel: [<ffffffff81040021>] complete_and_exit+0x0/0x1e
+Feb 7 15:28:36 localhost kernel: [<ffffffff81040021>] complete_and_exit+0x0/0x1e
+Feb 7 15:28:36 localhost kernel: [<ffffffff8100293b>]
+system_call_fastpath+0x16/0x1b
+Feb 7 15:28:36 localhost kernel: [<ffffffff8100293b>]
+system_call_fastpath+0x16/0x1b
 
-http://lwn.net/Articles/415728/
 
-The discussion also has lots of useful suggestions and insights.
+1301
+1302         if (WARN_ON_ONCE(ctx != cpuctx->task_ctx))
+1303                 return;
 
-It is an area that badly needs help to get the perf infrastructure to
-the next level, beyong the current state of good (excellent?) CPU bound
-profiling.
-
-- Arnaldo
+ -Arun
