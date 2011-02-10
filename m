@@ -1,40 +1,54 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Arun Sharma <arun@sharma-home.net>
 Subject: Re: 2.6.37 kernel warning in perf_events code
-Date: Thu, 10 Feb 2011 18:20:23 -0200
-Message-ID: <20110210202023.GG20676@ghostprotocols.net>
-References: <AANLkTi=4_p73eHhQbj5DDDEzTWaLou+u2igiY+yNiPQ9@mail.gmail.com> <20110210190843.GE20676@ghostprotocols.net> <AANLkTi=WRrBnyiDqOeR7PnqVhh8wLFx5W0tgjNaPvkLg@mail.gmail.com>
+Date: Thu, 10 Feb 2011 12:46:07 -0800
+Message-ID: <AANLkTi=H9+rKjgkmfbS2jzfPjryah0cc9sajSgN8WOaQ@mail.gmail.com>
+References: <AANLkTi=4_p73eHhQbj5DDDEzTWaLou+u2igiY+yNiPQ9@mail.gmail.com>
+	<20110210190843.GE20676@ghostprotocols.net>
+	<AANLkTi=WRrBnyiDqOeR7PnqVhh8wLFx5W0tgjNaPvkLg@mail.gmail.com>
+	<20110210202023.GG20676@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:25876 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756560Ab1BJUU2 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:49553 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750917Ab1BJUqI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 10 Feb 2011 15:20:28 -0500
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=WRrBnyiDqOeR7PnqVhh8wLFx5W0tgjNaPvkLg@mail.gmail.com>
+	Thu, 10 Feb 2011 15:46:08 -0500
+In-Reply-To: <20110210202023.GG20676@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <arun@sharma-home.net>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 
-Em Thu, Feb 10, 2011 at 12:02:20PM -0800, Arun Sharma escreveu:
-> On Thu, Feb 10, 2011 at 11:08 AM, Arnaldo Carvalho de Melo
-> <acme@redhat.com> wrote:
-> > Em Wed, Feb 09, 2011 at 06:50:09PM -0800, Arun Sharma escreveu:
-> >> [ Not sure if this is known and fixed in newer kernels. My machine
-> >> becomes unusable after this warning triggers ]
-> >>
-> >> perf record -g -p <pid> cs -o csw.data -- sleep 3
+On Thu, Feb 10, 2011 at 12:20 PM, Arnaldo Carvalho de Melo
+<acme@redhat.com> wrote:
+>
+>> >> perf record -g -p <pid> cs -o csw.data -- sleep 3
+>
+> Arun, are you shure the above line is right? I guess it should read:
+>
+>
+> perf record -g -p <pid> -e cs -o csw.data -- sleep 3
+>
+> To specify the context switches soft event, right?
+>
 
-Arun, are you shure the above line is right? I guess it should read:
+You caught a cut and paste error. I'm pretty sure I had the -e in
+there when the warning triggered. I tried this command a few times,
+just to verify and here's what I found:
 
-perf record -g -p <pid> -e cs -o csw.data -- sleep 3
+* Under low loads, everything works fine.
+* Under a heavy work load - I'm not able to reproduce the warning, but
+hitting very similar symptoms:
 
-To specify the context switches soft event, right?
+[ perf record: Captured and wrote 2.282 MB /tmp/junk.data (~99721 samples) ]
+[ perf record: Captured and wrote 1.734 MB /tmp/junk.data (~75740 samples) ]
+[ perf record: Captured and wrote 0.091 MB /tmp/junk.data (~3975
+samples) ]  <--- bad run
 
-> > What kernel are you using? Peter, rings any bells?
-> 
-> Stock 2.6.37.
+The bad run made my shell unresponsive and took around 30-40 seconds
+to complete (whereas the good runs completed in less than 5 secs).
+Could this be some kind of a feedback loop where what the measurement
+machinery is perturbing what's being measured?
 
-- Arnaldo
+ -Arun
