@@ -1,39 +1,46 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: 2.6.37 kernel warning in perf_events code
-Date: Fri, 11 Feb 2011 13:16:09 +0100
-Message-ID: <1297426569.5226.41.camel@laptop>
-References: <AANLkTi=4_p73eHhQbj5DDDEzTWaLou+u2igiY+yNiPQ9@mail.gmail.com>
-	 <20110210190843.GE20676@ghostprotocols.net>
-	 <AANLkTi=WRrBnyiDqOeR7PnqVhh8wLFx5W0tgjNaPvkLg@mail.gmail.com>
-	 <20110210202023.GG20676@ghostprotocols.net>
-	 <AANLkTi=H9+rKjgkmfbS2jzfPjryah0cc9sajSgN8WOaQ@mail.gmail.com>
-	 <20110211004232.GA22440@ghostprotocols.net>
-	 <AANLkTimwaOSC9CmO0rCPrRkCac-=Yj2PGg1DE_d0aM55@mail.gmail.com>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: Re: [perfmon2] updating perf tool
+Date: Fri, 11 Feb 2011 11:44:54 -0800
+Message-ID: <AANLkTi=h6Qb7aCB0wER-FEGMwkD6xp1sBgnQudTZ=e+x@mail.gmail.com>
+References: <AANLkTim5QGwisxLEHHHECrE1nLSYFxzXEMu7hvTRy09=@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AANLkTimwaOSC9CmO0rCPrRkCac-=Yj2PGg1DE_d0aM55@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Sharma <arun@sharma-home.net>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:53677 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757365Ab1BKToz convert rfc822-to-8bit (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 11 Feb 2011 14:44:55 -0500
+Received: by iwn9 with SMTP id 9so2753637iwn.19
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2011 11:44:54 -0800 (PST)
+In-Reply-To: <AANLkTim5QGwisxLEHHHECrE1nLSYFxzXEMu7hvTRy09=@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Can Hankendi <hankendi@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On Thu, 2011-02-10 at 16:57 -0800, Arun Sharma wrote:
-> On Thu, Feb 10, 2011 at 4:42 PM, Arnaldo Carvalho de Melo
-> <acme@redhat.com> wrote:
-> > Is it possible for you to test this with 2.6.38-rc4? At least the user
-> > level tools, just do:
-> 
-> I tried the 2.6.38rc3 perf binary on two machines:
-> 
-> kernel = 2.6.37: The machine hung solid on the first try.
-> kernel = 2.6.38rc3: I could run it 10 times in a loop and no bad runs.
-> 
-> Looks like this is already fixed in newer kernels.
+[ bcc: perfmon2-devel, +linux-perf-users ]
 
-I couldn't actually reproduce on .37 with the given details, so while
-its already fixed it would be nice to figure out what patch fixed it so
-we can make sure it ends up in .37-stable.
+On Fri, Feb 11, 2011 at 11:16 AM, Can Hankendi <hankendi@gmail.com> wro=
+te:
+> Hi,
+>
+> I'm using 2.6.38 kernel and trying to run performance tests for indiv=
+idual
+> cores on my system. But it seems like current kernel doesn't include =
+the
+> patches for perf events. I tried to collect data per core with -A=C2=A0=
+ and also
+> -G parameters but I got "Error: unknown switch". Where can I find the=
+ latest
+> patch for perf tool? How can I update the perf tools so that i can us=
+e the
+> new capabilities of perf tool?
+>
 
-Could you provide exact reproduction details or maybe bisect the thing?
+Per CPU collection is:
+
+perf record -C <cpulist> -e <events>
+
+ -Arun
