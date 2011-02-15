@@ -1,39 +1,38 @@
 From: Arun Sharma <arun@sharma-home.net>
-Subject: Re: [perfmon2] updating perf tool
-Date: Mon, 14 Feb 2011 14:04:35 -0800
-Message-ID: <AANLkTimtE79s-=U80R7Ujs6BK2Brn4GoKqQJiN9cYNdg@mail.gmail.com>
-References: <AANLkTim5QGwisxLEHHHECrE1nLSYFxzXEMu7hvTRy09=@mail.gmail.com>
-	<AANLkTi=h6Qb7aCB0wER-FEGMwkD6xp1sBgnQudTZ=e+x@mail.gmail.com>
-	<AANLkTimqRjUTzv+AO7zHCfXvA1RZFDTjyb-r0s_MVNTW@mail.gmail.com>
-	<AANLkTinYM-Sg2uQFkXFy25mSZZZEtTSAUNrA==CxJP0=@mail.gmail.com>
-	<20110214194428.GE21384@ghostprotocols.net>
-	<AANLkTikfaAbdFWzcvayOjYLNECKf_L08nUUEWUy=p8it@mail.gmail.com>
-	<20110214204830.GF21384@ghostprotocols.net>
+Subject: Re: [RFC] --dump-sym-trace
+Date: Mon, 14 Feb 2011 16:00:12 -0800
+Message-ID: <AANLkTimuEQVDdR7kZeDG0O3UUpyXd2+wA73b6HtrhTVU@mail.gmail.com>
+References: <AANLkTin3bp90ybuUDFQijspV0uBw=zTnczcPLBaZvO7p@mail.gmail.com>
+	<4D3F871B.3060906@cisco.com>
+	<AANLkTinik0+Zp7N54bkh5fBzF1hb2XoubRbuMXwBeYGZ@mail.gmail.com>
+	<4D433811.7020904@cisco.com>
+	<20110129205050.GH6345@ghostprotocols.net>
+	<AANLkTi=QdnJ2R-9bn4r+njwAnNewvWvBO2GRw6W4qwnj@mail.gmail.com>
+	<4D4CB83A.2030400@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:41120 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751079Ab1BNWEg (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:52081 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751997Ab1BOAAN (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 14 Feb 2011 17:04:36 -0500
-Received: by iwn9 with SMTP id 9so5289090iwn.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2011 14:04:36 -0800 (PST)
-In-Reply-To: <20110214204830.GF21384@ghostprotocols.net>
+	Mon, 14 Feb 2011 19:00:13 -0500
+Received: by iyj8 with SMTP id 8so5377142iyj.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2011 16:00:12 -0800 (PST)
+In-Reply-To: <4D4CB83A.2030400@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: Can Hankendi <hankendi@gmail.com>, linux-perf-users@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org
 
-On Mon, Feb 14, 2011 at 12:48 PM, Arnaldo Carvalho de Melo
-<acme@ghostprotocols.net> wrote:
+On Fri, Feb 4, 2011 at 6:38 PM, David Ahern <daahern@cisco.com> wrote:
 
->> Potentially, perf itself could be structured as a set of shared
->> libraries, which are then glued together using a scripting language.
->
-> That is what I'm talking about, see above commit.
->
+> I take it your mileage varied from the above.
 
-Sorry, I misunderstood. Looks like a step in the right direction!
+I can't reproduce the issue anymore and the code looks just fine. The
+issue I had was:
+
+perf record -a -T + perf report --timehist produced samples where:
+perf record --timehist + perf report --timehist didn't.
 
  -Arun
