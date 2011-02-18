@@ -1,68 +1,148 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/3] perf events: Introduce realtime clock event
-Date: Fri, 18 Feb 2011 12:14:01 +0100
-Message-ID: <1298027641.5226.666.camel@laptop>
-References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
-	 <1298008433-22911-3-git-send-email-daahern@cisco.com>
+From: Stephane Eranian <eranian@google.com>
+Subject: [PATCH] perf_events: fix rcu and locking issues with
+	cgroup support
+Date: Fri, 18 Feb 2011 14:40:01 +0200
+Message-ID: <4d5e76b8.815bdf0a.7ac3.774f@mx.google.com>
+Reply-To: eranian@google.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([18.85.46.34]:35487 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755056Ab1BRLMr (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Feb 2011 06:12:47 -0500
-Received: from canuck.infradead.org ([2001:4978:20e::1])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PqOGU-0004NE-Pn
-	for linux-perf-users@vger.kernel.org; Fri, 18 Feb 2011 11:12:46 +0000
-Received: from j77219.upc-j.chello.nl ([24.132.77.219] helo=dyad.programming.kicks-ass.net)
-	by canuck.infradead.org with esmtpsa (Exim 4.72 #1 (Red Hat Linux))
-	id 1PqOGT-0003L4-QD
-	for linux-perf-users@vger.kernel.org; Fri, 18 Feb 2011 11:12:45 +0000
-In-Reply-To: <1298008433-22911-3-git-send-email-daahern@cisco.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org
+Return-path: <perfmon2-devel-bounces@lists.sourceforge.net>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/perfmon2-devel>,
+	<mailto:perfmon2-devel-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=perfmon2-devel>
+List-Post: <mailto:perfmon2-devel@lists.sourceforge.net>
+List-Help: <mailto:perfmon2-devel-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/perfmon2-devel>,
+	<mailto:perfmon2-devel-request@lists.sourceforge.net?subject=subscribe>
+Errors-To: perfmon2-devel-bounces@lists.sourceforge.net
+To: linux-kernel@vger.kernel.org
+Cc: perfmon2-devel@lists.sf.net, linux-perf-users@vger.kernel.org, eranian@gmail.com, peterz@infradead.org, fweisbec@gmail.com, eranian@google.com, acme@redhat.com, paulus@samba.org, mingo@elte.hu, davem@davemloft.net
+List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, 2011-02-17 at 22:53 -0700, David Ahern wrote:
-> The motivation for this event is to convert perf_clock() time stamps
-> to wall-clock (gettimeofday()) equivalents, including adjustments made
-> by NTP (e.g., for comparing perf events to other log files).
+This patches ensures that we do not end up calling
+perf_cgroup_from_task() when there is no cgroup event.
+This avoids potential RCU and locking issues.
 
-> This patch is based on the monotonic patch by Arnaldo Carvalho de Melo
-> <acme@redhat.com>.
-> 
-> (NOTE: Comments from the last review of the timehist patch series
-> suggested calling this a monotonic clock. I am not trying to be
-> dense here; since gettimeofday maps to realtime clock I think that
-> is the better name for it.)
+The change in perf_cgroup_set_timestamp() ensures we
+check against ctx->nr_cgroups. It also avoids calling
+perf_clock() tiwce in a row. It also ensures we do need
+to grab ctx->lock before calling the function.
 
-Well, the idea was to use CLOCK_MONOTONIC, not to call CLOCK_REALTIME
-monotonic.
+We drop update_cgrp_time() from task_clock_event_read()
+because it is not needed. This also avoids having to
+deal with perf_cgroup_from_task().
 
-I'm really not sure why you want CLOCK_REALTIME and I think
-CLOCK_MONOTONIC is more useful (I'd argue you want your system logs to
-contain both, every admin who's ever had to untangle what happened
-during DST switches will agree)
+Thanks to Peter Zijlstra for his help on this.
 
-> @@ -5610,6 +5612,13 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
->  
->  	perf_sample_data_init(&data, 0);
->  	data.period = event->hw.last_period;
-> +	if (event->attr.sample_type & PERF_SAMPLE_RAW) 
-> +	{
-> +		raw.size = sizeof(u64);
-> +		raw.data = &event->count;
-> +		data.raw = &raw;
-> +	}
-> +
->  	regs = get_irq_regs();
->  
->  	if (regs && !perf_exclude_event(event, regs)) {
+Signed-off-by: Stephane Eranian <eranian@gmail.com>
+---
 
+diff --git a/kernel/perf_event.c b/kernel/perf_event.c
+index a0a6987..438d73a 100644
+--- a/kernel/perf_event.c
++++ b/kernel/perf_event.c
+@@ -201,6 +201,11 @@ __get_cpu_context(struct perf_event_context *ctx)
+ 
+ #ifdef CONFIG_CGROUP_PERF
+ 
++/*
++ * must ensure cgroup is pinned (css_get) before calling
++ * this function. In other words, we cannot call this function
++ * if there is no cgroup event for the current CPU context.
++ */
+ static inline struct perf_cgroup *
+ perf_cgroup_from_task(struct task_struct *task)
+ {
+@@ -268,28 +273,41 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx)
+ 
+ static inline void update_cgrp_time_from_event(struct perf_event *event)
+ {
+-	struct perf_cgroup *cgrp = perf_cgroup_from_task(current);
++	struct perf_cgroup *cgrp;
++
+ 	/*
+-	 * do not update time when cgroup is not active
++	 * ensure we access cgroup data only when needed and
++	 * when we know the cgroup is pinned (css_get)
+ 	 */
+-	if (!event->cgrp || cgrp != event->cgrp)
++	if (!is_cgroup_event(event))
+ 		return;
+ 
+-	__update_cgrp_time(event->cgrp);
++	cgrp = perf_cgroup_from_task(current);
++	/*
++	 * do not update time when cgroup is not active
++	 */
++	if (cgrp == event->cgrp)
++		__update_cgrp_time(event->cgrp);
+ }
+ 
+ static inline void
+-perf_cgroup_set_timestamp(struct task_struct *task, u64 now)
++perf_cgroup_set_timestamp(struct task_struct *task,
++			  struct perf_event_context *ctx)
+ {
+ 	struct perf_cgroup *cgrp;
+ 	struct perf_cgroup_info *info;
+ 
+-	if (!task)
++	/*
++	 * ctx->lock held by caller
++	 * ensure we do not access cgroup data
++	 * unless we have the cgroup pinned (css_get)
++	 */
++	if (!task || !ctx->nr_cgroups)
+ 		return;
+ 
+ 	cgrp = perf_cgroup_from_task(task);
+ 	info = this_cpu_ptr(cgrp->info);
+-	info->timestamp = now;
++	info->timestamp = ctx->timestamp;
+ }
+ 
+ #define PERF_CGROUP_SWOUT	0x1 /* cgroup switch out every event */
+@@ -494,7 +512,8 @@ static inline int perf_cgroup_connect(pid_t pid, struct perf_event *event,
+ }
+ 
+ static inline void
+-perf_cgroup_set_timestamp(struct task_struct *task, u64 now)
++perf_cgroup_set_timestamp(struct task_struct *task,
++			  struct perf_event_context *ctx)
+ {
+ }
+ 
+@@ -1613,7 +1632,7 @@ static int __perf_event_enable(void *info)
+ 	/*
+ 	 * set current task's cgroup time reference point
+ 	 */
+-	perf_cgroup_set_timestamp(current, perf_clock());
++	perf_cgroup_set_timestamp(current, ctx);
+ 
+ 	__perf_event_mark_enabled(event, ctx);
+ 
+@@ -2048,7 +2067,7 @@ ctx_sched_in(struct perf_event_context *ctx,
+ 
+ 	now = perf_clock();
+ 	ctx->timestamp = now;
+-	perf_cgroup_set_timestamp(task, now);
++	perf_cgroup_set_timestamp(task, ctx);
+ 	/*
+ 	 * First go through the list and put on any pinned groups
+ 	 * in order to give them the best chance of going on.
+@@ -5795,7 +5814,6 @@ static void task_clock_event_read(struct perf_event *event)
+ 
+ 	if (!in_nmi()) {
+ 		update_context_time(event->ctx);
+-		update_cgrp_time_from_event(event);
+ 		time = event->ctx->time;
+ 	} else {
+ 		u64 now = perf_clock();
 
-Why!? you already keep ->count = ktime_get_real(), so simply reading the
-count value will get you the timestamp.. this is superfluous at best.
+------------------------------------------------------------------------------
+The ultimate all-in-one performance toolkit: Intel(R) Parallel Studio XE:
+Pinpoint memory and threading errors before they happen.
+Find and fix more than 250 security defects in the development cycle.
+Locate bottlenecks in serial and parallel code that limit performance.
+http://p.sf.net/sfu/intel-dev2devfeb
