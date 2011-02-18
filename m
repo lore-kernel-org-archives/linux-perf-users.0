@@ -1,42 +1,54 @@
-From: Peter Zijlstra <peterz@infradead.org>
+From: David Ahern <daahern@cisco.com>
 Subject: Re: [PATCH 1/3] perf events: fix WARN_ON_ONCE for 64-bit raw data,
  SW events
-Date: Fri, 18 Feb 2011 16:01:31 +0100
-Message-ID: <1298041291.5226.776.camel@laptop>
-References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
-	 <1298008433-22911-2-git-send-email-daahern@cisco.com>
-	 <1298026821.5226.642.camel@laptop> <4D5E8338.8010602@cisco.com>
-	 <20110218145348.GA302@ghostprotocols.net>
+Date: Fri, 18 Feb 2011 08:28:22 -0700
+Message-ID: <4D5E9016.4070808@cisco.com>
+References: <1298008433-22911-1-git-send-email-daahern@cisco.com>	 <1298008433-22911-2-git-send-email-daahern@cisco.com>	 <1298026821.5226.642.camel@laptop>  <4D5E8338.8010602@cisco.com> <1298040938.5226.771.camel@laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:56137 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754341Ab1BRPAP (ORCPT
+Received: from sj-iport-6.cisco.com ([171.71.176.117]:27445 "EHLO
+	sj-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752389Ab1BRP2Y (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Feb 2011 10:00:15 -0500
-Received: from j77219.upc-j.chello.nl ([24.132.77.219] helo=dyad.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.72 #1 (Red Hat Linux))
-	id 1PqRoc-0006m0-HB
-	for linux-perf-users@vger.kernel.org; Fri, 18 Feb 2011 15:00:14 +0000
-In-Reply-To: <20110218145348.GA302@ghostprotocols.net>
+	Fri, 18 Feb 2011 10:28:24 -0500
+In-Reply-To: <1298040938.5226.771.camel@laptop>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, paulus@samba.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org
 
-On Fri, 2011-02-18 at 12:53 -0200, Arnaldo Carvalho de Melo wrote:
+
+
+On 02/18/11 07:55, Peter Zijlstra wrote:
+>> Another gotcha is in perf_output_sample there is:
+>>             struct {
+>>                 u32 size;
+>>                 u32 data;
+>>             } raw = {
+>>                 .size = sizeof(u32),
+>>                 .data = 0,
+>>             };
+>>
+>> While that meets the 8-byte stride I was concerned that changing the
+>> size field to u64 breaks ABI.
 > 
-> > So size should be changed to u64 rather than modifying the
-> WARN_ON_ONCE?
+> It would.
 > 
-> Yeah, I guess so, 32-bit has to die it seems, gets in the way of
-> testing
-> :-) 
+> No, what you need to do is provide data that is sized such that it
+> matches the 8b stride adding padding where needed.
 
-No!
+I want to push a 64-bit counter to userspace. By definition it meets the
+8-byte stride. Now how do I get sizeof(size field) + sizeof(data) to
+meet an 8-byte stride? I can't when sizeof(size field) = 4. Ok, I can
+pad the data with 4 bytes, but then I an api to tell the user to strip
+the 4-byte pad. Seems like an odd way to go.
 
-1) don't use RAW unless you have to
-2) you don't have to, goto 1
-3) if you do anyway, ensure its properly padded
+Why is an 8-byte stride preferred over a 4-bytes?
+
+David
+
+> 
+> Anyway, I don't think you need RAW at all.
+> 
