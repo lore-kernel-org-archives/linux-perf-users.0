@@ -1,56 +1,29 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [PATCH 2/3] perf events: Introduce realtime clock event
-Date: Fri, 18 Feb 2011 08:39:47 -0700
-Message-ID: <4D5E92C3.70003@cisco.com>
-References: <1298008433-22911-1-git-send-email-daahern@cisco.com>	 <1298008433-22911-3-git-send-email-daahern@cisco.com>	 <1298027641.5226.666.camel@laptop>  <4D5E84AC.4040104@cisco.com> <1298041106.5226.775.camel@laptop>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 1/3] perf events: fix WARN_ON_ONCE for 64-bit raw data,
+ SW events
+Date: Fri, 18 Feb 2011 16:51:56 +0100
+Message-ID: <1298044316.2887.0.camel@twins>
+References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
+	 <1298008433-22911-2-git-send-email-daahern@cisco.com>
+	 <1298026821.5226.642.camel@laptop>  <4D5E8338.8010602@cisco.com>
+	 <1298040938.5226.771.camel@laptop>  <4D5E9016.4070808@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:38390 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752003Ab1BRPjt (ORCPT
+Received: from bombadil.infradead.org ([18.85.46.34]:52331 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753393Ab1BRPwH convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Feb 2011 10:39:49 -0500
-In-Reply-To: <1298041106.5226.775.camel@laptop>
+	Fri, 18 Feb 2011 10:52:07 -0500
+In-Reply-To: <4D5E9016.4070808@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
+To: David Ahern <daahern@cisco.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org
 
+On Fri, 2011-02-18 at 08:28 -0700, David Ahern wrote:
 
+> Why is an 8-byte stride preferred over a 4-bytes?
 
-On 02/18/11 07:58, Peter Zijlstra wrote:
->>> I'm really not sure why you want CLOCK_REALTIME and I think
->>> CLOCK_MONOTONIC is more useful (I'd argue you want your system logs to
->>> contain both, every admin who's ever had to untangle what happened
->>> during DST switches will agree)
->>
->> I believe CLOCK_MONOTONIC is what perf_clock is tied to -- the
->> timestamps for PERF_SAMPLE_TIME -- so we already have that.
-> 
-> Its not (it mere _can_ be), it could be tied to the TSC which can
-> significantly drift wrt CLOCK_MONOTONIC.
-
-Ok, either way I would like correlation between perf_clock and the time
-sample data and gettimeofday.
-
-> 
->> Programs that generate time-of-day output are using gettimeofday which
->> is tied to CLOCK_REALTIME. We want to be able to correlate a perf sample
->> to an entry in an applications log file.
-> 
-> Well, you can argue those programs are broken :-), Imagine the joys of
-> trying to figure out wth happens when DST jumps the clock back an hour
-> and you have an hour of duplicate data.
-> 
-
-Luckily DST only happens twice a year. Of course reboots happen a little
-more often and those reset the monotonic clock.
-
-I can't change the known universe of programs that create pretty
-HH:MM:SS MM/DD/YY time strings. What I do want is to know why a program
-missed a heartbeat as noted by a log entry. Correlating with a perf
-event and seeing the backtrace is quite handy.
-
-David
+So as to avoid having to deal with unaligned u64 reads.
