@@ -1,48 +1,36 @@
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 3/3] perf events: add timehist option to record and report
-Date: Fri, 18 Feb 2011 08:06:57 +0100
-Message-ID: <20110218070657.GA11404@elte.hu>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 1/3] perf events: fix WARN_ON_ONCE for 64-bit raw data,
+ SW events
+Date: Fri, 18 Feb 2011 12:00:21 +0100
+Message-ID: <1298026821.5226.642.camel@laptop>
 References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
- <1298008433-22911-4-git-send-email-daahern@cisco.com>
+	 <1298008433-22911-2-git-send-email-daahern@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9]:45576 "EHLO mx2.mail.elte.hu"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753477Ab1BRHHT (ORCPT
+Received: from casper.infradead.org ([85.118.1.10]:52140 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752550Ab1BRK7H (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Feb 2011 02:07:19 -0500
-Content-Disposition: inline
-In-Reply-To: <1298008433-22911-4-git-send-email-daahern@cisco.com>
+	Fri, 18 Feb 2011 05:59:07 -0500
+Received: from j77219.upc-j.chello.nl ([24.132.77.219] helo=dyad.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.72 #1 (Red Hat Linux))
+	id 1PqO3F-0000kc-IV
+	for linux-perf-users@vger.kernel.org; Fri, 18 Feb 2011 10:59:05 +0000
+In-Reply-To: <1298008433-22911-2-git-send-email-daahern@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, acme@ghostprotocols.net, paulus@samba.org, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org
 
+On Thu, 2011-02-17 at 22:53 -0700, David Ahern wrote:
+> This check does not work out for 64-bit counter:
+> 
+>     sizeof(u32) + sizeof(u64) = 4 + 8 = 12
+> 
+> which does not pass the WARN_ON_ONCE test. I'm guessing (hoping
+> really) that the intent is that the size of the raw data is a
+> multiple of 4 bytes, not 8.
 
-* David Ahern <daahern@cisco.com> wrote:
-
-> +--timehist::
-> +        Generate time history output. This shows each sample with a wall-clock
-> +        timestamp and address to symbol conversions. The samples are output in
-> +        the same order they exist in the perf.data file. The --timehist option
-> +        must be used with the record to get wall-clock timestamps.
-
-Displaying samples this way is very useful, but how is this different from trace 
-output - i.e. 'perf script' output?
-
-There's a 'live logging mode' feature:
-
-    perf record ./myworkload | perf inject -v -b | perf script -i -
-
-( There's also some work going on to have a separate 'perf trace' utility that will
-  output a linear trace of whatever events in perf.data are. )
-
-So unless i'm missing something it would be more useful to extend 'perf script' (or 
-the upcoming 'perf trace') to list regular samples in a perf.data (i.e. not rely on 
--R raw trace data alone), and of course allow a straightforward utilization of real 
-timestamps, when available.
-
-Thanks,
-
-	Ingo
+No the data must come in 8bytes strides.
