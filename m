@@ -1,40 +1,48 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: [PATCH 1/3] perf events: fix WARN_ON_ONCE for 64-bit raw data,
  SW events
-Date: Fri, 18 Feb 2011 15:04:50 -0200
-Message-ID: <20110218170450.GB302@ghostprotocols.net>
+Date: Fri, 18 Feb 2011 18:13:09 +0100
+Message-ID: <1298049189.2887.1.camel@twins>
 References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
- <1298008433-22911-2-git-send-email-daahern@cisco.com>
- <1298026821.5226.642.camel@laptop>
- <4D5E8338.8010602@cisco.com>
- <20110218145348.GA302@ghostprotocols.net>
- <1298041291.5226.776.camel@laptop>
+	 <1298008433-22911-2-git-send-email-daahern@cisco.com>
+	 <1298026821.5226.642.camel@laptop> <4D5E8338.8010602@cisco.com>
+	 <20110218145348.GA302@ghostprotocols.net>
+	 <1298041291.5226.776.camel@laptop>
+	 <20110218170450.GB302@ghostprotocols.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1298041291.5226.776.camel@laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([18.85.46.34]:48300 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751665Ab1BRRNf convert rfc822-to-8bit (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 18 Feb 2011 12:13:35 -0500
+In-Reply-To: <20110218170450.GB302@ghostprotocols.net>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, paulus@samba.org
-List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Feb 18, 2011 at 04:01:31PM +0100, Peter Zijlstra escreveu:
-> On Fri, 2011-02-18 at 12:53 -0200, Arnaldo Carvalho de Melo wrote:
-> > > So size should be changed to u64 rather than modifying the
-> > WARN_ON_ONCE?
+On Fri, 2011-02-18 at 15:04 -0200, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Feb 18, 2011 at 04:01:31PM +0100, Peter Zijlstra escreveu:
+> > On Fri, 2011-02-18 at 12:53 -0200, Arnaldo Carvalho de Melo wrote:
+> > > > So size should be changed to u64 rather than modifying the
+> > > WARN_ON_ONCE?
+> > > 
+> > > Yeah, I guess so, 32-bit has to die it seems, gets in the way of
+> > > testing
+> > > :-) 
 > > 
-> > Yeah, I guess so, 32-bit has to die it seems, gets in the way of
-> > testing
-> > :-) 
+> > No!
+> > 
+> > 1) don't use RAW unless you have to
+> > 2) you don't have to, goto 1
+> > 3) if you do anyway, ensure its properly padded
 > 
-> No!
-> 
-> 1) don't use RAW unless you have to
-> 2) you don't have to, goto 1
-> 3) if you do anyway, ensure its properly padded
+> Ok, but using that struct definition on 32-bit land, will lead to non 8 byte
+> alignment, right?
 
-Ok, but using that struct definition on 32-bit land, will lead to non 8 byte
-alignment, right?
+Nope, its just fine.. it defaults to an empty 4byte payload ;-)
 
-- Arnaldo
+Its just that any custom payload must be of size 4+8*n bytes.
