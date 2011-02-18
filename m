@@ -1,148 +1,102 @@
-From: Stephane Eranian <eranian@google.com>
-Subject: [PATCH] perf_events: fix rcu and locking issues with
-	cgroup support
-Date: Fri, 18 Feb 2011 14:40:01 +0200
-Message-ID: <4d5e76b8.815bdf0a.7ac3.774f@mx.google.com>
-Reply-To: eranian@google.com
+From: David Ahern <daahern@cisco.com>
+Subject: Re: [PATCH 3/3] perf events: add timehist option to record and report
+Date: Fri, 18 Feb 2011 07:28:20 -0700
+Message-ID: <4D5E8204.2090501@cisco.com>
+References: <1298008433-22911-1-git-send-email-daahern@cisco.com> <1298008433-22911-4-git-send-email-daahern@cisco.com> <20110218070657.GA11404@elte.hu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <perfmon2-devel-bounces@lists.sourceforge.net>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/perfmon2-devel>,
-	<mailto:perfmon2-devel-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=perfmon2-devel>
-List-Post: <mailto:perfmon2-devel@lists.sourceforge.net>
-List-Help: <mailto:perfmon2-devel-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/perfmon2-devel>,
-	<mailto:perfmon2-devel-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: perfmon2-devel-bounces@lists.sourceforge.net
-To: linux-kernel@vger.kernel.org
-Cc: perfmon2-devel@lists.sf.net, linux-perf-users@vger.kernel.org, eranian@gmail.com, peterz@infradead.org, fweisbec@gmail.com, eranian@google.com, acme@redhat.com, paulus@samba.org, mingo@elte.hu, davem@davemloft.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110218070657.GA11404@elte.hu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingo Molnar <mingo@elte.hu>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, acme@ghostprotocols.net, paulus@samba.org, =?ISO-8859-1?Q?Fr=E9d=E9ric_Weisbecker?= <fweisbec@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This patches ensures that we do not end up calling
-perf_cgroup_from_task() when there is no cgroup event.
-This avoids potential RCU and locking issues.
 
-The change in perf_cgroup_set_timestamp() ensures we
-check against ctx->nr_cgroups. It also avoids calling
-perf_clock() tiwce in a row. It also ensures we do need
-to grab ctx->lock before calling the function.
 
-We drop update_cgrp_time() from task_clock_event_read()
-because it is not needed. This also avoids having to
-deal with perf_cgroup_from_task().
+On 02/18/11 00:06, Ingo Molnar wrote:
+> 
+> * David Ahern <daahern@cisco.com> wrote:
+> 
+>> +--timehist::
+>> +        Generate time history output. This shows each sample with a wall-clock
+>> +        timestamp and address to symbol conversions. The samples are output in
+>> +        the same order they exist in the perf.data file. The --timehist option
+>> +        must be used with the record to get wall-clock timestamps.
+> 
+> Displaying samples this way is very useful, but how is this different from trace 
+> output - i.e. 'perf script' output?
+> 
+> There's a 'live logging mode' feature:
+> 
+>     perf record ./myworkload | perf inject -v -b | perf script -i -
+> 
+> ( There's also some work going on to have a separate 'perf trace' utility that will
+>   output a linear trace of whatever events in perf.data are. )
+> 
+> So unless i'm missing something it would be more useful to extend 'perf script' (or 
+> the upcoming 'perf trace') to list regular samples in a perf.data (i.e. not rely on 
+> -R raw trace data alone), and of course allow a straightforward utilization of real 
+> timestamps, when available.
 
-Thanks to Peter Zijlstra for his help on this.
+To date I have not seen any option to show samples with wall-clock
+timestamps. In a sense it pretty-prints the -R format. This allows perf
+samples to be compared to other log files / sources of data to resolve
+an issue.
 
-Signed-off-by: Stephane Eranian <eranian@gmail.com>
----
+For example:
 
-diff --git a/kernel/perf_event.c b/kernel/perf_event.c
-index a0a6987..438d73a 100644
---- a/kernel/perf_event.c
-+++ b/kernel/perf_event.c
-@@ -201,6 +201,11 @@ __get_cpu_context(struct perf_event_context *ctx)
- 
- #ifdef CONFIG_CGROUP_PERF
- 
-+/*
-+ * must ensure cgroup is pinned (css_get) before calling
-+ * this function. In other words, we cannot call this function
-+ * if there is no cgroup event for the current CPU context.
-+ */
- static inline struct perf_cgroup *
- perf_cgroup_from_task(struct task_struct *task)
- {
-@@ -268,28 +273,41 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx)
- 
- static inline void update_cgrp_time_from_event(struct perf_event *event)
- {
--	struct perf_cgroup *cgrp = perf_cgroup_from_task(current);
-+	struct perf_cgroup *cgrp;
-+
- 	/*
--	 * do not update time when cgroup is not active
-+	 * ensure we access cgroup data only when needed and
-+	 * when we know the cgroup is pinned (css_get)
- 	 */
--	if (!event->cgrp || cgrp != event->cgrp)
-+	if (!is_cgroup_event(event))
- 		return;
- 
--	__update_cgrp_time(event->cgrp);
-+	cgrp = perf_cgroup_from_task(current);
-+	/*
-+	 * do not update time when cgroup is not active
-+	 */
-+	if (cgrp == event->cgrp)
-+		__update_cgrp_time(event->cgrp);
- }
- 
- static inline void
--perf_cgroup_set_timestamp(struct task_struct *task, u64 now)
-+perf_cgroup_set_timestamp(struct task_struct *task,
-+			  struct perf_event_context *ctx)
- {
- 	struct perf_cgroup *cgrp;
- 	struct perf_cgroup_info *info;
- 
--	if (!task)
-+	/*
-+	 * ctx->lock held by caller
-+	 * ensure we do not access cgroup data
-+	 * unless we have the cgroup pinned (css_get)
-+	 */
-+	if (!task || !ctx->nr_cgroups)
- 		return;
- 
- 	cgrp = perf_cgroup_from_task(task);
- 	info = this_cpu_ptr(cgrp->info);
--	info->timestamp = now;
-+	info->timestamp = ctx->timestamp;
- }
- 
- #define PERF_CGROUP_SWOUT	0x1 /* cgroup switch out every event */
-@@ -494,7 +512,8 @@ static inline int perf_cgroup_connect(pid_t pid, struct perf_event *event,
- }
- 
- static inline void
--perf_cgroup_set_timestamp(struct task_struct *task, u64 now)
-+perf_cgroup_set_timestamp(struct task_struct *task,
-+			  struct perf_event_context *ctx)
- {
- }
- 
-@@ -1613,7 +1632,7 @@ static int __perf_event_enable(void *info)
- 	/*
- 	 * set current task's cgroup time reference point
- 	 */
--	perf_cgroup_set_timestamp(current, perf_clock());
-+	perf_cgroup_set_timestamp(current, ctx);
- 
- 	__perf_event_mark_enabled(event, ctx);
- 
-@@ -2048,7 +2067,7 @@ ctx_sched_in(struct perf_event_context *ctx,
- 
- 	now = perf_clock();
- 	ctx->timestamp = now;
--	perf_cgroup_set_timestamp(task, now);
-+	perf_cgroup_set_timestamp(task, ctx);
- 	/*
- 	 * First go through the list and put on any pinned groups
- 	 * in order to give them the best chance of going on.
-@@ -5795,7 +5814,6 @@ static void task_clock_event_read(struct perf_event *event)
- 
- 	if (!in_nmi()) {
- 		update_context_time(event->ctx);
--		update_cgrp_time_from_event(event);
- 		time = event->ctx->time;
- 	} else {
- 		u64 now = perf_clock();
+ Time-of-Day   Kernel Timestamp cpu    Event  Command   PID
+IP     Symbol Name (DSO Name)
+22:40:13.831567     858005051634   1  context-switches  kworker/1:0 8
+ffffffff8103251e perf_event_task_sched_out ([kernel.kallsyms])
 
-------------------------------------------------------------------------------
-The ultimate all-in-one performance toolkit: Intel(R) Parallel Studio XE:
-Pinpoint memory and threading errors before they happen.
-Find and fix more than 250 security defects in the development cycle.
-Locate bottlenecks in serial and parallel code that limit performance.
-http://p.sf.net/sfu/intel-dev2devfeb
+22:40:13.831683     858005168139   1  context-switches  sshd 897
+ffffffff8103251e perf_event_task_sched_out ([kernel.kallsyms])
+
+With the stack callchain option it dumps a line for each address in the
+stack (columns abbreviated here for email):
+
+07:24:37.527728  1  sshd 819  ffffffff8103251e perf_event_task_sched_out
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81377231 schedule ([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81377f3a
+schedule_hrtimeout_range_clock ([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81378016 schedule_hrtimeout_range
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81103e15 poll_schedule_timeout
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff8110463c do_select ([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff811047f4 core_sys_select
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81104929 sys_select
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819  ffffffff81002bc2 system_call
+([kernel.kallsyms])
+07:24:37.527728  1  sshd 819      7f56d4814e93 __GI_select
+(/lib64/libc-2.12.90.so)
+07:24:37.527728  1  sshd 819            40560b run_builtin
+(/tmp/build-perf/perf)
+07:24:37.527728  1  sshd 819            40580d handle_internal_command
+(/tmp/build-perf/perf)
+07:24:37.527728  1  sshd 819            405959 run_argv
+(/tmp/build-perf/perf)
+07:24:37.527728  1  sshd 819            405b63 main (/tmp/build-perf/perf)
+07:24:37.527728  1  sshd 819      7fa49de9fe7d __libc_start_main
+(/lib64/libc-2.12.90.so)
+
+
+This format has allowed us to do an in-depth analysis of scheduling
+(record -e cs -c 1): we can see when was process running, for how long
+it ran, why it was kicked off the processor, how long was it off the
+processor, what ran in between schedulings, etc. If a log file shows a
+process missing a heartbeat you can look at the perf data in the time
+range and see if it had a chance to run. If not where was it blocked.
+
+David
+
+> 
+> Thanks,
+> 
+> 	Ingo
