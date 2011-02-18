@@ -1,29 +1,40 @@
-From: Peter Zijlstra <peterz@infradead.org>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Subject: Re: [PATCH 1/3] perf events: fix WARN_ON_ONCE for 64-bit raw data,
  SW events
-Date: Fri, 18 Feb 2011 16:51:56 +0100
-Message-ID: <1298044316.2887.0.camel@twins>
+Date: Fri, 18 Feb 2011 15:04:50 -0200
+Message-ID: <20110218170450.GB302@ghostprotocols.net>
 References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
-	 <1298008433-22911-2-git-send-email-daahern@cisco.com>
-	 <1298026821.5226.642.camel@laptop>  <4D5E8338.8010602@cisco.com>
-	 <1298040938.5226.771.camel@laptop>  <4D5E9016.4070808@cisco.com>
+ <1298008433-22911-2-git-send-email-daahern@cisco.com>
+ <1298026821.5226.642.camel@laptop>
+ <4D5E8338.8010602@cisco.com>
+ <20110218145348.GA302@ghostprotocols.net>
+ <1298041291.5226.776.camel@laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([18.85.46.34]:52331 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753393Ab1BRPwH convert rfc822-to-8bit (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Feb 2011 10:52:07 -0500
-In-Reply-To: <4D5E9016.4070808@cisco.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1298041291.5226.776.camel@laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: David Ahern <daahern@cisco.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, paulus@samba.org
+List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, 2011-02-18 at 08:28 -0700, David Ahern wrote:
+Em Fri, Feb 18, 2011 at 04:01:31PM +0100, Peter Zijlstra escreveu:
+> On Fri, 2011-02-18 at 12:53 -0200, Arnaldo Carvalho de Melo wrote:
+> > > So size should be changed to u64 rather than modifying the
+> > WARN_ON_ONCE?
+> > 
+> > Yeah, I guess so, 32-bit has to die it seems, gets in the way of
+> > testing
+> > :-) 
+> 
+> No!
+> 
+> 1) don't use RAW unless you have to
+> 2) you don't have to, goto 1
+> 3) if you do anyway, ensure its properly padded
 
-> Why is an 8-byte stride preferred over a 4-bytes?
+Ok, but using that struct definition on 32-bit land, will lead to non 8 byte
+alignment, right?
 
-So as to avoid having to deal with unaligned u64 reads.
+- Arnaldo
