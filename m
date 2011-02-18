@@ -1,49 +1,35 @@
-From: Arun Sharma <arun@sharma-home.net>
-Subject: Re: [perfmon2] updating perf tool
-Date: Thu, 17 Feb 2011 12:41:20 -0800
-Message-ID: <AANLkTimLpuwZ-t_Y771MDq3B0QYptg2MVGb8=wrWvMRe@mail.gmail.com>
-References: <AANLkTim5QGwisxLEHHHECrE1nLSYFxzXEMu7hvTRy09=@mail.gmail.com>
-	<AANLkTi=h6Qb7aCB0wER-FEGMwkD6xp1sBgnQudTZ=e+x@mail.gmail.com>
-	<AANLkTimqRjUTzv+AO7zHCfXvA1RZFDTjyb-r0s_MVNTW@mail.gmail.com>
-	<AANLkTinYM-Sg2uQFkXFy25mSZZZEtTSAUNrA==CxJP0=@mail.gmail.com>
-	<20110214194428.GE21384@ghostprotocols.net>
-	<AANLkTikfaAbdFWzcvayOjYLNECKf_L08nUUEWUy=p8it@mail.gmail.com>
-	<20110214204830.GF21384@ghostprotocols.net>
-	<AANLkTimtE79s-=U80R7Ujs6BK2Brn4GoKqQJiN9cYNdg@mail.gmail.com>
-	<20110215012405.GA22550@ghostprotocols.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH 0/3] perf events: Add realtime clock event and timehist option
+Date: Thu, 17 Feb 2011 22:53:50 -0700
+Message-ID: <1298008433-22911-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:45363 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751123Ab1BQUlV (ORCPT
+Received: from sj-iport-3.cisco.com ([171.71.176.72]:29254 "EHLO
+	sj-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750905Ab1BRFx4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Feb 2011 15:41:21 -0500
-Received: by iyj8 with SMTP id 8so2773784iyj.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Feb 2011 12:41:20 -0800 (PST)
-In-Reply-To: <20110215012405.GA22550@ghostprotocols.net>
+	Fri, 18 Feb 2011 00:53:56 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: Can Hankendi <hankendi@gmail.com>, linux-perf-users@vger.kernel.org, Tom Zanussi <tzanussi@gmail.com>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@elte.hu, acme@ghostprotocols.net, paulus@samba.org, David Ahern <daahern@cisco.com>
 
-On Mon, Feb 14, 2011 at 5:24 PM, Arnaldo Carvalho de Melo
-<acme@ghostprotocols.net> wrote:
+David Ahern (3):
+  perf events: fix WARN_ON_ONCE for 64-bit raw data, SW events
+  perf events: Introduce realtime clock event
+  perf events: add timehist option to record and report
 
-> I really need to look at the efforts you made in this direction,
-> experimentation, as in the --timehist case, is badly needed till we get
-> a good set of features for easing more widespread and innovative use of
-> this infrastructure.
+ include/linux/perf_event.h               |    1 +
+ kernel/perf_event.c                      |   74 +++++++++++-
+ tools/perf/Documentation/perf-record.txt |    4 +
+ tools/perf/Documentation/perf-report.txt |    6 +
+ tools/perf/builtin-record.c              |   78 +++++++++++-
+ tools/perf/builtin-report.c              |  208 +++++++++++++++++++++++++++++-
+ tools/perf/util/event.c                  |    1 +
+ tools/perf/util/event.h                  |    8 +
+ tools/perf/util/parse-events.c           |    2 +
+ tools/perf/util/session.c                |    4 +
+ tools/perf/util/session.h                |    3 +-
+ 11 files changed, 384 insertions(+), 5 deletions(-)
 
-If you're trying to marry python, cpuid, hardware topology detection
-and linux syscalls not wrapped in python (yet), these projects might
-also be interesting:
-
-http://code.google.com/p/module-linux/
-http://code.google.com/p/pycpuid/
-
-Specifically:
-
-http://code.google.com/p/pycpuid/source/browse/trunk/test/hwtopo.py
-
- -Arun
+-- 
+1.7.3.4
