@@ -1,92 +1,84 @@
 From: Frederic Weisbecker <fweisbec@gmail.com>
 Subject: Re: [PATCH 3/3] perf events: add timehist option to record and
  report
-Date: Mon, 21 Feb 2011 22:13:55 +0100
-Message-ID: <20110221211352.GA3583@nowhere>
+Date: Mon, 21 Feb 2011 22:17:59 +0100
+Message-ID: <20110221211757.GB3583@nowhere>
 References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
  <1298008433-22911-4-git-send-email-daahern@cisco.com>
  <20110218070657.GA11404@elte.hu>
  <4D5E8204.2090501@cisco.com>
  <20110218175926.GA3445@nowhere>
- <4D5EB564.6030504@cisco.com>
- <20110218192433.GA5658@nowhere>
- <4D5ECE3E.4040407@cisco.com>
+ <20110218184119.GC302@ghostprotocols.net>
+ <20110218192953.GB5658@nowhere>
+ <20110218203015.GF302@ghostprotocols.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:40379 "EHLO
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:39903 "EHLO
 	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751145Ab1BUVOB (ORCPT
+	with ESMTP id S1751186Ab1BUVfG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 21 Feb 2011 16:14:01 -0500
+	Mon, 21 Feb 2011 16:35:06 -0500
 Content-Disposition: inline
-In-Reply-To: <4D5ECE3E.4040407@cisco.com>
+In-Reply-To: <20110218203015.GF302@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, acme@ghostprotocols.net, paulus@samba.org, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: David Ahern <daahern@cisco.com>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, paulus@samba.org, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 
-On Fri, Feb 18, 2011 at 12:53:34PM -0700, David Ahern wrote:
-> 
-> 
-> On 02/18/11 12:24, Frederic Weisbecker wrote:
-> >> We want not only context-switch events, but the stack trace at the
-> >> switch. For example, with the stack trace you can see preemption -- when
-> >> a process got booted by another and where the booted process is at the
-> >> time. You can see not only which system call caused an ap to block
-> >> (e.g., an ioctl) but the full code path leading to the block.
+On Fri, Feb 18, 2011 at 06:30:15PM -0200, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Feb 18, 2011 at 08:29:56PM +0100, Frederic Weisbecker escreveu:
+> > On Fri, Feb 18, 2011 at 04:41:19PM -0200, Arnaldo Carvalho de Melo wrote:
+> > > Em Fri, Feb 18, 2011 at 06:59:30PM +0100, Frederic Weisbecker escreveu:
+> > > > The timestamps will be the cpu time and not the walltime, but at least that seems
+> > > > to be partly what you seek?
+> > > 
+> > > The whole issue for him, AFAIK, is to correlate perf events with app
+> > > events.
+> > > 
+> > > Think about tcpdump + networking tracepoints or 'perf probe' dynamic
+> > > events in the network stack, he wants to merge those logs and correlate
+> > > the tcpdump packet exchange with the tracepoints events in the network
+> > > stack, etc.
+> > > 
+> > > I.e. it doesn't matter if it is ftrace or not, having a common clock
+> > > shared between apps and kernel tracing/whatever infrastructure is what
+> > > David is after, right?
+> > > 
+> > > He can change userspace to use the clock the kernel is using in the
+> > > perf/ftrace/whatever infrastructure or make the kernel use the clock
+> > > userspace uses.
+> > > 
+> > > The issue here is who will bend, u or k ;-)
 > > 
-> > You can recognize preemption a the context switch tracepoint: if the state
-> > of the scheduled out task is R (TASK_RUNNING), which means it doesn't go
-> > to sleep but gets preempted, with an explicit preemption point like cond_resched(),
-> > or a more implicit one: spin_unlock(), preempt_enable(), an interrupt, ...
-> > Or it has been woken up while it was about to sleep, but it doesn't make much
-> > difference.
+> > Right. I don't disagree with the need of a walltime. That already
+> > in debate :)
 > > 
-> > If you want to know when a process is booted by another you can use the
-> > fork tracepoint, or sched:wake_up_new, etc...
-> > 
-> > And you can use syscall tracepoints to get the syscalls you want.
-> > 
-> > I don't see much the point for you to use stacktraces. But if you
-> > do, then rather add this support to perf script, in our scripting
-> > framework.
+> > I was rather arguing about the tracing part. Adding support in perf report
+> > in the wrong way to do this. If something must be extended, It should be done
+> > in perf script, where we do the tracing support.
 > 
-> It's more the simplicity of what we are using today. 1 command, 1 event
-> being monitored:
+> Squashing "profiling" and "tracing" differences is something I think
+> worthy.
 > 
->   perf record -ag -e cs -c 1
+> Its all about events, that should be treated as equal in all tools. So I
+> don't think 'perf script' is about tracing, its about handling events
+> found in the event stream, be it hw, sw, tracepoints, dynamic probes put
+> in place by 'perf probe', or whatever event source we end up having.
 > 
-> A wealth of information. That command shows preemption, stack traces
-> only for context-switches (not all of the syscalls which is
-> overwhelming) and opens the door for other analysis. One data set.
-> Simple. Focused.
-
-Right. Then why not adding support to stacktraces in perf script?
-Seems it's the only missing thing to achieve what you want.
-
-> > Because what you've done is basically to add tracing support to
-> > perf report. But we have perf script for that already. It only focuses
-> > on tracepoint events but they are those people are interested in
-> > because they show logical events in the kernel. I guess
-> > people are not interested in cpu-cycles overflows events or so as
-> > they don't show a state change in the kernel.
+> A 'clock_gettime' like event, sampling whatever POSIX clock the kernel
+> supports should be enough flexibility, leaving concerns about sanity of
+> any particular use to the rope user.
 > 
-> I have always referred to this as pretty printing each sample recorded
-> as opposed to summarizing into a histogram. With that approach you have
-> dictated the analysis of the data - a histogram summary. By printing
-> each sample with address-symbol conversions we can look at it in
-> whatever angle we need to make sense of it.
+> Of course, extensibility via 'perf script' or 'use perf' in perf scripts
+> should provide great avenues for experimentation, not requiring changes
+> in the builtins :-)
 
-I'm not dictating any analysis. You can can just launch
-perf script without script and it will display the events,
-like you want.
+Right.
 
-Just try:
-
-perf record -a -e sched:sched_switch
-perf script
-
-You can extend it to print addresses or symbols or even stacktraces.
-It just seems to me the right place to do so. Not perf report that is
-about histograms.
+So I agree perf script should be tracing/profiling/any semantic agnostic.
+But when it's about dumping, displaying events sequentially, it seems
+an extension to perf script is a better place for that rather than
+perf report. perf script default behaviour is already about displaying
+raw traces. If support is needed to print the ip of the event or the
+stacktraces, it's very welcome!
