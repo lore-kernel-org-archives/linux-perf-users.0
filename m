@@ -1,151 +1,92 @@
-From: David Ahern <daahern@cisco.com>
-Subject: [PATCH 1/4] perf events: Introduce realtime clock event
-Date: Mon, 21 Feb 2011 14:02:27 -0700
-Message-ID: <1298322150-15505-2-git-send-email-daahern@cisco.com>
-References: <1298322150-15505-1-git-send-email-daahern@cisco.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1298322150-15505-1-git-send-email-daahern@cisco.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH 3/3] perf events: add timehist option to record and
+ report
+Date: Mon, 21 Feb 2011 22:13:55 +0100
+Message-ID: <20110221211352.GA3583@nowhere>
+References: <1298008433-22911-1-git-send-email-daahern@cisco.com>
+ <1298008433-22911-4-git-send-email-daahern@cisco.com>
+ <20110218070657.GA11404@elte.hu>
+ <4D5E8204.2090501@cisco.com>
+ <20110218175926.GA3445@nowhere>
+ <4D5EB564.6030504@cisco.com>
+ <20110218192433.GA5658@nowhere>
+ <4D5ECE3E.4040407@cisco.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:40379 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751145Ab1BUVOB (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 21 Feb 2011 16:14:01 -0500
+Content-Disposition: inline
+In-Reply-To: <4D5ECE3E.4040407@cisco.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: David Ahern <daahern@cisco.com>
+Cc: Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, acme@ghostprotocols.net, paulus@samba.org, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The motivation for this event is to convert perf_clock() time stamps
-to wall-clock (gettimeofday()) equivalents for comparing perf events
-to other log files.
+On Fri, Feb 18, 2011 at 12:53:34PM -0700, David Ahern wrote:
+> 
+> 
+> On 02/18/11 12:24, Frederic Weisbecker wrote:
+> >> We want not only context-switch events, but the stack trace at the
+> >> switch. For example, with the stack trace you can see preemption -- when
+> >> a process got booted by another and where the booted process is at the
+> >> time. You can see not only which system call caused an ap to block
+> >> (e.g., an ioctl) but the full code path leading to the block.
+> > 
+> > You can recognize preemption a the context switch tracepoint: if the state
+> > of the scheduled out task is R (TASK_RUNNING), which means it doesn't go
+> > to sleep but gets preempted, with an explicit preemption point like cond_resched(),
+> > or a more implicit one: spin_unlock(), preempt_enable(), an interrupt, ...
+> > Or it has been woken up while it was about to sleep, but it doesn't make much
+> > difference.
+> > 
+> > If you want to know when a process is booted by another you can use the
+> > fork tracepoint, or sched:wake_up_new, etc...
+> > 
+> > And you can use syscall tracepoints to get the syscalls you want.
+> > 
+> > I don't see much the point for you to use stacktraces. But if you
+> > do, then rather add this support to perf script, in our scripting
+> > framework.
+> 
+> It's more the simplicity of what we are using today. 1 command, 1 event
+> being monitored:
+> 
+>   perf record -ag -e cs -c 1
+> 
+> A wealth of information. That command shows preemption, stack traces
+> only for context-switches (not all of the syscalls which is
+> overwhelming) and opens the door for other analysis. One data set.
+> Simple. Focused.
 
-This patch is based on the monotonic patch by Arnaldo Carvalho de Melo
-<acme@redhat.com>.
+Right. Then why not adding support to stacktraces in perf script?
+Seems it's the only missing thing to achieve what you want.
 
-Signed-off-by: David Ahern <daahern@cisco.com>
----
- include/linux/perf_event.h     |    1 +
- kernel/perf_event.c            |   66 ++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/parse-events.c |    2 +
- 3 files changed, 69 insertions(+), 0 deletions(-)
+> > Because what you've done is basically to add tracing support to
+> > perf report. But we have perf script for that already. It only focuses
+> > on tracepoint events but they are those people are interested in
+> > because they show logical events in the kernel. I guess
+> > people are not interested in cpu-cycles overflows events or so as
+> > they don't show a state change in the kernel.
+> 
+> I have always referred to this as pretty printing each sample recorded
+> as opposed to summarizing into a histogram. With that approach you have
+> dictated the analysis of the data - a histogram summary. By printing
+> each sample with address-symbol conversions we can look at it in
+> whatever angle we need to make sense of it.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 8ceb5a6..51a2f34 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -105,6 +105,7 @@ enum perf_sw_ids {
- 	PERF_COUNT_SW_PAGE_FAULTS_MAJ		= 6,
- 	PERF_COUNT_SW_ALIGNMENT_FAULTS		= 7,
- 	PERF_COUNT_SW_EMULATION_FAULTS		= 8,
-+	PERF_COUNT_SW_REALTIME_CLOCK		= 9,
- 
- 	PERF_COUNT_SW_MAX,			/* non-ABI */
- };
-diff --git a/kernel/perf_event.c b/kernel/perf_event.c
-index a0a6987..85f60c0 100644
---- a/kernel/perf_event.c
-+++ b/kernel/perf_event.c
-@@ -5413,6 +5413,7 @@ static int perf_swevent_init(struct perf_event *event)
- 	switch (event_id) {
- 	case PERF_COUNT_SW_CPU_CLOCK:
- 	case PERF_COUNT_SW_TASK_CLOCK:
-+	case PERF_COUNT_SW_REALTIME_CLOCK:
- 		return -ENOENT;
- 
- 	default:
-@@ -5751,6 +5752,70 @@ static struct pmu perf_cpu_clock = {
- };
- 
- /*
-+ * Software event: realtime wall time clock
-+ */
-+
-+static void realtime_clock_event_update(struct perf_event *event)
-+{
-+	u64 now = ktime_to_ns(ktime_get_real());
-+	local64_set(&event->count, now);
-+}
-+
-+static void realtime_clock_event_start(struct perf_event *event, int flags)
-+{
-+	realtime_clock_event_update(event);
-+	perf_swevent_start_hrtimer(event);
-+}
-+
-+static void realtime_clock_event_stop(struct perf_event *event, int flags)
-+{
-+	perf_swevent_cancel_hrtimer(event);
-+	realtime_clock_event_update(event);
-+}
-+
-+static int realtime_clock_event_add(struct perf_event *event, int flags)
-+{
-+	if (flags & PERF_EF_START)
-+		realtime_clock_event_start(event, flags);
-+
-+	return 0;
-+}
-+
-+static void realtime_clock_event_del(struct perf_event *event, int flags)
-+{
-+	realtime_clock_event_stop(event, flags);
-+}
-+
-+static void realtime_clock_event_read(struct perf_event *event)
-+{
-+	realtime_clock_event_update(event);
-+}
-+
-+static int realtime_clock_event_init(struct perf_event *event)
-+{
-+	if (event->attr.type != PERF_TYPE_SOFTWARE)
-+		return -ENOENT;
-+
-+	if (event->attr.config != PERF_COUNT_SW_REALTIME_CLOCK)
-+		return -ENOENT;
-+
-+	perf_swevent_init_hrtimer(event);
-+
-+	return 0;
-+}
-+
-+static struct pmu perf_realtime_clock = {
-+	.task_ctx_nr	= perf_sw_context,
-+
-+	.event_init	= realtime_clock_event_init,
-+	.add		= realtime_clock_event_add,
-+	.del		= realtime_clock_event_del,
-+	.start		= realtime_clock_event_start,
-+	.stop		= realtime_clock_event_stop,
-+	.read		= realtime_clock_event_read,
-+};
-+
-+/*
-  * Software event: task time clock
-  */
- 
-@@ -7285,6 +7350,7 @@ void __init perf_event_init(void)
- 	init_srcu_struct(&pmus_srcu);
- 	perf_pmu_register(&perf_swevent, "software", PERF_TYPE_SOFTWARE);
- 	perf_pmu_register(&perf_cpu_clock, NULL, -1);
-+	perf_pmu_register(&perf_realtime_clock, NULL, -1);
- 	perf_pmu_register(&perf_task_clock, NULL, -1);
- 	perf_tp_register();
- 	perf_cpu_notifier(perf_cpu_notify);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 54a7e26..c40bfef 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -41,6 +41,7 @@ static struct event_symbol event_symbols[] = {
- 
-   { CSW(CPU_CLOCK),		"cpu-clock",		""		},
-   { CSW(TASK_CLOCK),		"task-clock",		""		},
-+  { CSW(REALTIME_CLOCK),	"clock-realtime",	"clkr"		},
-   { CSW(PAGE_FAULTS),		"page-faults",		"faults"	},
-   { CSW(PAGE_FAULTS_MIN),	"minor-faults",		""		},
-   { CSW(PAGE_FAULTS_MAJ),	"major-faults",		""		},
-@@ -78,6 +79,7 @@ static const char *sw_event_names[] = {
- 	"major-faults",
- 	"alignment-faults",
- 	"emulation-faults",
-+	"realtime-clock-msecs",
- };
- 
- #define MAX_ALIASES 8
--- 
-1.7.3.4
+I'm not dictating any analysis. You can can just launch
+perf script without script and it will display the events,
+like you want.
+
+Just try:
+
+perf record -a -e sched:sched_switch
+perf script
+
+You can extend it to print addresses or symbols or even stacktraces.
+It just seems to me the right place to do so. Not perf report that is
+about histograms.
