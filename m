@@ -1,32 +1,48 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [PATCH 0/6 v3] perf events: Add realtime clock event, time-of-day
- strings to script output
-Date: Sun, 27 Feb 2011 20:55:28 -0700
-Message-ID: <4D6B1CB0.8020704@cisco.com>
-References: <1298865151-23656-1-git-send-email-daahern@cisco.com>
+From: Han Pingtian <phan@redhat.com>
+Subject: what's the usage of 'perf inject'?
+Date: Mon, 28 Feb 2011 18:09:33 +0800
+Message-ID: <20110228100933.GC10612@hpt.nay.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-5.cisco.com ([171.68.10.87]:35693 "EHLO
-	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752410Ab1B1DzR (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:24568 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752661Ab1B1KFZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 27 Feb 2011 22:55:17 -0500
-In-Reply-To: <1298865151-23656-1-git-send-email-daahern@cisco.com>
+	Mon, 28 Feb 2011 05:05:25 -0500
+Received: from int-mx02.intmail.prod.int.phx2.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1SA5PlM022799
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Feb 2011 05:05:25 -0500
+Received: from hpt.nay.redhat.com (dhcp-65-65.nay.redhat.com [10.66.65.65])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP id p1SA5LkW024124
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Feb 2011 05:05:24 -0500
+Received: from hpt.nay.redhat.com (localhost.localdomain [127.0.0.1])
+	by hpt.nay.redhat.com (8.14.4/8.14.4) with ESMTP id p1SA9YWd021799
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Feb 2011 18:09:34 +0800
+Received: (from hpt@localhost)
+	by hpt.nay.redhat.com (8.14.4/8.14.4/Submit) id p1SA9X5D021797
+	for linux-perf-users@vger.kernel.org; Mon, 28 Feb 2011 18:09:33 +0800
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
+To: linux-perf-users@vger.kernel.org
 
+Hello,
 
+I cannot figure out how to use 'perf inject'. It looks like I can run it
+like this:
 
-On 02/27/2011 08:52 PM, David Ahern wrote:
-> A request was made to modify perf-trace and perf-script. From what I can see
-> perf-trace does not exist yet and perf-script requires raw data which means
-> it does not work for the primary use case that motivated this feature
-> (perf record -e cs -1 -ag).
+$ perf record -o - ls | perf inject -b -v
 
-Please disregard the above; it is not relevant to this version.
+and get a lot of garbage on the screen. How does 'perf inject' be
+supposed to use? 
 
-David
+Thanks in advance.
+-- 
+Han Pingtian
+Quality Engineer
+hpt @ #kernel-qe
+Red Hat, Inc
+Freedom ... courage ... Commitment ... ACCOUNTABILITY
