@@ -1,7 +1,7 @@
 From: David Ahern <daahern@cisco.com>
-Subject: [PATCH 3/6] perf record: add time-of-day option
-Date: Sun, 27 Feb 2011 20:52:28 -0700
-Message-ID: <1298865151-23656-4-git-send-email-daahern@cisco.com>
+Subject: [PATCH 5/6] perf script: Prepend lines with time-of-day string
+Date: Sun, 27 Feb 2011 20:52:30 -0700
+Message-ID: <1298865151-23656-6-git-send-email-daahern@cisco.com>
 References: <1298865151-23656-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1298865151-23656-1-git-send-email-daahern@cisco.com>
@@ -10,371 +10,301 @@ To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Enable data collection for generating time-of-day strings when
-printing individual perf samples. This is done by sampling the
-realtime clock event with the perf_clock time stamps.
+Handle realtime-clock events and setting reference times that are then used
+to correlate perf_clock times with time-of-day. Output lines are then
+prepended with a time-of-day string if the --tod option was used with
+perf-record.
 
-If the realtime-clock event is not available (e.g, older kernels)
-fallback to a synthesized event. (I realize there is resistance
-to new synthesized events, but it is a simple way to gain this
-feature on older kernels without the need to modify the kernel
-code).
+Was:
+
+swapper-0    [000] 5329.151669: context-switches: ...
+   perf-5701 [001] 5329.151797: context-switches: ...
+  sleep-5702 [000] 5329.155550: context-switches: ...
+swapper-0    [001] 5329.158074: context-switches: ...
+
+Now:
+
+20:07:14.903936 swapper-0    [000] 5329.151669: context-switches: ...
+20:07:14.904065    perf-5701 [001] 5329.151797: context-switches: ...
+20:07:14.907817   sleep-5702 [000] 5329.155550: context-switches: ...
+20:07:14.910342 swapper-0    [001] 5329.158074: context-switches: ...
+
+Similarly for tracepoints:
+
+20:11:11.659801        perf-5714 [001] 5565.907534: sched_switch: ...
+20:11:11.659812     swapper-0    [001] 5565.907544: sched_switch: ...
+20:11:11.659828 ksoftirqd/1-9    [001] 5565.907560: sched_switch: ...
+20:11:12.857334     swapper-0    [001] 5567.105067: sched_switch: ...
 
 Signed-off-by: David Ahern <daahern@cisco.com>
 ---
- include/linux/perf_event.h               |    1 +
- kernel/perf_event.c                      |   19 +++++
- tools/perf/Documentation/perf-record.txt |    5 ++
- tools/perf/builtin-record.c              |  110 +++++++++++++++++++++++++++++-
- tools/perf/util/event.c                  |    1 +
- tools/perf/util/event.h                  |    8 ++
- tools/perf/util/evlist.c                 |    2 +-
- tools/perf/util/evlist.h                 |    2 +
- tools/perf/util/session.c                |    4 +
- tools/perf/util/session.h                |    3 +-
- 10 files changed, 151 insertions(+), 4 deletions(-)
+ tools/perf/builtin-script.c |   26 +++++++++++-
+ tools/perf/util/event.c     |   95 +++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/event.h     |   10 +++++
+ tools/perf/util/session.c   |   12 ++++--
+ tools/perf/util/session.h   |    2 +-
+ 5 files changed, 139 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 51a2f34..404b1ee 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -240,6 +240,7 @@ struct perf_event_attr {
- #define PERF_EVENT_IOC_PERIOD		_IOW('$', 4, __u64)
- #define PERF_EVENT_IOC_SET_OUTPUT	_IO ('$', 5)
- #define PERF_EVENT_IOC_SET_FILTER	_IOW('$', 6, char *)
-+#define PERF_EVENT_IOC_RECORD_SAMPLE	_IO('$', 7)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 4f4c63b..427c257 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -21,6 +21,8 @@ static u64			nr_unordered;
+ extern const struct option	record_options[];
+ static bool			hide_unresolved;
+ static bool			no_callchain;
++static struct			timeval tv_ref;
++static u64 			timestamp_ref;
  
- enum perf_event_ioc_flags {
- 	PERF_IOC_FLAG_GROUP		= 1U << 0,
-diff --git a/kernel/perf_event.c b/kernel/perf_event.c
-index a25a63d..7999f55 100644
---- a/kernel/perf_event.c
-+++ b/kernel/perf_event.c
-@@ -3250,6 +3250,7 @@ static struct perf_event *perf_fget_light(int fd, int *fput_needed)
- static int perf_event_set_output(struct perf_event *event,
- 				 struct perf_event *output_event);
- static int perf_event_set_filter(struct perf_event *event, void __user *arg);
-+static int perf_event_generate_sample(struct perf_event *event);
+ static int default_start_script(const char *script __unused,
+ 				int argc __unused,
+@@ -73,6 +75,7 @@ static int process_sample_event(union perf_event *event,
+ 	struct addr_location al;
+ 	struct thread *thread = perf_session__findnew(session, event->ip.pid);
+ 	const char *evname = NULL;
++	const char *tstr = NULL;
+ 	static bool check_raw = true;
  
- static long perf_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
-@@ -3296,6 +3297,9 @@ static long perf_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case PERF_EVENT_IOC_SET_FILTER:
- 		return perf_event_set_filter(event, (void __user *)arg);
- 
-+	case PERF_EVENT_IOC_RECORD_SAMPLE:
-+		return perf_event_generate_sample(event);
-+
- 	default:
- 		return -ENOTTY;
+ 	if (thread == NULL) {
+@@ -88,6 +91,16 @@ static int process_sample_event(union perf_event *event,
+ 		return -1;
  	}
-@@ -4398,6 +4402,21 @@ exit:
- 	rcu_read_unlock();
+ 
++	if ((attr->type == PERF_TYPE_SOFTWARE) &&
++	    (attr->config == PERF_COUNT_SW_REALTIME_CLOCK) &&
++	    (perf_event__process_rclk(sample, session,
++				      &tv_ref, &timestamp_ref) == 0))
++		return 0;
++
++
++	if (session->sample_type & PERF_SAMPLE_TIME)
++		tstr = perf_event__timestr(sample, session, timestamp_ref, &tv_ref);
++
+ 	switch (attr->type) {
+ 	case PERF_TYPE_SOFTWARE:
+ 		if (perf_event__preprocess_sample(event, session, &al, sample,
+@@ -96,7 +109,7 @@ static int process_sample_event(union perf_event *event,
+ 				event->header.type);
+ 			return -1;
+ 		}
+-		perf_session__print_sample(session, &al, sample, hide_unresolved);
++		perf_session__print_sample(session, &al, sample, hide_unresolved, tstr);
+ 		break;
+ 
+ 	case PERF_TYPE_TRACEPOINT:
+@@ -116,6 +129,9 @@ static int process_sample_event(union perf_event *event,
+ 			last_timestamp = sample->time;
+ 			return 0;
+ 		}
++		if (tstr)
++			printf("%15s ", tstr);
++
+ 		/*
+ 		 * FIXME: better resolve from pid from the struct trace_entry
+ 		 * field, although it should be the same than this perf
+@@ -137,6 +153,13 @@ static int process_sample_event(union perf_event *event,
+ 	return 0;
  }
  
-+/* add a sample to the event stream based on user request */
-+static int perf_event_generate_sample(struct perf_event *event)
++static int process_reftime_event(union perf_event *event,
++                 struct perf_session *session)
 +{
-+	struct perf_sample_data data;
-+	struct pt_regs regs;
++	return perf_event__process_reftime(event, session,
++	                                   &tv_ref, &timestamp_ref);
++}
 +
-+	perf_fetch_caller_regs(&regs);
-+	event->pmu->read(event);
-+	perf_sample_data_init(&data, 0);
-+	data.period = event->hw.last_period;
-+	perf_event_output(event, 0, &data, &regs);
+ static struct perf_event_ops event_ops = {
+ 	.sample		 = process_sample_event,
+ 	.comm		 = perf_event__process_comm,
+@@ -144,6 +167,7 @@ static struct perf_event_ops event_ops = {
+ 	.event_type	 = perf_event__process_event_type,
+ 	.tracing_data	 = perf_event__process_tracing_data,
+ 	.build_id	 = perf_event__process_build_id,
++	.reftime	 = process_reftime_event,
+ 	.ordered_samples = true,
+ 	.ordering_requires_timestamps = true,
+ };
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 6bbd551..ca1f56d 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1,4 +1,6 @@
+ #include <linux/types.h>
++#include <sys/time.h>
++#include <time.h>
+ #include "event.h"
+ #include "debug.h"
+ #include "session.h"
+@@ -847,3 +849,96 @@ out_filtered:
+ 	al->filtered = true;
+ 	return 0;
+ }
++
++int perf_event__process_rclk(struct perf_sample *sample,
++                 struct perf_session *session, struct timeval *tv,
++				 u64 *ts)
++{
++	u64 s;
++
++	if (!(session->sample_type & PERF_SAMPLE_READ)) {
++		static bool show_msg = true;
++		if (show_msg) {
++			printf("rclk sample does not have event data.\n"
++			       "Was record done with --timehist option?\n");
++			show_msg = false;
++		}
++		return -1;
++	}
++
++	if (!(session->sample_type & PERF_SAMPLE_TIME)) {
++		printf("rclk sample does not have kernel sample time\n");
++		return -1;
++	}
++
++	/* convert raw sample to wall-clock reference time */
++	s = sample->values.value;
++	tv->tv_sec = s / NSEC_PER_SEC;
++	tv->tv_usec = (s - tv->tv_sec * NSEC_PER_SEC) / 1000;
++	
++	/* match event sample with kernel timestamp */
++	*ts= sample->time;
 +
 +	return 0;
 +}
 +
- /*
-  * read event_id
-  */
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 5a520f8..8eb5b0a 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -148,6 +148,11 @@ an empty cgroup (monitor all the time) using, e.g., -G foo,,bar. Cgroups must ha
- corresponding events, i.e., they always refer to events defined earlier on the command
- line.
- 
-+--tod::
-+Collect data for time-of-day strings when printing events. This option adds
-+reference time samples to the event stream for converting perf timestamps to
-+time-of-day.
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e39883e..ac0717c 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -56,6 +56,8 @@ static bool			nodelay				=  false;
- static bool			raw_samples			=  false;
- static bool			sample_id_all_avail		=   true;
- static bool			system_wide			=  false;
-+static bool			want_tod_data			=  false;
-+static bool			synth_reftime			=  false;
- static pid_t			target_pid			=     -1;
- static pid_t			target_tid			=     -1;
- static pid_t			child_pid			=     -1;
-@@ -235,7 +237,7 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
- 
- 	attr->sample_type	|= PERF_SAMPLE_IP | PERF_SAMPLE_TID;
- 
--	if (evlist->nr_entries > 1)
-+	if ((evlist->nr_entries > 1) || want_tod_data)
- 		attr->sample_type |= PERF_SAMPLE_ID;
- 
- 	/*
-@@ -280,6 +282,12 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
- 		attr->sample_type	|= PERF_SAMPLE_CPU;
- 	}
- 
-+	if (want_tod_data) {
-+		attr->sample_type   |= PERF_SAMPLE_TIME;
-+		attr->sample_type   |= PERF_SAMPLE_CPU;
-+		attr->sample_type   |= PERF_SAMPLE_READ;
-+	}
-+
- 	if (nodelay) {
- 		attr->watermark = 0;
- 		attr->wakeup_events = 1;
-@@ -294,6 +302,88 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
- 	}
- }
- 
-+static int perf_event__synthesize_reftime(perf_event__handler_t process,
-+		struct perf_session *psession)
++/* 
++ *  process synthesized reference time event 
++ */
++int perf_event__process_reftime(union perf_event *event,
++                 struct perf_session *session __used,
++                 struct timeval *tv, u64 *ts)
 +{
-+	union perf_event ev;
-+	struct timespec tp;
++	*tv = event->reftime.tv;
++	*ts = event->reftime.nsec;
 +
-+	memset(&ev, 0, sizeof(ev));
-+
-+	/* race here between successive calls, but should be close enough */
-+	if (gettimeofday(&ev.reftime.tv, NULL) != 0) {
-+		error("gettimeofday failed. Cannot generate reference time.\n");
-+		return -1;
-+	}
-+	if (clock_gettime(CLOCK_MONOTONIC, &tp) != 0) {
-+		error("clock_gettime failed. Cannot generate reference time.\n");
-+		return -1;
-+	}
-+	ev.reftime.nsec = (u64) tp.tv_sec * NSEC_PER_SEC + (u64) tp.tv_nsec;
-+
-+	ev.header.type = PERF_RECORD_REFTIME;
-+	ev.header.size = sizeof(ev.reftime);
-+
-+	return process(&ev, NULL, psession);
++	return 0;
 +}
 +
-+static void create_tod_counter(void)
++const char *perf_event__timestr(struct perf_sample *sample,
++				struct perf_session *session,
++				u64 tsref, struct timeval *tvref)
 +{
-+	int fd;
-+	struct perf_event_attr attr;
-+	struct perf_evsel *evsel;
-+	/* only on 1 cpu */
-+	struct cpu_map *cpus = cpu_map__new("0");
-+	/* not associated with a process */
-+	struct thread_map *threads = thread_map__new(-1, -1);
++	static char buf[64];
++	u64 dt;
++	struct tm ltime;
++	struct timeval tv_dt, tv_res;
++	const char *fmt = "%H:%M:%S";
 +
-+	struct perf_evsel *first_evsel = list_entry(evsel_list->entries.next,
-+			                 struct perf_evsel, node);
++	buf[0] = '\0';
 +
-+	attr = first_evsel->attr;
-+	attr.type = PERF_TYPE_SOFTWARE;
-+	attr.config = PERF_COUNT_SW_REALTIME_CLOCK;
-+	attr.sample_period = 3600 * NSEC_PER_SEC;
-+	attr.freq = 0;
++	/* no sample time in sample data */
++	if (!(session->sample_type & PERF_SAMPLE_TIME))
++		return NULL;
 +
-+	evsel = perf_evsel__new(&attr, evsel_list->nr_entries);
-+	if (!evsel)
-+		die("Error: Failed to allocate memory for time counter\n");
-+
-+	config_attr(evsel, evsel_list);
-+
-+	if (perf_evsel__open(evsel, cpus, threads, 0, 1) < 0) {
-+		if (errno == EINVAL) {
++	if (tsref == 0) {
++		static bool show_msg = true;
++		if (show_msg) {
 +			if (verbose)
-+				warning("Failed to open realtime clock event\n");
-+			synth_reftime = true;
-+			return;
++			warning("Reference clock event not seen yet; "
++			        "Cannot generate wall-clock time strings until then.\n");
++			show_msg = false;
 +		}
-+		die("Failed to open realtime clock event\n");
++		return NULL;
 +	}
 +
-+	if (perf_evsel__alloc_id(evsel, cpus->nr, threads->nr) < 0)
-+		die("Failed to allocate an id for realtime-clock event\n");
++	if (sample->time > tsref) {
++		dt = sample->time - tsref;
++		tv_dt.tv_sec = (time_t) (dt / NSEC_PER_SEC);
++		tv_dt.tv_usec = (dt - tv_dt.tv_sec * NSEC_PER_SEC) / 1000;
++		timeradd(tvref, &tv_dt, &tv_res);
++	} else {
++		dt = tsref - sample->time;
++		tv_dt.tv_sec = (time_t) (dt / NSEC_PER_SEC);
++		tv_dt.tv_usec = (dt - tv_dt.tv_sec * NSEC_PER_SEC) / 1000;
++		timersub(tvref, &tv_dt, &tv_res);
++	}
 +
-+	fd = FD(evsel, 0, 0);
-+	if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, FD(first_evsel, 0, 0)) != 0)
-+		die("Failed to add realtime-clock event to output stream\n");
++	if (localtime_r(&tv_res.tv_sec, &ltime) != NULL) {
++		char date[64];
++		strftime(date, sizeof(date), fmt, &ltime);
++		snprintf(buf, sizeof(buf), "%s.%06ld", date, tv_res.tv_usec);
++	}
 +
-+	if (perf_evlist__id_hash(evsel_list, evsel, 0, 0, fd) < 0)
-+		die("id_hash failed for realtime-clock event\n");
-+
-+	create_counter(evsel, 0);
-+
-+	/* generate first sample - want a sample immediately so
-+	 * that time conversions are avialable from the get-go.
-+	 * Let user-specified rate take care of samples after that.
-+	 */
-+	if (ioctl(fd, PERF_EVENT_IOC_RECORD_SAMPLE) != 0)
-+		error("failed to generate sample for realtime clock\n");
-+
-+	return;
++	return buf;
 +}
-+
- static void open_counters(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *pos;
-@@ -335,7 +425,8 @@ try_again:
- 				 * Old kernel, no attr->sample_id_type_all field
- 				 */
- 				sample_id_all_avail = false;
--				if (!sample_time && !raw_samples && !time_needed)
-+				if (!sample_time && !raw_samples
-+						&& !time_needed && !want_tod_data)
- 					attr->sample_type &= ~PERF_SAMPLE_TIME;
- 
- 				goto retry_sample_id;
-@@ -378,6 +469,9 @@ try_again:
- 		list_for_each_entry(pos, &evlist->entries, node)
- 			create_counter(pos, cpu);
- 	}
-+
-+	if (want_tod_data)
-+		create_tod_counter();
- }
- 
- static int process_buildids(void)
-@@ -657,6 +751,16 @@ static int __cmd_record(int argc, const char **argv)
- 		}
- 	}
- 
-+	if (synth_reftime) {
-+		if (verbose)
-+			warning(" ... fall back to synthesized reftime\n");
-+
-+		if (perf_event__synthesize_reftime(process_synthesized_event,
-+	                                   session) != 0)
-+			error("Failed to create reftime event. "
-+			      "Cannot generate wall-clock timestamps\n");
-+	}
-+
- 	machine = perf_session__find_host_machine(session);
- 	if (!machine) {
- 		pr_err("Couldn't find native kernel information.\n");
-@@ -815,6 +919,8 @@ const struct option record_options[] = {
- 	OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
- 		     "monitor event in cgroup name only",
- 		     parse_cgroups),
-+	OPT_BOOLEAN(0, "tod", &want_tod_data,
-+		    "collect data for time-of-day strings"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index fbf5754..6bbd551 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_HEADER_TRACING_DATA]	 = "TRACING_DATA",
- 	[PERF_RECORD_HEADER_BUILD_ID]	 = "BUILD_ID",
- 	[PERF_RECORD_FINISHED_ROUND]	 = "FINISHED_ROUND",
-+	[PERF_RECORD_REFTIME]		 = "REF_TIME",
- };
- 
- const char *perf_event__name(unsigned int id)
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 512a1ca..d4810e0 100644
+index d4810e0..22e2af8 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -99,6 +99,7 @@ enum perf_user_event_type { /* above any possible kernel type */
- 	PERF_RECORD_HEADER_TRACING_DATA		= 66,
- 	PERF_RECORD_HEADER_BUILD_ID		= 67,
- 	PERF_RECORD_FINISHED_ROUND		= 68,
-+	PERF_RECORD_REFTIME			= 69,
- 	PERF_RECORD_HEADER_MAX
- };
+@@ -196,4 +196,14 @@ const char *perf_event__name(unsigned int id);
+ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 			     u64 read_format, bool sample_id_all, struct perf_sample *sample);
  
-@@ -125,6 +126,12 @@ struct tracing_data_event {
- 	u32 size;
- };
- 
-+struct reftime_event {
-+	struct perf_event_header header;
-+	struct timeval tv;
-+	u64 nsec;
-+};
++int perf_event__process_rclk(struct perf_sample *sample,
++				  struct perf_session *session, struct timeval *tv, u64 *ts);
 +
- union perf_event {
- 	struct perf_event_header	header;
- 	struct ip_event			ip;
-@@ -138,6 +145,7 @@ union perf_event {
- 	struct event_type_event		event_type;
- 	struct tracing_data_event	tracing_data;
- 	struct build_id_event		build_id;
-+	struct reftime_event		reftime;
- };
- 
- void perf_event__print_totals(void);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 95b21fe..bb49243 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -106,7 +106,7 @@ void perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd)
- 	evlist->nr_fds++;
- }
- 
--static int perf_evlist__id_hash(struct perf_evlist *evlist, struct perf_evsel *evsel,
-+int perf_evlist__id_hash(struct perf_evlist *evlist, struct perf_evsel *evsel,
- 			       int cpu, int thread, int fd)
- {
- 	struct perf_sample_id *sid;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index c988405..bd73572 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -48,6 +48,8 @@ union perf_event *perf_evlist__read_on_cpu(struct perf_evlist *self, int cpu);
- int perf_evlist__alloc_mmap(struct perf_evlist *evlist);
- int perf_evlist__mmap(struct perf_evlist *evlist, int pages, bool overwrite);
- void perf_evlist__munmap(struct perf_evlist *evlist);
-+int perf_evlist__id_hash(struct perf_evlist *evlist, struct perf_evsel *evsel,
-+					       int cpu, int thread, int fd);
- 
- static inline void perf_evlist__set_maps(struct perf_evlist *evlist,
- 					 struct cpu_map *cpus,
++int perf_event__process_reftime(union perf_event *event,
++				  struct perf_session *session, struct timeval *tv, u64 *ts);
++
++const char *perf_event__timestr(struct perf_sample *sample,
++				  struct perf_session *session,
++				  u64 tsref, struct timeval *tvref);
++
+ #endif /* __PERF_RECORD_H */
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index dc0235b..1ef8e8a 100644
+index 7d46351..b68fd4f 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -791,6 +791,10 @@ static int perf_session__process_user_event(struct perf_session *session, union
- 		return ops->build_id(event, session);
- 	case PERF_RECORD_FINISHED_ROUND:
- 		return ops->finished_round(event, session, ops);
-+	case PERF_RECORD_REFTIME:
-+		if (ops->reftime)
-+			return ops->reftime(event, session);
-+		return -EINVAL;
- 	default:
- 		return -EINVAL;
+@@ -1157,8 +1157,12 @@ size_t perf_session__fprintf_dsos_buildid(struct perf_session *self, FILE *fp,
+ 
+ static inline void print_sample(const char *comm, pid_t pid, 
+ 			u32 cpu, u64 secs, u64 usecs, const char *evname,
+-			u64 addr, const char *symname, const char *dsoname)
++			u64 addr, const char *symname, const char *dsoname,
++			const char *timestr)
+ {
++	if (timestr)
++		printf("%15s ", timestr);
++
+ 	printf("%16s-%-5d ", comm, pid);
+ 
+ 	if (cpu != (u32) -1)
+@@ -1175,7 +1179,7 @@ static inline void print_sample(const char *comm, pid_t pid,
+ void perf_session__print_sample(struct perf_session *session,
+ 				struct addr_location *al,
+ 				struct perf_sample *sample,
+-				bool hide_unresolved)
++				bool hide_unresolved, const char *timestr)
+ {
+ 	struct callchain_cursor_node *node, *prev;
+ 	struct perf_event_attr *attr;
+@@ -1228,7 +1232,7 @@ void perf_session__print_sample(struct perf_session *session,
+ 				continue;
+ 
+ 			print_sample(comm, al->thread->pid, cpu, secs, usecs,
+-			             evname, node->ip, symname, dsoname);
++			             evname, node->ip, symname, dsoname, timestr);
+ 
+ 			prev = node;
+ 			node = node->next;
+@@ -1244,6 +1248,6 @@ void perf_session__print_sample(struct perf_session *session,
+ 			dsoname = al->map->dso->name;
+ 
+ 		print_sample(comm, al->thread->pid, cpu, secs, usecs,
+-		             evname, al->addr, symname, dsoname);
++		             evname, al->addr, symname, dsoname, timestr);
  	}
+ }
 diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 212f810..b46672a 100644
+index ff8791d..a4f1c4f 100644
 --- a/tools/perf/util/session.h
 +++ b/tools/perf/util/session.h
-@@ -78,7 +78,8 @@ struct perf_event_ops {
- 	event_synth_op	attr,
- 			event_type,
- 			tracing_data,
--			build_id;
-+			build_id,
-+			reftime;
- 	event_op2	finished_round;
- 	bool		ordered_samples;
- 	bool		ordering_requires_timestamps;
+@@ -172,5 +172,5 @@ static inline int perf_session__parse_sample(struct perf_session *session,
+ 
+ void perf_session__print_sample(struct perf_session *session,
+ 					struct addr_location *al, struct perf_sample *sample,
+-					bool hide_unresolved);
++					bool hide_unresolved, const char *timestr);
+ #endif /* __PERF_SESSION_H */
 -- 
 1.7.4
