@@ -1,88 +1,85 @@
 From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: [PATCH 4/6] perf script: dump software events too
-Date: Tue, 1 Mar 2011 13:49:26 -0300
-Message-ID: <20110301164926.GD26068@ghostprotocols.net>
+Subject: Re: [PATCH 3/6] perf record: add time-of-day option
+Date: Tue, 1 Mar 2011 14:07:50 -0300
+Message-ID: <20110301170750.GE26068@ghostprotocols.net>
 References: <1298865151-23656-1-git-send-email-daahern@cisco.com>
- <1298865151-23656-5-git-send-email-daahern@cisco.com>
- <AANLkTikwsuBGVfB6uu7=H0jbL+2YbbvX=ea6rLwNP8w-@mail.gmail.com>
- <4D6D004F.5010602@cisco.com>
- <AANLkTi=jmS80Rs13QiTmdA5iUXvNaSKxQ9Gpp2P2nqRU@mail.gmail.com>
- <4D6D1AA8.4060809@cisco.com>
+ <1298865151-23656-4-git-send-email-daahern@cisco.com>
+ <1298989751.5226.863.camel@laptop>
+ <4D6D0438.2090901@cisco.com>
+ <1298993714.5226.871.camel@laptop>
+ <4D6D13C6.5020807@cisco.com>
+ <1298995250.5226.882.camel@laptop>
+ <4D6D1A4C.1090009@cisco.com>
+ <1298997435.5226.890.camel@laptop>
+ <4D6D22A7.6000000@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:56994 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754000Ab1CAQte (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:59567 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756612Ab1CARH6 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 1 Mar 2011 11:49:34 -0500
+	Tue, 1 Mar 2011 12:07:58 -0500
 Content-Disposition: inline
-In-Reply-To: <4D6D1AA8.4060809@cisco.com>
+In-Reply-To: <4D6D22A7.6000000@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: David Ahern <daahern@cisco.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
 
-Em Tue, Mar 01, 2011 at 09:11:20AM -0700, David Ahern escreveu:
-> On 03/01/2011 08:11 AM, Frederic Weisbecker wrote:
-> > Why shouldn't it be designed to dump software events? It's called print_event().
-> > Its current version is rather something I would call "limited". But it
-> > was not designed to be limited.
-
-> That's because its origins are trace specific. Per last week's thread,
-> perf-script was perf-trace until Nov 2010. perf-script deals with
-> tracepoints.
-
-> > Ideally, we should have print_tracepoint_event() in
-> > trace-event-parse.c, print_software_event()
-> > where you want, and have print_event() in builtin-script.c that wraps on those.
+Em Tue, Mar 01, 2011 at 09:45:27AM -0700, David Ahern escreveu:
 > 
-> process_event does not take the event sample, it takes elements of it:
 > 
-> struct scripting_ops {
-> ...
->     void (*process_event) (int cpu, void *data, int size,
->                    unsigned long long nsecs, char *comm);
+> On 03/01/2011 09:37 AM, Peter Zijlstra wrote:
+> > On Tue, 2011-03-01 at 09:09 -0700, David Ahern wrote:
+> >>
+> >> I did not code it create samples of a realtime-clock event; I coded it
+> >> to add an event to the stream on demand -- whatever event the fd is
+> >> tied to.
+> >>
+> >>
+> > Well yes, but aside from you and the realtime clock stuff, who'd ever
+> > want to do this particular thing?
+> 
+> One example would be a system watchdog that decided for some reason or
+> another to force an event sample because of some event it detected.
+> 
+> > 
+> > I'd much rather expose the whole
+> > local_clock()/perf_clock()/trace_clock() (should all be the same anyway)
+> > as a posix clock using CLOCK_TRACING or whatever would be an appropriate
+> > name.
+> > 
+> > [ Since the whole thing is NMI safe it should be well possible to make a
+> > VDSO version as well. ]
+> > 
+> > Anyway, once its visible as a posix clock you can sync up from
+> > userspace. And this clock is indeed wanted for other things too, like
+> > user-space tracing etc.
+> > 
+> 
+> And for some silly reason I sense a time trap here (pun intended) .....
+> 
+> So your pushback is:
+> 1. throw out the realtime-clock event patch,
 
-I still have to read the entire thread, but this definetely should
-receive "struct perf_sample", i.e. the parsed sample and the 'struct
-thread' from where it can get the comm, etc
+Nope
+ 
+> 2. add a new CLOCK_TRACING type to clock_gettime with VDSO hook,
 
-Look at the process_event for builtin-script.c:
+Yes
+ 
+> 3. and use a synthesized event from userspace for snapshotting
+> perf_clock to time-of-day -- similar to what I have now, but one that
+> will guarantee a time-of-day to perf_clock correlation (versus the
+> current one which hopes that perf_clock is the monotonic clock).
 
-                scripting_ops->process_event(sample->cpu,
-					     sample->raw_data,
-                                             sample->raw_size,
-                                             sample->time,
-					     thread->comm);
+Nope.
 
+My understanding was that for the initial gettime you use
+clock_gettime(), and then you get CLOCK_REALTIME events in the stream
+for resynch, etc.
 
-I'd change it to:
-
-                scripting_ops->process_event(event, sample, thread);
-
-Or even short circuit it completely modulo debugging, becoming:
-
-static int process_sample_event(union perf_event *event,
-                                struct perf_sample *sample,
-                                struct perf_session *session)
-{
-	if (debug_mode) {
-		if (sample->time < last_timestamp) {
-			pr_err("Samples misordered, previous: %" PRIu64
-			       " this: %" PRIu64 "\n", last_timestamp,
-				sample->time);
-				nr_unordered++;
-		}
-		last_timestamp = sample->time;
-	} else {
-		scripting_ops->process_event(event, sample, session);
-		session->hists.stats.total_period += sample->period;
-	}
-        return 0;
-}
-
-Script modules may then do their thread accounting if comms are asked
-for, etc.
+Peter?
 
 - Arnaldo
