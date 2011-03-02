@@ -1,56 +1,47 @@
-From: David Ahern <daahern@cisco.com>
-Subject: Re: [PATCH 3/6] perf record: add time-of-day option
-Date: Tue, 01 Mar 2011 15:35:36 -0700
-Message-ID: <4D6D74B8.4010607@cisco.com>
-References: <1298865151-23656-1-git-send-email-daahern@cisco.com>	 <1298865151-23656-4-git-send-email-daahern@cisco.com>	 <1298989751.5226.863.camel@laptop>  <4D6D0438.2090901@cisco.com>	 <1298993714.5226.871.camel@laptop>  <4D6D13C6.5020807@cisco.com>	 <1298995250.5226.882.camel@laptop>  <4D6D1A4C.1090009@cisco.com>	 <1298997435.5226.890.camel@laptop>  <4D6D22A7.6000000@cisco.com> <1299018489.5226.940.camel@laptop>
+From: Han Pingtian <phan@redhat.com>
+Subject: perf archive warning
+Date: Wed, 2 Mar 2011 12:23:54 +0800
+Message-ID: <20110302042354.GB5186@hpt.nay.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-3.cisco.com ([171.71.176.72]:4017 "EHLO
-	sj-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756526Ab1CAWfV (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:16331 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757565Ab1CBETq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 1 Mar 2011 17:35:21 -0500
-In-Reply-To: <1299018489.5226.940.camel@laptop>
+	Tue, 1 Mar 2011 23:19:46 -0500
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>
 
+Hi,
 
+perf archive has some waring messages, is this a bug?
 
-On 03/01/2011 03:28 PM, Peter Zijlstra wrote:
+root@intel-s3e36-01 perf]# ./perf-archive
+tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat: No such file or directory
+tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+Now please run:
 
->> And for some silly reason I sense a time trap here (pun intended) .....
->>
->> So your pushback is:
->> 1. throw out the realtime-clock event patch,
-> 
-> Well, no, you need continues samples to keep in sync, so having this is
-> required [*].
-> 
->> 2. add a new CLOCK_TRACING type to clock_gettime with VDSO hook,
-> 
-> Right, that is something we need anyway at some point in time.
-> 
->> 3. and use a synthesized event from userspace for snapshotting
->> perf_clock to time-of-day -- similar to what I have now, but one that
->> will guarantee a time-of-day to perf_clock correlation (versus the
->> current one which hopes that perf_clock is the monotonic clock).
-> 
-> I guess you could do that if we have full userspace tracing support, but
-> it wouldn't need synthesized events, it would need a pure userspace
-> event stream.
+$ tar xvf perf.data.tar.bz2 -C ~/.debug
 
+wherever you need to run 'perf report' on.
+[root@intel-s3e36-01 perf]# ./perf --version
+perf version 2.6.38.rc6.166.g493f33
+[root@intel-s3e36-01 perf]# ./perf buildid-list
+b2370e39ea2898c6e11c188e2f3879e4e3d6d1ef [kernel.kallsyms]
+dd95cb496ebc4ed922eeb5640965f1243fcfcd9a /lib/modules/2.6.32-118.el6.x86_64/kernel/fs/ext4/ext4.ko
+9e1aca88b83308cec7574d74975fa6f7d654c96e /lib64/libc-2.12.so
+d880be15bf992b5fbcc629e6bbf1c747a928ddd5 /lib64/libglib-2.0.so.0.2200.5
+d1b2ca4e1ec8f81ba820e5f1375d960107ac7e50 /usr/lib64/libstdc++.so.6.0.13
+[root@intel-s3e36-01 perf]#
 
-I still don't see how this solves the need to trigger the initial sample
-into the event stream.
-
-David
-
-> 
-> Thing is, I really dislike the ioctl() trigger
-> 
-> 
-> 
+-- 
+Han Pingtian
+Quality Engineer
+hpt @ #kernel-qe
+Red Hat, Inc
+Freedom ... courage ... Commitment ... ACCOUNTABILITY
