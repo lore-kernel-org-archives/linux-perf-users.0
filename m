@@ -1,66 +1,56 @@
-From: Lin Ming <ming.m.lin@intel.com>
-Subject: [PATCH] perf: Avoid resolving [kernel.kallsyms] to real path for buildid cache
-Date: Thu,  3 Mar 2011 23:23:57 +0800
-Message-ID: <1299165837-27817-1-git-send-email-ming.m.lin@intel.com>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH 3/6] perf record: add time-of-day option
+Date: Thu, 3 Mar 2011 09:51:48 +0100
+Message-ID: <20110303085148.GA16832@elte.hu>
+References: <1298865151-23656-1-git-send-email-daahern@cisco.com>
+ <1298865151-23656-4-git-send-email-daahern@cisco.com>
+ <alpine.LFD.2.00.1103012359460.2701@localhost6.localdomain6>
+ <4D6E5413.6060500@cisco.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:62382 "EHLO mga09.intel.com"
+Received: from mx3.mail.elte.hu ([157.181.1.138]:54563 "EHLO mx3.mail.elte.hu"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752657Ab1CCH2G (ORCPT
+	id S1751239Ab1CCIwK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 3 Mar 2011 02:28:06 -0500
+	Thu, 3 Mar 2011 03:52:10 -0500
+Content-Disposition: inline
+In-Reply-To: <4D6E5413.6060500@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Han Pingtian <phan@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@elte.hu>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, acme@ghostprotocols.net, Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, Paul Mackerras <paulus@samba.org>, John Stultz <johnstul@us.ibm.com>, Borislav Petkov <bp@alien8.de>
 
-kallsyms has a virtual file name [kernel.kallsyms].
-Currently, it can't be added to buildid cache successfully
-because the code(build_id_cache__add_s) tries to resolve
-[kernel.kallsyms]to a real absolute pathname and that fails.
 
-Fixes it by not resolving it and just use the name [kernel.kallsyms].
-So dir ~/.debug/[kernel.kallsyms] is created.
+* David Ahern <daahern@cisco.com> wrote:
 
-Original bug report at:
-https://lkml.org/lkml/2011/3/1/524
+> > How does all that deal with CLOCK_REALTIME being affected by NTP and
+> > settimeofday? Not really, as far as I can tell. It somehow works, but
+> > that depends on the frequency of your event injection.
+> 
+> It is sampled at some periodic rate to get NTP changes. Right now it is
+> hardcoded at once an hour. The frequency option can be added to the
+> --tod parameter.
 
-Tested-by: Han Pingtian <phan@redhat.com>
-Signed-off-by: Lin Ming <ming.m.lin@intel.com>
----
- tools/perf/util/header.c |   11 ++++++++---
- 1 files changed, 8 insertions(+), 3 deletions(-)
+As Thomas mentioned, we probably need something more complete than that.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 72c124d..1f8883b 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -271,11 +271,15 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
- 			  const char *name, bool is_kallsyms)
- {
- 	const size_t size = PATH_MAX;
--	char *realname = realpath(name, NULL),
--	     *filename = malloc(size),
-+	char *realname, *filename = malloc(size),
- 	     *linkname = malloc(size), *targetname;
- 	int len, err = -1;
- 
-+	if (is_kallsyms)
-+		realname = (char *)name;
-+	else
-+		realname = realpath(name, NULL);
-+
- 	if (realname == NULL || filename == NULL || linkname == NULL)
- 		goto out_free;
- 
-@@ -307,7 +311,8 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
- 	if (symlink(targetname, linkname) == 0)
- 		err = 0;
- out_free:
--	free(realname);
-+	if (!is_kallsyms)
-+		free(realname);
- 	free(filename);
- 	free(linkname);
- 	return err;
--- 
-1.7.2.3
+Still your approach is obviously useful and i'd like to stress that explicitly. Have 
+you considered another related feature, feeding printk lines as special 'string 
+events' into the perf ringbuffer?
+
+It would round up your scheme very nicely: that way you'd have a single, global, 
+GTOD-correlated event store/flow for basically every system event you might be 
+interested in. You could switch events (and tracepoints) on/off based on need, 
+controlling the type and rate of information in a very finegrained way.
+
+If the printk approach works out i'd even suggest that such a facility would need a 
+separate tool within perf: 'perf syslog' or 'perf log'. It would heavily reuse 
+perf-script and other perf internal facilities, obviously - but you would not be 
+tied to any particular sub-tool implementation.
+
+EDAC type events could feed into this as well, giving the tool a broader 'system 
+health' aspect as well, beyond the 'system performance analysis' aspect.
+
+Thanks,
+
+	Ingo
