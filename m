@@ -1,124 +1,133 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 3/3] perf script: dump software events and samples from
- hardware-based profiling
-Date: Thu, 3 Mar 2011 04:05:19 +0100
-Message-ID: <20110303030515.GD1946@nowhere>
-References: <1299086960-26964-1-git-send-email-daahern@cisco.com>
- <1299086960-26964-4-git-send-email-daahern@cisco.com>
+From: Han Pingtian <phan@redhat.com>
+Subject: Re: perf archive warning
+Date: Thu, 3 Mar 2011 12:21:50 +0800
+Message-ID: <20110303042150.GA3025@hpt.nay.redhat.com>
+References: <20110302042354.GB5186@hpt.nay.redhat.com>
+ <AANLkTim+Ls+_cbHnMzdfWAWUj0Wx2rQtnoTCjZJ8Cnro@mail.gmail.com>
+ <1299054581.8642.36.camel@minggr.sh.intel.com>
+ <20110302085355.GA9857@hpt.nay.redhat.com>
+ <1299112705.8642.42.camel@minggr.sh.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:62093 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757002Ab1CCDFX (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:48440 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757807Ab1CCERr (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Mar 2011 22:05:23 -0500
+	Wed, 2 Mar 2011 23:17:47 -0500
 Content-Disposition: inline
-In-Reply-To: <1299086960-26964-4-git-send-email-daahern@cisco.com>
+In-Reply-To: <1299112705.8642.42.camel@minggr.sh.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
+To: Lin Ming <ming.m.lin@intel.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>
 
-On Wed, Mar 02, 2011 at 10:29:20AM -0700, David Ahern wrote:
-> @@ -763,6 +783,18 @@ int cmd_script(int argc, const char **argv, const char *prefix __used)
->  		exit(-1);
->  	}
->  
-> +	if (no_callchain)
-> +		symbol_conf.use_callchain = false;
-> +
-> +	else {
-> +		symbol_conf.use_callchain = true;
-> +		if (callchain_register_param(&callchain_param) < 0) {
+On Thu, Mar 03, 2011 at 08:38:25AM +0800, Lin Ming wrote:
+> On Wed, 2011-03-02 at 16:53 +0800, Han Pingtian wrote:
+> > On Wed, Mar 02, 2011 at 04:29:41PM +0800, Lin Ming wrote:
+> > > > 
+> > > > root@intel-s3e36-01 perf]# ./perf-archive
+> > > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
+> > > > No such file or directory
+> > > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
+> > > > No such file or directory
+> > > > tar: Exiting with failure status due to previous errors
+> > > 
+> > > kernel.kallsyms is not created successfully in the buildid-cache.
+> > > Could you have a try below patch?
+> > > 
+> > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > > index 72c124d..d3b5062 100644
+> > > --- a/tools/perf/util/header.c
+> > > +++ b/tools/perf/util/header.c
+> > > @@ -271,11 +271,16 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+> > >  			  const char *name, bool is_kallsyms)
+> > >  {
+> > >  	const size_t size = PATH_MAX;
+> > > -	char *realname = realpath(name, NULL),
+> > > +	char *realname,
+> > >  	     *filename = malloc(size),
+> > >  	     *linkname = malloc(size), *targetname;
+> > >  	int len, err = -1;
+> > >  
+> > > +	if (is_kallsyms)
+> > > +		realname = (char *)name;
+> > > +	else
+> > > +		realname = realpath(name, NULL);
+> > > +
+> > >  	if (realname == NULL || filename == NULL || linkname == NULL)
+> > >  		goto out_free;
+> > >  
+> > > @@ -307,7 +312,8 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+> > >  	if (symlink(targetname, linkname) == 0)
+> > >  		err = 0;
+> > >  out_free:
+> > > -	free(realname);
+> > > +	if (!is_kallsyms)
+> > > +		free(realname);
+> > >  	free(filename);
+> > >  	free(linkname);
+> > >  	return err;
+> > > 
+> > The patch didn't fix this problem. 
+> 
+> Did you re-run perf command?
+> Need to re-run it to generate kernel.kallsyms build-id cache.
+> 
+> For example, 
+> 
+> $ perf record -- sleep 3
+> $ perf-archive
+I think I must do something wrong yesterday when testing your patch. It
+works just fine today, the problem has been fixed by it. Thanks! 
+> 
+> If the problem is still there, please attach below output:
+> 
+> $ tree ~/.debug
+> 
+> Thanks,
+> Lin Ming
+> 
+> > > 
+> > > > Now please run:
+> > > > 
+> > > > $ tar xvf perf.data.tar.bz2 -C ~/.debug
+> > > > 
+> > > > wherever you need to run 'perf report' on.
+> > > > [root@intel-s3e36-01 perf]# ./perf --version
+> > > > perf version 2.6.38.rc6.166.g493f33
+> > > > [root@intel-s3e36-01 perf]# ./perf buildid-list
+> > > > b2370e39ea2898c6e11c188e2f3879e4e3d6d1ef [kernel.kallsyms]
+> > > > dd95cb496ebc4ed922eeb5640965f1243fcfcd9a
+> > > > /lib/modules/2.6.32-118.el6.x86_64/kernel/fs/ext4/ext4.ko
+> > > > 9e1aca88b83308cec7574d74975fa6f7d654c96e /lib64/libc-2.12.so
+> > > > d880be15bf992b5fbcc629e6bbf1c747a928ddd5 /lib64/libglib-2.0.so.0.2200.5
+> > > > d1b2ca4e1ec8f81ba820e5f1375d960107ac7e50 /usr/lib64/libstdc++.so.6.0.13
+> > > > [root@intel-s3e36-01 perf]#
+> > > > 
+> > > > --
+> > > > Han Pingtian
+> > > > Quality Engineer
+> > > > hpt @ #kernel-qe
+> > > > Red Hat, Inc
+> > > > Freedom ... courage ... Commitment ... ACCOUNTABILITY
+> > > > --
+> > > > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > > > the body of a message to majordomo@vger.kernel.org
+> > > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > > Please read the FAQ at  http://www.tux.org/lkml/
+> > > 
+> > 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-That call doesn't seem needed. Register callchain params is only useful
-for later callchain sorting.
-
-> +			error("Can't register callchain params\n");
-> +			err = -EINVAL;
-> +			goto out;
-> +		}
-> +	}
-> +
->  	if (rec_script_path)
->  		script_path = rec_script_path;
->  	if (rep_script_path)
-[...]
-> +void perf_session__print_sample(union perf_event *event,
-> +				struct perf_sample *sample,
-> +				struct perf_session *session,
-> +				struct perf_event_attr *attr,
-> +				bool show_unresolved)
-> +{
-> +	struct callchain_cursor_node *node, *prev;
-> +	struct addr_location al;
-> +	const char *evname = NULL;
-> +	const char *comm;
-> +	const char *symname, *dsoname;
-> +	u32 cpu = -1;
-> +	u64 secs = 0, usecs = 0;
-> +
-> +	if (perf_event__preprocess_sample(event, session, &al, sample,
-> +					  NULL) < 0) {
-> +		error("problem processing %d event, skipping it.\n",
-> +			event->header.type);
-> +		return;
-> +	}
-> +
-> +	if (session->sample_type & PERF_SAMPLE_TIME) {
-> +		u64 nsecs = sample->time;
-> +		secs = nsecs / NSECS_PER_SEC;
-> +		nsecs -= secs * NSECS_PER_SEC;
-> +		usecs = nsecs / NSECS_PER_USEC;
-> +	}
-> +
-> +   	evname = __event_name(attr->type, attr->config);
-> +	if  (!evname)
-> +		evname = "(unknown)";
-> +
-> +	comm = al.thread->comm_set ? al.thread->comm : "-";
-> +
-> +	if (attr->sample_type & PERF_SAMPLE_CPU)
-> +		cpu = sample->cpu;
-> +
-> +	if (symbol_conf.use_callchain && sample->callchain) {
-> +
-> +		if (perf_session__resolve_callchain(session, al.thread,
-> +						sample->callchain, NULL) != 0) {
-> +			if (verbose)
-> +				error("Failed to resolve callchain. Skipping\n");
-> +			return;
-> +		}
-> +
-> +		node = session->callchain_cursor.first;
-> +		if (!node)
-> +			return;
-> +
-> +		while (node) {
-> +			if (node->sym && node->sym->name)
-> +				symname = node->sym->name;
-> +			else if (show_unresolved)
-> +				symname = "";
-> +			else
-> +				goto next;
-> +
-> +			if (node->map && node->map->dso && node->map->dso->name)
-> +				dsoname = node->map->dso->name;
-> +			else if (show_unresolved)
-> +				dsoname = "";
-> +			else
-> +				goto next;
-> +
-> +			print_one_symbol(comm, al.thread->pid, cpu, secs, usecs,
-> +			             evname, node->ip, symname, dsoname);
-> +
-> +next:
-> +			prev = node;
-> +			node = node->next;
-
-Hmm, that's a wrong way of walking through callchains. In fact it's not
-a classical list. node->next can be a ghost entry from a previous callchain
-that we kept cached in order to optimize allocations.
-
-You need the accessors callchain_cursor_current() and callchain_cursor_advance().
+-- 
+Han Pingtian
+Quality Engineer
+hpt @ #kernel-qe
+Red Hat, Inc
+Freedom ... courage ... Commitment ... ACCOUNTABILITY
