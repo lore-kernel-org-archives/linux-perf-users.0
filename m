@@ -1,88 +1,66 @@
 From: Lin Ming <ming.m.lin@intel.com>
-Subject: Re: perf archive warning
-Date: Thu, 03 Mar 2011 12:21:01 +0800
-Message-ID: <1299126061.8642.46.camel@minggr.sh.intel.com>
-References: <20110302042354.GB5186@hpt.nay.redhat.com>
-	 <AANLkTim+Ls+_cbHnMzdfWAWUj0Wx2rQtnoTCjZJ8Cnro@mail.gmail.com>
-	 <1299054581.8642.36.camel@minggr.sh.intel.com>
-	 <20110302085355.GA9857@hpt.nay.redhat.com>
-	 <1299112705.8642.42.camel@minggr.sh.intel.com>
-	 <20110303042150.GA3025@hpt.nay.redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] perf: Avoid resolving [kernel.kallsyms] to real path for buildid cache
+Date: Thu,  3 Mar 2011 23:23:57 +0800
+Message-ID: <1299165837-27817-1-git-send-email-ming.m.lin@intel.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:26791 "EHLO mga11.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:62382 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757807Ab1CCEUy (ORCPT
+	id S1752657Ab1CCH2G (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Mar 2011 23:20:54 -0500
-In-Reply-To: <20110303042150.GA3025@hpt.nay.redhat.com>
+	Thu, 3 Mar 2011 02:28:06 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Han Pingtian <phan@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Han Pingtian <phan@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@elte.hu>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 
-On Thu, 2011-03-03 at 12:21 +0800, Han Pingtian wrote:
-> On Thu, Mar 03, 2011 at 08:38:25AM +0800, Lin Ming wrote:
-> > On Wed, 2011-03-02 at 16:53 +0800, Han Pingtian wrote:
-> > > On Wed, Mar 02, 2011 at 04:29:41PM +0800, Lin Ming wrote:
-> > > > > 
-> > > > > root@intel-s3e36-01 perf]# ./perf-archive
-> > > > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
-> > > > > No such file or directory
-> > > > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
-> > > > > No such file or directory
-> > > > > tar: Exiting with failure status due to previous errors
-> > > > 
-> > > > kernel.kallsyms is not created successfully in the buildid-cache.
-> > > > Could you have a try below patch?
-> > > > 
-> > > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > > > index 72c124d..d3b5062 100644
-> > > > --- a/tools/perf/util/header.c
-> > > > +++ b/tools/perf/util/header.c
-> > > > @@ -271,11 +271,16 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
-> > > >  			  const char *name, bool is_kallsyms)
-> > > >  {
-> > > >  	const size_t size = PATH_MAX;
-> > > > -	char *realname = realpath(name, NULL),
-> > > > +	char *realname,
-> > > >  	     *filename = malloc(size),
-> > > >  	     *linkname = malloc(size), *targetname;
-> > > >  	int len, err = -1;
-> > > >  
-> > > > +	if (is_kallsyms)
-> > > > +		realname = (char *)name;
-> > > > +	else
-> > > > +		realname = realpath(name, NULL);
-> > > > +
-> > > >  	if (realname == NULL || filename == NULL || linkname == NULL)
-> > > >  		goto out_free;
-> > > >  
-> > > > @@ -307,7 +312,8 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
-> > > >  	if (symlink(targetname, linkname) == 0)
-> > > >  		err = 0;
-> > > >  out_free:
-> > > > -	free(realname);
-> > > > +	if (!is_kallsyms)
-> > > > +		free(realname);
-> > > >  	free(filename);
-> > > >  	free(linkname);
-> > > >  	return err;
-> > > > 
-> > > The patch didn't fix this problem. 
-> > 
-> > Did you re-run perf command?
-> > Need to re-run it to generate kernel.kallsyms build-id cache.
-> > 
-> > For example, 
-> > 
-> > $ perf record -- sleep 3
-> > $ perf-archive
-> I think I must do something wrong yesterday when testing your patch. It
-> works just fine today, the problem has been fixed by it. Thanks! 
+kallsyms has a virtual file name [kernel.kallsyms].
+Currently, it can't be added to buildid cache successfully
+because the code(build_id_cache__add_s) tries to resolve
+[kernel.kallsyms]to a real absolute pathname and that fails.
 
-OK. I'll send out a patch with your Tested-by.
+Fixes it by not resolving it and just use the name [kernel.kallsyms].
+So dir ~/.debug/[kernel.kallsyms] is created.
 
-Lin Ming
+Original bug report at:
+https://lkml.org/lkml/2011/3/1/524
+
+Tested-by: Han Pingtian <phan@redhat.com>
+Signed-off-by: Lin Ming <ming.m.lin@intel.com>
+---
+ tools/perf/util/header.c |   11 ++++++++---
+ 1 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 72c124d..1f8883b 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -271,11 +271,15 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+ 			  const char *name, bool is_kallsyms)
+ {
+ 	const size_t size = PATH_MAX;
+-	char *realname = realpath(name, NULL),
+-	     *filename = malloc(size),
++	char *realname, *filename = malloc(size),
+ 	     *linkname = malloc(size), *targetname;
+ 	int len, err = -1;
+ 
++	if (is_kallsyms)
++		realname = (char *)name;
++	else
++		realname = realpath(name, NULL);
++
+ 	if (realname == NULL || filename == NULL || linkname == NULL)
+ 		goto out_free;
+ 
+@@ -307,7 +311,8 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
+ 	if (symlink(targetname, linkname) == 0)
+ 		err = 0;
+ out_free:
+-	free(realname);
++	if (!is_kallsyms)
++		free(realname);
+ 	free(filename);
+ 	free(linkname);
+ 	return err;
+-- 
+1.7.2.3
