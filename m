@@ -1,63 +1,39 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 3/3] perf script: dump software events and samples from
- hardware-based profiling
-Date: Thu, 3 Mar 2011 19:06:27 +0100
-Message-ID: <20110303180624.GD1807@nowhere>
-References: <1299086960-26964-1-git-send-email-daahern@cisco.com>
- <1299086960-26964-4-git-send-email-daahern@cisco.com>
- <20110303030515.GD1946@nowhere>
- <4D6FA39A.60203@cisco.com>
- <20110303171940.GC1807@nowhere>
- <4D6FD027.3080704@cisco.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH V6 0/2] tracing, perf: cpu hotplug trace events
+Date: Thu, 03 Mar 2011 17:42:56 -0500
+Message-ID: <1299192176.6376.47.camel@gandalf.stny.rr.com>
+References: <AANLkTinbYWQxde2jTcAtyYQGvGgt2Lmtnph=voj=haXF@mail.gmail.com>
+	 <201103021157.08260.trenn@suse.de>
+	 <AANLkTi=dht7+bPrBqmt6shHefBxSB3yOUu4OcSvcd0am@mail.gmail.com>
+	 <201103022307.46694.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:53527 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758311Ab1CCSGk (ORCPT
+Received: from hrndva-omtalb.mail.rr.com ([71.74.56.122]:62854 "EHLO
+	hrndva-omtalb.mail.rr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759019Ab1CCWnA (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 3 Mar 2011 13:06:40 -0500
-Content-Disposition: inline
-In-Reply-To: <4D6FD027.3080704@cisco.com>
+	Thu, 3 Mar 2011 17:43:00 -0500
+In-Reply-To: <201103022307.46694.trenn@suse.de>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
+To: Thomas Renninger <trenn@suse.de>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org, linux-hotplug@vger.kernel.org, fweisbec@gmail.com, amit.kucheria@linaro.org, rusty@rustcorp.com.au, tglx@linutronix.de, Arjan van de Ven <arjan@infradead.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linux-perf-users@vger.kernel.org
 
-On Thu, Mar 03, 2011 at 10:30:15AM -0700, David Ahern wrote:
-> On 03/03/11 10:19, Frederic Weisbecker wrote:
-> > to use perf_session__resolve_callchain() that resolves the raw struct ip_callchain
-> > (only made of raw ips) into a cursor (list of ips resolved into symbols and so) and
-> > walk through the cursor with the two accessors.
-> > 
-> > Ah I forgot, you first need to use callchain_cursor_commit() in order to initialize
-> > the position in the cursor.
-> > 
-> > So:
-> > 
-> > 1) Resolve with perf_session__resolve_callchain()
-> > 2) commit with callchain_cursor_commit()
-> > 3) iterate with callchain_cursor_current(), callchain_cursor_advance()
-> 
-> yes, I figured out the missing commit, and I changed the loop to:
-> while (1) {
->     node = callchain_cursor_current(cursor);
->     if (!node)
->         break;
-> 
->       ... (print chain)
-> 
->     callchain_cursor_advance(cursor);
-> }
+On Wed, 2011-03-02 at 23:07 +0100, Thomas Renninger wrote:
 
-Yep.
+> I doubt cpu offlining is the proper instrument to save power.
+> You want to prevent the CPU of being used by ripping it out from scheduler decisions and
+> make sure it doesn't get interrupts by offlining. But the (latency) price is high.
 
-> 
-> Thanks for the comments.
-> 
-> What about the python and perl engines? Right now they are tracepoint
-> specific. I do not have a sufficient background in either to expand to
-> other sample types.
+I could imagine that a server could use this for power savings to take
+down all but 1 CPU on off hours. When it knows its not going to get much
+action but still needs to remain online. Then just before peak times
+begin, online the other CPUs.
 
-Not a problem, the new parameters layout paves the way to make it later feasible
-if someone is interested.
+But anything more dynamic than that, I can't see it really worth it. As
+the latency to bring the other CPU online, may miss a peak when it was
+needed.
+
+-- Steve
