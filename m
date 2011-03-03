@@ -1,116 +1,100 @@
-From: Lin Ming <ming.m.lin@intel.com>
-Subject: Re: perf archive warning
-Date: Thu, 03 Mar 2011 08:38:25 +0800
-Message-ID: <1299112705.8642.42.camel@minggr.sh.intel.com>
-References: <20110302042354.GB5186@hpt.nay.redhat.com>
-	 <AANLkTim+Ls+_cbHnMzdfWAWUj0Wx2rQtnoTCjZJ8Cnro@mail.gmail.com>
-	 <1299054581.8642.36.camel@minggr.sh.intel.com>
-	 <20110302085355.GA9857@hpt.nay.redhat.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH 1/3] perf script: change process_event prototype
+Date: Thu, 3 Mar 2011 03:40:06 +0100
+Message-ID: <20110303024003.GC1946@nowhere>
+References: <1299086960-26964-1-git-send-email-daahern@cisco.com>
+ <1299086960-26964-2-git-send-email-daahern@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:52095 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753055Ab1CCAiS (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Mar 2011 19:38:18 -0500
-In-Reply-To: <20110302085355.GA9857@hpt.nay.redhat.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Han Pingtian <phan@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1299086960-26964-2-git-send-email-daahern@cisco.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
+List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, 2011-03-02 at 16:53 +0800, Han Pingtian wrote:
-> On Wed, Mar 02, 2011 at 04:29:41PM +0800, Lin Ming wrote:
-> > > 
-> > > root@intel-s3e36-01 perf]# ./perf-archive
-> > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
-> > > No such file or directory
-> > > tar: .build-id/b2/370e39ea2898c6e11c188e2f3879e4e3d6d1ef: Cannot stat:
-> > > No such file or directory
-> > > tar: Exiting with failure status due to previous errors
-> > 
-> > kernel.kallsyms is not created successfully in the buildid-cache.
-> > Could you have a try below patch?
-> > 
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 72c124d..d3b5062 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -271,11 +271,16 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
-> >  			  const char *name, bool is_kallsyms)
-> >  {
-> >  	const size_t size = PATH_MAX;
-> > -	char *realname = realpath(name, NULL),
-> > +	char *realname,
-> >  	     *filename = malloc(size),
-> >  	     *linkname = malloc(size), *targetname;
-> >  	int len, err = -1;
-> >  
-> > +	if (is_kallsyms)
-> > +		realname = (char *)name;
-> > +	else
-> > +		realname = realpath(name, NULL);
-> > +
-> >  	if (realname == NULL || filename == NULL || linkname == NULL)
-> >  		goto out_free;
-> >  
-> > @@ -307,7 +312,8 @@ int build_id_cache__add_s(const char *sbuild_id, const char *debugdir,
-> >  	if (symlink(targetname, linkname) == 0)
-> >  		err = 0;
-> >  out_free:
-> > -	free(realname);
-> > +	if (!is_kallsyms)
-> > +		free(realname);
-> >  	free(filename);
-> >  	free(linkname);
-> >  	return err;
-> > 
-> The patch didn't fix this problem. 
-
-Did you re-run perf command?
-Need to re-run it to generate kernel.kallsyms build-id cache.
-
-For example, 
-
-$ perf record -- sleep 3
-$ perf-archive
-
-If the problem is still there, please attach below output:
-
-$ tree ~/.debug
-
-Thanks,
-Lin Ming
-
-> > 
-> > > Now please run:
-> > > 
-> > > $ tar xvf perf.data.tar.bz2 -C ~/.debug
-> > > 
-> > > wherever you need to run 'perf report' on.
-> > > [root@intel-s3e36-01 perf]# ./perf --version
-> > > perf version 2.6.38.rc6.166.g493f33
-> > > [root@intel-s3e36-01 perf]# ./perf buildid-list
-> > > b2370e39ea2898c6e11c188e2f3879e4e3d6d1ef [kernel.kallsyms]
-> > > dd95cb496ebc4ed922eeb5640965f1243fcfcd9a
-> > > /lib/modules/2.6.32-118.el6.x86_64/kernel/fs/ext4/ext4.ko
-> > > 9e1aca88b83308cec7574d74975fa6f7d654c96e /lib64/libc-2.12.so
-> > > d880be15bf992b5fbcc629e6bbf1c747a928ddd5 /lib64/libglib-2.0.so.0.2200.5
-> > > d1b2ca4e1ec8f81ba820e5f1375d960107ac7e50 /usr/lib64/libstdc++.so.6.0.13
-> > > [root@intel-s3e36-01 perf]#
-> > > 
-> > > --
-> > > Han Pingtian
-> > > Quality Engineer
-> > > hpt @ #kernel-qe
-> > > Red Hat, Inc
-> > > Freedom ... courage ... Commitment ... ACCOUNTABILITY
-> > > --
-> > > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > > the body of a message to majordomo@vger.kernel.org
-> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > > Please read the FAQ at  http://www.tux.org/lkml/
-> > 
+On Wed, Mar 02, 2011 at 10:29:18AM -0700, David Ahern wrote:
+> Prepare for handling of samples for any event type.
 > 
+> Signed-off-by: David Ahern <daahern@cisco.com>
+> ---
+>  tools/perf/builtin-script.c                        |   40 +++++++++++--------
+>  .../util/scripting-engines/trace-event-python.c    |   20 ++++++++-
+
+What about Perl?
+
+>  tools/perf/util/trace-event-scripting.c            |    8 +--
+>  tools/perf/util/trace-event.h                      |    6 ++-
+>  4 files changed, 47 insertions(+), 27 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 5f40df6..0bee150 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -20,6 +20,27 @@ static u64			last_timestamp;
+>  static u64			nr_unordered;
+>  extern const struct option	record_options[];
+>  
+> +static void process_event(union perf_event *event,
+> +			  struct perf_sample *sample,
+> +			  struct perf_session *session)
+> +{
+> +	struct thread *thread = perf_session__findnew(session, event->ip.pid);
+> +
+> +	if (thread == NULL) {
+> +		pr_debug("problem processing %d event, skipping it.\n",
+> +			 event->header.type);
+> +		return;
+> +	}
+
+Seems the thread is needed by any endpoints. It would be better to resolve
+it from process_sample_event and pass it to the process_event() handler.
+
+> +
+> +	/*
+> +	 * FIXME: better resolve from pid from the struct trace_entry
+> +	 * field, although it should be the same than this perf
+> +	 * event pid
+> +	 */
+> +	print_event(sample->cpu, sample->raw_data, sample->raw_size,
+> +		    sample->time, thread->comm);
+> +}
+[...]
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 2040b85..5b03fb6 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -204,9 +204,9 @@ static inline struct event *find_cache_event(int type)
+>  	return event;
+>  }
+>  
+> -static void python_process_event(int cpu, void *data,
+> -				 int size __unused,
+> -				 unsigned long long nsecs, char *comm)
+> +static void python_process_event(union perf_event *pevent,
+> +				struct perf_sample *sample,
+> +				struct perf_session *session)
+>  {
+>  	PyObject *handler, *retval, *context, *t, *obj, *dict = NULL;
+>  	static char handler_name[256];
+> @@ -218,6 +218,20 @@ static void python_process_event(int cpu, void *data,
+>  	int type;
+>  	int pid;
+
+Please avoid such blank line in the middle of local vars declaration.
+
+> +	int cpu = sample->cpu;
+> +	void *data = sample->raw_data;
+> +	unsigned long long nsecs = sample->time;
+> +	char *comm;
+> +	struct thread *thread;
+> +
+> +	thread = perf_session__findnew(session, pevent->ip.pid);
+> +	if (thread == NULL) {
+> +		pr_debug("problem processing %d event, skipping it.\n",
+> +			 pevent->header.type);
+> +		return;
+> +	}
+> +	comm = thread->comm;
+> +
