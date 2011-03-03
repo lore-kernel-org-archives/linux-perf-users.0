@@ -1,100 +1,124 @@
 From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 1/3] perf script: change process_event prototype
-Date: Thu, 3 Mar 2011 03:40:06 +0100
-Message-ID: <20110303024003.GC1946@nowhere>
+Subject: Re: [PATCH 3/3] perf script: dump software events and samples from
+ hardware-based profiling
+Date: Thu, 3 Mar 2011 04:05:19 +0100
+Message-ID: <20110303030515.GD1946@nowhere>
 References: <1299086960-26964-1-git-send-email-daahern@cisco.com>
- <1299086960-26964-2-git-send-email-daahern@cisco.com>
+ <1299086960-26964-4-git-send-email-daahern@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:62093 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757002Ab1CCDFX (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 2 Mar 2011 22:05:23 -0500
 Content-Disposition: inline
-In-Reply-To: <1299086960-26964-2-git-send-email-daahern@cisco.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1299086960-26964-4-git-send-email-daahern@cisco.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: David Ahern <daahern@cisco.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
-List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Mar 02, 2011 at 10:29:18AM -0700, David Ahern wrote:
-> Prepare for handling of samples for any event type.
-> 
-> Signed-off-by: David Ahern <daahern@cisco.com>
-> ---
->  tools/perf/builtin-script.c                        |   40 +++++++++++--------
->  .../util/scripting-engines/trace-event-python.c    |   20 ++++++++-
-
-What about Perl?
-
->  tools/perf/util/trace-event-scripting.c            |    8 +--
->  tools/perf/util/trace-event.h                      |    6 ++-
->  4 files changed, 47 insertions(+), 27 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 5f40df6..0bee150 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -20,6 +20,27 @@ static u64			last_timestamp;
->  static u64			nr_unordered;
->  extern const struct option	record_options[];
+On Wed, Mar 02, 2011 at 10:29:20AM -0700, David Ahern wrote:
+> @@ -763,6 +783,18 @@ int cmd_script(int argc, const char **argv, const char *prefix __used)
+>  		exit(-1);
+>  	}
 >  
-> +static void process_event(union perf_event *event,
-> +			  struct perf_sample *sample,
-> +			  struct perf_session *session)
-> +{
-> +	struct thread *thread = perf_session__findnew(session, event->ip.pid);
+> +	if (no_callchain)
+> +		symbol_conf.use_callchain = false;
 > +
-> +	if (thread == NULL) {
-> +		pr_debug("problem processing %d event, skipping it.\n",
-> +			 event->header.type);
-> +		return;
+> +	else {
+> +		symbol_conf.use_callchain = true;
+> +		if (callchain_register_param(&callchain_param) < 0) {
+
+That call doesn't seem needed. Register callchain params is only useful
+for later callchain sorting.
+
+> +			error("Can't register callchain params\n");
+> +			err = -EINVAL;
+> +			goto out;
+> +		}
 > +	}
-
-Seems the thread is needed by any endpoints. It would be better to resolve
-it from process_sample_event and pass it to the process_event() handler.
-
 > +
-> +	/*
-> +	 * FIXME: better resolve from pid from the struct trace_entry
-> +	 * field, although it should be the same than this perf
-> +	 * event pid
-> +	 */
-> +	print_event(sample->cpu, sample->raw_data, sample->raw_size,
-> +		    sample->time, thread->comm);
-> +}
+>  	if (rec_script_path)
+>  		script_path = rec_script_path;
+>  	if (rep_script_path)
 [...]
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 2040b85..5b03fb6 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -204,9 +204,9 @@ static inline struct event *find_cache_event(int type)
->  	return event;
->  }
->  
-> -static void python_process_event(int cpu, void *data,
-> -				 int size __unused,
-> -				 unsigned long long nsecs, char *comm)
-> +static void python_process_event(union perf_event *pevent,
+> +void perf_session__print_sample(union perf_event *event,
 > +				struct perf_sample *sample,
-> +				struct perf_session *session)
->  {
->  	PyObject *handler, *retval, *context, *t, *obj, *dict = NULL;
->  	static char handler_name[256];
-> @@ -218,6 +218,20 @@ static void python_process_event(int cpu, void *data,
->  	int type;
->  	int pid;
-
-Please avoid such blank line in the middle of local vars declaration.
-
-> +	int cpu = sample->cpu;
-> +	void *data = sample->raw_data;
-> +	unsigned long long nsecs = sample->time;
-> +	char *comm;
-> +	struct thread *thread;
+> +				struct perf_session *session,
+> +				struct perf_event_attr *attr,
+> +				bool show_unresolved)
+> +{
+> +	struct callchain_cursor_node *node, *prev;
+> +	struct addr_location al;
+> +	const char *evname = NULL;
+> +	const char *comm;
+> +	const char *symname, *dsoname;
+> +	u32 cpu = -1;
+> +	u64 secs = 0, usecs = 0;
 > +
-> +	thread = perf_session__findnew(session, pevent->ip.pid);
-> +	if (thread == NULL) {
-> +		pr_debug("problem processing %d event, skipping it.\n",
-> +			 pevent->header.type);
+> +	if (perf_event__preprocess_sample(event, session, &al, sample,
+> +					  NULL) < 0) {
+> +		error("problem processing %d event, skipping it.\n",
+> +			event->header.type);
 > +		return;
 > +	}
-> +	comm = thread->comm;
 > +
+> +	if (session->sample_type & PERF_SAMPLE_TIME) {
+> +		u64 nsecs = sample->time;
+> +		secs = nsecs / NSECS_PER_SEC;
+> +		nsecs -= secs * NSECS_PER_SEC;
+> +		usecs = nsecs / NSECS_PER_USEC;
+> +	}
+> +
+> +   	evname = __event_name(attr->type, attr->config);
+> +	if  (!evname)
+> +		evname = "(unknown)";
+> +
+> +	comm = al.thread->comm_set ? al.thread->comm : "-";
+> +
+> +	if (attr->sample_type & PERF_SAMPLE_CPU)
+> +		cpu = sample->cpu;
+> +
+> +	if (symbol_conf.use_callchain && sample->callchain) {
+> +
+> +		if (perf_session__resolve_callchain(session, al.thread,
+> +						sample->callchain, NULL) != 0) {
+> +			if (verbose)
+> +				error("Failed to resolve callchain. Skipping\n");
+> +			return;
+> +		}
+> +
+> +		node = session->callchain_cursor.first;
+> +		if (!node)
+> +			return;
+> +
+> +		while (node) {
+> +			if (node->sym && node->sym->name)
+> +				symname = node->sym->name;
+> +			else if (show_unresolved)
+> +				symname = "";
+> +			else
+> +				goto next;
+> +
+> +			if (node->map && node->map->dso && node->map->dso->name)
+> +				dsoname = node->map->dso->name;
+> +			else if (show_unresolved)
+> +				dsoname = "";
+> +			else
+> +				goto next;
+> +
+> +			print_one_symbol(comm, al.thread->pid, cpu, secs, usecs,
+> +			             evname, node->ip, symname, dsoname);
+> +
+> +next:
+> +			prev = node;
+> +			node = node->next;
+
+Hmm, that's a wrong way of walking through callchains. In fact it's not
+a classical list. node->next can be a ghost entry from a previous callchain
+that we kept cached in order to optimize allocations.
+
+You need the accessors callchain_cursor_current() and callchain_cursor_advance().
