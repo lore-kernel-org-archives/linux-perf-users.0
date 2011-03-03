@@ -1,56 +1,119 @@
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 3/6] perf record: add time-of-day option
-Date: Thu, 3 Mar 2011 09:51:48 +0100
-Message-ID: <20110303085148.GA16832@elte.hu>
-References: <1298865151-23656-1-git-send-email-daahern@cisco.com>
- <1298865151-23656-4-git-send-email-daahern@cisco.com>
- <alpine.LFD.2.00.1103012359460.2701@localhost6.localdomain6>
- <4D6E5413.6060500@cisco.com>
+From: David Ahern <daahern@cisco.com>
+Subject: Re: [PATCH 1/3] perf script: change process_event prototype
+Date: Thu, 03 Mar 2011 07:11:38 -0700
+Message-ID: <4D6FA19A.3040604@cisco.com>
+References: <1299086960-26964-1-git-send-email-daahern@cisco.com> <1299086960-26964-2-git-send-email-daahern@cisco.com> <20110303024003.GC1946@nowhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138]:54563 "EHLO mx3.mail.elte.hu"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751239Ab1CCIwK (ORCPT
+Received: from sj-iport-3.cisco.com ([171.71.176.72]:17004 "EHLO
+	sj-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755733Ab1CCOLT (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 3 Mar 2011 03:52:10 -0500
-Content-Disposition: inline
-In-Reply-To: <4D6E5413.6060500@cisco.com>
+	Thu, 3 Mar 2011 09:11:19 -0500
+In-Reply-To: <20110303024003.GC1946@nowhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, acme@ghostprotocols.net, Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, Paul Mackerras <paulus@samba.org>, John Stultz <johnstul@us.ibm.com>, Borislav Petkov <bp@alien8.de>
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
 
 
-* David Ahern <daahern@cisco.com> wrote:
 
-> > How does all that deal with CLOCK_REALTIME being affected by NTP and
-> > settimeofday? Not really, as far as I can tell. It somehow works, but
-> > that depends on the frequency of your event injection.
+On 03/02/2011 07:40 PM, Frederic Weisbecker wrote:
+> On Wed, Mar 02, 2011 at 10:29:18AM -0700, David Ahern wrote:
+>> Prepare for handling of samples for any event type.
+>>
+>> Signed-off-by: David Ahern <daahern@cisco.com>
+>> ---
+>>  tools/perf/builtin-script.c                        |   40 +++++++++++--------
+>>  .../util/scripting-engines/trace-event-python.c    |   20 ++++++++-
 > 
-> It is sampled at some periodic rate to get NTP changes. Right now it is
-> hardcoded at once an hour. The frequency option can be added to the
-> --tod parameter.
+> What about Perl?
 
-As Thomas mentioned, we probably need something more complete than that.
+Oversight. Stumbled onto it yesterday afternoon. I have the perl module
+installed now, so builds will get it too from now on.
 
-Still your approach is obviously useful and i'd like to stress that explicitly. Have 
-you considered another related feature, feeding printk lines as special 'string 
-events' into the perf ringbuffer?
+> 
+>>  tools/perf/util/trace-event-scripting.c            |    8 +--
+>>  tools/perf/util/trace-event.h                      |    6 ++-
+>>  4 files changed, 47 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index 5f40df6..0bee150 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -20,6 +20,27 @@ static u64			last_timestamp;
+>>  static u64			nr_unordered;
+>>  extern const struct option	record_options[];
+>>  
+>> +static void process_event(union perf_event *event,
+>> +			  struct perf_sample *sample,
+>> +			  struct perf_session *session)
+>> +{
+>> +	struct thread *thread = perf_session__findnew(session, event->ip.pid);
+>> +
+>> +	if (thread == NULL) {
+>> +		pr_debug("problem processing %d event, skipping it.\n",
+>> +			 event->header.type);
+>> +		return;
+>> +	}
+> 
+> Seems the thread is needed by any endpoints. It would be better to resolve
+> it from process_sample_event and pass it to the process_event() handler.
 
-It would round up your scheme very nicely: that way you'd have a single, global, 
-GTOD-correlated event store/flow for basically every system event you might be 
-interested in. You could switch events (and tracepoints) on/off based on need, 
-controlling the type and rate of information in a very finegrained way.
+tracepoints yes; S/W samples no. If you want it I'll add it.
 
-If the printk approach works out i'd even suggest that such a facility would need a 
-separate tool within perf: 'perf syslog' or 'perf log'. It would heavily reuse 
-perf-script and other perf internal facilities, obviously - but you would not be 
-tied to any particular sub-tool implementation.
+> 
+>> +
+>> +	/*
+>> +	 * FIXME: better resolve from pid from the struct trace_entry
+>> +	 * field, although it should be the same than this perf
+>> +	 * event pid
+>> +	 */
+>> +	print_event(sample->cpu, sample->raw_data, sample->raw_size,
+>> +		    sample->time, thread->comm);
+>> +}
+> [...]
+>> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+>> index 2040b85..5b03fb6 100644
+>> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+>> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+>> @@ -204,9 +204,9 @@ static inline struct event *find_cache_event(int type)
+>>  	return event;
+>>  }
+>>  
+>> -static void python_process_event(int cpu, void *data,
+>> -				 int size __unused,
+>> -				 unsigned long long nsecs, char *comm)
+>> +static void python_process_event(union perf_event *pevent,
+>> +				struct perf_sample *sample,
+>> +				struct perf_session *session)
+>>  {
+>>  	PyObject *handler, *retval, *context, *t, *obj, *dict = NULL;
+>>  	static char handler_name[256];
+>> @@ -218,6 +218,20 @@ static void python_process_event(int cpu, void *data,
+>>  	int type;
+>>  	int pid;
+> 
+> Please avoid such blank line in the middle of local vars declaration.
 
-EDAC type events could feed into this as well, giving the tool a broader 'system 
-health' aspect as well, beyond the 'system performance analysis' aspect.
+ok.
 
-Thanks,
+David
 
-	Ingo
+> 
+>> +	int cpu = sample->cpu;
+>> +	void *data = sample->raw_data;
+>> +	unsigned long long nsecs = sample->time;
+>> +	char *comm;
+>> +	struct thread *thread;
+>> +
+>> +	thread = perf_session__findnew(session, pevent->ip.pid);
+>> +	if (thread == NULL) {
+>> +		pr_debug("problem processing %d event, skipping it.\n",
+>> +			 pevent->header.type);
+>> +		return;
+>> +	}
+>> +	comm = thread->comm;
+>> +
