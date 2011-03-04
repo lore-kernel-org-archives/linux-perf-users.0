@@ -1,45 +1,53 @@
-From: Han Pingtian <phan@redhat.com>
-Subject: how to use 'perf kvm'?
-Date: Fri, 4 Mar 2011 16:28:34 +0800
-Message-ID: <20110304082834.GB2881@hpt.nay.redhat.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: ftrace function filter
+Date: Fri, 4 Mar 2011 13:26:32 +0100
+Message-ID: <AANLkTimLhbiG1=8CAybRA+emT6WW44BKcR9JQRGbRRNt@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:15446 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755871Ab1CDIYT (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:63466 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751999Ab1CDM0d (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 4 Mar 2011 03:24:19 -0500
-Content-Disposition: inline
+	Fri, 4 Mar 2011 07:26:33 -0500
+Received: by gyh20 with SMTP id 20so784113gyh.19
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Mar 2011 04:26:32 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi,
 
-Can someone tell me how to use the subcommand 'kvm' of the perf tool?
-I'm trying to use it this way:
+I would like to trace some function of the cpu hotplug feature on an
+Arm platform with ftrace in order to get the time spent in the
+different steps. I have tried to use the function/function_graph
+tracer with set_ftrace_filter but some function like _cpu_down are not
+in the available_filter_functions list. Is it possible to have
+_cpu_down in the list ? Do I need to enable some kernel configuration
+? I have added part of my config below
 
-perf kvm --guest --guestkallsyms kallsyms top
+CONFIG_TRACEPOINTS=y
+CONFIG_STACKTRACE=y
+CONFIG_NOP_TRACER=y
+CONFIG_HAVE_FUNCTION_TRACER=y
+CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y
+CONFIG_HAVE_DYNAMIC_FTRACE=y
+CONFIG_HAVE_FTRACE_MCOUNT_RECORD=y
+CONFIG_CONTEXT_SWITCH_TRACER=y
+CONFIG_GENERIC_TRACER=y
+CONFIG_FTRACE=y
+CONFIG_FUNCTION_TRACER=y
+CONFIG_FUNCTION_GRAPH_TRACER=y
+# CONFIG_IRQSOFF_TRACER is not set
+# CONFIG_PREEMPT_TRACER is not set
+# CONFIG_SCHED_TRACER is not set
+# CONFIG_STACK_TRACER is not set
+# CONFIG_BLK_DEV_IO_TRACE is not set
+CONFIG_DYNAMIC_FTRACE=y
+CONFIG_FTRACE_MCOUNT_RECORD=y
+# CONFIG_FTRACE_STARTUP_TEST is not set
+CONFIG_DEBUG_INFO=y
+# CONFIG_DEBUG_INFO_REDUCED is not set
 
-where kallsyms is copied from the kvm guest. But nothing useful is
-displayed, only some headers:
-
-
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   PerfTop:       0 irqs/sec  kernel:-nan% us:-nan% guest kernel:-nan% guest us:-nan% exact: -nan% [1000Hz cycles],  (all, 2 CPUs)
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-             samples  pcnt  DSO
-             _______ _____
-
-exiting.
-
-Thanks in advance.
-
--- 
-Han Pingtian
-Quality Engineer
-hpt @ #kernel-qe
-Red Hat, Inc
-Freedom ... courage ... Commitment ... ACCOUNTABILITY
+Thanks,
+Vincent
