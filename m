@@ -1,53 +1,41 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: ftrace function filter
-Date: Fri, 4 Mar 2011 13:26:32 +0100
-Message-ID: <AANLkTimLhbiG1=8CAybRA+emT6WW44BKcR9JQRGbRRNt@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH 0/2 v2] perf script: add support for dumping events other than trace
+Date: Sun,  6 Mar 2011 15:16:33 -0700
+Message-ID: <1299449795-12933-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:63466 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751999Ab1CDM0d (ORCPT
+Received: from sj-iport-5.cisco.com ([171.68.10.87]:43886 "EHLO
+	sj-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752448Ab1CFWQF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 4 Mar 2011 07:26:33 -0500
-Received: by gyh20 with SMTP id 20so784113gyh.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Mar 2011 04:26:32 -0800 (PST)
+	Sun, 6 Mar 2011 17:16:05 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
 
-Hi,
+v1 -> v2:
+- fixed process_event handler in trace-event-perl
+- removed unneeded call to callchain_register_param
+- corrected walking of callchains in perf_session__print_symbols
+- complete rewrite for handling non-tracepoint events
 
-I would like to trace some function of the cpu hotplug feature on an
-Arm platform with ftrace in order to get the time spent in the
-different steps. I have tried to use the function/function_graph
-tracer with set_ftrace_filter but some function like _cpu_down are not
-in the available_filter_functions list. Is it possible to have
-_cpu_down in the list ? Do I need to enable some kernel configuration
-? I have added part of my config below
 
-CONFIG_TRACEPOINTS=y
-CONFIG_STACKTRACE=y
-CONFIG_NOP_TRACER=y
-CONFIG_HAVE_FUNCTION_TRACER=y
-CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y
-CONFIG_HAVE_DYNAMIC_FTRACE=y
-CONFIG_HAVE_FTRACE_MCOUNT_RECORD=y
-CONFIG_CONTEXT_SWITCH_TRACER=y
-CONFIG_GENERIC_TRACER=y
-CONFIG_FTRACE=y
-CONFIG_FUNCTION_TRACER=y
-CONFIG_FUNCTION_GRAPH_TRACER=y
-# CONFIG_IRQSOFF_TRACER is not set
-# CONFIG_PREEMPT_TRACER is not set
-# CONFIG_SCHED_TRACER is not set
-# CONFIG_STACK_TRACER is not set
-# CONFIG_BLK_DEV_IO_TRACE is not set
-CONFIG_DYNAMIC_FTRACE=y
-CONFIG_FTRACE_MCOUNT_RECORD=y
-# CONFIG_FTRACE_STARTUP_TEST is not set
-CONFIG_DEBUG_INFO=y
-# CONFIG_DEBUG_INFO_REDUCED is not set
+David Ahern (2):
+  perf script: change process_event prototype
+  perf script: support custom field selection for output
 
-Thanks,
-Vincent
+ tools/perf/Documentation/perf-script.txt           |   24 ++
+ tools/perf/builtin-script.c                        |  234 ++++++++++++++++++--
+ tools/perf/util/output.h                           |   18 ++
+ .../perf/util/scripting-engines/trace-event-perl.c |   12 +-
+ .../util/scripting-engines/trace-event-python.c    |   12 +-
+ tools/perf/util/session.c                          |   75 +++++++
+ tools/perf/util/session.h                          |    5 +
+ tools/perf/util/trace-event-parse.c                |   71 +++++--
+ tools/perf/util/trace-event-scripting.c            |   10 +-
+ tools/perf/util/trace-event.h                      |    8 +-
+ 10 files changed, 420 insertions(+), 49 deletions(-)
+ create mode 100644 tools/perf/util/output.h
+
+-- 
+1.7.4
