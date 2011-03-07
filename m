@@ -1,211 +1,55 @@
-From: David Ahern <daahern@cisco.com>
-Subject: [PATCH 1/2] perf script: change process_event prototype
-Date: Sun,  6 Mar 2011 15:16:34 -0700
-Message-ID: <1299449795-12933-2-git-send-email-daahern@cisco.com>
-References: <1299449795-12933-1-git-send-email-daahern@cisco.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH V6 0/2] tracing, perf: cpu hotplug trace events
+Date: Mon, 7 Mar 2011 13:25:15 +0200
+Message-ID: <AANLkTi=VnpgjKdz1GBX801Uf3SHo-nOFEn1fSq9nVYct@mail.gmail.com>
+References: <AANLkTinbYWQxde2jTcAtyYQGvGgt2Lmtnph=voj=haXF@mail.gmail.com>
+	<201103021157.08260.trenn@suse.de>
+	<AANLkTi=dht7+bPrBqmt6shHefBxSB3yOUu4OcSvcd0am@mail.gmail.com>
+	<201103022307.46694.trenn@suse.de>
+	<1299192176.6376.47.camel@gandalf.stny.rr.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:10477 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754813Ab1CFWQG (ORCPT
+Received: from mail-ew0-f46.google.com ([209.85.215.46]:61049 "EHLO
+	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751221Ab1CGLZR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 6 Mar 2011 17:16:06 -0500
-In-Reply-To: <1299449795-12933-1-git-send-email-daahern@cisco.com>
+	Mon, 7 Mar 2011 06:25:17 -0500
+In-Reply-To: <1299192176.6376.47.camel@gandalf.stny.rr.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Renninger <trenn@suse.de>, Vincent Guittot <vincent.guittot@linaro.org>, Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org, linux-hotplug@vger.kernel.org, fweisbec@gmail.com, rusty@rustcorp.com.au, tglx@linutronix.de, Arjan van de Ven <arjan@infradead.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linux-perf-users@vger.kernel.org
 
-Prepare for handling of samples for any event type.
+On Fri, Mar 4, 2011 at 12:42 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Wed, 2011-03-02 at 23:07 +0100, Thomas Renninger wrote:
+>
+>> I doubt cpu offlining is the proper instrument to save power.
+>> You want to prevent the CPU of being used by ripping it out from scheduler decisions and
+>> make sure it doesn't get interrupts by offlining. But the (latency) price is high.
+>
+> I could imagine that a server could use this for power savings to take
+> down all but 1 CPU on off hours. When it knows its not going to get much
+> action but still needs to remain online. Then just before peak times
+> begin, online the other CPUs.
+>
+> But anything more dynamic than that, I can't see it really worth it. As
+> the latency to bring the other CPU online, may miss a peak when it was
+> needed.
+>
 
-Signed-off-by: David Ahern <daahern@cisco.com>
----
- tools/perf/builtin-script.c                        |   35 ++++++++++++++-----
- .../perf/util/scripting-engines/trace-event-perl.c |   12 +++++--
- .../util/scripting-engines/trace-event-python.c    |   12 +++++--
- tools/perf/util/trace-event-scripting.c            |   10 +++---
- tools/perf/util/trace-event.h                      |    8 +++-
- 5 files changed, 55 insertions(+), 22 deletions(-)
+ARM SoCs require both cores to be idle to hit the really low power
+retention/off states. Hoping for both cores to go idle at the same
+instant causes several low power opportunities to be lost. Hence the
+experiments with hotplug to improve the idle characteristics of the
+system. On our wiki page[1], you can see some results under "Idle
+improvement" section.
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5f40df6..48bdf94 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -20,6 +20,21 @@ static u64			last_timestamp;
- static u64			nr_unordered;
- extern const struct option	record_options[];
- 
-+static void process_event(union perf_event *event __unused,
-+			  struct perf_sample *sample,
-+			  struct perf_session *session __unused,
-+			  struct perf_event_attr *attr __unused,
-+			  struct thread *thread)
-+{
-+	/*
-+	 * FIXME: better resolve from pid from the struct trace_entry
-+	 * field, although it should be the same than this perf
-+	 * event pid
-+	 */
-+	print_event(sample->cpu, sample->raw_data, sample->raw_size,
-+		    sample->time, thread->comm);
-+}
-+
- static int default_start_script(const char *script __unused,
- 				int argc __unused,
- 				const char **argv __unused)
-@@ -40,7 +55,7 @@ static int default_generate_script(const char *outfile __unused)
- static struct scripting_ops default_scripting_ops = {
- 	.start_script		= default_start_script,
- 	.stop_script		= default_stop_script,
--	.process_event		= print_event,
-+	.process_event		= process_event,
- 	.generate_script	= default_generate_script,
- };
- 
-@@ -67,6 +82,7 @@ static int process_sample_event(union perf_event *event,
- 				struct perf_sample *sample,
- 				struct perf_session *session)
- {
-+	struct perf_event_attr *attr;
- 	struct thread *thread = perf_session__findnew(session, event->ip.pid);
- 
- 	if (thread == NULL) {
-@@ -75,6 +91,13 @@ static int process_sample_event(union perf_event *event,
- 		return -1;
- 	}
- 
-+	attr = perf_header__find_attr(sample->id, &session->header);
-+	if (!attr) {
-+		pr_debug("No attributes found for sample id %" PRId64 ". "
-+			 "skipping it.\n", sample->id);
-+		return -1;
-+	}
-+
- 	if (session->sample_type & PERF_SAMPLE_RAW) {
- 		if (debug_mode) {
- 			if (sample->time < last_timestamp) {
-@@ -86,14 +109,8 @@ static int process_sample_event(union perf_event *event,
- 			last_timestamp = sample->time;
- 			return 0;
- 		}
--		/*
--		 * FIXME: better resolve from pid from the struct trace_entry
--		 * field, although it should be the same than this perf
--		 * event pid
--		 */
--		scripting_ops->process_event(sample->cpu, sample->raw_data,
--					     sample->raw_size,
--					     sample->time, thread->comm);
-+		scripting_ops->process_event(event, sample, session,
-+					     attr, thread);
- 	}
- 
- 	session->hists.stats.total_period += sample->period;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 9368081..ed69d4c 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -245,9 +245,11 @@ static inline struct event *find_cache_event(int type)
- 	return event;
- }
- 
--static void perl_process_event(int cpu, void *data,
--			       int size __unused,
--			       unsigned long long nsecs, char *comm)
-+static void perl_process_event(union perf_event *pevent __unused,
-+			       struct perf_sample *sample,
-+			       struct perf_session *session __unused,
-+			       struct perf_event_attr *attr __unused,
-+			       struct thread *thread)
- {
- 	struct format_field *field;
- 	static char handler[256];
-@@ -256,6 +258,10 @@ static void perl_process_event(int cpu, void *data,
- 	struct event *event;
- 	int type;
- 	int pid;
-+	int cpu = sample->cpu;
-+	void *data = sample->raw_data;
-+	unsigned long long nsecs = sample->time;
-+	char *comm = thread->comm;
- 
- 	dSP;
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 2040b85..9fded61 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -204,9 +204,11 @@ static inline struct event *find_cache_event(int type)
- 	return event;
- }
- 
--static void python_process_event(int cpu, void *data,
--				 int size __unused,
--				 unsigned long long nsecs, char *comm)
-+static void python_process_event(union perf_event *pevent __unused,
-+				 struct perf_sample *sample,
-+				 struct perf_session *session __unused,
-+				 struct perf_event_attr *attr __unused,
-+				 struct thread *thread)
- {
- 	PyObject *handler, *retval, *context, *t, *obj, *dict = NULL;
- 	static char handler_name[256];
-@@ -217,6 +219,10 @@ static void python_process_event(int cpu, void *data,
- 	unsigned n = 0;
- 	int type;
- 	int pid;
-+	int cpu = sample->cpu;
-+	void *data = sample->raw_data;
-+	unsigned long long nsecs = sample->time;
-+	char *comm = thread->comm;
- 
- 	t = PyTuple_New(MAX_FIELDS);
- 	if (!t)
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index f7af2fc..6f91d3c 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -36,11 +36,11 @@ static int stop_script_unsupported(void)
- 	return 0;
- }
- 
--static void process_event_unsupported(int cpu __unused,
--				      void *data __unused,
--				      int size __unused,
--				      unsigned long long nsecs __unused,
--				      char *comm __unused)
-+static void process_event_unsupported(union perf_event *event __unused,
-+				      struct perf_sample *sample __unused,
-+				      struct perf_session *session __unused,
-+				      struct perf_event_attr *attr __unused,
-+				      struct thread *thread __unused)
- {
- }
- 
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index b5f12ca..b4b939d 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -3,6 +3,7 @@
- 
- #include <stdbool.h>
- #include "parse-events.h"
-+#include "session.h"
- 
- #define __unused __attribute__((unused))
- 
-@@ -278,8 +279,11 @@ struct scripting_ops {
- 	const char *name;
- 	int (*start_script) (const char *script, int argc, const char **argv);
- 	int (*stop_script) (void);
--	void (*process_event) (int cpu, void *data, int size,
--			       unsigned long long nsecs, char *comm);
-+	void (*process_event) (union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct perf_session *session,
-+			       struct perf_event_attr *attr,
-+			       struct thread *thread);
- 	int (*generate_script) (const char *outfile);
- };
- 
--- 
-1.7.4
+But sched_mc does seem like a more appropriate way to help nudge all
+the workload onto a single core.
+
+Regards,
+Amit
+
+
+[1] https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/Hotplug
