@@ -1,59 +1,128 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: perf record regression?
-Date: Thu, 10 Mar 2011 11:49:28 -0300
-Message-ID: <20110310144927.GF14438@ghostprotocols.net>
-References: <AANLkTikcz=_HX7Ws2Ojmky+JgQhk1cj2YW=uxSkYkXBQ@mail.gmail.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 3/6] perf script: move printing of 'common' data from
+ print_event and rename
+Date: Thu, 10 Mar 2011 10:20:53 -0500
+Message-ID: <20110310152053.GB12521@home.goodmis.org>
+References: <1299734608-5223-1-git-send-email-daahern@cisco.com>
+ <1299734608-5223-4-git-send-email-daahern@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:24388 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751137Ab1CJOtk (ORCPT
+Received: from hrndva-omtalb.mail.rr.com ([71.74.56.123]:53337 "EHLO
+	hrndva-omtalb.mail.rr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752678Ab1CJPU4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 10 Mar 2011 09:49:40 -0500
+	Thu, 10 Mar 2011 10:20:56 -0500
 Content-Disposition: inline
-In-Reply-To: <AANLkTikcz=_HX7Ws2Ojmky+JgQhk1cj2YW=uxSkYkXBQ@mail.gmail.com>
+In-Reply-To: <1299734608-5223-4-git-send-email-daahern@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <arun@sharma-home.net>
-Cc: linux-perf-users@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
 
-Em Wed, Mar 09, 2011 at 09:59:39PM -0800, Arun Sharma escreveu:
-> I pulled the perf/core branch in
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux-2.6.git today
-> and found that:
+On Wed, Mar 09, 2011 at 10:23:25PM -0700, David Ahern wrote:
+> This change does impact output: latency data is trace specific and is now
+> printed after the common data - comm, tid, cpu, time and event name.
 > 
-> perf record -ag -- sleep 1
-> perf report -D | grep dso:
-> 
-> was returning:
-> 
->  ...... dso: <not found>
->  ...... dso: <not found>
->  ...... dso: /boot/vmlinux-2.6.38-rc5+
-> 
-> i.e perf report was not able to map IP addresses to the correct dso
-> for anything in user space.
-> 
-> Using git bisect, I narrowed it down to these two commits:
-> 
-> commit f60686f71f4afec7b2925b4682f33c70c0a7eb17
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Wed Mar 9 07:48:24 2011 -0300
-> 
->     perf evsel: Assume rest of perf_header_attr functions
-> 
-> commit e62e48df064b431029658089ab1f8b529ff6da3d
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Tue Mar 8 09:05:57 2011 -0300
-> 
->     perf session: Simplify evlist creation from perf.data header
-> 
-> perf built after these commits is able to symbolize properly for
-> perf.data collected using an older version of perf. So I believe, the
-> perf report side of things are ok. But perf record is not.
+> Signed-off-by: David Ahern <daahern@cisco.com>
+> ---
+>  tools/perf/builtin-script.c         |   38 ++++++++++++++++++++++-----
+>  tools/perf/util/trace-event-parse.c |   49 +++++++---------------------------
 
-Thanks for bisecting, I noticed some problems yesterday and was trying
-to bisect it, but run into another bug, will investigate now.
+I was hoping after the next merge window to start making a common library
+for parsing events. This way things like powertop and timechart or
+anything that uses the perf interface does not need to write its own
+parsing of events, or expect the event formats to be hardcoded.
 
-- Arnaldo
+The trace-event-parse.c was taking from trace-cmd's parse-events.c code
+and hopefully the two can merge again. The parse-events.c code in
+trace-cmd has gone through several iterations that has made it much more
+robust and flexible. I purposely kept it as a separate libarary not
+dependent on trace-cmd so that it could be used by other utilities like
+perf.
+
+>  tools/perf/util/trace-event.h       |    3 +-
+>  3 files changed, 42 insertions(+), 48 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index b2bdd55..0a79da2 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -20,18 +20,42 @@ static u64			last_timestamp;
+>  static u64			nr_unordered;
+>  extern const struct option	record_options[];
+>  
+> +static void print_sample_start(struct perf_sample *sample,
+> +			       struct thread *thread)
+> +{
+> +	int type;
+> +	struct event *event;
+> +	const char *evname = NULL;
+> +	unsigned long secs;
+> +	unsigned long usecs;
+> +	unsigned long long nsecs = sample->time;
+> +
+> +	if (latency_format)
+> +		printf("%8.8s-%-5d %3d", thread->comm, sample->tid, sample->cpu);
+> +	else
+> +		printf("%16s-%-5d [%03d]", thread->comm, sample->tid, sample->cpu);
+> +
+> +	secs = nsecs / NSECS_PER_SEC;
+> +	nsecs -= secs * NSECS_PER_SEC;
+> +	usecs = nsecs / NSECS_PER_USEC;
+> +	printf(" %5lu.%06lu: ", secs, usecs);
+> +
+> +	type = trace_parse_common_type(sample->raw_data);
+> +	event = trace_find_event(type);
+> +	if (event)
+> +		evname = event->name;
+> +
+> +	printf("%s: ", evname ? evname : "(unknown)");
+> +}
+> +
+>  static void process_event(union perf_event *event __unused,
+>  			  struct perf_sample *sample,
+>  			  struct perf_session *session __unused,
+>  			  struct thread *thread)
+>  {
+> -	/*
+> -	 * FIXME: better resolve from pid from the struct trace_entry
+> -	 * field, although it should be the same than this perf
+> -	 * event pid
+> -	 */
+> -	print_event(sample->cpu, sample->raw_data, sample->raw_size,
+> -		    sample->time, thread->comm);
+> +	print_sample_start(sample, thread);
+> +	print_trace_event(sample->cpu, sample->raw_data, sample->raw_size);
+> +	printf("\n");
+>  }
+>  
+>  static int default_start_script(const char *script __unused,
+> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+> index dd5f058..0a7ed5b 100644
+> --- a/tools/perf/util/trace-event-parse.c
+> +++ b/tools/perf/util/trace-event-parse.c
+> @@ -2643,9 +2643,9 @@ static void print_lat_fmt(void *data, int size __unused)
+>  		printf(".");
+>  
+>  	if (lock_depth < 0)
+> -		printf(".");
+> +		printf(". ");
+>  	else
+> -		printf("%d", lock_depth);
+> +		printf("%d ", lock_depth);
+
+For example, I'm removing the field lock_depth, as that was added by
+Frederic as a temporary field to help with the removal of the BKL.
+Currently this code is unused by perf, but if it is in the future, it
+must be able to handle not having this field. In fact, I'm thinking of
+modifying other "common" fields to help improve tracing performance.
+
+If we could have a common library for all tools that need to parse
+events, then this code can be updated in a single place. Which also
+brings another point. Do we want to move the events out of debugfs. And
+if we do, I would love to change the way the event format is. I consider
+the format in debugfs as it stands a true ABI, but the content that the
+format shows is not.
+
+-- Steve
