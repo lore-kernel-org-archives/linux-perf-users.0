@@ -1,124 +1,87 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH] perf: Avoid resolving [kernel.kallsyms] to real path
-	for buildid cache
-Date: Wed, 9 Mar 2011 12:57:24 -0300
-Message-ID: <20110309155724.GB14438@ghostprotocols.net>
-References: <1299165837-27817-1-git-send-email-ming.m.lin@intel.com> <AANLkTikMi0TR9pUSG3bWdRvEOwKdFQ-5Ex5trjGEQBx0@mail.gmail.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH] Add inverted call graph report support to perf tool
+Date: Thu, 10 Mar 2011 03:43:57 +0100
+Message-ID: <20110310024355.GG2533@nowhere>
+References: <AANLkTi=vxgHe=dqz+xEPcZ9oBexM1jBxFz3sXA2DJEZA@mail.gmail.com>
+ <20110307180619.GG1873@nowhere>
+ <AANLkTi=rabeXE6m0wRo029jgqHLBaUGQcXYJriLewZeJ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:49916 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757010Ab1CIP5t (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:36840 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752147Ab1CJCoC (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 9 Mar 2011 10:57:49 -0500
+	Wed, 9 Mar 2011 21:44:02 -0500
 Content-Disposition: inline
-In-Reply-To: <AANLkTikMi0TR9pUSG3bWdRvEOwKdFQ-5Ex5trjGEQBx0@mail.gmail.com>
+In-Reply-To: <AANLkTi=rabeXE6m0wRo029jgqHLBaUGQcXYJriLewZeJ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Lin Ming <minggr@gmail.com>
-Cc: Lin Ming <ming.m.lin@intel.com>, Han Pingtian <phan@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Franck Bui-Huu <fbuihuu@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Sam Liao <phyomh@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 
-Em Wed, Mar 09, 2011 at 10:38:52PM +0800, Lin Ming escreveu:
-> Hi, Arnaldo
->=20
-> Could you have a look at this patch?
->=20
-> Thanks,
-> Lin Ming
+On Tue, Mar 08, 2011 at 04:59:30PM +0800, Sam Liao wrote:
+> On Tue, Mar 8, 2011 at 2:06 AM, Frederic Weisbecker <fweisbec@gmail.com> wrote:
+> > So, instead of having such temporary copy, could you rather feed the callchain
+> > into the cursor in reverse from perf_session__resolve_callchain() ?
+> >
+> > You can keep the common part inside the loop into a seperate helper
+> > but have two different kinds of loops.
+> 
+> In perf_session__resolve_callchain, only the callchain itself can be reversed,
+> which means the root of report will still be the ip of the event with a reversed
+> call chain sub tree. But what is more impressive to user is to make "main" like
+> function to be the root of the report, and this means that both the ip
+> and call chain is
+> involved to the reversion process.
+> 
+> Since the ip of event is resolved in event__preprocess_sample, so it is kind
+> hard to do such reversion in a better way.
 
-Seems ok, problem was introduced in:
+You are making an interesting point.
 
-commit 68a7a771ad0e2959983729bf88cbc74a7014438f
-Author: Franck Bui-Huu <fbuihuu@gmail.com>
-Date:   Fri Dec 10 22:06:26 2010 +0100
+My view of this feature was limited to the current per hist area: having
+the callchains on top of hists that can be sorted per ip, dso, pid, etc...
+like we have today basically. So my view was for this reverse callchain
+to show us one callers profiling for each hist entry.
 
-    perf buildid-cache: Fix symbolic link handling
-   =20
-    This was broken since link(2) doesn't dereference symbolic
-    links. Instead 'filename' becomes a symbolic link to the same file
-    that 'name' refers to.
-   =20
-    This had the bad effect to create dangling symlinks in the case tha=
-t
-    even can't be removed with perf-buildid-cache(1).
-   =20
-    LKML-Reference: <m38vzxxrql.fsf@gmail.com>
-    Signed-off-by: Franck Bui-Huu <fbuihuu@gmail.com>
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+But your idea of turning the callee into the caller would show us a very global
+profiling. With reverse callchains it can be a very nice overview of the big picture.
 
-[acme@emilia linux]$ git describe 68a7a771
-v2.6.37-rc5-71-g68a7a77
+IMO both workflow can be interesting:
 
-So I'll add a CC: stable@kernel.org when pushing to perf/urgent.
+1) Have a big reversed callchain overview, with one root per entrypoint. This
+what you wanted.
+2) Have a per hist 1)  which means a per hist per entrypoint callchain
 
-- Arnaldo
+1) involves reverting both callchains and ip <->caller whereas 2) only involves
+reverting the callchain.
 
-=20
-> On Thu, Mar 3, 2011 at 11:23 PM, Lin Ming <ming.m.lin@intel.com> wrot=
-e:
-> > kallsyms has a virtual file name [kernel.kallsyms].
-> > Currently, it can't be added to buildid cache successfully
-> > because the code(build_id_cache__add_s) tries to resolve
-> > [kernel.kallsyms]to a real absolute pathname and that fails.
-> >
-> > Fixes it by not resolving it and just use the name [kernel.kallsyms=
-].
-> > So dir ~/.debug/[kernel.kallsyms] is created.
-> >
-> > Original bug report at:
-> > https://lkml.org/lkml/2011/3/1/524
-> >
-> > Tested-by: Han Pingtian <phan@redhat.com>
-> > Signed-off-by: Lin Ming <ming.m.lin@intel.com>
-> > ---
-> > =A0tools/perf/util/header.c | =A0 11 ++++++++---
-> > =A01 files changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 72c124d..1f8883b 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -271,11 +271,15 @@ int build_id_cache__add_s(const char *sbuild_=
-id, const char *debugdir,
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0const char *name=
-, bool is_kallsyms)
-> > =A0{
-> > =A0 =A0 =A0 =A0const size_t size =3D PATH_MAX;
-> > - =A0 =A0 =A0 char *realname =3D realpath(name, NULL),
-> > - =A0 =A0 =A0 =A0 =A0 =A0*filename =3D malloc(size),
-> > + =A0 =A0 =A0 char *realname, *filename =3D malloc(size),
-> > =A0 =A0 =A0 =A0 =A0 =A0 *linkname =3D malloc(size), *targetname;
-> > =A0 =A0 =A0 =A0int len, err =3D -1;
-> >
-> > + =A0 =A0 =A0 if (is_kallsyms)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 realname =3D (char *)name;
-> > + =A0 =A0 =A0 else
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 realname =3D realpath(name, NULL);
-> > +
-> > =A0 =A0 =A0 =A0if (realname =3D=3D NULL || filename =3D=3D NULL || =
-linkname =3D=3D NULL)
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto out_free;
-> >
-> > @@ -307,7 +311,8 @@ int build_id_cache__add_s(const char *sbuild_id=
-, const char *debugdir,
-> > =A0 =A0 =A0 =A0if (symlink(targetname, linkname) =3D=3D 0)
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0err =3D 0;
-> > =A0out_free:
-> > - =A0 =A0 =A0 free(realname);
-> > + =A0 =A0 =A0 if (!is_kallsyms)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 free(realname);
-> > =A0 =A0 =A0 =A0free(filename);
-> > =A0 =A0 =A0 =A0free(linkname);
-> > =A0 =A0 =A0 =A0return err;
-> > --
-> > 1.7.2.3
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-per=
-f-users" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at =A0http://vger.kernel.org/majordomo-info.htm=
-l
-> >
+In order to get both features with a maximum flexibility and keep that extendable, I
+would suggest to decouple that in two independant parts:
+
+	- an option to get reversed callchains. Using the -g option and caller/callee
+	as a third argument.
+
+	- a new "caller" sort entry. What defines a hist entry is a set of sort
+	entries: dso, symbol, pid, comm, ... That we use with the -s option in perf report.
+	If you want one hist per entrypoint, we could add a new "caller" sort entry.
+	Then perf report -s caller will (roughly) produce one hist for main(), one hist
+	for kernel_thread(), etc...
+
+Hence, someone running "perf report -g fractal,0.5,reversed -s dso" is going to have a
+per dso caller-callchain profiling.
+
+Someone running "perf report -g fractal,0.5,reversed -s caller" is going to have that
+global caller profiling you wanted. You'll have one hist per entrypoint.
+
+The caller sorting mode may sound a bit limited currently, but think about what happens
+when you push forward the entrypoint, if one day we bring a feature to filter the callchains
+on some dso address space , we could do a caller callchain profile starting on a shared library
+and pinpoint which functions are mostly called on it, so that can be coupled with dso sorting mode,
+etc... So that looks like a right way to go.
+
+Ah and that shouldn't require to overwrite the real ip of an event with the caller.
+Better create a new "caller" field on struct hist_entry for that.
+
+Hm?
