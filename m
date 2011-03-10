@@ -1,183 +1,54 @@
-From: David Ahern <daahern@cisco.com>
-Subject: [PATCH 1/6] perf script: change process_event prototype
-Date: Wed,  9 Mar 2011 22:23:23 -0700
-Message-ID: <1299734608-5223-2-git-send-email-daahern@cisco.com>
-References: <1299734608-5223-1-git-send-email-daahern@cisco.com>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: perf record regression?
+Date: Wed, 9 Mar 2011 21:59:39 -0800
+Message-ID: <AANLkTikcz=_HX7Ws2Ojmky+JgQhk1cj2YW=uxSkYkXBQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-3.cisco.com ([171.71.176.72]:45745 "EHLO
-	sj-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751125Ab1CJFWx (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:61783 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750854Ab1CJF7k (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 10 Mar 2011 00:22:53 -0500
-In-Reply-To: <1299734608-5223-1-git-send-email-daahern@cisco.com>
+	Thu, 10 Mar 2011 00:59:40 -0500
+Received: by iwn34 with SMTP id 34so1211236iwn.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Mar 2011 21:59:39 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Prepare for handling of samples for any event type.
+I pulled the perf/core branch in
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux-2.6.git today
+and found that:
 
-Signed-off-by: David Ahern <daahern@cisco.com>
----
- tools/perf/builtin-script.c                        |   25 ++++++++++++-------
- .../perf/util/scripting-engines/trace-event-perl.c |   11 ++++++--
- .../util/scripting-engines/trace-event-python.c    |   11 ++++++--
- tools/perf/util/trace-event-scripting.c            |    9 +++----
- tools/perf/util/trace-event.h                      |    7 ++++-
- 5 files changed, 41 insertions(+), 22 deletions(-)
+perf record -ag -- sleep 1
+perf report -D | grep dso:
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5f40df6..b2bdd55 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -20,6 +20,20 @@ static u64			last_timestamp;
- static u64			nr_unordered;
- extern const struct option	record_options[];
- 
-+static void process_event(union perf_event *event __unused,
-+			  struct perf_sample *sample,
-+			  struct perf_session *session __unused,
-+			  struct thread *thread)
-+{
-+	/*
-+	 * FIXME: better resolve from pid from the struct trace_entry
-+	 * field, although it should be the same than this perf
-+	 * event pid
-+	 */
-+	print_event(sample->cpu, sample->raw_data, sample->raw_size,
-+		    sample->time, thread->comm);
-+}
-+
- static int default_start_script(const char *script __unused,
- 				int argc __unused,
- 				const char **argv __unused)
-@@ -40,7 +54,7 @@ static int default_generate_script(const char *outfile __unused)
- static struct scripting_ops default_scripting_ops = {
- 	.start_script		= default_start_script,
- 	.stop_script		= default_stop_script,
--	.process_event		= print_event,
-+	.process_event		= process_event,
- 	.generate_script	= default_generate_script,
- };
- 
-@@ -86,14 +100,7 @@ static int process_sample_event(union perf_event *event,
- 			last_timestamp = sample->time;
- 			return 0;
- 		}
--		/*
--		 * FIXME: better resolve from pid from the struct trace_entry
--		 * field, although it should be the same than this perf
--		 * event pid
--		 */
--		scripting_ops->process_event(sample->cpu, sample->raw_data,
--					     sample->raw_size,
--					     sample->time, thread->comm);
-+		scripting_ops->process_event(event, sample, session, thread);
- 	}
- 
- 	session->hists.stats.total_period += sample->period;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 9368081..6214272 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -245,9 +245,10 @@ static inline struct event *find_cache_event(int type)
- 	return event;
- }
- 
--static void perl_process_event(int cpu, void *data,
--			       int size __unused,
--			       unsigned long long nsecs, char *comm)
-+static void perl_process_event(union perf_event *pevent __unused,
-+			       struct perf_sample *sample,
-+			       struct perf_session *session __unused,
-+			       struct thread *thread)
- {
- 	struct format_field *field;
- 	static char handler[256];
-@@ -256,6 +257,10 @@ static void perl_process_event(int cpu, void *data,
- 	struct event *event;
- 	int type;
- 	int pid;
-+	int cpu = sample->cpu;
-+	void *data = sample->raw_data;
-+	unsigned long long nsecs = sample->time;
-+	char *comm = thread->comm;
- 
- 	dSP;
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 2040b85..1b85d60 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -204,9 +204,10 @@ static inline struct event *find_cache_event(int type)
- 	return event;
- }
- 
--static void python_process_event(int cpu, void *data,
--				 int size __unused,
--				 unsigned long long nsecs, char *comm)
-+static void python_process_event(union perf_event *pevent __unused,
-+				 struct perf_sample *sample,
-+				 struct perf_session *session __unused,
-+				 struct thread *thread)
- {
- 	PyObject *handler, *retval, *context, *t, *obj, *dict = NULL;
- 	static char handler_name[256];
-@@ -217,6 +218,10 @@ static void python_process_event(int cpu, void *data,
- 	unsigned n = 0;
- 	int type;
- 	int pid;
-+	int cpu = sample->cpu;
-+	void *data = sample->raw_data;
-+	unsigned long long nsecs = sample->time;
-+	char *comm = thread->comm;
- 
- 	t = PyTuple_New(MAX_FIELDS);
- 	if (!t)
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index f7af2fc..66f4b78 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -36,11 +36,10 @@ static int stop_script_unsupported(void)
- 	return 0;
- }
- 
--static void process_event_unsupported(int cpu __unused,
--				      void *data __unused,
--				      int size __unused,
--				      unsigned long long nsecs __unused,
--				      char *comm __unused)
-+static void process_event_unsupported(union perf_event *event __unused,
-+				      struct perf_sample *sample __unused,
-+				      struct perf_session *session __unused,
-+				      struct thread *thread __unused)
- {
- }
- 
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index b5f12ca..5f7b513 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -3,6 +3,7 @@
- 
- #include <stdbool.h>
- #include "parse-events.h"
-+#include "session.h"
- 
- #define __unused __attribute__((unused))
- 
-@@ -278,8 +279,10 @@ struct scripting_ops {
- 	const char *name;
- 	int (*start_script) (const char *script, int argc, const char **argv);
- 	int (*stop_script) (void);
--	void (*process_event) (int cpu, void *data, int size,
--			       unsigned long long nsecs, char *comm);
-+	void (*process_event) (union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct perf_session *session,
-+			       struct thread *thread);
- 	int (*generate_script) (const char *outfile);
- };
- 
--- 
-1.7.4
+was returning:
+
+ ...... dso: <not found>
+ ...... dso: <not found>
+ ...... dso: /boot/vmlinux-2.6.38-rc5+
+
+i.e perf report was not able to map IP addresses to the correct dso
+for anything in user space.
+
+Using git bisect, I narrowed it down to these two commits:
+
+commit f60686f71f4afec7b2925b4682f33c70c0a7eb17
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Wed Mar 9 07:48:24 2011 -0300
+
+    perf evsel: Assume rest of perf_header_attr functions
+
+commit e62e48df064b431029658089ab1f8b529ff6da3d
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue Mar 8 09:05:57 2011 -0300
+
+    perf session: Simplify evlist creation from perf.data header
+
+perf built after these commits is able to symbolize properly for
+perf.data collected using an older version of perf. So I believe, the
+perf report side of things are ok. But perf record is not.
+
+ -Arun
