@@ -1,56 +1,59 @@
-From: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
-Subject: perf counts nothing on SPARC
-Date: Tue, 15 Mar 2011 16:39:54 +0800
-Message-ID: <20110315083954.GA91348@cs.nctu.edu.tw>
+From: Kumar Ranjit-B04060 <B04060@freescale.com>
+Subject: RE: Building perf failed on Linux/SPARC
+Date: Tue, 15 Mar 2011 10:08:12 +0000
+Message-ID: <8CB5FB7FBAFD274A8E92A53BBAFE339D0ADFB9@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <20110314095121.GA66653@cs.nctu.edu.tw>
+ <20110314191526.GA2388@ghostprotocols.net>
+ <20110315031605.GA85789@cs.nctu.edu.tw>
+ <8CB5FB7FBAFD274A8E92A53BBAFE339D0ADF79@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20110315082042.GA88727@cs.nctu.edu.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from csmailer.cs.nctu.edu.tw ([140.113.235.130]:27947 "EHLO
-	csmailer.cs.nctu.edu.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754980Ab1COIjz convert rfc822-to-8bit (ORCPT
+Received: from ch1outboundpool.messaging.microsoft.com ([216.32.181.181]:1828
+	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750893Ab1COKjr (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 15 Mar 2011 04:39:55 -0400
-Received: from csmailer.cs.nctu.edu.tw (localhost [127.0.0.1])
-	by csmailer.cs.nctu.edu.tw (Postfix) with ESMTP id 957E82BA
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Mar 2011 16:41:38 +0800 (CST)
-Received: from alumni.cs.nctu.edu.tw (alumni.cs.nctu.edu.tw [140.113.235.116])
-	by csmailer.cs.nctu.edu.tw (Postfix) with ESMTP id 766522B9
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Mar 2011 16:41:38 +0800 (CST)
-Received: (from chenwj@localhost)
-	by alumni.cs.nctu.edu.tw (8.14.4/8.14.4/Submit) id p2F8dsXw091675
-	for linux-perf-users@vger.kernel.org; Tue, 15 Mar 2011 16:39:54 +0800 (CST)
-	(envelope-from chenwj)
-Content-Disposition: inline
+	Tue, 15 Mar 2011 06:39:47 -0400
+In-Reply-To: <20110315082042.GA88727@cs.nctu.edu.tw>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi, all
-
-  I don't know this is normal or not. But I got nothing when I
-ran `perf` on a SPARC machine. For example,
-
-$ perf stat -e instructions git gc
-Nothing new to pack.
-
- Performance counter stats for 'git gc':
-
-                 0 instructions             #      0.000 IPC
-
-        0.188904740  seconds time elapsed
-
-  I think there should be more than 1 instruction at least. But
-as you can see from the example, I got zero instruction while
-running `git gc`.
-
-  Any idea?
-
-Regards,
-chenwj
-
---=20
-Wei-Ren Chen (=E9=99=B3=E9=9F=8B=E4=BB=BB)
-Parallel Processing Lab, Institute of Information Science,
-Academia Sinica, Taiwan (R.O.C.)
-Tel:886-2-2788-3799 #1667
+SSBhbSBub3QgYWJsZSB0byBidWlsZCBlbGZ1dGlscy0wLjE1Mi50YXIuYnoyLiBUaGUgZXJyb3Ig
+SSBhbSBnZXR0aW5nIGlzDQoNCkluIGZpbGUgaW5jbHVkZWQgZnJvbSB4c3RybmR1cC5jOjMwOjA6
+DQovdXNyL2luY2x1ZGUvc3RyaW5nLmg6NTQ2OjU6IGVycm9yOiBleHBlY3RlZCBkZWNsYXJhdGlv
+biBzcGVjaWZpZXJzIG9yICcuLi4nIGJlZm9yZSAnX19sb2NhbGUNCi91c3IvaW5jbHVkZS9zdHJp
+bmcuaDo1NDc6NjogZXJyb3I6IG5vbm51bGwgYXJndW1lbnQgd2l0aCBvdXQtb2YtcmFuZ2Ugb3Bl
+cmFuZCBudW1iZXIgKGFyZ3VtZW50IDEsIG9wZXJhbmQgMykNCi91c3IvaW5jbHVkZS9zdHJpbmcu
+aDo1NTA6MTg6IGVycm9yOiBleHBlY3RlZCBkZWNsYXJhdGlvbiBzcGVjaWZpZXJzIG9yICcuLi4n
+IGJlZm9yZSAnX19sb2NhbGVfdCcNCi91c3IvaW5jbHVkZS9zdHJpbmcuaDo1NTE6NjogZXJyb3I6
+IG5vbm51bGwgYXJndW1lbnQgd2l0aCBvdXQtb2YtcmFuZ2Ugb3BlcmFuZCBudW1iZXIgKGFyZ3Vt
+ZW50IDEsIG9wZXJhbmQgNCkNCmNjMTogd2FybmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMN
+CnhzdHJuZHVwLmM6IEluIGZ1bmN0aW9uICd4c3RybmR1cCc6DQp4c3RybmR1cC5jOjQxOjM6IGVy
+cm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiAnc3RybmxlbicNCm1ha2VbMl06
+ICoqKiBbeHN0cm5kdXAub10gRXJyb3IgMQ0KbWFrZVsyXTogTGVhdmluZyBkaXJlY3RvcnkgYC9o
+b21lL3VzZXIvcmFuaml0ay9lbGZ1dGlscy0wLjE0Mi9saWInDQptYWtlWzFdOiAqKiogW2FsbC1y
+ZWN1cnNpdmVdIEVycm9yIDENCm1ha2VbMV06IExlYXZpbmcgZGlyZWN0b3J5IGAvaG9tZS91c2Vy
+L3JhbmppdGsvZWxmdXRpbHMtMC4xNDInDQptYWtlOiAqKiogW2FsbF0gRXJyb3IgMg0KDQpJIGFt
+IHVzaW5nIHRoZSBnY2MtNC41MS4NCg0KUmVnYXJkcw0KUmFuaml0IEt1bWFyDQpTeXN0ZW0gUGVy
+Zm9ybWFuY2UgQW5hbHlzaXMgR3JvdXANCkZyZWVzY2FsZSBTZW1pY29uZHVjdG9ycw0KSW5kaWEN
+Cg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBsaW51eC1wZXJmLXVzZXJz
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXBlcmYtdXNlcnMtb3duZXJAdmdl
+ci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgPz8/DQpTZW50OiBUdWVzZGF5LCBNYXJjaCAxNSwg
+MjAxMSAxOjUxIFBNDQpUbzogS3VtYXIgUmFuaml0LUIwNDA2MA0KQ2M6IGxpbnV4LXBlcmYtdXNl
+cnNAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTogQnVpbGRpbmcgcGVyZiBmYWlsZWQgb24g
+TGludXgvU1BBUkMNCg0KSGksIEt1bWFyDQoNCiAgSGVyZSBpcyB0aGUgaW5mb3JtYXRpb24gb2Yg
+ZWxmdXRpbHMgb24gZ2VudG9vIGxpbnV4LA0KDQpkZXYtbGlicy9lbGZ1dGlscw0KSG9tZXBhZ2U6
+ICAgICAgaHR0cHM6Ly9mZWRvcmFob3N0ZWQub3JnL2VsZnV0aWxzDQoNCiAgQW5kIHlvdSBtaWdo
+dCBuZWVkIHRvIHVwZGF0ZSB0aGUgcGVyZiBzb3VyY2UgY29kZS4NCg0KICBIVEguIDopDQoNClJl
+Z2FyZHMsDQpjaGVud2oNCg0KLS0NCldlaS1SZW4gQ2hlbiAo6Zmz6Z+L5Lu7KQ0KUGFyYWxsZWwg
+UHJvY2Vzc2luZyBMYWIsIEluc3RpdHV0ZSBvZiBJbmZvcm1hdGlvbiBTY2llbmNlLCBBY2FkZW1p
+YSBTaW5pY2EsIFRhaXdhbiAoUi5PLkMuKQ0KVGVsOjg4Ni0yLTI3ODgtMzc5OSAjMTY2Nw0KLS0N
+ClRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmli
+ZSBsaW51eC1wZXJmLXVzZXJzIiBpbiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21v
+QHZnZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJu
+ZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg0K
