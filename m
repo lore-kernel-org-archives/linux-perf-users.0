@@ -1,75 +1,67 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: Re: perf, x86: Fix PEBS enable/disable vs cpuc->enabled
-Date: Wed, 16 Mar 2011 17:59:44 -0700
-Message-ID: <20110317005944.GA13308__24577.1891823553$1300384466$gmane$org@dev1756.snc6.facebook.com>
+From: john smith <whalajam@yahoo.com>
+Subject: [kernel.kallsyms] with build id ... not found, continuing without symbols
+Date: Thu, 17 Mar 2011 11:32:48 -0700 (PDT)
+Message-ID: <957387.46563.qm@web161909.mail.bf1.yahoo.com>
+References: <20110314191526.GA2388@ghostprotocols.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from outmail004.snc4.facebook.com ([66.220.144.136]:38446 "EHLO
-	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1754898Ab1CQRyS (ORCPT
+Received: from web161909.mail.bf1.yahoo.com ([98.139.210.200]:30389 "HELO
+	web161909.mail.bf1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1755226Ab1CQSjb (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Mar 2011 13:54:18 -0400
-Content-Disposition: inline
+	Thu, 17 Mar 2011 14:39:31 -0400
+In-Reply-To: <20110314191526.GA2388@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Arnaldo Carvalho de Melo <acme@infradead.org>, Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+
+I'm running on 2.6.37.1-1.2, using the following rpm's to build tools/perf:
+(OpenSUSE 11.4)
+
+elfutils-devel-0.149-1.x86_64.rpm
+elfutils-libs-0.149-1.x86_64.rpm
+elfutils-libelf-0.149-1.x86_64.rpm 
+elfutils-libelf-devel-0.149-1.x86_64.rpm
+xz-libs-4.999.9-0.2.beta.20100401git.x86_64.rpm
+
+I' using my own scsi driver - my-driver.
+
+I do:
+# perf record -fg fio my_fio_script
+# perf annotate -l -k /usr/src/linux/vmlinux -s __lock_acquire
+I'm getting:
+
+[my_scsi_driver] with build id bee3bbdcaacc61223b70db093de47efffa26dbc9 not found, continuing without symbols
+
+I see annotated __lock_acquire but if I run:
+# perf annotate -l -k /my_driver_path/my_driver.ko -s my_function
+
+I'm getting:
+[kernel.kallsyms] with build id 08ba9c1ec15cb50d359428cacb0b490dee51e1a5 not found, continuing without symbols Segmentation fault
+
+However, when doing:
+# cat /proc/kallsyms|grep my_function
+
+I'm getting:
+ffffffffa0606b90 t   my_function	[my_driver]
+
+I also built & ran perf code copied from kernel version 2.6.38 (had to disable "attr->sample_id_all" field usage in builtin-record.c & util/header.c to build on 2.6.37 as, unfortunatelly my_driver doesn't work on 2.6.38) with the same results.
+
+When doing:
+# perf report --verbose --dso='[my_driver]'
+
+I see:
++     85.05%  fio  0x368f6          K [k] 0x368f6
++     14.95%  fio  0x7fffb9fff614   ! [.] 0x7fffb9fff614
+
+Expanding any of these two, I'm getting many '+' prefixed hex addresses  instead of function names (kernel entry names) and I don't see any of the driver's api.
+If I select to expand/zoom-in an api that doesn't have '+' and select "Zoom into fio DSO" it "Segmentation fault"
+
+What can I do to annotate/resolve symbols for my_functions?
+
+thanks,
+John
 
 
-This commit:
-
-commit 4807e3d5dc7bb7057dd6ca3abb09f3da2eb8c323
-Author: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Date:   Sat Mar 6 13:47:07 2010 +0100
-
-    perf, x86: Fix PEBS enable/disable vs cpuc->enabled
-
-    We should never call ->enable with the pmu enabled, and we _can_ have
-    ->disable called with the pmu enabled.
-
-introduced a new warning that's triggering on one of my test machines when I tried
-counter multiplexing (more events than number of general purpose counters):
-
-perf stat -e cycles,instructions,cache-misses,cache-misses,cache-misses,cache-misses,branch-misses -a -- sleep 10
-
-The trace looks as follows:
-
-WARNING: at arch/x86/kernel/cpu/perf_event_intel_ds.c:499 intel_pmu_enable_event+0x18f/0x2bc()
-Pid: 0, comm: kworker/0:1 Not tainted 2.6.38-00029-g0d3bcb8 #12
-Call Trace:
-<IRQ> [<ffffffff8103c810>] ? warn_slowpath_common+0x80/0x98
-[<ffffffff8103c83d>] ? warn_slowpath_null+0x15/0x17
-[<ffffffff8100f3cb>] ? intel_pmu_enable_event+0x18f/0x2bc
-[<ffffffff8100f939>] ? x86_pmu_start+0xf7/0x108
-[<ffffffff8109dd33>] ? perf_adjust_period+0x141/0x15c
-[<ffffffff810a44ce>] ? perf_ctx_adjust_freq+0xd2/0x10a
-[<ffffffff810a45f0>] ? perf_event_task_tick+0xea/0x1f0
-[<ffffffff810389e9>] ? scheduler_tick+0xc8/0x258
-[<ffffffff8104920f>] ? update_process_times+0x62/0x72
-[<ffffffff810628bd>] ? tick_nohz_handler+0x8d/0xd6
-[<ffffffff8101bfbc>] ? smp_apic_timer_interrupt+0x83/0x96
-[<ffffffff81003253>] ? apic_timer_interrupt+0x13/0x20
-<EOI> [<ffffffff81209eb5>] ? intel_idle+0xc3/0xe9
-[<ffffffff81209e98>] ? intel_idle+0xa6/0xe9
-[<ffffffff81375a12>] ? cpuidle_idle_call+0x112/0x1b8
-[<ffffffff81001c15>] ? cpu_idle+0x5a/0x91
-[<ffffffff8143168b>] ? start_secondary+0x180/0x184
----[ end trace 0717acdc46c926b2 ]---
-
-This was 2.6.38 + a few perf patches from the x86 tip. I believe stock 2.6.38 will behave similarly.
-
-static void x86_pmu_start(struct perf_event *event, int flags)
-{
-...
-       if (flags & PERF_EF_RELOAD) {
-                WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTODATE));
-                x86_perf_event_set_period(event); 
-		// missing return here?
-        }
-	..
-}
-
-I wonder if the code should return for the PERF_EF_RELOAD case, rather than falling through.
-
- -Arun
+      
