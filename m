@@ -1,44 +1,40 @@
-From: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
-Subject: Re: Building perf failed on Linux/SPARC
-Date: Wed, 16 Mar 2011 10:00:57 +0800
-Message-ID: <20110316020057.GA96084@cs.nctu.edu.tw>
-References: <20110314095121.GA66653@cs.nctu.edu.tw>
- <20110314191526.GA2388@ghostprotocols.net>
- <20110315031605.GA85789@cs.nctu.edu.tw>
- <8CB5FB7FBAFD274A8E92A53BBAFE339D0ADF79@039-SN1MPN1-003.039d.mgd.msft.net>
- <20110315082042.GA88727@cs.nctu.edu.tw>
- <8CB5FB7FBAFD274A8E92A53BBAFE339D0ADFB9@039-SN1MPN1-003.039d.mgd.msft.net>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: Re: [perfmon2] How does take use of EventName and UnitMask?
+Date: Thu, 17 Mar 2011 08:43:21 -0700
+Message-ID: <AANLkTinjmVwtWpAnGPyehn0kT6U3KQWKPU0iz=Fb45aA@mail.gmail.com>
+References: <tencent_5D9EFCFD67548CB92638B8BA@qq.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from csmailer.cs.nctu.edu.tw ([140.113.235.130]:53714 "EHLO
-	csmailer.cs.nctu.edu.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750813Ab1CPCBB convert rfc822-to-8bit (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:33822 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754467Ab1CQPnY (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 15 Mar 2011 22:01:01 -0400
-Content-Disposition: inline
-In-Reply-To: <8CB5FB7FBAFD274A8E92A53BBAFE339D0ADFB9@039-SN1MPN1-003.039d.mgd.msft.net>
+	Thu, 17 Mar 2011 11:43:24 -0400
+Received: by iyb26 with SMTP id 26so2944085iyb.19
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2011 08:43:23 -0700 (PDT)
+In-Reply-To: <tencent_5D9EFCFD67548CB92638B8BA@qq.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Kumar Ranjit-B04060 <B04060@freescale.com>
-Cc: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Easley <ugiwgh@gmail.com>
+Cc: perfmon2-devel <perfmon2-devel@lists.sourceforge.net>, chenwj <chenwj@iis.sinica.edu.tw>, Lin Ming <ming.m.lin@intel.com>, linux-perf-users@vger.kernel.org
 
-Hi, Kumar
+[ + Lin Ming, linux-perf-users ]
 
-  I built elfutils-0.152.tar.bz2 successfully on my system.
-Maybe you can ask your system administrator to install perf.
-Or you can consult your colleagues or the elfutils mailing list
-for help.
+On Thu, Mar 17, 2011 at 5:35 AM, Easley <ugiwgh@gmail.com> wrote:
 
-  Here is the elfutils mailing list,
-  https://fedorahosted.org/mailman/listinfo/elfutils-devel
+> EventNum and UmaskValue is control bits, but I can't find which address of msr to wirte.
 
-Regards,
-chenwj
+Try Ming Lin's kernel patch here:
 
---=20
-Wei-Ren Chen (=E9=99=B3=E9=9F=8B=E4=BB=BB)
-Parallel Processing Lab, Institute of Information Science,
-Academia Sinica, Taiwan (R.O.C.)
-Tel:886-2-2788-3799 #1667
+http://thread.gmane.org/gmane.linux.kernel/1071064
+
+and my patch to link the perf tool with libpfm4:
+
+http://article.gmane.org/gmane.comp.linux.perfmon2.devel/2912
+
+Stephane has disabled the uncore event support in libpfm4 (since the
+patch is still not upstream yet). But by uncommenting 2-3 lines of
+code, you should be able to get uncore events working.
+
+ -Arun
