@@ -1,203 +1,65 @@
 From: David Ahern <daahern@cisco.com>
-Subject: [PATCH 4/5] perf script: add support for time-of-day strings in output
-Date: Sun, 20 Mar 2011 12:54:36 -0600
-Message-ID: <1300647277-8431-5-git-send-email-daahern@cisco.com>
+Subject: [PATCH 3/5] perf record: add time-of-day option
+Date: Sun, 20 Mar 2011 12:54:35 -0600
+Message-ID: <1300647277-8431-4-git-send-email-daahern@cisco.com>
 References: <1300647277-8431-1-git-send-email-daahern@cisco.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-4.cisco.com ([171.68.10.86]:27121 "EHLO
-	sj-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752474Ab1CTSyt (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 20 Mar 2011 14:54:49 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1300647277-8431-1-git-send-email-daahern@cisco.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
-
-Format of time-of-day strings handled through strftime. Any format
-recognized by it can be used. Default format is %H:%M:%S with
-microseconds appended.
+List-Id: linux-perf-users.vger.kernel.org
 
 Signed-off-by: David Ahern <daahern@cisco.com>
 ---
- tools/perf/Documentation/perf-script.txt |    8 +++-
- tools/perf/builtin-script.c              |   84 +++++++++++++++++++++++++++++-
- 2 files changed, 90 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-record.txt |    4 ++++
+ tools/perf/builtin-record.c              |    5 +++++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 66f040b..9f04caa 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -115,7 +115,7 @@ OPTIONS
- -f::
- --fields
-         Comma separated list of fields to print. Options are:
--        comm, tid, pid, time, cpu, event, trace, sym. Field
-+        tod, comm, tid, pid, time, cpu, event, trace, sym. Field
-         list must be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -f sw:comm,tid,time,sym  and -f trace:time,cpu,trace
-@@ -134,6 +134,12 @@ OPTIONS
- --hide-call-graph::
-         When printing symbols do not display call chain.
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 5a520f8..b56b5c7 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -116,6 +116,10 @@ OPTIONS
+ 	Sample timestamps. Use it with 'perf report -D' to see the timestamps,
+ 	for instance.
  
 +--tod::
-+        Format for time-of-day strings. Format string is passed to
-+        strftime, so any format recognized by it can be used (see
-+        man strftime). Default format is "%H:%M:%S". Microseocnds
-+        are appended to the time string.
++	Collect data for time-of-day strings when printing events. This option
++	adds the realtime attribute to samples.
 +
- SEE ALSO
- --------
- linkperf:perf-record[1], linkperf:perf-script-perl[1],
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 9f5fc54..72c9a34 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -22,6 +22,8 @@ static u64			last_timestamp;
- static u64			nr_unordered;
- extern const struct option	record_options[];
- static bool			no_callchain;
-+static char default_tod_fmt[] = "%H:%M:%S";
-+static char *tod_fmt = default_tod_fmt;
- 
- enum perf_output_field {
- 	PERF_OUTPUT_COMM            = 1U << 0,
-@@ -32,6 +34,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_EVNAME          = 1U << 5,
- 	PERF_OUTPUT_TRACE           = 1U << 6,
- 	PERF_OUTPUT_SYM             = 1U << 7,
-+	PERF_OUTPUT_TIMEOFDAY       = 1U << 8,
- };
- 
- struct output_option {
-@@ -46,6 +49,7 @@ struct output_option {
- 	{.str = "event", .field = PERF_OUTPUT_EVNAME},
- 	{.str = "trace", .field = PERF_OUTPUT_TRACE},
- 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
-+	{.str = "tod",   .field = PERF_OUTPUT_TIMEOFDAY},
- };
- 
- /* default set to maintain compatibility with current format */
-@@ -102,9 +106,35 @@ static int perf_session__check_attr(struct perf_session *session,
- 		return -EINVAL;
+ -n::
+ --no-samples::
+ 	Don't sample.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 6febcc1..df15256 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -53,6 +53,7 @@ static bool			nodelay				=  false;
+ static bool			raw_samples			=  false;
+ static bool			sample_id_all_avail		=   true;
+ static bool			system_wide			=  false;
++static bool			want_tod			=  false;
+ static pid_t			target_pid			=     -1;
+ static pid_t			target_tid			=     -1;
+ static pid_t			child_pid			=     -1;
+@@ -214,6 +215,9 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
+ 		attr->sample_type	|= PERF_SAMPLE_CPU;
  	}
  
-+	if (PRINT_FIELD(TIMEOFDAY) &&
-+		!(session->sample_type & PERF_SAMPLE_REALTIME)) {
-+		pr_err("Samples do not contain realtime attribute.\n");
-+		pr_err("Was --tod used with perf-record?\n");
-+		return -EINVAL;
-+	}
++	if (want_tod)
++		attr->sample_type |= PERF_SAMPLE_REALTIME;
 +
- 	return 0;
- }
- 
-+static const char *timeofday_str(u64 realtime)
-+{
-+	static char buf[64];
-+	struct tm ltime;
-+	struct timeval tv;
-+
-+	buf[0] = '\0';
-+
-+	tv.tv_sec = realtime / NSEC_PER_SEC;
-+	tv.tv_usec = (realtime - tv.tv_sec * NSEC_PER_SEC) / 1000;
-+	if (localtime_r(&tv.tv_sec, &ltime) != NULL) {
-+		char date[128];
-+		strftime(date, sizeof(date), tod_fmt, &ltime);
-+		snprintf(buf, sizeof(buf), "%s.%06ld", date, tv.tv_usec);
-+	}
-+
-+	return buf;
-+}
-+
- static void print_sample_start(struct perf_sample *sample,
- 			       struct thread *thread,
- 			       struct perf_event_attr *attr)
-@@ -116,6 +146,9 @@ static void print_sample_start(struct perf_sample *sample,
- 	unsigned long usecs;
- 	unsigned long long nsecs;
- 
-+	if (PRINT_FIELD(TIMEOFDAY))
-+		printf("%s ", timeofday_str(sample->realtime));
-+
- 	if (PRINT_FIELD(COMM)) {
- 		if (latency_format)
- 			printf("%8.8s ", thread->comm);
-@@ -515,6 +548,49 @@ static int parse_output_fields(const struct option *opt __used,
- 	return rc;
- }
- 
-+static int parse_tod_format(const struct option *opt __used,
-+			    const char *arg, int unset __used)
-+{
-+	int i;
-+	char date[128];
-+	size_t rc;
-+	struct tm ltime;
-+
-+	if (strlen(arg) == 0) {
-+		pr_debug("Time-of-day strings will be suppressed\n");
-+		goto out;
-+	}
-+
-+	/* test input string for validity and length of output */
-+	localtime_r(0, &ltime);
-+	rc = strftime(date, sizeof(date), arg, &ltime);
-+	if (rc == 0) {
-+		fprintf(stderr, "Invalid format string for time-of-day\n");
-+		return -EINVAL;
-+	}
-+
-+out:
-+	for (i = 0; i < PERF_TYPE_MAX; ++i) {
-+		if (output_fields[i] == 0)
-+			continue;
-+		if (strlen(arg))
-+			output_fields[i] |= PERF_OUTPUT_TIMEOFDAY;
-+		else
-+			output_fields[i] &= ~PERF_OUTPUT_TIMEOFDAY;
-+	}
-+
-+	if (tod_fmt != default_tod_fmt)
-+		free(tod_fmt);
-+
-+	tod_fmt = strdup(arg);
-+	if (!tod_fmt) {
-+		fprintf(stderr, "Failed to copy time-of-day format string\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
- /* Helper function for filesystems that return a dent->d_type DT_UNKNOWN */
- static int is_directory(const char *base_path, const struct dirent *dent)
- {
-@@ -836,8 +912,11 @@ static const struct option options[] = {
- 	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
- 		    "Look for files with symbols relative to this directory"),
- 	OPT_CALLBACK('f', "fields", NULL, "str",
--		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace. Fields: comm,tid,pid,time,cpu,event,trace,sym",
-+		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace. Fields: tod,comm,tid,pid,time,cpu,event,trace,sym",
- 		     parse_output_fields),
-+	OPT_CALLBACK(0, "tod", NULL, "str",
-+		     "Format for time-of-day strings. Option is passed to strftime; microseconds are appended. Default is %H:%M:%S.",
-+		     parse_tod_format),
- 
- 	OPT_END()
- };
-@@ -1071,6 +1150,9 @@ int cmd_script(int argc, const char **argv, const char *prefix __used)
- 
- 	perf_session__delete(session);
- 	cleanup_scripting();
-+
-+	if (tod_fmt != default_tod_fmt)
-+		free(tod_fmt);
- out:
- 	return err;
- }
+ 	if (nodelay) {
+ 		attr->watermark = 0;
+ 		attr->wakeup_events = 1;
+@@ -764,6 +768,7 @@ const struct option record_options[] = {
+ 	OPT_BOOLEAN('d', "data", &sample_address,
+ 		    "Sample addresses"),
+ 	OPT_BOOLEAN('T', "timestamp", &sample_time, "Sample timestamps"),
++	OPT_BOOLEAN(0, "tod", &want_tod, "Collect data for Time-of-day strings."),
+ 	OPT_BOOLEAN('n', "no-samples", &no_samples,
+ 		    "don't sample"),
+ 	OPT_BOOLEAN('N', "no-buildid-cache", &no_buildid_cache,
 -- 
 1.7.4
