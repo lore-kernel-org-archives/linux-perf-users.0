@@ -1,86 +1,262 @@
-From: Lin Ming <minggr@gmail.com>
+From: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
 Subject: Re: What perf_event_paranoid can do?
-Date: Mon, 21 Mar 2011 21:51:16 +0800
-Message-ID: <AANLkTi=Z0Y6nsr-QOBCtLOJMJ_eQHyQ28CjTd4pUyujk@mail.gmail.com>
+Date: Tue, 22 Mar 2011 09:10:41 +0800
+Message-ID: <20110322011041.GA73124@cs.nctu.edu.tw>
 References: <20110321061435.GA52815@cs.nctu.edu.tw>
-	<AANLkTimJ36H76Z77AmauMWtZ9hOM62X1Y2jJa5H6fxWa@mail.gmail.com>
-	<20110321095643.GA57074@cs.nctu.edu.tw>
-	<AANLkTik3FT02nBPoKRh66hGA+bT7dPe2Vc0DK9HNmu7C@mail.gmail.com>
+ <AANLkTimJ36H76Z77AmauMWtZ9hOM62X1Y2jJa5H6fxWa@mail.gmail.com>
+ <20110321095643.GA57074@cs.nctu.edu.tw>
+ <AANLkTik3FT02nBPoKRh66hGA+bT7dPe2Vc0DK9HNmu7C@mail.gmail.com>
+ <AANLkTi=Z0Y6nsr-QOBCtLOJMJ_eQHyQ28CjTd4pUyujk@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Big5
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/mixed; boundary="VS++wcV0S1rZb1Fb"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:36819 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752925Ab1CUNxz convert rfc822-to-8bit (ORCPT
+Received: from csmailer.cs.nctu.edu.tw ([140.113.235.130]:39269 "EHLO
+	csmailer.cs.nctu.edu.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754880Ab1CVBKq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 21 Mar 2011 09:53:55 -0400
-Received: by iwn34 with SMTP id 34so6401594iwn.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2011 06:53:55 -0700 (PDT)
-In-Reply-To: <AANLkTik3FT02nBPoKRh66hGA+bT7dPe2Vc0DK9HNmu7C@mail.gmail.com>
+	Mon, 21 Mar 2011 21:10:46 -0400
+Content-Disposition: inline
+In-Reply-To: <AANLkTi=Z0Y6nsr-QOBCtLOJMJ_eQHyQ28CjTd4pUyujk@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, =?UTF-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
+To: Lin Ming <minggr@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
 
-2011/3/21 Lin Ming <minggr@gmail.com>:
-> 2011/3/21 =B3=AF=AD=B3=A5=F4 <chenwj@iis.sinica.edu.tw>:
->> Hi, Lin
->>
->>> It's used to control if some action is allowed or not for normal us=
-er.
->>> See comments at kernel/perf_event.c:
->>>
->>> /*
->>>  * perf event paranoia level:
->>>  *  -1 - not paranoid at all
->>>  *   0 - disallow raw tracepoint access for unpriv
->>>  *   1 - disallow cpu events for unpriv
->>>  *   2 - disallow kernel profiling for unpriv
->>>  */
->>
->>  I assume -1 give normal user the most high level privilege,
->> but it doesn't work. I have tried -1 through 2, but none of
->> them works. Any suggestion? Or maybe the event "branches" does
->> not support PBES modifier (pp)?
->
-> In x86_setup_perfctr:
->
->        /*
->         * Branch tracing:
->         */
->        if ((attr->config =3D=3D PERF_COUNT_HW_BRANCH_INSTRUCTIONS) &&
->            (hwc->sample_period =3D=3D 1)) {
->                /* BTS is not supported by this architecture. */
->                if (!x86_pmu.bts_active)
->                        return -EOPNOTSUPP;
->
->                /* BTS is currently only allowed for user-mode. */
->                if (!attr->exclude_kernel)
->                        return -EOPNOTSUPP;
->        }
->
-> Does your CPU support PEBS? Please attach below output.
->
-> dmesg |grep "Performance Events"
 
-And also "cat /proc/cpuinfo"
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Lin Ming
+Hi, Lin
 
+> > Does your CPU support PEBS? Please attach below output.
+> >
+> > dmesg |grep "Performance Events"
 >
-> Lin Ming
->
->>
->>  Thanks!
->>
->> Regards,
->> chenwj
->>
->> --
->> Wei-Ren Chen (=B3=AF=AD=B3=A5=F4)
->> Parallel Processing Lab, Institute of Information Science,
->> Academia Sinica, Taiwan (R.O.C.)
->> Tel:886-2-2788-3799 #1667
->>
->
+> And also "cat /proc/cpuinfo"
+
+  The attachment are output of dmesg and cpuinfo. Thanks.
+
+Regards,
+chenwj
+
+--=20
+Wei-Ren Chen (=E9=99=B3=E9=9F=8B=E4=BB=BB)
+Parallel Processing Lab, Institute of Information Science,
+Academia Sinica, Taiwan (R.O.C.)
+Tel:886-2-2788-3799 #1667
+
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename="dmesg.txt"
+
+Performance Events: PEBS fmt0+, Core2 events, Intel PMU driver.
+
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename="cpuinfo.txt"
+
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4657.13
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 1
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 1
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.96
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 1
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4509.06
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Xeon(R) CPU           E5410  @ 2.33GHz
+stepping	: 6
+cpu MHz		: 2327.585
+cache size	: 6144 KB
+physical id	: 1
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 lahf_lm dts tpr_shadow vnmi flexpriority
+bogomips	: 4656.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 38 bits physical, 48 bits virtual
+power management:
+
+
+--VS++wcV0S1rZb1Fb--
