@@ -1,36 +1,46 @@
-From: Arun Sharma <arun@sharma-home.net>
-Subject: from perf_trace_context import fails?
-Date: Tue, 22 Mar 2011 18:04:41 -0700
-Message-ID: <AANLkTikzNfTyHHgL5QiqSwXJvd-rGqCOx1MkizkqPuOw@mail.gmail.com>
+From: =?utf-8?B?6Zmz6Z+L5Lu7?= <chenwj@iis.sinica.edu.tw>
+Subject: Re: perf script and raw events?
+Date: Wed, 23 Mar 2011 09:25:52 +0800
+Message-ID: <20110323012552.GA2080@cs.nctu.edu.tw>
+References: <20110322224116.GA3794@dev1756.snc6.facebook.com>
+ <4D892E0E.3010505@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:54622 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753997Ab1CWBEm (ORCPT
+Received: from csmailer.cs.nctu.edu.tw ([140.113.235.130]:43833 "EHLO
+	csmailer.cs.nctu.edu.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752660Ab1CWBZz convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 22 Mar 2011 21:04:42 -0400
-Received: by mail-iw0-f174.google.com with SMTP id 34so8039436iwn.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2011 18:04:42 -0700 (PDT)
+	Tue, 22 Mar 2011 21:25:55 -0400
+Content-Disposition: inline
+In-Reply-To: <4D892E0E.3010505@cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: David Ahern <daahern@cisco.com>
+Cc: Arun Sharma <asharma@fb.com>, linux-perf-users@vger.kernel.org
 
-I built/installed perf from the perf/urgent branch on
-x86/linux-2.6-tip tree and I get:
+Hi,
 
-# perf script -g python
-generated Python script: perf-script.py
-# echo $PERF_EXEC_PATH
-/usr/libexec/perf-core
-# python perf-script.py
-Traceback (most recent call last):
-  File "perf-script.py", line 16, in <module>
-    from perf_trace_context import *
-ImportError: No module named perf_trace_context
+> What is that raw event? Where do you find the encodings for raw event=
+s?
 
-It didn't look like Context.o is getting installed in
-/usr/libexec/perf-core. Am I doing something wrong or is this work in
-progress?
+  You can try libpfm4.
 
--Arun
+$ git clone git://perfmon2.git.sourceforge.net/gitroot/perfmon2/libpfm4
+
+  `showevtinfo` in libpfm4/examples/ lists all events supported by the
+CPU, including raw events.
+
+  `evt2raw` in libpfm4/perf_examples converts event names into raw even=
+t
+recognized by perf.
+
+Regards,
+chenwj
+
+--=20
+Wei-Ren Chen (=E9=99=B3=E9=9F=8B=E4=BB=BB)
+Parallel Processing Lab, Institute of Information Science,
+Academia Sinica, Taiwan (R.O.C.)
+Tel:886-2-2788-3799 #1667
