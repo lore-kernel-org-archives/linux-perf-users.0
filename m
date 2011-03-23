@@ -1,39 +1,35 @@
-From: john smith <whalajam@yahoo.com>
-Subject: unresoved function addresses for loadable module
-Date: Wed, 23 Mar 2011 11:11:09 -0700 (PDT)
-Message-ID: <859170.98017.qm@web161917.mail.bf1.yahoo.com>
+From: Arun Sharma <arun@sharma-home.net>
+Subject: Re: from perf_trace_context import fails?
+Date: Wed, 23 Mar 2011 12:29:26 -0700
+Message-ID: <AANLkTim9yL1UdGAR5CvhtxTPHXeJCRnGmV+g=4gejg2M@mail.gmail.com>
+References: <AANLkTikzNfTyHHgL5QiqSwXJvd-rGqCOx1MkizkqPuOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from nm12-vm1.bullet.mail.bf1.yahoo.com ([98.139.213.38]:40494 "HELO
-	nm12-vm1.bullet.mail.bf1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1754946Ab1CWSRr (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:47945 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756546Ab1CWT31 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 Mar 2011 14:17:47 -0400
+	Wed, 23 Mar 2011 15:29:27 -0400
+Received: by iwn34 with SMTP id 34so8879689iwn.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2011 12:29:26 -0700 (PDT)
+In-Reply-To: <AANLkTikzNfTyHHgL5QiqSwXJvd-rGqCOx1MkizkqPuOw@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Please help, I'm trying to get the counters/events for a loadable module but I'm not getting my functions (names) profiled in the output (addresses instead).
-I've tried:
+On Tue, Mar 22, 2011 at 6:04 PM, Arun Sharma <arun@sharma-home.net> wro=
+te:
 
-perf report --verbose --dso='[module-name]'
-perf report -k /usr/src/vmlinux --dso='[module-name]'
-(same result as above: perf report -d /usr/src/module-path/module-name.ko)
-perf report --sort comm,dso,symbol
-perf report -d /usr/src/module-path/module-name.ko --sort comm,dso,symbol
+> # python perf-script.py
+> Traceback (most recent call last):
+> =C2=A0File "perf-script.py", line 16, in <module>
+> =C2=A0 =C2=A0from perf_trace_context import *
+> ImportError: No module named perf_trace_context
 
-This 'annotate' command produce no output (as symbol is not found):
-perf annotate -l -d /usr/src/module-path/module-name.ko -m -s module-function
+My bad. I forgot to run this as:
 
-What are the correct options for 'report' and 'annotate' commands that reports the module's functions? 
+perf script -s perf-script.py
 
-Also, there must be an option (not showing in the --help but mentioned in design doc) to selectively record the counters for user or kernel space only,
-
-thanks,
-John
-
-
-
-
-      
+-Arun
