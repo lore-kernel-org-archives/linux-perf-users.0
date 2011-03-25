@@ -1,44 +1,83 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: [PATCH] perf tools: Emit clearer message for sys_perf_event_open
- ENOENT return
-Date: Fri, 25 Mar 2011 15:37:45 -0300
-Message-ID: <20110325183745.GF13180@ghostprotocols.net>
-References: <1301076350-19593-1-git-send-email-daahern@cisco.com>
- <20110325180840.GE13180@ghostprotocols.net>
- <4D8CDE61.6050400@cisco.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH] perf tools: Emit clearer message for sys_perf_event_open ENOENT return
+Date: Fri, 25 Mar 2011 13:11:11 -0600
+Message-ID: <1301080271-20945-1-git-send-email-daahern@cisco.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:39995 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754693Ab1CYShv (ORCPT
+Received: from sj-iport-3.cisco.com ([171.71.176.72]:21180 "EHLO
+	sj-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751653Ab1CYTLQ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 25 Mar 2011 14:37:51 -0400
-Content-Disposition: inline
-In-Reply-To: <4D8CDE61.6050400@cisco.com>
+	Fri, 25 Mar 2011 15:11:16 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <daahern@cisco.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
 
-Em Fri, Mar 25, 2011 at 12:26:41PM -0600, David Ahern escreveu:
-> On 03/25/11 12:08, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Mar 25, 2011 at 12:05:50PM -0600, David Ahern escreveu:
-> >> Resend of patch sent back in January 2011 in light of recent confusion around
-> >> unsupported events for a given platform.
-> >>
-> >> Improve sys_perf_event_open ENOENT return handling in top and record, just
-> >> like 5a3446b does for stat.
-> >>
-> >> Retry of Arnaldo's patch using error instead of die which allows the fallback
-> >> from hardware cycles to software clock.
-> > 
-> > Please use ui__warning(""...) as it will work in the TUI too.
-> 
-> error() is consistent with current pattern. Is ui__warning the
-> preference for new messages? Is that for perf-top only?
+Resend of patch sent back in January 2011 in light of recent confusion around
+unsupported events for a given platform.
 
-Yes, it is, it takes care of using TUI of doing it like error() does.
-Eventually error(), etc will go away.
+Improve sys_perf_event_open ENOENT return handling in top and record, just
+like 5a3446b does for stat.
 
-- Arnaldo
+Retry of Arnaldo's patch using ui_warning instead of die which allows the
+fallback from hardware cycles to software clock.
+
+Signed-off-by: David Ahern <daahern@cisco.com>
+---
+ tools/perf/builtin-record.c |    7 +++++++
+ tools/perf/builtin-top.c    |    8 ++++++++
+ 2 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 6febcc1..cac275e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -282,6 +282,9 @@ try_again:
+ 			else if (err ==  ENODEV && cpu_list) {
+ 				die("No such device - did you specify"
+ 					" an out-of-range profile CPU?\n");
++			} else if (err ==  ENOENT) {
++				ui__warning("%s event is not supported.\n",
++					    event_name(pos));
+ 			} else if (err == EINVAL && sample_id_all_avail) {
+ 				/*
+ 				 * Old kernel, no attr->sample_id_type_all field
+@@ -307,6 +310,10 @@ try_again:
+ 				attr->config = PERF_COUNT_SW_CPU_CLOCK;
+ 				goto try_again;
+ 			}
++
++			if (err == ENOENT)
++				exit(1);
++
+ 			printf("\n");
+ 			error("sys_perf_event_open() syscall returned with %d (%s).  /bin/dmesg may provide additional information.\n",
+ 			      err, strerror(err));
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 80c9e06..109e1a0 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -852,6 +852,10 @@ try_again:
+ 				die("Permission error - are you root?\n"
+ 					"\t Consider tweaking"
+ 					" /proc/sys/kernel/perf_event_paranoid.\n");
++			else if (err == ENOENT)
++				ui__warning("%s event is not supported.\n",
++					    event_name(counter));
++
+ 			/*
+ 			 * If it's cycles then fall back to hrtimer
+ 			 * based cpu-clock-tick sw counter, which
+@@ -867,6 +871,10 @@ try_again:
+ 				attr->config = PERF_COUNT_SW_CPU_CLOCK;
+ 				goto try_again;
+ 			}
++
++			if (err == ENOENT)
++				exit(1);
++
+ 			printf("\n");
+ 			error("sys_perf_event_open() syscall returned with %d "
+ 			      "(%s).  /bin/dmesg may provide additional information.\n",
+-- 
+1.7.4
