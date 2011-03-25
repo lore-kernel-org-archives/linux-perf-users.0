@@ -1,34 +1,76 @@
-From: Kumar Ranjit-B04060 <B04060@freescale.com>
-Subject: Perf on Freescale P4080
-Date: Fri, 25 Mar 2011 13:23:38 +0000
-Message-ID: <8CB5FB7FBAFD274A8E92A53BBAFE339D0B6C9B@039-SN1MPN1-003.039d.mgd.msft.net>
-References: <AANLkTikzNfTyHHgL5QiqSwXJvd-rGqCOx1MkizkqPuOw@mail.gmail.com>
- <AANLkTim9yL1UdGAR5CvhtxTPHXeJCRnGmV+g=4gejg2M@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from ch1outboundpool.messaging.microsoft.com ([216.32.181.184]:1604
-	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752159Ab1CYNio (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 25 Mar 2011 09:38:44 -0400
-Received: from mail156-ch1 (localhost.localdomain [127.0.0.1])	by
- mail156-ch1-R.bigfish.com (Postfix) with ESMTP id 7D59619A83BA	for
- <linux-perf-users@vger.kernel.org>; Fri, 25 Mar 2011 13:23:41 +0000 (UTC)
-Received: from CH1EHSMHS003.bigfish.com (snatpool1.int.messaging.microsoft.com
- [10.43.68.246])	by mail156-ch1.bigfish.com (Postfix) with ESMTP id
- 5A5831CA0053	for <linux-perf-users@vger.kernel.org>; Fri, 25 Mar 2011
- 13:23:41 +0000 (UTC)
-In-Reply-To: <AANLkTim9yL1UdGAR5CvhtxTPHXeJCRnGmV+g=4gejg2M@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+From: David Ahern <daahern@cisco.com>
+Subject: [PATCH] perf tools: Emit clearer message for sys_perf_event_open ENOENT return
+Date: Fri, 25 Mar 2011 12:05:50 -0600
+Message-ID: <1301076350-19593-1-git-send-email-daahern@cisco.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <daahern@cisco.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-SSBhbSBhYmxlIHRvIHJ1biBtb3N0IG9mIHRoZSB0aGluZ3MgbGlrZSBzdGF0LHJlY29yZCxyZXBv
-cnQuLi5CdXQgSSBhbSBub3QgYWJsZSB0byBnZXQgdHJhY2UuIC4vcGVyZiB0cmFjZSBpcyBub3Qg
-d29ya2luZyBmb3IgbWUuIEl0cyBwcmludGluZyBub3RoaW5nIHRob3VnaCBJIGhhdmUgcGVyZi5k
-YXRhIGluIHRoZSBzYW1lIGRpcmVjdG9yeS4NCg0KUmVnYXJkcw0KUmFuaml0IEt1bWFyDQpTeXN0
-ZW0gUGVyZm9ybWFuY2UgQW5hbHlzaXMgR3JvdXANCkZyZWVzY2FsZSBTZW1pY29uZHVjdG9ycw0K
-SW5kaWENCg0KDQoNCg0K
+Resend of patch sent back in January 2011 in light of recent confusion around
+unsupported events for a given platform.
+
+Improve sys_perf_event_open ENOENT return handling in top and record, just
+like 5a3446b does for stat.
+
+Retry of Arnaldo's patch using error instead of die which allows the fallback
+from hardware cycles to software clock.
+
+Signed-off-by: David Ahern <daahern@cisco.com>
+---
+ tools/perf/builtin-record.c |    6 ++++++
+ tools/perf/builtin-top.c    |    7 +++++++
+ 2 files changed, 13 insertions(+), 0 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 6febcc1..73fa8b7 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -282,6 +282,8 @@ try_again:
+ 			else if (err ==  ENODEV && cpu_list) {
+ 				die("No such device - did you specify"
+ 					" an out-of-range profile CPU?\n");
++			} else if (err ==  ENOENT) {
++				error("%s event is not supported.", event_name(pos));
+ 			} else if (err == EINVAL && sample_id_all_avail) {
+ 				/*
+ 				 * Old kernel, no attr->sample_id_type_all field
+@@ -307,6 +309,10 @@ try_again:
+ 				attr->config = PERF_COUNT_SW_CPU_CLOCK;
+ 				goto try_again;
+ 			}
++
++			if (err == ENOENT)
++				exit(1);
++
+ 			printf("\n");
+ 			error("sys_perf_event_open() syscall returned with %d (%s).  /bin/dmesg may provide additional information.\n",
+ 			      err, strerror(err));
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 80c9e06..ab27693 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -852,6 +852,9 @@ try_again:
+ 				die("Permission error - are you root?\n"
+ 					"\t Consider tweaking"
+ 					" /proc/sys/kernel/perf_event_paranoid.\n");
++			else if (err == ENOENT)
++				error("%s event is not supported.", event_name(counter));
++
+ 			/*
+ 			 * If it's cycles then fall back to hrtimer
+ 			 * based cpu-clock-tick sw counter, which
+@@ -867,6 +870,10 @@ try_again:
+ 				attr->config = PERF_COUNT_SW_CPU_CLOCK;
+ 				goto try_again;
+ 			}
++
++			if (err == ENOENT)
++				exit(1);
++
+ 			printf("\n");
+ 			error("sys_perf_event_open() syscall returned with %d "
+ 			      "(%s).  /bin/dmesg may provide additional information.\n",
+-- 
+1.7.4
