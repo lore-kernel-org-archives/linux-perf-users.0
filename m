@@ -1,257 +1,106 @@
-From: David Ahern <daahern@cisco.com>
-Subject: [PATCH v2] perf script: improve validation of sample attributes for output fields
-Date: Wed,  6 Apr 2011 21:54:20 -0600
-Message-ID: <1302148460-570-1-git-send-email-daahern@cisco.com>
+From: Kumar Ranjit-B04060 <B04060@freescale.com>
+Subject: perf trace
+Date: Mon, 18 Apr 2011 03:43:22 +0000
+Message-ID: <8CB5FB7FBAFD274A8E92A53BBAFE339D0BB25C@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <AANLkTi=pRKpdupEcXS0FmOA-PiAiXHWPYwWxN4F27fFC@mail.gmail.com>
+ <AANLkTikXKDiyf7Q=mY_ez2P3OSw23VaRMdKcF_M-KCc0@mail.gmail.com>
+ <AANLkTi=VrazJpV+dpzX2hWJ8dYDgbdo_5FAOMRYRo0GD@mail.gmail.com>
+ <AANLkTi=A5hkUE0xna5zmuXGt=LvMS_C41whzwM0-nUNs@mail.gmail.com>
+ <4D8DE695.3000606@gmail.com>
+ <AANLkTiktVqjaaNRm7EaCTJMsYsQnKUWrekDqF4r7YW7=@mail.gmail.com>
+ <4D8DF6E4.1070804@gmail.com>
+ <AANLkTik4RrEh8wgj+TXB1DYZtfn1Wp3iMiZs-XZBrsRG@mail.gmail.com>
+ <4D8EB605.7070407@gmail.com>
+ <AANLkTi=JefJqiUdvZ+r+sS25+bbDG_c6M8825xKpSUnu@mail.gmail.com>
+ <4D8FA787.7020308@gmail.com>
+ <AANLkTinvS527WGa7+tYo7pqgZj1dSviY0HrLo=2XGqT-@mail.gmail.com>
+ <loom.20110329T185259-431@post.gmane.org> <4D923B8D.1020204@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from sj-iport-6.cisco.com ([171.71.176.117]:32650 "EHLO
-	sj-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756569Ab1DGDyY (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 6 Apr 2011 23:54:24 -0400
+Received: from ch1outboundpool.messaging.microsoft.com ([216.32.181.183]:3473
+	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752016Ab1DRDnZ convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Sun, 17 Apr 2011 23:43:25 -0400
+In-Reply-To: <4D923B8D.1020204@gmail.com>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, David Ahern <daahern@cisco.com>
+To: David Ahern <dsahern@gmail.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, baozhao <baozhao@gmail.com>
 
-Check for required sample attributes using evsel rather than sample_type in
-the session header. If the attribute for a default field is not present
-for the event type (e.g., new command operating on file from older kernel)
-the field is removed from the output list.
+Hi David
+I need to generate instruction trace for Freescale e500mc core. Please tell me whether I can use perf for that. 
+If yes then please tell me some steps to do that.
+Regards
+Ranjit
 
-Expected event types must exist. For example, if a user specifies
+-----Original Message-----
+From: linux-perf-users-owner@vger.kernel.org [mailto:linux-perf-users-owner@vger.kernel.org] On Behalf Of David Ahern
+Sent: Wednesday, March 30, 2011 1:36 AM
+To: baozhao
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: Fwd: perf trace cannot work with software events ?
 
-  -f trace:time,trace -f sw:time,cpu,sym
 
-the perf.data file must contain both tracepoints and software events
-(ie., it is an error if either does not exist in the file).
 
-Attribute checking is done once at the beginning of perf-script rather than
-for each sample.
+On 03/29/11 10:55, baozhao wrote:
+> zhao bao <baozhao <at> gmail.com> writes:
+> 
+> 
+>> I applyed this patch in the builtin-script.c , recompile and install 
+>> it. But I found it still doesn't  show any CR2 address info. The 
+>> patch seems to list a addr column, but perf script still work as before.
+> 
+>  Hi, I think I find the problem.
+> In builtin-script.c,   array output_fields should also be
+> changed,PERF_OUTPUT_ADDR should added to  [PERF_TYPE_SOFTWARE],  am I 
+> right?
 
-v1 -> v2:
-- addressed comments from acme
+The defaults do need to better detect when it exists. Until then you can add addr to the --fields option.
 
-Signed-off-by: David Ahern <daahern@cisco.com>
----
- tools/perf/builtin-script.c |  111 ++++++++++++++++++++++++++++++++++++-------
- tools/perf/util/session.c   |   12 +++++
- tools/perf/util/session.h   |    3 +
- 3 files changed, 109 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6cf811a..888fc6f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -51,6 +51,7 @@ struct output_option {
- /* default set to maintain compatibility with current format */
- static struct {
- 	bool user_set;
-+	bool wildcard_set;
- 	u64 fields;
- 	u64 invalid_fields;
- } output[PERF_TYPE_MAX] = {
-@@ -94,41 +95,113 @@ static bool output_set_by_user(void)
- 	return false;
- }
- 
-+static const char *output_field2str(enum perf_output_field field)
-+{
-+	int i, imax = ARRAY_SIZE(all_output_options);
-+	const char *str = "";
-+
-+	for (i = 0; i < imax; ++i) {
-+		if (all_output_options[i].field == field) {
-+			str = all_output_options[i].str;
-+			break;
-+		}
-+	}
-+	return str;
-+}
-+
- #define PRINT_FIELD(x)  (output[attr->type].fields & PERF_OUTPUT_##x)
- 
--static int perf_session__check_attr(struct perf_session *session,
--				    struct perf_event_attr *attr)
-+static int perf_event_attr__check_stype(struct perf_event_attr *attr,
-+				  u64 sample_type, const char *sample_msg,
-+				  enum perf_output_field field)
- {
-+	int type = attr->type;
-+	const char *evname;
-+
-+	if (attr->sample_type & sample_type)
-+		return 0;
-+
-+	if (output[type].user_set) {
-+		evname = __event_name(attr->type, attr->config);
-+		pr_err("Samples for '%s' event do not have %s attribute set. "
-+		       "Cannot print '%s' field.\n",
-+		       evname, sample_msg, output_field2str(field));
-+		return -1;
-+	}
-+
-+	/* user did not ask for it explicitly so remove from the default list */
-+	output[type].fields &= ~field;
-+	evname = __event_name(attr->type, attr->config);
-+	pr_debug("Samples for '%s' event do not have %s attribute set. "
-+		 "Skipping '%s' field.\n",
-+		 evname, sample_msg, output_field2str(field));
-+
-+	return 0;
-+}
-+
-+static int perf_evsel__check_attr(struct perf_evsel *evsel,
-+				  struct perf_session *session)
-+{
-+	struct perf_event_attr *attr = &evsel->attr;
-+
- 	if (PRINT_FIELD(TRACE) &&
- 		!perf_session__has_traces(session, "record -R"))
- 		return -EINVAL;
- 
- 	if (PRINT_FIELD(SYM)) {
--		if (!(session->sample_type & PERF_SAMPLE_IP)) {
--			pr_err("Samples do not contain IP data.\n");
-+		if (perf_event_attr__check_stype(attr, PERF_SAMPLE_IP, "IP",
-+					   PERF_OUTPUT_SYM))
- 			return -EINVAL;
--		}
-+
- 		if (!no_callchain &&
--		    !(session->sample_type & PERF_SAMPLE_CALLCHAIN))
-+		    !(attr->sample_type & PERF_SAMPLE_CALLCHAIN))
- 			symbol_conf.use_callchain = false;
- 	}
- 
- 	if ((PRINT_FIELD(PID) || PRINT_FIELD(TID)) &&
--		!(session->sample_type & PERF_SAMPLE_TID)) {
--		pr_err("Samples do not contain TID/PID data.\n");
-+		perf_event_attr__check_stype(attr, PERF_SAMPLE_TID, "TID",
-+				       PERF_OUTPUT_TID|PERF_OUTPUT_PID))
- 		return -EINVAL;
--	}
- 
- 	if (PRINT_FIELD(TIME) &&
--		!(session->sample_type & PERF_SAMPLE_TIME)) {
--		pr_err("Samples do not contain timestamps.\n");
-+		perf_event_attr__check_stype(attr, PERF_SAMPLE_TIME, "TIME",
-+				       PERF_OUTPUT_TIME))
- 		return -EINVAL;
--	}
- 
- 	if (PRINT_FIELD(CPU) &&
--		!(session->sample_type & PERF_SAMPLE_CPU)) {
--		pr_err("Samples do not contain cpu.\n");
-+		perf_event_attr__check_stype(attr, PERF_SAMPLE_CPU, "CPU",
-+				       PERF_OUTPUT_CPU))
- 		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* 
-+ * verify all user requested events exist and the samples
-+ * have the expected data
-+ */
-+static int perf_session__check_output_opt(struct perf_session *session)
-+{
-+	int j;
-+	struct perf_evsel *evsel;
-+
-+	for (j = 0; j < PERF_TYPE_MAX; ++j) {
-+		evsel = perf_session__find_first_evtype(session, j);
-+
-+		/* 
-+		 * even if fields is set to 0 (ie., show nothing) event must
-+		 * exist if user explicitly includes it on the command line
-+		 */
-+		if (!evsel && output[j].user_set && !output[j].wildcard_set) {
-+			pr_err("%s events do not exist. "
-+			       "Remove corresponding -f option to proceed.\n",
-+			       event_type(j));
-+			return -1;
-+		}
-+
-+		if (evsel && output[j].fields &&
-+			perf_evsel__check_attr(evsel, session))
-+			return -1;
- 	}
- 
- 	return 0;
-@@ -200,9 +273,6 @@ static void process_event(union perf_event *event __unused,
- 	if (output[attr->type].fields == 0)
- 		return;
- 
--	if (perf_session__check_attr(session, attr) < 0)
--		return;
--
- 	print_sample_start(sample, thread, attr);
- 
- 	if (PRINT_FIELD(TRACE))
-@@ -513,6 +583,7 @@ static int parse_output_fields(const struct option *opt __used,
- 
- 		output[type].fields = 0;
- 		output[type].user_set = true;
-+		output[type].wildcard_set = false;
- 
- 	} else {
- 		tok = str;
-@@ -529,6 +600,7 @@ static int parse_output_fields(const struct option *opt __used,
- 		for (j = 0; j < PERF_TYPE_MAX; ++j) {
- 			output[j].fields = 0;
- 			output[j].user_set = true;
-+			output[j].wildcard_set = true;
- 		}
- 	}
- 
-@@ -1133,6 +1205,11 @@ int cmd_script(int argc, const char **argv, const char *prefix __used)
- 		pr_debug("perf script started with script %s\n\n", script_name);
- 	}
- 
-+
-+	err = perf_session__check_output_opt(session);
-+	if (err < 0)
-+		goto out;
-+
- 	err = __cmd_script(session);
- 
- 	perf_session__delete(session);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index caa2245..fff6674 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1156,6 +1156,18 @@ size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp)
- 	return ret;
- }
- 
-+struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
-+					      unsigned int type)
-+{
-+	struct perf_evsel *pos;
-+
-+	list_for_each_entry(pos, &session->evlist->entries, node) {
-+		if (pos->attr.type == type)
-+			return pos;
-+	}
-+	return NULL;
-+}
-+
- void perf_session__print_symbols(union perf_event *event,
- 				struct perf_sample *sample,
- 				struct perf_session *session)
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 1ac481f..8daaa2d 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -162,6 +162,9 @@ static inline int perf_session__parse_sample(struct perf_session *session,
- 					session->sample_id_all, sample);
- }
- 
-+struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
-+					    unsigned int type);
-+
- void perf_session__print_symbols(union perf_event *event,
- 				 struct perf_sample *sample,
- 				 struct perf_session *session);
--- 
-1.7.4
+> 
+> static u64 output_fields[PERF_TYPE_MAX] = {
+>        ....
+>       [PERF_TYPE_SOFTWARE] = PERF_OUTPUT_COMM | PERF_OUTPUT_TID | \
+>                               PERF_OUTPUT_CPU | PERF_OUTPUT_TIME | \
+>                               PERF_OUTPUT_EVNAME | PERF_OUTPUT_SYM | \
+>                               PERF_OUTPUT_ADDR,
+> 
+> 
+> Here is the output:
+> [root@localhost lab]#  /root/bin/perf script
+>           hello  2229 [000]  1339.388865: page-faults: 0x804963c
+>   c05ccbb3 clear_user ([kernel.kallsyms])
+>           hello  2229 [000]  1339.388898: page-faults: 0x670834
+>  c05ccbb3 clear_user ([kernel.kallsyms])
+>           hello  2229 [000]  1339.388915: page-faults: 0xbf905d6b
+>    c05cc70c __copy_to_user_ll ([kernel.kallsyms])
+>           hello  2229 [000]  1339.388945: page-faults: 0x652870
+>       870 _start (/lib/ld-2.13.so)
+>           hello  2229 [000]  1339.388950: page-faults: 0x656920
+>      4920 _dl_start (/lib/ld-2.13.so)
+>           hello  2229 [000]  1339.388954: page-faults: 0x669acb
+>     17acb __i686.get_pc_thunk.bx (/lib/ld-2.13.so)
+>           hello  2229 [000]  1339.388958: page-faults: 0x66fe54
+>      4939 _dl_start (/lib/ld-2.13.so)
+
+And per another thread we can look at converting the sample addresses to symbols/dsos.
+
+David
+
+
+> 
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-perf-users" in the body of a message to 
+> majordomo@vger.kernel.org More majordomo info at  
+> http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in the body of a message to majordomo@vger.kernel.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
