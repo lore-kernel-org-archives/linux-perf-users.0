@@ -1,33 +1,36 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: Re: Non core PMU support
-Date: Wed, 20 Apr 2011 16:21:27 -0700
-Message-ID: <20110420232127.GA651@radium.snc4.facebook.com>
-References: <1303246041.6382.8.camel@carll-linux-laptop2.ibm.com>
+From: Francis Moreau <francis.moro@gmail.com>
+Subject: how to get a kernel callgraph starting from a syscall
+Date: Thu, 21 Apr 2011 09:46:49 +0200
+Message-ID: <BANLkTikNDX4hYpLjgDnPx8SXFvsv8Syr9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from outmail007.snc4.facebook.com ([66.220.144.139]:41991 "EHLO
-	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1752292Ab1DTXVc (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:33930 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753006Ab1DUHqt (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 20 Apr 2011 19:21:32 -0400
-Content-Disposition: inline
-In-Reply-To: <1303246041.6382.8.camel@carll-linux-laptop2.ibm.com>
+	Thu, 21 Apr 2011 03:46:49 -0400
+Received: by pxi2 with SMTP id 2so1135138pxi.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Apr 2011 00:46:49 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Carl E. Love" <cel@us.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 19, 2011 at 01:47:21PM -0700, Carl E. Love wrote:
-> 
-> I have not found any recent work on adding uncore PMUs to perf.  Can
-> anyone tell me what the current approach is to supporting uncore PMUs?
-> Any pointers on how to add an uncore PMU would be appreciated.
+Hello,
 
-If you install libpfm4 + my patch to perf posted here:
+Sorry if the question is dumb but I'm a bit lost about this.
 
-http://article.gmane.org/gmane.comp.linux.perfmon2.devel/2912/raw
+I know that ftrace exists but I think that perf can do this too: I
+have a userspace application which is calling a libc C function (read)
+which ends up doing a sys_read.
 
-You'll be able to use the uncore events by name.
+For the sys_read, I'd like to see what's happening in the kernel by
+displaying the call graph.
 
- -Arun
+Can perf do that ?
+
+If so, would it be possible to point me out the perf command to use ?
+
+Thanks
+-- 
+Francis
