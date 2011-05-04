@@ -1,43 +1,110 @@
-From: ken leo <kenleocompany01@gmail.com>
-Subject: (unknown)
-Date: Tue, 3 May 2011 09:03:52 -0700
-Message-ID: <BANLkTikkcgfy6CHmMchHsM0nD4RiDbnhHw@mail.gmail.com>
+From: Lin Ming <ming.m.lin@intel.com>
+Subject: Re: vmlinux buildid doesn't match the running one
+ (/sys/kernel/notes)
+Date: Wed, 04 May 2011 21:12:25 +0800
+Message-ID: <1304514745.2624.3.camel@localhost>
+References: <BANLkTim+kr6TYdkuh=bugJaNmSnLE0h-8Q@mail.gmail.com>
+	 <BANLkTikfDmsZ056G+Eht2BbNH4GVBokXzw@mail.gmail.com>
+	 <BANLkTikauRD6CF3MuBmuvQqJAuDPHE2x-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-13
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:59964 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751680Ab1ECQD5 convert rfc822-to-8bit (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:15300 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753196Ab1EDNMY (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 May 2011 12:03:57 -0400
-Received: by bwz15 with SMTP id 15so241984bwz.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2011 09:03:55 -0700 (PDT)
-Subject: 
+	Wed, 4 May 2011 09:12:24 -0400
+In-Reply-To: <BANLkTikauRD6CF3MuBmuvQqJAuDPHE2x-Q@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
+To: francis.moro@gmail.com
+Cc: linux-perf-users@vger.kernel.org
 
-Gera diena
 
-Mes si=FBlome paskolas atskiroms bendrov=EBms ir pig=FBs
-3% norma, asmenini=F8 ir investicijas, mes si=FBlome paskola
-$ 5,000.00 iki $ 100,000,000.00 doleri=F8 mus gr=E1=FEti prie m=FBs=F8 =
-su tikslios sumos
-jums reikia.
-Pra=F0ome u=FEpildyti ir gr=E0=FEinti =F0i=E0 form=E0 nor=EBdami t=E6st=
-i.
+> From: Francis Moreau <francis.moro@gmail.com>
+> Date: Mon, May 2, 2011 at 3:02 AM
+> Subject: Re: vmlinux buildid doesn't match the running one (/sys/kernel/notes)
+> To: linux-perf-users@vger.kernel.org
+> 
+> 
+> Hi,
+> 
+> Sorry for asking again but I would be really greatfull is someone can
+> tell me what's wrong when using a kernel that I compiled by my own.
+> 
+> I do not have that issue is I use the kernel shipped by my distro (FC14).
+> 
+> Thanks
+> 
+> On Thu, Apr 28, 2011 at 7:04 PM, Francis Moreau <francis.moro@gmail.com> wrote:
+> > Hello,
+> >
+> > I'm trying to use perf-probe, but it fails.
+> >
+> > Basically it's due to the buildid of the running kernel (the one which
+> > can be read from /sys/kernel/notes) and the one in vmlinx (which I
+> > compiled my self).
+> >
+> > I did this:
+> >
+> >  $ make
+> >  $ make modules_install install
+> >  $ ls vmlinux
+> >  vmlinux
+> >
+> > reboot
 
-Vardas, pavard=EB: _
-Kredito paskirtis: _
-Am=FEius: _
-Lytis: _
-Adresas: _
-=D0alis: _
-=C1mon=EBs pavadinimas: _
-Pareigos: _
-Telefonas: _
-reikalinga suma, kaip paskola: _
-Trukm=EB: _
+Could you make sure you indeed reboot with the new kernel running?
 
-Jei esate interested.contact su mumis =FEemiau
-E-mail: Brucefastfunds09@gmail.com
+Use below patch to dump the 2 build_ids.
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 516876d..4b66c1c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1036,6 +1036,15 @@ static size_t elf_addr_to_index(Elf *elf, GElf_Addr addr)
+ 	return -1;
+ }
+ 
++static void dump_build_id(u8 *build_id)
++{
++	int i;
++
++	for (i = 0; i < BUILD_ID_SIZE; i++)
++		printf("%02x ", build_id[i]);
++	printf("\n");
++}
++
+ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 			 int fd, symbol_filter_t filter, int kmodule,
+ 			 int want_symtab)
+@@ -1075,8 +1084,11 @@ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 				      BUILD_ID_SIZE) != BUILD_ID_SIZE)
+ 			goto out_elf_end;
+ 
+-		if (!dso__build_id_equal(dso, build_id))
++		if (!dso__build_id_equal(dso, build_id)) {
++			dump_build_id(build_id);
++			dump_build_id(dso->build_id);
+ 			goto out_elf_end;
++		}
+ 	}
+ 
+ 	sec = elf_section_by_name(elf, &ehdr, &shdr, ".symtab", NULL);
+
+
+> >
+> >  $ perf probe -k vmlinux -L schedule
+> >  Failed to find path of kernel module.
+> >  Failed to open debuginfo file.
+> >  Error: Failed to show lines. (-2)
+> >
+> > So my question is why the buildids doesn't match ?
+> >
+> > I guess I did something wrong since it's pretty a standard use case
+> > but I don't see why...
+> >
+> > Thanks
+> > --
+> > Francis
