@@ -1,37 +1,56 @@
-From: Francis Moreau <francis.moro@gmail.com>
-Subject: Re: vmlinux buildid doesn't match the running one (/sys/kernel/notes)
-Date: Thu, 5 May 2011 11:41:43 +0200
-Message-ID: <BANLkTimvzQJbrv3Zt3PYeEGq9nwsipzkQw@mail.gmail.com>
-References: <BANLkTim+kr6TYdkuh=bugJaNmSnLE0h-8Q@mail.gmail.com>
-	<BANLkTikfDmsZ056G+Eht2BbNH4GVBokXzw@mail.gmail.com>
-	<BANLkTikauRD6CF3MuBmuvQqJAuDPHE2x-Q@mail.gmail.com>
-	<1304514745.2624.3.camel@localhost>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] Add inverted call graph report support to perf tool
+Date: Fri, 6 May 2011 10:54:38 +0200
+Message-ID: <20110506085438.GA928@elte.hu>
+References: <AANLkTi=vxgHe=dqz+xEPcZ9oBexM1jBxFz3sXA2DJEZA@mail.gmail.com>
+ <20110307180619.GG1873@nowhere>
+ <AANLkTi=rabeXE6m0wRo029jgqHLBaUGQcXYJriLewZeJ@mail.gmail.com>
+ <20110310024355.GG2533@nowhere>
+ <AANLkTikZxDyL-SW7FFbEd4skMNTVWeh7mGDTXfWkvEMR@mail.gmail.com>
+ <20110311115657.GB1826@nowhere>
+ <AANLkTimaxPJCkA3TuDQKCvDXtqTrUb8vyrNqRRSzvYwb@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:60549 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751262Ab1EEJlo (ORCPT
+Received: from mx3.mail.elte.hu ([157.181.1.138]:54006 "EHLO mx3.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754766Ab1EFIyn (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 5 May 2011 05:41:44 -0400
-Received: by pvg12 with SMTP id 12so888463pvg.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2011 02:41:43 -0700 (PDT)
-In-Reply-To: <1304514745.2624.3.camel@localhost>
+	Fri, 6 May 2011 04:54:43 -0400
+Content-Disposition: inline
+In-Reply-To: <AANLkTimaxPJCkA3TuDQKCvDXtqTrUb8vyrNqRRSzvYwb@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Lin Ming <ming.m.lin@intel.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Sam Liao <phyomh@gmail.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Peter Zijlstra <a.p.zijlstra@chello.nl>
 
-On Wed, May 4, 2011 at 3:12 PM, Lin Ming <ming.m.lin@intel.com> wrote:
->
-> Could you make sure you indeed reboot with the new kernel running?
->
 
-I really don't know what happened when I tried, but now it works as
-expected (/me hiding).
+* Sam Liao <phyomh@gmail.com> wrote:
 
-Sorry for the noise
+> > It depends if you select reverse callchain or not:
+> >
+> > $ perf report -s caller
+> >
+> > That will report main and kernel_thread as hists, and regular callee -> caller callchains.
+> > Hence under main hist, you'll a lot of callchain starting from random points and all
+> > ending in main!
+> >
+> > $ perf report -s caller -g caller
+> >
+> > That will report main and kernel_thread as hists, with callchains starting from
+> > main under main.
+> >
+> > It becomes interesting when you want more granularity with -s caller,dso if we bring a way
+> > to push forward the entrypoint one day. I suspect even more sorting combinations are
+> > going to be interesting.
+> >
+> 
+> Thanks for clarification. I'll try to come up with patches as you talked.
 
-Thanks
--- 
-Francis
+I'm wondering, is there any progress with this feature? Having sysprof-alike 
+reverse ordering for call chains is a really powerful form of visualization 
+IMO.
+
+Thanks,
+
+	Ingo
