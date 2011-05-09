@@ -1,56 +1,40 @@
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH] Add inverted call graph report support to perf tool
-Date: Fri, 6 May 2011 10:54:38 +0200
-Message-ID: <20110506085438.GA928@elte.hu>
-References: <AANLkTi=vxgHe=dqz+xEPcZ9oBexM1jBxFz3sXA2DJEZA@mail.gmail.com>
- <20110307180619.GG1873@nowhere>
- <AANLkTi=rabeXE6m0wRo029jgqHLBaUGQcXYJriLewZeJ@mail.gmail.com>
- <20110310024355.GG2533@nowhere>
- <AANLkTikZxDyL-SW7FFbEd4skMNTVWeh7mGDTXfWkvEMR@mail.gmail.com>
- <20110311115657.GB1826@nowhere>
- <AANLkTimaxPJCkA3TuDQKCvDXtqTrUb8vyrNqRRSzvYwb@mail.gmail.com>
+From: Arun Sharma <asharma@fb.com>
+Subject: [RFC] perf top and deleted binaries
+Date: Mon, 9 May 2011 11:28:23 -0700
+Message-ID: <20110509182822.GA23798@dev1756.snc6.facebook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138]:54006 "EHLO mx3.mail.elte.hu"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754766Ab1EFIyn (ORCPT
+Received: from outmail014.snc4.facebook.com ([66.220.144.146]:42276 "EHLO
+	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1753171Ab1EISdu (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 6 May 2011 04:54:43 -0400
+	Mon, 9 May 2011 14:33:50 -0400
 Content-Disposition: inline
-In-Reply-To: <AANLkTimaxPJCkA3TuDQKCvDXtqTrUb8vyrNqRRSzvYwb@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Sam Liao <phyomh@gmail.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Peter Zijlstra <a.p.zijlstra@chello.nl>
+To: linux-perf-users@vger.kernel.org, acme@ghostprotocols.net
 
 
-* Sam Liao <phyomh@gmail.com> wrote:
+For long running binaries which may have been replaced or deleted, today 
+perf top spits out a warning and doesn't show anything. For eg:
 
-> > It depends if you select reverse callchain or not:
-> >
-> > $ perf report -s caller
-> >
-> > That will report main and kernel_thread as hists, and regular callee -> caller callchains.
-> > Hence under main hist, you'll a lot of callchain starting from random points and all
-> > ending in main!
-> >
-> > $ perf report -s caller -g caller
-> >
-> > That will report main and kernel_thread as hists, with callchains starting from
-> > main under main.
-> >
-> > It becomes interesting when you want more granularity with -s caller,dso if we bring a way
-> > to push forward the entrypoint one day. I suspect even more sorting combinations are
-> > going to be interesting.
-> >
-> 
-> Thanks for clarification. I'll try to come up with patches as you talked.
+test.c:
 
-I'm wondering, is there any progress with this feature? Having sysprof-alike 
-reverse ordering for call chains is a really powerful form of visualization 
-IMO.
+main()
+{
+	while(1);
+}
 
-Thanks,
+gcc -O2 test.c -o test
+./test &
+gcc -O2 test.c -o test	# overwrite the binary
+perf top -p <pid>
 
-	Ingo
+shows nothing. It could instead show:
+
+100% <unresolved>	test
+
+like perf record/report would show for the same test case. Comments?
+
+ -Arun
