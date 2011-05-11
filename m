@@ -1,58 +1,161 @@
 From: Arun Sharma <asharma@fb.com>
-Subject: [PATCH] Add dso->deleted bit
-Date: Tue, 10 May 2011 11:51:47 -0700
-Message-ID: <1305053507-28729-1-git-send-email-asharma@fb.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@ghostprotocols.net
-Cc: Arun Sharma <asharma@fb.com>
-List-Id: linux-perf-users.vger.kernel.org
+Subject: [PATCH] Add an unresolved symbol for deleted binaries
+Date: Tue, 10 May 2011 18:03:05 -0700
+Message-ID: <20110511010305.GA4324@dev1756.snc6.facebook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from outcampmail001.snc4.facebook.com ([66.220.144.159]:65296 "EHLO
+	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1752189Ab1EKBDK (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 10 May 2011 21:03:10 -0400
+Content-Disposition: inline
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: acme@ghostprotocols.net
+Cc: linux-perf-users@vger.kernel.org
 
-This keeps the knowledge about deleted filenames in one place.
+[ Not sure if this is the best way to do it. Suggestions welcome ]
+
+All samples that couldn't be resolved are attributed to this
+synthetic symbol. This way, perf top correctly attributes the
+samples to the right dso, even though it could not resolve the
+address.
 
 Signed-off-by: Arun Sharma <asharma@fb.com>
 ---
- tools/perf/util/map.c    |    1 +
- tools/perf/util/symbol.c |    2 +-
- tools/perf/util/symbol.h |    1 +
- 3 files changed, 3 insertions(+), 1 deletions(-)
+ tools/perf/util/map.c    |   50 +++++++++++++++++++++++++++++++++------------
+ tools/perf/util/symbol.c |    4 +-
+ tools/perf/util/symbol.h |    3 ++
+ 3 files changed, 41 insertions(+), 16 deletions(-)
 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index a16ecab..042ba9f 100644
+index 042ba9f..b525cba 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -135,6 +135,7 @@ int map__load(struct map *self, symbol_filter_t filter)
+@@ -1,4 +1,5 @@
+ #include "symbol.h"
++#include <elf.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <limits.h>
+@@ -97,6 +98,26 @@ void map__fixup_end(struct map *self)
+ }
+ 
+ #define DSO__DELETED "(deleted)"
++static int check_deleted(struct map *self, const char *name,
++			 symbol_filter_t filter)
++{
++	const size_t len = strlen(name);
++	const size_t real_len = len - sizeof(DSO__DELETED);
++
++	if (len > sizeof(DSO__DELETED) &&
++	    strcmp(name + real_len + 1, DSO__DELETED) == 0) {
++		pr_warning("%.*s was updated, restart the long "
++			   "running apps that use it!\n",
++			   (int)real_len, name);
++
++		self->dso->unresolved_sym = symbol__new(1, 4, STB_GLOBAL,
++							"<unresolved>");
++		if (filter)
++			filter(self, self->dso->unresolved_sym);
++		return 1;
++	}
++	return 0;
++}
+ 
+ int map__load(struct map *self, symbol_filter_t filter)
+ {
+@@ -116,27 +137,21 @@ int map__load(struct map *self, symbol_filter_t filter)
+ 					  sbuild_id);
+ 			pr_warning("%s with build id %s not found",
+ 				   name, sbuild_id);
+-		} else
++		} else {
+ 			pr_warning("Failed to open %s", name);
++			self->dso->deleted = check_deleted(self, name, filter);
++			return 0;
++		}
+ 
+ 		pr_warning(", continuing without symbols\n");
+ 		return -1;
+ 	} else if (nr == 0) {
+-		const size_t len = strlen(name);
+-		const size_t real_len = len - sizeof(DSO__DELETED);
+-
+-		if (len > sizeof(DSO__DELETED) &&
+-		    strcmp(name + real_len + 1, DSO__DELETED) == 0) {
+-			pr_warning("%.*s was updated, restart the long "
+-				   "running apps that use it!\n",
+-				   (int)real_len, name);
+-		} else {
++		self->dso->deleted = check_deleted(self, name, filter);
++		if (!self->dso->deleted) {
+ 			pr_warning("no symbols found in %s, maybe install "
  				   "a debug package?\n", name);
  		}
- 
-+		self->dso->deleted = 1;
- 		return -1;
+-
+-		self->dso->deleted = 1;
+-		return -1;
++		return 0;
  	}
  	/*
+ 	 * Only applies to the kernel, as its symtabs aren't relative like the
+@@ -151,10 +166,17 @@ int map__load(struct map *self, symbol_filter_t filter)
+ struct symbol *map__find_symbol(struct map *self, u64 addr,
+ 				symbol_filter_t filter)
+ {
++	struct symbol *ret;
++
+ 	if (map__load(self, filter) < 0)
+ 		return NULL;
+ 
+-	return dso__find_symbol(self->dso, self->type, addr);
++	ret = dso__find_symbol(self->dso, self->type, addr);
++
++	if (ret == NULL && self->dso->deleted)
++		return self->dso->unresolved_sym;
++
++	return ret;
+ }
+ 
+ struct symbol *map__find_symbol_by_name(struct map *self, const char *name,
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 17df793..dbd1944 100644
+index dbd1944..a22b6b0 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -1575,7 +1575,7 @@ restart:
- 	}
- 
- 	free(name);
--	if (ret < 0 && strstr(self->name, " (deleted)") != NULL)
-+	if (ret < 0 && self->deleted)
- 		return 0;
- 	return ret;
+@@ -137,8 +137,8 @@ static void map_groups__fixup_end(struct map_groups *self)
+ 		__map_groups__fixup_end(self, i);
  }
+ 
+-static struct symbol *symbol__new(u64 start, u64 len, u8 binding,
+-				  const char *name)
++struct symbol *symbol__new(u64 start, u64 len, u8 binding,
++			  const char *name)
+ {
+ 	size_t namelen = strlen(name) + 1;
+ 	struct symbol *self = calloc(1, (symbol_conf.priv_size +
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 713b0b4..943a054 100644
+index 943a054..d8a31a4 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -142,6 +142,7 @@ struct dso {
- 	u8		 annotate_warned:1;
- 	u8		 sname_alloc:1;
- 	u8		 lname_alloc:1;
-+	u8		 deleted:1;
- 	unsigned char	 symtab_type;
- 	u8		 sorted_by_name;
- 	u8		 loaded;
+@@ -149,6 +149,7 @@ struct dso {
+ 	u8		 build_id[BUILD_ID_SIZE];
+ 	const char	 *short_name;
+ 	char	 	 *long_name;
++	struct symbol	 *unresolved_sym;
+ 	u16		 long_name_len;
+ 	u16		 short_name_len;
+ 	char		 name[0];
+@@ -235,6 +236,8 @@ void machines__destroy_guest_kernel_maps(struct rb_root *self);
+ int symbol__init(void);
+ void symbol__exit(void);
+ bool symbol_type__is_a(char symbol_type, enum map_type map_type);
++struct symbol *symbol__new(u64 start, u64 len, u8 binding,
++			   const char *name);
+ 
+ size_t machine__fprintf_vmlinux_path(struct machine *self, FILE *fp);
+ 
 -- 
 1.7.4
