@@ -1,161 +1,59 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: [PATCH] Add an unresolved symbol for deleted binaries
-Date: Tue, 10 May 2011 18:03:05 -0700
-Message-ID: <20110511010305.GA4324@dev1756.snc6.facebook.com>
+From: =?UTF-8?B?UMOhZHJhaWcgQnJhZHk=?= <P@draigBrady.com>
+Subject: PEBS availability
+Date: Tue, 24 May 2011 16:49:27 +0100
+Message-ID: <4DDBD387.2070906@draigBrady.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from outcampmail001.snc4.facebook.com ([66.220.144.159]:65296 "EHLO
-	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1752189Ab1EKBDK (ORCPT
+Received: from mail1.slb.deg.dub.stisp.net ([84.203.253.98]:1612 "HELO
+	mail1.slb.deg.dub.stisp.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1757059Ab1EXPva (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 10 May 2011 21:03:10 -0400
-Content-Disposition: inline
+	Tue, 24 May 2011 11:51:30 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@ghostprotocols.net
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-[ Not sure if this is the best way to do it. Suggestions welcome ]
+Hi,
 
-All samples that couldn't be resolved are attributed to this
-synthetic symbol. This way, perf top correctly attributes the
-samples to the right dso, even though it could not resolve the
-address.
+I've just got a shiny new i3-2310M and am a
+bit surprised that `perf` isn't listing
+detailed stats like L1 cache misses etc.
 
-Signed-off-by: Arun Sharma <asharma@fb.com>
----
- tools/perf/util/map.c    |   50 +++++++++++++++++++++++++++++++++------------
- tools/perf/util/symbol.c |    4 +-
- tools/perf/util/symbol.h |    3 ++
- 3 files changed, 41 insertions(+), 16 deletions(-)
+$ perf stat true
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 042ba9f..b525cba 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -1,4 +1,5 @@
- #include "symbol.h"
-+#include <elf.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <limits.h>
-@@ -97,6 +98,26 @@ void map__fixup_end(struct map *self)
- }
- 
- #define DSO__DELETED "(deleted)"
-+static int check_deleted(struct map *self, const char *name,
-+			 symbol_filter_t filter)
-+{
-+	const size_t len = strlen(name);
-+	const size_t real_len = len - sizeof(DSO__DELETED);
-+
-+	if (len > sizeof(DSO__DELETED) &&
-+	    strcmp(name + real_len + 1, DSO__DELETED) == 0) {
-+		pr_warning("%.*s was updated, restart the long "
-+			   "running apps that use it!\n",
-+			   (int)real_len, name);
-+
-+		self->dso->unresolved_sym = symbol__new(1, 4, STB_GLOBAL,
-+							"<unresolved>");
-+		if (filter)
-+			filter(self, self->dso->unresolved_sym);
-+		return 1;
-+	}
-+	return 0;
-+}
- 
- int map__load(struct map *self, symbol_filter_t filter)
- {
-@@ -116,27 +137,21 @@ int map__load(struct map *self, symbol_filter_t filter)
- 					  sbuild_id);
- 			pr_warning("%s with build id %s not found",
- 				   name, sbuild_id);
--		} else
-+		} else {
- 			pr_warning("Failed to open %s", name);
-+			self->dso->deleted = check_deleted(self, name, filter);
-+			return 0;
-+		}
- 
- 		pr_warning(", continuing without symbols\n");
- 		return -1;
- 	} else if (nr == 0) {
--		const size_t len = strlen(name);
--		const size_t real_len = len - sizeof(DSO__DELETED);
--
--		if (len > sizeof(DSO__DELETED) &&
--		    strcmp(name + real_len + 1, DSO__DELETED) == 0) {
--			pr_warning("%.*s was updated, restart the long "
--				   "running apps that use it!\n",
--				   (int)real_len, name);
--		} else {
-+		self->dso->deleted = check_deleted(self, name, filter);
-+		if (!self->dso->deleted) {
- 			pr_warning("no symbols found in %s, maybe install "
- 				   "a debug package?\n", name);
- 		}
--
--		self->dso->deleted = 1;
--		return -1;
-+		return 0;
- 	}
- 	/*
- 	 * Only applies to the kernel, as its symtabs aren't relative like the
-@@ -151,10 +166,17 @@ int map__load(struct map *self, symbol_filter_t filter)
- struct symbol *map__find_symbol(struct map *self, u64 addr,
- 				symbol_filter_t filter)
- {
-+	struct symbol *ret;
-+
- 	if (map__load(self, filter) < 0)
- 		return NULL;
- 
--	return dso__find_symbol(self->dso, self->type, addr);
-+	ret = dso__find_symbol(self->dso, self->type, addr);
-+
-+	if (ret == NULL && self->dso->deleted)
-+		return self->dso->unresolved_sym;
-+
-+	return ret;
- }
- 
- struct symbol *map__find_symbol_by_name(struct map *self, const char *name,
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index dbd1944..a22b6b0 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -137,8 +137,8 @@ static void map_groups__fixup_end(struct map_groups *self)
- 		__map_groups__fixup_end(self, i);
- }
- 
--static struct symbol *symbol__new(u64 start, u64 len, u8 binding,
--				  const char *name)
-+struct symbol *symbol__new(u64 start, u64 len, u8 binding,
-+			  const char *name)
- {
- 	size_t namelen = strlen(name) + 1;
- 	struct symbol *self = calloc(1, (symbol_conf.priv_size +
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 943a054..d8a31a4 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -149,6 +149,7 @@ struct dso {
- 	u8		 build_id[BUILD_ID_SIZE];
- 	const char	 *short_name;
- 	char	 	 *long_name;
-+	struct symbol	 *unresolved_sym;
- 	u16		 long_name_len;
- 	u16		 short_name_len;
- 	char		 name[0];
-@@ -235,6 +236,8 @@ void machines__destroy_guest_kernel_maps(struct rb_root *self);
- int symbol__init(void);
- void symbol__exit(void);
- bool symbol_type__is_a(char symbol_type, enum map_type map_type);
-+struct symbol *symbol__new(u64 start, u64 len, u8 binding,
-+			   const char *name);
- 
- size_t machine__fprintf_vmlinux_path(struct machine *self, FILE *fp);
- 
--- 
-1.7.4
+ Performance counter stats for 'true':
+
+             1,239 cache-misses             #      1.555 M/sec
+             9,314 cache-references         #     11.693 M/sec
+             3,940 branch-misses            #      4.871 %
+            80,885 branches                 #    101.546 M/sec
+           403,808 instructions             #      0.000 IPC
+     <not counted> cycles
+                81 page-faults              #      0.102 M/sec
+                 0 CPU-migrations           #      0.000 M/sec
+                 1 context-switches         #      0.001 M/sec
+          0.796537 task-clock-msecs         #      0.032 CPUs
+
+        0.024654938  seconds time elapsed
+
+I searched for a while but found it _very_ difficult
+to find info on what was available on particular intel CPUs.
+
+I did see in the "Nehalem Core PMU programming guide":
+http://software.intel.com/file/30320
+that the above stats are core features and that the other
+counters I mentioned are PEBS (Precise Event Based Sampling)
+and are not available on all systems.
+
+So am I out of look with my new i3 sandy bridge CPU?
+Are PEBS restricted to i7 versions only?
+Is this documented anywhere?
+
+Maybe I need some kernel support as hinted at by:
+http://lwn.net/Articles/430100/
+My kernel is 2.6.38.6-27.fc15.x86_64
+
+cheers.
+P=C3=A1draig.
