@@ -1,82 +1,64 @@
-From: David Ahern <dsahern@gmail.com>
+From: Arun Sharma <asharma@fb.com>
 Subject: Re: PEBS availability
-Date: Tue, 24 May 2011 11:26:09 -0600
-Message-ID: <4DDBEA31.9070409@gmail.com>
+Date: Tue, 24 May 2011 13:37:51 -0700
+Message-ID: <20110524203751.GA31843@dev1756.snc6.facebook.com>
 References: <4DDBD387.2070906@draigBrady.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:51132 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754881Ab1EXR0M (ORCPT
+Received: from outmail021.snc4.facebook.com ([66.220.144.153]:37122 "EHLO
+	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1752528Ab1EXUhw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 24 May 2011 13:26:12 -0400
-Received: by pwi15 with SMTP id 15so3105464pwi.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 May 2011 10:26:11 -0700 (PDT)
+	Tue, 24 May 2011 16:37:52 -0400
+Content-Disposition: inline
 In-Reply-To: <4DDBD387.2070906@draigBrady.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?UTF-8?B?UMOhZHJhaWcgQnJhZHk=?= <P@draigBrady.com>
+To: =?iso-8859-1?Q?P=E1draig?= Brady <P@draigBrady.com>
 Cc: linux-perf-users@vger.kernel.org
 
-
-
-On 05/24/11 09:49, P=C3=A1draig Brady wrote:
-> Hi,
->=20
-> I've just got a shiny new i3-2310M and am a
-> bit surprised that `perf` isn't listing
-> detailed stats like L1 cache misses etc.
-
-'perf list | grep Hardware' will show you counters recognized by perf
-(perhaps with F15, "perf list hw"  works). You can add more counters
-using the -e option.
-
-You might also want to try 2.6.39 kernel and upstream version of perf.
-Ingo added a number of default counters to perf stat.
-
-David
-
->=20
-> $ perf stat true
->=20
->  Performance counter stats for 'true':
->=20
->              1,239 cache-misses             #      1.555 M/sec
->              9,314 cache-references         #     11.693 M/sec
->              3,940 branch-misses            #      4.871 %
->             80,885 branches                 #    101.546 M/sec
->            403,808 instructions             #      0.000 IPC
->      <not counted> cycles
->                 81 page-faults              #      0.102 M/sec
->                  0 CPU-migrations           #      0.000 M/sec
->                  1 context-switches         #      0.001 M/sec
->           0.796537 task-clock-msecs         #      0.032 CPUs
->=20
->         0.024654938  seconds time elapsed
->=20
-> I searched for a while but found it _very_ difficult
-> to find info on what was available on particular intel CPUs.
->=20
-> I did see in the "Nehalem Core PMU programming guide":
-> http://software.intel.com/file/30320
-> that the above stats are core features and that the other
-> counters I mentioned are PEBS (Precise Event Based Sampling)
-> and are not available on all systems.
+On Tue, May 24, 2011 at 04:49:27PM +0100, P=E1draig Brady wrote:
 >=20
 > So am I out of look with my new i3 sandy bridge CPU?
 > Are PEBS restricted to i7 versions only?
 > Is this documented anywhere?
+
+i3 and i7 are marketing terms that don't mean much.
+Engineers care more about the output of:
+
+#!/usr/bin/env python
+
+import struct
+
+def cpuid(eax):
+    f =3D open("/dev/cpu/0/cpuid", "rb")
+    f.seek(eax)
+    data =3D f.read(16)
+    f.close()
+    return struct.unpack('IIII', data)
+
+print "%x" % cpuid(1)[0]
+
 >=20
 > Maybe I need some kernel support as hinted at by:
 > http://lwn.net/Articles/430100/
 > My kernel is 2.6.38.6-27.fc15.x86_64
->=20
-> cheers.
-> P=C3=A1draig.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-=
-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Your kernel probably has support for most of PEBS. What's missing is
+support in user space for all the events in manuals.
+
+http://thread.gmane.org/gmane.comp.linux.perfmon2.devel/2912
+
+Kernel is still missing:
+
+* Ability to dump all of x86 architectural state to perf.data on an
+  event
+* Uncore events
+* Exposing offcore events to userspace
+
+http://lwn.net/Articles/441209/ has a summary of recent discussions on
+this topic.
+
+ -Arun
