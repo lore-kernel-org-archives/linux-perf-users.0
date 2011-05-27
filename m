@@ -1,64 +1,34 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: perf, H/W counters - ESX hosted VM
-Date: Fri, 27 May 2011 13:33:54 -0600
-Message-ID: <4DDFFCA2.8030100@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 0/2] perf script: split sym format option into ip, sym, dso
+Date: Fri, 27 May 2011 14:28:42 -0600
+Message-ID: <1306528124-25861-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:39876 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932098Ab1E0Td4 (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:51303 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752796Ab1E0U2t (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 May 2011 15:33:56 -0400
+	Fri, 27 May 2011 16:28:49 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
 
+The option to dump events with a custom field selection assumes "sym" means
+instruction pointer/callchain and the conversions to symbol and dso. This
+series adds "ip" to mean dump the instruction pointer/callchain and shifts
+the meaning of "sym" to symbol conversion of addresses. The "dso" option
+further splits the old "sym" format into symbols and the dso it comes
+from.
 
-Has anyone successfully used perf within an ESX VM? dmesg shows a PMU is
-discovered:
+David Ahern (2):
+  perf script: "sym" field really means show IP data
+  perf script: make printing of dso a separate field option
 
-dmesg | grep -i performance
-Performance Events: Nehalem/Corei7 events, Intel PMU driver.
+ tools/perf/Documentation/perf-script.txt |   10 +++---
+ tools/perf/builtin-script.c              |   38 ++++++++++++++-----
+ tools/perf/util/session.c                |   57 +++++++++++++++++++-----------
+ tools/perf/util/session.h                |    5 ++-
+ 4 files changed, 72 insertions(+), 38 deletions(-)
 
-yet data from it is nonsensical:
-
-perf stat -v -- /tmp/a
-
-task-clock-msecs: 20593318 20593318 20593318
-context-switches: 2 20593318 20593318
-CPU-migrations: 0 20593318 20593318
-page-faults: 387 20593318 20593318
-cycles: 10737418235 20593318 20593318
-instructions: 10737418235 20593318 20593318
-cache-references: 10737418235 20593318 20593318
-cache-misses: 10737418235 20593318 20593318
-
- Performance counter stats for '/tmp/a':
-
-      20.593318  task-clock-msecs         #      0.988 CPUs
-              2  context-switches         #      0.000 M/sec
-              0  CPU-migrations           #      0.000 M/sec
-            387  page-faults              #      0.019 M/sec
-    10737418235  cycles                   # 521403.022 M/sec
-    10737418235  instructions             #      1.000 IPC
-    10737418235  cache-references         # 521403.022 M/sec
-    10737418235  cache-misses             # 521403.022 M/sec
-
-    0.020837863  seconds time elapsed
-
-David
-
-/tmp/a  -- a step above 'sleep 1'
-
-#!/bin/sh
-
-declare -i i=0;
-declare -i sum=0;
-while [ $i -lt 1000 ]
-do
-	sum=$((sum + i))
-    i=$((i+1))
-done
-echo "sum $sum"
+-- 
+1.7.5.1
