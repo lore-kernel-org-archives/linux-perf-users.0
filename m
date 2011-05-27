@@ -1,154 +1,64 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH v2] perf stat: clarify unsupported events from uncounted events
-Date: Fri, 27 May 2011 12:06:54 -0600
-Message-ID: <1306519614-19463-1-git-send-email-dsahern@gmail.com>
+Subject: perf, H/W counters - ESX hosted VM
+Date: Fri, 27 May 2011 13:33:54 -0600
+Message-ID: <4DDFFCA2.8030100@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:46951 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751774Ab1E0SG6 (ORCPT
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:39876 "EHLO
+	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932098Ab1E0Td4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 May 2011 14:06:58 -0400
+	Fri, 27 May 2011 15:33:56 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 
-perf stat continues running even if the event list contains
-counters that are not supported. The resulting output then
-contains <not counted> for those events which gets confusing
-as to which events are supported, but not counted and which
-are not supported.
 
-Before:
+Has anyone successfully used perf within an ESX VM? dmesg shows a PMU is
+discovered:
 
-perf stat -ddd -- sleep 1
+dmesg | grep -i performance
+Performance Events: Nehalem/Corei7 events, Intel PMU driver.
 
- Performance counter stats for 'sleep 1':
+yet data from it is nonsensical:
 
-          0.571283 task-clock                #    0.001 CPUs utilized
-                 1 context-switches          #    0.002 M/sec
-                 0 CPU-migrations            #    0.000 M/sec
-               157 page-faults               #    0.275 M/sec
-         1,037,707 cycles                    #    1.816 GHz
-     <not counted> stalled-cycles-frontend
-     <not counted> stalled-cycles-backend
-           654,499 instructions              #    0.63  insns per cycle
-           136,129 branches                  #  238.286 M/sec
-     <not counted> branch-misses
-     <not counted> L1-dcache-loads
-     <not counted> L1-dcache-load-misses
-     <not counted> LLC-loads
-     <not counted> LLC-load-misses
-     <not counted> L1-icache-loads
-     <not counted> L1-icache-load-misses
-     <not counted> dTLB-loads
-     <not counted> dTLB-load-misses
-     <not counted> iTLB-loads
-     <not counted> iTLB-load-misses
-     <not counted> L1-dcache-prefetches
-     <not counted> L1-dcache-prefetch-misses
+perf stat -v -- /tmp/a
 
-       1.001004836 seconds time elapsed
+task-clock-msecs: 20593318 20593318 20593318
+context-switches: 2 20593318 20593318
+CPU-migrations: 0 20593318 20593318
+page-faults: 387 20593318 20593318
+cycles: 10737418235 20593318 20593318
+instructions: 10737418235 20593318 20593318
+cache-references: 10737418235 20593318 20593318
+cache-misses: 10737418235 20593318 20593318
 
-After:
+ Performance counter stats for '/tmp/a':
 
-perf stat -ddd -- sleep 1
+      20.593318  task-clock-msecs         #      0.988 CPUs
+              2  context-switches         #      0.000 M/sec
+              0  CPU-migrations           #      0.000 M/sec
+            387  page-faults              #      0.019 M/sec
+    10737418235  cycles                   # 521403.022 M/sec
+    10737418235  instructions             #      1.000 IPC
+    10737418235  cache-references         # 521403.022 M/sec
+    10737418235  cache-misses             # 521403.022 M/sec
 
- Performance counter stats for 'sleep 1':
+    0.020837863  seconds time elapsed
 
-          1.350326 task-clock                #    0.001 CPUs utilized
-                 2 context-switches          #    0.001 M/sec
-                 0 CPU-migrations            #    0.000 M/sec
-               157 page-faults               #    0.116 M/sec
-            11,986 cycles                    #    0.009 GHz
-   <not supported> stalled-cycles-frontend
-   <not supported> stalled-cycles-backend
-           496,986 instructions              #   41.46  insns per cycle
-           138,065 branches                  #  102.246 M/sec
-             7,245 branch-misses             #    5.25% of all branches         [97.60%]
-     <not counted> L1-dcache-loads
-     <not counted> L1-dcache-load-misses
-     <not counted> LLC-loads
-     <not counted> LLC-load-misses
-     <not counted> L1-icache-loads
-     <not counted> L1-icache-load-misses
-     <not counted> dTLB-loads
-     <not counted> dTLB-load-misses
-     <not counted> iTLB-loads
-     <not counted> iTLB-load-misses
-     <not counted> L1-dcache-prefetches
-   <not supported> L1-dcache-prefetch-misses
+David
 
-       1.002397333 seconds time elapsed
+/tmp/a  -- a step above 'sleep 1'
 
-v1->v2:
-changed supported type from int to bool
+#!/bin/sh
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
----
- tools/perf/builtin-stat.c |    9 +++++++--
- tools/perf/util/evsel.h   |    1 +
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a9f0671..784ed6d 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -61,6 +61,8 @@
- #include <locale.h>
- 
- #define DEFAULT_SEPARATOR	" "
-+#define CNTR_NOT_SUPPORTED	"<not supported>"
-+#define CNTR_NOT_COUNTED	"<not counted>"
- 
- static struct perf_event_attr default_attrs[] = {
- 
-@@ -448,6 +450,7 @@ static int run_perf_stat(int argc __used, const char **argv)
- 				if (verbose)
- 					ui__warning("%s event is not supported by the kernel.\n",
- 						    event_name(counter));
-+				counter->supported = false;
- 				continue;
- 			}
- 
-@@ -466,6 +469,7 @@ static int run_perf_stat(int argc __used, const char **argv)
- 			die("Not all events could be opened.\n");
- 			return -1;
- 		}
-+		counter->supported = true;
- 	}
- 
- 	if (perf_evlist__set_filters(evsel_list)) {
-@@ -861,7 +865,7 @@ static void print_counter_aggr(struct perf_evsel *counter)
- 	if (scaled == -1) {
- 		fprintf(stderr, "%*s%s%*s",
- 			csv_output ? 0 : 18,
--			"<not counted>",
-+			counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
- 			csv_sep,
- 			csv_output ? 0 : -24,
- 			event_name(counter));
-@@ -914,7 +918,8 @@ static void print_counter(struct perf_evsel *counter)
- 				csv_output ? 0 : -4,
- 				evsel_list->cpus->map[cpu], csv_sep,
- 				csv_output ? 0 : 18,
--				"<not counted>", csv_sep,
-+				counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
-+				csv_sep,
- 				csv_output ? 0 : -24,
- 				event_name(counter));
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index f79bb2c..77ea027 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -61,6 +61,7 @@ struct perf_evsel {
- 		off_t		id_offset;
- 	};
- 	struct cgroup_sel	*cgrp;
-+	bool supported;
- };
- 
- struct cpu_map;
--- 
-1.7.5.1
+declare -i i=0;
+declare -i sum=0;
+while [ $i -lt 1000 ]
+do
+	sum=$((sum + i))
+    i=$((i+1))
+done
+echo "sum $sum"
