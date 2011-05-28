@@ -1,42 +1,58 @@
-From: Vince Weaver <vweaver1@eecs.utk.edu>
-Subject: Re: perf_event validation tests
-Date: Fri, 27 May 2011 22:03:52 -0400 (EDT)
-Message-ID: <alpine.DEB.2.00.1105272159470.8159@cl320.eecs.utk.edu>
-References: <alpine.DEB.2.00.1105271752090.5485@cl320.eecs.utk.edu> <20110527224544.GA847@dev1756.snc6.facebook.com>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] perf stat: clarify unsupported events from uncounted
+ events
+Date: Sat, 28 May 2011 20:08:48 +0200
+Message-ID: <20110528180848.GC12530@elte.hu>
+References: <1306515106-11967-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from jaguar.mail.utk.edu ([160.36.0.84]:60085 "EHLO
-	jaguar.mail.utk.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753675Ab1E1CD5 (ORCPT
+Received: from mx2.mail.elte.hu ([157.181.151.9]:43756 "EHLO mx2.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754487Ab1E1SJF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 May 2011 22:03:57 -0400
-In-Reply-To: <20110527224544.GA847@dev1756.snc6.facebook.com>
+	Sat, 28 May 2011 14:09:05 -0400
+Content-Disposition: inline
+In-Reply-To: <1306515106-11967-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
-Cc: linux-perf-users@vger.kernel.org
+To: David Ahern <dsahern@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
 
-On Fri, 27 May 2011, Arun Sharma wrote:
 
-> On Fri, May 27, 2011 at 05:53:41PM -0400, Vince Weaver wrote:
+* David Ahern <dsahern@gmail.com> wrote:
 
-> cache-references.c:
+> After:
 > 
->   pe.config=PERF_COUNT_HW_CACHE_REFERENCES;
->   if (!quiet) printf("\tL1 D accesseses: %lld %lf\n",count,aSumm);
+> perf stat -ddd -- sleep 1
 > 
-> PERF_COUNT_HW_CACHE_REFERENCES is counting LLC references on many
-> platforms. Did you mean to use PERF_COUNT_HW_CACHE_L1D here?
+>  Performance counter stats for 'sleep 1':
+> 
+>           1.350326 task-clock                #    0.001 CPUs utilized
+>                  2 context-switches          #    0.001 M/sec
+>                  0 CPU-migrations            #    0.000 M/sec
+>                157 page-faults               #    0.116 M/sec
+>             11,986 cycles                    #    0.009 GHz
+>    <not supported> stalled-cycles-frontend
+>    <not supported> stalled-cycles-backend
+>            496,986 instructions              #   41.46  insns per cycle
+>            138,065 branches                  #  102.246 M/sec
+>              7,245 branch-misses             #    5.25% of all branches         [97.60%]
+>      <not counted> L1-dcache-loads
+>      <not counted> L1-dcache-load-misses
+>      <not counted> LLC-loads
+>      <not counted> LLC-load-misses
+>      <not counted> L1-icache-loads
+>      <not counted> L1-icache-load-misses
+>      <not counted> dTLB-loads
+>      <not counted> dTLB-load-misses
+>      <not counted> iTLB-loads
+>      <not counted> iTLB-load-misses
+>      <not counted> L1-dcache-prefetches
+>    <not supported> L1-dcache-prefetch-misses
 
+That looks like a really useful distinction!
 
-probably.  That was a last minute addition.  I have a much more complete 
-set of tests writted for PAPI and I'm trying to port over the ones that 
-make sense to be perf-event direct.  Properly programming perf_event 
-generalized cache events isn't documented very well though.
+Thanks,
 
-I've been distracted by the fact that my overflow tests start failing as 
-of kernel 2.6.36 :(  I hadn't noticed because I was primarily developing 
-the tests on 2.6.32 and 2.6.35 machines.
-
-Vince
+	Ingo
