@@ -1,215 +1,117 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH] perf script: add printing of sample address
-Date: Mon, 30 May 2011 13:13:49 -0600
-Message-ID: <4DE3EC6D.9070905@gmail.com>
-References: <1306782503-22002-1-git-send-email-dsahern@gmail.com>
+From: =?ISO-8859-1?Q?P=E1draig_Brady?= <P@draigBrady.com>
+Subject: Re: A shortcut to select generalized hw events
+Date: Tue, 31 May 2011 16:21:55 +0100
+Message-ID: <4DE50793.8040607@draigBrady.com>
+References: <BANLkTinxXczFsG8hd8fQULiCch8-FnMbBA@mail.gmail.com> <4DDFAB2B.90107@draigBrady.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="------------010104080707060704050903"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:62789 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750816Ab1E3TNy (ORCPT
+Received: from mail1.slb.deg.dub.stisp.net ([84.203.253.98]:11714 "HELO
+	mail1.slb.deg.dub.stisp.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1756625Ab1EaPYb (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 30 May 2011 15:13:54 -0400
-In-Reply-To: <1306782503-22002-1-git-send-email-dsahern@gmail.com>
+	Tue, 31 May 2011 11:24:31 -0400
+In-Reply-To: <4DDFAB2B.90107@draigBrady.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
+To: Francis Moreau <francis.moro@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@elte.hu>
 
+This is a multi-part message in MIME format.
+--------------010104080707060704050903
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 
-
-On 05/30/2011 01:08 PM, David Ahern wrote:
-> Resolve to a function or variable if possible and if the sym option
-> is enabled.
+On 27/05/11 14:46, Pádraig Brady wrote:
+> On 27/05/11 13:01, Francis Moreau wrote:
+>> Hello,
+>>
+>> Is there a mean to select all counters of a certain type ?
+>>
+>> For example I'd like to select all generalized hw counter with
+>> perf-stat, is this possible ?
 > 
-
-Forgot to add that this one applies on top of:
-http://lkml.org/lkml/2011/5/27/385
-
-David
-
-> Signed-off-by: David Ahern <dsahern@gmail.com>
-> ---
->  tools/perf/Documentation/perf-script.txt |    4 +-
->  tools/perf/builtin-script.c              |   84 +++++++++++++++++++++++++++---
->  tools/perf/util/evsel.c                  |    1 +
->  tools/perf/util/session.c                |    4 +-
->  4 files changed, 82 insertions(+), 11 deletions(-)
+> I was looking for that too.
+> I didn't look too hard, but there was nothing obvious.
+> It would be very useful for example, to print all hardware counters
+> that are supported by the current system as you say.
+> To do that, I'm using this perf-hw script:
 > 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index 1e744c2..c6068cb 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -115,8 +115,8 @@ OPTIONS
->  -f::
->  --fields::
->          Comma separated list of fields to print. Options are:
-> -        comm, tid, pid, time, cpu, event, trace, ip, sym, dso. Field
-> -        list can be prepended with the type, trace, sw or hw,
-> +        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr.
-> +        Field list can be prepended with the type, trace, sw or hw,
->          to indicate to which event type the field list applies.
->          e.g., -f sw:comm,tid,time,ip,sym  and -f trace:time,cpu,trace
->  
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index a8bd00f..3056b45 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -33,6 +33,7 @@ enum perf_output_field {
->  	PERF_OUTPUT_IP              = 1U << 7,
->  	PERF_OUTPUT_SYM             = 1U << 8,
->  	PERF_OUTPUT_DSO             = 1U << 9,
-> +	PERF_OUTPUT_ADDR            = 1U << 10,
->  };
->  
->  struct output_option {
-> @@ -49,6 +50,7 @@ struct output_option {
->  	{.str = "ip",    .field = PERF_OUTPUT_IP},
->  	{.str = "sym",   .field = PERF_OUTPUT_SYM},
->  	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-> +	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
->  };
->  
->  /* default set to maintain compatibility with current format */
-> @@ -173,14 +175,22 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
->  		    !(attr->sample_type & PERF_SAMPLE_CALLCHAIN))
->  			symbol_conf.use_callchain = false;
->  	}
-> -	if (PRINT_FIELD(SYM) && !PRINT_FIELD(IP)) {
-> -		pr_err("Display of symbols requested but IP is not selected.\n"
-> -		       "No addresses to convert to symbols.\n");
-> +
-> +	if (PRINT_FIELD(ADDR) &&
-> +		perf_event_attr__check_stype(attr, PERF_SAMPLE_ADDR, "ADDR",
-> +				       PERF_OUTPUT_ADDR))
-> +		return -EINVAL;
-> +
-> +	if (PRINT_FIELD(SYM) && !PRINT_FIELD(IP) && !PRINT_FIELD(ADDR)) {
-> +		pr_err("Display of symbols requested but neither sample IP nor "
-> +			   "sample address\nis selected. Hence, no addresses to convert "
-> +		       "to symbols.\n");
->  		return -EINVAL;
->  	}
-> -	if (PRINT_FIELD(DSO) && !PRINT_FIELD(IP)) {
-> -		pr_err("Display of DSO requested but IP is not selected.\n"
-> -		       "No addresses to convert to dso.\n");
-> +	if (PRINT_FIELD(DSO) && !PRINT_FIELD(IP) && !PRINT_FIELD(ADDR)) {
-> +		pr_err("Display of DSO requested but neither sample IP nor "
-> +			   "sample address\nis selected. Hence, no addresses to convert "
-> +		       "to DSO.\n");
->  		return -EINVAL;
->  	}
->  
-> @@ -288,6 +298,63 @@ static void print_sample_start(struct perf_sample *sample,
->  	}
->  }
->  
-> +static bool sample_addr_correlates_sym(struct perf_event_attr *attr)
-> +{
-> +	if ((attr->type == PERF_TYPE_SOFTWARE) &&
-> +	    ((attr->config == PERF_COUNT_SW_PAGE_FAULTS) ||
-> +	     (attr->config == PERF_COUNT_SW_PAGE_FAULTS_MIN) ||
-> +	     (attr->config == PERF_COUNT_SW_PAGE_FAULTS_MAJ)))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static void print_sample_addr(union perf_event *event,
-> +			  struct perf_sample *sample,
-> +			  struct perf_session *session,
-> +			  struct thread *thread,
-> +			  struct perf_event_attr *attr)
-> +{
-> +	struct addr_location al;
-> +	u8 cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
-> +	const char *symname, *dsoname;
-> +
-> +	printf("%16" PRIx64, sample->addr);
-> +
-> +	if (!sample_addr_correlates_sym(attr))
-> +		return;
-> +
-> +	thread__find_addr_map(thread, session, cpumode, MAP__FUNCTION,
-> +			      event->ip.pid, sample->addr, &al);
-> +	if (!al.map)
-> +		thread__find_addr_map(thread, session, cpumode, MAP__VARIABLE,
-> +				      event->ip.pid, sample->addr, &al);
-> +
-> +	al.cpu = sample->cpu;
-> +	al.sym = NULL;
-> +
-> +	if (al.map)
-> +		al.sym = map__find_symbol(al.map, al.addr, NULL);
-> +
-> +	if (PRINT_FIELD(SYM)) {
-> +		if (al.sym && al.sym->name)
-> +			symname = al.sym->name;
-> +		else
-> +			symname = "";
-> +
-> +		printf(" %16s", symname);
-> +	}
-> +
-> +	if (PRINT_FIELD(DSO)) {
-> +		if (al.map && al.map->dso && al.map->dso->name)
-> +			dsoname = al.map->dso->name;
-> +		else
-> +			dsoname = "";
-> +
-> +		printf(" (%s)", dsoname);
-> +	}
-> +}
-> +
->  static void process_event(union perf_event *event __unused,
->  			  struct perf_sample *sample,
->  			  struct perf_evsel *evsel,
-> @@ -305,6 +372,9 @@ static void process_event(union perf_event *event __unused,
->  		print_trace_event(sample->cpu, sample->raw_data,
->  				  sample->raw_size);
->  
-> +	if (PRINT_FIELD(ADDR))
-> +		print_sample_addr(event, sample, session, thread, attr);
-> +
->  	if (PRINT_FIELD(IP)) {
->  		if (!symbol_conf.use_callchain)
->  			printf(" ");
-> @@ -1003,7 +1073,7 @@ static const struct option options[] = {
->  	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
->  		    "Look for files with symbols relative to this directory"),
->  	OPT_CALLBACK('f', "fields", NULL, "str",
-> -		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso",
-> +		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr",
->  		     parse_output_fields),
->  
->  	OPT_END()
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index cca29ed..669e18a 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -361,6 +361,7 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
->  		array++;
->  	}
->  
-> +	data->addr = 0;
->  	if (type & PERF_SAMPLE_ADDR) {
->  		data->addr = *array;
->  		array++;
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 360d8c4..21e6c91 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -698,9 +698,9 @@ static void dump_sample(struct perf_session *session, union perf_event *event,
->  	if (!dump_trace)
->  		return;
->  
-> -	printf("(IP, %d): %d/%d: %#" PRIx64 " period: %" PRIu64 "\n",
-> +	printf("(IP, %d): %d/%d: %#" PRIx64 " period: %" PRIu64 " addr: %#" PRIx64 "\n",
->  	       event->header.misc, sample->pid, sample->tid, sample->ip,
-> -	       sample->period);
-> +	       sample->period, sample->addr);
->  
->  	if (session->sample_type & PERF_SAMPLE_CALLCHAIN)
->  		callchain__printf(sample);
+> #!/bin/sh
+> hw_events=$(
+>  for i in $(perf list | sed -n 's/\[Hardware.*event\]//; T; s/ OR .*//; p'); do
+>     perf stat -e $i true >/dev/null 2>&1 &&
+>      printf -- "-e %s \n" $i
+>  done | tr -d '\n'
+> )
+> perf stat $hw_events $*
+
+I've also just noticed the -ddd option recently added with:
+http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=2cba3ffb
+
+I've attached some more documentation which might be useful?
+
+cheers,
+Pádraig.
+
+--------------010104080707060704050903
+Content-Type: text/x-patch;
+ name="perf-stat-ddd.diff"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment;
+ filename="perf-stat-ddd.diff"
+
+From 50273f3c531b2111343326a22dd76a9c1d893338 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?P=C3=A1draig=20Brady?= <P@draigBrady.com>
+Date: Tue, 31 May 2011 16:16:59 +0100
+Subject: [PATCH] perf stat: better document the -d option
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Document fully the -d option from commit 2cba3ffb
+* Documentation/perf-stat.txt: Detail the -d option
+* builtin-stat.c: Document that -d can be repeated
+
+Signed-off-by: PÃ¡draig Brady <P@draigBrady.com>
+---
+ tools/perf/Documentation/perf-stat.txt |    6 ++++++
+ tools/perf/builtin-stat.c              |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 918cc38..36a6a00 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -50,6 +50,12 @@ OPTIONS
+ --scale::
+ 	scale/normalize counter values
+ 
++-d::
++        print more detailed statistics - repeat for more
++            -d:           detailed events, L1 and LLC data cache
++            -dd:     more detailed events, dTLB and iTLB events
++            -ddd:    very detailed events, adding prefetch events
++
+ -r::
+ --repeat=<n>::
+ 	repeat command and print average + stddev (max: 100)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a9f0671..a99be46 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1044,7 +1044,7 @@ static const struct option options[] = {
+ 	OPT_BOOLEAN('n', "null", &null_run,
+ 		    "null run - dont start any counters"),
+ 	OPT_INCR('d', "detailed", &detailed_run,
+-		    "detailed run - start a lot of events"),
++		    "detailed run - start a lot of events - repeat for more"),
+ 	OPT_BOOLEAN('S', "sync", &sync_run,
+ 		    "call sync() before starting a run"),
+ 	OPT_CALLBACK_NOOPT('B', "big-num", NULL, NULL, 
+-- 
+1.7.5.1
+
+
+--------------010104080707060704050903--
