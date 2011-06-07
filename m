@@ -1,7 +1,7 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH 4/6] perf record: add time-of-day option
-Date: Tue,  7 Jun 2011 17:56:04 -0600
-Message-ID: <1307490964-24714-1-git-send-email-dsahern@gmail.com>
+Subject: [PATCH 5/6] perf script: pass trace event to print_trace_event
+Date: Tue,  7 Jun 2011 17:56:19 -0600
+Message-ID: <1307490979-24754-1-git-send-email-dsahern@gmail.com>
 References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
@@ -10,191 +10,87 @@ To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Use reftime event for initial correlation of perf_clock to
-time-of-day. Add timekeeping trace events to event list to
-capture jumps in time-of-day.
+Next patch needs parsed trace event in perf-script. No since
+extracting it twice.
 
 Signed-off-by: David Ahern <dsahern@gmail.com>
 ---
- tools/perf/Documentation/perf-record.txt |    3 +
- tools/perf/builtin-record.c              |  102 +++++++++++++++++++++++++++++-
- 2 files changed, 104 insertions(+), 1 deletions(-)
+ tools/perf/builtin-script.c         |   16 ++++++++++++++--
+ tools/perf/util/trace-event-parse.c |   12 +-----------
+ tools/perf/util/trace-event.h       |    2 +-
+ 3 files changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 5a520f8..e4c87ba 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -148,6 +148,9 @@ an empty cgroup (monitor all the time) using, e.g., -G foo,,bar. Cgroups must ha
- corresponding events, i.e., they always refer to events defined earlier on the command
- line.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3056b45..c61ae26 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -362,14 +362,26 @@ static void process_event(union perf_event *event __unused,
+ 			  struct thread *thread)
+ {
+ 	struct perf_event_attr *attr = &evsel->attr;
++	struct event *tr_event = NULL;
  
-+--tod::
-+Collect data for displaying time-of-day strings when printing events.
+ 	if (output[attr->type].fields == 0)
+ 		return;
+ 
++	if (attr->type == PERF_TYPE_TRACEPOINT) {
++		int type;
 +
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8e2c857..4f8d5f2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -32,6 +32,9 @@
- 
- #define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
- 
-+#define TRACE_TOD_SUBSYSTEM      "timekeeping"
-+#define TRACE_TOD_SUBSYSTEM_LEN  11
++		type = trace_parse_common_type(sample->raw_data);
++		tr_event = trace_find_event(type);
++		if (!tr_event) {
++			warning("ug! no event found for type %d", type);
++			return;
++		}
++	}
 +
- enum write_mode_t {
- 	WRITE_FORCE,
- 	WRITE_APPEND
-@@ -65,6 +68,8 @@ static bool			sample_address			=  false;
- static bool			sample_time			=  false;
- static bool			no_buildid			=  false;
- static bool			no_buildid_cache		=  false;
-+static bool			want_tod			=  false;
-+static u64 			tod_sample_type;
- static struct perf_evlist	*evsel_list;
+ 	print_sample_start(sample, thread, attr);
  
- static long			samples				=      0;
-@@ -215,6 +220,9 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
- 		attr->sample_type	|= PERF_SAMPLE_CPU;
- 	}
+-	if (PRINT_FIELD(TRACE))
+-		print_trace_event(sample->cpu, sample->raw_data,
++	if ((attr->type == PERF_TYPE_TRACEPOINT) && PRINT_FIELD(TRACE))
++		print_trace_event(tr_event, sample->cpu, sample->raw_data,
+ 				  sample->raw_size);
  
-+	if (want_tod)
-+		attr->sample_type	|= tod_sample_type;
-+
- 	if (nodelay) {
- 		attr->watermark = 0;
- 		attr->wakeup_events = 1;
-@@ -248,6 +256,86 @@ static bool perf_evlist__equal(struct perf_evlist *evlist,
- 	return true;
+ 	if (PRINT_FIELD(ADDR))
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index 1e88485..1f4dccd 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -2912,20 +2912,10 @@ pretty_print_func_graph(void *data, int size, struct event *event,
+ 	printf("\n");
  }
  
-+static int perf_event__synthesize_reftime(perf_event__handler_t process)
-+{
-+	union perf_event ev;
-+	struct timespec tp;
-+
-+	memset(&ev, 0, sizeof(ev));
-+
-+	if (gettimeofday(&ev.reftime.tv, NULL) != 0) {
-+		error("gettimeofday failed.\n");
-+		return -1;
-+	}
-+	if (clock_gettime(CLOCK_MONOTONIC, &tp) != 0) {
-+		error("clock_gettime(CLOCK_MONOTONIC) failed.\n");
-+		return -1;
-+	}
-+	ev.reftime.nsec = (u64) tp.tv_sec * NSEC_PER_SEC + (u64) tp.tv_nsec;
-+
-+	ev.header.type = PERF_RECORD_REFTIME;
-+	ev.header.size = sizeof(ev.reftime);
-+
-+	return process(&ev, NULL, session);
-+}
-+
-+static int add_timeofday_events(void)
-+{
-+	int rc, i, len;
-+	struct perf_event_attr attr;
-+	struct perf_evsel *evsel;
-+
-+	/* events that modify xtime */
-+	const char *tod_events[] = {"settimeofday",
-+				    "timekeeping_inject_offset",
-+				    "timekeeping_inject_sleeptime",
-+				    NULL};
-+
-+	i = 0;
-+	rc = -1;
-+	while (tod_events[i]) {
-+		memset(&attr, 0, sizeof(attr));
-+		len = strlen(tod_events[i]);
-+
-+		if (parse_single_tracepoint_event(TRACE_TOD_SUBSYSTEM,
-+			tod_events[i], len, &attr, NULL) == EVT_FAILED) {
-+			error("Failed to parse event %s\n", tod_events[i]);
-+			goto out;
-+		}
-+
-+		evsel = perf_evsel__new(&attr, evsel_list->nr_entries);
-+		if (evsel == NULL)
-+			return -1;
-+
-+		perf_evlist__add(evsel_list, evsel);
-+
-+		/* +2 for ':' delimiter and string terminator */
-+		evsel->name = calloc(TRACE_TOD_SUBSYSTEM_LEN + len + 2, 1);
-+		if (!evsel->name)
-+			return -1;
-+
-+		sprintf(evsel->name, "timekeeping:%s", tod_events[i]);
-+
-+		tod_sample_type |= attr.sample_type;
-+
-+		++i;
-+	}
-+
-+	/*
-+	 * right now sample_type for all samples needs to be the same.
-+	 * tracepoints are collected at sample period 1 and hence do not
-+	 * request the period with the sample. However, default for record
-+	 * is cycles at a frequency. So, until this sample_type mess is
-+	 * fixed....
-+	 */
-+	if (freq)
-+		tod_sample_type |= PERF_SAMPLE_PERIOD;
-+
-+	rc = 0;
-+out:
-+	return rc;
-+}
-+
- static void open_counters(struct perf_evlist *evlist)
+-void print_trace_event(int cpu, void *data, int size)
++void print_trace_event(struct event *event, int cpu, void *data, int size)
  {
- 	struct perf_evsel *pos;
-@@ -289,7 +377,8 @@ try_again:
- 				 * Old kernel, no attr->sample_id_type_all field
- 				 */
- 				sample_id_all_avail = false;
--				if (!sample_time && !raw_samples && !time_needed)
-+				if (!sample_time && !raw_samples &&
-+						!time_needed && !want_tod)
- 					attr->sample_type &= ~PERF_SAMPLE_TIME;
+-	struct event *event;
+-	int type;
+ 	int pid;
  
- 				goto retry_sample_id;
-@@ -629,6 +718,11 @@ static int __cmd_record(int argc, const char **argv)
- 		}
- 	}
+-	type = trace_parse_common_type(data);
+-
+-	event = trace_find_event(type);
+-	if (!event) {
+-		warning("ug! no event found for type %d", type);
+-		return;
+-	}
+-
+ 	pid = trace_parse_common_pid(data);
  
-+	if (want_tod &&
-+	    (perf_event__synthesize_reftime(process_synthesized_event) != 0))
-+		error("Failed to create reftime event. "
-+		      "Cannot generate wall-clock timestamps\n");
-+
- 	machine = perf_session__find_host_machine(session);
- 	if (!machine) {
- 		pr_err("Couldn't find native kernel information.\n");
-@@ -787,6 +881,8 @@ const struct option record_options[] = {
- 	OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
- 		     "monitor event in cgroup name only",
- 		     parse_cgroups),
-+	OPT_BOOLEAN(0, "tod", &want_tod,
-+		    "Collect data for time-of-day strings"),
- 	OPT_END()
- };
+ 	if (event->flags & (EVENT_FL_ISFUNCENT | EVENT_FL_ISFUNCRET))
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index f674dda..34ec9f3 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -177,7 +177,7 @@ void print_printk(void);
  
-@@ -842,6 +938,10 @@ int cmd_record(int argc, const char **argv, const char *prefix __used)
- 		goto out_symbol_exit;
- 	}
+ int parse_ftrace_file(char *buf, unsigned long size);
+ int parse_event_file(char *buf, unsigned long size, char *sys);
+-void print_trace_event(int cpu, void *data, int size);
++void print_trace_event(struct event *event, int cpu, void *data, int size);
  
-+	if (want_tod && (add_timeofday_events() != 0))
-+		error("Failed to add timekeeping events to event list.\n"
-+		      "Cannot generate wall-clock timestamps\n");
-+
- 	if (target_pid != -1)
- 		target_tid = target_pid;
- 
+ extern int file_bigendian;
+ extern int host_bigendian;
 -- 
 1.7.5.2
