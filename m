@@ -1,96 +1,41 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH 2/6] perf utils: export parse_single_tracepoint_event
-Date: Tue,  7 Jun 2011 17:55:26 -0600
-Message-ID: <1307490926-24639-1-git-send-email-dsahern@gmail.com>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:61209 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757283Ab1FGXzc (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 7 Jun 2011 19:55:32 -0400
-In-Reply-To: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH 0/6] Add time-of-day option to perf events
+Date: Tue,  7 Jun 2011 17:53:26 -0600
+Message-ID: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-For use by perf-record in later patch. Allow strp arg to be NULL
-as well.
+Another attempt at printing time-of-day strings on perf events - this
+time with tracepoints in the timekeeping code to catch updates to
+xtime.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
----
- tools/perf/util/parse-events.c |   13 ++++---------
- tools/perf/util/parse-events.h |   12 ++++++++++++
- 2 files changed, 16 insertions(+), 9 deletions(-)
+David Ahern (6):
+  trace: add tracepoints to timekeeping code - xtime changes
+  perf utils: export parse_single_tracepoint_event
+  perf: add reference time event
+  perf record: add time-of-day option
+  perf script: pass trace event to print_trace_event
+  perf script: add time-of-day option for displaying events
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 41982c3..c15a701 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -19,12 +19,6 @@ struct event_symbol {
- 	const char	*alias;
- };
- 
--enum event_result {
--	EVT_FAILED,
--	EVT_HANDLED,
--	EVT_HANDLED_ALL
--};
--
- char debugfs_path[MAXPATHLEN];
- 
- #define CHW(x) .type = PERF_TYPE_HARDWARE, .config = PERF_COUNT_HW_##x
-@@ -432,8 +426,8 @@ parse_generic_hw_event(const char **str, struct perf_event_attr *attr)
- 	return EVT_HANDLED;
- }
- 
--static enum event_result
--parse_single_tracepoint_event(char *sys_name,
-+enum event_result
-+parse_single_tracepoint_event(const char *sys_name,
- 			      const char *evt_name,
- 			      unsigned int evt_length,
- 			      struct perf_event_attr *attr,
-@@ -460,7 +454,8 @@ parse_single_tracepoint_event(char *sys_name,
- 	id = atoll(id_buf);
- 	attr->config = id;
- 	attr->type = PERF_TYPE_TRACEPOINT;
--	*strp += strlen(sys_name) + evt_length + 1; /* + 1 for the ':' */
-+	if (strp)
-+		*strp += strlen(sys_name) + evt_length + 1; /* + 1 for the ':' */
- 
- 	attr->sample_type |= PERF_SAMPLE_RAW;
- 	attr->sample_type |= PERF_SAMPLE_TIME;
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 746d3fc..e65f724 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -17,6 +17,12 @@ struct tracepoint_path {
- 	struct tracepoint_path *next;
- };
- 
-+enum event_result {
-+	EVT_FAILED,
-+	EVT_HANDLED,
-+	EVT_HANDLED_ALL
-+};
-+
- extern struct tracepoint_path *tracepoint_id_to_path(u64 config);
- extern bool have_tracepoints(struct list_head *evlist);
- 
-@@ -26,6 +32,12 @@ extern const char *__event_name(int type, u64 config);
- 
- extern int parse_events(const struct option *opt, const char *str, int unset);
- extern int parse_filter(const struct option *opt, const char *str, int unset);
-+extern enum event_result
-+parse_single_tracepoint_event(const char *sys_name,
-+			      const char *evt_name,
-+			      unsigned int evt_length,
-+			      struct perf_event_attr *attr,
-+			      const char **strp);
- 
- #define EVENTS_HELP_MAX (128*1024)
- 
+ include/trace/events/timekeeping.h       |   43 ++++++++
+ kernel/time/timekeeping.c                |    8 ++
+ tools/perf/Documentation/perf-record.txt |    3 +
+ tools/perf/Documentation/perf-script.txt |    8 ++-
+ tools/perf/builtin-record.c              |  102 +++++++++++++++++++-
+ tools/perf/builtin-script.c              |  157 +++++++++++++++++++++++++++++-
+ tools/perf/util/event.c                  |    1 +
+ tools/perf/util/event.h                  |    8 ++
+ tools/perf/util/parse-events.c           |   13 +--
+ tools/perf/util/parse-events.h           |   12 +++
+ tools/perf/util/session.c                |    4 +
+ tools/perf/util/session.h                |    3 +-
+ tools/perf/util/trace-event-parse.c      |   12 +--
+ tools/perf/util/trace-event.h            |    2 +-
+ 14 files changed, 350 insertions(+), 26 deletions(-)
+ create mode 100644 include/trace/events/timekeeping.h
+
 -- 
 1.7.5.2
