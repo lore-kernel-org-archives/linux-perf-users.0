@@ -1,41 +1,98 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH 0/6] Add time-of-day option to perf events
-Date: Tue,  7 Jun 2011 17:53:26 -0600
-Message-ID: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+Subject: [PATCH 3/6] perf: add reference time event
+Date: Tue,  7 Jun 2011 17:55:46 -0600
+Message-ID: <1307490946-24673-1-git-send-email-dsahern@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Another attempt at printing time-of-day strings on perf events - this
-time with tracepoints in the timekeeping code to catch updates to
-xtime.
+For initial perf_clock to time-of-day correlation.
 
-David Ahern (6):
-  trace: add tracepoints to timekeeping code - xtime changes
-  perf utils: export parse_single_tracepoint_event
-  perf: add reference time event
-  perf record: add time-of-day option
-  perf script: pass trace event to print_trace_event
-  perf script: add time-of-day option for displaying events
+Signed-off-by: David Ahern <dsahern@gmail.com>
+---
+ tools/perf/util/event.c   |    1 +
+ tools/perf/util/event.h   |    8 ++++++++
+ tools/perf/util/session.c |    4 ++++
+ tools/perf/util/session.h |    3 ++-
+ 4 files changed, 15 insertions(+), 1 deletions(-)
 
- include/trace/events/timekeeping.h       |   43 ++++++++
- kernel/time/timekeeping.c                |    8 ++
- tools/perf/Documentation/perf-record.txt |    3 +
- tools/perf/Documentation/perf-script.txt |    8 ++-
- tools/perf/builtin-record.c              |  102 +++++++++++++++++++-
- tools/perf/builtin-script.c              |  157 +++++++++++++++++++++++++++++-
- tools/perf/util/event.c                  |    1 +
- tools/perf/util/event.h                  |    8 ++
- tools/perf/util/parse-events.c           |   13 +--
- tools/perf/util/parse-events.h           |   12 +++
- tools/perf/util/session.c                |    4 +
- tools/perf/util/session.h                |    3 +-
- tools/perf/util/trace-event-parse.c      |   12 +--
- tools/perf/util/trace-event.h            |    2 +-
- 14 files changed, 350 insertions(+), 26 deletions(-)
- create mode 100644 include/trace/events/timekeeping.h
-
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 3c1b8a6..1a89a04 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+ 	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+ 	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
++	[PERF_RECORD_REFTIME]			= "REF_TIME",
+ };
+ 
+ const char *perf_event__name(unsigned int id)
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 1d7f664..f481f90 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -98,6 +98,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+ 	PERF_RECORD_HEADER_BUILD_ID		= 67,
+ 	PERF_RECORD_FINISHED_ROUND		= 68,
++	PERF_RECORD_REFTIME			= 69,
+ 	PERF_RECORD_HEADER_MAX
+ };
+ 
+@@ -124,6 +125,12 @@ struct tracing_data_event {
+ 	u32 size;
+ };
+ 
++struct reftime_event {
++	struct perf_event_header header;
++	struct timeval tv;
++	u64 nsec;
++};
++
+ union perf_event {
+ 	struct perf_event_header	header;
+ 	struct ip_event			ip;
+@@ -137,6 +144,7 @@ union perf_event {
+ 	struct event_type_event		event_type;
+ 	struct tracing_data_event	tracing_data;
+ 	struct build_id_event		build_id;
++	struct reftime_event		reftime;
+ };
+ 
+ void perf_event__print_totals(void);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b723f21..322632c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -792,6 +792,10 @@ static int perf_session__process_user_event(struct perf_session *session, union
+ 		return ops->build_id(event, session);
+ 	case PERF_RECORD_FINISHED_ROUND:
+ 		return ops->finished_round(event, session, ops);
++	case PERF_RECORD_REFTIME:
++		if (ops->reftime)
++			return ops->reftime(event, session);
++		return -EINVAL;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index de4178d..9728701 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -81,7 +81,8 @@ struct perf_event_ops {
+ 	event_synth_op	attr,
+ 			event_type,
+ 			tracing_data,
+-			build_id;
++			build_id,
++			reftime;
+ 	event_op2	finished_round;
+ 	bool		ordered_samples;
+ 	bool		ordering_requires_timestamps;
 -- 
 1.7.5.2
