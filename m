@@ -1,52 +1,30 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH 0/6] Add time-of-day option to perf events
-Date: Tue, 14 Jun 2011 12:42:12 -0600
-Message-ID: <4DF7AB84.3080000@gmail.com>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: [PATCH] [perf] fix annotation loading when symbol sort order not
+ used.
+Date: Tue, 14 Jun 2011 15:03:04 -0700
+Message-ID: <20110614220304.GA17101@dev1756.snc6.facebook.com>
+References: <BANLkTinXzHiCTb6EWWGSJmzz5dS1P9p1sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:54214 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752108Ab1FNSmQ (ORCPT
+Received: from outmail007.snc4.facebook.com ([66.220.144.139]:60388 "EHLO
+	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1751905Ab1FNWDF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 14 Jun 2011 14:42:16 -0400
-In-Reply-To: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+	Tue, 14 Jun 2011 18:03:05 -0400
+Content-Disposition: inline
+In-Reply-To: <BANLkTinXzHiCTb6EWWGSJmzz5dS1P9p1sg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, tglx@linutronix.de
-Cc: acme@ghostprotocols.net, paulus@samba.org
+To: Sam Liao <phyomh@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-ping?
+On Sun, Jun 12, 2011 at 02:09:40AM +0800, Sam Liao wrote:
+> When "symbol" is not in "-s" sort order options, the hist entry's
+> ms.sym is not equal to sample's addr_location.sym where we should
+> not load annotation. This fix check if symbol sort order used, if
+> not, disable symbol annonation for report command in tui mode.
 
-On 06/07/2011 05:53 PM, David Ahern wrote:
-> Another attempt at printing time-of-day strings on perf events - this
-> time with tracepoints in the timekeeping code to catch updates to
-> xtime.
-> 
-> David Ahern (6):
->   trace: add tracepoints to timekeeping code - xtime changes
->   perf utils: export parse_single_tracepoint_event
->   perf: add reference time event
->   perf record: add time-of-day option
->   perf script: pass trace event to print_trace_event
->   perf script: add time-of-day option for displaying events
-> 
->  include/trace/events/timekeeping.h       |   43 ++++++++
->  kernel/time/timekeeping.c                |    8 ++
->  tools/perf/Documentation/perf-record.txt |    3 +
->  tools/perf/Documentation/perf-script.txt |    8 ++-
->  tools/perf/builtin-record.c              |  102 +++++++++++++++++++-
->  tools/perf/builtin-script.c              |  157 +++++++++++++++++++++++++++++-
->  tools/perf/util/event.c                  |    1 +
->  tools/perf/util/event.h                  |    8 ++
->  tools/perf/util/parse-events.c           |   13 +--
->  tools/perf/util/parse-events.h           |   12 +++
->  tools/perf/util/session.c                |    4 +
->  tools/perf/util/session.h                |    3 +-
->  tools/perf/util/trace-event-parse.c      |   12 +--
->  tools/perf/util/trace-event.h            |    2 +-
->  14 files changed, 350 insertions(+), 26 deletions(-)
->  create mode 100644 include/trace/events/timekeeping.h
-> 
+Thanks for taking care of this. Works well for me.
+
+ -Arun
