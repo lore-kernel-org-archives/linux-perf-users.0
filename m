@@ -1,43 +1,52 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: Re: [BUG] perf report core dump
-Date: Mon, 13 Jun 2011 13:16:59 -0700
-Message-ID: <4DF6703B.1040006@fb.com>
-References: <4DF2A5AA.90409@fb.com> <BANLkTi=7uznMtmTFyu_UXgdV=WvS-eXq3g@mail.gmail.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: [PATCH 0/6] Add time-of-day option to perf events
+Date: Tue, 14 Jun 2011 12:42:12 -0600
+Message-ID: <4DF7AB84.3080000@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from outmail019.snc4.facebook.com ([66.220.144.151]:37808 "EHLO
-	mx-out.facebook.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1750941Ab1FMUQR (ORCPT
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:54214 "EHLO
+	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752108Ab1FNSmQ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Jun 2011 16:16:17 -0400
-In-Reply-To: <BANLkTi=7uznMtmTFyu_UXgdV=WvS-eXq3g@mail.gmail.com>
+	Tue, 14 Jun 2011 14:42:16 -0400
+In-Reply-To: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Sam Liao <phyomh@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, tglx@linutronix.de
+Cc: acme@ghostprotocols.net, paulus@samba.org
 
-On 6/11/11 9:24 AM, Sam Liao wrote:
+ping?
 
-> I noticed similar error, but It seems it leads by the "-s pid" option
-> instead added "caller/callee" specifier. Remove this patch, symptom
-> also showed up.
-
-Yes - the bug doesn't seem to be caused by your patch, but it affects 
-the primary use case with  -g graph,0.5,caller --sort pid.
-
-builtin-report.c:
-
-         /*
-          * Only in the newt browser we are doing integrated annotation,
-          * so we don't allocated the extra space needed because the stdio
-          * code will not use it.
-          */
-         if (al->sym != NULL && use_browser > 0) {
-
-makes it clear why it hits the --tui case, but not --stdio. I'll 
-probably just disable this code path for now, until there is a better 
-solution.
-
-  -Arun
+On 06/07/2011 05:53 PM, David Ahern wrote:
+> Another attempt at printing time-of-day strings on perf events - this
+> time with tracepoints in the timekeeping code to catch updates to
+> xtime.
+> 
+> David Ahern (6):
+>   trace: add tracepoints to timekeeping code - xtime changes
+>   perf utils: export parse_single_tracepoint_event
+>   perf: add reference time event
+>   perf record: add time-of-day option
+>   perf script: pass trace event to print_trace_event
+>   perf script: add time-of-day option for displaying events
+> 
+>  include/trace/events/timekeeping.h       |   43 ++++++++
+>  kernel/time/timekeeping.c                |    8 ++
+>  tools/perf/Documentation/perf-record.txt |    3 +
+>  tools/perf/Documentation/perf-script.txt |    8 ++-
+>  tools/perf/builtin-record.c              |  102 +++++++++++++++++++-
+>  tools/perf/builtin-script.c              |  157 +++++++++++++++++++++++++++++-
+>  tools/perf/util/event.c                  |    1 +
+>  tools/perf/util/event.h                  |    8 ++
+>  tools/perf/util/parse-events.c           |   13 +--
+>  tools/perf/util/parse-events.h           |   12 +++
+>  tools/perf/util/session.c                |    4 +
+>  tools/perf/util/session.h                |    3 +-
+>  tools/perf/util/trace-event-parse.c      |   12 +--
+>  tools/perf/util/trace-event.h            |    2 +-
+>  14 files changed, 350 insertions(+), 26 deletions(-)
+>  create mode 100644 include/trace/events/timekeeping.h
+> 
