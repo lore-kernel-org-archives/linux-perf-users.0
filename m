@@ -1,85 +1,60 @@
 From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 1/6] trace: add tracepoints to timekeeping code - xtime
- changes
-Date: Fri, 17 Jun 2011 15:23:31 +0200
-Message-ID: <20110617132322.GB25197@somewhere.redhat.com>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Fri, 17 Jun 2011 15:32:35 +0200
+Message-ID: <20110617133230.GC25197@somewhere.redhat.com>
 References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
- <1307490903-24600-1-git-send-email-dsahern@gmail.com>
+ <1307490946-24673-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:53037 "EHLO
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:60585 "EHLO
 	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759012Ab1FQNXg (ORCPT
+	with ESMTP id S1756555Ab1FQNcq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 17 Jun 2011 09:23:36 -0400
+	Fri, 17 Jun 2011 09:32:46 -0400
 Content-Disposition: inline
-In-Reply-To: <1307490903-24600-1-git-send-email-dsahern@gmail.com>
+In-Reply-To: <1307490946-24673-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de, johnstul@us.ibm.com, rostedt@goodmis.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
 
-On Tue, Jun 07, 2011 at 05:55:03PM -0600, David Ahern wrote:
-> Trace points in timekeeping.c where xtime is modified by a user
-> or ntp.
+On Tue, Jun 07, 2011 at 05:55:46PM -0600, David Ahern wrote:
+> For initial perf_clock to time-of-day correlation.
 > 
 > Signed-off-by: David Ahern <dsahern@gmail.com>
 > ---
->  include/trace/events/timekeeping.h |   43 ++++++++++++++++++++++++++++++++++++
->  kernel/time/timekeeping.c          |    8 ++++++
->  2 files changed, 51 insertions(+), 0 deletions(-)
->  create mode 100644 include/trace/events/timekeeping.h
+>  tools/perf/util/event.c   |    1 +
+>  tools/perf/util/event.h   |    8 ++++++++
+>  tools/perf/util/session.c |    4 ++++
+>  tools/perf/util/session.h |    3 ++-
+>  4 files changed, 15 insertions(+), 1 deletions(-)
 > 
-> diff --git a/include/trace/events/timekeeping.h b/include/trace/events/timekeeping.h
-> new file mode 100644
-> index 0000000..3d5d083
-> --- /dev/null
-> +++ b/include/trace/events/timekeeping.h
-> @@ -0,0 +1,43 @@
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM timekeeping
-> +
-> +#if !defined(_TRACE_TIMEKEEP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_TIMEKEEP_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/time.h>
-> +
-> +DECLARE_EVENT_CLASS(tod_template,
-> +
-> +	TP_PROTO(const struct timespec *tv),
-> +
-> +	TP_ARGS(tv),
-> +
-> +	TP_STRUCT__entry(
-> +		__field( __kernel_time_t,	tv_sec)
-> +		__field( long,			tv_nsec)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->tv_sec  = tv->tv_sec;
-> +		__entry->tv_nsec = tv->tv_nsec;
-> +	),
-> +
-> +	TP_printk("tv_sec=%ld tv_nsec=%ld", __entry->tv_sec, __entry->tv_nsec)
-> +);
-> +
-> +DEFINE_EVENT(tod_template, settimeofday,
-> +	TP_PROTO(const struct timespec *tv),
-> +	TP_ARGS(tv));
-> +
-> +DEFINE_EVENT(tod_template, timekeeping_inject_offset,
-> +	TP_PROTO(const struct timespec *tv),
-> +	TP_ARGS(tv));
-> +
-> +DEFINE_EVENT(tod_template, timekeeping_inject_sleeptime,
-> +	TP_PROTO(const struct timespec *tv),
-> +	TP_ARGS(tv));
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index 3c1b8a6..1a89a04 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
+>  	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+>  	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+>  	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
+> +	[PERF_RECORD_REFTIME]			= "REF_TIME",
+>  };
+>  
+>  const char *perf_event__name(unsigned int id)
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index 1d7f664..f481f90 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -98,6 +98,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+>  	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+>  	PERF_RECORD_HEADER_BUILD_ID		= 67,
+>  	PERF_RECORD_FINISHED_ROUND		= 68,
+> +	PERF_RECORD_REFTIME			= 69,
 
-Does the fact it's any of the three way of updating xtime make any
-difference from the user point of view?
+We would like to avoid adding more custom events like these. They were very convenient
+but they steal the kernel event type space. They are deemed for removal in the long term.
 
-If not can we rather factorize that in a single settimeofday tracepoint?
-Or update_time_of_day if we don't want to confuse the user with the
-syscall.
+Another idea to achieve what you want would be to create a new perf event header feature,
+like HEADER_TRACE_INFO or HEADER_BUILD_ID are. Then use that to create a space in the perf
+file to save that couple of clocks initial values.
