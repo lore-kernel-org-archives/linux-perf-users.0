@@ -1,60 +1,85 @@
 From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH] [perf] Add inverted call graph report support.
-Date: Thu, 16 Jun 2011 00:24:05 +0200
-Message-ID: <20110615222402.GB18579@somewhere.redhat.com>
-References: <BANLkTi=svHgWzyKiEHjMc-j5Hq4y5R8Mow@mail.gmail.com>
- <20110609193300.GA16858@dev1756.snc6.facebook.com>
- <20110614221517.GA20319@dev1756.snc6.facebook.com>
- <BANLkTikcxA53t1ummUG3-3TagFhj==qYjw@mail.gmail.com>
- <20110615081518.GC12496@elte.hu>
+Subject: Re: [PATCH 1/6] trace: add tracepoints to timekeeping code - xtime
+ changes
+Date: Fri, 17 Jun 2011 15:23:31 +0200
+Message-ID: <20110617132322.GB25197@somewhere.redhat.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+ <1307490903-24600-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:53037 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759012Ab1FQNXg (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 17 Jun 2011 09:23:36 -0400
 Content-Disposition: inline
-In-Reply-To: <20110615081518.GC12496@elte.hu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Sam Liao <phyomh@gmail.com>, Arun Sharma <asharma@fb.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <1307490903-24600-1-git-send-email-dsahern@gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: David Ahern <dsahern@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de, johnstul@us.ibm.com, rostedt@goodmis.org
 
-On Wed, Jun 15, 2011 at 10:15:18AM +0200, Ingo Molnar wrote:
->=20
-> * Sam Liao <phyomh@gmail.com> wrote:
->=20
-> > On Wed, Jun 15, 2011 at 6:15 AM, Arun Sharma <asharma@fb.com> wrote=
-:
-> > > Sam,
-> > >
-> > > $ perf report -g graph,0.5,caller --sort pid
-> > >
-> > > is a bit hard to type. Perhaps add a simpler command line option
-> > > that has the same effect?
-> > >
-> > > =A0-Arun
-> > >
-> > >
-> >=20
-> > How about perf report -g [caller/callee,][graph,0.1] -s pid
-> >=20
-> > or remove the order of the options for "-g"
->=20
-> We could alias the -G flag to the inverse graph.
+On Tue, Jun 07, 2011 at 05:55:03PM -0600, David Ahern wrote:
+> Trace points in timekeeping.c where xtime is modified by a user
+> or ntp.
+> 
+> Signed-off-by: David Ahern <dsahern@gmail.com>
+> ---
+>  include/trace/events/timekeeping.h |   43 ++++++++++++++++++++++++++++++++++++
+>  kernel/time/timekeeping.c          |    8 ++++++
+>  2 files changed, 51 insertions(+), 0 deletions(-)
+>  create mode 100644 include/trace/events/timekeeping.h
+> 
+> diff --git a/include/trace/events/timekeeping.h b/include/trace/events/timekeeping.h
+> new file mode 100644
+> index 0000000..3d5d083
+> --- /dev/null
+> +++ b/include/trace/events/timekeeping.h
+> @@ -0,0 +1,43 @@
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM timekeeping
+> +
+> +#if !defined(_TRACE_TIMEKEEP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_TIMEKEEP_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/time.h>
+> +
+> +DECLARE_EVENT_CLASS(tod_template,
+> +
+> +	TP_PROTO(const struct timespec *tv),
+> +
+> +	TP_ARGS(tv),
+> +
+> +	TP_STRUCT__entry(
+> +		__field( __kernel_time_t,	tv_sec)
+> +		__field( long,			tv_nsec)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->tv_sec  = tv->tv_sec;
+> +		__entry->tv_nsec = tv->tv_nsec;
+> +	),
+> +
+> +	TP_printk("tv_sec=%ld tv_nsec=%ld", __entry->tv_sec, __entry->tv_nsec)
+> +);
+> +
+> +DEFINE_EVENT(tod_template, settimeofday,
+> +	TP_PROTO(const struct timespec *tv),
+> +	TP_ARGS(tv));
+> +
+> +DEFINE_EVENT(tod_template, timekeeping_inject_offset,
+> +	TP_PROTO(const struct timespec *tv),
+> +	TP_ARGS(tv));
+> +
+> +DEFINE_EVENT(tod_template, timekeeping_inject_sleeptime,
+> +	TP_PROTO(const struct timespec *tv),
+> +	TP_ARGS(tv));
 
-Agreed.
--g could map to fine tuning of callchain parameters like it does right =
-now
-and we can use -G as a shortcut for inverted callchain keeping the defa=
-ult
-settings.
-=20
-> Plus it would be nice to allow a .perfconfig flag for people to=20
-> configure their desired default reporting parameters.
+Does the fact it's any of the three way of updating xtime make any
+difference from the user point of view?
 
-Yeah.
-
-It would be also nice to have a "caller" sorting mode:
-
-	perf report -G -s caller
-
-This can be useful to get the entire tree of calls for each callers.
+If not can we rather factorize that in a single settimeofday tracepoint?
+Or update_time_of_day if we don't want to confuse the user with the
+syscall.
