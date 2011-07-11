@@ -1,65 +1,107 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: Using a new perf tool against an older kernel
-Date: Thu, 23 Jun 2011 23:14:19 -0600
-Message-ID: <4E041D2B.5020808@gmail.com>
-References: <4E026123.4060208@fb.com> <4E034C2C.30509@gmail.com> <4E03968A.5010008@fb.com> <4E039BC7.4050802@gmail.com> <20110624001145.GE8058@somewhere.redhat.com>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Sun, 10 Jul 2011 22:20:29 -0600
+Message-ID: <4E1A7A0D.8000806@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490946-24673-1-git-send-email-dsahern@gmail.com> <20110617133230.GC25197@somewhere.redhat.com> <4DFB5F0B.4020903@gmail.com> <20110617141707.GE25197@somewhere.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:50845 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751974Ab1FXFOW (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:47528 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750957Ab1GKEUk (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 24 Jun 2011 01:14:22 -0400
-In-Reply-To: <20110624001145.GE8058@somewhere.redhat.com>
+	Mon, 11 Jul 2011 00:20:40 -0400
+In-Reply-To: <20110617141707.GE25197@somewhere.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Arun Sharma <asharma@fb.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frederic Weisbecker <fweisbec@gmail.com>, peterz@infradead.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, paulus@samba.org, tglx@linutronix.de
 
-On 06/23/2011 06:11 PM, Frederic Weisbecker wrote:
-> On Thu, Jun 23, 2011 at 02:02:15PM -0600, David Ahern wrote:
+On 06/17/2011 08:17 AM, Frederic Weisbecker wrote:
+> On Fri, Jun 17, 2011 at 08:04:59AM -0600, David Ahern wrote:
 >>
 >>
->> On 06/23/2011 01:39 PM, Arun Sharma wrote:
->>> On 6/23/11 7:22 AM, David Ahern wrote:
+>> On 06/17/2011 07:32 AM, Frederic Weisbecker wrote:
+>>> On Tue, Jun 07, 2011 at 05:55:46PM -0600, David Ahern wrote:
+>>>> For initial perf_clock to time-of-day correlation.
+>>>>
+>>>> Signed-off-by: David Ahern <dsahern@gmail.com>
+>>>> ---
+>>>>  tools/perf/util/event.c   |    1 +
+>>>>  tools/perf/util/event.h   |    8 ++++++++
+>>>>  tools/perf/util/session.c |    4 ++++
+>>>>  tools/perf/util/session.h |    3 ++-
+>>>>  4 files changed, 15 insertions(+), 1 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+>>>> index 3c1b8a6..1a89a04 100644
+>>>> --- a/tools/perf/util/event.c
+>>>> +++ b/tools/perf/util/event.c
+>>>> @@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
+>>>>  	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+>>>>  	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+>>>>  	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
+>>>> +	[PERF_RECORD_REFTIME]			= "REF_TIME",
+>>>>  };
+>>>>  
+>>>>  const char *perf_event__name(unsigned int id)
+>>>> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+>>>> index 1d7f664..f481f90 100644
+>>>> --- a/tools/perf/util/event.h
+>>>> +++ b/tools/perf/util/event.h
+>>>> @@ -98,6 +98,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+>>>>  	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+>>>>  	PERF_RECORD_HEADER_BUILD_ID		= 67,
+>>>>  	PERF_RECORD_FINISHED_ROUND		= 68,
+>>>> +	PERF_RECORD_REFTIME			= 69,
 >>>
->>>> I have not seen issues like this using newer perf userspace against
->>>> older kernels. For example, my laptop was running Fedora 14 (2.6.35) and
->>>> now Fedora 15 (2.6.38.8) and I typically use latest perf builds (e.g.,
->>>> testing patches).
+>>> We would like to avoid adding more custom events like these. They were very convenient
+>>> but they steal the kernel event type space. They are deemed for removal in the long term.
 >>>
->>> I narrowed it down to PERF_SAMPLE_RAW:
->>>
->>> perf record -ag -- sleep 1
->>>
->>> is fine, but:
->>>
->>> perf record -agR -- sleep 1
->>>
->>> fails for me most of the time. The reason I needed to use the -R in the
->>> first place is that "perf script" fails on older kernels with:
->>>
->>> Samples do not contain timestamps.
->>>
->>> With the newer perf, I don't get errors, but the timestamp field is
->>> invalid. So I need to use the -R flag to get valid timestamps +
->>> stacktraces out of "perf script".
+>>> Another idea to achieve what you want would be to create a new perf event header feature,
+>>> like HEADER_TRACE_INFO or HEADER_BUILD_ID are. Then use that to create a space in the perf
+>>> file to save that couple of clocks initial values.
 >>
->> That should have been fixed.
->>
->> And -T on record gets the timestamps.
+>> you mean like this:
+>> https://lkml.org/lkml/2010/12/7/813
 >>
 >> David
 > 
-> Right, it would be nice to suggest that from perf script when timestamps
-> are not recorded.
+> Exactly, why did you change?
 
-Timestamps are enabled by default, but that output option is removed if
-the samples do not have timestamps. That message is generated if the
-user requests timestamps (-f time) in the perf-script output and the
-samples do not have timestamps, but Arun did not request that. Arun's
-mileage with perf-3.0 definitely varies from what I've seen.
+Finally getting back to this.
+
+The answer to the 'why' is that putting a reference timestamp in the
+header field does not work for file appends across reboots. ie., the case:
+perf record --tod ...
+reboot
+perf record -A --tod ...
+
+perf_clock timestamps change across reboots so the reference time
+created by the first invocation is not valid for the append case. The
+discussion then drifted towards having a kernel side event which per
+past patch sets has its own issues.
+
+So to summarize the options proposed to date and issues with the proposals:
+1. reference timestamp in header
+   - does not work for appends across reboots
+
+2. synthesized events
+   - preference against them
+
+3. kernel side event
+   - cannot generate an initial sample (with counter value and
+perf_clock timestamp) on demand - e.g., start of session; a proposal to
+use an ioctl to add one to the event stream was shot down
+
+At this point the only idea that comes to mind is to use a combination
+of 2 and 3: add the kernel side clock event
+(https://lkml.org/lkml/2011/2/18/11), read the realtime clock counter,
+read the monotonic clock timestamp (ie., perf_clock value), and
+synthesize a perf sample that is written to the file. The append case
+(with mismatch in --tod options between record invocations) would be
+handled by having the kernel side clock event in the event list
+(perf_evlist__equal would fail if --tod was not used for all invocations).
 
 David
