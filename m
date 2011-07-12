@@ -1,56 +1,138 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH] perf tools, x86: fix 32-bit compile on 64-bit system
-Date: Mon, 11 Jul 2011 15:38:24 -0600
-Message-ID: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Tue, 12 Jul 2011 16:30:27 +0200
+Message-ID: <20110712143024.GA9201@somewhere>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
+ <1307490946-24673-1-git-send-email-dsahern@gmail.com>
+ <20110617133230.GC25197@somewhere.redhat.com>
+ <4DFB5F0B.4020903@gmail.com>
+ <20110617141707.GE25197@somewhere.redhat.com>
+ <4E1A7A0D.8000806@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:58583 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756250Ab1GKVib (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:49648 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752970Ab1GLOac (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 11 Jul 2011 17:38:31 -0400
+	Tue, 12 Jul 2011 10:30:32 -0400
+Content-Disposition: inline
+In-Reply-To: <4E1A7A0D.8000806@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, David Ahern <dsahern@gmail.com>
+To: David Ahern <dsahern@gmail.com>, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
 
-Builds for 32-bit binaries on a 64-bit host currently fail with the error:
+On Sun, Jul 10, 2011 at 10:20:29PM -0600, David Ahern wrote:
+> On 06/17/2011 08:17 AM, Frederic Weisbecker wrote:
+> > On Fri, Jun 17, 2011 at 08:04:59AM -0600, David Ahern wrote:
+> >>
+> >>
+> >> On 06/17/2011 07:32 AM, Frederic Weisbecker wrote:
+> >>> On Tue, Jun 07, 2011 at 05:55:46PM -0600, David Ahern wrote:
+> >>>> For initial perf_clock to time-of-day correlation.
+> >>>>
+> >>>> Signed-off-by: David Ahern <dsahern@gmail.com>
+> >>>> ---
+> >>>>  tools/perf/util/event.c   |    1 +
+> >>>>  tools/perf/util/event.h   |    8 ++++++++
+> >>>>  tools/perf/util/session.c |    4 ++++
+> >>>>  tools/perf/util/session.h |    3 ++-
+> >>>>  4 files changed, 15 insertions(+), 1 deletions(-)
+> >>>>
+> >>>> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> >>>> index 3c1b8a6..1a89a04 100644
+> >>>> --- a/tools/perf/util/event.c
+> >>>> +++ b/tools/perf/util/event.c
+> >>>> @@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
+> >>>>  	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+> >>>>  	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+> >>>>  	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
+> >>>> +	[PERF_RECORD_REFTIME]			= "REF_TIME",
+> >>>>  };
+> >>>>  
+> >>>>  const char *perf_event__name(unsigned int id)
+> >>>> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> >>>> index 1d7f664..f481f90 100644
+> >>>> --- a/tools/perf/util/event.h
+> >>>> +++ b/tools/perf/util/event.h
+> >>>> @@ -98,6 +98,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+> >>>>  	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+> >>>>  	PERF_RECORD_HEADER_BUILD_ID		= 67,
+> >>>>  	PERF_RECORD_FINISHED_ROUND		= 68,
+> >>>> +	PERF_RECORD_REFTIME			= 69,
+> >>>
+> >>> We would like to avoid adding more custom events like these. They were very convenient
+> >>> but they steal the kernel event type space. They are deemed for removal in the long term.
+> >>>
+> >>> Another idea to achieve what you want would be to create a new perf event header feature,
+> >>> like HEADER_TRACE_INFO or HEADER_BUILD_ID are. Then use that to create a space in the perf
+> >>> file to save that couple of clocks initial values.
+> >>
+> >> you mean like this:
+> >> https://lkml.org/lkml/2010/12/7/813
+> >>
+> >> David
+> > 
+> > Exactly, why did you change?
+> 
+> Finally getting back to this.
+> 
+> The answer to the 'why' is that putting a reference timestamp in the
+> header field does not work for file appends across reboots. ie., the case:
+> perf record --tod ...
+> reboot
+> perf record -A --tod ...
 
-gcc -o /tmp/perf-ppc/bench/mem-memcpy-x86-64-asm.o -c -fno-omit-frame-pointer -ggdb3 -Wall -Wextra -std=gnu99 -Werror -O6 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Wformat-y2k -Wshadow -Winit-self -Wpacked -Wredundant-decls -Wstrict-aliasing=3 -Wswitch-default -Wswitch-enum -Wno-system-headers -Wundef -Wwrite-strings -Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wstrict-prototypes -Wdeclaration-after-statement -m32 -fstack-protector-all -Wstack-protector -Wvolatile-register-var -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Iutil/include -Iarch/x86/include -I/tmp/perf-ppc/ -DLIBELF_NO_MMAP -DDWARF_SUPPORT -DNO_NEWT_SUPPORT -DNO_LIBPERL -DNO_LIBPYTHON -DHAVE_CPLUS_DEMANGLE -DNO_STRLCPY -DARCH_X86_64 bench/mem-memcpy-x86-64-asm.
- S
-bench/../../../arch/x86/lib/memcpy_64.S: Assembler messages:
-bench/../../../arch/x86/lib/memcpy_64.S:29: Error: bad register name `%rdi'
-bench/../../../arch/x86/lib/memcpy_64.S:34: Error: invalid instruction suffix for `movs'
-bench/../../../arch/x86/lib/memcpy_64.S:50: Error: bad register name `%rdi'
-bench/../../../arch/x86/lib/memcpy_64.S:61: Error: bad register name `%rdi'
-...
+Damn append mode. I doubt that thing is really used. And it just complexifies
+everything. It might be wise to get rid of it?
 
-The problem is the detection of the host arch without considering passed in
-flags. This change fixes 32-bit builds via:
+Ingo, Peter, Arnaldo?
+ 
+> perf_clock timestamps change across reboots so the reference time
+> created by the first invocation is not valid for the append case. The
+> discussion then drifted towards having a kernel side event which per
+> past patch sets has its own issues.
+> 
+> So to summarize the options proposed to date and issues with the proposals:
+> 1. reference timestamp in header
+>    - does not work for appends across reboots
+> 
+> 2. synthesized events
+>    - preference against them
+> 
+> 3. kernel side event
+>    - cannot generate an initial sample (with counter value and
+> perf_clock timestamp) on demand - e.g., start of session; a proposal to
+> use an ioctl to add one to the event stream was shot down
+> 
+> At this point the only idea that comes to mind is to use a combination
+> of 2 and 3: add the kernel side clock event
+> (https://lkml.org/lkml/2011/2/18/11), read the realtime clock counter,
+> read the monotonic clock timestamp (ie., perf_clock value), and
+> synthesize a perf sample that is written to the file. The append case
+> (with mismatch in --tod options between record invocations) would be
+> handled by having the kernel side clock event in the event list
+> (perf_evlist__equal would fail if --tod was not used for all invocations).
 
-make EXTRA_CFLAGS=-m32 
+Actually you first have to face a deeper problem. events are not stored
+in order in the flow, but they are sorted from perf_session__process_events().
 
-and 64-bit builds still reference the memcpy_64.S.
+The bunch of sorted events is flushed periodically and sent to the consumer.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
----
- tools/perf/Makefile |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+See flush_sample_queue().
 
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 940257b..c168366 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -52,7 +52,10 @@ ifeq ($(ARCH),i386)
- endif
- ifeq ($(ARCH),x86_64)
- 	ARCH := x86
--	IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-+	IS_X86_64 := 0
-+	ifeq (, $(findstring m32,$(EXTRA_CFLAGS)))
-+		IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-+	endif
- 	ifeq (${IS_X86_64}, 1)
- 		RAW_ARCH := x86_64
- 		ARCH_CFLAGS := -DARCH_X86_64
--- 
-1.7.6
+And this sorting is made on top of the sample->time timestamps. So events
+are first sorted on sample->time and only afterward you have access to your
+gtod tracepoint samples. But if that gtod sample has been taken after a reboot
+then its sample->time is not consistant with the rest. It is not well sorted
+and thus the reftime won't be updated at the right moment.
+
+So the problem is that reftime update already depends on a consistant cpu
+timestamp.
+
+I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
+is not a solution because gtod can change.
+
+I'd rather propose to refuse append mode as long as we have any timestamp. That includes
+gtod but also sample timestamps. They are buggy if we reboot.
