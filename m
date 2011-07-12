@@ -1,50 +1,54 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH] perf tools: fix endian conversion reading event attr from header
-Date: Tue, 12 Jul 2011 09:19:19 -0600
-Message-ID: <1310483959-23621-1-git-send-email-dsahern@gmail.com>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Tue, 12 Jul 2011 10:35:21 -0600
+Message-ID: <4E1C77C9.1060005@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490946-24673-1-git-send-email-dsahern@gmail.com> <20110617133230.GC25197@somewhere.redhat.com> <4DFB5F0B.4020903@gmail.com> <20110617141707.GE25197@somewhere.redhat.com> <4E1A7A0D.8000806@gmail.com> <20110712143024.GA9201@somewhere>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:36297 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752645Ab1GLPT0 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:47181 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753738Ab1GLQf1 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 12 Jul 2011 11:19:26 -0400
+	Tue, 12 Jul 2011 12:35:27 -0400
+In-Reply-To: <20110712143024.GA9201@somewhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, David Ahern <dsahern@gmail.com>
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
 
-The perf_event_attr struct has 2 __u32's at the top and need to
-be swapped individually. With this change I was able to analyze
-a perf.data collected in a 32-bit PPC VM on an x86 system. I
-tested both 32-bit and 64-bit binaries for the Intel analysis
-side; both read the PPC perf.data file correctly.
+On 07/12/2011 08:30 AM, Frederic Weisbecker wrote:
+> Actually you first have to face a deeper problem. events are not stored
+> in order in the flow, but they are sorted from perf_session__process_events().
+> 
+> The bunch of sorted events is flushed periodically and sent to the consumer.
+> 
+> See flush_sample_queue().
+> 
+> And this sorting is made on top of the sample->time timestamps. So events
+> are first sorted on sample->time and only afterward you have access to your
+> gtod tracepoint samples. But if that gtod sample has been taken after a reboot
+> then its sample->time is not consistant with the rest. It is not well sorted
+> and thus the reftime won't be updated at the right moment.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
----
- tools/perf/util/header.c |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+I was aware of this function and the buffering /sorting it does; I have
+similar code in my local analysis tool (for older perf userspace). I had
+not stopped to consider the impacts on the append mode since I never use
+that option.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index afb0849..8044c6f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -877,9 +877,16 @@ int perf_session__read_header(struct perf_session *session, int fd)
- 		struct perf_evsel *evsel;
- 		off_t tmp;
- 
--		if (perf_header__getbuffer64(header, fd, &f_attr, sizeof(f_attr)))
-+		if (readn(fd, &f_attr, sizeof(f_attr)) <= 0)
- 			goto out_errno;
- 
-+		if (header->needs_swap) {
-+			f_attr.attr.type = bswap_32(f_attr.attr.type);
-+			f_attr.attr.size = bswap_32(f_attr.attr.size);
-+			mem_bswap_64(&f_attr.attr.config,
-+				     sizeof(struct perf_event_attr) - 8);
-+		}
-+
- 		tmp = lseek(fd, 0, SEEK_CUR);
- 		evsel = perf_evsel__new(&f_attr.attr, i);
- 
--- 
-1.7.6
+> So the problem is that reftime update already depends on a consistant cpu
+> timestamp.
+> 
+> I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
+> is not a solution because gtod can change.
+> 
+> I'd rather propose to refuse append mode as long as we have any timestamp. That includes
+> gtod but also sample timestamps. They are buggy if we reboot.
+
+I'm fine with restricting append mode if samples have timestamps. In
+that case the time of day reference can be added to the header per the
+original patch set. The change in behavior does impact a lot of record
+use cases (system wide, raw).
+
+David
