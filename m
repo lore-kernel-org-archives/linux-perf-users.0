@@ -1,67 +1,65 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH] perf tools, x86: fix 32-bit compile on 64-bit system
-Date: Fri, 15 Jul 2011 09:27:20 -0600
-Message-ID: <4E205C58.30607@gmail.com>
-References: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
+Subject: Re: [PATCH] perf tools: fix endian conversion reading event attr
+ from header
+Date: Fri, 15 Jul 2011 09:31:02 -0600
+Message-ID: <4E205D36.3010707@gmail.com>
+References: <1310483959-23621-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:51111 "EHLO
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:55036 "EHLO
 	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752174Ab1GOP1Z (ORCPT
+	with ESMTP id S1751163Ab1GOPbH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 15 Jul 2011 11:27:25 -0400
-In-Reply-To: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
+	Fri, 15 Jul 2011 11:31:07 -0400
+In-Reply-To: <1310483959-23621-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: mingo@elte.hu, fweisbec@gmail.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, peterz@infradead.org, paulus@samba.org
 
-On 07/11/2011 03:38 PM, David Ahern wrote:
-> Builds for 32-bit binaries on a 64-bit host currently fail with the error:
-> 
-> gcc -o /tmp/perf-ppc/bench/mem-memcpy-x86-64-asm.o -c -fno-omit-frame-pointer -ggdb3 -Wall -Wextra -std=gnu99 -Werror -O6 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Wformat-y2k -Wshadow -Winit-self -Wpacked -Wredundant-decls -Wstrict-aliasing=3 -Wswitch-default -Wswitch-enum -Wno-system-headers -Wundef -Wwrite-strings -Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wstrict-prototypes -Wdeclaration-after-statement -m32 -fstack-protector-all -Wstack-protector -Wvolatile-register-var -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Iutil/include -Iarch/x86/include -I/tmp/perf-ppc/ -DLIBELF_NO_MMAP -DDWARF_SUPPORT -DNO_NEWT_SUPPORT -DNO_LIBPERL -DNO_LIBPYTHON -DHAVE_CPLUS_DEMANGLE -DNO_STRLCPY -DARCH_X86_64 bench/mem-memcpy-x86-64-as
- m.S
-> bench/../../../arch/x86/lib/memcpy_64.S: Assembler messages:
-> bench/../../../arch/x86/lib/memcpy_64.S:29: Error: bad register name `%rdi'
-> bench/../../../arch/x86/lib/memcpy_64.S:34: Error: invalid instruction suffix for `movs'
-> bench/../../../arch/x86/lib/memcpy_64.S:50: Error: bad register name `%rdi'
-> bench/../../../arch/x86/lib/memcpy_64.S:61: Error: bad register name `%rdi'
-> ...
-> 
-> The problem is the detection of the host arch without considering passed in
-> flags. This change fixes 32-bit builds via:
-> 
-> make EXTRA_CFLAGS=-m32 
-> 
-> and 64-bit builds still reference the memcpy_64.S.
-> 
 
-Fairly trivial change to the Makefile. Any objections? I believe Arnaldo
-is out for a few more days and realistically another week to get through
-a month's backlog.
+
+On 07/12/2011 09:19 AM, David Ahern wrote:
+> The perf_event_attr struct has 2 __u32's at the top and need to
+> be swapped individually. With this change I was able to analyze
+> a perf.data collected in a 32-bit PPC VM on an x86 system. I
+> tested both 32-bit and 64-bit binaries for the Intel analysis
+> side; both read the PPC perf.data file correctly.
+
+Similarly with this one. It replaces a call to perf_header__getbuffer64
+with what it does inline -- only doing the swap of the attr struct after
+the initial 2 u32's. I spent 2 days tracking this down and would hate to
+lose it waiting for Arnaldo's return.
 
 David
 
+> 
 > Signed-off-by: David Ahern <dsahern@gmail.com>
 > ---
->  tools/perf/Makefile |    5 ++++-
->  1 files changed, 4 insertions(+), 1 deletions(-)
+>  tools/perf/util/header.c |    9 ++++++++-
+>  1 files changed, 8 insertions(+), 1 deletions(-)
 > 
-> diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-> index 940257b..c168366 100644
-> --- a/tools/perf/Makefile
-> +++ b/tools/perf/Makefile
-> @@ -52,7 +52,10 @@ ifeq ($(ARCH),i386)
->  endif
->  ifeq ($(ARCH),x86_64)
->  	ARCH := x86
-> -	IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-> +	IS_X86_64 := 0
-> +	ifeq (, $(findstring m32,$(EXTRA_CFLAGS)))
-> +		IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-> +	endif
->  	ifeq (${IS_X86_64}, 1)
->  		RAW_ARCH := x86_64
->  		ARCH_CFLAGS := -DARCH_X86_64
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index afb0849..8044c6f 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -877,9 +877,16 @@ int perf_session__read_header(struct perf_session *session, int fd)
+>  		struct perf_evsel *evsel;
+>  		off_t tmp;
+>  
+> -		if (perf_header__getbuffer64(header, fd, &f_attr, sizeof(f_attr)))
+> +		if (readn(fd, &f_attr, sizeof(f_attr)) <= 0)
+>  			goto out_errno;
+>  
+> +		if (header->needs_swap) {
+> +			f_attr.attr.type = bswap_32(f_attr.attr.type);
+> +			f_attr.attr.size = bswap_32(f_attr.attr.size);
+> +			mem_bswap_64(&f_attr.attr.config,
+> +				     sizeof(struct perf_event_attr) - 8);
+> +		}
+> +
+>  		tmp = lseek(fd, 0, SEEK_CUR);
+>  		evsel = perf_evsel__new(&f_attr.attr, i);
+>  
