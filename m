@@ -1,60 +1,47 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: David Ahern <dsahern@gmail.com>
 Subject: Re: [PATCH] perf tools: fix endian conversion reading event attr
  from header
-Date: Fri, 15 Jul 2011 17:47:13 +0200
-Message-ID: <20110715154711.GB6590@somewhere>
-References: <1310483959-23621-1-git-send-email-dsahern@gmail.com>
+Date: Fri, 15 Jul 2011 10:02:42 -0600
+Message-ID: <4E2064A2.10807@gmail.com>
+References: <1310483959-23621-1-git-send-email-dsahern@gmail.com> <20110715154711.GB6590@somewhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1310483959-23621-1-git-send-email-dsahern@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Ahern <dsahern@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:46650 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753018Ab1GOQCq (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 15 Jul 2011 12:02:46 -0400
+In-Reply-To: <20110715154711.GB6590@somewhere>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, paulus@samba.org
-List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Jul 12, 2011 at 09:19:19AM -0600, David Ahern wrote:
-> The perf_event_attr struct has 2 __u32's at the top and need to
-> be swapped individually. With this change I was able to analyze
-> a perf.data collected in a 32-bit PPC VM on an x86 system. I
-> tested both 32-bit and 64-bit binaries for the Intel analysis
-> side; both read the PPC perf.data file correctly.
+On 07/15/2011 09:47 AM, Frederic Weisbecker wrote:
+>> -		if (perf_header__getbuffer64(header, fd, &f_attr, sizeof(f_attr)))
+>> +		if (readn(fd, &f_attr, sizeof(f_attr)) <= 0)
+>>  			goto out_errno;
+>>  
+>> +		if (header->needs_swap) {
+>> +			f_attr.attr.type = bswap_32(f_attr.attr.type);
+>> +			f_attr.attr.size = bswap_32(f_attr.attr.size);
+>> +			mem_bswap_64(&f_attr.attr.config,
+>> +				     sizeof(struct perf_event_attr) - 8);
+>> +		}
+>> +
 > 
-> Signed-off-by: David Ahern <dsahern@gmail.com>
-> ---
->  tools/perf/util/header.c |    9 ++++++++-
->  1 files changed, 8 insertions(+), 1 deletions(-)
+> Good catch!
+
+A long, painful discovery
+
+> But would be nice to also handle the wakeup_events and bp_type fields.
 > 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index afb0849..8044c6f 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -877,9 +877,16 @@ int perf_session__read_header(struct perf_session *session, int fd)
->  		struct perf_evsel *evsel;
->  		off_t tmp;
->  
-> -		if (perf_header__getbuffer64(header, fd, &f_attr, sizeof(f_attr)))
-> +		if (readn(fd, &f_attr, sizeof(f_attr)) <= 0)
->  			goto out_errno;
->  
-> +		if (header->needs_swap) {
-> +			f_attr.attr.type = bswap_32(f_attr.attr.type);
-> +			f_attr.attr.size = bswap_32(f_attr.attr.size);
-> +			mem_bswap_64(&f_attr.attr.config,
-> +				     sizeof(struct perf_event_attr) - 8);
-> +		}
-> +
 
-Good catch!
+I did not think those values were used in userspace, so did not touch
+them. But then your inquiry pushed me into cscope and I found the
+perf_event__attr_swap() function. I'll redo the patch leveraging the
+swapping done there.
 
-But would be nice to also handle the wakeup_events and bp_type fields.
-
-Thanks.
-
->  		tmp = lseek(fd, 0, SEEK_CUR);
->  		evsel = perf_evsel__new(&f_attr.attr, i);
->  
-> -- 
-> 1.7.6
-> 
+David
