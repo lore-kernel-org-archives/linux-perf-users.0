@@ -1,62 +1,67 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 3/6] perf: add reference time event
-Date: Tue, 12 Jul 2011 19:03:20 +0200
-Message-ID: <20110712170311.GB9201@somewhere>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com>
- <1307490946-24673-1-git-send-email-dsahern@gmail.com>
- <20110617133230.GC25197@somewhere.redhat.com>
- <4DFB5F0B.4020903@gmail.com>
- <20110617141707.GE25197@somewhere.redhat.com>
- <4E1A7A0D.8000806@gmail.com>
- <20110712143024.GA9201@somewhere>
- <4E1C77C9.1060005@gmail.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: [PATCH] perf tools, x86: fix 32-bit compile on 64-bit system
+Date: Fri, 15 Jul 2011 09:27:20 -0600
+Message-ID: <4E205C58.30607@gmail.com>
+References: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:62796 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753711Ab1GLRD0 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:51111 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752174Ab1GOP1Z (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 12 Jul 2011 13:03:26 -0400
-Content-Disposition: inline
-In-Reply-To: <4E1C77C9.1060005@gmail.com>
+	Fri, 15 Jul 2011 11:27:25 -0400
+In-Reply-To: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
+To: mingo@elte.hu, fweisbec@gmail.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, peterz@infradead.org, paulus@samba.org
 
-On Tue, Jul 12, 2011 at 10:35:21AM -0600, David Ahern wrote:
-> On 07/12/2011 08:30 AM, Frederic Weisbecker wrote:
-> > Actually you first have to face a deeper problem. events are not stored
-> > in order in the flow, but they are sorted from perf_session__process_events().
-> > 
-> > The bunch of sorted events is flushed periodically and sent to the consumer.
-> > 
-> > See flush_sample_queue().
-> > 
-> > And this sorting is made on top of the sample->time timestamps. So events
-> > are first sorted on sample->time and only afterward you have access to your
-> > gtod tracepoint samples. But if that gtod sample has been taken after a reboot
-> > then its sample->time is not consistant with the rest. It is not well sorted
-> > and thus the reftime won't be updated at the right moment.
+On 07/11/2011 03:38 PM, David Ahern wrote:
+> Builds for 32-bit binaries on a 64-bit host currently fail with the error:
 > 
-> I was aware of this function and the buffering /sorting it does; I have
-> similar code in my local analysis tool (for older perf userspace). I had
-> not stopped to consider the impacts on the append mode since I never use
-> that option.
+> gcc -o /tmp/perf-ppc/bench/mem-memcpy-x86-64-asm.o -c -fno-omit-frame-pointer -ggdb3 -Wall -Wextra -std=gnu99 -Werror -O6 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Wformat-y2k -Wshadow -Winit-self -Wpacked -Wredundant-decls -Wstrict-aliasing=3 -Wswitch-default -Wswitch-enum -Wno-system-headers -Wundef -Wwrite-strings -Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wstrict-prototypes -Wdeclaration-after-statement -m32 -fstack-protector-all -Wstack-protector -Wvolatile-register-var -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Iutil/include -Iarch/x86/include -I/tmp/perf-ppc/ -DLIBELF_NO_MMAP -DDWARF_SUPPORT -DNO_NEWT_SUPPORT -DNO_LIBPERL -DNO_LIBPYTHON -DHAVE_CPLUS_DEMANGLE -DNO_STRLCPY -DARCH_X86_64 bench/mem-memcpy-x86-64-as
+ m.S
+> bench/../../../arch/x86/lib/memcpy_64.S: Assembler messages:
+> bench/../../../arch/x86/lib/memcpy_64.S:29: Error: bad register name `%rdi'
+> bench/../../../arch/x86/lib/memcpy_64.S:34: Error: invalid instruction suffix for `movs'
+> bench/../../../arch/x86/lib/memcpy_64.S:50: Error: bad register name `%rdi'
+> bench/../../../arch/x86/lib/memcpy_64.S:61: Error: bad register name `%rdi'
+> ...
 > 
-> > So the problem is that reftime update already depends on a consistant cpu
-> > timestamp.
-> > 
-> > I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
-> > is not a solution because gtod can change.
-> > 
-> > I'd rather propose to refuse append mode as long as we have any timestamp. That includes
-> > gtod but also sample timestamps. They are buggy if we reboot.
+> The problem is the detection of the host arch without considering passed in
+> flags. This change fixes 32-bit builds via:
 > 
-> I'm fine with restricting append mode if samples have timestamps. In
-> that case the time of day reference can be added to the header per the
-> original patch set. The change in behavior does impact a lot of record
-> use cases (system wide, raw).
+> make EXTRA_CFLAGS=-m32 
+> 
+> and 64-bit builds still reference the memcpy_64.S.
+> 
 
-Yep, sounds good.
+Fairly trivial change to the Makefile. Any objections? I believe Arnaldo
+is out for a few more days and realistically another week to get through
+a month's backlog.
+
+David
+
+> Signed-off-by: David Ahern <dsahern@gmail.com>
+> ---
+>  tools/perf/Makefile |    5 ++++-
+>  1 files changed, 4 insertions(+), 1 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+> index 940257b..c168366 100644
+> --- a/tools/perf/Makefile
+> +++ b/tools/perf/Makefile
+> @@ -52,7 +52,10 @@ ifeq ($(ARCH),i386)
+>  endif
+>  ifeq ($(ARCH),x86_64)
+>  	ARCH := x86
+> -	IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
+> +	IS_X86_64 := 0
+> +	ifeq (, $(findstring m32,$(EXTRA_CFLAGS)))
+> +		IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
+> +	endif
+>  	ifeq (${IS_X86_64}, 1)
+>  		RAW_ARCH := x86_64
+>  		ARCH_CFLAGS := -DARCH_X86_64
