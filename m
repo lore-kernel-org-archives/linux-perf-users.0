@@ -1,39 +1,62 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH v2] perf tools: fix endian conversion reading event attr
- from file header
-Date: Sun, 17 Jul 2011 20:12:04 +0200
-Message-ID: <20110717181202.GC29355@somewhere>
-References: <1310754849-12474-1-git-send-email-dsahern@gmail.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: perf PPC: kernel panic with callchains and context switch events
+Date: Wed, 20 Jul 2011 15:57:51 -0600
+Message-ID: <4E274F5F.7000604@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:32921 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756165Ab1GQSMJ (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:45630 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751543Ab1GTV57 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 17 Jul 2011 14:12:09 -0400
-Content-Disposition: inline
-In-Reply-To: <1310754849-12474-1-git-send-email-dsahern@gmail.com>
+	Wed, 20 Jul 2011 17:57:59 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>, peterz@infradead.org, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org
+To: Anton Blanchard <anton@samba.org>, Paul Mackerras <paulus@samba.org>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-On Fri, Jul 15, 2011 at 12:34:09PM -0600, David Ahern wrote:
-> The perf_event_attr struct has 2 __u32's at the top and need to
-> be swapped individually. With this change I was able to analyze
-> a perf.data collected in a 32-bit PPC VM on an x86 system. I
-> tested both 32-bit and 64-bit binaries for the Intel analysis
-> side; both read the PPC perf.data file correctly.
-> 
-> v1 -> v2:
-> - changed the existing perf_event__attr_swap to swap only elements
->   of perf_event_attr and exported it for use in swapping the
->   attributes in the file header
-> - updated swap_ops used for processing events
-> 
-> Signed-off-by: David Ahern <dsahern@gmail.com>
+I am hoping someone familiar with PPC can help understand a panic that
+is generated when capturing callchains with context switch events.
 
-Thanks!
+Call trace is below. The short of it is that walking the callchain
+generates a page fault. To handle the page fault the mmap_sem is needed,
+but it is currently held by setup_arg_pages. setup_arg_pages calls
+shift_arg_pages with the mmap_sem held. shift_arg_pages then calls
+move_page_tables which has a cond_resched at the top of its for loop. If
+the cond_resched() is removed from move_page_tables everything works
+beautifully - no panics.
 
-Acked-by: Frederic Weisbecker <fweisbec@gmail.com>
+So, the question: is it normal for walking the stack to trigger a page
+fault on PPC? The panic is not seen on x86 based systems.
+
+ [<b0180e00>]rb_erase+0x1b4/0x3e8
+ [<b00430f4>]__dequeue_entity+0x50/0xe8
+ [<b0043304>]set_next_entity+0x178/0x1bc
+ [<b0043440>]pick_next_task_fair+0xb0/0x118
+ [<b02ada80>]schedule+0x500/0x614
+ [<b02afaa8>]rwsem_down_failed_common+0xf0/0x264
+ [<b02afca0>]rwsem_down_read_failed+0x34/0x54
+ [<b02aed4c>]down_read+0x3c/0x54
+ [<b0023b58>]do_page_fault+0x114/0x5e8
+ [<b001e350>]handle_page_fault+0xc/0x80
+ [<b0022dec>]perf_callchain+0x224/0x31c
+ [<b009ba70>]perf_prepare_sample+0x240/0x2fc
+ [<b009d760>]__perf_event_overflow+0x280/0x398
+ [<b009d914>]perf_swevent_overflow+0x9c/0x10c
+ [<b009db54>]perf_swevent_ctx_event+0x1d0/0x230
+ [<b009dc38>]do_perf_sw_event+0x84/0xe4
+ [<b009dde8>]perf_sw_event_context_switch+0x150/0x1b4
+ [<b009de90>]perf_event_task_sched_out+0x44/0x2d4
+ [<b02ad840>]schedule+0x2c0/0x614
+ [<b0047dc0>]__cond_resched+0x34/0x90
+ [<b02adcc8>]_cond_resched+0x4c/0x68
+ [<b00bccf8>]move_page_tables+0xb0/0x418
+ [<b00d7ee0>]setup_arg_pages+0x184/0x2a0
+ [<b0110914>]load_elf_binary+0x394/0x1208
+ [<b00d6e28>]search_binary_handler+0xe0/0x2c4
+ [<b00d834c>]do_execve+0x1bc/0x268
+ [<b0015394>]sys_execve+0x84/0xc8
+ [<b001df10>]ret_from_syscall+0x0/0x3c
+
+Thanks,
+David
