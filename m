@@ -1,62 +1,70 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: perf PPC: kernel panic with callchains and context switch events
-Date: Wed, 20 Jul 2011 15:57:51 -0600
-Message-ID: <4E274F5F.7000604@gmail.com>
+Subject: Re: [PATCH] perf tools, x86: fix 32-bit compile on 64-bit system
+Date: Thu, 21 Jul 2011 08:30:43 -0600
+Message-ID: <4E283813.1010205@gmail.com>
+References: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:45630 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751543Ab1GTV57 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:42150 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751343Ab1GUOar (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 20 Jul 2011 17:57:59 -0400
+	Thu, 21 Jul 2011 10:30:47 -0400
+In-Reply-To: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Anton Blanchard <anton@samba.org>, Paul Mackerras <paulus@samba.org>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: mingo@elte.hu, peterz@infradead.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, fweisbec@gmail.com, paulus@samba.org
 
-I am hoping someone familiar with PPC can help understand a panic that
-is generated when capturing callchains with context switch events.
 
-Call trace is below. The short of it is that walking the callchain
-generates a page fault. To handle the page fault the mmap_sem is needed,
-but it is currently held by setup_arg_pages. setup_arg_pages calls
-shift_arg_pages with the mmap_sem held. shift_arg_pages then calls
-move_page_tables which has a cond_resched at the top of its for loop. If
-the cond_resched() is removed from move_page_tables everything works
-beautifully - no panics.
 
-So, the question: is it normal for walking the stack to trigger a page
-fault on PPC? The panic is not seen on x86 based systems.
+On 07/11/2011 03:38 PM, David Ahern wrote:
+> Builds for 32-bit binaries on a 64-bit host currently fail with the error:
+> 
+> gcc -o /tmp/perf-ppc/bench/mem-memcpy-x86-64-asm.o -c -fno-omit-frame-pointer -ggdb3 -Wall -Wextra -std=gnu99 -Werror -O6 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Wformat-y2k -Wshadow -Winit-self -Wpacked -Wredundant-decls -Wstrict-aliasing=3 -Wswitch-default -Wswitch-enum -Wno-system-headers -Wundef -Wwrite-strings -Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wstrict-prototypes -Wdeclaration-after-statement -m32 -fstack-protector-all -Wstack-protector -Wvolatile-register-var -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Iutil/include -Iarch/x86/include -I/tmp/perf-ppc/ -DLIBELF_NO_MMAP -DDWARF_SUPPORT -DNO_NEWT_SUPPORT -DNO_LIBPERL -DNO_LIBPYTHON -DHAVE_CPLUS_DEMANGLE -DNO_STRLCPY -DARCH_X86_64 bench/mem-memcpy-x86-64-as
+ m.S
+> bench/../../../arch/x86/lib/memcpy_64.S: Assembler messages:
+> bench/../../../arch/x86/lib/memcpy_64.S:29: Error: bad register name `%rdi'
+> bench/../../../arch/x86/lib/memcpy_64.S:34: Error: invalid instruction suffix for `movs'
+> bench/../../../arch/x86/lib/memcpy_64.S:50: Error: bad register name `%rdi'
+> bench/../../../arch/x86/lib/memcpy_64.S:61: Error: bad register name `%rdi'
+> ...
+> 
+> The problem is the detection of the host arch without considering passed in
+> flags. This change fixes 32-bit builds via:
+> 
+> make EXTRA_CFLAGS=-m32 
+> 
+> and 64-bit builds still reference the memcpy_64.S.
+> 
+> Signed-off-by: David Ahern <dsahern@gmail.com>
 
- [<b0180e00>]rb_erase+0x1b4/0x3e8
- [<b00430f4>]__dequeue_entity+0x50/0xe8
- [<b0043304>]set_next_entity+0x178/0x1bc
- [<b0043440>]pick_next_task_fair+0xb0/0x118
- [<b02ada80>]schedule+0x500/0x614
- [<b02afaa8>]rwsem_down_failed_common+0xf0/0x264
- [<b02afca0>]rwsem_down_read_failed+0x34/0x54
- [<b02aed4c>]down_read+0x3c/0x54
- [<b0023b58>]do_page_fault+0x114/0x5e8
- [<b001e350>]handle_page_fault+0xc/0x80
- [<b0022dec>]perf_callchain+0x224/0x31c
- [<b009ba70>]perf_prepare_sample+0x240/0x2fc
- [<b009d760>]__perf_event_overflow+0x280/0x398
- [<b009d914>]perf_swevent_overflow+0x9c/0x10c
- [<b009db54>]perf_swevent_ctx_event+0x1d0/0x230
- [<b009dc38>]do_perf_sw_event+0x84/0xe4
- [<b009dde8>]perf_sw_event_context_switch+0x150/0x1b4
- [<b009de90>]perf_event_task_sched_out+0x44/0x2d4
- [<b02ad840>]schedule+0x2c0/0x614
- [<b0047dc0>]__cond_resched+0x34/0x90
- [<b02adcc8>]_cond_resched+0x4c/0x68
- [<b00bccf8>]move_page_tables+0xb0/0x418
- [<b00d7ee0>]setup_arg_pages+0x184/0x2a0
- [<b0110914>]load_elf_binary+0x394/0x1208
- [<b00d6e28>]search_binary_handler+0xe0/0x2c4
- [<b00d834c>]do_execve+0x1bc/0x268
- [<b0015394>]sys_execve+0x84/0xc8
- [<b001df10>]ret_from_syscall+0x0/0x3c
+This one was missed in the recent commits. It has been acked by Frederic
+and Peter made a comment about picking it up. Perhaps coming through his
+tree?
 
 Thanks,
 David
+
+> ---
+>  tools/perf/Makefile |    5 ++++-
+>  1 files changed, 4 insertions(+), 1 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+> index 940257b..c168366 100644
+> --- a/tools/perf/Makefile
+> +++ b/tools/perf/Makefile
+> @@ -52,7 +52,10 @@ ifeq ($(ARCH),i386)
+>  endif
+>  ifeq ($(ARCH),x86_64)
+>  	ARCH := x86
+> -	IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
+> +	IS_X86_64 := 0
+> +	ifeq (, $(findstring m32,$(EXTRA_CFLAGS)))
+> +		IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
+> +	endif
+>  	ifeq (${IS_X86_64}, 1)
+>  		RAW_ARCH := x86_64
+>  		ARCH_CFLAGS := -DARCH_X86_64
