@@ -1,70 +1,68 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH] perf tools, x86: fix 32-bit compile on 64-bit system
-Date: Thu, 21 Jul 2011 08:30:43 -0600
-Message-ID: <4E283813.1010205@gmail.com>
-References: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
+Subject: [RFC 0/2] KVM: Fix kvm_exit trace event format
+Date: Fri, 22 Jul 2011 12:46:51 +0100
+Message-ID: <1311335213-4148-1-git-send-email-stefanha@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:42150 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751343Ab1GUOar (ORCPT
+Received: from mtagate2.uk.ibm.com ([194.196.100.162]:37921 "EHLO
+	mtagate2.uk.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753595Ab1GVLrU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 21 Jul 2011 10:30:47 -0400
-In-Reply-To: <1310420304-21452-1-git-send-email-dsahern@gmail.com>
+	Fri, 22 Jul 2011 07:47:20 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: mingo@elte.hu, peterz@infradead.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, fweisbec@gmail.com, paulus@samba.org
+To: linux-perf-users@vger.kernel.org
+Cc: kvm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Avi Kivity <avi@redhat.com>, Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
 
+Currently both perf and trace-cmd cannot parse the kvm:kvm_exit trace event
+format.  This patch is an attempt to make formatting work without changing the
+kvm:kvm_exit prototype.  Since this event is a core KVM operation, no doubt
+there are existing trace analysis scripts that rely on it and I don't want to
+break them.
 
+Patch 1 adjusts vmexit-related tracepoints so that they can be fixed too.
 
-On 07/11/2011 03:38 PM, David Ahern wrote:
-> Builds for 32-bit binaries on a 64-bit host currently fail with the error:
-> 
-> gcc -o /tmp/perf-ppc/bench/mem-memcpy-x86-64-asm.o -c -fno-omit-frame-pointer -ggdb3 -Wall -Wextra -std=gnu99 -Werror -O6 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Wformat-y2k -Wshadow -Winit-self -Wpacked -Wredundant-decls -Wstrict-aliasing=3 -Wswitch-default -Wswitch-enum -Wno-system-headers -Wundef -Wwrite-strings -Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wold-style-definition -Wstrict-prototypes -Wdeclaration-after-statement -m32 -fstack-protector-all -Wstack-protector -Wvolatile-register-var -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Iutil/include -Iarch/x86/include -I/tmp/perf-ppc/ -DLIBELF_NO_MMAP -DDWARF_SUPPORT -DNO_NEWT_SUPPORT -DNO_LIBPERL -DNO_LIBPYTHON -DHAVE_CPLUS_DEMANGLE -DNO_STRLCPY -DARCH_X86_64 bench/mem-memcpy-x86-64-as
- m.S
-> bench/../../../arch/x86/lib/memcpy_64.S: Assembler messages:
-> bench/../../../arch/x86/lib/memcpy_64.S:29: Error: bad register name `%rdi'
-> bench/../../../arch/x86/lib/memcpy_64.S:34: Error: invalid instruction suffix for `movs'
-> bench/../../../arch/x86/lib/memcpy_64.S:50: Error: bad register name `%rdi'
-> bench/../../../arch/x86/lib/memcpy_64.S:61: Error: bad register name `%rdi'
-> ...
-> 
-> The problem is the detection of the host arch without considering passed in
-> flags. This change fixes 32-bit builds via:
-> 
-> make EXTRA_CFLAGS=-m32 
-> 
-> and 64-bit builds still reference the memcpy_64.S.
-> 
-> Signed-off-by: David Ahern <dsahern@gmail.com>
+Patch 2 replaces ftrace_print_symbols_seq() with __print_symbolic().  This
+means all information necessary for formatting the exit_reason field is now
+part of the trace event's format.  In theory userspace tools should now work.
 
-This one was missed in the recent commits. It has been acked by Frederic
-and Peter made a comment about picking it up. Perhaps coming through his
-tree?
+In practice both perf and trace-cmd are not happy with the new exit_reason
+formatting expression (omitting the details and split across lines for easy
+email reading here):
 
-Thanks,
-David
+print fmt: "reason %s rip 0x%lx info %llx %llx",
+           (REC->isa == 1) ?
+           __print_symbolic(REC->exit_reason, { 0, "EXCEPTION_NMI" }, ...) :
+           __print_symbolic(REC->exit_reason, { 0x000, "read_cr0" }, ...),
+           REC->guest_rip, REC->info1, REC->info2
 
-> ---
->  tools/perf/Makefile |    5 ++++-
->  1 files changed, 4 insertions(+), 1 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-> index 940257b..c168366 100644
-> --- a/tools/perf/Makefile
-> +++ b/tools/perf/Makefile
-> @@ -52,7 +52,10 @@ ifeq ($(ARCH),i386)
->  endif
->  ifeq ($(ARCH),x86_64)
->  	ARCH := x86
-> -	IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-> +	IS_X86_64 := 0
-> +	ifeq (, $(findstring m32,$(EXTRA_CFLAGS)))
-> +		IS_X86_64 := $(shell echo __x86_64__ | ${CC} -E -xc - | tail -n 1)
-> +	endif
->  	ifeq (${IS_X86_64}, 1)
->  		RAW_ARCH := x86_64
->  		ARCH_CFLAGS := -DARCH_X86_64
+perf script says:
+
+  Warning: Error: expected type 5 but read 4
+  Warning: Error: expected type 5 but read 0
+  Warning: unknown op '}'
+
+kvm  2696 [001]   289.850941: kvm_exit: EVENT 'kvm_exit' FAILED TO PARSE
+
+trace-cmd says:
+
+  Error: expected type 5 but read 4
+  Error: expected type 5 but read 0
+  failed to read event print fmt for kvm_exit
+
+kvm-2696  [000]  1451.564092: kvm_exit: [FAILED TO PARSE] exit_reason=44 guest_rip=0xc01151a8 isa=1 info1=4272 info2=0
+
+I'd really like to make perf and trace-cmd just work with kvm:kvm_exit.  Any
+suggestions other than improving the parsers in the respective tools?
+
+Stefan Hajnoczi (2):
+  KVM: Record instruction set in all vmexit tracepoints
+  KVM: Use __print_symbolic() for vmexit tracepoints
+
+ arch/x86/include/asm/kvm_host.h |    2 -
+ arch/x86/kvm/svm.c              |   61 +-------------------
+ arch/x86/kvm/trace.h            |  118 +++++++++++++++++++++++++++++++++++---
+ arch/x86/kvm/vmx.c              |   44 --------------
+ 4 files changed, 112 insertions(+), 113 deletions(-)
+
+-- 
+1.7.5.4
