@@ -1,154 +1,72 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: perf PPC: kernel panic with callchains and context switch events
-Date: Mon, 25 Jul 2011 09:38:09 -0600
-Message-ID: <4E2D8DE1.6030604@gmail.com>
-References: <4E274F5F.7000604@gmail.com>  <4E2C53E0.3020400@gmail.com> <1311558949.25044.614.camel@pasglop>
+From: Avi Kivity <avi@redhat.com>
+Subject: Re: [RFC 0/2] KVM: Fix kvm_exit trace event format
+Date: Wed, 27 Jul 2011 14:47:20 +0300
+Message-ID: <4E2FFAC8.7080309@redhat.com>
+References: <1311335213-4148-1-git-send-email-stefanha@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f42.google.com ([209.85.210.42]:39541 "EHLO
-	mail-pz0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751997Ab1GYPiK (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:49582 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752099Ab1G0Lr3 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 25 Jul 2011 11:38:10 -0400
-In-Reply-To: <1311558949.25044.614.camel@pasglop>
+	Wed, 27 Jul 2011 07:47:29 -0400
+In-Reply-To: <1311335213-4148-1-git-send-email-stefanha@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Anton Blanchard <anton@samba.org>
-Cc: Kumar Gala <galak@kernel.crashing.org>, Becky Bruce <beckyb@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
+To: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 
-Hi Ben:
+On 07/22/2011 02:46 PM, Stefan Hajnoczi wrote:
+> Currently both perf and trace-cmd cannot parse the kvm:kvm_exit trace event
+> format.  This patch is an attempt to make formatting work without changing the
+> kvm:kvm_exit prototype.  Since this event is a core KVM operation, no doubt
+> there are existing trace analysis scripts that rely on it and I don't want to
+> break them.
+>
+> Patch 1 adjusts vmexit-related tracepoints so that they can be fixed too.
+>
+> Patch 2 replaces ftrace_print_symbols_seq() with __print_symbolic().  This
+> means all information necessary for formatting the exit_reason field is now
+> part of the trace event's format.  In theory userspace tools should now work.
+>
 
-On 07/24/2011 07:55 PM, Benjamin Herrenschmidt wrote:
-> On Sun, 2011-07-24 at 11:18 -0600, David Ahern wrote:
->> On 07/20/2011 03:57 PM, David Ahern wrote:
->>> I am hoping someone familiar with PPC can help understand a panic that
->>> is generated when capturing callchains with context switch events.
->>>
->>> Call trace is below. The short of it is that walking the callchain
->>> generates a page fault. To handle the page fault the mmap_sem is needed,
->>> but it is currently held by setup_arg_pages. setup_arg_pages calls
->>> shift_arg_pages with the mmap_sem held. shift_arg_pages then calls
->>> move_page_tables which has a cond_resched at the top of its for loop. If
->>> the cond_resched() is removed from move_page_tables everything works
->>> beautifully - no panics.
->>>
->>> So, the question: is it normal for walking the stack to trigger a page
->>> fault on PPC? The panic is not seen on x86 based systems.
->>
->> Can anyone confirm whether page faults while walking the stack are
->> normal for PPC? We really want to use the context switch event with
->> callchains and need to understand whether this behavior is normal. Of
->> course if it is normal, a way to address the problem without a panic
->> will be needed.
-> 
-> Now that leads to interesting discoveries :-) Becky, can you read all
-> the way and let me know what you think ?
-> 
-> So, trying to walk the user stack directly will potentially cause page
-> faults if it's done by direct access. So if you're going to do it in a
-> spot where you can't afford it, you need to pagefault_disable() I
-> suppose. I think the problem with our existing code is that it's missing
-> those around __get_user_inatomic().
-> 
-> In fact, arguably, we don't want the hash code from modifying the hash
-> either (or even hashing things in). Our 64-bit code handles it today in
-> perf_callchain.c in a way that involves pretty much duplicating the
-> functionality of __get_user_pages_fast() as used by x86 (see below), but
-> as a fallback from a direct access which misses the pagefault_disable()
-> as well.
-> 
-> I think it comes from an old assumption that this would always be called
-> from an nmi, and the explicit tracepoints broke that assumption.
-> 
-> In fact we probably want to bump the NMI count, not just the IRQ count
-> as pagefault_disable() does, to make sure we prevent hashing. 
-> 
-> x86 does things differently, using __get_user_pages_fast() (a variant of
-> get_user_page_fast() that doesn't fallback to normal get_user_pages()).
-> 
-> Now, we could do the same (use __gup_fast too), but I can see a
-> potential issue with ppc 32-bit platforms that have 64-bit PTEs, since
-> we could end up GUP'ing in the middle of the two accesses.
-> 
-> Becky: I think gup_fast is generally broken on 32-bit with 64-bit PTE
-> because of that, the problem isn't specific to perf backtraces, I'll
-> propose a solution further down.
-> 
-> Now, on x86, there is a similar problem with PAE, which is handled by
-> 
->  - having gup disable IRQs
->  - rely on the fact that to change from a valid value to another valid
->    value, the PTE will first get invalidated, which requires an IPI
->    and thus will be blocked by our interrupts being off
-> 
-> We do the first part, but the second part will break if we use HW TLB
-> invalidation broadcast (yet another reason why those are bad, I think I
-> will write a blog entry about it one of these days).
-> 
-> I think we can work around this while keeping our broadcast TLB
-> invalidations by having the invalidation code also increment a global
-> generation count (using the existing lock used by the invalidation code,
-> all 32-bit platforms have such a lock).
-> 
-> From there, gup_fast can be changed to, with proper ordering, check the
-> generation count around the loading of the PTE and loop if it has
-> changed, kind-of a seqlock.
-> 
-> We also need the NMI count bump if we are going to try to keep the
-> attempt at doing a direct access first for perfs.
-> 
-> Becky, do you feel like giving that a shot or should I find another
-> victim ? (Or even do it myself ... ) :-)
+Thanks, applied.
 
-Did you have something in mind besides the patch Anton sent? We'll give
-that one a try and see how it works. (Thanks, Anton!)
+> In practice both perf and trace-cmd are not happy with the new exit_reason
+> formatting expression (omitting the details and split across lines for easy
+> email reading here):
+>
+> print fmt: "reason %s rip 0x%lx info %llx %llx",
+>             (REC->isa == 1) ?
+>             __print_symbolic(REC->exit_reason, { 0, "EXCEPTION_NMI" }, ...) :
+>             __print_symbolic(REC->exit_reason, { 0x000, "read_cr0" }, ...),
+>             REC->guest_rip, REC->info1, REC->info2
+>
+> perf script says:
+>
+>    Warning: Error: expected type 5 but read 4
+>    Warning: Error: expected type 5 but read 0
+>    Warning: unknown op '}'
+>
+> kvm  2696 [001]   289.850941: kvm_exit: EVENT 'kvm_exit' FAILED TO PARSE
+>
+> trace-cmd says:
+>
+>    Error: expected type 5 but read 4
+>    Error: expected type 5 but read 0
+>    failed to read event print fmt for kvm_exit
+>
+> kvm-2696  [000]  1451.564092: kvm_exit: [FAILED TO PARSE] exit_reason=44 guest_rip=0xc01151a8 isa=1 info1=4272 info2=0
+>
+> I'd really like to make perf and trace-cmd just work with kvm:kvm_exit.  Any
+> suggestions other than improving the parsers in the respective tools?
 
-David
+trace-cmd has a plugin API (and a kvm plugin) that you can use for this, 
+and I expect perf either does as well or can make use of one.  I don't 
+think it's useful to complicate the print format description further to 
+support our weird use case.
 
-> 
-> Cheers,
-> Ben.
-> 
->> Thanks,
->> David
->>
->>>
->>>  [<b0180e00>]rb_erase+0x1b4/0x3e8
->>>  [<b00430f4>]__dequeue_entity+0x50/0xe8
->>>  [<b0043304>]set_next_entity+0x178/0x1bc
->>>  [<b0043440>]pick_next_task_fair+0xb0/0x118
->>>  [<b02ada80>]schedule+0x500/0x614
->>>  [<b02afaa8>]rwsem_down_failed_common+0xf0/0x264
->>>  [<b02afca0>]rwsem_down_read_failed+0x34/0x54
->>>  [<b02aed4c>]down_read+0x3c/0x54
->>>  [<b0023b58>]do_page_fault+0x114/0x5e8
->>>  [<b001e350>]handle_page_fault+0xc/0x80
->>>  [<b0022dec>]perf_callchain+0x224/0x31c
->>>  [<b009ba70>]perf_prepare_sample+0x240/0x2fc
->>>  [<b009d760>]__perf_event_overflow+0x280/0x398
->>>  [<b009d914>]perf_swevent_overflow+0x9c/0x10c
->>>  [<b009db54>]perf_swevent_ctx_event+0x1d0/0x230
->>>  [<b009dc38>]do_perf_sw_event+0x84/0xe4
->>>  [<b009dde8>]perf_sw_event_context_switch+0x150/0x1b4
->>>  [<b009de90>]perf_event_task_sched_out+0x44/0x2d4
->>>  [<b02ad840>]schedule+0x2c0/0x614
->>>  [<b0047dc0>]__cond_resched+0x34/0x90
->>>  [<b02adcc8>]_cond_resched+0x4c/0x68
->>>  [<b00bccf8>]move_page_tables+0xb0/0x418
->>>  [<b00d7ee0>]setup_arg_pages+0x184/0x2a0
->>>  [<b0110914>]load_elf_binary+0x394/0x1208
->>>  [<b00d6e28>]search_binary_handler+0xe0/0x2c4
->>>  [<b00d834c>]do_execve+0x1bc/0x268
->>>  [<b0015394>]sys_execve+0x84/0xc8
->>>  [<b001df10>]ret_from_syscall+0x0/0x3c
->>>
->>> Thanks,
->>> David
->> _______________________________________________
->> Linuxppc-dev mailing list
->> Linuxppc-dev@lists.ozlabs.org
->> https://lists.ozlabs.org/listinfo/linuxppc-dev
-> 
-> 
+-- 
+error compiling committee.c: too many arguments to function
