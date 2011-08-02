@@ -1,30 +1,53 @@
-From: Valeri Kuchansky <valeri.kuchansky@genband.com>
-Subject: How to assign devices with VT-d in KVM
-Date: Wed, 27 Jul 2011 15:47:14 +0000
-Message-ID: <28C870B467D2DE46AE9C45B578069D4EE41C@gbplmail03.genband.com>
+From: Han Pingtian <phan@redhat.com>
+Subject: [BUG] perf kmem: Processed 0 events and LOST 75691!
+Date: Tue, 2 Aug 2011 11:59:14 +0800
+Message-ID: <20110802035914.GA6626@hpt.nay.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from exprod7og102.obsmtp.com ([64.18.2.157]:53816 "EHLO
-	exprod7og102.obsmtp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753570Ab1G0UV3 convert rfc822-to-8bit (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:4364 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753775Ab1HBD65 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 27 Jul 2011 16:21:29 -0400
-Content-Language: en-US
+	Mon, 1 Aug 2011 23:58:57 -0400
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Avi Kivity <avi@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Folks,
+Hello,
 
-I'm looking for some help on guest network configuration when enabling VT-d.
-I have fully completed steps given on http://www.linux-kvm.org/page/How_to_assign_devices_with_VT-d_in_KVM on detaching and assigning VFs to KVM.
-I can see Virtual Functions PCIs on the guest. However I cannot find any information on how to further configure to use it by the network service.
-The guest  (standard Fedora 15 distro) Network Manager does not recognize any network hardware. 
-Any help on this matter would be greatly appreciated. 
+I got this with 3.0 perf, but the running kernel is a old one:
 
-Thanks in advance.
+[root@hp-dl580g7-01 perf]# ./perf kmem record sleep 1
+[ perf record: Woken up 0 times to write data ]
+[ perf record: Captured and wrote 21.789 MB perf.data (~951977 samples)
+]
+Processed 0 events and LOST 76148!
 
-Valeri
+Check IO/CPU overload!
+
+[root@hp-dl580g7-01 perf]# ./perf kmem stat
+Processed 0 events and LOST 76148!
+
+Check IO/CPU overload!
+
+
+SUMMARY
+=======
+Total bytes requested: 5725028
+Total bytes allocated: 6291512
+Total bytes wasted on internal fragmentation: 566484
+Internal fragmentation: 9.003941%
+Cross CPU allocations: 28/84295
+
+Is this a bug?
+
+Thanks.
+
+-- 
+Han Pingtian
+Quality Engineer
+hpt @ #kernel-qe
+Red Hat, Inc
+Freedom ... courage ... Commitment ... ACCOUNTABILITY
