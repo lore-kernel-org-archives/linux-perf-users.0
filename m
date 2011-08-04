@@ -1,89 +1,141 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: perf complains losting events
-Date: Wed, 03 Aug 2011 08:11:08 -0600
-Message-ID: <4E3956FC.5090104@gmail.com>
-References: <20110803102858.GB2790@hpt.nay.redhat.com> <1312368852.1147.290.camel@twins>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Thu, 04 Aug 2011 09:10:38 -0600
+Message-ID: <4E3AB66E.7070201@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490946-24673-1-git-send-email-dsahern@gmail.com> <20110617133230.GC25197@somewhere.redhat.com> <4DFB5F0B.4020903@gmail.com> <20110617141707.GE25197@somewhere.redhat.com> <4E1A7A0D.8000806@gmail.com> <20110712143024.GA9201@somewhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f42.google.com ([209.85.210.42]:50128 "EHLO
-	mail-pz0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753076Ab1HCOLY (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:64031 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752910Ab1HDPKp (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 3 Aug 2011 10:11:24 -0400
-In-Reply-To: <1312368852.1147.290.camel@twins>
+	Thu, 4 Aug 2011 11:10:45 -0400
+In-Reply-To: <20110712143024.GA9201@somewhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Han Pingtian <phan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, jolsa@redhat.com
+To: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
 
-On 08/03/2011 04:54 AM, Peter Zijlstra wrote:
-> On Wed, 2011-08-03 at 18:28 +0800, Han Pingtian wrote:
->> Hi,
+On 07/12/2011 08:30 AM, Frederic Weisbecker wrote:
+> On Sun, Jul 10, 2011 at 10:20:29PM -0600, David Ahern wrote:
+>> On 06/17/2011 08:17 AM, Frederic Weisbecker wrote:
+>>> On Fri, Jun 17, 2011 at 08:04:59AM -0600, David Ahern wrote:
+>>>>
+>>>>
+>>>> On 06/17/2011 07:32 AM, Frederic Weisbecker wrote:
+>>>>> On Tue, Jun 07, 2011 at 05:55:46PM -0600, David Ahern wrote:
+>>>>>> For initial perf_clock to time-of-day correlation.
+>>>>>>
+>>>>>> Signed-off-by: David Ahern <dsahern@gmail.com>
+>>>>>> ---
+>>>>>>  tools/perf/util/event.c   |    1 +
+>>>>>>  tools/perf/util/event.h   |    8 ++++++++
+>>>>>>  tools/perf/util/session.c |    4 ++++
+>>>>>>  tools/perf/util/session.h |    3 ++-
+>>>>>>  4 files changed, 15 insertions(+), 1 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+>>>>>> index 3c1b8a6..1a89a04 100644
+>>>>>> --- a/tools/perf/util/event.c
+>>>>>> +++ b/tools/perf/util/event.c
+>>>>>> @@ -24,6 +24,7 @@ static const char *perf_event__names[] = {
+>>>>>>  	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+>>>>>>  	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+>>>>>>  	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
+>>>>>> +	[PERF_RECORD_REFTIME]			= "REF_TIME",
+>>>>>>  };
+>>>>>>  
+>>>>>>  const char *perf_event__name(unsigned int id)
+>>>>>> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+>>>>>> index 1d7f664..f481f90 100644
+>>>>>> --- a/tools/perf/util/event.h
+>>>>>> +++ b/tools/perf/util/event.h
+>>>>>> @@ -98,6 +98,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+>>>>>>  	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+>>>>>>  	PERF_RECORD_HEADER_BUILD_ID		= 67,
+>>>>>>  	PERF_RECORD_FINISHED_ROUND		= 68,
+>>>>>> +	PERF_RECORD_REFTIME			= 69,
+>>>>>
+>>>>> We would like to avoid adding more custom events like these. They were very convenient
+>>>>> but they steal the kernel event type space. They are deemed for removal in the long term.
+>>>>>
+>>>>> Another idea to achieve what you want would be to create a new perf event header feature,
+>>>>> like HEADER_TRACE_INFO or HEADER_BUILD_ID are. Then use that to create a space in the perf
+>>>>> file to save that couple of clocks initial values.
+>>>>
+>>>> you mean like this:
+>>>> https://lkml.org/lkml/2010/12/7/813
+>>>>
+>>>> David
+>>>
+>>> Exactly, why did you change?
 >>
->> I find there is a comment about losting events:
+>> Finally getting back to this.
 >>
->> /*
->>  * The kernel collects the number of events it couldn't send in a stretch and
->>  * when possible sends this number in a PERF_RECORD_LOST event. The number of
->>  * such "chunks" of lost events is stored in .nr_events[PERF_EVENT_LOST] while
->>  * total_lost tells exactly how many events the kernel in fact lost, i.e. it is
->>  * the sum of all struct lost_event.lost fields reported.
->>  *
->>  * The total_period is needed because by default auto-freq is used, so
->>  * multipling nr_events[PERF_EVENT_SAMPLE] by a frequency isn't possible to get
->>  * the total number of low level events, it is necessary to to sum all struct
->>  * sample_event.period and stash the result in total_period.
->>  */
->>
->> So my question is, whether the losting of events is a problem? 
->> I have saw it many times:
->>
->> [root@hp-dl580g7-01 perf]# ./perf kmem record sleep 1
->> [ perf record: Woken up 0 times to write data ]
->> [ perf record: Captured and wrote 21.789 MB perf.data (~951977 samples)
->> ]
->> Processed 0 events and LOST 76148!
->>
->> Check IO/CPU overload!
->>
->> [root@hp-dl580g7-01 perf]# ./perf kmem stat
->> Processed 0 events and LOST 76148!
->>
->> Check IO/CPU overload!
->>
->>
->> SUMMARY
->> =======
->> Total bytes requested: 5725028
->> Total bytes allocated: 6291512
->> Total bytes wasted on internal fragmentation: 566484
->> Internal fragmentation: 9.003941%
->> Cross CPU allocations: 28/84295
+>> The answer to the 'why' is that putting a reference timestamp in the
+>> header field does not work for file appends across reboots. ie., the case:
+>> perf record --tod ...
+>> reboot
+>> perf record -A --tod ...
 > 
-> Just means there's too many event to process, if you run record as a
-> realtime task its less:
+> Damn append mode. I doubt that thing is really used. And it just complexifies
+> everything. It might be wise to get rid of it?
 > 
-> $ perf record -a -r 1 -R -f -c 1 -e kmem:kmalloc -e kmem:kmalloc_node -e
-> kmem:kfree -e kmem:kmem_cache_alloc -e kmem:kmem_cache_alloc_node -e
-> kmem:kmem_cache_free -- sleep 2
-> [ perf record: Woken up 2 times to write data ]
-> [ perf record: Captured and wrote 3.642 MB perf.data (~159113 samples) ]
-> Processed 0 events and LOST 7213!
+> Ingo, Peter, Arnaldo?
+>  
+>> perf_clock timestamps change across reboots so the reference time
+>> created by the first invocation is not valid for the append case. The
+>> discussion then drifted towards having a kernel side event which per
+>> past patch sets has its own issues.
+>>
+>> So to summarize the options proposed to date and issues with the proposals:
+>> 1. reference timestamp in header
+>>    - does not work for appends across reboots
+>>
+>> 2. synthesized events
+>>    - preference against them
+>>
+>> 3. kernel side event
+>>    - cannot generate an initial sample (with counter value and
+>> perf_clock timestamp) on demand - e.g., start of session; a proposal to
+>> use an ioctl to add one to the event stream was shot down
+>>
+>> At this point the only idea that comes to mind is to use a combination
+>> of 2 and 3: add the kernel side clock event
+>> (https://lkml.org/lkml/2011/2/18/11), read the realtime clock counter,
+>> read the monotonic clock timestamp (ie., perf_clock value), and
+>> synthesize a perf sample that is written to the file. The append case
+>> (with mismatch in --tod options between record invocations) would be
+>> handled by having the kernel side clock event in the event list
+>> (perf_evlist__equal would fail if --tod was not used for all invocations).
 > 
-> On the question on if its a problem, that very much depends on what you
-> want to do and what kind of precision you need from you data..
+> Actually you first have to face a deeper problem. events are not stored
+> in order in the flow, but they are sorted from perf_session__process_events().
 > 
-> I suspect that once we start writing one file per cpu this again will
-> improve somewhat. Acme was going to work on that.. dunno what his plans
-> are.
+> The bunch of sorted events is flushed periodically and sent to the consumer.
+> 
+> See flush_sample_queue().
+> 
+> And this sorting is made on top of the sample->time timestamps. So events
+> are first sorted on sample->time and only afterward you have access to your
+> gtod tracepoint samples. But if that gtod sample has been taken after a reboot
+> then its sample->time is not consistant with the rest. It is not well sorted
+> and thus the reftime won't be updated at the right moment.
+> 
+> So the problem is that reftime update already depends on a consistant cpu
+> timestamp.
+> 
+> I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
+> is not a solution because gtod can change.
+> 
+> I'd rather propose to refuse append mode as long as we have any timestamp. That includes
+> gtod but also sample timestamps. They are buggy if we reboot.
 
-Increasing the number of memory pages helps too (-m arg).
+Arnaldo's sending patches, so I take it he's dug out from backlog. ;-)
+
+Any objections to not allowing append mode for perf-record if samples
+contain timestamps?
 
 David
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
