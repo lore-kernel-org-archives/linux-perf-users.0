@@ -1,102 +1,70 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH 3/6] perf: add reference time event
-Date: Sun, 14 Aug 2011 22:06:08 -0600
-Message-ID: <4E489B30.6080502@gmail.com>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490946-24673-1-git-send-email-dsahern@gmail.com> <20110617133230.GC25197@somewhere.redhat.com> <4DFB5F0B.4020903@gmail.com> <20110617141707.GE25197@somewhere.redhat.com> <4E1A7A0D.8000806@gmail.com> <20110712143024.GA9201@somewhere> <4E3AB66E.7070201@gmail.com> <20110808193033.GA2744@ghostprotocols.net>
+Subject: Re: [PATCH 4/6] perf record: add time-of-day option
+Date: Sun, 14 Aug 2011 22:24:33 -0600
+Message-ID: <4E489F81.7060007@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490964-24714-1-git-send-email-dsahern@gmail.com> <20110617141425.GD25197@somewhere.redhat.com> <4DFB6345.3080007@gmail.com> <20110617151510.GG25197@somewhere.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:33283 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751007Ab1HOEGM (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:63138 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750782Ab1HOEYg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2011 00:06:12 -0400
-In-Reply-To: <20110808193033.GA2744@ghostprotocols.net>
+	Mon, 15 Aug 2011 00:24:36 -0400
+In-Reply-To: <20110617151510.GG25197@somewhere.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
+To: Frederic Weisbecker <fweisbec@gmail.com>, acme@ghostprotocols.net
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
 
-Ingo:
-
-On 08/08/2011 01:30 PM, Arnaldo Carvalho de Melo wrote:
->>>> The answer to the 'why' is that putting a reference timestamp in the
->>>> header field does not work for file appends across reboots. ie., the case:
->>>> perf record --tod ...
->>>> reboot
->>>> perf record -A --tod ...
+On 06/17/2011 09:15 AM, Frederic Weisbecker wrote:
+> On Fri, Jun 17, 2011 at 08:23:01AM -0600, David Ahern wrote:
+>> On 06/17/2011 08:14 AM, Frederic Weisbecker wrote:
 >>>
->>> Damn append mode. I doubt that thing is really used. And it just complexifies
->>> everything. It might be wise to get rid of it?
+>>> So I feel uncomfortable with this tod_sample_type hack. I think we can't really continue
+>>> with this fixed sample_type per session given the kind of hacks that involves.
 >>>
->>> Ingo, Peter, Arnaldo?
->>>  
->>>> perf_clock timestamps change across reboots so the reference time
->>>> created by the first invocation is not valid for the append case. The
->>>> discussion then drifted towards having a kernel side event which per
->>>> past patch sets has its own issues.
->>>>
->>>> So to summarize the options proposed to date and issues with the proposals:
->>>> 1. reference timestamp in header
->>>>    - does not work for appends across reboots
->>>>
->>>> 2. synthesized events
->>>>    - preference against them
->>>>
->>>> 3. kernel side event
->>>>    - cannot generate an initial sample (with counter value and
->>>> perf_clock timestamp) on demand - e.g., start of session; a proposal to
->>>> use an ioctl to add one to the event stream was shot down
->>>>
->>>> At this point the only idea that comes to mind is to use a combination
->>>> of 2 and 3: add the kernel side clock event
->>>> (https://lkml.org/lkml/2011/2/18/11), read the realtime clock counter,
->>>> read the monotonic clock timestamp (ie., perf_clock value), and
->>>> synthesize a perf sample that is written to the file. The append case
->>>> (with mismatch in --tod options between record invocations) would be
->>>> handled by having the kernel side clock event in the event list
->>>> (perf_evlist__equal would fail if --tod was not used for all invocations).
+>>> One thing we could do is to split session->sample_type into an array with one sample
+>>> type per event type (hardware, breakpoint, software, tracepoint).
 >>>
->>> Actually you first have to face a deeper problem. events are not stored
->>> in order in the flow, but they are sorted from perf_session__process_events().
+>>> And then each builtin tool can provide their constraints on top of these values:
 >>>
->>> The bunch of sorted events is flushed periodically and sent to the consumer.
+>>> - builtin-report wants sample_type[HARDWARE] == sample_type[SOFTWARE] == sample_type[TRACEPOINT] == sample_type[BREAKPOINT]
+>>>   although that may be tunable by the time but we can start with that.
+>>> - builtin-script has no specific constraints, except that sample_type[i] meets what the user passed as a parameter
+>>> - etc..
 >>>
->>> See flush_sample_queue().
+>>> Constraints can probably default to sample_type[i] == sample_type[i+1] to mimic the current behaviour. Then tools
+>>> can override that.
 >>>
->>> And this sorting is made on top of the sample->time timestamps. So events
->>> are first sorted on sample->time and only afterward you have access to your
->>> gtod tracepoint samples. But if that gtod sample has been taken after a reboot
->>> then its sample->time is not consistant with the rest. It is not well sorted
->>> and thus the reftime won't be updated at the right moment.
->>>
->>> So the problem is that reftime update already depends on a consistant cpu
->>> timestamp.
->>>
->>> I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
->>> is not a solution because gtod can change.
->>>
->>> I'd rather propose to refuse append mode as long as we have any timestamp. That includes
->>> gtod but also sample timestamps. They are buggy if we reboot.
+>>> What do you think?
 >>
->> Arnaldo's sending patches, so I take it he's dug out from backlog. ;-)
+>> I started working on sample_type refactoring right after sending this
+>> patchset (though I got sidetracked). Each evsel in the list has a
+>> perf_attr struct which has a sample_type. Why not use that which allows
+>> events to have their own sample type - versus a type per event type?
+> 
+> This can make sense, I can figure out some cases where such granularity can be
+> useful. Branch recording doesn't care about recording period for example I think.
+> 
 >>
->> Any objections to not allowing append mode for perf-record if samples
->> contain timestamps?
+>> I'll see if I can get back to it in the next few days and get a better
+>> idea of the pain involved with the refactoring.
 > 
-> I never used append mode, but having these restrictions on append mode
-> seems to be counter intuitive, either we make timestamps work with
-> append mode or we remove append mode completely.
-> 
-> Ingo?
-> 
-> - Arnaldo
+> Thanks a lot :)
 
-Any opinion on prohibiting append mode if samples contain timestamps? To
-summarize perf_clock is reset on reboots which affects sample ordering
-for the append case. We can either remove the append option or not allow
-it if samples have timestamps.
+Coming back to this one ....
 
-Thanks,
+From what I can see sample_type has to be a global per perf session and
+all samples have to use the same sample_type or a change is needed to
+the API/ABI.
+
+The perf_event_header does not have any information that uniquely
+associates it with a specific event type. Right now
+perf_evlist__id2evsel() is used to associate a sample with a specific
+event (evsel) in the list, but that function requires a parsed sample.
+To parse a sample we need the sample_type. So, the sample_type has to be
+a global and the same for all samples.
+
 David
