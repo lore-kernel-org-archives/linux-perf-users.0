@@ -1,38 +1,104 @@
-From: Han Pingtian <phan@redhat.com>
-Subject: How to use perf kvm?
-Date: Mon, 15 Aug 2011 09:28:50 +0800
-Message-ID: <20110815012850.GG4805@hpt.nay.redhat.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: [PATCH 1/6] trace: add tracepoints to timekeeping code - xtime
+ changes
+Date: Sun, 14 Aug 2011 22:03:59 -0600
+Message-ID: <4E489AAF.7080906@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490903-24600-1-git-send-email-dsahern@gmail.com> <20110617132322.GB25197@somewhere.redhat.com> <4DFB60FF.1080500@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:34408 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751207Ab1HOB2T (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:45506 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750724Ab1HOEEE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 14 Aug 2011 21:28:19 -0400
-Content-Disposition: inline
+	Mon, 15 Aug 2011 00:04:04 -0400
+In-Reply-To: <4DFB60FF.1080500@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: yanmin_zhang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org
+To: peterz@infradead.org, tglx@linutronix.de
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, paulus@samba.org, johnstul@us.ibm.com, rostedt@goodmis.org
 
-Hello,
+Thomas/Peter:
 
-Could you please tell me how to use subcommand kvm of perf? I have tried:
+On 06/17/2011 08:13 AM, David Ahern wrote:
+> 
+> 
+> On 06/17/2011 07:23 AM, Frederic Weisbecker wrote:
+>> On Tue, Jun 07, 2011 at 05:55:03PM -0600, David Ahern wrote:
+>>> Trace points in timekeeping.c where xtime is modified by a user
+>>> or ntp.
+>>>
+>>> Signed-off-by: David Ahern <dsahern@gmail.com>
+>>> ---
+>>>  include/trace/events/timekeeping.h |   43 ++++++++++++++++++++++++++++++++++++
+>>>  kernel/time/timekeeping.c          |    8 ++++++
+>>>  2 files changed, 51 insertions(+), 0 deletions(-)
+>>>  create mode 100644 include/trace/events/timekeeping.h
+>>>
+>>> diff --git a/include/trace/events/timekeeping.h b/include/trace/events/timekeeping.h
+>>> new file mode 100644
+>>> index 0000000..3d5d083
+>>> --- /dev/null
+>>> +++ b/include/trace/events/timekeeping.h
+>>> @@ -0,0 +1,43 @@
+>>> +#undef TRACE_SYSTEM
+>>> +#define TRACE_SYSTEM timekeeping
+>>> +
+>>> +#if !defined(_TRACE_TIMEKEEP_H) || defined(TRACE_HEADER_MULTI_READ)
+>>> +#define _TRACE_TIMEKEEP_H
+>>> +
+>>> +#include <linux/tracepoint.h>
+>>> +#include <linux/time.h>
+>>> +
+>>> +DECLARE_EVENT_CLASS(tod_template,
+>>> +
+>>> +	TP_PROTO(const struct timespec *tv),
+>>> +
+>>> +	TP_ARGS(tv),
+>>> +
+>>> +	TP_STRUCT__entry(
+>>> +		__field( __kernel_time_t,	tv_sec)
+>>> +		__field( long,			tv_nsec)
+>>> +	),
+>>> +
+>>> +	TP_fast_assign(
+>>> +		__entry->tv_sec  = tv->tv_sec;
+>>> +		__entry->tv_nsec = tv->tv_nsec;
+>>> +	),
+>>> +
+>>> +	TP_printk("tv_sec=%ld tv_nsec=%ld", __entry->tv_sec, __entry->tv_nsec)
+>>> +);
+>>> +
+>>> +DEFINE_EVENT(tod_template, settimeofday,
+>>> +	TP_PROTO(const struct timespec *tv),
+>>> +	TP_ARGS(tv));
+>>> +
+>>> +DEFINE_EVENT(tod_template, timekeeping_inject_offset,
+>>> +	TP_PROTO(const struct timespec *tv),
+>>> +	TP_ARGS(tv));
+>>> +
+>>> +DEFINE_EVENT(tod_template, timekeeping_inject_sleeptime,
+>>> +	TP_PROTO(const struct timespec *tv),
+>>> +	TP_ARGS(tv));
+>>
+>> Does the fact it's any of the three way of updating xtime make any
+>> difference from the user point of view?
+> 
+> This use case only cares that xtime is updated.
+> 
+>>
+>> If not can we rather factorize that in a single settimeofday tracepoint?
+>> Or update_time_of_day if we don't want to confuse the user with the
+>> syscall.
+> 
+> Peter and Thomas expressed interest in timekeeping tracepoints. How the
+> update happens might be wanted. If desired I can consolidate xtime = *tv
+> into a single update function and put the trace point there.
 
-[root@dell-pem710-02 ~]# pgrep qemu-kvm
-6912
-[root@dell-pem710-02 ~]# sshfs -o allow_other,direct_io  10.16.71.8:/
-guestmount/6912
-root@10.16.71.8's password:
-[root@dell-pem710-02 ~]# perf kvm   --guest --guestmount ~/guestmount top
+Any comments on the proposed trace points in the timekeeping code? I am
+working on a new spin of the patches and would like to know if there are
+changes needed here too.
 
-But there is no kvm guest's info. Only host's info displayed.
-
-Thanks in advance.
--- 
-Han Pingtian
-Quality Engineer
-hpt @ #kernel-qe
-Red Hat, Inc
-Freedom ... courage ... Commitment ... ACCOUNTABILITY
+Thanks,
+David
