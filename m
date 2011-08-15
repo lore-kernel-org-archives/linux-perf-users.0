@@ -1,104 +1,102 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH 1/6] trace: add tracepoints to timekeeping code - xtime
- changes
-Date: Sun, 14 Aug 2011 22:03:59 -0600
-Message-ID: <4E489AAF.7080906@gmail.com>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490903-24600-1-git-send-email-dsahern@gmail.com> <20110617132322.GB25197@somewhere.redhat.com> <4DFB60FF.1080500@gmail.com>
+Subject: Re: [PATCH 3/6] perf: add reference time event
+Date: Sun, 14 Aug 2011 22:06:08 -0600
+Message-ID: <4E489B30.6080502@gmail.com>
+References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490946-24673-1-git-send-email-dsahern@gmail.com> <20110617133230.GC25197@somewhere.redhat.com> <4DFB5F0B.4020903@gmail.com> <20110617141707.GE25197@somewhere.redhat.com> <4E1A7A0D.8000806@gmail.com> <20110712143024.GA9201@somewhere> <4E3AB66E.7070201@gmail.com> <20110808193033.GA2744@ghostprotocols.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:45506 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750724Ab1HOEEE (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:33283 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751007Ab1HOEGM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2011 00:04:04 -0400
-In-Reply-To: <4DFB60FF.1080500@gmail.com>
+	Mon, 15 Aug 2011 00:06:12 -0400
+In-Reply-To: <20110808193033.GA2744@ghostprotocols.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: peterz@infradead.org, tglx@linutronix.de
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@ghostprotocols.net, mingo@elte.hu, paulus@samba.org, johnstul@us.ibm.com, rostedt@goodmis.org
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, tglx@linutronix.de
 
-Thomas/Peter:
+Ingo:
 
-On 06/17/2011 08:13 AM, David Ahern wrote:
-> 
-> 
-> On 06/17/2011 07:23 AM, Frederic Weisbecker wrote:
->> On Tue, Jun 07, 2011 at 05:55:03PM -0600, David Ahern wrote:
->>> Trace points in timekeeping.c where xtime is modified by a user
->>> or ntp.
+On 08/08/2011 01:30 PM, Arnaldo Carvalho de Melo wrote:
+>>>> The answer to the 'why' is that putting a reference timestamp in the
+>>>> header field does not work for file appends across reboots. ie., the case:
+>>>> perf record --tod ...
+>>>> reboot
+>>>> perf record -A --tod ...
 >>>
->>> Signed-off-by: David Ahern <dsahern@gmail.com>
->>> ---
->>>  include/trace/events/timekeeping.h |   43 ++++++++++++++++++++++++++++++++++++
->>>  kernel/time/timekeeping.c          |    8 ++++++
->>>  2 files changed, 51 insertions(+), 0 deletions(-)
->>>  create mode 100644 include/trace/events/timekeeping.h
+>>> Damn append mode. I doubt that thing is really used. And it just complexifies
+>>> everything. It might be wise to get rid of it?
 >>>
->>> diff --git a/include/trace/events/timekeeping.h b/include/trace/events/timekeeping.h
->>> new file mode 100644
->>> index 0000000..3d5d083
->>> --- /dev/null
->>> +++ b/include/trace/events/timekeeping.h
->>> @@ -0,0 +1,43 @@
->>> +#undef TRACE_SYSTEM
->>> +#define TRACE_SYSTEM timekeeping
->>> +
->>> +#if !defined(_TRACE_TIMEKEEP_H) || defined(TRACE_HEADER_MULTI_READ)
->>> +#define _TRACE_TIMEKEEP_H
->>> +
->>> +#include <linux/tracepoint.h>
->>> +#include <linux/time.h>
->>> +
->>> +DECLARE_EVENT_CLASS(tod_template,
->>> +
->>> +	TP_PROTO(const struct timespec *tv),
->>> +
->>> +	TP_ARGS(tv),
->>> +
->>> +	TP_STRUCT__entry(
->>> +		__field( __kernel_time_t,	tv_sec)
->>> +		__field( long,			tv_nsec)
->>> +	),
->>> +
->>> +	TP_fast_assign(
->>> +		__entry->tv_sec  = tv->tv_sec;
->>> +		__entry->tv_nsec = tv->tv_nsec;
->>> +	),
->>> +
->>> +	TP_printk("tv_sec=%ld tv_nsec=%ld", __entry->tv_sec, __entry->tv_nsec)
->>> +);
->>> +
->>> +DEFINE_EVENT(tod_template, settimeofday,
->>> +	TP_PROTO(const struct timespec *tv),
->>> +	TP_ARGS(tv));
->>> +
->>> +DEFINE_EVENT(tod_template, timekeeping_inject_offset,
->>> +	TP_PROTO(const struct timespec *tv),
->>> +	TP_ARGS(tv));
->>> +
->>> +DEFINE_EVENT(tod_template, timekeeping_inject_sleeptime,
->>> +	TP_PROTO(const struct timespec *tv),
->>> +	TP_ARGS(tv));
+>>> Ingo, Peter, Arnaldo?
+>>>  
+>>>> perf_clock timestamps change across reboots so the reference time
+>>>> created by the first invocation is not valid for the append case. The
+>>>> discussion then drifted towards having a kernel side event which per
+>>>> past patch sets has its own issues.
+>>>>
+>>>> So to summarize the options proposed to date and issues with the proposals:
+>>>> 1. reference timestamp in header
+>>>>    - does not work for appends across reboots
+>>>>
+>>>> 2. synthesized events
+>>>>    - preference against them
+>>>>
+>>>> 3. kernel side event
+>>>>    - cannot generate an initial sample (with counter value and
+>>>> perf_clock timestamp) on demand - e.g., start of session; a proposal to
+>>>> use an ioctl to add one to the event stream was shot down
+>>>>
+>>>> At this point the only idea that comes to mind is to use a combination
+>>>> of 2 and 3: add the kernel side clock event
+>>>> (https://lkml.org/lkml/2011/2/18/11), read the realtime clock counter,
+>>>> read the monotonic clock timestamp (ie., perf_clock value), and
+>>>> synthesize a perf sample that is written to the file. The append case
+>>>> (with mismatch in --tod options between record invocations) would be
+>>>> handled by having the kernel side clock event in the event list
+>>>> (perf_evlist__equal would fail if --tod was not used for all invocations).
+>>>
+>>> Actually you first have to face a deeper problem. events are not stored
+>>> in order in the flow, but they are sorted from perf_session__process_events().
+>>>
+>>> The bunch of sorted events is flushed periodically and sent to the consumer.
+>>>
+>>> See flush_sample_queue().
+>>>
+>>> And this sorting is made on top of the sample->time timestamps. So events
+>>> are first sorted on sample->time and only afterward you have access to your
+>>> gtod tracepoint samples. But if that gtod sample has been taken after a reboot
+>>> then its sample->time is not consistant with the rest. It is not well sorted
+>>> and thus the reftime won't be updated at the right moment.
+>>>
+>>> So the problem is that reftime update already depends on a consistant cpu
+>>> timestamp.
+>>>
+>>> I can't think about a sane way to work around that. Sorting on gtod + cpu timestamp
+>>> is not a solution because gtod can change.
+>>>
+>>> I'd rather propose to refuse append mode as long as we have any timestamp. That includes
+>>> gtod but also sample timestamps. They are buggy if we reboot.
 >>
->> Does the fact it's any of the three way of updating xtime make any
->> difference from the user point of view?
-> 
-> This use case only cares that xtime is updated.
-> 
+>> Arnaldo's sending patches, so I take it he's dug out from backlog. ;-)
 >>
->> If not can we rather factorize that in a single settimeofday tracepoint?
->> Or update_time_of_day if we don't want to confuse the user with the
->> syscall.
+>> Any objections to not allowing append mode for perf-record if samples
+>> contain timestamps?
 > 
-> Peter and Thomas expressed interest in timekeeping tracepoints. How the
-> update happens might be wanted. If desired I can consolidate xtime = *tv
-> into a single update function and put the trace point there.
+> I never used append mode, but having these restrictions on append mode
+> seems to be counter intuitive, either we make timestamps work with
+> append mode or we remove append mode completely.
+> 
+> Ingo?
+> 
+> - Arnaldo
 
-Any comments on the proposed trace points in the timekeeping code? I am
-working on a new spin of the patches and would like to know if there are
-changes needed here too.
+Any opinion on prohibiting append mode if samples contain timestamps? To
+summarize perf_clock is reset on reboots which affects sample ordering
+for the append case. We can either remove the append option or not allow
+it if samples have timestamps.
 
 Thanks,
 David
