@@ -1,70 +1,103 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH 4/6] perf record: add time-of-day option
-Date: Sun, 14 Aug 2011 22:24:33 -0600
-Message-ID: <4E489F81.7060007@gmail.com>
-References: <1307490806-24548-1-git-send-email-dsahern@gmail.com> <1307490964-24714-1-git-send-email-dsahern@gmail.com> <20110617141425.GD25197@somewhere.redhat.com> <4DFB6345.3080007@gmail.com> <20110617151510.GG25197@somewhere.redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] perf script: add option to display time change between events
+Date: Thu, 18 Aug 2011 11:05:21 -0600
+Message-ID: <1313687121-25689-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:63138 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750782Ab1HOEYg (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:34417 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751599Ab1HRRF2 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2011 00:24:36 -0400
-In-Reply-To: <20110617151510.GG25197@somewhere.redhat.com>
+	Thu, 18 Aug 2011 13:05:28 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Frederic Weisbecker <fweisbec@gmail.com>, acme@ghostprotocols.net
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, paulus@samba.org, tglx@linutronix.de
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
 
-On 06/17/2011 09:15 AM, Frederic Weisbecker wrote:
-> On Fri, Jun 17, 2011 at 08:23:01AM -0600, David Ahern wrote:
->> On 06/17/2011 08:14 AM, Frederic Weisbecker wrote:
->>>
->>> So I feel uncomfortable with this tod_sample_type hack. I think we can't really continue
->>> with this fixed sample_type per session given the kind of hacks that involves.
->>>
->>> One thing we could do is to split session->sample_type into an array with one sample
->>> type per event type (hardware, breakpoint, software, tracepoint).
->>>
->>> And then each builtin tool can provide their constraints on top of these values:
->>>
->>> - builtin-report wants sample_type[HARDWARE] == sample_type[SOFTWARE] == sample_type[TRACEPOINT] == sample_type[BREAKPOINT]
->>>   although that may be tunable by the time but we can start with that.
->>> - builtin-script has no specific constraints, except that sample_type[i] meets what the user passed as a parameter
->>> - etc..
->>>
->>> Constraints can probably default to sample_type[i] == sample_type[i+1] to mimic the current behaviour. Then tools
->>> can override that.
->>>
->>> What do you think?
->>
->> I started working on sample_type refactoring right after sending this
->> patchset (though I got sidetracked). Each evsel in the list has a
->> perf_attr struct which has a sample_type. Why not use that which allows
->> events to have their own sample type - versus a type per event type?
-> 
-> This can make sense, I can figure out some cases where such granularity can be
-> useful. Branch recording doesn't care about recording period for example I think.
-> 
->>
->> I'll see if I can get back to it in the next few days and get a better
->> idea of the pain involved with the refactoring.
-> 
-> Thanks a lot :)
+Add a 'dt' field option to show time change between events dumped to user:
 
-Coming back to this one ....
+         swapper     0 [000] 0.003780: netif_receive_skb: dev=wlan0 skbaddr=...
+            vpnc 23605 [000] 0.000347: netif_rx: dev=tun0 skbaddr=...
+            vpnc 23605 [000] 0.000007: netif_receive_skb: dev=tun0 skbaddr=...
+ thunderbird-bin 22435 [000] 0.001043: net_dev_queue: dev=tun0 skbaddr=...
+ thunderbird-bin 22435 [000] 0.000012: net_dev_xmit: dev=tun0 skbaddr=...
 
-From what I can see sample_type has to be a global per perf session and
-all samples have to use the same sample_type or a change is needed to
-the API/ABI.
+Signed-off-by: David Ahern <dsahern@gmail.com>
+---
+ tools/perf/Documentation/perf-script.txt |    2 +-
+ tools/perf/builtin-script.c              |   20 +++++++++++++++++++-
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-The perf_event_header does not have any information that uniquely
-associates it with a specific event type. Right now
-perf_evlist__id2evsel() is used to associate a sample with a specific
-event (evsel) in the list, but that function requires a parsed sample.
-To parse a sample we need the sample_type. So, the sample_type has to be
-a global and the same for all samples.
-
-David
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index db01786..4f996ab 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -115,7 +115,7 @@ OPTIONS
+ -f::
+ --fields::
+         Comma separated list of fields to print. Options are:
+-        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr.
++        comm, tid, pid, time, dt, cpu, event, trace, ip, sym, dso, addr.
+         Field list can be prepended with the type, trace, sw or hw,
+         to indicate to which event type the field list applies.
+         e.g., -f sw:comm,tid,time,ip,sym  and -f trace:time,cpu,trace
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 09024ec..541b30a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -37,6 +37,7 @@ enum perf_output_field {
+ 	PERF_OUTPUT_SYM             = 1U << 8,
+ 	PERF_OUTPUT_DSO             = 1U << 9,
+ 	PERF_OUTPUT_ADDR            = 1U << 10,
++	PERF_OUTPUT_DT              = 1U << 11,
+ };
+ 
+ struct output_option {
+@@ -54,6 +55,7 @@ struct output_option {
+ 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
+ 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
+ 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
++	{.str = "dt",    .field = PERF_OUTPUT_DT},
+ };
+ 
+ /* default set to maintain compatibility with current format */
+@@ -207,6 +209,11 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
+ 				       PERF_OUTPUT_TIME))
+ 		return -EINVAL;
+ 
++	if (PRINT_FIELD(DT) &&
++		perf_event_attr__check_stype(attr, PERF_SAMPLE_TIME, "DT",
++				       PERF_OUTPUT_DT))
++		return -EINVAL;
++
+ 	if (PRINT_FIELD(CPU) &&
+ 		perf_event_attr__check_stype(attr, PERF_SAMPLE_CPU, "CPU",
+ 				       PERF_OUTPUT_CPU))
+@@ -288,6 +295,17 @@ static void print_sample_start(struct perf_sample *sample,
+ 		printf("%5lu.%06lu: ", secs, usecs);
+ 	}
+ 
++	if (PRINT_FIELD(DT)) {
++		static u64 prev_sample_time;
++
++		nsecs =  prev_sample_time ? sample->time - prev_sample_time : 0;
++		prev_sample_time = sample->time;
++		secs = nsecs / NSECS_PER_SEC;
++		nsecs -= secs * NSECS_PER_SEC;
++		usecs = nsecs / NSECS_PER_USEC;
++		printf("%lu.%06lu: ", secs, usecs);
++	}
++
+ 	if (PRINT_FIELD(EVNAME)) {
+ 		if (attr->type == PERF_TYPE_TRACEPOINT) {
+ 			type = trace_parse_common_type(sample->raw_data);
+@@ -1080,7 +1098,7 @@ static const struct option options[] = {
+ 	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
+ 		    "Look for files with symbols relative to this directory"),
+ 	OPT_CALLBACK('f', "fields", NULL, "str",
+-		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr",
++		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,dt,cpu,event,trace,ip,sym,dso,addr",
+ 		     parse_output_fields),
+ 	OPT_STRING('c', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
+ 
+-- 
+1.7.6
