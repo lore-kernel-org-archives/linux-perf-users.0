@@ -1,112 +1,92 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH] perf script: add option to display time change between
- events
-Date: Wed, 24 Aug 2011 16:03:58 -0600
-Message-ID: <4E55754E.8010108@gmail.com>
-References: <1313687121-25689-1-git-send-email-dsahern@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] perf record: create events initially disabled and enable after init
+Date: Thu, 25 Aug 2011 10:17:55 -0600
+Message-ID: <1314289075-14706-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:57631 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751110Ab1HXWEE (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:34321 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752574Ab1HYQSB (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 24 Aug 2011 18:04:04 -0400
-In-Reply-To: <1313687121-25689-1-git-send-email-dsahern@gmail.com>
+	Thu, 25 Aug 2011 12:18:01 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@ghostprotocols.net
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de
+To: acme@ghostprotocols.net, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
 
+perf-record currently creates events enabled. When doing a system wide
+collection (-a arg) this causes data collection for perf's initialization
+activities -- eg., perf_event__synthesize_threads(). For some events
+(e.g., context switch S/W event or tracepoints like syscalls) perf's
+initialization causes a lot of events to be captured frequently
+generating "Check IO/CPU overload!" warnings on larger systems
+(e.g., 2 socket, quad core, hyperthreading).
 
-Disregard. The time delta needs to be on a per-cpu basis. I'll redo.
+perf's initialization phase can be skipped by creating events
+disabled and then enabling them once the initialization is done.
 
+Signed-off-by: David Ahern <dsahern@gmail.com>
+---
+ tools/perf/builtin-record.c |    3 +++
+ tools/perf/util/evlist.c    |   13 +++++++++++++
+ tools/perf/util/evlist.h    |    1 +
+ 3 files changed, 17 insertions(+), 0 deletions(-)
 
-On 08/18/2011 11:05 AM, David Ahern wrote:
-> Add a 'dt' field option to show time change between events dumped to user:
-> 
->          swapper     0 [000] 0.003780: netif_receive_skb: dev=wlan0 skbaddr=...
->             vpnc 23605 [000] 0.000347: netif_rx: dev=tun0 skbaddr=...
->             vpnc 23605 [000] 0.000007: netif_receive_skb: dev=tun0 skbaddr=...
->  thunderbird-bin 22435 [000] 0.001043: net_dev_queue: dev=tun0 skbaddr=...
->  thunderbird-bin 22435 [000] 0.000012: net_dev_xmit: dev=tun0 skbaddr=...
-> 
-> Signed-off-by: David Ahern <dsahern@gmail.com>
-> ---
->  tools/perf/Documentation/perf-script.txt |    2 +-
->  tools/perf/builtin-script.c              |   20 +++++++++++++++++++-
->  2 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index db01786..4f996ab 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -115,7 +115,7 @@ OPTIONS
->  -f::
->  --fields::
->          Comma separated list of fields to print. Options are:
-> -        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr.
-> +        comm, tid, pid, time, dt, cpu, event, trace, ip, sym, dso, addr.
->          Field list can be prepended with the type, trace, sw or hw,
->          to indicate to which event type the field list applies.
->          e.g., -f sw:comm,tid,time,ip,sym  and -f trace:time,cpu,trace
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 09024ec..541b30a 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -37,6 +37,7 @@ enum perf_output_field {
->  	PERF_OUTPUT_SYM             = 1U << 8,
->  	PERF_OUTPUT_DSO             = 1U << 9,
->  	PERF_OUTPUT_ADDR            = 1U << 10,
-> +	PERF_OUTPUT_DT              = 1U << 11,
->  };
->  
->  struct output_option {
-> @@ -54,6 +55,7 @@ struct output_option {
->  	{.str = "sym",   .field = PERF_OUTPUT_SYM},
->  	{.str = "dso",   .field = PERF_OUTPUT_DSO},
->  	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
-> +	{.str = "dt",    .field = PERF_OUTPUT_DT},
->  };
->  
->  /* default set to maintain compatibility with current format */
-> @@ -207,6 +209,11 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
->  				       PERF_OUTPUT_TIME))
->  		return -EINVAL;
->  
-> +	if (PRINT_FIELD(DT) &&
-> +		perf_event_attr__check_stype(attr, PERF_SAMPLE_TIME, "DT",
-> +				       PERF_OUTPUT_DT))
-> +		return -EINVAL;
-> +
->  	if (PRINT_FIELD(CPU) &&
->  		perf_event_attr__check_stype(attr, PERF_SAMPLE_CPU, "CPU",
->  				       PERF_OUTPUT_CPU))
-> @@ -288,6 +295,17 @@ static void print_sample_start(struct perf_sample *sample,
->  		printf("%5lu.%06lu: ", secs, usecs);
->  	}
->  
-> +	if (PRINT_FIELD(DT)) {
-> +		static u64 prev_sample_time;
-> +
-> +		nsecs =  prev_sample_time ? sample->time - prev_sample_time : 0;
-> +		prev_sample_time = sample->time;
-> +		secs = nsecs / NSECS_PER_SEC;
-> +		nsecs -= secs * NSECS_PER_SEC;
-> +		usecs = nsecs / NSECS_PER_USEC;
-> +		printf("%lu.%06lu: ", secs, usecs);
-> +	}
-> +
->  	if (PRINT_FIELD(EVNAME)) {
->  		if (attr->type == PERF_TYPE_TRACEPOINT) {
->  			type = trace_parse_common_type(sample->raw_data);
-> @@ -1080,7 +1098,7 @@ static const struct option options[] = {
->  	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
->  		    "Look for files with symbols relative to this directory"),
->  	OPT_CALLBACK('f', "fields", NULL, "str",
-> -		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr",
-> +		     "comma separated output fields prepend with 'type:'. Valid types: hw,sw,trace,raw. Fields: comm,tid,pid,time,dt,cpu,event,trace,ip,sym,dso,addr",
->  		     parse_output_fields),
->  	OPT_STRING('c', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
->  
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 6b0519f..f4c3fbe 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -161,6 +161,7 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
+ 	struct perf_event_attr *attr = &evsel->attr;
+ 	int track = !evsel->idx; /* only the first counter needs these */
+ 
++	attr->disabled		= 1;
+ 	attr->inherit		= !no_inherit;
+ 	attr->read_format	= PERF_FORMAT_TOTAL_TIME_ENABLED |
+ 				  PERF_FORMAT_TOTAL_TIME_RUNNING |
+@@ -671,6 +672,8 @@ static int __cmd_record(int argc, const char **argv)
+ 		}
+ 	}
+ 
++	perf_evlist__enable(evsel_list);
++
+ 	/*
+ 	 * Let the child rip
+ 	 */
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c12bd47..72e9f48 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -113,6 +113,19 @@ void perf_evlist__disable(struct perf_evlist *evlist)
+ 	}
+ }
+ 
++void perf_evlist__enable(struct perf_evlist *evlist)
++{
++	int cpu, thread;
++	struct perf_evsel *pos;
++
++	for (cpu = 0; cpu < evlist->cpus->nr; cpu++) {
++		list_for_each_entry(pos, &evlist->entries, node) {
++			for (thread = 0; thread < evlist->threads->nr; thread++)
++				ioctl(FD(pos, cpu, thread), PERF_EVENT_IOC_ENABLE);
++		}
++	}
++}
++
+ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
+ {
+ 	int nfds = evlist->cpus->nr * evlist->threads->nr * evlist->nr_entries;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index ce85ae9..f349150 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -54,6 +54,7 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages, bool overwrite);
+ void perf_evlist__munmap(struct perf_evlist *evlist);
+ 
+ void perf_evlist__disable(struct perf_evlist *evlist);
++void perf_evlist__enable(struct perf_evlist *evlist);
+ 
+ static inline void perf_evlist__set_maps(struct perf_evlist *evlist,
+ 					 struct cpu_map *cpus,
+-- 
+1.7.6
