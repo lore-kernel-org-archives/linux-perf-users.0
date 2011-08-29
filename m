@@ -1,92 +1,171 @@
 From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH] perf record: create events initially disabled and enable after init
-Date: Thu, 25 Aug 2011 10:17:55 -0600
-Message-ID: <1314289075-14706-1-git-send-email-dsahern@gmail.com>
+Subject: [PATCH] perf tool: fix endianness handling of u32 data in samples
+Date: Mon, 29 Aug 2011 15:55:24 -0600
+Message-ID: <1314654924-13071-1-git-send-email-dsahern@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:34321 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752574Ab1HYQSB (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:36971 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754495Ab1H2Vzc (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 25 Aug 2011 12:18:01 -0400
+	Mon, 29 Aug 2011 17:55:32 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@ghostprotocols.net, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, David Ahern <dsahern@gmail.com>
+Cc: mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, anton@samba.org, David Ahern <dsahern@gmail.com>
 
-perf-record currently creates events enabled. When doing a system wide
-collection (-a arg) this causes data collection for perf's initialization
-activities -- eg., perf_event__synthesize_threads(). For some events
-(e.g., context switch S/W event or tracepoints like syscalls) perf's
-initialization causes a lot of events to be captured frequently
-generating "Check IO/CPU overload!" warnings on larger systems
-(e.g., 2 socket, quad core, hyperthreading).
+Currently, analyzing PPC data files on x86 the cpu field is always 0 and
+the tid and pid are backwards. For example, analyzing a PPC file on PPC
+the pid/tid fields show:
+        rsyslogd  1210/1212
 
-perf's initialization phase can be skipped by creating events
-disabled and then enabling them once the initialization is done.
+and analyzing the same PPC file using an x86 perf binary shows:
+        rsyslogd  1212/1210
+
+The problem is that the swap_op method for samples is
+perf_event__all64_swap which assumes all elements in the sample_data
+struct are u64s. cpu, tid and pid are u32s and need to be handled
+individually. Given that the swap is done before the sample is parsed,
+the simplest solution is to undo the 64-bit swap of those elements when
+the sample is parsed and do the proper swap.
+
+The RAW data field is generic and perf cannot have programmatic knowledge
+of how to treat that data. Instead a warning is given to the user.
+
+Thanks to Anton Blanchard for providing a data file for a mult-CPU
+PPC system so I could verify the fix for the CPU fields.
 
 Signed-off-by: David Ahern <dsahern@gmail.com>
 ---
- tools/perf/builtin-record.c |    3 +++
- tools/perf/util/evlist.c    |   13 +++++++++++++
- tools/perf/util/evlist.h    |    1 +
- 3 files changed, 17 insertions(+), 0 deletions(-)
+ tools/perf/builtin-test.c |    2 +-
+ tools/perf/util/event.h   |    2 +-
+ tools/perf/util/evsel.c   |   43 +++++++++++++++++++++++++++++++++++++------
+ tools/perf/util/session.h |    3 ++-
+ 4 files changed, 41 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 6b0519f..f4c3fbe 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -161,6 +161,7 @@ static void config_attr(struct perf_evsel *evsel, struct perf_evlist *evlist)
- 	struct perf_event_attr *attr = &evsel->attr;
- 	int track = !evsel->idx; /* only the first counter needs these */
- 
-+	attr->disabled		= 1;
- 	attr->inherit		= !no_inherit;
- 	attr->read_format	= PERF_FORMAT_TOTAL_TIME_ENABLED |
- 				  PERF_FORMAT_TOTAL_TIME_RUNNING |
-@@ -671,6 +672,8 @@ static int __cmd_record(int argc, const char **argv)
+diff --git a/tools/perf/builtin-test.c b/tools/perf/builtin-test.c
+index 55f4c76..efe696f 100644
+--- a/tools/perf/builtin-test.c
++++ b/tools/perf/builtin-test.c
+@@ -561,7 +561,7 @@ static int test__basic_mmap(void)
  		}
+ 
+ 		err = perf_event__parse_sample(event, attr.sample_type, sample_size,
+-					       false, &sample);
++					       false, &sample, false);
+ 		if (err) {
+ 			pr_err("Can't parse sample, err = %d\n", err);
+ 			goto out_munmap;
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 1d7f664..357a85b 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -186,6 +186,6 @@ const char *perf_event__name(unsigned int id);
+ 
+ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 			     int sample_size, bool sample_id_all,
+-			     struct perf_sample *sample);
++			     struct perf_sample *sample, bool swapped);
+ 
+ #endif /* __PERF_RECORD_H */
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a03a36b..1c8ecd1 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -7,6 +7,7 @@
+  * Released under the GPL v2. (and only v2, not any later version)
+  */
+ 
++#include <byteswap.h>
+ #include "evsel.h"
+ #include "evlist.h"
+ #include "util.h"
+@@ -342,7 +343,7 @@ static bool sample_overlap(const union perf_event *event,
+ 
+ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 			     int sample_size, bool sample_id_all,
+-			     struct perf_sample *data)
++			     struct perf_sample *data, bool swapped)
+ {
+ 	const u64 *array;
+ 
+@@ -366,7 +367,15 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
  	}
  
-+	perf_evlist__enable(evsel_list);
+ 	if (type & PERF_SAMPLE_TID) {
+-		u32 *p = (u32 *)array;
++		u64 a = *array;
++		u32 *p = (u32 *)&a;
 +
- 	/*
- 	 * Let the child rip
- 	 */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c12bd47..72e9f48 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -113,6 +113,19 @@ void perf_evlist__disable(struct perf_evlist *evlist)
++		if (swapped) {
++			a = bswap_64(a);
++			p[0] = bswap_32(p[0]);
++			p[1] = bswap_32(p[1]);
++		}
++
+ 		data->pid = p[0];
+ 		data->tid = p[1];
+ 		array++;
+@@ -395,8 +404,16 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
  	}
+ 
+ 	if (type & PERF_SAMPLE_CPU) {
+-		u32 *p = (u32 *)array;
+-		data->cpu = *p;
++		u64 a = *array;
++		u32 *p = (u32 *)&a, cpu;
++
++		if (swapped) {
++			a = bswap_64(a);
++			cpu = bswap_32(*p);
++		} else
++			cpu = *p;
++
++		data->cpu = cpu;
+ 		array++;
+ 	}
+ 
+@@ -423,12 +440,26 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 	}
+ 
+ 	if (type & PERF_SAMPLE_RAW) {
+-		u32 *p = (u32 *)array;
++		u64 a = *array;
++		u32 *p = (u32 *)&a;
++
++		if (swapped) {
++			static bool show_warn = true;
++
++			a = bswap_64(a);
++			p[0] = bswap_32(p[0]);
++			p[1] = bswap_32(p[1]);
++
++			if (show_warn) {
++				pr_warning("Endianness of raw data not corrected!\n");
++				show_warn = false;
++			}
++		}
+ 
+ 		if (sample_overlap(event, array, sizeof(u32)))
+ 			return -EFAULT;
+ 
+-		data->raw_size = *p;
++		data->raw_size = p[0];
+ 		p++;
+ 
+ 		if (sample_overlap(event, p, data->raw_size))
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 170601e..974d0cb 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -162,7 +162,8 @@ static inline int perf_session__parse_sample(struct perf_session *session,
+ {
+ 	return perf_event__parse_sample(event, session->sample_type,
+ 					session->sample_size,
+-					session->sample_id_all, sample);
++					session->sample_id_all, sample,
++					session->header.needs_swap);
  }
  
-+void perf_evlist__enable(struct perf_evlist *evlist)
-+{
-+	int cpu, thread;
-+	struct perf_evsel *pos;
-+
-+	for (cpu = 0; cpu < evlist->cpus->nr; cpu++) {
-+		list_for_each_entry(pos, &evlist->entries, node) {
-+			for (thread = 0; thread < evlist->threads->nr; thread++)
-+				ioctl(FD(pos, cpu, thread), PERF_EVENT_IOC_ENABLE);
-+		}
-+	}
-+}
-+
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
- {
- 	int nfds = evlist->cpus->nr * evlist->threads->nr * evlist->nr_entries;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index ce85ae9..f349150 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -54,6 +54,7 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages, bool overwrite);
- void perf_evlist__munmap(struct perf_evlist *evlist);
- 
- void perf_evlist__disable(struct perf_evlist *evlist);
-+void perf_evlist__enable(struct perf_evlist *evlist);
- 
- static inline void perf_evlist__set_maps(struct perf_evlist *evlist,
- 					 struct cpu_map *cpus,
+ struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
 -- 
 1.7.6
