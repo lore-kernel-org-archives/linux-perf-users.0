@@ -1,171 +1,55 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: [PATCH] perf tool: fix endianness handling of u32 data in samples
-Date: Mon, 29 Aug 2011 15:55:24 -0600
-Message-ID: <1314654924-13071-1-git-send-email-dsahern@gmail.com>
+From: Justin Santa Barbara <justin@fathomdb.com>
+Subject: How do I trace new threads in a process?
+Date: Mon, 29 Aug 2011 17:44:10 -0700
+Message-ID: <CAFoXKmqpdGKmAuWCypDJ5uxOBUjqHdhHL9UbYE=rtzRr2dm32A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:36971 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754495Ab1H2Vzc (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:59178 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750799Ab1H3AoK convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 29 Aug 2011 17:55:32 -0400
+	Mon, 29 Aug 2011 20:44:10 -0400
+Received: by ywf7 with SMTP id 7so5210986ywf.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Aug 2011 17:44:10 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@ghostprotocols.net, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, anton@samba.org, David Ahern <dsahern@gmail.com>
+To: linux-perf-users@vger.kernel.org
 
-Currently, analyzing PPC data files on x86 the cpu field is always 0 and
-the tid and pid are backwards. For example, analyzing a PPC file on PPC
-the pid/tid fields show:
-        rsyslogd  1210/1212
+I'm trying to use the perf API to trace a single process, including
+any child threads that are created after I initially set up the
+events. =A0(My end goal is to integrate perf-events into
+google-perftools; my work is open source and available here:
+https://github.com/justinsb/fathomdb-google-perftools-extensions)
 
-and analyzing the same PPC file using an x86 perf binary shows:
-        rsyslogd  1212/1210
+The strategy I've been using is to enumerate all child threads at the
+first call by reading /proc/<pid>/maps. =A0I then set up my performance
+events using sys_perf_event_open, one event per thread tid. =A0I mmap
+each of those fds, and then poll() them. =A0Works great.
 
-The problem is that the swap_op method for samples is
-perf_event__all64_swap which assumes all elements in the sample_data
-struct are u64s. cpu, tid and pid are u32s and need to be handled
-individually. Given that the swap is done before the sample is parsed,
-the simplest solution is to undo the 64-bit swap of those elements when
-the sample is parsed and do the proper swap.
+If a new thread starts, I do get the PERF_RECORD_FORK event, so I can
+then add additional monitors for the new thread. =A0However, the poll i=
+s
+only signaled when a page is full, by which time that thread could be
+long gone (or I could have missed all sorts of interesting events on
+it).
 
-The RAW data field is generic and perf cannot have programmatic knowledge
-of how to treat that data. Instead a warning is given to the user.
+I would think that PERF_RECORD_FORK should cause an immediate signal,
+but I don't see how I can do that without having _every_ event signal
+my thread (which would be very high overhead I think).
 
-Thanks to Anton Blanchard for providing a data file for a mult-CPU
-PPC system so I could verify the fix for the CPU fields.
+I guess I could schedule a second "dummy" perf event monitor on the
+same process, with immediate signalling, but with a low enough
+freequency that it wouldn't fire except for process events.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
----
- tools/perf/builtin-test.c |    2 +-
- tools/perf/util/event.h   |    2 +-
- tools/perf/util/evsel.c   |   43 +++++++++++++++++++++++++++++++++++++------
- tools/perf/util/session.h |    3 ++-
- 4 files changed, 41 insertions(+), 9 deletions(-)
+I can't use the "inherit" flag (which would otherwise be ideal),
+because then I can't mmap the result (the kernel deliberately won't
+allow it - it's the first test in perf_mmap() in
+kernel/events/core.c).
 
-diff --git a/tools/perf/builtin-test.c b/tools/perf/builtin-test.c
-index 55f4c76..efe696f 100644
---- a/tools/perf/builtin-test.c
-+++ b/tools/perf/builtin-test.c
-@@ -561,7 +561,7 @@ static int test__basic_mmap(void)
- 		}
- 
- 		err = perf_event__parse_sample(event, attr.sample_type, sample_size,
--					       false, &sample);
-+					       false, &sample, false);
- 		if (err) {
- 			pr_err("Can't parse sample, err = %d\n", err);
- 			goto out_munmap;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 1d7f664..357a85b 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -186,6 +186,6 @@ const char *perf_event__name(unsigned int id);
- 
- int perf_event__parse_sample(const union perf_event *event, u64 type,
- 			     int sample_size, bool sample_id_all,
--			     struct perf_sample *sample);
-+			     struct perf_sample *sample, bool swapped);
- 
- #endif /* __PERF_RECORD_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a03a36b..1c8ecd1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -7,6 +7,7 @@
-  * Released under the GPL v2. (and only v2, not any later version)
-  */
- 
-+#include <byteswap.h>
- #include "evsel.h"
- #include "evlist.h"
- #include "util.h"
-@@ -342,7 +343,7 @@ static bool sample_overlap(const union perf_event *event,
- 
- int perf_event__parse_sample(const union perf_event *event, u64 type,
- 			     int sample_size, bool sample_id_all,
--			     struct perf_sample *data)
-+			     struct perf_sample *data, bool swapped)
- {
- 	const u64 *array;
- 
-@@ -366,7 +367,15 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
- 	}
- 
- 	if (type & PERF_SAMPLE_TID) {
--		u32 *p = (u32 *)array;
-+		u64 a = *array;
-+		u32 *p = (u32 *)&a;
-+
-+		if (swapped) {
-+			a = bswap_64(a);
-+			p[0] = bswap_32(p[0]);
-+			p[1] = bswap_32(p[1]);
-+		}
-+
- 		data->pid = p[0];
- 		data->tid = p[1];
- 		array++;
-@@ -395,8 +404,16 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
- 	}
- 
- 	if (type & PERF_SAMPLE_CPU) {
--		u32 *p = (u32 *)array;
--		data->cpu = *p;
-+		u64 a = *array;
-+		u32 *p = (u32 *)&a, cpu;
-+
-+		if (swapped) {
-+			a = bswap_64(a);
-+			cpu = bswap_32(*p);
-+		} else
-+			cpu = *p;
-+
-+		data->cpu = cpu;
- 		array++;
- 	}
- 
-@@ -423,12 +440,26 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
- 	}
- 
- 	if (type & PERF_SAMPLE_RAW) {
--		u32 *p = (u32 *)array;
-+		u64 a = *array;
-+		u32 *p = (u32 *)&a;
-+
-+		if (swapped) {
-+			static bool show_warn = true;
-+
-+			a = bswap_64(a);
-+			p[0] = bswap_32(p[0]);
-+			p[1] = bswap_32(p[1]);
-+
-+			if (show_warn) {
-+				pr_warning("Endianness of raw data not corrected!\n");
-+				show_warn = false;
-+			}
-+		}
- 
- 		if (sample_overlap(event, array, sizeof(u32)))
- 			return -EFAULT;
- 
--		data->raw_size = *p;
-+		data->raw_size = p[0];
- 		p++;
- 
- 		if (sample_overlap(event, p, data->raw_size))
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 170601e..974d0cb 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -162,7 +162,8 @@ static inline int perf_session__parse_sample(struct perf_session *session,
- {
- 	return perf_event__parse_sample(event, session->sample_type,
- 					session->sample_size,
--					session->sample_id_all, sample);
-+					session->sample_id_all, sample,
-+					session->header.needs_swap);
- }
- 
- struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
--- 
-1.7.6
+I feel like I'm doing something wrong - what is the suggested approach =
+here?
+
+Thanks,
+Justin
