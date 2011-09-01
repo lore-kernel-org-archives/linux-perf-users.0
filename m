@@ -1,62 +1,93 @@
-From: Maynard Johnson <maynardj@us.ibm.com>
-Subject: Re: Profiling Java code running on Sun HotSpot JVM with linux perf
-Date: Thu, 01 Sep 2011 09:58:34 -0500
-Message-ID: <4E5F9D9A.3060307@us.ibm.com>
-References: <CACiFetRWM4nmfAhB1J6dSSJdiQnCqov8XQYHqrSuxSiMrWoLFA@mail.gmail.com> <CAJSP0QUEcbuxE6n0pb3rydaUuna_nLi-gPZVT6TXGS5OXMAK9A@mail.gmail.com>
-Reply-To: maynardj@us.ibm.com
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Subject: Re: [PATCH] perf tool: fix endianness handling of u32 data in samples
+Date: Thu, 1 Sep 2011 13:19:00 -0300
+Message-ID: <20110901161900.GB15984@ghostprotocols.net>
+References: <1314654924-13071-1-git-send-email-dsahern@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from e9.ny.us.ibm.com ([32.97.182.139]:57160 "EHLO e9.ny.us.ibm.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932185Ab1IAO7T (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 1 Sep 2011 10:59:19 -0400
-Received: from d01relay05.pok.ibm.com (d01relay05.pok.ibm.com [9.56.227.237])
-	by e9.ny.us.ibm.com (8.14.4/8.13.1) with ESMTP id p81EP4Qs022313
-	for <linux-perf-users@vger.kernel.org>; Thu, 1 Sep 2011 10:25:04 -0400
-Received: from d03av06.boulder.ibm.com (d03av06.boulder.ibm.com [9.17.195.245])
-	by d01relay05.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id p81ExHqL151848
-	for <linux-perf-users@vger.kernel.org>; Thu, 1 Sep 2011 10:59:17 -0400
-Received: from d03av06.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av06.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id p81F4K9H012969
-	for <linux-perf-users@vger.kernel.org>; Thu, 1 Sep 2011 09:04:20 -0600
-In-Reply-To: <CAJSP0QUEcbuxE6n0pb3rydaUuna_nLi-gPZVT6TXGS5OXMAK9A@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Geoffrey Blake <geoffrey.w.blake@gmail.com>
-Cc: Stefan Hajnoczi <stefanha@gmail.com>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1314654924-13071-1-git-send-email-dsahern@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Ahern <dsahern@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@elte.hu, peterz@infradead.org, fweisbec@gmail.com, paulus@samba.org, tglx@linutronix.de, anton@samba.org
+List-Id: linux-perf-users.vger.kernel.org
 
-On 08/31/2011 2:35 AM, Stefan Hajnoczi wrote:
-> On Tue, Aug 30, 2011 at 9:03 PM, Geoffrey Blake
-> <geoffrey.w.blake@gmail.com>  wrote:
->> Hi all,
->>
->> I am trying to profile some java server applications using %>perf
->> record -a, and as expected the majority of the execution time of these
->> applications is spent within jit'ed java code.  According to these
->> lists, the jit should be outputting a /tmp/perf-$pid.map file for each
->> thread being jit'ed.  The Sun JIT does not seem to have this output
->> enabled by default.  Does anyone here know what options I need to set
->> on the command line to get the JVM to output the symbol map files from
->> the JIT?
->
-> I don't know the answer but if you don't get one here you could check
-> the OProfile mailing list.  I believe there was a solution for JIT
-> compilers with OProfile and people probably got popular JVMs like
-> HotSpot working.  That might reveal what support HotSpot has for doing
-> this.
-Geoffrey,
-I don't know if there's a way to get perf to show you profile information for 
-Java class methods, but as Stefan said, you can indeed get this using oprofile. 
-  See http://oprofile.sourceforge.net/doc/index.html and read every section with 
-"JIT" in the title.
+Em Mon, Aug 29, 2011 at 03:55:24PM -0600, David Ahern escreveu:
+> Currently, analyzing PPC data files on x86 the cpu field is always 0 =
+and
+> the tid and pid are backwards. For example, analyzing a PPC file on P=
+PC
+> the pid/tid fields show:
+>         rsyslogd  1210/1212
+>=20
+> and analyzing the same PPC file using an x86 perf binary shows:
+>         rsyslogd  1212/1210
+>=20
+> The problem is that the swap_op method for samples is
+> perf_event__all64_swap which assumes all elements in the sample_data
+> struct are u64s. cpu, tid and pid are u32s and need to be handled
+> individually. Given that the swap is done before the sample is parsed=
+,
+> the simplest solution is to undo the 64-bit swap of those elements wh=
+en
+> the sample is parsed and do the proper swap.
+>=20
+> The RAW data field is generic and perf cannot have programmatic knowl=
+edge
+> of how to treat that data. Instead a warning is given to the user.
+>=20
+> Thanks to Anton Blanchard for providing a data file for a mult-CPU
+> PPC system so I could verify the fix for the CPU fields.
+>=20
+> Signed-off-by: David Ahern <dsahern@gmail.com>
 
--Maynard
+cc1: warnings being treated as errors
+util/evsel.c: In function =E2=80=98perf_event__parse_sample=E2=80=99:
+util/evsel.c:379: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:375: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:375: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:371: note: initialized from here
+util/evsel.c:376: error: dereferencing pointer =E2=80=98({anonymous})=E2=
+=80=99 does break strict-aliasing rules
+util/evsel.c:376: error: dereferencing pointer =E2=80=98({anonymous})=E2=
+=80=99 does break strict-aliasing rules
+util/evsel.c:376: note: initialized from here
+util/evsel.c:380: error: dereferencing pointer =E2=80=98({anonymous})=E2=
+=80=99 does break strict-aliasing rules
+util/evsel.c:380: note: initialized from here
+util/evsel.c:414: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:412: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:408: note: initialized from here
+util/evsel.c:462: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:450: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:450: error: dereferencing pointer =E2=80=98p=E2=80=99 does=
+ break strict-aliasing rules
+util/evsel.c:444: note: initialized from here
+util/evsel.c:451: error: dereferencing pointer =E2=80=98({anonymous})=E2=
+=80=99 does break strict-aliasing rules
+util/evsel.c:451: error: dereferencing pointer =E2=80=98({anonymous})=E2=
+=80=99 does break strict-aliasing rules
+util/evsel.c:451: note: initialized from here
+    CC /home/acme/git/build/perf//util/symbol.o
+make: *** [/home/acme/git/build/perf//util/evsel.o] Error 1
+make: *** Waiting for unfinished jobs....
+make: Leaving directory `/home/acme/git/linux/tools/perf'
+[acme@emilia linux]$
 
->
-> Stefan
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[acme@emilia linux]$ uname -a
+Linux emilia.ghostprotocols.net 3.0.3-rt12.14.el6rt.x86_64 #1 SMP PREEM=
+PT RT Wed Aug 31 12:38:53 BRT 2011 x86_64 x86_64 x86_64 GNU/Linux
+[acme@emilia linux]$ cat /etc/redhat-release=20
+Red Hat Enterprise Linux release 6.0 Beta (Santiago)
+[acme@emilia linux]$
+
+- Arnaldo
