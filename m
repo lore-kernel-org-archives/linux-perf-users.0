@@ -1,33 +1,37 @@
-From: Andrew Vagin <avagin@gmail.com>
-Subject: Re: Profiling sleep times?
-Date: Thu, 13 Oct 2011 09:39:25 +0400
-Message-ID: <4E96798D.1060400@gmail.com>
-References: <4E8A0F53.7020408@fb.com> <1317673027.20367.41.camel@twins> <4E8A2EC5.1030901@fb.com> <1317717291.25926.13.camel@twins> <4E8E2417.2000903@fb.com> <4E8FAB3A.2040801@gmail.com> <4E933E65.1090207@fb.com> <20111012074113.GK18618@elte.hu>
+From: walimis <walimisdev@gmail.com>
+Subject: how to get event sample data on vdso section?
+Date: Fri, 14 Oct 2011 11:26:29 +0800
+Message-ID: <20111014032629.GA12896@walimis-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:50069 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750936Ab1JMFj3 (ORCPT
+Received: from mail-ww0-f42.google.com ([74.125.82.42]:34166 "EHLO
+	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756003Ab1JNDpN (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 13 Oct 2011 01:39:29 -0400
-Received: by iaek3 with SMTP id k3so859476iae.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Oct 2011 22:39:28 -0700 (PDT)
-In-Reply-To: <20111012074113.GK18618@elte.hu>
+	Thu, 13 Oct 2011 23:45:13 -0400
+Received: by wwn22 with SMTP id 22so203273wwn.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Oct 2011 20:45:12 -0700 (PDT)
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Arun Sharma <asharma@fb.com>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, acme@ghostprotocols.net, Stephane Eranian <eranian@google.com>, Frederic Weisbecker <fweisbec@gmail.com>
+To: linux-perf-users@vger.kernel.org
+Cc: acme@ghostprotocols.net, mingo@elte.hu
 
-> Ok, will someone please send an updated series of all missing
-> patches, with all acks included, for potential v3.2 pickup?
-I'm in vacation now, so I'm going to send my patches in two-three weeks.
+hi,
 
-Sorry for delay.
->
-> Sleep time profiling is obviously a very hot feature ...
->
-> Thanks,
->
-> 	Ingo
+I want to use perf to profile how many events are emitted on vdso section?
+I followed the document Documentation/trace/tracepoint-analysis.txt to do that:
+
+  $ perf record  -e cycles  -f ./hackbench 10 
+  $ perf report
+
+But I can't see any events emitted on vdso section. I used 2.6.34 
+kernel and x86_32 host.
+
+What's wrong with that? Could anyone give me some clues how to get 
+events data on vdso section? 
+
+Thanks a lot!
+walimis
+    
