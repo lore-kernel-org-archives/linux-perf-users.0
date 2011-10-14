@@ -1,37 +1,31 @@
-From: walimis <walimisdev@gmail.com>
-Subject: how to get event sample data on vdso section?
-Date: Fri, 14 Oct 2011 11:26:29 +0800
-Message-ID: <20111014032629.GA12896@walimis-desktop>
+From: Roland Dreier <roland@kernel.org>
+Subject: perf for analyzing userspace contention
+Date: Thu, 13 Oct 2011 23:36:23 -0700
+Message-ID: <CAG4TOxPowPUbmZBL41MNJjPYKymTNFW3JMAgEf35u1k2BFgbwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ww0-f42.google.com ([74.125.82.42]:34166 "EHLO
-	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756003Ab1JNDpN (ORCPT
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:53611 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751379Ab1JNGgp (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 13 Oct 2011 23:45:13 -0400
-Received: by wwn22 with SMTP id 22so203273wwn.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Oct 2011 20:45:12 -0700 (PDT)
-Content-Disposition: inline
+	Fri, 14 Oct 2011 02:36:45 -0400
+Received: by eye27 with SMTP id 27so805812eye.19
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Oct 2011 23:36:43 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: acme@ghostprotocols.net, mingo@elte.hu
 
-hi,
+Hi everyone,
 
-I want to use perf to profile how many events are emitted on vdso section?
-I followed the document Documentation/trace/tracepoint-analysis.txt to do that:
+Hope this question from a kernel hacker about profiling userspace
+isn't too dumb...
 
-  $ perf record  -e cycles  -f ./hackbench 10 
-  $ perf report
+Anyway, suppose I have a multithreaded userspace app that uses a bunch of
+pthread_mutexes, and I want to figure out which locks are hot and/or heavily
+contended.  What's the best way to do that?  Is perf the right, or is there
+something better?  (This seems like such an obvious thing to want that there
+must be some good way to get this data, I hope)
 
-But I can't see any events emitted on vdso section. I used 2.6.34 
-kernel and x86_32 host.
-
-What's wrong with that? Could anyone give me some clues how to get 
-events data on vdso section? 
-
-Thanks a lot!
-walimis
-    
+Thanks!
+  Roland
