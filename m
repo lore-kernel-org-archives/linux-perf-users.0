@@ -1,43 +1,30 @@
-From: Stefan Hajnoczi <stefanha@gmail.com>
+From: Roland Dreier <roland@kernel.org>
 Subject: Re: perf for analyzing userspace contention
-Date: Fri, 14 Oct 2011 10:42:08 +0100
-Message-ID: <CAJSP0QW9PCjRjQdRQFxVi3DEi4F1PV-jFw1m9p=rmMdjpZb1Kg@mail.gmail.com>
+Date: Fri, 14 Oct 2011 09:58:35 -0700
+Message-ID: <CAG4TOxPDDC2gXqypWN3wRAZ+t5K4kDDynmusOFJUjN+QX0oWSg@mail.gmail.com>
 References: <CAG4TOxPowPUbmZBL41MNJjPYKymTNFW3JMAgEf35u1k2BFgbwA@mail.gmail.com>
+ <CAJSP0QW9PCjRjQdRQFxVi3DEi4F1PV-jFw1m9p=rmMdjpZb1Kg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:39231 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932078Ab1JNJmI convert rfc822-to-8bit (ORCPT
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:40605 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933288Ab1JNQ65 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 14 Oct 2011 05:42:08 -0400
-Received: by ggnb1 with SMTP id b1so193072ggn.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2011 02:42:08 -0700 (PDT)
-In-Reply-To: <CAG4TOxPowPUbmZBL41MNJjPYKymTNFW3JMAgEf35u1k2BFgbwA@mail.gmail.com>
+	Fri, 14 Oct 2011 12:58:57 -0400
+Received: by eye27 with SMTP id 27so1331485eye.19
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2011 09:58:56 -0700 (PDT)
+In-Reply-To: <CAJSP0QW9PCjRjQdRQFxVi3DEi4F1PV-jFw1m9p=rmMdjpZb1Kg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Roland Dreier <roland@kernel.org>
+To: Stefan Hajnoczi <stefanha@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 14, 2011 at 7:36 AM, Roland Dreier <roland@kernel.org> wrot=
-e:
-> Anyway, suppose I have a multithreaded userspace app that uses a bunc=
-h of
-> pthread_mutexes, and I want to figure out which locks are hot and/or =
-heavily
-> contended. =A0What's the best way to do that? =A0Is perf the right, o=
-r is there
-> something better? =A0(This seems like such an obvious thing to want t=
-hat there
-> must be some good way to get this data, I hope)
+On Fri, Oct 14, 2011 at 2:42 AM, Stefan Hajnoczi <stefanha@gmail.com> wrote:
+> I haven't tried this tool myself yet but have been wanting to for sometime:
+> http://git.0pointer.de/?p=mutrace.git
 
-Hi Roland,
-I haven't tried this tool myself yet but have been wanting to for somet=
-ime:
-http://git.0pointer.de/?p=3Dmutrace.git
+Thanks a lot for the reminder!  Now that you mention it, I remember Lennart's
+announcement, but I had completely forgotten about it.  Giving it a shot now.
 
-Here's the full overview of what it does:
-http://0pointer.de/blog/projects/mutrace.html
-
-Stefan
+ - R.
