@@ -1,46 +1,43 @@
-From: "Maucci, Cyrille" <cyrille.maucci@hp.com>
-Subject: RE: perf for analyzing userspace contention
-Date: Fri, 14 Oct 2011 08:33:12 +0100
-Message-ID: <0E02F16954AF394BB163AEE50FDF5485690C6533EB@GVW1121EXC.americas.hpqcorp.net>
+From: Stefan Hajnoczi <stefanha@gmail.com>
+Subject: Re: perf for analyzing userspace contention
+Date: Fri, 14 Oct 2011 10:42:08 +0100
+Message-ID: <CAJSP0QW9PCjRjQdRQFxVi3DEi4F1PV-jFw1m9p=rmMdjpZb1Kg@mail.gmail.com>
 References: <CAG4TOxPowPUbmZBL41MNJjPYKymTNFW3JMAgEf35u1k2BFgbwA@mail.gmail.com>
- <0E02F16954AF394BB163AEE50FDF5485690C6533A3@GVW1121EXC.americas.hpqcorp.net>
- <CAG4TOxPYjOxojTAti7gxrPJinKkGJXTMvAYoeD5MkgQFqVmgLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from g1t0029.austin.hp.com ([15.216.28.36]:11993 "EHLO
-	g1t0029.austin.hp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751326Ab1JNHaN convert rfc822-to-8bit (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:39231 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932078Ab1JNJmI convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 14 Oct 2011 03:30:13 -0400
-In-Reply-To: <CAG4TOxPYjOxojTAti7gxrPJinKkGJXTMvAYoeD5MkgQFqVmgLw@mail.gmail.com>
-Content-Language: en-US
+	Fri, 14 Oct 2011 05:42:08 -0400
+Received: by ggnb1 with SMTP id b1so193072ggn.19
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2011 02:42:08 -0700 (PDT)
+In-Reply-To: <CAG4TOxPowPUbmZBL41MNJjPYKymTNFW3JMAgEf35u1k2BFgbwA@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Roland Dreier <roland@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-
-So I don't know posix mutexex implementation on linux but on HPUX they usually spin first then yield then spin again etc... Until sleep.
-So tools like perf, reporting cpu consumption showing some mutexes path would reveal the pb.
-On HPUX, posix mutexes spin/yield/sleep can be tuned through env variables.
-If this is the same for Linux, you could temporarily set the # of spins to a very high value, to 'emphasize' the hotness of the contention through CPU usage and therefore something 'perf' was meant for since day1.
-
-++Cyrille
-
------Original Message-----
-From: roland.dreier@gmail.com [mailto:roland.dreier@gmail.com] On Behalf Of Roland Dreier
-Sent: Friday, October 14, 2011 9:21 AM
-To: Maucci, Cyrille
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: perf for analyzing userspace contention
 
-On Thu, Oct 13, 2011 at 11:58 PM, Maucci, Cyrille <cyrille.maucci@hp.com> wrote:
-> So are those mutexes acquired/released from different call sites or from one single generic function of yours like LOCK/UNLOCK and the mutex is passed as a param?
+On Fri, Oct 14, 2011 at 7:36 AM, Roland Dreier <roland@kernel.org> wrot=
+e:
+> Anyway, suppose I have a multithreaded userspace app that uses a bunc=
+h of
+> pthread_mutexes, and I want to figure out which locks are hot and/or =
+heavily
+> contended. =A0What's the best way to do that? =A0Is perf the right, o=
+r is there
+> something better? =A0(This seems like such an obvious thing to want t=
+hat there
+> must be some good way to get this data, I hope)
 
-I have lots of code paths taking lots of different classes of locks.
+Hi Roland,
+I haven't tried this tool myself yet but have been wanting to for somet=
+ime:
+http://git.0pointer.de/?p=3Dmutrace.git
 
-My problem is I don't know what to ask perf for to see if I have a mutex that is heavily contended, and so some threads are spending a lot of time asleep waiting to acquire it.  As I said, this is probably pretty basic stuff, but I'm not usually much of a userspace guy...
+Here's the full overview of what it does:
+http://0pointer.de/blog/projects/mutrace.html
 
-Thanks,
-  Roland
+Stefan
