@@ -1,74 +1,144 @@
-From: SUJA JAMES <sujamoljames@yahoo.com>
-Subject: Performance Events/Hw Cache Miss counting
-Date: Mon, 17 Oct 2011 11:32:09 -0700 (PDT)
-Message-ID: <1318876329.69798.YahooMailNeo@web110406.mail.gq1.yahoo.com>
-Reply-To: SUJA JAMES <sujamoljames@yahoo.com>
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: perf and gprof2dot
+Date: Mon, 17 Oct 2011 16:30:29 -0700
+Message-ID: <20111017233029.GA8704@dev1756.snc6.facebook.com>
+References: <1110171539460.18449@jrf.vwaro.pbz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from outmail016.snc4.facebook.com ([66.220.144.150]:43155 "EHLO
+	intmgw003.snc4.facebook.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1752850Ab1JQXua (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 17 Oct 2011 19:50:30 -0400
+Content-Disposition: inline
+In-Reply-To: <1110171539460.18449@jrf.vwaro.pbz>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Mark Hills <mark@pogo.org.uk>
+Cc: linux-perf-users@vger.kernel.org
 
-Message body
-Hi All,
+On Mon, Oct 17, 2011 at 05:38:22PM +0100, Mark Hills wrote:
+> I'm using perf very successfully, and recently in place of oprofile.
+> 
+> But I wondered if there is a way for 'perf report' to output a gprof-style 
+> callgraph (similar to 'oprofile -c')?
+> 
+> Aside from being familiar, the motivation is so that it can be displayed 
+> as a directed graph (not tree) by the excellent gprof2dot [1] tool.
 
-I am trying to query the performance management counters on my box,
-which is based on Kernel 2.6.38 and running Intel processor.=C2=A0 I am
-trying to do the same from my kernel module itself as I need to
-profile my kernel modules. I use the
-perf_event_create_kernel_counter() api with the following attr/config
+perf record -ag -- sleep 1
+perf script | script-below.py | gprof2dot -f hprof | dot -Tpng -o graph.png
 
-The below=C2=A0 attrs/configuration is working and I am getting the cou=
-nter
-values/overflow_handler is getting called.
-static struct perf_event_attr counter_attrs[] =3D {
-{
-=C2=A0 =C2=A0=C2=A0=C2=A0 {
-=C2=A0=C2=A0=C2=A0 .type=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =3D PERF_=
-TYPE_HARDWARE,
-=C2=A0=C2=A0=C2=A0 .config=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =3D PER=
-=46_COUNT_HW_CACHE_MISSES,
-=C2=A0=C2=A0=C2=A0 .size=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =3D sizeo=
-f(struct perf_event_attr),
-=C2=A0=C2=A0=C2=A0 .pinned=C2=A0=C2=A0=C2=A0 =3D 1,
-=C2=A0=C2=A0=C2=A0 .disabled=C2=A0=C2=A0=C2=A0 =3D 0,
-=C2=A0=C2=A0=C2=A0 },
-};
+It's probably better to teach gprof2dot how to parse the output of perf
+script. But this was the path of least resistance for me.
 
-But, when I use the following attrs/config, the
-perf_event_create_kernel_counter() API is failing.=C2=A0 Ie,
-(IS_ERR(returned_pevent) is TRUE and the event is not triggered on the
-CPU.=C2=A0 I even tried =E2=80=9CPERF_TYPE_HARDWARE=E2=80=9D type also =
-with the below
-config. Also I used different values for "sample_period" [100 to 1000]
+I've seen gprof2dot choke on large input sets though.
 
-static struct perf_event_attr counter_attrs[] =3D {
-{
-=C2=A0=C2=A0=C2=A0 .type=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =3D=
-=C2=A0 PERF_TYPE_HW_CACHE,
-=2Econfig=C2=A0=C2=A0=C2=A0 =C2=A0 =3D=C2=A0=C2=A0=C2=A0 PERF_COUNT_HW_=
-CACHE_L1D =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=
- <<=C2=A0 0=C2=A0 |
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0=C2=A0=C2=A0 (PERF_C=
-OUNT_HW_CACHE_OP_READ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 <<=C2=
-=A0 8) |
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 (PERF_COUNT_HW=
-_CACHE_RESULT_MISS =C2=A0=C2=A0=C2=A0 =C2=A0 << 16),
-=C2=A0=C2=A0=C2=A0 .size=C2=A0=C2=A0=C2=A0 =C2=A0 =3D sizeof(struct per=
-f_event_attr),
-=C2=A0=C2=A0=C2=A0 .pinned=C2=A0 =3D 1,
-=C2=A0=C2=A0=C2=A0 .disabled =3D 0,
-=C2=A0=C2=A0=C2=A0 },
-};
+ -Arun
 
-Does anybody know why?. What =E2=80=9Cconfig=E2=80=9D value=C2=A0 I sho=
-uld use to query the
-L1D/ L1I cache misses. I think the =E2=80=9CPERF_COUNT_HW_CACHE_MISSES=E2=
-=80=9D counts
-only 2nd and 3rd level caches.
+#!/usr/bin/env python
 
-Thanks,
-Suja
+"""
+Generate hprof compatible sample output so we could feed this into gprof2dot.py -f hprof
+"""
+
+import re, string, sys
+from optparse import OptionParser
+from operator import itemgetter
+
+class KernelSample:
+    def __init__(self):
+	pass
+
+chain_re = re.compile('^\s*(?P<ip>\S+)\s+(?P<sym>.*)')
+def process(file):
+    global traces
+    rdata = file.read()
+    rdata = rdata.split('\n\n')
+    for chain in rdata:
+        ips = []
+        try:
+            for line in chain.splitlines()[1:]:
+		mod_index = line.rfind('(')
+		if mod_index != -1:
+		    module = line[mod_index:]
+		    line = line[:mod_index]
+		else:
+		    module = ''
+		m = chain_re.match(line)
+		ip = ''
+		if m: 
+		    #print module, m.group('ip'), m.group('sym')
+		    ip = m.group('sym') 
+                if module.find('kernel') != -1:
+                    raise KernelSample()
+    	        # strip parens
+    	        module = module[1:-1]
+                ips.append((ip, module))
+        except KernelSample:
+    	    continue
+	if options.filter:
+	    ignore = 1
+	    for ip, module in ips:
+	        if options.filter.match(ip):
+		    ignore = 0
+	    if ignore: continue
+        trace = tuple(ips)
+        if trace in traces.keys():
+            traces[trace] += 1
+        else:
+            traces[trace] = 1
+
+if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option("-q", "--quiet",
+                      action="store_false", dest="verbose", default=True,
+                      help="don't print status messages to stdout")
+    parser.add_option("-t", "--threshold", dest="threshold", default=1,
+                      help="Ignore traces that have counts less than this")
+    parser.add_option("-p", "--top", dest="top", default=-1,
+                      help="Consider only the top N traces")
+    parser.add_option("-f", "--filter", dest="filter", default=None,
+                      help="Consider only traces that match this regex")
+
+    (options, args) = parser.parse_args()
+    if options.filter:
+        options.filter = re.compile(options.filter)
+    traces = {}
+    for file in args:
+	process(open(file))
+
+    if not args:
+	process(sys.stdin)
+  
+    options.top = int(options.top)
+    traces = sorted(traces.iteritems(), key=itemgetter(1), reverse=True)
+    if options.top != -1: traces = traces[:options.top]
+
+    map = {} 
+    print '-------' 
+    count = 0
+    for trace, hits in traces:
+	map[trace] = count
+        print "TRACE %d:" % count
+	count += 1
+        for frame in trace:
+    	    ip, module = frame
+	    print "\t%s (%s:0)" % (ip, module)
+
+    print 'blah'
+    print 'blah'
+    print 'CPU blah'
+    for trace, count in traces:
+	id = map[trace]
+        #rank, percent_self, percent_accum, count, traceid, method
+	try:
+            print '1 1 1 %d %d %s' % (count, id, trace[0][0])
+	except:
+	    import traceback
+	    print trace
+	    #traceback.print_exc(file=sys.stderr)
+	    continue
+
+    print 'CPU blah'
