@@ -1,61 +1,159 @@
 From: Andrew Vagin <avagin@openvz.org>
-Subject: [PATCH 7/7] event: add tracepoint for accounting block time
-Date: Mon, 28 Nov 2011 12:03:35 +0300
-Message-ID: <1322471015-107825-8-git-send-email-avagin@openvz.org>
+Subject: [PATCH 5/7] perf: teach perf inject to merge sched_stat_* and sched_switch events
+Date: Mon, 28 Nov 2011 12:03:33 +0300
+Message-ID: <1322471015-107825-6-git-send-email-avagin@openvz.org>
 References: <1322471015-107825-1-git-send-email-avagin@openvz.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailhub.sw.ru ([195.214.232.25]:28437 "EHLO relay.sw.ru"
+Received: from mailhub.sw.ru ([195.214.232.25]:44228 "EHLO relay.sw.ru"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753074Ab1K1JE6 (ORCPT
+	id S1753074Ab1K1JEx (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 28 Nov 2011 04:04:58 -0500
+	Mon, 28 Nov 2011 04:04:53 -0500
 In-Reply-To: <1322471015-107825-1-git-send-email-avagin@openvz.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, acme@ghostprotocols.net, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
 
-This tracepoint shows how long a task is sleeping in uninterruptible state.
+You may want to know where and how long a task is sleeping. A callchain
+may be found in sched_switch and a time slice in stat_iowait, so I add
+handler in perf inject for merging this events.
 
-E.g.
-It may show how long and where a mutex is waited.
+My code saves sched_switch event for each process and when it meets
+stat_iowait, it reports the sched_switch event, because this event
+contains a correct callchain. By another words it replaces all
+stat_iowait events on proper sched_switch events.
 
 Signed-off-by: Andrew Vagin <avagin@openvz.org>
 ---
- include/trace/events/sched.h |    7 +++++++
- kernel/sched_fair.c          |    2 ++
- 2 files changed, 9 insertions(+), 0 deletions(-)
+ tools/perf/builtin-inject.c |   87 +++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 87 insertions(+), 0 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 959ff18..be077cf 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -331,6 +331,13 @@ DEFINE_EVENT(sched_stat_template, sched_stat_iowait,
- 	     TP_ARGS(tsk, delay));
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8df8b71..d0af19d 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -12,6 +12,8 @@
+ #include "util/debug.h"
  
- /*
-+ * Tracepoint for accounting block time (time the task is in uninterruptible).
-+ */
-+DEFINE_EVENT(sched_stat_template, sched_stat_block,
-+	     TP_PROTO(struct task_struct *tsk, u64 delay),
-+	     TP_ARGS(tsk, delay));
+ #include "util/parse-options.h"
++#include "util/trace-event.h"
 +
-+/*
-  * Tracepoint for accounting runtime (time the task is executing
-  * on a CPU).
-  */
-diff --git a/kernel/sched_fair.c b/kernel/sched_fair.c
-index 5c9e679..0d7b156 100644
---- a/kernel/sched_fair.c
-+++ b/kernel/sched_fair.c
-@@ -907,6 +907,8 @@ static void enqueue_sleeper(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 				trace_sched_stat_iowait(tsk, delta);
- 			}
  
-+			trace_sched_stat_block(tsk, delta);
+ static char		const *input_name	= "-";
+ static const char	*output_name		= "-";
+@@ -20,6 +22,7 @@ static int		output;
+ static u64		bytes_written		= 0;
+ 
+ static bool		inject_build_ids;
++static bool		inject_sched_stat;
+ 
+ static int perf_event__repipe_synth(union perf_event *event,
+ 				    struct perf_session *session __used)
+@@ -179,6 +182,85 @@ repipe:
+ 	return 0;
+ }
+ 
++struct event_entry
++{
++	struct list_head list;
++	u32 pid;
++	union perf_event event[0];
++};
 +
- 			/*
- 			 * Blocking time is in units of nanosecs, so shift by
- 			 * 20 to get a milliseconds-range estimation of the
++static LIST_HEAD(samples);
++
++static int perf_event__sched_stat(union perf_event *event,
++				      struct perf_sample *sample,
++				      struct perf_evsel *evsel __used,
++				      struct perf_session *session)
++{
++	int type;
++	struct event *e;
++	const char *evname = NULL;
++	uint32_t size;
++	struct event_entry *ent;
++	union perf_event *event_sw = NULL;
++	struct perf_sample sample_sw;
++	int sched_process_exit;
++
++	size = event->header.size;
++
++	type = trace_parse_common_type(sample->raw_data);
++	e = trace_find_event(type);
++	if (e)
++		evname = e->name;
++
++	sched_process_exit = !strcmp(evname, "sched_process_exit");
++
++	if (!strcmp(evname, "sched_switch") ||  sched_process_exit) {
++		list_for_each_entry(ent, &samples, list)
++			if (sample->pid == ent->pid)
++				break;
++
++		if (&ent->list != &samples) {
++			list_del(&ent->list);
++			free(ent);
++		}
++
++		if (sched_process_exit)
++			return 0;
++
++		ent = malloc(size + sizeof(struct event_entry));
++		ent->pid = sample->pid;
++		memcpy(&ent->event, event, size);
++		list_add(&ent->list, &samples);
++		return 0;
++
++	} else if (!strncmp(evname, "sched_stat_", 11)) {
++		u32 pid;
++
++		pid = raw_field_value(e, "pid", sample->raw_data);
++
++		list_for_each_entry(ent, &samples, list) {
++			if (pid == ent->pid)
++				break;
++		}
++
++		if (&ent->list == &samples) {
++			pr_debug("Could not find sched_switch for pid %u\n", pid);
++			return 0;
++		}
++
++		event_sw = &ent->event[0];
++		perf_session__parse_sample(session, event_sw, &sample_sw);
++		sample_sw.period = sample->period;
++		sample_sw.time = sample->time;
++		perf_session__change_sample(session, event_sw, &sample_sw);
++		perf_event__repipe(event_sw, &sample_sw, session);
++		return 0;
++	}
++
++	perf_event__repipe(event, sample, session);
++
++	return 0;
++}
+ struct perf_event_ops inject_ops = {
+ 	.sample		= perf_event__repipe_sample,
+ 	.mmap		= perf_event__repipe,
+@@ -214,6 +296,9 @@ static int __cmd_inject(void)
+ 		inject_ops.mmap		= perf_event__repipe_mmap;
+ 		inject_ops.fork		= perf_event__repipe_task;
+ 		inject_ops.tracing_data	= perf_event__repipe_tracing_data;
++	} else if (inject_sched_stat) {
++		inject_ops.sample	= perf_event__sched_stat;
++		inject_ops.ordered_samples = true;
+ 	}
+ 
+ 	session = perf_session__new(input_name, O_RDONLY, false, true, &inject_ops);
+@@ -241,6 +326,8 @@ static const char * const report_usage[] = {
+ static const struct option options[] = {
+ 	OPT_BOOLEAN('b', "build-ids", &inject_build_ids,
+ 		    "Inject build-ids into the output stream"),
++	OPT_BOOLEAN('s', "sched-stat", &inject_sched_stat,
++		    "correct call-chains for shed-stat-*"),
+ 	OPT_STRING('i', "input", &input_name, "file",
+ 		    "input file name"),
+ 	OPT_STRING('o', "output", &output_name, "file",
 -- 
 1.7.1
