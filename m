@@ -1,144 +1,107 @@
 From: Andrew Vagin <avagin@openvz.org>
-Subject: [PATCH 3/7] perf: add ability to change event according to sample (v2)
-Date: Mon, 28 Nov 2011 12:03:31 +0300
-Message-ID: <1322471015-107825-4-git-send-email-avagin@openvz.org>
+Subject: [PATCH 4/7] perf: teach "perf inject" to work with files
+Date: Mon, 28 Nov 2011 12:03:32 +0300
+Message-ID: <1322471015-107825-5-git-send-email-avagin@openvz.org>
 References: <1322471015-107825-1-git-send-email-avagin@openvz.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailhub.sw.ru ([195.214.232.25]:35812 "EHLO relay.sw.ru"
+Received: from mailhub.sw.ru ([195.214.232.25]:39408 "EHLO relay.sw.ru"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751070Ab1K1JEt (ORCPT
+	id S1751070Ab1K1JEv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 28 Nov 2011 04:04:49 -0500
+	Mon, 28 Nov 2011 04:04:51 -0500
 In-Reply-To: <1322471015-107825-1-git-send-email-avagin@openvz.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, acme@ghostprotocols.net, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
 
-It's opposition of perf_session__parse_sample.
+Before this patch "perf inject" can only handle data from pipe.
 
-v2: fixed mistakes which David Arhen found
+I want to use "perf inject" for reworking events. Look at my following patch.
 
 Signed-off-by: Andrew Vagin <avagin@openvz.org>
 ---
- tools/perf/util/event.h   |    2 +
- tools/perf/util/evsel.c   |   74 +++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/session.h |    9 +++++
- 3 files changed, 85 insertions(+), 0 deletions(-)
+ tools/perf/builtin-inject.c |   33 +++++++++++++++++++++++++++++++--
+ 1 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 357a85b..0493101 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -187,5 +187,7 @@ const char *perf_event__name(unsigned int id);
- int perf_event__parse_sample(const union perf_event *event, u64 type,
- 			     int sample_size, bool sample_id_all,
- 			     struct perf_sample *sample, bool swapped);
-+int perf_event__change_sample(union perf_event *event, u64 type,
-+			     const struct perf_sample *data, bool swapped);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8dfc12b..8df8b71 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -13,7 +13,12 @@
  
- #endif /* __PERF_RECORD_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index e426264..d697568 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -494,3 +494,77 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ #include "util/parse-options.h"
+ 
+-static char		const *input_name = "-";
++static char		const *input_name	= "-";
++static const char	*output_name		= "-";
++static int		pipe_output		= 0;
++static int		output;
++static u64		bytes_written		= 0;
++
+ static bool		inject_build_ids;
+ 
+ static int perf_event__repipe_synth(union perf_event *event,
+@@ -25,12 +30,14 @@ static int perf_event__repipe_synth(union perf_event *event,
+ 	size = event->header.size;
+ 
+ 	while (size) {
+-		int ret = write(STDOUT_FILENO, buf, size);
++		int ret = write(output, buf, size);
+ 		if (ret < 0)
+ 			return -errno;
+ 
+ 		size -= ret;
+ 		buf += ret;
++
++		bytes_written += ret;
+ 	}
  
  	return 0;
- }
-+
-+int perf_event__change_sample(union perf_event *event, u64 type,
-+			     const struct perf_sample *data, bool swapped)
-+{
-+	u64 *array;
-+
-+	/*
-+	 * used for cross-endian analysis. See git commit 65014ab3
-+	 * for why this goofiness is needed.
-+	 */
-+	union {
-+		u64 val64;
-+		u32 val32[2];
-+	} u;
-+
-+	array = event->sample.array;
-+
-+	if (type & PERF_SAMPLE_IP) {
-+		event->ip.ip = data->ip;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_TID) {
-+		u.val32[0] = data->pid;
-+		u.val32[1] = data->tid;
-+		if (swapped) {
-+			/* undo swap of u64, then swap on individual u32s */
-+			u.val32[0] = bswap_32(u.val32[0]);
-+			u.val32[1] = bswap_32(u.val32[1]);
-+			u.val64 = bswap_64(u.val64);
-+		}
-+
-+		*array = u.val64;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_TIME) {
-+		*array = data->time;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_ADDR) {
-+		*array = data->addr;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_ID) {
-+		*array = data->id;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_STREAM_ID) {
-+		*array = data->stream_id;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_CPU) {
-+		u.val32[0] = data->cpu;
-+		if (swapped) {
-+			/* undo swap of u64, then swap on individual u32s */
-+			u.val32[0] = bswap_32(u.val32[0]);
-+			u.val64 = bswap_64(u.val64);
-+		}
-+		*array = u.val64;
-+		array++;
-+	}
-+
-+	if (type & PERF_SAMPLE_PERIOD) {
-+		*array = data->period;
-+		array++;
-+	}
-+
-+	return 0;
-+}
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 6e393c9..444f121 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -167,6 +167,15 @@ static inline int perf_session__parse_sample(struct perf_session *session,
- 					session->header.needs_swap);
- }
+@@ -213,8 +220,14 @@ static int __cmd_inject(void)
+ 	if (session == NULL)
+ 		return -ENOMEM;
  
-+static inline int perf_session__change_sample(struct perf_session *session,
-+					     union perf_event *event,
-+					     const struct perf_sample *sample)
-+{
-+	return perf_event__change_sample(event, session->sample_type,
-+					sample,
-+					session->header.needs_swap);
-+}
++	if (!pipe_output)
++		lseek(output, session->header.data_offset, SEEK_SET);
+ 	ret = perf_session__process_events(session, &inject_ops);
+ 
++	if (!pipe_output) {
++		session->header.data_size += bytes_written;
++		perf_session__write_header(session, session->evlist, output, true);
++	}
+ 	perf_session__delete(session);
+ 
+ 	return ret;
+@@ -228,6 +241,10 @@ static const char * const report_usage[] = {
+ static const struct option options[] = {
+ 	OPT_BOOLEAN('b', "build-ids", &inject_build_ids,
+ 		    "Inject build-ids into the output stream"),
++	OPT_STRING('i', "input", &input_name, "file",
++		    "input file name"),
++	OPT_STRING('o', "output", &output_name, "file",
++		    "output file name"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		 "be more verbose (show build ids, etc)"),
+ 	OPT_END()
+@@ -243,6 +260,18 @@ int cmd_inject(int argc, const char **argv, const char *prefix __used)
+ 	if (argc)
+ 		usage_with_options(report_usage, options);
+ 
++	if (!strcmp(output_name, "-")) {
++		pipe_output = 1;
++		output = STDOUT_FILENO;
++	} else {
++		output = open(output_name, O_CREAT| O_WRONLY | O_TRUNC,
++							S_IRUSR | S_IWUSR);
++		if (output < 0) {
++			perror("failed to create output file");
++			exit(-1);
++		}
++	}
 +
- struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
- 					    unsigned int type);
+ 	if (symbol__init() < 0)
+ 		return -1;
  
 -- 
 1.7.1
