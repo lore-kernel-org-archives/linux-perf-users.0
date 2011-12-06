@@ -1,71 +1,85 @@
-From: Arnaldo Carvalho de Melo <acme@infradead.org>
-Subject: Re: [PATCH 7/7] event: add tracepoint for accounting block time
-Date: Mon, 28 Nov 2011 12:59:17 -0200
-Message-ID: <20111128145917.GB12377@infradead.org>
+From: Andrey Vagin <avagin@openvz.org>
+Subject: Re: [Devel] [PATCH 0/7] Profiling sleep times (v3)
+Date: Tue, 06 Dec 2011 11:15:07 +0400
+Message-ID: <4EDDC0FB.6080005@openvz.org>
 References: <1322471015-107825-1-git-send-email-avagin@openvz.org>
- <1322471015-107825-8-git-send-email-avagin@openvz.org>
- <1322480531.2921.107.camel@twins>
- <4ED39473.9080600@linux.intel.com>
- <20111128143140.GA12377@infradead.org>
- <4ED39E17.7050807@linux.intel.com>
+Reply-To: avagin@openvz.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4ED39E17.7050807@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Robert Richter <robert.richter@amd.com>, Andrew Vagin <avagin@openvz.org>, linux-kernel@vger.kernel.org, paulus@samba.org, mingo@elte.hu, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=KOI8-R; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mailhub.sw.ru ([195.214.232.25]:10824 "EHLO relay.sw.ru"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750941Ab1LFHPP (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 6 Dec 2011 02:15:15 -0500
+In-Reply-To: <1322471015-107825-1-git-send-email-avagin@openvz.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Andrew Vagin <avagin@openvz.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, Paul Mackerras <paulus@samba.org>, devel@openvz.org, David Ahern <dsahern@gmail.com>, Ingo Molnar <mingo@elte.hu>, Arun Sharma <asharma@fb.com>
 
-Em Mon, Nov 28, 2011 at 06:43:35AM -0800, Arjan van de Ven escreveu:
-> > perf_evlist is what you call perf_bundle and perf_evsel is what you call
-> > perf_event in powertop.
+Hello Arnaldo,
 
-> > That part of the API should be ok for wider use and is in fact exported
-> > in the python binding.
-> 
-> I don't care about the snake language.
+I found, that you commit patches for perf. Could you review this part?
 
-I haven't suggested that you use any other language than C.
+Arun Sharma said, that the second versions of patches works ok for him.
+(Arun is the first user of this functionality after me.)
 
-What I tried to say was that the way the python binding was written
-provides an initial libperf.so, just that it is not exposed yet.
+Thanks.
 
-That is, the subset of C files there is (or should be) untangled from
-all the rest of tools/perf.
- 
-> frankly all that's missing is a "safe" accessor library as Steve has
-> promised will appear.
-
-> that library really needs to be a proper shared library and not come
-> from/with the kernel package, so that distributions can independently
-> package it properly.
-
-I can probably have something like:
-
-[acme@emilia linux]$ make help | grep perf
-  perf-tar-src-pkg    - Build perf-3.2.0-rc1.tar source tarball
-  perf-targz-src-pkg  - Build perf-3.2.0-rc1.tar.gz source tarball
-  perf-tarbz2-src-pkg - Build perf-3.2.0-rc1.tar.bz2 source tarball
-  perf-tarxz-src-pkg  - Build perf-3.2.0-rc1.tar.xz source tarball
-[acme@emilia linux]$ 
-
-i.e.:
-
-$ make libperf-tar-src.pkg
-
-> (and this obviously needs to at least look at the things that the
-> systemd guys pointed us at at the kernel summit)
-
-Yes, I'll take that into account.
- 
-> I'm not interested if the code for a library is somewhere deep in the
-> kernel source code, not installed by default in distros (or tied in with
-> loads of other mess) and/or uses the kernel makefiles/etc like perf does.
-
-Right, I'm working on that, don't know when it will get to the point
-you'd consider using it, but I'll try to address your concerns in the
-process.
-
-- Arnaldo
+On 11/28/2011 01:03 PM, Andrew Vagin wrote:
+> Do you want to know where your code waits locks for a long time?
+> Yes! It's for you. This feature helps you to find bottlenecks.
+>
+> It's not artificial task. Once one of my colleague was investigating a
+> scalability problem. He pressed sysrq-t some times and tried to merge
+> call-chains by hand. But perf can do that.
+>
+> Problem:
+> The problem is that events sched_stat_* contain call-chains of
+> non-target tasks.
+> About month ago I sent series of patches:
+>
+> [PATCH 0/3] trace: add ability to collect call chains of non current task.
+>
+> Peter and Frederic explained me, that this solve isn't good and will be
+> better to make it in userspace.
+>
+> Now it's in userspace. This series expands "perf inject" to be able to
+> merge sched_switch events and sched_stat* events. sched_switch events
+> contain correct call-chains and sched_stat contains a correct time
+> slices.
+>
+> v2:
+> * Removed all known issues. Now it works completely.
+> * Improved usability of sched-stat scripts according with Arun's comments.
+> v3: fixed accoding to comments from David Ahem
+>
+> Andrew Vagin (7):
+>    perf: use event_name() to get an event name
+>    perf: add ability to record event period
+>    perf: add ability to change event according to sample (v2)
+>    perf: teach "perf inject" to work with files
+>    perf: teach perf inject to merge sched_stat_* and sched_switch events
+>    perf: add scripts for profiling sleep times (v2)
+>    event: add tracepoint for accounting block time
+>
+>   include/trace/events/sched.h                    |    7 ++
+>   kernel/sched_fair.c                             |    2 +
+>   tools/perf/builtin-inject.c                     |  120 ++++++++++++++++++++++-
+>   tools/perf/builtin-record.c                     |    5 +
+>   tools/perf/scripts/python/bin/sched-stat-record |   65 ++++++++++++
+>   tools/perf/scripts/python/bin/sched-stat-report |    5 +
+>   tools/perf/util/event.h                         |    2 +
+>   tools/perf/util/evsel.c                         |   74 ++++++++++++++
+>   tools/perf/util/header.c                        |    2 +-
+>   tools/perf/util/session.h                       |    9 ++
+>   10 files changed, 288 insertions(+), 3 deletions(-)
+>   create mode 100644 tools/perf/scripts/python/bin/sched-stat-record
+>   create mode 100644 tools/perf/scripts/python/bin/sched-stat-report
+>
+> _______________________________________________
+> Devel mailing list
+> Devel@openvz.org
+> https://openvz.org/mailman/listinfo/devel
