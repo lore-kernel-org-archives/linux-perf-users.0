@@ -1,119 +1,48 @@
-From: Andrew Vagin <avagin@openvz.org>
-Subject: [PATCH 6/6] perf: add scripts for profiling sleep times (v2)
-Date: Wed,  7 Dec 2011 16:56:01 +0300
-Message-ID: <1323266161-394927-7-git-send-email-avagin@openvz.org>
-References: <1323266161-394927-1-git-send-email-avagin@openvz.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailhub.sw.ru ([195.214.232.25]:33623 "EHLO relay.sw.ru"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756204Ab1LGN6S (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 7 Dec 2011 08:58:18 -0500
-In-Reply-To: <1323266161-394927-1-git-send-email-avagin@openvz.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@ghostprotocols.net
-Cc: linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: [Devel] [PATCH 0/7] Profiling sleep times (v3)
+Date: Wed, 7 Dec 2011 12:33:48 -0800
+Message-ID: <4EDFCDAC.3060600@fb.com>
+References: <1322471015-107825-1-git-send-email-avagin@openvz.org> <4EDDC0FB.6080005@openvz.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="KOI8-R"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4EDDC0FB.6080005@openvz.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: avagin@openvz.org
+Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, Paul Mackerras <paulus@samba.org>, devel@openvz.org, David Ahern <dsahern@gmail.com>, Ingo Molnar <mingo@elte.hu>
+List-Id: linux-perf-users.vger.kernel.org
 
-E.g.:
- # perf script record -- sched:sched_stat_sleep -- ./foo
- # perf script report sched-stat
-or
- # perf script record -- -e sched:sched_stat_sleep
+On 12/5/11 11:15 PM, Andrey Vagin wrote:
 
-v2: Add ability to record events for a defined process. It executes a small
-bash script, then executes perf with filtering by pid and then a bash script
-executes a target process.
+> Arun Sharma said, that the second versions of patches works ok for him.
+> (Arun is the first user of this functionality after me.)
 
-Signed-off-by: Andrew Vagin <avagin@openvz.org>
----
- tools/perf/scripts/python/bin/sched-stat-record |   65 +++++++++++++++++++++++
- tools/perf/scripts/python/bin/sched-stat-report |    5 ++
- 2 files changed, 70 insertions(+), 0 deletions(-)
- create mode 100644 tools/perf/scripts/python/bin/sched-stat-record
- create mode 100644 tools/perf/scripts/python/bin/sched-stat-report
+Yes - Andrey's patches (v2) have been functional for me when used via:
 
-diff --git a/tools/perf/scripts/python/bin/sched-stat-record b/tools/perf/scripts/python/bin/sched-stat-record
-new file mode 100644
-index 0000000..02da7c1
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/sched-stat-record
-@@ -0,0 +1,65 @@
-+#!/bin/bash
-+# perf script record -- sched:sched_stat_[smth] -- CMD
-+# perf script record -- -e sched:sched_stat_[smth]
-+#
-+set -o monitor
-+
-+usage()
-+{
-+	echo "Usage:"
-+	echo "	perf script record sched-stat -- sched:sched_stat_[smth] -- CMD"
-+	echo "	perf script record sched-stat -- [PERF OPTS] -e sched:sched_stat_[smth]"
-+	exit 1;
-+}
-+
-+declare -a opt
-+declare -a cmd
-+f=0;
-+for i in "${@:2}"; do
-+	if [ "$i" == "--" ]; then
-+		f=1
-+		continue
-+	fi
-+	if [ $f -eq 1 ]; then
-+		cmd[${#cmd[*]}]="$i"
-+	else
-+		opt[${#opt[*]}]="$i"
-+	fi
-+done
-+
-+if [[ "${opt[@]}" != *sched_stat_* ]]; then
-+	usage;
-+fi
-+
-+if [ ${#cmd[@]} -eq 0 ]; then
-+	if [ ${#opt[@]} -eq 0 ]; then
-+		usage;
-+	fi
-+	exec perf record -agP \
-+		-e sched:sched_switch \
-+		--filter "prev_state == 1 || prev_state == 2" \
-+		"${opt[@]}"
-+fi
-+
-+if [ ${#opt[@]} -ne 1 ]; then
-+	usage;
-+fi
-+
-+# Wait until a target process is stopped.
-+bash -c 'kill -STOP $$; exec "$@"' -- "${cmd[@]}" &
-+pid=$!
-+wait %1
-+[ $? -eq 147 ] || exit 1;
-+
-+perf record -agP \
-+		-e sched:sched_switch \
-+		--filter "prev_pid == $pid && prev_state == 1 || prev_state == 2" \
-+		-e sched:sched_process_exit -e "${opt[@]}" --filter "pid == $pid" &
-+pid_perf=$!
-+kill -CONT %1
-+while :; do
-+	wait %1
-+	[ $? -eq 127 ] && break;
-+done
-+kill -INT %2
-+wait %2
-diff --git a/tools/perf/scripts/python/bin/sched-stat-report b/tools/perf/scripts/python/bin/sched-stat-report
-new file mode 100644
-index 0000000..e5114ce
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/sched-stat-report
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# description: profiling sleep times
-+perf inject -s -i perf.data -o perf.data.d || exit
-+perf report -i perf.data.d || exit
-+unlink perf.data.d
--- 
-1.7.1
+perf record -agP -e sched:sched_switch --filter "prev_state == 1 || 
+prev_state == 2" -e sched:sched_stat_sleep,sched:sched_stat_iowait -- 
+sleep 3
+mv perf.data{,.old}; perf inject -s -i perf.data.old -o perf.data
+perf report --stdio -g graph --sort pid -C command-name
+
+There are two major issues though:
+
+* The above command lines cause us to collect way too much data and perf 
+can't keep up on a busy server
+
+Eg:
+
+Warning:
+Processed 55182 events and lost 13 chunks!
+
+Check IO/CPU overload!
+
+* Requires root access
+
+I suspect there is a way to stash the delay information available at 
+enqueue_sleeper() into the task_struct (or some place else) and make it 
+available at the sched:sched_switch tracepoint. This would solve both of 
+the problems above, but I don't have a patch yet.
+
+  -Arun
