@@ -1,64 +1,107 @@
 From: Andrew Vagin <avagin@openvz.org>
-Subject: [PATCH 3/6] perf: add ability to record event period
-Date: Wed,  7 Dec 2011 16:55:58 +0300
-Message-ID: <1323266161-394927-4-git-send-email-avagin@openvz.org>
+Subject: [PATCH 4/6] perf: teach "perf inject" to work with files
+Date: Wed,  7 Dec 2011 16:55:59 +0300
+Message-ID: <1323266161-394927-5-git-send-email-avagin@openvz.org>
 References: <1323266161-394927-1-git-send-email-avagin@openvz.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailhub.sw.ru ([195.214.232.25]:23500 "EHLO relay.sw.ru"
+Received: from mailhub.sw.ru ([195.214.232.25]:24584 "EHLO relay.sw.ru"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756182Ab1LGN6L (ORCPT
+	id S1756199Ab1LGN6N (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 7 Dec 2011 08:58:11 -0500
+	Wed, 7 Dec 2011 08:58:13 -0500
 In-Reply-To: <1323266161-394927-1-git-send-email-avagin@openvz.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@ghostprotocols.net
 Cc: linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
 
+Before this patch "perf inject" can only handle data from pipe.
+
+I want to use "perf inject" for reworking events. Look at my following patch.
+
 Signed-off-by: Andrew Vagin <avagin@openvz.org>
 ---
- tools/perf/builtin-record.c |    1 +
- tools/perf/perf.h           |    1 +
- tools/perf/util/evsel.c     |    3 +++
- 3 files changed, 5 insertions(+), 0 deletions(-)
+ tools/perf/builtin-inject.c |   33 +++++++++++++++++++++++++++++++--
+ 1 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 766fa0a..f8fd14f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -700,6 +700,7 @@ const struct option record_options[] = {
- 	OPT_BOOLEAN('d', "data", &record.opts.sample_address,
- 		    "Sample addresses"),
- 	OPT_BOOLEAN('T', "timestamp", &record.opts.sample_time, "Sample timestamps"),
-+	OPT_BOOLEAN('P', "period", &record.opts.period, "Sample period"),
- 	OPT_BOOLEAN('n', "no-samples", &record.opts.no_samples,
- 		    "don't sample"),
- 	OPT_BOOLEAN('N', "no-buildid-cache", &record.no_buildid_cache,
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index ea804f5..64f8bee 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -200,6 +200,7 @@ struct perf_record_opts {
- 	bool	     sample_time;
- 	bool	     sample_id_all_avail;
- 	bool	     system_wide;
-+	bool	     period;
- 	unsigned int freq;
- 	unsigned int mmap_pages;
- 	unsigned int user_freq;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index e2d1b22..8550018 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -108,6 +108,9 @@ void perf_evsel__config(struct perf_evsel *evsel, struct perf_record_opts *opts)
- 	if (opts->system_wide)
- 		attr->sample_type	|= PERF_SAMPLE_CPU;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 09c1061..f87779f 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -14,7 +14,12 @@
  
-+	if (opts->period)
-+		attr->sample_type	|= PERF_SAMPLE_PERIOD;
+ #include "util/parse-options.h"
+ 
+-static char		const *input_name = "-";
++static char		const *input_name	= "-";
++static const char	*output_name		= "-";
++static int		pipe_output		= 0;
++static int		output;
++static u64		bytes_written		= 0;
 +
- 	if (opts->sample_id_all_avail &&
- 	    (opts->sample_time || opts->system_wide ||
- 	     !opts->no_inherit || opts->cpu_list))
+ static bool		inject_build_ids;
+ 
+ static int perf_event__repipe_synth(struct perf_tool *tool __used,
+@@ -27,12 +32,14 @@ static int perf_event__repipe_synth(struct perf_tool *tool __used,
+ 	size = event->header.size;
+ 
+ 	while (size) {
+-		int ret = write(STDOUT_FILENO, buf, size);
++		int ret = write(output, buf, size);
+ 		if (ret < 0)
+ 			return -errno;
+ 
+ 		size -= ret;
+ 		buf += ret;
++
++		bytes_written += ret;
+ 	}
+ 
+ 	return 0;
+@@ -239,8 +246,14 @@ static int __cmd_inject(void)
+ 	if (session == NULL)
+ 		return -ENOMEM;
+ 
++	if (!pipe_output)
++		lseek(output, session->header.data_offset, SEEK_SET);
+ 	ret = perf_session__process_events(session, &perf_inject);
+ 
++	if (!pipe_output) {
++		session->header.data_size += bytes_written;
++		perf_session__write_header(session, session->evlist, output, true);
++	}
+ 	perf_session__delete(session);
+ 
+ 	return ret;
+@@ -254,6 +267,10 @@ static const char * const report_usage[] = {
+ static const struct option options[] = {
+ 	OPT_BOOLEAN('b', "build-ids", &inject_build_ids,
+ 		    "Inject build-ids into the output stream"),
++	OPT_STRING('i', "input", &input_name, "file",
++		    "input file name"),
++	OPT_STRING('o', "output", &output_name, "file",
++		    "output file name"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		 "be more verbose (show build ids, etc)"),
+ 	OPT_END()
+@@ -269,6 +286,18 @@ int cmd_inject(int argc, const char **argv, const char *prefix __used)
+ 	if (argc)
+ 		usage_with_options(report_usage, options);
+ 
++	if (!strcmp(output_name, "-")) {
++		pipe_output = 1;
++		output = STDOUT_FILENO;
++	} else {
++		output = open(output_name, O_CREAT| O_WRONLY | O_TRUNC,
++							S_IRUSR | S_IWUSR);
++		if (output < 0) {
++			perror("failed to create output file");
++			exit(-1);
++		}
++	}
++
+ 	if (symbol__init() < 0)
+ 		return -1;
+ 
 -- 
 1.7.1
