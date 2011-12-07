@@ -1,39 +1,148 @@
 From: Andrew Vagin <avagin@openvz.org>
-Subject: [PATCH 1/6] perf: use event_name() to get an event name
-Date: Wed,  7 Dec 2011 16:55:56 +0300
-Message-ID: <1323266161-394927-2-git-send-email-avagin@openvz.org>
+Subject: [PATCH 2/6] perf: add ability to change event according to sample (v3)
+Date: Wed,  7 Dec 2011 16:55:57 +0300
+Message-ID: <1323266161-394927-3-git-send-email-avagin@openvz.org>
 References: <1323266161-394927-1-git-send-email-avagin@openvz.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailhub.sw.ru ([195.214.232.25]:9427 "EHLO relay.sw.ru"
+Received: from mailhub.sw.ru ([195.214.232.25]:33571 "EHLO relay.sw.ru"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756177Ab1LGN6G (ORCPT
+	id S1756182Ab1LGN6I (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 7 Dec 2011 08:58:06 -0500
+	Wed, 7 Dec 2011 08:58:08 -0500
 In-Reply-To: <1323266161-394927-1-git-send-email-avagin@openvz.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@ghostprotocols.net
 Cc: linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
 
-perf_evsel.name may be not initialized
+It's opposition of perf_session__parse_sample.
 
+v2: fixed mistakes which David Arhen found
+v3: s/data/sample/
+    s/perf_event__change_sample/perf_event__synthesize_sample
+
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: Andrew Vagin <avagin@openvz.org>
 ---
- tools/perf/util/header.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ tools/perf/util/event.h   |    2 +
+ tools/perf/util/evsel.c   |   74 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/session.h |    9 +++++
+ 3 files changed, 85 insertions(+), 0 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9272f3a..5b01449 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -388,7 +388,7 @@ static int write_event_desc(int fd, struct perf_header *h __used,
- 		/*
- 		 * write event string as passed on cmdline
- 		 */
--		ret = do_write_string(fd, attr->name);
-+		ret = do_write_string(fd, event_name(attr));
- 		if (ret < 0)
- 			return ret;
- 		/*
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 0d80201..cc3cc11 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -199,6 +199,8 @@ const char *perf_event__name(unsigned int id);
+ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 			     int sample_size, bool sample_id_all,
+ 			     struct perf_sample *sample, bool swapped);
++int perf_event__synthesize_sample(union perf_event *event, u64 type,
++			     const struct perf_sample *sample, bool swapped);
+ 
+ size_t perf_event__fprintf_comm(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_mmap(union perf_event *event, FILE *fp);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ee68d69..e2d1b22 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -574,3 +574,77 @@ int perf_event__parse_sample(const union perf_event *event, u64 type,
+ 
+ 	return 0;
+ }
++
++int perf_event__synthesize_sample(union perf_event *event, u64 type,
++			     const struct perf_sample *sample, bool swapped)
++{
++	u64 *array;
++
++	/*
++	 * used for cross-endian analysis. See git commit 65014ab3
++	 * for why this goofiness is needed.
++	 */
++	union {
++		u64 val64;
++		u32 val32[2];
++	} u;
++
++	array = event->sample.array;
++
++	if (type & PERF_SAMPLE_IP) {
++		event->ip.ip = sample->ip;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_TID) {
++		u.val32[0] = sample->pid;
++		u.val32[1] = sample->tid;
++		if (swapped) {
++			/* undo swap of u64, then swap on individual u32s */
++			u.val32[0] = bswap_32(u.val32[0]);
++			u.val32[1] = bswap_32(u.val32[1]);
++			u.val64 = bswap_64(u.val64);
++		}
++
++		*array = u.val64;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_TIME) {
++		*array = sample->time;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_ADDR) {
++		*array = sample->addr;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_ID) {
++		*array = sample->id;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_STREAM_ID) {
++		*array = sample->stream_id;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_CPU) {
++		u.val32[0] = sample->cpu;
++		if (swapped) {
++			/* undo swap of u64, then swap on individual u32s */
++			u.val32[0] = bswap_32(u.val32[0]);
++			u.val64 = bswap_64(u.val64);
++		}
++		*array = u.val64;
++		array++;
++	}
++
++	if (type & PERF_SAMPLE_PERIOD) {
++		*array = sample->period;
++		array++;
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 30e9c6b..4ed73d3 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -134,6 +134,15 @@ static inline int perf_session__parse_sample(struct perf_session *session,
+ 					session->header.needs_swap);
+ }
+ 
++static inline int perf_session__synthesize_sample(struct perf_session *session,
++					     union perf_event *event,
++					     const struct perf_sample *sample)
++{
++	return perf_event__synthesize_sample(event, session->sample_type,
++					sample,
++					session->header.needs_swap);
++}
++
+ struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
+ 					    unsigned int type);
+ 
 -- 
 1.7.1
