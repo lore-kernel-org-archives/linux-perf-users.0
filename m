@@ -1,42 +1,40 @@
-From: Arnaldo Carvalho de Melo <acme@infradead.org>
-Subject: Re: [PATCH] perf: add ability to record event period
-Date: Tue, 20 Dec 2011 15:20:19 -0200
-Message-ID: <20111220172019.GE28058@infradead.org>
-References: <1324391565-1369947-1-git-send-email-avagin@openvz.org>
+From: "postcodesloetrij-  Bonus" <Postinfo@luckymail.com>
+Subject: End of year bonus!!
+Date: Sun, 25 Dec 2011 14:55:33 -0700
+Message-ID: <0bb7cee5361d32f4a30bf4aa2b0d9925.squirrel__39408.4855834537$1324851213$gmane$org@macmail.lakotanetwork.com>
+Reply-To: Postinfo@luckymail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:40573 "EHLO
-	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751097Ab1LTRUe (ORCPT
+Received: from filter3.e-filtering.net ([64.251.173.164]:41121 "EHLO
+	filter3.e-filtering.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752986Ab1LYWMy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 20 Dec 2011 12:20:34 -0500
-Content-Disposition: inline
-In-Reply-To: <1324391565-1369947-1-git-send-email-avagin@openvz.org>
+	Sun, 25 Dec 2011 17:12:54 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andrew Vagin <avagin@openvz.org>
-Cc: linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, paulus@samba.org, mingo@elte.hu, asharma@fb.com, devel@openvz.org, dsahern@gmail.com, linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 20, 2011 at 05:32:45PM +0300, Andrew Vagin escreveu:
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 766fa0a..f8fd14f 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -700,6 +700,7 @@ const struct option record_options[] = {
->  	OPT_BOOLEAN('d', "data", &record.opts.sample_address,
->  		    "Sample addresses"),
->  	OPT_BOOLEAN('T', "timestamp", &record.opts.sample_time, "Sample timestamps"),
-> +	OPT_BOOLEAN('P', "period", &record.opts.period, "Sample period"),
->  	OPT_BOOLEAN('n', "no-samples", &record.opts.no_samples,
->  		    "don't sample"),
->  	OPT_BOOLEAN('N', "no-buildid-cache", &record.no_buildid_cache,
+postcodesloetrij-  Bonus !!
 
-You forgot to update the tools/perf/Documentation/perf-record.txt tho.
+Promotion advertisement !!: we are please to inform you that the
+Postcode-lottery yearly award award promotion program held 25th Dec  2011,
+have pronounce your e-mail address as the luckily winner of a total sum:
+of ?100,000(One Hundred Thousand Euros
+Only)
 
-I'm doing this for you this time, please take that into account next
-time.
+Please email via BV Post-lottery Solicitors Fund Verification Department
+with your Serial-No:LE-0031#55330 for your claim,
 
-Regards and thanks for iterating thru this and working on perf!
+Office/Email:Postinfo@luckymail.com
+Tell:+31-645-764-338/Netherlands
 
-- Arnaldo
+This program is organize to promote the postcode lottery company award
+yearly, and we are strictly and skeptical regard your winning information
+that  is why you are advice to forward your serial number the claim
+department only and without any dis-closer to any person /friends for
+security reason
+
+Sincerely,
+Mrs:Hase Van Willems
+Promotion Coordinator.
