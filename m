@@ -1,70 +1,26 @@
-From: Andrew Steets <asteets@rgmadvisors.com>
-Subject: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Fri, 27 Jan 2012 11:03:21 -0600
-Message-ID: <4F22D8D9.3010108@rgmadvisors.com>
+From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
+Date: Fri, 27 Jan 2012 18:12:43 +0100
+Message-ID: <1327684363.2446.176.camel@twins>
+References: <4F22D8D9.3010108@rgmadvisors.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from merlin.infradead.org ([205.233.59.134]:34932 "EHLO
+	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750957Ab2A0RM5 convert rfc822-to-8bit (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 27 Jan 2012 12:12:57 -0500
+In-Reply-To: <4F22D8D9.3010108@rgmadvisors.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Andrew Steets <asteets@rgmadvisors.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 
-prctl(PR_TASK_PERF_EVENTS_DISABLE) doesn't appear to disable perf event
-counters.  Here is a demonstration program:
+On Fri, 2012-01-27 at 11:03 -0600, Andrew Steets wrote:
+> Can anyone tell
+> me if I'm using this wrong or if this is a bug? 
 
-#include <linux/prctl.h>
-
-void loop_events_disabled() {
-     volatile int x;
-     int i;
-     for (i = 0; i < 1000000000; i++)
-         x = i;
-     return;
-}
-
-void loop_events_enabled() {
-     volatile int x;
-     int i;
-     for (i = 0; i < 1000000000; i++)
-         x = i;
-     return;
-}
-
-int main(int argc, char **argv) {
-     prctl(PR_TASK_PERF_EVENTS_ENABLE);
-     loop_events_enabled();
-     prctl(PR_TASK_PERF_EVENTS_DISABLE);
-     loop_events_disabled();
-}
-
-I would not expect to see loop_events_disabled() show up in the profile
-as reported by perf report, but it does.
-
-$ perf record ./a.out
-$ perf report -n --stdio
-# Events: 3K cycles
-#
-# Overhead  Samples    Command      Shared Object                Symbol
-# ........ ..........  .......  .................  ....................
-#
-     51.80%       1679    a.out  a.out              [.] loop_events_enabled
-     48.07%       1578    a.out  a.out              [.] loop_events_disabled
-      0.03%          5    a.out  [kernel.kallsyms]  [k] intel_pmu_enable_all
-      0.03%          1    a.out  [kernel.kallsyms]  [k] sched_clock
-      0.03%          1    a.out  [kernel.kallsyms]  [k] ktime_get
-      0.03%          1    a.out  [kernel.kallsyms]  [k] update_cpu_load
-      0.01%          1    a.out  [sunrpc]           [k] generic_match
-
-I have tested this on several kernels including 3.3rc1.  Can anyone tell
-me if I'm using this wrong or if this is a bug?
-
--Andrew
-
--- 
-
----------------------------------------------------------------
-This email, along with any attachments, is confidential. If you 
-believe you received this message in error, please contact the 
-sender immediately and delete all copies of the message.  
-Thank you.
+You're using it wrong, it will disable events you own (created) not
+events that monitor you.
