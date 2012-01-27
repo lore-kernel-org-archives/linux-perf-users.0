@@ -1,40 +1,27 @@
-From: "postcodesloetrij-  Bonus" <Postinfo@luckymail.com>
-Subject: End of year bonus!!
-Date: Sun, 25 Dec 2011 14:55:33 -0700
-Message-ID: <0bb7cee5361d32f4a30bf4aa2b0d9925.squirrel__39408.4855834537$1324851213$gmane$org@macmail.lakotanetwork.com>
-Reply-To: Postinfo@luckymail.com
+From: Jean-Mickael Guerin <jean-mickael.guerin@6wind.com>
+Subject: perf on mips
+Date: Fri, 27 Jan 2012 09:05:36 +0100
+Message-ID: <4F225AD0.1050208@6wind.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from filter3.e-filtering.net ([64.251.173.164]:41121 "EHLO
-	filter3.e-filtering.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752986Ab1LYWMy (ORCPT
+Received: from mail-wi0-f174.google.com ([209.85.212.174]:50595 "EHLO
+	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755955Ab2A0IFq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 25 Dec 2011 17:12:54 -0500
+	Fri, 27 Jan 2012 03:05:46 -0500
+Received: by wics10 with SMTP id s10so1002894wic.19
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jan 2012 00:05:45 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-postcodesloetrij-  Bonus !!
+Hello,
 
-Promotion advertisement !!: we are please to inform you that the
-Postcode-lottery yearly award award promotion program held 25th Dec  2011,
-have pronounce your e-mail address as the luckily winner of a total sum:
-of ?100,000(One Hundred Thousand Euros
-Only)
+My kernel is 2.6.32 base for mips and I'm not able to build perf, I 
+guess this version is too old
+to cross-compile correctly. Do someone know from which version it can work?
 
-Please email via BV Post-lottery Solicitors Fund Verification Department
-with your Serial-No:LE-0031#55330 for your claim,
-
-Office/Email:Postinfo@luckymail.com
-Tell:+31-645-764-338/Netherlands
-
-This program is organize to promote the postcode lottery company award
-yearly, and we are strictly and skeptical regard your winning information
-that  is why you are advice to forward your serial number the claim
-department only and without any dis-closer to any person /friends for
-security reason
-
-Sincerely,
-Mrs:Hase Van Willems
-Promotion Coordinator.
+Regards,
+Jean-Mickael
