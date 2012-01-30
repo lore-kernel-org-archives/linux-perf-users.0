@@ -1,28 +1,26 @@
-From: Gleb Natapov <gleb@redhat.com>
+From: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Sun, 29 Jan 2012 19:50:57 +0200
-Message-ID: <20120129175057.GC2938@redhat.com>
+Date: Mon, 30 Jan 2012 10:52:36 +0100
+Message-ID: <1327917156.2446.191.camel@twins>
 References: <4F22D8D9.3010108@rgmadvisors.com>
- <20120128120151.GA10390@elte.hu>
- <4F248938.5030507@rgmadvisors.com>
- <20120129163235.GB23408@elte.hu>
+	 <20120128120151.GA10390@elte.hu> <4F248938.5030507@rgmadvisors.com>
+	 <20120129163235.GB23408@elte.hu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:45664 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753232Ab2A2RvZ (ORCPT
+Received: from casper.infradead.org ([85.118.1.10]:59525 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751678Ab2A3Jwv convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 29 Jan 2012 12:51:25 -0500
-Content-Disposition: inline
+	Mon, 30 Jan 2012 04:52:51 -0500
 In-Reply-To: <20120129163235.GB23408@elte.hu>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@elte.hu>
-Cc: Andrew Steets <asteets@rgmadvisors.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 
-On Sun, Jan 29, 2012 at 05:32:35PM +0100, Ingo Molnar wrote:
-> 
+On Sun, 2012-01-29 at 17:32 +0100, Ingo Molnar wrote:
 > * Andrew Steets <asteets@rgmadvisors.com> wrote:
 > 
 > > On 1/28/12 6:01 AM, Ingo Molnar wrote:
@@ -41,12 +39,6 @@ On Sun, Jan 29, 2012 at 05:32:35PM +0100, Ingo Molnar wrote:
 > That usecase indeed makes sense. Peter, could we allow this for 
 > privileged tasks, depending on the perf_paranoia settings or 
 > such?
-> 
-This sounds useful not only for privileged tasks. Why not make
-it event attribute? If user wants PR_TASK_PERF_EVENTS_DISABLE be
-respected for an event it can specify special argument like:
 
-perf record -e cycles:n ./a.out
-
---
-			Gleb.
+I really dislike it. The sane way around this would be to allow easy
+self-profiling instead of doing things arse about face like that.
