@@ -1,7 +1,7 @@
-From: Ingo Molnar <mingo@elte.hu>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Mon, 30 Jan 2012 14:58:36 +0100
-Message-ID: <20120130135836.GA5703@elte.hu>
+Date: Mon, 30 Jan 2012 13:29:35 -0200
+Message-ID: <20120130152935.GA15935@infradead.org>
 References: <4F22D8D9.3010108@rgmadvisors.com>
  <20120128120151.GA10390@elte.hu>
  <4F248938.5030507@rgmadvisors.com>
@@ -9,71 +9,113 @@ References: <4F22D8D9.3010108@rgmadvisors.com>
  <1327917156.2446.191.camel@twins>
  <20120130101121.GB8924@elte.hu>
  <1327921293.2446.202.camel@twins>
- <20120130113115.GA6565@elte.hu>
- <1327931107.2446.205.camel@twins>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9]:44442 "EHLO mx2.mail.elte.hu"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752495Ab2A3N7A (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:55933 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753317Ab2A3P3o (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 30 Jan 2012 08:59:00 -0500
+	Mon, 30 Jan 2012 10:29:44 -0500
 Content-Disposition: inline
-In-Reply-To: <1327931107.2446.205.camel@twins>
+In-Reply-To: <1327921293.2446.202.camel@twins>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Cc: Ingo Molnar <mingo@elte.hu>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>
 
-
-* Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-
-> > What's your concern with the prctl()? This would arguably be 
-> > the right kind of usage for prctl(): it's an established 
-> > API/ABI for process/task-wide settings.
+Em Mon, Jan 30, 2012 at 12:01:33PM +0100, Peter Zijlstra escreveu:
+> On Mon, 2012-01-30 at 11:11 +0100, Ingo Molnar wrote:
+> > So, what workflow are you suggesting to Andrew?
 > 
-> Its doing things backwards, [...]
+> Librarize perf record, then in your code do something like:
+> 
+> #include "perf_record.h"
+> 
+>   handle = perf_record_init(); /* creates perf events and creates
+>                                   a record thread that writes samples
+>                                   to perf.data, consumes env(PERF_*)
+>                                   for configuration, registers with
+>                                   at_exit() for cleanup */
+>   if (!handle)
+>     /* burn */
+> 
+>   /* do you other code */
+> 
+>   perf_record_start(handle);
+> 
+>   /* do the bit you want profiled */
+> 
+>   perf_record_stop(handle);
+> 
+> Then build with -lperfrecord or so. Not too hard, right?
 
-What does that mean?
+This looks like the test__PERF_RECORD function in
+tools/perf/builtin-test.c, copying here just the equivalent parts to the
+above:
 
-> [...] also the whole concept of allowing people to hide things 
-> from a profiler is so rotten I'm not willing to even consider 
-> the notion.
+	#include "util/evlist.h"
 
-But what we want here is not to hide things from the profiler, 
-what we want to be able to is to *ask* the profiler to hide 
-things for us, and we do that for a good reason.
+        struct perf_record_opts opts = {
+                .target_pid = -1,
+                .target_tid = -1,
+                .no_delay   = true,
+                .freq       = 10,
+                .mmap_pages = 256,
+                .sample_id_all_avail = true,
+        };
 
-This distinction (which I agree is important) could be 
-implemented by adding a "allow self-profiling" bit (default 
-disabled) in the perf_attr. That way such code would not be able 
-to 'hide' from a simple:
+        struct perf_evlist *handle = perf_evlist__new(NULL, NULL);
 
-  perf top
-  perf record -a
+        /* 
+         * We need at least one evsel in the evlist, use the default 
+         * one: "cycles". 
+         */ 
+        err = perf_evlist__add_default(evlist);
 
-session, but would be able to self-profile from such a session:
+	perf_evlist__config_attrs(evlist, &opts);
 
-  perf record --allow-self-profile ...
+	err = perf_evlist__open(evlist, opts.group);
 
-where there could be some easy shortcut for 
---allow-self-profile, such as:
+        perf_evlist__enable(evlist);
 
-  perf record -S
+	/* do the bit you want profiled */
 
-that way no code could ever hide from a profiler, only if the 
-profiler is specifically allowing self-profiling. (opt in)
+        perf_evlist__disable(evlist);
 
-The librarization you suggested might make sense too - but i 
-think people will gravitate towards the easier to use variant, 
-and prctl() is as easy and straightforward as it gets.
 
-We can Cc: it to Linus with an explicit [RFC] and he can shoot 
-it down if the API is ugly - but I don't think it's ugly.
+----
 
-Hm?
 
-Thanks,
+perf_evlist__config_attrs will, among other chores, do:
 
-	Ingo
+        if (opts->target_pid == -1 && opts->target_tid == -1 &&
+            !opts->system_wide) {
+                attr->disabled = 1;
+                attr->enable_on_exec = 1;
+        }
+
+And you can fudge it a bit more to your liking before calling
+perf_evlist__open().
+
+	This 'perf test' use case was more for preparing for monitoring
+a workload that a program would start, setting up the events, etc,
+leaving all disabled and then letting the workload begin which would, by
+means of enable_on_exec start the counters/events.
+
+	But I guess you can just setup evlist->workload.pid to getpid()
+and use perf_evlist__enable()/ perf_evlist_disable() pairs to your
+liking.
+
+	Writing a test case that would do exactly what you want in 'perf
+test' would be awesome and would allow us to figure out if the
+abstractions in place are enough for your use case. Then we could
+librarize just this subset and go from there.
+
+	Take a look as well at test__basic_mmap, it may be useful as
+another example of using these evsel/evlist classes.
+
+	What is needed to link you can find in tools/perf/util/setup.py,
+remove util/python.c and you should be set.
+
+- Arnaldo
