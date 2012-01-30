@@ -1,72 +1,79 @@
-From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+From: Ingo Molnar <mingo@elte.hu>
 Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Mon, 30 Jan 2012 14:45:07 +0100
-Message-ID: <1327931107.2446.205.camel@twins>
+Date: Mon, 30 Jan 2012 14:58:36 +0100
+Message-ID: <20120130135836.GA5703@elte.hu>
 References: <4F22D8D9.3010108@rgmadvisors.com>
-	 <20120128120151.GA10390@elte.hu> <4F248938.5030507@rgmadvisors.com>
-	 <20120129163235.GB23408@elte.hu> <1327917156.2446.191.camel@twins>
-	 <20120130101121.GB8924@elte.hu> <1327921293.2446.202.camel@twins>
-	 <20120130113115.GA6565@elte.hu>
+ <20120128120151.GA10390@elte.hu>
+ <4F248938.5030507@rgmadvisors.com>
+ <20120129163235.GB23408@elte.hu>
+ <1327917156.2446.191.camel@twins>
+ <20120130101121.GB8924@elte.hu>
+ <1327921293.2446.202.camel@twins>
+ <20120130113115.GA6565@elte.hu>
+ <1327931107.2446.205.camel@twins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:34223 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752571Ab2A3Np2 convert rfc822-to-8bit (ORCPT
+Received: from mx2.mail.elte.hu ([157.181.151.9]:44442 "EHLO mx2.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752495Ab2A3N7A (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 30 Jan 2012 08:45:28 -0500
-In-Reply-To: <20120130113115.GA6565@elte.hu>
+	Mon, 30 Jan 2012 08:59:00 -0500
+Content-Disposition: inline
+In-Reply-To: <1327931107.2446.205.camel@twins>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Ingo Molnar <mingo@elte.hu>
-Cc: =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+To: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 
-On Mon, 2012-01-30 at 12:31 +0100, Ingo Molnar wrote:
-> * Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
+
+* Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
+
+> > What's your concern with the prctl()? This would arguably be 
+> > the right kind of usage for prctl(): it's an established 
+> > API/ABI for process/task-wide settings.
 > 
-> > On Mon, 2012-01-30 at 11:11 +0100, Ingo Molnar wrote:
-> > > So, what workflow are you suggesting to Andrew?
-> > 
-> > Librarize perf record, then in your code do something like:
-> > 
-> > #include "perf_record.h"
-> 
-> Maybe. (and then it shouldnt be limited to perf_record.h but 
-> should be events.h plus libevents.so or such)
+> Its doing things backwards, [...]
 
-Yes it should be, you want to reserve the more generic name for less
-narrow interfaces.
+What does that mean?
 
-> > 
-> >   handle = perf_record_init(); /* creates perf events and creates
-> >                                   a record thread that writes samples
-> >                                   to perf.data, consumes env(PERF_*)
-> >                                   for configuration, registers with
-> >                                   at_exit() for cleanup */
-> >   if (!handle)
-> >     /* burn */
-> > 
-> >   /* do you other code */
-> > 
-> >   perf_record_start(handle);
-> > 
-> >   /* do the bit you want profiled */
-> > 
-> >   perf_record_stop(handle);
-> > 
-> > Then build with -lperfrecord or so. Not too hard, right?
-> 
-> Isnt a simple prctl() so much easier and faster?
+> [...] also the whole concept of allowing people to hide things 
+> from a profiler is so rotten I'm not willing to even consider 
+> the notion.
 
-I really don't want to add another two prctl()s for this, ideally I'd
-remove the ones we have now, but I've never done due to maintaining
-backwards blah..
+But what we want here is not to hide things from the profiler, 
+what we want to be able to is to *ask* the profiler to hide 
+things for us, and we do that for a good reason.
 
-> What's your concern with the prctl()? This would arguably be the 
-> right kind of usage for prctl(): it's an established API/ABI for 
-> process/task-wide settings.
+This distinction (which I agree is important) could be 
+implemented by adding a "allow self-profiling" bit (default 
+disabled) in the perf_attr. That way such code would not be able 
+to 'hide' from a simple:
 
-Its doing things backwards, also the whole concept of allowing people to
-hide things from a profiler is so rotten I'm not willing to even
-consider the notion.
+  perf top
+  perf record -a
+
+session, but would be able to self-profile from such a session:
+
+  perf record --allow-self-profile ...
+
+where there could be some easy shortcut for 
+--allow-self-profile, such as:
+
+  perf record -S
+
+that way no code could ever hide from a profiler, only if the 
+profiler is specifically allowing self-profiling. (opt in)
+
+The librarization you suggested might make sense too - but i 
+think people will gravitate towards the easier to use variant, 
+and prctl() is as easy and straightforward as it gets.
+
+We can Cc: it to Linus with an explicit [RFC] and he can shoot 
+it down if the API is ugly - but I don't think it's ugly.
+
+Hm?
+
+Thanks,
+
+	Ingo
