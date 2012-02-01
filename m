@@ -1,40 +1,79 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+From: Frederic Weisbecker <fweisbec@gmail.com>
 Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Mon, 30 Jan 2012 13:30:40 -0200
-Message-ID: <20120130153040.GB15935@infradead.org>
+Date: Wed, 1 Feb 2012 20:03:29 +0100
+Message-ID: <20120201190327.GI6731@somewhere.redhat.com>
 References: <4F22D8D9.3010108@rgmadvisors.com>
  <20120128120151.GA10390@elte.hu>
  <4F248938.5030507@rgmadvisors.com>
  <20120129163235.GB23408@elte.hu>
  <1327917156.2446.191.camel@twins>
  <20120130101121.GB8924@elte.hu>
- <1327921293.2446.202.camel@twins>
- <20120130113115.GA6565@elte.hu>
- <1327931107.2446.205.camel@twins>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:58492 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755581Ab2BATDe (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 1 Feb 2012 14:03:34 -0500
 Content-Disposition: inline
-In-Reply-To: <1327931107.2446.205.camel@twins>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Ingo Molnar <mingo@elte.hu>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <20120130101121.GB8924@elte.hu>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Ingo Molnar <mingo@elte.hu>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
 
-Em Mon, Jan 30, 2012 at 02:45:07PM +0100, Peter Zijlstra escreveu:
-> On Mon, 2012-01-30 at 12:31 +0100, Ingo Molnar wrote:
-> > * Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-> > > On Mon, 2012-01-30 at 11:11 +0100, Ingo Molnar wrote:
-> > > > So, what workflow are you suggesting to Andrew?
-> > > Librarize perf record, then in your code do something like:
-> > > #include "perf_record.h"
+On Mon, Jan 30, 2012 at 11:11:21AM +0100, Ingo Molnar wrote:
+> 
+> * Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
+> 
+> > On Sun, 2012-01-29 at 17:32 +0100, Ingo Molnar wrote:
+> > > * Andrew Steets <asteets@rgmadvisors.com> wrote:
+> > > 
+> > > > On 1/28/12 6:01 AM, Ingo Molnar wrote:
+> > > > 
+> > > > >> prctl(PR_TASK_PERF_EVENTS_DISABLE) doesn't appear to 
+> > > > >> disable perf event counters.  Here is a demonstration 
+> > > > >> program:
+> > > > >
+> > > > > btw., what's your usecase?
+> > > > 
+> > > > I'm trying to profile a small section of a long-running 
+> > > > program.  I ran into trouble using call-graph recording 
+> > > > and I thought this might be an alternative way of getting 
+> > > > what I was after.
+> > > 
+> > > That usecase indeed makes sense. Peter, could we allow this 
+> > > for privileged tasks, depending on the perf_paranoia 
+> > > settings or such?
+> > 
+> > I really dislike it. The sane way around this would be to 
+> > allow easy self-profiling instead of doing things arse about 
+> > face like that.
+> 
+> So, what workflow are you suggesting to Andrew?
+> 
+> I guess we are also hurting from the lack of dwarf stack 
+> backtrace decoding - that would allow the filtering by parent 
+> function without modifying the code. I think Frederic had a 
+> prototype working for 32-bit - any update on that?
 
-> > Maybe. (and then it shouldnt be limited to perf_record.h but 
-> > should be events.h plus libevents.so or such)
+I haven't touched that for a while. I would be glad if
+somebody else could relay me on this work.
 
-> Yes it should be, you want to reserve the more generic name for less
-> narrow interfaces.
+I think Jiri Olsa has been working on something about Dwarf cfi
+unwinding with a different approach. Mine was about dumping chunks
+of stack and regs and do the unwinding on post processing. I think
+Jiri is doing the unwinding from the event overflow fast path.
 
-Agreed.
- 
-- Arnaldo
+> 
+> Andrew could work that problem around right now by adding:
+> 
+>    -fno-omit-frame-pointer
+> 
+> to the build of the utility - that should activate -g and 
+> perf-report's --parent filter should also work fine.
+> 
+> Thanks,
+> 
+> 	Ingo
