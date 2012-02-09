@@ -1,79 +1,84 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Wed, 1 Feb 2012 20:03:29 +0100
-Message-ID: <20120201190327.GI6731@somewhere.redhat.com>
-References: <4F22D8D9.3010108@rgmadvisors.com>
- <20120128120151.GA10390@elte.hu>
- <4F248938.5030507@rgmadvisors.com>
- <20120129163235.GB23408@elte.hu>
- <1327917156.2446.191.camel@twins>
- <20120130101121.GB8924@elte.hu>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] perf tools: Allow expressions in __print_symbolic()
+ fields
+Date: Wed, 08 Feb 2012 20:44:24 -0500
+Message-ID: <1328751864.2200.125.camel@gandalf.stny.rr.com>
+References: <1315148939-14313-1-git-send-email-stefanha@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:58492 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755581Ab2BATDe (ORCPT
+Received: from hrndva-omtalb.mail.rr.com ([71.74.56.124]:38695 "EHLO
+	hrndva-omtalb.mail.rr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751002Ab2BIBoZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 1 Feb 2012 14:03:34 -0500
-Content-Disposition: inline
-In-Reply-To: <20120130101121.GB8924@elte.hu>
+	Wed, 8 Feb 2012 20:44:25 -0500
+In-Reply-To: <1315148939-14313-1-git-send-email-stefanha@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Steets <asteets@rgmadvisors.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+To: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org
 
-On Mon, Jan 30, 2012 at 11:11:21AM +0100, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-> 
-> > On Sun, 2012-01-29 at 17:32 +0100, Ingo Molnar wrote:
-> > > * Andrew Steets <asteets@rgmadvisors.com> wrote:
-> > > 
-> > > > On 1/28/12 6:01 AM, Ingo Molnar wrote:
-> > > > 
-> > > > >> prctl(PR_TASK_PERF_EVENTS_DISABLE) doesn't appear to 
-> > > > >> disable perf event counters.  Here is a demonstration 
-> > > > >> program:
-> > > > >
-> > > > > btw., what's your usecase?
-> > > > 
-> > > > I'm trying to profile a small section of a long-running 
-> > > > program.  I ran into trouble using call-graph recording 
-> > > > and I thought this might be an alternative way of getting 
-> > > > what I was after.
-> > > 
-> > > That usecase indeed makes sense. Peter, could we allow this 
-> > > for privileged tasks, depending on the perf_paranoia 
-> > > settings or such?
-> > 
-> > I really dislike it. The sane way around this would be to 
-> > allow easy self-profiling instead of doing things arse about 
-> > face like that.
-> 
-> So, what workflow are you suggesting to Andrew?
-> 
-> I guess we are also hurting from the lack of dwarf stack 
-> backtrace decoding - that would allow the filtering by parent 
-> function without modifying the code. I think Frederic had a 
-> prototype working for 32-bit - any update on that?
+Arnaldo,
 
-I haven't touched that for a while. I would be glad if
-somebody else could relay me on this work.
+Can you pull this patch into perf? You can add my:
 
-I think Jiri Olsa has been working on something about Dwarf cfi
-unwinding with a different approach. Mine was about dumping chunks
-of stack and regs and do the unwinding on post processing. I think
-Jiri is doing the unwinding from the event overflow fast path.
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
+Thanks!
+
+-- Steve
+
+
+On Sun, 2011-09-04 at 16:08 +0100, Stefan Hajnoczi wrote:
+> The __print_symbolic() function takes a sequence of key-value pairs for
+> pretty-printing a constant.  The new kvm:kvm_exit print fmt uses the
+> expression:
 > 
-> Andrew could work that problem around right now by adding:
+>   __print_symbolic(..., { 0x040 + 1, "DB excp" }, ...)
 > 
->    -fno-omit-frame-pointer
+> Currently only atoms are supported and this print fmt fails to parse.
+> This patch adds support for expressions instead of just atoms so that
+> 0x040 + 1 is parsed successfully.  Also add arg_num_eval() support for
+> the '+' operator.
 > 
-> to the build of the utility - that should activate -g and 
-> perf-report's --parent filter should also work fine.
+> Signed-off-by: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
+> ---
+> The kvm:kvm_exit event was not recording enough information to format it.  I
+> recently fixed this by introducing a __print_symbolic(), this commit has not
+> yet hit linux.git but I think it will soon.  In order to correctly format the
+> new kvm:kvm_exit, this patch to extend event parsing is required.
 > 
-> Thanks,
+>  tools/perf/util/trace-event-parse.c |   12 ++++++++++++
+>  1 files changed, 12 insertions(+), 0 deletions(-)
 > 
-> 	Ingo
+> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+> index 0a7ed5b..d0a4548 100644
+> --- a/tools/perf/util/trace-event-parse.c
+> +++ b/tools/perf/util/trace-event-parse.c
+> @@ -1425,6 +1425,11 @@ static long long arg_num_eval(struct print_arg *arg)
+>  				die("unknown op '%s'", arg->op.op);
+>  			}
+>  			break;
+> +		case '+':
+> +			left = arg_num_eval(arg->op.left);
+> +			right = arg_num_eval(arg->op.right);
+> +			val = left + right;
+> +			break;
+>  		default:
+>  			die("unknown op '%s'", arg->op.op);
+>  		}
+> @@ -1485,6 +1490,13 @@ process_fields(struct event *event, struct print_flag_sym **list, char **tok)
+>  
+>  		free_token(token);
+>  		type = process_arg(event, arg, &token);
+> +
+> +		if (type == EVENT_OP)
+> +			type = process_op(event, arg, &token);
+> +
+> +		if (type == EVENT_ERROR)
+> +			goto out_free;
+> +
+>  		if (test_type_token(type, token, EVENT_DELIM, ","))
+>  			goto out_free;
+>  
