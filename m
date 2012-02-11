@@ -1,84 +1,61 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] perf tools: Allow expressions in __print_symbolic()
- fields
-Date: Wed, 08 Feb 2012 20:44:24 -0500
-Message-ID: <1328751864.2200.125.camel@gandalf.stny.rr.com>
-References: <1315148939-14313-1-git-send-email-stefanha@linux.vnet.ibm.com>
+From: Peter Senna Tschudin <peter.senna@gmail.com>
+Subject: Perf on custom module
+Date: Sat, 11 Feb 2012 15:38:19 -0200
+Message-ID: <CA+MoWDq6KFd3_=tpkjnS+p2G8NCU+12RsQ6V-ekXfwDcu_-jdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from hrndva-omtalb.mail.rr.com ([71.74.56.124]:38695 "EHLO
-	hrndva-omtalb.mail.rr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751002Ab2BIBoZ (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:42470 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753983Ab2BKRiU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 8 Feb 2012 20:44:25 -0500
-In-Reply-To: <1315148939-14313-1-git-send-email-stefanha@linux.vnet.ibm.com>
+	Sat, 11 Feb 2012 12:38:20 -0500
+Received: by yenm8 with SMTP id m8so1913872yen.19
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Feb 2012 09:38:19 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Arnaldo,
+Hi,
 
-Can you pull this patch into perf? You can add my:
+I'm using Fedora 15 and my goal is to compare the performance of
+different Kernel module codes.
 
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
+For example, on a custom module, I'm comparing:
 
-Thanks!
+getnstimeofday (ts_start); /*stopwatch start*/
 
--- Steve
+for (i = 0; i < q->num_buffers; ++i)
+	q->bufs[i]->state = VB2_BUF_STATE_DEQUEUED;
 
+getnstimeofday (ts_end); /*stopwatch stop*/
 
-On Sun, 2011-09-04 at 16:08 +0100, Stefan Hajnoczi wrote:
-> The __print_symbolic() function takes a sequence of key-value pairs for
-> pretty-printing a constant.  The new kvm:kvm_exit print fmt uses the
-> expression:
-> 
->   __print_symbolic(..., { 0x040 + 1, "DB excp" }, ...)
-> 
-> Currently only atoms are supported and this print fmt fails to parse.
-> This patch adds support for expressions instead of just atoms so that
-> 0x040 + 1 is parsed successfully.  Also add arg_num_eval() support for
-> the '+' operator.
-> 
-> Signed-off-by: Stefan Hajnoczi <stefanha@linux.vnet.ibm.com>
-> ---
-> The kvm:kvm_exit event was not recording enough information to format it.  I
-> recently fixed this by introducing a __print_symbolic(), this commit has not
-> yet hit linux.git but I think it will soon.  In order to correctly format the
-> new kvm:kvm_exit, this patch to extend event parsing is required.
-> 
->  tools/perf/util/trace-event-parse.c |   12 ++++++++++++
->  1 files changed, 12 insertions(+), 0 deletions(-)
-> 
-> diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-> index 0a7ed5b..d0a4548 100644
-> --- a/tools/perf/util/trace-event-parse.c
-> +++ b/tools/perf/util/trace-event-parse.c
-> @@ -1425,6 +1425,11 @@ static long long arg_num_eval(struct print_arg *arg)
->  				die("unknown op '%s'", arg->op.op);
->  			}
->  			break;
-> +		case '+':
-> +			left = arg_num_eval(arg->op.left);
-> +			right = arg_num_eval(arg->op.right);
-> +			val = left + right;
-> +			break;
->  		default:
->  			die("unknown op '%s'", arg->op.op);
->  		}
-> @@ -1485,6 +1490,13 @@ process_fields(struct event *event, struct print_flag_sym **list, char **tok)
->  
->  		free_token(token);
->  		type = process_arg(event, arg, &token);
-> +
-> +		if (type == EVENT_OP)
-> +			type = process_op(event, arg, &token);
-> +
-> +		if (type == EVENT_ERROR)
-> +			goto out_free;
-> +
->  		if (test_type_token(type, token, EVENT_DELIM, ","))
->  			goto out_free;
->  
+to:
+
+getnstimeofday (ts_start); /*stopwatch start*/
+
+buf_ptr_end = q->bufs[q->num_buffers];
+
+for (buf_ptr = q->bufs[0]; buf_ptr < buf_ptr_end; ++buf_ptr)
+	buf_ptr->state = VB2_BUF_STATE_DEQUEUED;
+
+getnstimeofday (ts_end); /*stopwatch stop*/
+
+I was able to do the profiling with perf on user space, by making one
+executable for each code, but I was not able to restrict the profiling
+to the portion of the code I'm interested in.
+
+My questions:
+
+1 - How can I restrict the profiling to a specific portion of the code?
+
+2 - How can I use perf to profile custom module?
+
+Kind Regards,
+
+Peter
+
+-- 
+Peter Senna Tschudin
+peter.senna@gmail.com
+gpg id: 48274C36
