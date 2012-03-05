@@ -1,283 +1,269 @@
-From: Victor Jimenez <victor.javier@bsc.es>
-Subject: Re: Sampling instruction pointer on PPC
-Date: Fri, 02 Mar 2012 20:21:35 +0100
-Message-ID: <4F511DBF.7000308@bsc.es>
-References: <4F4FACFA.6080209@bsc.es>
- <1330623954.4839.127.camel@oc5652146517.ibm.com>
+From: Arun Sharma <asharma@fb.com>
+Subject: [RFC] Sort inclusive
+Date: Mon, 5 Mar 2012 14:12:54 -0800
+Message-ID: <20120305221253.GA30250@dev3310.snc6.facebook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3651777854804970205=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1330623954.4839.127.camel@oc5652146517.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: "Carl E. Love" <cel@linux.vnet.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@elte.hu>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============3651777854804970205==
-Content-Type: multipart/alternative;
- boundary="------------010103010902020100030706"
 
-This is a multi-part message in MIME format.
---------------010103010902020100030706
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Some of our users have been asking for the ability to sort samples by
+inclusive time (time spent in the function + all of the callees in the
+callgraph).
 
-Hello Carl,
+While something like this is possible via tools such as:
 
-On 03/01/2012 06:45 PM, Carl E. Love wrote:
-> Victor:
->
-> The performance counter tools perf and OProfile capture the value of the
-> instruction pointer at the time an interrupt occurs. The file
-> arch/powerpc/oprofile/op_model_power4.c contains the OProfile interrupt
-> handler used for Power 4, 5, 6, and 7.  When the performance counters
-> overflow, the instruction pointer (Program Counter) is stored in the
-> SIAR register.  The perf and OProfile interrupt handlers store the
-> instruction address in their samples.  These tools then use the
-> addresses to create a histogram of where the processor was at the time
-> of the interrupt.
->
-> I am guessing you are hoping to collect something more like an raw
-> sequence of addresses trying to trace where the processor was in time.
-That is exactly what I want to do. Basically I want to use IP sampling 
-for detecting and keeping application phase changes.
-> I am not aware of a way to read the value of the instruction pointer
-> directly on the fly.  But you could possibly emulate it by setting a
-> program counter count value to 2^31 -1, enable the counter to count
-> cycles, then read the SIAR value.  You could do this each time you want
-> to take a sample.  It would require a couple reads/writes to registers.
-> Note, the counter generates the interrupt to store the instruction
-> pointer into the SIAR register when the most significant bit of the 32
-> bit HW count value changes from 0 to 1.  You will need to then clear the
-> interrupt, actually I would have to double check but I think the default
-> interrupt handler that is enabled with Perf and OProfile are not running
-> will do that quietly for you.
-Indeed this seems like it may do the trick. Just one question; from your 
-description I assume that there is no support in the current 
-implementation of perf (e.g., I know perf_event_read_value() is used to 
-read the value of an event, but I cannot find any equivalent function 
-that can write to a counter). I guess that means I need to implement 
-that in the kernel myself, right?
->
-> Not sure that helps.
->
->               Carl Love
-Thank you!
-Victor
->
->
->
-> On Thu, 2012-03-01 at 18:08 +0100, Victor Jimenez wrote:
->> I am trying to sample instruction pointer along time on a Power7 system.
->> I know that there are accurate mechanisms to do so in Intel processors
->> (e.g., PEBS and Branch Trace Store).
->>
->> Is it possible to do something similar in Power7? Will the samples be
->> accurate? I am worried that significant delays (skids) may appear.
->>
->> Thank you,
->> Victor
->>
->> WARNING / LEGAL TEXT: This message is intended only for the use of the
->> individual or entity to which it is addressed and may contain
->> information which is privileged, confidential, proprietary, or exempt
->> from disclosure under applicable law. If you are not the intended
->> recipient or the person responsible for delivering the message to the
->> intended recipient, you are strictly prohibited from disclosing,
->> distributing, copying, or in any way using this message. If you have
->> received this communication in error, please notify the sender and
->> destroy and delete any copies you may have received.
->>
->> http://www.bsc.es/disclaimer.htm
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
+perf script | gprof2dot.py -f perf
 
+a simpler, text only tool seems desirable.
 
--- 
-------------------------------------------------------------------------
+The attached patch seems to work ok on some test programs in
+order=caller mode. The idea is simple:
 
-      Victor Jimenez Perez
-      Barcelona Supercomputing Center
-      Centro Nacional de Supercomputacion
-      WWW: http://www.bsc.es         Tel: +34-934137167
-      e-mail: victor.javier@bsc.es
+For each input callchain such as:
 
-------------------------------------------------------------------------
+main -> a -> b -> c
 
+We create histogram entries for:
 
+main -> a -> b -> c (original callchain)
+a -> b -> c (inclusive callchain)
+b -> c (inclusive callchain)
+c (inclusive callchain)
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+When computing hists->stats.total_period, the patch ignores the inclusive
+callchains and considers only the original callchain.
 
-http://www.bsc.es/disclaimer.htm
---------------010103010902020100030706
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+However, this doesn't work very well for order=callee, mainly because
+the patch doesn't compute total_period correctly. The number of samples
+look ok (and should be the same as order=caller) for each symbol.
 
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hello Carl,<br>
-    <br>
-    On 03/01/2012 06:45 PM, Carl E. Love wrote:
-    <blockquote
-      cite="mid:1330623954.4839.127.camel@oc5652146517.ibm.com"
-      type="cite">
-      <pre wrap="">Victor:
+If the input stream had:
 
-The performance counter tools perf and OProfile capture the value of the
-instruction pointer at the time an interrupt occurs. The file
-arch/powerpc/oprofile/op_model_power4.c contains the OProfile interrupt
-handler used for Power 4, 5, 6, and 7.  When the performance counters
-overflow, the instruction pointer (Program Counter) is stored in the
-SIAR register.  The perf and OProfile interrupt handlers store the
-instruction address in their samples.  These tools then use the
-addresses to create a histogram of where the processor was at the time
-of the interrupt.
+c <- b <- a <- main 
 
-I am guessing you are hoping to collect something more like an raw
-sequence of addresses trying to trace where the processor was in time.</pre>
-    </blockquote>
-    That is exactly what I want to do. Basically I want to use IP
-    sampling for detecting and keeping application phase changes.<br>
-    <blockquote
-      cite="mid:1330623954.4839.127.camel@oc5652146517.ibm.com"
-      type="cite">
-      <pre wrap="">
-I am not aware of a way to read the value of the instruction pointer
-directly on the fly.  But you could possibly emulate it by setting a
-program counter count value to 2^31 -1, enable the counter to count
-cycles, then read the SIAR value.  You could do this each time you want
-to take a sample.  It would require a couple reads/writes to registers.
-Note, the counter generates the interrupt to store the instruction
-pointer into the SIAR register when the most significant bit of the 32
-bit HW count value changes from 0 to 1.  You will need to then clear the
-interrupt, actually I would have to double check but I think the default
-interrupt handler that is enabled with Perf and OProfile are not running
-will do that quietly for you. </pre>
-    </blockquote>
-    Indeed this seems like it may do the trick. Just one question; from
-    your description I assume that there is no support in the current
-    implementation of perf (e.g., I know perf_event_read_value() is used
-    to read the value of an event, but I cannot find any equivalent
-    function that can write to a counter). I guess that means I need to
-    implement that in the kernel myself, right?
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <blockquote
-      cite="mid:1330623954.4839.127.camel@oc5652146517.ibm.com"
-      type="cite">
-      <pre wrap="">
+everything would've worked just fine. But when I step through the code,
+I see:
 
-Not sure that helps.
+some <- kernel <- funcs <- c <- b <- a <- main (original)
+kernel <- funcs <- c <- b <- a <- main (inclusive)
+funcs <- c <- b <- a <- main (inclusive)
+c <- b <- a <- main (inclusive <- but should be the original callchain)
+b <- a <- main (inclusive)
+a <- main (inclusive)
+main (inclusive)
 
-             Carl Love</pre>
-    </blockquote>
-    Thank you!<br>
-    Victor<br>
-    <blockquote
-      cite="mid:1330623954.4839.127.camel@oc5652146517.ibm.com"
-      type="cite">
-      <pre wrap="">
+I tried a couple of hacks (eg: comparing event->ip.ip to al->addr) to
+tell the original callchain from inclusive ones, so the inclusive chains
+can be used for histogram display/sorting, but ignored for other
+purposes.
 
+I hope others find --sort inclusive functionality useful. Any comments
+on how to solve the order=callee case would be great. I suspect this has
+something to do with histogram output collapsing/resorting.
 
+ -Arun
 
-On Thu, 2012-03-01 at 18:08 +0100, Victor Jimenez wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">I am trying to sample instruction pointer along time on a Power7 system. 
-I know that there are accurate mechanisms to do so in Intel processors 
-(e.g., PEBS and Branch Trace Store).
+commit 29e659f0ca2041f2f1681a0072739165220d7c64
+Author: Arun Sharma <asharma@fb.com>
+Date:   Wed Feb 29 21:40:47 2012 +0000
 
-Is it possible to do something similar in Power7? Will the samples be 
-accurate? I am worried that significant delays (skids) may appear.
+    perf: Add a new sort order: SORT_INCLUSIVE
+    
+    Each entry that used to get added once to the histogram, now is added
+    chain->nr times, each time with one less entry in the
+    callchain.
+    
+    This will result in a non-leaf function that appears in a lot of
+    samples to get a histogram entry with lots of hits.
+    
+    The user can then drill down into the callchains of functions that
+    have high inclusive times.
+    
+    Signed-off-by: Arun Sharma <asharma@fb.com>
 
-Thank you,
-Victor
-
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
-
-<a class="moz-txt-link-freetext" href="http://www.bsc.es/disclaimer.htm">http://www.bsc.es/disclaimer.htm</a>
---
-To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-the body of a message to <a class="moz-txt-link-abbreviated" href="mailto:majordomo@vger.kernel.org">majordomo@vger.kernel.org</a>
-More majordomo info at  <a class="moz-txt-link-freetext" href="http://vger.kernel.org/majordomo-info.html">http://vger.kernel.org/majordomo-info.html</a>
-
-</pre>
-      </blockquote>
-      <pre wrap="">
-
-</pre>
-    </blockquote>
-    <br>
-    <br>
-    <pre class="moz-signature" cols="72">-- 
-------------------------------------------------------------------------
-
-     Victor Jimenez Perez
-     Barcelona Supercomputing Center
-     Centro Nacional de Supercomputacion
-     WWW: <a class="moz-txt-link-freetext" href="http://www.bsc.es">http://www.bsc.es</a>         Tel: +34-934137167
-     e-mail: <a class="moz-txt-link-abbreviated" href="mailto:victor.javier@bsc.es">victor.javier@bsc.es</a>
-
------------------------------------------------------------------------- </pre>
-  
-<br>
-<br>
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
-<br><br>
-<a href="http://www.bsc.es/disclaimer.htm">http://www.bsc.es/disclaimer.htm</a>
-<br>
-</body>
-</html>
-
---------------010103010902020100030706--
-
---===============3651777854804970205==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============3651777854804970205==--
+diff --git a/builtin-report.c b/builtin-report.c
+index 25d34d4..4bcd169 100644
+--- a/builtin-report.c
++++ b/builtin-report.c
+@@ -60,7 +60,7 @@ static int perf_evsel__add_hist_entry(struct perf_evsel *evsel,
+ {
+ 	struct symbol *parent = NULL;
+ 	int err = 0;
+-	struct hist_entry *he;
++	struct hist_entry *he = NULL;
+ 
+ 	if ((sort__has_parent || symbol_conf.use_callchain) && sample->callchain) {
+ 		err = machine__resolve_callchain(machine, evsel, al->thread,
+@@ -69,16 +69,47 @@ static int perf_evsel__add_hist_entry(struct perf_evsel *evsel,
+ 			return err;
+ 	}
+ 
+-	he = __hists__add_entry(&evsel->hists, al, parent, sample->period);
+-	if (he == NULL)
+-		return -ENOMEM;
++	if ((sort__first_dimension == SORT_INCLUSIVE) && (symbol_conf.use_callchain)) {
++		struct callchain_cursor *cursor = &evsel->hists.callchain_cursor;
++		struct callchain_cursor iter = *cursor;
++		struct callchain_cursor new_cursor = *cursor;
++		u64 i;
++
++		iter.pos = 0;
++		iter.curr = iter.first;
++		for (i = 0; i < cursor->nr; i++) {
++			struct addr_location al_child = *al;
++
++			err = callchain_get(&iter, &al_child);
++			if (err)
++				return err;
++			he = __hists__add_entry(&evsel->hists, &al_child, parent, sample->period);
++			if (he == NULL)
++				return -ENOMEM;
++
++			new_cursor.first = iter.curr;
++			new_cursor.nr = cursor->nr - i;
++			if (i != 0) 
++				he->inclusive = 1;
++			err = callchain_append(he->callchain,
++					       &new_cursor,
++					       sample->period);
++			if (err)
++				return err;
++			callchain_cursor_advance(&iter);
++		}
++	} else {
++		he = __hists__add_entry(&evsel->hists, al, parent, sample->period);
++		if (he == NULL)
++			return -ENOMEM;
+ 
+-	if (symbol_conf.use_callchain) {
+-		err = callchain_append(he->callchain,
+-				       &evsel->hists.callchain_cursor,
+-				       sample->period);
+-		if (err)
+-			return err;
++		if (symbol_conf.use_callchain) {
++			err = callchain_append(he->callchain,
++					       &evsel->hists.callchain_cursor,
++					       sample->period);
++			if (err)
++				return err;
++		}
+ 	}
+ 	/*
+ 	 * Only in the newt browser we are doing integrated annotation,
+@@ -595,6 +626,7 @@ int cmd_report(int argc, const char **argv, const char *prefix __used)
+ 	sort_entry__setup_elide(&sort_dso, symbol_conf.dso_list, "dso", stdout);
+ 	sort_entry__setup_elide(&sort_comm, symbol_conf.comm_list, "comm", stdout);
+ 	sort_entry__setup_elide(&sort_sym, symbol_conf.sym_list, "symbol", stdout);
++	sort_entry__setup_elide(&sort_sym, symbol_conf.sym_list, "inclusive", stdout);
+ 
+ 	return __cmd_report(&report);
+ }
+diff --git a/util/callchain.c b/util/callchain.c
+index 9f7106a..aa4acde 100644
+--- a/util/callchain.c
++++ b/util/callchain.c
+@@ -459,3 +459,17 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
+ 
+ 	return 0;
+ }
++
++int callchain_get(struct callchain_cursor *cursor,
++		  struct addr_location *al)
++{
++	struct callchain_cursor_node *node = cursor->curr;
++
++	if (node == NULL) return -1;
++
++	al->map = node->map;
++	al->sym = node->sym;
++	al->addr = node->ip;
++
++	return 0;
++}
+diff --git a/util/callchain.h b/util/callchain.h
+index 7f9c0f1..dcff6ec 100644
+--- a/util/callchain.h
++++ b/util/callchain.h
+@@ -103,9 +103,13 @@ int callchain_merge(struct callchain_cursor *cursor,
+ 
+ struct ip_callchain;
+ union perf_event;
++struct addr_location;
+ 
+ bool ip_callchain__valid(struct ip_callchain *chain,
+ 			 const union perf_event *event);
++
++int callchain_get(struct callchain_cursor *cursor, struct addr_location *al);
++
+ /*
+  * Initialize a cursor before adding entries inside, but keep
+  * the previously allocated entries as a cache.
+diff --git a/util/hist.c b/util/hist.c
+index 6f505d1..0eebe46 100644
+--- a/util/hist.c
++++ b/util/hist.c
+@@ -174,6 +174,7 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template)
+ 			he->ms.map->referenced = true;
+ 		if (symbol_conf.use_callchain)
+ 			callchain_init(he->callchain);
++		he->inclusive = false;
+ 	}
+ 
+ 	return he;
+@@ -181,7 +182,7 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template)
+ 
+ static void hists__inc_nr_entries(struct hists *hists, struct hist_entry *h)
+ {
+-	if (!h->filtered) {
++	if (!h->filtered && !h->inclusive) {
+ 		hists__calc_col_len(hists, h);
+ 		++hists->nr_entries;
+ 		hists->stats.total_period += h->period;
+diff --git a/util/sort.c b/util/sort.c
+index 16da30d..1440ad4 100644
+--- a/util/sort.c
++++ b/util/sort.c
+@@ -259,6 +259,7 @@ static struct sort_dimension sort_dimensions[] = {
+ 	{ .name = "symbol",	.entry = &sort_sym,	},
+ 	{ .name = "parent",	.entry = &sort_parent,	},
+ 	{ .name = "cpu",	.entry = &sort_cpu,	},
++	{ .name = "inclusive",	.entry = &sort_sym, 	},
+ };
+ 
+ int sort_dimension__add(const char *tok)
+@@ -298,6 +299,8 @@ int sort_dimension__add(const char *tok)
+ 				sort__first_dimension = SORT_DSO;
+ 			else if (!strcmp(sd->name, "symbol"))
+ 				sort__first_dimension = SORT_SYM;
++			else if (!strcmp(sd->name, "inclusive"))
++				sort__first_dimension = SORT_INCLUSIVE;
+ 			else if (!strcmp(sd->name, "parent"))
+ 				sort__first_dimension = SORT_PARENT;
+ 			else if (!strcmp(sd->name, "cpu"))
+diff --git a/util/sort.h b/util/sort.h
+index 3f67ae3..2d35c11 100644
+--- a/util/sort.h
++++ b/util/sort.h
+@@ -65,6 +65,7 @@ struct hist_entry {
+ 	bool			init_have_children;
+ 	char			level;
+ 	bool			used;
++	bool			inclusive;
+ 	u8			filtered;
+ 	struct symbol		*parent;
+ 	union {
+@@ -82,6 +83,7 @@ enum sort_type {
+ 	SORT_SYM,
+ 	SORT_PARENT,
+ 	SORT_CPU,
++	SORT_INCLUSIVE,
+ };
+ 
+ /*
