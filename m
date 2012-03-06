@@ -1,48 +1,46 @@
-From: Arun Sharma <asharma@fb.com>
+From: Ingo Molnar <mingo@elte.hu>
 Subject: Re: [RFC] Sort inclusive
-Date: Mon, 5 Mar 2012 15:41:33 -0800
-Message-ID: <20120305234133.GA7420@dev3310.snc6.facebook.com>
+Date: Tue, 6 Mar 2012 07:57:53 +0100
+Message-ID: <20120306065753.GB5100@elte.hu>
 References: <20120305221253.GA30250@dev3310.snc6.facebook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx3.mail.elte.hu ([157.181.1.138]:39867 "EHLO mx3.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753427Ab2CFG6D (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 6 Mar 2012 01:58:03 -0500
 Content-Disposition: inline
 In-Reply-To: <20120305221253.GA30250@dev3310.snc6.facebook.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Arun Sharma <asharma@fb.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Ingo Molnar <mingo@elte.hu>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Mon, Mar 05, 2012 at 02:12:54PM -0800, Arun Sharma wrote:
-> 
-> commit 29e659f0ca2041f2f1681a0072739165220d7c64
-> Author: Arun Sharma <asharma@fb.com>
-> Date:   Wed Feb 29 21:40:47 2012 +0000
-> 
->     perf: Add a new sort order: SORT_INCLUSIVE
 
-Tiny bug fix for --tui users. h->inclusive should be used only for
-total_period computation. Otherwise there will be entries in the UI that
-you desperately want to navigate to due to the awesomeness of the
-earlier patch, but can't get past the first entry :)
+* Arun Sharma <asharma@fb.com> wrote:
 
-I'll fold this into the next rev.
+> Some of our users have been asking for the ability to sort 
+> samples by inclusive time (time spent in the function + all of 
+> the callees in the callgraph).
 
- -Arun
+If this feature gets mature enough I'd even suggest that we make 
+this the default output mode.
 
---- a/util/hist.c
-+++ b/util/hist.c
-@@ -182,10 +182,11 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template)
- 
- static void hists__inc_nr_entries(struct hists *hists, struct hist_entry *h)
- {
--	if (!h->filtered && !h->inclusive) {
-+	if (!h->filtered) {
- 		hists__calc_col_len(hists, h);
- 		++hists->nr_entries;
--		hists->stats.total_period += h->period;
-+		if (!h->inclusive)
-+			hists->stats.total_period += h->period;
- 	}
- }
- 
+( Sidenote: the patched perf_evsel__add_hist_entry() function 
+  seems a tad large now, it might make sense to factor out one 
+  or two helper inline functions from it and thus clean up the 
+  flow all around. )
+
+Btw., assuming that you are profiling user-space applications 
+via call-chains, how do you deal with the lack of dwarf decoding 
+done by perf, in particular on 64-bit x86 systems where most 
+distros don't compile call-chains into libraries and 
+application? In what practical situations does that limitation 
+hinder you and what do you do about it - rebuild your apps with 
+frame pointers included?
+
+Thanks,
+
+	Ingo
