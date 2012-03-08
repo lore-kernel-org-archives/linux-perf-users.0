@@ -1,19 +1,18 @@
 From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 2/2] perf: Add a new sort order: SORT_INCLUSIVE
-Date: Thu, 8 Mar 2012 08:22:58 +0100
-Message-ID: <20120308072258.GB20784@elte.hu>
+Subject: Re: [PATCH 0/2] perf: add sort by inclusive time functionality (v2)
+Date: Thu, 8 Mar 2012 08:29:01 +0100
+Message-ID: <20120308072901.GC20784@elte.hu>
 References: <1331160079-13821-1-git-send-email-asharma@fb.com>
- <1331160079-13821-3-git-send-email-asharma@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138]:55619 "EHLO mx3.mail.elte.hu"
+Received: from mx3.mail.elte.hu ([157.181.1.138]:53293 "EHLO mx3.mail.elte.hu"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751487Ab2CHHXN (ORCPT
+	id S1751487Ab2CHH3R (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 8 Mar 2012 02:23:13 -0500
+	Thu, 8 Mar 2012 02:29:17 -0500
 Content-Disposition: inline
-In-Reply-To: <1331160079-13821-3-git-send-email-asharma@fb.com>
+In-Reply-To: <1331160079-13821-1-git-send-email-asharma@fb.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arun Sharma <asharma@fb.com>
@@ -22,28 +21,29 @@ Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Fr
 
 * Arun Sharma <asharma@fb.com> wrote:
 
-> @@ -71,8 +71,12 @@ static int perf_evsel__add_hist_entry(struct perf_evsel *evsel,
->  	}
->  
->  	cursor = &evsel->hists.callchain_cursor;
-> -	he = __hists__add_entry_single(&evsel->hists, al, parent,
-> -				       cursor, sample->period);
-> +	if (sort__first_dimension == SORT_INCLUSIVE)
-> +		he = __hists__add_entry_inclusive(&evsel->hists, al, parent,
-> +						  cursor, sample->period);
-> +	else
-> +		he = __hists__add_entry_single(&evsel->hists, al, parent,
-> +					       cursor, sample->period);
+> This patch series refactors existing code a bit and adds sort by 
+> inclusive time (time spent in the function + callees).
+> 
+> Sample command lines:
+> 
+> # perf record -ag -- sleep 1
+> # perf report -g graph,0.5,callee -n -s inclusive
 
-If sort__first_dimension is available to hist.c then I think 
-there should still be a simple __hists__add_entry() function in 
-hist.c, which perf_evsel__add_hist_entry() calls - which then 
-calls the static inline __hists__add_entry_inclusive() and 
-__hists__add_entry_single() functions within hist.c.
+So I tried this out with:
 
-I.e. this refactoring and splitup of the function into two parts 
-is not a detail that should matter to builtin-report.c's 
-perf_evsel__add_hist_entry().
+  $ taskset 1 perf record -g git gc
+
+and got entries above 100% (in the TUI):
+
+  $ perf report -g graph,0.5,callee -n -s inclusive
+
+ +  321.11%        5628  [.] 0x392b609269
+ +  142.27%        3774  [.] create_delta
+ +  78.86%        1248  [.] lookup_object
+ +  40.54%        1348  [k] system_call_fastpath
+ [...]
+
+Is that expected?
 
 Thanks,
 
