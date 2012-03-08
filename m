@@ -1,59 +1,116 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: Arun Sharma <asharma@fb.com>
 Subject: Re: [PATCH 2/2] perf: Add a new sort order: SORT_INCLUSIVE
-Date: Thu, 8 Mar 2012 16:39:36 +0100
-Message-ID: <20120308153933.GD7976@somewhere.redhat.com>
+Date: Thu, 8 Mar 2012 10:22:26 -0800
+Message-ID: <20120308182226.GA10065@dev3310.snc6.facebook.com>
 References: <1331160079-13821-1-git-send-email-asharma@fb.com>
  <1331160079-13821-3-git-send-email-asharma@fb.com>
+ <20120308153933.GD7976@somewhere.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:62747 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756597Ab2CHPjm (ORCPT
+Received: from outmail024.snc4.facebook.com ([66.220.144.158]:59780 "EHLO
+	intmgw005.snc4.facebook.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1755598Ab2CHSWb (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 8 Mar 2012 10:39:42 -0500
+	Thu, 8 Mar 2012 13:22:31 -0500
 Content-Disposition: inline
-In-Reply-To: <1331160079-13821-3-git-send-email-asharma@fb.com>
+In-Reply-To: <20120308153933.GD7976@somewhere.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Arun Sharma <asharma@fb.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Wed, Mar 07, 2012 at 02:41:19PM -0800, Arun Sharma wrote:
-> Each entry that used to get added once to the histogram, now is added
-> chain->nr times, each time with one less entry in the
-> callchain.
+On Thu, Mar 08, 2012 at 04:39:36PM +0100, Frederic Weisbecker wrote:
 > 
-> This will result in a non-leaf function that appears in a lot of
-> samples to get a histogram entry with lots of hits.
+> I don't yet understand the point of this.
 > 
-> The user can then drill down into the callchains of functions that
-> have high inclusive times.
+> Imagine those three hists:
+> 
+> a -> b -> c
+> a -> b -> d
+> a-> e -> f
+> 
+> The fractal inverted mode (-G) will report this:
+> 
+> a--
+>   |
+>   ----- b
+>   |     |
+>   |     -----c
+>   |     |
+>   |     -----d
+>   |
+>   ----- e
+>         |
+>         -----f
+> 
 
-I don't yet understand the point of this.
+Please see the test program attached. It has only two paths from main()
+to c(). But for this discussion, imagine a callgraph with 10 different
+paths.
 
-Imagine those three hists:
+With -G, c() appears 10 times in the callgraph and the user is required
+to manually sum up the samples to realize that the callgraph under c()
+is very expensive.
 
-a -> b -> c
-a -> b -> d
-a-> e -> f
+With -s inclusive, c() will show up at the very top after main().
 
-The fractal inverted mode (-G) will report this:
+ -Arun
 
-a--
-  |
-  ----- b
-  |     |
-  |     -----c
-  |     |
-  |     -----d
-  |
-  ----- e
-        |
-        -----f
+#include <stdio.h>
 
-The branch sorting is recursive so outstanding callers appear
-in the first branches already.
+int sum = 0;
 
-So if your goal is to find important callers, I don't see why
-the existing functionalities aren't enough.
+#define LOOP(n)                                         \
+        {                                               \
+                int j;                                  \
+                for (j = 0; j < 10000; j++) {           \
+                        sum += j;                       \
+                }                                       \
+        }
+
+int f()
+{
+        LOOP(100);
+}
+
+int d()
+{
+        LOOP(100);
+        f();
+}
+
+int e()
+{
+	LOOP(100);
+	f();
+}
+
+int c()
+{
+	LOOP(100);
+	d();
+	LOOP(100);
+	e();
+}
+
+int b() 
+{
+	LOOP(70);
+	c();
+}
+
+int a() 
+{
+	LOOP(30);
+	c();
+}
+
+int main()
+{
+	int i;
+	for (i = 0; i < 10000; i++) {
+		a();
+		b();
+	}
+}
