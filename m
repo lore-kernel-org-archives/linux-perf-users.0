@@ -1,116 +1,88 @@
 From: Arun Sharma <asharma@fb.com>
-Subject: Re: [PATCH 2/2] perf: Add a new sort order: SORT_INCLUSIVE
-Date: Thu, 8 Mar 2012 10:22:26 -0800
-Message-ID: <20120308182226.GA10065@dev3310.snc6.facebook.com>
-References: <1331160079-13821-1-git-send-email-asharma@fb.com>
- <1331160079-13821-3-git-send-email-asharma@fb.com>
- <20120308153933.GD7976@somewhere.redhat.com>
+Subject: Re: [PATCH 0/2] perf: add sort by inclusive time functionality (v2)
+Date: Thu, 8 Mar 2012 10:49:43 -0800
+Message-ID: <4F58FF47.6090504@fb.com>
+References: <1331160079-13821-1-git-send-email-asharma@fb.com> <20120308072901.GC20784@elte.hu> <20120308153130.GC7976@somewhere.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from outmail024.snc4.facebook.com ([66.220.144.158]:59780 "EHLO
-	intmgw005.snc4.facebook.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1755598Ab2CHSWb (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 8 Mar 2012 13:22:31 -0500
-Content-Disposition: inline
-In-Reply-To: <20120308153933.GD7976@somewhere.redhat.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120308153130.GC7976@somewhere.redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Arun Sharma <asharma@fb.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+Cc: Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Mar 08, 2012 at 04:39:36PM +0100, Frederic Weisbecker wrote:
-> 
-> I don't yet understand the point of this.
-> 
-> Imagine those three hists:
-> 
-> a -> b -> c
-> a -> b -> d
-> a-> e -> f
-> 
-> The fractal inverted mode (-G) will report this:
-> 
-> a--
->   |
->   ----- b
->   |     |
->   |     -----c
->   |     |
->   |     -----d
->   |
->   ----- e
->         |
->         -----f
-> 
+On 3/8/12 7:31 AM, Frederic Weisbecker wrote:
+> On Thu, Mar 08, 2012 at 08:29:01AM +0100, Ingo Molnar wrote:
+>>
+>> * Arun Sharma<asharma@fb.com>  wrote:
+>>
+>>> This patch series refactors existing code a bit and adds sort by
+>>> inclusive time (time spent in the function + callees).
+>>>
+>>> Sample command lines:
+>>>
+>>> # perf record -ag -- sleep 1
+>>> # perf report -g graph,0.5,callee -n -s inclusive
+>>
+>> So I tried this out with:
+>>
+>>    $ taskset 1 perf record -g git gc
+>>
+>> and got entries above 100% (in the TUI):
+>>
+>>    $ perf report -g graph,0.5,callee -n -s inclusive
+>>
+>>   +  321.11%        5628  [.] 0x392b609269
+>>   +  142.27%        3774  [.] create_delta
+>>   +  78.86%        1248  [.] lookup_object
+>>   +  40.54%        1348  [k] system_call_fastpath
+>>   [...]
+>>
+>> Is that expected?
 
-Please see the test program attached. It has only two paths from main()
-to c(). But for this discussion, imagine a callgraph with 10 different
-paths.
+Yes - this is the "known bug" I noted in the cover letter
 
-With -G, c() appears 10 times in the callgraph and the user is required
-to manually sum up the samples to realize that the callgraph under c()
-is very expensive.
+The second column (samples) is still accurate and could be used for the 
+analysis.
 
-With -s inclusive, c() will show up at the very top after main().
+>
+> I think this happens because of this:
+>
+> -               hists->stats.total_period += h->period;
+> +               if (!h->inclusive)
+> +                       hists->stats.total_period += h->period;
+>
+> Which I'm not sure why it is needed btw.
 
- -Arun
+Suppose the perf.data file had 1000 samples each with a period of 1e6 
+events. total_period would be 1e9 without -s inclusive. Further, let's 
+say the callchains had an average length of 10.
 
-#include <stdio.h>
+Now, after adding extra entries to the histogram, total_period would be 
+1e10, which screws up the percentages. I'd like to differentiate between 
+the hist entries that were in the event stream vs the ones added for 
+inclusive time computation. Desired end result: the total_period remains 
+unchanged at 1e9.
 
-int sum = 0;
+This is done via:
 
-#define LOOP(n)                                         \
-        {                                               \
-                int j;                                  \
-                for (j = 0; j < 10000; j++) {           \
-                        sum += j;                       \
-                }                                       \
-        }
++		if (i != 0)
++			he->inclusive = 1;
++		else
++			orig_he = he;
 
-int f()
-{
-        LOOP(100);
-}
+Either (i != 0) is not a good enough test, or the inclusive bit is not 
+getting propagated properly after histogram collapsing/resorting. This 
+is the part I need to better understand and debug.
 
-int d()
-{
-        LOOP(100);
-        f();
-}
+I tried to explain this problem in my first RFC message as well:
 
-int e()
-{
-	LOOP(100);
-	f();
-}
+http://thread.gmane.org/gmane.linux.kernel/1262289
 
-int c()
-{
-	LOOP(100);
-	d();
-	LOOP(100);
-	e();
-}
+The problem Ingo is running into (and I've reproduced it on my end as 
+well) is that total_period is smaller than without -s inclusive i.e. 
+h->inclusive is 1 when it shouldn't be.
 
-int b() 
-{
-	LOOP(70);
-	c();
-}
-
-int a() 
-{
-	LOOP(30);
-	c();
-}
-
-int main()
-{
-	int i;
-	for (i = 0; i < 10000; i++) {
-		a();
-		b();
-	}
-}
+  -Arun
