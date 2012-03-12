@@ -1,59 +1,68 @@
 From: Arun Sharma <asharma@fb.com>
 Subject: Re: [PATCH 0/2] perf: add sort by inclusive time functionality (v2)
-Date: Mon, 12 Mar 2012 11:05:16 -0700
-Message-ID: <4F5E3ADC.5090200@fb.com>
-References: <1331160079-13821-1-git-send-email-asharma@fb.com> <20120308072901.GC20784@elte.hu> <20120308153130.GC7976@somewhere.redhat.com> <4F58FF47.6090504@fb.com> <4F5DA294.6070700@lge.com>
+Date: Mon, 12 Mar 2012 11:21:00 -0700
+Message-ID: <4F5E3E8C.1020005@fb.com>
+References: <1331160079-13821-1-git-send-email-asharma@fb.com> <4F5DA91F.7060908@lge.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35523 "EHLO
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36156 "EHLO
 	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1754720Ab2CLSFk (ORCPT
+	by vger.kernel.org with ESMTP id S1755197Ab2CLSVH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 12 Mar 2012 14:05:40 -0400
-In-Reply-To: <4F5DA294.6070700@lge.com>
+	Mon, 12 Mar 2012 14:21:07 -0400
+In-Reply-To: <4F5DA91F.7060908@lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Namhyung Kim <namhyung.kim@lge.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On 3/12/12 12:15 AM, Namhyung Kim wrote:
+On 3/12/12 12:43 AM, Namhyung Kim wrote:
+
+>> Known bugs:
+>>
+>> total_period computation is broken for order=callee
+>>
+>
+> I'd like to add two more :).
+>
+> * If perf record misses callchain info, perf report will get stuck.
+> * If it's used with "symbol" sort order, it'll get stuck too.
+>
+
+Can you post the command lines you used to reproduce this? A backtrace 
+on where perf report is getting stuck would be useful as well.
+
+Since I didn't make any changes to the perf record or perf report code 
+paths that don't involve "-s inclusive", I wonder if you see the same 
+issues without my patch.
+
+For missing callchain info cases, I'd expect cursor->nr to be zero. So 
+loops such as:
+
++       for (i = 0; i < cursor->nr; i++) {
+
+should terminate immediately.
 
 >
-> I think it's because of the shared hist_entry. If a callchain is a
-> subset of another, it will be marked as inclusive so that it cannot be
-> contributed to total period. Say, there're two chains - X (a -> b -> c)
-> and Y (a -> b), once __hists__add_entry_inclusive() was called on X, we
-> have:
->
-> a -> b -> c
-> a -> b (inclusive)
-> a (inclusive)
->
-> And then, calling the function on Y should make:
->
-> a -> b
-> a (inclusive)
->
-> However, since both callchains are in tree already they'll be shared and
-> marked *inclusive*. Thus the total period will not increased at all for
-> Y. Also I guess the reverse case - add Y first, and then X - will have
-> the same result.
+> BTW, I don't like the name 'inclusive' as a sort key. If it cares about
+> time, IMHO, the name should contain 'time' - something like 'itime' or
+> 'inctime'?
 
-Thanks for figuring this out. Looks like using a single bit 
-(he->inclusive) is insufficient. How about:
+The existing sort orders: pid, comm, dso, symbol, parent -- all care 
+about time, but none of them have time in their name?
 
-struct hist_entry {
-	u64                     period;
-         u64                     period_self;
-	..
-};
+>
+> Furthermore, I don't think it is a sort key. As it doesn't sort
+> anything, and only affects the way calculating symbol's period value,
+> wouldn't it be better making it a separate switch rather than a sort
+> key? Plus, checking whether it has callchain data and symbol sort key
+> might be added also.
 
-Normal mode: period_self == period.
-Inclusive mode: period_self will be zero for inclusive hist_entries.
-Shared entries: we sum up both period and period_self.
-
-We can then compute total_period by summing up period_self.
+Yes, we're still sorting by period, but a redefined meaning of period 
+(please see my other mail about period vs period_self). Previous 
+iterations of this code did use a top level flag, but that namespace is 
+getting a bit crowded.
 
   -Arun
