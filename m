@@ -1,124 +1,34 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 2/2] perf: Add a new sort order: SORT_INCLUSIVE
-Date: Tue, 13 Mar 2012 14:44:00 +0100
-Message-ID: <20120313134357.GA24028@somewhere.redhat.com>
-References: <1331160079-13821-1-git-send-email-asharma@fb.com>
- <1331160079-13821-3-git-send-email-asharma@fb.com>
- <20120308153933.GD7976@somewhere.redhat.com>
- <20120308182226.GA10065@dev3310.snc6.facebook.com>
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: [PATCH 0/2] perf: add sort by inclusive time functionality (v2)
+Date: Tue, 13 Mar 2012 11:45:19 -0700
+Message-ID: <4F5F95BF.8060104@fb.com>
+References: <1331160079-13821-1-git-send-email-asharma@fb.com> <4F5DA91F.7060908@lge.com> <4F5E3E8C.1020005@fb.com> <4F5E9FFA.7060300@lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:35932 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753601Ab2CMNoG (ORCPT
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59118 "EHLO
+	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753222Ab2CMSqF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 13 Mar 2012 09:44:06 -0400
-Content-Disposition: inline
-In-Reply-To: <20120308182226.GA10065@dev3310.snc6.facebook.com>
+	Tue, 13 Mar 2012 14:46:05 -0400
+In-Reply-To: <4F5E9FFA.7060300@lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+To: Namhyung Kim <namhyung.kim@lge.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 10:22:26AM -0800, Arun Sharma wrote:
-> On Thu, Mar 08, 2012 at 04:39:36PM +0100, Frederic Weisbecker wrote:
-> > 
-> > I don't yet understand the point of this.
-> > 
-> > Imagine those three hists:
-> > 
-> > a -> b -> c
-> > a -> b -> d
-> > a-> e -> f
-> > 
-> > The fractal inverted mode (-G) will report this:
-> > 
-> > a--
-> >   |
-> >   ----- b
-> >   |     |
-> >   |     -----c
-> >   |     |
-> >   |     -----d
-> >   |
-> >   ----- e
-> >         |
-> >         -----f
-> > 
-> 
-> Please see the test program attached. It has only two paths from main()
-> to c(). But for this discussion, imagine a callgraph with 10 different
-> paths.
+On 3/12/12 6:16 PM, Namhyung Kim wrote:
 
-Ok that makes sense.
+> $ perf record -g sleep 1
+> $ perf report -s inclusive,symbol
 
-Thanks.
+Thanks. I was able to reproduce the hangs and they went away after I 
+added sort_sym_inclusive (a copy of sort_sym, except for the se_header).
 
-> 
-> With -G, c() appears 10 times in the callgraph and the user is required
-> to manually sum up the samples to realize that the callgraph under c()
-> is very expensive.
-> 
-> With -s inclusive, c() will show up at the very top after main().
-> 
->  -Arun
-> 
-> #include <stdio.h>
-> 
-> int sum = 0;
-> 
-> #define LOOP(n)                                         \
->         {                                               \
->                 int j;                                  \
->                 for (j = 0; j < 10000; j++) {           \
->                         sum += j;                       \
->                 }                                       \
->         }
-> 
-> int f()
-> {
->         LOOP(100);
-> }
-> 
-> int d()
-> {
->         LOOP(100);
->         f();
-> }
-> 
-> int e()
-> {
-> 	LOOP(100);
-> 	f();
-> }
-> 
-> int c()
-> {
-> 	LOOP(100);
-> 	d();
-> 	LOOP(100);
-> 	e();
-> }
-> 
-> int b() 
-> {
-> 	LOOP(70);
-> 	c();
-> }
-> 
-> int a() 
-> {
-> 	LOOP(30);
-> 	c();
-> }
-> 
-> int main()
-> {
-> 	int i;
-> 	for (i = 0; i < 10000; i++) {
-> 		a();
-> 		b();
-> 	}
-> }
-> 
+The output of perf report now better describes how the symbols are 
+sorted. The text reads: "Symbol (Inclusive)".
+
+v3 is coming via my next mail.
+
+  -Arun
