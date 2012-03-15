@@ -1,22 +1,109 @@
 From: Arun Sharma <asharma@fb.com>
-Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v5)
-Date: Thu, 15 Mar 2012 10:42:34 -0700
-Message-ID: <4F622A0A.30406@fb.com>
-References: <1331832848-17028-1-git-send-email-asharma@fb.com>
+Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
+Date: Thu, 15 Mar 2012 10:58:38 -0700
+Message-ID: <4F622DCE.4090608@fb.com>
+References: <1331746607-6706-1-git-send-email-asharma@fb.com> <20120315141402.GA550@somewhere.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1331832848-17028-1-git-send-email-asharma@fb.com>
+In-Reply-To: <20120315141402.GA550@somewhere.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Sharma <asharma@fb.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On 3/15/12 7:14 AM, Frederic Weisbecker wrote:
 
-This is just a rebase to tip:perf/core. No logic changes since v4 (which 
-Namhyung reviewed).
+> I still feel concerned about this.
+>
+> If I have only one event with a period of 1 and with that callchain:
+>
+> 	a ->  b ->  c
+>
+> Then I produce three hists
+>
+> 	1) a ->  b ->  c
+> 	2) a ->  b
+> 	3) a
+>
+> Each hist have a period of 1, but the total period is 1.
+> So the end result should be (IIUC):
+>
+> 100%    foo     a
+> 100%    foo     b
+>                  |
+>                  --- a
+> 100%    foo     c
+>                  |
+>                  --- b
+>                      |
+>                      --- c
+>
 
-Had to resolve some merge conflicts with the sort__branch_mode.
+That is correct. The first column no longer adds up to 100%.
+  		
+> And the percentages on callchain branches will have the same kind
+> of weird things.
+
+I expect --sort inclusive to be used with -g graph,0.5,caller. I can
+polish this in the next rev where a single top level flag will set this up.
+
+The percentages on the branches should still be accurate (as a 
+percentage of total_period). Please let me know if this is not the case.
+
+>
+> So I'm not sure this is a good direction. I'd rather advocate to create
+> true hists for each callers, all having the same real period as the leaf.
+>
+
+Please see the v5 I just posted. The callers have a true histogram entry 
+in every sense, except that period_self == 0.
+
+If we don't do this, total_period will be inflated.
+
+> Also this feature reminds me a lot the -b option in perf report.
+> Branch sorting and callchain inclusive sorting are a bit different in
+> the way they handle the things but the core idea is the same. Callchains
+> are branches as well.
+>
+
+Yes - I kept asking why the branch stack stuff doesn't use the existing 
+callchain logic.
+
+> Branch sorting (-b) adds a hist for every branch taken, and the period
+> is always 1. I wonder if this makes more sense than using the original
+> period of the event for all branches of the event. Not sure.
+>
+> Anyway I wonder if both features can be better integrated. After all
+> they are about the same thing. The difference is that the source of
+> the branches is not the same and that callchains can be depicted into
+> trees.
+>
+> So perhaps we can have -b specifying the desired source, in case both
+> are present: -b callchain and -b branch. Both at the same time wouldn't
+> make much sense I think.
+>
+> And the source could default to either if we don't have callchain and
+> branch at the same time in the events.
+>
+> Just an idea...
+
+I haven't played much with the branch stack logic. Will do so and get back.
+
+In the meanwhile, my impression is that there are two high level use cases:
+
+* Compiler optimizers, tracing JITs etc
+
+Which try to focus on a single branch and try to understand what 
+happened with that branch
+
+* Programmers who're trying to understand the behavior of the code they 
+wrote in production
+
+I think the branch-stack stuff primarily caters to the former and 
+inclusive callchain stuff to the latter. I was thinking that getting the 
+branch-stack data into callchains will make the data more useful to more 
+people.
 
   -Arun
