@@ -1,109 +1,163 @@
 From: Arun Sharma <asharma@fb.com>
-Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
-Date: Thu, 15 Mar 2012 10:58:38 -0700
-Message-ID: <4F622DCE.4090608@fb.com>
-References: <1331746607-6706-1-git-send-email-asharma@fb.com> <20120315141402.GA550@somewhere.redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120315141402.GA550@somewhere.redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Subject: [PATCH] [RFC] perf: new semantics for callgraph sym filtering
+Date: Thu, 15 Mar 2012 17:22:13 -0700
+Message-ID: <1331857333-5234-1-git-send-email-asharma@fb.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from outmail019.snc4.facebook.com ([66.220.144.153]:34412 "EHLO
+	intmgw004.snc4.facebook.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1032236Ab2CPAW1 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 15 Mar 2012 20:22:27 -0400
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Arun Sharma <asharma@fb.com>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On 3/15/12 7:14 AM, Frederic Weisbecker wrote:
+The current code takes incoming callchains, computes
+histograms and filters histogram entries based on a
+user specified filter.
 
-> I still feel concerned about this.
->
-> If I have only one event with a period of 1 and with that callchain:
->
-> 	a ->  b ->  c
->
-> Then I produce three hists
->
-> 	1) a ->  b ->  c
-> 	2) a ->  b
-> 	3) a
->
-> Each hist have a period of 1, but the total period is 1.
-> So the end result should be (IIUC):
->
-> 100%    foo     a
-> 100%    foo     b
->                  |
->                  --- a
-> 100%    foo     c
->                  |
->                  --- b
->                      |
->                      --- c
->
+In the presence of callchains, this may filter by
+leaf function or the parent function, dependening on
+the callgraph ordering params.
 
-That is correct. The first column no longer adds up to 100%.
-  		
-> And the percentages on callchain branches will have the same kind
-> of weird things.
+Sometimes users desire the ability to filter
+chains that contain a symbol and then compute
+the inverted callchain.
 
-I expect --sort inclusive to be used with -g graph,0.5,caller. I can
-polish this in the next rev where a single top level flag will set this up.
+This is more of an attempt to show what is desired.
+It contains an ugly hack involving a global variable
+since I can't access the filter when processing input
+sample events.
 
-The percentages on the branches should still be accurate (as a 
-percentage of total_period). Please let me know if this is not the case.
+Sample usage:
 
->
-> So I'm not sure this is a good direction. I'd rather advocate to create
-> true hists for each callers, all having the same real period as the leaf.
->
+perf record -g
+perf report some-symbol -G -s pid
 
-Please see the v5 I just posted. The callers have a true histogram entry 
-in every sense, except that period_self == 0.
+TODO:
 
-If we don't do this, total_period will be inflated.
+* Remove the ugly hack
+* Keep the chain, but mark the entry as filtered,
+  so we can show filtered samples as a percentage of the
+  total.
 
-> Also this feature reminds me a lot the -b option in perf report.
-> Branch sorting and callchain inclusive sorting are a bit different in
-> the way they handle the things but the core idea is the same. Callchains
-> are branches as well.
->
+Signed-off-by: Arun Sharma <asharma@fb.com>
+Cc: Ingo Molnar <mingo@elte.hu>
+CC: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Namhyung Kim <namhyung.kim@lge.com>
+Cc: Tom Zanussi <tzanussi@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+---
+ tools/perf/builtin-report.c |   11 ++++++++++-
+ tools/perf/util/callchain.c |   21 +++++++++++++++++++++
+ tools/perf/util/callchain.h |    1 +
+ tools/perf/util/hist.c      |    3 +++
+ 4 files changed, 35 insertions(+), 1 deletions(-)
 
-Yes - I kept asking why the branch stack stuff doesn't use the existing 
-callchain logic.
-
-> Branch sorting (-b) adds a hist for every branch taken, and the period
-> is always 1. I wonder if this makes more sense than using the original
-> period of the event for all branches of the event. Not sure.
->
-> Anyway I wonder if both features can be better integrated. After all
-> they are about the same thing. The difference is that the source of
-> the branches is not the same and that callchains can be depicted into
-> trees.
->
-> So perhaps we can have -b specifying the desired source, in case both
-> are present: -b callchain and -b branch. Both at the same time wouldn't
-> make much sense I think.
->
-> And the source could default to either if we don't have callchain and
-> branch at the same time in the events.
->
-> Just an idea...
-
-I haven't played much with the branch stack logic. Will do so and get back.
-
-In the meanwhile, my impression is that there are two high level use cases:
-
-* Compiler optimizers, tracing JITs etc
-
-Which try to focus on a single branch and try to understand what 
-happened with that branch
-
-* Programmers who're trying to understand the behavior of the code they 
-wrote in production
-
-I think the branch-stack stuff primarily caters to the former and 
-inclusive callchain stuff to the latter. I was thinking that getting the 
-branch-stack data into callchains will make the data more useful to more 
-people.
-
-  -Arun
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 35a86b5..faf3431 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -130,6 +130,9 @@ out:
+ 	return err;
+ }
+ 
++/* Hack to make the filter string available */
++const char *symbol_filter_str;
++
+ static int perf_evsel__add_hist_entry(struct perf_evsel *evsel,
+ 				      struct addr_location *al,
+ 				      struct perf_sample *sample,
+@@ -148,6 +151,12 @@ static int perf_evsel__add_hist_entry(struct perf_evsel *evsel,
+ 	}
+ 
+ 	cursor = &evsel->hists.callchain_cursor;
++
++	if (symbol_conf.use_callchain && symbol_filter_str) {
++		/* Do the filtering now, rather than later */
++		if (!callchain_has_symbol(cursor, symbol_filter_str))
++			return 0;
++	}
+ 	he = __hists__add_entry(&evsel->hists, al, parent,
+ 			        cursor, sample->period);
+ 	if (he == NULL)
+@@ -311,7 +320,6 @@ static int perf_evlist__tty_browse_hists(struct perf_evlist *evlist,
+ 		struct hists *hists = &pos->hists;
+ 		const char *evname = event_name(pos);
+ 
+-		hists->symbol_filter_str = rep->symbol_filter_str;
+ 		hists__filter_by_symbol(hists);
+ 		hists__fprintf_nr_sample_events(hists, evname, stdout);
+ 		hists__fprintf(hists, NULL, false, true, 0, 0, stdout);
+@@ -721,6 +729,7 @@ int cmd_report(int argc, const char **argv, const char *prefix __used)
+ 
+ 		report.symbol_filter_str = argv[0];
+ 	}
++	symbol_filter_str = report.symbol_filter_str;
+ 
+ 	sort_entry__setup_elide(&sort_comm, symbol_conf.comm_list, "comm", stdout);
+ 
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 2b824a5..a641d6a 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -474,3 +474,24 @@ int callchain_get(struct callchain_cursor *cursor,
+ 
+ 	return 0;
+ }
++
++bool callchain_has_symbol(struct callchain_cursor *cursor, const char *sym)
++{
++	struct callchain_cursor iter = *cursor;
++	u64 i;
++
++	iter.pos = 0;
++	iter.curr = iter.first;
++	for (i = 0; i < cursor->nr; i++) {
++		struct addr_location al_child;
++		int err;
++
++		err = callchain_get(&iter, &al_child);
++		if (err)
++			return false;
++		if (al_child.sym && (strstr(al_child.sym->name, sym) != NULL))
++			return true;
++		callchain_cursor_advance(&iter);
++	}
++	return false;
++}
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index dcff6ec..f016847 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -109,6 +109,7 @@ bool ip_callchain__valid(struct ip_callchain *chain,
+ 			 const union perf_event *event);
+ 
+ int callchain_get(struct callchain_cursor *cursor, struct addr_location *al);
++bool callchain_has_symbol(struct callchain_cursor *cursor, const char *sym);
+ 
+ /*
+  * Initialize a cursor before adding entries inside, but keep
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 43c0c09..85fec09 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1331,6 +1331,9 @@ void hists__filter_by_thread(struct hists *hists)
+ static bool hists__filter_entry_by_symbol(struct hists *hists,
+ 					  struct hist_entry *he)
+ {
++	if (symbol_conf.use_callchain)
++		return false;
++
+ 	if (hists->symbol_filter_str != NULL &&
+ 	    (!he->ms.sym || strstr(he->ms.sym->name,
+ 				   hists->symbol_filter_str) == NULL)) {
+-- 
+1.7.8.4
