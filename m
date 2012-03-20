@@ -1,53 +1,112 @@
-From: Ashay Rane <ashay.r@gmail.com>
-Subject: Re: [PATCH 1/1] Fix number of events displayed in header
-Date: Tue, 20 Mar 2012 15:27:41 -0500
-Message-ID: <CANn2t1kWGJueKUygFxka7ckfcGbAu0da9oUkdEZ9=JHWxS5m_g@mail.gmail.com>
-References: <1332271396-21756-1-git-send-email-ashay.r@gmail.com>
-	<20120320194241.GA24870@infradead.org>
-	<4F68DE88.1040301@gmail.com>
-	<1332272870.18960.450.camel@twins>
-	<CANn2t1n3fiVGqMKm=a7k3bKgKRzVdo3zu54ZKiCMqtDFbS4MeA@mail.gmail.com>
-	<1332273597.18960.454.camel@twins>
-	<CANn2t1=A8Gz4+YL2+fyBW3fzWzh4FN5Ktx_pBZidAEE5KbkiZQ@mail.gmail.com>
-	<1332274191.18960.459.camel@twins>
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
+Date: Tue, 20 Mar 2012 16:28:09 -0700
+Message-ID: <4F691289.7080505@fb.com>
+References: <1331746607-6706-1-git-send-email-asharma@fb.com> <20120315141402.GA550@somewhere.redhat.com> <4F622DCE.4090608@fb.com> <20120319155742.GF2660@somewhere>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:40205 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755236Ab2CTU1m (ORCPT
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37475 "EHLO
+	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1756717Ab2CTX2o (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 20 Mar 2012 16:27:42 -0400
-In-Reply-To: <1332274191.18960.459.camel@twins>
+	Tue, 20 Mar 2012 19:28:44 -0400
+In-Reply-To: <20120319155742.GF2660@somewhere>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: David Ahern <dsahern@gmail.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-perf-users@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, Ashay Rane <ashay.rane@tacc.utexas.edu>
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-Great, thanks! A (corrected) patch coming up...
+On 3/19/12 8:57 AM, Frederic Weisbecker wrote:
 
-Ashay
-
-
-2012/3/20 Peter Zijlstra <a.p.zijlstra@chello.nl>:
-> On Tue, 2012-03-20 at 15:04 -0500, Ashay Rane wrote:
->> Oh, okay. Thanks for the clarification!
+>>> Each hist have a period of 1, but the total period is 1.
+>>> So the end result should be (IIUC):
+>>>
+>>> 100%    foo     a
+>>> 100%    foo     b
+>>>                  |
+>>>                  --- a
+>>> 100%    foo     c
+>>>                  |
+>>>                  --- b
+>>>                      |
+>>>                      --- c
+>>>
 >>
->> However, my reasoning behind including the actual count of the events
->> was that (as far as I can tell) it is not displayed in any of the perf
->> report outputs. I understand that the count is not precise (because of
->> sampling errors) but the sampling frequency (-F) can always be
->> adjusted to get a more accurate number.
+>> That is correct. The first column no longer adds up to 100%.
+>
+> So do we really want this?
+>
+
+I think so. It's a different way of presenting the data. Pie chart vs a 
+bar chart of OS market share where people may be using more than one OS.
+
+I'll post some documentation updates.
+
+>> If we don't do this, total_period will be inflated.
+>
+> Yeah right I've just tried and callchains look right. I'm just puzzled
+> by the percentages:
+>
+
+Thanks for testing this!
+
+> +  98,99%  [k] execve
+> +  98,99%  [k] stub_execve
+> +  98,99%  [k] do_execve
+> +  98,99%  [k] do_execve_common
+> +  98,99%  [k] sys_execve
+> +  53,12%  [k] __libc_start_main
+> +  53,12%  [k] cmd_record
+
+These look like they belong to the perf binary and are incorrectly 
+classified as kernel samples. Problem is that callchain_get() is not 
+populating the privilege level - it's simply propagating the privilege 
+level of the sample:
+
+
++       for (i = 0; i < cursor->nr; i++) {
++               struct addr_location al_child = *al;
++
++               err = callchain_get(&iter, &al_child);
+
+Not all fields of al_child are populated by callchain_get().
+
+> +  53,12%  [k] T.101
+> +  53,12%  [k] main
+> +  53,12%  [k] run_builtin
+> +  52,11%  [k] perf_evlist__prepare_workload
+> +  52,09%  [k] T.1163
+
+The rest of them look ok to me. If something doesn't make sense, please 
+point me at the output of "perf script".
+
+>
 >>
->> With the inclusion of the count, it then becomes possible to compare
->> multiple different versions of a program. Hence the patch.
+>>> Also this feature reminds me a lot the -b option in perf report.
+>>> Branch sorting and callchain inclusive sorting are a bit different in
+>>> the way they handle the things but the core idea is the same. Callchains
+>>> are branches as well.
+>>>
+>>
+>> Yes - I kept asking why the branch stack stuff doesn't use the
+>> existing callchain logic.
 >
-> I'm okay if you change the wording of the existing message to be
-> clearer. I'm also okay if you add this extra information if you find
-> this useful.
+> Because I fear that loops branches could make the tree representation useless.
 >
-> In that case, also have a look at the data generated by perf record -s,
-> this dumps a PERF_RECORD_READ of the actual counter value at the exit of
-> every task [doesn't work with per-cpu counters].
->
->
+
+The loops could happen in callgraphs too right (eg: recursive programs)? 
+The other problem in branch stacks/LBR is that they're sampled branches. 
+Just because I got a sample with:
+
+a -> b
+b -> c
+
+doesn't necessarily mean that the callchain was a -> b -> c.
+
+I still don't have the branch stack setup working properly. But I'm now 
+more sympathetic to the view that last branch sampling and callchains 
+may have different representations in perf.
+
+  -Arun
