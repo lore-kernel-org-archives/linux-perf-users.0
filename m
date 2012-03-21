@@ -1,112 +1,75 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
-Date: Tue, 20 Mar 2012 16:28:09 -0700
-Message-ID: <4F691289.7080505@fb.com>
-References: <1331746607-6706-1-git-send-email-asharma@fb.com> <20120315141402.GA550@somewhere.redhat.com> <4F622DCE.4090608@fb.com> <20120319155742.GF2660@somewhere>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ashay Rane <ashay.r@gmail.com>
+Subject: [PATCH 1/1] perf report: Correct display of samples and events in header
+Date: Tue, 20 Mar 2012 20:20:28 -0500
+Message-ID: <1332292828-22656-1-git-send-email-ashay.r@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37475 "EHLO
-	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1756717Ab2CTX2o (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:61092 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753983Ab2CUBWA (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 20 Mar 2012 19:28:44 -0400
-In-Reply-To: <20120319155742.GF2660@somewhere>
+	Tue, 20 Mar 2012 21:22:00 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Stephane Eranian <eranian@google.com>, David Daney <david.daney@cavium.com>
+Cc: linux-kernel@vger.kernel.org, Ashay Rane <ashay.r@gmail.com>
 
-On 3/19/12 8:57 AM, Frederic Weisbecker wrote:
+This patch prints the number of samples and the count of performance events separately. This allows comparing performance of different applications with each other. Previously, the sample count was displayed against an 'Events:' heading. With this patch, the header now reads (for example):
 
->>> Each hist have a period of 1, but the total period is 1.
->>> So the end result should be (IIUC):
->>>
->>> 100%    foo     a
->>> 100%    foo     b
->>>                  |
->>>                  --- a
->>> 100%    foo     c
->>>                  |
->>>                  --- b
->>>                      |
->>>                      --- c
->>>
->>
->> That is correct. The first column no longer adds up to 100%.
->
-> So do we really want this?
->
+Samples: 5K of event 'instructions'
+Event count (approx.): 2993026545
 
-I think so. It's a different way of presenting the data. Pie chart vs a 
-bar chart of OS market share where people may be using more than one OS.
+The patch covers both the stdio and the browser interface.
 
-I'll post some documentation updates.
+Signed-off-by: Ashay Rane <ashay.r@gmail.com>
+---
+ tools/perf/builtin-report.c         |   11 +++++++----
+ tools/perf/util/ui/browsers/hists.c |    9 ++++++---
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
->> If we don't do this, total_period will be inflated.
->
-> Yeah right I've just tried and callchains look right. I'm just puzzled
-> by the percentages:
->
-
-Thanks for testing this!
-
-> +  98,99%  [k] execve
-> +  98,99%  [k] stub_execve
-> +  98,99%  [k] do_execve
-> +  98,99%  [k] do_execve_common
-> +  98,99%  [k] sys_execve
-> +  53,12%  [k] __libc_start_main
-> +  53,12%  [k] cmd_record
-
-These look like they belong to the perf binary and are incorrectly 
-classified as kernel samples. Problem is that callchain_get() is not 
-populating the privilege level - it's simply propagating the privilege 
-level of the sample:
-
-
-+       for (i = 0; i < cursor->nr; i++) {
-+               struct addr_location al_child = *al;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 8e91c6e..2ee7783 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -295,12 +295,15 @@ static size_t hists__fprintf_nr_sample_events(struct hists *self,
+ {
+ 	size_t ret;
+ 	char unit;
+-	unsigned long nr_events = self->stats.nr_events[PERF_RECORD_SAMPLE];
++	unsigned long nr_samples = self->stats.nr_events[PERF_RECORD_SAMPLE];
++	u64 nr_events = self->stats.total_period;
+ 
+-	nr_events = convert_unit(nr_events, &unit);
+-	ret = fprintf(fp, "# Events: %lu%c", nr_events, unit);
++	nr_samples = convert_unit(nr_samples, &unit);
++	ret = fprintf(fp, "# Samples: %lu%c", nr_samples, unit);
+ 	if (evname != NULL)
+-		ret += fprintf(fp, " %s", evname);
++		ret += fprintf(fp, " of event '%s'", evname);
 +
-+               err = callchain_get(&iter, &al_child);
-
-Not all fields of al_child are populated by callchain_get().
-
-> +  53,12%  [k] T.101
-> +  53,12%  [k] main
-> +  53,12%  [k] run_builtin
-> +  52,11%  [k] perf_evlist__prepare_workload
-> +  52,09%  [k] T.1163
-
-The rest of them look ok to me. If something doesn't make sense, please 
-point me at the output of "perf script".
-
->
->>
->>> Also this feature reminds me a lot the -b option in perf report.
->>> Branch sorting and callchain inclusive sorting are a bit different in
->>> the way they handle the things but the core idea is the same. Callchains
->>> are branches as well.
->>>
->>
->> Yes - I kept asking why the branch stack stuff doesn't use the
->> existing callchain logic.
->
-> Because I fear that loops branches could make the tree representation useless.
->
-
-The loops could happen in callgraphs too right (eg: recursive programs)? 
-The other problem in branch stacks/LBR is that they're sampled branches. 
-Just because I got a sample with:
-
-a -> b
-b -> c
-
-doesn't necessarily mean that the callchain was a -> b -> c.
-
-I still don't have the branch stack setup working properly. But I'm now 
-more sympathetic to the view that last branch sampling and callchains 
-may have different representations in perf.
-
-  -Arun
++	ret += fprintf(fp, "\n# Event count (approx.): %lu", nr_events);
+ 	return ret + fprintf(fp, "\n#\n");
+ }
+ 
+diff --git a/tools/perf/util/ui/browsers/hists.c b/tools/perf/util/ui/browsers/hists.c
+index fa530fc..d9ec415 100644
+--- a/tools/perf/util/ui/browsers/hists.c
++++ b/tools/perf/util/ui/browsers/hists.c
+@@ -837,10 +837,13 @@ static int hists__browser_title(struct hists *self, char *bf, size_t size,
+ 	int printed;
+ 	const struct dso *dso = self->dso_filter;
+ 	const struct thread *thread = self->thread_filter;
+-	unsigned long nr_events = self->stats.nr_events[PERF_RECORD_SAMPLE];
++	unsigned long nr_samples = self->stats.nr_events[PERF_RECORD_SAMPLE];
++	u64 nr_events = self->stats.total_period;
+ 
+-	nr_events = convert_unit(nr_events, &unit);
+-	printed = scnprintf(bf, size, "Events: %lu%c %s", nr_events, unit, ev_name);
++	nr_samples = convert_unit(nr_samples, &unit);
++	printed = scnprintf(bf, size,
++			    "Samples: %lu%c of event '%s', Event count (approx.): %lu",
++			    nr_samples, unit, ev_name, nr_events);
+ 
+ 	if (self->uid_filter_str)
+ 		printed += snprintf(bf + printed, size - printed,
+-- 
+1.7.9.3
