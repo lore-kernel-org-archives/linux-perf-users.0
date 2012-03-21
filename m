@@ -1,36 +1,89 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: perf stat: Doubt about stall cycle support
-Date: Wed, 21 Mar 2012 08:46:28 -0600
-Message-ID: <4F69E9C4.8060108@gmail.com>
-References: <loom.20120321T054053-857@post.gmane.org>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Subject: Re: [PATCH 1/1] perf report: Correct display of samples and events
+ in header
+Date: Wed, 21 Mar 2012 12:35:27 -0300
+Message-ID: <20120321153527.GA25820@infradead.org>
+References: <1332292828-22656-1-git-send-email-ashay.r@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:58901 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1031255Ab2CUOqc (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 21 Mar 2012 10:46:32 -0400
-Received: by mail-pb0-f46.google.com with SMTP id un15so839928pbc.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Mar 2012 07:46:31 -0700 (PDT)
-In-Reply-To: <loom.20120321T054053-857@post.gmane.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Yipeng Huang <yipeng@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1332292828-22656-1-git-send-email-ashay.r@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ashay Rane <ashay.r@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Stephane Eranian <eranian@google.com>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-On 3/20/12 10:42 PM, Yipeng Huang wrote:
-> I am running perf stat to count hardware counters but am confused about stall
-> cycle support.
->
-> On running the command perf stat ./progname, I am told that stalled-cycles-
-> frontend and stalled-cycles-backend are not counted, but when on running perf
-> stat -v ./progname, I am told that stall cycles are not supported by the kernel.
-> So which is it?
+Em Tue, Mar 20, 2012 at 08:20:28PM -0500, Ashay Rane escreveu:
+> This patch prints the number of samples and the count of performance events separately. This allows comparing performance of different applications with each other. Previously, the sample count was displayed against an 'Events:' heading. With this patch, the header now reads (for example):
+> 
+> Samples: 5K of event 'instructions'
+> Event count (approx.): 2993026545
+> 
+> The patch covers both the stdio and the browser interface.
+> 
+> Signed-off-by: Ashay Rane <ashay.r@gmail.com>
 
-What does perf --version show?
+Patches that are not bug fixes should be done on tip/perf/core, please
+do that and resubmit.
 
-Should be fixed by 2cee77c4505fc581f41b44e18ffc0953b67a414c.
+git remote add tip git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git remote update tip
+git checkout -b perf/core tip/perf/core
 
-David
+:-)
+
+- Arnaldo
+
+ ---
+>  tools/perf/builtin-report.c         |   11 +++++++----
+>  tools/perf/util/ui/browsers/hists.c |    9 ++++++---
+>  2 files changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 8e91c6e..2ee7783 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -295,12 +295,15 @@ static size_t hists__fprintf_nr_sample_events(struct hists *self,
+>  {
+>  	size_t ret;
+>  	char unit;
+> -	unsigned long nr_events = self->stats.nr_events[PERF_RECORD_SAMPLE];
+> +	unsigned long nr_samples = self->stats.nr_events[PERF_RECORD_SAMPLE];
+> +	u64 nr_events = self->stats.total_period;
+>  
+> -	nr_events = convert_unit(nr_events, &unit);
+> -	ret = fprintf(fp, "# Events: %lu%c", nr_events, unit);
+> +	nr_samples = convert_unit(nr_samples, &unit);
+> +	ret = fprintf(fp, "# Samples: %lu%c", nr_samples, unit);
+>  	if (evname != NULL)
+> -		ret += fprintf(fp, " %s", evname);
+> +		ret += fprintf(fp, " of event '%s'", evname);
+> +
+> +	ret += fprintf(fp, "\n# Event count (approx.): %lu", nr_events);
+>  	return ret + fprintf(fp, "\n#\n");
+>  }
+>  
+> diff --git a/tools/perf/util/ui/browsers/hists.c b/tools/perf/util/ui/browsers/hists.c
+> index fa530fc..d9ec415 100644
+> --- a/tools/perf/util/ui/browsers/hists.c
+> +++ b/tools/perf/util/ui/browsers/hists.c
+> @@ -837,10 +837,13 @@ static int hists__browser_title(struct hists *self, char *bf, size_t size,
+>  	int printed;
+>  	const struct dso *dso = self->dso_filter;
+>  	const struct thread *thread = self->thread_filter;
+> -	unsigned long nr_events = self->stats.nr_events[PERF_RECORD_SAMPLE];
+> +	unsigned long nr_samples = self->stats.nr_events[PERF_RECORD_SAMPLE];
+> +	u64 nr_events = self->stats.total_period;
+>  
+> -	nr_events = convert_unit(nr_events, &unit);
+> -	printed = scnprintf(bf, size, "Events: %lu%c %s", nr_events, unit, ev_name);
+> +	nr_samples = convert_unit(nr_samples, &unit);
+> +	printed = scnprintf(bf, size,
+> +			    "Samples: %lu%c of event '%s', Event count (approx.): %lu",
+> +			    nr_samples, unit, ev_name, nr_events);
+>  
+>  	if (self->uid_filter_str)
+>  		printed += snprintf(bf + printed, size - printed,
+> -- 
+> 1.7.9.3
