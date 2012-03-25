@@ -1,51 +1,133 @@
-From: yipeng <yipeng@gmail.com>
-Subject: Re: perf stat: Doubt about stall cycle support
-Date: Sat, 24 Mar 2012 09:55:31 +0800
-Message-ID: <CAB_n8zKuWw+EecLTtUyOgesanjas3V0YWes6PgWGogTDzrPqmg@mail.gmail.com>
-References: <loom.20120321T054053-857@post.gmane.org>
-	<4F69E9C4.8060108@gmail.com>
-	<CAB_n8zK5b0jWA=retCX12DGmrb19gMd2UxJGWkn6HD9nFrdiAQ@mail.gmail.com>
-	<4F6A00BC.8070705@gmail.com>
-	<loom.20120322T013621-317@post.gmane.org>
-	<alpine.DEB.2.00.1203212112430.16205@cl320.eecs.utk.edu>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
+Date: Sun, 25 Mar 2012 04:14:56 +0200
+Message-ID: <20120325021451.GA14971@somewhere.redhat.com>
+References: <1331746607-6706-1-git-send-email-asharma@fb.com>
+ <20120315141402.GA550@somewhere.redhat.com>
+ <4F622DCE.4090608@fb.com>
+ <20120319155742.GF2660@somewhere>
+ <4F691289.7080505@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-lpp01m010-f46.google.com ([209.85.215.46]:64132 "EHLO
-	mail-lpp01m010-f46.google.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751623Ab2CXBzc convert rfc822-to-8bit
-	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 23 Mar 2012 21:55:32 -0400
-Received: by lahj13 with SMTP id j13so2918450lah.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Mar 2012 18:55:31 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.00.1203212112430.16205@cl320.eecs.utk.edu>
+Received: from mail-qc0-f174.google.com ([209.85.216.174]:58806 "EHLO
+	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752731Ab2CYCPD (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sat, 24 Mar 2012 22:15:03 -0400
+Content-Disposition: inline
+In-Reply-To: <4F691289.7080505@fb.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Arun Sharma <asharma@fb.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Thu, Mar 22, 2012 at 9:17 AM, Vince Weaver <vweaver1@eecs.utk.edu> w=
-rote:
->
-> What kind of stalls are you looking to measure?
->
-> The core2 supports many kind of stall events. =A0Check out Intel Vol3=
-b
-> documentation, or the libpfm4 showevtinfo utility for a list of them =
-all.
->
-> perf only directly supports a small subset of "generalized" events, a=
-nd
-> only then if a kernel developer bothers to hook up the proper events =
-in
-> the kernel sources.
->
-> If you do find a likely event you want to use, you can make perf use =
-it as
-> a "raw" event.
+On Tue, Mar 20, 2012 at 04:28:09PM -0700, Arun Sharma wrote:
+> On 3/19/12 8:57 AM, Frederic Weisbecker wrote:
+> 
+> >>>Each hist have a period of 1, but the total period is 1.
+> >>>So the end result should be (IIUC):
+> >>>
+> >>>100%    foo     a
+> >>>100%    foo     b
+> >>>                 |
+> >>>                 --- a
+> >>>100%    foo     c
+> >>>                 |
+> >>>                 --- b
+> >>>                     |
+> >>>                     --- c
+> >>>
+> >>
+> >>That is correct. The first column no longer adds up to 100%.
+> >
+> >So do we really want this?
+> >
+> 
+> I think so. It's a different way of presenting the data. Pie chart
+> vs a bar chart of OS market share where people may be using more
+> than one OS.
+> 
+> I'll post some documentation updates.
 
-Vince, resource stalls is close to what I was looking for.
+Ok this is one way to do this. The -b option has chosen to use a
+period of 1 for everyone.
 
-libpfim4 and raw events set me on the right direction, thanks!
+But both are doing the same thing, except that in the case of
+callchains we also rewind the stacktrace at each entry.
 
-Yipeng
+But otherwise they deal with the same idea. I wish we have
+a unified way of representing both. Either both should use
+a period of 1 and add to the total period, or we should use
+your way, I don't know. But I have the feeling they shouldn't
+be treated differently.
+
+> 
+> >>If we don't do this, total_period will be inflated.
+> >
+> >Yeah right I've just tried and callchains look right. I'm just puzzled
+> >by the percentages:
+> >
+> 
+> Thanks for testing this!
+> 
+> >+  98,99%  [k] execve
+> >+  98,99%  [k] stub_execve
+> >+  98,99%  [k] do_execve
+> >+  98,99%  [k] do_execve_common
+> >+  98,99%  [k] sys_execve
+> >+  53,12%  [k] __libc_start_main
+> >+  53,12%  [k] cmd_record
+> 
+> These look like they belong to the perf binary and are incorrectly
+> classified as kernel samples. Problem is that callchain_get() is not
+> populating the privilege level - it's simply propagating the
+> privilege level of the sample:
+
+Ah so you should perhaps rather look at the raw callchain from the
+sample. It contains the PERF_CONTEXT_* things
+
+> >>>Also this feature reminds me a lot the -b option in perf report.
+> >>>Branch sorting and callchain inclusive sorting are a bit different in
+> >>>the way they handle the things but the core idea is the same. Callchains
+> >>>are branches as well.
+> >>>
+> >>
+> >>Yes - I kept asking why the branch stack stuff doesn't use the
+> >>existing callchain logic.
+> >
+> >Because I fear that loops branches could make the tree representation useless.
+> >
+> 
+> The loops could happen in callgraphs too right (eg: recursive
+> programs)?
+
+Right but loops are a common construct used in most programs.
+recursive functions are more rare. enough for us to assume
+than we can build a tree where branches are often hit more
+than one time.
+
+Another thing with callchains VS branches: with callchain we generalize
+the sample IPs to the symbol of the function they are contained. We
+want this kind of generalization on callchains.
+
+This is not true with branches where details are zoomed. There are less
+chances for different branch samples to match each other inside a tree.
+
+> The other problem in branch stacks/LBR is that they're
+> sampled branches. Just because I got a sample with:
+> 
+> a -> b
+> b -> c
+> 
+> doesn't necessarily mean that the callchain was a -> b -> c.
+
+Not sure what you mean. If you have a -> b, b -> c in single
+LBR sample it means you got a -> b -> c.
+
+> 
+> I still don't have the branch stack setup working properly. But I'm
+> now more sympathetic to the view that last branch sampling and
+> callchains may have different representations in perf.
+> 
+>  -Arun
