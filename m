@@ -1,133 +1,57 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: Arun Sharma <asharma@fb.com>
 Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v4)
-Date: Sun, 25 Mar 2012 04:14:56 +0200
-Message-ID: <20120325021451.GA14971@somewhere.redhat.com>
-References: <1331746607-6706-1-git-send-email-asharma@fb.com>
- <20120315141402.GA550@somewhere.redhat.com>
- <4F622DCE.4090608@fb.com>
- <20120319155742.GF2660@somewhere>
- <4F691289.7080505@fb.com>
+Date: Tue, 27 Mar 2012 11:09:48 -0700
+Message-ID: <4F72026C.3050604@fb.com>
+References: <1331746607-6706-1-git-send-email-asharma@fb.com> <20120315141402.GA550@somewhere.redhat.com> <4F622DCE.4090608@fb.com> <20120319155742.GF2660@somewhere> <4F691289.7080505@fb.com> <20120325021451.GA14971@somewhere.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f174.google.com ([209.85.216.174]:58806 "EHLO
-	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752731Ab2CYCPD (ORCPT
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53765 "EHLO
+	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754635Ab2C0SKL (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 24 Mar 2012 22:15:03 -0400
-Content-Disposition: inline
-In-Reply-To: <4F691289.7080505@fb.com>
+	Tue, 27 Mar 2012 14:10:11 -0400
+In-Reply-To: <20120325021451.GA14971@somewhere.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
+To: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Tue, Mar 20, 2012 at 04:28:09PM -0700, Arun Sharma wrote:
-> On 3/19/12 8:57 AM, Frederic Weisbecker wrote:
-> 
-> >>>Each hist have a period of 1, but the total period is 1.
-> >>>So the end result should be (IIUC):
-> >>>
-> >>>100%    foo     a
-> >>>100%    foo     b
-> >>>                 |
-> >>>                 --- a
-> >>>100%    foo     c
-> >>>                 |
-> >>>                 --- b
-> >>>                     |
-> >>>                     --- c
-> >>>
-> >>
-> >>That is correct. The first column no longer adds up to 100%.
-> >
-> >So do we really want this?
-> >
-> 
-> I think so. It's a different way of presenting the data. Pie chart
-> vs a bar chart of OS market share where people may be using more
-> than one OS.
-> 
-> I'll post some documentation updates.
+On 3/24/12 7:14 PM, Frederic Weisbecker wrote:
 
-Ok this is one way to do this. The -b option has chosen to use a
-period of 1 for everyone.
+>> The other problem in branch stacks/LBR is that they're
+>> sampled branches. Just because I got a sample with:
+>>
+>> a ->  b
+>> b ->  c
+>>
+>> doesn't necessarily mean that the callchain was a ->  b ->  c.
+>
+> Not sure what you mean. If you have a ->  b, b ->  c in single
+> LBR sample it means you got a ->  b ->  c.
+>
 
-But both are doing the same thing, except that in the case of
-callchains we also rewind the stacktrace at each entry.
+I was going by Stephane's commit message here:
 
-But otherwise they deal with the same idea. I wish we have
-a unified way of representing both. Either both should use
-a period of 1 and add to the total period, or we should use
-your way, I don't know. But I have the feeling they shouldn't
-be treated differently.
+http://article.gmane.org/gmane.linux.kernel/1236999
 
-> 
-> >>If we don't do this, total_period will be inflated.
-> >
-> >Yeah right I've just tried and callchains look right. I'm just puzzled
-> >by the percentages:
-> >
-> 
-> Thanks for testing this!
-> 
-> >+  98,99%  [k] execve
-> >+  98,99%  [k] stub_execve
-> >+  98,99%  [k] do_execve
-> >+  98,99%  [k] do_execve_common
-> >+  98,99%  [k] sys_execve
-> >+  53,12%  [k] __libc_start_main
-> >+  53,12%  [k] cmd_record
-> 
-> These look like they belong to the perf binary and are incorrectly
-> classified as kernel samples. Problem is that callchain_get() is not
-> populating the privilege level - it's simply propagating the
-> privilege level of the sample:
+ > Statistical sampling of taken branch should not be confused
+ > for branch tracing. Not all branches are necessarily captured
 
-Ah so you should perhaps rather look at the raw callchain from the
-sample. It contains the PERF_CONTEXT_* things
+Stephane, could you please explain if the 16 filtered branches in LBR 
+are guaranteed to be from a given callchain to the leaf function? My 
+understanding is that it's not.
 
-> >>>Also this feature reminds me a lot the -b option in perf report.
-> >>>Branch sorting and callchain inclusive sorting are a bit different in
-> >>>the way they handle the things but the core idea is the same. Callchains
-> >>>are branches as well.
-> >>>
-> >>
-> >>Yes - I kept asking why the branch stack stuff doesn't use the
-> >>existing callchain logic.
-> >
-> >Because I fear that loops branches could make the tree representation useless.
-> >
-> 
-> The loops could happen in callgraphs too right (eg: recursive
-> programs)?
+callchain1: a -> b -> d -> e (sample a->b)
+callchain2: a -> c -> b -> f (sample b->f)
 
-Right but loops are a common construct used in most programs.
-recursive functions are more rare. enough for us to assume
-than we can build a tree where branches are often hit more
-than one time.
+on PMU interrupt can we end up with:
 
-Another thing with callchains VS branches: with callchain we generalize
-the sample IPs to the symbol of the function they are contained. We
-want this kind of generalization on callchains.
+b -> f <- top of stack
+a -> b
+...
 
-This is not true with branches where details are zoomed. There are less
-chances for different branch samples to match each other inside a tree.
+even though a -> b -> f can never happen in the actual program flow?
 
-> The other problem in branch stacks/LBR is that they're
-> sampled branches. Just because I got a sample with:
-> 
-> a -> b
-> b -> c
-> 
-> doesn't necessarily mean that the callchain was a -> b -> c.
-
-Not sure what you mean. If you have a -> b, b -> c in single
-LBR sample it means you got a -> b -> c.
-
-> 
-> I still don't have the branch stack setup working properly. But I'm
-> now more sympathetic to the view that last branch sampling and
-> callchains may have different representations in perf.
-> 
->  -Arun
+  -Arun
