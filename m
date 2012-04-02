@@ -1,27 +1,71 @@
-From: Arun Sharma <asharma@fb.com>
-Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v6)
-Date: Fri, 30 Mar 2012 22:43:18 -0700
-Message-ID: <4F769976.3070203@fb.com>
-References: <1333172421-6775-2-git-send-email-asharma@fb.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCH] perf: archive: correct cutting of symbolic link
+Date: Mon, 02 Apr 2012 15:28:29 +0900
+Message-ID: <1333348109-12598-1-git-send-email-chanho61.park@samsung.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33585 "EHLO
-	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1751997Ab2CaFnr (ORCPT
+Received: from mailout4.samsung.com ([203.254.224.34]:34140 "EHLO
+	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751240Ab2DBG3K (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 31 Mar 2012 01:43:47 -0400
-In-Reply-To: <1333172421-6775-2-git-send-email-asharma@fb.com>
+	Mon, 2 Apr 2012 02:29:10 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+To: a.p.zijlstra@chello.nl, paulus@samba.org, mingo@redhat.com, acme@ghostprotocols.net
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 
-[ Meant to include v6 ChangeLog as well. Technical difficulties.. ]
+If a '$PERF_BUILDID_DIR'(typically $HOME/.debug) is a symbolic
+link directory, cutting of the path will be failed.
+Here is an example where a buildid directory is a symbolic link.
 
-v6 ChangeLog:
+/ # ls -al /root
+lrwxrwxrwx    1 root     root            13 Mar 26  2012 /root -> opt/home/root
+/ # cd ~
+/opt/home/root # perf record -a -g sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.322 MB perf.data (~14057 samples) ]
+/opt/home/root # perf archive
+tar: Removing leading `/' from member names
+Now please run:
 
-rebased to tip:perf/core and fixed a minor problem in computing
-the total period in hists__remove_entry_filter(). Needed to
-use period_self instead of period.
+$ tar xvf perf.data.tar.bz2 -C ~/.debug
+
+wherever you need to run 'perf report' on.
+/opt/home/root # mkdir temp
+/opt/home/root # tar xf perf.data.tar.bz2 -C ./temp
+/opt/home/root # find ./temp -name "*kernel*"
+./temp/opt/home/root/.debug/[kernel.kallsyms]
+
+-> If successfully cut off the path, [kernel.kallsyms] is located
+in top of the archived file.
+
+This patch enables to cut correctly even if the buildid directory
+is a symbolic link.
+
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ tools/perf/perf-archive.sh |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
+index 677e59d..95b6f8b 100644
+--- a/tools/perf/perf-archive.sh
++++ b/tools/perf/perf-archive.sh
+@@ -29,13 +29,14 @@ if [ ! -s $BUILDIDS ] ; then
+ fi
+ 
+ MANIFEST=$(mktemp /tmp/perf-archive-manifest.XXXXXX)
++PERF_BUILDID_LINKDIR=$(readlink -f $PERF_BUILDID_DIR)/
+ 
+ cut -d ' ' -f 1 $BUILDIDS | \
+ while read build_id ; do
+ 	linkname=$PERF_BUILDID_DIR.build-id/${build_id:0:2}/${build_id:2}
+ 	filename=$(readlink -f $linkname)
+ 	echo ${linkname#$PERF_BUILDID_DIR} >> $MANIFEST
+-	echo ${filename#$PERF_BUILDID_DIR} >> $MANIFEST
++	echo ${filename#$PERF_BUILDID_LINKDIR} >> $MANIFEST
+ done
+ 
+ tar cfj $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
+-- 
+1.7.5.4
