@@ -1,45 +1,61 @@
-From: Lin Ming <mlin@ss.pku.edu.cn>
-Subject: Re: Question on perf hardware event_ cache misses
-Date: Tue, 17 Apr 2012 12:31:25 +0800
-Message-ID: <CAF1ivSZ8UuLs7_K+Ymtv0M=YAn9XP8h2XmosKtyU5sL=hPEzPw@mail.gmail.com>
-References: <1334346399.20093.YahooMailNeo@web120703.mail.ne1.yahoo.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Arun Sharma <asharma@fb.com>
+Subject: [PATCH] perf, x86: Disable sanity check
+Date: Wed, 18 Apr 2012 16:24:09 -0700
+Message-ID: <1334791449-402-1-git-send-email-asharma@fb.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from [124.207.24.138] ([124.207.24.138]:50965 "EHLO
-	mail.ss.pku.edu.cn" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-	with ESMTP id S1751402Ab2DQEiP convert rfc822-to-8bit (ORCPT
+Received: from outmail005.snc4.facebook.com ([66.220.144.139]:43763 "EHLO
+	intmgw001.snc4.facebook.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751456Ab2DRXY3 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 17 Apr 2012 00:38:15 -0400
-Received: from mail-vx0-f174.google.com (mail-vx0-f174.google.com [209.85.220.174])
-	(Authenticated sender: mlin@ss.pku.edu.cn)
-	by mail.ss.pku.edu.cn (Postfix) with ESMTPA id 1F74CDBC50
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Apr 2012 12:31:28 +0800 (CST)
-Received: by vcqp1 with SMTP id p1so3810594vcq.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Apr 2012 21:31:25 -0700 (PDT)
-In-Reply-To: <1334346399.20093.YahooMailNeo@web120703.mail.ne1.yahoo.com>
+	Wed, 18 Apr 2012 19:24:29 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Junjie Qian <junjie.qian@yahoo.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Arun Sharma <asharma@fb.com>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Sat, Apr 14, 2012 at 3:46 AM, Junjie Qian <junjie.qian@yahoo.com> wr=
-ote:
-> Dear all,
->
-> I have one question regarding the perf event "cache misses =A0--hardw=
-are events".
->
-> I am not sure which level of cache misses does this hardware event me=
-an? Last level cache? Or total cache misses number? Or others?
->
-> Could anyone give me a hint on this? Or where I can check this in sou=
-rce code?
+Without this patch, applications with two different stack
+regions (eg: native stack vs JIT stack) get truncated 
+callchains even when RBP chaining is present. GDB shows proper
+stack traces and the frame pointer chaining is intact.
 
-It's last level cache if your are using Intel x86 CPU.
+This patch disables the (fp < RSP) check, hoping that other checks
+in the code save the day for us. In our limited testing, this
+didn't seem to break anything.
 
->
-> Thanks!
-> Best
-> Junjie
+In the long term, we could potentially have userspace advise
+the kernel on the range of valid stack addresses, so we don't 
+spend a lot of time unwinding from bogus addresses.
+
+Signed-off-by: Arun Sharma <asharma@fb.com>
+Cc: Ingo Molnar <mingo@elte.hu>
+CC: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Namhyung Kim <namhyung.kim@lge.com>
+Cc: Tom Zanussi <tzanussi@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+
+---
+ arch/x86/kernel/cpu/perf_event.c |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/perf_event.c b/arch/x86/kernel/cpu/perf_event.c
+index 07f46ba..87d9abd 100644
+--- a/arch/x86/kernel/cpu/perf_event.c
++++ b/arch/x86/kernel/cpu/perf_event.c
+@@ -1596,9 +1596,6 @@ perf_callchain_user(struct perf_callchain_entry *entry, struct pt_regs *regs)
+ 		if (bytes != sizeof(frame))
+ 			break;
+ 
+-		if ((unsigned long)fp < regs->sp)
+-			break;
+-
+ 		perf_callchain_store(entry, frame.return_address);
+ 		fp = frame.next_frame;
+ 	}
+-- 
+1.7.8.4
