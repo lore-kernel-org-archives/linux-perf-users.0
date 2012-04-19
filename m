@@ -1,75 +1,65 @@
-From: Frederic Weisbecker <fweisbec@gmail.com>
+From: Arun Sharma <asharma@fb.com>
 Subject: Re: [PATCH] perf, x86: Disable sanity check
-Date: Thu, 19 Apr 2012 07:22:11 +0200
-Message-ID: <20120419052208.GA29875@somewhere.redhat.com>
-References: <1334791449-402-1-git-send-email-asharma@fb.com>
+Date: Thu, 19 Apr 2012 10:33:32 -0700
+Message-ID: <4F904C6C.7020407@fb.com>
+References: <1334791449-402-1-git-send-email-asharma@fb.com> <20120419052208.GA29875@somewhere.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qa0-f42.google.com ([209.85.216.42]:40260 "EHLO
-	mail-qa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751315Ab2DSFWR (ORCPT
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59977 "EHLO
+	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754630Ab2DSRes (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 19 Apr 2012 01:22:17 -0400
-Content-Disposition: inline
-In-Reply-To: <1334791449-402-1-git-send-email-asharma@fb.com>
+	Thu, 19 Apr 2012 13:34:48 -0400
+In-Reply-To: <20120419052208.GA29875@somewhere.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arun Sharma <asharma@fb.com>
+To: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Wed, Apr 18, 2012 at 04:24:09PM -0700, Arun Sharma wrote:
-> Without this patch, applications with two different stack
-> regions (eg: native stack vs JIT stack) get truncated 
-> callchains even when RBP chaining is present. GDB shows proper
-> stack traces and the frame pointer chaining is intact.
-> 
-> This patch disables the (fp < RSP) check, hoping that other checks
-> in the code save the day for us. In our limited testing, this
-> didn't seem to break anything.
-> 
-> In the long term, we could potentially have userspace advise
-> the kernel on the range of valid stack addresses, so we don't 
-> spend a lot of time unwinding from bogus addresses.
+On 4/18/12 10:22 PM, Frederic Weisbecker wrote:
 
-So rbp is part of the JIT stack but not rsp?
-Do you have a practical example of that? I must confess I don't know
-much about JIT stack.
+> So rbp is part of the JIT stack but not rsp?
+> Do you have a practical example of that? I must confess I don't know
+> much about JIT stack.
 
-Thanks.
+Nothing specific to JITs here. Any time an app has two stacks S1 and S2 
+(with S1 at a lower address and S2 at a higher address) and %rsp at the 
+time of a perf event is pointing to S2, we don't get traces beyond S2.
 
-> 
-> Signed-off-by: Arun Sharma <asharma@fb.com>
-> Cc: Ingo Molnar <mingo@elte.hu>
-> CC: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Frederic Weisbecker <fweisbec@gmail.com>
-> Cc: Mike Galbraith <efault@gmx.de>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Stephane Eranian <eranian@google.com>
-> Cc: Namhyung Kim <namhyung.kim@lge.com>
-> Cc: Tom Zanussi <tzanussi@gmail.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
-> 
-> ---
->  arch/x86/kernel/cpu/perf_event.c |    3 ---
->  1 files changed, 0 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/perf_event.c b/arch/x86/kernel/cpu/perf_event.c
-> index 07f46ba..87d9abd 100644
-> --- a/arch/x86/kernel/cpu/perf_event.c
-> +++ b/arch/x86/kernel/cpu/perf_event.c
-> @@ -1596,9 +1596,6 @@ perf_callchain_user(struct perf_callchain_entry *entry, struct pt_regs *regs)
->  		if (bytes != sizeof(frame))
->  			break;
->  
-> -		if ((unsigned long)fp < regs->sp)
-> -			break;
-> -
->  		perf_callchain_store(entry, frame.return_address);
->  		fp = frame.next_frame;
->  	}
-> -- 
-> 1.7.8.4
-> 
+               |                 |
+               |                 |
+               |   0x1000000     |  <-- %rbp
+               |                 |
+               |                 |
+S2: 0x2000000 |                 |  <-- %rsp
+               |                 |
+               |                 |
+               |                 |
+               |    frame3       |
+               |                 |
+               |    frame2       |
+               |                 |
+S1: 0x1000000 |    frame1       |
+               |                 |
+               |                 |
+               |                 |
+               |                 |
+
+gdb is able to show:
+
+(gdb) bt
+<frame at 0x2000000>
+frame1
+frame2
+frame3
+frame4
+..
+
+just fine.
+
+In our use case, there may be multiple transitions between S1 and S2. 
+For eg: frame4 could be on S2 (i.e 0x2xxxxxx range).
+
+  -Arun
