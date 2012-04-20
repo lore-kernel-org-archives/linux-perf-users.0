@@ -1,49 +1,33 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Arun Sharma <asharma@fb.com>
 Subject: Re: [PATCH] perf, x86: Disable sanity check
-Date: Fri, 20 Apr 2012 09:16:42 -0700
-Message-ID: <CA+55aFwg-LvxYUGD_mD=V4mt=zi8J34hQu+ZBGAHH9yX8WET2Q@mail.gmail.com>
+Date: Fri, 20 Apr 2012 11:18:16 -0700
+Message-ID: <4F91A868.6090803@fb.com>
 References: <1334791449-402-1-git-send-email-asharma@fb.com> <1334913084.2463.29.camel@laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:37997 "EHLO
-	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754938Ab2DTQRF (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 20 Apr 2012 12:17:05 -0400
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1334913084.2463.29.camel@laptop>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arun Sharma <asharma@fb.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Apr 20, 2012 at 2:11 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->
+On 4/20/12 2:11 AM, Peter Zijlstra wrote:
 > Makes me really nervous.. Ingo, Linus ?
+>
+> 'normal' usespace can suffer from this too with signal stacks. Arun's
+> JIT case seems particularly weird in that his stacks don't strictly nest
+> but can cross over multiple times (makes one wonder why they bother with
+> multiple stacks..).
 
-I don't care as long as this only *ever* triggers for user stacks, and
-the code verifies that. And I'm not sure it does, actually.
+It's a tracing JIT, which dynamically chooses between interpreted mode 
+and JIT mode. Translation is not necessarily a function at a time and 
+has to be guarded by types inferred at runtime. Each time they switch 
+between the two modes, they need to examine the non-native frames on the 
+stack. With a single stack design, they'd have to unwind the stack 
+looking for native frames vs JIT frames which adds complexity and cost.
 
-Why am I not sure? Because it uses copy_from_user_nmi(), which in turn
-uses "access_ok()". But can we perhaps have the perf event happen
-*while* the kernel has done a "set_fs(KERNEL_DS)" - and we just
-happen to follow the user stack too? In which case we may be copying
-kernel memory.
+Like you observed, this is needed for other less complex cases as well.
 
-So I think this user stack following code is buggy in *other* ways.
-
-Guys: stack following has to be *f^&%ing* careful! This shows yet
-again how people blithely follow frame pointers without verifying
-everything they damn well can.
-
-Also, I note that the deepest stack chain allowed is something
-*ridiculously* deep (like 255), and we use copy_from_user_nmi() for
-this each entry. Which is slow as hell. So I would suggest at least
-considering limiting that depth more.
-
-End result: I'm ok with removing that one test. But I want more tests
-to replace it. The user frame pointer had damn well better be in user
-space (and no, "access_ok()" is not valid or sufficient in interrupt
-context!) and I suspect there are other things you could check.
-
-                  Linus
+  -Arun
