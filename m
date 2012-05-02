@@ -1,121 +1,290 @@
-From: Namhyung Kim <namhyung.kim@lge.com>
-Subject: [BUG] perf top -G is broken
-Date: Wed, 02 May 2012 11:50:45 +0900
-Message-ID: <87pqanmh2y.fsf@sejong.aot.lge.com>
+From: Prashanth Nageshappa <prashanth@linux.vnet.ibm.com>
+Subject: [PATCH-V2] perf symbols: fix symbol offset breakage with separated
+ debug info
+Date: Wed, 02 May 2012 12:32:06 +0530
+Message-ID: <4FA0DBEE.3040909@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:60441 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757388Ab2EBCwK (ORCPT
+Received: from e31.co.us.ibm.com ([32.97.110.149]:51566 "EHLO
+	e31.co.us.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752392Ab2EBHD0 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 1 May 2012 22:52:10 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1SPPfk-0005h8-FS
-	for linux-perf-users@vger.kernel.org; Wed, 02 May 2012 04:52:08 +0200
-Received: from 121.50.20.41 ([121.50.20.41])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 May 2012 04:52:08 +0200
-Received: from namhyung.kim by 121.50.20.41 with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 May 2012 04:52:08 +0200
+	Wed, 2 May 2012 03:03:26 -0400
+Received: from /spool/local
+	by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+	for <linux-perf-users@vger.kernel.org> from <prashanth@linux.vnet.ibm.com>;
+	Wed, 2 May 2012 01:03:25 -0600
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+To: peterz@infradead.org, mingo@elte.hu
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, ananth@in.ibm.com, jkenisto@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, oleg@redhat.com, andi@firstfloor.org, hch@infradead.org, rostedt@goodmis.org, acme@infradead.org, masami.hiramatsu.pt@hitachi.com, tglx@linutronix.de, anton@redhat.com, srikar@linux.vnet.ibm.com, dave.martin@linaro.org, linux-perf-users@vger.kernel.org
 
+From: Dave Martin <dave.martin@linaro.org>
 
-Hi,
+perf resolves symbols to wrong offsets when debug info is separated
+from the lib/executable.
 
-Some guy reported me that perf top -G is broken with segment fault. I
-can reproduce it on my system easily but the time is vary - few seconds
-to 30 minutes. I ran it with --stdio to get a core file:
+This patch is based on Dave Martin's initial work first published at
+https://lkml.org/lkml/2010/11/22/137
 
-$ sudo ./perf top -G --stdio > /dev/null
-[sudo] password for namhyung: 
-Failed to open /tmp/perf-1313.map, continuing without symbols
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-/usr/lib64/libgvfscommon.so.0.0.0.#prelink#.SjIuuf was updated (is prelink enabled?). Restart the long running apps that use it!
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-no symbols found in /usr/sbin/iscsid, maybe install a debug package?
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
-Warning: empty node in callchain tree
+This patch loads the ELF section headers from a separate file if
+necessary, to avoid getting confused by the different section file
+offsets seen in debug images.  Invalid section headers are detected by
+checking for the presence of non-writable SHT_NOBITS sections, which
+don't make sense under normal circumstances.
 
+In particular, this allows symbols in ET_EXEC images to get fixed up
+correctly in the presence of separated debug images.
 
-It seems there's a callchain problem. gdb bracktrace told me:
+v2 addresses review comments (to remove asserts) from Dave Martin.
 
-$ gdb -q ./perf core.4513 
-Reading symbols from /home/namhyung/project/linux/tools/perf/perf...done.
-[New LWP 4514]
-[New LWP 4513]
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/lib64/libthread_db.so.1".
-Core was generated by `./perf top -G --stdio'.
-Program terminated with signal 11, Segmentation fault.
-#0  0x00000000004594ba in callchain_cursor_advance (cursor=<optimized out>) at util/callchain.h:141
-141		cursor->curr = cursor->curr->next;
-Missing separate debuginfos, use: <SNIP>
+Signed-off-by: Dave Martin <dave.martin@linaro.org>
+Signed-off-by: Prashanth Nageshappa <prashanth@linux.vnet.ibm.com>
+---
 
-(gdb) bt
-#0  0x00000000004594ba in callchain_cursor_advance (cursor=<optimized out>) at util/callchain.h:141
-#1  fill_node (cursor=0x19ad6f8, node=0x7f8208697df0) at util/callchain.c:226
-#2  add_child (period=1198958, cursor=0x19ad6f8, parent=0x21197c0) at util/callchain.c:239
-#3  append_chain_children (root=root@entry=0x21197c0, cursor=cursor@entry=0x19ad6f8, period=period@entry=1198958)
-    at util/callchain.c:308
-#4  0x000000000045951f in append_chain (period=1198958, cursor=0x19ad6f8, root=0x21197c0) at util/callchain.c:374
-#5  append_chain_children (root=root@entry=0x1a25f90, cursor=cursor@entry=0x19ad6f8, period=1198958) at util/callchain.c:302
-#6  0x0000000000459a33 in merge_chain_branch (cursor=cursor@entry=0x19ad6f8, dst=dst@entry=0x1a25f90, src=src@entry=0x28c3240)
-    at util/callchain.c:415
-#7  0x000000000045999a in merge_chain_branch (cursor=cursor@entry=0x19ad6f8, dst=dst@entry=0x1a25f90, src=src@entry=0x29e7480)
-    at util/callchain.c:419
-#8  0x000000000045a274 in callchain_merge (cursor=cursor@entry=0x19ad6f8, dst=dst@entry=0x1a25f88, src=src@entry=0x29e7478)
-    at util/callchain.c:436
-#9  0x00000000004776fe in hists__collapse_insert_entry (he=0x29e73d0, root=0x19ad540, hists=0x19ad520) at util/hist.c:401
-#10 __hists__collapse_resort (hists=0x19ad520, threaded=threaded@entry=true) at util/hist.c:458
-#11 0x00000000004791f1 in hists__collapse_resort_threaded (hists=<optimized out>) at util/hist.c:476
-#12 0x0000000000426ad3 in perf_top__print_sym_table (top=0x7fffb70097c0) at builtin-top.c:309
-#13 display_thread (arg=0x7fffb70097c0) at builtin-top.c:623
-#14 0x0000003275607d14 in start_thread () from /lib64/libpthread.so.0
-#15 0x00000032752f194d in clone () from /lib64/libc.so.6
+ tools/perf/util/symbol.c |  168 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 164 insertions(+), 4 deletions(-)
 
-(gdb) p *(struct callchain_cursor *)0x19ad6f8
-$1 = {nr = 1, first = 0x1a097a0, last = 0x1a097b8, pos = 1, curr = 0x19c6a90}
-
-I wonder how callchain_cursor_advance() is called in fill_node() when
-cursor->pos == cursor->nr. It should be checked at while conditional and
-bailed out AFAICS.
-
-Any thought?
-
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index caaf75a..a6ad4b1 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1158,8 +1158,105 @@ static size_t elf_addr_to_index(Elf *elf, GElf_Addr addr)
+ 	return -1;
+ }
+ 
++/**
++ * Read all section headers, copying them into a separate array so they survive
++ * elf_end.
++ *
++ * @elf: the libelf instance to operate on.
++ * @ehdr: the elf header: this must already have been read with gelf_getehdr().
++ * @count: the number of headers read is assigned to *count on successful
++ *	return.  count must not be NULL.
++ *
++ * Returns a pointer to the allocated headers, which should be deallocated with
++ * free() when no longer needed.
++ */
++static GElf_Shdr *elf_get_all_shdrs(Elf *elf, GElf_Ehdr const *ehdr,
++				    unsigned *count)
++{
++	GElf_Shdr *shdrs;
++	Elf_Scn *scn;
++	unsigned max_index = 0;
++	unsigned i;
++
++	shdrs = malloc(ehdr->e_shnum * sizeof *shdrs);
++	if (!shdrs)
++		return NULL;
++
++	for (i = 0; i < ehdr->e_shnum; i++)
++		shdrs[i].sh_type = SHT_NULL;
++
++	for (scn = NULL; (scn = elf_nextscn(elf, scn)); ) {
++		size_t j;
++
++		/*
++		 * Just assuming we get section 0, 1, ... in sequence may lead
++		 * to wrong section indices.  Check the index explicitly:
++		 */
++		j = elf_ndxscn(scn);
++		if (j > max_index)
++			max_index = j;
++
++		if (!gelf_getshdr(scn, &shdrs[j]))
++			goto error;
++	}
++
++	*count = max_index + 1;
++	return shdrs;
++
++error:
++	free(shdrs);
++	return NULL;
++}
++
++/**
++ * Check that the section headers @shdrs reflect accurately the file data
++ * layout of the image that was loaded during perf record.  This is generally
++ * not true for separated debug images generated with e.g.,
++ * objcopy --only-keep-debug.
++ *
++ * We identify invalid files by checking for non-empty sections which are
++ * declared as having no file data (SHT_NOBITS) but are not writable.
++ *
++ * @shdrs: the full set of section headers, as loaded by elf_get_all_shdrs().
++ * @count: the number of headers present in @shdrs.
++ *
++ * Returns 1 for valid headers, 0 otherwise.
++ */
++static int elf_check_shdrs_valid(GElf_Shdr const *shdrs, unsigned count)
++{
++	unsigned i;
++
++	for (i = 0; i < count; i++) {
++		if (shdrs[i].sh_type == SHT_NOBITS &&
++		    !(shdrs[i].sh_flags & SHF_WRITE) &&
++		    shdrs[i].sh_size != 0)
++			return 0;
++	}
++
++	return 1;
++}
++
++/*
++ * Notes:
++ *
++ * If saved_shdrs is non-NULL, the section headers will be read if found, and
++ * will be used for address fixups.  saved_shdrs_count must also be non-NULL in
++ * this case.  This may be needed for separated debug images, since the section
++ * headers and symbols may need to come from separate images in that case.
++ *
++ * Note: irrespective of whether this function returns successfully,
++ * *saved_shdrs may get initialised if saved_shdrs is non-NULL.  It is the
++ * caller's responsibility to free() it when non longer needed.
++ *
++ * If want_symtab == 1, this function will only load symbols from .symtab
++ * sections.  Otherwise (want_symtab == 0), .dynsym or .symtab symbols are
++ * loaded.  This feature is used by dso__load() to search for the best image
++ * to load.
++ */
++
+ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 			 int fd, symbol_filter_t filter, int kmodule,
++			 GElf_Shdr **saved_shdrs, unsigned *saved_shdrs_count,
+ 			 int want_symtab)
+ {
+ 	struct kmap *kmap = dso->kernel ? map__kmap(map) : NULL;
+@@ -1178,6 +1275,17 @@ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 	int nr = 0;
+ 	size_t opdidx = 0;
+ 
++	if (saved_shdrs != NULL && saved_shdrs_count == NULL) {
++		/*
++		 * If you trigger this check, you're calling this function
++		 * incorrectly.  Refer to the notes above for details.
++		 */
++		pr_debug("%s: warning: saved_shdrs_count == NULL: "
++			 "ignoring the saved section headers.\n",
++			 __func__);
++		saved_shdrs = NULL;
++	}
++
+ 	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+ 	if (elf == NULL) {
+ 		pr_debug("%s: cannot read %s ELF file.\n", __func__, name);
+@@ -1200,6 +1308,36 @@ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 			goto out_elf_end;
+ 	}
+ 
++	/*
++	 * Copy all section headers from the image if requested and if not
++	 * already loaded.
++	 */
++	if (saved_shdrs != NULL && *saved_shdrs == NULL) {
++		GElf_Shdr *shdrs;
++		unsigned count;
++
++		shdrs = elf_get_all_shdrs(elf, &ehdr, &count);
++		if (shdrs == NULL)
++			goto out_elf_end;
++
++		/*
++		 * Only keep the headers if they reflect the actual run-time
++		 * image's file layout:
++		 */
++		if (elf_check_shdrs_valid(shdrs, count)) {
++			*saved_shdrs = shdrs;
++			*saved_shdrs_count = count;
++		} else
++			free(shdrs);
++	}
++
++	/*
++	 * If no genuine ELF headers are available yet, give up: we can't
++	 * adjust symbols correctly in that case:
++	 */
++	if (saved_shdrs != NULL && *saved_shdrs == NULL)
++		goto out_elf_end;
++
+ 	sec = elf_section_by_name(elf, &ehdr, &shdr, ".symtab", NULL);
+ 	if (sec == NULL) {
+ 		if (want_symtab)
+@@ -1344,12 +1482,25 @@ static int dso__load_sym(struct dso *dso, struct map *map, const char *name,
+ 			goto new_symbol;
+ 		}
+ 
++		/*
++		 * Currently, symbols for shared objects and PIE executables
++		 * (i.e., ET_DYN) do not seem to get adjusted.  This might need
++		 * to change if file offset == virtual address is not actually
++		 * guaranteed for these images.  ELF doesn't provide this
++		 * guarantee natively.
++		 */
+ 		if (curr_dso->adjust_symbols) {
+ 			pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+ 				  "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+ 				  (u64)sym.st_value, (u64)shdr.sh_addr,
+ 				  (u64)shdr.sh_offset);
+-			sym.st_value -= shdr.sh_addr - shdr.sh_offset;
++			if (saved_shdrs && *saved_shdrs &&
++			    sym.st_shndx < *saved_shdrs_count)
++				sym.st_value -=
++					(*saved_shdrs)[sym.st_shndx].sh_addr -
++					(*saved_shdrs)[sym.st_shndx].sh_offset;
++			else
++				sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+ 		}
+ 		/*
+ 		 * We need to figure out if the object was created from C++ sources
+@@ -1590,6 +1741,8 @@ int dso__load(struct dso *dso, struct map *map, symbol_filter_t filter)
+ 	struct machine *machine;
+ 	const char *root_dir;
+ 	int want_symtab;
++	GElf_Shdr *saved_shdrs = NULL;
++	unsigned saved_shdrs_count;
+ 
+ 	dso__set_loaded(dso, map->type);
+ 
+@@ -1692,6 +1845,7 @@ restart:
+ 			continue;
+ 
+ 		ret = dso__load_sym(dso, map, name, fd, filter, 0,
++				    &saved_shdrs, &saved_shdrs_count,
+ 				    want_symtab);
+ 		close(fd);
+ 
+@@ -1713,14 +1867,19 @@ restart:
+ 
+ 	/*
+ 	 * If we wanted a full symtab but no image had one,
+-	 * relax our requirements and repeat the search.
++	 * relax our requirements and repeat the search,
++	 * provided we saw some valid section headers:
+ 	 */
+-	if (ret <= 0 && want_symtab) {
++	if (ret <= 0 && want_symtab && saved_shdrs != NULL) {
+ 		want_symtab = 0;
+ 		goto restart;
+ 	}
+ 
+ 	free(name);
++
++	if (saved_shdrs)
++		free(saved_shdrs);
++
+ 	if (ret < 0 && strstr(dso->name, " (deleted)") != NULL)
+ 		return 0;
+ 	return ret;
+@@ -1989,7 +2148,8 @@ int dso__load_vmlinux(struct dso *dso, struct map *map,
+ 
+ 	dso__set_long_name(dso, (char *)vmlinux);
+ 	dso__set_loaded(dso, map->type);
+-	err = dso__load_sym(dso, map, symfs_vmlinux, fd, filter, 0, 0);
++	err = dso__load_sym(dso, map, symfs_vmlinux, fd, filter, 0,
++			    NULL, NULL, 0);
+ 	close(fd);
+ 
+ 	if (err > 0)
