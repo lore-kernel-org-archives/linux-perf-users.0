@@ -1,38 +1,144 @@
-From: Hank <hankendi@gmail.com>
-Subject: using perf lock
-Date: Wed, 23 May 2012 15:42:42 +0000 (UTC)
-Message-ID: <loom.20120523T174059-193@post.gmane.org>
+From: HUMMEL Michel <michel.hummel@thalesgroup.com>
+Subject: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
+Date: Wed, 23 May 2012 18:06:59 +0200
+Message-ID: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:49662 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757036Ab2EWPpN (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 May 2012 11:45:13 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1SXDkI-0003SN-62
-	for linux-perf-users@vger.kernel.org; Wed, 23 May 2012 17:45:06 +0200
-Received: from novalis.bu.edu ([128.197.176.26])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 May 2012 17:45:06 +0200
-Received: from hankendi by novalis.bu.edu with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 May 2012 17:45:06 +0200
+Received: from thsbbfxrt02p.thalesgroup.com ([192.93.158.29]:46026 "EHLO
+	thsbbfxrt02p.thalesgroup.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S933691Ab2EWQOn convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 23 May 2012 12:14:43 -0400
+Received: from thsbbfxrt02p.thalesgroup.com (localhost.localdomain [127.0.0.1])
+	by localhost (Postfix) with SMTP id B357737A573
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 May 2012 18:07:02 +0200 (CEST)
+Content-Language: fr-FR
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi,
+Hello,
+I am testing the perf command of my new centos 6.2 server, and I don't understand something.
+My Conf :
+################################################################
+$ grep name /proc/cpuinfo
+model name      : Intel(R) Xeon(R) CPU           E5620  @ 2.40GHz
+$ uname -a
+Linux xxxxxxxx 2.6.32-220.el6.x86_64 #1 SMP Tue Dec 6 19:48:22 GMT 2011 x86_64 x86_64 x86_64 GNU/Linux
+$ perf --version
+perf version 2.6.32-220.el6.x86_64.debug
+$ perf test
+ 1: vmlinux symtab matches kallsyms: FAILED!
 
-I've been trying to use perf lock command on my Ubuntu 12.04, but I'm getting
-this error:
+ 2: detect open syscall event: Ok
+ 3: detect open syscall event on all cpus: Ok
+ 4: read samples using the mmap interface: Ok
+################################################################
 
-invalid or unsupported event: 'lock:lock_acquire'
+I wrote a simple test case which is calling two functions.
+The first one "good_perfo"  does the same as the second "bad_perfo" but more efficiently (lesser cache miss ...).
 
-What might be the problem? Should I get the kernel source code? 
+Gprof profile confirms this :
+################################################################
+$ gprof -p ./test_perfo
+Flat profile:
 
-Thanks,
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls   s/call   s/call  name
+ 76.14     38.75    38.75        1    38.75    38.75  bad_perfo
+ 23.70     50.81    12.06        1    12.06    12.06  good_perfo
+################################################################
+
+but perf don't want to give me the good answer when I asking for two events : cycles and instructions  :
+################################################################
+$ perf record -e  cycles,instructions  -o perf.data.cycles.instructions ./test_perfo
+$ perf report -i perf.data.cycles.instructions --stdio
+# Events: 5K cycles
+#
+# Overhead  Command      Shared Object                      Symbol
+# ........  .......  .................  ..........................
+#
+    99.35%  test_perfo  test_perfo         [.] good_perfo
+     0.14%  test_perfo  [kernel.kallsyms]  [k] clear_page_c
+     0.08%  test_perfo  [kernel.kallsyms]  [k] page_fault
+     0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
+
+
+# Events: 5K instructions
+#
+# Overhead  Command      Shared Object                     Symbol
+# ........  .......  .................  .........................
+#
+    99.93%  test_perfo  test_perfo         [.] good_perfo
+     0.02%  test_perfo  [kernel.kallsyms]  [k] __run_hrtimer
+     0.02%  test_perfo  [kernel.kallsyms]  [k] inode_has_perm
+     0.02%  test_perfo  [kernel.kallsyms]  [k] update_wall_time
+
+################################################################
+
+The bad_perfo function is not appearing in the profile (and I am sure that it should !) 
+Now if I do 2 separate records, one for the cycles and one for the instructions, the profile seems to be good :
+
+################################################################
+$ perf record -e  cycles  -o perf.data.cycles ./test_perfo
+$ perf report -i perf.data.cycles --stdio
+# Events: 51K cycles
+#
+# Overhead  Command      Shared Object                      Symbol
+# ........  .......  .................  ..........................
+#
+    76.20%  test_perfo  test_perfo         [.] bad_perfo
+    23.36%  test_perfo  test_perfo         [.] good_perfo
+     0.03%  test_perfo  [kernel.kallsyms]  [k] apic_timer_interrupt
+     0.02%  test_perfo  [kernel.kallsyms]  [k] do_softirq
+     0.02%  test_perfo  [kernel.kallsyms]  [k] avc_has_perm_noaudit
+
+$ perf record -e  instructions  -o perf.data.instructions ./test_perfo
+$ perf report -i perf.data.instructions --stdio
+# Events: 45K instructions
+#
+# Overhead  Command      Shared Object                    Symbol
+# ........  .......  .................  ........................
+#
+    49.95%  test_perfo  test_perfo         [.] bad_perfo
+    49.94%  test_perfo  test_perfo         [.] good_perfo
+     0.01%  test_perfo  [kernel.kallsyms]  [k] raise_softirq
+     0.01%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
+     0.01%  test_perfo  [kernel.kallsyms]  [k] kmem_cache_alloc_notrace
+################################################################
+
+Is I missed something with the perf command or this is a bug ?
+
+
+I found a Quick&Dirty solution :
+Using the -D ( Collect data without buffering ) option give me the good profile :
+################################################################
+$ perf record -D -e  cycles,instructions  -o perf.data.cycles.instructions ./test_perfo
+$ perf report -i perf.data.cycles.instructions --stdio
+# Events: 51K cycles
+#
+# Overhead  Command      Shared Object                      Symbol
+# ........  .......  .................  ..........................
+#
+    76.20%  test_perfo  test_perfo         [.] bad_perfo
+    22.99%  test_perfo  test_perfo         [.] good_perfo
+     0.10%  test_perfo  [kernel.kallsyms]  [k] _spin_lock
+     0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
+  
+:
+# Events: 51K cycles
+#
+# Overhead  Command      Shared Object                      Symbol
+# ........  .......  .................  ..........................
+#
+    76.20%  test_perfo  test_perfo         [.] bad_perfo
+    22.99%  test_perfo  test_perfo         [.] good_perfo
+     0.10%  test_perfo  [kernel.kallsyms]  [k] _spin_lock
+     0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt 
+################################################################
+
+Thank for any help,
+Michel Hummel
