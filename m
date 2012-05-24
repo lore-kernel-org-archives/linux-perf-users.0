@@ -1,37 +1,32 @@
-From: Namhyung Kim <namhyung.kim@lge.com>
-Subject: Re: using perf lock
-Date: Thu, 24 May 2012 09:28:09 +0900
-Message-ID: <87fwaq1kyu.fsf@sejong.aot.lge.com>
-References: <loom.20120523T174059-193@post.gmane.org>
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
+Date: Thu, 24 May 2012 10:33:15 +1000
+Message-ID: <1337819595.29765.9.camel@concordia>
+References: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE7Q.lge.com ([156.147.1.151]:64143 "EHLO
-	LGEMRELSE7Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751255Ab2EXAaI (ORCPT
+Received: from ozlabs.org ([203.10.76.45]:52383 "EHLO ozlabs.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753048Ab2EXAdR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 May 2012 20:30:08 -0400
-In-Reply-To: <loom.20120523T174059-193@post.gmane.org> (Hank's message of
-	"Wed, 23 May 2012 15:42:42 +0000 (UTC)")
+	Wed, 23 May 2012 20:33:17 -0400
+In-Reply-To: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Hank <hankendi@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: HUMMEL Michel <michel.hummel@thalesgroup.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi,
+On Wed, 2012-05-23 at 18:06 +0200, HUMMEL Michel wrote:
+> Hello,
+> I am testing the perf command of my new centos 6.2 server, and I don't understand something.
+> 
+> I wrote a simple test case which is calling two functions.
+> The first one "good_perfo"  does the same as the second "bad_perfo"
+> but more efficiently (lesser cache miss ...).
 
-On Wed, 23 May 2012 15:42:42 +0000 (UTC), Hank wrote:
-> I've been trying to use perf lock command on my Ubuntu 12.04, but I'm getting
-> this error:
->
-> invalid or unsupported event: 'lock:lock_acquire'
->
-> What might be the problem? Should I get the kernel source code? 
->
+Does it make any difference if you rewrite your test to run bad_perfo
+first, and then good_perfo?
 
-Maybe due to the kernel was built without CONFIG_LOCKDEP and/or
-CONFIG_LOCK_STAT. You can grep it from /boot/config-$(uname -r).
-If so, you need to rebuild the kernel.
-
-Thanks,
-Namhyung
+cheers
