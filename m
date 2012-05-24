@@ -1,156 +1,60 @@
-From: Namhyung Kim <namhyung.kim@lge.com>
-Subject: Re: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
-Date: Thu, 24 May 2012 09:44:55 +0900
-Message-ID: <87bole1k6w.fsf@sejong.aot.lge.com>
+From: HUMMEL Michel <michel.hummel@thalesgroup.com>
+Subject: RE: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
+Date: Thu, 24 May 2012 09:14:46 +0200
+Message-ID: <25548_1337843693_4FBDDFED_25548_4972_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB956D2@THSONEA01CMS01P.one.grp>
 References: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
+ <1337819595.29765.9.camel@concordia>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:49587 "EHLO
-	LGEMRELSE6Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750859Ab2EXAqx (ORCPT
+Received: from thsbbfxrt01p.thalesgroup.com ([192.54.144.131]:38196 "EHLO
+	thsbbfxrt01p.thalesgroup.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750787Ab2EXHWt (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 May 2012 20:46:53 -0400
-In-Reply-To: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
-	(HUMMEL Michel's message of "Wed, 23 May 2012 18:06:59 +0200")
+	Thu, 24 May 2012 03:22:49 -0400
+Received: from thsbbfxrt01p.thalesgroup.com (localhost.localdomain [127.0.0.1])
+	by localhost (Postfix) with SMTP id 1058E59A38F
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 May 2012 09:14:53 +0200 (CEST)
+In-Reply-To: <1337819595.29765.9.camel@concordia>
+Content-Language: fr-FR
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: HUMMEL Michel <michel.hummel@thalesgroup.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi,
-
-On Wed, 23 May 2012 18:06:59 +0200, HUMMEL Michel wrote:
-> Hello,
-> I am testing the perf command of my new centos 6.2 server, and I don't understand something.
-> My Conf :
-> ################################################################
-> $ grep name /proc/cpuinfo
-> model name      : Intel(R) Xeon(R) CPU           E5620  @ 2.40GHz
-> $ uname -a
-> Linux xxxxxxxx 2.6.32-220.el6.x86_64 #1 SMP Tue Dec 6 19:48:22 GMT 2011 x86_64 x86_64 x86_64 GNU/Linux
-> $ perf --version
-> perf version 2.6.32-220.el6.x86_64.debug
-> $ perf test
->  1: vmlinux symtab matches kallsyms: FAILED!
->
->  2: detect open syscall event: Ok
->  3: detect open syscall event on all cpus: Ok
->  4: read samples using the mmap interface: Ok
-> ################################################################
->
-> I wrote a simple test case which is calling two functions.
-> The first one "good_perfo"  does the same as the second "bad_perfo" but more efficiently (lesser cache miss ...).
->
-> Gprof profile confirms this :
-> ################################################################
-> $ gprof -p ./test_perfo
-> Flat profile:
->
-> Each sample counts as 0.01 seconds.
->   %   cumulative   self              self     total
->  time   seconds   seconds    calls   s/call   s/call  name
->  76.14     38.75    38.75        1    38.75    38.75  bad_perfo
->  23.70     50.81    12.06        1    12.06    12.06  good_perfo
-> ################################################################
->
-> but perf don't want to give me the good answer when I asking for two events : cycles and instructions  :
-> ################################################################
-> $ perf record -e  cycles,instructions  -o perf.data.cycles.instructions ./test_perfo
-> $ perf report -i perf.data.cycles.instructions --stdio
-> # Events: 5K cycles
-> #
-
-One thing I noticed is the number of events in this run is much smaller
-than others (5K to 51K). Probably it can be a reason of the inaccuracy,
-but I'm not sure. Maybe increasing sampling freq (-F) or adding the 'u'
-modifier on events can help.
-
-Thanks,
-Namhyung
-
-
-> # Overhead  Command      Shared Object                      Symbol
-> # ........  .......  .................  ..........................
-> #
->     99.35%  test_perfo  test_perfo         [.] good_perfo
->      0.14%  test_perfo  [kernel.kallsyms]  [k] clear_page_c
->      0.08%  test_perfo  [kernel.kallsyms]  [k] page_fault
->      0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
->
->
-> # Events: 5K instructions
-> #
-> # Overhead  Command      Shared Object                     Symbol
-> # ........  .......  .................  .........................
-> #
->     99.93%  test_perfo  test_perfo         [.] good_perfo
->      0.02%  test_perfo  [kernel.kallsyms]  [k] __run_hrtimer
->      0.02%  test_perfo  [kernel.kallsyms]  [k] inode_has_perm
->      0.02%  test_perfo  [kernel.kallsyms]  [k] update_wall_time
->
-> ################################################################
->
-> The bad_perfo function is not appearing in the profile (and I am sure that it should !) 
-> Now if I do 2 separate records, one for the cycles and one for the instructions, the profile seems to be good :
->
-> ################################################################
-> $ perf record -e  cycles  -o perf.data.cycles ./test_perfo
-> $ perf report -i perf.data.cycles --stdio
-> # Events: 51K cycles
-> #
-> # Overhead  Command      Shared Object                      Symbol
-> # ........  .......  .................  ..........................
-> #
->     76.20%  test_perfo  test_perfo         [.] bad_perfo
->     23.36%  test_perfo  test_perfo         [.] good_perfo
->      0.03%  test_perfo  [kernel.kallsyms]  [k] apic_timer_interrupt
->      0.02%  test_perfo  [kernel.kallsyms]  [k] do_softirq
->      0.02%  test_perfo  [kernel.kallsyms]  [k] avc_has_perm_noaudit
->
-> $ perf record -e  instructions  -o perf.data.instructions ./test_perfo
-> $ perf report -i perf.data.instructions --stdio
-> # Events: 45K instructions
-> #
-> # Overhead  Command      Shared Object                    Symbol
-> # ........  .......  .................  ........................
-> #
->     49.95%  test_perfo  test_perfo         [.] bad_perfo
->     49.94%  test_perfo  test_perfo         [.] good_perfo
->      0.01%  test_perfo  [kernel.kallsyms]  [k] raise_softirq
->      0.01%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
->      0.01%  test_perfo  [kernel.kallsyms]  [k] kmem_cache_alloc_notrace
-> ################################################################
->
-> Is I missed something with the perf command or this is a bug ?
->
->
-> I found a Quick&Dirty solution :
-> Using the -D ( Collect data without buffering ) option give me the good profile :
-> ################################################################
-> $ perf record -D -e  cycles,instructions  -o perf.data.cycles.instructions ./test_perfo
-> $ perf report -i perf.data.cycles.instructions --stdio
-> # Events: 51K cycles
-> #
-> # Overhead  Command      Shared Object                      Symbol
-> # ........  .......  .................  ..........................
-> #
->     76.20%  test_perfo  test_perfo         [.] bad_perfo
->     22.99%  test_perfo  test_perfo         [.] good_perfo
->      0.10%  test_perfo  [kernel.kallsyms]  [k] _spin_lock
->      0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt
->   
-> :
-> # Events: 51K cycles
-> #
-> # Overhead  Command      Shared Object                      Symbol
-> # ........  .......  .................  ..........................
-> #
->     76.20%  test_perfo  test_perfo         [.] bad_perfo
->     22.99%  test_perfo  test_perfo         [.] good_perfo
->      0.10%  test_perfo  [kernel.kallsyms]  [k] _spin_lock
->      0.05%  test_perfo  [kernel.kallsyms]  [k] hrtimer_interrupt 
-> ################################################################
->
-> Thank for any help,
-> Michel Hummel
+SSd2ZSB3cml0dGVuIHRoZSB0ZXN0IHRvIHJ1biBiYWRfcGVyZm8gZmlyc3QsIGFuZCB0aGVuIGdv
+b2RfcGVyZm8gYW5kIG5vdyBvbmx5IGJhZF9wZXJmbyBpcyBpbiB0aGUgcmVwb3J0IDoNCg0KJCBw
+ZXJmIHJlY29yZCAtZSAgY3ljbGVzLGluc3RydWN0aW9ucyAgLW8gcGVyZi5kYXRhLmN5Y2xlcy5p
+bnN0cnVjdGlvbnMyIC4vdGVzdF9wZXJmbzINCiQgcGVyZiByZXBvcnQgLWkgcGVyZi5kYXRhLmN5
+Y2xlcy5pbnN0cnVjdGlvbnMyIC0tc3RkaW8NCiMgRXZlbnRzOiA4SyBjeWNsZXMNCiMNCiMgT3Zl
+cmhlYWQgIENvbW1hbmQgICAgICBTaGFyZWQgT2JqZWN0ICAgICAgICAgICAgICAgICAgICAgU3lt
+Ym9sDQojIC4uLi4uLi4uICAuLi4uLi4uICAuLi4uLi4uLi4uLi4uLi4uLiAgLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLg0KIw0KICAgIDk5LjUyJSAgdGVzdF9wZXJmbzIgIHRlc3RfcGVyZm8yICAg
+ICAgICBbLl0gYmFkX3BlcmZvDQogICAgIDAuMDYlICB0ZXN0X3BlcmZvMiAgW2tlcm5lbC5rYWxs
+c3ltc10gIFtrXSBjb3B5X3BhZ2VfYw0KICAgICAwLjA1JSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwu
+a2FsbHN5bXNdICBba10gYXBpY190aW1lcl9pbnRlcnJ1cHQNCiAgICAgMC4wNCUgIHRlc3RfcGVy
+Zm8yICBba2VybmVsLmthbGxzeW1zXSAgW2tdIHJ1bl90aW1lcl9zb2Z0aXJxDQoNCg0KIyBFdmVu
+dHM6IDhLIGluc3RydWN0aW9ucw0KIw0KIyBPdmVyaGVhZCAgQ29tbWFuZCAgICAgIFNoYXJlZCBP
+YmplY3QgICAgICAgICAgICAgICAgICAgU3ltYm9sDQojIC4uLi4uLi4uICAuLi4uLi4uICAuLi4u
+Li4uLi4uLi4uLi4uLiAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCiMNCiAgICA5OS44MiUgIHRl
+c3RfcGVyZm8yICB0ZXN0X3BlcmZvMiAgICAgICAgWy5dIGJhZF9wZXJmbw0KICAgICAwLjA0JSAg
+dGVzdF9wZXJmbzIgIGxkLTIuMTIuc28gICAgICAgICBbLl0gX2RsX2xvb2t1cF9zeW1ib2xfeA0K
+ICAgICAwLjAxJSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwua2FsbHN5bXNdICBba10gY2xlYXJfcGFn
+ZV9jDQogICAgIDAuMDElICB0ZXN0X3BlcmZvMiAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSB1cGRh
+dGVfd2FsbF90aW1lDQoNCg0KTWljaGVsIEh1bW1lbA0KVEhBTEVTIFNFUlZJQ0VTIFNTRS9EU0MN
+ClTDqWwgOiArMzMgKDApNSA2MiA4OCA3NiAyOQ0KUGFyYyB0ZWNobm9sb2dpcXVlIGR1IENhbmFs
+IC0gMyBhdmVudWUgZGUgbCdFdXJvcGUg4oCTIENhbXB1cyAyIELDonQuRCDigKIgMzE0MDAgVG91
+bG91c2Ug4oCiIEZyYW5jZSB3d3cudGhhbGVzZ3JvdXAuY29tDQoNCg0KDQotLS0tLU1lc3NhZ2Ug
+ZCdvcmlnaW5lLS0tLS0NCkRlwqA6IE1pY2hhZWwgRWxsZXJtYW4gW21haWx0bzptaWNoYWVsQGVs
+bGVybWFuLmlkLmF1XSANCkVudm95w6nCoDogamV1ZGkgMjQgbWFpIDIwMTIgMDI6MzMNCsOAwqA6
+IEhVTU1FTCBNaWNoZWwNCkNjwqA6IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnDQpP
+YmpldMKgOiBSZTogUGVyZiAyLjYuMzItMjIwLmVsNi54ODZfNjQgcHJvYmxlbSB3aGVuIHJlY29y
+ZGluZyAyIGNvdW50ZXJzDQoNCk9uIFdlZCwgMjAxMi0wNS0yMyBhdCAxODowNiArMDIwMCwgSFVN
+TUVMIE1pY2hlbCB3cm90ZToNCj4gSGVsbG8sDQo+IEkgYW0gdGVzdGluZyB0aGUgcGVyZiBjb21t
+YW5kIG9mIG15IG5ldyBjZW50b3MgNi4yIHNlcnZlciwgYW5kIEkgZG9uJ3QgdW5kZXJzdGFuZCBz
+b21ldGhpbmcuDQo+IA0KPiBJIHdyb3RlIGEgc2ltcGxlIHRlc3QgY2FzZSB3aGljaCBpcyBjYWxs
+aW5nIHR3byBmdW5jdGlvbnMuDQo+IFRoZSBmaXJzdCBvbmUgImdvb2RfcGVyZm8iICBkb2VzIHRo
+ZSBzYW1lIGFzIHRoZSBzZWNvbmQgImJhZF9wZXJmbyINCj4gYnV0IG1vcmUgZWZmaWNpZW50bHkg
+KGxlc3NlciBjYWNoZSBtaXNzIC4uLikuDQoNCkRvZXMgaXQgbWFrZSBhbnkgZGlmZmVyZW5jZSBp
+ZiB5b3UgcmV3cml0ZSB5b3VyIHRlc3QgdG8gcnVuIGJhZF9wZXJmbw0KZmlyc3QsIGFuZCB0aGVu
+IGdvb2RfcGVyZm8/DQoNCmNoZWVycw0KDQo=
