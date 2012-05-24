@@ -1,57 +1,68 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
-Date: Thu, 24 May 2012 08:57:13 -0600
-Message-ID: <4FBE4C49.7060703@gmail.com>
-References: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp> <1337819595.29765.9.camel@concordia> <25548_1337843693_4FBDDFED_25548_4972_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB956D2@THSONEA01CMS01P.one.grp>
+From: HUMMEL Michel <michel.hummel@thalesgroup.com>
+Subject: RE: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
+Date: Thu, 24 May 2012 18:19:05 +0200
+Message-ID: <15071_1337876344_4FBE5F78_15071_4976_1_932AC94CE5A51243A6F091BAFB3EE3E0028B23FD2E@THSONEA01CMS01P.one.grp>
+References: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
+ <1337819595.29765.9.camel@concordia>
+ <25548_1337843693_4FBDDFED_25548_4972_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB956D2@THSONEA01CMS01P.one.grp>
+ <4FBE4C49.7060703@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:42090 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932287Ab2EXO5R (ORCPT
+Received: from thsbbfxrt01p.thalesgroup.com ([192.54.144.131]:48896 "EHLO
+	thsbbfxrt01p.thalesgroup.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1757266Ab2EXQTP (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 24 May 2012 10:57:17 -0400
-Received: by dady13 with SMTP id y13so11425955dad.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 May 2012 07:57:17 -0700 (PDT)
-In-Reply-To: <25548_1337843693_4FBDDFED_25548_4972_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB956D2@THSONEA01CMS01P.one.grp>
+	Thu, 24 May 2012 12:19:15 -0400
+Received: from thsbbfxrt01p.thalesgroup.com (localhost.localdomain [127.0.0.1])
+	by localhost (Postfix) with SMTP id 24E7459A429
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 May 2012 18:19:04 +0200 (CEST)
+In-Reply-To: <4FBE4C49.7060703@gmail.com>
+Content-Language: fr-FR
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: HUMMEL Michel <michel.hummel@thalesgroup.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On 5/24/12 1:14 AM, HUMMEL Michel wrote:
-> I've written the test to run bad_perfo first, and then good_perfo and now only bad_perfo is in the report :
->
-> $ perf record -e  cycles,instructions  -o perf.data.cycles.instructions2 ./test_perfo2
-> $ perf report -i perf.data.cycles.instructions2 --stdio
-> # Events: 8K cycles
-> #
-> # Overhead  Command      Shared Object                     Symbol
-> # ........  .......  .................  .........................
-> #
->      99.52%  test_perfo2  test_perfo2        [.] bad_perfo
->       0.06%  test_perfo2  [kernel.kallsyms]  [k] copy_page_c
->       0.05%  test_perfo2  [kernel.kallsyms]  [k] apic_timer_interrupt
->       0.04%  test_perfo2  [kernel.kallsyms]  [k] run_timer_softirq
->
->
-> # Events: 8K instructions
-> #
-> # Overhead  Command      Shared Object                   Symbol
-> # ........  .......  .................  .......................
-> #
->      99.82%  test_perfo2  test_perfo2        [.] bad_perfo
->       0.04%  test_perfo2  ld-2.12.so         [.] _dl_lookup_symbol_x
->       0.01%  test_perfo2  [kernel.kallsyms]  [k] clear_page_c
->       0.01%  test_perfo2  [kernel.kallsyms]  [k] update_wall_time
->
-
-Can you try an upstream version of the perf binary? It should be able to 
-read the data file. You can use the perf-script command to dump the 
-events and look at what was recorded and which type of event (cycles vs 
-instructions). Adding -R to the record will get the timestamp added to 
-each sample and look at the delta time between samples. Maybe that will 
-give a clue.
-
-David
+VGhhbmtzIGZvciB5b3VyIGhlbHAsDQoNCkkgdHJpZWQgd2l0aCBhIHBlcmZfMy4yIGJpbmFyeSBi
+dXQgaXQgZ2l2ZXMgbWUgdGhlIHNhbWUgYmFkIHJlc3VsdHMuDQpJIFRyaWVkIHRvIHJlYWQgdGhl
+IG9sZCByZWNvcmQsIGFuZCBhbHNvIHRvIGdlbmVyYXRlIGEgbmV3IG9uZSB3aXRoIHRoZSAzLjIg
+YmluYXJ5Lg0KDQpJIGFtIG5vdCBzdXJlIHRvIHVuZGVyc3RhbmQgeW91ciBzdWdnZXN0aW9uIHdp
+dGggcGVyZiBzY3JpcHQgYW5kIHRoZSAtUiBvcHRpb24sIGNhbiB5b3UgZ2l2ZSBtZSBtb3JlIGRl
+dGFpbHMgcGxlYXNlIChzb3JyeSBmb3IgbXkgcG9vciBlbmdsaXNoKS4NCg0KDQoNCk1pY2hlbCBI
+dW1tZWwNClRIQUxFUyBTRVJWSUNFUyBTU0UvRFNDDQpUw6lsIDogKzMzICgwKTUgNjIgODggNzYg
+MjkNClBhcmMgdGVjaG5vbG9naXF1ZSBkdSBDYW5hbCAtIDMgYXZlbnVlIGRlIGwnRXVyb3BlIOKA
+kyBDYW1wdXMgMiBCw6J0LkQg4oCiIDMxNDAwIFRvdWxvdXNlIOKAoiBGcmFuY2Ugd3d3LnRoYWxl
+c2dyb3VwLmNvbQ0KDQoNCg0KLS0tLS1NZXNzYWdlIGQnb3JpZ2luZS0tLS0tDQpEZcKgOiBEYXZp
+ZCBBaGVybiBbbWFpbHRvOmRzYWhlcm5AZ21haWwuY29tXSANCkVudm95w6nCoDogamV1ZGkgMjQg
+bWFpIDIwMTIgMTY6NTcNCsOAwqA6IEhVTU1FTCBNaWNoZWwNCkNjwqA6IGxpbnV4LXBlcmYtdXNl
+cnNAdmdlci5rZXJuZWwub3JnDQpPYmpldMKgOiBSZTogUGVyZiAyLjYuMzItMjIwLmVsNi54ODZf
+NjQgcHJvYmxlbSB3aGVuIHJlY29yZGluZyAyIGNvdW50ZXJzDQoNCk9uIDUvMjQvMTIgMToxNCBB
+TSwgSFVNTUVMIE1pY2hlbCB3cm90ZToNCj4gSSd2ZSB3cml0dGVuIHRoZSB0ZXN0IHRvIHJ1biBi
+YWRfcGVyZm8gZmlyc3QsIGFuZCB0aGVuIGdvb2RfcGVyZm8gYW5kIG5vdyBvbmx5IGJhZF9wZXJm
+byBpcyBpbiB0aGUgcmVwb3J0IDoNCj4NCj4gJCBwZXJmIHJlY29yZCAtZSAgY3ljbGVzLGluc3Ry
+dWN0aW9ucyAgLW8gcGVyZi5kYXRhLmN5Y2xlcy5pbnN0cnVjdGlvbnMyIC4vdGVzdF9wZXJmbzIN
+Cj4gJCBwZXJmIHJlcG9ydCAtaSBwZXJmLmRhdGEuY3ljbGVzLmluc3RydWN0aW9uczIgLS1zdGRp
+bw0KPiAjIEV2ZW50czogOEsgY3ljbGVzDQo+ICMNCj4gIyBPdmVyaGVhZCAgQ29tbWFuZCAgICAg
+IFNoYXJlZCBPYmplY3QgICAgICAgICAgICAgICAgICAgICBTeW1ib2wNCj4gIyAuLi4uLi4uLiAg
+Li4uLi4uLiAgLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCj4g
+Iw0KPiAgICAgIDk5LjUyJSAgdGVzdF9wZXJmbzIgIHRlc3RfcGVyZm8yICAgICAgICBbLl0gYmFk
+X3BlcmZvDQo+ICAgICAgIDAuMDYlICB0ZXN0X3BlcmZvMiAgW2tlcm5lbC5rYWxsc3ltc10gIFtr
+XSBjb3B5X3BhZ2VfYw0KPiAgICAgICAwLjA1JSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwua2FsbHN5
+bXNdICBba10gYXBpY190aW1lcl9pbnRlcnJ1cHQNCj4gICAgICAgMC4wNCUgIHRlc3RfcGVyZm8y
+ICBba2VybmVsLmthbGxzeW1zXSAgW2tdIHJ1bl90aW1lcl9zb2Z0aXJxDQo+DQo+DQo+ICMgRXZl
+bnRzOiA4SyBpbnN0cnVjdGlvbnMNCj4gIw0KPiAjIE92ZXJoZWFkICBDb21tYW5kICAgICAgU2hh
+cmVkIE9iamVjdCAgICAgICAgICAgICAgICAgICBTeW1ib2wNCj4gIyAuLi4uLi4uLiAgLi4uLi4u
+LiAgLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQo+ICMNCj4gICAg
+ICA5OS44MiUgIHRlc3RfcGVyZm8yICB0ZXN0X3BlcmZvMiAgICAgICAgWy5dIGJhZF9wZXJmbw0K
+PiAgICAgICAwLjA0JSAgdGVzdF9wZXJmbzIgIGxkLTIuMTIuc28gICAgICAgICBbLl0gX2RsX2xv
+b2t1cF9zeW1ib2xfeA0KPiAgICAgICAwLjAxJSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwua2FsbHN5
+bXNdICBba10gY2xlYXJfcGFnZV9jDQo+ICAgICAgIDAuMDElICB0ZXN0X3BlcmZvMiAgW2tlcm5l
+bC5rYWxsc3ltc10gIFtrXSB1cGRhdGVfd2FsbF90aW1lDQo+DQoNCkNhbiB5b3UgdHJ5IGFuIHVw
+c3RyZWFtIHZlcnNpb24gb2YgdGhlIHBlcmYgYmluYXJ5PyBJdCBzaG91bGQgYmUgYWJsZSB0byAN
+CnJlYWQgdGhlIGRhdGEgZmlsZS4gWW91IGNhbiB1c2UgdGhlIHBlcmYtc2NyaXB0IGNvbW1hbmQg
+dG8gZHVtcCB0aGUgDQpldmVudHMgYW5kIGxvb2sgYXQgd2hhdCB3YXMgcmVjb3JkZWQgYW5kIHdo
+aWNoIHR5cGUgb2YgZXZlbnQgKGN5Y2xlcyB2cyANCmluc3RydWN0aW9ucykuIEFkZGluZyAtUiB0
+byB0aGUgcmVjb3JkIHdpbGwgZ2V0IHRoZSB0aW1lc3RhbXAgYWRkZWQgdG8gDQplYWNoIHNhbXBs
+ZSBhbmQgbG9vayBhdCB0aGUgZGVsdGEgdGltZSBiZXR3ZWVuIHNhbXBsZXMuIE1heWJlIHRoYXQg
+d2lsbCANCmdpdmUgYSBjbHVlLg0KDQpEYXZpZA0K
