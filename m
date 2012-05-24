@@ -1,60 +1,137 @@
 From: HUMMEL Michel <michel.hummel@thalesgroup.com>
 Subject: RE: Perf 2.6.32-220.el6.x86_64 problem when recording 2 counters
-Date: Thu, 24 May 2012 09:14:46 +0200
-Message-ID: <25548_1337843693_4FBDDFED_25548_4972_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB956D2@THSONEA01CMS01P.one.grp>
+Date: Thu, 24 May 2012 09:23:51 +0200
+Message-ID: <25544_1337844238_4FBDE20E_25544_549_1_932AC94CE5A51243A6F091BAFB3EE3E0028AB95713@THSONEA01CMS01P.one.grp>
 References: <14480_1337789222_4FBD0B26_14480_3035_2_932AC94CE5A51243A6F091BAFB3EE3E0028AB9506D@THSONEA01CMS01P.one.grp>
- <1337819595.29765.9.camel@concordia>
+ <87bole1k6w.fsf@sejong.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from thsbbfxrt01p.thalesgroup.com ([192.54.144.131]:38196 "EHLO
+Received: from thsbbfxrt01p.thalesgroup.com ([192.54.144.131]:38741 "EHLO
 	thsbbfxrt01p.thalesgroup.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750787Ab2EXHWt (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 24 May 2012 03:22:49 -0400
+	by vger.kernel.org with ESMTP id S1751013Ab2EXHYG convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 24 May 2012 03:24:06 -0400
 Received: from thsbbfxrt01p.thalesgroup.com (localhost.localdomain [127.0.0.1])
-	by localhost (Postfix) with SMTP id 1058E59A38F
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 May 2012 09:14:53 +0200 (CEST)
-In-Reply-To: <1337819595.29765.9.camel@concordia>
+	by localhost (Postfix) with SMTP id 84BD059A391
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 May 2012 09:23:58 +0200 (CEST)
+In-Reply-To: <87bole1k6w.fsf@sejong.aot.lge.com>
 Content-Language: fr-FR
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-SSd2ZSB3cml0dGVuIHRoZSB0ZXN0IHRvIHJ1biBiYWRfcGVyZm8gZmlyc3QsIGFuZCB0aGVuIGdv
-b2RfcGVyZm8gYW5kIG5vdyBvbmx5IGJhZF9wZXJmbyBpcyBpbiB0aGUgcmVwb3J0IDoNCg0KJCBw
-ZXJmIHJlY29yZCAtZSAgY3ljbGVzLGluc3RydWN0aW9ucyAgLW8gcGVyZi5kYXRhLmN5Y2xlcy5p
-bnN0cnVjdGlvbnMyIC4vdGVzdF9wZXJmbzINCiQgcGVyZiByZXBvcnQgLWkgcGVyZi5kYXRhLmN5
-Y2xlcy5pbnN0cnVjdGlvbnMyIC0tc3RkaW8NCiMgRXZlbnRzOiA4SyBjeWNsZXMNCiMNCiMgT3Zl
-cmhlYWQgIENvbW1hbmQgICAgICBTaGFyZWQgT2JqZWN0ICAgICAgICAgICAgICAgICAgICAgU3lt
-Ym9sDQojIC4uLi4uLi4uICAuLi4uLi4uICAuLi4uLi4uLi4uLi4uLi4uLiAgLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLg0KIw0KICAgIDk5LjUyJSAgdGVzdF9wZXJmbzIgIHRlc3RfcGVyZm8yICAg
-ICAgICBbLl0gYmFkX3BlcmZvDQogICAgIDAuMDYlICB0ZXN0X3BlcmZvMiAgW2tlcm5lbC5rYWxs
-c3ltc10gIFtrXSBjb3B5X3BhZ2VfYw0KICAgICAwLjA1JSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwu
-a2FsbHN5bXNdICBba10gYXBpY190aW1lcl9pbnRlcnJ1cHQNCiAgICAgMC4wNCUgIHRlc3RfcGVy
-Zm8yICBba2VybmVsLmthbGxzeW1zXSAgW2tdIHJ1bl90aW1lcl9zb2Z0aXJxDQoNCg0KIyBFdmVu
-dHM6IDhLIGluc3RydWN0aW9ucw0KIw0KIyBPdmVyaGVhZCAgQ29tbWFuZCAgICAgIFNoYXJlZCBP
-YmplY3QgICAgICAgICAgICAgICAgICAgU3ltYm9sDQojIC4uLi4uLi4uICAuLi4uLi4uICAuLi4u
-Li4uLi4uLi4uLi4uLiAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCiMNCiAgICA5OS44MiUgIHRl
-c3RfcGVyZm8yICB0ZXN0X3BlcmZvMiAgICAgICAgWy5dIGJhZF9wZXJmbw0KICAgICAwLjA0JSAg
-dGVzdF9wZXJmbzIgIGxkLTIuMTIuc28gICAgICAgICBbLl0gX2RsX2xvb2t1cF9zeW1ib2xfeA0K
-ICAgICAwLjAxJSAgdGVzdF9wZXJmbzIgIFtrZXJuZWwua2FsbHN5bXNdICBba10gY2xlYXJfcGFn
-ZV9jDQogICAgIDAuMDElICB0ZXN0X3BlcmZvMiAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSB1cGRh
-dGVfd2FsbF90aW1lDQoNCg0KTWljaGVsIEh1bW1lbA0KVEhBTEVTIFNFUlZJQ0VTIFNTRS9EU0MN
-ClTDqWwgOiArMzMgKDApNSA2MiA4OCA3NiAyOQ0KUGFyYyB0ZWNobm9sb2dpcXVlIGR1IENhbmFs
-IC0gMyBhdmVudWUgZGUgbCdFdXJvcGUg4oCTIENhbXB1cyAyIELDonQuRCDigKIgMzE0MDAgVG91
-bG91c2Ug4oCiIEZyYW5jZSB3d3cudGhhbGVzZ3JvdXAuY29tDQoNCg0KDQotLS0tLU1lc3NhZ2Ug
-ZCdvcmlnaW5lLS0tLS0NCkRlwqA6IE1pY2hhZWwgRWxsZXJtYW4gW21haWx0bzptaWNoYWVsQGVs
-bGVybWFuLmlkLmF1XSANCkVudm95w6nCoDogamV1ZGkgMjQgbWFpIDIwMTIgMDI6MzMNCsOAwqA6
-IEhVTU1FTCBNaWNoZWwNCkNjwqA6IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnDQpP
-YmpldMKgOiBSZTogUGVyZiAyLjYuMzItMjIwLmVsNi54ODZfNjQgcHJvYmxlbSB3aGVuIHJlY29y
-ZGluZyAyIGNvdW50ZXJzDQoNCk9uIFdlZCwgMjAxMi0wNS0yMyBhdCAxODowNiArMDIwMCwgSFVN
-TUVMIE1pY2hlbCB3cm90ZToNCj4gSGVsbG8sDQo+IEkgYW0gdGVzdGluZyB0aGUgcGVyZiBjb21t
-YW5kIG9mIG15IG5ldyBjZW50b3MgNi4yIHNlcnZlciwgYW5kIEkgZG9uJ3QgdW5kZXJzdGFuZCBz
-b21ldGhpbmcuDQo+IA0KPiBJIHdyb3RlIGEgc2ltcGxlIHRlc3QgY2FzZSB3aGljaCBpcyBjYWxs
-aW5nIHR3byBmdW5jdGlvbnMuDQo+IFRoZSBmaXJzdCBvbmUgImdvb2RfcGVyZm8iICBkb2VzIHRo
-ZSBzYW1lIGFzIHRoZSBzZWNvbmQgImJhZF9wZXJmbyINCj4gYnV0IG1vcmUgZWZmaWNpZW50bHkg
-KGxlc3NlciBjYWNoZSBtaXNzIC4uLikuDQoNCkRvZXMgaXQgbWFrZSBhbnkgZGlmZmVyZW5jZSBp
-ZiB5b3UgcmV3cml0ZSB5b3VyIHRlc3QgdG8gcnVuIGJhZF9wZXJmbw0KZmlyc3QsIGFuZCB0aGVu
-IGdvb2RfcGVyZm8/DQoNCmNoZWVycw0KDQo=
+
+-----Message d'origine-----
+De=A0: linux-perf-users-owner@vger.kernel.org [mailto:linux-perf-users-=
+owner@vger.kernel.org] De la part de Namhyung Kim
+Envoy=E9=A0: jeudi 24 mai 2012 02:45
+=C0=A0: HUMMEL Michel
+Cc=A0: linux-perf-users@vger.kernel.org
+Objet=A0: Re: Perf 2.6.32-220.el6.x86_64 problem when recording 2 count=
+ers
+
+Hi,
+
+On Wed, 23 May 2012 18:06:59 +0200, HUMMEL Michel wrote:
+> Hello,
+> I am testing the perf command of my new centos 6.2 server, and I don'=
+t understand something.
+> My Conf :
+> ################################################################
+> $ grep name /proc/cpuinfo
+> model name      : Intel(R) Xeon(R) CPU           E5620  @ 2.40GHz
+> $ uname -a
+> Linux xxxxxxxx 2.6.32-220.el6.x86_64 #1 SMP Tue Dec 6 19:48:22 GMT 20=
+11 x86_64 x86_64 x86_64 GNU/Linux
+> $ perf --version
+> perf version 2.6.32-220.el6.x86_64.debug
+> $ perf test
+>  1: vmlinux symtab matches kallsyms: FAILED!
+>
+>  2: detect open syscall event: Ok
+>  3: detect open syscall event on all cpus: Ok
+>  4: read samples using the mmap interface: Ok
+> ################################################################
+>
+> I wrote a simple test case which is calling two functions.
+> The first one "good_perfo"  does the same as the second "bad_perfo" b=
+ut more efficiently (lesser cache miss ...).
+>
+> Gprof profile confirms this :
+> ################################################################
+> $ gprof -p ./test_perfo
+> Flat profile:
+>
+> Each sample counts as 0.01 seconds.
+>   %   cumulative   self              self     total
+>  time   seconds   seconds    calls   s/call   s/call  name
+>  76.14     38.75    38.75        1    38.75    38.75  bad_perfo
+>  23.70     50.81    12.06        1    12.06    12.06  good_perfo
+> ################################################################
+>
+> but perf don't want to give me the good answer when I asking for two =
+events : cycles and instructions  :
+> ################################################################
+> $ perf record -e  cycles,instructions  -o perf.data.cycles.instructio=
+ns ./test_perfo
+> $ perf report -i perf.data.cycles.instructions --stdio
+> # Events: 5K cycles
+> #
+
+One thing I noticed is the number of events in this run is much smaller
+than others (5K to 51K). Probably it can be a reason of the inaccuracy,
+but I'm not sure. Maybe increasing sampling freq (-F) or adding the 'u'
+modifier on events can help.
+
+Thanks,
+Namhyung
+
+
+
+
+Increasing the frequency doesn't change the profile :
+
+$  perf record -F100000 -e  cycles,instructions  -o perf.data.cycles.in=
+structions3 ./test_perfo
+
+ [ perf record: Captured and wrote 2.015 MB perf.data.cycles.instructio=
+ns3 (~88048 samples) ]
+Processed 0 events and LOST 66!
+
+Check IO/CPU overload!
+
+$ perf report -i perf.data.cycles.instructions3 --stdio
+Processed 0 events and LOST 66!
+
+Check IO/CPU overload!
+
+# Events: 22K cycles
+#
+# Overhead  Command      Shared Object                            Symbo=
+l
+# ........  .......  .................  ...............................=
+=2E
+#
+    95.85%  test_perfo  test_perfo         [.] good_perfo
+     2.73%  test_perfo  [kernel.kallsyms]  [k] clear_page_c
+     0.23%  test_perfo  [kernel.kallsyms]  [k] page_fault
+     0.06%  test_perfo  [kernel.kallsyms]  [k] __alloc_pages_nodemask
+
+# Events: 21K instructions
+#
+# Overhead  Command      Shared Object                       Symbol
+# ........  .......  .................  ...........................
+#
+    99.71%  test_perfo  test_perfo         [.] good_perfo
+     0.03%  test_perfo  [kernel.kallsyms]  [k] clear_page_c
+     0.03%  test_perfo  [kernel.kallsyms]  [k] get_page_from_freelist
+     0.02%  test_perfo  [kernel.kallsyms]  [k] handle_mm_fault
+
+#
+# (For a higher level overview, try: perf report --sort comm,dso)
+#
+
+
+Michel Hummel
