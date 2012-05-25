@@ -1,41 +1,63 @@
 From: Vince Weaver <vweaver1@eecs.utk.edu>
 Subject: Re: perf event "instructions"
-Date: Thu, 24 May 2012 23:07:05 -0400
-Message-ID: <alpine.DEB.2.00.1205242304100.7065@cl320.icl.utk.edu>
-References: <loom.20120525T044121-415@post.gmane.org>
+Date: Fri, 25 May 2012 09:57:52 -0400
+Message-ID: <alpine.DEB.2.00.1205250954260.17420@cl320.icl.utk.edu>
+References: <loom.20120525T044121-415@post.gmane.org> <alpine.DEB.2.00.1205242304100.7065@cl320.icl.utk.edu> <139CD8A4-506E-46DF-BB18-6378576A90FC@bu.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: multipart/mixed;
+	boundary="614521987-199609940-1337954272=:17420"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from ch1ehsobe005.messaging.microsoft.com ([216.32.181.185]:24736
+Received: from ch1ehsobe003.messaging.microsoft.com ([216.32.181.183]:57645
 	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753370Ab2EYDH1 (ORCPT
+	by vger.kernel.org with ESMTP id S1751227Ab2EYN6A (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 24 May 2012 23:07:27 -0400
-In-Reply-To: <loom.20120525T044121-415@post.gmane.org>
+	Fri, 25 May 2012 09:58:00 -0400
+In-Reply-To: <139CD8A4-506E-46DF-BB18-6378576A90FC@bu.edu>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Hank <hankendi@bu.edu>
+To: Can Hankendi <hankendi@bu.edu>
 Cc: linux-perf-users@vger.kernel.org
 
-On Thu, 24 May 2012, Hank wrote:
+--614521987-199609940-1337954272=:17420
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
 
-> I've collected number of instructions using predefined event named
-> "instructions" and also collected using the raw event (register and unit mask)
-> for instructions retired. Although they are similar, outputs are not the exactly
-> the same. 
-> 
-> Can anyone explain me what is the built-in event "instructions" measuring? If it
-> is the number of retired instructions, then what might be the reason for getting
-> different output when I use the raw event number?
+On Thu, 24 May 2012, Can Hankendi wrote:
 
-what processor are you running on?  What raw event are you using?
-what version of Linux?
+> Processor is AMD 10H family processor and I'm using this raw event (fro=
+m AMD
+> Bios and Kernel Developers Guide):
+>=20
+> EventSelect 0C0h Retired Instructions=A0
+>=20
+> The number of instructions retired (execution completed and architectur=
+al
+> state updated). This count includes exceptions and interrupts - each
+> exception or interrupt is counted as one instruction.
+>=20
+> Linux is Ubuntu 12.04, with 3.2.0 kernel.=A0
+>=20
+> I'm collecting system-wide data with perf stat command. I'm well aware =
+about
+> the variations in retired instructions. However, I'm collecting the
+> "instructions" and raw event 0x0C0h for the same session and ending up =
+with
+> different results. So I assume it is not about variations, it's more ab=
+out
+> how the built-in event is configured in perf tool.=A0
 
-Are you specifying things like user-only?
+so you're saying you are doing something like:
+   perf stat -e instructions:u,rc0:u  my_job
 
-There's enough variation in retired instruction counts that entire papers 
-have been written on it.
-   
-http://web.eecs.utk.edu/~vweaver1/projects/deterministic/fhpm2010_weaver.pdf
+and getting different values for the results?
+You keep giving not enough info to diagnose this problem.  What's your
+*exact* perf command?
+
+The only way to find out what the kernel is using is to check the source.
+(I won't comment on how great a feature I think that is).
+In arch/x86/kernel/cpu/perf_event_amd.c you can find
+  [PERF_COUNT_HW_INSTRUCTIONS]                  =3D 0x00c0,
 
 Vince
+
+--614521987-199609940-1337954272=:17420--
