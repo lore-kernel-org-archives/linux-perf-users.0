@@ -1,42 +1,50 @@
-From: Vince Weaver <vweaver1@eecs.utk.edu>
-Subject: Re: Questions about cycle events
-Date: Mon, 28 May 2012 09:04:17 -0400
-Message-ID: <alpine.LRH.2.00.1205280901530.44209@ig.icl.utk.edu>
-References: <CAB_n8zJ5DjXF=qbVYNWr8yHUhB2dNB3gHru=nJv490tcdtdfFg@mail.gmail.com>
+From: Joy Arulraj <prabhu.link@gmail.com>
+Subject: Is sampling in perf spread across the program ?
+Date: Wed, 30 May 2012 02:19:01 +0000 (UTC)
+Message-ID: <loom.20120530T040734-241@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from va3ehsobe001.messaging.microsoft.com ([216.32.180.11]:29469
-	"EHLO va3outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754606Ab2E1NEV (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:56131 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756197Ab2E3CTM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 28 May 2012 09:04:21 -0400
-In-Reply-To: <CAB_n8zJ5DjXF=qbVYNWr8yHUhB2dNB3gHru=nJv490tcdtdfFg@mail.gmail.com>
+	Tue, 29 May 2012 22:19:12 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1SZYVC-0004Np-7Z
+	for linux-perf-users@vger.kernel.org; Wed, 30 May 2012 04:19:10 +0200
+Received: from angua.cs.wisc.edu ([128.105.7.45])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 May 2012 04:19:10 +0200
+Received: from prabhu.link by angua.cs.wisc.edu with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 May 2012 04:19:10 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Yipeng Huang <yipeng@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Mon, 28 May 2012, Yipeng Huang wrote:
+Hi all,
 
-> Have a couple questions about how the cycle events in Perf are defined.
-> 
-> 1. Is the perf stat -e cycles event a good equivalent for PAPI_TOT_CYC
-> (PAPI's total cycles event)?
+ I understand that sampling in perf is done by raising interrupts based on user
+specified sampling rate. Also, though the sampling rate can change dynamically
+over the execution, the overall sampling rate is maintained to closely match the
+user specified sampling rate.
 
-usually.
+ But, will the samples collected by repeatedly sampling the same program differ
+across runs ?
 
-> 2. Is there an overlap in counting between the cycles event and the
-> resource stall event r01a2 or are they distinct?
+ Like, if the sampling rate is "collect 1 sample every 500 events". And say in
+run 1 of a program, perf collects the 500th, 1000th, 1500th .. events. And say
+in run 2 of the same program with same sampling rate, perf collects the 499th,
+1002th, 1501th .. events. Will Perf ever sample some midway events like 250th or
+750th events in the program with the same sampling rate ? 
 
-what processor is this full?  In general cycles only stops if the CPU is 
-explicitly halted (with a halt instruction), it doesn't stop for stalls.
+ ie. Is the sampling *spread* over the entire program across multiple runs ? If
+not, how can we achieve something like that - maybe some initial offset after
+which perf starts collecting events ?
 
-> 3. How can I find out how other particular events are defined? Is
-> there a reference available?
-
-do you mean how do you tell which events perf uses?  You need to check
-the kernel sources. For example the AMD event definitions are in
-  arch/x86/kernel/cpu/perf_event_amd.c
-
-Vince
+Thanks,
+Joy 
