@@ -1,18 +1,18 @@
 From: David Ahern <dsahern@gmail.com>
 Subject: Re: [GIT PULL 00/15] perf/urgent fixes
-Date: Wed, 06 Jun 2012 16:50:31 -0600
-Message-ID: <4FCFDEB7.8000101@gmail.com>
+Date: Wed, 06 Jun 2012 21:52:07 -0600
+Message-ID: <4FD02567.20505@gmail.com>
 References: <1338588999-32509-1-git-send-email-acme@infradead.org> <20120606065014.GB17808@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:65359 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753452Ab2FFWui (ORCPT
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:45159 "EHLO
+	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752672Ab2FGDwS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 6 Jun 2012 18:50:38 -0400
+	Wed, 6 Jun 2012 23:52:18 -0400
 In-Reply-To: <20120606065014.GB17808@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -27,10 +27,6 @@ On 6/6/12 12:50 AM, Ingo Molnar wrote:
 =80=98perf_atoll=E2=80=99 [-Werror=3Dimplicit-function-declaration]
 > bench/mem-memcpy.c:193:2: error: nested extern declaration of =E2=80=98=
 perf_atoll=E2=80=99 [-Werror=3Dnested-externs]
-
-I just created a new F17-x86_64 VM and Arnaldo's perf/urgent branch=20
-builds fine (which includes this patch).
-
 >
 > Which appears to be a result of:
 >
@@ -38,21 +34,20 @@ builds fine (which includes this patch).
 >
 > Those declarations were not so unused on this fresh install of
 > Fedora 17.
+>
+> Luckily, the offending commit was the last one in the series, so
+> I merged your tree at cb7225f, excluding only the buggy commit.
+>
+> Thanks,
+>
+> 	Ingo
 
-32-bit? 64-bit?
 
-This would fix your compile problem, but I have no way of verifying=20
-since it builds fine for me.
+I see the problem now: I had a stale util/string.h file which was=20
+removed by e206d556. Local problem (stupidity) as to why. Sorry for the=
+=20
+noise.
 
-diff --git a/tools/perf/bench/mem-memcpy.c b/tools/perf/bench/mem-memcp=
-y.c
-index 7155722..535b4b8 100644
---- a/tools/perf/bench/mem-memcpy.c
-+++ b/tools/perf/bench/mem-memcpy.c
-@@ -10,6 +10,7 @@
-  #include "../util/util.h"
-  #include "../util/parse-options.h"
-  #include "../util/header.h"
-+#include "../util/string.h"
-  #include "bench.h"
-  #include "mem-memcpy-arch.h"
+Arnaldo: please drop the patch.
+
+David
