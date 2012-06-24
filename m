@@ -1,54 +1,377 @@
 From: Alexis Berlemont <alexis.berlemont@gmail.com>
-Subject: Minor fix
-Date: Mon, 25 Jun 2012 00:33:43 +0200
-Message-ID: <CAMesUR4=wH-NSJ+ovoPFHgcQcGcr7Vw2OE5p_vXOqWbbwNqBBQ@mail.gmail.com>
+Subject: Proposal of a python script: latency.py
+Date: Mon, 25 Jun 2012 01:31:50 +0200
+Message-ID: <CAMesUR4OJUNwg8wdz+oTTpQ2bMs_YE+Y=dFd7oKGsmgoduQpeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/mixed; boundary=f46d043c80760f1e5c04c34045ba
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:63063 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750967Ab2FXWdp (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:55703 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750776Ab2FXXbw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 24 Jun 2012 18:33:45 -0400
-Received: by wibhq12 with SMTP id hq12so2196389wib.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Jun 2012 15:33:43 -0700 (PDT)
+	Sun, 24 Jun 2012 19:31:52 -0400
+Received: by weyu7 with SMTP id u7so2412270wey.19
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Jun 2012 16:31:50 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
+--f46d043c80760f1e5c04c34045ba
+Content-Type: text/plain; charset=ISO-8859-1
+
 Hi,
 
-Has anyway try to compile perf at the latest tag (v3.5-rc4) or on
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git ?
+Here is a little script which mainly works with tracepoints events. It
+measures time intervals between events occurences.
 
-I did not manage to do it without this little fix.
+The script latency.py analyzes tracepoints events saved into a
+recorded perf archive. Events (which have been passed as argument to
+the script) are sorted according to their running CPUs and their
+timestamps. Then, the script computes time intervals between events
+which occurred in the specified order.
 
-Did I miss something obvious?
+Basic statistics (min, avg, max) and (optionally) histograms are displayed.
+
+You will find some small test-cases (beware the record was executed on
+a qemu system).
+
+Do you consider the script interesting enough?
 
 Alexis.
 
+# perf script -s /libexec/perf-core/scripts/python/latency.py
+events=irq:irq_handler_entry,irq:irq_handler_exit,irq:softirq_entry
+# ========
+# captured on: Sun Jun 24 23:27:06 2012
+# hostname : perf-test
+# os release : 3.5.0-rc3
+# perf version : 3.5.0-rc3
+# arch : x86_64
+# nrcpus online : 1
+# nrcpus avail : 1
+# cpudesc : QEMU Virtual CPU version 1.0
+# total memory : 765632 kB
+# cmdline : /bin/perf record -e irq:irq_handler_entry -e
+irq:irq_handler_exit -e irq:softirq_entry -a sleep 10
+# event : name = irq:irq_handler_entry, type = 2, config = 0x19,
+config1 = 0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 5 }
+# event : name = irq:irq_handler_exit, type = 2, config = 0x18,
+config1 = 0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 6 }
+# event : name = irq:softirq_entry, type = 2, config = 0x17, config1 =
+0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 7 }
+# HEADER_CPU_TOPOLOGY info available, use -I to display
+# ========
+#
+Install the audit-libs-python package to get syscall names
+# === Legend ===
+# L00: irq:irq_handler_entry -> irq:irq_handler_exit
+# L01: irq:irq_handler_exit -> irq:softirq_entry
+# L02: total
+# === Statistics: min avg max (ns) ===
+# cpus:            0            |           all
+ L00  : 0027782 0089626 0143788 | 0027782 0089626 0143788
+ L01  : 0008346 0056006 0122153 | 0008346 0056006 0122153
+ L02  : 0036128 0145632 0186212 | 0036128 0145632 0186212
 
-From d2f83b6f0a7a3805f640e722f2c6ccfcdbbd91fc Mon Sep 17 00:00:00 2001
-From: Alexis Berlemont <alexis.berlemont@gmail.com>
-Date: Mon, 25 Jun 2012 00:26:08 +0200
-Subject: [PATCH] perf: minor compilation fix (wrong include path)
+# perf script -s /libexec/perf-core/scripts/python/latency.py
+events=irq:irq_handler_entry,irq:irq_handler_exit,irq:softirq_entry
+histo=10000,10
+# ========
+# captured on: Sun Jun 24 23:27:06 2012
+# hostname : perf-test
+# os release : 3.5.0-rc3
+# perf version : 3.5.0-rc3
+# arch : x86_64
+# nrcpus online : 1
+# nrcpus avail : 1
+# cpudesc : QEMU Virtual CPU version 1.0
+# total memory : 765632 kB
+# cmdline : /bin/perf record -e irq:irq_handler_entry -e
+irq:irq_handler_exit -e irq:softirq_entry -a sleep 10
+# event : name = irq:irq_handler_entry, type = 2, config = 0x19,
+config1 = 0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 5 }
+# event : name = irq:irq_handler_exit, type = 2, config = 0x18,
+config1 = 0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 6 }
+# event : name = irq:softirq_entry, type = 2, config = 0x17, config1 =
+0x0, config2 = 0x0, excl_usr = 0, excl_kern = 0, id = { 7 }
+# HEADER_CPU_TOPOLOGY info available, use -I to display
+# ========
+#
+Install the audit-libs-python package to get syscall names
+# === Legend ===
+# L00: irq:irq_handler_entry -> irq:irq_handler_exit
+# L01: irq:irq_handler_exit -> irq:softirq_entry
+# L02: total
+# === Statistics: min avg max (ns) ===
+# cpus:            0            |           all
+ L00  : 0027782 0089626 0143788 | 0027782 0089626 0143788
+ L01  : 0008346 0056006 0122153 | 0008346 0056006 0122153
+ L02  : 0036128 0145632 0186212 | 0036128 0145632 0186212
+# === Histograms: bucket:10000ns ===
+ L00 \ cpus:  0   | all
+00000000000: 0000 | 0000
+00000010000: 0000 | 0000
+00000020000: 0002 | 0002
+00000030000: 0001 | 0001
+00000040000: 0000 | 0000
+00000050000: 0000 | 0000
+00000060000: 0000 | 0000
+00000070000: 0004 | 0004
+00000080000: 0010 | 0010
+00000090000: 0002 | 0002
+ overflows : 0008 | 0008
+  totals   : 0027 | 0027
+ L01 \ cpus:  0   | all
+00000000000: 0002 | 0002
+00000010000: 0000 | 0000
+00000020000: 0013 | 0013
+00000030000: 0001 | 0001
+00000040000: 0000 | 0000
+00000050000: 0000 | 0000
+00000060000: 0000 | 0000
+00000070000: 0000 | 0000
+00000080000: 0000 | 0000
+00000090000: 0009 | 0009
+ overflows : 0002 | 0002
+  totals   : 0027 | 0027
+ L02 \ cpus:  0   | all
+00000000000: 0000 | 0000
+00000010000: 0000 | 0000
+00000020000: 0000 | 0000
+00000030000: 0001 | 0001
+00000040000: 0001 | 0001
+00000050000: 0000 | 0000
+00000060000: 0000 | 0000
+00000070000: 0000 | 0000
+00000080000: 0000 | 0000
+00000090000: 0000 | 0000
+ overflows : 0025 | 0025
+  totals   : 0027 | 0027
 
----
- tools/perf/util/evsel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--f46d043c80760f1e5c04c34045ba
+Content-Type: application/octet-stream;
+	name="0001-perf-python-import-a-latency-calculation-python-scri.patch"
+Content-Disposition: attachment;
+	filename="0001-perf-python-import-a-latency-calculation-python-scri.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_h3urec180
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9f6cebd..d5491f1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -15,7 +15,7 @@
- #include "cpumap.h"
- #include "thread_map.h"
- #include "target.h"
--#include "../../include/linux/perf_event.h"
-+#include "../../../include/linux/perf_event.h"
-
- #define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
- #define GROUP_FD(group_fd, cpu) (*(int *)xyarray__entry(group_fd, cpu, 0))
--- 
-1.7.10
+RnJvbSA5MDAyYzUwZTQ3YWI0OTY5MGQzMjE5MGUzMDU5NDMxY2IzZjQ2OGM3IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbGV4aXMgQmVybGVtb250IDxhbGV4aXMuYmVybGVtb250QGdt
+YWlsLmNvbT4KRGF0ZTogTW9uLCAyNSBKdW4gMjAxMiAwMDo1NDo0OSArMDIwMApTdWJqZWN0OiBb
+UEFUQ0hdIHBlcmYtcHl0aG9uOiBpbXBvcnQgYSBsYXRlbmN5IGNhbGN1bGF0aW9uIHB5dGhvbiBz
+Y3JpcHQgZm9yCiBwZXJmCgpUaGUgc2NyaXB0IGxhdGVuY3kucHkgYW5hbHl6ZXMgdHJhY2Vwb2lu
+dHMgZXZlbnRzIHNhdmVkIGludG8gYQpyZWNvcmRlZCBwZXJmIGFyY2hpdmUuIEV2ZW50cyAod2hp
+Y2ggaGF2ZSBiZWVuIHBhc3NlZCBhcwphcmd1bWVudCB0byB0aGUgc2NyaXB0KSBhcmUgc29ydGVk
+IGFjY29yZGluZyB0byB0aGVpciBydW5uaW5nCkNQVXMgYW5kIHRoZWlyIHRpbWVzdGFtcHMuIFRo
+ZW4sIHRoZSBzY3JpcHQgY29tcHV0ZXMgdGltZSBpbnRlcnZhbHMKYmV0d2VlbiBldmVudHMgd2hp
+Y2ggb2NjdXJyZWQgaW4gdGhlIHNwZWNpZmllZCBvcmRlci4KCkJhc2ljIHN0YXRpc3RpY3MgKG1p
+biwgYXZnLCBtYXgpIGFuZCAob3B0aW9uYWxseSkgaGlzdG9ncmFtcyBhcmUKZGlzcGxheWVkLgot
+LS0KIHRvb2xzL3BlcmYvc2NyaXB0cy9weXRob24vYmluL2xhdGVuY3kgfCAgICA1ICsKIHRvb2xz
+L3BlcmYvc2NyaXB0cy9weXRob24vbGF0ZW5jeS5weSAgfCAgMzM1ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzNDAgaW5zZXJ0aW9ucygrKQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvc2NyaXB0cy9weXRob24vYmluL2xhdGVuY3kKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3NjcmlwdHMvcHl0aG9uL2xhdGVuY3kucHkKCmRp
+ZmYgLS1naXQgYS90b29scy9wZXJmL3NjcmlwdHMvcHl0aG9uL2Jpbi9sYXRlbmN5IGIvdG9vbHMv
+cGVyZi9zY3JpcHRzL3B5dGhvbi9iaW4vbGF0ZW5jeQpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAwMDAwMDAwLi5lMTQwNjIwCi0tLSAvZGV2L251bGwKKysrIGIvdG9vbHMvcGVyZi9zY3JpcHRz
+L3B5dGhvbi9iaW4vbGF0ZW5jeQpAQCAtMCwwICsxLDUgQEAKKyMhL2Jpbi9iYXNoCisjIGRlc2Ny
+aXB0aW9uOiBkaXNwbGF5IGxhdGVuY2llcyBiZXR3ZWVuIGV2ZW50cworIyBhcmdzOiBldmVudHM9
+ZXZ0MCxldnQxLC4uLiBbaGlzdG9bPWJ1Y2tldC1uc2VjcyxidWNrZXRzLWNvdW50XV0gW2xpbWl0
+PWxpbWl0LW5zZWNzXQorCitwZXJmIHNjcmlwdCAtcyAiJFBFUkZfRVhFQ19QQVRIIi9zY3JpcHRz
+L3B5dGhvbi9sYXRlbmN5LnB5ICRACmRpZmYgLS1naXQgYS90b29scy9wZXJmL3NjcmlwdHMvcHl0
+aG9uL2xhdGVuY3kucHkgYi90b29scy9wZXJmL3NjcmlwdHMvcHl0aG9uL2xhdGVuY3kucHkKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNDM0ZTY2YQotLS0gL2Rldi9udWxsCisr
+KyBiL3Rvb2xzL3BlcmYvc2NyaXB0cy9weXRob24vbGF0ZW5jeS5weQpAQCAtMCwwICsxLDMzNSBA
+QAorCitpbXBvcnQgb3MKK2ltcG9ydCBzeXMKKworc3lzLnBhdGguYXBwZW5kKG9zLmVudmlyb25b
+J1BFUkZfRVhFQ19QQVRIJ10gKyBcCisJJy9zY3JpcHRzL3B5dGhvbi9QZXJmLVRyYWNlLVV0aWwv
+bGliL1BlcmYvVHJhY2UnKQorCitpbXBvcnQgVXRpbCAKKworIyAtLS0gRXZlbnRzIG1hbmFnZW1l
+bnQgcGFydCAtLS0KKworY2xhc3MgRXZlbnQ6CisgICAgQVJHUyA9ICgnbmFtZScsICdjb250ZXh0
+JywgJ2NwdScsICduc2VjcycsICdwaWQnLCAnY29tbScpCisKKyAgICBkZWYgX19pbml0X18oc2Vs
+ZiwgKmFyZ3MsICoqa2V5d29yZHMpOgorICAgICAgICAjIEJhc2ljIGNoZWNraW5nCisgICAgICAg
+IGFzc2VydCBsZW4oYXJncykgPT0gbGVuKEV2ZW50LkFSR1MpCisKKyAgICAgICAgIyBTZXQgdGhl
+IG1hbmRhdG9yeSBhcmd1bWVudHMuLi4KKyAgICAgICAgZm9yIGksIGFyZyBpbiBlbnVtZXJhdGUo
+RXZlbnQuQVJHUyk6CisgICAgICAgICAgICBzZXRhdHRyKHNlbGYsIGFyZywgYXJnc1tpXSkKKwor
+ICAgICAgICAjIC4uLmFuZCB0aGUgb3B0aW9uYWwgb25lcyAob25lIG5ldmVyIGtub3dzKQorICAg
+ICAgICBmb3Iga2V5LCB2YWx1ZSBpbiBrZXl3b3Jkcy5pdGVyaXRlbXMoKToKKyAgICAgICAgICAg
+IHNldGF0dHIoc2VsZiwga2V5LCB2YWx1ZSkKKworY2xhc3MgRXZlbnRzOgorICAgIGRlZiBfX2lu
+aXRfXyhzZWxmKToKKyAgICAgICAgc2VsZi5fZXZlbnRzID0ge30KKworICAgIGRlZiBhcHBlbmQo
+c2VsZiwgb3RoZXIpOgorICAgICAgICBjcHUgPSBvdGhlci5jcHUKKyAgICAgICAgaWYgY3B1IG5v
+dCBpbiBzZWxmLl9ldmVudHM6CisgICAgICAgICAgICBzZWxmLl9ldmVudHNbY3B1XSA9IFtdCisg
+ICAgICAgIHNlbGYuX2V2ZW50c1tjcHVdLmFwcGVuZChvdGhlcikKKworICAgIGRlZiBzb3J0KHNl
+bGYpOgorICAgICAgICBmb3IgY3B1IGluIHNlbGYuX2V2ZW50czoKKyAgICAgICAgICAgIHNlbGYu
+X2V2ZW50c1tjcHVdLnNvcnQobGFtYmRhIGEsYjogY21wKGEubnNlY3MsIGIubnNlY3MpKQorCisg
+ICAgZGVmIGdldF9jcHVzKHNlbGYpOgorICAgICAgICByZXR1cm4gc2VsZi5fZXZlbnRzLmtleXMo
+KQorCisgICAgZGVmIGdldF9ldmVudHMoc2VsZiwgY3B1KToKKyAgICAgICAgcmV0dXJuIHNlbGYu
+X2V2ZW50c1tjcHVdCisKKyMgLS0tIExhdGVuY2llcyBnZW5lcmF0aW9uIHBhcnQgLS0tCisKK2Ns
+YXNzIExhdGVuY2llczoKKyAgICBkZWYgX19pbml0X18oc2VsZiwgbmFtZXMsIGxpbWl0LCBldmVu
+dHMgPSBOb25lLCBsYXRlbmNpZXMgPSBOb25lKToKKyAgICAgICAgc2VsZi5saW1pdCA9IGxpbWl0
+CisgICAgICAgIGlmIGxhdGVuY2llcyBpcyBOb25lOgorICAgICAgICAgICAgc2VsZi5fcHJlc2V0
+X25hbWVzKG5hbWVzKQorICAgICAgICAgICAgc2VsZi5fcHJlc2V0X3ZhbHVlcyhuYW1lcywgZXZl
+bnRzKQorICAgICAgICBlbHNlOgorICAgICAgICAgICAgc2VsZi5uYW1lcyA9IG5hbWVzCisgICAg
+ICAgICAgICBzZWxmLmxhdGVuY2llcyA9IFtsWzpdIGZvciBsIGluIGxhdGVuY2llc10KKworICAg
+IGRlZiBfX2FkZF9fKHNlbGYsIG90aGVyKToKKyAgICAgICAgcmVzdWx0ID0gTGF0ZW5jaWVzKHNl
+bGYubmFtZXMsIHNlbGYubGltaXQsIGxhdGVuY2llcyA9IHNlbGYubGF0ZW5jaWVzKQorICAgICAg
+ICByZXN1bHQgKz0gb3RoZXIKKyAgICAgICAgcmV0dXJuIHJlc3VsdAorCisgICAgZGVmIF9faWFk
+ZF9fKHNlbGYsIG90aGVyKToKKyAgICAgICAgZm9yIGksIHZhbHVlcyBpbiBlbnVtZXJhdGUob3Ro
+ZXIubGF0ZW5jaWVzKToKKyAgICAgICAgICAgIHNlbGYubGF0ZW5jaWVzW2ldICs9IHZhbHVlcwor
+ICAgICAgICByZXR1cm4gc2VsZgorCisgICAgZGVmIF9fZ2V0aXRlbV9fKHNlbGYsIG5hbWUpOgor
+ICAgICAgICBpbmRleCA9IHNlbGYubmFtZXMuaW5kZXgobmFtZSkKKyAgICAgICAgcmV0dXJuIHNl
+bGYubGF0ZW5jaWVzW2luZGV4XQorCisgICAgZGVmIF9wcmVzZXRfbmFtZXMoc2VsZiwgbmFtZXMp
+OgorICAgICAgICAjIFNldCB0aGUgbGF0ZW5jeSBuYW1lcworICAgICAgICBzZWxmLm5hbWVzID0g
+W25hbWVzW2ldICsgJyAtPiAnICsgbmFtZXNbaSArIDFdIAorICAgICAgICAgICAgICAgICAgICAg
+IGZvciBpIGluIHhyYW5nZShsZW4obmFtZXMpIC0gMSldICsgWyd0b3RhbCddCisKKyAgICAgICAg
+IyBCdWlsZCBhIG1hcCB0byB0cmFuc2xhdGUgZXZlbnQgbmFtZXMgdG8gaW5kZXhlcworICAgICAg
+ICBuYW1lcyA9IFtuLnJlcGxhY2UoJzonLCAnX18nKSBmb3IgbiBpbiBuYW1lc10KKyAgICAgICAg
+c2VsZi5uYW1lX3RvX2luZGV4ID0gZGljdCgobiwgaSkgZm9yIGksIG4gaW4gZW51bWVyYXRlKG5h
+bWVzKSkKKworICAgIGRlZiBfcHJlc2V0X3ZhbHVlcyhzZWxmLCBuYW1lcywgZXZlbnRzKToKKyAg
+ICAgICAgZXZlbnRzX2NvdW50ID0gbGVuKG5hbWVzKQorICAgICAgICBzZWxmLmxhdGVuY2llcyA9
+IFtbXSBmb3IgaSBpbiB4cmFuZ2UoZXZlbnRzX2NvdW50KV0KKworICAgICAgICBjdXJyZW50X2lu
+ZGV4ID0gMAorICAgICAgICBpbmRleF90b19uc2VjcyA9IHt9CisKKyAgICAgICAgZm9yIGV2ZW50
+IGluIGV2ZW50czoKKyAgICAgICAgICAgIGlmIGV2ZW50Lm5hbWUgbm90IGluIHNlbGYubmFtZV90
+b19pbmRleC5rZXlzKCk6CisgICAgICAgICAgICAgICAgY29udGludWUKKworICAgICAgICAgICAg
+IyBHZXQgdGhlIGluZGV4IG9mIHRoZSBldmVudCBhY2NvcmRpbmcgdG8gdGhlIG9yZGVyCisgICAg
+ICAgICAgICAjIGluZGljYXRlZCBieSB0aGUgdXNlcgorICAgICAgICAgICAgaW5kZXggPSBzZWxm
+Lm5hbWVfdG9faW5kZXhbZXZlbnQubmFtZV0KKworICAgICAgICAgICAgbmV4dF9ldmVudCA9IEZh
+bHNlCisgICAgICAgICAgICBuZXh0X2N5Y2xlID0gVHJ1ZQorICAgICAgICAgICAgCisgICAgICAg
+ICAgICB3aGlsZSBub3QgbmV4dF9ldmVudDoKKyAgICAgICAgICAgICAgICAjIElmIHRoZSBldmVu
+dHMgb3JkZXIgaXMgd2hhdCB3ZSBleHBlY3RlZCwgd2UgcmVjb3JkCisgICAgICAgICAgICAgICAg
+IyB0aGUgY3VycmVudCBldmVudCdzIHRpbWVzdGFtcAorICAgICAgICAgICAgICAgIGlmIGluZGV4
+ID49IGN1cnJlbnRfaW5kZXg6CisgICAgICAgICAgICAgICAgICAgIGluZGV4X3RvX25zZWNzW2lu
+ZGV4XSA9IGV2ZW50Lm5zZWNzCisgICAgICAgICAgICAgICAgICAgIGN1cnJlbnRfaW5kZXggPSBp
+bmRleCArIDEKKyAgICAgICAgICAgICAgICAgICAgbmV4dF9ldmVudCA9IFRydWUKKyAgICAgICAg
+ICAgICAgICAgICAgbmV4dF9jeWNsZSA9IEZhbHNlCisKKyAgICAgICAgICAgICAgICAjIElmIHRo
+ZSBvcmRlciBpcyBub3QgcHJvcGVyIG9yIHdlIHJlYWNoIHRoZSBlbmQgb2YgYQorICAgICAgICAg
+ICAgICAgICMgY3ljbGUsIGxldCdzIGNvbXB1dGUgdGhlIGxhdGVuY2llcworICAgICAgICAgICAg
+ICAgIGlmIG5leHRfY3ljbGUgb3IgY3VycmVudF9pbmRleCA9PSBldmVudHNfY291bnQ6CisgICAg
+ICAgICAgICAgICAgICAgIHNlbGYuX2NvbXB1dGVfbGF0ZW5jaWVzKGV2ZW50c19jb3VudCwgaW5k
+ZXhfdG9fbnNlY3MpCisgICAgICAgICAgICAgICAgICAgIGluZGV4X3RvX25zZWNzID0ge30KKyAg
+ICAgICAgICAgICAgICAgICAgY3VycmVudF9pbmRleCA9IDAKKworICAgICAgICBzZWxmLl9jb21w
+dXRlX2xhdGVuY2llcyhldmVudHNfY291bnQsIGluZGV4X3RvX25zZWNzKQorCisgICAgZGVmIF9j
+b21wdXRlX2xhdGVuY2llcyhzZWxmLCBldmVudHNfY291bnQsIHRpbWVzKToKKyAgICAgICAgIyBI
+ZXJlLCB3ZSBqdXN0IHJldHJpZXZlIGEgY3ljbGUgb2YgdGltZXN0YW1wcyB3ZSB3aWxsIHRyeSB0
+bworICAgICAgICAjIGNvbnZlcnQgaW50byBsYXRlbmNpZXMKKyAgICAgICAgaW5kZXhlcyA9IHRp
+bWVzLmtleXMoKQorICAgICAgICBmb3IgaSBpbiB4cmFuZ2UoZXZlbnRzX2NvdW50IC0gMSk6Cisg
+ICAgICAgICAgICAjIElmIHR3byBldmVudHMgb2NjdXJlZCBpbiB0aGUgb3JkZXIgd2UgZXhwZWN0
+ZWQsIHdlIGNhbgorICAgICAgICAgICAgIyBjYWxjdWxhdGUgdGhlIHJlbGF0ZWQgbGF0ZW5jeQor
+ICAgICAgICAgICAgaWYgaSBpbiBpbmRleGVzIGFuZCBpICsgMSBpbiBpbmRleGVzOgorICAgICAg
+ICAgICAgICAgIGxhdGVuY3kgPSB0aW1lc1tpICsgMV0gLSB0aW1lc1tpXQorICAgICAgICAgICAg
+ICAgIGlmIGxhdGVuY3kgPCBjb25maWcubGltaXQ6CisgICAgICAgICAgICAgICAgICAgIHNlbGYu
+bGF0ZW5jaWVzW2ldLmFwcGVuZChsYXRlbmN5KQorCisgICAgICAgICMgSWYgdGhlIGZpcnN0IGFu
+ZCBsYXN0IGV2ZW50cycgdGltZXN0YW1wcywgd2UgY2FuIGdldCB0aGUKKyAgICAgICAgIyB0b3Rh
+bCBsYXRlbmN5CisgICAgICAgIGlmIDAgaW4gaW5kZXhlcyBhbmQgZXZlbnRzX2NvdW50IC0gMSBp
+biBpbmRleGVzOgorICAgICAgICAgICAgbGF0ZW5jeSA9IHRpbWVzW2V2ZW50c19jb3VudCAtIDFd
+IC0gdGltZXNbMF0KKyAgICAgICAgICAgIGlmIGxhdGVuY3kgPCBjb25maWcubGltaXQ6CisgICAg
+ICAgICAgICAgICAgc2VsZi5sYXRlbmNpZXNbLTFdLmFwcGVuZChsYXRlbmN5KQorCisjIC0tLSBM
+YXRlbmNpZXMgYW5hbHlzaXMgcGFydCAtLS0KKworY2xhc3MgU3RhdGlzdGljczoKKyAgICBkZWYg
+X19pbml0X18oc2VsZiwgdmFsdWVzID0gTm9uZSk6CisgICAgICAgIHNlbGYubWluID0gMTAwMDAw
+MDAwMAorICAgICAgICBzZWxmLm1heCA9IDAKKyAgICAgICAgc2VsZi5zdW0gPSAwCisgICAgICAg
+IHNlbGYuY291bnQgPSAwCisgICAgICAgIGlmIHZhbHVlcyBpcyBub3QgTm9uZToKKyAgICAgICAg
+ICAgIGZvciB2YWx1ZSBpbiB2YWx1ZXM6CisgICAgICAgICAgICAgICAgc2VsZi51cGRhdGUodmFs
+dWUpCisKKyAgICBkZWYgdXBkYXRlKHNlbGYsIHZhbHVlKToKKyAgICAgICAgaWYgdmFsdWUgPCBz
+ZWxmLm1pbjoKKyAgICAgICAgICAgIHNlbGYubWluID0gdmFsdWUKKyAgICAgICAgaWYgdmFsdWUg
+PiBzZWxmLm1heDoKKyAgICAgICAgICAgIHNlbGYubWF4ID0gdmFsdWUKKyAgICAgICAgc2VsZi5z
+dW0gKz0gdmFsdWUKKyAgICAgICAgc2VsZi5jb3VudCArPSAxCisKKyAgICBkZWYgZ2V0X3ZhbHVl
+cyhzZWxmKToKKyAgICAgICAgcmVzdWx0ID0gKDAgLCAwLCAwKSBpZiBzZWxmLmNvdW50ID09IDAg
+ZWxzZSBcCisgICAgICAgICAgICAoc2VsZi5taW4sIHNlbGYubWF4LCBzZWxmLnN1bSAvIHNlbGYu
+Y291bnQpCisgICAgICAgIHJldHVybiByZXN1bHQKKworY2xhc3MgSGlzdG9ncmFtOgorICAgIGRl
+ZiBfX2luaXRfXyhzZWxmLCB2YWx1ZXMgPSBOb25lLCBidWNrZXRfc2l6ZSA9IDEwMDAsIGJ1Y2tl
+dHNfY291bnQgPSAxMDApOgorICAgICAgICBzZWxmLnN0ZXAgPSBidWNrZXRfc2l6ZQorICAgICAg
+ICBzZWxmLmNvdW50ID0gYnVja2V0c19jb3VudAorICAgICAgICBzZWxmLmJ1Y2tldHMgPSBbaSBm
+b3IgaSBpbiB4cmFuZ2Uoc2VsZi5jb3VudCldCisgICAgICAgIHNlbGYuaGlzdG8gPSBbMCBmb3Ig
+aSBpbiB4cmFuZ2Uoc2VsZi5jb3VudCldCisgICAgICAgIHNlbGYub3ZlcmZsb3cgPSAwCisgICAg
+ICAgIHNlbGYudG90YWwgPSAwCisgICAgICAgIGlmIHZhbHVlcyBpcyBub3QgTm9uZToKKyAgICAg
+ICAgICAgIGZvciB2YWx1ZSBpbiB2YWx1ZXM6CisgICAgICAgICAgICAgICAgc2VsZi51cGRhdGUo
+dmFsdWUpCisKKyAgICBkZWYgdXBkYXRlKHNlbGYsIHZhbHVlKToKKyAgICAgICAgaW5kZXggPSBp
+bnQodmFsdWUgLyBzZWxmLnN0ZXApCisgICAgICAgIGlmIGluZGV4IDwgc2VsZi5jb3VudDoKKyAg
+ICAgICAgICAgIHNlbGYuaGlzdG9baW5kZXhdICs9IDEKKyAgICAgICAgZWxzZToKKyAgICAgICAg
+ICAgIHNlbGYub3ZlcmZsb3cgKz0gMQorICAgICAgICBzZWxmLnRvdGFsICs9IDEKKworICAgIGRl
+ZiBnZXRfdmFsdWVzKHNlbGYpOgorICAgICAgICByZXR1cm4gc2VsZi5oaXN0bworCisjIC0tLSBP
+cHRpb25zIG1hbmFnZW1lbnQgcGFydCAtLS0KKworY2xhc3MgT3B0aW9uczoKKyAgICBjbGFzcyBF
+dmVudHM6CisgICAgICAgIE5BTUUgPSAnZXZlbnRzPScKKyAgICAgICAgQHN0YXRpY21ldGhvZAor
+ICAgICAgICBkZWYgY2hlY2soYXJnKToKKyAgICAgICAgICAgIHJldHVybiBhcmdbOmxlbihPcHRp
+b25zLkV2ZW50cy5OQU1FKV0gPT0gT3B0aW9ucy5FdmVudHMuTkFNRQorICAgICAgICBkZWYgX19p
+bml0X18oc2VsZiwgYXJnKToKKyAgICAgICAgICAgIHNlbGYuY29uZmlnID0gYXJnW2xlbihPcHRp
+b25zLkV2ZW50cy5OQU1FKTpdLnNwbGl0KCcsJykKKworICAgIGNsYXNzIEhpc3RvOgorICAgICAg
+ICBOQU1FID0gJ2hpc3RvJworICAgICAgICBAc3RhdGljbWV0aG9kCisgICAgICAgIGRlZiBjaGVj
+ayhhcmcpOgorICAgICAgICAgICAgcmV0dXJuIGFyZ1s6bGVuKE9wdGlvbnMuSGlzdG8uTkFNRSld
+ID09IE9wdGlvbnMuSGlzdG8uTkFNRQorICAgICAgICBkZWYgX19pbml0X18oc2VsZiwgYXJnKToK
+KyAgICAgICAgICAgIGJ1Y2tldCA9IDEwMDAKKyAgICAgICAgICAgIGNvdW50ID0gMTAwCisgICAg
+ICAgICAgICBuYW1lID0gT3B0aW9ucy5IaXN0by5OQU1FICsgJz0nCisgICAgICAgICAgICBpZiBh
+cmdbOmxlbihuYW1lKV0gPT0gbmFtZToKKyAgICAgICAgICAgICAgICBfYXJnID0gYXJnW2xlbihu
+YW1lKTpdLnNwbGl0KCcsJykKKyAgICAgICAgICAgICAgICBpZiBsZW4oX2FyZykgPiAwOgorICAg
+ICAgICAgICAgICAgICAgICBidWNrZXQgPSBpbnQoX2FyZ1swXSkKKyAgICAgICAgICAgICAgICBp
+ZiBsZW4oX2FyZykgPiAxOgorICAgICAgICAgICAgICAgICAgICBjb3VudCA9IGludChfYXJnWzFd
+KQorCisgICAgICAgICAgICBzZWxmLmNvbmZpZyA9IChidWNrZXQsIGNvdW50KQorCisgICAgY2xh
+c3MgTGltaXQ6CisgICAgICAgIE5BTUUgPSAnbGltaXQ9JworICAgICAgICBAc3RhdGljbWV0aG9k
+CisgICAgICAgIGRlZiBjaGVjayhhcmcpOgorICAgICAgICAgICAgcmV0dXJuIGFyZ1s6bGVuKE9w
+dGlvbnMuTGltaXQuTkFNRSldID09IE9wdGlvbnMuTGltaXQuTkFNRQorICAgICAgICBkZWYgX19p
+bml0X18oc2VsZiwgYXJnKToKKyAgICAgICAgICAgIHRtcCA9IGFyZ1tsZW4oT3B0aW9ucy5MaW1p
+dC5OQU1FKTpdCisgICAgICAgICAgICBzZWxmLmNvbmZpZyA9IGludCh0bXApCisKKyAgICBkZWYg
+X19pbml0X18oc2VsZiwgYXJncyk6CisgICAgICAgIHNlbGYuZXZlbnRzID0gW10KKyAgICAgICAg
+c2VsZi5oaXN0byA9IE5vbmUKKyAgICAgICAgc2VsZi5saW1pdCA9IGludCgweGZmZmZmZmZmZmZm
+ZmZmZmYpCisKKyAgICAgICAgZm9yIGFyZyBpbiBhcmdzOgorICAgICAgICAgICAgaWYgT3B0aW9u
+cy5FdmVudHMuY2hlY2soYXJnKToKKyAgICAgICAgICAgICAgICBzZWxmLmV2ZW50cyA9IE9wdGlv
+bnMuRXZlbnRzKGFyZykuY29uZmlnCisgICAgICAgICAgICBlbGlmIE9wdGlvbnMuSGlzdG8uY2hl
+Y2soYXJnKToKKyAgICAgICAgICAgICAgICBzZWxmLmhpc3RvID0gT3B0aW9ucy5IaXN0byhhcmcp
+LmNvbmZpZworICAgICAgICAgICAgZWxpZiBPcHRpb25zLkxpbWl0LmNoZWNrKGFyZyk6CisgICAg
+ICAgICAgICAgICAgc2VsZi5saW1pdCA9IE9wdGlvbnMuTGltaXQoYXJnKS5jb25maWcKKyAgICAg
+ICAgICAgIGVsc2U6CisgICAgICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcignVW5zdXBwb3J0
+ZWQgb3B0aW9uczogJyArIGFyZykKKworICAgICAgICBpZiBsZW4oc2VsZi5ldmVudHMpIDwgMjoK
+KyAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoJ1R3byBldmVudHMgYXJlIG5lZWRlZCBhdCBs
+ZWFzdCcpCisKKyMgLS0tIFJlcG9ydCByZWxhdGVkIHBhcnQgLS0tCisKK2RlZiBwcmludF9sZWdl
+bmQobGF0ZW5jaWVzKToKKyAgICBuYW1lcyA9IGxhdGVuY2llc1snYWxsJ10ubmFtZXMKKworICAg
+IHByaW50ICcjID09PSBMZWdlbmQgPT09JworICAgIGxlZ2VuZHMgPSBbJyMgTHs6MDJkfToge30n
+LmZvcm1hdChpLCBuKSBmb3IgaSwgbiBpbiBlbnVtZXJhdGUobmFtZXMpXQorICAgIGZvciBsZWdl
+bmQgaW4gbGVnZW5kczoKKyAgICAgICAgcHJpbnQgbGVnZW5kCisgICAgCitkZWYgcHJpbnRfc3Rh
+dHMobGF0ZW5jaWVzKToKKyAgICBuYW1lcyA9IGxhdGVuY2llc1snYWxsJ10ubmFtZXMKKworICAg
+IHByaW50ICcjID09PSBTdGF0aXN0aWNzOiBtaW4gYXZnIG1heCAobnMpID09PScKKyAgICB0bXAg
+PSBbJ3s6XjIzfScuZm9ybWF0KGspIGZvciBrIGluIGxhdGVuY2llcy5rZXlzKCldCisgICAgcHJp
+bnQgJyMgY3B1czogJyArICcgfCAnLmpvaW4odG1wKQorCisgICAgZm9yIGksIG5hbWUgaW4gZW51
+bWVyYXRlKG5hbWVzKToKKyAgICAgICAgdmFsdWVzID0gW1N0YXRpc3RpY3MobGF0ZW5jaWVzW2td
+W25hbWVdKS5nZXRfdmFsdWVzKCkgCisgICAgICAgICAgICAgICAgICBmb3IgayBpbiBsYXRlbmNp
+ZXMua2V5cygpXQorICAgICAgICB0bXAgPSBbJ3s6MDdkfSB7OjA3ZH0gezowN2R9Jy5mb3JtYXQo
+dlswXSwgdlsyXSwgdlsxXSkgZm9yIHYgaW4gdmFsdWVzXQorICAgICAgICBsaW5lID0gJ3s6XjZ9
+OiAnLmZvcm1hdCgnTHs6MDJkfScuZm9ybWF0KGkpKSArICcgfCAnLmpvaW4odG1wKQorICAgICAg
+ICBwcmludCBsaW5lCisKK2RlZiBwcmludF9oaXN0b2dyYW1zKGxhdGVuY2llcywgYnVja2V0LCBj
+b3VudCk6CisgICAgbmFtZXMgPSBsYXRlbmNpZXNbJ2FsbCddLm5hbWVzCisKKyAgICBwcmludCAn
+IyA9PT0gSGlzdG9ncmFtczogYnVja2V0Ont9bnMgPT09Jy5mb3JtYXQoYnVja2V0KQorCisgICAg
+Zm9yIGksIG5hbWUgaW4gZW51bWVyYXRlKG5hbWVzKToKKyAgICAgICAgdG1wID0gWyd7Ol40fScu
+Zm9ybWF0KGspIGZvciBrIGluIGxhdGVuY2llcy5rZXlzKCldCisgICAgICAgIHByaW50ICcgTHs6
+MDJkfSBcIGNwdXM6ICcuZm9ybWF0KGkpICsgJyB8ICcuam9pbih0bXApCisKKyAgICAgICAgaGlz
+dG9ncmFtcyA9IFtIaXN0b2dyYW0obGF0ZW5jaWVzW2tdW25hbWVdLCBidWNrZXQsIGNvdW50KSAK
+KyAgICAgICAgICAgICAgICAgICAgICBmb3IgayBpbiBsYXRlbmNpZXMua2V5cygpXQorICAgICAg
+ICAKKyAgICAgICAgdmFsdWVzID0gW2guZ2V0X3ZhbHVlcygpIGZvciBoIGluIGhpc3RvZ3JhbXNd
+CisgICAgICAgIG92ZXJmbG93cyA9IFtoLm92ZXJmbG93IGZvciBoIGluIGhpc3RvZ3JhbXNdCisg
+ICAgICAgIHRvdGFscyA9IFtoLnRvdGFsIGZvciBoIGluIGhpc3RvZ3JhbXNdCisKKyAgICAgICAg
+Zm9yIGkgaW4geHJhbmdlKGNvdW50KToKKyAgICAgICAgICAgIHRtcCA9ICBbJ3s6MDRkfScuZm9y
+bWF0KHZbaV0pIGZvciB2IGluIHZhbHVlc10KKyAgICAgICAgICAgIGxpbmUgPSAnezowMTFkfTog
+Jy5mb3JtYXQoaSAqIGJ1Y2tldCkgKyAnIHwgJy5qb2luKHRtcCkKKyAgICAgICAgICAgIHByaW50
+IGxpbmUKKworICAgICAgICB0bXAgPSAgWyd7OjA0ZH0nLmZvcm1hdChvKSBmb3IgbyBpbiBvdmVy
+Zmxvd3NdCisgICAgICAgIGxpbmUgID0gJyBvdmVyZmxvd3MgOiAnICsgJyB8ICcuam9pbih0bXAp
+CisgICAgICAgIHByaW50IGxpbmUKKworICAgICAgICB0bXAgPSAgWyd7OjA0ZH0nLmZvcm1hdChv
+KSBmb3IgbyBpbiB0b3RhbHNdCisgICAgICAgIGxpbmUgID0gJyAgdG90YWxzICAgOiAnICsgJyB8
+ICcuam9pbih0bXApCisgICAgICAgIHByaW50IGxpbmUKKworIyAtLS0gUGVyZiByZWxhdGVkIHBh
+cnQgLS0tCisKK2V2ZW50cyA9IE5vbmUKK2NvbmZpZyA9IE5vbmUKKworZGVmIHRyYWNlX3VuaGFu
+ZGxlZChldmVudF9uYW1lLCBjb250ZXh0LCBmaWVsZHMpOgorICAgIGFyZ3MgPSAoZXZlbnRfbmFt
+ZSwgCisgICAgICAgICAgICBjb250ZXh0LAorICAgICAgICAgICAgZmllbGRzWydjb21tb25fY3B1
+J10sCisgICAgICAgICAgICBVdGlsLm5zZWNzKGZpZWxkc1snY29tbW9uX3MnXSwgZmllbGRzWydj
+b21tb25fbnMnXSksCisgICAgICAgICAgICBmaWVsZHNbJ2NvbW1vbl9waWQnXSwgZmllbGRzWydj
+b21tb25fY29tbSddKQorICAgIGV2ZW50ID0gRXZlbnQoKmFyZ3MpCisgICAgZXZlbnRzLmFwcGVu
+ZChldmVudCkKKworZGVmIHRyYWNlX2JlZ2luKCk6CisgICAgIyBQYXJzZSB0aGUgc2NyaXB0LXNw
+ZWNpZmljIG9wdGlvbnMKKyAgICBnbG9iYWwgY29uZmlnCisgICAgY29uZmlnID0gT3B0aW9ucyhz
+eXMuYXJndlsxOl0pCisKKyAgICAjIEluc3RhbmNpYXRlIHRoZSBnbG9iYWwgZXZlbnRzIGhvbGRl
+cgorICAgIGdsb2JhbCBldmVudHMKKyAgICBldmVudHMgPSBFdmVudHMoKQorCitkZWYgdHJhY2Vf
+ZW5kKCk6CisgICAgIyBIZXJlIHdlIHNvcnQgdGhlIHBlci1DUFUgZXZlbnRzIGFjY29yZGluZyB0
+byB0aGVpciB0aW1lc3RhbXBzCisgICAgZXZlbnRzLnNvcnQoKQorCisgICAgIyBGb3IgZWFjaCBD
+UFUsIHdlIGdlbmVyYXRlIHRoZSBsYXRlbmNpZXMKKyAgICBsYXRlbmNpZXMgPSB7fQorICAgIGZv
+ciBjcHUgaW4gZXZlbnRzLmdldF9jcHVzKCk6CisgICAgICAgIF9ldmVudHMgPSBldmVudHMuZ2V0
+X2V2ZW50cyhjcHUpCisgICAgICAgIGxhdGVuY2llc1tjcHVdID0gTGF0ZW5jaWVzKGNvbmZpZy5l
+dmVudHMsIGNvbmZpZy5saW1pdCwgX2V2ZW50cykKKworICAgICMgR2F0aGVyIGFsbCB0aGUgcGVy
+LWNwdSBsYXRlbmNpZXMgaW50byBhIGdsb2JhbCBzZXQKKyAgICBsYXRlbmNpZXNbJ2FsbCddID0g
+cmVkdWNlKGxhbWJkYSBhLCBiOiBhICsgYiwgbGF0ZW5jaWVzLnZhbHVlcygpKQorCisgICAgIyBQ
+cmludCB0aGUgcmVzdWx0cyAoYWNjb3JkaW5nIHRvIHRoZSBjb25maWd1cmF0aW9uKQorICAgIHBy
+aW50X2xlZ2VuZChsYXRlbmNpZXMpCisgICAgcHJpbnRfc3RhdHMobGF0ZW5jaWVzKQorICAgIGlm
+IGNvbmZpZy5oaXN0byBpcyBub3QgTm9uZToKKyAgICAgICAgcHJpbnRfaGlzdG9ncmFtcyhsYXRl
+bmNpZXMsICpjb25maWcuaGlzdG8pCisKLS0gCjEuNy4xMAoK
+--f46d043c80760f1e5c04c34045ba--
