@@ -1,52 +1,32 @@
-From: Roland McGrath <roland@hack.frob.com>
-Subject: Re: Fwd: [PATCH-V2] perf symbols: fix symbol offset breakage with
- separated debug info
-Date: Mon, 25 Jun 2012 16:49:51 -0700 (PDT)
-Message-ID: <20120625234951.B839C2C08D@topped-with-meat.com>
-References: <4FA0DBEE.3040909@linux.vnet.ibm.com>
-	<4FD5D3CE.2010307@linux.vnet.ibm.com>
-	<20120611135352.GA2202@infradead.org>
-	<20120613101436.GA2122@linaro.org>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: --mmap-pages option seemingly has no effect to help with LOST
+ samples
+Date: Tue, 26 Jun 2012 14:16:37 -0600
+Message-ID: <4FEA18A5.8090106@gmail.com>
+References: <4FD7ACB9.70205@us.ibm.com> <4FD7AF0C.1030300@gmail.com> <4FD8B32C.60608@us.ibm.com> <4FD8B641.9040907@gmail.com> <4FE49663.7000908@us.ibm.com> <4FE49A6F.7020503@gmail.com> <4FE4C589.5080802@us.ibm.com> <4FE4CB21.90005@gmail.com> <4FE4D446.5000906@us.ibm.com> <4FE4D7A8.5080607@gmail.com> <4FE87153.8010502@us.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: Dave Martin's message of  Wednesday, 13 June 2012 11:14:36 +0100 <20120613101436.GA2122@linaro.org>
-Sender: owner-linux-mm@kvack.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@infradead.org>, Prashanth Nageshappa <prashanth@linux.vnet.ibm.com>, peterz@infradead.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, ananth@in.ibm.com, jkenisto@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, oleg@redhat.com, andi@firstfloor.org, hch@infradead.org, rostedt@goodmis.org, masami.hiramatsu.pt@hitachi.com, tglx@linutronix.de, anton@redhat.com, srikar@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org, mingo@elte.hu
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:59341 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750809Ab2FZUQn (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 26 Jun 2012 16:16:43 -0400
+Received: by pbbrp8 with SMTP id rp8so538894pbb.19
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jun 2012 13:16:43 -0700 (PDT)
+In-Reply-To: <4FE87153.8010502@us.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Maynard Johnson <maynardj@us.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, suka@us.ibm.com
 
-> For one thing, I assumed that the section headers for a debug-only image
-> may be bogus garbage and not useful for some aspects of symbol
-> processing.  I'm no longer sure that this is the case: if not, then we
-> don't need to bother with saving the section headers because once we
-> have chosen a reference image for the symbols, we know that image is
-> good enough for all the symbol processing.  My previous assumption
-> that we may need to juggle parts of two ELF images in order to do the
-> symbol processing does complicate things -- hopefully we don't need it.
+On 6/25/12 8:10 AM, Maynard Johnson wrote:
 
-The section headers in a .debug file are never "bogus garbage".  Aside
-from sh_offset fields, they match the original unstripped file except
-that sh_type is changed to SHT_NOBITS for each section that is kept only
-in the stripped file.
+> Just an FYI -- adding ":u" doesn't help for RHEL 6.2.  Thanks much for the help so far.
+>
 
-The one issue you have to deal with (in ET_DYN files) is that the
-addresses used in the section headers and everywhere else in the .debug
-file (symbol table st_value fields, all DWARF data containing addresses,
-etc.) may no longer match the addresses used in the stripped file, if
-prelink has changed that file after stripping.  For this, all you need
-to do is calculate the offset between .debug file and stripped-file
-addresses.  The way to do that is to examine the PT_LOAD program headers
-(just the first one is all you really need), and take the difference
-between the p_vaddr fields of the same PT_LOAD command in the two files.
+What kind of processor are you using and what is the output of:
+dmesg |grep Perf
 
-
-Thanks,
-Roland
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+David
