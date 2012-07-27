@@ -1,74 +1,115 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Fri, 27 Jul 2012 13:53:51 +0200
-Message-ID: <20120727115351.GA4514@gmail.com>
+From: Frederic Weisbecker <fweisbec@gmail.com>
+Subject: [RFD] perf: events defined contexts (was Re: perf:
+ prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect)
+Date: Fri, 27 Jul 2012 13:56:36 +0200
+Message-ID: <20120727115633.GL1173@somewhere.redhat.com>
 References: <501121D3.3060700@mentor.com>
  <20120727072647.GA3965@gmail.com>
- <1343376002.32120.22.camel@twins>
- <20120727081830.GA4258@gmail.com>
- <1343377764.32120.29.camel@twins>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:35427 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751462Ab2G0Lx5 (ORCPT
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:37684 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750872Ab2G0L4l (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 Jul 2012 07:53:57 -0400
-Received: by wibhm11 with SMTP id hm11so7402632wib.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jul 2012 04:53:55 -0700 (PDT)
+	Fri, 27 Jul 2012 07:56:41 -0400
+Received: by wgbfm10 with SMTP id fm10so583534wgb.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jul 2012 04:56:40 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <1343377764.32120.29.camel@twins>
+In-Reply-To: <20120727072647.GA3965@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Iegorov Oleg <oleg_iegorov@mentor.com>, linux-perf-users@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+Cc: Iegorov Oleg <oleg_iegorov@mentor.com>, linux-perf-users@vger.kernel.org, mingo@elte.hu, a.p.zijlstra@chello.nl, acme@ghostprotocols.net, Arnaldo Carvalho de Melo <acme@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
 
-
-* Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-
-> > It also allows system-wide profiling after you've modified a 
-> > library to self-profile, while your suggestion does not 
-> > allow that.
+On Fri, Jul 27, 2012 at 09:26:47AM +0200, Ingo Molnar wrote:
 > 
-> But its no long self-profiling when some other process is 
-> involved. And system wide is definitely not self.
-
-If I'm a library developer and want to self-profile my 
-modifications, then it's entirely appropriate to do a 
-system-wide profile to see the system-wide use of this library!
-
-System-wide and self-profiling is not exclusive. Think of it as 
-a narrow, precise filter applied to a given area of 
-functionality only.
-
-AFAICS the alternative, under your method, would be to recompile 
-every single app in the system - that's cumbersome beyond 
-imagination, I wouldn't even call it a solution, let alone a 
-quality implementation.
-
-> > > It really isn't that hard to make userspace do what is 
-> > > needed, it just takes a bit of work.
-> > 
-> > Even if your suggested solution was available (it isn't), my 
-> > suggested approach is easier to use and covers more 
-> > usecases.
-> > 
-> > User-space expecting the kernel to provide usable and 
-> > minimal interfaces is not 'being silly'. It's the 
-> > fundamental task of a kernel to provide them.
+> * Iegorov Oleg <oleg_iegorov@mentor.com> wrote:
 > 
-> Bloating the interface for something that is already well 
-> possible is.
+> > as there was no proposed solution that helped me in response to the
+> > same post by Andrew Steets, I would like to know if it is possible
+> > to disable/enable perf event counters from the source code?
+> > 
+> > calling prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect, nor does
+> > compiling with -fno-omit-frame-pointer option.
+> > 
+> > It would be extremely useful to disable perf event counters for some
+> > parts of code and re-enable them for other parts of code, like:
+> > 
+> > prctl(PR_TASK_PERF_EVENTS_DISABLE);
+> > // not important for performance analysis code
+> > prctl(PR_TASK_PERF_EVENTS_ENABLE);
+> > // code that needs to be analysed
+> > 
+> > and then, run perf:
+> > 
+> > $ perf record ./program
+> > $ perf report
+> > 
+> > Can anyone tell me how can I enable such functionality?
+> 
+> So, the kernel bits to do this in a pretty quirky way are there, 
+> see:
+> 
+>     https://lkml.org/lkml/2012/1/30/99
+> 
+> but the librarization bits are definitely non-obvious to do and 
+> it's no surprise that it has not been done yet.
+> 
+> Regular 'perf record' in itself is not self-profiling - it's 
+> another task profiling you, so we cannot blanket allow 
+> PR_TASK_PERF_EVENTS_DISABLE to disable profiling.
+> 
+> What we might want to do instead on the kernel side to offer the 
+> functionality you are asking for is to enable 'public/weak' 
+> events be created by the profiler on an opt-in basis, which can 
+> be turned off by child tasks as well via 
+> PR_TASK_PERF_EVENTS_DISABLE.
+> 
+> On the profiling workflow side it would work in a very simple 
+> way, like this:
+> 
+>     perf record --self-profiling ./my-app
+> 
+> In your app you stick in appropriately placed 
+> PR_TASK_PERF_EVENTS_DISABLE/ENABLE calls.
+> 
+> On the technical side perf record creates events with that 
+> struct perf_event_attr::self_profiling flag set to 1. (the flag 
+> is disabled by default)
+> 
+> The PR_TASK_PERF_EVENTS_DISABLE code in the modified kernel then 
+> iterates through all events and disables those that have this 
+> flag set, not just the ones owned by this task.
+> 
+> Maybe someone on Cc: would be interested in implementing this 
+> new perf events feature?
 
-There's no 'bloat' worth speaking off: a single bit out of an 
-already allocated bitmap, plus a single check in an already 
-existing loop, plus a single new command-line flag to the 
-tooling side and minimal glue.
+The problem is more general than that I think.
+We need to be able to define finer grained contexts than just
+"task" and/or "CPU".
 
-There's no runtime overhead to any other perf functionality, at 
-all.
+And reusing events themselves would be a nice interface.
 
-Thanks,
+For example create 3 events:
 
-	Ingo
+A = irq entry tracepoint
+B = irq exit tracepoint
+C = cpu-cycles
+
+And say: I want to count cpu-cycles when event A fires and stop counting
+when B fires.
+
+With that you can count cpu cycles on irqs.
+
+You could use any event you want to define your contexts: lock, functions, etc...
+
+And even uprobes to define areas in userspace to profile. Would that solve
+the initial problem in the thread? Like hook on function library entry/exit?
+
+I talked about that to Jiri Olsa several times. May be he would be interested
+in implementing this. I posted some patchets one year ago but got sidetracked.
+
+This can give you an idea from where we can start: https://lkml.org/lkml/2011/3/14/346
+
+Jiri, would you be interested in working on this?
