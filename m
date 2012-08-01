@@ -1,52 +1,39 @@
-From: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: perf: prctl(PR_TASK_PERF_EVENTS_DISABLE) has no effect
-Date: Tue, 31 Jul 2012 21:48:52 +0200
-Message-ID: <1343764132.20897.40.camel@twins>
-References: <501121D3.3060700@mentor.com> <20120727072647.GA3965@gmail.com>
-	 <1343376002.32120.22.camel@twins> <20120727081830.GA4258@gmail.com>
-	 <1343377764.32120.29.camel@twins> <20120727115351.GA4514@gmail.com>
-	 <1343713645.20897.11.camel@twins> <20120731071600.GB2950@gmail.com>
+From: Yipeng Huang <yipeng@gmail.com>
+Subject: Using Perf Stat with --field-separator flag
+Date: Wed, 1 Aug 2012 04:14:22 +0000 (UTC)
+Message-ID: <loom.20120801T060325-224@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:38159 "EHLO
-	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754048Ab2GaTtG convert rfc822-to-8bit (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:49531 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750814Ab2HAEOf (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 31 Jul 2012 15:49:06 -0400
-In-Reply-To: <20120731071600.GB2950@gmail.com>
+	Wed, 1 Aug 2012 00:14:35 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1SwQKP-0001kh-Ja
+	for linux-perf-users@vger.kernel.org; Wed, 01 Aug 2012 06:14:34 +0200
+Received: from cm244.omega17.maxonline.com.sg ([218.186.17.244])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Aug 2012 06:14:33 +0200
+Received: from yipeng by cm244.omega17.maxonline.com.sg with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Aug 2012 06:14:33 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Iegorov Oleg <oleg_iegorov@mentor.com>, linux-perf-users@vger.kernel.org, mingo@elte.hu, acme@ghostprotocols.net, =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+To: linux-perf-users@vger.kernel.org
 
-On Tue, 2012-07-31 at 09:16 +0200, Ingo Molnar wrote:
-> * Peter Zijlstra <a.p.zijlstra@chello.nl> wrote:
-> 
-> > On Fri, 2012-07-27 at 13:53 +0200, Ingo Molnar wrote:
-> > > > Bloating the interface for something that is already well 
-> > > > possible is.
-> > > 
-> > > There's no 'bloat' worth speaking off: a single bit out of 
-> > > an already allocated bitmap, plus a single check in an 
-> > > already existing loop,
-> > 
-> > Uhm, no. The existing prctl() loop is over the fd's the task 
-> > owns, you want a loop over the fd's that monitor you. This 
-> > needs new prctl()s at the very least.
-> 
-> We could add a new prctl if you think, but I thought to not 
-> complicate it and offer it as a simple extension of the 
-> semantics to loop over active events. No existing binary's 
-> behavior will change.
+I would like to use the separator flag for easy exporting but face two issues. 
 
-It muddles up the semantics of the existing prctl()s though.
+1) The standard perf stat output has elapsed time but the SEP output doesn't. 
+How can I capture elapsed time AND use --field-separator at the same time? 
 
-Ideally we'd simply remove the current ones though, I don't think
-anybody actually uses them and as an owner you actually have all the fds
-to call ioctl() on.
+2) I also need to record CPU utilization. How do I derive this from the task-
+clock field? 
 
-This would let us get rid of the entire event->owner, event->owner_entry
-and task->perf_event_list mess. See perf_event_exit_task() and
-perf_release() for why I'd love that crap to go away.
+Thanks, 
+
+Yipeng 
