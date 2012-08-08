@@ -1,36 +1,70 @@
-From: Vince Weaver <vweaver1@eecs.utk.edu>
-Subject: attr inherit vs inherit_stat
-Date: Tue, 7 Aug 2012 15:47:32 -0400
-Message-ID: <alpine.DEB.2.00.1208071544240.16260@cl320.icl.utk.edu>
+From: Arun Sharma <asharma@fb.com>
+Subject: Re: [PATCH] perf: Add a new sort order: SORT_INCLUSIVE (v6)
+Date: Wed, 8 Aug 2012 12:16:30 -0700
+Message-ID: <5022BB0E.8050706@fb.com>
+References: <1333172421-6775-2-git-send-email-asharma@fb.com> <4F769976.3070203@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from ch1ehsobe005.messaging.microsoft.com ([216.32.181.185]:30129
-	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755857Ab2HGTri (ORCPT
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:59975 "EHLO
+	mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S932896Ab2HHTRZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 7 Aug 2012 15:47:38 -0400
-Received: from mail42-ch1 (localhost [127.0.0.1])	by mail42-ch1-R.bigfish.com
- (Postfix) with ESMTP id 28A41180327	for <linux-perf-users@vger.kernel.org>;
- Tue,  7 Aug 2012 19:47:37 +0000 (UTC)
-Received: from CH1EHSMHS016.bigfish.com (snatpool2.int.messaging.microsoft.com
- [10.43.68.233])	by mail42-ch1.bigfish.com (Postfix) with ESMTP id 2594A8004C
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Aug 2012 19:47:35 +0000 (UTC)
+	Wed, 8 Aug 2012 15:17:25 -0400
+In-Reply-To: <4F769976.3070203@fb.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mike Galbraith <efault@gmx.de>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung.kim@lge.com>, Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org
 
-Hello
+On 3/30/12 10:43 PM, Arun Sharma wrote:
+> [ Meant to include v6 ChangeLog as well. Technical difficulties.. ]
+>
+> v6 ChangeLog:
+>
+> rebased to tip:perf/core and fixed a minor problem in computing
+> the total period in hists__remove_entry_filter(). Needed to
+> use period_self instead of period.
 
-I'm trying to figure out the difference between the "inherit" and
-"inherit_stat" bitfields in the perf_event_attr structure.
+This patch breaks perf top (symptom: percentages > 100%). Fixed by the 
+following patch.
 
-Both seem to have similar functionality, and the code in core.c
-is hard to follow.
+Namhyung: if you're still working on forward porting this, please add 
+this fix to your queue.
 
-Does anyone have any idea?
+  -Arun
 
-Thanks,
+commit 75a1c409a529c9741f8a2f493868d1fc7ce7e06d
+Author: Arun Sharma <asharma@fb.com>
+Date:   Wed Aug 8 11:47:02 2012 -0700
 
-Vince
-vweaver1@eecs.utk.edu
+    perf: update period_self as well on collapsing
+       When running perf top, we have a series of incoming samples,
+    which get aggregated in various user specified ways.
+       Suppose function "foo" had the following samples:
+    101, 103, 99, 105, ...
+       ->period for the corresponding entry looks as follows:
+    101, 204, 303, 408, ...
+       However, due to this bug, ->period_self contains:
+    101, 103, 99, 105, ...
+       and therefore breaks the invariant period == period_self
+    in the default mode (no sort inclusive).
+       Since total_period is computed by summing up period_self,
+       period/total_period can be > 100%
+       Fix the bug by updating period_self as well.
+       Signed-off-by: Arun Sharma <asharma@fb.com>
+
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index a2a8d91..adc891e 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -462,6 +462,7 @@ static bool hists__collapse_insert_entry(struct 
+hists *hists,
+
+		if (!cmp) {
+			iter->period += he->period;
++			iter->period_self += he->period_self;
+			iter->nr_events += he->nr_events;
+			if (symbol_conf.use_callchain) {
+				callchain_cursor_reset(&hists->callchain_cursor);
