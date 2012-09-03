@@ -1,49 +1,39 @@
-From: chenggang qin <chenggang.qin@gmail.com>
-Subject: Re: How to trace threads created by a process after perf has started
- recording, using the -p PID flag?
-Date: Sun, 26 Aug 2012 12:56:19 +0800
-Message-ID: <5039AC73.8090908@gmail.com>
-References: <CAJgLYc+dMADVBkbPq1wJFptcx63UUSg24DDM5BbYSWW2bDV+tg@mail.gmail.com>
+From: Arkaprava Basu <arkaprava.basu@gmail.com>
+Subject: Collecting raw PEBS sample using perf
+Date: Mon, 3 Sep 2012 16:35:21 -0500
+Message-ID: <CAErB21jqztpUcyvzcPmMntyLQzO6=V73ZgNecRccngsH1T4-Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:64188 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750939Ab2HZE4X (ORCPT
+Received: from mail-ie0-f174.google.com ([209.85.223.174]:61516 "EHLO
+	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753645Ab2ICVfW (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 26 Aug 2012 00:56:23 -0400
-Received: by dady13 with SMTP id y13so1785803dad.19
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Aug 2012 21:56:23 -0700 (PDT)
-In-Reply-To: <CAJgLYc+dMADVBkbPq1wJFptcx63UUSg24DDM5BbYSWW2bDV+tg@mail.gmail.com>
+	Mon, 3 Sep 2012 17:35:22 -0400
+Received: by ieje11 with SMTP id e11so3993266iej.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Sep 2012 14:35:21 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-HI:
-    I submitted a patch to fix this problem. and the patch is waitting for
-reviewing.
+Hello,
 
-                        chenggang qin
+   I need to collect raw hardware dumped PEBS (precise event based
+sampling) records (i.e., dump of architectural state) on sampled DTLB
+miss events.  I need the dump of the architectural state since I plan
+to use it regenerate address trace of the sampled DTLB miss event.  I
+was trying to use perf (kernel version 2.6.39) to record PEBS samples.
+Following is an example of a common I was using.
 
-On Sat, Aug 25, 2012 at 8:52 PM, Mikolaj Konarski <
-mikolaj.konarski@gmail.com> wrote:
+perf record -e r80cb:pp -o ls_k.out -c 1000 /bin/ls   (the raw event
+number 80cb is for load DTLB miss)
 
-> Hi,
->
-> Could someone clarify the behaviour of the -p PID flag of perf-record?
-> In our experiments (3.2.0-27 #43-Ubuntu SMP x86_64),
-> it ignores events on threads spawned after perf-record is started.
-> Is this the intended behaviour, and is there any work-around?
->
-> Generally, what is the best (vs CPU/IO, distortion of profiling results)
-> way to record only events of a given OS process, with all its threads?
->
-> Thanks a lot,
-> Mikolaj
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+However, it seems like this does not dump the PEBS records written by
+the hardware and only dumps the processed samples collected by the
+perf tool. I was wondering if there is a way to get perf dump the raw
+PEBS record in the output file.
+
+Does somebody know how raw PEBS dumps can be collected?
+
+Thanks
+Arka
