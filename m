@@ -1,124 +1,41 @@
-From: Maciek Borzecki <maciek.borzecki@gmail.com>
-Subject: [PATCH] perf: allow user to indicate path to objdump in command line
-Date: Tue, 04 Sep 2012 12:32:30 +0200
-Message-ID: <1346754750.16299.3.camel@localhost.localdomain>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: How to trace threads created by a process after perf has started
+ recording, using the -p PID flag?
+Date: Tue, 04 Sep 2012 10:04:31 -0600
+Message-ID: <5046268F.4050504@gmail.com>
+References: <CAHFo2uodOOiTKRbeZvFFbGry8XK85unXz+_L6imgH6EeiROc0Q@mail.gmail.com> <CAKYOsXwF-Rk97BEWk_fEHhfVisPy_q439tdx7H9onAOyFi=-uA@mail.gmail.com> <CAHFo2up0cy4A8pSX5=dJ4k95ZtUTEzvzqcvfRoaoUjedpcvw5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-we0-f174.google.com ([74.125.82.174]:41425 "EHLO
-	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752309Ab2IDKce (ORCPT
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:49285 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757312Ab2IDQEe (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Sep 2012 06:32:34 -0400
+	Tue, 4 Sep 2012 12:04:34 -0400
+Received: by pbbrr13 with SMTP id rr13so9703443pbb.19
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Sep 2012 09:04:34 -0700 (PDT)
+In-Reply-To: <CAHFo2up0cy4A8pSX5=dJ4k95ZtUTEzvzqcvfRoaoUjedpcvw5Q@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Mikolaj Konarski <mikolaj.konarski@gmail.com>
+Cc: chenggang.qin@gmail.com, Bernie Pope <florbitous@gmail.com>, Duncan Coutts <duncan@well-typed.com>, linux-perf-users@vger.kernel.org
 
-When analyzing perf data from hosts of other architecture than one of the local
-host it's useful to call objdump that is part of a toolchain for that
-architecture. Instead of calling regular objdump, call one that user specified
-in command line.
+On 9/3/12 4:17 PM, Mikolaj Konarski wrote:
+>>> Could someone clarify the behaviour of the -p PID flag of perf-record?
+>>> In our experiments (3.2.0-27 #43-Ubuntu SMP x86_64),
+>>> it ignores events on threads spawned after perf-record is started.
+>>> Is this the intended behaviour, and is there any work-around?
+>
+> Anybody? We'd love to use a proven, standard workaround
+> for this issue, preferably without forcing our users to upgrade
+> the kernel or wait for any future release. Do we even diagnose
+> the problem correctly? The best workaround we can come up with
+> right now is to use the "--filter 'pid==NNNN'" option, but it has
+> a couple of downsides. Any help would be sincerely appreciated.
 
-Signed-off-by: Maciek Borzecki <maciek.borzecki@gmail.com>
----
- tools/perf/Documentation/perf-annotate.txt | 3 +++
- tools/perf/Documentation/perf-report.txt   | 3 +++
- tools/perf/builtin-annotate.c              | 2 ++
- tools/perf/builtin-report.c                | 2 ++
- tools/perf/util/annotate.c                 | 4 +++-
- tools/perf/util/annotate.h                 | 1 +
- 6 files changed, 14 insertions(+), 1 deletion(-)
+I see the problem now. The perf tool gets FORK events as threads are 
+created, but it does not respond to them and create new counters. Some 
+refactoring is needed to make that happen.
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index c89f9e1..c8ffd9f 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -85,6 +85,9 @@ OPTIONS
- -M::
- --disassembler-style=:: Set disassembler style for objdump.
- 
-+--objdump=<path>::
-+        Path to objdump binary.
-+
- SEE ALSO
- --------
- linkperf:perf-record[1], linkperf:perf-report[1]
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 2d89f02..2da267f 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -168,6 +168,9 @@ OPTIONS
- 	branch stacks and it will automatically switch to the branch view mode,
- 	unless --no-branch-stack is used.
- 
-+--objdump=<path>::
-+        Path to objdump binary.
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-annotate[1]
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 67522cf..2f3f002 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -282,6 +282,8 @@ int cmd_annotate(int argc, const char **argv, const char *prefix __used)
- 		    "Display raw encoding of assembly instructions (default)"),
- 	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
- 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
-+	OPT_STRING(0, "objdump", &objdump_path, "path",
-+		   "objdump binary to use for disassembly and annotations"),
- 	OPT_END()
- 	};
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 25249f7..dad231b 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -635,6 +635,8 @@ int cmd_report(int argc, const char **argv, const char *prefix __used)
- 		    "Show a column with the sum of periods"),
- 	OPT_CALLBACK_NOOPT('b', "branch-stack", &sort__branch_mode, "",
- 		    "use branch records for histogram filling", parse_branch_mode),
-+	OPT_STRING(0, "objdump", &objdump_path, "path",
-+		   "objdump binary to use for disassembly and annotations"),
- 	OPT_END()
- 	};
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 8069dfb..be7290c 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -17,6 +17,7 @@
- #include <pthread.h>
- 
- const char 	*disassembler_style;
-+const char	*objdump_path;
- 
- static struct ins *ins__find(const char *name);
- static int disasm_line__parse(char *line, char **namep, char **rawp);
-@@ -809,9 +810,10 @@ fallback:
- 		 dso, dso->long_name, sym, sym->name);
- 
- 	snprintf(command, sizeof(command),
--		 "objdump %s%s --start-address=0x%016" PRIx64
-+		 "%s %s%s --start-address=0x%016" PRIx64
- 		 " --stop-address=0x%016" PRIx64
- 		 " -d %s %s -C %s|grep -v %s|expand",
-+		 objdump_path ? objdump_path : "objdump",
- 		 disassembler_style ? "-M " : "",
- 		 disassembler_style ? disassembler_style : "",
- 		 map__rip_2objdump(map, sym->start),
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 78a5692..a6d6bc5 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -152,5 +152,6 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map, int evidx,
- #endif
- 
- extern const char	*disassembler_style;
-+extern const char	*objdump_path;
- 
- #endif	/* __PERF_ANNOTATE_H */
--- 
-1.7.11.4
+David
