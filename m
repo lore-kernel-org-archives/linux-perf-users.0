@@ -1,77 +1,43 @@
-From: liang xie <xieliang007@gmail.com>
-Subject: Re: [PATCH] perf tool: fix trivial memory leak while calling system_path()
-Date: Wed, 5 Sep 2012 22:09:06 +0800
-Message-ID: <CADu=CFq2c4j5-n5Ah+JeLT+WR+TZkjraDs6th=S9XR2x5cSgwQ@mail.gmail.com>
-References: <CADu=CFrNXPJV-DiMT0Ruw6jZNhbsqg+uwP6UQnu-xrAVMc7mQg@mail.gmail.com>
-	<20120905134937.GN19591@arwen.pp.htv.fi>
+From: Joel Uckelman <joel@lightboxtechnologies.com>
+Subject: duplicate cache misses counter labels with perf-stat
+Date: Wed, 5 Sep 2012 17:21:10 +0200
+Message-ID: <CAB04Epfe1n0R3HHi217YJzazh4ejWJk2-Ww1r55X0=q__WftwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:62768 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750906Ab2IEOJG convert rfc822-to-8bit (ORCPT
+Received: from mail-vb0-f46.google.com ([209.85.212.46]:58252 "EHLO
+	mail-vb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751318Ab2IEPVL (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 5 Sep 2012 10:09:06 -0400
-In-Reply-To: <20120905134937.GN19591@arwen.pp.htv.fi>
+	Wed, 5 Sep 2012 11:21:11 -0400
+Received: by vbbff1 with SMTP id ff1so227246vbb.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Sep 2012 08:21:10 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: balbi@ti.com
-Cc: acme@ghostprotocols.net, mingo@elte.hu, paulus@samba.org, linux-perf-users@vger.kernel.org, a.p.zijlstra@chello.nl, linux-kernel@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Hi Felipe,
+When I do this with perf 3.5.2,
 
-Thanks for reviewing! yeh, the check could be removed safely .
-=46or casting, it'll complain like this if removed:
-cc1: warnings being treated as errors
-util/help.c: In function =91load_command_list=92:
-util/help.c:190: error: passing argument 1 of =91free=92 discards
-qualifiers from pointer target type
-/usr/include/stdlib.h:488: note: expected =91void *=92 but argument is =
-of
-type =91const char *=92
-make: *** [util/help.o] Error 1
+  perf stat -x, -e
+L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores,L1-dcache-store-misses
+ls
 
-Best Regards,
+I'm seeing this output from perf:
 
-On Wed, Sep 5, 2012 at 9:49 PM, Felipe Balbi <balbi@ti.com> wrote:
-> Hi,
->
-> On Wed, Sep 05, 2012 at 09:48:54PM +0800, liang xie wrote:
->> A trivial memory leak fix while calling system_path
->>
->> Signed-off-by: Liang Xie <xieliang@xiaomi.com>
->> ---
->>  tools/perf/util/exec_cmd.c |    6 ++++--
->>  tools/perf/util/help.c     |    1 +
->>  2 files changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/exec_cmd.c b/tools/perf/util/exec_cmd.c
->> index 7adf4ad..790cc95 100644
->> --- a/tools/perf/util/exec_cmd.c
->> +++ b/tools/perf/util/exec_cmd.c
->> @@ -83,8 +83,8 @@ void setup_path(void)
->>  {
->>       const char *old_path =3D getenv("PATH");
->>       struct strbuf new_path =3D STRBUF_INIT;
->> -
->> -     add_path(&new_path, perf_exec_path());
->> +     const char *exec_path =3D perf_exec_path();
->> +     add_path(&new_path, exec_path);
->>       add_path(&new_path, argv0_path);
->>
->>       if (old_path)
->> @@ -95,6 +95,8 @@ void setup_path(void)
->>       setenv("PATH", new_path.buf, 1);
->>
->>       strbuf_release(&new_path);
->> +     if (exec_path)
->
-> free(NULL) is safe, the check isn't needed.
->
->> +             free((void *)exec_path);
->
-> this cast doesn't look necessary either.
->
-> --
-> balbi
+  697171,L1-dcache-loads
+
+  28012,L1-dcache-misses
+
+  455691,L1-dcache-stores
+
+  11791,L1-dcache-misses
+
+So, I'm getting two results labeled "L1-dcache-misses" (with different
+values!) and none labeled "L1-dcache-store-misses". It looks to me
+like one of the "L1-dcache-misses" is mislabeled.
+
+There appears to be a general problem with all of the *-misses
+counters, as a similar thing happens with, e.g., LLC-load-misses and
+LLC-store-missses, and all of the others I've checked.
+
+Is this a bug, or am I misunderstanding how perf-stat is supposed to work?
