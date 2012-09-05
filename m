@@ -1,43 +1,63 @@
-From: Maciek Borzecki <maciek.borzecki@gmail.com>
-Subject: Re: [PATCH] perf: allow user to indicate path to objdump in command
- line
-Date: Wed, 05 Sep 2012 07:22:44 +0200
-Message-ID: <1346822564.18428.3.camel@localhost.localdomain>
-References: <1346754750.16299.3.camel@localhost.localdomain>
-	 <504626CB.60601@gmail.com> <1346811109.28652.1.camel@concordia>
+From: liang xie <xieliang007@gmail.com>
+Subject: [PATCH] perf tool: fix trivial memory leak while calling system_path()
+Date: Wed, 5 Sep 2012 21:48:54 +0800
+Message-ID: <CADu=CFrNXPJV-DiMT0Ruw6jZNhbsqg+uwP6UQnu-xrAVMc7mQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:54350 "EHLO
-	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752016Ab2IEFWx (ORCPT
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:64304 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751543Ab2IENsz (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 5 Sep 2012 01:22:53 -0400
-In-Reply-To: <1346811109.28652.1.camel@concordia>
+	Wed, 5 Sep 2012 09:48:55 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Ellerman <michael@ellerman.id.au>, David Ahern <dsahern@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: acme@ghostprotocols.net, mingo@elte.hu
+Cc: paulus@samba.org, linux-perf-users@vger.kernel.org, a.p.zijlstra@chello.nl, linux-kernel@vger.kernel.org
 
-On Wed, 2012-09-05 at 12:11 +1000, Michael Ellerman wrote:
-> On Tue, 2012-09-04 at 10:05 -0600, David Ahern wrote:
-> > On 9/4/12 4:32 AM, Maciek Borzecki wrote:
-> > > When analyzing perf data from hosts of other architecture than one of the local
-> > > host it's useful to call objdump that is part of a toolchain for that
-> > > architecture. Instead of calling regular objdump, call one that user specified
-> > > in command line.
-> > 
-> > Why not set the PATH to make the toolchain's version the one used by perf?
-> 
-> At least one reason is that cross toolchains are usually built such that
-> the resulting binaries are called <target>-objdump, <target>-gcc etc.
-Correct, PATH won't work. First I thought, why not hardcode objdump
-based on CROSS. But then, I'd need to rebuild perf for each toolchain,
-bad idea.
-Passing objdump in command line seems like a good compromise to me,
-especially as I haven't noticed any other binutils tools to be used by
-perf same way as objdump is.
+A trivial memory leak fix while calling system_path
 
+Signed-off-by: Liang Xie <xieliang@xiaomi.com>
+---
+ tools/perf/util/exec_cmd.c |    6 ++++--
+ tools/perf/util/help.c     |    1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/exec_cmd.c b/tools/perf/util/exec_cmd.c
+index 7adf4ad..790cc95 100644
+--- a/tools/perf/util/exec_cmd.c
++++ b/tools/perf/util/exec_cmd.c
+@@ -83,8 +83,8 @@ void setup_path(void)
+ {
+ 	const char *old_path = getenv("PATH");
+ 	struct strbuf new_path = STRBUF_INIT;
+-
+-	add_path(&new_path, perf_exec_path());
++	const char *exec_path = perf_exec_path();
++	add_path(&new_path, exec_path);
+ 	add_path(&new_path, argv0_path);
+
+ 	if (old_path)
+@@ -95,6 +95,8 @@ void setup_path(void)
+ 	setenv("PATH", new_path.buf, 1);
+
+ 	strbuf_release(&new_path);
++	if (exec_path)
++		free((void *)exec_path);
+ }
+
+ static const char **prepare_perf_cmd(const char **argv)
+diff --git a/tools/perf/util/help.c b/tools/perf/util/help.c
+index 6f2975a..798f66d 100644
+--- a/tools/perf/util/help.c
++++ b/tools/perf/util/help.c
+@@ -187,6 +187,7 @@ void load_command_list(const char *prefix,
+ 		uniq(other_cmds);
+ 	}
+ 	exclude_cmds(other_cmds, main_cmds);
++	free((void *)exec_path);
+ }
+
+ void list_commands(const char *title, struct cmdnames *main_cmds,
 -- 
-Maciek Borzecki <maciek.borzecki@gmail.com>
+1.7.1
