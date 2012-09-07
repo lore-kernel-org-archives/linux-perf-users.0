@@ -1,79 +1,63 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2] A trivial memory leak fix while calling system_path
-Date: Fri, 07 Sep 2012 15:26:00 +0900
-Message-ID: <87oblibb7r.fsf@sejong.aot.lge.com>
-References: <CADu=CFpMKkAW5+=Us9J2GOxZTBDN91FTeteCgbyh8c7fsP837g@mail.gmail.com>
+From: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: attr inherit vs inherit_stat
+Date: Fri, 07 Sep 2012 17:31:21 +0200
+Message-ID: <1347031881.18408.86.camel@twins>
+References: <alpine.DEB.2.00.1208071544240.16260@cl320.icl.utk.edu>
+	 <871uiie0q4.fsf@sejong.aot.lge.com>
+	 <alpine.DEB.2.00.1209061116560.10268@cl320.icl.utk.edu>
+	 <87fw6ud3wo.fsf@sejong.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:47680 "EHLO
-	LGEMRELSE6Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752455Ab2IGGdR (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:56545 "EHLO
+	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751188Ab2IGPb0 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 7 Sep 2012 02:33:17 -0400
-In-Reply-To: <CADu=CFpMKkAW5+=Us9J2GOxZTBDN91FTeteCgbyh8c7fsP837g@mail.gmail.com>
-	(liang xie's message of "Fri, 7 Sep 2012 11:34:49 +0800")
+	Fri, 7 Sep 2012 11:31:26 -0400
+In-Reply-To: <87fw6ud3wo.fsf@sejong.aot.lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: liang xie <xieliang007@gmail.com>
-Cc: acme@ghostprotocols.net, a.p.zijlstra@chello.nl, mingo@elte.hu, paulus@samba.org, balbi@ti.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Vince Weaver <vweaver1@eecs.utk.edu>, linux-perf-users@vger.kernel.org
 
-Hi, liang
+On Fri, 2012-09-07 at 10:20 +0900, Namhyung Kim wrote:
+> (Adding peterz in case he has a time to answer)
+> 
+> On Thu, 6 Sep 2012 11:19:21 -0400, Vince Weaver wrote:
+> > On Tue, 4 Sep 2012, Namhyung Kim wrote:
+> >> 
+> >> AFAIK the "inherit" field determines whether the event is inherited to a
+> >> child process/thread.  The "inherit_stat" is only meaningful when the
+> >> "inherit" field is also set and it'll preserve (saved) event counts
+> >> between context switch of the inherited processes/threads.
+> >
+> > Thank you for taking the time to answer!
+> >
+> > I'm still trying to construct a test case that shows the difference but 
+> > I'm failing.
 
-On Fri, 7 Sep 2012 11:34:49 +0800, liang xie wrote:
-> A trivial memory leak fix while calling system_path
->
-> Since v1: Remove an unnecessary null pointer check per Felipe's comments
->
-> Signed-off-by: Liang Xie <xieliang@xiaomi.com>
-> ---
->  tools/perf/util/exec_cmd.c |    4 +++-
->  tools/perf/util/help.c     |    1 +
->  2 files changed, 4 insertions(+), 1 deletions(-)
->
-> diff --git a/tools/perf/util/exec_cmd.c b/tools/perf/util/exec_cmd.c
-> index 7adf4ad..d041407 100644
-> --- a/tools/perf/util/exec_cmd.c
-> +++ b/tools/perf/util/exec_cmd.c
-> @@ -83,8 +83,9 @@ void setup_path(void)
->  {
->  	const char *old_path = getenv("PATH");
->  	struct strbuf new_path = STRBUF_INIT;
-> +	const char *exec_path = perf_exec_path();
->
-> -	add_path(&new_path, perf_exec_path());
-> +	add_path(&new_path, exec_path);
->  	add_path(&new_path, argv0_path);
->
->  	if (old_path)
-> @@ -95,6 +96,7 @@ void setup_path(void)
->  	setenv("PATH", new_path.buf, 1);
->
->  	strbuf_release(&new_path);
-> +	free((void *)exec_path);
->  }
+inherit && inherit_stat preserves the counts per-task and issues a
+PERF_RECORD_READ when a task dies. This allows a per-task stat on an
+inherited process hierarchy.
 
-The problem is that perf_exec_path() can return a non-dynamically
-allocated string (e.g. command line argument or environment string) and
-currently we cannot know where the returned string is came from.
+> > Aren't the stats *always* saved on context switch?
 
-It might cause much more troubles when you free that kind of string than
-just leaking a couple of bytes IMHO.
+No, they're normally swizzled around, the only thing we care about is
+the total event count for the entire task-set, not the count of the
+individual tasks.
 
-Thanks,
-Namhyung
+> > Does this affect what happens when you read the perf_event fd in the 
+> > inherited threads, or only from the master thread?
 
->
->  static const char **prepare_perf_cmd(const char **argv)
-> diff --git a/tools/perf/util/help.c b/tools/perf/util/help.c
-> index 6f2975a..798f66d 100644
-> --- a/tools/perf/util/help.c
-> +++ b/tools/perf/util/help.c
-> @@ -187,6 +187,7 @@ void load_command_list(const char *prefix,
->  		uniq(other_cmds);
->  	}
->  	exclude_cmds(other_cmds, main_cmds);
-> +	free((void *)exec_path);
->  }
->
->  void list_commands(const char *title, struct cmdnames *main_cmds,
+read() on an inherited event gives the total count of the entire
+hierarchy.
+
+> > What is the expected behavior if you set inherit_thread but do not set 
+> > inherit?
+> 
+> You meant inherit_stat, right?  If so, it looks it'd be a nop since
+> there's no inherited events.  Maybe the perf tools can be changed to
+> warn about that.
+
+Right that would be a pointless configuration.
