@@ -1,20 +1,20 @@
 From: ulrik@kristnet.org
 Subject: PEBS not supported even if CPU microcode is updated to  =?UTF-8?Q?=30x=32=38=3F?=
-Date: Tue, 18 Sep 2012 08:48:48 +0200
-Message-ID: <ca97dbdf5dd407af0aad762f63916959@kristnet.org>
+Date: Tue, 18 Sep 2012 08:40:33 +0200
+Message-ID: <7e5519feab1e8e1c31ab4070ae21edc6@kristnet.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtprelay-b21.telenor.se ([195.54.99.212]:45022 "EHLO
+Received: from smtprelay-b21.telenor.se ([195.54.99.212]:60155 "EHLO
 	smtprelay-b21.telenor.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753261Ab2IRGsv (ORCPT
+	with ESMTP id S1756422Ab2IRHDq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 18 Sep 2012 02:48:51 -0400
-Received: from ipb3.telenor.se (ipb3.telenor.se [195.54.127.166])
-	by smtprelay-b21.telenor.se (Postfix) with ESMTP id D3074EA0DE
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Sep 2012 08:48:49 +0200 (CEST)
+	Tue, 18 Sep 2012 03:03:46 -0400
+Received: from ipb2.telenor.se (ipb2.telenor.se [195.54.127.165])
+	by smtprelay-b21.telenor.se (Postfix) with ESMTP id 9C284E9F4C
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Sep 2012 08:41:04 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
@@ -24,8 +24,7 @@ Hi,
 Perf does not seem to be able to handle PEBS, even with the new CPU 
 0x28 microcode.
 
-     sudo ./perf stat -e branches:pp "true"
-
+> sudo ./perf stat -e branches:pp "true"
 
   Performance counter stats for 'true':
 
