@@ -1,354 +1,116 @@
-From: liang xie <xieliang007@gmail.com>
-Subject: [PATCH v4] memory leak fix while calling system_path
-Date: Mon, 17 Sep 2012 16:47:08 +0800
-Message-ID: <CADu=CFoVkk3Vujf3bqJ6SALzpJPC_7uq-rYexer5ESEABd_d4Q@mail.gmail.com>
+From: ulrik@kristnet.org
+Subject: PEBS not supported even if CPU microcode is updated to  =?UTF-8?Q?=30x=32=38=3F?=
+Date: Tue, 18 Sep 2012 08:48:48 +0200
+Message-ID: <ca97dbdf5dd407af0aad762f63916959@kristnet.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:57299 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750728Ab2IQIrJ (ORCPT
+Received: from smtprelay-b21.telenor.se ([195.54.99.212]:45022 "EHLO
+	smtprelay-b21.telenor.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753261Ab2IRGsv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 17 Sep 2012 04:47:09 -0400
+	Tue, 18 Sep 2012 02:48:51 -0400
+Received: from ipb3.telenor.se (ipb3.telenor.se [195.54.127.166])
+	by smtprelay-b21.telenor.se (Postfix) with ESMTP id D3074EA0DE
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Sep 2012 08:48:49 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: acme@ghostprotocols.net, namhyung@gmail.com, balbi@ti.com, a.p.zijlstra@chello.nl, mingo@elte.hu, paulus@samba.org, linux-kernel@vger.kernel.org
 
-memory leak fix while calling system_path
+Hi,
 
-Since v1: Remove an unnecessary null pointer check per Felipe's comments
-Since v2: Make system_path&perf_exec_path always return dynamically
-allocated string
-Since v3: check strdup() per Namhyung's comments
+Perf does not seem to be able to handle PEBS, even with the new CPU 
+0x28 microcode.
 
-Signed-off-by: xieliang <xieliang@xiaomi.com>
----
- tools/perf/builtin-help.c   |   12 +++++++++---
- tools/perf/builtin-script.c |   13 ++++++++++---
- tools/perf/perf.c           |    8 ++++++--
- tools/perf/util/config.c    |   16 +++++-----------
- tools/perf/util/exec_cmd.c  |   42 +++++++++++++++++++++++++++++-------------
- tools/perf/util/exec_cmd.h  |    4 ++--
- tools/perf/util/help.c      |    6 ++++--
- 7 files changed, 65 insertions(+), 36 deletions(-)
-
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 6d5a8a7..180a5bd 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -321,12 +321,13 @@ static void setup_man_path(void)
- {
- 	struct strbuf new_path = STRBUF_INIT;
- 	const char *old_path = getenv("MANPATH");
-+	char *man_path = system_path(PERF_MAN_PATH);
-
- 	/* We should always put ':' after our path. If there is no
- 	 * old_path, the ':' at the end will let 'man' to try
- 	 * system-wide paths after ours to find the manual page. If
- 	 * there is old_path, we need ':' as delimiter. */
--	strbuf_addstr(&new_path, system_path(PERF_MAN_PATH));
-+	strbuf_addstr(&new_path, man_path);
- 	strbuf_addch(&new_path, ':');
- 	if (old_path)
- 		strbuf_addstr(&new_path, old_path);
-@@ -334,6 +335,7 @@ static void setup_man_path(void)
- 	setenv("MANPATH", new_path.buf, 1);
-
- 	strbuf_release(&new_path);
-+	free(man_path);
- }
-
- static void exec_viewer(const char *name, const char *page)
-@@ -371,14 +373,16 @@ static void show_man_page(const char *perf_cmd)
- static void show_info_page(const char *perf_cmd)
- {
- 	const char *page = cmd_to_page(perf_cmd);
--	setenv("INFOPATH", system_path(PERF_INFO_PATH), 1);
-+	char *info_path = system_path(PERF_INFO_PATH);
-+	setenv("INFOPATH", info_path, 1);
- 	execlp("info", "info", "perfman", page, NULL);
-+	free(info_path);
- }
-
- static void get_html_page_path(struct strbuf *page_path, const char *page)
- {
- 	struct stat st;
--	const char *html_path = system_path(PERF_HTML_PATH);
-+	char *html_path = system_path(PERF_HTML_PATH);
-
- 	/* Check that we have a perf documentation directory. */
- 	if (stat(mkpath("%s/perf.html", html_path), &st)
-@@ -387,6 +391,7 @@ static void get_html_page_path(struct strbuf
-*page_path, const char *page)
-
- 	strbuf_init(page_path, 0);
- 	strbuf_addf(page_path, "%s/%s.html", html_path, page);
-+	free(html_path);
- }
-
- /*
-@@ -409,6 +414,7 @@ static void show_html_page(const char *perf_cmd)
- 	get_html_page_path(&page_path, page);
-
- 	open_html(page_path.buf);
-+	strbuf_release(&page_path);
- }
-
- int cmd_help(int argc, const char **argv, const char *prefix __used)
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1e60ab7..528b786 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1021,8 +1021,10 @@ static int list_available_scripts(const struct
-option *opt __used,
- 	struct script_desc *desc;
- 	char first_half[BUFSIZ];
- 	char *script_root;
-+	char *exec_path = perf_exec_path();
-
--	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", perf_exec_path());
-+	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", exec_path);
-+	free(exec_path);
-
- 	scripts_dir = opendir(scripts_path);
- 	if (!scripts_dir)
-@@ -1066,8 +1068,10 @@ static char *get_script_path(const char
-*script_root, const char *suffix)
- 	DIR *scripts_dir, *lang_dir;
- 	char lang_path[MAXPATHLEN];
- 	char *__script_root;
-+	char *exec_path = perf_exec_path();
-
--	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", perf_exec_path());
-+	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", exec_path);
-+	free(exec_path);
-
- 	scripts_dir = opendir(scripts_path);
- 	if (!scripts_dir)
-@@ -1199,6 +1203,7 @@ int cmd_script(int argc, const char **argv,
-const char *prefix __used)
- {
- 	char *rec_script_path = NULL;
- 	char *rep_script_path = NULL;
-+	char *exec_path = NULL;
- 	struct perf_session *session;
- 	char *script_path = NULL;
- 	const char **__argv;
-@@ -1226,7 +1231,9 @@ int cmd_script(int argc, const char **argv,
-const char *prefix __used)
- 	}
-
- 	/* make sure PERF_EXEC_PATH is set for scripts */
--	perf_set_argv_exec_path(perf_exec_path());
-+	exec_path = perf_exec_path();
-+	perf_set_argv_exec_path(exec_path);
-+	free(exec_path);
-
- 	if (argc && !script_name && !rec_script_path && !rep_script_path) {
- 		int live_pipe[2];
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 2b2e225..2198725 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -104,11 +104,15 @@ static int handle_options(const char ***argv,
-int *argc, int *envchanged)
- 			if (*cmd == '=')
- 				perf_set_argv_exec_path(cmd + 1);
- 			else {
--				puts(perf_exec_path());
-+				char *exec_path = perf_exec_path();
-+				puts(exec_path);
-+				free(exec_path);
- 				exit(0);
- 			}
- 		} else if (!strcmp(cmd, "--html-path")) {
--			puts(system_path(PERF_HTML_PATH));
-+			char *html_path = system_path(PERF_HTML_PATH);
-+			puts(html_path);
-+			free(html_path);
- 			exit(0);
- 		} else if (!strcmp(cmd, "-p") || !strcmp(cmd, "--paginate")) {
- 			use_pager = 1;
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 6faa3a1..7fb00e2 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -375,14 +375,6 @@ static int perf_config_from_file(config_fn_t fn,
-const char *filename, void *dat
- 	return ret;
- }
-
--static const char *perf_etc_perfconfig(void)
--{
--	static const char *system_wide;
--	if (!system_wide)
--		system_wide = system_path(ETC_PERFCONFIG);
--	return system_wide;
--}
--
- static int perf_env_bool(const char *k, int def)
- {
- 	const char *v = getenv(k);
-@@ -403,15 +395,17 @@ int perf_config(config_fn_t fn, void *data)
- {
- 	int ret = 0, found = 0;
- 	const char *home = NULL;
-+	char *etc_perfconfig = NULL;
-
- 	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
- 	if (config_exclusive_filename)
- 		return perf_config_from_file(fn, config_exclusive_filename, data);
--	if (perf_config_system() && !access(perf_etc_perfconfig(), R_OK)) {
--		ret += perf_config_from_file(fn, perf_etc_perfconfig(),
--					    data);
-+	etc_perfconfig = system_path(ETC_PERFCONFIG);
-+	if (perf_config_system() && !access(etc_perfconfig, R_OK)) {
-+		ret += perf_config_from_file(fn, etc_perfconfig, data);
- 		found += 1;
- 	}
-+	free(etc_perfconfig);
-
- 	home = getenv("HOME");
- 	if (perf_config_global() && home) {
-diff --git a/tools/perf/util/exec_cmd.c b/tools/perf/util/exec_cmd.c
-index 7adf4ad..7e5c7c2 100644
---- a/tools/perf/util/exec_cmd.c
-+++ b/tools/perf/util/exec_cmd.c
-@@ -9,17 +9,23 @@
- static const char *argv_exec_path;
- static const char *argv0_path;
-
--const char *system_path(const char *path)
-+char *system_path(const char *path)
- {
--	static const char *prefix = PREFIX;
--	struct strbuf d = STRBUF_INIT;
-+	char *new_path = NULL;
-
--	if (is_absolute_path(path))
--		return path;
-+	if (is_absolute_path(path)) {
-+		new_path = strdup(path);
-+		if (!new_path)
-+			die("malloc");
-+		return new_path;
-+	}
-+
-+	new_path = malloc((strlen(PREFIX) + strlen(path) + 2));
-+	if (!new_path)
-+		die("malloc");
-
--	strbuf_addf(&d, "%s/%s", prefix, path);
--	path = strbuf_detach(&d, NULL);
--	return path;
-+	sprintf(new_path, "%s/%s", PREFIX, path);
-+	return new_path;
- }
-
- const char *perf_extract_argv0_path(const char *argv0)
-@@ -52,16 +58,24 @@ void perf_set_argv_exec_path(const char *exec_path)
+     sudo ./perf stat -e branches:pp "true"
 
 
- /* Returns the highest-priority, location to look for perf programs. */
--const char *perf_exec_path(void)
-+char *perf_exec_path(void)
- {
- 	const char *env;
-+	char *path;
+  Performance counter stats for 'true':
 
--	if (argv_exec_path)
--		return argv_exec_path;
-+	if (argv_exec_path) {
-+		path = strdup(argv_exec_path);
-+		if (!path)
-+			die("malloc");
-+		return path;
-+	}
+    <not supported> branches:pp
 
- 	env = getenv(EXEC_PATH_ENVIRONMENT);
- 	if (env && *env) {
--		return env;
-+		path = strdup(env);
-+		if (!path)
-+			die("malloc");
-+		return path;
- 	}
+        0.000717042 seconds time elapsed
 
- 	return system_path(PERF_EXEC_PATH);
-@@ -83,8 +97,9 @@ void setup_path(void)
- {
- 	const char *old_path = getenv("PATH");
- 	struct strbuf new_path = STRBUF_INIT;
-+	char *exec_path = perf_exec_path();
+The output from dmsg write "PEBS is disabled due to CPU errata" BEFORE 
+the microcode is updated during the boot processs later. I guess that 
+may be the problem?
 
--	add_path(&new_path, perf_exec_path());
-+	add_path(&new_path, exec_path);
- 	add_path(&new_path, argv0_path);
+What can I try more to get support for PEBS?
 
- 	if (old_path)
-@@ -95,6 +110,7 @@ void setup_path(void)
- 	setenv("PATH", new_path.buf, 1);
+Thanks.
 
- 	strbuf_release(&new_path);
-+	free(exec_path);
- }
+/Ulrik
 
- static const char **prepare_perf_cmd(const char **argv)
-diff --git a/tools/perf/util/exec_cmd.h b/tools/perf/util/exec_cmd.h
-index bc4b915..8bfde93 100644
---- a/tools/perf/util/exec_cmd.h
-+++ b/tools/perf/util/exec_cmd.h
-@@ -3,10 +3,10 @@
 
- extern void perf_set_argv_exec_path(const char *exec_path);
- extern const char *perf_extract_argv0_path(const char *path);
--extern const char *perf_exec_path(void);
-+extern char *perf_exec_path(void);
- extern void setup_path(void);
- extern int execv_perf_cmd(const char **argv); /* NULL terminated */
- extern int execl_perf_cmd(const char *cmd, ...);
--extern const char *system_path(const char *path);
-+extern char *system_path(const char *path);
+...
+[    0.003839] ACPI: Core revision 20120320
+[    0.012024] ftrace: allocating 23614 entries in 93 pages
+[    0.020716] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.120589] CPU0: Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz stepping 
+07
+[    0.237328] Performance Events: PEBS fmt1+, 16-deep LBR, SandyBridge 
+events, Intel PMU driver.
+[    0.237332] PEBS disabled due to CPU errata.
+[    0.237333] ... version:                3
+[    0.237334] ... bit width:              48
+[    0.237334] ... generic registers:      4
+[    0.237335] ... value mask:             0000ffffffffffff
+[    0.237336] ... max period:             000000007fffffff
+[    0.237336] ... fixed-purpose events:   3
+[    0.237337] ... event mask:             000000070000000f
+[    0.237434] Booting Node   0, Processors  #1 #2 #3 #4 #5 #6 #7 Ok.
+[    0.329982] Brought up 8 CPUs
+...
+[   15.144230] microcode: CPU0 updated to revision 0x28, date = 
+2012-04-24
+[   15.144554] microcode: CPU1 updated to revision 0x28, date = 
+2012-04-24
+[   15.144897] microcode: CPU2 updated to revision 0x28, date = 
+2012-04-24
+[   15.145245] microcode: CPU3 updated to revision 0x28, date = 
+2012-04-24
+[   15.145573] microcode: CPU4 updated to revision 0x28, date = 
+2012-04-24
+[   15.145923] microcode: CPU5 updated to revision 0x28, date = 
+2012-04-24
+[   15.146269] microcode: CPU6 updated to revision 0x28, date = 
+2012-04-24
+[   15.146615] microcode: CPU7 updated to revision 0x28, date = 
+2012-04-24
 
- #endif /* __PERF_EXEC_CMD_H */
-diff --git a/tools/perf/util/help.c b/tools/perf/util/help.c
-index 6f2975a..ba1de76 100644
---- a/tools/perf/util/help.c
-+++ b/tools/perf/util/help.c
-@@ -158,7 +158,7 @@ void load_command_list(const char *prefix,
- 		struct cmdnames *other_cmds)
- {
- 	const char *env_path = getenv("PATH");
--	const char *exec_path = perf_exec_path();
-+	char *exec_path = perf_exec_path();
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 42
+model name      : Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz
+stepping        : 7
+microcode       : 0x28
+cpu MHz         : 1600.000
+cache size      : 8192 KB
+physical id     : 0
+siblings        : 8
+core id         : 0
+cpu cores       : 4
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
+mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe 
+syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl 
+xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx 
+smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt 
+tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts 
+dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips        : 7004.38
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 36 bits physical, 48 bits virtual
+power management:
 
- 	if (exec_path) {
- 		list_commands_in_dir(main_cmds, exec_path, prefix);
-@@ -187,6 +187,7 @@ void load_command_list(const char *prefix,
- 		uniq(other_cmds);
- 	}
- 	exclude_cmds(other_cmds, main_cmds);
-+	free(exec_path);
- }
-
- void list_commands(const char *title, struct cmdnames *main_cmds,
-@@ -202,13 +203,14 @@ void list_commands(const char *title, struct
-cmdnames *main_cmds,
- 			longest = other_cmds->names[i]->len;
-
- 	if (main_cmds->cnt) {
--		const char *exec_path = perf_exec_path();
-+		char *exec_path = perf_exec_path();
- 		printf("available %s in '%s'\n", title, exec_path);
- 		printf("----------------");
- 		mput_char('-', strlen(title) + strlen(exec_path));
- 		putchar('\n');
- 		pretty_print_string_list(main_cmds, longest);
- 		putchar('\n');
-+		free(exec_path);
- 	}
-
- 	if (other_cmds->cnt) {
--- 
-1.7.1
+I'm running Kernel 3.5.4 with the patch 
+https://patchwork.kernel.org/patch/1329691/
