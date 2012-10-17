@@ -1,39 +1,56 @@
-From: Ryan Johnson <ryan.johnson@cs.utoronto.ca>
-Subject: perf top -z not working?
-Date: Wed, 17 Oct 2012 08:26:53 -0400
-Message-ID: <507EA40D.60206@cs.utoronto.ca>
+From: Chulmin Kim <cmkim@core.kaist.ac.kr>
+Subject: Re: perf top -z not working?
+Date: Wed, 17 Oct 2012 22:49:42 +0900
+Message-ID: <507EB776.9030304@core.kaist.ac.kr>
+References: <507EA40D.60206@cs.utoronto.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from bureau84.ns.utoronto.ca ([128.100.132.184]:57602 "EHLO
-	bureau84.ns.utoronto.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756147Ab2JQNnu (ORCPT
+Received: from core.kaist.ac.kr ([143.248.147.118]:35150 "EHLO
+	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757061Ab2JQNuR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 17 Oct 2012 09:43:50 -0400
-Received: from [192.168.0.100] (69-165-148-254.dsl.teksavvy.com [69.165.148.254])
-	(authenticated bits=0)
-	by bureau84.ns.utoronto.ca (8.13.8/8.13.8) with ESMTP id q9HCQkxh005716
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Oct 2012 08:26:47 -0400
+	Wed, 17 Oct 2012 09:50:17 -0400
+In-Reply-To: <507EA40D.60206@cs.utoronto.ca>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
+Cc: Ryan Johnson <ryan.johnson@cs.utoronto.ca>
 
-Hi,
+2012-10-17 =EC=98=A4=ED=9B=84 9:26, Ryan Johnson =EC=93=B4 =EA=B8=80:
+> Hi,
+>
+> (Please CC me in replies, not a list member)
+>
+> It seems that `perf top -z' does not behave as advertized, at least=20
+> not on the 3.2.0-25 kernel (Ubuntu) that I'm running. The man page=20
+> states that it should "zero history across display updates" but the=20
+> counts still seem to accumulate (the total samples reported rises=20
+> monotonically) and processes still show up in the display long after=20
+> they have exited. Pressing `z' or `Z' seems to have no effect, either=
+=2E
 
-(Please CC me in replies, not a list member)
+My kernel version is 3.0.0 (ubuntu 11.10).
+Mine seems to work well. The result was not the accumulated one,=20
+definitely.
 
-It seems that `perf top -z' does not behave as advertized, at least not 
-on the 3.2.0-25 kernel (Ubuntu) that I'm running. The man page states 
-that it should "zero history across display updates" but the counts 
-still seem to accumulate (the total samples reported rises 
-monotonically) and processes still show up in the display long after 
-they have exited. Pressing `z' or `Z' seems to have no effect, either.
+In my opinion, it is a buf in the perf tool in that kernel version.
 
-Have I misunderstood this feature, or is this a bug that has perhaps 
-been fixed in later kernel versions? I haven't been successful searching 
-for information about it, beyond the man pages and what the perf wiki says.
-
-Thanks,
-Ryan
+>
+> Have I misunderstood this feature, or is this a bug that has perhaps=20
+> been fixed in later kernel versions? I haven't been successful=20
+> searching for information about it, beyond the man pages and what the=
+=20
+> perf wiki says.
+>
+> Thanks,
+> Ryan
+>
+> --=20
+> To unsubscribe from this list: send the line "unsubscribe=20
+> linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at http://vger.kernel.org/majordomo-info.html
+>
