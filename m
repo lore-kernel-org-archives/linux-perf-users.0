@@ -1,44 +1,39 @@
-From: Chulmin Kim <cmkim@core.kaist.ac.kr>
-Subject: Question about LLC-load-misses event
-Date: Mon, 15 Oct 2012 21:59:48 +0900
-Message-ID: <507C08C4.1090705@core.kaist.ac.kr>
+From: Ryan Johnson <ryan.johnson@cs.utoronto.ca>
+Subject: perf top -z not working?
+Date: Wed, 17 Oct 2012 08:26:53 -0400
+Message-ID: <507EA40D.60206@cs.utoronto.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from core.kaist.ac.kr ([143.248.147.118]:33992 "EHLO
-	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753529Ab2JOODT (ORCPT
+Received: from bureau84.ns.utoronto.ca ([128.100.132.184]:57602 "EHLO
+	bureau84.ns.utoronto.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756147Ab2JQNnu (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Oct 2012 10:03:19 -0400
-Received: from [143.248.165.115] (az.kaist.ac.kr [143.248.165.115])
-	by core.kaist.ac.kr (8.14.4/8.14.4) with ESMTP id q9FD8x6v019304
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Oct 2012 22:09:00 +0900
+	Wed, 17 Oct 2012 09:43:50 -0400
+Received: from [192.168.0.100] (69-165-148-254.dsl.teksavvy.com [69.165.148.254])
+	(authenticated bits=0)
+	by bureau84.ns.utoronto.ca (8.13.8/8.13.8) with ESMTP id q9HCQkxh005716
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Oct 2012 08:26:47 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Hi, all.
+Hi,
 
-I'm currently evaluating memory performance of my own machine (intel
-x5650 cpu).
-My machine can have NUMA configuration, but it is under control. (only
-local mem access allowed)
+(Please CC me in replies, not a list member)
 
-As i run STREAM benchmark, i monitor LLC cache misses using "perf"
-simultaneously.
-(perf command : perf stat -a -A -e LLC-loads -e LLC-load-misses -e
-instructions sleep 3)
+It seems that `perf top -z' does not behave as advertized, at least not 
+on the 3.2.0-25 kernel (Ubuntu) that I'm running. The man page states 
+that it should "zero history across display updates" but the counts 
+still seem to accumulate (the total samples reported rises 
+monotonically) and processes still show up in the display long after 
+they have exited. Pressing `z' or `Z' seems to have no effect, either.
 
-The problem is,, the bandwidth from STREAM benchmark does not match with
-the monitored value.
+Have I misunderstood this feature, or is this a bug that has perhaps 
+been fixed in later kernel versions? I haven't been successful searching 
+for information about it, beyond the man pages and what the perf wiki says.
 
-e.g.
-I got 9395MB/s from Stream.
-
-"perf" shows 134,642,063 LLC-load-misses for 3 seconds.
--> BW = ((# of events)/(3 seconds)) * 64 bytes / (1024*1024) = 2739MB/s
-In this equation, the term (64bytes) is for cache line size, and the
-term(1024*1024) is for (MB/s).
-
-Why does this mismatch occur?
+Thanks,
+Ryan
