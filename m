@@ -1,79 +1,61 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Multiple commands in perf 3.2.30 and 3.5.5 on Ubuntu 12 do not work
-Date: Thu, 15 Nov 2012 10:25:03 +0900
-Message-ID: <878va3mzdc.fsf@sejong.aot.lge.com>
-References: <loom.20121113T224335-737@post.gmane.org>
+From: Saumil Merchant <msaumil@gmail.com>
+Subject: perf trace timestamps
+Date: Fri, 16 Nov 2012 13:07:20 +0000 (UTC)
+Message-ID: <loom.20121116T140608-755@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE1Q.lge.com ([156.147.1.111]:42565 "EHLO
-	LGEMRELSE1Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S964820Ab2KOBZG (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:37542 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751474Ab2KPNJ4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 14 Nov 2012 20:25:06 -0500
-In-Reply-To: <loom.20121113T224335-737@post.gmane.org> (Florin Trofin's
-	message of "Tue, 13 Nov 2012 23:01:18 +0000 (UTC)")
+	Fri, 16 Nov 2012 08:09:56 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1TZLgK-0004Nv-IZ
+	for linux-perf-users@vger.kernel.org; Fri, 16 Nov 2012 14:10:04 +0100
+Received: from 122.248.161.59 ([122.248.161.59])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Nov 2012 14:10:04 +0100
+Received: from msaumil by 122.248.161.59 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Nov 2012 14:10:04 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Florin Trofin <ftrofin@adobe.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Hi Florin,
+Hi,
+I am trying to understand the origin of the timestamps in the trace output. 
+Here is an example trace of a sample C code.
 
-On Tue, 13 Nov 2012 23:01:18 +0000 (UTC), Florin Trofin wrote:
-> I mentioned in a previous post that "perf archive" command is not recognized on
-> Ubuntu 12.04 (perf version 3.2.30) although it is  listed in the --help output.
-> I wanted to see if the issue was fixed in a later version so I tried
-> Ubuntu 12.10 (perf version 3.5.5) and it has the same problems:
-> archive is not recognized as a valid command, and other commands fail as well:
->
-> $ perf timechart record sleep 2
-> invalid or unsupported event: 'power:cpu_frequency'
-> Run 'perf list' for a list of valid events
->
-> Another command that doesn't work:
->
-> $ perf lock record sleep 2
-> invalid or unsupported event: 'lock:lock_acquire'
-> Run 'perf list' for a list of valid events
->
-> This makes me think that either perf is mostly broken in the new versions
-> or something is wrong on my machine (although installation went smoothly).
-> I installed perf by doing:
->
-> $ sudo apt-get install linux-tools-common
-> $ sudo apt-get install linux-tools-3.5.0-17
->
-> Can somebody shed some light on this please?
+/> perf sched record -a ./a.out
+/> perf script
 
-It looks like a problem of opening a tracepoint event.  More
-specifically there's a problem in accessing debugfs.  Even after
-changing /proc/sys/kernel/perf_events_paranoid to -1, I failed to
-record tracepoint events.
+[ ... ]
+a.out 29311 [000] 1746678.549886: sched_stat_runtime: comm=a.out pid=29311
+runtime=310028 [ns] vruntime=159246710291986646 [ns]
+a.out 29311 [000] 1746678.550885: sched_stat_runtime: comm=a.out pid=29311
+runtime=998470 [ns] vruntime=159246710292985116 [ns]
+a.out 29311 [000] 1746678.550895: sched_stat_runtime: comm=a.out pid=29311
+runtime=11039 [ns] vruntime=159246710292996155 [ns]
+[ ... ]
 
-$ ls /sys/kernel/debug
-ls: cannot open directory /sys/kernel/debug: Permission denied
+My original impression was that this timestamp (eg, 1746678.550895) would align
+with time reported clk_gettime(MONOTONIC,...) function, but it does not. My C
+function above prints out timestamps from clk_gettime(MONOTONIC,..)  function
+and there is a delta of >15 mins.
 
-$ sudo ls -la /sys/kernel/debug | head -3
-total 0
-drwx------. 19 root root 0 Nov  6 10:38 .
-drwxr-xr-x.  8 root root 0 Nov  6 10:38 ..
+Here is the printout on console:
+CLKTIME (MONOTONIC):  1748132.102228068
 
-$ perf record -e sched:sched_switch
-invalid or unsupported event: 'sched:sched_switch'
-Run 'perf list' for a list of valid events
+This delta has been varying from 5 mins to 15+ mins.  My objective is to
+correlate events in a kernel trace with the execution of our user program.  My
+understanding is that both perf and clk_gettime functions on newer x86 systems
+use TSC as the clock source and hence I was confused why they do not align.
 
-I have no idea when it's changed, I used to be abled to access
-tracepoint events as a non-root user with the perf_events_paranoid
-setting.
+Can someone please help?
 
-But this is failed on a recent kernel (w/ Fedora 17).
-
-$ uname -a
-Linux sejong.aot.lge.com 3.7.0-rc2+ #35 SMP PREEMPT Tue Nov 6 10:33:02 KST 2012 x86_64 x86_64 x86_64 GNU/Linux
-
-
-Anyways, running as root will solve your problem I guess.
-
-Thanks,
-Namhyung
+Regards,
+Saumil
