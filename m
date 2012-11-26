@@ -1,60 +1,44 @@
-From: Chulmin Kim <cmkim@core.kaist.ac.kr>
-Subject: Re: Does Perf support AMD cpu perfectly?
-Date: Tue, 27 Nov 2012 00:43:24 +0900
-Message-ID: <50B38E1C.3090401@core.kaist.ac.kr>
-References: <50B3517A.7090505@core.kaist.ac.kr> <50B35D78.9090805@core.kaist.ac.kr> <50B3726C.8070706@core.kaist.ac.kr> <20121126140558.GD1210@krava.brq.redhat.com>
+From: Chris Freehill <cfreehill@gmail.com>
+Subject: perf stat -e cycles -p <pid> sleep 10
+Date: Mon, 26 Nov 2012 22:50:13 +0000 (UTC)
+Message-ID: <loom.20121126T234917-97@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from core.kaist.ac.kr ([143.248.147.118]:50597 "EHLO
-	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754304Ab2KZPoA (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:56972 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757346Ab2KZWyy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 26 Nov 2012 10:44:00 -0500
-In-Reply-To: <20121126140558.GD1210@krava.brq.redhat.com>
+	Mon, 26 Nov 2012 17:54:54 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1Td7Zv-0008Dk-CJ
+	for linux-perf-users@vger.kernel.org; Mon, 26 Nov 2012 23:55:03 +0100
+Received: from gate-tx3.freescale.com ([192.88.168.1])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Nov 2012 23:55:03 +0100
+Received: from cfreehill by gate-tx3.freescale.com with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Nov 2012 23:55:03 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
+Hi,
 
+Apologies if the answer to this is someplace I have not looked. I've searched 
+this list and other sites/FAQ's. 
 
-2012-11-26 =EC=98=A4=ED=9B=84 11:05, Jiri Olsa =EC=93=B4 =EA=B8=80:
-> On Mon, Nov 26, 2012 at 10:45:16PM +0900, Chulmin Kim wrote:
->> Update for this issue.
->>
->> I'm investigating the kernel source.
->>
->> I found that Perf for AMD seems imperfect in linux 3.0 (my machine's
->> linux version).
->>
->> For AMD family 15h, there is a commented line as follow.
->>   - /* nortbridge counters not yet implemented: */  (line 541,
->> perf_event_amd.c )
->
-> there were some updates for 15h models recently,
-> you probably need to try latest sources
->
+I've noticed that command listed in the subject line always yields
 
-Thanks for your advice.
+<not counted> cycles
 
-I installed v3.6.7 which is the latest stable kernel version.
+unless the target process is suspended. I have noticed this with a few different
+distributions. Is the fact that the target process has to be suspended at least
+once a known design limitation or would it be considered a bug?
 
-However, the result of Perf shows that the northbridge event is not yet=
-=20
-supported as shown below.
-root@ubuntu:~# /bin/perf stat -a -x ' ' -C 0 -e rc0 -e r4008307e1 sleep=
- 1
-3956883 raw 0xc0
-<not supported> raw 0x4008307e1:HG
+Thank you for your help.
 
-The recent patches for this issue might not have been included yet.
-
-I should add the patchset I mentioned in this thread.
-Will report it soon. :)
-
-
-> jirka
->
+Chris
