@@ -1,106 +1,38 @@
-From: Chulmin Kim <cmkim@core.kaist.ac.kr>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: Does Perf support AMD cpu perfectly?
-Date: Mon, 26 Nov 2012 22:53:00 +0900
-Message-ID: <50B3743C.5020508@core.kaist.ac.kr>
-References: <50B3517A.7090505@core.kaist.ac.kr> <50B35D78.9090805@core.kaist.ac.kr> <50B3726C.8070706@core.kaist.ac.kr>
+Date: Mon, 26 Nov 2012 15:05:58 +0100
+Message-ID: <20121126140558.GD1210@krava.brq.redhat.com>
+References: <50B3517A.7090505@core.kaist.ac.kr>
+ <50B35D78.9090805@core.kaist.ac.kr>
+ <50B3726C.8070706@core.kaist.ac.kr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from core.kaist.ac.kr ([143.248.147.118]:35429 "EHLO
-	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754017Ab2KZNxc (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:15445 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752832Ab2KZOGE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 26 Nov 2012 08:53:32 -0500
-Received: from [143.248.165.115] (az.kaist.ac.kr [143.248.165.115])
-	by core.kaist.ac.kr (8.14.4/8.14.4) with ESMTP id qAQDupJ0025037
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Nov 2012 22:56:51 +0900
+	Mon, 26 Nov 2012 09:06:04 -0500
+Content-Disposition: inline
 In-Reply-To: <50B3726C.8070706@core.kaist.ac.kr>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Chulmin Kim <cmkim@core.kaist.ac.kr>
+Cc: linux-perf-users@vger.kernel.org
 
-Sorry for the posting with no patience.
-
-I've found the patch. (https://patchwork.kernel.org/patch/1722691/)
-
-It's pretty new. (released on 10,nov,2012)
-
-If you have something to mention about this issue,
-
-don't hesitate to contact me.
-
-Thanks.
-
-2012-11-26 =BF=C0=C8=C4 10:45, Chulmin Kim =BE=B4 =B1=DB:
+On Mon, Nov 26, 2012 at 10:45:16PM +0900, Chulmin Kim wrote:
 > Update for this issue.
->=20
+> 
 > I'm investigating the kernel source.
->=20
+> 
 > I found that Perf for AMD seems imperfect in linux 3.0 (my machine's
 > linux version).
->=20
+> 
 > For AMD family 15h, there is a commented line as follow.
->   - /* nortbridge counters not yet implemented: */  (line 541,
+>  - /* nortbridge counters not yet implemented: */  (line 541,
 > perf_event_amd.c )
->=20
->=20
-> According to my further exploration, linux 3.2 does not support it ei=
-ther.
->=20
-> Does any of you know or have the patch for it?
->=20
->=20
-> 2012-11-26 =BF=C0=C8=C4 9:15, Chulmin Kim =BE=B4 =B1=DB:
->> Update for this issue.
->>
->> - rc0 and instruction events show the similar result.
->> - still, the count of L3 cache miss event is 1/10 of what i expected=
-=2E
->> (LLC-load-misses)
->>
->>
->>
->> 2012-11-26 =BF=C0=C8=C4 8:24, Chulmin Kim =BE=B4 =B1=DB:
->>> Hi all.
->>>
->>> I'm on the way of monitoring AMD machine.
->>>
->>> I wonder Perf is supporting AMD PMU Events perfectly or not.
->>>
->>> It seems not working correctly despite the same command works in in=
-tel
->>> machines perfectly.
->>>
->>> command : (perf stat -e rc0 -e instructions ./blah)
->>> result : the value for "rc0" almost equals to that of "instruction"=
- in
->>> Intel machine, while it does not in AMD machine
->>>
->>>
->>> Other events such as cache events seem weird also.
->>>
->>> Is there any material mentioning this issue?
->>>
->>>
->>>
->>> Thanks!
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-per=
-f-users" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-perf=
--users" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-=
-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+
+there were some updates for 15h models recently,
+you probably need to try latest sources
+
+jirka
