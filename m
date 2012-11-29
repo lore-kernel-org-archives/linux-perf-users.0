@@ -1,43 +1,46 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: cboxes on NehalemEX
-Date: Wed, 28 Nov 2012 12:33:22 -0800
-Message-ID: <m2fw3th3hp.fsf@firstfloor.org>
-References: <OF1ABEA8BA.B758F3D3-ONC1257AB8.00507893-C1257AB8.00512F18@ch.ibm.com>
+From: Chulmin Kim <cmkim@core.kaist.ac.kr>
+Subject: PEBS event monitoring
+Date: Thu, 29 Nov 2012 15:08:16 +0900
+Message-ID: <50B6FBD0.1010406@core.kaist.ac.kr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:14794 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932085Ab2K1UdZ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 28 Nov 2012 15:33:25 -0500
-In-Reply-To: <OF1ABEA8BA.B758F3D3-ONC1257AB8.00507893-C1257AB8.00512F18@ch.ibm.com>
-	(Animesh K. Trivedi1's message of "Fri, 16 Nov 2012 15:46:36 +0100")
+Received: from core.kaist.ac.kr ([143.248.147.118]:39478 "EHLO
+	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751344Ab2K2GIV (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 29 Nov 2012 01:08:21 -0500
+Received: from [143.248.165.115] (az.kaist.ac.kr [143.248.165.115])
+	by core.kaist.ac.kr (8.14.4/8.14.4) with ESMTP id qAT6C5xM011492
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Nov 2012 15:12:06 +0900
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Animesh K Trivedi1 <ZRLATR@ch.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, Bernard Metzler <BMT@zurich.ibm.com>
+To: linux-perf-users@vger.kernel.org
 
-Animesh K Trivedi1 <ZRLATR@ch.ibm.com> writes:
+Hi, all.
 
-> Hi all,
->
-> I'm testing/using uncore support on a dual socket NehalemEX (Xeon E7520)
-> box on 3.7-rc1.
-> It shows me only 4 CBOXes under devices. Although the document (Uncore
-> programming
-> for 7500) says that there should be 8 CBOXes. Am I missing something?
+Sorry for consecutive basic questions.
 
-The number of CBOXes depends on the number of CPU cores in the socket.
-Each core has a CBOX.  You would only see 8 on a 8 core CPU.
+I am about to use PEBS monitoring of Intel CPU. (westmere)
 
+Let me elaborate pfmon example a bit.
 
-> get a global view of LLC behaviour shouldn't I have to sum up the count of
-> events from all
-> physical processor's CBOXes.
+ %  pfmon --smpl-module=pebs -einstructions_retired --inv=1
+--counter-mask=1 --long-smpl-periods=2660000 -uk -- foo
+ # counts   %self    %cum          code addr
+     1976  70.67%  70.67% 0x00000000004005e9
+      710  25.39%  96.07% 0x00000000004005f1
+       61   2.18%  98.25% 0x00000000004005e0
+       21   0.75%  99.00% 0x00000000004005ed
+       10   0.36%  99.36% 0x00000000004005f4
+        2   0.07%  99.43% 0xffffffff80583110
+        2   0.07%  99.50% 0xffffffff8024b4f8
 
-Yes. Each BOX has its own counters.
+As shown in the above,
+I want to get the count number attached with address information.
 
--Andi
+While the example is only for retired instruction event, I want the same
+thing for memory event (mem_load_retired) using Perf.
 
--- 
-ak@linux.intel.com -- Speaking for myself only
+Is there any guide for this issue?
