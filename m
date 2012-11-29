@@ -1,56 +1,75 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: PEBS event monitoring
-Date: Thu, 29 Nov 2012 16:06:55 +0900
-Message-ID: <87hao8q44w.fsf@sejong.aot.lge.com>
-References: <50B6FBD0.1010406@core.kaist.ac.kr>
+From: Animesh K Trivedi1 <ZRLATR@ch.ibm.com>
+Subject: Re: cboxes on NehalemEX
+Date: Thu, 29 Nov 2012 10:15:04 +0100
+Message-ID: <OF06F65378.873F0645-ONC1257AC5.00324D5B-C1257AC5.0032D88B@ch.ibm.com>
+References: <OF1ABEA8BA.B758F3D3-ONC1257AB8.00507893-C1257AB8.00512F18@ch.ibm.com> <m2fw3th3hp.fsf@firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:58845 "EHLO
-	LGEMRELSE6Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751100Ab2K2HG5 (ORCPT
+Received: from e06smtp13.uk.ibm.com ([195.75.94.109]:58356 "EHLO
+	e06smtp13.uk.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751392Ab2K2JPn (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 29 Nov 2012 02:06:57 -0500
-In-Reply-To: <50B6FBD0.1010406@core.kaist.ac.kr> (Chulmin Kim's message of
-	"Thu, 29 Nov 2012 15:08:16 +0900")
+	Thu, 29 Nov 2012 04:15:43 -0500
+Received: from /spool/local
+	by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+	for <linux-perf-users@vger.kernel.org> from <zrlatr@ch.ibm.com>;
+	Thu, 29 Nov 2012 09:15:40 -0000
+Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com [9.149.37.217])
+	by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id qAT9F6C850069568
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Nov 2012 09:15:06 GMT
+Received: from d06av06.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av06.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id qAT9FDQT009557
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Nov 2012 02:15:13 -0700
+In-Reply-To: <m2fw3th3hp.fsf@firstfloor.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Chulmin Kim <cmkim@core.kaist.ac.kr>
-Cc: linux-perf-users@vger.kernel.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: Bernard Metzler <BMT@zurich.ibm.com>, linux-perf-users@vger.kernel.org
 
-Hi Chulmin,
+Hi Andi,
 
-On Thu, 29 Nov 2012 15:08:16 +0900, Chulmin Kim wrote:
-> Hi, all.
->
-> Sorry for consecutive basic questions.
->
-> I am about to use PEBS monitoring of Intel CPU. (westmere)
->
-> Let me elaborate pfmon example a bit.
->
->  %  pfmon --smpl-module=pebs -einstructions_retired --inv=1
-> --counter-mask=1 --long-smpl-periods=2660000 -uk -- foo
->  # counts   %self    %cum          code addr
->      1976  70.67%  70.67% 0x00000000004005e9
->       710  25.39%  96.07% 0x00000000004005f1
->        61   2.18%  98.25% 0x00000000004005e0
->        21   0.75%  99.00% 0x00000000004005ed
->        10   0.36%  99.36% 0x00000000004005f4
->         2   0.07%  99.43% 0xffffffff80583110
->         2   0.07%  99.50% 0xffffffff8024b4f8
->
-> As shown in the above,
-> I want to get the count number attached with address information.
->
-> While the example is only for retired instruction event, I want the same
-> thing for memory event (mem_load_retired) using Perf.
->
-> Is there any guide for this issue?
+Thanks for the reply. E7520 have 4 cores (and 8 threads, though I assume
+that is irrelevant) but in a dual-socket configuration shouldn't I see
+total of 8 CBoxes? 4 CBoxes for each E7520 processor ?
 
-Is this what you're looking for? (FYI, it's not merged yet)
+Cheers,
+--
+Animesh
 
-https://lkml.org/lkml/2012/11/21/295
+Andi Kleen <andi@firstfloor.org> wrote on 11/28/2012 09:33:22 PM:
 
-Thanks,
-Namhyung
+> From: Andi Kleen <andi@firstfloor.org>
+> To: Animesh K Trivedi1/Zurich/IBM@IBMCH,
+> Cc: linux-perf-users@vger.kernel.org, Bernard Metzler
+<BMT@zurich.ibm.com>
+> Date: 11/28/2012 09:33 PM
+> Subject: Re: cboxes on NehalemEX
+>
+> Animesh K Trivedi1 <ZRLATR@ch.ibm.com> writes:
+>
+> > Hi all,
+> >
+> > I'm testing/using uncore support on a dual socket NehalemEX (Xeon
+E7520)
+> > box on 3.7-rc1.
+> > It shows me only 4 CBOXes under devices. Although the document (Uncore
+> > programming
+> > for 7500) says that there should be 8 CBOXes. Am I missing something?
+>
+> The number of CBOXes depends on the number of CPU cores in the socket.
+> Each core has a CBOX.  You would only see 8 on a 8 core CPU.
+>
+>
+> > get a global view of LLC behaviour shouldn't I have to sum up the count
+of
+> > events from all
+> > physical processor's CBOXes.
+>
+> Yes. Each BOX has its own counters.
+>
+> -Andi
+>
+> --
+> ak@linux.intel.com -- Speaking for myself only
+>
