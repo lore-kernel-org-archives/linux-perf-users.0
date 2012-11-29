@@ -1,46 +1,53 @@
-From: Chulmin Kim <cmkim@core.kaist.ac.kr>
-Subject: PEBS event monitoring
-Date: Thu, 29 Nov 2012 15:08:16 +0900
-Message-ID: <50B6FBD0.1010406@core.kaist.ac.kr>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Queries on using PERF tool
+Date: Thu, 29 Nov 2012 15:59:59 +0900
+Message-ID: <87lidkq4gg.fsf@sejong.aot.lge.com>
+References: <loom.20121128T064019-497@post.gmane.org>
+	<50B5A903.5080003@core.kaist.ac.kr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from core.kaist.ac.kr ([143.248.147.118]:39478 "EHLO
-	core.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751344Ab2K2GIV (ORCPT
+Received: from LGEMRELSE7Q.lge.com ([156.147.1.151]:46631 "EHLO
+	LGEMRELSE7Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751039Ab2K2HAB convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 29 Nov 2012 01:08:21 -0500
-Received: from [143.248.165.115] (az.kaist.ac.kr [143.248.165.115])
-	by core.kaist.ac.kr (8.14.4/8.14.4) with ESMTP id qAT6C5xM011492
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Nov 2012 15:12:06 +0900
+	Thu, 29 Nov 2012 02:00:01 -0500
+In-Reply-To: <50B5A903.5080003@core.kaist.ac.kr> (Chulmin Kim's message of
+	"Wed, 28 Nov 2012 15:02:43 +0900")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Chulmin Kim <cmkim@core.kaist.ac.kr>
+Cc: Shahina Rabbani <shahinarabbani.shaik@gmail.com>, linux-perf-users@vger.kernel.org
 
-Hi, all.
+Hi,
 
-Sorry for consecutive basic questions.
+On Wed, 28 Nov 2012 15:02:43 +0900, Chulmin Kim wrote:
+> 2012-11-28 =EC=98=A4=ED=9B=84 2:47, Shahina Rabbani =EC=93=B4 =EA=B8=80=
+:
+>> Hi,
+>>
+>> I am a new user of PERF tool. I have few questions to ask about the =
+PERF tool.
+>> Please help me with the answers.
+>>
+>> Q1. Is it possible to use PERF tool on a piece of code? Say i have a=
+ process P1
+>> and the process has several functions F1, F2, F3. Is it possible to =
+perform
+>> profilng only on F1 Function ??
+>>
+>
+> As other profiling tools do, PERF also supports monitoring per
+> function (per SYMBOL).
+>
+> You can select the result related with the function you are intereste=
+d in.
 
-I am about to use PEBS monitoring of Intel CPU. (westmere)
+It's not profiling the function only, it's just filtering the function
+in the whole result.  You might want to use 'perf probe' command - on a
+recent kernel/perf tools support uprobe which is able to insert probe
+points dynamically to any user-level codes/functions.
 
-Let me elaborate pfmon example a bit.
-
- %  pfmon --smpl-module=pebs -einstructions_retired --inv=1
---counter-mask=1 --long-smpl-periods=2660000 -uk -- foo
- # counts   %self    %cum          code addr
-     1976  70.67%  70.67% 0x00000000004005e9
-      710  25.39%  96.07% 0x00000000004005f1
-       61   2.18%  98.25% 0x00000000004005e0
-       21   0.75%  99.00% 0x00000000004005ed
-       10   0.36%  99.36% 0x00000000004005f4
-        2   0.07%  99.43% 0xffffffff80583110
-        2   0.07%  99.50% 0xffffffff8024b4f8
-
-As shown in the above,
-I want to get the count number attached with address information.
-
-While the example is only for retired instruction event, I want the same
-thing for memory event (mem_load_retired) using Perf.
-
-Is there any guide for this issue?
+Thanks,
+Namhyung
