@@ -1,51 +1,55 @@
-From: Dervin Thunk <dervin.thunk@gmail.com>
-Subject: perf not measuring LLC events?
-Date: Sat, 15 Dec 2012 18:26:22 +0000 (UTC)
-Message-ID: <loom.20121215T192044-606@post.gmane.org>
+From: Guru Prasad <gurupras@buffalo.edu>
+Subject: Sampling the perf counters
+Date: Sun, 16 Dec 2012 11:29:32 -0500
+Message-ID: <CAMefCkCMj2XNE15u9QEMKW0=0HU=QS3KLyxiyK40Zb-qaZxt6w@mail.gmail.com>
+References: <CAMefCkBP4-We-jGet6EaWDGcztvMiKPsVBVVs7d3hyxOncSzFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:58072 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750995Ab2LOS3y (ORCPT
+Received: from mail-ie0-f174.google.com ([209.85.223.174]:46535 "EHLO
+	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750955Ab2LPQ3d (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 15 Dec 2012 13:29:54 -0500
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1TjwUt-0001uJ-JU
-	for linux-perf-users@vger.kernel.org; Sat, 15 Dec 2012 19:30:04 +0100
-Received: from pc-233-76-241-201.cm.vtr.net ([201.241.76.233])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Sat, 15 Dec 2012 19:30:03 +0100
-Received: from dervin.thunk by pc-233-76-241-201.cm.vtr.net with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Sat, 15 Dec 2012 19:30:03 +0100
+	Sun, 16 Dec 2012 11:29:33 -0500
+Received: by mail-ie0-f174.google.com with SMTP id c11so8189376ieb.19
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Dec 2012 08:29:32 -0800 (PST)
+In-Reply-To: <CAMefCkBP4-We-jGet6EaWDGcztvMiKPsVBVVs7d3hyxOncSzFg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Dear all,
+I modified Perf Stat to enable it to sample the performance counters
+periodically. To do this, I moved the sampling portion of the code
+into the while block.
+While this works, I seem to get some erroneous data; such as cycle
+counter being the same whereas instruction counter increased.
 
-I'm trying to measure the LLC events of a program. I'm running
-linux-tools-3.2.0- 34 on a fairly recent 4 core Intel machine. For a
-certain program that reads a 64 MB file into memory, I get
+while(!done) {
+            nanosleep(&delay,NULL);
+            update_stats(&walltime_nsecs_stats, (rdclock() - t0));
+            if (no_aggr) {
+                list_for_each_entry(counter, &evsel_list->entries, node) {
 
- Performance counter stats for './algo data/E.dna':
+                    read_counter(counter);
+                }
+            } else {
+                list_for_each_entry(counter, &evsel_list->entries, node) {
+                    read_counter_aggr(counter);
+                }
 
-                 0 LLC-loads                                                   
-                 0 LLC-load-misses
-        26,538,349 cache-misses                                                
-     4,465,644,541 L1-dcache-misses                                            
+                if(verbose)
+                    fprintf(stdout , "\n\n");
+            }
+}
 
-      35.116615511 seconds time elapsed
+The command that I use to do this is
+perf stat -e cycles,instructions -p <pid>
 
-I have tried this in another machine, and it does give me some results
-for LLC.  Also Valgrind gives me results (different from 0, that is)
+I believe this is because a context switch to the process being
+monitored happens after perf reads the first counter (cycles).
+Hence, after the context switch, when perf runs, it reads the
+instruction counter which has moved ahead (as the process executed
+upon context switching). This causes the cycle counter to reflect no
+change in this sample whereas the instruction counter changed.
 
-Any idea what I'm doing wrong? Anyone else experiencing this problem
-with perf right now? Please let me know if I need to provide more
-information.
-
-Thanks.
+Is there any way to circumvent this issue?
