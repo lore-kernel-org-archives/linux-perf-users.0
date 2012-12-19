@@ -1,55 +1,57 @@
-From: Guru Prasad <gurupras@buffalo.edu>
-Subject: Sampling the perf counters
-Date: Sun, 16 Dec 2012 11:29:32 -0500
-Message-ID: <CAMefCkCMj2XNE15u9QEMKW0=0HU=QS3KLyxiyK40Zb-qaZxt6w@mail.gmail.com>
-References: <CAMefCkBP4-We-jGet6EaWDGcztvMiKPsVBVVs7d3hyxOncSzFg@mail.gmail.com>
+From: Shahina Rabbani <shahinarabbani.shaik@gmail.com>
+Subject: perf listed events are not supported when tested
+Date: Wed, 19 Dec 2012 14:54:09 +0000 (UTC)
+Message-ID: <loom.20121219T155022-994@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ie0-f174.google.com ([209.85.223.174]:46535 "EHLO
-	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750955Ab2LPQ3d (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:57435 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751516Ab2LSOy0 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 16 Dec 2012 11:29:33 -0500
-Received: by mail-ie0-f174.google.com with SMTP id c11so8189376ieb.19
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Dec 2012 08:29:32 -0800 (PST)
-In-Reply-To: <CAMefCkBP4-We-jGet6EaWDGcztvMiKPsVBVVs7d3hyxOncSzFg@mail.gmail.com>
+	Wed, 19 Dec 2012 09:54:26 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1TlL2Z-0001ip-2t
+	for linux-perf-users@vger.kernel.org; Wed, 19 Dec 2012 15:54:35 +0100
+Received: from 106.51.156.173 ([106.51.156.173])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Dec 2012 15:54:35 +0100
+Received: from shahinarabbani.shaik by 106.51.156.173 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Dec 2012 15:54:35 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-I modified Perf Stat to enable it to sample the performance counters
-periodically. To do this, I moved the sampling portion of the code
-into the while block.
-While this works, I seem to get some erroneous data; such as cycle
-counter being the same whereas instruction counter increased.
+Hi,
 
-while(!done) {
-            nanosleep(&delay,NULL);
-            update_stats(&walltime_nsecs_stats, (rdclock() - t0));
-            if (no_aggr) {
-                list_for_each_entry(counter, &evsel_list->entries, node) {
+I am working on perf tool from last 1 month. 
+I am using arndale board.
+I did native compilation of perf tool on arndale target board. 
+I set up the target board by following the steps from
+ 
+https://wiki.linaro.org/Boards/Arndale/Setup/EnterpriseUbuntuServer 
 
-                    read_counter(counter);
-                }
-            } else {
-                list_for_each_entry(counter, &evsel_list->entries, node) {
-                    read_counter_aggr(counter);
-                }
+I took the same kernel source code to target board and 
+did perf compiling and got the perf tool.
 
-                if(verbose)
-                    fprintf(stdout , "\n\n");
-            }
-}
+Now the  problem is that :
+perf list shows a list of pre-deifned events,
+but when i tried to count on those events it gives error message.
 
-The command that I use to do this is
-perf stat -e cycles,instructions -p <pid>
+Example:
 
-I believe this is because a context switch to the process being
-monitored happens after perf reads the first counter (cycles).
-Hence, after the context switch, when perf runs, it reads the
-instruction counter which has moved ahead (as the process executed
-upon context switching). This causes the cycle counter to reflect no
-change in this sample whereas the instruction counter changed.
+perf record -e cycles ls : it works well
+perf record -e instructions ls : it gives error saying 
+"The instructions event is not supported.  ls: Terminated"
 
-Is there any way to circumvent this issue?
+But perf list shows all thse events.
+
+Please help me.
+
+
+Thanks,
+Shahina Rabbani
