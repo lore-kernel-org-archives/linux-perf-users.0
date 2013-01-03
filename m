@@ -1,41 +1,40 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: perf-<pid>.map I generated for jit codes lose effect when hugepage used
-Date: Mon, 31 Dec 2012 11:40:57 -0800
-Message-ID: <m2bodac8mu.fsf@firstfloor.org>
-References: <C9CE69BB2598EB41AAEEDA105E742F4884B55FF1@G9W0727.americas.hpqcorp.net>
+From: Shahina Rabbani <shahinarabbani.shaik@gmail.com>
+Subject: Downloading perf 3.6 package
+Date: Thu, 3 Jan 2013 10:23:34 +0000 (UTC)
+Message-ID: <loom.20130103T111920-71@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga14.intel.com ([143.182.124.37]:4670 "EHLO mga14.intel.com"
+Received: from plane.gmane.org ([80.91.229.3]:51338 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751679Ab2LaTk7 convert rfc822-to-8bit (ORCPT
+	id S1752757Ab3ACKXu (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 31 Dec 2012 14:40:59 -0500
-In-Reply-To: <C9CE69BB2598EB41AAEEDA105E742F4884B55FF1@G9W0727.americas.hpqcorp.net>
-	(Wen-Jie Zhu's message of "Mon, 31 Dec 2012 06:02:27 +0000")
+	Thu, 3 Jan 2013 05:23:50 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1Tqhxz-0006hx-Kb
+	for linux-perf-users@vger.kernel.org; Thu, 03 Jan 2013 11:24:04 +0100
+Received: from 125.21.230.68 ([125.21.230.68])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Jan 2013 11:24:03 +0100
+Received: from shahinarabbani.shaik by 125.21.230.68 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Jan 2013 11:24:03 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Zhu, Wen-Jie (Joshua)" <zhu.wen-jie@hp.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-"Zhu, Wen-Jie (Joshua)" <zhu.wen-jie@hp.com> writes:
->
-> Therefore in order to avoid this problem, I temporarily change the co=
-des of is_anon_memory() into following:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn (strcmp(filename, "//anon") && strcmp(filename, "/anon_hugepage (d=
-eleted)")) =3D=3D 0;
->
-> I already verify this problem in =C2=A0kernel 3.5.0-21-generic and RH=
-EL kernel 2.6.32-279.el6.
->
-> Do you have any better solution replacement?
+Hi,
+
+I am trying to create a debian package for perf 3.6 version,
+as it was not available in:
+http://ports.ubuntu.com/pool/main/l/linux/
+
+Can anybody help me giving the link to download
+the perf package for linux kernel version 3.6.
 
 
-Your fix looks good to me, probably you just need to send it as a more
-formal patch.
-
--Andi
---=20
-ak@linux.intel.com -- Speaking for myself only
+Thanks,
+Shahina Rabbani
