@@ -1,42 +1,43 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Appended data not reportable
-Date: Fri, 04 Jan 2013 16:17:44 -0700
-Message-ID: <50E76318.8040805@gmail.com>
-References: <50E75786.4040902@nist.gov>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: perf top shows [unknown]
+Date: Sat, 05 Jan 2013 22:54:58 -0800
+Message-ID: <m27gnqdcn1.fsf@firstfloor.org>
+References: <20130105085225.cfe28f3dad43a2148885c2f4@lavabit.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f52.google.com ([209.85.160.52]:64113 "EHLO
-	mail-pb0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754749Ab3ADXRs (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:32959 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750854Ab3AFGzW (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 4 Jan 2013 18:17:48 -0500
-Received: by mail-pb0-f52.google.com with SMTP id ro2so9382912pbb.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jan 2013 15:17:47 -0800 (PST)
-In-Reply-To: <50E75786.4040902@nist.gov>
+	Sun, 6 Jan 2013 01:55:22 -0500
+Received: from public by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <public@plane.gmane.org>)
+	id 1Trk8m-00050N-F7
+	for linux-perf-users@vger.kernel.org; Sun, 06 Jan 2013 07:55:28 +0100
+In-Reply-To: <20130105085225.cfe28f3dad43a2148885c2f4@lavabit.com> (rh's
+	message of "Sat, 5 Jan 2013 08:52:25 -0800")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Flater <dflater@nist.gov>
-Cc: Perf Users <linux-perf-users@vger.kernel.org>
+To: rh <public-richard_hubbe11-N9AOi2cAC9ZBDgjK7y7TUQ@plane.gmane.org>
+Cc: public-linux-perf-users-u79uwXL29TY76Z2rM5mHXA@plane.gmane.org
 
-On 1/4/13 3:28 PM, David Flater wrote:
-> With kernel/perf 3.7.1, trying to do something akin to the "sum" option of
-> gprof to pool the samples from multiple runs.
->
-> This option from the perf-record man page looked promising:
-> -A, --append
->      Append to the output file to do incremental profiling.
->
-> bash-4.2$ perf record -F 1000 ./app
-> bash-4.2$ perf record -F 1000 -A ./app
->
-> perf.data gets bigger, but then neither perf report nor perf script work.  Both
-> say:
-> 0x1a0 [0]: failed to process type: 0
->
-> Is this a regression?
 
-It's been broken for a long time now.
 
-David
+rh <richard_hubbe11-N9AOi2cAC9ZBDgjK7y7TUQ@public.gmane.org> writes:
+
+> How to change things so that [unknown] becomes [something known]?
+>
+> When I run perf top 
+> I see [unknown] in the 2nd column. Am I missing a build flag?
+> I specified vmlinux too.
+>
+> I can't find anything else about this, how would I go about discovering
+> what that [unknown] is about?
+
+I often see this when I run perf top as non root. Fix: run as root.
+
+-Andi
+
+-- 
+ak@linux.intel.com -- Speaking for myself only
