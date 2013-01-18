@@ -1,35 +1,48 @@
-From: Digant <digantdesai@gmail.com>
-Subject: Task Profiling
-Date: Sun, 13 Jan 2013 21:59:29 -0700
-Message-ID: <CAHbVqFa_8qLtEakFwXjOu-V8dPH5bGyyfeCXET8eFYrOYq5dNw@mail.gmail.com>
+From: Jeff Johnson <jerojohn@ucsc.edu>
+Subject: Re: perf not measuring LLC events?
+Date: Fri, 18 Jan 2013 16:28:51 +0000 (UTC)
+Message-ID: <loom.20130118T172647-728@post.gmane.org>
+References: <loom.20121215T192044-606@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-la0-f54.google.com ([209.85.215.54]:63544 "EHLO
-	mail-la0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752333Ab3ANFFO (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:33431 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751146Ab3ARQev (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 14 Jan 2013 00:05:14 -0500
-Received: by mail-la0-f54.google.com with SMTP id fp12so3344361lab.41
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Jan 2013 21:05:12 -0800 (PST)
+	Fri, 18 Jan 2013 11:34:51 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1TwEuF-0006ex-O1
+	for linux-perf-users@vger.kernel.org; Fri, 18 Jan 2013 17:35:04 +0100
+Received: from delaware-204-222.ucsc.edu ([128.114.204.222])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jan 2013 17:35:03 +0100
+Received: from jerojohn by delaware-204-222.ucsc.edu with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jan 2013 17:35:03 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Hi All,
+Dervin Thunk <dervin.thunk <at> gmail.com> writes:
 
-I wish to profile all tasks with one or more PMU events for all time
-on all CPUs. What I mean is I wish to add a support inside kernel to
-check average IPC of all running task individually. And also user
-READ_ONLY through something like "/proc/<PID>/avg_IPC".
+> 
+> Dear all,
+> 
+> I'm trying to measure the LLC events of a program. I'm running
+> linux-tools-3.2.0- 34 on a fairly recent 4 core Intel machine. For a
+> certain program that reads a 64 MB file into memory, I get
+> 
+>  Performance counter stats for './algo data/E.dna':
+> 
+>                  0 LLC-loads                                                   
+>                  0 LLC-load-misses
 
-I checked kernel perf-events source code seems overwhelmingly
-complicated and mainly for user-space perf tool support.
-I could not find much documents for inside kernel use for perf_events
-mainly per task PMUs except watchdog example in FAQs.
-I am using Intel SNB with kernel-v3.5.5. If any one can point me in
-right direction that will be helpful.
 
-I am new to this mailing list sorry if I did something stupid by asking ..thanks
-Regards,
-Digant Desai.
+Dervin, 
+I am experiencing the same issue. I am running perf on an i5 machine. Have you 
+gotten any feedback regarding this? 
+-Jeff
