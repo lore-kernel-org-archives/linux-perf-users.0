@@ -1,48 +1,49 @@
-From: Jeff Johnson <jerojohn@ucsc.edu>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: perf not measuring LLC events?
-Date: Fri, 18 Jan 2013 16:28:51 +0000 (UTC)
-Message-ID: <loom.20130118T172647-728@post.gmane.org>
+Date: Mon, 21 Jan 2013 15:38:16 +0100
+Message-ID: <20130121143816.GE1995@krava.brq.redhat.com>
 References: <loom.20121215T192044-606@post.gmane.org>
+ <loom.20130118T172647-728@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:33431 "EHLO plane.gmane.org"
+Received: from mx1.redhat.com ([209.132.183.28]:60781 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751146Ab3ARQev (ORCPT
+	id S1755388Ab3AUOiU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Jan 2013 11:34:51 -0500
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1TwEuF-0006ex-O1
-	for linux-perf-users@vger.kernel.org; Fri, 18 Jan 2013 17:35:04 +0100
-Received: from delaware-204-222.ucsc.edu ([128.114.204.222])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jan 2013 17:35:03 +0100
-Received: from jerojohn by delaware-204-222.ucsc.edu with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jan 2013 17:35:03 +0100
+	Mon, 21 Jan 2013 09:38:20 -0500
+Content-Disposition: inline
+In-Reply-To: <loom.20130118T172647-728@post.gmane.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Jeff Johnson <jerojohn@ucsc.edu>
+Cc: linux-perf-users@vger.kernel.org
 
-Dervin Thunk <dervin.thunk <at> gmail.com> writes:
+On Fri, Jan 18, 2013 at 04:28:51PM +0000, Jeff Johnson wrote:
+> Dervin Thunk <dervin.thunk <at> gmail.com> writes:
+> 
+> > 
+> > Dear all,
+> > 
+> > I'm trying to measure the LLC events of a program. I'm running
+> > linux-tools-3.2.0- 34 on a fairly recent 4 core Intel machine. For a
+> > certain program that reads a 64 MB file into memory, I get
+> > 
+> >  Performance counter stats for './algo data/E.dna':
+> > 
+> >                  0 LLC-loads                                                   
+> >                  0 LLC-load-misses
+> 
+> 
+> Dervin, 
+> I am experiencing the same issue. I am running perf on an i5 machine. Have you 
+> gotten any feedback regarding this? 
 
-> 
-> Dear all,
-> 
-> I'm trying to measure the LLC events of a program. I'm running
-> linux-tools-3.2.0- 34 on a fairly recent 4 core Intel machine. For a
-> certain program that reads a 64 MB file into memory, I get
-> 
->  Performance counter stats for './algo data/E.dna':
-> 
->                  0 LLC-loads                                                   
->                  0 LLC-load-misses
+I'm getting some 'sane' numbers on 2 cores i7 SandyBridge on 3.6.11-1.fc17.x86_64
 
+not sure if this was broken back in 3.2.0
 
-Dervin, 
-I am experiencing the same issue. I am running perf on an i5 machine. Have you 
-gotten any feedback regarding this? 
--Jeff
+please be more specific on what system you're testing on
+and provide whole perf stat command line
+
+jirka
