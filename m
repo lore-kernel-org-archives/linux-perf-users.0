@@ -1,42 +1,27 @@
-From: dark_footix <dark_footix@yahoo.fr>
-Subject: Re: Chronogram with pref ?
-Date: Wed, 23 Jan 2013 09:49:16 +0000 (GMT)
-Message-ID: <1358934556.33108.YahooMailNeo@web171501.mail.ir2.yahoo.com>
-References: <1358934288.36342.YahooMailNeo@web171503.mail.ir2.yahoo.com>
-Reply-To: dark_footix <dark_footix@yahoo.fr>
+From: Narendra Pal Singh <narendrapal2020@gmail.com>
+Subject: help
+Date: Wed, 23 Jan 2013 15:29:14 +0530
+Message-ID: <CAOtT9RLmk6xMpSX9nU=Wx0HyFZsLy7QepW9eaPt7jPQy8WE=yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from nm9-vm0.bullet.mail.ird.yahoo.com ([77.238.189.197]:36832 "EHLO
-	nm9-vm0.bullet.mail.ird.yahoo.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754500Ab3AWJtT convert rfc822-to-8bit
-	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 Jan 2013 04:49:19 -0500
-In-Reply-To: <1358934288.36342.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+Received: from mail-ea0-f181.google.com ([209.85.215.181]:48858 "EHLO
+	mail-ea0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754609Ab3AWJ7P (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 23 Jan 2013 04:59:15 -0500
+Received: by mail-ea0-f181.google.com with SMTP id i13so2446085eaa.40
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jan 2013 01:59:14 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Hello All,
+I want to check time taken  and  number of system calls made by each
+function in my code  .My code is part of user as well as kernel space.
+So i need time taken in both space. I am interested to know
+performance in terms of CPU time and Disk IO .How should i go ? is
+perf is right tool for same ?
 
-
-Is there some workshop about timestamping the enter / exit of all the f=
-unctions ?
-
-Is it possible to have the info of timestamp on the enter / exit of eac=
-h function with the backtrace info, and the sub-functions called ?=A0 a=
-nd the thread id .
-
-If I am interested to start a development of an graphic interface to vi=
-sual the result,=20
-do you have some result of log which one I could parse ? which could be=
- the formalism of the result ?
-
-What is the best way to develop this kind of feature ?
-Does it already exist ?
-
-You are welcome !
-
+-- 
 Regards,
-=46r=E9d=E9ric
+Narendra Pal
