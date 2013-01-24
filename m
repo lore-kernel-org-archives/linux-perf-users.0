@@ -1,29 +1,37 @@
 From: Thorsten Schuett <schuett@gmail.com>
 Subject: Re: perf with gnuplot
-Date: Thu, 24 Jan 2013 09:07:39 +0100
-Message-ID: <5100EBCB.5020204@gmail.com>
+Date: Thu, 24 Jan 2013 10:06:27 +0100
+Message-ID: <5100F993.80905@gmail.com>
 References: <50FFD9A8.5000500@gmail.com> <87libjjes6.fsf@sejong.aot.lge.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-bk0-f48.google.com ([209.85.214.48]:41822 "EHLO
-	mail-bk0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751776Ab3AXIHn (ORCPT
+Received: from mail-lb0-f180.google.com ([209.85.217.180]:64771 "EHLO
+	mail-lb0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751777Ab3AXJGb (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 24 Jan 2013 03:07:43 -0500
-Received: by mail-bk0-f48.google.com with SMTP id jk14so2320899bkc.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jan 2013 00:07:42 -0800 (PST)
+	Thu, 24 Jan 2013 04:06:31 -0500
+Received: by mail-lb0-f180.google.com with SMTP id q12so1789221lbc.39
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jan 2013 01:06:30 -0800 (PST)
 In-Reply-To: <87libjjes6.fsf@sejong.aot.lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-This sounds great.
+After thinking about it, I have some questions/suggestions:
 
-Thanks,
-   Thorsten
+I would really like to see this work with record/report as well. In my 
+case,
+I  have to watch programs on a remote machine and do the analysis
+afterwards on my local machine. The record/report workflow seems to
+be more flexible here. I guess perf.data is a more compact file than the
+interval counter printing and I can experiment with different parameters on
+the report command.
+
+Is this going to work with -s as well?
+
+Thorsten
 
 On 01/24/2013 07:06 AM, Namhyung Kim wrote:
 > Hi Thorsten,
