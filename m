@@ -1,65 +1,55 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: Mixed group of sw/hw counters are not started if sw counter is
- group leader
-Date: Fri, 1 Feb 2013 11:13:48 +0100
-Message-ID: <20130201101347.GB1078@krava.brq.redhat.com>
-References: <CAGz0_-0ti+_3cXQhYUAb_-zKqHBcPVYjFtQ86ZGr8utXF13Rag@mail.gmail.com>
- <20130129123908.GC8339@krava.brq.redhat.com>
- <CAGz0_-2O+7a5Bkeu3vgNFYrsGGYJxrqECKQUJJTwSDQZBktLjw@mail.gmail.com>
- <20130129140110.GF8339@krava.brq.redhat.com>
- <20130129153720.GG8339@krava.brq.redhat.com>
- <alpine.DEB.2.02.1301291153490.538@pianoman.cluster.toy>
+From: Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Perf record premature termination
+Date: Mon, 11 Feb 2013 10:50:12 -0800
+Message-ID: <1360608612.17632.193.camel@schen9-DESK>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:54246 "EHLO mx1.redhat.com"
+Received: from mga02.intel.com ([134.134.136.20]:32261 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755892Ab3BAKOG (ORCPT
+	id S1758821Ab3BKSuL (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 1 Feb 2013 05:14:06 -0500
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1301291153490.538@pianoman.cluster.toy>
+	Mon, 11 Feb 2013 13:50:11 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vince@deater.net>
-Cc: Andreas Hollmann <hollmann@in.tum.de>, linux-perf-users@vger.kernel.org, Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@elte.hu>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org
+To: David Ahern <dsahern@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, ak <ak@linux.intel.com>
 
-On Tue, Jan 29, 2013 at 11:56:01AM -0500, Vince Weaver wrote:
-> On Tue, 29 Jan 2013, Jiri Olsa wrote:
-> 
-> > ok, there's been perf fixies wrt enable events groups, but they
-> > landed in 3.8-rc1.. until that point all the group members are
-> > specifically enabled, so that's why your perf is working and
-> > mine not..
-> > 
-> > Anyway, seems like there's bug in kernel code when we have group
-> > with sw and hw counters.
-> > 
-> > Attached path makes your test case working for me. I'll give it some
-> > more thoughts & testing and send it out soon. If you like to test,
-> > please go ahead.
-> 
-> I've added a test to my perf_event_test testsuite to look for this bug.
->    http://www.eece.maine.edu/~vweaver/projects/perf_events/validation/
-> 
-> In my (minimal) testing so far it looks like this bug does exist in 3.2
-> but does not in 2.6.35.  Is anyone curious enough to do a bisect to find 
-> out when it was introduced?
+David,
 
-I found this started at v2.6.37 where following commit that introduced
-the group moving was added:
+When I am doing a profiling of kernel compile with 32 threads on a 4
+socket westmere machine, I found that perf record terminated right away
+for the version of perf in 3.7 kernel source tree.
+There's no profile data recroded and the compile is running in
+background.
 
-perf: Complete software pmu grouping
-commit b04243ef7006cda301819f54ee7ce0a3632489e3
-Author: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Date:   Fri Sep 17 11:28:48 2010 +0200
+$ make -j32 &
+then
+$ sudo /test/perf record -a -g -f sleep 5
+sleep: Terminated
 
-I could not get finer bisection within 2.6.37 because the kernel
-deadlocked each time I ran the test.
+I've bisected the patch responsible to the following patch.
 
-But it seems this problem is there from the introducing
-of the group moving.
+Tim
 
-CCing more folks and lkml
 
-jirka
+8d3eca20b9f31cf10088e283d704f6a71b9a4ee2 is the first bad commit
+commit 8d3eca20b9f31cf10088e283d704f6a71b9a4ee2
+Author: David Ahern <dsahern@gmail.com>
+Date:   Sun Aug 26 12:24:47 2012 -0600
+
+    perf record: Remove use of die/exit
+    
+    Allows perf to clean up properly on exit. If perf-record is exiting
+due
+    to failure, the on_exit should not run as the session has been
+deleted.
+    
+    Signed-off-by: David Ahern <dsahern@gmail.com>
+    Cc: Frederic Weisbecker <fweisbec@gmail.com>
+    Cc: Ingo Molnar <mingo@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Link:
+http://lkml.kernel.org/r/1346005487-62961-8-git-send-email-dsahern@gmail.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
