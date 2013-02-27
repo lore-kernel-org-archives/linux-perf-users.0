@@ -1,56 +1,47 @@
-From: Gleb Natapov <gleb@redhat.com>
-Subject: Re: Tracing kvm: kvm_entry and kvm_exit
-Date: Tue, 26 Feb 2013 18:32:54 +0200
-Message-ID: <20130226163254.GA26996@redhat.com>
-References: <1361550867.51279e13338a7@www.imp.polymtl.ca>
- <20130225101804.GC2790@stefanha-thinkpad.redhat.com>
+From: Dongsoo Nathaniel Kim <dongsoo.kim@gmail.com>
+Subject: perf terminates immediately with segfault in dmesg
+Date: Wed, 27 Feb 2013 23:21:00 +0900
+Message-ID: <CAP+Vy9d8Yd7HoxvixS6oT+wow+rV2PzriKBqOw17VVFwTc0iNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:62278 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932643Ab3BZQdD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 26 Feb 2013 11:33:03 -0500
-Content-Disposition: inline
-In-Reply-To: <20130225101804.GC2790@stefanha-thinkpad.redhat.com>
+Received: from mail-oa0-f45.google.com ([209.85.219.45]:48060 "EHLO
+	mail-oa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760074Ab3B0OVl (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 27 Feb 2013 09:21:41 -0500
+Received: by mail-oa0-f45.google.com with SMTP id o6so1223009oag.18
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Feb 2013 06:21:40 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Stefan Hajnoczi <stefanha@gmail.com>
-Cc: Mohamad Gebai <mohamad.gebai@polymtl.ca>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 25, 2013 at 11:18:04AM +0100, Stefan Hajnoczi wrote:
-> On Fri, Feb 22, 2013 at 11:34:27AM -0500, Mohamad Gebai wrote:
-> > I am tracing kvm using perf and I am analyzing the sequences of kvm_entry and
-> > kvm_exit tracepoints.
-> > I noticed that during the boot process of a VM, there are a lot more (2 to 3 as
-> > many times) kvm_entry event than there are kvm_exit. I tried looking around but
-> > didn't find anything that explains this. Is this missing instrumentation? Or
-> > what other path does kvm take that doesn't generate a kvm_exit event?
-> 
-> Gleb Natapov noticed something similar when playing with the perf script
-> I posted here:
-> 
-> http://permalink.gmane.org/gmane.comp.emulators.kvm.devel/104181
-> 
-> Perhaps there is a code path that is missing trace_kvm_exit().
-> 
-During guest boot there is such path. If instruction is emulated entry
-is reported but exit is not. What we saw with perf was different though,
-It was during normal run, not boot, so emulation cannot explain it.
+Hi,
 
-> We didn't investigate why it happens but the unexplained kvm_entry
-> events only appeared at the beginning of the trace, so the theory was
-> that events are not activated atomically by perf(1).
-> 
-> CCing perf mailing list.
-> 
-> It would be interesting if someone knows the answer.
-> 
-> Stefan
-> --
-> To unsubscribe from this list: send the line "unsubscribe kvm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm trying to profile kvm guest and host as well.
+I checked out v3.8 vanilla kernel and built bundled perf tool.
+(commit 19f949f52599ba7c3f67a5897ac6be14bfcb1200)
+
+Here is my command line:
+sudo perf kvm --host --guest --guestmount=/tmp/guestmount record -o
+my.perf.data
+(I mounted guest instance on /tmp/guestmount using sshfs)
+
+and perf gets terminated immediately and no clue but segfault message in
+dmesg:
+[11618.130483] perf[39937]: segfault at 30 ip 00007fed26de1121 sp
+00007fff0394c258 error 4 in libc-2.15.so[7fed26d58000+1b5000]
+
+Any idea? Can too many processor core cause this problem?
+
+BTW, I'm working on AMD 64core system..and found that perf tool doesn't
+work perfectly with AMD opteron processor.
+
+Cheers,
 
 --
-			Gleb.
+=
+Dongsoo Nathaniel Kim
+Linux kernel, media device S/W engineer / Ph.D Student
+Dept. of Computer Science, KAIST
+Real-time & Embedded Systems Lab.
