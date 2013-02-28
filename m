@@ -1,77 +1,65 @@
-From: Dongsoo Nathaniel Kim <dongsoo.kim@gmail.com>
-Subject: Re: perf terminates immediately with segfault in dmesg
-Date: Thu, 28 Feb 2013 10:22:16 +0900
-Message-ID: <CAP+Vy9dFFqhchMiPEW0CAudoCkjDcyJY2HA5s6yvad+Q8kqVNQ@mail.gmail.com>
-References: <CAP+Vy9d8Yd7HoxvixS6oT+wow+rV2PzriKBqOw17VVFwTc0iNg@mail.gmail.com>
- <512E3183.6000007@gmail.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: Tracing kvm: kvm_entry and kvm_exit
+Date: Wed, 27 Feb 2013 21:49:24 -0700
+Message-ID: <512EE1D4.6080808@gmail.com>
+References: <1361550867.51279e13338a7@www.imp.polymtl.ca> <20130225101804.GC2790@stefanha-thinkpad.redhat.com> <512E36B2.5090100@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oa0-f52.google.com ([209.85.219.52]:38155 "EHLO
-	mail-oa0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751813Ab3B1BW5 (ORCPT
+Received: from mail-da0-f44.google.com ([209.85.210.44]:56655 "EHLO
+	mail-da0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753956Ab3B1Et1 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 27 Feb 2013 20:22:57 -0500
-Received: by mail-oa0-f52.google.com with SMTP id k14so2650089oag.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Feb 2013 17:22:56 -0800 (PST)
-In-Reply-To: <512E3183.6000007@gmail.com>
+	Wed, 27 Feb 2013 23:49:27 -0500
+In-Reply-To: <512E36B2.5090100@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Stefan Hajnoczi <stefanha@gmail.com>
+Cc: Mohamad Gebai <mohamad.gebai@polymtl.ca>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Hi David,
+On 2/27/13 9:39 AM, David Ahern wrote:
+> I have been playing with the live mode a bit lately. I'll add a debug to
+> note 2 consecutive entry events without an exit -- see if it sheds some
+> light on it.
 
-It seems to be solving the problem.
+If you feel game take this for a spin:
+   https://github.com/dsahern/linux/commits/perf-kvm-live-3.8
 
-Cheers,
+I pushed a few more commits that add debugs to show consecutive events 
+(2 entries or 2 exits), max and min times for various exit reasons and 
+an option to dump events that take longer than some threshold. If you 
+dump the output to a file or run screen with logging you should be able 
+to find when the 'long' event happens and which VMEXIT reason was the cause.
 
-On Thu, Feb 28, 2013 at 1:17 AM, David Ahern <dsahern@gmail.com> wrote:
-> On 2/27/13 7:21 AM, Dongsoo Nathaniel Kim wrote:
->>
->> Hi,
->>
->> I'm trying to profile kvm guest and host as well.
->> I checked out v3.8 vanilla kernel and built bundled perf tool.
->> (commit 19f949f52599ba7c3f67a5897ac6be14bfcb1200)
->>
->> Here is my command line:
->> sudo perf kvm --host --guest --guestmount=/tmp/guestmount record -o
->> my.perf.data
->> (I mounted guest instance on /tmp/guestmount using sshfs)
->>
->> and perf gets terminated immediately and no clue but segfault message in
->> dmesg:
->> [11618.130483] perf[39937]: segfault at 30 ip 00007fed26de1121 sp
->> 00007fff0394c258 error 4 in libc-2.15.so[7fed26d58000+1b5000]
->>
->> Any idea? Can too many processor core cause this problem?
->
->
-> Does this solve the problem for you?
->
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index ca3f80e..e55701d 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -973,7 +973,7 @@ __cmd_buildid_list(const char *file_name, int argc,
-> const char **argv)
->
->  int cmd_kvm(int argc, const char **argv, const char *prefix __maybe_unused)
->  {
-> -   const char *file_name;
-> +   const char *file_name = NULL;
->
->     const struct option kvm_options[] = {
->         OPT_STRING('i', "input", &file_name, "file",
->
->
+Example screen dump:
 
+21:47:37.935302
 
+Analyze events for all VMs, all VCPUs:
 
---
-=
-Dongsoo Nathaniel Kim
-Linux kernel, media device S/W engineer / Ph.D Student
-Dept. of Computer Science, KAIST
-Real-time & Embedded Systems Lab.
+              VM-EXIT    Samples  Samples%     Time%   Min Time   Max 
+Time         Avg time
+
+          APIC_ACCESS        978    61.51%     0.02%        1us 
+113us      7.81us ( +-   3.67% )
+       IO_INSTRUCTION        212    13.33%     0.00%        2us 
+85us      9.20us ( +-   7.57% )
+            CR_ACCESS         93     5.85%     0.00%        2us 
+66us      3.49us ( +-  19.73% )
+   EXTERNAL_INTERRUPT         53     3.33%     0.01%        3us 
+135us     57.02us ( +-   6.59% )
+        EXCEPTION_NMI         26     1.64%     0.00%        2us 
+3us      2.57us ( +-   1.74% )
+    PENDING_INTERRUPT          3     0.19%     0.00%        1us 
+1us      1.85us ( +-   4.18% )
+
+Total Samples:1590, Total events handled time:39942741.62us.
+
+295170818723592 VM 11854, vcpu 3: APIC_ACCESS event took 113usec
+295170819686668 VM 11854, vcpu 0: EXTERNAL_INTERRUPT event took 112usec
+295172155051688 VM 11854, vcpu 0: EXTERNAL_INTERRUPT event took 119usec
+295172841724899 VM 11854, vcpu 0: APIC_ACCESS event took 129usec
+295172999633325 VM 11854, vcpu 0: EXTERNAL_INTERRUPT event took 111usec
+
+David
