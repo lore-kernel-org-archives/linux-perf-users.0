@@ -1,42 +1,28 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: make O=/my/personal/build/using/root's/kernel/sources  --  broken
- for perf
-Date: Wed, 06 Mar 2013 13:29:06 -0700
-Message-ID: <5137A712.8080805@gmail.com>
-References: <20130306115629.e98077bd2ec86da58b2d2996@lavabit.com>
+From: Sylwester Arabas <sarabas@itstudio.pl>
+Subject: perf kills the whole process group on error - intentional?
+Date: Fri, 15 Mar 2013 23:48:58 +0100
+Message-ID: <5143A55A.5060507@itstudio.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f51.google.com ([209.85.160.51]:49892 "EHLO
-	mail-pb0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750716Ab3CFU3L (ORCPT
+Received: from host49.kei.pl ([94.152.8.49]:43978 "EHLO smtp.host49.kei.pl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754406Ab3COWzm (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 6 Mar 2013 15:29:11 -0500
-Received: by mail-pb0-f51.google.com with SMTP id un15so6520207pbc.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Mar 2013 12:29:10 -0800 (PST)
-In-Reply-To: <20130306115629.e98077bd2ec86da58b2d2996@lavabit.com>
+	Fri, 15 Mar 2013 18:55:42 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: rh <richard_hubbe11@lavabit.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: eric.noulard@gmail.com
 
-On 3/6/13 12:56 PM, rh wrote:
-> I hadn't tried to build perf using make O= previously so I don't know
-> if it ever worked. But I tried to use it and it doesn't work.
->
-> Also, I have a local libdef.h but perf doesn't see it/use it, it is in
-> /usr/include/libelf/libelf.h
->
-> I'm trying to use my system as an end user that has no root privileges.
-> Therefore I am building the kernel in /usr/src/linux with
-> make O=/my/output/dir
+Hello,
 
-That's how I always build perf. Either from top-level 'make 
-O=/tmp/pbuild -C tools/perf' or from tools/perf and just 'make 
-O=/tmp/pbuild'. And often from a VM mounting the kernel tree over NFS 
-read-only. It works fine for me.
+Here's a description of a situation where perf kills its parent process 
+on error (by sending SIFTERM to all processes of its process group): 
+http://public.kitware.com/Bug/view.php?id=14015
 
-What problem are you having and what version?
+Is this behavior intentional?
 
-David
+Thanks,
+Sylwester
