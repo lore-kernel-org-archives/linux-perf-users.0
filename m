@@ -1,28 +1,35 @@
-From: Sylwester Arabas <sarabas@itstudio.pl>
-Subject: perf kills the whole process group on error - intentional?
-Date: Fri, 15 Mar 2013 23:48:58 +0100
-Message-ID: <5143A55A.5060507@itstudio.pl>
+From: OSDepend <osdepend@gmail.com>
+Subject: software event latency or duration
+Date: Mon, 18 Mar 2013 01:06:34 +0800
+Message-ID: <201303180106326608998@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain;
+	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from host49.kei.pl ([94.152.8.49]:43978 "EHLO smtp.host49.kei.pl"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754406Ab3COWzm (ORCPT
+Received: from mail-pb0-f41.google.com ([209.85.160.41]:46744 "EHLO
+	mail-pb0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752037Ab3CQRGg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 15 Mar 2013 18:55:42 -0400
+	Sun, 17 Mar 2013 13:06:36 -0400
+Received: by mail-pb0-f41.google.com with SMTP id um15so5837198pbc.28
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Mar 2013 10:06:36 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: eric.noulard@gmail.com
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hello,
+Hi all,
+ 
+I'm wandering how to use perf tool to get the event latency of SW event.
+just like the commond "perf sched latency" does, shows the time cost by the context-switch.
+Is there some commond like that i can measure the interrupt latency, or pagefault latency?
+Is it possible to show all the individual event's time cost?
+Any reply is much appreciated!
+ 
+Best,
+Chen
 
-Here's a description of a situation where perf kills its parent process 
-on error (by sending SIFTERM to all processes of its process group): 
-http://public.kitware.com/Bug/view.php?id=14015
-
-Is this behavior intentional?
-
-Thanks,
-Sylwester
+ 				
+--------------
+OSDepend
+2013-03-18
