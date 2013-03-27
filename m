@@ -1,37 +1,59 @@
-From: Vince Weaver <vince@deater.net>
-Subject: Re: Perf feature?
-Date: Tue, 26 Mar 2013 14:02:08 -0400 (EDT)
-Message-ID: <alpine.DEB.2.02.1303261358560.9710@pianoman.cluster.toy>
-References: <CAG=jzgBF7qVc4LE=cMrMp3+_8h8HuRaMi3OHn510vJSGd1YN-w@mail.gmail.com>
+From: Freehill Christopher-RAT063 <RAT063@freescale.com>
+Subject: perf event attrributes
+Date: Wed, 27 Mar 2013 15:40:38 +0000
+Message-ID: <0C53B16FB1F182409A7BA6DC928E7AFE1FDA4F@039-SN2MPN1-022.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from fbr03.mfg.siteprotect.com ([64.26.60.138]:53895 "EHLO
-	fbr03.mfg.siteprotect.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752300Ab3CZSKE (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 26 Mar 2013 14:10:04 -0400
-Received: from smtpauth05.mfg.siteprotect.com (unknown [192.168.33.144])
-	by fbr03.mfg.siteprotect.com (Postfix) with ESMTP id F344B880CC3
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Mar 2013 13:02:33 -0500 (CDT)
-In-Reply-To: <CAG=jzgBF7qVc4LE=cMrMp3+_8h8HuRaMi3OHn510vJSGd1YN-w@mail.gmail.com>
+Received: from co1ehsobe006.messaging.microsoft.com ([216.32.180.189]:4301
+	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751671Ab3C0Pko convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 27 Mar 2013 11:40:44 -0400
+Received: from mail174-co1 (localhost [127.0.0.1])	by
+ mail174-co1-R.bigfish.com (Postfix) with ESMTP id EE2E21000F5	for
+ <linux-perf-users@vger.kernel.org>; Wed, 27 Mar 2013 15:40:43 +0000 (UTC)
+Received: from CO1EHSMHS005.bigfish.com (unknown [10.243.78.230])	by
+ mail174-co1.bigfish.com (Postfix) with ESMTP id 9077A5C00E6	for
+ <linux-perf-users@vger.kernel.org>; Wed, 27 Mar 2013 15:40:41 +0000 (UTC)
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: kernel kernel <kernel@kenobrien.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-On Tue, 26 Mar 2013, kernel kernel wrote:
+Hi,
 
-> Is it possible to use perf to record the performance counters of
-> specific lines of code instead of the entire program?
+I am working on adding support in perf for many events for a particular=
+ architecture.=A0 As it is, there are thousands of events to add, with =
+potentially many more.=20
 
-If you want exact counts (i.e., these three lines of code had exactly 
-20 branch misses) you'll need to instrument your code using a library like 
-PAPI, or else insert raw perf_event calls yourself before and after 
-the lines of interest (see the example at the end of the perf_event_open 
-manpage).
+Instead of treating each event as a separate raw event number (e.g., "p=
+erf stat -e rXXXXX ."), I wondering if there is any existing support in=
+ the perf infrastructure to support event attributes? For example, if I=
+ have an event that represents "DDR hits", meaning all accesses to DDR,=
+ and I want to add support for DDR hits from a particular source, do I =
+need to add a perf event for every possible source (e.g., "DDR access f=
+rom source A", "DDR access from source B", .), or is=A0 there a way to =
+specify attributes for the event, in order to keep the number of events=
+ to a reasonable level, and also make it easier for the user? Something=
+ like "perf stat -e rXXXXX -source A"
 
-Doing self-monitoring like this introduces a certain amount of overhead 
-into your program and measurements.
+The "Source" =A0is one example of an attribute. There are several other=
+s. If you wanted to add support for all of those variations without usi=
+ng some kind of attribute, the number of events would be difficult to i=
+mplement in a "flat" way, due to the huge number of events required. Al=
+so, it seems not very useable.=20
 
-Vince
+On the perf wiki, I see mention of "sub-events" and "unit masks", which=
+ could be applicable, but I cannot find any other info or examples on t=
+hem, or see the related kernel code. I would like to use a kernel modul=
+e to extend this, if possible.
+
+Also, potentially related are modifiers (but it looks like those may no=
+t be something I could extend). I'm not sure.
+
+Any info or suggestions are appreciated.
+
+Thanks,
+Chris
