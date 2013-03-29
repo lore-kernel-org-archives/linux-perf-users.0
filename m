@@ -1,51 +1,63 @@
-From: kernel kernel <kernel@kenobrien.org>
-Subject: Re: Perf feature?
-Date: Thu, 28 Mar 2013 18:05:53 +0000
-Message-ID: <CAG=jzgB5vJAgzRhXGeLsFCivP2rE278zN2Av3sF-QkZStqTtUg@mail.gmail.com>
-References: <CAG=jzgBF7qVc4LE=cMrMp3+_8h8HuRaMi3OHn510vJSGd1YN-w@mail.gmail.com>
-	<alpine.DEB.2.02.1303261358560.9710@pianoman.cluster.toy>
+From: Phillip Williams <p.williams@americanmediadistributioninc.com>
+Subject: Offer to Attend Events for AMD
+Date: Fri, 29 Mar 2013 10:50:17 -0400
+Message-ID: <b6750e3fe84df1165cff7a67d0f73796@www.americanmediadistributioninc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-vc0-f173.google.com ([209.85.220.173]:61851 "EHLO
-	mail-vc0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751528Ab3C1SF4 (ORCPT
+Received: from [204.12.61.126] ([204.12.61.126]:42922 "EHLO
+	s1051440.instanturl.net" rhost-flags-FAIL-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1754712Ab3C2O4H (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 28 Mar 2013 14:05:56 -0400
-Received: by mail-vc0-f173.google.com with SMTP id gd11so8036535vcb.32
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2013 11:05:55 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.02.1303261358560.9710@pianoman.cluster.toy>
+	Fri, 29 Mar 2013 10:56:07 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vince@deater.net>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Thanks. I will try out both options.
+I would like to know if you would have any interest in covering some
+events for us in your area?
 
-On Tue, Mar 26, 2013 at 6:02 PM, Vince Weaver <vince@deater.net> wrote:
-> On Tue, 26 Mar 2013, kernel kernel wrote:
->
->> Is it possible to use perf to record the performance counters of
->> specific lines of code instead of the entire program?
->
-> If you want exact counts (i.e., these three lines of code had exactly
-> 20 branch misses) you'll need to instrument your code using a library like
-> PAPI, or else insert raw perf_event calls yourself before and after
-> the lines of interest (see the example at the end of the perf_event_open
-> manpage).
->
-> Doing self-monitoring like this introduces a certain amount of overhead
-> into your program and measurements.
->
-> Vince
+There would be NO COST at all for admission, and it would not be
+necessary for you to be an experienced reporter.
+
+We are looking for members of the public to cover events such as Music
+Concerts, Sporting Events, Restaurant Openings, Movies, Gallery
+Openings, Shows, and others.
+
+Since AMD has different pools relevant to experience (beginners up to
+experienced working reporters) should you not be familiar with our
+company, please take a moment to look into American Media Distribution
+with any source you deem trusted.
+
+Here is a link to the AMD BBB page for your convenience.
+
+http://www.bbb.org/new-jersey/business-reviews/news-service/american-media-distribution-in-howell-nj-90096055
+
+There is compensation for the events you would attend and again, there
+is no cost for admission to any of the events, and no obligation is
+required. 
+
+We will be accepting only a few people from your area so let us know
+if you are interested in obtaining any further information. 
+
+Phil Williams
+AMD Event Coverage Coordinator
+American Media Distribution(.com) or americanmediadist.com
+4057 US Hwy 9 North Howell NJ 07731
+888.319.6336 x714(by appointment only please)
+
+-This e-mail and any accompanying attachments are confidential. This
+information is intended solely for the use of the individual to whom
+it is addressed. Any review, disclosure, copying, distribution, or use
+of this e-mail communication by others is strictly prohibited. THERE
+WILL BE NO FOLLOWING EMAILS SENT - If you are not the intended
+recipient, please notify us immediately by returning this message to
+the sender and delete all copies. Thank you for your cooperation.
+-MacAfee Virus Checked - Virus Free-
+
+-- no more reporter/event updates reply w NO MORE in subject
 
 
 
--- 
-Ken O'Brien
-PhD Researcher
-Simulation Science and Extreme Events Cluster,
-3B1, UCD CASL,
-8 Belfield Business Park,
-Dublin 4,
-Ireland.
+--
