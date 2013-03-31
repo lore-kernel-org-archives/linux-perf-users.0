@@ -1,63 +1,39 @@
-From: Phillip Williams <p.williams@americanmediadistributioninc.com>
-Subject: Offer to Attend Events for AMD
-Date: Fri, 29 Mar 2013 10:50:17 -0400
-Message-ID: <b6750e3fe84df1165cff7a67d0f73796@www.americanmediadistributioninc.com>
+From: OSDepend <osdepend@gmail.com>
+Subject: Howto make perf probe work
+Date: Mon, 1 Apr 2013 01:30:15 +0800
+Message-ID: <201304010130139026692@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from [204.12.61.126] ([204.12.61.126]:42922 "EHLO
-	s1051440.instanturl.net" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1754712Ab3C2O4H (ORCPT
+Received: from mail-pd0-f177.google.com ([209.85.192.177]:65087 "EHLO
+	mail-pd0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752567Ab3CaRaS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 29 Mar 2013 10:56:07 -0400
+	Sun, 31 Mar 2013 13:30:18 -0400
+Received: by mail-pd0-f177.google.com with SMTP id y14so892200pdi.36
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Mar 2013 10:30:17 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-I would like to know if you would have any interest in covering some
-events for us in your area?
+Hi all,
+	Is there any way to use perf probe to add new tracepoint like pagefault enter/exit?
+	
+	When I type perf probe fault:10
+	I always get the error as follow:
 
-There would be NO COST at all for admission, and it would not be
-necessary for you to be an experienced reporter.
+		Debuginfo-analysis is not supported.
+		Error: Failed to add events. (-38)
+	
+	What exactly i miss to get the perf probe work correctly?
 
-We are looking for members of the public to cover events such as Music
-Concerts, Sporting Events, Restaurant Openings, Movies, Gallery
-Openings, Shows, and others.
+Best,
+Chen
 
-Since AMD has different pools relevant to experience (beginners up to
-experienced working reporters) should you not be familiar with our
-company, please take a moment to look into American Media Distribution
-with any source you deem trusted.
-
-Here is a link to the AMD BBB page for your convenience.
-
-http://www.bbb.org/new-jersey/business-reviews/news-service/american-media-distribution-in-howell-nj-90096055
-
-There is compensation for the events you would attend and again, there
-is no cost for admission to any of the events, and no obligation is
-required. 
-
-We will be accepting only a few people from your area so let us know
-if you are interested in obtaining any further information. 
-
-Phil Williams
-AMD Event Coverage Coordinator
-American Media Distribution(.com) or americanmediadist.com
-4057 US Hwy 9 North Howell NJ 07731
-888.319.6336 x714(by appointment only please)
-
--This e-mail and any accompanying attachments are confidential. This
-information is intended solely for the use of the individual to whom
-it is addressed. Any review, disclosure, copying, distribution, or use
-of this e-mail communication by others is strictly prohibited. THERE
-WILL BE NO FOLLOWING EMAILS SENT - If you are not the intended
-recipient, please notify us immediately by returning this message to
-the sender and delete all copies. Thank you for your cooperation.
--MacAfee Virus Checked - Virus Free-
-
--- no more reporter/event updates reply w NO MORE in subject
+2013-04-01
 
 
 
---
+zhengchen
