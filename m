@@ -1,56 +1,58 @@
-From: OSDepend <osdepend@gmail.com>
-Subject: Fw: Re: Re: Howto make perf probe work
-Date: Mon, 1 Apr 2013 23:24:41 +0800
-Message-ID: <201304012324395211298@gmail.com>
-References: <201304010130139026692@gmail.com>,
- <CAGJbQddYW4-QZUvGpwCbmVhsvGEan5UkgRbXq+w4i+9Ob9vUrw@mail.gmail.com>,
- <201304012320294652937@gmail.com>
+From: Freehill Christopher-RAT063 <RAT063@freescale.com>
+Subject: RE: perf event attrributes
+Date: Mon, 1 Apr 2013 16:09:50 +0000
+Message-ID: <0C53B16FB1F182409A7BA6DC928E7AFE20C90D@039-SN2MPN1-022.039d.mgd.msft.net>
+References: <0C53B16FB1F182409A7BA6DC928E7AFE1FDA4F@039-SN2MPN1-022.039d.mgd.msft.net>
+ <m2boa4ia23.fsf@firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f180.google.com ([209.85.192.180]:33080 "EHLO
-	mail-pd0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758584Ab3DAPYp (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 1 Apr 2013 11:24:45 -0400
-Received: by mail-pd0-f180.google.com with SMTP id g10so1274360pdj.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Apr 2013 08:24:44 -0700 (PDT)
+Received: from co9ehsobe005.messaging.microsoft.com ([207.46.163.28]:56480
+	"EHLO co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1758978Ab3DAQJy convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 1 Apr 2013 12:09:54 -0400
+In-Reply-To: <m2boa4ia23.fsf@firstfloor.org>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Cc: nelakurthi koteswararao <koteswararao18@gmail.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 
->HI,
->Please enable kprobe_event config option in the kernel and build the same
->and boot the board using it. Then please try to add event using perf probe
->command
+Andi,
 
-Thanks very much for your reply, and I already enable DEBUG_KPROBE_EVENT in kernel.
-I did success in "perf probe handle_mm_fault".
+Thanks for the response.
 
-But when i want to to "perf probe" other Kernel symbol, such as do_page_fault.
-I came across other problems:
-    Added new event:
-    Failed to write event: Invalid argument
-    Error: Failed to add events. (-1)
-And when i type perf probe page_fault_entry:
-    Kernel symbol 'page_fault_entry' not found.
-    Error: Failed to add events. (-2)
-Please notice that "do_page_fault" and "page_fault_entry" are all Kernel symbols, which canbe find in  "/proc/kallsyms", but not recorgonized by perf (or even kprobe).
-Any idea for that?
+I am not familiar with "config/config1", but I infer from your message that I would make folders in sysfs for different event groups (?) and then have a file for each event that is a bit field that can be parsed. 
 
-Best,
-Chen
+As an alternative, is there anything to prevent encoding the attributes in the event ID itself? I think there are 64 bits to use. Some of those could be interpreted in a way specific to the event. I can see advantages and disadvantage to both. 
 
->>On Sun, Mar 31, 2013 at 11:00 PM, OSDepend <osdepend@gmail.com> wrote:
->>Hi all,
->>        Is there any way to use perf probe to add new tracepoint like pagefault enter/exit?
->>        When I type perf probe fault:10
->>       I always get the error as follow:
->>                Debuginfo-analysis is not supported.
->>                Error: Failed to add events. (-38)
->>        What exactly i miss to get the perf probe work correctly?
->>Best,
->>Chen
+Both ways seem a little convoluted from a user point of view. Seems like a more intuitive way would have been from the command line; ie, provide a way to pass info from the command line that could be interpreted in a way specific to the event. I'm sure that was probably considered, and there is a good reason that method wasn't chosen, but I do wonder...
+
+Can you point me to the Intel uncore drivers you mentioned?
+
+Thanks again,
+Chris
+
+-----Original Message-----
+From: Andi Kleen [mailto:andi@firstfloor.org] 
+Sent: Wednesday, March 27, 2013 8:32 PM
+To: Freehill Christopher-RAT063
+Cc: linux-perf-users
+Subject: Re: perf event attrributes
+
+Freehill Christopher-RAT063 <RAT063@freescale.com> writes:
+>
+> Any info or suggestions are appreciated.
+
+The perf model for this is to use bit fields in config/config1 and then declare those in sysfs, so that they can be set as cpu/foo=1,bar=2/ The kernel driver then extracts those fields.
+
+This only supports numerical values, not string enumerations.
+
+You can see the Intel uncore drivers as a example doing this extensively.
+
+-Andi
+
+--
+ak@linux.intel.com -- Speaking for myself only
