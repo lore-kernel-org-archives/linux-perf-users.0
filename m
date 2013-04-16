@@ -1,46 +1,50 @@
-From: Freehill Christopher-RAT063 <RAT063@freescale.com>
-Subject: how perf handles (or should handle) off-core events
-Date: Fri, 12 Apr 2013 14:52:55 +0000
-Message-ID: <0C53B16FB1F182409A7BA6DC928E7AFE210D39@039-SN2MPN1-022.039d.mgd.msft.net>
+From: OSDepend <osdepend@gmail.com>
+Subject: Issue about raw_syscalls!
+Date: Tue, 16 Apr 2013 23:17:22 +0800
+Message-ID: <201304162317193846964@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-db8lp0185.outbound.messaging.microsoft.com ([213.199.154.185]:5342
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752758Ab3DLPII convert rfc822-to-8bit
-	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 12 Apr 2013 11:08:08 -0400
-Received: from mail59-db8 (localhost [127.0.0.1])	by mail59-db8-R.bigfish.com
- (Postfix) with ESMTP id D96A56801CB	for <linux-perf-users@vger.kernel.org>;
- Fri, 12 Apr 2013 14:53:00 +0000 (UTC)
-Received: from DB8EHSMHS026.bigfish.com (unknown [10.174.8.254])	by
- mail59-db8.bigfish.com (Postfix) with ESMTP id E7481980045	for
- <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2013 14:52:58 +0000 (UTC)
-Content-Language: en-US
+Received: from mail-pa0-f51.google.com ([209.85.220.51]:54312 "EHLO
+	mail-pa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752396Ab3DPPRZ (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 16 Apr 2013 11:17:25 -0400
+Received: by mail-pa0-f51.google.com with SMTP id jh10so400801pab.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2013 08:17:25 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
+Hi all,
 
-Hi,
+I recently use perf "-e  raw_syscalls:sys_enter  -e raw_syscalls:sys_exit" to trace all the syscall entry and exit.
+After i perf script the data, I get result like below:
+            perf 10258 [013] 260748.823215: sys_exit: NR 0 = 0
+            perf 10258 [013] 260748.823244: sys_enter: NR 59 (7fffd5b085bf, 7fffd5b0bb10, 12f7030, 3266018240, 65726f632d667265, 2811)
+            perf 10258 [013] 260748.823280: sys_exit: NR 59 = -2
+            perf 10258 [013] 260748.823283: sys_enter: NR 59 (7fffd5b085b9, 7fffd5b0bb10, 12f7030, 3266018240, 6e69622f75706363, 2811)
+         runspec 10258 [019] 260748.823995: sys_exit: NR 59 = 0
+         runspec 10258 [019] 260748.824028: sys_enter: NR 12 (0, 41b590, 0, 64, 7fffa13ff000, 37f)
+         runspec 10258 [019] 260748.824031: sys_exit: NR 12 = 7761920
+         runspec 10258 [019] 260748.824139: sys_enter: NR 9 (0, 1000, 3, 22, ffffffff, 0)
+         runspec 10258 [019] 260748.824147: sys_exit: NR 9 = 140288080863232
+         runspec 10258 [019] 260748.824167: sys_enter: NR 21 (326521cb00, 4, 3265200158, 0, 0, 0)
+         runspec 10258 [019] 260748.824187: sys_exit: NR 21 = -2
+         runspec 10258 [019] 260748.824203: sys_enter: NR 2 (326521b181, 0, 1, 0, fefefefefefefeff, 0)
+         runspec 10258 [019] 260748.824223: sys_exit: NR 2 = 4
+         runspec 10258 [019] 260748.824225: sys_enter: NR 5 (4, 7fffa135d310, 7fffa135d310, 0, fefefefefefefeff, 0)
+         runspec 10258 [019] 260748.824229: sys_exit: NR 5 = 0
+         runspec 10258 [019] 260748.824231: sys_enter: NR 9 (0, c052, 1, 2, 4, 0)
+         runspec 10258 [019] 260748.824245: sys_exit: NR 9 = 140288080809984
+         runspec 10258 [019] 260748.824247: sys_enter: NR 3 (4, c052, 1, 2, 4, 0)
+         runspec 10258 [019] 260748.824249: sys_exit: NR 3 = 0
 
-I am seeing inconsistencies when I use perf to measure off core events with the -a option, compared with using a probe. For example
+I guess that the NR # in the end of the line is defined as the systemcall id, but i'm confused about how to match the NR id to the exact systemcall name! Is there any systemcall table or list that I can check the system name accoring to the NR number?
 
-$ perf -a -A -e rXXXX sleep 5
-
-I am running a simple program that copies arrays. The rXXXX event above counts memory accesses.
-
-For comparison, I have a probe from which I can measure the events. To see if the measurements are equal, I am comparing events/second collected by each method, while the simple array-copy program is running. What I am seeing is that the counts provided by perf are 2X to 3X smaller for the memory accesses.
-
-My theory is that for non-core events, when perf is handling counter overflows via interrupt in one of the cores, the other cores are still active, but the events they are generating are not being counted, because perf is busy handling a counter overflow. 
-
-I've tried various tests, but have not been able to prove/disprove this theory. 
-
-If the theory is correct, is there already a way to deal with this issue? Seems like you would have to suspend the other cores while handling the counter overflow in order to avoid losing events.
-
-Any thoughts, suggestions, ideas, etc. are most welcome.
-
-Thanks,
-
-Chris
+Best,
+Chen
+2013-04-16  
+OSDepend
