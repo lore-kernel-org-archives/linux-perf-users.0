@@ -1,20 +1,34 @@
 From: "Jin, Yao" <yao.jin@intel.com>
-Subject: NumaTOP 1.0 launched
-Date: Wed, 17 Apr 2013 02:29:31 +0000
-Message-ID: <0C6A3B2997299B4EAD81D386F36CD8C20FD915B0@SHSMSX102.ccr.corp.intel.com>
+Subject: RE: NumaTOP 1.0 launched
+Date: Thu, 18 Apr 2013 02:20:02 +0000
+Message-ID: <0C6A3B2997299B4EAD81D386F36CD8C20FD91958@SHSMSX102.ccr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:37982 "EHLO mga02.intel.com"
+Received: from mga14.intel.com ([143.182.124.37]:19762 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S936221Ab3DQC3f convert rfc822-to-8bit (ORCPT
+	id S964828Ab3DRCUH convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Apr 2013 22:29:35 -0400
+	Wed, 17 Apr 2013 22:20:07 -0400
 Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: "lwn@lwn.net" <lwn@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+
+Hi, 
+
+https://01.org/numatop/ is slightly faster to access.
+Or please access https://github.com/01org/numatop to get the source directly. 
+
+Thanks
+Jin Yao
+
+-----Original Message-----
+From: Jin, Yao 
+Sent: Wednesday, April 17, 2013 10:30 AM
+To: 'lwn@lwn.net'; 'linux-kernel@vger.kernel.org'; 'linux-perf-users@vger.kernel.org'
+Subject: NumaTOP 1.0 launched
 
 We are pleased to announce today that the NumaTOP project has been added to 01.org. 
 
