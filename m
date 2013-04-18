@@ -1,47 +1,47 @@
-From: "Jin, Yao" <yao.jin@intel.com>
-Subject: RE: NumaTOP 1.0 launched
-Date: Thu, 18 Apr 2013 02:20:02 +0000
-Message-ID: <0C6A3B2997299B4EAD81D386F36CD8C20FD91958@SHSMSX102.ccr.corp.intel.com>
+From: Chris Freehill <cfreehill@gmail.com>
+Subject: simultaneous counter start
+Date: Wed, 17 Apr 2013 22:37:47 -0500
+Message-ID: <CANFySvfpjow=j02sb2WxCNjDKj_SZZurMEibvaoXiwOJJZOFLA@mail.gmail.com>
+References: <CANFySveqm7z6wgXyNdkinwJirPSLhaSvApabbK3EP07XPzbaKA@mail.gmail.com>
+	<CANFySvd-HjA0ZAOad+0M1_cQZaVr86Y0NbhpaKFHBrRrYCEEPw@mail.gmail.com>
+Reply-To: cfreehill@alumni.utexas.net
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga14.intel.com ([143.182.124.37]:19762 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S964828Ab3DRCUH convert rfc822-to-8bit (ORCPT
+Received: from mail-wi0-f176.google.com ([209.85.212.176]:50583 "EHLO
+	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965501Ab3DRDht (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 17 Apr 2013 22:20:07 -0400
-Content-Language: en-US
+	Wed, 17 Apr 2013 23:37:49 -0400
+Received: by mail-wi0-f176.google.com with SMTP id hj19so625082wib.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2013 20:37:48 -0700 (PDT)
+In-Reply-To: <CANFySvd-HjA0ZAOad+0M1_cQZaVr86Y0NbhpaKFHBrRrYCEEPw@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "lwn@lwn.net" <lwn@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Hi, 
+Hi,
 
-https://01.org/numatop/ is slightly faster to access.
-Or please access https://github.com/01org/numatop to get the source directly. 
+Is perf stat supposed to start all specified counters simultaneously?
 
-Thanks
-Jin Yao
+For example, in  the command:
 
------Original Message-----
-From: Jin, Yao 
-Sent: Wednesday, April 17, 2013 10:30 AM
-To: 'lwn@lwn.net'; 'linux-kernel@vger.kernel.org'; 'linux-perf-users@vger.kernel.org'
-Subject: NumaTOP 1.0 launched
+perf stat -a -e rXXXX,rYYYY sleep 5
 
-We are pleased to announce today that the NumaTOP project has been added to 01.org. 
+I would think that perf would configure for counting XXXX and YYYY,
+and then start counting for both, so that the 2 events will have been
+collected for the same amount of time.
 
-Performance analysis engineers know that NUMA can seriously impact performance and that NUMA performance analysis can be challenging. We've realized that currently there isn't an easy-to-use tool that lets us easily observe whether NUMA-related issues exist and, if so, where the NUMA bottleneck(s) reside. It can be quite challenging, especially in complex server environments. 
+However, looking at the perf code (and adding some logging) I see that
+the first event counter is configured, then started before it then
+configures and starts the 2nd event counter. Additionally, each time
+it configures and starts, a global disable ("pmu_disable") is called.
+So if you have many event specified, there would be a lot of starting
+and stopping of all counters.
 
-We decided to create a tool that automatically performs the typical steps in NUMA analysis and provides a good starting point to dive in and fix NUMA-related bottlenecks. That's NumaTOP!
+It seems like you would always want to start all the counters
+simultaneously. Am I missing something? Or is there an option I can
+specify to make that happen?
 
-NumaTOP is an observation tool for runtime memory locality characterization and analysis of processes and threads running on a NUMA system. It helps the user characterize the NUMA behavior of processes and threads and identify where the NUMA-related performance bottlenecks reside. It uses Intel performance counter sampling technologies and associates the performance data with system runtime information to provide real-time analysis for production systems.
-
-NumaTOP is a GUI tool. It can run on Linux kernel 3.8 with a perf load latency patch today. That patch is planned to be integrated into kernel 3.9 or a later release.
-
-To learn more about NumaTOP, visit:
-http://01.org/numatop/
-
-Best Regards
-Jin Yao
+thanks,
+chris
