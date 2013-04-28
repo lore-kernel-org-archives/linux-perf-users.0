@@ -1,19 +1,38 @@
-From: dark_footix <dark_footix@yahoo.fr>
-Subject: Re:7
-Date: Fri, 26 Apr 2013 16:23:36 +0100 (BST)
-Message-ID: <1366989816.785.BPMail_high_noncarrier@web171502.mail.ir2.yahoo.com>
+From: Donitta <sabra_gr@yahoo.fr>
+Subject: How to monitor sampling over time with Perf
+Date: Sun, 28 Apr 2013 12:01:24 +0000 (UTC)
+Message-ID: <loom.20130428T132842-381@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from nm1-vm1.bullet.mail.ird.yahoo.com ([77.238.189.219]:42329 "HELO
-	nm1-vm1.bullet.mail.ird.yahoo.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1751341Ab3DZPaN convert rfc822-to-8bit
-	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 26 Apr 2013 11:30:13 -0400
+Received: from plane.gmane.org ([80.91.229.3]:37080 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755821Ab3D1MBg (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sun, 28 Apr 2013 08:01:36 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1UWQIQ-0004Hb-Io
+	for linux-perf-users@vger.kernel.org; Sun, 28 Apr 2013 14:01:34 +0200
+Received: from 82.220.1.207 ([82.220.1.207])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Apr 2013 14:01:34 +0200
+Received: from sabra_gr by 82.220.1.207 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Apr 2013 14:01:34 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: maxou220882@aol.com, linux-perf-users@vger.kernel.org, isabelle.hiblot@dgi.finances.gouv.fr, saladier1@caramail.com, frederic.mourmant@softathome.com, f4cuu@wanadoo.fr, boby2schlienger@yahoo.com, pirouette1071665@wanadoo.fr, Josef.Weidendorfer@in.tum.de
+To: linux-perf-users@vger.kernel.org
 
+Hi,
+I would like to monitor perf results over time. For example, I would like to 
+have all the occurrences of an event and their timestamp of occurrence.
+How can I have those infos? I read somewhere in the documentation that perf 
+script command provides timestamps for each occurrence, but when I tried this 
+command I didn't understand it's output, and there is no documentation. 
+Could someone plead provide me examples on how to use perf utilities to answer 
+my needs?
 
-Sat, 27 Apr 2013 19:21:36 I highly recommend the following site  http://yofuku09.web.fc2.com/default/79It%20s%20p0ssible%20t0%20bec0me%20rich%20w0rking%200n-line47
+Many thnaks
