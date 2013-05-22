@@ -1,78 +1,58 @@
-From: Chao Xu <caesarxuchao@gmail.com>
-Subject: Re: perf record always record the same kernel symbol
-Date: Fri, 10 May 2013 15:43:49 -0500
-Message-ID: <CAKZq+rfLcUP26UxW2xdtKTqanfQHjc497Z6Ddcpe+7b9gBc6SQ@mail.gmail.com>
-References: <CAKZq+rfUO070Ph38EeOzGGxG3CtWiLZ4-eH=PLgby62Ugk3w1w@mail.gmail.com>
-	<518D46AA.1000006@gmail.com>
+From: Andreas Hollmann <hollmann@in.tum.de>
+Subject: What is the difference between the events task-clock and cpu-clock?
+Date: Wed, 22 May 2013 18:21:09 +0200
+Message-ID: <CAGz0_-0wg+k4--2CWdMWiVOY-eEmut1Br2Z4ck21b=1jff7rew@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oa0-f50.google.com ([209.85.219.50]:61420 "EHLO
-	mail-oa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753888Ab3EJUnu (ORCPT
+Received: from mailsender1.informatik.tu-muenchen.de ([131.159.0.97]:49054
+	"EHLO mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1756074Ab3EVQVP (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 10 May 2013 16:43:50 -0400
-Received: by mail-oa0-f50.google.com with SMTP id l20so2507341oag.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2013 13:43:50 -0700 (PDT)
-In-Reply-To: <518D46AA.1000006@gmail.com>
+	Wed, 22 May 2013 12:21:15 -0400
+Received: from mail-oa0-f52.google.com (mail-oa0-f52.google.com [209.85.219.52])
+	(using TLSv1 with cipher RC4-SHA (128/128 bits))
+	(No client certificate requested)
+	by mail.in.tum.de (Postfix) with ESMTPSA id CCF5F240266
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 May 2013 18:21:10 +0200 (CEST)
+Received: by mail-oa0-f52.google.com with SMTP id h1so2967763oag.11
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 May 2013 09:21:09 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Thanks David. This indeed gave more samples. Do you know why the
-symbol  [k] 0xffffffff81043fea occured so often? As shown in the
-pasted result, both "swapper" and "perf" had this symbol. And if I
-"perf record dd if=/dev/zero of=/dev/null" or "perf record ping", they
-all showed this symbol. I pasted these results in the end of this
-email.
-I guess my real concern is the symbols cannot be mapped into
-meaningful function names. These symbols cannot be found in either
-/proc/kallsyms nor the vmlinux I built from the kernel source tree.
-Any idea? Thanks.
+Hi,
 
-result of sudo perf record -a -- sleep 1
-# Samples: 104  of event 'cycles'
-# Event count (approx.): 61197061
+what's the difference between the two events task-clock and cpu-clock?
 
-#
-# Overhead          Command               Shared Object  Symbol
-# ........  ...............  ..........................  ......
-#
-    47.49%          swapper  [kernel.kallsyms]           [k] 0xffffffff81043fea
-    11.78%  chromium-browse  [kernel.kallsyms]           [k] 0xffffffff81095950
-    11.46%  chromium-browse  chromium-browser            [.] 0x000000000160d0a6
-     4.07%  chromium-browse  perf-5594.map               [.] 0x00000bb86b1cb70a
-     4.07%             perf  [kernel.kallsyms]           [k] 0xffffffff81043fea
-     2.38%            sleep  perf                        [.] 0x00000000000459da
-     2.29%            sleep  [kernel.kallsyms]           [k] 0xffffffff813548c3
-     2.05%             java  perf-3109.map               [.] 0x00007f84d5206071
-     2.05%  indicator-cpufr  libgobject-2.0.so.0.3200.3  [.] 0x0000000000031787
-     2.05%           compiz  libc-2.15.so                [.] 0x0000000000082fa6
-     2.02%  chromium-browse  libflashplayer.so           [.] 0x0000000000803fe7
-     1.88%             java  libglib-2.0.so.0.3200.3     [.] 0x0000000000045619
-     1.72%  chromium-browse  libglib-2.0.so.0.3200.3     [.] 0x0000000000019930
-     1.64%  chromium-browse  libpthread-2.15.so          [.] 0x000000000000cd60
-     1.02%             Xorg  [kernel.kallsyms]           [k] 0xffffffff81044c1d
-     0.62%          swapper  [i915]                      [k] 0x0000000000000ce5
-     0.62%             Xorg  [i915]                      [k] 0x0000000000018a80
-     0.51%             Xorg  Xorg                        [.] 0x000000000013a619
-     0.29%      kworker/0:1  [kernel.kallsyms]           [k] 0xffffffff81096afc
+I couldn't find any information that tells me the difference.
 
-result of sudo perf record dd if=/dev/zero of=/dev/null:
-# Overhead  Command      Shared Object  Symbol
-# ........  .......  .................  ......
-#
-    76.89%       dd  [kernel.kallsyms]  [k] 0xffffffff81043fea
-    13.91%       dd  libc-2.15.so       [.] 0x000000000014815f
-     9.21%       dd  dd                 [.] 0x0000000000004889
+Why does the event modifier 'u' has no effect on these two software events?
 
-result of sudo perf record ping 10.0.0.1:
-# Overhead  Command      Shared Object  Symbol
-# ........  .......  .................  ......
-#
-    64.59%     ping  ld-2.15.so         [.] 0x00000000000188d2
-    35.41%     ping  [kernel.kallsyms]  [k] 0xffffffff81043fea
+Cheers,
+Andreas
 
---
-Regards,
-Chao Xu
+Here is the example:
+
+$ time perf stat -e
+'{task-clock,task-clock:u,cpu-clock,cpu-clock:u,instructions,instructions:u}'
+dd if=/dev/zero of=/dev/null count=10000000
+10000000+0 records in
+10000000+0 records out
+5120000000 bytes (5.1 GB) copied, 2.99018 s, 1.7 GB/s
+
+ Performance counter stats for 'dd if=/dev/zero of=/dev/null count=10000000':
+
+       2989.907827 task-clock                #    0.999 CPUs utilized
+       2989.907827 task-clock:u              #    0.999 CPUs utilized
+       2989.992015 cpu-clock
+       2989.999305 cpu-clock:u
+    14,525,479,811 instructions              #    0.00  insns per cycle
+     3,130,315,989 instructions:u            #    0.00  insns per cycle
+
+       2.991410383 seconds time elapsed
+
+
+real    0m3.001s
+user    0m0.723s
+sys     0m2.270s
