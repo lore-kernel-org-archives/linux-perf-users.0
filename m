@@ -1,46 +1,52 @@
-From: Holger Brunck <holger.brunck@keymile.com>
-Subject: perf top and multithreaded applications
-Date: Fri, 31 May 2013 11:04:27 +0200
-Message-ID: <51A8679B.9030405@keymile.com>
+From: Andrew Davidoff <davidoff@qedmf.net>
+Subject: Re: Getting started with perf; a couple of questions
+Date: Fri, 31 May 2013 14:35:33 -0600
+Message-ID: <CAJLXCZTN1xLXk79kh5i8WbJBB+4sh0Qs1v+PndhLKSrPPvZ2wQ@mail.gmail.com>
+References: <CAJLXCZTs4i0P3wA78u25aCt-rfcsBNQ8t0QSsbWazQyoV-XdLA@mail.gmail.com>
+	<51A83824.1090907@gmail.com>
+	<CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-de.keymile.com ([195.8.104.250]:57143 "EHLO
-	mail-de.keymile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753831Ab3EaJEg (ORCPT
+Received: from mail-ie0-f176.google.com ([209.85.223.176]:45025 "EHLO
+	mail-ie0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754217Ab3EaUfd (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 31 May 2013 05:04:36 -0400
-Received: from frodo.de.keymile.net ([10.9.1.54]:52250 helo=mailrelay.de.keymile.net)
-	by mail-de.keymile.com with esmtp (Exim 4.76)
-	(envelope-from <Holger.Brunck@keymile.com>)
-	id 1UiLG8-0005I8-1Z
-	for linux-perf-users@vger.kernel.org; Fri, 31 May 2013 11:04:28 +0200
-Received: from srvdehan1003.de.keymile.net (srvdehan1003.de.keymile.net [10.9.1.108])
-	by mailrelay.de.keymile.net (8.12.2/8.12.2) with ESMTP id r4V92Sxd019269
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 May 2013 11:02:29 +0200 (MEST)
+	Fri, 31 May 2013 16:35:33 -0400
+Received: by mail-ie0-f176.google.com with SMTP id at20so5031619iec.21
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 May 2013 13:35:33 -0700 (PDT)
+In-Reply-To: <CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: David Ahern <dsahern@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi all,
-I have a question to use perf on a multithread application.
+On Fri, May 31, 2013 at 1:09 AM, Andrew Davidoff <davidoff@qedmf.net> wrote:
+> I will play with this more tomorrow but any further advice is
+> appreciated. I feel like I'm probably just missing a switch or
+> something that's not entirely obvious from the scant documentation I
+> have found.
 
-I am able to attach "perf top" to a specific TID with "-t" and then I see only
-the symbols and performance of this specific thread.
+After struggling a bit more with this on the original host:
 
-Am I able to zoom into a specific thread if I start "perf top" in a system wide
-mode? I am able to switch between different processes and see the performance
-measured for this specific process. But if this process is multithreaded I am
-unable to zoom further into one of his threads. The symbols which are shown are
-always for the whole process.
+Ubuntu 10.04.4 LTS
+kernel 2.6.32-47-server
+perf versions 3.9.4 and 3.8.13
 
-So is this in general possible? Am I miss something?
+with no change in results, I gave it a shot on a CentOS 6 virtual
+machine on my Mac:
 
-I currently use perf taken from the 3.4 kernel on a embedded powerpc board
-running a 3.0.40 kernel.
+CentOS release 6.4 (Final)
+kernel 3.9.4 AND kernel 2.6.32-358.2.1.el6.x86_64
+perf version 3.9.4
 
-Many thanks in advance.
+And perf record is working as I'd expect it to. To be clear about the
+description above, under CentOS,  perf record 3.9.4 is recording
+samples whether I'm running kernel 3.9.4 or 2.6.32-358.2.1.el6.x86_64.
 
-Regards
-Holger
+So...Ubuntu thing? Or maybe just a 10.04 thing (yeah, I know it's old).
+
+Maybe this'll help someone.
+
+Thanks all.
+Andy
