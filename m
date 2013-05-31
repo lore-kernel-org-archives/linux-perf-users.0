@@ -1,66 +1,46 @@
-From: Andrew Davidoff <davidoff@qedmf.net>
-Subject: Re: Getting started with perf; a couple of questions
-Date: Fri, 31 May 2013 01:09:18 -0600
-Message-ID: <CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com>
-References: <CAJLXCZTs4i0P3wA78u25aCt-rfcsBNQ8t0QSsbWazQyoV-XdLA@mail.gmail.com>
-	<51A83824.1090907@gmail.com>
+From: Holger Brunck <holger.brunck@keymile.com>
+Subject: perf top and multithreaded applications
+Date: Fri, 31 May 2013 11:04:27 +0200
+Message-ID: <51A8679B.9030405@keymile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ie0-f181.google.com ([209.85.223.181]:52583 "EHLO
-	mail-ie0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751161Ab3EaHJT (ORCPT
+Received: from mail-de.keymile.com ([195.8.104.250]:57143 "EHLO
+	mail-de.keymile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753831Ab3EaJEg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 31 May 2013 03:09:19 -0400
-Received: by mail-ie0-f181.google.com with SMTP id x14so3092714ief.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 May 2013 00:09:18 -0700 (PDT)
-In-Reply-To: <51A83824.1090907@gmail.com>
+	Fri, 31 May 2013 05:04:36 -0400
+Received: from frodo.de.keymile.net ([10.9.1.54]:52250 helo=mailrelay.de.keymile.net)
+	by mail-de.keymile.com with esmtp (Exim 4.76)
+	(envelope-from <Holger.Brunck@keymile.com>)
+	id 1UiLG8-0005I8-1Z
+	for linux-perf-users@vger.kernel.org; Fri, 31 May 2013 11:04:28 +0200
+Received: from srvdehan1003.de.keymile.net (srvdehan1003.de.keymile.net [10.9.1.108])
+	by mailrelay.de.keymile.net (8.12.2/8.12.2) with ESMTP id r4V92Sxd019269
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 May 2013 11:02:29 +0200 (MEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi all,
+I have a question to use perf on a multithread application.
 
-Thanks for the quick response.
+I am able to attach "perf top" to a specific TID with "-t" and then I see only
+the symbols and performance of this specific thread.
 
-> add a -v and see if more info comes out.
->
-> perf script can be used to dump events.
+Am I able to zoom into a specific thread if I start "perf top" in a system wide
+mode? I am able to switch between different processes and see the performance
+measured for this specific process. But if this process is multithreaded I am
+unable to zoom further into one of his threads. The symbols which are shown are
+always for the whole process.
 
-I tried again with -v on record, but I am still not getting any event
-samples in perf.data. Looking at an ASCII dump with report -D, I see
-43 PERF_RECORD_MMAP entries, each of which appears to be related to a
-kernel module, but nothing for any of the events I have selected to
-sample (each is simply listed like "page-faults stats:").
+So is this in general possible? Am I miss something?
 
-The run ends like this every time:
+I currently use perf taken from the 3.4 kernel on a embedded powerpc board
+running a 3.0.40 kernel.
 
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.004 MB perf.data (~194 samples) ]
+Many thanks in advance.
 
-"Woken up 1 times" seemed suspicious, if record should be sampling at
-1000Hz. I tried using -F 1000 and adding cycles to my events list both
-in an effort to get 1000Hz samples, but as far as I could tell, there
-was no change in the recorded data.
-
-Also note that when using -v with record, I get the message "failed to
-write feature 2" at the very end of the run output. I do not get that
-message without -v. I don't know what it's trying to tell me and
-haven't looked at the source code yet.
-
-The command I am running is a threaded python script (spawns workers).
-As I understand the documentation, I shouldn't need any additional
-flags for perf to collect data on all the threads, since it reads like
-counter inheritance is on by default. In other words, I believe perf
-record should be working in what is documented as "per-process" mode
-by default. I tried using -i with record in case I wasn't
-understanding correctly, but that didn't change anything.
-
-I will play with this more tomorrow but any further advice is
-appreciated. I feel like I'm probably just missing a switch or
-something that's not entirely obvious from the scant documentation I
-have found.
-
-Thanks again.
-Andy
+Regards
+Holger
