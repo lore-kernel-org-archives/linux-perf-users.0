@@ -1,63 +1,63 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Getting started with perf; a couple of questions
-Date: Thu, 06 Jun 2013 08:01:23 -0600
-Message-ID: <51B09633.2040204@gmail.com>
-References: <CAJLXCZTs4i0P3wA78u25aCt-rfcsBNQ8t0QSsbWazQyoV-XdLA@mail.gmail.com> <51A83824.1090907@gmail.com> <CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com> <CAJLXCZTN1xLXk79kh5i8WbJBB+4sh0Qs1v+PndhLKSrPPvZ2wQ@mail.gmail.com>
+From: Andreas Hollmann <hollmann@in.tum.de>
+Subject: Re: What is the difference between the events task-clock and cpu-clock?
+Date: Thu, 6 Jun 2013 16:57:46 +0200
+Message-ID: <CAGz0_-3+vfirrD2uvtRS70Hj_TDG0+QL_PjpZwGJo5WvS2FpZQ@mail.gmail.com>
+References: <CAGz0_-0wg+k4--2CWdMWiVOY-eEmut1Br2Z4ck21b=1jff7rew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f47.google.com ([209.85.160.47]:52987 "EHLO
-	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750870Ab3FFOB1 (ORCPT
+Received: from mailsender1.informatik.tu-muenchen.de ([131.159.0.97]:48052
+	"EHLO mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1750731Ab3FFO5u (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 6 Jun 2013 10:01:27 -0400
-Received: by mail-pb0-f47.google.com with SMTP id rr13so642416pbb.34
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2013 07:01:26 -0700 (PDT)
-In-Reply-To: <CAJLXCZTN1xLXk79kh5i8WbJBB+4sh0Qs1v+PndhLKSrPPvZ2wQ@mail.gmail.com>
+	Thu, 6 Jun 2013 10:57:50 -0400
+Received: from mail-vb0-f44.google.com (mail-vb0-f44.google.com [209.85.212.44])
+	(using TLSv1 with cipher RC4-SHA (128/128 bits))
+	(No client certificate requested)
+	by mail.in.tum.de (Postfix) with ESMTPSA id 811012401E7
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2013 16:57:47 +0200 (CEST)
+Received: by mail-vb0-f44.google.com with SMTP id 11so2053944vbf.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2013 07:57:46 -0700 (PDT)
+In-Reply-To: <CAGz0_-0wg+k4--2CWdMWiVOY-eEmut1Br2Z4ck21b=1jff7rew@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andrew Davidoff <davidoff@qedmf.net>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On 5/31/13 2:35 PM, Andrew Davidoff wrote:
-> On Fri, May 31, 2013 at 1:09 AM, Andrew Davidoff <davidoff@qedmf.net> wrote:
->> I will play with this more tomorrow but any further advice is
->> appreciated. I feel like I'm probably just missing a switch or
->> something that's not entirely obvious from the scant documentation I
->> have found.
->
-> After struggling a bit more with this on the original host:
->
-> Ubuntu 10.04.4 LTS
-> kernel 2.6.32-47-server
-> perf versions 3.9.4 and 3.8.13
->
-> with no change in results, I gave it a shot on a CentOS 6 virtual
-> machine on my Mac:
->
-> CentOS release 6.4 (Final)
-> kernel 3.9.4 AND kernel 2.6.32-358.2.1.el6.x86_64
-> perf version 3.9.4
->
-> And perf record is working as I'd expect it to. To be clear about the
-> description above, under CentOS,  perf record 3.9.4 is recording
-> samples whether I'm running kernel 3.9.4 or 2.6.32-358.2.1.el6.x86_64.
+Any ideas?
 
-It's a VM and not running on KVM so there is no PMU which means the -e 
-cycles is most likely falling back to -e cpu-clock. You should see this 
-in a message with the -v flag on record. perf-script should dump out the 
-events and show cpu-clock versus cycles.
-
-Based on that I suggest trying -e cpu-clock on your original host. If 
-that works then something is messed up with the pmu config on the host.
-
-David
+2013/5/22 Andreas Hollmann <hollmann@in.tum.de>:
+> Hi,
 >
-> So...Ubuntu thing? Or maybe just a 10.04 thing (yeah, I know it's old).
+> what's the difference between the two events task-clock and cpu-clock?
 >
-> Maybe this'll help someone.
+> I couldn't find any information that tells me the difference.
 >
-> Thanks all.
-> Andy
+> Why does the event modifier 'u' has no effect on these two software events?
 >
+> Cheers,
+> Andreas
+>
+> Here is the example:
+>
+> $ time perf stat -e
+> '{task-clock,task-clock:u,cpu-clock,cpu-clock:u,instructions,instructions:u}'
+> dd if=/dev/zero of=/dev/null count=10000000
+> 10000000+0 records in
+> 10000000+0 records out
+> 5120000000 bytes (5.1 GB) copied, 2.99018 s, 1.7 GB/s
+>
+>  Performance counter stats for 'dd if=/dev/zero of=/dev/null count=10000000':
+>
+>        2989.907827 task-clock                #    0.999 CPUs utilized
+>        2989.907827 task-clock:u              #    0.999 CPUs utilized
+>        2989.992015 cpu-clock
+>        2989.999305 cpu-clock:u
+>     14,525,479,811 instructions              #    0.00  insns per cycle
+>      3,130,315,989 instructions:u            #    0.00  insns per cycle
+>
+>        2.991410383 seconds time elapsed
+>
+>
+> real    0m3.001s
+> user    0m0.723s
+> sys     0m2.270s
