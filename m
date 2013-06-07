@@ -1,105 +1,75 @@
-From: David Ahern <dsahern@gmail.com>
+From: Andrew Davidoff <davidoff@qedmf.net>
 Subject: Re: Getting started with perf; a couple of questions
-Date: Fri, 07 Jun 2013 09:05:41 -0600
-Message-ID: <51B1F6C5.3060302@gmail.com>
-References: <CAJLXCZTs4i0P3wA78u25aCt-rfcsBNQ8t0QSsbWazQyoV-XdLA@mail.gmail.com> <51A83824.1090907@gmail.com> <CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com> <CAJLXCZTN1xLXk79kh5i8WbJBB+4sh0Qs1v+PndhLKSrPPvZ2wQ@mail.gmail.com> <51B09633.2040204@gmail.com> <CAJLXCZSE=LWW8PxTAs4yPAQsmwQjVF=ehGCTKbUWF3rCDF-+7w@mail.gmail.com>
+Date: Fri, 7 Jun 2013 17:49:48 -0600
+Message-ID: <CAJLXCZTayKKetZPx5mgsFm4wbnHnT__Hosqj-mBGnTXoTaiVjw@mail.gmail.com>
+References: <CAJLXCZTs4i0P3wA78u25aCt-rfcsBNQ8t0QSsbWazQyoV-XdLA@mail.gmail.com>
+	<51A83824.1090907@gmail.com>
+	<CAJLXCZTzRdLYmcRVTO_AeRawmZ55AtdABcKpu5T5A-Z89iHnbA@mail.gmail.com>
+	<CAJLXCZTN1xLXk79kh5i8WbJBB+4sh0Qs1v+PndhLKSrPPvZ2wQ@mail.gmail.com>
+	<51B09633.2040204@gmail.com>
+	<CAJLXCZSE=LWW8PxTAs4yPAQsmwQjVF=ehGCTKbUWF3rCDF-+7w@mail.gmail.com>
+	<51B1F6C5.3060302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f46.google.com ([209.85.220.46]:61959 "EHLO
-	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754298Ab3FGPF5 (ORCPT
+Received: from mail-ie0-f181.google.com ([209.85.223.181]:65224 "EHLO
+	mail-ie0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757213Ab3FGXts (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 7 Jun 2013 11:05:57 -0400
-Received: by mail-pa0-f46.google.com with SMTP id fa11so2622850pad.33
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jun 2013 08:05:57 -0700 (PDT)
-In-Reply-To: <CAJLXCZSE=LWW8PxTAs4yPAQsmwQjVF=ehGCTKbUWF3rCDF-+7w@mail.gmail.com>
+	Fri, 7 Jun 2013 19:49:48 -0400
+Received: by mail-ie0-f181.google.com with SMTP id x14so11671451ief.26
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jun 2013 16:49:48 -0700 (PDT)
+In-Reply-To: <51B1F6C5.3060302@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andrew Davidoff <davidoff@qedmf.net>
+To: David Ahern <dsahern@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On 6/6/13 12:26 PM, Andrew Davidoff wrote:
-> On Thu, Jun 6, 2013 at 8:01 AM, David Ahern <dsahern@gmail.com> wrote:
->>
->> It's a VM and not running on KVM so there is no PMU which means the -e
->> cycles is most likely falling back to -e cpu-clock. You should see this in a
->> message with the -v flag on record. perf-script should dump out the events
->> and show cpu-clock versus cycles.
->>
->> Based on that I suggest trying -e cpu-clock on your original host. If that
->> works then something is messed up with the pmu config on the host.
+On Fri, Jun 7, 2013 at 9:05 AM, David Ahern <dsahern@gmail.com> wrote:
 >
-> Thanks. It wasn't clear to me if a VM had the same access to the PMU
-> that a non-virtualized host would. But I guess that might explain why
-> a bunch of events I'd expect samples for didn't have any (ex:
-> iTLB-load-misses), even on the VM that did record some samples?
->
+> So perf record -v does not show the fallback? The default event has been
+> 'cycles' from the beginning I believe. Only if cycles is not supported does
+> it fallback to cpu-clock. You should not have to add '-e cycles'. Well, at
+> least that is the way it is for the code in Linus' tree.
 
-The hypervisor needs to expose a PMU to the guest. AFAIK KVM is the only 
-one that does that. Without the PMU you do not get H/W based events.
+The perf record invocation I am using in the CentOS 6.4 VM is in the
+form of `perf record -v -e event0,...eventN <command-to-trace>`, and
+perf is built from 3.9.4 sources from kernel.org, and the running
+kernel is built from the same sources. In this environment If I pass
+events to -e without including cycles, I do not get the message about
+falling back to cpu-clock. If I do include cycles in the event list,
+or do not provide an event list at all, I do get the message about
+falling back to cpu-clock.
 
-> I re-ran the record on the VM with -v and did see the message about
-> falling back to cpu-clock-ticks, but only after I added the cycles
-> even to my events list. Which actually leads into a question regarding
-> event sampling.
+Thank you for the clarification regarding -c and -F / sampling rate/period.
 
-So perf record -v does not show the fallback? The default event has been 
-'cycles' from the beginning I believe. Only if cycles is not supported 
-does it fallback to cpu-clock. You should not have to add '-e cycles'. 
-Well, at least that is the way it is for the code in Linus' tree.
+> What command lines are you running? I seem to recall this is a 2.6.32 kernel
+> and basic perf record commands should work fine -- perf record -a or perf
+> record -p <pid>. Perhaps something snuck in recently that broke compat with
+> 2.6.32. You can determine that by running the perf command that comes with
+> that version of Ubuntu and then newer ones -- 3.0, 3.4, 3.8 would be a good
+> distribution of versions to start with if you want to get to the bottom of
+> it.
 
->
-> The documentation I have found mentions a "default sampling event"
-> (cycles) but doesn't explain the concept of a sampling event in
-> detail. Does each event listed with -e have its own sample period/rate
-> that can be adjusted? Or do -c or -F apply to all events sampled? Even
-> I don't sample cycles, is the default sampling rate still 1000Hz for
-> all events sampled in the absence of -c or -F?
+You are correct that the Ubuntu 10.04 host that doesn't seem to be
+recording properly is running a 2.6.32 kernel (2.6.32-47-server from
+Ubuntu). The invocation of perf record is the same as described for
+the CentOS VM (i.e. I am not using -p, and would like to not use -a,
+though -a is the only way I'm getting samples recorded for
+<command-to-trace>).
 
-Unless it crept it with some changes Jiri made (I have not been using 
-the fancy -e declarations) I believe there is a single -c/-F argument 
-and it applies to all events. ie., all events have the same sampling 
-interval.
+I had moved to building a newer version of perf than the one that came
+from the Ubuntu 10.04 repo (linux-tools-common) because that one
+appeared ancient based on the output it was generating, and reports
+version as 0.0.2.PERF (though the binary is installed as
+/usr/bin/perf_2.6.32-47). perf record does record data with that
+version, but it looks like (via perf report) that it's data only for
+one event even when multiple are passed, and that event isn't labeled
+in the report, so at a glance I am not sure which it is.
 
-The default is 1000 Hz (equivalent to -F 1000). -c specifies the period 
--- which is the similar to specifying -F.
+Anyway, for now I'm not worrying about getting this working on this
+particular version of Ubuntu, but I appreciate all your help. If I
+decide to dig further I'll start iterating through the versions you
+suggested and see where things get extra broken.
 
-     OPT_U64('c', "count", &record.opts.user_interval, "event period to 
-sample"),
-...
-     OPT_UINTEGER('F', "freq", &record.opts.user_freq, "profile at this 
-frequency"),
-
-
-And then configuring the attributes for the event only 1 of the 2 is 
-used with frequency taking precedent:
-
-    if (!attr->sample_period || (opts->user_freq != UINT_MAX &&
-                      opts->user_interval != ULLONG_MAX)) {
-         if (opts->freq) {
-             perf_evsel__set_sample_bit(evsel, PERIOD);
-             attr->freq      = 1;
-             attr->sample_freq   = opts->freq;
-         } else {
-             attr->sample_period = opts->default_interval;
-         }
-     }
-
->
-> Regarding using -e cpu-clock on the original host, that doesn't appear
-> to have changed the perf record behavior. Neither does using -e
-> cycles. And even with -v on record, I didn't see any additional
-> messaging (like fall back to cpu-clock). But I do still get sample
-> data if I run with -a. *shrug*.
-
-What command lines are you running? I seem to recall this is a 2.6.32 
-kernel and basic perf record commands should work fine -- perf record -a 
-or perf record -p <pid>. Perhaps something snuck in recently that broke 
-compat with 2.6.32. You can determine that by running the perf command 
-that comes with that version of Ubuntu and then newer ones -- 3.0, 3.4, 
-3.8 would be a good distribution of versions to start with if you want 
-to get to the bottom of it.
-
-David
+Andy
