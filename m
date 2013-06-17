@@ -1,62 +1,31 @@
-From: Michael Ellerman <michael@ellerman.id.au>
-Subject: Re: Problem when profiling a process' running/sleeping/waiting time
-Date: Mon, 17 Jun 2013 17:20:03 +1000
-Message-ID: <1371453603.549.6.camel@concordia>
-References: <50ED4CE0.7050201@bsc.es>
+From: Yuanfang Chen <tabloid.adroit@gmail.com>
+Subject: perf record: per-event sampling period
+Date: Mon, 17 Jun 2013 14:18:52 -0400
+Message-ID: <CAN1HeCdeoNs4rPcLVcJGbcrJhmzjhd9AkJfx2WSPAwJJ_XugMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from ozlabs.org ([203.10.76.45]:50453 "EHLO ozlabs.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750937Ab3FQHUH (ORCPT
+Received: from mail-pd0-f169.google.com ([209.85.192.169]:53743 "EHLO
+	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751073Ab3FQSSx (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 17 Jun 2013 03:20:07 -0400
-In-Reply-To: <50ED4CE0.7050201@bsc.es>
+	Mon, 17 Jun 2013 14:18:53 -0400
+Received: by mail-pd0-f169.google.com with SMTP id y10so3067783pdj.28
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2013 11:18:52 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Victor Jimenez <victor.javier@bsc.es>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Wed, 2013-01-09 at 11:56 +0100, Victor Jimenez wrote:
-> I am trying to profile a process in terms of running, sleeping and 
-> waiting time. I am using kernel 3.6.6 running on an IBM POWER7 machine. 
-> Initially, I decided to use a toy example where I would expect that the 
-> process remains in running state most of the time. This is the code for 
-> such a simple example:
-> 
-> int main() {
->      for (int i = 0; i < 1000000; i++)
->          for (int j = 0; j < 1000; j++);
-> }
-> 
-> I am using the following command line for reading kernel stats:
-> 
-> perf stat -e 
-> "sched:sched_stat_runtime,sched:sched_stat_sleep,sched:sched_stat_wait, \
->      sched:sched_stat_iowait,sched:sched_stat_blocked" ./test
-> 
-> And these are the results that I obtain:
-> 
->   Performance counter stats for './test':
-> 
->      12,077,957,756 sched:sched_stat_runtime
->     169,892,740,990 sched:sched_stat_sleep
->           5,816,784 sched:sched_stat_wait
->                   0 sched:sched_stat_iowait
->                   0 sched:sched_stat_blocked
-> 
->       12.084706279  seconds time elapsed
-> 
-> I cannot really understand why the counter for sched_stat_sleep is so 
-> high (even higher than sched_stat_runtime), especially for such a 
-> CPU-bound workload.
-> 
-> Am I missing anything, or there could be a problem with sched_stat_sleep 
-> counter?
+Hi all,
 
-Hi Victor,
+Is the per-event sampling period supported now? I'm searching around,
+found [1] using "-c 100,1000" method, [2] using
+"cpu/----/period=1000". However, neither of these work in my box
+(fedora 18, 3.8.11-200.fc18.x86_64, with perf package from fedora 18
+repo ).
 
-Did you ever work out what was going on here?
+thanks,
+yuanfang
 
-cheers
+[1]https://lkml.org/lkml/2010/11/23/122
+[2]http://cscads.rice.edu/workshops/summer-2012/slides/performance-tools/CSCADS_2012_perf_events_status_update.pdf
