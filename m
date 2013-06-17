@@ -1,56 +1,62 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: BUG: perf kvm top --callgraph not showing callgraph
-Date: Fri, 14 Jun 2013 17:23:20 -0600
-Message-ID: <51BBA5E8.5070204@gmail.com>
-References: <CAPoQQ-2Xqms+FL=sfGKftgyMJsRKbS4+Fh8dV6Th-XjoqCBRjw@mail.gmail.com> <51BA6D96.5050004@gmail.com> <CAPoQQ-3Jq2tu1ccsmcL14H=+QF1B+k5cb-SOqihwvZbWcA960A@mail.gmail.com> <51BB92B9.6080706@gmail.com> <CAPoQQ-1sjf6Wj4sU7--X4DpCEeMhbgbap_OfDmD0rCXWT1XyvA@mail.gmail.com>
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: Problem when profiling a process' running/sleeping/waiting time
+Date: Mon, 17 Jun 2013 17:20:03 +1000
+Message-ID: <1371453603.549.6.camel@concordia>
+References: <50ED4CE0.7050201@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f51.google.com ([209.85.160.51]:56398 "EHLO
-	mail-pb0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752063Ab3FNXXY (ORCPT
+Received: from ozlabs.org ([203.10.76.45]:50453 "EHLO ozlabs.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750937Ab3FQHUH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 14 Jun 2013 19:23:24 -0400
-In-Reply-To: <CAPoQQ-1sjf6Wj4sU7--X4DpCEeMhbgbap_OfDmD0rCXWT1XyvA@mail.gmail.com>
+	Mon, 17 Jun 2013 03:20:07 -0400
+In-Reply-To: <50ED4CE0.7050201@bsc.es>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Cody P Schafer <devel-lists@codyps.com>
-Cc: linux-perf-users@vger.kernel.org, KVM <kvm@vger.kernel.org>, Xiao Guangrong <xiaoguangrong@linux.vnet.ibm.com>
+To: Victor Jimenez <victor.javier@bsc.es>
+Cc: linux-perf-users@vger.kernel.org
 
-[added kvm devel list and Xiao who implemented the original perf-kvm as 
-I recall]
+On Wed, 2013-01-09 at 11:56 +0100, Victor Jimenez wrote:
+> I am trying to profile a process in terms of running, sleeping and 
+> waiting time. I am using kernel 3.6.6 running on an IBM POWER7 machine. 
+> Initially, I decided to use a toy example where I would expect that the 
+> process remains in running state most of the time. This is the code for 
+> such a simple example:
+> 
+> int main() {
+>      for (int i = 0; i < 1000000; i++)
+>          for (int j = 0; j < 1000; j++);
+> }
+> 
+> I am using the following command line for reading kernel stats:
+> 
+> perf stat -e 
+> "sched:sched_stat_runtime,sched:sched_stat_sleep,sched:sched_stat_wait, \
+>      sched:sched_stat_iowait,sched:sched_stat_blocked" ./test
+> 
+> And these are the results that I obtain:
+> 
+>   Performance counter stats for './test':
+> 
+>      12,077,957,756 sched:sched_stat_runtime
+>     169,892,740,990 sched:sched_stat_sleep
+>           5,816,784 sched:sched_stat_wait
+>                   0 sched:sched_stat_iowait
+>                   0 sched:sched_stat_blocked
+> 
+>       12.084706279  seconds time elapsed
+> 
+> I cannot really understand why the counter for sched_stat_sleep is so 
+> high (even higher than sched_stat_runtime), especially for such a 
+> CPU-bound workload.
+> 
+> Am I missing anything, or there could be a problem with sched_stat_sleep 
+> counter?
 
-On 6/14/13 5:11 PM, Cody P Schafer wrote:
->> I am under the impression the limitations are these 2 snippets in
->> >arch/x86/kernel/cpu/perf_event.c:
-> Yep, that's disabling the in-kernel callchain generation (the in-perf
-> callchain code should still be an option without this). I wonder if
-> one could use perf_callchain_user() to find the callchain of the guest
-> kernel.
->
-> Does anyone know the particular changes that need to be done to
-> support kvm backtraces/the reasons it is specifically disabled?
+Hi Victor,
 
-It's going to require some KVM changes I would think. e.g., for the IP:
+Did you ever work out what was going on here?
 
-unsigned long perf_instruction_pointer(struct pt_regs *regs)
-{
-     if (perf_guest_cbs && perf_guest_cbs->is_in_guest())
-         return perf_guest_cbs->get_guest_ip();
-
-     return regs->ip + code_segment_base(regs);
-}
-
-get_guest_ip comes from arch/x86/kvm/x86.c.
-
-callchain walking starts in perf_callchain, kernel/events/callchain.c
-
-For more context:
-perf_prepare_sample()
-   data->callchain = perf_callchain(event, regs);
-
-For guests you'll want regs from the guest which will need to be 
-supplied by kvm.
-
-David
+cheers
