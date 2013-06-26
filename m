@@ -1,126 +1,94 @@
-From: Prabhat Kumar Ravi <prabhatravi09@gmail.com>
-Subject: Re: vmlinux symtab matching kallsyms fails: dso__find_symbol_by_name
- ---- end ----
-Date: Tue, 25 Jun 2013 17:46:40 +0530
-Message-ID: <CAJ_BOiDFKUC+LAxSAefXBHG0FnmmFE2yzuy5gzHWOb5e45j3ew@mail.gmail.com>
-References: <CAJ_BOiBABAojuwTXCEp1PPF8_rJO8QXkebb5z8JgLEhFyQm+Hw@mail.gmail.com>
-	<20130625090702.GA4865@krava.brq.redhat.com>
-	<CAJ_BOiDFqLbF3JpofpvZjR8aO+Ng7SYX9u5g2=3Bg5+bXH+uNg@mail.gmail.com>
+From: Peipei Wang <wangpeipei.90@gmail.com>
+Subject: How can I get the number of Generic counters and Fixed Counters in A computer
+Date: Wed, 26 Jun 2013 15:00:19 -0400
+Message-ID: <CAEuYUep2MwCdvWxjJKqSjLvTWPPdE6QTzUS-0AXkSnHBFiYYfQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f178.google.com ([209.85.216.178]:53763 "EHLO
-	mail-qc0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751445Ab3FYMQm (ORCPT
+Received: from mail-vc0-f175.google.com ([209.85.220.175]:59167 "EHLO
+	mail-vc0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751774Ab3FZTAV (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 25 Jun 2013 08:16:42 -0400
-Received: by mail-qc0-f178.google.com with SMTP id c11so7026015qcv.23
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2013 05:16:40 -0700 (PDT)
-In-Reply-To: <CAJ_BOiDFqLbF3JpofpvZjR8aO+Ng7SYX9u5g2=3Bg5+bXH+uNg@mail.gmail.com>
+	Wed, 26 Jun 2013 15:00:21 -0400
+Received: by mail-vc0-f175.google.com with SMTP id hr11so1278347vcb.20
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2013 12:00:19 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
+To: perf group <linux-perf-users@vger.kernel.org>
 
-Hi Jirka,
+Hi all,
 
-On Tue, Jun 25, 2013 at 5:37 PM, Prabhat Kumar Ravi
-<prabhatravi09@gmail.com> wrote:
-> Hi Jirka,
->
-> As _stext getting removed in
->
-> dso__load_kallsyms
->  --> symbols__fixup_duplicate   (here _stext removed)
->
-> as we have same address in /proc/kallsyms for _stext, asm_do_IRQ and
-> __exception_text_start
->
-> So, we need to disable symbols__fixup_duplicate in dso__load_kallsyms,
->
-> Prabhat
->
-> On Tue, Jun 25, 2013 at 2:37 PM, Jiri Olsa <jolsa@redhat.com> wrote:
->> On Tue, Jun 25, 2013 at 11:24:56AM +0530, Prabhat Kumar Ravi wrote:
->>> On 3.4-rc49, I got following failure running `perf test`:
->>>
->>> / # perf test -v 1
->>>  1: vmlinux symtab matches kallsyms:
->>> --- start ---
->>> dso__find_symbol_by_name ---- end ----
->>> vmlinux symtab matches kallsyms: FAILED!
->>>
->>> Perf test is failing at dsofind_symbol_by_name
->>>
->>> where
->>>
->>>         kallsyms_map = machine__kernel_map(&kallsyms, type);
->>>
->>>      sym = map__find_symbol_by_name(kallsyms_map, ref_reloc_sym.name, NULL);
->>>      if (sym == NULL) {
->>>                 pr_debug("dso__find_symbol_by_name ");
->>>                 goto out;
->>>         }
->>>
->>> Here sym is search for "_stext" which is NULL here so perf test fails
->>> here only.
->>>
->>> On investigation found that _stext having same address as asm_do_IRQ
->>> and exception_text_start,
->>>
->>> c00081c0 T asm_do_IRQ
->>> c00081c0 T _stext
->>> c00081c0 T __exception_text_start
->>>
->>> so being deleted by symbolsfixup_duplicate in
->>>
->>> if (choose_best_symbol(curr, next) == SYMBOL_A) {
->>>
->>>                         rb_erase(&next->rb_node, symbols); --> symbole
->>> getting erase here.
->>>                         goto again;
->>>                 } else {
->>>
->>>
->>
->> I recently fixed this test for another kind of error rising from
->> the /proc/kallsyms being not as precise as vmlinux file. This one
->> looks like another one.
->>
->> acme's tree:
->>   b8bae2c perf tests: Omit end of the symbol check failure for test 1
->>
->>> My doubt is, Is we really need this commit??:
->>>
->>> commit 3f5a42722b9e78a434d5a4ee5e607dc33c69ac80
->>> Author: Anton Blanchard <anton@samba.org>
->>> Date:   Wed Aug 24 16:40:15 2011 +1000
->>>
->>>     perf symbols: /proc/kallsyms does not sort module symbols
->>>
->>>     kallsyms__parse assumes that /proc/kallsyms is sorted and sets the end
->>>     of the previous symbol to the start of the current one.
->>>
->>>     Unfortunately module symbols are not sorted, eg:
->>>
->>>     ffffffffa0081f30 t e1000_clean_rx_irq   [e1000e]
->>>     ffffffffa00817a0 t e1000_alloc_rx_buffers       [e1000e]
->>>
->>>     Some symbols end up with a negative length and others have a length
->>>     larger than they should. This results in confusing perf output.
->>>
->>>     We already have a function to fixup the end of zero length symbols so
->>>     use that instead.
->>>
->>> Or we can search for other string.??
->>
->> This one looks important, I think we should fix the test again.
->> Maybe bisable duplicates removal for test? Keep removed symbols
->> list? ;-)
->>
->> jirka
+I see from Perf wiki that if i put too many events in a perf stat,
+there will be something called multiplexing and scaling because of the
+number of counters provided by PMU. That wiki gives the Generic
+counter and Fixed counters For Intel Core and Nehalem.
 
-Thanks for your input otherwise I am thinking to change _stext to some
-other symbol.
+Does anybody know how to find the number of Both counters for Other
+processors?? Mine is Xelon.
 
-- Prabhat
+Another question. I found there is some events that are stored in
+Generic counters, while others in Fixed Counters. Here is an example.
+How can I get to know which kind of counter that actually each
+performance events is stored in?
+
+**********here is no scaling******************************
+perf stat -e cycles -e instructions -e branches -a sleep 2
+
+ Performance counter stats for 'sleep 2':
+
+     1,166,790,650 cycles                    #    0.000 GHz
+         [100.00%]
+     1,197,347,780 instructions              #    1.03  insns per
+cycle         [100.00%]
+       227,330,156 branches
+
+       2.000775070 seconds time elapsed
+
+
+
+**********if I add branches-misses here, then it starts scaling for
+the four******************************
+***************So I guess they use generic counters and should be only
+3, since 3/5=75%****************
+
+perf stat -e cycles -e instructions -e branches -e branch-misses -a sleep 2
+
+ Performance counter stats for 'sleep 2':
+
+     1,028,005,876 cycles                    #    0.000 GHz
+         [47.87%]
+     1,177,117,294 instructions              #    1.15  insns per
+cycle         [70.11%]
+       229,233,872 branches
+         [77.88%]
+         3,276,060 branch-misses             #    1.43% of all
+branches         [74.25%]
+
+       2.000727148 seconds time elapsed
+
+
+
+**********but if I change branches-misses to context-switches, then it
+stops scaling ***********
+***************So I guess branches instructions and cycles are for
+generic counters, and context-switches is stored by another fixed
+counter***************
+
+
+perf stat -e cycles -e instructions -e branches -e context-switches -a sleep 2
+
+ Performance counter stats for 'sleep 2':
+
+     1,141,756,954 cycles                    #    0.000 GHz
+         [100.00%]
+     1,192,438,722 instructions              #    1.04  insns per
+cycle         [100.00%]
+       226,363,898 branches
+             2,644 context-switches
+
+       2.000766968 seconds time elapsed
+
+
+Best wishes.
+Yours,
+Wang Peipei
