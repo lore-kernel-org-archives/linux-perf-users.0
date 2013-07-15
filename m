@@ -1,41 +1,116 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: Re: Link between Intel documentation events and perf list events
-Date: Wed, 03 Jul 2013 16:02:50 +0200
-Message-ID: <51D42F0A.70806@gmail.com>
-References: <51D1AA04.7060403@insa-lyon.fr> <8761wt62f8.fsf@tassilo.jf.intel.com> <51D286E0.2070500@insa-lyon.fr> <CAGz0_-3uWqVqPLwKvpiuveBJo1DT3B5TynK9ebdBZuw5ZGe3nQ@mail.gmail.com> <51D2D69E.9020207@gmail.com> <20130702144904.GY6123@two.firstfloor.org> <51D3E9A5.2010804@gmail.com> <20130703132844.GJ6123@two.firstfloor.org>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: perf documentation: update format and events ABI files
+Date: Mon, 15 Jul 2013 17:04:50 -0400 (EDT)
+Message-ID: <alpine.DEB.2.10.1307151656050.6555@vincent-weaver-1.um.maine.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-bk0-f41.google.com ([209.85.214.41]:47818 "EHLO
-	mail-bk0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755298Ab3GCOCx (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 3 Jul 2013 10:02:53 -0400
-Received: by mail-bk0-f41.google.com with SMTP id jc3so98673bkc.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2013 07:02:51 -0700 (PDT)
-In-Reply-To: <20130703132844.GJ6123@two.firstfloor.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org, acme@redhat.com, Stephane Eranian <eranian@gmail.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Thanks, the correct program is reporting all events as available.
 
-Manu
+This updates the sysfs-bus-event_source-devices-events and
+sysfs-bus-event_source-devices-format Documentation to more
+closely match the values current kernels are exporting.
 
-On 07/03/2013 03:28 PM, Andi Kleen wrote:
-> #include <cpuid.h>
-> #include <stdio.h>
-> int main()
-> {
-> 	unsigned a, b, c, d;
-> 	/* check __get_cpuid_max here */
-> 	__cpuid(10, a, b, c, d);
-> 	printf("eax: %x ebx %x ecx %x edx %x\n", a, b, c, d);
-> 	int i;
-> 	for (i = 0; i < 10; i++)
-> 		if (b & (1 << i))
-> 			printf("event %d not supported\n", i);
-> 	return 0;
-> }
+The big change is the allowing of decimal values in the events file;
+this was an ABI change in the 3.10 kernel.
+
+It also documents more completely how non-contiguous values work in the 
+format file.  I have to say it would have been much easier for parser 
+writers if the format value had been a simple mask rather than having to 
+take a value, parse it, and then do an arbitracy number of shift/masks
+to split up the value to pass in.
+
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
+index 3c1cc24..43aae08 100644
+--- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
+@@ -1,30 +1,51 @@
+-What:		/sys/devices/cpu/events/
++What:		/sys/bus/event_source/devices/<dev>/events
++
++Date:		2013/01/08
++
++Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
++
++Description:	Generic performance monitoring events
++
++		A collection of performance monitoring events that are
++		supported by the PMU (performance monitoring unit)
++		specified by "<dev>". These events can be monitored
++		using the 'perf(1)' tool.
++
++		The contents of each file is a list of attribute names
++		(as found in the corresponding
++			/sys/bus/event_source/devices/<dev>/format
++		file) separated by commas.  Each entry has
++		an optional value (either hex or decimal).  If no
++		value is specified than it is assumed to be a single-bit
++		field with a value of 1.
++
++		An example of what you might find:
++			event=0x2,inv,ldlat=3
++
++
++What:		/sys/devices/cpu/events/branch-instructions
+ 		/sys/devices/cpu/events/branch-misses
+-		/sys/devices/cpu/events/cache-references
++		/sys/devices/cpu/events/bus-cycles
+ 		/sys/devices/cpu/events/cache-misses
+-		/sys/devices/cpu/events/stalled-cycles-frontend
+-		/sys/devices/cpu/events/branch-instructions
+-		/sys/devices/cpu/events/stalled-cycles-backend
+-		/sys/devices/cpu/events/instructions
++		/sys/devices/cpu/events/cache-references
+ 		/sys/devices/cpu/events/cpu-cycles
++		/sys/devices/cpu/events/instructions
++		/sys/devices/cpu/events/stalled-cycles-backend
++		/sys/devices/cpu/events/stalled-cycles-frontend
+ 
+ Date:		2013/01/08
+ 
+ Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+ 
+-Description:	Generic performance monitoring events
++Description:	Generic CPU performance monitoring events
+ 
+ 		A collection of performance monitoring events that may be
+ 		supported by many/most CPUs. These events can be monitored
+ 		using the 'perf(1)' tool.
+ 
+-		The contents of each file would look like:
+-
+-			event=0xNNNN
+-
+-		where 'N' is a hex digit and the number '0xNNNN' shows the
+-		"raw code" for the perf event identified by the file's
+-		"basename".
++		The format of these files matches that of
++		/sys/bus/event_source/devices/<dev>/events as described
++		previously in this file.
+ 
+ 
+ What: 		/sys/devices/cpu/events/PM_1PLUS_PPC_CMPL
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-format b/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
+index 77f47ff..4f7ee5e 100644
+--- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
+@@ -15,6 +15,12 @@ Description:
+ 			attr2 = 'config:0-7'
+ 			attr3 = 'config:12-35'
+ 
+-		Example: 'config1:1,6-10,44'
++		Example: event = 'config1:1,6-10,44'
+ 		Defines contents of attribute that occupies bits 1,6-10,44 of
+ 		perf_event_attr::config1.
++
++		In this example, the events file would have the value 
++			event=0x7f
++		to set all of the specified bits (they will be split up).
++		You would not use 0x10000007c2 (which is what the bits
++		actually passed into config1 would look like).
