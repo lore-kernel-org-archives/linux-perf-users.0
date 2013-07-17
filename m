@@ -1,48 +1,42 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: How does perf collects per thread/process events ?
-Date: Tue, 16 Jul 2013 17:29:33 +0200
-Message-ID: <51E566DD.1070006@insa-lyon.fr>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Periodic checkpointing (using perf and signals?)
+Date: Wed, 17 Jul 2013 11:44:00 -0400
+Message-ID: <51E6BBC0.1080102@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wg0-f41.google.com ([74.125.82.41]:64065 "EHLO
-	mail-wg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932241Ab3GPP3g (ORCPT
+Received: from smtp.codeaurora.org ([198.145.11.231]:53098 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752053Ab3GQPoB (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Jul 2013 11:29:36 -0400
-Received: by mail-wg0-f41.google.com with SMTP id y10so3778625wgg.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jul 2013 08:29:35 -0700 (PDT)
+	Wed, 17 Jul 2013 11:44:01 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, criu@openvz.org
 
 Hi,
 
-My question regards a platform equipped with 2 Intel Xeon X5650.
-According to the perf wiki page 
-(https://perf.wiki.kernel.org/index.php/Tutorial), "by default perf stat 
-counts for all threads of the process and subsequent child processes and 
-threads" and "By default, perf stat counts in per-thread mode".
+I'm interested in taking checkpoints of processes from fast systems like
+hardware and restoring them on really slow software models for performance
+analysis. So far I've been able to save and restore checkpoints on the
+different systems using CRIU. Now I'm looking for some way to trigger the
+checkpointing. One basic use case might be to take a process that runs for say
+100M instructions and take a checkpoint every 10M instructions to be restored
+as 10 parallel runs of the model.
 
-So a first question is what is the default: per thread or per process ?
+I'm thinking of trying to use performance counters to trigger such behavior.
+Does perf already have support for triggering things like this? If not, I'm
+thinking of trying to work in the ability to send a signal, like stop, to the
+process of interest once the specified count, such as 10M instructions, has
+been reached. CRIU or a wrapper could then wait for process of interest to
+stop, take the checkpoint, let the process continue, and then wait for it to
+stop again or exit. Would such an approach make sense?
 
-Then, independently of the answer, I am wondering how does perf handles 
-per thread or per process regarding the scheduler and migrations. I 
-didn't find it explicitly in the Intel documentation but it seems 
-natural that hardware performance counters located on a given core are 
-only capable of counting event on this core and not on other cores. Is 
-it true ?
-
-Moreover, the wiki page says that "When a thread migrated from one 
-processor to another, counters are saved on the current processor and 
-are restored on the new one" (this seems to confirm the answer to my 
-previous question above). It means that the scheduler is aware about 
-"perf" or that perf is able to register a hook into the scheduler. So I 
-guess this is done in the kernel part of perf (in the implementation of 
-the perf_event_open system call) and not in the user land part, is it true ?
-
-Thanks
+Thanks,
+Christopher
 
 -- 
-Manu
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
