@@ -1,67 +1,67 @@
-From: Pavel Emelyanov <xemul@parallels.com>
-Subject: Re: [CRIU] Periodic checkpointing (using perf and signals?)
-Date: Wed, 17 Jul 2013 19:57:11 +0400
-Message-ID: <51E6BED7.20402@parallels.com>
-References: <51E6BBC0.1080102@codeaurora.org>
+From: Milian Wolff <mail@milianw.de>
+Subject: Re: Reusable data analysis/parser library?
+Date: Sun, 21 Jul 2013 23:57:26 +0200
+Message-ID: <1570240.AOWUWmZr1e@minime>
+References: <1435472.kqSja2FelP@minime>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart1675150.VUJQQP4fmt"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from relay.parallels.com ([195.214.232.42]:58100 "EHLO
-	relay.parallels.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754176Ab3GQP5Q (ORCPT
+Received: from dd24202.kasserver.com ([85.13.143.162]:50708 "EHLO
+	dd24202.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751101Ab3GUWE7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 17 Jul 2013 11:57:16 -0400
-In-Reply-To: <51E6BBC0.1080102@codeaurora.org>
+	Sun, 21 Jul 2013 18:04:59 -0400
+Received: from minime.localnet (dslb-178-005-158-050.pools.arcor-ip.net [178.5.158.50])
+	by dd24202.kasserver.com (Postfix) with ESMTPSA id 739A9A02001
+	for <linux-perf-users@vger.kernel.org>; Sun, 21 Jul 2013 23:57:29 +0200 (CEST)
+In-Reply-To: <1435472.kqSja2FelP@minime>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Christopher Covington <cov@codeaurora.org>
-Cc: linux-perf-users@vger.kernel.org, criu@openvz.org
+To: linux-perf-users@vger.kernel.org
 
-On 07/17/2013 07:44 PM, Christopher Covington wrote:
-> Hi,
+
+--nextPart1675150.VUJQQP4fmt
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Thursday 27 December 2012 15:42:32 Milian Wolff wrote:
+> Hey there,
 > 
-> I'm interested in taking checkpoints of processes from fast systems like
-> hardware and restoring them on really slow software models for performance
-> analysis.
-
-Great idea! I will add it on http://criu.org/Usage_scenarios :)
-
-> So far I've been able to save and restore checkpoints on the
-> different systems using CRIU. Now I'm looking for some way to trigger the
-> checkpointing. One basic use case might be to take a process that runs for say
-> 100M instructions and take a checkpoint every 10M instructions to be restored
-> as 10 parallel runs of the model.
+> I found [1] and [2] but not a reusable shared library which one could use to
+> write custom analyzers for perf.data files. Are you still working on this
+> or should one rather stick to parsing the output of "perf script"?
 > 
-> I'm thinking of trying to use performance counters to trigger such behavior.
-> Does perf already have support for triggering things like this?
+> As a start I would like to integrate a parser into KCacheGrind to seamlessly
+> open perf.data files with it.
+> 
+> Thanks
+> 
+> [1]: https://openlab-mu-internal.web.cern.ch/openlab-mu-> internal/03_Documents/3_Technical_Documents/Technical_Reports/2011/Urs_Fassl
+> er_report.pdf [2]:
+> http://article.gmane.org/gmane.linux.kernel.perf.user/974/match=kcachegrind
 
-I'm not 100% sure, but I've seen examples of python plugins for perf. From
-these examples, I believe that it's possible to write a plugin, that will run
-some code after noticing 100M instructions.
+Ping, is there anything available which I can use to write a perf.data parser 
+for KCacheGrind? This would be highly benefitial for many people using perf.
 
-> If not, I'm
-> thinking of trying to work in the ability to send a signal, like stop, to the
-> process of interest once the specified count, such as 10M instructions, has
-> been reached. CRIU or a wrapper could then wait for process of interest to
-> stop, take the checkpoint, let the process continue, and then wait for it to
-> stop again or exit. Would such an approach make sense?
+Otherwise, is there at least a solid documentation of the binary format which 
+I might then use to write a custom external library?
 
-It makes perfect sense! Several things to note from my side.
+Cheers
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
+--nextPart1675150.VUJQQP4fmt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-1. It's perfect case where the --track-mem + --prev-images-dir options should be
-used. It will help subsequent dumps take MUCH less time, since with them CRIU 
-will not take full task dump, but instead will only grab what has changed since
-last dump.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-2. Current version of CRIU doesn't work with stopped tasks. We're currently
-developing it and this functionality will be available with v0.7 only. However,
-I think it's OK just to start "criu dump" command after perf trigger. The dump
-would work on a process that has done slightly more than 10M instructions, but
-that would be the same in case you send it STOP signal.
+iEYEABECAAYFAlHsWUgACgkQDA6yEs0dE5NzMgCgvN0bxohi/7VggMsPnbRxxcKx
+vgsAn2WC2sSIDZXH3fUDFQX/ayFot4bg
+=zLy0
+-----END PGP SIGNATURE-----
 
-> Thanks,
-> Christopher
-
-Thanks,
-Pavel
+--nextPart1675150.VUJQQP4fmt--
