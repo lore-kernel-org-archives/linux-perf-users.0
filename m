@@ -1,83 +1,54 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 2/2] Update perf_event ABI documentation: add devices dir
- documentation
-Date: Thu, 25 Jul 2013 00:12:45 -0400 (EDT)
-Message-ID: <alpine.DEB.2.10.1307250009490.25162@vincent-weaver-1.um.maine.edu>
-References: <alpine.DEB.2.10.1307250004590.25162@vincent-weaver-1.um.maine.edu>
+From: Abhishek Karoliya <abhikaro@gmail.com>
+Subject: Perf Timechart for long duration =?utf-8?b?fjRtaW4=?=
+Date: Thu, 25 Jul 2013 12:55:58 +0000 (UTC)
+Message-ID: <loom.20130725T144247-338@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ve0-f178.google.com ([209.85.128.178]:57197 "EHLO
-	mail-ve0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751104Ab3GYEGp (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:46781 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755450Ab3GYNAF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 25 Jul 2013 00:06:45 -0400
-Received: by mail-ve0-f178.google.com with SMTP id pb11so157866veb.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2013 21:06:44 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.10.1307250004590.25162@vincent-weaver-1.um.maine.edu>
+	Thu, 25 Jul 2013 09:00:05 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1V2L9H-0002fg-Ju
+	for linux-perf-users@vger.kernel.org; Thu, 25 Jul 2013 15:00:04 +0200
+Received: from 192.8.190.10 ([192.8.190.10])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2013 15:00:03 +0200
+Received: from abhikaro by 192.8.190.10 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2013 15:00:03 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org, acme@redhat.com, Stephane Eranian <eranian@gmail.com>
+To: linux-perf-users@vger.kernel.org
+
+Hi All,
 
 
-There were various perf_event related sysfs entries in the
-/sys/bus/event_source/devices/*/ directories that were not
-documented.
 
-This is version 2 with fixes suggested by Jiri Olsa.
+I am profiling the boot time for a ppc system (WR Linux based on 2.6.32 
+with PREEMPT RT)from powerup till the system is usable. I am running perf 
+timechart as the first script by init to start recording 
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+(perf timechart record -a -F 125 -m1024 ) and sending a kill sig 2 when 
+done. My problem is I can't get perf to collect data for more than 5secs 
+(version 0.0.2.PERF) or 12sec(version 3.0.4). The .svg plotted only for 
+this duration and perf trace lists that there are enteries beyond this 
+duration.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b/Documentation/ABI/testing/sysfs-bus-event_source-devices
-new file mode 100644
-index 0000000..e7434ee
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
-@@ -0,0 +1,45 @@
-+What:		/sys/bus/event_source/devices/<dev>/cpumask
-+
-+Date:		2012/09/10
-+
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+
-+Description:	This value holds a representative core for each
-+		socket in a system.  It is meant to help when
-+		creating a perf_event event for socket-wide events
-+		like uncore and northbridge events.
-+
-+		The format is a comma separated list of cpu numbers,
-+		one for each socket in the system that the PMU in
-+		question can run on.
-+
-+		For example, on a two-socket Sandybridge-EP machine and
-+		the cbox0 uncore the value of the file will be:
-+			0,8
-+
-+
-+What:		/sys/bus/event_source/devices/cpu/rdpmc
-+
-+Date:		2011/11/20
-+
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+
-+Description:	Indicates whether a CPU allows userspace "rdpmc"
-+		instructions (unprivileged reads of the performance
-+		counter MSRs).
-+
-+		You can echo 0 to this value to disable user rdpmc
-+		access.
-+
-+
-+What:		/sys/bus/event_source/devices/<dev>/type
-+
-+Date:		2013/01/08
-+
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+
-+Description:	This value holds the PMU (Performance Monitor Unit) type
-+		value that is passed into the perf_event_open()
-+		attr:type field when opening an event.
-+
-+		The value is a decimal integer.
+
+
+I have been breaking my head for some time now but heading nowhere, so 
+asking for help. If you can point me how can I get the timechart to record 
+and display for longer duration (around 4min in my case), that would be 
+very helpful.
+
+
+
+Thanks!
+
+Abhi 
