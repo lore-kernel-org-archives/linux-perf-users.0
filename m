@@ -1,42 +1,50 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: what does id mean in perf script
-Date: Fri, 23 Aug 2013 09:38:41 -0600
-Message-ID: <52178201.2050207@gmail.com>
-References: <CAEuYUepPXrZnGN4tZxu2usynRmQ8tdQXCKUgv2NF4uD5Z5-k1w@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+Subject: Re: How does perf collects stats for L1/L2 cache events
+Date: Fri, 23 Aug 2013 13:23:55 -0300
+Message-ID: <20130823162355.GA1895@ghostprotocols.net>
+References: <CAD15agZimrkEsYi12oQRSCjTvNaXd9rFzrPE=tRBkqJiASUJ=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f181.google.com ([209.85.192.181]:64653 "EHLO
-	mail-pd0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753736Ab3HWPir (ORCPT
+Received: from mail-yh0-f43.google.com ([209.85.213.43]:46495 "EHLO
+	mail-yh0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755336Ab3HWQYE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 23 Aug 2013 11:38:47 -0400
-Received: by mail-pd0-f181.google.com with SMTP id g10so811165pdj.40
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2013 08:38:47 -0700 (PDT)
-In-Reply-To: <CAEuYUepPXrZnGN4tZxu2usynRmQ8tdQXCKUgv2NF4uD5Z5-k1w@mail.gmail.com>
+	Fri, 23 Aug 2013 12:24:04 -0400
+Received: by mail-yh0-f43.google.com with SMTP id z20so194599yhz.30
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2013 09:24:02 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <CAD15agZimrkEsYi12oQRSCjTvNaXd9rFzrPE=tRBkqJiASUJ=A@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peipei Wang <wangpeipei.90@gmail.com>
-Cc: perf group <linux-perf-users@vger.kernel.org>
+To: Ritesh Harjani <ritesh.harjani@gmail.com>
+Cc: David Ahern <dsahern@gmail.com>, Michael Ellerman <michael@ellerman.id.au>, Manuel Selva <selva.manuel@gmail.com>, linux-perf-users@vger.kernel.org
 
-On 8/23/13 8:38 AM, Peipei Wang wrote:
-> Hi all,
->
-> I got a file using perf script as follows. I want to know the meaning
-> in the array id in event,like
->   id = { 672074, 672075, 672076, 672077
-> , 672078, 672079, 672080, 672081, 672082, 672083, 672084, 672085,
-> 672086, 672087, 672088, 672089, 672090, 672091, 672092, 672093,
-> 672094, 672095, 672096, 672097, 672098, 672099, 672100, 672101,
-> 672102, 672103, 672104, 672105, 672106, 672107, 672108, 672109,
-> 672110, 672111, 672112, 672113, 672114, 672115, 672116, 672117,
-> 672118, 672119, 672120, 672121, 672122, 672123, 672124, 672125,
-> 672126, 672127, 672128, 672129, 672130, 672131, 672132 }
->
-> What do these numbers mean??
+Em Fri, Aug 23, 2013 at 04:21:00PM +0530, Ritesh Harjani escreveu:
+>    Hi folks,
+> 
+>    I have some following  queries on perf:
+> 
+>    1. how does perf collect L1/L2 cache events on various architectures?
 
-I believe those are the id's for the events in your data set. A means 
-for correlating your samples with the evsel that describes the event.
+PMU counters.
+ 
+>    2. My question might be specific to ARM architecture as well, does perf
+>    collects the stats of cache events based on PMU counter in ARM processor ?
 
-David
+yes
+
+>    If no, could some one please tell, how does perf collects this data  ?
+> 
+>    3. And how about rest of the architectures ?
+
+PMU counters. Look at arch/
+
+>    4. Also, If possible could someone please guide to that piece of code(
+>    where cache events stats are collected ) in tools/perf/ ?
+
+Start at arch/arm, I hadn't looked, but did a quick scan now with:
+
+[acme@zoo linux]$ find arch/arm/ -name "*perf*"
+
+- Arnaldo
