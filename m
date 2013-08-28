@@ -1,50 +1,43 @@
-From: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-Subject: Re: How does perf collects stats for L1/L2 cache events
-Date: Fri, 23 Aug 2013 13:23:55 -0300
-Message-ID: <20130823162355.GA1895@ghostprotocols.net>
-References: <CAD15agZimrkEsYi12oQRSCjTvNaXd9rFzrPE=tRBkqJiASUJ=A@mail.gmail.com>
+From: Chris Freehill <cfreehill@gmail.com>
+Subject: help with porting perf lkm to later kernel
+Date: Tue, 27 Aug 2013 21:14:09 -0500
+Message-ID: <CANFySvdsmSyd7QK61biOKMWwcR_QHVA1Xcwz9NTybGoY_2eqGw@mail.gmail.com>
+Reply-To: cfreehill@alumni.utexas.net
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yh0-f43.google.com ([209.85.213.43]:46495 "EHLO
-	mail-yh0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755336Ab3HWQYE (ORCPT
+Received: from mail-wi0-f169.google.com ([209.85.212.169]:57301 "EHLO
+	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752664Ab3H1COK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 23 Aug 2013 12:24:04 -0400
-Received: by mail-yh0-f43.google.com with SMTP id z20so194599yhz.30
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2013 09:24:02 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <CAD15agZimrkEsYi12oQRSCjTvNaXd9rFzrPE=tRBkqJiASUJ=A@mail.gmail.com>
+	Tue, 27 Aug 2013 22:14:10 -0400
+Received: by mail-wi0-f169.google.com with SMTP id l12so6187414wiv.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2013 19:14:09 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Ritesh Harjani <ritesh.harjani@gmail.com>
-Cc: David Ahern <dsahern@gmail.com>, Michael Ellerman <michael@ellerman.id.au>, Manuel Selva <selva.manuel@gmail.com>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 23, 2013 at 04:21:00PM +0530, Ritesh Harjani escreveu:
->    Hi folks,
-> 
->    I have some following  queries on perf:
-> 
->    1. how does perf collect L1/L2 cache events on various architectures?
+Hello,
 
-PMU counters.
- 
->    2. My question might be specific to ARM architecture as well, does perf
->    collects the stats of cache events based on PMU counter in ARM processor ?
+I am trying to get my linux kernel module that extends perf support to
+work in a later kernel version. The lkm had been working in 3.0.51.
 
-yes
+In the new target kernel to which I am trying to port, 3.8.13, I get
+warnings at the modpost stage complaining about symbols that can no
+longer be found. If I attempt to load that module, I get errors saying
+the same thing (those symbols can't be found).
 
->    If no, could some one please tell, how does perf collects this data  ?
-> 
->    3. And how about rest of the architectures ?
+The symbols that can't be found are
 
-PMU counters. Look at arch/
+".perf_pmu_enable"
+".perf_event_update_userpage"
+".perf_pmu_disable"
+".perf_event_overflow"
+".perf_pmu_unregister"
+".perf_pmu_register"
 
->    4. Also, If possible could someone please guide to that piece of code(
->    where cache events stats are collected ) in tools/perf/ ?
+Does anyone have any tips or advice as to how code that calls these
+previously working functions should now be handled when built against
+later kernels?
 
-Start at arch/arm, I hadn't looked, but did a quick scan now with:
-
-[acme@zoo linux]$ find arch/arm/ -name "*perf*"
-
-- Arnaldo
+Chris
