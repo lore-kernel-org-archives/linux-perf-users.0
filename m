@@ -1,45 +1,81 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: What should I do if I want to get Perf samples and Read Performance
- Counter at the same time?
-Date: Fri, 30 Aug 2013 12:01:27 -0600
-Message-ID: <5220DDF7.5020704@gmail.com>
-References: <CAEuYUerYx9w=LdJsGG0PV0BKteMcoTL4ro=3+nfm8hBdXtuZ2w@mail.gmail.com> <521E57D4.7090105@gmail.com> <CAKnzfP9VxYry9v+tSyTrs_9m6GFoCGzAuKXY0_yv99LqumeZEg@mail.gmail.com> <CAEuYUeoj9YmHmD9SPv1OMdqaNV+C3e1UoMxTKW4kvQbmJxq2=A@mail.gmail.com> <CAKnzfP85J+AD9A4E2OD9ZzHfCoE_0srPdFRJp2SXmwFc6Dh_Jg@mail.gmail.com> <CAEuYUep-n=Pts8sFSusgOvKG8xTY8=aQqjb8mqtEpfUzz6ihCw@mail.gmail.com> <CAEuYUepG4p2+ET81MdrrajgUvfgG4=WnNwSDKpPS8YSQ8EO+6w@mail.gmail.com> <CAKnzfP99WV-p=WP0zgs-68+dy7pTxkfMPcDEmL_P6KL4jh2Umw@mail.gmail.com> <CAEuYUepPNNpUQ8ysgyR6DK85_kUqiZyz=hdfnfwzFQtCG=mhuQ@mail.gmail.com> <CAKnzfP995a6UrpKDJ4akOMDBX-j9vkwhtp-i0S=WM3v3pWzQvg@mail.gmail.com> <52209F11.5030201@gmail.com> <CAEuYUeoNJg4wjcpJNQeJH=-E4TQ1cQJVvB5P4z87KNGTXdP6_A@mail.gmail.com> <CAKnzfP_QR1X1M8g0awamFNqgaMS1O2s5c6MgW2
- W5x7D3YnCMdQ@mail.gmail.com>
+From: Stephane Eranian <eranian@googlemail.com>
+Subject: Re: perf_event: rdpmc self-monitoring overhead issue
+Date: Fri, 30 Aug 2013 20:05:05 +0200
+Message-ID: <CAMsRxfLSnNi_vESxYHM5w0tQrOtOPsEy3ythoViRMBbEi+XHGw@mail.gmail.com>
+References: <alpine.DEB.2.10.1308301334410.19094@vincent-weaver-1.um.maine.edu>
+Reply-To: eranian@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f53.google.com ([209.85.160.53]:34713 "EHLO
-	mail-pb0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753708Ab3H3SBe (ORCPT
+Received: from mail-qe0-f48.google.com ([209.85.128.48]:61634 "EHLO
+	mail-qe0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756641Ab3H3SFH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 30 Aug 2013 14:01:34 -0400
-Received: by mail-pb0-f53.google.com with SMTP id up15so2182424pbc.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2013 11:01:34 -0700 (PDT)
-In-Reply-To: <CAKnzfP_QR1X1M8g0awamFNqgaMS1O2s5c6MgW2W5x7D3YnCMdQ@mail.gmail.com>
+	Fri, 30 Aug 2013 14:05:07 -0400
+In-Reply-To: <alpine.DEB.2.10.1308301334410.19094@vincent-weaver-1.um.maine.edu>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mikhail Kulemin <mihkulemin@gmail.com>
-Cc: Peipei Wang <wangpeipei.90@gmail.com>, perf group <linux-perf-users@vger.kernel.org>
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 8/30/13 11:15 AM, Mikhail Kulemin wrote:
-> You should fix perf-script.py
+On Fri, Aug 30, 2013 at 7:55 PM, Vince Weaver <vincent.weaver@maine.edu> wrote:
+> Hello,
 >
-> replace   sys.path.append(os.environ['PERF_EXEC_PATH'] +
-> '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> with
+> I've finally found time to track down why perf_event/rdpmc self-monitoring
+> overhead was so bad.
+>
+> To summarize, a test which does:
+>
+>    perf_event_open()
+>    ioctl(PERF_EVENT_IOC_ENABLE)
+>    read() /* either via syscall or  the rdpmc code listed in
+>              include/uapi/linux/perf_event.h */
+>    ioctl(PERF_EVENT_IOC_DISABLE)
+>
+> is done, and the number of cycles for each routine is taken using
+> rdtsc().
+>
+> On a Core2 Processor the results look something like this for read:
+>
+>                               | read time for 1 event
+>                               | median of 1024 runs
+>                               |     (cycles)
+>  -----------------------------|-------------------------
+>    2.6.32-perfctr (rdpmc)     |       133
+>    2.6.30-perfmon2            |      1264
+>    3.10                       |      1482
+>    3.10 (rdpmc)               |      3062
+>
+> As you can see, using the userspace-only rdpmc code is twice as slow as
+> just using the read() syscall.
+>
+>
+> I've tracked down the cause of this, and apparently it's due to
+> the first access to the event's struct perf_event_mmap_page.  If
+> outside of the read timing code I do an unrelated read of the mmap() page
+> to fault it in, then the result is much more believable:
+>
+>   3.10 (rdpmc)                 |      123
+>
+You mean that the high cost in your first example comes from the fact
+that you are averaging over all the iterations and not n-1 (where 1 is
+the first). I don't see a flag in mmap() to fault it in immediately. But
+why not document, that programs should touch the page once before
+starting any timing measurements.
 
-better to set/export PERF_EXEC_PATH before running the command.
-
-David
-
-
+> So the question is, why do I have to explicitly in advance fault the
+> page in?  Is there a way to force this to happen automatically?
 >
-> sys.path.append(os.getcwd()+"/tools/perf/scripts/python/
-> Perf-Trace-Util/lib/Perf/Trace")
+> The perfctr code as far as I can tell doesn't touch its mmap page in
+> advance.
+> It uses vm_insert_page() to insert the page rather than the
+> rb tree stuff that perf_event uses.
 >
-> this string instruct python interpreter where to find modules to load.
+> I know part of this overhead is due to the construction of my benchmark
+> and in theory would be mitigated if you were doing a large number
+> of measurements in a program, but at the same time this is also a common
+> pattern when self-monitoring: putting calipers around one chunk of code
+> and taking one measurement (often in a timing-critical area where
+> overhead matters).
 >
->
-> Please check that "perf script" command works correctly (output all
-> sample records from perf.data file)
+> Vince
