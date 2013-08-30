@@ -1,86 +1,72 @@
-From: Mikhail Kulemin <mihkulemin@gmail.com>
-Subject: Re: What should I do if I want to get Perf samples and Read
- Performance Counter at the same time?
-Date: Fri, 30 Aug 2013 21:15:27 +0400
-Message-ID: <CAKnzfP_QR1X1M8g0awamFNqgaMS1O2s5c6MgW2W5x7D3YnCMdQ@mail.gmail.com>
-References: <CAEuYUerYx9w=LdJsGG0PV0BKteMcoTL4ro=3+nfm8hBdXtuZ2w@mail.gmail.com>
-	<521E57D4.7090105@gmail.com>
-	<CAKnzfP9VxYry9v+tSyTrs_9m6GFoCGzAuKXY0_yv99LqumeZEg@mail.gmail.com>
-	<CAEuYUeoj9YmHmD9SPv1OMdqaNV+C3e1UoMxTKW4kvQbmJxq2=A@mail.gmail.com>
-	<CAKnzfP85J+AD9A4E2OD9ZzHfCoE_0srPdFRJp2SXmwFc6Dh_Jg@mail.gmail.com>
-	<CAEuYUep-n=Pts8sFSusgOvKG8xTY8=aQqjb8mqtEpfUzz6ihCw@mail.gmail.com>
-	<CAEuYUepG4p2+ET81MdrrajgUvfgG4=WnNwSDKpPS8YSQ8EO+6w@mail.gmail.com>
-	<CAKnzfP99WV-p=WP0zgs-68+dy7pTxkfMPcDEmL_P6KL4jh2Umw@mail.gmail.com>
-	<CAEuYUepPNNpUQ8ysgyR6DK85_kUqiZyz=hdfnfwzFQtCG=mhuQ@mail.gmail.com>
-	<CAKnzfP995a6UrpKDJ4akOMDBX-j9vkwhtp-i0S=WM3v3pWzQvg@mail.gmail.com>
-	<52209F11.5030201@gmail.com>
-	<CAEuYUeoNJg4wjcpJNQeJH=-E4TQ1cQJVvB5P4z87KNGTXdP6_A@mail.gmail.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: perf_event: rdpmc self-monitoring overhead issue
+Date: Fri, 30 Aug 2013 13:55:25 -0400 (EDT)
+Message-ID: <alpine.DEB.2.10.1308301334410.19094@vincent-weaver-1.um.maine.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pb0-f47.google.com ([209.85.160.47]:35874 "EHLO
-	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752426Ab3H3RP2 (ORCPT
+Received: from mail-qe0-f43.google.com ([209.85.128.43]:47785 "EHLO
+	mail-qe0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755340Ab3H3Rsl (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 30 Aug 2013 13:15:28 -0400
-Received: by mail-pb0-f47.google.com with SMTP id rr4so2110703pbb.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2013 10:15:27 -0700 (PDT)
-In-Reply-To: <CAEuYUeoNJg4wjcpJNQeJH=-E4TQ1cQJVvB5P4z87KNGTXdP6_A@mail.gmail.com>
+	Fri, 30 Aug 2013 13:48:41 -0400
+Received: by mail-qe0-f43.google.com with SMTP id t7so1147944qeb.30
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2013 10:48:41 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peipei Wang <wangpeipei.90@gmail.com>
-Cc: David Ahern <dsahern@gmail.com>, perf group <linux-perf-users@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org, acme@redhat.com, Stephane Eranian <eranian@gmail.com>
 
-You should fix perf-script.py
+Hello,
 
-replace   sys.path.append(os.environ['PERF_EXEC_PATH'] +
-'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-with
+I've finally found time to track down why perf_event/rdpmc self-monitoring 
+overhead was so bad.
 
-sys.path.append(os.getcwd()+"/tools/perf/scripts/python/
-Perf-Trace-Util/lib/Perf/Trace")
+To summarize, a test which does:
 
-this string instruct python interpreter where to find modules to load.
+   perf_event_open()
+   ioctl(PERF_EVENT_IOC_ENABLE)
+   read() /* either via syscall or  the rdpmc code listed in 
+             include/uapi/linux/perf_event.h */
+   ioctl(PERF_EVENT_IOC_DISABLE)
+
+is done, and the number of cycles for each routine is taken using
+rdtsc().
+
+On a Core2 Processor the results look something like this for read:
+
+                              | read time for 1 event
+                              | median of 1024 runs
+                              |     (cycles)
+ -----------------------------|-------------------------
+   2.6.32-perfctr (rdpmc)     |       133
+   2.6.30-perfmon2            |      1264
+   3.10                       |      1482
+   3.10 (rdpmc)               |      3062
+
+As you can see, using the userspace-only rdpmc code is twice as slow as 
+just using the read() syscall.
 
 
-Please check that "perf script" command works correctly (output all
-sample records from perf.data file)
+I've tracked down the cause of this, and apparently it's due to
+the first access to the event's struct perf_event_mmap_page.  If 
+outside of the read timing code I do an unrelated read of the mmap() page
+to fault it in, then the result is much more believable:
 
-Mikhail.
+  3.10 (rdpmc)                 |      123
 
-2013/8/30 Peipei Wang <wangpeipei.90@gmail.com>:
-> Hi Mikhail,
->
-> Yes, you are right. I could use perf now. But I get errors again running
-> "perf script -s perf-script.py". Here it is:
-> perf script -s perf-script.py
-> Traceback (most recent call last):
->   File "perf-script.py", line 18, in <module>
->     from Core import *
-> ImportError: No module named Core
->
-> I do have the module Core.py in the directory of
-> tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace
->
-> Is there anything else I should pay attention to when using this?
->
-> Best wishes.
-> Yours,
-> Wang Peipei
->
->
-> On Fri, Aug 30, 2013 at 9:33 AM, David Ahern <dsahern@gmail.com> wrote:
->>
->> On 8/29/13 10:28 PM, Mikhail Kulemin wrote:
->>>
->>> You can ignote message about Android. As far as I understand form
->>> output you should see compiled executable of perf in tools/perf
->>> directory. Please check it.
->>
->>
->> Yes, you can ignore that message during the CHK - it's just probing for
->> build options.
->>
->> David
->
->
+So the question is, why do I have to explicitly in advance fault the
+page in?  Is there a way to force this to happen automatically?
+
+The perfctr code as far as I can tell doesn't touch its mmap page in 
+advance.
+It uses vm_insert_page() to insert the page rather than the
+rb tree stuff that perf_event uses.
+
+I know part of this overhead is due to the construction of my benchmark
+and in theory would be mitigated if you were doing a large number
+of measurements in a program, but at the same time this is also a common
+pattern when self-monitoring: putting calipers around one chunk of code
+and taking one measurement (often in a timing-critical area where
+overhead matters).
+
+Vince
