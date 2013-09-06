@@ -1,72 +1,44 @@
-From: Rodrigo Campos <rodrigo@sdfg.com.ar>
-Subject: Re: [PATCH] perf tools: Clarify error when running "perf lock record"
-Date: Thu, 5 Sep 2013 18:35:39 +0100
-Message-ID: <20130905173538.GB31659@sdfg.com.ar>
-References: <1378369936-26473-1-git-send-email-rodrigo@sdfg.com.ar>
- <52289536.3070504@gmail.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: perf cannot see call graph, visible in gdb
+Date: Fri, 06 Sep 2013 12:49:34 -0700
+Message-ID: <87ioydhgs1.fsf@tassilo.jf.intel.com>
+References: <1309051629550.29229@wes.ijneb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from alerce.vps.bitfolk.com ([85.119.82.134]:56912 "EHLO
-	alerce.vps.bitfolk.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752288Ab3IERiV (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:60395 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750830Ab3IFTte (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 5 Sep 2013 13:38:21 -0400
-Content-Disposition: inline
-In-Reply-To: <52289536.3070504@gmail.com>
+	Fri, 6 Sep 2013 15:49:34 -0400
+In-Reply-To: <1309051629550.29229@wes.ijneb.com> (Mark Hills's message of
+	"Thu, 5 Sep 2013 17:48:07 +0100 (BST)")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, paulus@samba.org, mingo@redhat.com, acme@ghostprotocols.net, linux-perf-users@vger.kernel.org
+To: Mark Hills <mark@pogo.org.uk>
+Cc: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 05, 2013 at 08:29:10AM -0600, David Ahern wrote:
-> On 9/5/13 2:32 AM, Rodrigo Campos wrote:
-> >If you have the config options enabled in your kernel, you still need to be root
-> >to run perf lock. And is kind of misleading when you have that options enabled
-> >and the error says that they might not be.
-> >
-> >So, this patch just adds to the error that it should be run as root. Although we
-> >can probably check if it's running as root or not, adding it to the error
-> >message is really simple and should be enough.
-> >
-> >Signed-off-by: Rodrigo Campos <rodrigo@sdfg.com.ar>
-> >---
-> >Please keep me in Cc: since I'm not subscribed
-> >---
-> >  tools/perf/builtin-lock.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> >index 76543a4..f07b318 100644
-> >--- a/tools/perf/builtin-lock.c
-> >+++ b/tools/perf/builtin-lock.c
-> >@@ -886,8 +886,8 @@ static int __cmd_record(int argc, const char **argv)
-> >  	for (i = 0; i < ARRAY_SIZE(lock_tracepoints); i++) {
-> >  		if (!is_valid_tracepoint(lock_tracepoints[i].name)) {
-> >  				pr_err("tracepoint %s is not enabled. "
-> >-				       "Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled?\n",
-> >-				       lock_tracepoints[i].name);
-> >+				       "Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled "
-> >+				       "and running as root?\n", lock_tracepoints[i].name);
-> >  				return 1;
-> >  		}
-> >  	}
-> >
-> 
-> you can run perf-lock as non-root with certain settings. It would be
+Mark Hills <mark@pogo.org.uk> writes:
 
-Ohh, I didn't know. Sorry.
+> I have a pre-compiled .so library, which was given to me for profiling.
+>
+> gdb can see a complete call stack -- both the library and my own code, as 
+> expected.
+>
+> But in perf the callgraph for the library is not present. I'm using "perf 
+> record -g", and the callgraph for the other code is seen.
+>  
+> In what cases could gdb see the stack, but perf cannot?
 
-> better to discriminate debugfs access errors (insufficient
-> privilege). That means improving is_valid_tracepoint and handling
-> the errors in perf-lock.
+No frame pointer. 
 
-IMHO suggesting to check the privileges should be enough for most cases and is
-simpler that checking all that. I mean, for me it's not worth the effort, but
-maybe I'm too lazy. Probably it's quite simple too... :-)
+Recompile with -fno-omit-frame-pointer
 
+Or if you have a new enough perf, you can use -g dwarf to enable 
+dwarf backtracing, but it's very slow and also doesn't handle all 
+situations gdb handles.
 
+-Andi
 
-
-Thanks,
-Rodrigo
+-- 
+ak@linux.intel.com -- Speaking for myself only
