@@ -1,45 +1,50 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: Intel PEBS  Load Latency Measurement
-Date: Tue, 17 Sep 2013 09:44:35 +0200
-Message-ID: <52380863.4090606@insa-lyon.fr>
+From: Freehill Christopher-RAT063 <RAT063@freescale.com>
+Subject: disabling multiplexing for offcore/uncore events
+Date: Tue, 17 Sep 2013 21:42:35 +0000
+Message-ID: <0C53B16FB1F182409A7BA6DC928E7AFE2C2CA8@039-SN2MPN1-022.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wi0-f181.google.com ([209.85.212.181]:38588 "EHLO
-	mail-wi0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751375Ab3IQHoi (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 17 Sep 2013 03:44:38 -0400
-Received: by mail-wi0-f181.google.com with SMTP id ex4so4563071wid.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2013 00:44:37 -0700 (PDT)
+Received: from ch1ehsobe001.messaging.microsoft.com ([216.32.181.181]:53242
+	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753457Ab3IQVml convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 17 Sep 2013 17:42:41 -0400
+Received: from mail180-ch1 (localhost [127.0.0.1])	by
+ mail180-ch1-R.bigfish.com (Postfix) with ESMTP id CB184320127	for
+ <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2013 21:42:39 +0000 (UTC)
+Received: from CH1EHSMHS041.bigfish.com (snatpool3.int.messaging.microsoft.com
+ [10.43.68.225])	by mail180-ch1.bigfish.com (Postfix) with ESMTP id
+ 31E432E0087	for <linux-perf-users@vger.kernel.org>; Tue, 17 Sep 2013 21:42:37
+ +0000 (UTC)
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hi all,
 
-I am trying to use PMU on a 2 sockets workstation (2x Intel Xeon X5650 
-currently running Linux 3.6.11) processor to identify memory controller 
-unbalance.
 
-For this purpose I successfully used some uncore events to count the 
-load on each memory controller through the perf_event_open system call. 
-I am now planning to use Intel PEBS Load Latency Measurement to identify 
-if these loads result in "unusual" long memory latencies.
+Hi,
 
-Looking at Vince Weaver web page discussing about kernel support for PMU 
-here: 
-http://web.eece.maine.edu/~vweaver/projects/perf_events/features.html I 
-saw that the kernel 3.10 supports Load Latency Measurement. 
-Unfortunately I can't find a man page describing how this works. Before 
-looking at kernel sources, I wanted to ask here for confirmation about 
-Load Latency Measurement in recent Linux kernels.
+Is there a way to disable the multiplexing perf does when (presumably) there are not enough resources?
 
-Can anyone confirm that this functionality is available and usable ? Is 
-the perf userland tool using it to provide the functionality to end users ?
+I am dealing with off-core/SOC/uncore events/counters. If I issue the following:
 
-Thanks in advance for your help,
+perf stat -a -e ra0000000,ra0000001,ra0000002 sleep 1
 
--- 
-Manu
+
+I see that perf multiplexes:
+
+           3027440 ra0000000                                                    [99.86%]
+         293037102 ra0000001                                                    [99.89%]
+          59123244 ra0000002                                                   
+
+I don't want it to multiplex because I get an erroneous result for off-core events.
+
+Seems like there should be a way to disable this, but I am not sure what it is.
+
+Thanks,
+Chris
+
+ 
