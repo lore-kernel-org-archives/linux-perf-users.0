@@ -1,39 +1,47 @@
-From: caobenzhi <caobenzhi0915@gmail.com>
-Subject: Re: how to see glibc symbol when using perf to profile programs
-Date: Thu, 26 Sep 2013 09:04:55 +0000 (UTC)
-Message-ID: <loom.20130926T110223-690@post.gmane.org>
-References: <loom.20130926T032429-925@post.gmane.org>
+From: Johan Tibell <johan.tibell@gmail.com>
+Subject: 'annotate' confusingly reports 'add' instruction as taking most CPU time
+Date: Mon, 30 Sep 2013 21:06:56 -0700
+Message-ID: <CAK-tuPbbbWcbJxk88xO_urj2ktk861xnG+tkOs0cZBjnowjMeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:36105 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751471Ab3IZJFT (ORCPT
+Received: from mail-qa0-f41.google.com ([209.85.216.41]:34294 "EHLO
+	mail-qa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751079Ab3JAEHS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 26 Sep 2013 05:05:19 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1VP7Va-00028U-Jw
-	for linux-perf-users@vger.kernel.org; Thu, 26 Sep 2013 11:05:15 +0200
-Received: from 222.195.92.204 ([222.195.92.204])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2013 11:05:14 +0200
-Received: from caobenzhi0915 by 222.195.92.204 with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Sep 2013 11:05:14 +0200
+	Tue, 1 Oct 2013 00:07:18 -0400
+Received: by mail-qa0-f41.google.com with SMTP id ii20so3004362qab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Sep 2013 21:07:17 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-caobenzhi <caobenzhi0915 <at> gmail.com> writes:
+Hi,
 
+I'm trying to use 'perf record' to find the hotspot inside a function.
+The results I'm seeing are confusing. 'annotate' claims that a simple
+'add' instruction is the main CPU time consumer"
 
-Now I solve this problem by using the following two commands:
-sudo apt-get install libc6-dbg
-sudo apt-get source libc6-dev
-But I got another problem, how to know which code trigger page fault in 
-Perf?
-Thanks and regards~
-Emily
+        0.00 :          408246:       mov    0x8(%rbp),%rsi
+                                                               0.31 :
+        40824a:       mov    0x10(%rbp),%rcx
+                                              0.00 :          40824e:
+     lea    0x4(%rcx),%rdi
+                                0.81 :          408252:       mov
+0x6(%rbx),%rbx
+                  0.00 :          408256:       mov
+0x18(%rbx,%rax,8),%r8
+     --->   27.58 :          40825b:       add    $0x20,%rbp
+
+0.00 :          40825f:       jmpq   408338 <Main_zdwpolyzugo_info>
+                                             0.00 :          408264:
+    mov    $0x7b9609,%ebx
+                           0.00 :          408269:       add
+$0x20,%rbp
+                    0.00 :          40826d:       jmpq   *0x0(%rbp)
+
+        5.41 :          408270:       mov    0xd(%rbx),%rax
+
+How shall I interpret this? Is it really the following jump that is to blame?
+
+-- Johan
