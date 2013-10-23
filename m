@@ -1,71 +1,83 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Information regarding the perf tool
-Date: Tue, 22 Oct 2013 18:19:11 +0200
-Message-ID: <5266A57F.2000201@bsc.es>
+From: Hiep Trinh <trinhhiepth@gmail.com>
+Subject: Compile linux tool perf for Android
+Date: Wed, 23 Oct 2013 09:00:16 +0000 (UTC)
+Message-ID: <loom.20131023T104641-256@post.gmane.org>
+References: <CAAo=-0a74sJ1TieeCH81K+gKFaiKNAKLKL-eiDp-jYnGJVjkbg@mail.gmail.com> <502C4D77.7010505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:54588 "EHLO opsmail01.bsc.es"
+Received: from plane.gmane.org ([80.91.229.3]:56989 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753454Ab3JVQ0n (ORCPT
+	id S1750936Ab3JWJkF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 22 Oct 2013 12:26:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by opsmail01.bsc.es (Postfix) with ESMTP id 7208EB1600
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2013 18:19:11 +0200 (CEST)
-Received: from opsmail01.bsc.es ([127.0.0.1])
- by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 17597-01 for <linux-perf-users@vger.kernel.org>;
- Tue, 22 Oct 2013 18:19:10 +0200 (CEST)
-Received: from opswc01.bsc.es (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPS id A9C21AE4BF
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2013 18:19:10 +0200 (CEST)
-Received: (from filter@localhost)
-	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id r9MGJAX2018915
-	for linux-perf-users@vger.kernel.org; Tue, 22 Oct 2013 18:19:10 +0200
-Received: from [84.88.50.148] (unknown [84.88.50.148])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPSA id 850CA9132C
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Oct 2013 18:19:10 +0200 (CEST)
+	Wed, 23 Oct 2013 05:40:05 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1VYuv4-0006SH-Up
+	for linux-perf-users@vger.kernel.org; Wed, 23 Oct 2013 11:40:03 +0200
+Received: from ip-address-pool-xxx.fpt.vn ([ip-address-pool-xxx.fpt.vn])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 11:40:02 +0200
+Received: from trinhhiepth by ip-address-pool-xxx.fpt.vn with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 11:40:02 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Dear list,
+David Ahern <dsahern <at> gmail.com> writes:
 
-    I'm wondering whether it be possible to extend the "perf mem" (tool) 
-to emit the TSC of the sampling event?
+> 
+> On 8/13/12 9:00 PM, Koteswararao Nelakurthi wrote:
+> > I am trying to cross compile Perf source present in 2.6.35/tools/perf
+> > directory for ARM.in ubuntu machine.(x86 is host machine).But i am
+> > facing the following compilation error as compiler looks at host
+> > specific header files instead of looking at header files present in
+> > perf/ directory..Please provide Makefile changes required to compile
+> > successfully perf for ARM.{{{
+> >
+> > perf>make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+> >
+> 
+> Do you have a sysroot for the cross-compile environment? e.g., for WRL3 
+> we use:
+> 
+> CROSS_COMPILE = i586-wrs-linux-gnu-
+> CROSS_SYSROOT = /path/to/cross-compile/sysroot
+> 
+> make CROSS_COMPILE=$(CROSS_COMPILE) ARCH=$(ARCH) CC="$(CROSS_COMPILE)gcc 
+> --sysroot=$(CROSS_SYSROOT)"
+> 
+> David
+> 
+> 
 
-    I started looking at the code, and I'd like to understand how does 
-the perf tool work to extend that tool providing such functionality. 
-However, I'm clueless on how the perf tool works. I have a machine with 
-kernel 3.11.0 and its source code and within the source code in 
-tools/perf/builtin-mem.c I observe that the application is somehow 
-executed through "cmd_record ()" but I don't see the implementation of 
-cmd_record() around. Would anyone on the list giving me some hints on 
-how this is done?
-
-   Additionally, it seems that perf.data is a file that mostly contains 
-perf_event that represent the data gathered. It seems to be defined in 
-include/linux/perf_event.h, but it doesn't seem to me a simple container 
-for performance data. Is that the struct I'm looking for?
-
-Thank you very much.
--- 
 
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+I try to compile perf for Android with Android NDK 
+base on the page
+http://stuff.mit.edu/afs/sipb/contrib/linux
+/tools/perf/Documentation/android.txt
+I met issues of CROSS_COMPILE and SYSROOT,
+ it does not work and responds errors: 
 
-http://www.bsc.es/disclaimer
+Android NDK: NDK_TOOLCHAIN is defined to the unsupported value
+android-ndk-r9/toolchains/arm-linux-androideabi-4.6
+/prebuilt/linux-x86/bin/arm-linux-androideabi-
+   
+Android NDK: Please use one of the following values:
+arm-linux-androideabi-4.6 arm-linux-androideabi-4.8
+arm-linux-androideabi-clang3.2 arm-linux-androideabi-clang3.3
+mipsel-linux-android-4.6 mipsel-linux-android-4.8
+mipsel-linux-android-clang3.2 mipsel-linux-android-clang3.3 x86-4.6 x86-4.8
+x86-clang3.2 x86-clang3.3    
+build/core/init.mk:555: *** Android NDK: Aborting    .  Stop.
+
+I can't fix this error because I used "arm-linux-androideabi-4.6" value and
+it also appear in Android NDK/Toolchains directory
+
+If you have any suggestion about that, please reply on this post or send
+email to me. I appreciate your help. Thanks
+ 
