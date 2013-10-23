@@ -1,39 +1,68 @@
 From: Harald Servat <harald.servat@bsc.es>
-Subject: Re: Information regarding the perf tool
-Date: Wed, 23 Oct 2013 15:51:32 +0200
-Message-ID: <5267D464.5080801@bsc.es>
-References: <5266A57F.2000201@bsc.es> <87y55krw6f.fsf@tassilo.jf.intel.com>
+Subject: Changing frequency rate to perf mem
+Date: Wed, 23 Oct 2013 17:43:10 +0200
+Message-ID: <5267EE8E.3020306@bsc.es>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:45665 "EHLO opsmail01.bsc.es"
+Received: from mao.bsc.es ([84.88.52.34]:50734 "EHLO opsmail01.bsc.es"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751855Ab3JWNve (ORCPT
+	id S1751222Ab3JWPnM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 Oct 2013 09:51:34 -0400
-In-Reply-To: <87y55krw6f.fsf@tassilo.jf.intel.com>
+	Wed, 23 Oct 2013 11:43:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id D3A28AC5A5
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 22619-05 for <linux-perf-users@vger.kernel.org>;
+ Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id 370B8B1702
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id r9NFhA3L032179
+	for linux-perf-users@vger.kernel.org; Wed, 23 Oct 2013 17:43:10 +0200
+Received: from [84.88.50.148] (unknown [84.88.50.148])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id 0C735BD8A1
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On 23/10/13 14:47, Andi Kleen wrote:
-> Harald Servat <harald.servat@bsc.es> writes:
->
->> Dear list,
->>
->>     I'm wondering whether it be possible to extend the "perf mem"
->> (tool) to emit the TSC of the sampling event?
->
-> perf report -D reports everything, including time stamps.
->
-> -Andi
->
+Hello list,
 
-Thank you very much for the pointer Andi. I see, the first data shown 
-refers to the timestamp, but as returned by clock_gettime(). I was 
-looking for the processor TSC, but I guess that this will work for now.
+   I'm interested on changing the frequency rate to the perf mem tool. I 
+understand that this tool captures the data every N loads or stores, 
+however I don't see how to tune N.
+
+   I've looked into builtin-record.c approx line 980 and I found that 
+changing rec->opts.freq allows me capturing more or less data. 
+Initially, its value is 4000 and generates 4.5Mbytes for an application. 
+If I modify this value to 200, it generates 0.2Mbytes, therefore 
+200/4000 is closely 0.2/4.5 which seems the value I want to tune.
+
+   I'd like to know what is this rec->opts.freq with respect to perf 
+mem. I expected to setup the number of loads, therefore the higher N the 
+lesser number of samples generated, but it seems the other way around. 
+Where I can get any hint on what does this mean.
+
+   BTW, I tried to change this value by adding "-F" and "200" into the 
+argv that is passed to cmd_report by adding
+
+         rec_argv[i++] = strdup("-F");
+         rec_argv[i++] = strdup("200");
+
+   into line 42 of perf-mem.c - just after the strdup("record"). 
+Unfortunately, this seems to break something and perf segfaults often. 
+Which is the most appropriate way to tune the user frequency of perf mem?
+
+Thank you very much in advance!
 
 -- 
 
