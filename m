@@ -1,80 +1,76 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Changing frequency rate to perf mem
-Date: Wed, 23 Oct 2013 17:43:10 +0200
-Message-ID: <5267EE8E.3020306@bsc.es>
+From: Nitisha Jain <nitishajain15@gmail.com>
+Subject: urgent help needed :perf record and report showing inconsistent results
+Date: Wed, 23 Oct 2013 16:06:02 +0000 (UTC)
+Message-ID: <loom.20131023T175255-294@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:50734 "EHLO opsmail01.bsc.es"
+Received: from plane.gmane.org ([80.91.229.3]:47071 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751222Ab3JWPnM (ORCPT
+	id S1751447Ab3JWQKF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 23 Oct 2013 11:43:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by opsmail01.bsc.es (Postfix) with ESMTP id D3A28AC5A5
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
-Received: from opsmail01.bsc.es ([127.0.0.1])
- by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 22619-05 for <linux-perf-users@vger.kernel.org>;
- Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
-Received: from opswc01.bsc.es (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPS id 370B8B1702
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
-Received: (from filter@localhost)
-	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id r9NFhA3L032179
-	for linux-perf-users@vger.kernel.org; Wed, 23 Oct 2013 17:43:10 +0200
-Received: from [84.88.50.148] (unknown [84.88.50.148])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPSA id 0C735BD8A1
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 17:43:10 +0200 (CEST)
+	Wed, 23 Oct 2013 12:10:05 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1VZ10W-0005zz-85
+	for linux-perf-users@vger.kernel.org; Wed, 23 Oct 2013 18:10:04 +0200
+Received: from 14.139.128.12 ([14.139.128.12])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 18:10:04 +0200
+Received: from nitishajain15 by 14.139.128.12 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Oct 2013 18:10:04 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Hello list,
+hi, 
 
-   I'm interested on changing the frequency rate to the perf mem tool. I 
-understand that this tool captures the data every N loads or stores, 
-however I don't see how to tune N.
+I am trying to find the overhead due to the kvm hypervisor when an IO
+intensive process is running on a virtual machine and the perf record/report
+are run on the host.( host has 12 cores, VM is pinned to a core)
 
-   I've looked into builtin-record.c approx line 980 and I found that 
-changing rec->opts.freq allows me capturing more or less data. 
-Initially, its value is 4000 and generates 4.5Mbytes for an application. 
-If I modify this value to 200, it generates 0.2Mbytes, therefore 
-200/4000 is closely 0.2/4.5 which seems the value I want to tune.
+I need to understand how to interpret the perf report in order to find the
+cpu utilization of various components. In order to do that, I ran simple
+tests on the host.
 
-   I'd like to know what is this rec->opts.freq with respect to perf 
-mem. I expected to setup the number of loads, therefore the higher N the 
-lesser number of samples generated, but it seems the other way around. 
-Where I can get any hint on what does this mean.
+However, even if I run the exact same perf record command on the host
+repeatedly, the results are quite different in terms of the report size, no
+of samples and the total no of cycles shown in perf report.
+The following commands were run in quick succession :
 
-   BTW, I tried to change this value by adding "-F" and "200" into the 
-argv that is passed to cmd_report by adding
+perf record -a -c 10000 -C 0 -o 1.data sleep 5
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.837 MB 1.data (~36559 samples) ]
 
-         rec_argv[i++] = strdup("-F");
-         rec_argv[i++] = strdup("200");
-
-   into line 42 of perf-mem.c - just after the strdup("record"). 
-Unfortunately, this seems to break something and perf segfaults often. 
-Which is the most appropriate way to tune the user frequency of perf mem?
-
-Thank you very much in advance!
-
--- 
+perf report -i 1.data  (shows Events :15k cycles at the top)
 
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+perf record -a -c 10000 -C 0 -o 1.data sleep 5
+[ perf record: Woken up 20 times to write data ]
+[ perf record: Captured and wrote 5.214 MB 1.data (~227824 samples) ]
 
-http://www.bsc.es/disclaimer
+perf report -i 1.data  (shows Events :128k cycles at the top)
+
+
+ perf record -a -c 10000 -C 0 -o 1.data sleep 5
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.775 MB 1.data (~33867 samples) ]
+
+perf report -i 1.data  (shows Events :13k cycles at the top)
+
+
+perf record -a -c 10000 -C 0 -o 1.data sleep 5
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.605 MB 1.data (~26442 samples) ]
+
+perf report -i 1.data  (shows Events :9k cycles at the top)
+
+Why is there such disparity between the reports ?
+
+If I need to compare any two perf reports, how can I do so with the total
+cycles being different on the 2 cases ?
+
+Please assist me in this matter .
