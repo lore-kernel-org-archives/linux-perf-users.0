@@ -1,126 +1,74 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: Re: Intel PEBS Load Latency Measurement
-Date: Tue, 29 Oct 2013 14:20:09 +0100
-Message-ID: <CALbiyZyimUGh5MfjyBcH4UdvwX=S0V2uKJz3px1CaKg_HrMzeA@mail.gmail.com>
-References: <52380863.4090606@insa-lyon.fr>
-	<526E4A46.2060003@insa-lyon.fr>
-	<87r4b47qgv.fsf@sejong.aot.lge.com>
-	<CALbiyZy_JE+wai7d_=r-XzE+FdHRitTiAuPmANtRt7Qpet8fTg@mail.gmail.com>
-	<CALbiyZyOUYL3dKo_OaXK6SMXmMBF3N47gGv0MAjRirsFzyPDMw@mail.gmail.com>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: Interference between perf record and PAPI in sampling mode
+Date: Wed, 30 Oct 2013 11:43:47 +0100
+Message-ID: <5270E2E3.2050201@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-la0-f44.google.com ([209.85.215.44]:55743 "EHLO
-	mail-la0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752823Ab3J2NUL (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:44882 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751644Ab3J3Knw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 29 Oct 2013 09:20:11 -0400
-Received: by mail-la0-f44.google.com with SMTP id ep20so6523260lab.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Oct 2013 06:20:10 -0700 (PDT)
-In-Reply-To: <CALbiyZyOUYL3dKo_OaXK6SMXmMBF3N47gGv0MAjRirsFzyPDMw@mail.gmail.com>
+	Wed, 30 Oct 2013 06:43:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id 3F294C02B1
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:49 +0100 (CET)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 27537-04-3 for <linux-perf-users@vger.kernel.org>;
+ Wed, 30 Oct 2013 11:43:47 +0100 (CET)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id AAA3D8306D
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:47 +0100 (CET)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id r9UAhlf9028248
+	for linux-perf-users@vger.kernel.org; Wed, 30 Oct 2013 11:43:47 +0100
+Received: from [84.88.50.148] (unknown [84.88.50.148])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id 842609C825
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:47 +0100 (CET)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-One more thing I forgot to ask is clarification about the pid
-parameter. According to Vince Weaver page: "If pid is 0, measurements
-happen on the current thread, if pid is greater than 0, the process
-indicated by pid is measured, and if pid is -1, all processes are
-counted." and according to perf userland tool wiki page, it's possible
-to attache to a specific thread with a -i option. As a consequence I
-wonder how I can use the perf perf_event_sys_call to only count events
-for a specific thread ?
+Dear all,
 
-Thanks again
+   I'd like to run some experiments using perf record command while 
+running some other experiments with PAPI library [1] in sampling mode. I 
+found that in kernel 3.11.0, if I sample an application using 
+PAPI_overflow on a hardware counter (PAPI_TOT_INS, for instance), then 
+the following command I execute through perf mem record raises the 
+following error.
 
-2013/10/29 Manuel Selva <selva.manuel@gmail.com>:
-> Hi Namhyung,
->
-> Many thanks for your answer and the function you pointed. I think I
-> now have all the required understanding of the perf_event_open syscall
-> to do what I want.
->
-> I still have two questions regarding Intel (I am on a Westmere-Ep Xeon
-> X5650) Load latency feature and its usage by the perf mem tool.
->
-> 1- In the Intel software developer guide we can read: "load operations
-> are randomly selected by hardware and tagged to carry information
-> related to data source locality and latency" I am wondering what does
-> it mean, are we doing sampling at two different levels ? First the
-> hardware chooses some load instructions to tag, and then each time X
-> (sampling period in events count specified by software) such tagged
-> instructions with a latency greater than a software specify threshold
-> we record a sample with some information. What is the sampling rate of
-> the hardware tagging mechanism, is it enough to get some interesting
-> results ?
->
-> 2- How does the perf mem tool (with the load option) with of course
-> the help of the kernel uses this feature ? After a quick browsing of
-> the code, here is my understanding, is it correct ?
-> The PEBS load latency feature is enabled with the minimal possible
-> latency (3 cycles) to do sampling on all loads and with a given
-> default sampling period (x tagged load events with latency greater or
-> equal to 3). In addition to these "loads events" the perf mem tool
-> asks the kernel to record events about processes naming, and memory
-> mappings of code to be able to retrieve offline the source code
-> associated to instruction pointers present in samples.
->
-> Thanks again for your help,
->
-> Manu
->
->
-> 2013/10/29 Namhyung Kim <namhyung@kernel.org>
->>
->> Hi Manuel,
->>
->> On Mon, 28 Oct 2013 12:28:06 +0100, Manuel Selva wrote:
->> > Hi,
->> >
->> > I am coming back on this subject after working on other stuff for
->> > several weeks. Andi pointed me to the userland tool 'perf mem'
->> > introduced in "recent" kernels (can't find the version) that is using
->> > the kernel perf_event_open system call to profile memory accesses.
->> >
->> > I guess the answer to my question is in the code of this tool, but
->> > before stepping deeper inside it, I wanted to ask you (Linux perf
->> > experts) few questions, to be sure I am on the right track.
->> >
->> > For now, I just configured a perf_event_attr to perform sampling of
->> > PERF_COUNT_HW_INSTRUCTIONS at a given period. Can you confirm than the
->> > sample_period means "the kernel will generate a sample (with fields
->> > asked through sample_type) every sample_period instructions ?
->>
->> Yes.
->>
->> >
->> > Then after calling the perf_event_open system call I mmap the file
->> > descriptor returned with an arbitrary size of X pages (with X = 1 +
->> > 2^n).
->> >
->> > I then start recording events with ioctl on the file descriptor
->> > returned by perf_event_open. I am now wondering how to access the
->> > samples. My main concern is about the meaning of the data_head and
->> > data_tail fields of the metadata page located at the beginning of the
->> > memory mmaped. In understand that my samples are located just after
->> > this metadata page, and that these head and tail pointers are used to
->> > indicate where we are in the reading of the samples, is it correct ?
->>
->> Correct.
->>
->>
->> > While reading samples, should I use/modify these head and tail
->> > pointers, if yes what is the purpose of that ?
->>
->> The head is updated by kernel, you only need to update the tail after
->> reading.  Please see perf_record__mmap_read().
->>
->> >
->> > I am going now to look for the perf mem code, to try to understand
->> > that from my side, but I am interested in any hint on the subject that
->> > may help me.
->> >
->> > Many thanks in advance for your help,
->>
->> Hope this helps,
->> Namhyung
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) 
+for event (cpu/mem-loads/pp).
+/bin/dmesg may provide additional information.
+No CONFIG_PERF_EVENTS=y kernel support configured?
+
+   It seems evident that there's an interference between the two. Can 
+anyone enlighten me on how to debug this a bit just to hunt for this bug 
+(if it's a bug, and not a feature)?
+
+Thank you very much!
+
+[1] http://icl.cs.utk.edu/papi/
+
+-- 
+
+
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
+
+http://www.bsc.es/disclaimer
