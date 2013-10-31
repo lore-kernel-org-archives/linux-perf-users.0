@@ -1,62 +1,68 @@
 From: Harald Servat <harald.servat@bsc.es>
-Subject: Interference between perf record and PAPI in sampling mode
-Date: Wed, 30 Oct 2013 11:43:47 +0100
-Message-ID: <5270E2E3.2050201@bsc.es>
+Subject: Re: Information regarding the perf tool
+Date: Thu, 31 Oct 2013 16:45:16 +0100
+Message-ID: <52727B0C.5040402@bsc.es>
+References: <5266A57F.2000201@bsc.es> <87y55krw6f.fsf@tassilo.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:44882 "EHLO opsmail01.bsc.es"
+Received: from mao.bsc.es ([84.88.52.34]:55419 "EHLO opsmail01.bsc.es"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751644Ab3J3Knw (ORCPT
+	id S1751640Ab3JaPpV (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 30 Oct 2013 06:43:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by opsmail01.bsc.es (Postfix) with ESMTP id 3F294C02B1
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:49 +0100 (CET)
-Received: from opsmail01.bsc.es ([127.0.0.1])
- by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 27537-04-3 for <linux-perf-users@vger.kernel.org>;
- Wed, 30 Oct 2013 11:43:47 +0100 (CET)
-Received: from opswc01.bsc.es (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPS id AAA3D8306D
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:47 +0100 (CET)
-Received: (from filter@localhost)
-	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id r9UAhlf9028248
-	for linux-perf-users@vger.kernel.org; Wed, 30 Oct 2013 11:43:47 +0100
-Received: from [84.88.50.148] (unknown [84.88.50.148])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPSA id 842609C825
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Oct 2013 11:43:47 +0100 (CET)
+	Thu, 31 Oct 2013 11:45:21 -0400
+In-Reply-To: <87y55krw6f.fsf@tassilo.jf.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: linux-perf-users@vger.kernel.org
 
-Dear all,
+On 23/10/13 14:47, Andi Kleen wrote:
+> Harald Servat <harald.servat@bsc.es> writes:
+>
+>> Dear list,
+>>
+>>     I'm wondering whether it be possible to extend the "perf mem"
+>> (tool) to emit the TSC of the sampling event?
+>
+> perf report -D reports everything, including time stamps.
+>
+> -Andi
+>
 
-   I'd like to run some experiments using perf record command while 
-running some other experiments with PAPI library [1] in sampling mode. I 
-found that in kernel 3.11.0, if I sample an application using 
-PAPI_overflow on a hardware counter (PAPI_TOT_INS, for instance), then 
-the following command I execute through perf mem record raises the 
-following error.
+Hello,
 
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) 
-for event (cpu/mem-loads/pp).
-/bin/dmesg may provide additional information.
-No CONFIG_PERF_EVENTS=y kernel support configured?
+   returning to this topic, I'd like to mention that the time-stamps 
+associated with the data samples seems to be a bit delayed from the 
+actual computation.
 
-   It seems evident that there's an interference between the two. Can 
-anyone enlighten me on how to debug this a bit just to hunt for this bug 
-(if it's a bug, and not a feature)?
+   I tried to look at how are timestamps set in the perf samples and I 
+took a look at
 
-Thank you very much!
+   arch/x86/kernel/cpu/perf_event_intel_ds.c
 
-[1] http://icl.cs.utk.edu/papi/
+   and also at Intel Architectures Software Developer Manual [1].
+
+   The first thing I notice is that pebs_record_core structure seems to 
+be the same as the record of PEBS as indicated in Figure 17-10 of [1] 
+(page 105), while pebs_record_nhm seems to be the record as indicated in 
+Table 18-12 of [1] (page 147), but  neither Table 18-12 nor Figure 17-10 
+provide the time when the record was generated, so the timestamp in the 
+perf sample is generated elsewhere.
+
+   In fact, I expected that for each entry into the PEBS a handler would 
+be executed, but Intel documentations points that to use PEBS the tool 
+(here perf) needs to allocate space for multiple PEBS entries, so the 
+when the handler is invoked there may be multiple entries in the buffer, 
+which makes things a little more obscure.
+
+   Can anyone point me where and how is the timestamp calculated for 
+every sample reported by perf?
+
+Thank you very much.
+
+[1] http://download.intel.com/products/processor/manual/253669.pdf
 
 -- 
 
