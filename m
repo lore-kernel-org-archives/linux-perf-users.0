@@ -1,43 +1,34 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: ratio of progress of the counters
-Date: Fri, 01 Nov 2013 12:35:46 -0700
-Message-ID: <871u2zykx9.fsf@tassilo.jf.intel.com>
-References: <CAJ38vxtu6nsNU8m_kWecJKVKs8ArBmaR2DF3iXmcE=pUQoxEEA@mail.gmail.com>
+From: caobenzhi <caobenzhi0915@gmail.com>
+Subject: memory read/write access counts event in perf
+Date: Sat, 2 Nov 2013 09:25:25 +0000 (UTC)
+Message-ID: <loom.20131102T102049-521@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:26374 "EHLO mga09.intel.com"
+Received: from plane.gmane.org ([80.91.229.3]:33015 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752343Ab3KATgP convert rfc822-to-8bit (ORCPT
+	id S1751596Ab3KBJZs (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 1 Nov 2013 15:36:15 -0400
-In-Reply-To: <CAJ38vxtu6nsNU8m_kWecJKVKs8ArBmaR2DF3iXmcE=pUQoxEEA@mail.gmail.com>
-	(=?utf-8?Q?=22Jos=C3=A9_Sim=C3=A3o=22's?= message of "Thu, 31 Oct 2013
- 16:39:20 +0000")
+	Sat, 2 Nov 2013 05:25:48 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1VcXSk-0005aD-Cf
+	for linux-perf-users@vger.kernel.org; Sat, 02 Nov 2013 10:25:47 +0100
+Received: from 222.195.92.204 ([222.195.92.204])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2013 10:25:46 +0100
+Received: from caobenzhi0915 by 222.195.92.204 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2013 10:25:46 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?Sm9zw6kgU2ltw6Nv?= <jose.m.simao@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Jos=C3=A9 Sim=C3=A3o <jose.m.simao@gmail.com> writes:
-
-> Dear all,
->
-> I'm trying to collect ASCII-based progress information regarding a se=
-t
-> of performance counters. "Progress" means, for example, the ratios of
-> values/second (e.g. page faults/seconds).
->
-> I can get information in this form using 'perf stat' but 'stat' only
-> gives me the final value. I would like to collect, or calculate,
-> theses values from the running command and determine how these metric=
-s
-> evolved over time (i.e. faster or slower).
-
-Newer perf stat has a -I (interval) option for this.
-
--Andi
-
---=20
-ak@linux.intel.com -- Speaking for myself only
+Hi,everyone~ 
+Recently I want to use perf to count the memory read/write access times, but 
+when I use perf list|help, I can't find corresponding events? Does perf 
+cannot be used to count memory access times? Any help will be appreciated, 
+thanks a lot~
+Best
