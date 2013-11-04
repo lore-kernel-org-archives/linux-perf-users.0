@@ -1,55 +1,35 @@
-From: =?ISO-8859-1?Q?Jos=E9_Sim=E3o?= <jose.m.simao@gmail.com>
-Subject: Re: ratio of progress of the counters
-Date: Mon, 4 Nov 2013 15:12:32 +0000
-Message-ID: <CAJ38vxvPBP=TFJXf55wfk5Y=Q=QX2xZ6L3p3Gb1Ob0b3cC-efg@mail.gmail.com>
-References: <CAJ38vxtu6nsNU8m_kWecJKVKs8ArBmaR2DF3iXmcE=pUQoxEEA@mail.gmail.com>
-	<871u2zykx9.fsf@tassilo.jf.intel.com>
+From: Milian Wolff <mail@milianw.de>
+Subject: Can perf compare two perf.data files?
+Date: Mon, 04 Nov 2013 16:17:58 +0100
+Message-ID: <10173985.aGnRNdx3u3@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-lb0-f174.google.com ([209.85.217.174]:51364 "EHLO
-	mail-lb0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752937Ab3KDPMg convert rfc822-to-8bit (ORCPT
+Received: from dd24202.kasserver.com ([85.13.143.162]:53818 "EHLO
+	dd24202.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753167Ab3KDPYW (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 4 Nov 2013 10:12:36 -0500
-Received: by mail-lb0-f174.google.com with SMTP id q8so5450131lbi.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2013 07:12:34 -0800 (PST)
-In-Reply-To: <871u2zykx9.fsf@tassilo.jf.intel.com>
+	Mon, 4 Nov 2013 10:24:22 -0500
+Received: from milian-kdab2.localnet (unknown [188.111.54.34])
+	by dd24202.kasserver.com (Postfix) with ESMTPSA id C8AC7CFC486
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Nov 2013 16:17:58 +0100 (CET)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 1, 2013 at 7:35 PM, Andi Kleen <andi@firstfloor.org> wrote:
-> Jos=E9 Sim=E3o <jose.m.simao@gmail.com> writes:
->
->> Dear all,
->>
->> I'm trying to collect ASCII-based progress information regarding a s=
-et
->> of performance counters. "Progress" means, for example, the ratios o=
-f
->> values/second (e.g. page faults/seconds).
->>
->> I can get information in this form using 'perf stat' but 'stat' only
->> gives me the final value. I would like to collect, or calculate,
->> theses values from the running command and determine how these metri=
-cs
->> evolved over time (i.e. faster or slower).
->
-> Newer perf stat has a -I (interval) option for this.
+Hello there!
 
-Thank you for your answer.
+Is there some command for perf which I haven't found so far, that enables me 
+to compare two perf.data files?
 
-How can I get more information regarding the update of my system to
-use this new version of perf?
+When I try to improve the performance, I first get a baseline perf.data. Then 
+I try to optimize and want to compare before/after. It would now be cool if 
+perf record could only show the difference between before/after, similar to 
+what VTune is able to do.
 
-Regards,
-Jos=E9
-
->
-> -Andi
->
-> --
-> ak@linux.intel.com -- Speaking for myself only
+Bye
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
