@@ -1,31 +1,36 @@
-From: Vivek Nair <vivekaxl@gmail.com>
-Subject: Task Clock (Cgroup)
-Date: Sat, 2 Nov 2013 22:00:12 -0400
-Message-ID: <CAOWdYyV+BuOMmfFurrC-gHhMDVA7ZOe4hy8UcwJ+nKq_U1vGZA@mail.gmail.com>
+From: caobenzhi <caobenzhi0915@gmail.com>
+Subject: how to trace to the source code
+Date: Mon, 4 Nov 2013 13:54:09 +0000 (UTC)
+Message-ID: <loom.20131104T145013-347@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-vb0-f49.google.com ([209.85.212.49]:65532 "EHLO
-	mail-vb0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752617Ab3KCCAe (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:36519 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753031Ab3KDN51 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 2 Nov 2013 22:00:34 -0400
-Received: by mail-vb0-f49.google.com with SMTP id w20so582922vbb.22
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Nov 2013 19:00:34 -0700 (PDT)
+	Mon, 4 Nov 2013 08:57:27 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1VdKeY-0003fi-Jj
+	for linux-perf-users@vger.kernel.org; Mon, 04 Nov 2013 14:57:17 +0100
+Received: from 222.195.92.204 ([222.195.92.204])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2013 14:57:14 +0100
+Received: from caobenzhi0915 by 222.195.92.204 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2013 14:57:14 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Hello All,
-
-I am trying to find the task clock of a cgroup(containing hadoop) in
-the counting mode but I see that the task clock is always 4 (number of
-cores in the system). I did the following tests on it
-
-1. Ran a empty cgroup and found the task clock (always constant value of 4)
-2. Ran a infinite loop inside the cgroup (still 4).
-
-Could you please help me understand what could be going wrong?
-
-Regards,
-Vivek Nair
+Hi,everyone.
+Recently I use perf to see the performance problem of my programs. But I 
+cannot see the source code, what I see are all assembly code.I have already 
+compile with -g option, and I use command "perf opannotate --source prime" to 
+the the source code of prime function, unfortunately what I got are assembly 
+code.Does anyone know how to solve it?Thanks a lot~
+Best
+Emily
