@@ -1,34 +1,44 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: Information regarding the perf tool
-Date: Mon, 04 Nov 2013 18:02:43 +0000
-Message-ID: <1383588163.3234.34.camel@hornet>
-References: <5266A57F.2000201@bsc.es> <87y55krw6f.fsf@tassilo.jf.intel.com>
-	 <52727B0C.5040402@bsc.es> <527287A7.3050908@gmail.com>
-	 <5272922E.20007@bsc.es> <52729FE5.3090109@gmail.com>
-	 <5277D8E1.9000009@bsc.es> <5277DF11.7080601@gmail.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: Found unknown events
+Date: Mon, 04 Nov 2013 22:04:24 -0700
+Message-ID: <52787C58.7030100@gmail.com>
+References: <CAGTy5_T+8sY4s+Lp6WhNwjtodqRJs2imd8i6_+7PvvnUf_zQnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:56528 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754496Ab3KDSCq convert rfc822-to-8bit (ORCPT
+Received: from mail-pd0-f172.google.com ([209.85.192.172]:58920 "EHLO
+	mail-pd0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750911Ab3KEFE0 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 4 Nov 2013 13:02:46 -0500
-In-Reply-To: <5277DF11.7080601@gmail.com>
+	Tue, 5 Nov 2013 00:04:26 -0500
+Received: by mail-pd0-f172.google.com with SMTP id w10so7759634pde.31
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Nov 2013 21:04:26 -0800 (PST)
+In-Reply-To: <CAGTy5_T+8sY4s+Lp6WhNwjtodqRJs2imd8i6_+7PvvnUf_zQnA@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: Harald Servat <harald.servat@bsc.es>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: wufei <at.wufei@gmail.com>, linux-perf-users@vger.kernel.org
 
-On Mon, 2013-11-04 at 17:53 +0000, David Ahern wrote:
-> that's why we would like to get a perf_clock/trace_clock time source=20
-> exported by the kernel.
+On 11/4/13, 7:40 AM, wufei wrote:
+> Hello All,
+>
+> I am using perf to measure a multi-threaded program on kernel 3.2.23,
+> the system has 40 cores and there are lots of context switches during
+> the test. The command is:
+>    # perf record -e sched:sched_stat_sleep -e sched:sched_switch -e
+> sched:sched_process_exit -g -r 0 -p 39249 sleep 5
+> It generates a ~1GB size perf.data. `perf report` got 2 issues:
+>
+> 1. A lot of this warning message:
+>       Warning: Timestamp below last timeslice flush
 
-By all means. One of the issues right now is that perf and trace clocks
-can be (and are at least on ARM) different. Once the LLTng people get
-around providing One Source To Rule Them All, we'll be in much better
-position to convince John Stultz to provide a posix clock for it (which
-should make it VDSO-able as well).
+What's the NUMA make up? multiple sockets?
 
-Pawe=C5=82
+>
+> 2. No useful output, but this:
+>       Found 32117 unknown events!
+
+Try increasing the mmap size. e.g., -m 2048. Does it decrease or remove 
+this stat?
+
+David
