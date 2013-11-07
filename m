@@ -1,29 +1,39 @@
-From: AmirReza Ghods <ar.ghods@gmail.com>
-Subject: Fwd: The overhead of sampling in perf record
-Date: Thu, 7 Nov 2013 00:46:06 +0000
-Message-ID: <CAOJauODPXaVmumdKTzsQhbo3uwR1EH-+CL2XdeQC2L-LexAVdg@mail.gmail.com>
-References: <CAOJauOC53oai36QmGy19H_z51E7P4eBoQJympuz0_Z9j=3f6Sg@mail.gmail.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: Perf support for stalled-cycles-frontend and
+ stalled-cycles-backend event
+Date: Thu, 7 Nov 2013 17:23:50 +0000
+Message-ID: <20131107172349.GJ13139@mudshark.cambridge.arm.com>
+References: <CABHD4K9uYYx3ga=joDid71YUWT7o93Cg8hDSQgX=dDy156vAsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ie0-f178.google.com ([209.85.223.178]:48362 "EHLO
-	mail-ie0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752044Ab3KGAqH (ORCPT
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:43284 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751535Ab3KGRX7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 6 Nov 2013 19:46:07 -0500
-Received: by mail-ie0-f178.google.com with SMTP id x13so498533ief.23
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Nov 2013 16:46:06 -0800 (PST)
-In-Reply-To: <CAOJauOC53oai36QmGy19H_z51E7P4eBoQJympuz0_Z9j=3f6Sg@mail.gmail.com>
+	Thu, 7 Nov 2013 12:23:59 -0500
+Content-Disposition: inline
+In-Reply-To: <CABHD4K9uYYx3ga=joDid71YUWT7o93Cg8hDSQgX=dDy156vAsQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Amit Tomer <amittomer25@gmail.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi all,
+On Wed, Nov 06, 2013 at 01:33:23PM +0000, Amit Tomer wrote:
+> We recently installed Perf tool on our platform based on Cortex A-15  cores and Linux kerenl 3.4.8.
+> 
+> We enabled the Hardware Performance counter(PMU) and can see below message in dmeg log .
+> 
+> [    2.292157] hw perfevents: enabled with ARMv7 Cortex-A15 PMU driver, 7 counters available
+> 
+> This message suggests there are 7 counter avaiable here.
+> 
+> But when we run the below command ,we find two counters named stalled-cycles-frontend and stalled-cycles-backend are not suported
 
-Could you please explain the overhead of sampling with perf record? I
-mean, when I do sampling with high frequencies, such as 10000Hz, the
-accuracy of counting the events decreases. I want to know the exact
-source of overheads which makes the results less accurate.
+Take a look at the Cortex-A15 TRM. I couldn't see anything in there which
+matched my understanding of stalled-cycles-frontend or
+stalled-cycles-backend, so I decided to leave them as UNSUPPORTED.
 
-Best,
-Amir
+Do you have a suggestion for which event to use?
+
+Will
