@@ -1,45 +1,32 @@
-From: JJ Hiblot <jjhiblot@gmail.com>
+From: Mohammed Riyaz <riyaz.list@gmail.com>
 Subject: Re: Measuring worst case interrupt processing time
-Date: Mon, 09 Dec 2013 12:26:14 +0100
-Message-ID: <52A5A8D6.6020401@gmail.com>
+Date: Mon, 9 Dec 2013 04:17:33 -0800
+Message-ID: <CAL7o8iu+cM1x+NnNWvtjVjJLRdB2q5f==-0nmzfhX02BjUxcjA@mail.gmail.com>
 References: <CAL7o8itUf0wOj-f7LEF=EfydzimOkpi1VrTZXVE0VvECNP0VPQ@mail.gmail.com>
+	<52A5A8D6.6020401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtp3-g21.free.fr ([212.27.42.3]:55459 "EHLO smtp3-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932735Ab3LIL0i (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 9 Dec 2013 06:26:38 -0500
-In-Reply-To: <CAL7o8itUf0wOj-f7LEF=EfydzimOkpi1VrTZXVE0VvECNP0VPQ@mail.gmail.com>
+Received: from mail-qe0-f47.google.com ([209.85.128.47]:60406 "EHLO
+	mail-qe0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932532Ab3LIMRe (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 9 Dec 2013 07:17:34 -0500
+Received: by mail-qe0-f47.google.com with SMTP id t7so2623102qeb.6
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Dec 2013 04:17:33 -0800 (PST)
+In-Reply-To: <52A5A8D6.6020401@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mohammed Riyaz <riyaz.list@gmail.com>, linux-perf-users@vger.kernel.org
+To: JJ Hiblot <jjhiblot@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi,
+On Mon, Dec 9, 2013 at 3:26 AM, JJ Hiblot <jjhiblot@gmail.com> wrote:
+> I used to do this kind of measurement with a GPIO and an oscilloscope set up
+> in persistence mode. In this case ,the precision of  the measure doesn't
+> depend of the timer's resolution.
 
-I used to do this kind of measurement with a GPIO and an oscilloscope=20
-set up in persistence mode. In this case ,the precision of  the measure=
-=20
-doesn't depend of the timer's resolution.
+Though not suitable for my setup, never thought of using h/w for such
+measurements. Interesting.
 
-Jean-Jacques
-
-Le 08/12/2013 14:18, Mohammed Riyaz a =E9crit :
-> Hi,
->
-> I am working on trying to measure the worst case processing time for
-> hard IRQ and soft IRQ. Well, I understand that we could use time
-> stamps at entry and exit to measure this. Just wanted to know if ther=
-e
-> were other standard ways of measuring this. Any suggestions?
->
-> Thanks
->
-> Riyaz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-=
-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Riyaz
