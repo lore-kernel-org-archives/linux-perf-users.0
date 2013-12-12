@@ -1,65 +1,61 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Re: Information regarding the perf tool
-Date: Thu, 12 Dec 2013 09:47:32 +0100
-Message-ID: <52A97824.1050203@bsc.es>
-References: <5266A57F.2000201@bsc.es> <87y55krw6f.fsf@tassilo.jf.intel.com> <52727B0C.5040402@bsc.es> <527287A7.3050908@gmail.com> <5272922E.20007@bsc.es> <52729FE5.3090109@gmail.com> <5277D8E1.9000009@bsc.es> <52A909C8.4060801@gmail.com>
+From: Manuel Selva <manuel.selva@insa-lyon.fr>
+Subject: Understanding perf mem -t load results
+Date: Thu, 12 Dec 2013 15:06:04 +0100 (CET)
+Message-ID: <1776760155.10395562.1386857164818.JavaMail.root@insa-lyon.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:48999 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751064Ab3LLI4x (ORCPT
+Received: from smtp2.insa-lyon.fr ([134.214.76.44]:40184 "EHLO
+	smtp2.insa-lyon.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751489Ab3LLOgx (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 12 Dec 2013 03:56:53 -0500
-In-Reply-To: <52A909C8.4060801@gmail.com>
+	Thu, 12 Dec 2013 09:36:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by smtp2.insa-lyon.fr (Postfix) with ESMTP id 9EBBC9DE70
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2013 15:31:42 +0100 (CET)
+Received: from smtp2.insa-lyon.fr ([127.0.0.1])
+	by localhost (smtp2.insa-lyon.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id USeYulcmIk26 for <linux-perf-users@vger.kernel.org>;
+	Thu, 12 Dec 2013 15:31:39 +0100 (CET)
+Received: from zstore1.insa-lyon.fr (zstore1.insa-lyon.fr [134.214.182.187])
+	by smtp2.insa-lyon.fr (Postfix) with ESMTP id DCCED9D9BF
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Dec 2013 15:06:05 +0100 (CET)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On 12/12/13 01:56, David Ahern wrote:
-> On 11/4/13, 10:26 AM, Harald Servat wrote:
->> On 31/10/13 19:22, David Ahern wrote:
->>> On 10/31/13, 11:23 AM, Harald Servat wrote:
->>>> Which is the relation between perf_clock() (or local_clock()) and
->>>> clock_gettime (CLOCK_MONOTONIC, ). Are they the same? If not, is
->>>> there a
->>>> way to correlate them? Or alternatively, is it possible to call
->>>> local_clock() from the userland?
->>>
->>> We still do not have a means of correlating perf_clock to time-of-day,
->>> monotonic or any other clock source. Still trying.
->>>
->>> Pawell Moll has a couple of patches posted -- one uses an ioctl to get
->>> perf_clock timestamps the other makes perf_clock accessible through
->>> clock_gettime. See attached.
->>>
->
-> Coming back to this....
->
-> Here is a module version of the posix clock approach:
->   https://github.com/dsahern/linux/blob/perf-full-monty/README.ahern
->
-> As far as I can tell it works for 2.6.38 and forward and there should
-> not be a conflict with the CLOCK_PERF id of 12. No need to patch and
-> build your kernel, just build the module, load and go.
->
-> That branch also has time-of-day hooks for record, report, script and
-> sched.
->
+Hi all,
 
-Thank you very much David. Using a module instead of recompiling would 
-be a very nice alternative. I'll give it a try.
+I am trying to understand the output of the perf mem tool on my workstation with two intel Xeon X5650.
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+I recorded a perf.data file with memory load sampling (write sampling is not availble for these processors) as following (in the root directory of a Linux kernel source tree):
 
-http://www.bsc.es/disclaimer
+perf mem -t load rec -c 1 make -j18
+
+Then I am reporting the results with
+
+perf mem rep --sort=mem
+
+ 97.00%      25519343  L1 hit
+  1.31%         43687  L3 hit
+  1.15%         37253  LFB hit
+  0.32%          3156  Remote Cache (1 hop) hit
+  0.14%         38579  L3 miss
+  0.05%          6309  L2 hit
+  0.03%           231  Remote RAM (1 hop) hit
+  0.00%             8  Local RAM hit
+  0.00%             2  Uncached hit
+
+As you can see, 97% of the loads (I am sampling all loads with -c 1: is it true ?) hit the L1 cache. My first question is about this high L1 hit ration and the small number of RAM requests (231 + 8). Is it realistic to have 97% of L1 hit and only 239 RAM accesses when compiling a Linux kernel ? 
+
+Writing this email and looking again into Intel SDM I am thinking that the L3 misses are what is called "unknown L3 cache miss in SDM". As a consequence the total number of memory accesses would be L3 miss + Remote RAM + Local RAM, is it correct ?
+
+The second question is the Uncached hit: is it the Un-cacheable memory in the SDM ? If yes, I guess it's also a request to RAM.
+
+Finally, it's not very clear for me what Line Fill Buffer (LFB) is exactly and I was not able to find a pointer explaining that. Do you know where I can read information about this ?
+
+Thanks,
+
+------
+Manuel
