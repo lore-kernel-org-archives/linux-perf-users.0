@@ -1,35 +1,50 @@
-From: Mohammed Riyaz <riyaz.list@gmail.com>
-Subject: Re: Measuring worst case interrupt processing time
-Date: Tue, 10 Dec 2013 01:14:34 -0800
-Message-ID: <CAL7o8ivP97rHo1LD3o_KhKF_9MH=F6HZ216S-HTPJyuNiKi94A@mail.gmail.com>
-References: <CAL7o8itUf0wOj-f7LEF=EfydzimOkpi1VrTZXVE0VvECNP0VPQ@mail.gmail.com>
-	<87ob4qvg2v.fsf@tassilo.jf.intel.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: Information regarding the perf tool
+Date: Wed, 11 Dec 2013 17:56:40 -0700
+Message-ID: <52A909C8.4060801@gmail.com>
+References: <5266A57F.2000201@bsc.es> <87y55krw6f.fsf@tassilo.jf.intel.com> <52727B0C.5040402@bsc.es> <527287A7.3050908@gmail.com> <5272922E.20007@bsc.es> <52729FE5.3090109@gmail.com> <5277D8E1.9000009@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f171.google.com ([209.85.216.171]:33448 "EHLO
-	mail-qc0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751371Ab3LJJOf (ORCPT
+Received: from mail-pd0-f180.google.com ([209.85.192.180]:62309 "EHLO
+	mail-pd0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751000Ab3LLA4n (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 10 Dec 2013 04:14:35 -0500
-Received: by mail-qc0-f171.google.com with SMTP id c9so3745470qcz.30
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Dec 2013 01:14:34 -0800 (PST)
-In-Reply-To: <87ob4qvg2v.fsf@tassilo.jf.intel.com>
+	Wed, 11 Dec 2013 19:56:43 -0500
+Received: by mail-pd0-f180.google.com with SMTP id q10so10543265pdj.39
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Dec 2013 16:56:42 -0800 (PST)
+In-Reply-To: <5277D8E1.9000009@bsc.es>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
+To: Harald Servat <harald.servat@bsc.es>
 Cc: linux-perf-users@vger.kernel.org
 
-Hi Andi,
+On 11/4/13, 10:26 AM, Harald Servat wrote:
+> On 31/10/13 19:22, David Ahern wrote:
+>> On 10/31/13, 11:23 AM, Harald Servat wrote:
+>>> Which is the relation between perf_clock() (or local_clock()) and
+>>> clock_gettime (CLOCK_MONOTONIC, ). Are they the same? If not, is there a
+>>> way to correlate them? Or alternatively, is it possible to call
+>>> local_clock() from the userland?
+>>
+>> We still do not have a means of correlating perf_clock to time-of-day,
+>> monotonic or any other clock source. Still trying.
+>>
+>> Pawell Moll has a couple of patches posted -- one uses an ioctl to get
+>> perf_clock timestamps the other makes perf_clock accessible through
+>> clock_gettime. See attached.
+>>
 
->
-> If your goal is to identify worst case latencies of interrupted code --
-> ftrace has special tracers for this: CONFIG_{IRQSOFF,PREEMPT,SCHED}_TRACER
->
+Coming back to this....
 
-ok, that got me thinking.. but it turns out that, the need is to
-measure the processing time per IRQ. And of course, to then identify
-the offenders using this.
+Here is a module version of the posix clock approach:
+  https://github.com/dsahern/linux/blob/perf-full-monty/README.ahern
 
-Thanks
-Riyaz
+As far as I can tell it works for 2.6.38 and forward and there should 
+not be a conflict with the CLOCK_PERF id of 12. No need to patch and 
+build your kernel, just build the module, load and go.
+
+That branch also has time-of-day hooks for record, report, script and sched.
+
+David
