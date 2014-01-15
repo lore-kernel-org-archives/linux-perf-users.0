@@ -1,37 +1,51 @@
-From: Gaurav Jain <gjain@fb.com>
-Subject: Pid namespaces & perf map files
-Date: Wed, 15 Jan 2014 20:33:41 +0000
-Message-ID: <B69B38A7-7142-4AE3-A109-98800BCF8DCE@fb.com>
+From: Vivek Nair <vivekaxl@gmail.com>
+Subject: Fwd: Perf Cgroup Support
+Date: Wed, 15 Jan 2014 16:34:48 -0500
+Message-ID: <CAOWdYyWjqnu4RT91bWN15+A0dff_fZmEKgteUDbnJa090DHouQ@mail.gmail.com>
+References: <CAOWdYyWGPz90n5p_=ebKWLT+xU5TgmbWoyo75d072p60v9FZBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:56368 "EHLO
-	mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752158AbaAOUdp convert rfc822-to-8bit
-	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 15 Jan 2014 15:33:45 -0500
-Received: from pps.filterd (m0004077 [127.0.0.1])
-	by mx0b-00082601.pphosted.com (8.14.5/8.14.5) with SMTP id s0FKXeC3009281
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2014 12:33:43 -0800
-Received: from mail.thefacebook.com (mailwest.thefacebook.com [173.252.71.148])
-	by mx0b-00082601.pphosted.com with ESMTP id 1hdxbfrvj7-1
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=OK)
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2014 12:33:43 -0800
-Content-Language: en-US
-Content-ID: <DC4141B9FBDF884E80190CBB00B6ECFB@fb.com>
+Received: from mail-qa0-f49.google.com ([209.85.216.49]:44352 "EHLO
+	mail-qa0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751258AbaAOVfK (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 15 Jan 2014 16:35:10 -0500
+Received: by mail-qa0-f49.google.com with SMTP id w8so1402347qac.22
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2014 13:35:09 -0800 (PST)
+In-Reply-To: <CAOWdYyWGPz90n5p_=ebKWLT+xU5TgmbWoyo75d072p60v9FZBg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hi,
+Dear All,
 
-I have a setup where the process generating the perf-<pid>.map file is using pid namespaces while the perf tool is running in the global namespace. As a result, perf cannot automatically find the map file since perf only knows the global pid of the file, while the map file is named with the pid in the namespace.
+I am using perf to count events for cgroups. I am getting some wierd results.
 
-The fix I have is to modify perf to search for the map file in /proc/<global pid>/root/tmp/perf-<namespace pid>.map. This works, except for one caveat, how does perf get the pid in the namespace? Is there a way for perf to extract this? I couldn't see a way. As a result, I needed to expose the pid in /proc/pid/status.
+For example, I am using the following toy program:
+for(a=0;a<4000;a++)
+{
+count=0;
+for(b=0;b<4000;b++)
+for(c=0;c<4000;c++)
+count++;
+}
 
-Would there be a better way to achieve the same result?
+I measure the values of the performance counter while program
+1. as a process - perf stat -p 'pid' sleep 1 and I run this every
+second till the end of the program. So, at the end of the run, I get
+time series of performance counter values
+2. inside a Cgroup. - perf stat -G "cgroup-name" sleep 1 and I run
+this every second till the end of the program.
 
-Thanks,
+But, I get really strange results. For example, the average values of
+the number of branches in case of the process is 411.1236M/sec where
+as the number of branches in case of the Cgroup it's 103.20M/sec.
+Since, the number of branch instruction is expected to be constant,
+this would mean that the run time of the program has to be around 4
+times more than the normal running time. But, this is not the case.
 
-Gaurav
+How can I explain this?
+
+Regards,
+Vivek Nair
