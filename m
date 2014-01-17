@@ -1,133 +1,76 @@
-From: Mauro Andreolini <mauro.andreolini@gmail.com>
-Subject: Two questions on perf dwarf callchains
-Date: Fri, 17 Jan 2014 11:21:23 +0100
-Message-ID: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
-Reply-To: mauro.andreolini@gmail.com
+From: Manuel Selva <selva.manuel@gmail.com>
+Subject: Remote Cache Accesses (1 Hop)
+Date: Fri, 17 Jan 2014 14:24:09 +0100
+Message-ID: <52D92EF9.8000903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ee0-f47.google.com ([74.125.83.47]:55685 "EHLO
-	mail-ee0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751354AbaAQKV1 (ORCPT
+Received: from mail-we0-f172.google.com ([74.125.82.172]:54619 "EHLO
+	mail-we0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751382AbaAQNYM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 17 Jan 2014 05:21:27 -0500
-Received: by mail-ee0-f47.google.com with SMTP id d49so1248016eek.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jan 2014 02:21:25 -0800 (PST)
+	Fri, 17 Jan 2014 08:24:12 -0500
+Received: by mail-we0-f172.google.com with SMTP id q58so4586096wes.17
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jan 2014 05:24:11 -0800 (PST)
+Received: from [192.168.0.10] (mut38-6-88-167-68-98.fbx.proxad.net. [88.167.68.98])
+        by mx.google.com with ESMTPSA id q15sm9356747wjw.18.2014.01.17.05.24.10
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Fri, 17 Jan 2014 05:24:10 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: Mauro Andreolini <mauro.andreolini@gmail.com>
 
 Hi all,
 
-I have installed a textual Arch Linux guest (the hypervisor
-is KVM) and I am playing with perf and dwarf callchains.
-In particular, I am trying to get meaningful stacktraces
-for a simple command such as "ls -lR /".
+I wrote a benchmarking program, in order to play with perf_event_open 
+memory sampling capabilities (as discussed earlier on this list).
 
-Here is what I did.
-* recompile the kernel with
-  CONFIG_DEBUG_INFO=y
-  CONFIG_FRAME_POINTER=Y
-* recompile the C library with symbols (-g)
-* recompile all other dependencies of "ls" (ldd /usr/bin/ls)
-  with symbols (on my system, that would be libcap, libacl,
-  libattr)
-* recompile the coreutils package with symbols
+My benchmark is allocating a large array of memory (120 megas by 
+default), then I am starting sampling with perf_event_open and the 
+MEM_INST_RETIRED_LATENCY_ABOVE_THRESHOLD event (with threshold = 3, the 
+minimal one according to Intel's doc) along with memory accesses 
+counting (uncore event QMC_NORMAL_READ.ANY) and I access all the 
+allocated memory either sequentially or randomly. The benchmark is mono 
+thread, pinned to a given core, and memory is allocate don the core 
+associated with this node using numa_alloc functions. perf_event_open is 
+thus called to monitor only this core/numa node. The code is compiled 
+without any optimization and I tried as possible to increase the ratio 
+of memory accesses codes vs branching, and other stuff code.
 
-After that, I executed the following commands:
-perf record --call-graph dwarf -g -- ls -lR /
-<wait 10s; hit CTRL-C>
-perf report --call-graph --stdio
+I can clearly see with the QMC_NORMAL_READ.ANY events count that my 
+random accesses test case generate far more memory accesses than the 
+sequential one (I guess the prefetcher and sequential access are 
+responsible for that).
 
-I hit two problems.
-Problem n.1: perf report warns me about missing kernel symbols.
+Regarding the sampled event, I successfully mmap the result of perf 
+event open and I am able to read the samples. My problem is that even 
+for the random accesses test case on the 120 megas, I don't have any 
+samples served by the RAM (I am using the PERF_SAMPLE_DATA_SRC field) 
+(the sampling period is 1000 events and I only get ~700 samples). 
+Nevertheless, in the sequential case I have 0,01% of my samples that are 
+remote cache accesses (1 Hop) where as this percentage is ~20% in the 
+random case.
 
-No kallsyms or vmlinux with build-id 4c6ab941f31dde04c2a481430218994849927c8d was found
-[ext4] with build id 4c6ab941f31dde04c2a481430218994849927c8d not found, continuing without symbols
-No kallsyms or vmlinux with build-id 21f163b0a8a8b924efdd173b8f83ad723d378958 was found
-[drm] with build id 21f163b0a8a8b924efdd173b8f83ad723d378958 not found, continuing without symbols
-No kallsyms or vmlinux with build-id d0bd7dd69886c2dccde18dee760b6d39cc0b5a55 was found[qxl] with build id d0bd7dd69886c2dccde18dee760b6d39cc0b5a55 not found, continuing without symbols
-No kallsyms or vmlinux with build-id 8d13e6f0c4d4f8b4628c8c4bd6c660b0a00576df was found[ttm] with build id 8d13e6f0c4d4f8b4628c8c4bd6c660b0a00576df not found, continuing without symbols
-...
-#
-# Samples: 4K of event 'cpu-clock'
-# Event count (approx.): 1201250000
-#
-# Overhead  Command      Shared Object
-Symbol
-# ........  .......  .................  .................................
-...
-     7.12%       ls  [qxl]              [k] 0x0000000000009b20 <--- HERE
-                 |
-                 |--4.09%-- 0xffffffffa048c2c2
-                 |          |
-                 |          |--42.86%-- 0xffffffffa048ee8b
-                 |          |          0xffffffffa048ba8f
-                 |          |          bit_bmove
-                 |          |          fbcon_redraw_blit.isra.22
-                 |          |          fbcon_scroll
-                 |          |          scrup
-                 |          |          lf
-                 |          |          do_con_trol
-                 |          |          do_con_write.part.18
-                 |          |          con_write
-                 |          |          do_output_char
-                 |          |          n_tty_write
-                 |          |          tty_write
-                 |          |          vfs_write
-                 |          |          sys_write
-                 |          |          system_call_fastpath
-                 |          |          __GI___libc_write
+So my questions are:
 
-For example, the 0x0000000000009b20 address should refer to some
-function in the qxl module for which no symbol was generated. As far as
-I could understand, perf does not seem to be able to extract symbol
-information from compressed modules. I had to decompress the qxl.ko.gz
-file to get perf report to print the function names.
-Is this expected behaviour? How do I get perf to automatically extract
-symbols from compressed files?
+- What is exactly remote cache (1 hop) ? A data found in another core's 
+private cache (L1 or L2 in my case) on the same processor ?
 
-Problem n.2: sometimes perf prints bogus callchains (in particular
-when the various printf() variants are involved).
+- How can I interpret my results, I was expecting to have local memory 
+accesses samples increasing in the random case instead of remote cache 
+(1 hop). How can I have remote cache accesses with malloced data not 
+shared, and used by a thread pinned to a given core.
 
-                 |--1.46%-- 0xffffffffa048a275
-                 |          0xffffffffa048c110
-                 |          0xffffffffa04909e7
-                 |          |
-                 |          |--80.00%-- 0xffffffffa0490afa
-                 |          |          0xffffffffa048ee8b
-                 |          |          0xffffffffa048ba8f
-                 |          |          bit_bmove
-                 |          |          fbcon_redraw_blit.isra.22
-                 |          |          fbcon_scroll
-                 |          |          scrup
-                 |          |          lf
-                 |          |          do_con_trol
-                 |          |          do_con_write.part.18
-                 |          |          con_write
-                 |          |          do_output_char
-                 |          |          n_tty_write
-                 |          |          tty_write
-                 |          |          vfs_write
-                 |          |          sys_write
-                 |          |          system_call_fastpath
-                 |          |          __GI___libc_write
-                 |          |          |
-                 |          |          |--50.00%-- vfprintf
-                 |          |          |          0x0        <---HERE
-                 |          |          |
-                 |          |          |--25.00%-- main
-                 |          |          |          __libc_start_main
-                 |          |          |          _start
-                 |          |          |          0x0        <---HERE
-                 |          |          |
-                 |          |           --25.00%-- 0x7facc1df12a0 HERE
+- I didn't yet look at that on details, but 700~ samples for accessing 
+120 megas with sampling every 1000 events seems small. I am going to 
+check the assembly code generated and also count the total number of 
+memory requests (a core event) and compare that to the 700 samples * 
+1000 events.
 
-To which function would 0x7facc1df12a0 match? It does not even seem to
-be in the mapped address space of "ls". I am clueless.
+Thanks in advance for any suggestions you may have in order to help 
+understand what's happening there.
 
-Thanks for your time.
-Bye
-Mauro
+-- 
+Manu
