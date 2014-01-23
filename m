@@ -1,49 +1,42 @@
-From: Mauro Andreolini <mauro.andreolini@gmail.com>
-Subject: Re: Two questions on perf dwarf callchains
-Date: Wed, 22 Jan 2014 19:02:30 +0100
-Message-ID: <1390413750.5206.6.camel@nb-andreolini.mat.unimo.it>
-References: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
-	 <87d2jq1i7q.fsf@tassilo.jf.intel.com>
-	 <1390001852.8555.8.camel@nb-andreolini>
-	 <20140118044203.GR20765@two.firstfloor.org>
-	 <1390401626.22168.4.camel@nb-andreolini.mat.unimo.it>
-	 <20140122175529.GX20765@two.firstfloor.org>
-Reply-To: mauro.andreolini@gmail.com
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Does perf record support event multiplexing?
+Date: Wed, 22 Jan 2014 20:51:53 -0800
+Message-ID: <874n4v1es6.fsf@tassilo.jf.intel.com>
+References: <CAOJauOAJbbjP6kR_op4bzncDajjOZvN0YWf9+scYjpHrJeLTOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ea0-f171.google.com ([209.85.215.171]:56500 "EHLO
-	mail-ea0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752531AbaAVSCd (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:5313 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752311AbaAWEvy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 22 Jan 2014 13:02:33 -0500
-Received: by mail-ea0-f171.google.com with SMTP id h10so4778305eak.16
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2014 10:02:32 -0800 (PST)
-In-Reply-To: <20140122175529.GX20765@two.firstfloor.org>
+	Wed, 22 Jan 2014 23:51:54 -0500
+In-Reply-To: <CAOJauOAJbbjP6kR_op4bzncDajjOZvN0YWf9+scYjpHrJeLTOg@mail.gmail.com>
+	(AmirReza Ghods's message of "Tue, 21 Jan 2014 13:34:15 -0500")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
+To: AmirReza Ghods <ar.ghods@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-Il giorno mer, 22/01/2014 alle 18.55 +0100, Andi Kleen ha scritto:
-> On Wed, Jan 22, 2014 at 03:40:26PM +0100, Mauro Andreolini wrote:
-> > Il giorno sab, 18/01/2014 alle 05.42 +0100, Andi Kleen ha scritto:
-> > > The dwarf information should be present unless explicitely disabled.
-> > > It's either a libunwind or compiler problem. You could file a gcc bug
-> > > I suppose. Also check if gdb can backtrace through it. If that works
-> > > it's likely unwind.
-> > gdb can backtrace perfectly through ls -lR /. Also, recompiling the
-> 
-> You tested it on the same IP as perf failed on, correct?
-> It will depend on the exact location.
-Yes, I did.
+AmirReza Ghods <ar.ghods@gmail.com> writes:
 
-> 
-> > whole system with -fno-omit-frame-pointer makes perf record & report
-> > work like a charm. So I guess it must be the unwinder.
-> 
-> Please report it to the libunwind developers.
-OK. Will do.
+> I noticed that "perf record" does not calculate the true value for the
+> number of event's counts in the case of having more events than
+> hardware counters.
+> But in pef stat it does and there is a time interpolation algorithm
+> for estimating and correcting the true value.
+> Also I saw a patch for Perf's source code that implimented time
+> interpolation for Perf in record mode but it did not include in the
+> next official realses of Perf. I just want to know that is there any
+> technical difficulty for implimenting this feature in "perf record" or
+> not?
 
-Mauro
+Why would you care about the exact sample count for perf report?
+
+The only thing that counts in such a histogram is the percent
+relationships, which would stay the same if the numbers
+were scaled up.
+
+-Andi
+-- 
+ak@linux.intel.com -- Speaking for myself only
