@@ -1,67 +1,83 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: perf not working for some commands?
-Date: Tue, 28 Jan 2014 10:22:03 +0100
-Message-ID: <20140128092203.GC1229@krava.brq.redhat.com>
-References: <CACTzACVZLm00yVZag5Hf-c_u0tdH+cQT0=8B_XS8BrN5cT2mDA@mail.gmail.com>
+Subject: Re: perf lock usage
+Date: Tue, 28 Jan 2014 10:35:42 +0100
+Message-ID: <20140128093542.GD1229@krava.brq.redhat.com>
+References: <21216.48020.60857.22056@gargle.gargle.HOWL>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:53605 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:23918 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754473AbaA1JWN (ORCPT
+	id S1754917AbaA1Jfv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 28 Jan 2014 04:22:13 -0500
+	Tue, 28 Jan 2014 04:35:51 -0500
 Content-Disposition: inline
-In-Reply-To: <CACTzACVZLm00yVZag5Hf-c_u0tdH+cQT0=8B_XS8BrN5cT2mDA@mail.gmail.com>
+In-Reply-To: <21216.48020.60857.22056@gargle.gargle.HOWL>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Li <android.wm.edu@gmail.com>
+To: Sujith Manoharan <sujith@msujith.org>
 Cc: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 09:58:15PM -0500, David Li wrote:
-> Hi everyone,
-> I'd like to use perf to profile the monkey command on Android, but I
-> got stuck with this.
+On Thu, Jan 23, 2014 at 12:19:56PM +0530, Sujith Manoharan wrote:
+> Hi,
 > 
-> Normally, when I run following:
+> I am trying to use perf lock and am not sure if
+> the results are correct (the bad rate is 98 %).
 > 
->       monkey -v -p com.google.android.youtube 500
-> 
->       -it works (it generates 500 user events for youtube)
-> 
-> BUT, when I want to get the perf stat of it as follows:
-> 
->       perf stat monkey -v -p com.google.android.youtube 500
-> 
-> I get:
-> 
->      monkey: No such file or directory
->      Terminated
-> 
-> 
-> monkey is a command, not a file nor a directory. Why am I getting
-> this? Any help will be greatly appreciated!
+> Is this expected behavior ?
 
-perf calls execvp to run the command.. make sure
-the program is within the PATH variable location
+some of the kernel lock types do not follow the:
+  acquire
+  contended
+  acuired
+  release
 
-you can where perf searches by:
+lock state machine, like rcu or spin locks.. and thats what
+caused most of the bad rates in my tests.
 
-[jolsa@krava perf]$ strace -fo out ./perf stat krava
-Workload failed: No such file or directory
-[jolsa@krava perf]$ cat out | grep exec
-5308  execve("./perf", ["./perf", "stat", "krava"], [/* 36 vars */]) = 0
-5309  execve("/home/jolsa/libexec/perf-core/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/home/jolsa/kernel.org/linux-perf/tools/perf/./krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/usr/lib64/qt-3.3/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/usr/local/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/usr/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/usr/local/sbin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/usr/sbin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/opt/mocp/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/home/jolsa/.local/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/home/jolsa/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
-5309  execve("/opt/mocp/bin/krava", ["krava"], [/* 37 vars */]) = -1 ENOENT (No such file or directory)
+I was recently working on some changes for lock tracing,
+what stats are you interested in?
 
 jirka
+
+> 
+> root@linux-test ~# perf --version
+> perf version 3.12.0
+> 
+> root@linux-test ~# perf lock record cat /etc/issue
+> Arch Linux \r (\l)
+> 
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.356 MB perf.data (~15533 samples) ]
+> root@linux-test ~# perf lock report
+>                 Name   acquired  contended total wait (ns)   max wait (ns)   min wait (ns)
+> 
+>         &cpuctx_lock          0          0               0               0               0
+>  &sig->cred_guard...          0          0               0               0               0
+> 
+> === output for debug===
+> 
+> bad: 153, total: 155
+> bad rate: 98.709677 %
+> histogram of events caused bad sequence
+>     acquire: 1
+>    acquired: 0
+>   contended: 0
+>     release: 152
+> 
+> I am using the wireless-testing kernel:
+> root@linux-test ~# uname -a
+> Linux linux-test 3.13.0-wl-debug #197 SMP PREEMPT Tue Jan 21 03:19:43 IST 2014 x86_64 GNU/Linux
+> 
+> lockdep is enabled:
+> root@linux-test ~# zgrep -i lockdep /proc/config.gz
+> CONFIG_LOCKDEP_SUPPORT=y
+> CONFIG_LOCKDEP=y
+> # CONFIG_DEBUG_LOCKDEP is not set
+> 
+> 
+> Sujith
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
