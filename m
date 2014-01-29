@@ -1,120 +1,125 @@
-From: Mauro Andreolini <mauro.andreolini@gmail.com>
-Subject: Re: Two questions on perf dwarf callchains
-Date: Wed, 29 Jan 2014 14:02:55 +0100
-Message-ID: <1391000575.1316.4.camel@nb-andreolini.mat.unimo.it>
-References: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
-Reply-To: mauro.andreolini@gmail.com
+From: Manuel Selva <selva.manuel@gmail.com>
+Subject: Re: Remote Cache Accesses (1 Hop)
+Date: Wed, 29 Jan 2014 14:47:14 +0100
+Message-ID: <CALbiyZwrVtggjQxapjTP_7rzFGs7iwX5_jrhK9WffGmPwXK+gQ@mail.gmail.com>
+References: <52D92EF9.8000903@gmail.com>
+	<CALbiyZzfdSxaDnkNmG10NpxQocH+OyqU8thMv=HnqkHeF4WWGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wg0-f51.google.com ([74.125.82.51]:36685 "EHLO
-	mail-wg0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750950AbaA2NDB (ORCPT
+Received: from mail-la0-f52.google.com ([209.85.215.52]:65487 "EHLO
+	mail-la0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751294AbaA2NrR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 29 Jan 2014 08:03:01 -0500
-Received: by mail-wg0-f51.google.com with SMTP id z12so3379324wgg.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2014 05:02:57 -0800 (PST)
-Received: from [155.185.5.180] (nb-andreolini.mat.unimo.it. [155.185.5.180])
-        by mx.google.com with ESMTPSA id n15sm5219544wij.3.2014.01.29.05.02.55
-        for <linux-perf-users@vger.kernel.org>
-        (version=SSLv3 cipher=RC4-SHA bits=128/128);
-        Wed, 29 Jan 2014 05:02:56 -0800 (PST)
-In-Reply-To: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
+	Wed, 29 Jan 2014 08:47:17 -0500
+Received: by mail-la0-f52.google.com with SMTP id c6so1467222lan.39
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2014 05:47:14 -0800 (PST)
+In-Reply-To: <CALbiyZzfdSxaDnkNmG10NpxQocH+OyqU8thMv=HnqkHeF4WWGA@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Il giorno mer, 29/01/2014 alle 12.18 +0100, Jiri Olsa ha scritto:
-> On Fri, Jan 17, 2014 at 11:21:23AM +0100, Mauro Andreolini wrote:
-> > Hi all,
-> 
-> hi
-> 
-> > 
-> > No kallsyms or vmlinux with build-id
-4c6ab941f31dde04c2a481430218994849927c8d was found
-> > [ext4] with build id 4c6ab941f31dde04c2a481430218994849927c8d not
-found, continuing without symbols
-> > No kallsyms or vmlinux with build-id
-21f163b0a8a8b924efdd173b8f83ad723d378958 was found
-> > [drm] with build id 21f163b0a8a8b924efdd173b8f83ad723d378958 not
-found, continuing without symbols
-> > No kallsyms or vmlinux with build-id
-d0bd7dd69886c2dccde18dee760b6d39cc0b5a55 was found[qxl] with build id
-d0bd7dd69886c2dccde18dee760b6d39cc0b5a55 not found, continuing without
-symbols
-> > No kallsyms or vmlinux with build-id
-8d13e6f0c4d4f8b4628c8c4bd6c660b0a00576df was found[ttm] with build id
-8d13e6f0c4d4f8b4628c8c4bd6c660b0a00576df not found, continuing without
-symbols
-> 
-> hum, do you have kernel-debuginfo* packages installed?
-Hi, thanks for your time. I am using Arch Linux, which does not provide
-separate -debuginfo packages as Fedora. However, I have compiled the
-kernel with debug-info and with frame pointers. Now I am not seeing
-those messages anymore. Sorry for that noise.
+Hi all,
 
-> 
-> 
-> SNIP
-> 
-> > 
-> > Problem n.2: sometimes perf prints bogus callchains (in particular
-> > when the various printf() variants are involved).
-> > 
-> >                  |--1.46%-- 0xffffffffa048a275
-> >                  |          0xffffffffa048c110
-> >                  |          0xffffffffa04909e7
-> >                  |          |
-> >                  |          |--80.00%-- 0xffffffffa0490afa
-> >                  |          |          0xffffffffa048ee8b
-> >                  |          |          0xffffffffa048ba8f
-> >                  |          |          bit_bmove
-> >                  |          |          fbcon_redraw_blit.isra.22
-> >                  |          |          fbcon_scroll
-> >                  |          |          scrup
-> >                  |          |          lf
-> >                  |          |          do_con_trol
-> >                  |          |          do_con_write.part.18
-> >                  |          |          con_write
-> >                  |          |          do_output_char
-> >                  |          |          n_tty_write
-> >                  |          |          tty_write
-> >                  |          |          vfs_write
-> >                  |          |          sys_write
-> >                  |          |          system_call_fastpath
-> >                  |          |          __GI___libc_write
-> >                  |          |          |
-> >                  |          |          |--50.00%-- vfprintf
-> >                  |          |          |          0x0
-<---HERE
-> >                  |          |          |
-> >                  |          |          |--25.00%-- main
-> >                  |          |          |          __libc_start_main
-> >                  |          |          |          _start
-> >                  |          |          |          0x0
-<---HERE
-> >                  |          |          |
-> >                  |          |           --25.00%-- 0x7facc1df12a0
-HERE
-> 
-> this one could be caused by:
-> http://marc.info/?l=linux-kernel&m=134934717011451&w=2
-> I never managed to push this change through.. need to revisit it ;-)
-> 
-> if you want to try, I rebased the patch and put it in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   branch perf/rsp_fix1
-> 
->   commit:
+Anyone can help on this subject about low number of sample and remote
+cache samples meaning ?
+
+Thanks,
+
+Manu
+
+2014-01-23 Manuel Selva <selva.manuel@gmail.com>:
+> Hi all,
 >
-https://git.kernel.org/cgit/linux/kernel/git/jolsa/perf.git/commit/?h=perf/rsp_fix1&id=5eed39431f9b1e65e740a2e3e197c79f0a1bcf6b
-> 
-> it still fixies some of the backtraces for me
-Oh, thanks a lot. I will try this ASAP. Meanwhile, using the frame
-pointer
-for kernel, libraries and executables works like a charm.
-
-Thanks for your time.
-Mauro
+> Today I followed up my investigations on this subject.
+>
+> Concerning the first question about, remote cache samples, I am still
+> not able to understand  why i get this kind of events instead of Local
+> ram accesses. I modified my memory allocation function to use
+> numa_alloc function to be sure the memory is physically allocated
+> where I want. When the memory is allocated on the same node as the
+> thread running my program, I still have remote cache accesses and no
+> ram accesses. When it's on another node, I have remote ram accesses as
+> expected.
+>
+> Does anybody have an explanation of the exact meaning of these remote
+> cache events that could explain why I get them ?
+>
+> Regarding the the number of samples, I first checked the number of
+> memory loads generated by the sampled function (I mean here
+> statically, looking at the code generated by gcc). I then compared
+> this number with the core event: MEM_INST_RETIRED.LOADS, they are very
+> close (measured = 15001804, expected = 15001804). The difference must
+> come from the loads generated by the start/stop ioctl calls and maybe
+> other thing happening behind the scene I must miss, anyway this is
+> coherent. With a sampling period of 1000 events, I only have 455
+> samples. For period = 5000 I have 91 samples, and for period = 10000
+> 45 samples.
+>
+> So my question is what is the reason for this low number of samples ?
+>
+> 1- Some memory accesses have a threshold smaller than 3 cycles and are
+> thus not counted at all ?
+>
+> 2- Is there any relation to the time taken by  the PMI handler being
+> too large. My benchmarking code is only doing loads and no computation
+> at all ?
+>
+> 3- any other idea ?
+>
+> Manu
+>
+> PS: Because this list is called perf-users, I should maybe ask this
+> kind of question on another list. If it's the case, please let me know
+> where ? Thanks.
+>
+> 2014/1/17 Manuel Selva <selva.manuel@gmail.com>:
+>> Hi all,
+>>
+>> I wrote a benchmarking program, in order to play with perf_event_open memory
+>> sampling capabilities (as discussed earlier on this list).
+>>
+>> My benchmark is allocating a large array of memory (120 megas by default),
+>> then I am starting sampling with perf_event_open and the
+>> MEM_INST_RETIRED_LATENCY_ABOVE_THRESHOLD event (with threshold = 3, the
+>> minimal one according to Intel's doc) along with memory accesses counting
+>> (uncore event QMC_NORMAL_READ.ANY) and I access all the allocated memory
+>> either sequentially or randomly. The benchmark is mono thread, pinned to a
+>> given core, and memory is allocate don the core associated with this node
+>> using numa_alloc functions. perf_event_open is thus called to monitor only
+>> this core/numa node. The code is compiled without any optimization and I
+>> tried as possible to increase the ratio of memory accesses codes vs
+>> branching, and other stuff code.
+>>
+>> I can clearly see with the QMC_NORMAL_READ.ANY events count that my random
+>> accesses test case generate far more memory accesses than the sequential one
+>> (I guess the prefetcher and sequential access are responsible for that).
+>>
+>> Regarding the sampled event, I successfully mmap the result of perf event
+>> open and I am able to read the samples. My problem is that even for the
+>> random accesses test case on the 120 megas, I don't have any samples served
+>> by the RAM (I am using the PERF_SAMPLE_DATA_SRC field) (the sampling period
+>> is 1000 events and I only get ~700 samples). Nevertheless, in the sequential
+>> case I have 0,01% of my samples that are remote cache accesses (1 Hop) where
+>> as this percentage is ~20% in the random case.
+>>
+>> So my questions are:
+>>
+>> - What is exactly remote cache (1 hop) ? A data found in another core's
+>> private cache (L1 or L2 in my case) on the same processor ?
+>>
+>> - How can I interpret my results, I was expecting to have local memory
+>> accesses samples increasing in the random case instead of remote cache (1
+>> hop). How can I have remote cache accesses with malloced data not shared,
+>> and used by a thread pinned to a given core.
+>>
+>> - I didn't yet look at that on details, but 700~ samples for accessing 120
+>> megas with sampling every 1000 events seems small. I am going to check the
+>> assembly code generated and also count the total number of memory requests
+>> (a core event) and compare that to the 700 samples * 1000 events.
+>>
+>> Thanks in advance for any suggestions you may have in order to help
+>> understand what's happening there.
+>>
+>> --
+>> Manu
