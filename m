@@ -1,39 +1,39 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: Perf mem report Data Object
-Date: Wed, 29 Jan 2014 14:53:28 +0100
-Message-ID: <CALbiyZzdM84Cy+sodbuxPxT1jRZs4W94-N0KCjyaw3K89Edh3w@mail.gmail.com>
+From: Sujith Manoharan <sujith@msujith.org>
+Subject: Re: perf lock usage
+Date: Wed, 29 Jan 2014 19:23:57 +0530
+Message-ID: <21225.2037.467035.833797@gargle.gargle.HOWL>
+References: <21216.48020.60857.22056@gargle.gargle.HOWL>
+	<20140128093542.GD1229@krava.brq.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-lb0-f170.google.com ([209.85.217.170]:62955 "EHLO
-	mail-lb0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751086AbaA2Nxa (ORCPT
+Received: from s72.web-hosting.com ([198.187.29.21]:36385 "EHLO
+	s72.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751806AbaA2N7W (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 29 Jan 2014 08:53:30 -0500
-Received: by mail-lb0-f170.google.com with SMTP id u14so1472795lbd.15
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2014 05:53:29 -0800 (PST)
+	Wed, 29 Jan 2014 08:59:22 -0500
+In-Reply-To: <20140128093542.GD1229@krava.brq.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi all,
+Jiri Olsa wrote:
+> some of the kernel lock types do not follow the:
+>   acquire
+>   contended
+>   acuired
+>   release
+> 
+> lock state machine, like rcu or spin locks.. and thats what
+> caused most of the bad rates in my tests.
+> 
+> I was recently working on some changes for lock tracing,
+> what stats are you interested in?
 
-The perf mem report tools shows me a warning before printing results:
+I am trying to see lock usage stats for the ath9k wireless driver.
+Mainly in the transmission path, where normal spin locks
+are acquired.
 
-Failed to open /tmp/perf-8741.map, continuing without symbols
-
-Then it seems that all the memory accesses which source address (Data
-Symbol field in perf mem rep output) is located in the heap of the
-profiled process is reported as "perf-8741.map" in the Data Object
-field.
-
-I am not sure to understand what this file is, what it should contain,
-and why it's not created when my process is profiled ?
-
-Moreover, I am wondering what perf mem could report for heap data
-object in addition to the fact that the object is in the heap ?
-
-Thanks,
-
--------
-Manu
+Sujith
