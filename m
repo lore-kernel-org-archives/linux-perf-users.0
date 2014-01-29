@@ -1,44 +1,32 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Does perf record support event multiplexing?
-Date: Wed, 29 Jan 2014 15:49:55 +0900
-Message-ID: <878utz5lkc.fsf@sejong.aot.lge.com>
-References: <CAOJauOAJbbjP6kR_op4bzncDajjOZvN0YWf9+scYjpHrJeLTOg@mail.gmail.com>
-	<874n4v1es6.fsf@tassilo.jf.intel.com>
-	<CAOJauODyEsYJs3+BGeqiOgTYbiE4UU8ZUjP9DZ2Hmes-JSun=w@mail.gmail.com>
+Subject: Re: perf not working for some commands?
+Date: Wed, 29 Jan 2014 15:55:23 +0900
+Message-ID: <874n4n5lb8.fsf@sejong.aot.lge.com>
+References: <CACTzACVZLm00yVZag5Hf-c_u0tdH+cQT0=8B_XS8BrN5cT2mDA@mail.gmail.com>
+	<20140128092203.GC1229@krava.brq.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lgeamrelo01.lge.com ([156.147.1.125]:54818 "EHLO
-	LGEAMRELO01.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750851AbaA2Gt5 (ORCPT
+Received: from LGEMRELSE1Q.lge.com ([156.147.1.111]:50884 "EHLO
+	LGEMRELSE1Q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750950AbaA2GzZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 29 Jan 2014 01:49:57 -0500
-In-Reply-To: <CAOJauODyEsYJs3+BGeqiOgTYbiE4UU8ZUjP9DZ2Hmes-JSun=w@mail.gmail.com>
-	(AmirReza Ghods's message of "Mon, 27 Jan 2014 16:14:21 -0500")
+	Wed, 29 Jan 2014 01:55:25 -0500
+In-Reply-To: <20140128092203.GC1229@krava.brq.redhat.com> (Jiri Olsa's message
+	of "Tue, 28 Jan 2014 10:22:03 +0100")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: AmirReza Ghods <ar.ghods@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: David Li <android.wm.edu@gmail.com>, linux-perf-users@vger.kernel.org
 
-Hi AmirReza,
+Hi Jiri,
 
-On Mon, 27 Jan 2014 16:14:21 -0500, AmirReza Ghods wrote:
-> Thank you for your response, but that doesn't really answer my
-> question. I wanted to know why scaling of the event counts is
-> implemented in "perf stat" but NOT implemented in "perf record".
+On Tue, 28 Jan 2014 10:22:03 +0100, Jiri Olsa wrote:
+> [jolsa@krava perf]$ strace -fo out ./perf stat krava
+> Workload failed: No such file or directory
+> [jolsa@krava perf]$ cat out | grep exec
 
-I think the reason is "perf record" lacks enabled/running time
-information in the samples.
-
->
-> As for caring about the exact sample count of perf report, I don't think
-> the relative usefulness of the values is a good reason to leave users
-> with some verifiably false results, and expect them to figure out why
-> they got them. I know some users, including myself, will be confused to
-> measure event counts differing (sometimes 300% in my experience) from
-> what they might expect.
-
-You might want to use "perf stat --no-scale" then. ;-)
+You can also use "strace -f -e execve ./perf stat krava" :)
 
 Thanks,
 Namhyung
