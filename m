@@ -1,83 +1,44 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: perf lock usage
-Date: Tue, 28 Jan 2014 10:35:42 +0100
-Message-ID: <20140128093542.GD1229@krava.brq.redhat.com>
-References: <21216.48020.60857.22056@gargle.gargle.HOWL>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Does perf record support event multiplexing?
+Date: Wed, 29 Jan 2014 15:49:55 +0900
+Message-ID: <878utz5lkc.fsf@sejong.aot.lge.com>
+References: <CAOJauOAJbbjP6kR_op4bzncDajjOZvN0YWf9+scYjpHrJeLTOg@mail.gmail.com>
+	<874n4v1es6.fsf@tassilo.jf.intel.com>
+	<CAOJauODyEsYJs3+BGeqiOgTYbiE4UU8ZUjP9DZ2Hmes-JSun=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:23918 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754917AbaA1Jfv (ORCPT
+Received: from lgeamrelo01.lge.com ([156.147.1.125]:54818 "EHLO
+	LGEAMRELO01.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750851AbaA2Gt5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 28 Jan 2014 04:35:51 -0500
-Content-Disposition: inline
-In-Reply-To: <21216.48020.60857.22056@gargle.gargle.HOWL>
+	Wed, 29 Jan 2014 01:49:57 -0500
+In-Reply-To: <CAOJauODyEsYJs3+BGeqiOgTYbiE4UU8ZUjP9DZ2Hmes-JSun=w@mail.gmail.com>
+	(AmirReza Ghods's message of "Mon, 27 Jan 2014 16:14:21 -0500")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Sujith Manoharan <sujith@msujith.org>
-Cc: linux-perf-users@vger.kernel.org
+To: AmirReza Ghods <ar.ghods@gmail.com>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 12:19:56PM +0530, Sujith Manoharan wrote:
-> Hi,
-> 
-> I am trying to use perf lock and am not sure if
-> the results are correct (the bad rate is 98 %).
-> 
-> Is this expected behavior ?
+Hi AmirReza,
 
-some of the kernel lock types do not follow the:
-  acquire
-  contended
-  acuired
-  release
+On Mon, 27 Jan 2014 16:14:21 -0500, AmirReza Ghods wrote:
+> Thank you for your response, but that doesn't really answer my
+> question. I wanted to know why scaling of the event counts is
+> implemented in "perf stat" but NOT implemented in "perf record".
 
-lock state machine, like rcu or spin locks.. and thats what
-caused most of the bad rates in my tests.
+I think the reason is "perf record" lacks enabled/running time
+information in the samples.
 
-I was recently working on some changes for lock tracing,
-what stats are you interested in?
+>
+> As for caring about the exact sample count of perf report, I don't think
+> the relative usefulness of the values is a good reason to leave users
+> with some verifiably false results, and expect them to figure out why
+> they got them. I know some users, including myself, will be confused to
+> measure event counts differing (sometimes 300% in my experience) from
+> what they might expect.
 
-jirka
+You might want to use "perf stat --no-scale" then. ;-)
 
-> 
-> root@linux-test ~# perf --version
-> perf version 3.12.0
-> 
-> root@linux-test ~# perf lock record cat /etc/issue
-> Arch Linux \r (\l)
-> 
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.356 MB perf.data (~15533 samples) ]
-> root@linux-test ~# perf lock report
->                 Name   acquired  contended total wait (ns)   max wait (ns)   min wait (ns)
-> 
->         &cpuctx_lock          0          0               0               0               0
->  &sig->cred_guard...          0          0               0               0               0
-> 
-> === output for debug===
-> 
-> bad: 153, total: 155
-> bad rate: 98.709677 %
-> histogram of events caused bad sequence
->     acquire: 1
->    acquired: 0
->   contended: 0
->     release: 152
-> 
-> I am using the wireless-testing kernel:
-> root@linux-test ~# uname -a
-> Linux linux-test 3.13.0-wl-debug #197 SMP PREEMPT Tue Jan 21 03:19:43 IST 2014 x86_64 GNU/Linux
-> 
-> lockdep is enabled:
-> root@linux-test ~# zgrep -i lockdep /proc/config.gz
-> CONFIG_LOCKDEP_SUPPORT=y
-> CONFIG_LOCKDEP=y
-> # CONFIG_DEBUG_LOCKDEP is not set
-> 
-> 
-> Sujith
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Namhyung
