@@ -1,114 +1,145 @@
-From: Mauro Andreolini <mauro.andreolini@gmail.com>
-Subject: Re: Two questions on perf dwarf callchains
-Date: Mon, 03 Feb 2014 15:30:56 +0100
-Message-ID: <1391437856.1135.8.camel@nb-andreolini.mat.unimo.it>
-References: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
-	 <20140129111844.GA1869@krava.brq.redhat.com>
-	 <1391008146.1316.8.camel@nb-andreolini.mat.unimo.it>
-	 <20140130114751.GB1161@krava.brq.redhat.com>
-	 <1391092999.1111.3.camel@nb-andreolini.mat.unimo.it>
-	 <20140130154047.GB1827@krava.brq.redhat.com>
-Reply-To: mauro.andreolini@gmail.com
+From: Manuel Selva <selva.manuel@gmail.com>
+Subject: Re: Remote Cache Accesses (1 Hop)
+Date: Mon, 03 Feb 2014 19:29:05 +0100
+Message-ID: <52EFDFF1.9080006@gmail.com>
+References: <52D92EF9.8000903@gmail.com>	<CALbiyZzfdSxaDnkNmG10NpxQocH+OyqU8thMv=HnqkHeF4WWGA@mail.gmail.com> <CALbiyZwrVtggjQxapjTP_7rzFGs7iwX5_jrhK9WffGmPwXK+gQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ee0-f51.google.com ([74.125.83.51]:42735 "EHLO
-	mail-ee0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751294AbaBCObB (ORCPT
+Received: from mail-we0-f180.google.com ([74.125.82.180]:47717 "EHLO
+	mail-we0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751999AbaBCS3T (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 3 Feb 2014 09:31:01 -0500
-Received: by mail-ee0-f51.google.com with SMTP id b57so3692904eek.38
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2014 06:31:00 -0800 (PST)
-In-Reply-To: <20140130154047.GB1827@krava.brq.redhat.com>
+	Mon, 3 Feb 2014 13:29:19 -0500
+Received: by mail-we0-f180.google.com with SMTP id u57so2739582wes.25
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2014 10:29:18 -0800 (PST)
+In-Reply-To: <CALbiyZwrVtggjQxapjTP_7rzFGs7iwX5_jrhK9WffGmPwXK+gQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: Manuel Selva <selva.manuel@gmail.com>
 
-> I use elfutils git tree ;-)
-> git://git.fedorahosted.org/git/elfutils.git
-Installed fine.
+Hi,
 
-> and the latest patchset (recently rebased) is in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/core_libdw_unwind
-Pulled the repo, switched branch to core_libdw_unwind, recompiled
-the kernel and rebooted fine. When I try to compile perf
-(make tools/perf NO_LIBUNWIND=3D1 PYTHON=3D/usr/bin/python2) I get this
-error message, though:
+I just read information about Intel MESIF cache coherency protocol, and 
+I learned that the protocol tries as possible to satisfy memory requests 
+from remote caches before using memory for performances purpose.
 
-    CHK -fstack-protector-all
-    CHK -Wstack-protector
-    CHK -Wvolatile-register-var
-    CHK bionic
-    CHK libelf
-    CHK libdw
-    CHK -DLIBELF_MMAP
-    CHK libaudit
-    CHK libnewt
-    CHK gtk2
-    CHK -DHAVE_GTK_INFO_BAR
-    CHK perl
-    CHK python
-    CHK python version
-    CHK libbfd
-    CHK liberty
-    CHK libz
-    CHK demangle
-    CHK -DHAVE_STRLCPY
-    CHK -DHAVE_ON_EXIT
-    CHK -DBACKTRACE_SUPPORT
-    CHK libnuma
-    * new build flags or prefix
-PERF_VERSION =3D 3.9.rc2.g7c6baa
-=2E..
-[SNIP make output]
-=2E..
-In file included from util/scripting-engines/trace-event-perl.c:30:0:
-/usr/lib/perl5/core_perl/CORE/perl.h:548:5: error:
-"SILENT_NO_TAINT_SUPPORT" is not defined [-Werror=3Dundef]
- #if SILENT_NO_TAINT_SUPPORT && !defined(NO_TAINT_SUPPORT)
-     ^
-/usr/lib/perl5/core_perl/CORE/perl.h:556:5: error: "NO_TAINT_SUPPORT" i=
-s
-not defined [-Werror=3Dundef]
- #if NO_TAINT_SUPPORT
-     ^
-In file included from /usr/lib/perl5/core_perl/CORE/perl.h:3471:0,
-                 from util/scripting-engines/trace-event-perl.c:30:
-/usr/lib/perl5/core_perl/CORE/sv.h:1455:5: error: "NO_TAINT_SUPPORT" is
-not defined [-Werror=3Dundef]
- #if NO_TAINT_SUPPORT
-     ^
-In file included from /usr/lib/perl5/core_perl/CORE/perl.h:3472:0,
-                 from util/scripting-engines/trace-event-perl.c:30:
-/usr/lib/perl5/core_perl/CORE/regexp.h:436:5: error: "NO_TAINT_SUPPORT"
-is not defined [-Werror=3Dundef]
- #if NO_TAINT_SUPPORT
-     ^
-In file included from /usr/lib/perl5/core_perl/CORE/hv.h:593:0,
-                 from /usr/lib/perl5/core_perl/CORE/perl.h:3480,
-                 from util/scripting-engines/trace-event-perl.c:30:
-/usr/lib/perl5/core_perl/CORE/hv_func.h: In function
-=E2=80=98S_perl_hash_siphash_2_4=E2=80=99:
-/usr/lib/perl5/core_perl/CORE/hv_func.h:222:3: error: switch missing
-default case [-Werror=3Dswitch-default]
-   switch( left )
-   ^
-/usr/lib/perl5/core_perl/CORE/hv_func.h: In function
-=E2=80=98S_perl_hash_superfast=E2=80=99:
-/usr/lib/perl5/core_perl/CORE/hv_func.h:274:5: error: switch missing
-default case [-Werror=3Dswitch-default]
-     switch (rem) { \
-     ^
-/usr/lib/perl5/core_perl/CORE/hv_func.h: In function
-=E2=80=98S_perl_hash_murmur3=E2=80=99:
-/usr/lib/perl5/core_perl/CORE/hv_func.h:398:5: error: switch missing
-default case [-Werror=3Dswitch-default]
-     switch(bytes_in_carry) { /* how many bytes in carry */
-     ^
-cc1: all warnings being treated as errors
-make: *** [util/scripting-engines/trace-event-perl.o] Errore 1
+As a consequence I am wondering if the hardware may be able to identify 
+that my second (remote) L3 cache is not used and thus use it for 
+performances purpose even if it's on another Node than the memory I am 
+using. This could explain why I am getting remote caches samples while 
+sampling a mono thread application using only local memory (allocated 
+with numa_alloc_on_node()).
 
-Mauro
+Is this hypothesis possible ?
+
+----
+Manu
+
+On 01/29/2014 02:47 PM, Manuel Selva wrote:
+> Hi all,
+>
+> Anyone can help on this subject about low number of sample and remote
+> cache samples meaning ?
+>
+> Thanks,
+>
+> Manu
+>
+> 2014-01-23 Manuel Selva <selva.manuel@gmail.com>:
+>> Hi all,
+>>
+>> Today I followed up my investigations on this subject.
+>>
+>> Concerning the first question about, remote cache samples, I am still
+>> not able to understand  why i get this kind of events instead of Local
+>> ram accesses. I modified my memory allocation function to use
+>> numa_alloc function to be sure the memory is physically allocated
+>> where I want. When the memory is allocated on the same node as the
+>> thread running my program, I still have remote cache accesses and no
+>> ram accesses. When it's on another node, I have remote ram accesses as
+>> expected.
+>>
+>> Does anybody have an explanation of the exact meaning of these remote
+>> cache events that could explain why I get them ?
+>>
+>> Regarding the the number of samples, I first checked the number of
+>> memory loads generated by the sampled function (I mean here
+>> statically, looking at the code generated by gcc). I then compared
+>> this number with the core event: MEM_INST_RETIRED.LOADS, they are very
+>> close (measured = 15001804, expected = 15001804). The difference must
+>> come from the loads generated by the start/stop ioctl calls and maybe
+>> other thing happening behind the scene I must miss, anyway this is
+>> coherent. With a sampling period of 1000 events, I only have 455
+>> samples. For period = 5000 I have 91 samples, and for period = 10000
+>> 45 samples.
+>>
+>> So my question is what is the reason for this low number of samples ?
+>>
+>> 1- Some memory accesses have a threshold smaller than 3 cycles and are
+>> thus not counted at all ?
+>>
+>> 2- Is there any relation to the time taken by  the PMI handler being
+>> too large. My benchmarking code is only doing loads and no computation
+>> at all ?
+>>
+>> 3- any other idea ?
+>>
+>> Manu
+>>
+>> PS: Because this list is called perf-users, I should maybe ask this
+>> kind of question on another list. If it's the case, please let me know
+>> where ? Thanks.
+>>
+>> 2014/1/17 Manuel Selva <selva.manuel@gmail.com>:
+>>> Hi all,
+>>>
+>>> I wrote a benchmarking program, in order to play with perf_event_open memory
+>>> sampling capabilities (as discussed earlier on this list).
+>>>
+>>> My benchmark is allocating a large array of memory (120 megas by default),
+>>> then I am starting sampling with perf_event_open and the
+>>> MEM_INST_RETIRED_LATENCY_ABOVE_THRESHOLD event (with threshold = 3, the
+>>> minimal one according to Intel's doc) along with memory accesses counting
+>>> (uncore event QMC_NORMAL_READ.ANY) and I access all the allocated memory
+>>> either sequentially or randomly. The benchmark is mono thread, pinned to a
+>>> given core, and memory is allocate don the core associated with this node
+>>> using numa_alloc functions. perf_event_open is thus called to monitor only
+>>> this core/numa node. The code is compiled without any optimization and I
+>>> tried as possible to increase the ratio of memory accesses codes vs
+>>> branching, and other stuff code.
+>>>
+>>> I can clearly see with the QMC_NORMAL_READ.ANY events count that my random
+>>> accesses test case generate far more memory accesses than the sequential one
+>>> (I guess the prefetcher and sequential access are responsible for that).
+>>>
+>>> Regarding the sampled event, I successfully mmap the result of perf event
+>>> open and I am able to read the samples. My problem is that even for the
+>>> random accesses test case on the 120 megas, I don't have any samples served
+>>> by the RAM (I am using the PERF_SAMPLE_DATA_SRC field) (the sampling period
+>>> is 1000 events and I only get ~700 samples). Nevertheless, in the sequential
+>>> case I have 0,01% of my samples that are remote cache accesses (1 Hop) where
+>>> as this percentage is ~20% in the random case.
+>>>
+>>> So my questions are:
+>>>
+>>> - What is exactly remote cache (1 hop) ? A data found in another core's
+>>> private cache (L1 or L2 in my case) on the same processor ?
+>>>
+>>> - How can I interpret my results, I was expecting to have local memory
+>>> accesses samples increasing in the random case instead of remote cache (1
+>>> hop). How can I have remote cache accesses with malloced data not shared,
+>>> and used by a thread pinned to a given core.
+>>>
+>>> - I didn't yet look at that on details, but 700~ samples for accessing 120
+>>> megas with sampling every 1000 events seems small. I am going to check the
+>>> assembly code generated and also count the total number of memory requests
+>>> (a core event) and compare that to the 700 samples * 1000 events.
+>>>
+>>> Thanks in advance for any suggestions you may have in order to help
+>>> understand what's happening there.
+>>>
+>>> --
+>>> Manu
