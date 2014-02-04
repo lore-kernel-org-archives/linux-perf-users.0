@@ -1,55 +1,65 @@
-From: Manuel Selva <selva.manuel@gmail.com>
-Subject: Re: Perf mem report Data Object
-Date: Mon, 03 Feb 2014 19:32:37 +0100
-Message-ID: <52EFE0C5.1030805@gmail.com>
-References: <CALbiyZzdM84Cy+sodbuxPxT1jRZs4W94-N0KCjyaw3K89Edh3w@mail.gmail.com>
+From: Mauro Andreolini <mauro.andreolini@unimore.it>
+Subject: Re: Two questions on perf dwarf callchains
+Date: Tue, 04 Feb 2014 16:28:59 +0100
+Message-ID: <1391527739.1174.16.camel@nb-andreolini.mat.unimo.it>
+References: <1389954083.1125.23.camel@nb-andreolini.mat.unimo.it>
+	 <20140129111844.GA1869@krava.brq.redhat.com>
+	 <1391008146.1316.8.camel@nb-andreolini.mat.unimo.it>
+	 <20140130114751.GB1161@krava.brq.redhat.com>
+	 <1391092999.1111.3.camel@nb-andreolini.mat.unimo.it>
+	 <20140130154047.GB1827@krava.brq.redhat.com>
+	 <1391437856.1135.8.camel@nb-andreolini.mat.unimo.it>
+Reply-To: mauro.andreolini@unimore.it
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-we0-f170.google.com ([74.125.82.170]:46727 "EHLO
-	mail-we0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751999AbaBCSck (ORCPT
+Received: from smtp7.sms.unimo.it ([155.185.44.150]:54445 "EHLO
+	smtp7.sms.unimo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753487AbaBDP3E (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 3 Feb 2014 13:32:40 -0500
-Received: by mail-we0-f170.google.com with SMTP id w62so2832868wes.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2014 10:32:39 -0800 (PST)
-Received: from [192.168.0.10] (mut38-6-88-167-68-98.fbx.proxad.net. [88.167.68.98])
-        by mx.google.com with ESMTPSA id q15sm45982471wjw.18.2014.02.03.10.32.38
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-        Mon, 03 Feb 2014 10:32:38 -0800 (PST)
-In-Reply-To: <CALbiyZzdM84Cy+sodbuxPxT1jRZs4W94-N0KCjyaw3K89Edh3w@mail.gmail.com>
+	Tue, 4 Feb 2014 10:29:04 -0500
+In-Reply-To: <1391437856.1135.8.camel@nb-andreolini.mat.unimo.it>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi,
+> /usr/lib/perl5/core_perl/CORE/hv_func.h:398:5: error: switch missing
+> default case [-Werror=switch-default]
+>      switch(bytes_in_carry) { /* how many bytes in carry */
+>      ^
+> cc1: all warnings being treated as errors
+> make: *** [util/scripting-engines/trace-event-perl.o] Errore 1
+I solved this one by applying this:
+https://lkml.org/lkml/2013/7/23/60
 
-Anyone else is having the same error (warning) message ?
+Wow! Unwinding is noticeably faster than libunwind! The trace is almost
+perfect. I think I found only one unresolved symbol (it's always the
+same one, maybe I screwed up the compilation):
 
-Manu
+     0.01%       ls  [kernel.kallsyms]  [k] do_raw_read_unlock
+                 |
+                 --- do_raw_read_unlock
+                     _raw_read_unlock
+                     0xffffffffa0154479 <--- HERE
+                     jbd2__journal_start
+                     __ext4_journal_start_sb
+                     ext4_dirty_inode
+                     __mark_inode_dirty
+                     update_time
+                     touch_atime
+                     sys_readlinkat
+                     sys_readlink
+                     system_call
+                     __GI___readlink
+                     get_link_name
+                     gobble_file
+                     print_dir
+                     main
+                     __libc_start_main
+                     _start
 
-On 01/29/2014 02:53 PM, Manuel Selva wrote:
-> Hi all,
->
-> The perf mem report tools shows me a warning before printing results:
->
-> Failed to open /tmp/perf-8741.map, continuing without symbols
->
-> Then it seems that all the memory accesses which source address (Data
-> Symbol field in perf mem rep output) is located in the heap of the
-> profiled process is reported as "perf-8741.map" in the Data Object
-> field.
->
-> I am not sure to understand what this file is, what it should contain,
-> and why it's not created when my process is profiled ?
->
-> Moreover, I am wondering what perf mem could report for heap data
-> object in addition to the fact that the object is in the heap ?
->
-> Thanks,
->
-> -------
-> Manu
->
+Is this going into mainline soon?
+
+Mauro
