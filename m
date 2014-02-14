@@ -1,79 +1,52 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Latency = weigth in perf mem record/report?
-Date: Thu, 13 Feb 2014 18:08:43 +0100
-Message-ID: <52FCFC1B.1000703@bsc.es>
+From: "Dr.William Davies" <purchase@veltechuniv.edu.in>
+Subject: Re: Instructions to release your payment.
+Date: Fri, 14 Feb 2014 18:06:49 +0530
+Message-ID: <05850bfa675129882bc42edd957194c7__20904.5597505339$1392389458$gmane$org@127.0.0.1>
+Reply-To: williamdavies54@yahoo.co.uk
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:42070 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751968AbaBMRIr (ORCPT
+Received: from webmail.veltechuniv.edu.in ([202.71.145.3]:57988 "EHLO
+	server.veltechuniv.edu.in" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751065AbaBNOul (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 13 Feb 2014 12:08:47 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by opsmail01.bsc.es (Postfix) with ESMTP id 88957C328E
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2014 18:08:44 +0100 (CET)
-Received: from opsmail01.bsc.es ([127.0.0.1])
- by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 15871-10 for <linux-perf-users@vger.kernel.org>;
- Thu, 13 Feb 2014 18:08:43 +0100 (CET)
-Received: from opswc01.bsc.es (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPS id E24FDC0B36
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2014 18:08:43 +0100 (CET)
-Received: (from filter@localhost)
-	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id s1DH8hYB026143
-	for linux-perf-users@vger.kernel.org; Thu, 13 Feb 2014 18:08:43 +0100
-Received: from [84.88.50.148] (bsccs203.int.bsc.es [84.88.50.148])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPSA id C1487D5210
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2014 18:08:43 +0100 (CET)
+	Fri, 14 Feb 2014 09:50:41 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
 
-Dear list,
+Attention
 
-   table 18-18 from the Vol 3b part 2 of the Intel=AE 64 and IA-32=20
-Architectures  Software Developer=92s Manual (labeled as Table 18-18. P=
-EBS=20
-Record Format for Intel Core i7 Processor Family ) [1] indicates that=20
-the PEBS samples report the latency value (in core cycles) for that=20
-particular load/store that emitted the sample at the address 0xa8 from=20
-the begin of the PEBS sample address.
+Sir,
 
-   I've seen that there is a weight field in the output of the perf=20
-report -D associated to the PERF_RECORD_SAMPLE. Looking at the kernel=20
-code I found in file arch/x86/kernel/cpu/perf_event_intel_ds.c the=20
-following code which seems to be storing the info I want
+Following an application brought, seeking the release of your due payment
+through British bank, I am directed to inform you that the application has
+been approved and Natwest bank of London has been mandated to make transfer
+of your payment to the bank account you will nominate. Please kindly reply
+for immediate release of your US$6.2 Million to you nominates account.
 
-  819         /*
-  820          * Use latency for weight (only avail with PEBS-LL)
-  821          */
-  822         if (fll && (sample_type & PERF_SAMPLE_WEIGHT))
-  823             data.weight =3D pebs->lat;
+Sir, for the avoidance of doubts, reconfirm the following information to
+me to enable us forward same to Natwest bank to contact you for your
+payment.
 
-   and then in tools/perf/builtin-mem.c the routine dump_raw_samples=20
-seems to dump this info. Am I right? Can anyone kindly confirm this?
+Name:
 
-Thank you very much.
+Address:
 
-[1]=20
-http://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-=
-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf
+Tel/Fax No.:
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+Nationality:
 
-http://www.bsc.es/disclaimer
+Occupation:
+
+Date of birth: 
+
+As soon as I received the above information, I will forward them to
+Natwest bank to contact you for your approved payment. Please see in the
+attachment, letter I wrote to Natwest bank informing them of the
+transaction
+
+Yours faithfully
+
+Dr.William Davies
+Chairman,British Banking Regulatory Board.
