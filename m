@@ -1,52 +1,58 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: Latency = weigth in perf mem record/report?
-Date: Mon, 17 Feb 2014 17:02:30 +0100
-Message-ID: <20140217160230.GD3113@krava.brq.redhat.com>
-References: <52FCFC1B.1000703@bsc.es>
+From: Martin Ichilevici de Oliveira <martin.i.oliveira@gmail.com>
+Subject: Event not supported
+Date: Tue, 18 Feb 2014 13:51:46 -0300
+Message-ID: <CAOanW0NszteQapi6MzaUhkPpYA6yAe+bTc8Vkz033MDA3ynd_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42106 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751976AbaBQQCi (ORCPT
+Received: from mail-ie0-f178.google.com ([209.85.223.178]:38653 "EHLO
+	mail-ie0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756218AbaBRQw1 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 17 Feb 2014 11:02:38 -0500
-Content-Disposition: inline
-In-Reply-To: <52FCFC1B.1000703@bsc.es>
+	Tue, 18 Feb 2014 11:52:27 -0500
+Received: by mail-ie0-f178.google.com with SMTP id ar20so3006514iec.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2014 08:52:26 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Harald Servat <harald.servat@bsc.es>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 06:08:43PM +0100, Harald Servat wrote:
-> Dear list,
->=20
->   table 18-18 from the Vol 3b part 2 of the Intel=C2=AE 64 and IA-32
-> Architectures  Software Developer=E2=80=99s Manual (labeled as Table =
-18-18.
-> PEBS Record Format for Intel Core i7 Processor Family ) [1]
-> indicates that the PEBS samples report the latency value (in core
-> cycles) for that particular load/store that emitted the sample at
-> the address 0xa8 from the begin of the PEBS sample address.
->=20
->   I've seen that there is a weight field in the output of the perf
-> report -D associated to the PERF_RECORD_SAMPLE. Looking at the
-> kernel code I found in file
-> arch/x86/kernel/cpu/perf_event_intel_ds.c the following code which
-> seems to be storing the info I want
->=20
->  819         /*
->  820          * Use latency for weight (only avail with PEBS-LL)
->  821          */
->  822         if (fll && (sample_type & PERF_SAMPLE_WEIGHT))
->  823             data.weight =3D pebs->lat;
->=20
->   and then in tools/perf/builtin-mem.c the routine dump_raw_samples
-> seems to dump this info. Am I right? Can anyone kindly confirm this?
+Hello,
 
-Right, PEBS latency info is stored in sample's WEIGHT (for mem-loads an=
-d
-mem-stores events), and it's sample->weight on the perf tool side.
+I'm still learning perf, so I apologize in advance if my questions are
+too simple and not suited here. I did, however, searched the web and
+tried to find a solution by myself before posting to this mailing
+list.
 
-jirka
+From my manufacturer's manual, I chose an event I'm interested in
+monitoring. They also list unit masks, as below:
+
+UnitMask    Description
+7                  From Local node to Node 7
+6                  From Local node to Node 6
+5                  From Local node to Node 5
+4                  From Local node to Node 4
+3                  From Local node to Node 3
+2                  From Local node to Node 2
+1                  From Local node to Node 1
+0                  From Local node to Node 0
+
+The event is "CPU to DRAM Requests to Target Node" (NUMA machine) and
+it's number is 0x1E0. As I understood, I should precede the event with
+the unit mask. So, for example, if I'm interested in unit mask 2, I
+should type:
+
+perf stat -e r21e0 /bin/ls
+
+However, this results in a <not supported> message. This happened for
+all events that have a unit mask that I tried. Other events worked
+fine.
+
+I'm not sure whether I'm giving the right command or this is a problem
+with perf/kernel version. As it turned out, I'm running Ubuntu with
+kernel 3.11.10-03111002, but the latest available perf version from
+the repositories is 3.8.0-35, which is the one I'm using.
+
+Any help is appreciated.
+
+Thank you,
+Martin
