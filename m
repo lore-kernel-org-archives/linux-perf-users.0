@@ -1,65 +1,32 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Re: perf pebs sampling through stores + period is wrong?
-Date: Fri, 21 Feb 2014 10:45:44 +0100
-Message-ID: <53072048.5090405@bsc.es>
-References: <5305E9AF.3050906@bsc.es> <87eh2xcw4h.fsf@tassilo.jf.intel.com>
+From: Junjie Qian <junjie.qian@yahoo.com>
+Subject: Profile the waiting time for lock or lock stats for one application
+Date: Tue, 25 Feb 2014 10:13:11 -0800 (PST)
+Message-ID: <1393351991.27573.YahooMailNeo@web124901.mail.ne1.yahoo.com>
+Reply-To: Junjie Qian <junjie.qian@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:35875 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754533AbaBUJpt (ORCPT
+Received: from nm7-vm4.bullet.mail.ne1.yahoo.com ([98.138.91.167]:36747 "EHLO
+	nm7-vm4.bullet.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753193AbaBYSNM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 21 Feb 2014 04:45:49 -0500
-In-Reply-To: <87eh2xcw4h.fsf@tassilo.jf.intel.com>
+	Tue, 25 Feb 2014 13:13:12 -0500
+References: 
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On 20/02/14 22:27, Andi Kleen wrote:
-> Harald Servat <harald.servat@bsc.es> writes:
->>
->>    $ perf mem -t store record -c 10000 ./a.out
->>    ...
->>    [perf record: Woken up 4 times to write data]
->>    [perf record: Captured and wrote 0.921 MB perf.data (~40247 samples)]
->>
->>    Notice that the number of samples raised by 20x, which to me seems
->> very odd because the number of stores was half, so I expected 0.5x
->> here. Or am I supposing this the wrong way?
->
-> Likely you're throttling. 10k is a far too low period for such
-> measurements
->
-> (The cpu can do multiple stores per cycle and it runs at multiple
-> Ghz. Each PMI takes many thousands of cycles. You can do the math.)
->
-> -Andi
->
+Dear all,
 
-Dear Andi,
+I am working on one project, which tries to profile the lock stats for one application, such as total waiting time for locks or how many locks happens during the execution.
 
-   but then why the loads aren't throttling? There are far more loads in 
-the app than stores (as seen in the perf stat results), but the loads do 
-not throttle while store do? Of course, apps face different performance 
-rate as apps run and there may be situations where the number of 
-loads/second is either larger or smaller than stores/second, but still 
-it is a bit confusing why so much difference between loads & stores. I 
-would expect also the loads to throttle, then.
+I did some research, which shows "perf lock" may help to report such information, but I am getting the error showing as "tracepoint lock:lock_acquire is not enabled. Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled?". Does this mean, I need to recompile the kernel to have this option?
+Could anyone give me some link for this?
 
-Regards.
+I also got this link "http://article.gmane.org/gmane.linux.kernel.perf.user/770/match=perf+lock", talking about profile the sleep times, but I cannot find how to use this.
 
+Any help would be great appreciated.
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
-
-http://www.bsc.es/disclaimer
+Thanks!
+Best
+Junjie
