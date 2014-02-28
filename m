@@ -1,78 +1,144 @@
-From: Martin Ichilevici de Oliveira <martin.i.oliveira@gmail.com>
-Subject: Re: Event not supported
-Date: Fri, 28 Feb 2014 06:35:35 -0300
-Message-ID: <CAOanW0NSAPa1opj-e=qQx=XNbTE-PERqUzyXtytCyNpyLMOECg@mail.gmail.com>
-References: <CAOanW0NszteQapi6MzaUhkPpYA6yAe+bTc8Vkz033MDA3ynd_w@mail.gmail.com>
- <5303A4CF.3060200@gmail.com> <CAOanW0OsZXZU7Os=VrxA=s7SwRo+gK0qtpNjbX7E84fgL0swxg@mail.gmail.com>
- <5303B986.2070801@gmail.com> <CAOanW0OiK8QTgLxajx=pEaW4XWD94hnNUOf=-e=Y1ch2LA9j3A@mail.gmail.com>
- <alpine.DEB.2.10.1402190754540.21724@vincent-weaver-1.um.maine.edu>
- <CAOanW0OzQnpt+cr6m8VFYj1CGPQoyecEQidt_5wZzxG4CAj_Gw@mail.gmail.com> <alpine.DEB.2.10.1402261634260.1178@vincent-weaver-1.um.maine.edu>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: Re: unable to get load latency info
+Date: Fri, 28 Feb 2014 11:43:25 +0100
+Message-ID: <5310684D.7000001@bsc.es>
+References: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ie0-f176.google.com ([209.85.223.176]:42646 "EHLO
-	mail-ie0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750750AbaB1JgP (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:57908 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751407AbaB1Kn3 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Feb 2014 04:36:15 -0500
-Received: by mail-ie0-f176.google.com with SMTP id rd18so1250141iec.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2014 01:36:15 -0800 (PST)
-In-Reply-To: <alpine.DEB.2.10.1402261634260.1178@vincent-weaver-1.um.maine.edu>
+	Fri, 28 Feb 2014 05:43:29 -0500
+In-Reply-To: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: linux-perf-users@vger.kernel.org
+To: Muthusamy <muthu9283@yahoo.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On Wed, Feb 26, 2014 at 6:38 PM, Vince Weaver <vincent.weaver@maine.edu> wrote:
-> On Wed, 26 Feb 2014, Martin Ichilevici de Oliveira wrote:
+
+On 28/02/14 07:24, Muthusamy wrote:
+> Hi,
 >
->> as I could understand, any tool that I use to profile AMD fam15h
->> northbridge events will depend on Linux 3.9 or newer, am I right? If
->> that's the case, would you say that currently Linux 3.9 is the
->> best/easiest way to go?
+> I am trying to get the memory load latency info using perf, but I am always getting 0.
+> Can you please help me in understanding what I am missing. Below are the details
 >
-> It depends where your kernel comes from.
-
-I got it from the Ubuntu kernel ppa.
-
-> If you're using a stock Linux kernel compiled yourself, then yes you
-> probably need at least 3.9 for it to work.
+> [root@rafa tmp]# ./perf --version
+> perf version 3.12.11
+> [root@rafa tmp]# ./perf stat -e r100b pwd  ### (I have tried with other data intensive programs too)
+> /tmp/cms/tmp
 >
-> Sometimes if you're using a vendor supplied kernel they backport support
-> for features, so it is not always clear what support there is in a kernel.
+>   Performance counter stats for 'pwd':
 >
-> Linux 3.9 and Linux 3.10 have very different amd15h northbridge support.
-> If you're looking for long-term usability of your project/tool/research
-> you probably want to jump straight to 3.10 so you don't have to make
-> everything work on 3.9 and then change it all again when you move to newer
-> kernels.
+>                   0 r100b
 >
-> Vince
+>         0.000846849 seconds time elapsed
+>
+> [root@rafa tmp]# uname -a
+> Linux rafa 2.6.32-431.el6.x86_64 #1 SMP Sun Nov 10 22:19:54 EST 2013 x86_64 x86_64 x86_64 GNU/Linux
+>
+> [root@rafa tmp]# cat /proc/cpuinfo
+> processor: 0
+> vendor_id: GenuineIntel
+> cpu family: 6
+> model: 26
+> model name: Intel(R) Xeon(R) CPU           X5550  @ 2.67GHz
+> stepping
+> : 5
+> cpu MHz: 1600.000
+> cache size: 8192 KB
+> physical id: 0
+> siblings: 1
+> core id: 0
+> cpu cores: 1
+> apicid: 0
+> initial apicid: 0
+> fpu: yes
+> fpu_exception: yes
+> cpuid level: 11
+> wp: yes
+> flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good xtopology nonstop_tsc aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 sse4_2 popcnt lahf_lm ida dts tpr_shadow vnmi flexpriority ept vpid
+> bogomips: 5333.09
+> clflush size: 64
+> cache_alignment: 64
+> address sizes: 40 bits physical, 48 bits virtual
+> power management:
+>
+> processor: 1
+> vendor_id
+> : GenuineIntel
+> cpu family: 6
+> model: 26
+> model name: Intel(R) Xeon(R) CPU           X5550  @ 2.67GHz
+> stepping: 5
+> cpu MHz: 1600.000
+> cache size: 8192 KB
+> physical id
+> : 1
+> siblings: 1
+> core id: 0
+> cpu cores: 1
+> apicid: 16
+> initial apicid: 16
+> fpu: yes
+> fpu_exception: yes
+> cpuid level: 11
+> wp: yes
+> flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good xtopology nonstop_tsc aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm dca sse4_1 sse4_2 popcnt lahf_lm ida dts tpr_shadow vnmi flexpriority ept vpid
+> bogomips: 5332.56
+> clflush size: 64
+> cache_alignment: 64
+> address sizes: 40 bits physical, 48 bits virtual
+> power management:
+>
+> [root@rafa tmp]#
+>
+> Let me know if any other details are also required and steps on how to get them.
+>
+> Thanks,
+> Muthusamy C
 
-I installed Linux 3.10 but it's still not clear to me how to profile
-amd15h northbridge events, as I keep getting unsupported event
-messages. Also, I tried using papi_component_avail and it says that
-perf_events_uncore is disabled (no uncore PMUs or or events found).
+Hello Muthusamy,
 
-In a previous message you mentioned
+   I have obtained load latency info through perf record + perf report, 
+but never used perf stat to do that. I don't know if this is what you're 
+looking for, but maybe you can give this a try.
 
-> To access the counters starting in 3.10 they are in a separate PMU.
-> You need to be root and you need to set the type field to the proper PMU.
+   To capture the latency for an app (say /bin/ls)
 
-I tried with root but I wasn't sure how to set the type field to the
-proper PMU. Could you please clarify? This has been a lot of trial and
-(mostly) error. In the meantime, I went on to try your other
-suggestion:
+   # perf mem record /bin/ls
 
-> You might be better off using something like libpfm4 to find out what aw
-> values to use, trying to set them by hand is a hassle.
+   Then, to show the summary of the results (which part of the cache 
+hierarchy provided the data for the references) you can use:
 
-I tried using pfm_get_event_os_event_encoding() from libpfm4, but with
-no success. The manpage for this function is from 2011 and most likely
-lots has changed since. I've been reading the source to try to figure
-something out, but I couldn't figure it out.
+   # perf mem report
 
-Any help is appreciated.
+   Additionally, if you want to know the cost in cycles of every memory 
+reference captured by PEBS, execute:
 
-Thank you,
--Martin
+   # perf mem report -D
+
+   in that output, each PERF_RECORD_SAMPLE reflects a sample, and its 
+weight is the latency in cycles that the CPU was waiting for that reference.
+
+   Hope that helps.
+
+Regards.
+
+
+
+
+
+
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
+
+http://www.bsc.es/disclaimer
