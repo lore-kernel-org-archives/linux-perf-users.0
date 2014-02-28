@@ -1,35 +1,115 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Profile the waiting time for lock or lock stats for one application
-Date: Wed, 26 Feb 2014 20:29:48 -0700
-Message-ID: <530EB12C.9020407@gmail.com>
-References: <1393351991.27573.YahooMailNeo@web124901.mail.ne1.yahoo.com> <1393471039.86366.YahooMailNeo@web124905.mail.ne1.yahoo.com>
+From: Muthusamy <muthu9283@yahoo.com>
+Subject: unable to get load latency info
+Date: Thu, 27 Feb 2014 22:24:39 -0800 (PST)
+Message-ID: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com>
+Reply-To: Muthusamy <muthu9283@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f48.google.com ([209.85.220.48]:57710 "EHLO
-	mail-pa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751700AbaB0D3x (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 26 Feb 2014 22:29:53 -0500
-Received: by mail-pa0-f48.google.com with SMTP id kx10so1890143pab.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2014 19:29:52 -0800 (PST)
-In-Reply-To: <1393471039.86366.YahooMailNeo@web124905.mail.ne1.yahoo.com>
+Received: from nm17-vm6.bullet.mail.ne1.yahoo.com ([98.138.91.110]:43412 "EHLO
+	nm17-vm6.bullet.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750795AbaB1Gbm convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 28 Feb 2014 01:31:42 -0500
+References: 
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Junjie Qian <junjie.qian@yahoo.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On 2/26/14, 8:17 PM, Junjie Qian wrote:
-> Hi all,
->
-> This is a follow up question about "perf lock".
-> I recompile the kernel, with both CONFIG_LOCKDEP and CONFIG_LOCK_STAT are "y". But when I run the command "perf lock record -- sleep 10", the error information still shows as:
-> tracepoint lock:lock_acquire is not enabled. Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled?
->
-> Could you give me some suggestions on this?
+Hi,
 
-are you running as root? If you are running perf as a normal user is the 
-events directory accessible -- /sys/kernel/debug/tracing? Does 
-/sys/kernel/debug/tracing/events/lock exist?
+I am trying to get the memory load latency info using perf, but I am al=
+ways getting 0.
+Can you please help me in understanding what I am missing. Below are th=
+e details
 
-David
+[root@rafa tmp]# ./perf --version
+perf version 3.12.11
+[root@rafa tmp]# ./perf stat -e r100b pwd =A0### (I have tried with oth=
+er data intensive programs too)
+/tmp/cms/tmp
+
+=A0Performance counter stats for 'pwd':
+
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00 r100b =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0=A0
+
+=A0 =A0 =A0 =A00.000846849 seconds time elapsed
+
+[root@rafa tmp]# uname -a
+Linux rafa 2.6.32-431.el6.x86_64 #1 SMP Sun Nov 10 22:19:54 EST 2013 x8=
+6_64 x86_64 x86_64 GNU/Linux
+
+[root@rafa tmp]# cat /proc/cpuinfo
+processor: 0
+vendor_id: GenuineIntel
+cpu family: 6
+model: 26
+model name: Intel(R) Xeon(R) CPU =A0 =A0 =A0 =A0 =A0 X5550 =A0@ 2.67GHz
+stepping
+: 5
+cpu MHz: 1600.000
+cache size: 8192 KB
+physical id: 0
+siblings: 1
+core id: 0
+cpu cores: 1
+apicid: 0
+initial apicid: 0
+fpu: yes
+fpu_exception: yes
+cpuid level: 11
+wp: yes
+flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pa=
+t pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdts=
+cp lm constant_tsc arch_perfmon pebs bts rep_good xtopology nonstop_tsc=
+ aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm =
+dca sse4_1 sse4_2 popcnt lahf_lm ida dts tpr_shadow vnmi flexpriority e=
+pt vpid
+bogomips: 5333.09
+clflush size: 64
+cache_alignment: 64
+address sizes: 40 bits physical, 48 bits virtual
+power management:
+
+processor: 1
+vendor_id
+: GenuineIntel
+cpu family: 6
+model: 26
+model name: Intel(R) Xeon(R) CPU =A0 =A0 =A0 =A0 =A0 X5550 =A0@ 2.67GHz
+stepping: 5
+cpu MHz: 1600.000
+cache size: 8192 KB
+physical id
+: 1
+siblings: 1
+core id: 0
+cpu cores: 1
+apicid: 16
+initial apicid: 16
+fpu: yes
+fpu_exception: yes
+cpuid level: 11
+wp: yes
+flags: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pa=
+t pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdts=
+cp lm constant_tsc arch_perfmon pebs bts rep_good xtopology nonstop_tsc=
+ aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm =
+dca sse4_1 sse4_2 popcnt lahf_lm ida dts tpr_shadow vnmi flexpriority e=
+pt vpid
+bogomips: 5332.56
+clflush size: 64
+cache_alignment: 64
+address sizes: 40 bits physical, 48 bits virtual
+power management:
+
+[root@rafa tmp]#
+
+Let me know if any other details are also required and steps on how to =
+get them.
+
+Thanks,
+Muthusamy C
