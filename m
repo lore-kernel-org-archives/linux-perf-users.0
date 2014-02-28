@@ -1,24 +1,33 @@
-From: Harald Servat <harald.servat@bsc.es>
+From: Manuel Selva <selva.manuel@gmail.com>
 Subject: Re: unable to get load latency info
-Date: Fri, 28 Feb 2014 11:43:25 +0100
-Message-ID: <5310684D.7000001@bsc.es>
+Date: Fri, 28 Feb 2014 12:06:15 +0100
+Message-ID: <53106DA7.3040807@gmail.com>
 References: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:57908 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751407AbaB1Kn3 (ORCPT
+Received: from mail-ee0-f43.google.com ([74.125.83.43]:38253 "EHLO
+	mail-ee0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751224AbaB1LGS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Feb 2014 05:43:29 -0500
+	Fri, 28 Feb 2014 06:06:18 -0500
+Received: by mail-ee0-f43.google.com with SMTP id e53so1950920eek.16
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2014 03:06:17 -0800 (PST)
 In-Reply-To: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Muthusamy <muthu9283@yahoo.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
+You must also take care of the fact that PEBS load Latency Measurement 
+has been introduced in kernel 3.10
 
-On 28/02/14 07:24, Muthusamy wrote:
+http://web.eece.maine.edu/~vweaver/projects/perf_events/features.html
+http://comments.gmane.org/gmane.linux.kernel/1428651
+
+Manu
+
+On 02/28/2014 07:24 AM, Muthusamy wrote:
 > Hi,
 >
 > I am trying to get the memory load latency info using perf, but I am always getting 0.
@@ -98,47 +107,9 @@ On 28/02/14 07:24, Muthusamy wrote:
 >
 > Thanks,
 > Muthusamy C
-
-Hello Muthusamy,
-
-   I have obtained load latency info through perf record + perf report, 
-but never used perf stat to do that. I don't know if this is what you're 
-looking for, but maybe you can give this a try.
-
-   To capture the latency for an app (say /bin/ls)
-
-   # perf mem record /bin/ls
-
-   Then, to show the summary of the results (which part of the cache 
-hierarchy provided the data for the references) you can use:
-
-   # perf mem report
-
-   Additionally, if you want to know the cost in cycles of every memory 
-reference captured by PEBS, execute:
-
-   # perf mem report -D
-
-   in that output, each PERF_RECORD_SAMPLE reflects a sample, and its 
-weight is the latency in cycles that the CPU was waiting for that reference.
-
-   Hope that helps.
-
-Regards.
-
-
-
-
-
-
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
-
-http://www.bsc.es/disclaimer
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
