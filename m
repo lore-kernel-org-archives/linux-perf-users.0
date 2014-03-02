@@ -1,42 +1,49 @@
-From: Rodrigo Campos <rodrigo@sdfg.com.ar>
-Subject: Re: Profile the waiting time for lock or lock stats for one
- application
-Date: Sat, 1 Mar 2014 16:03:39 +0000
-Message-ID: <20140301160338.GE10080@sdfg.com.ar>
-References: <1393351991.27573.YahooMailNeo@web124901.mail.ne1.yahoo.com>
- <20140228184343.GD10080@sdfg.com.ar>
- <5311FD27.7000903@gmail.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: perf crash at util/symbol-elf.c:154
+Date: Sun, 2 Mar 2014 14:34:31 +0100
+Message-ID: <20140302133431.GA1655@krava.brq.redhat.com>
+References: <CAAvaZB0fFuD=Lb3R9eu4F=riedZS0JtQ_Z6zOtw8RYBNTsWqnQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from alerce.vps.bitfolk.com ([85.119.82.134]:49879 "EHLO
-	alerce.vps.bitfolk.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752963AbaCAQEn (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:64137 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752491AbaCBNef (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 1 Mar 2014 11:04:43 -0500
+	Sun, 2 Mar 2014 08:34:35 -0500
 Content-Disposition: inline
-In-Reply-To: <5311FD27.7000903@gmail.com>
+In-Reply-To: <CAAvaZB0fFuD=Lb3R9eu4F=riedZS0JtQ_Z6zOtw8RYBNTsWqnQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: Junjie Qian <junjie.qian@yahoo.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Albert Strasheim <albert@cloudflare.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On Sat, Mar 01, 2014 at 08:30:47AM -0700, David Ahern wrote:
-> On 2/28/14, 11:43 AM, Rodrigo Campos wrote:
-> >There are ways (not sure if the patch is in) to track for lock contension using
-> >perf, but not sure (I think not easy at least) if the lock is not contended. As,
-> >if using glibc, lot of locks are implemented using futex and then solved
-> >entirely in userspace lot of times (at least without contention).
+On Wed, Feb 26, 2014 at 12:24:07PM -0800, Albert Strasheim wrote:
+> Hello all
+
+SNIP
+
+> <commands+264>, argc=argc@entry=3, argv=argv@entry=0x7fffffffdce0) at
+> perf.c:319
+> #13 0x0000000000419230 in handle_internal_command
+> (argv=0x7fffffffdce0, argc=3) at perf.c:376
+> #14 run_argv (argv=0x7fffffffdae0, argcp=0x7fffffffdaec) at perf.c:420
+> #15 main (argc=3, argv=0x7fffffffdce0) at perf.c:529
 > 
-> What patch are you referring to? You can trace system calls to catch
+> The Python build is available here:
+> 
+> https://docs.google.com/file/d/0B0b-iwt-kSG2Z2dOYWVDYVEyZ2c/edit
+> 
+> To reproduce the crash, all you need is
+> 
+> ./python -c 'while True: continue'
+> 
+> perf top -p `pidof python`
+> 
+> Any help would be appreciated. Thanks in advance.
 
-I think one from you, from late last year. I'm not sure and I'm not on my
-notebook right now. Something to trace the futex syscall or something like that
-? That can help to understand lock contention on userspace
+hi,
+thanks for reporting, I sent out patch (and CCed you)
+http://marc.info/?l=linux-kernel&m=139376715924685&w=2
 
-
-
-
-
-Thanks,
-Rodrigo
+jirka
