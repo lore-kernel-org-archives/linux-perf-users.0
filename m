@@ -1,51 +1,70 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Re: unable to get load latency info
-Date: Mon, 03 Mar 2014 15:24:44 +0100
-Message-ID: <531490AC.70605@bsc.es>
-References: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com> <87bnxrcq0y.fsf@tassilo.jf.intel.com> <531095B3.3070800@bsc.es> <20140228164510.GU22728@two.firstfloor.org> <1393823578.5408.YahooMailNeo@web125402.mail.ne1.yahoo.com> <5314343E.803@bsc.es> <1393851732.26401.YahooMailNeo@web125404.mail.ne1.yahoo.com>
+From: Junjie Qian <junjie.qian@yahoo.com>
+Subject: Re: Profile the waiting time for lock or lock stats for one application
+Date: Mon, 3 Mar 2014 08:11:12 -0800 (PST)
+Message-ID: <1393863072.34363.YahooMailNeo@web124906.mail.ne1.yahoo.com>
+References: <1393351991.27573.YahooMailNeo@web124901.mail.ne1.yahoo.com> <20140228184343.GD10080@sdfg.com.ar> <5311FD27.7000903@gmail.com> <20140301160338.GE10080@sdfg.com.ar>
+Reply-To: Junjie Qian <junjie.qian@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:55385 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754359AbaCCOYp (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 3 Mar 2014 09:24:45 -0500
-In-Reply-To: <1393851732.26401.YahooMailNeo@web125404.mail.ne1.yahoo.com>
+Received: from nm28-vm5.bullet.mail.ne1.yahoo.com ([98.138.91.250]:41244 "EHLO
+	nm28-vm5.bullet.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753968AbaCCQLN convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 3 Mar 2014 11:11:13 -0500
+In-Reply-To: <20140301160338.GE10080@sdfg.com.ar>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Muthusamy <muthu9283@yahoo.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Rodrigo Campos <rodrigo@sdfg.com.ar>, David Ahern <dsahern@gmail.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On 03/03/14 14:02, Muthusamy wrote:
->> On Monday, March 3, 2014 1:20 PM, Harald Servat <harald.servat@bsc.es> wrote:
->>    so I imagine that you're ok with respect to OS.
->>      Besides of that, the Intel Manual [1] says in section 18.7.1.1 that
->> Nehalem (and I'd would guess Westmere, as it is a Nehalem successor)
->> supports PEBS, so it should work.
->
->
-> So, what am I missing. Is there something the kernel needs to be enabled for PEBS. If yes, how do I know if it is enabled.
->
-> Regards,
-> Muthusamy C
->
+Hi,
 
-I notice that you provide on an earlier output a uname -a showed 
-2.6.32-xxxx but perf --version showed version 3.12.11, and they don't 
-match but should. Are you running on 2.6.x or on 3.12.x?
+Really appreciate your help on this issue!
+1. using root solve my problem with "perf lock", thank you very much!
+2. about the discussion on locks in user-space. I discussed this with m=
+y advisor, and found that lock contention does not mean waiting time or=
+ idle cpu-cycles sometime, for example, spin-lock in user-space that al=
+l threads/cores are still running but useless work and this cannot be d=
+etected as either system lock or idle-cpu-cycles.=A0
+The way, I am trying to do this, now is insert the counter into the app=
+lication layer once the lock happens start the counting and I prepare t=
+o monitor the threads in queue to detect the lock.
 
-Regards
+I will let you know if I have any updates on this.
+Again thank you all for your help and discussions.
+=A0
+Thanks!
+Best
+Junjie
 
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
 
-http://www.bsc.es/disclaimer
+On Saturday, March 1, 2014 10:04 AM, Rodrigo Campos <rodrigo@sdfg.com.a=
+r> wrote:
+On Sat, Mar 01, 2014 at 08:30:47AM -0700, David Ahern wrote:
+> On 2/28/14, 11:43 AM, Rodrigo Campos wrote:
+> >There are ways (not sure if the patch is in) to track for lock conte=
+nsion using
+> >perf, but not sure (I think not easy at least) if the lock is not co=
+ntended. As,
+> >if using glibc, lot of locks are implemented using futex and then so=
+lved
+> >entirely in userspace lot of times (at least without contention).
+>=20
+> What patch are you referring to? You can trace system calls to catch
+
+I think one from you, from late last year. I'm not sure and I'm not on =
+my
+notebook right now. Something to trace the futex syscall or something l=
+ike that
+? That can help to understand lock contention on userspace
+
+
+
+
+
+Thanks,
+
+Rodrigo
