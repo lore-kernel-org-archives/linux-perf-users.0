@@ -1,58 +1,80 @@
-From: Rodrigo Campos <rodrigo@sdfg.com.ar>
-Subject: Re: Profile the waiting time for lock or lock stats for one
- application
-Date: Mon, 3 Mar 2014 16:23:54 +0000
-Message-ID: <20140303162354.GA30567@sdfg.com.ar>
-References: <1393351991.27573.YahooMailNeo@web124901.mail.ne1.yahoo.com>
- <20140228184343.GD10080@sdfg.com.ar>
- <5311FD27.7000903@gmail.com>
- <20140301160338.GE10080@sdfg.com.ar>
- <1393863072.34363.YahooMailNeo@web124906.mail.ne1.yahoo.com>
+From: Muthusamy <muthu9283@yahoo.com>
+Subject: Re: unable to get load latency info
+Date: Tue, 4 Mar 2014 02:43:25 -0800 (PST)
+Message-ID: <1393929805.25511.YahooMailNeo@web125403.mail.ne1.yahoo.com>
+References: <1393568679.86476.YahooMailNeo@web125402.mail.ne1.yahoo.com> <87bnxrcq0y.fsf@tassilo.jf.intel.com> <531095B3.3070800@bsc.es> <20140228164510.GU22728@two.firstfloor.org> <1393823578.5408.YahooMailNeo@web125402.mail.ne1.yahoo.com> <5314343E.803@bsc.es> <1393851732.26401.YahooMailNeo@web125404.mail.ne1.yahoo.com> <531490AC.70605@bsc.es>
+Reply-To: Muthusamy <muthu9283@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from alerce.vps.bitfolk.com ([85.119.82.134]:49978 "EHLO
-	alerce.vps.bitfolk.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753758AbaCCQZD (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 3 Mar 2014 11:25:03 -0500
-Content-Disposition: inline
-In-Reply-To: <1393863072.34363.YahooMailNeo@web124906.mail.ne1.yahoo.com>
+Received: from nm11-vm6.bullet.mail.ne1.yahoo.com ([98.138.91.104]:35378 "EHLO
+	nm11-vm6.bullet.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756777AbaCDKn0 convert rfc822-to-8bit
+	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 4 Mar 2014 05:43:26 -0500
+In-Reply-To: <531490AC.70605@bsc.es>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Junjie Qian <junjie.qian@yahoo.com>
-Cc: David Ahern <dsahern@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Harald Servat <harald.servat@bsc.es>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On Mon, Mar 03, 2014 at 08:11:12AM -0800, Junjie Qian wrote:
-> Hi,
+>>> On Monday, March 3, 2014 1:20 PM, Harald Servat=A0
+> <harald.servat@bsc.es> wrote:
+
+
+> I notice that you provide on an earlier output a uname -a showed=A0
+> 2.6.32-xxxx but perf --version showed version 3.12.11, and they don't=
+=A0
+> match but should. Are you running on 2.6.x or on 3.12.x?
+
+After upgrading the kernel, it did work.
+Thanks a lot for the support.
+
+Regards,
+Muthusamy C
+
+
+> On Monday, March 3, 2014 7:54 PM, Harald Servat <harald.servat@bsc.es=
+> wrote:
+> > On 03/03/14 14:02, Muthusamy wrote:
+>>>  On Monday, March 3, 2014 1:20 PM, Harald Servat=20
+> <harald.servat@bsc.es> wrote:
+>>> =A0 =A0 so I imagine that you're ok with respect to OS.
+>>> =A0 =A0 =A0 Besides of that, the Intel Manual [1] says in section 1=
+8.7.1.1=20
+> that
+>>>  Nehalem (and I'd would guess Westmere, as it is a Nehalem=20
+> successor)
+>>>  supports PEBS, so it should work.
+>>=20
+>>=20
+>>  So, what am I missing. Is there something the kernel needs to be en=
+abled=20
+> for PEBS. If yes, how do I know if it is enabled.
+>>=20
+>>  Regards,
+>>  Muthusamy C
+>>=20
 >=20
-> Really appreciate your help on this issue!
-> 1. using root solve my problem with "perf lock", thank you very much!
-> 2. about the discussion on locks in user-space. I discussed this with=
- my advisor, and found that lock contention does not mean waiting time =
-or idle cpu-cycles sometime, for example, spin-lock in user-space that =
-all threads/cores are still running but useless work and this cannot be=
- detected as either system lock or idle-cpu-cycles.=C2=A0
-
-Yeah, with mutexes usually there is some spinning before waiting for th=
-e lock.
-
-> The way, I am trying to do this, now is insert the counter into the a=
-pplication layer once the lock happens start the counting and I prepare=
- to monitor the threads in queue to detect the lock.
-
-clock_gettime() with some clocks is implemented as a VDSO, so it should=
- be
-pretty light to get that info if you need it.
-And thread local variables can be very useful too probably :)
-
-> I will let you know if I have any updates on this.
-
-Great :)
-
-
-
-
-Thanks a lot,
-Rodrigo
+> I notice that you provide on an earlier output a uname -a showed=20
+> 2.6.32-xxxx but perf --version showed version 3.12.11, and they don't=
+=20
+> match but should. Are you running on 2.6.x or on 3.12.x?
+>=20
+>=20
+> Regards
+>=20
+>=20
+> WARNING / LEGAL TEXT: This message is intended only for the use of th=
+e
+> individual or entity to which it is addressed and may contain
+> information which is privileged, confidential, proprietary, or exempt
+> from disclosure under applicable law. If you are not the intended
+> recipient or the person responsible for delivering the message to the
+> intended recipient, you are strictly prohibited from disclosing,
+> distributing, copying, or in any way using this message. If you have
+> received this communication in error, please notify the sender and
+> destroy and delete any copies you may have received.
+>=20
+> http://www.bsc.es/disclaimer
+>=20
