@@ -1,65 +1,61 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: Re: Some event modifiers missing from output and desire option to
- compute value based on measurements
-Date: Thu, 13 Mar 2014 14:39:02 -0400
-Message-ID: <5321FB46.5020003@redhat.com>
-References: <5321E3AC.8050600@redhat.com> <87siqmf1kc.fsf@tassilo.jf.intel.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: Event not supported
+Date: Thu, 13 Mar 2014 16:06:27 -0400 (EDT)
+Message-ID: <alpine.DEB.2.10.1403131603590.3849@vincent-weaver-1.um.maine.edu>
+References: <CAOanW0NszteQapi6MzaUhkPpYA6yAe+bTc8Vkz033MDA3ynd_w@mail.gmail.com> <5303A4CF.3060200@gmail.com> <CAOanW0OsZXZU7Os=VrxA=s7SwRo+gK0qtpNjbX7E84fgL0swxg@mail.gmail.com> <5303B986.2070801@gmail.com> <CAOanW0OiK8QTgLxajx=pEaW4XWD94hnNUOf=-e=Y1ch2LA9j3A@mail.gmail.com>
+ <alpine.DEB.2.10.1402190754540.21724@vincent-weaver-1.um.maine.edu> <CAOanW0OzQnpt+cr6m8VFYj1CGPQoyecEQidt_5wZzxG4CAj_Gw@mail.gmail.com> <alpine.DEB.2.10.1402261634260.1178@vincent-weaver-1.um.maine.edu> <CAOanW0NSAPa1opj-e=qQx=XNbTE-PERqUzyXtytCyNpyLMOECg@mail.gmail.com>
+ <CAOanW0OwDhqQnZ1B3QCm5HFFom26TSxHBQbToU3cBSxT3tZf3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:22602 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754607AbaCMSjQ (ORCPT
+Received: from mail-qa0-f48.google.com ([209.85.216.48]:41964 "EHLO
+	mail-qa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752191AbaCMUD6 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 13 Mar 2014 14:39:16 -0400
-In-Reply-To: <87siqmf1kc.fsf@tassilo.jf.intel.com>
+	Thu, 13 Mar 2014 16:03:58 -0400
+Received: by mail-qa0-f48.google.com with SMTP id m5so1559374qaj.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2014 13:03:57 -0700 (PDT)
+In-Reply-To: <CAOanW0OwDhqQnZ1B3QCm5HFFom26TSxHBQbToU3cBSxT3tZf3Q@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
+To: Martin Ichilevici de Oliveira <martin.i.oliveira@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On 03/13/2014 01:30 PM, Andi Kleen wrote:
-> William Cohen <wcohen@redhat.com> writes:
-> 
->> When experimenting with perf I wanted to have separate counts for events in userspace and the kernel.  I used:
->>
->> $ perf stat   -e instructions:u -e instructions:k -e cycles:u -e cycles:k -e cache-misses:u -e cache-misses:k make
->>
->> The associated  output below includes the event modifiers for all the events, but the 3.06 and 0.37 insns per cycles look off.  Shouldn't that instructions:u/cycles:u and instructions:k/cycles:k be the values reported for "insns per cycle"?
-> 
-> Yes the event match code currently assumes there's only a single event
-> each and always uses the last.
-> 
->> It appears that the output is listing the measurements in the same
->> order they are specified on the command line, but it would be nice if
->> the output was clearer on the events being measured.  If I am reading
->> the output correctly, the L1-icache-load-misses per instruction is
->> pretty poor for kernel-space.  Much of the time I am looking at ratios
->> of events and it would be nice if "perf stat" had a way to have it
->> compute the ratios directly. Maybe a "-m, --math" option allowing
->> algebraic expressions where you could do:
+On Tue, 11 Mar 2014, Martin Ichilevici de Oliveira wrote:
 
-Hi Andi,
-
-So the missing event modifier is still a problem.  The events begins passed into the perf are not going to match the names on the output.  Also a script using the output perf is not going to be able to distinguish between the same event with different modifiers.
-
+> On Fri, Feb 28, 2014 at 6:35 AM, Martin Ichilevici de Oliveira
+> <martin.i.oliveira@gmail.com> wrote:
+> > On Wed, Feb 26, 2014 at 6:38 PM, Vince Weaver <vincent.weaver@maine.edu> wrote:
+> >> On Wed, 26 Feb 2014, Martin Ichilevici de Oliveira wrote:
+> >>
+> >>
+> >> Linux 3.9 and Linux 3.10 have very different amd15h northbridge support.
+> >> If you're looking for long-term usability of your project/tool/research
+> >> you probably want to jump straight to 3.10 so you don't have to make
+> >> everything work on 3.9 and then change it all again when you move to newer
+> >> kernels.
+> >>
+> >> Vince
+> >
+> > I installed Linux 3.10 but it's still not clear to me how to profile
+> > amd15h northbridge events, as I keep getting unsupported event
+> > messages. Also, I tried using papi_component_avail and it says that
+> > perf_events_uncore is disabled (no uncore PMUs or or events found).
 > 
-> Most people just use -x, and load the result into a spread sheet or
-> other script that does the compuations. At some point you usually want
-> to plot the data or do other more complex manipulations than your
-> simple facility would provide.
-> 
-> You may also find this script useful
-> 
-> https://github.com/andikleen/pmu-tools/blob/master/interval-normalize.py
-> 
-> -Andi
-> 
+> Do I need to compile my kernel (3.10) with explicit support? I don't
+> understand why papi_component_avail keeps saying that
+> perf_events_uncore is disabled.
 
-Thanks for the pointer to the interval-normalize.py script.
+If you're having issues with PAPI it might be better to bring your 
+questions to one of the PAPI mailing lists.
 
-Yes, many people are probably using other more sophisticated tools such as spread sheets to analyze the data from perf.  However, something like a "-m, --math" option would give a bit more insight than the basic "perf stat" without having to resort to more sophisticated tools.  "perf stat" is already generating all sorts of derived numbers such as IPC, events/second, and perccent of cache misses it seems like a small step to provide some flexibility for the user to specify exactly what to compute.
+If you have a 3.10 x86_64 kernel it's not possible to disable perf_event 
+or uncore support, so support is there.
 
+You will need to run as root (or set the perf_event paranoid setting away 
+from the default) to access the NorthBridge counters though.
 
--Will
+PAPI at least is not well tested on amd fam15h hardware as we don't have 
+acess to any test systems with the hardware.
+
+Vince
