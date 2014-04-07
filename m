@@ -1,60 +1,88 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Inconsistent perf top output
-Date: Sun, 06 Apr 2014 21:10:34 -0700
-Message-ID: <87ioqlkced.fsf@tassilo.jf.intel.com>
-References: <645781396449095@web21h.yandex.ru>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] Correctly handle symbols in VDSO
+Date: Mon, 07 Apr 2014 15:14:17 +0900
+Message-ID: <87eh19y8cm.fsf@sejong.aot.lge.com>
+References: <D6A5CDD8-F8F1-4C9D-8BCF-83A739FD6A2F@tbricks.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:37817 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754652AbaDGEKf (ORCPT
+Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:54863 "EHLO
+	lgemrelse6q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750743AbaDGGOW (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 7 Apr 2014 00:10:35 -0400
-In-Reply-To: <645781396449095@web21h.yandex.ru> (Oleg A. Arkhangelsky's
-	message of "Wed, 02 Apr 2014 18:31:35 +0400")
+	Mon, 7 Apr 2014 02:14:22 -0400
+In-Reply-To: <D6A5CDD8-F8F1-4C9D-8BCF-83A739FD6A2F@tbricks.com> (Vladimir
+	Nikulichev's message of "Tue, 1 Apr 2014 23:15:14 +0400")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "\"Oleg A. Arkhangelsky\"" <sysoleg@yandex.ru>
-Cc: linux-perf-users@vger.kernel.org, netdev@vger.kernel.org
+To: Vladimir Nikulichev <nvs@tbricks.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>
 
-"\"Oleg A. Arkhangelsky\"" <sysoleg@yandex.ru> writes:
+Hi Vladimir,
 
-Better asked on netdev. Copied here. It's unlikely to be a perf problem.
-You better specify what kernel version you have.
+On Tue, 1 Apr 2014 23:15:14 +0400, Vladimir Nikulichev wrote:
+> pert-report doesn't resolve function names in VDSO:
+>
+> $ perf report --stdio -g flat,0.0,15,callee --sort pid
+> ...
+>              8.76%
+>                 0x7fff6b1fe861
+>                 __gettimeofday
+>                 ACE_OS::gettimeofday()
+> ...
+>
+> In this case symbol values should be adjusted the same way as for executables, relocatable objects and prelinked libraries.
+>
+> After fix:
+>
+> $ perf report --stdio -g flat,0.0,15,callee --sort pid
+> ...
+>              8.76%
+>                 __vdso_gettimeofday
+>                 __gettimeofday
+>                 ACE_OS::gettimeofday()
+> ...
 
-> Hello,
->
-> I'm profiling Linux IP packet forwarding performance. In common case I see this
-> functions eating most of CPU cycles.
->
-> 13735.00 22.5% build_skb  
-> 5138.00   8.4% ipt_do_table 
-> 4750.00   7.8% fib_table_lookup
-> 3519.00   5.8% ixgbe_clean_rx_irq
-> 2836.00   4.6% nf_iterate
-> 1530.00   2.5% dev_queue_xmit
->
-> Looks good. But accidentally I run tcpdump program on one of the NICs related
-> to my test. After killing tcpdump I see that top is different:
->
-> 6362.00 10.3% fib_table_lookup
-> 6227.00 10.1% ipt_do_table
-> 4300.00  7.0% ixgbe_clean_rx_irq
-> 3771.00  6.1% nf_iterate
-> 3284.00  5.3% build_skb
-> 2179.00  3.5% ixgbe_xmit_frame_ring
->
-> Dramatic change in build_skb() cpu cycles. But tcpdump is not active anymore.
-> More than this, if I stop pktgen on traffic generator PC for a few seconds and
-> start it again without any other changes, I see that build_skb() is top offender
-> again. Running tcpdump again and killing it move fib_table_lookup() or
-> ipt_do_table() (they are pretty same in cpu cycles) to the top. So this behavior
-> is reproducible.
->
-> I just have no sane explanation to such strange behavior. Maybe someone have?
->
-> Thank you!
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
--- 
-ak@linux.intel.com -- Speaking for myself only
+Just one question below..
+
+>
+> ---------------------------------------------------------------------------------------------------------------------------
+>
+> perf tools: Adjust symbols in VDSO
+>
+> Signed-off-by: Vladimir Nikulichev <nvs@tbricks.com>
+>
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 3b7dbf5..9c8b23b 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -6,6 +6,7 @@
+>  #include <inttypes.h>
+>
+>  #include "symbol.h"
+> +#include "vdso.h"
+>  #include <symbol/kallsyms.h>
+>  #include "debug.h"
+>
+> @@ -618,6 +619,8 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+>  		GElf_Shdr shdr;
+>  		ss->adjust_symbols = (ehdr.e_type == ET_EXEC ||
+>  				ehdr.e_type == ET_REL ||
+> +				(dso->symsrc_filename == NULL &&
+
+Is this really needed?  Just checking is_vdso_map() seems to work well
+for me.  Did you have a specific reason to add it?
+
+Thanks,
+Namhyung
+
+
+> +					is_vdso_map(dso->short_name)) ||
+>  				elf_section_by_name(elf, &ehdr, &shdr,
+>  						     ".gnu.prelink_undo",
+>  						     NULL) != NULL);--
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
