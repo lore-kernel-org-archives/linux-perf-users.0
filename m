@@ -1,39 +1,48 @@
-From: Noah Luther <nluther@vt.edu>
-Subject: perf branch
-Date: Sun, 13 Apr 2014 23:55:53 -0400
-Message-ID: <CAH+i1GK4QdEzoa05PUN-Zx8Gzr2-w0RY631a9MzvTvyMAs1fGg@mail.gmail.com>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Re: perf branch
+Date: Mon, 14 Apr 2014 08:53:16 -0400
+Message-ID: <534BDA3C.7080603@codeaurora.org>
+References: <CAH+i1GK4QdEzoa05PUN-Zx8Gzr2-w0RY631a9MzvTvyMAs1fGg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lennier.cc.vt.edu ([198.82.162.213]:60207 "EHLO
-	lennier.cc.vt.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751013AbaDNGuj (ORCPT
+Received: from smtp.codeaurora.org ([198.145.11.231]:34473 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753030AbaDNMxS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 14 Apr 2014 02:50:39 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [198.82.164.236])
-	by lennier.cc.vt.edu (8.13.8/8.13.8) with ESMTP id s3E3tx08009700
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Apr 2014 23:55:59 -0400
-Received: from mail-ve0-f181.google.com (mail-ve0-f181.google.com [209.85.128.181])
-	by mr4.cc.vt.edu (8.14.4/8.14.4) with ESMTP id s3E3trDv017385
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Apr 2014 23:55:59 -0400
-Received: by mail-ve0-f181.google.com with SMTP id oy12so6781792veb.40
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Apr 2014 20:55:53 -0700 (PDT)
+	Mon, 14 Apr 2014 08:53:18 -0400
+In-Reply-To: <CAH+i1GK4QdEzoa05PUN-Zx8Gzr2-w0RY631a9MzvTvyMAs1fGg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Noah Luther <nluther@vt.edu>
+Cc: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Noah,
 
-I am trying to use perf to trace branches as described by the 'perf
-branch' subcommand. Is there support through perf_event_open to access
-the buffer storing branch traces? I saw Akihiro Nagai's presentation
-on 'perf branch', but haven't yet figured out how to enable BTS and
-access the buffer based on the documentation on this page:
+On 04/13/2014 11:55 PM, Noah Luther wrote:
+> Hello,
+> 
+> I am trying to use perf to trace branches as described by the 'perf
+> branch' subcommand. Is there support through perf_event_open to access
+> the buffer storing branch traces? I saw Akihiro Nagai's presentation
+> on 'perf branch', but haven't yet figured out how to enable BTS and
+> access the buffer based on the documentation on this page:
+> 
+> http://web.eece.maine.edu/~vweaver/projects/perf_events/perf_event_open.html
+> 
+> If there are any resources that might be of use to me, I would
+> appreciate any assistance.
 
-http://web.eece.maine.edu/~vweaver/projects/perf_events/perf_event_open.html
+In the past I've found the test suite to be a useful reference. Here's a test
+that looks like it might serve as a jumping-off point.
 
-If there are any resources that might be of use to me, I would
-appreciate any assistance.
+https://github.com/deater/perf_event_tests/blob/master/tests/record_sample/sample_branch_stack.c
 
-Thank you,
-Noah
+Regards,
+Christopher
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
