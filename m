@@ -1,74 +1,115 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf tools: Adjust symbols in VDSO
-Date: Thu, 17 Apr 2014 11:46:42 +0300
-Message-ID: <534F94F2.7020402@intel.com>
-References: <web-7508803@mx2.tbricks.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] Error reporting improvement
+Date: Thu, 17 Apr 2014 11:56:33 +0200
+Message-ID: <20140417095632.GA1382@krava.brq.redhat.com>
+References: <534E3215.2060306@metascale.org>
+ <20140416142405.GC2005@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:44368 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751454AbaDQIr1 (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Apr 2014 04:47:27 -0400
-In-Reply-To: <web-7508803@mx2.tbricks.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Vladimir Nikulichev <nvs@tbricks.com>, Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140416142405.GC2005@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adrien BAK <adrien.bak@metascale.org>
+Cc: Will Deacon <will.deacon@arm.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "paulus@samba.org" <paulus@samba.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@ghostprotocols.net" <acme@ghostprotocols.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-On 04/11/2014 05:25 PM, Vladimir Nikulichev wrote:
-> perf tools: Adjust symbols in VDSO
+On Wed, Apr 16, 2014 at 03:24:05PM +0100, Will Deacon wrote:
+> Hi Adrien,
 > 
-> pert-report doesn't resolve function names in VDSO:
+> On Wed, Apr 16, 2014 at 08:32:37AM +0100, Adrien BAK wrote:
+> > In the current version, when using perf record, if something goes wrong in
+> > tools/perf/builtin-record.c:375  session = perf_session__new(file, 
+> > false, NULL);
+> > The error message:
+> > "Not enough memory for reading per file header"
+> > is issued. This error message seems to be outdated and is not very helpful.
+> > This patch propose to replace this error message by
+> > "Perf session creation failed"
+> > 
+> > I believe this issue has been brought to lkml :
+> > https://lkml.org/lkml/2014/2/24/458
+> > although this patch only tackle a (small) part of the issue.
+> > 
+> > Additionnaly, this patch improves error reporting in
+> > tools/perf/util/data.c open_file_write
+> > Currently, if the call to open fails, the user is unaware of it.
+> > This patch logs the error, before returning the error code to the caller.
+> > 
+> > Signed-off-by: Adrien BAK <adrien.bak@metascale.org>
 > 
-> $ perf report --stdio -g flat,0.0,15,callee --sort pid
-> ...
->             8.76%
->                0x7fff6b1fe861
->                __gettimeofday
->                ACE_OS::gettimeofday()
-> ...
+> Whilst this patch (admittedly) only solves part of the problem, I think it
+> makes the error I encountered a lot easier to understand.
 > 
-> In this case symbol values should be adjusted the same way as for executables,
-> relocatable objects and prelinked libraries.
+> Thanks,
 > 
-> After fix:
-> 
-> $ perf report --stdio -g flat,0.0,15,callee --sort pid
-> ...
->             8.76%
->                __vdso_gettimeofday
->                __gettimeofday
->                ACE_OS::gettimeofday()
-> 
-> Signed-off-by: Vladimir Nikulichev <nvs@tbricks.com>
+>   Reported-by: Will Deacon <will.deacon@arm.com>
 
-Annotation still doesn't work. but this is a start, so:
+seems ok to me, but the patch is mangled:
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+[jolsa@krava perf]$ git am /tmp/b
+Applying: Error reporting improvement
+fatal: corrupt patch at line 7
+Patch failed at 0001 Error reporting improvement
+The copy of the patch that failed is found in:
+   /home/jolsa/kernel.org/linux-perf/.git/rebase-apply/patch
+When you have resolved this problem, run "git am --resolved".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
 
+[jolsa@krava perf]$ patch -p3 < /tmp/b1 
+patching file builtin-record.c
+patch: **** malformed patch at line 87: argc, const char **argv)
+
+please check Documentation/email-clients.txt and resend
+
+thanks,
+jirka
 
 > 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 3b7dbf5..6864661 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -6,6 +6,7 @@
-> #include <inttypes.h>
+> Will
 > 
-> #include "symbol.h"
-> +#include "vdso.h"
-> #include <symbol/kallsyms.h>
-> #include "debug.h"
-> 
-> @@ -618,6 +619,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso,
-> const char *name,
->         GElf_Shdr shdr;
->         ss->adjust_symbols = (ehdr.e_type == ET_EXEC ||
->                 ehdr.e_type == ET_REL ||
-> +                is_vdso_map(dso->short_name) ||
->                 elf_section_by_name(elf, &ehdr, &shdr,
->                              ".gnu.prelink_undo",
->                              NULL) != NULL);
+> > 
+> > ---
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index eb524f9..8ce62ef 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -374,7 +374,7 @@ static int __cmd_record(struct record *rec, int 
+> > argc, const char **argv)
+> > 
+> >       session = perf_session__new(file, false, NULL);
+> >       if (session == NULL) {
+> > -        pr_err("Not enough memory for reading perf file header\n");
+> > +        pr_err("Perf session creation failed.\n");
+> >           return -1;
+> >       }
+> > 
+> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > index 1fbcd8b..ff2ced7 100644
+> > --- a/tools/perf/util/data.c
+> > +++ b/tools/perf/util/data.c
+> > @@ -86,10 +86,16 @@ static int open_file_read(struct perf_data_file *file)
+> > 
+> >   static int open_file_write(struct perf_data_file *file)
+> >   {
+> > +    int fd;
+> >       if (check_backup(file))
+> >           return -1;
+> > 
+> > -    return open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
+> > +    fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
+> > +
+> > +    if (fd < 0)
+> > +        pr_err("failed to open %s : %s\n", file->path, strerror(errno));
+> > +
+> > +    return fd;
+> >   }
+> > 
+> >   static int open_file(struct perf_data_file *file)
+> > 
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
