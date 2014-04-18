@@ -1,19 +1,19 @@
 From: Adrien BAK <adrien.bak@metascale.org>
 Subject: [PATCH] Error reporting improvement (updated)
-Date: Fri, 18 Apr 2014 11:00:43 +0900
-Message-ID: <1397786443.3093.4.camel@beast>
+Date: Fri, 18 Apr 2014 13:59:47 +0900
+Message-ID: <1397797187.5762.1.camel@beast>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from 1.mo68.mail-out.ovh.net ([46.105.41.146]:39687 "EHLO
+Received: from 1.mo68.mail-out.ovh.net ([46.105.41.146]:54558 "EHLO
 	mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1750970AbaDRCSi (ORCPT
+	with ESMTP id S1751854AbaDRE7z (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Apr 2014 22:18:38 -0400
+	Fri, 18 Apr 2014 00:59:55 -0400
 Received: from mail610.ha.ovh.net (b9.ovh.net [213.186.33.59])
-	by mo68.mail-out.ovh.net (Postfix) with SMTP id 57458FFB626
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Apr 2014 04:00:51 +0200 (CEST)
+	by mo68.mail-out.ovh.net (Postfix) with SMTP id 68008FFACCD
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Apr 2014 06:59:54 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
