@@ -1,83 +1,29 @@
-From: Adrien BAK <adrien.bak@metascale.org>
-Subject: [PATCH] Error reporting improvement (updated)
-Date: Fri, 18 Apr 2014 13:59:47 +0900
-Message-ID: <1397797187.5762.1.camel@beast>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] Error reporting improvement (updated)
+Date: Fri, 18 Apr 2014 10:41:04 +0200
+Message-ID: <20140418084104.GB11096@twins.programming.kicks-ass.net>
+References: <1397786443.3093.4.camel@beast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from 1.mo68.mail-out.ovh.net ([46.105.41.146]:54558 "EHLO
-	mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751854AbaDRE7z (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:59060 "EHLO
+	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751034AbaDRIlT (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Apr 2014 00:59:55 -0400
-Received: from mail610.ha.ovh.net (b9.ovh.net [213.186.33.59])
-	by mo68.mail-out.ovh.net (Postfix) with SMTP id 68008FFACCD
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Apr 2014 06:59:54 +0200 (CEST)
+	Fri, 18 Apr 2014 04:41:19 -0400
+Content-Disposition: inline
+In-Reply-To: <1397786443.3093.4.camel@beast>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
-Cc: paulus@samba.org, a.p.zijlstra@chello.nl, mingo@redhat.com, acme@ghostprotocols.net, will.deacon@arm.com
+To: Adrien BAK <adrien.bak@metascale.org>
+Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, paulus@samba.org, mingo@redhat.com, acme@ghostprotocols.net, will.deacon@arm.com
 
-Update : I resend this patch due to my email client behaving. I added the
-reported-by line Will Deacon added in the original discussion.
+On Fri, Apr 18, 2014 at 11:00:43AM +0900, Adrien BAK wrote:
+> Update : I resend this patch due to my email client behaving. I added the
 
-In the current version, when using perf record, if something goes wrong in
-tools/perf/builtin-record.c:375  session = perf_session__new(file, 
-false, NULL);
-The error message:
-"Not enough memory for reading per file header"
-is issued. This error message seems to be outdated and is not very helpful.
-This patch propose to replace this error message by
-"Perf session creation failed"
+You should also add a subsystem tag in your $subject, something like:
 
-I believe this issue has been brought to lkml :
-https://lkml.org/lkml/2014/2/24/458
-although this patch only tackle a (small) part of the issue.
+Subject: [PATCH] perf,tools: Error reporting improvement (updated)
+                 ^^^^^^^^^^^
 
-Additionnaly, this patch improves error reporting in
-tools/perf/util/data.c open_file_write
-Currently, if the call to open fails, the user is unaware of it.
-This patch logs the error, before returning the error code to the caller.
-
-Signed-off-by: Adrien BAK <adrien.bak@metascale.org>
-Reported-by: Will Deacon <will.deacon@arm.com>
----
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index eb524f9..8ce62ef 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -374,7 +374,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 
- 	session = perf_session__new(file, false, NULL);
- 	if (session == NULL) {
--		pr_err("Not enough memory for reading perf file header\n");
-+		pr_err("Perf session creation failed.\n");
- 		return -1;
- 	}
- 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 1fbcd8b..ff2ced7 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -86,10 +86,16 @@ static int open_file_read(struct perf_data_file *file)
- 
- static int open_file_write(struct perf_data_file *file)
- {
-+	int fd;
- 	if (check_backup(file))
- 		return -1;
- 
--	return open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
-+	fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
-+
-+	if (fd < 0)
-+		pr_err("failed to open %s : %s\n", file->path, strerror(errno));
-+
-+	return fd;
- }
- 
- static int open_file(struct perf_data_file *file)
-
--- 
-A.
+That makes it clear what you're patching.
