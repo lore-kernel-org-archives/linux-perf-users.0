@@ -1,54 +1,40 @@
-From: Adrien BAK <adrien.bak@metascale.org>
-Subject: recording rapl/power events
-Date: Mon, 21 Apr 2014 17:01:32 +0900
-Message-ID: <5354D05C.8080201@metascale.org>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: recording rapl/power events
+Date: Mon, 21 Apr 2014 10:07:00 -0400 (EDT)
+Message-ID: <alpine.DEB.2.10.1404211004570.10033@vincent-weaver-1.um.maine.edu>
+References: <5354D05C.8080201@metascale.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from 9.mo4.mail-out.ovh.net ([46.105.40.176]:43250 "EHLO
-	mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751321AbaDUIBi (ORCPT
+Received: from mail-qc0-f182.google.com ([209.85.216.182]:57154 "EHLO
+	mail-qc0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751136AbaDUODk (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 21 Apr 2014 04:01:38 -0400
-Received: from mail615.ha.ovh.net (gw6.ovh.net [213.251.189.206])
-	by mo4.mail-out.ovh.net (Postfix) with SMTP id BA2C5FFB7E6
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2014 10:01:36 +0200 (CEST)
+	Mon, 21 Apr 2014 10:03:40 -0400
+Received: by mail-qc0-f182.google.com with SMTP id e16so4043884qcx.27
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2014 07:03:39 -0700 (PDT)
+In-Reply-To: <5354D05C.8080201@metascale.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Adrien BAK <adrien.bak@metascale.org>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi everyone,
+On Mon, 21 Apr 2014, Adrien BAK wrote:
 
-I am looking into the power (rapl) events introduced in the kernel in 
-version 3.14.
+> However, it seems that I can't record a sequence of power events :
+> 
+> perf record -a -e power/energy-pkg/ sleep 1
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
+> event (power/energy-pkg/).
+> /bin/dmesg may provide additional information.
+> No CONFIG_PERF_EVENTS=y kernel support configured?
 
-Right now, I can access those events through perf stat :
+RAPL events cannot generate interrupts, so I don't think you can sample 
+like this.
 
-perf stat -a -e power/energy-pkg/ sleep 1
+You can possibly sample using some other event (like one of the software 
+clock events) and include the RAPL event in the list of events to record, 
+not sure if that will accomplish what you're trying to do.
 
-  Performance counter stats for 'system wide':
-
-              17.16 Joules power/energy-pkg/
-
-        1.002808169 seconds time elapsed
-
-However, it seems that I can't record a sequence of power events :
-
-perf record -a -e power/energy-pkg/ sleep 1
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) 
-for event (power/energy-pkg/).
-/bin/dmesg may provide additional information.
-No CONFIG_PERF_EVENTS=y kernel support configured?
-
-dmesg does not give any information, and, as far as I know, perf_events 
-are fully supported by my kernel (
-
-Is there some limitation of the power events (or kernel support) I am 
-unaware of that could explain this behaviour, or is there something 
-wrong with my setup/configuration ?
-How would one procede to record a sequence of power events ?
-
-Thanks in advance
-A.
+Vince
