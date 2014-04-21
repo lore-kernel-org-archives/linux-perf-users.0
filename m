@@ -1,40 +1,48 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: recording rapl/power events
-Date: Mon, 21 Apr 2014 10:07:00 -0400 (EDT)
-Message-ID: <alpine.DEB.2.10.1404211004570.10033@vincent-weaver-1.um.maine.edu>
-References: <5354D05C.8080201@metascale.org>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Re: Signal on PMU event?
+Date: Mon, 21 Apr 2014 10:29:36 -0400
+Message-ID: <53552B50.7080508@codeaurora.org>
+References: <CAA2XHbfJdXBzxF8=FCpBv5pM76XOPBY5av5np0dNkr4CYU0Jrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f182.google.com ([209.85.216.182]:57154 "EHLO
-	mail-qc0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751136AbaDUODk (ORCPT
+Received: from smtp.codeaurora.org ([198.145.11.231]:45206 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751073AbaDUO3i (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 21 Apr 2014 10:03:40 -0400
-Received: by mail-qc0-f182.google.com with SMTP id e16so4043884qcx.27
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2014 07:03:39 -0700 (PDT)
-In-Reply-To: <5354D05C.8080201@metascale.org>
+	Mon, 21 Apr 2014 10:29:38 -0400
+In-Reply-To: <CAA2XHbfJdXBzxF8=FCpBv5pM76XOPBY5av5np0dNkr4CYU0Jrg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Adrien BAK <adrien.bak@metascale.org>
+To: Luke Gorrie <luke@snabb.co>
 Cc: linux-perf-users@vger.kernel.org
 
-On Mon, 21 Apr 2014, Adrien BAK wrote:
+Hi Luke,
 
-> However, it seems that I can't record a sequence of power events :
+On 04/20/2014 02:45 PM, Luke Gorrie wrote:
+> Howdy!
 > 
-> perf record -a -e power/energy-pkg/ sleep 1
-> Error:
-> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
-> event (power/energy-pkg/).
-> /bin/dmesg may provide additional information.
-> No CONFIG_PERF_EVENTS=y kernel support configured?
+> Is it possible for a self-profiling program to receive a signal (e.g.
+> SIGPROF) driven by a chosen PMU event (e.g. cache-misses, etc)?
+> 
+> I'm using a SIGITIMER-driven profiler (LuaJIT's one) and it would be
+> wonderfully convenient to be able to switch the event source while
+> keeping the signal-driven flow.
 
-RAPL events cannot generate interrupts, so I don't think you can sample 
-like this.
+It is possible to receive a SIGIO after a specified number of events. You have
+to be careful to set the sample_period, watermark, and wakeup_events or
+wakeup_watermark attributes and set the asynchronous flag on the resulting
+file descriptor (always setting the owner may be required as well) for it to
+work. You can find an example in perf_event_tests [1].
 
-You can possibly sample using some other event (like one of the software 
-clock events) and include the RAPL event in the list of events to record, 
-not sure if that will accomplish what you're trying to do.
+1.
+https://github.com/deater/perf_event_tests/blob/master/tests/overflow/wakeup_events_overflow.c
 
-Vince
+Regards,
+Christopher
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
