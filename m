@@ -1,40 +1,57 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: recording rapl/power events
-Date: Tue, 22 Apr 2014 03:17:56 -0700
-Message-ID: <87ppk9brcb.fsf@tassilo.jf.intel.com>
-References: <5354D05C.8080201@metascale.org>
-	<alpine.DEB.2.10.1404211004570.10033@vincent-weaver-1.um.maine.edu>
-	<5355D46A.4090209@metascale.org>
+From: Jun Wang <junwang123@gmail.com>
+Subject: Fwd: access function parameters with DWARF-less perf probing
+Date: Tue, 22 Apr 2014 10:30:05 -0700
+Message-ID: <CANHDG4am3Z2cfxw0mke6pWj83W00h2LHgQVCUgjh_OZtxaagvA@mail.gmail.com>
+References: <CANHDG4ZHPxLTyWxpPT3A7Amj0FBziA+WgQvaeT1VvvVycrcn5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:54272 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755726AbaDVKR6 (ORCPT
+Received: from mail-lb0-f173.google.com ([209.85.217.173]:36844 "EHLO
+	mail-lb0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933293AbaDVRaH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 22 Apr 2014 06:17:58 -0400
-In-Reply-To: <5355D46A.4090209@metascale.org> (Adrien BAK's message of "Tue,
-	22 Apr 2014 11:31:06 +0900")
+	Tue, 22 Apr 2014 13:30:07 -0400
+Received: by mail-lb0-f173.google.com with SMTP id p9so4642158lbv.32
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2014 10:30:06 -0700 (PDT)
+In-Reply-To: <CANHDG4ZHPxLTyWxpPT3A7Amj0FBziA+WgQvaeT1VvvVycrcn5A@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Adrien BAK <adrien.bak@metascale.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: Jun Wang <junwang123@gmail.com>
 
-Adrien BAK <adrien.bak@metascale.org> writes:
->
-> This looks promising, although I couldn't find any useful
-> documentation on this. Do you know if the perf userland tool allows
-> for this kind of slave-sampling or if I have to build my own tool
-> around the perf_event API ?
+Hi Everyone,
 
-perf record supports it (with :S), but none of the reporting tools
-unfortunately.
+With systemTap, in the absence of debugging information (DWARF), one
+can access function parameters using (positional) numbers. Can the
+same be done with `perf`?
+Why? I'm trying to capture variables in a kernel function but I don't
+have an good perf with DWARF support and there is are significant
+challenges to build one due to the relatively old distro.
 
-However keep in mind that very rapid sampling of RAPL is not
-likely to give useful results. The data only really makes
-sense over longer intervals.
+Thanks,
+Jun
 
--Andi
+Details on the SystemTap way of doing that can be referred to at
+https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/SystemTap_Language_Reference/ch04s03.html
+4.3. DWARF-less probing
 
--- 
-ak@linux.intel.com -- Speaking for myself only
+In the absence of debugging information, you can still use the /kprobe/
+family of probes to examine the entry and exit points of kernel and
+module functions. You cannot look up the arguments or local variables of
+a function using these probes. However, you can access the parameters by
+following this procedure:
+When you're stopped at the entry to a function, you can refer to the
+function's arguments by number. For example, when probing the function
+declared:
+
+asmlinkage ssize_t sys_read(unsigned int fd, char __user * buf, size_t
+count)
+
+You can obtain the values of |fd|, |buf|, and |count|, respectively, as
+|uint_arg(1)|, |pointer_arg(2)|, and |ulong_arg(3)|. In this case, your
+probe code must first call |asmlinkage()|, because on some architectures
+the asmlinkage attribute affects how the function's arguments are passed.
+When you're in a return probe, $|return| isn't supported without DWARF,
+but you can call |returnval()| to get the value of the register in which
+the function value is typically returned, or call |returnstr()| to get a
+string version of that value.
