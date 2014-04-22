@@ -1,19 +1,17 @@
 From: Jun Wang <junwang123@gmail.com>
-Subject: Fwd: access function parameters with DWARF-less perf probing
-Date: Tue, 22 Apr 2014 10:30:05 -0700
-Message-ID: <CANHDG4am3Z2cfxw0mke6pWj83W00h2LHgQVCUgjh_OZtxaagvA@mail.gmail.com>
-References: <CANHDG4ZHPxLTyWxpPT3A7Amj0FBziA+WgQvaeT1VvvVycrcn5A@mail.gmail.com>
+Subject: access function parameters with DWARF-less perf probing
+Date: Tue, 22 Apr 2014 10:31:34 -0700
+Message-ID: <CANHDG4btxwQxGme+TwWYhPVEKSwyHA_C3fVxNuaFJOrzGYOyCA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-lb0-f173.google.com ([209.85.217.173]:36844 "EHLO
-	mail-lb0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933293AbaDVRaH (ORCPT
+Received: from mail-la0-f45.google.com ([209.85.215.45]:45554 "EHLO
+	mail-la0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933273AbaDVRbg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 22 Apr 2014 13:30:07 -0400
-Received: by mail-lb0-f173.google.com with SMTP id p9so4642158lbv.32
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2014 10:30:06 -0700 (PDT)
-In-Reply-To: <CANHDG4ZHPxLTyWxpPT3A7Amj0FBziA+WgQvaeT1VvvVycrcn5A@mail.gmail.com>
+	Tue, 22 Apr 2014 13:31:36 -0400
+Received: by mail-la0-f45.google.com with SMTP id hr17so4667845lab.32
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2014 10:31:34 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
