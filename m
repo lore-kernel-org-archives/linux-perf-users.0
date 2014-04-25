@@ -1,38 +1,51 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: access function parameters with DWARF-less perf probing
-Date: Thu, 24 Apr 2014 08:12:34 -0600
-Message-ID: <53591BD2.6080001@gmail.com>
-References: <CANHDG4btxwQxGme+TwWYhPVEKSwyHA_C3fVxNuaFJOrzGYOyCA@mail.gmail.com> <87iopzb8vw.fsf@tassilo.jf.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: recording rapl/power events
+Date: Fri, 25 Apr 2014 17:29:36 +0900
+Message-ID: <8761lxrevj.fsf@sejong.aot.lge.com>
+References: <5354D05C.8080201@metascale.org>
+	<alpine.DEB.2.10.1404211004570.10033@vincent-weaver-1.um.maine.edu>
+	<5355D46A.4090209@metascale.org> <87ppk9brcb.fsf@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f182.google.com ([209.85.192.182]:56366 "EHLO
-	mail-pd0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753526AbaDXOMi (ORCPT
+Received: from lgeamrelo01.lge.com ([156.147.1.125]:37559 "EHLO
+	lgeamrelo01.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750844AbaDYI3k (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 24 Apr 2014 10:12:38 -0400
-Received: by mail-pd0-f182.google.com with SMTP id y10so1959917pdj.41
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2014 07:12:37 -0700 (PDT)
-In-Reply-To: <87iopzb8vw.fsf@tassilo.jf.intel.com>
+	Fri, 25 Apr 2014 04:29:40 -0400
+In-Reply-To: <87ppk9brcb.fsf@tassilo.jf.intel.com> (Andi Kleen's message of
+	"Tue, 22 Apr 2014 03:17:56 -0700")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>, Jun Wang <junwang123@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: Adrien BAK <adrien.bak@metascale.org>, Vince Weaver <vincent.weaver@maine.edu>, linux-perf-users@vger.kernel.org
 
-On 4/23/14, 11:21 PM, Andi Kleen wrote:
-> Jun Wang <junwang123@gmail.com> writes:
->
->> Hi Everyone,
+Hi Andi,
+
+On Tue, 22 Apr 2014 03:17:56 -0700, Andi Kleen wrote:
+> Adrien BAK <adrien.bak@metascale.org> writes:
 >>
->> With systemTap, in the absence of debugging information (DWARF), one
->> can access function parameters using (positional) numbers. Can the
->> same be done with `perf`?
->> Why? I'm trying to capture variables in a kernel function but I don't
->> have an good perf with DWARF support and there is are significant
->> challenges to build one due to the relatively old distro.
+>> This looks promising, although I couldn't find any useful
+>> documentation on this. Do you know if the perf userland tool allows
+>> for this kind of slave-sampling or if I have to build my own tool
+>> around the perf_event API ?
 >
-> You can specify the registers according to the ABI.
-> di = 1. arg, si = 2nd arg etc.
+> perf record supports it (with :S), but none of the reporting tools
+> unfortunately.
 
-http://en.wikipedia.org/wiki/X86_calling_conventions#List_of_x86_calling_conventions
+It seems it's what --group option of perf report is for?
+
+  $ perf record -e '{cycles,power/energy-pkg/}:S' -a sleep 1
+
+  $ perf report --group --stdio
+
+
+Thanks,
+Namhyung
+
+>
+> However keep in mind that very rapid sampling of RAPL is not
+> likely to give useful results. The data only really makes
+> sense over longer intervals.
+>
+> -Andi
