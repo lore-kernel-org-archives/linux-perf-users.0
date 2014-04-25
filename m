@@ -1,51 +1,46 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: recording rapl/power events
-Date: Fri, 25 Apr 2014 17:29:36 +0900
-Message-ID: <8761lxrevj.fsf@sejong.aot.lge.com>
-References: <5354D05C.8080201@metascale.org>
-	<alpine.DEB.2.10.1404211004570.10033@vincent-weaver-1.um.maine.edu>
-	<5355D46A.4090209@metascale.org> <87ppk9brcb.fsf@tassilo.jf.intel.com>
+From: Jun Wang <junwang123@gmail.com>
+Subject: stack trace of threads that wake up a specific target userspace
+ thread blocking in epoll_wait
+Date: Fri, 25 Apr 2014 09:33:40 -0700
+Message-ID: <CANHDG4anUmNmAxwx99fFTLCSFGNkENg6mZFun7N6dPZLGmSkqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lgeamrelo01.lge.com ([156.147.1.125]:37559 "EHLO
-	lgeamrelo01.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750844AbaDYI3k (ORCPT
+Received: from mail-we0-f171.google.com ([74.125.82.171]:48776 "EHLO
+	mail-we0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753996AbaDYQdl (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 25 Apr 2014 04:29:40 -0400
-In-Reply-To: <87ppk9brcb.fsf@tassilo.jf.intel.com> (Andi Kleen's message of
-	"Tue, 22 Apr 2014 03:17:56 -0700")
+	Fri, 25 Apr 2014 12:33:41 -0400
+Received: by mail-we0-f171.google.com with SMTP id t61so3796653wes.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2014 09:33:40 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Adrien BAK <adrien.bak@metascale.org>, Vince Weaver <vincent.weaver@maine.edu>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Hi Andi,
+Hi Everyone,
 
-On Tue, 22 Apr 2014 03:17:56 -0700, Andi Kleen wrote:
-> Adrien BAK <adrien.bak@metascale.org> writes:
->>
->> This looks promising, although I couldn't find any useful
->> documentation on this. Do you know if the perf userland tool allows
->> for this kind of slave-sampling or if I have to build my own tool
->> around the perf_event API ?
->
-> perf record supports it (with :S), but none of the reporting tools
-> unfortunately.
+I have a profiling tool question that could go beyond perf.
 
-It seems it's what --group option of perf report is for?
+In an application, there are threads blocking on epoll_wait(). The
+file descriptors are sockets connecting to other servers in a data
+center with less than 1ms network latency. On normal systems, the
+delay to wake up epoll_wait is much less than 1ms. It is noticed on a
+system that sometimes it takes an unbelievable 30ms delay to wake up
+the thread blocking in epoll_wait(). To be exact, the delay of
+reference here is between tcp_rcv_established() and epoll_wait.return.
 
-  $ perf record -e '{cycles,power/energy-pkg/}:S' -a sleep 1
+I wonder whether there is a way to dump out the stack trace of
+threads, or some other kernel entities, that wake up that thread. The
+idea is to figure out why there is a huge delay by looking at how the
+delayed is ended, and by whom/what.
 
-  $ perf report --group --stdio
+epoll wakeup internels in the kernel space can be referred to at
+http://www.slideshare.net/llj098/epoll-from-the-kernel-side.
 
+As a reference, there is a dtrace script that does this on Solaris.
+https://github.com/brendangregg/dtrace-cloud-tools/blob/master/system/cv_wakeup_slow.d
+
+Would perf/systemTap or other Linux tools be helpful?
 
 Thanks,
-Namhyung
-
->
-> However keep in mind that very rapid sampling of RAPL is not
-> likely to give useful results. The data only really makes
-> sense over longer intervals.
->
-> -Andi
+Jun
