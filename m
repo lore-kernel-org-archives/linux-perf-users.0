@@ -1,37 +1,35 @@
-From: Daniel Chumak <daniel.chumak@student.HTW-Berlin.de>
-Subject: Perf Script Handler Arguments
-Date: Tue, 06 May 2014 11:53:13 +0200
-Message-ID: <5368B109.2000206@student.HTW-Berlin.de>
+From: Milian Wolff <mail@milianw.de>
+Subject: Re: Access to backtraces from user-space tracepoint callback in perf-script?
+Date: Wed, 07 May 2014 14:46:31 +0200
+Message-ID: <4531806.6Q1YW4Luy6@milian-kdab2>
+References: <1998748.ORBRrU6aol@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail0.rz.htw-berlin.de ([141.45.10.100]:18128 "EHLO
-	mail0.rz.htw-berlin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934609AbaEFKNO (ORCPT
+Received: from dd17628.kasserver.com ([85.13.138.83]:39228 "EHLO
+	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932085AbaEGMqe (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 6 May 2014 06:13:14 -0400
-Received: from [188.111.54.34] (helo=[192.168.149.85])
-	by mail0.rz.htw-berlin.de with esmtpsa (TLSv1:DHE-RSA-AES128-SHA:128)
-	(Exim 4.82 (FreeBSD))
-	(envelope-from <daniel.chumak@student.HTW-Berlin.de>)
-	id 1Whc3z-0002v1-8y
-	for linux-perf-users@vger.kernel.org; Tue, 06 May 2014 11:53:27 +0200
+	Wed, 7 May 2014 08:46:34 -0400
+Received: from milian-kdab2.localnet (unknown [188.111.54.34])
+	by dd17628.kasserver.com (Postfix) with ESMTPSA id 8BA246280E02
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2014 14:46:32 +0200 (CEST)
+In-Reply-To: <1998748.ORBRrU6aol@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Hi,
+On Tuesday 29 April 2014 17:44:54 Milian Wolff wrote:
+> Hello,
+> 
+> today I played around with perf-script(-python) and custom tracepoints. What
+> I could not figure out so far is how to print a backtrace from the python
+> callback. Can someone explain me how this is done, or point me to the
+> documentation for this?
 
-I am currently in the process of learning perfs python script support. 
-Is there a way to find out, without trial and error, how much parameter 
-a handler function has and what iformation the parameters are holding ?
-The first 7 (event_name,context,common_cpu,common_secs, 
-common_nsecs,common_pid,common_comm ) are documented in the man-page and 
-are allways the same (?) but what is with the remaining ones ?
-Syscalls__sys_enter_write for example needs 4 additional parameters: 
-unkown0, unkown1, unkown2 and bytesToWrite.
-
-Regards
-
-D.C.
+Ping? Could someone help me here please?
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
