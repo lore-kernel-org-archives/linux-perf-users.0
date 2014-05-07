@@ -1,35 +1,53 @@
-From: Milian Wolff <mail@milianw.de>
-Subject: Re: Access to backtraces from user-space tracepoint callback in perf-script?
-Date: Wed, 07 May 2014 14:46:31 +0200
-Message-ID: <4531806.6Q1YW4Luy6@milian-kdab2>
-References: <1998748.ORBRrU6aol@milian-kdab2>
+From: "lhmaster2 ." <lhmaster2@gmail.com>
+Subject: Re: Loop block overhead
+Date: Wed, 7 May 2014 14:55:05 -0300
+Message-ID: <CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
+References: <CAPZR5J0vJU4X4H+f3gs3CK4duw6TaQuXS1q+xWkS0EgJ_DKiBw@mail.gmail.com>
+	<87r44elgry.fsf@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from dd17628.kasserver.com ([85.13.138.83]:39228 "EHLO
-	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932085AbaEGMqe (ORCPT
+Received: from mail-wg0-f48.google.com ([74.125.82.48]:60647 "EHLO
+	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751865AbaEGRzG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 7 May 2014 08:46:34 -0400
-Received: from milian-kdab2.localnet (unknown [188.111.54.34])
-	by dd17628.kasserver.com (Postfix) with ESMTPSA id 8BA246280E02
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2014 14:46:32 +0200 (CEST)
-In-Reply-To: <1998748.ORBRrU6aol@milian-kdab2>
+	Wed, 7 May 2014 13:55:06 -0400
+Received: by mail-wg0-f48.google.com with SMTP id b13so1377528wgh.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2014 10:55:05 -0700 (PDT)
+In-Reply-To: <87r44elgry.fsf@tassilo.jf.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: linux-perf-users@vger.kernel.org
 
-On Tuesday 29 April 2014 17:44:54 Milian Wolff wrote:
-> Hello,
-> 
-> today I played around with perf-script(-python) and custom tracepoints. What
-> I could not figure out so far is how to print a backtrace from the python
-> callback. Can someone explain me how this is done, or point me to the
-> documentation for this?
+Thank you for the info.
 
-Ping? Could someone help me here please?
--- 
-Milian Wolff
-mail@milianw.de
-http://milianw.de
+I researched a bit and found that srcline uses addr2line capabilities
+to map memory addressed into source lines. Nevertheless, as I invoke
+
+$ perf report -s srcline, sys
+
+only the original mem addresses are printed. Should I pass some
+special parameter for perf record to make it work?
+
+Best regards,
+Lucas
+
+
+On 30 April 2014 17:10, Andi Kleen <andi@firstfloor.org> wrote:
+>
+> "lhmaster2 ." <lhmaster2@gmail.com> writes:
+>
+> > Dear all,
+> >
+> > Is there any way to make perf report retrieve the total overhead due
+> > to loop blocks, like what is done with total function overhead?
+>
+> perf has no idea what a loop is unfortunately.
+>
+> You can use srcline as a sort key to account per line.
+>
+> -Andi
+>
+> --
+> ak@linux.intel.com -- Speaking for myself only
