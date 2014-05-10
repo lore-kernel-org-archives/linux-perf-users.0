@@ -1,53 +1,54 @@
-From: "lhmaster2 ." <lhmaster2@gmail.com>
-Subject: Re: Loop block overhead
-Date: Wed, 7 May 2014 14:55:05 -0300
-Message-ID: <CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
-References: <CAPZR5J0vJU4X4H+f3gs3CK4duw6TaQuXS1q+xWkS0EgJ_DKiBw@mail.gmail.com>
-	<87r44elgry.fsf@tassilo.jf.intel.com>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: Referencing perf?
+Date: Sat, 10 May 2014 19:54:27 +0200
+Message-ID: <536E67D3.2030604@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wg0-f48.google.com ([74.125.82.48]:60647 "EHLO
-	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751865AbaEGRzG (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:47764 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751001AbaEJSCI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 7 May 2014 13:55:06 -0400
-Received: by mail-wg0-f48.google.com with SMTP id b13so1377528wgh.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2014 10:55:05 -0700 (PDT)
-In-Reply-To: <87r44elgry.fsf@tassilo.jf.intel.com>
+	Sat, 10 May 2014 14:02:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id 7FB12F9773
+	for <linux-perf-users@vger.kernel.org>; Sat, 10 May 2014 19:54:30 +0200 (CEST)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 02481-02 for <linux-perf-users@vger.kernel.org>;
+ Sat, 10 May 2014 19:54:29 +0200 (CEST)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id E406B7D3FF
+	for <linux-perf-users@vger.kernel.org>; Sat, 10 May 2014 19:54:29 +0200 (CEST)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id s4AHsTdw020811
+	for linux-perf-users@vger.kernel.org; Sat, 10 May 2014 19:54:29 +0200
+Received: from [192.168.1.36] (30.Red-83-47-124.dynamicIP.rima-tde.net [83.47.124.30])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id A00827D5C2
+	for <linux-perf-users@vger.kernel.org>; Sat, 10 May 2014 19:54:29 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Thank you for the info.
+Hello,
 
-I researched a bit and found that srcline uses addr2line capabilities
-to map memory addressed into source lines. Nevertheless, as I invoke
+   which is the appropriate way to reference perf in a publication?
 
-$ perf report -s srcline, sys
+Thank you
 
-only the original mem addresses are printed. Should I pass some
-special parameter for perf record to make it work?
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
 
-Best regards,
-Lucas
-
-
-On 30 April 2014 17:10, Andi Kleen <andi@firstfloor.org> wrote:
->
-> "lhmaster2 ." <lhmaster2@gmail.com> writes:
->
-> > Dear all,
-> >
-> > Is there any way to make perf report retrieve the total overhead due
-> > to loop blocks, like what is done with total function overhead?
->
-> perf has no idea what a loop is unfortunately.
->
-> You can use srcline as a sort key to account per line.
->
-> -Andi
->
-> --
-> ak@linux.intel.com -- Speaking for myself only
+http://www.bsc.es/disclaimer
