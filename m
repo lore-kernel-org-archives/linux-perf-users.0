@@ -1,64 +1,74 @@
 From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: Does perf support different length of user-space hw_breakpoint?
-Date: Mon, 12 May 2014 10:05:03 +0200
-Message-ID: <20140512080503.GL30445@twins.programming.kicks-ass.net>
+Date: Mon, 12 May 2014 10:48:23 +0200
+Message-ID: <20140512084823.GO30445@twins.programming.kicks-ass.net>
 References: <53707DD6.2000108@huawei.com>
+ <20140512080503.GL30445@twins.programming.kicks-ass.net>
+ <CAGjdHukwC3cu3YOSSteXsC4_52m-YTdAAYCfXV+q5A2pnW+CKQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="veZQh2nSsG1B2+Ku"
+	protocol="application/pgp-signature"; boundary="RTD9Hr/VfB+mRRII"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:33664 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752501AbaELIFL (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:47563 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754593AbaELIsi (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 12 May 2014 04:05:11 -0400
+	Mon, 12 May 2014 04:48:38 -0400
 Content-Disposition: inline
-In-Reply-To: <53707DD6.2000108@huawei.com>
+In-Reply-To: <CAGjdHukwC3cu3YOSSteXsC4_52m-YTdAAYCfXV+q5A2pnW+CKQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: xiakaixu <xiakaixu@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, paulus@samba.org, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Borislav Petkov <bp@alien8.de>, Namhyung Kim <namhyung@kernel.org>, Huxinwei <huxinwei@huawei.com>, peifeiyue@huawei.com, fweisbec@gmail.com
+To: kaixu xia <xiakaixu1987@gmail.com>
+Cc: xiakaixu <xiakaixu@huawei.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, paulus@samba.org, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Borislav Petkov <bp@alien8.de>, Namhyung Kim <namhyung@kernel.org>, Huxinwei <huxinwei@huawei.com>, peifeiyue@huawei.com, fweisbec@gmail.com
 
 
---veZQh2nSsG1B2+Ku
+--RTD9Hr/VfB+mRRII
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2014 at 03:52:54PM +0800, xiakaixu wrote:
-> Hi guys,
+On Mon, May 12, 2014 at 04:20:44PM +0800, kaixu xia wrote:
+> 2014-05-12 16:05 GMT+08:00 Peter Zijlstra <peterz@infradead.org>:
 >=20
-> Does perf support different length of user-space hw_breakpoint,
-> such as  HW_BREAKPOINT_LEN_1/HW_BREAKPOINT_LEN_2/HW_BREAKPOINT_LEN_4/
-> HW_BREAKPOINT_LEN_8?
+> > On Mon, May 12, 2014 at 03:52:54PM +0800, xiakaixu wrote:
+> > > Hi guys,
+> > >
+> > > Does perf support different length of user-space hw_breakpoint,
+> > > such as  HW_BREAKPOINT_LEN_1/HW_BREAKPOINT_LEN_2/HW_BREAKPOINT_LEN_4/
+> > > HW_BREAKPOINT_LEN_8?
+> > >
+> > > Seems perf only support HW_BREAKPOINT_LEN_4/sizeof(long)
+> > > by default from the source code and simple test.
+> > >
+> > > May I have your opinions if I want to trace different bytes of
+> > > hw_breakpoint addr?
+> >
+> > Frederic?
+> >
 >=20
-> Seems perf only support HW_BREAKPOINT_LEN_4/sizeof(long)
-> by default from the source code and simple test.
->=20
-> May I have your opinions if I want to trace different bytes of
-> hw_breakpoint addr?
+> Sorry, can not fully understand it. Can you give more details on that?
 
-Frederic?
+I asked Frederic to answer your question :-)
 
---veZQh2nSsG1B2+Ku
+--RTD9Hr/VfB+mRRII
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTcICvAAoJEHZH4aRLwOS6l/UP/iWS4hWXFwuXTM16XGrUrSCD
-W3Hl8LNN350YPObGxi0i3EQ3BnKqHbByTjJfeNIHo1LmGrza3dSWRccPafMAjOwr
-x7zCHX7RJndE4EZ2zALK0BTEMhiSIDHSY4PDazGNfLpEGKFRo71A1v1n64xG9CFn
-jVvvZI+naDy1zrp2zvLwW1uB8+7acCZFVHsgv0+rKq+B+XoJ3EuR43p1PhzclUDN
-LVR+Bc6J/owZn0NHCYhFbEqiaPfBYHAbCnE/dgovU3kFQvlaqVYH8oCVAwG0XPRI
-JOo407QNUah0qHKn0WR0oPybs9iWjWUyGwfhizE3TkHqnBVd+6JaKvI7MEu22yGg
-sck4EkMKTfpv/fDS4BQzj+J2/8DaXfSjZOmRBPdT8k9iZ/hJWaIW1Qkxkx3Sg8zt
-wQKGpcdRx/aaSZacisKT2iAANAcpGFktvMlr0BOz2dcDVEVx6lZDa5ak6kcxZ3ib
-v4yPQvJzCqZodpEPBKHQzOt2bNanAeNWvzCMm2AqWGN66/pyrKIKQobxt0Ngw77a
-EEUznvGMPBhpxUKymvFOcQCuKiY8yWEPszVbeuj1iRhbslBO8wIGiNMqRZQPdo8n
-RDuBvU76FS0rBzHVMCOS0AePCN3eCBKibtuzCJIlN1OzHwhXLNvtwSweXLFR3IAp
-wts8+RdvVbL9oynDV8YJ
-=Z5sS
+iQIcBAEBAgAGBQJTcIrXAAoJEHZH4aRLwOS6/zMQALVehCXX4rb95WDOTsfG4oCX
+PkA4ZtJDPjEvyUx160UN+yDq4DWgYUVndWqwyolY+7v0XAvnUm9hLPFmYfU5w9XV
+a/RNEaRtZzSPHe4VYeSXtGNSpN3mBdL07H/uR/xb1BnNqPG5DeKT28p8w8iyg8i8
+Nxpmp4YlxrcoOrYO9P/lRNvC7cVOZEKDzJGElRtWv5rYiOzaeX9bdEN7aB0wePxb
+oFQqQ7fbod+HGYUaBnck667ruNwmvofkdG3ccSj0U/cb+4rdxDZqi6JgtXb5No3A
+vOMpLEV1ZUd0wKiCR4npZ6bJj2MY/fkIUdW7U1MtEjUiEmXHkMs+BUx8rEFovVHS
+1rOouIdFs/L4zQ7nEXLK0BV1qcnA5pY6BCFSrU4JoLmXoAQJSpZamL3XYdTmu5TV
+I8pjuVM6CeCo4xHktcQTfaC/lJIEeLaPsQvmWqg9BT2wJQPRd3NevpH3LtiPGbuc
+AUxqNwg7URUI7HzAPrzIZ8RV0BUmjceLkQluEN4fnN6bwOmtOgPre4fhiUq1Nto0
+UOEteN2RT7Qm2BezJfQeNKj56Jc6PSH1U9y4tgOZUhtqJdNln+gKF+wIvE97Amyx
+E7XI6f4ROX6KA2rHzEDSpx3docT7ypiN5LiuaxXAhBBHH4cnpru0Wm+Gl37vhNVQ
+uQmhBTAZIQA67PCTUHL4
+=e/MY
 -----END PGP SIGNATURE-----
 
---veZQh2nSsG1B2+Ku--
+--RTD9Hr/VfB+mRRII--
