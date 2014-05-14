@@ -1,45 +1,55 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Referencing perf?
-Date: Wed, 14 May 2014 09:43:08 +0900
-Message-ID: <87d2fhmbqb.fsf@sejong.aot.lge.com>
-References: <536E67D3.2030604@bsc.es>
-	<alpine.DEB.2.10.1405131021440.24957@vincent-weaver-1.umelst.maine.edu>
+From: xiakaixu <xiakaixu@huawei.com>
+Subject: Re: Does perf support different length of user-space hw_breakpoint?
+Date: Wed, 14 May 2014 10:55:09 +0800
+Message-ID: <5372DB0D.5070206@huawei.com>
+References: <53707DD6.2000108@huawei.com> <20140513120046.GB1138@krava.brq.redhat.com> <20140513150613.GC13828@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:45703 "EHLO
-	lgemrelse6q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750776AbaENAnK (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 13 May 2014 20:43:10 -0400
-In-Reply-To: <alpine.DEB.2.10.1405131021440.24957@vincent-weaver-1.umelst.maine.edu>
-	(Vince Weaver's message of "Tue, 13 May 2014 10:24:06 -0400 (EDT)")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Harald Servat <harald.servat@bsc.es>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140513150613.GC13828@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, paulus@samba.org, Ingo Molnar <mingo@kernel.org>, a.p.zijlstra@chello.nl, Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>, Namhyung Kim <namhyung@kernel.org>, Huxinwei <huxinwei@huawei.com>, peifeiyue@huawei.com
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Harald and Vince,
+=E4=BA=8E 2014/5/13 23:06, Frederic Weisbecker =E5=86=99=E9=81=93:
+> On Tue, May 13, 2014 at 02:00:46PM +0200, Jiri Olsa wrote:
+>> On Mon, May 12, 2014 at 03:52:54PM +0800, xiakaixu wrote:
+>>> Hi guys,
+>>>
+>>> Does perf support different length of user-space hw_breakpoint,
+>>> such as  HW_BREAKPOINT_LEN_1/HW_BREAKPOINT_LEN_2/HW_BREAKPOINT_LEN_=
+4/
+>>> HW_BREAKPOINT_LEN_8?
+>>>
+>>> Seems perf only support HW_BREAKPOINT_LEN_4/sizeof(long)
+>>> by default from the source code and simple test.
+>>
+>> right..
+>>
+>>         /*
+>>          * We should find a nice way to override the access length
+>>          * Provide some defaults for now
+>>          */
+>>         if (attr.bp_type =3D=3D HW_BREAKPOINT_X)
+>>                 attr.bp_len =3D sizeof(long);
+>>         else
+>>                 attr.bp_len =3D HW_BREAKPOINT_LEN_4;
+>>
+>>>
+>>> May I have your opinions if I want to trace different bytes of
+>>> hw_breakpoint addr?
+>>
+>> I guess that depends on what you want to do ;-)
+>=20
+> Ah, I have a patchset from Jacob Shin and Suravee Suthikulpanit that =
+does
+> that. Also it has been hanging around for too long by my fault. I'm p=
+osting
+> it now.
 
-On Tue, 13 May 2014 10:24:06 -0400 (EDT), Vince Weaver wrote:
-> On Sat, 10 May 2014, Harald Servat wrote:
->
->>   which is the appropriate way to reference perf in a publication?
->
-> That's a good question.
->
-> The original authors are T. Gleixner and I. Molnar, but they've never 
-> published a real document about it.  You could try citing the
->    tools/perf/design.txt document that comes with the Linux kernel,
-> or also the git commit 0793a61d4df8daeac6492dbf8d2f3e5713caae5e
-> from Thu Dec 4 2008 that introduced perf_event to the world.
->
-> I'm not sure if there is an official way to cite a git commit.
-
-Maybe via web page of the commit?
-
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=0793a61d4df8daeac6492dbf8d2f3e5713caae5e
-
-
-Thanks,
-Namhyung
+Thanks for your reply!
+Hopefully I can get it ASAP.
+> .
+>=20
