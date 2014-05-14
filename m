@@ -1,40 +1,45 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Loop block overhead
-Date: Wed, 14 May 2014 09:37:00 +0900
-Message-ID: <87ha4tmc0j.fsf@sejong.aot.lge.com>
-References: <CAPZR5J0vJU4X4H+f3gs3CK4duw6TaQuXS1q+xWkS0EgJ_DKiBw@mail.gmail.com>
-	<87r44elgry.fsf@tassilo.jf.intel.com>
-	<CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
+Subject: Re: Referencing perf?
+Date: Wed, 14 May 2014 09:43:08 +0900
+Message-ID: <87d2fhmbqb.fsf@sejong.aot.lge.com>
+References: <536E67D3.2030604@bsc.es>
+	<alpine.DEB.2.10.1405131021440.24957@vincent-weaver-1.umelst.maine.edu>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lgeamrelo04.lge.com ([156.147.1.127]:52220 "EHLO
-	lgeamrelo04.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751191AbaENAhE (ORCPT
+Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:45703 "EHLO
+	lgemrelse6q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750776AbaENAnK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 13 May 2014 20:37:04 -0400
-In-Reply-To: <CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
-	(lhmaster's message of "Wed, 7 May 2014 14:55:05 -0300")
+	Tue, 13 May 2014 20:43:10 -0400
+In-Reply-To: <alpine.DEB.2.10.1405131021440.24957@vincent-weaver-1.umelst.maine.edu>
+	(Vince Weaver's message of "Tue, 13 May 2014 10:24:06 -0400 (EDT)")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "lhmaster2 ." <lhmaster2@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Harald Servat <harald.servat@bsc.es>, linux-perf-users@vger.kernel.org
 
-Hi lhmaster,
+Hi Harald and Vince,
 
-On Wed, 7 May 2014 14:55:05 -0300, lhmaster wrote:
-> Thank you for the info.
+On Tue, 13 May 2014 10:24:06 -0400 (EDT), Vince Weaver wrote:
+> On Sat, 10 May 2014, Harald Servat wrote:
 >
-> I researched a bit and found that srcline uses addr2line capabilities
-> to map memory addressed into source lines. Nevertheless, as I invoke
+>>   which is the appropriate way to reference perf in a publication?
 >
-> $ perf report -s srcline, sys
+> That's a good question.
 >
-> only the original mem addresses are printed. Should I pass some
-> special parameter for perf record to make it work?
+> The original authors are T. Gleixner and I. Molnar, but they've never 
+> published a real document about it.  You could try citing the
+>    tools/perf/design.txt document that comes with the Linux kernel,
+> or also the git commit 0793a61d4df8daeac6492dbf8d2f3e5713caae5e
+> from Thu Dec 4 2008 that introduced perf_event to the world.
+>
+> I'm not sure if there is an official way to cite a git commit.
 
-Nope.  But you need to make sure that your binary was built with
-debuginfo and the binutils is available on your system.
+Maybe via web page of the commit?
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=0793a61d4df8daeac6492dbf8d2f3e5713caae5e
+
 
 Thanks,
 Namhyung
