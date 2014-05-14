@@ -1,40 +1,40 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Access to backtraces from user-space tracepoint callback in perf-script?
-Date: Wed, 14 May 2014 09:33:35 +0900
-Message-ID: <87lhu5mc68.fsf@sejong.aot.lge.com>
-References: <1998748.ORBRrU6aol@milian-kdab2>
-	<4531806.6Q1YW4Luy6@milian-kdab2>
+Subject: Re: Loop block overhead
+Date: Wed, 14 May 2014 09:37:00 +0900
+Message-ID: <87ha4tmc0j.fsf@sejong.aot.lge.com>
+References: <CAPZR5J0vJU4X4H+f3gs3CK4duw6TaQuXS1q+xWkS0EgJ_DKiBw@mail.gmail.com>
+	<87r44elgry.fsf@tassilo.jf.intel.com>
+	<CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:40006 "EHLO
-	lgemrelse6q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750793AbaENAdj (ORCPT
+Received: from lgeamrelo04.lge.com ([156.147.1.127]:52220 "EHLO
+	lgeamrelo04.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751191AbaENAhE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 13 May 2014 20:33:39 -0400
-In-Reply-To: <4531806.6Q1YW4Luy6@milian-kdab2> (Milian Wolff's message of
-	"Wed, 07 May 2014 14:46:31 +0200")
+	Tue, 13 May 2014 20:37:04 -0400
+In-Reply-To: <CAPZR5J1Rc8jcB7c-f+9h-SYpgkWBQy5h+HPV4_iYQ7NrZN8Vcw@mail.gmail.com>
+	(lhmaster's message of "Wed, 7 May 2014 14:55:05 -0300")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <mail@milianw.de>
-Cc: linux-perf-users@vger.kernel.org
+To: "lhmaster2 ." <lhmaster2@gmail.com>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
 
-Hi Milian,
+Hi lhmaster,
 
-On Wed, 07 May 2014 14:46:31 +0200, Milian Wolff wrote:
-> On Tuesday 29 April 2014 17:44:54 Milian Wolff wrote:
->> Hello,
->> 
->> today I played around with perf-script(-python) and custom tracepoints. What
->> I could not figure out so far is how to print a backtrace from the python
->> callback. Can someone explain me how this is done, or point me to the
->> documentation for this?
+On Wed, 7 May 2014 14:55:05 -0300, lhmaster wrote:
+> Thank you for the info.
 >
-> Ping? Could someone help me here please?
+> I researched a bit and found that srcline uses addr2line capabilities
+> to map memory addressed into source lines. Nevertheless, as I invoke
+>
+> $ perf report -s srcline, sys
+>
+> only the original mem addresses are printed. Should I pass some
+> special parameter for perf record to make it work?
 
-As far as I know it's not possible currently.. I vaguely recall that
-there's a patch to support the feature but unfortunately it didn't get
-reviews..
+Nope.  But you need to make sure that your binary was built with
+debuginfo and the binutils is available on your system.
 
 Thanks,
 Namhyung
