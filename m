@@ -1,55 +1,50 @@
-From: xiakaixu <xiakaixu@huawei.com>
-Subject: Re: Does perf support different length of user-space hw_breakpoint?
-Date: Wed, 14 May 2014 10:55:09 +0800
-Message-ID: <5372DB0D.5070206@huawei.com>
-References: <53707DD6.2000108@huawei.com> <20140513120046.GB1138@krava.brq.redhat.com> <20140513150613.GC13828@localhost.localdomain>
+From: Milian Wolff <mail@milianw.de>
+Subject: Re: Access to backtraces from user-space tracepoint callback in perf-script?
+Date: Wed, 14 May 2014 10:47:43 +0200
+Message-ID: <1944165.rOQGbuz1ZM@milian-kdab2>
+References: <1998748.ORBRrU6aol@milian-kdab2> <4531806.6Q1YW4Luy6@milian-kdab2> <87lhu5mc68.fsf@sejong.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140513150613.GC13828@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, paulus@samba.org, Ingo Molnar <mingo@kernel.org>, a.p.zijlstra@chello.nl, Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>, Namhyung Kim <namhyung@kernel.org>, Huxinwei <huxinwei@huawei.com>, peifeiyue@huawei.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from dd17628.kasserver.com ([85.13.138.83]:39714 "EHLO
+	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751320AbaENIrq (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 14 May 2014 04:47:46 -0400
+Received: from milian-kdab2.localnet (unknown [188.111.54.34])
+	by dd17628.kasserver.com (Postfix) with ESMTPSA id 1FE806280E09
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2014 10:47:44 +0200 (CEST)
+In-Reply-To: <87lhu5mc68.fsf@sejong.aot.lge.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-=E4=BA=8E 2014/5/13 23:06, Frederic Weisbecker =E5=86=99=E9=81=93:
-> On Tue, May 13, 2014 at 02:00:46PM +0200, Jiri Olsa wrote:
->> On Mon, May 12, 2014 at 03:52:54PM +0800, xiakaixu wrote:
->>> Hi guys,
->>>
->>> Does perf support different length of user-space hw_breakpoint,
->>> such as  HW_BREAKPOINT_LEN_1/HW_BREAKPOINT_LEN_2/HW_BREAKPOINT_LEN_=
-4/
->>> HW_BREAKPOINT_LEN_8?
->>>
->>> Seems perf only support HW_BREAKPOINT_LEN_4/sizeof(long)
->>> by default from the source code and simple test.
->>
->> right..
->>
->>         /*
->>          * We should find a nice way to override the access length
->>          * Provide some defaults for now
->>          */
->>         if (attr.bp_type =3D=3D HW_BREAKPOINT_X)
->>                 attr.bp_len =3D sizeof(long);
->>         else
->>                 attr.bp_len =3D HW_BREAKPOINT_LEN_4;
->>
->>>
->>> May I have your opinions if I want to trace different bytes of
->>> hw_breakpoint addr?
->>
->> I guess that depends on what you want to do ;-)
->=20
-> Ah, I have a patchset from Jacob Shin and Suravee Suthikulpanit that =
-does
-> that. Also it has been hanging around for too long by my fault. I'm p=
-osting
-> it now.
+On Wednesday 14 May 2014 09:33:35 Namhyung Kim wrote:
+> Hi Milian,
+> 
+> On Wed, 07 May 2014 14:46:31 +0200, Milian Wolff wrote:
+> > On Tuesday 29 April 2014 17:44:54 Milian Wolff wrote:
+> >> Hello,
+> >> 
+> >> today I played around with perf-script(-python) and custom tracepoints.
+> >> What I could not figure out so far is how to print a backtrace from the
+> >> python callback. Can someone explain me how this is done, or point me to
+> >> the documentation for this?
+> > 
+> > Ping? Could someone help me here please?
+> 
+> As far as I know it's not possible currently.. I vaguely recall that
+> there's a patch to support the feature but unfortunately it didn't get
+> reviews..
 
-Thanks for your reply!
-Hopefully I can get it ASAP.
-> .
->=20
+Is it this one: https://lkml.org/lkml/2014/4/3/217 ?
+
+If so, could I kindly ask the perf developers to take a look at that? It would 
+be an immensely useful feature for third-party tool developers to have.
+
+Cheers
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
