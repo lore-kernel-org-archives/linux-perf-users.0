@@ -1,55 +1,45 @@
-From: Jesper Dangaard Brouer <jbrouer@redhat.com>
-Subject: Use of PMU counters inside kernel?
-Date: Thu, 19 Jun 2014 12:53:52 +0200
-Message-ID: <20140619125352.768e1ec9@redhat.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Use of PMU counters inside kernel?
+Date: Thu, 19 Jun 2014 14:11:59 -0700
+Message-ID: <87d2e48uzk.fsf@tassilo.jf.intel.com>
+References: <20140619125352.768e1ec9@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:21995 "EHLO mx1.redhat.com"
+Received: from mga02.intel.com ([134.134.136.20]:61448 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753528AbaFSKyW (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 19 Jun 2014 06:54:22 -0400
+	id S934695AbaFSVMJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 19 Jun 2014 17:12:09 -0400
+In-Reply-To: <20140619125352.768e1ec9@redhat.com> (Jesper Dangaard Brouer's
+	message of "Thu, 19 Jun 2014 12:53:52 +0200")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
-Cc: Daniel Borkmann <dborkman@redhat.com>, Florian Westphal <fw@strlen.de>, Hannes Frederic Sowa <hannes@stressinduktion.org>
+To: Jesper Dangaard Brouer <jbrouer@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, Daniel Borkmann <dborkman@redhat.com>, Florian Westphal <fw@strlen.de>, Hannes Frederic Sowa <hannes@stressinduktion.org>
 
-Hi
+Jesper Dangaard Brouer <jbrouer@redhat.com> writes:
 
-I want to use/read the PMU counters for 'instructions' and 'cycles',
-from within the kernel, to measure the overhead of different in-kernel
-functions (and calc the pipeline efficiency ala perf-stat insns per cycle).
+> I want to use/read the PMU counters for 'instructions' and 'cycles',
+> from within the kernel, to measure the overhead of different in-kernel
+> functions (and calc the pipeline efficiency ala perf-stat insns per cycle).
+>
+> What is the prefered way/API to read these counters, without
+> conflicting with the perf tool?
+>
 
-What is the prefered way/API to read these counters, without
-conflicting with the perf tool?
-
-
-I've already looked at Andi Kleens "simple-pmu" kernel module
- https://github.com/andikleen/simple-pmu/
-Thus, I have figured out how I can hack this together open-coded. I'm
-looking for advice on howto use the existing perf APIs ?
-
-I basically just need a in-kernel API to turn in these counters, and
-then I can just read them via the rdpcm instruction.
+perf_event_create_counter()
 
 
-Info I already learned (correct me if I'm wrong):
+> I basically just need a in-kernel API to turn in these counters, and
+> then I can just read them via the rdpcm instruction.
 
-The 'instructions' counter is the "Instruction Retired" counter
- * Event num: 0xC0, Umask: 0x00
- * Read via rdpmc 0x40000000
+For RDPMC you would need extra support actually, as there is no 
+guarantee perf uses the fixed counter. In user space this 
+information is in the perf mmap page.
 
-The 'cycles' counter is the "Unhalted core cycles" counter
- * Event num: 0x3C, Umask: 0x00
- * Read via rdpmc 0x40000001
+Also please be aware that RDPMC is not synchronizing.
 
-I'm uncertain about the rdpmc hex values (taken from simple-pmu).
+-Andi
 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Sr. Network Kernel Developer at Red Hat
-  Author of http://www.iptv-analyzer.org
-  LinkedIn: http://www.linkedin.com/in/brouer
+ak@linux.intel.com -- Speaking for myself only
