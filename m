@@ -1,77 +1,29 @@
-From: Jesper Dangaard Brouer <jbrouer@redhat.com>
-Subject: Re: Use of PMU counters inside kernel?
-Date: Fri, 20 Jun 2014 13:04:03 +0200
-Message-ID: <20140620130403.5ed22a73@redhat.com>
-References: <20140619125352.768e1ec9@redhat.com>
-	<87d2e48uzk.fsf@tassilo.jf.intel.com>
+From: Taeung <treeze.taeung@gmail.com>
+Subject: Where is main linux-perf IRC ?
+Date: Wed, 02 Jul 2014 22:31:26 +0900
+Message-ID: <53B409AE.8050109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:9143 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S966249AbaFTLEd (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 20 Jun 2014 07:04:33 -0400
-In-Reply-To: <87d2e48uzk.fsf@tassilo.jf.intel.com>
+Received: from mail-pd0-f177.google.com ([209.85.192.177]:44545 "EHLO
+	mail-pd0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753941AbaGBNb3 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 2 Jul 2014 09:31:29 -0400
+Received: by mail-pd0-f177.google.com with SMTP id y10so11831822pdj.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jul 2014 06:31:29 -0700 (PDT)
+Received: from [192.168.0.150] ([218.232.5.234])
+        by mx.google.com with ESMTPSA id fk4sm130252253pab.23.2014.07.02.06.31.27
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Wed, 02 Jul 2014 06:31:28 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, Daniel Borkmann <dborkman@redhat.com>, Florian Westphal <fw@strlen.de>, Hannes Frederic Sowa <hannes@stressinduktion.org>, Richard Fowles <rfowles@redhat.com>
+To: linux-perf-users@vger.kernel.org
 
-On Thu, 19 Jun 2014 14:11:59 -0700
-Andi Kleen <andi@firstfloor.org> wrote:
+Where is main linux-perf IRC ?
 
-> Jesper Dangaard Brouer <jbrouer@redhat.com> writes:
-> 
-> > I want to use/read the PMU counters for 'instructions' and 'cycles',
-> > from within the kernel, to measure the overhead of different in-kernel
-> > functions (and calc the pipeline efficiency ala perf-stat insns per cycle).
-> >
-> > What is the prefered way/API to read these counters, without
-> > conflicting with the perf tool?
-> >
-> 
-> perf_event_create_counter()
+I've failed finding main perf IRC though I try to find 'perf' IRC server.
 
-Thanks, guess you mean:
- perf_event_create_kernel_counter()
-
-
-> > I basically just need a in-kernel API to turn in these counters, and
-> > then I can just read them via the rdpcm instruction.
-> 
-> For RDPMC you would need extra support actually, as there is no 
-> guarantee perf uses the fixed counter. In user space this 
-> information is in the perf mmap page.
-
-Hmm, so you are saying that I cannot rely on just reading the counters
-with the "rdpmc" inctruction.  What should I then use?
-
-I'm a little confused about the fixed counters, and the (to me) magic
-number that is used to read them:
-
-// From: https://github.com/andikleen/simple-pmu
-enum {
-	FIXED_SELECT = (1U << 30), /* == 0x40000000 */
-	FIXED_INST_RETIRED_ANY = 0,
-	FIXED_CPU_CLK_UNHALTED_CORE = 1,
-	FIXED_CPU_CLK_UNHALTED_REF = 2,
-};
-
-
-> Also please be aware that RDPMC is not synchronizing.
-
-What do you mean by "not synchronizing"?
-
-I've read some where, that I can use the "rdmsr" instruction in the
-kernel, and read the PCM register directly, to give me higher
-accuracy.  Is that a bad idea?
-
-
-Thanks for your feedback,
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Sr. Network Kernel Developer at Red Hat
-  Author of http://www.iptv-analyzer.org
-  LinkedIn: http://www.linkedin.com/in/brouer
+- Taeung -
