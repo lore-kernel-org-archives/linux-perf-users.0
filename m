@@ -1,71 +1,57 @@
-From: Martin Ichilevici de Oliveira <martin.i.oliveira@gmail.com>
-Subject: Interrupt caused by software events
-Date: Tue, 8 Jul 2014 11:42:42 -0300
-Message-ID: <20140708144242.GA300@gamayun>
+From: William Cohen <wcohen@redhat.com>
+Subject: Re: Fwd: filtering perf itself
+Date: Tue, 08 Jul 2014 15:10:53 -0400
+Message-ID: <53BC423D.7040208@redhat.com>
+References: <CAE40pdeACbvYJN0BMh9edGGLvdpV_H1Kn5ccgBh7GFuDHiuWGQ@mail.gmail.com>	<CAE40pdePzcfHfZzuOC6DyFc2H7DQMZ_JzADvx_guDS+Eg4SJtw@mail.gmail.com>	<53BAEA99.7050602@gmail.com> <CAE40pdev5Y5KRsftgNCy67ScXeF7G4JGG_zu5EqDjp=2e4APiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-yh0-f52.google.com ([209.85.213.52]:58941 "EHLO
-	mail-yh0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750845AbaGHOmH (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:52016 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754835AbaGHTK5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 8 Jul 2014 10:42:07 -0400
-Received: by mail-yh0-f52.google.com with SMTP id a41so2355918yho.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jul 2014 07:42:06 -0700 (PDT)
-Received: from localhost ([201.81.88.138])
-        by mx.google.com with ESMTPSA id y3sm71080404yhd.28.2014.07.08.07.42.04
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Jul 2014 07:42:05 -0700 (PDT)
-Content-Disposition: inline
+	Tue, 8 Jul 2014 15:10:57 -0400
+In-Reply-To: <CAE40pdev5Y5KRsftgNCy67ScXeF7G4JGG_zu5EqDjp=2e4APiQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Brendan Gregg <brendan.d.gregg@gmail.com>, David Ahern <dsahern@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
+On 07/07/2014 03:00 PM, Brendan Gregg wrote:
+> On Mon, Jul 7, 2014 at 11:44 AM, David Ahern <dsahern@gmail.com> wrote:
+>> On 7/7/14, 12:38 PM, Brendan Gregg wrote:
+>>>
+>>> G'Day perf users,
+>>>
+>>> Is there a way to filter perf from tracing itself?
+>>>
+>>> Here's an idle system:
+>>>
+>>> # ./perf record -e syscalls:sys_enter_read -a sleep 5
+>>> [ perf record: Woken up 2 times to write data ]
+>>> [ perf record: Captured and wrote 0.569 MB perf.data (~24864 samples) ]
+>>> # ./perf record -e syscalls:sys_enter_write -a sleep 5
+>>> [ perf record: Woken up 0 times to write data ]
+>>> [ perf record: Captured and wrote 150.381 MB perf.data (~6570251 samples)
+>>> ]
+>>>
+>>> Note the disparity. perf is capturing its own writes, creating a feedback
+>>> loop.
+>>
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What about probing using SystemTap and doing filtering in the probe handler to exclude the monitoring process?
 
-Hello,
+-Will
 
-I'm learning the perf_events programming interface and I'm not sure if
-what I'm trying to do is possible. I could only find the perf_event_open
-documentation, but unfortunately that's not enough for my needs, as it
-only counts the number of events that happened.
-
-I'm looking for a way to determine which instruction caused some events:
-something similar to what perf annotate does, but in an online fashion.=20
-Ideally, I'd like to have some kind of handler that gets called whenever
-a perf event occurs. Is that even possible? If not, is there any way I=20
-could get this information in a real-time way?
-
-I'll be using PEBS or IBS events.
-
-Thank you,
--Martin
-
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJTvANiAAoJEKAgcdgOx8KDtGIQAImXEh3MZzJL9Dr1u9rHCtHc
-FbELhV3NYt9Yt1gTdjHnpUl+qnf5Q7R77T6FYkooCJHGixhA4I7i6OjEoxGbd3fR
-YDb1PB8YaS0N7jerv/nB5wlgHIuIGpq+x+TdpYoZ4/hPfvBYTV2shJJfXH3Ln9Xe
-tvdPcVgt9+hJeNLrNC9yfmi1LmHYx6MMC223T5ytl/1fUVAlhgbvXWTI8whVEHBk
-DbqDOBpYKf5bpxZd/018WwMfnRtpEy+eHdsyZvp3VCk7nYRaVPCzoB3Epl2gqfLL
-0JGLMcy/8MhLfp4iOGoldRomBNZBJpriieL1B0HzLOVDRNxLY5I57q9RQX7U+A3o
-oBY25M64UIDk/hpU5Heoz+V7cVcfA/8C61GL6ODbFB/AxnMWt9+1EtqWlqlN7GMa
-vft774CUVY+WfMy0H7yFKKwLYx9vNmcAp7vHhfHnP1AsfdUC1hdA987AQGVs2vJP
-g3/6c372qEUHBYxzWE9+JOlaCRAUN3HSvZ12Uic9ewoJtcWt6QyqMpsDPFjVCtwr
-7Iq/j2RLSwBGK7sKNpgJZts48yNt2WQg1ef7L5972U9t4qsXBAUrazbKV8OSYS5Y
-tib4P+RGDl5HPcBIwREaxGFUaCRC/bZUYq2/OVnPw1C4GTq2aahlCUrJhy59V92m
-BUEPl2dx2BRZlEkWYr3m
-=uYq8
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
+>>
+>> Not a filter, but works around the problem using mmap'ed output file:
+>>
+>> https://github.com/dsahern/linux/commit/ae2d7010256f5a5b247fb4df9f764a911a34a2f3
+>>
+> 
+> Ah, thanks David, that should work! Looking forward to having this
+> patch included.
+> 
+> Brendan
+> 
