@@ -1,81 +1,71 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: Fwd: filtering perf itself
-Date: Mon, 7 Jul 2014 12:31:46 -0700
-Message-ID: <CAE40pdeRThGU-qVTSiR8O-qwcYPNGhS3akd3DBhk4tNWxbFf8w@mail.gmail.com>
-References: <CAE40pdeACbvYJN0BMh9edGGLvdpV_H1Kn5ccgBh7GFuDHiuWGQ@mail.gmail.com>
-	<CAE40pdePzcfHfZzuOC6DyFc2H7DQMZ_JzADvx_guDS+Eg4SJtw@mail.gmail.com>
-	<53BAEA99.7050602@gmail.com>
-	<CAE40pdev5Y5KRsftgNCy67ScXeF7G4JGG_zu5EqDjp=2e4APiQ@mail.gmail.com>
-	<CAE40pddousTpz0-RzehG=Dg7+TKTQYKUXfErqg9QuBU=fzUyGw@mail.gmail.com>
+From: Martin Ichilevici de Oliveira <martin.i.oliveira@gmail.com>
+Subject: Interrupt caused by software events
+Date: Tue, 8 Jul 2014 11:42:42 -0300
+Message-ID: <20140708144242.GA300@gamayun>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f45.google.com ([209.85.192.45]:43465 "EHLO
-	mail-qg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751019AbaGGTbq (ORCPT
+Received: from mail-yh0-f52.google.com ([209.85.213.52]:58941 "EHLO
+	mail-yh0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750845AbaGHOmH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 7 Jul 2014 15:31:46 -0400
-Received: by mail-qg0-f45.google.com with SMTP id a108so4094368qge.18
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jul 2014 12:31:46 -0700 (PDT)
-In-Reply-To: <CAE40pddousTpz0-RzehG=Dg7+TKTQYKUXfErqg9QuBU=fzUyGw@mail.gmail.com>
+	Tue, 8 Jul 2014 10:42:07 -0400
+Received: by mail-yh0-f52.google.com with SMTP id a41so2355918yho.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jul 2014 07:42:06 -0700 (PDT)
+Received: from localhost ([201.81.88.138])
+        by mx.google.com with ESMTPSA id y3sm71080404yhd.28.2014.07.08.07.42.04
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Jul 2014 07:42:05 -0700 (PDT)
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 7, 2014 at 12:16 PM, Brendan Gregg
-<brendan.d.gregg@gmail.com> wrote:
-> On Mon, Jul 7, 2014 at 12:00 PM, Brendan Gregg
-> <brendan.d.gregg@gmail.com> wrote:
->> On Mon, Jul 7, 2014 at 11:44 AM, David Ahern <dsahern@gmail.com> wrote:
->>> On 7/7/14, 12:38 PM, Brendan Gregg wrote:
->>>>
->>>> G'Day perf users,
->>>>
->>>> Is there a way to filter perf from tracing itself?
->>>>
->>>> Here's an idle system:
->>>>
->>>> # ./perf record -e syscalls:sys_enter_read -a sleep 5
->>>> [ perf record: Woken up 2 times to write data ]
->>>> [ perf record: Captured and wrote 0.569 MB perf.data (~24864 samples) ]
->>>> # ./perf record -e syscalls:sys_enter_write -a sleep 5
->>>> [ perf record: Woken up 0 times to write data ]
->>>> [ perf record: Captured and wrote 150.381 MB perf.data (~6570251 samples)
->>>> ]
->>>>
->>>> Note the disparity. perf is capturing its own writes, creating a feedback
->>>> loop.
->>>
->>>
->>> Not a filter, but works around the problem using mmap'ed output file:
->>>
->>> https://github.com/dsahern/linux/commit/ae2d7010256f5a5b247fb4df9f764a911a34a2f3
->>>
->>
->> Ah, thanks David, that should work! Looking forward to having this
->> patch included.
->>
->
-> While this should help a lot of cases, I realized I am using stdout
-> from time to time as well (similar to the "perf script" framework),
-> where I don't think mmap() is going to work. Eg:
->
-> # perf record -e raw_syscalls:sys_enter -a -o - sleep 5 | perf script
-> -i - | stuff...
->
-> Maybe perf should skip itself by-default, unless asked (eg, -I to
-> include perf's own events). Or some way to filter it would also work,
-> eg, common_ppid.
 
-I figured out one workaround...:
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-# sh -c 'exec ./perf record -e syscalls:sys_enter_write --filter
-"common_pid != "$$ -a sleep 5'
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.161 MB perf.data (~7051 samples) ]
+Hello,
 
-Brendan
+I'm learning the perf_events programming interface and I'm not sure if
+what I'm trying to do is possible. I could only find the perf_event_open
+documentation, but unfortunately that's not enough for my needs, as it
+only counts the number of events that happened.
 
--- 
-http://www.brendangregg.com
+I'm looking for a way to determine which instruction caused some events:
+something similar to what perf annotate does, but in an online fashion.=20
+Ideally, I'd like to have some kind of handler that gets called whenever
+a perf event occurs. Is that even possible? If not, is there any way I=20
+could get this information in a real-time way?
+
+I'll be using PEBS or IBS events.
+
+Thank you,
+-Martin
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJTvANiAAoJEKAgcdgOx8KDtGIQAImXEh3MZzJL9Dr1u9rHCtHc
+FbELhV3NYt9Yt1gTdjHnpUl+qnf5Q7R77T6FYkooCJHGixhA4I7i6OjEoxGbd3fR
+YDb1PB8YaS0N7jerv/nB5wlgHIuIGpq+x+TdpYoZ4/hPfvBYTV2shJJfXH3Ln9Xe
+tvdPcVgt9+hJeNLrNC9yfmi1LmHYx6MMC223T5ytl/1fUVAlhgbvXWTI8whVEHBk
+DbqDOBpYKf5bpxZd/018WwMfnRtpEy+eHdsyZvp3VCk7nYRaVPCzoB3Epl2gqfLL
+0JGLMcy/8MhLfp4iOGoldRomBNZBJpriieL1B0HzLOVDRNxLY5I57q9RQX7U+A3o
+oBY25M64UIDk/hpU5Heoz+V7cVcfA/8C61GL6ODbFB/AxnMWt9+1EtqWlqlN7GMa
+vft774CUVY+WfMy0H7yFKKwLYx9vNmcAp7vHhfHnP1AsfdUC1hdA987AQGVs2vJP
+g3/6c372qEUHBYxzWE9+JOlaCRAUN3HSvZ12Uic9ewoJtcWt6QyqMpsDPFjVCtwr
+7Iq/j2RLSwBGK7sKNpgJZts48yNt2WQg1ef7L5972U9t4qsXBAUrazbKV8OSYS5Y
+tib4P+RGDl5HPcBIwREaxGFUaCRC/bZUYq2/OVnPw1C4GTq2aahlCUrJhy59V92m
+BUEPl2dx2BRZlEkWYr3m
+=uYq8
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
