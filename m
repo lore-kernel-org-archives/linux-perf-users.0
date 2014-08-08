@@ -1,106 +1,70 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: kprobe string
-Date: Sun, 20 Jul 2014 18:20:20 -0700
-Message-ID: <CAE40pdeyZkYeKC4DQdw2QCqQ+HtMxWZz_pGj09Z8WGr8AtVX_w@mail.gmail.com>
-References: <CAE40pdfJpksb-LJghF+w4XZBagKo7wg6fh3irGPha5F9Uknb=A@mail.gmail.com>
-	<53C753DE.6080306@gmail.com>
-	<CAE40pdefmx7trDyWnix1tPXNQBeO-cE8-6-p68tojuXry-LGXQ@mail.gmail.com>
-	<8761iw30sv.fsf@sejong.aot.lge.com>
-	<CAE40pdfdrUOdkrV6WWZ-0PjwzVoWYo3cSe3SysKwN+PtVtV45w@mail.gmail.com>
+From: taeung <treeze.taeung@gmail.com>
+Subject: About use of dlsym()
+Date: Fri, 08 Aug 2014 15:29:26 +0900
+Message-ID: <53E46E46.5000700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qa0-f51.google.com ([209.85.216.51]:58283 "EHLO
-	mail-qa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751586AbaGUBUV (ORCPT
+Received: from mail-pa0-f44.google.com ([209.85.220.44]:41054 "EHLO
+	mail-pa0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752678AbaHHG3b (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 20 Jul 2014 21:20:21 -0400
-Received: by mail-qa0-f51.google.com with SMTP id k15so4606283qaq.24
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Jul 2014 18:20:20 -0700 (PDT)
-In-Reply-To: <CAE40pdfdrUOdkrV6WWZ-0PjwzVoWYo3cSe3SysKwN+PtVtV45w@mail.gmail.com>
+	Fri, 8 Aug 2014 02:29:31 -0400
+Received: by mail-pa0-f44.google.com with SMTP id eu11so6760037pac.17
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Aug 2014 23:29:30 -0700 (PDT)
+Received: from [192.168.1.215] ([106.245.241.10])
+        by mx.google.com with ESMTPSA id zq5sm1801738pbb.37.2014.08.07.23.29.29
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Thu, 07 Aug 2014 23:29:29 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: David Ahern <dsahern@gmail.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 1:23 AM, Brendan Gregg
-<brendan.d.gregg@gmail.com> wrote:
-> G'Day Namhyung,
-[...]
-> Wow... So now I know perf can do this, and, I have working examples of
-> kprobes via ftrace if needed (I am trying to use perf first, due to
-> the way it buffers, error handling, and concurrent usage).
->
+Hello, perf hackers :-)
 
-To follow up: I ended up using kprobes, as I wanted to match on the
-calling function (the "(xxx <- yyy)" part), which wasn't showing
-symbols for perf_events, but was for ftrace.
+I'm beginner in perf.
+I'm analysing the sequence of function call and how it was written to 
+update 'report' of gtk view.
 
-The outcome is a (hacky) Linux port of my popular opensnoop tool,
-based on Linux ftrace:
+This is a thread of a command 'perf report --gtk'
 
-# ./opensnoop
-Tracing open()s. Ctrl-C to end.
-COMM             PID      FD FILE
-opensnoop        5881    0x3
-<...>            5900    0x3 /etc/ld.so.cache
-opensnoop        5899    0x3 /etc/ld.so.cache
-opensnoop        5899    0x3 /lib/x86_64-linux-gnu/libm.so.6
-<...>            5900    0x3 /lib/x86_64-linux-gnu/libc.so.6
-opensnoop        5899    0x3 /lib/x86_64-linux-gnu/libc.so.6
-<...>            5900    0x3 /usr/lib/locale/locale-archive
-<...>            5900    0x3 trace_pipe
-ls               5915    0x3 /etc/ld.so.cache
-ls               5915    0x3 /lib/x86_64-linux-gnu/libselinux.so.1
-ls               5915    0x3 /lib/x86_64-linux-gnu/librt.so.1
-ls               5915    0x3 /lib/x86_64-linux-gnu/libacl.so.1
-ls               5915    0x3 /lib/x86_64-linux-gnu/libc.so.6
-ls               5915    0x3 /lib/x86_64-linux-gnu/libdl.so.2
-ls               5915    0x3 /lib/x86_64-linux-gnu/libpthread.so.0
-ls               5915    0x3 /lib/x86_64-linux-gnu/libattr.so.1
-ls               5915    0x3 /proc/filesystems
-ls               5915    0x3 /usr/lib/locale/locale-archive
-supervise        1690    0x9 supervise/status.new
-supervise        1681    0x9 supervise/status.new
-supervise        1690    0x9 supervise/status.new
-supervise        1681    0x9 supervise/status.new
-[...]
+1. run_argv()
+(in main of perf.c:534)
 
-This works by caching the getname() result, and reading it for
-sys_exit_open. It works in my large environment of 3.2 servers,
-without debuginfo, since I'm just using $retval:string.
+2. handle_internal_command()
+(in run_argv of perf.c:420 )
+So far, I've thought this process is to filter what command and option is
 
-If debuginfo is available I can improve opensnoop a bit by using just
-the syscall tracepoints, and tracing filenames using "filename:string"
-on sys_enter_open, but this adds a lot of lag to wait for a debuginfo
-install when wanting to debug an issue (and having debuginfo installed
-on all our servers isn't really practical). I couldn't find entry
-argument versions of $retval, eg, $arg1, $arg2, etc. Such a thing
-would let me use the syscall open tracepoint with $arg2:string,
-without debuginfo, so I could avoid dynamic tracing of getname(), and
-therefore improving stability a bit. I was trying to hack this up
-using %ax, %bx, etc, but I think that's also brittle...
+3. cmd_report()
+(in run_builtin of perf.c:319) by function pointer
 
-opensnoop supports various options:
+4. setup_browser()
+(in cmd_report of builtin-report.c:750)
 
-# ./opensnoop -h
-USAGE: opensnoop [-htx] [-d secs] [-f file] [-p PID] [-n name]
-                 -d seconds      # trace duration, and use buffers
-                 -f file         # match filename (partials ok)
-                 -n name         # process name to match on I/O issue
-                 -p PID          # PID to match on I/O issue
-                 -t              # include time (seconds)
-                 -x              # only show failed opens
-                 -h              # this usage message
-  eg,
-        opensnoop                # watch open()s live (unbuffered)
-        opensnoop -d 1           # trace 1 sec (buffered)
-        opensnoop -f conf        # trace filenames containing "conf"
-        opensnoop -p 181         # trace I/O issued by PID 181 only
+5. setup_gtk_browser()
+(in setup_browser of ui/setup.c:74)
 
-It's on github: https://github.com/brendangregg/perf-tools
+6. perf_gtk__init()
+(in setup_gtk_browser of ui/setup.c:32)
 
-Brendan
+about number 6, I have a question.
 
--- 
-http://www.brendangregg.com
+In setup_gtk_browser of ui/setup.c: 28 ~ 32,
+
+  28         perf_ui_init = dlsym(perf_gtk_handle, "perf_gtk__init");
+  29         if (perf_ui_init == NULL)
+  30                 goto out_close;
+  31
+  32         if (perf_ui_init() == 0)
+  33                 return 0;
+  34
+
+Why not call directly 'perf_gtk__init()' ?
+Why call the function by function pointer(perf_ui_init) after it is 
+gotten by 'dlsym()' ?
+Why use 'dlsym()' ?
+Is it better than calling directly the function ?
+
+- Taeung -
