@@ -1,42 +1,30 @@
-From: Taeung <treeze.taeung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
 Subject: Re: About use of dlsym()
-Date: Sat, 09 Aug 2014 22:39:15 +0900
-Message-ID: <53E62483.8070800@gmail.com>
+Date: Mon, 11 Aug 2014 16:25:22 +0900
+Message-ID: <874mxjh4il.fsf@sejong.aot.lge.com>
 References: <53E46E46.5000700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f173.google.com ([209.85.192.173]:36881 "EHLO
-	mail-pd0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751512AbaHINjT (ORCPT
+Received: from lgeamrelo02.lge.com ([156.147.1.126]:36262 "EHLO
+	lgeamrelo02.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752244AbaHKHZZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 9 Aug 2014 09:39:19 -0400
-Received: by mail-pd0-f173.google.com with SMTP id w10so8441233pde.32
-        for <linux-perf-users@vger.kernel.org>; Sat, 09 Aug 2014 06:39:19 -0700 (PDT)
-Received: from [211.201.152.215] ([211.201.152.215])
-        by mx.google.com with ESMTPSA id jy4sm6010439pbb.68.2014.08.09.06.39.17
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-        Sat, 09 Aug 2014 06:39:18 -0700 (PDT)
-In-Reply-To: <53E46E46.5000700@gmail.com>
+	Mon, 11 Aug 2014 03:25:25 -0400
+In-Reply-To: <53E46E46.5000700@gmail.com> (taeung's message of "Fri, 08 Aug
+	2014 15:29:26 +0900")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: taeung <treeze.taeung@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Sorry for my poor question.
+Hi taeung,
 
-I didn't know that 'dlopen()', 'dlsym()', 'dlclose()' for DL(Dynamic 
-Library).
-But I know it.
-
-- Taeung -
-
-On 08/08/2014 03:29 PM, taeung wrote:
+On Fri, 08 Aug 2014 15:29:26 +0900, taeung wrote:
 > Hello, perf hackers :-)
 >
 > I'm beginner in perf.
-> I'm analysing the sequence of function call and how it was written to 
+> I'm analysing the sequence of function call and how it was written to
 > update 'report' of gtk view.
 >
 > This is a thread of a command 'perf report --gtk'
@@ -73,9 +61,17 @@ On 08/08/2014 03:29 PM, taeung wrote:
 >  34
 >
 > Why not call directly 'perf_gtk__init()' ?
-> Why call the function by function pointer(perf_ui_init) after it is 
+> Why call the function by function pointer(perf_ui_init) after it is
 > gotten by 'dlsym()' ?
 > Why use 'dlsym()' ?
 > Is it better than calling directly the function ?
->
-> - Taeung -
+
+It was because many perf users wanted to reduce dependency in the main
+perf binary as they hardly/never use the GTK ui.  Although it can be
+disabled with NO_GTK2=1 when invoking make, they're just too lazy to do
+that. :)
+
+Please see https://lkml.org/lkml/2013/8/4/154 .
+
+Thanks,
+Namhyung
