@@ -1,33 +1,51 @@
 From: Suresh Nagarajan <Sureshnagaraja@gmail.com>
-Subject: cross compiling perf tool on ARM fails in yocto-linux environment
-Date: Tue, 12 Aug 2014 18:04:10 +0000 (UTC)
-Message-ID: <loom.20140812T195504-52@post.gmane.org>
+Subject: perf cross compilation on yocto-linux for ARM fails
+Date: Tue, 12 Aug 2014 21:49:47 +0000 (UTC)
+Message-ID: <loom.20140812T234636-955@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:43455 "EHLO plane.gmane.org"
+Received: from plane.gmane.org ([80.91.229.3]:58816 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752765AbaHLSKG (ORCPT
+	id S1752787AbaHLVuC (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 12 Aug 2014 14:10:06 -0400
+	Tue, 12 Aug 2014 17:50:02 -0400
 Received: from list by plane.gmane.org with local (Exim 4.69)
 	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1XHGWK-0000ru-9i
-	for linux-perf-users@vger.kernel.org; Tue, 12 Aug 2014 20:10:04 +0200
+	id 1XHJxA-00082m-2Q
+	for linux-perf-users@vger.kernel.org; Tue, 12 Aug 2014 23:50:00 +0200
 Received: from ip67-88-244-162.z244-88-67.customer.algx.net ([67.88.244.162])
         by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
         id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Aug 2014 20:10:04 +0200
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Aug 2014 23:50:00 +0200
 Received: from Sureshnagaraja by ip67-88-244-162.z244-88-67.customer.algx.net with local (Gmexim 0.1 (Debian))
         id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Aug 2014 20:10:04 +0200
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Aug 2014 23:50:00 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-I am trying to cross-compile perf tool for ARM on x86 machine. 
 
+perf cross compilation on yocto-linux for ARM fails.  I've seen posts on 
+this failure on internet but no where a detailed info is given on what was 
+the fix (or if there is a fix yet)
+
+using yocto package, I have run into issues.. 
+
+Here are the steps to run into the issue
+$ cd ~
+$ git clone http://git.rocketboards.org/poky-socfpga.git  
+$ cd  poky-socfpga/
+$ git checkout -b <test_branch> ACDS14.0_REL_GSRD_PR
+$ source ./altera-init build
+$ bitbake perf 
+
+Note: replace <test_branch> with the name of the branch you want to use 
+locally.
+
+
+This fails with 
 
 ====================================================
 
@@ -79,7 +97,7 @@ In file included from util/callchain.h:8:0,
                  from util/evlist.h:8,
                  from util/evlist.c:15:
 util/symbol.h:17:20: fatal error: libelf.h: No such file or directory
- #include <libelf.h>
+#include <libelf.h>
                     ^
 compilation terminated.
 make[1]: *** [util/evlist.o] Error 1
@@ -87,18 +105,8 @@ make[1]: *** Waiting for unfinished jobs....
 In file included from util/sort.h:11:0,
                  from util/event.c:5:
 util/symbol.h:17:20: fatal error: libelf.h: No such file or directory
- #include <libelf.h>
+#include <libelf.h>
                     ^
 compilation terminated.
 make[1]: *** [util/event.o] Error 1
 make: *** [install] Error 2
-
-
-====================================================================
-
-I have libelf.h file compiled for ARM, I tried replacing it in
-/usr/include and also in ../arm-none-linux-gnueabi/libc/usr/include.
-However, I face the same error. (I am not exactly sure about where the
-compiler is looking for libelf.h)
-
-I noticed that this issue existed from 2012... Is this not fixed?
