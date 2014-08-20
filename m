@@ -1,43 +1,43 @@
-From: "Jen-Cheng(Tommy) Huang" <tommy24@gatech.edu>
-Subject: Re: Problems with perf
-Date: Tue, 19 Aug 2014 10:50:14 -0400
-Message-ID: <CABooUW2dxtDJoLBgpkc+ZhdyS5RZ8CsOe4rB9TwBDrUtrthorA@mail.gmail.com>
-References: <CABooUW2QDE_zRMyNzSEvWMEy+c-yrMvm+rSoASsx7ctBTijvFg@mail.gmail.com>
-	<loom.20140818T205057-420@post.gmane.org>
-	<loom.20140818T221806-241@post.gmane.org>
-	<20140819080852.GA12435@krava.brq.redhat.com>
-	<87tx58mxs5.fsf@tassilo.jf.intel.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: perf cross compilation on yocto-linux for ARM fails
+Date: Tue, 19 Aug 2014 19:54:36 -0600
+Message-ID: <53F3FFDC.8090007@gmail.com>
+References: <loom.20140812T234636-955@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f46.google.com ([209.85.192.46]:37236 "EHLO
-	mail-qg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753268AbaHSOuP (ORCPT
+Received: from mail-pd0-f180.google.com ([209.85.192.180]:55720 "EHLO
+	mail-pd0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751883AbaHTByq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 19 Aug 2014 10:50:15 -0400
-Received: by mail-qg0-f46.google.com with SMTP id z60so2540835qgd.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2014 07:50:14 -0700 (PDT)
-In-Reply-To: <87tx58mxs5.fsf@tassilo.jf.intel.com>
+	Tue, 19 Aug 2014 21:54:46 -0400
+Received: by mail-pd0-f180.google.com with SMTP id v10so10837763pde.39
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2014 18:54:46 -0700 (PDT)
+In-Reply-To: <loom.20140812T234636-955@post.gmane.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org
+To: Suresh Nagarajan <Sureshnagaraja@gmail.com>, linux-perf-users@vger.kernel.org
 
-Thank you guys.
-So far the "-a" full system mode seems working.
-Thanks for the workaround.
-I will update you guys for any issues.
-Thanks.
-
-
-On Tue, Aug 19, 2014 at 9:09 AM, Andi Kleen <andi@firstfloor.org> wrote:
-> Jiri Olsa <jolsa@redhat.com> writes:
->> hi,
->> we switch off event inheritance for multiple events in group
->> with leader sampling. That's probably why you see less samples
->> and only one thread.
+On 8/12/14, 3:49 PM, Suresh Nagarajan wrote:
 >
-> If that's the problem then a short term workaround would
-> be using -a
+> perf cross compilation on yocto-linux for ARM fails.  I've seen posts on
+> this failure on internet but no where a detailed info is given on what was
+> the fix (or if there is a fix yet)
 >
-> -Andi
+> using yocto package, I have run into issues..
+>
+> Here are the steps to run into the issue
+> $ cd ~
+> $ git clone http://git.rocketboards.org/poky-socfpga.git
+> $ cd  poky-socfpga/
+> $ git checkout -b <test_branch> ACDS14.0_REL_GSRD_PR
+> $ source ./altera-init build
+> $ bitbake perf
+>
+> Note: replace <test_branch> with the name of the branch you want to use
+> locally.
+
+you should create a recipe to build perf within the yocto framework.
+
+David
