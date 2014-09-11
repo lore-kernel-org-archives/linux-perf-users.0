@@ -1,146 +1,152 @@
-From: Tong Shen <endlessroad@google.com>
-Subject: Re: Fix Symbol Address for ET_DYN
-Date: Thu, 11 Sep 2014 11:21:40 -0700
-Message-ID: <CAPp4yYzRwoTBzH1_TwcdvAOryZppV9-BwnX2bOtN1qrEqrdBww@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 1/1] perf tools: Fix Symbol Address for ET_DYN
+Date: Thu, 11 Sep 2014 17:38:06 -0300
+Message-ID: <20140911203806.GA25763@kernel.org>
 References: <CAPp4yYwTHbXiypxR_1WJGS9DYQNJ24t_Ykdo_sfQ48Ak-K3Z7g@mail.gmail.com>
-	<20140911150123.GH10158@kernel.org>
+ <20140911150123.GH10158@kernel.org>
+ <CAPp4yYzRwoTBzH1_TwcdvAOryZppV9-BwnX2bOtN1qrEqrdBww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=001a11c2a3ec772baa0502ce3d32
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f49.google.com ([209.85.192.49]:38807 "EHLO
-	mail-qg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751220AbaIKSVn (ORCPT
+Received: from mail.kernel.org ([198.145.19.201]:36159 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754290AbaIKUiN (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 11 Sep 2014 14:21:43 -0400
-Received: by mail-qg0-f49.google.com with SMTP id j5so7819637qga.36
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Sep 2014 11:21:42 -0700 (PDT)
-In-Reply-To: <20140911150123.GH10158@kernel.org>
+	Thu, 11 Sep 2014 16:38:13 -0400
+Content-Disposition: inline
+In-Reply-To: <CAPp4yYzRwoTBzH1_TwcdvAOryZppV9-BwnX2bOtN1qrEqrdBww@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+To: Tong Shen <endlessroad@google.com>
+Cc: linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
---001a11c2a3ec772baa0502ce3d32
-Content-Type: text/plain; charset=UTF-8
+Em Thu, Sep 11, 2014 at 11:21:40AM -0700, Tong Shen escreveu:
+> Hi Arnaldo,
+> 
+> Thanks a lot for the comment!
+> 
+> I fixed the coding style and added a helper function with comments, as
+> you suggested :-)
+> See attachment.
 
-Hi Arnaldo,
+That is much better, I'm adding lkml to the CC list so that we can give
+other people the opportunity to chime in.
 
-Thanks a lot for the comment!
+- Arnaldo
+ 
+> On Thu, Sep 11, 2014 at 8:01 AM, Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> > Em Fri, Sep 05, 2014 at 11:38:02AM -0700, Tong Shen escreveu:
+> >> Hi linux-perf-users,
+> >>
+> >> It's actually a patch, and I didn't find a development mailing list
+> >> for perf, so I just post it here. If this is not the right place to
+> >
+> > You can post it here, but please add the maintainers to the CC list, so
+> > that we can more quickly see your message.
+> >
+> > Comments below:
+> >
+> >> post patches, could someone direct me to it? Thanks in advance!
+> >>
+> >> In tools/perf/util/symbol-elf.c, we don't adjust symbol address for
+> >> ET_DYN type of ELF files because we think ET_DYN is always
+> >> relocatable.
+> >>
+> >> But that's not necessarily true; there are some non-relocatable ET_DYN
+> >> ELF files. For those files, we should still adjust symbol address.
+> >
+> >> Suggested patch: (HTML subpart now allowed in this mailing list...)
+> >
+> >> +++ b/perf-3.12.0/tools/perf/util/symbol-elf.c
+> >> @@ -915,7 +915,10 @@ int dso__load_sym(struct dso *dso, struct map *map,
+> >
+> >>               if ((used_opd && runtime_ss->adjust_symbols)
+> >> -                             || (!used_opd && syms_ss->adjust_symbols)) {
+> >> +                             || (!used_opd && syms_ss->adjust_symbols)
+> >> +                             || (syms_ss->ehdr.e_type == et_dyn
+> >> +                                     && shdr.sh_addr != shdr.sh_offset
+> >> +                                     && elf_sec__is_text(&shdr, secstrs))) {
+> >
+> > Please try to follow kernel coding style in these tools, i.e. the &&
+> > should be at the end, the expression on each line should be aligned just
+> > after the opening parens.
+> >
+> > If, like in this case, you find something not following that style, take
+> > the opportunity to fix it :-)
+> >
+> > But back to your change, I'll have to look at this code further, just
+> > looking at the excerpt above I find it way too confusing, and your patch
+> > makes it even more so...
+> >
+> > Can you introduce some suitably named helper that has those extra
+> > conditions you're adding now and then add it to this conditional?
+> >
+> > I.e. make it somethine like:
+> >
+> > -               if ((used_opd && runtime_ss->adjust_symbols)
+> > -                               || (!used_opd && syms_ss->adjust_symbols)) {
+> > +               if ((used_opd && runtime_ss->adjust_symbols) ||
+> > +                   (!used_opd && syms_ss->adjust_symbols)   ||
+> > +                   syms__some_suitable_name(syms_ss, &shdr)) {
+> >
+> > And then add your explanation of these kinds of files as a comment over
+> > this new function, please?
+> >
+> >>                       pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+> >>                                 "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+> >>                                 (u64)sym.st_value, (u64)shdr.sh_addr,
+> >
+> > Best regards,
+> >
+> > - Arnaldo
+> 
+> 
+> 
+> -- 
+> Best Regards, Tong Shen
 
-I fixed the coding style and added a helper function with comments, as
-you suggested :-)
-See attachment.
-
-On Thu, Sep 11, 2014 at 8:01 AM, Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> Em Fri, Sep 05, 2014 at 11:38:02AM -0700, Tong Shen escreveu:
->> Hi linux-perf-users,
->>
->> It's actually a patch, and I didn't find a development mailing list
->> for perf, so I just post it here. If this is not the right place to
->
-> You can post it here, but please add the maintainers to the CC list, so
-> that we can more quickly see your message.
->
-> Comments below:
->
->> post patches, could someone direct me to it? Thanks in advance!
->>
->> In tools/perf/util/symbol-elf.c, we don't adjust symbol address for
->> ET_DYN type of ELF files because we think ET_DYN is always
->> relocatable.
->>
->> But that's not necessarily true; there are some non-relocatable ET_DYN
->> ELF files. For those files, we should still adjust symbol address.
->
->> Suggested patch: (HTML subpart now allowed in this mailing list...)
->
->> +++ b/perf-3.12.0/tools/perf/util/symbol-elf.c
->> @@ -915,7 +915,10 @@ int dso__load_sym(struct dso *dso, struct map *map,
->
->>               if ((used_opd && runtime_ss->adjust_symbols)
->> -                             || (!used_opd && syms_ss->adjust_symbols)) {
->> +                             || (!used_opd && syms_ss->adjust_symbols)
->> +                             || (syms_ss->ehdr.e_type == et_dyn
->> +                                     && shdr.sh_addr != shdr.sh_offset
->> +                                     && elf_sec__is_text(&shdr, secstrs))) {
->
-> Please try to follow kernel coding style in these tools, i.e. the &&
-> should be at the end, the expression on each line should be aligned just
-> after the opening parens.
->
-> If, like in this case, you find something not following that style, take
-> the opportunity to fix it :-)
->
-> But back to your change, I'll have to look at this code further, just
-> looking at the excerpt above I find it way too confusing, and your patch
-> makes it even more so...
->
-> Can you introduce some suitably named helper that has those extra
-> conditions you're adding now and then add it to this conditional?
->
-> I.e. make it somethine like:
->
-> -               if ((used_opd && runtime_ss->adjust_symbols)
-> -                               || (!used_opd && syms_ss->adjust_symbols)) {
-> +               if ((used_opd && runtime_ss->adjust_symbols) ||
-> +                   (!used_opd && syms_ss->adjust_symbols)   ||
-> +                   syms__some_suitable_name(syms_ss, &shdr)) {
->
-> And then add your explanation of these kinds of files as a comment over
-> this new function, please?
->
->>                       pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
->>                                 "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
->>                                 (u64)sym.st_value, (u64)shdr.sh_addr,
->
-> Best regards,
->
-> - Arnaldo
-
-
-
--- 
-Best Regards, Tong Shen
-
---001a11c2a3ec772baa0502ce3d32
-Content-Type: text/x-patch; charset=US-ASCII; name="perf.patch"
-Content-Disposition: attachment; filename="perf.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_hzyfa5hy0
-
-ZGlmZiAtLWdpdCBhL3BlcmYtMy4xMi4wL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wtZWxmLmMgYi9w
-ZXJmLTMuMTIuMC90b29scy9wZXJmL3V0aWwvc3ltYm9sLWVsZi5jCmluZGV4IGE5YzgyOWIuLmY5
-YmQ0ODggMTAwNjQ0Ci0tLSBhL3BlcmYtMy4xMi4wL3Rvb2xzL3BlcmYvdXRpbC9zeW1ib2wtZWxm
-LmMKKysrIGIvcGVyZi0zLjEyLjAvdG9vbHMvcGVyZi91dGlsL3N5bWJvbC1lbGYuYwpAQCAtNjcz
-LDYgKzY3MywyNyBAQCBzdGF0aWMgdTY0IHJlZl9yZWxvYyhzdHJ1Y3Qga21hcCAqa21hcCkKIAly
-ZXR1cm4gMDsKIH0KIAorLyoqCisgKiBpc19ub25fcmVsb2NhdGFibGVfZHluIC0gY2hlY2sgaWYg
-RUxGIGZpbGUgaXMgRVRfRFlOLCBidXQgbm90IHJlbG9jYXRhYmxlCisgKiBAZWhkcjogRUxGIGhl
-YWRlciBvZiB0aGUgRUxGIGZpbGUKKyAqIEBzaGRyOiBhIHNlY3Rpb24gaGVhZGVyIGluIHRoZSBF
-TEYgZmlsZQorICoKKyAqIEZvciBFTEYgZmlsZXMgd2l0aCB0eXBlIEVUX0VYRUMgYW5kIEVUX1JF
-TCwgd2UgYWRqdXN0IHN5bWJvbCBhZGRyZXNzZXMgaW4KKyAqIHN5bWJvbCB0YWJsZSBpbiBkc29f
-X2xvYWRfc3ltKCkgc28gdGhhdCBsYXRlciB3ZSBjYW4gYWx3YXlzIGxvY2F0ZSBzeW1ib2xzCisg
-KiBieSBzeW0uc3RfdmFsdWUgKyBtYXBfYWRkcmVzc19vZl9FTEZfZmlsZS4KKyAqCisgKiBCdXQg
-RUxGIGZpbGVzIHdpdGggdHlwZSBFVF9EWU4gbWF5IG5lZWQgYWRqdXN0aW5nIGFzIHdlbGwsIGlm
-IHRoZXkgYXJlCisgKiBub3QgcmVsb2NhdGFibGUuIFRoZXJlJ3Mgbm8gc3RhbmRhcmQgd2F5IHRv
-IHRlbGwgaWYgYW4gRUxGIGZpbGUgd2l0aCB0eXBlCisgKiBFVF9EWU4gaXMgcmVsb2NhdGFibGUu
-IE9uZSBwb3NzaWJsZSB3YXkgdG8gZG8gdGhhdCBpcyBjaGVja2luZyBpZgorICogc2hfYWRkciA9
-PSBzaF9vZmZzZXQgZm9yIC50ZXh0IHNlY3Rpb24uCisgKi8KK3N0YXRpYyBib29sIGlzX25vbl9y
-ZWxvY2F0YWJsZV9keW4oR0VsZl9FaGRyICplaGRyLCBHRWxmX1NoZHIgKnNoZHIsCisgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIEVsZl9EYXRhICpzZWNzdHJzKSB7CisJcmV0dXJu
-IGVoZHItPmVfdHlwZSA9PSBFVF9EWU4gJiYKKwkgICAgICAgZWxmX3NlY19faXNfdGV4dChzaGRy
-LCBzZWNzdHJzKSAmJgorCSAgICAgICBzaGRyLT5zaF9vZmZzZXQgIT0gc2hkci0+c2hfYWRkcjsK
-K30KKwogaW50IGRzb19fbG9hZF9zeW0oc3RydWN0IGRzbyAqZHNvLCBzdHJ1Y3QgbWFwICptYXAs
-CiAJCSAgc3RydWN0IHN5bXNyYyAqc3ltc19zcywgc3RydWN0IHN5bXNyYyAqcnVudGltZV9zcywK
-IAkJICBzeW1ib2xfZmlsdGVyX3QgZmlsdGVyLCBpbnQga21vZHVsZSkKQEAgLTkxNCw4ICs5MzUs
-OSBAQCBpbnQgZHNvX19sb2FkX3N5bShzdHJ1Y3QgZHNvICpkc28sIHN0cnVjdCBtYXAgKm1hcCwK
-IAkJCWdvdG8gbmV3X3N5bWJvbDsKIAkJfQogCi0JCWlmICgodXNlZF9vcGQgJiYgcnVudGltZV9z
-cy0+YWRqdXN0X3N5bWJvbHMpCi0JCQkJfHwgKCF1c2VkX29wZCAmJiBzeW1zX3NzLT5hZGp1c3Rf
-c3ltYm9scykpIHsKKwkJaWYgKCh1c2VkX29wZCAmJiBydW50aW1lX3NzLT5hZGp1c3Rfc3ltYm9s
-cykgfHwKKwkJICAgICghdXNlZF9vcGQgJiYgc3ltc19zcy0+YWRqdXN0X3N5bWJvbHMpIHx8CisJ
-CSAgICBpc19ub25fcmVsb2NhdGFibGVfZHluKCZlaGRyLCAmc2hkciwgc2Vjc3RycykpIHsKIAkJ
-CXByX2RlYnVnNCgiJXM6IGFkanVzdGluZyBzeW1ib2w6IHN0X3ZhbHVlOiAlIyIgUFJJeDY0ICIg
-IgogCQkJCSAgInNoX2FkZHI6ICUjIiBQUkl4NjQgIiBzaF9vZmZzZXQ6ICUjIiBQUkl4NjQgIlxu
-IiwgX19mdW5jX18sCiAJCQkJICAodTY0KXN5bS5zdF92YWx1ZSwgKHU2NClzaGRyLnNoX2FkZHIs
-Cg==
---001a11c2a3ec772baa0502ce3d32--
+> diff --git a/perf-3.12.0/tools/perf/util/symbol-elf.c b/perf-3.12.0/tools/perf/util/symbol-elf.c
+> index a9c829b..f9bd488 100644
+> --- a/perf-3.12.0/tools/perf/util/symbol-elf.c
+> +++ b/perf-3.12.0/tools/perf/util/symbol-elf.c
+> @@ -673,6 +673,27 @@ static u64 ref_reloc(struct kmap *kmap)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * is_non_relocatable_dyn - check if ELF file is ET_DYN, but not relocatable
+> + * @ehdr: ELF header of the ELF file
+> + * @shdr: a section header in the ELF file
+> + *
+> + * For ELF files with type ET_EXEC and ET_REL, we adjust symbol addresses in
+> + * symbol table in dso__load_sym() so that later we can always locate symbols
+> + * by sym.st_value + map_address_of_ELF_file.
+> + *
+> + * But ELF files with type ET_DYN may need adjusting as well, if they are
+> + * not relocatable. There's no standard way to tell if an ELF file with type
+> + * ET_DYN is relocatable. One possible way to do that is checking if
+> + * sh_addr == sh_offset for .text section.
+> + */
+> +static bool is_non_relocatable_dyn(GElf_Ehdr *ehdr, GElf_Shdr *shdr,
+> +                                   Elf_Data *secstrs) {
+> +	return ehdr->e_type == ET_DYN &&
+> +	       elf_sec__is_text(shdr, secstrs) &&
+> +	       shdr->sh_offset != shdr->sh_addr;
+> +}
+> +
+>  int dso__load_sym(struct dso *dso, struct map *map,
+>  		  struct symsrc *syms_ss, struct symsrc *runtime_ss,
+>  		  symbol_filter_t filter, int kmodule)
+> @@ -914,8 +935,9 @@ int dso__load_sym(struct dso *dso, struct map *map,
+>  			goto new_symbol;
+>  		}
+>  
+> -		if ((used_opd && runtime_ss->adjust_symbols)
+> -				|| (!used_opd && syms_ss->adjust_symbols)) {
+> +		if ((used_opd && runtime_ss->adjust_symbols) ||
+> +		    (!used_opd && syms_ss->adjust_symbols) ||
+> +		    is_non_relocatable_dyn(&ehdr, &shdr, secstrs)) {
+>  			pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+>  				  "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+>  				  (u64)sym.st_value, (u64)shdr.sh_addr,
