@@ -1,281 +1,164 @@
-From: taeung <treeze.taeung@gmail.com>
-Subject: Re: [PATCH 03/13] perf annotate: Move session handling out of __cmd_annotate()
-Date: Sat, 13 Sep 2014 16:52:30 +0900
-Message-ID: <5413F7BE.2020201@gmail.com>
-References: <5413EFA5.4020706@gmail.com>
+From: Tong Shen <endlessroad@google.com>
+Subject: Re: [PATCH 1/1] perf tools: Fix Symbol Address for ET_DYN
+Date: Mon, 15 Sep 2014 11:06:49 -0700
+Message-ID: <CAPp4yYzT66+J_dHC5_0TiTEdSK874OS-PH9nAtcr5-Luj69+7w@mail.gmail.com>
+References: <CAPp4yYwTHbXiypxR_1WJGS9DYQNJ24t_Ykdo_sfQ48Ak-K3Z7g@mail.gmail.com>
+	<20140911150123.GH10158@kernel.org>
+	<CAPp4yYzRwoTBzH1_TwcdvAOryZppV9-BwnX2bOtN1qrEqrdBww@mail.gmail.com>
+	<20140911203806.GA25763@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f54.google.com ([209.85.220.54]:44180 "EHLO
-	mail-pa0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751447AbaIMHw5 (ORCPT
+Received: from mail-qg0-f46.google.com ([209.85.192.46]:61608 "EHLO
+	mail-qg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753046AbaIOSGv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 13 Sep 2014 03:52:57 -0400
-In-Reply-To: <5413EFA5.4020706@gmail.com>
+	Mon, 15 Sep 2014 14:06:51 -0400
+Received: by mail-qg0-f46.google.com with SMTP id q107so4231126qgd.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2014 11:06:50 -0700 (PDT)
+In-Reply-To: <20140911203806.GA25763@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-Hi,
+Gentle ping :-)
 
-I modified error code for the requirement as below.
-
-Author: taeung <treeze.taeung@gmail.com>
-Date:   Sat Sep 13 16:22:53 2014 +0900
-
-      modified error code when perf_session__new() fail
-
-         Because perf_session__new() could fail
-         for more reasons than just ENOMEM,
-         I modified error code(ENOMEM or EINVAL)
-         into -1.
-
-
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 1ec429f..81c9fda 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -199,7 +199,7 @@ static int __cmd_annotate(struct perf_annotate *ann)
-
-      session = perf_session__new(&file, false, &ann->tool);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      machines__set_symbol_filter(&session->machines, 
-symbol__annotate_init);
-
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 9a5a035..3363dce 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -683,7 +683,7 @@ static int __cmd_diff(void)
-          d->session = perf_session__new(&d->file, false, &tool);
-          if (!d->session) {
-              pr_err("Failed to open %s\n", d->file.path);
--            ret = -ENOMEM;
-+            ret = -1;
-              goto out_delete;
-          }
-
-diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
-index 66e12f5..0f93f85 100644
---- a/tools/perf/builtin-evlist.c
-+++ b/tools/perf/builtin-evlist.c
-@@ -28,7 +28,7 @@ static int __cmd_evlist(const char *file_name, struct 
-perf_attr_details *details
-
-      session = perf_session__new(&file, 0, NULL);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      evlist__for_each(session->evlist, pos)
-          perf_evsel__fprintf(pos, details, stdout);
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 9a02807..8dbdd13 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -359,7 +359,7 @@ static int __cmd_inject(struct perf_inject *inject)
-
-      session = perf_session__new(&file, true, &inject->tool);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      if (inject->build_ids) {
-          inject->tool.sample = perf_event__inject_buildid;
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index bef3376..b518f4b 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -422,7 +422,7 @@ static int __cmd_kmem(void)
-
-      session = perf_session__new(&file, false, &perf_kmem);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      if (perf_session__create_kernel_maps(session) < 0)
-          goto out_delete;
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 43367eb..828e706 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1060,7 +1060,7 @@ static int read_events(struct perf_kvm_stat *kvm)
-          .comm            = perf_event__process_comm,
-          .ordered_samples    = true,
-      };
--    struct perf_data_file file = {
-+    struct perf_data_file file = {
-          .path = kvm->file_name,
-          .mode = PERF_DATA_MODE_READ,
-      };
-@@ -1069,7 +1069,7 @@ static int read_events(struct perf_kvm_stat *kvm)
-      kvm->session = perf_session__new(&file, false, &kvm->tool);
-      if (!kvm->session) {
-          pr_err("Initializing perf session failed\n");
--        return -EINVAL;
-+        return -1;
-      }
-
-      if (!perf_session__has_traces(kvm->session, "kvm record"))
-@@ -1369,7 +1369,7 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
-       */
-      kvm->session = perf_session__new(&file, false, &kvm->tool);
-      if (kvm->session == NULL) {
--        err = -ENOMEM;
-+        err = -1;
-          goto out;
-      }
-      kvm->session->evlist = kvm->evlist;
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 6148afc..49f1e30 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -862,7 +862,7 @@ static int __cmd_report(bool display_info)
-      session = perf_session__new(&file, false, &eops);
-      if (!session) {
-          pr_err("Initializing perf session failed\n");
--        return -ENOMEM;
-+        return -1;
-      }
-
-      if (!perf_session__has_traces(session, "lock record"))
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 4a1a6c9..75976ce 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -124,7 +124,7 @@ static int report_raw_events(struct perf_mem *mem)
-                               &mem->tool);
-
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      if (mem->cpu_list) {
-          ret = perf_session__cpu_bitmap(session, mem->cpu_list,
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 21d830b..1a7abac 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -712,7 +712,7 @@ int cmd_report(int argc, const char **argv, const 
-char *prefix __maybe_unused)
-  repeat:
-      session = perf_session__new(&file, false, &report.tool);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      report.session = session;
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index f57035b..77cef60 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1725,7 +1725,7 @@ int cmd_script(int argc, const char **argv, const 
-char *prefix __maybe_unused)
-
-      session = perf_session__new(&file, false, &script.tool);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      if (header || header_only) {
-          perf_session__fprintf_info(session, stdout, show_full_info);
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 2f1a522..dc9a465 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1605,7 +1605,7 @@ static int __cmd_timechart(struct timechart 
-*tchart, const char *output_name)
-      int ret = -EINVAL;
-
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      (void)perf_header__process_sections(&session->header,
-                          perf_data_file__fd(session->file),
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 377971d..8217b5d 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -911,7 +911,7 @@ static int __cmd_top(struct perf_top *top)
-
-      top->session = perf_session__new(NULL, false, NULL);
-      if (top->session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      machines__set_symbol_filter(&top->session->machines, symbol_filter);
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a6c3752..9e23293 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2220,7 +2220,7 @@ static int trace__replay(struct trace *trace)
-
-      session = perf_session__new(&file, false, &trace->tool);
-      if (session == NULL)
--        return -ENOMEM;
-+        return -1;
-
-      trace->host = &session->machines.host;
-
-Thanks,
---
-taeung
-
-> On Tue, Aug 12, 2014 at 03:40:35PM +0900, Namhyung Kim wrote:
+On Thu, Sep 11, 2014 at 1:38 PM, Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+> Em Thu, Sep 11, 2014 at 11:21:40AM -0700, Tong Shen escreveu:
+>> Hi Arnaldo,
+>>
+>> Thanks a lot for the comment!
+>>
+>> I fixed the coding style and added a helper function with comments, as
+>> you suggested :-)
+>> See attachment.
 >
-> SNIP
+> That is much better, I'm adding lkml to the CC list so that we can give
+> other people the opportunity to chime in.
 >
-> >
-> > @@ -301,6 +281,10 @@ int cmd_annotate(int argc, const char **argv, 
-> const char *prefix __maybe_unused)
-> > .ordering_requires_timestamps = true,
-> > },
-> > };
-> > + struct perf_data_file file = {
-> > + .path = input_name,
-> > + .mode = PERF_DATA_MODE_READ,
-> > + };
-> > const struct option options[] = {
-> > OPT_STRING('i', "input", &input_name, "file",
-> > "input file name"),
-> > @@ -308,7 +292,7 @@ int cmd_annotate(int argc, const char **argv, 
-> const char *prefix __maybe_unused)
-> > "only consider symbols in these dsos"),
-> > OPT_STRING('s', "symbol", &annotate.sym_hist_filter, "symbol",
-> > "symbol to annotate"),
-> > - OPT_BOOLEAN('f', "force", &annotate.force, "don't complain, do it"),
-> > + OPT_BOOLEAN('f', "force", &file.force, "don't complain, do it"),
-> > OPT_INCR('v', "verbose", &verbose,
-> > "be more verbose (show symbol address, etc)"),
-> > OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
-> > @@ -341,6 +325,7 @@ int cmd_annotate(int argc, const char **argv, 
-> const char *prefix __maybe_unused)
-> > "Show event group information together"),
-> > OPT_END()
-> > };
-> > + int ret;
-> >
-> > argc = parse_options(argc, argv, options, annotate_usage, 0);
-> >
-> > @@ -353,11 +338,16 @@ int cmd_annotate(int argc, const char **argv, 
-> const char *prefix __maybe_unused)
-> >
-> > setup_browser(true);
-> >
-> > + annotate.session = perf_session__new(&file, false, &annotate.tool);
-> > + if (annotate.session == NULL)
-> > + return -ENOMEM;
+> - Arnaldo
 >
-> I know you're just moving code, but perf_session__new could
-> fail for more reasons than just ENOMEM, which is the most
-> unlikely case ;-) -1 is probably better option here
+>> On Thu, Sep 11, 2014 at 8:01 AM, Arnaldo Carvalho de Melo
+>> <acme@kernel.org> wrote:
+>> > Em Fri, Sep 05, 2014 at 11:38:02AM -0700, Tong Shen escreveu:
+>> >> Hi linux-perf-users,
+>> >>
+>> >> It's actually a patch, and I didn't find a development mailing list
+>> >> for perf, so I just post it here. If this is not the right place to
+>> >
+>> > You can post it here, but please add the maintainers to the CC list, so
+>> > that we can more quickly see your message.
+>> >
+>> > Comments below:
+>> >
+>> >> post patches, could someone direct me to it? Thanks in advance!
+>> >>
+>> >> In tools/perf/util/symbol-elf.c, we don't adjust symbol address for
+>> >> ET_DYN type of ELF files because we think ET_DYN is always
+>> >> relocatable.
+>> >>
+>> >> But that's not necessarily true; there are some non-relocatable ET_DYN
+>> >> ELF files. For those files, we should still adjust symbol address.
+>> >
+>> >> Suggested patch: (HTML subpart now allowed in this mailing list...)
+>> >
+>> >> +++ b/perf-3.12.0/tools/perf/util/symbol-elf.c
+>> >> @@ -915,7 +915,10 @@ int dso__load_sym(struct dso *dso, struct map *map,
+>> >
+>> >>               if ((used_opd && runtime_ss->adjust_symbols)
+>> >> -                             || (!used_opd && syms_ss->adjust_symbols)) {
+>> >> +                             || (!used_opd && syms_ss->adjust_symbols)
+>> >> +                             || (syms_ss->ehdr.e_type == et_dyn
+>> >> +                                     && shdr.sh_addr != shdr.sh_offset
+>> >> +                                     && elf_sec__is_text(&shdr, secstrs))) {
+>> >
+>> > Please try to follow kernel coding style in these tools, i.e. the &&
+>> > should be at the end, the expression on each line should be aligned just
+>> > after the opening parens.
+>> >
+>> > If, like in this case, you find something not following that style, take
+>> > the opportunity to fix it :-)
+>> >
+>> > But back to your change, I'll have to look at this code further, just
+>> > looking at the excerpt above I find it way too confusing, and your patch
+>> > makes it even more so...
+>> >
+>> > Can you introduce some suitably named helper that has those extra
+>> > conditions you're adding now and then add it to this conditional?
+>> >
+>> > I.e. make it somethine like:
+>> >
+>> > -               if ((used_opd && runtime_ss->adjust_symbols)
+>> > -                               || (!used_opd && syms_ss->adjust_symbols)) {
+>> > +               if ((used_opd && runtime_ss->adjust_symbols) ||
+>> > +                   (!used_opd && syms_ss->adjust_symbols)   ||
+>> > +                   syms__some_suitable_name(syms_ss, &shdr)) {
+>> >
+>> > And then add your explanation of these kinds of files as a comment over
+>> > this new function, please?
+>> >
+>> >>                       pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+>> >>                                 "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+>> >>                                 (u64)sym.st_value, (u64)shdr.sh_addr,
+>> >
+>> > Best regards,
+>> >
+>> > - Arnaldo
+>>
+>>
+>>
+>> --
+>> Best Regards, Tong Shen
 >
-> jirka
+>> diff --git a/perf-3.12.0/tools/perf/util/symbol-elf.c b/perf-3.12.0/tools/perf/util/symbol-elf.c
+>> index a9c829b..f9bd488 100644
+>> --- a/perf-3.12.0/tools/perf/util/symbol-elf.c
+>> +++ b/perf-3.12.0/tools/perf/util/symbol-elf.c
+>> @@ -673,6 +673,27 @@ static u64 ref_reloc(struct kmap *kmap)
+>>       return 0;
+>>  }
+>>
+>> +/**
+>> + * is_non_relocatable_dyn - check if ELF file is ET_DYN, but not relocatable
+>> + * @ehdr: ELF header of the ELF file
+>> + * @shdr: a section header in the ELF file
+>> + *
+>> + * For ELF files with type ET_EXEC and ET_REL, we adjust symbol addresses in
+>> + * symbol table in dso__load_sym() so that later we can always locate symbols
+>> + * by sym.st_value + map_address_of_ELF_file.
+>> + *
+>> + * But ELF files with type ET_DYN may need adjusting as well, if they are
+>> + * not relocatable. There's no standard way to tell if an ELF file with type
+>> + * ET_DYN is relocatable. One possible way to do that is checking if
+>> + * sh_addr == sh_offset for .text section.
+>> + */
+>> +static bool is_non_relocatable_dyn(GElf_Ehdr *ehdr, GElf_Shdr *shdr,
+>> +                                   Elf_Data *secstrs) {
+>> +     return ehdr->e_type == ET_DYN &&
+>> +            elf_sec__is_text(shdr, secstrs) &&
+>> +            shdr->sh_offset != shdr->sh_addr;
+>> +}
+>> +
+>>  int dso__load_sym(struct dso *dso, struct map *map,
+>>                 struct symsrc *syms_ss, struct symsrc *runtime_ss,
+>>                 symbol_filter_t filter, int kmodule)
+>> @@ -914,8 +935,9 @@ int dso__load_sym(struct dso *dso, struct map *map,
+>>                       goto new_symbol;
+>>               }
+>>
+>> -             if ((used_opd && runtime_ss->adjust_symbols)
+>> -                             || (!used_opd && syms_ss->adjust_symbols)) {
+>> +             if ((used_opd && runtime_ss->adjust_symbols) ||
+>> +                 (!used_opd && syms_ss->adjust_symbols) ||
+>> +                 is_non_relocatable_dyn(&ehdr, &shdr, secstrs)) {
+>>                       pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+>>                                 "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+>>                                 (u64)sym.st_value, (u64)shdr.sh_addr,
+>
+
+
+
+-- 
+Best Regards, Tong Shen
