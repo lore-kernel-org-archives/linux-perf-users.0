@@ -1,157 +1,141 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [GIT PULL 00/20] perf/core improvements and fixes
-Date: Wed, 17 Sep 2014 18:24:03 -0300
-Message-ID: <1410989063-14207-1-git-send-email-acme@kernel.org>
+Subject: [PATCH 18/20] perf probe: Do not access kallsyms when analyzing user binaries
+Date: Wed, 17 Sep 2014 18:24:21 -0300
+Message-ID: <1410989063-14207-19-git-send-email-acme@kernel.org>
+References: <1410989063-14207-1-git-send-email-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.19.201]:57847 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.19.201]:58290 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756386AbaIQVYg (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 17 Sep 2014 17:24:36 -0400
+	id S932235AbaIQVZq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 17 Sep 2014 17:25:46 -0400
+In-Reply-To: <1410989063-14207-1-git-send-email-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Yarygin <yarygin@linux.vnet.ibm.com>, Anton Blanchard <anton@samba.org>, Avi Kivity <avi@cloudius-systems.com>, Chanho Park <chanho61.park@samsung.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Corey Ashford <cjashfor@linux.vnet.ibm.com>, David Ahern <dsahern@gmail.com>, david lerner <dlernerdroid@gmail.com>, Don Zickus <dzickus@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Jean Pihet <jean.pihet@linaro.org>, Jiri Olsa <jolsa@redhat.com>, John Spencer <maillist-linux@barfooze.de>, Kyle McMartin <kyle@mcmartin.ca>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Michael Ellerman <mpe@ellerman.id.au>, Mike Galbraith <efault@gmx.de>, Namhyung Kim <namhyung@gmail.com>, Paul Mackerras <paulu>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, david lerner <dlernerdroid@gmail.com>, linux-perf-users@vger.kernel.org, yrl.pp-manager.tt@hitachi.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi Ingo,
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-	Please consider pulling,
+Do not access kallsyms to show available variables and show source lines
+in user binaries.
 
-- Arnaldo
+This behavior always requires the root privilege when sysctl sets
+kernel.kptr_restrict=1, but we don't need it just for analyzing user
+binaries.
 
-The following changes since commit c88f2096136416b261bd3647cc260935f6e95805:
+Without this patch (by normal user, kptr_restrict=1):
+  ----
+  $ perf probe -x ./perf -V add_cmdname
+  Failed to init vmlinux path.
+    Error: Failed to show vars.
+  $ perf probe -x ./perf -L add_cmdname
+  Failed to init vmlinux path.
+    Error: Failed to show lines.
+  ----
 
-  perf: Do not check PERF_EVENT_STATE_EXIT on syscall read path (2014-09-16 10:30:36 +0200)
+With this patch:
+  ----
+  $ perf probe -x ./perf -V add_cmdname
+  Available variables at add_cmdname
+          @<perf_unknown_cmd_config+144>
+                  (No matched variables)
+          @<list_commands_in_dir+160>
+                  (No matched variables)
+          @<add_cmdname+0>
+                  char*   name
+                  size_t  len
+                  struct cmdnames*        cmds
+  $ perf probe -x ./perf -L add_cmdname
+  <add_cmdname@/home/fedora/ksrc/linux-3/tools/perf/util/help.c:0>
+        0  void add_cmdname(struct cmdnames *cmds, const char *name, size_t len)
+        1  {
+        2         struct cmdname *ent = malloc(sizeof(*ent) + len + 1);
 
-are available in the git repository at:
+        4         ent->len = len;
+        5         memcpy(ent->name, name, len);
+        6         ent->name[len] = 0;
+  ...
+  ----
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo
-
-for you to fetch changes up to e5685730e2c620f97bc12380e9370e857e5bd7a7:
-
-  perf record: Use ring buffer consume method to look like other tools (2014-09-17 18:01:43 -0300)
-
-----------------------------------------------------------------
-perf/core improvements and fixes:
-
-User visible:
-
-o Add +field argument support for --sort option (Jiri Olsa)
-
-o Do not access kallsyms when analyzing user binaries with 'probe' (Masami Hiramatsu)
-
-o Ignore stripped vmlinux and fallback to kallsyms (Anton Blanchard)
-
-o Add path to Ubuntu kernel debuginfo file (Anton Blanchard)
-
-o Disable kernel symbol demangling by default (Avi Kivity)
-
-Infrastructure:
-
-o More intel PT prep work, from Adrian Hunter, including:
-
-  - Let a user specify a PMU event without any config terms
-  - Add perf-with-kcore script
-  - Let default config be defined for a PMU
-  - Add perf_pmu__scan_file()
-
-o "perf kvm stat report" improvements by Alexander Yarygin:
-  o  Save pid string in opts.target.pid
-  o  Enable the target.system_wide flag
-  o  Unify the title bar output
-
-o Fix build issue on powerpc when DWARF support is disabled (Anton Blanchard)
-
-o Allow to specify lib compile variable for spec usage (Jiri Olsa)
-
-o Fix build on ARM (Stephane Eranian)
-
-o Fix build on powerpc when DWARF support is disabled (Anton Blanchard)
-
-o Don't include sys/poll.h directly (Arnaldo Carvalho de Melo)
-
-o Use ring buffer consume method to look like other tools (Arnaldo Carvalho de Melo)
-
-Chanho Park (1):
-  perf tools: define _DEFAULT_SOURCE for glibc_2.20
-
-o Allow to specify lib compile variable for spec usage (Jiri Olsa)
-
-o Fix GNU-only grep usage in Makefile (John Spencer)
-
+Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: david lerner <dlernerdroid@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: yrl.pp-manager.tt@hitachi.com
+Link: http://lkml.kernel.org/r/20140917084054.3722.73975.stgit@kbuild-f20.novalocal
+[ Added missing 'bool user' argument to the !DWARF show_line_range() stub ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-----------------------------------------------------------------
-Adrian Hunter (4):
-      perf tools: Let a user specify a PMU event without any config terms
-      perf tools: Add perf-with-kcore script
-      perf tools: Let default config be defined for a PMU
-      perf tools: Add perf_pmu__scan_file()
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-probe.c    | 3 ++-
+ tools/perf/util/probe-event.c | 9 +++++----
+ tools/perf/util/probe-event.h | 3 ++-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-Alexander Yarygin (3):
-      perf kvm stat report: Save pid string in opts.target.pid
-      perf kvm stat report: Enable the target.system_wide flag
-      perf kvm stat report: Unify the title bar output
-
-Anton Blanchard (3):
-      perf tools powerpc: Fix build issue when DWARF support is disabled
-      perf symbols: Ignore stripped vmlinux and fallback to kallsyms
-      perf symbols: Add path to Ubuntu kernel debuginfo file
-
-Arnaldo Carvalho de Melo (2):
-      perf tools: Don't include sys/poll.h directly
-      perf record: Use ring buffer consume method to look like other tools
-
-Avi Kivity (1):
-      perf tools: Disable kernel symbol demangling by default
-
-Chanho Park (1):
-      perf tools: define _DEFAULT_SOURCE for glibc_2.20
-
-Jiri Olsa (2):
-      perf tools: Add +field argument support for --sort option
-      perf tools: Allow to specify lib compile variable for spec usage
-
-John Spencer (1):
-      perf tools: Fix GNU-only grep usage in Makefile
-
-Masami Hiramatsu (2):
-      perf probe: Do not access kallsyms when analyzing user binaries
-      perf probe: Do not use dwfl_module_addrsym if dwarf_diename finds symbol name
-
-Stephane Eranian (1):
-      perf tool: fix compilation for ARM
-
- tools/perf/.gitignore                       |   1 +
- tools/perf/Documentation/perf-probe.txt     |   3 +
- tools/perf/Documentation/perf-report.txt    |   3 +
- tools/perf/Documentation/perf-top.txt       |   3 +
- tools/perf/Makefile.perf                    |   5 +-
- tools/perf/arch/arm/tests/dwarf-unwind.c    |   1 +
- tools/perf/arch/arm/util/unwind-libunwind.c |   1 +
- tools/perf/arch/powerpc/Makefile            |   2 +-
- tools/perf/bench/sched-messaging.c          |   2 +-
- tools/perf/builtin-kvm.c                    |  23 +--
- tools/perf/builtin-probe.c                  |   5 +-
- tools/perf/builtin-record.c                 |   8 +-
- tools/perf/builtin-report.c                 |   2 +
- tools/perf/builtin-top.c                    |   4 +-
- tools/perf/config/Makefile                  |  12 +-
- tools/perf/config/utilities.mak             |   2 +-
- tools/perf/perf-with-kcore.sh               | 259 ++++++++++++++++++++++++++++
- tools/perf/tests/pmu.c                      |   2 +-
- tools/perf/util/kvm-stat.h                  |   1 -
- tools/perf/util/parse-events.c              |  13 +-
- tools/perf/util/parse-events.y              |  10 ++
- tools/perf/util/pmu.c                       |  79 +++++++--
- tools/perf/util/pmu.h                       |  12 +-
- tools/perf/util/probe-event.c               |   9 +-
- tools/perf/util/probe-event.h               |   3 +-
- tools/perf/util/probe-finder.c              |  16 +-
- tools/perf/util/sort.c                      |  37 +++-
- tools/perf/util/symbol-elf.c                |  15 +-
- tools/perf/util/symbol.c                    |   9 +-
- tools/perf/util/symbol.h                    |   1 +
- tools/perf/util/util.h                      |   4 +-
- 31 files changed, 487 insertions(+), 60 deletions(-)
- create mode 100644 tools/perf/perf-with-kcore.sh
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 4d6858dbebea..04412b4770a2 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -472,7 +472,8 @@ __cmd_probe(int argc, const char **argv, const char *prefix __maybe_unused)
+ 			usage_with_options(probe_usage, options);
+ 		}
+ 
+-		ret = show_line_range(&params.line_range, params.target);
++		ret = show_line_range(&params.line_range, params.target,
++				      params.uprobes);
+ 		if (ret < 0)
+ 			pr_err_with_code("  Error: Failed to show lines.", ret);
+ 		return ret;
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index f73595fc0627..be37b5aca335 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -697,11 +697,11 @@ end:
+ 	return ret;
+ }
+ 
+-int show_line_range(struct line_range *lr, const char *module)
++int show_line_range(struct line_range *lr, const char *module, bool user)
+ {
+ 	int ret;
+ 
+-	ret = init_symbol_maps(false);
++	ret = init_symbol_maps(user);
+ 	if (ret < 0)
+ 		return ret;
+ 	ret = __show_line_range(lr, module);
+@@ -776,7 +776,7 @@ int show_available_vars(struct perf_probe_event *pevs, int npevs,
+ 	int i, ret = 0;
+ 	struct debuginfo *dinfo;
+ 
+-	ret = init_symbol_maps(false);
++	ret = init_symbol_maps(pevs->uprobes);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -822,7 +822,8 @@ static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
+ }
+ 
+ int show_line_range(struct line_range *lr __maybe_unused,
+-		    const char *module __maybe_unused)
++		    const char *module __maybe_unused,
++		    bool user __maybe_unused)
+ {
+ 	pr_warning("Debuginfo-analysis is not supported.\n");
+ 	return -ENOSYS;
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 776c9347a3b6..e01e9943139f 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -128,7 +128,8 @@ extern int add_perf_probe_events(struct perf_probe_event *pevs, int npevs,
+ 				 bool force_add);
+ extern int del_perf_probe_events(struct strlist *dellist);
+ extern int show_perf_probe_events(void);
+-extern int show_line_range(struct line_range *lr, const char *module);
++extern int show_line_range(struct line_range *lr, const char *module,
++			   bool user);
+ extern int show_available_vars(struct perf_probe_event *pevs, int npevs,
+ 			       int max_probe_points, const char *module,
+ 			       struct strfilter *filter, bool externs);
+-- 
+1.9.3
