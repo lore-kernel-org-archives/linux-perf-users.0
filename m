@@ -1,169 +1,237 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/20] perf/core improvements and fixes
-Date: Fri, 19 Sep 2014 07:15:36 +0200
-Message-ID: <20140919051536.GA9821@gmail.com>
-References: <1410989063-14207-1-git-send-email-acme@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Perf event for Wall-time based sampling?
+Date: Fri, 19 Sep 2014 14:59:55 +0900
+Message-ID: <874mw4m9pg.fsf@sejong.aot.lge.com>
+References: <2221771.b2oSN5LR6X@milian-kdab2>
+	<2297882.Vc1x1zOfA6@milian-kdab2> <20140918155745.GH2770@kernel.org>
+	<45528931.El8SOGvs6Z@milian-kdab2> <20140918191713.GK2770@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-we0-f172.google.com ([74.125.82.172]:61416 "EHLO
-	mail-we0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752464AbaISFPn (ORCPT
+Received: from lgeamrelo01.lge.com ([156.147.1.125]:39975 "EHLO
+	lgeamrelo01.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751458AbaISF76 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 19 Sep 2014 01:15:43 -0400
-Content-Disposition: inline
-In-Reply-To: <1410989063-14207-1-git-send-email-acme@kernel.org>
+	Fri, 19 Sep 2014 01:59:58 -0400
+In-Reply-To: <20140918191713.GK2770@kernel.org> (Arnaldo Carvalho de Melo's
+	message of "Thu, 18 Sep 2014 16:17:13 -0300")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Yarygin <yarygin@linux.vnet.ibm.com>, Anton Blanchard <anton@samba.org>, Avi Kivity <avi@cloudius-systems.com>, Chanho Park <chanho61.park@samsung.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Corey Ashford <cjashfor@linux.vnet.ibm.com>, David Ahern <dsahern@gmail.com>, david lerner <dlernerdroid@gmail.com>, Don Zickus <dzickus@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, Jean Pihet <jean.pihet@linaro.org>, Jiri Olsa <jolsa@redhat.com>, John Spencer <maillist-linux@barfooze.de>, Kyle McMartin <kyle@mcmartin.ca>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Michael Ellerman <mpe@ellerman.id.au>, Mike Galbraith <efault@gmx.de>, Namhyung Kim <namhyung@gmail.com>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infrade>
+Cc: Milian Wolff <mail@milianw.de>, linux-perf-users <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Joseph Schuchart <joseph.schuchart@tu-dresden.de>
+
+Hi Arnaldo and Millan,
+
+On Thu, 18 Sep 2014 16:17:13 -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Sep 18, 2014 at 06:37:47PM +0200, Milian Wolff escreveu:
+>> On Thursday 18 September 2014 12:57:45 Arnaldo Carvalho de Melo wrote:
+>> > Em Thu, Sep 18, 2014 at 05:26:33PM +0200, Milian Wolff escreveu:
+>> > > On Thursday 18 September 2014 11:51:24 Arnaldo Carvalho de Melo wrote:
+>  
+>> <snip>
+>  
+>> > > b) The callgraphs are really strange, imo. Different traces are printed
+>> > > with the same cost, which sounds wrong, no? See e.g. the multiple 44.44%
+>> > > traces in sched:sched_wakeup.
+>
+>> > Try using --no-children in the 'report' command line.
+>
+>> Nice, this is very useful. Many thanks!
+>
+> npo
+>  
+>> > > c) Most of the traces point into the kernel, how can I hide these traces
+>> > > and only concentrate on the user-space? Do I have to grep manually for
+>> > > [.] ? I
+>
+>> > Oh well, for userspace you need to be aware of how callchains are
+>> > collected, i.e. if your binaries and libraries use
+>> > -fno-omit-frame-pointer, because if they do you will not get callchains
+>> > going into userspace, so you will need to specifically ask for 'DWARF'
+>> > callchains, from 'perf record' documentation:
+>  
+>> I'm actually aware of that and I did add that option to my initial record 
+>> call, sorry for not being clear here.
+>  
+>> <snip>
+>  
+>> > This has to be made automated, i.e. the tooling needs to figure out that
+>> > the binaries used do use %bp for optimization and automagically collect
+>> > DWARF, but till then, one needs to know about such issues and deal with
+>> > it.
+>> 
+>> That would indeed be very welcome. There are multiple "defaults" in perf which 
+>> I find highly confusing. The --no-children above e.g. could/should probably be 
+>> the default, no? Similar, I find it extremely irritating that `perf report -g` 
+>
+> It was, this is something we've actually been discussing recently: the
+> change that made --children be the default mode. That is why I added
+> Namhyung and Ingo to the CC list, so that they become aware of more
+> reaction to this change.
+
+Yeah, we should rethink about changing the default now.  Actually I'm
+okay with the change, Ingo what do you think?
 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+>> defaults to `-g fractal` and not `-g graph`.
+>> 
+>> 100% foo
+>>   70% bar
+>>     70% asdf
+>>     30% lalala
+>>   30% baz
+>> 
+>> is much harder to interpret than
+>> 
+>> 100% foo
+>>   70% bar
+>>     49% asdf
+>>     21% lalala
+>>   30% baz
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
+I also agree with you. :)
+
+
+>
+> But the question then is if this is configurable, if not that would be a
+> first step, i.e. making this possible via some ~/.perfconfig change.
+
+Yes, we have record.call-graph and top.call-graph config options now so
+adding a new report.call-graph option should not be difficult.  However
+I think it'd be better being call-graph.XXX as it can be applied to all
+other subcommands transparently.
+
+What about like below?
+
+[call-graph]
+  mode = dwarf
+  dump-size = 8192
+  print-type = fractal
+  order = callee
+  threshold = 0.5
+  print-limit = 128
+  sort-key = function
+
+
+>
+> Later we could advocate changing the default. Or perhaps provide some
+> "skins", i.e. config files that could be sourced into ~/.perfconfig so
+> that perf mimics the decisions of other profilers, with which people are
+> used to.
+>
+> Kinda like making mutt behave like pine (as I did a long time ago), even
+> if just for a while, till one gets used to the "superior" default way of
+> doing things of the new tool :-)
+>  
+>> especially for more involved call chains. It took me quite some time to become 
+>> aware of the ability to pass `-g graph` to get the desired output. KCacheGrind 
+>> e.g. also defaults to something similar to `-g graph` and only optionally 
+>> allows the user to get the "relative to parent" cost of `-g fractal`.
+>> 
+>> > User space support is something that as you see, is still rough, we need
+>> > people like you trying it, but while it is rough, people tend to avoid
+>> > it... :-\
+>> 
+>> Yes. But already perf is extremely useful and I use it a lot. I'm also 
+>> actively educating people about using it more. I've talked about it at last 
+>> year's Akademy and Qt Developer Days, and again this year at a profiling 
+>> workshop at Akademy. Please keep up the good work!
+>
+> Thanks a lot for doing that!
+>
+>> > > tried something like `perf report --parent "main"` but that makes no
+>> > > difference.
+>
+>> > > > I would recommend that you take a look at Brendan Greggs _excellent_
+>> > > > tutorials at:
+>
+>> > > > http://www.brendangregg.com/perf.html
+>
+>> > > > He will explain all this in way more detail than I briefly skimmed
+>> > > > above. :-)
+>
+>> > > I did that already, but Brendan and the other available Perf documentation
+>> > > mostly concentrates on performance issues in the Kernel. I'm interested
+>> > > purely in the user space. Perf record with one of the hardware PMU events
+>> > > works nicely in that case, but one cannot use it to find locks&waits
+>> > > similar to what VTune offers.
+>
+>> > Humm, yeah, you need to figure out how to solve your issue, what I tried
+>> > was to show what kinds of building blocks you could use to build what
+>> > you need, but no, there is no ready to use tool for this, that I am
+>> > aware of.
+
+I'm also *very* interest in collecting idle/wait info using perf.  Looks
+like we can somehow use sched:* tracepoints but it requires root
+privilege though (unless /proc/sys/kernel/perf_event_paranoid being -1).
+
+With that restriction however, we might improve perf sched (or even
+plain perf record/report) to provide such info..  David may have an
+idea. :)
+
+Thanks,
+Namhyung
+
+
+>
+>> > For instance, you need to collect scheduler events, then do some
+>> > scripting, perhaps using perl or python, perhaps using the scripting
+>> > support that is built into perf already, but yeah, not documented.
+>
+>> And also lacking the ability to get callgraphs, if I'm not mistaken. This is 
+>> crucial for my undertaking. Or has this been added in the meantime?
+>
+> I guess it was:
+>
+> commit 57608cfd8827a74237d264a197722e2c99f72da4
+> Author: Joseph Schuchart <joseph.schuchart@tu-dresden.de>
+> Date:   Thu Jul 10 13:50:56 2014 +0200
+>
+>     perf script: Provide additional sample information on generic events
+>     
+>     To python scripts, including pid, tid, and cpu for which the event
+>     was recorded.
+>     
+>     At the moment, the pointer to the sample struct is passed to
+>     scripts, which seems to be of little use.
+>     
+>     The patch puts this information in dictionaries for easy access by
+>     Python scripts.
+>
+> commit 0f5f5bcd112292f14b75750dde7461463bb1c7bb
+> Author: Joseph Schuchart <joseph.schuchart@tu-dresden.de>
+> Date:   Thu Jul 10 13:50:51 2014 +0200
+>
+>     perf script: Add callchain to generic and tracepoint events
+>     
+>     This provides valuable information for tracing performance problems.
+>     
+>     Since this change alters the interface for the python scripts, also
+>     adjust the script generation and the provided scripts.
+>  
+>> <snip>
+>> 
+>> This was also why I asked my initial question, which I want to repeat once 
+>> more: Is there a technical reason to not offer a "timer" software event to 
+>> perf? I'm a complete layman when it comes to Kernel internals, but from a user 
+>> point of view this would be awesome:
+>  
+>> perf record --call-graph dwarf -e sw-timer -F 100 someapplication
+>  
+>> This command would then create a timer in the kernel with a 100Hz frequency. 
+>> Whenever it fires, the callgraphs of all threads in $someapplication are 
+>> sampled and written to perf.data. Is this technically not feasible? Or is it 
+>> simply not implemented?
+>
+>> I'm experimenting with a libunwind based profiler, and with some ugly signal 
+>> hackery I can now grab backtraces by sending my application SIGUSR1. Based on 
+>
+> Humm, can't you do the same thing with perf? I.e. you send SIGUSR1 to
+> your app with the frequency you want, and then hook a 'perf probe' into
+> your signal... /me tries some stuff, will get back with results...
+>
+>> that, I can probably create a profiling tool that fits my needs. I just wonder 
+>> why one cannot do the same with perf.
+>
 > - Arnaldo
-> 
-> The following changes since commit c88f2096136416b261bd3647cc260935f6e95805:
-> 
->   perf: Do not check PERF_EVENT_STATE_EXIT on syscall read path (2014-09-16 10:30:36 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo
-> 
-> for you to fetch changes up to e5685730e2c620f97bc12380e9370e857e5bd7a7:
-> 
->   perf record: Use ring buffer consume method to look like other tools (2014-09-17 18:01:43 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> User visible:
-> 
-> o Add +field argument support for --sort option (Jiri Olsa)
-> 
-> o Do not access kallsyms when analyzing user binaries with 'probe' (Masami Hiramatsu)
-> 
-> o Ignore stripped vmlinux and fallback to kallsyms (Anton Blanchard)
-> 
-> o Add path to Ubuntu kernel debuginfo file (Anton Blanchard)
-> 
-> o Disable kernel symbol demangling by default (Avi Kivity)
-> 
-> Infrastructure:
-> 
-> o More intel PT prep work, from Adrian Hunter, including:
-> 
->   - Let a user specify a PMU event without any config terms
->   - Add perf-with-kcore script
->   - Let default config be defined for a PMU
->   - Add perf_pmu__scan_file()
-> 
-> o "perf kvm stat report" improvements by Alexander Yarygin:
->   o  Save pid string in opts.target.pid
->   o  Enable the target.system_wide flag
->   o  Unify the title bar output
-> 
-> o Fix build issue on powerpc when DWARF support is disabled (Anton Blanchard)
-> 
-> o Allow to specify lib compile variable for spec usage (Jiri Olsa)
-> 
-> o Fix build on ARM (Stephane Eranian)
-> 
-> o Fix build on powerpc when DWARF support is disabled (Anton Blanchard)
-> 
-> o Don't include sys/poll.h directly (Arnaldo Carvalho de Melo)
-> 
-> o Use ring buffer consume method to look like other tools (Arnaldo Carvalho de Melo)
-> 
-> Chanho Park (1):
->   perf tools: define _DEFAULT_SOURCE for glibc_2.20
-> 
-> o Allow to specify lib compile variable for spec usage (Jiri Olsa)
-> 
-> o Fix GNU-only grep usage in Makefile (John Spencer)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (4):
->       perf tools: Let a user specify a PMU event without any config terms
->       perf tools: Add perf-with-kcore script
->       perf tools: Let default config be defined for a PMU
->       perf tools: Add perf_pmu__scan_file()
-> 
-> Alexander Yarygin (3):
->       perf kvm stat report: Save pid string in opts.target.pid
->       perf kvm stat report: Enable the target.system_wide flag
->       perf kvm stat report: Unify the title bar output
-> 
-> Anton Blanchard (3):
->       perf tools powerpc: Fix build issue when DWARF support is disabled
->       perf symbols: Ignore stripped vmlinux and fallback to kallsyms
->       perf symbols: Add path to Ubuntu kernel debuginfo file
-> 
-> Arnaldo Carvalho de Melo (2):
->       perf tools: Don't include sys/poll.h directly
->       perf record: Use ring buffer consume method to look like other tools
-> 
-> Avi Kivity (1):
->       perf tools: Disable kernel symbol demangling by default
-> 
-> Chanho Park (1):
->       perf tools: define _DEFAULT_SOURCE for glibc_2.20
-> 
-> Jiri Olsa (2):
->       perf tools: Add +field argument support for --sort option
->       perf tools: Allow to specify lib compile variable for spec usage
-> 
-> John Spencer (1):
->       perf tools: Fix GNU-only grep usage in Makefile
-> 
-> Masami Hiramatsu (2):
->       perf probe: Do not access kallsyms when analyzing user binaries
->       perf probe: Do not use dwfl_module_addrsym if dwarf_diename finds symbol name
-> 
-> Stephane Eranian (1):
->       perf tool: fix compilation for ARM
-> 
->  tools/perf/.gitignore                       |   1 +
->  tools/perf/Documentation/perf-probe.txt     |   3 +
->  tools/perf/Documentation/perf-report.txt    |   3 +
->  tools/perf/Documentation/perf-top.txt       |   3 +
->  tools/perf/Makefile.perf                    |   5 +-
->  tools/perf/arch/arm/tests/dwarf-unwind.c    |   1 +
->  tools/perf/arch/arm/util/unwind-libunwind.c |   1 +
->  tools/perf/arch/powerpc/Makefile            |   2 +-
->  tools/perf/bench/sched-messaging.c          |   2 +-
->  tools/perf/builtin-kvm.c                    |  23 +--
->  tools/perf/builtin-probe.c                  |   5 +-
->  tools/perf/builtin-record.c                 |   8 +-
->  tools/perf/builtin-report.c                 |   2 +
->  tools/perf/builtin-top.c                    |   4 +-
->  tools/perf/config/Makefile                  |  12 +-
->  tools/perf/config/utilities.mak             |   2 +-
->  tools/perf/perf-with-kcore.sh               | 259 ++++++++++++++++++++++++++++
->  tools/perf/tests/pmu.c                      |   2 +-
->  tools/perf/util/kvm-stat.h                  |   1 -
->  tools/perf/util/parse-events.c              |  13 +-
->  tools/perf/util/parse-events.y              |  10 ++
->  tools/perf/util/pmu.c                       |  79 +++++++--
->  tools/perf/util/pmu.h                       |  12 +-
->  tools/perf/util/probe-event.c               |   9 +-
->  tools/perf/util/probe-event.h               |   3 +-
->  tools/perf/util/probe-finder.c              |  16 +-
->  tools/perf/util/sort.c                      |  37 +++-
->  tools/perf/util/symbol-elf.c                |  15 +-
->  tools/perf/util/symbol.c                    |   9 +-
->  tools/perf/util/symbol.h                    |   1 +
->  tools/perf/util/util.h                      |   4 +-
->  31 files changed, 487 insertions(+), 60 deletions(-)
->  create mode 100644 tools/perf/perf-with-kcore.sh
-
-Pulled into tip:perf/core, thanks a lot Arnaldo!
-
-	Ingo
