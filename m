@@ -1,79 +1,215 @@
-From: =?utf-8?B?5bCP5rGf?= <miguel@ubannet.com.br>
-Subject: =?utf-8?B?55So6L+Z5Liq5bmz5Y+w5Y+R55+t5L+h77yM6L+Z5bCx5a+55LqGICAgICAgIA==?=
-	=?utf-8?B?ICAgICAgICAgICAgICAgICAgICA=?=
-	=?utf-8?B?ICAgICAgICAgICAgICAgICAgICA=?=
-	=?utf-8?B?ICAgICAgICAgICAgICAgICAgICA=?=
-	=?utf-8?B?ICBtcmw3c3c4M3g=?=
-Date: Tue, 23 Sep 2014 22:33:00 +0800
-Message-ID: <20140923223306575236@ubannet.com.br>
-Reply-To: <dingxj8@aliyun.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linusxiii.bbs@bbs.svdcc.fju.edu.tw, linux-iscsi-users@lists.sourceforge.net, linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+From: Taeung Song <treeze.taeung@gmail.com>
+Subject: [PATCH] perf tools: modify error code when perf_session__new() fail.
+Date: Wed, 24 Sep 2014 10:33:37 +0900
+Message-ID: <1411522417-9917-1-git-send-email-treeze.taeung@gmail.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pa0-f45.google.com ([209.85.220.45]:33370 "EHLO
+	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757322AbaIXBd7 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 23 Sep 2014 21:33:59 -0400
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jolsa@redhat.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>
 
-DQogIOWbveWGheacgOWlveeUqOeahOefreS/oeW5s+WPsO+8jOmAiei/meS4qui/meWwseWvueS6
-huOAguato+inhOWGheWuuemDveWPr+S7peWPke+8jOWIsOi+vumrmO+8jOS4jeWxj+iUveOAguWS
-qOivouivt+WKoFFRMTkzOTg5NzI177yM5Y+v5Lul5rWL6K+V5ZOm44CCDQoNCg0KDQoNCg0KIA0K
-DQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoN
-Cg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0K
-DQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoN
-Cg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCuaCqOWImuWImuW3sue7j+WcqOWk
-p+W6reW5v+S8l+S5i+S4i+Wuo+W4g+S6huWkhOeQhue7k+aenO+8jOWmguaenOaCqOimgeS4jeWk
-hOeQhuaIke+8jOS8muW9seWTjeaCqOeahOadg+WogeOAguKAnSAgICDoi4/nu5vllIfoh6rku47m
-i4Xku7vlia/moKHplb/ku6XlkI7vvIzlsLHmsqHmnInmjojor77vvIzlvojlsJHlkozlrabnlJ/n
-m7TmjqXmiZPkuqTpgZPkuobvvIzlj6/mmK/vvIzlpI/lsI/mtJvnu4/luLjliLDouLnkuobkuIDo
-hJrnmoTlrqDnianni5fvvIzkuI3mmI7nmb3kuLrkvZXliJrliJrov5jlr7noh6rlt7HlvojlrqDn
-iLHnmoTkuLvkurrlv73nhLblr7noh6rlt7HlpoLmraTni6Dmr5IgICAgICDljaLljZfljY7kuJ3m
-r6vkuI3nkIbkvJrokaPlm5vllpznmoTlj43lupTvvIzkuZ/lr7nohJrkuIvkuI3kvY/lkbvlkJ/n
-moTkurrnnIvpg73kuI3nnIvkuIDnnLzvvIzku5bovazov4fohLjlhrLnnYDmm7nmtanmmoTmga3m
-lazogIzkurLlpb3nmoTpnaLlrrnvvIzotoXotorlkIzpvoTkurrnmoTmt7HpgoPmgJ3mg7PvvIzn
-o4rokL3mtJLohLHnmoTpo47luqbvvIznlJroh7PokL3mi5PkuI3nvoHlkozmhbXmh5Lpl7LpgILn
-moTmsJTotKjvvIzpg73ku6Tlkajlm7TpgqPkupvlsI/nlLfnlJ/nnYDov7fvvIzlpbnkuZ/kuIDn
-m7TkuaDmg6/ooqvov73msYLlkozkvJfmmJ/mjafmnIjnmoTmhJ/op4njgIIgICAg5aSP5bCP5rSb
-55qE6Lqy6Zeq5oCB5bqm5Y+N5YCS5r+A5Y+R5ruh552A5Lib5p6X5Y6f5YiZ55qE5Ye26Juu55u0
-5o6l77yM6LSi5a+M6YeM5pu06ZqQ6JeP552A56eN56eN6IKu6ISP77yM5L2G5piv5b2T6L+Z5Liq
-5pe25Luj5Yiw5Li055qE5pe25YCZ77yM6ZSQ5LiN5Y+v5b2T77yM5LiH54mp6IKG5oSP55Sf6ZW/
-77yM5bCY5Z+D5LiO5puZ5YWJ5Y2H6IW+77yM5rGf5rKz6IGa5Lya5oiQ5bed77yM5peg5ZCN5bGx
-5LiY5bSb6LW35Li65bOw77yM5aSp5Zyw5LiA5pe26Ze077yM5peg5q+U5byA6ZiU6LCB5Lyg5Ye6
-5Y676L+Z5Lu25LqL5oOF77yM5peg6K665pyJ5rKh5pyJ5a+55rSb5rC05Y6/56ys5LiA6auY5Lit
-55qE5aOw6KqJ6YCg5oiQ5a6e6LSo5oCn55qE5b2x5ZON77yM5LiA5b6L5byA6Zmk77yB4oCdICAg
-IOWlueeri+WNs+WPrOmbhuagoeS4u+imgemihuWvvOadpeWIsOagoemVv+mZiOawtOeMrueahOWK
-nuWFrOWupOWPrOW8gOe0p+aApeS8muiuru+8jOmmluWFiO+8jOWlueWQkeWkp+WutueugOaYjuaJ
-vOimgeWcsOiusuW3sue7j+aZmuS4iuWNgeeCueS6hu+8jOWgguWTpeWkj+aTjuWkqei/mOayoeWb
-nuadpe+8jOWkj+aTjuWkqeS7iuW5tOS6jOWNgeS6jOWyge+8jOW3sue7j+S4jeivu+S5puS6hu+8
-jDg25bm05YWo5Zu95rWB6KGM44CK5bCR5p6X5a+644CL77yM5LuW5LiA5Yay5Yqo77yM5YmD5LqG
-5Liq5YWJ5aS077yM5ZKM5p2R6YeM5Yeg5Liq5bCP5a2p5Y675bCR5p6X5a+65a2m5q2m5Y675LqG
-77yM5Lmf5rKh5ZKM54i25q+N6K+044CCICAgIAkNCueahOmAn+W6puWHoOS5juWPr+S7peeci+W+
-l+WHuuadpe+8jOWPiOmVv+mrmOS6huiuuOWkmu+8jOiEuOS4iuS5n+aIkOeGn+S6huiuuOWkmuOA
-giAgICDkvYbmmK/ppbbmmK/lpoLmraTvvIzku5bmiZPnr67nkIPnmoTmioDmnK/kuZ/kuI3lpoLm
-najmma/liJ3vvIzlho3liqDkuIrlkI7ogIXnmoTouqvpq5jkvJjlir/vvIzov5norqnlpI/lsI/m
-tJvpnZ7luLjpg4Hpl7fjgIIgICAg5LqO5piv5LuW6K+077ya4oCc5b635LqG77yM5LiN6L+H77yM
-5aW56Z2i5a+555qE5piv6YeN55Sf6L+H5p2l5pyJ552A5LiJ5Y2B5bKB5b+D55CG5bm06b6E5aSP
-5bCP5rSb44CCICAgIOWkj+Wwj+a0m+ijheWHuuaEn+a/gOeahOagt+WtkO+8jOmBk++8muKAnOiw
-ouiwouS9oO+8jOiLj+agoemVv++8geKAnSAgICDoi4/nu5vllIflpKfluqblnLDkuIDnrJHvvIzk
-vLjlh7rmiYvvvIzpgZPvvJrigJzlpI/lsI/mtJvvvIzmrKLov47kvaDmnaXliLDmtJvmsLTnrKzl
-t7HmmK/ot5HkuI3kuobnmoTjgIIgICAg4oCc5ZWq4oCd77yM5LiA5Liq57q45Zui5LuO5bem5ZCO
-6L655oqb5LqG6L+H5p2l77yM5LuW5b6q552A5pa55ZCR5pyb5Y6777yM5pyA5ZCO5LiA5o6S6Z2g
-5ZCO6Zeo55qE5L2N572u5LiA5Liq6IKk6Imy6bud6buR77yM6Z2i6LKM5L+K5pyX77yM5L2T5Z6L
-5L+u6ZW/55qE5bCP55S355Sf5q2j56yR5Zi75Zi755qE5pyb552A6Ieq5bex4oCU4oCU5bGI5bCP
-5YWD77yB5aiY77yM5p2R6YeM5YW25L2Z5Yeg5Liq6aqo5bmy5Lmf6YO957uZ5oqT6LW35p2l5LqG
-44CC6JGj6ZuG5LiA5pe26Ze05Lmf5rKh5LqG5Li75b+D6aqo77yM5pu+57uP6L+c6L+R6Ze75ZCN
-55qE5Lq/5YWD6YCg5YGH5p2R77yM5bCx6L+Z5qC35oWi5oWi6aKT6LSl44CCICAgIOWPr+aYr++8
-jOiuqeS9leS6rOeUn+aEj+WklueahOaYr++8jOecgemHjOWNtOacieS6huWKqOS9nO+8jOecgeeD
-n+iNieWxgOmTgeWxgOmVv+aPkuaJi+S6humTnOS4ne+8jOivtOWIsOayu+eXhe+8jOmCo+WPquiD
-veWThOaEmuWkq+aEmuWmh+OAgiAgICDpmr7mgKrlpI/ov5HkuJzlv4PkuK3kuI3mgqbvvIzku6Xk
-u5bnmoTljLvoja/lrabnn6Xor4bvvIzogq/lrprlr7nnjovlpKflipvnjqnnmoTpgqPlpZfmiorm
-iI/lv4Pnn6XogprmmI7vvIzlj6/mmK/noo3nnYDogIHlqYblkozlsI/lp6jlrZDnmoTpnaLlrZDv
-vIzov5jlvpflp5Tmm7LmsYLlhajvvIzlkoznjovlpKflipvlkIzmtYHlkIjngbbjgILkuIDlsYLm
-pbzlhbHnlKjkuIDkuKrmsLTmiL/vvIzlpI/lpKnmtJfmvqHov5jopoHmjpLpmJ/jgIIgICAg5Y+v
-5piv6L+Z6YeM5Lmf5pyJ5b6I5aSa5aSP5bCP5rSb576O5aW955qE6K6w5b+G77yM6YKj5pe25YCZ
-6YK76YeM5LmL6Ze05rKf6YCa5b6I5aSa77yM5Lmf5b6I5ZKM552m77yM5aaC5p6c54i25q+N5LiN
-5Zyo5a6277yM5bCx5Y+v5Lul5ZCD55m+5a626aWt77yM5YeR5ZCI5LiA6aG/44CCICAgIOWkj+Ww
-j+a0mwkNCg==
+Because perf_session__new() could fail for more reasons than just ENOMEM,
+I modified error code(ENOMEM or EINVAL) into -1.
 
+Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
+---
+ tools/perf/builtin-annotate.c  | 2 +-
+ tools/perf/builtin-diff.c      | 2 +-
+ tools/perf/builtin-evlist.c    | 2 +-
+ tools/perf/builtin-inject.c    | 2 +-
+ tools/perf/builtin-kmem.c      | 2 +-
+ tools/perf/builtin-kvm.c       | 4 ++--
+ tools/perf/builtin-lock.c      | 2 +-
+ tools/perf/builtin-mem.c       | 2 +-
+ tools/perf/builtin-report.c    | 2 +-
+ tools/perf/builtin-script.c    | 2 +-
+ tools/perf/builtin-timechart.c | 2 +-
+ tools/perf/builtin-top.c       | 2 +-
+ tools/perf/builtin-trace.c     | 2 +-
+ 13 files changed, 14 insertions(+), 14 deletions(-)
 
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index d4da692..be59394 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -340,7 +340,7 @@ int cmd_annotate(int argc, const char **argv, const char *prefix __maybe_unused)
+ 
+ 	annotate.session = perf_session__new(&file, false, &annotate.tool);
+ 	if (annotate.session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	symbol_conf.priv_size = sizeof(struct annotation);
+ 	symbol_conf.try_vmlinux_path = true;
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 190d0b6..a3ce19f 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -683,7 +683,7 @@ static int __cmd_diff(void)
+ 		d->session = perf_session__new(&d->file, false, &tool);
+ 		if (!d->session) {
+ 			pr_err("Failed to open %s\n", d->file.path);
+-			ret = -ENOMEM;
++			ret = -1;
+ 			goto out_delete;
+ 		}
+ 
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index 66e12f5..0f93f85 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -28,7 +28,7 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 
+ 	session = perf_session__new(&file, 0, NULL);
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	evlist__for_each(session->evlist, pos)
+ 		perf_evsel__fprintf(pos, details, stdout);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 3a62b6b..de99ca1 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -460,7 +460,7 @@ int cmd_inject(int argc, const char **argv, const char *prefix __maybe_unused)
+ 	file.path = inject.input_name;
+ 	inject.session = perf_session__new(&file, true, &inject.tool);
+ 	if (inject.session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	if (symbol__init(&inject.session->header.env) < 0)
+ 		return -1;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 2376218..f295141 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -698,7 +698,7 @@ int cmd_kmem(int argc, const char **argv, const char *prefix __maybe_unused)
+ 
+ 	session = perf_session__new(&file, false, &perf_kmem);
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	symbol__init(&session->header.env);
+ 
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index f5d3ae4..fd84d47 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1062,7 +1062,7 @@ static int read_events(struct perf_kvm_stat *kvm)
+ 	kvm->session = perf_session__new(&file, false, &kvm->tool);
+ 	if (!kvm->session) {
+ 		pr_err("Initializing perf session failed\n");
+-		return -EINVAL;
++		return -1;
+ 	}
+ 
+ 	symbol__init(&kvm->session->header.env);
+@@ -1365,7 +1365,7 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
+ 	 */
+ 	kvm->session = perf_session__new(&file, false, &kvm->tool);
+ 	if (kvm->session == NULL) {
+-		err = -ENOMEM;
++		err = -1;
+ 		goto out;
+ 	}
+ 	kvm->session->evlist = kvm->evlist;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 92790ed..e7ec715 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -862,7 +862,7 @@ static int __cmd_report(bool display_info)
+ 	session = perf_session__new(&file, false, &eops);
+ 	if (!session) {
+ 		pr_err("Initializing perf session failed\n");
+-		return -ENOMEM;
++		return -1;
+ 	}
+ 
+ 	symbol__init(&session->header.env);
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 8b4a87f..24db6ff 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -124,7 +124,7 @@ static int report_raw_events(struct perf_mem *mem)
+ 							 &mem->tool);
+ 
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	if (mem->cpu_list) {
+ 		ret = perf_session__cpu_bitmap(session, mem->cpu_list,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 8c0b3f2..ac145fa 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -720,7 +720,7 @@ int cmd_report(int argc, const char **argv, const char *prefix __maybe_unused)
+ repeat:
+ 	session = perf_session__new(&file, false, &report.tool);
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	if (report.queue_size) {
+ 		ordered_events__set_alloc_size(&session->ordered_events,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 02dce92..b9b9e58 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1744,7 +1744,7 @@ int cmd_script(int argc, const char **argv, const char *prefix __maybe_unused)
+ 
+ 	session = perf_session__new(&file, false, &script.tool);
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	if (header || header_only) {
+ 		perf_session__fprintf_info(session, stdout, show_full_info);
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 48eea6c..35b425b 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -1605,7 +1605,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 	int ret = -EINVAL;
+ 
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	symbol__init(&session->header.env);
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index e13864b..a70a551 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -929,7 +929,7 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	top->session = perf_session__new(NULL, false, NULL);
+ 	if (top->session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	machines__set_symbol_filter(&top->session->machines, symbol_filter);
+ 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a9e96ff..aa5f1c9 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2245,7 +2245,7 @@ static int trace__replay(struct trace *trace)
+ 
+ 	session = perf_session__new(&file, false, &trace->tool);
+ 	if (session == NULL)
+-		return -ENOMEM;
++		return -1;
+ 
+ 	if (symbol__init(&session->header.env) < 0)
+ 		goto out;
+-- 
+1.8.3.2
