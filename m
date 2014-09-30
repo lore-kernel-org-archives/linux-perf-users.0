@@ -1,49 +1,40 @@
-From: Tong Shen <endlessroad@google.com>
-Subject: Re: [PATCH 1/1] perf tools: Fix Symbol Address for ET_DYN
-Date: Mon, 29 Sep 2014 11:13:13 -0700
-Message-ID: <CAPp4yYxVSUMBBXdVPUETu=uM2K5P9GoeQjH0YgayVL2qco-gYg@mail.gmail.com>
-References: <CAPp4yYwTHbXiypxR_1WJGS9DYQNJ24t_Ykdo_sfQ48Ak-K3Z7g@mail.gmail.com>
-	<20140911150123.GH10158@kernel.org>
-	<CAPp4yYzRwoTBzH1_TwcdvAOryZppV9-BwnX2bOtN1qrEqrdBww@mail.gmail.com>
-	<20140911203806.GA25763@kernel.org>
-	<CAPp4yYzT66+J_dHC5_0TiTEdSK874OS-PH9nAtcr5-Luj69+7w@mail.gmail.com>
-	<CAPp4yYxripyJvr87TtVqNMi5=K+UQGeKTomQiJarFnVGyjtofA@mail.gmail.com>
-	<87fvffj5o0.fsf@sejong.aot.lge.com>
-	<CAPp4yYzPR-FozYeuDUFqR0hhE5tioSqNy22cZ7WjSdBXoxeNxw@mail.gmail.com>
-	<87ppefi29s.fsf@sejong.aot.lge.com>
+From: taeung <treeze.taeung@gmail.com>
+Subject: What do zeroing of samples in 'perf top' mean ?
+Date: Tue, 30 Sep 2014 12:19:41 +0900
+Message-ID: <542A214D.1090804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-la0-f44.google.com ([209.85.215.44]:54041 "EHLO
-	mail-la0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753969AbaI2SNP (ORCPT
+Received: from mail-pa0-f53.google.com ([209.85.220.53]:37235 "EHLO
+	mail-pa0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751946AbaI3DTu (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 29 Sep 2014 14:13:15 -0400
-Received: by mail-la0-f44.google.com with SMTP id gi9so8372113lab.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2014 11:13:14 -0700 (PDT)
-In-Reply-To: <87ppefi29s.fsf@sejong.aot.lge.com>
+	Mon, 29 Sep 2014 23:19:50 -0400
+Received: by mail-pa0-f53.google.com with SMTP id kq14so6785104pab.40
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2014 20:19:50 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>
 
-On Sun, Sep 28, 2014 at 7:33 PM, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hmm.. IIUC for normal dso (ET_DYN), shdr->offset == shdr->sh_addr for
-> text section right?  And we always adjust ET_EXEC and ET_REL..  What
-> about always trying to adjust symbol address then?  We may precalculate
-> adjust offset and subtracting it from symbol values.  And the offset of
-> 0 effectively means no adjust.  This way we can simplify the logic IMHO.
+Hi,
 
-Yeah I'd like to do that too; but (shdr->offset == shdr->sh_addr for
-normal ET_DYN && shdr->offset != shdr->sh_addr for non-relocatable
-ET_DYN) is only true for .text section. It does not hold for .data
-section.
+I have two questions about 'zeroing of samples' in 'perf top'.
 
+I knew if I use 'perf top', I can see a performance counter profile in 
+real time.
+But I can't find a difference between 'perf top -a' and 'perf top --zero'.
 
-I didn't dig deep into the code; if we only care about symbols in
-.text section (function names), we can do what you said. Otherwise we
-may want to keep it the way it is...
+After 'perf top' is run , I press key 'z' to toggle zeroing of samples.
+But I don't know a difference between when I press key 'z' and before I 
+did it.
 
--- 
-Best Regards, Tong Shen
+1. What is 'Zero history' ?
+(I saw it in Documentation/perf-top.txt that '--zero' option is 'Zero 
+history across display updates.')
+
+2. What do 'zeroing of samples' mean ?
+
+Thanks,
+Taeung
