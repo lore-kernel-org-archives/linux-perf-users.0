@@ -1,7 +1,7 @@
 From: Taeung Song <treeze.taeung@gmail.com>
 Subject: [PATCH] perf top: Add a visual cue for toggle zeroing of samples
-Date: Sun,  5 Oct 2014 01:13:08 +0900
-Message-ID: <1412439188-3246-1-git-send-email-treeze.taeung@gmail.com>
+Date: Sun,  5 Oct 2014 01:35:39 +0900
+Message-ID: <1412440539-3580-1-git-send-email-treeze.taeung@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -14,11 +14,20 @@ So I added a visual cue to know whether it is the zeroing or not.
 
 Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
 ---
- tools/perf/ui/browsers/hists.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+ tools/perf/PERF-FEATURES       |  1 +
+ tools/perf/ui/browsers/hists.c | 34 ++++++++++++++++++++++++----------
+ 2 files changed, 25 insertions(+), 10 deletions(-)
+ create mode 100644 tools/perf/PERF-FEATURES
 
+diff --git a/tools/perf/PERF-FEATURES b/tools/perf/PERF-FEATURES
+new file mode 100644
+index 0000000..bf2723d
+--- /dev/null
++++ b/tools/perf/PERF-FEATURES
+@@ -0,0 +1 @@
++feature-dwarf(1) feature-glibc(1) feature-gtk2(0) feature-libaudit(1) feature-libbfd(0) feature-libelf(1) feature-libnuma(1) feature-libperl(1) feature-libpython(0) feature-libslang(1) feature-libunwind(1) feature-libdw-dwarf-unwind(1) dwarf-post-unwind(libunwind)
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 8f60a97..be49363 100644
+index 8f60a97..6af157c 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
 @@ -35,7 +35,9 @@ struct hist_browser {
@@ -69,21 +78,10 @@ index 8f60a97..be49363 100644
  {
  	char unit;
  	int printed;
-@@ -1241,7 +1253,7 @@ static int hists__browser_title(struct hists *hists, char *bf, size_t size)
- 
- 	nr_samples = convert_unit(nr_samples, &unit);
- 	printed = scnprintf(bf, size,
--			   "Samples: %lu%c of event '%s', Event count (approx.): %lu",
-+			   "Samples: %lu%c of event z'%s', Event count (approx.): %lu",
- 			   nr_samples, unit, ev_name, nr_events);
- 
- 
-@@ -1255,7 +1267,15 @@ static int hists__browser_title(struct hists *hists, char *bf, size_t size)
- 				    thread->tid);
+@@ -1256,6 +1268,14 @@ static int hists__browser_title(struct hists *hists, char *bf, size_t size)
  	if (dso)
  		printed += scnprintf(bf + printed, size - printed,
--				    ", DSO: %s", dso->short_name);
-+				     ", DSO: %s", dso->short_name);
+ 				    ", DSO: %s", dso->short_name);
 +	if (!is_report_browser(hbt)) {
 +		struct perf_top *top = hbt->arg;
 +
