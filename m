@@ -1,44 +1,48 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: [PATCH 2/2] The arm64 dwarf unwinder is missing a needed include
-Date: Wed,  8 Oct 2014 12:45:05 -0400
-Message-ID: <1412786705-19994-2-git-send-email-wcohen@redhat.com>
-References: <1412786705-19994-1-git-send-email-wcohen@redhat.com>
+From: Hemendra Rawat <hkr1990@vt.edu>
+Subject: Collect Per thread event count using perf
+Date: Wed, 29 Oct 2014 02:03:36 +0000 (UTC)
+Message-ID: <loom.20141029T024721-194@post.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:12636 "EHLO mx1.redhat.com"
+Received: from plane.gmane.org ([80.91.229.3]:39318 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754673AbaJHQpR (ORCPT
+	id S1751062AbaJ2CKG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 8 Oct 2014 12:45:17 -0400
-Received: from int-mx14.intmail.prod.int.phx2.redhat.com (int-mx14.intmail.prod.int.phx2.redhat.com [10.5.11.27])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s98GjGeK009433
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-	for <linux-perf-users@vger.kernel.org>; Wed, 8 Oct 2014 12:45:17 -0400
-In-Reply-To: <1412786705-19994-1-git-send-email-wcohen@redhat.com>
+	Tue, 28 Oct 2014 22:10:06 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1XjIi4-0008Gw-HR
+	for linux-perf-users@vger.kernel.org; Wed, 29 Oct 2014 03:10:04 +0100
+Received: from c-71-62-159-173.hsd1.va.comcast.net ([71.62.159.173])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2014 03:10:04 +0100
+Received: from hkr1990 by c-71-62-159-173.hsd1.va.comcast.net with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2014 03:10:04 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: William Cohen <wcohen@redhat.com>
 
-When the libunwind is available perf does not build on arm64 machines
-because debug.h is not included.  The debug.h provides some needed
-defines.
+Hi,
 
-Signed-off-by: William Cohen <wcohen@redhat.com>
----
- tools/perf/arch/arm64/util/unwind-libunwind.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm new to perf. I want to use perf to collect cpu-cycles spent in 
+each function for a multi-threaded program (Nasa Parallel Bench
+marks OpenMP version).  
 
-diff --git a/tools/perf/arch/arm64/util/unwind-libunwind.c b/tools/perf/arch/arm64/util/unwind-libunwind.c
-index 436ee43..a87afa9 100644
---- a/tools/perf/arch/arm64/util/unwind-libunwind.c
-+++ b/tools/perf/arch/arm64/util/unwind-libunwind.c
-@@ -3,6 +3,7 @@
- #include <libunwind.h>
- #include "perf_regs.h"
- #include "../../util/unwind.h"
-+#include "../../util/debug.h"
- 
- int libunwind__arch_reg_id(int regnum)
- {
--- 
-1.9.3
+I'm using following commands to record and analyze the data. 
+
+            # perf record -s --call-graph=dwarf ./my-program 10
+            # perf report -T --call-graph=graph     
+
+But the TUI interface that opens up doesn't give information on a 
+per thread basis. It's all aggregate event count for each function. 
+I'm not sure whether i'm recording the data in the wrong way or 
+I'm missing something in the interpretation of perf output.  Can 
+someone help me with this ? Any help will be highly appreciated.
+
+Thanks
+Hemendra
+   
