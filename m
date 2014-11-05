@@ -1,45 +1,56 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: sampling and reading
-Date: Wed, 05 Nov 2014 11:41:43 +0900
-Message-ID: <87ppd2xtaw.fsf@sejong.aot.lge.com>
-References: <loom.20141104T212325-617@post.gmane.org>
+From: Milian Wolff <mail@milianw.de>
+Subject: Re: Adding cache misses and references to list of default events for perf stat?
+Date: Wed, 05 Nov 2014 12:18:07 +0100
+Message-ID: <4264844.1bgz2IYRsf@milian-kdab2>
+References: <2902317.tSPbunES6b@milian-kdab2> <87mw86k9gm.fsf@tassilo.jf.intel.com> <87tx2exu03.fsf@sejong.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEMRELSE6Q.lge.com ([156.147.1.121]:37043 "EHLO
-	lgemrelse6q.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751812AbaKEClp (ORCPT
+Received: from dd17628.kasserver.com ([85.13.138.83]:33825 "EHLO
+	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753520AbaKELSK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Nov 2014 21:41:45 -0500
-In-Reply-To: <loom.20141104T212325-617@post.gmane.org> (Arnav's message of
-	"Tue, 4 Nov 2014 20:27:08 +0000 (UTC)")
+	Wed, 5 Nov 2014 06:18:10 -0500
+In-Reply-To: <87tx2exu03.fsf@sejong.aot.lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnav <arnav.gupta06@live.in>
-Cc: linux-perf-users@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
 
-Hi Arnav,
+On Wednesday 05 November 2014 11:26:36 Namhyung Kim wrote:
+> Hi Andi and Milian,
+> 
+> On Tue, 04 Nov 2014 12:16:25 -0800, Andi Kleen wrote:
+> > Milian Wolff <mail@milianw.de> writes:
+> >> Hello all,
+> >> 
+> >> could we have the cache-references,cache-misses events added to the list
+> >> of
+> >> default events for perf stat? I think it is a very valuable metric for
+> >> all
+> >> user-space applications.
+> >> 
+> >> Currently, I run perf stat twice, once with the default events, and once
+> >> with
+> >> 
+> >> perf stat -e cache-references,cache-misses ...
+> >> 
+> >> there is no easy way to append two events to the list of default events.
+> >> 
+> >> So, what do you think?
+> > 
+> > On most systems with only four counters it'll start multiplexing, which
+> > will give much worse results. Defaulting to non multiplexing is much
+> > better.
+> 
+> Anyway it has -d/--detailed option which can be specified up to 3 times.
 
-On Tue, 4 Nov 2014 20:27:08 +0000 (UTC), Arnav wrote:
-> i am working on a project where i need to find program counters for every 100M 
-> instructions.
->
-> i have used the  following command to record the event
->
-> perf record -e instructions -c 100000000 ./filename
->
-> now, since counters are counted every 100M instructions, i read file using 
-> 'perf report'. But i get results in some percentage form and not in numerical 
-> numbers format.
->
-> i wish to read the file and gather the perforamance counter statistics. 
-> Plz suggest how to get the desired results.
+Thanks, that helps!
 
-How about using
+Cheers
 
-  perf report --show-total-period
-
-?
-
-Thanks,
-Namhyung
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
