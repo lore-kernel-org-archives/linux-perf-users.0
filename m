@@ -1,89 +1,59 @@
-From: Hemendra Rawat <hkr1990@vt.edu>
-Subject: Perf call-graph on arm aarch64 Linux
-Date: Thu, 6 Nov 2014 06:43:32 +0000 (UTC)
-Message-ID: <loom.20141106T071245-829@post.gmane.org>
+From: Manuel Selva <selva.manuel@gmail.com>
+Subject: Re: Perf mem report Data Object
+Date: Thu, 06 Nov 2014 15:06:01 +0100
+Message-ID: <545B8049.4050207@gmail.com>
+References: <CALbiyZzdM84Cy+sodbuxPxT1jRZs4W94-N0KCjyaw3K89Edh3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:53966 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750926AbaKFGnv (ORCPT
+Received: from mail-wg0-f53.google.com ([74.125.82.53]:65442 "EHLO
+	mail-wg0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750998AbaKFOGH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 6 Nov 2014 01:43:51 -0500
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1XmGnM-0005RP-PQ
-	for linux-perf-users@vger.kernel.org; Thu, 06 Nov 2014 07:43:49 +0100
-Received: from nc65214b0.cns.vt.edu ([198.82.20.176])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2014 07:43:48 +0100
-Received: from hkr1990 by nc65214b0.cns.vt.edu with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2014 07:43:48 +0100
+	Thu, 6 Nov 2014 09:06:07 -0500
+Received: by mail-wg0-f53.google.com with SMTP id b13so1274489wgh.12
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2014 06:06:04 -0800 (PST)
+Received: from [134.214.61.216] (anyconnect216.insa-lyon.fr. [134.214.61.216])
+        by mx.google.com with ESMTPSA id hu3sm7955189wjb.17.2014.11.06.06.06.02
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Nov 2014 06:06:02 -0800 (PST)
+In-Reply-To: <CALbiyZzdM84Cy+sodbuxPxT1jRZs4W94-N0KCjyaw3K89Edh3w@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
 Hi,
 
-I'm trying to profile NAS benchmarks on a 64bit ARM machine running 
-linux. I want to find number of cycles elapsed in each function of my 
-multi-threaded application. For this, I'm trying to  generate call-graphs 
-for my program for each thread using perf. I'm using perf as follows : 
+I am again wondering why I have this issue about /tmp/perf-pid.map file. 
+Can anyone explain why it's not there and what this file should contain ?
 
-perf record -g -s ./is.A 2                 (2 = Number of threads)
-perf report -s pid --call-graph=graph
+Thanks,
 
-The problem I'm facing is that  when i call perf report, It prints 
-"Failed to open /tmp/perf-565.map" and the generated call-graph 
-has no symbol information 
+----
+Manu
 
-Samples: 29K of event 'cycles'
-# Event count (approx.): 17905152121
-#
-# Overhead                              Symbol
-# ........  ..................................
-#
-    99.72%  [.] 0x0000000000005080            
-            |          
-            |--40.99%-- 0x402760
-            |          |          
-            |          |--87.05%-- 0x403fa4
-            |          |          0x407e6c
-            |          |          0x430c6c
-            |          |          |          
-            |          |          |--99.85%-- 0x0
-            |          |           --0.15%-- [...]
-            |          |          
-            |           --12.95%-- 0x402df8
-            |                     |          
-            |                     |--90.98%-- 0x403050
-            |                     |          0x40b7b8
-            |                     |          0x40244c
-            |                     |          0x7fd7c9dbc8
-            |                     |          
-            |                      --9.02%-- 0x403014
-            |                                0x40b7b8
-            |                                0x40244c
-            |                                
-
-Also, the generated call-graphs are not per thread. On an x86 machine, 
-I get proper call-graphs with symbol information and "perf report -s pid" 
-sorts the results thread wise. My version of perf on x86 is "3.16" on ARM 
-it is "3.12"  
-
-Linux dhcp-10-66-9-75 3.12.0-mustang_sw_1.13.28-beta  aarch64 GNU/Linux
-[root@dhcp-10-66-9-75 tmp]# perf --version
-perf version 3.12.0
-
-Can someone please help me with how to proceed. It is something to do 
-with the version of perf I have on my ARM machine ? I read somewhere 
-on Internet that I need to have DWARF support for which I  need to compile 
-perf using libunwind. Is it possible to compile and install a new version of 
-perf (3.16) on my existing linux version (3.12.0). Any help would 
-be highly appreciated.
-
-Thanks
-Hemendra
+On 01/29/2014 02:53 PM, Manuel Selva wrote:
+> Hi all,
+>
+> The perf mem report tools shows me a warning before printing results:
+>
+> Failed to open /tmp/perf-8741.map, continuing without symbols
+>
+> Then it seems that all the memory accesses which source address (Data
+> Symbol field in perf mem rep output) is located in the heap of the
+> profiled process is reported as "perf-8741.map" in the Data Object
+> field.
+>
+> I am not sure to understand what this file is, what it should contain,
+> and why it's not created when my process is profiled ?
+>
+> Moreover, I am wondering what perf mem could report for heap data
+> object in addition to the fact that the object is in the heap ?
+>
+> Thanks,
+>
+> -------
+> Manu
+>
