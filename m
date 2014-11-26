@@ -1,38 +1,40 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Size of perf data files
-Date: Wed, 26 Nov 2014 12:48:59 -0800
-Message-ID: <871topit6s.fsf@tassilo.jf.intel.com>
-References: <1601237.BEhNSa8l6d@milian-kdab2>
+Subject: Re: Using perf with cgroups and containers
+Date: Wed, 26 Nov 2014 12:52:21 -0800
+Message-ID: <87wq6hhegq.fsf@tassilo.jf.intel.com>
+References: <547606D8.3040601@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:6430 "EHLO mga09.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:6872 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750793AbaKZUtB (ORCPT
+	id S1752671AbaKZUwW (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 26 Nov 2014 15:49:01 -0500
-In-Reply-To: <1601237.BEhNSa8l6d@milian-kdab2> (Milian Wolff's message of
-	"Wed, 26 Nov 2014 13:47:41 +0100")
+	Wed, 26 Nov 2014 15:52:22 -0500
+In-Reply-To: <547606D8.3040601@redhat.com> (William Cohen's message of "Wed,
+	26 Nov 2014 11:59:04 -0500")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <mail@milianw.de>
+To: William Cohen <wcohen@redhat.com>
 Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Milian Wolff <mail@milianw.de> writes:
+William Cohen <wcohen@redhat.com> writes:
 
-> Hello all,
+> Hi,
 >
-> I wonder whether there is a way to reduce the size of perf data files. Esp. 
-> when I collect call graph information via Dwarf on user space applications, I 
-> easily end up with multiple gigabytes of data in just a few seconds.
+> I have been looking at how perf supports cgroups and containers.  The
+> "-G" option allows limiting the data collected to a particular cgroup.
+> Thus, one can use the option to collect some information about a
+> particular cgroup with something like:
+>
+> $ sudo perf stat -a -e cycles  -G
+> machine.slice/machine-qemu\\x2drhel7\\x2dx86_64.scope -e instructions
+> -G machine.slice/machine-qemu\\x2drhel7\\x2dx86_64.scope -- sleep 1
 
-Use a fixed period and reduce the period or so.
+You can specify multiple events with -e. Typically you should anyways,
+to define appropiate groups with {}
 
--c 10000000
-
-Don't use dwarf backtracing.
-
-On new enough perf you can disable time stamps --no-time.
+perf record -a -e cycles,instructions -G cgroup  ...
 
 -Andi
 
