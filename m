@@ -1,61 +1,55 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Size of perf data files
-Date: Fri, 28 Nov 2014 15:18:48 +0900
-Message-ID: <87wq6fetkn.fsf@sejong.aot.lge.com>
-References: <1601237.BEhNSa8l6d@milian-kdab2>
-	<20141126160617.GD30226@kernel.org> <1439400.fEBkspRaxp@milian-kdab2>
-	<87oarto40a.fsf@sejong.aot.lge.com>
-	<20141127131916.GH30226@kernel.org>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Using perf with cgroups and containers
+Date: Fri, 28 Nov 2014 19:00:15 +0100
+Message-ID: <20141128180015.GZ12538@two.firstfloor.org>
+References: <547606D8.3040601@redhat.com>
+ <87wq6hhegq.fsf@tassilo.jf.intel.com>
+ <54764629.9050601@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lgeamrelo04.lge.com ([156.147.1.127]:62063 "EHLO
-	lgeamrelo04.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750901AbaK1GSv (ORCPT
+Received: from one.firstfloor.org ([193.170.194.197]:51103 "EHLO
+	one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750729AbaK1SAQ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Nov 2014 01:18:51 -0500
-In-Reply-To: <20141127131916.GH30226@kernel.org> (Arnaldo Carvalho de Melo's
-	message of "Thu, 27 Nov 2014 10:19:16 -0300")
+	Fri, 28 Nov 2014 13:00:16 -0500
+Content-Disposition: inline
+In-Reply-To: <54764629.9050601@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <mail@milianw.de>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: William Cohen <wcohen@redhat.com>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hi Arnaldo,
+> Is there some where that explain use of the "{}" for event grouping? 
 
-On Thu, 27 Nov 2014 10:19:16 -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 27, 2014 at 09:56:21AM +0900, Namhyung Kim escreveu:
->> Hi Milian,
->> 
->> On Wed, 26 Nov 2014 19:11:01 +0100, Milian Wolff wrote:
->> > I tried this on a benchmark of mine:
->> >
->> > before:
->> > [ perf record: Woken up 196 times to write data ]
->> > [ perf record: Captured and wrote 48.860 MB perf.data (~2134707 samples) ]
->> >
->> > after, with dwarf,512
->> > [ perf record: Woken up 18 times to write data ]
->> > [ perf record: Captured and wrote 4.401 MB perf.data (~192268 samples) ]
->> >
->> > What confuses me though is the number of samples. When the workload is equal, 
->> > shouldn't the number of samples stay the same? Or what does this mean? The 
->> > resulting reports both look similar enough.
->> 
->> It's bogus - it just calculates the number of samples based on the file
->> size (with fixed sample size).  I think we should either show the correct
->> number as we post-process samples for build-id detection or simply
->> remove it.
->
-> Well, since we setup the perf_event_attr we could perhaps do a better
-> job at estimating this... In this case we even know how much stack_dump
-> we will take at each sample, that would be major culprit for the current
-> mis estimation.
+The only good description I know of is in the ucevent documentation.
 
-Also fp callchain and tracepoint events can lead the mis estimation IMHO.
+https://github.com/andikleen/pmu-tools/tree/master/ucevent#grouping-event-scheduling-and-measurement-inaccuracy
 
-Thanks,
-Namhyung
+Yes the documentation probably needs to be improved (as in many other
+ways)
 
->
-> And yes, if we do the post processing, we can do a precise calculation.
+> 
+>       -G name,..., --cgroup name,...
+>            monitor only in the container (cgroup) called "name". This option
+>            is available only in per-cpu mode. The cgroup filesystem must be
+>            mounted. All threads belonging to container "name" are monitored
+>            when they run on the monitored CPUs. Multiple cgroups can be
+>            provided. Each cgroup is applied to the corresponding event, i.e.,
+>            first cgroup to first event, second cgroup to second event and so
+>            on. It is possible to provide an empty cgroup (monitor all the
+>            time) using, e.g., -G foo,,bar. Cgroups must have corresponding
+>            events, i.e., they always refer to events defined earlier on the
+>            command line.
+> 
+> The results looks pretty questionable on my machine with the version of perf and kernel I am using:
+
+You're right it doesn't work as I described. Should probably fix it,
+my way would make a lot more sense :-)
+
+I guess the current interface was more aimed at scripts.
+
+
+-Andi
+-- 
+ak@linux.intel.com -- Speaking for myself only.
