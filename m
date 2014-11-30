@@ -1,55 +1,48 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Using perf with cgroups and containers
-Date: Fri, 28 Nov 2014 19:00:15 +0100
-Message-ID: <20141128180015.GZ12538@two.firstfloor.org>
-References: <547606D8.3040601@redhat.com>
- <87wq6hhegq.fsf@tassilo.jf.intel.com>
- <54764629.9050601@redhat.com>
+From: Jerome Correnoz <jerome.correnoz@st.com>
+Subject: Re: Is it possible to get (or compute) the consummed CPU with perf ?
+Date: Sun, 30 Nov 2014 20:37:19 +0000 (UTC)
+Message-ID: <loom.20141130T212144-298@post.gmane.org>
+References: <loom.20141111T083453-589@post.gmane.org> <loom.20141118T183130-762@post.gmane.org> <546B8B05.5000102@gmail.com> <loom.20141126T191243-557@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from one.firstfloor.org ([193.170.194.197]:51103 "EHLO
-	one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750729AbaK1SAQ (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:60138 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751650AbaK3Uhh (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 28 Nov 2014 13:00:16 -0500
-Content-Disposition: inline
-In-Reply-To: <54764629.9050601@redhat.com>
+	Sun, 30 Nov 2014 15:37:37 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1XvBFM-0005d1-Qj
+	for linux-perf-users@vger.kernel.org; Sun, 30 Nov 2014 21:37:33 +0100
+Received: from 77.242.202.229 ([77.242.202.229])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sun, 30 Nov 2014 21:37:32 +0100
+Received: from jerome.correnoz by 77.242.202.229 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Sun, 30 Nov 2014 21:37:32 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: William Cohen <wcohen@redhat.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-> Is there some where that explain use of the "{}" for event grouping? 
+Hi,
 
-The only good description I know of is in the ucevent documentation.
+It seems possible to compute the CPU load by exploiting the 'perf stat'
+results, in particular the GHz reported with "cycles" when using 'perf stat
+-a sleep x'
 
-https://github.com/andikleen/pmu-tools/tree/master/ucevent#grouping-event-scheduling-and-measurement-inaccuracy
+For our use case example, it reports "CPU cycles 0.132 GHZ".
+Knowing that the cpu frequency is 1.2 GHz (from
+/sys/devices/system/cpu/cpu[01]/cpufreq/cpuinfo_cur_freq)
+We can deduce the CPU load: 0.132/1.2*100=11% 
 
-Yes the documentation probably needs to be improved (as in many other
-ways)
+In our system, we've checked with different use cases for which we know the
+expected values and using the above method allows to get very accurate values.
 
-> 
->       -G name,..., --cgroup name,...
->            monitor only in the container (cgroup) called "name". This option
->            is available only in per-cpu mode. The cgroup filesystem must be
->            mounted. All threads belonging to container "name" are monitored
->            when they run on the monitored CPUs. Multiple cgroups can be
->            provided. Each cgroup is applied to the corresponding event, i.e.,
->            first cgroup to first event, second cgroup to second event and so
->            on. It is possible to provide an empty cgroup (monitor all the
->            time) using, e.g., -G foo,,bar. Cgroups must have corresponding
->            events, i.e., they always refer to events defined earlier on the
->            command line.
-> 
-> The results looks pretty questionable on my machine with the version of perf and kernel I am using:
+Can someone confirm that this method is reliable and a good way to get
+accurate CPU load figures ?
 
-You're right it doesn't work as I described. Should probably fix it,
-my way would make a lot more sense :-)
-
-I guess the current interface was more aimed at scripts.
-
-
--Andi
--- 
-ak@linux.intel.com -- Speaking for myself only.
+Regards,
+  Jerome
