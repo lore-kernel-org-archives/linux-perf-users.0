@@ -1,112 +1,116 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: Perf support for interpreted and Just-In-Time translated
  olanguages
-Date: Wed, 10 Dec 2014 16:21:23 -0300
-Message-ID: <20141210192123.GG8788@kernel.org>
+Date: Wed, 10 Dec 2014 16:43:02 -0300
+Message-ID: <20141210194302.GH8788@kernel.org>
 References: <1417810736.5098.11.camel@oc0276584878.ibm.com>
  <CAE40pdcXt_gaCXD7n3UED4Y2_gdpH+A3S627TS-72xkbGDoNsA@mail.gmail.com>
  <20141209203419.GI4189@kernel.org>
  <87ppbs4h5k.fsf@tassilo.jf.intel.com>
  <20141209222203.GD8788@kernel.org>
- <87h9x449vd.fsf@tassilo.jf.intel.com>
- <1418233295.4953.33.camel@oc0276584878.ibm.com>
+ <20141210173228.GA6759@two.firstfloor.org>
+ <54888569.30409@gmail.com>
+ <20141210180529.GB6759@two.firstfloor.org>
+ <54889086.4070606@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.19.201]:36454 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.19.201]:37759 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932674AbaLJTV2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 10 Dec 2014 14:21:28 -0500
+	id S932319AbaLJTnK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 10 Dec 2014 14:43:10 -0500
 Content-Disposition: inline
-In-Reply-To: <1418233295.4953.33.camel@oc0276584878.ibm.com>
+In-Reply-To: <54889086.4070606@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Carl Love <cel@us.ibm.com>
-Cc: Andi Kleen <andi@firstfloor.org>, Brendan Gregg <brendan.d.gregg@gmail.com>, Pekka Enberg <penberg@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: David Ahern <dsahern@gmail.com>
+Cc: Andi Kleen <andi@firstfloor.org>, Brendan Gregg <brendan.d.gregg@gmail.com>, Carl Love <cel@us.ibm.com>, Pekka Enberg <penberg@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Em Wed, Dec 10, 2014 at 09:41:35AM -0800, Carl Love escreveu:
-> On Tue, 2014-12-09 at 16:38 -0800, Andi Kleen wrote:
-> > Arnaldo Carvalho de Melo <acme@kernel.org> writes:
-> > 
-> > > When we use mmap(addr, len, PROT_EXEC) the kernel has a meta event
-> > > called PERF_RECORD_MMAP that will record addr range, symtab DSO path,
-> > > and we ask it to be timestamped, how to do that for the equivalent part
-> > > in the JVM?
-> > 
-> > http://docs.oracle.com/javase/7/docs/platform/jvmti/jvmti.html
-> > 
-> > You just need a way to push it from the agent to perf.
-> > 
-> 
-> This may be more complex then needed.  We really just need to track the
-> symbol.  From talking with the Java experts, they say the reused memory
-> is almost always from methods that are loaded/used early when
-> initializing the program.  Then the memory gets reused by a method that
-> runs for the bulk of the time.  So by getting a timestamp for when the
-> symbol was loaded you can then determine the length of time each symbol
-> was in the anonymous memory.  Then just associate the sample with the
-> symbol that was present in the anonymous memory the longest.  You can
-> also tag the symbol names to say that they reside in the same memory,
-> ie, the memory was reused. To warn the user that there maybe some
-> ambiguity in the sample to symbol association.  
-> 
-> 
-> > >
-> > > My initial thought was to find that using perf probe and insert there a
-> > > probe point, but I think that there may be already an existing
-> > > tracepoint in the jvm for that, one that, from what I've read so far,
-> > > is _not_ being used by this java perf agent, right?
-> > 
-> > The agent interface works by linking an agent with a special library
-> > I believe. So the agent can do whatever it wants.
-> 
-> > > From what I understood, how would it insert that event into the
-> > > perf.data event stream? Only if it necessarily involved a new mmap, via
-> > > the kernel, etc.
-> > 
-> > You basically need a way to trigger a perf event from user space.
-> > One simple way would be to just write a perf.data too into /tmp,
-> > and let perf collect that.
-> > 
-> > But it's more than that. You also need to transfer the executable
-> > code somewhere, and the line numbers.
-> > 
-> 
-> The source file and line number information is optionally available from
-> the jvm via the jvmti complied method load callback.  With this
+Em Wed, Dec 10, 2014 at 11:27:18AM -0700, David Ahern escreveu:
+> On 12/10/14 11:05 AM, Andi Kleen wrote:
+> >On Wed, Dec 10, 2014 at 10:39:53AM -0700, David Ahern wrote:
+> >>On 12/10/14 10:32 AM, Andi Kleen wrote:
+> >>>> From what I understood, how would it insert that event into the
+> >>>>perf.data event stream? Only if it necessarily involved a new mmap, via
+> >>>>the kernel, etc.
 
-Right, this could be used to synthesize DWARF for that, as described in
-the message I just sent.
+> >>>That's the new interface to be defined.
 
-> information on the symbol, line number and source file, perf could then
-> persist the data in an ELF formatted file. 
-> 
-> 
-> > >  
-> > >> It just needs a better interface from the agent to perf, to pass all
-> > >> needed information, including symbols, line numbers, executable code
-> > >> (for PT decoding and for showing diassembler), and ordering it by time
-> > >> so that no hacks are needed.
-> > >> 
-> > >> BTW other JITs (LLVM, Mono, V8, ...) have similar interfaces.
-> > >> 
-> > >> Longer term as the kernel gets more JITed (eBPF etc.) it likely needs 
-> > >> some kind of JIT interface too.
-> > >
-> > > Right, this is something we need to have, no questions about it, its
-> > > just a matter of cooking up some prototype implementation...
-> > >
-> > > If, for instance, the java agent would put on some file those events,
-> > > timestamped, then when in perf report we would just insert them into the
-> > > event stream as synthesized PERF_RECORD_MMAPs, probably that would be
-> > > enough.
-> > 
-> > Really to be useful you need at least line numbers, better code.
-> > 
-> > In theory the agent could write ELF files with dwarf, but that may get
-> > really ugly.  Probably better to have something more light weight.
-> 
-> Perf would need to do this so the data collection and ELF file
-> conversion will be done only when pref is doing the profiling of the
-> JITed code. Specifically, if perf is passed the pid of a running JVM the
-> agent library would not know when profiling starts and stops.
+> >>>Just write a perf.data?
+
+> >>Pawel Moll's new ioctl -- assumming it gets committed.
+
+> >We can't push large volume data -- like line numbers and executable code -
+> >through a ioctl.
+ 
+> If you write a separate perf.data file then it has to be merged with the
+> file generated by perf which brings in the perf_clock timestamp problem
+> since timestamps are needed to merge the data sets.
+
+yeap, but what he is saying is kinda like the problem with long running
+perf sessions where a library may be updated while keeping the same
+pathname, i.e. we samples taken up to the time the symtab backing
+storage was replaced would be unreliable.
+
+I think this should be solved in the same way, i.e. content based keys,
+that we call build-ids, every mapping, when put in place generates an
+event, say PERF_RECORD_MMAP3, that comes with a key that can later be
+used to retrieve the matching ELF file with DWARF info for annotation,
+symbol resolution, unwinding, etc.
+
+Modern distros have this and that is why we store in the perf.data file
+just the build ids, not the full ELF files at the time of the recording
+session:
+
+[root@ssdandy ~]# perf record -a sleep 1
+^[[A^[[A[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.475 MB perf.data (~20748 samples) ]
+[root@ssdandy ~]# perf buildid-list
+2aae14c5b9aef2a3ebce0f168814ca7391c7ea6b /usr/lib/debug/lib/modules/3.10.0-123.el7.x86_64/vmlinux
+e62a248621f017c39fbdeff22e3fb68ad3e0be77 /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/ata/libahci.ko
+8acd5b3b420f0a37af9d661da5d6f88a86908c52 /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
+37bed793bb0736d341002165538659862dcc9e4f /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/scsi/sd_mod.ko
+8f0c72d8c938fdeecef941e47a586614ce1014e7 /lib/modules/3.10.0-123.el7.x86_64/kernel/fs/xfs/xfs.ko
+9bb557cc045eb57af2f83b315389dd8287fb7f60 /lib/modules/3.10.0-123.el7.x86_64/kernel/net/ipv4/netfilter/ip_tables.ko
+cff370844d00ea5451d7add439646a93c64d48a5 /usr/lib64/libc-2.17.so
+18562ee0363bc9bd7101610bd86469aa426d0c44 /usr/lib64/libpthread-2.17.so
+ebd9fbf2265129ceab3866d40c826c9629f08cd0 [vdso]
+a8cf24d1279557a3f2e563c21a858dcd8784b665 /usr/lib64/libcrypto.so.1.0.1e
+148a981dc96876372c6f5c06bbb3efd0a1668432 /usr/sbin/sshd
+ce3715b450fc4015a6763b210c868f930d2cffa6 /usr/bin/find
+[root@ssdandy ~]# 
+
+[root@ssdandy ~]# ls -la perf.data
+-rw-------. 1 root root 501828 Dec 10 16:26 perf.data
+[root@ssdandy ~]# ls -la /usr/lib/debug/lib/modules/3.10.0-123.el7.x86_64/vmlinux
+-rwxr-xr-x. 2 root root 146606780 May  5  2014 /usr/lib/debug/lib/modules/3.10.0-123.el7.x86_64/vmlinux
+[root@ssdandy ~]# ls -la /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/ata/libahci.ko
+-rw-r--r--. 2 root root 51561 May  5  2014 /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/ata/libahci.ko
+[root@ssdandy ~]# ls -la /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
+-rw-r--r--. 2 root root 400273 May  5  2014 /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
+[root@ssdandy ~]# /lib/modules/3.10.0-123.el7.x86_64/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
+
+
+And by the build-id we can get to the right file, that may even not be
+installed on the target machine at the time of profiling.
+
+[root@ssdandy ~]# perf buildid-list -i /usr/lib64/libc-2.17.so 
+cff370844d00ea5451d7add439646a93c64d48a5
+[root@ssdandy ~]# ls -la /usr/lib/debug/.build-id/cf/f370844d00ea5451d7add439646a93c64d48a5
+lrwxrwxrwx. 1 root root 33 Dec 10 16:32 /usr/lib/debug/.build-id/cf/f370844d00ea5451d7add439646a93c64d48a5 -> ../../../../../lib64/libc-2.17.so
+[root@ssdandy ~]# rpm -qf /usr/lib/debug/.build-id/cf/f370844d00ea5451d7add439646a93c64d48a5
+glibc-debuginfo-2.17-55.el7_0.1.x86_64
+[root@ssdandy ~]# rpm -q glibc
+glibc-2.17-55.el7_0.1.x86_64
+[root@ssdandy ~]#
+
+The agent would need to, using PERF_RECORD_MMAP3 + build-ids plus intercepting the
+CompiledMethodLoad synthesize the right ELF files + build-ids, which
+could be just one per workload, or multiple, if those methods gets
+recompiled frequently and move to different locations.
+
+And we may want even to have a different one per version of the compiled
+method, so that developers could figure out which compiled method
+generation is best :-)
+
+- Arnaldo
