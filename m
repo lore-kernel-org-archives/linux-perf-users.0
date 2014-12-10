@@ -1,83 +1,37 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Perf support for interpreted and Just-In-Time translated olanguages
-Date: Tue, 09 Dec 2014 16:38:30 -0800
-Message-ID: <87h9x449vd.fsf@tassilo.jf.intel.com>
-References: <1417810736.5098.11.camel@oc0276584878.ibm.com>
-	<CAE40pdcXt_gaCXD7n3UED4Y2_gdpH+A3S627TS-72xkbGDoNsA@mail.gmail.com>
-	<20141209203419.GI4189@kernel.org>
-	<87ppbs4h5k.fsf@tassilo.jf.intel.com>
-	<20141209222203.GD8788@kernel.org>
+From: Pekka Enberg <penberg@iki.fi>
+Subject: Re: Perf support for interpreted and Just-In-Time translated languages
+Date: Wed, 10 Dec 2014 09:55:22 +0200
+Message-ID: <5487FC6A.3080800@iki.fi>
+References: <1417810736.5098.11.camel@oc0276584878.ibm.com> <CAE40pdcXt_gaCXD7n3UED4Y2_gdpH+A3S627TS-72xkbGDoNsA@mail.gmail.com> <20141209203419.GI4189@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:50715 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750952AbaLJAia (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:56234 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755726AbaLJHzY (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 9 Dec 2014 19:38:30 -0500
-In-Reply-To: <20141209222203.GD8788@kernel.org> (Arnaldo Carvalho de Melo's
-	message of "Tue, 9 Dec 2014 19:22:03 -0300")
+	Wed, 10 Dec 2014 02:55:24 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 6E69920859
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Dec 2014 02:55:24 -0500 (EST)
+In-Reply-To: <20141209203419.GI4189@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>, Carl Love <cel@us.ibm.com>, Pekka Enberg <penberg@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Carl Love <cel@us.ibm.com>, Pekka Enberg <penberg@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Arnaldo Carvalho de Melo <acme@kernel.org> writes:
+On 12/9/14 10:34 PM, Arnaldo Carvalho de Melo wrote:
+>>>    - How does this work for the offline analysis scenario (i.e., using 'perf archive')?
+>>>      Would the /tmp/perf-<pid>.map files have to be copied over to the host system where
+>>>      the analysis is being done?
+>> Yes. I keep copies of the perf.map along with the perf.data. It might
+>> be worth having an option to perf to change the base path for these
+>> maps, so that I didn't have to keep putting them in /tmp.
+> Right, this was not really designed, was just a proof of concept for
+> JATO needs, right Pekka?
 
-> When we use mmap(addr, len, PROT_EXEC) the kernel has a meta event
-> called PERF_RECORD_MMAP that will record addr range, symtab DSO path,
-> and we ask it to be timestamped, how to do that for the equivalent part
-> in the JVM?
+Indeed. And like with all useful proof of concepts, people started to 
+use it elsewhere as well. :-)
 
-http://docs.oracle.com/javase/7/docs/platform/jvmti/jvmti.html
-
-You just need a way to push it from the agent to perf.
-
->
-> My initial thought was to find that using perf probe and insert there a
-> probe point, but I think that there may be already an existing
-> tracepoint in the jvm for that, one that, from what I've read so far,
-> is _not_ being used by this java perf agent, right?
-
-The agent interface works by linking an agent with a special library
-I believe. So the agent can do whatever it wants.
-
-> From what I understood, how would it insert that event into the
-> perf.data event stream? Only if it necessarily involved a new mmap, via
-> the kernel, etc.
-
-You basically need a way to trigger a perf event from user space.
-One simple way would be to just write a perf.data too into /tmp,
-and let perf collect that.
-
-But it's more than that. You also need to transfer the executable
-code somewhere, and the line numbers.
-
->  
->> It just needs a better interface from the agent to perf, to pass all
->> needed information, including symbols, line numbers, executable code
->> (for PT decoding and for showing diassembler), and ordering it by time
->> so that no hacks are needed.
->> 
->> BTW other JITs (LLVM, Mono, V8, ...) have similar interfaces.
->> 
->> Longer term as the kernel gets more JITed (eBPF etc.) it likely needs 
->> some kind of JIT interface too.
->
-> Right, this is something we need to have, no questions about it, its
-> just a matter of cooking up some prototype implementation...
->
-> If, for instance, the java agent would put on some file those events,
-> timestamped, then when in perf report we would just insert them into the
-> event stream as synthesized PERF_RECORD_MMAPs, probably that would be
-> enough.
-
-Really to be useful you need at least line numbers, better code.
-
-In theory the agent could write ELF files with dwarf, but that may get
-really ugly.  Probably better to have something more light weight.
-
--Andi
-
--- 
-ak@linux.intel.com -- Speaking for myself only
+- Pekka
