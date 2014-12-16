@@ -1,40 +1,42 @@
-From: Jerome Correnoz <jerome.correnoz@st.com>
-Subject: Re: Is it possible to get source code annotation for kernel modules ?
-Date: Mon, 15 Dec 2014 08:51:36 +0000 (UTC)
-Message-ID: <loom.20141215T094546-812@post.gmane.org>
-References: <loom.20141126T215923-206@post.gmane.org>
+From: "Chinnathambi, Muthusamy" <muthusamy.chinnathambi@hp.com>
+Subject: perf probe failed to find symbols -
+Date: Tue, 16 Dec 2014 03:18:24 +0000
+Message-ID: <050363D101EB63409B222217F4B02E781EC22E9F@G6W2492.americas.hpqcorp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:57223 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750876AbaLOIv5 (ORCPT
+Received: from g9t1613g.houston.hp.com ([15.240.0.71]:33663 "EHLO
+	g9t1613g.houston.hp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751009AbaLPDVU convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Dec 2014 03:51:57 -0500
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1Y0RNg-0002Ju-Sf
-	for linux-perf-users@vger.kernel.org; Mon, 15 Dec 2014 09:51:53 +0100
-Received: from 77.242.202.232 ([77.242.202.232])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2014 09:51:52 +0100
-Received: from jerome.correnoz by 77.242.202.232 with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Dec 2014 09:51:52 +0100
+	Mon, 15 Dec 2014 22:21:20 -0500
+Received: from g6t1526.atlanta.hp.com (g6t1526.atlanta.hp.com [15.193.200.69])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by g9t1613g.houston.hp.com (Postfix) with ESMTPS id 225666463C
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2014 03:21:20 +0000 (UTC)
+Received: from G6W4001.americas.hpqcorp.net (g6w4001.atlanta.hp.com [16.205.80.210])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by g6t1526.atlanta.hp.com (Postfix) with ESMTPS id 1E59DC8
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Dec 2014 03:21:12 +0000 (UTC)
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: "Chinnathambi, Muthusamy" <muthusamy.chinnathambi@hp.com>
 
 Hi,
 
-Could someone please provide support on it ? 
+I wanted try perf probe, but I am getting the following failure.
 
-We would like to know if 'perf annotate' can allow to display the C source
-code interleaved with disassembly for the kernel modules (we can get it only
-for user space application. For kerne modules, we only have the
-disassembly). Is it feasible for kernel modules ?
+[root@force perf_tests]# ./perf probe --add sys_read
+Failed to find symbol sys_read in kernel
+  Error: Failed to add events.
+[root@force perf_tests]#
+
+I had built and installed the kernel with kprobes enabled. Looks like the kernel is stripped, how should I build the kernel for perf to be able to find symbols.
 
 Regards,
-  Jerome 
+Muthusamy C
