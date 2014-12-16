@@ -1,34 +1,38 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Is it possible to get source code annotation for kernel modules ?
-Date: Tue, 16 Dec 2014 08:44:32 -0300
-Message-ID: <20141216114432.GQ9845@kernel.org>
-References: <loom.20141126T215923-206@post.gmane.org>
- <loom.20141215T094546-812@post.gmane.org>
+Subject: Re: perf probe failed to find symbols -
+Date: Tue, 16 Dec 2014 08:46:41 -0300
+Message-ID: <20141216114641.GR9845@kernel.org>
+References: <050363D101EB63409B222217F4B02E781EC22E9F@G6W2492.americas.hpqcorp.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.19.201]:34121 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.19.201]:34259 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750952AbaLPLog (ORCPT
+	id S1751215AbaLPLqo (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Dec 2014 06:44:36 -0500
+	Tue, 16 Dec 2014 06:46:44 -0500
 Content-Disposition: inline
-In-Reply-To: <loom.20141215T094546-812@post.gmane.org>
+In-Reply-To: <050363D101EB63409B222217F4B02E781EC22E9F@G6W2492.americas.hpqcorp.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jerome Correnoz <jerome.correnoz@st.com>
-Cc: linux-perf-users@vger.kernel.org
+To: "Chinnathambi, Muthusamy" <muthusamy.chinnathambi@hp.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Mon, Dec 15, 2014 at 08:51:36AM +0000, Jerome Correnoz escreveu:
-> Hi,
-> 
-> Could someone please provide support on it ? 
-> 
-> We would like to know if 'perf annotate' can allow to display the C source
-> code interleaved with disassembly for the kernel modules (we can get it only
-> for user space application. For kerne modules, we only have the
-> disassembly). Is it feasible for kernel modules ?
+Em Tue, Dec 16, 2014 at 03:18:24AM +0000, Chinnathambi, Muthusamy escreveu:
+> I wanted try perf probe, but I am getting the following failure.
+ 
+> [root@force perf_tests]# ./perf probe --add sys_read
+> Failed to find symbol sys_read in kernel
+>   Error: Failed to add events.
+> [root@force perf_tests]#
+ 
+> I had built and installed the kernel with kprobes enabled. Looks like
+> the kernel is stripped, how should I build the kernel for perf to be
+> able to find symbols.
 
-Yes it is possible, as is possible for userspace, someone has to work on it.
+In addition to what David said, you can try using -v to get more verbose
+error messages that could provide you some extra clue about what is
+happening, also please check the other perf probe options, like the one
+that lists the available functions to probe (-F), etc.
 
 - Arnaldo
