@@ -1,50 +1,61 @@
-From: Jerome CORRENOZ <jerome.correnoz@st.com>
-Subject: RE: Is it possible to get source code annotation for kernel modules
- ?
-Date: Thu, 18 Dec 2014 16:23:11 +0100
-Message-ID: <A896A0DA7D7489439B5404E97E8CA1400158AB95165A@SAFEX1MAIL2.st.com>
-References: <loom.20141126T215923-206@post.gmane.org>
- <loom.20141215T094546-812@post.gmane.org> <20141216114432.GQ9845@kernel.org>
+From: "Pavey, Nicholas" <npavey@akamai.com>
+Subject: Thoughts on processor vendor?
+Date: Mon, 29 Dec 2014 09:33:08 -0500
+Message-ID: <D0C6CFDE.B04E%npavey@akamai.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37335 "EHLO
-	mx08-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750899AbaLRPXV convert rfc822-to-8bit
+Received: from prod-mail-xrelay08.akamai.com ([96.6.114.112]:42412 "EHLO
+	prod-mail-xrelay08.akamai.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751997AbaL2OkC convert rfc822-to-8bit
 	(ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 18 Dec 2014 10:23:21 -0500
-In-Reply-To: <20141216114432.GQ9845@kernel.org>
+	Mon, 29 Dec 2014 09:40:02 -0500
+Received: from prod-mail-xrelay08.akamai.com (localhost.localdomain [127.0.0.1])
+	by postfix.imss70 (Postfix) with ESMTP id E5FF248762
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Dec 2014 14:33:11 +0000 (GMT)
+Received: from prod-mail-relay09.akamai.com (prod-mail-relay09.akamai.com [172.27.22.68])
+	by prod-mail-xrelay08.akamai.com (Postfix) with ESMTP id DA1144875D
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Dec 2014 14:33:11 +0000 (GMT)
+Received: from email.msg.corp.akamai.com (usma1ex-cas2.msg.corp.akamai.com [172.27.123.31])
+	by prod-mail-relay09.akamai.com (Postfix) with ESMTP id C09651E03D
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Dec 2014 14:33:11 +0000 (GMT)
 Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi Arnaldo,
+Hi Perf experts,
 
-It would be a nice feature. In particular when people are interested to display C source annotation for a specific kernel module.
+What=B9s your opinion regarding tracing support (e.g. Performance count=
+ers,
+hardware debug features) in x86 processors developed by AMD and Intel.
 
-Best Regards,
-  Jerome
+I=B9m interested in whether the common tracing tools (perf, oprofile,
+systemtap, lltng etc etc) are more mature on AMD=B9s or Intel=B9s syste=
+ms (or
+perhaps it doesn=B9t matter?), and whether there are any processor mode=
+ls
+that are particularly well supported or should be avoided.
 
------Original Message-----
-From: Arnaldo Carvalho de Melo [mailto:acme@kernel.org] 
-Sent: Tuesday, December 16, 2014 12:45 PM
-To: Jerome CORRENOZ
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: Is it possible to get source code annotation for kernel modules ?
+=46or example, I=B9m considering a machine with an AMD A10 series proce=
+ssor or
+alternatively an Intel i5 series processor.
 
-Em Mon, Dec 15, 2014 at 08:51:36AM +0000, Jerome Correnoz escreveu:
-> Hi,
-> 
-> Could someone please provide support on it ? 
-> 
-> We would like to know if 'perf annotate' can allow to display the C 
-> source code interleaved with disassembly for the kernel modules (we 
-> can get it only for user space application. For kerne modules, we only 
-> have the disassembly). Is it feasible for kernel modules ?
+Just to be clear, I=B9m not trying to start a flame-war here! My questi=
+on is
+specific to tracing tooling support and not to relative performance, pr=
+ice
+or purchasing philosophy.
 
-Yes it is possible, as is possible for userspace, someone has to work on it.
+(Full disclosure: I worked for AMD for quite a while, so I=B9d prefer o=
+ne of
+their machines, but ultimately I=B9ll use whatever=B9s got the best too=
+l
+support. I could conceivably be convinced to contribute to support for
+AMDs systems, but that=B9s another conversation!).
 
-- Arnaldo
+Thanks for your help,
+
+
+Nick
