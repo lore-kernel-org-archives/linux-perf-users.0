@@ -1,89 +1,196 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Sample LLC miss references?
-Date: Tue, 30 Dec 2014 13:08:05 +0100
-Message-ID: <54A295A5.9030408@bsc.es>
+From: Yale Zhang <yzhang1985@gmail.com>
+Subject: Re: Size of perf data files
+Date: Mon, 5 Jan 2015 19:21:22 -0800
+Message-ID: <CALQF7ZygJpx=Lf0Dc70=cRRCheF_8SFos8sv8z0kjiog2Do0Zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:58395 "EHLO opsmail01.bsc.es"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751977AbaL3MQ2 (ORCPT
+Received: from mail-ie0-f174.google.com ([209.85.223.174]:37461 "EHLO
+	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753277AbbAFDVX (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 30 Dec 2014 07:16:28 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by opsmail01.bsc.es (Postfix) with ESMTP id C17F8885A4
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Dec 2014 13:08:36 +0100 (CET)
-Received: from opsmail01.bsc.es ([127.0.0.1])
- by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 23681-10 for <linux-perf-users@vger.kernel.org>;
- Tue, 30 Dec 2014 13:08:09 +0100 (CET)
-Received: from opswc01.bsc.es (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPS id 258F6B5A7C
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Dec 2014 13:08:09 +0100 (CET)
-Received: (from filter@localhost)
-	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id sBUC89VS012934
-	for linux-perf-users@vger.kernel.org; Tue, 30 Dec 2014 13:08:09 +0100
-Received: from [192.168.1.35] (105.Red-83-53-16.dynamicIP.rima-tde.net [83.53.16.105])
-	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by opsmail01.bsc.es (Postfix) with ESMTPSA id DD9FCED085
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Dec 2014 13:08:08 +0100 (CET)
+	Mon, 5 Jan 2015 22:21:23 -0500
+Received: by mail-ie0-f174.google.com with SMTP id at20so736148iec.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jan 2015 19:21:22 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Dear list,
+Perf developers,
+I'm also very interested in reducing the size of the data files when
+reporting call stacks. Currently, profiling 30s of execution with call
+graph reporting is unusable - the data file is like 600 MiB (with just
+1 core loaded) and worse yet, the reporting takes minutes (maybe
+because my files are over the network?).
+Even worse, I need to profile with all 16 cores loaded, so that would
+blow up the sample count even further. It seems such big data logs is
+going to severely add overhead by kicking data out of cache.
+I want to defer the stack trace lookup to the end of the recording
+stage so that you don't need to store those huge stack traces.
+Ideally, I'd like to do the stack trace during the report stage, but
+that seems hard since you would have to reload the EXE and DLLs into
+memory and wouldn't work for dynamically generated code.
+So, it has to be done during recording. This is fine when perf starts
+the profilee itself, but when operating in system wide mode, there's
+the chance that a process ends before perf can do stack tracing. There
+doesn't seem much we can do about that? so should we let the user
+specify a choice of doing immediate or deferred stack trace lookup, or
+always do deferred and assume the user has a way of making a process
+run indefinitely for profiling purposes.
+I think the Zoom profiler does deferred stack trace lookups since its
+tree based profiling is way faster.
 
-   I'd like to use PEBS to sample only misses at LLC on my Intel(R)=20
-Core(TM) i7-2760QM CPU.
+Before I proceed, can I get some feedback on the feasibility.
+And If I proceed, would you adopt this method?
 
-   I've been digging into section 18.4.4 of the Intel=AE 64 and IA-32=20
-Architectures Developer's Manual: Vol. 3B and I've found that=20
-MEM_LOAD_RETIRED does not include LLC_MISSES in that event. However, in=
-=20
-Table 19-13 (Section 19.6) the LLC_MISSES can be reported by setting=20
-umask 0x10. Since I'm interested on this particular counter, I guess=20
-that I cannot use perf mem command and I've have to stick with perf, am=
-=20
-I right?
+-Yale
 
-   In order to test this, I've modified the stream benchmark so that th=
-e=20
-accesses are random in each of the four kernels (copy, scale, add and=20
-triad) in order to reduce the spatial&temporal localities.
+On Wednesday 26 November 2014 13:06:17 Arnaldo Carvalho de Melo wrote:
+> Em Wed, Nov 26, 2014 at 01:47:41PM +0100, Milian Wolff escreveu:
+> > I wonder whether there is a way to reduce the size of perf data files.
+> > Esp.
+> > when I collect call graph information via Dwarf on user space
+> > applications, I easily end up with multiple gigabytes of data in just a
+> > few seconds.
+> >
+> > I assume currently, perf is built for lowest possible overhead in mind.
+> > But
+> > could maybe a post-processor be added, which can be run after perf is
+> > finished collecting data, that aggregates common backtraces etc.?
+> > Essentially what I'd like to see would be something similar to:
+> >
+> > perf report --stdout | gzip > perf.report.gz
+> > perf report -g graph --no-children -i perf.report.gz
+> >
+> > Does anything like that exist yet? Or is it planned?
+>
+> No, it doesn't, and yes, it would be something nice to have, i.e. one
+> that would process the file, find the common backtraces, and for that
+> probably we would end up using the existing 'report' logic and then
+> refer to those common backtraces by some index into a new perf.data file
+> section, perhaps we could use the features code for that...
 
-   So if I run
+Yes, this sounds excellent. Now someone just needs the time to implement this,
+damn ;-)
 
-   # Capture MEM_LOAD_RETIRED.L2_HIT
-   perf record -c 1 -e r02cb ./stream.rand
+> But one thing you can do now to reduce the size of perf.data files with
+> dwarf callchains is to reduce the userspace chunk it takes, what is
+> exactly the 'perf record' command line you use?
 
-   The number of captured samples is about 2M.
+So far, the default, since I assumed that was good enough:
 
-   However, if I run
+perf record --call-graph dwarf <app +args|-p PID>
 
-   # Capture MEM_LOAD_RETIRED.L3_MISS
-   perf record -c 1 -e r10cb ./stream.rand
+> The default is to get 8KB of userspace stack per sample, from
+> 'perf record --help':
+>
+>     -g             enables call-graph recording
+>         --call-graph <mode[,dump_size]>
+>                    setup and enables call-graph (stack chain/backtrace)
+> recording: fp dwarf -v, --verbose  be more verbose (show counter open
+> errors, etc)
+>
+> So, please try with something like:
+>
+>  perf record --call-graph dwarf,512
+>
+> And see if it is enough for your workload and what kind of effect you
+> notice on the perf.data file size. Play with that dump_size, perhaps 4KB
+> would be needed if you have deep callchains, perhaps even less would do.
 
-   then I get 0 samples. Is that a demonstration that it's impossible t=
-o=20
-capture precise misses at L3? If so, is there any alternative to do=20
-that? Could I use the latency to bring the data from the memory=20
-hierarchy instead?
+I tried this on a benchmark of mine:
 
-Thank you very much, and happy new year!
+before:
+[ perf record: Woken up 196 times to write data ]
+[ perf record: Captured and wrote 48.860 MB perf.data (~2134707 samples) ]
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+after, with dwarf,512
+[ perf record: Woken up 18 times to write data ]
+[ perf record: Captured and wrote 4.401 MB perf.data (~192268 samples) ]
 
-http://www.bsc.es/disclaimer
+What confuses me though is the number of samples. When the workload is equal,
+shouldn't the number of samples stay the same? Or what does this mean? The
+resulting reports both look similar enough.
+
+But how do I know whether 512 is "enough for your workload" - do I get an
+error/warning message if that is not the case?
+
+Anyhow, I'll use your command line in the future. Could this maybe be made the
+default?
+
+> Something you can use to speed up the _report_ part is:
+>
+>         --max-stack <n>   Set the maximum stack depth when parsing the
+>                           callchain, anything beyond the specified depth
+>                           will be ignored. Default: 127
+>
+> But this won't reduce the perf.data file, obviously.
+
+Thanks for the tip, but in the test above this does not make a difference for
+me:
+
+milian <at> milian-kdab2:/ssd/milian/projects/.build/kde4/akonadi$
+perf stat perf
+report -g graph --no-children -i perf.data --stdio > /dev/null
+Failed to open [nvidia], continuing without symbols
+Failed to open [ext4], continuing without symbols
+Failed to open [scsi_mod], continuing without symbols
+
+ Performance counter stats for 'perf report -g graph --no-children -i
+perf.data --stdio':
+
+       1008.389483      task-clock (msec)         #    0.977 CPUs
+utilized
+               304      context-switches          #    0.301 K/sec
+                15      cpu-migrations            #    0.015 K/sec
+            54,965      page-faults               #    0.055 M/sec
+     2,837,339,980      cycles                    #    2.814 GHz
+[49.97%]
+   <not supported>      stalled-cycles-frontend
+   <not supported>      stalled-cycles-backend
+     2,994,058,232      instructions              #    1.06  insns per
+cycle
+[75.08%]
+       586,461,237      branches                  #  581.582 M/sec
+[75.21%]
+         6,526,482      branch-misses             #    1.11% of all
+branches
+[74.85%]
+
+       1.032337255 seconds time elapsed
+
+milian <at> milian-kdab2:/ssd/milian/projects/.build/kde4/akonadi$
+perf stat perf
+report --max-stack 64 -g graph --no-children -i perf.data --stdio > /dev/null
+Failed to open [nvidia], continuing without symbols
+Failed to open [ext4], continuing without symbols
+Failed to open [scsi_mod], continuing without symbols
+
+ Performance counter stats for 'perf report --max-stack 64 -g graph --no-
+children -i perf.data --stdio':
+
+       1053.129822      task-clock (msec)         #    0.995 CPUs
+utilized
+               266      context-switches          #    0.253 K/sec
+                 0      cpu-migrations            #    0.000 K/sec
+            50,740      page-faults               #    0.048 M/sec
+     2,965,952,028      cycles                    #    2.816 GHz
+[50.10%]
+   <not supported>      stalled-cycles-frontend
+   <not supported>      stalled-cycles-backend
+     3,153,423,696      instructions              #    1.06  insns per
+cycle
+[75.08%]
+       618,865,595      branches                  #  587.644 M/sec
+[75.27%]
+         6,534,277      branch-misses             #    1.06% of all
+branches
+[74.79%]
+
+       1.058710369 seconds time elapsed
+
+Thanks
+-- 
+Milian Wolff
+mail <at> milianw.de
+http://milianw.de
