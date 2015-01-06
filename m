@@ -1,41 +1,56 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Size of perf data files
-Date: Mon, 05 Jan 2015 21:39:49 -0800
-Message-ID: <87ppas31sq.fsf@tassilo.jf.intel.com>
-References: <CALQF7ZygJpx=Lf0Dc70=cRRCheF_8SFos8sv8z0kjiog2Do0Zg@mail.gmail.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 0/5] Perf fixes for ARC + uClibc
+Date: Tue, 6 Jan 2015 19:22:10 +0530
+Message-ID: <1420552335-26886-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:42056 "EHLO mga01.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751281AbbAFFjt (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 6 Jan 2015 00:39:49 -0500
-In-Reply-To: <CALQF7ZygJpx=Lf0Dc70=cRRCheF_8SFos8sv8z0kjiog2Do0Zg@mail.gmail.com>
-	(Yale Zhang's message of "Mon, 5 Jan 2015 19:21:22 -0800")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Yale Zhang <yzhang1985@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: acme@redhat.com, peterz@infradead.org
+Cc: jolsa@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, bp@suse.de, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Yale Zhang <yzhang1985@gmail.com> writes:
+Hi,
 
-> Perf developers,
-> I'm also very interested in reducing the size of the data files when
-> reporting call stacks. Currently, profiling 30s of execution with call
+This series based off linux-next of 20150105 allows us to build/use perf
+for ARC with uClibc based userland.
 
-The simplest way is to lower the frequency. Especially don't
-use adaptive frequency (which is the default). This also
-lowers overhead quite a bit. Also don't use dwarf unwinding.
-It is very expensive.
+* 1/5 is really a resend of old patch posted by Alexey a while back
+* 2/5 is uClibc build spew seen on ARM as well
+* 3/5 likewise
+* 4/5 is uClibc config specific
+* 5/5 is uClibc pthread library flavour specific
+  It adds a stub for pthread_attr_setaffinity_np
+  I can rework it to disable the futex tests altogether if people think that is
+  cleaner
 
-There are some other ways.
+Please review and consider applying.
+W/o these perf doesn't build and/or work for ARC.
 
-I suspect you would most of what you want by just running
-a fast compressor (snappy or LZO) at perf record time. That would
-be likely a useful addition.
+Thx,
+-Vineet
 
--Andi
+Alexey Brodkin (1):
+  perf tools: [uclibc] fix statfs.f_type data type mismatch build error
+
+Vineet Gupta (4):
+  perf tools: [uclibc] Elide strlcpy warning
+  perf tools: [uclibc] Avoid build splat for syscall numbers
+  perf tools: [uclibc] don't rely on glibc malloc working for sz 0
+  perf tools: [uclibc] provide stub for pthread_attr_setaffinity_np
+
+ tools/lib/api/fs/debugfs.c                  |  2 +-
+ tools/lib/api/fs/fs.c                       |  2 +-
+ tools/perf/bench/futex.h                    | 13 +++++++++++++
+ tools/perf/bench/sched-pipe.c               |  1 -
+ tools/perf/builtin-top.c                    |  1 -
+ tools/perf/config/Makefile                  |  6 ++++++
+ tools/perf/config/feature-checks/Makefile   |  4 ++++
+ tools/perf/config/feature-checks/test-all.c |  5 +++++
+ tools/perf/perf-sys.h                       |  1 -
+ tools/perf/util/cache.h                     |  2 ++
+ tools/perf/util/header.c                    |  2 +-
+ 11 files changed, 33 insertions(+), 6 deletions(-)
 
 -- 
-ak@linux.intel.com -- Speaking for myself only
+1.9.1
