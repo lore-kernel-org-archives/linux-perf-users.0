@@ -1,156 +1,100 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 5/5] perf tools: [uclibc] provide stub for
- pthread_attr_setaffinity_np
-Date: Thu, 8 Jan 2015 16:56:53 +0900
-Message-ID: <20150108075653.GG7268@sejong>
-References: <1420552335-26886-1-git-send-email-vgupta@synopsys.com>
- <1420552335-26886-6-git-send-email-vgupta@synopsys.com>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: Re: Sample LLC miss references?
+Date: Thu, 08 Jan 2015 10:08:00 +0100
+Message-ID: <54AE48F0.6070702@bsc.es>
+References: <54A295A5.9030408@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420552335-26886-6-git-send-email-vgupta@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: acme@redhat.com, peterz@infradead.org, jolsa@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, bp@suse.de, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com
-List-Id: linux-perf-users.vger.kernel.org
-
-On Tue, Jan 06, 2015 at 07:22:15PM +0530, Vineet Gupta wrote:
-> uClibc Linuxthreads.old doesnt support pthread_attr_setaffinity_np()
-> call
-> 
-> ----------------->8-----------------------
->   CC       bench/futex-hash.o
->   CC       bench/futex-wake.o
-> bench/futex-hash.c: In function 'bench_futex_hash':
-> bench/futex-hash.c:161:3: error: implicit declaration of function
-> 'pthread_attr_setaffinity_np' [-Werror=implicit-function-declaration]
->    ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t),
-> &cpu);
->    ^
-> bench/futex-hash.c:161:3: error: nested extern declaration of
-> 'pthread_attr_setaffinity_np' [-Werror=nested-externs]
-> ----------------->8-----------------------
-> 
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-> ---
->  tools/perf/bench/futex.h                    | 13 +++++++++++++
->  tools/perf/config/Makefile                  |  6 ++++++
->  tools/perf/config/feature-checks/Makefile   |  4 ++++
->  tools/perf/config/feature-checks/test-all.c |  5 +++++
->  4 files changed, 28 insertions(+)
-
-It seems that you fotgot to add the real test file
-(test-pthread_attr_setaffinity_np.c?) here..
-
-Thanks,
-Namhyung
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mao.bsc.es ([84.88.52.34]:37575 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753641AbbAHJIG (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 8 Jan 2015 04:08:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id 7B4F5B5CC8
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2015 10:08:02 +0100 (CET)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 20640-07 for <linux-perf-users@vger.kernel.org>;
+ Thu,  8 Jan 2015 10:08:01 +0100 (CET)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id 3A553AEE62
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2015 10:08:01 +0100 (CET)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id t08981YD029271
+	for linux-perf-users@vger.kernel.org; Thu, 8 Jan 2015 10:08:01 +0100
+Received: from [84.88.50.148] (bsccs203.int.bsc.es [84.88.50.148])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id 1DBD4809A5
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Jan 2015 10:08:01 +0100 (CET)
+In-Reply-To: <54A295A5.9030408@bsc.es>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
 
-> 
-> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-> index 71f2844cf97f..7ed22ff1e1ac 100644
-> --- a/tools/perf/bench/futex.h
-> +++ b/tools/perf/bench/futex.h
-> @@ -68,4 +68,17 @@ futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wak
->  		 val, opflags);
->  }
->  
-> +#ifndef HAVE_PTHREAD_ATTR_SETAFFINITY_NP
-> +#include <pthread.h>
-> +static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr,
-> +					      size_t cpusetsize,
-> +					      cpu_set_t *cpuset)
-> +{
-> +	attr = attr;
-> +	cpusetsize = cpusetsize;
-> +	cpuset = cpuset;
-> +	return 0;
-> +}
-> +#endif
-> +
->  #endif /* _FUTEX_H */
-> diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-> index 5d4b039fe1ed..6b59662136fa 100644
-> --- a/tools/perf/config/Makefile
-> +++ b/tools/perf/config/Makefile
-> @@ -198,6 +198,7 @@ CORE_FEATURE_TESTS =			\
->  	libpython-version		\
->  	libslang			\
->  	libunwind			\
-> +	pthread-attr-setaffinity-np	\
->  	stackprotector-all		\
->  	timerfd				\
->  	libdw-dwarf-unwind		\
-> @@ -226,6 +227,7 @@ VF_FEATURE_TESTS =			\
->  	libelf-getphdrnum		\
->  	libelf-mmap			\
->  	libpython-version		\
-> +	pthread-attr-setaffinity-np	\
->  	stackprotector-all		\
->  	timerfd				\
->  	libunwind-debug-frame		\
-> @@ -301,6 +303,10 @@ ifeq ($(feature-sync-compare-and-swap), 1)
->    CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
->  endif
->  
-> +ifeq ($(feature-pthread-attr-setaffinity-np), 1)
-> +  CFLAGS += -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
-> +endif
-> +
->  ifndef NO_BIONIC
->    $(call feature_check,bionic)
->    ifeq ($(feature-bionic), 1)
-> diff --git a/tools/perf/config/feature-checks/Makefile b/tools/perf/config/feature-checks/Makefile
-> index 53f19b5dbc37..e9b99bb29348 100644
-> --- a/tools/perf/config/feature-checks/Makefile
-> +++ b/tools/perf/config/feature-checks/Makefile
-> @@ -25,6 +25,7 @@ FILES=					\
->  	test-libslang.bin		\
->  	test-libunwind.bin		\
->  	test-libunwind-debug-frame.bin	\
-> +	test-pthread-attr-setaffinity-np.bin	\
->  	test-stackprotector-all.bin	\
->  	test-timerfd.bin		\
->  	test-libdw-dwarf-unwind.bin	\
-> @@ -47,6 +48,9 @@ test-all.bin:
->  test-hello.bin:
->  	$(BUILD)
->  
-> +test-pthread-attr-setaffinity-np.bin:
-> +	$(BUILD) -Werror
-> +
->  test-stackprotector-all.bin:
->  	$(BUILD) -Werror -fstack-protector-all
->  
-> diff --git a/tools/perf/config/feature-checks/test-all.c b/tools/perf/config/feature-checks/test-all.c
-> index 652e0098eba6..6d4d09323922 100644
-> --- a/tools/perf/config/feature-checks/test-all.c
-> +++ b/tools/perf/config/feature-checks/test-all.c
-> @@ -97,6 +97,10 @@
->  # include "test-zlib.c"
->  #undef main
->  
-> +#define main main_test_pthread_attr_setaffinity_np
-> +# include "test-pthread_attr_setaffinity_np.c"
-> +#undef main
-> +
->  int main(int argc, char *argv[])
->  {
->  	main_test_libpython();
-> @@ -121,6 +125,7 @@ int main(int argc, char *argv[])
->  	main_test_libdw_dwarf_unwind();
->  	main_test_sync_compare_and_swap(argc, argv);
->  	main_test_zlib();
-> +	main_test_pthread_attr_setaffinity_np();
->  
->  	return 0;
->  }
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+On 30/12/14 13:08, Harald Servat wrote:
+> Dear list,
+>
+>    I'd like to use PEBS to sample only misses at LLC on my Intel(R)
+> Core(TM) i7-2760QM CPU.
+>
+>    I've been digging into section 18.4.4 of the Intel=AE 64 and IA-32
+> Architectures Developer's Manual: Vol. 3B and I've found that
+> MEM_LOAD_RETIRED does not include LLC_MISSES in that event. However, =
+in
+> Table 19-13 (Section 19.6) the LLC_MISSES can be reported by setting
+> umask 0x10. Since I'm interested on this particular counter, I guess
+> that I cannot use perf mem command and I've have to stick with perf, =
+am
+> I right?
+>
+>    In order to test this, I've modified the stream benchmark so that =
+the
+> accesses are random in each of the four kernels (copy, scale, add and
+> triad) in order to reduce the spatial&temporal localities.
+>
+>    So if I run
+>
+>    # Capture MEM_LOAD_RETIRED.L2_HIT
+>    perf record -c 1 -e r02cb ./stream.rand
+>
+>    The number of captured samples is about 2M.
+>
+>    However, if I run
+>
+>    # Capture MEM_LOAD_RETIRED.L3_MISS
+>    perf record -c 1 -e r10cb ./stream.rand
+>
+>    then I get 0 samples. Is that a demonstration that it's impossible=
+ to
+> capture precise misses at L3? If so, is there any alternative to do
+> that? Could I use the latency to bring the data from the memory
+> hierarchy instead?
+>
+> Thank you very much, and happy new year!
+>
+
+   Any thoughts on this?
+
+Thank you very much.
+
+
+
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
+
+http://www.bsc.es/disclaimer
