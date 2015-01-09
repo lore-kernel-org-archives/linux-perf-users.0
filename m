@@ -1,44 +1,62 @@
-From: fche@redhat.com (Frank Ch. Eigler)
-Subject: Re: Size of perf data files
-Date: Thu, 08 Jan 2015 21:06:37 -0500
-Message-ID: <y0mlhlcemhe.fsf@fche.csb>
-References: <CALQF7ZygJpx=Lf0Dc70=cRRCheF_8SFos8sv8z0kjiog2Do0Zg@mail.gmail.com>
-	<87ppas31sq.fsf@tassilo.jf.intel.com>
-	<CALQF7ZzpLB3Ch3=nn5yi23eneqwXnEpFTq6dX4BT7dLYvxcVXw@mail.gmail.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 0/5] Perf fixes for ARC + uClibc
+Date: Fri, 9 Jan 2015 18:47:08 +0000
+Message-ID: <1420829227.5917.5.camel@synopsys.com>
+References: <1420552335-26886-1-git-send-email-vgupta@synopsys.com>
+	 <20150106151329.GD2517@redhat.com>
+	 <C2D7FE5348E1B147BCA15975FBA2307565BCA4D7@IN01WEMBXA.internal.synopsys.com>
+Reply-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42558 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751129AbbAICIL (ORCPT
+Received: from smtprelay.synopsys.com ([198.182.47.9]:52386 "EHLO
+	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751139AbbAISxr convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 8 Jan 2015 21:08:11 -0500
-In-Reply-To: <CALQF7ZzpLB3Ch3=nn5yi23eneqwXnEpFTq6dX4BT7dLYvxcVXw@mail.gmail.com> (Yale Zhang's message of "Tue, 6 Jan 2015 13:02:23 -0800")
+	Fri, 9 Jan 2015 13:53:47 -0500
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307565BCA4D7@IN01WEMBXA.internal.synopsys.com>
+Content-Language: en-US
+Content-ID: <A5AB0857DFB8D84981436CA330C02280@internal.synopsys.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Yale Zhang <yzhang1985@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
+To: "acme@redhat.com" <acme@redhat.com>
+Cc: "mingo@kernel.org" <mingo@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bp@suse.de" <bp@suse.de>, "jolsa@kernel.org" <jolsa@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
 
-Yale Zhang <yzhang1985@gmail.com> writes:
+Hi Arnaldo,
 
-> [...]
-> I've already tried lowering the size of each sample from 8KiB to 512,
-> but that only allows storing 2 or 3 parent function calls, which isn't
-> enough for me.
->
-> "don't use dwarf unwinding."
-> The main reason I'm trying to switch from Zoom to perf is because it
-> supports dwarf unwinding! [...]
+On Wed, 2015-01-07 at 07:38 +0000, Vineet Gupta wrote:
+> On Tuesday 06 January 2015 08:43 PM, Arnaldo Carvalho de Melo wrote:
+> 
+> > Em Tue, Jan 06, 2015 at 07:22:10PM +0530, Vineet Gupta escreveu:
+> > > > Hi,
+> > > > 
+> > > > This series based off linux-next of 20150105 allows us to build/use perf
+> > > > for ARC with uClibc based userland.
+> > Do you have some ready made ARC VM image with devel tools I could use with qemu?
+> > 
+> > - Arnaldo
+> >  
+> 
+> FWIW, most of the issues I posted fixes for can be reproduced with
+> building perf with ARC buildroot !
+> 
+> git://github.com:foss-for-synopsys-dwc-arc-processors/buildroot.git
 
-You may wish to try systemtap.  Its backtracing uses in-situ dwarf
-unwinding, and is pretty fast.  Each sample costs not 4K+ of stack
-snapshots, but a hexadecimal pc-list or optionally symbolic backtrace
-string.  The downside is that the programs that you may be backtracing
-need to be identified at stap invocation - ahead of time - via
-something like:
+To reproduce described build problems (covered in patches 1, 2, 3, 5) you may indeed use Buildroot.
+Just get the most recent release from here http://buildroot.uclibc.org/downloads/buildroot-2014.11.tar.gz
+and use load following configuration in "menuconfig":
+--->---
+BR2_arcle=y
+BR2_TOOLCHAIN_BUILDROOT_LARGEFILE=y
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_DEFCONFIG="fpga"
+BR2_PACKAGE_PERF=y
+BR2_TARGET_ROOTFS_INITRAMFS=y 
+--->---
 
-  % stap -d /bin/foo -d /usr/lib64/libbar.so --ldd --all-modules SCRIPT.stp
+Then say "make" and you'll see the problem.
+If you experience any problems trying to follow my advice please let me
+know and I'll try to help you.
 
-See e.g. https://sourceware.org/systemtap/examples/#profiling/pf4.stp
-
-- FChE
+-Alexey
