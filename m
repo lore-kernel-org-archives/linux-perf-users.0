@@ -1,71 +1,91 @@
-From: Dennis <daodennis@gmail.com>
-Subject: Re: JVM Profiling: Does hotspot emit frame pointer, and other Q's
-Date: Sat, 10 Jan 2015 01:37:19 -0800
-Message-ID: <CANqRL=Qeyc_HjO5s_+d2iT-1XSbak8zk121EaoY=8CLMZmqg2g@mail.gmail.com>
-References: <CANqRL=RKvTEWc=t0ff_NOc6Ja8j3MLq5s-ZmsPtXZOfTMGB8Qg@mail.gmail.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH 4/5] perf tools: [uclibc] don't rely on glibc malloc
+ working for sz 0
+Date: Sat, 10 Jan 2015 10:16:06 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307565BCA731@IN01WEMBXA.internal.synopsys.com>
+References: <1420552335-26886-1-git-send-email-vgupta@synopsys.com>
+ <1420552335-26886-5-git-send-email-vgupta@synopsys.com>
+ <20150108075125.GF7268@sejong>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f179.google.com ([209.85.216.179]:37992 "EHLO
-	mail-qc0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751528AbbAJJhU (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 10 Jan 2015 04:37:20 -0500
-Received: by mail-qc0-f179.google.com with SMTP id c9so12353454qcz.10
-        for <linux-perf-users@vger.kernel.org>; Sat, 10 Jan 2015 01:37:19 -0800 (PST)
-In-Reply-To: <CANqRL=RKvTEWc=t0ff_NOc6Ja8j3MLq5s-ZmsPtXZOfTMGB8Qg@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: "acme@redhat.com" <acme@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "bp@suse.de" <bp@suse.de>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Apologies for tempting fate and not reading the archives :-).
-
-
-"Perf support for interpreted and Just-In-Time translated languages"
-http://thread.gmane.org/gmane.linux.kernel.perf.user/1817
-and
-"A hotspot patch for stack profiling (frame pointer)"
-http://mail.openjdk.java.net/pipermail/hotspot-compiler-dev/2014-December/016546.html
-
-Would it please the mailing list if I merge my questions into the
-perf-users thread above or continue with this one?  Most of my
-questions still stand though and I don't want to derail that thread.
-
-Between either or both the light-weight-java profiler and perf I can
-find a way to come as close to possible to always on / continuous
-profiling of a JVM.
-
-
-Regards,
-
-Dennis O.
-
-On Sat, Jan 10, 2015 at 1:03 AM, Dennis <daodennis@gmail.com> wrote:
-> Hi,
+On Thursday 08 January 2015 01:23 PM, Namhyung Kim wrote:
+> Hi Vineet,
 >
-> http://www.brendangregg.com/perf.html mentions the following** in
-> regards to profiling JVMs.
+> On Tue, Jan 06, 2015 at 07:22:14PM +0530, Vineet Gupta wrote:
+>> When running perf on ARC (uClibc based userspace), ran into this issue
+>> ------------->8----------------
+>> 	[ARCLinux]$ ./perf record ls
+>> 	bin             etc             perf            sys
+>> 	debug           init            perf.data       tmp
+>> 	[ perf record: Woken up 1 times to write data ]
+>> 	[ perf record: Captured and wrote 0.001 MB perf.data (~24 samples) ]
+>>
+>> 	[ARCLinux]$ ./perf report
+>> 	incompatible file format (rerun with -v to learn more)
+>> ------------->8----------------
+>>
+>> The problem happens in the following call stack when zalloc is called
+>> with size zero
+>>
+>> glibc default / uClibc with MALLOC_GLIBC_COMPAT are OK, but not if that
+>> config option is not enabled.
+>>
+>>   cmd_report
+>>      perf_session__new
+>> 	perf_session__open
+>> 	    perf_session__read_header
+>> 		read_attr(fd, header, &f_attr)
+>> 		nr_ids = f_attr.ids.size / sizeof(u64); <-- 0
+>> 		perf_evsel__alloc_id(vsel, 1, nr_ids)
+>> 			zalloc(ncpus * nthreads * sizeof(u64)) <-- 0
+>>
+>> header.c: read_attr()
+>>
+>> (gdb) p *f_attr
+>> $17 = {
+>>   attr = {
+>>     type = 0,
+>>     size = 96,
+>>     config = 0,
+>>     {
+>>       sample_period = 4000,
+>>       sample_freq = 4000
+>>     },
+>> ...
+>>   ids = {
+>>     offset = 104,
+>>     size = 0      <------
+>>   }
+>> }
+> Hmm.. okay.  I think we don't need to allocate the id arrays when size
+> is 0.  So perf_event__process_attr() will have the same problem IMHO.
+> How about this?
 >
-> 1) Is this still an issue, if not when was it fixed?
-> 2) Are there workarounds? (Other JVMs?)
-> 3) Does it even matter? What is the status quo? Are symbols just not
-> resolved or are parts of the stack omitted completely?
 >
-> 3 The lightweight-java-profiler seems to be able to resolve most
-> symbols, but I don't understand why it can and perf cannot.
->
-> ** Note that Java may not show full stacks to begin with, due to
-> hotspot omitting the frame pointer (just like gcc). There is currently
-> no option to disable this optimization (either in OpenJDK or Oracle
-> JDK), meaning that profiling is basically broken. I've heard that the
-> performance benefit for omitting the frame pointer in hotspot is
-> negligible, meaning, we lose the incredibly useful ability to profile
-> stack traces for no real gain. Hotspot, at least, need to provide us
-> with an option to not omit the frame pointer.
->
-> P.S. I love the perf tool!
->
->
-> Regards,
->
-> Dennis Ordanov
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 1e90c8557ede..1d826d63bc20 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -797,6 +797,9 @@ int perf_evsel__enable(struct perf_evsel *evsel, int ncpus, int nthreads)
+>  
+>  int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
+>  {
+> +	if (ncpus == 0 || nthreads == 0)
+> +		return 0;
+> +
+>  	if (evsel->system_wide)
+>  		nthreads = 1;
+
+Fine by me as I'm not too familiar with perf tools internals.
+So I need to spin a v2 for this or would you rather create a patch with me as
+Reported-by:
+
+-Vineet
