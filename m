@@ -1,96 +1,68 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 3/5] perf tools: [uclibc] Avoid build splat for
- syscall numbers
-Date: Mon, 12 Jan 2015 12:00:02 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307565BCBA99@IN01WEMBXA.internal.synopsys.com>
-References: <1420888254-17504-1-git-send-email-vgupta@synopsys.com>
- <1420888254-17504-4-git-send-email-vgupta@synopsys.com>
- <20150112110907.GD26229@krava.redhat.com>
+From: Carl Love <cel@us.ibm.com>
+Subject: Re: Perf support for interpreted and Just-In-Time translated
+ olanguages
+Date: Mon, 12 Jan 2015 09:22:48 -0800
+Message-ID: <1421083368.6211.2.camel@oc0276584878.ibm.com>
+References: <1417810736.5098.11.camel@oc0276584878.ibm.com>
+	 <CAE40pdcXt_gaCXD7n3UED4Y2_gdpH+A3S627TS-72xkbGDoNsA@mail.gmail.com>
+	 <20141209203419.GI4189@kernel.org> <87ppbs4h5k.fsf@tassilo.jf.intel.com>
+	 <20141209222203.GD8788@kernel.org>
+	 <20141210173228.GA6759@two.firstfloor.org> <54888569.30409@gmail.com>
+	 <20141210180529.GB6759@two.firstfloor.org> <54889086.4070606@gmail.com>
+	 <20141210194302.GH8788@kernel.org>
+	 <1420834758.4897.10.camel@oc0276584878.ibm.com>
+	 <54B0A757.2010407@redhat.com>  <54B141F2.60104@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-arch-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: "acme@redhat.com" <acme@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from e39.co.us.ibm.com ([32.97.110.160]:46447 "EHLO
+	e39.co.us.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751400AbbALRW5 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 12 Jan 2015 12:22:57 -0500
+Received: from /spool/local
+	by e39.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+	for <linux-perf-users@vger.kernel.org> from <cel@us.ibm.com>;
+	Mon, 12 Jan 2015 10:22:56 -0700
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+	by d01dlp02.pok.ibm.com (Postfix) with ESMTP id 15F506E8047
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2015 12:14:45 -0500 (EST)
+Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
+	by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id t0CHMp1627721924
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2015 17:22:52 GMT
+Received: from d01av01.pok.ibm.com (localhost [127.0.0.1])
+	by d01av01.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id t0CHMppw010401
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Jan 2015 12:22:51 -0500
+In-Reply-To: <54B141F2.60104@gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: David Ahern <dsahern@gmail.com>
+Cc: William Cohen <wcohen@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Hi Jiri,
+On Sat, 2015-01-10 at 08:14 -0700, David Ahern wrote:
+> On 1/9/15 9:15 PM, William Cohen wrote:
+> >> I have thought about pipes, callbacks, but I don't see any way to get
+> >> these to work between the library loaded in the Java program and perf.
+> >> Just wondering if you had any thoughts on how to do the communication?
+> >>
+> >>                   Carl Love
+> >
+> > Hi Carl,
+> >
+> > Too bad there isn't a "sys_perf_event" syscall to allow user-space applications to inject like a software event style entries into the kernel's recording of perf events. The AMD lightweight profiling mechanism specified the LWPINS instruction to insert a software event entry into the data buffer (http://support.amd.com/TechDocs/43724.pdf).  Seems like the linux kernel should have a similar mechanism to allow user and kernel-space to inject data in the perf records.
+> >
+> > -Will
+> 
+> https://lkml.org/lkml/2014/11/3/917
+> 
+> David
+> 
 
-On Monday 12 January 2015 04:39 PM, Jiri Olsa wrote:
-> On Sat, Jan 10, 2015 at 04:40:52PM +0530, Vineet Gupta wrote:
->> This is due to duplicated unistd inclusion (via uClibc headers + kernel headers)
->> Also seen on ARM uClibc based tools
->>
->> ------- ARC build ---------->8-------------
->>
->>   CC       util/evlist.o
->> In file included from
->> ~/arc/k.org/arch/arc/include/uapi/asm/unistd.h:25:0,
->>                  from util/../perf-sys.h:10,
->>                  from util/../perf.h:15,
->>                  from util/event.h:7,
->>                  from util/event.c:3:
->> ~/arc/k.org/include/uapi/asm-generic/unistd.h:906:0:
->> warning: "__NR_fcntl64" redefined [enabled by default]
->>  #define __NR_fcntl64 __NR3264_fcntl
->>  ^
->> In file included from
->> ~/arc/gnu/INSTALL_1412-arc-2014.12-rc1/arc-snps-linux-uclibc/sysroot/usr/include/sys/syscall.h:24:0,
->>                  from util/../perf-sys.h:6,
->> ----------------->8-------------------
->>
->> ------- ARM build ---------->8-------------
->>
->>   CC FPIC  plugin_scsi.o
->> In file included from util/../perf-sys.h:9:0,
->>                  from util/../perf.h:15,
->>                  from util/cache.h:7,
->>                  from perf.c:12:
->> ~/arc/k.org/arch/arm/include/uapi/asm/unistd.h:28:0:
->> warning: "__NR_restart_syscall" redefined [enabled by default]
->> In file included from
->> ~/buildroot/host/usr/arm-buildroot-linux-uclibcgnueabi/sysroot/usr/include/sys/syscall.h:25:0,
->>                  from util/../perf-sys.h:6,
->>                  from util/../perf.h:15,
->>                  from util/cache.h:7,
->>                  from perf.c:12:
->> ~/buildroot/host/usr/arm-buildroot-linux-uclibcgnueabi/sysroot/usr/include/bits/sysnum.h:17:0:
->> note: this is the location of the previous definition
->> ----------------->8-------------------
-> Could you please point out what's the right logic for including those headers?
+David:
 
-I'm not sure why you were including <linux/unistd.h> in first place. Vanilla
-<unistd.h> shd suffice for the functions exported by that file. OTOH, if the
-intent was to get SYS_xxx or NR_xxx, then per syscall man page, <sys/syscall.h> is
-the recommended way.
+Ah, this is the ioctl patch you had mentioned you mentioned previously.
+I hadn't found the patch before.  Yes, this looks like it would work.  I
+will see if I can get a prototype working with this patch.  Thanks.
 
-I just tried a small test program which uses __NR_restart_syscall for both x86
-(glibc) and ARC (uClibc) and including <sys/syscall.h> seems to work.
-
-Also replacing <linux/unistd.h> with <sys/syscall.h> in the first 2 hunks of this
-patch equally fixes my perf build splat. The 3rd one (perf-sys.h) already includes
-<sys/syscall.h> so no change required there.
-
-I'll send out a v3 to same effect.
-
->
-> I've always thought that just adding:
->
->   #include <linux/unistd.h>
->
-> should be safe no matter what.. feels like bug in one of those
-> header files? (uClibc headers & kernel headers)
-
-Well the design of asm-generic/unistd.h (no legacy syscalls ABI) which ARC uses
-does require duplicate inclusion of asm/unistd.h so a simple guard in header is
-not sufficient (and actually caused me embarrassing grief when I naively submitted
-that into mainline some time last year)
-
-Thx,
--Vineet
-
->
-> thanks for info,
-> jirka
+                Carl Love
