@@ -1,14 +1,14 @@
 From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 5/5] perf tools: [uclibc] provide stub for
- pthread_attr_setaffinity_np
-Date: Mon, 12 Jan 2015 11:13:17 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307565BCBA7D@IN01WEMBXA.internal.synopsys.com>
+Subject: Re: [PATCH v2 3/5] perf tools: [uclibc] Avoid build splat for
+ syscall numbers
+Date: Mon, 12 Jan 2015 12:00:02 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307565BCBA99@IN01WEMBXA.internal.synopsys.com>
 References: <1420888254-17504-1-git-send-email-vgupta@synopsys.com>
- <1420888254-17504-6-git-send-email-vgupta@synopsys.com>
- <20150112110443.GB26229@krava.redhat.com>
+ <1420888254-17504-4-git-send-email-vgupta@synopsys.com>
+ <20150112110907.GD26229@krava.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-arch-owner@vger.kernel.org>
 Content-Language: en-US
 Sender: linux-arch-owner@vger.kernel.org
@@ -18,67 +18,79 @@ List-Id: linux-perf-users.vger.kernel.org
 
 Hi Jiri,
 
-On Monday 12 January 2015 04:35 PM, Jiri Olsa wrote:
-> On Sat, Jan 10, 2015 at 04:40:54PM +0530, Vineet Gupta wrote:
->
-> SNIP
->
->> [SNIP]
->>  	test-timerfd.bin		\
->>  	test-libdw-dwarf-unwind.bin	\
->> @@ -47,6 +48,9 @@ test-all.bin:
->>  test-hello.bin:
->>  	$(BUILD)
->> =20
->> +test-pthread-attr-setaffinity-np.bin:
->> +	$(BUILD) -Werror
-> this does not works for me unless I add -lpthread (check patch below)
-> is it possible you pushed that through LDFLAGS?
->
-> otherwise I'm getting following error:
-> 	---
-> 	In file included from bench/futex-hash.c:17:0:
-> 	bench/futex.h:73:19: error: conflicting types for =91pthread_attr_se=
-taffinity_np=92
-> 	 static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr,
-> [snip]
-> 			   ^
-> 	In file included from bench/futex.h:72:0,
-> 			 from bench/futex-requeue.c:17:
-> 	/usr/include/pthread.h:407:12: note: previous declaration of =91pthr=
-ead_attr_setaffinity_np=92 was here
-> 	 extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
-> 		    ^
-> 	make[1]: *** [bench/futex-requeue.o] Error 1
-> 	make: *** [all] Error 2
-> 	---
->
-> my system is x86_64 on F20
->
-> thanks,
-> jirka
->
->
-> diff --git a/tools/perf/config/feature-checks/Makefile b/tools/perf/c=
-onfig/feature-checks/Makefile
-> index e9b99bb29348..42ac05aaf8ac 100644
-> --- a/tools/perf/config/feature-checks/Makefile
-> +++ b/tools/perf/config/feature-checks/Makefile
-> @@ -49,7 +49,7 @@ test-hello.bin:
->  	$(BUILD)
-> =20
->  test-pthread-attr-setaffinity-np.bin:
-> -	$(BUILD) -Werror
-> +	$(BUILD) -Werror -lpthread
-> =20
->  test-stackprotector-all.bin:
->  	$(BUILD) -Werror -fstack-protector-all
+On Monday 12 January 2015 04:39 PM, Jiri Olsa wrote:
+> On Sat, Jan 10, 2015 at 04:40:52PM +0530, Vineet Gupta wrote:
+>> This is due to duplicated unistd inclusion (via uClibc headers + kernel headers)
+>> Also seen on ARM uClibc based tools
+>>
+>> ------- ARC build ---------->8-------------
+>>
+>>   CC       util/evlist.o
+>> In file included from
+>> ~/arc/k.org/arch/arc/include/uapi/asm/unistd.h:25:0,
+>>                  from util/../perf-sys.h:10,
+>>                  from util/../perf.h:15,
+>>                  from util/event.h:7,
+>>                  from util/event.c:3:
+>> ~/arc/k.org/include/uapi/asm-generic/unistd.h:906:0:
+>> warning: "__NR_fcntl64" redefined [enabled by default]
+>>  #define __NR_fcntl64 __NR3264_fcntl
+>>  ^
+>> In file included from
+>> ~/arc/gnu/INSTALL_1412-arc-2014.12-rc1/arc-snps-linux-uclibc/sysroot/usr/include/sys/syscall.h:24:0,
+>>                  from util/../perf-sys.h:6,
+>> ----------------->8-------------------
+>>
+>> ------- ARM build ---------->8-------------
+>>
+>>   CC FPIC  plugin_scsi.o
+>> In file included from util/../perf-sys.h:9:0,
+>>                  from util/../perf.h:15,
+>>                  from util/cache.h:7,
+>>                  from perf.c:12:
+>> ~/arc/k.org/arch/arm/include/uapi/asm/unistd.h:28:0:
+>> warning: "__NR_restart_syscall" redefined [enabled by default]
+>> In file included from
+>> ~/buildroot/host/usr/arm-buildroot-linux-uclibcgnueabi/sysroot/usr/include/sys/syscall.h:25:0,
+>>                  from util/../perf-sys.h:6,
+>>                  from util/../perf.h:15,
+>>                  from util/cache.h:7,
+>>                  from perf.c:12:
+>> ~/buildroot/host/usr/arm-buildroot-linux-uclibcgnueabi/sysroot/usr/include/bits/sysnum.h:17:0:
+>> note: this is the location of the previous definition
+>> ----------------->8-------------------
+> Could you please point out what's the right logic for including those headers?
 
-Right - that fix is indeed needed to make it pass. Thing is, with my uC=
-libc config
-it always fails - so I couldn't make it fail because of this reason :-)
+I'm not sure why you were including <linux/unistd.h> in first place. Vanilla
+<unistd.h> shd suffice for the functions exported by that file. OTOH, if the
+intent was to get SYS_xxx or NR_xxx, then per syscall man page, <sys/syscall.h> is
+the recommended way.
 
-I'll add that hunk in v3.
+I just tried a small test program which uses __NR_restart_syscall for both x86
+(glibc) and ARC (uClibc) and including <sys/syscall.h> seems to work.
+
+Also replacing <linux/unistd.h> with <sys/syscall.h> in the first 2 hunks of this
+patch equally fixes my perf build splat. The 3rd one (perf-sys.h) already includes
+<sys/syscall.h> so no change required there.
+
+I'll send out a v3 to same effect.
+
+>
+> I've always thought that just adding:
+>
+>   #include <linux/unistd.h>
+>
+> should be safe no matter what.. feels like bug in one of those
+> header files? (uClibc headers & kernel headers)
+
+Well the design of asm-generic/unistd.h (no legacy syscalls ABI) which ARC uses
+does require duplicate inclusion of asm/unistd.h so a simple guard in header is
+not sufficient (and actually caused me embarrassing grief when I naively submitted
+that into mainline some time last year)
 
 Thx,
 -Vineet
+
+>
+> thanks for info,
+> jirka
