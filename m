@@ -1,73 +1,76 @@
 From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 1/5] perf tools: [uclibc] fix statfs.f_type data type
- mismatch build error
-Date: Tue, 13 Jan 2015 04:49:42 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307565BCBBD6@IN01WEMBXA.internal.synopsys.com>
-References: <1420888254-17504-1-git-send-email-vgupta@synopsys.com>
- <1420888254-17504-2-git-send-email-vgupta@synopsys.com>
- <20150112110522.GC26229@krava.redhat.com> <20150113014757.GG29743@kernel.org>
+Subject: [PATCH v3 0/5] Perf tool fixes for ARC + uClibc
+Date: Tue, 13 Jan 2015 19:13:19 +0530
+Message-ID: <1421156604-30603-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:46361 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750971AbbAMEtu convert rfc822-to-8bit (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 12 Jan 2015 23:49:50 -0500
-Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
-Cc: "namhyung@kernel.org" <namhyung@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, Borislav Petkov <bp@suse.de>, Cody P Schafer <dev@codyps.com>
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: acme@redhat.com, namhyung@kernel.org, jolsa@kernel.org
+Cc: peterz@infradead.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Tuesday 13 January 2015 07:18 AM, Arnaldo Carvalho de Melo wrote:
+Hi,
 
-Em Mon, Jan 12, 2015 at 12:05:22PM +0100, Jiri Olsa escreveu:
+This series based off linux-next of 20150105 allows us to build/use perf
+for ARC with uClibc based userland.
 
+v3: Changes since v2 [2]
+* 1/5	: Ack from Jiri
+* 2/5	: no changes
+* 3/5	: sys/syscall.h included	  [Jiri]
+* 4/5	: no changes
+* 5/5	: -lpthread added to link target  [Jiri]
+* {1,5} : Changelog updated so scissor lines don't start at column 1
 
-> On Sat, Jan 10, 2015 at 04:40:50PM +0530, Vineet Gupta wrote:
+v2: Change since v1 [1]
+* [1-3]/5 : no changes
+* 4/5     : Make perf_evsel__alloc_id agnostic of zero threads [Namhyung Kim]
+* 5/5     : Add missing test file
 
+v1:
+* 1/5 is really a resend of old patch posted by Alexey a while back
+* 2/5 is uClibc build spew seen on ARM as well
+* 3/5 likewise
+* 4/5 is uClibc config specific
+* 5/5 is uClibc pthread library flavour specific
+  It adds a stub for pthread_attr_setaffinity_np
+  I can rework it to disable the futex tests altogether if people think that is
+  cleaner
 
-> > From: Alexey Brodkin <abrodkin@synopsys.com><mailto:abrodkin@synopsys.com>
-> >
-> > ARC Linux uses the no legacy syscalls abi and corresponding uClibc headers
-> > statfs defines f_type to be U32 which causes perf build breakage
-> >
-> > http://git.uclibc.org/uClibc/tree/libc/sysdeps/linux/common-generic/bits/statfs.h
-> >
-> > ----------->8---------------
-> >   CC       fs/fs.o
-> > fs/fs.c: In function 'fs__valid_mount':
-> > fs/fs.c:82:24: error: comparison between signed and unsigned integer
-> > expressions [-Werror=sign-compare]
-> >   else if (st_fs.f_type != magic)
-> >                         ^
-> > cc1: all warnings being treated as errors
-> > ----------->8---------------
-> >
-> > Cc: Borislav Petkov <bp@suse.de><mailto:bp@suse.de>
-> > Cc: Jiri Olsa <jolsa@kernel.org><mailto:jolsa@kernel.org>
-> > Cc: Cody P Schafer <dev@codyps.com><mailto:dev@codyps.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com><mailto:acme@redhat.com>
-> > Cc: linux-perf-users@vger.kernel.org<mailto:linux-perf-users@vger.kernel.org>
-> > Cc: linux-kernel@vger.kernel.org<mailto:linux-kernel@vger.kernel.org>
-> > Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com><mailto:abrodkin@synopsys.com>
+Please review and consider applying.
+W/o these perf doesn't build and/or work for ARC.
 
-
->
-> Acked-by: Jiri Olsa <jolsa@kernel.org><mailto:jolsa@kernel.org>
-
-
-Thanks, applied, but please do not start lines in the changelog comment
-with ---, that breaks some patch applying scripts. I fixed it up this
-time.
-
-Thx. I've udpated the changelogs so scissor lines start at column 3 with leading whitespace, is that OK or do you want me to remove those lines altogether. Also do u want me to drop this patch from v3 of series as I have some fixups for other patches.
+[1] http://www.spinics.net/linux/lists/kernel/msg1897268.html
+[2] http://www.spinics.net/linux/lists/kernel/msg1900706.html
 
 Thx,
 -Vineet
 
 
+Alexey Brodkin (1):
+  perf tools: [uclibc] fix statfs.f_type data type mismatch build error
 
-- Arnaldo
+Vineet Gupta (4):
+  perf tools: [uclibc] Elide strlcpy warning
+  perf tools: [uclibc] Avoid build splat for syscall numbers
+  perf tools: [uclibc] don't rely on glibc malloc working for sz 0
+  perf tools: [uclibc] provide stub for pthread_attr_setaffinity_np
+
+ tools/lib/api/fs/debugfs.c                                 |  2 +-
+ tools/lib/api/fs/fs.c                                      |  2 +-
+ tools/perf/bench/futex.h                                   | 13 +++++++++++++
+ tools/perf/bench/sched-pipe.c                              |  2 +-
+ tools/perf/builtin-top.c                                   |  1 -
+ tools/perf/config/Makefile                                 |  6 ++++++
+ tools/perf/config/feature-checks/Makefile                  |  4 ++++
+ tools/perf/config/feature-checks/test-all.c                |  5 +++++
+ .../feature-checks/test-pthread-attr-setaffinity-np.c      | 14 ++++++++++++++
+ tools/perf/perf-sys.h                                      |  1 -
+ tools/perf/util/cache.h                                    |  2 ++
+ tools/perf/util/evsel.c                                    |  3 +++
+ 12 files changed, 50 insertions(+), 5 deletions(-)
+ create mode 100644 tools/perf/config/feature-checks/test-pthread-attr-setaffinity-np.c
+
+-- 
+1.9.1
