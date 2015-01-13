@@ -1,160 +1,66 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v3 5/5] perf tools: [uclibc] provide stub for pthread_attr_setaffinity_np
-Date: Tue, 13 Jan 2015 19:13:24 +0530
-Message-ID: <1421156604-30603-6-git-send-email-vgupta@synopsys.com>
-References: <1421156604-30603-1-git-send-email-vgupta@synopsys.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: Why the distinction between regular anon regions and hugepage
+ anon regions for PERF_RECORD_MMAP entries?
+Date: Tue, 13 Jan 2015 08:30:00 -0700
+Message-ID: <54B539F8.2070107@gmail.com>
+References: <54B09C10.6090008@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421156604-30603-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: acme@redhat.com, namhyung@kernel.org, jolsa@kernel.org
-Cc: peterz@infradead.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pa0-f52.google.com ([209.85.220.52]:56136 "EHLO
+	mail-pa0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752660AbbAMPaC (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 13 Jan 2015 10:30:02 -0500
+Received: by mail-pa0-f52.google.com with SMTP id eu11so4233981pac.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jan 2015 07:30:02 -0800 (PST)
+In-Reply-To: <54B09C10.6090008@redhat.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: William Cohen <wcohen@redhat.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-uClibc Linuxthreads.old doesnt support pthread_attr_setaffinity_np()
-call
+On 1/9/15 8:27 PM, William Cohen wrote:
+> Hi All,
+>
+> Earlier this week I was examining why operf was not properly mapping samples from anonymous regions to Java methods when the JVM was using the older hugepage page mechanism which has a static pool of pages when the machine sets up.  I tracked the problem down to the the PERF_RECORD_MMAP entries being different between regular and hugepages.
+>
+> A hugepage PERF_RECORD_MMAP entry from "perf report -D" when hugepages were used:
+>
+> 0x125d60 [0x58]: event: 1
+> .
+> . ... raw event: size 88 bytes
+> .  0000:  01 00 00 00 02 00 58 00 36 29 00 00 37 29 00 00  ......X.6)..7)..
+> .  0010:  00 00 c0 aa aa 2a 00 00 00 00 00 03 00 00 00 00  .....*..........
+> .  0020:  00 00 00 00 00 00 00 00 2f 61 6e 6f 6e 5f 68 75  ......../anon_hu
+> .  0030:  67 65 70 61 67 65 20 28 64 65 6c 65 74 65 64 29  gepage (deleted)
+> .  0040:  00 00 00 00 00 00 00 00 36 29 00 00 37 29 00 00  ........6)..7)..
+> .  0050:  cd 0f 4c 7e a7 b2 00 00                          ..L~....
+> .
+> 196432448196557 0x125d60 [0x58]: PERF_RECORD_MMAP 10550/10551: [0x2aaaaac00000(0x3000000) @ 0]: /anon_hugepage (deleted)
+>
+>
+> Below is a PERF_RECORD_MMAP for normal page sized pages anonymous region:
+>
+> 0xd8 [0x50]: event: 1
+> .
+> . ... raw event: size 80 bytes
+> .  0000:  01 00 00 00 01 00 50 00 ff ff ff ff 00 00 00 00  ......P.........
+> ...skipping...
+> .  0020:  00 00 00 a9 f9 7f 00 00 2f 2f 61 6e 6f 6e 00 00  ........//anon..
+> .  0030:  3f 2a 00 00 40 2a 00 00 68 f9 4a f5 20 b3 00 00  ?*..@*..h.J. ...
+> .
+> 196954135656808 0x1873c8 [0x40]: PERF_RECORD_MMAP 10815/10816: [0x7ff9a9000000(0x270000) @ 0x7ff9a9000000]: //anon
+>
+>
+> Why the distinction between the two memory mappings in this manner?  Why not just generate same output for the hugepage PERF_RECORD_MMAP?  Also why does it include the " (deleted)" suffix for the hugepage entry?  I don't think that the mapping had been removed when that entry was generated?
 
-   ----------------->8-----------------------
-  CC       bench/futex-hash.o
-  CC       bench/futex-wake.o
-bench/futex-hash.c: In function 'bench_futex_hash':
-bench/futex-hash.c:161:3: error: implicit declaration of function
-'pthread_attr_setaffinity_np' [-Werror=implicit-function-declaration]
-   ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t),
-&cpu);
-   ^
-bench/futex-hash.c:161:3: error: nested extern declaration of
-'pthread_attr_setaffinity_np' [-Werror=nested-externs]
-   ----------------->8-----------------------
+perf is just passing on the information given to it.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- tools/perf/bench/futex.h                                   | 13 +++++++++++++
- tools/perf/config/Makefile                                 |  6 ++++++
- tools/perf/config/feature-checks/Makefile                  |  4 ++++
- tools/perf/config/feature-checks/test-all.c                |  5 +++++
- .../feature-checks/test-pthread-attr-setaffinity-np.c      | 14 ++++++++++++++
- 5 files changed, 42 insertions(+)
- create mode 100644 tools/perf/config/feature-checks/test-pthread-attr-setaffinity-np.c
+The "anon" versus "anon_hugepage" comes from the filename used in the 
+mapping (e.g, see references to HUGETLB_ANON_FILE for the latter). And 
+as I recall file references for hugepages are typically deleted after 
+opening so that the pages are released even if the process terminates 
+abnormally.
 
-diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-index 71f2844cf97f..7ed22ff1e1ac 100644
---- a/tools/perf/bench/futex.h
-+++ b/tools/perf/bench/futex.h
-@@ -68,4 +68,17 @@ futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wak
- 		 val, opflags);
- }
- 
-+#ifndef HAVE_PTHREAD_ATTR_SETAFFINITY_NP
-+#include <pthread.h>
-+static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr,
-+					      size_t cpusetsize,
-+					      cpu_set_t *cpuset)
-+{
-+	attr = attr;
-+	cpusetsize = cpusetsize;
-+	cpuset = cpuset;
-+	return 0;
-+}
-+#endif
-+
- #endif /* _FUTEX_H */
-diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-index 5d4b039fe1ed..6b59662136fa 100644
---- a/tools/perf/config/Makefile
-+++ b/tools/perf/config/Makefile
-@@ -198,6 +198,7 @@ CORE_FEATURE_TESTS =			\
- 	libpython-version		\
- 	libslang			\
- 	libunwind			\
-+	pthread-attr-setaffinity-np	\
- 	stackprotector-all		\
- 	timerfd				\
- 	libdw-dwarf-unwind		\
-@@ -226,6 +227,7 @@ VF_FEATURE_TESTS =			\
- 	libelf-getphdrnum		\
- 	libelf-mmap			\
- 	libpython-version		\
-+	pthread-attr-setaffinity-np	\
- 	stackprotector-all		\
- 	timerfd				\
- 	libunwind-debug-frame		\
-@@ -301,6 +303,10 @@ ifeq ($(feature-sync-compare-and-swap), 1)
-   CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
- endif
- 
-+ifeq ($(feature-pthread-attr-setaffinity-np), 1)
-+  CFLAGS += -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
-+endif
-+
- ifndef NO_BIONIC
-   $(call feature_check,bionic)
-   ifeq ($(feature-bionic), 1)
-diff --git a/tools/perf/config/feature-checks/Makefile b/tools/perf/config/feature-checks/Makefile
-index 53f19b5dbc37..42ac05aaf8ac 100644
---- a/tools/perf/config/feature-checks/Makefile
-+++ b/tools/perf/config/feature-checks/Makefile
-@@ -25,6 +25,7 @@ FILES=					\
- 	test-libslang.bin		\
- 	test-libunwind.bin		\
- 	test-libunwind-debug-frame.bin	\
-+	test-pthread-attr-setaffinity-np.bin	\
- 	test-stackprotector-all.bin	\
- 	test-timerfd.bin		\
- 	test-libdw-dwarf-unwind.bin	\
-@@ -47,6 +48,9 @@ test-all.bin:
- test-hello.bin:
- 	$(BUILD)
- 
-+test-pthread-attr-setaffinity-np.bin:
-+	$(BUILD) -Werror -lpthread
-+
- test-stackprotector-all.bin:
- 	$(BUILD) -Werror -fstack-protector-all
- 
-diff --git a/tools/perf/config/feature-checks/test-all.c b/tools/perf/config/feature-checks/test-all.c
-index 652e0098eba6..6d4d09323922 100644
---- a/tools/perf/config/feature-checks/test-all.c
-+++ b/tools/perf/config/feature-checks/test-all.c
-@@ -97,6 +97,10 @@
- # include "test-zlib.c"
- #undef main
- 
-+#define main main_test_pthread_attr_setaffinity_np
-+# include "test-pthread_attr_setaffinity_np.c"
-+#undef main
-+
- int main(int argc, char *argv[])
- {
- 	main_test_libpython();
-@@ -121,6 +125,7 @@ int main(int argc, char *argv[])
- 	main_test_libdw_dwarf_unwind();
- 	main_test_sync_compare_and_swap(argc, argv);
- 	main_test_zlib();
-+	main_test_pthread_attr_setaffinity_np();
- 
- 	return 0;
- }
-diff --git a/tools/perf/config/feature-checks/test-pthread-attr-setaffinity-np.c b/tools/perf/config/feature-checks/test-pthread-attr-setaffinity-np.c
-new file mode 100644
-index 000000000000..0a0d3ecb4e8a
---- /dev/null
-+++ b/tools/perf/config/feature-checks/test-pthread-attr-setaffinity-np.c
-@@ -0,0 +1,14 @@
-+#include <stdint.h>
-+#include <pthread.h>
-+
-+int main(void)
-+{
-+	int ret = 0;
-+	pthread_attr_t thread_attr;
-+
-+	pthread_attr_init(&thread_attr);
-+	/* don't care abt exact args, just the API itself in libpthread */
-+	ret = pthread_attr_setaffinity_np(&thread_attr, 0, NULL);
-+
-+	return ret;
-+}
--- 
-1.9.1
+David
