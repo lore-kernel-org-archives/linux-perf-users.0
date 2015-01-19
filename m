@@ -1,46 +1,50 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 0/5] Perf tool fixes for ARC + uClibc
-Date: Mon, 19 Jan 2015 11:58:43 -0200
-Message-ID: <20150119135843.GA2276@redhat.com>
-References: <1421156604-30603-1-git-send-email-vgupta@synopsys.com>
- <20150114120000.GB11443@krava.brq.redhat.com>
- <20150114135930.GA2463@redhat.com>
- <54BC897C.7070309@synopsys.com>
+From: David Ahern <dsahern@gmail.com>
+Subject: Re: perf: Kconfig based feature selection
+Date: Mon, 19 Jan 2015 08:54:14 -0700
+Message-ID: <54BD28A6.2030206@gmail.com>
+References: <CAGszK3i4ZuvCp_jSkCV26dPAeAUbjJ1PV7b0WtgmAK5Dn+1VaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54BC897C.7070309@synopsys.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, namhyung@kernel.org, jolsa@kernel.org, peterz@infradead.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pa0-f52.google.com ([209.85.220.52]:58740 "EHLO
+	mail-pa0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751066AbbASPyQ (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 19 Jan 2015 10:54:16 -0500
+Received: by mail-pa0-f52.google.com with SMTP id kx10so8940912pab.11
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2015 07:54:16 -0800 (PST)
+In-Reply-To: <CAGszK3i4ZuvCp_jSkCV26dPAeAUbjJ1PV7b0WtgmAK5Dn+1VaQ@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Jan Heylen <heyleke@gmail.com>, linux-perf-users@vger.kernel.org
+Cc: alexis.berlemont@gmail.com, Jiri Olsa <jolsa@redhat.com>
 
-Em Mon, Jan 19, 2015 at 10:05:08AM +0530, Vineet Gupta escreveu:
-> Hi Arnaldo,
-> 
-> On Wednesday 14 January 2015 07:29 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Jan 14, 2015 at 01:00:00PM +0100, Jiri Olsa escreveu:
-> >> > On Tue, Jan 13, 2015 at 07:13:19PM +0530, Vineet Gupta wrote:
-> >>> > > Hi,
-> >>> > > 
-> >>> > > This series based off linux-next of 20150105 allows us to build/use perf
-> >>> > > for ARC with uClibc based userland.
-> >>> > > 
-> >>> > > v3: Changes since v2 [2]
-> >>> > > * 1/5	: Ack from Jiri
-> >>> > > * 2/5	: no changes
-> >>> > > * 3/5	: sys/syscall.h included	  [Jiri]
-> >>> > > * 4/5	: no changes
-> >>> > > * 5/5	: -lpthread added to link target  [Jiri]
-> >>> > > * {1,5} : Changelog updated so scissor lines don't start at column 1
+On 1/19/15 2:35 AM, Jan Heylen wrote:
+> Hi,
+>
+> I was wondering what the status is for following item on the TODO list:
+>
+> Use Kconfig to allow selecting features and build minimal version of
+> perf, e.g. one with just 'record' for use in embedded platforms.
+>
+> David Ahern prototyped this, dig those patches and update them
+>
+>
+> I tried a search for Kconfig on this mailing list it's archives, but
+> no good hit.
+>
+> I see in the github repos from David Ahern a link to commits from
+> Alexis Berlemont that look interesting, is there a plan to upstream
+> this?
+> https://github.com/aberlemont/linux/tree/perf/kbuild
 
-> >> > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> > Most are already in my perf/urgent branch.
+Latest incarnation: https://lkml.org/lkml/2015/1/15/310
 
-> Are you planning to add {4,5}/5 for next window or did u drop/miss them ?
+David
 
-I will, IIRC those were not that trivial, so could wait, I'll make sure
-I review them and merge for perf/core if I find no issues.
-
-- Arnaldo
+>
+> One thing that I don't see is, in libperf, nothing seem to be stripped
+> out if you e.g. only select 'record'. Is this correct? But this
+> observation is only based on looking at the github repo kbuild files,
+> I'll have to clone Alexis his repo to have a closer look.
