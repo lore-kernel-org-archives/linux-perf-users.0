@@ -1,47 +1,45 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v3 0/5] Perf tool fixes for ARC + uClibc
-Date: Mon, 19 Jan 2015 10:05:08 +0530
-Message-ID: <54BC897C.7070309@synopsys.com>
-References: <1421156604-30603-1-git-send-email-vgupta@synopsys.com> <20150114120000.GB11443@krava.brq.redhat.com> <20150114135930.GA2463@redhat.com>
+From: Jan Heylen <heyleke@gmail.com>
+Subject: perf: Kconfig based feature selection
+Date: Mon, 19 Jan 2015 10:35:56 +0100
+Message-ID: <CAGszK3i4ZuvCp_jSkCV26dPAeAUbjJ1PV7b0WtgmAK5Dn+1VaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:42730 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751090AbbASEfc (ORCPT
+Received: from mail-wg0-f51.google.com ([74.125.82.51]:64738 "EHLO
+	mail-wg0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751293AbbASJf7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 18 Jan 2015 23:35:32 -0500
-In-Reply-To: <20150114135930.GA2463@redhat.com>
+	Mon, 19 Jan 2015 04:35:59 -0500
+Received: by mail-wg0-f51.google.com with SMTP id l18so8580614wgh.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jan 2015 01:35:58 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
-Cc: namhyung@kernel.org, jolsa@kernel.org, peterz@infradead.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com
+To: linux-perf-users@vger.kernel.org
+Cc: alexis.berlemont@gmail.com, dsahern@gmail.com
 
-Hi Arnaldo,
+Hi,
 
-On Wednesday 14 January 2015 07:29 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Jan 14, 2015 at 01:00:00PM +0100, Jiri Olsa escreveu:
->> > On Tue, Jan 13, 2015 at 07:13:19PM +0530, Vineet Gupta wrote:
->>> > > Hi,
->>> > > 
->>> > > This series based off linux-next of 20150105 allows us to build/use perf
->>> > > for ARC with uClibc based userland.
->>> > > 
->>> > > v3: Changes since v2 [2]
->>> > > * 1/5	: Ack from Jiri
->>> > > * 2/5	: no changes
->>> > > * 3/5	: sys/syscall.h included	  [Jiri]
->>> > > * 4/5	: no changes
->>> > > * 5/5	: -lpthread added to link target  [Jiri]
->>> > > * {1,5} : Changelog updated so scissor lines don't start at column 1
->> > 
->> > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Most are already in my perf/urgent branch.
-> 
-> - Arnaldo
+I was wondering what the status is for following item on the TODO list:
 
-Are you planning to add {4,5}/5 for next window or did u drop/miss them ?
+Use Kconfig to allow selecting features and build minimal version of
+perf, e.g. one with just 'record' for use in embedded platforms.
 
-Thx,
--Vineet
+David Ahern prototyped this, dig those patches and update them
+
+
+I tried a search for Kconfig on this mailing list it's archives, but
+no good hit.
+
+I see in the github repos from David Ahern a link to commits from
+Alexis Berlemont that look interesting, is there a plan to upstream
+this?
+https://github.com/aberlemont/linux/tree/perf/kbuild
+
+One thing that I don't see is, in libperf, nothing seem to be stripped
+out if you e.g. only select 'record'. Is this correct? But this
+observation is only based on looking at the github repo kbuild files,
+I'll have to clone Alexis his repo to have a closer look.
+
+best regards,
+
+Jan
