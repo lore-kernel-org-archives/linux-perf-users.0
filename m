@@ -1,40 +1,41 @@
-From: Ulf Hermann <ulf.hermann@theqtcompany.com>
-Subject: Re: pipe_output format different from file output?
-Date: Tue, 20 Jan 2015 16:13:16 +0100
-Message-ID: <54BE708C.6000006@theqtcompany.com>
-References: <CAGszK3ji6h_GkzqSJ59Eyw+4ALj+pwxcRb41Y65ZC-eKjiz3bg@mail.gmail.com>
+From: AKel <ankelly006@hotmail.com>
+Subject: Using perf to generate a call stack from a kernel function to the user space caller
+Date: Tue, 20 Jan 2015 17:08:10 +0000 (UTC)
+Message-ID: <loom.20150120T180008-930@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-db3on0119.outbound.protection.outlook.com ([157.55.234.119]:42304
-	"EHLO emea01-db3-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1752130AbbATP1l (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:45996 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752595AbbATRPH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 20 Jan 2015 10:27:41 -0500
-In-Reply-To: <CAGszK3ji6h_GkzqSJ59Eyw+4ALj+pwxcRb41Y65ZC-eKjiz3bg@mail.gmail.com>
+	Tue, 20 Jan 2015 12:15:07 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1YDcOO-0007JX-Iy
+	for linux-perf-users@vger.kernel.org; Tue, 20 Jan 2015 18:15:04 +0100
+Received: from 12.175-14-84.ripe.coltfrance.com ([84.14.175.12])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2015 18:15:04 +0100
+Received: from ankelly006 by 12.175-14-84.ripe.coltfrance.com with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jan 2015 18:15:04 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jan Heylen <heyleke@gmail.com>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-> # perf record sleep 1
-> # perf report -i perf.data
-> --> expected output
-> (note: -i perf.data not really needed)
->
-> # perf record -o - sleep 1 | cat > perf.data
-> # perf report -i perf.data
-> --> incompatible file format (rerun with -v to learn more)
-> # perf report -i - < perf.data
-> --> expected output
-> [...]
-> But I still want to understand why there is a difference (and what is
-> the consequence of using the pipe_output format)
+Hi,
 
-As I've been fighting with the perf data format for a while now, I can answer this:
+I'm trying to profile an application which is spending quite a bit of time 
+in the kernel (~40% in do_raw_spin_lock for example). To fully understand 
+what is happening I would like to generate a call stack using perf (or 
+otherwise) to see where the calls to this function are originating from. 
+Is this possible? My hands are slightly tied in that I don't have sudo 
+access to the system I'm working on, so a solution which accounts for this 
+would be greatly appreciated. Even transferring files to/from the system 
+is very difficult so I'm rather restricted in what i can do.
 
-With the "normal" output various meta information is written to the end of the file. If you pipe the output to a different process that is impractical because the other process would have to buffer its input until perf stops, making it impossible to analyze the events as they arrive. That's why they came up with a second format which puts the meta information inline with the actual data. Apparently perf will only read that from stdin, though.
-
-best regards,
-Ulf Hermann
+Thanks,
+A
