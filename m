@@ -1,240 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Using perf to generate a call stack from a kernel function to
- the user space caller
-Date: Wed, 21 Jan 2015 11:56:01 -0300
-Message-ID: <20150121145601.GF3420@kernel.org>
-References: <loom.20150120T180008-930@post.gmane.org>
- <54BEA111.9060504@hp.com>
- <loom.20150121T090925-23@post.gmane.org>
- <20150121124021.GB3420@kernel.org>
+From: Sujoy Saraswati <sujoy.saraswati@hp.com>
+Subject: Re: Perf support for interpreted and Just-In-Time translated olanguages
+Date: Fri, 23 Jan 2015 08:25:25 +0000 (UTC)
+Message-ID: <loom.20150123T092344-985@post.gmane.org>
+References: <1417810736.5098.11.camel@oc0276584878.ibm.com>  <CAE40pdcXt_gaCXD7n3UED4Y2_gdpH+A3S627TS-72xkbGDoNsA@mail.gmail.com>  <20141209203419.GI4189@kernel.org> <87ppbs4h5k.fsf@tassilo.jf.intel.com>  <20141209222203.GD8788@kernel.org>  <20141210173228.GA6759@two.firstfloor.org> <54888569.30409@gmail.com>  <20141210180529.GB6759@two.firstfloor.org> <54889086.4070606@gmail.com>  <20141210194302.GH8788@kernel.org>  <1420834758.4897.10.camel@oc0276584878.ibm.com>  <54B0A757.2010407@redhat.com>  <54B141F2.60104@gmail.com>  <1421083368.6211.2.camel@oc0276584878.ibm.com> <54B40B51.5080107@gmail.com> <1421777950.4953.40.camel@oc0276584878.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:43022 "EHLO mail.kernel.org"
+Received: from plane.gmane.org ([80.91.229.3]:51596 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753248AbbAUO4H (ORCPT
+	id S1753969AbbAWIaF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 21 Jan 2015 09:56:07 -0500
-Content-Disposition: inline
-In-Reply-To: <20150121124021.GB3420@kernel.org>
+	Fri, 23 Jan 2015 03:30:05 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1YEZcx-0004E2-Il
+	for linux-perf-users@vger.kernel.org; Fri, 23 Jan 2015 09:30:03 +0100
+Received: from idp01pxyout-6.asiapac.hp.net ([15.219.201.80])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2015 09:30:03 +0100
+Received: from sujoy.saraswati by idp01pxyout-6.asiapac.hp.net with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jan 2015 09:30:03 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: AKel <ankelly006@hotmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Em Wed, Jan 21, 2015 at 09:40:21AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Then, in the 'perf report' TUI, use the 'P' hotkey after expanding a few
-> callgraphs:
- 
->   $ perf report --no-children # expand callgraphs, press P, press q
->   $ head -45 perf.hist.0  
->   -    3,47%  Image Scaler     libxul.so                      [.] _ZN4skia14BGRAConvolve2DEPKhibRKNS_19ConvolutionFilter1DES4_iPhb
->        _ZN4skia14BGRAConvolve2DEPKhibRKNS_19ConvolutionFilter1DES4_iPhb
->        _ZN4skia15ImageOperations11ResizeBasicERK8SkBitmapNS0_12ResizeMethodEiiRK7SkIRectPv
->        _ZN4skia15ImageOperations6ResizeERK8SkBitmapNS0_12ResizeMethodEiiRK7SkIRectPv
+Hi all,
 
-<SNIP>
+Carl Love <cel <at> us.ibm.com> writes:
 
-> These C++ methods that needs unmangling, and I have the firefox-debuginfo
-> package matching the binary... Have to check this.
+> 
+> On Mon, 2015-01-12 at 10:58 -0700, David Ahern wrote:
+> > On 1/12/15 10:22 AM, Carl Love wrote:
+> > > Ah, this is the ioctl patch you had mentioned you mentioned 
+previously.
+> > > I hadn't found the patch before.  Yes, this looks like it would 
+work.  I
+> > > will see if I can get a prototype working with this patch.  
+Thanks.
+> > >
+> > 
+> > If you need to shove samples into perf (versus mmap updates) I 
+suspect 
+> > the prctl system call will have way to much overhead. In that case 
+> > perhaps processes could export a shared memory buffer that a perf 
+> > session could attach -- another aux buffer similar to what itrace 
+needs. 
+> > But then that brings in the perf_clock issue; samples would need to 
+have 
+> > the same time basis as kernel generated samples.
+> > 
+> 
+> I have the kernel patch by Pawel working to send the source file name,
+> the code address and the code size to perf and insert a new record 
+into
+> the perf.data file as a uevent.  In the perf code, I have added code 
+in
+> file util/session.c, perf_session__deliver_event() to call a function 
+to
+> process the new event data.  
+> 
+> I am trying to start with just getting the samples mapped to the elf
+> file.  I will try to implement mapping the samples to a specific 
+source
+> code line later.  
+> 
+> My thought is I need to take the data and create a "fake" elf file 
+entry
+> with the file name, start address and code size so the will be able to
+> map sample addresses to the elf file for the java method.  I am
+> struggling to understand code flow for the perf record, specifically
+> when the elf files get read, mapping a sample to an elf file, etc.  It
+> is not clear to me how I would go about creating the fake elf file and
+> how to make it visible for use by the perf record tool.  Any pointers
+> and guidance would be appreciated.  Thanks.
 
-  [acme@zoo linux]$ make -C tools/perf O=/tmp/build/perf install-bin
-  make: Entering directory `/home/git/linux/tools/perf'
-    BUILD:   Doing 'make -j4' parallel build
-  config/Makefile:597: No bfd.h/libbfd found, install binutils-dev[el]/zlib-static to gain symbol demangling
+ FWIW, the HP caliper tool on HP-UX/IPF has some similar functionality 
+to show Java function names and show an annotated source code in the 
+function disassembly part of the report. Caliper runs as a separate 
+process measuring the target process by tracing it, and the target 
+process can register dynamically generated code/module with caliper. JVM 
+code for HP-UX was modified to use this framework to register the 
+dynamically generated methods with caliper at runtime.
 
-  Auto-detecting system features:
-  ...                         dwarf: [ on  ]
-  ...                         glibc: [ on  ]
-  ...                          gtk2: [ on  ]
-  ...                      libaudit: [ on  ]
-  ...                        libbfd: [ OFF ]
+ As for the source code annotation for JVM generated code through JIT 
+compiler, we use a Java option to dump the annotated assembly from JIT 
+into a file, and also generate an index file to search the assembly dump 
+given an address. The index file is somewhat similar to a dwarf line 
+table, but it's just a plain text file and not in an elf format. When 
+caliper shows the disassembly, it looks up for the index file and finds 
+the relevant annotation to display for the address ranges in the 
+assembly. Since the annotated dump comes from Java itself, it contains 
+information like source line number, prologue region etc. For example, 
+if it is a safepoint, the information about Oop maps, bytecode index, 
+etc are available in those annotations which are very JVM specific. 
+Basically, the idea was to merge the JVM assembly annotations along with 
+the caliper report.
 
-after installing binutils-devel it gets symbol demangling:
- 
--    3,47%  Image Scaler     libxul.so                      [.] skia::BGRAConvolve2D
-     skia::BGRAConvolve2D
-     skia::ImageOperations::ResizeBasic
-     skia::ImageOperations::Resize
-     skia::ImageOperations::Resize
-     mozilla::gfx::Scale
-     mozilla::image::ScaleRunner::Run
-     nsThread::ProcessNextEvent
-     NS_ProcessNextEvent
-     mozilla::ipc::MessagePumpForNonMainThreads::Run
-     MessageLoop::Run
-     nsThread::ThreadFunc
-     _pt_root
-     start_thread
-     __clone
-+    3,00%  Cache2 I/O       libc-2.18.so                   [.] __memmove_ssse3_back
-+    1,79%  firefox          libz.so.1.2.8                  [.] inflate_fast
-+    1,76%  Cache2 I/O       libxul.so                      [.] nsTArray_Impl<mozilla::net::CacheIndexRecord*, nsTArrayInfallibleAllocator>::RemoveElement<mozilla::net::CacheIndexRecord*, nsDefaultComparator<mozilla::net::CacheIndexRecord*, mozilla::net::CacheIndexRecord*> >
-+    1,39%  firefox          libpthread-2.18.so             [.] pthread_mutex_lock
-+    1,37%  firefox          firefox                        [.] arena_dalloc
-+    1,27%  firefox          libpthread-2.18.so             [.] pthread_mutex_unlock
-+    1,02%  firefox          firefox                        [.] arena_malloc
-+    0,68%  firefox          libxul.so                      [.] PLDHashTable::SearchTable
-+    0,58%  firefox          libxul.so                      [.] js::AtomizeChars<unsigned char>
-+    0,55%  firefox          libxul.so                      [.] Interpret
-+    0,52%  firefox          libxul.so                      [.] js::ObjectImpl::nativeLookup
-+    0,49%  firefox          libc-2.18.so                   [.] __memcpy_sse2_unaligned
-+    0,47%  firefox          libxul.so                      [.] NewObject
-+    0,45%  firefox          p11-kit-trust.so               [.] lookup_or_create_bucket
-+    0,41%  mozStorage #5    libpthread-2.18.so             [.] pthread_mutex_lock
-+    0,39%  firefox          libxul.so                      [.] js::EmptyShape::getInitialShape
-+    0,38%  mozStorage #5    libpthread-2.18.so             [.] pthread_mutex_unlock
-+    0,35%  ImageDecoder #2  libz.so.1.2.8                  [.] inflate_fast
-+    0,35%  firefox          libxul.so                      [.] mozilla::gfx::AlphaBoxBlur::BoxBlur_SSE2
-+    0,34%  firefox          ld-2.18.so                     [.] do_lookup_x
-+    0,34%  firefox          libxul.so                      [.] JSObject::putProperty<(js::ExecutionMode)0>
-+    0,34%  firefox          libxul.so                      [.] js::ShapeTable::search
-+    0,33%  firefox          libxul.so                      [.] js::baseops::GetProperty
--    0,32%  firefox          [kernel.vmlinux]               [k] clear_page_c_e
-     clear_page_c_e
-   - __alloc_pages_nodemask
-      - 97,50% alloc_pages_vma
-         - 95,75% handle_mm_fault
-              __do_page_fault
-              do_page_fault
-            - page_fault
-               - 19,82% __memcpy_sse2_unaligned
-                  - 35,58% _XRead
-                       _XReadPad
-                       XGetImage
-                       _get_image_surface
-                       _cairo_xlib_surface_acquire_source_image
-                       _cairo_surface_acquire_source_image
-                       _pixman_image_for_pattern
-                       _clip_and_composite_boxes
-                       _cairo_image_surface_paint
-                       _cairo_surface_paint
-                       _cairo_gstate_paint
-                       INT__moz_cairo_paint
-                       _moz_cairo_paint_with_alpha
-                       mozilla::gfx::DrawTargetCairo::DrawSurface
-                       mozilla::image::imgFrame::LockImageData
-                       mozilla::image::RasterImage::RequestScale
-                       mozilla::image::RasterImage::OptimalImageSizeForDest
-                       DrawImageInternal
-                       nsLayoutUtils::DrawBackgroundImage
-                       nsImageRenderer::Draw
-                       nsImageRenderer::DrawBackground
-                       nsCSSRendering::PaintBackgroundWithSC
-                       nsCSSRendering::PaintBackground
-                       nsDisplayBackgroundImage::PaintInternal
-                       mozilla::FrameLayerBuilder::PaintItems
-                       mozilla::FrameLayerBuilder::DrawThebesLayer
-                       mozilla::layers::BasicThebesLayer::PaintBuffer
-                       mozilla::layers::BasicThebesLayer::Validate
-                       mozilla::layers::BasicContainerLayer::Validate
-                       mozilla::layers::BasicContainerLayer::Validate
-                       mozilla::layers::BasicLayerManager::EndTransactionInternal
-                       nsDisplayList::PaintForFrame
-                  - 22,39% js::jit::Assembler::executableCopy
-                       js::jit::JitCode::copyFrom
-                       js::jit::Linker::newCode<(js::AllowGC)1>
-                       js::jit::ICStubCompiler::getStubCode
-                       js::jit::ICCallScriptedCompiler::getStub
-                       js::jit::TryAttachCallStub
-                       js::jit::DoCallFallback
-                       0x7f5e847ffdb0
-                  - 21,73% js::NewObjectWithClassProtoCommon
-                       js::jit::NewInitObject
-                       js::jit::DoNewObject
-                       0x7f5e84800ec4
-                  + 20,30% updatewindow
-               + 15,70% arena_dalloc
-               + 12,82% arena_malloc
-               + 12,73% js::gc::Chunk::fetchNextDecommittedArena
-               + 7,31% skb_copy_datagram_iovec
-               + 7,04% sse2_blt
-               + 4,45% NS_CopySegmentToBuffer
-               + 4,18% js::InflateString
-               + 4,18% mozilla::VectorBase<js::jit::BaselineCompilerShared::ICLoadLabel, 16ul, js::SystemAllocPolicy, js::Vector<js::jit::BaselineCompilerShared::ICLoadLabel, 16ul, js::SystemAllocPolicy> >::growStorageBy
-               + 4,13% mozilla::image::imgFrame::Init
-               + 3,86% _cairo_image_surface_span
-               + 3,78% sse2_fill
-         + 4,25% do_wp_page
-      + 2,50% alloc_pages_current
-+    0,32%  ImageDecoder #3  libz.so.1.2.8                  [.] inflate_fast
+ I am not familiar with perf, but just wanted to bring up this 
+information to this forum to see if this could be an approach to 
+consider for the samples to source co-relation. The source co-relation 
+comes from the JIT compiler like JVM, and can probably made into 
+annotation records. Along with this, the index file could be used to co-
+relate the annotation records to the address ranges seen in samples.
 
-
-And if you press 'V' you get the DSO name right after the symbol name:
-
-
-+    0,32%  firefox          [k] clear_page_c_e
-+    0,26%  firefox          [k] copy_user_enhanced_fast_string
-+    0,26%  firefox          [k] page_fault
-+    0,20%  firefox          [k] get_page_from_freelist
-+    0,20%  firefox          [k] __list_del_entry
-+    0,20%  firefox          [k] mem_cgroup_page_lruvec
-+    0,16%  firefox          [k] lookup_page_cgroup_used
--    0,14%  firefox          [k] _raw_spin_lock
-   - _raw_spin_lock [kernel.vmlinux]
-      - 37,73% try_to_wake_up [kernel.vmlinux]
-         - 64,20% wake_up_state [kernel.vmlinux]
-              wake_futex [kernel.vmlinux]
-              futex_wake [kernel.vmlinux]
-              do_futex [kernel.vmlinux]
-              sys_futex [kernel.vmlinux]
-              system_call [kernel.vmlinux]
-            - __lll_unlock_wake libpthread-2.18.so
-                 37,39% 0x7f5e81b10400 libxul.so
-                 32,07% 0x7f5e63e81bd0 unknown
-               - 30,54% arena_malloc firefox
-                    malloc firefox
-                    nsStringBuffer::Alloc libxul.so
-                    nsAString_internal::MutatePrep libxul.so
-                    nsAString_internal::ReplacePrepInternal libxul.so
-         + 35,80% default_wake_function [kernel.vmlinux]
-      - 17,55% handle_mm_fault [kernel.vmlinux]
-           __do_page_fault [kernel.vmlinux]
-           do_page_fault [kernel.vmlinux]
-         - page_fault [kernel.vmlinux]
-            - 52,88% js::gc::Chunk::fetchNextDecommittedArena libxul.so
-                 js::gc::Chunk::allocateArena libxul.so
-                 js::gc::ArenaLists::allocateFromArenaInline libxul.so
-                 js::gc::ArenaLists::refillFreeList<(js::AllowGC)1> libxul.so
-                 js::PropertyTree::getChild libxul.so
-                 JSObject::getChildProperty libxul.so
-                 JSObject::addPropertyInternal<(js::ExecutionMode)0> libxul.so
-                 JSObject::putProperty<(js::ExecutionMode)0> libxul.so
-                 DefinePropertyOrElement<(js::ExecutionMode)0> libxul.so
-                 js::DefineNativeProperty libxul.so
-                 JSObject::defineGeneric libxul.so
-                 js::DefineFunction libxul.so
-                 JS_DefineFunctions libxul.so
-                 js::GlobalObject::resolveConstructor libxul.so
-                 js::GetBuiltinPrototype libxul.so
-                 js::NewDenseUnallocatedArray libxul.so
-                 js::XDRObjectLiteral<(js::XDRMode)1> libxul.so
-                 js::XDRScript<(js::XDRMode)1> libxul.so
-                 js::XDRState<(js::XDRMode)1>::codeScript libxul.so
-                 JS_DecodeScript libxul.so
-                 ReadCachedScript libxul.so
-                 mozJSComponentLoader::ObjectForLocation libxul.so
-                 mozJSComponentLoader::ImportInto libxul.so
-                 mozJSComponentLoader::Import libxul.so
-                 nsXPCComponents_Utils::Import libxul.so
-                 NS_InvokeByIndex libxul.so
-                 XPCWrappedNative::CallMethod libxul.so
-                 XPC_WN_CallMethod libxul.so
-                 js::Invoke libxul.so
-            - 47,12% arena_dalloc firefox
-                 nsTArray_base<nsTArrayFallibleAllocator, nsTArray_CopyWithMemutils>::ShiftData libxul.so
-                 SnowWhiteKiller::~SnowWhiteKiller libxul.so
-                 nsCycleCollector::FreeSnowWhite libxul.so
-                 nsCycleCollector::Shutdown libxul.so
-                 nsCycleCollector_shutdown libxul.so
-                 mozilla::ShutdownXPCOM libxul.so
-                 ScopedXPCOMStartup::~ScopedXPCOMStartup libxul.so
-                 XREMain::XRE_main libxul.so
-                 XRE_main libxul.so
-                 do_main firefox
-                 main firefox
-                 __libc_start_main libc-2.18.so
-                 _start firefox
-      + 9,54% do_futex [kernel.vmlinux]
-
-- Arnaldo
+Regards,
+Sujoy
