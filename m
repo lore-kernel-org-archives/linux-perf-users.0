@@ -1,41 +1,71 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 0/5] Perf tool fixes for ARC + uClibc
-Date: Tue, 27 Jan 2015 12:29:02 -0200
-Message-ID: <20150127142902.GB2406@redhat.com>
-References: <1421156604-30603-1-git-send-email-vgupta@synopsys.com>
- <20150114120000.GB11443@krava.brq.redhat.com>
- <20150114135930.GA2463@redhat.com>
- <54BC897C.7070309@synopsys.com>
- <20150119135843.GA2276@redhat.com>
- <54C768A7.8020505@synopsys.com>
+From: Christopher Covington <ccovingt@quicinc.com>
+Subject: Re: [PATCH] perf: fix building error in x86_64 when dwarf unwind is on.
+Date: Tue, 3 Feb 2015 14:58:53 -0500
+Message-ID: <54D1287D.5020502@quicinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C768A7.8020505@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, namhyung@kernel.org, jolsa@kernel.org, peterz@infradead.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, Alexey.Brodkin@synopsys.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from wolverine02.qualcomm.com ([199.106.114.251]:18541 "EHLO
+	wolverine02.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756139AbbBCT65 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 3 Feb 2015 14:58:57 -0500
+References: 1421029255-23039-1-git-send-email-wangnan0@huawei.com
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Wang Nan <wangnan0@huawei.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Li Zefan <lizefan@huawei.com>, Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 27, 2015 at 03:59:59PM +0530, Vineet Gupta escreveu:
-> Hi Arnaldo,
-> 
-> On Monday 19 January 2015 07:28 PM, Arnaldo Carvalho de Melo wrote:
-> >>>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> >>> > > Most are already in my perf/urgent branch.
-> >> > Are you planning to add {4,5}/5 for next window or did u drop/miss them ?
-> > I will, IIRC those were not that trivial, so could wait, I'll make sure
-> > I review them and merge for perf/core if I find no issues.
-> 
-> Sorry for annoying pestering on this. I don't see the patches in ur perf/core yet
-> and given that we are so close to next window, I fear that we will miss them if we
-> don't add them soon.
-> 
-> We need them to be able to use perf on ARC - fixing build issue (5/5) as well as
-> run time issue (4/5)
+Hi,
 
-Applied the remaining ones to my perf/core branch, will be on my next
-pull req to Ingo.
+Commit c6e5e9fbc3ea1c1a5648a3498d085fc3978df2d4 breaks the following make
+invocation (-j, -C, O=, LDFLAGS=, and build directory prefix stripped to
+simplify report):
 
-- Arnaldo
+make ARCH=x86_64 CROSS_COMPILE= EXTRA_CFLAGS=
+config/Makefile:128: The path 'python-config' is not executable.
+config/Makefile:349: No libdw.h found or old libdw.h found or elfutils is
+older than 0.138, disables dwarf support. Please install new
+elfutils-devel/libdw-dev
+config/Makefile:401: Disabling post unwind, no support found.
+config/Makefile:439: No libaudit.h found, disables 'trace' tool, please
+install audit-libs-devel or libaudit-dev
+config/Makefile:453: slang not found, disables TUI support. Please install
+slang-devel or libslang-dev
+config/Makefile:466: GTK2 not found, disables GTK2 support. Please install
+gtk2-devel or libgtk2.0-dev
+config/Makefile:494: Missing perl devel files. Disabling perl scripting
+support, consider installing perl-ExtUtils-Embed
+config/Makefile:525: No python-config tool was found
+config/Makefile:525: Python support will not be built
+config/Makefile:597: No bfd.h/libbfd found, install
+binutils-dev[el]/zlib-static to gain symbol demangling
+config/Makefile:627: No numa.h found, disables 'perf bench numa mem'
+benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
+
+Auto-detecting system features:
+...                         dwarf: [ [31mOFF[m ]
+...                         glibc: [ [32mon[m  ]
+...                          gtk2: [ [31mOFF[m ]
+...                      libaudit: [ [31mOFF[m ]
+...                        libbfd: [ [31mOFF[m ]
+...                        libelf: [ [32mon[m  ]
+...                       libnuma: [ [31mOFF[m ]
+...                       libperl: [ [31mOFF[m ]
+...                     libpython: [ [31mOFF[m ]
+...                      libslang: [ [31mOFF[m ]
+...                     libunwind: [ [31mOFF[m ]
+...            libdw-dwarf-unwind: [ [31mOFF[m ]
+...                          zlib: [ [32mon[m  ]
+
+[...]
+
+  AR       x86_64-linux-gnu/perf/libperf.a
+  LINK     x86_64-linux-gnu/perf/perf
+x86_64-linux-gnu/perf/tests/builtin-test.o:(.data+0x158): undefined reference
+to `test__perf_time_to_tsc'
+collect2: ld returned 1 exit status
+
+Thanks,
+Chris
