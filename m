@@ -1,355 +1,451 @@
 From: Carl Love <cel@us.ibm.com>
-Subject: PATCH[3/3 RFC]  PERF, Add remapping support for jit'ed code to perf
-Date: Wed, 04 Feb 2015 09:15:37 -0800
-Message-ID: <1423070137.7292.31.camel@oc0276584878.ibm.com>
+Subject: PATCH[2/3 RFC]  PERF, Add remapping support for jit'ed code to perf
+Date: Wed, 04 Feb 2015 09:15:35 -0800
+Message-ID: <1423070135.7292.30.camel@oc0276584878.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from e8.ny.us.ibm.com ([32.97.182.138]:39680 "EHLO e8.ny.us.ibm.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1161032AbbBDRQa (ORCPT
+Received: from e31.co.us.ibm.com ([32.97.110.149]:38712 "EHLO
+	e31.co.us.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752025AbbBDRR5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 4 Feb 2015 12:16:30 -0500
+	Wed, 4 Feb 2015 12:17:57 -0500
 Received: from /spool/local
-	by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+	by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
 	for <linux-perf-users@vger.kernel.org> from <cel@us.ibm.com>;
-	Wed, 4 Feb 2015 12:16:30 -0500
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-	by d01dlp01.pok.ibm.com (Postfix) with ESMTP id D48A338C804F
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2015 12:16:26 -0500 (EST)
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id t14HGQss21692642
-	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 17:16:26 GMT
-Received: from d01av03.pok.ibm.com (localhost [127.0.0.1])
-	by d01av03.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id t14HGP3I019833
-	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 12:16:26 -0500
+	Wed, 4 Feb 2015 10:16:21 -0700
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+	by d03dlp03.boulder.ibm.com (Postfix) with ESMTP id AA16819D8042
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2015 10:07:27 -0700 (MST)
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id t14HGOhn39649522
+	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 10:16:24 -0700
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id t14HFqZC017167
+	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 10:15:52 -0700
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
 Cc: cel@us.ibm.com, sukadev@linux.vnet.ibm.com, Pawel Moll <pawel.moll@arm.com>
 
-/*
- * Agent library to collect jit code for the perf tool
- * 
- *
- *
- */
-
-#include <stdio.h>
-#include "/home/carll/JAVA_INCLUDES/include/jvmti.h"
-#include "perf-jit-support.h"
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <linux/prctl.h>
-#include <fcntl.h>
-#include <pthread.h>
-
-
-#define TRUE  1
-#define FALSE 0
-
-/* This call back library is still under development.  The library inserts
- * a remap request after pr_count symbols have loaded.  This is just to force
- * remap requests to be sent to test the remapping in the perf code.
- *
- * This code will be updated to only send the remap request when the mapping
- * has changed to reuse an address range.  As long as new symbols do not use
- * an address range for a previously loaded and unloaded method no remap is 
- * required.  
- * 
- * This library is being submitted as is for the moment to show how the remap
- * requests are sent to perf.
- */
-
-static int debug = TRUE;
-static int symbol_count = 0, pr_count = 1;
-static pthread_mutex_t perf_mutex = PTHREAD_MUTEX_INITIALIZER;
-static FILE *perf_file = NULL;
-
-/* flags for informatiion we can access */
-static int source_file_name_avail = FALSE;
-
-typedef void (*call_back) (int, int);
-
-call_back back = NULL;
-
-void set_callback_function(call_back back_arg) {
-  back = back_arg;
-}
-
-void print_callback_function(void) {
-  fprintf(stderr, " the call back function address is %p\n", back);
-}
-
-static int print_error(jvmtiError error, char const * msg)
-{
-  fprintf(stderr, "  %s:  err code %i\n", msg, error);
-  fflush(stderr);
-  return 0;
-
-}
-
-
-static void JNICALL
-compiled_method_load_handler(jvmtiEnv * jvmti,
-			     jmethodID method,
-			     jint code_size,
-			     void const * code_addr,
-			     jint map_length,
-			     jvmtiAddrLocationMap const * map,
-			     void const * compile_info)
-{
-
-  jvmtiError rtn;
-  jclass class_type;
-  char * thread_ptr = NULL;
-  char * class_signature_ptr = NULL;
-  char * source_file_name = NULL;
-  char * method_signature_ptr = NULL;
-  char * method_name = NULL;
-
-  char filename[20];
-  char methodname[20];
-  static FILE *perf_file_tmp;
-
-  struct jit_data_st jit_data;
-  struct sym_data_st sym_data, sym_data_array[200];
-
-  int i, error;
-  unsigned long zero = 0, size;
-
-  if (debug)
-    fprintf(stderr, "Called compiled_method_load_handler\n");
-
-  rtn = (*jvmti)->GetMethodDeclaringClass(jvmti, method,
-					  &class_type);
-  if (back == NULL) {
-    fprintf(stderr, "call back function is NULL\n");
-  } else {
-    fprintf(stderr, "call back function is not NULL\n");
-    back (1, 2);
-  }
-
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: GetMethodDeclaringClass() failed");
-  }
-
-  rtn = (*jvmti)->GetClassSignature(jvmti, class_type,
-				    &class_signature_ptr, NULL);
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: GetClassSignature() failed");
-    (*jvmti)->Deallocate(jvmti, (unsigned char *) class_signature_ptr);
-  }
-
-  rtn = (*jvmti)->GetMethodName(jvmti, method, &method_name,
-				&method_signature_ptr, NULL);
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: GetMethodName() failed");
-    (*jvmti)->Deallocate(jvmti, (unsigned char *) class_signature_ptr);
-    (*jvmti)->Deallocate(jvmti, (unsigned char *) method_signature_ptr);
-  }
-
-  /* get additional info if available */
-  if (source_file_name_avail == TRUE) {
-    //    rtn = (*jvmti)->GetSourceFileName(jvmti, class_type,
-    //				      &sym_data.source_code_filename);
-    // Work on gathering the source code.  FIX
-    ;
-  }
-
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: GetSourceFileName() failed");
-    source_file_name_avail == FALSE;
-  }
-
-  strcpy(sym_data.method_name, method_name);
-  sym_data.virtual_mem_addr = (uint64_t)(uintptr_t) code_addr;
-  sym_data.code_size = code_size;
-
-  if (debug) {
-    fprintf(stderr, "PID = %d\n", getpid());
-    fprintf(stderr, "compiled_method_load_handler: class_type = %p\n",
-	    class_type);
-    fprintf(stderr, "class signature = %s, method name = %s\n",
-	    class_signature_ptr, sym_data.method_name);
-
-    fprintf(stderr, "method_signature = %s\n", method_signature_ptr);
-
-    if (source_file_name_avail == TRUE)
-      fprintf(stderr, "source file name = %s\n",
-	      sym_data.source_code_filename);
-
-    fprintf(stderr, "code address = %p, code size = %x\n",
-	    sym_data.virtual_mem_addr, sym_data.code_size);
-    fprintf(stderr, "\n");
-  }
-
-  size = (unsigned long) sizeof(sym_data);
-
-
-  /* check if the perf file is open */
-  if (perf_file == NULL) {
-    sprintf(filename, "/tmp/perf-%d.map", getpid());
-    fprintf(stderr, "CARLL, symbol file %s\n", filename);
-
-    perf_file = fopen(filename, "w");
-
-    if (perf_file == NULL) {
-      fprintf(stderr, "ERROR, could not open %s\n", filename);
-    }
-  }
-
-  sym_data_array[symbol_count].virtual_mem_addr = sym_data.virtual_mem_addr;
-  sym_data_array[symbol_count].code_size = sym_data.code_size;
-  strcpy(sym_data_array[symbol_count].method_name, sym_data.method_name);
-  printf("CARLL, here 3\n");
-  fflush(stdout);
-  
-  printf("CARLL, source_file_name_avail = %d\n", source_file_name_avail);
-  fflush(stdout);
-
-  if (source_file_name_avail == TRUE) {
-    ;  
-  }
-
-  pthread_mutex_lock(&perf_mutex);
-
-  if ((symbol_count % pr_count == 0) && (symbol_count != 0)){
-    fclose(perf_file);
-    sprintf(filename, "/tmp/perf-%d-%d.map", getpid(),
-	    (symbol_count/pr_count));
-    perf_file = fopen(filename, "w");
-
-    if (perf_file == NULL) {
-      fprintf(stderr, "ERROR, could not open %s\n", filename);
-    } 
-
-    /* Send notification to perf.data file saying remap has occured.  Do
-     * this as soon as possible so samples will be correctly aligned to 
-     * the old/new maps.
-     */
-    strcpy(jit_data.map_filename, filename);  
-    jit_data.pid = getpid();
-    jit_data.tid = getpid()+1;   // temporary hack, the gettid() isn't compiling
-    //      jit_data.tid = gettid();  // gettid() UNDEFINED, FIX, hack for now
-
-    error = prctl(PR_TASK_PERF_UEVENT, zero, size,
-		  (unsigned long)(&jit_data),	zero);
-    if (error)
-      fprintf(stderr, "ERROR, perf remap with file = %s FALED\n", filename);
-    
-    for (i = 0; i <= symbol_count; i++) {
-      fprintf(perf_file, "%llx %x %s\n",
-	      sym_data_array[i].virtual_mem_addr,
-	      sym_data_array[i].code_size,
-	      sym_data_array[i].method_name);
-    }
-    fflush(stdout);
-
-  } else {
-    fprintf(perf_file, "%llx %x %s\n",
-	    sym_data.virtual_mem_addr,
-	    sym_data.code_size,
-	    sym_data.method_name);
-  }
-  pthread_mutex_unlock(&perf_mutex);
-
-  symbol_count++;
-}
-
-static void JNICALL
-compiled_method_unload_handler(jvmtiEnv * jvmti_env,
-			       jmethodID method,
-			       void const * code_addr)
-{
-  if (debug)
-    fprintf(stderr, "called compiled_method_unload_handler addr=%p\n",
-	    code_addr);
-}
-
-
-
-JNIEXPORT jint JNICALL
-Agent_OnLoad(JavaVM * jvm, char * options, void * reserved)
-{
-  jint  rc;
-  jvmtiEventCallbacks callbacks;
-  jvmtiEnv * jvmti = NULL;
-  jvmtiError rtn;
-  jvmtiCapabilities capabilities;
-
-  if (options) {
-    /* check the passed options */
-    if (strcmp("debug", options) == 0)
-      debug = TRUE;
-  }
-
-  if (debug)
-    fprintf(stderr, "Called Agent_OnLoad for libjvmti-perf\n");
-
-  rc = (*jvm)->GetEnv(jvm, (void *)&jvmti, JVMTI_VERSION_1);
-
-  if (rc != JNI_OK) {
-    print_error(rtn, "Error: GetEnv failed");
-    return -1;
-  }
-
-  /* setup capabilities */
-  memset(&capabilities, '\0', sizeof(capabilities));
-  capabilities.can_generate_compiled_method_load_events = 1;
-  rtn = (*jvmti)->AddCapabilities(jvmti, &capabilities);
-
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: AddCapabilities, can_generate_compiled_method_load_events failed");
-    return -1;
-  }
-
-  capabilities.can_get_source_file_name = 1;
-  rtn = (*jvmti)->AddCapabilities(jvmti, &capabilities);
-
-  if (rtn == JVMTI_ERROR_NONE)
-    source_file_name_avail = TRUE;
-
-  if (debug) {
-    fprintf(stderr, "Capabilities: \n");
-
-    if (source_file_name_avail == TRUE)  
-      fprintf(stderr, " get_source_file_name\n");
-
-    fprintf(stderr, "\n\n");
-  }
-  /* setup callbacks to collect information needed by perf */
-  memset(&callbacks, 0, sizeof(callbacks));
-  callbacks.CompiledMethodLoad = compiled_method_load_handler;
-  callbacks.CompiledMethodUnload = compiled_method_unload_handler;
-
-  rtn = (*jvmti)->SetEventCallbacks(jvmti, &callbacks,
-				      sizeof(callbacks));
-
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: SetEventCallbacks failed");
-    return -1;
-  }
-
-  rtn = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
-					   JVMTI_EVENT_COMPILED_METHOD_LOAD,
-					   NULL);
-
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: Enabling method load callback failed");
-    return -1;
-  }
-
-  rtn = (*jvmti)->SetEventNotificationMode(jvmti, JVMTI_ENABLE,
-					   JVMTI_EVENT_COMPILED_METHOD_UNLOAD,
-					   NULL);
-  if (rtn != JVMTI_ERROR_NONE) {
-    print_error(rtn, "Error: Enabling method unload callback failed");
-    return -1;
-  }
-
-  return 0;  /* success */
-}
+From dcaa64d3643a2eb0ebbe73d8b19025a9ed45510a Mon Sep 17 00:00:00 2001
+From: Carl Love <cel@us.ibm.com>
+Date: Mon, 2 Feb 2015 11:15:37 -0800
+Subject: [PATCH 2/2] Added uevent call to process the remap request.
+
+The patch adds the calls to process the uevent which contains the
+remap request.  An mmap2 request is generated by the function
+machine__process_uevents_event() which then calls the function
+machine__process_mmap2_event() to do the remapping.
+
+This patch is not done. I have been requested to post the patch so people
+can see where I am at with it.  I appreciate feedback on the overall approach
+an suggestions for improvements.  It has only been tested on a very simple
+workload.  In the test, the callback library forces a remap for every method
+add just to exercise the remapping code.  The jit library is also under
+development.  The goal is the jit library will only call for a remap when
+it is really needed.
+
+Signed-off-by: Carl Love <cel@us.ibm.com>
+---
+ tools/perf/builtin-record.c |  2 ++
+ tools/perf/builtin-report.c |  1 +
+ tools/perf/builtin-script.c |  5 +++
+ tools/perf/util/event.c     | 81 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/event.h     | 27 +++++++++++++++
+ tools/perf/util/machine.c   | 37 +++++++++++++++++++++
+ tools/perf/util/machine.h   |  2 ++
+ tools/perf/util/map.c       | 11 ++++--
+ tools/perf/util/record.c    |  2 ++
+ tools/perf/util/session.c   |  4 +++
+ tools/perf/util/tool.h      |  3 +-
+ 11 files changed, 172 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8648c6d..9b836f3 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -146,6 +146,8 @@ static int record__open(struct record *rec)
+ 
+ 	evlist__for_each(evlist, pos) {
+ try_again:
++		pos->attr.uevents = 1;
++
+ 		if (perf_evsel__open(pos, evlist->cpus, evlist->threads) < 0) {
+ 			if (perf_evsel__fallback(pos, errno, msg, sizeof(msg))) {
+ 				if (verbose)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 072ae8a..5403c6f 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -607,6 +607,7 @@ int cmd_report(int argc, const char **argv, const char *prefix __maybe_unused)
+ 			.sample		 = process_sample_event,
+ 			.mmap		 = perf_event__process_mmap,
+ 			.mmap2		 = perf_event__process_mmap2,
++			.uevents	 = perf_event__process_uevents,
+ 			.comm		 = perf_event__process_comm,
+ 			.exit		 = perf_event__process_exit,
+ 			.fork		 = perf_event__process_fork,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ce304df..59bc24d 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -608,6 +608,11 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+ 	evlist = *pevlist;
+ 	evsel = perf_evlist__last(*pevlist);
+ 
++	/* enable the jit data delivery.  This needs to be tied to a command
++	 * line argument or something.  FIXME
++	 */
++	evsel->attr.uevents = 1;
++
+ 	if (evsel->attr.type >= PERF_TYPE_MAX)
+ 		return 0;
+ 
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 6c6d044..d4c2f20 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -29,6 +29,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_HEADER_BUILD_ID]		= "BUILD_ID",
+ 	[PERF_RECORD_FINISHED_ROUND]		= "FINISHED_ROUND",
+ 	[PERF_RECORD_ID_INDEX]			= "ID_INDEX",
++	[PERF_RECORD_UEVENT]                    = "UEVENT",
+ };
+ 
+ const char *perf_event__name(unsigned int id)
+@@ -154,6 +155,70 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
+ 	return 0;
+ }
+ 
++int perf_event__synthesize_jit_mmap_events(union perf_event *event,
++					   char *filename,
++					   u32 pid, u32 tid)
++{
++	FILE *fp;
++	unsigned long long start;
++	int len;
++	unsigned long long min_start = 0, max_stop = 0;
++	char sym_name[100];
++
++	fp = fopen(filename, "r");
++	if (fp == NULL) {
++		fprintf(stderr,
++			"ERROR, perf_event__synthesize_jit_mmap_events() %s.\n",
++			filename);
++	}
++
++	event->header.type = PERF_RECORD_MMAP2;
++	/* need to determine the start of the address space and the maximum
++	 * size used in the map file.
++	 */
++	while (1) {
++		int n;
++
++		/* format of the file is:
++		   <start addr>  <length> <symbol name>
++		*/
++		n = fscanf(fp, "%llx  %x %s \n",
++			   &start, &len, sym_name);
++
++		if (n == -1)
++			break;  /* finished reading */
++
++		if (n != 3) {
++			fprintf(stderr,
++				"ERROR, machine__process_uevents_event() failed reading file %s\n",
++				filename);
++			return -1;
++		}
++		if ((min_start == 0) || (start < min_start))
++			min_start = start;
++
++		if ((max_stop == 0) || (start + len > max_stop))
++			max_stop = start+len;
++	}
++	fclose(fp);
++
++	event->header.type = PERF_RECORD_MMAP2;
++	event->mmap2.start = min_start;
++	event->mmap2.len = max_stop - min_start;
++	event->mmap2.pid = pid;
++	event->mmap2.tid = tid;
++	event->mmap2.pgoff = min_start;
++	event->mmap2.maj = 0;
++	event->mmap2.min = 0;
++	event->mmap2.ino = 0;
++	event->mmap2.ino_generation = 0;
++	event->mmap2.prot = 0;
++	event->mmap2.flags = 0;
++
++	strcpy(event->mmap2.filename, filename);
++	return 0;
++}
++
+ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       union perf_event *event,
+ 				       pid_t pid, pid_t tgid,
+@@ -634,6 +699,19 @@ int perf_event__process_lost(struct perf_tool *tool __maybe_unused,
+ 	return machine__process_lost_event(machine, event, sample);
+ }
+ 
++int perf_event__process_uevents(struct perf_tool *tool __maybe_unused,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	return machine__process_uevents_event(machine, event, sample);
++}
++
++size_t perf_event__fprintf_uevent(union perf_event *event, FILE *fp)
++{
++	return fprintf(fp, " %d/%d: (CARLL, FIXME NOT DONE YET\n", event->uevent.type, event->uevent.size);
++}
++
+ size_t perf_event__fprintf_mmap(union perf_event *event, FILE *fp)
+ {
+ 	return fprintf(fp, " %d/%d: [%#" PRIx64 "(%#" PRIx64 ") @ %#" PRIx64 "]: %c %s\n",
+@@ -716,6 +794,9 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
+ 	case PERF_RECORD_MMAP2:
+ 		ret += perf_event__fprintf_mmap2(event, fp);
+ 		break;
++	case PERF_RECORD_UEVENT:
++		ret += perf_event__fprintf_uevent(event, fp);
++		break;
+ 	default:
+ 		ret += fprintf(fp, "\n");
+ 	}
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index c4ffe2b..7dc6515 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -3,6 +3,7 @@
+ 
+ #include <limits.h>
+ #include <stdio.h>
++#include <string.h>
+ 
+ #include "../perf.h"
+ #include "map.h"
+@@ -52,6 +53,23 @@ struct lost_event {
+ 	u64 lost;
+ };
+ 
++/* Copy of the perf data struct from the library.  Need to have it
++ * in some common include file.  For now it is a hack.
++ */
++struct jit_data_st {
++	char map_filename[50];
++	u32 pid;
++	u32 tid;
++};
++
++struct uevent_event {
++	struct perf_event_header      header;
++	u32                           type;
++	u32                           size;
++	char                          data[50];   // NEEDS WORK
++	char                          __padding[-50 & 7];
++};
++
+ /*
+  * PERF_FORMAT_ENABLED | PERF_FORMAT_RUNNING | PERF_FORMAT_ID
+  */
+@@ -296,6 +314,7 @@ union perf_event {
+ 	struct tracing_data_event	tracing_data;
+ 	struct build_id_event		build_id;
+ 	struct id_index_event		id_index;
++	struct uevent_event             uevent;
+ };
+ 
+ void perf_event__print_totals(void);
+@@ -347,6 +366,13 @@ int perf_event__process_exit(struct perf_tool *tool,
+ 			     union perf_event *event,
+ 			     struct perf_sample *sample,
+ 			     struct machine *machine);
++int perf_event__synthesize_jit_mmap_events(union perf_event *event,
++					   char *filename,
++					   u32 pid, u32 tid);
++int perf_event__process_uevents(struct perf_tool *tool __maybe_unused,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine);
+ int perf_event__process(struct perf_tool *tool,
+ 			union perf_event *event,
+ 			struct perf_sample *sample,
+@@ -387,6 +413,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ size_t perf_event__fprintf_comm(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_mmap(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_mmap2(union perf_event *event, FILE *fp);
++size_t perf_event__fprintf_uevent(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_task(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf(union perf_event *event, FILE *fp);
+ 
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 94de3e4..887020e 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -460,6 +460,41 @@ int machine__process_lost_event(struct machine *machine __maybe_unused,
+ 	return 0;
+ }
+ 
++int machine__process_uevents_event(struct machine *machine __maybe_unused,
++				   union perf_event *event,
++				   struct perf_sample *sample __maybe_unused)
++{
++  	union perf_event *new_event;
++	struct jit_data_st *jit_data;
++	int rc = 0;
++
++	/* the binary data is sent in a character string, scarey but it seems
++	 * to work.  Need to consider if this is really the right way of
++	 * doing things.
++	 */
++	jit_data = (struct jit_data_st *) event->uevent.data;
++
++	new_event = malloc(sizeof(new_event->mmap2) + machine->id_hdr_size);
++	if (new_event == NULL) {
++		fprintf(stderr,
++			"ERROR, machine__process_uevents_event() failed to malloc event\n");
++		return -1;
++	}
++
++	event = new_event;
++
++	/* setup event */
++	rc = perf_event__synthesize_jit_mmap_events(event,
++						    jit_data->map_filename,
++						    jit_data->pid,
++						    jit_data->tid);
++
++
++	/* call machine__process_mmap_event() to do the remap of the file */
++	rc = machine__process_mmap2_event(machine, event, sample);
++	return rc;
++}
++
+ struct map *machine__new_module(struct machine *machine, u64 start,
+ 				const char *filename)
+ {
+@@ -1307,6 +1342,8 @@ int machine__process_event(struct machine *machine, union perf_event *event,
+ 		ret = machine__process_exit_event(machine, event, sample); break;
+ 	case PERF_RECORD_LOST:
+ 		ret = machine__process_lost_event(machine, event, sample); break;
++	case PERF_RECORD_UEVENT:
++		ret = machine__process_uevents_event(machine, event, sample); break;
+ 	default:
+ 		ret = -1;
+ 		break;
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index e8b7779..d3f8f52 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -85,6 +85,8 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
+ 				struct perf_sample *sample);
+ int machine__process_mmap2_event(struct machine *machine, union perf_event *event,
+ 				 struct perf_sample *sample);
++int machine__process_uevents_event(struct machine *machine, union perf_event *event,
++				   struct perf_sample *sample);
+ int machine__process_event(struct machine *machine, union perf_event *event,
+ 				struct perf_sample *sample);
+ 
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 62ca9f2..babcf36 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -41,6 +41,12 @@ static inline int is_android_lib(const char *filename)
+ 	       !strncmp(filename, "/system/lib", 11);
+ }
+ 
++static inline int is_jit_map(const char *filename)
++{
++	return (strncmp(filename, "/tmp/perf-", 10) == 0);
++}
++
++
+ static inline bool replace_android_lib(const char *filename, char *newfilename)
+ {
+ 	const char *libname;
+@@ -149,12 +155,13 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 	if (map != NULL) {
+ 		char newfilename[PATH_MAX];
+ 		struct dso *dso;
+-		int anon, no_dso, vdso, android;
++		int anon, no_dso, vdso, android, jit;
+ 
+ 		android = is_android_lib(filename);
+ 		anon = is_anon_memory(filename);
+ 		vdso = is_vdso_map(filename);
+ 		no_dso = is_no_dso_memory(filename);
++		jit  = is_jit_map(filename);
+ 
+ 		map->maj = d_maj;
+ 		map->min = d_min;
+@@ -184,7 +191,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 
+ 		map__init(map, type, start, start + len, pgoff, dso);
+ 
+-		if (anon || no_dso) {
++		if (anon || no_dso || jit) {
+ 			map->map_ip = map->unmap_ip = identity__map_ip;
+ 
+ 			/*
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 8acd0df..a0abb25 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -24,6 +24,7 @@ static int perf_do_probe_api(setup_probe_fn_t fn, int cpu, const char *str)
+ 		goto out_delete;
+ 
+ 	evsel = perf_evlist__first(evlist);
++	evsel->attr.uevents = 1;  // CARLL ADDED, don't remember if this is needed or not?  Doesn't hurt anything at the moment.
+ 
+ 	while (1) {
+ 		fd = sys_perf_event_open(&evsel->attr, pid, cpu, -1, flags);
+@@ -221,6 +222,7 @@ bool perf_evlist__can_select_event(struct perf_evlist *evlist, const char *str)
+ 	} else {
+ 		cpu = evlist->cpus->map[0];
+ 	}
++	evsel->attr.uevents = 1;  // CARLL ADDED, don't remember if this was needed or not.  FIX
+ 
+ 	while (1) {
+ 		fd = sys_perf_event_open(&evsel->attr, pid, cpu, -1,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 5f0e05a..cf19604 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -253,6 +253,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 		tool->exit = process_event_stub;
+ 	if (tool->lost == NULL)
+ 		tool->lost = perf_event__process_lost;
++	if (tool->uevents == NULL)
++		tool->uevents = process_event_stub;
+ 	if (tool->read == NULL)
+ 		tool->read = process_event_sample_stub;
+ 	if (tool->throttle == NULL)
+@@ -885,6 +887,8 @@ int perf_session__deliver_event(struct perf_session *session,
+ 		if (tool->lost == perf_event__process_lost)
+ 			session->stats.total_lost += event->lost.lost;
+ 		return tool->lost(tool, event, sample, machine);
++	case PERF_RECORD_UEVENT:
++		return tool->uevents(tool, event, sample, machine);
+ 	case PERF_RECORD_READ:
+ 		return tool->read(tool, event, sample, evsel, machine);
+ 	case PERF_RECORD_THROTTLE:
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index bb2708b..ed67a12 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -35,7 +35,8 @@ struct perf_tool {
+ 			exit,
+ 			lost,
+ 			throttle,
+-			unthrottle;
++			unthrottle,
++			uevents;
+ 	event_attr_op	attr;
+ 	event_op2	tracing_data;
+ 	event_op2	finished_round,
+-- 
+1.8.3.1
