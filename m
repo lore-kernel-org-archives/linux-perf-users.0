@@ -1,68 +1,268 @@
 From: Carl Love <cel@us.ibm.com>
-Subject: PATCH[0/3 RFC]  PERF, Add remapping support for jit'ed code to perf
-Date: Wed, 04 Feb 2015 09:15:26 -0800
-Message-ID: <1423070126.7292.28.camel@oc0276584878.ibm.com>
+Subject: PATCH[1/3 RFC]  PERF, Add remapping support for jit'ed code to perf
+Date: Wed, 04 Feb 2015 09:15:32 -0800
+Message-ID: <1423070132.7292.29.camel@oc0276584878.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from e8.ny.us.ibm.com ([32.97.182.138]:39357 "EHLO e8.ny.us.ibm.com"
+Received: from e9.ny.us.ibm.com ([32.97.182.139]:47936 "EHLO e9.ny.us.ibm.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1161071AbbBDRPe (ORCPT
+	id S1161210AbbBDRPr (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 4 Feb 2015 12:15:34 -0500
+	Wed, 4 Feb 2015 12:15:47 -0500
 Received: from /spool/local
-	by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+	by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
 	for <linux-perf-users@vger.kernel.org> from <cel@us.ibm.com>;
-	Wed, 4 Feb 2015 12:15:32 -0500
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-	by d01dlp01.pok.ibm.com (Postfix) with ESMTP id 3AD7438C8039
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2015 12:15:30 -0500 (EST)
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id t14HFUYX23920700
-	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 17:15:30 GMT
-Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
-	by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id t14HFSrZ021650
-	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 12:15:28 -0500
+	Wed, 4 Feb 2015 12:15:47 -0500
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+	by d01dlp03.pok.ibm.com (Postfix) with ESMTP id A4974C90045
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Feb 2015 12:06:56 -0500 (EST)
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id t14HFi4v23920774
+	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 17:15:45 GMT
+Received: from d01av03.pok.ibm.com (localhost [127.0.0.1])
+	by d01av03.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id t14HFgXO013956
+	for <linux-perf-users@vger.kernel.org>; Wed, 4 Feb 2015 12:15:43 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
-Cc: cel@us.ibm.com, sukadev@linux.vnet.ibm.com, Pawel Moll <pawel.moll@arm.com>
+To: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: cel@us.ibm.com, Pawel Moll <pawel.moll@arm.com>, sukadev@linux.vnet.ibm.com
 
-Arnaldo:
+The following patch was submitted to the mailing list but  
+is currently not accepted.  I have forward ported it to the latest
+kernel  version.
 
-I got my patch to work without causing perf to seg fault yesterday.  So,
-I am now willing to post what I have as it appears to work.
+     Carl Love
+-----------------------------------------------------------------------
 
-Here is a patch series for the perf Java support as I have it today.  I
-am posting it per your request so people can see what I have been
-working on, the approach that I am taking etc.  I welcome feedback on
-the overall approach and the patch.  It is a proof of concept patch set
-showing the approach that I am using.  There is still plenty of work to
-do.
+This patch adds a PR_TASK_PERF_UEVENT prctl call which can be used by
+any process to inject custom data into perf data stream as a new
+PERF_RECORD_UEVENT record, if such process is being observed or if it
+is running on a CPU being observed by the perf framework.
 
-  Work to do
-1)  Jit call back library needs to store the jit source code
-2)  Perf add source code annotation for the jit code.
-3)  Rewrite the jit call back library to only request re-map when it is
-    absolutely needed.  Currently it requests a call back for every
-    symbol load just to exercise the perf code.
+The prctl call takes the following arguments:
 
-There are three parts to this work.  First is the patch that adds the
-uevent functionality that was written by Pawel Moll.  Second is the
-patch I wrote to take the uevent, which contains the remap request, and
-process it.  Third is the jvmti callback library that gets built and run
-with the java execution.  The library is compiled into java agent
-library libjvm-perf.so.  The perf command is invoked with
+    prctl(PR_TASK_PERF_UEVENT, type, size, data, flags);
 
-perf record java -agentpath:libjvmti-perf.so test
+- type: a number meaning to describe content of the following data.
+  Kernel does not pay attention to it and merely passes it further in
+  the perf data, therefore its use must be agreed between the events
+  producer (the process being observed) and the consumer (performance
+  analysis tool). The perf userspace tool will contain a repository of
+  "well known" types and reference implementation of their decoders.
+- size: Length in bytes of the data.
+- data: Pointer to the data.
+- flags: Reserved for future use. Always pass zero.
 
-where test is my java workload being profiled.
+Perf context that are supposed to receive events generated with the
+prctl above must be opened with perf_event_attr.uevent set to 1. The
+PERF_RECORD_UEVENT records consist of a standard perf event header,
+32-bit type value, 32-bit data size and the data itself, followed by
+padding to align the overall record size to 8 bytes and optional,
+standard sample_id field.
 
-The following patches in this patch set are:
+Example use cases:
 
-1/3   Patch by Pawel Moll
-2/3   Perf remap patch by Carl Love
-3/3   jvmti library source code for testing the perf patch
+- "perf_printf" like mechanism to add logging messages to perf data;
+  in the simplest case it can be just
 
-                     Carl Love
+  prctl(PR_TASK_PERF_UEVENT, 0, 8, "Message", 0);
+
+- synchronisation of performance data generated in user space with the
+  perf stream coming from the kernel. For example, the marker can be
+  inserted by a JIT engine after it generated portion of the code, but
+  before the code is executed for the first time, allowing the
+  post-processor to pick the correct debugging information.
+
+Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+---
+ include/linux/perf_event.h      |  4 +++
+ include/uapi/linux/perf_event.h | 22 ++++++++++++-
+ include/uapi/linux/prctl.h      |  9 ++++++
+ kernel/events/core.c            | 72 +++++++++++++++++++++++++++++++++++++++++
+ kernel/sys.c                    |  5 +++
+ 5 files changed, 111 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 4f7a61c..b6ff319 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -726,6 +726,8 @@ extern int perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks
+ extern void perf_event_exec(void);
+ extern void perf_event_comm(struct task_struct *tsk, bool exec);
+ extern void perf_event_fork(struct task_struct *tsk);
++extern int perf_uevent(struct task_struct *tsk, u32 type, u32 size,            
++		       const char __user *data);
+ 
+ /* Callchains */
+ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+@@ -834,6 +836,8 @@ static inline void perf_event_mmap(struct vm_area_struct *vma)		{ }
+ static inline void perf_event_exec(void)				{ }
+ static inline void perf_event_comm(struct task_struct *tsk, bool exec)	{ }
+ static inline void perf_event_fork(struct task_struct *tsk)		{ }
++static inline int perf_uevent(struct task_struct *tsk, u32 type, u32 size,     
++			      const char __user *data)             { return -1; }; 
+ static inline void perf_event_init(void)				{ }
+ static inline int  perf_swevent_get_recursion_context(void)		{ return -1; }
+ static inline void perf_swevent_put_recursion_context(int rctx)		{ }
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 9b79abb..c0cf2b5 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -305,7 +305,8 @@ struct perf_event_attr {
+ 				exclude_callchain_user   : 1, /* exclude user callchains */
+ 				mmap2          :  1, /* include mmap with inode data     */
+ 				comm_exec      :  1, /* flag comm events that are due to an exec */
+-				__reserved_1   : 39;
++				uevents        :  1, /* allow uevents into the buffer */
++				__reserved_1   : 38;
+ 
+ 	union {
+ 		__u32		wakeup_events;	  /* wakeup every n events */
+@@ -724,6 +725,25 @@ enum perf_event_type {
+ 	 * };
+ 	 */
+ 	PERF_RECORD_MMAP2			= 10,
++	/*
++	 * Data in userspace event record is transparent for the kernel
++
++	 * Userspace perf tool code maintains a list of known types with
++	 * reference implementations of parsers for the data field.
++	 *
++	 * Overall size of the record (including type and size fields)
++	 * is always aligned to 8 bytes by adding padding after the data.
++	 *
++	 * struct {
++	 *        struct perf_event_header      header;
++	 *        u32                           type;
++	 *        u32                           size;   
++	 *        char                          data[size];
++	 *        char                          __padding[-size & 7];
++	 *  struct sample_id                    sample_id;
++	 * };
++         */
++        PERF_RECORD_UEVENT                     = 11,
+ 
+ 	PERF_RECORD_MAX,			/* non-ABI */
+ };
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 89f6350..fca8940 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -184,5 +184,14 @@ struct prctl_mm_map {
+  */
+ #define PR_MPX_ENABLE_MANAGEMENT  43
+ #define PR_MPX_DISABLE_MANAGEMENT 44
++/*
++ * Perf userspace event generation
++ *
++ * second argument: event type
++ * third argument:  data size
++ * fourth argument: pointer to data
++ * fifth argument:  flags (currently unused, pass 0)
++ */
++#define PR_TASK_PERF_UEVENT    45
+ 
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 882f835..a801653 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5602,6 +5602,78 @@ static void perf_log_throttle(struct perf_event *event, int enable)
+ }
+ 
+ /*
++ * Userspace-generated event
++ */
++
++struct perf_uevent {
++	struct perf_event_header	header;
++	u32				type;
++	u32				size;
++	u8				data[0];
++};
++
++static void perf_uevent_output(struct perf_event *event, void *data)
++{
++	struct perf_uevent *uevent = data;
++	struct perf_output_handle handle;
++	struct perf_sample_data sample;
++	int size = uevent->header.size;
++
++	if (!event->attr.uevents)
++	   return;
++
++	perf_event_header__init_id(&uevent->header, &sample, event);
++
++	if (perf_output_begin(&handle, event, uevent->header.size) != 0)
++	   goto out;
++	perf_output_put(&handle, uevent->header);
++	perf_output_put(&handle, uevent->type);
++	perf_output_put(&handle, uevent->size);
++	__output_copy(&handle, uevent->data, uevent->size);
++
++	/* Padding to align overall data size to 8 bytes */
++	perf_output_skip(&handle, -uevent->size & (sizeof(u64) - 1));
++
++	perf_event__output_id_sample(event, &handle, &sample);
++
++	perf_output_end(&handle);
++out:
++	uevent->header.size = size;
++}
++ 
++
++int perf_uevent(struct task_struct *tsk, u32 type, u32 size,
++   		const char __user *data)
++{
++	struct perf_uevent *uevent;
++
++	/* Need some reasonable limit */
++	if (size > PAGE_SIZE)
++	        return -E2BIG;
++
++	uevent = kmalloc(sizeof(*uevent) + size, GFP_KERNEL);
++	if (!uevent)
++	        return -ENOMEM;
++
++	uevent->header.type = PERF_RECORD_UEVENT;
++	uevent->header.size = sizeof(*uevent) + ALIGN(size, sizeof(u64));
++
++	uevent->type = type;
++	uevent->size = size;
++	if (copy_from_user(uevent->data, data, size)) {
++	        kfree(uevent);
++		return -EFAULT;
++ 	}
++
++	perf_event_aux(perf_uevent_output, uevent, NULL);
++
++	kfree(uevent);
++
++	return 0;
++}
++
++
++/*
+  * Generic event overflow handling, sampling.
+  */
+ 
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a8c9f5a..db395ae 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2127,6 +2127,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 	case PR_TASK_PERF_EVENTS_ENABLE:
+ 		error = perf_event_task_enable();
+ 		break;
++	case PR_TASK_PERF_UEVENT:
++		if (arg5 != 0)
++			return -EINVAL;
++		error = perf_uevent(me, arg2, arg3, (char __user *)arg4);
++		break;
+ 	case PR_GET_TIMERSLACK:
+ 		error = current->timer_slack_ns;
+ 		break;
+-- 
+1.8.3.1
