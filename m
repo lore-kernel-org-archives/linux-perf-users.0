@@ -1,163 +1,129 @@
-From: Harald Servat <harald.servat@bsc.es>
-Subject: Re: Sample memory references with at least a given latency?
-Date: Thu, 05 Feb 2015 12:39:26 +0100
-Message-ID: <54D3566E.4010103@bsc.es>
-References: <54D21524.8010305@bsc.es> <CALbiyZyJhUNfMNOYwJ26P-Lq+3E_xM8SpZ9CG+WR70-n_k9x8A@mail.gmail.com> <54D22AB8.4060607@bsc.es> <54D354F0.2090405@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: What does several of perf configurations (alias, help,
+ call-graph) mean ?
+Date: Thu, 5 Feb 2015 15:06:32 +0100
+Message-ID: <20150205140632.GB16369@kernel.org>
+References: <54D3242A.8050606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mao.bsc.es ([84.88.52.34]:48248 "EHLO opsmail01.bsc.es"
+Received: from mail.kernel.org ([198.145.29.136]:42107 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752004AbbBELj2 (ORCPT
+	id S1753111AbbBEOGV (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 5 Feb 2015 06:39:28 -0500
-In-Reply-To: <54D354F0.2090405@gmail.com>
+	Thu, 5 Feb 2015 09:06:21 -0500
+Received: from mail.kernel.org (localhost [127.0.0.1])
+	by mail.kernel.org (Postfix) with ESMTP id 34EA220274
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2015 14:06:20 +0000 (UTC)
+Received: from zoo.ghostprotocols.net (ip-94-112-29-173.net.upcbroadband.cz [94.112.29.173])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPSA id 324642026F
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Feb 2015 14:06:19 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <54D3242A.8050606@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Manuel Selva <selva.manuel@gmail.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: taeung <treeze.taeung@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
+Em Thu, Feb 05, 2015 at 05:04:58PM +0900, taeung escreveu:
+> 
+> Hi, every one. :-)
+> 
+> I'm tring to make things about perf configuration neat and tidy.
+> Three questions have arisen doing it.
+> 
+> 1. alias [ util/alias.c : alias_lookup_cb(), util/help.c :
+> perf_unknown_cmd_config() ]
+> 
+>         What kind of alias keys are there ?
 
-Hello,
+I'm unaware of any, this came from the git sources where this concept
+of 'alias' must be used.
+ 
+> 2. help [ builtin-help.c : perf_help_config() ]
+> 
+>         'autocorrect' can have a value of integer type.
+>         What does the value mean ?
 
-On 05/02/15 12:33, Manuel Selva wrote:
-> Hi Harald,
->
-> You are right, the perf mem tool dosn't support stting the latency
-> threshold. It should be a very easy first contribution to kernel for
-> myself ;-)
+Also comes from git, where it does things like:
 
-   that would be great. If I had some spare time & a machine to mess a 
-bit, I'd gladly help you. BTW, do you know if there's any alternative 
-for developing the kernel?
+  [acme@zoo linux]$ git ckone
+  git: 'ckone' is not a git command. See 'git --help'.
 
-> Regarding the timestamp, I nver need such information, but as you said
-> you can't tll to the hardware (on Intel I mean) to record it along with
-> processor state information. I don't know how th kernel part of perf
-> configure PEBS, but why would the kernel pay the overhead of an
-> interrupt by using 1 slot buffers ? Only for recording timestamp ?
+  Did you mean this?
+  	clone
 
-   Personally, I play with time-stamped trace-files and find capturing 
-the time-stamp extremely important! Andi Kleen (also from this list) 
-confirmed this (1 slot buffer) but he didn't mention the exact reason. 
-Still, and let me insist, this is perfect for my purposes so I'm ok with 
-it. See previous mails from this ML:
+But perf doesn't and instead:
 
-http://article.gmane.org/gmane.linux.kernel.perf.user/1398/match=information+regarding+perf+tool
+  [acme@zoo linux]$ perf repjort
+  perf: 'repjort' is not a perf-command. See 'perf --help'.
+  [acme@zoo linux]$
 
-http://article.gmane.org/gmane.linux.kernel.perf.user/1375/match=information+regarding+perf+tool
+I guess this is what 'autocorrect' stands for, unsure tho.
+ 
+> 3. call-graph [ util/callchain.c : perf_callchain_config(),
+> parse_callchain_record_opt() ]
+> 
+>         record-mode can be 'Framepointer style' or  'Dwarf style'.
+>         Why does 'Dwarf style' accompany dump-size ?
 
-Regards.
+For these things I think you should try to use 'git blame', figure out
+when this was introduced and get the documentation bits from there...
+did it, was a bit more complicated as there was code move in these areas
+but this is the cset that introduced this feature:
 
+26d330226b9cf6208daae9b0b3697980c8fb51d8
 
-> ----
-> Manu
->
-> On 02/04/2015 03:20 PM, Harald Servat wrote:
->>
->> Hello Manuel,
->>
->>    I'm running Linux 3.11 but I don't see a way to setup the latency
->> threshold there. My option flags include:
->>
->>         -t, --type=
->>         -D, --dump-raw-samples=
->>         -x, --field-separator
->>         -C, --cpu-list
->>
->>    so I guess that this option is not implemented in perf (at least on
->> 3.11). So I need to capture all the samples and then discard those that
->> surpass that threshold.
->>
->>    Going back into your example, is it possible to capture / show the
->> timestamp for the captured samples? I've seen the Intel documentation,
->> and there aren't timestamps in PEBS entries so that may require
->> additional work. IIRC, someone of the list told me that perf allocates a
->> 1-entry PEBS buffer so every time PEBS fills it, perf somehow gets an
->> interrupt indicating that it has to flush it. This way, perf can
->> attribute a timestamp to that sample also.
->>
->> Thank you very much!
->>
->>
->> On 04/02/15 15:00, Manuel Selva wrote:
->>> Hi Harald,
->>>
->>> Yes you can with the "perf mem" tool. It has been introduced in kernel
->>> 3.10 (correct me if I am wrong, not very sure about that). It's built on
->>> top of perf mem record and perf mem report but hide for you the
->>> complxity of choosing the memory events . See "man perf mem" for th
->>> details.
->>>
->>> ----------
->>> Manuel
->>>
->>>
->>>
->>> 2015-02-04 13:48 GMT+01:00 Harald Servat <harald.servat@bsc.es
->>> <mailto:harald.servat@bsc.es>>:
->>>
->>>     Hello list,
->>>
->>>        is there any way to configure perf to sample memory references
->>>     through PEBS and enable the Load Latency Performance Monitoring
->>>     Facility (section 18.7.1.2 from the Intel 64 and IA-32 Architectures
->>>     Software Developer's Manual).
->>>
->>>     Thank you very much in advance.
->>>
->>>     WARNING / LEGAL TEXT: This message is intended only for the use of
->>> the
->>>     individual or entity to which it is addressed and may contain
->>>     information which is privileged, confidential, proprietary, or
->>> exempt
->>>     from disclosure under applicable law. If you are not the intended
->>>     recipient or the person responsible for delivering the message to
->>> the
->>>     intended recipient, you are strictly prohibited from disclosing,
->>>     distributing, copying, or in any way using this message. If you have
->>>     received this communication in error, please notify the sender and
->>>     destroy and delete any copies you may have received.
->>>
->>>     http://www.bsc.es/disclaimer
->>>     --
->>>     To unsubscribe from this list: send the line "unsubscribe
->>>     linux-perf-users" in
->>>     the body of a message to majordomo@vger.kernel.org
->>>     <mailto:majordomo@vger.kernel.org>
->>>     More majordomo info at http://vger.kernel.org/__majordomo-info.html
->>>     <http://vger.kernel.org/majordomo-info.html>
->>>
->>>
->>
->>
->> WARNING / LEGAL TEXT: This message is intended only for the use of the
->> individual or entity to which it is addressed and may contain
->> information which is privileged, confidential, proprietary, or exempt
->> from disclosure under applicable law. If you are not the intended
->> recipient or the person responsible for delivering the message to the
->> intended recipient, you are strictly prohibited from disclosing,
->> distributing, copying, or in any way using this message. If you have
->> received this communication in error, please notify the sender and
->> destroy and delete any copies you may have received.
->>
->> http://www.bsc.es/disclaimer
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+commit 26d330226b9cf6208daae9b0b3697980c8fb51d8
+Author: Jiri Olsa <jolsa@redhat.com>
+Date:   Tue Aug 7 15:20:47 2012 +0200
 
+    perf tools: Support for DWARF mode callchain
+    
+    This patch enables perf to use the DWARF unwind code.
+    
+    It extends the perf record '-g' option with following arguments:
+      'fp'           - provides framepointer based user
+                       stack backtrace
+      'dwarf[,size]' - provides DWARF (libunwind) based user stack
+                       backtrace. The size specifies the size of the
+                       user stack dump. If omitted it is 8192 by default.
+    
+    If libunwind is found during the perf build, then the 'dwarf' argument
+    becomes available for record command. The 'fp' stays as default option
+    in any case.
+    
+    Examples: (perf compiled with libunwind)
+    
+       perf record -g dwarf ls
+          - provides dwarf unwind with 8192 as stack dump size
+    
+       perf record -g dwarf,4096 ls
+          - provides dwarf unwind with 4096 as stack dump size
+    
+       perf record -g -- ls
+       perf record -g fp ls
+          - provides frame pointer unwind
+    
+    Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+    Original-patch-by: Frederic Weisbecker <fweisbec@gmail.com>
+ 
+>         'threshold' can have a value of double type
+>         and the value can be entered into callchain_param.min_percent.
+>         What does 'threshold' mean ?
 
-WARNING / LEGAL TEXT: This message is intended only for the use of the
-individual or entity to which it is addressed and may contain
-information which is privileged, confidential, proprietary, or exempt
-from disclosure under applicable law. If you are not the intended
-recipient or the person responsible for delivering the message to the
-intended recipient, you are strictly prohibited from disclosing,
-distributing, copying, or in any way using this message. If you have
-received this communication in error, please notify the sender and
-destroy and delete any copies you may have received.
+Ditto:
 
-http://www.bsc.es/disclaimer
+  commit 805d127d62472f17c7d79baa001a7651afe2fa47
+  Author: Frederic Weisbecker <fweisbec@gmail.com>
+  Date:   Sun Jul 5 07:39:21 2009 +0200
+
+    perf report: Add "Fractal" mode output - support callchains with relative overhead rate
+
+But especifically on the function you mention, the meaning looks
+obvious, its the minimal percentage that that entry in the callchain
+must have to appear on the output.
+
+- Arnaldo
