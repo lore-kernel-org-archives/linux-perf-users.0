@@ -1,72 +1,52 @@
-From: Vinson Lee <vlee@twopensource.com>
-Subject: [PATCH] perf tools: Work around lack of sched_getcpu in glibc < 2.6.
-Date: Fri, 13 Feb 2015 18:06:47 -0800
-Message-ID: <1423879609-4373-1-git-send-email-vlee@twopensource.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: TaeWoong Song <treeze.taeung@gmail.com>
+Subject: several questions about config
+Date: Sun, 15 Feb 2015 20:23:14 +0900
+Message-ID: <039ADDFB-D656-4760-842A-F65B780198C3@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f179.google.com ([209.85.192.179]:39467 "EHLO
-	mail-pd0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753215AbbBNCG7 (ORCPT
+Received: from mail-pa0-f43.google.com ([209.85.220.43]:37537 "EHLO
+	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754475AbbBOLXQ convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 13 Feb 2015 21:06:59 -0500
-Received: by pdjy10 with SMTP id y10so22953337pdj.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Feb 2015 18:06:59 -0800 (PST)
+	Sun, 15 Feb 2015 06:23:16 -0500
+Received: by mail-pa0-f43.google.com with SMTP id fa1so28917069pad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Feb 2015 03:23:15 -0800 (PST)
+Received: from [10.138.13.172] ([211.61.23.220])
+        by mx.google.com with ESMTPSA id yl2sm11671275pbb.1.2015.02.15.03.23.13
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Sun, 15 Feb 2015 03:23:14 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Yann Droneaud <ydroneaud@opteya.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
+To: linux-perf-users@vger.kernel.org
 
-=46rom: Vinson Lee <vlee@twitter.com>
+Hi, perf users and developers=20
 
-This patch fixes this build error with glibc < 2.6.
+I have several questions about perfconfig
 
-  CC       util/cloexec.o
-cc1: warnings being treated as errors
-util/cloexec.c: In function =E2=80=98perf_flag_probe=E2=80=99:
-util/cloexec.c:24: error: implicit declaration of function
-=E2=80=98sched_getcpu=E2=80=99
-util/cloexec.c:24: error: nested extern declaration of =E2=80=98sched_g=
-etcpu=E2=80=99
-make: *** [util/cloexec.o] Error 1
+1. [colors] section : What is concrete evaluation standard of =E2=80=99=
+top=E2=80=99 and =E2=80=98medium=E2=80=99 ?
+( I've thought  that =E2=80=99top=E2=80=99 and =E2=80=98medium=E2=80=99=
+ is decided by CPU overhead(%) but I don=E2=80=99t know it=E2=80=99s mo=
+re concrete standard  )
 
-Cc: stable@vger.kernel.org # 3.18+
-Signed-off-by: Vinson Lee <vlee@twitter.com>
----
- tools/perf/util/cloexec.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+2. [colors] section : Why is it that the name which decide colors of li=
+ne for jumping with assemble command such as =E2=80=98jmpq=E2=80=99 is =
+=E2=80=98code =E2=80=98 ? =20
 
-diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-index 47b78b3..3738924 100644
---- a/tools/perf/util/cloexec.c
-+++ b/tools/perf/util/cloexec.c
-@@ -7,6 +7,12 @@
-=20
- static unsigned long flag =3D PERF_FLAG_FD_CLOEXEC;
-=20
-+#ifdef __GLIBC_PREREQ
-+#if __GLIBC_PREREQ(2, 6)
-+#define HAVE_SCHED_GETCPU
-+#endif
-+#endif
-+
- static int perf_flag_probe(void)
- {
- 	/* use 'safest' configuration as used in perf_evsel__fallback() */
-@@ -21,9 +27,13 @@ static int perf_flag_probe(void)
- 	pid_t pid =3D -1;
- 	char sbuf[STRERR_BUFSIZE];
-=20
-+#ifdef HAVE_SCHED_GETCPU
- 	cpu =3D sched_getcpu();
- 	if (cpu < 0)
- 		cpu =3D 0;
-+#else
-+	cpu =3D 0;
-+#endif
-=20
- 	while (1) {
- 		/* check cloexec flag */
---=20
-1.8.2.1
+3. [colors] section : What would you think  =E2=80=98headers=E2=80=99 i=
+s better than =E2=80=98root=E2=80=99 ?
+(Because =E2=80=99show-headers=E2=80=99 which [ui] section has decide w=
+hether column names on the top of output is shown or not.)
+
+4. [call-graph] section : Is it a bug that after 'sort-key=E2=80=99 is =
+set =E2=80=98address=E2=80=99 if I select shared object and  symbol suc=
+h as =E2=80=9C [kernel] , [k] vfs_read =E2=80=9C
+, perf process is stopped with error message =E2=80=98addr2line: /proc/=
+kcore: File format not recognized=E2=80=99 ?=20
+
+
+Thanks,=20
+Taeung=20
