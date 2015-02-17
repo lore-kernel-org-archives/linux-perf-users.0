@@ -1,90 +1,65 @@
-From: Yann Droneaud <ydroneaud@opteya.com>
-Subject: Re: [PATCH] perf tools: Work around lack of sched_getcpu in glibc <
- 2.6.
-Date: Mon, 16 Feb 2015 21:50:15 +0100
-Message-ID: <1424119815.32606.14.camel@opteya.com>
-References: <1423879609-4373-1-git-send-email-vlee@twopensource.com>
+From: taeung <treeze.taeung@gmail.com>
+Subject: perfconfig : what does mean annotate.show_nr_jumps ?
+Date: Tue, 17 Feb 2015 19:07:40 +0900
+Message-ID: <54E312EC.7010804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from ou.quest-ce.net ([195.154.187.82]:49461 "EHLO ou.quest-ce.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751038AbbBPUuq (ORCPT
+Received: from mail-pd0-f182.google.com ([209.85.192.182]:46015 "EHLO
+	mail-pd0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752058AbbBQKHs (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 16 Feb 2015 15:50:46 -0500
-In-Reply-To: <1423879609-4373-1-git-send-email-vlee@twopensource.com>
+	Tue, 17 Feb 2015 05:07:48 -0500
+Received: by pdjz10 with SMTP id z10so42690359pdj.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Feb 2015 02:07:47 -0800 (PST)
+Received: from [123.140.74.165] ([123.140.74.165])
+        by mx.google.com with ESMTPSA id ph7sm17149394pbb.6.2015.02.17.02.07.46
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Feb 2015 02:07:46 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vinson Lee <vlee@twopensource.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
+To: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi, list
 
-Le vendredi 13 f=C3=A9vrier 2015 =C3=A0 18:06 -0800, Vinson Lee a =C3=A9=
-crit :
-> From: Vinson Lee <vlee@twitter.com>
->=20
-> This patch fixes this build error with glibc < 2.6.
->=20
->   CC       util/cloexec.o
-> cc1: warnings being treated as errors
-> util/cloexec.c: In function =E2=80=98perf_flag_probe=E2=80=99:
-> util/cloexec.c:24: error: implicit declaration of function
-> =E2=80=98sched_getcpu=E2=80=99
-> util/cloexec.c:24: error: nested extern declaration of =E2=80=98sched=
-_getcpu=E2=80=99
-> make: *** [util/cloexec.o] Error 1
->=20
-> Cc: stable@vger.kernel.org # 3.18+
-> Signed-off-by: Vinson Lee <vlee@twitter.com>
-> ---
->  tools/perf/util/cloexec.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-> index 47b78b3..3738924 100644
-> --- a/tools/perf/util/cloexec.c
-> +++ b/tools/perf/util/cloexec.c
-> @@ -7,6 +7,12 @@
-> =20
->  static unsigned long flag =3D PERF_FLAG_FD_CLOEXEC;
-> =20
-> +#ifdef __GLIBC_PREREQ
-> +#if __GLIBC_PREREQ(2, 6)
-> +#define HAVE_SCHED_GETCPU
-> +#endif
-> +#endif
-> +
+what does mean annotate.show_nr_jumps ?
 
-OK
 
->  static int perf_flag_probe(void)
->  {
->  	/* use 'safest' configuration as used in perf_evsel__fallback() */
-> @@ -21,9 +27,13 @@ static int perf_flag_probe(void)
->  	pid_t pid =3D -1;
->  	char sbuf[STRERR_BUFSIZE];
-> =20
-> +#ifdef HAVE_SCHED_GETCPU
->  	cpu =3D sched_getcpu();
->  	if (cpu < 0)
->  		cpu =3D 0;
-> +#else
-> +	cpu =3D 0;
-> +#endif
-> =20
->  	while (1) {
->  		/* check cloexec flag */
+If I configure 'annotate.show_nr_jumps' with a boolean 'false'
+The output is as below..
 
-I've reviewed the use of __GLIBC_PREREQ(2, 6), but not whether using cp=
-u
-=3D 0 is OK if sched_getcpu() is not available.
+         =E2=94=821382:   movb   $0x1,-0x270(%rbp)
+         =E2=94=82          =E2=86=91 jmpq   1223
+         =E2=94=82            xchg   %ax,%ax
+3.51 =E2=94=821390:   mov    -0x210(%rbp),%rax
+         =E2=94=82            movslq %r15d,%rsi
+         =E2=94=82            mov    0x68(%rax),%rax
+         =E2=94=82            testb  $0x10,0x1(%rax,%rsi,2)
+7.89 =E2=94=82         =E2=86=91 je     be6
+2.63 =E2=94=8213a9:   mov    %r9,%rbx
 
-Reviewed-by: Yann Droneaud <ydroneaud@opteya.com>
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
 
-Regards.
+And If I set 'true' to it, the output is as below
 
---=20
-Yann Droneaud
-OPTEYA
+         =E2=94=82    1 1382:   movb   $0x1,-0x270(%rbp)
+         =E2=94=82                 =E2=86=91 jmpq   1223
+         =E2=94=82                   xchg   %ax,%ax
+3.51 =E2=94=82    1 1390:   mov    -0x210(%rbp),%rax
+         =E2=94=82                   movslq %r15d,%rsi
+         =E2=94=82                   mov    0x68(%rax),%rax
+         =E2=94=82                   testb  $0x10,0x1(%rax,%rsi,2)
+7.89 =E2=94=82                 =E2=86=91 je     be6
+2.63 =E2=94=82    1 13a9:   mov    %r9,%rbx
+
+What does mean the number '1' in front of address such as  " 1 13a9: " =
+?
+
+
+Thanks,
+Taeung
