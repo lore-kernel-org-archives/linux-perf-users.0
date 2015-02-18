@@ -1,39 +1,103 @@
-From: TaeWoong Song <treeze.taeung@gmail.com>
-Subject: perf config : Have not effect pager.cmd  ?
-Date: Wed, 18 Feb 2015 19:32:46 +0900
-Message-ID: <C83B54E2-ECD1-45F9-B5BC-4DB934F8062A@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Weird instruction profiling
+Date: Wed, 18 Feb 2015 10:30:40 -0800
+Message-ID: <87zj8bvzqn.fsf@tassilo.jf.intel.com>
+References: <CAE40pddnqg-H-YqvyHodw1ME6W9_7et151+=O9y=S7sHB0an7w@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pd0-f169.google.com ([209.85.192.169]:35367 "EHLO
-	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751934AbbBRKcr convert rfc822-to-8bit (ORCPT
+Received: from mga03.intel.com ([134.134.136.65]:33421 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755080AbbBRSam convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 18 Feb 2015 05:32:47 -0500
-Received: by pdbfl12 with SMTP id fl12so287555pdb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Feb 2015 02:32:47 -0800 (PST)
-Received: from [192.168.0.2] ([220.86.35.214])
-        by mx.google.com with ESMTPSA id ck11sm20510934pac.5.2015.02.18.02.32.43
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-        Wed, 18 Feb 2015 02:32:46 -0800 (PST)
+	Wed, 18 Feb 2015 13:30:42 -0500
+In-Reply-To: <CAE40pddnqg-H-YqvyHodw1ME6W9_7et151+=O9y=S7sHB0an7w@mail.gmail.com>
+	(Brendan Gregg's message of "Wed, 18 Feb 2015 01:57:50 -0800")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Hi, list=20
+Brendan Gregg <brendan.d.gregg@gmail.com> writes:
+>
+> Despite millions of samples, many NOPs are never seen. (See the
+> Percent column.) I'm not using PEBS, but I suppose I should.
 
-Haven=E2=80=99t effect pager.cmd ?=20
+Yes you should. You get better results with :p / :pp (PEBS)
+and the best results (but not at the cycles level) with
+INST_RETIRED.PREC_DIST / ALL
 
-I expected all output of command =E2=80=98perf annotate =E2=80=94stdio=E2=
-=80=99 was printed when I set pager.cmd =E2=80=99false=E2=80=99.
-But whether  pager.cmd is =E2=80=99true=E2=80=99 or not =E2=80=98perf a=
-nnotate =E2=80=94stdio=E2=80=99 works with pager or less.  =20
+cycles:upp
 
-If not, was it misused ?=20
-Is for other command pager.cmd ?=20
+       =E2=94=82    0000000000400400 <main>:
+  0.05 =E2=94=82 0:   nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+ 19.78 =E2=94=82      nop
+  0.17 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+ 20.16 =E2=94=82      nop
+  0.12 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+ 20.49 =E2=94=82      nop
+  0.07 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+ 18.88 =E2=94=82      nop
+ 20.30 =E2=94=82    =E2=86=91 jmp    0
 
 
-Thanks,
-Taeung
+cpu/event=3D0xc0,umask=3D0x1,name=3Dinst_retired_prec_dist/pp
+
+       =E2=94=82    0000000000400400 <main>:
+  6.13 =E2=94=82 0:   nop
+       =E2=94=82      nop
+  0.02 =E2=94=82      nop
+  0.02 =E2=94=82      nop
+ 23.69 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+  0.02 =E2=94=82      nop
+ 24.05 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+  0.02 =E2=94=82      nop
+ 23.60 =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+       =E2=94=82      nop
+ 22.46 =E2=94=82    =E2=86=91 jmp    0
+
+
+This is nearly as good as you can get here because the machine can
+retire four nops per cycle
+
+A common trick is to run PREC_DIST/ALL in parallel with other events
+and correlate.
+
+> I think Andi mentioned this to me last year -- that instruction
+> profiling was no longer reliable.=20
+
+It never was.
+
+> Is this due to parallel and out-of-order execution? (ie, we're
+> sampling the instruction pointer, but that's set to the resumption
+> instruction, not the instructions being processed in the backend?).
+
+Most problems are due to 'skid': It takes some time to trigger the
+profiling interrupt after the event fired. Without PEBS the skid is
+quite high. With PEBS it's a lot better because it writes out=20
+the information into the PEBS buffer faster, but also not zero and can
+still be noticed. With PREC_DIST/ALL it does some additional tricks
+to further reduce it.
+
+There are also other problems, for example an event may not be tied
+to an instruction. Some events have inherently large skid.
+
+-Andi
+
+--=20
+ak@linux.intel.com -- Speaking for myself only
