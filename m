@@ -1,124 +1,84 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Bizarre results from perf event API
-Date: Mon, 23 Feb 2015 18:21:35 -0700
-Message-ID: <54EBD21F.3030101@gmail.com>
-References: <CAAk6P0UvfKGhaFJKKdRkVcZbx+XNoJLGgKtw3f-hVuNfGSjNDQ@mail.gmail.com>	<54E7D3B3.7020108@gmail.com> <CAAk6P0X5N3pvEjaEy-v6mHy7+fg3pdLyeRYR2VGm2wuqPYeOZw@mail.gmail.com>
+From: taeung <treeze.taeung@gmail.com>
+Subject: compile error : about declaration of =?UTF-8?B?4oCYcHRocmVhZF9hdA==?=
+ =?UTF-8?B?dHJfc2V0YWZmaW5pdHlfbnDigJk=?=
+Date: Tue, 24 Feb 2015 18:02:51 +0900
+Message-ID: <54EC3E3B.2040702@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ig0-f179.google.com ([209.85.213.179]:47071 "EHLO
-	mail-ig0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751712AbbBXBVg (ORCPT
+Received: from mail-pa0-f51.google.com ([209.85.220.51]:42046 "EHLO
+	mail-pa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751314AbbBXJC7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 23 Feb 2015 20:21:36 -0500
-Received: by mail-ig0-f179.google.com with SMTP id l13so23219460iga.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Feb 2015 17:21:36 -0800 (PST)
-In-Reply-To: <CAAk6P0X5N3pvEjaEy-v6mHy7+fg3pdLyeRYR2VGm2wuqPYeOZw@mail.gmail.com>
+	Tue, 24 Feb 2015 04:02:59 -0500
+Received: by padhz1 with SMTP id hz1so34541633pad.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Feb 2015 01:02:59 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Benjamin Moody <benjamin.moody@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
 
-On 2/21/15 2:44 PM, Benjamin Moody wrote:
-> Hi,
->
->> Trying using a program with established results. e.g., This is from
->> PeterZ years ago. On intel 'perf stat -e instructions a.out' should show
->> ~1 billion (a wee bit more, but clearly in the 1b range).
->
-> That program itself gave the expected results, but it's a good
-> suggestion.  When I tried changing that program to also fork a bunch
-> of child processes, I started getting similarly weird results to what
-> I had seen before.
+Hi, Namhyung
 
-This is with the 1billion instructions sent earlier:
+After I pulled new changed source codes from 'perf/core' branch=20
+(https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git)
+,when I compiled perf I've had a problem with error messages as below.
 
-$ ./myperfstat ./1bi
-Total instructions: 1000087491
+(I'm using as below
+system : Ubuntu 14.04.2 LTS 64-bit
+kernel version : 3.13.0-40-generic)
 
-$ perf stat -e instructions:u ./1bi
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+taeung ~/git/tip/tools/perf
+  :> make -j4
 
-  Performance counter stats for './1bi':
+=2E..(omitted)
 
-      1,000,087,608      instructions:u
+In file included from bench/futex-hash.c:17:0:
+bench/futex.h:73:19: error: conflicting types for=20
+=E2=80=98pthread_attr_setaffinity_np=E2=80=99
+  static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr,
+                    ^
+In file included from bench/futex.h:72:0,
+                  from bench/futex-hash.c:17:
+/usr/include/pthread.h:407:12: note: previous declaration of=20
+=E2=80=98pthread_attr_setaffinity_np=E2=80=99 was here
+  extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
+             ^
+make[3]: *** [bench/futex-hash.o] Error 1
+make[2]: *** [bench] Error 2
+make[2]: *** Waiting for unfinished jobs....
 
-        0.285943713 seconds time elapsed
+=2E..(omitted)
 
-Using the second version of this program:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+But I modified 'tools/perf/config/feature-checks/Makefile' as Jirka sai=
+d=20
+(https://lkml.org/lkml/2015/1/12/216)
+so I was able to compile perf.
 
-main ()
-{
-         int i;
 
-         fork();
-         fork();
+diff --git a/tools/perf/config/feature-checks/Makefile=20
+b/tools/perf/config/feature-checks/Makefile
+index b32ff33..42ac05a 100644
+--- a/tools/perf/config/feature-checks/Makefile
++++ b/tools/perf/config/feature-checks/Makefile
+@@ -49,7 +49,7 @@ test-hello.bin:
+         $(BUILD)
 
-         for (i = 0; i < 100000000; i++) {
-                 asm("nop");
-                 asm("nop");
-                 asm("nop");
-                 asm("nop");
-                 asm("nop");
-                 asm("nop");
-                 asm("nop");
-         }
-         wait(NULL);
-         wait(NULL);
-         wait(NULL);
-         wait(NULL);
-}
+  test-pthread-attr-setaffinity-np.bin:
+-       $(BUILD) -D_GNU_SOURCE -Werror -lpthread
++       $(BUILD) -Werror -lpthread
 
-This one spawn child processes so you have
-     perf -> child -> gchild -> ggchild
-                |---> gchild
+  test-stackprotector-all.bin:
+         $(BUILD) -Werror -fstack-protector-all
 
-So it has the grandparent characteristics you are getting at.
 
-$ ./myperfstat ./1bi4
-Total instructions: 4000094342
+Is this patch right ?
 
-$ perf stat -e instructions:u ./1bi4
 
-  Performance counter stats for './1bi4':
-
-      4,000,094,649      instructions:u
-
-        0.259537842 seconds time elapsed
-
-Still seems to match up.
-
-This is on:
-$ uname -r
-3.18.7-200.fc21.x86_64
-
->
-> Looking more closely at the behavior of perf, I think the essential
-> difference is that perf uses the *child* PID as argument to
-> perf_event_open.  When I tried changing my program to do the same, it
-> seems to have fixed the problem.  That is to say, where I used
-> something like
-
-And I did not modify the mystat.c program to do this:
-
->
->     fd = perf_event_open(..., getpid(), ...);
->     child = fork();
->     if (child == 0) {
->         execvp(...);
->     }
->
-> I needed to instead use
->
->     pipe(pipefd);
->     child = fork();
->     if (child == 0) {
->         read(pipefd[0], &x, 1);
->         execvp(...);
->     }
->     fd = perf_event_open(..., child, ...);
->     write(pipefd[1], &x, 1);
+Thanks,
+Taeung
