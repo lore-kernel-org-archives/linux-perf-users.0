@@ -1,106 +1,56 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: compile error : about =?utf-8?Q?declar?=
- =?utf-8?B?YXRpb24gb2Yg4oCYcHRocmVhZF9hdHRyX3NldGFmZmluaXR5X25w4oCZ?=
-Date: Sat, 28 Feb 2015 12:04:55 +0900
-Message-ID: <20150228030454.GC15964@danjae>
-References: <54EC3E3B.2040702@gmail.com>
-Mime-Version: 1.0
+From: TaeWoong Song <treeze.taeung@gmail.com>
+Subject: What do mean children of top ?
+Date: Tue, 3 Mar 2015 02:04:47 +0900
+Message-ID: <FC0BA225-3078-48F1-AC1D-67D6F84D6416@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f45.google.com ([209.85.220.45]:42574 "EHLO
-	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750752AbbB1DFb (ORCPT
+Received: from mail-pd0-f170.google.com ([209.85.192.170]:36557 "EHLO
+	mail-pd0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754224AbbCBREy convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 Feb 2015 22:05:31 -0500
-Received: by pablj1 with SMTP id lj1so24947098pab.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Feb 2015 19:05:30 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <54EC3E3B.2040702@gmail.com>
+	Mon, 2 Mar 2015 12:04:54 -0500
+Received: by pdbnh10 with SMTP id nh10so17354208pdb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Mar 2015 09:04:53 -0800 (PST)
+Received: from [211.201.152.53] ([211.201.152.53])
+        by mx.google.com with ESMTPSA id ym10sm11412998pac.10.2015.03.02.09.04.51
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Mon, 02 Mar 2015 09:04:52 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: taeung <treeze.taeung@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, jolsa@kernel.org
+To: linux-perf-users@vger.kernel.org
 
-(Adding Arnaldo and Jiri to CC.)
+Hi, perf users
 
-On Tue, Feb 24, 2015 at 06:02:51PM +0900, taeung wrote:
-> Hi, Namhyung
+About=20
+The function perf_top_config() on builtin-top.c:
+It depend on whether top.children is =E2=80=99true=E2=80=99 in perfconf=
+ig=20
+that whether =E2=80=98symbol_conf.cumulate_callchain=E2=80=99 is =E2=80=
+=99true=E2=80=99 or not.
+(when =E2=80=98top' only work with =E2=80=98=E2=80=94call-graph' )
 
-Hi Taeung,
+The output of =E2=80=99top =E2=80=94call-graph fp=E2=80=99 is changed d=
+epending on  a boolean value of =E2=80=98symbol_conf.cumulate_callchain=
+=E2=80=99.
 
->=20
-> After I pulled new changed source codes from 'perf/core' branch
-> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git)
-> ,when I compiled perf I've had a problem with error messages as below=
-=2E
->=20
-> (I'm using as below
-> system : Ubuntu 14.04.2 LTS 64-bit
-> kernel version : 3.13.0-40-generic)
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> taeung ~/git/tip/tools/perf
->  :> make -j4
->=20
-> ...(omitted)
->=20
-> In file included from bench/futex-hash.c:17:0:
-> bench/futex.h:73:19: error: conflicting types for
-> =E2=80=98pthread_attr_setaffinity_np=E2=80=99
->  static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr,
->                    ^
-> In file included from bench/futex.h:72:0,
->                  from bench/futex-hash.c:17:
-> /usr/include/pthread.h:407:12: note: previous declaration of
-> =E2=80=98pthread_attr_setaffinity_np=E2=80=99 was here
->  extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
->             ^
+Do mean children of top relationship of calling functions which are par=
+ents or children ?=20
+Linked-ring of invoking functions ? =20
 
-This means it failed to find pthread_attr_setaffinity_np() on the
-feature test (so HAVE_PTHREAD_ATTR_SETAFFINITY_NP is not defined) but
-it's actually available on your system.
+I wanna exactly explain the effect of =E2=80=98top.children=E2=80=99 in=
+ perfconfig.
+Can anybody tell me the different between true and false on top.childre=
+n ?
 
+If anybody a bit give hints me, I=E2=80=99ll appreciate it.=20
 
-> make[3]: *** [bench/futex-hash.o] Error 1
-> make[2]: *** [bench] Error 2
-> make[2]: *** Waiting for unfinished jobs....
->=20
-> ...(omitted)
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> But I modified 'tools/perf/config/feature-checks/Makefile' as Jirka s=
-aid
-> (https://lkml.org/lkml/2015/1/12/216)
-> so I was able to compile perf.
-
-No Jiri's advice was to add -lpthread, not remove _GNU_SOURCE define.
-I guess adding -pthread instead of -lpthread might help..
-
-
->=20
->=20
-> diff --git a/tools/perf/config/feature-checks/Makefile
-> b/tools/perf/config/feature-checks/Makefile
-> index b32ff33..42ac05a 100644
-> --- a/tools/perf/config/feature-checks/Makefile
-> +++ b/tools/perf/config/feature-checks/Makefile
-> @@ -49,7 +49,7 @@ test-hello.bin:
->         $(BUILD)
->=20
->  test-pthread-attr-setaffinity-np.bin:
-> -       $(BUILD) -D_GNU_SOURCE -Werror -lpthread
-> +       $(BUILD) -Werror -lpthread
->=20
->  test-stackprotector-all.bin:
->         $(BUILD) -Werror -fstack-protector-all
->=20
->=20
-> Is this patch right ?
-
-I don't think so.  You'd better to find out the reason of the failure
-in the feature test.
 
 Thanks,
-Namhyung
+Taeung--
+To unsubscribe from this list: send the line "unsubscribe linux-perf-us=
+ers" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
