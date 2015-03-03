@@ -1,99 +1,132 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: address output in 'perf script' does not work for addr2line
-Date: Tue, 3 Mar 2015 18:07:48 -0300
-Message-ID: <20150303210748.GO5187@kernel.org>
-References: <CAJh9x3pz1aLQP_vvfN_Y_BwF4ekcU1mqvZFJz7x7X6QqLkK1jg@mail.gmail.com>
- <20150303162322.GK5187@kernel.org>
- <CAJh9x3rwvAdjXJ67wvNjWjy451zWy1a_7JjDKQacJkwWWL031A@mail.gmail.com>
- <54F61172.4050002@gmail.com>
- <20150303205026.GN5187@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: What do mean children of top ?
+Date: Wed, 4 Mar 2015 08:46:29 +0900
+Message-ID: <20150303234629.GE27046@danjae>
+References: <FC0BA225-3078-48F1-AC1D-67D6F84D6416@gmail.com>
+ <20150303162348.GL5187@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:56875 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754821AbbCCVHx (ORCPT
+Received: from mail-pa0-f48.google.com ([209.85.220.48]:41943 "EHLO
+	mail-pa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756006AbbCCXrJ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Mar 2015 16:07:53 -0500
+	Tue, 3 Mar 2015 18:47:09 -0500
+Received: by pablj1 with SMTP id lj1so22066062pab.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2015 15:47:09 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <20150303205026.GN5187@kernel.org>
+In-Reply-To: <20150303162348.GL5187@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: Yuanfang Chen <cyfmxc@gmail.com>, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: TaeWoong Song <treeze.taeung@gmail.com>, linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 03, 2015 at 05:50:26PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Mar 03, 2015 at 12:54:26PM -0700, David Ahern escreveu:
-> > On 3/3/15 12:27 PM, Yuanfang Chen wrote:
-> > >On Tue, Mar 3, 2015 at 11:23 AM, Arnaldo Carvalho de Melo wrote:
-> > >>Em Tue, Mar 03, 2015 at 11:07:18AM -0500, Yuanfang Chen escreveu:
-> > >>>Recently after updating perf package, I found the 'ip' in 'perf
-> > >>>script' like below is shorter than before. Also feeding that address
-> > >>>(like 57e below) to addr2line does not output filename:lineno
-> > >>>information anymore.  How do I fix this issue? Is this a bug?
-> 
-> > >>Yeah, I tried using it with addr2line and it didn't work :-\ So what
-> > >>you're saying is that in the past it worked like that?
-> 
-> > >>If so, could you please 'git bisect' it to find out when it got broken?
-> 
-> > >Yeah, it worked in the past.
-> > >commit 5550171b2a9f8df26ff483051d060db06376b26d  change ip into
-> > >relative address ( not sure relative to which address), which makes
-> > >addr2line unable to parse.
-> 
-> > That's Andi's commit.
-> 
-> Oh well, that, IIRC, was done to make the srcline sort key to work, but
-> broke the perf script output, so perhaps its time to change the perf
-> script output to use that code and show srcline:lineno, will see.
+Hi Arnaldo and Taewoong,
 
-So 'perf script' allows one to ask for a srcline as one of its fields,
-it is in the man page, not in the OPTION help, and it is broken,
-possibly by Andi's commit as well, unsure:
+On Tue, Mar 03, 2015 at 01:23:48PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> Em Tue, Mar 03, 2015 at 02:04:47AM +0900, TaeWoong Song escreveu:
+> > Hi, perf users
+> >=20
+> > About=20
+> > The function perf_top_config() on builtin-top.c:
+> > It depend on whether top.children is =E2=80=99true=E2=80=99 in perf=
+config=20
+> > that whether =E2=80=98symbol_conf.cumulate_callchain=E2=80=99 is =E2=
+=80=99true=E2=80=99 or not.
+> > (when =E2=80=98top' only work with =E2=80=98=E2=80=94call-graph' )
+> >=20
+> > The output of =E2=80=99top =E2=80=94call-graph fp=E2=80=99 is chang=
+ed depending on  a boolean value of =E2=80=98symbol_conf.cumulate_callc=
+hain=E2=80=99.
+> >=20
+> > Do mean children of top relationship of calling functions which are=
+ parents or children ?=20
+> > Linked-ring of invoking functions ? =20
+> >=20
+> > I wanna exactly explain the effect of =E2=80=98top.children=E2=80=99=
+ in perfconfig.
+> > Can anybody tell me the different between true and false on top.chi=
+ldren ?
+> >=20
+> > If anybody a bit give hints me, I=E2=80=99ll appreciate it.=20
 
+The effect of top.children is same as report.children but just for perf=
+ top.
 
-[acme@zoo linux]$ perf script -f comm,tid,time,ip,sym,srcline
-          :29199 29199 59715.176367:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+The children here means that functions called from another function.
+Let me give you an example:
 
-  [kernel.vmlinux][ffffffff8109fe42]
-          :29199 29199 59715.176368:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+  void foo(void) {
+    /* do something */
+  }
 
-  [kernel.vmlinux][ffffffff8109fe42]
-          :29199 29199 59715.176368:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+  void bar(void) {
+    /* do something */
+    foo();
+  }
 
-  [kernel.vmlinux][ffffffff8109fe42]
-          :29199 29199 59715.176369:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+  int main(void) {
+    bar()
+    return 0;
+  }
 
-  [kernel.vmlinux][ffffffff8109fe42]
-          usleep 29200 59715.176897:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+In this case 'foo' is a child of 'bar', and 'bar' is an immediate
+child of 'main' so 'foo' also is a child of 'main'.  In other words,
+'main' is a parent of 'foo' and 'bar'. and 'bar' is a parent of 'foo'.
+When you record with callchain you'll see something like this:
 
-  [kernel.vmlinux][ffffffff8109fe42]
-         swapper     0 59715.177306:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+ Overhead  Symbol
+ ........  .....................
+   60.00%  foo
+           |
+           --- foo
+               bar
+               main
+               __libc_start_main
 
-  [kernel.vmlinux][ffffffff8109fe42]
-         swapper     0 59715.177307:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+   40.00%  bar
+           |
+           --- bar
+               main
+               __libc_start_main
 
-  [kernel.vmlinux][ffffffff8109fe42]
-         swapper     0 59715.177308:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+These percentage are 'self' overhead that came from the samples of the
+function themselves.  If you use --children, the overhead of children
+will be add to all of parents to calculate 'children' overhead.  In
+this case we'll see somethink like below:
 
-  [kernel.vmlinux][ffffffff8109fe42]
-         swapper     0 59715.177308:  ffffffff8109fe42 ttwu_do_wakeupaddr2line_init failed for /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
+ Children      Self  Symbol
+ ........  ........  ....................
+  100.00%     0.00%  __libc_start_main
+           |
+           --- __libc_start_main
 
-  [kernel.vmlinux][ffffffff8109fe42]
-[acme@zoo linux]$ 
+  100.00%     0.00%  main
+           |
+           --- main
+               __libc_start_main
 
-[acme@zoo linux]$ readlink -f /home/acme/.debug/.build-id/9c/657619efb47cd8eb1a825865ba3a26cf709e98
-/home/acme/.debug/home/git/build/v3.19-rc6+/vmlinux/9c657619efb47cd8eb1a825865ba3a26cf709e98
-[acme@zoo linux]$ file /home/acme/.debug/home/git/build/v3.19-rc6+/vmlinux/9c657619efb47cd8eb1a825865ba3a26cf709e98 
-/home/acme/.debug/home/git/build/v3.19-rc6+/vmlinux/9c657619efb47cd8eb1a825865ba3a26cf709e98: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=9c657619efb47cd8eb1a825865ba3a26cf709e98, not stripped
+  100.00%    40.00%  bar
+           |
+           --- bar
+               main
+               __libc_start_main
 
+   60.00%    60.00%  foo
+           |
+           --- foo
+               bar
+               main
+               __libc_start_main
 
-It works if using addr2line directly:
+The first percentage is the children overhead and second is the self
+overhead.  As you can see, the children overhead is a sum of the self
+overhead and all (self) overhead of children.  It gives you an higher
+level view which function (including children) consumes cpu cycles (or
+other event) more.  And with '--call-graph caller', you'll see which
+children are called from this function.
 
-[acme@zoo linux]$ addr2line -f -e /home/acme/.debug/home/git/build/v3.19-rc6+/vmlinux/9c657619efb47cd8eb1a825865ba3a26cf709e98 ffffffff8109fe42
-trace_sched_wakeup
-/home/git/linux/include/trace/events/sched.h:83
-[acme@zoo linux]$ 
-
-- Arnaldo
+Thanks,
+Namhyung
