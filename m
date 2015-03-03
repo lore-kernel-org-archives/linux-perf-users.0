@@ -1,50 +1,64 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: What do mean children of top ?
-Date: Tue, 3 Mar 2015 13:23:48 -0300
-Message-ID: <20150303162348.GL5187@kernel.org>
-References: <FC0BA225-3078-48F1-AC1D-67D6F84D6416@gmail.com>
+From: Yuanfang Chen <cyfmxc@gmail.com>
+Subject: Re: address output in 'perf script' does not work for addr2line
+Date: Tue, 3 Mar 2015 14:27:46 -0500
+Message-ID: <CAJh9x3rwvAdjXJ67wvNjWjy451zWy1a_7JjDKQacJkwWWL031A@mail.gmail.com>
+References: <CAJh9x3pz1aLQP_vvfN_Y_BwF4ekcU1mqvZFJz7x7X6QqLkK1jg@mail.gmail.com>
+	<20150303162322.GK5187@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:58358 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751655AbbCCQXv (ORCPT
+Received: from mail-wg0-f48.google.com ([74.125.82.48]:42472 "EHLO
+	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756040AbbCCT1r (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Mar 2015 11:23:51 -0500
-Content-Disposition: inline
-In-Reply-To: <FC0BA225-3078-48F1-AC1D-67D6F84D6416@gmail.com>
+	Tue, 3 Mar 2015 14:27:47 -0500
+Received: by wggz12 with SMTP id z12so4956211wgg.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Mar 2015 11:27:46 -0800 (PST)
+In-Reply-To: <20150303162322.GK5187@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: TaeWoong Song <treeze.taeung@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, David Ahern <dsahern@gmail.com>
 
-Em Tue, Mar 03, 2015 at 02:04:47AM +0900, TaeWoong Song escreveu:
-> Hi, perf users
->=20
-> About=20
-> The function perf_top_config() on builtin-top.c:
-> It depend on whether top.children is =E2=80=99true=E2=80=99 in perfco=
-nfig=20
-> that whether =E2=80=98symbol_conf.cumulate_callchain=E2=80=99 is =E2=80=
-=99true=E2=80=99 or not.
-> (when =E2=80=98top' only work with =E2=80=98=E2=80=94call-graph' )
->=20
-> The output of =E2=80=99top =E2=80=94call-graph fp=E2=80=99 is changed=
- depending on  a boolean value of =E2=80=98symbol_conf.cumulate_callcha=
-in=E2=80=99.
->=20
-> Do mean children of top relationship of calling functions which are p=
-arents or children ?=20
-> Linked-ring of invoking functions ? =20
->=20
-> I wanna exactly explain the effect of =E2=80=98top.children=E2=80=99 =
-in perfconfig.
-> Can anybody tell me the different between true and false on top.child=
-ren ?
->=20
-> If anybody a bit give hints me, I=E2=80=99ll appreciate it.=20
+On Tue, Mar 3, 2015 at 11:23 AM, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+> Em Tue, Mar 03, 2015 at 11:07:18AM -0500, Yuanfang Chen escreveu:
+>> I'm using perf 3.19.0 on Archlinux
+>>
+>> [arch@t440s-arch ~/Trash]$ uname -a
+>> Linux t440s-arch 3.18.6-1-ARCH #1 SMP PREEMPT Sat Feb 7 08:44:05 CET
+>> 2015 x86_64 GNU/Linux
+>>
+>> Recently after updating perf package, I found the 'ip' in 'perf
+>> script' like below is shorter than before. Also feeding that address
+>> (like 57e below) to addr2line does not output filename:lineno
+>> information anymore.  How do I fix this issue? Is this a bug?
+>
+> Yeah, I tried using it with addr2line and it didn't work :-\ So what
+> you're saying is that in the past it worked like that?
+>
+> If so, could you please 'git bisect' it to find out when it got broken?
 
-Namhyung?
+Yeah, it worked in the past.
+commit 5550171b2a9f8df26ff483051d060db06376b26d  change ip into
+relative address ( not sure relative to which address), which makes
+addr2line unable to parse.
 
-- Arnaldo
+> I would argue that it would be even better if it resolved to file:lineno
+> by default...
+
+Totally agree.
+
+> - Arnaldo
+>
+>> a.out 26620 [000] 314643.350007:    6825289 cycles:
+>>                      57e main (/home/arch/Trash/a.out)
+>>                    20800 __libc_start_main (/usr/lib/libc-2.21.so)
+>>         13d6258d4c544155 [unknown] ([unknown])
+>>
+>> thank you,
+>> Yuanfang
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
