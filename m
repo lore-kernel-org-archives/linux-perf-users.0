@@ -1,47 +1,41 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: address output in 'perf script' does not work for addr2line
-Date: Fri, 6 Mar 2015 15:19:11 -0800
-Message-ID: <20150306231911.GF31334@tassilo.jf.intel.com>
-References: <CAJh9x3pz1aLQP_vvfN_Y_BwF4ekcU1mqvZFJz7x7X6QqLkK1jg@mail.gmail.com>
- <20150303162322.GK5187@kernel.org>
- <CAJh9x3rwvAdjXJ67wvNjWjy451zWy1a_7JjDKQacJkwWWL031A@mail.gmail.com>
- <54F61172.4050002@gmail.com>
- <20150303205026.GN5187@kernel.org>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: event power/energy-dram/
+Date: Sat, 7 Mar 2015 00:50:36 -0500 (EST)
+Message-ID: <alpine.DEB.2.11.1503070049130.27106@vincent-weaver-1.umelst.maine.edu>
+References: <CAJ38vxvP3wJ8tBKoithLa6T7CztVrjiWuRYVDO8s1s5vMD8++w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-220717116-1425707443=:27106"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:63873 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755315AbbCFXTM (ORCPT
+Received: from mail-qg0-f41.google.com ([209.85.192.41]:36819 "EHLO
+	mail-qg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751438AbbCGFqy (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 6 Mar 2015 18:19:12 -0500
-Content-Disposition: inline
-In-Reply-To: <20150303205026.GN5187@kernel.org>
+	Sat, 7 Mar 2015 00:46:54 -0500
+Received: by qgdz107 with SMTP id z107so17696989qgd.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2015 21:46:53 -0800 (PST)
+In-Reply-To: <CAJ38vxvP3wJ8tBKoithLa6T7CztVrjiWuRYVDO8s1s5vMD8++w@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: David Ahern <dsahern@gmail.com>, Yuanfang Chen <cyfmxc@gmail.com>, linux-perf-users@vger.kernel.org
+To: =?ISO-8859-15?Q?Jos=E9_Sim=E3o?= <jose.m.simao@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-> > >Yeah, it worked in the past.
-> > >commit 5550171b2a9f8df26ff483051d060db06376b26d  change ip into
-> > >relative address ( not sure relative to which address), which makes
-> > >addr2line unable to parse.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-220717116-1425707443=:27106
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 6 Mar 2015, José Simão wrote:
+
+> The documentation on this counters says "servers only"
+> (http://lwn.net/Articles/573602/).
 > 
-> > That's Andi's commit.
-> 
-> Oh well, that, IIRC, was done to make the srcline sort key to work, but
-> broke the perf script output, so perhaps its time to change the perf
-> script output to use that code and show srcline:lineno, will see.
+> Can anyone tell me how if I can read this counter on my system and how?
 
-Yes fixing perf script is best. Then the addr2line hacks are not needed
-anymore. addr2line was never fully complete, as it couldn't handle
-shared libraries.
+the documentation is correct, normal sandybridge chips (non-EP) do not 
+support dram measuring, and even some of the EP models do not support it 
+if the motherboard or BIOS does not properly support it.
 
-However we should make it a new key to not break anything existing.
-
-I'll take a look.
-
--Andi
-
--- 
-ak@linux.intel.com -- Speaking for myself only
+Vince
+--8323328-220717116-1425707443=:27106--
