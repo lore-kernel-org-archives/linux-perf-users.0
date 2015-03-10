@@ -1,41 +1,118 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: event power/energy-dram/
-Date: Sat, 7 Mar 2015 00:50:36 -0500 (EST)
-Message-ID: <alpine.DEB.2.11.1503070049130.27106@vincent-weaver-1.umelst.maine.edu>
-References: <CAJ38vxvP3wJ8tBKoithLa6T7CztVrjiWuRYVDO8s1s5vMD8++w@mail.gmail.com>
+From: Nan Xiao <xiaonan830818@gmail.com>
+Subject: Why "perf stat" output more memory load/store counts?
+Date: Tue, 10 Mar 2015 17:46:45 +0800
+Message-ID: <CA+MhoaMshSNRS1RD0Dq6dXY_XZtEnryfRq6Hvm+Ntf_Gs67h=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-220717116-1425707443=:27106"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f41.google.com ([209.85.192.41]:36819 "EHLO
-	mail-qg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751438AbbCGFqy (ORCPT
+Received: from mail-wi0-f177.google.com ([209.85.212.177]:35948 "EHLO
+	mail-wi0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751858AbbCJJqq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 7 Mar 2015 00:46:54 -0500
-Received: by qgdz107 with SMTP id z107so17696989qgd.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Mar 2015 21:46:53 -0800 (PST)
-In-Reply-To: <CAJ38vxvP3wJ8tBKoithLa6T7CztVrjiWuRYVDO8s1s5vMD8++w@mail.gmail.com>
+	Tue, 10 Mar 2015 05:46:46 -0400
+Received: by wiwh11 with SMTP id h11so18198346wiw.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Mar 2015 02:46:45 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?ISO-8859-15?Q?Jos=E9_Sim=E3o?= <jose.m.simao@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi all,
 
---8323328-220717116-1425707443=:27106
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Greetings from me!
 
-On Fri, 6 Mar 2015, José Simão wrote:
+I want to use "perf stat" command to do a statistic of
+"MEM_UOP_RETIRED.ALL_LOADS" and "MEM_UOP_RETIRED.ALL_STORES" of the
+program:
 
-> The documentation on this counters says "servers only"
-> (http://lwn.net/Articles/573602/).
-> 
-> Can anyone tell me how if I can read this counter on my system and how?
+#include <stdio.h>
 
-the documentation is correct, normal sandybridge chips (non-EP) do not 
-support dram measuring, and even some of the EP models do not support it 
-if the motherboard or BIOS does not properly support it.
+#define MAX_ARRAY_SIZE  (10000000)
 
-Vince
---8323328-220717116-1425707443=:27106--
+double a[MAX_ARRAY_SIZE];
+double b[MAX_ARRAY_SIZE];
+double c[MAX_ARRAY_SIZE];
+int main(void)
+{
+
+    ssize_t i = 0;
+
+    for (i = 0; i < MAX_ARRAY_SIZE; i++)
+    {
+       c[i] = a[i] + b[i];
+    }
+   return 0;
+}
+
+The disassemble code of the program (no Optimization):
+
+Dump of assembler code for function main:
+  0x00000000004004f0 <+0>:     push   %rbp
+  0x00000000004004f1 <+1>:     mov    %rsp,%rbp
+  0x00000000004004f4 <+4>:     movq   $0x0,-0x8(%rbp)
+  0x00000000004004fc <+12>:    movq   $0x0,-0x8(%rbp)
+  0x0000000000400504 <+20>:    jmp    0x400536 <main+70>
+  0x0000000000400506 <+22>:    mov    -0x8(%rbp),%rax
+  0x000000000040050a <+26>:    movsd  0x9e97860(,%rax,8),%xmm1
+  0x0000000000400513 <+35>:    mov    -0x8(%rbp),%rax
+  0x0000000000400517 <+39>:    movsd  0x601060(,%rax,8),%xmm0
+  0x0000000000400520 <+48>:    addsd  %xmm1,%xmm0
+  0x0000000000400524 <+52>:    mov    -0x8(%rbp),%rax
+  0x0000000000400528 <+56>:    movsd  %xmm0,0x524c460(,%rax,8)
+  0x0000000000400531 <+65>:    addq   $0x1,-0x8(%rbp)
+  0x0000000000400536 <+70>:    cmpq   $0x98967f,-0x8(%rbp)
+  0x000000000040053e <+78>:    jle    0x400506 <main+22>
+  0x0000000000400540 <+80>:    mov    $0x0,%eax
+  0x0000000000400545 <+85>:    pop    %rbp
+  0x0000000000400546 <+86>:    retq
+End of assembler dump.
+
+The loop statement code is:
+  0x0000000000400506 <+22>:    mov    -0x8(%rbp),%rax
+  0x000000000040050a <+26>:    movsd  0x9e97860(,%rax,8),%xmm1
+  0x0000000000400513 <+35>:    mov    -0x8(%rbp),%rax
+  0x0000000000400517 <+39>:    movsd  0x601060(,%rax,8),%xmm0
+  0x0000000000400520 <+48>:    addsd  %xmm1,%xmm0
+  0x0000000000400524 <+52>:    mov    -0x8(%rbp),%rax
+  0x0000000000400528 <+56>:    movsd  %xmm0,0x524c460(,%rax,8)
+  0x0000000000400531 <+65>:    addq   $0x1,-0x8(%rbp)
+  0x0000000000400536 <+70>:    cmpq   $0x98967f,-0x8(%rbp)
+
+The number of load operations is 7:
+  0x0000000000400506 <+22>:    mov    -0x8(%rbp),%rax
+  0x000000000040050a <+26>:    movsd  0x9e97860(,%rax,8),%xmm1
+  0x0000000000400513 <+35>:    mov    -0x8(%rbp),%rax
+  0x0000000000400517 <+39>:    movsd  0x601060(,%rax,8),%xmm0
+  0x0000000000400524 <+52>:    mov    -0x8(%rbp),%rax
+  0x0000000000400531 <+65>:    addq   $0x1,-0x8(%rbp)
+  0x0000000000400536 <+70>:    cmpq   $0x98967f,-0x8(%rbp)
+
+The number of store operations is 2:
+  0x0000000000400528 <+56>:    movsd  %xmm0,0x524c460(,%rax,8)
+  0x0000000000400531 <+65>:    addq   $0x1,-0x8(%rbp)
+
+So the number of total load operations is about 70,000,000, and the
+number of total store operations is about 20,000,000.
+
+After executing "perf stat" command, the output is:
+
+[root@Linux test]# perf stat -a -e "r81d0","r82d0" ./a
+
+Performance counter stats for './a':
+
+        71,779,954 r81d0
+         [100.00%]
+        26,601,675 r82d0
+
+       0.036929715 seconds time elapsed
+
+I can see there are about 1,779,954(71,779,954 - 70,000,000) more load
+operations and 6,601,675(26,601,675 - 20,000,000) more store
+operations.
+
+I can't understand why there are so many more load/store operations
+from "perf stat" output. Could anyone can explain this? Thanks very
+much in advance!
+
+-- 
+Best Regards
+Nan Xiao
