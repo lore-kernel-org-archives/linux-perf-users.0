@@ -1,37 +1,44 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: Why the need to do a perf_event_open syscall for each cpu on
- the system?
-Date: Fri, 13 Mar 2015 17:14:02 -0400 (EDT)
-Message-ID: <alpine.DEB.2.11.1503131712230.19926@vincent-weaver-1.umelst.maine.edu>
+From: Elazar Leibovich <elazar.leibovich@ravellosystems.com>
+Subject: Re: Why the need to do a perf_event_open syscall for each cpu on the system?
+Date: Sun, 15 Mar 2015 07:15:29 +0200
+Message-ID: <CAL2Y34DEW+HvF6tsFH5qg-RxkAmstEcK=qYhkcRV6D8DCFG3kg@mail.gmail.com>
 References: <55033138.5010500@redhat.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f179.google.com ([209.85.216.179]:36794 "EHLO
-	mail-qc0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752543AbbCMVJo (ORCPT
+Received: from mail-ie0-f169.google.com ([209.85.223.169]:36214 "EHLO
+	mail-ie0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750711AbbCOFPa convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 13 Mar 2015 17:09:44 -0400
-Received: by qcxm20 with SMTP id m20so29770783qcx.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Mar 2015 14:09:43 -0700 (PDT)
+	Sun, 15 Mar 2015 01:15:30 -0400
+Received: by iegc3 with SMTP id c3so151269585ieg.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Mar 2015 22:15:29 -0700 (PDT)
 In-Reply-To: <55033138.5010500@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: William Cohen <wcohen@redhat.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On Fri, 13 Mar 2015, William Cohen wrote:
+Hi,
 
-> Why not have a perf_event_open with pid=-1 and cpu=-1 mean 
-> system-wide event and aggregate it in the kernel when the value is read?  
-> The line below from design.txt specifically say it is invalid.
+Not an expert, but my understanding is that it's just technical
+difficulty. Performance metrics are being saved in per-cpu buffer.
+Having pid==-1 and cpu==-1 means that something would aggregate all
+buffers in multiple CPUs to a single buffer. That code must exist,
+either in userspace or in the kernel.
 
-you might have more luck asking questions like this on linux-kernel, I'm 
-not sure if many of the actual kernel developers hang out on 
-linux-perf-users.
+The kernel preferred that this code would be in userspace.
 
-From what I gather, having aggregate system-wide events in the kernel adds 
-a lot of kernel overhead for not much benefit, as you can always aggregate 
-yourself in userspace (which is what I think the perf tool does).
-
-Vince
+On Fri, Mar 13, 2015 at 8:49 PM, William Cohen <wcohen@redhat.com> wrote:
+> Hi All,
+>
+> I have a design question about the linux kernel perf support. A number of /proc statistics aggregate data across all the cpus in the system.  Why the does perf require the user-space application to enumerate all the processors and do a perf_event_open syscall for each of the processors?  Why not have a perf_event_open with pid=-1 and cpu=-1 mean system-wide event and aggregate it in the kernel when the value is read?  The line below from design.txt specifically say it is invalid.
+>
+> (Note: the combination of 'pid == -1' and 'cpu == -1' is not valid.)
+>
+> -Will
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
