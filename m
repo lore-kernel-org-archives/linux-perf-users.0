@@ -1,111 +1,67 @@
-From: Vinson Lee <vlee@twopensource.com>
-Subject: Re: [PATCH v2] perf tools: Work around lack of sched_getcpu in glibc
- < 2.6.
-Date: Fri, 20 Mar 2015 11:44:42 -0700
-Message-ID: <CAHTgTXUqBj9rE8yXm=XtzhKC0G+H-ZYuhG5GZpk858p0=Egc2g@mail.gmail.com>
-References: <20150318091527.GM23123@twins.programming.kicks-ass.net>
-	<1426720316-7470-1-git-send-email-vlee@twopensource.com>
-	<20150319101304.GC6363@krava>
-	<20150319131455.GE2983@kernel.org>
-	<CAHTgTXUQVuxf5u_AZ9g-eLtwdrE4rGfiN5cCHA5ReMe0sObiBA@mail.gmail.com>
-	<20150320130313.GB16485@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC PATCH] perf tui: Annotate entries in callchains
+Date: Fri, 20 Mar 2015 17:39:22 -0300
+Message-ID: <20150320203922.GO16485@kernel.org>
+References: <20150319225858.GA16485@kernel.org>
+ <CABPqkBRoG4pinYO+FGQVeLa3hQEFk4CjsK0KPFhSKfNr5Ju1=g@mail.gmail.com>
+ <CA+JHD93s2VkkdJMKZOGa6fPwEd43C8Ow80CU0b=bwTV=_8zjhw@mail.gmail.com>
+ <CABPqkBQkUKkq87=o-XPYyowmYZ4=HWMtB7eYQA4YHsUQs+Kf4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oi0-f54.google.com ([209.85.218.54]:33756 "EHLO
-	mail-oi0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751649AbbCTSom (ORCPT
+Received: from casper.infradead.org ([85.118.1.10]:41962 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751036AbbCTUj1 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 20 Mar 2015 14:44:42 -0400
-Received: by oifl3 with SMTP id l3so68478423oif.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Mar 2015 11:44:42 -0700 (PDT)
-In-Reply-To: <20150320130313.GB16485@kernel.org>
+	Fri, 20 Mar 2015 16:39:27 -0400
+Content-Disposition: inline
+In-Reply-To: <CABPqkBQkUKkq87=o-XPYyowmYZ4=HWMtB7eYQA4YHsUQs+Kf4w@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Yann Droneaud <ydroneaud@opteya.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
+To: Stephane Eranian <eranian@google.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>
 
-On Fri, Mar 20, 2015 at 6:03 AM, Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> Em Thu, Mar 19, 2015 at 02:12:05PM -0700, Vinson Lee escreveu:
->> On Thu, Mar 19, 2015 at 6:14 AM, Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->> > Em Thu, Mar 19, 2015 at 11:13:04AM +0100, Jiri Olsa escreveu:
->> >> On Wed, Mar 18, 2015 at 04:11:52PM -0700, Vinson Lee wrote:
->> >> > This patch fixes this build error with glibc < 2.6.
->> >
->> >> > +#ifdef __GLIBC_PREREQ
->> >> > +#if !__GLIBC_PREREQ(2, 6)
->> >> > +static int sched_getcpu(void)
->> >> > +{
->> >> > +   errno = ENOSYS;
->> >> > +   return -1;
->> >> > +}
->> >> > +#endif
->> >> > +#endif
->> >
->> >> you could mark it as __weak and get rid of those ifdef's
->> >> like we do for strlcpy in utilpath.c
->> >
->> > Agreed.
->
->> I tried this approach but am having trouble getting a patch to compile
->> with both older glibc and recent glibc.
->
->> With older glibc I will get a "no previous prototype" compilation
->> error. I can fix this error by adding a prototype but this results in
->> a "redundant redeclaration" error with newer glibc.
->
-> So for strlcpy we have in tools/perf/util/cache.h:
->
-> #ifndef __UCLIBC__
-> /* Matches the libc/libbsd function attribute so we declare this
->  * unconditionally: */
-> extern size_t strlcpy(char *dest, const char *src, size_t size);
-> #endif
->
-> I.e. have the ifdef just in the header file.
->
-> This way, if we end up needing to use sched_getcpu elsewhere, it will
-> work and the needed #ifdef will be constrained to the header file.
->
-> At some point we should try to move these functions to some
-> libc-compat.c file and move it to somewhere in tools/lib/.
->
-> - Arnaldo
+Em Fri, Mar 20, 2015 at 10:15:53AM -0700, Stephane Eranian escreveu:
+> Hi,
+> 
+> On Thu, Mar 19, 2015 at 5:39 PM, Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> > On Mar 19, 2015 9:34 PM, "Stephane Eranian" <eranian@google.com> wrote:
+> >>
+> >> Hi Arnaldo,
+> >>
+> >> On Thu, Mar 19, 2015 at 3:58 PM, Arnaldo Carvalho de Melo
+> >> <acme@kernel.org> wrote:
+> >> >
+> >> > Hi Stephane,
+> >> >
+> >> >         This patch, together with what is in my perf/core branch, should
+> >> > implement that feature we talked about recently, i.e. to allow
+> >> > annotating entries in callchains, please take a look at see if you think
+> >> > it is ok,
+> >> >
+> >> I tried on tip.git and a simple example. It does what I wanted.
+> >> I will try on more complex test cases.
+> >> Thanks for implementing this quickly.
+> >
+> > Thanks for testing, please let us know if you have further suggestions,
+> >
+> Ok, it does not work.
+> I think it works as long as the caller you want to annotate is in the
+> same module.
+> But suppose, I am on malloc() (libc) and I want to see a caller of
+> malloc(), it will
+> propose 'annotate bar()', but will still show me the code of libc:malloc.
+> 
+> In my earlier test, everything worked because the callee and caller were in the
+> same module.
+> 
+> Could you fix this?
+
+I thought that was covered because it deals with a "map_symbol" struct,
+where it finds both the symbol and the DSO where it came from, etc.
+
+Checking that now...
 
 
-I tried moving the prototype to a header file and it does not compile
-with newer glibc for me either. I still get a "redundant
-redeclaration" compiler error.
-
-Here is the diff that I tried.
-
-diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-index 6da965b..85b5238 100644
---- a/tools/perf/util/cloexec.c
-+++ b/tools/perf/util/cloexec.c
-@@ -7,6 +7,12 @@
-
- static unsigned long flag = PERF_FLAG_FD_CLOEXEC;
-
-+int __weak sched_getcpu(void)
-+{
-+       errno = ENOSYS;
-+       return -1;
-+}
-+
- static int perf_flag_probe(void)
- {
-        /* use 'safest' configuration as used in perf_evsel__fallback() */
-diff --git a/tools/perf/util/cloexec.h b/tools/perf/util/cloexec.h
-index 94a5a7d..06904bc 100644
---- a/tools/perf/util/cloexec.h
-+++ b/tools/perf/util/cloexec.h
-@@ -3,4 +3,6 @@
-
- unsigned long perf_event_open_cloexec_flag(void);
-
-+extern int sched_getcpu(void) __THROW;
-+
- #endif /* __PERF_CLOEXEC_H */
+- Arnaldo
