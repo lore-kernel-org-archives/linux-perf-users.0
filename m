@@ -1,91 +1,66 @@
-From: Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH] perf tui: Annotate entries in callchains
-Date: Thu, 19 Mar 2015 17:34:13 -0700
-Message-ID: <CABPqkBRoG4pinYO+FGQVeLa3hQEFk4CjsK0KPFhSKfNr5Ju1=g@mail.gmail.com>
-References: <20150319225858.GA16485@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2] perf tools: Work around lack of sched_getcpu in glibc
+ < 2.6.
+Date: Fri, 20 Mar 2015 10:03:13 -0300
+Message-ID: <20150320130313.GB16485@kernel.org>
+References: <20150318091527.GM23123@twins.programming.kicks-ass.net>
+ <1426720316-7470-1-git-send-email-vlee@twopensource.com>
+ <20150319101304.GC6363@krava>
+ <20150319131455.GE2983@kernel.org>
+ <CAHTgTXUQVuxf5u_AZ9g-eLtwdrE4rGfiN5cCHA5ReMe0sObiBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ob0-f182.google.com ([209.85.214.182]:32963 "EHLO
-	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751618AbbCTAeO (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 19 Mar 2015 20:34:14 -0400
-Received: by obcxo2 with SMTP id xo2so67427717obc.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Mar 2015 17:34:14 -0700 (PDT)
-In-Reply-To: <20150319225858.GA16485@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHTgTXUQVuxf5u_AZ9g-eLtwdrE4rGfiN5cCHA5ReMe0sObiBA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinson Lee <vlee@twopensource.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Yann Droneaud <ydroneaud@opteya.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,
+Em Thu, Mar 19, 2015 at 02:12:05PM -0700, Vinson Lee escreveu:
+> On Thu, Mar 19, 2015 at 6:14 AM, Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> > Em Thu, Mar 19, 2015 at 11:13:04AM +0100, Jiri Olsa escreveu:
+> >> On Wed, Mar 18, 2015 at 04:11:52PM -0700, Vinson Lee wrote:
+> >> > This patch fixes this build error with glibc < 2.6.
+> >
+> >> > +#ifdef __GLIBC_PREREQ
+> >> > +#if !__GLIBC_PREREQ(2, 6)
+> >> > +static int sched_getcpu(void)
+> >> > +{
+> >> > +   errno = ENOSYS;
+> >> > +   return -1;
+> >> > +}
+> >> > +#endif
+> >> > +#endif
+> >
+> >> you could mark it as __weak and get rid of those ifdef's
+> >> like we do for strlcpy in utilpath.c
+> >
+> > Agreed.
+ 
+> I tried this approach but am having trouble getting a patch to compile
+> with both older glibc and recent glibc.
+ 
+> With older glibc I will get a "no previous prototype" compilation
+> error. I can fix this error by adding a prototype but this results in
+> a "redundant redeclaration" error with newer glibc.
 
-On Thu, Mar 19, 2015 at 3:58 PM, Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Hi Stephane,
->
->         This patch, together with what is in my perf/core branch, should
-> implement that feature we talked about recently, i.e. to allow
-> annotating entries in callchains, please take a look at see if you think
-> it is ok,
->
-I tried on tip.git and a simple example. It does what I wanted.
-I will try on more complex test cases.
-Thanks for implementing this quickly.
+So for strlcpy we have in tools/perf/util/cache.h:
 
->
-> - Arnaldo
->
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Subject: [PATCH 1/1] perf hists browser: Indicate which callchain entries are annotated
->
-> Now that we can annotate entries in a callchain, show which ones have an
-> associated symbol and samples, by adding a right arrow just before the
-> symbol name when in verbose mode.
->
-> To toggle verbose mode press 'V'.
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Don Zickus <dzickus@redhat.com>
-> Cc: Frederic Weisbecker <fweisbec@gmail.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Mike Galbraith <efault@gmx.de>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Stephane Eranian <eranian@google.com>
-> Link: http://lkml.kernel.org/n/tip-d2rf1p3h5gdp7hdl2gf2bozl@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/ui/browsers/hists.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index cd7350aeb8e7..995b7a8596b1 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -511,6 +511,7 @@ static void hist_browser__show_callchain_entry(struct hist_browser *browser,
->  {
->         int color, width;
->         char folded_sign = callchain_list__folded(chain);
-> +       bool show_annotated = browser->show_dso && chain->ms.sym && symbol__annotation(chain->ms.sym)->src;
->
->         color = HE_COLORSET_NORMAL;
->         width = browser->b.width - (offset + 2);
-> @@ -523,7 +524,8 @@ static void hist_browser__show_callchain_entry(struct hist_browser *browser,
->         ui_browser__set_color(&browser->b, color);
->         hist_browser__gotorc(browser, row, 0);
->         slsmg_write_nstring(" ", offset);
-> -       slsmg_printf("%c ", folded_sign);
-> +       slsmg_printf("%c", folded_sign);
-> +       ui_browser__write_graph(&browser->b, show_annotated ? SLSMG_RARROW_CHAR : ' ');
->         slsmg_write_nstring(str, width);
->  }
->
-> --
-> 1.9.3
->
+#ifndef __UCLIBC__
+/* Matches the libc/libbsd function attribute so we declare this
+ * unconditionally: */
+extern size_t strlcpy(char *dest, const char *src, size_t size);
+#endif
+
+I.e. have the ifdef just in the header file.
+
+This way, if we end up needing to use sched_getcpu elsewhere, it will
+work and the needed #ifdef will be constrained to the header file.
+
+At some point we should try to move these functions to some
+libc-compat.c file and move it to somewhere in tools/lib/.
+
+- Arnaldo
