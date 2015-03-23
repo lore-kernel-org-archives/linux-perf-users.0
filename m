@@ -1,104 +1,83 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC PATCH] perf tui: Annotate entries in callchains
-Date: Mon, 23 Mar 2015 09:27:08 +0900
-Message-ID: <20150323002708.GB2782@sejong>
-References: <20150319225858.GA16485@kernel.org>
- <CABPqkBRoG4pinYO+FGQVeLa3hQEFk4CjsK0KPFhSKfNr5Ju1=g@mail.gmail.com>
- <CA+JHD93s2VkkdJMKZOGa6fPwEd43C8Ow80CU0b=bwTV=_8zjhw@mail.gmail.com>
- <CABPqkBQkUKkq87=o-XPYyowmYZ4=HWMtB7eYQA4YHsUQs+Kf4w@mail.gmail.com>
- <20150320203922.GO16485@kernel.org>
- <20150320210709.GQ16485@kernel.org>
- <CABPqkBRjHMOzNL=vWqzTUNA_8FidDk=THBErj4c6Tj=6Yw+0hg@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Set the input file name after parsing
+ options.
+Date: Mon, 23 Mar 2015 09:36:08 +0900
+Message-ID: <20150323003608.GC2782@sejong>
+References: <1426785969-26345-1-git-send-email-rgrunber@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from lgeamrelo02.lge.com ([156.147.1.126]:36786 "EHLO
-	lgeamrelo02.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751914AbbCWAd4 (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 22 Mar 2015 20:33:56 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABPqkBRjHMOzNL=vWqzTUNA_8FidDk=THBErj4c6Tj=6Yw+0hg@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Stephane Eranian <eranian@google.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, David Ahern <dsahern@gmail.com>, Ingo Molnar <mingo@kernel.org>
+In-Reply-To: <1426785969-26345-1-git-send-email-rgrunber@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Grunberg <rgrunber@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Sergio Durigan Junior <sergiodj@redhat.com>, linux-kernel@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Stephane,
+Hi Roland,
 
-On Fri, Mar 20, 2015 at 02:12:30PM -0700, Stephane Eranian wrote:
-> On Fri, Mar 20, 2015 at 2:07 PM, Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> > Em Fri, Mar 20, 2015 at 05:39:22PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Fri, Mar 20, 2015 at 10:15:53AM -0700, Stephane Eranian escreveu:
-> >> > On Thu, Mar 19, 2015 at 5:39 PM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> >> > > On Mar 19, 2015 9:34 PM, "Stephane Eranian" <eranian@google.com> wrote:
-> >> > >> On Thu, Mar 19, 2015 at 3:58 PM, Arnaldo Carvalho de Melo
-> >> > >> <acme@kernel.org> wrote:
-> >> > >> >         This patch, together with what is in my perf/core branch, should
-> >> > >> > implement that feature we talked about recently, i.e. to allow
-> >> > >> > annotating entries in callchains, please take a look at see if you think
-> >> > >> > it is ok,
-> >
-> >> > >> I tried on tip.git and a simple example. It does what I wanted.
-> >> > >> I will try on more complex test cases.
-> >> > >> Thanks for implementing this quickly.
-> >
-> >> > > Thanks for testing, please let us know if you have further suggestions,
-> >
-> >> > Ok, it does not work.
-> >
-> > Are you sure? I just tried, take a look at:
-> >
-> > http://vger.kernel.org/~acme/perf-report-annotate-callchain-entries-in-multiple-DSOs-in-the-same-hist_entry.png
-> >
-> > In there you will see that in the unmap_single_vma case there are
-> > callchains that pass thru multiple DSOs in userspace (I used --call
-> > dwarf in 'perf record') and those are marked as having
-> > samples/annotation and when I go to those, pressing 'a' after moving the
-> > cursor to it and it works as expected...
-> >
-> > Do you have some specific example I could try?
-> >
-> I tried on an example I cannot share.
-> But I am guessing you could reproduce with a test which calls a libc
-> or libm function
-> heavily form multiple callers in the main program.
-> Example:
->        -  pow()
->            50% foo() [main.c]
->            50% bar() [main.c]
+On Thu, Mar 19, 2015 at 01:26:09PM -0400, Roland Grunberg wrote:
+> The input file name should be set after parse_options has been called if
+> the '-i' option is to have any effect.
 > 
-> If I move the cursor line to foo() and annotate foo() is shows me the
-> code of pow().
+> Signed-off-by: Roland Grunberg <rgrunber@redhat.com>
 
-Did you play with acme/perf/core not tip/perf/core?  I got same
-problem but then I realize it's not the Arnaldo's tree.  When I
-changed to acme/perf/core the problem disappeared. :)
-
-But unfortunately I got this segfault instead..
-
-  namhyung@sejong:perf$ perf report
-  perf: Segmentation fault
-  -------- backtrace --------
-  perf[0x506e5b]
-  /usr/lib/libc.so.6(+0x33540)[0x7fa3eb90a540]
-  perf[0x47b39c]
-  perf(disasm_line__free+0x58)[0x47c178]
-  perf(symbol__tui_annotate+0x2f3)[0x4fe683]
-  perf[0x503773]
-  perf(perf_evlist__tui_browse_hists+0x94)[0x505b44]
-  perf(cmd_report+0x18f0)[0x436890]
-  perf[0x47a793]
-  perf(main+0x60a)[0x427c7a]
-  /usr/lib/libc.so.6(__libc_start_main+0xf0)[0x7fa3eb8f7800]
-  perf(_start+0x29)[0x427d99]
-  [0x0]
-
-  namhyung@sejong:perf$ addr2line -e `which perf` 0x506e5b
-  /home/namhyung/project/linux/tools/perf/ui/tui/setup.c:106
-  namhyung@sejong:perf$ addr2line -e `which perf` 0x47b39c
-  /home/namhyung/project/linux/tools/perf/util/annotate.c:33
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+
+> ---
+> 
+> Not registered to the referenced lists so feel free to CC.
+> 
+> The input file option for perf-annotate seems to be broken and will always
+> default to 'perf.data'. The perf_data_file path field is being set before
+> parse_options has initialized input_name.
+> 
+> Current Behaviour :
+> $ perf record -o datafile uname
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.007 MB datafile (~322 samples) ]
+> $ file datafile
+> datafile: data
+> $ perf annotate --stdio -i datafile
+> failed to open perf.data: No such file or directory  (try 'perf record' first)
+> 
+> Expected Behaviour :
+> The 'perf-annotate' call should run against the specified input file.
+> 
+>  tools/perf/builtin-annotate.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 747f861..78489bc 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -283,7 +283,6 @@ int cmd_annotate(int argc, const char **argv, const char *prefix __maybe_unused)
+>  		},
+>  	};
+>  	struct perf_data_file file = {
+> -		.path  = input_name,
+>  		.mode  = PERF_DATA_MODE_READ,
+>  	};
+>  	const struct option options[] = {
+> @@ -333,6 +332,8 @@ int cmd_annotate(int argc, const char **argv, const char *prefix __maybe_unused)
+>  
+>  	argc = parse_options(argc, argv, options, annotate_usage, 0);
+>  
+> +	file.path = input_name;
+> +
+>  	if (annotate.use_stdio)
+>  		use_browser = 0;
+>  	else if (annotate.use_tui)
+> -- 
+> 2.1.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
