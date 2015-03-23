@@ -1,46 +1,69 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC PATCH] perf tui: Annotate entries in callchains
-Date: Mon, 23 Mar 2015 13:56:39 -0300
-Message-ID: <3FAA059E-DC0F-4290-BDB5-AE2950D1E1CA@gmail.com>
-References: <20150319225858.GA16485@kernel.org> <CABPqkBRoG4pinYO+FGQVeLa3hQEFk4CjsK0KPFhSKfNr5Ju1=g@mail.gmail.com> <CA+JHD93s2VkkdJMKZOGa6fPwEd43C8Ow80CU0b=bwTV=_8zjhw@mail.gmail.com> <CABPqkBQkUKkq87=o-XPYyowmYZ4=HWMtB7eYQA4YHsUQs+Kf4w@mail.gmail.com> <20150320203922.GO16485@kernel.org> <20150320210709.GQ16485@kernel.org> <CABPqkBRjHMOzNL=vWqzTUNA_8FidDk=THBErj4c6Tj=6Yw+0hg@mail.gmail.com> <20150323002708.GB2782@sejong> <CABPqkBRee=X_UumuZfW_9d50f1gjFj4NG_rqchityfYjGQvWXw@mail.gmail.com>
-Reply-To: acme@kernel.org
+From: Vinson Lee <vlee@twopensource.com>
+Subject: [PATCH v3] perf tools: Work around lack of sched_getcpu in glibc < 2.6.
+Date: Mon, 23 Mar 2015 12:09:16 -0700
+Message-ID: <1427137761-16119-1-git-send-email-vlee@twopensource.com>
+References: <20150320203828.GN16485@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABPqkBRee=X_UumuZfW_9d50f1gjFj4NG_rqchityfYjGQvWXw@mail.gmail.com>
+In-Reply-To: <20150320203828.GN16485@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <fweisbec@gmail.com>, linux-perf-users@vger.kernel.org, David Ahern <dsahern@gmail.com>, Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Yann Droneaud <ydroneaud@opteya.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+=46rom: Vinson Lee <vlee@twitter.com>
 
+This patch fixes this build error with glibc < 2.6.
 
-Le 23 mars 2015 13:49:24 GMT-03:00, Stephane Eranian <eranian@google.co=
-m> a =C3=A9crit :
->On Sun, Mar 22, 2015 at 5:27 PM, Namhyung Kim <namhyung@kernel.org>
->wrote:().
->>
->> Did you play with acme/perf/core not tip/perf/core?  I got same
->> problem but then I realize it's not the Arnaldo's tree.  When I
->> changed to acme/perf/core the problem disappeared. :)
->>
->I was only trying it with tip.git. The patch looke simple enough to
->apply
->to tip.git but clearly it relies on some other infrastructure changes
->which
->I don't know about. In my case =3D, I care about getting this feature =
-in
->tip.git
->or older versions of perf.
+  CC       util/cloexec.o
+cc1: warnings being treated as errors
+util/cloexec.c: In function =E2=80=98perf_flag_probe=E2=80=99:
+util/cloexec.c:24: error: implicit declaration of function
+=E2=80=98sched_getcpu=E2=80=99
+util/cloexec.c:24: error: nested extern declaration of =E2=80=98sched_g=
+etcpu=E2=80=99
+make: *** [util/cloexec.o] Error 1
 
-It is all in tip.git by now.
+Cc: stable@vger.kernel.org # 3.18+
+Signed-off-by: Vinson Lee <vlee@twitter.com>
+---
+ tools/perf/util/cloexec.c | 6 ++++++
+ tools/perf/util/cloexec.h | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
->> But unfortunately I got this segfault instead..
-
-Needs a patch that is in perf/urgent
-
-
--- Arnaldo
-
-Sent from smartphone.
+diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
+index 6da965b..85b5238 100644
+--- a/tools/perf/util/cloexec.c
++++ b/tools/perf/util/cloexec.c
+@@ -7,6 +7,12 @@
+=20
+ static unsigned long flag =3D PERF_FLAG_FD_CLOEXEC;
+=20
++int __weak sched_getcpu(void)
++{
++	errno =3D ENOSYS;
++	return -1;
++}
++
+ static int perf_flag_probe(void)
+ {
+ 	/* use 'safest' configuration as used in perf_evsel__fallback() */
+diff --git a/tools/perf/util/cloexec.h b/tools/perf/util/cloexec.h
+index 94a5a7d..68888c2 100644
+--- a/tools/perf/util/cloexec.h
++++ b/tools/perf/util/cloexec.h
+@@ -3,4 +3,10 @@
+=20
+ unsigned long perf_event_open_cloexec_flag(void);
+=20
++#ifdef __GLIBC_PREREQ
++#if !__GLIBC_PREREQ(2, 6)
++extern int sched_getcpu(void) __THROW;
++#endif
++#endif
++
+ #endif /* __PERF_CLOEXEC_H */
+--=20
+1.8.2.1
