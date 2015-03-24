@@ -1,22 +1,25 @@
-From: Namhyung Kim <namhyung@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v3] perf tools: Work around lack of sched_getcpu in glibc
  < 2.6.
-Date: Tue, 24 Mar 2015 09:21:58 +0900
-Message-ID: <20150324002158.GL2782@sejong>
+Date: Tue, 24 Mar 2015 08:10:53 +0100
+Message-ID: <20150324071053.GA17372@krava.brq.redhat.com>
 References: <20150320203828.GN16485@kernel.org>
  <1427137761-16119-1-git-send-email-vlee@twopensource.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:41932 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751602AbbCXHL2 (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 24 Mar 2015 03:11:28 -0400
 Content-Disposition: inline
 In-Reply-To: <1427137761-16119-1-git-send-email-vlee@twopensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Vinson Lee <vlee@twopensource.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Yann Droneaud <ydroneaud@opteya.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
-List-Id: linux-perf-users.vger.kernel.org
-
-Hi Vinson,
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Yann Droneaud <ydroneaud@opteya.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vinson Lee <vlee@twitter.com>
 
 On Mon, Mar 23, 2015 at 12:09:16PM -0700, Vinson Lee wrote:
 > From: Vinson Lee <vlee@twitter.com>
@@ -35,11 +38,10 @@ _getcpu=E2=80=99
 > Cc: stable@vger.kernel.org # 3.18+
 > Signed-off-by: Vinson Lee <vlee@twitter.com>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks,
-Namhyung
-
+thanks,
+jirka
 
 > ---
 >  tools/perf/util/cloexec.c | 6 ++++++
@@ -81,9 +83,3 @@ Namhyung
 > --=20
 > 1.8.2.1
 >=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
