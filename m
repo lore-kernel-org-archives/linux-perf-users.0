@@ -1,50 +1,30 @@
-From: ratheesh kannoth <ratheesh.ksz@gmail.com>
-Subject: kprobe registration fails.
-Date: Sun, 29 Mar 2015 14:49:18 +0530
-Message-ID: <CAGZFCEFRuDLsNdKxKD7uDm0RcugtYiCLXP=mKiYwPeKErEE4yw@mail.gmail.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: perf smapling
+Date: Mon, 30 Mar 2015 10:38:35 -0700
+Message-ID: <87ego6qtb8.fsf@tassilo.jf.intel.com>
+References: <loom.20150329T075320-204@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ig0-f175.google.com ([209.85.213.175]:38061 "EHLO
-	mail-ig0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750882AbbC2JTT (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:55727 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753089AbbC3Ri4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 29 Mar 2015 05:19:19 -0400
-Received: by igbqf9 with SMTP id qf9so50026783igb.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 29 Mar 2015 02:19:18 -0700 (PDT)
+	Mon, 30 Mar 2015 13:38:56 -0400
+In-Reply-To: <loom.20150329T075320-204@post.gmane.org> (sahil aggarwal's
+	message of "Sun, 29 Mar 2015 05:54:14 +0000 (UTC)")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: sahil aggarwal <sahil.agg15@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi list,
+sahil aggarwal <sahil.agg15@gmail.com> writes:
 
-I am afraid whether i am posting to the right list. I could not find a
-krpobe mailing list; so posting.
+> Hi all
+>
+> I am beginner to the perf API. Can someone direct me to the example of 
+> reading ring buffer using mmap.?
 
-I took kprobe example from kernel documentation. There is an error
-during insertion of module.
+https://github.com/andikleen/pmu-tools/tree/master/addr
 
-root@fox:/# uname -a
-Linux fox 3.16.0-031600-generic #201408031935 SMP Sun Aug 3 23:36:11
-UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
-root@fox:/#
-root@fox:/# insmod  ~fox/workspace/module/kprobe.ko
-insmod: ERROR: could not insert module
-/home/fox/workspace/module/kprobe.ko: Invalid parameters
-
-
-Please find the code snippet below.
-
-        kp.pre_handler = handler_pre;
-        kp.post_handler = handler_post;
-        kp.fault_handler = handler_fault;
-        kp.addr = (kprobe_opcode_t*)
-kallsyms_lookup_name("my_empty_call_back_enter");
-
-        ret = register_kprobe(&kp);
-        if (ret < 0) {
-                printk(KERN_INFO "register_kprobe failed, returned %d \n", ret);
-                return ret;
-        }
-
--Ratheesh
+-Andi
