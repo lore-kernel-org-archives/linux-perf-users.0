@@ -1,7 +1,7 @@
-From: sahil aggarwal <sahil.agg15@gmail.com>
+From: Elazar Leibovich <elazar.leibovich@ravellosystems.com>
 Subject: Re: perf smapling
-Date: Wed, 1 Apr 2015 17:24:52 +0530
-Message-ID: <CAGAANTV8VjOY-koUAeO6Os_Qu5q-hHP9xhtutdCznFpPgTAx+w@mail.gmail.com>
+Date: Wed, 1 Apr 2015 21:50:56 +0300
+Message-ID: <CAL2Y34CHBX-er4M=xjyRDcb9JjzXU-BgvdVCZxyJ-CfwtGswTg@mail.gmail.com>
 References: <loom.20150329T075320-204@post.gmane.org>
 	<CAL2Y34Bi+VLSvGucN8J=4RXKh785Lg9BYAa4LUU_yCMR7COTgQ@mail.gmail.com>
 	<20150331111813.GA1152@ubuntu>
@@ -17,22 +17,23 @@ References: <loom.20150329T075320-204@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ob0-f176.google.com ([209.85.214.176]:34659 "EHLO
-	mail-ob0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752973AbbDALyx (ORCPT
+Received: from mail-ie0-f182.google.com ([209.85.223.182]:35378 "EHLO
+	mail-ie0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752655AbbDASu5 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 1 Apr 2015 07:54:53 -0400
-Received: by obbgh1 with SMTP id gh1so71877909obb.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2015 04:54:53 -0700 (PDT)
+	Wed, 1 Apr 2015 14:50:57 -0400
+Received: by ierf6 with SMTP id f6so51010758ier.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Apr 2015 11:50:56 -0700 (PDT)
 In-Reply-To: <CAGAANTXNGGEw33U8NfzceQoOpuW5GDQNgJafC=2vfumuwePtVg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Elazar Leibovich <elazar.leibovich@ravellosystems.com>
+To: sahil aggarwal <sahil.agg15@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-** it gives me some ID when i print stream_id
+You can't && event ids in config, it'll simply give a different event.
+You need to open a stream per tracing event.
 
-On 1 April 2015 at 17:19, sahil aggarwal <sahil.agg15@gmail.com> wrote:
+On Wed, Apr 1, 2015 at 2:49 PM, sahil aggarwal <sahil.agg15@gmail.com> wrote:
 > If i enable multiple tracepoints, say:
 >
 > type    = PERF_TYPE_TRACEPOINT
