@@ -1,41 +1,61 @@
-From: Elazar Leibovich <elazar.leibovich@ravellosystems.com>
-Subject: Re: Translation to File name in sys_enter_open
-Date: Mon, 6 Apr 2015 20:21:39 +0300
-Message-ID: <CAL2Y34Cb7YEkwJ24K9gCpN4cWDBxsrU=0HQOYXtEXihLUmdpsw@mail.gmail.com>
-References: <CAGAANTWqLq4j-2rn=FPxOYw-dgG-2ed-JZfiQy76zB7WU4iA4Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Tianwei Zhang <artdream07@gmail.com>
+Subject: Uncore event for one process
+Date: Tue, 7 Apr 2015 01:57:20 -0400
+Message-ID: <78FDB3A8-3F50-43F8-A69D-D7C6A37A2859@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ie0-f173.google.com ([209.85.223.173]:34130 "EHLO
-	mail-ie0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750891AbbDFRVk (ORCPT
+Received: from mail-qk0-f177.google.com ([209.85.220.177]:34483 "EHLO
+	mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751568AbbDGF5Y convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 6 Apr 2015 13:21:40 -0400
-Received: by iedfl3 with SMTP id fl3so30005094ied.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2015 10:21:39 -0700 (PDT)
-In-Reply-To: <CAGAANTWqLq4j-2rn=FPxOYw-dgG-2ed-JZfiQy76zB7WU4iA4Q@mail.gmail.com>
+	Tue, 7 Apr 2015 01:57:24 -0400
+Received: by qkgx75 with SMTP id x75so42105994qkg.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Apr 2015 22:57:23 -0700 (PDT)
+Received: from nat-oitwireless-inside-vapornet100-d-15872.princeton.edu (nat-oitwireless-outside-vapornet3-j-245.Princeton.EDU. [140.180.250.1])
+        by mx.google.com with ESMTPSA id s36sm4841084qge.1.2015.04.06.22.57.22
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Mon, 06 Apr 2015 22:57:22 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: sahil aggarwal <sahil.agg15@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-I don't think you really can do that in the general case. I guess that
-you can check the CWD of the running process, and calculate the
-absolute path from it. Though, of course, you don't know the exact
-state of the filesystem when the event occured.
+Hi,
 
-On Mon, Apr 6, 2015 at 1:08 PM, sahil aggarwal <sahil.agg15@gmail.com> wrote:
-> Hi
->
-> I enabled sampling on tracepoint sys_enter_open but filename field
-> returned is address to filename as being passed to the system call,
-> how i can translate this to actual file name while reading ring
-> buffer.? How perf is doing it.?
->
-> Thanks
-> Regards
-> Sahil
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I want to count the uncore events on a specified process id (Intel Xeon E5-2667
+machine). I tried the following perf command to count the CAS_COUNT.RD for process 3460, but it gets stuck with the following output:
+
+#perf stat -e uncore_imc_0/event=0x4,umask=0x3/,uncore_imc_1/event=0x4,umask=0x3/,uncore_imc_2/event=0x4,umask=0x3/,uncore_imc_3/event=0x4,umask=0x3/ -p 3460 sleep 1
+
+Performance counter stats for process id '3460':
+
+                 0 uncore_imc_0/event=0x4,umask=0x3/
+                 0 uncore_imc_1/event=0x4,umask=0x3/
+                 0 uncore_imc_2/event=0x4,umask=0x3/
+                 0 uncore_imc_3/event=0x4,umask=0x3/
+
+       1.000750918 seconds time elapsed
+
+*** glibc detected *** /usr/lib/linux-tools/3.13.0-32-generic/perf: free(): invalid next size (fast): 0x0000000000aaee20 ***
+*** glibc detected *** /usr/lib/linux-tools/3.13.0-32-generic/perf: malloc(): memory corruption: 0x0000000000aaf3d0 ***
+
+However, if I switched the perf to the system-wide counting mode, it works:
+
+#perf stat -e uncore_imc_0/event=0x4,umask=0x3/,uncore_imc_1/event=0x4,umask=0x3/,uncore_imc_2/event=0x4,umask=0x3/,uncore_imc_3/event=0x4,umask=0x3/ -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+             4,487 uncore_imc_0/event=0x4,umask=0x3/
+             3,721 uncore_imc_1/event=0x4,umask=0x3/
+             4,885 uncore_imc_2/event=0x4,umask=0x3/
+           212,513 uncore_imc_3/event=0x4,umask=0x3/
+
+       1.000788447 seconds time elapsed
+
+Can anyone help me with this problem?
+
+Thank you very much.
+
+--Tianwei
