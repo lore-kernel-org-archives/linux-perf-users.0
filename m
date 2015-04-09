@@ -1,277 +1,751 @@
-From: sahil aggarwal <sahil.agg15@gmail.com>
-Subject: Re: perf smapling
-Date: Wed, 8 Apr 2015 12:11:40 +0530
-Message-ID: <CAGAANTX6Um2E+PaB=zs+Uq6hsr7PNho7B7B_9dbYH41yRD1TrA@mail.gmail.com>
-References: <loom.20150329T075320-204@post.gmane.org>
-	<CAL2Y34Bi+VLSvGucN8J=4RXKh785Lg9BYAa4LUU_yCMR7COTgQ@mail.gmail.com>
-	<20150331111813.GA1152@ubuntu>
-	<CAL2Y34A=Fk03_LSTM_SHwVaE4NaKSD=zZt0vWtzn3Rm9dQtDLQ@mail.gmail.com>
-	<CAL2Y34CxT=YRGx6G0kcCWK0AVnaPdb4ybL+u-BiUE7gYg1jYGg@mail.gmail.com>
-	<CAGAANTXoY_iVhSHf+dq2K0UEk1Vt=4pGA6ovHwSKmFr=-Xh7Jg@mail.gmail.com>
-	<CAGAANTWToURnsEQ4YfYiw2e4y9g=54N+joKpHuO2i6vQV_wVBQ@mail.gmail.com>
-	<CAL2Y34AL94U7KGej5mN3enqLpXWs_xiE36D1MY3NghH17g+Epw@mail.gmail.com>
-	<CAGAANTUgpMLY6tNfOrzgH7YKJw2TvJWeyrkqXXnRZi5x5+1ctg@mail.gmail.com>
-	<CAL2Y34Amk49Upd8+eCmEK9WqG6SGgEJfj3tUXdrRKEa_6Hxr8Q@mail.gmail.com>
-	<CAGAANTXPFZp_zn7QwNtzOeo7Cpo1aEWTQVizY97W89joz6-YUw@mail.gmail.com>
-	<CAGAANTXNGGEw33U8NfzceQoOpuW5GDQNgJafC=2vfumuwePtVg@mail.gmail.com>
-	<CAL2Y34CHBX-er4M=xjyRDcb9JjzXU-BgvdVCZxyJ-CfwtGswTg@mail.gmail.com>
-	<CAGAANTUeGXEZM4mm4B-wjFdDgZXVswq+JqX7o8A3SCmkWwPb9Q@mail.gmail.com>
-	<CAGAANTV6-N8LpidfoNzdLQui6T5+PcQKD6VEuaYi0OzN1CuxMg@mail.gmail.com>
-	<CAGAANTUfbgwxgGEPpJMKwyCBi9z9XkBNy-ttqKJ1kOPz1zasMQ@mail.gmail.com>
+From: Taeung Song <treeze.taeung@gmail.com>
+Subject: [PATCH 1/2] perf tools: Add 'perf-config' command
+Date: Thu,  9 Apr 2015 23:26:30 +0900
+Message-ID: <1428589591-22838-1-git-send-email-treeze.taeung@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ob0-f176.google.com ([209.85.214.176]:33825 "EHLO
-	mail-ob0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751215AbbDHGll (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 8 Apr 2015 02:41:41 -0400
-Received: by obbgh1 with SMTP id gh1so118042659obb.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Apr 2015 23:41:40 -0700 (PDT)
-In-Reply-To: <CAGAANTUfbgwxgGEPpJMKwyCBi9z9XkBNy-ttqKJ1kOPz1zasMQ@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Elazar Leibovich <elazar.leibovich@ravellosystems.com>
-Cc: linux-perf-users@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jolsa@redhat.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Digging a bit deep  i found that if
+The perf configuration file contain many variables which can make
+the perf command's action more effective and more skilful.
+But looking through state of configuration is difficult and
+there's no knowing what kind of other variables except variables in per=
+fconfig.example exist.
+So This patch adds 'perf-config' command with '--all' option and a docu=
+ment for it.
 
-pid > 0 && cpu == -1
+Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
+---
+ tools/perf/Build                            |   1 +
+ tools/perf/Documentation/perf-config.txt    | 433 ++++++++++++++++++++=
+++++++++
+ tools/perf/Documentation/perfconfig.example |  65 ++++-
+ tools/perf/builtin-config.c                 |  68 +++++
+ tools/perf/builtin.h                        |   1 +
+ tools/perf/command-list.txt                 |   1 +
+ tools/perf/perf.c                           |   1 +
+ 7 files changed, 559 insertions(+), 11 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-config.txt
+ create mode 100644 tools/perf/builtin-config.c
 
-then only mmap during attr->inherit=1 fails. what i could be missing.?
-
-On 8 April 2015 at 11:38, sahil aggarwal <sahil.agg15@gmail.com> wrote:
-> Hey Elazar,
->
-> In the example you sent me, if i set :
-> attr->inherit=1
->
-> Then,
->  mmap(mmap_pages->wrap_base + page_size,             \
->             mmap_len - page_size, PROT_READ |               \
->             PROT_WRITE, MAP_FIXED | MAP_SHARED,   \
->              fd, 0);
->
-> call fails with "Invalid argument".
->
-> Happens only if inherit is set. Do i need to set any other flag
-> too.?
->
-> Thanks
-> Regards
->
-> On 3 April 2015 at 11:04, sahil aggarwal <sahil.agg15@gmail.com> wrote:
->> Sorry for that dumb ques. Problem was somewhere else.
->>
->> On 2 April 2015 at 19:00, sahil aggarwal <sahil.agg15@gmail.com> wrote:
->>> Yeah you are right. And, there seem to be problem when i declare
->>> 'struct perf_event_attr'
->>> at run time. Is it know issue.?
->>> It gives me -EINVAL(Invalid Argument).
->>>
->>> Run Time:
->>> perf_event_open(0x22a20b8, 0, 0xffffffff, 0xffffffff, 0) = -1 EINVAL
->>> (Invalid argument)
->>>
->>> Compile Time:
->>> perf_event_open(0x7fffa242ee50, 0xffffffff, 0x1, 0xffffffff, 0) = 6
->>>
->>> On 2 April 2015 at 00:20, Elazar Leibovich
->>> <elazar.leibovich@ravellosystems.com> wrote:
->>>> You can't && event ids in config, it'll simply give a different event.
->>>> You need to open a stream per tracing event.
->>>>
->>>> On Wed, Apr 1, 2015 at 2:49 PM, sahil aggarwal <sahil.agg15@gmail.com> wrote:
->>>>> If i enable multiple tracepoints, say:
->>>>>
->>>>> type    = PERF_TYPE_TRACEPOINT
->>>>> config  = 87 | 402  (sched/sched_switch && syscalls/sys_enter_open)
->>>>> sample_type = PERF_SAMPLE_TIME       |
->>>>>                          PERF_SAMPLE_RAW       |
->>>>>                          PERF_SAMPLE_TID          |
->>>>>                          PERF_SAMPLE_STREAM_ID ;
->>>>>
->>>>> It gives me some ID when i print sample_id(i thought it will print
->>>>> config value).  But how i can connect this ID with my type of event
->>>>> (sched_switch or sys_enter_open). .?
->>>>>
->>>>> On 1 April 2015 at 15:34, sahil aggarwal <sahil.agg15@gmail.com> wrote:
->>>>>> No i didn't give it a shot yet but code was very helpful.
->>>>>> And, the raw data form was same as struct defined for event in format
->>>>>> file(syscalls/sys_enter_open/format).
->>>>>>
->>>>>>
->>>>>> On 1 April 2015 at 15:28, Elazar Leibovich
->>>>>> <elazar.leibovich@ravellosystems.com> wrote:
->>>>>>> Yes, this is correct, as far as I can tell, when you create a perf_event for
->>>>>>> every tracepoint event.
->>>>>>>
->>>>>>> I personally created a separate thread for each trace point, since I found
->>>>>>> this approach simpler, but it is certainly possible to use a single thread +
->>>>>>> select from all perf_event_open file descriptor.
->>>>>>>
->>>>>>> BTW, did you manage to experiment with perf using the tool I attached?
->>>>>>>
->>>>>>> On Wed, Apr 1, 2015 at 12:22 PM, sahil aggarwal <sahil.agg15@gmail.com>
->>>>>>> wrote:
->>>>>>>>
->>>>>>>> Hi Elazar
->>>>>>>>
->>>>>>>> Finally i am able to make small prototype to enable tracepoints. :)
->>>>>>>>
->>>>>>>> One more thing, is it possible to enable multiple tracepoints through
->>>>>>>> 1 thread and
->>>>>>>> while parsing output find out to which tracepoint that raw data belongs.?
->>>>>>>>
->>>>>>>> Or i would have to create separate thread for each tracepoint. ?
->>>>>>>>
->>>>>>>> Man page says:
->>>>>>>>   Set config to one of the  following:
->>>>>>>>           .........
->>>>>>>>
->>>>>>>> So i am assuming i will have to create separate thread for each event.
->>>>>>>>
->>>>>>>>
->>>>>>>> Thanks a lot.
->>>>>>>>
->>>>>>>> On 31 March 2015 at 23:37, Elazar Leibovich
->>>>>>>> <elazar.leibovich@ravellosystems.com> wrote:
->>>>>>>> > Look at the man page, you should set the type to PERF_TYPE_TRACEPOINT
->>>>>>>> > and set the config to the event id.
->>>>>>>> >
->>>>>>>> > On my system, sys_enter_open event id is 455
->>>>>>>> >
->>>>>>>> > $ sudo cat /sys/kernel/debug/tracing/events/syscalls/sys_enter_open/id
->>>>>>>> > 455
->>>>>>>> >
->>>>>>>> > Add PERF_SAMPLE_RAW to the sample_type.
->>>>>>>> >
->>>>>>>> > BTW
->>>>>>>> > You can compile the tar.gz I sent and echo JSON in the attr format to
->>>>>>>> > it, it'll print back perf data in json format. Easier to experiment
->>>>>>>> > with perf_event_open API than writing a C program.
->>>>>>>> >
->>>>>>>> > For example
->>>>>>>> >
->>>>>>>> > $ make
->>>>>>>> > $ sudo ./perf2 <<EOF
->>>>>>>> > {
->>>>>>>> >   "attr": {
->>>>>>>> >     "sample_type": [
->>>>>>>> >       "PERF_SAMPLE_IP",
->>>>>>>> >       "PERF_SAMPLE_RAW"
->>>>>>>> >     ],
->>>>>>>> >     "wakeup_events": 1,
->>>>>>>> >     "config": 455,
->>>>>>>> >     "sample_period": 1,
->>>>>>>> >     "type": "PERF_TYPE_TRACEPOINT"
->>>>>>>> >   }
->>>>>>>> > }
->>>>>>>> > EOF
->>>>>>>> >
->>>>>>>> > {"type":"PERF_RECORD_SAMPLE","misc":"PERF_RECORD_MISC_USER","sample":{"ip":"7f4f3625263d","data":[-57,1,0,0,7,11,0,0,2,0,0,0,0,0,0,0,-32,101,75,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}}
->>>>>>>> >
->>>>>>>> > {"type":"PERF_RECORD_SAMPLE","misc":"PERF_RECORD_MISC_USER","sample":{"ip":"7f4f3625263d","data":[-57,1,0,0,7,11,0,0,2,0,0,0,0,0,0,0,-64,112,75,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}}
->>>>>>>> >
->>>>>>>> > {"type":"PERF_RECORD_SAMPLE","misc":"PERF_RECORD_MISC_USER","sample":{"ip":"7f4f3625263d","data":[-57,1,0,0,7,11,0,0,2,0,0,0,0,0,0,0,-112,70,75,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}}
->>>>>>>> >
->>>>>>>> > {"type":"PERF_RECORD_SAMPLE","misc":"PERF_RECORD_MISC_USER","sample":{"ip":"7f4f3625263d","data":[-57,1,0,0,7,11,0,0,2,0,0,0,0,0,0,0,-32,70,75,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}}
->>>>>>>> >
->>>>>>>> > {"type":"PERF_RECORD_SAMPLE","misc":"PERF_RECORD_MISC_USER","sample":{"ip":"7f4f3625263d","data":[-57,1,0,0,7,11,0,0,2,0,0,0,0,0,0,0,0,-99,26,-19,-1,127,0,0,0,0,0,0,0,0,0,0,-74,1,0,0,0,0,0,0,0,0,0,0]}}
->>>>>>>> > ...
->>>>>>>> >
->>>>>>>> > What is the raw data? Depends on the event. For sys_enter/exit it is
->>>>>>>> > struct syscall_trace_enter/exit.
->>>>>>>> >
->>>>>>>> > http://osxr.org/linux/source/kernel/trace/trace.h#0095
->>>>>>>> > struct trace_entry {
->>>>>>>> >      unsigned short      type;
->>>>>>>> >      unsigned char       flags;
->>>>>>>> >      unsigned char       preempt_count;
->>>>>>>> >      int         pid;
->>>>>>>> > };
->>>>>>>> > struct syscall_trace_enter {
->>>>>>>> >     struct trace_entry  ent;
->>>>>>>> >     int         nr;
->>>>>>>> >     unsigned long       args[];
->>>>>>>> > };
->>>>>>>> >
->>>>>>>> > How did I know that? I followed the kernel logic here:
->>>>>>>> >
->>>>>>>> > http://osxr.org/linux/source/kernel/trace/trace_syscalls.c#0636
->>>>>>>> > static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long
->>>>>>>> > ret)
->>>>>>>> > {
->>>>>>>> > ...
->>>>>>>> > rec = (struct syscall_trace_exit *)perf_trace_buf_prepare(size, ...);
->>>>>>>> > ...
->>>>>>>> > }
->>>>>>>> >
->>>>>>>> > Note that indeed after short+char+char+int we have 2, the open syscall
->>>>>>>> > number in all event's raw data.
->>>>>>>> >
->>>>>>>> > On Tue, Mar 31, 2015 at 6:22 PM, sahil aggarwal <sahil.agg15@gmail.com>
->>>>>>>> > wrote:
->>>>>>>> >> Actually i need most of the sampling around PERF_TYPE_TRACEPOINT,
->>>>>>>> >> so if i enable tracepoint "syscalls/sys_enter_open/" what will be the
->>>>>>>> >> "type"
->>>>>>>> >> field in perf_event_header.? And, the the record struct will be same as
->>>>>>>> >> given
->>>>>>>> >> in "syscalls/sys_enter_open/format" .?
->>>>>>>> >>
->>>>>>>> >> Thanks
->>>>>>>> >>
->>>>>>>> >> On 31 March 2015 at 20:40, sahil aggarwal <sahil.agg15@gmail.com>
->>>>>>>> >> wrote:
->>>>>>>> >>> Yeah that was clear enough.
->>>>>>>> >>> Thanks a lot. Your code is of great help.
->>>>>>>> >>>
->>>>>>>> >>> Regards
->>>>>>>> >>> Sahil
->>>>>>>> >>>
->>>>>>>> >>> On 31 March 2015 at 19:45, Elazar Leibovich
->>>>>>>> >>> <elazar.leibovich@ravellosystems.com> wrote:
->>>>>>>> >>>> I wanted to ensure the user always see contiguous array of data from
->>>>>>>> >>>> the ring buffer.
->>>>>>>> >>>>
->>>>>>>> >>>> The last piece of data, say "abcde" could wrap around in the ring
->>>>>>>> >>>> buffer and appear like:
->>>>>>>> >>>>
->>>>>>>> >>>> [de...                 ...abc]
->>>>>>>> >>>>
->>>>>>>> >>>> I wanted the user to see a contigious array of the form [abcde].
->>>>>>>> >>>>
->>>>>>>> >>>> So in the case I'm having input that wrap around, I'll simply copy it
->>>>>>>> >>>> to the first buffer
->>>>>>>> >>>>
->>>>>>>> >>>> [wrap_buffer][de..                 ...abc]
->>>>>>>> >>>> would become
->>>>>>>> >>>> [               abc][de...               ...abc]
->>>>>>>> >>>>
->>>>>>>> >>>> And then I'll the user pointer to the leftmost "a", and he'll see
->>>>>>>> >>>> "abcde" without knowing he's handling a ring buffer.
->>>>>>>> >>>>
->>>>>>>> >>>> Let me know if I was clear enough.
->>>>>>>> >>>>
->>>>>>>> >>>> On Tue, Mar 31, 2015 at 2:18 PM, sahil aggarwal
->>>>>>>> >>>> <sahil.agg15@gmail.com> wrote:
->>>>>>>> >>>>>
->>>>>>>> >>>>> Hi Elazar
->>>>>>>> >>>>>
->>>>>>>> >>>>> Can you help me understand why you have used
->>>>>>>> >>>>> mmap_pages->wrap_base.? And, instead of allocating
->>>>>>>> >>>>> (2^n)+1 pages you allocate (2^n)+2 pages, why so.?
->>>>>>>> >>>>> wrap_base points to (2^n)+2 pages and base points to
->>>>>>>> >>>>> (2^n)+1 pages, what is use of wrap_base.? I tried reading
->>>>>>>> >>>>> perf source too, there it seems they use (2^n)+1 pages only.
->>>>>>>> >>>>>
->>>>>>>> >>>>>
->>>>>>>> >>>>> Thanks
->>>>>>>> >>>>> Regards
->>>>>>>> >> --
->>>>>>>> >> To unsubscribe from this list: send the line "unsubscribe
->>>>>>>> >> linux-perf-users" in
->>>>>>>> >> the body of a message to majordomo@vger.kernel.org
->>>>>>>> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>>>
->>>>>>>
+diff --git a/tools/perf/Build b/tools/perf/Build
+index b77370e..3c1f437 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -1,5 +1,6 @@
+ perf-y +=3D builtin-bench.o
+ perf-y +=3D builtin-annotate.o
++perf-y +=3D builtin-config.o
+ perf-y +=3D builtin-diff.o
+ perf-y +=3D builtin-evlist.o
+ perf-y +=3D builtin-help.o
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Docu=
+mentation/perf-config.txt
+new file mode 100644
+index 0000000..b251702
+--- /dev/null
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -0,0 +1,433 @@
++perf-config(1)
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++NAME
++----
++perf-config - Get and set variables in configuration file.
++
++SYNOPSIS
++--------
++[verse]
++'perf config' -a | --all
++
++DESCRIPTION
++-----------
++You can manage variables in configuration file with this command.
++
++OPTIONS
++-------
++
++-a::
++--all::
++	Show all variables with key and value into each sections.
++
++CONFIGURATION FILE
++------------------
++
++The Perf configuration file contain many variables which can make
++the perf command's action more effective, more skilful.
++The '$HOME/.perfconfig' file is used to store a per-user configuration=
+=2E
++The file 'etc/perfconfig' or '$(sysconfdir)/perfconfig' can be used to
++store a system-wide default configuration.
++
++The variables are divided into sections. In each sections, the variabl=
+es
++can contain a key and values.
++
++Syntax
++~~~~~~
++
++The file consists of sections and subkeys. A section begins with
++the name of the section in square brackets and continues until the nex=
+t
++section begins. Each variable have to belong to some section, which me=
+ans
++there must be a section header before the first setting of a variable,=
+ as below:
++Each variable are in the form 'subkey =3D value'.
++
++	[section]
++		subkey1 =3D value1
++		subkey2 =3D value2
++
++Subsection names are case sensitive and can contain any characters exc=
+ept
++newline (doublequote `"` and backslash have to be escaped as `\"` and =
+`\\`,
++respectively).  Section headers cannot span multiple
++lines.  Variables may belong directly to a section or to a given subse=
+ction.
++
++Example
++~~~~~~~
++
++Given a $HOME/.perfconfig like this:
++
++#
++# This is the config file, and
++# a '#' and ';' character indicates a comment
++#
++
++[colors]
++	# Color variables
++	top =3D red, default
++	medium =3D green, default
++	normal =3D lightgray, default
++	selected =3D white, lightgray
++	code =3D blue, default
++	addr =3D magenta, default
++	root =3D white, blue
++
++[tui]
++	# Defaults if linked with libslang
++	report =3D on
++	annotate =3D on
++	top =3D on
++
++[buildid]
++	# Default, disable using /dev/null
++	dir =3D /root/.debug
++
++[annotate]
++	# Defaults
++	hide_src_code =3D false
++	use_offset =3D true
++	jump_arrows =3D true
++	show_nr_jumps =3D false
++
++[help]
++	# Format can be man, info, web or html
++	format =3D man
++	autocorrect =3D 0
++
++[ui]
++	show-headers=3D true
++
++[call-graph]
++	# fp (framepointer), dwarf
++	record-mode =3D fp
++	print-type =3D graph
++	order =3D caller
++	sort-key =3D function
++
++Variables
++~~~~~~~~~
++
++colors.*::
++	Color variables can appoint colors of the output which is printed out
++	from =E2=80=98report=E2=80=99, =E2=80=98top=E2=80=99,=E2=80=99annotat=
+e=E2=80=99 on tui.
++	Color variables is composed of foreground and background
++	and should have two values for them. If you want to set as colors
++	of your terminal, you should use =E2=80=98default=E2=80=99 for color =
+value.
++        The kind of color which can be used as below.
++	red, green, default, black, blue, white, magenta, lightgray
++
++	colors.top::
++		=E2=80=98top=E2=80=99 means a overhead percentage which has more tha=
+n 5%.
++		And values of it=E2=80=99s variable specify colors of percentage.
++		Basic key values are foreground-color =E2=80=99red=E2=80=99 and
++		background-color =E2=80=99default=E2=80=99.
++	colors.medium::
++		=E2=80=98medium=E2=80=99 means a overhead percentage which has more =
+than 0.5%.
++		Default values are =E2=80=99green=E2=80=99 and =E2=80=99default=E2=80=
+=99.
++	colors.normal::
++		=E2=80=98normal=E2=80=99 means rest of overhead percentages
++		except =E2=80=98top=E2=80=99, =E2=80=98medium=E2=80=99, =E2=80=98sel=
+ected=E2=80=99.
++		Default values are =E2=80=99lightgray=E2=80=99 and =E2=80=99default=E2=
+=80=99.
++	colors.selected::
++		This appoint colors for forcussed one of the output list
++		from sub-commands (top,report,annotate).
++		Default values are =E2=80=99white=E2=80=99 and =E2=80=99lightgray=E2=
+=80=99.
++	colors.code::
++		Colors for a arrow and lines on jumping by assembly code
++		such as =E2=80=98jns=E2=80=99,=E2=80=99jmp=E2=80=99,=E2=80=99jane=E2=
+=80=99,etc. Default values are =E2=80=98blue=E2=80=99, =E2=80=98default=
+=E2=80=99.
++	colors.addr::
++		This appoint colors for addresses from a sub-command =E2=80=99annota=
+te=E2=80=99.
++		Default values are =E2=80=98magenta=E2=80=99, =E2=80=98default=E2=80=
+=99.
++	colors.root::
++		Colors for headers in the output of a sub-command =E2=80=98top=E2=80=
+=99.
++		Default values are =E2=80=98white=E2=80=99, =E2=80=98blue=E2=80=99.
++
++tui.*::
++	A boolean value that controls launching TUI browser for each subcomma=
+nd.
++	By default, TUI is enabled if perf detects a needed library during bu=
+ild
++	and this config option can control it.  Available subcommands are 'to=
+p',
++	'report' and 'annotate'.
++
++gtk.*::
++	A boolean value that controls launching GTK+2 GUI browser for
++	each subcommand.  By default, TUI is enabled if perf detects a
++	needed library during build and this config option can control
++	it.  Available subcommands are 'top', 'report' and 'annotate'.
++
++buildid.*::
++	buildid.dir::
++		Each executable or shared library built with each program is assigne=
+d
++		a unique identification as build-id. The option means a path where
++		build-id information can be saved.
++		The default is $HOME/.debug
++
++annotate.*::
++	There=E2=80=99re options which work with a =E2=80=99annotate=E2=80=99=
+ sub-command.
++	This Options is in control of addresses, jump function, source code
++	in lines of assembly code from a specific program.
++
++	annotate.hide_src_code::
++		If a program which is analyzed has source code of itself,
++		this option let =E2=80=98annotate=E2=80=99 print a list of assembly =
+code with the source code.
++		For example, let=E2=80=99s see a part of a program. There=E2=80=99re=
+ four lines.
++		If this option is =E2=80=98false=E2=80=99, they can be printed
++		without source code from a program as below.
++
++		=E2=94=82        push   %rbp
++		=E2=94=82        mov    %rsp,%rbp
++		=E2=94=82        sub    $0x10,%rsp
++		=E2=94=82        mov    (%rdi),%rdx
++
++		But if this option is =E2=80=98true=E2=80=99, source code of the par=
+t
++		can be also printed as below.
++
++		=E2=94=82      struct rb_node *rb_next(const struct rb_node *node)
++		=E2=94=82      {
++		=E2=94=82        push   %rbp
++		=E2=94=82        mov    %rsp,%rbp
++		=E2=94=82        sub    $0x10,%rsp
++		=E2=94=82              struct rb_node *parent;
++		=E2=94=82
++		=E2=94=82              if (RB_EMPTY_NODE(node))
++		=E2=94=82        mov    (%rdi),%rdx
++		=E2=94=82              return n;
++
++        annotate.use_offset::
++		Basing on a first address of a loaded function, offset can be used.
++		Instead of using original addresses of assembly code,
++		addresses subtracted from a base address can be printed.
++		Let=E2=80=99s illustrate a example.
++		If a base address is 0XFFFFFFFF81624d50 as below,
++
++		ffffffff81624d50 <load0>
++
++		a address on assembly code has a specific absolute address as below
++
++		ffffffff816250b8:=E2=94=82  mov    0x8(%r14),%rdi
++
++		but if use_offset is =E2=80=99true=E2=80=99, a address subtracted fr=
+om a base address is printed.
++		The default is true.
++
++		             368:=E2=94=82  mov    0x8(%r14),%rdi
++
++	annotate.jump_arrows::
++		There=E2=80=99re jump instruction among assembly code.
++		Depending on a boolean value of jump_arrows,
++		arrows can be printed or not which represent
++		where do the instruction jump into as below.
++
++		=E2=94=82     =E2=94=8C=E2=94=80=E2=94=80jmp    1333
++		=E2=94=82     =E2=94=82  xchg   %ax,%ax
++		=E2=94=821330:=E2=94=82  mov    %r15,%r10
++		=E2=94=821333:=E2=94=94=E2=94=80=E2=86=92cmp    %r15,%r14
++
++		If jump_arrow is =E2=80=98false=E2=80=99, the arrows isn=E2=80=99t p=
+rinted as below.
++
++		=E2=94=82      =E2=86=93 jmp    1333
++		=E2=94=82        xchg   %ax,%ax
++		=E2=94=821330:   mov    %r15,%r10
++		=E2=94=821333:   cmp    %r15,%r14
++
++        annotate.show_nr_jumps::
++		Let=E2=80=99s see a part of assembly code.
++
++		=E2=94=821382:   movb   $0x1,-0x270(%rbp)
++
++		If use this, the number of branches branching to that address can be=
+ printed as below.
++
++		=E2=94=821 1382:   movb   $0x1,-0x270(%rbp)
++
++help.*::
++	help.format:: =3D man
++		A format of manual page can be =E2=80=98man=E2=80=99, =E2=80=98info=E2=
+=80=99, =E2=80=98web=E2=80=99 or =E2=80=98html=E2=80=99.
++		=E2=80=99man=E2=80=99 is default.
++	help.autocorrect:: =3D 0
++		Automatically correct and execute mistyped commands after
++		waiting for the given number of deciseconds (0.1 sec).
++		Let's see a example. If a mistyped sub-command is executed like 'per=
+f mistyped-command'
++		and this option is 0, the output is as below.
++
++		perf: 'mistyped-command' is not a perf-command. See 'perf --help=E2=80=
+=99.
++
++		Or if this option is more than 1, the output can be such as.
++
++		WARNING: You called a perf program named 'mistyped-command', which d=
+oes not exist.
++		Continuing under the assumption that you meant 'with-kcore'
++		in 0.1 seconds automatically...
++		Usage: perf-with-kcore <perf sub-command> <perf.data directory> [<su=
+b-command options> [ -- <workload>]]
++		<perf sub-command> can be record, script, report or inject
++		    or: perf-with-kcore fix_buildid_cache_permissions
++
++hist.*::
++	hist.percentage::
++		This option control a way to calcurate overhead of filtered entries =
+-
++		that means the value of this option is effective only if there's a
++		filter (by comm, dso or symbol name).  Suppose a following example:
++
++		       Overhead  Symbols
++		       ........  .......
++		        33.33%     foo
++		        33.33%     bar
++		        33.33%     baz
++
++	       This is an original overhead and we'll filter out the first 'f=
+oo'
++	       entry.  The value of 'relative' would increase the overhead of=
+ 'bar'
++	       and 'baz' to 50.00% for each, while 'absolute' would show thei=
+r
++	       current overhead (33.33%).
++
++ui.*::
++	ui.show-headers::
++		There=E2=80=99re columns as header =E2=80=98Overhead=E2=80=99, =E2=80=
+=98Children=E2=80=99, =E2=80=98Shared Object=E2=80=99, =E2=80=98Symbol=E2=
+=80=99, =E2=80=99self=E2=80=99.
++		If this option is false, they are hiden.
++
++call-graph.*::
++	When sub-commands =E2=80=98top=E2=80=99 and =E2=80=98report=E2=80=99 =
+work with -g/=E2=80=94-children
++	there=E2=80=99re options in control of call-graph.
++
++	call-graph.record-mode::
++		The record-mode can be =E2=80=98fp=E2=80=99 (frame pointer) and =E2=80=
+=98dwarf=E2=80=99.
++		The value of 'dwarf' is effective only if perf detect needed library
++		(libunwind or a recent version of libdw).  Also it doesn't *require*
++		the dump-size option since it can use the default value of 8192 if
++		missing.
++
++	call-graph.dump-size::
++		The size of stack to dump in order to do post-unwinding.  Default is=
+ 8192 (byte).
++		When using dwarf into record-mode this option should have a value.
++
++	call-graph.print-type::
++		The print-types can be graph (graph absolute), fractal (graph relati=
+ve), flat.
++		This option controls a way to show overhead for each callchain entry=
+=2E
++		Suppose a following example.
++
++		Overhead  Symbols
++		........  .......
++		  40.00%  foo
++		      |
++		      --- foo
++		      |
++		      |--50.00%-- bar
++		      |           main
++		      |
++		      --50.00%-- baz
++		                 main
++
++		This output is a default format which is 'fractal'.  The 'foo' came
++		from 'bar' and 'baz' exactly half and half so 'fractal' shows 50.00%
++		for each (meaning that it assumes 100% total overhead of 'foo').
++
++		The 'graph' uses absolute overhead value of 'foo' as total so each o=
+f
++		'bar' and 'baz' callchain will have 20.00% of overhead.
++
++	call-graph.order::
++		This option controls print order of callchains.  The default is
++		'callee' which means callee is printed at top and then followed by i=
+ts
++		caller and so on.  The 'caller' prints it in reverse order.
++
++	call-graph.sort-key::
++		The callchains are merged if they contain same information.
++		The sort-key option determines a way to compare the callchains.
++		A value of 'sort-key' can be 'function' or 'address=E2=80=99.
++		The default is =E2=80=98function=E2=80=99.
++
++	call-graph.threshold::
++		When there're many callchains it'd print tons of lines.  So perf omi=
+ts
++		small callchains under a certain overhead (threshold) and this optio=
+n
++		control the threashold.  Default is 0.5 (%).
++
++	call-graph.print-limit::
++		This is another way to control the number of callchains printed for =
+a
++		single entry.  Default is 0 which means no limitation.
++
++report.*::
++	report.percent-limit::
++		This one is mostly same as call-graph.threshold but works for
++		histogram entries.  Entries have overhead lower than this percentage
++		will not be printed.  Default is 0.
++		If percent-limit is 70, the output which has percentages of
++		each overhead above 70% can be printed.
++
++	report.queue-size::
++		option to setup the maximum allocation size for session's
++		ordered events queue, if not set there's no default limit
++
++	report.children::
++		The children means that functions called from another function.
++		If the option is true, accumulate callchain of children and show tot=
+al overhead.
++		For example, there=E2=80=99re three functions like below.
++
++		 void foo(void) {
++		   /* do something */
++		 }
++
++		 void bar(void) {
++		   /* do something */
++		   foo();
++		 }
++
++		 int main(void) {
++		   bar()
++		   return 0;
++		 }
++
++		Defaultly the output of sub-commands such as =E2=80=99top=E2=80=99, =
+=E2=80=98report=E2=80=99 and =E2=80=98annotate=E2=80=99
++		depend on a sort of overhead into each functions as below.
++
++		Overhead  Symbol
++		........  .....................
++		  60.00%  foo
++		          |
++		          --- foo
++		              bar
++		              main
++		              __libc_start_main
++
++		  40.00%  bar
++		          |
++		          --- bar
++		              main
++		              __libc_start_main
++
++		But if this option is true, the sort is changed into a sort of
++		overhead into each children group of each function  reciting all fun=
+ctions
++		from a first parent function till a last child function like below.
++		And it requires -g/--call-graph option enabled
++
++		Children      Self  Symbol
++		........  ........  ....................
++		 100.00%     0.00%  __libc_start_main
++		          |
++		          --- __libc_start_main
++
++		 100.00%     0.00%  main
++		          |
++		          --- main
++		              __libc_start_main
++
++		 100.00%    40.00%  bar
++		          |
++		          --- bar
++		              main
++		              __libc_start_main
++
++		  60.00%    60.00%  foo
++		          |
++		          --- foo
++		              bar
++		              main
++		              __libc_start_main
++
++top.*::
++	top.children::
++		This option means same as report.children.
++		So it is true, the output of =E2=80=98top=E2=80=99 is rearranged by =
+each overhead into children group.
++
++man.*::
++	man.viewer::
++
++pager.*::
++	pager.report::
++	pager
++
++SEE ALSO
++--------
++linkperf:perf[1]
+diff --git a/tools/perf/Documentation/perfconfig.example b/tools/perf/D=
+ocumentation/perfconfig.example
+index 767ea24..853aa20 100644
+--- a/tools/perf/Documentation/perfconfig.example
++++ b/tools/perf/Documentation/perfconfig.example
+@@ -1,29 +1,72 @@
+ [colors]
+-
+-	# These were the old defaults
+-	top =3D red, lightgray
+-	medium =3D green, lightgray
+-	normal =3D black, lightgray
+-	selected =3D lightgray, magenta
+-	code =3D blue, lightgray
+-	addr =3D magenta, lightgray
++	# There are types of colors which are red,
++	# green, default, black, blue,
++	# white, magenta, lightgray
++	# The default is like below
++	top =3D red, default
++	medium =3D green, default
++	normal =3D lightgray, default
++	selected =3D white, lightgray
++	code =3D blue, default
++	addr =3D magenta, default
++	root =3D white, blue
+=20
+ [tui]
+-
+ 	# Defaults if linked with libslang
+ 	report =3D on
+ 	annotate =3D on
+ 	top =3D on
+=20
+ [buildid]
+-
+ 	# Default, disable using /dev/null
+ 	dir =3D /root/.debug
+=20
+ [annotate]
+-
+ 	# Defaults
+ 	hide_src_code =3D false
+ 	use_offset =3D true
+ 	jump_arrows =3D true
+ 	show_nr_jumps =3D false
++
++[gtk]
++	report =3D off
++	annotate =3D off
++	#top =3D off
++
++[pager]
++	# That a 'cmd' is true mean to use "pager or less"
++	cmd =3D true
++	report =3D false
++	diff =3D true
++
++[help]
++	# Format can be man, info, web or html
++	format =3D man
++	autocorrect =3D 0
++
++[hist]
++	# a value of 'percentage' can be 'relative' or 'absolute'
++	percentage =3D absolute
++
++[ui]
++	show-headers=3D true
++
++[call-graph]
++	# fp (framepointer), dwarf
++	record-mode =3D fp
++
++	# graph (graph absolute), flat, fractal (graph relative)
++	print-type =3D fractal
++
++	# caller, callee
++	order =3D caller
++
++	# function, address
++	sort-key =3D function
++
++[report]
++	percent-limit =3D 1
++	children =3D false
++
++[top]
++	children =3D true
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+new file mode 100644
+index 0000000..32f8ae6
+--- /dev/null
++++ b/tools/perf/builtin-config.c
+@@ -0,0 +1,68 @@
++/*
++ * builtin-config.c
++ *
++ * Copyright (C) 2015, Taeung Song <treeze.taeung@gmail.com>
++ *
++ */
++#include "builtin.h"
++
++#include "perf.h"
++
++#include "util/cache.h"
++#include "util/parse-options.h"
++#include "util/util.h"
++#include "util/debug.h"
++
++static struct {
++	bool all_action;
++} params;
++
++static const char * const config_usage[] =3D {
++	"perf config [options]",
++	NULL
++};
++static const struct option config_options[] =3D {
++	OPT_GROUP("Action"),
++	OPT_BOOLEAN('a', "all", &params.all_action, "print all configurations=
+"),
++	OPT_END()
++};
++
++static void check_argc(int argc, int limit)
++{
++	if (argc >=3D limit && argc <=3D limit)
++		return;
++	error("wrong number of arguments");
++	usage_with_options(config_usage, config_options);
++}
++
++static int show_config(const char *key, const char *value,
++			   void *cb __maybe_unused)
++{
++	if (value)
++		printf("%s=3D%s\n", key, value);
++	else
++		printf("%s\n", key);
++
++	return 0;
++}
++
++int cmd_config(int argc, const char **argv, const char *prefix __maybe=
+_unused)
++{
++	int ret =3D 0;
++
++	argc =3D parse_options(argc, argv, config_options, config_usage,
++			     PARSE_OPT_STOP_AT_NON_OPTION);
++	if (argc > 0) {
++		if (strcmp(argv[0], "-") =3D=3D 0) {
++			pr_warning("  Error: '-' is not supported.\n");
++			usage_with_options(config_usage, config_options);
++		}
++	}
++
++	if (argc =3D=3D 0 || params.all_action) {
++		check_argc(argc, 0);
++		ret =3D perf_config(show_config, NULL);
++	}
++
++	return ret;
++}
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 3688ad2..3f871b5 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -17,6 +17,7 @@ extern int cmd_annotate(int argc, const char **argv, =
+const char *prefix);
+ extern int cmd_bench(int argc, const char **argv, const char *prefix);
+ extern int cmd_buildid_cache(int argc, const char **argv, const char *=
+prefix);
+ extern int cmd_buildid_list(int argc, const char **argv, const char *p=
+refix);
++extern int cmd_config(int argc, const char **argv, const char *prefix)=
+;
+ extern int cmd_diff(int argc, const char **argv, const char *prefix);
+ extern int cmd_evlist(int argc, const char **argv, const char *prefix)=
+;
+ extern int cmd_help(int argc, const char **argv, const char *prefix);
+diff --git a/tools/perf/command-list.txt b/tools/perf/command-list.txt
+index 00fcaf8..acc3ea7 100644
+--- a/tools/perf/command-list.txt
++++ b/tools/perf/command-list.txt
+@@ -9,6 +9,7 @@ perf-buildid-cache		mainporcelain common
+ perf-buildid-list		mainporcelain common
+ perf-data			mainporcelain common
+ perf-diff			mainporcelain common
++perf-config			mainporcelain common
+ perf-evlist			mainporcelain common
+ perf-inject			mainporcelain common
+ perf-kmem			mainporcelain common
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index b857fcb..604fa4a 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -37,6 +37,7 @@ struct cmd_struct {
+ static struct cmd_struct commands[] =3D {
+ 	{ "buildid-cache", cmd_buildid_cache, 0 },
+ 	{ "buildid-list", cmd_buildid_list, 0 },
++	{ "config",	cmd_config,	0 },
+ 	{ "diff",	cmd_diff,	0 },
+ 	{ "evlist",	cmd_evlist,	0 },
+ 	{ "help",	cmd_help,	0 },
+--=20
+1.9.1
