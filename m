@@ -1,60 +1,30 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 2/2] perf tools: Add a option 'remove' to perf-config and
- features which get or set a config variable.
-Date: Fri, 10 Apr 2015 11:31:36 +0200
-Message-ID: <20150410093136.GB31326@krava.brq.redhat.com>
-References: <1428589591-22838-1-git-send-email-treeze.taeung@gmail.com>
- <1428589591-22838-2-git-send-email-treeze.taeung@gmail.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Uncore event for one process
+Date: Fri, 10 Apr 2015 05:14:33 -0700
+Message-ID: <87twwonpsm.fsf@tassilo.jf.intel.com>
+References: <78FDB3A8-3F50-43F8-A69D-D7C6A37A2859@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:59804 "EHLO mx1.redhat.com"
+Received: from mga14.intel.com ([192.55.52.115]:14199 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754014AbbDJJbp (ORCPT
+	id S1754714AbbDJMOg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 10 Apr 2015 05:31:45 -0400
-Content-Disposition: inline
-In-Reply-To: <1428589591-22838-2-git-send-email-treeze.taeung@gmail.com>
+	Fri, 10 Apr 2015 08:14:36 -0400
+In-Reply-To: <78FDB3A8-3F50-43F8-A69D-D7C6A37A2859@gmail.com> (Tianwei Zhang's
+	message of "Tue, 7 Apr 2015 01:57:20 -0400")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Taeung Song <treeze.taeung@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, namhyung@kernel.org, linux-perf-users@vger.kernel.org
+To: Tianwei Zhang <artdream07@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 09, 2015 at 11:26:31PM +0900, Taeung Song wrote:
-> This patch consists of adding functions
-> which get, set or remove a specific config variable.
-> For the syntax examples,
-> 
->     perf config [options] [section.subkey[=value]]
-> 
->     display all perf config with default values
->     # perf config
->     or
->     # perf config -a | --all
+Tianwei Zhang <artdream07@gmail.com> writes:
+>
+> Can anyone help me with this problem?
 
-so this is ^^^ what the previous patch does right?
+uncore monitoring is only supported socket wide.
 
-> 
->     display a specific key(section.subkey) and value
->     # perf config report.queue
-> 
->     set a specific key and value
->     # perf config report.queue=100M
-> 
->     remove a specific key
->     # perf config -r | --remove report.queue
+-Andi
 
-haven't checked the code but:
-
-  [jolsa@krava perf]$ ./perf config krava=true
-  The config variable does not contain a section: krava=true[jolsa@krava perf]$ 
-
-missing '\n'
-
-we can set anything now:
-  [jolsa@krava perf]$ ./perf config krava.krava=true
-
-the restriction for only known keys would need similar stuff like
-for the '-a' option I asked in the previous email right?
-
-jirka
+-- 
+ak@linux.intel.com -- Speaking for myself only
