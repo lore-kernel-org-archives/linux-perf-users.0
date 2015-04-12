@@ -1,56 +1,56 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: How to measure VM events using perf-event
-Date: Sat, 11 Apr 2015 08:59:20 -0300
-Message-ID: <20150411115920.GA3200@kernel.org>
-References: <37CC8A17-BF41-41A5-8890-83A792C0BC08@gmail.com>
- <5527EEB3.1060507@codeaurora.org>
- <ABC4B897-7580-4EFC-B424-266D1E556498@gmail.com>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: perf user SDT markers
+Date: Sat, 11 Apr 2015 19:13:08 -0700
+Message-ID: <CAE40pdf1Y3mQMnVi7jSBMg8ovg7x3L17jCf_yGemM_PLLG_k1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:55250 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752657AbbDKL72 (ORCPT
+Received: from mail-ie0-f179.google.com ([209.85.223.179]:33456 "EHLO
+	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751881AbbDLCNa (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 11 Apr 2015 07:59:28 -0400
-Content-Disposition: inline
-In-Reply-To: <ABC4B897-7580-4EFC-B424-266D1E556498@gmail.com>
+	Sat, 11 Apr 2015 22:13:30 -0400
+Received: by iebmp1 with SMTP id mp1so42900702ieb.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Apr 2015 19:13:29 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jueyuan Zhu <jueyuan.zhu@gmail.com>
-Cc: Christopher Covington <cov@codeaurora.org>, linux-perf-users@vger.kernel.org
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>, hemant@linux.vnet.ibm.com
 
-Em Fri, Apr 10, 2015 at 12:17:08PM -0400, Jueyuan Zhu escreveu:
-> Hi Chris,
-> 
-> Thanks for your suggestions. Since I am using the perf_event_open in the host OS, not in the guest OS. So does it need the support of PMU virtualization? I used the perf command below to measure the VM, and it can give correct results. So I am wondering how to use perf_event_open to get the same results as the perf user command?
-> 
-> #perf stat -e instructions -p VM_id sleep 1
- 
-Try adding -vv to the above perf stat command, it will show you how it
-is setting up perf_event_attr, as well as the other arguments to
-sys_perf_event_open, for example:
+G'Day,
 
-[acme@zoo linux]$ perf stat -vv -e instructions usleep 1
-------------------------------------------------------------
-perf_event_attr:
-  size                             112
-  config                           1
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  enable_on_exec                   1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid 3530  cpu -1  group_fd -1  flags 0x8
-instructions: 632294 767399 767399
+I was just trying Hemant Kumar's user SDT patch
+(http://lwn.net/Articles/618956/); anyone else tried it recently? I
+applied it to 4.0.0-rc6, and it creates instrumentation, but doesn't
+record the probes.
 
- Performance counter stats for 'usleep 1':
+This works (it finds the Node.js probes):
 
-           632.294      instructions                                                
+# ./perf sdt-cache --dump
+/home/bgregg-testtest/node-standard/out/Release/node:
+   %node:net__server__connection
+   %node:net__stream__end
+   %node:net__socket__read
+   %node:net__socket__write
+   %node:http__server__request
+   %node:http__server__response
+   %node:http__client__request
+   %node:http__client__response
+   %node:gc__done
+   %node:gc__start
 
-       0,001521851 seconds time elapsed
+But I can't "perf list" or record them:
 
-[acme@zoo linux]$
+# ./perf record -e '%node:http__server__request' -aR
+invalid or unsupported event: '%node:http__server__request'
+Run 'perf list' for a list of valid events
+[...]
 
-- Arnaldo
+stap works:
+
+# /root/systemtap-2.8/bin/stap -e 'probe
+process("/home/bgregg-testtest/node-standard/out/Release/node").mark("http__server__request")
+{ println("hit"); }'
+hit
+hit
+
+Brendan
