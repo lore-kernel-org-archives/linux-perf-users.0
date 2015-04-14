@@ -1,136 +1,119 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+From: sahil aggarwal <sahil.agg15@gmail.com>
 Subject: Re: Sampling on sched:sched_switch
-Date: Tue, 14 Apr 2015 09:15:59 -0300
-Message-ID: <20150414121559.GD16027@kernel.org>
+Date: Tue, 14 Apr 2015 18:00:17 +0530
+Message-ID: <CAGAANTUAJJmBBSRijursj2VxCg=1kbEP90BRMW2-J0S83tzRug@mail.gmail.com>
 References: <CAGAANTU3HMoZCNsN=PAWCb8Pqx89ZyO3aQcibXKN+ZxMx1MAOA@mail.gmail.com>
- <20150413151148.GI3200@kernel.org>
- <CAGAANTXY8UiP2yRUg5tVBB+PQdH8=X27MKUj=nSHvWHk-x5MJQ@mail.gmail.com>
+	<20150413151148.GI3200@kernel.org>
+	<CAGAANTXY8UiP2yRUg5tVBB+PQdH8=X27MKUj=nSHvWHk-x5MJQ@mail.gmail.com>
+	<20150414121559.GD16027@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35189 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754359AbbDNMQD (ORCPT
+Received: from mail-oi0-f49.google.com ([209.85.218.49]:35187 "EHLO
+	mail-oi0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753243AbbDNMaS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 14 Apr 2015 08:16:03 -0400
-Received: from [187.65.119.65] (helo=zoo.ghostprotocols.net)
-	by bombadil.infradead.org with esmtpsa (Exim 4.80.1 #2 (Red Hat Linux))
-	id 1Yhzl4-00021p-LW
-	for linux-perf-users@vger.kernel.org; Tue, 14 Apr 2015 12:16:02 +0000
-Content-Disposition: inline
-In-Reply-To: <CAGAANTXY8UiP2yRUg5tVBB+PQdH8=X27MKUj=nSHvWHk-x5MJQ@mail.gmail.com>
+	Tue, 14 Apr 2015 08:30:18 -0400
+Received: by oign205 with SMTP id n205so563040oig.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2015 05:30:17 -0700 (PDT)
+In-Reply-To: <20150414121559.GD16027@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: sahil aggarwal <sahil.agg15@gmail.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 14, 2015 at 11:12:11AM +0530, sahil aggarwal escreveu:
-> In my case:
- 
-> bash-4.1# sudo perf stat -e sched:sched_switch sleep 1
- 
->  Performance counter stats for 'sleep 1':
- 
->                  0 sched:sched_switch
- 
->        1.004714901 seconds time elapsed
+> So, there are some critical pieces of information missing here:
+>
+> - perf --version
 
-So, there are some critical pieces of information missing here:
+bash-4.1# perf --version
+perf version 3.2.17
 
-- perf --version
-- cat /proc/cpuinfo
-- uname -a
-- What distribution is this?
+> - cat /proc/cpuinfo
 
-So that we can try to figure this out.
- 
-> And  if i do:
- 
-> bash-4.1# perf stat -e cs sleep 1
+processor : 0
+vendor_id : GenuineIntel
+cpu family : 6
+model : 45
+model name : Intel(R) Xeon(R) CPU E5-2643 0 @ 3.30GHz
+stepping : 7
+microcode : 0x70d
+cpu MHz : 3299.897
+cache size : 10240 KB
+physical id : 0
+siblings : 4
+core id : 0
+cpu cores : 4
+apicid : 0
+initial apicid : 0
+fpu : yes
+fpu_exception : yes
+cpuid level : 13
+wp : yes
+flags : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov
+pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx
+pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl
+xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl
+vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic
+popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln
+pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips : 6599.79
+clflush size : 64
+cache_alignment : 64
+address sizes : 46 bits physical, 48 bits virtual
+power management:
 
->  Performance counter stats for 'sleep 1':
- 
->                  1 cs
- 
->        1.003306642 seconds time elapsed
- 
-> To enable sampling on sched:sched_switch my perf_event_attr look like:
- 
->         e_open->attr.disabled           = 1;
->         e_open->attr.type                  = PERF_TYPE_TRACEPOINT;
->         e_open->attr.config               = 87;
+processor : 1
+vendor_id : GenuineIntel
+cpu family : 6
+model : 45
+model name : Intel(R) Xeon(R) CPU E5-2643 0 @ 3.30GHz
+stepping : 7
+microcode : 0x70d
+cpu MHz : 3299.897
+cache size : 10240 KB
+physical id : 0
+siblings : 4
+core id : 3
+cpu cores : 4
+apicid : 6
+initial apicid : 6
+fpu : yes
+fpu_exception : yes
+cpuid level : 13
+wp : yes
+flags : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov
+pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx
+pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl
+xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl
+vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic
+popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln
+pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips : 6600.30
+clflush size : 64
+cache_alignment : 64
+address sizes : 46 bits physical, 48 bits virtual
+power management:
 
-in my machine:
+> - uname -a
+bash-4.1# uname -a
+Linux ops-es2 3.2.66-amd64 #1 SMP Wed Mar 4 16:29:30 IST 2015 x86_64 GNU/Linux
 
-[root@zoo ~]# cat /sys/kernel/debug/events/sched/sched_switch/format 
-name: sched_switch
-ID: 263
+> [root@zoo ~]# cat /sys/kernel/debug/events/sched/sched_switch/format
+> name: sched_switch
+> ID: 263
 
+bash-4.1# cat /sys/kernel/debug/tracing/events/sched/sched_switch/id
+87
 
->         e_open->attr.size                  = sizeof(e_open->attr);
->         e_open->attr.sample_period = 1;
->         e_open->attr.inherit               = 1;
->         e_open->attr.sample_type     = PERF_SAMPLE_TIME      |
-> PERF_SAMPLE_RAW       |
-> PERF_SAMPLE_CPU       |
-> PERF_SAMPLE_TID       ;
->         e_open->attr.__reserved_1       = 0;
->         e_open->attr.read_format        = 0;
- 
-> Running in separate thread for each CPU:
+> So you have two counters, one in each CPU, for the same thread? What is
+> the intent?
+I have multiple tracepoints(say ~20-25), i tried it to enable them for
+all CPU's but when i do attr->inherit = 1, it doesnt mmap the FD(
+Gives EINVAL). When i digged the perf code a bit, i found :
 
-Running in separate thread for each CPU? Can you ellaborate on this?
+if (evlist->cpus->map[0] < 0)
+                no_inherit = true;
 
-> perf_event_open(&e_open->attr,2552,0,-1,0)
-> perf_event_open(&e_open->attr,2552,1,-1,0)
-
-So you have two counters, one in each CPU, for the same thread? What is
-the intent?
-
-If I go to do it with 'perf stat' it uses:
-
-[root@zoo ~]# perf stat -vv -p 7762 -e sched:*switch 2>&1 | grep sys_perf_event_open
-sys_perf_event_open: pid 7762  cpu -1  group_fd -1  flags 0x8
-^C[root@zoo ~]#
-
-Just one sys_perf_event_open syscall, stating that its the thread 7762
-that should be monitored, in whatever CPU it ends up running.
-
-Of course I can have multiple sys_perf_event_open() calls, from
-different users even, if they have the appropriate permissions, and as
-well many from the same user, but why, on the same monitoring session,
-create one thread per CPU if the thread will only run in one CPU at a
-time? You will end up having to order events from multiple ring buffers,
-etc.
-
-> 
-> But if do :
-> 
->        e_open->attr.disabled           = 1;
->         e_open->attr.type                  = PERF_TYPE_SOFTWARE;
->         e_open->attr.config               = PERF_COUNT_SW_CONTEXT_SWITCHES;
->         e_open->attr.size                  = sizeof(e_open->attr);
->         e_open->attr.sample_period = 1;
->         e_open->attr.inherit               = 1;
->         e_open->attr.sample_type     = PERF_SAMPLE_TIME      |
-> 
-> PERF_SAMPLE_RAW       |
-> 
-> PERF_SAMPLE_CPU       |
-> 
-> PERF_SAMPLE_TID       ;
->         e_open->attr.__reserved_1       = 0;
->         e_open->attr.read_format          = 0;
-> 
-> It writes events to ring buffer but of course without any
-> args(prev_comm,prev_pid,next_comm,next_pid)
-> 
-> So i am not able to understand this difference. Why sched:sched_switch
-> doesnt give me any counter.
-
-The difference is that you're using two different kinds of events, as you
-can see on the attr.type and attr.config above, for some reason in your
-case the PERF_TYPE_TRACEPOINT one is not happening, being lost or not
-being asked for in some subtle way.
-
-- Arnaldo
+So, i thought may be it doesn't allow trace on all CPU's when i
+inherit. Does that make sense.?
