@@ -1,88 +1,60 @@
-From: sahil aggarwal <sahil.agg15@gmail.com>
-Subject: Re: Sampling on sched:sched_switch
-Date: Wed, 15 Apr 2015 11:47:46 +0530
-Message-ID: <CAGAANTV=nhS8H=1aot1VybjjNykkMkJv9dJgejaY4=FRgzvtTw@mail.gmail.com>
-References: <CAGAANTU3HMoZCNsN=PAWCb8Pqx89ZyO3aQcibXKN+ZxMx1MAOA@mail.gmail.com>
-	<20150413151148.GI3200@kernel.org>
-	<CAGAANTXY8UiP2yRUg5tVBB+PQdH8=X27MKUj=nSHvWHk-x5MJQ@mail.gmail.com>
-	<20150414121559.GD16027@kernel.org>
-	<CAGAANTUAJJmBBSRijursj2VxCg=1kbEP90BRMW2-J0S83tzRug@mail.gmail.com>
-	<20150414125921.GJ16027@kernel.org>
-	<CAGAANTV1gQFd0_WZbGTG_+ASZZdDmfAecr_ddchnWGB+dMyVDA@mail.gmail.com>
-	<20150414142226.GL16027@kernel.org>
-	<CAGAANTWdzGu=NKrViUm9-e_9r0jVzRdS4+72VjqgOKOURnqKKA@mail.gmail.com>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: perf message in dmesg
+Date: Thu, 16 Apr 2015 10:02:08 +0200
+Message-ID: <552F6C80.2000005@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-vn0-f43.google.com ([209.85.216.43]:35792 "EHLO
-	mail-vn0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S964804AbbDOGRr (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:45978 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757020AbbDPIMF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 15 Apr 2015 02:17:47 -0400
-Received: by vnbg1 with SMTP id g1so11517793vnb.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Apr 2015 23:17:46 -0700 (PDT)
-In-Reply-To: <CAGAANTWdzGu=NKrViUm9-e_9r0jVzRdS4+72VjqgOKOURnqKKA@mail.gmail.com>
+	Thu, 16 Apr 2015 04:12:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id EF347DE7C3
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2015 10:02:09 +0200 (CEST)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 03665-02 for <linux-perf-users@vger.kernel.org>;
+ Thu, 16 Apr 2015 10:02:09 +0200 (CEST)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id 94C31DED19
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2015 10:02:09 +0200 (CEST)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id t3G829Nr004677
+	for linux-perf-users@vger.kernel.org; Thu, 16 Apr 2015 10:02:09 +0200
+Received: from [84.88.51.110] (bsccs203.int.bsc.es [84.88.51.110])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id 6623FF93E8
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Apr 2015 10:02:09 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Update to kernel 4.0.0. Working fine now.
+Hello,
 
-Thank you Arnaldo.
+   I've been using the perf mem record command recently, and I've just 
+noticed this message in the dmesg?
 
-On 14 April 2015 at 20:25, sahil aggarwal <sahil.agg15@gmail.com> wrote:
->> My question stands: "Are you monitoring a specific thread? Or all
->> threads in the system"?
-> I am monitoring a specific thread not systemwide.
->
->> Above, we are not asking the kernel for cpu == -1 and thread == -1, that will
->> result in that -EINVAL, that is there for scalability reasons.
->
-> Yes, this condition will give EINVAL according to the documentation,
-> but i pass the pid of thread i want to monitor so i definitely dont
-> ask kernel for cpu == -1 and pid == -1.
->
-> sys_perf_event_open(__NR_perf_event_open,2588,0,-1,0)
-> sys_perf_event_open(__NR_perf_event_open,2588,1,-1,0)
->
-> But, my actual problem still persist. Still not getting any counts on
-> sched:sched_switch for particular thread. But it works for systemwide
->
-> bash-4.1# perf stat -ae "sched:*" sleep 1
->
->  Performance counter stats for 'sleep 1':
->
->                  0 sched:sched_kthread_stop
->          [100.00%]
->                  0 sched:sched_kthread_stop_ret
->             [100.00%]
->                 90 sched:sched_wakeup
->          [100.00%]
->                  8 sched:sched_wakeup_new
->          [100.00%]
->                210 sched:sched_switch
->          [100.00%]
->                 31 sched:sched_migrate_task
->          [100.00%]
->                  6 sched:sched_process_free
->          [100.00%]
->                  5 sched:sched_process_exit
->          [100.00%]
->                  0 sched:sched_wait_task
->          [100.00%]
->                  7 sched:sched_process_wait
->          [100.00%]
->                 10 sched:sched_process_fork
->          [100.00%]
->                  0 sched:sched_stat_wait
->          [100.00%]
->                  0 sched:sched_stat_sleep
->          [100.00%]
->                  0 sched:sched_stat_iowait
->          [100.00%]
->           81156012 sched:sched_stat_runtime
->          [100.00%]
->                  0 sched:sched_pi_setprio
->
->        1.004944414 seconds time elapsed
+   What does it mean?
+
+[  157.538495] perf samples too long (2504 > 2500), lowering
+kernel.perf_event_max_sample_rate to 50000
+
+Thank you very much in advance
+
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
+
+http://www.bsc.es/disclaimer
