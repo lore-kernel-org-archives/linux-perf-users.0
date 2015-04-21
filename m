@@ -1,36 +1,42 @@
-From: Vinson Lee <vlee@twopensource.com>
-Subject: perf linking error with NO_DWARF=1 and NO_LIBUNWIND=1
-Date: Sat, 18 Apr 2015 00:05:39 -0700
-Message-ID: <CAHTgTXVqzwcP39PqwaLNUFSdc-q_fk6cWEdfGQoNzqsGu9Qb8g@mail.gmail.com>
+From: Daniel Speyer <dspeyer@gmail.com>
+Subject: Re: How to read the perf report output
+Date: Tue, 21 Apr 2015 18:44:17 +0000 (UTC)
+Message-ID: <loom.20150421T203602-458@post.gmane.org>
+References: <CA+res+Qw26_URgzDGWOriDDqpc6G6tqqEYfHe-9nO1gonOzkWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f50.google.com ([209.85.192.50]:34003 "EHLO
-	mail-qg0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751039AbbDRHFk (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:40619 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751842AbbDUSpF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 18 Apr 2015 03:05:40 -0400
-Received: by qgfi89 with SMTP id i89so31735450qgf.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 18 Apr 2015 00:05:39 -0700 (PDT)
+	Tue, 21 Apr 2015 14:45:05 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1YkdAM-0005c9-Ed
+	for linux-perf-users@vger.kernel.org; Tue, 21 Apr 2015 20:45:02 +0200
+Received: from cpe-74-65-228-248.nyc.res.rr.com ([74.65.228.248])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2015 20:45:02 +0200
+Received: from dspeyer by cpe-74-65-228-248.nyc.res.rr.com with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Apr 2015 20:45:02 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-I build perf with NO_DWARF=1 and my spec file does not require libunwind-devel.
+My copy of perf doesn't do that, but from looking at some stacks, I think
+the first percentage is time spent in that function *including* children and
+the second is *excluding*.  For example, cpu_startup_entry calls
+arch_cpu_idle, and the latter accounts for most of the former's run time, so
+they both have high inclusive time but the former has very low exclusive.
 
-With this combination I see perf linking errors such as the following.
+You might find things clearer using perf script instead of perf report.  It
+doesn't analyze, but just dumps the results in an easy-to-read format
+(intended to be the input to a script you would write, hence the name, but
+you can also read it by hand).  You may need to specify a format.  I
+generally use:
 
-  LINK     perf
-libperf.a(unwind-libdw.o): In function `libdw__arch_set_initial_registers':
-tools/perf/arch/x86/util/unwind-libdw.c:50: undefined reference to
-`dwfl_thread_state_registers'
-
-This linking error was introduced with commit
-0a4f2b6a3ba5066947a8cbd7cfa26fb8a9280625 "perf tools: Setup default
-dwarf post unwinder" in Linux 3.15-rc1.
-
-The above error can also be reproduced with this command line.
-make -C tools/perf NO_DWARF=1 NO_LIBUNWIND=1
-
-Cheers,
-Vinson
+  sudo perf script -f trace:tid,comm,time,event,trace,sym,ip,dso
