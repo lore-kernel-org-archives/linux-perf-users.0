@@ -1,51 +1,43 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: L1-dcache-stores twice as big as expected
-Date: Thu, 30 Apr 2015 16:53:32 -0400 (EDT)
-Message-ID: <alpine.DEB.2.11.1504301648300.30450@vincent-weaver-1.umelst.maine.edu>
-References: <loom.20150430T211657-416@post.gmane.org> <alpine.DEB.2.11.1504301613070.30426@vincent-weaver-1.umelst.maine.edu> <loom.20150430T221024-824@post.gmane.org>
+From: Chris Freehill <cfreehill@utexas.edu>
+Subject: perf uncore behavior
+Date: Fri, 1 May 2015 15:55:35 -0500
+Message-ID: <CANFySvewjJTo7Cezq3e1SPAFFmRRRWADTJ50T5rubvcLrAV2xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qc0-f170.google.com ([209.85.216.170]:35713 "EHLO
-	mail-qc0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750863AbbD3Usa (ORCPT
+Received: from mail-wg0-f54.google.com ([74.125.82.54]:36207 "EHLO
+	mail-wg0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752553AbbEAUzg (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 30 Apr 2015 16:48:30 -0400
-Received: by qcbii10 with SMTP id ii10so35482462qcb.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Apr 2015 13:48:30 -0700 (PDT)
-In-Reply-To: <loom.20150430T221024-824@post.gmane.org>
+	Fri, 1 May 2015 16:55:36 -0400
+Received: by wgen6 with SMTP id n6so100376953wge.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 May 2015 13:55:35 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Patrick <plafratt@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-On Thu, 30 Apr 2015, Patrick wrote:
+Hi,
 
-> I think I may have figured out what is going on by looking at the assembly
-> (shown below). It looks like it is doing two stores per loop iteration - one to
-> set the array value and one to update the index into the array.
+I'm trying to get clarification on the meaning of the results perf
+gives for uncore events, depending on the options.
 
-Yes, that's because you are compiling without optimization.
+Here are some examples:
 
-> I am new to perf and seeing a lot of results from counters of which I'm not
-> sure how to make sense. So I'm still trying to get comfortable and make sure I
-> know what's going on. I have a follow-on question regarding possible ways to
-> count memory writes on a processor that's not a Xeon. 
+1. $ perf stat -a -e "uncore_cbox_0/clockticks/" sleep 1
 
-good luck sorting things out, perf counter results have many issues that 
-make them hard to interpret, especially with advanced processors and 
-especially if cache is involved.
+2. $ perf stat  -e "uncore_cbox_0/clockticks/" sleep 1
 
-Just be glad you aren't running your test on an AMD model 14h machine as 
-seen below.
+3. $ perf stat -a -C0 -e "uncore_cbox_0/clockticks/" sleep 1
 
-perf stat -e L1-dcache-stores:u ./copy 1048576
+It appears #2 is not supported. If it was supported, I would take it
+to mean the number of uncore events counted while the process was
+active, regardless of which processor it was running on. Right?  Is
+there any reason it's not implemented (for example it's nonsensical)
+or it just has been tackled yet?
 
- Performance counter stats for './copy_test 1048576':
+Are 1 and 3 effectively the same, since uncore events are not specific
+to a core? I would think they would be the same. If not, what is the
+difference?
 
-                35      L1-dcache-stores                                            
-
-       0.014573254 seconds time elapsed
-
-
-Vince
+thanks,
+Chris
