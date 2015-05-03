@@ -1,51 +1,63 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: perf uncore behavior
-Date: Sat, 2 May 2015 14:16:11 +0200
-Message-ID: <20150502121611.GK2366@two.firstfloor.org>
-References: <CANFySvewjJTo7Cezq3e1SPAFFmRRRWADTJ50T5rubvcLrAV2xA@mail.gmail.com>
- <87618blpsr.fsf@tassilo.jf.intel.com>
- <CANFySvcwE52VTqPKc5vzkQkq+wAenFr=deaGX8ZxGQFTU1SjVg@mail.gmail.com>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: About using PEBS from the user space
+Date: Mon, 04 May 2015 00:05:04 +0200
+Message-ID: <55469B90.1090903@bsc.es>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from one.firstfloor.org ([193.170.194.197]:45423 "EHLO
-	one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750920AbbEBMQN (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:36346 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751458AbbECWFN (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 2 May 2015 08:16:13 -0400
-Content-Disposition: inline
-In-Reply-To: <CANFySvcwE52VTqPKc5vzkQkq+wAenFr=deaGX8ZxGQFTU1SjVg@mail.gmail.com>
+	Sun, 3 May 2015 18:05:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by opsmail01.bsc.es (Postfix) with ESMTP id 86BE1DF0DC
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2015 00:05:09 +0200 (CEST)
+Received: from opsmail01.bsc.es ([127.0.0.1])
+ by localhost (opswc01.bsc.es [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 25816-07 for <linux-perf-users@vger.kernel.org>;
+ Mon,  4 May 2015 00:05:09 +0200 (CEST)
+Received: from opswc01.bsc.es (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPS id 0BA27DD133
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2015 00:05:09 +0200 (CEST)
+Received: (from filter@localhost)
+	by opswc01.bsc.es (8.13.6/8.13.6/Submit) id t43M58iu012520
+	for linux-perf-users@vger.kernel.org; Mon, 4 May 2015 00:05:08 +0200
+Received: from [192.168.1.36] (17.Red-79-150-113.dynamicIP.rima-tde.net [79.150.113.17])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by opsmail01.bsc.es (Postfix) with ESMTPSA id BD9CAE4BE2
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 May 2015 00:05:08 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Chris Freehill <cfreehill@utexas.edu>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On Fri, May 01, 2015 at 09:31:58PM -0500, Chris Freehill wrote:
-> A follow up...can  you define what  "sockets/nodes" means in this
-> context? What is the relationship between sockets/nodes and CPU's.
+Dear list,
 
-In Linux terminology a CPU is a logical CPU thread. A socket
-is a physical chip. 
+   I'd like to use the perf library to access PEBS so as to collect 
+referenced memory addresses from the user space. I think I've 
+successfully setup the perf structures (struct perf_event_attr) to 
+configure the performance counters, but I don't see what should I do to 
+access to the captured memory addresses. I've seen that within 
+arch/x86/kernel/cpu/perf_event_intel_ds.c there are the routines 
+alloc_pebs_buffer, alloc_ds_buffer which seems to allocate and setup the 
+necessary buffers using kmalloc_node calls. Question is, how can 
+replicate this from the user space? And how we should connect these 
+buffers to the PEBS infrastructure using perf calls?
 
-> What is the distinction? For core events, they would be the same,
-> right? Could you give an example of what "-a" would sum up when we are
-> talking about uncore events?
+Thank you very much in advance.
 
-It sums up events from all sockets
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
 
-> 
-> I think my main confusion is an assumption (up to now, anyway) that
-> there is only one set of uncore events, for the multicore device, so
-> it wouldn't make sense to sum up anything. 
-
-There is one set per socket (or rather chip, if you talk about an
-multi-chip-module)
-
-> For core events, my
-> understanding is that with no "-C<core id>" specified, perf sums up
-> the core event counts and presents this as output. For uncore, the
-> events are not per-core, so I'm not sure how to interpret that "sum".
-
-It's the sum of all cores on that socket.
-
--Andi
+http://www.bsc.es/disclaimer
