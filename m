@@ -1,116 +1,201 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Bug Report
-Date: Mon, 11 May 2015 18:42:46 -0300
-Message-ID: <20150511214246.GA29215@kernel.org>
-References: <CAPMERti9KnqyR7U3upPz0wh14CEO=W1T=0_cDQ61cBASdKH-yQ@mail.gmail.com>
- <5550E37B.8070209@gmail.com>
- <CAPMERtji+=bZffRL-kFpvkte-P_U3DR3fs+FXe=zS9L91JphhQ@mail.gmail.com>
+From: taeung <treeze.taeung@gmail.com>
+Subject: How do you think about a time when selecting perf config file path
+ ?
+Date: Thu, 14 May 2015 15:29:44 +0900
+Message-ID: <555440D8.6040201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:47520 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752791AbbEKVmw (ORCPT
+Received: from mail-pa0-f52.google.com ([209.85.220.52]:35157 "EHLO
+	mail-pa0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751017AbbENG3t (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 11 May 2015 17:42:52 -0400
-Received: from mail.kernel.org (localhost [127.0.0.1])
-	by mail.kernel.org (Postfix) with ESMTP id C35C420CCB
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2015 21:42:50 +0000 (UTC)
-Received: from zoo.ghostprotocols.net (unknown [177.35.16.174])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPSA id 872C120CCA
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 May 2015 21:42:49 +0000 (UTC)
-Content-Disposition: inline
-In-Reply-To: <CAPMERtji+=bZffRL-kFpvkte-P_U3DR3fs+FXe=zS9L91JphhQ@mail.gmail.com>
+	Thu, 14 May 2015 02:29:49 -0400
+Received: by pabtp1 with SMTP id tp1so74657933pab.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 May 2015 23:29:48 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Alex Newman <posix4e@gmail.com>
-Cc: David Ahern <dsahern@gmail.com>, linux-perf-users@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
 
-Em Mon, May 11, 2015 at 10:56:39AM -0700, Alex Newman escreveu:
-> Ah sorry for the typo. David, that's correct. But you should be able
-> to replicate that the error message is not revealing.
+Hi, Namhyung
 
-It should be changed to emit better messages like was done for 'perf
-trace':
+How do you think about a time when selecting perf config file path ?
 
-[acme@zoo linux]$ trace usleep 1
-Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
+At this present, perfconfig file path can be selected as 
+'/etc/perfconfig' or '$(HOME)/.perfconfig'.
+And the config file path is selected when calling a function 
+'perf_config()'.
 
-[acme@zoo linux]$ sudo mount -o remount,mode=755 /sys/kernel/debug
-[sudo] password for acme: 
-[acme@zoo linux]$ trace usleep 1
-     0.095 ( 0.002 ms): usleep/974 brk(                                                                  ) = 0x7f2dc04fd000
-     0.112 ( 0.003 ms): usleep/974 mmap(len: 4096, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS, fd: -1    ) = 0x7f2dbf39e000
-     0.123 ( 0.006 ms): usleep/974 access(filename: 0x7f2dbf19c270, mode: R                              ) = -1 ENOENT No such file or directory
-     0.137 ( 0.006 ms): usleep/974 open(filename: 0x7f2dbf19ab92, flags: CLOEXEC                         ) = 3
-     0.141 ( 0.002 ms): usleep/974 fstat(fd: 3, statbuf: 0x7ffffabf0d60                                  ) = 0
-     0.146 ( 0.004 ms): usleep/974 mmap(len: 98505, prot: READ, flags: PRIVATE, fd: 3                    ) = 0x7f2dbf385000
-     0.148 ( 0.001 ms): usleep/974 close(fd: 3                                                           ) = 0
-     0.164 ( 0.007 ms): usleep/974 open(filename: 0x7f2dbf39427a, flags: CLOEXEC                         ) = 3
-     0.168 ( 0.002 ms): usleep/974 read(fd: 3, buf: 0x7ffffabf0ef0, count: 832                           ) = 832
-     0.171 ( 0.001 ms): usleep/974 fstat(fd: 3, statbuf: 0x7ffffabf0d90                                  ) = 0
-     0.179 ( 0.005 ms): usleep/974 mmap(len: 2147728, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f2dbef71000
-     0.188 ( 0.007 ms): usleep/974 mprotect(start: 0x7f2dbef7c000, len: 2097152                          ) = 0
-     0.194 ( 0.005 ms): usleep/974 mmap(addr: 0x7f2dbf17c000, len: 8192, prot: READ|WRITE, flags: PRIVATE|DENYWRITE|FIXED, fd: 3, off: 45056) = 0x7f2dbf17c000
-     0.205 ( 0.001 ms): usleep/974 close(fd: 3                                                           ) = 0
-     0.220 ( 0.007 ms): usleep/974 open(filename: 0x7f2dbf39b33b, flags: CLOEXEC                         ) = 3
-     0.223 ( 0.002 ms): usleep/974 read(fd: 3, buf: 0x7ffffabf0ec0, count: 832                           ) = 832
-     0.230 ( 0.002 ms): usleep/974 fstat(fd: 3, statbuf: 0x7ffffabf0d60                                  ) = 0
-     0.237 ( 0.006 ms): usleep/974 mmap(len: 3919744, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f2dbebb4000
-     0.247 ( 0.009 ms): usleep/974 mprotect(start: 0x7f2dbed67000, len: 2097152                          ) = 0
-     0.255 ( 0.006 ms): usleep/974 mmap(addr: 0x7f2dbef67000, len: 24576, prot: READ|WRITE, flags: PRIVATE|DENYWRITE|FIXED, fd: 3, off: 1781760) = 0x7f2dbef67000
-     0.273 ( 0.011 ms): usleep/974 mmap(addr: 0x7f2dbef6d000, len: 16256, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS|FIXED, fd: -1) = 0x7f2dbef6d000
-     0.281 ( 0.001 ms): usleep/974 close(fd: 3                                                           ) = 0
-     0.291 ( 0.003 ms): usleep/974 mmap(len: 4096, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS, fd: -1    ) = 0x7f2dbf384000
-     0.306 ( 0.003 ms): usleep/974 mmap(len: 4096, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS, fd: -1    ) = 0x7f2dbf383000
-     0.311 ( 0.002 ms): usleep/974 mmap(len: 4096, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS, fd: -1    ) = 0x7f2dbf382000
-     0.316 ( 0.001 ms): usleep/974 arch_prctl(option: 4098, arg2: 139834458388224, arg3: 139834458382352, arg4: 34, arg5: 4294967295) = 0
-     0.386 ( 0.006 ms): usleep/974 mprotect(start: 0x7f2dbef67000, len: 16384, prot: READ                ) = 0
-     0.396 ( 0.003 ms): usleep/974 mprotect(start: 0x7f2dbf17c000, len: 4096, prot: READ                 ) = 0
-     0.407 ( 0.004 ms): usleep/974 mprotect(start: 0x7f2dbf5a3000, len: 4096, prot: READ                 ) = 0
-     0.416 ( 0.005 ms): usleep/974 mprotect(start: 0x7f2dbf39f000, len: 4096, prot: READ                 ) = 0
-     0.429 ( 0.012 ms): usleep/974 munmap(addr: 0x7f2dbf385000, len: 98505                               ) = 0
-     0.487 ( 0.002 ms): usleep/974 brk(                                                                  ) = 0x7f2dc04fd000
-     0.492 ( 0.004 ms): usleep/974 brk(brk: 0x7f2dc051e000                                               ) = 0x7f2dc051e000
-     0.495 ( 0.001 ms): usleep/974 brk(                                                                  ) = 0x7f2dc051e000
-     0.573 ( 0.059 ms): usleep/974 nanosleep(rqtp: 0x7ffffabf14e0                                        ) = 0
-     0.581 ( 0.000 ms): usleep/974 exit_group(                                                           
-[acme@zoo linux]$ 
+If you see functions 1,2,3,4 as below, you can understand what I 
+agonize. I think that the part which perf config path is selected must 
+be separated as other function to also use the function in 
+'cmd_config()' in new builtin-config.c.
 
-[acme@zoo linux]$ trace --all-cpus
-Error:	Operation not permitted.
-Hint:	Check /proc/sys/kernel/perf_event_paranoid setting.
-Hint:	For system wide tracing it needs to be set to -1.
-Hint:	Try: 'sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"'
-Hint:	The current value is 1.
-[acme@zoo linux]$ 
+For example,
+If adding a option '--global' or '--local' for config file path,
+the perf config file name have to selected in 'cmd_config()' before 
+'perf_config()' is called.
 
-Will try to do it soon,
+How do you think about this ?
 
-- Arnaldo
- 
-> On Mon, May 11, 2015 at 10:14 AM, David Ahern <dsahern@gmail.com> wrote:
-> > On 5/11/15 10:57 AM, Alex Newman wrote:
-> >>
-> >> Hello mailing list friends,
-> >>
-> >> I am sorry if this is not the best place for this (where should I
-> >> report improvements for perf).
-> >>
-> >> This command works when I have the correct permissions but if I don't
-> >> rather than getting "bad permissions" I get
-> >>
-> >> posix4e@posix4e-P27GV2:~$ perf stat -e 'ext4:' -a
-> >
-> >
-> > that's an invalid event list; it should never work. Did you mean -e
-> > 'ext4:*'?
-> >
-> > David
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Taeung
+
+1. a function 'perf_config()' in util/config.c
+
+========
+int perf_config(config_fn_t fn, void *data)
+{
+	int ret = 0, found = 0;
+	const char *home = NULL;
+
+	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
+	if (config_exclusive_filename)
+		return perf_config_from_file(fn, config_exclusive_filename, data);
+	if (perf_config_system() && !access(perf_etc_perfconfig(), R_OK)) {
+		ret += perf_config_from_file(fn, perf_etc_perfconfig(),
+					    data);
+		found += 1;
+	}
+
+	home = getenv("HOME");
+	if (perf_config_global() && home) {
+		char *user_config = strdup(mkpath("%s/.perfconfig", home));
+		struct stat st;
+
+		if (user_config == NULL) {
+			warning("Not enough memory to process %s/.perfconfig, "
+				"ignoring it.", home);
+			goto out;
+		}
+
+		if (stat(user_config, &st) < 0)
+			goto out_free;
+
+		if (st.st_uid && (st.st_uid != geteuid())) {
+			warning("File %s not owned by current user or root, "
+				"ignoring it.", user_config);
+			goto out_free;
+		}
+
+		if (!st.st_size)
+			goto out_free;
+
+		ret += perf_config_from_file(fn, user_config, data);
+		found += 1;
+out_free:
+		free(user_config);
+	}
+out:
+	if (found == 0)
+		return -1;
+	return ret;
+}
+========
+
+2. 'perf_config_from_file()' in util/config.c I modified
+
+========
+int perf_config_from_file(config_fn_t fn, const char *filename, void *data)
+{
+	int ret;
+	FILE *f = fopen(filename, "r");
+
+	ret = -1;
+  	if (f) {
+  		config_file = f;
+-		config_file_name = filename;
++		config_file_name = strdup(filename);
+  		config_linenr = 1;
+  		config_file_eof = 0;
+  		ret = perf_parse_file(fn, data);
+  		fclose(f);
+-		config_file_name = NULL;
+  	}
+	return ret;
+}
+========
+
+3. 'perf_configset_write_in_full()' in util/config.c that I added as new 
+a function because of new 'perf config' command. And this function use a 
+global variable 'config_file_name' to rewrite config file with new 
+config contents.
+(To add new command 'perf-config', I try to modify this file 
+'util/config.c')
+
+========
++int perf_configset_write_in_full(void)
++{
++	struct config_section *section_node;
++	struct config_element *element_node;
++	const char *first_line = "# this file is auto-generated.";
++	FILE *fp = fopen(config_file_name, "w");
++
++	if (!fp)
++		return -1;
++
++	fprintf(fp, "%s\n", first_line);
++	/* overwrite configvariables */
++	list_for_each_entry(section_node, sections, list) {
++		fprintf(fp, "[%s]\n", section_node->name);
++		list_for_each_entry(element_node, &section_node->element_head, list) {
++			if (element_node->value)
++				fprintf(fp, "\t%s = %s\n",
++					element_node->subkey, element_node->value);
++		}
++	}
++	fclose(fp);
++
++	return 0;
++}
+========
+
+4. a new function 'cmd_config()' in new file builtin-config.c.
+(If working a command as '$ perf config', cmd_config() is firstly 
+called. This function is also added by me.)
+
+========
++int cmd_config(int argc, const char **argv, const char *prefix 
+__maybe_unused)
++{
++	int i, ret = 0;
++	int origin_argc = argc - 1;
++	char *value;
++	bool is_option;
++
++	argc = parse_options(argc, argv, config_options, config_usage,
++			     PARSE_OPT_STOP_AT_NON_OPTION);
++	if (origin_argc > argc)
++		is_option = true;
++	else
++		is_option = false;
++
++	if (!is_option && argc >= 0) {
++		switch (argc) {
++		case 0:
++			break;
++		default:
++			for (i = 0; argv[i]; i++) {
++				value = strrchr(argv[i], '=');
++				if (value == NULL || value == argv[i])
++					ret = perf_configset_with_option(show_spec_config, argv[i]);
++				else
++					ret = perf_configset_with_option(set_spec_config, argv[i]);
++				if (ret < 0)
++					break;
++			}
++			goto out;
++		}
++	}
++	if (params.list_action && argc == 0)
++		ret = perf_config(show_config, NULL);
++	else {
++		pr_warning("Error: Unknown argument.\n");
++		usage_with_options(config_usage, config_options);
++	}
++
++	return ret;
++}
+========
