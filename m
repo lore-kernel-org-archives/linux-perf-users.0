@@ -1,35 +1,35 @@
-From: Marina Moran <esperandoelmilagro@gmail.com>
-Subject: event for speculative executed instruction
-Date: Wed, 20 May 2015 10:45:42 -0300
-Message-ID: <CAP5Bk4hT3sSRprB6JP7NYbuG7fQdsK70NMNqqtPgpJM0TzfaGQ@mail.gmail.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: event for speculative executed instruction
+Date: Wed, 20 May 2015 07:23:08 -0700
+Message-ID: <87k2w3ib03.fsf@tassilo.jf.intel.com>
+References: <CAP5Bk4hT3sSRprB6JP7NYbuG7fQdsK70NMNqqtPgpJM0TzfaGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-la0-f48.google.com ([209.85.215.48]:36134 "EHLO
-	mail-la0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753435AbbETNpn (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:61611 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751609AbbETOXJ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 20 May 2015 09:45:43 -0400
-Received: by lagv1 with SMTP id v1so74892338lag.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2015 06:45:42 -0700 (PDT)
+	Wed, 20 May 2015 10:23:09 -0400
+In-Reply-To: <CAP5Bk4hT3sSRprB6JP7NYbuG7fQdsK70NMNqqtPgpJM0TzfaGQ@mail.gmail.com>
+	(Marina Moran's message of "Wed, 20 May 2015 10:45:42 -0300")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Marina Moran <esperandoelmilagro@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi All,
+Marina Moran <esperandoelmilagro@gmail.com> writes:
+>
+> The intels are:
+> Intel Xeon CPU E5-2630 0 @ 2.30GHz
+> Intel Core2 Quad CPU    Q6600  @ 2.40GHz
 
-We need to measure over two Intel computers the instruction executed
-in a speculative manner, but not commited. We need to measure how many
-instructions are discarded (over a period of time), to see how the
-speculative execution is working. We check the manual with the
-Performance Monitoring Events (from Intel) but cant figure out which
-event to monitor. If you could please know where to look for it, or
-with which name we shoudl look for it.
+What you can measure on the E5 is cycles stalled due to recovery
+from mis-speculation. That is not quite the same, but somewhat related.
+The toplev tool in pmu-tools (http://github.com/andikleen/pmu-tools) can
+do this on top of perf for the E5. No support for the Core2.
 
-The intels are:
-Intel Xeon CPU E5-2630 0 @ 2.30GHz
-Intel Core2 Quad CPU    Q6600  @ 2.40GHz
+-Andi
 
-Thanks so much in advance.
-regards
-Marina
+-- 
+ak@linux.intel.com -- Speaking for myself only
