@@ -1,114 +1,127 @@
 From: Taeung Song <treeze.taeung@gmail.com>
-Subject: [PATCH v2 4/4] perf tools: Add a option 'remove' to perf-config.
-Date: Fri, 29 May 2015 14:42:48 +0900
-Message-ID: <1432878168-11278-4-git-send-email-treeze.taeung@gmail.com>
+Subject: [PATCH v2 3/4] perf tools: Add a option 'list-all' to perf-config.
+Date: Fri, 29 May 2015 14:42:47 +0900
+Message-ID: <1432878168-11278-3-git-send-email-treeze.taeung@gmail.com>
 References: <1432878168-11278-1-git-send-email-treeze.taeung@gmail.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f50.google.com ([209.85.220.50]:33461 "EHLO
-	mail-pa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751717AbbE2FnT (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 29 May 2015 01:43:19 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432878168-11278-1-git-send-email-treeze.taeung@gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: linux-kernel@vger.kernel.org, jolsa@redhat.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-A option 'remove' is to remove specific config variables.
-For the syntax examples,
+A option 'list-all' is to display both current config variables and
+all possible config variables with default values.
+The syntax examples are like below
 
-    # perf config -r | --remove [section.name ...]
+    perf config [options]
+
+    display all perf config with default values.
+    # perf config -a | --list-all
 
 Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
 ---
- tools/perf/Documentation/perf-config.txt |  6 ++++++
- tools/perf/builtin-config.c              | 25 ++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-config.txt |  6 ++++
+ tools/perf/builtin-config.c              | 48 ++++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index e33e481..a543e1b 100644
+index f3dae23..e33e481 100644
 --- a/tools/perf/Documentation/perf-config.txt
 +++ b/tools/perf/Documentation/perf-config.txt
-@@ -13,6 +13,8 @@ or
- 'perf config' -l | --list
+@@ -11,6 +11,8 @@ SYNOPSIS
+ 'perf config' [section.name[=value] ...]
  or
- 'perf config' -a | --list-all
+ 'perf config' -l | --list
 +or
-+'perf config' -r | --remove [section.name ...]
++'perf config' -a | --list-all
  
  DESCRIPTION
  -----------
-@@ -29,6 +31,10 @@ OPTIONS
- --list-all::
- 	Show current and all possible config variables with default values.
+@@ -23,6 +25,10 @@ OPTIONS
+ --list::
+ 	Show current config variables with key and value into each sections.
  
-+-r::
-+--remove::
-+	Remove specific config variables.
++-a::
++--list-all::
++	Show current and all possible config variables with default values.
 +
  CONFIGURATION FILE
  ------------------
  
 diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index cf7d61d..b7afe6e 100644
+index 175b125..cf7d61d 100644
 --- a/tools/perf/builtin-config.c
 +++ b/tools/perf/builtin-config.c
-@@ -22,12 +22,14 @@ static const char * const config_usage[] = {
+@@ -21,10 +21,13 @@ static const char * const config_usage[] = {
+ };
  
  #define ACTION_LIST (1<<0)
- #define ACTION_LIST_ALL (1<<1)
-+#define ACTION_REMOVE (1<<2)
++#define ACTION_LIST_ALL (1<<1)
  
  static const struct option config_options[] = {
  	OPT_GROUP("Action"),
  	OPT_BIT('l', "list", &actions, "show current config variables", ACTION_LIST),
- 	OPT_BIT('a', "list-all", &actions,
- 		"show current and all possible config variables with default values", ACTION_LIST_ALL),
-+	OPT_BIT('r', "remove", &actions, "remove specific variables: [section.name ...]", ACTION_REMOVE),
++	OPT_BIT('a', "list-all", &actions,
++		"show current and all possible config variables with default values", ACTION_LIST_ALL),
  	OPT_END()
  };
  
-@@ -471,7 +473,15 @@ static int set_config(const char *section_name, const char *name, char *value)
- 	struct config_element *element_node = NULL;
- 
- 	find_config(&section_node, &element_node, section_name, name);
--	if (value != NULL) {
-+	if (!value) {
-+		/* value == NULL means remove the variable */
-+		if (section_node && element_node) {
-+			if (!element_node->value)
-+				free(element_node->value);
-+			element_node->value = NULL;
-+		} else
-+			pr_err("Error: Failed to find the variable.\n");
-+	} else {
- 		value = normalize_value(section_name, name, value);
- 
- 		/* if there isn't existent section, add a new section */
-@@ -490,6 +500,7 @@ static int set_config(const char *section_name, const char *name, char *value)
- 			element_node->value = value;
- 		}
- 	}
-+
- 	return perf_configset_write_in_full();
+@@ -516,6 +519,45 @@ static int collect_current_config(const char *var, const char *value,
+ 			   normalize_value(section_name, name, value));
  }
  
-@@ -633,6 +644,18 @@ int cmd_config(int argc, const char **argv, const char *prefix __maybe_unused)
++static int show_all_config(void)
++{
++	int i;
++	bool has_config;
++	struct config_section *section_node;
++	struct config_element *element_node;
++
++	for (i = 0; default_configsets[i].section_name != NULL; i++) {
++		find_config(&section_node, &element_node,
++			    default_configsets[i].section_name, default_configsets[i].name);
++
++		if (!element_node)
++			printf("%s.%s=%s\n", default_configsets[i].section_name,
++			       default_configsets[i].name, default_configsets[i].value);
++		else
++			printf("%s.%s=%s\n", section_node->name,
++			       element_node->name, element_node->value);
++	}
++
++	/* Print config variables the default configsets haven't */
++	list_for_each_entry(section_node, &sections, list) {
++		list_for_each_entry(element_node, &section_node->element_head, list) {
++			has_config = false;
++			for (i = 0; default_configsets[i].section_name != NULL; i++) {
++				if (!strcmp(default_configsets[i].section_name, section_node->name)
++				    && !strcmp(default_configsets[i].name, element_node->name)) {
++					has_config = true;
++					break;
++				}
++			}
++			if (!has_config)
++				printf("%s.%s=%s\n", section_node->name,
++				       element_node->name, element_node->value);
++		}
++	}
++
++	return 0;
++}
++
+ static int perf_configset_with_option(configset_fn_t fn, const char *var, char *value)
+ {
+ 	char *section_name;
+@@ -585,6 +627,12 @@ int cmd_config(int argc, const char **argv, const char *prefix __maybe_unused)
  		else
  			goto out_err;
  		goto out;
-+	case ACTION_REMOVE:
-+		for (i = 0; argv[i]; i++) {
-+			if (value == NULL)
-+				ret = perf_configset_with_option(set_config, argv[i], NULL);
-+			else {
-+				pr_err("invalid key: %s\n", argv[i]);
-+				return -1;
-+			}
-+			if (ret < 0)
-+				goto out;
-+		}
++	case ACTION_LIST_ALL:
++		if (argc == 0)
++			ret = show_all_config();
++		else
++			goto out_err;
 +		goto out;
  	default:
  		if (!has_option && argc == 0) {
