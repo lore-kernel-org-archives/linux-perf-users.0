@@ -1,13 +1,20 @@
 From: Mahmood Naderan <mahmood.nt@gmail.com>
 Subject: Using perf on AMD 15h
-Date: Sat, 6 Jun 2015 10:37:17 +0430
-Message-ID: <CADa2P2V7hrecCM2C_H5ZB5V4xVq1UqcR4wKvt9HL9sAjQ8CEwg@mail.gmail.com>
+Date: Sat, 6 Jun 2015 11:05:51 +0430
+Message-ID: <CADa2P2XLEJt6LGkn4bStJz5pashX2phoU_wJfHqLGtzcgddmtA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-oi0-f45.google.com ([209.85.218.45]:36745 "EHLO
+	mail-oi0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750768AbbFFGgM (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sat, 6 Jun 2015 02:36:12 -0400
+Received: by oihb142 with SMTP id b142so66822725oih.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2015 23:36:12 -0700 (PDT)
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
 Hi Guys,
 My first question is, does the version of kernel affects the perf
@@ -64,7 +71,6 @@ Tested 64MB buffer: OK!
 
 I expect to see 0 in front of  L1-dcache-prefetches. Don't you?
 I have stuck at this problem. I appreciate any feedback and comment.
-
 
 Regards,
 Mahmood
