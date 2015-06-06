@@ -1,76 +1,48 @@
-From: Mahmood Naderan <mahmood.nt@gmail.com>
-Subject: Using perf on AMD 15h
-Date: Sat, 6 Jun 2015 11:05:51 +0430
-Message-ID: <CADa2P2XLEJt6LGkn4bStJz5pashX2phoU_wJfHqLGtzcgddmtA@mail.gmail.com>
+From: Manuel Selva <selva.manuel@gmail.com>
+Subject: Re: What is the exact meaning of this parameter ?
+Date: Sat, 06 Jun 2015 09:20:48 +0200
+Message-ID: <55729F50.4030308@gmail.com>
+References: <5565F6EB.3090406@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oi0-f45.google.com ([209.85.218.45]:36745 "EHLO
-	mail-oi0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750768AbbFFGgM (ORCPT
+Received: from mail-wi0-f176.google.com ([209.85.212.176]:33879 "EHLO
+	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750829AbbFFHUw (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 6 Jun 2015 02:36:12 -0400
-Received: by oihb142 with SMTP id b142so66822725oih.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2015 23:36:12 -0700 (PDT)
+	Sat, 6 Jun 2015 03:20:52 -0400
+Received: by wibut5 with SMTP id ut5so40062635wib.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2015 00:20:51 -0700 (PDT)
+Received: from [192.168.0.10] (mut38-6-88-167-68-98.fbx.proxad.net. [88.167.68.98])
+        by mx.google.com with ESMTPSA id a19sm1205678wiv.2.2015.06.06.00.20.49
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Jun 2015 00:20:49 -0700 (PDT)
+In-Reply-To: <5565F6EB.3090406@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi Guys,
-My first question is, does the version of kernel affects the perf
-functionality? I mean fixing bugs and ...
-Currently, the kernel version is 2.6.39 and here is the problem:
+Any idea on that ?
 
-According tot he BKDG of AMD 15h, it is possbile to disable the
-hardware prefetcher by setting some bits of MSRC001_1022
+Thanks,
 
-MSRC001_1022 Data Cache Configuration (DC_CFG)
-Bits       -->     Description
-63:16   -->  Reserved.
-15  -->    DisPfHwForSw. Read-write. Reset: 0. 1=Disable hardware
-prefetches for software prefetches.
-14   -->   Reserved.
-13   -->   DisHwPf. Read-write. Reset: 0. 1=Disable the DC hardware
-prefetcher. BIOS: See 2.3.3 [Using L2 Cache as General Storage During
-Boot].
-12:10   -->  Reserved.
-9:5   -->  Reserved.
-4   -->  DisSpecTlbRld. Read-write. Reset: 0. 1=Disable speculative
-TLB reloads. BIOS: See 2.3.3 [UsingL2 Cache as General Storage During
-Boot].
-3:0   -->  Reserved.
+----
+Manu
 
-
-
-So in order to disable all prefetch configs, I have to write 0xA008 to
-that MSR. I did that for all cores using
-
-[root@tiger exe]# wrmsr -a 0xc0011022 0xA008
-[root@tiger exe]# rdmsr -a -x -0 0xc0011022
-000000000000a008
-...
-
-
-However, when I run perf along with the command, the prefetch ststs
-are non-zero!
-
-
-[root@tiger exe]# perf stat -e
-L1-dcache-loads:uk,L1-dcache-prefetches:uk,L1-dcache-prefetch-misses:uk
-./bzip2_base.amd64-m64-gcc44-nn
-spec_init
-Tested 64MB buffer: OK!
- Performance counter stats for './bzip2_base.amd64-m64-gcc44-nn':
-    55,341,597,193 L1-dcache-loads:uk
-     1,047,662,614 L1-dcache-prefetches:uk
-                 0 L1-dcache-prefetch-misses:uk
-      35.921618464 seconds time elapsed
-
-
-
-
-I expect to see 0 in front of  L1-dcache-prefetches. Don't you?
-I have stuck at this problem. I appreciate any feedback and comment.
-
-Regards,
-Mahmood
+On 05/27/2015 06:55 PM, Manuel Selva wrote:
+> Hi all,
+>
+> I know that the perf_event_mlock_kb kernel parameter allows to limit the
+> amount of counters sampling memory that can be mmap'ed by an unprivileged
+> user.
+>
+> Nevertheless, playing with the size I give to mmap some memory using the
+> file descriptor returned by perf_event_open I am not able to linkk with the
+> perf_event_mlock_kb parameter. Looking into kernel sources, it seems this
+> parameter is used in kernel/events/core.c where the perf mmap operation is
+> defined but I am not sure to understand the code there. So my question is
+> what is the exact meaning of this parameter ?
+>
+>
