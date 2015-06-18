@@ -1,70 +1,37 @@
-From: Milian Wolff <mail@milianw.de>
-Subject: Re: perf mem: invalid or unsupported event: 'cpu/mem-loads/pp'
-Date: Sun, 14 Jun 2015 14:06:27 +0200
-Message-ID: <4386856.SFWvs8H8rN@agathebauer>
-References: <6210395.6gJQB6qfUl@minime> <1374544009.5545.2.camel@concordia>
+From: Noel Grandin <noelgrandin@gmail.com>
+Subject: perf script not writing out symbol names?
+Date: Thu, 18 Jun 2015 10:26:22 +0200
+Message-ID: <558280AE.9080102@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4718706.Z04hLAqpXL"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from dd17628.kasserver.com ([85.13.138.83]:49919 "EHLO
-	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751035AbbFNMG3 (ORCPT
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:34353 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753396AbbFRI0a (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 14 Jun 2015 08:06:29 -0400
-In-Reply-To: <1374544009.5545.2.camel@concordia>
+	Thu, 18 Jun 2015 04:26:30 -0400
+Received: by wicnd19 with SMTP id nd19so14997361wic.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jun 2015 01:26:28 -0700 (PDT)
+Received: from [192.168.1.164] ([41.164.8.42])
+        by mx.google.com with ESMTPSA id a8sm30244596wic.22.2015.06.18.01.26.26
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jun 2015 01:26:28 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Ellerman <michael@ellerman.id.au>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
---nextPart4718706.Z04hLAqpXL
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+Hi
 
-On Tuesday 23 July 2013 11:46:49 Michael Ellerman wrote:
-> On Mon, 2013-07-22 at 19:34 +0200, Milian Wolff wrote:
-> > Hey there,
-> >=20
-> > I just found perf mem in the output of perf help and wanted to try =
-it:
-> >=20
-> > $ perf mem record ls
-> > invalid or unsupported event: 'cpu/mem-loads/pp'
-> > Run 'perf list' for a list of valid events
-> >=20
-> >  usage: perf record [<options>] [<command>]
-> >  ...
-> >=20
-> > Am I missing a kernel configuration? Or what is going on here?
->=20
-> You need a kernel that has mem-loads in
-> /sys/bus/event_source/devices/cpu/events
->=20
-> Assuming you're on x86 you'll need a 3.10 or later kernel.
+I'm using 'perf record -e cycles --call-graph dwarf' on Ubuntu 15.04 which is kernel version '3.19.0-18-generic'
 
-Sorry for the long delay. I wanted to try it out again today, but I sti=
-ll get=20
-the same error message above. This is with a 4.0.5 kernel and perf 4.0.=
-3.
+At the moment it does not demangle C++ symbols, but otherwise 'perf report' looks fine.
 
-What is required to get mem-loads in the path specified above?
+However, if I try to pass the data through the FlameGraph tools, most of the symbols show up as "unknown".
 
-Bye
-=2D-=20
-Milian Wolff
-mail@milianw.de
-http://milianw.de
---nextPart4718706.Z04hLAqpXL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+It looks like the 'perf script' tool is not writing out symbol names for most of the events.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Any ideas?
 
-iEYEABECAAYFAlV9bkMACgkQDA6yEs0dE5M+SQCfVKjHIl1SYkuA8zDAVrh0we9a
-6XAAn27NrKS/bohoc4vwkGqkZo26Guas
-=EBUA
------END PGP SIGNATURE-----
-
---nextPart4718706.Z04hLAqpXL--
+Thanks, Noel Grandin
