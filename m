@@ -1,58 +1,66 @@
-From: hsultan@thefroid.net
-Subject: Stability of KProbe (specifically KRetProbe) for production systems
-Date: Wed, 24 Jun 2015 16:45:08 -0700
-Message-ID: <47e93276a76a9be4ec26ec24d5faac4c@thefroid.net>
+From: Harald Servat <harald.servat@bsc.es>
+Subject: Re: About using PEBS from the user space
+Date: Thu, 25 Jun 2015 18:00:46 +0200
+Message-ID: <558C25AE.9040601@bsc.es>
+References: <55469B90.1090903@bsc.es> <alpine.DEB.2.11.1505031816450.4940@vincent-weaver-1.umelst.maine.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from hapkido.dreamhost.com ([66.33.216.122]:35893 "EHLO
-	hapkido.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751842AbbFXXpL (ORCPT
+Received: from mao.bsc.es ([84.88.52.34]:38474 "EHLO opsmail01.bsc.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751579AbbFYQG1 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 24 Jun 2015 19:45:11 -0400
-Received: from homiemail-a42.g.dreamhost.com (sub5.mail.dreamhost.com [208.113.200.129])
-	by hapkido.dreamhost.com (Postfix) with ESMTP id 1E609AA73B
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2015 16:45:11 -0700 (PDT)
-Received: from homiemail-a42.g.dreamhost.com (localhost [127.0.0.1])
-	by homiemail-a42.g.dreamhost.com (Postfix) with ESMTP id 1E79068C05B
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2015 16:45:09 -0700 (PDT)
-Received: from webmail.thefroid.net (caiajhbihbdd.dreamhost.com [208.97.187.133])
-	(Authenticated sender: hsultan@thefroid.net)
-	by homiemail-a42.g.dreamhost.com (Postfix) with ESMTPA id 1B49B68C058
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2015 16:45:09 -0700 (PDT)
+	Thu, 25 Jun 2015 12:06:27 -0400
+In-Reply-To: <alpine.DEB.2.11.1505031816450.4940@vincent-weaver-1.umelst.maine.edu>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi,
+On 04/05/15 00:19, Vince Weaver wrote:
+> On Mon, 4 May 2015, Harald Servat wrote:
+>
+>> Dear list,
+>>
+>>    I'd like to use the perf library to access PEBS so as to collect referenced
+>> memory addresses from the user space. I think I've successfully setup the perf
+>> structures (struct perf_event_attr) to configure the performance counters, but
+>> I don't see what should I do to access to the captured memory addresses. I've
+>> seen that within arch/x86/kernel/cpu/perf_event_intel_ds.c there are the
+>> routines alloc_pebs_buffer, alloc_ds_buffer which seems to allocate and setup
+>> the necessary buffers using kmalloc_node calls. Question is, how can replicate
+>> this from the user space? And how we should connect these buffers to the PEBS
+>> infrastructure using perf calls?
+>
+> You can try looking at the example code in my perf_event_tests code.
+> 	https://github.com/deater/perf_event_tests
+>
+> The stuff you are looking for is probably covered in the
+> 	test/record_sample/samples_data_src
+> 	test/record_sample/sample_weight
+> and especially the
+> 	test/record_sample/sample_regs_intr
+> tests, although that last one requires a fairly recent kernel to work.
+>
+> Vince
 
-I am curious to know what the stance is from people with deep expertise 
-with KProbe regarding its stability for use on production systems 
-(meaning, what are the chances of crashing a system by inserting kernel 
-probes).
+Hello,
 
-The main use I am looking at is intercepting a few (~8-10) system 
-calls, and retrieving some specific data from the task_struct mainly.
+   is there a way to setup PEBS to collect information from loads that 
+take at least X cycles to complete using MSR_PEBS_LD_LAT_THRESHOLD 
+through this approach?
 
-Notably :
-- Is KProbe today (in the latest distribs : Ubuntu 14.04 , RHEL 7, 
-etc...) stable to the point it is perfectly ok to use KProbe to say 
-redirect system calls and perform measurements on them on a system 
-that's high value ?  This obviously assumes that whatever code I am 
-inserting in the probe is safe and sound.
+Thank you!
 
+WARNING / LEGAL TEXT: This message is intended only for the use of the
+individual or entity to which it is addressed and may contain
+information which is privileged, confidential, proprietary, or exempt
+from disclosure under applicable law. If you are not the intended
+recipient or the person responsible for delivering the message to the
+intended recipient, you are strictly prohibited from disclosing,
+distributing, copying, or in any way using this message. If you have
+received this communication in error, please notify the sender and
+destroy and delete any copies you may have received.
 
-- Did stability evolve over recent times or has it been deemed stable 
-for years ? I'm trying to figure out if there's some kind of cutoff 
-date, where kernels released before that cutoff date should not be used 
-with KProbe and those after are okay. Even a very blurry timeline is 
-fine btw, I don't need a specific day of the year :)
-
-I'm interested in both the insertion and removal of the probes. Are 
-they both safe ?
-
-Thanks,
-
-Hassan
+http://www.bsc.es/disclaimer
