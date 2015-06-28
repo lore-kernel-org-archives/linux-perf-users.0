@@ -1,31 +1,34 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: perf probe an addr without debuginfo
-Date: Sat, 27 Jun 2015 12:06:24 -0700
-Message-ID: <CAE40pdemFG8f7EB6SerUEGeK0G2qeztqzeLCnLigB3TdgY6G1Q@mail.gmail.com>
+From: Benjamin King <benjaminking@web.de>
+Subject: Re: perf probe an addr without debuginfo
+Date: Sun, 28 Jun 2015 17:46:51 +0200
+Message-ID: <20150628154651.GA3953@localhost>
+References: <CAE40pdemFG8f7EB6SerUEGeK0G2qeztqzeLCnLigB3TdgY6G1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ig0-f174.google.com ([209.85.213.174]:35615 "EHLO
-	mail-ig0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753094AbbF0TGo (ORCPT
+Received: from mout.web.de ([212.227.17.11]:63348 "EHLO mout.web.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752056AbbF1Pq4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 27 Jun 2015 15:06:44 -0400
-Received: by igblr2 with SMTP id lr2so31750742igb.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2015 12:06:44 -0700 (PDT)
+	Sun, 28 Jun 2015 11:46:56 -0400
+Content-Disposition: inline
+In-Reply-To: <CAE40pdemFG8f7EB6SerUEGeK0G2qeztqzeLCnLigB3TdgY6G1Q@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-G'Day,
+Hi Brendan
 
-Is there a trick to getting perf to probe a user-level address without
-debuginfo? Eg (on Linux 4.0):
+>Is there a trick to getting perf to probe a user-level address without
+>debuginfo? Eg (on Linux 4.0):
+>[...]
+>I can do this using ftrace ok, eg, "p:tick_0x583 /root/tick:0x583"
+>works. Thanks,
 
-# perf probe -x /root/tick '@+0x583'
-Debuginfo-analysis is not supported.
-  Error: Failed to add events.
+Not quite what you have asked for, but you can add the probe via ftrace and
+then use it from perf. Probes from /sys/kernel/debug/tracing/uprobe_events
+will show up in 'perf list' as well.
 
-I can do this using ftrace ok, eg, "p:tick_0x583 /root/tick:0x583"
-works. Thanks,
-
-Brendan
+Cheers,
+  Benjamin
