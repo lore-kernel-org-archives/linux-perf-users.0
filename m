@@ -1,26 +1,26 @@
 From: Philipp Trommler <philipp.trommler@mailbox.tu-dresden.de>
 Subject: Using perf on Xeon Phi
-Date: Tue, 30 Jun 2015 12:05:10 +0200
-Message-ID: <1435658710.18320.27.camel@mailbox.tu-dresden.de>
+Date: Tue, 30 Jun 2015 11:54:06 +0200
+Message-ID: <1435658046.18320.25.camel@mailbox.tu-dresden.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailout2.zih.tu-dresden.de ([141.30.67.73]:50450 "EHLO
+Received: from mailout2.zih.tu-dresden.de ([141.30.67.73]:45674 "EHLO
 	mailout2.zih.tu-dresden.de" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752894AbbF3KFM (ORCPT
+	by vger.kernel.org with ESMTP id S1751104AbbF3KG6 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 30 Jun 2015 06:05:12 -0400
+	Tue, 30 Jun 2015 06:06:58 -0400
 Received: from mail.zih.tu-dresden.de ([141.76.14.4])
 	by mailout2.zih.tu-dresden.de with esmtp (Exim 4.63)
 	(envelope-from <philipp.trommler@mailbox.tu-dresden.de>)
-	id 1Z9sPf-0002y1-3u
-	for linux-perf-users@vger.kernel.org; Tue, 30 Jun 2015 12:05:11 +0200
+	id 1Z9sEx-0002Bo-5L
+	for linux-perf-users@vger.kernel.org; Tue, 30 Jun 2015 11:54:07 +0200
 Received: from ma013.zih.tu-dresden.de ([141.30.69.13])
 	by server-50.mailclusterdns.zih.tu-dresden.de with esmtpsa (TLSv1.2:AES128-SHA:128)
 	(envelope-from <philipp.trommler@mailbox.tu-dresden.de>)
-	id 1Z9sPe-0004ge-ON
-	for linux-perf-users@vger.kernel.org; Tue, 30 Jun 2015 12:05:10 +0200
+	id 1Z9sEw-0004Ij-Qq
+	for linux-perf-users@vger.kernel.org; Tue, 30 Jun 2015 11:54:06 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
