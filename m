@@ -1,58 +1,38 @@
-From: Daniel Ortiz <daniel.ortiz@tum.de>
-Subject: perf top for memory access profiling
-Date: Tue, 7 Jul 2015 12:20:57 +0000 (UTC)
-Message-ID: <mngg78$ft9$1@ger.gmane.org>
+From: Vinson Lee <vlee@twopensource.com>
+Subject: =?UTF-8?Q?4=2E2=2Drc2_perf_build_error_builtin=2Dstat=2Ec=3A346=3A_error=3A_?=
+	=?UTF-8?Q?declaration_of_=E2=80=98close=E2=80=99_shadows_a_global_declaration?=
+Date: Tue, 7 Jul 2015 11:01:25 -0700
+Message-ID: <CAHTgTXWecD6LoDRt4a5gJ385GULuhyB6YaK6iMNh=YW9cCkiZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:42907 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751757AbbGGMVG (ORCPT
+Received: from mail-la0-f46.google.com ([209.85.215.46]:32882 "EHLO
+	mail-la0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932428AbbGGSB0 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 7 Jul 2015 08:21:06 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1ZCRs0-0003sS-Eo
-	for linux-perf-users@vger.kernel.org; Tue, 07 Jul 2015 14:21:04 +0200
-Received: from host198-2.natpool.mwn.de ([138.246.2.198])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2015 14:21:04 +0200
-Received: from daniel.ortiz by host198-2.natpool.mwn.de with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2015 14:21:04 +0200
+	Tue, 7 Jul 2015 14:01:26 -0400
+Received: by laar3 with SMTP id r3so206267924laa.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2015 11:01:25 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 
-Hello
+Hi.
 
-Right now I am interested in profiling memory accesses. So far I have
-used perf mem record (perf mem record -W -d -e "cpu/mem-loads/pp") and
-then perf mem report to get information about the address being
-accessed, the access latency and the type of access such as l1,l2,l3 and
-remote hit or miss. This information would correspon to the fields
-"Local", "Weight, "Memory access" and "Data symbol" that are shown by
-the default in perf mem report.
+4.2-rc1 commit 106a94a0f8c207ef4113ce7e32f34a00b3b174e7 "perf stat:
+Introduce read_counters function" introduced a build error with older
+toolchains.
 
-I need to move to solution that shows the sampled information right as
-it is retrived from the hardware without user intervention, just like
-perf top does. Howewer, it seems that perf top does not show such
-information with memory access sampling, I have tried doiing the
-following :
+This is the build error on CentOS 6.
 
-I started trying to run perf mem record -W -d -e "cpu/mem-loads/pp" but
-then I realized that perf top does not support the -d and -W option in
-the same way perf record does, what I did was changing the top struct in
-the cmd_top functions more specifically the
-top.record_opts.sample_address and top.record_opts.sample_weight fields
-but the required information is still not shown.
+  CC       builtin-stat.o
+cc1: warnings being treated as errors
+builtin-stat.c: In function =E2=80=98read_counters=E2=80=99:
+builtin-stat.c:346: error: declaration of =E2=80=98close=E2=80=99 shado=
+ws a global declaration
+/usr/include/unistd.h:350: error: shadowed declaration is here
 
-The question is whether you know if perf top is capable in any way of
-showing the same information that perf mem report shows even if some
-tweaks are necessary.
-
-Kind regards...
-
-Daniel Ortiz
+Cheers,
+Vinson
