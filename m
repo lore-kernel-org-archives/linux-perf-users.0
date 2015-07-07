@@ -1,85 +1,58 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: Re: perf probe an addr without debuginfo
-Date: Mon, 6 Jul 2015 16:18:51 -0700
-Message-ID: <CAE40pdfVg2eay_1XG9YKhUEMFh1-WOwLUGk3R432X=Kct3WqrQ@mail.gmail.com>
-References: <CAE40pdemFG8f7EB6SerUEGeK0G2qeztqzeLCnLigB3TdgY6G1Q@mail.gmail.com>
- <20150628154651.GA3953@localhost> <20150629150038.GA1225@kernel.org>
- <55924725.5010504@hitachi.com> <CAE40pde_keAUGX7S1MN7ekYhM8E5my445nRKDJvYXRTOw-UPnQ@mail.gmail.com>
- <5593C996.6090803@hitachi.com>
+From: Daniel Ortiz <daniel.ortiz@tum.de>
+Subject: perf top for memory access profiling
+Date: Tue, 7 Jul 2015 12:20:57 +0000 (UTC)
+Message-ID: <mngg78$ft9$1@ger.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ig0-f182.google.com ([209.85.213.182]:37335 "EHLO
-	mail-ig0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755695AbbGFXTL (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:42907 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751757AbbGGMVG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 6 Jul 2015 19:19:11 -0400
-Received: by igau2 with SMTP id u2so23725838iga.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jul 2015 16:19:10 -0700 (PDT)
-In-Reply-To: <5593C996.6090803@hitachi.com>
+	Tue, 7 Jul 2015 08:21:06 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1ZCRs0-0003sS-Eo
+	for linux-perf-users@vger.kernel.org; Tue, 07 Jul 2015 14:21:04 +0200
+Received: from host198-2.natpool.mwn.de ([138.246.2.198])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2015 14:21:04 +0200
+Received: from daniel.ortiz by host198-2.natpool.mwn.de with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2015 14:21:04 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Benjamin King <benjaminking@web.de>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, cti.systems-productivity-manager.ts@hitachi.com
+To: linux-perf-users@vger.kernel.org
 
-G'Day Masami-san,
+Hello
 
-On Wed, Jul 1, 2015 at 4:05 AM, Masami Hiramatsu
-<masami.hiramatsu.pt@hitachi.com> wrote:
-> On 2015/07/01 3:40, Brendan Gregg wrote:
->> G'Day Masami,
->>
->> On Tue, Jun 30, 2015 at 12:37 AM, Masami Hiramatsu
->> <masami.hiramatsu.pt@hitachi.com> wrote:
->>> On 2015/06/30 0:00, Arnaldo Carvalho de Melo wrote:
->>>> Em Sun, Jun 28, 2015 at 05:46:51PM +0200, Benjamin King escreveu:
->>>>> Hi Brendan
->>>>>
->>>>>> Is there a trick to getting perf to probe a user-level address without
->>>>>> debuginfo? Eg (on Linux 4.0):
->>>>>> [...]
->>>>>> I can do this using ftrace ok, eg, "p:tick_0x583 /root/tick:0x583"
->>>>>> works. Thanks,
->>>>>
->>>>> Not quite what you have asked for, but you can add the probe via ftrace and
->>>>> then use it from perf. Probes from /sys/kernel/debug/tracing/uprobe_events
->>>>> will show up in 'perf list' as well.
->>>>
->>>> Masami,
->>>>
->>>>       Is this already possible?
->>>
->>> Yes, it should be possible. However, I don't recommend you to
->>> probe the address inside a function without debuginfo. You must
->>> check the instruction boundary in that case.
->>
->> Ah, because otherwise I could accidentally trace at a non-zero offsite
->> inside an instruction? That probably explains the only failure I saw
->> on uprobes on linux 4.0.
->>
->> Here's the original use case:
->>
->> # readelf -n /root/node/node
->> [...]
->>   stapsdt              0x00000082 NT_STAPSDT (SystemTap probe descriptors)
->>     Provider: node
->>     Name: http__client__request
->>     Location: 0x0000000000bf48ff, Base: 0x0000000000f22464, Semaphore:
->> 0x0000000001243024
->>     Arguments: 8@%rax 8@%rdx 8@-136(%rbp) -4@-140(%rbp) 8@-72(%rbp)
->> 8@-80(%rbp) -4@-144(%rbp)
->> [...]
->>
->> These user SDT probes (or "USDT probes") can't currently be traced
->> using perf (although Hemant Kumar was working on a patch).
->
-> Yes, and I'm working on it.
+Right now I am interested in profiling memory accesses. So far I have
+used perf mem record (perf mem record -W -d -e "cpu/mem-loads/pp") and
+then perf mem report to get information about the address being
+accessed, the access latency and the type of access such as l1,l2,l3 and
+remote hit or miss. This information would correspon to the fields
+"Local", "Weight, "Memory access" and "Data symbol" that are shown by
+the default in perf mem report.
 
-Oh, can't wait! :)
+I need to move to solution that shows the sampled information right as
+it is retrived from the hardware without user intervention, just like
+perf top does. Howewer, it seems that perf top does not show such
+information with memory access sampling, I have tried doiing the
+following :
 
-If it's helpful, I did some USDT hacking with ftrace:
-http://www.brendangregg.com/blog/2015-07-03/hacking-linux-usdt-ftrace.html
-, although this is really a place-holder until we have a proper
-implementation.
+I started trying to run perf mem record -W -d -e "cpu/mem-loads/pp" but
+then I realized that perf top does not support the -d and -W option in
+the same way perf record does, what I did was changing the top struct in
+the cmd_top functions more specifically the
+top.record_opts.sample_address and top.record_opts.sample_weight fields
+but the required information is still not shown.
 
-Brendan
+The question is whether you know if perf top is capable in any way of
+showing the same information that perf mem report shows even if some
+tweaks are necessary.
+
+Kind regards...
+
+Daniel Ortiz
