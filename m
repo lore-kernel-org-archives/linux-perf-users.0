@@ -1,115 +1,177 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf: remount of tracefs required
-Date: Tue, 4 Aug 2015 12:27:46 -0300
-Message-ID: <20150804152746.GA3126@kernel.org>
-References: <5297956.5blcApkzlY@milian-kdab2>
+From: Milian Wolff <mail@milianw.de>
+Subject: perf sched trick to profile wait times: period miscalculated on multicore machines
+Date: Tue, 04 Aug 2015 17:36:54 +0200
+Message-ID: <2080352.v3MQbmJ2PT@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:44882 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753315AbbHDP1s (ORCPT
+Received: from dd17628.kasserver.com ([85.13.138.83]:48565 "EHLO
+	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751419AbbHDPg4 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Aug 2015 11:27:48 -0400
-Content-Disposition: inline
-In-Reply-To: <5297956.5blcApkzlY@milian-kdab2>
+	Tue, 4 Aug 2015 11:36:56 -0400
+Received: from milian-kdab2.localnet (unknown [185.28.184.2])
+	by dd17628.kasserver.com (Postfix) with ESMTPSA id 0407162803F8
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Aug 2015 17:36:55 +0200 (CEST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <mail@milianw.de>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 04, 2015 at 04:44:53PM +0200, Milian Wolff escreveu:
-> on ArchLinux with Linux 4.1.3, perf 4.1.0, I get:
-> 
-> $ perf trace
-> Error:  No permissions to read 
-> /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-> Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
-> $ sudo mount -o remount,mode=755 /sys/kernel/debug
-> $ perf trace
-> Error:  No permissions to read 
-> /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-> Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
-> 
-> This is b/c Arch uses tracefs, and running
-> 
-> $ sudo mount -o remount,mode=755 /sys/kernel/debug/tracefs
-> 
-> fixes the issue for me. Could someone please amend the error message? Do I 
-> also need to remount debugfs, or is tracefs sufficient for using more advanced 
-> perf tools?
+Hello all,
 
-Well:
+following the perf tutorial, I recorded and merged samples and backtraces to 
+find out where my code is sleeping. The result is something like this:
 
-  [acme@zoo linux]$ perf trace ls
-  Error:	No permissions to read
-  /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
+$ perf report -g graph --no-children --show-total-period --stdio
+...
 
-  [acme@zoo linux]$ ls -la /sys/kernel/debug
-  ls: cannot open directory /sys/kernel/debug: Permission denied
-  [acme@zoo linux]$
+   100.00%            24    8886224240  ex_sleep  
+fcca6947df440540ec364a93452b05b3a13ef7  [k] __schedule
+            |
+            ---__schedule
+               schedule
+               do_nanosleep
+               hrtimer_nanosleep
+               sys_nanosleep
+               system_call
+               __nanosleep
+               0x7f36c861f2ad
+               |          
+               |--90.07%-- QThread::sleep
+               |          main
+               |          
+               |--9.02%-- QThread::msleep
+               |          main
+               |          
+                --0.91%-- QThread::usleep
+                          main
 
-So, I can't access debugfs, that is where the canonical mount point for
-tracefs is, so the message can be read as well as: "hey, let me get to
-where tracefs is".
+Cool! But the period should be in ns, no? That number reported is wrong by an 
+order of magnitude, roughly:
 
-Once that is done:
+The example code sleeps for 1s, 100ms and 10ms. perf stat agrees:
 
-  [acme@zoo linux]$ sudo mount -o remount,mode=755 /sys/kernel/debug
-  [sudo] password for acme: 
-  [acme@zoo linux]$ ls -la /sys/kernel/debug
-  total 0
-  drwxr-xr-x. 32 root root 0 Aug  4 08:35 .
-  drwxr-xr-x. 10 root root 0 Aug  4 08:35 ..
-  drwxr-xr-x.  2 root root 0 Aug  4 08:35 acpi
-  <SNIP>
-  drwxr-xr-x.  2 root root 0 Aug  4 08:35 zswap
-  [acme@zoo linux]$ ls -la /sys/kernel/debug/tracing/
-  ls: cannot open directory /sys/kernel/debug/tracing/: Permission denied
-  [acme@zoo linux]$
+1.112868066 seconds time elapsed ( +-  0.01%, avg over 10 runs )
 
-So, if I try:
+But perf record shows a period of 8886224240ns = 8.89s - a difference of 
+factor 8 (which corresponds to the number of cores on this machine, see also 
+below).
 
-  [acme@zoo linux]$ trace usleep 1
-  Error:	No permissions to read
-  /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+I recorded the data by doing
 
-  [acme@zoo linux]$
+$ sudo mount -o remount,mode=755 /sys/kernel/debug
+$ sudo mount -o remount,mode=755 /sys/kernel/debug/tracing
+$ echo \"-1\" | sudo tee /proc/sys/kernel/perf_event_paranoid
 
-It asks for that same remount to be done, this time for tracefs, once
-that is done:
+perf record -e sched:sched_stat_sleep -e sched:sched_switch -e 
+sched:sched_process_exit --call-graph dwarf -o perf.data.raw ./ex_sleep
+perf inject -v -s -i perf.data.raw -o perf.data
+perf report --no-children --show-total-period --stdio
 
-  [acme@zoo linux]$ sudo mount -o remount,mode=755 /sys/kernel/debug/tracing
-  [acme@zoo linux]$ trace usleep 1
-     0.086 (0.001 ms): usleep/10122 brk(                                                              ) = 0x556309717000
-     0.101 (0.003 ms): usleep/10122 mmap(len: 4096, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS, fd: -1) = 0x7f6f856ab000
-  <SNIP>
-  [acme@zoo linux]$
+One interesting find of mine is the following:
 
-It works.
+ perf script -i perf.data.raw | grep delay
+           :7038  7038 [004] 80885.657156: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657158: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657158: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657158: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657158: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657158: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657159: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+           :7038  7038 [004] 80885.657159: sched:sched_stat_sleep: comm=perf 
+pid=7039 delay=1015990 [ns]
+         swapper     0 [002] 80886.659750: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659752: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659753: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659754: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659754: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659755: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659756: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.659757: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=1000521253 [ns]
+         swapper     0 [002] 80886.759925: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759927: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759927: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759928: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759929: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759930: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759930: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.759931: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=100144138 [ns]
+         swapper     0 [002] 80886.770070: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770072: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770073: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770074: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770075: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770076: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770077: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
+         swapper     0 [002] 80886.770078: sched:sched_stat_sleep: 
+comm=ex_sleep pid=7039 delay=10114111 [ns]
 
-I guess what fixes what you report is this cset:
+My machine here is an 8 core, and it seems as if the sleep times are recorded 
+once for every core, thus explaining the factor 8 of difference. The 
+individual delays in the output above are correct, i.e. 1s, 100ms, 10ms and 
+some stuff at the beginning that is perf overhead.
 
-  commit ab85785aa13c36440a91a8e9f7616357de411a1f
-  Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-  Date:   Mon Jul 6 08:51:41 2015 -0300
+Would be awesome if someone could fix this, or explain me how to use perf 
+correctly to not trigger this issue. As a workaround I'll devide the period 
+count by nproc for now.
 
-    tools lib api debugfs: Check for tracefs when reporting errors
-    
-    Now that we have two mountpoints, one for debugfs and another, for
-    tracefs, we end up needing to check permissions for both, so, on
-    a system with default config we were always asking the user to
-    check the permission of the debugfs mountpoint, even when it was
-    already sufficient. Fix it.
+Furthermore, it would be awesome if perf record would repeat the individual 
+period in the results, i.e. my ideal output would look somewhat like this:
 
------------
+  100.00%            24    1.11s  ex_sleep  
+fcca6947df440540ec364a93452b05b3a13ef7  [k] __schedule
+            |
+            ---__schedule
+               schedule
+               do_nanosleep
+               hrtimer_nanosleep
+               sys_nanosleep
+               system_call
+               __nanosleep
+               0x7f36c861f2ad
+               |          
+               |--90.07% (1.00s) -- QThread::sleep
+               |          main
+               |          
+               |-- 9.02% (100ms) -- QThread::msleep
+               |          main
+               |          
+                -- 0.91% (10.0ms) -- QThread::usleep
+                          main
 
-[acme@zoo linux]$ git describe ab85785aa13c36440a91a8e9f7616357de411a1f
-v4.2-rc1-17-gab85785aa13c
-
-So, can you try running the perf tools, built from the latest 4.2-rc codebase
-to see if it behaves as you expect?
-
-- Arnaldo
+Thanks
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
