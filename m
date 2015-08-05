@@ -1,111 +1,122 @@
 From: Milian Wolff <mail@milianw.de>
-Subject: Re: task-clock vs. cpu-clock; per-event documentation
-Date: Wed, 05 Aug 2015 15:38:50 +0200
-Message-ID: <2546272.3bCUhbRkWq@milian-kdab2>
-References: <1472439.mytDSkIAAG@milian-kdab2> <CAGz0_-2CGffoKu7LG+ZA6=QkYFzts8=AVg=j7xYVHkCxJPtQSQ@mail.gmail.com>
+Subject: Re: perf: remount of tracefs required
+Date: Wed, 05 Aug 2015 16:17:42 +0200
+Message-ID: <3948762.FVKqmXobpH@milian-kdab2>
+References: <5297956.5blcApkzlY@milian-kdab2> <20150804152746.GA3126@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from dd17628.kasserver.com ([85.13.138.83]:37977 "EHLO
+Received: from dd17628.kasserver.com ([85.13.138.83]:40292 "EHLO
 	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751861AbbHENix (ORCPT
+	with ESMTP id S1751495AbbHEORp (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 5 Aug 2015 09:38:53 -0400
-In-Reply-To: <CAGz0_-2CGffoKu7LG+ZA6=QkYFzts8=AVg=j7xYVHkCxJPtQSQ@mail.gmail.com>
+	Wed, 5 Aug 2015 10:17:45 -0400
+In-Reply-To: <20150804152746.GA3126@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andreas Hollmann <hollmann@in.tum.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
 
-On Wednesday 05 August 2015 15:07:28 Andreas Hollmann wrote:
-> Hi,
+On Tuesday 04 August 2015 12:27:46 Arnaldo Carvalho de Melo wrote:
+> Em Tue, Aug 04, 2015 at 04:44:53PM +0200, Milian Wolff escreveu:
+> > on ArchLinux with Linux 4.1.3, perf 4.1.0, I get:
+> > 
+> > $ perf trace
+> > Error:  No permissions to read
+> > /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+> > Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
+> > $ sudo mount -o remount,mode=755 /sys/kernel/debug
+> > $ perf trace
+> > Error:  No permissions to read
+> > /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+> > Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
+> > 
+> > This is b/c Arch uses tracefs, and running
+> > 
+> > $ sudo mount -o remount,mode=755 /sys/kernel/debug/tracefs
+> > 
+> > fixes the issue for me. Could someone please amend the error message? Do I
+> > also need to remount debugfs, or is tracefs sufficient for using more
+> > advanced perf tools?
 > 
-> I had the same question in 2013 and the best answer I got was (by David
-> Ahern):
-
-Hello Andreas,
-
-I found your email as well, but not the answer by David Ahern - thanks!
-
-> cpu-clock is wall-clock based -- so samples are taken at regular
-> intervals relative to walltime.
+> Well:
 > 
-> I believe that task-clock is relative to the task run time. So,
-> samples are taken at regular intervals relative to the process'
-> runtime.
+>   [acme@zoo linux]$ perf trace ls
+>   Error:	No permissions to read
+>   /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+>   Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug'
+> 
+>   [acme@zoo linux]$ ls -la /sys/kernel/debug
+>   ls: cannot open directory /sys/kernel/debug: Permission denied
+>   [acme@zoo linux]$
+> 
+> So, I can't access debugfs, that is where the canonical mount point for
+> tracefs is, so the message can be read as well as: "hey, let me get to
+> where tracefs is".
 
-Hm, I seem to be missing some crucial information then. From the above, I'd 
-assume that cpu-clock would advance even when any other process is running on 
-the given CPU, and also that it would always be higher than the task-clock:
+Yes, at that point this message is correct.
 
-perf stat -e cpu-clock,task-clock find /tmp
+> Once that is done:
+> 
+>   [acme@zoo linux]$ sudo mount -o remount,mode=755 /sys/kernel/debug
+>   [sudo] password for acme:
+>   [acme@zoo linux]$ ls -la /sys/kernel/debug
+>   total 0
+>   drwxr-xr-x. 32 root root 0 Aug  4 08:35 .
+>   drwxr-xr-x. 10 root root 0 Aug  4 08:35 ..
+>   drwxr-xr-x.  2 root root 0 Aug  4 08:35 acpi
+>   <SNIP>
+>   drwxr-xr-x.  2 root root 0 Aug  4 08:35 zswap
+>   [acme@zoo linux]$ ls -la /sys/kernel/debug/tracing/
+>   ls: cannot open directory /sys/kernel/debug/tracing/: Permission denied
+>   [acme@zoo linux]$
+> 
+> So, if I try:
+> 
+>   [acme@zoo linux]$ trace usleep 1
+>   Error:	No permissions to read
+>   /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+>   Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
 
- Performance counter stats for 'find /tmp':
+This message I do not get, not even with my perf compiled from the v4.2-rc5 
+tag. And it is exactly what I was asking for.
 
-          2.504951      cpu-clock (msec)                                            
-          2.508933      task-clock (msec)         #    0.726 CPUs utilized          
+<snip>
 
-       0.003456557 seconds time elapsed
+> I guess what fixes what you report is this cset:
+> 
+>   commit ab85785aa13c36440a91a8e9f7616357de411a1f
+>   Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+>   Date:   Mon Jul 6 08:51:41 2015 -0300
+> 
+>     tools lib api debugfs: Check for tracefs when reporting errors
+> 
+>     Now that we have two mountpoints, one for debugfs and another, for
+>     tracefs, we end up needing to check permissions for both, so, on
+>     a system with default config we were always asking the user to
+>     check the permission of the debugfs mountpoint, even when it was
+>     already sufficient. Fix it.
+> 
+> -----------
+> 
+> [acme@zoo linux]$ git describe ab85785aa13c36440a91a8e9f7616357de411a1f
+> v4.2-rc1-17-gab85785aa13c
+> 
+> So, can you try running the perf tools, built from the latest 4.2-rc
+> codebase to see if it behaves as you expect?
 
-Here the task-clock is higher than the cpu-clock...? So what is a task in 
-Kernel speak? Is it a thread? A process? 
+This is not included in 4.2-rc5 as far as I can see:
 
-Also, you say that cpu-clock samples are relative to walltime, but that is 
-only CPU walltime, i.e. excluding sleep or I/O time. And even then, cpu-clock 
-is limited to the process clock:
+$ git describe
+v4.2-rc5-2-ga64d3e5
+$ git show ab85785aa13c36440a91a8e9f7616357de411a1f
+fatal: bad object ab85785aa13c36440a91a8e9f7616357de411a1f
+$ git log --grep debugfs --oneline --author=Arnaldo
+f816b3c tools lib fs debugfs: Check if debugfs is mounted when handling ENOENT
+...
 
-$ perf stat -e cpu-clock,task-clock sleep 1
-
- Performance counter stats for 'sleep 1':
-
-          0.365390      cpu-clock (msec)                                            
-          0.365318      task-clock (msec)         #    0.000 CPUs utilized          
-
-       1.000775593 seconds time elapsed
-
-$ sudo perf stat -e cpu-clock,task-clock -a sleep 1
-
- Performance counter stats for 'system wide':
-
-       8015.143460      cpu-clock (msec)                                              
-(100.00%)
-       8015.047445      task-clock (msec)         #    8.006 CPUs utilized          
-
-       1.001121827 seconds time elapsed
-
-Bye
-
-> 2015-08-05 14:55 GMT+02:00 Milian Wolff <mail@milianw.de>:
-> > Hello all,
-> > 
-> > I was asked by a colleague of mine what the difference between task-clock
-> > and cpu-clock is. I found many similar questions on the web, but none
-> > have a final answer:
-> > 
-> > http://stackoverflow.com/questions/23965363/linux-perf-events-cpu-clock-an
-> > d-task-clock-what-is-the-difference https://lkml.org/lkml/2010/11/3/373
-> > 
-> > Could someone explain the difference between the two counters for a
-> > non-kernel person? What is a task for that matter? When I compare the
-> > counters on test applications, they deviate only marginally.
-> > 
-> > In general, is there hope for more documentation on the individual
-> > performance counters? Perf list shows what's available but has no
-> > information whatsoever about the actual meaning of the counters. It would
-> > be excellent to also explain how to interpret the counter, or in what
-> > case you'd want to look at a given event.
-> > 
-> > Thanks
-> > --
-> > Milian Wolff
-> > mail@milianw.de
-> > http://milianw.de
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe
-> > linux-perf-users" in the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
+Thanks
 -- 
 Milian Wolff
 mail@milianw.de
