@@ -1,99 +1,87 @@
-From: "Liang, Kan" <kan.liang@intel.com>
-Subject: RE: Haswell LBR call stacks - broken
-Date: Tue, 4 Aug 2015 21:41:47 +0000
-Message-ID: <37D7C6CF3E00A74B8858931C1DB2F077018D21C6@SHSMSX103.ccr.corp.intel.com>
-References: <1682663.JO3lAz5bZo@agathebauer>
- <8643019.4YmQ1Xdl9W@milian-kdab2> <87h9oe3ox3.fsf@tassilo.jf.intel.com>
+From: Milian Wolff <mail@milianw.de>
+Subject: Re: Haswell LBR call stacks - broken
+Date: Wed, 05 Aug 2015 11:02:55 +0200
+Message-ID: <1789536.mnTOPtGhsS@milian-kdab2>
+References: <1682663.JO3lAz5bZo@agathebauer> <87h9oe3ox3.fsf@tassilo.jf.intel.com> <37D7C6CF3E00A74B8858931C1DB2F077018D21C6@SHSMSX103.ccr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:31558 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752128AbbHDVl5 convert rfc822-to-8bit (ORCPT
+Received: from dd17628.kasserver.com ([85.13.138.83]:49477 "EHLO
+	dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751073AbbHEJC6 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 4 Aug 2015 17:41:57 -0400
-In-Reply-To: <87h9oe3ox3.fsf@tassilo.jf.intel.com>
-Content-Language: en-US
+	Wed, 5 Aug 2015 05:02:58 -0400
+In-Reply-To: <37D7C6CF3E00A74B8858931C1DB2F077018D21C6@SHSMSX103.ccr.corp.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>, Milian Wolff <mail@milianw.de>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: "Liang, Kan" <kan.liang@intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Hi Milian,
+On Tuesday 04 August 2015 21:41:47 Liang, Kan wrote:
+> Hi Milian,
+> 
+> Is it possible to share your test case/steps with me?
 
-Is it possible to share your test case/steps with me?
+Sure, I hope Qt is fine with you.
 
-Does --call-graph fp work?
+main.cpp:
+~~~~~~~~~~~~~~~~~~~~~~
+#include <QString>
+#include <QTextStream>
 
-Thanks,
-Kan
+int main()
+{
+    QStringList haystack;
+    for (int i = 0; i < 1000; ++i) {
+        haystack << QString::number(i);
+    }
 
-> 
-> Milian Wolff <mail@milianw.de> writes:
-> >
-> > OK, with a more recent perf v4.2.rc5 on a Intel(R) Core(TM) i7-4770
-> > CPU @ 3.40GHz it actually works. Somewhat :) It is much faster, but
-> > the callstacks don't terminate properly, and are sometimes not
-> > correctly demangled. I observe the following behavior:
-> >
-> >     15.56%  ex_string_compa  libQt5Core.so.5.5.0   [.]
-> QString::compare_helper
-> >             |
-> >             |--5.84%--
-> >
-> _ZN7QString14compare_helperEPK5QChariS2_iN2Qt15CaseSensitivityE@pl
-> t
-> 
-> Maybe the demangler doesn't like the @plt.
-> 
-> 
-> >             |          QString::compare_helper
-> >             |          main
-> >             |          |
-> >             |          |--4.24%-- main
-> >             |          |          |
-> >             |          |          |--1.60%-- main
-> >             |          |          |          |
-> >             |          |          |          |--1.07%-- main
-> 
-> Yes that looks like a bug.
-> 
-> Adding Kan.
-> 
-> -Andi
-> 
-> >             |          |          |          |          |
-> >             |          |          |          |          |--0.54%-- main
-> >             |          |          |          |          |          main
-> >             |          |          |          |          |
-> >             |          |          |          |           --0.53%--
-> > QString::compare_helper
-> >             |          |          |          |                     main
-> >             |          |          |          |
-> >             |          |          |           --0.53%--
-> > QString::compare_helper
-> >             |          |          |                     main
-> >             |          |          |                     main
-> >             |          |          |
-> > QString::compare_helper
-> >             |          |          |                     main
-> >             |          |          |
-> > QString::compare_helper
-> > ...
-> >
-> > The correct callgraph, as shown by --call-graph dwarf, is:
-> >
-> >     21.62%  ex_string_compa  libQt5Core.so.5.5.0   [.]
-> QString::compare_helper
-> >             |
-> >             ---QString::compare_helper
-> >                main
-> >
-> > Is this a known (undocumented) limitation or a bug? Is there anything
-> > I could do to get this fixed?
-> >
-> > Thanks
-> 
-> --
-> ak@linux.intel.com -- Speaking for myself only
+    uint matches = 0;
+    for (int i = 0; i < 1000; ++i) {
+        foreach (const QString &str, haystack) {
+            if (str == "needle") {
+                ++matches;
+            }
+        }
+    }
+
+    QTextStream out(stdout);
+    out << "Matches: " << matches << endl;
+
+    return 0;
+}
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+lbr.pro:
+~~~~~~~~~~~~~~~~~~~~~~
+TEMPLATE = app
+
+SOURCES = main.cpp
+
+CONFIG += release
+QMAKE_CXXFLAGS += -g
+~~~~~~~~~~~~~~~~~~~~~~
+
+To build, put both into a folder and then do:
+
+~~~~~~~~~~~~~~~~~~~~~~
+mkdir build
+cd build
+qmake-qt5 ..
+make
+perf record --call-graph lbr ./lbr
+perf report --stdio
+~~~~~~~~~~~~~~~~~~~~~~
+
+> Does --call-graph fp work?
+
+No, I'm on a 64bit architecture, and most libs (esp. Qt) is built without 
+framepointers. --call-graph dwarf does work though.
+
+Bye
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
