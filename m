@@ -1,32 +1,87 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: Latency values in perf mem report
-Date: Wed, 5 Aug 2015 16:02:41 -0400 (EDT)
-Message-ID: <alpine.DEB.2.20.1508051602080.7381@vincent-weaver-1.umelst.maine.edu>
-References: <loom.20150805T123916-655@post.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH] perf trace: add total time column to summary.
+Date: Thu,  6 Aug 2015 11:24:29 +0200
+Message-ID: <1438853069-5902-1-git-send-email-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f172.google.com ([209.85.223.172]:35934 "EHLO
-	mail-io0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753065AbbHETzp (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:51610 "EHLO mail.kdab.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751142AbbHFJeR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 5 Aug 2015 15:55:45 -0400
-Received: by ioeg141 with SMTP id g141so60398469ioe.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2015 12:55:44 -0700 (PDT)
-In-Reply-To: <loom.20150805T123916-655@post.gmane.org>
+	Thu, 6 Aug 2015 05:34:17 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milan Radulovic <milan.radulovic@bsc.es>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 
-On Wed, 5 Aug 2015, Milan Radulovic wrote:
+It is cumbersome to manually calculate the total time spent in a
+given syscall by multiplying the average value with the number of
+calls. Instead, we now do this directly inside perf trace. Note
+that this is also done by strace, which even adds a column with
+relative numbers - something we could do in the future.
 
-> I measured load latency using perf mem rec and I have some doubts regarding
-> the results.
-> It is a 2 socket machine, with 2x Intel E5-2620 (2x 6 cores) at 2.3 GHz.
+Example:
 
-I'm not sure if it applies, but you might want to take a look at this:
-	
-https://software.intel.com/en-us/articles/performance-monitoring-on-intel-xeon-processor-e5-family
+perf trace -s find /some/folder > /dev/null
 
-Vince
+ Summary of events:
+
+ find (19976), 700123 events, 100.0%, 0.000 msec
+
+   syscall            calls    total       min       avg       max      stddev
+                               (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- -------- --------- --------- --------- ---------     ------
+   read                   4     0.006     0.001     0.002     0.003     27.42%
+   write               8046     9.617     0.001     0.001     0.035      0.56%
+   open               34196    40.384     0.001     0.001     0.071      0.30%
+   close              68375    57.104     0.001     0.001     0.076      0.25%
+   stat                   4     0.004     0.001     0.001     0.001      3.14%
+   fstat              34189    27.518     0.001     0.001     0.060      0.34%
+   mmap                  13     0.029     0.001     0.002     0.003     10.74%
+   mprotect               6     0.018     0.002     0.003     0.005     17.04%
+   munmap                 3     0.014     0.003     0.005     0.006     24.87%
+   brk                   87     0.490     0.001     0.006     0.016      6.50%
+   ioctl                  3     0.004     0.001     0.001     0.003     36.39%
+   access                 1     0.004     0.004     0.004     0.004      0.00%
+   uname                  1     0.001     0.001     0.001     0.001      0.00%
+   getdents           68393   143.600     0.001     0.002     0.187      0.95%
+   fchdir             68371    56.980     0.001     0.001     0.111      0.39%
+   arch_prctl             1     0.001     0.001     0.001     0.001      0.00%
+   openat             34184    41.737     0.001     0.001     0.102      0.41%
+   newfstatat         34184    41.180     0.001     0.001     0.064      0.34%
+
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+---
+ tools/perf/builtin-trace.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d183d88..98e1d8b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2586,9 +2586,9 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+ 
+ 	printed += fprintf(fp, "\n");
+ 
+-	printed += fprintf(fp, "   syscall            calls      min       avg       max      stddev\n");
+-	printed += fprintf(fp, "                               (msec)    (msec)    (msec)        (%%)\n");
+-	printed += fprintf(fp, "   --------------- -------- --------- --------- ---------     ------\n");
++	printed += fprintf(fp, "   syscall            calls    total       min       avg       max      stddev\n");
++	printed += fprintf(fp, "                               (msec)    (msec)    (msec)    (msec)        (%%)\n");
++	printed += fprintf(fp, "   --------------- -------- --------- --------- --------- ---------     ------\n");
+ 
+ 	/* each int_node is a syscall */
+ 	while (inode) {
+@@ -2605,8 +2605,8 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+ 
+ 			sc = &trace->syscalls.table[inode->i];
+ 			printed += fprintf(fp, "   %-15s", sc->name);
+-			printed += fprintf(fp, " %8" PRIu64 " %9.3f %9.3f",
+-					   n, min, avg);
++			printed += fprintf(fp, " %8" PRIu64 " %9.3f %9.3f %9.3f",
++					   n, avg * n, min, avg);
+ 			printed += fprintf(fp, " %9.3f %9.2f%%\n", max, pct);
+ 		}
+ 
+-- 
+2.5.0
