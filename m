@@ -1,28 +1,32 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Meaning of weight and source fields in perf mem samples
-Date: Wed, 02 Sep 2015 12:21:04 -0700
-Message-ID: <87si6w4ogv.fsf@tassilo.jf.intel.com>
-References: <ms64jg$cfo$1@ger.gmane.org>
+Subject: Re: Understanding timestamps in perf.data
+Date: Wed, 02 Sep 2015 12:23:39 -0700
+Message-ID: <87oahk4ock.fsf@tassilo.jf.intel.com>
+References: <55E6C120.3030504@kit.edu> <55E6FCF9.60403@gmail.com>
+	<55E71351.8010507@kit.edu> <55E72762.6030209@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:44940 "EHLO mga09.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:33381 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751615AbbIBTVI (ORCPT
+	id S1756033AbbIBTXq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Sep 2015 15:21:08 -0400
-In-Reply-To: <ms64jg$cfo$1@ger.gmane.org> (Daniel Ortiz's message of "Wed, 2
-	Sep 2015 06:22:40 +0000 (UTC)")
+	Wed, 2 Sep 2015 15:23:46 -0400
+In-Reply-To: <55E72762.6030209@gmail.com> (David Ahern's message of "Wed, 2
+	Sep 2015 10:44:18 -0600")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Daniel Ortiz <daniel.ortiz@tum.de>
-Cc: linux-perf-users@vger.kernel.org
+To: David Ahern <dsahern@gmail.com>
+Cc: Dennis Gnad <dennis.gnad@kit.edu>, linux-perf-users@vger.kernel.org
 
-Daniel Ortiz <daniel.ortiz@tum.de> writes:
+David Ahern <dsahern@gmail.com> writes:
 >
-> But I have not found any source that confirms whether perf is taking
-> this value or not. Could anyone confirm me if these are the values
-> that perf is putting on the samples
+> The counter values are not relevant for profiling. They are programmed
+> to rollover and generate an NMI which causes the sample to be taken.
 
-Yes the load-latency values are used for weight here.
+Actually it's relevent if you use adaptive frequency mode
+(-F or default, not using -c) because it varies then.
+
+The count values are reported by default in perf script.
+
 -Andi
