@@ -1,33 +1,28 @@
-From: David Ahern <dsahern@gmail.com>
-Subject: Re: Understanding timestamps in perf.data
-Date: Wed, 2 Sep 2015 11:00:12 -0600
-Message-ID: <55E72B1C.7070108@gmail.com>
-References: <55E6C120.3030504@kit.edu> <55E6FCF9.60403@gmail.com>
- <55E71351.8010507@kit.edu> <55E72762.6030209@gmail.com>
- <alpine.DEB.2.20.1509021256550.575@vincent-weaver-1.umelst.maine.edu>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Meaning of weight and source fields in perf mem samples
+Date: Wed, 02 Sep 2015 12:21:04 -0700
+Message-ID: <87si6w4ogv.fsf@tassilo.jf.intel.com>
+References: <ms64jg$cfo$1@ger.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f178.google.com ([209.85.223.178]:36236 "EHLO
-	mail-io0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755631AbbIBRAN (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:44940 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751615AbbIBTVI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Sep 2015 13:00:13 -0400
-Received: by ioii196 with SMTP id i196so27389479ioi.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Sep 2015 10:00:12 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.20.1509021256550.575@vincent-weaver-1.umelst.maine.edu>
+	Wed, 2 Sep 2015 15:21:08 -0400
+In-Reply-To: <ms64jg$cfo$1@ger.gmane.org> (Daniel Ortiz's message of "Wed, 2
+	Sep 2015 06:22:40 +0000 (UTC)")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Dennis Gnad <dennis.gnad@kit.edu>, linux-perf-users@vger.kernel.org
+To: Daniel Ortiz <daniel.ortiz@tum.de>
+Cc: linux-perf-users@vger.kernel.org
 
-On 9/2/15 11:00 AM, Vince Weaver wrote:
-> On Wed, 2 Sep 2015, David Ahern wrote:
->> The counter values are not relevant for profiling. They are programmed to
->> rollover and generate an NMI which causes the sample to be taken.
+Daniel Ortiz <daniel.ortiz@tum.de> writes:
 >
-> They might not be relevant for profiling, but some people use the perf
-> counters for other tasks.
+> But I have not found any source that confirms whether perf is taking
+> this value or not. Could anyone confirm me if these are the values
+> that perf is putting on the samples
 
-Dennis was asking about profiling.
+Yes the load-latency values are used for weight here.
+-Andi
