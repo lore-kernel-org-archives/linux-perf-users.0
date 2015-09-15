@@ -1,45 +1,86 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: LBR unwinding for user defined dynamic trace point
-Date: Tue, 15 Sep 2015 15:12:02 +0200
-Message-ID: <2495974.rH49Pff4SO@milian-kdab2>
+Subject: permissions required for user defined dynamic tracepoints
+Date: Tue, 15 Sep 2015 15:26:56 +0200
+Message-ID: <2165133.E7ilaynrlj@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2398157.3a1q0hbcJr"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart19779865.SYhPpyO59P"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:53004 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:54276 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751676AbbIONMG (ORCPT
+	id S1752412AbbION07 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 15 Sep 2015 09:12:06 -0400
+	Tue, 15 Sep 2015 09:26:59 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
---nextPart2398157.3a1q0hbcJr
+--nextPart19779865.SYhPpyO59P
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
 Hey all,
 
-I just tried to use LBR with a user defined dynamic trace point and get a 
-strange error message:
+most "advanced" perf tools can be used as a normal non-root user after 
+executing the following commands:
 
-$ sudo perf probe -x /lib64/libc.so.6 malloc
-$ sudo perf record -e probe_libc:malloc --call-graph lbr -F 1000 ./foo
-Error:
-The sys_perf_event_open() syscall returned with 95 (Operation not supported) 
-for event (probe_libc:malloc).
-/bin/dmesg may provide additional information.
-No CONFIG_PERF_EVENTS=y kernel support configured?
+sudo mount -o remount,mode=755 /sys/kernel/debug/
+sudo mount -o remount,mode=755 /sys/kernel/debug/tracing
+echo "-1" | sudo tee /proc/sys/kernel/perf_event_paranoid
 
-When I do the same with the Dwarf unwinder, it works just fine. Using the LBR 
-unwinder with a performance counter like instructions also works fine. Does 
-anyone know what the issue is here?
+The exception here are dynamic tracepoints:
+
+perf probe -x /lib64/libc.so.6 malloc
+Failed to open uprobe_events: Permission denied
+  Error: Failed to add events.
+
+Strace shows that it fails to write to /sys/kernel/debug/tracing/
+uprobe_events. I could workaround this issue with a
+
+sudo chmod a+w -R /sys/kernel/debug/tracing/uprobe_events
+
+Is that "OK", or a very bad idea? Is there a better alternative? Furthermore, 
+I notice that I cannot delete the trace points:
+
+perf probe -l
+probe_libc:malloc    (on __malloc in /usr/lib/libc-2.22.so)
+debug perf probe -d probe_libc:malloc
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff5f73160 in feof () from /usr/lib/libc.so.6
+(gdb) bt
+#0  0x00007ffff5f73160 in feof () from /usr/lib/libc.so.6
+#1  0x000000000050c9d3 in probe_file__get_rawlist (fd=<optimized out>) at 
+util/probe-file.c:144
+#2  0x000000000050cab1 in __probe_file__get_namelist (fd=<optimized out>, 
+include_group=include_group@entry=true)
+    at util/probe-file.c:173
+#3  0x000000000050cd90 in probe_file__get_events (fd=<optimized out>, 
+filter=filter@entry=0x1745b50, 
+    plist=plist@entry=0x17457b0) at util/probe-file.c:274
+#4  0x000000000046184f in perf_del_probe_events (filter=0x1745b50) at builtin-
+probe.c:386
+#5  __cmd_probe (argc=<optimized out>, argv=argv@entry=0x7fffffffcb90, 
+prefix=<optimized out>) at builtin-probe.c:596
+#6  0x0000000000461c8c in cmd_probe (argc=<optimized out>, 
+argv=0x7fffffffcb90, prefix=<optimized out>)
+    at builtin-probe.c:627
+#7  0x0000000000486923 in run_builtin (p=p@entry=0x6a9cc0 <commands+384>, 
+argc=argc@entry=3, argv=argv@entry=0x7fffffffcb90)
+    at perf.c:371
+#8  0x000000000042cce2 in handle_internal_command (argv=0x7fffffffcb90, 
+argc=3) at perf.c:431
+#9  run_argv (argv=0x7fffffffc920, argcp=0x7fffffffc92c) at perf.c:475
+#10 main (argc=3, argv=0x7fffffffcb90) at perf.c:592
+
+Any idea what might be going on here? I get the same crash when trying this as 
+root.
+
+Bye
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2398157.3a1q0hbcJr
+--nextPart19779865.SYhPpyO59P
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -141,13 +182,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE1MDkxNTEzMTIwMlowIwYJKoZIhvcNAQkEMRYEFCHNY2+UlU52JkJW+qFvN/NVTUiPMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGnY
-wsG7gLuaTs4sgDqmE/yvJSVB1ZJ3Ch5fHHR2FHQDnSm98vBRRtmvFQk1G4B3kNIgKghReYoSTxJs
-ZfRJjZbk3wNcwaJrqxwLEuvQr2URTYFanNplvcDlJirrtBMBFdv5nIxo0j6JafOYOJrBi2hgMxz2
-gS8gabQ2BUUZAUBO+2NbIzKRBfpVZtZagh4GktA08I8YwAMlHeZFEuGhe1CVQtj0aSwfKKAknBVp
-5idOPPva3AE1adV+W/s91CvZS4HF4/XVxXJ0qq0K/NOo5EPQiEw5nExZFCkhP5p/l4JWbvHwnUjV
-GBvW24Et6Qkk1FEZWiemWSdSvonsEkHiQEgAAAAAAAA=
+DTE1MDkxNTEzMjY1NlowIwYJKoZIhvcNAQkEMRYEFADsxfQ/2YoSzeYRSJ4hWqXE8AGoMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAK1Z
+6vQ73/mmFPKQCzW4994Pwka8vf8yVGNldAsM7l3MHczAJD99TuVl7MuEnk+pm/FOyQMF+o/XUPae
+h2Cmhn6K0QRfT7PF4kaZKOyssNcSKBHfavrMSoYDLPCHLfcMUxsoxRH6yzLeggcZQtR7NhyPLgbJ
+AjFS3pLeN2KK+d5Gz0ckHfOSYZWsekDUqEv5Fs1IpQGpPFenRpRYbnvfHxPpRuiO5tOL/xseHoE5
+6jurre1oyMN/wxjA+FJ5qQW3v9Ix1fhY/v90g9/6UB+G+JAjugTcHdRndtLjh3Z1qbfBBvqsvT9N
+7BZgMbfof67KGS3QN3bzjveEPb6umGzMJEoAAAAAAAA=
 
 
---nextPart2398157.3a1q0hbcJr--
+--nextPart19779865.SYhPpyO59P--
