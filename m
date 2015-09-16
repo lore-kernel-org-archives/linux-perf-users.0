@@ -1,50 +1,42 @@
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Subject: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
- removing uprobe events
-Date: Wed, 16 Sep 2015 21:52:42 +0900
-Message-ID: <20150916125241.4446.44805.stgit@localhost.localdomain>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: LBR unwinding for user defined dynamic trace point
+Date: Wed, 16 Sep 2015 20:56:14 +0200
+Message-ID: <20150916185614.GF1747@two.firstfloor.org>
+References: <2495974.rH49Pff4SO@milian-kdab2>
+ <874mivkcg2.fsf@tassilo.jf.intel.com>
+ <3862406.HVDrYIDCMl@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from one.firstfloor.org ([193.170.194.197]:59366 "EHLO
+	one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752330AbbIPS4R (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 16 Sep 2015 14:56:17 -0400
+Content-Disposition: inline
+In-Reply-To: <3862406.HVDrYIDCMl@milian-kdab2>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Andi Kleen <andi@firstfloor.org>, 5A@linux.intel.com, linux-perf-users@vger.kernel.org
 
-Fix a segfault bug and a small mistake in perf probe -d.
+On Wed, Sep 16, 2015 at 11:55:22AM +0200, Milian Wolff wrote:
+> On Tuesday, September 15, 2015 7:02:37 AM CEST Andi Kleen wrote:
+> > Milian Wolff <milian.wolff@kdab.com> writes:
+> > > When I do the same with the Dwarf unwinder, it works just fine. Using the
+> > > LBR unwinder with a performance counter like instructions also works
+> > > fine. Does anyone know what the issue is here?
+> > 
+> > LBR is only supported for PMU sampling at this point.
+> 
+> OK, thanks. Can you give me some more information on why that is? Is it 
+> fundamentally not possible, or simply not yet implemented?
 
-Since the "ulist" in perf_del_probe_events is never initialized,
-strlist__add(ulist, *) always causes a segfault when removing
-uprobe events by perf probe -d.
+For LBR callgraph it could be implemented. For some other LBR usages
+there would be limitations, as there is no LBR freezing for software
+trace points.
 
-Also, the "str" local variable is never released if fail to
-allocate the "klist". This fixes it too.
+-Andi
 
-This has been introduced by the commit e607f1426b58 ("perf probe:
-Print deleted events in cmd_probe()").
-
-Reported-by: Milian Wolff <milian.wolff@kdab.com>
-Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
----
- tools/perf/builtin-probe.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 94385ee..f7882ae 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -380,8 +380,11 @@ static int perf_del_probe_events(struct strfilter *filter)
- 		goto out;
- 
- 	klist = strlist__new(NULL, NULL);
--	if (!klist)
--		return -ENOMEM;
-+	ulist = strlist__new(NULL, NULL);
-+	if (!klist || !ulist) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
- 	ret = probe_file__get_events(kfd, filter, klist);
- 	if (ret == 0) {
+-- 
+ak@linux.intel.com -- Speaking for myself only.
