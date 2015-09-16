@@ -1,37 +1,50 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: LBR unwinding for user defined dynamic trace point
-Date: Wed, 16 Sep 2015 11:55:22 +0200
-Message-ID: <3862406.HVDrYIDCMl@milian-kdab2>
-References: <2495974.rH49Pff4SO@milian-kdab2> <874mivkcg2.fsf@tassilo.jf.intel.com>
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Subject: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
+ removing uprobe events
+Date: Wed, 16 Sep 2015 21:52:42 +0900
+Message-ID: <20150916125241.4446.44805.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:43150 "EHLO mail.kdab.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753811AbbIPJzZ (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 16 Sep 2015 05:55:25 -0400
-In-Reply-To: <874mivkcg2.fsf@tassilo.jf.intel.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: 5A@linux.intel.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Tuesday, September 15, 2015 7:02:37 AM CEST Andi Kleen wrote:
-> Milian Wolff <milian.wolff@kdab.com> writes:
-> > When I do the same with the Dwarf unwinder, it works just fine. Using the
-> > LBR unwinder with a performance counter like instructions also works
-> > fine. Does anyone know what the issue is here?
-> 
-> LBR is only supported for PMU sampling at this point.
+Fix a segfault bug and a small mistake in perf probe -d.
 
-OK, thanks. Can you give me some more information on why that is? Is it 
-fundamentally not possible, or simply not yet implemented?
+Since the "ulist" in perf_del_probe_events is never initialized,
+strlist__add(ulist, *) always causes a segfault when removing
+uprobe events by perf probe -d.
 
-Thanks
--- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
+Also, the "str" local variable is never released if fail to
+allocate the "klist". This fixes it too.
+
+This has been introduced by the commit e607f1426b58 ("perf probe:
+Print deleted events in cmd_probe()").
+
+Reported-by: Milian Wolff <milian.wolff@kdab.com>
+Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+---
+ tools/perf/builtin-probe.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 94385ee..f7882ae 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -380,8 +380,11 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 		goto out;
+ 
+ 	klist = strlist__new(NULL, NULL);
+-	if (!klist)
+-		return -ENOMEM;
++	ulist = strlist__new(NULL, NULL);
++	if (!klist || !ulist) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 
+ 	ret = probe_file__get_events(kfd, filter, klist);
+ 	if (ret == 0) {
