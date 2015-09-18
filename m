@@ -1,113 +1,48 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Linux 4.3-rc1 build error =?utf-8?Q?wi?=
- =?utf-8?Q?th_older_elfutils_=22util=2Fsymbol-elf=2Ec=3A41=3A5=3A_error=3A?=
- =?utf-8?Q?_no_previous_prototype_for_=E2=80=98elf=5Fgetphdrnum=E2=80=99?=
- =?utf-8?Q?=22?=
-Date: Thu, 17 Sep 2015 13:23:54 -0300
-Message-ID: <20150917162354.GN11551@kernel.org>
-References: <CAHTgTXVPtzyRuW5tYGuC4Ssxpzgc8uFvnXirbvtrCXbJ7f9RnA@mail.gmail.com>
- <55FA5D8F.6000502@intel.com>
- <20150917140619.GK11551@kernel.org>
- <20150917143708.GL11551@kernel.org>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
+ removing uprobe events
+Date: Fri, 18 Sep 2015 01:39:13 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB3752541831@GSjpTKYDCembx32.service.hitachi.net>
+References: <20150916125241.4446.44805.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:43320 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751980AbbIQQX7 (ORCPT
+Received: from mail9.hitachi.co.jp ([133.145.228.44]:34684 "EHLO
+	mail9.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752431AbbIRBjR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Sep 2015 12:23:59 -0400
-Content-Disposition: inline
-In-Reply-To: <20150917143708.GL11551@kernel.org>
+	Thu, 17 Sep 2015 21:39:17 -0400
+In-Reply-To: <20150916125241.4446.44805.stgit@localhost.localdomain>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Vinson Lee <vlee@twopensource.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Victor Kamensky <victor.kamensky@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Milian Wolff <milian.wolff@kdab.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
 
-Em Thu, Sep 17, 2015 at 11:37:08AM -0300, Arnaldo Carvalho de Melo escr=
-eveu:
-> Em Thu, Sep 17, 2015 at 11:06:19AM -0300, Arnaldo Carvalho de Melo es=
-creveu:
-> > Em Thu, Sep 17, 2015 at 09:28:31AM +0300, Adrian Hunter escreveu:
-> > > On 17/09/15 01:10, Vinson Lee wrote:
-> > > > With Linux 4.3-rc1 I get a perf build error using toolchains wi=
-th
-> > > > older elfutils.
-> > > >=20
-> > > > The following build error occurs on both CentOS 5.11 (elfutils =
-0.137)
-> > > > and Ubuntu 10.04.4 (elfutils 0.143).
-> > > >=20
-> > > >   CC       util/symbol-elf.o
-> > > > cc1: warnings being treated as errors
-> > > > util/symbol-elf.c:41: error: no previous prototype for =E2=80=98=
-elf_getphdrnum=E2=80=99
-> > >=20
-> > > commit f785f2357673d520a0b7b468973cdd197f336494
-> > > removed the 'static' qualifier, presumably because there
-> > > are cases where the prototype is in the header but the function i=
-s
-> > > not in the library.
-> > >=20
-> > > AFAICT gcc accepts multiple prototypes so long as they are the sa=
-me
-> > > so just adding the prototype should be ok i.e.
-> >=20
-> > But that looks like a bandaid :-\
-> >=20
-> > The comment I made in f785f2357673d520a0b7b468973cdd197f336494 was =
-not
-> > clear enough, now I'm the one trying to figure out why I did that..=
-=2E Duh
-> > :-\
-> >=20
-> > I.e. if:
-> >=20
-> > "HAVE_ELF_GETPHDRNUM_SUPPORT is false" we shouldn't have any protot=
-ype
-> > for that elf_getphdrnum function, i.e. the fact that it is in libel=
-f.h
-> > should mean that it is present, how come the feature test for it fa=
-iled,
-> > i.e. HAVE_ELF_GETPHDRNUM_SUPPORT wasn't defined?
->=20
-> So, on RHEL5.11 (aka, I guess, CentOS 5.11):
->=20
->   [acme@rhel5 linux]$ cat /etc/redhat-release=20
->   Red Hat Enterprise Linux Server release 5.11 (Tikanga)
->   [acme@rhel5 linux]$ rpm -q elfutils
->   elfutils-0.137-3.el5
->   [acme@rhel5 linux]$ cat /tmp/build/perf/feature/test-libelf-getphdr=
-num.make.output
->   cc1: warnings being treated as errors
->   test-libelf-getphdrnum.c: In function =E2=80=98main=E2=80=99:
->   test-libelf-getphdrnum.c:7: warning: implicit declaration of functi=
-on =E2=80=98elf_getphdrnum=E2=80=99
->   [acme@rhel5 linux]$
->=20
-> If I revert my patch, it builds... I am now building this in more
-> systems while trying to get my head around how
-> HAVE_ELF_GETPHDRNUM_SUPPORT can be false while elf_getphdrnum() is
-> defined.
-
-The only thing I could think was if there are missing libraries to link=
- with the
-elf_getphdrnum() test, at:
-
-  tools/build/feature/Makefile
-
-  test-libelf-getphdrnum.bin:
-          $(BUILD) -lelf
-
-I.e. on normal builds we end up somehow indirectly getting what we need
-and it all builds well, but when some extra lib is needed then the test
-will fail, HAVE_ELF_GETPHDRNUM_SUPPORT will not be set even in the
-presence of libelf.h with a valid elf_getphdrnum() prototype and the
-problems manifests itself...
-
-I'm reverting the patch now, as it was reported as breaking the build
-for someone, will revisit this if/when we find out where is that this
-breaks :-\
-
-- Arnaldo
+SGkgQXJuYWxkbywNCg0KQ291bGQgeW91IHB1bGwgdGhpcyBidWdmaXggYXMgYW4gdXJnZW50IHBh
+dGNoLCBzaW5jZSB0aGlzIGZpeGVzIGEgY3JpdGljYWwNCnByb2JsZW0/DQoNClRoYW5rcywNCg0K
+RnJvbTogTWFzYW1pIEhpcmFtYXRzdSBbbWFpbHRvOm1hc2FtaS5oaXJhbWF0c3UucHRAaGl0YWNo
+aS5jb21dDQo+DQo+Rml4IGEgc2VnZmF1bHQgYnVnIGFuZCBhIHNtYWxsIG1pc3Rha2UgaW4gcGVy
+ZiBwcm9iZSAtZC4NCj4NCj5TaW5jZSB0aGUgInVsaXN0IiBpbiBwZXJmX2RlbF9wcm9iZV9ldmVu
+dHMgaXMgbmV2ZXIgaW5pdGlhbGl6ZWQsDQo+c3RybGlzdF9fYWRkKHVsaXN0LCAqKSBhbHdheXMg
+Y2F1c2VzIGEgc2VnZmF1bHQgd2hlbiByZW1vdmluZw0KPnVwcm9iZSBldmVudHMgYnkgcGVyZiBw
+cm9iZSAtZC4NCj4NCj5BbHNvLCB0aGUgInN0ciIgbG9jYWwgdmFyaWFibGUgaXMgbmV2ZXIgcmVs
+ZWFzZWQgaWYgZmFpbCB0bw0KPmFsbG9jYXRlIHRoZSAia2xpc3QiLiBUaGlzIGZpeGVzIGl0IHRv
+by4NCj4NCj5UaGlzIGhhcyBiZWVuIGludHJvZHVjZWQgYnkgdGhlIGNvbW1pdCBlNjA3ZjE0MjZi
+NTggKCJwZXJmIHByb2JlOg0KPlByaW50IGRlbGV0ZWQgZXZlbnRzIGluIGNtZF9wcm9iZSgpIiku
+DQo+DQo+UmVwb3J0ZWQtYnk6IE1pbGlhbiBXb2xmZiA8bWlsaWFuLndvbGZmQGtkYWIuY29tPg0K
+PlNpZ25lZC1vZmYtYnk6IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0c3UucHRAaGl0
+YWNoaS5jb20+DQo+LS0tDQo+IHRvb2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jIHwgICAgNyArKysr
+Ky0tDQo+IDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+
+DQo+ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jIGIvdG9vbHMvcGVyZi9i
+dWlsdGluLXByb2JlLmMNCj5pbmRleCA5NDM4NWVlLi5mNzg4MmFlIDEwMDY0NA0KPi0tLSBhL3Rv
+b2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jDQo+KysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXByb2Jl
+LmMNCj5AQCAtMzgwLDggKzM4MCwxMSBAQCBzdGF0aWMgaW50IHBlcmZfZGVsX3Byb2JlX2V2ZW50
+cyhzdHJ1Y3Qgc3RyZmlsdGVyICpmaWx0ZXIpDQo+IAkJZ290byBvdXQ7DQo+DQo+IAlrbGlzdCA9
+IHN0cmxpc3RfX25ldyhOVUxMLCBOVUxMKTsNCj4tCWlmICgha2xpc3QpDQo+LQkJcmV0dXJuIC1F
+Tk9NRU07DQo+Kwl1bGlzdCA9IHN0cmxpc3RfX25ldyhOVUxMLCBOVUxMKTsNCj4rCWlmICgha2xp
+c3QgfHwgIXVsaXN0KSB7DQo+KwkJcmV0ID0gLUVOT01FTTsNCj4rCQlnb3RvIG91dDsNCj4rCX0N
+Cj4NCj4gCXJldCA9IHByb2JlX2ZpbGVfX2dldF9ldmVudHMoa2ZkLCBmaWx0ZXIsIGtsaXN0KTsN
+Cj4gCWlmIChyZXQgPT0gMCkgew0KPg0KDQo=
