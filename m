@@ -1,48 +1,78 @@
-From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
-	<masami.hiramatsu.pt@hitachi.com>
-Subject: RE: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
  removing uprobe events
-Date: Fri, 18 Sep 2015 01:39:13 +0000
-Message-ID: <50399556C9727B4D88A595C8584AAB3752541831@GSjpTKYDCembx32.service.hitachi.net>
+Date: Fri, 18 Sep 2015 11:26:22 -0300
+Message-ID: <20150918142622.GP11551@kernel.org>
 References: <20150916125241.4446.44805.stgit@localhost.localdomain>
+ <50399556C9727B4D88A595C8584AAB3752541831@GSjpTKYDCembx32.service.hitachi.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44]:34684 "EHLO
-	mail9.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752431AbbIRBjR (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:51891 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751596AbbIRO01 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 17 Sep 2015 21:39:17 -0400
-In-Reply-To: <20150916125241.4446.44805.stgit@localhost.localdomain>
-Content-Language: ja-JP
+	Fri, 18 Sep 2015 10:26:27 -0400
+Content-Disposition: inline
+In-Reply-To: <50399556C9727B4D88A595C8584AAB3752541831@GSjpTKYDCembx32.service.hitachi.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Milian Wolff <milian.wolff@kdab.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
+To: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Milian Wolff <milian.wolff@kdab.com>
 
-SGkgQXJuYWxkbywNCg0KQ291bGQgeW91IHB1bGwgdGhpcyBidWdmaXggYXMgYW4gdXJnZW50IHBh
-dGNoLCBzaW5jZSB0aGlzIGZpeGVzIGEgY3JpdGljYWwNCnByb2JsZW0/DQoNClRoYW5rcywNCg0K
-RnJvbTogTWFzYW1pIEhpcmFtYXRzdSBbbWFpbHRvOm1hc2FtaS5oaXJhbWF0c3UucHRAaGl0YWNo
-aS5jb21dDQo+DQo+Rml4IGEgc2VnZmF1bHQgYnVnIGFuZCBhIHNtYWxsIG1pc3Rha2UgaW4gcGVy
-ZiBwcm9iZSAtZC4NCj4NCj5TaW5jZSB0aGUgInVsaXN0IiBpbiBwZXJmX2RlbF9wcm9iZV9ldmVu
-dHMgaXMgbmV2ZXIgaW5pdGlhbGl6ZWQsDQo+c3RybGlzdF9fYWRkKHVsaXN0LCAqKSBhbHdheXMg
-Y2F1c2VzIGEgc2VnZmF1bHQgd2hlbiByZW1vdmluZw0KPnVwcm9iZSBldmVudHMgYnkgcGVyZiBw
-cm9iZSAtZC4NCj4NCj5BbHNvLCB0aGUgInN0ciIgbG9jYWwgdmFyaWFibGUgaXMgbmV2ZXIgcmVs
-ZWFzZWQgaWYgZmFpbCB0bw0KPmFsbG9jYXRlIHRoZSAia2xpc3QiLiBUaGlzIGZpeGVzIGl0IHRv
-by4NCj4NCj5UaGlzIGhhcyBiZWVuIGludHJvZHVjZWQgYnkgdGhlIGNvbW1pdCBlNjA3ZjE0MjZi
-NTggKCJwZXJmIHByb2JlOg0KPlByaW50IGRlbGV0ZWQgZXZlbnRzIGluIGNtZF9wcm9iZSgpIiku
-DQo+DQo+UmVwb3J0ZWQtYnk6IE1pbGlhbiBXb2xmZiA8bWlsaWFuLndvbGZmQGtkYWIuY29tPg0K
-PlNpZ25lZC1vZmYtYnk6IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0c3UucHRAaGl0
-YWNoaS5jb20+DQo+LS0tDQo+IHRvb2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jIHwgICAgNyArKysr
-Ky0tDQo+IDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+
-DQo+ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jIGIvdG9vbHMvcGVyZi9i
-dWlsdGluLXByb2JlLmMNCj5pbmRleCA5NDM4NWVlLi5mNzg4MmFlIDEwMDY0NA0KPi0tLSBhL3Rv
-b2xzL3BlcmYvYnVpbHRpbi1wcm9iZS5jDQo+KysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXByb2Jl
-LmMNCj5AQCAtMzgwLDggKzM4MCwxMSBAQCBzdGF0aWMgaW50IHBlcmZfZGVsX3Byb2JlX2V2ZW50
-cyhzdHJ1Y3Qgc3RyZmlsdGVyICpmaWx0ZXIpDQo+IAkJZ290byBvdXQ7DQo+DQo+IAlrbGlzdCA9
-IHN0cmxpc3RfX25ldyhOVUxMLCBOVUxMKTsNCj4tCWlmICgha2xpc3QpDQo+LQkJcmV0dXJuIC1F
-Tk9NRU07DQo+Kwl1bGlzdCA9IHN0cmxpc3RfX25ldyhOVUxMLCBOVUxMKTsNCj4rCWlmICgha2xp
-c3QgfHwgIXVsaXN0KSB7DQo+KwkJcmV0ID0gLUVOT01FTTsNCj4rCQlnb3RvIG91dDsNCj4rCX0N
-Cj4NCj4gCXJldCA9IHByb2JlX2ZpbGVfX2dldF9ldmVudHMoa2ZkLCBmaWx0ZXIsIGtsaXN0KTsN
-Cj4gCWlmIChyZXQgPT0gMCkgew0KPg0KDQo=
+Em Fri, Sep 18, 2015 at 01:39:13AM +0000, =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=
+=B7=B3 / HIRAMATU=EF=BC=8CMASAMI escreveu:
+> Hi Arnaldo,
+>=20
+> Could you pull this bugfix as an urgent patch, since this fixes a cri=
+tical
+> problem?
+
+Sure, thanks for the reminder.
+
+- Arnaldo
+=20
+> Thanks,
+>=20
+> From: Masami Hiramatsu [mailto:masami.hiramatsu.pt@hitachi.com]
+> >
+> >Fix a segfault bug and a small mistake in perf probe -d.
+> >
+> >Since the "ulist" in perf_del_probe_events is never initialized,
+> >strlist__add(ulist, *) always causes a segfault when removing
+> >uprobe events by perf probe -d.
+> >
+> >Also, the "str" local variable is never released if fail to
+> >allocate the "klist". This fixes it too.
+> >
+> >This has been introduced by the commit e607f1426b58 ("perf probe:
+> >Print deleted events in cmd_probe()").
+> >
+> >Reported-by: Milian Wolff <milian.wolff@kdab.com>
+> >Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> >---
+> > tools/perf/builtin-probe.c |    7 +++++--
+> > 1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> >index 94385ee..f7882ae 100644
+> >--- a/tools/perf/builtin-probe.c
+> >+++ b/tools/perf/builtin-probe.c
+> >@@ -380,8 +380,11 @@ static int perf_del_probe_events(struct strfilt=
+er *filter)
+> > 		goto out;
+> >
+> > 	klist =3D strlist__new(NULL, NULL);
+> >-	if (!klist)
+> >-		return -ENOMEM;
+> >+	ulist =3D strlist__new(NULL, NULL);
+> >+	if (!klist || !ulist) {
+> >+		ret =3D -ENOMEM;
+> >+		goto out;
+> >+	}
+> >
+> > 	ret =3D probe_file__get_events(kfd, filter, klist);
+> > 	if (ret =3D=3D 0) {
+> >
+>=20
