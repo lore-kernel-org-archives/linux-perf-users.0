@@ -1,55 +1,40 @@
-From: Paul Clarke <pc@us.ibm.com>
-Subject: Re: [PATCH perf/core ] [BUGFIX] perf probe: Fix a segfault when
- removing uprobe events
-Date: Fri, 18 Sep 2015 16:24:10 -0500
-Message-ID: <55FC80FA.6020007@us.ibm.com>
-References: <20150916125241.4446.44805.stgit@localhost.localdomain>
+From: Harris <mhmughees@gmail.com>
+Subject: Perf Hardware Counters Android
+Date: Mon, 21 Sep 2015 07:54:49 +0000 (UTC)
+Message-ID: <loom.20150921T094733-948@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150916125241.4446.44805.stgit@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from plane.gmane.org ([80.91.229.3]:38024 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756191AbbIUIuJ (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 21 Sep 2015 04:50:09 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1ZdwnV-0004Us-6r
+	for linux-perf-users@vger.kernel.org; Mon, 21 Sep 2015 10:50:07 +0200
+Received: from wf099-128.ust.hk ([175.159.99.128])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2015 10:50:05 +0200
+Received: from mhmughees by wf099-128.ust.hk with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2015 10:50:05 +0200
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-On 09/16/2015 07:52 AM, Masami Hiramatsu wrote:
-> Fix a segfault bug and a small mistake in perf probe -d.
->
-> Since the "ulist" in perf_del_probe_events is never initialized,
-> strlist__add(ulist, *) always causes a segfault when removing
-> uprobe events by perf probe -d.
->
-> Also, the "str" local variable is never released if fail to
-> allocate the "klist". This fixes it too.
->
-> This has been introduced by the commit e607f1426b58 ("perf probe:
-> Print deleted events in cmd_probe()").
->
-> Reported-by: Milian Wolff <milian.wolff@kdab.com>
-> Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-> ---
->   tools/perf/builtin-probe.c |    7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> index 94385ee..f7882ae 100644
-> --- a/tools/perf/builtin-probe.c
-> +++ b/tools/perf/builtin-probe.c
-> @@ -380,8 +380,11 @@ static int perf_del_probe_events(struct strfilter *filter)
->   		goto out;
->
->   	klist = strlist__new(NULL, NULL);
-> -	if (!klist)
-> -		return -ENOMEM;
-> +	ulist = strlist__new(NULL, NULL);
-> +	if (!klist || !ulist) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
+I have compiled AOSP which includes perf tool. 
+Later I pushed this compiled perf module into 
+production build on my MotoG device. 
+Now I am able to run perf command however perf top 
+command only shows empty layout of table with no entry. 
+Similarly I found I can to record and 
+stat for software events only. 
+While hardware events like "cycles" are not recorded. 
 
-Newbie here, but if one of "strlist__new()" calls succeeds, don't you 
-need a corresponding strlist__delete() ?
-
-PC
+I wonder if it is not possible to use perf with production
+built android or do I need to configure something.
+Please help me out.
