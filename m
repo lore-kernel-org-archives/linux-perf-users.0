@@ -1,54 +1,53 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: demangling of @plt entries
-Date: Sat, 03 Oct 2015 12:43:34 +0200
-Message-ID: <1896568.Zv4hrWaDKC@agathebauer>
+Subject: perf record of multiple events: disable callgraph for some events
+Date: Sun, 04 Oct 2015 13:48:21 +0200
+Message-ID: <4930261.j7GqdZnq15@agathebauer>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1507325.ok8D850Pbv"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1475500.iZkjRpCs6D"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:54487 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:55416 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751750AbbJCKnl (ORCPT
+	id S1751412AbbJDLs3 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 3 Oct 2015 06:43:41 -0400
+	Sun, 4 Oct 2015 07:48:29 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: perf group <linux-perf-users@vger.kernel.org>
 
---nextPart1507325.ok8D850Pbv
-Content-Transfer-Encoding: 7Bit
+--nextPart1475500.iZkjRpCs6D
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="us-ascii"
 
 Hey all,
 
-both perf and c++filt seem to have a problem with demangling @plt symbols:
+would it be possible to add a feature to perf to only grab callgraphs for a=
+=20
+certain selection of events? E.g. thinking about a lock contention profile =
+of=20
+a Qt application, I'd listen to=20
 
-c++filt _ZNK12QMapNodeBase8nextNodeEv@plt
-_ZNK12QMapNodeBase8nextNodeEv@plt
+=2De syscalls:sys_enter_futex,syscalls:sys_exit_futex
 
-c++filt _ZNK12QMapNodeBase8nextNodeEv
-QMapNodeBase::nextNode() const
+Now, with the dwarf unwinder this easily produces huge data files in the or=
+der=20
+of gigabytes. This cost could easily be reduced by a factor of two, as one=
+=20
+only needs the callgraphs for syscalls:sys_enter_futex - the TID should be=
+=20
+enough to find the callgraph for the enter event from the exit trace point.
 
-My question is: Should perf prevent this? I have a patch locally to just 
-demangle symbols up to the @plt at the end, i.e. ignoring it. This fixes the 
-problem for me.
-
-But I'm not so sure - sounds like this is something that would be better fixed 
-globally. I found https://sourceware.org/bugzilla/show_bug.cgi?id=12021 but 
-that says it should be fixed already. Can anyone else reproduce this? Where 
-should this be fixed, can anyone point me to a software repository?
-
-c++filt --version
-GNU c++filt (GNU Binutils) 2.25.1
-
-perf from current acme/perf/core
+Could someone guide me in implementing such a feature to make it possible t=
+o=20
+filter the events which trigger the collection of a callgraph? Or is that=20
+already possible somehow?
 
 Thanks
--- 
+=2D-=20
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1507325.ok8D850Pbv
+--nextPart1475500.iZkjRpCs6D
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -150,13 +149,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE1MTAwMzEwNDMzNFowIwYJKoZIhvcNAQkEMRYEFHypetOO/U2oh2cu+LqssZB8DgU8MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBACPO
-U9VHkkTDBu4JvNMR7BQ2PGXGz3xkJK31UkRYQsuXR6Eiqi0dS9AYvIBhOX/iU459XYI9d3Uly6x0
-4SJU9QWj6kx/Tl4UExr8bQvskkjrofTj1pq/HLsqfujsZlaUxmdZnJkHrZ2akkZycGiy/sg4hzMP
-adz6kLIFlnJPChZMg5vUw6jrotlzC+05sABfmDydYIQORtEHzESeWESEr4KuXIPRrm4OIeD/sjoD
-+/TKN/o1VaLx5LhdcXZD1Dv+LGESXcqdOSjHWe1FnlXQ63gkr3yMnXHpnUy+ANFpuuS5/cUZODsO
-FhkfMlL99TloIakYmrtV0hhJkbIZebswFZUAAAAAAAA=
+DTE1MTAwNDExNDgyMVowIwYJKoZIhvcNAQkEMRYEFBeOd22sv5gqwAqrmJCc9E8t+kQ9MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALrU
+Xd6u/eDmnRXwEwJITkft77ftxZzM91MVem3jmcfiOCDgtpn1aCW0Cwb9Z5iTNbU9o3WfYfFwIwMc
++LS5fDd/GS2eaUiOXABT+D72yJ1DDKIqSBjHIRGiR5c/xxrPmIWMdQ4GdN9qduiHemaGG164qwkx
+Rfhbg6UtImLWcvGKXczAL12PXvPDtadGQ4Aw+RwCaa3YaqTmhKLZGKLYJBaqIa3bZGePXV+ZJBRy
+B5K1K8yWmyAzwb8AcSEurykgjPK1Cdgky3VLjzPEq5+rF+MTDfElLkMFuoZAzGOJ6bA/nku6H684
+IgW5ufKXX2RNTKoPwrXBp5j4WHynACqphxcAAAAAAAA=
 
 
---nextPart1507325.ok8D850Pbv--
+--nextPart1475500.iZkjRpCs6D--
