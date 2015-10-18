@@ -1,75 +1,30 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+From: Andi Kleen <andi@firstfloor.org>
 Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Sun, 18 Oct 2015 11:15:16 +0000
-Message-ID: <1445166916.9672.10.camel@synopsys.com>
+Date: Sun, 18 Oct 2015 16:14:54 -0700
+Message-ID: <87a8rf6a6p.fsf@tassilo.jf.intel.com>
 References: <1445088959-3058-1-git-send-email-abrodkin@synopsys.com>
-	 <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
+	<C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
+	<1445166916.9672.10.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
-Content-Language: en-US
-Content-ID: <9FBB3E5308CA9F44848E4D722EDE48F9@internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Aabid Rushdi <Aabid.Rushdi@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "acme@redhat.com" <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:48608 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751409AbbJRXOz (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sun, 18 Oct 2015 19:14:55 -0400
+In-Reply-To: <1445166916.9672.10.camel@synopsys.com> (Alexey Brodkin's message
+	of "Sun, 18 Oct 2015 11:15:16 +0000")
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Aabid Rushdi <Aabid.Rushdi@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "acme@redhat.com" <acme@redhat.com>
 
-SGkgVmluZWV0LA0KDQpMb29rcyBsaWtlIHRoaXMgdGltZSBhdG9taWNzIGFyZSBhIG11c3QuIEFu
-ZCB0aGF0IHJlYWxseSBzdWNrcyENCg0KU2VlIHRoZXNlIGNvbW1pdHMgdGhhdCBpbnRyb2R1Y2Ug
-dXNhZ2Ugb2YgYXRvbWljX3h4eCgpIGFsbCBhcm91bmQgdGhlIHBlcmYgYW5kIHRvb2xzIGl0IHVz
-ZXM6DQpodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRz
-L2xpbnV4LmdpdC9jb21taXQvP2lkPWY4MTJkMzA0NWMyMzg1YWMxNjIzN2U2OGIxNTY4NTljNDAw
-NTUyNmUNCmh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFs
-ZHMvbGludXguZ2l0L2NvbW1pdC8/aWQ9ZDNhN2M0ODljN2ZkMjQ2M2UzYjJjM2EyMTc5YzdiZTg3
-OWRkOWNiNA0KaHR0cDovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC90b3J2
-YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD03MTQzODQ5YTVkNmE1YzYyM2Q4MTc5MGQ5MmYwMDMz
-NTA3YzViMTRmDQpodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3Rv
-cnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTU5YTUxYzFkYzlmYmIzZmI0YWY5MjhiODUyZDdi
-MzVkZjgzZWRkNzQNCmh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQv
-dG9ydmFsZHMvbGludXguZ2l0L2NvbW1pdC8/aWQ9ZTFlZDNhNWI4N2VkNjc1OWUxNmVjOTNmMTZh
-YWU4M2QyY2M3N2NhMg0KDQphbmQgdGhhdCdzIHRoZSBvbmUgdGhhdCBpbnRyb2R1Y2VkIHVzYWdl
-IG9mIHRoZSBmb2xsb3dpbmcgZ2VuZXJpYyBnY2MncyBhdG9taWNzDQooX19zeW5jX2FkZF9hbmRf
-ZmV0Y2gvX19zeW5jX3N1Yl9hbmRfZmV0Y2gpOg0KaHR0cDovL2dpdC5rZXJuZWwub3JnL2NnaXQv
-bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD1kYTZkODU2NzUx
-MmRmMTFlMDQ3M2I3MTBjMDdkZTg3ZWZkZTU3MDljDQoNClNvIHRoZSBiZXN0IHdlIG1heSBkbyBp
-cyB0byBpbXBsZW1lbnQgZGV0ZWN0aW9uIG9mIGF0b21pY3MgaW4gdGhlIHRvb2xjaGFpbiBhbmQg
-aWYgdGhlcmUncyBubyBhdG9taWNzIGhhcmQgc3RvcCB3aXRoDQpwZXJmIGJ1aWxkaW5nLg0KDQot
-QWxleGV5DQoNCk9uIFNhdCwgMjAxNS0xMC0xNyBhdCAxNDoxOSArMDAwMCwgVmluZWV0IEd1cHRh
-IHdyb3RlOg0KPiBPbiBTYXR1cmRheSAxNyBPY3RvYmVyIDIwMTUgMDc6MDYgUE0sIEFsZXhleSBC
-cm9ka2luIHdyb3RlOg0KPiA+IFBlcmYgdXNlcyBhdG9taWMgb3B0aW9ucyBhbmQgc28gaXQgaXMg
-cmVxdWlyZWQgdG8gaGF2ZSBhdG9taWNzIGVuYWJsZWQNCj4gPiBpbiB0b29sY2hhaW4uDQo+ID4g
-DQo+ID4gSW4gY2FzZSBvZiBBUkMgYXRvbWljcyBhcmUgZW5hYmxlZCBieSBkZWZhdWx0IGZvciBB
-UkN2MiBidXQgZGlzYWJsZWQgZm9yDQo+ID4gQVJDdjEuIE5vdyB3ZSBleHBsaWNpdGx5IGVuYWJs
-ZSBhdG9taWNzIGZvciBlaXRoZXIgQVJDIGFjaGl0ZWN0dXJlDQo+ID4gdmVyc2lvbiBzbyBwZXJm
-IGNvdWxkIGJlIHN1Y2Nlc3NmdWxseSBidWlsdC4NCj4gPiANCj4gPiBDdXJyZW50bHkgb24gYXR0
-ZW1wdCB0byBidWlsZCBwZXJmIGZvciBBUkN2MSB5b3UnbGwgc2VlIHRvbnMgb2Y6DQo+ID4gLS0t
-LS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gdW5kZWZpbmVkIHJlZmVyZW5j
-ZSB0byBgX19zeW5jX2FkZF9hbmRfZmV0Y2hfNCcNCj4gPiAtLS0tLS0tLS0tLS0tLS0tLT44LS0t
-LS0tLS0tLS0tLS0tLS0NCj4gPiANCj4gPiBTdGlsbCBub3RlIGlmIEFSQ3YxIENQVSBpcyBjb25m
-aWd1cmVkIHdpdGhvdXQgTEwvU0MgcGVyZiB3aWxsIGNyYXNoIG9uDQo+ID4gZXhlY3V0aW9uIG9u
-Y2UgImxsb2NrIiBpbnN0cnVjdGlvbiBpcyBhdHRlbXB0ZWQgdG8gYmUgZXhlY3V0ZWQuDQo+IA0K
-PiBPayB0aGlzIGZpeGVzIEFSQ29tcGFjdCAtIGFzc3VtaW5nIGl0IHdpbGwgaGF2ZSBMTC9TQy4g
-V2UgZG8gaGF2ZSBvbGQgU29DcyB3L28NCj4gdGhhdCBzdXBwb3J0Lg0KPiBTbyB3aGF0IHdlIGFy
-ZSBzYXlpbmcgaXMgdGhhdCBhbnkgYXJjaCAob3IgYSBjb25maWd1cmF0aW9uIHRoZXJlb2YpIHdo
-aWNoIGRvZXNuJ3QNCj4gc3VwcG9ydCBhdG9taWMgci1tLXcgY2FuJ3QgZXZlbiBidWlsZCBwZXJm
-IG5vdyAtIHRoYXQgc3Vja3MgIQ0KPiANCj4gQSBiZXR0ZXIgd2F5IHdvdWxkIGJlIHRvIGRvIGZl
-YXR1cmUgdGVzdCBmb3IgX19zeW5jX3h5eiBhbmQgbWFrZSBhdG9taWNfeHh4DQo+IHdyYXBwZXJz
-IGNhbGwgX19zeW5jX3h5eikgdnMuIGFuIGVtcHR5IHN0dWIuDQo+IFNvIGF0bGVhc3Qgc3VjaCBh
-cmNoZXMgY2FuIGJ1aWxkIGFuZCBkbyAic29tZSIgcGVyZiB3b3JrICENCj4gDQo+IC1WaW5lZXQN
-Cj4gDQo+ID4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNvbT4NCj4gPiBDYzog
-UGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KPiA+IENjOiBBcm5hbGRvIENh
-cnZhbGhvIGRlIE1lbG8gPGFjbWVAa2VybmVsLm9yZz4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4
-ZXkgQnJvZGtpbiA8YWJyb2RraW5Ac3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+ICB0b29scy9w
-ZXJmL2NvbmZpZy9NYWtlZmlsZSB8IDUgKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5z
-ZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2NvbmZpZy9NYWtl
-ZmlsZSBiL3Rvb2xzL3BlcmYvY29uZmlnL01ha2VmaWxlDQo+ID4gaW5kZXggMzhhMDg1My4uZGM3
-YzBhOCAxMDA2NDQNCj4gPiAtLS0gYS90b29scy9wZXJmL2NvbmZpZy9NYWtlZmlsZQ0KPiA+ICsr
-KyBiL3Rvb2xzL3BlcmYvY29uZmlnL01ha2VmaWxlDQo+ID4gQEAgLTQ3LDYgKzQ3LDExIEBAIGlm
-ZXEgKCQoQVJDSCksYXJtNjQpDQo+ID4gICAgTElCVU5XSU5EX0xJQlMgPSAtbHVud2luZCAtbHVu
-d2luZC1hYXJjaDY0DQo+ID4gIGVuZGlmDQo+ID4gIA0KPiA+ICsjIEFkZGl0aW9uYWwgQVJDSCBz
-ZXR0aW5ncyBmb3IgQVJDDQo+ID4gK2lmZXEgKCQoQVJDSCksYXJjKQ0KPiA+ICsgIENGTEFHUyAr
-PSAtbWF0b21pYw0KPiA+ICtlbmRpZg0KPiA+ICsNCj4gPiAgaWZlcSAoJChOT19QRVJGX1JFR1Mp
-LDApDQo+ID4gICAgJChjYWxsIGRldGVjdGVkLENPTkZJR19QRVJGX1JFR1MpDQo+ID4gIGVuZGlm
-DQo+IA0KPiA=
+Alexey Brodkin <Alexey.Brodkin@synopsys.com> writes:
+>
+> So the best we may do is to implement detection of atomics in the toolchain and if there's no atomics hard stop with
+> perf building.
+
+If your target is single cpu only you can always simulate them in C.
+
+-Andi
