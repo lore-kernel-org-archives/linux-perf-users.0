@@ -1,71 +1,75 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Sat, 17 Oct 2015 14:19:19 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
+Date: Sun, 18 Oct 2015 11:15:16 +0000
+Message-ID: <1445166916.9672.10.camel@synopsys.com>
 References: <1445088959-3058-1-git-send-email-abrodkin@synopsys.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtprelay4.synopsys.com ([198.182.47.9]:54133 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752485AbbJQOTX convert rfc822-to-8bit (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 17 Oct 2015 10:19:23 -0400
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
 Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Aabid Rushdi <Aabid.Rushdi@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Darren Hart <dvhart@linux.intel.com>
+Content-ID: <9FBB3E5308CA9F44848E4D722EDE48F9@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: Aabid Rushdi <Aabid.Rushdi@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "acme@redhat.com" <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Saturday 17 October 2015 07:06 PM, Alexey Brodkin wrote:
-> Perf uses atomic options and so it is required to have atomics enabled
-> in toolchain.
->
-> In case of ARC atomics are enabled by default for ARCv2 but disabled for
-> ARCv1. Now we explicitly enable atomics for either ARC achitecture
-> version so perf could be successfully built.
->
-> Currently on attempt to build perf for ARCv1 you'll see tons of:
-> ----------------->8-----------------
-> undefined reference to `__sync_add_and_fetch_4'
-> ----------------->8-----------------
->
-> Still note if ARCv1 CPU is configured without LL/SC perf will crash on
-> execution once "llock" instruction is attempted to be executed.
-
-Ok this fixes ARCompact - assuming it will have LL/SC. We do have old SoCs w/o
-that support.
-So what we are saying is that any arch (or a configuration thereof) which doesn't
-support atomic r-m-w can't even build perf now - that sucks !
-
-A better way would be to do feature test for __sync_xyz and make atomic_xxx
-wrappers call __sync_xyz) vs. an empty stub.
-So atleast such arches can build and do "some" perf work !
-
--Vineet
-
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> ---
->  tools/perf/config/Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-> index 38a0853..dc7c0a8 100644
-> --- a/tools/perf/config/Makefile
-> +++ b/tools/perf/config/Makefile
-> @@ -47,6 +47,11 @@ ifeq ($(ARCH),arm64)
->    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
->  endif
->  
-> +# Additional ARCH settings for ARC
-> +ifeq ($(ARCH),arc)
-> +  CFLAGS += -matomic
-> +endif
-> +
->  ifeq ($(NO_PERF_REGS),0)
->    $(call detected,CONFIG_PERF_REGS)
->  endif
+SGkgVmluZWV0LA0KDQpMb29rcyBsaWtlIHRoaXMgdGltZSBhdG9taWNzIGFyZSBhIG11c3QuIEFu
+ZCB0aGF0IHJlYWxseSBzdWNrcyENCg0KU2VlIHRoZXNlIGNvbW1pdHMgdGhhdCBpbnRyb2R1Y2Ug
+dXNhZ2Ugb2YgYXRvbWljX3h4eCgpIGFsbCBhcm91bmQgdGhlIHBlcmYgYW5kIHRvb2xzIGl0IHVz
+ZXM6DQpodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRz
+L2xpbnV4LmdpdC9jb21taXQvP2lkPWY4MTJkMzA0NWMyMzg1YWMxNjIzN2U2OGIxNTY4NTljNDAw
+NTUyNmUNCmh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFs
+ZHMvbGludXguZ2l0L2NvbW1pdC8/aWQ9ZDNhN2M0ODljN2ZkMjQ2M2UzYjJjM2EyMTc5YzdiZTg3
+OWRkOWNiNA0KaHR0cDovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC90b3J2
+YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD03MTQzODQ5YTVkNmE1YzYyM2Q4MTc5MGQ5MmYwMDMz
+NTA3YzViMTRmDQpodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3Rv
+cnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTU5YTUxYzFkYzlmYmIzZmI0YWY5MjhiODUyZDdi
+MzVkZjgzZWRkNzQNCmh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQv
+dG9ydmFsZHMvbGludXguZ2l0L2NvbW1pdC8/aWQ9ZTFlZDNhNWI4N2VkNjc1OWUxNmVjOTNmMTZh
+YWU4M2QyY2M3N2NhMg0KDQphbmQgdGhhdCdzIHRoZSBvbmUgdGhhdCBpbnRyb2R1Y2VkIHVzYWdl
+IG9mIHRoZSBmb2xsb3dpbmcgZ2VuZXJpYyBnY2MncyBhdG9taWNzDQooX19zeW5jX2FkZF9hbmRf
+ZmV0Y2gvX19zeW5jX3N1Yl9hbmRfZmV0Y2gpOg0KaHR0cDovL2dpdC5rZXJuZWwub3JnL2NnaXQv
+bGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD1kYTZkODU2NzUx
+MmRmMTFlMDQ3M2I3MTBjMDdkZTg3ZWZkZTU3MDljDQoNClNvIHRoZSBiZXN0IHdlIG1heSBkbyBp
+cyB0byBpbXBsZW1lbnQgZGV0ZWN0aW9uIG9mIGF0b21pY3MgaW4gdGhlIHRvb2xjaGFpbiBhbmQg
+aWYgdGhlcmUncyBubyBhdG9taWNzIGhhcmQgc3RvcCB3aXRoDQpwZXJmIGJ1aWxkaW5nLg0KDQot
+QWxleGV5DQoNCk9uIFNhdCwgMjAxNS0xMC0xNyBhdCAxNDoxOSArMDAwMCwgVmluZWV0IEd1cHRh
+IHdyb3RlOg0KPiBPbiBTYXR1cmRheSAxNyBPY3RvYmVyIDIwMTUgMDc6MDYgUE0sIEFsZXhleSBC
+cm9ka2luIHdyb3RlOg0KPiA+IFBlcmYgdXNlcyBhdG9taWMgb3B0aW9ucyBhbmQgc28gaXQgaXMg
+cmVxdWlyZWQgdG8gaGF2ZSBhdG9taWNzIGVuYWJsZWQNCj4gPiBpbiB0b29sY2hhaW4uDQo+ID4g
+DQo+ID4gSW4gY2FzZSBvZiBBUkMgYXRvbWljcyBhcmUgZW5hYmxlZCBieSBkZWZhdWx0IGZvciBB
+UkN2MiBidXQgZGlzYWJsZWQgZm9yDQo+ID4gQVJDdjEuIE5vdyB3ZSBleHBsaWNpdGx5IGVuYWJs
+ZSBhdG9taWNzIGZvciBlaXRoZXIgQVJDIGFjaGl0ZWN0dXJlDQo+ID4gdmVyc2lvbiBzbyBwZXJm
+IGNvdWxkIGJlIHN1Y2Nlc3NmdWxseSBidWlsdC4NCj4gPiANCj4gPiBDdXJyZW50bHkgb24gYXR0
+ZW1wdCB0byBidWlsZCBwZXJmIGZvciBBUkN2MSB5b3UnbGwgc2VlIHRvbnMgb2Y6DQo+ID4gLS0t
+LS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gdW5kZWZpbmVkIHJlZmVyZW5j
+ZSB0byBgX19zeW5jX2FkZF9hbmRfZmV0Y2hfNCcNCj4gPiAtLS0tLS0tLS0tLS0tLS0tLT44LS0t
+LS0tLS0tLS0tLS0tLS0NCj4gPiANCj4gPiBTdGlsbCBub3RlIGlmIEFSQ3YxIENQVSBpcyBjb25m
+aWd1cmVkIHdpdGhvdXQgTEwvU0MgcGVyZiB3aWxsIGNyYXNoIG9uDQo+ID4gZXhlY3V0aW9uIG9u
+Y2UgImxsb2NrIiBpbnN0cnVjdGlvbiBpcyBhdHRlbXB0ZWQgdG8gYmUgZXhlY3V0ZWQuDQo+IA0K
+PiBPayB0aGlzIGZpeGVzIEFSQ29tcGFjdCAtIGFzc3VtaW5nIGl0IHdpbGwgaGF2ZSBMTC9TQy4g
+V2UgZG8gaGF2ZSBvbGQgU29DcyB3L28NCj4gdGhhdCBzdXBwb3J0Lg0KPiBTbyB3aGF0IHdlIGFy
+ZSBzYXlpbmcgaXMgdGhhdCBhbnkgYXJjaCAob3IgYSBjb25maWd1cmF0aW9uIHRoZXJlb2YpIHdo
+aWNoIGRvZXNuJ3QNCj4gc3VwcG9ydCBhdG9taWMgci1tLXcgY2FuJ3QgZXZlbiBidWlsZCBwZXJm
+IG5vdyAtIHRoYXQgc3Vja3MgIQ0KPiANCj4gQSBiZXR0ZXIgd2F5IHdvdWxkIGJlIHRvIGRvIGZl
+YXR1cmUgdGVzdCBmb3IgX19zeW5jX3h5eiBhbmQgbWFrZSBhdG9taWNfeHh4DQo+IHdyYXBwZXJz
+IGNhbGwgX19zeW5jX3h5eikgdnMuIGFuIGVtcHR5IHN0dWIuDQo+IFNvIGF0bGVhc3Qgc3VjaCBh
+cmNoZXMgY2FuIGJ1aWxkIGFuZCBkbyAic29tZSIgcGVyZiB3b3JrICENCj4gDQo+IC1WaW5lZXQN
+Cj4gDQo+ID4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNvbT4NCj4gPiBDYzog
+UGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KPiA+IENjOiBBcm5hbGRvIENh
+cnZhbGhvIGRlIE1lbG8gPGFjbWVAa2VybmVsLm9yZz4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4
+ZXkgQnJvZGtpbiA8YWJyb2RraW5Ac3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+ICB0b29scy9w
+ZXJmL2NvbmZpZy9NYWtlZmlsZSB8IDUgKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5z
+ZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2NvbmZpZy9NYWtl
+ZmlsZSBiL3Rvb2xzL3BlcmYvY29uZmlnL01ha2VmaWxlDQo+ID4gaW5kZXggMzhhMDg1My4uZGM3
+YzBhOCAxMDA2NDQNCj4gPiAtLS0gYS90b29scy9wZXJmL2NvbmZpZy9NYWtlZmlsZQ0KPiA+ICsr
+KyBiL3Rvb2xzL3BlcmYvY29uZmlnL01ha2VmaWxlDQo+ID4gQEAgLTQ3LDYgKzQ3LDExIEBAIGlm
+ZXEgKCQoQVJDSCksYXJtNjQpDQo+ID4gICAgTElCVU5XSU5EX0xJQlMgPSAtbHVud2luZCAtbHVu
+d2luZC1hYXJjaDY0DQo+ID4gIGVuZGlmDQo+ID4gIA0KPiA+ICsjIEFkZGl0aW9uYWwgQVJDSCBz
+ZXR0aW5ncyBmb3IgQVJDDQo+ID4gK2lmZXEgKCQoQVJDSCksYXJjKQ0KPiA+ICsgIENGTEFHUyAr
+PSAtbWF0b21pYw0KPiA+ICtlbmRpZg0KPiA+ICsNCj4gPiAgaWZlcSAoJChOT19QRVJGX1JFR1Mp
+LDApDQo+ID4gICAgJChjYWxsIGRldGVjdGVkLENPTkZJR19QRVJGX1JFR1MpDQo+ID4gIGVuZGlm
+DQo+IA0KPiA=
