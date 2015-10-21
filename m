@@ -1,67 +1,75 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Tue, 20 Oct 2015 10:45:25 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
-References: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
- <1445166916.9672.10.camel@synopsys.com>
- <87a8rf6a6p.fsf@tassilo.jf.intel.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44C9E9A@IN01WEMBXA.internal.synopsys.com>
- <8761235rwe.fsf@tassilo.jf.intel.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44CAFF9@IN01WEMBXA.internal.synopsys.com>
- <20151019093549.GK3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
- <20151019095157.GM3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
- <20151020101133.GA17308@twins.programming.kicks-ass.net>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Re: perf report feature request: folded stack output
+Date: Tue, 20 Oct 2015 17:51:46 -0700
+Message-ID: <CAE40pde2AtkVGM8ophK3y2Yu75Prbfr-YsroPC4pvZienk2R6w@mail.gmail.com>
+References: <CAE40pddHkm_SB4mpOBeSfTe8BcfU1js5fiEK96xA95gbjPa1bg@mail.gmail.com>
+ <2844120.msKGatE6uD@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtprelay.synopsys.com ([198.182.47.9]:47870 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751743AbbJTKpb convert rfc822-to-8bit (ORCPT
+Received: from mail-ig0-f176.google.com ([209.85.213.176]:34375 "EHLO
+	mail-ig0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751421AbbJUAwH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 20 Oct 2015 06:45:31 -0400
-Content-Language: en-US
+	Tue, 20 Oct 2015 20:52:07 -0400
+Received: by igbni9 with SMTP id ni9so83971091igb.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2015 17:52:05 -0700 (PDT)
+In-Reply-To: <2844120.msKGatE6uD@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Noam Camus <noamc@ezchip.com>, Andi Kleen <andi@firstfloor.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Gilad Ben Yossef <giladb@ezchip.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "acme@redhat.com" <acme@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-On Tuesday 20 October 2015 03:41 PM, Peter Zijlstra wrote:
->> > Can we use existing syscall(s) - again this is what our good old pthread library
->> > code did.
->> > 
->> > static void __pthread_acquire(int * spinlock)
->> > {
->> >   int cnt = 0;
->> >   struct timespec tm;
->> > 
->> >   READ_MEMORY_BARRIER();
->> > 
->> >   while (testandset(spinlock)) {   <---- atomic EXchange
->> >     if (cnt < 50) {
->> >       sched_yield();
->> >       cnt++;
->> >     } else {
->> >       tm.tv_sec = 0;
->> >       tm.tv_nsec = 2000001;
->> >       nanosleep(&tm, ((void *)0));
->> >       cnt = 0;
->> >     }
->> >   }
-> *shudder* that is quite horrible.
+On Fri, Oct 9, 2015 at 4:33 PM, Milian Wolff <milian.wolff@kdab.com> wrote:
+> On Freitag, 9. Oktober 2015 14:24:17 CEST Brendan Gregg wrote:
+>> G'Day,
+>>
+>> Maybe someone would like to code this (if not I hope to find the
+>> time); perf report already has the capability to print captured stacks
+>> as a call tree. I'd like a new output mode: folded.
+>>
+>> Flame graphs[1] consume folded stacks. Eg:
+>>
+>> # git clone https://github.com/brendangregg/FlameGraph
+>> # cd FlameGraph
+>> # perf record -F 99 -a -g -- sleep 60
+>> # perf script | ./stackcollapse-perf.pl | ./flamegraph.pl
+>> out.perf-folded > flame.svg
+>>
+>> The last line is inefficient, and should really be something like:
+>>
+>> # perf report --folded | ./flamegraph.pl out.perf-folded > flame.svg
+>>
+>> The folded format is function names separated by semicolons, a space,
+>> then the count of occurrences. Eg:
 >
-> This means all your 'atomics' are broken for anything SCHED_FIFO and the
-> like. You simply _cannot_ run a realtime system.
+> <snip>
+>
+> Hey Brendan,
+>
+> did you consider writing a python script to do the folding? It's pretty simple
+> nowadays, once you cross the initial bar.
+>
+> I wrote this for stack collapsing futex locks:
+> https://paste.kde.org/p61qxah7d
+>
+> And this to convert samples to callgrind format to open it in KCacheGrind:
+> https://paste.kde.org/pjfwd1e8f
+>
+> If you combine the stack collapsing in the former with the generic
+> process_event hook used in the latter, you should be all set. In my tests, it
+> was pretty quick to convert stuff, certainly better than creating strings,
+> pushing them to the console, and then parsing that again in perl.
+>
+> perf script fold | flamegraph.pl > flame.svg
+>
+> gets pretty close. If you want to test locally, make sure you use `perf script
+> -s fold.py` or similar.
 
-The code above is from uClibc old threading library which we don't use anymore.
-The NPTL version doesn't have all of this song-n-dance and relies on futexes. The
-change we are talking about is only for the atomics in perf itself. I do
-understand your POV though.
+Thanks, I did check them out (those links since expired), and that is
+an improvement! But I can't help but think that perf report already
+has the logic for creating a call tree, and it would be more efficient
+if perf could just dump in folded output directly -- without a python
+coprocess.
 
-> (also, for ACQUIRE you want the READ_MEMORY_BARRIER() _after_ the
-> test-and-set control dependency.)
-
-Absolutely and in this case it will have to be added both inside the loop and one
-at the end to cover both the scenarios !
+Brendan
