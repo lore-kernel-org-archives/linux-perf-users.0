@@ -1,316 +1,379 @@
 From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Subject: [PATCH perf/core 1/2] perf/runtests: Add runtests.sh shellscript
- testsuite
-Date: Thu, 22 Oct 2015 21:16:17 +0900
-Message-ID: <20151022121617.13192.98024.stgit@localhost.localdomain>
+Subject: [PATCH perf/core  2/2] perf/runtests: Add testcases for perf probe
+Date: Thu, 22 Oct 2015 21:16:19 +0900
+Message-ID: <20151022121619.13192.80700.stgit@localhost.localdomain>
 References: <20151022121615.13192.71967.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mailx.hitachi.co.jp ([133.145.228.49]:32854 "EHLO
+Received: from mailx.hitachi.co.jp ([133.145.228.49]:60663 "EHLO
 	mailx.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757279AbbJVNBN (ORCPT
+	with ESMTP id S1757298AbbJVNBF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 22 Oct 2015 09:01:13 -0400
+	Thu, 22 Oct 2015 09:01:05 -0400
 Received: from mail7.hitachi.co.jp (mail7.hitachi.co.jp [133.145.228.42])
-	by mailx.hitachi.co.jp (Postfix) with ESMTP id F0E71177006F
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2015 21:23:17 +0900 (JST)
+	by mailx.hitachi.co.jp (Postfix) with ESMTP id 2E3F8177007F
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2015 21:23:20 +0900 (JST)
 In-Reply-To: <20151022121615.13192.71967.stgit@localhost.localdomain>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 
-Add runtests.sh shellscript testsute which is derived from
-tools/testing/selftests/ftrace/ftracetest.
+Add testcases for perf probe command, including following
+features;
+
+ - Add probes on the kernel
+ - Add probes on user binary
+ - Delete probes
+ - Add probes with --force
+ - Check help message
+ - Parse --list options
+ - Skip blacklist functions
+ - Skip out-of-text address
+ - Ignore dot suffixes of function names
+ - List up functions
+ - Check invalid commands
+ - Check --list shown in stdout (instead of stderr)
+ - Check quiet option
+ - Semantic error checking for --line
+ - Check --vars command
+ - Check wildcard support
 
 Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 ---
- tools/perf/runtests/runtests.conf |    5 +
- tools/perf/runtests/runtests.sh   |  264 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 269 insertions(+)
- create mode 100644 tools/perf/runtests/runtests.conf
- create mode 100755 tools/perf/runtests/runtests.sh
+ tools/perf/runtests/test.d/functions               |   13 ++++++++++
+ tools/perf/runtests/test.d/probe/addprobes.tc      |   15 +++++++++++
+ tools/perf/runtests/test.d/probe/adduprobes.tc     |   13 ++++++++++
+ tools/perf/runtests/test.d/probe/blacklist.tc      |   14 ++++++++++
+ tools/perf/runtests/test.d/probe/delete.tc         |    8 ++++++
+ tools/perf/runtests/test.d/probe/forceadd.tc       |    8 ++++++
+ .../perf/runtests/test.d/probe/funcname-suffix.tc  |   17 +++++++++++++
+ tools/perf/runtests/test.d/probe/funcs.tc          |    8 ++++++
+ tools/perf/runtests/test.d/probe/help.tc           |    5 ++++
+ .../perf/runtests/test.d/probe/invalid_command.tc  |   27 ++++++++++++++++++++
+ tools/perf/runtests/test.d/probe/list-stdout.tc    |    7 +++++
+ tools/perf/runtests/test.d/probe/list.tc           |   10 +++++++
+ tools/perf/runtests/test.d/probe/out-of-text.tc    |   10 +++++++
+ tools/perf/runtests/test.d/probe/quiet.tc          |    6 ++++
+ tools/perf/runtests/test.d/probe/semantic-line.tc  |   20 +++++++++++++++
+ tools/perf/runtests/test.d/probe/vars.tc           |    9 +++++++
+ tools/perf/runtests/test.d/probe/wildcard.tc       |    6 ++++
+ 17 files changed, 196 insertions(+)
+ create mode 100644 tools/perf/runtests/test.d/functions
+ create mode 100644 tools/perf/runtests/test.d/probe/addprobes.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/adduprobes.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/blacklist.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/delete.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/forceadd.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/funcname-suffix.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/funcs.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/help.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/invalid_command.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/list-stdout.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/list.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/out-of-text.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/quiet.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/semantic-line.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/vars.tc
+ create mode 100644 tools/perf/runtests/test.d/probe/wildcard.tc
 
-diff --git a/tools/perf/runtests/runtests.conf b/tools/perf/runtests/runtests.conf
+diff --git a/tools/perf/runtests/test.d/functions b/tools/perf/runtests/test.d/functions
 new file mode 100644
-index 0000000..545748c3
+index 0000000..89ca293
 --- /dev/null
-+++ b/tools/perf/runtests/runtests.conf
-@@ -0,0 +1,5 @@
-+# Config file for runtest
++++ b/tools/perf/runtests/test.d/functions
+@@ -0,0 +1,13 @@
++clear_all_probes() {
++	echo 0 > /sys/kernel/debug/tracing/events/enable
++	echo > /sys/kernel/debug/tracing/kprobe_events
++	echo > /sys/kernel/debug/tracing/uprobe_events
++}
 +
-+PERF=`abspath ../perf`
-+PERF_MANDIR=`abspath ../Documentation/`
++check_perf_probe_option() { #option
++	$PERF probe -h 2>&1 | egrep '[\t ]+'$1'[\t ]+' > /dev/null
++}
 +
-diff --git a/tools/perf/runtests/runtests.sh b/tools/perf/runtests/runtests.sh
-new file mode 100755
-index 0000000..7ac9148
++check_kernel_debuginfo() {
++	eu-addr2line -k 0x`grep -m 1 vfs_read /proc/kallsyms | cut -f 1 -d" "` | grep vfs_read
++}
+diff --git a/tools/perf/runtests/test.d/probe/addprobes.tc b/tools/perf/runtests/test.d/probe/addprobes.tc
+new file mode 100644
+index 0000000..69c2bc5
 --- /dev/null
-+++ b/tools/perf/runtests/runtests.sh
-@@ -0,0 +1,264 @@
++++ b/tools/perf/runtests/test.d/probe/addprobes.tc
+@@ -0,0 +1,15 @@
 +#!/bin/sh
++#description: Basinc probe adding
 +
-+# runtests.sh - A shell script to run test cases
-+#
-+# Derived from testing/selftest/ftracetest
-+# Copyright (C) Hitachi Ltd., 2014, 2015
-+#  Written by Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-+#
-+# Released under the terms of the GPL v2.
++clear_all_probes
++$PERF probe --add vfs_read
 +
-+SCRIPTNAME=$0
++clear_all_probes
++$PERF probe -a vfs_read
 +
-+usage() { # errno [message]
-+[ "$2" ] && echo $2
-+echo "Usage: $SCRIPTNAME [options] [testcase(s)] [testcase-directory(s)]"
-+echo " Options:"
-+echo "		-h|--help  Show help message"
-+echo "		-k|--keep  Keep passed test logs"
-+echo "		-v|--verbose Show all stdout messages in testcases"
-+echo "		-d|--debug Debug mode (trace all shell commands)"
-+exit $1
-+}
++clear_all_probes
++$PERF probe vfs_read
 +
-+errexit() { # message
-+  echo "Error: $1" 1>&2
-+  exit 1
-+}
++clear_all_probes
 +
-+# Ensuring user privilege
-+if [ `id -u` -ne 0 ]; then
-+  errexit "this must be run by root user"
++! $PERF probe -d vfs_read vfs_read
+diff --git a/tools/perf/runtests/test.d/probe/adduprobes.tc b/tools/perf/runtests/test.d/probe/adduprobes.tc
+new file mode 100644
+index 0000000..b0e748d
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/adduprobes.tc
+@@ -0,0 +1,13 @@
++#!/bin/sh
++#description: Basic probe adding on user binary
++
++clear_all_probes
++$PERF probe -x /bin/bash --add array_create
++
++clear_all_probes
++$PERF probe -x /bin/bash --add 'array_*'
++
++clear_all_probes
++$PERF probe /bin/bash 'array_*'
++
++clear_all_probes
+diff --git a/tools/perf/runtests/test.d/probe/blacklist.tc b/tools/perf/runtests/test.d/probe/blacklist.tc
+new file mode 100644
+index 0000000..d399439
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/blacklist.tc
+@@ -0,0 +1,14 @@
++#!/bin/sh
++#description: Skip blacklist function
++
++echo "Check blacklisted function correctly skipped"
++BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist | cut -f2`
++test "$BLACKFUNC" || exit_unsupported
++clear_all_probes
++
++echo "probing on blacklist must fail"
++(! $PERF probe $BLACKFUNC)
++
++echo "it should be skipped"
++$PERF probe $BLACKFUNC 2>&1 | grep "skip it"
++
+diff --git a/tools/perf/runtests/test.d/probe/delete.tc b/tools/perf/runtests/test.d/probe/delete.tc
+new file mode 100644
+index 0000000..918d6e1
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/delete.tc
+@@ -0,0 +1,8 @@
++#!/bin/sh
++# description: Basic probe deleting
++clear_all_probes
++
++$PERF probe --add vfs_read
++$PERF probe -x $PERF --add cmd_help
++
++$PERF probe -d \* 2>&1 | grep ^Removed | wc -l | grep '^2$'
+diff --git a/tools/perf/runtests/test.d/probe/forceadd.tc b/tools/perf/runtests/test.d/probe/forceadd.tc
+new file mode 100644
+index 0000000..bcefabb
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/forceadd.tc
+@@ -0,0 +1,8 @@
++#!/bin/sh
++#description: probe adding with --force
++clear_all_probes
++
++$PERF probe --add vfs_read
++! $PERF probe --add 'vfs_read'
++$PERF probe --force --add 'vfs_read'
++$PERF probe --del \*
+diff --git a/tools/perf/runtests/test.d/probe/funcname-suffix.tc b/tools/perf/runtests/test.d/probe/funcname-suffix.tc
+new file mode 100644
+index 0000000..8c68ad0
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/funcname-suffix.tc
+@@ -0,0 +1,17 @@
++#!/bin/sh
++#description: Cut off the function suffix from name
++
++clear_all_probes
++echo "get a symbol which has a suffix"
++CANDIDATE=`egrep -m 1 '\.(isra|part|constprep)' /proc/kallsyms | cut -f3 -d' '`
++if [ -z "$CANDIDATE" ]; then
++  echo "No suffixed function found. skip it"
++  exit_unsupported
 +fi
++echo "add an event on it"
++$PERF probe $CANDIDATE
 +
-+# Utilities
-+absdir() { # file_path
-+  (cd `dirname $1`; pwd)
-+}
++echo "add the second event on it (with suffix number)"
++$PERF probe -f $CANDIDATE
 +
-+abspath() {
-+  echo `absdir $1`/`basename $1`
-+}
++clear_all_probes
+diff --git a/tools/perf/runtests/test.d/probe/funcs.tc b/tools/perf/runtests/test.d/probe/funcs.tc
+new file mode 100644
+index 0000000..98a412f
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/funcs.tc
+@@ -0,0 +1,8 @@
++#!/bin/sh
++# description: Basic function listup command
 +
-+find_testcases() { #directory
-+  echo `find $1 -name \*.tc | sort`
-+}
++$PERF probe -F &> /dev/null
++$PERF probe -x $PERF -F &> /dev/null
++$PERF probe -x $PERF -F 'map_*' &> /dev/null
 +
-+parse_opts() { # opts
-+  local OPT_TEST_CASES=
-+  local OPT_TEST_DIR=
 +
-+  while [ "$1" ]; do
-+    case "$1" in
-+    --help|-h)
-+      usage 0
-+    ;;
-+    --keep|-k)
-+      KEEP_LOG=1
-+    ;;
-+    --verbose|-v)
-+      VERBOSE=1
-+    ;;
-+    --debug|-d)
-+      DEBUG=1
-+    ;;
-+    *.tc)
-+      if [ -f "$1" ]; then
-+        OPT_TEST_CASES="$OPT_TEST_CASES `abspath $1`"
-+      else
-+        usage 1 "$1 is not a testcase"
-+      fi
-+      ;;
-+    *)
-+      if [ -d "$1" ]; then
-+        OPT_TEST_DIR=`abspath $1`
-+        OPT_TEST_CASES="$OPT_TEST_CASES `find_testcases $OPT_TEST_DIR`"
-+      else
-+        usage 1 "Invalid option ($1)"
-+      fi
-+    ;;
-+    esac
-+    shift 1
-+  done
-+  if [ "$OPT_TEST_CASES" ]; then
-+    TEST_CASES=$OPT_TEST_CASES
-+  fi
-+}
+diff --git a/tools/perf/runtests/test.d/probe/help.tc b/tools/perf/runtests/test.d/probe/help.tc
+new file mode 100644
+index 0000000..67e2c0a
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/help.tc
+@@ -0,0 +1,5 @@
++#!/bin/sh
++# description: help messages
++! $PERF probe -h
++$PERF probe 2>&1 | grep usage
 +
-+# Parameters
-+CONFIG=./runtests.conf
-+TOP_DIR=`absdir $0`
-+TEST_DIR=$TOP_DIR/test.d
-+TEST_CASES=`find_testcases $TEST_DIR`
-+LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
-+KEEP_LOG=0
-+DEBUG=0
-+VERBOSE=0
-+# Parse command-line options
-+parse_opts $*
+diff --git a/tools/perf/runtests/test.d/probe/invalid_command.tc b/tools/perf/runtests/test.d/probe/invalid_command.tc
+new file mode 100644
+index 0000000..351ec99
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/invalid_command.tc
+@@ -0,0 +1,27 @@
++#!/bin/sh
++# description: invalid commands
++echo "Some commands requires an argument"
++! $PERF probe -a
++! $PERF probe -d
++! $PERF probe -L
++! $PERF probe -V
++echo "Some commands can omit the argument"
++$PERF probe -F > /dev/null
++$PERF probe -l > /dev/null
++echo "Commands are mutually exclusive"
++! $PERF probe -a xxx -d xxx
++! $PERF probe -a xxx -L foo
++! $PERF probe -a xxx -V foo
++! $PERF probe -a xxx -l
++! $PERF probe -a xxx -F
++! $PERF probe -d xxx -L foo
++! $PERF probe -d xxx -V foo
++! $PERF probe -d xxx -l
++! $PERF probe -d xxx -F
++! $PERF probe -L foo -V bar
++! $PERF probe -L foo -l
++! $PERF probe -L foo -F
++! $PERF probe -V foo -l
++! $PERF probe -V foo -F
++! $PERF probe -l -F
 +
-+[ -f "$CONFIG" ] && . $CONFIG
+diff --git a/tools/perf/runtests/test.d/probe/list-stdout.tc b/tools/perf/runtests/test.d/probe/list-stdout.tc
+new file mode 100644
+index 0000000..d797abf
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/list-stdout.tc
+@@ -0,0 +1,7 @@
++#!/bin/sh
++# description: perf probe --list outputs in stdout
 +
-+[ $DEBUG -ne 0 ] && set -x
++clear_all_probes
++$PERF probe --add 'vfs_read'
++test `$PERF probe --list | wc -l` -ne 0
++clear_all_probes
+diff --git a/tools/perf/runtests/test.d/probe/list.tc b/tools/perf/runtests/test.d/probe/list.tc
+new file mode 100644
+index 0000000..2cfab75
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/list.tc
+@@ -0,0 +1,10 @@
++#!/bin/sh
++# description: list command parsing
++$PERF probe -l
++$PERF probe -l \*
++$PERF probe -l 'probe:*'
 +
-+# Preparing logs
-+LOG_FILE=$LOG_DIR/${SCRIPTNAME}.log
-+mkdir -p $LOG_DIR || errexit "Failed to make a log directory: $LOG_DIR"
-+date > $LOG_FILE
-+prlog() { # messages
-+  echo "$@" | tee -a $LOG_FILE
-+}
-+catlog() { #file
-+  cat $1 | tee -a $LOG_FILE
-+}
-+prlog "=== Run tests ==="
++! $PERF probe -l \*\|
++! $PERF probe -l \*\&
++! $PERF probe -l \*\!
 +
-+# Testcase management
-+# Test result codes - Dejagnu extended code
-+PASS=0	# The test succeeded.
-+FAIL=1	# The test failed, but was expected to succeed.
-+UNRESOLVED=2  # The test produced indeterminate results. (e.g. interrupted)
-+UNTESTED=3    # The test was not run, currently just a placeholder.
-+UNSUPPORTED=4 # The test failed because of lack of feature.
-+XFAIL=5	# The test failed, and was expected to fail.
+diff --git a/tools/perf/runtests/test.d/probe/out-of-text.tc b/tools/perf/runtests/test.d/probe/out-of-text.tc
+new file mode 100644
+index 0000000..34163a9
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/out-of-text.tc
+@@ -0,0 +1,10 @@
++#!/bin/sh
++#description: Skip out-of-text functions
 +
-+# Accumulations
-+PASSED_CASES=
-+FAILED_CASES=
-+UNRESOLVED_CASES=
-+UNTESTED_CASES=
-+UNSUPPORTED_CASES=
-+XFAILED_CASES=
-+UNDEFINED_CASES=
-+TOTAL_RESULT=0
++echo "Check init text correctly skipped"
++INITTEXT=init_setup
++grep $INITTEXT /proc/kallsyms || exit_unsupported
++clear_all_probes
++! $PERF probe $INITTEXT
++$PERF probe $INITTEXT 2>&1 | grep "skip it"
 +
-+CASENO=0
-+testcase() { # testfile
-+  CASENO=$((CASENO+1))
-+  desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
-+  prlog -n "[$CASENO]$desc"
-+}
+diff --git a/tools/perf/runtests/test.d/probe/quiet.tc b/tools/perf/runtests/test.d/probe/quiet.tc
+new file mode 100644
+index 0000000..ac954aa
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/quiet.tc
+@@ -0,0 +1,6 @@
++#!/bin/sh
++#description: Quiet option check
 +
-+eval_result() { # sigval
-+  case $1 in
-+    $PASS)
-+      prlog "	[PASS]"
-+      PASSED_CASES="$PASSED_CASES $CASENO"
-+      return 0
-+    ;;
-+    $FAIL)
-+      prlog "	[FAIL]"
-+      FAILED_CASES="$FAILED_CASES $CASENO"
-+      return 1 # this is a bug.
-+    ;;
-+    $UNRESOLVED)
-+      prlog "	[UNRESOLVED]"
-+      UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
-+      return 1 # this is a kind of bug.. something happened.
-+    ;;
-+    $UNTESTED)
-+      prlog "	[UNTESTED]"
-+      UNTESTED_CASES="$UNTESTED_CASES $CASENO"
-+      return 0
-+    ;;
-+    $UNSUPPORTED)
-+      prlog "	[UNSUPPORTED]"
-+      UNSUPPORTED_CASES="$UNSUPPORTED_CASES $CASENO"
-+      return 1 # this is not a bug, but the result should be reported.
-+    ;;
-+    $XFAIL)
-+      prlog "	[XFAIL]"
-+      XFAILED_CASES="$XFAILED_CASES $CASENO"
-+      return 0
-+    ;;
-+    *)
-+      prlog "	[UNDEFINED]"
-+      UNDEFINED_CASES="$UNDEFINED_CASES $CASENO"
-+      return 1 # this must be a test bug
-+    ;;
-+  esac
-+}
++test `$PERF probe --quiet --add vfs_read | wc -l` -eq 0
++test `$PERF probe --quiet --list | wc -l` -ne 0
++test `$PERF probe --quiet --del vfs_read | wc -l` -eq 0
+diff --git a/tools/perf/runtests/test.d/probe/semantic-line.tc b/tools/perf/runtests/test.d/probe/semantic-line.tc
+new file mode 100644
+index 0000000..a6f5869
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/semantic-line.tc
+@@ -0,0 +1,20 @@
++#!/bin/sh
++# description: --line semantic errors
 +
-+# Signal handling for result codes
-+SIG_RESULT=
-+SIG_BASE=36	# Use realtime signals
-+SIG_PID=$$
++echo "Acceptable --line descriptions"
++! ($PERF probe --line 'func' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'func:10' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'func:0-10' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'func:2+10' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'func@source.c' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'func@source.c:1' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'source.c:1' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'source.c:1+1' 2>&1 | grep "Semantic error")
++! ($PERF probe --line 'source.c:1-10' 2>&1 | grep "Semantic error")
 +
-+SIG_FAIL=$((SIG_BASE + FAIL))
-+trap 'SIG_RESULT=$FAIL' $SIG_FAIL
++echo "Unacceptable --line descriptions"
++$PERF probe --line 'func:foo' 2>&1 | grep "Semantic error"
++$PERF probe --line 'func:1-foo' 2>&1 | grep "Semantic error"
++$PERF probe --line 'func:1+foo' 2>&1 | grep "Semantic error"
++$PERF probe --line 'func;lazy*pattern' 2>&1 | grep "Semantic error"
 +
-+SIG_UNRESOLVED=$((SIG_BASE + UNRESOLVED))
-+exit_unresolved () {
-+  kill -s $SIG_UNRESOLVED $SIG_PID
-+  exit 0
-+}
-+trap 'SIG_RESULT=$UNRESOLVED' $SIG_UNRESOLVED
+diff --git a/tools/perf/runtests/test.d/probe/vars.tc b/tools/perf/runtests/test.d/probe/vars.tc
+new file mode 100644
+index 0000000..9711c91
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/vars.tc
+@@ -0,0 +1,9 @@
++#!/bin/sh
++# description: readable vars command
 +
-+SIG_UNTESTED=$((SIG_BASE + UNTESTED))
-+exit_untested () {
-+  kill -s $SIG_UNTESTED $SIG_PID
-+  exit 0
-+}
-+trap 'SIG_RESULT=$UNTESTED' $SIG_UNTESTED
++#check_kernel_debuginfo || exit_unsupported
 +
-+SIG_UNSUPPORTED=$((SIG_BASE + UNSUPPORTED))
-+exit_unsupported () {
-+  kill -s $SIG_UNSUPPORTED $SIG_PID
-+  exit 0
-+}
-+trap 'SIG_RESULT=$UNSUPPORTED' $SIG_UNSUPPORTED
++! $PERF probe -V
 +
-+SIG_XFAIL=$((SIG_BASE + XFAIL))
-+exit_xfail () {
-+  kill -s $SIG_XFAIL $SIG_PID
-+  exit 0
-+}
-+trap 'SIG_RESULT=$XFAIL' $SIG_XFAIL
++$PERF probe -V vfs_read
 +
-+__run_test() { # testfile
-+  # setup PID and PPID, $$ is not updated.
-+  (cd $TRACING_DIR; read PID _ < /proc/self/stat ; set -e; set -x; . $1)
-+  [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
-+}
+diff --git a/tools/perf/runtests/test.d/probe/wildcard.tc b/tools/perf/runtests/test.d/probe/wildcard.tc
+new file mode 100644
+index 0000000..ec3e633
+--- /dev/null
++++ b/tools/perf/runtests/test.d/probe/wildcard.tc
+@@ -0,0 +1,6 @@
++#!/bin/sh
++#description: perf-probe wildcard support
 +
-+# Run one test case
-+run_test() { # testfile
-+  local testname=`basename $1`
-+  local testlog=`mktemp $LOG_DIR/${testname}-log.XXXXXX`
-+  testcase $1
-+  echo "execute: "$1 > $testlog
-+  SIG_RESULT=0
-+  if [ $VERBOSE -ne 0 ]; then
-+    __run_test $1 2>> $testlog | tee -a $testlog
-+  else
-+    __run_test $1 >> $testlog 2>&1
-+  fi
-+  eval_result $SIG_RESULT
-+  if [ $? -eq 0 ]; then
-+    # Remove test log if the test was done as it was expected.
-+    [ $KEEP_LOG -eq 0 ] && rm $testlog
-+  else
-+    catlog $testlog
-+    TOTAL_RESULT=1
-+  fi
-+}
++$PERF probe -nf -a 'vfs_* $params'
++$PERF probe -nf vfs_\* \$params
 +
-+# load in the helper functions
-+[ -f $TEST_DIR/functions ] && . $TEST_DIR/functions
-+
-+# Main loop
-+for t in $TEST_CASES; do
-+  run_test $t
-+done
-+
-+prlog ""
-+prlog "# of passed: " `echo $PASSED_CASES | wc -w`
-+prlog "# of failed: " `echo $FAILED_CASES | wc -w`
-+prlog "# of unresolved: " `echo $UNRESOLVED_CASES | wc -w`
-+prlog "# of untested: " `echo $UNTESTED_CASES | wc -w`
-+prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
-+prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
-+prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
-+
-+# if no error, return 0
-+exit $TOTAL_RESULT
