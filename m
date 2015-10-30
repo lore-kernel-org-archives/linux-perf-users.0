@@ -1,53 +1,85 @@
-From: Stephane Eranian <eranian@google.com>
-Subject: Re: perf script branch stack output
-Date: Thu, 29 Oct 2015 13:51:39 -0700
-Message-ID: <CABPqkBR=PzU3dXC=fghf5z4LizSXrVdVfUxJnQ=ugU_+B5Y2TQ@mail.gmail.com>
-References: <CAJh9x3ocJtpNf7+ZNcRkB4=68im0mr-aYmZ=jTnWqrcsnu=7Vg@mail.gmail.com>
-	<20151029153307.GC2923@kernel.org>
-	<20151029153525.GD2923@kernel.org>
-	<CABPqkBQ98pZATj9hgTT=-FRjSrGBGoT-4cgbDHk=M_9Gvc6H2g@mail.gmail.com>
-	<20151029203313.GG2923@kernel.org>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [RFC] perf: fix building for ARCv1
+Date: Fri, 30 Oct 2015 06:19:21 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
+References: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
+ <1445166916.9672.10.camel@synopsys.com>
+ <87a8rf6a6p.fsf@tassilo.jf.intel.com>
+ <C2D7FE5348E1B147BCA15975FBA23075F44C9E9A@IN01WEMBXA.internal.synopsys.com>
+ <8761235rwe.fsf@tassilo.jf.intel.com>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CAFF9@IN01WEMBXA.internal.synopsys.com>
+ <20151019093549.GK3816@twins.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
+ <20151019095157.GM3816@twins.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
+ <20151020101133.GA17308@twins.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
+ <1446134296.3203.27.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wi0-f169.google.com ([209.85.212.169]:35533 "EHLO
-	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757341AbbJ2Uvk (ORCPT
+Received: from smtprelay.synopsys.com ([198.182.47.9]:51708 "EHLO
+	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758525AbbJ3GT0 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 29 Oct 2015 16:51:40 -0400
-Received: by wicll6 with SMTP id ll6so238157579wic.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2015 13:51:39 -0700 (PDT)
-In-Reply-To: <20151029203313.GG2923@kernel.org>
+	Fri, 30 Oct 2015 02:19:26 -0400
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Yuanfang Chen <cyfmxc@gmail.com>, linux-perf-users@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "andi@firstfloor.org" <andi@firstfloor.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "acme@redhat.com" <acme@redhat.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "giladb@ezchip.com" <giladb@ezchip.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "noamc@ezchip.com" <noamc@ezchip.com>
 
-On Thu, Oct 29, 2015 at 1:33 PM, Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> Em Thu, Oct 29, 2015 at 10:59:40AM -0700, Stephane Eranian escreveu:
->> On Thu, Oct 29, 2015 at 8:35 AM, Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->> > Em Thu, Oct 29, 2015 at 12:33:07PM -0300, Arnaldo Carvalho de Melo escreveu:
->> >> Em Thu, Oct 29, 2015 at 10:14:49AM -0400, Yuanfang Chen escreveu:
->> >> > There is a patch to output branch stack here.
->> >> > https://lkml.org/lkml/2015/8/31/315. Any reason it is still not
->> >> > committed? I'm going to use the patch on my machine. Just want to make
->> >> > sure. Thank you.
->> >>
->> >> Read the thread, Stephane said he would send a v2, probably I saw that I
->> >> refrained from applying it, waiting for such v2, I'm checking if it
->> >> applies cleanly now, if it does I'll apply it as-is.
->> >
->> > It does, applied to my perf/core branch, will go upstream in my next
->> > pull request to Ingo, thanks for pointing this out!
->> >
->> I posted V2 a long time ago. Glad to see it eventually made it!
+On Thursday 29 October 2015 09:28 PM, Alexey Brodkin wrote:
+> Hi Vineet,
 >
-> Ok, I checked that one and saw Andi made some questions about it, but
-> the thread died down, I am applying v2 then, this one, to make sure I
-> got the right one:
->
-> http://lkml.kernel.org/r/1441039273-16260-5-git-send-email-eranian@google.com
->
-yes, this is it.
+> On Tue, 2015-10-20 at 10:45 +0000, Vineet Gupta wrote:
+>> On Tuesday 20 October 2015 03:41 PM, Peter Zijlstra wrote:
+>>>>> Can we use existing syscall(s) - again this is what our good old pthread library
+>>>>> code did.
+>>>>>
+>>>>> static void __pthread_acquire(int * spinlock)
+>>>>> {
+>>>>>   int cnt = 0;
+>>>>>   struct timespec tm;
+>>>>>
+>>>>>   READ_MEMORY_BARRIER();
+>>>>>
+>>>>>   while (testandset(spinlock)) {   <---- atomic EXchange
+>>>>>     if (cnt < 50) {
+>>>>>       sched_yield();
+>>>>>       cnt++;
+>>>>>     } else {
+>>>>>       tm.tv_sec = 0;
+>>>>>       tm.tv_nsec = 2000001;
+>>>>>       nanosleep(&tm, ((void *)0));
+>>>>>       cnt = 0;
+>>>>>     }
+>>>>>   }
+>>> *shudder* that is quite horrible.
+>>>
+>>> This means all your 'atomics' are broken for anything SCHED_FIFO and the
+>>> like. You simply _cannot_ run a realtime system.
+>> The code above is from uClibc old threading library which we don't use anymore.
+>> The NPTL version doesn't have all of this song-n-dance and relies on futexes. The
+>> change we are talking about is only for the atomics in perf itself. I do
+>> understand your POV though.
+>>
+>>> (also, for ACQUIRE you want the READ_MEMORY_BARRIER() _after_ the
+>>> test-and-set control dependency.)
+>> Absolutely and in this case it will have to be added both inside the loop and one
+>> at the end to cover both the scenarios !
+>>
+> I'm wondering what are our plans for now?
+> Are we going to accept proposed fix just for ARC in 4.4 (and to all stables then)
+> or we'll try to come up with more general solution?
+
+I agree with the current solution to add -atomic to for arc700 builds.
+Although making that default for arc700 tools will be better but that will not fix
+things before next release of tools etc.
+
+But we *do* need to improve generic solution
+1. Add atomics detection in perf to add fall back arch stubs
+2. ARC needs to add syscall for facilitating atomic r-m-w !
+
+-Vineet
