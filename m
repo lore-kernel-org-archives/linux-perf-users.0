@@ -1,62 +1,66 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf report: Support caller callchain order when using DWARF unwinder.
-Date: Tue, 03 Nov 2015 12:25:39 +0100
-Message-ID: <1709816.RSlVQ2aJOf@milian-kdab2>
-References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com> <2192570.dg0L2eaEiH@agathebauer> <20151103073711.GB23878@krava.brq.redhat.com>
+Subject: Re: perf probe Argument list too long
+Date: Tue, 03 Nov 2015 12:30:56 +0100
+Message-ID: <2050018.LCqhWtF7on@milian-kdab2>
+References: <CAHeneC-iMpy4tx35UXdSkLz7WYKx8epajgEpnS=NbfxvnxewTg@mail.gmail.com> <20151103010026.GF21609@kernel.org> <50399556C9727B4D88A595C8584AAB37525F9F23@GSjpTKYDCembx32.service.hitachi.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart11394136.s5pKcdyyUF"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart6107566.a9vFK3gOHj"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:40877 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:41280 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751546AbbKCLZo (ORCPT
+	id S1751510AbbKCLa7 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Nov 2015 06:25:44 -0500
-In-Reply-To: <20151103073711.GB23878@krava.brq.redhat.com>
+	Tue, 3 Nov 2015 06:30:59 -0500
+In-Reply-To: <50399556C9727B4D88A595C8584AAB37525F9F23@GSjpTKYDCembx32.service.hitachi.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
+To: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alex Bagehot <ceeaspb@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
---nextPart11394136.s5pKcdyyUF
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+--nextPart6107566.a9vFK3gOHj
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-On Tuesday, November 3, 2015 8:37:11 AM CET Jiri Olsa wrote:
-> On Fri, Oct 09, 2015 at 07:29:34PM +0200, Milian Wolff wrote:
-> 
-> SNIP
-> 
-> > > ;-)
-> > > 
-> > > any chance this could be done also for util/unwind-libdw.c ?
-> > 
-> > That patch looks much better than mine. I'll try it out later next week
-> > and
-> > will also have a look at util/unwind-libdw.c. Question: How can I test the
-> > behavior of the latter? Do I need to uninstall libunwind, or can I change
-> > the unwinder at runtime somehow (env var?).
-> 
-> It's either libunwind or libdw compiled in, so I'd suggest
-> generic test (see below) and compile with make variables
-> NO_LIBUNWIND=1 or NO_LIBDW_DWARF_UNWIND=1 to get desired
-> unwinder compiled in
-> 
-> > Also, are there unit tests for this behavior somewhere?
-> 
-> please check tests/dwarf-unwind.c, I think you can add similar test
+On Tuesday, November 3, 2015 3:20:42 AM CET =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=
+=B7=B3 / HIRAMATU=EF=BC=8CMASAMI wrote:
+> From: Arnaldo Carvalho de Melo [mailto:acme@kernel.org]
+>=20
+> >Em Tue, Nov 03, 2015 at 12:50:46AM +0000, Alex Bagehot escreveu:
+> >> Hello,
+> >>=20
+> >> I get this error with perf probe, :
+> >>=20
+> >> perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
+> >> '_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Thread'
+>=20
+> Ah, I've never thought that the symbol name gets so long :(
+> BTW, is that oracle's jdk package? I'd like to reproduce the bug.
 
-OK, I'll try to find the time to test this later this week. I have also some 
-more on my todo list regarding documentation and testing. If you don't hear 
-back from me though, I'd appreciate if someone could adopt this patch and make 
-sure it gets integrated.
+Just want to chime in: Don't assume _anything_ about symbol names - they ar=
+e=20
+extremely complicated and with C++ templates can be extremely long:
+
+nm -a libQt5WebKit.so.5.6.0 | cut -d' ' -f 3 | awk '{ if (length($0) > max)=
+=20
+{max =3D length($0); maxline =3D $0} } END { print maxline; print length(ma=
+xline)=20
+}' =20
+_ZZN3WTF9HashTableINS_12AtomicStringENS_12KeyValuePairIS1_PFvPN7WebCore17Ne=
+tworkingContextERKNS3_15ResourceRequestENS3_17StoredCredentialsERNS3_13Reso=
+urceErrorERNS3_16ResourceResponseERNS_6VectorIcLm0ENS_15CrashOnOverflowEEEE=
+EENS_24KeyValuePairKeyExtractorISK_EENS_16AtomicStringHashENS_18HashMapValu=
+eTraitsINS_10HashTraitsIS1_EENSP_ISJ_EEEESQ_E3addINS_17HashMapTranslatorISS=
+_SN_EES1_SJ_EENS_18HashTableAddResultINS_17HashTableIteratorIS1_SK_SM_SN_SS=
+_SQ_EEEERKT0_RKT1_E19__PRETTY_FUNCTION__
+490
 
 Cheers
--- 
+=2D-=20
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart11394136.s5pKcdyyUF
+--nextPart6107566.a9vFK3gOHj
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -158,13 +162,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE1MTEwMzExMjUzOVowIwYJKoZIhvcNAQkEMRYEFG248iywnFWPhrt/AAIsC+llD1cWMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAL5Y
-EQBiAOYp+MSSvluiu/w6DQTMaAMDbzSn4albZplFk4dc4lkdjVgoVjFm+zjLtDcVfL3n2RWj90SC
-BCwZdvwuIucc9dGA5GZA0UwttrRk1qXXJddHcptHQf77iaOifmXiYk7YmVdFHU37mw3itN7uUu16
-AMx3NaKpwF+QApezrUkkDRV632JeugmT4mGACEQOu2h9sAc4e/czs8ExPcxqbyF7IaMoETX6Jp8v
-fVnJKl72uxDS6H6TcyqxDLHa005DUK4v69v/xX/vgs4F84UKA/kR3mbmFqCp4l4yumsW1HwOqGGG
-bl5kU4cGC1smmE2Sjue9JVHryVIgMr1Fa0gAAAAAAAA=
+DTE1MTEwMzExMzA1NlowIwYJKoZIhvcNAQkEMRYEFH9yO8UZeu4PhqmK7eLrJm6F5Xg1MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBABFT
+cLRO9a4n7FjtQS5qNKPqGNxCcuRyY5/e+J/OHVOfLUie/3qz6xyLEITv8zIkhuqcVuzuMQcbVCSj
+ScTVYK0jP76xeqe664cGwGF21TQiXVfYan37hvq55GdDUVpS7H/NcGxNwo4fdMc07ttDcDermQM+
+jvT69kDUrWsBQ8qe11ZY+3fQXcEx9Hy04RaKIWlPafOf5xIdQ/PSF+xUfUGYThgDx2uY+lNWatJn
+MYmxnPVHpEELehUqI+rAANgI+6DdcslRzW9p9vf+M8QMvN+WPwYAmNWRfopqkik/83ATgaJOgrDn
+XpnuYlTvgDC6t4tkQkUAKb2nNv6fmmpy6k8AAAAAAAA=
 
 
---nextPart11394136.s5pKcdyyUF--
+--nextPart6107566.a9vFK3gOHj--
