@@ -1,142 +1,135 @@
-From: Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH perf/core 0/2] perf/runtests: Add runtests.sh
- shellscript testcases for perf probe
-Date: Mon, 2 Nov 2015 19:43:49 -0500 (EST)
-Message-ID: <1499210318.1567245.1446511429277.JavaMail.zimbra@redhat.com>
-References: <1445468925.12960.117.camel@Rudolf-RHEL-7> <20151022121615.13192.71967.stgit@localhost.localdomain>
+From: Alex Bagehot <ceeaspb@gmail.com>
+Subject: perf probe Argument list too long
+Date: Tue, 3 Nov 2015 00:50:46 +0000
+Message-ID: <CAHeneC-iMpy4tx35UXdSkLz7WYKx8epajgEpnS=NbfxvnxewTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25]:40727 "EHLO
-	mx4-phx2.redhat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752751AbbKCAnz (ORCPT
+Received: from mail-ob0-f180.google.com ([209.85.214.180]:33345 "EHLO
+	mail-ob0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752703AbbKCAur (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 2 Nov 2015 19:43:55 -0500
-In-Reply-To: <20151022121615.13192.71967.stgit@localhost.localdomain>
+	Mon, 2 Nov 2015 19:50:47 -0500
+Received: by obbwb3 with SMTP id wb3so1132822obb.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2015 16:50:47 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Hi Masami Hiramatsu,
+Hello,
 
-I am sorry for responding late, I had a lot of other work.
-Thanks for sharing the testsuite, I like it very much, so
-I added some of your testcases into my skeleton. There is
-still some work to do regarding that.
+I get this error with perf probe, :
 
-I develop the testsuite using my own github repository[1],
-if you are interested, you may have look at it, comment...
+perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
+'_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Thread'
 
-The commit cc094da02683b0908512b6b8676c0648e73fa2c8 added
-the first part of your suite there.
-
-Thank you again for your interest.
-
-Michael
-
-
-[1] https://github.com/rfmvh/perftool-testsuite
+probe-definition(0):
+_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Thread
+symbol:_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Thread
+file:(null) line:0 offset:0 return:0 lazy:(null)
+0 arguments
+Opening /sys/kernel/debug/tracing/uprobe_events write=1
+Added new event:
+snprintf() failed: -7
+  Error: Failed to add events. Reason: Argument list too long (Code: -7)
 
 
------ Mensaje original -----
-> De: "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>
-> Para: "Michael Petlan" <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org
-> CC: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-> Enviados: Jueves, 22 de Octubre 2015 14:16:15
-> Asunto: [PATCH perf/core 0/2] perf/runtests: Add runtests.sh shellscript testcases for perf probe
-> 
-> Hi Michael,
-> 
-> Here is a couple of patches to add my testsuite(runtest.sh) to perf.
-> 
-> This runs as ftracetest does. I've added some testcases which cover
-> perf-probe features :)
-> 
->   ----
->   # ./runtests.sh
->   === Run tests ===
->   [1] Basinc probe adding [PASS]
->   [2] Basic probe adding on user binary   [PASS]
->   [3] Skip blacklist function     [PASS]
->   [4] Basic probe deleting        [PASS]
->   [5] probe adding with --force   [PASS]
->   [6] Cut off the function suffix from name       [PASS]
->   [7] Basic function listup command       [PASS]
->   [8] help messages       [PASS]
->   [9] invalid commands    [PASS]
->   [10] perf probe --list outputs in stdout        [PASS]
->   [11] list command parsing       [PASS]
->   [12] Skip out-of-text functions [PASS]
->   [13] Quiet option check [PASS]
->   [14] --line semantic errors     [PASS]
->   [15] readable vars command      [PASS]
->   [16] perf-probe wildcard support        [PASS]
->   
->   # of passed:  16
->   # of failed:  0
->   # of unresolved:  0
->   # of untested:  0
->   # of unsupported:  0
->   # of xfailed:  0
->   # of undefined(test bug):  0
->   ----
-> 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (2):
->       perf/runtests: Add runtests.sh shellscript testsuite
->       perf/runtests: Add testcases for perf probe
-> 
-> 
->  tools/perf/runtests/runtests.conf                  |    5
->  tools/perf/runtests/runtests.sh                    |  264
->  ++++++++++++++++++++
->  tools/perf/runtests/test.d/functions               |   13 +
->  tools/perf/runtests/test.d/probe/addprobes.tc      |   15 +
->  tools/perf/runtests/test.d/probe/adduprobes.tc     |   13 +
->  tools/perf/runtests/test.d/probe/blacklist.tc      |   14 +
->  tools/perf/runtests/test.d/probe/delete.tc         |    8 +
->  tools/perf/runtests/test.d/probe/forceadd.tc       |    8 +
->  .../perf/runtests/test.d/probe/funcname-suffix.tc  |   17 +
->  tools/perf/runtests/test.d/probe/funcs.tc          |    8 +
->  tools/perf/runtests/test.d/probe/help.tc           |    5
->  .../perf/runtests/test.d/probe/invalid_command.tc  |   27 ++
->  tools/perf/runtests/test.d/probe/list-stdout.tc    |    7 +
->  tools/perf/runtests/test.d/probe/list.tc           |   10 +
->  tools/perf/runtests/test.d/probe/out-of-text.tc    |   10 +
->  tools/perf/runtests/test.d/probe/quiet.tc          |    6
->  tools/perf/runtests/test.d/probe/semantic-line.tc  |   20 ++
->  tools/perf/runtests/test.d/probe/vars.tc           |    9 +
->  tools/perf/runtests/test.d/probe/wildcard.tc       |    6
->  19 files changed, 465 insertions(+)
->  create mode 100644 tools/perf/runtests/runtests.conf
->  create mode 100755 tools/perf/runtests/runtests.sh
->  create mode 100644 tools/perf/runtests/test.d/functions
->  create mode 100644 tools/perf/runtests/test.d/probe/addprobes.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/adduprobes.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/blacklist.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/delete.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/forceadd.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/funcname-suffix.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/funcs.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/help.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/invalid_command.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/list-stdout.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/list.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/out-of-text.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/quiet.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/semantic-line.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/vars.tc
->  create mode 100644 tools/perf/runtests/test.d/probe/wildcard.tc
-> 
-> --
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+it looks like it's failing here: ./util/probe-event.c
+probe_trace_event__set_name
+
+        /* Get an unused new event name */
+        ret = get_new_event_name(buf, 64, event,
+                                 namelist, allow_suffix);
+
+
+It works with a function 63 chars long not 64.
+Knowing it is the event name erroring, It also works if I give the
+event a short name eg. 'a'. I don't understand why it creates 3 probes
+though?
+
+
+
+objdump -t /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so|grep
+\.text|awk 'length($NF) == 63 {print length($NF)" "$NF}'|head -1
+
+63 _ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+
+
+
+perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
+'_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread'
+
+probe-definition(0):
+_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+symbol:_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+file:(null) line:0 offset:0 return:0 lazy:(null)
+0 arguments
+Opening /sys/kernel/debug/tracing/uprobe_events write=1
+Added new event:
+Writing event: p:probe_libjvm/_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x325a20
+  probe_libjvm:_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+(on _ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+
+You can now use it in all perf tools, such as:
+
+perf record -e probe_libjvm:_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
+-aR sleep 1
+
+
+
+perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
+'a=_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_'
+
+probe-definition(0):
+a=_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_
+symbol:_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_
+file:(null) line:0 offset:0 return:0 lazy:(null)
+0 arguments
+Opening /sys/kernel/debug/tracing/uprobe_events write=1
+Added new events:
+Writing event: p:probe_libjvm/a
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x8ca940
+  probe_libjvm:a       (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+Writing event: p:probe_libjvm/a_1
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x9c07fe
+  probe_libjvm:a_1     (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+Writing event: p:probe_libjvm/a_2
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x9c25c1
+  probe_libjvm:a_2     (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+
+You can now use it in all perf tools, such as:
+
+perf record -e probe_libjvm:a_2 -aR sleep 1
+
+
+perf probe -l
+
+  probe_libjvm:a       (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+  probe_libjvm:a_1     (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+  probe_libjvm:a_2     (on
+_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
+/opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
+
+
+
+uname -a
+
+Linux vagrant-ubuntu-trusty-64 4.3.0-999-generic #201510112200 SMP Mon
+Oct 12 02:01:41 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+
+Thanks,
+
+Alex
