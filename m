@@ -1,50 +1,57 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf report: Support caller callchain order when using
- DWARF unwinder.
-Date: Tue, 3 Nov 2015 12:11:27 -0300
-Message-ID: <20151103151127.GM21609@kernel.org>
-References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com>
- <20151103073325.GA23878@krava.brq.redhat.com>
- <20151103120631.GI21609@kernel.org>
- <2431085.Wl2WqsIU7l@milian-kdab2>
- <20151103142837.GJ21609@kernel.org>
- <20151103143207.GA6117@krava.brq.redhat.com>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: Re: perf probe Argument list too long
+Date: Tue, 3 Nov 2015 15:38:31 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB37525FB4FE@GSjpTKYDCembx32.service.hitachi.net>
+References: <CAHeneC-iMpy4tx35UXdSkLz7WYKx8epajgEpnS=NbfxvnxewTg@mail.gmail.com>
+ <20151103010026.GF21609@kernel.org>
+ <50399556C9727B4D88A595C8584AAB37525F9F23@GSjpTKYDCembx32.service.hitachi.net>
+ <2050018.LCqhWtF7on@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:37335 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751266AbbKCPLc (ORCPT
+Received: from mail7.hitachi.co.jp ([133.145.228.42]:37660 "EHLO
+	mail7.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755403AbbKCPig (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Nov 2015 10:11:32 -0500
-Content-Disposition: inline
-In-Reply-To: <20151103143207.GA6117@krava.brq.redhat.com>
+	Tue, 3 Nov 2015 10:38:36 -0500
+In-Reply-To: <2050018.LCqhWtF7on@milian-kdab2>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
+To: 'Milian Wolff' <milian.wolff@kdab.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alex Bagehot <ceeaspb@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Tue, Nov 03, 2015 at 03:32:07PM +0100, Jiri Olsa escreveu:
-> On Tue, Nov 03, 2015 at 11:28:37AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Nov 03, 2015 at 01:54:58PM +0100, Milian Wolff escreveu:
-> > > On Tuesday, November 3, 2015 9:06:31 AM CET Arnaldo Carvalho de Melo wrote:
-> > > > I can take it, as soon as you guys agree its something I should :-)
-> > > 
-> > > Yes, I think it's good as-is. Should I resubmit Jiris patch? Considering that 
-> > > he rewrote the patch, should he send it and add me as tester? How do you 
-> > > handle such situations in the Kernel land?
-
-> > So, I'll fix this all up by adding a Signed-off-by: Jiri and a
-> > Tested-by: Millian, which I think I can do according to the above
-> > messages and past experience, but the Correct Way to do this would
-> > be for Jiri to collect your Tested-by and resubmit in a separate
-> > message, not as a patch added to the text of a thread.
- 
-> well, I'd rather take it then and test it.. I sent
-> it out completely untested.. just to show what I meant
-> 
-> I'll resend and add some test code
-
-Sounds like a plan, thanks in advance,
-
-- Arnaldo
+RnJvbTogbWlsaWFuQGFzZnMyLmhpdGFjaGkuY28uanAgW21haWx0bzptaWxpYW5AYXNmczIuaGl0
+YWNoaS5jby5qcF0gT24gQmVoYWxmIE9mIE1pbGlhbiBXb2xmZg0KPg0KPk9uIFR1ZXNkYXksIE5v
+dmVtYmVyIDMsIDIwMTUgMzoyMDo0MiBBTSBDRVQg5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxN
+QVNBTUkgd3JvdGU6DQo+PiBGcm9tOiBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8gW21haWx0bzph
+Y21lQGtlcm5lbC5vcmddDQo+Pg0KPj4gPkVtIFR1ZSwgTm92IDAzLCAyMDE1IGF0IDEyOjUwOjQ2
+QU0gKzAwMDAsIEFsZXggQmFnZWhvdCBlc2NyZXZldToNCj4+ID4+IEhlbGxvLA0KPj4gPj4NCj4+
+ID4+IEkgZ2V0IHRoaXMgZXJyb3Igd2l0aCBwZXJmIHByb2JlLCA6DQo+PiA+Pg0KPj4gPj4gcGVy
+ZiBwcm9iZSAgLXZ2diAteCAvb3B0L2pkazEuOC4wXzYwL2pyZS9saWIvYW1kNjQvc2VydmVyL2xp
+Ymp2bS5zbw0KPj4gPj4gJ19aTjEzQ29sbGVjdGVkSGVhcDI0Y29tbW9uX21lbV9hbGxvY2F0ZV9p
+bml0RTExS2xhc3NIYW5kbGVtUDZUaHJlYWQnDQo+Pg0KPj4gQWgsIEkndmUgbmV2ZXIgdGhvdWdo
+dCB0aGF0IHRoZSBzeW1ib2wgbmFtZSBnZXRzIHNvIGxvbmcgOigNCj4+IEJUVywgaXMgdGhhdCBv
+cmFjbGUncyBqZGsgcGFja2FnZT8gSSdkIGxpa2UgdG8gcmVwcm9kdWNlIHRoZSBidWcuDQo+DQo+
+SnVzdCB3YW50IHRvIGNoaW1lIGluOiBEb24ndCBhc3N1bWUgX2FueXRoaW5nXyBhYm91dCBzeW1i
+b2wgbmFtZXMgLSB0aGV5IGFyZQ0KPmV4dHJlbWVseSBjb21wbGljYXRlZCBhbmQgd2l0aCBDKysg
+dGVtcGxhdGVzIGNhbiBiZSBleHRyZW1lbHkgbG9uZzoNCj4NCj5ubSAtYSBsaWJRdDVXZWJLaXQu
+c28uNS42LjAgfCBjdXQgLWQnICcgLWYgMyB8IGF3ayAneyBpZiAobGVuZ3RoKCQwKSA+IG1heCkN
+Cj57bWF4ID0gbGVuZ3RoKCQwKTsgbWF4bGluZSA9ICQwfSB9IEVORCB7IHByaW50IG1heGxpbmU7
+IHByaW50IGxlbmd0aChtYXhsaW5lKQ0KPn0nDQo+X1paTjNXVEY5SGFzaFRhYmxlSU5TXzEyQXRv
+bWljU3RyaW5nRU5TXzEyS2V5VmFsdWVQYWlySVMxX1BGdlBON1dlYkNvcmUxN05ldHdvcmtpbmdD
+b250ZXh0RVJLTlMzXzE1UmVzb3VyY2VSZXF1ZXN0RU4NCj5TM18xN1N0b3JlZENyZWRlbnRpYWxz
+RVJOUzNfMTNSZXNvdXJjZUVycm9yRVJOUzNfMTZSZXNvdXJjZVJlc3BvbnNlRVJOU182VmVjdG9y
+SWNMbTBFTlNfMTVDcmFzaE9uT3ZlcmZsb3dFRUVFRUVOU18yNEtlDQo+eVZhbHVlUGFpcktleUV4
+dHJhY3RvcklTS19FRU5TXzE2QXRvbWljU3RyaW5nSGFzaEVOU18xOEhhc2hNYXBWYWx1ZVRyYWl0
+c0lOU18xMEhhc2hUcmFpdHNJUzFfRUVOU1BfSVNKX0VFRUVTUV9FM2FkZElOU18xDQo+N0hhc2hN
+YXBUcmFuc2xhdG9ySVNTX1NOX0VFUzFfU0pfRUVOU18xOEhhc2hUYWJsZUFkZFJlc3VsdElOU18x
+N0hhc2hUYWJsZUl0ZXJhdG9ySVMxX1NLX1NNX1NOX1NTX1NRX0VFRUVSS1QwX1JLVDFfRTENCj45
+X19QUkVUVFlfRlVOQ1RJT05fXw0KPjQ5MA0KPg0KDQpPb3BzIC4uLiBPSywgc28gcGVyZi1wcm9i
+ZSBzaG91bGQgd2FybiB1c2VyIHRvIGdpdmUgYSBuZXcgZXZlbnQgbmFtZSBmb3IgdGhlIHByb2Jl
+cyBvbiBzdWNoIGxvbmctbmFtZSBmdW5jdGlvbi4NCg0KVGhhbmtzIQ0KDQo+Q2hlZXJzDQo+LS0N
+Cj5NaWxpYW4gV29sZmYgfCBtaWxpYW4ud29sZmZAa2RhYi5jb20gfCBTb2Z0d2FyZSBFbmdpbmVl
+cg0KPktEQUIgKERldXRzY2hsYW5kKSBHbWJIJkNvIEtHLCBhIEtEQUIgR3JvdXAgY29tcGFueQ0K
+PlRlbDogKzQ5LTMwLTUyMTMyNTQ3MA0KPktEQUIgLSBUaGUgUXQgRXhwZXJ0cw0K
