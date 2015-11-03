@@ -1,227 +1,170 @@
-From: Alex Bagehot <ceeaspb@gmail.com>
-Subject: Re: Re: perf probe Argument list too long
-Date: Tue, 3 Nov 2015 11:22:17 +0000
-Message-ID: <CAHeneC8iDAXym-JEr5idsAyDciekpgFCOq6rJPJs-vQK59E2fA@mail.gmail.com>
-References: <CAHeneC-iMpy4tx35UXdSkLz7WYKx8epajgEpnS=NbfxvnxewTg@mail.gmail.com>
-	<20151103010026.GF21609@kernel.org>
-	<50399556C9727B4D88A595C8584AAB37525F9F23@GSjpTKYDCembx32.service.hitachi.net>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH] perf report: Support caller callchain order when using DWARF unwinder.
+Date: Tue, 03 Nov 2015 12:25:39 +0100
+Message-ID: <1709816.RSlVQ2aJOf@milian-kdab2>
+References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com> <2192570.dg0L2eaEiH@agathebauer> <20151103073711.GB23878@krava.brq.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; boundary="nextPart11394136.s5pKcdyyUF"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ob0-f175.google.com ([209.85.214.175]:33583 "EHLO
-	mail-ob0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751016AbbKCLWS convert rfc822-to-8bit (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:40877 "EHLO mail.kdab.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751546AbbKCLZo (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Nov 2015 06:22:18 -0500
-Received: by obbwb3 with SMTP id wb3so9743439obb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2015 03:22:18 -0800 (PST)
-In-Reply-To: <50399556C9727B4D88A595C8584AAB37525F9F23@GSjpTKYDCembx32.service.hitachi.net>
+	Tue, 3 Nov 2015 06:25:44 -0500
+In-Reply-To: <20151103073711.GB23878@krava.brq.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?UTF-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
 
-On Tue, Nov 3, 2015 at 3:20 AM, =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=B7=B3 / =
-HIRAMATU=EF=BC=8CMASAMI
-<masami.hiramatsu.pt@hitachi.com> wrote:
-> From: Arnaldo Carvalho de Melo [mailto:acme@kernel.org]
->>Em Tue, Nov 03, 2015 at 12:50:46AM +0000, Alex Bagehot escreveu:
->>> Hello,
->>>
->>> I get this error with perf probe, :
->>>
->>> perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
->>> '_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Threa=
-d'
->
-> Ah, I've never thought that the symbol name gets so long :(
+--nextPart11394136.s5pKcdyyUF
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-no problem. thanks for looking at this.
+On Tuesday, November 3, 2015 8:37:11 AM CET Jiri Olsa wrote:
+> On Fri, Oct 09, 2015 at 07:29:34PM +0200, Milian Wolff wrote:
+> 
+> SNIP
+> 
+> > > ;-)
+> > > 
+> > > any chance this could be done also for util/unwind-libdw.c ?
+> > 
+> > That patch looks much better than mine. I'll try it out later next week
+> > and
+> > will also have a look at util/unwind-libdw.c. Question: How can I test the
+> > behavior of the latter? Do I need to uninstall libunwind, or can I change
+> > the unwinder at runtime somehow (env var?).
+> 
+> It's either libunwind or libdw compiled in, so I'd suggest
+> generic test (see below) and compile with make variables
+> NO_LIBUNWIND=1 or NO_LIBDW_DWARF_UNWIND=1 to get desired
+> unwinder compiled in
+> 
+> > Also, are there unit tests for this behavior somewhere?
+> 
+> please check tests/dwarf-unwind.c, I think you can add similar test
 
-> BTW, is that oracle's jdk package? I'd like to reproduce the bug.
+OK, I'll try to find the time to test this later this week. I have also some 
+more on my todo list regarding documentation and testing. If you don't hear 
+back from me though, I'd appreciate if someone could adopt this patch and make 
+sure it gets integrated.
 
-yes, openjdk should be the same/similar
+Cheers
+-- 
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart11394136.s5pKcdyyUF
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
->
->>>
->>> probe-definition(0):
->>> _ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP6Thread
->>> symbol:_ZN13CollectedHeap24common_mem_allocate_initE11KlassHandlemP=
-6Thread
->>> file:(null) line:0 offset:0 return:0 lazy:(null)
->>> 0 arguments
->>> Opening /sys/kernel/debug/tracing/uprobe_events write=3D1
->>> Added new event:
->>> snprintf() failed: -7
->>>   Error: Failed to add events. Reason: Argument list too long (Code=
-: -7)
->>>
->>>
->>> it looks like it's failing here: ./util/probe-event.c
->>> probe_trace_event__set_name
->>>
->>>         /* Get an unused new event name */
->>>         ret =3D get_new_event_name(buf, 64, event,
->>>                                  namelist, allow_suffix);
->>
->>Masami, do we really need to cap it at 64 bytes? And would it be
->>possible to improve that error reporting? I.e. this isn't an "argumen=
-t
->>list", right?
->
-> No, but it is used for event name whose maximum length is 63+\0.
-> There is actually no reason for 64, but we need a limitation for even=
-t name.
->
-> And, yeah, the error message comes from E2BIG.
->
-> #define E2BIG            7      /* Argument list too long */
->
-> So, the "argument" means argument of snprintf.
->
->>> It works with a function 63 chars long not 64.
->>> Knowing it is the event name erroring, It also works if I give the
->>> event a short name eg. 'a'. I don't understand why it creates 3 pro=
-bes
->>> though?
->>
->>Masami? You gave this explanation at some point, but I forgot, aliase=
-s?
->>Inlining?
->
-> Yes, I guess it is because of inlined function. If there are several =
-different
-> instances at different addresses, perf probe tries to define probes f=
-or each
-> address.
->
->>
->>Would be interesting to warn the user why multiple probes are being
->>created, no?
->
-> Hmm, ok. it is usually done by probing inlined function, or the targe=
-t line
-> has multiple instructions. It may be better to show the reason why.
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE1MTEwMzExMjUzOVowIwYJKoZIhvcNAQkEMRYEFG248iywnFWPhrt/AAIsC+llD1cWMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAL5Y
+EQBiAOYp+MSSvluiu/w6DQTMaAMDbzSn4albZplFk4dc4lkdjVgoVjFm+zjLtDcVfL3n2RWj90SC
+BCwZdvwuIucc9dGA5GZA0UwttrRk1qXXJddHcptHQf77iaOifmXiYk7YmVdFHU37mw3itN7uUu16
+AMx3NaKpwF+QApezrUkkDRV632JeugmT4mGACEQOu2h9sAc4e/czs8ExPcxqbyF7IaMoETX6Jp8v
+fVnJKl72uxDS6H6TcyqxDLHa005DUK4v69v/xX/vgs4F84UKA/kR3mbmFqCp4l4yumsW1HwOqGGG
+bl5kU4cGC1smmE2Sjue9JVHryVIgMr1Fa0gAAAAAAAA=
 
-If the information is there yes that would be useful to the user.
 
->
->
->>Alex, you can try using wildcards in this case, i.e.:
->>
->>  perf record -e probe_libjvm:a* your-workload
->>
->>That if you don't have other probes in place starting with the same
->>prefix :-\
-
-Thanks
-
->>
->>- Arnaldo
->>
->>
->>> objdump -t /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so|grep
->>> \.text|awk 'length($NF) =3D=3D 63 {print length($NF)" "$NF}'|head -=
-1
->>>
->>> 63 _ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
->>>
->>>
->>>
->>> perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
->>> '_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread'
->>>
->>> probe-definition(0):
->>> _ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread
->>> symbol:_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThr=
-ead
->>> file:(null) line:0 offset:0 return:0 lazy:(null)
->>> 0 arguments
->>> Opening /sys/kernel/debug/tracing/uprobe_events write=3D1
->>> Added new event:
->>> Writing event: p:probe_libjvm/_ZL34bulk_revoke_or_rebias_at_safepoi=
-ntP7oopDescbbP10JavaThread
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x325a20
->>>   probe_libjvm:_ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP1=
-0JavaThread
->>> (on _ZL34bulk_revoke_or_rebias_at_safepointP7oopDescbbP10JavaThread=
- in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>>
->>> You can now use it in all perf tools, such as:
->>>
->>> perf record -e probe_libjvm:_ZL34bulk_revoke_or_rebias_at_safepoint=
-P7oopDescbbP10JavaThread
->>> -aR sleep 1
->>>
->>>
->>>
->>> perf probe  -vvv -x /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so
->>> 'a=3D_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriter=
-T_'
->>>
->>> probe-definition(0):
->>> a=3D_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT=
-_
->>> symbol:_Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWrit=
-erT_
->>> file:(null) line:0 offset:0 return:0 lazy:(null)
->>> 0 arguments
->>> Opening /sys/kernel/debug/tracing/uprobe_events write=3D1
->>> Added new events:
->>> Writing event: p:probe_libjvm/a
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x8ca940
->>>   probe_libjvm:a       (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>> Writing event: p:probe_libjvm/a_1
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x9c07fe
->>>   probe_libjvm:a_1     (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>> Writing event: p:probe_libjvm/a_2
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so:0x9c25c1
->>>   probe_libjvm:a_2     (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>>
->>> You can now use it in all perf tools, such as:
->>>
->>> perf record -e probe_libjvm:a_2 -aR sleep 1
->>>
->>>
->>> perf probe -l
->>>
->>>   probe_libjvm:a       (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>>   probe_libjvm:a_1     (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>>   probe_libjvm:a_2     (on
->>> _Z17do_write_prologueIP17GlobalTraceBufferEvR15JfrBufferWriterT_ in
->>> /opt/jdk1.8.0_60/jre/lib/amd64/server/libjvm.so)
->>>
->>>
->>>
->>> uname -a
->>>
->>> Linux vagrant-ubuntu-trusty-64 4.3.0-999-generic #201510112200 SMP =
-Mon
->>> Oct 12 02:01:41 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
->>>
->>>
->>> Thanks,
->>>
->>> Alex
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-per=
-f-users" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-=
-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nextPart11394136.s5pKcdyyUF--
