@@ -1,8 +1,8 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH] perf report: Support caller callchain order when using
  DWARF unwinder.
-Date: Tue, 3 Nov 2015 11:30:47 -0300
-Message-ID: <20151103143047.GK21609@kernel.org>
+Date: Tue, 3 Nov 2015 15:32:07 +0100
+Message-ID: <20151103143207.GA6117@krava.brq.redhat.com>
 References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com>
  <20151103073325.GA23878@krava.brq.redhat.com>
  <20151103120631.GI21609@kernel.org>
@@ -11,23 +11,43 @@ References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:33204 "EHLO mail.kernel.org"
+Received: from mx1.redhat.com ([209.132.183.28]:37978 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751546AbbKCOaw (ORCPT
+	id S1753335AbbKCOcK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 3 Nov 2015 09:30:52 -0500
+	Tue, 3 Nov 2015 09:32:10 -0500
 Content-Disposition: inline
 In-Reply-To: <20151103142837.GJ21609@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
 
-Em Tue, Nov 03, 2015 at 11:28:37AM -0300, Arnaldo Carvalho de Melo escreveu:
+On Tue, Nov 03, 2015 at 11:28:37AM -0300, Arnaldo Carvalho de Melo wrote:
 > Em Tue, Nov 03, 2015 at 01:54:58PM +0100, Milian Wolff escreveu:
 > > On Tuesday, November 3, 2015 9:06:31 AM CET Arnaldo Carvalho de Melo wrote:
 > > > Em Tue, Nov 03, 2015 at 08:33:25AM +0100, Jiri Olsa escreveu:
 > > > > On Mon, Nov 02, 2015 at 06:19:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > 
+> > > > SNIP
+> > > > 
+> > > > > > > there's no check for return value of entry callback
+> > > > > > > 
+> > > > > > > also I wonder would it be better to store into ips[] within
+> > > > > > > the single loop all the time, and iterate throught it after
+> > > > > > > forward/backward based on the callchain_param.order
+> > > > > > > 
+> > > > > > > please check attached patch, totaly untested, probably leaking some
+> > > > > > > index
+> > > > > > > ;-)
+> > > > > > > 
+> > > > > > > any chance this could be done also for util/unwind-libdw.c ?
+> > > > > > 
+> > > > > > That patch looks much better than mine. I'll try it out later next
+> > > > > > week and
+> > > > > > will also have a look at util/unwind-libdw.c. Question: How can I test
+> > > > > > the
+> > > > > 
 > > > > > So, you tried this patch, right? Jiri, have you submitted this in some
 > > > > > other message I missed?
 > > > > 
@@ -40,14 +60,14 @@ Em Tue, Nov 03, 2015 at 11:28:37AM -0300, Arnaldo Carvalho de Melo escreveu:
 > > handle such situations in the Kernel land?
 > 
 > So, I'll fix this all up by adding a Signed-off-by: Jiri and a
-
-I take that back, can one of you please write a nice description to the
-problem and how the proposed patch fixes it, then send as a separate
-message with your Tested-by + Signed-off-by?
-
-- Arnaldo
-
 > Tested-by: Millian, which I think I can do according to the above
 > messages and past experience, but the Correct Way to do this would
 > be for Jiri to collect your Tested-by and resubmit in a separate
 > message, not as a patch added to the text of a thread.
+
+well, I'd rather take it then and test it.. I sent
+it out completely untested.. just to show what I meant
+
+I'll resend and add some test code
+
+jirka
