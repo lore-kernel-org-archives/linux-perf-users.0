@@ -1,120 +1,50 @@
-From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
-	<masami.hiramatsu.pt@hitachi.com>
-Subject: RE: perf/runtests: Add runtests.sh shellscript testcases for perf
- probe
-Date: Tue, 3 Nov 2015 03:24:43 +0000
-Message-ID: <50399556C9727B4D88A595C8584AAB37525F9F4E@GSjpTKYDCembx32.service.hitachi.net>
-References: <1445468925.12960.117.camel@Rudolf-RHEL-7>
- <20151022121615.13192.71967.stgit@localhost.localdomain>
- <1499210318.1567245.1446511429277.JavaMail.zimbra@redhat.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf report: Support caller callchain order when using
+ DWARF unwinder.
+Date: Tue, 3 Nov 2015 08:33:25 +0100
+Message-ID: <20151103073325.GA23878@krava.brq.redhat.com>
+References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com>
+ <20151004203817.GE20515@kernel.org>
+ <20151005110836.GA28364@krava.landal.opennet>
+ <2192570.dg0L2eaEiH@agathebauer>
+ <20151102211944.GR2923@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42]:41609 "EHLO
-	mail7.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751188AbbKCDYr (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:54064 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751016AbbKCHd2 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 2 Nov 2015 22:24:47 -0500
-In-Reply-To: <1499210318.1567245.1446511429277.JavaMail.zimbra@redhat.com>
-Content-Language: ja-JP
+	Tue, 3 Nov 2015 02:33:28 -0500
+Content-Disposition: inline
+In-Reply-To: <20151102211944.GR2923@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: 'Michael Petlan' <mpetlan@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
 
-SGkgTWljaGFlbCwNCg0KRnJvbTogTWljaGFlbCBQZXRsYW4gW21haWx0bzptcGV0bGFuQHJlZGhh
-dC5jb21dDQo+DQo+SGkgTWFzYW1pIEhpcmFtYXRzdSwNCj4NCj5JIGFtIHNvcnJ5IGZvciByZXNw
-b25kaW5nIGxhdGUsIEkgaGFkIGEgbG90IG9mIG90aGVyIHdvcmsuDQo+VGhhbmtzIGZvciBzaGFy
-aW5nIHRoZSB0ZXN0c3VpdGUsIEkgbGlrZSBpdCB2ZXJ5IG11Y2gsIHNvDQo+SSBhZGRlZCBzb21l
-IG9mIHlvdXIgdGVzdGNhc2VzIGludG8gbXkgc2tlbGV0b24uIFRoZXJlIGlzDQo+c3RpbGwgc29t
-ZSB3b3JrIHRvIGRvIHJlZ2FyZGluZyB0aGF0Lg0KPg0KPkkgZGV2ZWxvcCB0aGUgdGVzdHN1aXRl
-IHVzaW5nIG15IG93biBnaXRodWIgcmVwb3NpdG9yeVsxXSwNCj5pZiB5b3UgYXJlIGludGVyZXN0
-ZWQsIHlvdSBtYXkgaGF2ZSBsb29rIGF0IGl0LCBjb21tZW50Li4uDQoNClRoYW5rcyEgdGhhdCBo
-ZWxwcyBtZSBhIGxvdC4NCkFybmFsZG8sIEkgdGhpbmsgd2UnZCBiZXR0ZXIgaW5jbHVkZSB0aGlz
-IHR5cGUgb2YgYmxhY2tib3ggdGVzdHMNCndoYXQgd291bGQgeW91IHRoaW5rPw0KDQpUaGFua3Ms
-DQoNCj4NCj5UaGUgY29tbWl0IGNjMDk0ZGEwMjY4M2IwOTA4NTEyYjZiODY3NmMwNjQ4ZTczZmEy
-YzggYWRkZWQNCj50aGUgZmlyc3QgcGFydCBvZiB5b3VyIHN1aXRlIHRoZXJlLg0KPg0KPlRoYW5r
-IHlvdSBhZ2FpbiBmb3IgeW91ciBpbnRlcmVzdC4NCj4NCj5NaWNoYWVsDQo+DQo+DQo+WzFdIGh0
-dHBzOi8vZ2l0aHViLmNvbS9yZm12aC9wZXJmdG9vbC10ZXN0c3VpdGUNCj4NCj4NCj4tLS0tLSBN
-ZW5zYWplIG9yaWdpbmFsIC0tLS0tDQo+PiBEZTogIk1hc2FtaSBIaXJhbWF0c3UiIDxtYXNhbWku
-aGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tPg0KPj4gUGFyYTogIk1pY2hhZWwgUGV0bGFuIiA8bXBl
-dGxhbkByZWRoYXQuY29tPiwgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmcNCj4+IEND
-OiAiQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIiA8YWNtZUBrZXJuZWwub3JnPg0KPj4gRW52aWFk
-b3M6IEp1ZXZlcywgMjIgZGUgT2N0dWJyZSAyMDE1IDE0OjE2OjE1DQo+PiBBc3VudG86IFtQQVRD
-SCBwZXJmL2NvcmUgMC8yXSBwZXJmL3J1bnRlc3RzOiBBZGQgcnVudGVzdHMuc2ggc2hlbGxzY3Jp
-cHQgdGVzdGNhc2VzIGZvciBwZXJmIHByb2JlDQo+Pg0KPj4gSGkgTWljaGFlbCwNCj4+DQo+PiBI
-ZXJlIGlzIGEgY291cGxlIG9mIHBhdGNoZXMgdG8gYWRkIG15IHRlc3RzdWl0ZShydW50ZXN0LnNo
-KSB0byBwZXJmLg0KPj4NCj4+IFRoaXMgcnVucyBhcyBmdHJhY2V0ZXN0IGRvZXMuIEkndmUgYWRk
-ZWQgc29tZSB0ZXN0Y2FzZXMgd2hpY2ggY292ZXINCj4+IHBlcmYtcHJvYmUgZmVhdHVyZXMgOikN
-Cj4+DQo+PiAgIC0tLS0NCj4+ICAgIyAuL3J1bnRlc3RzLnNoDQo+PiAgID09PSBSdW4gdGVzdHMg
-PT09DQo+PiAgIFsxXSBCYXNpbmMgcHJvYmUgYWRkaW5nIFtQQVNTXQ0KPj4gICBbMl0gQmFzaWMg
-cHJvYmUgYWRkaW5nIG9uIHVzZXIgYmluYXJ5ICAgW1BBU1NdDQo+PiAgIFszXSBTa2lwIGJsYWNr
-bGlzdCBmdW5jdGlvbiAgICAgW1BBU1NdDQo+PiAgIFs0XSBCYXNpYyBwcm9iZSBkZWxldGluZyAg
-ICAgICAgW1BBU1NdDQo+PiAgIFs1XSBwcm9iZSBhZGRpbmcgd2l0aCAtLWZvcmNlICAgW1BBU1Nd
-DQo+PiAgIFs2XSBDdXQgb2ZmIHRoZSBmdW5jdGlvbiBzdWZmaXggZnJvbSBuYW1lICAgICAgIFtQ
-QVNTXQ0KPj4gICBbN10gQmFzaWMgZnVuY3Rpb24gbGlzdHVwIGNvbW1hbmQgICAgICAgW1BBU1Nd
-DQo+PiAgIFs4XSBoZWxwIG1lc3NhZ2VzICAgICAgIFtQQVNTXQ0KPj4gICBbOV0gaW52YWxpZCBj
-b21tYW5kcyAgICBbUEFTU10NCj4+ICAgWzEwXSBwZXJmIHByb2JlIC0tbGlzdCBvdXRwdXRzIGlu
-IHN0ZG91dCAgICAgICAgW1BBU1NdDQo+PiAgIFsxMV0gbGlzdCBjb21tYW5kIHBhcnNpbmcgICAg
-ICAgW1BBU1NdDQo+PiAgIFsxMl0gU2tpcCBvdXQtb2YtdGV4dCBmdW5jdGlvbnMgW1BBU1NdDQo+
-PiAgIFsxM10gUXVpZXQgb3B0aW9uIGNoZWNrIFtQQVNTXQ0KPj4gICBbMTRdIC0tbGluZSBzZW1h
-bnRpYyBlcnJvcnMgICAgIFtQQVNTXQ0KPj4gICBbMTVdIHJlYWRhYmxlIHZhcnMgY29tbWFuZCAg
-ICAgIFtQQVNTXQ0KPj4gICBbMTZdIHBlcmYtcHJvYmUgd2lsZGNhcmQgc3VwcG9ydCAgICAgICAg
-W1BBU1NdDQo+Pg0KPj4gICAjIG9mIHBhc3NlZDogIDE2DQo+PiAgICMgb2YgZmFpbGVkOiAgMA0K
-Pj4gICAjIG9mIHVucmVzb2x2ZWQ6ICAwDQo+PiAgICMgb2YgdW50ZXN0ZWQ6ICAwDQo+PiAgICMg
-b2YgdW5zdXBwb3J0ZWQ6ICAwDQo+PiAgICMgb2YgeGZhaWxlZDogIDANCj4+ICAgIyBvZiB1bmRl
-ZmluZWQodGVzdCBidWcpOiAgMA0KPj4gICAtLS0tDQo+Pg0KPj4gVGhhbmsgeW91LA0KPj4NCj4+
-IC0tLQ0KPj4NCj4+IE1hc2FtaSBIaXJhbWF0c3UgKDIpOg0KPj4gICAgICAgcGVyZi9ydW50ZXN0
-czogQWRkIHJ1bnRlc3RzLnNoIHNoZWxsc2NyaXB0IHRlc3RzdWl0ZQ0KPj4gICAgICAgcGVyZi9y
-dW50ZXN0czogQWRkIHRlc3RjYXNlcyBmb3IgcGVyZiBwcm9iZQ0KPj4NCj4+DQo+PiAgdG9vbHMv
-cGVyZi9ydW50ZXN0cy9ydW50ZXN0cy5jb25mICAgICAgICAgICAgICAgICAgfCAgICA1DQo+PiAg
-dG9vbHMvcGVyZi9ydW50ZXN0cy9ydW50ZXN0cy5zaCAgICAgICAgICAgICAgICAgICAgfCAgMjY0
-DQo+PiAgKysrKysrKysrKysrKysrKysrKysNCj4+ICB0b29scy9wZXJmL3J1bnRlc3RzL3Rlc3Qu
-ZC9mdW5jdGlvbnMgICAgICAgICAgICAgICB8ICAgMTMgKw0KPj4gIHRvb2xzL3BlcmYvcnVudGVz
-dHMvdGVzdC5kL3Byb2JlL2FkZHByb2Jlcy50YyAgICAgIHwgICAxNSArDQo+PiAgdG9vbHMvcGVy
-Zi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvYWRkdXByb2Jlcy50YyAgICAgfCAgIDEzICsNCj4+ICB0
-b29scy9wZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9iZS9ibGFja2xpc3QudGMgICAgICB8ICAgMTQg
-Kw0KPj4gIHRvb2xzL3BlcmYvcnVudGVzdHMvdGVzdC5kL3Byb2JlL2RlbGV0ZS50YyAgICAgICAg
-IHwgICAgOCArDQo+PiAgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvZm9yY2VhZGQu
-dGMgICAgICAgfCAgICA4ICsNCj4+ICAuLi4vcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvZnVu
-Y25hbWUtc3VmZml4LnRjICB8ICAgMTcgKw0KPj4gIHRvb2xzL3BlcmYvcnVudGVzdHMvdGVzdC5k
-L3Byb2JlL2Z1bmNzLnRjICAgICAgICAgIHwgICAgOCArDQo+PiAgdG9vbHMvcGVyZi9ydW50ZXN0
-cy90ZXN0LmQvcHJvYmUvaGVscC50YyAgICAgICAgICAgfCAgICA1DQo+PiAgLi4uL3BlcmYvcnVu
-dGVzdHMvdGVzdC5kL3Byb2JlL2ludmFsaWRfY29tbWFuZC50YyAgfCAgIDI3ICsrDQo+PiAgdG9v
-bHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvbGlzdC1zdGRvdXQudGMgICAgfCAgICA3ICsN
-Cj4+ICB0b29scy9wZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9iZS9saXN0LnRjICAgICAgICAgICB8
-ICAgMTAgKw0KPj4gIHRvb2xzL3BlcmYvcnVudGVzdHMvdGVzdC5kL3Byb2JlL291dC1vZi10ZXh0
-LnRjICAgIHwgICAxMCArDQo+PiAgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvcXVp
-ZXQudGMgICAgICAgICAgfCAgICA2DQo+PiAgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJv
-YmUvc2VtYW50aWMtbGluZS50YyAgfCAgIDIwICsrDQo+PiAgdG9vbHMvcGVyZi9ydW50ZXN0cy90
-ZXN0LmQvcHJvYmUvdmFycy50YyAgICAgICAgICAgfCAgICA5ICsNCj4+ICB0b29scy9wZXJmL3J1
-bnRlc3RzL3Rlc3QuZC9wcm9iZS93aWxkY2FyZC50YyAgICAgICB8ICAgIDYNCj4+ICAxOSBmaWxl
-cyBjaGFuZ2VkLCA0NjUgaW5zZXJ0aW9ucygrKQ0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29s
-cy9wZXJmL3J1bnRlc3RzL3J1bnRlc3RzLmNvbmYNCj4+ICBjcmVhdGUgbW9kZSAxMDA3NTUgdG9v
-bHMvcGVyZi9ydW50ZXN0cy9ydW50ZXN0cy5zaA0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29s
-cy9wZXJmL3J1bnRlc3RzL3Rlc3QuZC9mdW5jdGlvbnMNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-dG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvYWRkcHJvYmVzLnRjDQo+PiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcnVudGVzdHMvdGVzdC5kL3Byb2JlL2FkZHVwcm9iZXMu
-dGMNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJv
-YmUvYmxhY2tsaXN0LnRjDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcnVudGVz
-dHMvdGVzdC5kL3Byb2JlL2RlbGV0ZS50Yw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9w
-ZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9iZS9mb3JjZWFkZC50Yw0KPj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCB0b29scy9wZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9iZS9mdW5jbmFtZS1zdWZmaXgudGMN
-Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUv
-ZnVuY3MudGMNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0
-LmQvcHJvYmUvaGVscC50Yw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3J1bnRl
-c3RzL3Rlc3QuZC9wcm9iZS9pbnZhbGlkX2NvbW1hbmQudGMNCj4+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvbGlzdC1zdGRvdXQudGMNCj4+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvbGlzdC50
-Yw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9i
-ZS9vdXQtb2YtdGV4dC50Yw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3J1bnRl
-c3RzL3Rlc3QuZC9wcm9iZS9xdWlldC50Yw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9w
-ZXJmL3J1bnRlc3RzL3Rlc3QuZC9wcm9iZS9zZW1hbnRpYy1saW5lLnRjDQo+PiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcnVudGVzdHMvdGVzdC5kL3Byb2JlL3ZhcnMudGMNCj4+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9ydW50ZXN0cy90ZXN0LmQvcHJvYmUvd2lsZGNh
-cmQudGMNCj4+DQo+PiAtLQ0KPj4gLS0NCj4+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0
-OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1wZXJmLXVzZXJzIg0KPj4gaW4NCj4+
-IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+PiBN
-b3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1p
-bmZvLmh0bWwNCj4+DQo=
+On Mon, Nov 02, 2015 at 06:19:44PM -0300, Arnaldo Carvalho de Melo wrote:
+
+SNIP
+
+> > > 
+> > > there's no check for return value of entry callback
+> > > 
+> > > also I wonder would it be better to store into ips[] within
+> > > the single loop all the time, and iterate throught it after
+> > > forward/backward based on the callchain_param.order
+> > > 
+> > > please check attached patch, totaly untested, probably leaking some index
+> > > ;-)
+> > > 
+> > > any chance this could be done also for util/unwind-libdw.c ?
+> > 
+> > That patch looks much better than mine. I'll try it out later next week and 
+> > will also have a look at util/unwind-libdw.c. Question: How can I test the 
+> 
+> So, you tried this patch, right? Jiri, have you submitted this in some
+> other message I missed?
+
+nope.. I thought Milian would take it ;-)
+
+jirka
