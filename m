@@ -1,108 +1,142 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf report: Support caller callchain order when using
- DWARF unwinder.
-Date: Mon, 2 Nov 2015 18:19:44 -0300
-Message-ID: <20151102211944.GR2923@kernel.org>
-References: <1443971797-25548-1-git-send-email-milian.wolff@kdab.com>
- <20151004203817.GE20515@kernel.org>
- <20151005110836.GA28364@krava.landal.opennet>
- <2192570.dg0L2eaEiH@agathebauer>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH perf/core 0/2] perf/runtests: Add runtests.sh
+ shellscript testcases for perf probe
+Date: Mon, 2 Nov 2015 19:43:49 -0500 (EST)
+Message-ID: <1499210318.1567245.1446511429277.JavaMail.zimbra@redhat.com>
+References: <1445468925.12960.117.camel@Rudolf-RHEL-7> <20151022121615.13192.71967.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:32982 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752296AbbKBVTu (ORCPT
+Received: from mx4-phx2.redhat.com ([209.132.183.25]:40727 "EHLO
+	mx4-phx2.redhat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752751AbbKCAnz (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 2 Nov 2015 16:19:50 -0500
-Content-Disposition: inline
-In-Reply-To: <2192570.dg0L2eaEiH@agathebauer>
+	Mon, 2 Nov 2015 19:43:55 -0500
+In-Reply-To: <20151022121615.13192.71967.stgit@localhost.localdomain>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
+To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 
-Em Fri, Oct 09, 2015 at 07:29:34PM +0200, Milian Wolff escreveu:
-> On Montag, 5. Oktober 2015 13:08:36 CEST Jiri Olsa wrote:
-> > On Sun, Oct 04, 2015 at 05:38:17PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Sun, Oct 04, 2015 at 05:16:37PM +0200, Milian Wolff escreveu:
-> > > > We cannot reverse the order of the libunwind stepper. To workaround
-> > > > this, we store the IPs in a temporary stack buffer and then walk
-> > > > this buffer in reverse order when callchain_param.order is set to
-> > > > ORDER_CALLER.
-> > > > 
-> > > > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> > > 
-> > > Jiri,
-> > > 
-> > > 	Can you please take a look at this?
-> > > 
-> > > - Arnaldo
-> > > 
-> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > ---
-> > > > 
-> > > >  tools/perf/util/unwind-libunwind.c | 21 +++++++++++++++++----
-> > > >  1 file changed, 17 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/tools/perf/util/unwind-libunwind.c
-> > > > b/tools/perf/util/unwind-libunwind.c index 4c00507..bf631f1 100644
-> > > > --- a/tools/perf/util/unwind-libunwind.c
-> > > > +++ b/tools/perf/util/unwind-libunwind.c
-> > > > @@ -621,11 +621,24 @@ static int get_entries(struct unwind_info *ui,
-> > > > unwind_entry_cb_t cb,> > 
-> > > >  	if (ret)
-> > > >  	
-> > > >  		display_error(ret);
-> > > > 
-> > > > -	while (!ret && (unw_step(&c) > 0) && max_stack--) {
-> > > > -		unw_word_t ip;
-> > > > +	if (callchain_param.order == ORDER_CALLEE) {
-> > > > +		while (!ret && (unw_step(&c) > 0) && max_stack--) {
-> > > > +			unw_word_t ip;
-> > > > 
-> > > > -		unw_get_reg(&c, UNW_REG_IP, &ip);
-> > > > -		ret = ip ? entry(ip, ui->thread, cb, arg) : 0;
-> > > > +			unw_get_reg(&c, UNW_REG_IP, &ip);
-> > > > +			ret = ip ? entry(ip, ui->thread, cb, arg) : 0;
-> > > > +		}
-> > > > +	} else {
-> > > > +		unw_word_t ips[max_stack];
-> > > > +		int i = 0;
-> > > > +
-> > > > +		while ((unw_step(&c) > 0) && i < max_stack) {
-> > > > +			unw_get_reg(&c, UNW_REG_IP, &ips[i]);
-> > > > +			++i;
-> > > > +		}
-> > > > +		max_stack = i;
-> > > > +		for (i = max_stack - 1; i >= 0; --i)
-> > > > +			entry(ips[i], ui->thread, cb, arg);
-> > 
-> > there's no check for return value of entry callback
-> > 
-> > also I wonder would it be better to store into ips[] within
-> > the single loop all the time, and iterate throught it after
-> > forward/backward based on the callchain_param.order
-> > 
-> > please check attached patch, totaly untested, probably leaking some index
-> > ;-)
-> > 
-> > any chance this could be done also for util/unwind-libdw.c ?
+Hi Masami Hiramatsu,
+
+I am sorry for responding late, I had a lot of other work.
+Thanks for sharing the testsuite, I like it very much, so
+I added some of your testcases into my skeleton. There is
+still some work to do regarding that.
+
+I develop the testsuite using my own github repository[1],
+if you are interested, you may have look at it, comment...
+
+The commit cc094da02683b0908512b6b8676c0648e73fa2c8 added
+the first part of your suite there.
+
+Thank you again for your interest.
+
+Michael
+
+
+[1] https://github.com/rfmvh/perftool-testsuite
+
+
+----- Mensaje original -----
+> De: "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>
+> Para: "Michael Petlan" <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org
+> CC: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+> Enviados: Jueves, 22 de Octubre 2015 14:16:15
+> Asunto: [PATCH perf/core 0/2] perf/runtests: Add runtests.sh shellscript testcases for perf probe
 > 
-> That patch looks much better than mine. I'll try it out later next week and 
-> will also have a look at util/unwind-libdw.c. Question: How can I test the 
-
-So, you tried this patch, right? Jiri, have you submitted this in some
-other message I missed?
-
-- Arnaldo
-
-> behavior of the latter? Do I need to uninstall libunwind, or can I change the 
-> unwinder at runtime somehow (env var?).
+> Hi Michael,
 > 
-> Also, are there unit tests for this behavior somewhere?
-> -- 
-> Milian Wolff | milian.wolff@kdab.com | Software Engineer
-> KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-> Tel: +49-30-521325470
-> KDAB - The Qt Experts
+> Here is a couple of patches to add my testsuite(runtest.sh) to perf.
+> 
+> This runs as ftracetest does. I've added some testcases which cover
+> perf-probe features :)
+> 
+>   ----
+>   # ./runtests.sh
+>   === Run tests ===
+>   [1] Basinc probe adding [PASS]
+>   [2] Basic probe adding on user binary   [PASS]
+>   [3] Skip blacklist function     [PASS]
+>   [4] Basic probe deleting        [PASS]
+>   [5] probe adding with --force   [PASS]
+>   [6] Cut off the function suffix from name       [PASS]
+>   [7] Basic function listup command       [PASS]
+>   [8] help messages       [PASS]
+>   [9] invalid commands    [PASS]
+>   [10] perf probe --list outputs in stdout        [PASS]
+>   [11] list command parsing       [PASS]
+>   [12] Skip out-of-text functions [PASS]
+>   [13] Quiet option check [PASS]
+>   [14] --line semantic errors     [PASS]
+>   [15] readable vars command      [PASS]
+>   [16] perf-probe wildcard support        [PASS]
+>   
+>   # of passed:  16
+>   # of failed:  0
+>   # of unresolved:  0
+>   # of untested:  0
+>   # of unsupported:  0
+>   # of xfailed:  0
+>   # of undefined(test bug):  0
+>   ----
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (2):
+>       perf/runtests: Add runtests.sh shellscript testsuite
+>       perf/runtests: Add testcases for perf probe
+> 
+> 
+>  tools/perf/runtests/runtests.conf                  |    5
+>  tools/perf/runtests/runtests.sh                    |  264
+>  ++++++++++++++++++++
+>  tools/perf/runtests/test.d/functions               |   13 +
+>  tools/perf/runtests/test.d/probe/addprobes.tc      |   15 +
+>  tools/perf/runtests/test.d/probe/adduprobes.tc     |   13 +
+>  tools/perf/runtests/test.d/probe/blacklist.tc      |   14 +
+>  tools/perf/runtests/test.d/probe/delete.tc         |    8 +
+>  tools/perf/runtests/test.d/probe/forceadd.tc       |    8 +
+>  .../perf/runtests/test.d/probe/funcname-suffix.tc  |   17 +
+>  tools/perf/runtests/test.d/probe/funcs.tc          |    8 +
+>  tools/perf/runtests/test.d/probe/help.tc           |    5
+>  .../perf/runtests/test.d/probe/invalid_command.tc  |   27 ++
+>  tools/perf/runtests/test.d/probe/list-stdout.tc    |    7 +
+>  tools/perf/runtests/test.d/probe/list.tc           |   10 +
+>  tools/perf/runtests/test.d/probe/out-of-text.tc    |   10 +
+>  tools/perf/runtests/test.d/probe/quiet.tc          |    6
+>  tools/perf/runtests/test.d/probe/semantic-line.tc  |   20 ++
+>  tools/perf/runtests/test.d/probe/vars.tc           |    9 +
+>  tools/perf/runtests/test.d/probe/wildcard.tc       |    6
+>  19 files changed, 465 insertions(+)
+>  create mode 100644 tools/perf/runtests/runtests.conf
+>  create mode 100755 tools/perf/runtests/runtests.sh
+>  create mode 100644 tools/perf/runtests/test.d/functions
+>  create mode 100644 tools/perf/runtests/test.d/probe/addprobes.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/adduprobes.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/blacklist.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/delete.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/forceadd.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/funcname-suffix.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/funcs.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/help.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/invalid_command.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/list-stdout.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/list.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/out-of-text.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/quiet.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/semantic-line.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/vars.tc
+>  create mode 100644 tools/perf/runtests/test.d/probe/wildcard.tc
+> 
+> --
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
