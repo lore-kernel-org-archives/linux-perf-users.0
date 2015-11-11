@@ -1,100 +1,63 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf annotate: Support of full source file paths for
- srcline fix
-Date: Mon, 9 Nov 2015 16:39:54 -0300
-Message-ID: <20151109193954.GD4715@kernel.org>
-References: <1447083211.15375.57.camel@Rudolf-RHEL-7>
+From: Yuanfang Chen <cyfmxc@gmail.com>
+Subject: event group without multiplexing
+Date: Wed, 11 Nov 2015 17:05:33 -0500
+Message-ID: <CAJh9x3q+g4Q4WfZ8XZ9ZOw0BcgYd_hdoUufu2YpRGtZt2tfu5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:60274 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751339AbbKITj7 (ORCPT
+Received: from mail-wm0-f50.google.com ([74.125.82.50]:38159 "EHLO
+	mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752437AbbKKWFf (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 9 Nov 2015 14:39:59 -0500
-Content-Disposition: inline
-In-Reply-To: <1447083211.15375.57.camel@Rudolf-RHEL-7>
+	Wed, 11 Nov 2015 17:05:35 -0500
+Received: by wmec201 with SMTP id c201so66052680wme.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2015 14:05:33 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 09, 2015 at 04:33:31PM +0100, Michael Petlan escreveu:
-> 
-> The --full-paths option did not show the full source file paths
-> in the perf annotate tool, because the value of the option was
-> not propagated into the related functions.
-> 
-> With this patch the value of the --full-paths option is known to
-> the function that composes the srcline string, so it prints the
-> full path when necessary.
+Hello
 
-Thanks, applied, but you forgot to show when this happens, how it looks
-before and after, I did it this time, please consider doing it this way
-next time, so that I can more quickly reproduce your steps, reproduce
-the problem, apply the patch, test the end result, matching your
-findings.
+I am using a haswell box. (E3-1231 v3). HT enabled.
 
-Also please send it to me, CC ing other people that touched this code,
-then CC it to linux-perf-users/lkml.
+perf stat -e \{cycles,r148,r1000248,r8d1,r40d1\} -- sleep 1
 
-Thanks for the patch,
+with ubuntu version of perf
 
-- Arnaldo
+Performance counter stats for 'sleep 1':
 
-commit e1d13c36cd043a335de33845443f5d172f0eb543
-Author: Michael Petlan <mpetlan@redhat.com>
-Date:   Mon Nov 9 16:33:31 2015 +0100
+            756066      cycles
+              5740      r1000248
+              5516      r8d1
+              9064      r40d1
+                 0        r148
 
-    perf annotate: Support full source file paths for srcline fix
-    
-    The --full-paths option did not show the full source file paths in the 'perf
-    annotate' tool, because the value of the option was not propagated into the
-    related functions.
-    
-    With this patch the value of the --full-paths option is known to the function
-    that composes the srcline string, so it prints the full path when necessary.
-    
-    Committer Note:
-    
-    This affects annotate when the --print-line option is used:
-    
-      # perf annotate -h 2>&1 | grep print-line
-          -l, --print-line      print matching source lines (may be slow)
-    
-    Looking just at the lines that should be affected by this change:
-    
-    Before:
-    
-      # perf annotate --print-line --full-paths --stdio fput | grep '\.[ch]:[0-9]\+'
-         94.44 atomic64_64.h:114
-          5.56 file_table.c:265
-       file_table.c:265    5.56 :	  ffffffff81219a00:       callq  ffffffff81769360 <__fentry__>
-       atomic64_64.h:114   94.44 :	  ffffffff81219a05:       lock decq 0x38(%rdi)
-    
-    After:
-    
-      # perf annotate --print-line --full-paths --stdio fput | grep '\.[ch]:[0-9]\+'
-         94.44 /home/git/linux/arch/x86/include/asm/atomic64_64.h:114
-          5.56 /home/git/linux/fs/file_table.c:265
-       /home/git/linux/fs/file_table.c:265    5.56 :	  ffffffff81219a00:       callq  ffffffff81769360 <__fentry__>
-       /home/git/linux/arch/x86/include/asm/atomic64_64.h:114   94.44 :	  ffffffff81219a05:       lock decq 0x38(%rdi)
-      #
-    
-    Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Link: http://permalink.gmane.org/gmane.linux.kernel.perf.user/2365
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+       1.001770249 seconds time elapsed
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index f2974da0185a..1dd1949b0e79 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1620,6 +1620,7 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
- 	len = symbol__size(sym);
- 
- 	if (print_lines) {
-+		srcline_full_filename = full_paths;
- 		symbol__get_source_line(sym, map, evsel, &source_line, len);
- 		print_summary(&source_line, dso->long_name);
- 	}
+with relatively new tip of perf/core:
+
+ Performance counter stats for 'sleep 1':
+
+            729403      cycles
+              7250      r1000248
+              5628      r8d1
+              9273      r40d1
+   <not supported>      r148
+
+       1.001674174 seconds time elapsed
+
+from https://download.01.org/perfmon/HSW/
+                                                         SMT on
+          SMT off
+cpu_clk_unhalted.thread cycles           Fixed counter 2      Fixed counter 2
+ld_blocks.no_sr    r803                        0,1,2,3
+ 0,1,2,3,4,5,6,7
+mem_load_uops_retired.l1_miss r8d1   0,1,2,3                  0,1,2,3
+mem_load_uops_retired.hit_lfb r40d1    0,1,2,3                  0,1,2,3
+l1d_pend_miss.pending r148                2                          2
+
+Seems these five events couldn't be counting at the same time,
+although in terms of hardware they should get along.  Is this a bug or
+a limitation I should be aware of? Thank you so much.
+
+Yuanfang
