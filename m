@@ -1,26 +1,26 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
+From: Michael Petlan <mpetlan@redhat.com>
 Subject: Re: event group without multiplexing
-Date: Thu, 12 Nov 2015 11:51:41 -0500 (EST)
-Message-ID: <alpine.DEB.2.20.1511121148550.6382@vincent-weaver-1.umelst.maine.edu>
-References: <CAJh9x3q+g4Q4WfZ8XZ9ZOw0BcgYd_hdoUufu2YpRGtZt2tfu5Q@mail.gmail.com> <CAJh9x3qCnvz4yWTBxyMp_RZt66L7OXHxbgTcfWaqFBfdZiGkLQ@mail.gmail.com> <CAJh9x3q1ZeJ7U2XFpP2PbaeJ4xtjNJ1K13fYQSjnZKiO2LjKWQ@mail.gmail.com>
+Date: Thu, 12 Nov 2015 18:40:01 +0100
+Message-ID: <1447350001.15375.95.camel@Rudolf-RHEL-7>
+References: <CAJh9x3q+g4Q4WfZ8XZ9ZOw0BcgYd_hdoUufu2YpRGtZt2tfu5Q@mail.gmail.com>
+	 <CAJh9x3qCnvz4yWTBxyMp_RZt66L7OXHxbgTcfWaqFBfdZiGkLQ@mail.gmail.com>
+	 <CAJh9x3q1ZeJ7U2XFpP2PbaeJ4xtjNJ1K13fYQSjnZKiO2LjKWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ig0-f177.google.com ([209.85.213.177]:37152 "EHLO
-	mail-ig0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751958AbbKLQtw (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:53065 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753326AbbKLRkD (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 12 Nov 2015 11:49:52 -0500
-Received: by igbhv6 with SMTP id hv6so44653008igb.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2015 08:49:51 -0800 (PST)
+	Thu, 12 Nov 2015 12:40:03 -0500
 In-Reply-To: <CAJh9x3q1ZeJ7U2XFpP2PbaeJ4xtjNJ1K13fYQSjnZKiO2LjKWQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Yuanfang Chen <cyfmxc@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On Thu, 12 Nov 2015, Yuanfang Chen wrote:
-
+On Thu, 2015-11-12 at 10:02 -0500, Yuanfang Chen wrote:
 > And the case can be reduced to
 > 
 > perf stat -e \{r1000248,r148\} -- sleep 1
@@ -29,13 +29,29 @@ On Thu, 12 Nov 2015, Yuanfang Chen wrote:
 > 
 >               7008      r1000248
 >    <not supported>      r148
+> 
+>        1.001885804 seconds time elapsed
+> 
 
-the kernel thinks that all events of type 0x48 (L1D_PEND_MISS) can only go 
-into one of the counters, and thus you can't have multiple at the same 
-time.
+perf stat -e \{r1000248,r148\} -- sleep 1
 
-If this is a bug you'll need to report it to the perf_event developers.
-I'd double check intel's documents to see what they actuall say about this 
-class of events on your processor.
+ Performance counter stats for 'sleep 1':
 
-Vince
+             9,605      r1000248
+           553,201      r148
+
+
+Intel Ivy Bridge EP machine (family = 6, model = 62),
+kernel/perf version 4.3.0
+
+The Intel 64 and IA-32 Architectures Software Developer's
+Manual, vol-3B, part-2 agrees with the download.01.org's
+json file on the fact that r0148 is limited to the counter
+2 only on both IVB and HSW.
+
+But I can't find any reference about the r1000248 event
+in the Intel Manual. Vince, am I missing something?
+
+Anyway, shouldn't it behave the same on IVB and HSW?
+
+Michael
