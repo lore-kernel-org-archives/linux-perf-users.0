@@ -1,65 +1,71 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+From: "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
 Subject: Re: timing information with perf
-Date: Fri, 13 Nov 2015 16:47:26 -0300
-Message-ID: <20151113194726.GN7160@kernel.org>
+Date: Fri, 13 Nov 2015 21:57:57 +0000
+Message-ID: <F15B167A-5646-474D-8C7F-66AD9DB41C20@netapp.com>
 References: <94D0C06D-C3A7-4BD1-9898-124EE0AA923D@netapp.com>
  <20151112215728.GD7160@kernel.org>
  <21ECAC65-E51A-4430-A499-FFE216BF856B@netapp.com>
  <20151112233429.GG7160@kernel.org>
  <5B1B04DE-98CC-44CC-BC75-896C2F029799@netapp.com>
+ <20151113194726.GN7160@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:38548 "EHLO mail.kernel.org"
+Received: from mx144.netapp.com ([216.240.21.25]:60011 "EHLO mx144.netapp.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754225AbbKMTrb (ORCPT
+	id S1751167AbbKMV57 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 13 Nov 2015 14:47:31 -0500
-Content-Disposition: inline
-In-Reply-To: <5B1B04DE-98CC-44CC-BC75-896C2F029799@netapp.com>
+	Fri, 13 Nov 2015 16:57:59 -0500
+In-Reply-To: <20151113194726.GN7160@kernel.org>
+Content-Language: en-US
+Content-ID: <F4B6E1681416CE49952DFBBE7C252664@hq.netapp.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Fri, Nov 13, 2015 at 05:01:57PM +0000, Kornievskaia, Olga escreveu:
-> > On Nov 12, 2015, at 6:34 PM, Arnaldo Carvalho de Melo <acme@kernel.=
-org> wrote:
-> > There is also:
-> >=20
-> >    11.033 (         ): nfs:nfs_fsync_enter:fileid=3D00:26:2360376 f=
-handle=3D0xfd52be06 version=3D6216410999163535246 )
-> >    15.535 (         ): nfs:nfs_fsync_exit:error=3D0 fileid=3D00:26:=
-2360376 fhandle=3D0xfd52be06 type=3D8 (REG) version=3D62164109991695351=
-49 size=3D1576 cache_validity=3D25 (INVALID_ATTR|INVALID_ACCESS|INVALID=
-_ACL) nfs_flags=3D4 ())
-> >=20
-> > Well, you also can just get these and do some scripting, no, in thi=
-s case:
-> >=20
-> >   15.535 - 11.033 =3D 4.502ms
-> >=20
-> > for that nfs_fsync :-)
-
-> David and Arnaldo thank you your replies. I can see that to acquire
-> the timings for non-syscall events requires scripting. Would I be
-> missing something by not using =E2=80=9Cperf=E2=80=9D and instead doi=
-ng scripting on
-> the output that I get from the trace_pipe? I guess instead of the
-
-Both will present you with the timestamp and parameters for the enabled
-tracepoints, so I think that at this state, yes, you will not get
-anything better from perf than what you'll get from ftrace via debugfs.
-
-But this comes from time to time, the logic used for
-raw_syscalls:sys_enter -> raw_syscalls:sys_exit, using some set of keys
-to match one to the other should be extended to be used with non-syscal=
-l
-events, such as the ones you mention here.
-
-i.e. whereas raw_syscalls:sys_exit has a "ret" variable to tell the
-result of the sys_enter+sys_exit operation, nfs_fsync_exit has "error",
-I guess, for the same purpose :)
-
-- Arnaldo
+DQo+IE9uIE5vdiAxMywgMjAxNSwgYXQgMjo0NyBQTSwgQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxv
+IDxhY21lQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gRW0gRnJpLCBOb3YgMTMsIDIwMTUgYXQg
+MDU6MDE6NTdQTSArMDAwMCwgS29ybmlldnNrYWlhLCBPbGdhIGVzY3JldmV1Og0KPj4+IE9uIE5v
+diAxMiwgMjAxNSwgYXQgNjozNCBQTSwgQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQGtl
+cm5lbC5vcmc+IHdyb3RlOg0KPj4+IFRoZXJlIGlzIGFsc286DQo+Pj4gDQo+Pj4gICAxMS4wMzMg
+KCAgICAgICAgICk6IG5mczpuZnNfZnN5bmNfZW50ZXI6ZmlsZWlkPTAwOjI2OjIzNjAzNzYgZmhh
+bmRsZT0weGZkNTJiZTA2IHZlcnNpb249NjIxNjQxMDk5OTE2MzUzNTI0NiApDQo+Pj4gICAxNS41
+MzUgKCAgICAgICAgICk6IG5mczpuZnNfZnN5bmNfZXhpdDplcnJvcj0wIGZpbGVpZD0wMDoyNjoy
+MzYwMzc2IGZoYW5kbGU9MHhmZDUyYmUwNiB0eXBlPTggKFJFRykgdmVyc2lvbj02MjE2NDEwOTk5
+MTY5NTM1MTQ5IHNpemU9MTU3NiBjYWNoZV92YWxpZGl0eT0yNSAoSU5WQUxJRF9BVFRSfElOVkFM
+SURfQUNDRVNTfElOVkFMSURfQUNMKSBuZnNfZmxhZ3M9NCAoKSkNCj4+PiANCj4+PiBXZWxsLCB5
+b3UgYWxzbyBjYW4ganVzdCBnZXQgdGhlc2UgYW5kIGRvIHNvbWUgc2NyaXB0aW5nLCBubywgaW4g
+dGhpcyBjYXNlOg0KPj4+IA0KPj4+ICAxNS41MzUgLSAxMS4wMzMgPSA0LjUwMm1zDQo+Pj4gDQo+
+Pj4gZm9yIHRoYXQgbmZzX2ZzeW5jIDotKQ0KPiANCj4+IERhdmlkIGFuZCBBcm5hbGRvIHRoYW5r
+IHlvdSB5b3VyIHJlcGxpZXMuIEkgY2FuIHNlZSB0aGF0IHRvIGFjcXVpcmUNCj4+IHRoZSB0aW1p
+bmdzIGZvciBub24tc3lzY2FsbCBldmVudHMgcmVxdWlyZXMgc2NyaXB0aW5nLiBXb3VsZCBJIGJl
+DQo+PiBtaXNzaW5nIHNvbWV0aGluZyBieSBub3QgdXNpbmcg4oCccGVyZuKAnSBhbmQgaW5zdGVh
+ZCBkb2luZyBzY3JpcHRpbmcgb24NCj4+IHRoZSBvdXRwdXQgdGhhdCBJIGdldCBmcm9tIHRoZSB0
+cmFjZV9waXBlPyBJIGd1ZXNzIGluc3RlYWQgb2YgdGhlDQo+IA0KPiBCb3RoIHdpbGwgcHJlc2Vu
+dCB5b3Ugd2l0aCB0aGUgdGltZXN0YW1wIGFuZCBwYXJhbWV0ZXJzIGZvciB0aGUgZW5hYmxlZA0K
+PiB0cmFjZXBvaW50cywgc28gSSB0aGluayB0aGF0IGF0IHRoaXMgc3RhdGUsIHllcywgeW91IHdp
+bGwgbm90IGdldA0KPiBhbnl0aGluZyBiZXR0ZXIgZnJvbSBwZXJmIHRoYW4gd2hhdCB5b3UnbGwg
+Z2V0IGZyb20gZnRyYWNlIHZpYSBkZWJ1Z2ZzLg0KDQpBY3R1YWxseSBvbmUgdGhpbmcgdGhhdCBj
+YW1lIHRvIG1pbmQgdGhhdCBJIHdvdWxkIGxpa2UgdG8gY2xhcmlmaWNhdGlvbiBhYm91dC4gSSBr
+bm93IHRoYXQgdHJhY2Vwb2ludHMgYXJlIOKAnGxvc3N54oCdIGFuZCB0aGF0IGlmIHRoZSDigJxy
+ZWFkZXLigJ0gb2YgdGhlIHBpcGUgaXMgbm90IGNvbnN1bWluZyBmYXN0IGVub3VnaCBhbmQgdGhl
+IHJpbmcgYnVmZmVycyBnZXQgZnVsbCB0aGVuIHRyYWNlcG9pbnQgaW5mb3JtYXRpb24gZ2V0cyBk
+cm9wcGVkIGFuZCBwaXBlIGxvZ3MgdGhhdCBpdCBsb3N0IGV2ZW50cy4gV2hlbiBJIHJ1biDigJxw
+ZXJmIHJlY29yZOKAnSwgaXMgaXQgYWxzbyByZWNvcmRpbmcgZXZlcnkgdHJhY2Vwb2ludCBvciBp
+cyBpdCBzYW1wbGluZyAod2hpY2ggSSBkb27igJl0IGV4YWN0bHkgdW5kZXJzdGFuZCBidXQgSSB0
+aGluayBvZiBpdCBhcyBpdCBqdXN0IHBlcmlvZGljYWxseSBjYXB0dXJlcyB0aGUgdHJhY2Vwb2lu
+dCBpbmZvIHdoaWNoIGJhc2ljYWxseSBtZWFucyBpdOKAmXMgbG9zaW5nIHRoZW0gaW50ZW50aW9u
+YWxseSk/DQoNCj4gQnV0IHRoaXMgY29tZXMgZnJvbSB0aW1lIHRvIHRpbWUsIHRoZSBsb2dpYyB1
+c2VkIGZvcg0KPiByYXdfc3lzY2FsbHM6c3lzX2VudGVyIC0+IHJhd19zeXNjYWxsczpzeXNfZXhp
+dCwgdXNpbmcgc29tZSBzZXQgb2Yga2V5cw0KPiB0byBtYXRjaCBvbmUgdG8gdGhlIG90aGVyIHNo
+b3VsZCBiZSBleHRlbmRlZCB0byBiZSB1c2VkIHdpdGggbm9uLXN5c2NhbGwNCj4gZXZlbnRzLCBz
+dWNoIGFzIHRoZSBvbmVzIHlvdSBtZW50aW9uIGhlcmUuDQo+IA0KPiBpLmUuIHdoZXJlYXMgcmF3
+X3N5c2NhbGxzOnN5c19leGl0IGhhcyBhICJyZXQiIHZhcmlhYmxlIHRvIHRlbGwgdGhlDQo+IHJl
+c3VsdCBvZiB0aGUgc3lzX2VudGVyK3N5c19leGl0IG9wZXJhdGlvbiwgbmZzX2ZzeW5jX2V4aXQg
+aGFzICJlcnJvciIsDQo+IEkgZ3Vlc3MsIGZvciB0aGUgc2FtZSBwdXJwb3NlIDopDQo+IA0KDQpJ
+IGRvbuKAmXQgZXhhY3RseSBmb2xsb3cgd2hhdCB5b3UgYXJlIHN1Z2dlc3RpbmcgaGVyZS4gQXJl
+IHlvdSBzYXlpbmcgSSBzaG91bGQgbG9vayBhdCB0aGUgcGVyZiBjb2RlIHRoYXQgZG9lcyBwYXJz
+aW5nIGZvciByYXcgc3lzIGNhbGxzIGFuZCBtb2RpZnkgYW5kIHVzZSBpdCBmb3IgbmZzIHRyYWNl
+cG9pbnRzPw0KDQoNCg==
