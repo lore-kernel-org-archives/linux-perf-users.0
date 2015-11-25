@@ -1,125 +1,56 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: perftool-testsuite was: Re: bogus values of variables in userspace
- probes
-Date: Wed, 25 Nov 2015 11:43:10 -0300
-Message-ID: <20151125144310.GO18140@kernel.org>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: Re: bogus values of variables in userspace probes
+Date: Wed, 25 Nov 2015 15:07:28 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB3752630A96@GSjpTKYDCembx32.service.hitachi.net>
 References: <1448363902.24573.18.camel@redhat.com>
- <20151124150819.GD18140@kernel.org>
- <1448389839.24573.21.camel@redhat.com>
- <20151124191641.GK18140@kernel.org>
- <1448457943.24573.79.camel@redhat.com>
- <20151125133343.GA11434@krava.brq.redhat.com>
+	 <20151124150819.GD18140@kernel.org> <1448389839.24573.21.camel@redhat.com>
+	 <20151124191641.GK18140@kernel.org> <1448457943.24573.79.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:41777 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751799AbbKYOnU (ORCPT
+Received: from mail4.hitachi.co.jp ([133.145.228.5]:50805 "EHLO
+	mail4.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752205AbbKYPHd (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 09:43:20 -0500
-Content-Disposition: inline
-In-Reply-To: <20151125133343.GA11434@krava.brq.redhat.com>
+	Wed, 25 Nov 2015 10:07:33 -0500
+In-Reply-To: <1448457943.24573.79.camel@redhat.com>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
+To: 'Michael Petlan' <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
 
-Em Wed, Nov 25, 2015 at 02:33:43PM +0100, Jiri Olsa escreveu:
-> On Wed, Nov 25, 2015 at 02:25:43PM +0100, Michael Petlan wrote:
-> > On Tue, 2015-11-24 at 16:16 -0300, Arnaldo Carvalho de Melo wrote:
-> > >  
-> > > > I have met this when writing new tests for perf-probe into the testsuite
-> > > > I had been speaking about some time ago [1]. But if needed, I may add it
-> > > > as a perf-test entry as you wish.
-> > > 
-> > > Please :-)
-> > > 
-> > 
-> > Hi,
-> > 
-> > after a short discussion with Jiri Olsa I think that perf-test entry is
-> > not an ideal way to add a testcase such as this one. While perf-test
-> > aims on testing internal functions, here you need to use multiple tools
-> > in order to reproduce the issue:
-> > 
-> > 1) build a custom C example
-> > 2) add a userspace probe in the example
-> > 3) record some perf.data of it
-> > 4) analyze the perf.data by perf script
-> > 
-> > So in order to have this testcase in perf.test we'd need to call all the
-> > mentioned functionality within a C function. That's why I think that
-> > better approach is to use the shell based tests that I am collecting in
-> > my suite for now:
-> > 
-> > 
-> > # for running the particular testcase for this issue you just need to:
-> > git clone https://github.com/rfmvh/perftool-testsuite.git
-> > cd perftool-testsuite/base_probe
-> > ./setup.sh
-> > ./test_advanced.sh
-
-Looking at it, but how do you envision the workflow when/if this is
-merged into the kernel?
-
-Nowadays, I have to do:
-
-  make -C tools/perf build-test
-
-To do build-tests, and also have to run:
-
-  perf test
-
-Would this be a 3td thing I'd have to do? Or would it be hooked into
-'perf test' somehow? It doesn't have to be written in C, but if it could
-be called without us having to add a 3rd step to this process...
-
-What I saw from a very quick walkthru starting from the 'base_probe'
-one:
-
-[root@zoo base_probe]# ./test_advanced.sh 
--- [ PASS ] -- perf_probe :: test_advanced :: function argument probing :: add
--- [ PASS ] -- perf_probe :: test_advanced :: function argument probing :: record
-Pattern not found in the proper order: a=2
--- [ FAIL ] -- perf_probe :: test_advanced :: function argument probing :: script (output regexp parsing)
--- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: add
--- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: record
--- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: script
-## [ FAIL ] ## perf_probe :: test_advanced SUMMARY :: 1 failures found
-[root@zoo base_probe]#
-
-With 'perf test'
-
-[root@zoo ~]# perf test bpf llvm
-35: Test LLVM searching and compiling                        :
-35.1: Basic BPF llvm compiling test                          : Ok
-35.2: Test kbuild searching                                  : Ok
-35.3: Compile source for BPF prologue generation test        : Ok
-37: Test BPF filter                                          :
-37.1: Test basic BPF filtering                               : Ok
-37.2: Test BPF prologue generation                           : Ok
-[root@zoo ~]#
-
-So just FAIL, Skip or Ok, and if I ask for -v, then it will emit more
-information.
-
-I think that we should add your suite to be called from 'perf test', and
-it should follow the same style as 'perf test', see the BPF and LLVM test?
-they have subtests, perhaps this is the way for this test suite to be
-integrated.
-
-How can I run all the tests in perftool-testsuite? Checking...
-
-> > The overall approach of that testsuite is to test the tool as it is. So
-> > both approaches are necessary; both testing of the internal functions by
-> > perf-test and testing the tool as such from the outside by the suite.
-> > I am not against extending perf-test set, but I don't think this is the
-> > right case for it.
-> 
-> +1 ;-)
-> 
-> also I remember discussion about having your test suite
-> ported somewhere over perf sources.. is this still a plan?
-> 
-> thanks,
-> jirka
+RnJvbTogTWljaGFlbCBQZXRsYW4gW21haWx0bzptcGV0bGFuQHJlZGhhdC5jb21dDQo+DQo+T24g
+VHVlLCAyMDE1LTExLTI0IGF0IDE2OjE2IC0wMzAwLCBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8g
+d3JvdGU6DQo+Pg0KPj4gPiBJIGhhdmUgbWV0IHRoaXMgd2hlbiB3cml0aW5nIG5ldyB0ZXN0cyBm
+b3IgcGVyZi1wcm9iZSBpbnRvIHRoZSB0ZXN0c3VpdGUNCj4+ID4gSSBoYWQgYmVlbiBzcGVha2lu
+ZyBhYm91dCBzb21lIHRpbWUgYWdvIFsxXS4gQnV0IGlmIG5lZWRlZCwgSSBtYXkgYWRkIGl0DQo+
+PiA+IGFzIGEgcGVyZi10ZXN0IGVudHJ5IGFzIHlvdSB3aXNoLg0KPj4NCj4+IFBsZWFzZSA6LSkN
+Cj4+DQo+DQo+SGksDQo+DQo+YWZ0ZXIgYSBzaG9ydCBkaXNjdXNzaW9uIHdpdGggSmlyaSBPbHNh
+IEkgdGhpbmsgdGhhdCBwZXJmLXRlc3QgZW50cnkgaXMNCj5ub3QgYW4gaWRlYWwgd2F5IHRvIGFk
+ZCBhIHRlc3RjYXNlIHN1Y2ggYXMgdGhpcyBvbmUuIFdoaWxlIHBlcmYtdGVzdA0KPmFpbXMgb24g
+dGVzdGluZyBpbnRlcm5hbCBmdW5jdGlvbnMsIGhlcmUgeW91IG5lZWQgdG8gdXNlIG11bHRpcGxl
+IHRvb2xzDQo+aW4gb3JkZXIgdG8gcmVwcm9kdWNlIHRoZSBpc3N1ZToNCj4NCj4xKSBidWlsZCBh
+IGN1c3RvbSBDIGV4YW1wbGUNCj4yKSBhZGQgYSB1c2Vyc3BhY2UgcHJvYmUgaW4gdGhlIGV4YW1w
+bGUNCj4zKSByZWNvcmQgc29tZSBwZXJmLmRhdGEgb2YgaXQNCj40KSBhbmFseXplIHRoZSBwZXJm
+LmRhdGEgYnkgcGVyZiBzY3JpcHQNCj4NCj5TbyBpbiBvcmRlciB0byBoYXZlIHRoaXMgdGVzdGNh
+c2UgaW4gcGVyZi50ZXN0IHdlJ2QgbmVlZCB0byBjYWxsIGFsbCB0aGUNCj5tZW50aW9uZWQgZnVu
+Y3Rpb25hbGl0eSB3aXRoaW4gYSBDIGZ1bmN0aW9uLiBUaGF0J3Mgd2h5IEkgdGhpbmsgdGhhdA0K
+PmJldHRlciBhcHByb2FjaCBpcyB0byB1c2UgdGhlIHNoZWxsIGJhc2VkIHRlc3RzIHRoYXQgSSBh
+bSBjb2xsZWN0aW5nIGluDQo+bXkgc3VpdGUgZm9yIG5vdzoNCj4NCj4NCj4jIGZvciBydW5uaW5n
+IHRoZSBwYXJ0aWN1bGFyIHRlc3RjYXNlIGZvciB0aGlzIGlzc3VlIHlvdSBqdXN0IG5lZWQgdG86
+DQo+Z2l0IGNsb25lIGh0dHBzOi8vZ2l0aHViLmNvbS9yZm12aC9wZXJmdG9vbC10ZXN0c3VpdGUu
+Z2l0DQo+Y2QgcGVyZnRvb2wtdGVzdHN1aXRlL2Jhc2VfcHJvYmUNCj4uL3NldHVwLnNoDQo+Li90
+ZXN0X2FkdmFuY2VkLnNoDQo+DQo+DQo+VGhlIG92ZXJhbGwgYXBwcm9hY2ggb2YgdGhhdCB0ZXN0
+c3VpdGUgaXMgdG8gdGVzdCB0aGUgdG9vbCBhcyBpdCBpcy4gU28NCj5ib3RoIGFwcHJvYWNoZXMg
+YXJlIG5lY2Vzc2FyeTsgYm90aCB0ZXN0aW5nIG9mIHRoZSBpbnRlcm5hbCBmdW5jdGlvbnMgYnkN
+Cj5wZXJmLXRlc3QgYW5kIHRlc3RpbmcgdGhlIHRvb2wgYXMgc3VjaCBmcm9tIHRoZSBvdXRzaWRl
+IGJ5IHRoZSBzdWl0ZS4NCj5JIGFtIG5vdCBhZ2FpbnN0IGV4dGVuZGluZyBwZXJmLXRlc3Qgc2V0
+LCBidXQgSSBkb24ndCB0aGluayB0aGlzIGlzIHRoZQ0KPnJpZ2h0IGNhc2UgZm9yIGl0Lg0KDQpZ
+ZWFoLCBJIGFncmVlZCwgYW5kIHBlcmYtcHJvYmUgZGVmaW5pdGVseSBuZWVkcyBpdCA6KQ0KSSBo
+b3BlIHRoYXQgdGhpcyBpcyBpbmNsdWRlZCBpbnRvIHRoZSBrZXJuZWwgdHJlZSBzbyB0aGF0IGl0
+IGNhbg0KYmUgc3luY2hyb25vdXNseSBldm9sdmluZyB3aXRoIHBlcmYgaXRzZWxmLg0KDQpUaGFu
+a3MhDQoNCj4NCj4+IC0gQXJuYWxkbw0KPg0KPlJlZ2FyZHMsDQo+TWljaGFlbA0KPg0KPg0KPg0K
+DQo=
