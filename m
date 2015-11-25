@@ -1,122 +1,66 @@
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH] perf probe: Adjust dso->long_name for offline module
-Date: Wed, 25 Nov 2015 11:30:59 +0000
-Message-ID: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: Re: bogus values of variables in userspace probes
+Date: Wed, 25 Nov 2015 14:25:43 +0100
+Message-ID: <1448457943.24573.79.camel@redhat.com>
+References: <1448363902.24573.18.camel@redhat.com>
+	 <20151124150819.GD18140@kernel.org> <1448389839.24573.21.camel@redhat.com>
+	 <20151124191641.GK18140@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64]:64525 "EHLO
-	szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751732AbbKYLfC (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:37465 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751832AbbKYNZq (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 06:35:02 -0500
+	Wed, 25 Nov 2015 08:25:46 -0500
+In-Reply-To: <20151124191641.GK18140@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, pi3orama@163.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
 
-If libelf unable to open debuginfo for an offline module but the ko has
-symtab, something unexpected may happen.
+On Tue, 2015-11-24 at 16:16 -0300, Arnaldo Carvalho de Melo wrote:
+>  
+> > I have met this when writing new tests for perf-probe into the testsuite
+> > I had been speaking about some time ago [1]. But if needed, I may add it
+> > as a perf-test entry as you wish.
+> 
+> Please :-)
+> 
 
- # rm -rf ~/.debug/
- # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
- # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
- [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
- Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
-   Error: Failed to add events
- # ./perf buildid-cache -a ./mymodule.ko
- # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
- Added new event:
-   probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
+Hi,
 
- You can now use it in all perf tools, such as:
+after a short discussion with Jiri Olsa I think that perf-test entry is
+not an ideal way to add a testcase such as this one. While perf-test
+aims on testing internal functions, here you need to use multiple tools
+in order to reproduce the issue:
 
-	 perf record -e probe:my_func -aR sleep 1
+1) build a custom C example
+2) add a userspace probe in the example
+3) record some perf.data of it
+4) analyze the perf.data by perf script
 
-In the above example, probe fails if it isn't in buildid-cache. However,
-user would expect it success in both case because perf is able to find
-probe points actually.
+So in order to have this testcase in perf.test we'd need to call all the
+mentioned functionality within a C function. That's why I think that
+better approach is to use the shell based tests that I am collecting in
+my suite for now:
 
-The problem is because perf won't utilize module's full path if it
-failed to open debuginfo. In
- convert_to_probe_trace_events ->
- find_probe_trace_events_from_map ->
- get_target_map ->
- kernel_get_module_map ->
- machine__findnew_module_map ->
- map_groups__find_by_name
 
-map_groups__find_by_name() is able to find the map of that module, but
-this information is found from /proc/modules before it knows the real
-path of the offline module. Therefore, the map->dso->long_name is
-set to something like '[mymodule]', which prevents dso__load() find
-the real path of the module file.
+# for running the particular testcase for this issue you just need to:
+git clone https://github.com/rfmvh/perftool-testsuite.git
+cd perftool-testsuite/base_probe
+./setup.sh
+./test_advanced.sh
 
-In another aspect, if dso__load() can get the offline module through
-buildid cache, it can read symble table from that ko. Even if debuginfo
-is not available, 'perf probe' can success if the '.symtab' can be
-found.
 
-This patch fixes long_name so dso__load() is able to find module's path
-and read symbol table in this case.
+The overall approach of that testsuite is to test the tool as it is. So
+both approaches are necessary; both testing of the internal functions by
+perf-test and testing the tool as such from the outside by the suite.
+I am not against extending perf-test set, but I don't think this is the
+right case for it.
 
-After this patch:
+> - Arnaldo
 
- # rm -rf ~/.debug/
- # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
- # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
- Added new event:
-   probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
-
- You can now use it in all perf tools, such as:
-
- 	perf record -e probe:my_func -aR sleep 1
-
- # mv /usr/lib64/elfutils/libebl_x86_64.so{.bak,}
-
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>
-Cc: pi3orama@163.com
----
- tools/perf/util/probe-event.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 93996ec..ea4f79f 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2516,6 +2516,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 	struct probe_trace_point *tp;
- 	int num_matched_functions;
- 	int ret, i, j, skipped = 0;
-+	const char *dup_filename;
- 
- 	map = get_target_map(pev->target, pev->uprobes);
- 	if (!map) {
-@@ -2523,6 +2524,21 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 		goto out;
- 	}
- 
-+	/*
-+	 * If the map's dso is an offline module, give dso__load() a chance
-+	 * to find the file path of that module by fixing long_name.
-+	 */
-+	if (map->dso && strchr(pev->target, '/')) {
-+		if (!map->dso->long_name || map->dso->long_name[0] == '[') {
-+			dup_filename = strdup(pev->target);
-+			if (!dup_filename) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			dso__set_long_name(map->dso, dup_filename, true);
-+		}
-+	}
-+
- 	syms = malloc(sizeof(struct symbol *) * probe_conf.max_probes);
- 	if (!syms) {
- 		ret = -ENOMEM;
--- 
-1.8.3.4
+Regards,
+Michael
