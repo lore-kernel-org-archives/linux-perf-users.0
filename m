@@ -1,91 +1,78 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: bogus values of variables in userspace probes
-Date: Tue, 24 Nov 2015 16:16:41 -0300
-Message-ID: <20151124191641.GK18140@kernel.org>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: bogus values of variables in userspace probes
+Date: Wed, 25 Nov 2015 01:03:47 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB375262F4C3@GSjpTKYDCembx32.service.hitachi.net>
 References: <1448363902.24573.18.camel@redhat.com>
- <20151124150819.GD18140@kernel.org>
- <1448389839.24573.21.camel@redhat.com>
+	 <20151124150819.GD18140@kernel.org> <1448389839.24573.21.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:60120 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754368AbbKXTQq (ORCPT
+Received: from mail9.hitachi.co.jp ([133.145.228.44]:59695 "EHLO
+	mail9.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932339AbbKYBDv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 24 Nov 2015 14:16:46 -0500
-Content-Disposition: inline
+	Tue, 24 Nov 2015 20:03:51 -0500
 In-Reply-To: <1448389839.24573.21.camel@redhat.com>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
+To: 'Michael Petlan' <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
 
-Em Tue, Nov 24, 2015 at 07:30:39PM +0100, Michael Petlan escreveu:
-> On Tue, 2015-11-24 at 12:08 -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Nov 24, 2015 at 12:18:22PM +0100, Michael Petlan escreveu:
-> > > I have been playing with perf-probe tool and I found out that some bogus
-> > > values of a function argument are obtained by perf-record.
-> > > 
-> > > How to reproduce:
-> > > 
-> > > gcc -O0 -g -o dummy dummy.c
-> > > perf probe -x ./dummy --add 'isprime a'
-> > > perf record -e probe_dummy:isprime ./dummy
-> > > perf script
-> > > 
-> > > The actual output looks like the following:
-> > > 
-> > > dummy 32476 [000] 3534401.838454: probe_dummy:isprime: (400530) a=32767
-> > > dummy 32476 [000] 3534401.838504: probe_dummy:isprime: (400530) a=32714
-> > > dummy 32476 [000] 3534401.838513: probe_dummy:isprime: (400530) a=3
-> > > dummy 32476 [000] 3534401.838519: probe_dummy:isprime: (400530) a=4
-> > > dummy 32476 [000] 3534401.838525: probe_dummy:isprime: (400530) a=5
-> > > dummy 32476 [000] 3534401.838531: probe_dummy:isprime: (400530) a=6
-> > > dummy 32476 [000] 3534401.838537: probe_dummy:isprime: (400530) a=7
-> > > dummy 32476 [000] 3534401.838543: probe_dummy:isprime: (400530) a=13
-> > > dummy 32476 [000] 3534401.838561: probe_dummy:isprime: (400530) a=17
-> > > 
-> > > But if you look into the source, you can see that the function isprime()
-> > > is called with the following arguments:
-> > > 
-> > > int numbers[] = { 2, 3, 4, 5, 6, 7, 13, 17, 19 };
-> > > 
-> > > So the first and last ones are omitted, there are some bogus numbers instead
-> > > of them and all that is shifted somehow.
-> > > 
-> > > Note that when I probe for %ax register it looks correct.
-> > > 
-> > > The version of kernel/perf is 4.3.0. The architecture is x86_64.
-> > > Am I missing something or is it a bug?
-> > 
-> > I'm now trying to bisect that register error I found while trying to
-> > reproduce the problem reported above, but please consider writing a
-> > 'perf test' entry that does exactly what you did, i.e. have a simple
-> > program that you build with a known set of compile flags, then run it
-> > using perf probe to catch a specific function, its argument, and then
-> > check that the values it produces are the ones expected.
-
-> > We would catch bugs in 'perf probe', the DWARF code, etc, much more
-> > quickly with something like that in place. :-)
- 
-> Hi Arnaldo,
- 
-> thanks for investigating the issue. I do not use fedora kernel, I use
-
-I ended up having to investigate that other issue, and now I have to do
-something else, but hopefully Masami will fix both issues, the one I
-bisected and the one you reported.
-
-> what I build from git, but of course I am some versions back. So I use
-> 4.3.0 and 4.3.0-rc5 and both do the same thing.
-
-Right, I also use custom kernels, but reboot with RHEL or fedora kernels
-from time to time to investigate issues like this.
- 
-> I have met this when writing new tests for perf-probe into the testsuite
-> I had been speaking about some time ago [1]. But if needed, I may add it
-> as a perf-test entry as you wish.
-
-Please :-)
-
-- Arnaldo
+RnJvbTogTWljaGFlbCBQZXRsYW4gW21haWx0bzptcGV0bGFuQHJlZGhhdC5jb21dDQo+DQo+T24g
+VHVlLCAyMDE1LTExLTI0IGF0IDEyOjA4IC0wMzAwLCBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8g
+d3JvdGU6DQo+PiBFbSBUdWUsIE5vdiAyNCwgMjAxNSBhdCAxMjoxODoyMlBNICswMTAwLCBNaWNo
+YWVsIFBldGxhbiBlc2NyZXZldToNCj4+ID4gSSBoYXZlIGJlZW4gcGxheWluZyB3aXRoIHBlcmYt
+cHJvYmUgdG9vbCBhbmQgSSBmb3VuZCBvdXQgdGhhdCBzb21lIGJvZ3VzDQo+PiA+IHZhbHVlcyBv
+ZiBhIGZ1bmN0aW9uIGFyZ3VtZW50IGFyZSBvYnRhaW5lZCBieSBwZXJmLXJlY29yZC4NCj4+ID4N
+Cj4+ID4gSG93IHRvIHJlcHJvZHVjZToNCj4+ID4NCj4+ID4gZ2NjIC1PMCAtZyAtbyBkdW1teSBk
+dW1teS5jDQo+PiA+IHBlcmYgcHJvYmUgLXggLi9kdW1teSAtLWFkZCAnaXNwcmltZSBhJw0KPj4g
+PiBwZXJmIHJlY29yZCAtZSBwcm9iZV9kdW1teTppc3ByaW1lIC4vZHVtbXkNCj4+ID4gcGVyZiBz
+Y3JpcHQNCj4+ID4NCj4+ID4gVGhlIGFjdHVhbCBvdXRwdXQgbG9va3MgbGlrZSB0aGUgZm9sbG93
+aW5nOg0KPj4gPg0KPj4gPiBkdW1teSAzMjQ3NiBbMDAwXSAzNTM0NDAxLjgzODQ1NDogcHJvYmVf
+ZHVtbXk6aXNwcmltZTogKDQwMDUzMCkgYT0zMjc2Nw0KPj4gPiBkdW1teSAzMjQ3NiBbMDAwXSAz
+NTM0NDAxLjgzODUwNDogcHJvYmVfZHVtbXk6aXNwcmltZTogKDQwMDUzMCkgYT0zMjcxNA0KPj4g
+PiBkdW1teSAzMjQ3NiBbMDAwXSAzNTM0NDAxLjgzODUxMzogcHJvYmVfZHVtbXk6aXNwcmltZTog
+KDQwMDUzMCkgYT0zDQo+PiA+IGR1bW15IDMyNDc2IFswMDBdIDM1MzQ0MDEuODM4NTE5OiBwcm9i
+ZV9kdW1teTppc3ByaW1lOiAoNDAwNTMwKSBhPTQNCj4+ID4gZHVtbXkgMzI0NzYgWzAwMF0gMzUz
+NDQwMS44Mzg1MjU6IHByb2JlX2R1bW15OmlzcHJpbWU6ICg0MDA1MzApIGE9NQ0KPj4gPiBkdW1t
+eSAzMjQ3NiBbMDAwXSAzNTM0NDAxLjgzODUzMTogcHJvYmVfZHVtbXk6aXNwcmltZTogKDQwMDUz
+MCkgYT02DQo+PiA+IGR1bW15IDMyNDc2IFswMDBdIDM1MzQ0MDEuODM4NTM3OiBwcm9iZV9kdW1t
+eTppc3ByaW1lOiAoNDAwNTMwKSBhPTcNCj4+ID4gZHVtbXkgMzI0NzYgWzAwMF0gMzUzNDQwMS44
+Mzg1NDM6IHByb2JlX2R1bW15OmlzcHJpbWU6ICg0MDA1MzApIGE9MTMNCj4+ID4gZHVtbXkgMzI0
+NzYgWzAwMF0gMzUzNDQwMS44Mzg1NjE6IHByb2JlX2R1bW15OmlzcHJpbWU6ICg0MDA1MzApIGE9
+MTcNCg0KSG1tLCB2ZXJ5IG9kZC4NCg0KQ291bGQgeW91IHRyeSB0byB1c2UgZnRyYWNlIHdpdGgg
+dXNlciBzdGFja3RyYWNlIG9uIHRoYXQgZXZlbnQ/DQoNCiMgZWNobyAxID4gKGRlYnVnZnMpL3Ry
+YWNpbmcvb3B0aW9ucy9zdGFja3RyYWNlDQojIGVjaG8gMSA+IChkZWJ1Z2ZzKS90cmFjaW5nL29w
+dGlvbnMvdXNlcnN0YWNrdHJhY2UNCiMgZWNobyAxID4gZXZlbnRzL3Byb2JlX2R1bW15L2lzcHJp
+bWUvZW5hYmxlDQojIC4vZHVtbXkNCiMgY2F0IHRyYWNlDQoNCkFuZCBkZWNvZGUgdGhlIHN0YWNr
+IGFkZHJlc3MgYnkgdXNpbmcgKGV1LSlhZGRyMmxpbmUgPw0KDQpUaGFuayB5b3UsDQoNCj4+ID4N
+Cj4+ID4gQnV0IGlmIHlvdSBsb29rIGludG8gdGhlIHNvdXJjZSwgeW91IGNhbiBzZWUgdGhhdCB0
+aGUgZnVuY3Rpb24gaXNwcmltZSgpDQo+PiA+IGlzIGNhbGxlZCB3aXRoIHRoZSBmb2xsb3dpbmcg
+YXJndW1lbnRzOg0KPj4gPg0KPj4gPiBpbnQgbnVtYmVyc1tdID0geyAyLCAzLCA0LCA1LCA2LCA3
+LCAxMywgMTcsIDE5IH07DQo+PiA+DQo+PiA+IFNvIHRoZSBmaXJzdCBhbmQgbGFzdCBvbmVzIGFy
+ZSBvbWl0dGVkLCB0aGVyZSBhcmUgc29tZSBib2d1cyBudW1iZXJzIGluc3RlYWQNCj4+ID4gb2Yg
+dGhlbSBhbmQgYWxsIHRoYXQgaXMgc2hpZnRlZCBzb21laG93Lg0KPj4gPg0KPj4gPiBOb3RlIHRo
+YXQgd2hlbiBJIHByb2JlIGZvciAlYXggcmVnaXN0ZXIgaXQgbG9va3MgY29ycmVjdC4NCj4+ID4N
+Cj4+ID4gVGhlIHZlcnNpb24gb2Yga2VybmVsL3BlcmYgaXMgNC4zLjAuIFRoZSBhcmNoaXRlY3R1
+cmUgaXMgeDg2XzY0Lg0KPj4gPiBBbSBJIG1pc3Npbmcgc29tZXRoaW5nIG9yIGlzIGl0IGEgYnVn
+Pw0KPj4NCj4+IEknbSBub3cgdHJ5aW5nIHRvIGJpc2VjdCB0aGF0IHJlZ2lzdGVyIGVycm9yIEkg
+Zm91bmQgd2hpbGUgdHJ5aW5nIHRvDQo+PiByZXByb2R1Y2UgdGhlIHByb2JsZW0gcmVwb3J0ZWQg
+YWJvdmUsIGJ1dCBwbGVhc2UgY29uc2lkZXIgd3JpdGluZyBhDQo+PiAncGVyZiB0ZXN0JyBlbnRy
+eSB0aGF0IGRvZXMgZXhhY3RseSB3aGF0IHlvdSBkaWQsIGkuZS4gaGF2ZSBhIHNpbXBsZQ0KPj4g
+cHJvZ3JhbSB0aGF0IHlvdSBidWlsZCB3aXRoIGEga25vd24gc2V0IG9mIGNvbXBpbGUgZmxhZ3Ms
+IHRoZW4gcnVuIGl0DQo+PiB1c2luZyBwZXJmIHByb2JlIHRvIGNhdGNoIGEgc3BlY2lmaWMgZnVu
+Y3Rpb24sIGl0cyBhcmd1bWVudCwgYW5kIHRoZW4NCj4+IGNoZWNrIHRoYXQgdGhlIHZhbHVlcyBp
+dCBwcm9kdWNlcyBhcmUgdGhlIG9uZXMgZXhwZWN0ZWQuDQo+Pg0KPj4gV2Ugd291bGQgY2F0Y2gg
+YnVncyBpbiAncGVyZiBwcm9iZScsIHRoZSBEV0FSRiBjb2RlLCBldGMsIG11Y2ggbW9yZQ0KPj4g
+cXVpY2tseSB3aXRoIHNvbWV0aGluZyBsaWtlIHRoYXQgaW4gcGxhY2UuIDotKQ0KPg0KPkhpIEFy
+bmFsZG8sDQo+DQo+dGhhbmtzIGZvciBpbnZlc3RpZ2F0aW5nIHRoZSBpc3N1ZS4gSSBkbyBub3Qg
+dXNlIGZlZG9yYSBrZXJuZWwsIEkgdXNlDQo+d2hhdCBJIGJ1aWxkIGZyb20gZ2l0LCBidXQgb2Yg
+Y291cnNlIEkgYW0gc29tZSB2ZXJzaW9ucyBiYWNrLiBTbyBJIHVzZQ0KPjQuMy4wIGFuZCA0LjMu
+MC1yYzUgYW5kIGJvdGggZG8gdGhlIHNhbWUgdGhpbmcuDQo+DQo+SSBoYXZlIG1ldCB0aGlzIHdo
+ZW4gd3JpdGluZyBuZXcgdGVzdHMgZm9yIHBlcmYtcHJvYmUgaW50byB0aGUgdGVzdHN1aXRlDQo+
+SSBoYWQgYmVlbiBzcGVha2luZyBhYm91dCBzb21lIHRpbWUgYWdvIFsxXS4gQnV0IGlmIG5lZWRl
+ZCwgSSBtYXkgYWRkIGl0DQo+YXMgYSBwZXJmLXRlc3QgZW50cnkgYXMgeW91IHdpc2guDQo+DQo+
+TWljaGFlbA0KPg0KPj4NCj4+IC0gQXJuYWxkbw0KPg0KDQo=
