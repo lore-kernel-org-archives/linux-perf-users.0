@@ -1,184 +1,133 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perftool-testsuite was: Re: bogus values of variables in
- userspace probes
-Date: Wed, 25 Nov 2015 16:27:24 -0300
-Message-ID: <20151125192724.GB2945@kernel.org>
-References: <1448363902.24573.18.camel@redhat.com>
- <20151124150819.GD18140@kernel.org>
- <1448389839.24573.21.camel@redhat.com>
- <20151124191641.GK18140@kernel.org>
- <1448457943.24573.79.camel@redhat.com>
- <20151125133343.GA11434@krava.brq.redhat.com>
- <20151125144310.GO18140@kernel.org>
- <1448467097.24573.95.camel@redhat.com>
+Subject: Re: [PATCH] perf probe: Adjust dso->long_name for offline module
+Date: Wed, 25 Nov 2015 16:35:32 -0300
+Message-ID: <20151125193532.GC2945@kernel.org>
+References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:36691 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.136]:37714 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752185AbbKYT1a (ORCPT
+	id S1752656AbbKYTfh (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 14:27:30 -0500
+	Wed, 25 Nov 2015 14:35:37 -0500
 Content-Disposition: inline
-In-Reply-To: <1448467097.24573.95.camel@redhat.com>
+In-Reply-To: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>
+To: Wang Nan <wangnan0@huawei.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, pi3orama@163.com
 
-Em Wed, Nov 25, 2015 at 04:58:17PM +0100, Michael Petlan escreveu:
-> On Wed, 2015-11-25 at 11:43 -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Nov 25, 2015 at 02:33:43PM +0100, Jiri Olsa escreveu:
-> > Looking at it, but how do you envision the workflow when/if this is
-> > merged into the kernel?
-
-> > Nowadays, I have to do:
-
-> >   make -C tools/perf build-test
-
-> > To do build-tests, and also have to run:
-
-> >   perf test
-
-> > Would this be a 3td thing I'd have to do? Or would it be hooked into
-> > 'perf test' somehow? It doesn't have to be written in C, but if it could
-> > be called without us having to add a 3rd step to this process...
-
-> I think there's no need to have any 3rd thing to do... I would vote for
-> calling from the perf's Makefile after building it.
-
-That doesn't work, sometimes patches are just cosmetic, sometimes they
-require root priviledges, sometimes it requires some preparation, like
-setting some tunable in /proc/sys/kernel/perf_event_paranoid or moving
-around the vmlinux file so that it uses kallsyms, or, or, or.
-
-Also the granularity is more like before pushing upstream, or automating
-the tests using a script that runs the tests changeset by changeset in
-multiple distros before pushing, etc.
-
-I.e. like 'make -C tools/perf build-test' and 'perf test' do now.
- 
-> Bus same as perf-test, the testsuite does not 100% pass. Some better
-
-Well, it better pass 100% for things it _can_ test, if something is not
-available (root perms, vmlinux file, hardware capability (testing Intel
-PT on older CPUs), etc) that prevents the test from being performed,
-then it just prints Skip and doesn't consider that an error.
-
-> skipping mechanism could be useful. But anyway, it is designed to be
-> parametrized, so it can be run in some "quick/smoke testing" mode and in
-> case of a need, in a more thoroughful mode. That depends on the configs
-> in the common/parametrization.sh file.
+Em Wed, Nov 25, 2015 at 11:30:59AM +0000, Wang Nan escreveu:
+> If libelf unable to open debuginfo for an offline module but the ko has
+> symtab, something unexpected may happen.
 > 
-> Should the testsuite 100% pass in a basic mode?
+>  # rm -rf ~/.debug/
+>  # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
+>  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
+>  [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
+>  Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
 
-I think so. And by basic more I mean the mode that it is run when one
-calls:
-
- perf test command-line
-
-Picking "command-line" to mean what you have now in
-'perftool-testsuite'.
-
-Any other option will probably not be tested that frequently by anybody
-else than you, perhaps me and a few others.
-
-I really think that the answer to 'Hey, how can I make sure the perf
-tools are working? How do I test it?" should be: "run 'perf test'".
-
-Then it becomes muscle memory and one doesn't have to remember any other
-name or file to config, etc.
-
-> > What I saw from a very quick walkthru starting from the 'base_probe'
-> > one:
-
-> > [root@zoo base_probe]# ./test_advanced.sh 
-> > -- [ PASS ] -- perf_probe :: test_advanced :: function argument probing :: add
-> > -- [ PASS ] -- perf_probe :: test_advanced :: function argument probing :: record
-> > Pattern not found in the proper order: a=2
-> > -- [ FAIL ] -- perf_probe :: test_advanced :: function argument probing :: script (output regexp parsing)
-> > -- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: add
-> > -- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: record
-> > -- [ PASS ] -- perf_probe :: test_advanced :: function retval probing :: script
-> > ## [ FAIL ] ## perf_probe :: test_advanced SUMMARY :: 1 failures found
-> > [root@zoo base_probe]#
-
-Re-reading the above, generally we try to remove redundant stuff, like
-all that "perf_probe" column, ditto for the "test_advanced", etc.
-
-Reduces eyestrain and, to say something funny I saw on FB about mass
-surveilance, "removes hay so that we can find needles" :-)
-
-> > With 'perf test'
-
-> > [root@zoo ~]# perf test bpf llvm
-> > 35: Test LLVM searching and compiling                        :
-> > 35.1: Basic BPF llvm compiling test                          : Ok
-> > 35.2: Test kbuild searching                                  : Ok
-> > 35.3: Compile source for BPF prologue generation test        : Ok
-> > 37: Test BPF filter                                          :
-> > 37.1: Test basic BPF filtering                               : Ok
-> > 37.2: Test BPF prologue generation                           : Ok
-> > [root@zoo ~]#
-
-> > So just FAIL, Skip or Ok, and if I ask for -v, then it will emit more
-> > information.
-> 
-> Now it prints the PASS/FAIL/SKIP, and in case of FAIL some minimalistic
-> footprint of the failure, so I can see whether it is just the old known
-> thing or something different. The detailed logs are generated with that,
-> but they are usually cleaned up in the cleanup.sh scripts.
-
-I know, that is what I am saying, we have one tool to test the perf
-tools and it communicates using a set of messages and has a semantic for
-when to tell more than "Ok/FAIl/Skip", while your test suite does the
-same thing, but with slight formatting variations, what I am suggesting
-is to adopt the one in 'perf test' so that it becomes consistent and can
-be plugged directly into 'perf test'.
-
-Of course one could run it as of today, directly, in a standalone
-fashion, be it by going to its source directory and running that
-test_drive.sh (or whatever other name it ends up having) or from 'perf
-test', by using something like:
-
-  [acme@zoo linux]$ perf test clock
-  20: Test software clock events have valid period values      : Ok
-
-See? Just one test was run.
-
-If it is run by spanwing a shell from another shell or from 'perf test',
-that shouldn't matter, right?
-
-Being able to just do 'perf test' and all tests, be it ones written in C
-and part of tools/perf/tests/ or one written in whatever script
-language, driven by your test suite, is the goal.
- 
-> I am still thinking about an ideal way to report failures, since I keep
-> in mind another goal:  I would like to have the path from "looking at
-> the logs" and "reproducing the thing manually in shell" as short and
-> straightforward as possible.
-> 
-> But using some -v is generally a good idea. I'll try to integrate that
-> concept too.
-
-Thanks.
- 
-> > I think that we should add your suite to be called from 'perf test', and
-> > it should follow the same style as 'perf test', see the BPF and LLVM test?
-> > they have subtests, perhaps this is the way for this test suite to be
-> > integrated.
-> > 
-> > How can I run all the tests in perftool-testsuite? Checking...
- 
-> Basically you need to run the ./test_driver.sh from the top directory.
-> But nowadays all the subtests (base_SOMETHING) that are run are listed
-> in the test_driver.sh per architecture. That concept could (and probably
-> also should) be reworked a bit, but now it allows me hot-enabling and
-> disabling groups of tests on various archs.
-
-Thanks for the explanations, I had already found the README files and
-ran the whole suite using that test_driver.sh file (at first I thought,
-what driver is this testing? huh?) but then reading the README I figured
-it was the "driver" of tests :-)
+Understood, since we are giving the path to that module, we can, if its
+build-id matches the one for the online module, use it, is that the
+case, i.e. do we check, int his scenario, that the build-id matches?
 
 - Arnaldo
+
+>    Error: Failed to add events
+>  # ./perf buildid-cache -a ./mymodule.ko
+>  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
+>  Added new event:
+>    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
+> 
+>  You can now use it in all perf tools, such as:
+> 
+> 	 perf record -e probe:my_func -aR sleep 1
+> 
+> In the above example, probe fails if it isn't in buildid-cache. However,
+> user would expect it success in both case because perf is able to find
+> probe points actually.
+> 
+> The problem is because perf won't utilize module's full path if it
+> failed to open debuginfo. In
+>  convert_to_probe_trace_events ->
+>  find_probe_trace_events_from_map ->
+>  get_target_map ->
+>  kernel_get_module_map ->
+>  machine__findnew_module_map ->
+>  map_groups__find_by_name
+> 
+> map_groups__find_by_name() is able to find the map of that module, but
+> this information is found from /proc/modules before it knows the real
+> path of the offline module. Therefore, the map->dso->long_name is
+> set to something like '[mymodule]', which prevents dso__load() find
+> the real path of the module file.
+> 
+> In another aspect, if dso__load() can get the offline module through
+> buildid cache, it can read symble table from that ko. Even if debuginfo
+> is not available, 'perf probe' can success if the '.symtab' can be
+> found.
+> 
+> This patch fixes long_name so dso__load() is able to find module's path
+> and read symbol table in this case.
+> 
+> After this patch:
+> 
+>  # rm -rf ~/.debug/
+>  # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
+>  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
+>  Added new event:
+>    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
+> 
+>  You can now use it in all perf tools, such as:
+> 
+>  	perf record -e probe:my_func -aR sleep 1
+> 
+>  # mv /usr/lib64/elfutils/libebl_x86_64.so{.bak,}
+> 
+> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Zefan Li <lizefan@huawei.com>
+> Cc: pi3orama@163.com
+> ---
+>  tools/perf/util/probe-event.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 93996ec..ea4f79f 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -2516,6 +2516,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
+>  	struct probe_trace_point *tp;
+>  	int num_matched_functions;
+>  	int ret, i, j, skipped = 0;
+> +	const char *dup_filename;
+>  
+>  	map = get_target_map(pev->target, pev->uprobes);
+>  	if (!map) {
+> @@ -2523,6 +2524,21 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
+>  		goto out;
+>  	}
+>  
+> +	/*
+> +	 * If the map's dso is an offline module, give dso__load() a chance
+> +	 * to find the file path of that module by fixing long_name.
+> +	 */
+> +	if (map->dso && strchr(pev->target, '/')) {
+> +		if (!map->dso->long_name || map->dso->long_name[0] == '[') {
+> +			dup_filename = strdup(pev->target);
+> +			if (!dup_filename) {
+> +				ret = -ENOMEM;
+> +				goto out;
+> +			}
+> +			dso__set_long_name(map->dso, dup_filename, true);
+> +		}
+> +	}
+> +
+>  	syms = malloc(sizeof(struct symbol *) * probe_conf.max_probes);
+>  	if (!syms) {
+>  		ret = -ENOMEM;
+> -- 
+> 1.8.3.4
