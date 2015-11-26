@@ -1,88 +1,169 @@
-From: "Wangnan (F)" <wangnan0@huawei.com>
-Subject: Re: [PATCH] perf probe: Adjust dso->long_name for offline module
-Date: Thu, 26 Nov 2015 09:29:32 +0800
-Message-ID: <5656607C.40907@huawei.com>
-References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com> <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
+From: Wang Nan <wangnan0@huawei.com>
+Subject: [PATCH v2] perf probe: Adjust dso->long_name for offline module
+Date: Thu, 26 Nov 2015 03:19:09 +0000
+Message-ID: <1448507949-187812-1-git-send-email-wangnan0@huawei.com>
+References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65]:59225 "EHLO
-	szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751349AbbKZB3z (ORCPT
+Received: from szxga01-in.huawei.com ([58.251.152.64]:36055 "EHLO
+	szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751119AbbKZDXG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 20:29:55 -0500
-In-Reply-To: <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
+	Wed, 25 Nov 2015 22:23:06 -0500
+In-Reply-To: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?UTF-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, "acme@kernel.org" <acme@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, "pi3orama@163.com" <pi3orama@163.com>
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, pi3orama@163.com
 
+Something unexpected may happen if copy statically linked perf to a
+production environment:
 
+ # ./perf probe -m ./mymodule.ko my_func
+ [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
+ Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
+   Error: Failed to add events.
+ # ./perf buildid-cache -a ./mymodule.ko
+ # ./perf probe -m ./mymodule.ko my_func
+ Added new event:
+   probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
 
-On 2015/11/26 9:10, =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=B7=B3 / HIRAMATU=EF=BC=
-=8CMASAMI wrote:
-> From: Wang Nan [mailto:wangnan0@huawei.com]
->> If libelf unable to open debuginfo for an offline module but the ko =
-has
->> symtab, something unexpected may happen.
->>
->> # rm -rf ~/.debug/
->> # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
-> Please do give more possible usecase. removing libebl is crazy,
-> and broken environment.
+ You can now use it in all perf tools, such as:
 
-It is a real problem we met, where perf itself is statically linked
-and copied to target platform.
+ 	perf record -e probe:my_func -aR sleep 1
 
-> If you'd like to use perf probe without debuginfo, make NO_DWARF=3D1 =
-or
-> strip the target binary.
+Where:
 
-Can't simply stripping the target binary because the symtab would
-also be stipped out.
+ # ldd ./perf
+	not a dynamic executable
+ # strace -e open ./perf probe -m ./mymodule.ko my_func
+ ...
+ open("/home/wangnan/kmodule/mymodule.ko", O_RDONLY) = 3
+ open("/home/wangnan/kmodule/../lib64/elfutils/libebl_x86_64.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+ ...
+ open("/lib64/tls/libebl_x86_64.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+ open("/lib64/libebl_x86_64.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+ open("/usr/lib64/tls/libebl_x86_64.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+ open("/usr/lib64/libebl_x86_64.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+ open("[mymodule]", O_RDONLY)            = -1 ENOENT (No such file or directory)
+ open("/home/wangnan/.debug/.build-id/32/6ab42550ef3d24944f53c817533728367effeb", O_RDONLY) = -1 ENOENT (No such file or directory)
+ open("[mymodule]", O_RDONLY)            = -1 ENOENT (No such file or directory)
 
->> # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
->> [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb no=
-t found, continuing without symbols
->> Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
->>    Error: Failed to add events
->> # ./perf buildid-cache -a ./mymodule.ko
->> # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
->> Added new event:
->>    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodul=
-e.ko)
->>
->> You can now use it in all perf tools, such as:
->>
->> 	 perf record -e probe:my_func -aR sleep 1
->>
->> In the above example, probe fails if it isn't in buildid-cache. Howe=
-ver,
->> user would expect it success in both case because perf is able to fi=
-nd
->> probe points actually.
->>
->> The problem is because perf won't utilize module's full path if it
->> failed to open debuginfo. In
->> convert_to_probe_trace_events ->
->> find_probe_trace_events_from_map ->
->> get_target_map ->
->> kernel_get_module_map ->
->> machine__findnew_module_map ->
->> map_groups__find_by_name
->>
->> map_groups__find_by_name() is able to find the map of that module, b=
-ut
->> this information is found from /proc/modules before it knows the rea=
-l
->> path of the offline module. Therefore, the map->dso->long_name is
->> set to something like '[mymodule]', which prevents dso__load() find
->> the real path of the module file.
-> Hmm, if so, it should be fixed in map or machine, not in probe-event.=
-c.
+In the above example, probe fails before we put the module into
+buildid-cache. However, user would expect it success in both case
+because perf is able to find probe points actually.
 
-Will do in next version.
+The reason is because perf won't utilize module's full path if it
+failed to open debuginfo. In
+ convert_to_probe_trace_events ->
+ find_probe_trace_events_from_map ->
+ get_target_map ->
+ kernel_get_module_map ->
+ machine__findnew_module_map ->
+ map_groups__find_by_name
 
-Thank you.
+map_groups__find_by_name() is able to find the map of that module, but
+this information is found from /proc/module before it knows the real
+path of the offline module. Therefore, the map->dso->long_name is
+set to something like '[mymodule]', which prevent dso__load() find
+the real path of the module file.
+
+In another aspect, if dso__load() can get the offline module through
+buildid cache, it can read symble table from that ko. Even if debuginfo
+is not available, 'perf probe' can success if the '.symtab' can be
+found.
+
+This patch improves machine__findnew_module_map(): when dso->long_name
+is leading with '[' (doesn't find path of module when parsing
+/proc/modules), fixes it by dso__set_long_name(), so following
+dso__load() is possible to find the symbol table.
+
+This patch won't interfere with buildid matching. Here is the test
+result:
+
+ # ./perf probe -m ./mymodule.ko my_func
+ Added new event:
+   probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
+
+ You can now use it in all perf tools, such as:
+
+ 	perf record -e probe:my_func -aR sleep 1
+
+ # ./perf probe -d '*'
+ Removed event: probe:my_func
+ # mv ./mymodule.{ko,.bak}
+ # mv ./moduleb.ko mymodule.ko
+ # ./perf probe -m ./mymodule.ko my_func
+ /home/wangnan/kmodule/mymodule.ko with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
+ Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
+   Error: Failed to add events.
+
+ # ./perf probe -v -m ./mymodule.ko my_func
+ probe-definition(0): my_func
+ symbol:my_func file:(null) line:0 offset:0 return:0 lazy:(null)
+ 0 arguments
+ Could not open debuginfo. Try to use symbols.
+ symsrc__init: build id mismatch for /home/wangnan/kmodule/mymodule.ko.
+ /home/wangnan/kmodule/mymodule.ko with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
+ Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
+   Error: Failed to add events. Reason: No such file or directory (Code: -2)
+
+Signed-off-by: Wang Nan <wangnan0@huawei.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>
+Cc: pi3orama@163.com
+---
+ tools/perf/util/machine.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 7f5071a..cdfa97f 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -561,6 +561,24 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
+ 	return 0;
+ }
+ 
++static void adjust_dso_long_name(struct map *map, const char *filename)
++{
++	const char *dup_filename;
++
++	if (!filename || !map->dso || !map->dso->long_name)
++		return;
++	if (map->dso->long_name[0] != '[')
++		return;
++	if (!strchr(filename, '/'))
++		return;
++
++	dup_filename = strdup(filename);
++	if (!dup_filename)
++		return;
++
++	dso__set_long_name(map->dso, filename, true);
++}
++
+ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename)
+ {
+@@ -573,8 +591,15 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 
+ 	map = map_groups__find_by_name(&machine->kmaps, MAP__FUNCTION,
+ 				       m.name);
+-	if (map)
++	if (map) {
++		/*
++		 * If the map's dso is an offline module, give dso__load()
++		 * a chance to find the file path of that module by fixing
++		 * long_name.
++		 */
++		adjust_dso_long_name(map, filename);
+ 		goto out;
++	}
+ 
+ 	dso = machine__findnew_module_dso(machine, &m, filename);
+ 	if (dso == NULL)
+-- 
+1.8.3.4
