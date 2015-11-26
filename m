@@ -1,133 +1,56 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf probe: Adjust dso->long_name for offline module
-Date: Wed, 25 Nov 2015 16:35:32 -0300
-Message-ID: <20151125193532.GC2945@kernel.org>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: [PATCH] perf probe: Adjust dso->long_name for offline module
+Date: Thu, 26 Nov 2015 01:10:32 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
 References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:37714 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752656AbbKYTfh (ORCPT
+Received: from mail9.hitachi.co.jp ([133.145.228.44]:35754 "EHLO
+	mail9.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751501AbbKZBKh (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 14:35:37 -0500
-Content-Disposition: inline
+	Wed, 25 Nov 2015 20:10:37 -0500
 In-Reply-To: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Wang Nan <wangnan0@huawei.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, pi3orama@163.com
+To: 'Wang Nan' <wangnan0@huawei.com>, "acme@kernel.org" <acme@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, "pi3orama@163.com" <pi3orama@163.com>
 
-Em Wed, Nov 25, 2015 at 11:30:59AM +0000, Wang Nan escreveu:
-> If libelf unable to open debuginfo for an offline module but the ko has
-> symtab, something unexpected may happen.
-> 
->  # rm -rf ~/.debug/
->  # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
->  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
->  [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb not found, continuing without symbols
->  Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
-
-Understood, since we are giving the path to that module, we can, if its
-build-id matches the one for the online module, use it, is that the
-case, i.e. do we check, int his scenario, that the build-id matches?
-
-- Arnaldo
-
->    Error: Failed to add events
->  # ./perf buildid-cache -a ./mymodule.ko
->  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
->  Added new event:
->    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
-> 
->  You can now use it in all perf tools, such as:
-> 
-> 	 perf record -e probe:my_func -aR sleep 1
-> 
-> In the above example, probe fails if it isn't in buildid-cache. However,
-> user would expect it success in both case because perf is able to find
-> probe points actually.
-> 
-> The problem is because perf won't utilize module's full path if it
-> failed to open debuginfo. In
->  convert_to_probe_trace_events ->
->  find_probe_trace_events_from_map ->
->  get_target_map ->
->  kernel_get_module_map ->
->  machine__findnew_module_map ->
->  map_groups__find_by_name
-> 
-> map_groups__find_by_name() is able to find the map of that module, but
-> this information is found from /proc/modules before it knows the real
-> path of the offline module. Therefore, the map->dso->long_name is
-> set to something like '[mymodule]', which prevents dso__load() find
-> the real path of the module file.
-> 
-> In another aspect, if dso__load() can get the offline module through
-> buildid cache, it can read symble table from that ko. Even if debuginfo
-> is not available, 'perf probe' can success if the '.symtab' can be
-> found.
-> 
-> This patch fixes long_name so dso__load() is able to find module's path
-> and read symbol table in this case.
-> 
-> After this patch:
-> 
->  # rm -rf ~/.debug/
->  # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
->  # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
->  Added new event:
->    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodule.ko)
-> 
->  You can now use it in all perf tools, such as:
-> 
->  	perf record -e probe:my_func -aR sleep 1
-> 
->  # mv /usr/lib64/elfutils/libebl_x86_64.so{.bak,}
-> 
-> Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Zefan Li <lizefan@huawei.com>
-> Cc: pi3orama@163.com
-> ---
->  tools/perf/util/probe-event.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 93996ec..ea4f79f 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -2516,6 +2516,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
->  	struct probe_trace_point *tp;
->  	int num_matched_functions;
->  	int ret, i, j, skipped = 0;
-> +	const char *dup_filename;
->  
->  	map = get_target_map(pev->target, pev->uprobes);
->  	if (!map) {
-> @@ -2523,6 +2524,21 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
->  		goto out;
->  	}
->  
-> +	/*
-> +	 * If the map's dso is an offline module, give dso__load() a chance
-> +	 * to find the file path of that module by fixing long_name.
-> +	 */
-> +	if (map->dso && strchr(pev->target, '/')) {
-> +		if (!map->dso->long_name || map->dso->long_name[0] == '[') {
-> +			dup_filename = strdup(pev->target);
-> +			if (!dup_filename) {
-> +				ret = -ENOMEM;
-> +				goto out;
-> +			}
-> +			dso__set_long_name(map->dso, dup_filename, true);
-> +		}
-> +	}
-> +
->  	syms = malloc(sizeof(struct symbol *) * probe_conf.max_probes);
->  	if (!syms) {
->  		ret = -ENOMEM;
-> -- 
-> 1.8.3.4
+RnJvbTogV2FuZyBOYW4gW21haWx0bzp3YW5nbmFuMEBodWF3ZWkuY29tXQ0KPg0KPklmIGxpYmVs
+ZiB1bmFibGUgdG8gb3BlbiBkZWJ1Z2luZm8gZm9yIGFuIG9mZmxpbmUgbW9kdWxlIGJ1dCB0aGUg
+a28gaGFzDQo+c3ltdGFiLCBzb21ldGhpbmcgdW5leHBlY3RlZCBtYXkgaGFwcGVuLg0KPg0KPiAj
+IHJtIC1yZiB+Ly5kZWJ1Zy8NCj4gIyBtdiAvdXNyL2xpYjY0L2VsZnV0aWxzL2xpYmVibF94ODZf
+NjQuc297LC5iYWt9DQoNClBsZWFzZSBkbyBnaXZlIG1vcmUgcG9zc2libGUgdXNlY2FzZS4gcmVt
+b3ZpbmcgbGliZWJsIGlzIGNyYXp5LA0KYW5kIGJyb2tlbiBlbnZpcm9ubWVudC4NCg0KSWYgeW91
+J2QgbGlrZSB0byB1c2UgcGVyZiBwcm9iZSB3aXRob3V0IGRlYnVnaW5mbywgbWFrZSBOT19EV0FS
+Rj0xIG9yDQpzdHJpcCB0aGUgdGFyZ2V0IGJpbmFyeS4NCg0KPiAjIC4vcGVyZiBwcm9iZSAtbSAv
+aG9tZS93YW5nbmFuL2ttb2R1bGUvbXltb2R1bGUua28gbXlfZnVuYw0KPiBbbXltb2R1bGVdIHdp
+dGggYnVpbGQgaWQgMzI2YWI0MjU1MGVmM2QyNDk0NGY1M2M4MTc1MzM3MjgzNjdlZmZlYiBub3Qg
+Zm91bmQsIGNvbnRpbnVpbmcgd2l0aG91dCBzeW1ib2xzDQo+IEZhaWxlZCB0byBmaW5kIHN5bWJv
+bCBteV9mdW5jIGluIC9ob21lL3dhbmduYW4va21vZHVsZS9teW1vZHVsZS5rbw0KPiAgIEVycm9y
+OiBGYWlsZWQgdG8gYWRkIGV2ZW50cw0KPiAjIC4vcGVyZiBidWlsZGlkLWNhY2hlIC1hIC4vbXlt
+b2R1bGUua28NCj4gIyAuL3BlcmYgcHJvYmUgLW0gL2hvbWUvd2FuZ25hbi9rbW9kdWxlL215bW9k
+dWxlLmtvIG15X2Z1bmMNCj4gQWRkZWQgbmV3IGV2ZW50Og0KPiAgIHByb2JlOm15X2Z1bmMgICAg
+ICAgIChvbiBteV9mdW5jIGluIC9ob21lL3dhbmduYW4va21vZHVsZS9teW1vZHVsZS5rbykNCj4N
+Cj4gWW91IGNhbiBub3cgdXNlIGl0IGluIGFsbCBwZXJmIHRvb2xzLCBzdWNoIGFzOg0KPg0KPgkg
+cGVyZiByZWNvcmQgLWUgcHJvYmU6bXlfZnVuYyAtYVIgc2xlZXAgMQ0KPg0KPkluIHRoZSBhYm92
+ZSBleGFtcGxlLCBwcm9iZSBmYWlscyBpZiBpdCBpc24ndCBpbiBidWlsZGlkLWNhY2hlLiBIb3dl
+dmVyLA0KPnVzZXIgd291bGQgZXhwZWN0IGl0IHN1Y2Nlc3MgaW4gYm90aCBjYXNlIGJlY2F1c2Ug
+cGVyZiBpcyBhYmxlIHRvIGZpbmQNCj5wcm9iZSBwb2ludHMgYWN0dWFsbHkuDQo+DQo+VGhlIHBy
+b2JsZW0gaXMgYmVjYXVzZSBwZXJmIHdvbid0IHV0aWxpemUgbW9kdWxlJ3MgZnVsbCBwYXRoIGlm
+IGl0DQo+ZmFpbGVkIHRvIG9wZW4gZGVidWdpbmZvLiBJbg0KPiBjb252ZXJ0X3RvX3Byb2JlX3Ry
+YWNlX2V2ZW50cyAtPg0KPiBmaW5kX3Byb2JlX3RyYWNlX2V2ZW50c19mcm9tX21hcCAtPg0KPiBn
+ZXRfdGFyZ2V0X21hcCAtPg0KPiBrZXJuZWxfZ2V0X21vZHVsZV9tYXAgLT4NCj4gbWFjaGluZV9f
+ZmluZG5ld19tb2R1bGVfbWFwIC0+DQo+IG1hcF9ncm91cHNfX2ZpbmRfYnlfbmFtZQ0KPg0KPm1h
+cF9ncm91cHNfX2ZpbmRfYnlfbmFtZSgpIGlzIGFibGUgdG8gZmluZCB0aGUgbWFwIG9mIHRoYXQg
+bW9kdWxlLCBidXQNCj50aGlzIGluZm9ybWF0aW9uIGlzIGZvdW5kIGZyb20gL3Byb2MvbW9kdWxl
+cyBiZWZvcmUgaXQga25vd3MgdGhlIHJlYWwNCj5wYXRoIG9mIHRoZSBvZmZsaW5lIG1vZHVsZS4g
+VGhlcmVmb3JlLCB0aGUgbWFwLT5kc28tPmxvbmdfbmFtZSBpcw0KPnNldCB0byBzb21ldGhpbmcg
+bGlrZSAnW215bW9kdWxlXScsIHdoaWNoIHByZXZlbnRzIGRzb19fbG9hZCgpIGZpbmQNCj50aGUg
+cmVhbCBwYXRoIG9mIHRoZSBtb2R1bGUgZmlsZS4NCg0KSG1tLCBpZiBzbywgaXQgc2hvdWxkIGJl
+IGZpeGVkIGluIG1hcCBvciBtYWNoaW5lLCBub3QgaW4gcHJvYmUtZXZlbnQuYy4NCg0KVGhhbmtz
+LA0KDQo=
