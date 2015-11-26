@@ -1,56 +1,88 @@
-From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
-	<masami.hiramatsu.pt@hitachi.com>
-Subject: RE: [PATCH] perf probe: Adjust dso->long_name for offline module
-Date: Thu, 26 Nov 2015 01:10:32 +0000
-Message-ID: <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
-References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
+From: "Wangnan (F)" <wangnan0@huawei.com>
+Subject: Re: [PATCH] perf probe: Adjust dso->long_name for offline module
+Date: Thu, 26 Nov 2015 09:29:32 +0800
+Message-ID: <5656607C.40907@huawei.com>
+References: <1448451059-156220-1-git-send-email-wangnan0@huawei.com> <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44]:35754 "EHLO
-	mail9.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751501AbbKZBKh (ORCPT
+Received: from szxga02-in.huawei.com ([119.145.14.65]:59225 "EHLO
+	szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751349AbbKZB3z (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 Nov 2015 20:10:37 -0500
-In-Reply-To: <1448451059-156220-1-git-send-email-wangnan0@huawei.com>
-Content-Language: ja-JP
+	Wed, 25 Nov 2015 20:29:55 -0500
+In-Reply-To: <50399556C9727B4D88A595C8584AAB3752631912@GSjpTKYDCembx32.service.hitachi.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: 'Wang Nan' <wangnan0@huawei.com>, "acme@kernel.org" <acme@kernel.org>
+To: =?UTF-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, "acme@kernel.org" <acme@kernel.org>
 Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Zefan Li <lizefan@huawei.com>, "pi3orama@163.com" <pi3orama@163.com>
 
-RnJvbTogV2FuZyBOYW4gW21haWx0bzp3YW5nbmFuMEBodWF3ZWkuY29tXQ0KPg0KPklmIGxpYmVs
-ZiB1bmFibGUgdG8gb3BlbiBkZWJ1Z2luZm8gZm9yIGFuIG9mZmxpbmUgbW9kdWxlIGJ1dCB0aGUg
-a28gaGFzDQo+c3ltdGFiLCBzb21ldGhpbmcgdW5leHBlY3RlZCBtYXkgaGFwcGVuLg0KPg0KPiAj
-IHJtIC1yZiB+Ly5kZWJ1Zy8NCj4gIyBtdiAvdXNyL2xpYjY0L2VsZnV0aWxzL2xpYmVibF94ODZf
-NjQuc297LC5iYWt9DQoNClBsZWFzZSBkbyBnaXZlIG1vcmUgcG9zc2libGUgdXNlY2FzZS4gcmVt
-b3ZpbmcgbGliZWJsIGlzIGNyYXp5LA0KYW5kIGJyb2tlbiBlbnZpcm9ubWVudC4NCg0KSWYgeW91
-J2QgbGlrZSB0byB1c2UgcGVyZiBwcm9iZSB3aXRob3V0IGRlYnVnaW5mbywgbWFrZSBOT19EV0FS
-Rj0xIG9yDQpzdHJpcCB0aGUgdGFyZ2V0IGJpbmFyeS4NCg0KPiAjIC4vcGVyZiBwcm9iZSAtbSAv
-aG9tZS93YW5nbmFuL2ttb2R1bGUvbXltb2R1bGUua28gbXlfZnVuYw0KPiBbbXltb2R1bGVdIHdp
-dGggYnVpbGQgaWQgMzI2YWI0MjU1MGVmM2QyNDk0NGY1M2M4MTc1MzM3MjgzNjdlZmZlYiBub3Qg
-Zm91bmQsIGNvbnRpbnVpbmcgd2l0aG91dCBzeW1ib2xzDQo+IEZhaWxlZCB0byBmaW5kIHN5bWJv
-bCBteV9mdW5jIGluIC9ob21lL3dhbmduYW4va21vZHVsZS9teW1vZHVsZS5rbw0KPiAgIEVycm9y
-OiBGYWlsZWQgdG8gYWRkIGV2ZW50cw0KPiAjIC4vcGVyZiBidWlsZGlkLWNhY2hlIC1hIC4vbXlt
-b2R1bGUua28NCj4gIyAuL3BlcmYgcHJvYmUgLW0gL2hvbWUvd2FuZ25hbi9rbW9kdWxlL215bW9k
-dWxlLmtvIG15X2Z1bmMNCj4gQWRkZWQgbmV3IGV2ZW50Og0KPiAgIHByb2JlOm15X2Z1bmMgICAg
-ICAgIChvbiBteV9mdW5jIGluIC9ob21lL3dhbmduYW4va21vZHVsZS9teW1vZHVsZS5rbykNCj4N
-Cj4gWW91IGNhbiBub3cgdXNlIGl0IGluIGFsbCBwZXJmIHRvb2xzLCBzdWNoIGFzOg0KPg0KPgkg
-cGVyZiByZWNvcmQgLWUgcHJvYmU6bXlfZnVuYyAtYVIgc2xlZXAgMQ0KPg0KPkluIHRoZSBhYm92
-ZSBleGFtcGxlLCBwcm9iZSBmYWlscyBpZiBpdCBpc24ndCBpbiBidWlsZGlkLWNhY2hlLiBIb3dl
-dmVyLA0KPnVzZXIgd291bGQgZXhwZWN0IGl0IHN1Y2Nlc3MgaW4gYm90aCBjYXNlIGJlY2F1c2Ug
-cGVyZiBpcyBhYmxlIHRvIGZpbmQNCj5wcm9iZSBwb2ludHMgYWN0dWFsbHkuDQo+DQo+VGhlIHBy
-b2JsZW0gaXMgYmVjYXVzZSBwZXJmIHdvbid0IHV0aWxpemUgbW9kdWxlJ3MgZnVsbCBwYXRoIGlm
-IGl0DQo+ZmFpbGVkIHRvIG9wZW4gZGVidWdpbmZvLiBJbg0KPiBjb252ZXJ0X3RvX3Byb2JlX3Ry
-YWNlX2V2ZW50cyAtPg0KPiBmaW5kX3Byb2JlX3RyYWNlX2V2ZW50c19mcm9tX21hcCAtPg0KPiBn
-ZXRfdGFyZ2V0X21hcCAtPg0KPiBrZXJuZWxfZ2V0X21vZHVsZV9tYXAgLT4NCj4gbWFjaGluZV9f
-ZmluZG5ld19tb2R1bGVfbWFwIC0+DQo+IG1hcF9ncm91cHNfX2ZpbmRfYnlfbmFtZQ0KPg0KPm1h
-cF9ncm91cHNfX2ZpbmRfYnlfbmFtZSgpIGlzIGFibGUgdG8gZmluZCB0aGUgbWFwIG9mIHRoYXQg
-bW9kdWxlLCBidXQNCj50aGlzIGluZm9ybWF0aW9uIGlzIGZvdW5kIGZyb20gL3Byb2MvbW9kdWxl
-cyBiZWZvcmUgaXQga25vd3MgdGhlIHJlYWwNCj5wYXRoIG9mIHRoZSBvZmZsaW5lIG1vZHVsZS4g
-VGhlcmVmb3JlLCB0aGUgbWFwLT5kc28tPmxvbmdfbmFtZSBpcw0KPnNldCB0byBzb21ldGhpbmcg
-bGlrZSAnW215bW9kdWxlXScsIHdoaWNoIHByZXZlbnRzIGRzb19fbG9hZCgpIGZpbmQNCj50aGUg
-cmVhbCBwYXRoIG9mIHRoZSBtb2R1bGUgZmlsZS4NCg0KSG1tLCBpZiBzbywgaXQgc2hvdWxkIGJl
-IGZpeGVkIGluIG1hcCBvciBtYWNoaW5lLCBub3QgaW4gcHJvYmUtZXZlbnQuYy4NCg0KVGhhbmtz
-LA0KDQo=
+
+
+On 2015/11/26 9:10, =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=B7=B3 / HIRAMATU=EF=BC=
+=8CMASAMI wrote:
+> From: Wang Nan [mailto:wangnan0@huawei.com]
+>> If libelf unable to open debuginfo for an offline module but the ko =
+has
+>> symtab, something unexpected may happen.
+>>
+>> # rm -rf ~/.debug/
+>> # mv /usr/lib64/elfutils/libebl_x86_64.so{,.bak}
+> Please do give more possible usecase. removing libebl is crazy,
+> and broken environment.
+
+It is a real problem we met, where perf itself is statically linked
+and copied to target platform.
+
+> If you'd like to use perf probe without debuginfo, make NO_DWARF=3D1 =
+or
+> strip the target binary.
+
+Can't simply stripping the target binary because the symtab would
+also be stipped out.
+
+>> # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
+>> [mymodule] with build id 326ab42550ef3d24944f53c817533728367effeb no=
+t found, continuing without symbols
+>> Failed to find symbol my_func in /home/wangnan/kmodule/mymodule.ko
+>>    Error: Failed to add events
+>> # ./perf buildid-cache -a ./mymodule.ko
+>> # ./perf probe -m /home/wangnan/kmodule/mymodule.ko my_func
+>> Added new event:
+>>    probe:my_func        (on my_func in /home/wangnan/kmodule/mymodul=
+e.ko)
+>>
+>> You can now use it in all perf tools, such as:
+>>
+>> 	 perf record -e probe:my_func -aR sleep 1
+>>
+>> In the above example, probe fails if it isn't in buildid-cache. Howe=
+ver,
+>> user would expect it success in both case because perf is able to fi=
+nd
+>> probe points actually.
+>>
+>> The problem is because perf won't utilize module's full path if it
+>> failed to open debuginfo. In
+>> convert_to_probe_trace_events ->
+>> find_probe_trace_events_from_map ->
+>> get_target_map ->
+>> kernel_get_module_map ->
+>> machine__findnew_module_map ->
+>> map_groups__find_by_name
+>>
+>> map_groups__find_by_name() is able to find the map of that module, b=
+ut
+>> this information is found from /proc/modules before it knows the rea=
+l
+>> path of the offline module. Therefore, the map->dso->long_name is
+>> set to something like '[mymodule]', which prevents dso__load() find
+>> the real path of the module file.
+> Hmm, if so, it should be fixed in map or machine, not in probe-event.=
+c.
+
+Will do in next version.
+
+Thank you.
