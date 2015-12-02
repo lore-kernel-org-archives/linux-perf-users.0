@@ -1,65 +1,57 @@
 From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf-list: perf list sw segmentation fault fix
-Date: Wed, 02 Dec 2015 14:52:02 +0100
-Message-ID: <1449064322.24573.140.camel@redhat.com>
+Subject: [PATCH] perf buildid-list: Fix return value of perf buildid-list -k
+Date: Wed, 02 Dec 2015 19:27:51 +0100
+Message-ID: <1449080871.24573.145.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:34494 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:35492 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758233AbbLBNwE (ORCPT
+	id S1750964AbbLBS1y (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Dec 2015 08:52:04 -0500
+	Wed, 2 Dec 2015 13:27:54 -0500
+Received: from int-mx11.intmail.prod.int.phx2.redhat.com (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24])
+	by mx1.redhat.com (Postfix) with ESMTPS id 257B4A35A2
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Dec 2015 18:27:54 +0000 (UTC)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, ast@plumgrid.com
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-The PERF_COUNT_SW_BPF_OUTPUT entry is missing in the event_symbols_sw
-array.  Due to that "perf list sw" segfaults,  because a NULL pointer
-is passed to strlen() function at util/parse-events.c:1895.
-
-After this patch, the syms array is set correctly,  so "perf list sw"
-does not segfault.
+The buildid string length is returned by perf buildid-list -k command.
+Since a non-zero return value means an error, perf buildid-list -k cmd
+should return 0 when successful instead.
 
 Before:
 
-Segmentation fault
+	# perf buildid-list -k
+	39356d74e96e02346fe0ec1f3f162b6c522bac62
+	# echo $?
+	41
 
 After:
 
-List of pre-defined events (to be used in -e):
-
-  alignment-faults                                   [Software event]
-  bpf-output                                         [Software event]
-  context-switches OR cs                             [Software event]
-  cpu-clock                                          [Software event]
-  cpu-migrations OR migrations                       [Software event]
-  dummy                                              [Software event]
-  emulation-faults                                   [Software event]
-  major-faults                                       [Software event]
-  minor-faults                                       [Software event]
-  page-faults OR faults                              [Software event]
-  task-clock                                         [Software event]
+	# perf buildid-list -k
+	39356d74e96e02346fe0ec1f3f162b6c522bac62
+	# echo $?
+	0
 
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/util/parse-events.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-buildid-list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index e48d9da..40ae92a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -124,6 +124,10 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
- 		.symbol = "dummy",
- 		.alias  = "",
- 	},
-+	[PERF_COUNT_SW_BPF_OUTPUT] = {
-+		.symbol = "bpf-output",
-+		.alias  = "",
-+	},
- };
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index 918b4de..6419f57 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -110,7 +110,7 @@ int cmd_buildid_list(int argc, const char **argv,
+ 	setup_pager();
  
- #define __PERF_EVENT_FIELD(config, name) \
+ 	if (show_kernel)
+-		return sysfs__fprintf_build_id(stdout);
++		return !(sysfs__fprintf_build_id(stdout) > 0);
+ 
+ 	return perf_session__list_build_ids(force, with_hits);
+ }
