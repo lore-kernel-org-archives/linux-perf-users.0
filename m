@@ -1,60 +1,59 @@
-From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf buildid-list: Show running kernel build id fix
-Date: Fri, 27 Nov 2015 14:48:09 +0100
-Message-ID: <1448632089.24573.114.camel@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Taeung Song <treeze.taeung@gmail.com>
+Subject: What is 'web--browse' on builtin-help.c ?
+Date: Wed, 2 Dec 2015 12:46:40 +0900
+Message-ID: <A0EEEF14-34F9-4D51-BD26-52EA958AD2C2@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.0 \(3094\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:55340 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751165AbbK0NsM (ORCPT
+Received: from mail-pa0-f41.google.com ([209.85.220.41]:33633 "EHLO
+	mail-pa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752769AbbLBDqq convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 27 Nov 2015 08:48:12 -0500
+	Tue, 1 Dec 2015 22:46:46 -0500
+Received: by pabfh17 with SMTP id fh17so27452825pab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Dec 2015 19:46:46 -0800 (PST)
+Received: from [10.138.13.185] ([211.61.23.220])
+        by smtp.gmail.com with ESMTPSA id l20sm801407pfi.10.2015.12.01.19.46.43
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 01 Dec 2015 19:46:45 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, =?UTF-8?Q?=E5=B9=B3=E6=9D=BE=E9=9B=85=E5=B7=B3?= / =?UTF-8?Q?HIRAMATU=EF=BC=8CMASAMI?= <masami.hiramatsu.pt@hitachi.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-The --kernel option of perf buildid-list tool should show the running
-kernel buildid.  The functionality has been lost during other changes
-of the related code.   The build_id__sprintf() function should return
-length of the build-id string,  but it was the length of the build-id
-raw data instead. Due to that, some return value checking caused that
-the final string was not printed out.
+Hi, all
 
-With this patch the build_id__sprintf() returns the correct value, so
-the --kernel option works again.
+I=E2=80=99m checking perf-help subcommand and config =E2=80=98help.form=
+at=E2=80=99.
+source code for them contain functionality for info and web
+but functionality for info and web didn=E2=80=99t work well. ( there is=
+n=E2=80=99t problems about =E2=80=98man=E2=80=99 )
 
-Before:
+So, I=E2=80=99m trying to fix the bugs.
+There is a function =E2=80=98open_html()=E2=80=99 on builtin-help.c as =
+below.
 
-	# perf buildid-list --kernel
-	#
+408 static void open_html(const char *path)
+409 {
+410         execl_perf_cmd("web--browse", "-c", "help.browser", path, N=
+ULL);
+411 }
 
-After:
+excel_perf_cmd() function lastly call execvp(=E2=80=9Cperf=E2=80=9D, (c=
+har **)nargv)
+and then error messages like.
 
-	# perf buildid-list --kernel
-	972c1edab5bdc06cc224af45d510af662a3c6972
-	#
+perf: 'web--browse' is not a perf-command.
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
----
- tools/perf/util/build-id.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is this leftover from git source code ?
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 217b5a6..6a7e273 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -91,7 +91,7 @@ int build_id__sprintf(const u8 *build_id, int len, char *bf)
- 		bid += 2;
- 	}
- 
--	return raw - build_id;
-+	return (bid - bf) + 1;
- }
- 
- int sysfs__sprintf_build_id(const char *root_dir, char *sbuild_id)
+
+Thanks,
+Taeung
+
+  --
+To unsubscribe from this list: send the line "unsubscribe linux-perf-us=
+ers" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
