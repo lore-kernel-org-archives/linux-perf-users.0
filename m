@@ -1,57 +1,83 @@
-From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf buildid-list: Fix return value of perf buildid-list -k
-Date: Wed, 02 Dec 2015 19:27:51 +0100
-Message-ID: <1449080871.24573.145.camel@redhat.com>
+From: Patrick Agrain <patrick.agrain@al-enterprise.com>
+Subject: perf records  no samples on an IBM x3250M5
+Date: Thu, 3 Dec 2015 14:26:14 +0000 (UTC)
+Message-ID: <loom.20151203T151613-447@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35492 "EHLO mx1.redhat.com"
+Received: from plane.gmane.org ([80.91.229.3]:56893 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750964AbbLBS1y (ORCPT
+	id S1752019AbbLCOa3 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 2 Dec 2015 13:27:54 -0500
-Received: from int-mx11.intmail.prod.int.phx2.redhat.com (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24])
-	by mx1.redhat.com (Postfix) with ESMTPS id 257B4A35A2
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Dec 2015 18:27:54 +0000 (UTC)
+	Thu, 3 Dec 2015 09:30:29 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1a4UtY-0004K0-Av
+	for linux-perf-users@vger.kernel.org; Thu, 03 Dec 2015 15:30:04 +0100
+Received: from proxy.eu.alcatel-lucent.com ([proxy.eu.alcatel-lucent.com])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Dec 2015 15:30:04 +0100
+Received: from patrick.agrain by proxy.eu.alcatel-lucent.com with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Dec 2015 15:30:04 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-The buildid string length is returned by perf buildid-list -k command.
-Since a non-zero return value means an error, perf buildid-list -k cmd
-should return 0 when successful instead.
+Hello,
 
-Before:
+perf record no samples in perf.data on an IBM x3250M5.
+perf stat is OK (in that way that it displays some stats).
+Before digging into the hardware, let us check together if my 'perf'
+compilation fulfills all requirements :
 
-	# perf buildid-list -k
-	39356d74e96e02346fe0ec1f3f162b6c522bac62
-	# echo $?
-	41
+I tried to compile the perf inside a linux kernel 3.19 from kernel.org.
+Compilation is made on a Centos 6.6 with following info:
 
-After:
+[root@localhost Desktop]# cat /proc/version
+Linux version 2.6.32-504.23.4.el6.i686 (mockbuild@c6b9.bsys.dev.centos.org)
+(gcc version 4.4.7 20120313 (Red Hat 4.4.7-11) (GCC) ) #1 SMP Tue Jun 9
+18:09:42 UTC 2015
+[root@localhost Desktop]# cd /usr/src/kernels/linux-3.19/tools/perf/
+[root@localhost perf]# make
+  BUILD:   Doing 'make -j1' parallel build
+config/Makefile:128: The path 'python-config' is not executable.
+config/Makefile:390: No libunwind found. Please install libunwind-dev[el] >=
+1.1 and/or set LIBUNWIND_DIR
+config/Makefile:494: Missing perl devel files. Disabling perl scripting
+support, consider installing perl-ExtUtils-Embed
+config/Makefile:525: No python-config tool was found
+config/Makefile:525: Python support will not be built
+config/Makefile:627: No numa.h found, disables 'perf bench numa mem'
+benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
 
-	# perf buildid-list -k
-	39356d74e96e02346fe0ec1f3f162b6c522bac62
-	# echo $?
-	0
+Auto-detecting system features:
+...                         dwarf: [ on  ]
+...                         glibc: [ on  ]
+...                          gtk2: [ on  ]
+...                      libaudit: [ on  ]
+...                        libbfd: [ on  ]
+...                        libelf: [ on  ]
+...                       libnuma: [ OFF ]
+...                       libperl: [ OFF ]
+...                     libpython: [ OFF ]
+...                      libslang: [ on  ]
+...                     libunwind: [ OFF ]
+...            libdw-dwarf-unwind: [ on  ]
+...                          zlib: [ on  ]
+...     DWARF post unwind library: libdw
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- tools/perf/builtin-buildid-list.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  CC       perf.o
+  LINK     perf
+  GEN      perf-archive
+  GEN      perf-with-kcore
+[root@localhost perf]#
 
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index 918b4de..6419f57 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -110,7 +110,7 @@ int cmd_buildid_list(int argc, const char **argv,
- 	setup_pager();
- 
- 	if (show_kernel)
--		return sysfs__fprintf_build_id(stdout);
-+		return !(sysfs__fprintf_build_id(stdout) > 0);
- 
- 	return perf_session__list_build_ids(force, with_hits);
- }
+Do you see here anything unusual (or wrong, or missing) ?
+FYI, I saw no error message during compilation.
+
+Thanks.
+Kind regards,
+Patrick Agrain
