@@ -1,41 +1,33 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 2/2] perf test: Introducing new testsuite
-Date: Sun, 6 Dec 2015 16:55:52 +0100
-Message-ID: <20151206155552.GC11852@krava.brq.redhat.com>
-References: <1449249082.24573.185.camel@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf-list: perf list sw segmentation fault fix
+Date: Sun, 6 Dec 2015 16:14:26 -0200
+Message-ID: <20151206181426.GA2493@redhat.com>
+References: <1449064322.24573.140.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:58898 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:47723 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752559AbbLFPzy (ORCPT
+	id S1753639AbbLFSOa (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 6 Dec 2015 10:55:54 -0500
+	Sun, 6 Dec 2015 13:14:30 -0500
 Content-Disposition: inline
-In-Reply-To: <1449249082.24573.185.camel@redhat.com>
+In-Reply-To: <1449064322.24573.140.camel@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Michael Petlan <mpetlan@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, ast@plumgrid.com
 
-On Fri, Dec 04, 2015 at 06:11:22PM +0100, Michael Petlan wrote:
+Em Wed, Dec 02, 2015 at 02:52:02PM +0100, Michael Petlan escreveu:
+> The PERF_COUNT_SW_BPF_OUTPUT entry is missing in the event_symbols_sw
+> array.  Due to that "perf list sw" segfaults,  because a NULL pointer
+> is passed to strlen() function at util/parse-events.c:1895.
+> 
+> After this patch, the syms array is set correctly,  so "perf list sw"
+> does not segfault.
 
-SNIP
+I had that fixed already, its upstream by now.
 
->  tools/perf/testsuite/common/init.sh                |  67 ++++++
->  tools/perf/testsuite/common/parametrization.sh     |  32 +++
->  tools/perf/testsuite/common/patterns.sh            | 117 +++++++++++
->  tools/perf/testsuite/common/settings.sh            |  57 +++++
->  61 files changed, 3145 insertions(+)
+Thanks,
 
-this is too big to review in single patch ;-)
-
-please separate this under multiple patches, like:
-  - base
-  - test 1
-  - test 2
-  ...
-
-ot something like that, that makes sense
-
-jirka
+- Arnaldo
