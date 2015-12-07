@@ -1,55 +1,52 @@
 From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 8/9] perf test: new testsuite: perf stat tests
-Date: Mon, 07 Dec 2015 19:53:37 +0100
-Message-ID: <1449514417.24573.258.camel@redhat.com>
+Subject: [PATCH 9/9] perf test: new testsuite: perf trace tests
+Date: Mon, 07 Dec 2015 19:53:49 +0100
+Message-ID: <1449514429.24573.259.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:37210 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:36994 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932310AbbLGSxj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 7 Dec 2015 13:53:39 -0500
-Received: from int-mx14.intmail.prod.int.phx2.redhat.com (int-mx14.intmail.prod.int.phx2.redhat.com [10.5.11.27])
-	by mx1.redhat.com (Postfix) with ESMTPS id 72513A0B3E
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Dec 2015 18:53:39 +0000 (UTC)
+	id S1755740AbbLGSxv (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 7 Dec 2015 13:53:51 -0500
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	by mx1.redhat.com (Postfix) with ESMTPS id 75D50C0B7A13
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Dec 2015 18:53:51 +0000 (UTC)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
 Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-This commit adds tests for perf stat tool.
+This commit adds tests for perf trace tools.
 
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/testsuite/base_stat/cleanup.sh          | 21 +++++++
- tools/perf/testsuite/base_stat/settings.sh         | 10 ++++
- tools/perf/testsuite/base_stat/test_basic.sh       | 68 ++++++++++++++++++++++
- tools/perf/testsuite/base_stat/test_hw.sh          | 50 ++++++++++++++++
- tools/perf/testsuite/base_stat/test_hwcache.sh     | 51 ++++++++++++++++
- .../perf/testsuite/base_stat/test_intel_uncore.sh  | 46 +++++++++++++++
- .../testsuite/base_stat/test_powerpc_hv_24x7.sh    | 60 +++++++++++++++++++
- .../base_stat/test_tracepoints_definition.sh       | 60 +++++++++++++++++++
- 8 files changed, 366 insertions(+)
- create mode 100755 tools/perf/testsuite/base_stat/cleanup.sh
- create mode 100644 tools/perf/testsuite/base_stat/settings.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_basic.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_hw.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_hwcache.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_intel_uncore.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_powerpc_hv_24x7.sh
- create mode 100755 tools/perf/testsuite/base_stat/test_tracepoints_definition.sh
+ tools/perf/testsuite/base_trace/cleanup.sh         |  19 +++
+ tools/perf/testsuite/base_trace/settings.sh        |  10 ++
+ tools/perf/testsuite/base_trace/setup.sh           |  16 +++
+ .../perf/testsuite/base_trace/stderr-whitelist.txt |   1 +
+ tools/perf/testsuite/base_trace/test_basic.sh      | 129 +++++++++++++++++++++
+ tools/perf/testsuite/base_trace/test_record.sh     |  45 +++++++
+ 6 files changed, 220 insertions(+)
+ create mode 100755 tools/perf/testsuite/base_trace/cleanup.sh
+ create mode 100644 tools/perf/testsuite/base_trace/settings.sh
+ create mode 100755 tools/perf/testsuite/base_trace/setup.sh
+ create mode 100644 tools/perf/testsuite/base_trace/stderr-whitelist.txt
+ create mode 100755 tools/perf/testsuite/base_trace/test_basic.sh
+ create mode 100755 tools/perf/testsuite/base_trace/test_record.sh
 
-diff --git a/tools/perf/testsuite/base_stat/cleanup.sh b/tools/perf/testsuite/base_stat/cleanup.sh
+diff --git a/tools/perf/testsuite/base_trace/cleanup.sh b/tools/perf/testsuite/base_trace/cleanup.sh
 new file mode 100755
-index 0000000..29e1ae6
+index 0000000..8a16968
 --- /dev/null
-+++ b/tools/perf/testsuite/base_stat/cleanup.sh
-@@ -0,0 +1,21 @@
++++ b/tools/perf/testsuite/base_trace/cleanup.sh
+@@ -0,0 +1,19 @@
 +#!/bin/bash
 +
 +#
-+#	cleanup.sh of perf stat test
++#	cleanup.sh of perf_trace test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
@@ -61,20 +58,18 @@ index 0000000..29e1ae6
 +. ./settings.sh
 +
 +find . -name \*.log | xargs -r rm
-+test -d hw && rmdir hw
-+test -d hwcache && rmdir hwcache
-+test -d hv24x7 && rmdir hv_24x7
-+test -d intel_uncore && rmdir intel_uncore
++find . -name \*.err | xargs -r rm
++rm -f perf.data*
 +print_overall_results 0
 +exit 0
-diff --git a/tools/perf/testsuite/base_stat/settings.sh b/tools/perf/testsuite/base_stat/settings.sh
+diff --git a/tools/perf/testsuite/base_trace/settings.sh b/tools/perf/testsuite/base_trace/settings.sh
 new file mode 100644
-index 0000000..a92dd73
+index 0000000..730ac74
 --- /dev/null
-+++ b/tools/perf/testsuite/base_stat/settings.sh
++++ b/tools/perf/testsuite/base_trace/settings.sh
 @@ -0,0 +1,10 @@
 +#
-+#	settings.sh of perf_stat test
++#	settings.sh of perf_trace test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
@@ -82,22 +77,51 @@ index 0000000..a92dd73
 +#
 +#
 +
-+export TEST_NAME="perf_stat"
-diff --git a/tools/perf/testsuite/base_stat/test_basic.sh b/tools/perf/testsuite/base_stat/test_basic.sh
++export TEST_NAME="perf_trace"
+diff --git a/tools/perf/testsuite/base_trace/setup.sh b/tools/perf/testsuite/base_trace/setup.sh
 new file mode 100755
-index 0000000..1b0f59e
+index 0000000..8d5ccaa
 --- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_basic.sh
-@@ -0,0 +1,68 @@
++++ b/tools/perf/testsuite/base_trace/setup.sh
+@@ -0,0 +1,16 @@
 +#!/bin/bash
 +
 +#
-+#	test_basic of perf_stat test
++#	setup.sh of SKELETON test
++#	Author: Michael Petlan <mpetlan@redhat.com>
++#
++#	Description:
++#		FIXME
++#
++#
++
++. ../common/init.sh
++. ./settings.sh
++
++print_overall_results 0
++exit 0
+diff --git a/tools/perf/testsuite/base_trace/stderr-whitelist.txt b/tools/perf/testsuite/base_trace/stderr-whitelist.txt
+new file mode 100644
+index 0000000..d59b483
+--- /dev/null
++++ b/tools/perf/testsuite/base_trace/stderr-whitelist.txt
+@@ -0,0 +1 @@
++no symbols found in .*, maybe install a debug package
+diff --git a/tools/perf/testsuite/base_trace/test_basic.sh b/tools/perf/testsuite/base_trace/test_basic.sh
+new file mode 100755
+index 0000000..e80f124
+--- /dev/null
++++ b/tools/perf/testsuite/base_trace/test_basic.sh
+@@ -0,0 +1,129 @@
++#!/bin/bash
++
++#
++#	test_basic of perf_trace test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
 +#
-+#		This test tests basic functionality of perf stat command.
++#		This test tests basic functionality of perf trace command.
 +#
 +#
 +
@@ -108,70 +132,131 @@ index 0000000..1b0f59e
 +THIS_TEST_NAME=`basename $0 .sh`
 +TEST_RESULT=0
 +
++#### help message
++
++if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
++	# test that a help message is shown and looks reasonable
++	$CMD_PERF trace --help > basic_helpmsg.log
++	PERF_EXIT_CODE=$?
++
++	../common/check_all_patterns_found.pl "PERF-TRACE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PAGEFAULTS" "EXAMPLES" "SEE ALSO" "NOTES" < basic_helpmsg.log
++	CHECK_EXIT_CODE=$?
++	../common/check_all_patterns_found.pl "all-cpus" "expr" "output" "pid" "tid" "uid" "verbose" "cpu" "duration" "summary" "sched" "event" < basic_helpmsg.log
++	(( CHECK_EXIT_CODE += $? ))
++	../common/check_all_patterns_found.pl "perf trace record" < basic_helpmsg.log
++	(( CHECK_EXIT_CODE += $? ))
++
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
++	(( TEST_RESULT += $? ))
++else
++	print_testcase_skipped "help message"
++fi
++
 +#### basic execution
 +
-+# test that perf stat is even working
-+$CMD_PERF stat $CMD_SIMPLE 2> 01.log
++# test that perf trace is working
++$CMD_PERF trace $CMD_QUICK_SLEEP 2> basic_basic.log
 +PERF_EXIT_CODE=$?
 +
-+REGEX_HEADER="\s*Performance counter stats for 'true':"
-+REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*"
-+../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" < 01.log
++../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < basic_basic.log
 +CHECK_EXIT_CODE=$?
 +
 +print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 +(( TEST_RESULT += $? ))
 +
 +
-+#### some options
++### duration threshold
 +
-+# test some basic options that they change the behaviour
-+$CMD_PERF stat -i -a -c -r 3 -o /dev/stdout -- $CMD_BASIC_SLEEP > 02.log
++# '--duration X' should show only syscalls that take longer than X ms
++$CMD_PERF trace --duration 80 $CMD_BASIC_SLEEP 2> basic_duration.log
 +PERF_EXIT_CODE=$?
 +
-+REGEX_HEADER="^\s*Performance counter stats for '(sleep [\d\.]+|system wide)' \(3 runs\):"
-+REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*\s*"$RE_NUMBER"%?.*"
-+REGEX_FOOTER="^\s*"$RE_NUMBER" seconds time elapsed.*"
-+../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" "$REGEX_FOOTER" < 02.log
++REGEX_SLEEP_SYSCALL_ONLY="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+\w*sleep\(.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
++../common/check_all_lines_matched.pl "$REGEX_SLEEP_SYSCALL_ONLY" < basic_duration.log
 +CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "some options"
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "duration threshold"
 +(( TEST_RESULT += $? ))
 +
 +
-+#### CSV output
++### systemwide
 +
-+# with -x'<SEPARATOR>' perf stat should produce a CSV output
-+$CMD_PERF stat -x';' -o /dev/stdout -a -- sleep 0.1 > 03.log
++# '-a' should trace system-wide from all CPUs
++$CMD_PERF trace -o basic_systemwide.log -a &
++PERF_PID=$!
++$CMD_LONGER_SLEEP
++kill -SIGINT $PERF_PID
++wait $PERF_PID
 +PERF_EXIT_CODE=$?
 +
-+REGEX_LINES="^"$RE_NUMBER";+"$RE_EVENT
-+REGEX_UNSUPPORTED_LINES="^<not supported>;+"$RE_EVENT
-+../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < 03.log
++../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < basic_systemwide.log
 +CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
++(( TEST_RESULT += $? ))
++
++
++### full timestamp
++
++# '-T' should print the full timestamp instead of the relative one
++$CMD_PERF trace -T -- $CMD_QUICK_SLEEP 2> basic_full_timestamp.log
++PERF_EXIT_CODE=$?
++
++../common/check_all_lines_matched.pl "$RE_LINE_TRACE" "\d{8,}\." < basic_full_timestamp.log
++CHECK_EXIT_CODE=$?
++
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "full timestamp"
++(( TEST_RESULT += $? ))
++
++
++### summary
++
++# '-s' should print out a summary table
++$CMD_PERF trace -s -- $CMD_QUICK_SLEEP 2> basic_summary.log
++PERF_EXIT_CODE=$?
++
++../common/check_all_patterns_found.pl "$RE_LINE_EMPTY" "$RE_LINE_TRACE_SUMMARY_HEADER" "$RE_LINE_TRACE_SUMMARY_CONTENT" < basic_summary.log
++CHECK_EXIT_CODE=$?
++
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "summary"
++(( TEST_RESULT += $? ))
++
++
++### attach process
++
++# perf-trace should be able to attach an existing process by '-p PID'
++$CMD_BASIC_SLEEP &
++$CMD_PERF trace -p $! -o basic_attach.log
++PERF_EXIT_CODE=$?
++
++../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < basic_attach.log
++CHECK_EXIT_CODE=$?
++# perf should know the syscall even if perf attached during it (sleep)
++../common/check_all_patterns_found.pl "sleep" "close" "exit" < basic_attach.log
++(( CHECK_EXIT_CODE += $? ))
++
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "attach process"
 +(( TEST_RESULT += $? ))
 +
 +
 +# print overall resutls
 +print_overall_results "$TEST_RESULT"
 +exit $?
-diff --git a/tools/perf/testsuite/base_stat/test_hw.sh b/tools/perf/testsuite/base_stat/test_hw.sh
+diff --git a/tools/perf/testsuite/base_trace/test_record.sh b/tools/perf/testsuite/base_trace/test_record.sh
 new file mode 100755
-index 0000000..7a94af9
+index 0000000..dab3471
 --- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_hw.sh
-@@ -0,0 +1,50 @@
++++ b/tools/perf/testsuite/base_trace/test_record.sh
+@@ -0,0 +1,45 @@
 +#!/bin/bash
 +
 +#
-+#	test_hw of perf_stat test
++#	test_record of perf_trace test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
 +#
-+#		This test tests hardware events by perf stat.
++#		This test tests the sampling mode of perf-trace.
 +#
 +#
 +
@@ -182,275 +267,29 @@ index 0000000..7a94af9
 +THIS_TEST_NAME=`basename $0 .sh`
 +TEST_RESULT=0
 +
-+EVENTS_TO_TEST=`$CMD_PERF list hw | grep "Hardware event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
-+if [ -z "$EVENTS_TO_TEST" ]; then
-+	print_overall_skipped
-+	exit 0
-+fi
 +
-+# FIXME test -e hw.log && rm -f hw.log
++#### basic execution
 +
-+test -d hw || mkdir hw
++# test that perf trace record is working
++$CMD_PERF trace record $CMD_QUICK_SLEEP 2> record_basic_record.log
++PERF_EXIT_CODE=$?
++$CMD_PERF report --stdio > record_basic_report.log 2> record_basic_report.err
++(( PERF_EXIT_CODE += $? ))
 +
++# check the perf record output
++../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < record_basic_record.log
++CHECK_EXIT_CODE=$?
++# check the perf report output
++../common/check_all_lines_matched.pl "$RE_LINE_REPORT_CONTENT" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < record_basic_report.log
++(( CHECK_EXIT_CODE += $? ))
++# check that the perf report stderr is empty
++../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < record_basic_report.err
++(( CHECK_EXIT_CODE += $? ))
 +
-+#### testing hardware events
-+
-+for event in $EVENTS_TO_TEST; do
-+	$CMD_PERF stat -a -e $event -o hw/$event.log --append -x';' -- $CMD_BASIC_SLEEP
-+	PERF_EXIT_CODE=$?
-+	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
-+	../common/check_all_patterns_found.pl "$REGEX_LINES" < hw/$event.log
-+	CHECK_EXIT_CODE=$?
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
-+	(( TEST_RESULT += $? ))
-+done
-+
-+# print overall resutls
-+print_overall_results "$TEST_RESULT"
-+exit $?
-+
-+
-+
-+# FIXME we should test the numbers
-+# FIXME we should be able to blacklist events on some archs (<not supported> is OK (SND, IVB))
-diff --git a/tools/perf/testsuite/base_stat/test_hwcache.sh b/tools/perf/testsuite/base_stat/test_hwcache.sh
-new file mode 100755
-index 0000000..be1829d
---- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_hwcache.sh
-@@ -0,0 +1,51 @@
-+#!/bin/bash
-+
-+#
-+#	test_hwcache of perf_stat test
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This test tests hardware events by perf stat.
-+#
-+#
-+
-+# include working environment
-+. ../common/init.sh
-+. ./settings.sh
-+
-+THIS_TEST_NAME=`basename $0 .sh`
-+TEST_RESULT=0
-+
-+EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep "Hardware cache event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
-+if [ -z "$EVENTS_TO_TEST" ]; then
-+	print_overall_skipped
-+	exit 0
-+fi
-+
-+test -d hwcache || mkdir hwcache
-+
-+# FIXME test -e hw.log && rm -f hw.log
-+
-+
-+#### testing hardware events
-+
-+for event in $EVENTS_TO_TEST; do
-+	$CMD_PERF stat -a -e $event -o hwcache/$event.log --append -x';' -- $CMD_BASIC_SLEEP
-+	PERF_EXIT_CODE=$?
-+	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
-+	../common/check_all_patterns_found.pl "$REGEX_LINES" < hwcache/$event.log
-+	CHECK_EXIT_CODE=$?
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
-+	(( TEST_RESULT += $? ))
-+done
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - record"
++(( TEST_RESULT += $? ))
 +
 +
 +# print overall resutls
-+print_overall_results "$TEST_RESULT"
-+exit $?
-+
-+
-+
-+# FIXME we should test the numbers
-+# FIXME we should be able to blacklist events on some archs (<not supported> is OK (SND, IVB))
-diff --git a/tools/perf/testsuite/base_stat/test_intel_uncore.sh b/tools/perf/testsuite/base_stat/test_intel_uncore.sh
-new file mode 100755
-index 0000000..d04615f
---- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_intel_uncore.sh
-@@ -0,0 +1,46 @@
-+#!/bin/bash
-+
-+#
-+#	test_intel_uncore of perf_stat test
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This test tests support of uncore events
-+#
-+#
-+
-+# include working environment
-+. ../common/init.sh
-+. ./settings.sh
-+
-+THIS_TEST_NAME=`basename $0 .sh`
-+TEST_RESULT=0
-+
-+EVENTS_TO_TEST=`$CMD_PERF list | grep "uncore" | awk '{print $1}' | tr '\n' ' '`
-+if [ -z "$EVENTS_TO_TEST" ]; then
-+	print_overall_skipped
-+	exit 0
-+fi
-+
-+test -d intel_uncore || mkdir intel_uncore
-+
-+
-+#### testing Intel uncore events
-+
-+for event in $EVENTS_TO_TEST; do
-+	EVENT_NAME=`echo $event | tr '/' '_' | tr ',' '-'`
-+	$CMD_PERF stat -a -e $event -o intel_uncore/$EVENT_NAME.log -x';' -- $CMD_QUICK_SLEEP
-+	PERF_EXIT_CODE=$?
-+
-+	REGEX_LINES="$RE_NUMBER;[^;]*;$RE_EVENT_ANY;$RE_NUMBER;100\.00"
-+	../common/check_all_patterns_found.pl "$REGEX_LINES" < intel_uncore/$EVENT_NAME.log
-+	CHECK_EXIT_CODE=$?
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
-+	(( TEST_RESULT += $? ))
-+done
-+
-+
-+# print overall resutls
-+print_overall_results "$TEST_RESULT"
-+exit $?
-diff --git a/tools/perf/testsuite/base_stat/test_powerpc_hv_24x7.sh b/tools/perf/testsuite/base_stat/test_powerpc_hv_24x7.sh
-new file mode 100755
-index 0000000..e1bc643
---- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_powerpc_hv_24x7.sh
-@@ -0,0 +1,60 @@
-+#!/bin/bash
-+
-+#
-+#	test_powerpc_hv24x7 of perf_stat test
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This test tests hardware events by perf stat.
-+#
-+#
-+
-+# include working environment
-+. ../common/init.sh
-+. ./settings.sh
-+
-+THIS_TEST_NAME=`basename $0 .sh`
-+TEST_RESULT=0
-+
-+EVENTS_TO_TEST=`$CMD_PERF list | grep "24x7" | grep "core" | awk '{print $1}' | tr '\n' ' '`
-+if [ -z "$EVENTS_TO_TEST" ]; then
-+	print_overall_skipped
-+	exit 0
-+fi
-+
-+test -d hv_24x7 || mkdir hv_24x7
-+
-+if [ "$PARAM_STAT_24x7_ALL_CORES" = "y" ]; then
-+	NPROC=`nproc`
-+	CORES_TO_TEST="`seq 0 $((NPROC-1))`"
-+else
-+	CORES_TO_TEST="0"
-+fi
-+
-+#### testing hv_24x7 events
-+
-+for event in $EVENTS_TO_TEST; do
-+	EVENT_NAME=`echo $event | awk -F',' '{print $1}' | awk -F'/' '{print $2}'`
-+	PERF_EXIT_CODE=0
-+	for core in $CORES_TO_TEST; do
-+		evt=`echo $event | sed "s/\?/$core/"`
-+		$CMD_PERF stat -a -e $evt -o hv_24x7/$EVENT_NAME.log --append -x';' -- $CMD_QUICK_SLEEP
-+		(( PERF_EXIT_CODE += $? ))
-+	done
-+	REGEX_LINES="$RE_NUMBER;+hv_24x7\/$EVENT_NAME,core=$RE_NUMBER\/;$RE_NUMBER;100\.00"
-+	../common/check_all_patterns_found.pl "$REGEX_LINES" < hv_24x7/$EVENT_NAME.log
-+	CHECK_EXIT_CODE=$?
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $EVENT_NAME"
-+	(( TEST_RESULT += $? ))
-+done
-+
-+# print overall resutls
-+print_overall_results "$TEST_RESULT"
-+exit $?
-+
-+
-+
-+# FIXME we should test the numbers
-+# FIXME add lpar/vcpu events? maybe configurable
-+# FIXME "You have POWER8 LPAR, so I think you should have hv24x7 but you do not!" warning
-diff --git a/tools/perf/testsuite/base_stat/test_tracepoints_definition.sh b/tools/perf/testsuite/base_stat/test_tracepoints_definition.sh
-new file mode 100755
-index 0000000..bc238cb
---- /dev/null
-+++ b/tools/perf/testsuite/base_stat/test_tracepoints_definition.sh
-@@ -0,0 +1,60 @@
-+#!/bin/bash
-+
-+#
-+#	test_tracepoints_definition.sh of perf_stat test
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This test checks the tracepoints for syntax
-+#	errors in definition. It takes a long time, so
-+#	that's why the test can be disabled by an option
-+#	in common/parametrization.sh
-+#
-+#
-+
-+# include working environment
-+. ../common/init.sh
-+. ./settings.sh
-+
-+THIS_TEST_NAME=`basename $0 .sh`
-+TEST_RESULT=0
-+
-+if [ ! "$PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX" == "y" ]; then
-+	print_overall_skipped
-+	exit 0
-+fi
-+
-+# remove old logs
-+find . -name tracepoints_def_\*.log | xargs -r rm
-+
-+### check all the tracepoint events of all the available subsystems
-+
-+SUBSYSTEMS=`$CMD_PERF list tracepoint | grep "Tracepoint event" | awk '{print $1}' | awk -F':' '{print $1}' | sort -u`
-+for subs in $SUBSYSTEMS; do
-+	TRACEPOINT_EVENTS=`$CMD_PERF list $subs:\* | grep "Tracepoint event" | awk '{print $1}' | tr '\n' ' '`
-+	PERF_EXIT_CODE=0
-+	for tp in $TRACEPOINT_EVENTS; do
-+		$CMD_PERF stat -e $tp -o /dev/stdout true > out 2> err
-+		(( PERF_EXIT_CODE += $? ))
-+		echo -n "$tp    is " >> tracepoints_def_$subs.log
-+
-+		# check whether the event is supported when it is listed
-+		grep -qi "not supported" out
-+		test $? -eq 0 && echo -n "NOT SUPPORTED and " >> tracepoints_def_$subs.log || echo -n "supported and " >> tracepoints_def_$subs.log
-+
-+		# check whether the event causes any warnings
-+		test -s err
-+		test $? -eq 0 && echo "CAUSES WARNINGS" >> tracepoints_def_$subs.log || echo "is defined correctly" >> tracepoints_def_$subs.log
-+	done
-+
-+	# check for the results
-+	! grep -e "CAUSES WARNINGS" -e "NOT SUPPORTED" tracepoints_def_$subs.log
-+	print_results $PERF_EXIT_CODE $? "subsystem $subs"
-+	(( TEST_RESULT += $? ))
-+done
-+
-+rm -f err out
-+
 +print_overall_results "$TEST_RESULT"
 +exit $?
