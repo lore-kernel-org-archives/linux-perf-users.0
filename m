@@ -1,336 +1,340 @@
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Subject: [PATCH perf/core 01/22] [v2] perf refcnt: Introduce generic
- refcount APIs with debug feature
-Date: Wed, 09 Dec 2015 11:10:50 +0900
-Message-ID: <20151209021050.10245.81565.stgit@localhost.localdomain>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH perf/core  00/22] perf refcnt debugger API and fixes
+Date: Wed, 9 Dec 2015 10:41:38 -0300
+Message-ID: <20151209134138.GB15864@kernel.org>
 References: <20151209021047.10245.8918.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5]:53331 "EHLO
-	mail4.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753060AbbLICSo (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:47181 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754345AbbLINlo (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 8 Dec 2015 21:18:44 -0500
+	Wed, 9 Dec 2015 08:41:44 -0500
+Content-Disposition: inline
 In-Reply-To: <20151209021047.10245.8918.stgit@localhost.localdomain>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <ast@plumgrid.com>
 
-This is a kind of debugging feature for atomic reference counter.
-The reference counters are widely used in perf tools but not well
-debugged. It sometimes causes memory leaks but no one has noticed
-the issue, since it is hard to debug such un-reclaimed objects.
+Em Wed, Dec 09, 2015 at 11:10:48AM +0900, Masami Hiramatsu escreveu:
+> Hi Arnaldo,
+> 
+> Here is a series of patches for perf refcnt debugger and
+> some fixes.
+> 
+> In this series I've replaced all atomic reference counters
+> with the refcnt interface, including dso, map, map_groups,
+> thread, cpu_map, comm_str, cgroup_sel, thread_map, and
+> perf_mmap.
+> 
+>   refcnt debugger (or refcnt leak checker)
+>   ===============
+> 
+> At first, note that this change doesn't affect any compiled
+> code unless building with REFCNT_DEBUG=1 (see macros in
+> refcnt.h). So, this feature is only enabled in the debug binary.
+> But before releasing, we can ensure that all objects are safely
+> reclaimed before exit in -rc phase.
 
-This refcnt interface provides fully backtrace debug feature to
-analyze such issue. User just replace atomic_t ops with refcnt
-APIs and add refcnt__exit() where the object is released.
+That helps and is finding bugs and is really great stuff, thank you!
 
-/* At object initializing */
-refcnt__init(obj, refcnt, 1); /* <- atomic_set(&obj->refcnt, 1); */
-/* or */
-refcnt__init_as(obj, refcnt, 1, "class");	/* init as "class" */
+But I wonder if we couldn't get the same results on an unmodified binary
+by using things like 'perf probe', the BPF code we're introducing, have
+you thought about this possibility?
 
-/* At object get method */
-refcnt__get(obj, refcnt); /* <- atomic_inc(&obj->refcnt); */
+I.e. trying to use 'perf probe' to do this would help in using the same
+technique in other code bases where we can't change the sources, etc.
 
-/* At object put method */
-if (obj && refcnt__put(obj, refcnt)) /* <-atmoic_dec_and_test(&obj->refcnt)*/
+For perf we could perhaps use a 'noinline' on the __get/__put
+operations, so that we could have the right places to hook using
+uprobes, other codebases would have to rely in the 'perf probe'
+infrastructure that knows where inlines were expanded, etc.
 
-/* At object releasing */
-refcnt__exit(obj, refcnt); /* <- Newly added */
+Such a toold could work like:
 
-The debugging feature is enabled when building perf with
-REFCNT_DEBUG=1. Otherwides it is just translated as normal
-atomic ops.
+   perf dbgrefcnt ~/bin/perf thread 
 
-Debugging binary warns you if it finds leaks when the perf exits.
-If you give -v (or --verbose) to the perf, it also shows backtrace
-logs on all refcnt operations of leaked objects.
+And it would look up thread__get and thread__put(), create an eBPF map
+where to store the needed tracking data structures, and use the same
+techniques you used, asking for backtraces using the perf
+infrastructure, etc.
 
-Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+We would be using this opportunity to improve the 'perf probe' and the
+eBPF infrastructures we're putting in place, and having something that
+could be used in other codebases, not just perf.
 
----
- Changes from v1:
-  - Change internal functions as it indicates the object more clear
-  - Minor macro changes to have braces.
-  - refcnt__init takes an initial number for some cases.
-  - Add refcnt__init_as() for the object which the object and class
-    have different name.
-  - Header shows "obj@addr" instead of "obj: addr".
-  - Shrink down the backtrace size to 16 (it is enough).
-  - Fix a bug in case of refcnt == 0.
-  - Show raw addresses if backtrace_symbol is failed.
----
- tools/perf/config/Makefile |    5 +
- tools/perf/util/Build      |    1 
- tools/perf/util/refcnt.c   |  151 ++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/refcnt.h   |   70 ++++++++++++++++++++
- 4 files changed, 227 insertions(+)
- create mode 100644 tools/perf/util/refcnt.c
- create mode 100644 tools/perf/util/refcnt.h
-
-diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-index 6eb9a95..62fc93f 100644
---- a/tools/perf/config/Makefile
-+++ b/tools/perf/config/Makefile
-@@ -147,6 +147,11 @@ ifdef PARSER_DEBUG
-   $(call detected_var,PARSER_DEBUG_FLEX)
- endif
+Comments about other issues are below:
  
-+ifdef REFCNT_DEBUG
-+  CFLAGS += -DREFCNT_DEBUG
-+  $(call detected,CONFIG_REFCNT_DEBUG)
-+endif
-+
- ifndef NO_LIBPYTHON
-   # Try different combinations to accommodate systems that only have
-   # python[2][-config] in weird combinations but always preferring
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 0513dd5..646a4b7 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -87,6 +87,7 @@ libperf-$(CONFIG_AUXTRACE) += intel-pt.o
- libperf-$(CONFIG_AUXTRACE) += intel-bts.o
- libperf-y += parse-branch-options.o
- libperf-y += parse-regs-options.o
-+libperf-$(CONFIG_REFCNT_DEBUG) += refcnt.o
+> To use the refcnt debugger, you just build a perf binary with
+> REFCNT_DEBUG=1 as follows;
+>   ----
+>   # make REFCNT_DEBUG=1
+>   ----
+> And run the perf command. If the refcnt debugger finds leaks,
+> it shows the summary of the bugs. Note that if the command does
+> not use stdio, it doesn't show anything because refcnt debugger
+> uses pr_debug. Please use --stdio option in such case.
+
+It would be interesting to have this writing to a file instead, so that
+we could use the same technique for the TUI and other UIs.
  
- libperf-$(CONFIG_LIBBPF) += bpf-loader.o
- libperf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
-diff --git a/tools/perf/util/refcnt.c b/tools/perf/util/refcnt.c
-new file mode 100644
-index 0000000..9bd36b2b
---- /dev/null
-+++ b/tools/perf/util/refcnt.c
-@@ -0,0 +1,151 @@
-+/* Refcount backtrace for debugging leaks */
-+#include "../perf.h"
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <execinfo.h>	/* For backtrace */
-+
-+#include "event.h"
-+#include "debug.h"
-+#include "util.h"
-+#include "refcnt.h"
-+
-+/* A root of backtrace */
-+static LIST_HEAD(refcnt_root);	/* List head of refcnt object */
-+
-+static void refcnt_object__delete(struct refcnt_object *ref)
-+{
-+	struct refcnt_buffer *buf;
-+
-+	while (!list_empty(&ref->head)) {
-+		buf = list_entry(ref->head.next, struct refcnt_buffer, list);
-+		list_del_init(&buf->list);
-+		free(buf);
-+	}
-+	list_del_init(&ref->list);
-+	free(ref);
-+}
-+
-+static struct refcnt_object *refcnt_object__find(void *obj)
-+{
-+	struct refcnt_object *ref;
-+
-+	/* TODO: use hash list */
-+	list_for_each_entry(ref, &refcnt_root, list)
-+		if (ref->obj == obj)
-+			return ref;
-+
-+	return NULL;
-+}
-+
-+void refcnt__delete(void *addr)
-+{
-+	struct refcnt_object *ref = refcnt_object__find(addr);
-+
-+	if (!ref) {
-+		pr_debug("REFCNT: Delete uninitialized refcnt: %p\n", addr);
-+		return;
-+	}
-+	refcnt_object__delete(ref);
-+}
-+
-+static void refcnt_object__record(struct refcnt_object *ref, int count)
-+{
-+	struct refcnt_buffer *buf = malloc(sizeof(*buf));
-+
-+	if (!buf) {
-+		pr_debug("REFCNT: Out of memory for %p (%s)\n",
-+			 ref->obj, ref->name);
-+		return;
-+	}
-+	INIT_LIST_HEAD(&buf->list);
-+	buf->count = count;
-+	buf->nr = backtrace(buf->buf, BACKTRACE_SIZE);
-+	list_add_tail(&buf->list, &ref->head);
-+}
-+
-+static struct refcnt_object *refcnt_object__new(void *obj, const char *name)
-+{
-+	struct refcnt_object *ref = malloc(sizeof(*ref));
-+
-+	if (!ref) {
-+		pr_debug("REFCNT: Out of memory for %p (%s)\n",
-+			 obj, name);
-+		return NULL;
-+	}
-+	INIT_LIST_HEAD(&ref->list);
-+	INIT_LIST_HEAD(&ref->head);
-+	ref->name = name;
-+	ref->obj = obj;
-+	list_add_tail(&ref->list, &refcnt_root);
-+
-+	return ref;
-+}
-+
-+/* This is called via refcnt__init */
-+void refcnt__recordnew(void *obj, const char *name, int count)
-+{
-+	struct refcnt_object *ref = refcnt_object__new(obj, name);
-+
-+	if (ref)
-+		refcnt_object__record(ref, count);
-+}
-+
-+/* This is called via refcnt__get/put */
-+void refcnt__record(void *obj, const char *name, int count)
-+{
-+	struct refcnt_object *ref = refcnt_object__find(obj);
-+
-+	/* If no entry, allocate new one */
-+	if (!ref)
-+		refcnt__recordnew(obj, name, count);
-+	else
-+		refcnt_object__record(ref, count);
-+}
-+
-+static void pr_refcnt_buffer(struct refcnt_buffer *buf)
-+{
-+	char **symbuf;
-+	int i;
-+
-+	if (!buf)
-+		return;
-+	symbuf = backtrace_symbols(buf->buf, buf->nr);
-+	/* Skip the first one because it is always btrace__record */
-+	for (i = 1; i < buf->nr; i++) {
-+		if (symbuf)
-+			pr_debug("  %s\n", symbuf[i]);
-+		else
-+			pr_debug("  [%p]\n", buf->buf[i]);
-+	}
-+	free(symbuf);
-+}
-+
-+static void  __attribute__((destructor)) refcnt__dump_unreclaimed(void)
-+{
-+	struct refcnt_object *ref, *n;
-+	struct refcnt_buffer *buf;
-+	int i = 0;
-+
-+	if (list_empty(&refcnt_root))
-+		return;
-+
-+	pr_warning("REFCNT: BUG: Unreclaimed objects found.\n");
-+	list_for_each_entry_safe(ref, n, &refcnt_root, list) {
-+		pr_debug("==== [%d] ====\nUnreclaimed %s@%p\n", i,
-+			 ref->name ? ref->name : "(object)", ref->obj);
-+		list_for_each_entry(buf, &ref->head, list) {
-+			pr_debug("Refcount %s => %d at\n",
-+				 buf->count >= 0 ? "+1" : "-1",
-+				 buf->count >= 0 ? buf->count :
-+						  -buf->count - 1);
-+			pr_refcnt_buffer(buf);
-+		}
-+		refcnt_object__delete(ref);
-+		i++;
-+	}
-+	pr_warning("REFCNT: Total %d objects are not reclaimed.\n", i);
-+	if (!verbose)
-+		pr_warning("   To see all backtraces, rerun with -v option\n");
-+}
-+
-diff --git a/tools/perf/util/refcnt.h b/tools/perf/util/refcnt.h
-new file mode 100644
-index 0000000..cd5e4e4
---- /dev/null
-+++ b/tools/perf/util/refcnt.h
-@@ -0,0 +1,70 @@
-+/*
-+ * Atomic reference counter API with debugging feature
-+ */
-+#ifndef __PERF_REFCNT_H
-+#define __PERF_REFCNT_H
-+
-+#include <linux/atomic.h>
-+
-+#ifdef REFCNT_DEBUG
-+
-+struct refcnt_object {
-+	struct list_head	list;	/* List of objects */
-+	void			*obj;	/* Object address which has refcnt */
-+	const char		*name;	/* Object class name */
-+	struct list_head	head;	/* List head for buffers */
-+};
-+
-+#define BACKTRACE_SIZE 16
-+struct refcnt_buffer {
-+	struct list_head	list;	/* List of buffers */
-+	int			count;	/* Count number at recording point */
-+	int			nr;	/* Number of recorded buffer entries */
-+	void			*buf[BACKTRACE_SIZE];	/* Backtrace buffer */
-+};
-+
-+void refcnt__recordnew(void *obj, const char *name, int count);
-+void refcnt__record(void *obj, const char *name, int count);
-+void refcnt__delete(void *obj);
-+
-+static inline void __refcnt__init(atomic_t *refcnt, int n, void *obj,
-+				  const char *name)
-+{
-+	atomic_set(refcnt, n);
-+	refcnt__recordnew(obj, name, n);
-+}
-+
-+static inline void __refcnt__get(atomic_t *refcnt, void *obj, const char *name)
-+{
-+	atomic_inc(refcnt);
-+	refcnt__record(obj, name, atomic_read(refcnt));
-+}
-+
-+static inline int __refcnt__put(atomic_t *refcnt, void *obj, const char *name)
-+{
-+	refcnt__record(obj, name, -atomic_read(refcnt));
-+	return atomic_dec_and_test(refcnt);
-+}
-+
-+#define refcnt__init(obj, member, n)	\
-+	__refcnt__init(&(obj)->member, n, obj, #obj)
-+#define refcnt__init_as(obj, member, n, name)	\
-+	__refcnt__init(&(obj)->member, n, obj, name)
-+#define refcnt__exit(obj, member)	\
-+	refcnt__delete(obj)
-+#define refcnt__get(obj, member)	\
-+	__refcnt__get(&(obj)->member, obj, #obj)
-+#define refcnt__put(obj, member)	\
-+	__refcnt__put(&(obj)->member, obj, #obj)
-+
-+#else	/* !REFCNT_DEBUG */
-+
-+#define refcnt__init(obj, member, n)	atomic_set(&(obj)->member, n)
-+#define refcnt__init_as(obj, member, n, name)	refcnt__init(obj, member, n)
-+#define refcnt__exit(obj, member)	do { } while (0)
-+#define refcnt__get(obj, member)	atomic_inc(&(obj)->member)
-+#define refcnt__put(obj, member)	atomic_dec_and_test(&(obj)->member)
-+
-+#endif	/* !REFCNT_DEBUG */
-+
-+#endif	/* __PERF_REFCNT_H */
+> E.g. with the first 13 patches, perf top shows that many objects
+> are leaked.
+>   ----
+>   # ./perf top --stdio
+>   q
+>   exiting.
+>   REFCNT: BUG: Unreclaimed objects found.
+>   REFCNT: Total 3595 objects are not reclaimed.
+>     "map" leaks 3334 objects
+>     "dso" leaks 231 objects
+>     "thread" leaks 9 objects
+>     "comm_str" leaks 13 objects
+>     "map_groups" leaks 8 objects
+>      To see all backtraces, rerun with -v option
+>   ----
+> You can also dump all the backtrace data with -v option, but I
+> don't recommend you to do it on your console, because it will
+> be very very long (for example, above dumps 40MB text logs
+> on your console).
+> 
+> Instead, you can use PERF_REFCNT_DEBUG_FILTER env. var. to focus
+> on one object, and also use "2>" to redirect stderr output to file.
+> E.g.
+>   ----
+>   # PERF_REFCNT_DEBUG_FILTER=map ./perf top --stdio -v 2> refcnt.log
+>   q
+>   exiting.
+>   # less refcnt.log
+>   mmap size 528384B
+>   Looking at the vmlinux_path (8 entries long)
+>   Using /lib/modules/4.3.0-rc2+/build/vmlinux for symbols
+>   REFCNT: BUG: Unreclaimed objects found.
+>   ==== [0] ====
+>   Unreclaimed map@0x2157dc0
+>   Refcount +1 => 1 at
+>   ...
+>     ./perf() [0x4226fd]
+>   REFCNT: Total 3229 objects are not reclaimed.
+>     "map" leaks 3229 objects
+>   ----
+> 
+>   Bugfixes
+>   ========
+> 
+> In this series I've also tried to fix some object leaks in perf top
+> and perf stat.
+> After applying this series, this reduced (not vanished) to 1/5.
+>   ----
+>   # ./perf top --stdio
+>   q
+>   exiting.
+>   REFCNT: BUG: Unreclaimed objects found.
+>   REFCNT: Total 866 objects are not reclaimed.
+>     "dso" leaks 213 objects
+>     "map" leaks 624 objects
+>     "comm_str" leaks 12 objects
+>     "thread" leaks 9 objects
+>     "map_groups" leaks 8 objects
+>      To see all backtraces, rerun with -v option
+>   ----
+> 
+> Actually, I'm still not able to fix all of the bugs. It seems that
+> hists has a bug that hists__delete_entries doesn't delete all the
+> entries because some entries are on hists->entries but others on
+> hists->entries_in. And I'm not so sure about hists.c.
+> Arnaldo, would you have any idea for this bug?
+
+I'll will audit the hists code, its all about collecting new entries
+into an rbtree to then move the last batch for merging with the
+previous, decayed ones while continuing to process a new batch in
+another thread.
+ 
+> 
+>   General refcnt miscodings
+>   =========================
+> 
+> BTW, while applying this change, I've found that there are refcnt
+> coding mismatches in those code and most of the bugs come from those
+> mismatches.
+> 
+> - The reference counter can be initialized by 0 or 1.
+>  - If 0 is chosen, caller have to get it and free it if failed to
+>    register appropriately.
+>  - If 1 is chosen, caller doesn't need to get it, but when exits the
+>    caller, it has to put it. (except for returning the object itself)
+> - The application should choose either one as its policy, to avoid
+>   confusion.
+> 
+> perf tools mixes it up (moreover, it initializes 2 in a case) and
+> caller usually forgets to put it (it is not surprising, because too
+> many "put" usually cause SEGV by accessing freed object.)
+
+Well, we should fix the bugs and document why some initialization is
+deemed better than a single initialization style.
+
+For instance, if we know that we will keep multiple references straight
+away, then we could init it with some value different that preferred,
+that I aggee, is 1, i.e. the usual way for some constructor is:
+
+
+struct foo *foo__new()
+{
+	struct foo *f = malloc(sizeof (*f));
+
+	if (f) {
+		atomic_set(&f->refcnt, 1);
+	}
+
+	return f;
+}
+
+void *foo__delete(struct foo *f)
+{
+	free(f);
+}
+
+void foo__put(struct foo *f)
+{
+	if (f && atomic_dec_and_test(f->refcnt))
+		foo__delete(f);
+}
+
+
+Then, when using if, and before adding it to any other tree, list, i.e.
+a container, we do:
+
+	struct foo *f = foo__new();
+
+	/*
+	 * assume f was allocated and then the function allocating it
+	 * failed, when it bails out it should just do:
+ 	 */
+out_error:
+	foo__put(f);
+
+And that will make it hit zero, which will call foo__delete(), case
+closed.
+ 
+> As far as I can see, cgroup_sel, perf_mmap(this is initialized 0 or 2...),
+> thread, and comm_str are initialized by 0. Others are initialized by 1.
+> 
+> So, I'd like to suggest that we choose one policy and cleanup the code.
+> I recommend to use init by 1 policy, because anyway caller has to get
+
+See above, if nothing else recommends using a different value, use 1.
+
+> the refcnt. Suppose the below code;
+> 
+>    ----
+> obj__new() {
+> 	obj = zalloc(sizeof(*obj));
+> 	refcnt__init(obj, refcnt, 0);
+> 	return obj;
+> }
+> 
+> caller() {
+> 	obj = obj__new();
+> 	if (parent__add_obj(parent, obj) != SUCCESS) {
+> 		free(obj);
+> 	}
+> }
+>    ----
+> 
+> At first glance, this looks good. However, if the parent__add_obj() once
+
+The caller never should call free or the object destructor (i.e.
+foo__delete() in my example above), it should _always_ just drop the
+referece it has to the object, i.e. call foo__put()
+
+> gets the obj(refcnt => 1) and fails to add it to parent list by some reason,
+> it should put the obj(refcnt => 0). This means the obj is already freed at
+> that point.
+> 
+> Then, caller() shouldn't free obj in error case? No, because parent__add_obj()
+> can fail before getting the obj :(. Maybe we can handle it by checking return
+> code, but it is ugly.
+> 
+> If we choose "init by 1", caller always has to put it before returning. But
+
+Right, if you don't keep a pointer to the object that at a later point
+you will call obj__put() on it, then you should do it straight away
+after adding it to some list, tree, array, i.e. a container, and the
+container adding operation should grab a refcount, that will be dropped
+when the object is removed from that data structure.
+
+> the coding rule becomes simpler.
+>    ----
+> caller() {
+> 	obj = obj__new();
+> 	if (parent__add_obj(parent, obj) != SUCCESS) {
+> 		ret = errorcode;
+> 	}
+> 	obj__put(obj);
+> 	return ret;
+> }
+>    ----
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (22):
+>       [v2] perf refcnt: Introduce generic refcount APIs with debug feature
+>       perf refcnt: Use a hash for refcnt_root
+>       perf refcnt: Add refcnt debug filter
+>       perf refcnt: refcnt shows summary per object
+>       perf: make map to use refcnt
+>       perf: Make dso to use refcnt for debug
+>       perf: Make map_groups to use refcnt
+>       perf: Make thread uses refcnt for debug
+>       perf: Make cpu_map to use refcnt for debug
+>       perf: Make comm_str to use refcnt for debug
+>       perf: Make cgroup_sel to use refcnt for debug
+>       perf: Make thread_map to use refcnt for debug
+>       perf: Make perf_mmap to use refcnt for debug
+>       perf: Fix dso__load_sym to put dso
+>       perf: Fix map_groups__clone to put cloned map
+>       perf: Fix __cmd_top and perf_session__process_events to put the idle thread
+>       perf: Fix __machine__addnew_vdso to put dso after add to dsos
+>       perf stat: Fix cmd_stat to release cpu_map
+>       perf: fix hists_evsel to release hists
+>       perf: Fix maps__fixup_overlappings to put used maps
+>       perf: Fix machine.vmlinux_maps to make sure to clear the old one
+>       perf: Fix write_numa_topology to put cpu_map instead of free
+> 
+> 
+>  tools/perf/builtin-stat.c    |   11 ++
+>  tools/perf/builtin-top.c     |    6 +
+>  tools/perf/config/Makefile   |    5 +
+>  tools/perf/util/Build        |    1 
+>  tools/perf/util/cgroup.c     |   11 +-
+>  tools/perf/util/comm.c       |    8 +
+>  tools/perf/util/cpumap.c     |   33 +++---
+>  tools/perf/util/dso.c        |    7 +
+>  tools/perf/util/evlist.c     |    8 +
+>  tools/perf/util/header.c     |    2 
+>  tools/perf/util/hist.c       |   10 ++
+>  tools/perf/util/machine.c    |    5 +
+>  tools/perf/util/map.c        |   15 ++-
+>  tools/perf/util/map.h        |    5 +
+>  tools/perf/util/refcnt.c     |  229 ++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/refcnt.h     |   70 +++++++++++++
+>  tools/perf/util/session.c    |   10 ++
+>  tools/perf/util/symbol-elf.c |    2 
+>  tools/perf/util/thread.c     |    7 +
+>  tools/perf/util/thread_map.c |   28 +++--
+>  tools/perf/util/vdso.c       |    2 
+>  21 files changed, 420 insertions(+), 55 deletions(-)
+>  create mode 100644 tools/perf/util/refcnt.c
+>  create mode 100644 tools/perf/util/refcnt.h
+> 
+> 
+> -- 
+> Masami HIRAMATSU
+> Linux Technology Research Center, System Productivity Research Dept.
+> Center for Technology Innovation - Systems Engineering 
+> Hitachi, Ltd., Research & Development Group
+> E-mail: masami.hiramatsu.pt@hitachi.com
