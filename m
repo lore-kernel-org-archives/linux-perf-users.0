@@ -1,78 +1,109 @@
 From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Subject: [PATCH perf/core  08/22] perf: Make thread uses refcnt for debug
-Date: Wed, 09 Dec 2015 11:11:05 +0900
-Message-ID: <20151209021105.10245.83142.stgit@localhost.localdomain>
+Subject: [PATCH perf/core 09/22] perf: Make cpu_map to use refcnt for debug
+Date: Wed, 09 Dec 2015 11:11:07 +0900
+Message-ID: <20151209021107.10245.33413.stgit@localhost.localdomain>
 References: <20151209021047.10245.8918.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5]:53384 "EHLO
-	mail4.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753232AbbLICS6 (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 8 Dec 2015 21:18:58 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20151209021047.10245.8918.stgit@localhost.localdomain>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Make 'thread' object to use refcnt interface for debug.
+Make 'cpu_map' object to use refcnt interface for debug.
 This can find refcnt related memory leaks.
-E.g.
-
-  ----
-  # ./perf top --stdio
-  ^q
-  REFCNT: BUG: Unreclaimed objects found.
-  REFCNT: Total 3525 objects are not reclaimed.
-    "map" leaks 3285 objects
-    "dso" leaks 225 objects
-    "thread" leaks 8 objects
-    "map_groups" leaks 7 objects
-     To see all backtraces, rerun with -v option
-  ----
 
 Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 ---
- tools/perf/util/thread.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/util/cpumap.c |   33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 0a9ae80..392fc32 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -53,7 +53,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
- 			goto err_thread;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 10af1e7..cca94d3 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -23,7 +23,7 @@ static struct cpu_map *cpu_map__default_new(void)
+ 			cpus->map[i] = i;
  
- 		list_add(&comm->list, &thread->comm_list);
--		atomic_set(&thread->refcnt, 0);
-+		refcnt__init(thread, refcnt, 0);
- 		RB_CLEAR_NODE(&thread->rb_node);
+ 		cpus->nr = nr_cpus;
+-		atomic_set(&cpus->refcnt, 1);
++		refcnt__init_as(cpus, refcnt, 1, "cpu_map");
  	}
  
-@@ -81,6 +81,7 @@ void thread__delete(struct thread *thread)
- 		comm__free(comm);
+ 	return cpus;
+@@ -37,7 +37,7 @@ static struct cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
+ 	if (cpus != NULL) {
+ 		cpus->nr = nr_cpus;
+ 		memcpy(cpus->map, tmp_cpus, payload_size);
+-		atomic_set(&cpus->refcnt, 1);
++		refcnt__init_as(cpus, refcnt, 1, "cpu_map");
  	}
- 	unwind__finish_access(thread);
-+	refcnt__exit(thread, refcnt);
  
- 	free(thread);
+ 	return cpus;
+@@ -197,7 +197,7 @@ struct cpu_map *cpu_map__dummy_new(void)
+ 	if (cpus != NULL) {
+ 		cpus->nr = 1;
+ 		cpus->map[0] = -1;
+-		atomic_set(&cpus->refcnt, 1);
++		refcnt__init_as(cpus, refcnt, 1, "cpu_map");
+ 	}
+ 
+ 	return cpus;
+@@ -214,32 +214,33 @@ struct cpu_map *cpu_map__empty_new(int nr)
+ 		for (i = 0; i < nr; i++)
+ 			cpus->map[i] = -1;
+ 
+-		atomic_set(&cpus->refcnt, 1);
++		refcnt__init_as(cpus, refcnt, 1, "cpu_map");
+ 	}
+ 
+ 	return cpus;
  }
-@@ -88,13 +89,13 @@ void thread__delete(struct thread *thread)
- struct thread *thread__get(struct thread *thread)
+ 
+-static void cpu_map__delete(struct cpu_map *map)
++static void cpu_map__delete(struct cpu_map *cpus)
  {
- 	if (thread)
--		atomic_inc(&thread->refcnt);
-+		refcnt__get(thread, refcnt);
- 	return thread;
+-	if (map) {
+-		WARN_ONCE(atomic_read(&map->refcnt) != 0,
++	if (cpus) {
++		WARN_ONCE(atomic_read(&cpus->refcnt) != 0,
+ 			  "cpu_map refcnt unbalanced\n");
+-		free(map);
++		refcnt__exit(cpus, refcnt);
++		free(cpus);
+ 	}
  }
  
- void thread__put(struct thread *thread)
+-struct cpu_map *cpu_map__get(struct cpu_map *map)
++struct cpu_map *cpu_map__get(struct cpu_map *cpus)
  {
--	if (thread && atomic_dec_and_test(&thread->refcnt)) {
-+	if (thread && refcnt__put(thread, refcnt)) {
- 		list_del_init(&thread->node);
- 		thread__delete(thread);
- 	}
+-	if (map)
+-		atomic_inc(&map->refcnt);
+-	return map;
++	if (cpus)
++		refcnt__get(cpus, refcnt);
++	return cpus;
+ }
+ 
+-void cpu_map__put(struct cpu_map *map)
++void cpu_map__put(struct cpu_map *cpus)
+ {
+-	if (map && atomic_dec_and_test(&map->refcnt))
+-		cpu_map__delete(map);
++	if (cpus && refcnt__put(cpus, refcnt))
++		cpu_map__delete(cpus);
+ }
+ 
+ static int cpu__get_topology_int(int cpu, const char *name, int *value)
+@@ -302,7 +303,7 @@ int cpu_map__build_map(struct cpu_map *cpus, struct cpu_map **res,
+ 	/* ensure we process id in increasing order */
+ 	qsort(c->map, c->nr, sizeof(int), cmp_ids);
+ 
+-	atomic_set(&c->refcnt, 1);
++	refcnt__init_as(c, refcnt, 1, "cpu_map");
+ 	*res = c;
+ 	return 0;
+ }
