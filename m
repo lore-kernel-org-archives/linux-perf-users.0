@@ -1,8 +1,7 @@
 From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Subject: [PATCH perf/core 15/22] perf: Fix map_groups__clone to put cloned
- map
-Date: Wed, 09 Dec 2015 11:11:20 +0900
-Message-ID: <20151209021120.10245.95388.stgit@localhost.localdomain>
+Subject: [PATCH perf/core 13/22] perf: Make perf_mmap to use refcnt for debug
+Date: Wed, 09 Dec 2015 11:11:16 +0900
+Message-ID: <20151209021116.10245.15749.stgit@localhost.localdomain>
 References: <20151209021047.10245.8918.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,63 +13,57 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Fix map_groups__clone to put cloned map after
-inserting it to the map_groups.
-
-Refcnt debugger shows:
-  ----
-  ==== [0] ====
-  Unreclaimed map: 0x2a27ee0
-  Refcount +1 => 1 at
-    ./perf(map_groups__clone+0x8d) [0x4bb7ed]
-    ./perf(thread__fork+0xbe) [0x4c1f9e]
-    ./perf(machine__process_fork_event+0x216) [0x4b79a6]
-    ./perf(perf_event__synthesize_threads+0x38b) [0x48135b]
-    ./perf(cmd_top+0xdc6) [0x43cb76]
-    ./perf() [0x477223]
-    ./perf(main+0x617) [0x422077]
-    /lib64/libc.so.6(__libc_start_main+0xf0) [0x7ff806af8fe0]
-    ./perf() [0x4221ed]
-  Refcount +1 => 2 at
-    ./perf(map_groups__clone+0x128) [0x4bb888]
-    ./perf(thread__fork+0xbe) [0x4c1f9e]
-    ./perf(machine__process_fork_event+0x216) [0x4b79a6]
-    ./perf(perf_event__synthesize_threads+0x38b) [0x48135b]
-    ./perf(cmd_top+0xdc6) [0x43cb76]
-    ./perf() [0x477223]
-    ./perf(main+0x617) [0x422077]
-    /lib64/libc.so.6(__libc_start_main+0xf0) [0x7ff806af8fe0]
-    ./perf() [0x4221ed]
-  Refcount -1 => 1 at
-    ./perf(map_groups__exit+0x87) [0x4ba757]
-    ./perf(map_groups__put+0x68) [0x4ba9a8]
-    ./perf(thread__put+0x8b) [0x4c1aeb]
-    ./perf(machine__delete_threads+0x81) [0x4b48f1]
-    ./perf(perf_session__delete+0x4f) [0x4be63f]
-    ./perf(cmd_top+0x1094) [0x43ce44]
-    ./perf() [0x477223]
-    ./perf(main+0x617) [0x422077]
-    /lib64/libc.so.6(__libc_start_main+0xf0) [0x7ff806af8fe0]
-    ./perf() [0x4221ed]
-  ----
-
-This shows map_groups__clone get the map twice
-and put it when map_groups__exit.
+Make 'perf_mmap' object to use refcnt interface for debug.
+This can find refcnt related memory leaks.
 
 Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 ---
- tools/perf/util/map.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/evlist.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 7859216..03b7297 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -744,6 +744,7 @@ int map_groups__clone(struct map_groups *mg,
- 		if (new == NULL)
- 			goto out_unlock;
- 		map_groups__insert(mg, new);
-+		map__put(new);
- 	}
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index d1b6c20..0637603 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -15,6 +15,7 @@
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "debug.h"
++#include "refcnt.h"
+ #include <unistd.h>
  
- 	err = 0;
+ #include "parse-events.h"
+@@ -769,14 +770,14 @@ static bool perf_mmap__empty(struct perf_mmap *md)
+ 
+ static void perf_evlist__mmap_get(struct perf_evlist *evlist, int idx)
+ {
+-	atomic_inc(&evlist->mmap[idx].refcnt);
++	refcnt__get(&evlist->mmap[idx], refcnt);
+ }
+ 
+ static void perf_evlist__mmap_put(struct perf_evlist *evlist, int idx)
+ {
+ 	BUG_ON(atomic_read(&evlist->mmap[idx].refcnt) == 0);
+ 
+-	if (atomic_dec_and_test(&evlist->mmap[idx].refcnt))
++	if (refcnt__put(&evlist->mmap[idx], refcnt))
+ 		__perf_evlist__munmap(evlist, idx);
+ }
+ 
+@@ -827,6 +828,7 @@ static void __perf_evlist__munmap(struct perf_evlist *evlist, int idx)
+ 	if (evlist->mmap[idx].base != NULL) {
+ 		munmap(evlist->mmap[idx].base, evlist->mmap_len);
+ 		evlist->mmap[idx].base = NULL;
++		refcnt__exit(&evlist->mmap[idx], refcnt);
+ 		atomic_set(&evlist->mmap[idx].refcnt, 0);
+ 	}
+ 	auxtrace_mmap__munmap(&evlist->mmap[idx].auxtrace_mmap);
+@@ -876,7 +878,7 @@ static int __perf_evlist__mmap(struct perf_evlist *evlist, int idx,
+ 	 * evlist layer can't just drop it when filtering events in
+ 	 * perf_evlist__filter_pollfd().
+ 	 */
+-	atomic_set(&evlist->mmap[idx].refcnt, 2);
++	refcnt__init_as(&evlist->mmap[idx], refcnt, 2, "perf_mmap");
+ 	evlist->mmap[idx].prev = 0;
+ 	evlist->mmap[idx].mask = mp->mask;
+ 	evlist->mmap[idx].base = mmap(NULL, evlist->mmap_len, mp->prot,
