@@ -1,80 +1,104 @@
-From: 'Arnaldo Carvalho de Melo' <acme@kernel.org>
-Subject: Re: [PATCH perf/core  14/22] perf: Fix dso__load_sym to put dso
-Date: Thu, 10 Dec 2015 16:26:19 -0300
-Message-ID: <20151210192619.GK17996@kernel.org>
-References: <20151209021047.10245.8918.stgit@localhost.localdomain>
- <20151209021118.10245.49869.stgit@localhost.localdomain>
- <20151209141601.GE15864@kernel.org>
- <50399556C9727B4D88A595C8584AAB375264F788@GSjpTKYDCembx32.service.hitachi.net>
+From: William Cohen <wcohen@redhat.com>
+Subject: "perf list" built from git repository Segmentation fault with 4.4.0
+ kernels
+Date: Thu, 10 Dec 2015 17:54:03 -0500
+Message-ID: <566A028B.2060708@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:46298 "EHLO mail.kernel.org"
+Received: from mx1.redhat.com ([209.132.183.28]:42012 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752422AbbLJT02 (ORCPT
+	id S1752623AbbLJWyF (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 10 Dec 2015 14:26:28 -0500
-Content-Disposition: inline
-In-Reply-To: <50399556C9727B4D88A595C8584AAB375264F788@GSjpTKYDCembx32.service.hitachi.net>
+	Thu, 10 Dec 2015 17:54:05 -0500
+Received: from int-mx13.intmail.prod.int.phx2.redhat.com (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
+	by mx1.redhat.com (Postfix) with ESMTPS id D2087C0B0237
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Dec 2015 22:54:03 +0000 (UTC)
+Received: from [10.13.129.159] (dhcp129-159.rdu.redhat.com [10.13.129.159])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id tBAMs3pd026676
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Dec 2015 17:54:03 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+To: linux-perf-users@vger.kernel.org
 
-Em Thu, Dec 10, 2015 at 08:52:46AM +0000, =E5=B9=B3=E6=9D=BE=E9=9B=85=E5=
-=B7=B3 / HIRAMATU=EF=BC=8CMASAMI escreveu:
-> From: Arnaldo Carvalho de Melo [mailto:acme@kernel.org]
-> >
-> >Em Wed, Dec 09, 2015 at 11:11:18AM +0900, Masami Hiramatsu escreveu:
-> >> +++ b/tools/perf/util/symbol-elf.c
-> >> @@ -1045,6 +1045,8 @@ int dso__load_sym(struct dso *dso, struct ma=
-p *map,
-> >>  				/* kmaps already got it */
-> >>  				map__put(curr_map);
-> >>  				dsos__add(&map->groups->machine->dsos, curr_dso);
-> >> +				/* curr_map and machine->dsos already got it */
-> >> +				dso__put(curr_dso);
-> >>  				dso__set_loaded(curr_dso, map->type);
-> >>  			} else
-> >>  				curr_dso =3D curr_map->dso;
-> >
-> >Right, to make the code smaller, how about doing it this way, i.e. d=
-rop
-> >the reference once we have that curr_dso object with a ref held by
-> >curr_map, if curr_map doesn't get it, then we don't need and will dr=
-op
-> >it anyway:
->=20
-> But as above code, curr_dso is passed to dsos__add after curr_map is =
-put.
-> Even if the curr_map is hold by kmaps, isn't the kmaps controlled by =
-other pthreads?
-> If no, I'm OK if we move above dsos__add() before map__put() for safe=
-ty, because
-> curr_dso is held by curr_map at that point.
+I have noticed that with the 4.4.0 kernels "perf list" has been segfaulting on both aarch64 and x86_64.  Below is the failure on fedora rawhide running on x86_64:
 
-Good catch, so I'll do as you suggest and move dsos__add() to before we
-drop that map reference, as then we're sure that we hold it and it hold=
-s
-the dso.
-=20
-> Thank you,
->=20
-> >
-> >diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-e=
-lf.c
-> >index 53f19968bfa2..84d787074152 100644
-> >--- a/tools/perf/util/symbol-elf.c
-> >+++ b/tools/perf/util/symbol-elf.c
-> >@@ -1026,8 +1026,8 @@ int dso__load_sym(struct dso *dso, struct map =
-*map,
-> > 				curr_dso->long_name_len =3D dso->long_name_len;
-> > 				curr_map =3D map__new2(start, curr_dso,
-> > 						     map->type);
-> >+				dso__put(curr_dso);
-> > 				if (curr_map =3D=3D NULL) {
-> >-					dso__put(curr_dso);
-> > 					goto out_elf_end;
-> > 				}
-> > 				if (adjust_kernel_syms) {
+[wcohen@localhost ~]$ rpm -q perf
+perf-4.4.0-0.rc4.git0.1.fc24.x86_64
+[wcohen@localhost ~]$ gdb /bin/perf ./core.2110 
+GNU gdb (GDB) Fedora 7.10.50.20151113-33.fc24
+Copyright (C) 2015 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from /bin/perf...Reading symbols from /usr/lib/debug/usr/bin/perf.debug...done.
+done.
+[New LWP 2110]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+Core was generated by `perf list'.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
+    syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
+    name_only=<optimized out>, event_glob=<optimized out>)
+    at util/parse-events.c:1895
+1895			if (!name_only && strlen(syms->alias))
+Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-19.fc24.x86_64 nss-softokn-freebl-3.21.0-3.fc24.x86_64
+(gdb) where
+#0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
+    syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
+    name_only=<optimized out>, event_glob=<optimized out>)
+    at util/parse-events.c:1895
+#1  print_events (event_glob=event_glob@entry=0x0, name_only=false)
+    at util/parse-events.c:1943
+#2  0x000055b1fc90a63e in cmd_list (argc=0, argv=0x7ffde1523f80, 
+    prefix=<optimized out>) at builtin-list.c:43
+#3  0x000055b1fc95c413 in run_builtin (p=0x55b1fcd803d8 <commands+120>, 
+    argc=1, argv=0x7ffde1523f80) at perf.c:386
+#4  0x000055b1fc8fe308 in handle_internal_command (argv=0x7ffde1523f80, argc=1)
+    at perf.c:447
+#5  run_argv (argv=0x7ffde1523d10, argcp=0x7ffde1523d1c) at perf.c:491
+#6  main (argc=1, argv=0x7ffde1523f80) at perf.c:608
+(gdb) 
+
+
+I did a git bisect on the kernel source code to find out when "perf list" broke and the git bisect pointed to the following commit causing the problem:
+
+# git bisect good
+a43eec304259a6c637f4014a6d4767159b6a3aa3 is the first bad commit
+commit a43eec304259a6c637f4014a6d4767159b6a3aa3
+Author: Alexei Starovoitov <ast@plumgrid.com>
+Date:   Tue Oct 20 20:02:34 2015 -0700
+
+    bpf: introduce bpf_perf_event_output() helper
+    
+    This helper is used to send raw data from eBPF program into
+    special PERF_TYPE_SOFTWARE/PERF_COUNT_SW_BPF_OUTPUT perf_event.
+    User space needs to perf_event_open() it (either for one or all cpus) and
+    store FD into perf_event_array (similar to bpf_perf_event_read() helper)
+    before eBPF program can send data into it.
+    
+    Today the programs triggered by kprobe collect the data and either store
+    it into the maps or print it via bpf_trace_printk() where latter is the debug
+    facility and not suitable to stream the data. This new helper replaces
+    such bpf_trace_printk() usage and allows programs to have dedicated
+    channel into user space for post-processing of the raw data collected.
+    
+    Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+:040000 040000 322abd03170df11e43da73d3fa4f74f1826788e9 14f3ee14b7fb4b6c76daf18e026cf67acd3154fa M	include
+:040000 040000 f84baec2884fe97ec501ae8d45bbb8a7aad3a578 ea440aeb13f1dd25aa8f2e1dadfc32dbf4b3d2b3 M	kernel
+
+
+-Will
