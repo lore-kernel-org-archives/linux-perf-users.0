@@ -1,116 +1,87 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH perf/core  00/22] perf refcnt debugger API and fixes
-Date: Thu, 10 Dec 2015 13:49:49 +0900
-Message-ID: <20151210044949.GD13790@sejong>
+From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
+	<masami.hiramatsu.pt@hitachi.com>
+Subject: RE: [PATCH perf/core  00/22] perf refcnt debugger API and fixes
+Date: Thu, 10 Dec 2015 08:39:38 +0000
+Message-ID: <50399556C9727B4D88A595C8584AAB375264F75A@GSjpTKYDCembx32.service.hitachi.net>
 References: <20151209021047.10245.8918.stgit@localhost.localdomain>
- <20151209134138.GB15864@kernel.org>
+ <20151209134138.GB15864@kernel.org> <20151210044949.GD13790@sejong>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEAMRELO12.lge.com ([156.147.23.52]:57069 "EHLO
-	lgeamrelo12.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752633AbbLJEvT (ORCPT
+Received: from mail7.hitachi.co.jp ([133.145.228.42]:40750 "EHLO
+	mail7.hitachi.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751136AbbLJIjm (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 9 Dec 2015 23:51:19 -0500
-In-Reply-To: <20151209134138.GB15864@kernel.org>
-Content-Disposition: inline
+	Thu, 10 Dec 2015 03:39:42 -0500
+In-Reply-To: <20151210044949.GD13790@sejong>
+Content-Language: ja-JP
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <ast@plumgrid.com>
+To: 'Namhyung Kim' <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <ast@plumgrid.com>
 
-Hi Arnaldo and Masami,
-
-On Wed, Dec 09, 2015 at 10:41:38AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 09, 2015 at 11:10:48AM +0900, Masami Hiramatsu escreveu:
-> > In this series I've also tried to fix some object leaks in perf top
-> > and perf stat.
-> > After applying this series, this reduced (not vanished) to 1/5.
-> >   ----
-> >   # ./perf top --stdio
-> >   q
-> >   exiting.
-> >   REFCNT: BUG: Unreclaimed objects found.
-> >   REFCNT: Total 866 objects are not reclaimed.
-> >     "dso" leaks 213 objects
-> >     "map" leaks 624 objects
-> >     "comm_str" leaks 12 objects
-> >     "thread" leaks 9 objects
-> >     "map_groups" leaks 8 objects
-> >      To see all backtraces, rerun with -v option
-> >   ----
-> > 
-> > Actually, I'm still not able to fix all of the bugs. It seems that
-> > hists has a bug that hists__delete_entries doesn't delete all the
-> > entries because some entries are on hists->entries but others on
-> > hists->entries_in. And I'm not so sure about hists.c.
-> > Arnaldo, would you have any idea for this bug?
-> 
-> I'll will audit the hists code, its all about collecting new entries
-> into an rbtree to then move the last batch for merging with the
-> previous, decayed ones while continuing to process a new batch in
-> another thread.
-
-Right.  After processing is done, hist entries are in both of
-hists->entries and hists->entries_in (or hists->entries_collapsed).
-So I guess perf report does not have leaks on hists.
-
-But for perf top, it's possible to have half-processed entries which
-are only in hists->entries_in.  Eventually they will go to the
-hists->entries and get freed but they cannot be deleted by current
-hists__delete_entries().  If we really care deleting all of those
-half-processed entries, how about this?
-
-Thanks,
-Namhyung
-
-
-
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index fd179a068df7..08396a7fea23 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -270,6 +270,8 @@ static void hists__delete_entry(struct hists *hists, struct hist_entry *he)
- 
- 	if (sort__need_collapse)
- 		rb_erase(&he->rb_node_in, &hists->entries_collapsed);
-+	else
-+		rb_erase(&he->rb_node_in, hists->entries_in);
- 
- 	--hists->nr_entries;
- 	if (!he->filtered)
-@@ -1589,11 +1591,33 @@ int __hists__init(struct hists *hists)
- 	return 0;
- }
- 
-+static void hists__delete_remaining_entries(struct rb_root *root)
-+{
-+	struct rb_node *node;
-+	struct hist_entry *he;
-+
-+	while (!RB_EMPTY_ROOT(root)) {
-+		node = rb_first(root);
-+		rb_erase(node, root);
-+
-+		he = rb_entry(node, struct hist_entry, rb_node_in);
-+		hist_entry__delete(he);
-+	}
-+}
-+
-+static void hists__delete_all_entries(struct hists *hists)
-+{
-+	hists__delete_entries(hists);
-+	hists__delete_remaining_entries(&hists->entries_in_array[0]);
-+	hists__delete_remaining_entries(&hists->entries_in_array[1]);
-+	hists__delete_remaining_entries(&hists->entries_collapsed);
-+}
-+
- static void hists_evsel__exit(struct perf_evsel *evsel)
- {
- 	struct hists *hists = evsel__hists(evsel);
- 
--	hists__delete_entries(hists);
-+	hists__delete_all_entries(hists);
- }
- 
- static int hists_evsel__init(struct perf_evsel *evsel)
+PkZyb206IE5hbWh5dW5nIEtpbSBbbWFpbHRvOm5hbWh5dW5nQGtlcm5lbC5vcmddDQo+DQo+SGkg
+QXJuYWxkbyBhbmQgTWFzYW1pLA0KPg0KPk9uIFdlZCwgRGVjIDA5LCAyMDE1IGF0IDEwOjQxOjM4
+QU0gLTAzMDAsIEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyB3cm90ZToNCj4+IEVtIFdlZCwgRGVj
+IDA5LCAyMDE1IGF0IDExOjEwOjQ4QU0gKzA5MDAsIE1hc2FtaSBIaXJhbWF0c3UgZXNjcmV2ZXU6
+DQo+PiA+IEluIHRoaXMgc2VyaWVzIEkndmUgYWxzbyB0cmllZCB0byBmaXggc29tZSBvYmplY3Qg
+bGVha3MgaW4gcGVyZiB0b3ANCj4+ID4gYW5kIHBlcmYgc3RhdC4NCj4+ID4gQWZ0ZXIgYXBwbHlp
+bmcgdGhpcyBzZXJpZXMsIHRoaXMgcmVkdWNlZCAobm90IHZhbmlzaGVkKSB0byAxLzUuDQo+PiA+
+ICAgLS0tLQ0KPj4gPiAgICMgLi9wZXJmIHRvcCAtLXN0ZGlvDQo+PiA+ICAgcQ0KPj4gPiAgIGV4
+aXRpbmcuDQo+PiA+ICAgUkVGQ05UOiBCVUc6IFVucmVjbGFpbWVkIG9iamVjdHMgZm91bmQuDQo+
+PiA+ICAgUkVGQ05UOiBUb3RhbCA4NjYgb2JqZWN0cyBhcmUgbm90IHJlY2xhaW1lZC4NCj4+ID4g
+ICAgICJkc28iIGxlYWtzIDIxMyBvYmplY3RzDQo+PiA+ICAgICAibWFwIiBsZWFrcyA2MjQgb2Jq
+ZWN0cw0KPj4gPiAgICAgImNvbW1fc3RyIiBsZWFrcyAxMiBvYmplY3RzDQo+PiA+ICAgICAidGhy
+ZWFkIiBsZWFrcyA5IG9iamVjdHMNCj4+ID4gICAgICJtYXBfZ3JvdXBzIiBsZWFrcyA4IG9iamVj
+dHMNCj4+ID4gICAgICBUbyBzZWUgYWxsIGJhY2t0cmFjZXMsIHJlcnVuIHdpdGggLXYgb3B0aW9u
+DQo+PiA+ICAgLS0tLQ0KPj4gPg0KPj4gPiBBY3R1YWxseSwgSSdtIHN0aWxsIG5vdCBhYmxlIHRv
+IGZpeCBhbGwgb2YgdGhlIGJ1Z3MuIEl0IHNlZW1zIHRoYXQNCj4+ID4gaGlzdHMgaGFzIGEgYnVn
+IHRoYXQgaGlzdHNfX2RlbGV0ZV9lbnRyaWVzIGRvZXNuJ3QgZGVsZXRlIGFsbCB0aGUNCj4+ID4g
+ZW50cmllcyBiZWNhdXNlIHNvbWUgZW50cmllcyBhcmUgb24gaGlzdHMtPmVudHJpZXMgYnV0IG90
+aGVycyBvbg0KPj4gPiBoaXN0cy0+ZW50cmllc19pbi4gQW5kIEknbSBub3Qgc28gc3VyZSBhYm91
+dCBoaXN0cy5jLg0KPj4gPiBBcm5hbGRvLCB3b3VsZCB5b3UgaGF2ZSBhbnkgaWRlYSBmb3IgdGhp
+cyBidWc/DQo+Pg0KPj4gSSdsbCB3aWxsIGF1ZGl0IHRoZSBoaXN0cyBjb2RlLCBpdHMgYWxsIGFi
+b3V0IGNvbGxlY3RpbmcgbmV3IGVudHJpZXMNCj4+IGludG8gYW4gcmJ0cmVlIHRvIHRoZW4gbW92
+ZSB0aGUgbGFzdCBiYXRjaCBmb3IgbWVyZ2luZyB3aXRoIHRoZQ0KPj4gcHJldmlvdXMsIGRlY2F5
+ZWQgb25lcyB3aGlsZSBjb250aW51aW5nIHRvIHByb2Nlc3MgYSBuZXcgYmF0Y2ggaW4NCj4+IGFu
+b3RoZXIgdGhyZWFkLg0KPg0KPlJpZ2h0LiAgQWZ0ZXIgcHJvY2Vzc2luZyBpcyBkb25lLCBoaXN0
+IGVudHJpZXMgYXJlIGluIGJvdGggb2YNCj5oaXN0cy0+ZW50cmllcyBhbmQgaGlzdHMtPmVudHJp
+ZXNfaW4gKG9yIGhpc3RzLT5lbnRyaWVzX2NvbGxhcHNlZCkuDQo+U28gSSBndWVzcyBwZXJmIHJl
+cG9ydCBkb2VzIG5vdCBoYXZlIGxlYWtzIG9uIGhpc3RzLg0KPg0KPkJ1dCBmb3IgcGVyZiB0b3As
+IGl0J3MgcG9zc2libGUgdG8gaGF2ZSBoYWxmLXByb2Nlc3NlZCBlbnRyaWVzIHdoaWNoDQo+YXJl
+IG9ubHkgaW4gaGlzdHMtPmVudHJpZXNfaW4uICBFdmVudHVhbGx5IHRoZXkgd2lsbCBnbyB0byB0
+aGUNCj5oaXN0cy0+ZW50cmllcyBhbmQgZ2V0IGZyZWVkIGJ1dCB0aGV5IGNhbm5vdCBiZSBkZWxl
+dGVkIGJ5IGN1cnJlbnQNCj5oaXN0c19fZGVsZXRlX2VudHJpZXMoKS4gIElmIHdlIHJlYWxseSBj
+YXJlIGRlbGV0aW5nIGFsbCBvZiB0aG9zZQ0KPmhhbGYtcHJvY2Vzc2VkIGVudHJpZXMsIGhvdyBh
+Ym91dCB0aGlzPw0KPg0KDQpOaWNlISBJJ3ZlIGFwcGxpZWQgYmVsb3cgcGF0Y2ggb24gdGhlIHRv
+cCBvZiBteSBzZXJpZXMgYW5kDQpjaGVja2VkIHRoYXQgbm8gbGVhayBpcyBkZXRlY3RlZC4gOikN
+Cg0KWW91IGNhbiBhZGQgbXkgYWNrZWQtYnkgYW5kIHRlc3RlZC1ieS4gOikNCg0KQWNrZWQtYnk6
+IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0c3UucHRAaGl0YWNoaS5jb20+DQpUZXN0
+ZWQtYnk6IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0c3UucHRAaGl0YWNoaS5jb20+
+DQoNClRoYW5rcyENCg0KPg0KPg0KPmRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0aWwvaGlzdC5j
+IGIvdG9vbHMvcGVyZi91dGlsL2hpc3QuYw0KPmluZGV4IGZkMTc5YTA2OGRmNy4uMDgzOTZhN2Zl
+YTIzIDEwMDY0NA0KPi0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9oaXN0LmMNCj4rKysgYi90b29scy9w
+ZXJmL3V0aWwvaGlzdC5jDQo+QEAgLTI3MCw2ICsyNzAsOCBAQCBzdGF0aWMgdm9pZCBoaXN0c19f
+ZGVsZXRlX2VudHJ5KHN0cnVjdCBoaXN0cyAqaGlzdHMsIHN0cnVjdCBoaXN0X2VudHJ5ICpoZSkN
+Cj4NCj4gCWlmIChzb3J0X19uZWVkX2NvbGxhcHNlKQ0KPiAJCXJiX2VyYXNlKCZoZS0+cmJfbm9k
+ZV9pbiwgJmhpc3RzLT5lbnRyaWVzX2NvbGxhcHNlZCk7DQo+KwllbHNlDQo+KwkJcmJfZXJhc2Uo
+JmhlLT5yYl9ub2RlX2luLCBoaXN0cy0+ZW50cmllc19pbik7DQo+DQo+IAktLWhpc3RzLT5ucl9l
+bnRyaWVzOw0KPiAJaWYgKCFoZS0+ZmlsdGVyZWQpDQo+QEAgLTE1ODksMTEgKzE1OTEsMzMgQEAg
+aW50IF9faGlzdHNfX2luaXQoc3RydWN0IGhpc3RzICpoaXN0cykNCj4gCXJldHVybiAwOw0KPiB9
+DQo+DQo+K3N0YXRpYyB2b2lkIGhpc3RzX19kZWxldGVfcmVtYWluaW5nX2VudHJpZXMoc3RydWN0
+IHJiX3Jvb3QgKnJvb3QpDQo+K3sNCj4rCXN0cnVjdCByYl9ub2RlICpub2RlOw0KPisJc3RydWN0
+IGhpc3RfZW50cnkgKmhlOw0KPisNCj4rCXdoaWxlICghUkJfRU1QVFlfUk9PVChyb290KSkgew0K
+PisJCW5vZGUgPSByYl9maXJzdChyb290KTsNCj4rCQlyYl9lcmFzZShub2RlLCByb290KTsNCj4r
+DQo+KwkJaGUgPSByYl9lbnRyeShub2RlLCBzdHJ1Y3QgaGlzdF9lbnRyeSwgcmJfbm9kZV9pbik7
+DQo+KwkJaGlzdF9lbnRyeV9fZGVsZXRlKGhlKTsNCj4rCX0NCj4rfQ0KPisNCj4rc3RhdGljIHZv
+aWQgaGlzdHNfX2RlbGV0ZV9hbGxfZW50cmllcyhzdHJ1Y3QgaGlzdHMgKmhpc3RzKQ0KPit7DQo+
+KwloaXN0c19fZGVsZXRlX2VudHJpZXMoaGlzdHMpOw0KPisJaGlzdHNfX2RlbGV0ZV9yZW1haW5p
+bmdfZW50cmllcygmaGlzdHMtPmVudHJpZXNfaW5fYXJyYXlbMF0pOw0KPisJaGlzdHNfX2RlbGV0
+ZV9yZW1haW5pbmdfZW50cmllcygmaGlzdHMtPmVudHJpZXNfaW5fYXJyYXlbMV0pOw0KPisJaGlz
+dHNfX2RlbGV0ZV9yZW1haW5pbmdfZW50cmllcygmaGlzdHMtPmVudHJpZXNfY29sbGFwc2VkKTsN
+Cj4rfQ0KPisNCj4gc3RhdGljIHZvaWQgaGlzdHNfZXZzZWxfX2V4aXQoc3RydWN0IHBlcmZfZXZz
+ZWwgKmV2c2VsKQ0KPiB7DQo+IAlzdHJ1Y3QgaGlzdHMgKmhpc3RzID0gZXZzZWxfX2hpc3RzKGV2
+c2VsKTsNCj4NCj4tCWhpc3RzX19kZWxldGVfZW50cmllcyhoaXN0cyk7DQo+KwloaXN0c19fZGVs
+ZXRlX2FsbF9lbnRyaWVzKGhpc3RzKTsNCj4gfQ0KPg0KPiBzdGF0aWMgaW50IGhpc3RzX2V2c2Vs
+X19pbml0KHN0cnVjdCBwZXJmX2V2c2VsICpldnNlbCkNCg==
