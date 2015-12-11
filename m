@@ -1,74 +1,124 @@
-From: =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?=
-	<masami.hiramatsu.pt@hitachi.com>
-Subject: RE: [PATCH perf/core  00/22] perf refcnt debugger API and fixes
-Date: Fri, 11 Dec 2015 03:59:42 +0000
-Message-ID: <50399556C9727B4D88A595C8584AAB37526518A7@GSjpTKYDCembx32.service.hitachi.net>
-References: <20151209021047.10245.8918.stgit@localhost.localdomain>
- <20151209134138.GB15864@kernel.org>
- <50399556C9727B4D88A595C8584AAB375264FB48@GSjpTKYDCembx32.service.hitachi.net>
- <56697572.90701@huawei.com> <20151210151239.GB17996@kernel.org>
- <50399556C9727B4D88A595C8584AAB37526515F5@GSjpTKYDCembx32.service.hitachi.net>
- <566A3823.9080503@huawei.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: "perf list" built from git repository Segmentation fault with
+ 4.4.0 kernels
+Date: Fri, 11 Dec 2015 10:10:27 -0300
+Message-ID: <20151211131027.GD6843@kernel.org>
+References: <566A028B.2060708@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566A3823.9080503@huawei.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: "'Wangnan (F)'" <wangnan0@huawei.com>, 'Arnaldo Carvalho de Melo' <acme@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexei Starovoitov <ast@plumgrid.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.136]:49704 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750960AbbLKNKe (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 11 Dec 2015 08:10:34 -0500
+Content-Disposition: inline
+In-Reply-To: <566A028B.2060708@redhat.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: William Cohen <wcohen@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
 
-RnJvbTogV2FuZ25hbiAoRikgW21haWx0bzp3YW5nbmFuMEBodWF3ZWkuY29tXQ0KPg0KPg0KPk9u
-IDIwMTUvMTIvMTEgMTA6MTUsIOW5s+advumbheW3syAvIEhJUkFNQVRV77yMTUFTQU1JIHdyb3Rl
-Og0KPj4gRnJvbTogJ0FybmFsZG8gQ2FydmFsaG8gZGUgTWVsbycgW21haWx0bzphY21lQGtlcm5l
-bC5vcmddDQo+Pj4gQnV0IHRoaXMgcmVxdWlyZXMgaGF2aW5nIHRoZXNlIHNwZWNpYWwgcmVmY250
-X18gcm91dGluZXMsIHRoYXQgd2lsbCBtYWtlDQo+Pj4gdG9vbHMvcGVyZi8gY29kZSBwYXR0ZXJu
-cyBmb3IgcmVmZXJlbmNlIGNvdW50cyBsb29rIGRpZmZlcmVudCB0aGF0IHRoZQ0KPj4+IHJlZmNv
-dW50IHBhdHRlcm5zIGluIHRoZSBrZXJuZWwgOi1cDQo+PiBCVFcsIEkgdGhpbmsgZXZlbiB3aXRo
-b3V0IHRoZSByZWZjbnQgZGVidWdnZXIsIHdlJ2QgYmV0dGVyIGludHJvZHVjZSB0aGlzDQo+PiBr
-aW5kIEFQSSB0byB1bmlmeSB0aGUgcmVmY250IG9wZXJhdGlvbiBpbiBwZXJmIGNvZGUuIEFzIEkg
-c2FpZCwgd2UgaGF2ZSBtYW55DQo+PiBtaXNjb2RpbmdzIG9uIGN1cnJlbnQgaW1wbGVtZW50YXRp
-b24uIFVuaWZ5aW5nIHRoZSBBUEkgY2FuIGVuZm9yY2UgZGV2ZWxvcGVycw0KPj4gdG8gYXZvaWQg
-c3VjaCBtaXNjb2RpbmdzLg0KPj4NCj4+IFRoYW5rIHlvdSwNCj4+DQo+DQo+SSB0cmllZCB0aGlz
-IHByb2JsZW0gaW4gYW5vdGhlciB3YXksIEknZCBsaWtlIHRvIHNoYXJlIGl0IGhlcmUuDQoNCk5v
-LCB3aGF0IEkgc2FpZCBoZXJlIGlzIHRoZSBpc3N1ZSBvbiB0aGUgY29kaW5nIHBvbGljeS4gSWYg
-d2UgaGF2ZSBubyBzcGVjaWFsDQpyZWFzb24gdGhhdCBlYWNoIG9iamVjdCAoY2xhc3MpIGhhcyBp
-dHMgb3duIHJlZmVyZW5jZSBjb3VudGVyIGltcGxlbWVudGF0aW9uLA0Kd2UnZCBiZXR0ZXIgdW5p
-ZnkgaXQgZm9yIGJpbmRpbmcgdGhlbSB0byBvbmUgcG9saWN5Lg0KDQoNCj4NCj5UaGVuIGZyb20g
-cGVyZiBzY3JpcHQncyByZXN1bHQsIHNlYXJjaCBmb3IgdGhlIHR3byBhZGRyZXNzOg0KPg0KPnBl
-cmYgMjMyMDMgWzAwNF0gNjY1MjQ0LjE3MDM4NzogcHJvYmVfcGVyZjpkc29fX25ldzogKDRhYWVl
-MCA8LSA1MGE1ZWIpDQo+YXJnMT0weDM0Y2IzNTANCj4gICAgICAgICAgICAgICAgICAgMTBhNWVi
-IGRzb19fbG9hZF9zeW0gKC9ob21lL3cwMDIyOTc1Ny9wZXJmKQ0KPiAgICAgICAgICAgICAgICAg
-ICAgYWY0MmQgZHNvX19sb2FkX3ZtbGludXggKC9ob21lL3cwMDIyOTc1Ny9wZXJmKQ0KPiAgICAg
-ICAgICAgICAgICAgICAgYWY1OGMgZHNvX19sb2FkX3ZtbGludXhfcGF0aCAoL2hvbWUvdzAwMjI5
-NzU3L3BlcmYpDQo+ICAgICAgICAgICAgICAgICAgIDEwYzQwYSBvcGVuX2RlYnVnaW5mbyAoL2hv
-bWUvdzAwMjI5NzU3L3BlcmYpDQo+ICAgICAgICAgICAgICAgICAgIDExMWQzOSBjb252ZXJ0X3Bl
-cmZfcHJvYmVfZXZlbnRzICgvaG9tZS93MDAyMjk3NTcvcGVyZikNCj4gICAgICAgICAgICAgICAg
-ICAgIDYwM2E3IF9fY21kX3Byb2JlLmlzcmEuMyAoL2hvbWUvdzAwMjI5NzU3L3BlcmYpDQo+ICAg
-ICAgICAgICAgICAgICAgICA2MGE0NCBjbWRfcHJvYmUgKC9ob21lL3cwMDIyOTc1Ny9wZXJmKQ0K
-PiAgICAgICAgICAgICAgICAgICAgN2Y2ZDEgcnVuX2J1aWx0aW4gKC9ob21lL3cwMDIyOTc1Ny9w
-ZXJmKQ0KPiAgICAgICAgICAgICAgICAgICAgMzMwNTYgbWFpbiAoL2hvbWUvdzAwMjI5NzU3L3Bl
-cmYpDQo+ICAgICAgICAgICAgICAgICAgICAyMWJkNSBfX2xpYmNfc3RhcnRfbWFpbg0KPigvdG1w
-L294eWdlbl9yb290LXcwMDIyOTc1Ny9saWI2NC9saWJjLTIuMTguc28pDQo+DQo+cGVyZiAyMzIw
-MyBbMDA0XSA2NjUyNDQuMTcwNjc5OiBwcm9iZV9wZXJmOmRzb19fbmV3OiAoNGFhZWUwIDwtIDUw
-YTVlYikNCj5hcmcxPTB4MzRkNDY0MA0KPiAgICAgICAgICAgICAgICAgICAxMGE1ZWIgZHNvX19s
-b2FkX3N5bSAoL2hvbWUvdzAwMjI5NzU3L3BlcmYpDQo+ICAgICAgICAgICAgICAgICAgICBhZjQy
-ZCBkc29fX2xvYWRfdm1saW51eCAoL2hvbWUvdzAwMjI5NzU3L3BlcmYpDQo+ICAgICAgICAgICAg
-ICAgICAgICBhZjU4YyBkc29fX2xvYWRfdm1saW51eF9wYXRoICgvaG9tZS93MDAyMjk3NTcvcGVy
-ZikNCj4gICAgICAgICAgICAgICAgICAgMTBjNDBhIG9wZW5fZGVidWdpbmZvICgvaG9tZS93MDAy
-Mjk3NTcvcGVyZikNCj4gICAgICAgICAgICAgICAgICAgMTExZDM5IGNvbnZlcnRfcGVyZl9wcm9i
-ZV9ldmVudHMgKC9ob21lL3cwMDIyOTc1Ny9wZXJmKQ0KPiAgICAgICAgICAgICAgICAgICAgNjAz
-YTcgX19jbWRfcHJvYmUuaXNyYS4zICgvaG9tZS93MDAyMjk3NTcvcGVyZikNCj4gICAgICAgICAg
-ICAgICAgICAgIDYwYTQ0IGNtZF9wcm9iZSAoL2hvbWUvdzAwMjI5NzU3L3BlcmYpDQo+ICAgICAg
-ICAgICAgICAgICAgICA3ZjZkMSBydW5fYnVpbHRpbiAoL2hvbWUvdzAwMjI5NzU3L3BlcmYpDQo+
-ICAgICAgICAgICAgICAgICAgICAzMzA1NiBtYWluICgvaG9tZS93MDAyMjk3NTcvcGVyZikNCj4g
-ICAgICAgICAgICAgICAgICAgIDIxYmQ1IF9fbGliY19zdGFydF9tYWluDQo+KC90bXAvb3h5Z2Vu
-X3Jvb3QtdzAwMjI5NzU3L2xpYjY0L2xpYmMtMi4xOC5zbykNCg0KQlRXLCBhY3R1YWxseSB0aGUg
-YW5hbHlzaXMgb2YgdGhpcyBsZXZlbCAob2JqZWN0IG1lbW9yeSBsZWFrcykgY2FuIGJlIGZvdW5k
-DQogKGFuZCBhbmFseXplZCkgYnkgdmFsZ3JpbmQgKHBsZWFzZSB0cnkgaXQpLg0KVGhlIHByb2Js
-ZW0gaXMgbm90IGhhcHBlbiBvbmx5IHdoZW4gdGhlIGNyZWF0aW5nIHNpdGUsIGJ1dCB0aGUgcmVm
-Y250IGNhbg0KbGVhayB3aGVuIHByb2Nlc3NpbmcgdGhlIG9iamVjdCBhZnRlcndhcmRzLiBUaGF0
-IGlzIHRoZSByZWFzb24gd2h5IEkgbWFkZQ0KcmVmY250IGRlYnVnZ2VyIHRvIHN1cHBvcnQgcHJl
-Y2lzZSBiYWNrdHJhY2luZyBmb3IgZWFjaCBvcGVyYXRpb24uDQoNClRoYW5rcywNCg0K
+Em Thu, Dec 10, 2015 at 05:54:03PM -0500, William Cohen escreveu:
+
+> I have noticed that with the 4.4.0 kernels "perf list" has been
+> segfaulting on both aarch64 and x86_64.  Below is the failure on
+> fedora rawhide running on x86_64:
+
+Ok, this was fixed, but just on the perf/core branch:
+
+"perf list: Add support for PERF_COUNT_SW_BPF_OUT"
+https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git/commit/tools/perf/util/parse-events.c?h=perf/core&id=bae9cc41105b9edd74d68a9636be2ba240e74b9e
+
+And then this one on top to avoid such things in the future:
+"perf list: Robustify event printing routine"
+https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git/commit/tools/perf/util/parse-events.c?h=perf/core&id=e37df6c76cb19971f1228bfaff504d8a3ea6f748
+
+I'll cherry-pick those and push to Ingo.
+
+Thanks for the report!
+
+- Arnaldo
+
+> [wcohen@localhost ~]$ rpm -q perf
+> perf-4.4.0-0.rc4.git0.1.fc24.x86_64
+> [wcohen@localhost ~]$ gdb /bin/perf ./core.2110 
+> GNU gdb (GDB) Fedora 7.10.50.20151113-33.fc24
+> Copyright (C) 2015 Free Software Foundation, Inc.
+> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> This is free software: you are free to change and redistribute it.
+> There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+> and "show warranty" for details.
+> This GDB was configured as "x86_64-redhat-linux-gnu".
+> Type "show configuration" for configuration details.
+> For bug reporting instructions, please see:
+> <http://www.gnu.org/software/gdb/bugs/>.
+> Find the GDB manual and other documentation resources online at:
+> <http://www.gnu.org/software/gdb/documentation/>.
+> For help, type "help".
+> Type "apropos word" to search for commands related to "word"...
+> Reading symbols from /bin/perf...Reading symbols from /usr/lib/debug/usr/bin/perf.debug...done.
+> done.
+> [New LWP 2110]
+> [Thread debugging using libthread_db enabled]
+> Using host libthread_db library "/lib64/libthread_db.so.1".
+> Core was generated by `perf list'.
+> Program terminated with signal SIGSEGV, Segmentation fault.
+> #0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
+>     syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
+>     name_only=<optimized out>, event_glob=<optimized out>)
+>     at util/parse-events.c:1895
+> 1895			if (!name_only && strlen(syms->alias))
+> Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-19.fc24.x86_64 nss-softokn-freebl-3.21.0-3.fc24.x86_64
+> (gdb) where
+> #0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
+>     syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
+>     name_only=<optimized out>, event_glob=<optimized out>)
+>     at util/parse-events.c:1895
+> #1  print_events (event_glob=event_glob@entry=0x0, name_only=false)
+>     at util/parse-events.c:1943
+> #2  0x000055b1fc90a63e in cmd_list (argc=0, argv=0x7ffde1523f80, 
+>     prefix=<optimized out>) at builtin-list.c:43
+> #3  0x000055b1fc95c413 in run_builtin (p=0x55b1fcd803d8 <commands+120>, 
+>     argc=1, argv=0x7ffde1523f80) at perf.c:386
+> #4  0x000055b1fc8fe308 in handle_internal_command (argv=0x7ffde1523f80, argc=1)
+>     at perf.c:447
+> #5  run_argv (argv=0x7ffde1523d10, argcp=0x7ffde1523d1c) at perf.c:491
+> #6  main (argc=1, argv=0x7ffde1523f80) at perf.c:608
+> (gdb) 
+> 
+> 
+> I did a git bisect on the kernel source code to find out when "perf list" broke and the git bisect pointed to the following commit causing the problem:
+> 
+> # git bisect good
+> a43eec304259a6c637f4014a6d4767159b6a3aa3 is the first bad commit
+> commit a43eec304259a6c637f4014a6d4767159b6a3aa3
+> Author: Alexei Starovoitov <ast@plumgrid.com>
+> Date:   Tue Oct 20 20:02:34 2015 -0700
+> 
+>     bpf: introduce bpf_perf_event_output() helper
+>     
+>     This helper is used to send raw data from eBPF program into
+>     special PERF_TYPE_SOFTWARE/PERF_COUNT_SW_BPF_OUTPUT perf_event.
+>     User space needs to perf_event_open() it (either for one or all cpus) and
+>     store FD into perf_event_array (similar to bpf_perf_event_read() helper)
+>     before eBPF program can send data into it.
+>     
+>     Today the programs triggered by kprobe collect the data and either store
+>     it into the maps or print it via bpf_trace_printk() where latter is the debug
+>     facility and not suitable to stream the data. This new helper replaces
+>     such bpf_trace_printk() usage and allows programs to have dedicated
+>     channel into user space for post-processing of the raw data collected.
+>     
+>     Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> :040000 040000 322abd03170df11e43da73d3fa4f74f1826788e9 14f3ee14b7fb4b6c76daf18e026cf67acd3154fa M	include
+> :040000 040000 f84baec2884fe97ec501ae8d45bbb8a7aad3a578 ea440aeb13f1dd25aa8f2e1dadfc32dbf4b3d2b3 M	kernel
+> 
+> 
+> -Will
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
