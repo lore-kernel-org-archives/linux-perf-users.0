@@ -1,131 +1,264 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: Re: "perf list" built from git repository Segmentation fault with
- 4.4.0 kernels
-Date: Fri, 11 Dec 2015 10:08:40 -0500
-Message-ID: <566AE6F8.10500@redhat.com>
-References: <566A028B.2060708@redhat.com> <20151211131027.GD6843@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH perf/core  00/22] perf refcnt debugger API and fixes
+Date: Fri, 11 Dec 2015 19:26:21 -0300
+Message-ID: <20151211222621.GE6843@kernel.org>
+References: <20151209021047.10245.8918.stgit@localhost.localdomain>
+ <20151209134138.GB15864@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:47722 "EHLO mx1.redhat.com"
+Received: from mail.kernel.org ([198.145.29.136]:33517 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754509AbbLKPIl (ORCPT
+	id S1753581AbbLKW01 (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 11 Dec 2015 10:08:41 -0500
-In-Reply-To: <20151211131027.GD6843@kernel.org>
+	Fri, 11 Dec 2015 17:26:27 -0500
+Content-Disposition: inline
+In-Reply-To: <20151209134138.GB15864@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+To: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <ast@plumgrid.com>
 
-On 12/11/2015 08:10 AM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Dec 10, 2015 at 05:54:03PM -0500, William Cohen escreveu:
+Em Wed, Dec 09, 2015 at 10:41:38AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Dec 09, 2015 at 11:10:48AM +0900, Masami Hiramatsu escreveu:
+> >   General refcnt miscodings
+> >   =========================
+> > 
+> > BTW, while applying this change, I've found that there are refcnt
+> > coding mismatches in those code and most of the bugs come from those
+> > mismatches.
+> > 
+> > - The reference counter can be initialized by 0 or 1.
+> >  - If 0 is chosen, caller have to get it and free it if failed to
+> >    register appropriately.
+> >  - If 1 is chosen, caller doesn't need to get it, but when exits the
+> >    caller, it has to put it. (except for returning the object itself)
+> > - The application should choose either one as its policy, to avoid
+> >   confusion.
+> > 
+> > perf tools mixes it up (moreover, it initializes 2 in a case) and
+> > caller usually forgets to put it (it is not surprising, because too
+> > many "put" usually cause SEGV by accessing freed object.)
 > 
->> I have noticed that with the 4.4.0 kernels "perf list" has been
->> segfaulting on both aarch64 and x86_64.  Below is the failure on
->> fedora rawhide running on x86_64:
+> Well, we should fix the bugs and document why some initialization is
+> deemed better than a single initialization style.
+ 
+> For instance, if we know that we will keep multiple references straight
+> away, then we could init it with some value different that preferred,
+> that I aggee, is 1, i.e. the usual way for some constructor is:
 > 
-> Ok, this was fixed, but just on the perf/core branch:
 > 
-> "perf list: Add support for PERF_COUNT_SW_BPF_OUT"
-> https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git/commit/tools/perf/util/parse-events.c?h=perf/core&id=bae9cc41105b9edd74d68a9636be2ba240e74b9e
+> struct foo *foo__new()
+> {
+> 	struct foo *f = malloc(sizeof (*f));
 > 
-> And then this one on top to avoid such things in the future:
-> "perf list: Robustify event printing routine"
-> https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git/commit/tools/perf/util/parse-events.c?h=perf/core&id=e37df6c76cb19971f1228bfaff504d8a3ea6f748
+> 	if (f) {
+> 		atomic_set(&f->refcnt, 1);
+> 	}
 > 
-> I'll cherry-pick those and push to Ingo.
+> 	return f;
+> }
 > 
-> Thanks for the report!
+> void *foo__delete(struct foo *f)
+> {
+> 	free(f);
+> }
 > 
-> - Arnaldo
+> void foo__put(struct foo *f)
+> {
+> 	if (f && atomic_dec_and_test(f->refcnt))
+> 		foo__delete(f);
+> }
+> 
+> 
+> Then, when using if, and before adding it to any other tree, list, i.e.
+> a container, we do:
+> 
+> 	struct foo *f = foo__new();
+> 
+> 	/*
+> 	 * assume f was allocated and then the function allocating it
+> 	 * failed, when it bails out it should just do:
+>  	 */
+> out_error:
+> 	foo__put(f);
+> 
+> And that will make it hit zero, which will call foo__delete(), case
+> closed.
+>  
+> > As far as I can see, cgroup_sel, perf_mmap(this is initialized 0 or 2...),
+> > thread, and comm_str are initialized by 0. Others are initialized by 1.
+> > 
+> > So, I'd like to suggest that we choose one policy and cleanup the code.
+> > I recommend to use init by 1 policy, because anyway caller has to get
+> 
+> See above, if nothing else recommends using a different value, use 1.
 
-Thanks Arnaldo.  Glad to hear that this is already addressed and just needed to be pulled into the appropriate git repo.
+So, I think I fixed the thread->refcnt case, please take a look at my
+perf/core branch, more specifically this patch:
 
--Will
+From a9a8442c64a86599600ecb2ae0f296b5c93e2a98 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Fri, 11 Dec 2015 19:11:23 -0300
+Subject: [PATCH 1/1] perf thread: Fix reference count initial state
 
+We should always return from thread__new(), the constructor, with the
+object with a reference count of one, so that:
 
-> 
->> [wcohen@localhost ~]$ rpm -q perf
->> perf-4.4.0-0.rc4.git0.1.fc24.x86_64
->> [wcohen@localhost ~]$ gdb /bin/perf ./core.2110 
->> GNU gdb (GDB) Fedora 7.10.50.20151113-33.fc24
->> Copyright (C) 2015 Free Software Foundation, Inc.
->> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
->> This is free software: you are free to change and redistribute it.
->> There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
->> and "show warranty" for details.
->> This GDB was configured as "x86_64-redhat-linux-gnu".
->> Type "show configuration" for configuration details.
->> For bug reporting instructions, please see:
->> <http://www.gnu.org/software/gdb/bugs/>.
->> Find the GDB manual and other documentation resources online at:
->> <http://www.gnu.org/software/gdb/documentation/>.
->> For help, type "help".
->> Type "apropos word" to search for commands related to "word"...
->> Reading symbols from /bin/perf...Reading symbols from /usr/lib/debug/usr/bin/perf.debug...done.
->> done.
->> [New LWP 2110]
->> [Thread debugging using libthread_db enabled]
->> Using host libthread_db library "/lib64/libthread_db.so.1".
->> Core was generated by `perf list'.
->> Program terminated with signal SIGSEGV, Segmentation fault.
->> #0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
->>     syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
->>     name_only=<optimized out>, event_glob=<optimized out>)
->>     at util/parse-events.c:1895
->> 1895			if (!name_only && strlen(syms->alias))
->> Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-19.fc24.x86_64 nss-softokn-freebl-3.21.0-3.fc24.x86_64
->> (gdb) where
->> #0  0x000055b1fc97fdce in print_symbol_events (type=<optimized out>, 
->>     syms=0x55b1fcd81580 <event_symbols_sw+160>, max=<optimized out>, 
->>     name_only=<optimized out>, event_glob=<optimized out>)
->>     at util/parse-events.c:1895
->> #1  print_events (event_glob=event_glob@entry=0x0, name_only=false)
->>     at util/parse-events.c:1943
->> #2  0x000055b1fc90a63e in cmd_list (argc=0, argv=0x7ffde1523f80, 
->>     prefix=<optimized out>) at builtin-list.c:43
->> #3  0x000055b1fc95c413 in run_builtin (p=0x55b1fcd803d8 <commands+120>, 
->>     argc=1, argv=0x7ffde1523f80) at perf.c:386
->> #4  0x000055b1fc8fe308 in handle_internal_command (argv=0x7ffde1523f80, argc=1)
->>     at perf.c:447
->> #5  run_argv (argv=0x7ffde1523d10, argcp=0x7ffde1523d1c) at perf.c:491
->> #6  main (argc=1, argv=0x7ffde1523f80) at perf.c:608
->> (gdb) 
->>
->>
->> I did a git bisect on the kernel source code to find out when "perf list" broke and the git bisect pointed to the following commit causing the problem:
->>
->> # git bisect good
->> a43eec304259a6c637f4014a6d4767159b6a3aa3 is the first bad commit
->> commit a43eec304259a6c637f4014a6d4767159b6a3aa3
->> Author: Alexei Starovoitov <ast@plumgrid.com>
->> Date:   Tue Oct 20 20:02:34 2015 -0700
->>
->>     bpf: introduce bpf_perf_event_output() helper
->>     
->>     This helper is used to send raw data from eBPF program into
->>     special PERF_TYPE_SOFTWARE/PERF_COUNT_SW_BPF_OUTPUT perf_event.
->>     User space needs to perf_event_open() it (either for one or all cpus) and
->>     store FD into perf_event_array (similar to bpf_perf_event_read() helper)
->>     before eBPF program can send data into it.
->>     
->>     Today the programs triggered by kprobe collect the data and either store
->>     it into the maps or print it via bpf_trace_printk() where latter is the debug
->>     facility and not suitable to stream the data. This new helper replaces
->>     such bpf_trace_printk() usage and allows programs to have dedicated
->>     channel into user space for post-processing of the raw data collected.
->>     
->>     Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->>     Signed-off-by: David S. Miller <davem@davemloft.net>
->>
->> :040000 040000 322abd03170df11e43da73d3fa4f74f1826788e9 14f3ee14b7fb4b6c76daf18e026cf67acd3154fa M	include
->> :040000 040000 f84baec2884fe97ec501ae8d45bbb8a7aad3a578 ea440aeb13f1dd25aa8f2e1dadfc32dbf4b3d2b3 M	kernel
->>
->>
->> -Will
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+     struct thread *thread = thread__new();
+     thread__put(thread);
+
+Will call thread__delete().
+
+If any reference is made to that 'thread' variable, it better use
+thread__get(thread) to hold a reference.
+
+We were returning with thread->refcnt set to zero, fix it and some cases
+where thread__delete() was being called, which were not a problem
+because just one reference was being used, now that we set it to 1, use
+thread__put() instead.
+
+Reported-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-4b9mkuk66to4ecckpmpvqx6s@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/intel-pt.c |  4 ++--
+ tools/perf/util/machine.c  | 19 ++++++++++++-------
+ tools/perf/util/thread.c   | 10 ++++++++--
+ 3 files changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 97f963a3dcb9..81a2eb77ba7f 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -1744,7 +1744,7 @@ static void intel_pt_free(struct perf_session *session)
+ 	auxtrace_heap__free(&pt->heap);
+ 	intel_pt_free_events(session);
+ 	session->auxtrace = NULL;
+-	thread__delete(pt->unknown_thread);
++	thread__put(pt->unknown_thread);
+ 	free(pt);
+ }
+ 
+@@ -2153,7 +2153,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	return 0;
+ 
+ err_delete_thread:
+-	thread__delete(pt->unknown_thread);
++	thread__zput(pt->unknown_thread);
+ err_free_queues:
+ 	intel_pt_log_disable();
+ 	auxtrace_queues__free(&pt->queues);
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 1407d5107480..ad79297c76c8 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -352,13 +352,18 @@ static void machine__update_thread_pid(struct machine *machine,
+ 	}
+ 
+ 	th->mg = map_groups__get(leader->mg);
+-
++out_put:
++	thread__put(leader);
+ 	return;
+-
+ out_err:
+ 	pr_err("Failed to join map groups for %d:%d\n", th->pid_, th->tid);
++	goto out_put;
+ }
+ 
++/*
++ * Caller must eventually drop thread->refcnt returned with a successfull
++ * lookup/new thread inserted.
++ */
+ static struct thread *____machine__findnew_thread(struct machine *machine,
+ 						  pid_t pid, pid_t tid,
+ 						  bool create)
+@@ -376,7 +381,7 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
+ 	if (th != NULL) {
+ 		if (th->tid == tid) {
+ 			machine__update_thread_pid(machine, th, pid);
+-			return th;
++			return thread__get(th);
+ 		}
+ 
+ 		machine->last_match = NULL;
+@@ -389,7 +394,7 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
+ 		if (th->tid == tid) {
+ 			machine->last_match = th;
+ 			machine__update_thread_pid(machine, th, pid);
+-			return th;
++			return thread__get(th);
+ 		}
+ 
+ 		if (tid < th->tid)
+@@ -417,7 +422,7 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
+ 		if (thread__init_map_groups(th, machine)) {
+ 			rb_erase_init(&th->rb_node, &machine->threads);
+ 			RB_CLEAR_NODE(&th->rb_node);
+-			thread__delete(th);
++			thread__put(th);
+ 			return NULL;
+ 		}
+ 		/*
+@@ -441,7 +446,7 @@ struct thread *machine__findnew_thread(struct machine *machine, pid_t pid,
+ 	struct thread *th;
+ 
+ 	pthread_rwlock_wrlock(&machine->threads_lock);
+-	th = thread__get(__machine__findnew_thread(machine, pid, tid));
++	th = __machine__findnew_thread(machine, pid, tid);
+ 	pthread_rwlock_unlock(&machine->threads_lock);
+ 	return th;
+ }
+@@ -451,7 +456,7 @@ struct thread *machine__find_thread(struct machine *machine, pid_t pid,
+ {
+ 	struct thread *th;
+ 	pthread_rwlock_rdlock(&machine->threads_lock);
+-	th =  thread__get(____machine__findnew_thread(machine, pid, tid, false));
++	th =  ____machine__findnew_thread(machine, pid, tid, false);
+ 	pthread_rwlock_unlock(&machine->threads_lock);
+ 	return th;
+ }
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 0a9ae8014729..dfd00c6dad6e 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -19,8 +19,10 @@ int thread__init_map_groups(struct thread *thread, struct machine *machine)
+ 		thread->mg = map_groups__new(machine);
+ 	} else {
+ 		leader = __machine__findnew_thread(machine, pid, pid);
+-		if (leader)
++		if (leader) {
+ 			thread->mg = map_groups__get(leader->mg);
++			thread__put(leader);
++		}
+ 	}
+ 
+ 	return thread->mg ? 0 : -1;
+@@ -53,7 +55,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 			goto err_thread;
+ 
+ 		list_add(&comm->list, &thread->comm_list);
+-		atomic_set(&thread->refcnt, 0);
++		atomic_set(&thread->refcnt, 1);
+ 		RB_CLEAR_NODE(&thread->rb_node);
+ 	}
+ 
+@@ -95,6 +97,10 @@ struct thread *thread__get(struct thread *thread)
+ void thread__put(struct thread *thread)
+ {
+ 	if (thread && atomic_dec_and_test(&thread->refcnt)) {
++		/*
++		 * Remove it from the dead_threads list, as last reference
++		 * is gone.
++		 */
+ 		list_del_init(&thread->node);
+ 		thread__delete(thread);
+ 	}
+-- 
+2.1.0
