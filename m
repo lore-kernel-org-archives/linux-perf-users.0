@@ -1,25 +1,78 @@
-From: Michael@mail.microamerica.com.pe,
-	"J.Tynan <f.digeronimo"@federconsumatori.abruzzo.it
-Subject: Review & Reply
-Date: Fri, 18 Dec 2015 17:18:54 +0700
-Message-ID: <20151218101948.48F5D8E86297__11017.6089955077$1450448574$gmane$org@mail.microamerica.com.pe>
-Reply-To: michaeljtynan8@gmail.com
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: linux 4.4, perf & BPF, and bpf_perf_event_output
+Date: Mon, 11 Jan 2016 16:07:36 -0800
+Message-ID: <CAE40pde1XCYDCRXgThopk_wiDN_yw26BWLGgL4iaFnkWCkpW-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.microamerica.com.pe ([200.37.170.69]:41181 "EHLO
-	mail.microamerica.com.pe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754004AbbLROVk convert rfc822-to-8bit (ORCPT
+Received: from mail-ig0-f182.google.com ([209.85.213.182]:38741 "EHLO
+	mail-ig0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752068AbcALAIH (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 18 Dec 2015 09:21:40 -0500
-Content-Description: Mail message body
+	Mon, 11 Jan 2016 19:08:07 -0500
+Received: by mail-ig0-f182.google.com with SMTP id mw1so121161697igb.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jan 2016 16:08:06 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Recipients <f.digeronimo@federconsumatori.abruzzo.it>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Alexei Starovoitov <ast@plumgrid.com>, Wang Nan <wangnan0@huawei.com>
 
-Greetings,
-My name is Mr.Michael J. Tynan, I am a banker with Bank Of America. It is true that we have not meet each other in person, but I strongly believe in trust and friendship in every business. I have a Lebanese deceased customer's abandoned fund, which I am his personal financial adviser before his accidental death, that being the main reason why I alone working in the bank here, know much about the existence of this fund and the secrets surrounding this money. But before I disclose the full details to you, I will like to know your interest and willingness to assist me. You can call me as soon you receive my message, so that i will send to you full details about the transaction.
-My best regards,
-Mr.Michael J. Tynan
-MOBILE: +1 347 269 3740
+G'Day,
+
+Congrats Wang Nan on the new perf bpf features in 4.4! I just
+revisited where I was at with them now that it's official, and have a
+couple of questions.
+
+So I can run something like this:
+
+---syncsnoop.c---
+/* perf.data: default event record only; trace_pipe:
+bpf_trace_printk() output */
+#include <uapi/linux/bpf.h>
+#include "bpf_helpers.h"
+
+SEC("func=sys_sync")
+int bpf_func__sys_sync(void *ctx)
+{
+    char fmt[] = "sync()\n";
+    bpf_trace_printk(fmt, sizeof (fmt));
+    return 1;
+};
+
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+------
+
+With: perf record -a --clang-opt "-DLINUX_VERSION_CODE=0x40400"
+--event syncsnoop.c sleep 5
+
+And it works. I get PERF_RECORD_SAMPLE entries in perf.data, and my
+custom strings in /sys/kernel/debug/tracing/trace_pipe.
+
+Q1. Given bpf_trace_printk() & trace_pipe is a hack, is there a way
+yet to print my custom strings to perf.data? Eg, something like
+bpf_perf_event_output() to change the format string of the event.
+Currently I just get:
+
+# perf script
+            sync 30207 [002]  2509.576984: perf_bpf_probe:func:
+(ffffffff81221b20)
+            sync 30209 [003]  2509.766632: perf_bpf_probe:func:
+(ffffffff81221b20)
+            sync 30229 [003]  2509.936299: perf_bpf_probe:func:
+(ffffffff81221b20)
+            sync 30230 [004]  2510.099059: perf_bpf_probe:func:
+(ffffffff81221b20)
+            sync 30231 [004]  2510.289351: perf_bpf_probe:func:
+(ffffffff81221b20)
+
+Q2. Apart from per-event strings, is there a way to emit the maps?
+bpf-script-example.c populates a map, but I don't think it ends up in
+perf.data. I think a common case would be to emit it once for the run.
+Another common case would be to emit it once per second. Any way we
+can do this? I did try bpf_perf_event_output(), but I don't think it
+ended up in perf.data (at least, I don't see it using "perf script
+-D").
+
+thanks,
+
+Brendan
