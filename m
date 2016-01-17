@@ -1,64 +1,68 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: perf tracepoints for regular user?
-Date: Sun, 17 Jan 2016 22:20:00 +0100
-Message-ID: <4927145.OUESRpdSEU@agathebauer>
-References: <20160115210516.GA6329@localhost>
+Date: Sun, 17 Jan 2016 22:56:03 +0100
+Message-ID: <17940607.BqW1FPFzvU@agathebauer>
+References: <20160115210516.GA6329@localhost> <4927145.OUESRpdSEU@agathebauer>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2125863.ertgbEDhpq"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart96872683.ZbcEOt3ehs"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:35907 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:36975 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752554AbcAQV1k (ORCPT
+	id S1752761AbcAQV4I (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 17 Jan 2016 16:27:40 -0500
-In-Reply-To: <20160115210516.GA6329@localhost>
+	Sun, 17 Jan 2016 16:56:08 -0500
+In-Reply-To: <4927145.OUESRpdSEU@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Benjamin King <benjaminking@web.de>
 Cc: Linux perf users <linux-perf-users@vger.kernel.org>
 
---nextPart2125863.ertgbEDhpq
+--nextPart96872683.ZbcEOt3ehs
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
 
-On Freitag, 15. Januar 2016 22:05:16 CET Benjamin King wrote:
-> Hi,
+On Sonntag, 17. Januar 2016 22:20:00 CET Milian Wolff wrote:
+> On Freitag, 15. Januar 2016 22:05:16 CET Benjamin King wrote:
+> > Hi,
+> >=20
+> > I am trying to use 'perf stat -e uprobes:xyz' on a tracepoint that I ha=
+ve
+> > previously set, but with no success.
+> > I thought that I should be able to do that when allowing my user access=
+ to
+> > debugfs, but this is what I get:
+> >=20
+> > $ id -u;id -g
+> > 1001
+> > 1001
+> > $ mount|grep debug
+> > none on /sys/kernel/debug type debugfs (rw,uid=3D1001,gid=3D1001)
+> > $ ls /sys/kernel/debug
+> > acpi  bluetooth  cleancache  dell_laptop  dri extfrag ...
+> > $ ls /sys/kernel/debug/tracing/
+> > ls: cannot open directory /sys/kernel/debug/tracing/: Permission denied
+> >=20
+> > So, my user can't look in the tracing subdirectory and perf list doesn't
+> > show the uprobes either.
+> >=20
+> > I have also tried to =B4sudo setcap cap_sys_admin+eip $(which perf)=B4,=
+ also
+> > without success.
 >=20
-> I am trying to use 'perf stat -e uprobes:xyz' on a tracepoint that I have
-> previously set, but with no success.
-> I thought that I should be able to do that when allowing my user access to
-> debugfs, but this is what I get:
+> Try these commands:
 >=20
-> $ id -u;id -g
-> 1001
-> 1001
-> $ mount|grep debug
-> none on /sys/kernel/debug type debugfs (rw,uid=3D1001,gid=3D1001)
-> $ ls /sys/kernel/debug
-> acpi  bluetooth  cleancache  dell_laptop  dri extfrag ...
-> $ ls /sys/kernel/debug/tracing/
-> ls: cannot open directory /sys/kernel/debug/tracing/: Permission denied
->=20
-> So, my user can't look in the tracing subdirectory and perf list doesn't
-> show the uprobes either.
->=20
-> I have also tried to =B4sudo setcap cap_sys_admin+eip $(which perf)=B4, a=
-lso
-> without success.
+> $ sudo mount -o remount,mode=3D755 /sys/kernel/debug
+> $ sudo mount -o remount,mode=3D755 /sys/kernel/debug/tracing
+> $ echo \"-1\" | sudo tee /proc/sys/kernel/perf_event_paranoid
 
-Try these commands:
+(minus the escaping, copy'n'paste fail from a slide of mine)
 
-$ sudo mount -o remount,mode=3D755 /sys/kernel/debug
-$ sudo mount -o remount,mode=3D755 /sys/kernel/debug/tracing
-$ echo \"-1\" | sudo tee /proc/sys/kernel/perf_event_paranoid
-
-HTH
 =2D-=20
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2125863.ertgbEDhpq
+--nextPart96872683.ZbcEOt3ehs
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -160,13 +164,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDExNzIxMjAwMFowIwYJKoZIhvcNAQkEMRYEFMzg5Sxubg1mDyLljhEmES7MmEDYMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBABjT
-++tyo0NiUbma7c4Y0sTD0No401wAjSMO57HR7h4VD7PSQL5E2CPmNWVWa3fxRGP5FtbNsHCOZxmx
-Rl7fMR47NkmpTxEQLs7n5hwqBuHun8zQJ3OTyFtU3FJAJ9QYqWYEaHzPmk5QANwUXbrgIIOrwFFc
-cJhh7JYq8MxEcZuLQXrr6IZ1dc2lD/Vs/KomaAGZJXrXgfq2nwnQZkkUxDnPUWv8CupQOVKIX8cj
-s7eLjAqtiPNKB2wNH4OqJ058ds6NyXdTKVGXJPj20ahwfBar4o11MZl8NO6PJyrvjL785fJVG+Kk
-Xfl15jfDbNj5nGjxpNJI3Y4O8ofRKFRVxbgAAAAAAAA=
+DTE2MDExNzIxNTYwM1owIwYJKoZIhvcNAQkEMRYEFHpNTrUxzyyUePokAWMVQVsNfwdMMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBADgN
+4VoLuRBjYebyh9yTghRCujMrdk+Oor9JJLH61V8H0yHGiuJN8DGa7trxwtQ3c3qjNd1YO+X4bGVc
+3R3C4zpr/OVG52gCksygI7+U8E3SCnqOX7PU1JFmrrrdzY3n4l7yuOm2m5zX02/bNpUZ9hkyoli1
+VWxGvNVYOh9qats6qxYAKuMvh3sCjbsDVi8NQHEyax1APYjVejURfiIKSViyKuSFXnIh7AHJwdjt
+5iBKwSOwIBdczFxxYe6Wz1wv1auh995znqOzgfHRBcEuzPFo7IrRXiDCMTVn65TRoQQnQPDBZGtr
+S2s8z5MFJF/DonLpSUGVYbOxRttphtLzfgQAAAAAAAA=
 
 
---nextPart2125863.ertgbEDhpq--
+--nextPart96872683.ZbcEOt3ehs--
