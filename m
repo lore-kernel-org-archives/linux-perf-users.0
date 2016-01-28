@@ -1,34 +1,33 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: memory consumption information in perf stat?
-Date: Thu, 28 Jan 2016 18:11:33 +0100
-Message-ID: <53853116.DaB1LNLXKQ@milian-kdab2>
+Subject: sleep time counter for perf stat
+Date: Thu, 28 Jan 2016 18:19:47 +0100
+Message-ID: <14688108.VmeEoMdOOJ@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart10692408.I5p78J2yzp"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2453165.HLH3vbqTQp"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:39979 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:40573 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755451AbcA1RLj (ORCPT
+	id S1755434AbcA1RTt (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 28 Jan 2016 12:11:39 -0500
+	Thu, 28 Jan 2016 12:19:49 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
---nextPart10692408.I5p78J2yzp
+--nextPart2453165.HLH3vbqTQp
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
 Hey all,
 
-for user-space profiling, it would be extremely useful to get memory 
-consumption information such as peak heap size into the output of perf stat. 
-Is this doable? I just learned that `command time -v` is able to output the 
-maximum and average RSS. It would be extremely nice if `perf stat` could 
-incorporate that as well somehow such that I only need a single application to 
-look at that.
+similar to the previous email, I'd like to get input on another feature 
+addition to perf stat: An aggregated sleep time count. I know that one can 
+profile sleep times with perf as documented on its wiki. But for a quick check 
+I often run `perf stat` first which is - as far as I can see - currently not 
+able to give me an insight on the sleep time.
 
-If this is doable, then feel free to guide me to the code and I'm willing to 
-supply a patch for perf stat.
+Could such a feature be added? If so, how? I'm again willing to provide a 
+patch, if someone would guide me a bit.
 
 Thanks
 -- 
@@ -36,7 +35,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart10692408.I5p78J2yzp
+--nextPart2453165.HLH3vbqTQp
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -138,13 +137,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDEyODE3MTEzM1owIwYJKoZIhvcNAQkEMRYEFC7xRp8hSwCe8+t9IkssSEQ4jPYUMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALZg
-0Fuk4zw2xJVd8hmNlqhNcABCh+4dELEi57zoSI+YU/XwoCqFmeMuqrujKSiXYUU3CrmDh0vdHoje
-H/yWiwMjTdhYVCPNWKGFHBUEu1R1v4HUArvPfVmzqF/OOInIKMdYLxdG3thDc7L3+I1Kpr88mmAx
-72eU+qS8mAMMeJlXbh3ovzyFU/Bl3uwsbx5ipxbWGuw5u1tYwcYVGTNS+lycBCcN3KRKAsqVfVLX
-hmnCZA4vtlMaJLGUC5kVeaVKK7si7StPqhhV30sBA0vSzF1BSbPQIh5ldqel09LJNEWh7bb3soF6
-HVrAmY4WdzS41YmLV+a9s0/R2Y1XoGwfK60AAAAAAAA=
+DTE2MDEyODE3MTk0N1owIwYJKoZIhvcNAQkEMRYEFN+kjkZ3n8gMHs3o1aaue1iD8rU5MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFx0
+EVaIIGI2H+uJDv25DhLwK5irL329Ymp8C3ZDzqzIqZrUoeUKfHDJ3tl8GixyFidH8SMRT6oZUwXw
+JLQsoKwZH77/xJlwKhRgNJuvzdNtGXoTDEAhji15L/VSbSdsJ3Nikh+Tx1LVpedBjEE99ZAlR4Pi
+ZrmCtgB7zqdvZlhgrOmt3yvkmjcffowTojm3lWwV1lBWgQ3RJJqz4J0yt0Pn+xxSN3qbyUZnKCGl
+ReDBwtZTMx7wygr4x8Nf6qN5BhFPcL4vUO9Fyb0vLElk+76b/o+6JcV7qAj95YCo+qsdkG+NsBYy
+F2Kraq8Lg0WkP3OqJJSV88fxa/wDRgo4SowAAAAAAAA=
 
 
---nextPart10692408.I5p78J2yzp--
+--nextPart2453165.HLH3vbqTQp--
