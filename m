@@ -1,32 +1,35 @@
-From: Andreas Hollmann <hollmann@in.tum.de>
-Subject: User defined metrics for perf stat?
-Date: Sun, 31 Jan 2016 17:53:49 +0100
-Message-ID: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: User defined metrics for perf stat?
+Date: Mon, 1 Feb 2016 14:15:40 -0300
+Message-ID: <20160201171540.GB20817@kernel.org>
+References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-out1.informatik.tu-muenchen.de ([131.159.0.8]:44186 "EHLO
-	mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750901AbcAaRBR (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:44852 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753128AbcBARPx (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 31 Jan 2016 12:01:17 -0500
-Received: (Authenticated sender: hollmann)
-	by mail.in.tum.de (Postfix) with ESMTPSA id C5B9E1C247E
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 Jan 2016 17:53:51 +0100 (CET)
-Received: by mail-qg0-f50.google.com with SMTP id 6so101313091qgy.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jan 2016 08:53:51 -0800 (PST)
+	Mon, 1 Feb 2016 12:15:53 -0500
+Content-Disposition: inline
+In-Reply-To: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Andreas Hollmann <hollmann@in.tum.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Hi,
+Em Sun, Jan 31, 2016 at 05:53:49PM +0100, Andreas Hollmann escreveu:
+> Hi,
+> 
+> is there any way to create user defined metrics in perf stat?
+> 
+> Many hardware performance counters make only sense if you relate them
+> to other counters, so it would be nice to have it in perf.
 
-is there any way to create user defined metrics in perf stat?
+I think what you want is the 'perf stat recording' feature that was
+recently merged, contributed by Jiri Olsa, that I am CCing this reply.
+Jiri, is there something still to be merged in that series?
 
-Many hardware performance counters make only sense if you relate them
-to other counters, so it would be nice to have it in perf.
-
-I thought that I have seen something like that, but I coundn't find it again.
-
-Best regards,
-Andreas
+- Arnaldo
+ 
+> I thought that I have seen something like that, but I coundn't find it again.
