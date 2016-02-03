@@ -1,108 +1,82 @@
-From: Andreas Hollmann <hollmann@in.tum.de>
-Subject: Re: User defined metrics for perf stat?
-Date: Wed, 3 Feb 2016 16:25:57 +0100
-Message-ID: <CAGz0_-1H+J4YOGtiY5f1zCsTGW-QPXLq9Wn0qPEKVQPOohGjkA@mail.gmail.com>
-References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
-	<20160201171540.GB20817@kernel.org>
-	<20160201172755.GA27366@krava.redhat.com>
-	<CAGz0_-0k93OvSNgtnDMMTwYWxQuVnABqjfKC-KdmhGqv5H=C3A@mail.gmail.com>
-	<20160202085802.GA4257@krava.brq.redhat.com>
-	<CAGz0_-0HtuVf9XV1NZduHEtwz4nKJb8+Jib6_AksgAdG=pL=TA@mail.gmail.com>
-	<20160203074804.GA16045@krava.brq.redhat.com>
-	<CAGz0_-31qWb_0B2T_fpBwxGQkeg+PSATPS=uS5Ui1fKc8sVyiQ@mail.gmail.com>
-	<20160203140957.GA31974@krava.brq.redhat.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [RFC] perf: fix building for ARCv1
+Date: Wed, 3 Feb 2016 16:20:56 +0000
+Message-ID: <1454516455.2811.4.camel@synopsys.com>
+References: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
+	 <1445166916.9672.10.camel@synopsys.com>
+	 <87a8rf6a6p.fsf@tassilo.jf.intel.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44C9E9A@IN01WEMBXA.internal.synopsys.com>
+	 <8761235rwe.fsf@tassilo.jf.intel.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44CAFF9@IN01WEMBXA.internal.synopsys.com>
+	 <20151019093549.GK3816@twins.programming.kicks-ass.net>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
+	 <20151019095157.GM3816@twins.programming.kicks-ass.net>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
+	 <20151020101133.GA17308@twins.programming.kicks-ass.net>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
+	 <1446134296.3203.27.camel@synopsys.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-out2.informatik.tu-muenchen.de ([131.159.0.36]:41994 "EHLO
-	mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1754892AbcBCP0B (ORCPT
+Received: from smtprelay.synopsys.com ([198.182.60.111]:33735 "EHLO
+	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750991AbcBCQVD (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 3 Feb 2016 10:26:01 -0500
-Received: (Authenticated sender: hollmann)
-	by mail.in.tum.de (Postfix) with ESMTPSA id 13B9C1C248B
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Feb 2016 16:26:00 +0100 (CET)
-Received: by mail-qk0-f177.google.com with SMTP id o6so9113458qkc.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Feb 2016 07:26:00 -0800 (PST)
-In-Reply-To: <20160203140957.GA31974@krava.brq.redhat.com>
+	Wed, 3 Feb 2016 11:21:03 -0500
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
+Content-Language: en-US
+Content-ID: <1C4C0DD35AD39349AB8A56D688DF15D1@internal.synopsys.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "andi@firstfloor.org" <andi@firstfloor.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "acme@redhat.com" <acme@redhat.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "giladb@ezchip.com" <giladb@ezchip.com>, "dsahern@gmail.com" <dsahern@gmail.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "noamc@ezchip.com" <noamc@ezchip.com>
 
-Thanks again, Jiri!
-
-I'm wondering why stat_interva(time) and the
-time parameter has a second meaning for non
-interval code?
-
-What intention was behind your decision?
-
-Isn't it redundant and maybe ambiguous
-since we have trace_end()?
-
-The issue I see is that you have to distinguish
-between time for interval and non interval mode
-in your python script and then you could use
-trace_end() anyway?
-
-Maybe I'm missing something.
-
-  def stat__interval(time):
-
-    - is called for every interval with its time,
-      in non interval mode it's called after last
-      stat event with total measured time in ns
-
-2016-02-03 15:09 GMT+01:00 Jiri Olsa <jolsa@redhat.com>:
-> On Wed, Feb 03, 2016 at 12:43:48PM +0100, Andreas Hollmann wrote:
->> Thanks! Now it works.
->>
->> Are there any other callbacks specific to the new functionality?
->>
->> I saw this:
->>
->> def stat__interval(time):
->>    ...
->>
->> The name suggests that it is called once for each interval event entry?
->>
->> Anything else?
->
-> there was explanation in one of the patch changelogs, attached
-> I'll make it appear in some doc soon
->
->>
->> Would it make sense to extend "perf script -g" to generate the callbacks?
->
-> yep, I thought about that.. will make it happen ;-)
->
-> thanks,
-> jirka
->
->
-> ---
-> Add support to get stat events data in perf python scripts.
->
-> The python script shall implement following
-> new interface to process stat data:
->
->   def stat__<event_name>_[<modifier>](cpu, thread, time, val, ena, run):
->
->     - is called for every stat event for given counter,
->       if user monitors 'cycles,instructions:u" following
->       callbacks should be defined:
->
->       def stat__cycles(cpu, thread, time, val, ena, run):
->       def stat__instructions_u(cpu, thread, time, val, ena, run):
->
->   def stat__interval(time):
->
->     - is called for every interval with its time,
->       in non interval mode it's called after last
->       stat event with total measured time in ns
->
-> The rest of the current interface stays untouched..
->
-> Please check example CPI metrics script in following patch
-> with command line examples in changelogs.
+SGkgVmluZWV0LA0KDQpPbiBGcmksIDIwMTUtMTAtMzAgYXQgMDY6MTkgKzAwMDAsIFZpbmVldCBH
+dXB0YSB3cm90ZToNCj4gT24gVGh1cnNkYXkgMjkgT2N0b2JlciAyMDE1IDA5OjI4IFBNLCBBbGV4
+ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiBIaSBWaW5lZXQsDQo+ID4gDQo+ID4gT24gVHVlLCAyMDE1
+LTEwLTIwIGF0IDEwOjQ1ICswMDAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+ID4gPiBPbiBUdWVz
+ZGF5IDIwIE9jdG9iZXIgMjAxNSAwMzo0MSBQTSwgUGV0ZXIgWmlqbHN0cmEgd3JvdGU6DQo+ID4g
+PiA+ID4gPiBDYW4gd2UgdXNlIGV4aXN0aW5nIHN5c2NhbGwocykgLSBhZ2FpbiB0aGlzIGlzIHdo
+YXQgb3VyIGdvb2Qgb2xkIHB0aHJlYWQgbGlicmFyeQ0KPiA+ID4gPiA+ID4gY29kZSBkaWQuDQo+
+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IHN0YXRpYyB2b2lkIF9fcHRocmVhZF9hY3F1aXJlKGlu
+dCAqIHNwaW5sb2NrKQ0KPiA+ID4gPiA+ID4gew0KPiA+ID4gPiA+ID4gICBpbnQgY250ID0gMDsN
+Cj4gPiA+ID4gPiA+ICAgc3RydWN0IHRpbWVzcGVjIHRtOw0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+
+ID4gPiAgIFJFQURfTUVNT1JZX0JBUlJJRVIoKTsNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
+ICB3aGlsZSAodGVzdGFuZHNldChzcGlubG9jaykpIHsgICA8LS0tLSBhdG9taWMgRVhjaGFuZ2UN
+Cj4gPiA+ID4gPiA+ICAgICBpZiAoY250IDwgNTApIHsNCj4gPiA+ID4gPiA+ICAgICAgIHNjaGVk
+X3lpZWxkKCk7DQo+ID4gPiA+ID4gPiAgICAgICBjbnQrKzsNCj4gPiA+ID4gPiA+ICAgICB9IGVs
+c2Ugew0KPiA+ID4gPiA+ID4gICAgICAgdG0udHZfc2VjID0gMDsNCj4gPiA+ID4gPiA+ICAgICAg
+IHRtLnR2X25zZWMgPSAyMDAwMDAxOw0KPiA+ID4gPiA+ID4gICAgICAgbmFub3NsZWVwKCZ0bSwg
+KCh2b2lkICopMCkpOw0KPiA+ID4gPiA+ID4gICAgICAgY250ID0gMDsNCj4gPiA+ID4gPiA+ICAg
+ICB9DQo+ID4gPiA+ID4gPiAgIH0NCj4gPiA+ID4gKnNodWRkZXIqIHRoYXQgaXMgcXVpdGUgaG9y
+cmlibGUuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIG1lYW5zIGFsbCB5b3VyICdhdG9taWNzJyBh
+cmUgYnJva2VuIGZvciBhbnl0aGluZyBTQ0hFRF9GSUZPIGFuZCB0aGUNCj4gPiA+ID4gbGlrZS4g
+WW91IHNpbXBseSBfY2Fubm90XyBydW4gYSByZWFsdGltZSBzeXN0ZW0uDQo+ID4gPiBUaGUgY29k
+ZSBhYm92ZSBpcyBmcm9tIHVDbGliYyBvbGQgdGhyZWFkaW5nIGxpYnJhcnkgd2hpY2ggd2UgZG9u
+J3QgdXNlIGFueW1vcmUuDQo+ID4gPiBUaGUgTlBUTCB2ZXJzaW9uIGRvZXNuJ3QgaGF2ZSBhbGwg
+b2YgdGhpcyBzb25nLW4tZGFuY2UgYW5kIHJlbGllcyBvbiBmdXRleGVzLiBUaGUNCj4gPiA+IGNo
+YW5nZSB3ZSBhcmUgdGFsa2luZyBhYm91dCBpcyBvbmx5IGZvciB0aGUgYXRvbWljcyBpbiBwZXJm
+IGl0c2VsZi4gSSBkbw0KPiA+ID4gdW5kZXJzdGFuZCB5b3VyIFBPViB0aG91Z2guDQo+ID4gPiAN
+Cj4gPiA+ID4gKGFsc28sIGZvciBBQ1FVSVJFIHlvdSB3YW50IHRoZSBSRUFEX01FTU9SWV9CQVJS
+SUVSKCkgX2FmdGVyXyB0aGUNCj4gPiA+ID4gdGVzdC1hbmQtc2V0IGNvbnRyb2wgZGVwZW5kZW5j
+eS4pDQo+ID4gPiBBYnNvbHV0ZWx5IGFuZCBpbiB0aGlzIGNhc2UgaXQgd2lsbCBoYXZlIHRvIGJl
+IGFkZGVkIGJvdGggaW5zaWRlIHRoZSBsb29wIGFuZCBvbmUNCj4gPiA+IGF0IHRoZSBlbmQgdG8g
+Y292ZXIgYm90aCB0aGUgc2NlbmFyaW9zICENCj4gPiA+IA0KPiA+IEknbSB3b25kZXJpbmcgd2hh
+dCBhcmUgb3VyIHBsYW5zIGZvciBub3c/DQo+ID4gQXJlIHdlIGdvaW5nIHRvIGFjY2VwdCBwcm9w
+b3NlZCBmaXgganVzdCBmb3IgQVJDIGluIDQuNCAoYW5kIHRvIGFsbCBzdGFibGVzIHRoZW4pDQo+
+ID4gb3Igd2UnbGwgdHJ5IHRvIGNvbWUgdXAgd2l0aCBtb3JlIGdlbmVyYWwgc29sdXRpb24/DQo+
+IA0KPiBJIGFncmVlIHdpdGggdGhlIGN1cnJlbnQgc29sdXRpb24gdG8gYWRkIC1hdG9taWMgdG8g
+Zm9yIGFyYzcwMCBidWlsZHMuDQo+IEFsdGhvdWdoIG1ha2luZyB0aGF0IGRlZmF1bHQgZm9yIGFy
+YzcwMCB0b29scyB3aWxsIGJlIGJldHRlciBidXQgdGhhdCB3aWxsIG5vdCBmaXgNCj4gdGhpbmdz
+IGJlZm9yZSBuZXh0IHJlbGVhc2Ugb2YgdG9vbHMgZXRjLg0KPiANCj4gQnV0IHdlICpkbyogbmVl
+ZCB0byBpbXByb3ZlIGdlbmVyaWMgc29sdXRpb24NCj4gMS4gQWRkIGF0b21pY3MgZGV0ZWN0aW9u
+IGluIHBlcmYgdG8gYWRkIGZhbGwgYmFjayBhcmNoIHN0dWJzDQo+IDIuIEFSQyBuZWVkcyB0byBh
+ZGQgc3lzY2FsbCBmb3IgZmFjaWxpdGF0aW5nIGF0b21pYyByLW0tdyAhDQoNClNvIHRoZSBtb3N0
+IHJlY2VudCBBUkMgR05VIHRvb2xzICgyMDE1LjEyKSB3ZXJlIGp1c3QgcmVsZWFzZWQgeWVzdGVy
+ZGF5DQphbmQgc3RpbGwgYXRvbWljcyBhcmUgZGlzYWJsZWQgYnkgZGVmYXVsdCBmb3IgQVJDdjEu
+DQpUaGF0IG1lYW5zIHBlcmYgd2lsbCBjb250aW51ZSB0byBmYWlsIG9uIGJ1aWxkaW5nIGZvciBu
+b3cuDQoNCkRvIHlvdSB0aGluayB3ZSBtYXkgYXBwbHkgbXkgaW5pdGlhbCBmaXggdG8gNC41IHdo
+aWxlIGl0IGlzIGluIGRldmVsb3BtZW50IGFuZA0KdGhlbiB0byBzdGFibGUgdHJlZXMgYXMgd2Vs
+bD8NCg0KLUFsZXhleQ==
