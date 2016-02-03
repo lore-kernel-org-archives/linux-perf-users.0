@@ -1,78 +1,43 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: User defined metrics for perf stat?
-Date: Wed, 3 Feb 2016 15:09:57 +0100
-Message-ID: <20160203140957.GA31974@krava.brq.redhat.com>
+Date: Wed, 3 Feb 2016 15:11:57 +0100
+Message-ID: <20160203141157.GB31974@krava.brq.redhat.com>
 References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
- <20160201171540.GB20817@kernel.org>
- <20160201172755.GA27366@krava.redhat.com>
  <CAGz0_-0k93OvSNgtnDMMTwYWxQuVnABqjfKC-KdmhGqv5H=C3A@mail.gmail.com>
  <20160202085802.GA4257@krava.brq.redhat.com>
- <CAGz0_-0HtuVf9XV1NZduHEtwz4nKJb8+Jib6_AksgAdG=pL=TA@mail.gmail.com>
- <20160203074804.GA16045@krava.brq.redhat.com>
- <CAGz0_-31qWb_0B2T_fpBwxGQkeg+PSATPS=uS5Ui1fKc8sVyiQ@mail.gmail.com>
+ <17343448.BlG9640ky3@milian-kdab2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:46466 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:37527 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751824AbcBCOJ7 (ORCPT
+	id S1755368AbcBCOMB (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 3 Feb 2016 09:09:59 -0500
+	Wed, 3 Feb 2016 09:12:01 -0500
 Content-Disposition: inline
-In-Reply-To: <CAGz0_-31qWb_0B2T_fpBwxGQkeg+PSATPS=uS5Ui1fKc8sVyiQ@mail.gmail.com>
+In-Reply-To: <17343448.BlG9640ky3@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andreas Hollmann <hollmann@in.tum.de>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Andreas Hollmann <hollmann@in.tum.de>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-On Wed, Feb 03, 2016 at 12:43:48PM +0100, Andreas Hollmann wrote:
-> Thanks! Now it works.
+On Wed, Feb 03, 2016 at 01:39:20PM +0100, Milian Wolff wrote:
+> On Tuesday, February 2, 2016 9:58:02 AM CET Jiri Olsa wrote:
+> > On Tue, Feb 02, 2016 at 12:33:51AM +0100, Andreas Hollmann wrote:
+> > > Thanks, this is what I was looking for!
+> > > 
+> > > Why was the formula language abandoned? To restricted?
+> > > It would be still useful for interval prints.
+> > 
+> > yea the python script interface is way more powerful
+> > then whatever we would come with
 > 
-> Are there any other callbacks specific to the new functionality?
-> 
-> I saw this:
-> 
-> def stat__interval(time):
->    ...
-> 
-> The name suggests that it is called once for each interval event entry?
-> 
-> Anything else?
+> How does this compare to the ongoing eBPF effort? Will we be able to do eBPF 
+> based in-kernel aggregation for perf stat in the future?
 
-there was explanation in one of the patch changelogs, attached
-I'll make it appear in some doc soon
+hum, not sure what you mean by that, however this is
+all user level scripting support to allow user defined
+metrics/ratios from perf counters, more info ine here:
+  http://marc.info/?l=linux-kernel&m=145207742329050&w=2
 
-> 
-> Would it make sense to extend "perf script -g" to generate the callbacks?
-
-yep, I thought about that.. will make it happen ;-)
-
-thanks,
 jirka
-
-
----
-Add support to get stat events data in perf python scripts.
-
-The python script shall implement following
-new interface to process stat data:
-
-  def stat__<event_name>_[<modifier>](cpu, thread, time, val, ena, run):
-
-    - is called for every stat event for given counter,
-      if user monitors 'cycles,instructions:u" following
-      callbacks should be defined:
-
-      def stat__cycles(cpu, thread, time, val, ena, run):
-      def stat__instructions_u(cpu, thread, time, val, ena, run):
-
-  def stat__interval(time):
-
-    - is called for every interval with its time,
-      in non interval mode it's called after last
-      stat event with total measured time in ns
-
-The rest of the current interface stays untouched..
-
-Please check example CPI metrics script in following patch
-with command line examples in changelogs.
