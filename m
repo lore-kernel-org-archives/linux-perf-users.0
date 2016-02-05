@@ -1,54 +1,80 @@
-From: Noam Camus <noamc@ezchip.com>
-Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Fri, 5 Feb 2016 11:18:52 +0000
-Message-ID: <HE1PR02MB13872D4A7A43E49B8440AEB5D6D20@HE1PR02MB1387.eurprd02.prod.outlook.com>
-References: <C2D7FE5348E1B147BCA15975FBA23075F44C9DD2@IN01WEMBXA.internal.synopsys.com>
- <1445166916.9672.10.camel@synopsys.com> <87a8rf6a6p.fsf@tassilo.jf.intel.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44C9E9A@IN01WEMBXA.internal.synopsys.com>
- <8761235rwe.fsf@tassilo.jf.intel.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44CAFF9@IN01WEMBXA.internal.synopsys.com>
- <20151019093549.GK3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
- <20151019095157.GM3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
- <20151020101133.GA17308@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
- <1446134296.3203.27.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
- <1454516455.2811.4.camel__10775.5710989752$1454516490$gmane$org@synopsys.com>,<56B2CFF2.4030503@synopsys.com>
+From: Andreas Hollmann <hollmann@in.tum.de>
+Subject: Re: User defined metrics for perf stat?
+Date: Fri, 5 Feb 2016 15:12:04 +0100
+Message-ID: <CAGz0_-2Rs9DqfRhP2mWm6CQvoQtC385VeE+cYKJnJinx5nkpSQ@mail.gmail.com>
+References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
+	<20160201171540.GB20817@kernel.org>
+	<20160201172755.GA27366@krava.redhat.com>
+	<CAGz0_-0k93OvSNgtnDMMTwYWxQuVnABqjfKC-KdmhGqv5H=C3A@mail.gmail.com>
+	<20160202085802.GA4257@krava.brq.redhat.com>
+	<CAGz0_-0HtuVf9XV1NZduHEtwz4nKJb8+Jib6_AksgAdG=pL=TA@mail.gmail.com>
+	<20160203074804.GA16045@krava.brq.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56B2CFF2.4030503@synopsys.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "acme@redhat.com" <acme@redhat.com>, "andi@firstfloor.org" <andi@firstfloor.org>, "dsahern@gmail.com" <dsahern@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Gilad Ben Yossef <giladb@ezchip.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-out1.informatik.tu-muenchen.de ([131.159.0.8]:38644 "EHLO
+	mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754229AbcBEOMJ (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Fri, 5 Feb 2016 09:12:09 -0500
+Received: (Authenticated sender: hollmann)
+	by mail.in.tum.de (Postfix) with ESMTPSA id 2504A1C112D
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Feb 2016 15:12:07 +0100 (CET)
+Received: by mail-qg0-f54.google.com with SMTP id b35so67846683qge.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Feb 2016 06:12:07 -0800 (PST)
+In-Reply-To: <20160203074804.GA16045@krava.brq.redhat.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+
+Jiri, this method does not work when you pipe data to perf script.
+
+Works with perf.data file:
+
+./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/" record
+
+/perf script -s test.py
+event krava cpu -1, thread -1, time 1029898211, val 10959, ena
+81192094638, run 81192094638
+event krava cpu -1, thread -1, time 2043671594, val 10753, ena
+81094362809, run 81094362809
+
+does not work when using pipe
+
+./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/"
+record | ./perf script -s test.py
+
+--- no output
+
+Here the test.py
+
+cat test.py
+#!/usr/bin/env python
+
+def stat__krava(cpu, thread, time, val, ena, run):
+    print "event %s cpu %d, thread %d, time %d, val %d, ena %d, run %d" % \
+          ("krava", cpu, thread, time, val, ena, run)
 
 
-
-________________________________________
->From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
->Sent: Thursday, February 4, 2016 6:13 AM
->Noam, what's the atomic story for EZChip. Do you support such things for user
-space in GNU tools. If -atomic is added to perf user space builds are you guys OK!
-
-Well here for EZchip I also see the:
-undefined reference to `__sync_add_and_fetch_4'
-undefined reference to `__sync_sub_and_fetch_4'
-
-This is since at file tools/include/asm/atomic.h we use the generic implementation
-If for ARC I could use just like x86 my own header file then functions like:
-atomic_inc()
-atomic_dec_and_test()
-Are easy to implement and you may see an example for such atomic methods in my patch set for the new platform.
-
-You however wants to use some GCC flag -matomic which I assume somehow will implement the above __sync*.
-I can't find the implementation but if it uses LLSC then it won't work for me since I am not supporting LLSC.
-
-So seem that either I have my own header at kernel or that I need to change the GCC implementation for __sync* to use my atomic instructions.
-I am personally tend to the x86 solution and not the generic one since changing GCC will require to have new compiler dependency.
- 
--Noam
+2016-02-03 8:48 GMT+01:00 Jiri Olsa <jolsa@redhat.com>:
+> On Tue, Feb 02, 2016 at 05:24:16PM +0100, Andreas Hollmann wrote:
+>> Jiri, how do you handle raw counters with this python stat__*
+>> callback? What is the name of the callback?
+>
+> you can use 'name' term like:
+>   perf stat -e cycles,"cpu/config=0x6530160,name=krava/"
+>
+> and use following callback in your script:
+>   def stat__krava(cpu, thread, time, val, ena, run):
+>
+>>
+>> Is there any documentation on that? Thanks!
+>
+> no.. ;-)
+>
+> I'll try to come up with something.. meanwhile please just ask,
+> I'd be happy to help you
+>
+> thanks,
+> jirka
