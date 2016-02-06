@@ -1,57 +1,60 @@
-From: "acme@redhat.com" <acme@redhat.com>
-Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Fri, 5 Feb 2016 13:10:27 -0300
-Message-ID: <20160205161027.GG28242@kernel.org>
-References: <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
- <20151019095157.GM3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
- <20151020101133.GA17308@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
- <1446134296.3203.27.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
- <1454516455.2811.4.camel__10775.5710989752$1454516490$gmane$org@synopsys.com>
- <56B2CFF2.4030503@synopsys.com>
- <HE1PR02MB13872D4A7A43E49B8440AEB5D6D20@HE1PR02MB1387.eurprd02.prod.outlook.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: User defined metrics for perf stat?
+Date: Sat, 6 Feb 2016 22:54:48 +0100
+Message-ID: <20160206215448.GA6025@krava.redhat.com>
+References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
+ <20160201171540.GB20817@kernel.org>
+ <20160201172755.GA27366@krava.redhat.com>
+ <CAGz0_-0k93OvSNgtnDMMTwYWxQuVnABqjfKC-KdmhGqv5H=C3A@mail.gmail.com>
+ <20160202085802.GA4257@krava.brq.redhat.com>
+ <CAGz0_-0HtuVf9XV1NZduHEtwz4nKJb8+Jib6_AksgAdG=pL=TA@mail.gmail.com>
+ <20160203074804.GA16045@krava.brq.redhat.com>
+ <CAGz0_-2Rs9DqfRhP2mWm6CQvoQtC385VeE+cYKJnJinx5nkpSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:49704 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752286AbcBFVyx (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Sat, 6 Feb 2016 16:54:53 -0500
 Content-Disposition: inline
-In-Reply-To: <HE1PR02MB13872D4A7A43E49B8440AEB5D6D20@HE1PR02MB1387.eurprd02.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Noam Camus <noamc@ezchip.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "andi@firstfloor.org" <andi@firstfloor.org>, "dsahern@gmail.com" <dsahern@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, Gilad Ben Yossef <giladb@ezchip.com>
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <CAGz0_-2Rs9DqfRhP2mWm6CQvoQtC385VeE+cYKJnJinx5nkpSQ@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Andreas Hollmann <hollmann@in.tum.de>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Em Fri, Feb 05, 2016 at 11:18:52AM +0000, Noam Camus escreveu:
-> Well here for EZchip I also see the:
-> undefined reference to `__sync_add_and_fetch_4'
-> undefined reference to `__sync_sub_and_fetch_4'
-
-Yeah, because there is no: tools/arch/arc/include/asm/atomic.h, can't
-you guys adapt arch/arc/include/asm/atomic.h to use in userspace?
-
-- Arnaldo
- 
-> This is since at file tools/include/asm/atomic.h we use the generic implementation
-> If for ARC I could use just like x86 my own header file then functions like:
-> atomic_inc()
-> atomic_dec_and_test()
-> Are easy to implement and you may see an example for such atomic methods in my patch set for the new platform.
+On Fri, Feb 05, 2016 at 03:12:04PM +0100, Andreas Hollmann wrote:
+> Jiri, this method does not work when you pipe data to perf script.
 > 
-> You however wants to use some GCC flag -matomic which I assume somehow will implement the above __sync*.
-> I can't find the implementation but if it uses LLSC then it won't work for me since I am not supporting LLSC.
+> Works with perf.data file:
+> 
+> ./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/" record
+> 
+> /perf script -s test.py
+> event krava cpu -1, thread -1, time 1029898211, val 10959, ena
+> 81192094638, run 81192094638
+> event krava cpu -1, thread -1, time 2043671594, val 10753, ena
+> 81094362809, run 81094362809
+> 
+> does not work when using pipe
+> 
+> ./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/"
+> record | ./perf script -s test.py
+> 
+> --- no output
+> 
+> Here the test.py
+> 
+> cat test.py
+> #!/usr/bin/env python
+> 
+> def stat__krava(cpu, thread, time, val, ena, run):
+>     print "event %s cpu %d, thread %d, time %d, val %d, ena %d, run %d" % \
+>           ("krava", cpu, thread, time, val, ena, run)
 
-> So seem that either I have my own header at kernel or that I need to
-> change the GCC implementation for __sync* to use my atomic
-> instructions.  I am personally tend to the x86 solution and not the
-> generic one since changing GCC will require to have new compiler
-> dependency.
+right, we probably don't transfer the name term through the pipe,
+I'll check on that..
+
+jirka
