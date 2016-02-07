@@ -1,60 +1,80 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: User defined metrics for perf stat?
-Date: Sat, 6 Feb 2016 22:54:48 +0100
-Message-ID: <20160206215448.GA6025@krava.redhat.com>
-References: <CAGz0_-1EMt=mBSyrJPSQ_rg4f0tEf+PasAH-4A8sPWDnSm_JPw@mail.gmail.com>
- <20160201171540.GB20817@kernel.org>
- <20160201172755.GA27366@krava.redhat.com>
- <CAGz0_-0k93OvSNgtnDMMTwYWxQuVnABqjfKC-KdmhGqv5H=C3A@mail.gmail.com>
- <20160202085802.GA4257@krava.brq.redhat.com>
- <CAGz0_-0HtuVf9XV1NZduHEtwz4nKJb8+Jib6_AksgAdG=pL=TA@mail.gmail.com>
- <20160203074804.GA16045@krava.brq.redhat.com>
- <CAGz0_-2Rs9DqfRhP2mWm6CQvoQtC385VeE+cYKJnJinx5nkpSQ@mail.gmail.com>
+From: Andreas Hollmann <hollmann@in.tum.de>
+Subject: How to detect memory bound workloads with perf / toplev?
+Date: Sun, 7 Feb 2016 18:39:41 +0100
+Message-ID: <CAGz0_-3mKi2rict8yh-+28xLxjwSAjEDh62fwqCT4g6hm4x=Bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:49704 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752286AbcBFVyx (ORCPT
+Received: from mail-out1.informatik.tu-muenchen.de ([131.159.0.8]:56736 "EHLO
+	mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754635AbcBGRjo (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 6 Feb 2016 16:54:53 -0500
-Content-Disposition: inline
-In-Reply-To: <CAGz0_-2Rs9DqfRhP2mWm6CQvoQtC385VeE+cYKJnJinx5nkpSQ@mail.gmail.com>
+	Sun, 7 Feb 2016 12:39:44 -0500
+Received: (Authenticated sender: hollmann)
+	by mail.in.tum.de (Postfix) with ESMTPSA id 0F54C1C1134
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Feb 2016 18:39:42 +0100 (CET)
+Received: by mail-qg0-f44.google.com with SMTP id b67so16356384qgb.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 07 Feb 2016 09:39:42 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andreas Hollmann <hollmann@in.tum.de>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-On Fri, Feb 05, 2016 at 03:12:04PM +0100, Andreas Hollmann wrote:
-> Jiri, this method does not work when you pipe data to perf script.
-> 
-> Works with perf.data file:
-> 
-> ./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/" record
-> 
-> /perf script -s test.py
-> event krava cpu -1, thread -1, time 1029898211, val 10959, ena
-> 81192094638, run 81192094638
-> event krava cpu -1, thread -1, time 2043671594, val 10753, ena
-> 81094362809, run 81094362809
-> 
-> does not work when using pipe
-> 
-> ./perf stat -a -I 1000 -e cycles,"cpu/config=0x6530160,name=krava/"
-> record | ./perf script -s test.py
-> 
-> --- no output
-> 
-> Here the test.py
-> 
-> cat test.py
-> #!/usr/bin/env python
-> 
-> def stat__krava(cpu, thread, time, val, ena, run):
->     print "event %s cpu %d, thread %d, time %d, val %d, ena %d, run %d" % \
->           ("krava", cpu, thread, time, val, ena, run)
+Hi,
 
-right, we probably don't transfer the name term through the pipe,
-I'll check on that..
+im trying to find a good metric to detect memory bound situations on a
+system. Pure memory bandwidth depends on the memory access pattern and
+does not help to detect if the DRAM is really busy.
 
-jirka
+I found some metrics in toplev and in some documents by Ahmad Yasin
+and David Levinthal.
+
+OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_DATA COUNTER_MASK=6 / cycles
+
+As I understand it should give you the ratio of cycles with 6 or more
+elements in the super queue and the overall cycles.
+
+Description in toplev:
+
+This metric estimates cycles fraction where the performance
+was likely hurt due to approaching bandwidth limits of
+external main (DRAM).  This metric does not aggregate
+requests from other threads/cores/sockets (see Uncore
+counters for that).. NUMA in multi-socket system may be
+considered in such case.
+
+ORO_Demand_DRD_C6(self, EV, 4) / CLKS(self, EV, 4 )
+
+On my Ivybrdige CPU on my notebook it return even for pure memory
+bound applications (triad a = b + 1.0 * c; a, b, c, arrays of 1 GB
+size) a ratio of 0.3.
+
+On my Westmere-EX server the same counter returns 0.001 for the same
+application, which makes even less sense, since it has 10 cores per
+socket and the memory bandwidth should be even a bigger issue.
+
+Is this counter broken on the Westmere-EX architecture? Toplev
+supports only Sandybridge and later.
+
+Here is how I did the experiment:
+
+wget https://www.cs.virginia.edu/stream/FTP/Code/stream.c
+gcc -fopenmp -O2 -DNTIMES=100 -DSTREAM_ARRAY_SIZE=100000000 stream.c
+-o stream.100M
+perf stat -e cycles,"cpu/config=0x6530160,name=ORO_Demand_DRD_C6/" -D
+5000 ./stream.100M
+
+Ivybridge 8 Threads
+
+Performance counter stats for './stream.100M':
+
+ 1,324,163,717,562      cycles
+   364,524,300,688      ORO_Demand_DRD_C6
+
+Westmere-EX (4-Socket * 20 Threads)
+
+ Performance counter stats for './stream.100M':
+
+     1923967401946      cycles
+         228881898      ORO_Demand_DRD_C6
+
+      18.754835181 seconds time elapsed
