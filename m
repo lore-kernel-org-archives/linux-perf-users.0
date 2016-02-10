@@ -1,80 +1,64 @@
-From: Andreas Hollmann <hollmann@in.tum.de>
-Subject: How to detect memory bound workloads with perf / toplev?
-Date: Sun, 7 Feb 2016 18:39:41 +0100
-Message-ID: <CAGz0_-3mKi2rict8yh-+28xLxjwSAjEDh62fwqCT4g6hm4x=Bw@mail.gmail.com>
+From: Vineet Gupta <vgupta@synopsys.com>
+Subject: Re: [RFC] perf: fix building for ARCv1
+Date: Wed, 10 Feb 2016 08:39:43 +0530
+Message-ID: <56BAA9F7.50807@synopsys.com>
+References: <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
+ <20151019095157.GM3816@twins.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
+ <20151020101133.GA17308@twins.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
+ <1446134296.3203.27.camel@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
+ <1454516455.2811.4.camel__10775.5710989752$1454516490$gmane$org@synopsys.com>
+ <56B2CFF2.4030503@synopsys.com>
+ <HE1PR02MB13872D4A7A43E49B8440AEB5D6D20@HE1PR02MB1387.eurprd02.prod.outlook.com>
+ <20160205161027.GG28242@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-out1.informatik.tu-muenchen.de ([131.159.0.8]:56736 "EHLO
-	mail-out1.informatik.tu-muenchen.de" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754635AbcBGRjo (ORCPT
+Received: from mail-pa0-f43.google.com ([209.85.220.43]:33387 "EHLO
+	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932069AbcBJDJv (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 7 Feb 2016 12:39:44 -0500
-Received: (Authenticated sender: hollmann)
-	by mail.in.tum.de (Postfix) with ESMTPSA id 0F54C1C1134
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Feb 2016 18:39:42 +0100 (CET)
-Received: by mail-qg0-f44.google.com with SMTP id b67so16356384qgb.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Feb 2016 09:39:42 -0800 (PST)
+	Tue, 9 Feb 2016 22:09:51 -0500
+In-Reply-To: <20160205161027.GG28242@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: "acme@redhat.com" <acme@redhat.com>, Noam Camus <noamc@ezchip.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "andi@firstfloor.org" <andi@firstfloor.org>, "dsahern@gmail.com" <dsahern@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, Gilad Ben Yossef <giladb@ezchip.com>
 
-Hi,
+On Friday 05 February 2016 09:40 PM, acme@redhat.com wrote:
+> Em Fri, Feb 05, 2016 at 11:18:52AM +0000, Noam Camus escreveu:
+>> Well here for EZchip I also see the:
+>> undefined reference to `__sync_add_and_fetch_4'
+>> undefined reference to `__sync_sub_and_fetch_4'
+> 
+> Yeah, because there is no: tools/arch/arc/include/asm/atomic.h, can't
+> you guys adapt arch/arc/include/asm/atomic.h to use in userspace?
 
-im trying to find a good metric to detect memory bound situations on a
-system. Pure memory bandwidth depends on the memory access pattern and
-does not help to detect if the DRAM is really busy.
+Sure - however we need to support 3 variants: LLSC, !LLSC, EZCHIP
 
-I found some metrics in toplev and in some documents by Ahmad Yasin
-and David Levinthal.
+If needed, latter 2 could be done using a new atomic assist syscall
 
-OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_DATA COUNTER_MASK=6 / cycles
+I presume kernel Kconfig items are no go in this header so this diversity
+management needs to use toolchain defined macros e.g. __ezchip__
 
-As I understand it should give you the ratio of cycles with 6 or more
-elements in the super queue and the overall cycles.
 
-Description in toplev:
-
-This metric estimates cycles fraction where the performance
-was likely hurt due to approaching bandwidth limits of
-external main (DRAM).  This metric does not aggregate
-requests from other threads/cores/sockets (see Uncore
-counters for that).. NUMA in multi-socket system may be
-considered in such case.
-
-ORO_Demand_DRD_C6(self, EV, 4) / CLKS(self, EV, 4 )
-
-On my Ivybrdige CPU on my notebook it return even for pure memory
-bound applications (triad a = b + 1.0 * c; a, b, c, arrays of 1 GB
-size) a ratio of 0.3.
-
-On my Westmere-EX server the same counter returns 0.001 for the same
-application, which makes even less sense, since it has 10 cores per
-socket and the memory bandwidth should be even a bigger issue.
-
-Is this counter broken on the Westmere-EX architecture? Toplev
-supports only Sandybridge and later.
-
-Here is how I did the experiment:
-
-wget https://www.cs.virginia.edu/stream/FTP/Code/stream.c
-gcc -fopenmp -O2 -DNTIMES=100 -DSTREAM_ARRAY_SIZE=100000000 stream.c
--o stream.100M
-perf stat -e cycles,"cpu/config=0x6530160,name=ORO_Demand_DRD_C6/" -D
-5000 ./stream.100M
-
-Ivybridge 8 Threads
-
-Performance counter stats for './stream.100M':
-
- 1,324,163,717,562      cycles
-   364,524,300,688      ORO_Demand_DRD_C6
-
-Westmere-EX (4-Socket * 20 Threads)
-
- Performance counter stats for './stream.100M':
-
-     1923967401946      cycles
-         228881898      ORO_Demand_DRD_C6
-
-      18.754835181 seconds time elapsed
+> 
+> - Arnaldo
+>  
+>> This is since at file tools/include/asm/atomic.h we use the generic implementation
+>> If for ARC I could use just like x86 my own header file then functions like:
+>> atomic_inc()
+>> atomic_dec_and_test()
+>> Are easy to implement and you may see an example for such atomic methods in my patch set for the new platform.
+>>
+>> You however wants to use some GCC flag -matomic which I assume somehow will implement the above __sync*.
+>> I can't find the implementation but if it uses LLSC then it won't work for me since I am not supporting LLSC.
+> 
+>> So seem that either I have my own header at kernel or that I need to
+>> change the GCC implementation for __sync* to use my atomic
+>> instructions.  I am personally tend to the x86 solution and not the
+>> generic one since changing GCC will require to have new compiler
+>> dependency.
