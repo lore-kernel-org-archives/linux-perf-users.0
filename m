@@ -1,64 +1,204 @@
-From: Vineet Gupta <vgupta@synopsys.com>
-Subject: Re: [RFC] perf: fix building for ARCv1
-Date: Wed, 10 Feb 2016 08:39:43 +0530
-Message-ID: <56BAA9F7.50807@synopsys.com>
-References: <C2D7FE5348E1B147BCA15975FBA23075F44CB023@IN01WEMBXA.internal.synopsys.com>
- <20151019095157.GM3816@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB43D@IN01WEMBXA.internal.synopsys.com>
- <20151020101133.GA17308@twins.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA23075F44CB4BF@IN01WEMBXA.internal.synopsys.com>
- <1446134296.3203.27.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA23075F44CE67A@IN01WEMBXA.internal.synopsys.com>
- <1454516455.2811.4.camel__10775.5710989752$1454516490$gmane$org@synopsys.com>
- <56B2CFF2.4030503@synopsys.com>
- <HE1PR02MB13872D4A7A43E49B8440AEB5D6D20@HE1PR02MB1387.eurprd02.prod.outlook.com>
- <20160205161027.GG28242@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [RFC PATCH] perf hists: Do column alignment on the format iterator
+Date: Thu, 11 Feb 2016 17:27:18 -0300
+Message-ID: <20160211202718.GD32168@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f43.google.com ([209.85.220.43]:33387 "EHLO
-	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932069AbcBJDJv (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 9 Feb 2016 22:09:51 -0500
-In-Reply-To: <20160205161027.GG28242@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "acme@redhat.com" <acme@redhat.com>, Noam Camus <noamc@ezchip.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "andi@firstfloor.org" <andi@firstfloor.org>, "dsahern@gmail.com" <dsahern@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, Gilad Ben Yossef <giladb@ezchip.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Jones <davej@codemonkey.org.uk>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Friday 05 February 2016 09:40 PM, acme@redhat.com wrote:
-> Em Fri, Feb 05, 2016 at 11:18:52AM +0000, Noam Camus escreveu:
->> Well here for EZchip I also see the:
->> undefined reference to `__sync_add_and_fetch_4'
->> undefined reference to `__sync_sub_and_fetch_4'
-> 
-> Yeah, because there is no: tools/arch/arc/include/asm/atomic.h, can't
-> you guys adapt arch/arc/include/asm/atomic.h to use in userspace?
+We were doing column alignment in the format function for each cell,
+returning a string padded with spaces so that when the next column is
+printed the cursor is at its column alignment.
 
-Sure - however we need to support 3 variants: LLSC, !LLSC, EZCHIP
+This ends up needlessly printing trailing spaces, do it at the format
+iterator, that is where we know if it is needed, i.e. if there is more
+columns to be printed.
 
-If needed, latter 2 could be done using a new atomic assist syscall
+This eliminates the need for triming lines when doing a dump using 'P'
+in the TUI browser and also produces far saner results with things like
+piping 'perf report' to 'less'.
 
-I presume kernel Kconfig items are no go in this header so this diversity
-management needs to use toolchain defined macros e.g. __ezchip__
+Right now only the formatters for sym->name and the 'locked' column
+(perf mem report), that are the ones that end up at the end of lines
+in the default 'perf report', 'perf top' and 'perf mem report' tools,
+the others will be done in a subsequent patch.
 
+In the end the 'width' parameter for the formatters now mean, in
+'printf' terms, the 'precision', where before it was the field 'width'.
 
-> 
-> - Arnaldo
->  
->> This is since at file tools/include/asm/atomic.h we use the generic implementation
->> If for ARC I could use just like x86 my own header file then functions like:
->> atomic_inc()
->> atomic_dec_and_test()
->> Are easy to implement and you may see an example for such atomic methods in my patch set for the new platform.
->>
->> You however wants to use some GCC flag -matomic which I assume somehow will implement the above __sync*.
->> I can't find the implementation but if it uses LLSC then it won't work for me since I am not supporting LLSC.
-> 
->> So seem that either I have my own header at kernel or that I need to
->> change the GCC implementation for __sync* to use my atomic
->> instructions.  I am personally tend to the x86 solution and not the
->> generic one since changing GCC will require to have new compiler
->> dependency.
+Reported-by: Dave Jones <davej@codemonkey.org.uk>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lkml.kernel.org/n/tip-s7iwl2gj23w92l6tibnrcqzr@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/ui/browsers/hists.c | 17 ++++++++++-------
+ tools/perf/ui/stdio/hist.c     |  1 +
+ tools/perf/util/hist.c         | 21 +++++++++++++++++++++
+ tools/perf/util/hist.h         |  5 +++++
+ tools/perf/util/sort.c         | 13 +++----------
+ 5 files changed, 40 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index a5a5390476ac..af608d5da17d 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -1086,16 +1086,17 @@ static int hist_browser__show_entry(struct hist_browser *browser,
+ 			.folded_sign	= folded_sign,
+ 			.current_entry	= current_entry,
+ 		};
+-		struct perf_hpp hpp = {
+-			.buf		= s,
+-			.size		= sizeof(s),
+-			.ptr		= &arg,
+-		};
+ 		int column = 0;
+ 
+ 		hist_browser__gotorc(browser, row, 0);
+ 
+ 		hists__for_each_format(browser->hists, fmt) {
++			struct perf_hpp hpp = {
++				.buf	= s,
++				.size	= sizeof(s),
++				.ptr	= &arg,
++			};
++
+ 			if (perf_hpp__should_skip(fmt, entry->hists) ||
+ 			    column++ < browser->b.horiz_scroll)
+ 				continue;
+@@ -1122,8 +1123,9 @@ static int hist_browser__show_entry(struct hist_browser *browser,
+ 			if (fmt->color) {
+ 				width -= fmt->color(fmt, &hpp, entry);
+ 			} else {
+-				width -= fmt->entry(fmt, &hpp, entry);
++				hist_entry__snprintf_alignment(entry, &hpp, fmt, fmt->entry(fmt, &hpp, entry));
+ 				ui_browser__printf(&browser->b, "%s", s);
++				width -= hpp.buf - s;
+ 			}
+ 		}
+ 
+@@ -1452,9 +1454,10 @@ static int hist_browser__fprintf_entry(struct hist_browser *browser,
+ 			first = false;
+ 
+ 		ret = fmt->entry(fmt, &hpp, he);
++		ret = hist_entry__snprintf_alignment(he, &hpp, fmt, ret);
+ 		advance_hpp(&hpp, ret);
+ 	}
+-	printed += fprintf(fp, "%s\n", rtrim(s));
++	printed += fprintf(fp, "%s\n", s);
+ 
+ 	if (folded_sign == '-')
+ 		printed += hist_browser__fprintf_callchain(browser, he, fp);
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 1a6e8f7f38c4..87b022ff03d8 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -403,6 +403,7 @@ static int hist_entry__snprintf(struct hist_entry *he, struct perf_hpp *hpp)
+ 		else
+ 			ret = fmt->entry(fmt, hpp, he);
+ 
++		ret = hist_entry__snprintf_alignment(he, hpp, fmt, ret);
+ 		advance_hpp(hpp, ret);
+ 	}
+ 
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 12f2d794dc28..561e9473a915 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1015,6 +1015,27 @@ void hist_entry__delete(struct hist_entry *he)
+ }
+ 
+ /*
++ * If this is not the last column, then we need to pad it according to the
++ * pre-calculated max lenght for this column, otherwise don't bother adding
++ * spaces because that would break viewing this with, for instance, 'less',
++ * that would show tons of trailing spaces when a long C++ demangled method
++ * names is sampled.
++*/
++int hist_entry__snprintf_alignment(struct hist_entry *he, struct perf_hpp *hpp,
++				   struct perf_hpp_fmt *fmt, int printed)
++{
++	if (!list_is_last(&fmt->list, &he->hists->hpp_list->fields)) {
++		const int width = fmt->width(fmt, hpp, hists_to_evsel(he->hists));
++		if (printed < width) {
++			advance_hpp(hpp, printed);
++			printed = scnprintf(hpp->buf, hpp->size, "%-*s", width - printed, " ");
++		}
++	}
++
++	return printed;
++}
++
++/*
+  * collapse the histogram
+  */
+ 
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 1c7544a8fe1a..840b6d6aa44f 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -122,11 +122,16 @@ struct hist_entry *__hists__add_entry(struct hists *hists,
+ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+ 			 int max_stack_depth, void *arg);
+ 
++struct perf_hpp;
++struct perf_hpp_fmt;
++
+ int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
+ int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
+ int hist_entry__transaction_len(void);
+ int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
+ 			      struct hists *hists);
++int hist_entry__snprintf_alignment(struct hist_entry *he, struct perf_hpp *hpp,
++				   struct perf_hpp_fmt *fmt, int printed);
+ void hist_entry__delete(struct hist_entry *he);
+ 
+ void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog);
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index de620f7f40f4..c0ddde280584 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -247,10 +247,8 @@ static int _hist_entry__sym_snprintf(struct map *map, struct symbol *sym,
+ 			ret += repsep_snprintf(bf + ret, size - ret, "%s", sym->name);
+ 			ret += repsep_snprintf(bf + ret, size - ret, "+0x%llx",
+ 					ip - map->unmap_ip(map, sym->start));
+-			ret += repsep_snprintf(bf + ret, size - ret, "%-*s",
+-				       width - ret, "");
+ 		} else {
+-			ret += repsep_snprintf(bf + ret, size - ret, "%-*s",
++			ret += repsep_snprintf(bf + ret, size - ret, "%.*s",
+ 					       width - ret,
+ 					       sym->name);
+ 		}
+@@ -258,14 +256,9 @@ static int _hist_entry__sym_snprintf(struct map *map, struct symbol *sym,
+ 		size_t len = BITS_PER_LONG / 4;
+ 		ret += repsep_snprintf(bf + ret, size - ret, "%-#.*llx",
+ 				       len, ip);
+-		ret += repsep_snprintf(bf + ret, size - ret, "%-*s",
+-				       width - ret, "");
+ 	}
+ 
+-	if (ret > width)
+-		bf[width] = '\0';
+-
+-	return width;
++	return ret;
+ }
+ 
+ static int hist_entry__sym_snprintf(struct hist_entry *he, char *bf,
+@@ -811,7 +804,7 @@ static int hist_entry__locked_snprintf(struct hist_entry *he, char *bf,
+ 	else
+ 		out = "No";
+ 
+-	return repsep_snprintf(bf, size, "%-*s", width, out);
++	return repsep_snprintf(bf, size, "%.*s", width, out);
+ }
+ 
+ static int64_t
+-- 
+2.5.0
