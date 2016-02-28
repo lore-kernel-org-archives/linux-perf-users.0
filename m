@@ -1,25 +1,28 @@
 From: Joel Fernandes <joel.opensrc@gmail.com>
-Subject: [RFC] perf: probe_finder: continue if atleast one probe point found
-Date: Sun, 28 Feb 2016 03:14:47 -0800
-Message-ID: <1456658087-4107-1-git-send-email-agnel.joel@gmail.com>
+Subject: [RFC v2] perf: probe_finder: continue if atleast one probe point found
+Date: Sun, 28 Feb 2016 03:19:09 -0800
+Message-ID: <1456658349-4186-1-git-send-email-joel.opensrc@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pa0-f45.google.com ([209.85.220.45]:36593 "EHLO
-	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756975AbcB1LOx (ORCPT
+Received: from mail-pf0-f169.google.com ([209.85.192.169]:35147 "EHLO
+	mail-pf0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756975AbcB1LTR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 28 Feb 2016 06:14:53 -0500
+	Sun, 28 Feb 2016 06:19:17 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: joel.opensrc@gmail.com, agnel.joel@gmail.com
+
+From: Joel Fernandes <agnel.joel@gmail.com>
 
 Sometimes for inline functions, perf probe can fail such as if an arguments are
 requested at probe points. This is probably because when the compiler inlines,
 for some instances it optimizes away arguments. Either way, the DWARF has
 missing arguments for certain probe points of inline functions causing 'perf
 probe' to fail. I noticed this when probing the C library that ships with my
-distribution. With the following patch I am successfully able to record kprobe
+distribution. With the following patch I am successfully able to record uprobe
 events with arguments.
+v2 changes: Corrected commit message to mention uprobe.
 
 Test
 ----
