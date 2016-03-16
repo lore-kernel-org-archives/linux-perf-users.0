@@ -1,46 +1,45 @@
 From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 4/9] perf test: new testsuite: perf buildid-list tests
-Date: Wed, 16 Mar 2016 14:55:15 +0100 (CET)
-Message-ID: <alpine.LRH.2.20.1603161454590.13911@Rudolf-RHEL-7>
+Subject: [PATCH 5/9] perf test: new testsuite: perf list tests
+Date: Wed, 16 Mar 2016 14:55:57 +0100 (CET)
+Message-ID: <alpine.LRH.2.20.1603161455320.13911@Rudolf-RHEL-7>
 References: <cover.1458134357.git.mpetlan@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:56495 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:46388 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932209AbcCPNzT (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 16 Mar 2016 09:55:19 -0400
+	id S932209AbcCPN4B (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Wed, 16 Mar 2016 09:56:01 -0400
 In-Reply-To: <cover.1458134357.git.mpetlan@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 Cc: acme@kernel.org, Jiri Olsa <jolsa@redhat.com>
 
-This commit adds tests for perf buildid-list tool. It is a placeholder
-for future perf buildid-cache tests as well.
+This commit adds tests for perf list tool.
 
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
-  tools/perf/testsuite/base_buildid/cleanup.sh       | 23 ++++++
-  tools/perf/testsuite/base_buildid/settings.sh      | 45 ++++++++++++
-  tools/perf/testsuite/base_buildid/setup.sh         | 26 +++++++
-  .../testsuite/base_buildid/test_buildid-list.sh    | 81 ++++++++++++++++++++++
-  4 files changed, 175 insertions(+)
-  create mode 100755 tools/perf/testsuite/base_buildid/cleanup.sh
-  create mode 100644 tools/perf/testsuite/base_buildid/settings.sh
-  create mode 100755 tools/perf/testsuite/base_buildid/setup.sh
-  create mode 100755 tools/perf/testsuite/base_buildid/test_buildid-list.sh
+  tools/perf/testsuite/base_list/cleanup.sh    |  22 ++++++
+  tools/perf/testsuite/base_list/settings.sh   |  30 ++++++++
+  tools/perf/testsuite/base_list/setup.sh      |  20 ++++++
+  tools/perf/testsuite/base_list/test_basic.sh | 101 +++++++++++++++++++++++++++
+  4 files changed, 173 insertions(+)
+  create mode 100755 tools/perf/testsuite/base_list/cleanup.sh
+  create mode 100644 tools/perf/testsuite/base_list/settings.sh
+  create mode 100755 tools/perf/testsuite/base_list/setup.sh
+  create mode 100755 tools/perf/testsuite/base_list/test_basic.sh
 
-diff --git a/tools/perf/testsuite/base_buildid/cleanup.sh b/tools/perf/testsuite/base_buildid/cleanup.sh
+diff --git a/tools/perf/testsuite/base_list/cleanup.sh b/tools/perf/testsuite/base_list/cleanup.sh
 new file mode 100755
-index 0000000..fb90cc3
+index 0000000..d2ef647
 --- /dev/null
-+++ b/tools/perf/testsuite/base_buildid/cleanup.sh
-@@ -0,0 +1,23 @@
++++ b/tools/perf/testsuite/base_list/cleanup.sh
+@@ -0,0 +1,22 @@
 +#!/bin/bash
 +
 +#
-+#	cleanup.sh of perf buildid test
++#	cleanup.sh of perf list test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#
@@ -49,25 +48,24 @@ index 0000000..fb90cc3
 +. ../common/init.sh
 +. ./settings.sh
 +
-+if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
-+	remove_buildid_cache
-+	find . -name \*.log | xargs -r rm
-+	find . -name \*.err | xargs -r rm
-+	test -e perf.data && rm -rf perf.data
-+else
-+	mv "$BUILDIDDIR" "$PERFSUITE_RUN_DIR/perf_buildid-cache/"
++if [ -n "$PERFSUITE_RUN_DIR" ]; then
++	print_overall_skipped
++	exit 0
 +fi
 +
-+print_overall_results 0
++find . -name \*.log | xargs -r rm
++find . -name \*.err | xargs -r rm
++
++print_overal_results 0
 +exit $?
-diff --git a/tools/perf/testsuite/base_buildid/settings.sh b/tools/perf/testsuite/base_buildid/settings.sh
+diff --git a/tools/perf/testsuite/base_list/settings.sh b/tools/perf/testsuite/base_list/settings.sh
 new file mode 100644
-index 0000000..9bc0415
+index 0000000..eef343b
 --- /dev/null
-+++ b/tools/perf/testsuite/base_buildid/settings.sh
-@@ -0,0 +1,45 @@
++++ b/tools/perf/testsuite/base_list/settings.sh
+@@ -0,0 +1,30 @@
 +#
-+#	settings.sh of perf buildid test
++#	settings.sh of perf_list test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
@@ -75,15 +73,12 @@ index 0000000..9bc0415
 +#
 +#
 +
-+export TEST_NAME="perf_buildid-cache"
++export TEST_NAME="perf_list"
 +export MY_ARCH=`arch`
 +export MY_HOSTNAME=`hostname`
 +export MY_KERNEL_VERSION=`uname -r`
 +export MY_CPUS_ONLINE=`nproc`
 +export MY_CPUS_AVAILABLE=`cat /proc/cpuinfo | grep -P "processor\s" | wc -l`
-+
-+export BUILDIDDIR=${BUILDIDDIR:-"$HOME/.debug-`date +%s`"}
-+test -d "$BUILDIDDIR" || mkdir "$BUILDIDDIR"
 +
 +if [ -n "$PERFSUITE_RUN_DIR" ]; then
 +	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
@@ -99,28 +94,16 @@ index 0000000..9bc0415
 +	export CURRENT_TEST_DIR="."
 +	export LOGS_DIR="."
 +fi
-+
-+
-+clear_buildid_cache()
-+{
-+	rm -rf $BUILDIDDIR/*
-+}
-+
-+remove_buildid_cache()
-+{
-+	clear_buildid_cache
-+	rmdir $BUILDIDDIR
-+}
-diff --git a/tools/perf/testsuite/base_buildid/setup.sh b/tools/perf/testsuite/base_buildid/setup.sh
+diff --git a/tools/perf/testsuite/base_list/setup.sh b/tools/perf/testsuite/base_list/setup.sh
 new file mode 100755
-index 0000000..e9f6d56
+index 0000000..e254d05
 --- /dev/null
-+++ b/tools/perf/testsuite/base_buildid/setup.sh
-@@ -0,0 +1,26 @@
++++ b/tools/perf/testsuite/base_list/setup.sh
+@@ -0,0 +1,20 @@
 +#!/bin/bash
 +
 +#
-+#	setup.sh of perf buildid test
++#	setup.sh of perf list test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
@@ -135,31 +118,24 @@ index 0000000..e9f6d56
 +
 +THIS_TEST_NAME=`basename $0 .sh`
 +
-+# clear the cache
-+clear_buildid_cache
-+
-+# record some perf.data
-+$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data -a -- $CMD_LONGER_SLEEP &> $LOGS_DIR/setup.log
-+
-+print_overall_results $?
++print_overall_results 0
 +exit $?
-diff --git a/tools/perf/testsuite/base_buildid/test_buildid-list.sh b/tools/perf/testsuite/base_buildid/test_buildid-list.sh
+diff --git a/tools/perf/testsuite/base_list/test_basic.sh b/tools/perf/testsuite/base_list/test_basic.sh
 new file mode 100755
-index 0000000..4b40500
+index 0000000..7eed587
 --- /dev/null
-+++ b/tools/perf/testsuite/base_buildid/test_buildid-list.sh
-@@ -0,0 +1,81 @@
++++ b/tools/perf/testsuite/base_list/test_basic.sh
+@@ -0,0 +1,101 @@
 +#!/bin/bash
 +
 +#
-+#	test_buildid-list of perf buildid test
++#	test_basic of perf_list test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
 +#
-+#		This test checks whether the buildids captured by perf record
-+#	and listed by perf buildid-list from the perf.data file matches
-+#	reality. Some other checks of the tool are done too.
++#		This test tests basic functionality of perf list command.
++#
 +#
 +
 +# include working environment
@@ -169,19 +145,17 @@ index 0000000..4b40500
 +THIS_TEST_NAME=`basename $0 .sh`
 +TEST_RESULT=0
 +
-+test -s perf.data || ./setup.sh
-+
 +
 +### help message
 +
 +if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 +	# test that a help message is shown and looks reasonable
-+	$CMD_PERF buildid-list --help > $LOGS_DIR/list_helpmsg.log
++	$CMD_PERF list --help > $LOGS_DIR/basic_helpmsg.log
 +	PERF_EXIT_CODE=$?
 +
-+	../common/check_all_patterns_found.pl "PERF-BUILDID-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < $LOGS_DIR/list_helpmsg.log
++	../common/check_all_patterns_found.pl "PERF-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "EVENT MODIFIERS" "RAW HARDWARE" "PARAMETERIZED EVENTS" "OPTIONS" "SEE ALSO" "NOTES" < $LOGS_DIR/basic_helpmsg.log
 +	CHECK_EXIT_CODE=$?
-+	../common/check_all_patterns_found.pl "perf\-buildid\-list \- List the buildids in a perf\.data file" < $LOGS_DIR/list_helpmsg.log
++	../common/check_all_patterns_found.pl "perf\-list \- List all symbolic event types" < $LOGS_DIR/basic_helpmsg.log
 +	(( CHECK_EXIT_CODE += $? ))
 +
 +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
@@ -191,39 +165,62 @@ index 0000000..4b40500
 +fi
 +
 +
-+### buildids check
++### basic execution
 +
 +# test that perf list is even working
-+$CMD_PERF buildid-list -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/list_buildids.log 2> $LOGS_DIR/list_buildids.err
++$CMD_PERF list > $LOGS_DIR/basic_basic.log 2> $LOGS_DIR/basic_basic.err
 +PERF_EXIT_CODE=$?
 +
-+# output sanity checks
-+REGEX_LINE_BASIC="\w{40}\s+$RE_PATH"
-+REGEX_LINE_KALLSYMS="\w{40}\s+\[kernel\.kallsyms\]"
-+../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$REGEX_LINE_KALLSYMS" < $LOGS_DIR/list_buildids.log
++REGEX_LINE_HEADER="List of pre-defined events"
++REGEX_LINE_BASIC="\s*$RE_EVENT_ANY\s+(?:OR\s+$RE_EVENT_ANY\s+)?\[.*event.*\]"
++REGEX_LINE_BREAKPOINT="\s*mem:<addr>.*\s+\[Hardware breakpoint\]"
++REGEX_LINE_RAW="\[Raw hardware event descriptor\]"
++REGEX_LINE_AUX="see \'man perf\-list\' on how to encode it"
++../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$REGEX_LINE_HEADER" "$REGEX_LINE_BASIC" "$REGEX_LINE_BREAKPOINT" "$REGEX_LINE_RAW" "$REGEX_LINE_AUX" < $LOGS_DIR/basic_basic.log
 +CHECK_EXIT_CODE=$?
-+test ! -s $LOGS_DIR/basic_buildids.err
++test ! -s $LOGS_DIR/basic_basic.err
 +(( CHECK_EXIT_CODE += $? ))
 +
-+# output semantics check
-+../common/check_buildids_vs_files.pl < $LOGS_DIR/list_buildids.log
-+(( CHECK_EXIT_CODE += $? ))
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "buildids check"
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 +(( TEST_RESULT += $? ))
 +
 +
-+### kernel buildid
++### listing event groups
 +
-+# the --kernel option should print the buildid of the running kernel
-+$CMD_PERF buildid-list --kernel > $LOGS_DIR/list_kernel.log
++# perf list can filter the list by keywords or group globals
++declare -A outputs
++outputs["hw"]="Hardware event"
++outputs["sw"]="Software event"
++outputs["cache"]="Hardware cache event"
++outputs["tracepoint"]="Tracepoint event"
++outputs["pmu"]="Kernel PMU event"
++outputs["xfs:\*"]="^\s*xfs:"
++outputs["kmem:\*"]="^\s*kmem:"
++outputs["syscalls:\*"]="^\s*syscalls:sys"
++
++for i in ${!outputs[@]}; do
++	j=`echo $i | tr -d '\\\*:'`
++	$CMD_PERF list $i > $LOGS_DIR/basic_$j.log
++	PERF_EXIT_CODE=$?
++
++	../common/check_all_lines_matched.pl "$REGEX_LINE_HEADER" "$RE_LINE_EMPTY" "${outputs[$i]}" < $LOGS_DIR/basic_$j.log
++	CHECK_EXIT_CODE=$?
++
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list $i"
++	(( TEST_RESULT += $? ))
++done
++
++
++### non-sense argument
++
++# 'perf list somethingnonsense' caused segfault in 4.4-rc
++$CMD_PERF list somethingnonsense &> $LOGS_DIR/basic_nonsense.log
 +PERF_EXIT_CODE=$?
 +
-+# check whether the buildid is printed
-+../common/check_all_lines_matched.pl "\w{40}" < $LOGS_DIR/list_kernel.log
++../common/check_no_patterns_found.pl "SIGSEGV" "egmentation fault" < $LOGS_DIR/basic_nonsense.log
 +CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel buildid"
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-sense argument"
 +(( TEST_RESULT += $? ))
 +
 +
