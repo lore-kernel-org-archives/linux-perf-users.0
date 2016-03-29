@@ -1,94 +1,139 @@
 From: Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 1/9] perf test: Adding an entry for the
- perftool-testsuite
-Date: Tue, 29 Mar 2016 14:57:20 +0200 (CEST)
-Message-ID: <alpine.LRH.2.20.1603291437540.7107@Rudolf-RHEL-7>
-References: <cover.1458134357.git.mpetlan@redhat.com> <alpine.LRH.2.20.1603161450230.13911@Rudolf-RHEL-7> <20160327122340.GG4015@krava.sund.root.ku.dk>
+Subject: Re: [PATCH 0/9] perf test: the testsuite again
+Date: Tue, 29 Mar 2016 19:28:16 +0200 (CEST)
+Message-ID: <alpine.LRH.2.20.1603291917040.7107@Rudolf-RHEL-7>
+References: <alpine.LRH.2.20.1603161423550.13911@Rudolf-RHEL-7> <20160327122441.GL4015@krava.sund.root.ku.dk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="571116545-45931462-1459256242=:7107"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:44428 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:55343 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751915AbcC2M5Y (ORCPT
+	id S1753747AbcC2R2T (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 29 Mar 2016 08:57:24 -0400
-In-Reply-To: <20160327122340.GG4015@krava.sund.root.ku.dk>
+	Tue, 29 Mar 2016 13:28:19 -0400
+In-Reply-To: <20160327122441.GL4015@krava.sund.root.ku.dk>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: linux-perf-users@vger.kernel.org, acme@kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---571116545-45931462-1459256242=:7107
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-
 On Sun, 27 Mar 2016, Jiri Olsa wrote:
-> On Wed, Mar 16, 2016 at 02:50:59PM +0100, Michael Petlan wrote:
+> ctrl-c does not stop the suite.. I checked and you run several
+> command on background.. is there a reason for that?
 >
-> SNIP
 >
->> +#define TESTSUITE_ROOT "./testsuite/"
->> +
->> +/* globals */
->> +int fatal_occured = 0;
->> +char *cwd;
->> +
->> +
->> +/* runs a shell script */
->> +int _run_shell(const char *script)
->> +{
->> +	int ret;
->> +	char *cmd = malloc(strlen(script) + 3 * sizeof(char));
+> [jolsa@krava perf]$ sudo ./perf test suite -v
+> 44: Testsuite                                                :
+> --- start ---
+> test child forked, pid 25786
+> ======== base_stat ========
+> -- [ PASS ] -- perf_stat :: test_basic :: basic execution
 >
-> please check the return value
+> ...
+>
+> -- [ PASS ] -- perf_annotate :: test_basic :: redirected input
+> -- [ PASS ] -- perf_annotate :: test_basic :: execution without data
+> ## [ PASS ] ## perf_annotate :: test_basic SUMMARY
+> ## [ SKIP ] ## perf_annotate :: cleanup :: testcase skipped
+>
+> ======== base_report ========
+> ^C
+> [jolsa@krava perf]$ ^C
+> [jolsa@krava perf]$ ^C
+> [jolsa@krava perf]$ -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
+> -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase skipped
+> -- [ FAIL ] -- perf_report :: test_basic :: basic execution (output regexp parsing)
+> -- [ FAIL ] -- perf_report :: test_basic :: number of samples (output regexp parsing)
+> -- [ PASS ] -- perf_report :: test_basic :: header
+>
+>
 
-Fixed in the attached patch.
+I think this is a generic behaviour of perf-test itself. In the case of the
+testsuite it just has a bigger "race window" you can hit with the C-c.
 
+Every test forks:
 
-To the other notes:
+---- end ----
+roundtrip evsel->name check: Ok
+12: Check parsing of sched tracepoints fields                :
+--- start ---
+test child forked, pid 8304
+test child finished with 0
+---- end ----
+Check parsing of sched tracepoints fields: Ok
+13: Generate and check syscalls:sys_enter_openat event fields:
+--- start ---
+test child forked, pid 8305
+mmap size 528384B
+test child finished with 0
+---- end ----
 
-> 'cwd' does not need to be global
+And I managed to C-c the test 14 hitting the "race window", so it continued
+printing something:
 
-Fixed in the attached patch.
+14: struct perf_event_attr setup                             :
+--- start ---
+test child forked, pid 8306
+running './tests/attr/test-record-C0'
+unsupp  './tests/attr/test-record-C0'
+running './tests/attr/test-record-basic'
+unsupp  './tests/attr/test-record-basic'
+running './tests/attr/test-record-branch-any'
+unsupp  './tests/attr/test-record-branch-any'
+running './tests/attr/test-record-branch-filter-any'
+unsupp  './tests/attr/test-record-branch-filter-any'
+running './tests/attr/test-record-branch-filter-any_call'
+unsupp  './tests/attr/test-record-branch-filter-any_call'
+running './tests/attr/test-record-branch-filter-any_ret'
+unsupp  './tests/attr/test-record-branch-filter-any_ret'
+running './tests/attr/test-record-branch-filter-hv'
+unsupp  './tests/attr/test-record-branch-filter-hv'
+running './tests/attr/test-record-branch-filter-ind_call'
+unsupp  './tests/attr/test-record-branch-filter-ind_call'
+running './tests/attr/test-record-branch-filter-k'
+unsupp  './tests/attr/test-record-branch-filter-k'
+running './tests/attr/test-record-branch-filter-u'
+unsupp  './tests/attr/test-record-branch-filter-u'
+running './tests/attr/test-record-count'
+unsupp  './tests/attr/test-record-count'
+running './tests/attr/test-record-data'
+unsupp  './tests/attr/test-record-data'
+running './tests/attr/test-record-freq'
+unsupp  './tests/attr/test-record-freq'
+running './tests/attr/test-record-graph-default'
+unsupp  './tests/attr/test-record-graph-default'
+running './tests/attr/test-record-graph-dwarf'
+unsupp  './tests/attr/test-record-graph-dwarf'
+running './tests/attr/test-record-graph-fp'
+^C
+[root@muflon perf]# sh: line 1:  8357 Terminated              PERF_TEST_ATTR=/tmp/tmpzPprWC ./perf record -o /tmp/tmpzPprWC/perf.data --call-graph fp kill > /dev/null 2>&1
+unsupp  './tests/attr/test-record-graph-fp'
+running './tests/attr/test-record-group'
+unsupp  './tests/attr/test-record-group'
+running './tests/attr/test-record-group-sampling'
+unsupp  './tests/attr/test-record-group-sampling'
+running './tests/attr/test-record-group1'
+unsupp  './tests/attr/test-record-group1'
 
-> you propage all the error all the way through, so what's
-> the point of having extra global fatal_occured variable?
+When looking at `ps aux | grep perf | grep -v grep`, you can see the following:
 
-It is reserved for distinguishing between a regular failures in the
-tests (failures of perf in the ideal state) and the failures of the
-infrastructure (cannot allocate memory for the *cmd string above).
+# in this case you won't hit the "race window", C-c would work
+root      8286  0.0  0.1  76944  5692 pts/0    S+   18:16   0:00 perf test -v
+root      8292  0.0  0.0  81316  3640 pts/0    S+   18:16   0:00 perf test -v
 
-     if(failures || fatal_occurred)
-         test_status = TEST_FAIL;
+# in this case you hit the "race window" (run ps aux exactly when a sub-test
+# was running), so C-c would kill the perf test itself, but not the PID 8307
+# (which will continue printing stuff)
+root      8286  0.0  0.1  76944  5692 pts/0    S+   18:16   0:00 perf test -v
+root      8306  0.0  0.0  76944   936 pts/0    S+   18:16   0:00 perf test -v
+root      8307  1.6  0.3 192668 12340 pts/0    D+   18:16   0:00 /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ -p ./perf -v
 
-I know that this idiom merges that into TEST_FAIL, but we still are
-able to make differences here. The suite is pretty complex, I think
-there should be a way to notice infrastructure failures.
+When the testsuite runs, it usually runs some /bin/bash instead of the python2
+here. Since the testsuite spends most of the time in running the subtests outside
+of the C code (known issue), your chance that you hit that moment by C-c is pretty
+high. I don't think it can be fixed without re-designing the perf-test itself.
 
-> also I think you could erase the  ==== quoted lines
-
-I think it is more human-eye-friendly when the sections are separated
-by one more \n and the header. I moved that into the (verbose >= 2)
-mode. Once there might be twice or thrice more lines and sections as
-well. When reviewing the results of the suite, I like the headers.
-
-> is there a point to run tests if the setup fails?
-
-There is a reason, since not all of the tests of the 'group'
-(base_something/test_*.sh) need the setup.
-
-
-Thanks for the notes. The remaining two I have to check separately.
-All the failures that I usually encounter have their stderrs cut
-out in -v, so the testsuite logs look still nice. I have to check
-the failure you posted.
-
-Regarding to the C-c, yes, there are commands running in background,
-we need that e.g. for `perf stat -p` testing. However I don't think
-that that is why it cannot be C-c'd. I have to look at it more.
-
+Regards,
 Michael
 
 >
@@ -98,57 +143,3 @@ Michael
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
---571116545-45931462-1459256242=:7107
-Content-Type: text/plain; charset=US-ASCII; name=suite.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <alpine.LRH.2.20.1603291457200.7107@Rudolf-RHEL-7>
-Content-Description: 
-Content-Disposition: attachment; filename=suite.patch
-
-ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdGVzdHMvc3VpdGUuYyBiL3Rvb2xz
-L3BlcmYvdGVzdHMvc3VpdGUuYw0KaW5kZXggMTdmNjYxMC4uYjMzMTBlOCAx
-MDA2NDQNCi0tLSBhL3Rvb2xzL3BlcmYvdGVzdHMvc3VpdGUuYw0KKysrIGIv
-dG9vbHMvcGVyZi90ZXN0cy9zdWl0ZS5jDQpAQCAtMyw4ICszLDcgQEANCiAj
-ZGVmaW5lIFRFU1RTVUlURV9ST09UICIuL3Rlc3RzdWl0ZS8iDQogDQogLyog
-Z2xvYmFscyAqLw0KLWludCBmYXRhbF9vY2N1cmVkID0gMDsNCi1jaGFyICpj
-d2Q7DQoraW50IGZhdGFsX29jY3VycmVkID0gMDsNCiANCiANCiAvKiBydW5z
-IGEgc2hlbGwgc2NyaXB0ICovDQpAQCAtMTIsMTIgKzExLDE3IEBAIGludCBf
-cnVuX3NoZWxsKGNvbnN0IGNoYXIgKnNjcmlwdCkNCiB7DQogCWludCByZXQ7
-DQogCWNoYXIgKmNtZCA9IG1hbGxvYyhzdHJsZW4oc2NyaXB0KSArIDMgKiBz
-aXplb2YoY2hhcikpOw0KKwlpZihjbWQgPT0gTlVMTCkNCisJew0KKwkJZnBy
-aW50ZihzdGRlcnIsICJGQVRBTDogQ291bGQgbm90IGFsbG9jYXRlIG1lbW9y
-eS5cbiIpOw0KKwkJcmV0dXJuIDE7DQorCX0NCiAJc3RyY3B5KGNtZCwgIi4v
-Iik7DQogCXN0cmNweShjbWQgKyAyLCBzY3JpcHQpOw0KIAlyZXQgPSBzeXN0
-ZW0oY21kKTsNCiAJaWYgKHJldCA9PSAtMSkgew0KIAkJZnByaW50ZihzdGRl
-cnIsICJGQVRBTDogQ291bGQgbm90IHJ1biAlcyIsIGNtZCk7DQotCQlmYXRh
-bF9vY2N1cmVkKys7DQorCQlmYXRhbF9vY2N1cnJlZCsrOw0KIAkJcmV0dXJu
-IDE7DQogCX0NCiAJcmV0dXJuIHJldDsNCkBAIC0zMCwxMiArMzQsMTIgQEAg
-aW50IHJ1bl9zaGVsbChjb25zdCBjaGFyICpzY3JpcHQpDQogCXN0cnVjdCBz
-dGF0IHNiOw0KIA0KIAlpZiAoc3RhdChzY3JpcHQsICZzYikgPT0gLTEpIHsN
-Ci0JCWZhdGFsX29jY3VyZWQrKzsNCisJCWZhdGFsX29jY3VycmVkKys7DQog
-CQlyZXR1cm4gMTsNCiAJfQ0KIA0KIAlpZiAoISAoc2Iuc3RfbW9kZSAmIChT
-X0lYVVNSIHwgU19JRlJFRykpKSB7DQotCQlmYXRhbF9vY2N1cmVkKys7DQor
-CQlmYXRhbF9vY2N1cnJlZCsrOw0KIAkJcmV0dXJuIDE7DQogCX0NCiANCkBA
-IC02OCw3ICs3Miw3IEBAIGludCBydW5fZ3JvdXAoY29uc3QgY2hhciAqcGF0
-aCkNCiAJaW50IGZhaWx1cmVzID0gMDsNCiAJcmV0ID0gY2hkaXIocGF0aCk7
-DQogDQotCWlmICh2ZXJib3NlKQ0KKwlpZiAodmVyYm9zZSA+IDEpDQogCQlw
-cmludGYoIj09PT09PT09ICVzID09PT09PT09XG4iLCBwYXRoKTsNCiANCiAJ
-LyogdHJ5IHRvIHJ1biBzZXR1cCAqLw0KQEAgLTEwMiwxMyArMTA2LDE0IEBA
-IGludCBydW5fZ3JvdXAoY29uc3QgY2hhciAqcGF0aCkNCiBpbnQgdGVzdF9f
-c3VpdGUoaW50IHN1YnRlc3QgX19tYXliZV91bnVzZWQpDQogew0KIAlESVIg
-KmRwOw0KKwljaGFyICpjd2Q7DQogCXN0cnVjdCBkaXJlbnQgKmVwOw0KIAlp
-bnQgZmFpbHVyZXMgPSAwOw0KIAlpbnQgcmV0Ow0KIAlpbnQgdGVzdF9zdGF0
-dXMgPSBURVNUX09LOw0KIAljaGFyIHZlcmJvc2l0eV9zdHJbMl07DQogCWlu
-dCBfdmVyYm9zZSA9ICh2ZXJib3NlID4gOSk/IDkgOiB2ZXJib3NlOw0KLQlj
-aGFyIHRlbXBkaXJfdGVtcGxhdGVbMjRdLCBfdGVtcGRpcl90ZW1wbGF0ZTsN
-CisJY2hhciB0ZW1wZGlyX3RlbXBsYXRlWzI0XSwgKl90ZW1wZGlyX3RlbXBs
-YXRlOw0KIA0KIAkvKiBzZXQgdmVyYm9zaXR5IGFjY29yZGluZyB0byBwZXJm
-LXRlc3QgY29tbWFuZCBsaW5lIHN3aXRjaGVzICovDQogCXNucHJpbnRmKHZl
-cmJvc2l0eV9zdHIsIDIsICIlaSIsIF92ZXJib3NlKTsNCkBAIC0xNDMsNyAr
-MTQ4LDcgQEAgaW50IHRlc3RfX3N1aXRlKGludCBzdWJ0ZXN0IF9fbWF5YmVf
-dW51c2VkKQ0KIAlyZXQgPSByZXQ7DQogCWZyZWUoY3dkKTsNCiANCi0JaWYo
-ZmFpbHVyZXMgfHwgZmF0YWxfb2NjdXJlZCkNCisJaWYoZmFpbHVyZXMgfHwg
-ZmF0YWxfb2NjdXJyZWQpDQogCQl0ZXN0X3N0YXR1cyA9IFRFU1RfRkFJTDsN
-CiANCiAJcmV0dXJuIHRlc3Rfc3RhdHVzOw0K
-
---571116545-45931462-1459256242=:7107--
