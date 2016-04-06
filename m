@@ -1,69 +1,84 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: perf trace report with time consumed
-Date: Wed, 06 Apr 2016 23:16:27 +0200
-Message-ID: <8811507.a6yccgC5Cj@agathebauer>
-References: <1894563.GPSC8z33rH@agathebauer> <2600188.8x2NmCkWJL@agathebauer> <20160405083524.GB17232@krava.brq.redhat.com>
+Subject: Re: [PATCH] perf tools: Add dedicated unwind addr_space member into thread struct
+Date: Wed, 06 Apr 2016 23:15:27 +0200
+Message-ID: <2529332.MbcSn26IoS@agathebauer>
+References: <1894563.GPSC8z33rH@agathebauer> <20160405083524.GB17232@krava.brq.redhat.com> <20160406154657.GA14971@krava.brq.redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5567707.tzL1prBlJ9"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart4236050.HaRfuyQHAV"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:41059 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:41067 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753110AbcDHLDR (ORCPT
+	id S1754046AbcDHLDS (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 8 Apr 2016 07:03:17 -0400
-In-Reply-To: <20160405083524.GB17232@krava.brq.redhat.com>
+	Fri, 8 Apr 2016 07:03:18 -0400
+In-Reply-To: <20160406154657.GA14971@krava.brq.redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, perf group <linux-perf-users@vger.kernel.org>
 
---nextPart5567707.tzL1prBlJ9
+--nextPart4236050.HaRfuyQHAV
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Dienstag, 5. April 2016 10:35:24 CEST Jiri Olsa wrote:
-> On Mon, Apr 04, 2016 at 11:17:11PM +0200, Milian Wolff wrote:
-> 
-> SNIP
-> 
-> >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
-> >             5582244227cd main (/tmp/ex_sleep)
-> >   
-> >   1001.702 ( 0.059 ms): ex_sleep/4390 nanosleep(rqtp: 0x7ffe4d16eec0
+On Mittwoch, 6. April 2016 17:46:57 CEST Jiri Olsa wrote:
+> On Tue, Apr 05, 2016 at 10:35:24AM +0200, Jiri Olsa wrote:
+> > On Mon, Apr 04, 2016 at 11:17:11PM +0200, Milian Wolff wrote:
 > > 
-> > ) = 0
+> > SNIP
 > > 
-> >                   20379e syscall_slow_exit_work ([kernel.kallsyms])
-> >                   203bc4 syscall_return_slowpath ([kernel.kallsyms])
-> >                   797248 int_ret_from_sys_call ([kernel.kallsyms])
-> >             
-> >             7f688a5c5600 __nanosleep (/usr/lib/libc-2.23.so)
-> >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
-> >             5582244227d7 main (/tmp/ex_sleep)
+> > >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
+> > >             5582244227cd main (/tmp/ex_sleep)
+> > >   
+> > >   1001.702 ( 0.059 ms): ex_sleep/4390 nanosleep(rqtp: 0x7ffe4d16eec0
+> > > 
+> > > ) = 0
+> > > 
+> > >                   20379e syscall_slow_exit_work ([kernel.kallsyms])
+> > >                   203bc4 syscall_return_slowpath ([kernel.kallsyms])
+> > >                   797248 int_ret_from_sys_call ([kernel.kallsyms])
+> > >             
+> > >             7f688a5c5600 __nanosleep (/usr/lib/libc-2.23.so)
+> > >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
+> > >             5582244227d7 main (/tmp/ex_sleep)
+> > > 
+> > > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > 
+> > > Is there a way to increase the event buffer or something like that to
+> > > not lose events when the costly dwarf unwinding happens for the first
+> > > time? Consecutive unwinding is cached by libunwind and much faster.
 > > 
-> > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > not sure about perf trace, but there's -m option available for perf record
+> > that allows you to increase the buffer size
 > > 
-> > Is there a way to increase the event buffer or something like that to not
-> > lose events when the costly dwarf unwinding happens for the first time?
-> > Consecutive unwinding is cached by libunwind and much faster.
-> 
-> not sure about perf trace, but there's -m option available for perf record
-> that allows you to increase the buffer size
+> > > Alternatively, I could try to unwind in the `sys_enter`, but then I'd
+> > > need to buffer the output to print the trace after the duration line...
+> > > 
+> > > How would you guys handle this situation?
+> > > 
+> > > Also, Jiri, Arnaldo - what would be your suggestion on how to handle the
+> > > `thread::priv` situation - I doubt my naive `priv2` approach is
+> > > acceptable.
+> > 
+> > yea, I think one priv is more than enough ;-)
+> > 
+> > I think we want to move the the unwinder usage of this field into separate
+> > field
+> need to run test over this, but will try to post it this week
+> let me know if this solution would work for you
 
-<snip>
+Yes, works for me, thanks a lot!
 
-Yes, trace also knows the -m and even passing "-m 1M" already makes it the 
-above use-case work. What is the default value? Could/Should it maybe be 
-increased? 1M is not a lot of memory, sounds like a good trade-off to me?
+Feel free to add
 
-Bye
+    Tested-by: Milian Wolff <milian.wolff@kdab.com>
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart5567707.tzL1prBlJ9
+--nextPart4236050.HaRfuyQHAV
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -165,13 +180,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDQwNjIxMTYyN1owIwYJKoZIhvcNAQkEMRYEFHvvgANfCWNi/itELoyI4+OrlRU+MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAH+6
-zsgHnbZvcBEsH+BKVY74O/KJTmAbY+1YjvfBtRiTgF7bvNW4yLC6W1kO7nVjvXTmzaDnnQ+cHyjG
-HhYWsQF1wM1ebGG0xYbLGuU/ePGfqeRM0zjRPiBYyb39pyRKD3FQ82qutqi9u1q56qtBARj5IcMF
-GB35UrazU60rpFw9hKoZtHGN18h5ZKC3rAtuei1kYybU0GM5Rqx+tOS4r6ZBHFmictXcxsgc4h31
-WsKedoVUcEJMjwmtBPxALPGRtkAlMmfEjsmTTlX5sTYyp00Y7gHFva16uvo51xiD6+tq3cspzuld
-+8pQ0eB2079DJhdp526BkReCVZLfYlOAn+kAAAAAAAA=
+DTE2MDQwNjIxMTUyN1owIwYJKoZIhvcNAQkEMRYEFEuzHlYoTSJtB5N6qhptsavK5xvgMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAEyF
+5/m+JgeUeB+DTVp1xcx1gNrfV27CkPhM5+ah9W0r+btpxnD9jvAD+Goy6GNOTpHVfLylT/wOJ5Ku
+FoyP6miZ7H7obfiFvda9jXyKZsYyjctlsKQ7kvwAP2660fVRss1uFgSlrswFrJVqzn1esnynb04b
+KGVflzdeKBSmk4ga6vEvNNNtbYP0kijT5sN7E493VrWsyOTkC87NFVdk8UO1jx7RXHOEes4RWkuY
+mdwLK2v05/fPBus+1b53njBwwk5NFFnjTRxn+3teXVLPlP52Yhla1oSKnXK6oOayAZfy1kmGmXfm
+H8qre+3HGq/+E9C0Bpfb9vs1s80P2+5DNxYAAAAAAAA=
 
 
---nextPart5567707.tzL1prBlJ9--
+--nextPart4236050.HaRfuyQHAV--
