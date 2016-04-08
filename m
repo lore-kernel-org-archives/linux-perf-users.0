@@ -1,192 +1,257 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf tools: Add dedicated unwind addr_space member into thread struct
-Date: Wed, 06 Apr 2016 23:15:27 +0200
-Message-ID: <2529332.MbcSn26IoS@agathebauer>
-References: <1894563.GPSC8z33rH@agathebauer> <20160405083524.GB17232@krava.brq.redhat.com> <20160406154657.GA14971@krava.brq.redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4236050.HaRfuyQHAV"; micalg="sha1"; protocol="application/pkcs7-signature"
+Subject: [PATCH] perf trace: Add support for printing call chains on sys_exit events.
+Date: Fri,  8 Apr 2016 13:34:15 +0200
+Message-ID: <1460115255-17648-1-git-send-email-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:41067 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:42591 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754046AbcDHLDS (ORCPT
+	id S1757655AbcDHLeZ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 8 Apr 2016 07:03:18 -0400
-In-Reply-To: <20160406154657.GA14971@krava.brq.redhat.com>
+	Fri, 8 Apr 2016 07:34:25 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, perf group <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Milian Wolff <milian.wolff@kdab.com>
 
---nextPart4236050.HaRfuyQHAV
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Now, one can print the call chain for every encountered sys_exit
+event, e.g.:
 
-On Mittwoch, 6. April 2016 17:46:57 CEST Jiri Olsa wrote:
-> On Tue, Apr 05, 2016 at 10:35:24AM +0200, Jiri Olsa wrote:
-> > On Mon, Apr 04, 2016 at 11:17:11PM +0200, Milian Wolff wrote:
-> > 
-> > SNIP
-> > 
-> > >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
-> > >             5582244227cd main (/tmp/ex_sleep)
-> > >   
-> > >   1001.702 ( 0.059 ms): ex_sleep/4390 nanosleep(rqtp: 0x7ffe4d16eec0
-> > > 
-> > > ) = 0
-> > > 
-> > >                   20379e syscall_slow_exit_work ([kernel.kallsyms])
-> > >                   203bc4 syscall_return_slowpath ([kernel.kallsyms])
-> > >                   797248 int_ret_from_sys_call ([kernel.kallsyms])
-> > >             
-> > >             7f688a5c5600 __nanosleep (/usr/lib/libc-2.23.so)
-> > >             7f688a5ef0c4 usleep (/usr/lib/libc-2.23.so)
-> > >             5582244227d7 main (/tmp/ex_sleep)
-> > > 
-> > > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > 
-> > > Is there a way to increase the event buffer or something like that to
-> > > not lose events when the costly dwarf unwinding happens for the first
-> > > time? Consecutive unwinding is cached by libunwind and much faster.
-> > 
-> > not sure about perf trace, but there's -m option available for perf record
-> > that allows you to increase the buffer size
-> > 
-> > > Alternatively, I could try to unwind in the `sys_enter`, but then I'd
-> > > need to buffer the output to print the trace after the duration line...
-> > > 
-> > > How would you guys handle this situation?
-> > > 
-> > > Also, Jiri, Arnaldo - what would be your suggestion on how to handle the
-> > > `thread::priv` situation - I doubt my naive `priv2` approach is
-> > > acceptable.
-> > 
-> > yea, I think one priv is more than enough ;-)
-> > 
-> > I think we want to move the the unwinder usage of this field into separate
-> > field
-> need to run test over this, but will try to post it this week
-> let me know if this solution would work for you
+    $ perf trace -e nanosleep --call-graph dwarf path/to/ex_sleep
+    1005.757 (1000.090 ms): ex_sleep/13167 nanosleep(...) = 0
+                    20379e syscall_slow_exit_work ([kernel.kallsyms])
+                    203bc4 syscall_return_slowpath ([kernel.kallsyms])
+                    797248 int_ret_from_sys_call ([kernel.kallsyms])
+                7f3991cd2600 __nanosleep (/usr/lib/libc-2.23.so)
+                7f39926ab08d [unknown] (/usr/lib/libQt5Core.so.5.6.0)
+                7f39925fe1bb QThread::sleep (/usr/lib/libQt5Core.so.5.6.0)
+                5614801e4a2d main (path/to/ex_sleep)
+                7f3991c3b710 __libc_start_main (/usr/lib/libc-2.23.so)
+                5614801e4aa9 _start (path/to/ex_sleep)
 
-Yes, works for me, thanks a lot!
+Note that it is advised to increase the number of mmap pages to
+prevent event losses when using this new feature. Often, adding
+`-m 10M` to the `perf trace` invocation is enough.
 
-Feel free to add
+This feature is also available in strace when built with libunwind
+via `strace -k`. Performance wise, this solution is much better:
 
-    Tested-by: Milian Wolff <milian.wolff@kdab.com>
+    $ time find path/to/linux &> /dev/null
 
+    real    0m0.051s
+    user    0m0.013s
+    sys     0m0.037s
+
+    $ time perf trace -m 800M --call-graph dwarf find path/to/linux &> /dev/null
+
+    real    0m2.624s
+    user    0m1.203s
+    sys     0m1.333s
+
+    $ time strace -k find path/to/linux  &> /dev/null
+
+    real    0m35.398s
+    user    0m10.403s
+    sys     0m23.173s
+
+Note that it is currently not possible to configure the print output.
+Adding such a feature, similar to what is available in `perf script`
+via its `--fields` knob can be added later on.
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+---
+ tools/perf/builtin-script.c |  4 ++--
+ tools/perf/builtin-trace.c  | 27 +++++++++++++++++++++++++++
+ tools/perf/util/session.c   | 39 +++++++++++++++++++++------------------
+ tools/perf/util/session.h   |  3 ++-
+ 4 files changed, 52 insertions(+), 21 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3770c3d..e79d6f1 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -580,7 +580,7 @@ static void print_sample_bts(struct perf_sample *sample,
+ 			}
+ 		}
+ 		perf_evsel__print_ip(evsel, sample, al, print_opts,
+-				     scripting_max_stack);
++				     scripting_max_stack, stdout);
+ 	}
+ 
+ 	/* print branch_to information */
+@@ -790,7 +790,7 @@ static void process_event(struct perf_script *script,
+ 
+ 		perf_evsel__print_ip(evsel, sample, al,
+ 				     output[attr->type].print_ip_opts,
+-				     scripting_max_stack);
++				     scripting_max_stack, stdout);
+ 	}
+ 
+ 	if (PRINT_FIELD(IREGS))
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d309f45..f3b5e07 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -34,6 +34,7 @@
+ #include "trace-event.h"
+ #include "util/parse-events.h"
+ #include "util/bpf-loader.h"
++#include "util/callchain.h"
+ 
+ #include <libaudit.h>
+ #include <stdlib.h>
+@@ -2161,6 +2162,23 @@ signed_print:
+ 		goto signed_print;
+ 
+ 	fputc('\n', trace->output);
++
++	if (sample->callchain) {
++		struct addr_location al;
++		/* TODO: user-configurable print_opts */
++		unsigned int print_opts = PRINT_IP_OPT_IP
++					| PRINT_IP_OPT_SYM
++					| PRINT_IP_OPT_DSO;
++
++		if (machine__resolve(trace->host, &al, sample) < 0) {
++			pr_err("problem processing %d event, skipping it.\n",
++			    event->header.type);
++			err = -1;
++			goto out_put;
++		}
++		perf_evsel__print_ip(evsel, sample, &al, print_opts,
++				     scripting_max_stack, trace->output);
++	}
+ out:
+ 	ttrace->entry_pending = false;
+ 	err = 0;
+@@ -3225,6 +3243,9 @@ int cmd_trace(int argc, const char **argv, const char *prefix __maybe_unused)
+ 		     "Trace pagefaults", parse_pagefaults, "maj"),
+ 	OPT_BOOLEAN(0, "syscalls", &trace.trace_syscalls, "Trace syscalls"),
+ 	OPT_BOOLEAN('f', "force", &trace.force, "don't complain, do it"),
++	OPT_CALLBACK(0, "call-graph", &trace.opts,
++		     "record_mode[,record_size]", record_callchain_help,
++		     &record_parse_callchain_opt),
+ 	OPT_UINTEGER(0, "proc-map-timeout", &trace.opts.proc_map_timeout,
+ 			"per thread proc mmap processing timeout in ms"),
+ 	OPT_END()
+@@ -3252,6 +3273,12 @@ int cmd_trace(int argc, const char **argv, const char *prefix __maybe_unused)
+ 		trace.opts.sample_time = true;
+ 	}
+ 
++	if (trace.opts.callgraph_set) {
++		symbol_conf.use_callchain = true;
++		callchain_param.enabled = true;
++		symbol__init(NULL);
++	}
++
+ 	if (trace.evlist->nr_entries > 0)
+ 		evlist__set_evsel_handler(trace.evlist, trace__event_handler);
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index ef37055..bbac0ef 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1955,7 +1955,8 @@ struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
+ 
+ void perf_evsel__print_ip(struct perf_evsel *evsel, struct perf_sample *sample,
+ 			  struct addr_location *al,
+-			  unsigned int print_opts, unsigned int stack_depth)
++			  unsigned int print_opts, unsigned int stack_depth,
++			  FILE *fp)
+ {
+ 	struct callchain_cursor_node *node;
+ 	int print_ip = print_opts & PRINT_IP_OPT_IP;
+@@ -1992,33 +1993,35 @@ void perf_evsel__print_ip(struct perf_evsel *evsel, struct perf_sample *sample,
+ 				goto next;
+ 
+ 			if (print_ip)
+-				printf("%c%16" PRIx64, s, node->ip);
++				fprintf(fp, "%c%16" PRIx64, s, node->ip);
+ 
+ 			if (node->map)
+ 				addr = node->map->map_ip(node->map, node->ip);
+ 
+ 			if (print_sym) {
+-				printf(" ");
++				fprintf(fp, " ");
+ 				if (print_symoffset) {
+ 					node_al.addr = addr;
+ 					node_al.map  = node->map;
+-					symbol__fprintf_symname_offs(node->sym, &node_al, stdout);
++					symbol__fprintf_symname_offs(node->sym,
++								     &node_al,
++								     fp);
+ 				} else
+-					symbol__fprintf_symname(node->sym, stdout);
++					symbol__fprintf_symname(node->sym, fp);
+ 			}
+ 
+ 			if (print_dso) {
+-				printf(" (");
+-				map__fprintf_dsoname(node->map, stdout);
+-				printf(")");
++				fprintf(fp, " (");
++				map__fprintf_dsoname(node->map, fp);
++				fprintf(fp, ")");
+ 			}
+ 
+ 			if (print_srcline)
+ 				map__fprintf_srcline(node->map, addr, "\n  ",
+-						     stdout);
++						     fp);
+ 
+ 			if (!print_oneline)
+-				printf("\n");
++				fprintf(fp, "\n");
+ 
+ 			stack_depth--;
+ next:
+@@ -2030,25 +2033,25 @@ next:
+ 			return;
+ 
+ 		if (print_ip)
+-			printf("%16" PRIx64, sample->ip);
++			fprintf(fp, "%16" PRIx64, sample->ip);
+ 
+ 		if (print_sym) {
+-			printf(" ");
++			fprintf(fp, " ");
+ 			if (print_symoffset)
+ 				symbol__fprintf_symname_offs(al->sym, al,
+-							     stdout);
++							     fp);
+ 			else
+-				symbol__fprintf_symname(al->sym, stdout);
++				symbol__fprintf_symname(al->sym, fp);
+ 		}
+ 
+ 		if (print_dso) {
+-			printf(" (");
+-			map__fprintf_dsoname(al->map, stdout);
+-			printf(")");
++			fprintf(fp, " (");
++			map__fprintf_dsoname(al->map, fp);
++			fprintf(fp, ")");
+ 		}
+ 
+ 		if (print_srcline)
+-			map__fprintf_srcline(al->map, al->addr, "\n  ", stdout);
++			map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index f96fc9e8c..0ee3d9d 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -106,7 +106,8 @@ struct perf_evsel *perf_session__find_first_evtype(struct perf_session *session,
+ 
+ void perf_evsel__print_ip(struct perf_evsel *evsel, struct perf_sample *sample,
+ 			  struct addr_location *al,
+-			  unsigned int print_opts, unsigned int stack_depth);
++			  unsigned int print_opts, unsigned int stack_depth,
++			  FILE *fp);
+ 
+ int perf_session__cpu_bitmap(struct perf_session *session,
+ 			     const char *cpu_list, unsigned long *cpu_bitmap);
 -- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart4236050.HaRfuyQHAV
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDQwNjIxMTUyN1owIwYJKoZIhvcNAQkEMRYEFEuzHlYoTSJtB5N6qhptsavK5xvgMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAEyF
-5/m+JgeUeB+DTVp1xcx1gNrfV27CkPhM5+ah9W0r+btpxnD9jvAD+Goy6GNOTpHVfLylT/wOJ5Ku
-FoyP6miZ7H7obfiFvda9jXyKZsYyjctlsKQ7kvwAP2660fVRss1uFgSlrswFrJVqzn1esnynb04b
-KGVflzdeKBSmk4ga6vEvNNNtbYP0kijT5sN7E493VrWsyOTkC87NFVdk8UO1jx7RXHOEes4RWkuY
-mdwLK2v05/fPBus+1b53njBwwk5NFFnjTRxn+3teXVLPlP52Yhla1oSKnXK6oOayAZfy1kmGmXfm
-H8qre+3HGq/+E9C0Bpfb9vs1s80P2+5DNxYAAAAAAAA=
-
-
---nextPart4236050.HaRfuyQHAV--
+2.8.0
