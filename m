@@ -1,52 +1,153 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: [PATCH] perf trace: Add support for printing call chains on sys_exit events.
-Date: Sat, 09 Apr 2016 13:38:48 +0200
-Message-ID: <6162029.GvZZdvIglj@agathebauer>
-References: <1460115255-17648-1-git-send-email-milian.wolff@kdab.com> <20160408175754.GB25165@kernel.org>
+Date: Sat, 09 Apr 2016 13:44:51 +0200
+Message-ID: <1714692.A55s9sBUmI@agathebauer>
+References: <1460115255-17648-1-git-send-email-milian.wolff@kdab.com> <20160408175754.GB25165@kernel.org> <20160408181853.GC25165@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1554246.nprYBeHWEN"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2307636.tl4RkQaI2W"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:38246 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:38319 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753234AbcDILjE (ORCPT
+	id S1753227AbcDILoz (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sat, 9 Apr 2016 07:39:04 -0400
-In-Reply-To: <20160408175754.GB25165@kernel.org>
+	Sat, 9 Apr 2016 07:44:55 -0400
+In-Reply-To: <20160408181853.GC25165@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
---nextPart1554246.nprYBeHWEN
-Content-Transfer-Encoding: quoted-printable
+--nextPart2307636.tl4RkQaI2W
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Freitag, 8. April 2016 14:57:54 CEST Arnaldo Carvalho de Melo wrote:
-> Em Fri, Apr 08, 2016 at 01:34:15PM +0200, Milian Wolff escreveu:
-> > Now, one can print the call chain for every encountered sys_exit
->=20
-> > event, e.g.:
-> You mixed up multiple changes in one single patch, I'll break it down
-> while testing, and before pushing upstream.
+On Freitag, 8. April 2016 15:18:53 CEST Arnaldo Carvalho de Melo wrote:
+> Em Fri, Apr 08, 2016 at 02:57:54PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, Apr 08, 2016 at 01:34:15PM +0200, Milian Wolff escreveu:
+> > > Now, one can print the call chain for every encountered sys_exit
+> > > event, e.g.:
+> > > 
+> > > Note that it is advised to increase the number of mmap pages to
+> > > prevent event losses when using this new feature. Often, adding
+> > > `-m 10M` to the `perf trace` invocation is enough.
+> > > 
+> > > This feature is also available in strace when built with libunwind
+> > > 
+> > > via `strace -k`. Performance wise, this solution is much better:
+> > >     $ time find path/to/linux &> /dev/null
+> > >     
+> > >     real    0m0.051s
+> > >     user    0m0.013s
+> > >     sys     0m0.037s
+> > >     
+> > >     $ time perf trace -m 800M --call-graph dwarf find path/to/linux &>
+> > >     /dev/null
+> > >     
+> > >     real    0m2.624s
+> > >     user    0m1.203s
+> > >     sys     0m1.333s
+> > >     
+> > >     $ time strace -k find path/to/linux  &> /dev/null
+> > >     
+> > >     real    0m35.398s
+> > >     user    0m10.403s
+> > >     sys     0m23.173s
+> > > 
+> > > Note that it is currently not possible to configure the print output.
+> > > Adding such a feature, similar to what is available in `perf script`
+> > > via its `--fields` knob can be added later on.
+> > 
+> > You mixed up multiple changes in one single patch, I'll break it down
+> > while testing, and before pushing upstream.
+> 
+> Expanding a bit the audience:
+> 
+> First test, it works, great! But do we really need that address? I guess
+> not, right, perhaps via some callchain parameter, to tell what we want to
+> see? But by default knowing the function name + DSO seems enough, no?
 
-Cool, thanks a lot Arnaldo. I'm also interested to see how you break it up,=
-=20
-apparently you handle this differently to the projects I work on so far. I=
-=20
-guess you want the "pass `FILE* fp` to `perf_evsel__print_ip`" as one chunk=
-=20
-and then actually using it in a second patch? Or are there even more steps =
-you=20
-can split this into?
+...
 
-Thanks
+> Yeah, you agree with that, now that I read the patch 8-):
+> 
+> +               /* TODO: user-configurable print_opts */
+> +               unsigned int print_opts = PRINT_IP_OPT_IP
 
-=2D-=20
+;-)
+
+I even tried to make the code of `perf script` reusable for `perf trace`, but 
+stopped once I realised that it currently relies on the existance of a 
+`perf_session`, which does not exist when we do live tracing. It only exists 
+for replaying in `builtin-trace.c`. So it involves some more refactoring which 
+I did not have the time for.
+
+<snip>
+
+> Better, but perhaps we should try aligning, up to a limit, the function
+> names/DSOs?
+> 
+> [root@jouet bpf]# trace -e nanosleep --call-graph dwarf usleep 1
+>      0.063 ( 0.063 ms): usleep/6132 nanosleep(rqtp: 0x7ffd1b7a8e70          
+>                              ) = 0 syscall_slow_exit_work
+> ([kernel.kallsyms]) do_syscall_64          ([kernel.kallsyms])
+> return_from_SYSCALL_64 ([kernel.kallsyms]) __nanosleep           
+> (/usr/lib64/libc-2.22.so) usleep                 (/usr/lib64/libc-2.22.so)
+> [unknown]              (/usr/bin/usleep) __libc_start_main     
+> (/usr/lib64/libc-2.22.so) [unknown]              (/usr/bin/usleep)
+> [root@jouet bpf]#
+> 
+> wdyt?
+
+Yes, sounds good. Many profilers I've worked with always dump the IP, so I 
+thought we should do it here as well. `perf script` e.g. does it. Could we 
+maybe print the IP if the symbol is [unknown]?
+
+> Also, after this initial support is in, I think the next step is to
+> allow per syscall configs, like we have for per tracepoints, i.e. this
+> should be possible:
+> 
+>    # trace -e nanosleep(call-graph=dwarf),socket -a
+> 
+> And then we would get callchains just for nanosleep calls, not for
+> socket ones. We then need to think how to ask that efficiently to the
+> kernel, in this case it should be instead of using
+> raw_syscalls:sys_enter + tracepoint filters set via ioctl, to use
+> syscalls:sys_{enter,exit}_nanosleep, with callgraphs +
+> syscalls:sys_{enter,exit}_socket, without.
+> 
+> Doing it this way allows us to avoid asking callchains for a lot of
+> events when we want just for a few ones, to reduce overhead.
+ 
+Yep, sounds useful for some more specific use-cases. For me, this patch is 
+sufficient as I'd just do:
+
+    $ trace -e nanosleep --call-graph=dwarf ...
+
+What I think is more important though is to make sure we only ask for 
+callchains on the sys_exit events. Afaik, my patch will do it also for the 
+sys_enter which is just additional cost with no benefit? So fixing that first 
+is I think even more important, but I don't know how.
+
+> Anyway, I think I'll just break this down into multiple patches and then
+> we can work on these other aspects.
+
+Yes, but note that I'll be busy and then on vacation for the next two weeks. 
+I'll get back to this after wards.
+
+> David, ah, his patch floated on the linux-perf-users mailing list, easy
+> one once the thread->priv one got out of the way (it was being used by
+> builtin-trace.c and the unwind code, ugh).
+> 
+> Thanks,
+
+Same to you, cheers!
+
+-- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1554246.nprYBeHWEN
+--nextPart2307636.tl4RkQaI2W
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -148,13 +249,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDQwOTExMzg0OFowIwYJKoZIhvcNAQkEMRYEFAeZyOFfCMfk8KxLQRPrXktbtU1IMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAKtw
-PtpOmZztX9lkBQSNwz+QoM7w6Vzk3cgHP7R9QQm2nV1Ko/9tukzu2hua3bk7JStVrt6Mi6eObpYp
-7G9PEb5+ogd9jUvZMRCZDsHYP6NOfDqknSlHO93vIJ06YVhFBwiDdcHNMnv732NYBHkOIGqkXKxF
-qAudtKZQDQktfWX8S7Fsb1c87CHNy7ANqh2ht1QoG+b2V3OX1F4Ps7UZtVUb4kiZmO07hKImRNef
-Jkt8ZGdbwNY89mkYBib9ziQ3z5erLn57zMOABodBwN3duTSTH2tKp08hVpXUkE7etv7QcH9v0N/e
-cdTz+OK/rwwZWVdaA65oNEOyHcXN9cvYwGMAAAAAAAA=
+DTE2MDQwOTExNDQ1MVowIwYJKoZIhvcNAQkEMRYEFGONCPgx2bZSTyXO66xzVOugFJd8MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAHwf
+m1w2fq4H+A2tIGQoTexheKuhDC8lGDj94kMWRiueNxZVI1ZBH7qF+GA9SxE1u57Wez0DUGwoiskU
++iFglrzCZazjl0JquyK7hfK/DolDUiww0VVdAsc8uyapMH2NBvLzv8icMr53UgvVZMgTBPz/aN+n
+IcR6Eb0pVhu5KxcuvklySJf1JrxwAWbuH6b3+hyHem29CCbfwgJBagMzDPXZ4Vjo/fep7VNBm/ax
+v4oZP+iuxH+v4Nsyo2IfUv24haglbJ6H12ve8RjYgsMKqMJGhySeZzpRRY6W4bMp9cWWlWTQt8z8
+KFQM8Oc/uG8+tReups08Y0P+D2Xj8vME/r4AAAAAAAA=
 
 
---nextPart1554246.nprYBeHWEN--
+--nextPart2307636.tl4RkQaI2W--
