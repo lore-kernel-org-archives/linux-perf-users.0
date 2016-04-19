@@ -1,36 +1,51 @@
-From: Qu Wenruo <quwenruo@cn.fujitsu.com>
-Subject: Ideas to measure kernel function execution time using perf
-Date: Tue, 19 Apr 2016 09:42:49 +0800
-Message-ID: <57158D19.7070307@cn.fujitsu.com>
+From: Taeung Song <treeze.taeung@gmail.com>
+Subject: Re: Missing stack symbols with perf_event's perf report, despite
+ -fno-omit-frame-pointer compilation
+Date: Tue, 19 Apr 2016 11:26:17 +0900
+Message-ID: <57159749.9060705@gmail.com>
+References: <loom.20160419T015612-712@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([59.151.112.132]:25602 "EHLO
-	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751834AbcDSBm4 (ORCPT
+Received: from mail-pf0-f195.google.com ([209.85.192.195]:35730 "EHLO
+	mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751091AbcDSC0V (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 18 Apr 2016 21:42:56 -0400
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
-	by cn.fujitsu.com (Postfix) with ESMTP id 8D5FA42B55E3
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Apr 2016 09:42:50 +0800 (CST)
+	Mon, 18 Apr 2016 22:26:21 -0400
+Received: by mail-pf0-f195.google.com with SMTP id r187so319080pfr.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2016 19:26:21 -0700 (PDT)
+In-Reply-To: <loom.20160419T015612-712@post.gmane.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Mark Davis <markdavisinboston@gmail.com>, linux-perf-users@vger.kernel.org
 
 Hi,
 
-Is there any method to measure kernel function execution time for 
-specific functions using perf?
+On 04/19/2016 09:07 AM, Mark Davis wrote:
+> I'm struggling getting perf_events to give me stack traces with symbols,
+> despite reading many tutorials on the subject and doing (I think) all the
+> necessary things. It's possible that my local install of perf (details on that
+> below) is somehow botched? Anyway, here's what I did:
+>
+> main.cpp is a simple C++ program that calls a few functions defined in the same
+> file, allocates some memory and frees it, and prints a few things out.
+>
+> compilation command:
+>
+>      gcc -std=c++11 -lstdc++ main.cpp -Og -fno-omit-frame-pointer -fno-inline -o
+> arr_test
+>
+> profile command:
+>
+>      perf record -a -g -- ./arr_test && perf report --stdio
+>
+>
+> I do get the following warnings about kernel symbols, but I don't think this
+> should matter given that I only care about symbols in my application for now:
+>
 
-Current ftrace events can only record the timestamp when hitting the 
-trace point (along with some other info).
+As a guide..
+If you add ":u" to a event name, you can measure only at the user level e.g.
 
-I'm OK adding new ftrace events into kernel, but even after adding such 
-ftrace events, is it possible to use perf to calculate the function 
-execution time?
-
-Any advice is welcomed.
-
-Thanks,
-Qu
+     perf record -ag -e cycles:u ./arr_test
