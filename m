@@ -1,122 +1,75 @@
-From: Leonardo Boquillon <leonardo.boquillon@tallertechnologies.com>
-Subject: Ability for classifying of measurements
-Date: Tue, 19 Apr 2016 17:51:57 -0300
-Message-ID: <1461099117-21401-1-git-send-email-leonardo.boquillon@tallertechnologies.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: Ideas to measure kernel function execution time using perf
+Date: Wed, 20 Apr 2016 08:37:57 +0900
+Message-ID: <20160420083757.cba5cdd3038c7d82391b3b4c@kernel.org>
+References: <57158D19.7070307@cn.fujitsu.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qg0-f44.google.com ([209.85.192.44]:34261 "EHLO
-	mail-qg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753527AbcDSUwE (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:47230 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752682AbcDSXiD (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 19 Apr 2016 16:52:04 -0400
-Received: by mail-qg0-f44.google.com with SMTP id c6so17157448qga.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Apr 2016 13:52:03 -0700 (PDT)
+	Tue, 19 Apr 2016 19:38:03 -0400
+In-Reply-To: <57158D19.7070307@cn.fujitsu.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, daniel.gutson@tallertechnologies.com
+To: Qu Wenruo <quwenruo@cn.fujitsu.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Hi,
+On Tue, 19 Apr 2016 09:42:49 +0800
+Qu Wenruo <quwenruo@cn.fujitsu.com> wrote:
 
-When profiling an application, grouping measurements according to specific
-criteria can provide valuable information for the developer. For instance, 
-suppose there is a variable in the application whose value represents the
-current state of an internal state machine. We might want to classify the
-sampled data depending on the current state. The decision of what constitutes an
-adequate classification criteria depends on the application developer. 
+> Hi,
+> 
+> Is there any method to measure kernel function execution time for 
+> specific functions using perf?
+> 
+> Current ftrace events can only record the timestamp when hitting the 
+> trace point (along with some other info).
+> 
+> I'm OK adding new ftrace events into kernel, but even after adding such 
+> ftrace events, is it possible to use perf to calculate the function 
+> execution time?
 
-The idea proposed here is to have a mechanism to let perf_events know the data
-used to annotate the samples, either via a callback implemented by the 
-application developer or by the application itself telling perf_events the data
-used to classify the measurements.
+Would you mean "perf probe"? :)
 
-The sample annotation would be a struct, whose size is specified before samples 
-are recorded.
+Actually, kprobes on the function entry point (on x86) automatically
+use ftrace and also you can get function parameters, e.g.
 
-As an experiment, this patch implements the second approach, where the
-annotation is a 64 bit integer that is located at a fixed memory address. The
-samples are annotated using the value at that address. The value is assumed to
-be in a fixed location, specified by the application being profiled through a 
-new perf_ioctl subcommand.
+# perf probe -a 'YOUR_TARGET_FUNCTION $params'
 
-In no way we intend this patch to be committed; we just want to show the idea 
-and start a discussion instead, focusing on the idea first rather than on the 
-design & code.
+And with using ftrace, you can get function duration and parameters,
+for example,
 
-Thanks
+# perf probe -a 'vfs_read $params'
+Added new event:
+  probe:vfs_read       (on vfs_read with $params)
 
----
- include/uapi/linux/perf_event.h |  1 +
- kernel/events/core.c            | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+You can now use it in all perf tools, such as:
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 1afe962..f4f2a32 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -401,6 +401,7 @@ struct perf_event_attr {
- #define PERF_EVENT_IOC_SET_FILTER	_IOW('$', 6, char *)
- #define PERF_EVENT_IOC_ID		_IOR('$', 7, __u64 *)
- #define PERF_EVENT_IOC_SET_BPF		_IOW('$', 8, __u32)
-+#define PERF_EVENT_IOC_SET_WATCHED  _IOW('$', 9, __u64 *)
- 
- enum perf_event_ioc_flags {
- 	PERF_IOC_FLAG_GROUP		= 1U << 0,
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 52bedc5..cf148b8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -49,6 +49,8 @@
- 
- #include <asm/irq_regs.h>
- 
-+static __u64 *watched_data;
-+
- typedef int (*remote_function_f)(void *);
- 
- struct remote_function_call {
-@@ -4079,10 +4081,12 @@ static int perf_read_one(struct perf_event *event,
- 				 u64 read_format, char __user *buf)
- {
- 	u64 enabled, running;
--	u64 values[4];
-+	u64 values[5];
- 	int n = 0;
- 
- 	values[n++] = perf_event_read_value(event, &enabled, &running);
-+	if (watched_data != NULL)
-+		values[n++] = *((__u64 *)watched_data);
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
- 		values[n++] = enabled;
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-@@ -4295,6 +4299,7 @@ static int perf_event_set_output(struct perf_event *event,
- 				 struct perf_event *output_event);
- static int perf_event_set_filter(struct perf_event *event, void __user *arg);
- static int perf_event_set_bpf_prog(struct perf_event *event, u32 prog_fd);
-+static int perf_event_set_watched(__u64* watched);
- 
- static long _perf_ioctl(struct perf_event *event, unsigned int cmd, unsigned long arg)
- {
-@@ -4351,6 +4356,9 @@ static long _perf_ioctl(struct perf_event *event, unsigned int cmd, unsigned lon
- 	case PERF_EVENT_IOC_SET_BPF:
- 		return perf_event_set_bpf_prog(event, arg);
- 
-+	case PERF_EVENT_IOC_SET_WATCHED:
-+		return perf_event_set_watched((void __user *)arg);
-+
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -4628,6 +4636,12 @@ static void ring_buffer_wakeup(struct perf_event *event)
- 	rcu_read_unlock();
- }
- 
-+static int perf_event_set_watched(__u64 *watched)
-+{
-+	watched_data = watched;
-+	return 0;
-+}
-+
- struct ring_buffer *ring_buffer_get(struct perf_event *event)
- {
- 	struct ring_buffer *rb;
+	perf record -e probe:vfs_read -aR sleep 1
+
+# cd /sys/kernel/debug/tracing/
+# echo vfs_read > set_ftrace_filter
+# echo 1 > events/probe/vfs_read/enable
+# echo function_graph > current_tracer
+# echo 0 > trace
+# less trace
+# tracer: function_graph
+#
+# CPU  DURATION                  FUNCTION CALLS
+# |     |   |                     |   |   |   |
+ 2)               |  /* vfs_read: (vfs_read+0x0/0x130) file=0xffff88036a959200 buf=0x7ffe460abb70 count=0x10 pos=0xffff880052d1bf20 */
+ 3)               |  /* vfs_read: (vfs_read+0x0/0x130) file=0xffff88024524b900 buf=0x7ffcdee7ec57 count=0x1 pos=0xffff88023942ff20 */
+ 2)   0.538 us    |  vfs_read();
+ 3)               |  vfs_read() {
+ 2)               |  /* vfs_read: (vfs_read+0x0/0x130) file=0xffff8803c24ba400 buf=0xd8efdc count=0x1ff0 pos=0xffff880052d1bf20 */
+ 2)   0.979 us    |  vfs_read();
+...
+
+Thanks,
+
 -- 
-1.9.1
+Masami Hiramatsu <mhiramat@kernel.org>
