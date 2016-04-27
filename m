@@ -1,43 +1,61 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: Help needed. Default value for a event parameter (param=?)
-Date: Tue, 26 Apr 2016 19:00:40 +0530
-Message-ID: <571F6D80.5010602@gmail.com>
+From: Lada Trimasova <Lada.Trimasova@synopsys.com>
+Subject: Re: Misleading hint to select CONFIG_PERF_EVENTS if driver sets
+ PERF_PMU_CAP_NO_INTERRUPT
+Date: Wed, 27 Apr 2016 15:13:50 +0000
+Message-ID: <1461770030.5970.8.camel@synopsys.com>
+References: <1461331523.3403.11.camel@synopsys.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
+Reply-To: Lada Trimasova <Lada.Trimasova@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f169.google.com ([209.85.192.169]:33318 "EHLO
-	mail-pf0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752418AbcDZNao (ORCPT
+Received: from smtprelay4.synopsys.com ([198.182.47.9]:59035 "EHLO
+	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752615AbcD0PNz (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 26 Apr 2016 09:30:44 -0400
-Received: by mail-pf0-f169.google.com with SMTP id 206so6942961pfu.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Apr 2016 06:30:44 -0700 (PDT)
-Received: from [192.168.40.11] ([14.141.5.98])
-        by smtp.gmail.com with ESMTPSA id 127sm37198010pfe.72.2016.04.26.06.30.42
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLSv1/SSLv3 cipher=OTHER);
-        Tue, 26 Apr 2016 06:30:42 -0700 (PDT)
+	Wed, 27 Apr 2016 11:13:55 -0400
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
+Content-Language: en-US
+Content-ID: <27C393F7879594458302245078D48E8D@internal.synopsys.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 
-I have a question about perf event parameter. I am trying to add an event parameter
-which should take a default value if not input by the user.
-
-I have the event added in sys/bus/event_source/devices/<pmu>/events/  and there
-is a configurable event parameter "unit=?"
-ex: event=0x301,units=?
-
-The perf list list it as below
-# perf list
-<pmu>/<event_alias>,units=?/ [Kernel PMU event]
-
-Now I have a requirement that If user does not pass any value for the parameter "unit"
-I should take a default value in my PMU implementation. Is this supported?
-
-If not please guide me on where the change is needed.
-Any suggestions are appreciated.
-
-Thanks,
-Anurup
+T24gVHVlLCAyMDE2LTA0LTI2IGF0IDEyOjQyICswMDAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQoN
+Ck9uIEZyaWRheSAyMiBBcHJpbCAyMDE2IDA2OjU2IFBNLCBMYWRhIFRyaW1hc292YSB3cm90ZToN
+CkkgdGhpbmsgd2hhdCB3ZSBoYXZlIG5vdyBpcyBzdWZmaWNpZW50IC0gYnV0IHUgc2VlbSB0byB3
+YW50IGEgcHJldHRpZXIgZmFpbHVyZSBvdXRwdXQuDQoNCkFueWhvdywgdGhpcyBwcmludCBpcyBj
+b21pbmcgZnJvbSB1dGlsL2V2c2VsLmM6IHBlcmZfZXZzZWxfX29wZW5fc3RyZXJyb3IoKQ0KQXQg
+dGhlIHZlcnkgbGVhc3QgeW91IHdhbnQgYW5vdGhlciBlbnRyeSBpbiBzd2l0Y2ggY2FzZSBmb3Ig
+RU5PVFNVUFAgYW5kIHRoZW4NCmNoZWNrIGlmIGV2ZW50IHdhcyBzYW1wbGluZyBvbmUgKA0KZXZz
+ZWwtPmF0dHIuc2FtcGxlX3BlcmlvZCkgLSB1c2UgdGhhdCBhcyBhIGhpbnQgZm9yIHNheWluZyBz
+YW1wbGluZyBldmVudHMgbm90DQpzdXBwb3J0ZWQuDQoNCg0KDQoNCkVOT1RTVVBQIGlzIG5vdCB2
+aXNpYmxlIGZvciB1c2VyIHByb2dyYW1zLiBTbyBpdCdzIGltcG9zc2libGUgdG8gYWRkIHRoaXMg
+ZW50cnkNCg0KdG8gbWVudGlvbmVkIHN3aXRjaC4NCg0KSSB0aGluayB0aGF0IHRoZXJlIGlzIG5v
+IGdvb2Qgd2F5IHRvIG1ha2UgZXJyb3IgbWVzc2FnZSBtb3JlIHVuZGVyc3RhbmRhYmxlDQoNCndp
+dGhvdXQgYnJlYWtpbmcgZXhpc3RpbmcgYXBpLg0KDQoNCkJ1dCB0aGlzIHdpbGwgcHJpbnQgdGhl
+IHNhbWUgZXZlbiBpZiBDT05GSUdfUEVSRl9FVkVOVFM9bi4gVG8gcmVhbGx5IGZpeCB0aGlzIHlv
+dQ0Kd291bGQgd2FudCB0byBjaGFuZ2UgdGhlIGVycm9yIGNvZGUgcmV0dXJuZWQgYnkgU1lTQ0FM
+TF9ERUZJTkU1KHBlcmZfZXZlbnRfb3Blbg0KZm9yIFBFUkZfUE1VX0NBUF9OT19JTlRFUlJVUFQg
+dG8gc2F5IC1FT1BOT1RTVVBQIGFuZCB1c2UgdGhlIHNhbXBsZV9wZXJpb2QgdG8gc2F5DQp0aGlz
+IHdhcyBmb3Igc2FtcGxpZ24gZXZlbnRzISBIb3dldmVyIHRoaXMgaXMgYW4gQUJJIGNoYW5nZSBh
+bmQgbWlnaHQgbm90IGJlDQphY2NlcHRhYmxlIGFzIHNvbWUgZXhpc3Rpbmcgc2NyaXB0cyBldGMg
+bWlnaHQgYnJlYWsuDQoNCg0KDQovYmluL2RtZXNnIG1heSBwcm92aWRlIGFkZGl0aW9uYWwgaW5m
+b3JtYXRpb24uDQpObyBDT05GSUdfUEVSRl9FVkVOVFM9eSBrZXJuZWwgc3VwcG9ydCBjb25maWd1
+cmVkPw0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQpBcyB5b3UgY2FuIHNlZSB0aGUgcm9vdCBjYXVzZSBvZiB0
+aGlzIGVycm9yIG1lc3NhZ2UgaXMgbm90IG9idmlvdXMuDQpDT05GSUdfUEVSRl9FVkVOVFMgaXMg
+c2VsZWN0ZWQgYnV0IHN0aWxsIHRoZXJlJ3MgYSBwcm9ibGVtIHdoaWxlDQpleGlzdGluZyBzdWdn
+ZXN0aW9uIGJhcmVseSBtYWtlcyBhbnkgc2Vuc2UuDQpTbyBwcm9iYWJseSB0aGVyZSBjb3VsZCBi
+ZSBhIHdheSB0byBkZXRlcm1pbmUgaWYgQ09ORklHX1BFUkZfRVZFTlRTIHdhcw0Kc2VsZWN0ZWQg
+b3Igbm90Lg0KDQpJIGFtIG5vdCBzdXJlIGFib3V0IHRoZSBjb3JyZWN0IHdheSBvZiBzb2x2aW5n
+IHRoaXMgcHJvYmxlbS4gTWF5YmUgSQ0Kc2hvdWxkIGFkZCBzb21lIGNoZWNrcyBvZiBzeXNjYWxs
+cyByZXR1cm4gdmFsdWVzIGFuZCBnaXZlIHVzZXINCmEgd2FybmluZyB3aGVuIG5vdCBQTVUgaW50
+ZXJydXB0cyBhcmUgYXZhaWxhYmxlLg0KQW55IHN1Z2dlc3Rpb25zIGFyZSBhcHByZWNpYXRlZC4N
+Cg0KUmVnYXJkcywNCkxhZGEgVHJpbWFzb3ZhLg0KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18NCmxpbnV4LXNucHMtYXJjIG1haWxpbmcgbGlzdA0KbGludXgt
+c25wcy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZzxtYWlsdG86bGludXgtc25wcy1hcmNAbGlzdHMu
+aW5mcmFkZWFkLm9yZz4NCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtc25wcy1hcmMNCg0KDQoNCg0KDQpSZWdhcmRzLA0KDQpMYWRhLg0K
