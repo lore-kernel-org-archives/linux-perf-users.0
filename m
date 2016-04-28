@@ -1,48 +1,31 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: Misleading hint to select CONFIG_PERF_EVENTS if driver sets
- PERF_PMU_CAP_NO_INTERRUPT
-Date: Thu, 28 Apr 2016 10:05:13 +0530
-Message-ID: <57219301.10505@synopsys.com>
-References: <1461331523.3403.11.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
- <1461770030.5970.8.camel__5728.3871378333$1461770054$gmane$org@synopsys.com>
+From: Mark Davis <markdavisinboston@gmail.com>
+Subject: Comparing output of two perf cpu profiling reports
+Date: Thu, 28 Apr 2016 09:27:07 -0400
+Message-ID: <CAPe7T+9fYXHWa7X4x-su6LujYuOFv7BB7j-jCcdH-hw3oQM9Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtprelay2.synopsys.com ([198.182.60.111]:55952 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751257AbcD1Efa (ORCPT
+Received: from mail-oi0-f65.google.com ([209.85.218.65]:35254 "EHLO
+	mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752936AbcD1N1J (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 28 Apr 2016 00:35:30 -0400
-In-Reply-To: <1461770030.5970.8.camel__5728.3871378333$1461770054$gmane$org@synopsys.com>
+	Thu, 28 Apr 2016 09:27:09 -0400
+Received: by mail-oi0-f65.google.com with SMTP id w198so9944519oiw.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2016 06:27:09 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Lada Trimasova <Lada.Trimasova@synopsys.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+To: linux-perf-users@vger.kernel.org
 
-On Wednesday 27 April 2016 08:43 PM, Lada Trimasova wrote:
-> On Tue, 2016-04-26 at 12:42 +0000, Vineet Gupta wrote:
-> 
-> On Friday 22 April 2016 06:56 PM, Lada Trimasova wrote:
-> I think what we have now is sufficient - but u seem to want a prettier failure output.
-> 
-> Anyhow, this print is coming from util/evsel.c: perf_evsel__open_strerror()
-> At the very least you want another entry in switch case for ENOTSUPP and then
-> check if event was sampling one (
-> evsel->attr.sample_period) - use that as a hint for saying sampling events not
-> supported.
-> 
-> 
-> 
-> 
-> ENOTSUPP is not visible for user programs. So it's impossible to add this entry
-> 
-> to mentioned switch.
-> 
-> I think that there is no good way to make error message more understandable
-> 
-> without breaking existing api.
+Hi, what is the recommend way to compare two different perf reports
+from CPU event profiling (via sampling with perf record)? I'm
+comparing two macro benchmarks, with a couple small implementation
+details between the two. Right now I'm manually comparing the output
+of perf report to determine the salient differences. However, I'm
+wondering if there's a tool or otherwise best practice to essentially
+"diff" the two outputs. I could just use diff on the --stdio version
+of the reports, but sometimes lines get mangled and I loose
+context/hierarchy.
 
-I meant EOPNOTSUPP. Any errno value has to be visible to user programs otherwise
-there is no point defining it.
+Any tips?
+
+Mark
