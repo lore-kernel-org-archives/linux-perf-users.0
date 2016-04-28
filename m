@@ -1,61 +1,48 @@
-From: Lada Trimasova <Lada.Trimasova@synopsys.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Subject: Re: Misleading hint to select CONFIG_PERF_EVENTS if driver sets
  PERF_PMU_CAP_NO_INTERRUPT
-Date: Wed, 27 Apr 2016 15:13:50 +0000
-Message-ID: <1461770030.5970.8.camel@synopsys.com>
+Date: Thu, 28 Apr 2016 10:05:13 +0530
+Message-ID: <57219301.10505@synopsys.com>
 References: <1461331523.3403.11.camel@synopsys.com>
-	 <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
-Reply-To: Lada Trimasova <Lada.Trimasova@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
+ <1461770030.5970.8.camel__5728.3871378333$1461770054$gmane$org@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtprelay4.synopsys.com ([198.182.47.9]:59035 "EHLO
+Received: from smtprelay2.synopsys.com ([198.182.60.111]:55952 "EHLO
 	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752615AbcD0PNz (ORCPT
+	with ESMTP id S1751257AbcD1Efa (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 27 Apr 2016 11:13:55 -0400
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
-Content-Language: en-US
-Content-ID: <27C393F7879594458302245078D48E8D@internal.synopsys.com>
+	Thu, 28 Apr 2016 00:35:30 -0400
+In-Reply-To: <1461770030.5970.8.camel__5728.3871378333$1461770054$gmane$org@synopsys.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Lada Trimasova <Lada.Trimasova@synopsys.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 
-T24gVHVlLCAyMDE2LTA0LTI2IGF0IDEyOjQyICswMDAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQoN
-Ck9uIEZyaWRheSAyMiBBcHJpbCAyMDE2IDA2OjU2IFBNLCBMYWRhIFRyaW1hc292YSB3cm90ZToN
-CkkgdGhpbmsgd2hhdCB3ZSBoYXZlIG5vdyBpcyBzdWZmaWNpZW50IC0gYnV0IHUgc2VlbSB0byB3
-YW50IGEgcHJldHRpZXIgZmFpbHVyZSBvdXRwdXQuDQoNCkFueWhvdywgdGhpcyBwcmludCBpcyBj
-b21pbmcgZnJvbSB1dGlsL2V2c2VsLmM6IHBlcmZfZXZzZWxfX29wZW5fc3RyZXJyb3IoKQ0KQXQg
-dGhlIHZlcnkgbGVhc3QgeW91IHdhbnQgYW5vdGhlciBlbnRyeSBpbiBzd2l0Y2ggY2FzZSBmb3Ig
-RU5PVFNVUFAgYW5kIHRoZW4NCmNoZWNrIGlmIGV2ZW50IHdhcyBzYW1wbGluZyBvbmUgKA0KZXZz
-ZWwtPmF0dHIuc2FtcGxlX3BlcmlvZCkgLSB1c2UgdGhhdCBhcyBhIGhpbnQgZm9yIHNheWluZyBz
-YW1wbGluZyBldmVudHMgbm90DQpzdXBwb3J0ZWQuDQoNCg0KDQoNCkVOT1RTVVBQIGlzIG5vdCB2
-aXNpYmxlIGZvciB1c2VyIHByb2dyYW1zLiBTbyBpdCdzIGltcG9zc2libGUgdG8gYWRkIHRoaXMg
-ZW50cnkNCg0KdG8gbWVudGlvbmVkIHN3aXRjaC4NCg0KSSB0aGluayB0aGF0IHRoZXJlIGlzIG5v
-IGdvb2Qgd2F5IHRvIG1ha2UgZXJyb3IgbWVzc2FnZSBtb3JlIHVuZGVyc3RhbmRhYmxlDQoNCndp
-dGhvdXQgYnJlYWtpbmcgZXhpc3RpbmcgYXBpLg0KDQoNCkJ1dCB0aGlzIHdpbGwgcHJpbnQgdGhl
-IHNhbWUgZXZlbiBpZiBDT05GSUdfUEVSRl9FVkVOVFM9bi4gVG8gcmVhbGx5IGZpeCB0aGlzIHlv
-dQ0Kd291bGQgd2FudCB0byBjaGFuZ2UgdGhlIGVycm9yIGNvZGUgcmV0dXJuZWQgYnkgU1lTQ0FM
-TF9ERUZJTkU1KHBlcmZfZXZlbnRfb3Blbg0KZm9yIFBFUkZfUE1VX0NBUF9OT19JTlRFUlJVUFQg
-dG8gc2F5IC1FT1BOT1RTVVBQIGFuZCB1c2UgdGhlIHNhbXBsZV9wZXJpb2QgdG8gc2F5DQp0aGlz
-IHdhcyBmb3Igc2FtcGxpZ24gZXZlbnRzISBIb3dldmVyIHRoaXMgaXMgYW4gQUJJIGNoYW5nZSBh
-bmQgbWlnaHQgbm90IGJlDQphY2NlcHRhYmxlIGFzIHNvbWUgZXhpc3Rpbmcgc2NyaXB0cyBldGMg
-bWlnaHQgYnJlYWsuDQoNCg0KDQovYmluL2RtZXNnIG1heSBwcm92aWRlIGFkZGl0aW9uYWwgaW5m
-b3JtYXRpb24uDQpObyBDT05GSUdfUEVSRl9FVkVOVFM9eSBrZXJuZWwgc3VwcG9ydCBjb25maWd1
-cmVkPw0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQpBcyB5b3UgY2FuIHNlZSB0aGUgcm9vdCBjYXVzZSBvZiB0
-aGlzIGVycm9yIG1lc3NhZ2UgaXMgbm90IG9idmlvdXMuDQpDT05GSUdfUEVSRl9FVkVOVFMgaXMg
-c2VsZWN0ZWQgYnV0IHN0aWxsIHRoZXJlJ3MgYSBwcm9ibGVtIHdoaWxlDQpleGlzdGluZyBzdWdn
-ZXN0aW9uIGJhcmVseSBtYWtlcyBhbnkgc2Vuc2UuDQpTbyBwcm9iYWJseSB0aGVyZSBjb3VsZCBi
-ZSBhIHdheSB0byBkZXRlcm1pbmUgaWYgQ09ORklHX1BFUkZfRVZFTlRTIHdhcw0Kc2VsZWN0ZWQg
-b3Igbm90Lg0KDQpJIGFtIG5vdCBzdXJlIGFib3V0IHRoZSBjb3JyZWN0IHdheSBvZiBzb2x2aW5n
-IHRoaXMgcHJvYmxlbS4gTWF5YmUgSQ0Kc2hvdWxkIGFkZCBzb21lIGNoZWNrcyBvZiBzeXNjYWxs
-cyByZXR1cm4gdmFsdWVzIGFuZCBnaXZlIHVzZXINCmEgd2FybmluZyB3aGVuIG5vdCBQTVUgaW50
-ZXJydXB0cyBhcmUgYXZhaWxhYmxlLg0KQW55IHN1Z2dlc3Rpb25zIGFyZSBhcHByZWNpYXRlZC4N
-Cg0KUmVnYXJkcywNCkxhZGEgVHJpbWFzb3ZhLg0KX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18NCmxpbnV4LXNucHMtYXJjIG1haWxpbmcgbGlzdA0KbGludXgt
-c25wcy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZzxtYWlsdG86bGludXgtc25wcy1hcmNAbGlzdHMu
-aW5mcmFkZWFkLm9yZz4NCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtc25wcy1hcmMNCg0KDQoNCg0KDQpSZWdhcmRzLA0KDQpMYWRhLg0K
+On Wednesday 27 April 2016 08:43 PM, Lada Trimasova wrote:
+> On Tue, 2016-04-26 at 12:42 +0000, Vineet Gupta wrote:
+> 
+> On Friday 22 April 2016 06:56 PM, Lada Trimasova wrote:
+> I think what we have now is sufficient - but u seem to want a prettier failure output.
+> 
+> Anyhow, this print is coming from util/evsel.c: perf_evsel__open_strerror()
+> At the very least you want another entry in switch case for ENOTSUPP and then
+> check if event was sampling one (
+> evsel->attr.sample_period) - use that as a hint for saying sampling events not
+> supported.
+> 
+> 
+> 
+> 
+> ENOTSUPP is not visible for user programs. So it's impossible to add this entry
+> 
+> to mentioned switch.
+> 
+> I think that there is no good way to make error message more understandable
+> 
+> without breaking existing api.
+
+I meant EOPNOTSUPP. Any errno value has to be visible to user programs otherwise
+there is no point defining it.
