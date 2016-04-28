@@ -1,47 +1,79 @@
 From: Mark Davis <markdavisinboston@gmail.com>
-Subject: Re: Comparing output of two perf cpu profiling reports
-Date: Thu, 28 Apr 2016 10:17:39 -0400
-Message-ID: <CAPe7T+-siZXrqfUjktdoJmap=d77XB9YMs=QLyA0_rXUVwq7CQ@mail.gmail.com>
-References: <CAPe7T+9fYXHWa7X4x-su6LujYuOFv7BB7j-jCcdH-hw3oQM9Vw@mail.gmail.com>
-	<20160428141643.GA3386@kernel.org>
+Subject: No source code for static library (compiled with -g -ggdb)
+Date: Thu, 28 Apr 2016 13:44:16 -0400
+Message-ID: <CAPe7T+8oQptK0Wak2y_b1RNBy7ddmftc+++HNMPF5R8BDxWVYQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oi0-f68.google.com ([209.85.218.68]:34752 "EHLO
-	mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752159AbcD1ORk (ORCPT
+Received: from mail-ob0-f195.google.com ([209.85.214.195]:36059 "EHLO
+	mail-ob0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752560AbcD1RoR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 28 Apr 2016 10:17:40 -0400
-Received: by mail-oi0-f68.google.com with SMTP id b10so14507458oig.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2016 07:17:40 -0700 (PDT)
-In-Reply-To: <20160428141643.GA3386@kernel.org>
+	Thu, 28 Apr 2016 13:44:17 -0400
+Received: by mail-ob0-f195.google.com with SMTP id ds1so7503020obc.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2016 10:44:17 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Yeah, that would do it. Thanks to you both, Alex and Arnaldo!
+Hello, I'm using perf record and perf report to profile an application
+which is made from a static (.a) library file that I made as well as a
+handful of C++ files that are not in the static library. They are all
+compiled with "-g -ggdb -fno-inline -O2 -fno-omit-frame-pointer" and
+all linked together to create the application.
 
-On Thu, Apr 28, 2016 at 10:16 AM, Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
-> Em Thu, Apr 28, 2016 at 09:27:07AM -0400, Mark Davis escreveu:
->> Hi, what is the recommend way to compare two different perf reports
->> from CPU event profiling (via sampling with perf record)?
->
->> I'm comparing two macro benchmarks, with a couple small implementation
->> details between the two.
->
->> Right now I'm manually comparing the output of perf report to
->> determine the salient differences.
->
->> However, I'm wondering if there's a tool or otherwise best practice to
->> essentially "diff" the two outputs.
->
->> I could just use diff on the --stdio version of the reports, but
->> sometimes lines get mangled and I loose context/hierarchy.
->
-> Can you try:
->
-> perf diff --help
->
-> - Arnaldo
+When I use perf report (in interactive/tui mode), when I annotate the
+symbols that are in the C++ files (not the static library), I see the
+source code intermingled with the assembly (this is what I want). I
+can do this at any layer of the call stack. However, when I drill into
+the symbols that are from the static library, I just see the assembly
+of the leaf symbol. I don't expect to see the source in this case, as
+the leaf symbol is a low-level library from libc; but, perf report
+won't let me drill into (i.e., annotate) any non-leaf symbols.
+
+Example:
+execute_native_thread_routine
+std::_Bind_simple<int (*(int, char**, Thread*))(int, char**,
+Thread*)>::operator()()
+main(int, char**)
+my_func_A
+my_func_B
+malloc
+
+When I annotate my_func_A and my_func_B, it just jumps to the
+annotation of malloc (I see this listed at the top of the annotation
+view). Note that my_func_A and my_func_B are both defined in the
+static library that I'm linking in. However, when I do a similar thing
+with a different stack where I'm annotating a function that's not from
+the static library (but in the regular C++ files), it works fine.
+
+Here's what I'm doing to create my static lib:
+ar -cvrs $@ $(OBJS)
+
+
+I did confirm with nm --debug-syms that my static lib has debugging
+symbols in it:
+
+U __assert_fail
+0000000000000000 b .bss
+0000000000000000 n .comment
+U __cxa_atexit
+0000000000000000 d .data
+0000000000000000 N .debug_abbrev
+0000000000000000 N .debug_aranges
+0000000000000000 N .debug_info
+0000000000000000 N .debug_line
+0000000000000000 N .debug_loc
+0000000000000000 N .debug_ranges
+0000000000000000 N .debug_str
+U __dso_handle
+0000000000000000 r .eh_frame
+U exit
+
+
+How can I compile and link my application and configure perf report so
+I can drill in like this on functions defined in a static library with
+debug symbols?
+
+Thank you,
+Mark
