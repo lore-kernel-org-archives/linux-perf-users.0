@@ -1,68 +1,124 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Reordering the thread output in perf trace --summary
-Date: Wed, 04 May 2016 11:02:12 +0200
-Message-ID: <91397949.qTd2kn5sDj@milian-kdab2>
+Subject: Re: Reordering the thread output in perf trace --summary
+Date: Wed, 04 May 2016 11:51:04 +0200
+Message-ID: <52227896.H02DnUL2Ue@milian-kdab2>
+References: <91397949.qTd2kn5sDj@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1890260.MNByboIIYs"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart10521458.xR3MGQbQGM"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:39251 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:42508 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757833AbcEDJCU (ORCPT
+	id S1757442AbcEDJvI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 4 May 2016 05:02:20 -0400
+	Wed, 4 May 2016 05:51:08 -0400
+In-Reply-To: <91397949.qTd2kn5sDj@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
---nextPart1890260.MNByboIIYs
+--nextPart10521458.xR3MGQbQGM
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hey all,
+On Wednesday, May 4, 2016 11:02:12 AM CEST Milian Wolff wrote:
+> Hey all,
+> 
+> when using `perf trace --summary` on a (badly designed) user application
+> that creates tons of threads, the usually interesting overall summary is
+> drowned by the per-thread summary output. I.e.:
+> 
+> perf trace --summary lab_mandelbrot_concurrent |& grep events
+>  lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
+>  QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
+>  QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
+>  Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
+>  Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
+>  lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
+>  Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
+>  Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
+>  Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
+> ... continued for a total of 163 lines
+> 
+> usually, I forget to pipe the output of `perf trace --summary` into a file
+> and then have to rerun the command, as the total output (2643 lines!)
+> easily exceeds my scrollback buffer.
+> 
+> I would like to propose to reorder the output to sort the output in
+> ascending total event order, such that the most interesting output is shown
+> at the bottom of the output on the CLI. I.e. in the output above it should
+> be something like
+> 
+> perf trace --summary lab_mandelbrot_concurrent |& grep events
+> ... continued for a total of 163 lines
+>  lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
+>  Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
+>  Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
+>  Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
+>  Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
+>  QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
+>  QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
+>  Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
+>  lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
+> 
+> If this is acceptable to you, can someone please tell me how to do such a
+> seemingly simple task in C? In C++ I'd except to add a simple std::sort
+> somewhere, but in perf's C...? My current idea would be to run
+> machine__for_each_thread and store the even count + thread pointer in
+> another temporary buffer, which I then qsort and finally iterate over. Does
+> that sound OK, or how would you approach this task?
 
-when using `perf trace --summary` on a (badly designed) user application that 
-creates tons of threads, the usually interesting overall summary is drowned by 
-the per-thread summary output. I.e.:
+While at it, can we similarly reorder the output of the per-thread syscall 
+list? At the moment it is e.g.:
 
-perf trace --summary lab_mandelbrot_concurrent |& grep events
- lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
- QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
- QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
- Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
- Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
- lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
- Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
- Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
- Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
-... continued for a total of 163 lines
+   syscall            calls    total       min       avg       max      stddev
+                               (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- -------- --------- --------- --------- ---------     ------
+   read                 166     0.332     0.001     0.002     0.031     10.22%
+   write                 13     0.038     0.002     0.003     0.006     12.41%
+   open                 448     1.189     0.001     0.003     0.020      1.94%
+   close                185     0.270     0.001     0.001     0.022      7.78%
+   stat                 507     0.823     0.001     0.002     0.009      2.34%
+   fstat                215     0.211     0.001     0.001     0.001      1.00%
+   lstat                317     0.469     0.001     0.001     0.003      1.42%
+   poll                 176     0.534     0.001     0.003     0.169     32.22%
+   lseek                  1     0.001     0.001     0.001     0.001      0.00%
+   mmap                 384     1.184     0.002     0.003     0.006      1.20%
+   mprotect             238     0.949     0.001     0.004     0.013      1.96%
+   munmap                42     0.501     0.002     0.012     0.107     27.58%
+   brk                   12     0.042     0.001     0.004     0.013     26.16%
+   rt_sigaction           2     0.002     0.001     0.001     0.001     12.90%
+   rt_sigprocmask         1     0.001     0.001     0.001     0.001      0.00%
+   writev               165     0.387     0.002     0.002     0.005      1.57%
+   access               156     0.250     0.001     0.002     0.011      4.88%
+   socket                 2     0.012     0.005     0.006     0.007     12.05%
+   connect                2     0.014     0.005     0.007     0.009     25.14%
+   recvfrom               4     0.014     0.002     0.003     0.008     45.24%
+   recvmsg               16     0.029     0.001     0.002     0.004     12.30%
+   shutdown               1     0.004     0.004     0.004     0.004      0.00%
+   getsockname            1     0.001     0.001     0.001     0.001      0.00%
+   getpeername            1     0.002     0.002     0.002     0.002      0.00%
+   getsockopt             1     0.002     0.002     0.002     0.002      0.00%
+   clone                 34     7.506     0.207     0.221     0.295      1.49%
+   uname                  2     0.003     0.001     0.001     0.001      4.12%
+   fcntl                 32     0.032     0.001     0.001     0.001      2.53%
+   getdents              16     0.057     0.001     0.004     0.007     15.32%
+   readlink              11     0.020     0.001     0.002     0.005     19.02%
+   getrlimit              1     0.001     0.001     0.001     0.001      0.00%
+   getuid                 2     0.002     0.001     0.001     0.001     15.24%
+   getgid                 1     0.001     0.001     0.001     0.001      0.00%
+   geteuid                2     0.002     0.001     0.001     0.001     23.66%
+   getegid                1     0.001     0.001     0.001     0.001      0.00%
+   statfs                 8     0.020     0.002     0.002     0.004     10.60%
+   arch_prctl             1     0.001     0.001     0.001     0.001      0.00%
+   futex                489  1466.240     0.001     2.998  1447.978     98.75%
+   set_tid_address        1     0.001     0.001     0.001     0.001      0.00%
+   clock_getres           1     0.001     0.001     0.001     0.001      0.00%
+   set_robust_list        1     0.001     0.001     0.001     0.001      0.00%
 
-usually, I forget to pipe the output of `perf trace --summary` into a file and 
-then have to rerun the command, as the total output (2643 lines!) easily 
-exceeds my scrollback buffer.
-
-I would like to propose to reorder the output to sort the output in ascending 
-total event order, such that the most interesting output is shown at the 
-bottom of the output on the CLI. I.e. in the output above it should be 
-something like
-
-perf trace --summary lab_mandelbrot_concurrent |& grep events
-... continued for a total of 163 lines
- lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
- Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
- Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
- Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
- Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
- QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
- QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
- Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
- lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
-
-If this is acceptable to you, can someone please tell me how to do such a 
-seemingly simple task in C? In C++ I'd except to add a simple std::sort 
-somewhere, but in perf's C...? My current idea would be to run 
-machine__for_each_thread and store the even count + thread pointer in another 
-temporary buffer, which I then qsort and finally iterate over. Does that sound 
-OK, or how would you approach this task?
+This output is not sorted by syscall name, nor by number of calls or total or 
+anything... Could we maybe sort it by total msecs by default? Or maybe by 
+syscall name and then offer the user a way to sort it by calls/total msecs 
+instead?
 
 Thanks
 -- 
@@ -70,7 +126,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1890260.MNByboIIYs
+--nextPart10521458.xR3MGQbQGM
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -172,13 +228,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDUwNDA5MDIxMlowIwYJKoZIhvcNAQkEMRYEFDF3el08l0FbFrpxjRE5xKmcro0IMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFVt
-U9fmxxZiJtXj0ytsZJRKAiVjrZKf4jtw/HPyLXYYxsioxuwEXKcgzKCe0FMp3iLUEh34SZF43eWw
-LN12Ns5TC/xoU+SMqLf7kEKpFQDA6GGRalLSQaudycUalCeqIAeMKA4hVbVT+y0heuB1rAQm4p94
-/SAdsCMFeJNPjNJVSDYgmq4FdvufqnCKZI2TuD6vuytup9tto9qGqpuA7htsxMdA9mbNjT9JbyDm
-StUDwWvHjOLA7XysiBbe/kHfEgqShZyc86pO2NkdfZs0mBmagXMtojyUyw8TEInkW8MBGjv5aw7m
-H3dIZquZYJo7wOv7UHVaMMvBSp0heoJ9rT8AAAAAAAA=
+DTE2MDUwNDA5NTEwNFowIwYJKoZIhvcNAQkEMRYEFI7Kwu3AG3vBqk34eHa/nuFncC/mMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBADuc
+MJpmauLupAjIt3pOr5oQ3fvXz4bRrFaome/hxmBDLmgo7BP3v+lVfMh0Hfbs+zqOqXICEpkspZpM
+gIavcMUBh/SKCgfclYq8KPiUvRqZ3ypCGz4TF3i/8p2SbE3KGycVysQKf241gUhplSHFIDaOO7Yf
+tz6kvfQ9w98bMUSH/K4xPfFG5zm9P3ujmmV0h591CUT8yKzMeF5TpgiOqkTRL2rDpnMg04c8s+zE
+vMXRHcFv76pILm4PFUuw9L1DsD8bcRW/DRJ2KJ/rbOhgJrNZhVue3mKNei87u9f5VWgsAEgaH8G5
+PFJEkaKZNr9J2R9XfYgOlZlLVltBbtJMVDwAAAAAAAA=
 
 
---nextPart1890260.MNByboIIYs--
+--nextPart10521458.xR3MGQbQGM--
