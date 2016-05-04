@@ -1,278 +1,76 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: No source code for static library (compiled with -g -ggdb)
-Date: Mon, 02 May 2016 09:58:39 +0200
-Message-ID: <7356064.n03a6Iq7TP@agathebauer>
-References: <CAPe7T+8oQptK0Wak2y_b1RNBy7ddmftc+++HNMPF5R8BDxWVYQ@mail.gmail.com> <CAPe7T+_UbFVFWpfcM8VrGQ_yXKcMcK1CDMVrPKZ4NY5ac-VyCA@mail.gmail.com> <CAPe7T+9mjYs3QWtjCUmOVNmVeEYyV8qV9CDUicqndcLk_itrQw@mail.gmail.com>
+Subject: Reordering the thread output in perf trace --summary
+Date: Wed, 04 May 2016 11:02:12 +0200
+Message-ID: <91397949.qTd2kn5sDj@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2449475.hNmcvZFNpM"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1890260.MNByboIIYs"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37023 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:39251 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752472AbcEBH6p (ORCPT
+	id S1757833AbcEDJCU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 2 May 2016 03:58:45 -0400
-In-Reply-To: <CAPe7T+9mjYs3QWtjCUmOVNmVeEYyV8qV9CDUicqndcLk_itrQw@mail.gmail.com>
+	Wed, 4 May 2016 05:02:20 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mark Davis <markdavisinboston@gmail.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
---nextPart2449475.hNmcvZFNpM
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+--nextPart1890260.MNByboIIYs
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Freitag, 29. April 2016 09:26:44 CEST Mark Davis wrote:
-> It turns out that I was incorrect about diagnosing this problem, and
-> this is probably just due to my misunderstanding of how to use
-> annotations in perf. (Sorry, I'm a new user to perf and trying to get
-> my head around it.) I do have a question below.
->=20
-> Recall my example from above:
->=20
-> execute_native_thread_routine
-> std::_Bind_simple<int (*(int, char**, Thread*))(int, char**,
-> Thread*)>::operator()()
-> main(int, char**)
-> my_func_A
-> my_func_B
-> malloc
->=20
-> I was trying to jump into my_func_B to see the annotation of it, and
-> it kept jumping me into the annotation of malloc. That is, I wanted to
-> see *where* malloc was being called from my_func_B, and the hottest
-> areas of my_func_B. But, when I type "a" when on my_func_B (or drill
-> in with the arrows or enter key), it always takes me to the annotation
-> of malloc (i.e., the leaf node in the callchain). I figured this out
-> by filtering to the DSO of my system (which made the leaf node always
-> be a symbol in my system as opposed to some system library, etc.) and
-> it shows that my symbols have debug info, etc.
->=20
-> But if I wanted to see the annotation of my_func_B, how would I? Is it
-> possible that I'm not able to see this simply because I don't have
-> enough samples of it (and all the real time is spent down in malloc)?
-> Or is there some other reason? Arnaldo, what exactly determines if
-> your arrows show up when pressing V in perf v4.1?
+Hey all,
 
-I'm not really sure, but I seem to remember this "bug" in older perf versio=
-ns.=20
-I see in the other thread that you manually installed a newer perf, but cou=
-ld=20
-you check whether the following works with the older versions:
+when using `perf trace --summary` on a (badly designed) user application that 
+creates tons of threads, the usually interesting overall summary is drowned by 
+the per-thread summary output. I.e.:
 
-=2D navigate to the function you want to annotate (my_func_B)
-=2D instead of pressing 'a', press 'arrow right'
-=2D in the menu that shows up, select "annotate"
+perf trace --summary lab_mandelbrot_concurrent |& grep events
+ lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
+ QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
+ QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
+ Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
+ Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
+ lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
+ Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
+ Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
+ Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
+... continued for a total of 163 lines
 
-I /think/ that 'a' used to be the "annotate sample entry point" hotkey as y=
-ou=20
-encounter, whereas the submenu always allowed one to annotate individual=20
-frames of the sample callstack.
+usually, I forget to pipe the output of `perf trace --summary` into a file and 
+then have to rerun the command, as the total output (2643 lines!) easily 
+exceeds my scrollback buffer.
 
-> Furthermore, is there some other feature of perf_events that I should
-> try (perhaps tracing?) to get more fidelity? My programs are
-> relatively short-running, so I can afford to wait a bit longer.
+I would like to propose to reorder the output to sort the output in ascending 
+total event order, such that the most interesting output is shown at the 
+bottom of the output on the CLI. I.e. in the output above it should be 
+something like
 
-Tracing will require you to add tracepoints via uprobe manually, which is=20
-super time consuming - the changeset for Systemtap trace point support in p=
-erf=20
-has not yet been merged (bummer!).
+perf trace --summary lab_mandelbrot_concurrent |& grep events
+... continued for a total of 163 lines
+ lab_mandelbrot_ (19502), 88 events, 0.2%, 0.000 msec
+ Thread (pooled) (19501), 114 events, 0.3%, 0.000 msec
+ Thread (pooled) (19503), 106 events, 0.3%, 0.000 msec
+ Thread (pooled) (19504), 101 events, 0.3%, 0.000 msec
+ Thread (pooled) (19505), 102 events, 0.3%, 0.000 msec
+ QDBusConnection (19499), 132 events, 0.4%, 0.000 msec
+ QXcbEventReader (19498), 1094 events, 3.0%, 0.000 msec
+ Thread (pooled) (19500), 1982 events, 5.5%, 0.000 msec
+ lab_mandelbrot_ (19497), 9246 events, 25.7%, 0.000 msec
 
-I suggest you try to increase the sampling rate if you are interested in mo=
-re=20
-details of short-running apps.
+If this is acceptable to you, can someone please tell me how to do such a 
+seemingly simple task in C? In C++ I'd except to add a simple std::sort 
+somewhere, but in perf's C...? My current idea would be to run 
+machine__for_each_thread and store the even count + thread pointer in another 
+temporary buffer, which I then qsort and finally iterate over. Does that sound 
+OK, or how would you approach this task?
 
-> Thank you for any input you can provide as I'm learning perf_events.
-
-On more suggestion from my side: In your original mail you said you compile=
-=20
-your code with "-g -ggdb -fno-inline -O2 -fno-omit-frame-pointer". I think=
-=20
-this will produce potentially extremely misleading results, due to you=20
-disabling the arguably most useful optimization feature of a compiler there=
-=20
-is: "-fno-inline"
-
-I /really/ urge you to remove this check and actually profile a "real" worl=
-d=20
-example that is build with "-g -O2", i.e. with inlining enabled. Yes, the=20
-callstacks /may/ be harder to grasp, but at the same time you actually prof=
-ile=20
-what the real app is doing. In C++ code, esp. with templates, I've seen=20
-hotspots disappear just due to inlining and the avalanche effect they can=20
-trigger in a good optimizer, e.g. by enabling deadcode elimination etc.=20
-
-Cheers
-
-> On Fri, Apr 29, 2016 at 8:28 AM, Mark Davis <markdavisinboston@gmail.com>=
-=20
-wrote:
-> > Arnaldo, that's a really nice feature. Unfortunately, I'm currently
-> > running on an older version of perf (3.13.11-ckt18) and it's a bit of
-> > a pain to modify things like this on the cluster I'm running on
-> > (although I can if I have something I absolutely need). So, for me
-> > when I run verbose mode I simply get the DSO names in the callchains,
-> > but no arrows. I would assume, if I had a newer version of perf, that
-> > I would get no arrows for the symbols I want to annotate, given the
-> > behavior I'm seeing.
-> >=20
-> > Anything else I can try? Does anyone have any ideas about why this may
-> > be happening? Again, this is only happening for symbols in my static
-> > library, and I'm creating this library using:
-> >=20
-> > ar -cvrs $@ $(OBJS)
-> >=20
-> > (I'm not an expert on ar, so I could be doing this wrong?)
-> >=20
-> > On Thu, Apr 28, 2016 at 6:16 PM, Arnaldo Carvalho de Melo
-> >=20
-> > <arnaldo.melo@gmail.com> wrote:
-> >> Em Thu, Apr 28, 2016 at 01:44:16PM -0400, Mark Davis escreveu:
-> >>> Hello, I'm using perf record and perf report to profile an application
-> >>> which is made from a static (.a) library file that I made as well as a
-> >>> handful of C++ files that are not in the static library. They are all
-> >>> compiled with "-g -ggdb -fno-inline -O2 -fno-omit-frame-pointer" and
-> >>> all linked together to create the application.
-> >>>=20
-> >>> When I use perf report (in interactive/tui mode), when I annotate the
-> >>> symbols that are in the C++ files (not the static library), I see the
-> >>> source code intermingled with the assembly (this is what I want). I
-> >>> can do this at any layer of the call stack. However, when I drill into
-> >>> the symbols that are from the static library, I just see the assembly
-> >>> of the leaf symbol. I don't expect to see the source in this case, as
-> >>> the leaf symbol is a low-level library from libc; but, perf report
-> >>> won't let me drill into (i.e., annotate) any non-leaf symbols.
-> >>>=20
-> >>> Example:
-> >>> execute_native_thread_routine
-> >>> std::_Bind_simple<int (*(int, char**, Thread*))(int, char**,
-> >>> Thread*)>::operator()()
-> >>> main(int, char**)
-> >>> my_func_A
-> >>> my_func_B
-> >>> malloc
-> >>=20
-> >> What happens when you press 'V'? Here, say for this callchain:
-> >>=20
-> >> -    0.73%  gnome-shell      libgobject-2.0.so.0.4600.2          [.]
-> >> handlers_find>>=20
-> >>    - handlers_find
-> >>   =20
-> >>       - 0.68% signal_handlers_foreach_matched_R
-> >>      =20
-> >>            g_signal_handlers_disconnect_matched
-> >>            0x7f71fe809a80
-> >>            g_object_unref
-> >>         =20
-> >>          - st_widget_get_theme_node
-> >>         =20
-> >>               0.58% 0x7f71fe813429
-> >>=20
-> >> And I press V, I get:
-> >>=20
-> >> -    0.73%  gnome-shell      libgobject-2.0.so.0.4600.2          [.]
-> >> handlers_find>>=20
-> >>    -=E2=86=92handlers_find libgobject-2.0.so.0.4600.2
-> >>   =20
-> >>       - 0.68% signal_handlers_foreach_matched_R
-> >>       libgobject-2.0.so.0.4600.2
-> >>      =20
-> >>            g_signal_handlers_disconnect_matched
-> >>            libgobject-2.0.so.0.4600.2
-> >>            0x7f71fe809a80 libgnome-shell.so
-> >>          =20
-> >>           =E2=86=92g_object_unref libgobject-2.0.so.0.4600.2
-> >>         =20
-> >>          -=E2=86=92st_widget_get_theme_node libgnome-shell.so
-> >>         =20
-> >>               0.58% 0x7f71fe813429 libgnome-shell.so
-> >>=20
-> >> See those arrows? They point to the places where you can annotate, the
-> >> others can't because they had no samples or were unresolved.
-> >>=20
-> >> With some changes I think we can show the ones without samples, but th=
-at
-> >> remains to be done.
-> >>=20
-> >> Also, this is with:
-> >>=20
-> >> [root@jouet ~]# perf --version
-> >> perf version 4.6.rc4.ga453697
-> >>=20
-> >> This feature was introduced in:
-> >>=20
-> >> commit 70e972788888315851a5c1b4982efbcafcd03b5b
-> >> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >> Date:   Thu Mar 19 16:07:21 2015 -0300
-> >>=20
-> >>     perf hists browser: Indicate which callchain entries are annotated
-> >>    =20
-> >>     Now that we can annotate entries in a callchain, show which ones h=
-ave
-> >>     an
-> >>     associated symbol and samples, by adding a right arrow just before
-> >>     the
-> >>     symbol name when in verbose mode.
-> >>    =20
-> >>     To toggle verbose mode press 'V'.
-> >>=20
-> >> ---------------------------------
-> >>=20
-> >> Which is:
-> >>=20
-> >> [acme@jouet linux]$ git tag --contains
-> >> 70e972788888315851a5c1b4982efbcafcd03b5b | grep ^v4 | head -1 v4.1
-> >> [acme@jouet linux]$
-> >>=20
-> >> Thanks,
-> >>=20
-> >> - Arnaldo
-> >>=20
-> >>> When I annotate my_func_A and my_func_B, it just jumps to the
-> >>> annotation of malloc (I see this listed at the top of the annotation
-> >>> view). Note that my_func_A and my_func_B are both defined in the
-> >>> static library that I'm linking in. However, when I do a similar thing
-> >>> with a different stack where I'm annotating a function that's not from
-> >>> the static library (but in the regular C++ files), it works fine.
-> >>>=20
-> >>> Here's what I'm doing to create my static lib:
-> >>> ar -cvrs $@ $(OBJS)
-> >>>=20
-> >>>=20
-> >>> I did confirm with nm --debug-syms that my static lib has debugging
-> >>> symbols in it:
-> >>>=20
-> >>> U __assert_fail
-> >>> 0000000000000000 b .bss
-> >>> 0000000000000000 n .comment
-> >>> U __cxa_atexit
-> >>> 0000000000000000 d .data
-> >>> 0000000000000000 N .debug_abbrev
-> >>> 0000000000000000 N .debug_aranges
-> >>> 0000000000000000 N .debug_info
-> >>> 0000000000000000 N .debug_line
-> >>> 0000000000000000 N .debug_loc
-> >>> 0000000000000000 N .debug_ranges
-> >>> 0000000000000000 N .debug_str
-> >>> U __dso_handle
-> >>> 0000000000000000 r .eh_frame
-> >>> U exit
-> >>>=20
-> >>>=20
-> >>> How can I compile and link my application and configure perf report so
-> >>> I can drill in like this on functions defined in a static library with
-> >>> debug symbols?
-> >>>=20
-> >>> Thank you,
-> >>> Mark
-
-
-
-=2D-=20
+Thanks
+-- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2449475.hNmcvZFNpM
+--nextPart1890260.MNByboIIYs
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -374,13 +172,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDUwMjA3NTgzOVowIwYJKoZIhvcNAQkEMRYEFLIEo5jvD6tzbCWRFEHKGJ0g7A/SMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAHD5
-5L+ZVksegdL5DV6rv1cKvUhZ/d1EtZeyC5OlrQrAiGB0B4LU4k1E5MMaVaBlFXvGBkytW+BZyhYQ
-j8YmOlS6+DsvT/HlMRqm2BcKiciMnL99LGyowigiZCCwdlwYjRgKWHjk+LrP+qroXRb61q7+l+Q3
-1LO1rkOvNzp3krkFVycXK2ushzvhhYqPAhHoBH2dyHmKPue6mzyEC1TDXELvvPfh5QjGxu4QPZGG
-HE945jOsf0e1HvK9h4amkmX3xlsr/ntZJd5DbVq5FbVoj+ZkXDwvX2da2Y7L3/fvJCgrh7/uTh5J
-snDixEiecWEmgUTmWu+aoHIk9M1HKFsSSVEAAAAAAAA=
+DTE2MDUwNDA5MDIxMlowIwYJKoZIhvcNAQkEMRYEFDF3el08l0FbFrpxjRE5xKmcro0IMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFVt
+U9fmxxZiJtXj0ytsZJRKAiVjrZKf4jtw/HPyLXYYxsioxuwEXKcgzKCe0FMp3iLUEh34SZF43eWw
+LN12Ns5TC/xoU+SMqLf7kEKpFQDA6GGRalLSQaudycUalCeqIAeMKA4hVbVT+y0heuB1rAQm4p94
+/SAdsCMFeJNPjNJVSDYgmq4FdvufqnCKZI2TuD6vuytup9tto9qGqpuA7htsxMdA9mbNjT9JbyDm
+StUDwWvHjOLA7XysiBbe/kHfEgqShZyc86pO2NkdfZs0mBmagXMtojyUyw8TEInkW8MBGjv5aw7m
+H3dIZquZYJo7wOv7UHVaMMvBSp0heoJ9rT8AAAAAAAA=
 
 
---nextPart2449475.hNmcvZFNpM--
+--nextPart1890260.MNByboIIYs--
