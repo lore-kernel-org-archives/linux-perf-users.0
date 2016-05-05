@@ -1,49 +1,44 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Ability for classifying of measurements\
-Date: Wed, 04 May 2016 16:50:14 -0700
-Message-ID: <87inytpemh.fsf@tassilo.jf.intel.com>
-References: <1461099117-21401-1-git-send-email-leonardo.boquillon@tallertechnologies.com>
-	<87ega0whpq.fsf@tassilo.jf.intel.com>
-	<CAF5HaEXOwn0_b=an2RR2FT++ktRXLpAP2WHPE7O=kdVKVRYKVQ@mail.gmail.com>
-	<CAF5HaEW29wA6ZtNkGhTdFQGwoZp=QWaxEgt3n_7Ph+iA2YVyxQ@mail.gmail.com>
-	<20160420174724.GP9407@two.firstfloor.org>
-	<CAF5HaEXP1vvDod5eRnY2DYvTzeZDC_w15SbNpPEdosbv52qbAQ@mail.gmail.com>
-	<87mvo5pklu.fsf@tassilo.jf.intel.com>
-	<CAF5HaEXM+Wko35QCtPqYq3KMai=BOA8kfRcLX60Mad=eYaHetQ@mail.gmail.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: Misleading hint to select CONFIG_PERF_EVENTS if driver sets
+ PERF_PMU_CAP_NO_INTERRUPT
+Date: Thu, 5 May 2016 18:51:09 +0530
+Message-ID: <572B48C5.6090401@synopsys.com>
+References: <1461331523.3403.11.camel@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:19186 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753952AbcEDXuU (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 4 May 2016 19:50:20 -0400
-In-Reply-To: <CAF5HaEXM+Wko35QCtPqYq3KMai=BOA8kfRcLX60Mad=eYaHetQ@mail.gmail.com>
-	(Daniel Gutson's message of "Wed, 4 May 2016 18:56:02 -0300")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Daniel Gutson <daniel.gutson@tallertechnologies.com>
-Cc: Leonardo Boquillon <leonardo.boquillon@tallertechnologies.com>, linux-perf-users@vger.kernel.org, eranian@google.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F4E9F42D@us01wembx1.internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Lada Trimasova <Lada.Trimasova@synopsys.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: "peterz@infradead.org" <peterz@infradead.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Vince Weaver <vincent.weaver@maine.edu>, Will Deacon <Will.Deacon@arm.com>, Ingo Molnar <mingo@kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-Daniel Gutson <daniel.gutson@tallertechnologies.com> writes:
+On Tuesday 26 April 2016 06:12 PM, Vineet Gupta wrote:
+> On Friday 22 April 2016 06:56 PM, Lada Trimasova wrote:
+>> I have a question about user-space perf handling error numbers.
+>> The problem is that PMU interrupts are not supported in arc700
+>> architecture and it is impossible to evaluate `perf record` command.
+>> In our perf implementation we set PERF_PMU_CAP_NO_INTERRUPT flag so
+>> core perf infrastructure knows we don't have interrupts.
 >>
->> For non self monitoring there were perf patches at some point, but they
->> were rejected because it wasn't clear if a process should be able
->> to opt out of monitoring on its own.
->
-> Any link?
+>> Kernel `sys_perf_event_open` handler checks if PMU interrupts are
+>> supported and returns ENOTSUPP (524) error code.
+>> I'd expect that perf implementation checks the return value of syscalls
+>> and gives the user understandable error message.
+>> But now I see:
+>> --------------------------------->8-----------------------------------
+>> # perf record ls
+>> The sys_perf_event_open() syscall returned with 524 (Unknown error 524)
+>> for event (cycles:ppp).
+>> /bin/dmesg may provide additional information.
+>> No CONFIG_PERF_EVENTS=y kernel support configured?
+>> --------------------------------->8-----------------------------------
 
-Here's an older variant from Jiri https://lwn.net/Articles/568602/
+Guys, is the ABI change for returning -EOPNOTSUPP vs. -ENOTSUPP for
+is_sampling_event() && (event->pmu->capabilities & PERF_PMU_CAP_NO_INTERRUPT)
+acceptable ? We could use this in userspace to print pretty rather than half
+cooked error msg above !
 
-I think there was another newer from Stephane to enable/disable perf
-through an prctl, but I can't find it right now.
-
-> (separately, of course): timing is of no help there.
-> What I would like to know, is what happened (in terms of performance
-> metrics) on each state. I would simply
-> call perf_label("state name") on each transition.
-
-Ok. It could be done using the uprobes. But would still need to write
-the tools to filter by it.
-
--Andi
+-Vineet
