@@ -1,401 +1,81 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf inject: Make it possible to merge raw_syscalls:sys_enter/exit
-Date: Mon, 09 May 2016 19:56:05 +0200
-Message-ID: <1620913.Ds3A27bHTf@milian-kdab2>
-References: <1459554637-22126-1-git-send-email-milian.wolff@kdab.com>
+Subject: Re: [DONE] Re: Reordering the thread output in perf trace --summary
+Date: Mon, 09 May 2016 20:03:30 +0200
+Message-ID: <3442884.78Cb9YQhj3@milian-kdab2>
+References: <91397949.qTd2kn5sDj@milian-kdab2> <36570524.2BCkYtH2gR@milian-kdab2> <20160509162516.GB5101@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1694036.n27UpqDuvx"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart6531395.Cr2ys5eLzZ"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:49377 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:49878 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750941AbcEIR4M (ORCPT
+	id S1750919AbcEISDh (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 9 May 2016 13:56:12 -0400
-In-Reply-To: <1459554637-22126-1-git-send-email-milian.wolff@kdab.com>
+	Mon, 9 May 2016 14:03:37 -0400
+In-Reply-To: <20160509162516.GB5101@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: acme@kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>, linux-perf-users@vger.kernel.org
 
---nextPart1694036.n27UpqDuvx
+--nextPart6531395.Cr2ys5eLzZ
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hey Arnaldo,
+On Monday, May 9, 2016 1:25:16 PM CEST Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 09, 2016 at 10:28:01AM +0200, Milian Wolff escreveu:
+> > On Thursday, May 5, 2016 1:04:02 PM CEST Arnaldo Carvalho de Melo wrote:
+> > > Em Wed, May 04, 2016 at 06:41:23PM -0300, Arnaldo Carvalho de Melo 
+escreveu:
+> > > > Em Wed, May 04, 2016 at 11:51:04AM +0200, Milian Wolff escreveu:
+> > > > > On Wednesday, May 4, 2016 11:02:12 AM CEST Milian Wolff wrote:
+> > > > > While at it, can we similarly reorder the output of the per-thread
+> > > > > syscall
+> > > > 
+> > > > > list? At the moment it is e.g.:
+> > > > Take a look at my perf/core branch, I have it working there.
+> > > > 
+> > > > I'm in the process of experimenting with creating some kinde of
+> > > > template
+> > > > for resorting rb_trees, that will reduce the boilerplace while keeping
+> > > > it following the principles described in Documentation/rbtree.txt.
+> > > 
+> > > Ok, done, got really small and easy to change the keys if we want to,
+> > > not dynamicly tho as-is now, but should be easy, with offsetof 8-)
+> > > 
+> > > Anyway, I'm satisfied and pushed to perf/core, now looking at why total
+> > > thread time is zeroed...
+> > > 
+> > > Please take a look and check if it works for you,
+> > 
+> > Great Arnaldo, thanks a lot! A pleasant surprise to come home from a sunny
+> > weekend and see this gem waiting for me :)
+> > 
+> > I played around with it, and it does work as advertised. Great work!
+> 
+> Glad you liked it :-)
+> 
+> I'll probably make it use the sched:sched_stat_runtime data as the sort
+> key for threads if --stat is used, what do you think?
 
-I think the patch below got lost, as it is not yet applied upstream and I 
-never got any feedback on it. Could you please have a look at it?
+You mean if `--sched` was used? I'm undecided on this. On one hand, the user 
+explicitly requests `--sched` so he probably is interested in it. On the other 
+hand, the total number of syscalls or wait time per thread may be more 
+interesting... If you use this to find contention issues e.g. then the threads 
+suffering most from contention issues will have a low runtime.
 
-Thanks
+Personally, I think this is yet another situation where a proper GUI could 
+solve this problem nicely. A trivial tree view with the option to adapt the 
+sorting and aggregation as needed and a way to filter out certain syscalls 
+post-collection would be really nice to have. I'm very much looking forward to 
+having more time at hands again to finally tackle this.
 
-On Saturday, April 2, 2016 1:50:37 AM CEST Milian Wolff wrote:
-> This makes it much more useful to report data recorded with
-> `perf trace record`. E.g.:
-> 
->     #include <unistd.h>
-> 
->     int main()
->     {
->         sleep(1);
->         usleep(1000);
->         usleep(1);
->         return 0;
->     }
-> 
->     Compile and trace it:
-> 
-> # gcc -g sleep.c -o ex_sleep
-> # perf trace record --call-graph dwarf ex_sleep
-> 
-> Previously, the report is not so useful as it aggregates by the number
-> of syscalls:
-> 
-> # perf report --stdio --show-nr-samples --show-total-period \
->               --no-children --sort sym --max-stack 1
-> 
->     #
->     # Samples: 46  of event 'raw_syscalls:sys_enter'
->     # Event count (approx.): 46
->     #
->     # Overhead       Samples        Period  Symbol
->     # ........  ............  ............  ..............................
->     #
->     100.00%            46            46  [k] syscall_trace_enter_phase2
-> 
->                 |--30.43%--open64
->                 |
->                 |--17.39%--_xstat
->                 |
->                 |--15.22%--mmap64
->                 |
->                 |--8.70%--mprotect
->                 |
->                 |--6.52%--__nanosleep
->                 |
->                 |--4.35%--close
->                 |
->                 |--4.35%--_fxstat
->                 |
->                 |--2.17%--_exit
->                 |
->                 |--2.17%--munmap
->                 |
->                 |--2.17%--access
->                 |
->                 |--2.17%--read
->                 |
->                 |--2.17%--brk
->                 |
->                 |--2.17%--init_tls
-> 
-> And then the same for sys_exit. Note how the period count equals the
-> sample count. Yes, open, stat and mmap are called often, but are
-> these syscalls really expensive? Hard to tell.
-> 
-> This patch adds a new inject command to aggregate the
-> sys_enter and sys_exit events and sets the period to the elapsed time:
-> 
-> # perf inject -t -i perf.data -o perf.data.merged
-> 
-> This makes the report much nicer:
-> 
-> # perf report --stdio --show-total-period --no-children --sort sym \
->               --max-stack 1  -i perf.data.merged
-> 
->     #
->     # Total Lost Samples: 0
->     #
->     # Samples: 45  of event 'raw_syscalls:sys_enter'
->     # Event count (approx.): 1001520568
->     #
->     # Overhead        Period  Symbol
->     # ........  ............  ..............................
->     #
->     100.00%    1001520568  [k] syscall_trace_enter_phase2
-> 
->                 |--99.99%--__nanosleep
-> 
-> Note that the other syscalls in this example are so cheap they are
-> filtered out of the report by default. You can bring them back via
-> e.g. `--call-graph graph,0`, or by omitting `--no-children` or
-> via --percent-limit 0.
-> 
-> The report of the merged data can also again use the raw number
-> of syscalls for merging, with a pretty unwieldy command:
-> 
-> # perf report -i perf.data.merged --sort sym --show-nr-samples \
->               -g graph,0,caller,function,count --stdio --max-stack 1
-> 
->     #
->     # Samples: 45  of event 'raw_syscalls:sys_enter'
->     # Event count (approx.): 1001520568
->     #
->     # Children      Self       Samples  Symbol
->     # ........  ........  ............  ..............................
->     #
->     100.00%   100.00%            45  [k] syscall_trace_enter_phase2
-> 
->                 |--3--__nanosleep
->                 |
->                 |--14--open64
->                 |
->                 |--7--mmap64
->                 |
->                 |--8--_xstat
->                 |
->                 |--4--mprotect
->                 |
->                 |--1--munmap
->                 |
->                 |--2--_fxstat
->                 |
->                 |--1--access
->                 |
->                 |--2--close
->                 |
->                 |--1--read
->                 |
->                 |--1--init_tls
->                 |
->                 |--1--brk
-> 
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> ---
->  tools/perf/builtin-inject.c | 141
-> +++++++++++++++++++++++++++++++++++--------- 1 file changed, 113
-> insertions(+), 28 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index e5afa8f..3bad330 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -31,6 +31,7 @@ struct perf_inject {
->  	bool			have_auxtrace;
->  	bool			strip;
->  	bool			jit_mode;
-> +	bool			trace;
->  	const char		*input_name;
->  	struct perf_data_file	output;
->  	u64			bytes_written;
-> @@ -451,17 +452,14 @@ repipe:
->  	return 0;
->  }
-> 
-> -static int perf_inject__sched_process_exit(struct perf_tool *tool,
-> -					   union perf_event *event __maybe_unused,
-> -					   struct perf_sample *sample,
-> -					   struct perf_evsel *evsel __maybe_unused,
-> -					   struct machine *machine __maybe_unused)
-> +static int perf_inject__free_cloned_event(struct perf_tool *tool,
-> +					  u32 tid)
->  {
->  	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-> struct event_entry *ent;
-> 
->  	list_for_each_entry(ent, &inject->samples, node) {
-> -		if (sample->tid == ent->tid) {
-> +		if (tid == ent->tid) {
->  			list_del_init(&ent->node);
->  			free(ent);
->  			break;
-> @@ -471,21 +469,18 @@ static int perf_inject__sched_process_exit(struct
-> perf_tool *tool, return 0;
->  }
-> 
-> -static int perf_inject__sched_switch(struct perf_tool *tool,
-> -				     union perf_event *event,
-> -				     struct perf_sample *sample,
-> -				     struct perf_evsel *evsel,
-> -				     struct machine *machine)
-> +static int perf_inject__clone_event(struct perf_tool *tool,
-> +				    union perf_event *event,
-> +				    struct perf_sample *sample)
->  {
->  	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-> struct event_entry *ent;
-> 
-> -	perf_inject__sched_process_exit(tool, event, sample, evsel, machine);
-> -
-> +	perf_inject__free_cloned_event(tool, sample->tid);
->  	ent = malloc(event->header.size + sizeof(struct event_entry));
->  	if (ent == NULL) {
->  		color_fprintf(stderr, PERF_COLOR_RED,
-> -			     "Not enough memory to process sched switch event!");
-> +			     "Not enough memory to clone event!");
->  		return -1;
->  	}
-> 
-> @@ -495,35 +490,104 @@ static int perf_inject__sched_switch(struct perf_tool
-> *tool, return 0;
->  }
-> 
-> +static struct event_entry *perf_inject__find_cloned_event(struct perf_tool
-> *tool, +							  u32 tid)
-> +{
-> +	struct event_entry *ent;
-> +	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-> +
-> +	list_for_each_entry(ent, &inject->samples, node) {
-> +		if (tid == ent->tid)
-> +			return ent;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static int perf_inject__repipe_cloned_event_sample(struct perf_tool *tool,
-> +						   struct perf_evsel *evsel,
-> +						   struct machine *machine,
-> +						   union perf_event *event_sw,
-> +						   struct perf_sample sample_sw)
-> +{
-> +	perf_event__synthesize_sample(event_sw, evsel->attr.sample_type,
-> +				      evsel->attr.read_format, &sample_sw,
-> +				      false);
-> +	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
-> +	return perf_event__repipe(tool, event_sw, &sample_sw, machine);
-> +}
-> +
-> +static int perf_inject__sched_process_exit(struct perf_tool *tool,
-> +					   union perf_event *event __maybe_unused,
-> +					   struct perf_sample *sample,
-> +					   struct perf_evsel *evsel __maybe_unused,
-> +					   struct machine *machine __maybe_unused)
-> +{
-> +	perf_inject__free_cloned_event(tool, sample->tid);
-> +	return 0;
-> +}
-> +
-> +static int perf_inject__sched_switch(struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample,
-> +				     struct perf_evsel *evsel __maybe_unused,
-> +				     struct machine *machine __maybe_unused)
-> +{
-> +	return perf_inject__clone_event(tool, event, sample);
-> +}
-> +
->  static int perf_inject__sched_stat(struct perf_tool *tool,
->  				   union perf_event *event __maybe_unused,
->  				   struct perf_sample *sample,
->  				   struct perf_evsel *evsel,
->  				   struct machine *machine)
->  {
-> -	struct event_entry *ent;
->  	union perf_event *event_sw;
->  	struct perf_sample sample_sw;
-> -	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
-> u32 pid = perf_evsel__intval(evsel, sample, "pid");
-> +	struct event_entry *ent = perf_inject__find_cloned_event(tool, pid);
-> 
-> -	list_for_each_entry(ent, &inject->samples, node) {
-> -		if (pid == ent->tid)
-> -			goto found;
-> -	}
-> +	if (ent == NULL)
-> +		return 0;
-> 
-> -	return 0;
-> -found:
->  	event_sw = &ent->event[0];
->  	perf_evsel__parse_sample(evsel, event_sw, &sample_sw);
-> 
->  	sample_sw.period = sample->period;
->  	sample_sw.time	 = sample->time;
-> -	perf_event__synthesize_sample(event_sw, evsel->attr.sample_type,
-> -				      evsel->attr.read_format, &sample_sw,
-> -				      false);
-> -	build_id__mark_dso_hit(tool, event_sw, &sample_sw, evsel, machine);
-> -	return perf_event__repipe(tool, event_sw, &sample_sw, machine);
-> +
-> +	return perf_inject__repipe_cloned_event_sample(tool, evsel, machine,
-> +						       event_sw, sample_sw);
-> +}
-> +
-> +static int perf_inject__raw_syscalls_sys_enter(struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample,
-> +				     struct perf_evsel *evsel __maybe_unused,
-> +				     struct machine *machine __maybe_unused)
-> +{
-> +	return perf_inject__clone_event(tool, event, sample);
-> +}
-> +
-> +static int perf_inject__raw_syscalls_sys_exit(struct perf_tool *tool,
-> +				   union perf_event *event __maybe_unused,
-> +				   struct perf_sample *sample,
-> +				   struct perf_evsel *evsel,
-> +				   struct machine *machine)
-> +{
-> +	union perf_event *event_sw;
-> +	struct perf_sample sample_sw;
-> +	struct event_entry *ent = perf_inject__find_cloned_event(tool,
-> sample->tid); +
-> +	if (ent == NULL)
-> +		return 0;
-> +
-> +	event_sw = &ent->event[0];
-> +	perf_evsel__parse_sample(evsel, event_sw, &sample_sw);
-> +
-> +	sample_sw.period = sample->time - sample_sw.time;
-> +
-> +	return perf_inject__repipe_cloned_event_sample(tool, evsel, machine,
-> +						       event_sw, sample_sw);
->  }
-> 
->  static void sig_handler(int sig __maybe_unused)
-> @@ -656,6 +720,24 @@ static int __cmd_inject(struct perf_inject *inject)
->  			else if (!strncmp(name, "sched:sched_stat_", 17))
->  				evsel->handler = perf_inject__sched_stat;
->  		}
-> +	} else if (inject->trace) {
-> +		struct perf_evsel *evsel;
-> +
-> +		evlist__for_each(session->evlist, evsel) {
-> +			const char *name = perf_evsel__name(evsel);
-> +
-> +			if (!strcmp(name, "raw_syscalls:sys_exit")) {
-> +				if (perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
-> +					return -EINVAL;
-> +
-> +				evsel->handler = perf_inject__raw_syscalls_sys_exit;
-> +			} else if (!strcmp(name, "raw_syscalls:sys_enter")) {
-> +				if (perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
-> +					return -EINVAL;
-> +
-> +				evsel->handler = perf_inject__raw_syscalls_sys_enter;
-> +			}
-> +		}
->  	} else if (inject->itrace_synth_opts.set) {
->  		session->itrace_synth_opts = &inject->itrace_synth_opts;
->  		inject->itrace_synth_opts.inject = true;
-> @@ -775,6 +857,9 @@ int cmd_inject(int argc, const char **argv, const char
-> *prefix __maybe_unused) OPT_BOOLEAN('s', "sched-stat", &inject.sched_stat,
->  			    "Merge sched-stat and sched-switch for getting events "
->  			    "where and how long tasks slept"),
-> +		OPT_BOOLEAN('t', "trace", &inject.trace,
-> +			    "Merge raw_syscalls:sys_enter and raw_syscalls:sys_exit trace 
-"
-> +			    "events to measure how long the individual syscalls took"),
->  #ifdef HAVE_JITDUMP
->  		OPT_BOOLEAN('j', "jit", &inject.jit_mode, "merge jitdump files into
-> perf.data file"), #endif
-> @@ -815,7 +900,7 @@ int cmd_inject(int argc, const char **argv, const char
-> *prefix __maybe_unused) return -1;
->  	}
-> 
-> -	inject.tool.ordered_events = inject.sched_stat;
-> +	inject.tool.ordered_events = inject.sched_stat || inject.trace;
-> 
->  	file.path = inject.input_name;
->  	inject.session = perf_session__new(&file, true, &inject.tool);
-
-
+Bye
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1694036.n27UpqDuvx
+--nextPart6531395.Cr2ys5eLzZ
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -497,13 +177,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDUwOTE3NTYwNVowIwYJKoZIhvcNAQkEMRYEFI4jV0GbqbvQc5vPqpzTi2HUxOg1MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAH9K
-eX9YzEzsTPJ9Ky4hPJTPEC0+Riz53sTG91qSDGBsHdgjgRxc7Gg8+3vql/huGQzFShZhBfFf2VEi
-qkVdUHw1rH8zQnwAK/W624oDtu3ButJxLbrZijmNyiCIWlszz9ktVCzY0ML69zdV36QaGJGZAZeW
-UbcIKAYcmIvKaGMgHmgcGCsDcrxUksIYGXNdRDiVa4AG99nhy24F6t+L00ixbS+qmQNjipWIKH0c
-mZyRP2EHYCqid8YvuIIuwZ+U1P5O0j6YWh7Tfl49kKot27jdnj/NsZPVsOg+xylCltsjXO4u6prm
-vGjz1E7+TO4p1mUXnjQwt2KBowf4nPfpSmwAAAAAAAA=
+DTE2MDUwOTE4MDMzMFowIwYJKoZIhvcNAQkEMRYEFOHr6s8ieDiagkwhQGhorHfTbkzlMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALow
+AL7H9p098yj1uz83uO4pep8FTIUeHmiqwrGiDpicujBZbduto9KplgK3UgpD5CJ+ZdAVMIHW+hGz
+I1v2BAqSkpfsD75pla5jPNUrs0e14xb6i64VZnCYR5mzJ+ZUhRyi+HmE8RD/pCyHWBSxDQuNkQqt
+9PtKs2zwDZ7CT8N5Fut0GNw+TymG4Z+2IfA4TOId9focuZbtIuphMg0QyWRRByycFXOzoAatSiE3
+ffGqyAOQ0H0labaS8dQQIeO007tC1NWzK8Wtz7OWi2ORRiY8yc4TUieXvaK+5PwY+mjhXW+oNCOV
+a2c+DMyM7jr0CpmczKVfF69TTaEf6rUmZmUAAAAAAAA=
 
 
---nextPart1694036.n27UpqDuvx--
+--nextPart6531395.Cr2ys5eLzZ--
