@@ -1,38 +1,33 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [RFC 2/2] perf/core: change errno for sampling event not supported
- in hardware
-Date: Tue, 10 May 2016 23:33:13 -0400 (EDT)
-Message-ID: <alpine.DEB.2.20.1605102331420.15322@macbook-air>
-References: <1462786660-2900-1-git-send-email-vgupta@synopsys.com> <1462786660-2900-3-git-send-email-vgupta@synopsys.com> <alpine.DEB.2.20.1605090923460.27332@macbook-air> <5730C79F.3060307@synopsys.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC 2/2] perf/core: change errno for sampling event not
+ supported in hardware
+Date: Wed, 11 May 2016 21:36:27 +0200
+Message-ID: <20160511193627.GH3190@twins.programming.kicks-ass.net>
+References: <1462786660-2900-1-git-send-email-vgupta@synopsys.com>
+ <1462786660-2900-3-git-send-email-vgupta@synopsys.com>
+ <alpine.DEB.2.20.1605090923460.27332@macbook-air>
+ <5730C79F.3060307@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f195.google.com ([209.85.223.195]:36064 "EHLO
-	mail-io0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751867AbcEKDdP (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 10 May 2016 23:33:15 -0400
-Received: by mail-io0-f195.google.com with SMTP id k129so4098241iof.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2016 20:33:15 -0700 (PDT)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
 In-Reply-To: <5730C79F.3060307@synopsys.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: Vineet Gupta <vgupta@synopsys.com>
-Cc: Vince Weaver <vincent.weaver@maine.edu>, linux-perf-users@vger.kernel.org, peterz@infradead.org, acme@redhat.com, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@kernel.org
+Cc: acme@redhat.com, Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-snps-arc@lists.infradead.org, mingo@kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, 9 May 2016, Vineet Gupta wrote:
+On Mon, May 09, 2016 at 10:53:43PM +0530, Vineet Gupta wrote:
 
-> On Monday 09 May 2016 07:24 PM, Vince Weaver wrote:
-> > On Mon, 9 May 2016, Vineet Gupta wrote:
-> > 
-> >> This allows userspace to identify this case specifically from the
-> >> catch all error msg it prints currently.
-> >>
-> >> This is an ABI change
-> > 
-> > An ABI change which will probably break things.
-> 
-> 
 > Right thats what I feared. But hold on, I don't think we need to change the ABI to
 > achieve what we want. Gosh why did I even take that path.
 > 
@@ -42,10 +37,4 @@ On Mon, 9 May 2016, Vineet Gupta wrote:
 > 
 > Do you see anything wrong with that ?
 
-no, but it would be nice if one of the actual maintainers would chime in 
-with an opinion.
-
-In any case if ENOTSUPP is being returned to userspace I should update the 
-perf_event manpage to reflect that.
-
-Vince
+Should work I think.
