@@ -1,47 +1,31 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf trace: Problems initializing symbol libraries!
-Date: Thu, 12 May 2016 15:10:44 -0300
-Message-ID: <20160512181044.GK20258@kernel.org>
-References: <2323271.hRPH2PSKxc@milian-kdab2>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [RFC 2/2] perf/core: change errno for sampling event not supported
+ in hardware
+Date: Thu, 12 May 2016 19:04:58 -0400 (EDT)
+Message-ID: <alpine.DEB.2.20.1605121903470.18777@macbook-air>
+References: <1462786660-2900-1-git-send-email-vgupta@synopsys.com> <1462786660-2900-3-git-send-email-vgupta@synopsys.com> <alpine.DEB.2.20.1605090923460.27332@macbook-air> <5730C79F.3060307@synopsys.com> <20160511193627.GH3190@twins.programming.kicks-ass.net>
+ <5734229B.90706@synopsys.com> <20160512064201.GL3192@twins.programming.kicks-ass.net> <573428A1.3060402@synopsys.com> <20160512072542.GM3192@twins.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:36661 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751402AbcELSKv (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 12 May 2016 14:10:51 -0400
-Content-Disposition: inline
-In-Reply-To: <2323271.hRPH2PSKxc@milian-kdab2>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160512072542.GM3192@twins.programming.kicks-ass.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, acme@redhat.com, linux-snps-arc@lists.infradead.org, mingo@kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, May 12, 2016 at 02:05:35PM +0200, Milian Wolff escreveu:
-> I'm getting the following error when trying to run `perf trace` built from 
-> acme's perf/core branch on an Ubuntu 16.04 machine:
- 
-> $ perf trace
-> Problems initializing symbol libraries!
- 
-> strace shows this at the end:
- 
-> ...
-> lstat("/proc", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
-> lstat("/proc/kallsyms", {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-> write(2, "Problems initializing symbol lib"..., 40Problems initializing symbol 
-> libraries!
-> ) = 40
-> exit_group(244) 
- 
-> Is something wrong with my /proc/kallsyms? Can someone tell me what the 
-> problems are that are being encountered?
+On Thu, 12 May 2016, Peter Zijlstra wrote:
 
-Does it work as root?
+> Ah.. which might be a hint that nobody is actually explicitly testing
+> for this and we might just get away with changing the ABI.
+> 
+> Vince, what say you; shall we try and get away with it? ;-)
 
-What is the value of /proc/sys/kernel/kptr_restrict?
+It's probably worth trying.
 
-Need to improve that message :-\
+The only other time anyone else noticed was in this thread
+	https://lkml.org/lkml/2015/6/11/136
+and I think the conclusion at the end of that was also that it's probably 
+worth changing.
 
-- Arnaldo
+Vince
