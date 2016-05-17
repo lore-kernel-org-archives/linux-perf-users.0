@@ -1,40 +1,40 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf trace: Problems initializing symbol libraries!
-Date: Tue, 17 May 2016 12:06:17 -0300
-Message-ID: <20160517150617.GA28790@kernel.org>
-References: <2323271.hRPH2PSKxc@milian-kdab2>
- <1849423.FYp0BrzLMo@agathebauer>
- <20160516201359.GB3455@kernel.org>
- <27102286.6frB0TEpAH@milian-kdab2>
+From: Vasmi Abidi <vabidi@gmail.com>
+Subject: how to get "--children" overhead with perf?
+Date: Tue, 17 May 2016 17:38:48 +0000 (UTC)
+Message-ID: <loom.20160517T193444-154@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:43288 "EHLO mail.kernel.org"
+Received: from plane.gmane.org ([80.91.229.3]:35148 "EHLO plane.gmane.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752785AbcEQPGV (ORCPT
+	id S1751072AbcEQRkG (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 17 May 2016 11:06:21 -0400
-Content-Disposition: inline
-In-Reply-To: <27102286.6frB0TEpAH@milian-kdab2>
+	Tue, 17 May 2016 13:40:06 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1b2iyS-0001g8-7Q
+	for linux-perf-users@vger.kernel.org; Tue, 17 May 2016 19:40:04 +0200
+Received: from smtp.rabbitmq.com ([192.240.153.112])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2016 19:40:04 +0200
+Received: from vabidi by smtp.rabbitmq.com with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2016 19:40:04 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
-Em Tue, May 17, 2016 at 09:51:44AM +0200, Milian Wolff escreveu:
-> On Monday, May 16, 2016 5:13:59 PM CEST Arnaldo Carvalho de Melo wrote:
-> > So, the problem is not with what is in my perf/core branch, its that ubuntu
-> > 16.04's kernel comes with kptr_restrict defaulting to 1, I have to get that
-> > warning emitted by 'perf record' into 'perf trace'.
- 
-> that makes it work for me. I'll include the line to set kptr_restrict to 0 
-> into my "perf init" script that elevates the restrictions.
+Hi,
 
-That will not be strictly needed with what I have now on my perf/core
-branch, where it will just warn the user if/when symbol resolution is
-needed and kptr_restrict=1.
+   Which version of perf gives the overhead of the children in the caller view?
+    On my ubuntu14.04.1 machine, I don't see any options for this.
 
-Thanks for the report, tested on fedora 23 with kptr_restrict set to 1
-and then again on ubuntu 16.04, default kernel sysctl values.
+ root@prmh:~# perf --version
+perf version 3.13.11.4
+root@:~# perf report --children
+  Error: unknown option `children'
 
-- Arnaldo
+   thanks,
+   Vasmi
