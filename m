@@ -1,65 +1,223 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Workarounds for LLC miss profiling without PEBS
-Date: Mon, 16 May 2016 18:01:47 -0700
-Message-ID: <CAE40pdfxcd_aZ0Bkjk28Fa8TDHbLZUSS1QdpQJ3AudTMXAMB0A@mail.gmail.com>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: perf trace: Problems initializing symbol libraries!
+Date: Tue, 17 May 2016 09:51:44 +0200
+Message-ID: <27102286.6frB0TEpAH@milian-kdab2>
+References: <2323271.hRPH2PSKxc@milian-kdab2> <1849423.FYp0BrzLMo@agathebauer> <20160516201359.GB3455@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="nextPart6447973.oYRdr1UEkZ"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f175.google.com ([209.85.223.175]:32854 "EHLO
-	mail-io0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752800AbcEQBCR (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 16 May 2016 21:02:17 -0400
-Received: by mail-io0-f175.google.com with SMTP id f89so4861525ioi.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2016 18:02:17 -0700 (PDT)
+Received: from mail.kdab.com ([176.9.126.58]:41652 "EHLO mail.kdab.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932222AbcEQHvv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+	Tue, 17 May 2016 03:51:51 -0400
+In-Reply-To: <20160516201359.GB3455@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
 
-G'Day,
+--nextPart6447973.oYRdr1UEkZ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-I have a system that lacks PEBS, and would like to do LLC miss
-profiling to identify the responsible functions. Some skid is okay, so
-long as it usually stays within the function. I've come up with one
-hack, and wonder if people know of others...
+On Monday, May 16, 2016 5:13:59 PM CEST Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 16, 2016 at 01:31:48PM +0200, Milian Wolff escreveu:
+> > On Donnerstag, 12. Mai 2016 15:10:44 CEST Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, May 12, 2016 at 02:05:35PM +0200, Milian Wolff escreveu:
+> > > > I'm getting the following error when trying to run `perf trace` built
+> > > > from
+> > > > acme's perf/core branch on an Ubuntu 16.04 machine:
+> > > > 
+> > > > $ perf trace
+> > > > Problems initializing symbol libraries!
+> 
+> Ok, so with the perf tool that comes with ubuntu 16.04 I get:
+> 
+>   acme@ubuntu:~$ perf record ls
+>   WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
+>   check /proc/sys/kernel/kptr_restrict.
+> 
+>   Samples in kernel functions may not be resolved if a suitable vmlinux
+>   file is not found in the buildid cache or in the vmlinux path.
+> 
+>   Samples in kernel modules won't be resolved at all.
+> 
+>   If some relocation was applied (e.g. kexec) symbols may be misresolved
+>   even with a suitable vmlinux or kallsyms file.
+> 
+>   Cannot read kernel map
+>   Couldn't record kernel reference relocation symbol
+>   Symbol resolution may be skewed if relocation was used (e.g. kexec).
+>   Check /proc/kallsyms permission or run as root.
+>   git  perf.data
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.002 MB perf.data (14 samples) ]
+>   acme@ubuntu:~$
+> 
+> Which is a better message than:
+> 
+>   acme@ubuntu:~$ perf trace
+>   Error:	No permissions to read
+> /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit) Hint:	Try
+> 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+> 
+>   acme@ubuntu:~$ sudo mount -o remount,mode=755 /sys/kernel/debug/tracing
+>   acme@ubuntu:~$ perf trace
+>   Error:	No permissions to read
+> /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit) Hint:	Try
+> 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+> 
+>   acme@ubuntu:~$ sudo mount -o remount,mode=755 /sys/kernel/debug
+>   acme@ubuntu:~$ perf trace
+>   Problems initializing symbol libraries!
+>   acme@ubuntu:~$
+> 
+> So, if I follow the instructions given in the 'perf record ls' case:
+> 
+>   acme@ubuntu:~$ sudo sh -c "echo 0 > /proc/sys/kernel/kptr_restrict"
+>   acme@ubuntu:~$ perf trace
+>   Error:	Operation not permitted.
+>   Hint:	Check /proc/sys/kernel/perf_event_paranoid setting.
+>   Hint:	For system wide tracing it needs to be set to -1.
+>   Hint:	Try: 'sudo sh -c "echo -1 > /proc/sys/kernel/
+perf_event_paranoid"'
+>   Hint:	The current value is 1.
+>   acme@ubuntu:~$
+> 
+> It gets a bit better, then, one more step...
+> 
+>   acme@ubuntu:~$ perf trace --ev sched:sched_switch -e nanosleep sleep 1
+>        0.938 (   0.025 ms): sleep/7461 nanosleep(rqtp: 0x7ffc77ca6310       
+>                                 ) ... 0.938 (           ):
+> sched:sched_switch:prev_comm=sleep prev_pid=7461 prev_prio=120 prev_state=S
+> ==> next_comm=swapper/1 next_pid=0 next_prio=120) 1001.076 (1000.163 ms):
+> sleep/7461  ... [continued]: nanosleep()) = 0 acme@ubuntu:~$
+> 
+> So, the problem is not with what is in my perf/core branch, its that ubuntu
+> 16.04's kernel comes with kptr_restrict defaulting to 1, I have to get that
+> warning emitted by 'perf record' into 'perf trace'.
 
-To test this out, I wrote a test program[1], and profiled LLC misses:
+Thanks a lot Arnaldo,
 
-# perf top -e r412e:u -c 10000
-Overhead  Shared Object     Symbol
-  99.30%  memprofiletest    [.] spinner
-   0.64%  memprofiletest    [.] memreader
-   0.06%  perf              [.] 0x000000000006728e
+that makes it work for me. I'll include the line to set kptr_restrict to 0 
+into my "perf init" script that elevates the restrictions.
 
-It's identifying the wrong function: it should identify memreader, not
-spinner. The :p modifier is also "not permitted" on this system (this
-is Sandy Bridge, but also a Xen guest).
+Thanks again
 
-Now with a hack:
+-- 
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart6447973.oYRdr1UEkZ
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-# perf top -e r412e:u -c 10000
-Overhead  Shared Object     Symbol
-  97.39%  memprofiletest    [.] memreader
-   0.64%  perf              [.] 0x000000000007a667
-   0.42%  memprofiletest    [.] spinner
-   0.19%  perf              [.] 0x0000000000084d56
-   0.11%  [kernel]          [k] xen_hvm_callback_vector
-   0.11%  libc-2.19.so      [.] pthread_cond_destroy@@GLIBC_2.3.2
-   0.11%  libjvm.so         [.] _ZNK24CompactibleFreeListSpace4freeEv
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE2MDUxNzA3NTE0NFowIwYJKoZIhvcNAQkEMRYEFA3J82RlMThi/sIeVNWkVicQA0MvMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAJXC
+heGMwivj6nUQl3Y3Dgt453iXfEnciXF+kaN244nbp1b7cZxgDaC0Mg4XFbGKdFiZxm/iDFPryc+y
+3YX+i8yo7DNFXbQmLE1LYYDJPo1tQ3fG6h9m6NJuHpCOVj5Zs/YlORuz13H5E8ldYdCtG/gvxteF
+42umcMggix4zyuE/Hz3xnVfssCLjQAqsVUJDaB7gsEdNxI4bMY6+H5b9iBXqNLjhTS6WuAiq0ad7
+spUAkAqBayKwg7J5ZSUT14RGeok8t3Oq8tQ6wWqCzbsBmrhclNoghGamY4mwerWSIIQxr8oAwUVy
+zjcy5lZqV8EgX7n8YRSitMA1MnWla5REpoQAAAAAAAA=
 
-Works. This hack is adding three "mfence" instructions at the end of
-each function, which also causes it to run 30% slower (for this
-workload). Awful, yes. I suppose I could modifier compilers to do this
-too, or do something similar dynamically with uretprobes...
 
-Anyone know of other hacks?
-
-I was also thinking of reducing the clockspeed, to see if that
-improved (reduced) skid.
-
-Maybe there's a way to cause mem loads/stores to be MUCH slower, also
-reducing skid enough to fall within a function?
-
-Brendan
-
-[1] https://gist.github.com/brendangregg/84de23c57b2ef477d82bc30af15ca1cf
+--nextPart6447973.oYRdr1UEkZ--
