@@ -1,94 +1,65 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf trace: Problems initializing symbol libraries!
-Date: Mon, 16 May 2016 17:13:59 -0300
-Message-ID: <20160516201359.GB3455@kernel.org>
-References: <2323271.hRPH2PSKxc@milian-kdab2>
- <20160512181044.GK20258@kernel.org>
- <1849423.FYp0BrzLMo@agathebauer>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Workarounds for LLC miss profiling without PEBS
+Date: Mon, 16 May 2016 18:01:47 -0700
+Message-ID: <CAE40pdfxcd_aZ0Bkjk28Fa8TDHbLZUSS1QdpQJ3AudTMXAMB0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:34103 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754560AbcEPUOF (ORCPT
+Received: from mail-io0-f175.google.com ([209.85.223.175]:32854 "EHLO
+	mail-io0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752800AbcEQBCR (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 16 May 2016 16:14:05 -0400
-Content-Disposition: inline
-In-Reply-To: <1849423.FYp0BrzLMo@agathebauer>
+	Mon, 16 May 2016 21:02:17 -0400
+Received: by mail-io0-f175.google.com with SMTP id f89so4861525ioi.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2016 18:02:17 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Em Mon, May 16, 2016 at 01:31:48PM +0200, Milian Wolff escreveu:
-> On Donnerstag, 12. Mai 2016 15:10:44 CEST Arnaldo Carvalho de Melo wrote:
-> > Em Thu, May 12, 2016 at 02:05:35PM +0200, Milian Wolff escreveu:
-> > > I'm getting the following error when trying to run `perf trace` built from
-> > > acme's perf/core branch on an Ubuntu 16.04 machine:
-> > > 
-> > > $ perf trace
-> > > Problems initializing symbol libraries!
+G'Day,
 
-Ok, so with the perf tool that comes with ubuntu 16.04 I get:
+I have a system that lacks PEBS, and would like to do LLC miss
+profiling to identify the responsible functions. Some skid is okay, so
+long as it usually stays within the function. I've come up with one
+hack, and wonder if people know of others...
 
-  acme@ubuntu:~$ perf record ls
-  WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-  check /proc/sys/kernel/kptr_restrict.
+To test this out, I wrote a test program[1], and profiled LLC misses:
 
-  Samples in kernel functions may not be resolved if a suitable vmlinux
-  file is not found in the buildid cache or in the vmlinux path.
+# perf top -e r412e:u -c 10000
+Overhead  Shared Object     Symbol
+  99.30%  memprofiletest    [.] spinner
+   0.64%  memprofiletest    [.] memreader
+   0.06%  perf              [.] 0x000000000006728e
 
-  Samples in kernel modules won't be resolved at all.
+It's identifying the wrong function: it should identify memreader, not
+spinner. The :p modifier is also "not permitted" on this system (this
+is Sandy Bridge, but also a Xen guest).
 
-  If some relocation was applied (e.g. kexec) symbols may be misresolved
-  even with a suitable vmlinux or kallsyms file.
+Now with a hack:
 
-  Cannot read kernel map
-  Couldn't record kernel reference relocation symbol
-  Symbol resolution may be skewed if relocation was used (e.g. kexec).
-  Check /proc/kallsyms permission or run as root.
-  git  perf.data
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.002 MB perf.data (14 samples) ]
-  acme@ubuntu:~$
+# perf top -e r412e:u -c 10000
+Overhead  Shared Object     Symbol
+  97.39%  memprofiletest    [.] memreader
+   0.64%  perf              [.] 0x000000000007a667
+   0.42%  memprofiletest    [.] spinner
+   0.19%  perf              [.] 0x0000000000084d56
+   0.11%  [kernel]          [k] xen_hvm_callback_vector
+   0.11%  libc-2.19.so      [.] pthread_cond_destroy@@GLIBC_2.3.2
+   0.11%  libjvm.so         [.] _ZNK24CompactibleFreeListSpace4freeEv
 
-Which is a better message than:
+Works. This hack is adding three "mfence" instructions at the end of
+each function, which also causes it to run 30% slower (for this
+workload). Awful, yes. I suppose I could modifier compilers to do this
+too, or do something similar dynamically with uretprobes...
 
-  acme@ubuntu:~$ perf trace
-  Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+Anyone know of other hacks?
 
-  acme@ubuntu:~$ sudo mount -o remount,mode=755 /sys/kernel/debug/tracing
-  acme@ubuntu:~$ perf trace
-  Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+I was also thinking of reducing the clockspeed, to see if that
+improved (reduced) skid.
 
-  acme@ubuntu:~$ sudo mount -o remount,mode=755 /sys/kernel/debug
-  acme@ubuntu:~$ perf trace
-  Problems initializing symbol libraries!
-  acme@ubuntu:~$
+Maybe there's a way to cause mem loads/stores to be MUCH slower, also
+reducing skid enough to fall within a function?
 
-So, if I follow the instructions given in the 'perf record ls' case:
+Brendan
 
-  acme@ubuntu:~$ sudo sh -c "echo 0 > /proc/sys/kernel/kptr_restrict"
-  acme@ubuntu:~$ perf trace
-  Error:	Operation not permitted.
-  Hint:	Check /proc/sys/kernel/perf_event_paranoid setting.
-  Hint:	For system wide tracing it needs to be set to -1.
-  Hint:	Try: 'sudo sh -c "echo -1 > /proc/sys/kernel/perf_event_paranoid"'
-  Hint:	The current value is 1.
-  acme@ubuntu:~$ 
-
-It gets a bit better, then, one more step...
-
-  acme@ubuntu:~$ perf trace --ev sched:sched_switch -e nanosleep sleep 1
-       0.938 (   0.025 ms): sleep/7461 nanosleep(rqtp: 0x7ffc77ca6310                                        ) ...
-       0.938 (           ): sched:sched_switch:prev_comm=sleep prev_pid=7461 prev_prio=120 prev_state=S ==> next_comm=swapper/1 next_pid=0 next_prio=120)
-    1001.076 (1000.163 ms): sleep/7461  ... [continued]: nanosleep()) = 0
-  acme@ubuntu:~$ 
-
-So, the problem is not with what is in my perf/core branch, its that ubuntu
-16.04's kernel comes with kptr_restrict defaulting to 1, I have to get that
-warning emitted by 'perf record' into 'perf trace'.
-
-- Arnaldo
+[1] https://gist.github.com/brendangregg/84de23c57b2ef477d82bc30af15ca1cf
