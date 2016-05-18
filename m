@@ -1,77 +1,49 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: how to get "--children" overhead with perf?
-Date: Tue, 17 May 2016 16:05:33 -0300
-Message-ID: <20160517190533.GE28790@kernel.org>
-References: <loom.20160517T193444-154@post.gmane.org>
+From: "Pavey, Nicholas" <npavey@akamai.com>
+Subject: Detecting cache line sharing with perf / ocperf
+Date: Wed, 18 May 2016 15:10:40 +0000
+Message-ID: <B99D9D85-737A-408A-990A-BAA6F60CC0DD@akamai.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:59038 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752658AbcEQTFi (ORCPT
+Received: from prod-mail-xrelay08.akamai.com ([96.6.114.112]:31260 "EHLO
+	prod-mail-xrelay08.akamai.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753249AbcERPKo (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 17 May 2016 15:05:38 -0400
-Received: from mail.kernel.org (localhost [127.0.0.1])
-	by mail.kernel.org (Postfix) with ESMTP id 059DD2021B
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2016 19:05:37 +0000 (UTC)
-Received: from jouet.infradead.org (unknown [187.65.121.17])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPSA id 4472F20218
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2016 19:05:36 +0000 (UTC)
-Content-Disposition: inline
-In-Reply-To: <loom.20160517T193444-154@post.gmane.org>
+	Wed, 18 May 2016 11:10:44 -0400
+Received: from prod-mail-xrelay08.akamai.com (localhost.localdomain [127.0.0.1])
+	by postfix.imss70 (Postfix) with ESMTP id 0CD502000BF
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2016 15:10:42 +0000 (GMT)
+Received: from prod-mail-relay08.akamai.com (prod-mail-relay08.akamai.com [172.27.22.71])
+	by prod-mail-xrelay08.akamai.com (Postfix) with ESMTP id EB396200036
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2016 15:10:41 +0000 (GMT)
+Received: from email.msg.corp.akamai.com (ustx2ex-cas5.msg.corp.akamai.com [172.27.25.34])
+	by prod-mail-relay08.akamai.com (Postfix) with ESMTP id E856698082
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2016 15:10:41 +0000 (GMT)
+Content-Language: en-US
+Content-ID: <C7A6634BCAAC8E409E62C959598B0581@akamai.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Vasmi Abidi <vabidi@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Tue, May 17, 2016 at 05:38:48PM +0000, Vasmi Abidi escreveu:
->    Which version of perf gives the overhead of the children in the caller view?
->     On my ubuntu14.04.1 machine, I don't see any options for this.
-> 
->  root@prmh:~# perf --version
-> perf version 3.13.11.4
-> root@:~# perf report --children
->   Error: unknown option `children'
-
-[acme@jouet linux]$ git log --oneline 793aaaabb79803a0154fc6a98c472a29bb6d5cc9 -1
-793aaaabb798 perf report: Add --children option
-
-[acme@jouet linux]$ git tag --contains 793aaaabb798 | grep ^v3 | head
-v3.16
-v3.16-rc1
-v3.16-rc2
-v3.16-rc3
-v3.16-rc4
-v3.16-rc5
-v3.16-rc6
-v3.16-rc7
-v3.17
-v3.17-rc1
-[acme@jouet linux]$ 
-
-But I'd recommend you grab the very latest sources, using git, then
-build just the tools, as in:
-
-  cd linux
-  make -C tools/perf install-bin
-
-then use it from ~/bin/perf
-
-It should work with your ubuntu14.04.1 system.
-
-I regularly build it (as in multiple times a day) in these ubuntu Docker
-containers:
-
-[root@jouet atomic]# docker images | grep -- -ubuntu
-perf-build-alldeps-ubuntu-14.04     latest  c36091c85ed1 3 weeks ago 632.9 MB
-perf-build-alldeps-ubuntu-16.04     latest  72f6f5434e6d 3 weeks ago 669.3 MB
-perf-build-alldeps-ubuntu-12.04     latest  f55b8c3182bf 6 weeks ago 508.7 MB
-perf-build-minimal-ubuntu-x-arm     latest  a9450fa330a4 7 weeks ago 380.5 MB
-perf-build-minimal-ubuntu-x-arm64   latest  c236781b734e 7 weeks ago 357.2 MB
-perf-build-minimal-ubuntu-x-ppc64   latest  02adec2f8e15 7 weeks ago 384.3 MB
-perf-build-minimal-ubuntu-x-ppc64el latest  5b4e2e62a3f3 7 weeks ago 372.3 MB
-[root@jouet atomic]#
-
-- Arnaldo
+DQoNCknigJltIGhvcGluZyB0byByZWFkIHRoZSBwZXJmb3JtYW5jZSBjb3VudGVycyB0byBkZXRl
+Y3QgY2FjaGUgbGluZSBzaGFyaW5nIChib3RoIHRydWUgYW5kIGZhbHNlKS4NCg0KSeKAmXZlIGdv
+dCB0aGUgdmVyeSB1c2VmdWwg4oCYb2NwZXJm4oCZIHRvb2wsIHdoaWNoIGdpdmVzIG1lIGEgbXVj
+aCB3aWRlciByYW5nZSBvZiBzeW1ib2xpYyBwZXJmb3JtYW5jZSBjb3VudGVyIG9wdGlvbnMuIE15
+IHByb2JsZW0gaXMgdGhhdCB0aGUgc3BlY2lmaWMgcHJvZ3JhbW1pbmcgc2VlbXMgdG8gdmFyeSBi
+eSBwcm9jZXNzb3IgbWljcm8tYXJjaGl0ZWN0dXJlLg0KDQpUaGUg4oCYb2NwZXJm4oCZIGNvbW1p
+dCBpcyA6DQoNCsKgID4gZ2l0IHJldi1wYXJzZSBIRUFEIA0KwqDCoD4gNTliOWUyM2YyNTJlMTAx
+MTQ3ZjIyZDhiYTFkZDQ5YmVhZmUzMTliNw0KDQpNeSBwcm9jZXNzb3IgaXMgOiBJbnRlbChSKSBY
+ZW9uKFIpIENQVSBFNS0yNjQwIHYzLCBpbiBhIE5VTUEgY29uZmlndXJhdGlvbiB3aXRoIDIgc29j
+a2V0cy4NCg0KSeKAmXZlIGxvb2tlZCBhdCB0aGlzIGRvY3VtZW50Og0KDQrCoCBodHRwczovL3Nv
+ZnR3YXJlLmludGVsLmNvbS9lbi11cy9hcnRpY2xlcy9hdm9pZGluZy1hbmQtaWRlbnRpZnlpbmct
+ZmFsc2Utc2hhcmluZy1hbW9uZy10aHJlYWRzDQoNCklmIEnigJltIGludGVycHJldGluZyB0aGlz
+IGNvcnJlY3RseSwgSSBzaG91bGQgYmUgbG9va2luZyBmb3IgdGhlIGZvbGxvd2luZyBwZXJmb3Jt
+YW5jZSBjb3VudGVyczoNCg0KwqAgTUVNX1VOQ09SRV9SRVRJUkVELk9USEVSX0NPUkVfTDJfSElU
+TQ0KDQpNYXliZSBJ4oCZbSBtaXNzaW5nIGl0LCBidXQgSSB3YXNu4oCZdCBhYmxlIHRvIGxvY2F0
+ZSBhbiBlcXVpdmFsZW50bHkgbmFtZWQgY291bnRlciBpbiDigJhvY3BlcmbigJkuDQoNCknigJl2
+ZSBleHBlcmltZW50ZWQgd2l0aCBhIHJhbmdlIG9mIGNvdW50ZXJzIHRvIGRvIHdpdGggc25vb3Bp
+bmcgYW5kIE1FU0kgcHJvdG9jb2wgc3RhdGVzLCBidXQgSSBoYXZlbuKAmXQgZm91bmQgYSBwcm9n
+cmFtbWluZyB0aGF0IHNlZW1zIHRvIHdvcmsuDQoNCkRvZXMgYW55b25lIGtub3cgdGhlIGNvcnJl
+Y3QgcHJvZ3JhbW1pbmcgZm9yIG15IG1hY2hpbmU/DQoNClRoYW5rcywNCg0KDQpOaWNrDQoNCg0K
+DQo=
