@@ -1,44 +1,70 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Detecting cache line sharing with perf / ocperf
-Date: Wed, 18 May 2016 18:52:43 -0700
-Message-ID: <87h9duyftg.fsf@tassilo.jf.intel.com>
-References: <B99D9D85-737A-408A-990A-BAA6F60CC0DD@akamai.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Chris Ryder <chris.ryder@arm.com>
+Subject: [PATCH 0/7] perf annotate: Support for AArch64
+Date: Thu, 19 May 2016 17:59:44 +0100
+Message-ID: <cover.1463676839.git.chris.ryder@arm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:40853 "EHLO mga14.intel.com"
+Received: from foss.arm.com ([217.140.101.70]:36342 "EHLO foss.arm.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753187AbcESBwp convert rfc822-to-8bit (ORCPT
+	id S1755147AbcESRAQ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 18 May 2016 21:52:45 -0400
-In-Reply-To: <B99D9D85-737A-408A-990A-BAA6F60CC0DD@akamai.com> (Nicholas
-	Pavey's message of "Wed, 18 May 2016 15:10:40 +0000")
+	Thu, 19 May 2016 13:00:16 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Pavey, Nicholas" <npavey@akamai.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Chris Ryder <chris.ryder@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
 
-"Pavey, Nicholas" <npavey@akamai.com> writes:
+Hi,
 
-> I=E2=80=99m hoping to read the performance counters to detect cache l=
-ine sharing (both true and false).
->
-> I=E2=80=99ve got the very useful =E2=80=98ocperf=E2=80=99 tool, which=
- gives me a much wider
-> range of symbolic performance counter options. My problem is that the
-> specific programming seems to vary by processor micro-architecture.
+The linux perf tool has some basic support for annotating
+AArch32 branch instructions when displaying assembly. This
+patchset refactors the annotation support to have a cleaner
+separation between architectures, and then adds support for
+annotating AArch64 instructions.
 
-% ocperf.py  list | grep hitm
-  mem_load_uops_l3_hit_retired.xsnp_hitm      [Retired load uops which
-  data sources were HitM responses from shared L3. (Supports PEBS)
-  Errata: HSM26, HSM30]
-    mem_load_uops_l3_miss_retired.remote_hitm   [Retired load uop whose
-  Data Source was: Remote cache HITM (Supports PEBS) Errata: HSM30]
+Comments very welcome, thanks.
+Chris.
 
-If you want to sample you'll likely also want to enable PEBS (:pp)
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 
--Andi
+Chris Ryder (7):
+  perf annotate: Fix identification of ARM blt and bls instructions
+  perf annotate: Sort list of recognised instructions
+  pref annotate: Separate architecture specific annotation support
+  perf annotate: Separate out architecture specific parsing
+  perf annotate: Architecture neutral handling of return instruction
+  perf annotate: Make action message be architecture specific
+  perf annotate: AArch64 support
 
---=20
-ak@linux.intel.com -- Speaking for myself only
+ tools/perf/arch/arm/include/annotate_ins.h   |  27 +++++
+ tools/perf/arch/arm/util/Build               |   2 +
+ tools/perf/arch/arm/util/annotate_ins.c      |  22 ++++
+ tools/perf/arch/arm64/include/annotate_ins.h |  40 +++++++
+ tools/perf/arch/arm64/util/Build             |   2 +
+ tools/perf/arch/arm64/util/annotate_ins.c    |  21 ++++
+ tools/perf/arch/x86/include/annotate_ins.h   |  84 +++++++++++++++
+ tools/perf/arch/x86/util/Build               |   1 +
+ tools/perf/arch/x86/util/annotate_ins.c      |  17 +++
+ tools/perf/config/Makefile                   |  12 +++
+ tools/perf/ui/browsers/annotate.c            |  15 +--
+ tools/perf/util/Build                        |   1 +
+ tools/perf/util/annotate.c                   | 150 +++++++--------------------
+ tools/perf/util/annotate_ins.c               |  21 ++++
+ tools/perf/util/annotate_ins.h               |  17 +++
+ 15 files changed, 313 insertions(+), 119 deletions(-)
+ create mode 100644 tools/perf/arch/arm/include/annotate_ins.h
+ create mode 100644 tools/perf/arch/arm/util/annotate_ins.c
+ create mode 100644 tools/perf/arch/arm64/include/annotate_ins.h
+ create mode 100644 tools/perf/arch/arm64/util/annotate_ins.c
+ create mode 100644 tools/perf/arch/x86/include/annotate_ins.h
+ create mode 100644 tools/perf/arch/x86/util/annotate_ins.c
+ create mode 100644 tools/perf/util/annotate_ins.c
+ create mode 100644 tools/perf/util/annotate_ins.h
+
+-- 
+2.1.4
