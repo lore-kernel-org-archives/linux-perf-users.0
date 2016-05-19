@@ -1,408 +1,88 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 3/7] pref annotate: Separate architecture specific
- annotation support
-Date: Thu, 19 May 2016 16:45:40 -0300
-Message-ID: <20160519194540.GC22286@kernel.org>
-References: <cover.1463676839.git.chris.ryder@arm.com>
- <c7d0aa5a6a8579dc6960adbf9c9e5791a1596241.1463676839.git.chris.ryder@arm.com>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Getting PEBS to work
+Date: Thu, 19 May 2016 15:29:49 -0700
+Message-ID: <CAE40pdfx+LMiwXMZNaLVkT_XsaYFmQQqW5iOr63JnCfOhkFBmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:55716 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932179AbcESTpq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 19 May 2016 15:45:46 -0400
-Content-Disposition: inline
-In-Reply-To: <c7d0aa5a6a8579dc6960adbf9c9e5791a1596241.1463676839.git.chris.ryder@arm.com>
+Received: from mail-io0-f195.google.com ([209.85.223.195]:34027 "EHLO
+	mail-io0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751646AbcESWaU (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Thu, 19 May 2016 18:30:20 -0400
+Received: by mail-io0-f195.google.com with SMTP id d197so5257540ioe.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2016 15:30:19 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Chris Ryder <chris.ryder@arm.com>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Em Thu, May 19, 2016 at 05:59:47PM +0100, Chris Ryder escreveu:
-> Currently the list of instructions recognised by perf annotate
-> contains an intermingled mix of x86 and ARM instructions, and the x86
-> instructions are unconditionally included on all platforms. This means
-> that perf attempts to parse x86 instructions on non-x86 platforms.
-> Refactor the instruction list into per-architecture header files so that
-> only the instructions applicable to the target architecture are parsed.
+G'Day perf-users,
 
-How about annotating a perf.data file collected on ARM on a x86_64
-machine?
+Different Q than my previous email... This is a physical system (Linux
+3.13, Sandy Bridge) that's I think is supposed to have PEBS, but it
+doesn't work. Eg:
 
-I think we should have this keyed by the arch name and have all the
-tables available, using the one we get from the perf.data header.
+# perf record -e r412e:p -c 10000 -a -- sleep 1
+Error:
+'precise' request may not be supported. Try removing 'p' modifier.
+sleep: Terminated
 
-Look at the "[PATCH v4 2/6] perf tools: Promote proper messages for
-cross-platform unwind " patch, it has the bits you need to get the arch
-from the perf.data file header (session->machines->machine->env->arch)
+Maybe I'm doing it wrong? Here's -vv:
 
-I applied the first patch.
+# perf record -vv -e r412e:p -c 10000 -a -- sleep 1
+------------------------------------------------------------
+perf_event_attr:
+  type                4
+  size                96
+  config              0x412e
+  sample_period       10000
+  sample_freq         10000
+  sample_type         0x87
+  read_format         0
+  disabled            1    inherit             1
+  pinned              0    exclusive           0
+  exclude_user        0    exclude_kernel      0
+  exclude_hv          0    exclude_idle        0
+  mmap                1    comm                1
+  freq                0    inherit_stat        0
+  enable_on_exec      0    task                0
+  watermark           0    precise_ip          1
+  mmap_data           0    sample_id_all       1
+  exclude_host        0    exclude_guest       1
+  excl.callchain_kern 0    excl.callchain_user 0
+  mmap2               0
+  wakeup_events       0
+  wakeup_watermark    0
+  bp_type             0
+  bp_addr             0
+  config1             0
+  bp_len              0
+  config2             0
+  branch_sample_type  0
+  sample_regs_user    0
+  sample_stack_user   0
+------------------------------------------------------------
+perf_event_open: pid -1  cpu 0  group_fd -1  flags 0
+perf_event_open failed, error -95
+Error:
+'precise' request may not be supported. Try removing 'p' modifier.
+sleep: Terminated
 
-- Arnaldo
- 
-> Signed-off-by: Chris Ryder <chris.ryder@arm.com>
-> Acked-by: Pawel Moll <pawel.moll@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  tools/perf/arch/arm/include/annotate_ins.h |  25 +++++++
->  tools/perf/arch/x86/include/annotate_ins.h |  82 ++++++++++++++++++++++
->  tools/perf/config/Makefile                 |  11 +++
->  tools/perf/util/annotate.c                 | 105 +++--------------------------
->  tools/perf/util/annotate_ins.h             |  10 +++
->  5 files changed, 136 insertions(+), 97 deletions(-)
->  create mode 100644 tools/perf/arch/arm/include/annotate_ins.h
->  create mode 100644 tools/perf/arch/x86/include/annotate_ins.h
->  create mode 100644 tools/perf/util/annotate_ins.h
-> 
-> diff --git a/tools/perf/arch/arm/include/annotate_ins.h b/tools/perf/arch/arm/include/annotate_ins.h
-> new file mode 100644
-> index 0000000..e8ea98d
-> --- /dev/null
-> +++ b/tools/perf/arch/arm/include/annotate_ins.h
-> @@ -0,0 +1,25 @@
-> +#ifndef ARCH_ANNOTATE_INS_H
-> +#define ARCH_ANNOTATE_INS_H
-> +
-> +#define ARCH_INSTRUCTIONS { \
-> +	{ .name = "add",   .ops  = &mov_ops, }, \
-> +	{ .name = "and",   .ops  = &mov_ops, }, \
-> +	{ .name = "b",     .ops  = &jump_ops, }, /* might also be a call */ \
-> +	{ .name = "bcc",   .ops  = &jump_ops, }, \
-> +	{ .name = "bcs",   .ops  = &jump_ops, }, \
-> +	{ .name = "beq",   .ops  = &jump_ops, }, \
-> +	{ .name = "bge",   .ops  = &jump_ops, }, \
-> +	{ .name = "bgt",   .ops  = &jump_ops, }, \
-> +	{ .name = "bhi",   .ops  = &jump_ops, }, \
-> +	{ .name = "bl",    .ops  = &call_ops, }, \
-> +	{ .name = "bls",   .ops  = &jump_ops, }, \
-> +	{ .name = "blt",   .ops  = &jump_ops, }, \
-> +	{ .name = "blx",   .ops  = &call_ops, }, \
-> +	{ .name = "bne",   .ops  = &jump_ops, }, \
-> +	{ .name = "cmp",   .ops  = &mov_ops, }, \
-> +	{ .name = "mov",   .ops  = &mov_ops, }, \
-> +	{ .name = "nop",   .ops  = &nop_ops, }, \
-> +	{ .name = "orr",   .ops  = &mov_ops, }, \
-> +	}
-> +
-> +#endif /* ARCH_ANNOTATE_INS_H */
-> diff --git a/tools/perf/arch/x86/include/annotate_ins.h b/tools/perf/arch/x86/include/annotate_ins.h
-> new file mode 100644
-> index 0000000..179b50e
-> --- /dev/null
-> +++ b/tools/perf/arch/x86/include/annotate_ins.h
-> @@ -0,0 +1,82 @@
-> +#ifndef ARCH_ANNOTATE_INS_H
-> +#define ARCH_ANNOTATE_INS_H
-> +
-> +#define ARCH_INSTRUCTIONS { \
-> +	{ .name = "add",     .ops  = &mov_ops, }, \
-> +	{ .name = "addl",    .ops  = &mov_ops, }, \
-> +	{ .name = "addq",    .ops  = &mov_ops, }, \
-> +	{ .name = "addw",    .ops  = &mov_ops, }, \
-> +	{ .name = "and",     .ops  = &mov_ops, }, \
-> +	{ .name = "bts",     .ops  = &mov_ops, }, \
-> +	{ .name = "call",    .ops  = &call_ops, }, \
-> +	{ .name = "callq",   .ops  = &call_ops, }, \
-> +	{ .name = "cmp",     .ops  = &mov_ops, }, \
-> +	{ .name = "cmpb",    .ops  = &mov_ops, }, \
-> +	{ .name = "cmpl",    .ops  = &mov_ops, }, \
-> +	{ .name = "cmpq",    .ops  = &mov_ops, }, \
-> +	{ .name = "cmpw",    .ops  = &mov_ops, }, \
-> +	{ .name = "cmpxch",  .ops  = &mov_ops, }, \
-> +	{ .name = "dec",     .ops  = &dec_ops, }, \
-> +	{ .name = "decl",    .ops  = &dec_ops, }, \
-> +	{ .name = "imul",    .ops  = &mov_ops, }, \
-> +	{ .name = "inc",     .ops  = &dec_ops, }, \
-> +	{ .name = "incl",    .ops  = &dec_ops, }, \
-> +	{ .name = "ja",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jae",     .ops  = &jump_ops, }, \
-> +	{ .name = "jb",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jbe",     .ops  = &jump_ops, }, \
-> +	{ .name = "jc",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jcxz",    .ops  = &jump_ops, }, \
-> +	{ .name = "je",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jecxz",   .ops  = &jump_ops, }, \
-> +	{ .name = "jg",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jge",     .ops  = &jump_ops, }, \
-> +	{ .name = "jl",      .ops  = &jump_ops, }, \
-> +	{ .name = "jle",     .ops  = &jump_ops, }, \
-> +	{ .name = "jmp",     .ops  = &jump_ops, }, \
-> +	{ .name = "jmpq",    .ops  = &jump_ops, }, \
-> +	{ .name = "jna",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnae",    .ops  = &jump_ops, }, \
-> +	{ .name = "jnb",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnbe",    .ops  = &jump_ops, }, \
-> +	{ .name = "jnc",     .ops  = &jump_ops, }, \
-> +	{ .name = "jne",     .ops  = &jump_ops, }, \
-> +	{ .name = "jng",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnge",    .ops  = &jump_ops, }, \
-> +	{ .name = "jnl",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnle",    .ops  = &jump_ops, }, \
-> +	{ .name = "jno",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnp",     .ops  = &jump_ops, }, \
-> +	{ .name = "jns",     .ops  = &jump_ops, }, \
-> +	{ .name = "jnz",     .ops  = &jump_ops, }, \
-> +	{ .name = "jo",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jp",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jpe",     .ops  = &jump_ops, }, \
-> +	{ .name = "jpo",     .ops  = &jump_ops, }, \
-> +	{ .name = "jrcxz",   .ops  = &jump_ops, }, \
-> +	{ .name = "js",	     .ops  = &jump_ops, }, \
-> +	{ .name = "jz",	     .ops  = &jump_ops, }, \
-> +	{ .name = "lea",     .ops  = &mov_ops, }, \
-> +	{ .name = "lock",    .ops  = &lock_ops, }, \
-> +	{ .name = "mov",     .ops  = &mov_ops, }, \
-> +	{ .name = "movb",    .ops  = &mov_ops, }, \
-> +	{ .name = "movdqa",  .ops  = &mov_ops, }, \
-> +	{ .name = "movl",    .ops  = &mov_ops, }, \
-> +	{ .name = "movq",    .ops  = &mov_ops, }, \
-> +	{ .name = "movslq",  .ops  = &mov_ops, }, \
-> +	{ .name = "movzbl",  .ops  = &mov_ops, }, \
-> +	{ .name = "movzwl",  .ops  = &mov_ops, }, \
-> +	{ .name = "nop",     .ops  = &nop_ops, }, \
-> +	{ .name = "nopl",    .ops  = &nop_ops, }, \
-> +	{ .name = "nopw",    .ops  = &nop_ops, }, \
-> +	{ .name = "or",      .ops  = &mov_ops, }, \
-> +	{ .name = "orl",     .ops  = &mov_ops, }, \
-> +	{ .name = "test",    .ops  = &mov_ops, }, \
-> +	{ .name = "testb",   .ops  = &mov_ops, }, \
-> +	{ .name = "testl",   .ops  = &mov_ops, }, \
-> +	{ .name = "xadd",    .ops  = &mov_ops, }, \
-> +	{ .name = "xbeginl", .ops  = &jump_ops, }, \
-> +	{ .name = "xbeginq", .ops  = &jump_ops, }, \
-> +	}
-> +
-> +#endif /* ARCH_ANNOTATE_INS_H */
-> diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-> index 1e46277..d3eba89 100644
-> --- a/tools/perf/config/Makefile
-> +++ b/tools/perf/config/Makefile
-> @@ -22,6 +22,7 @@ include $(srctree)/tools/scripts/Makefile.arch
->  $(call detected_var,ARCH)
->  
->  NO_PERF_REGS := 1
-> +NO_ANNOTATE_INS := 1
->  
->  # Additional ARCH settings for x86
->  ifeq ($(ARCH),x86)
-> @@ -35,10 +36,12 @@ ifeq ($(ARCH),x86)
->      LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
->    endif
->    NO_PERF_REGS := 0
-> +  NO_ANNOTATE_INS := 0
->  endif
->  
->  ifeq ($(ARCH),arm)
->    NO_PERF_REGS := 0
-> +  NO_ANNOTATE_INS := 0
->    LIBUNWIND_LIBS = -lunwind -lunwind-arm
->  endif
->  
-> @@ -51,6 +54,10 @@ ifeq ($(NO_PERF_REGS),0)
->    $(call detected,CONFIG_PERF_REGS)
->  endif
->  
-> +ifeq ($(NO_ANNOTATE_INS),0)
-> +  $(call detected,CONFIG_ANNOTATE_INS)
-> +endif
-> +
->  # So far there's only x86 and arm libdw unwind support merged in perf.
->  # Disable it on all other architectures in case libdw unwind
->  # support is detected in system. Add supported architectures
-> @@ -83,6 +90,10 @@ ifeq ($(NO_PERF_REGS),0)
->    CFLAGS += -DHAVE_PERF_REGS_SUPPORT
->  endif
->  
-> +ifeq ($(NO_ANNOTATE_INS),0)
-> +  CFLAGS += -DHAVE_ANNOTATE_INS_SUPPORT
-> +endif
-> +
->  # for linking with debug library, run like:
->  # make DEBUG=1 LIBDW_DIR=/opt/libdw/
->  ifdef LIBDW_DIR
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 619bc27..71c1dd5 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -20,6 +20,7 @@
->  #include <regex.h>
->  #include <pthread.h>
->  #include <linux/bitops.h>
-> +#include "annotate_ins.h"
->  
->  const char 	*disassembler_style;
->  const char	*objdump_path;
-> @@ -107,7 +108,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
->  	return scnprintf(bf, size, "%-6.6s *%" PRIx64, ins->name, ops->target.addr);
->  }
->  
-> -static struct ins_ops call_ops = {
-> +static struct ins_ops call_ops __maybe_unused = {
->  	.parse	   = call__parse,
->  	.scnprintf = call__scnprintf,
->  };
-> @@ -137,7 +138,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
->  	return scnprintf(bf, size, "%-6.6s %" PRIx64, ins->name, ops->target.offset);
->  }
->  
-> -static struct ins_ops jump_ops = {
-> +static struct ins_ops jump_ops __maybe_unused = {
->  	.parse	   = jump__parse,
->  	.scnprintf = jump__scnprintf,
->  };
-> @@ -230,7 +231,7 @@ static void lock__delete(struct ins_operands *ops)
->  	zfree(&ops->target.name);
->  }
->  
-> -static struct ins_ops lock_ops = {
-> +static struct ins_ops lock_ops __maybe_unused = {
->  	.free	   = lock__delete,
->  	.parse	   = lock__parse,
->  	.scnprintf = lock__scnprintf,
-> @@ -298,7 +299,7 @@ static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
->  			 ops->target.name ?: ops->target.raw);
->  }
->  
-> -static struct ins_ops mov_ops = {
-> +static struct ins_ops mov_ops __maybe_unused = {
->  	.parse	   = mov__parse,
->  	.scnprintf = mov__scnprintf,
->  };
-> @@ -339,7 +340,7 @@ static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
->  			 ops->target.name ?: ops->target.raw);
->  }
->  
-> -static struct ins_ops dec_ops = {
-> +static struct ins_ops dec_ops __maybe_unused = {
->  	.parse	   = dec__parse,
->  	.scnprintf = dec__scnprintf,
->  };
-> @@ -350,101 +351,11 @@ static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
->  	return scnprintf(bf, size, "%-6.6s", "nop");
->  }
->  
-> -static struct ins_ops nop_ops = {
-> +static struct ins_ops nop_ops __maybe_unused = {
->  	.scnprintf = nop__scnprintf,
->  };
->  
-> -static struct ins instructions[] = {
-> -	{ .name = "add",   .ops  = &mov_ops, },
-> -	{ .name = "addl",  .ops  = &mov_ops, },
-> -	{ .name = "addq",  .ops  = &mov_ops, },
-> -	{ .name = "addw",  .ops  = &mov_ops, },
-> -	{ .name = "and",   .ops  = &mov_ops, },
-> -#ifdef __arm__
-> -	{ .name = "b",     .ops  = &jump_ops, }, // might also be a call
-> -	{ .name = "bcc",   .ops  = &jump_ops, },
-> -	{ .name = "bcs",   .ops  = &jump_ops, },
-> -	{ .name = "beq",   .ops  = &jump_ops, },
-> -	{ .name = "bge",   .ops  = &jump_ops, },
-> -	{ .name = "bgt",   .ops  = &jump_ops, },
-> -	{ .name = "bhi",   .ops  = &jump_ops, },
-> -	{ .name = "bl",    .ops  = &call_ops, },
-> -	{ .name = "bls",   .ops  = &jump_ops, },
-> -	{ .name = "blt",   .ops  = &jump_ops, },
-> -	{ .name = "blx",   .ops  = &call_ops, },
-> -	{ .name = "bne",   .ops  = &jump_ops, },
-> -#endif
-> -	{ .name = "bts",   .ops  = &mov_ops, },
-> -	{ .name = "call",  .ops  = &call_ops, },
-> -	{ .name = "callq", .ops  = &call_ops, },
-> -	{ .name = "cmp",   .ops  = &mov_ops, },
-> -	{ .name = "cmpb",  .ops  = &mov_ops, },
-> -	{ .name = "cmpl",  .ops  = &mov_ops, },
-> -	{ .name = "cmpq",  .ops  = &mov_ops, },
-> -	{ .name = "cmpw",  .ops  = &mov_ops, },
-> -	{ .name = "cmpxch", .ops  = &mov_ops, },
-> -	{ .name = "dec",   .ops  = &dec_ops, },
-> -	{ .name = "decl",  .ops  = &dec_ops, },
-> -	{ .name = "imul",  .ops  = &mov_ops, },
-> -	{ .name = "inc",   .ops  = &dec_ops, },
-> -	{ .name = "incl",  .ops  = &dec_ops, },
-> -	{ .name = "ja",	   .ops  = &jump_ops, },
-> -	{ .name = "jae",   .ops  = &jump_ops, },
-> -	{ .name = "jb",	   .ops  = &jump_ops, },
-> -	{ .name = "jbe",   .ops  = &jump_ops, },
-> -	{ .name = "jc",	   .ops  = &jump_ops, },
-> -	{ .name = "jcxz",  .ops  = &jump_ops, },
-> -	{ .name = "je",	   .ops  = &jump_ops, },
-> -	{ .name = "jecxz", .ops  = &jump_ops, },
-> -	{ .name = "jg",	   .ops  = &jump_ops, },
-> -	{ .name = "jge",   .ops  = &jump_ops, },
-> -	{ .name = "jl",    .ops  = &jump_ops, },
-> -	{ .name = "jle",   .ops  = &jump_ops, },
-> -	{ .name = "jmp",   .ops  = &jump_ops, },
-> -	{ .name = "jmpq",  .ops  = &jump_ops, },
-> -	{ .name = "jna",   .ops  = &jump_ops, },
-> -	{ .name = "jnae",  .ops  = &jump_ops, },
-> -	{ .name = "jnb",   .ops  = &jump_ops, },
-> -	{ .name = "jnbe",  .ops  = &jump_ops, },
-> -	{ .name = "jnc",   .ops  = &jump_ops, },
-> -	{ .name = "jne",   .ops  = &jump_ops, },
-> -	{ .name = "jng",   .ops  = &jump_ops, },
-> -	{ .name = "jnge",  .ops  = &jump_ops, },
-> -	{ .name = "jnl",   .ops  = &jump_ops, },
-> -	{ .name = "jnle",  .ops  = &jump_ops, },
-> -	{ .name = "jno",   .ops  = &jump_ops, },
-> -	{ .name = "jnp",   .ops  = &jump_ops, },
-> -	{ .name = "jns",   .ops  = &jump_ops, },
-> -	{ .name = "jnz",   .ops  = &jump_ops, },
-> -	{ .name = "jo",	   .ops  = &jump_ops, },
-> -	{ .name = "jp",	   .ops  = &jump_ops, },
-> -	{ .name = "jpe",   .ops  = &jump_ops, },
-> -	{ .name = "jpo",   .ops  = &jump_ops, },
-> -	{ .name = "jrcxz", .ops  = &jump_ops, },
-> -	{ .name = "js",	   .ops  = &jump_ops, },
-> -	{ .name = "jz",	   .ops  = &jump_ops, },
-> -	{ .name = "lea",   .ops  = &mov_ops, },
-> -	{ .name = "lock",  .ops  = &lock_ops, },
-> -	{ .name = "mov",   .ops  = &mov_ops, },
-> -	{ .name = "movb",  .ops  = &mov_ops, },
-> -	{ .name = "movdqa",.ops  = &mov_ops, },
-> -	{ .name = "movl",  .ops  = &mov_ops, },
-> -	{ .name = "movq",  .ops  = &mov_ops, },
-> -	{ .name = "movslq", .ops  = &mov_ops, },
-> -	{ .name = "movzbl", .ops  = &mov_ops, },
-> -	{ .name = "movzwl", .ops  = &mov_ops, },
-> -	{ .name = "nop",   .ops  = &nop_ops, },
-> -	{ .name = "nopl",  .ops  = &nop_ops, },
-> -	{ .name = "nopw",  .ops  = &nop_ops, },
-> -	{ .name = "or",    .ops  = &mov_ops, },
-> -	{ .name = "orl",   .ops  = &mov_ops, },
-> -	{ .name = "test",  .ops  = &mov_ops, },
-> -	{ .name = "testb", .ops  = &mov_ops, },
-> -	{ .name = "testl", .ops  = &mov_ops, },
-> -	{ .name = "xadd",  .ops  = &mov_ops, },
-> -	{ .name = "xbeginl", .ops  = &jump_ops, },
-> -	{ .name = "xbeginq", .ops  = &jump_ops, },
-> -};
-> +static struct ins instructions[] = ARCH_INSTRUCTIONS;
->  
->  static int ins__key_cmp(const void *name, const void *insp)
->  {
-> diff --git a/tools/perf/util/annotate_ins.h b/tools/perf/util/annotate_ins.h
-> new file mode 100644
-> index 0000000..2ec9a05
-> --- /dev/null
-> +++ b/tools/perf/util/annotate_ins.h
-> @@ -0,0 +1,10 @@
-> +#ifndef __ANNOTATE_INS_H
-> +#define __ANNOTATE_INS_H
-> +
-> +#ifdef HAVE_ANNOTATE_INS_SUPPORT
-> +#include <annotate_ins.h>
-> +#else
-> +#define ARCH_INSTRUCTIONS { }
-> +#endif
-> +
-> +#endif /* __ANNOTATE_INS_H */
-> -- 
-> 2.1.4
+This CPU does have DS:
+
+# cpuid -1 | gerp 'debug store'
+      debug store                            = true
+      64-bit debug store                      = true
+      CPL-qualified debug store               = true
+
+And bit 12 of IA32_MISC_ENABLE is 0, which should mean PEBS is supported:
+
+# rdmsr 0x1a0 -f 12:12
+0
+
+Any other way to debug?
+
+I see x86_pmu_hw_config() has been updated since 3.13, so maybe I
+should upgrade the kernel... Thanks,
+
+Brendan
