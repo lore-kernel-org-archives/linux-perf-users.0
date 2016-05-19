@@ -1,29 +1,23 @@
 From: Chris Ryder <chris.ryder@arm.com>
-Subject: [PATCH 0/7] perf annotate: Support for AArch64
-Date: Thu, 19 May 2016 17:59:44 +0100
-Message-ID: <cover.1463676839.git.chris.ryder@arm.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from foss.arm.com ([217.140.101.70]:36342 "EHLO foss.arm.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755147AbcESRAQ (ORCPT
-	<rfc822;linux-perf-users@vger.kernel.org>);
-	Thu, 19 May 2016 13:00:16 -0400
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH 1/7] perf annotate: Fix identification of ARM blt and bls instructions
+Date: Thu, 19 May 2016 17:59:45 +0100
+Message-ID: <560e196b7c79b7ff853caae13d8719a31479cb1a.1463676839.git.chris.ryder@arm.com>
+References: <cover.1463676839.git.chris.ryder@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1463676839.git.chris.ryder@arm.com>
+In-Reply-To: <cover.1463676839.git.chris.ryder@arm.com>
+References: <cover.1463676839.git.chris.ryder@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Chris Ryder <chris.ryder@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
+The ARM blt and bls instructions are not correctly identified when
+parsing assembly because the list of recognised instructions must
+be sorted by name. Swap the ordering of blt and bls.
 
-The linux perf tool has some basic support for annotating
-AArch32 branch instructions when displaying assembly. This
-patchset refactors the annotation support to have a cleaner
-separation between architectures, and then adds support for
-annotating AArch64 instructions.
-
-Comments very welcome, thanks.
-Chris.
-
+Signed-off-by: Chris Ryder <chris.ryder@arm.com>
+Acked-by: Pawel Moll <pawel.moll@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -31,40 +25,23 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chris Ryder (7):
-  perf annotate: Fix identification of ARM blt and bls instructions
-  perf annotate: Sort list of recognised instructions
-  pref annotate: Separate architecture specific annotation support
-  perf annotate: Separate out architecture specific parsing
-  perf annotate: Architecture neutral handling of return instruction
-  perf annotate: Make action message be architecture specific
-  perf annotate: AArch64 support
-
- tools/perf/arch/arm/include/annotate_ins.h   |  27 +++++
- tools/perf/arch/arm/util/Build               |   2 +
- tools/perf/arch/arm/util/annotate_ins.c      |  22 ++++
- tools/perf/arch/arm64/include/annotate_ins.h |  40 +++++++
- tools/perf/arch/arm64/util/Build             |   2 +
- tools/perf/arch/arm64/util/annotate_ins.c    |  21 ++++
- tools/perf/arch/x86/include/annotate_ins.h   |  84 +++++++++++++++
- tools/perf/arch/x86/util/Build               |   1 +
- tools/perf/arch/x86/util/annotate_ins.c      |  17 +++
- tools/perf/config/Makefile                   |  12 +++
- tools/perf/ui/browsers/annotate.c            |  15 +--
- tools/perf/util/Build                        |   1 +
- tools/perf/util/annotate.c                   | 150 +++++++--------------------
- tools/perf/util/annotate_ins.c               |  21 ++++
- tools/perf/util/annotate_ins.h               |  17 +++
- 15 files changed, 313 insertions(+), 119 deletions(-)
- create mode 100644 tools/perf/arch/arm/include/annotate_ins.h
- create mode 100644 tools/perf/arch/arm/util/annotate_ins.c
- create mode 100644 tools/perf/arch/arm64/include/annotate_ins.h
- create mode 100644 tools/perf/arch/arm64/util/annotate_ins.c
- create mode 100644 tools/perf/arch/x86/include/annotate_ins.h
- create mode 100644 tools/perf/arch/x86/util/annotate_ins.c
- create mode 100644 tools/perf/util/annotate_ins.c
- create mode 100644 tools/perf/util/annotate_ins.h
-
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 4db73d5..d197571 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -372,8 +372,8 @@ static struct ins instructions[] = {
+ 	{ .name = "bgt",   .ops  = &jump_ops, },
+ 	{ .name = "bhi",   .ops  = &jump_ops, },
+ 	{ .name = "bl",    .ops  = &call_ops, },
+-	{ .name = "blt",   .ops  = &jump_ops, },
+ 	{ .name = "bls",   .ops  = &jump_ops, },
++	{ .name = "blt",   .ops  = &jump_ops, },
+ 	{ .name = "blx",   .ops  = &call_ops, },
+ 	{ .name = "bne",   .ops  = &jump_ops, },
+ #endif
 -- 
 2.1.4
