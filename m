@@ -1,420 +1,477 @@
-From: Chris Ryder <chris.ryder@arm.com>
-Subject: Re: [PATCH 3/7] pref annotate: Separate architecture specific
- annotation support
-Date: Fri, 20 May 2016 10:44:08 +0100
-Message-ID: <20160520094407.GB26584@arm.com>
-References: <cover.1463676839.git.chris.ryder@arm.com>
- <c7d0aa5a6a8579dc6960adbf9c9e5791a1596241.1463676839.git.chris.ryder@arm.com>
- <20160519194540.GC22286@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: usability issues with inlining and backtraces
+Date: Mon, 23 May 2016 11:10:00 +0200
+Message-ID: <3421510.JYGX19gbWH@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="nextPart15250905.mWTtv9s2Is"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from foss.arm.com ([217.140.101.70]:40157 "EHLO foss.arm.com"
+Received: from mail.kdab.com ([176.9.126.58]:49009 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751199AbcETJoD (ORCPT
+	id S1753758AbcEWJKL (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 20 May 2016 05:44:03 -0400
-Content-Disposition: inline
-In-Reply-To: <20160519194540.GC22286@kernel.org>
+	Mon, 23 May 2016 05:10:11 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: linux-perf-users@vger.kernel.org
 
-On Thu, May 19, 2016 at 04:45:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 19, 2016 at 05:59:47PM +0100, Chris Ryder escreveu:
-> > Currently the list of instructions recognised by perf annotate
-> > contains an intermingled mix of x86 and ARM instructions, and the x86
-> > instructions are unconditionally included on all platforms. This means
-> > that perf attempts to parse x86 instructions on non-x86 platforms.
-> > Refactor the instruction list into per-architecture header files so that
-> > only the instructions applicable to the target architecture are parsed.
-> 
-> How about annotating a perf.data file collected on ARM on a x86_64
-> machine?
-> 
-> I think we should have this keyed by the arch name and have all the
-> tables available, using the one we get from the perf.data header.
+--nextPart15250905.mWTtv9s2Is
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Yes, that would be a better way to go - I'll take a look at doing it
-that way.
+Hey all,
 
-> 
-> Look at the "[PATCH v4 2/6] perf tools: Promote proper messages for
-> cross-platform unwind " patch, it has the bits you need to get the arch
-> from the perf.data file header (session->machines->machine->env->arch)
+I've recently encountered some nasty issues with perf which should - I hope=
+ -=20
+be possible to be fixed.
 
-Thanks for pointing me in the right direction,
-Chris.
+=46irst of all, I learned about `perf report -s sym,srcline`, most notably =
+the=20
+`srcline`, which finally (!) allows me to correlate sample cost directly to=
+=20
+line numbers, without trying to interpret the often quite convoluted output=
+ of=20
+`perf annotate`. But, take the following example code:
 
-> 
-> I applied the first patch.
-> 
-> - Arnaldo
->  
-> > Signed-off-by: Chris Ryder <chris.ryder@arm.com>
-> > Acked-by: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> >  tools/perf/arch/arm/include/annotate_ins.h |  25 +++++++
-> >  tools/perf/arch/x86/include/annotate_ins.h |  82 ++++++++++++++++++++++
-> >  tools/perf/config/Makefile                 |  11 +++
-> >  tools/perf/util/annotate.c                 | 105 +++--------------------------
-> >  tools/perf/util/annotate_ins.h             |  10 +++
-> >  5 files changed, 136 insertions(+), 97 deletions(-)
-> >  create mode 100644 tools/perf/arch/arm/include/annotate_ins.h
-> >  create mode 100644 tools/perf/arch/x86/include/annotate_ins.h
-> >  create mode 100644 tools/perf/util/annotate_ins.h
-> > 
-> > diff --git a/tools/perf/arch/arm/include/annotate_ins.h b/tools/perf/arch/arm/include/annotate_ins.h
-> > new file mode 100644
-> > index 0000000..e8ea98d
-> > --- /dev/null
-> > +++ b/tools/perf/arch/arm/include/annotate_ins.h
-> > @@ -0,0 +1,25 @@
-> > +#ifndef ARCH_ANNOTATE_INS_H
-> > +#define ARCH_ANNOTATE_INS_H
-> > +
-> > +#define ARCH_INSTRUCTIONS { \
-> > +	{ .name = "add",   .ops  = &mov_ops, }, \
-> > +	{ .name = "and",   .ops  = &mov_ops, }, \
-> > +	{ .name = "b",     .ops  = &jump_ops, }, /* might also be a call */ \
-> > +	{ .name = "bcc",   .ops  = &jump_ops, }, \
-> > +	{ .name = "bcs",   .ops  = &jump_ops, }, \
-> > +	{ .name = "beq",   .ops  = &jump_ops, }, \
-> > +	{ .name = "bge",   .ops  = &jump_ops, }, \
-> > +	{ .name = "bgt",   .ops  = &jump_ops, }, \
-> > +	{ .name = "bhi",   .ops  = &jump_ops, }, \
-> > +	{ .name = "bl",    .ops  = &call_ops, }, \
-> > +	{ .name = "bls",   .ops  = &jump_ops, }, \
-> > +	{ .name = "blt",   .ops  = &jump_ops, }, \
-> > +	{ .name = "blx",   .ops  = &call_ops, }, \
-> > +	{ .name = "bne",   .ops  = &jump_ops, }, \
-> > +	{ .name = "cmp",   .ops  = &mov_ops, }, \
-> > +	{ .name = "mov",   .ops  = &mov_ops, }, \
-> > +	{ .name = "nop",   .ops  = &nop_ops, }, \
-> > +	{ .name = "orr",   .ops  = &mov_ops, }, \
-> > +	}
-> > +
-> > +#endif /* ARCH_ANNOTATE_INS_H */
-> > diff --git a/tools/perf/arch/x86/include/annotate_ins.h b/tools/perf/arch/x86/include/annotate_ins.h
-> > new file mode 100644
-> > index 0000000..179b50e
-> > --- /dev/null
-> > +++ b/tools/perf/arch/x86/include/annotate_ins.h
-> > @@ -0,0 +1,82 @@
-> > +#ifndef ARCH_ANNOTATE_INS_H
-> > +#define ARCH_ANNOTATE_INS_H
-> > +
-> > +#define ARCH_INSTRUCTIONS { \
-> > +	{ .name = "add",     .ops  = &mov_ops, }, \
-> > +	{ .name = "addl",    .ops  = &mov_ops, }, \
-> > +	{ .name = "addq",    .ops  = &mov_ops, }, \
-> > +	{ .name = "addw",    .ops  = &mov_ops, }, \
-> > +	{ .name = "and",     .ops  = &mov_ops, }, \
-> > +	{ .name = "bts",     .ops  = &mov_ops, }, \
-> > +	{ .name = "call",    .ops  = &call_ops, }, \
-> > +	{ .name = "callq",   .ops  = &call_ops, }, \
-> > +	{ .name = "cmp",     .ops  = &mov_ops, }, \
-> > +	{ .name = "cmpb",    .ops  = &mov_ops, }, \
-> > +	{ .name = "cmpl",    .ops  = &mov_ops, }, \
-> > +	{ .name = "cmpq",    .ops  = &mov_ops, }, \
-> > +	{ .name = "cmpw",    .ops  = &mov_ops, }, \
-> > +	{ .name = "cmpxch",  .ops  = &mov_ops, }, \
-> > +	{ .name = "dec",     .ops  = &dec_ops, }, \
-> > +	{ .name = "decl",    .ops  = &dec_ops, }, \
-> > +	{ .name = "imul",    .ops  = &mov_ops, }, \
-> > +	{ .name = "inc",     .ops  = &dec_ops, }, \
-> > +	{ .name = "incl",    .ops  = &dec_ops, }, \
-> > +	{ .name = "ja",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jae",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jb",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jbe",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jc",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jcxz",    .ops  = &jump_ops, }, \
-> > +	{ .name = "je",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jecxz",   .ops  = &jump_ops, }, \
-> > +	{ .name = "jg",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jge",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jl",      .ops  = &jump_ops, }, \
-> > +	{ .name = "jle",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jmp",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jmpq",    .ops  = &jump_ops, }, \
-> > +	{ .name = "jna",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnae",    .ops  = &jump_ops, }, \
-> > +	{ .name = "jnb",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnbe",    .ops  = &jump_ops, }, \
-> > +	{ .name = "jnc",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jne",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jng",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnge",    .ops  = &jump_ops, }, \
-> > +	{ .name = "jnl",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnle",    .ops  = &jump_ops, }, \
-> > +	{ .name = "jno",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnp",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jns",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jnz",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jo",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jp",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jpe",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jpo",     .ops  = &jump_ops, }, \
-> > +	{ .name = "jrcxz",   .ops  = &jump_ops, }, \
-> > +	{ .name = "js",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "jz",	     .ops  = &jump_ops, }, \
-> > +	{ .name = "lea",     .ops  = &mov_ops, }, \
-> > +	{ .name = "lock",    .ops  = &lock_ops, }, \
-> > +	{ .name = "mov",     .ops  = &mov_ops, }, \
-> > +	{ .name = "movb",    .ops  = &mov_ops, }, \
-> > +	{ .name = "movdqa",  .ops  = &mov_ops, }, \
-> > +	{ .name = "movl",    .ops  = &mov_ops, }, \
-> > +	{ .name = "movq",    .ops  = &mov_ops, }, \
-> > +	{ .name = "movslq",  .ops  = &mov_ops, }, \
-> > +	{ .name = "movzbl",  .ops  = &mov_ops, }, \
-> > +	{ .name = "movzwl",  .ops  = &mov_ops, }, \
-> > +	{ .name = "nop",     .ops  = &nop_ops, }, \
-> > +	{ .name = "nopl",    .ops  = &nop_ops, }, \
-> > +	{ .name = "nopw",    .ops  = &nop_ops, }, \
-> > +	{ .name = "or",      .ops  = &mov_ops, }, \
-> > +	{ .name = "orl",     .ops  = &mov_ops, }, \
-> > +	{ .name = "test",    .ops  = &mov_ops, }, \
-> > +	{ .name = "testb",   .ops  = &mov_ops, }, \
-> > +	{ .name = "testl",   .ops  = &mov_ops, }, \
-> > +	{ .name = "xadd",    .ops  = &mov_ops, }, \
-> > +	{ .name = "xbeginl", .ops  = &jump_ops, }, \
-> > +	{ .name = "xbeginq", .ops  = &jump_ops, }, \
-> > +	}
-> > +
-> > +#endif /* ARCH_ANNOTATE_INS_H */
-> > diff --git a/tools/perf/config/Makefile b/tools/perf/config/Makefile
-> > index 1e46277..d3eba89 100644
-> > --- a/tools/perf/config/Makefile
-> > +++ b/tools/perf/config/Makefile
-> > @@ -22,6 +22,7 @@ include $(srctree)/tools/scripts/Makefile.arch
-> >  $(call detected_var,ARCH)
-> >  
-> >  NO_PERF_REGS := 1
-> > +NO_ANNOTATE_INS := 1
-> >  
-> >  # Additional ARCH settings for x86
-> >  ifeq ($(ARCH),x86)
-> > @@ -35,10 +36,12 @@ ifeq ($(ARCH),x86)
-> >      LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
-> >    endif
-> >    NO_PERF_REGS := 0
-> > +  NO_ANNOTATE_INS := 0
-> >  endif
-> >  
-> >  ifeq ($(ARCH),arm)
-> >    NO_PERF_REGS := 0
-> > +  NO_ANNOTATE_INS := 0
-> >    LIBUNWIND_LIBS = -lunwind -lunwind-arm
-> >  endif
-> >  
-> > @@ -51,6 +54,10 @@ ifeq ($(NO_PERF_REGS),0)
-> >    $(call detected,CONFIG_PERF_REGS)
-> >  endif
-> >  
-> > +ifeq ($(NO_ANNOTATE_INS),0)
-> > +  $(call detected,CONFIG_ANNOTATE_INS)
-> > +endif
-> > +
-> >  # So far there's only x86 and arm libdw unwind support merged in perf.
-> >  # Disable it on all other architectures in case libdw unwind
-> >  # support is detected in system. Add supported architectures
-> > @@ -83,6 +90,10 @@ ifeq ($(NO_PERF_REGS),0)
-> >    CFLAGS += -DHAVE_PERF_REGS_SUPPORT
-> >  endif
-> >  
-> > +ifeq ($(NO_ANNOTATE_INS),0)
-> > +  CFLAGS += -DHAVE_ANNOTATE_INS_SUPPORT
-> > +endif
-> > +
-> >  # for linking with debug library, run like:
-> >  # make DEBUG=1 LIBDW_DIR=/opt/libdw/
-> >  ifdef LIBDW_DIR
-> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > index 619bc27..71c1dd5 100644
-> > --- a/tools/perf/util/annotate.c
-> > +++ b/tools/perf/util/annotate.c
-> > @@ -20,6 +20,7 @@
-> >  #include <regex.h>
-> >  #include <pthread.h>
-> >  #include <linux/bitops.h>
-> > +#include "annotate_ins.h"
-> >  
-> >  const char 	*disassembler_style;
-> >  const char	*objdump_path;
-> > @@ -107,7 +108,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
-> >  	return scnprintf(bf, size, "%-6.6s *%" PRIx64, ins->name, ops->target.addr);
-> >  }
-> >  
-> > -static struct ins_ops call_ops = {
-> > +static struct ins_ops call_ops __maybe_unused = {
-> >  	.parse	   = call__parse,
-> >  	.scnprintf = call__scnprintf,
-> >  };
-> > @@ -137,7 +138,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
-> >  	return scnprintf(bf, size, "%-6.6s %" PRIx64, ins->name, ops->target.offset);
-> >  }
-> >  
-> > -static struct ins_ops jump_ops = {
-> > +static struct ins_ops jump_ops __maybe_unused = {
-> >  	.parse	   = jump__parse,
-> >  	.scnprintf = jump__scnprintf,
-> >  };
-> > @@ -230,7 +231,7 @@ static void lock__delete(struct ins_operands *ops)
-> >  	zfree(&ops->target.name);
-> >  }
-> >  
-> > -static struct ins_ops lock_ops = {
-> > +static struct ins_ops lock_ops __maybe_unused = {
-> >  	.free	   = lock__delete,
-> >  	.parse	   = lock__parse,
-> >  	.scnprintf = lock__scnprintf,
-> > @@ -298,7 +299,7 @@ static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
-> >  			 ops->target.name ?: ops->target.raw);
-> >  }
-> >  
-> > -static struct ins_ops mov_ops = {
-> > +static struct ins_ops mov_ops __maybe_unused = {
-> >  	.parse	   = mov__parse,
-> >  	.scnprintf = mov__scnprintf,
-> >  };
-> > @@ -339,7 +340,7 @@ static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
-> >  			 ops->target.name ?: ops->target.raw);
-> >  }
-> >  
-> > -static struct ins_ops dec_ops = {
-> > +static struct ins_ops dec_ops __maybe_unused = {
-> >  	.parse	   = dec__parse,
-> >  	.scnprintf = dec__scnprintf,
-> >  };
-> > @@ -350,101 +351,11 @@ static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
-> >  	return scnprintf(bf, size, "%-6.6s", "nop");
-> >  }
-> >  
-> > -static struct ins_ops nop_ops = {
-> > +static struct ins_ops nop_ops __maybe_unused = {
-> >  	.scnprintf = nop__scnprintf,
-> >  };
-> >  
-> > -static struct ins instructions[] = {
-> > -	{ .name = "add",   .ops  = &mov_ops, },
-> > -	{ .name = "addl",  .ops  = &mov_ops, },
-> > -	{ .name = "addq",  .ops  = &mov_ops, },
-> > -	{ .name = "addw",  .ops  = &mov_ops, },
-> > -	{ .name = "and",   .ops  = &mov_ops, },
-> > -#ifdef __arm__
-> > -	{ .name = "b",     .ops  = &jump_ops, }, // might also be a call
-> > -	{ .name = "bcc",   .ops  = &jump_ops, },
-> > -	{ .name = "bcs",   .ops  = &jump_ops, },
-> > -	{ .name = "beq",   .ops  = &jump_ops, },
-> > -	{ .name = "bge",   .ops  = &jump_ops, },
-> > -	{ .name = "bgt",   .ops  = &jump_ops, },
-> > -	{ .name = "bhi",   .ops  = &jump_ops, },
-> > -	{ .name = "bl",    .ops  = &call_ops, },
-> > -	{ .name = "bls",   .ops  = &jump_ops, },
-> > -	{ .name = "blt",   .ops  = &jump_ops, },
-> > -	{ .name = "blx",   .ops  = &call_ops, },
-> > -	{ .name = "bne",   .ops  = &jump_ops, },
-> > -#endif
-> > -	{ .name = "bts",   .ops  = &mov_ops, },
-> > -	{ .name = "call",  .ops  = &call_ops, },
-> > -	{ .name = "callq", .ops  = &call_ops, },
-> > -	{ .name = "cmp",   .ops  = &mov_ops, },
-> > -	{ .name = "cmpb",  .ops  = &mov_ops, },
-> > -	{ .name = "cmpl",  .ops  = &mov_ops, },
-> > -	{ .name = "cmpq",  .ops  = &mov_ops, },
-> > -	{ .name = "cmpw",  .ops  = &mov_ops, },
-> > -	{ .name = "cmpxch", .ops  = &mov_ops, },
-> > -	{ .name = "dec",   .ops  = &dec_ops, },
-> > -	{ .name = "decl",  .ops  = &dec_ops, },
-> > -	{ .name = "imul",  .ops  = &mov_ops, },
-> > -	{ .name = "inc",   .ops  = &dec_ops, },
-> > -	{ .name = "incl",  .ops  = &dec_ops, },
-> > -	{ .name = "ja",	   .ops  = &jump_ops, },
-> > -	{ .name = "jae",   .ops  = &jump_ops, },
-> > -	{ .name = "jb",	   .ops  = &jump_ops, },
-> > -	{ .name = "jbe",   .ops  = &jump_ops, },
-> > -	{ .name = "jc",	   .ops  = &jump_ops, },
-> > -	{ .name = "jcxz",  .ops  = &jump_ops, },
-> > -	{ .name = "je",	   .ops  = &jump_ops, },
-> > -	{ .name = "jecxz", .ops  = &jump_ops, },
-> > -	{ .name = "jg",	   .ops  = &jump_ops, },
-> > -	{ .name = "jge",   .ops  = &jump_ops, },
-> > -	{ .name = "jl",    .ops  = &jump_ops, },
-> > -	{ .name = "jle",   .ops  = &jump_ops, },
-> > -	{ .name = "jmp",   .ops  = &jump_ops, },
-> > -	{ .name = "jmpq",  .ops  = &jump_ops, },
-> > -	{ .name = "jna",   .ops  = &jump_ops, },
-> > -	{ .name = "jnae",  .ops  = &jump_ops, },
-> > -	{ .name = "jnb",   .ops  = &jump_ops, },
-> > -	{ .name = "jnbe",  .ops  = &jump_ops, },
-> > -	{ .name = "jnc",   .ops  = &jump_ops, },
-> > -	{ .name = "jne",   .ops  = &jump_ops, },
-> > -	{ .name = "jng",   .ops  = &jump_ops, },
-> > -	{ .name = "jnge",  .ops  = &jump_ops, },
-> > -	{ .name = "jnl",   .ops  = &jump_ops, },
-> > -	{ .name = "jnle",  .ops  = &jump_ops, },
-> > -	{ .name = "jno",   .ops  = &jump_ops, },
-> > -	{ .name = "jnp",   .ops  = &jump_ops, },
-> > -	{ .name = "jns",   .ops  = &jump_ops, },
-> > -	{ .name = "jnz",   .ops  = &jump_ops, },
-> > -	{ .name = "jo",	   .ops  = &jump_ops, },
-> > -	{ .name = "jp",	   .ops  = &jump_ops, },
-> > -	{ .name = "jpe",   .ops  = &jump_ops, },
-> > -	{ .name = "jpo",   .ops  = &jump_ops, },
-> > -	{ .name = "jrcxz", .ops  = &jump_ops, },
-> > -	{ .name = "js",	   .ops  = &jump_ops, },
-> > -	{ .name = "jz",	   .ops  = &jump_ops, },
-> > -	{ .name = "lea",   .ops  = &mov_ops, },
-> > -	{ .name = "lock",  .ops  = &lock_ops, },
-> > -	{ .name = "mov",   .ops  = &mov_ops, },
-> > -	{ .name = "movb",  .ops  = &mov_ops, },
-> > -	{ .name = "movdqa",.ops  = &mov_ops, },
-> > -	{ .name = "movl",  .ops  = &mov_ops, },
-> > -	{ .name = "movq",  .ops  = &mov_ops, },
-> > -	{ .name = "movslq", .ops  = &mov_ops, },
-> > -	{ .name = "movzbl", .ops  = &mov_ops, },
-> > -	{ .name = "movzwl", .ops  = &mov_ops, },
-> > -	{ .name = "nop",   .ops  = &nop_ops, },
-> > -	{ .name = "nopl",  .ops  = &nop_ops, },
-> > -	{ .name = "nopw",  .ops  = &nop_ops, },
-> > -	{ .name = "or",    .ops  = &mov_ops, },
-> > -	{ .name = "orl",   .ops  = &mov_ops, },
-> > -	{ .name = "test",  .ops  = &mov_ops, },
-> > -	{ .name = "testb", .ops  = &mov_ops, },
-> > -	{ .name = "testl", .ops  = &mov_ops, },
-> > -	{ .name = "xadd",  .ops  = &mov_ops, },
-> > -	{ .name = "xbeginl", .ops  = &jump_ops, },
-> > -	{ .name = "xbeginq", .ops  = &jump_ops, },
-> > -};
-> > +static struct ins instructions[] = ARCH_INSTRUCTIONS;
-> >  
-> >  static int ins__key_cmp(const void *name, const void *insp)
-> >  {
-> > diff --git a/tools/perf/util/annotate_ins.h b/tools/perf/util/annotate_ins.h
-> > new file mode 100644
-> > index 0000000..2ec9a05
-> > --- /dev/null
-> > +++ b/tools/perf/util/annotate_ins.h
-> > @@ -0,0 +1,10 @@
-> > +#ifndef __ANNOTATE_INS_H
-> > +#define __ANNOTATE_INS_H
-> > +
-> > +#ifdef HAVE_ANNOTATE_INS_SUPPORT
-> > +#include <annotate_ins.h>
-> > +#else
-> > +#define ARCH_INSTRUCTIONS { }
-> > +#endif
-> > +
-> > +#endif /* __ANNOTATE_INS_H */
-> > -- 
-> > 2.1.4
-> 
+~~~~~~~~~~~~
+#include <complex>
+#include <cmath>
+#include <random>
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    uniform_real_distribution<double> uniform(-1E5, 1E5);
+    default_random_engine engine;
+    double s =3D 0;
+    for (int i =3D 0; i < 1000000; ++i) {
+        s +=3D norm(complex<double>(uniform(engine), uniform(engine)));
+    }
+    cout << s << '\n';
+    return 0;
+}
+~~~~~~~~~~~~
+
+Compile it with
+
+    g++ -std=3Dc++11 -g -O2 test.cpp
+
+Then profile it with perf:
+
+    perf record --call-graph dwarf
+
+########## perf report backtraces in face of inlining
+
+Now let us go through the the output of the report with srcline enabled:
+
+~~~~~~~~~~~~
+    perf report --stdio -s sym,srcline --no-children
+
+    21.07%  [.] main                   random.tcc:3332
+            |
+            ---__libc_start_main
+               _start
+    20.30%  [.] main                   random.h:143
+            |
+            ---__libc_start_main
+               _start
+~~~~~~~~~~~~
+
+Here, the cost of inlined functions (random.tcc:3332,random.h:143) is=20
+attributed to the main function. This is of course correct, but very unhelp=
+ful=20
+to me as a programmer. I'm much more interested in the line inside test.cpp=
+=20
+which triggered the call to random.tcc:3332 etc. Is there a way to get that=
+=20
+data? Note how you can a way better backtrace when using GDB on the same=20
+binary as above:=20
+
+~~~~~~~~~~~~
+    gdb a.out
+    break random.tcc:3332
+    run
+Breakpoint 1, std::generate_canonical<double, 53ul,=20
+std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> =
+>=20
+(__urng=3D...) at /usr/include/c++/6.1.1/bits/random.tcc:3332
+3332                  __sum +=3D _RealType(__urng() - __urng.min()) * __tmp;
+(gdb) bt
+#0  std::generate_canonical<double, 53ul,=20
+std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> =
+>=20
+(__urng=3D...) at /usr/include/c++/6.1.1/bits/random.tcc:3332
+#1  std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long,=
+=20
+16807ul, 0ul, 2147483647ul>, double>::operator() (this=3D<optimized out>)
+    at /usr/include/c++/6.1.1/bits/random.h:185
+#2 =20
+std::uniform_real_distribution<double>::operator()<std::linear_congruential=
+_engine<unsigned=20
+long, 16807ul, 0ul, 2147483647ul> > (this=3D<optimized out>, __p=3D...,=20
+__urng=3D...)
+    at /usr/include/c++/6.1.1/bits/random.h:1818
+#3 =20
+std::uniform_real_distribution<double>::operator()<std::linear_congruential=
+_engine<unsigned=20
+long, 16807ul, 0ul, 2147483647ul> > (__urng=3D<synthetic pointer>,=20
+this=3D<synthetic pointer>)
+    at /usr/include/c++/6.1.1/bits/random.h:1809
+#4  main () at test.cpp:14
+~~~~~~~~~~~~
+
+Why is perf (or is it libunwind?) not capable of getting the same backtrace?
+
+######### srcline in perf report backtraces
+
+If we continue with the `perf report` output from the command above, we'll
+eventually see:
+
+~~~~~~~~~~~~
+
+     4.60%  [.] main                   test.cpp:14
+            |
+            ---__libc_start_main
+               _start
+
+     3.63%  [.] __hypot_finite         __hypot_finite+257
+            |
+            ---hypot
+               main
+               __libc_start_main
+               _start
+
+     3.25%  [.] hypot                  hypot+55
+            |
+            ---main
+               __libc_start_main
+               _start
+
+     3.21%  [.] __hypot_finite         __hypot_finite+152
+            |
+            ---hypot
+               main
+               __libc_start_main
+               _start
+
+     2.63%  [.] __hypot_finite         __hypot_finite+66
+            |
+            ---hypot
+               main
+=2E.. continued
+~~~~~~~~~
+
+Here, I have again a few things to note:
+
+On one hand, we have the same issue as above, namely inlined functions bein=
+g=20
+attributed directly to the parent function. See how the backtrace shows mai=
+n=20
+calling hypot? Look at the source, I'm not calling hypot anywhere - it's=20
+std::norm calling it internally eventually. And GDB does know about that an=
+d=20
+can give me a proper backtrace.
+
+But, differently to above, the major gripe I have with this output is=20
+exemplified by this part:
+
+~~~~~~~~~
+     3.63%  [.] __hypot_finite         __hypot_finite+257
+            |
+            ---hypot
+               main
+               __libc_start_main
+               _start
+~~~~~~~~~
+
+I added `srcline` to the report, but the backtrace still only contains the=
+=20
+symbol name. I hope, that we can simply honor srcline there as well, to at=
+=20
+least print something like this instead:
+
+~~~~~~~~~
+     3.63%  [.] __hypot_finite         __hypot_finite+257
+            |
+            ---hypot
+               main at test.cpp:14 ### <-- srcline here as well please?
+               __libc_start_main
+               _start
+~~~~~~~~~
+
+Is there a reason why this was not yet implemented? If not, then I'll prepa=
+re=20
+a patch for that, as I hope this to be easy to implement.
+
+########## symbol cost aggregation
+
+Once we have that implemented, can we maybe account for the following: I to=
+ld=20
+`perf report` to aggregate by symbol first, then srcline, i.e. `-s=20
+sym,srcline`. But the report seems to aggregate by `srcline`, because I see=
+=20
+some symbols (__hypot_finite) multiple times, for different code points. Ca=
+n=20
+we merge those and start the backtrace then at the different code points?=20
+Something like this would be my desirable output:
+
+~~~~~~~~
+# see above for what I actually get, here I'm accumulating manually
+$ perf report --stdio -s sym,srcline --no-children |grep __hypot_finite+ | =
+awk=20
+'{sum+=3D$1}END{print sum}'
+34.96
+# this is what I would like to get directly
+$ perf report --stdio -s sym,srcline --no-children=20
+=2E..
+34.96%  [.] __hypot_finite
+            |
+     3.63%  | __hypot_finite         __hypot_finite+257
+            - ...
+     3.21%  | __hypot_finite         __hypot_finite+152
+            - ...
+     ...
+~~~~~~~~~
+
+What do you think?
+
+####### perf annotate for mere mortals
+
+To conclude this already long email, I want to raise the mess that is `perf=
+=20
+annotate`. If I run it on my above data file, I get the following output:
+
+~~~~~~~~~
+  1.23 =E2=94=82       mulsd  0x2f2(%rip),%xmm0        # 400bd0 <_IO_stdin_=
+used+0x20>
+  2.47 =E2=94=82       subsd  0x2f2(%rip),%xmm0        # 400bd8 <_IO_stdin_=
+used+0x28>
+       =E2=94=82     _ZSt13__complex_absCd():
+       =E2=94=82     #if _GLIBCXX_USE_C99_COMPLEX
+       =E2=94=82       inline float
+       =E2=94=82       __complex_abs(__complex__ float __z) { return=20
+__builtin_cabsf(__z); }
+       =E2=94=82
+       =E2=94=82       inline double
+       =E2=94=82       __complex_abs(__complex__ double __z) { return=20
+__builtin_cabs(__z); }
+  1.23 =E2=94=82     =E2=86=92 callq  cabs@plt
+       =E2=94=82     _ZNSt12_Norm_helperILb1EE8_S_do_itIdEET_RKSt7complexIS=
+2_E():
+       =E2=94=82         {
+       =E2=94=82           template<typename _Tp>
+       =E2=94=82             static inline _Tp _S_do_it(const complex<_Tp>&=
+ __z)
+       =E2=94=82             {
+       =E2=94=82               _Tp __res =3D std::abs(__z);
+       =E2=94=82               return __res * __res;
+       =E2=94=82       mulsd  %xmm0,%xmm0
+       =E2=94=82     main():
+       =E2=94=82         for (int i =3D 0; i < 1000000; ++i) {
+  1.23 =E2=94=82       sub    $0x1,%ebp
+       =E2=94=82             s +=3D norm(complex<double>(uniform(engine),=20
+uniform(engine)));
+  7.41 =E2=94=82       addsd  0x8(%rsp),%xmm0
+       =E2=94=82       movsd  %xmm0,0x8(%rsp)
+       =E2=94=82     int main()
+       =E2=94=82     {
+       =E2=94=82         uniform_real_distribution<double> uniform(-1E5, 1E=
+5);
+       =E2=94=82         default_random_engine engine;
+       =E2=94=82         double s =3D 0;
+       =E2=94=82         for (int i =3D 0; i < 1000000; ++i) {
+       =E2=94=82     =E2=86=93 je     24e
+       =E2=94=82    =20
+_ZNSt8__detail4_ModImLm2147483647ELm16807ELm0ELb1ELb1EE6__calcEm():
+       =E2=94=82           struct _Mod<_Tp, __m, __a, __c, true, __s>
+       =E2=94=82           {
+       =E2=94=82             static _Tp
+       =E2=94=82             __calc(_Tp __x)
+       =E2=94=82             {
+       =E2=94=82               _Tp __res =3D __a * __x + __c;
+       =E2=94=82194:   imul   $0x41a7,%rbx,%rbx
+
+~~~~~~~
+
+I personally think this output is extremely hard to interpret. I see the va=
+lue=20
+of the above output when you want to look at the cost of hot computational=
+=20
+kernels, but for most user space applications the above is pretty much=20
+useless. Most notably, note that the above shows self cost only and I could=
+=20
+not find a way to trigger inclusive cost visualization. It makes me believe=
+=20
+that the addition of the complex norms is the most costly operation in my=20
+code. That is not true, the inclusive cost of the random engine as well as=
+=20
+actually computing the norm is way higher, i.e. I see
+
+   1.23 =E2=94=82     =E2=86=92 callq  cabs@plt
+
+but from the output of `perf report` above that triggers the calls to=20
+`__hypot` which have close to 40% of the cost.
+
+As such, I propose a "simplified" `perf annotate` output, which gets closer=
+ to=20
+what you'll see in other profilers, e.g. VTune or also Microsoft Visual=20
+studio's sampling profilers: Use the source files and annotate those with=20
+inclusive cost. Only show the cost of individual binary instructions (statu=
+s=20
+quo) when explicitly asked. I.e. I want the output to look something like t=
+hat=20
+(I made up the actual percentages):
+
+~~~~~~~~~
+        #include <complex>
+        #include <cmath>
+        #include <random>
+        #include <iostream>
+
+        using namespace std;
+
+        int main()
+        {
+1%          uniform_real_distribution<double> uniform(-1E5, 1E5);
+1%          default_random_engine engine;
+            double s =3D 0;
+1%          for (int i =3D 0; i < 1000000; ++i) {
+95%            s +=3D norm(complex<double>(uniform(engine), uniform(engine)=
+));
+            }
+2%          cout << s << '\n';
+            return 0;
+        }
+~~~~~~~~~
+
+Bonus points if I could then navigate to a source line and dig deeper (i.e.=
+=20
+see the instructions for this line and then jump to a function that is bein=
+g=20
+called e.g.).
+
+Thanks a lot for reading this far. Please note that I really like perf, I j=
+ust=20
+have trouble teaching people using it as many things are really really hard=
+=20
+and I hope we can work together to make perf much easier to use!
+
+Thanks
+=2D-=20
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart15250905.mWTtv9s2Is
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE2MDUyMzA5MTAwMFowIwYJKoZIhvcNAQkEMRYEFNObBHYerfgM8DscT6S9L/xgsBQ7MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALCJ
+NUDBwOldqMRLJhjlCaMo9/YKi9xAW7cTmYml4/2PCqVqJAi0lHe/oZHlMHPRJLF7Stv8zCH5QtpT
+U/553jQ9tVX2lBz8YzNRU0v2BkOSOcBTZV4fD4e0ULu0GZVo9qMPdt0b1Q5oiShI679ocb/6D7wz
+zeesqqQijdirqVL9xML+//N4RkTK4b3Ca+KeWrrJoOnX9nkua2NNvo8UWiwm5ztVTxopFtNl+8hH
+VZOCIQ3Pl0keyXaIxV0vjrDIgfIWXYu4GMfPr6dUgnN7WN4vi4lcWmzhcx3lNrzho6Eurb4zrOpR
+lV5TehTdWQ6gLJEqpmps/JmnhnsFtacUFMMAAAAAAAA=
+
+
+--nextPart15250905.mWTtv9s2Is--
