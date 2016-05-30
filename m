@@ -1,67 +1,44 @@
-From: fche@redhat.com (Frank Ch. Eigler)
-Subject: Re: perf trace & vfs_getname
-Date: Wed, 25 May 2016 14:00:22 -0400
-Message-ID: <y0m1t4qqaq1.fsf@fche.csb>
-References: <3503612.0WeV8glAT3@agathebauer>
-	<20160524222107.GA8857@kernel.org>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH-REBASED 0/2] report perf sampling failing due to PMU lacking overflow intr support
+Date: Mon, 30 May 2016 17:01:44 +0530
+Message-ID: <1464607906-16012-1-git-send-email-vgupta@synopsys.com>
+References: <alpine.DEB.2.20.1605121903470.18777@macbook-air>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:52733 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755003AbcEYSAV (ORCPT
+Received: from smtprelay4.synopsys.com ([198.182.47.9]:40537 "EHLO
+	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933060AbcE3LcM (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 25 May 2016 14:00:21 -0400
-In-Reply-To: <20160524222107.GA8857@kernel.org> (Arnaldo Carvalho de Melo's message of "Tue, 24 May 2016 19:21:07 -0300")
+	Mon, 30 May 2016 07:32:12 -0400
+In-Reply-To: <alpine.DEB.2.20.1605121903470.18777@macbook-air>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org, acme@redhat.com, linux-kernel@vger.kernel.org, mingo@kernel.org, vincent.weaver@maine.edu, linux-snps-arc@lists.infradead.org, Alexey.Brodkin@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+
+Hi,
+
+This is a repost of RFC [1], rebased on 4.7-rc1, to print pretty PMU lacking
+overflow interrupt support if user tries perf sampling.
+
+At the time of RFC review, both PeterZ and Vince seemed convinced to go ahead
+with this patch despite the ABI change [2].
+
+Thx,
+-Vineet
 
 
-acme wrote:
+[1] http://lists.infradead.org/pipermail/linux-snps-arc/2016-May/001014.html
+[2] http://lists.infradead.org/pipermail/linux-snps-arc/2016-May/001032.html
 
-> [...]
->> I just wanted to try out your ongoing work to get file names printed in perf 
->> trace:
->> 
->> $ perf trace -e open ls builtin-trace.c
->>      0.007 ( 0.007 ms): ls/26364 open(filename: 0x2a1b0d20, flags: CLOEXEC
->> ) = -1 ENOENT No such file or directorybuiltin-trace.c
->> [...]
+Vineet Gupta (2):
+  tools/perf: Handle EOPNOTSUPP for sampling events
+  perf/core: change errno for sampling event not supported in hardware
 
-> For 'perf trace' to be a superset of strace it needs to pretty print
-> syscall args other than integers, and for that we need things like the
-> vfs_getname, or to go and look at several places where those syscalls
-> are copied to the kernel (move_addr_to_kernel, gename_flags), and back
-> (move_addr_to_user), etc.
+ kernel/events/core.c    | 2 +-
+ tools/perf/util/evsel.c | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-In systemtap's case, we copy from userspace & pretty-print right from
-the event where we detect the system call, not via a secondary
-tracepoint like vfs_getname that would need to have its values
-saved/coordinated.
-
-
-> [...]  Arch? I never tried it, would have to google for instructions
-> on how to use, say, systemtap [...]
-
-FYI, Arch is (in)famous for dropping debuginfo completely.  Systemtap
-can work out-of-the-box based on symbol table info only, but many
-users end up recompiling their kernel with CONFIG_DEBUG_INFO=1 to get
-the full capabilities.
-
-Just as demo, this may work for you (including file names):
-
-# stap -e '
-probe nd_syscall.* { printf("%s/%d %s(%s) ", execname(), tid(), name, argstr) }
-probe nd_syscall.*.return { printf("-> %s\n", retstr) }
-'
-
-... which is the core of what
-
-     /usr/share/doc/systemtap*/examples/*/strace.stp
-
-does, sans process-filtering and other goodies.
-
-
-- FChE
+-- 
+2.5.0
