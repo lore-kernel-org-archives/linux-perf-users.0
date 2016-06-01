@@ -1,49 +1,41 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH-REBASED 1/2] tools/perf: Handle EOPNOTSUPP for sampling events
-Date: Mon, 30 May 2016 17:01:45 +0530
-Message-ID: <1464607906-16012-2-git-send-email-vgupta@synopsys.com>
-References: <alpine.DEB.2.20.1605121903470.18777@macbook-air>
- <1464607906-16012-1-git-send-email-vgupta@synopsys.com>
+From: "Kelly, Mark (RIS-BCT)" <Mark.Kelly@lexisnexis.com>
+Subject: spin_lock cause ?
+Date: Wed, 1 Jun 2016 13:05:40 -0400
+Message-ID: <574F15E4.5070008@lexisnexis.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+  charset="utf-8";
+  format=flowed
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:58294 "EHLO
-	smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933060AbcE3LcQ (ORCPT
+Received: from risk-out02.rsi.lexisnexis.com ([209.243.59.74]:60916 "EHLO
+	RISK-OUT02.rsi.lexisnexis.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752732AbcFARQI (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 30 May 2016 07:32:16 -0400
-In-Reply-To: <1464607906-16012-1-git-send-email-vgupta@synopsys.com>
+	Wed, 1 Jun 2016 13:16:08 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org, acme@redhat.com, linux-kernel@vger.kernel.org, mingo@kernel.org, vincent.weaver@maine.edu, linux-snps-arc@lists.infradead.org, Alexey.Brodkin@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
 
-This allows (with next change to perf core) for calling out in userspace
-the exact reason for perf record failing when PMU doesn't support
-overflow interrupts
-
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- tools/perf/util/evsel.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5d7037ef7d3b..1578e67c7357 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2372,6 +2372,13 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
- 	 "No such device - did you specify an out-of-range profile CPU?");
- 		break;
- 	case EOPNOTSUPP:
-+		/*
-+		 * Needs to be tested ahead of precise_ip check as
-+		 * that seems to be true for this case as well
-+		 */
-+		if (evsel->attr.sample_period != 0)
-+			return scnprintf(msg, size, "%s",
-+	"PMU Hardware doesn't support sampling/overflow-interrupts.");
- 		if (evsel->attr.precise_ip)
- 			return scnprintf(msg, size, "%s",
- 	"\'precise\' request may not be supported. Try removing 'p' modifier.");
--- 
-2.5.0
+SGksCgpQZXJmIHJlcG9ydCBmb3Igb3VyIGFwcGxpY2F0aW9uIHNob3dzOgoKICAzNC4yNyUgIFtr
+ZXJuZWxdICAgICAgICAgICAgICAgICAgICBba10gX3NwaW5fbG9jawogICA4LjE5JSAgbGliamxp
+Yi5zbyAgICAgICAgICAgICAgICAgIFsuXSBDTFpXRXhwYW5kZXI6OmV4cGFuZCh2b2lkKikKICAg
+NC42MiUgIGxpYmpodHJlZS5zbyAgICAgICAgICAgICAgICBbLl0gQ01SVUNhY2hlT2Y8Q0tleUlk
+QW5kUG9zLCBDSkhUcmVlTm9kZT4KICAgMS45NyUgIFtrZXJuZWxdICAgICAgICAgICAgICAgICAg
+ICBba10gZnV0ZXhfd2FpdF9zZXR1cAogICAxLjUxJSAgW2tlcm5lbF0gICAgICAgICAgICAgICAg
+ICAgIFtrXSBuYXRpdmVfd3JpdGVfbXNyX3NhZmUKICAgMS4zNCUgIFtrZXJuZWxdICAgICAgICAg
+ICAgICAgICAgICBba10gZnV0ZXhfd2FrZQoKQW55IHN1Z2dlc3Rpb24gZm9yIGhvdyB0byB0cmFj
+ZSB3aGVyZS93aG8gaXMgcmVzcG9uc2libGUgZm9yIHRoZSBzcGluX2xvY2sgPwoKdGhhbmsgeW91
+IGluIGFkdmFuY2UsCm1hcmsKCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLSBUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgaXMg
+aW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbmFsIGFuZCBjb25maWRlbnRpYWwgdXNlIG9mIHRo
+ZSByZWNpcGllbnQocykgbmFtZWQgYWJvdmUuIFRoaXMgbWVzc2FnZSBtYXkgYmUgYW4gYXR0b3Ju
+ZXktY2xpZW50IGNvbW11bmljYXRpb24gYW5kL29yIHdvcmsgcHJvZHVjdCBhbmQgYXMgc3VjaCBp
+cyBwcml2aWxlZ2VkIGFuZCBjb25maWRlbnRpYWwuIElmIHRoZSByZWFkZXIgb2YgdGhpcyBtZXNz
+YWdlIGlzIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IG9yIGFuIGFnZW50IHJlc3BvbnNpYmxl
+IGZvciBkZWxpdmVyaW5nIGl0IHRvIHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHlvdSBhcmUgaGVy
+ZWJ5IG5vdGlmaWVkIHRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBkb2N1bWVudCBpbiBlcnJv
+ciBhbmQgdGhhdCBhbnkgcmV2aWV3LCBkaXNzZW1pbmF0aW9uLCBkaXN0cmlidXRpb24sIG9yIGNv
+cHlpbmcgb2YgdGhpcyBtZXNzYWdlIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBoYXZl
+IHJlY2VpdmVkIHRoaXMgY29tbXVuaWNhdGlvbiBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB1cyBp
+bW1lZGlhdGVseSBieSBlLW1haWwsIGFuZCBkZWxldGUgdGhlIG9yaWdpbmFsIG1lc3NhZ2UuICAK
