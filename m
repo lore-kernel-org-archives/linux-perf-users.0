@@ -1,41 +1,44 @@
-From: "Kelly, Mark (RIS-BCT)" <Mark.Kelly@lexisnexis.com>
-Subject: spin_lock cause ?
-Date: Wed, 1 Jun 2016 13:05:40 -0400
-Message-ID: <574F15E4.5070008@lexisnexis.com>
+From: M Kelly <mark.kelly@lexisnexis.com>
+Subject: =?utf-8?b?X3NwaW5fbG9jaw==?= origin ?
+Date: Wed, 1 Jun 2016 17:14:43 +0000 (UTC)
+Message-ID: <loom.20160601T191324-906@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-  charset="utf-8";
-  format=flowed
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from risk-out02.rsi.lexisnexis.com ([209.243.59.74]:60916 "EHLO
-	RISK-OUT02.rsi.lexisnexis.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752732AbcFARQI (ORCPT
+Received: from plane.gmane.org ([80.91.229.3]:42179 "EHLO plane.gmane.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753715AbcFARUK (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 1 Jun 2016 13:16:08 -0400
+	Wed, 1 Jun 2016 13:20:10 -0400
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
+	id 1b89oM-0004R4-9j
+	for linux-perf-users@vger.kernel.org; Wed, 01 Jun 2016 19:20:06 +0200
+Received: from 209.243.55.99 ([209.243.55.99])
+        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2016 19:20:06 +0200
+Received: from mark.kelly by 209.243.55.99 with local (Gmexim 0.1 (Debian))
+        id 1AlnuQ-0007hv-00
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2016 19:20:06 +0200
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-SGksCgpQZXJmIHJlcG9ydCBmb3Igb3VyIGFwcGxpY2F0aW9uIHNob3dzOgoKICAzNC4yNyUgIFtr
-ZXJuZWxdICAgICAgICAgICAgICAgICAgICBba10gX3NwaW5fbG9jawogICA4LjE5JSAgbGliamxp
-Yi5zbyAgICAgICAgICAgICAgICAgIFsuXSBDTFpXRXhwYW5kZXI6OmV4cGFuZCh2b2lkKikKICAg
-NC42MiUgIGxpYmpodHJlZS5zbyAgICAgICAgICAgICAgICBbLl0gQ01SVUNhY2hlT2Y8Q0tleUlk
-QW5kUG9zLCBDSkhUcmVlTm9kZT4KICAgMS45NyUgIFtrZXJuZWxdICAgICAgICAgICAgICAgICAg
-ICBba10gZnV0ZXhfd2FpdF9zZXR1cAogICAxLjUxJSAgW2tlcm5lbF0gICAgICAgICAgICAgICAg
-ICAgIFtrXSBuYXRpdmVfd3JpdGVfbXNyX3NhZmUKICAgMS4zNCUgIFtrZXJuZWxdICAgICAgICAg
-ICAgICAgICAgICBba10gZnV0ZXhfd2FrZQoKQW55IHN1Z2dlc3Rpb24gZm9yIGhvdyB0byB0cmFj
-ZSB3aGVyZS93aG8gaXMgcmVzcG9uc2libGUgZm9yIHRoZSBzcGluX2xvY2sgPwoKdGhhbmsgeW91
-IGluIGFkdmFuY2UsCm1hcmsKCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLSBUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgaXMg
-aW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbmFsIGFuZCBjb25maWRlbnRpYWwgdXNlIG9mIHRo
-ZSByZWNpcGllbnQocykgbmFtZWQgYWJvdmUuIFRoaXMgbWVzc2FnZSBtYXkgYmUgYW4gYXR0b3Ju
-ZXktY2xpZW50IGNvbW11bmljYXRpb24gYW5kL29yIHdvcmsgcHJvZHVjdCBhbmQgYXMgc3VjaCBp
-cyBwcml2aWxlZ2VkIGFuZCBjb25maWRlbnRpYWwuIElmIHRoZSByZWFkZXIgb2YgdGhpcyBtZXNz
-YWdlIGlzIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IG9yIGFuIGFnZW50IHJlc3BvbnNpYmxl
-IGZvciBkZWxpdmVyaW5nIGl0IHRvIHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHlvdSBhcmUgaGVy
-ZWJ5IG5vdGlmaWVkIHRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBkb2N1bWVudCBpbiBlcnJv
-ciBhbmQgdGhhdCBhbnkgcmV2aWV3LCBkaXNzZW1pbmF0aW9uLCBkaXN0cmlidXRpb24sIG9yIGNv
-cHlpbmcgb2YgdGhpcyBtZXNzYWdlIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBoYXZl
-IHJlY2VpdmVkIHRoaXMgY29tbXVuaWNhdGlvbiBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB1cyBp
-bW1lZGlhdGVseSBieSBlLW1haWwsIGFuZCBkZWxldGUgdGhlIG9yaWdpbmFsIG1lc3NhZ2UuICAK
+Hi,
+
+Perf report for our application shows:
+
+ 34.27%  [kernel]                    [k] _spin_lock
+  8.19%  libjlib.so                  [.] CLZWExpander::expand(void*)
+  4.62%  libjhtree.so                [.] CMRUCacheOf<CKeyIdAndPos, 
+CJHTreeNode>
+  1.97%  [kernel]                    [k] futex_wait_setup
+  1.51%  [kernel]                    [k] native_write_msr_safe
+  1.34%  [kernel]                    [k] futex_wake
+
+Any suggestion for how to trace where/who is responsible for the spin_lock ?
+
+thank you in advance,
+mark 
