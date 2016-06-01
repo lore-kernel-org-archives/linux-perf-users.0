@@ -1,96 +1,36 @@
-From: M Kelly <mark.kelly@lexisnexis.com>
-Subject: Re: =?utf-8?b?c3Bpbl9sb2Nr?= cause ?
-Date: Wed, 1 Jun 2016 18:49:01 +0000 (UTC)
-Message-ID: <loom.20160601T204307-459@post.gmane.org>
-References: <574F15E4.5070008@lexisnexis.com> <4716588.WReR5L1Wkn@milian-kdab2> <loom.20160601T194103-83@post.gmane.org> <20160601181153.GU2563@kernel.org>
+From: Rick Jones <rick.jones2@hpe.com>
+Subject: Re: spin_lock cause ?
+Date: Wed, 1 Jun 2016 11:53:20 -0700
+Message-ID: <574F2F20.2090007@hpe.com>
+References: <574F15E4.5070008@lexisnexis.com>
+ <4716588.WReR5L1Wkn@milian-kdab2> <loom.20160601T194103-83@post.gmane.org>
+ <20160601181153.GU2563@kernel.org> <loom.20160601T204307-459@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:47628 "EHLO plane.gmane.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751148AbcFAStM (ORCPT
+Received: from g2t1383g.austin.hpe.com ([15.233.16.89]:31261 "EHLO
+	g2t1383g.austin.hpe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750824AbcFATCE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Wed, 1 Jun 2016 14:49:12 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1b8BCV-0004gV-5v
-	for linux-perf-users@vger.kernel.org; Wed, 01 Jun 2016 20:49:07 +0200
-Received: from 209.243.55.99 ([209.243.55.99])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2016 20:49:07 +0200
-Received: from mark.kelly by 209.243.55.99 with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2016 20:49:07 +0200
+	Wed, 1 Jun 2016 15:02:04 -0400
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by g2t1383g.austin.hpe.com (Postfix) with ESMTPS id 6C690BF5
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2016 18:53:22 +0000 (UTC)
+In-Reply-To: <loom.20160601T204307-459@post.gmane.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: M Kelly <mark.kelly@lexisnexis.com>, linux-perf-users@vger.kernel.org
 
-Arnaldo Carvalho de Melo <acme <at> kernel.org> writes:
+On 06/01/2016 11:49 AM, M Kelly wrote:
+> So that is helpful.
+> I do not understand the system_call_fastpath->futex->_spin_lock part yet,
+> but that is a separate issue!
 
-> No need for DWARF if you want to know what leads to the spinlock just up
-> to the syscall layer or if your userland components have frame pointers.
+Just a guess, but if your application is using threads, contention on 
+the synchonrization primitives you use to keep things straight can 
+end-up punting to the kernel.
 
-Hi,
-
-ok, I rebuilt our app using -fno-omit-frame-pointer 
-and did the perf record -g and when looking at the 
-report output I now see:
-
-    40.90%  thorslave_mytho  [kernel.kallsyms]                   [k] _spin_lock                                                                       
-            |
-            --- _spin_lock
-               |          
-               |--49.11%-- futex_wake
-               |          do_futex
-               |          sys_futex
-               |          system_call_fastpath
-               |          __lll_unlock_wake
-               |          |          
-               |          |--99.81%-- CKeyCursor::gtEqual(char const*, char*, bool)
-               |          |          _ZN16CKeyLevelManager7_lookupEbj.constprop.100
-               |
-               |--44.31%-- futex_wait_setup
-               |          futex_wait
-               |          do_futex
-               |          sys_futex
-               |          system_call_fastpath
-               |          __lll_lock_wait
-               |          |          
-               |          |--99.83%-- CKeyCursor::gtEqual(char const*, char*, bool)
-               |          |          _ZN16CKeyLevelManager7_lookupEbj.constprop.100
-               |
-               |--5.46%-- task_rq_lock
-               |          try_to_wake_up
-               |          |          
-               |          |--99.98%-- wake_up_state
-               |          |          wake_futex
-               |          |          futex_wake
-               |          |          do_futex
-               |          |          sys_futex
-               |          |          system_call_fastpath
-               |          |          __lll_unlock_wake
-               |          |          |          
-               |          |          |--99.75%-- CKeyCursor::gtEqual(char const*, char*, bool)
-               |          |          |          _ZN16CKeyLevelManager7_lookupEbj.constprop.100
-               |          
-               |--0.73%-- try_to_wake_up
-               |          |          
-               |          |--99.83%-- wake_up_state
-               |          |          wake_futex
-               |          |          futex_wake
-               |          |          do_futex
-               |          |          sys_futex
-               |          |          system_call_fastpath
-               |          |          __lll_unlock_wake
-               |          |          |          
-               |          |          |--99.88%-- CKeyCursor::gtEqual(char const*, char*, bool)
-               |          |          |          _ZN16CKeyLevelManager7_lookupEbj.constprop.100
-
-So that is helpful.  
-I do not understand the system_call_fastpath->futex->_spin_lock part yet, 
-but that is a separate issue!
-
-thanks so much,
-mark
+rick jones
