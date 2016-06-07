@@ -1,65 +1,77 @@
-From: Jose <jose.sgarcia.aldonza@gmail.com>
-Subject: Re: IPC sampling
-Date: Fri, 3 Jun 2016 15:23:52 +0000 (UTC)
-Message-ID: <loom.20160603T171204-784@post.gmane.org>
-References: <loom.20160603T134548-395@post.gmane.org> <87oa7imiyt.fsf@tassilo.jf.intel.com>
+From: "Sebastian, Shiny" <shiny.sebastian@intel.com>
+Subject: Perf report --percentage
+Date: Tue, 7 Jun 2016 19:21:15 +0000
+Message-ID: <6076A35470B38B408600AA0E3B4A31E767471A9E@ORSMSX114.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from plane.gmane.org ([80.91.229.3]:34598 "EHLO plane.gmane.org"
+Received: from mga11.intel.com ([192.55.52.93]:59183 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751147AbcFCPYO (ORCPT
+	id S1753912AbcFGTW3 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 3 Jun 2016 11:24:14 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <glkpu-linux-perf-users@m.gmane.org>)
-	id 1b8qxH-0000Ih-75
-	for linux-perf-users@vger.kernel.org; Fri, 03 Jun 2016 17:24:11 +0200
-Received: from 90.168.7.87 ([90.168.7.87])
-        by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2016 17:24:11 +0200
-Received: from jose.sgarcia.aldonza by 90.168.7.87 with local (Gmexim 0.1 (Debian))
-        id 1AlnuQ-0007hv-00
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2016 17:24:11 +0200
+	Tue, 7 Jun 2016 15:22:29 -0400
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-
-Andi Kleen <andi <at> firstfloor.org> writes:
-
-> 
-> Jose <jose.sgarcia.aldonza <at> gmail.com> writes:
-> >
-> > My problem now is that I don't know how to obtain "cycles" and
-> > "instructions" from perf.data file. I have tried several options using "perf
-> > report" and "perf script" but I don't achieve it.
-> 
-> perf record -e '{instructions,cycles}:S' ...
-> perf script
-> 
-> This means sample on cycles, but always read instructions too during the
-sample.
-> Then match up the values with the same time stamp from perf script and
-> calculate ipc, or use a perf script interpreted script to do so.
-> 
-> -Andi
-> 
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
 
-Good! 
+Hi,
+=A0
+I work with Intel and am running perf tool within Linux VMs on Windows =
+Hyper-V. =A0With kernel 4.6 and corresponding perf version, percentages=
+ of call stacks at deeper levels  do not seem to add up to 100% or pare=
+nt value (26.97%): example below. I have tried the -percentage flag wit=
+h both 'absolute' and 'relative' values and they don't seem to change t=
+he output at all. Is this a bug or something wrong with my perf flags ?
 
-Two additional questions:
+Commands used:
+#perf record=A0 -a -g -c 10000 sleep 10
+#perf report -i cpu3.data.old -C 1 --no-children
 
-- If using '{cycles,instructions}:S', is sampling on instructions? Sometimes
-I'm interested to sample on number of instructions.
+-   27.48%  fio          [kernel.kallsyms]  [k] __softirqentry_text_sta=
+rt
+     __softirqentry_text_start
+   - irq_exit
+      - 26.97% smp_call_function_single_interrupt
+         - call_function_single_interrupt
+            + 4.21% __blk_run_queue
+            + 4.09% hv_ringbuffer_write
+            + 1.83% 0x99c
+            + 1.78% __blockdev_direct_IO
+            + 0.96% do_blockdev_direct_IO
+            + 0.95% generic_make_request
+            + 0.86% blk_queue_bio
+            + 0.70% iov_iter_get_pages
+            + 0.64% md_make_request
+            + 0.55% do_io_submit
+              0.51% entry_SYSCALL_64_fastpath
+      + 0.51% hyperv_vector_handler
 
-I don't find information about option :S from man pages. Is there a manual
-with much more information?
 
-- Could you provide more information (links, an example, ...) on "perf
-script interpreted script"
+Older version: Perf version 4.2 on kernel 4.2 - seems to normalize them=
+ to 100%.=A0
+    27.69%  swapper          [kernel.kallsyms]            [k] intel_idl=
+e
+                    |
+                    ---intel_idle
+                       |
+                       |--99.84%-- cpuidle_enter_state
+                       |          cpuidle_enter
+                       |          call_cpuidle
+                       |          cpu_startup_entry
+                       |          |
+                       |          |--97.27%-- start_secondary
+                       |          |
+                       |           --2.73%-- rest_init
+                       |                     start_kernel
+                       |                     x86_64_start_reservations
+                       |                     x86_64_start_kernel
+                        --0.16%-- [...]
 
-Thanks
-Jose
+
+I am running SLES 12.=20
+
+Thanks,
+Shiny
