@@ -1,55 +1,39 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf segfault in docker container
-Date: Fri, 10 Jun 2016 17:15:19 -0300
-Message-ID: <20160610201519.GE3826@kernel.org>
-References: <CAE40pdfWpz6rreOCMJCs1P8WXfOXO_B5zZoeOyC_5usYGp8xRQ@mail.gmail.com>
+From: Brian Robbins <brianrob@microsoft.com>
+Subject: C++ Demangling in Perf Backtraces
+Date: Fri, 10 Jun 2016 23:08:03 +0000
+Message-ID: <CO2PR00MB00855E5836D39D8CA5A49B3FC8500@CO2PR00MB0085.namprd00.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:60066 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751382AbcFJUPZ (ORCPT
+Received: from mail-by2on0113.outbound.protection.outlook.com ([207.46.100.113]:61509
+	"EHLO na01-by2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1751918AbcFJXi5 convert rfc822-to-8bit (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 10 Jun 2016 16:15:25 -0400
-Content-Disposition: inline
-In-Reply-To: <CAE40pdfWpz6rreOCMJCs1P8WXfOXO_B5zZoeOyC_5usYGp8xRQ@mail.gmail.com>
+	Fri, 10 Jun 2016 19:38:57 -0400
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Thu, Jun 09, 2016 at 02:14:11PM -0700, Brendan Gregg escreveu:
-> G'Day,
-> 
-> Default docker container, in Linux 4.7-rc2, with latest perf from perf/core:
-> 
-> docker# ./perf record -F 99 -a
-> Segmentation fault
-> 
-> The segfault is in perf_event__synthesize_kernel_mmap(). I know
-> symbol__read_kptr_restrict() has been updated recently to fix similar
-> segfaults, hence getting perf/core.
-> 
-> I think the problem is this:
-> 
-> docker# id
-> uid=0(root) gid=0(root) groups=0(root)
-> docker# cat /proc/sys/kernel/kptr_restrict
-> 1
-> 
-> (I'd previously set "echo -1 > /proc/sys/kernel/perf_event_paranoid")
-> 
-> The current (May 24) code has, symbol__read_kptr_restrict():
-> 
->                 if (fgets(line, sizeof(line), fp) != NULL)
->                         value = (geteuid() != 0) ?
->                                         (atoi(line) != 0) :
->                                         (atoi(line) == 2);
-> 
-> assumes that if euid is 0 && kptr_restrict isn't 2, then we're aren't
-> restricted. But we are. Maybe the code should check for CAP_SYS_ADMIN,
-> instead of euid == 0?
+Hello,
 
-Ack, reproduced will work on it. Thanks for the report.
+When using perf to collect data with backtraces, I've noticed that none of the C++ symbols in our binaries get de-mangled properly, so they end up looking like these:
 
-- Arnaldo
+	_ZN18MethodDescCallSite16CallTargetWorkerEPKm
+	_ZNK10SigPointer24PeekValueTypeTokenClosedEP6ModulePK14SigTypeContextPS1_
+	_ZL31ManagedThreadBase_DispatchOuterP22ManagedThreadCallState
+	_ZN17ManagedThreadBase10ThreadPoolE4ADIDPFvPvES1_
+	_Z23CopyValueClassUncheckedPvS_P11MethodTable
+	_ZN13ThreadpoolMgr17WorkerThreadStartEPv
+	_ZN11ClassLoader24LoadApproxParentThrowingEP6ModulejP10SigPointerPK14SigTypeContext
+
+If I debug the same application with the same binaries using lldb for example, the symbols get demangled properly.
+
+Are there any known issues or pitfalls that I might be encountering here?
+
+I've tried various versions perf - the latest that I've tried is: perf version 4.2.8-ckt1
+
+Thanks in advance,
+-Brian
