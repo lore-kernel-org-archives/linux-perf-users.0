@@ -1,137 +1,173 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: Perf report --percentage
-Date: Mon, 13 Jun 2016 13:01:36 +0200
-Message-ID: <1492589.8RtTsSktH8@agathebauer>
-References: <6076A35470B38B408600AA0E3B4A31E767471A9E@ORSMSX114.amr.corp.intel.com> <1739457.PENJkRDNvS@agathebauer> <20160612135526.GA16671@danjae.aot.lge.com>
+Subject: Re: usability issues with inlining and backtraces
+Date: Mon, 13 Jun 2016 18:07:13 +0200
+Message-ID: <3237195.qkayrO3A0T@milian-kdab2>
+References: <3421510.JYGX19gbWH@milian-kdab2> <871t4s251x.fsf@tassilo.jf.intel.com> <7872019.1GQhL8td4o@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6306007.S9o3xb2RLr"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart3620702.UjRroCNELz"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:52011 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:41235 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S964790AbcFMLBl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 13 Jun 2016 07:01:41 -0400
-In-Reply-To: <20160612135526.GA16671@danjae.aot.lge.com>
+	id S1424288AbcFMQHU (ORCPT
+	<rfc822;linux-perf-users@vger.kernel.org>);
+	Mon, 13 Jun 2016 12:07:20 -0400
+In-Reply-To: <7872019.1GQhL8td4o@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: namhyung@kernel.org
-Cc: shiny.sebastian@intel.com, linux-perf-users@vger.kernel.org
+To: andi@firstfloor.org
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart6306007.S9o3xb2RLr
+--nextPart3620702.UjRroCNELz
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Sonntag, 12. Juni 2016 22:55:26 CEST Namhyung Kim wrote:
-> Hi Milian,
+Ping?
+
+Andi, I'd be very interested in your answers on my questions below. Most 
+notably, `srcline` with `--call-graph ...,address` seems to be highly buggy 
+for me.
+
+Thanks
+
+On Monday, May 23, 2016 5:18:53 PM CEST Milian Wolff wrote:
+> On Monday, May 23, 2016 7:59:54 AM CEST Andi Kleen wrote:
+> > Milian Wolff <milian.wolff@kdab.com> writes:
+> > > Here, the cost of inlined functions (random.tcc:3332,random.h:143) is
+> > > attributed to the main function. This is of course correct, but very
+> > > unhelpful to me as a programmer. I'm much more interested in the line
+> > > inside test.cpp which triggered the call to random.tcc:3332 etc. Is
+> > > there
+> > > a way to get that data? Note how you can a way better backtrace when
+> > > using GDB on the same
+> > 
+> > > binary as above:
+> > Yes this works using --call-graph ...,address
+> > 
+> > If you use srcfile it can resolve inlines. it is currently not supported
+> > for other backtraces, but yes expanding them in the normal history
+> > would be useful.
 > 
-> On Sat, Jun 11, 2016 at 01:53:34PM +0200, Milian Wolff wrote:
-> > On Samstag, 11. Juni 2016 17:31:48 CEST Namhyung Kim wrote:
-> > > Hello,
-> > > 
-> > > On Wed, Jun 08, 2016 at 04:21:43PM +0000, Sebastian, Shiny wrote:
-> > > > Thanks Milian. I added -g graph,0 and it did add lot more percentages
-> > > > -
-> > > > it's still not adding up though.
-> > > > 
-> > > > #perf report -C 1 --no-children -g graph,0
-> > > 
-> > > I think it's because you used -C option to restrict samples only from
-> > > cpu 1.  One way to check this is adding 'cpu' to sort keys and compare
-> > > sample count and callchain count.
-> > > 
-> > > What is the result of this command?
-> > > 
-> > >   # perf report -C 1 --no-children -g graph,0,count -n -s +cpu
-> > 
-> > If that is the case, how would you explain my findings? Note how I did not
-> > pass `-C 1`, and still missed up to 90% of backtraces:
-> > 
-> > $ perf report --no-children -g fractal,0
-> > 
-> > -    9.47%  kwrite           ld-2.23.so                     [.]
-> > do_lookup_x
-> > 
-> >    + 23.31% do_lookup_x
-> > 
-> > -    7.06%  kwrite           ld-2.23.so                     [.] strcmp
-> > 
-> >    + 9.06% strcmp
-> > 
-> > +    5.71%  kwrite           ld-2.23.so                     [.]
-> > check_match
+> Can you expand on this part a bit please? It's the first time I realize that
+> I can add a sort key to `--call-graph`, so at the very least this shows
+> that the defaults are bad.
 > 
-> Hmm.. I have no idea.  Could you please show me the count of
-> callchains with following command?
+> For the example I'm now trying this:
 > 
->   $ perf report --no-children -g graph,0,count -n
+>     $ perf report -g graph,address -s sym,srcline --no-children --stdio
+> 
+> # Overhead  Symbol                       Source:Line
+> # ........  ...........................  ..................
+> #
+>     21.82%  [.] main                     random.tcc:3332
+> 
+>             |--3.84%--main +8388740
+>             |
+>             |          __libc_start_main +140389813309681
+>             |          _start +8388649
+>             | 
+>             | ...
+> 
+>      6.29%  [.] __hypot_finite           __hypot_finite+152
+> 
+>             ---hypot +140389819301908
+>                main +8388987
+>                __libc_start_main +140389813309681
+>                _start +8388649
+> 
+> -> much better, but still unusable backtraces. And my `perf report` only
+> allows this:
+> 
+>     sort_key:       call graph sort key (function|address)
+> 
+> So we need to add support for "|srcline" here as well?
+> 
+> > > On one hand, we have the same issue as above, namely inlined functions
+> > > being attributed directly to the parent function. See how the backtrace
+> > > shows main calling hypot? Look at the source, I'm not calling hypot
+> > > anywhere - it's std::norm calling it internally eventually. And GDB does
+> > > know about that and can give me a proper backtrace.
+> > 
+> > Use srcfile then.
+> 
+> See above, can you please extend this answer a bit? How would you use
+> srcfile, and where, to get the full backtrace? Is that maybe a patch that
+> is not yet included in acme's perf/core branch?
+> 
+> > > But, differently to above, the major gripe I have with this output is
+> > > exemplified by this part:
+> > > 
+> > > ~~~~~~~~~
+> > > 
+> > >      3.63%  [.] __hypot_finite         __hypot_finite+257
+> > >      
+> > >             ---hypot
+> > >             
+> > >                main
+> > >                __libc_start_main
+> > >                _start
+> > > 
+> > > ~~~~~~~~~
+> > > 
+> > > I added `srcline` to the report, but the backtrace still only contains
+> > > the
+> > > symbol name. I hope, that we can simply honor srcline there as well, to
+> > > at
+> > 
+> > > least print something like this instead:
+> > --call-graph ....,address
+> > 
+> > (or --branch-history)
+> 
+> Both produce output like I've shown above, i.e. they always put down
+> 
+>   <symbol> +<offset>
+> 
+> insetead of using the much more useable
+> 
+>   <symbol> <file>:<line>
+> 
+> format. What am I missing?
+> 
+> > > ########## symbol cost aggregation
+> > > 
+> > > Once we have that implemented, can we maybe account for the following: I
+> > > told `perf report` to aggregate by symbol first, then srcline, i.e. `-s
+> > > sym,srcline`. But the report seems to aggregate by `srcline`, because I
+> > > see some symbols (__hypot_finite) multiple times, for different code
+> > > points. Can we merge those and start the backtrace then at the different
+> > > code points?
+> > 
+> > > Something like this would be my desirable output:
+> > perf sorts by address, but the compiler can generate the same symbol
+> > in multiple versions or in may inlines instances. That's probably
+> > more work to fix.
+> > 
+> > > As such, I propose a "simplified" `perf annotate` output, which gets
+> > > closer to what you'll see in other profilers, e.g. VTune or also
+> > > Microsoft Visual studio's sampling profilers: Use the source files and
+> > > annotate those with inclusive cost. Only show the cost of individual
+> > > binary instructions (status quo) when explicitly asked. I.e. I want the
+> > > output to look something like that
+> > 
+> > > (I made up the actual percentages):
+> > Sounds like the fallacy of abstracted performance analysis.
+> 
+> Can you please elaborate that some more as well? For me, as a user-space
+> application developer, getting an aggregated inclusive cost for the source
+> code I actually write is extremely useful. Of course, when it's not directly
+> clear from that view why something is slow I still need to dig deeper and
+> get to the current in-depth assembly view. But why is having a simplified
+> overview a fallacy? Why is this abstracted performance analysis?
+> 
+> Thanks a lot for your input!
 
--   12.43%           252  kwrite           ld-2.23.so                     [.]
-do_lookup_x
-     51 do_lookup_x
-      + _dl_lookup_symbol_x
--   10.46%           223  kwrite           ld-2.23.so                     [.] 
-strcmp
-   + 37 strcmp
--    8.66%           175  kwrite           ld-2.23.so                     [.] 
-check_match
-     44 check_match
-        do_lookup_x
-      + _dl_lookup_symbol_x
 
-Note that I could not reproduce that on a different machine of mine.
-
-> Also it'd be great if you double check the output of 'perf script' to
-> ensure all the samples have callchains..
-
-Quite a few samples don't have callchains:
-
-kwrite 14838 31462.912726:     222759 cycles:u: 
-
-kwrite 14838 31462.913158:     207623 cycles:u: 
-
-kwrite 14838 31462.913428:     196656 cycles:u: 
-
-kwrite 14838 31462.913532:     194832 cycles:u: 
-
-kwrite 14838 31462.913714:     229283 cycles:u: 
-
-kwrite 14838 31462.913895:     239871 cycles:u: 
-
-kwrite 14838 31462.914303:     234688 cycles:u: 
-
-kwrite 14838 31462.914384:     223273 cycles:u: 
-
-kwrite 14838 31462.914533:     281279 cycles:u: 
-
-So this quite possibly is the issue in my case.
-
-Could we improve `perf report` to show a "<no stack>" entry or similar? I.e. 
-something like this:
-
--   12.43%           252  kwrite           ld-2.23.so                     [.]
-do_lookup_x
-     51 do_lookup_x
-      + _dl_lookup_symbol_x
-    201 <no stack>
--   10.46%           223  kwrite           ld-2.23.so                     [.] 
-strcmp
-   + 37 strcmp
-    186 <no stack>
--    8.66%           175  kwrite           ld-2.23.so                     [.] 
-check_match
-     44 check_match
-        do_lookup_x
-      + _dl_lookup_symbol_x
-    131 <no stack>
-
-I'll have a look at implementing that. Should be simple enough, I hope.
-
-Bye
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart6306007.S9o3xb2RLr
+--nextPart3620702.UjRroCNELz
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -233,13 +269,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDYxMzExMDEzNlowIwYJKoZIhvcNAQkEMRYEFE0JJmkK0G2Op5DeiMFP0vik9th7MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAF//
-986YWWAYCoDT9TQSs3ugyHghZgFDZjhZkQ7Sk3NjvgbMpVqnHEo5lIwQgvzBFeXKl+Dsqrbpvuww
-eMSRod6rGaAl8oZBdqeHzdOsTZ5Ywcvb2EeJsW5cNh0eVCg3V6fy+qgzeDqkU/rqDDYRA9ufYDxO
-1GRcG1BHN5uOCAAW9PU6iWiF8J+rlcympBay3aWQDNbPFZG5wmeURTBd+TwMSd58Pfl31JAMxJ/q
-eRNa8sbGuBWljWclJxPjtJSJOJ907fqT3cW2o4dCAQt94W6OC3vJ240U+vpVK5q1VfBxc2UHzYk0
-2fS2ZshvCdcfEQrI6yrl4klbCOWJdAryGBcAAAAAAAA=
+DTE2MDYxMzE2MDcxM1owIwYJKoZIhvcNAQkEMRYEFICKA6hUaKtz3K7QQM7n2eTC1BKgMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAB1C
+nBd2EuGN05cQkJLPR6dMGo9UpCC2lxxxQaqQr2+ZDg9/7oZnRgxHkpjBtlb4sZjzH0zUKyAuYeYi
+yqVcPMTiCiYp2q9n1zVXafA9YIfKx2wkdMAZBnTrD+sluMMCTupL8GLtYMxvQdBPtOcaxTeYLBNn
+yAdEeD/15MThflr560lxy8hNleToudTrXeLnsCpSW+eGr3KZGmLnrB86jfwcL11ls+3PTWqwuP08
+JPtJ2sbTHzcwer9TqtBN4XAdE/Pp55qSoHR7Vobv6G9fLzE1LUyLWhoX3WaHp+f79ISWpxy5nNma
+xGx8dSkfeHHlxQuhwqs2zIW+i55/H9k4uMUAAAAAAAA=
 
 
---nextPart6306007.S9o3xb2RLr--
+--nextPart3620702.UjRroCNELz--
