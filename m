@@ -1,116 +1,94 @@
-From: "Wangnan (F)" <wangnan0@huawei.com>
-Subject: Re: cross compiling perf
-Date: Mon, 20 Jun 2016 09:56:09 +0800
-Message-ID: <57674D39.1000104@huawei.com>
-References: <16135005.c00Xa53Rc9@milian-kdab2>
- <20160616161111.GA13337@kernel.org> <29350352.ftQorT9lcR@agathebauer>
- <20160617110056.GJ13337@kernel.org>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Re: perf segfault in docker container
+Date: Tue, 21 Jun 2016 15:32:27 -0700
+Message-ID: <CAE40pdccu3HnO3PdEX1fUEQk40jBrmteHs9hKA9+aboRUJz1sA@mail.gmail.com>
+References: <CAE40pdfWpz6rreOCMJCs1P8WXfOXO_B5zZoeOyC_5usYGp8xRQ@mail.gmail.com>
+ <575A9660.4070907@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65]:32144 "EHLO
-	szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751487AbcFTB5V (ORCPT
+Received: from mail-io0-f180.google.com ([209.85.223.180]:35428 "EHLO
+	mail-io0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751626AbcFUWdU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Sun, 19 Jun 2016 21:57:21 -0400
-In-Reply-To: <20160617110056.GJ13337@kernel.org>
+	Tue, 21 Jun 2016 18:33:20 -0400
+Received: by mail-io0-f180.google.com with SMTP id f30so29232407ioj.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jun 2016 15:32:57 -0700 (PDT)
+In-Reply-To: <575A9660.4070907@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, jiri@infradead.org, He Kuang <hekuang@huawei.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Ananth M <ananth@linux.vnet.ibm.com>, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
+G'Day Aravinda,
 
+Sorry for the delay; answers inline:
 
-On 2016/6/17 19:00, Arnaldo Carvalho de Melo wrote:
-> Adding some folks to the CC list, that either worked on the make
-> infrastructure or that I know works with cross compiling environments,
-> maybe they can help.
+On Fri, Jun 10, 2016 at 3:28 AM, Aravinda Prasad
+<aravinda@linux.vnet.ibm.com> wrote:
 >
-> More below.
+> Hi Brendan,
 >
-> Em Fri, Jun 17, 2016 at 11:49:28AM +0200, Milian Wolff escreveu:
->> On Donnerstag, 16. Juni 2016 13:11:11 CEST Arnaldo Carvalho de Melo wrote:
->>> Em Wed, Jun 15, 2016 at 04:24:52PM +0200, Milian Wolff escreveu:
->>>> I'm trying to compile a more modern version of the user-space perf tools
->>>> for an arm64 embedded target. So far, no cigar.
->>>>
->>>> Neither tools/build/Documentation nor tools/perf/Documentation/Build.txt
->>>> explain how this should be done. Right now, I'm trying the following from
->>>> an SDK with an environment that already sets up CC, CFLAGS etc. pp.
->>>>
->>>> [SDK] ~/milian/linux/tools/perf$ make ARCH=arm64 CROSS_COMPILE=/home/sdk/
->>>> sysroots/x86_64-oesdk-linux/usr/bin/aarch64-gnu-linux/aarch64-gnu-linux-
->>>> CFLAGS="--sysroot=/home/sdk/sysroots/aarch64-gnu-linux
->>>> -I/home/milian/target- prefix/include -L/home/milian/target-prefix/lib
->>>> $CFLAGS"
->>>>
->>>>    BUILD:   Doing 'make -j8' parallel build
->>>>
->>>> Auto-detecting system features:
->>>> ...                         dwarf: [ OFF ]
->>>> ...            dwarf_getlocations: [ OFF ]
->>>> ...                         glibc: [ OFF ]
->>>> ...                          gtk2: [ OFF ]
->>>> ...                      libaudit: [ OFF ]
->>>> ...                        libbfd: [ OFF ]
->>>> ...                        libelf: [ OFF ]
->>>> ...                       libnuma: [ OFF ]
->>>> ...        numa_num_possible_cpus: [ OFF ]
->>>> ...                       libperl: [ OFF ]
->>>> ...                     libpython: [ OFF ]
->>>> ...                      libslang: [ OFF ]
->>>> ...                     libcrypto: [ OFF ]
->>>> ...                     libunwind: [ OFF ]
->>>> ...            libdw-dwarf-unwind: [ OFF ]
->>>> ...                          zlib: [ OFF ]
->>>> ...                          lzma: [ OFF ]
->>>> ...                     get_cpuid: [ OFF ]
->>>> ...                           bpf: [ OFF ]
->>>>
->>>> config/Makefile:272: *** No gnu/libc-version.h found, please install
->>>> glibc-
->>>> dev[el].  Stop
+> I though of replying to your mail as I saw you running perf inside a
+> docker container. I believe you would be interested in events specific
+> to the container context as you are using "perf record -a".
+>
+> We are working on supporting "container-aware tracing" i.e., whenever
+> you run "perf record -a" inside a container it should report
+> container-wide events rather than system-wide events. Towards that goal,
+> we posted an RFC patch in LKML [1] last year and also discussed possible
+> ways to restrict events within a container in Plumbers (Container
+> Microconf) [2].
 
-I think this error message is missleading. Let's see source code:
+Sounds great.
 
-ifdef NO_LIBELF
-   ...
-else
-   ifeq ($(feature-libelf), 0)
-     ifeq ($(feature-glibc), 1)
-       LIBC_SUPPORT := 1
-     endif
-     ifeq ($(BIONIC),1)
-       LIBC_SUPPORT := 1
-     endif
-     ifeq ($(LIBC_SUPPORT),1)
-       ...
-     else
-       ifneq ($(filter s% -static%,$(LDFLAGS),),)
-         msg := $(error No static glibc found, please install glibc-static);
-       else
-         msg := $(error No gnu/libc-version.h found, please install 
-glibc-dev[el]);
-       endif
-     endif
-   else
-     ...
-   endif # libelf support
-endif # NO_LIBELF
+>
+>
+> Based on the discussion in Container Microconf, we are coming up with a
+> new prototype which should be ready for review by next week. The new
+> prototype introduces a new namespace "perf-namespace" (namespace name is
+> just a placeholder. Suggestions welcome). If the container is created
+> with perf-namespace, then "perf record -a" inside the container reports
+> only those events that are triggered within the container.
 
-So the 'libc-version.h' error message really means the failure of 
-feature-glibc detector.
-There's many reasons cause libc detector fail. 'libc-version.h' in error 
-message provides
-wrong clue, lead user to check this file instead of checking feature 
-check result.
+I'd think that this restriction should be the default, rather than
+needing to create a container with a perf-namespace. Why wouldn't it
+make use of the existing pid namespace?
 
-Thank you.
+>
+> We would like to know if you are looking for "container-aware tracing"
+> and also like to know the scenarios/problems you are trying to debug by
+> running perf inside a container.
 
->>>> How can I figure out where perf's buildsystem is looking for the
->>>> dependencies? How can I configure it to look into both, my sysroot as
->>>> well as a secondary path that contains some additional software I
->>>> compiled manually?
->>>
-[SNIP]
+Yes, perf needs to be container-aware.
+
+To start with, we'd like to profile apps running inside Docker
+containers, either by running perf in the container, or by running
+perf from the host. As in, "perf record -F49 -a -g -- sleep 30". I've
+tried both and had both approaches work, with some wrestling of
+/tmp/perf-PID.map files and things.
+
+If perf was container-aware, then running it in the container should
+be the easiest way to profile an app, if it's only sampling that
+container.
+
+Also, from within a container, I'd expect to be able to sample kernel
+stacks that are running for the container processes (eg, syscalls),
+but not asynchronous kernel threads that are running host-wide (eg,
+background fsflush).
+
+More advanced things would involve tracing syscall latency and using
+BPF for latency histograms, from within a container. That should be
+allowed.
+
+What about tracepoints? Should a container be able to use the block
+I/O tracepoints and see disk I/O latency histograms? Filtering this to
+be just the container's block I/O would be tricky. Doing it
+system-wide may be allowable, depending on a setting in
+perf_event_paranoid. I think in some environments, having a container
+trace all tracepoints (disk, tcp, etc) is ok, provided to data is
+leaked from another container; whereas in other environments tracing
+non-container events would not be ok. Hence setting this in
+perf_event_paranoid.
+
+Brendan
