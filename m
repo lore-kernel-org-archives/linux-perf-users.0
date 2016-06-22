@@ -1,69 +1,63 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: perf segfault in docker container
-Date: Tue, 21 Jun 2016 15:43:01 -0700
-Message-ID: <CAE40pdcLugg+pEdWku-Kmf7YN4D-QNkhTzPF+HPoskzBj0Y=6Q@mail.gmail.com>
-References: <CAE40pdfWpz6rreOCMJCs1P8WXfOXO_B5zZoeOyC_5usYGp8xRQ@mail.gmail.com>
- <575A9660.4070907@linux.vnet.ibm.com> <CAE40pdccu3HnO3PdEX1fUEQk40jBrmteHs9hKA9+aboRUJz1sA@mail.gmail.com>
+From: Michael Petlan <Michael@redhat.com>
+Subject: hwcache events and kernel/userspace event modifiers - bug?
+Date: Wed, 22 Jun 2016 16:16:29 +0200 (CEST)
+Message-ID: <alpine.LRH.2.20.1606221605280.5594@Diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f171.google.com ([209.85.223.171]:35526 "EHLO
-	mail-io0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752132AbcFUWnc (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:54893 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751848AbcFVOQc (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 21 Jun 2016 18:43:32 -0400
-Received: by mail-io0-f171.google.com with SMTP id f30so29402008ioj.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jun 2016 15:43:31 -0700 (PDT)
-In-Reply-To: <CAE40pdccu3HnO3PdEX1fUEQk40jBrmteHs9hKA9+aboRUJz1sA@mail.gmail.com>
+	Wed, 22 Jun 2016 10:16:32 -0400
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9581F78231
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jun 2016 14:16:31 +0000 (UTC)
+Received: from [10.34.1.163] ([10.34.1.163])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id u5MEGT1E006102
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jun 2016 10:16:30 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Ananth M <ananth@linux.vnet.ibm.com>, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 3:32 PM, Brendan Gregg
-<brendan.d.gregg@gmail.com> wrote:
-> G'Day Aravinda,
->
-[...]
->> We would like to know if you are looking for "container-aware tracing"
->> and also like to know the scenarios/problems you are trying to debug by
->> running perf inside a container.
->
-> Yes, perf needs to be container-aware.
->
-> To start with, we'd like to profile apps running inside Docker
-> containers, either by running perf in the container, or by running
-> perf from the host. As in, "perf record -F49 -a -g -- sleep 30". I've
-> tried both and had both approaches work, with some wrestling of
-> /tmp/perf-PID.map files and things.
->
-> If perf was container-aware, then running it in the container should
-> be the easiest way to profile an app, if it's only sampling that
-> container.
->
-> Also, from within a container, I'd expect to be able to sample kernel
-> stacks that are running for the container processes (eg, syscalls),
-> but not asynchronous kernel threads that are running host-wide (eg,
-> background fsflush).
->
-> More advanced things would involve tracing syscall latency and using
-> BPF for latency histograms, from within a container. That should be
-> allowed.
->
-> What about tracepoints? Should a container be able to use the block
-> I/O tracepoints and see disk I/O latency histograms? Filtering this to
-> be just the container's block I/O would be tricky. Doing it
-> system-wide may be allowable, depending on a setting in
-> perf_event_paranoid. I think in some environments, having a container
-> trace all tracepoints (disk, tcp, etc) is ok, provided to data is
-> leaked from another container; whereas in other environments tracing
-> non-container events would not be ok. Hence setting this in
-> perf_event_paranoid.
->
-> Brendan
+Hi,
 
-An addition for container-aware tracing: perf from the host should be
-able to find the correct /tmp/perf-PID.map files, even though they are
-in the container /tmp's.
+when using the "k" and "u" event modifiers in order to exclude
+kernel or userspace counting, the "hw" events print the modifier
+along with the event names in results. When doing the same with
+a "hwcache" event, the report shows events without modifiers.
 
-Brendan
+$ perf stat -e cycles:u -e L1-dcache-loads:u -- true
+
+  Performance counter stats for 'true':
+
+            153,771      cycles:u
+             24,457      L1-dcache-loads
+
+        0.001813975 seconds time elapsed
+
+While "cycles:u" has the ":u" modifier, "L1-dcache-loads" does
+not. Despite that, the kernel/userspace excluding seem to work:
+
+$ perf stat -e L1-dcache-loads:u -e L1-dcache-loads:k -e L1-dcache-loads:ku -- ls
+
+  Performance counter stats for 'ls':
+
+            146,714      L1-dcache-loads
+            305,080      L1-dcache-loads
+            451,794      L1-dcache-loads
+
+        0.002221714 seconds time elapsed
+
+Where 146714 + 305080 = 451794, so k+u is equal to ku.
+
+This happens with the Arnaldo's latest perf/core perf, the same
+as with the others.
+
+Might that be a bug?
+Thanks.
+
+Michael
