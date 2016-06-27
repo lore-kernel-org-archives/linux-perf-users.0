@@ -1,140 +1,44 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: cross compiling perf
-Date: Mon, 27 Jun 2016 13:56:23 +0200
-Message-ID: <3763103.tiqVXQm4JX@milian-kdab2>
-References: <16135005.c00Xa53Rc9@milian-kdab2> <20160617110056.GJ13337@kernel.org> <57674D39.1000104@huawei.com>
+Date: Mon, 27 Jun 2016 13:56:59 +0200
+Message-ID: <5203721.HQllVzS61Y@milian-kdab2>
+References: <16135005.c00Xa53Rc9@milian-kdab2> <20160615154706.CC0A43F246@usa-sjc-imap-foss1.foss.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2174867.uKz0eZHoIb"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart4433602.o9leooxpS1"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37246 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:37294 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750869AbcF0L41 (ORCPT
+	id S1751215AbcF0L5C (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 27 Jun 2016 07:56:27 -0400
-In-Reply-To: <57674D39.1000104@huawei.com>
+	Mon, 27 Jun 2016 07:57:02 -0400
+In-Reply-To: <20160615154706.CC0A43F246@usa-sjc-imap-foss1.foss.arm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: wangnan0@huawei.com
-Cc: acme@kernel.org, jiri@infradead.org, hekuang@huawei.com, linux-perf-users@vger.kernel.org
+To: kim.phillips@arm.com
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart2174867.uKz0eZHoIb
+--nextPart4433602.o9leooxpS1
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, June 20, 2016 9:56:09 AM CEST Wangnan (F) wrote:
-> On 2016/6/17 19:00, Arnaldo Carvalho de Melo wrote:
-> > Adding some folks to the CC list, that either worked on the make
-> > infrastructure or that I know works with cross compiling environments,
-> > maybe they can help.
-> > 
-> > More below.
-> > 
-> > Em Fri, Jun 17, 2016 at 11:49:28AM +0200, Milian Wolff escreveu:
-> >> On Donnerstag, 16. Juni 2016 13:11:11 CEST Arnaldo Carvalho de Melo 
-wrote:
-> >>> Em Wed, Jun 15, 2016 at 04:24:52PM +0200, Milian Wolff escreveu:
-> >>>> I'm trying to compile a more modern version of the user-space perf
-> >>>> tools
-> >>>> for an arm64 embedded target. So far, no cigar.
-> >>>> 
-> >>>> Neither tools/build/Documentation nor
-> >>>> tools/perf/Documentation/Build.txt
-> >>>> explain how this should be done. Right now, I'm trying the following
-> >>>> from
-> >>>> an SDK with an environment that already sets up CC, CFLAGS etc. pp.
-> >>>> 
-> >>>> [SDK] ~/milian/linux/tools/perf$ make ARCH=arm64
-> >>>> CROSS_COMPILE=/home/sdk/
-> >>>> sysroots/x86_64-oesdk-linux/usr/bin/aarch64-gnu-linux/aarch64-gnu-linux
-> >>>> -
-> >>>> CFLAGS="--sysroot=/home/sdk/sysroots/aarch64-gnu-linux
-> >>>> -I/home/milian/target- prefix/include -L/home/milian/target-prefix/lib
-> >>>> $CFLAGS"
-> >>>> 
-> >>>>    BUILD:   Doing 'make -j8' parallel build
-> >>>> 
-> >>>> Auto-detecting system features:
-> >>>> ...                         dwarf: [ OFF ]
-> >>>> ...            dwarf_getlocations: [ OFF ]
-> >>>> ...                         glibc: [ OFF ]
-> >>>> ...                          gtk2: [ OFF ]
-> >>>> ...                      libaudit: [ OFF ]
-> >>>> ...                        libbfd: [ OFF ]
-> >>>> ...                        libelf: [ OFF ]
-> >>>> ...                       libnuma: [ OFF ]
-> >>>> ...        numa_num_possible_cpus: [ OFF ]
-> >>>> ...                       libperl: [ OFF ]
-> >>>> ...                     libpython: [ OFF ]
-> >>>> ...                      libslang: [ OFF ]
-> >>>> ...                     libcrypto: [ OFF ]
-> >>>> ...                     libunwind: [ OFF ]
-> >>>> ...            libdw-dwarf-unwind: [ OFF ]
-> >>>> ...                          zlib: [ OFF ]
-> >>>> ...                          lzma: [ OFF ]
-> >>>> ...                     get_cpuid: [ OFF ]
-> >>>> ...                           bpf: [ OFF ]
-> >>>> 
-> >>>> config/Makefile:272: *** No gnu/libc-version.h found, please install
-> >>>> glibc-
-> >>>> dev[el].  Stop
+On Wednesday, June 15, 2016 10:47:06 AM CEST Kim Phillips wrote:
+> On Wed, 15 Jun 2016 16:24:52 +0200
 > 
-> I think this error message is missleading. Let's see source code:
+> Milian Wolff <milian.wolff@kdab.com> wrote:
+> > I'm trying to compile a more modern version of the user-space perf tools
+> > for an arm64 embedded target. So far, no cigar.
 > 
-> ifdef NO_LIBELF
->    ...
-> else
->    ifeq ($(feature-libelf), 0)
->      ifeq ($(feature-glibc), 1)
->        LIBC_SUPPORT := 1
->      endif
->      ifeq ($(BIONIC),1)
->        LIBC_SUPPORT := 1
->      endif
->      ifeq ($(LIBC_SUPPORT),1)
->        ...
->      else
->        ifneq ($(filter s% -static%,$(LDFLAGS),),)
->          msg := $(error No static glibc found, please install glibc-static);
-> else
->          msg := $(error No gnu/libc-version.h found, please install
-> glibc-dev[el]);
->        endif
->      endif
->    else
->      ...
->    endif # libelf support
-> endif # NO_LIBELF
+> ...
 > 
-> So the 'libc-version.h' error message really means the failure of
-> feature-glibc detector.
-> There's many reasons cause libc detector fail. 'libc-version.h' in error
-> message provides
-> wrong clue, lead user to check this file instead of checking feature
-> check result.
+> > config/Makefile:272: *** No gnu/libc-version.h found, please install
+> > glibc-
+> > dev[el].  Stop
+> 
+> fwiw, I've had marginally greater success in the past by perfoming an
+> arm64-cross 'make defconfig; make -C tools/perf clean perf' before
+> switching to building fully-featured perfs natively.
 
-OK, so if it's the wrong clue, can you tell me what else to look at then?
-
-I'm seeing
-
-$ echo $CC
-aarch64-gnu-linux-gcc --sysroot=/home/yocto/SDK/E013/sdk/sysroots/aarch64-gnu-
-linux
-$ echo $PWD
-path/to/linux/tools/build/feature
-$ $CC test-glib.c
-$ echo $?
-0
-
-The above looks good, but from a make run I get:
-
-$ cat test-glibc.make.output 
-test-glibc.c:1:20: fatal error: stdlib.h: No such file or directory
- #include <stdlib.h>
-                    ^
-compilation terminated.
-
-Can I somehow figure out how it tries to compile the test-glib.c file? I.e. 
-can I invoke "make" in a verbose mode that outputs all commands?
+Doing these steps lead me to the same erroneous output as before.
 
 Thanks
 -- 
@@ -142,7 +46,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2174867.uKz0eZHoIb
+--nextPart4433602.o9leooxpS1
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -244,13 +148,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDYyNzExNTYyM1owIwYJKoZIhvcNAQkEMRYEFNFG5GN/C1VhVVEhlo9H1t1cf9MaMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAI15
-Id8/HyxO6Z+79zxxVWPlyTqhBB/OHVD1HlJ0WZPN2Z7vfXxiopeWW3KB1CKKg5i0dbG6lqZ1Dv/n
-FpJ9uJVRYn75Gl2lv473SlypUh3uqlUiGabPBbwFc+lSFH+66OxgKfhO/1T5w4mTJKX8g3+UApuy
-ecQWhAIEayR0q49gJbTk1NOWerw9VQ9dZ95qFox+PaPIAgObHUIH8wnVimfACVAQH/PZu8zOemVq
-wj3VMON71dFqyKiNrv4pHOEYyf3WUzFYs4W6RCre+l/cG1pBHghk3UEsSVyCKLzSMDy4AsgjFgel
-6UjqRPO0HKvzL3QsEnpOFThHx08wsWcLZcwAAAAAAAA=
+DTE2MDYyNzExNTY1OVowIwYJKoZIhvcNAQkEMRYEFNPoiQIc0fRd58FxX/RuiWCsaNEIMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFD9
+AOZJ8ktFPJRd8OGQvF9jBjREGw2S32scvLbqaC6YNQqTiv7YB9ZCi3hOeP9gBJ/TQ4qXHQ9StKZZ
+QYINY5OT7jU1cpPsIVX+vkCzJHRGfrBic0R+7v5gHDzrEoJGlC6tobI8WmvIm3lhHjJX7Qp55BZd
+wtLvHT8mqSx5D2JPTgXCUwzUw/JjsZ5K3XOz6Cn5ttNa0eq00a7znzDvo5yAlpIAJp5/fH1US6xu
+NDz8lad/9xbz59IJsZF/3j1Foicrj9863wRh3NmooVd4poLnxMlH+w0bRJDTzmg9wfaCRnMMa349
+MsFAwofspGFGdQSZ08LUeIZq0FL8mg5UrugAAAAAAAA=
 
 
---nextPart2174867.uKz0eZHoIb--
+--nextPart4433602.o9leooxpS1--
