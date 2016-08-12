@@ -1,158 +1,112 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: cross compiling perf
-Date: Fri, 12 Aug 2016 12:48:53 +0200
-Message-ID: <1728044.WAxNW5e6fy@milian-kdab2>
-References: <16135005.c00Xa53Rc9@milian-kdab2> <1973740.7uikfxrqxa@agathebauer> <20160805001327.GM14639@kernel.org>
+Subject: Cross platform perf reporting
+Date: Fri, 12 Aug 2016 14:22:29 +0200
+Message-ID: <3989281.iuuvGBEDVR@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3558169.lKsEISflAu"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1534798.4WcAilLfya"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:56652 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:38340 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751230AbcHLKtC (ORCPT
+	id S1751895AbcHLMWi (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Fri, 12 Aug 2016 06:49:02 -0400
-In-Reply-To: <20160805001327.GM14639@kernel.org>
+	Fri, 12 Aug 2016 08:22:38 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@kernel.org
-Cc: hekuang@huawei.com, wangnan0@huawei.com, jolsa@kernel.org, namhyung@kernel.org, dsahern@gmail.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
---nextPart3558169.lKsEISflAu
+--nextPart1534798.4WcAilLfya
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Thursday, August 4, 2016 9:13:27 PM CEST Arnaldo Carvalho de Melo wrote:
-> Em Thu, Aug 04, 2016 at 11:58:32PM +0200, Milian Wolff escreveu:
-> > On Donnerstag, 4. August 2016 15:36:05 CEST Arnaldo Carvalho de Melo 
-wrote:
-> > > Em Thu, Aug 04, 2016 at 05:02:01PM +0200, Milian Wolff escreveu:
-> > > > On Thursday, August 4, 2016 10:22:25 AM CEST Arnaldo Carvalho de Melo
-> > 
-> > wrote:
-> > > > > Em Wed, Aug 03, 2016 at 10:56:20PM +0200, Milian Wolff escreveu:
-> > > > > > I hope this helps others. I finally have a working up2date perf on
-> > > > > > my
-> > > > > > aarch64 platform and it seems to work form my simple 5min tests so
-> > > > > > far.
-> > > > > 
-> > > > > Ok, that should help people, but it is way convoluted :-\
-> > > > > 
-> > > > > How did you obtained your cross compiler environment? Some ready
-> > > > > made
-> > > > > tarball or set of distro packages? I have an ever growing set of
-> > > > > perf
-> > > > 
-> > > > > build cointainers that includes a few cross compilers:
-> > > > The environment was provided to us as a tarball from a customer of
-> > > > ours,
-> > > > who probably got that from another subcontractor.
-> > > > 
-> > > > <snip>
-> > > > 
-> > > >     export INSTALLDIR=/usr/${TARGET} && \
-> > > > 
-> > > > ^-- is that path potentially special cased in the build file? I mean
-> > > > you
-> > > > don't
-> > > 
-> > > Huh? Not that I am aware, no, I just looked at where the existing cross
-> > > build packages were located, so that I used the same place for the cross
-> 
-> > > built versions of libelf and zlib:
->  <snip>
-> 
-> > > etc. So I assumed the best place to install the zlib and libelf devel
-> > > files
-> > > was with that path prefix.
-> > 
-> > Right, I think my point above was not clear: Since you essentially put
-> > your
-> > custom libelf into the implicit sysroot and also don't specify any prefix
-> > to install to, it seems to work out of the box. Is this the common way
-> > people build perf?
-> 
-> I have no idea besides what is documented for android in
-> tools/perf/Documentation/, and that uses a --sysroot
-> 
-> > From my experience working on e.g. KDE, one often has the sysroot
-> > (e.g. /usr), and then a bunch of custom stuff in a prefix somewhere in
-> > $HOME. Doing that with perf seems to be "hard", as it's not enough to do
-> > 
-> >     make prefix=$HOME/path/to/foo
-> > 
-> > but instead one also needs to pass `-I.../include` and `-L.../lib` to
-> > EXTRA_CFLAGS & LDFLAGS. I'd be willing to supply a patch to simplify this
-> > process, if you think that is acceptable.
-> > 
-> > > See it running:
-> > <snip>
-> > 
-> > > See? The features it is finding are just the ones related to having
-> > > glibc,
-> > > zlib and libelf devel packages that can be used in a cross build.
-> > 
-> > OK, good to know. Then this clearly is something else special to my setup,
-> > similar to my initial problems with `--sysroot` being defined in `CC`
-> > rather than `EXTRA_CFLAGS`. I'll try to dig into that eventually.
-> > 
-> > > > set the sysroot anywhere, nor do you seem to pass special include
-> > > > paths to
-> > > > perf. This of course works fine in a docker environment, but for
-> > > > "normal"
-> > > > development machines, where you compile and install stuff somewhere in
-> > > > $HOME, this won't work at all.
-> > > 
-> > > Hey, a "docker environment" should be no different than a "normal"
-> > > development machine, it should work just the same, its just the former
-> > > will
-> > > run inside a container, but the packages are the same I would install in
-> > > my
-> > > workstation if I wanted to pollute it with a cross compiler environment.
-> > > Since I want to install tons of cross compiler environments, I better
-> > > use
-> > > some sort of container, docker being the most popular, I picked it.
-> > 
-> > My point here is exactly the pollution that happens in my non-containered
-> > environment. There, I have tons of dev packages installed in e.g. /usr,
-> > which may potentially get picked up, as well as the "actual" stuff that
-> > should be used from the sysroot. But, again, at this point this is just
-> > speculation.
-> Sure, this is a valid concern and one that should grand creating a few
-> more containers, taking advantage of its layers stuff to reduce the
-> space needed, i.e. share the base stuff I have and then have another set
-> with the native devel packages, to test that there is no pollution and
-> the results are the expected ones in a cross compile env.
-> 
-> > If you have the time, could you try to install some more x86 dev packages
-> > in your docker environments? E.g. when you install libunwind(-x86-64) -
-> > does it
-> I'll try what I described above, which is in line with your suggestion.
-> 
-> > then get picked up by your arm cross compile, or does it work as it
-> > should?
-> > That data point would help me figure out what could go wrong.
-> 
-> Will try tomorrow, if time allows, and will do it in the container
-> fashion, i.e. it should be a few more containers, testing this
-> possibility.
+Hey all,
 
-Update: It seems to me that the above mess-up was due to some left-over build 
-artifact. I just tried to reproduce this with an up2date git checkout after 
-doing a hearty `git clean -xfd` in my linux tree. The issue is gone. I thought 
-to have done that before, but apparently that is not the case...
+I'm trying to analyze perf.data files that I recorded on one machine (usually 
+arm or arm64) on my development machine (x86_64). I have compiled a new 
+version of perf (and the corresponding dependencies, where needed) to do this.
 
-Sorry for the noise. I hope it may help someone out there who might run into 
-that issue again in the future. I'll remember to use `git clean -xfd` before I 
-report any other build related issues.
+Now I do:
 
-Cheers
+~~~~~~~~~~~~~~~~~~~~~~~~
+aarch64$ perf record -g ...
+aarch64$ perf archive
+
+x86_64$ scp aarch64:perf.data* .
+x86_64$ tar xvf perf.data.tar.bz2 -C ~/.debug
+x86_64$ perf report |& less
+-> lots of errors, none of which are displayed in the TUI, such as:
+
+unwind: target platform=arm64 is not supported
+(often repeated)
+Failed to open /lib/ld-2.21.so, continuing without symbols
+Failed to open /lib/libc-2.21.so, continuing without symbols
+Failed to open /lib/libpthread-2.21.so, continuing without symbols
+Failed to open /lib/libdl-2.21.so, continuing without symbols
+...
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If I try to run `perf report` on the device, I actually see resolved symbol 
+names and backtraces, e.g.:
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+aarch64$ perf report
+...
+    62.93%     0.00%  QQmlThread       libglib-2.0.so.0.4200.1                                       
+[.] g_main_context_iteration
+            |
+            ---g_main_context_iteration
+               |          
+                --62.92%--0x55ae0
+                          g_main_context_dispatch
+                          0x322dc4
+                          QCoreApplicationPrivate::sendPostedEvents
+                          |          
+                           --62.91%--QCoreApplication::notifyInternal2
+                                     QCoreApplication::notify
+                                     QCoreApplicationPrivate::notify_helper
+                                     0x2decc8
+                                     |          
+                                      --62.89%--0x2de2b4
+...
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+But if I do the same on my development machine, after extracting the perf 
+archive, I only see:
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+    62.93%     0.00%  QQmlThread       [unknown]                                                     
+[.] 0x0000007fa58c0eac
+            |
+            ---0x7fa58c0eac
+               |          
+                --62.93%--0x7fa58c14a4
+                          |          
+                           --62.92%--0x7fa56c43bc
+                                     0x7fa5e55dfc
+                                     0x7fa56c9be8
+                                     0x6e48
+                                     0xc7e90
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+So my questions:
+
+- How do I get an arm / aarch64 unwinder to work on x86_64? Do I need to 
+compile libunwind in a special way?
+
+- Is the unwinder what is missing to get the symbols resolved in the report? 
+Note that e.g. the "libglib" is not reported as "Failed to open", thus I 
+wonder why I'm not seeing the "g_main_context_iteration" symbol from it in the 
+report. It seems as if the mapping between address and SO is broken?
+
+Any hints on how to improve that situation would be welcome.
+
+Thanks
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart3558169.lKsEISflAu
+--nextPart1534798.4WcAilLfya
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -254,13 +208,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgxMjEwNDg1M1owIwYJKoZIhvcNAQkEMRYEFAhWWz2j2JdeMCrNuEAjaLxnvUOOMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBACl/
-5d1McnpeSwz1tErYbueMV4hIGypTaEvKcGEsqIoTqpYYQgW/bLD4ffmpc9SH6zX05jY+sj3Yfn8h
-BJNlIm/bJcNJE1LpzviEyg0TKNrwQiB3SFZY/nwe/1v9l3PIj+t7eFRTGFqnkADHKVgyn0QIOVFA
-I4OBQ6VxSJj2XCf3AnxNR5W3osFhGsB6i/+mXcdZSSwh4LalrexwBvsONGKoKYjTvzKEUzIFhE3Z
-zw0LRUCnSYh7GEfYDBiS0nbGntGtWBzk9zCVHsDCZEuW4iUm2jdmwXzw2V1ta3I1P4hyKX0WRSdt
-Klixqb9XTsW+ZpcaL1MNr94EeT00mTvUC5oAAAAAAAA=
+DTE2MDgxMjEyMjIyOVowIwYJKoZIhvcNAQkEMRYEFAf3zfkvZ7E71GDGIvYh+BNJnpGOMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAI68
+BptrHgwqouUfiMe/zq6QpBWixAxnP1X8MX1dEoNDmK32SGYOm81A5YIW+89mBtEHZISCDOypFpYa
+kKtrm827MpDgY5DcviDAvFq0ba5frAsYkNJ732mk9exgQJjJc2jL7zAb1JplLFDskXpbllyGpY28
+0to2Pma1piBvk2oOMoGD6bnWrHsjT34cOVlFEA1DqOFb6yBfBjPcqmsezhlJiRVN+k89wuKdkuOd
+7t616tXqmMNFVSAXi3NiYjZ3J/CrOqNh8kBTy3+WFmJPJxQw+hA5+pr1FVu+B+87gGK+ka1a1N3t
+hA81gn6icjtC8WZkU75d5tkfteiAdxaQh3AAAAAAAAA=
 
 
---nextPart3558169.lKsEISflAu--
+--nextPart1534798.4WcAilLfya--
