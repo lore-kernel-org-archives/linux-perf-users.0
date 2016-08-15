@@ -1,73 +1,84 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: usability issues with inlining and backtraces
-Date: Mon, 15 Aug 2016 13:32:24 +0200
-Message-ID: <4329099.drS591pfTr@milian-kdab2>
-References: <3421510.JYGX19gbWH@milian-kdab2> <3237195.qkayrO3A0T@milian-kdab2> <16720652.kfi49F7aVl@milian-kdab2>
+Date: Mon, 15 Aug 2016 13:44:51 +0200
+Message-ID: <2915251.99QXSDB1Jd@milian-kdab2>
+References: <3421510.JYGX19gbWH@milian-kdab2> <20160523141104.GG8897@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1780895.qjZ0qdZmBS"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart7827720.f4kavmW8WW"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:50552 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:51492 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752707AbcHOLcc (ORCPT
+	id S1752684AbcHOLoz (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2016 07:32:32 -0400
-In-Reply-To: <16720652.kfi49F7aVl@milian-kdab2>
+	Mon, 15 Aug 2016 07:44:55 -0400
+In-Reply-To: <20160523141104.GG8897@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart1780895.qjZ0qdZmBS
+--nextPart7827720.f4kavmW8WW
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, August 15, 2016 11:32:33 AM CEST Milian Wolff wrote:
-> On Monday, June 13, 2016 6:07:13 PM CEST Milian Wolff wrote:
-> > Ping?
+On Monday, May 23, 2016 11:11:04 AM CEST Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 23, 2016 at 11:10:00AM +0200, Milian Wolff escreveu:
+> > Hey all,
 > > 
-> > Andi, I'd be very interested in your answers on my questions below. Most
-> > notably, `srcline` with `--call-graph ...,address` seems to be highly
-> > buggy
-> > for me.
+> > I've recently encountered some nasty issues with perf which should - I
+> > hope - be possible to be fixed.
 > 
-> Reping again.
+> I've quickly read this, all interesting, but I need some time to digest
+> it fully, which I don't have right now, I'll get to it as soon as I can.
 > 
-> Andi, or anyone else - I would really appreciate some more feedback on my
-> questions below.
-> 
-> I esp. wonder how to leverage srcline and addresses in the call-graph, as
-> that has the potential to greatly increase perf's value to me.
+> The fact that other open source tools do it as you expect is a precious
+> observation, as we can go look at how they solved problems.
 
-OK, I have found at least two culprits that partially explain the behavior.
+I have now found something very interesting in the perf code base:
 
-On one hand, I'm simply missing debug information for some libraries, such as 
-libm, libc etc. pp. Due to that, the addr2line step fails and sym+offset is 
-displayed.
+The addr2line implementation with HAVE_LIBBFD_SUPPORT is actually capable of 
+producing backtraces that include inliners, similar to what GDB can do. If I 
+add debug output to the bfd_find_inliner_info loop inside addr2line in 
+srcline.c, and force unwind_inlines to true, then I see e.g.:
 
-On the other hand, there seems to be a bug in perf: 
+~~~~~~~~~~
+inline: 0 _ZNSt8__detail4_ModImLm2147483647ELm16807ELm0ELb1ELb1EE6__calcEm (/
+usr/include/c++/6.1.1/bits/random.h:143)
+inline: 1 _ZNSt8__detail5__modImLm2147483647ELm16807ELm0EEET_S1_ (/usr/
+include/c++/6.1.1/bits/random.h:151)
+inline: 2 _ZNSt26linear_congruential_engineImLm16807ELm0ELm2147483647EEclEv (/
+usr/include/c++/6.1.1/bits/random.h:332)
+inline: 3 
+_ZSt18generate_canonicalIdLm53ESt26linear_congruential_engineImLm16807ELm0ELm2147483647EEET_RT1_ 
+(/usr/include/c++/6.1.1/bits/random.tcc:3332)
+inline: 4 
+_ZNSt8__detail8_AdaptorISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEdEclEv 
+(/usr/include/c++/6.1.1/bits/random.h:185)
+inline: 5 
+_ZNSt25uniform_real_distributionIdEclISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEEEdRT_RKNS0_10param_typeE 
+(/usr/include/c++/6.1.1/bits/random.h:1818)
+inline: 6 
+_ZNSt25uniform_real_distributionIdEclISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEEEdRT_ 
+(/usr/include/c++/6.1.1/bits/random.h:1809)
+inline: 7 main (/path/to/test.cpp:14)
+~~~~~~~~~~
 
-When hist_entry__get_srcline calls get_srcline I see from debug output
+I would really like to see this information be included in the call graph 
+shown by perf, e.g. in the stdio/browser output of perf report, but also in 
+perf script etc. pp.
 
-he->ip=307e, sym=main -> rip_obj2dump=40307e -> mandelbrot.h:39
-
-But in callchain_list__sym_name, I see:
-
-cl->ip=40373d, sym=main -> rip_obj2dump=80373d-> main+8390413
-
-So it seems like the callchain_list is missing a normalization step that is 
-applied to the IP addresses stored in hist_entry. Can someone point me into 
-the right direction?
-
-If I change callchain_list__sym_name to pass cl->ip - cl->ms.map->start to 
-map__rip_2objdump this feature works much better for me, but I doubt that this 
-is the correct fix.
+Can someone suggest a way to do that? These entries cannot be represented by a 
+normal instruction pointer address, so extending the existing callchains with 
+additional entries is not straight forward to do.
 
 Thanks
+
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1780895.qjZ0qdZmBS
+--nextPart7827720.f4kavmW8WW
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -169,13 +180,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgxNTExMzIyNFowIwYJKoZIhvcNAQkEMRYEFMeV20q7XsU5PAi6HjVpgwWSNHKtMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALkO
-VNXIq7IsL7G+930Ge5f+GvTh0rkEA98BtOPLEAe2EtXA48fA5z/hmc/XdC4vtVKB841ZaBwc6hOg
-+GuT5B36w31GFHcGaKw2lDlHhn4QXS4n2g0uB36Nx8Z8CTOSs67wyqngR4Q+VQh/FCBSNLdg1IDI
-iMWkyBGlz0CYMyJh4zzp42AevzHqFv6u53KAgLyqK+I5HxhHdqY1cLNHF5AAkmxlZjGA9WHT003x
-ITWcN50X4crhTgVnsi2sviGPD4Bu8f/dGV+dPTjXa2wvCyGceUQz4HSKT621eJMLmra53vcV9TQ5
-S281ksZCrK8ti0BjMPlCxS9KLmqg4JyJ1zMAAAAAAAA=
+DTE2MDgxNTExNDQ1MVowIwYJKoZIhvcNAQkEMRYEFOMkuBbi+BuJKYOLo/Rv+HOBf6QAMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAI69
+6DNDtehfolg+hiNsq6KBQZFt3LVuAhCpSb1mdmgZT3RKoaoCF60+/5gFwKQLBm0+DLUGZFGvaQA6
+d7+dy4sUiK0Ql7SBTs+A2gg9y1+aAdUny6opa4XRmC878DuqdYcmuaczC7yg19noGqgFooXGtDBV
+hlAmoHVlZrvwyi63514lZRNWh88bdlKrqPnzb1m1y/TIUN/qQuUgy3OkhMxEe8yLJ29NUhDr3Rua
+V2pnm0FUIoPHPZHxFgifQRq57+5XqCy/DY00iExa6R6stYigUM8StFDMNzZ2C8vOz9+PNdbbljuj
+wbWvylVA2SzUzl689oUeW0ftgaxmzgY5R3UAAAAAAAA=
 
 
---nextPart1780895.qjZ0qdZmBS--
+--nextPart7827720.f4kavmW8WW--
