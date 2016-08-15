@@ -1,192 +1,73 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: usability issues with inlining and backtraces
-Date: Mon, 15 Aug 2016 11:32:33 +0200
-Message-ID: <16720652.kfi49F7aVl@milian-kdab2>
-References: <3421510.JYGX19gbWH@milian-kdab2> <7872019.1GQhL8td4o@milian-kdab2> <3237195.qkayrO3A0T@milian-kdab2>
+Date: Mon, 15 Aug 2016 13:32:24 +0200
+Message-ID: <4329099.drS591pfTr@milian-kdab2>
+References: <3421510.JYGX19gbWH@milian-kdab2> <3237195.qkayrO3A0T@milian-kdab2> <16720652.kfi49F7aVl@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2605850.vOPm2Rvizg"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1780895.qjZ0qdZmBS"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37050 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:50552 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752073AbcHOJci (ORCPT
+	id S1752707AbcHOLcc (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2016 05:32:38 -0400
-In-Reply-To: <3237195.qkayrO3A0T@milian-kdab2>
+	Mon, 15 Aug 2016 07:32:32 -0400
+In-Reply-To: <16720652.kfi49F7aVl@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: andi@firstfloor.org
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
 
---nextPart2605850.vOPm2Rvizg
+--nextPart1780895.qjZ0qdZmBS
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, June 13, 2016 6:07:13 PM CEST Milian Wolff wrote:
-> Ping?
+On Monday, August 15, 2016 11:32:33 AM CEST Milian Wolff wrote:
+> On Monday, June 13, 2016 6:07:13 PM CEST Milian Wolff wrote:
+> > Ping?
+> > 
+> > Andi, I'd be very interested in your answers on my questions below. Most
+> > notably, `srcline` with `--call-graph ...,address` seems to be highly
+> > buggy
+> > for me.
 > 
-> Andi, I'd be very interested in your answers on my questions below. Most
-> notably, `srcline` with `--call-graph ...,address` seems to be highly buggy
-> for me.
+> Reping again.
+> 
+> Andi, or anyone else - I would really appreciate some more feedback on my
+> questions below.
+> 
+> I esp. wonder how to leverage srcline and addresses in the call-graph, as
+> that has the potential to greatly increase perf's value to me.
 
-Reping again.
+OK, I have found at least two culprits that partially explain the behavior.
 
-Andi, or anyone else - I would really appreciate some more feedback on my 
-questions below.
+On one hand, I'm simply missing debug information for some libraries, such as 
+libm, libc etc. pp. Due to that, the addr2line step fails and sym+offset is 
+displayed.
 
-I esp. wonder how to leverage srcline and addresses in the call-graph, as that 
-has the potential to greatly increase perf's value to me.
+On the other hand, there seems to be a bug in perf: 
+
+When hist_entry__get_srcline calls get_srcline I see from debug output
+
+he->ip=307e, sym=main -> rip_obj2dump=40307e -> mandelbrot.h:39
+
+But in callchain_list__sym_name, I see:
+
+cl->ip=40373d, sym=main -> rip_obj2dump=80373d-> main+8390413
+
+So it seems like the callchain_list is missing a normalization step that is 
+applied to the IP addresses stored in hist_entry. Can someone point me into 
+the right direction?
+
+If I change callchain_list__sym_name to pass cl->ip - cl->ms.map->start to 
+map__rip_2objdump this feature works much better for me, but I doubt that this 
+is the correct fix.
 
 Thanks
-
-> On Monday, May 23, 2016 5:18:53 PM CEST Milian Wolff wrote:
-> > On Monday, May 23, 2016 7:59:54 AM CEST Andi Kleen wrote:
-> > > Milian Wolff <milian.wolff@kdab.com> writes:
-> > > > Here, the cost of inlined functions (random.tcc:3332,random.h:143) is
-> > > > attributed to the main function. This is of course correct, but very
-> > > > unhelpful to me as a programmer. I'm much more interested in the line
-> > > > inside test.cpp which triggered the call to random.tcc:3332 etc. Is
-> > > > there
-> > > > a way to get that data? Note how you can a way better backtrace when
-> > > > using GDB on the same
-> > > 
-> > > > binary as above:
-> > > Yes this works using --call-graph ...,address
-> > > 
-> > > If you use srcfile it can resolve inlines. it is currently not supported
-> > > for other backtraces, but yes expanding them in the normal history
-> > > would be useful.
-> > 
-> > Can you expand on this part a bit please? It's the first time I realize
-> > that I can add a sort key to `--call-graph`, so at the very least this
-> > shows that the defaults are bad.
-> > 
-> > For the example I'm now trying this:
-> >     $ perf report -g graph,address -s sym,srcline --no-children --stdio
-> > 
-> > # Overhead  Symbol                       Source:Line
-> > # ........  ...........................  ..................
-> > #
-> > 
-> >     21.82%  [.] main                     random.tcc:3332
-> >     
-> >             |--3.84%--main +8388740
-> >             |
-> >             |          __libc_start_main +140389813309681
-> >             |          _start +8388649
-> >             | 
-> >             | ...
-> >      
-> >      6.29%  [.] __hypot_finite           __hypot_finite+152
-> >      
-> >             ---hypot +140389819301908
-> >             
-> >                main +8388987
-> >                __libc_start_main +140389813309681
-> >                _start +8388649
-> > 
-> > -> much better, but still unusable backtraces. And my `perf report` only
-> > 
-> > allows this:
-> >     sort_key:       call graph sort key (function|address)
-> > 
-> > So we need to add support for "|srcline" here as well?
-> > 
-> > > > On one hand, we have the same issue as above, namely inlined functions
-> > > > being attributed directly to the parent function. See how the
-> > > > backtrace
-> > > > shows main calling hypot? Look at the source, I'm not calling hypot
-> > > > anywhere - it's std::norm calling it internally eventually. And GDB
-> > > > does
-> > > > know about that and can give me a proper backtrace.
-> > > 
-> > > Use srcfile then.
-> > 
-> > See above, can you please extend this answer a bit? How would you use
-> > srcfile, and where, to get the full backtrace? Is that maybe a patch that
-> > is not yet included in acme's perf/core branch?
-> > 
-> > > > But, differently to above, the major gripe I have with this output is
-> > > > exemplified by this part:
-> > > > 
-> > > > ~~~~~~~~~
-> > > > 
-> > > >      3.63%  [.] __hypot_finite         __hypot_finite+257
-> > > >      
-> > > >             ---hypot
-> > > >             
-> > > >                main
-> > > >                __libc_start_main
-> > > >                _start
-> > > > 
-> > > > ~~~~~~~~~
-> > > > 
-> > > > I added `srcline` to the report, but the backtrace still only contains
-> > > > the
-> > > > symbol name. I hope, that we can simply honor srcline there as well,
-> > > > to
-> > > > at
-> > > 
-> > > > least print something like this instead:
-> > > --call-graph ....,address
-> > > 
-> > > (or --branch-history)
-> > 
-> > Both produce output like I've shown above, i.e. they always put down
-> > 
-> >   <symbol> +<offset>
-> > 
-> > insetead of using the much more useable
-> > 
-> >   <symbol> <file>:<line>
-> > 
-> > format. What am I missing?
-> > 
-> > > > ########## symbol cost aggregation
-> > > > 
-> > > > Once we have that implemented, can we maybe account for the following:
-> > > > I
-> > > > told `perf report` to aggregate by symbol first, then srcline, i.e.
-> > > > `-s
-> > > > sym,srcline`. But the report seems to aggregate by `srcline`, because
-> > > > I
-> > > > see some symbols (__hypot_finite) multiple times, for different code
-> > > > points. Can we merge those and start the backtrace then at the
-> > > > different
-> > > > code points?
-> > > 
-> > > > Something like this would be my desirable output:
-> > > perf sorts by address, but the compiler can generate the same symbol
-> > > in multiple versions or in may inlines instances. That's probably
-> > > more work to fix.
-> > > 
-> > > > As such, I propose a "simplified" `perf annotate` output, which gets
-> > > > closer to what you'll see in other profilers, e.g. VTune or also
-> > > > Microsoft Visual studio's sampling profilers: Use the source files and
-> > > > annotate those with inclusive cost. Only show the cost of individual
-> > > > binary instructions (status quo) when explicitly asked. I.e. I want
-> > > > the
-> > > > output to look something like that
-> > > 
-> > > > (I made up the actual percentages):
-> > > Sounds like the fallacy of abstracted performance analysis.
-> > 
-> > Can you please elaborate that some more as well? For me, as a user-space
-> > application developer, getting an aggregated inclusive cost for the source
-> > code I actually write is extremely useful. Of course, when it's not
-> > directly clear from that view why something is slow I still need to dig
-> > deeper and get to the current in-depth assembly view. But why is having a
-> > simplified overview a fallacy? Why is this abstracted performance
-> > analysis?
-> > 
-> > Thanks a lot for your input!
-
-
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2605850.vOPm2Rvizg
+--nextPart1780895.qjZ0qdZmBS
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -288,13 +169,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgxNTA5MzIzM1owIwYJKoZIhvcNAQkEMRYEFCdhfJY5VWIPzJYGGqpDjfg5OeYCMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAH+C
-OpVzy6ZxkHW75rtbLSfLIyTazoG9BwHA5wcNPQRnotmDfQyRxH6Pg6QGaAEaeqIa8GA5CCIZVsgT
-5vR4Tyi2v7aOK8Pp5jWMELGHP/DiQkpLZgmZFqyi1Qj4onp7nAyCmneHyIxhYEWF44DJn+FVSvFA
-2rSH+u6nsv/mOD1IC12ysyYM3ald9ZOynqJmDHPjsTb6UwRV3gaOZthQ/xmageUwewf6kqIFtFLi
-aJ/qEcSdOEvFsnDyu7O3XCUxuvr1UnT+yIO7Xcwm9ILuiESWkzByUrA0zTOMyzTsnnu0awzY+Clw
-A6csVrDLwg5rYf/SemiBjVCFvNpFFtfk/1sAAAAAAAA=
+DTE2MDgxNTExMzIyNFowIwYJKoZIhvcNAQkEMRYEFMeV20q7XsU5PAi6HjVpgwWSNHKtMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALkO
+VNXIq7IsL7G+930Ge5f+GvTh0rkEA98BtOPLEAe2EtXA48fA5z/hmc/XdC4vtVKB841ZaBwc6hOg
++GuT5B36w31GFHcGaKw2lDlHhn4QXS4n2g0uB36Nx8Z8CTOSs67wyqngR4Q+VQh/FCBSNLdg1IDI
+iMWkyBGlz0CYMyJh4zzp42AevzHqFv6u53KAgLyqK+I5HxhHdqY1cLNHF5AAkmxlZjGA9WHT003x
+ITWcN50X4crhTgVnsi2sviGPD4Bu8f/dGV+dPTjXa2wvCyGceUQz4HSKT621eJMLmra53vcV9TQ5
+S281ksZCrK8ti0BjMPlCxS9KLmqg4JyJ1zMAAAAAAAA=
 
 
---nextPart2605850.vOPm2Rvizg--
+--nextPart1780895.qjZ0qdZmBS--
