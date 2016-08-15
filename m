@@ -1,84 +1,303 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: usability issues with inlining and backtraces
-Date: Mon, 15 Aug 2016 13:44:51 +0200
-Message-ID: <2915251.99QXSDB1Jd@milian-kdab2>
-References: <3421510.JYGX19gbWH@milian-kdab2> <20160523141104.GG8897@kernel.org>
+Subject: Re: Cross platform perf reporting
+Date: Mon, 15 Aug 2016 14:20:15 +0200
+Message-ID: <18625452.F1CIFXVKL2@milian-kdab2>
+References: <20160812153125.GK27651@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart7827720.f4kavmW8WW"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2155981.m03nQMB48J"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:51492 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:56448 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752684AbcHOLoz (ORCPT
+	id S1752748AbcHOMUU (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Mon, 15 Aug 2016 07:44:55 -0400
-In-Reply-To: <20160523141104.GG8897@kernel.org>
+	Mon, 15 Aug 2016 08:20:20 -0400
+In-Reply-To: <20160812153125.GK27651@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, dsahern@gmail.com, hekuang@huawei.com
 
---nextPart7827720.f4kavmW8WW
+--nextPart2155981.m03nQMB48J
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, May 23, 2016 11:11:04 AM CEST Arnaldo Carvalho de Melo wrote:
-> Em Mon, May 23, 2016 at 11:10:00AM +0200, Milian Wolff escreveu:
-> > Hey all,
+On Friday, August 12, 2016 12:31:25 PM CEST Arnaldo Carvalho de Melo wrote:
+> Em Fri, Aug 12, 2016 at 05:10:18PM +0200, Milian Wolff escreveu:
+> > On Friday, August 12, 2016 2:22:29 PM CEST Milian Wolff wrote:
+> > > I'm trying to analyze perf.data files that I recorded on one machine
+> > > (usually arm or arm64) on my development machine (x86_64). I have
+> > > compiled
+> > > a new version of perf (and the corresponding dependencies, where needed)
+> > > to
+> > > do this.
+> 
+> Adding He Kuang, that did work on this area recently.
+> 
+> > > Now I do:
+> > > 
+> > > ~~~~~~~~~~~~~~~~~~~~~~~~
+> > > aarch64$ perf record -g ...
+> > > aarch64$ perf archive
+> > > 
+> > > x86_64$ scp aarch64:perf.data* .
+> > > x86_64$ tar xvf perf.data.tar.bz2 -C ~/.debug
+> > > x86_64$ perf report |& less
+> > > -> lots of errors, none of which are displayed in the TUI, such as:
+> > > 
+> > > unwind: target platform=arm64 is not supported
+> > > (often repeated)
+> > > Failed to open /lib/ld-2.21.so, continuing without symbols
+> > > Failed to open /lib/libc-2.21.so, continuing without symbols
+> > > Failed to open /lib/libpthread-2.21.so, continuing without symbols
+> > > Failed to open /lib/libdl-2.21.so, continuing without symbols
+> > > ...
+> > > ~~~~~~~~~~~~~~~~~~~~~~~~
 > > 
-> > I've recently encountered some nasty issues with perf which should - I
-> > hope - be possible to be fixed.
+> > What I notice, is that `perf buildid-list` does not contain any of these
 > 
-> I've quickly read this, all interesting, but I need some time to digest
-> it fully, which I don't have right now, I'll get to it as soon as I can.
+> That is a limitation that needs fixing, what gets into the build-id are
+> entries that had hits, DSOs, but those are sample hits, not callchain
+> hits.
 > 
-> The fact that other open source tools do it as you expect is a precious
-> observation, as we can go look at how they solved problems.
+> We would have to traverse all callchains and add build-id entries for
+> the DSOs in it.
+> 
+> I need to do this :-\
+> 
+> But if you have a copy of your target in a file and use --symfs with it it
+> should work, because then, because it doesn't have the build-id for the DSOs
+> in the callchains that didn't had hits, it will resort to using just the
+> pathname when looking for a symtab or the whole ELF for annotation, etc.
+>
+> > files. I also don't have the corresponding files in my target's ~/.debug
+> > folder, where everything seems to work as expected. Is that, because there
+> > the symbols are read directly from the file and nothing is cached in
+> > ~/.debug?
+>
+> That is a possibility, yes. But it should be adding it to ~/.debug, that
+> is the default, unless you have something disabling that in your
+> ~/.perfconfig or some sort of problem is happening that is preventing it
+> to do the hardlink/copy.
 
-I have now found something very interesting in the perf code base:
+I now realized that the culprit here is actually a broken platform, i.e. the 
+libs above simply don't have a build id:
 
-The addr2line implementation with HAVE_LIBBFD_SUPPORT is actually capable of 
-producing backtraces that include inliners, similar to what GDB can do. If I 
-add debug output to the bfd_find_inliner_info loop inside addr2line in 
-srcline.c, and force unwind_inlines to true, then I see e.g.:
+eu-readelf -n libc.so.6
 
-~~~~~~~~~~
-inline: 0 _ZNSt8__detail4_ModImLm2147483647ELm16807ELm0ELb1ELb1EE6__calcEm (/
-usr/include/c++/6.1.1/bits/random.h:143)
-inline: 1 _ZNSt8__detail5__modImLm2147483647ELm16807ELm0EEET_S1_ (/usr/
-include/c++/6.1.1/bits/random.h:151)
-inline: 2 _ZNSt26linear_congruential_engineImLm16807ELm0ELm2147483647EEclEv (/
-usr/include/c++/6.1.1/bits/random.h:332)
-inline: 3 
-_ZSt18generate_canonicalIdLm53ESt26linear_congruential_engineImLm16807ELm0ELm2147483647EEET_RT1_ 
-(/usr/include/c++/6.1.1/bits/random.tcc:3332)
-inline: 4 
-_ZNSt8__detail8_AdaptorISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEdEclEv 
-(/usr/include/c++/6.1.1/bits/random.h:185)
-inline: 5 
-_ZNSt25uniform_real_distributionIdEclISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEEEdRT_RKNS0_10param_typeE 
-(/usr/include/c++/6.1.1/bits/random.h:1818)
-inline: 6 
-_ZNSt25uniform_real_distributionIdEclISt26linear_congruential_engineImLm16807ELm0ELm2147483647EEEEdRT_ 
-(/usr/include/c++/6.1.1/bits/random.h:1809)
-inline: 7 main (/path/to/test.cpp:14)
-~~~~~~~~~~
+Note section [ 1] '.note.ABI-tag' of 32 bytes at offset 0x270:
+  Owner          Data size  Type
+  GNU                   16  VERSION
+    OS: Linux, ABI: 3.18.0
 
-I would really like to see this information be included in the call graph 
-shown by perf, e.g. in the stdio/browser output of perf report, but also in 
-perf script etc. pp.
+So no wonder they are not included in perf archive. I think a warning would be 
+helpful here to tell users that analyzing the data on the remote machine will 
+require --symfs (which I wasn't aware of, thanks!).
 
-Can someone suggest a way to do that? These entries cannot be represented by a 
-normal instruction pointer address, so extending the existing callchains with 
-additional entries is not straight forward to do.
+> > Can I set an environment variable to let perf know to look in secondary
+> > paths for the libraries? I.e. I hope to make it look into the cross
+> > compile sysroot for these libraries, instead of literally interpreting
+> > the path as a valid path on my development machine.
+> 
+> That is the --symfs David talked about, no?
+> 
+> [acme@jouet linux]$ perf report -h symfs
+> 
+>  Usage: perf report [<options>]
+> 
+>         --symfs <directory>
+>                           Look for files with symbols relative to this
+> directory
 
-Thanks
+Yes, symfs sounds exactly like what I was looking for. I have now tested this, 
+and seem to hit some issues with it:
 
+I unpacked a perf archive from a platform which includes a libc with buildit:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+milian@milian-kdab2:/tmp$ tar -tvf perf.data.tar.bz2 | grep libc-2.19
+lrwxrwxrwx root/root         0 2000-01-01 18:36 .build-id/
+45/7c5918872338e1b82bf8bf41ae9f55b34604ea -> ../../lib/arm-linux-gnueabihf/
+libc-2.19.so/457c5918872338e1b82bf8bf41ae9f55b34604ea
+drwxr-xr-x root/root         0 2000-01-01 18:36 lib/arm-linux-gnueabihf/
+libc-2.19.so/457c5918872338e1b82bf8bf41ae9f55b34604ea/
+-rwxr-xr-x root/root    911068 2016-03-01 01:55 lib/arm-linux-gnueabihf/
+libc-2.19.so/457c5918872338e1b82bf8bf41ae9f55b34604ea/elf
+-rw-r--r-- root/root         0 2000-01-01 18:36 lib/arm-linux-gnueabihf/
+libc-2.19.so/457c5918872338e1b82bf8bf41ae9f55b34604ea/probes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Analyzing it for some reason isn't using the build id:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+milian@milian-kdab2:/tmp$ strace -e file -f perf report --stdio -s sym,srcline 
+|& grep libc-2.19
+stat("/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffde9316200) = -1 ENOENT (No 
+such file or directory)
+stat("/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffde9316180) = -1 ENOENT (No 
+such file or directory)
+stat("/usr/lib/debug/lib/arm-linux-gnueabihf/libc-2.19.so.debug", 
+0x7ffde9316200) = -1 ENOENT (No such file or directory)
+stat("/usr/lib/debug/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffde9316200) = 
+-1 ENOENT (No such file or directory)
+stat("/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffde9316200) = -1 ENOENT (No 
+such file or directory)
+stat("/lib/arm-linux-gnueabihf/.debug/libc-2.19.so", 0x7ffde9316200) = -1 
+ENOENT (No such file or directory)
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+     0.25%     0.25%  [.] 0x000000000005336c       libc-2.19.so[5336c]
+     0.25%     0.00%  [.] 0xffffffff4936136c       
+libc-2.19.so[ffffffff4936136
+     0.24%     0.24%  [.] 0x0000000000053422       libc-2.19.so[53422]
+     0.24%     0.00%  [.] 0xffffffff49361422       
+libc-2.19.so[ffffffff4936142
+     0.21%     0.21%  [.] 0x0000000000053664       libc-2.19.so[53664]
+     0.21%     0.00%  [.] 0xffffffff49361664       
+libc-2.19.so[ffffffff4936166
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Setting symfs:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+milian@milian-kdab2:/tmp$ locate libc-2.19.so
+/home/milian/.debug/lib/arm-linux-gnueabihf/libc-2.19.so
+/home/milian/.debug/lib/arm-linux-gnueabihf/libc-2.19.so/
+457c5918872338e1b82bf8bf41ae9f55b34604ea
+/home/milian/.debug/lib/arm-linux-gnueabihf/libc-2.19.so/
+457c5918872338e1b82bf8bf41ae9f55b34604ea/elf
+/home/milian/.debug/lib/arm-linux-gnueabihf/libc-2.19.so/
+457c5918872338e1b82bf8bf41ae9f55b34604ea/probes
+/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06/lib/arm-
+linux-gnueabihf/libc-2.19.so
+milian@milian-kdab2:/tmp$ strace -e file -f perf report --symfs=/ssd/milian/
+projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06/ --stdio -s 
+sym,srcline |& grep libc-2.19
+open("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = 8
+stat("/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffc4da5e740) = -1 ENOENT (No 
+such file or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", {st_mode=S_IFREG|0755, st_size=911068, 
+...}) = 0
+open("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = 9
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", {st_mode=S_IFREG|0755, st_size=911068, 
+...}) = 0
+open("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = 9
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+usr/lib/debug/lib/arm-linux-gnueabihf/libc-2.19.so.debug", 0x7ffc4da5e740) = 
+-1 ENOENT (No such file or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+usr/lib/debug/lib/arm-linux-gnueabihf/libc-2.19.so", 0x7ffc4da5e740) = -1 
+ENOENT (No such file or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", {st_mode=S_IFREG|0755, st_size=911068, 
+...}) = 0
+open("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = 10
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+lib/arm-linux-gnueabihf/.debug/libc-2.19.so", 0x7ffc4da5e740) = -1 ENOENT (No 
+such file or directory)
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+open("/lib/arm-linux-gnueabihf/libc-2.19.so", O_RDONLY) = -1 ENOENT (No such 
+file or directory)
+addr2line_init failed for /lib/arm-linux-gnueabihf/libc-2.19.so
+     0.25%     0.25%  [.] 0x000000000005336c  libc-2.19.so[5336c]
+     0.25%     0.00%  [.] 0xffffffff4936136c  libc-2.19.so[ffffffff4936136
+     0.24%     0.24%  [.] 0x0000000000053422  libc-2.19.so[53422]
+     0.24%     0.00%  [.] 0xffffffff49361422  libc-2.19.so[ffffffff4936142
+     0.21%     0.21%  [.] 0x0000000000053664  libc-2.19.so[53664]
+     0.21%     0.00%  [.] 0xffffffff49361664  libc-2.19.so[ffffffff4936166
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note how it does look into symfs sometimes, but not everywhere...
+
+To make things worse, it seems to break the buildid lookup, i.e. when you get 
+samples in a file that you deployed manually to a target, which is not 
+included in your sysroot that you pass to symfs:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ perf report --stdio -s sym,srcline |& grep particles
+    34.79%    34.79%  [.] main                     particles.cpp:34
+    32.62%    32.62%  [.] main                     particles.cpp:33
+     9.85%     9.85%  [.] main                     particles.cpp:32
+$ perf report --symfs=/ssd/milian/projects/pandaboard/debian-8.5-minimal-
+armhf-2016-06-06/ --stdio -s sym,srcline |& grep particles
+/root/particles with build id 1c10a17afa25337ab368f8d9e690184e536c6563 not 
+found, continuing without symbols
+addr2line_init failed for /root/particles
+# above line is repeated a lot
+    26.99%    26.99%  [.] 0x00000000000005a4  particles[5a4]
+    26.99%     0.00%  [.] 0xffffffffffff05a4  particles[ffffffffffff05a4]
+    21.83%    21.83%  [.] 0x00000000000005a6  particles[5a6]
+    21.83%     0.00%  [.] 0xffffffffffff05a6  particles[ffffffffffff05a6]
+    14.55%     0.00%  [.] 0xffffffffffff0596  particles[ffffffffffff0596]
+    14.54%    14.54%  [.] 0x0000000000000596  particles[596]
+...
+$ strace -e file -f perf report --symfs=/ssd/milian/projects/pandaboard/
+debian-8.5-minimal-armhf-2016-06-06/ --stdio -s sym,srcline |& grep particles 
+
+open("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+root/particles", O_RDONLY) = -1 ENOENT (No such file or directory)
+stat("/root/particles", 0x7ffe7535bf40) = -1 EACCES (Permission denied)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+root/particles", 0x7ffe7535bec0) = -1 ENOENT (No such file or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+usr/lib/debug/root/particles.debug", 0x7ffe7535bf40) = -1 ENOENT (No such file 
+or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+usr/lib/debug/root/particles", 0x7ffe7535bf40) = -1 ENOENT (No such file or 
+directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+root/particles", 0x7ffe7535bf40) = -1 ENOENT (No such file or directory)
+stat("/ssd/milian/projects/pandaboard/debian-8.5-minimal-armhf-2016-06-06///
+root/.debug/particles", 0x7ffe7535bf40) = -1 ENOENT (No such file or 
+directory)
+/root/particles with build id 1c10a17afa25337ab368f8d9e690184e536c6563 not 
+found, continuing without symbols
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note how the above does not look for the buildid in my ~/.debug anymore...
+
+Cheers
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart7827720.f4kavmW8WW
+--nextPart2155981.m03nQMB48J
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -180,13 +399,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgxNTExNDQ1MVowIwYJKoZIhvcNAQkEMRYEFOMkuBbi+BuJKYOLo/Rv+HOBf6QAMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAI69
-6DNDtehfolg+hiNsq6KBQZFt3LVuAhCpSb1mdmgZT3RKoaoCF60+/5gFwKQLBm0+DLUGZFGvaQA6
-d7+dy4sUiK0Ql7SBTs+A2gg9y1+aAdUny6opa4XRmC878DuqdYcmuaczC7yg19noGqgFooXGtDBV
-hlAmoHVlZrvwyi63514lZRNWh88bdlKrqPnzb1m1y/TIUN/qQuUgy3OkhMxEe8yLJ29NUhDr3Rua
-V2pnm0FUIoPHPZHxFgifQRq57+5XqCy/DY00iExa6R6stYigUM8StFDMNzZ2C8vOz9+PNdbbljuj
-wbWvylVA2SzUzl689oUeW0ftgaxmzgY5R3UAAAAAAAA=
+DTE2MDgxNTEyMjAxNVowIwYJKoZIhvcNAQkEMRYEFDwNf8T6cx2c7SCkmWYYg2wgL4XwMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAI4k
+5aubBPMd0S6MFF5kJ7smdRvqYvcNGoPDqRg3epRsGdd/WXFvGd1TuNH6eLsGK4pYY2r07w0IzY7G
+TC1U4pxmbsNjIvB+iM33O3/++lLHyRETX+nwkyuY8bBYSJQM8iQx0hEcWi4vXDf+FD9t46APhZ0K
+6s/BJYZEivm/nrgbA/wG0OjBQt6kDWBCXAgKW9NtZ0qEzdKufej++T5hVT5XYc8xGHwOkJxbPDMZ
+9qM8rWhpaX4Z5C9Z7DoD5uQeI0CE6Ut4x8T6IQ4MSLl0bUqTSVKPnxjX+XJ/BnMWtCo0sAQwniVq
+h9TVQ/2oi762LkuSIXZC7Xi3b4CN+yX5kpQAAAAAAAA=
 
 
---nextPart7827720.f4kavmW8WW--
+--nextPart2155981.m03nQMB48J--
