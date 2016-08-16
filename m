@@ -1,59 +1,75 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH] perf record: Allow to disable callchains by setting mode to "none"
-Date: Tue, 16 Aug 2016 12:34:27 +0200
-Message-ID: <20160816103427.5567-1-milian.wolff@kdab.com>
+Subject: [PATCH] perf: Fix off-by-one buffer overflow while using strtok_r
+Date: Tue, 16 Aug 2016 13:01:49 +0200
+Message-ID: <20160816110149.10829-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:41246 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:44276 "EHLO mail.kdab.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753103AbcHPKel (ORCPT
+	id S1753302AbcHPLCE (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Aug 2016 06:34:41 -0400
+	Tue, 16 Aug 2016 07:02:04 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 Cc: acme@kernel.org, Milian Wolff <milian.wolff@kdab.com>
 
-This change is mostly useful for symmetry purposes. Before, we could:
+The string passed to strtok_r in parse_ftrace_printk must be null-
+delimited, otherwise we run into the following issue reported by
+valgrind:
 
-    --event foo/call-graph=fp/
-    --event bar/call-graph=dwarf/
-    --event asdf/call-graph=lbr/
-
-Now, we can also use
-
-    --event xyz/call-graph=none/
-
-The latter is equivalent to
-
-    --event xyz
-
-when the `perf record` invocation does not specify a global call-graph
-option. If it does, then this patch also allows us to selectively
-disable the call-graph for single events.
+valgrind --track-origins=yes perf report
+==7962== Invalid read of size 1
+==7962==    at 0x25CEBB: __strtok_r_1c (string2.h:200)
+==7962==    by 0x25CEBB: parse_ftrace_printk (trace-event-parse.c:158)
+==7962==    by 0x268242: read_ftrace_printk (trace-event-read.c:204)
+==7962==    by 0x268242: trace_report (trace-event-read.c:423)
+==7962==    by 0x23E751: process_tracing_data (header.c:1571)
+==7962==    by 0x244911: perf_file_section__process (header.c:2683)
+==7962==    by 0x244911: perf_header__process_sections (header.c:2466)
+==7962==    by 0x244911: perf_session__read_header (header.c:2901)
+==7962==    by 0x2571CA: perf_session__open (session.c:32)
+==7962==    by 0x2571CA: perf_session__new (session.c:139)
+==7962==    by 0x1D153D: cmd_inject (builtin-inject.c:919)
+==7962==    by 0x207E6E: run_builtin (perf.c:357)
+==7962==    by 0x19E58D: handle_internal_command (perf.c:419)
+==7962==    by 0x19E58D: run_argv (perf.c:465)
+==7962==    by 0x19E58D: main (perf.c:609)
+==7962==  Address 0x81fc59e is 0 bytes after a block of size 1,998 alloc'd
+==7962==    at 0x4C29BBE: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7962==    by 0x268219: read_ftrace_printk (trace-event-read.c:195)
+==7962==    by 0x268219: trace_report (trace-event-read.c:423)
+==7962==    by 0x23E751: process_tracing_data (header.c:1571)
+==7962==    by 0x244911: perf_file_section__process (header.c:2683)
+==7962==    by 0x244911: perf_header__process_sections (header.c:2466)
+==7962==    by 0x244911: perf_session__read_header (header.c:2901)
+==7962==    by 0x2571CA: perf_session__open (session.c:32)
+==7962==    by 0x2571CA: perf_session__new (session.c:139)
+==7962==    by 0x1D153D: cmd_inject (builtin-inject.c:919)
+==7962==    by 0x207E6E: run_builtin (perf.c:357)
+==7962==    by 0x19E58D: handle_internal_command (perf.c:419)
+==7962==    by 0x19E58D: run_argv (perf.c:465)
+==7962==    by 0x19E58D: main (perf.c:609)
 
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/util.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/trace-event-read.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 85c5680..a549fee 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -536,6 +536,14 @@ int parse_callchain_record(const char *arg, struct callchain_param *param)
- 				pr_err("callchain: No more arguments "
- 					"needed for --call-graph lbr\n");
- 			break;
-+		} else if (!strncmp(name, "none", sizeof("none"))) {
-+			if (!strtok_r(NULL, ",", &saveptr)) {
-+				param->record_mode = CALLCHAIN_NONE;
-+				ret = 0;
-+			} else
-+				pr_err("callchain: No more arguments "
-+					"needed for --call-graph none\n");
-+			break;
- 		} else {
- 			pr_err("callchain: Unknown --call-graph option "
- 			       "value: %s\n", arg);
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index b67a0cc..250d064 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -192,9 +192,10 @@ static int read_ftrace_printk(struct pevent *pevent)
+ 	if (!size)
+ 		return 0;
+ 
+-	buf = malloc(size);
++	buf = malloc(size + 1);
+ 	if (buf == NULL)
+ 		return -1;
++        buf[size] = 0;
+ 
+ 	if (do_read(buf, size) < 0) {
+ 		free(buf);
 -- 
 2.9.3
