@@ -1,201 +1,140 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: usability issues with inlining and backtraces
-Date: Tue, 16 Aug 2016 17:45:44 +0200
-Message-ID: <2904652.KDh7S7X2A6@agathebauer>
-References: <3421510.JYGX19gbWH@milian-kdab2> <87mvkeymyz.fsf@tassilo.jf.intel.com> <20160816151310.GB11382@danjae.aot.lge.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf unwind: Use addr_location::addr instead of ip for
+ entries
+Date: Wed, 17 Aug 2016 00:49:39 +0900
+Message-ID: <20160816154939.GA15204@danjae.aot.lge.com>
+References: <20160816153926.11288-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12173979.Dsf4WXJCED"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:48426 "EHLO mail.kdab.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751003AbcHPPps (ORCPT
+Received: from mail-pf0-f195.google.com ([209.85.192.195]:32978 "EHLO
+	mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752499AbcHPPvJ (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Aug 2016 11:45:48 -0400
-In-Reply-To: <20160816151310.GB11382@danjae.aot.lge.com>
+	Tue, 16 Aug 2016 11:51:09 -0400
+Received: by mail-pf0-f195.google.com with SMTP id i6so5696468pfe.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2016 08:51:09 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20160816153926.11288-1-milian.wolff@kdab.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org
 
---nextPart12173979.Dsf4WXJCED
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Mittwoch, 17. August 2016 00:13:10 CEST Namhyung Kim wrote:
-> On Mon, Aug 15, 2016 at 10:13:24AM -0700, Andi Kleen wrote:
-> > Milian Wolff <milian.wolff@kdab.com> writes:
-> > > On Monday, August 15, 2016 11:32:33 AM CEST Milian Wolff wrote:
-> > >> On Monday, June 13, 2016 6:07:13 PM CEST Milian Wolff wrote:
-> > >> > Ping?
-> > >> > 
-> > >> > Andi, I'd be very interested in your answers on my questions below.
-> > >> > Most
-> > >> > notably, `srcline` with `--call-graph ...,address` seems to be highly
-> > >> > buggy
-> > >> > for me.
-> > >> 
-> > >> Reping again.
-> > >> 
-> > >> Andi, or anyone else - I would really appreciate some more feedback on
-> > >> my
-> > >> questions below.
-> > >> 
-> > >> I esp. wonder how to leverage srcline and addresses in the call-graph,
-> > >> as
-> > >> that has the potential to greatly increase perf's value to me.
-> > > 
-> > > OK, I have found at least two culprits that partially explain the
-> > > behavior.
-> > > 
-> > > On one hand, I'm simply missing debug information for some libraries,
-> > > such as libm, libc etc. pp. Due to that, the addr2line step fails and
-> > > sym+offset is displayed.
-> > > 
-> > > On the other hand, there seems to be a bug in perf:
-> > > 
-> > > When hist_entry__get_srcline calls get_srcline I see from debug output
-> > > 
-> > > he->ip=307e, sym=main -> rip_obj2dump=40307e -> mandelbrot.h:39
-> > > 
-> > > But in callchain_list__sym_name, I see:
-> > > 
-> > > cl->ip=40373d, sym=main -> rip_obj2dump=80373d-> main+8390413
-> > > 
-> > > So it seems like the callchain_list is missing a normalization step that
-> > > is
-> > > applied to the IP addresses stored in hist_entry. Can someone point me
-> > > into
-> > > the right direction?
-> > > 
-> > > If I change callchain_list__sym_name to pass cl->ip - cl->ms.map->start
-> > > to
-> > > map__rip_2objdump this feature works much better for me, but I doubt
-> > > that this is the correct fix.
-> > 
-> > Yes it's something like that. Namhyung or Jiri probably know
-> > what the right fix would be.
+On Tue, Aug 16, 2016 at 05:39:26PM +0200, Milian Wolff wrote:
+> This fixes the srcline translation for call chains of user space
+> applications.
 > 
-> I think the unwind libs should set entry->ip to al.addr instead of
-> ip.  The __hists__add_entry() sets hist_entry->ip using al->addr.
+> Before we got:
+> 
+>     perf report --stdio --no-children -s sym,srcline -g address
+>      8.92%  [.] main                                 mandelbrot.h:41
+>             |
+>             |--3.70%--main +8390240
+>             |          __libc_start_main +139950056726769
+>             |          _start +8388650
+>             |
+>             |--2.74%--main +8390189
+>             |
+>              --2.08%--main +8390296
+>                        __libc_start_main +139950056726769
+>                        _start +8388650
+> 
+>      7.59%  [.] main                                 complex:1326
+>             |
+>             |--4.79%--main +8390203
+>             |          __libc_start_main +139950056726769
+>             |          _start +8388650
+>             |
+>              --2.80%--main +8390219
+> 
+>      7.12%  [.] __muldc3                             libgcc2.c:1945
+>             |
+>             |--3.76%--__muldc3 +139950060519490
+>             |          main +8390224
+>             |          __libc_start_main +139950056726769
+>             |          _start +8388650
+>             |
+>              --3.32%--__muldc3 +139950060519512
+>                        main +8390224
+> 
+> With this patch applied, we instead get:
+> 
+>     perf report --stdio --no-children -s sym,srcline -g address
+>      8.92%  [.] main                                 mandelbrot.h:41
+>             |
+>             |--3.70%--main mandelbrot.h:41
+>             |          __libc_start_main +241
+>             |          _start +4194346
+>             |
+>             |--2.74%--main mandelbrot.h:41
+>             |
+>              --2.08%--main mandelbrot.h:41
+>                        __libc_start_main +241
+>                        _start +4194346
+> 
+>      7.59%  [.] main                                 complex:1326
+>             |
+>             |--4.79%--main complex:1326
+>             |          __libc_start_main +241
+>             |          _start +4194346
+>             |
+>              --2.80%--main complex:1326
+> 
+>      7.12%  [.] __muldc3                             libgcc2.c:1945
+>             |
+>             |--3.76%--__muldc3 libgcc2.c:1945
+>             |          main mandelbrot.h:39
+>             |          __libc_start_main +241
+>             |          _start +4194346
+>             |
+>              --3.32%--__muldc3 libgcc2.c:1945
+>                        main mandelbrot.h:39
+> 
+> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-Thank you, that works. I've submitted a patch accordingly.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Cheers
-
--- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart12173979.Dsf4WXJCED
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgxNjE1NDU0NFowIwYJKoZIhvcNAQkEMRYEFCxskpJA9cwZi22u/cVsylelvAkJMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAKDI
-je7m5Is1fjcJyQz6VJk1HloErXBmfvXb/NZxZWOTltUCenFYCz91XeOG7vXCeXTOYyxYCvNTmARu
-xLIywKvnQW+yHtp/3X6O899LbV5RoUuE3fOxMhP6hMjiSDEYpl1CdcV8yj8gN89WCRaXI0Y8QS7E
-HdYGdoLN4YyRv0BYUbLcHxmEtq86obH9yzfEwafWK8w/hB0yhMLWUta9lUXfGkAaua9wlmtOhFfi
-2/yaoyC3s1uH3nob/6TCPs7aKid+4trIVRdp32RhU94dC8r1sKtMmLC/0PYxkcaZb1pMVEKStviY
-pPL7uR5irtdhPeNPIf9D9TDEizoctF9zg/4AAAAAAAA=
+Thanks,
+Namhyung
 
 
---nextPart12173979.Dsf4WXJCED--
+> ---
+>  tools/perf/util/unwind-libdw.c           | 2 +-
+>  tools/perf/util/unwind-libunwind-local.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> index cf5e250..783a53f 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -66,7 +66,7 @@ static int entry(u64 ip, struct unwind_info *ui)
+>  	if (__report_module(&al, ip, ui))
+>  		return -1;
+>  
+> -	e->ip  = ip;
+> +	e->ip  = al.addr;
+>  	e->map = al.map;
+>  	e->sym = al.sym;
+>  
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> index 97c0f8f..20c2e57 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -542,7 +542,7 @@ static int entry(u64 ip, struct thread *thread,
+>  	thread__find_addr_location(thread, PERF_RECORD_MISC_USER,
+>  				   MAP__FUNCTION, ip, &al);
+>  
+> -	e.ip = ip;
+> +	e.ip = al.addr;
+>  	e.map = al.map;
+>  	e.sym = al.sym;
+>  
+> -- 
+> 2.9.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
