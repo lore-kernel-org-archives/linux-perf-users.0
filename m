@@ -1,78 +1,119 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: usability issues with inlining and backtraces
-Date: Wed, 17 Aug 2016 00:13:10 +0900
-Message-ID: <20160816151310.GB11382@danjae.aot.lge.com>
-References: <3421510.JYGX19gbWH@milian-kdab2>
- <3237195.qkayrO3A0T@milian-kdab2>
- <16720652.kfi49F7aVl@milian-kdab2>
- <4329099.drS591pfTr@milian-kdab2>
- <87mvkeymyz.fsf@tassilo.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH] perf unwind: Use addr_location::addr instead of ip for entries
+Date: Tue, 16 Aug 2016 17:39:26 +0200
+Message-ID: <20160816153926.11288-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f170.google.com ([209.85.192.170]:33755 "EHLO
-	mail-pf0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751455AbcHPPOg (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:47460 "EHLO mail.kdab.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752985AbcHPPjp (ORCPT
 	<rfc822;linux-perf-users@vger.kernel.org>);
-	Tue, 16 Aug 2016 11:14:36 -0400
-Received: by mail-pf0-f170.google.com with SMTP id y134so28525020pfg.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2016 08:14:36 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <87mvkeymyz.fsf@tassilo.jf.intel.com>
+	Tue, 16 Aug 2016 11:39:45 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@redhat.com, linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: acme@kernel.org, Milian Wolff <milian.wolff@kdab.com>
 
-On Mon, Aug 15, 2016 at 10:13:24AM -0700, Andi Kleen wrote:
-> Milian Wolff <milian.wolff@kdab.com> writes:
-> 
-> > On Monday, August 15, 2016 11:32:33 AM CEST Milian Wolff wrote:
-> >> On Monday, June 13, 2016 6:07:13 PM CEST Milian Wolff wrote:
-> >> > Ping?
-> >> > 
-> >> > Andi, I'd be very interested in your answers on my questions below. Most
-> >> > notably, `srcline` with `--call-graph ...,address` seems to be highly
-> >> > buggy
-> >> > for me.
-> >> 
-> >> Reping again.
-> >> 
-> >> Andi, or anyone else - I would really appreciate some more feedback on my
-> >> questions below.
-> >> 
-> >> I esp. wonder how to leverage srcline and addresses in the call-graph, as
-> >> that has the potential to greatly increase perf's value to me.
-> >
-> > OK, I have found at least two culprits that partially explain the behavior.
-> >
-> > On one hand, I'm simply missing debug information for some libraries, such as 
-> > libm, libc etc. pp. Due to that, the addr2line step fails and sym+offset is 
-> > displayed.
-> >
-> > On the other hand, there seems to be a bug in perf: 
-> >
-> > When hist_entry__get_srcline calls get_srcline I see from debug output
-> >
-> > he->ip=307e, sym=main -> rip_obj2dump=40307e -> mandelbrot.h:39
-> >
-> > But in callchain_list__sym_name, I see:
-> >
-> > cl->ip=40373d, sym=main -> rip_obj2dump=80373d-> main+8390413
-> >
-> > So it seems like the callchain_list is missing a normalization step that is 
-> > applied to the IP addresses stored in hist_entry. Can someone point me into 
-> > the right direction?
-> >
-> > If I change callchain_list__sym_name to pass cl->ip - cl->ms.map->start to 
-> > map__rip_2objdump this feature works much better for me, but I doubt that this 
-> > is the correct fix.
-> 
-> Yes it's something like that. Namhyung or Jiri probably know
-> what the right fix would be.
+This fixes the srcline translation for call chains of user space
+applications.
 
-I think the unwind libs should set entry->ip to al.addr instead of
-ip.  The __hists__add_entry() sets hist_entry->ip using al->addr.
+Before we got:
 
-Thanks,
-Namhyung
+    perf report --stdio --no-children -s sym,srcline -g address
+     8.92%  [.] main                                 mandelbrot.h:41
+            |
+            |--3.70%--main +8390240
+            |          __libc_start_main +139950056726769
+            |          _start +8388650
+            |
+            |--2.74%--main +8390189
+            |
+             --2.08%--main +8390296
+                       __libc_start_main +139950056726769
+                       _start +8388650
+
+     7.59%  [.] main                                 complex:1326
+            |
+            |--4.79%--main +8390203
+            |          __libc_start_main +139950056726769
+            |          _start +8388650
+            |
+             --2.80%--main +8390219
+
+     7.12%  [.] __muldc3                             libgcc2.c:1945
+            |
+            |--3.76%--__muldc3 +139950060519490
+            |          main +8390224
+            |          __libc_start_main +139950056726769
+            |          _start +8388650
+            |
+             --3.32%--__muldc3 +139950060519512
+                       main +8390224
+
+With this patch applied, we instead get:
+
+    perf report --stdio --no-children -s sym,srcline -g address
+     8.92%  [.] main                                 mandelbrot.h:41
+            |
+            |--3.70%--main mandelbrot.h:41
+            |          __libc_start_main +241
+            |          _start +4194346
+            |
+            |--2.74%--main mandelbrot.h:41
+            |
+             --2.08%--main mandelbrot.h:41
+                       __libc_start_main +241
+                       _start +4194346
+
+     7.59%  [.] main                                 complex:1326
+            |
+            |--4.79%--main complex:1326
+            |          __libc_start_main +241
+            |          _start +4194346
+            |
+             --2.80%--main complex:1326
+
+     7.12%  [.] __muldc3                             libgcc2.c:1945
+            |
+            |--3.76%--__muldc3 libgcc2.c:1945
+            |          main mandelbrot.h:39
+            |          __libc_start_main +241
+            |          _start +4194346
+            |
+             --3.32%--__muldc3 libgcc2.c:1945
+                       main mandelbrot.h:39
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/unwind-libdw.c           | 2 +-
+ tools/perf/util/unwind-libunwind-local.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index cf5e250..783a53f 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -66,7 +66,7 @@ static int entry(u64 ip, struct unwind_info *ui)
+ 	if (__report_module(&al, ip, ui))
+ 		return -1;
+ 
+-	e->ip  = ip;
++	e->ip  = al.addr;
+ 	e->map = al.map;
+ 	e->sym = al.sym;
+ 
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 97c0f8f..20c2e57 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -542,7 +542,7 @@ static int entry(u64 ip, struct thread *thread,
+ 	thread__find_addr_location(thread, PERF_RECORD_MISC_USER,
+ 				   MAP__FUNCTION, ip, &al);
+ 
+-	e.ip = ip;
++	e.ip = al.addr;
+ 	e.map = al.map;
+ 	e.sym = al.sym;
+ 
+-- 
+2.9.3
