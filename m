@@ -1,91 +1,111 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Accessing sample data (like period) for trace events from python
- scripts
-Date: Fri, 19 Aug 2016 10:51:01 +0900
-Message-ID: <20160819015101.GB22968@sejong>
-References: <12483222.2TZrqxLJ8H@agathebauer>
- <20160817030553.GB8981@sejong>
- <8086607.n4B18LBsdA@milian-kdab2>
- <20160819013549.GA22968@sejong>
+From: Benjamin King <benjaminking@web.de>
+Subject: Re: Failure to parallelize
+Date: Thu, 18 Aug 2016 20:50:48 +0200
+Message-ID: <20160818185048.GA2242@localhost>
+References: <20160817135528.GA13652@localhost>
+ <21975224.qTVBMiFlMz@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEAMRELO12.lge.com ([156.147.23.52]:55713 "EHLO
-        lgeamrelo12.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754131AbcHSBxD (ORCPT
+Received: from mout.web.de ([212.227.17.11]:59265 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754510AbcHSBxB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2016 21:53:03 -0400
-In-Reply-To: <20160819013549.GA22968@sejong>
+        Thu, 18 Aug 2016 21:53:01 -0400
 Content-Disposition: inline
+In-Reply-To: <21975224.qTVBMiFlMz@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Milian Wolff <milian.wolff@kdab.com>
 Cc: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 10:35:49AM +0900, Namhyung Kim wrote:
-> On Wed, Aug 17, 2016 at 10:48:31AM +0200, Milian Wolff wrote:
-> > On Wednesday, August 17, 2016 12:05:53 PM CEST Namhyung Kim wrote:
-> > > Hi Milian,
-> > > 
-> > > On Tue, Aug 16, 2016 at 08:42:01PM +0200, Milian Wolff wrote:
-> > > > Hey all,
-> > > > 
-> > > > It doesn't seem to be possible to access the period, tid and various other
-> > > > sample fields from a python (and perl?) script using `perf script`. My
-> > > > use-
-> > > > case would be analyzing a perf data file created by perf inject
-> > > > --sched-stat.
-> > > 
-> > > I think you can access param_dict["sample"]["period"].
-> > 
-> > No, that is not possible, but would be a viable solution as well.
-> 
-> Sorry for late reply.  Oh, you wanted to access period of tracepoint
-> but I guess it's always 1, no?
+On Thu, Aug 18, 2016 at 11:56:45AM +0200, Milian Wolff wrote:
+>> Is there some way to make the difference [between threaded and non
+>> threaded code] more visible in perf?
+>
+>I think that won't even be detected by perf's way of doing sleep time
+>profiling, e.g.:
+>
+>https://github.com/milianw/shell-helpers/blob/master/perf-sleep-record
+>
+>Because there is no contention - it's simply Amdahl's law that's tripping you
+>up. Having a look at the CPU utilization is very important when writing
+>(supposedly) parallel code.
 
-OK, it seems sched_stat events have periods bigger than 1.  But you
-can access it using 'runtime' or 'delay' field in the event too.  I
-think sample data of tracepoint event is mostly meaningless and you
-should access to the event fields for useful information.  That's why
-it doesn't provide the info for tracepoint events, I guess.
+Yes, I should have looked at CPU utilization more closely right away. But
+even now that I know this, it seems awkward that I am unable to demonstrate
+with my trusty old profiler which part of my program just took longer in terms
+of wall clock time. I don't have VTune at my disposal, but it could be that I
+am using the wrong tool for the job.
 
-What do you specifically want to know from sample data?
+Still, I dabbled a bit with "perf record -s ...; perf report -T", but I find the
+output a little confusing. To wit:
 
-Thanks,
-Namhyung
+-----8< noppy1.c
+#include <omp.h>
+void foo() { int i; for ( i = 0; i < 900; ++i ) asm("nop;nop;nop;nop;"); }
+void bar() { int i; for ( i = 0; i < 100; ++i ) asm("nop;nop;nop;nop;"); }
+int main() {
+  long i;
+#pragma omp parallel for
+  for ( i = 0; i < 1000000; ++i ) foo();
+  for ( i = 0; i < 1000000; ++i ) bar();
+}
+-----8< noppy2.c
+#include <omp.h>
+void foo() { int i; for ( i = 0; i < 900; ++i ) asm("nop;nop;nop;nop;"); }
+void bar() { int i; for ( i = 0; i < 100; ++i ) asm("nop;nop;nop;nop;"); }
+int main() {
+  long i;
+#pragma omp parallel for
+  for ( i = 0; i < 1000000; ++i ) foo();
+#pragma omp parallel for
+  for ( i = 0; i < 1000000; ++i ) bar();
+}
+-----8< gcc noppy1.c -g -fopenmp -o noppy1;perf record -s ./noppy1;perf report -T
+    92.15%  noppy1   noppy1              [.] foo
+     7.08%  noppy1   noppy1              [.] bar
+    ...
+#  PID   TID  cycles:pp   cycles:pp  cycles:pp
+  3853  3856          0  1492046281          0
+  3853  3854          0    57482400          0
+  3853  3855          0           0          0
+-----8< gcc noppy2.c -g -fopenmp -o noppy2;perf record -s ./noppy2;perf report -T
+    88.97%  noppy2   noppy2            [.] foo                   
+    10.27%  noppy2   noppy2            [.] bar                   
+    ...
+#  PID   TID        cycles:pp  cycles:pp  cycles:pp
+  3869  3870                0   56778112          0
+  3869  3871       2180814133   57030240          0
+  3869  3872  139866901929176          0          0
+-----8<
 
 
-> 
-> > 
-> > ~~~~~~~~~~~~~~~~~~
-> > /tmp$ cat perf-script.py
-> > 
-> > import os
-> > import sys
-> > 
-> > sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> >         '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> > 
-> > from perf_trace_context import *
-> > from Core import *
-> > 
-> > def trace_unhandled(event_name, context, event_fields_dict):
-> >         print event_fields_dict['sample']['period']
-> > 
-> > /tmp$ perf script -s perf-script.py
-> > Traceback (most recent call last):
-> >   File "perf-script.py", line 11, in trace_unhandled
-> >     print event_fields_dict['sample']['period']
-> > KeyError: 'sample'
-> > Fatal Python error: problem in Python trace event handler
-> > Aborted (core dumped)
-> > ~~~~~~~~~~~~~~~~~~
-> > 
-> > Cheers
-> > -- 
-> > Milian Wolff | milian.wolff@kdab.com | Software Engineer
-> > KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-> > Tel: +49-30-521325470
-> > KDAB - The Qt Experts
-> 
-> 
+So, there is some difference in cycles:pp but I totally don't get what this
+table in the end of perf report -T is supposed to mean. The large value for TID
+3872 looks broken.
+
+
+I had more luck with 'perf report --per-thread':
+
+-----8< perf record --per-thread ./noppy1;perf report
+  68.90%  noppy1   noppy1            [.] foo
+  29.79%  noppy1   noppy1            [.] bar
+...
+-----8< perf record --per-thread ./noppy2;perf report
+  87.18%  noppy2   noppy2            [.] foo
+  10.35%  noppy2   noppy2            [.] bar
+...
+-----8<
+
+So, noppy1 looks different and I can see that the effort between foo and bar
+shifted. Adding a '--show-nr-samples' or a '--show-total-period' is then
+telling me that the effort for foo() stays the same, but bar() gets more
+expensive.
+
+Unfortunately, I still do not understand what exactly '--per-thread' is doing.
+The manpage is a little brief and I did not look in the code yet.
+But it's a start!
+
+Cheers,
+  Benjamin
