@@ -1,63 +1,150 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Cost in sym vs. sym@plt
-Date: Tue, 30 Aug 2016 13:54:53 +0200
-Message-ID: <2472727.a3qg7mcsuX@milian-kdab2>
+Subject: Improved backtraces with srcline in perf report
+Date: Tue, 30 Aug 2016 15:02:24 +0200
+Message-ID: <5097362.aBWkQI5end@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart9626554.ca7mQ1G7Ud"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1767654.fxRPVFXbCd"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:36758 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:46670 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1757871AbcH3LzE (ORCPT
+        id S1751629AbcH3NCa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2016 07:55:04 -0400
+        Tue, 30 Aug 2016 09:02:30 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
---nextPart9626554.ca7mQ1G7Ud
+--nextPart1767654.fxRPVFXbCd
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
 Hey all,
 
-in one of my perf data, I see the following cost report:
+I would like to work on improving the usability of the way backtraces are 
+reported by perf. See also my mail on that topic from a few weeks ago 
+("usability issues with inlining and backtraces").
 
-    Samples: 7K of event 'cycles:ppp', Event count (approx.): 6223833141
-    Children      Self  Command          Shared Object           Symbol
-    -   93.63%    28.89%  lab_mandelbrot   lab_mandelbrot        [.] main
-        - 73.81% main
-            - 33.57% hypot
-              27.76% __hypot_finite
-              15.97% __muldc3
-               2.90% __muldc3@plt
-               2.40% QImage::height() const@plt
-             + 2.14% QColor::rgb
-               1.94% QImage::width() const@plt
-               1.92% cabs@plt
+Status quo:
 
-How do I interpret the @plt cost? Does this really mean that 2.90% + 2.40% + 
-1.94% + 1.92% + ... of time is spent in the @plt stubs, which then call the 
-"real" non-@plt functions?
+~~~~~~~~~~~~~~~~
+perf report  --no-children -s dso,sym,srcline -g address --stdio
+# Samples: 8K of event 'cycles:ppp'
+# Event count (approx.): 8164367769
+#
+# Overhead  Shared Object               Symbol                                                              
+Source:Line                                  
+# ........  ..........................  
+..................................................................  
+.............................................
+#
+     7.82%  lab_mandelbrot              [.] main                                                            
+mandelbrot.h:41
+            |          
+            |--2.84%--main mandelbrot.h:41
+            |          __libc_start_main +241
+            |          _start +4194346
+            |          
+            |--2.58%--main mandelbrot.h:41
+            |          
+             --2.01%--main mandelbrot.h:41
+                       __libc_start_main +241
+                       _start +4194346
 
-I'm asking, because I did not expect the cost of the @plt to be that large. Is 
-this maybe due to skid? I doubt that, since the above is from a cycles:ppp 
-profile on an Intel Haswell i5, which is supposedly accurate.
+     7.79%  libgcc_s.so.1               [.] __muldc3                                                        
+libgcc2.c:1945
+            |          
+            |--3.93%--__muldc3 libgcc2.c:1945
+            |          main mandelbrot.h:39
+            |          __libc_start_main +241
+            |          _start +4194346
+            |          
+             --3.72%--__muldc3 libgcc2.c:1945
+                       main mandelbrot.h:39
+                       __libc_start_main +241
+                       _start +4194346
+~~~~~~~~~~~~~~~~
 
-If on the other hand the @plt actually calls the real function opaquely 
-internally, then I would propose to merge the two symbols in perf reports (at 
-least optionally). From my POV of an application developer, the distinction 
-between sym and sym@plt is just adding noise, the real cost for me is the sum 
-of the two entries.
+Note: I have no idea why unwinding failed for the second main entry of 2.58% 
+cost, but that is not topic of this email.
 
-Any explanation on how to interpret the data would be appreciated.
+I would like to fix the following issues in descending priority. Please advise 
+me whether these ideas are acceptable and, more importantly, where to 
+implement them in the existing perf code base.
 
-Thanks
+a) merge entries with equal labels
+
+Most lines of code will contain multiple instructions. When translating them 
+to srcline (-g address), the addresses will get mapped to the same labels. In 
+the above case e.g. this distinction simply adds visual noise with no value at 
+all. Instead, I'd like the report to show me:
+
+~~~~~~~~~~~~~~~~
+     7.82%  lab_mandelbrot              [.] main                                                            
+mandelbrot.h:41
+            |          
+            |--4.85%--main mandelbrot.h:41
+            |          __libc_start_main +241
+            |          _start +4194346
+            |          
+            |--2.58%--main mandelbrot.h:41
+
+     7.79%  libgcc_s.so.1               [.] __muldc3                                                        
+libgcc2.c:1945
+            |          
+            |--7.79%--__muldc3 libgcc2.c:1945
+            |          main mandelbrot.h:39
+            |          __libc_start_main +241
+            |          _start +4194346
+~~~~~~~~~~~~~~~~
+
+The merging of the entries must take backtraces into account, but must not 
+merge based on the the ip/address of entries in the backtrace, but merge based 
+on the symbol/label.
+
+Especially for more complex applications, where the same code gets called from 
+different functions (and we thus have different backtraces), this aggregation 
+of costs will greatly simplify the analysis.
+
+b) Add inliners
+
+The above report is highly confusing, as a lot of code gets inlined and perf 
+does not show the symbols of inlined functions. I.e. I'd like the report to 
+show me:
+
+~~~~~~~~~~~~~~~~
+     7.82%  lab_mandelbrot              [.] drawMandelbrot                                                            
+mandelbrot.h:41
+            |          
+            |--4.85%--drawMandelbrot mandelbrot.h:41
+            |          main main.cpp:55
+            |          __libc_start_main +241
+            |          _start +4194346
+            |          
+            |--2.58%--drawMandelbrot mandelbrot.h:41
+            |          main main.cpp:55
+
+     7.79%  libgcc_s.so.1               [.] __muldc3                                                        
+libgcc2.c:1945
+            |          
+            |--7.79%--__muldc3 libgcc2.c:1945
+            |          std::complex<double>::operator*=<double> complex:1326
+            |          main mandelbrot.h:39
+            |          __libc_start_main +241
+            |          _start +4194346
+~~~~~~~~~~~~~~~~
+
+The information for that exists in DWARF and can already be read out in perf 
+using the `bfd_find_inliner_info` code in util/srcline.c:addr2line. 
+
+Could someone please tell me what refactoring is required to make this work in 
+perf? It seems to be non-trivial.
+
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart9626554.ca7mQ1G7Ud
+--nextPart1767654.fxRPVFXbCd
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -159,13 +246,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgzMDExNTQ1M1owIwYJKoZIhvcNAQkEMRYEFD3YxfyPh/psJoYBPI5/x82hZmGwMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAIVT
-kUECYQstcO62XS6dPUHy+SaNHMnmhlXqND4On39DwQxTq76nfm2E7KxDvA/tymobIKV5AjfdZGHp
-xd6TNms9JdCruRVq/Jz8M6GHDupeV9i4HVo4lPMPE1mKLaTDUpKr3CvDG2NQE3gqeI8wfQZw/b4S
-YkBtJxQ23ihm/QfzhgMDRrMsS4+FTVLx9CP0n2sh9UKKWJl18fZRru0T8PQHoq0fxBb6I+usotKN
-ZOH+7N0FUMx7v0LHYekPaHOwREfpZVQKl9pkI8SpcNhfv+FmLlQXkIn/jpXUXp4tjTY4vMADYyiA
-NqEpBDIA1slIOFPkpcgVl9cw9nUZg4n0dOYAAAAAAAA=
+DTE2MDgzMDEzMDIyNFowIwYJKoZIhvcNAQkEMRYEFHFmYyYBAEHdr3xiUjl1maaI86LsMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBABw5
+ykv4RipHVonEIxg2cKf0oyasOBdmU2kPQLdfMX4SEUJLou2qc9P7EErfk4tbLWsfnWfItwt8arBe
+mDz1ZzRSKUr6oHXgBghzz0KI97dmpfoHj0I0oagJ03j/xwHFKL2tOz37jZczsZrs/aG+VejP7MTe
+lGQ60ykjWTpTNgBQmVnrQfis3PEEwuWc9KmZQUG730la9QItMdkZmHX+3VI92ia0NIo6ofQNsv85
+FPf4JmMANEKb5f7OEG7Vkx8q2HveqEj+CXhDo8NXvDi9JotTL19t+69MvyiT3zmRjlD0jk8A887v
+vn+IKEiyZySrZidSx0UEMENRMcwlVf/HGOgAAAAAAAA=
 
 
---nextPart9626554.ca7mQ1G7Ud--
+--nextPart1767654.fxRPVFXbCd--
