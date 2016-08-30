@@ -1,47 +1,136 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf symbols: Demangle symbols for synthesized @plt entries.
-Date: Tue, 30 Aug 2016 16:42:53 +0200
-Message-ID: <2260532.LgbvIAF3sS@milian-kdab2>
-References: <20160830114102.30863-1-milian.wolff@kdab.com> <20160830131733.GA11113@kernel.org>
+Subject: regression: perf script IP address format
+Date: Tue, 30 Aug 2016 17:42:47 +0200
+Message-ID: <3089144.akJYgxmlqy@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1632743.xHKo75O4Jx"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart294516345.1jI2lgKObS"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:60346 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:39156 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752288AbcH3OnK (ORCPT
+        id S1753657AbcH3Pmw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2016 10:43:10 -0400
-In-Reply-To: <20160830131733.GA11113@kernel.org>
+        Tue, 30 Aug 2016 11:42:52 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>, Brendan Gregg <brendan.d.gregg@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 
---nextPart1632743.xHKo75O4Jx
+--nextPart294516345.1jI2lgKObS
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Tuesday, August 30, 2016 10:17:33 AM CEST Arnaldo Carvalho de Melo wrote:
-> Em Tue, Aug 30, 2016 at 01:41:02PM +0200, Milian Wolff escreveu:
-> > The symbols in the synthesized @plt entries where not demangled
-> 
-> > before, i.e. we could end up with entries such as:
-> Thanks, applied.
-> 
-> Please CC linux-kernel@vger.kernel.org for wider exposure, as there are
-> many perf users (and developers) that don't subscribe to this list.
+Hey all,
 
-OK, will do in the future. Should I resend all my other pending patches that 
-did not get reviewed so far to linux-kernel as well?
+I'm encountering an issue related to the one I reported a few days ago, where 
+the `-g address` feature was broken due to the wrong address being used.
+
+We fixed this by using al.addr instead of ip, but this now breaks the output 
+of perf script:
+
+Before 67540759151aefafddade3e27c4671ab7b3d230f was applied:
+
+lab_mandelbrot 28224 13656.319122:     995647 cycles:ppp: 
+                  403a8a _start+0x2a (/ssd/milian/projects/kdab/training-
+material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
+            7f8a88e1c291 __libc_start_main+0xf1 (/usr/lib/libc-2.24.so)
+                  40307a main+0x4a (/ssd/milian/projects/kdab/training-
+material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
+            7f8a8ae39ae9 QApplicationPrivate::init+0x9 (/usr/lib/
+libQt5Widgets.so.5.7.0)
+            7f8a8a69e7af QGuiApplicationPrivate::init+0x2f (/usr/lib/
+libQt5Gui.so.5.7.0)
+            7f8a8a15b3bf QCoreApplicationPrivate::init+0xaaf (/usr/lib/
+libQt5Core.so.5.7.0)
+            7f8a8a69cced QGuiApplicationPrivate::createEventDispatcher+0x2d (/
+usr/lib/libQt5Gui.so.5.7.0)
+            7f8a8a69c252 QGuiApplicationPrivate::createPlatformIntegration
++0x5c2 (/usr/lib/libQt5Gui.so.5.7.0)
+            7f8a8a68e01f QPlatformIntegrationFactory::create+0xef (/usr/lib/
+libQt5Gui.so.5.7.0)
+            7f8a8a13f9c2 QFactoryLoader::instance+0x112 (/usr/lib/
+libQt5Core.so.5.7.0)
+            7f8a8a14a6a5 [unknown] (/usr/lib/libQt5Core.so.5.7.0)
+            7f8a8a15121e [unknown] (/usr/lib/libQt5Core.so.5.7.0)
+            7f8a87aa5f82 dlopen+0x32 (/usr/lib/libdl-2.24.so)
+            7f8a87aa6521 [unknown] (/usr/lib/libdl-2.24.so)
+            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
+            7f8a87aa5ee9 [unknown] (/usr/lib/libdl-2.24.so)
+            7f8a8b54d2d9 _dl_open+0xc9 (/usr/lib/ld-2.24.so)
+            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
+            7f8a8b54d85d dl_open_worker+0x11d (/usr/lib/ld-2.24.so)
+            7f8a8b547005 _dl_map_object_deps+0x275 (/usr/lib/ld-2.24.so)
+            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
+            7f8a8b546d80 openaux+0x30 (/usr/lib/ld-2.24.so)
+            7f8a8b5423fd _dl_map_object+0x8d (/usr/lib/ld-2.24.so)
+            7f8a8b54a5d4 _dl_name_match_p+0x44 (/usr/lib/ld-2.24.so)
+            7f8a8b55364c strcmp+0xc (/usr/lib/ld-2.24.so)
+
+After it got applied:
+
+lab_mandelbrot 28224 13656.319122:     995647 cycles:ppp: 
+                    3a8a _start+0xffffffffff80002a (/ssd/milian/projects/kdab/
+training-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
+                   20291 __libc_start_main+0xffff00eaee4080f1 (/usr/lib/
+libc-2.24.so)
+                    307a main+0xffffffffff80004a (/ssd/milian/projects/kdab/
+training-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
+                  158ae9 QApplicationPrivate::init+0xffff00eaea63e009 (/usr/
+lib/libQt5Widgets.so.5.7.0)
+                   f97af QGuiApplicationPrivate::init+0xffff00eaeb4b602f (/
+usr/lib/libQt5Gui.so.5.7.0)
+                  28d3bf QCoreApplicationPrivate::init+0xffff00eaec264aaf (/
+usr/lib/libQt5Core.so.5.7.0)
+                   f7ced QGuiApplicationPrivate::createEventDispatcher
++0xffff00eaeb4b602d (/usr/lib/libQt5Gui.so.5.7.0)
+                   f7252 QGuiApplicationPrivate::createPlatformIntegration
++0xffff00eaeb4b65c2 (/usr/lib/libQt5Gui.so.5.7.0)
+                   e901f QPlatformIntegrationFactory::create
++0xffff00eaeb4b60ef (/usr/lib/libQt5Gui.so.5.7.0)
+                  2719c2 QFactoryLoader::instance+0xffff00eaec264112 (/usr/
+lib/libQt5Core.so.5.7.0)
+                  27c6a5 [unknown] (/usr/lib/libQt5Core.so.5.7.0)
+                  28321e [unknown] (/usr/lib/libQt5Core.so.5.7.0)
+                     f82 dlopen+0xffff00eaf0ab6032 (/usr/lib/libdl-2.24.so)
+                    1521 [unknown] (/usr/lib/libdl-2.24.so)
+                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
+ld-2.24.so)
+                     ee9 [unknown] (/usr/lib/libdl-2.24.so)
+                   132d9 _dl_open+0xffff00eae958c0c9 (/usr/lib/ld-2.24.so)
+                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
+ld-2.24.so)
+                   1385d dl_open_worker+0xffff00eae958c11d (/usr/lib/
+ld-2.24.so)
+                    d005 _dl_map_object_deps+0xffff00eae958c275 (/usr/lib/
+ld-2.24.so)
+                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
+ld-2.24.so)
+                    cd80 openaux+0xffff00eae958c030 (/usr/lib/ld-2.24.so)
+                    83fd _dl_map_object+0xffff00eae958c08d (/usr/lib/
+ld-2.24.so)
+                   105d4 _dl_name_match_p+0xffff00eae958c044 (/usr/lib/
+ld-2.24.so)
+                   1964c strcmp+0xffff00eae958c00c (/usr/lib/ld-2.24.so)
+
+This breaks consumers of the `perf script` output who want to feed the IP 
+address into addr2line, most notably stackcollapse-perf.
+
+Namhyung, how do you propose to fix this issue, while keeping `-g address` 
+function in reports?
+
+Also, while at it, I'd really like to see a way to output the srcline 
+information in backtraces output by `perf script`, such that the expensive 
+addr2line invocation by stackcollapse-perf becomes obsolete. Any suggestion on 
+how to do that? I think it will mean refactoring `perf script` to become aware 
+of a `--call-graph` option, similar to `perf report`. Additionally, the data 
+must then be published to the python/perl bindings...
 
 Thanks
-
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1632743.xHKo75O4Jx
+--nextPart294516345.1jI2lgKObS
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -143,13 +232,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgzMDE0NDI1NFowIwYJKoZIhvcNAQkEMRYEFDRurgPxUuvwg0d1lY3cjgdo12heMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAJfw
-dBQicLbX7h0ypO+RQY8wwTZf0gEjbtWtSxseCcWzWaj7aqnupN+M4pNKVzfjuBc3gv939qWxa21s
-0ngnVl2xXxHXaPj5P/ugfGP0/ltdAleRSpihyk2ify+LL7QLfxrIOc2Q7+s8ZtB2mgNrwz2RmKrR
-5SmxcKZM7BPht663A2ykh1lvX2+S7GF3OtILWMtOKlGcXEeCbJ822/oEx4R0awtRVRPNwr67xgql
-Viuwhp9kEkRNGYXZSGkUo2axiZx0iH0DcG9achOL/PQ2+RJG1PBL/Fh7xb1gSu7jLeowXm28fVx5
-f183h6UJ8zUhw8dkXRTGFbx/2Eb5d+vuOqkAAAAAAAA=
+DTE2MDgzMDE1NDI0N1owIwYJKoZIhvcNAQkEMRYEFLDFIdGmu2Zmk7V5pNKvCeb3b3phMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAKgy
+CDP0qD5sOxiCPEPJx3IMznb2PDXBx1MoKozvTcuZqL0KlRQcw05jSDeNjt6OaOxmXaUFoIq+INXs
+QRbDR2SllAqcNKqMapQneywUlO5DQA9vuM2XnhyLHpZt6gceePiFjEi+1xqq13zDoQc0kOVVF/L4
+0FoXv7R2vZepTbre8Vz7um7i6QiKaJGKXEYeDr5zT+2u4i2Dmbcaieec0sYBg0ah/9ZewfgDoje8
+iJFKZtMfH1OsGHclHsSQefHfPmlRrGb23cs/Ykc2qQOaEgUUeHWkI6nwrpmla19XwmiznfoWRcmT
+2wkMlknVk2OHa6NtrAi34vyQa+X7XeRcCEoAAAAAAAA=
 
 
---nextPart1632743.xHKo75O4Jx--
+--nextPart294516345.1jI2lgKObS--
