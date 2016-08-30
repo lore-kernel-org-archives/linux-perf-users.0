@@ -1,63 +1,63 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH 1/2] perf report: Accept report.sort-order as synonym to report.sort_order
-Date: Tue, 30 Aug 2016 15:41:05 +0200
-Message-ID: <20160830134106.21240-1-milian.wolff@kdab.com>
+Subject: [PATCH 2/2] perf config: Show default report configuration in example and docs
+Date: Tue, 30 Aug 2016 15:41:06 +0200
+Message-ID: <20160830134106.21240-2-milian.wolff@kdab.com>
+References: <20160830134106.21240-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:52100 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:52114 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750980AbcH3NlL (ORCPT
+        id S1750980AbcH3NlQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2016 09:41:11 -0400
+        Tue, 30 Aug 2016 09:41:16 -0400
+In-Reply-To: <20160830134106.21240-1-milian.wolff@kdab.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 Cc: Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 
-The other config keys use dashes but report.sort_order used to only
-allow an underline which is confusing. This patch allows the
-dash syntax as a synonym to the underline syntax, making the
-following .perfconfig file completely valid:
-
-    [report]
-    sort-order = dso,sym,srcline
-
-    [call-graph]
-    record-mode = dwarf
-    print-type = graph
-    sort-key = address
-
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 ---
- tools/perf/Documentation/perf-config.txt | 1 +
- tools/perf/builtin-report.c              | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-config.txt    | 8 ++++++++
+ tools/perf/Documentation/perfconfig.example | 9 +++++++++
+ 2 files changed, 17 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 68c8919..c7031bc 100644
+index c7031bc..1559000 100644
 --- a/tools/perf/Documentation/perf-config.txt
 +++ b/tools/perf/Documentation/perf-config.txt
-@@ -382,6 +382,7 @@ call-graph.*::
- 		histogram entry. Default is 0 which means no limitation.
+@@ -110,6 +110,14 @@ Given a $HOME/.perfconfig like this:
+ 		order = caller
+ 		sort-key = function
  
- report.*::
-+	report.sort-order::
- 	report.sort_order::
- 		Allows changing the default sort order from "comm,dso,symbol" to
- 		some other default, for instance "sym,dso" may be more fitting for
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index b9e046b..3842b59 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -89,7 +89,7 @@ static int report__config(const char *var, const char *value, void *cb)
- 		rep->queue_size = perf_config_u64(var, value);
- 		return 0;
- 	}
--	if (!strcmp(var, "report.sort_order")) {
-+	if (!strcmp(var, "report.sort_order") || !strcmp(var, "report.sort-order")) {
- 		default_sort_order = strdup(value);
- 		return 0;
- 	}
++	[report]
++		# Defaults
++		sort-order = comm,dso,symbol
++		percent-limit = 0
++		queue-size = 0
++		children = true
++		group = true
++
+ Variables
+ ~~~~~~~~~
+ 
+diff --git a/tools/perf/Documentation/perfconfig.example b/tools/perf/Documentation/perfconfig.example
+index 1d8d5bc..2b477c1 100644
+--- a/tools/perf/Documentation/perfconfig.example
++++ b/tools/perf/Documentation/perfconfig.example
+@@ -27,3 +27,12 @@
+ 	use_offset = true
+ 	jump_arrows = true
+ 	show_nr_jumps = false
++
++[report]
++
++	# Defaults
++	sort-order = comm,dso,symbol
++	percent-limit = 0
++	queue-size = 0
++	children = true
++	group = true
 -- 
 2.9.3
