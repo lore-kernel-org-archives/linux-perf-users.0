@@ -1,136 +1,103 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: regression: perf script IP address format
-Date: Tue, 30 Aug 2016 17:42:47 +0200
-Message-ID: <3089144.akJYgxmlqy@milian-kdab2>
+Subject: Re: perf inject --sched-stat can produce invalid perf.data files
+Date: Tue, 30 Aug 2016 23:26:53 +0200
+Message-ID: <1996346.OFykjbkAe6@agathebauer>
+References: <1705181.9Ekn7j0XTY@agathebauer>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart294516345.1jI2lgKObS"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2395423.6lVTeE4ouF"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:39156 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:43890 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753657AbcH3Pmw (ORCPT
+        id S1751609AbcH3V06 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2016 11:42:52 -0400
+        Tue, 30 Aug 2016 17:26:58 -0400
+In-Reply-To: <1705181.9Ekn7j0XTY@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>, Brendan Gregg <brendan.d.gregg@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 
---nextPart294516345.1jI2lgKObS
+--nextPart2395423.6lVTeE4ouF
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hey all,
+On Dienstag, 16. August 2016 17:56:10 CEST Milian Wolff wrote:
+> Hey all,
 
-I'm encountering an issue related to the one I reported a few days ago, where 
-the `-g address` feature was broken due to the wrong address being used.
+ping?
 
-We fixed this by using al.addr instead of ip, but this now breaks the output 
-of perf script:
+> I've hit another issue that I have trouble understanding and fixing:
+> 
+> ~~~~~~~~~~~~
+> echo 1 | sudo tee /proc/sys/kernel/sched_schedstats
+> 
+> perf record \
+>     --event sched:sched_stat_sleep/call-graph=no/ \
+>     --event sched:sched_switch/call-graph=fp/ \
+>     --output perf.data.raw \
+>     sleep 1
+> 
+> echo 0 | sudo tee /proc/sys/kernel/sched_schedstats
+> 
+> perf inject --sched-stat --input perf.data.raw --output perf.data
+> perf script # or perf report
+> 0x4e18 [0xd8]: failed to process type: 9
+> ~~~~~~~~~~~~
+> 
+> This happens only for the perf.data produced by perf-inject when at least
+> one of the sched events has no call graph.
+> 
+> Looking at the code, I see that the issue is triggered in evsel.c:
+> 
+> ~~~~~~~~~~~~
+> 	if (type & PERF_SAMPLE_CALLCHAIN) {
+> 		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
+> 
+> 		OVERFLOW_CHECK_u64(array);
+> 		data->callchain = (struct ip_callchain *)array++;
+> 		if (data->callchain->nr > max_callchain_nr)
+> 			return -EFAULT;
+> 		sz = data->callchain->nr * sizeof(u64);
+> 		OVERFLOW_CHECK(array, sz, max_size);
+> 		array = (void *)array + sz;
+> 	}
+> ~~~~~~~~~~~~
+> 
+> In GDB:
+> 
+> ~~~~~~~~~~~~
+> (gdb) break evsel.c:1859
+> Breakpoint 1 at 0x5555556704d9: file util/evsel.c, line 1859.
+> (gdb) run
+> Starting program: /home/milian/.bin/perf script
+> [Thread debugging using libthread_db enabled]
+> Using host libthread_db library "/usr/lib/libthread_db.so.1".
+> 
+> Breakpoint 1, perf_evsel__parse_sample (evsel=0x5555571c1d50,
+> event=0x7ffff7ff4e18, data=0x7fffffffb3e0) at util/evsel.c:1861
+> 1861                    data->callchain = (struct ip_callchain *)array++;
+> (gdb) next
+> 1862                    if (data->callchain->nr > max_callchain_nr)
+> (gdb) print *data->callchain
+> $1 = {nr = 61654255534090, ips = 0x7ffff7ff4e58}
+> (gdb) next
+> 1864                    sz = data->callchain->nr * sizeof(u64);
+> (gdb)
+> 1865                    OVERFLOW_CHECK(array, sz, max_size);
+> (gdb) print sz
+> $2 = 493234044272720
+> (gdb) next
+> 1934                                    return -EFAULT;
+> ~~~~~~~~~~~~
+> 
+> Can someone please look into this issue and find a way to fix perf-inject?
 
-Before 67540759151aefafddade3e27c4671ab7b3d230f was applied:
-
-lab_mandelbrot 28224 13656.319122:     995647 cycles:ppp: 
-                  403a8a _start+0x2a (/ssd/milian/projects/kdab/training-
-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
-            7f8a88e1c291 __libc_start_main+0xf1 (/usr/lib/libc-2.24.so)
-                  40307a main+0x4a (/ssd/milian/projects/kdab/training-
-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
-            7f8a8ae39ae9 QApplicationPrivate::init+0x9 (/usr/lib/
-libQt5Widgets.so.5.7.0)
-            7f8a8a69e7af QGuiApplicationPrivate::init+0x2f (/usr/lib/
-libQt5Gui.so.5.7.0)
-            7f8a8a15b3bf QCoreApplicationPrivate::init+0xaaf (/usr/lib/
-libQt5Core.so.5.7.0)
-            7f8a8a69cced QGuiApplicationPrivate::createEventDispatcher+0x2d (/
-usr/lib/libQt5Gui.so.5.7.0)
-            7f8a8a69c252 QGuiApplicationPrivate::createPlatformIntegration
-+0x5c2 (/usr/lib/libQt5Gui.so.5.7.0)
-            7f8a8a68e01f QPlatformIntegrationFactory::create+0xef (/usr/lib/
-libQt5Gui.so.5.7.0)
-            7f8a8a13f9c2 QFactoryLoader::instance+0x112 (/usr/lib/
-libQt5Core.so.5.7.0)
-            7f8a8a14a6a5 [unknown] (/usr/lib/libQt5Core.so.5.7.0)
-            7f8a8a15121e [unknown] (/usr/lib/libQt5Core.so.5.7.0)
-            7f8a87aa5f82 dlopen+0x32 (/usr/lib/libdl-2.24.so)
-            7f8a87aa6521 [unknown] (/usr/lib/libdl-2.24.so)
-            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
-            7f8a87aa5ee9 [unknown] (/usr/lib/libdl-2.24.so)
-            7f8a8b54d2d9 _dl_open+0xc9 (/usr/lib/ld-2.24.so)
-            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
-            7f8a8b54d85d dl_open_worker+0x11d (/usr/lib/ld-2.24.so)
-            7f8a8b547005 _dl_map_object_deps+0x275 (/usr/lib/ld-2.24.so)
-            7f8a8b5493a4 _dl_catch_error+0x74 (/usr/lib/ld-2.24.so)
-            7f8a8b546d80 openaux+0x30 (/usr/lib/ld-2.24.so)
-            7f8a8b5423fd _dl_map_object+0x8d (/usr/lib/ld-2.24.so)
-            7f8a8b54a5d4 _dl_name_match_p+0x44 (/usr/lib/ld-2.24.so)
-            7f8a8b55364c strcmp+0xc (/usr/lib/ld-2.24.so)
-
-After it got applied:
-
-lab_mandelbrot 28224 13656.319122:     995647 cycles:ppp: 
-                    3a8a _start+0xffffffffff80002a (/ssd/milian/projects/kdab/
-training-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
-                   20291 __libc_start_main+0xffff00eaee4080f1 (/usr/lib/
-libc-2.24.so)
-                    307a main+0xffffffffff80004a (/ssd/milian/projects/kdab/
-training-material/addon/profiling/build/lab_mandelbrot/src/lab_mandelbrot)
-                  158ae9 QApplicationPrivate::init+0xffff00eaea63e009 (/usr/
-lib/libQt5Widgets.so.5.7.0)
-                   f97af QGuiApplicationPrivate::init+0xffff00eaeb4b602f (/
-usr/lib/libQt5Gui.so.5.7.0)
-                  28d3bf QCoreApplicationPrivate::init+0xffff00eaec264aaf (/
-usr/lib/libQt5Core.so.5.7.0)
-                   f7ced QGuiApplicationPrivate::createEventDispatcher
-+0xffff00eaeb4b602d (/usr/lib/libQt5Gui.so.5.7.0)
-                   f7252 QGuiApplicationPrivate::createPlatformIntegration
-+0xffff00eaeb4b65c2 (/usr/lib/libQt5Gui.so.5.7.0)
-                   e901f QPlatformIntegrationFactory::create
-+0xffff00eaeb4b60ef (/usr/lib/libQt5Gui.so.5.7.0)
-                  2719c2 QFactoryLoader::instance+0xffff00eaec264112 (/usr/
-lib/libQt5Core.so.5.7.0)
-                  27c6a5 [unknown] (/usr/lib/libQt5Core.so.5.7.0)
-                  28321e [unknown] (/usr/lib/libQt5Core.so.5.7.0)
-                     f82 dlopen+0xffff00eaf0ab6032 (/usr/lib/libdl-2.24.so)
-                    1521 [unknown] (/usr/lib/libdl-2.24.so)
-                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
-ld-2.24.so)
-                     ee9 [unknown] (/usr/lib/libdl-2.24.so)
-                   132d9 _dl_open+0xffff00eae958c0c9 (/usr/lib/ld-2.24.so)
-                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
-ld-2.24.so)
-                   1385d dl_open_worker+0xffff00eae958c11d (/usr/lib/
-ld-2.24.so)
-                    d005 _dl_map_object_deps+0xffff00eae958c275 (/usr/lib/
-ld-2.24.so)
-                    f3a4 _dl_catch_error+0xffff00eae958c074 (/usr/lib/
-ld-2.24.so)
-                    cd80 openaux+0xffff00eae958c030 (/usr/lib/ld-2.24.so)
-                    83fd _dl_map_object+0xffff00eae958c08d (/usr/lib/
-ld-2.24.so)
-                   105d4 _dl_name_match_p+0xffff00eae958c044 (/usr/lib/
-ld-2.24.so)
-                   1964c strcmp+0xffff00eae958c00c (/usr/lib/ld-2.24.so)
-
-This breaks consumers of the `perf script` output who want to feed the IP 
-address into addr2line, most notably stackcollapse-perf.
-
-Namhyung, how do you propose to fix this issue, while keeping `-g address` 
-function in reports?
-
-Also, while at it, I'd really like to see a way to output the srcline 
-information in backtraces output by `perf script`, such that the expensive 
-addr2line invocation by stackcollapse-perf becomes obsolete. Any suggestion on 
-how to do that? I think it will mean refactoring `perf script` to become aware 
-of a `--call-graph` option, similar to `perf report`. Additionally, the data 
-must then be published to the python/perl bindings...
-
-Thanks
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart294516345.1jI2lgKObS
+--nextPart2395423.6lVTeE4ouF
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -232,13 +199,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDgzMDE1NDI0N1owIwYJKoZIhvcNAQkEMRYEFLDFIdGmu2Zmk7V5pNKvCeb3b3phMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAKgy
-CDP0qD5sOxiCPEPJx3IMznb2PDXBx1MoKozvTcuZqL0KlRQcw05jSDeNjt6OaOxmXaUFoIq+INXs
-QRbDR2SllAqcNKqMapQneywUlO5DQA9vuM2XnhyLHpZt6gceePiFjEi+1xqq13zDoQc0kOVVF/L4
-0FoXv7R2vZepTbre8Vz7um7i6QiKaJGKXEYeDr5zT+2u4i2Dmbcaieec0sYBg0ah/9ZewfgDoje8
-iJFKZtMfH1OsGHclHsSQefHfPmlRrGb23cs/Ykc2qQOaEgUUeHWkI6nwrpmla19XwmiznfoWRcmT
-2wkMlknVk2OHa6NtrAi34vyQa+X7XeRcCEoAAAAAAAA=
+DTE2MDgzMDIxMjY1M1owIwYJKoZIhvcNAQkEMRYEFC78LjvFlsKAbl3+wE7WAAxlCOshMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBABny
+pjcfd7AYgPqlZpANTIkOEQcYC4znYYdl8uUAXRJpuF/veMULL9RFDMfyzGZyKfF+FJBSpELGf80w
+7k/0JEZttT5yR1BpvjUflkJhbl7kwr/l7UhpO1nGDphmrOage7frIN9I9u9tjdcQELb5fdMjJFxE
+EDxHBIJUiz4JaXaWy/pTzOB3tmEdWD9iJkt8ABQpARrgoSEMYUHI//JgtUWEbcreNRJEsdkkTfpU
++gyEK/s/bVSGLDO54++0LDQFXRBzx4bpf+aqDTawVJDexx2kITTqcgi8BGwFoRLSHGdT40jxnIO6
+BRUG3X5DbG+ekm1fnWai0xGdZlZR71uARJcAAAAAAAA=
 
 
---nextPart294516345.1jI2lgKObS--
+--nextPart2395423.6lVTeE4ouF--
