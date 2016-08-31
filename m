@@ -1,27 +1,56 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: Cost in sym vs. sym@plt
-Date: Wed, 31 Aug 2016 09:51:06 -0700
-Message-ID: <8760qgrif9.fsf@tassilo.jf.intel.com>
-References: <2472727.a3qg7mcsuX@milian-kdab2>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH] arc: perf: Enable generic "cache-references" and
+ "cache-misses" events
+Date: Wed, 31 Aug 2016 12:05:14 -0700
+Message-ID: <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
+References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
+ <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:38976 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S935292AbcHaQvg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2016 12:51:36 -0400
-In-Reply-To: <2472727.a3qg7mcsuX@milian-kdab2> (Milian Wolff's message of
-        "Tue, 30 Aug 2016 13:54:53 +0200")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Jiri Olsa <jolsa@redhat.com>
+Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Milian Wolff <milian.wolff@kdab.com> writes:
+On 08/26/2016 10:31 AM, Vineet Gupta wrote:
+> On 08/25/2016 04:49 AM, Alexey Brodkin wrote:
+>> ...
+>>  	[PERF_COUNT_ARC_EDTLB] = "edtlb",	/* D-TLB Miss */
+>>  	[PERF_COUNT_ARC_EITLB] = "eitlb",	/* I-TLB Miss */
+>> +
+>> +	[PERF_COUNT_HW_CACHE_REFERENCES] = "imemrdc",	/* Instr: mem read cached */
+>> +	[PERF_COUNT_HW_CACHE_MISSES] = "dclm",		/* D-cache Load Miss */
+> I think this is duplicating a mistake we already have. I vaguely remember when
+> doing some hackbench profiling last year with range based profiling confined to
+> memset routine and saw that L1-dcache-misses was counting zero. This is because it
+> only counts LD misses while memset only does ST.
 >
-> I'm asking, because I did not expect the cost of the @plt to be that large. Is 
-> this maybe due to skid? I doubt that, since the above is from a cycles:ppp 
-> profile on an Intel Haswell i5, which is supposedly accurate.
+> Performance counter stats for '/sbin/hackbench':
+>
+>      0 L1-dcache-misses
+>      0 L1-dcache-load-misses
+>      1846082 L1-dcache-store-misses
+>
+>
+> @PeterZ do you concur that is wrong and we ought to setup 2 counters to do this
+> correctly ?
 
-There's no such thing as fully accurate profiling.
+Hi Peter / Will,
 
--Andi
+Can you provide some guidance here. So I looked at what others do -
+ARMV7_PERFCTR_L1_DCACHE_REFILL counts both load and store misses, while ARC has 2
+separate conditions for load or stores. Is there an existing mechanism to "group"
+/ "add" them to give a cumulative PERF_COUNT_HW_CACHE_MISSES - is that what perf
+event grouping is ?
+
+Quoting from perf wiki @ https://perf.wiki.kernel.org/index.php/Tutorial
+
+"It can be interesting to try and pack events in a way that guarantees that event
+A and B are always measured together. Although the perf_events kernel interface
+provides support for event grouping, the current perf tool does *not*."
+
+Thx,
+-Vineet
