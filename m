@@ -1,73 +1,85 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 2/2] perf config: Show default report configuration in
- example and docs
-Date: Wed, 31 Aug 2016 18:49:41 -0300
-Message-ID: <20160831214941.GC13095@kernel.org>
-References: <20160830134106.21240-1-milian.wolff@kdab.com>
- <20160830134106.21240-2-milian.wolff@kdab.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] arc: perf: Enable generic "cache-references" and
+ "cache-misses" events
+Date: Thu, 1 Sep 2016 10:33:24 +0200
+Message-ID: <20160901083324.GM10153@twins.programming.kicks-ass.net>
+References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
+ <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
+ <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:41812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1756740AbcHaVtq (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2016 17:49:46 -0400
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20160830134106.21240-2-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Jiri Olsa <jolsa@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Aug 30, 2016 at 03:41:06PM +0200, Milian Wolff escreveu:
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-
-Thanks, applied to perf/core.
-
-- Arnaldo
- 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> ---
->  tools/perf/Documentation/perf-config.txt    | 8 ++++++++
->  tools/perf/Documentation/perfconfig.example | 9 +++++++++
->  2 files changed, 17 insertions(+)
+On Wed, Aug 31, 2016 at 12:05:14PM -0700, Vineet Gupta wrote:
+> On 08/26/2016 10:31 AM, Vineet Gupta wrote:
+> > On 08/25/2016 04:49 AM, Alexey Brodkin wrote:
+> >> ...
+> >>  	[PERF_COUNT_ARC_EDTLB] = "edtlb",	/* D-TLB Miss */
+> >>  	[PERF_COUNT_ARC_EITLB] = "eitlb",	/* I-TLB Miss */
+> >> +
+> >> +	[PERF_COUNT_HW_CACHE_REFERENCES] = "imemrdc",	/* Instr: mem read cached */
+> >> +	[PERF_COUNT_HW_CACHE_MISSES] = "dclm",		/* D-cache Load Miss */
+> > I think this is duplicating a mistake we already have. I vaguely remember when
+> > doing some hackbench profiling last year with range based profiling confined to
+> > memset routine and saw that L1-dcache-misses was counting zero. This is because it
+> > only counts LD misses while memset only does ST.
+> >
+> > Performance counter stats for '/sbin/hackbench':
+> >
+> >      0 L1-dcache-misses
+> >      0 L1-dcache-load-misses
+> >      1846082 L1-dcache-store-misses
+> >
+> >
+> > @PeterZ do you concur that is wrong and we ought to setup 2 counters to do this
+> > correctly ?
 > 
-> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> index c7031bc..1559000 100644
-> --- a/tools/perf/Documentation/perf-config.txt
-> +++ b/tools/perf/Documentation/perf-config.txt
-> @@ -110,6 +110,14 @@ Given a $HOME/.perfconfig like this:
->  		order = caller
->  		sort-key = function
->  
-> +	[report]
-> +		# Defaults
-> +		sort-order = comm,dso,symbol
-> +		percent-limit = 0
-> +		queue-size = 0
-> +		children = true
-> +		group = true
-> +
->  Variables
->  ~~~~~~~~~
->  
-> diff --git a/tools/perf/Documentation/perfconfig.example b/tools/perf/Documentation/perfconfig.example
-> index 1d8d5bc..2b477c1 100644
-> --- a/tools/perf/Documentation/perfconfig.example
-> +++ b/tools/perf/Documentation/perfconfig.example
-> @@ -27,3 +27,12 @@
->  	use_offset = true
->  	jump_arrows = true
->  	show_nr_jumps = false
-> +
-> +[report]
-> +
-> +	# Defaults
-> +	sort-order = comm,dso,symbol
-> +	percent-limit = 0
-> +	queue-size = 0
-> +	children = true
-> +	group = true
-> -- 
-> 2.9.3
+> Hi Peter / Will,
+> 
+> Can you provide some guidance here. So I looked at what others do -
+> ARMV7_PERFCTR_L1_DCACHE_REFILL counts both load and store misses, while ARC has 2
+> separate conditions for load or stores. Is there an existing mechanism to "group"
+> / "add" them to give a cumulative PERF_COUNT_HW_CACHE_MISSES 
+
+Nope. So I would not try and use these generic events. In other news, it
+seems like there's finally some progress on the JSON patches:
+
+  https://lkml.kernel.org/r/20160831114254.GA9001@krava
+
+Which would make using non-standard events easier.
+
+> - is that what perf event grouping is ?
+
+Again, nope. Perf event groups are single counter (so no implicit
+addition) that are co-scheduled on the PMU.
+
+> Quoting from perf wiki @ https://perf.wiki.kernel.org/index.php/Tutorial
+> 
+> "It can be interesting to try and pack events in a way that guarantees that event
+> A and B are always measured together. Although the perf_events kernel interface
+> provides support for event grouping, the current perf tool does *not*."
+
+That seems out-dated, Jiri added grouping support to perf-tool quite a
+while back.
+
+You can do it like:
+
+	perf stat -e '{cycles,instructions}'
+
+Which will place the cycles event and the instructions event in a group
+and thereby guarantee they're co-scheduled.
