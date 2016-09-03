@@ -1,55 +1,45 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: profiling Firefox, no perf-<PID>.map file
-Date: Sat, 03 Sep 2016 22:37:55 +0200
-Message-ID: <3432177.9qbfN6MEYg@agathebauer>
-References: <1472928806.2377.2.camel@suse.cz>
+Subject: Re: Cost in sym vs. sym@plt
+Date: Sat, 03 Sep 2016 22:40:41 +0200
+Message-ID: <3408445.G4dNQRL7lP@agathebauer>
+References: <2472727.a3qg7mcsuX@milian-kdab2> <8760qgrif9.fsf@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3081768.4JNOoPnZ3h"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart1727465.8EfY1f2iZb"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:42946 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:43090 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753962AbcICUiL (ORCPT
+        id S1751983AbcICUk7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Sep 2016 16:38:11 -0400
-In-Reply-To: <1472928806.2377.2.camel@suse.cz>
+        Sat, 3 Sep 2016 16:40:59 -0400
+In-Reply-To: <8760qgrif9.fsf@tassilo.jf.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Giovanni Gherdovich <ggherdovich@suse.cz>
+To: Andi Kleen <andi@firstfloor.org>
 Cc: linux-perf-users@vger.kernel.org
 
---nextPart3081768.4JNOoPnZ3h
-Content-Transfer-Encoding: 7Bit
+--nextPart1727465.8EfY1f2iZb
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="us-ascii"
 
-On Samstag, 3. September 2016 20:53:26 CEST Giovanni Gherdovich wrote:
-> Hello,
-> 
-> when profiling firefox with perf (i.e. `perf top` or `perf record`) I
-> get errors like "Failed to open /tmp/perf-<PID>.map, continuing
-> without symbols". The perf docs says it has to do with the support for
-> JIT'ed code (tools/perf/Documentation/jit-interface.txt), which I
-> guess is produced by firefox' javascript engine (I could be wrong).
-> 
-> The documentation is a bit vague on how to have those perf-<PID>.map
-> files produced correctly, and the original commit introducing this
-> feature, 80d496be89ed "perf report: Add support for profiling JIT
-> generated code" only says "A JIT compiler is required [...]".
-> 
-> Is there a way to profile firefox and get those *.map files?
-> It's more of a curiosity, I am new to perf and I'm playing around.
+On Mittwoch, 31. August 2016 09:51:06 CEST Andi Kleen wrote:
+> Milian Wolff <milian.wolff@kdab.com> writes:
+> > I'm asking, because I did not expect the cost of the @plt to be that
+> > large. Is this maybe due to skid? I doubt that, since the above is from=
+ a
+> > cycles:ppp profile on an Intel Haswell i5, which is supposedly accurate.
+>=20
+> There's no such thing as fully accurate profiling.
 
-You need integration for generating such a file in the JavaScript engine. node 
-and QML are two examples for that. But if you don't want to attribute JIT code 
-addresses to JavaScript code, you can safely ignore this warning.
+OK, so does this mean it's skid that I'm seeing here?
 
-Bye
+Thanks
 
--- 
+=2D-=20
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart3081768.4JNOoPnZ3h
+--nextPart1727465.8EfY1f2iZb
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -151,13 +141,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MDkwMzIwMzc1NVowIwYJKoZIhvcNAQkEMRYEFN6GIXkBMNb3npKSGlWLv6vJ+fxiMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBABgb
-BhB1h3A7D6l8sDqQMc1mcvZQUIdlY8ZCNR03IqH3weo9Y/v0ZPzZ+aajy39uRa/4jQ3i86K4hHVu
-vhA5XWOVZYXa3pAnOWfB6gqfMBh+8bIp2QVPB7ZnqfcUg4Z8m8rZf4Q50IqFfm9lN7cTT522Dr+u
-2AzuZBRcMSG/p3TQdrBcgqalvbZ9hs3IGzDTu2DIiJjnLfvSLHJwaydCrVFgWvEnFNN+MTmkcU9+
-sSqDXbRtMD5IfePQhi5yKqh7HfnJLzZDn+ksNnayprCazbmhi50Ripeqt4WdqjM1CHgl15B5d5yP
-KYoUyQjd6BfC1kojg5BCwYBegu3B6cyolOgAAAAAAAA=
+DTE2MDkwMzIwNDA0MVowIwYJKoZIhvcNAQkEMRYEFFr/jhzHXrV3+E83YD9YJc9lrdMeMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAIs0
+pQGrearkbvvgQckjAGgSu4bQQCtugT4IFqQbhz1mz11qVLG3kONUMYS2i8j6RDVNj9yr7UvYN9kC
+AJ8HIi8Sij6STYDynOj0A3+cnjlLgD2UVw7eE8b3b2peUSLXE5Wmw5AArdaiBx7orxvKnDL/gSUE
+c8a07ZuSteDLoBxD+q9jvt9dkvE43SLmYw1RXqnqL/I33WypEpdHLsxvQglTseQdiG4svBTt4/9H
+0fe/zaslfM5DJMn0Q7Y66P6nlhEd0SObAEK8ryM62uvh3rswtAbVvu6T11LAw3ah/yCro2IZMOKm
+eldl7G5yEet4B8xjGGGFhOsfkEHbJMr5msAAAAAAAAA=
 
 
---nextPart3081768.4JNOoPnZ3h--
+--nextPart1727465.8EfY1f2iZb--
