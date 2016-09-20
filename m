@@ -1,47 +1,82 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: reading PMU counts with perf leader sampling and perf script
-Date: Tue, 20 Sep 2016 13:16:25 -0700
-Message-ID: <8737kupbs6.fsf@tassilo.jf.intel.com>
-References: <etPan.57d2cbe0.548515bd.6188@cern.ch>
-        <20160912200411.GH4897@kernel.org>
-        <etPan.57e15392.6894e226.675c@cern.ch>
-        <20160920191953.GF4973@kernel.org>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: perf event grouping for dummies (was Re: [PATCH] arc: perf: Enable
+ generic "cache-references" and "cache-misses" events)
+Date: Tue, 20 Sep 2016 13:56:20 -0700
+Message-ID: <2a18ae06-3abd-c3a1-e980-f04c511b08e5@synopsys.com>
+References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
+ <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
+ <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
+ <20160901083324.GM10153@twins.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:57091 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751729AbcITUQ1 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2016 16:16:27 -0400
-In-Reply-To: <20160920191953.GF4973@kernel.org> (Arnaldo Carvalho de Melo's
-        message of "Tue, 20 Sep 2016 16:19:53 -0300")
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Omar Awile <omar.awile@cern.ch>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160901083324.GM10153@twins.programming.kicks-ass.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Jiri Olsa <jolsa@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Arnaldo Carvalho de Melo <acme@kernel.org> writes:
-
-> Em Tue, Sep 20, 2016 at 03:19:47PM +0000, Omar Awile escreveu:
->> Hi Arnaldo,
->  
->> Ah that’s pretty neat. I will try it out. I found perf script really
->> useful to generate properly formatted CSV (after I finally understood
->> how to correctly use it). This might be something worth adding as a
->> feature across all perf tools (stat, report, script). I know that some
->> of the tools can print something kind of CSV, but it’s still just
->> kind-of and not properly formatted, which makes parsing and processing
+On 09/01/2016 01:33 AM, Peter Zijlstra wrote:
+>> - is that what perf event grouping is ?
 >
-> So, can you provide specific examples of things you think are wrong so
-> that we can see if something can be made to improve it?
+> Again, nope. Perf event groups are single counter (so no implicit
+> addition) that are co-scheduled on the PMU.
 
-The main problem is that commas are not quoted (or rather not put into
-""), and cpu events have a lot of commas. So -x, tends to output
-invalid CSV.
+I'm not sure I understand - does this require specific PMU/arch support - as in
+multiple conditions feeding to same counter. How does perf user make use of this
+info - I tried googling around but can't seem to find anything which explains the
+semantics.
 
-However it generally works well enough with -x; and most CSV tools
-can handle that too.
+I can see that group events to work on ARC (although in our case a counter can
+cont one condition at a time only) and the results seem to be similar whther we
+group or not.
 
--Andi
+------------->8------------
+[ARCLinux]# perf stat -e {cycles,instructions} hackbench
+Running with 10*40 (== 400) tasks.
+Time: 37.430
+
+ Performance counter stats for 'hackbench':
+
+        3487777173    cycles
+        1351709784    instructions            #    0.39  insn per cycle
+
+      38.957481536 seconds time elapsed
+
+[ARCLinux]# perf stat -e cycles hackbench
+Running with 10*40 (== 400) tasks.
+Time: 36.735
+
+ Performance counter stats for 'hackbench':
+
+        3426151391    cycles
+
+      38.247235981 seconds time elapsed
+
+[ARCLinux]#
+[ARCLinux]# perf stat -e instructions hackbench
+Running with 10*40 (== 400) tasks.
+Time: 37.537
+
+ Performance counter stats for 'hackbench':
+
+        1355421559    instructions
+
+      39.061784281 seconds time elapsed
+------------->8------------
+
+...
+> 
+> You can do it like:
+> 
+> 	perf stat -e '{cycles,instructions}'
+> 
+> Which will place the cycles event and the instructions event in a group
+> and thereby guarantee they're co-scheduled.
+
+Again when you say co-scheduled what do you mean - why would anyone use the event
+grouping - is it when they only have 1 counter and they want to count 2
+conditions/events at the same time - isn't this same as event multiplexing ?
+
+-Vineet
