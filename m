@@ -1,82 +1,87 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: perf event grouping for dummies (was Re: [PATCH] arc: perf: Enable
- generic "cache-references" and "cache-misses" events)
-Date: Tue, 20 Sep 2016 13:56:20 -0700
-Message-ID: <2a18ae06-3abd-c3a1-e980-f04c511b08e5@synopsys.com>
-References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
- <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
- <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
- <20160901083324.GM10153@twins.programming.kicks-ass.net>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: Re: Haswell EP some uncore imc counter are missing
+Date: Wed, 21 Sep 2016 14:07:46 +0200 (CEST)
+Message-ID: <alpine.LRH.2.20.1609211355400.10180@Diego>
+References: <20160917180155.Horde.5aCQxGa9_V0-tbqDKZDTDx2@horde.inf.h-brs.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901083324.GM10153@twins.programming.kicks-ass.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Jiri Olsa <jolsa@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:43960 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S933865AbcIUMRO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 21 Sep 2016 08:17:14 -0400
+In-Reply-To: <20160917180155.Horde.5aCQxGa9_V0-tbqDKZDTDx2@horde.inf.h-brs.de>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Christian Neugebauer <christian.neugebauer@smail.inf.h-brs.de>
+Cc: linux-perf-users@vger.kernel.org
 
-On 09/01/2016 01:33 AM, Peter Zijlstra wrote:
->> - is that what perf event grouping is ?
+On Sat, 17 Sep 2016, Christian Neugebauer wrote:
 >
-> Again, nope. Perf event groups are single counter (so no implicit
-> addition) that are co-scheduled on the PMU.
+> Hi,
+>
+> We encountered the following problem with perf. We want to measure the total 
+> memory bandwidth by using the uncore imc counter uncore_imc_0, uncore_imc_1, 
+> ..., uncore_imc_7. In our system the counter uncore_imc_2, uncore_imc_3, 
+> uncore_imc_6, uncore_imc_7 are NOT listed under /sys/devices. Only 
+> uncore_imc_0, uncore_imc_1, uncore_imc_4, uncore_imc_5 are available (linked 
+> under /sys/device and accessible via perf).
+>
 
-I'm not sure I understand - does this require specific PMU/arch support - as in
-multiple conditions feeding to same counter. How does perf user make use of this
-info - I tried googling around but can't seem to find anything which explains the
-semantics.
+Hi,
 
-I can see that group events to work on ARC (although in our case a counter can
-cont one condition at a time only) and the results seem to be similar whther we
-group or not.
+When I tested uncore with perf on (probably) the same (or very similar) Haswell
+EP CPU as the one of yours, I also have seen only imcs 0, 1, 4, 5. Are you sure
+the 2, 3, 6, 7 should really be there (are supported by the CPU itself)?
 
-------------->8------------
-[ARCLinux]# perf stat -e {cycles,instructions} hackbench
-Running with 10*40 (== 400) tasks.
-Time: 37.430
+My guess would be that the 2, 3, 6, 7 slots are reserved/unused.
 
- Performance counter stats for 'hackbench':
+Could you attach more info about your CPU topology (cpuid, lstopo, ...)?
 
-        3487777173    cycles
-        1351709784    instructions            #    0.39  insn per cycle
+This was the CPU I used:
 
-      38.957481536 seconds time elapsed
+Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
+Family: 6
+Model: 63
+Stepping: 2
+RAM: 31976 MB
+56 processors on 28 cores organized into 2 numa nodes
 
-[ARCLinux]# perf stat -e cycles hackbench
-Running with 10*40 (== 400) tasks.
-Time: 36.735
+Unfortunatelly, I didn't stored my topology logs, however I think it is as I
+said above.
 
- Performance counter stats for 'hackbench':
+Cheers,
+Michael
 
-        3426151391    cycles
 
-      38.247235981 seconds time elapsed
-
-[ARCLinux]#
-[ARCLinux]# perf stat -e instructions hackbench
-Running with 10*40 (== 400) tasks.
-Time: 37.537
-
- Performance counter stats for 'hackbench':
-
-        1355421559    instructions
-
-      39.061784281 seconds time elapsed
-------------->8------------
-
-...
-> 
-> You can do it like:
-> 
-> 	perf stat -e '{cycles,instructions}'
-> 
-> Which will place the cycles event and the instructions event in a group
-> and thereby guarantee they're co-scheduled.
-
-Again when you say co-scheduled what do you mean - why would anyone use the event
-grouping - is it when they only have 1 counter and they want to count 2
-conditions/events at the same time - isn't this same as event multiplexing ?
-
--Vineet
+> Our setup:
+>
+> - 2 x Intel Xeon E5-2697 v3 (Haswell EP)
+> - uname -a
+> Linux wr5 2.6.32-642.4.2.el6.x86_64 #1 SMP Tue Aug 23 11:15:56 CDT 2016 
+> x86_64 x86_64 x86_64 GNU/Linux
+> - perf --version
+> perf version 2.6.32-642.4.2.el6.x86_64.debug
+>
+> From my understanding 8 imc counter in total should be available for Haswell 
+> EP. The kernel is a fresh build which seems to have all latest perf changes 
+> in it. I also checked the perf source code briefly. I could do more debugging 
+> and try to find out the problem but before that I want to know if this is 
+> either a known problem, an unknown problem or no problem at all because there 
+> are restrictions that I'm not aware of.
+>
+> I also double checked other machines (same kernel though). E.g Intel Xeon 
+> E5-2697 v2 (Ivy Bridge EP) shows me 8 counters as expected, and if I remember 
+> correctly Intel Xeon EP E5-2670 (Sandy Bridge EP) had 4 counter, could double 
+> check that if necessary.
+>
+> Chris
+> -- 
+> Christian Neugebauer
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" 
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
