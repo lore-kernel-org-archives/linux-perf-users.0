@@ -1,114 +1,66 @@
-From: "Liang, Kan" <kan.liang@intel.com>
-Subject: RE: Haswell EP some uncore imc counter are missing
-Date: Wed, 21 Sep 2016 20:16:20 +0000
-Message-ID: <37D7C6CF3E00A74B8858931C1DB2F07750C6289A@SHSMSX103.ccr.corp.intel.com>
-References: <20160917180155.Horde.5aCQxGa9_V0-tbqDKZDTDx2@horde.inf.h-brs.de>
- <alpine.LRH.2.20.1609211355400.10180@Diego>
+From: Paul Clarke <pc@us.ibm.com>
+Subject: Re: perf event grouping for dummies (was Re: [PATCH] arc: perf:
+ Enable generic "cache-references" and "cache-misses" events)
+Date: Wed, 21 Sep 2016 19:43:28 -0500
+Message-ID: <04f6dcd2-35c6-6e28-2dcf-bc5f0bb446dc@us.ibm.com>
+References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
+ <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
+ <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
+ <20160901083324.GM10153@twins.programming.kicks-ass.net>
+ <2a18ae06-3abd-c3a1-e980-f04c511b08e5@synopsys.com>
+Reply-To: pc@us.ibm.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:35245 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1757366AbcIUUQ1 (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49633 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1753942AbcIVAnj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2016 16:16:27 -0400
-In-Reply-To: <alpine.LRH.2.20.1609211355400.10180@Diego>
-Content-Language: en-US
+        Wed, 21 Sep 2016 20:43:39 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id u8M0hbXw077291
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2016 20:43:39 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 25kqvpv9pu-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2016 20:43:38 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <pc@us.ibm.com>;
+        Wed, 21 Sep 2016 20:43:34 -0400
+In-Reply-To: <2a18ae06-3abd-c3a1-e980-f04c511b08e5@synopsys.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>, Christian Neugebauer <christian.neugebauer@smail.inf.h-brs.de>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Jiri Olsa <jolsa@redhat.com>
 
+On 09/20/2016 03:56 PM, Vineet Gupta wrote:
+> On 09/01/2016 01:33 AM, Peter Zijlstra wrote:
+>>> - is that what perf event grouping is ?
+>>
+>> Again, nope. Perf event groups are single counter (so no implicit
+>> addition) that are co-scheduled on the PMU.
+>
+> I'm not sure I understand - does this require specific PMU/arch support - as in
+> multiple conditions feeding to same counter.
 
-Haswell EP can only support at most 4 channels for each processor.
-That's correct that you only observe 4 IMCs.
+My read is that is that what Peter meant was that each event in the perf event group is a single counter, so all the events in the group are counted simultaneously.  (No multiplexing.)
 
-However, there are 8 possible device location for IMC channels on Haswell.
-Where are those channels located depends on the memory configuration, which is different among machines.
+>> You can do it like:
+>>
+>> 	perf stat -e '{cycles,instructions}'
+>>
+>> Which will place the cycles event and the instructions event in a group
+>> and thereby guarantee they're co-scheduled.
+>
+> Again when you say co-scheduled what do you mean - why would anyone use the event
+> grouping - is it when they only have 1 counter and they want to count 2
+> conditions/events at the same time - isn't this same as event multiplexing ?
 
-In uncore driver, we have all 8 possible device coded.  It's from imc_0 to imc_7.
-But there will be only 4 IMCs observed at runtime. The unused ones are hidden.
+I'd say it's the converse of multiplexing.  Instead of mapping multiple events to a single counter, perf event groups map a set of events each to their own counter, and they are active simultaneously.  I suppose it's possible for the _groups_ to be multiplexed with other events or groups, but the group as a whole will be scheduled together, as a group.
 
-Thanks,
-Kan
+If you have a single counter, I don't believe you can support perf event groups, by definition.
 
-
-> On Sat, 17 Sep 2016, Christian Neugebauer wrote:
-> >
-> > Hi,
-> >
-> > We encountered the following problem with perf. We want to measure the
-> > total memory bandwidth by using the uncore imc counter uncore_imc_0,
-> > uncore_imc_1, ..., uncore_imc_7. In our system the counter
-> > uncore_imc_2, uncore_imc_3, uncore_imc_6, uncore_imc_7 are NOT listed
-> > under /sys/devices. Only uncore_imc_0, uncore_imc_1, uncore_imc_4,
-> > uncore_imc_5 are available (linked under /sys/device and accessible via
-> perf).
-> >
-> 
-> Hi,
-> 
-> When I tested uncore with perf on (probably) the same (or very similar)
-> Haswell EP CPU as the one of yours, I also have seen only imcs 0, 1, 4, 5. Are
-> you sure the 2, 3, 6, 7 should really be there (are supported by the CPU itself)?
-> 
-> My guess would be that the 2, 3, 6, 7 slots are reserved/unused.
-> 
-> Could you attach more info about your CPU topology (cpuid, lstopo, ...)?
-> 
-> This was the CPU I used:
-> 
-> Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
-> Family: 6
-> Model: 63
-> Stepping: 2
-> RAM: 31976 MB
-> 56 processors on 28 cores organized into 2 numa nodes
-> 
-> Unfortunatelly, I didn't stored my topology logs, however I think it is as I said
-> above.
-> 
-> Cheers,
-> Michael
-> 
-> 
-> > Our setup:
-> >
-> > - 2 x Intel Xeon E5-2697 v3 (Haswell EP)
-> > - uname -a
-> > Linux wr5 2.6.32-642.4.2.el6.x86_64 #1 SMP Tue Aug 23 11:15:56 CDT
-> > 2016
-> > x86_64 x86_64 x86_64 GNU/Linux
-> > - perf --version
-> > perf version 2.6.32-642.4.2.el6.x86_64.debug
-> >
-> > From my understanding 8 imc counter in total should be available for
-> > Haswell EP. The kernel is a fresh build which seems to have all latest
-> > perf changes in it. I also checked the perf source code briefly. I
-> > could do more debugging and try to find out the problem but before
-> > that I want to know if this is either a known problem, an unknown
-> > problem or no problem at all because there are restrictions that I'm not
-> aware of.
-> >
-> > I also double checked other machines (same kernel though). E.g Intel
-> > Xeon
-> > E5-2697 v2 (Ivy Bridge EP) shows me 8 counters as expected, and if I
-> > remember correctly Intel Xeon EP E5-2670 (Sandy Bridge EP) had 4
-> > counter, could double check that if necessary.
-> >
-> > Chris
-> > --
-> > Christian Neugebauer
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users"
-> > in
-> > the body of a message to majordomo@vger.kernel.org More majordomo
-> info
-> > at  http://vger.kernel.org/majordomo-info.html
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org More majordomo
-> info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Paul Clarke, IBM
