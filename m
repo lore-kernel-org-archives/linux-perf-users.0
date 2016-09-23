@@ -1,193 +1,84 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: perf event grouping for dummies (was Re: [PATCH] arc: perf:
- Enable generic "cache-references" and "cache-misses" events)
-Date: Thu, 22 Sep 2016 16:42:52 -0300
-Message-ID: <20160922194252.GA2441@redhat.com>
-References: <1472125647-518-1-git-send-email-abrodkin@synopsys.com>
- <6074e252-6e18-bb01-4de1-023bd7e82f03@synopsys.com>
- <5f65fa04-8d33-e525-115d-4e6991a7668e@synopsys.com>
- <20160901083324.GM10153@twins.programming.kicks-ass.net>
- <2a18ae06-3abd-c3a1-e980-f04c511b08e5@synopsys.com>
- <04f6dcd2-35c6-6e28-2dcf-bc5f0bb446dc@us.ibm.com>
- <20160922075603.GW5008@twins.programming.kicks-ass.net>
- <b15fc87b-c846-fdb5-ef6a-48fc2d797917@synopsys.com>
- <4351119f-b212-5039-9a3d-f568f6893b36@us.ibm.com>
+From: Bruno Alexandre Rosa <bruno.rosa@eldorado.org.br>
+Subject: Using perf inject on ppc64le
+Date: Fri, 23 Sep 2016 19:22:59 +0000
+Message-ID: <9f091d82a3a44d2d8c80622a64f59d01@serv030.corp.eldorado.org.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4351119f-b212-5039-9a3d-f568f6893b36@us.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Jiri Olsa <jolsa@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from smtp1.eldorado.org.br ([200.148.226.10]:54585 "EHLO
+        smtp1.eldorado.org.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752259AbcIWTXD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 23 Sep 2016 15:23:03 -0400
+Content-Language: en-US
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-RW0gVGh1LCBTZXAgMjIsIDIwMTYgYXQgMDE6MjM6MDRQTSAtMDUwMCwgUGF1bCBDbGFya2UgZXNj
-cmV2ZXU6Cj4gT24gMDkvMjIvMjAxNiAxMjo1MCBQTSwgVmluZWV0IEd1cHRhIHdyb3RlOgo+ID5P
-biAwOS8yMi8yMDE2IDEyOjU2IEFNLCBQZXRlciBaaWpsc3RyYSB3cm90ZToKPiA+Pk9uIFdlZCwg
-U2VwIDIxLCAyMDE2IGF0IDA3OjQzOjI4UE0gLTA1MDAsIFBhdWwgQ2xhcmtlIHdyb3RlOgo+ID4+
-Pk9uIDA5LzIwLzIwMTYgMDM6NTYgUE0sIFZpbmVldCBHdXB0YSB3cm90ZToKPiA+Pj4+T24gMDkv
-MDEvMjAxNiAwMTozMyBBTSwgUGV0ZXIgWmlqbHN0cmEgd3JvdGU6Cj4gPj4+Pj4+LSBpcyB0aGF0
-IHdoYXQgcGVyZiBldmVudCBncm91cGluZyBpcyA/Cj4gPj4+Pj4KPiA+Pj4+PkFnYWluLCBub3Bl
-LiBQZXJmIGV2ZW50IGdyb3VwcyBhcmUgc2luZ2xlIGNvdW50ZXIgKHNvIG5vIGltcGxpY2l0Cj4g
-Pj4+Pj5hZGRpdGlvbikgdGhhdCBhcmUgY28tc2NoZWR1bGVkIG9uIHRoZSBQTVUuCj4gPj4+Pgo+
-ID4+Pj5JJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIC0gZG9lcyB0aGlzIHJlcXVpcmUgc3BlY2lm
-aWMgUE1VL2FyY2ggc3VwcG9ydCAtIGFzIGluCj4gPj4+Pm11bHRpcGxlIGNvbmRpdGlvbnMgZmVl
-ZGluZyB0byBzYW1lIGNvdW50ZXIuCj4gPj4+Cj4gPj4+TXkgcmVhZCBpcyB0aGF0IGlzIHRoYXQg
-d2hhdCBQZXRlciBtZWFudCB3YXMgdGhhdCBlYWNoIGV2ZW50IGluIHRoZQo+ID4+PnBlcmYgZXZl
-bnQgZ3JvdXAgaXMgYSBzaW5nbGUgY291bnRlciwgc28gYWxsIHRoZSBldmVudHMgaW4gdGhlIGdy
-b3VwCj4gPj4+YXJlIGNvdW50ZWQgc2ltdWx0YW5lb3VzbHkuICAoTm8gbXVsdGlwbGV4aW5nLikK
-PiA+Pgo+ID4+UmlnaHQsIHNvcnJ5IGZvciB0aGUgcG9vciB3b3JkaW5nLgo+ID4+Cj4gPj4+PkFn
-YWluIHdoZW4geW91IHNheSBjby1zY2hlZHVsZWQgd2hhdCBkbyB5b3UgbWVhbiAtIHdoeSB3b3Vs
-ZCBhbnlvbmUgdXNlIHRoZSBldmVudAo+ID4+Pj5ncm91cGluZyAtIGlzIGl0IHdoZW4gdGhleSBv
-bmx5IGhhdmUgMSBjb3VudGVyIGFuZCB0aGV5IHdhbnQgdG8gY291bnQgMgo+ID4+Pj5jb25kaXRp
-b25zL2V2ZW50cyBhdCB0aGUgc2FtZSB0aW1lIC0gaXNuJ3QgdGhpcyBzYW1lIGFzIGV2ZW50IG11
-bHRpcGxleGluZyA/Cj4gPj4+Cj4gPj4+SSdkIHNheSBpdCdzIHRoZSBjb252ZXJzZSBvZiBtdWx0
-aXBsZXhpbmcuICBJbnN0ZWFkIG9mIG1hcHBpbmcKPiA+Pj5tdWx0aXBsZSBldmVudHMgdG8gYSBz
-aW5nbGUgY291bnRlciwgcGVyZiBldmVudCBncm91cHMgbWFwIGEgc2V0IG9mCj4gPj4+ZXZlbnRz
-IGVhY2ggdG8gdGhlaXIgb3duIGNvdW50ZXIsIGFuZCB0aGV5IGFyZSBhY3RpdmUgc2ltdWx0YW5l
-b3VzbHkuCj4gPj4+SSBzdXBwb3NlIGl0J3MgcG9zc2libGUgZm9yIHRoZSBfZ3JvdXBzXyB0byBi
-ZSBtdWx0aXBsZXhlZCB3aXRoIG90aGVyCj4gPj4+ZXZlbnRzIG9yIGdyb3VwcywgYnV0IHRoZSBn
-cm91cCBhcyBhIHdob2xlIHdpbGwgYmUgc2NoZWR1bGVkIHRvZ2V0aGVyLAo+ID4+PmFzIGEgZ3Jv
-dXAuCj4gPj4KPiA+PkNvcnJlY3QuCj4gPj4KPiA+PkVhY2ggZXZlbnRzIGdldCB0aGVpciBvd24g
-aGFyZHdhcmUgY291bnRlci4gR3JvdXBlZCBldmVudHMgYXJlCj4gPj5jby1zY2hlZHVsZWQgb24g
-dGhlIGhhcmR3YXJlLgo+ID4KPiA+QW5kIGlmIHdlIGRvbid0IGdyb3VwIHRoZW0sIHRoZW4gdGhl
-eSBfbWF5XyBub3QgYmUgY28tc2NoZWR1bGVkIChhY3RpdmUvY291bnRpbmcKPiA+YXQgdGhlIHNh
-bWUgdGltZSkgPyBCdXQgaG93IGNhbiB0aGlzIGJlIHBvc3NpYmxlLgo+ID5TYXkgd2UgaGF2ZSAy
-IGNvdW50ZXJzLCBib3RoIHRoZSBjbWRzIGJlbG93Cj4gPgo+ID4gICAgIHBlcmYgLWUgY3ljbGVz
-LGluc3RydWN0aW9ucyBoYWNrYmVuY2gKPiA+ICAgICBwZXJmIC1lIHtjeWNsZXMsaW5zdHJ1Y3Rp
-b25zfSBoYWNrYmVuY2gKPiA+Cj4gPndvdWxkIGFzc2lnbiAyIGNvdW50ZXJzIHRvIHRoZSAyIGNv
-bmRpdGlvbnMgd2hpY2gga2VlcCBjb3VudGluZyB1bnRpbCBwZXJmIGFza3MKPiA+dGhlbSB0byBz
-dG9wIChiZWNhdXNlIHRoZSBwcm9maWxlZCBhcHBsaWNhdGlvbiBlbmRlZCkKPiA+Cj4gPkkgZG9u
-J3QgdW5kZXJzdGFuZCB0aGUgInNjaGVkdWxpbmciIG9mIGNvdW50ZXIgLSBvbmNlIHdlIHNldCB0
-aGVtIHRvIGNvdW50LCB0aGVyZQo+ID5pcyBubyByZWFsIGludGVydmVudGlvbi9zY2hlZHVsaW5n
-IGZvcm0gc29mdHdhcmUgaW4gdGVybXMgb2YgZGlzYWJsaW5nL2VuYWJsaW5nCj4gPihhc3N1bWlu
-ZyBubyBtdWx0aXBsZXhpbmcgZXRjKQoKU28sIGdldHRpbmcgdGhpcyBtYWNoaW5lIGFzIGFuIGV4
-YW1wbGU6CgpbICAgIDAuMDY3NzM5XSBzbXBib290OiBDUFUwOiBJbnRlbChSKSBDb3JlKFRNKSBp
-Ny0zNjY3VSBDUFUgQCAyLjAwR0h6IChmYW1pbHk6IDB4NiwgbW9kZWw6IDB4M2EsIHN0ZXBwaW5n
-OiAweDkpClsgICAgMC4wNjc3NDRdIFBlcmZvcm1hbmNlIEV2ZW50czogUEVCUyBmbXQxKywgMTYt
-ZGVlcCBMQlIsIEl2eUJyaWRnZSBldmVudHMsIGZ1bGwtd2lkdGggY291bnRlcnMsIEludGVsIFBN
-VSBkcml2ZXIuClsgICAgMC4wNjc3NzRdIC4uLiB2ZXJzaW9uOiAgICAgICAgICAgICAgICAzClsg
-ICAgMC4wNjc3NzZdIC4uLiBiaXQgd2lkdGg6ICAgICAgICAgICAgICA0OApbICAgIDAuMDY3Nzc3
-XSAuLi4gZ2VuZXJpYyByZWdpc3RlcnM6ICAgICAgNApbICAgIDAuMDY3Nzc4XSAuLi4gdmFsdWUg
-bWFzazogICAgICAgICAgICAgMDAwMGZmZmZmZmZmZmZmZgpbICAgIDAuMDY3Nzc5XSAuLi4gbWF4
-IHBlcmlvZDogICAgICAgICAgICAgMDAwMGZmZmZmZmZmZmZmZgpbICAgIDAuMDY3NzgwXSAuLi4g
-Zml4ZWQtcHVycG9zZSBldmVudHM6ICAgMwpbICAgIDAuMDY3NzgxXSAuLi4gZXZlbnQgbWFzazog
-ICAgICAgICAgICAgMDAwMDAwMDcwMDAwMDAwZgpbICAgIDAuMDY4Njk0XSBOTUkgd2F0Y2hkb2c6
-IGVuYWJsZWQgb24gYWxsIENQVXMsIHBlcm1hbmVudGx5IGNvbnN1bWVzIG9uZSBody1QTVUgY291
-bnRlci4KCltyb290QHpvbyB+XSMgcGVyZiBzdGF0IC1lICd7YnJhbmNoLWluc3RydWN0aW9ucyxi
-cmFuY2gtbWlzc2VzLGJ1cy1jeWNsZXMsY2FjaGUtbWlzc2VzfScgbHMgYQpsczogY2Fubm90IGFj
-Y2VzcyAnYSc6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKCiBQZXJmb3JtYW5jZSBjb3VudGVy
-IHN0YXRzIGZvciAnbHMgYSc6CgogICAgICAgICAgIDM1NiwwOTAgICAgICBicmFuY2gtaW5zdHJ1
-Y3Rpb25zICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAg
-ICAgMTcsMTcwICAgICAgYnJhbmNoLW1pc3NlcyAgICAgICAgICAgICAjICAgIDQuODIlIG9mIGFs
-bCBicmFuY2hlcyAgICAgICAgCiAgICAgICAgICAgMjMyLDM2NSAgICAgIGJ1cy1jeWNsZXMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAg
-ICAxMiwxMDcgICAgICBjYWNoZS1taXNzZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAKCiAgICAgICAwLjAwMzYyNDk2NyBzZWNvbmRzIHRpbWUgZWxhcHNl
-ZAoKW3Jvb3RAem9vIH5dIyBwZXJmIHN0YXQgLWUgJ3ticmFuY2gtaW5zdHJ1Y3Rpb25zLGJyYW5j
-aC1taXNzZXMsYnVzLWN5Y2xlcyxjYWNoZS1taXNzZXMsY3B1LWN5Y2xlc30nIGxzIGEKbHM6IGNh
-bm5vdCBhY2Nlc3MgJ2EnOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5CgogUGVyZm9ybWFuY2Ug
-Y291bnRlciBzdGF0cyBmb3IgJ2xzIGEnOgoKICAgICA8bm90IGNvdW50ZWQ+ICAgICAgYnJhbmNo
-LWluc3RydWN0aW9ucyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAo
-MC4wMCUpCiAgICAgPG5vdCBjb3VudGVkPiAgICAgIGJyYW5jaC1taXNzZXMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAlKQogICAgIDxub3QgY291
-bnRlZD4gICAgICBidXMtY3ljbGVzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICgwLjAwJSkKICAgICA8bm90IGNvdW50ZWQ+ICAgICAgY2FjaGUtbWlz
-c2VzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMC4w
-MCUpCiAgICAgPG5vdCBjb3VudGVkPiAgICAgIGNwdS1jeWNsZXMgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAlKQoKICAgICAgIDAuMDAzNjU5
-Njc4IHNlY29uZHMgdGltZSBlbGFwc2VkCgpbcm9vdEB6b28gfl0jCgpUaGF0IHdhcyBhcyBhIGdy
-b3VwLCBpLmUuIHRob3NlIHt9IGVuY2xvc2luZyBpdCwgaWYgeW91IHJ1biBpdCB3aXRoIC12diwg
-YW1vbmcKb3RoZXIgdGhpbmdzIHlvdSdsbCBzZWUgdGhlICJncm91cF9mZCIgcGFyYW1ldGVyIHRv
-IHRoZSBzeXNfcGVyZl9ldmVudF9vcGVuCnN5c2NhbGw6Cgpbcm9vdEB6b28gfl0jIHBlcmYgc3Rh
-dCAtdnYgLWUgJ3ticmFuY2gtaW5zdHJ1Y3Rpb25zLGJyYW5jaC1taXNzZXMsYnVzLWN5Y2xlcyxj
-YWNoZS1taXNzZXMsY3B1LWN5Y2xlc30nIGxzIGEKc3lzX3BlcmZfZXZlbnRfb3BlbjogcGlkIDI4
-NTgxICBjcHUgLTEgIGdyb3VwX2ZkIC0xICBmbGFncyAweDgKc3lzX3BlcmZfZXZlbnRfb3Blbjog
-cGlkIDI4NTgxICBjcHUgLTEgIGdyb3VwX2ZkIDMgIGZsYWdzIDB4OApzeXNfcGVyZl9ldmVudF9v
-cGVuOiBwaWQgMjg1ODEgIGNwdSAtMSAgZ3JvdXBfZmQgMyAgZmxhZ3MgMHg4CnN5c19wZXJmX2V2
-ZW50X29wZW46IHBpZCAyODU4MSAgY3B1IC0xICBncm91cF9mZCAzICBmbGFncyAweDgKc3lzX3Bl
-cmZfZXZlbnRfb3BlbjogcGlkIDI4NTgxICBjcHUgLTEgIGdyb3VwX2ZkIDMgIGZsYWdzIDB4OAps
-czogY2Fubm90IGFjY2VzcyAnYSc6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkKCiBQZXJmb3Jt
-YW5jZSBjb3VudGVyIHN0YXRzIGZvciAnbHMgYSc6CgogICAgIDxub3QgY291bnRlZD4gICAgICBi
-cmFuY2gtaW5zdHJ1Y3Rpb25zICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICgwLjAwJSkKICAgICA8bm90IGNvdW50ZWQ+ICAgICAgYnJhbmNoLW1pc3NlcyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMC4wMCUpCiAgICAgPG5v
-dCBjb3VudGVkPiAgICAgIGJ1cy1jeWNsZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgKDAuMDAlKQogICAgIDxub3QgY291bnRlZD4gICAgICBjYWNo
-ZS1taXNzZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICgwLjAwJSkKICAgICA8bm90IGNvdW50ZWQ+ICAgICAgY3B1LWN5Y2xlcyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMC4wMCUpCgogICAgICAgMC4w
-MDI4ODMyMDkgc2Vjb25kcyB0aW1lIGVsYXBzZWQKCltyb290QHpvbyB+XSMKClNvLCB0aGUgZmly
-c3Qgb25lIHBhc3NlcyAtMSwgdG8gY3JlYXRlIHRoZSBncm91cCwgdGhlIGZkIGl0IHJldHVybnMg
-aXMgJzMnLAp0aGF0IGlzIHVzZWQgYXMgZ3JvdXBfZmQgZm9yIHRoZSBvdGhlciBldmVudHMgaW4g
-dGhhdCBncm91cC4KClNvIHRoZSB3b3JrbG9hZCBydW5zIGJ1dCBub3RoaW5nIGlzIGNvdW50ZWQs
-IHRoZSBrZXJuZWwgY2FuJ3QgZG8gd2hhdCB3YXMKYXNrZWQsIGkuZS4gc2NoZWR1bGUgYWxsIHRo
-b3NlIDUgaGFyZHdhcmUgZXZlbnRzIF9hdCB0aGUgc2FtZSB0aW1lXywgbm8KbXVsdGlwbGV4aW5n
-IG9mIGNvdW50ZXJzIHRoYXQgY2FuIGNvdW50IGRpZmZlcmVudCBoYXJkd2FyZSBldmVudHMgaXMg
-cGVyZm9ybWVkCl9mb3IgdGhhdCB0YXNrXy4KCklmIHdlIHJlbW92ZSB0aGF0IHt9LCBpLmUuIHNh
-eSwgbm8gbmVlZCB0byBlbmFibGUgYWxsIHRob3NlIGNvdW50ZXJzIF9hdCB0aGUKc2FtZSB0aW1l
-XywgbXVsdGlwbGV4IHRoZW0gX2luIHRoZSBzYW1lIHRhc2tfIHRvIGJlIGFibGUgdG8gbWVhc3Vy
-ZSB0aGVtIGFsbAp0byBzb21lIGRlZ3JlZSwgaXQgIndvcmtzIjoKCltyb290QHpvbyB+XSMgcGVy
-ZiBzdGF0IC12diAtZSAnYnJhbmNoLWluc3RydWN0aW9ucyxicmFuY2gtbWlzc2VzLGJ1cy1jeWNs
-ZXMsY2FjaGUtbWlzc2VzLGNwdS1jeWNsZXMnIGxzIGEKcGVyZl9ldmVudF9hdHRyOiAoRm9yIHRo
-ZSBmaXJzdCBldmVudDopCiAgY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgMHg0CiAg
-cmVhZF9mb3JtYXQgICAgICAgICAgICAgICAgICAgICAgVE9UQUxfVElNRV9FTkFCTEVEfFRPVEFM
-X1RJTUVfUlVOTklORwpzeXNfcGVyZl9ldmVudF9vcGVuOiBwaWQgMjg1OTQgIGNwdSAtMSAgZ3Jv
-dXBfZmQgLTEgIGZsYWdzIDB4OApzeXNfcGVyZl9ldmVudF9vcGVuOiBwaWQgMjg1OTQgIGNwdSAt
-MSAgZ3JvdXBfZmQgLTEgIGZsYWdzIDB4OApzeXNfcGVyZl9ldmVudF9vcGVuOiBwaWQgMjg1OTQg
-IGNwdSAtMSAgZ3JvdXBfZmQgLTEgIGZsYWdzIDB4OApzeXNfcGVyZl9ldmVudF9vcGVuOiBwaWQg
-Mjg1OTQgIGNwdSAtMSAgZ3JvdXBfZmQgLTEgIGZsYWdzIDB4OApzeXNfcGVyZl9ldmVudF9vcGVu
-OiBwaWQgMjg1OTQgIGNwdSAtMSAgZ3JvdXBfZmQgLTEgIGZsYWdzIDB4OAoKIFBlcmZvcm1hbmNl
-IGNvdW50ZXIgc3RhdHMgZm9yICdscyBhJzoKCiAgICAgICAgICAgMzE3LDg5MiAgICAgIGJyYW5j
-aC1pbnN0cnVjdGlvbnMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-KDUzLjAxJSkKICAgICAgICAgICAgMTMsNDAwICAgICAgYnJhbmNoLW1pc3NlcyAgICAgICAgICAg
-ICAjICAgIDQuMjIlIG9mIGFsbCBicmFuY2hlcyAgICAgICAgCiAgICAgICAgICAgMjAxLDU3OCAg
-ICAgIGJ1cy1jeWNsZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIAogICAgICAgICAgICAxMSwzMjYgICAgICBjYWNoZS1taXNzZXMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgMiwyMDMsNDgyICAg
-ICAgY3B1LWN5Y2xlcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAoNzguNDQlKQoKICAgICAgIDAuMDAzMDI2ODQwIHNlY29uZHMgdGltZSBlbGFwc2Vk
-Cgpbcm9vdEB6b28gfl0jCgpTZWUgdGhlIHJlYWRfZm9ybWF0PyBUaG9zZSBwZXJjZW50YWdlcz8g
-dGhlIGdyb3VwX2ZkID0gLTE/CgpJdCBhbGwgZGVwZW5kcyBvbiB0aGVzZSBQTVUgcmVzb3VyY2Vz
-OgoKWyAgICAwLjA2Nzc3N10gLi4uIGdlbmVyaWMgcmVnaXN0ZXJzOiAgICAgIDQKWyAgICAwLjA2
-Nzc4MF0gLi4uIGZpeGVkLXB1cnBvc2UgZXZlbnRzOiAgIDMKCkl0cyB0aGlzIHBhcnQgb2YgJ21h
-biBwZXJmX2V2ZW50X29wZW4nOgoKICBUaGUgIGdyb3VwX2ZkICBhcmd1bWVudCAgYWxsb3dzICBl
-dmVudCBncm91cHMgdG8gYmUgY3JlYXRlZC4gIEFuIGV2ZW50IGdyb3VwCmhhcyBvbmUgZXZlbnQg
-d2hpY2ggaXMgdGhlIGdyb3VwIGxlYWRlci4gIFRoZSBsZWFkZXIgaXMgY3JlYXRlZCBmaXJzdCwg
-d2l0aApncm91cF9mZCA9IC0xLiAgVGhlIHJlc3Qgb2YgdGhlIGdyb3VwIG1lbWJlcnMgYXJlIGNy
-ZWF0ZWQgd2l0aCBzdWJzZXF1ZW50CnBlcmZfZXZlbnRfb3BlbigpIGNhbGxzIHdpdGggZ3JvdXBf
-ZmQgYmVpbmcgc2V0IHRvIHRoZSBmaWxlIGRlc2NyaXDigJAgdG9yICBvZgp0aGUgZ3JvdXAgbGVh
-ZGVyLiAgKEEgc2luZ2xlIGV2ZW50IG9uIGl0cyBvd24gaXMgY3JlYXRlZCB3aXRoIGdyb3VwX2Zk
-ID0gLTEgYW5kCmlzIGNvbnNpZGVyZWQgdG8gYmUgYSBncm91cCB3aXRoIG9ubHkgMSBtZW1iZXIu
-KSAgQW4gZXZlbnQgZ3JvdXAgaXMgc2NoZWR1bGVkCm9udG8gdGhlIENQVSBhcyBhIHVuaXQ6IGl0
-IHdpbGwgYmUgcHV0IG9udG8gdGhlIENQVSBvbmx5IGlmIGFsbCBvZiB0aGUgZXZlbnRzCmluIHRo
-ZSBncm91cCBjYW4gYmUgcHV0IG9udG8gdGhlIENQVS4gIFRoaXMgIG1lYW5zIHRoYXQgIHRoZSAg
-dmFsdWVzICBvZiAgdGhlCm1lbWJlciAgZXZlbnRzICBjYW4gYmUgbWVhbmluZ2Z1bGx5IGNvbXBh
-cmVk4oCUYWRkZWQsIGRpdmlkZWQgKHRvIGdldCByYXRpb3MpLAphbmQgc28gb27igJR3aXRoIGVh
-Y2ggb3RoZXIsIHNpbmNlIHRoZXkgaGF2ZSBjb3VudGVkIGV2ZW50cyBmb3IgdGhlIHNhbWUgc2V0
-IG9mCmV4ZWN1dGVkIGluc3RydWN0aW9ucy4KCi0gQXJuYWxkbwogCj4gSWYgeW91IGFzc3VtZSBu
-byBtdWx0aXBsZXhpbmcsIHRoZW4gdGhpcyBkaXNjdXNzaW9uIG9uIGdyb3VwaW5nIGlzIG1vb3Qu
-CiAKPiBJdCBkZXBlbmRzIG9uIGhvdyBtYW55IGV2ZW50cyB5b3Ugc3BlY2lmeSwgaG93IG1hbnkg
-Y291bnRlcnMgdGhlcmUKPiBhcmUsIGFuZCB3aGljaCBjb3VudGVycyBjYW4gY291bnQgd2hpY2gg
-ZXZlbnRzLiAgSWYgeW91IHNwZWNpZnkgYSBzZXQKPiBvZiBldmVudHMgZm9yIHdoaWNoIGV2ZXJ5
-IGV2ZW50IGNhbiBiZSBjb3VudGVkIHNpbXVsdGFuZW91c2x5LCB0aGV5Cj4gd2lsbCBiZSBzY2hl
-ZHVsZWQgc2ltdWx0YW5lb3VzbHkgYW5kIGNvbnRpbnVvdXNseS4gIElmIHlvdSBzcGVjaWZ5Cj4g
-bW9yZSBldmVudHMgdGhhbiBjb3VudGVycywgdGhlcmUncyBtdWx0aXBsZXhpbmcuICBBTkQsIGlm
-IHlvdSBzcGVjaWZ5CgpUaGVyZSBpcyBtdWx0aXBsZXhpbmcgaWYgZ3JvdXBfZmQgaXMgc2V0IHRv
-IC0xIGluIGFsbCBldmVudHMuCgo+IGEgc2V0IG9mIGV2ZW50cywgc29tZSBvZiB3aGljaCBjYW5u
-b3QgYmUgY291bnRlZCBzaW11bHRhbmVvdXNseSBkdWUgdG8KPiBoYXJkd2FyZSBsaW1pdGF0aW9u
-cywgdGhleSdsbCBiZSBtdWx0aXBsZXhlZC4KCk5vdCBpZiBncm91cF9mZCBpcyBzZXQgdG8gYSBn
-cm91cCBsZWFkZXIuCiAKPiBQQwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4LXNucHMtYXJjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1zbnBzLWFyYw==
+Hello everyone,
+
+I'm trying to inspect "jitted" code (i.e. code from a just-in-time compiler) from OpenJDK following the steps mentioned in https://patchwork.kernel.org/patch/8236901/ on a  ppc64le 4.4.0-38-generic Ubuntu 16.04 virtual machine.
+Unfortunately, though, when I look at the perf report, the higher level of detail I can get is on perf-<pid>.map.
+
+Going through the same steps on a x64 virtual machine I was able to get to jit-<pid>.so level of information.
+
+Is there any known compatibility/port issue? Am I missing something?
+
+More info:
+- Perf compiled from from git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+- Perf record command line and output:
+brunorosa@brosa-ubuntu:~/test$ ~/tip/tools/perf/perf record -k mono -g /home/brunorosa/hs-comp/build/linux-ppc64le-normal-server-release/jdk/bin/java -agentpath:libjvmti.so HelloWorld
+WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
+check /proc/sys/kernel/kptr_restrict.
+
+Samples in kernel functions may not be resolved if a suitable vmlinux
+file is not found in the buildid cache or in the vmlinux path.
+
+Samples in kernel modules won't be resolved at all.
+
+If some relocation was applied (e.g. kexec) symbols may be misresolved
+even with a suitable vmlinux or kallsyms file.
+
+Couldn't record kernel reference relocation symbol
+Symbol resolution may be skewed if relocation was used (e.g. kexec).
+Check /proc/kallsyms permission or run as root.
+java: jvmti: jitdump in /home/brunorosa/.debug/jit/java-jit-20160923.XXD2HmC2/jit-13964.dump
+Compiler intrinsic is defined for method [java.lang.Math.fma(FFF)F], but the method is not annotated with @HotSpotIntrinsicCandidate. Method will not be inlined.
+Compiler intrinsic is defined for method [java.lang.Math.fma(DDD)D], but the method is not annotated with @HotSpotIntrinsicCandidate. Method will not be inlined.
+Hello, World
+[ perf record: Woken up 4 times to write data ]
+[kernel.kallsyms] with build id 2132f2e43450ff769c824a9552ab551ab8402d7b not found, continuing without symbols
+[ perf record: Captured and wrote 1.749 MB perf.data (7551 samples) ]
+
+-  Perf inject command line: ~/tip/tools/perf/perf inject --jit -i perf.data -o perf.jitted.data
+
+- Perf report command line:
+brunorosa@brosa-ubuntu: ~/tip/tools/perf/perf report -g 'graph,0.5,caller' -i perf.jitted.data
+<clipped>
++   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] CompileBroker::compiler_thread_loop
++   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] compiler_thread_entry
++   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] JavaThread::thread_main_inner
++   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] thread_native_entry
++   36.91%     0.00%  C2 CompilerThre  libpthread-2.23.so     [.] start_thread
++   36.91%     0.00%  C2 CompilerThre  libc-2.23.so           [.] __clone
++   36.19%     0.00%  C2 CompilerThre  libjvm.so              [.] CompileBroker::invoke_compiler_on_method
++   36.03%     0.00%  C2 CompilerThre  libjvm.so              [.] C2Compiler::compile_method
++   36.00%     0.00%  C2 CompilerThre  libjvm.so              [.] Compile::Compile
++   34.03%     0.01%  java             libc-2.23.so           [.] __clone
++   34.00%     0.00%  java             libpthread-2.23.so     [.] start_thread
++   33.35%     0.00%  java             libjli.so              [.] JavaMain
++   33.05%     0.00%  java             libjvm.so              [.] Threads::create_vm
++   33.05%     0.00%  java             libjvm.so              [.] JNI_CreateJavaVM
++   31.84%     0.00%  java             libjvm.so              [.] JavaCalls::call_helper
++   31.84%     0.00%  java             libjvm.so              [.] os::os_exception_wrapper
++   31.08%     0.00%  java             libjvm.so              [.] JavaCalls::call_static
++   30.29%     0.00%  java             perf-13964.map         [.] 0x00003fff20000924
++   30.25%     0.07%  java             perf-13964.map         [.] 0x00003fff2000a2a0
++   29.87%     0.07%  java             perf-13964.map         [.] 0x00003fff2000a53c
++   29.56%     0.00%  java             perf-13964.map         [.] 0x00003fff2000a37c
++   24.15%     0.04%  java             perf-13964.map         [.] 0x00003fff2000a5ac
+<clipped>
+
+Regards,
+Bruno Rosa
