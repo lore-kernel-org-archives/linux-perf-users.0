@@ -1,124 +1,171 @@
-From: Bruno Alexandre Rosa <bruno.rosa@eldorado.org.br>
-Subject: RE: Using perf inject on ppc64le
-Date: Fri, 23 Sep 2016 22:28:52 +0000
-Message-ID: <8a73d9e467e745e9b46d4d9555155f76@serv030.corp.eldorado.org.br>
-References: <9f091d82a3a44d2d8c80622a64f59d01@serv030.corp.eldorado.org.br>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: perf call stacks on 32bit ARM v7
+Date: Tue, 27 Sep 2016 23:25:20 +0200
+Message-ID: <4233607.GXAFRqVoOG@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="nextPart1650407.tdWV9SEqCh"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtp1.eldorado.org.br ([200.148.226.10]:54979 "EHLO
-        smtp1.eldorado.org.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752017AbcIWW3H (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:48790 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751496AbcI0VZd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2016 18:29:07 -0400
-In-Reply-To: <9f091d82a3a44d2d8c80622a64f59d01@serv030.corp.eldorado.org.br>
-Content-Language: en-US
+        Tue, 27 Sep 2016 17:25:33 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: jean.pihet@newoldbits.com
+Cc: perf group <linux-perf-users@vger.kernel.org>, wangnan0@huawei.com
 
-Looking closer, when I switch to flat profile and profile an example more interesting than a HelloWorld, I could actually see annotated jitted code on ppc64. But perf still complains about missing perf-<pid>.map(s)  (is that an unrelated problem?)
+--nextPart1650407.tdWV9SEqCh
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Output from profiling hog.java example on the patch notes
+Hello Jean, others.
 
-<clipped>
-+    7.32%     0.01%  java             perf-8536.map        [.] 0x00003fff60009958             <===== missing symbols                                                                                             
-+    6.85%     0.00%  java             perf-8536.map        [.] 0x00003fff88474400             <===== missing symbols           
-+    6.81%     0.01%  C2 CompilerThre  libjvm.so            [.] PhaseChaitin::Register_Allocate
-+    6.81%     0.02%  java             jitted-8536-1009.so  [.] class hog.do_something(int)             <===== it works! 
-+    6.61%     0.00%  C2 CompilerThre  libjvm.so            [.] Compile::Optimize                                                                                                               
-<clipped>
+Can someone please clarify the requirements for getting perf to properly 
+unwind the call stack on 32bit ARM v7?
 
-Regards,
-Bruno Rosa
+Looking at [1], it seems that I need either (a) frame pointers, or (b) DWARF 
+debug information. Because (a) is often not available, and (b) is too large 
+for small flash drives on embedded - how do I use perf with split debug 
+information files? I.e. I have tries to record on the arm board using DWARF:
 
------Original Message-----
-From: linux-perf-users-owner@vger.kernel.org [mailto:linux-perf-users-owner@vger.kernel.org] On Behalf Of Bruno Alexandre Rosa
-Sent: sexta-feira, 23 de setembro de 2016 16:23
-To: linux-perf-users@vger.kernel.org
-Subject: Using perf inject on ppc64le
+arm-v7$ perf record --call-graph dwarf ...
 
-Hello everyone,
+Then transferred the perf.data file over to my host machine. Perf archive said 
+that no build-id's could be found, so I'm not using that. Instead, I try to 
+ask perf to find the split debug packes using symfs:
 
-I'm trying to inspect "jitted" code (i.e. code from a just-in-time compiler) from OpenJDK following the steps mentioned in https://patchwork.kernel.org/patch/8236901/ on a  ppc64le 4.4.0-38-generic Ubuntu 16.04 virtual machine.
-Unfortunately, though, when I look at the perf report, the higher level of detail I can get is on perf-<pid>.map.
+x86-64$ perf report --symfs ... -g graph
 
-Going through the same steps on a x64 virtual machine I was able to get to jit-<pid>.so level of information.
+But that does not work and I'm not seeing any backtraces. Stracing the report, 
+I don't see it even trying to access files - how can I debug this and figure 
+out what I'm supposed to be using?
 
-Is there any known compatibility/port issue? Am I missing something?
+Also according to [1], ARM .exidx unwind tables (c) are not supported by perf 
+- is that still the case? If so, what is holding back support for that in 
+perf, considering that libunwind supposedly supports unwinding using that 
+information?
 
-More info:
-- Perf compiled from from git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-- Perf record command line and output:
-brunorosa@brosa-ubuntu:~/test$ ~/tip/tools/perf/perf record -k mono -g /home/brunorosa/hs-comp/build/linux-ppc64le-normal-server-release/jdk/bin/java -agentpath:libjvmti.so HelloWorld
-WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted, check /proc/sys/kernel/kptr_restrict.
+Thanks
 
-Samples in kernel functions may not be resolved if a suitable vmlinux file is not found in the buildid cache or in the vmlinux path.
+[1]: https://archive.fosdem.org/2015/schedule/event/arm_perf/attachments/
+slides/601/export/events/attachments/arm_perf/slides/601/
+Fosdem_2015_perf_status_on_ARM_and_ARM64.pdf
 
-Samples in kernel modules won't be resolved at all.
+-- 
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart1650407.tdWV9SEqCh
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-If some relocation was applied (e.g. kexec) symbols may be misresolved even with a suitable vmlinux or kallsyms file.
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE2MDkyNzIxMjUyMFowIwYJKoZIhvcNAQkEMRYEFBle6jQ8uKZK9QQamMD5lRxjhiSVMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGZz
+iXyuuHcLrtcAZ5CQTu/pRyfdsmJiuWXuM2yyHCbz7Qo0XzHvbWNwQzKQdd1P6Mc98EXdU4oATBIT
+i5bEQiafBtUk8Lh/jgIimctnhZ6w6qiddoUHUW0YGzeTfHE9ZrZQbXB+IhQDAxTiKUdoBLppoUKE
+P8YkN0uSFIiCMcERzWzXpKpsfbbJXzY3iNqjZz2FpiYjB8W4QPU4PCs4oZy/hHO7k7xVPJkfPhw+
+z1Btl9r+CrB0mihB5kBeVYnDcIV/vxFVZ23Khy3OMy4T5XFd96Ax4mTBQuY3WSPwkCju+s0oYmV8
+EbFHnGm8sdYMEv66CBy1Maze+i0nOU+m1uIAAAAAAAA=
 
-Couldn't record kernel reference relocation symbol Symbol resolution may be skewed if relocation was used (e.g. kexec).
-Check /proc/kallsyms permission or run as root.
-java: jvmti: jitdump in /home/brunorosa/.debug/jit/java-jit-20160923.XXD2HmC2/jit-13964.dump
-Compiler intrinsic is defined for method [java.lang.Math.fma(FFF)F], but the method is not annotated with @HotSpotIntrinsicCandidate. Method will not be inlined.
-Compiler intrinsic is defined for method [java.lang.Math.fma(DDD)D], but the method is not annotated with @HotSpotIntrinsicCandidate. Method will not be inlined.
-Hello, World
-[ perf record: Woken up 4 times to write data ] [kernel.kallsyms] with build id 2132f2e43450ff769c824a9552ab551ab8402d7b not found, continuing without symbols [ perf record: Captured and wrote 1.749 MB perf.data (7551 samples) ]
 
--  Perf inject command line: ~/tip/tools/perf/perf inject --jit -i perf.data -o perf.jitted.data
-
-- Perf report command line:
-brunorosa@brosa-ubuntu: ~/tip/tools/perf/perf report -g 'graph,0.5,caller' -i perf.jitted.data <clipped>
-+   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+CompileBroker::compiler_thread_loop
-+   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+compiler_thread_entry
-+   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+JavaThread::thread_main_inner
-+   36.91%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+thread_native_entry
-+   36.91%     0.00%  C2 CompilerThre  libpthread-2.23.so     [.] 
-+start_thread
-+   36.91%     0.00%  C2 CompilerThre  libc-2.23.so           [.] 
-+__clone
-+   36.19%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+CompileBroker::invoke_compiler_on_method
-+   36.03%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+C2Compiler::compile_method
-+   36.00%     0.00%  C2 CompilerThre  libjvm.so              [.] 
-+Compile::Compile
-+   34.03%     0.01%  java             libc-2.23.so           [.] 
-+__clone
-+   34.00%     0.00%  java             libpthread-2.23.so     [.] 
-+start_thread
-+   33.35%     0.00%  java             libjli.so              [.] 
-+JavaMain
-+   33.05%     0.00%  java             libjvm.so              [.] 
-+Threads::create_vm
-+   33.05%     0.00%  java             libjvm.so              [.] 
-+JNI_CreateJavaVM
-+   31.84%     0.00%  java             libjvm.so              [.] 
-+JavaCalls::call_helper
-+   31.84%     0.00%  java             libjvm.so              [.] 
-+os::os_exception_wrapper
-+   31.08%     0.00%  java             libjvm.so              [.] 
-+JavaCalls::call_static
-+   30.29%     0.00%  java             perf-13964.map         [.] 
-+0x00003fff20000924
-+   30.25%     0.07%  java             perf-13964.map         [.] 
-+0x00003fff2000a2a0
-+   29.87%     0.07%  java             perf-13964.map         [.] 
-+0x00003fff2000a53c
-+   29.56%     0.00%  java             perf-13964.map         [.] 
-+0x00003fff2000a37c
-+   24.15%     0.04%  java             perf-13964.map         [.] 
-+0x00003fff2000a5ac
-<clipped>
-
-Regards,
-Bruno Rosa
---
-To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in the body of a message to majordomo@vger.kernel.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nextPart1650407.tdWV9SEqCh--
