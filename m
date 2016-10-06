@@ -1,229 +1,197 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Duplication of sched events
-Date: Thu, 06 Oct 2016 18:14:16 +0200
-Message-ID: <2304161.71JrnPZhhs@milian-kdab2>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: Problems with -b, and confusing error messages
+Date: Thu, 6 Oct 2016 13:18:10 -0300
+Message-ID: <20161006161810.GA4809@kernel.org>
+References: <CAMRJFfLVEHrJ3zqExY=SMzuw8TS7V5A4sy5N2vW9moL=uYvYvg@mail.gmail.com>
+ <20161005111131.GO7143@kernel.org>
+ <CAMRJFfJeM8XGeNVzzhDom7zoB6fAsFgZrYY69UnW0H2C8Bu0tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4556714.Yciz3Mu2WA"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:48990 "EHLO mail.kdab.com"
+Received: from mail.kernel.org ([198.145.29.136]:60288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S942308AbcJFQOU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2016 12:14:20 -0400
+        id S1752677AbcJFQS2 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 6 Oct 2016 12:18:28 -0400
+Content-Disposition: inline
+In-Reply-To: <CAMRJFfJeM8XGeNVzzhDom7zoB6fAsFgZrYY69UnW0H2C8Bu0tw@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Jonas Wagner <jonas.wagner@epfl.ch>
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart4556714.Yciz3Mu2WA
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Em Wed, Oct 05, 2016 at 02:24:53PM +0200, Jonas Wagner escreveu:
+> Hi,
+> 
+> Thanks a lot Arnaldo for your help!
+> 
+> Unfortunately the problem persists, even with generous permissions and
+> when running as root :( Here are some more examples:
+> 
+> ---
+> 
+> jowagner@kirk3[~] % sudo perf record -b /bin/true
+> Error: 'precise' request may not be supported. Try removing 'p' modifier.
+> 
+> jowagner@kirk3[~] % sudo perf record -b -e cycles /bin/true
+> Error: No hardware sampling interrupt available.
+> No APIC? If so then you can boot the kernel with the "lapic" boot
+> parameter to force-enable it.
 
-Hey all,
+This smells like a problem that could have been fixed, in the kernel, at
+a later version, would it be possible to grab a clone of Linus's tree:
 
-I noticed the following strange behavior, which applies to most of the sched 
-trace events, most notably sched_wakeup and sched_stat_*:
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-~~~~~~~~
-#include <unistd.h>
+Build it using your current kernel config as a start, install, build and
+check if the problem persists?
 
-int main()
-{
-   for (int i = 0; i < 100; ++i) {
-       usleep(10);
-   }
-}
-~~~~~~~~
+Or you could look at the git log for the Intel PMU code from the kernel
+where it works to the current HEAD to see if there are any changesets
+that looks related.
 
-~~~~~~~~
-$ perf record -e sched:sched_wakeup --event=syscalls:sys_{enter,exit}
-_nanosleep ./a.out
-           a.out 16841 [007] 24360.139137: syscalls:sys_enter_nanosleep: rqtp: 
-0x7ffda95e0c20, rmtp: 0x00000000
-         swapper     0 [007] 24360.139201:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139201:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139203:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139203:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-           a.out 16841 [007] 24360.139206:  syscalls:sys_exit_nanosleep: 0x0
-           a.out 16841 [007] 24360.139206: syscalls:sys_enter_nanosleep: rqtp: 
-0x7ffda95e0c20, rmtp: 0x00000000
-         swapper     0 [007] 24360.139267:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
-a.out:16841 [120] success=1 CPU:007
-           a.out 16841 [007] 24360.139270:  syscalls:sys_exit_nanosleep: 0x0
-...
-# repeated like this
-~~~~~~
-
-Note how I get eight sched_wakeup events, all for the same cpu. This seems to 
-be related to the number of cores on my system:
-
-~~~~~
-$ nproc
-8
-~~~~~
-
-On a quad-core machine, I get them four times.
-
-Interestingly, tracing system-wide "fixes" this behavior:
-
-~~~~~
-$ perf record -e sched:sched_wakeup --event=syscalls:sys_{enter,exit}
-_nanosleep -a ./a.out
-$ perf script |& grep a.out | head
-           a.out 16978 [006] 24514.874484: syscalls:sys_enter_nanosleep: rqtp: 
-0x7ffc44f450e0, rmtp: 0x00000000
-         swapper     0 [006] 24514.874547:           sched:sched_wakeup: 
-a.out:16978 [120] success=1 CPU:006
-           a.out 16978 [006] 24514.874549:  syscalls:sys_exit_nanosleep: 0x0
-           a.out 16978 [006] 24514.874549: syscalls:sys_enter_nanosleep: rqtp: 
-0x7ffc44f450e0, rmtp: 0x00000000
-         swapper     0 [006] 24514.874611:           sched:sched_wakeup: 
-a.out:16978 [120] success=1 CPU:006
-           a.out 16978 [006] 24514.874612:  syscalls:sys_exit_nanosleep: 0x0
-~~~~~
-
-I think this is a bug. Can someone clarify where it could come from, then I 
-could try to fix it.
-
-Thanks
--- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart4556714.Yciz3Mu2WA
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MTAwNjE2MTQxNlowIwYJKoZIhvcNAQkEMRYEFJQLkWTGORqYjDCjKVEJyB3h4PSaMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAHZh
-CnIPmOSq4dFWWhWu3XVmPiVTgJs598NqTGq16xRAN8OlHf20alfXQO02IxSgmPzSgBP+ZA1ErB6V
-cf/kbVMXXKPEkTJFutFd1CH+2sOEOg6Q4G+pf+ZNPBojIhQbfe8aRu4wo53LKx2khALTcmZRoWgC
-dSxAUjsBJ8CmiodvnVqS77snXGXUH3W9+T4ZWzuZmLOyFyvML9PQZgSv3M7EH6cEmhrLN3rpCIKI
-a65RMC4PG5azz2ePF5b8yyAEzmio8RCDMjjC6HlwG7YSGeDxWiMz9kSJrBopbVbOcqEXlNHUhJeL
-yRaSXkSlK2O6M27ebEt9meaZ/SZB/4hQH/sAAAAAAAA=
-
-
---nextPart4556714.Yciz3Mu2WA--
+- Arnaldo
+ 
+> jowagner@kirk3[~] % perf evlist -v
+> zero-sized file (perf.data), nothing to do!
+> 
+> jowagner@kirk3[~] % sudo perf record /bin/true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.014 MB perf.data (9 samples) ]
+> 
+> jowagner@kirk3[~] % perf evlist -v
+> cycles:pp: size: 112, { sample_period, sample_freq }: 4000,
+> sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
+> comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
+> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
+> 
+> ---
+> 
+> Here are my settings in /proc/sys/kernel:
+> /proc/sys/kernel/perf_cpu_time_max_percent         25
+> /proc/sys/kernel/perf_event_max_sample_rate        100000
+> /proc/sys/kernel/perf_event_mlock_kb               516
+> /proc/sys/kernel/perf_event_paranoid               0
+> /proc/sys/kernel/kptr_restrict                     0
+> 
+> And these are the CPU flags:
+> model name      : Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
+> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge
+> mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe
+> syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts
+> rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq
+> dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm
+> pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer xsave
+> avx f16c rdrand lahf_lm abm epb tpr_shadow vnmi flexpriority ept vpid
+> fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm xsaveopt
+> cqm_llc cqm_occup_llc dtherm ida arat pln pts
+> 
+> Any other idea about the problem, or hints as to how I could debug it?
+> 
+> Best,
+> Jonas
+> 
+> On Wed, Oct 5, 2016 at 1:11 PM, Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> > Em Tue, Oct 04, 2016 at 05:02:58PM +0200, Jonas Wagner escreveu:
+> >> I would like to ask for help, because perf stopped working when I
+> >> enable taken branch stack sampling (with the -b option). Here are a
+> >> few examples:
+> >>
+> >> $ perf record -b /bin/true
+> >> Error:
+> >> 'precise' request may not be supported. Try removing 'p' modifier.
+> >>
+> >> $ perf record -b -e cycles /bin/true
+> >> Error:
+> >> No hardware sampling interrupt available.
+> >> No APIC? If so then you can boot the kernel with the "lapic" boot
+> >> parameter to force-enable it.
+> >>
+> >> $ perf record -e cycles /bin/true
+> >> [ perf record: Woken up 1 times to write data ]
+> >> [ perf record: Captured and wrote 0.014 MB perf.data (8 samples) ]
+> >>
+> >> $ perf record -e cycles:p /bin/true
+> >> [ perf record: Woken up 1 times to write data ]
+> >> [ perf record: Captured and wrote 0.014 MB perf.data (9 samples) ]
+> >>
+> >> $ cat /proc/cmdline
+> >> BOOT_IMAGE=/boot/vmlinuz-4.4.0-38-generic
+> >> root=UUID=a5440a73-d559-4b61-808c-2430cd67ba25 ro quiet lapic
+> >>
+> >> I have a couple questions about this:
+> >>
+> >> 1. What's wrong? Branch stack sampling used to work on this machine...
+> >> how can I make it work again?
+> >> 2. Apparently, the problem is not related to the precise modifier, or
+> >> the lapic boot parameter. Could we make these error messages more
+> >> meaningful?
+> >>
+> >> Note regarding (1): I recently upgraded the kernel on this machine
+> >> from 4.4.0-36-generic to 4.4.0-38-generic, on Ubuntu Xenial. Using the
+> >> previous kernel, perf worked fine. It's tricky for me to undo the
+> >> update though :(
+> >>
+> >> Help would be appreciated. Happy to provide more logs if needed. Thanks!
+> >
+> > So the message needs to be improved, no question about it, but can you
+> > try running as root or tweaking perf_event_paranoid, as here I have:
+> >
+> > [root@jouet ~]# perf record -b /bin/true
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.024 MB perf.data (9 samples) ]
+> > [root@jouet ~]# uname -a
+> > Linux jouet 4.7.3-200.fc24.x86_64 #1 SMP Wed Sep 7 17:31:21 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+> > [root@jouet ~]# perf record -b /bin/true
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.024 MB perf.data (8 samples) ]
+> > [root@jouet ~]# perf evlist -v
+> > cycles:ppp: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, branch_sample_type: ANY
+> > [root@jouet ~]#
+> >
+> >
+> > And, as user:
+> >
+> > [acme@jouet linux]$ perf record -b /bin/true
+> > Error:
+> > You may not have permission to collect stats.
+> >
+> > Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+> > which controls use of the performance events system by
+> > unprivileged users (without CAP_SYS_ADMIN).
+> >
+> > The current value is 2:
+> >
+> >   -1: Allow use of (almost) all events by all users
+> >>= 0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
+> >>= 1: Disallow CPU event access by users without CAP_SYS_ADMIN
+> >>= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+> > [acme@jouet linux]$
+> >
+> > If I tweak /proc/sys/kernel/perf_event_paranoid, changing it from 2 to 1, say:
+> >
+> > [acme@jouet linux]$ perf record -b /bin/true
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.024 MB perf.data (9 samples) ]
+> > [acme@jouet linux]$ perf evlist -v
+> > cycles:ppp: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, branch_sample_type: ANY
+> > [acme@jouet linux]$
+> >
+> > It seems to work.
+> >
+> > IIRC there was a change in the default of /proc/sys/kernel/perf_event_paranoid
+> > in Ubuntu recently, I bet this is the case.
+> >
+> > Probably they did that but forgot to update the tool, that would get better
+> > error messages, but still not that good wrt branch stack support :-\
+> >
+> > - Arnaldo
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
