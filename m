@@ -1,27 +1,28 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Tracing sched_switch events for client application when process is switched back in
-Date: Thu, 06 Oct 2016 17:52:51 +0200
-Message-ID: <10618911.8qrkJBTkNF@milian-kdab2>
+Subject: Duplication of sched events
+Date: Thu, 06 Oct 2016 18:14:16 +0200
+Message-ID: <2304161.71JrnPZhhs@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1777762.yp3cQxLiHa"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart4556714.Yciz3Mu2WA"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:45846 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:48990 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S942114AbcJFPw6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2016 11:52:58 -0400
+        id S942308AbcJFQOU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 6 Oct 2016 12:14:20 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: linux-perf-users@vger.kernel.org
 
---nextPart1777762.yp3cQxLiHa
+--nextPart4556714.Yciz3Mu2WA
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
 Hey all,
 
-when you have an application like this:
+I noticed the following strange behavior, which applies to most of the sched 
+trace events, most notably sched_wakeup and sched_stat_*:
 
-~~~~~~
+~~~~~~~~
 #include <unistd.h>
 
 int main()
@@ -30,64 +31,83 @@ int main()
        usleep(10);
    }
 }
+~~~~~~~~
+
+~~~~~~~~
+$ perf record -e sched:sched_wakeup --event=syscalls:sys_{enter,exit}
+_nanosleep ./a.out
+           a.out 16841 [007] 24360.139137: syscalls:sys_enter_nanosleep: rqtp: 
+0x7ffda95e0c20, rmtp: 0x00000000
+         swapper     0 [007] 24360.139201:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139201:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139202:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139203:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139203:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+           a.out 16841 [007] 24360.139206:  syscalls:sys_exit_nanosleep: 0x0
+           a.out 16841 [007] 24360.139206: syscalls:sys_enter_nanosleep: rqtp: 
+0x7ffda95e0c20, rmtp: 0x00000000
+         swapper     0 [007] 24360.139267:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139268:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+         swapper     0 [007] 24360.139269:           sched:sched_wakeup: 
+a.out:16841 [120] success=1 CPU:007
+           a.out 16841 [007] 24360.139270:  syscalls:sys_exit_nanosleep: 0x0
+...
+# repeated like this
 ~~~~~~
 
-Then record sched:sched_switch events for it:
-
-~~~~~~
-$ perf record -e sched:sched_switch ./a.out 
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.031 MB perf.data (100 samples) ]
-~~~~~~
-
-Note how it's only 100 samples, instead of 200 for both, the switch-out and 
-switch-in events. Apparently we only get the switch-out events:
+Note how I get eight sched_wakeup events, all for the same cpu. This seems to 
+be related to the number of cores on my system:
 
 ~~~~~
-$ perf script -F trace | uniq -c
-     99 a.out:3994 [120] S ==> swapper/7:0 [120]
-      1 a.out:3994 [120] S ==> swapper/7:0 [1
+$ nproc
+8
 ~~~~~
 
-Doing a global trace, or using LTTNG, we also see the switch-in events:
+On a quad-core machine, I get them four times.
+
+Interestingly, tracing system-wide "fixes" this behavior:
 
 ~~~~~
-$ perf record -e sched:sched_switch -a ./a.out 
-$ perf script -F trace | grep a.out | sort | uniq -c
-    100 a.out:11570 [120] S ==> swapper/4:0 [120]
-      1 a.out:11570 [120] x ==> swapper/4:0 [120]
-    100 swapper/4:0 [120] R ==> a.out:11570 [120]
+$ perf record -e sched:sched_wakeup --event=syscalls:sys_{enter,exit}
+_nanosleep -a ./a.out
+$ perf script |& grep a.out | head
+           a.out 16978 [006] 24514.874484: syscalls:sys_enter_nanosleep: rqtp: 
+0x7ffc44f450e0, rmtp: 0x00000000
+         swapper     0 [006] 24514.874547:           sched:sched_wakeup: 
+a.out:16978 [120] success=1 CPU:006
+           a.out 16978 [006] 24514.874549:  syscalls:sys_exit_nanosleep: 0x0
+           a.out 16978 [006] 24514.874549: syscalls:sys_enter_nanosleep: rqtp: 
+0x7ffc44f450e0, rmtp: 0x00000000
+         swapper     0 [006] 24514.874611:           sched:sched_wakeup: 
+a.out:16978 [120] success=1 CPU:006
+           a.out 16978 [006] 24514.874612:  syscalls:sys_exit_nanosleep: 0x0
 ~~~~~
 
-Is there any way I can get both sched switch events, i.e. not only the one 
-with prev_tid=$client_tid, but also the one with next_tid=$client_tid? One way 
-that seems to work is the following:
-
-~~~~~
-$ perf record -e sched:sched_switch --filter 'prev_comm=="a.out" || 
-next_comm=="a.out"' -a ./a.out 
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 1.499 MB perf.data (201 samples) ]
-$ perf script -F trace | grep a.out | sort | uniq -c
-      1 akonadi_notes_a:2160 [120] S ==> a.out:14710 [120]
-      3 a.out:14710 [120] S ==> swapper/2:0 [120]
-     97 a.out:14710 [120] S ==> swapper/6:0 [120]
-      1 a.out:14710 [120] x ==> swapper/6:0 [120]
-      1 ksoftirqd/6:47 [120] S ==> a.out:14710 [120]
-      1 mysqld:14707 [120] S ==> a.out:14710 [120]
-      1 QDBusConnection:2140 [120] S ==> a.out:14710 [120]
-      1 QDBusConnection:2213 [120] S ==> a.out:14710 [120]
-      2 swapper/2:0 [120] R ==> a.out:14710 [120]
-     93 swapper/6:0 [120] R ==> a.out:14710 [120]
-~~~~~
-
-The above workaround will not work for more complex applications, with 
-secondary threads that can have different comm names. So:
-
-Where is the "default" filtering done, which simply drops all events from 
-sources that do not match the pid of the created process? I assume this 
-happens in kernel space? Could it be adapted to also include switch_switch 
-events when next_tid belongs to the pid we use for filtering?
+I think this is a bug. Can someone clarify where it could come from, then I 
+could try to fix it.
 
 Thanks
 -- 
@@ -95,7 +115,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1777762.yp3cQxLiHa
+--nextPart4556714.Yciz3Mu2WA
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -197,13 +217,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MTAwNjE1NTI1MVowIwYJKoZIhvcNAQkEMRYEFDh3I/RfUrH88Nv814efmQIxZG3YMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAL+p
-rnUiBOAMxVt7p+rjIUR1A/uJyWqyqqAmZeyE3IJpeEjpHAr8t3sERduRESBpPycKzxyRPYhlssmS
-Lx1V03QtyuliW1AKuBNfVldrMep1IsqNqW2K60UaGNG0REmTNSx60X+4D4o+nLXQ43cuf89eo+IE
-ZYmkJYUMEflmtqLb/tSNqM/UiBXV9I/9gu2gJ2um495me5RGnRjzTVYcoXIrRWFzZt9EVJlHiYly
-yOAnnTd+3Au8NWS2+qibXLlnTw0j1iplK6W/1EGXwZTWbEv9dAj5epHHD23VWR7k7uoBE44mW/P0
-4vGT6T1OADo5AlZqbtTkjmx0b6YREzxtHwUAAAAAAAA=
+DTE2MTAwNjE2MTQxNlowIwYJKoZIhvcNAQkEMRYEFJQLkWTGORqYjDCjKVEJyB3h4PSaMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAHZh
+CnIPmOSq4dFWWhWu3XVmPiVTgJs598NqTGq16xRAN8OlHf20alfXQO02IxSgmPzSgBP+ZA1ErB6V
+cf/kbVMXXKPEkTJFutFd1CH+2sOEOg6Q4G+pf+ZNPBojIhQbfe8aRu4wo53LKx2khALTcmZRoWgC
+dSxAUjsBJ8CmiodvnVqS77snXGXUH3W9+T4ZWzuZmLOyFyvML9PQZgSv3M7EH6cEmhrLN3rpCIKI
+a65RMC4PG5azz2ePF5b8yyAEzmio8RCDMjjC6HlwG7YSGeDxWiMz9kSJrBopbVbOcqEXlNHUhJeL
+yRaSXkSlK2O6M27ebEt9meaZ/SZB/4hQH/sAAAAAAAA=
 
 
---nextPart1777762.yp3cQxLiHa--
+--nextPart4556714.Yciz3Mu2WA--
