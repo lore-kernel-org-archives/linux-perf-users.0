@@ -1,143 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Tracing sched_switch events for client application when process
- is switched back in
-Date: Mon, 10 Oct 2016 21:36:55 -0300
-Message-ID: <20161011003655.GP4809@kernel.org>
-References: <10618911.8qrkJBTkNF@milian-kdab2>
- <20161006162125.GB4809@kernel.org>
- <4514930.f3mZKdtDhX@milian-kdab2>
+From: William Cohen <wcohen@redhat.com>
+Subject: Re: [PATCH] s390: Add support for z13
+Date: Wed, 12 Oct 2016 16:27:46 -0400
+Message-ID: <44aa1856-f35d-4077-df94-c588d5b3b1e2@redhat.com>
+References: <m3mvnwu1cy.fsf@oc1027705133.ibm.com>
+	<bb9acd86-0c7c-7291-00c1-1c6ad8576232@redhat.com>
+	<m360p8m87d.fsf@oc1027705133.ibm.com>
+	<d2177055-a1c3-7562-f555-bd239836af3e@redhat.com>
+	<alpine.LRH.2.20.1610042254100.6819@Diego>
+	<m3vax6lkon.fsf@oc1027705133.ibm.com>
+	<alpine.LRH.2.20.1610121546540.14258@Diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:57444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753376AbcJKOeH (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2016 10:34:07 -0400
-Content-Disposition: inline
-In-Reply-To: <4514930.f3mZKdtDhX@milian-kdab2>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <oprofile-list-bounces@lists.sourceforge.net>
+In-Reply-To: <alpine.LRH.2.20.1610121546540.14258@Diego>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/oprofile-list>,
+	<mailto:oprofile-list-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=oprofile-list>
+List-Post: <mailto:oprofile-list@lists.sourceforge.net>
+List-Help: <mailto:oprofile-list-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/oprofile-list>,
+	<mailto:oprofile-list-request@lists.sourceforge.net?subject=subscribe>
+Errors-To: oprofile-list-bounces@lists.sourceforge.net
+To: Michael Petlan <mpetlan@redhat.com>, Andreas Arnez <arnez@linux.vnet.ibm.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Andreas Krebbel <krebbel@linux.vnet.ibm.com>, oprofile-list@lists.sf.net
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Oct 06, 2016 at 06:38:28PM +0200, Milian Wolff escreveu:
-> On Thursday, October 6, 2016 1:21:25 PM CEST Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Oct 06, 2016 at 05:52:51PM +0200, Milian Wolff escreveu:
-> > > Hey all,
-> > > 
-> > > when you have an application like this:
-> > > 
-> > > ~~~~~~
-> > > #include <unistd.h>
-> > > 
-> > > int main()
-> > > {
-> > > 
-> > >    for (int i = 0; i < 100; ++i) {
-> > >    
-> > >        usleep(10);
-> > >    
-> > >    }
-> > > 
-> > > }
-> > > ~~~~~~
-> > > 
-> > > Then record sched:sched_switch events for it:
-> > > 
-> > > ~~~~~~
-> > > $ perf record -e sched:sched_switch ./a.out
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.031 MB perf.data (100 samples) ]
-> > > ~~~~~~
-> > > 
-> > > Note how it's only 100 samples, instead of 200 for both, the switch-out
-> > > and
-> > > switch-in events. Apparently we only get the switch-out events:
-> > > 
-> > > ~~~~~
-> > > $ perf script -F trace | uniq -c
-> > > 
-> > >      99 a.out:3994 [120] S ==> swapper/7:0 [120]
-> > >      
-> > >       1 a.out:3994 [120] S ==> swapper/7:0 [1
-> > > 
-> > > ~~~~~
-> > > 
-> > > Doing a global trace, or using LTTNG, we also see the switch-in events:
-> > > 
-> > > ~~~~~
-> > > $ perf record -e sched:sched_switch -a ./a.out
-> > > $ perf script -F trace | grep a.out | sort | uniq -c
-> > > 
-> > >     100 a.out:11570 [120] S ==> swapper/4:0 [120]
-> > >     
-> > >       1 a.out:11570 [120] x ==> swapper/4:0 [120]
-> > >     
-> > >     100 swapper/4:0 [120] R ==> a.out:11570 [120]
-> > > 
-> > > ~~~~~
-> > > 
-> > > Is there any way I can get both sched switch events, i.e. not only the one
-> > > with prev_tid=$client_tid, but also the one with next_tid=$client_tid? One
-> > > way
-> > > that seems to work is the following:
-> > Have you considered using PERF_RECORD_SWITCH?
-> > 
-> > [acme@jouet linux]$ perf record --switch-events sleep 1
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
-> > [acme@jouet linux]$ perf script --show-switch-events
-> >   sleep 20679  5578.172409:          1 cycles:u:      7fb4e5a51c80
-> > _start+0x0 (/usr/lib64/ld-2.23.so) sleep 20679  5578.172411:          1
-> > cycles:u:      7fb4e5a51c80 _start+0x0 (/usr/lib64/ld-2.23.so) sleep 20679 
-> > 5578.172412:         12 cycles:u:      7fb4e5a51c80 _start+0x0
-> > (/usr/lib64/ld-2.23.so) sleep 20679  5578.172413:        397 cycles:u:     
-> > 7fb4e5a51c80 _start+0x0 (/usr/lib64/ld-2.23.so) sleep 20679  5578.172414:  
-> >    13936 cycles:u:  ffffffffb77ee7a0 page_fault+0x0
-> > (/usr/lib/debug/lib/modules/4.7.5-200.fc24.x86_64/vmlinux) sleep 20679 
-> > 5578.172431:     330542 cycles:u:      7fb4e5a5301f dl_main+0x6cf
-> > (/usr/lib64/ld-2.23.so) sleep 20679  5578.172700: PERF_RECORD_SWITCH OUT
-> >   sleep 20679  5579.172821: PERF_RECORD_SWITCH IN
-> >   sleep 20679  5579.172838:     802931 cycles:u:      7fb4e5a6122e
-> > _dl_fini+0x8e (/usr/lib64/ld-2.23.so) [acme@jouet linux]$
+On 10/12/2016 10:01 AM, Michael Petlan wrote:
+> On Wed, 5 Oct 2016, Andreas Arnez wrote:
+>> On Tue, Oct 04 2016, Michael Petlan wrote:
+>>
+>>> Hi Andreas,
+>>>
+>>> have you or anyone tested this patch and/or s390 oprofile support
+>>> in general? I'd love to know more about the results or at least,
+>>> if there any, what has been tested and what not + whether there
+>>> are any known issues regarding to HW sampling on s390.
+>>
+>> IIRC, I just performed a quick smoke test before submitting this patch;
+>> and oprofile didn't crash.  Other than that, I don't really know what
+>> works and what doesn't.
+>>
+
+Hi Andreas and Andreas,
+
+Is there support for IBM z13 perf counters in the upstream linux kernel?  I didn't see perf support for IBM z13 in the mainline kernel git repository.
+
+There is a difference between the kernel and oprofile is the s390 identification.  The kernel is using hex numbers such as 0x2817 and 0x2818 for Z196 identification (http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/s390/kernel/perf_cpum_cf_events.c#n303), but oprofile is reading the numbers as decimal for idenfication (https://sourceforge.net/p/oprofile/oprofile/ci/master/tree/libop/op_cpu_type.c).  oprofile should also be using hex numbers like the kernel.
+
+-Will
 > 
-> First time I read about it, and the documentation is scarce, to not say non-
-> existing. It seems to record cycles for the switch events. But why does it 
+> Could you please try it with setting /proc/sys/kernel/kptr_restrict to '0'
+> and /proc/sys/kernel/perf_event_paranoid to '-1', being logged as root user?
+> 
+> `ophelp -r`
+>   --> should detect the machine, print "IBM z13"
+> 
+> `ophelp -d`
+>   --> should print default event "CPU_CYCLES"
+> 
+> `ocount ls`
+>   --> should return some non-zero value for event CPU_CYCLES
+> 
+> `ocount -e INSTRUCTIONS ls`
+>   --> should use INSTRUCTIONS and return a non-zero value too
+> 
+> Please try out also the --system-wide mode as root.
+> 
+> If the above commands work, at least the basic z13 support can be verified.
+> 
+>> Some people mentioned various issues with oprofile on s390, depending on
+>> kernel version and environment.  Since I'm currently more focused on
+>> other projects, I haven't investigated them.  Here are some
+>> (unconfirmed) examples:
+>>
+>> * The --help/--usage options of operf and ocount behave strangely.
+>>  E.g., they attempt perf_open and just emit a cryptic error message if
+>>  that fails.  And upon success they still yield exit code 1.
+> 
+> Maybe if /proc/sys/kernel/perf_event_paranoid is '2' and the user is not
+> root, this might happen.
+> 
+>>
+>> * operf is showing a warning message:
+>>
+>>    Kernel profiling is not possible with current system config.
+>>    Set /proc/sys/kernel/kptr_restrict to 0 to collect kernel samples.
+>>
+> Is kptr_restrict set to '0'?
+> 
+>> * Without the --system-wide option, operf generates all-zero statistics.
+> 
+> Does `ocount` do the same? If yes, the event counting probably does not
+> work as expected.
+> 
+> 
+> Thanks!
+> Michael
+> 
+>>
+>> -- 
+>> Andreas
+>>
+>>
 
 
-
-> only find 7, whereas tracing sched_switch finds all 100 that actually take 
-> place?
-
-This is looking only for the sched switches for the monitored workload,
-which in this case is 'sleep 1', this wasn't a system wide session.
-
-add -a and you'll get those other switches, if I got what you described.
- 
-> The reason why I want sched_switch is that I want to build a "better" sleep 
-> time profiler. The existing script [1] is cumbersome to use, and only shows 
-> parts of what is going on:
-> 
-> - only looks at sched_stat_sleep, ignores sched_stat_iowait or sched_stat_wait
-> - requires one to enable the sched_stat tracepoints in newer kernels 
->   $ echo 1 | sudo tee /proc/sys/kernel/sched_schedstats
-> - as a user-space developer, I actually care about the time between getting 
-> switched out and getting switched in, so using that in perf would actually 
-> give me the duration I got switched out
-> 
-> If I could do something like this:
-> 
-> $ perf record -e cycles:ppp,sched:sched_switch <my app>
-> 
-> And have both switch-in and switch-out traced, than a GUI could visualize this 
-> together and show me both, CPU hotspots as well as sleep/io/blocked time where 
-> I got switched out
-> 
-> [1] https://perf.wiki.kernel.org/index.php/Tutorial#Profiling_sleep_times
-> 
-> -- 
-> Milian Wolff | milian.wolff@kdab.com | Software Engineer
-> KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-> Tel: +49-30-521325470
-> KDAB - The Qt Experts
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most 
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
