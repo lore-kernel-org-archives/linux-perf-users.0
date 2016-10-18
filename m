@@ -1,35 +1,42 @@
-From: Jonas Wagner <jonas.wagner@epfl.ch>
-Subject: Re: Problems with -b, and confusing error messages
-Date: Tue, 18 Oct 2016 18:04:35 +0200
-Message-ID: <CAMRJFfJyydRegQTt=78cD+nRswr7up78JO=e8=sk4PiYdfhRxQ@mail.gmail.com>
-References: <CAMRJFfLVEHrJ3zqExY=SMzuw8TS7V5A4sy5N2vW9moL=uYvYvg@mail.gmail.com>
- <20161005111131.GO7143@kernel.org> <CAMRJFfJeM8XGeNVzzhDom7zoB6fAsFgZrYY69UnW0H2C8Bu0tw@mail.gmail.com>
- <20161006161810.GA4809@kernel.org>
+From: "Odzioba, Lukasz" <lukasz.odzioba@intel.com>
+Subject: perf report: null ptr dereference in utils/env.c
+Date: Tue, 18 Oct 2016 16:13:45 +0000
+Message-ID: <D6EDEBF1F91015459DB866AC4EE162CC02499B19@IRSMSX103.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtp0.epfl.ch ([128.178.224.218]:54435 "EHLO smtp0.epfl.ch"
+Received: from mga06.intel.com ([134.134.136.31]:16945 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S964914AbcJRQFX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2016 12:05:23 -0400
-Received: by mail-wm0-f47.google.com with SMTP id c78so2152482wme.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Oct 2016 09:05:16 -0700 (PDT)
-In-Reply-To: <20161006161810.GA4809@kernel.org>
+        id S964973AbcJRQOB (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 18 Oct 2016 12:14:01 -0400
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jonas Wagner <jonas.wagner@epfl.ch>, linux-perf-users@vger.kernel.org
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: "jolsa@kernel.org" <jolsa@kernel.org>
 
 Hi,
+Am I the only one getting segfaults in perf report (4.8-rc8/4.9rc-1)?
+It happens simply when I try to exit it.
 
-> This smells like a problem that could have been fixed, in the kernel, at
-> a later version, would it be possible to grab a clone of Linus's tree:
+Program received signal SIGSEGV, Segmentation fault.
+perf_env__exit (env=env@entry=0x1fc4d00) at util/env.c:25
+(...)
+(gdb) list
+(...)
 
-I can confirm that the problem is gone when using a custom-compiled
-4.8.0-25 kernel. Unfortunately I'm on a deadline right now and can't
-do a lot of bisecting to find the reason for that.
+24              for (i = 0; i < env->nr_numa_nodes; i++)
+25                      cpu_map__put(env->numa_nodes[i].map);
+26              zfree(&env->numa_nodes);
+ 
+ (gdb) print env->nr_numa_nodes
+$1 = 2
+ (gdb) print env->numa_nodes
+$2 = (struct numa_node *) 0x0    
 
-But anyway, thanks a lot for the advice of compiling/installing a newer kernel!
+This line was introduced in the following patch:
+https://patchwork.kernel.org/patch/9213995/
 
-Best,
-Jonas
+Thanks,
+Lukas
