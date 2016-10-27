@@ -1,33 +1,71 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: perf bpf-output example program
-Date: Tue, 25 Oct 2016 01:37:56 -0400 (EDT)
-Message-ID: <alpine.DEB.2.20.1610250136010.32482@macbook-air>
-References: <alpine.DEB.2.20.1610231302040.27722@macbook-air> <580ECF62.8020900@huawei.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: Question about Perf's handling of in-use performance counters
+Date: Thu, 27 Oct 2016 11:11:24 -0700
+Message-ID: <87r371k6gj.fsf@tassilo.jf.intel.com>
+References: <BN3PR0501MB14590BFC82C2B45B81E56C1BA3D40@BN3PR0501MB1459.namprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oi0-f50.google.com ([209.85.218.50]:35825 "EHLO
-        mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755322AbcJYFi1 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2016 01:38:27 -0400
-Received: by mail-oi0-f50.google.com with SMTP id i127so24408969oia.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Oct 2016 22:38:03 -0700 (PDT)
-In-Reply-To: <580ECF62.8020900@huawei.com>
+Received: from mga04.intel.com ([192.55.52.120]:33870 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S933792AbcJ0SL0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 27 Oct 2016 14:11:26 -0400
+In-Reply-To: <BN3PR0501MB14590BFC82C2B45B81E56C1BA3D40@BN3PR0501MB1459.namprd05.prod.outlook.com>
+        (Taylor Andrews's message of "Fri, 21 Oct 2016 21:59:49 +0000")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Wangnan (F)" <wangnan0@huawei.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Taylor Andrews <andrewst@vmware.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, peterz@infradead.org
 
-On Tue, 25 Oct 2016, Wangnan (F) wrote:
 
-> But in your case it reports can't locate kbuild dir. Please fix it, or the
->  #include <uapi/linux/bpf.h>
-> at the head of test-bpf-output.c causes failure.
+Taylor Andrews <andrewst@vmware.com> writes:
 
-It looks like the problem was trying to run on 4.7 kernel, which just 
-didn't work.  I tried running on 4.9-rc1 and it seems to work.
+> First some background:
+>
+> VMware's virtual x86 performance counter implementation aims to expose
+> in-use (unavailable) performance counters to the guest operating
+> system in the hopes that software agents will recognize it as an
+> "in-use" resource and follow the PMU sharing guidelines outlined in
+> Intel's Performance Monitoring Unit Sharing Guide
+> (https://software.intel.com/en-us/articles/performance-monitoring-unit-guidelines/).
+> There is also a VMware-based mechanism to force virtual performance
+> counters to be exposed to the guest operating system as in-use.
+> "In-use" is defined in the sharing guidelines as the enable bits being
+> found to be set, either in the general purpose PMC's event select MSR,
+> or in the case of fixed function counters, in the Fixed Counter
+> Control MSR.
+>
+> The Linux PMU driver looks like it currently complains about the BIOS
+> being "broken" if it finds any counters are in-use by it, but it still
+> successfully initializes:
+> https://github.com/torvalds/linux/blob/a5ebe0ba3dff658c5286e8d5f20e4328f719d5a3/arch/x86/kernel/cpu/perf_event.c#L181
+>
 
-Thanks for the help
+>
+> By looking at these warnings, naively, it would appear perf is trying
+> to use counters that are marked as in-use.
 
-Vince
+That's right. For generic counters perf doesn't really follow the
+exclusion protocol. It just checks and warns, but they later
+the "in use" information is not used in the scheduler.
+It works for fixed counters.
+
+> I would like to investigate if this is expected perf behavior, or
+> unexpected perf behavior.
+
+It's kind of expected, but could argue that it probably should be fixed.
+
+For the VM of course you could implement it by taking counters from
+the top of the range and limiting CPUID.
+
+There are some other use cases (e.g. with user space users of perfmon)
+where it would be helpful, so at some point it would be useful to fix.
+
+I think it could be done by simply making the bios test update the
+active_mask of the scheduler. But it would be somewhat expensive
+to reread the enable registers all the time to do full exclusion
+with run timer users.
+
+It's also hard to test unfortunately.
+
+-Andi
