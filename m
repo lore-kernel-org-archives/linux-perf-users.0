@@ -1,223 +1,217 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: can not trace function (main) with perf-probe
-Date: Mon, 14 Nov 2016 11:55:36 -0300
-Message-ID: <20161114145536.GA24331@kernel.org>
-References: <CABvthirHujJiKsYc_1Fq=sy9SoYzg0h9XyYGxe-LRf10YdXn8g@mail.gmail.com>
+Subject: Re: Tracing sched_switch events for client application when process
+ is switched back in
+Date: Mon, 14 Nov 2016 12:36:11 -0300
+Message-ID: <20161114153611.GA26543@kernel.org>
+References: <10618911.8qrkJBTkNF@milian-kdab2>
+ <4514930.f3mZKdtDhX@milian-kdab2>
+ <20161011003655.GP4809@kernel.org>
+ <9863268.pt3viFMpJL@milian-kdab2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:60238 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.136]:38972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932280AbcKNOzu (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2016 09:55:50 -0500
+        id S1751750AbcKNPgW (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 14 Nov 2016 10:36:22 -0500
 Content-Disposition: inline
-In-Reply-To: <CABvthirHujJiKsYc_1Fq=sy9SoYzg0h9XyYGxe-LRf10YdXn8g@mail.gmail.com>
+In-Reply-To: <9863268.pt3viFMpJL@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: HOUSSEN Franck <fghoussen@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, namhyung@kernel.org, jolsa@kernel.org, penberg@kernel.org, linux-perf-users@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Em Sun, Nov 13, 2016 at 12:10:05PM +0100, HOUSSEN Franck escreveu:
-> I can not trace the main function (hello world) with perf-probe.
-
-You should send this to a list, like I'm doing now, not in private, I suggest
-linux-perf-users@vger.kernel.org, info about it:
-
-http://vger.kernel.org/vger-lists.html#linux-perf-users
+Em Mon, Nov 14, 2016 at 03:10:26PM +0100, Milian Wolff escreveu:
+> On Monday, October 10, 2016 9:36:55 PM CET Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Oct 06, 2016 at 06:38:28PM +0200, Milian Wolff escreveu:
+> > > only find 7, whereas tracing sched_switch finds all 100 that actually take
+> > > place?
  
-> perf-report reports:
-> # Overhead  Trace output
-> # ........  ............
-> #
->    100.00%  (563a994a56b
-> Instead of the expected:
-> # Overhead  Trace output
-> # ........  ............
-> #
->    100.00%  main
+> Hey there,
+ 
+> long delay but I looked at this again today.
+ 
+> > This is looking only for the sched switches for the monitored workload,
+> > which in this case is 'sleep 1', this wasn't a system wide session.
 
-So, trying this:
+> > add -a and you'll get those other switches, if I got what you described.
+ 
+> I've used the sources of the simple C application I showed in the first email 
+> of this thread (still quoted above). Then I try:
+ 
+> perf record --switch-events -a ./a.out
+ 
+> And indeed, I get all switch events. But I now also profile all applications 
+> on the machine, which is not what I want. I want to combine the following 
 
-[root@jouet c]# cat hello.c
-#include <stdio.h>
+So you remove that '-a' from that command line and gets just the context
+switches for that ./a.out app, no?
 
-int main(void)
-{
-	printf("hello, world\n");
-	return 0;
-}
-[root@jouet c]# make hello
-cc     hello.c   -o hello
-[root@jouet c]# perf probe -x ./hello main
-Added new event:
-  probe_hello:main     (on main in /home/acme/c/hello)
+Lets see:
 
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_hello:main -aR sleep 1
-
-[root@jouet c]# perf record -e probe_hello:main ./hello
-hello, world
+[root@jouet ~]# perf record --switch-events sleep 1
 [ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.021 MB perf.data (1 samples) ]
-[root@jouet c]# perf report --no-header --stdio
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 1  of event 'probe_hello:main'
-# Event count (approx.): 1
-#
-# Overhead  Trace output
-# ........  ............
-#
-   100.00%  (400526)
+[ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
+[root@jouet ~]#
 
+[root@jouet ~]# perf script --show-switch-events
+   perf 29395 176148.426824:          1 cycles:ppp:  ffffffffae1ad256 perf_event_exec+0x146 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux
+   perf 29395 176148.426827:          1 cycles:ppp:  ffffffffae00ca1b intel_pmu_handle_irq+0x21b (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vm
+   perf 29395 176148.426829:         10 cycles:ppp:  ffffffffae02fd93 native_sched_clock+0x33 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlin
+   perf 29395 176148.426830:        221 cycles:ppp:  ffffffffae02fd93 native_sched_clock+0x33 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlin
+   perf 29395 176148.426831:       5213 cycles:ppp:  ffffffffae02fe79 sched_clock+0x9 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+  sleep 29395 176148.426834:     120344 cycles:ppp:  ffffffffae36b0cf selinux_inode_permission+0x11f (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_6
+  sleep 29395 176148.426873:    1717973 cycles:ppp:  ffffffffae259e3b free_pipe_info+0x4b (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+  sleep 29395 176148.427182: PERF_RECORD_SWITCH OUT
+  sleep 29395 176149.427366: PERF_RECORD_SWITCH IN 
 
-#
-# (Tip: Create an archive with symtabs to analyse on other machine: perf archive)
-#
-[root@jouet c]# 
+And if you use something that generates more switches, say:
 
+[root@jouet ~]# perf record --switch-events ping -c 5 localhost
+PING localhost.localdomain (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=1 ttl=64 time=0.043 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=2 ttl=64 time=0.040 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=3 ttl=64 time=0.038 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=4 ttl=64 time=0.038 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=5 ttl=64 time=0.036 ms
 
-Reproduced, this ends up showing just the trace fields for this tracepoint:
+--- localhost.localdomain ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4077ms
+rtt min/avg/max/mdev = 0.036/0.039/0.043/0.002 ms
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.021 MB perf.data (9 samples) ]
+[root@jouet ~]# perf script --show-switch-events
+   perf 29429 176239.731333:          1 cycles:ppp:  ffffffffae1ad250 perf_event_exec+0x140 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux
+   perf 29429 176239.731336:          1 cycles:ppp:  ffffffffae00ca1b intel_pmu_handle_irq+0x21b (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vm
+   perf 29429 176239.731338:          9 cycles:ppp:  ffffffffae02fd93 native_sched_clock+0x33 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlin
+   perf 29429 176239.731339:        198 cycles:ppp:  ffffffffae02fd93 native_sched_clock+0x33 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlin
+   perf 29429 176239.731340:       4667 cycles:ppp:  ffffffffae02fe7c sched_clock+0xc (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+   ping 29429 176239.731343:     108407 cycles:ppp:  ffffffffae258d09 setup_new_exec+0x109 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+   ping 29429 176239.731378:    1645300 cycles:ppp:  ffffffffae240c29 mem_cgroup_try_charge+0x19 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vm
+   ping 29429 176239.731951:    2594316 cycles:ppp:  ffffffffae0e46fc __wake_up_bit+0x1c (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+   ping 29429 176239.732833:    2411373 cycles:ppp:  ffffffffae756ec0 icmpv4_xrlim_allow.isra.17+0x60 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_
+   ping 29429 176239.732872: PERF_RECORD_SWITCH OUT
+   ping 29429 176240.738063: PERF_RECORD_SWITCH IN 
+   ping 29429 176240.738139: PERF_RECORD_SWITCH OUT
+   ping 29429 176241.762048: PERF_RECORD_SWITCH IN 
+   ping 29429 176241.762119: PERF_RECORD_SWITCH OUT
+   ping 29429 176242.786143: PERF_RECORD_SWITCH IN 
+   ping 29429 176242.786221: PERF_RECORD_SWITCH OUT
+   ping 29429 176243.810099: PERF_RECORD_SWITCH IN 
+   ping 29429 176243.810182: PERF_RECORD_SWITCH OUT
+   ping 29429 176243.810190: PERF_RECORD_SWITCH IN
 
-[root@jouet c]# perf evlist --trace
-probe_hello:main: trace_fields: __probe_ip
-[root@jouet c]# perf script
-           hello 26213 [003] 174431.417607: probe_hello:main: (400526)
-[root@jouet c]# 
+5 out, 5 in, in a lightly loaded machine, plenty of CPUs, looks about right, no?
 
-If we instead ask for dso,sym, as it is done for non-tracepoint events, we'd get:
+But...
 
-[root@jouet c]# perf report --no-header --stdio -s dso,sym
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 1  of event 'probe_hello:main'
-# Event count (approx.): 1
-#
-# Overhead  Shared Object  Symbol  
-# ........  .............  ........
-#
-   100.00%  hello          [.] main
+> features:
+> 
+> - sample CPU events for a given application with backtraces
+> 	perf record --call-graph dwarf ./foo
+> - record switch-out events with backtraces (`-e sched:sched_switch/fp=dwarf/`)
+> - somehow record the switch-in events, which are associated with a different 
+> process and thus currently discarded
 
-You can get both with:
+You want the backtraces with that, and since this is a meta-event... Humm, for
+the switch in would the above be sufficient? What value would be in knowing the
+backtrace in that case?
 
-[root@jouet c]# perf report --no-header --stdio -s dso,sym,trace
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 1  of event 'probe_hello:main'
-# Event count (approx.): 1
-#
-# Overhead  Shared Object  Symbol    Trace output
-# ........  .............  ........  ............
-#
-   100.00%  hello          [.] main  (400526)
+So something like would do? Try not looking at the "PERF_RECORD_SWITCH OUT"
+lines, they are generated by the kernel _after_ the corresponding
+sched:sched_switch is registered:
 
+[root@jouet ~]# perf record --call-graph=dwarf --switch-events -e sched:sched_switch ping -c 5 localhost
+PING localhost.localdomain (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=1 ttl=64 time=0.043 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=2 ttl=64 time=0.039 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=3 ttl=64 time=0.043 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=4 ttl=64 time=0.041 ms
+64 bytes from localhost.localdomain (127.0.0.1): icmp_seq=5 ttl=64 time=0.039 ms
 
-[root@jouet c]#
+--- localhost.localdomain ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4074ms
+rtt min/avg/max/mdev = 0.039/0.041/0.043/0.002 ms
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.069 MB perf.data (5 samples) ]
+[root@jouet ~]# ^C
+[root@jouet ~]# perf script --show-switch-events
+ping 29565 [001] 176667.912276: sched:sched_switch: ping:29565 [120] S ==> swapper/1:0 [120]
+                  9fd994 __schedule+0xa4200354 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  9fdde5 schedule+0xa4200035 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  a01259 schedule_timeout+0xa4200219 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8cb431 __skb_wait_for_more_packets+0xa4200111 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8cb796 __skb_recv_datagram+0xa4200066 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8cb82f skb_recv_datagram+0xa420003f (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  94d197 raw_recvmsg+0xa4200097 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  95daee inet_recvmsg+0xa420007e (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8bb61d sock_recvmsg+0xa420003d (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8bc667 ___sys_recvmsg+0xa42000d7 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8bd191 __sys_recvmsg+0xa4200051 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  8bd1e2 sys_recvmsg+0xa4200012 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  a02572 entry_SYSCALL_64_fastpath+0xa420001a (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  104050 __GI___libc_recvmsg+0xffff0206e8e70010 (/usr/lib64/libc-2.23.so)
+                    7b5a _init+0xffff5455e66f3ab2 (/usr/bin/ping)
+                    3b34 _init+0xffff5455e66efa8c (/usr/bin/ping)
+                    2d9f _init+0xffff5455e66eecf7 (/usr/bin/ping)
+                   20731 __libc_start_main+0xffff0206e8e700f1 (/usr/lib64/libc-2.23.so)
+                    30a9 _init+0xffff5455e66ef001 (/usr/bin/ping)
 
-Please look at the --sort/-s docs for further information:
+ping 29565 [001] 176667.912281: PERF_RECORD_SWITCH OUT
+ping 29565 [001] 176668.915107: PERF_RECORD_SWITCH IN 
+ping 29565 [001] 176668.915114: sched:sched_switch: ping:29565 [120] R ==> kworker/1:179:28142 [120]
+                  9fd994 __schedule+0xa4200354 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  9fdde5 schedule+0xa4200035 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  203282 exit_to_usermode_loop+0xa4200072 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  203be1 syscall_return_slowpath+0xa42000a1 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  a025fa entry_SYSCALL_64_fastpath+0xa42000a2 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  104050 __GI___libc_recvmsg+0xffff0206e8e70010 (/usr/lib64/libc-2.23.so)
+                    7b5a _init+0xffff5455e66f3ab2 (/usr/bin/ping)
+                    3b34 _init+0xffff5455e66efa8c (/usr/bin/ping)
+                    2d9f _init+0xffff5455e66eecf7 (/usr/bin/ping)
+                   20731 __libc_start_main+0xffff0206e8e700f1 (/usr/lib64/libc-2.23.so)
+                    30a9 _init+0xffff5455e66ef001 (/usr/bin/ping)
 
-[root@jouet c]# perf report -h -s
+ping 29565 [001] 176668.915121: PERF_RECORD_SWITCH OUT
+ping 29565 [001] 176668.915126: PERF_RECORD_SWITCH IN 
+ping 29565 [001] 176668.915197: sched:sched_switch: ping:29565 [120] S ==> swapper/1:0 [120]
+                  9fd994 __schedule+0xa4200354 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+                  9fdde5 schedule+0xa4200035 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+[root@jouet ~]# 
 
- Usage: perf report [<options>]
-
-    -s, --sort <key[,key2...]>
-                          sort by key(s): pid, comm, dso, symbol, parent, cpu, srcline, ... Please refer the man page for the complete list.
-
-[root@jouet c]# 
-
-Some other example:
-
-[root@jouet c]# perf report --no-header --stdio -s dso,sym,pid,cpu
-# To display the perf.data header info, please use
-# --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 1  of event 'probe_hello:main'
-# Event count (approx.): 1
-#
-# Overhead  Shared Object  Symbol        Pid:Command  CPU
-# ........  .............  ........  ...............  ...
-#
-   100.00%  hello          [.] main    26213:hello    003
-
-
-[root@jouet c]#
-
-- Arnaldo
-
+Just to check that the backtrace for ping is ok, I did a 'dnf debuginfo-install
+iputils', looks sensible:
  
-> I use perf record/report with other events and I get some reports with
-> expected symbols (= name of functions instead of their memory
-> address).
+ping 29619 [001] 176793.486584: sched:sched_switch: ping:29619 [120] S ==> swapper/1:0 [120]
+        9fd994 __schedule+0xa4200354 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        9fdde5 schedule+0xa4200035 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        a01259 schedule_timeout+0xa4200219 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8cb431 __skb_wait_for_more_packets+0xa4200111 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8cb796 __skb_recv_datagram+0xa4200066 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8cb82f skb_recv_datagram+0xa420003f (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        94d197 raw_recvmsg+0xa4200097 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        95daee inet_recvmsg+0xa420007e (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8bb61d sock_recvmsg+0xa420003d (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8bc667 ___sys_recvmsg+0xa42000d7 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8bd191 __sys_recvmsg+0xa4200051 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        8bd1e2 sys_recvmsg+0xa4200012 (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        a02572 entry_SYSCALL_64_fastpath+0xa420001a (/usr/lib/debug/lib/modules/4.8.6-201.fc24.x86_64/vmlinux)
+        104050 __GI___libc_recvmsg+0xffff020805e62010 (/usr/lib64/libc-2.23.so)
+          7b5a main_loop+0xffff550a5a4dc1fa (/usr/bin/ping)
+          3b34 ping4_run+0xffff550a5a4dc534 (/usr/bin/ping)
+          2d9f main+0xffff550a5a4dc98f (/usr/bin/ping)
+         20731 __libc_start_main+0xffff020805e620f1 (/usr/lib64/libc-2.23.so)
+          30a9 _start+0xffff550a5a4dc029 (/usr/bin/ping)
+
+> Any advise on where to look for the filtering? Not discarding the sched_switch 
+> of a different process based on matching next_tid can't be that hard, or is 
+> it?
 > 
-> Did I miss something when using perf-probe or perf-record / perf-report ?
+> Cheers
 > 
-> Franck
-> 
-> /tmp> more main.cpp
-> #include <unistd.h> // sleep
-> int main(void) { sleep(10); return 0; }
-> 
-> /tmp> gcc -g main.cpp -o main
-> 
-> /tmp> sudo perf probe --exec ./main --add main
-> Added new event:
->   probe_main:main      (on main in /tmp/main)
->   You can now use it in all perf tools, such as:
->     perf record -e probe_main:main -aR sleep 1
-> 
-> /tmp> sudo perf record -e probe_main:main ./main
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (1 samples) ]
-> 
-> /tmp> sudo perf report --stdio
-> # To display the perf.data header info, please use
-> --header/--header-only options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 1  of event 'probe_main:main'
-> # Event count (approx.): 1
-> #
-> # Overhead  Trace output
-> # ........  ............
-> #
->    100.00%  (563a994a56b
-> #
-> # (Tip: List events using substring match: perf list <keyword>)
-> #
-> 
-> ~> lsb_release -a
-> No LSB modules are available.
-> Distributor ID: Debian
-> Description:  Debian GNU/Linux testing (stretch)
-> Release:  testing
-> Codename: stretch
-> 
-> ~> cat /proc/sys/kernel/perf_event_paranoid
-> -1
-> 
-> ~> cat /proc/sys/kernel/kptr_restrict
-> 0
-> 
-> ~> gcc --version
-> gcc (Debian 6.2.0-10) 6.2.0 20161027
-> 
-> ~> perf --version
-> perf version 4.7.8
-> 
-> ~> uname -a
-> Linux yoda 4.7.0-1-amd64 #1 SMP Debian 4.7.8-1 (2016-10-19) x86_64 GNU/Linux
+> -- 
+> Milian Wolff | milian.wolff@kdab.com | Software Engineer
+> KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+> Tel: +49-30-521325470
+> KDAB - The Qt Experts
