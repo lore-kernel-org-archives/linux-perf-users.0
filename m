@@ -1,101 +1,167 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: frame-pointer based user stack unwinding with perf on arm32
-Date: Mon, 14 Nov 2016 14:14:30 +0100
-Message-ID: <2484144.z8iE8SUiXE@milian-kdab2>
+Subject: Re: Tracing sched_switch events for client application when process is switched back in
+Date: Mon, 14 Nov 2016 15:10:26 +0100
+Message-ID: <9863268.pt3viFMpJL@milian-kdab2>
+References: <10618911.8qrkJBTkNF@milian-kdab2> <4514930.f3mZKdtDhX@milian-kdab2> <20161011003655.GP4809@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart87009988.tMBNAcv6sR"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart92448173.OAAKODbE5h"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:43358 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:51150 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751481AbcKNNXr (ORCPT
+        id S1751636AbcKNOKa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2016 08:23:47 -0500
+        Mon, 14 Nov 2016 09:10:30 -0500
+In-Reply-To: <20161011003655.GP4809@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: perf group <linux-perf-users@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart87009988.tMBNAcv6sR
+--nextPart92448173.OAAKODbE5h
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hey all,
+On Monday, October 10, 2016 9:36:55 PM CET Arnaldo Carvalho de Melo wrote:
+> Em Thu, Oct 06, 2016 at 06:38:28PM +0200, Milian Wolff escreveu:
+> > On Thursday, October 6, 2016 1:21:25 PM CEST Arnaldo Carvalho de Melo 
+wrote:
+> > > Em Thu, Oct 06, 2016 at 05:52:51PM +0200, Milian Wolff escreveu:
+> > > > Hey all,
+> > > > 
+> > > > when you have an application like this:
+> > > > 
+> > > > ~~~~~~
+> > > > #include <unistd.h>
+> > > > 
+> > > > int main()
+> > > > {
+> > > > 
+> > > >    for (int i = 0; i < 100; ++i) {
+> > > >    
+> > > >        usleep(10);
+> > > >    
+> > > >    }
+> > > > 
+> > > > }
+> > > > ~~~~~~
+> > > > 
+> > > > Then record sched:sched_switch events for it:
+> > > > 
+> > > > ~~~~~~
+> > > > $ perf record -e sched:sched_switch ./a.out
+> > > > [ perf record: Woken up 1 times to write data ]
+> > > > [ perf record: Captured and wrote 0.031 MB perf.data (100 samples) ]
+> > > > ~~~~~~
+> > > > 
+> > > > Note how it's only 100 samples, instead of 200 for both, the
+> > > > switch-out
+> > > > and
+> > > > switch-in events. Apparently we only get the switch-out events:
+> > > > 
+> > > > ~~~~~
+> > > > $ perf script -F trace | uniq -c
+> > > > 
+> > > >      99 a.out:3994 [120] S ==> swapper/7:0 [120]
+> > > >      
+> > > >       1 a.out:3994 [120] S ==> swapper/7:0 [1
+> > > > 
+> > > > ~~~~~
+> > > > 
+> > > > Doing a global trace, or using LTTNG, we also see the switch-in
+> > > > events:
+> > > > 
+> > > > ~~~~~
+> > > > $ perf record -e sched:sched_switch -a ./a.out
+> > > > $ perf script -F trace | grep a.out | sort | uniq -c
+> > > > 
+> > > >     100 a.out:11570 [120] S ==> swapper/4:0 [120]
+> > > >     
+> > > >       1 a.out:11570 [120] x ==> swapper/4:0 [120]
+> > > >     
+> > > >     100 swapper/4:0 [120] R ==> a.out:11570 [120]
+> > > > 
+> > > > ~~~~~
+> > > > 
+> > > > Is there any way I can get both sched switch events, i.e. not only the
+> > > > one
+> > > > with prev_tid=$client_tid, but also the one with next_tid=$client_tid?
+> > > > One
+> > > > way
+> > > 
+> > > > that seems to work is the following:
+> > > Have you considered using PERF_RECORD_SWITCH?
+> > > 
+> > > [acme@jouet linux]$ perf record --switch-events sleep 1
+> > > [ perf record: Woken up 1 times to write data ]
+> > > [ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
+> > > [acme@jouet linux]$ perf script --show-switch-events
+> > > 
+> > >   sleep 20679  5578.172409:          1 cycles:u:      7fb4e5a51c80
+> > > 
+> > > _start+0x0 (/usr/lib64/ld-2.23.so) sleep 20679  5578.172411:          1
+> > > cycles:u:      7fb4e5a51c80 _start+0x0 (/usr/lib64/ld-2.23.so) sleep
+> > > 20679
+> > > 5578.172412:         12 cycles:u:      7fb4e5a51c80 _start+0x0
+> > > (/usr/lib64/ld-2.23.so) sleep 20679  5578.172413:        397 cycles:u:
+> > > 
+> > > 7fb4e5a51c80 _start+0x0 (/usr/lib64/ld-2.23.so) sleep 20679  
+5578.172414:
+> > >    13936 cycles:u:  ffffffffb77ee7a0 page_fault+0x0
+> > > 
+> > > (/usr/lib/debug/lib/modules/4.7.5-200.fc24.x86_64/vmlinux) sleep 20679
+> > > 5578.172431:     330542 cycles:u:      7fb4e5a5301f dl_main+0x6cf
+> > > (/usr/lib64/ld-2.23.so) sleep 20679  5578.172700: PERF_RECORD_SWITCH OUT
+> > > 
+> > >   sleep 20679  5579.172821: PERF_RECORD_SWITCH IN
+> > >   sleep 20679  5579.172838:     802931 cycles:u:      7fb4e5a6122e
+> > > 
+> > > _dl_fini+0x8e (/usr/lib64/ld-2.23.so) [acme@jouet linux]$
+> > 
+> > First time I read about it, and the documentation is scarce, to not say
+> > non- existing. It seems to record cycles for the switch events. But why
+> > does it
+> > 
+> > 
+> > 
+> > only find 7, whereas tracing sched_switch finds all 100 that actually take
+> > place?
 
-in principle, from what I understand and read on various places on the 
-internet, it should be possible to unwind user stacks with perf using frame 
-pointers on arm32 platform. See e.g.:
+Hey there,
 
-http://lxr.free-electrons.com/source/arch/arm/kernel/perf_callchain.c?
-v=4.1#L62
+long delay but I looked at this again today.
 
-Today, I tried this again, and could not make it work.
+> This is looking only for the sched switches for the monitored workload,
+> which in this case is 'sleep 1', this wasn't a system wide session.
+>
+> add -a and you'll get those other switches, if I got what you described.
 
-I used the stress_bt test application [1], and compiled it with various 
-combinations of
+I've used the sources of the simple C application I showed in the first email 
+of this thread (still quoted above). Then I try:
 
--fno-omit-frame-pointer
--mapcs-frame
--mtpcs-frame
--funwind-tables
--fasynchronous-unwind-tables
+perf record --switch-events -a ./a.out
 
-[1]: https://wiki.linaro.org/LEG/Engineering/TOOLS/perf-callstack-unwinding#Backtrace_stress_application
+And indeed, I get all switch events. But I now also profile all applications 
+on the machine, which is not what I want. I want to combine the following 
+features:
 
-None of these produced the desired results when running `perf record -g` on 
-the target platform (a panda board):
+- sample CPU events for a given application with backtraces
+	perf record --call-graph dwarf ./foo
+- record switch-out events with backtraces (`-e sched:sched_switch/fp=dwarf/`)
+- somehow record the switch-in events, which are associated with a different 
+process and thus currently discarded
 
-root@arm:~# perf record -g ./stress_bt
-Total count: 171711327751528502
-root@arm:~# perf script 
-<snip>
-...
-stress_bt   825  7645.3346298627:    8241360 cycles:ppp: 
-                     5a0 foo_128+0xfffe0084 (/root/stress_bt)
+Any advise on where to look for the filtering? Not discarding the sched_switch 
+of a different process based on matching next_tid can't be that hard, or is 
+it?
 
-stress_bt   825  7645.3346305738:    7932022 cycles:ppp: 
-                     592 foo_128+0xfffe0076 (/root/stress_bt)
-...
-root@arm:~# uname -a
-Linux arm 4.1.30-armv7-x7 #1 SMP Thu Aug 11 17:44:31 CEST 2016 armv7l GNU/
-Linux
-root@arm:~# cat /proc/cpuinfo 
-processor       : 0
-model name      : ARMv7 Processor rev 10 (v7l)
-BogoMIPS        : 698.80
-Features        : half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32 
-CPU implementer : 0x41
-CPU architecture: 7
-CPU variant     : 0x2
-CPU part        : 0xc09
-CPU revision    : 10
-
-processor       : 1
-model name      : ARMv7 Processor rev 10 (v7l)
-BogoMIPS        : 698.80
-Features        : half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32 
-CPU implementer : 0x41
-CPU architecture: 7
-CPU variant     : 0x2
-CPU part        : 0xc09
-CPU revision    : 10
-
-Hardware        : Generic OMAP4 (Flattened Device Tree)
-Revision        : 0000
-Serial          : 0000000000000000
-
-Doing the same on an aarch64 platform, frame pointers seem to work as 
-intended.
-
-So, can someone please clarify whether this should also work on arm32? What 
-are the requirements?
-
-Thanks
+Cheers
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart87009988.tMBNAcv6sR
+--nextPart92448173.OAAKODbE5h
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -197,13 +263,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MTExNDEzMTQzMFowIwYJKoZIhvcNAQkEMRYEFK2uUc7bLOK/P33th07oIwCN0bRTMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALAq
-JnnKbheqZE/c76EYKUiccShD+mVPlCL15KblU60kkzaYufJdTt4M3N1Gggv09iWcdnxjy+Qx48XA
-T2HlWEJEONzPtP9E4apFqCo9ukfdEe3RSCz25FgIRR/GhKDthc9HgQeUVuQITCV/vq/VIMO09VsC
-YWorQYg02sXk+T4TvjXpyYxFgm1RMy/Feu0M7T+nVCpOYKdaJ/OEg1t+CxYoVf8ujlfR01ibkXTu
-H2nU9M2qseiLfP0E0DskI9PVGeQLsnpMwbtqHF2cW39IfsTqP/efPPikmjGsVAgatgTuNgwCV3oH
-6pUJPkUeXR6TgX8B3lF9Pkb6v4LsbcE43r8AAAAAAAA=
+DTE2MTExNDE0MTAyNlowIwYJKoZIhvcNAQkEMRYEFA3zUIUw9WJWnXRz0QhtGXHYAACmMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBADmG
+ng1k5ofj8Kcvea/j9jaXD2n5ZfF1BF+AXOPV65XZ3x8iwLmc4hM1Ff+Mj4zdPyZv6QJjjaSOJJ73
+YhXh4QajBBWFgZkZJqq0JQ4sA1shaVIUplUYjRd/kyVWpwg7evkOzqVohr1s9mKU9aJbBxRb1KP4
+Uk1HNMJ4riZIf1kiDIOnN9kjPI3ViVVD2XyFywIOgMYHfF7Luiv6FjtvLxlUwe7EUPFyZzO63yKt
+ivZy4mpmtyVnUkGlF9YmhsdNcbW7dsAvaSZ7lUJG39JS7UFFW3HuXK/MT42BD+bhIV/2ArakG1Yg
+w9SY83733abx21Do+QV4y1oEIilDxJh6yk4AAAAAAAA=
 
 
---nextPart87009988.tMBNAcv6sR--
+--nextPart92448173.OAAKODbE5h--
