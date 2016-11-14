@@ -1,230 +1,193 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: Tracing sched_switch events for client application when process is switched back in
-Date: Mon, 14 Nov 2016 19:17:01 +0100
-Message-ID: <2210066.hO1CYxl5Jz@milian-kdab2>
-References: <10618911.8qrkJBTkNF@milian-kdab2> <9863268.pt3viFMpJL@milian-kdab2> <20161114153611.GA26543@kernel.org>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: frame-pointer based user stack unwinding with perf on arm32
+Date: Mon, 14 Nov 2016 17:45:18 -0600
+Message-ID: <20161114174518.9d88459ac32145bbd6e0d5a8@arm.com>
+References: <2484144.z8iE8SUiXE@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3654599.OC1ps2JDd9"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:57884 "EHLO mail.kdab.com"
+Received: from foss.arm.com ([217.140.101.70]:42744 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933423AbcKNSRH (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2016 13:17:07 -0500
-In-Reply-To: <20161114153611.GA26543@kernel.org>
+        id S1755155AbcKNXpU (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 14 Nov 2016 18:45:20 -0500
+In-Reply-To: <2484144.z8iE8SUiXE@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: perf group <linux-perf-users@vger.kernel.org>
 
---nextPart3654599.OC1ps2JDd9
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On Mon, 14 Nov 2016 14:14:30 +0100
+Milian Wolff <milian.wolff@kdab.com> wrote:
 
-On Monday, November 14, 2016 12:36:11 PM CET Arnaldo Carvalho de Melo wrote:
-> Em Mon, Nov 14, 2016 at 03:10:26PM +0100, Milian Wolff escreveu:
-> > On Monday, October 10, 2016 9:36:55 PM CET Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Oct 06, 2016 at 06:38:28PM +0200, Milian Wolff escreveu:
-> > > > only find 7, whereas tracing sched_switch finds all 100 that actually
-> > > > take
-> > > > place?
-> > 
-> > Hey there,
-> > 
-> > long delay but I looked at this again today.
-> > 
-> > > This is looking only for the sched switches for the monitored workload,
-> > > which in this case is 'sleep 1', this wasn't a system wide session.
-> > > 
-> > > add -a and you'll get those other switches, if I got what you described.
-> > 
-> > I've used the sources of the simple C application I showed in the first
-> > email of this thread (still quoted above). Then I try:
-> > 
-> > perf record --switch-events -a ./a.out
-> > 
-> > And indeed, I get all switch events. But I now also profile all
-> > applications on the machine, which is not what I want. I want to combine
-> > the following
->
-> So you remove that '-a' from that command line and gets just the context
-> switches for that ./a.out app, no?
->
-> Lets see:
+Hi Milian,
 
-<snip>
-
-> 5 out, 5 in, in a lightly loaded machine, plenty of CPUs, looks about right,
-> no?
-
-Hm this is odd. Before writing the last mail, and the one from one month ago, 
-I tried this and it did not work. But now it does seem to work as intended, 
-even with my simple application code...
-
-perf record --switch-events ./a.out
-perf script --show-switch-events | grep -c SWITCH
-200
-
-So this clearly works as intended - sorry for the noise.
-
-> But...
+> None of these produced the desired results when running `perf record -g` on 
+> the target platform (a panda board):
 > 
-> > features:
-> > 
-> > - sample CPU events for a given application with backtraces
-> > 
-> > 	perf record --call-graph dwarf ./foo
-> > 
-> > - record switch-out events with backtraces (`-e
-> > sched:sched_switch/fp=dwarf/`) - somehow record the switch-in events,
-> > which are associated with a different process and thus currently
-> > discarded
+> root@arm:~# perf record -g ./stress_bt
+> Total count: 171711327751528502
+> root@arm:~# perf script 
+> <snip>
+> ...
+> stress_bt   825  7645.3346298627:    8241360 cycles:ppp: 
+>                      5a0 foo_128+0xfffe0084 (/root/stress_bt)
 > 
-> You want the backtraces with that, and since this is a meta-event... Humm,
-> for the switch in would the above be sufficient? What value would be in
-> knowing the backtrace in that case?
+> stress_bt   825  7645.3346305738:    7932022 cycles:ppp: 
+>                      592 foo_128+0xfffe0076 (/root/stress_bt)
+> ...
 
-Knowing the backtrace would ensure I get the real location that triggered a 
-switch, i.e. often times that comes from a syscall like futex or the like. Or 
-would I always get a CPU event (e.g. cycles) with a backtrace before the 
-switch happens, pointing to the same location?
+> So, can someone please clarify whether this should also work on arm32? What 
+> are the requirements?
 
-> So something like would do? Try not looking at the "PERF_RECORD_SWITCH OUT"
-> lines, they are generated by the kernel _after_ the corresponding
-> sched:sched_switch is registered:
-> 
-> [root@jouet ~]# perf record --call-graph=dwarf --switch-events -e
+I have this working with a natively-built perf (today's acme's
+perf/core branch):
 
-<snip>
+$ ./perf --version
+perf version 4.9.rc1.g699c
+$ uname -a
+Linux tc2 4.8.0+ #7 SMP Tue Oct 4 10:29:55 CDT 2016 armv7l GNU/Linux
+$ cat ./runcallg.sh
+sudo ./perf record -o perf.data --call-graph dwarf -- ./stress_bt |& tee record-callg.log
+sudo ./perf report --call-graph --stdio >& report-callg.log
+$ ./runcallg.sh 
+Lowering default frequency rate to 1600.
+Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+Total count: 171711327751528502
+[ perf record: Woken up 514 times to write data ]
+Warning:
+Processed 19294 events and lost 32 chunks!
 
-Yes, that seems to work just fine:
+Check IO/CPU overload!
 
-perf record -e cycles -e sched:sched_switch \
-	--call-graph dwarf --switch-events \
-	./a.out
+[ perf record: Captured and wrote 128.420 MB perf.data (16025 samples) ]
+$ head -40 report-callg.log
+Warning:
+Processed 19294 events and lost 32 chunks!
 
-That gives me all information. With some post-processing one could then turn 
-this into a really useful profiling tool, as one will only need a single perf 
-record step to allow both, on-CPU as well as off-CPU profiling for application 
-developers.
+Check IO/CPU overload!
 
-Many thanks for the help, Arnaldo, and sorry again for the confusion on my 
-side.
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 16K of event 'cycles:ppp'
+# Event count (approx.): 7863498267
+#
+# Children      Self  Command    Shared Object      Symbol                            
+# ........  ........  .........  .................  ..................................
+#
+    99.62%    99.58%  stress_bt  stress_bt          [.] foo_128
+            |          
+            |--95.74%--__libc_start_main
+            |          main
+            |          doit
+            |          bar
+            |          |          
+            |          |--1.01%--foo_30
+            |          |          foo_31
+            |          |          foo_32
+            |          |          foo_33
+            |          |          foo_34
+            |          |          foo_35
+            |          |          foo_36
+            |          |          foo_37
+            |          |          foo_38
+            |          |          foo_39
+            |          |          foo_40
+            |          |          foo_41
+            |          |          foo_42
+            |          |          foo_43
+            |          |          foo_44
+            |          |          foo_45
+            |          |          foo_46
 
-Cheers
--- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart3654599.OC1ps2JDd9
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+The above works both with the arm32 binary included in the downloaded
+stress_bt.tar.gz, and one built with a native gcc 4.9.2, using only the
+'-g' flag ("gcc -g stress_bt.c").
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MTExNDE4MTcwMVowIwYJKoZIhvcNAQkEMRYEFODMAg24l2DKxotnjlUBcDqbxGMAMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAAgk
-csd9I6hvwcwH6ANAf2HvFgS+q076OUIkbSquzNOQTfHN/2YU79y0pio/2T5p9aHmd3HDFmDcaDWb
-GlmSjLOm4HP9gql4gCl4UasS/VTzazGUGWhmSjLPkoA67M2mI92SMeVybPvLAKxmEiqJN41OjaJx
-UbXakvEfya57zJfOALukl2chqeKQwWmYypdztv22ds/hqLG1Zy5yWzhiofYJ+1119Bt6KGtIeZ3L
-1C0WwPBgEyCoj4973RNoLFrtorfgge12Dazxgw2KOPJ/YLR23Iv7/uUMbLUBE+A5VDgyG/DQJQcD
-qFOI6hJ/7RRlKRZBAxBDS2ti4RybVnTpzrIAAAAAAAA=
+OTOH, I tried using a cross-built perf, and it did not work (same
+behaviour you're seeing).
 
+The Linaro wiki page lists at least libunwind as a dependency, and the
+native build has it:
 
---nextPart3654599.OC1ps2JDd9--
+Auto-detecting system features:
+...                         dwarf: [ on  ]
+...            dwarf_getlocations: [ on  ]
+...                         glibc: [ on  ]
+...                          gtk2: [ OFF ]
+...                      libaudit: [ on  ]
+...                        libbfd: [ on  ]
+...                        libelf: [ on  ]
+...                       libnuma: [ OFF ]
+...        numa_num_possible_cpus: [ OFF ]
+...                       libperl: [ on  ]
+...                     libpython: [ on  ]
+...                      libslang: [ on  ]
+...                     libcrypto: [ on  ]
+...                     libunwind: [ on  ]
+...            libdw-dwarf-unwind: [ on  ]
+...                          zlib: [ on  ]
+...                          lzma: [ on  ]
+...                     get_cpuid: [ OFF ]
+...                           bpf: [ OFF ]
+
+Makefile.config:349: BPF prologue is not supported by architecture arm, missing regs_query_register_offset()
+Makefile.config:422: BPF API too old. Please install recent kernel headers. BPF support in 'perf record' is disabled.
+Makefile.config:519: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
+Makefile.config:693: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
+
+whereas the cross build does not:
+
+Auto-detecting system features:
+...                         dwarf: [ OFF ]
+...            dwarf_getlocations: [ OFF ]
+...                         glibc: [ on  ]
+...                          gtk2: [ OFF ]
+...                      libaudit: [ OFF ]
+...                        libbfd: [ OFF ]
+...                        libelf: [ OFF ]
+...                       libnuma: [ OFF ]
+...        numa_num_possible_cpus: [ OFF ]
+...                       libperl: [ OFF ]
+...                     libpython: [ OFF ]
+...                      libslang: [ OFF ]
+...                     libcrypto: [ OFF ]
+...                     libunwind: [ OFF ]
+...            libdw-dwarf-unwind: [ OFF ]
+...                          zlib: [ OFF ]
+...                          lzma: [ OFF ]
+...                     get_cpuid: [ OFF ]
+...                           bpf: [ on  ]
+
+Makefile.config:260: No libelf found, disables 'probe' tool and BPF support in 'perf record', please install libelf-dev, l
+ibelf-devel or elfutils-libelf-devel
+Makefile.config:360: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-de
+v
+Makefile.config:433: Disabling post unwind, no support found.
+Makefile.config:479: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
+Makefile.config:490: No libcrypto.h found, disables jitted code injection, please install libssl-devel or libssl-dev
+Makefile.config:505: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
+Makefile.config:519: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
+Makefile.config:547: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libper
+l-dev
+Makefile.config:590: No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-dev
+el/python-dev
+Makefile.config:680: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
+Makefile.config:693: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel
+/libnuma-dev
+
+Unfortunately, I don't know how to cross-build perf with libunwind
+turned on: On Ubuntu, I cd tools/ and issue 'make ARCH=arm
+CROSS_COMPILE=arm-linux-gnueabihf- perf'.  Installing something called
+android-libunwind-dev didn't help, and I can't tell whether the wiki
+page includes building perf in a cross environment (in fact, it
+references a /lib/arm-linux-gnueabihf/ which is present on my versatile
+express' target Debian installation).
+
+hth,
+
+Kim
