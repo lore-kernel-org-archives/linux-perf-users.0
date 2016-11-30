@@ -1,67 +1,44 @@
-From: HOUSSEN Franck <fghoussen@gmail.com>
-Subject: perf-probe : error "Rebuild with -g, or install an appropriate
- debuginfo package"
-Date: Wed, 30 Nov 2016 14:49:09 +0100
-Message-ID: <CABvthiqmUuGqcDU6LQRJhsPiic4-qePRx8wJtMoj+D+ihjAVdg@mail.gmail.com>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: [PATCH 1/2] perf annotate: use arch->objdump.comment_char in
+ dec__parse()
+Date: Wed, 30 Nov 2016 09:23:33 -0600
+Message-ID: <20161130092333.1cca5dd2c77e1790d61c1e9c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wj0-f195.google.com ([209.85.210.195]:36568 "EHLO
-        mail-wj0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752845AbcK3NtL (ORCPT
+Received: from foss.arm.com ([217.140.101.70]:49952 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752845AbcK3PXg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2016 08:49:11 -0500
-Received: by mail-wj0-f195.google.com with SMTP id jb2so22280158wjb.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Nov 2016 05:49:10 -0800 (PST)
+        Wed, 30 Nov 2016 10:23:36 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Chris Ryder <chris.ryder@arm.com>, Pawel Moll <pawel.moll@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org
 
-I compiled myApp.cpp (that contains a function named myFunction) with:
-~>mpic++ -O2 -ggdb -fno-omit-frame-pointer -o myApp myApp.cpp
+Presume neglected in commit 786c1b5 "perf annotate: Start supporting
+cross arch annotation".  This doesn't fix a bug since none of the
+affected arches support parsing dec/inc instructions yet.
 
-When I try to probe a function from the myApp binary, I get:
-~> sudo perf probe --exe ./myApp --add "myFunction:2"
-The /home/path/to/myApp file has no debug information.
-Rebuild with -g, or install an appropriate debuginfo package.
-  Error: Failed to add events.
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-... -g has been set a t compile time and libelf (and libelf-dev) seems
-to be installed:
-~> dpkg -l *elf*
-Desired=Unknown/Install/Remove/Purge/Hold
-| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
-|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
-||/ Name                                  Version
-Architecture            Description
-+++-=====================================-=======================-===================
-un  elf-binutils                          <none>
-<none>                  (no description available)
-un  libelf                                <none>
-<none>                  (no description available)
-ii  libelf-dev:amd64                      0.166-2.2
-amd64                   libelf1 development libraries and header files
-un  libelf0                               <none>
-<none>                  (no description available)
-ii  libelf1:amd64                         0.166-2.2
-amd64                   library to read and write ELF files
-ii  libelf1:i386                          0.166-2.2               i386
-                   library to read and write ELF files
-rc  libelfg0:amd64                        0.8.13-5
-amd64                   an ELF object file access library
-un  libelfg0-dev                          <none>
-<none>                  (no description available)
-
-I googled that without any relevant answer... Could somebody help me
-on this ? What's wrong ?
-
-Franck
-
-PS : When I do that
-~>sudo perf probe --exe ./myApp --add "myFunction"
-Added new event:
-  probe_myApp:myFunction (on myFunction in /home/path/to/myApp)
-
-It works !?... I need to place the tracepoint at the second line below
-the entry of myFunction => replacing "myFunction" with "myFunction:2"
-does not work ! Why ?...
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 3e34ee0..191599e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -408,7 +408,7 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
+ 	if (ops->target.raw == NULL)
+ 		return -1;
+ 
+-	comment = strchr(s, '#');
++	comment = strchr(s, arch->objdump.comment_char);
+ 	if (comment == NULL)
+ 		return 0;
+ 
+-- 
+2.10.2
