@@ -1,60 +1,63 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Question about Perf's handling of in-use performance counters
-Date: Wed, 30 Nov 2016 19:17:42 +0100
-Message-ID: <20161130181742.GS3092@twins.programming.kicks-ass.net>
-References: <BN3PR0501MB14590BFC82C2B45B81E56C1BA3D40@BN3PR0501MB1459.namprd05.prod.outlook.com>
- <87r371k6gj.fsf@tassilo.jf.intel.com>
- <20161027210012.GN3102@twins.programming.kicks-ass.net>
- <20161028135325.GB26852@two.firstfloor.org>
- <20161028140354.GH3142@twins.programming.kicks-ass.net>
- <20161028154012.GC26852@two.firstfloor.org>
- <20161028162844.GJ3142@twins.programming.kicks-ass.net>
- <20161028163305.GD26852@two.firstfloor.org>
- <BN3PR0501MB145957823C655728020392F3A3AD0@BN3PR0501MB1459.namprd05.prod.outlook.com>
- <BN3PR0501MB14597261479AD30C8081CBA2A38C0@BN3PR0501MB1459.namprd05.prod.outlook.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: perf-probe : error
+ "Rebuild with -g, or install an appropriate debuginfo package"
+Date: Thu, 1 Dec 2016 14:26:24 +0900
+Message-ID: <20161201142624.2041eb5a2ed866f817dd7566@kernel.org>
+References: <CABvthiqmUuGqcDU6LQRJhsPiic4-qePRx8wJtMoj+D+ihjAVdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BN3PR0501MB14597261479AD30C8081CBA2A38C0@BN3PR0501MB1459.namprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taylor Andrews <andrewst@vmware.com>
-Cc: Andi Kleen <andi@firstfloor.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alok Kataria <akataria@vmware.com>, Ingo Molnar <mingo@kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.136]:34552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754354AbcLAF0a (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 1 Dec 2016 00:26:30 -0500
+In-Reply-To: <CABvthiqmUuGqcDU6LQRJhsPiic4-qePRx8wJtMoj+D+ihjAVdg@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: HOUSSEN Franck <fghoussen@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 03:44:57PM +0000, Taylor Andrews wrote:
+On Wed, 30 Nov 2016 14:49:09 +0100
+HOUSSEN Franck <fghoussen@gmail.com> wrote:
 
-> > No, it was about the (mis)guide-line having fundamental races and the
-> > belief that the BIOS has no business what so ever using these resources
-> > to begin with.
+> I compiled myApp.cpp (that contains a function named myFunction) with:
+> ~>mpic++ -O2 -ggdb -fno-omit-frame-pointer -o myApp myApp.cpp
 > 
-> Can you please describe what fundamental races you are talking about?
+> When I try to probe a function from the myApp binary, I get:
+> ~> sudo perf probe --exe ./myApp --add "myFunction:2"
+> The /home/path/to/myApp file has no debug information.
+> Rebuild with -g, or install an appropriate debuginfo package.
+>   Error: Failed to add events.
 
-The protocol does a RDMSR to see if the counter is configured or not, if
-not, then it can proceed with the WRMSR.
+Could you run `eu-readelf -S myApp` ?
+Could you also try to build your app with '-g' instead of '-ggdb'?
+I guess mpic++ might generate some extened debuginfo or just ignored
+the option.
 
-Since these are two separate instructions, there is nothing that
-prevents a vCPU preemption or SMI to come in between and invalidate the
-state we just read.
+> 
+> ... -g has been set a t compile time and libelf (and libelf-dev) seems
+> to be installed:
 
-> Why do you believe the BIOS should never be using performance counters?
+No, libelf is not related to this issue.
 
-The BIOS's job is to boot the system and then stay the heck away.
-Runtime services are not what its for.
+[...]
+> PS : When I do that
+> ~>sudo perf probe --exe ./myApp --add "myFunction"
+> Added new event:
+>   probe_myApp:myFunction (on myFunction in /home/path/to/myApp)
+> 
+> It works !?... I need to place the tracepoint at the second line below
+> the entry of myFunction => replacing "myFunction" with "myFunction:2"
+> does not work ! Why ?...
 
-Now I know some hardware vendors like to (ab)use SMM for
-fail^Wfeature-add, and that is exactly the kind of crap we don't need.
-BIOS monkeys always get it wrong and BIOS code is _never_ updated, so
-then you're stuck with wreckage.
+Without line number, perf probe tries to find symbols from symtab in
+the binary. DWARF (a.k.a. debuginfo) has much more information, like
+line-to-addr, local variable assignment etc.
 
-> Even if you discount the BIOS use case (despite Intel considering it
-> legitimate), we still have the scenario of a Hypervisor exposing some
-> virtual performance counters as in-use and unavailable.  What was the
-> rationale that the PMU cooperative sharing guidelines outlined by
-> Intel should be intentionally ignored, and that perf should attempt to
-> take over all generic performance counters, regardless of if they are
-> marked in-use?
+Thanks,
 
-See the thread here:
 
-  https://lkml.org/lkml/2011/3/24/608
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
