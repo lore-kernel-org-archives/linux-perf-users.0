@@ -1,53 +1,50 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: Inlined functions in perf report
-Date: Tue, 20 Dec 2016 15:03:40 +0100
-Message-ID: <3116188.fHYjqyENF0@milian-kdab2>
-References: <20161220115954.GA35897@sesse.net> <2027151.EnbG4A8ymx@milian-kdab2> <20161220134341.GA4183@sesse.net>
+Date: Tue, 20 Dec 2016 15:05:54 +0100
+Message-ID: <1783774.Dxgbb3QbWh@milian-kdab2>
+References: <20161220115954.GA35897@sesse.net> <2027151.EnbG4A8ymx@milian-kdab2> <20161220135450.GA32756@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1669547.q3jtxJdDNG"; micalg="sha1"; protocol="application/pkcs7-signature"
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:44660 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934868AbcLTODy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2016 09:03:54 -0500
-In-Reply-To: <20161220134341.GA4183@sesse.net>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "Steinar H. Gunderson" <sgunderson@bigfoot.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+Content-Type: multipart/signed; boundary="nextPart5747359.gMN0ZqNGmq"; micalg="sha1"; protocol="application/pkcs7-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161220135450.GA32756@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, "Steinar H. Gunderson" <sgunderson@bigfoot.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, "Liang, Kan" <kan.liang@intel.com>, "Jin, Yao" <yao.jin@linux.intel.com>
+List-Id: linux-perf-users.vger.kernel.org
 
---nextPart1669547.q3jtxJdDNG
+--nextPart5747359.gMN0ZqNGmq
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Tuesday, December 20, 2016 2:43:41 PM CET Steinar H. Gunderson wrote:
-> On Tue, Dec 20, 2016 at 02:27:10PM +0100, Milian Wolff wrote:
+On Tuesday, December 20, 2016 10:54:50 AM CET Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 20, 2016 at 02:27:10PM +0100, Milian Wolff escreveu:
+> > On Tuesday, December 20, 2016 1:17:55 PM CET Peter Zijlstra wrote:
+> > > On Tue, Dec 20, 2016 at 12:59:54PM +0100, Steinar H. Gunderson wrote:
+> > > > FWIW, this is with perf from 4.10 (git as of a few days ago) and GCC
+> > > > 6.2.1.
+> > > 
+> > > OK, so it might be possible with: perf record -g --call-graph dwarf
+> > > but that's fairly heavy on the overhead, it will dump the top-of-stack
+> > > for each sample (8k default) and unwind using libunwind in userspace.
+> > 
 > > It is not even possible with that, perf report is lacking the steps
 > > required to add inline frames - it will only add "real" frames it gets
 > > from either of the unwind libraries.
-> > 
-> > I have a WIP patch available for this functionality though, it can be
-> > found
-> > here (depends on libbfd, i.e. bfd_find_inliner_info):
-> > 
-> > https://github.com/milianw/linux/commit/
-> > 71d031c9d679bfb4a4044226e8903dd80ea601b3
 > 
-> Thanks, I'll be sure to try it out. I assume this works only with -g dwarf?
-> I.e., for non-graph runs, I will still get the bottom function only, not the
-> inlined one.
+> Have you guys looked at this:
+> 
+> http://lkml.kernel.org/r/1481121822-2537-1-git-send-email-yao.jin@linux.inte
+> l.com
 
-There is no -g dwarf to my knowldge. There is only `perf record -g`, which is 
-the framepointer based unwinding and that should also work. But I only really 
-tested this WIP branch with `--call-graph dwarf` so far.
+No, haven't seen it. Seems like I should have made my work public earlier to 
+prevent the duplication of effort.
 
-I'm not so sure whether I understand your sentence about "non-graph runs". It 
-has nothing to do with `perf report -g graph` (yes, perf is confusing!).
+> I have to review it and maybe you will help me with that ;-)
+> 
+> I've CCed Jin Yao, the author of this series.
 
-You'll have to:
-
-perf record [-g | --call-graph lbr | --call-graph dwarf ] (pick one)
-perf report -g srcline (and anything else)
+Great stuff Jin, I'll try to find some time to review this over the coming 
+days, instead of trying to push my work further.
 
 Cheers
 
@@ -56,7 +53,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1669547.q3jtxJdDNG
+--nextPart5747359.gMN0ZqNGmq
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -158,13 +155,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE2MTIyMDE0MDM0MFowIwYJKoZIhvcNAQkEMRYEFAsl40K/QCU7+wjhDsDVVsiJ+KLQMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAD5y
-CpOoVJtAWj0b5zgDBp74j5AfVJiyZ+o8ulWNPAglUCF8OaRwFrgaZwkibs1PI8JnLuGhnEX1pENl
-XFdcmljmEIygomg7epnve12AwZzExXHkUjNsV1nYMmLok9whfQ9ODDoJYvqwVUaG3+nRm4ZTMz4O
-RPTOEvBw+KTr5y7O3/qeWQtJee0RjCGaOBLeMwl4NuSlc4Qu2EK5mWoWozvNQrn01Fezt8/oK0vc
-54ZnCC2QeOLmYFourOSWPLTF4ooZFr/et+vcYYlBWg2aY1WYQbznsn1YqzCfSN/bwOCWOKkEAOA/
-g1OamhyD4h/n3LyHZuZGGlee0ywASvNdqvQAAAAAAAA=
+DTE2MTIyMDE0MDU1NFowIwYJKoZIhvcNAQkEMRYEFFy6OpGCxYippF38lqfaGwaZ2RwQMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBALyQ
+I4UwH0KktXNiIVKt4TQ19DX8PoHsM12TEvlABcwqflrxv0FU3ByYABZ2f5pDooRX62RHXSo7wF2j
+wcIP9uJpDmyguXH5BzkPZNuFjrWmI0iWtl363qMTEQPz6nkHDZMMATLkFJHHccCwHq4l1qPLsZcS
+l893m0jaroyxPgN+ARkTRVRZvlj+Z1fczMHpRIWchIUgualivSL+wRxc8GevWmbCKQWd89EnvNHP
+P+e0/g+8zYLUESoM50WkDaDVVhBHEjTm2DqkOQA0sQaSHsauxRlQj8t/wRklzkQgnSYZsiK9M58t
+u36ZIXmPDsGWt1Ars7LfBiRz2FD3+2BSNwIAAAAAAAA=
 
 
---nextPart1669547.q3jtxJdDNG--
+--nextPart5747359.gMN0ZqNGmq--
