@@ -1,30 +1,56 @@
-From: "Steinar H. Gunderson" <sgunderson@bigfoot.com>
-Subject: Re: Inlined functions in perf report
-Date: Wed, 21 Dec 2016 23:58:13 +0100
-Message-ID: <20161221225813.GA8236@sesse.net>
-References: <20161220115954.GA35897@sesse.net>
- <df263fe1-e1af-881b-311e-5329bb51db0e@linux.intel.com>
- <20161221095823.GA19249@sesse.net>
- <8193556.VWj3dM7HSI@milian-kdab2>
- <20161221102035.GA31703@sesse.net>
- <499d963f-9049-0b6c-00c3-0f155433ae26@linux.intel.com>
+From: Christian Convey <christian.convey@gmail.com>
+Subject: newbie question: tracing userspace call/return sequences
+Date: Thu, 5 Jan 2017 22:49:13 -0500
+Message-ID: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <499d963f-9049-0b6c-00c3-0f155433ae26@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Jin, Yao" <yao.jin@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, "Liang, Kan" <kan.liang@intel.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-qk0-f181.google.com ([209.85.220.181]:32791 "EHLO
+        mail-qk0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751946AbdAFDtO (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 5 Jan 2017 22:49:14 -0500
+Received: by mail-qk0-f181.google.com with SMTP id s140so41021222qke.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2017 19:49:14 -0800 (PST)
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 22, 2016 at 06:56:28AM +0800, Jin, Yao wrote:
-> Could you see the inline if you use the addr2line command? For example,
-> addr2line -e <app> -i <addr>
+Hi guys,
 
-I'm sorry, I don't have this profile anymore. I'll try again once we sort out
-the problems of the DWARF error messages everywhere.
+Any suggestions for the best way to achieve something with perf tools?
 
-/* Steinar */
--- 
-Homepage: https://www.sesse.net/
+Systemtap has an example script, "para-callgraph.stp", that reports
+the *sequence* of userspace function calls and returns made by an
+application.
+
+I'd like to perform that kind of analysis using perf tools rather than
+Systemtap, because I recently learned that Canonical considers
+Systemtap to be unsupported.  (E.g., it's pretty broken on Ubuntu
+14.04.)
+
+I think I've gotten fairly close with these steps:
+
+  perf probe --exec=./fib -f --add='*'
+  perf probe --exec=./fib -f --add='*:%return'
+  perf record -e 'probe_fib:*' -aR ./fib
+  perf script -g py
+  perf script -s ./perf_script.py
+
+The generated Python script contains two Python functions for each
+userspace function that's called during the execution of "fib".  This
+seems to work, at least on a small, toy program.
+
+But AFAICT, this has two major downsides relative to the
+Systemtap-based approach, in cases where the target program has
+thousands of functions:
+
+(1) The generated Python script will be huge, and
+
+(2) It will require some non-trivial Python coding for me to tweak
+what that script does for every call/return event.
+
+Any suggestions for a good/better way to pull this off?
+
+Thanks,
+Christian
