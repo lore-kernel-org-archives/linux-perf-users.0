@@ -1,49 +1,38 @@
-From: Namhyung Kim <namhyung@gmail.com>
+From: Christian Convey <christian.convey@gmail.com>
 Subject: Re: newbie question: tracing userspace call/return sequences
-Date: Sat, 7 Jan 2017 13:37:34 +0900
-Message-ID: <CAM9d7cjdNdeUKge_LbSwWyCdnrvzP2VxKGLy3tAw3q03D5Jf3w@mail.gmail.com>
+Date: Sat, 7 Jan 2017 13:26:47 -0500
+Message-ID: <CAPfS4ZzJUUdD-WGgoZ=ZTyDvQHZa322DeYMeJYBHj6PjMQcG2A@mail.gmail.com>
 References: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
  <87zij4nhvk.fsf@firstfloor.org> <CAPfS4Zx6ZzWWUsSEbstsd2En6bqo=z94NTWe6xh_tJ9eZd17+A@mail.gmail.com>
+ <CAM9d7cjdNdeUKge_LbSwWyCdnrvzP2VxKGLy3tAw3q03D5Jf3w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68]:36012 "EHLO
-        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754867AbdAGEhz (ORCPT
+Received: from mail-qk0-f180.google.com ([209.85.220.180]:34219 "EHLO
+        mail-qk0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932653AbdAGS0s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2017 23:37:55 -0500
-Received: by mail-it0-f68.google.com with SMTP id n68so4001244itn.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2017 20:37:55 -0800 (PST)
-In-Reply-To: <CAPfS4Zx6ZzWWUsSEbstsd2En6bqo=z94NTWe6xh_tJ9eZd17+A@mail.gmail.com>
+        Sat, 7 Jan 2017 13:26:48 -0500
+Received: by mail-qk0-f180.google.com with SMTP id a20so105983674qkc.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Jan 2017 10:26:48 -0800 (PST)
+In-Reply-To: <CAM9d7cjdNdeUKge_LbSwWyCdnrvzP2VxKGLy3tAw3q03D5Jf3w@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Christian Convey <christian.convey@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Namhyung Kim <namhyung@gmail.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hello,
-
-On Sat, Jan 7, 2017 at 4:07 AM, Christian Convey
-<christian.convey@gmail.com> wrote:
->> Use the right tool for the job.
->>
->> On Intel, use a Broadwell or Skylake or Goldmont and use processor trace.
->>
->> perf record -e intel_pt//u foo
->> perf script --itrace=cr
+On Fri, Jan 6, 2017 at 11:37 PM, Namhyung Kim <namhyung@gmail.com> wrote:
+...
+> You can use uftrace for function tracing.  It doesn't have a hardware dependency
+> but you need to rebuild your program with instrumentation enabled (like -pg
+> or -finstrument-functions in gcc).
 >
-> Hi Andi,
->
-> Thanks for the idea.  It sounds promising.
->
-> Unfortunately for my current situation, the CPU's on which I need to
-> run this are too old to have intel_pt.
+> https://github.com/namhyung/uftrace
 
-You can use uftrace for function tracing.  It doesn't have a hardware dependency
-but you need to rebuild your program with instrumentation enabled (like -pg
-or -finstrument-functions in gcc).
+Thanks Namhyung.
 
-https://github.com/namhyung/uftrace
+For one of my current projects, I'm limited to tools which don't
+require me to recompile / relink the target program.  So I'm limited
+to options such as Perf, Systemtap, Gdb, or Intel Pin.
 
--- 
-Thanks,
-Namhyung Kim
+- Christian
