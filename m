@@ -1,81 +1,53 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Namhyung Kim <namhyung@gmail.com>
 Subject: Re: newbie question: tracing userspace call/return sequences
-Date: Sun, 8 Jan 2017 08:44:03 +0900
-Message-ID: <20170108084403.39baa3d793af5fed3ed4aeac@kernel.org>
+Date: Sun, 8 Jan 2017 17:08:19 +0900
+Message-ID: <CAM9d7ci9FWrr8a7OtanKft2EmST0dtfWap1fdOcAQb+j+LkM6g@mail.gmail.com>
 References: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
-        <3722511.TPbTubHR2j@milian-kdab2>
-        <CAPfS4ZyBOz_E5k3DKf8qqMbrKacCpijBM4-aUsgeL5LJTnxNyw@mail.gmail.com>
+ <87zij4nhvk.fsf@firstfloor.org> <CAPfS4Zx6ZzWWUsSEbstsd2En6bqo=z94NTWe6xh_tJ9eZd17+A@mail.gmail.com>
+ <CAM9d7cjdNdeUKge_LbSwWyCdnrvzP2VxKGLy3tAw3q03D5Jf3w@mail.gmail.com> <20170107190835.GA26852@two.firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:56698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750845AbdAGXoU (ORCPT
+Received: from mail-io0-f193.google.com ([209.85.223.193]:34974 "EHLO
+        mail-io0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750747AbdAHIIk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 7 Jan 2017 18:44:20 -0500
-In-Reply-To: <CAPfS4ZyBOz_E5k3DKf8qqMbrKacCpijBM4-aUsgeL5LJTnxNyw@mail.gmail.com>
+        Sun, 8 Jan 2017 03:08:40 -0500
+Received: by mail-io0-f193.google.com with SMTP id m98so4053394iod.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 Jan 2017 00:08:40 -0800 (PST)
+In-Reply-To: <20170107190835.GA26852@two.firstfloor.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Christian Convey <christian.convey@gmail.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: Christian Convey <christian.convey@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hi Christian,
+Hi Andi,
 
-On Fri, 6 Jan 2017 15:05:05 -0500
-Christian Convey <christian.convey@gmail.com> wrote:
+On Sun, Jan 8, 2017 at 4:08 AM, Andi Kleen <andi@firstfloor.org> wrote:
+>> You can use uftrace for function tracing.  It doesn't have a hardware dependency
+>> but you need to rebuild your program with instrumentation enabled (like -pg
+>> or -finstrument-functions in gcc).
+>>
+>> https://github.com/namhyung/uftrace
+>
+> I have a similar tool here.
+>
+> http://github.com/andikleen/ftracer
 
-> On Fri, Jan 6, 2017 at 5:16 AM, Milian Wolff <milian.wolff@kdab.com> wrote:
-> ...
-> > There is a catch-all handler:
-> >
-> > *trace_unhandled*, if defined, is called after for any event that
-> >  doesn't have a handler explicitly defined for it.  The standard set
-> >  of common arguments are passed into it:
-> >
-> > ----
-> > def trace_unhandled(event_name, context, common_cpu, common_secs,
-> >         common_nsecs, common_pid, common_comm):
-> >     pass
-> > ----
-> >
-> > Maybe you can use that one instead? I'd still be interested to know whether
-> > you can get all required information. If not, extending the API is doable.
-> 
-> Hi Milian,
-> 
-> Thanks for the idea - I tried it out.  My Python script was a bit ugly
-> / hackish, but it did allow me to trace basic call/return information.
-> 
-> With your approach, it was also easy to trace the return-value of each
-> function call: I modified my return-probe definition to be "*:%return
-> $retval".  After that, the "trace_unhandled" function can access the
-> return value via "event_fields_dict['arg1']".
-> 
-> There are two more improvements I'd like to make, but they're less important:
-> 
-> (1) For each function being traced, I'd like to report the values of
-> all of its parameters.  (SystemTap makes this easy.)  Unfortunately,
-> `perf probe`'s probe-argument syntax seems to require that I know the
-> name of every function-parameter I want to probe.  So I may end up
-> having to write a script that parses either (a) the target program's
-> DWARF info, or (b) the output of `perf probe --vars`.
+Cool!
 
-No, you can use $params for tracing all function parameters :)
-So, please try "* $params" instead of "*".
+>
+> But it's really far inferior to hardware tracing. Use the right tool for the
+> job.
 
-> (2) I want the tracing to be robust even if the target program
-> dynamically links to `.so` files that I didn't anticipate when
-> creating the probes.  I haven't found any documentation regarding how
-> gracefully perf, SystemTap, etc. handle that situation.  I'm not sure
-> how I'd solve this problem.  Perhaps hooking `dlopen` is an option.
+I admit that hardware tracing is much better in terms of performance
+and precision.  But I don't have such a recent CPU.
 
-Hm, would you know which libraries(so) can be loaded?
-In that case, you can put probes on those files (before loading).
-The probe events are automatically enabled after loading the files.
+Also uftrace has various types of filters to reduce data and
+some useful features like capturing argument/return value,
+showing kernel functions (system call, page fault, ...) with root
+privilege (using ftrace) and support analysis using external programs
+like chrome or flamegraph.
 
-Thank you,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Namhyung
