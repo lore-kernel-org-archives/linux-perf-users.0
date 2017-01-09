@@ -1,50 +1,47 @@
 From: Christian Convey <christian.convey@gmail.com>
 Subject: Re: newbie question: tracing userspace call/return sequences
-Date: Mon, 9 Jan 2017 12:59:38 -0500
-Message-ID: <CAPfS4ZxuWKhR2KXvkTQf9om5DcAsC_D2sQE5KC-eJNv6GDREyQ@mail.gmail.com>
+Date: Mon, 9 Jan 2017 13:08:46 -0500
+Message-ID: <CAPfS4ZxoKn+3QycvGY8M=tj8P=c8DnBumXHw13f42WNuH1MggQ@mail.gmail.com>
 References: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
- <3722511.TPbTubHR2j@milian-kdab2> <CAPfS4ZyBOz_E5k3DKf8qqMbrKacCpijBM4-aUsgeL5LJTnxNyw@mail.gmail.com>
- <20170108084403.39baa3d793af5fed3ed4aeac@kernel.org> <CAPfS4ZzKPTPrBJY+yhMBte_wyVgTnt-kuDUGF39BxV0NZs+TDQ@mail.gmail.com>
- <20170109170354.GD13299@naverao1-tp.localdomain>
+ <y0mshosi1zj.fsf@fche.csb>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:32879 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1422830AbdAIR7k (ORCPT
+Received: from mail-qt0-f175.google.com ([209.85.216.175]:35710 "EHLO
+        mail-qt0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S970351AbdAISIs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2017 12:59:40 -0500
-Received: by mail-qk0-f194.google.com with SMTP id 11so7447231qkl.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2017 09:59:39 -0800 (PST)
-In-Reply-To: <20170109170354.GD13299@naverao1-tp.localdomain>
+        Mon, 9 Jan 2017 13:08:48 -0500
+Received: by mail-qt0-f175.google.com with SMTP id x49so77296229qtc.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2017 10:08:47 -0800 (PST)
+In-Reply-To: <y0mshosi1zj.fsf@fche.csb>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: "Frank Ch. Eigler" <fche@redhat.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-On Mon, Jan 9, 2017 at 12:03 PM, Naveen N. Rao
-<naveen.n.rao@linux.vnet.ibm.com> wrote:
+On Mon, Jan 9, 2017 at 12:20 PM, Frank Ch. Eigler <fche@redhat.com> wrote:
 ...
-> On 2017/01/09 10:19AM, Christian Convey wrote:
-> Try compiling your program with -O2, or use a newer perf:
-> https://git.kernel.org/cgit/linux/kernel/git/powerpc/linux.git/commit/?id=e47392bf9c0613a058cd20ee89d8ce9d957d4b24
+> For what it's worth, upstream systemtap versions work generally fine on
+> Ubuntus old & new.  Consider building your own, if Canonical's community
+> is not keeping it fresh on their own distro.
 
-Thanks for the suggestion.  I switched from -O0 to -O2, and
-unfortunately I could no longer add the probe events at all:
+Thanks for the tip.
 
-cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ sudo -E
-${PERF_EXEC_PATH}/perf probe --exec=./fib -f --add='* $params'
-Failed to write event: Invalid argument
-Please upgrade your kernel to at least 3.14 to have access to feature @__fmt
- Error: Failed to add events.
+When I was using Ubuntu 14.04, Ubuntu's systemtap package was at
+version 2.3, and it didn't even pass unit tests.
 
-cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ sudo -E
-${PERF_EXEC_PATH}/perf --version
-perf version 4.8.11
+On 14.04 I tried to build my own systemtap 3.0.  IIRC, I ran into
+enough problems with library versions, that my messiness threshold was
+exceeded.  I think where I stopped as a problem involving the version
+of libc-json, where Ubuntu 14.04's packaged version was too old.
 
-cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ uname -a
-Linux spaceman 4.8.0-32-generic #34-Ubuntu SMP Tue Dec 13 14:30:43 UTC
-2016 x86_64 x86_64 x86_64 GNU/Linux
+>
+> That said, consider also dyninst (C++ binary instrumentation API), or
+> perhaps even as a kernel-independent pure-userspace systemtap backend:
+>   % stap --runtime=dyninst
 
+Cool, thanks for the tip.  I wasn't aware of stap's `--runtime` option.
 
-- Christian
+Cheers,
+Christian
