@@ -1,53 +1,88 @@
-From: Namhyung Kim <namhyung@gmail.com>
-Subject: Re: newbie question: tracing userspace call/return sequences
-Date: Sun, 8 Jan 2017 17:08:19 +0900
-Message-ID: <CAM9d7ci9FWrr8a7OtanKft2EmST0dtfWap1fdOcAQb+j+LkM6g@mail.gmail.com>
-References: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
- <87zij4nhvk.fsf@firstfloor.org> <CAPfS4Zx6ZzWWUsSEbstsd2En6bqo=z94NTWe6xh_tJ9eZd17+A@mail.gmail.com>
- <CAM9d7cjdNdeUKge_LbSwWyCdnrvzP2VxKGLy3tAw3q03D5Jf3w@mail.gmail.com> <20170107190835.GA26852@two.firstfloor.org>
+From: "Jin, Yao" <yao.jin@linux.intel.com>
+Subject: Re: Feedback on: [RESEND PATCH v2 0/5] perf report: Show inline stack
+Date: Mon, 9 Jan 2017 11:07:26 +0800
+Message-ID: <ded48f05-ab7f-d294-16aa-65d4ac8ee926@linux.intel.com>
+References: <5135140.l86lTS2Zdn@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f193.google.com ([209.85.223.193]:34974 "EHLO
-        mail-io0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750747AbdAHIIk (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:41428 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751866AbdAIDH2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2017 03:08:40 -0500
-Received: by mail-io0-f193.google.com with SMTP id m98so4053394iod.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Jan 2017 00:08:40 -0800 (PST)
-In-Reply-To: <20170107190835.GA26852@two.firstfloor.org>
+        Sun, 8 Jan 2017 22:07:28 -0500
+In-Reply-To: <5135140.l86lTS2Zdn@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Christian Convey <christian.convey@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Hi Andi,
+Hi Wolff,
 
-On Sun, Jan 8, 2017 at 4:08 AM, Andi Kleen <andi@firstfloor.org> wrote:
->> You can use uftrace for function tracing.  It doesn't have a hardware dependency
->> but you need to rebuild your program with instrumentation enabled (like -pg
->> or -finstrument-functions in gcc).
->>
->> https://github.com/namhyung/uftrace
+Thanks a lot for your feedback.
+
+Have you tested with the browser mode? I mean without the "--stdio" option.
+
+Could you give your test binary then I can try to reproduce the issue? I 
+have tried with my tests but I could not reproduce.
+
+Thanks
+
+Jin Yao
+
+On 1/8/2017 4:13 AM, Milian Wolff wrote:
+> Hey Jin,
 >
-> I have a similar tool here.
+> I have finally had the time to test your patch series. Sadly, I hit a
+> fundamental issue with it early on in my testing:
 >
-> http://github.com/andikleen/ftracer
-
-Cool!
-
+> In my test case, I get with `perf report --no-children` e.g. the following:
 >
-> But it's really far inferior to hardware tracing. Use the right tool for the
-> job.
-
-I admit that hardware tracing is much better in terms of performance
-and precision.  But I don't have such a recent CPU.
-
-Also uftrace has various types of filters to reduce data and
-some useful features like capturing argument/return value,
-showing kernel functions (system call, page fault, ...) with root
-privilege (using ftrace) and support analysis using external programs
-like chrome or flamegraph.
-
-Thanks,
-Namhyung
+>      42.50%  lab_mandelbrot   libm-2.24.so                [.] __hypot_finite
+>              |
+>              ---__hypot_finite
+>                 hypot
+>                 main
+>                 __libc_start_main
+>                 _start
+>
+> Enabling --inline does not change the output, even though hypot is inlined
+> into main.
+>
+> Looking at your code, it looks to me as if you are only trying to find
+> inliners for root entries, cf. hist_entry__fprintf (stdio/hist.c), and only
+> when unwinding failed (?, cf. (callchain_ret == 0)).
+>
+> Is this understanding correct, or should your patch also add inliners for
+> nodes in the middle of the callstack?
+>
+> This approach makes the whole feature unusable for my use case. In my (really
+> hacky) approach to adding inliners to the output of perf (https://github.com/
+> milianw/linux/commit/71d031c9d679bfb4a4044226e8903dd80ea601b3) I decided to
+> lookup inliners for _every_ callchain entry. The result then there is with my
+> branch and a `perf report -g srcline --stdio`:
+>
+>      42.50%  lab_mandelbrot   libm-2.24.so                [.] __hypot_finite
+>              |
+>              ---__hypot_finite +387
+>                 hypot +20
+>                 std::__complex_abs complex:589
+>                 std::abs<double> complex:597
+>                 drawMandelbrot mandelbrot.h:39
+>                 main main.cpp:55
+>                 __libc_start_main +241
+>                 _start +42
+>
+> Note the three inliner entries in the middle of the callstack. The way I did
+> it, one will also see "proper" entries for inlined functions in a top-down
+> `perf report --children` output.
+>
+> In general, your patch series looks much more polished than mine, so I would
+> love to get it integrated. But with your approach, we will need lots of
+> changes to the various browsers to get all features in. My hacky approach has
+> the nice property that it simply adds "normal" callchain entries for inlined
+> nodes - maybe you should do the same?
+>
+> Thanks a lot for your work, much appreciated.
+>
