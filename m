@@ -1,47 +1,67 @@
-From: Christian Convey <christian.convey@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 Subject: Re: newbie question: tracing userspace call/return sequences
-Date: Mon, 9 Jan 2017 13:08:46 -0500
-Message-ID: <CAPfS4ZxoKn+3QycvGY8M=tj8P=c8DnBumXHw13f42WNuH1MggQ@mail.gmail.com>
+Date: Tue, 10 Jan 2017 09:25:07 +0900
+Message-ID: <20170110092507.939229d10bc7cd08b12d31dc@kernel.org>
 References: <CAPfS4ZwrYePYFoNtf7GOvMpJKABY8ZdCf+MB+xc+Ksa7ubRATQ@mail.gmail.com>
- <y0mshosi1zj.fsf@fche.csb>
+        <3722511.TPbTubHR2j@milian-kdab2>
+        <CAPfS4ZyBOz_E5k3DKf8qqMbrKacCpijBM4-aUsgeL5LJTnxNyw@mail.gmail.com>
+        <20170108084403.39baa3d793af5fed3ed4aeac@kernel.org>
+        <CAPfS4ZzKPTPrBJY+yhMBte_wyVgTnt-kuDUGF39BxV0NZs+TDQ@mail.gmail.com>
+        <20170109170354.GD13299@naverao1-tp.localdomain>
+        <CAPfS4ZxuWKhR2KXvkTQf9om5DcAsC_D2sQE5KC-eJNv6GDREyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qt0-f175.google.com ([209.85.216.175]:35710 "EHLO
-        mail-qt0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S970351AbdAISIs (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:36950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752287AbdAJAZV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2017 13:08:48 -0500
-Received: by mail-qt0-f175.google.com with SMTP id x49so77296229qtc.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2017 10:08:47 -0800 (PST)
-In-Reply-To: <y0mshosi1zj.fsf@fche.csb>
+        Mon, 9 Jan 2017 19:25:21 -0500
+In-Reply-To: <CAPfS4ZxuWKhR2KXvkTQf9om5DcAsC_D2sQE5KC-eJNv6GDREyQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Frank Ch. Eigler" <fche@redhat.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Christian Convey <christian.convey@gmail.com>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
 
-On Mon, Jan 9, 2017 at 12:20 PM, Frank Ch. Eigler <fche@redhat.com> wrote:
-...
-> For what it's worth, upstream systemtap versions work generally fine on
-> Ubuntus old & new.  Consider building your own, if Canonical's community
-> is not keeping it fresh on their own distro.
+On Mon, 9 Jan 2017 12:59:38 -0500
+Christian Convey <christian.convey@gmail.com> wrote:
 
-Thanks for the tip.
+> On Mon, Jan 9, 2017 at 12:03 PM, Naveen N. Rao
+> <naveen.n.rao@linux.vnet.ibm.com> wrote:
+> ...
+> > On 2017/01/09 10:19AM, Christian Convey wrote:
+> > Try compiling your program with -O2, or use a newer perf:
+> > https://git.kernel.org/cgit/linux/kernel/git/powerpc/linux.git/commit/?id=e47392bf9c0613a058cd20ee89d8ce9d957d4b24
+> 
+> Thanks for the suggestion.  I switched from -O0 to -O2, and
+> unfortunately I could no longer add the probe events at all:
+> 
+> cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ sudo -E
+> ${PERF_EXEC_PATH}/perf probe --exec=./fib -f --add='* $params'
+> Failed to write event: Invalid argument
+> Please upgrade your kernel to at least 3.14 to have access to feature @__fmt
+>  Error: Failed to add events.
+> 
+> cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ sudo -E
+> ${PERF_EXEC_PATH}/perf --version
+> perf version 4.8.11
+> 
+> cconvey@spaceman ~/dw/scratch/cconvey/src/fib $ uname -a
+> Linux spaceman 4.8.0-32-generic #34-Ubuntu SMP Tue Dec 13 14:30:43 UTC
+> 2016 x86_64 x86_64 x86_64 GNU/Linux
+ 
+It seems that the above fix is included v4.9 series, not v4.8.
 
-When I was using Ubuntu 14.04, Ubuntu's systemtap package was at
-version 2.3, and it didn't even pass unit tests.
+Could you try to download the latest kernel and build the perf?
+You don't need to build kernel, only tools/perf/perf is what you need.
+So, what you need is
+$ cd <somewhere-your-download-kernel>/tools/perf/
+$ make
 
-On 14.04 I tried to build my own systemtap 3.0.  IIRC, I ran into
-enough problems with library versions, that my messiness threshold was
-exceeded.  I think where I stopped as a problem involving the version
-of libc-json, where Ubuntu 14.04's packaged version was too old.
+Not that you have to install libdw-dev for perf-probe before that.
 
->
-> That said, consider also dyninst (C++ binary instrumentation API), or
-> perhaps even as a kernel-independent pure-userspace systemtap backend:
->   % stap --runtime=dyninst
+Thank you,
 
-Cool, thanks for the tip.  I wasn't aware of stap's `--runtime` option.
-
-Cheers,
-Christian
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
