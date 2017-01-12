@@ -1,75 +1,141 @@
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: Is it possible to trace events and its call stack?
-Date: Thu, 12 Jan 2017 15:46:58 +0530
-Message-ID: <20170112101658.GA3470@naverao1-tp.localdomain>
-References: <b5c14c32-b348-4783-1232-23894080dc5e@cn.fujitsu.com>
+Date: Thu, 12 Jan 2017 17:41:53 -0300
+Message-ID: <20170112204153.GD20003@kernel.org>
+References: <20170112101658.GA3470@naverao1-tp.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45732 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750856AbdALKRR (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:52320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750877AbdALUmZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Jan 2017 05:17:17 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id v0CAFAXe051314
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2017 05:17:16 -0500
-Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 27x57s61h3-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2017 05:17:16 -0500
-Received: from localhost
-        by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 12 Jan 2017 15:47:13 +0530
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-        by d28dlp03.in.ibm.com (Postfix) with ESMTP id 68CE11258061
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2017 15:48:43 +0530 (IST)
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
-        by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id v0CAH9Un41746556
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2017 15:47:09 +0530
-Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
-        by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id v0CAH7Vm001118
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2017 15:47:09 +0530
+        Thu, 12 Jan 2017 15:42:25 -0500
 Content-Disposition: inline
-In-Reply-To: <b5c14c32-b348-4783-1232-23894080dc5e@cn.fujitsu.com>
+In-Reply-To: <20170112101658.GA3470@naverao1-tp.localdomain>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Qu Wenruo <quwenruo@cn.fujitsu.com>
-Cc: linux-perf-users@vger.kernel.org
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org
 
-On 2017/01/12 03:49PM, Qu Wenruo wrote:
-> Hi,
+Em Thu, Jan 12, 2017 at 03:46:58PM +0530, Naveen N. Rao escreveu:
+> On 2017/01/12 03:49PM, Qu Wenruo wrote:
+> > Hi,
+> > 
+> > Is it possible to use perf/ftrace to trace events and its call stack?
+> > 
+> > [Background]
+> > It's one structure in btrfs, btrfs_bio, I'm tracing for.
+> > That structure is allocated and free somewhat frequently, and its size is
+> > not fixed, so no SLAB/SLUB cache is used.
+> > 
+> > I added trace events(or trace points, anyway, just in
+> > include/trace/events/btrfs.h) to trace the allocation and freeing.
+> > Which will output the pointer address of that structure, so I can pair them,
+> > alone with other info.
+> > 
+> > Things went well until, I found some structures are allocated but not freed.
+> > (no corresponding trace point is triggered for given address).
+> > 
+> > It's possible that btrfs just forget to free it, or btrfs is just holding it
+> > for some purpose.
+> > So kernel memleak detector won't catch the later one.
+> > 
+> > That's to say along with the tracepoint data, I still need the call stack of
+> > each calling, to determine the code who leak or hold the pointer.
+> > 
+> > Is it possible to do it using perf or ftrace?
 > 
-> Is it possible to use perf/ftrace to trace events and its call stack?
-> 
-> [Background]
-> It's one structure in btrfs, btrfs_bio, I'm tracing for.
-> That structure is allocated and free somewhat frequently, and its size is
-> not fixed, so no SLAB/SLUB cache is used.
-> 
-> I added trace events(or trace points, anyway, just in
-> include/trace/events/btrfs.h) to trace the allocation and freeing.
-> Which will output the pointer address of that structure, so I can pair them,
-> alone with other info.
-> 
-> Things went well until, I found some structures are allocated but not freed.
-> (no corresponding trace point is triggered for given address).
-> 
-> It's possible that btrfs just forget to free it, or btrfs is just holding it
-> for some purpose.
-> So kernel memleak detector won't catch the later one.
-> 
-> That's to say along with the tracepoint data, I still need the call stack of
-> each calling, to determine the code who leak or hold the pointer.
-> 
-> Is it possible to do it using perf or ftrace?
+> Yes, use -g option with 'perf record'. In fact, I don't think you even 
+> need to add a new tracepoint - you should be able to use kprobes (perf 
+> probe) at structure allocation/free points.
 
-Yes, use -g option with 'perf record'. In fact, I don't think you even 
-need to add a new tracepoint - you should be able to use kprobes (perf 
-probe) at structure allocation/free points.
+Yes, with 'perf record -g', as suggested above, or directly with 'perf trace',
+if the volume is not big or if you're ok about using a strace like workflow,
+for example:
 
-A more efficient way would probably use a eBPF program with stackmaps to 
-track the stack traces.
+[root@jouet ~]# perf probe -m btrfs -F btrfs_bio* 
+btrfs_bio_alloc
+btrfs_bio_clone
+btrfs_bio_counter_inc_blocked
+btrfs_bio_counter_inc_noblocked
+btrfs_bio_counter_sub
+btrfs_bio_wq_end_io
+[root@jouet ~]# perf probe -m btrfs btrfs_bio_alloc
+Added new event:
+  probe:btrfs_bio_alloc (on btrfs_bio_alloc in btrfs)
 
-- Naveen
+You can now use it in all perf tools, such as:
+
+	perf record -e probe:btrfs_bio_alloc -aR sleep 1
+
+[root@jouet ~]# #perf trace -e write,read,probe:btrfs* 
+[root@jouet ~]# mount | grep btrfs
+/var/lib/machines.raw on /var/lib/machines type btrfs (rw,relatime,seclabel,space_cache,subvolid=5,subvol=/)
+[root@jouet ~]# perf trace --no-syscalls -e probe:btrfs*/max-stack=4/
+     0.000 probe:btrfs_bio_alloc:(ffffffffc0aae110))
+                                       btrfs_bio_alloc ([btrfs])
+                                       write_one_eb ([btrfs])
+                                       btree_write_cache_pages ([btrfs])
+                                       btree_writepages ([btrfs])
+    13.112 probe:btrfs_bio_alloc:(ffffffffc0aae110))
+                                       btrfs_bio_alloc ([btrfs])
+                                       __extent_writepage_io ([btrfs])
+                                       __extent_writepage ([btrfs])
+                                       extent_write_cache_pages.isra.43.constprop.60 ([btrfs])
+    13.285 probe:btrfs_bio_alloc:(ffffffffc0aae110))
+                                       btrfs_bio_alloc ([btrfs])
+                                       __extent_writepage_io ([btrfs])
+                                       __extent_writepage ([btrfs])
+                                       extent_write_cache_pages.isra.43.constprop.60 ([btrfs])
+    13.434 probe:btrfs_bio_alloc:(ffffffffc0aae110))
+                                       btrfs_bio_alloc ([btrfs])
+                                       write_one_eb ([btrfs])
+                                       btree_write_cache_pages ([btrfs])
+                                       btree_writepages ([btrfs])
+    13.454 probe:btrfs_bio_alloc:(ffffffffc0aae110))
+                                       btrfs_bio_alloc ([btrfs])
+                                       write_one_eb ([btrfs])
+                                       btree_write_cache_pages ([btrfs])
+                                       btree_writepages ([btrfs])
+^C[root@jouet ~]#
+[root@jouet ~]# perf probe -l
+  probe:btrfs_bio_alloc (on __start_delalloc_inodes+624@git/linux/fs/btrfs/inode.c in btrfs)
+[root@jouet ~]# 
+
+This was a system wide record, you could do it just for a set of threads, or
+for work taking place in a specific CPU, etc.
+
+I.e. you could try to isolate a set of CPUs, then make sure that the work you
+want to trace takes place there and then trace just those CPUS, etc.
+
+Use 'perf trace -h topic' to see options related to a topic, e.g.:
+
+[root@jouet ~]# perf trace -h cpu
+
+ Usage: perf trace [<options>] [<command>]
+    or: perf trace [<options>] -- <command> [<options>]
+    or: perf trace record [<options>] [<command>]
+    or: perf trace record [<options>] -- <command> [<options>]
+
+    -a, --all-cpus        system-wide collection from all CPUs
+    -C, --cpu <cpu>       list of cpus to monitor
+
+[root@jouet ~]#
+
+Remote that --no-syscalls to see strace like output for syscalls (enter + exit,
+time it takes, only syscalls with more than N milliseconds.microsecds, etc)
+ 
+> A more efficient way would probably use a eBPF program with stackmaps to 
+> track the stack traces.
+
+If wanting to do aggregation inside the kernel, yes.
+
+- Arnaldo
+ 
+> - Naveen
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
