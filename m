@@ -1,136 +1,331 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/15] perf/core improvements and fixes
-Date: Tue, 14 Feb 2017 07:31:53 +0100
-Message-ID: <20170214063153.GA3837@gmail.com>
-References: <20170214011400.13352-1-acme@kernel.org>
+From: Taeung Song <treeze.taeung@gmail.com>
+Subject: [Suggestion/Problems] perf annoate: Some problems related to the
+ source code view and Improvement of it with line numbers
+Date: Wed, 15 Feb 2017 21:34:51 +0900
+Message-ID: <5c703d64-3ef4-3d43-bf99-f14c5fc4cdac@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wr0-f193.google.com ([209.85.128.193]:32977 "EHLO
-        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751635AbdBNGb7 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Feb 2017 01:31:59 -0500
-Content-Disposition: inline
-In-Reply-To: <20170214011400.13352-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, Clark Williams <williams@redhat.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Joe Perches <joe@perches.com>, Joe Stringer <joe@ovn.org>, =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>, Namhyung Kim <namhyung@kernel.org>, netdev@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Taeung Song <treeze.taeung@gmail.com>, Wang Nan <wangnan0@huawei.com>, Wang YanQing <udknight@gmail.com>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: perf group <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+List-Id: linux-perf-users.vger.kernel.org
+
+Hi all :)
+
+I found some problems about showing line numbers of perf-annotate.
+and I have a suggestion about perf-annotate.
+
+Sure, I have a plan to send the patchset about that.
+But I'd like to know other opinions about that before sending the 
+patchset. :)
+
+If the user do perf-annotate,
+
+     # perf record ./a.out
+     [ perf record: Woken up 1 times to write data ]
+     [ perf record: Captured and wrote 0.043 MB perf.data (799 samples) ]
+
+     # perf annotate
+
+(In TUI, if using a 'k' option to see line numbers)
+
+        │3   Disassembly of section .text:
+        │
+        │5   0000000000400966 <get_cond_maxprice>:
+        │6   get_cond_maxprice():
+        │7   };
+        │
+        │9   unsigned int limited_wgt;
+        │
+        │11  unsigned int get_cond_maxprice(int wgt, struct jewelry 
+*jewelry)
+        │12  {
+
+But I think it has some problems and seems a bit deficient..
+There are several reasons as below.
+
+     1) I think we don't need the line numbers except for source codes
+
+        │3   Disassembly of section .text:
+        │
+        │5   0000000000400966 <get_cond_maxprice>:
+        │6   get_cond_maxprice():
+
+I think that '3', '5' and '6' seems like needless.
+
+     2) The line numbers aren't correct
+(But they are correct if perf-annotate work with --stdio)
+
+If we check the actual source file as below,
+we can find many wrong line numbers on perf-annotate.
+
+(e.g. A actual line number of get_cond_amxprice() is 25,
+but the line number of the function on perf-annotate is 11.)
+
+...
+  18 struct jewelry {
+  19         unsigned int wgt;
+  20         unsigned int price;
+  21 };
+  22
+  23 unsigned int limited_wgt;
+  24
+  25 unsigned int get_cond_maxprice(int wgt, struct jewelry *jewelry)
+  26 {
+  27         /* Get maximum price based on a specific weight 
+
+  28          * following a specific jewelry. 
+
+  29          */
+  30         int i;
+  31         unsigned int nr_cases = wgt/jewelry->wgt;
+  32         unsigned int maxprice = 0;
+...
+
+Sure, the correct line numbers partially exist as well
+but there are more wrong line numbers than them.
+
+     3) It is hard to read source code + assembly code of perf-annoate.
+        If the user want to see source code on perf-annotate,
+        In TUI the user can use 'k' option but the output is mixed with
+        both source code and assembly code so it's so confusing.. :-\
+        and the readability is not good.. :(
+        And the line numbers aren't even wrong..
+
+        So, I suggest first showing source code before assembly code
+        only when the target program has debug info.
+        If we do, perf-annotate provide good readable source code view 
+per function
+        and correct line numbers. :)
+
+For example,
+If there is 'get_cond_maxprice()' on a source file as below,
+
+... (with line numbers) ...
+  25 unsigned int get_cond_maxprice(int wgt, struct jewelry *jewelry)
+  26 {
+  27         /* Get maximum price based on a specific weight 
+
+  28          * following a specific jewelry. 
+
+  29          */
+  30         int i;
+  31         unsigned int nr_cases = wgt/jewelry->wgt;
+  32         unsigned int maxprice = 0;
+  33
+  34         for (i = 1; i <= nr_cases; i++) {
+  35                 unsigned int price, rest_wgt;
+  36
+  37                 rest_wgt = wgt - (i * jewelry->wgt);
+  38                 price = (i * jewelry->price) + 
+knapsack_list[rest_wgt].maxprice;
+  39                 if (maxprice < price)
+  40                         maxprice = price;
+  41         }
+  42
+  43         return maxprice;
+  44 }
+...
+
+And if the target program(e.g. a.out) compiled with the source file has 
+debug info,
+we can first show source code before assembly code for good readability 
+as below.
+(If we do, the user don't be confusing due to mixed parts of code any more)
+
+     # perf record ./a.out
+     [ perf record: Woken up 1 times to write data ]
+     [ perf record: Captured and wrote 0.043 MB perf.data (799 samples) ]
+
+     # perf annoate (using 'k' option in TUI)
+...
+        │25 unsigned int get_cond_maxprice(int wgt, struct jewelry *jewelry)
+   2.21 │26 {
+        │27         /* Get maximum price based on a specific weight 
+
+        │28          * following a specific jewelry. 
+
+        │29          */
+        │30         int i;
+   4.43 │31         unsigned int nr_cases = wgt/jewelry->wgt;
+        │32         unsigned int maxprice = 0;
+        │33
+   7.49 │34         for (i = 1; i <= nr_cases; i++) {
+        │35                 unsigned int price, rest_wgt;
+        │36
+  29.12 │37                 rest_wgt = wgt - (i * jewelry->wgt);
+  15.83 │38                 price = (i * jewelry->price) + 
+knapsack_list[rest_wgt].maxprice;
+  17.38 │39                 if (maxprice < price)
+   0.34 │40                         maxprice = price;
+        │41         }
+        │42
+   1.19 │43         return maxprice;
+   1.19 │44 }
 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+And if the user want to see not only source code but also assembly code,
+we can show as below.
+(This output is similar to current annotate view
+but it sequentially show full code of the function, not confusing mixed 
+parts of code
+And this output show correct line numbers unlike current annotate view)
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit f2029b1e47b607619d1dd2cb0bbb77f64ec6b7c2:
-> 
->   perf/x86/intel: Add Kaby Lake support (2017-02-11 21:28:23 +0100)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.11-20170213
-> 
-> for you to fetch changes up to a734fb5d60067a73dd7099a58756847c07f9cd68:
-> 
->   samples/bpf: Reset global variables (2017-02-13 17:22:53 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> New feature:
-> 
-> - Introduce the 'delta-abs' 'perf diff' compute method, that orders the
->   histogram entries by the absolute value of the percentage delta for a
->   function in two perf.data files, i.e. the functions that changed the
->   most (increase or decrease in samples) comes first (Namhyung Kim)
-> 
-> User visible:
-> 
-> - Improve message about tweaking the kernel.perf_event_paranoid setting,
->   telling how to make the change permanent by editing /etc/sysctl.conf
->   (Ingo Molnar)
-> 
-> Infrastructure:
-> 
-> - Introduce linux/compiler-gcc.h as a counterpart to the kernel's,
->   initially containing the definition of __fallthrough, more to
->   come (__maybe_unused, etc) (Arnaldo Carvalho de Melo)
-> 
-> - Fixes for problems uncovered by building tools/perf with clang, such
->   as always true tests of arrays against NULL and variables that sometimes
->   were used without being initialized (Arnaldo Carvalho de Melo, Steven Rostedt)
-> 
-> - Before loading a new ELF, clear global variables set by the
->   samples/bpf loader (Micka�l Sala�n)
-> 
-> - Ignore already processed ELF sections in the samples/bpf
->   loader (Micka�l Sala�n)
-> 
-> - Fix compile error in the scripting code with some perl5
->   versions (Wang YanQing)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (6):
->       tools include: Introduce linux/compiler-gcc.h
->       tools lib traceevent plugin function: Initialize 'index' variable
->       perf evsel: Inform how to make a sysctl setting permanent
->       perf symbols: No need to check if sym->name is NULL
->       perf tests record: No need to test an array against NULL
->       perf symbols: dso->name is an array, no need to check it against NULL
-> 
-> Micka�l Sala�n (3):
->       samples/bpf: Add missing header
->       samples/bpf: Ignore already processed ELF sections
->       samples/bpf: Reset global variables
-> 
-> Namhyung Kim (4):
->       perf diff: Add 'delta-abs' compute method
->       perf diff: Add diff.order config option
->       perf diff: Add diff.compute config option
->       perf diff: Change default setting to "delta-abs"
-> 
-> Steven Rostedt (VMware) (1):
->       tools lib traceevent: Initialize lenght on OLD_RING_BUFFER_TYPE_TIME_STAMP
-> 
-> Wang YanQing (1):
->       perf scripting perl: Fix compile error with some perl5 versions
-> 
->  samples/bpf/bpf_load.c                             |  7 ++
->  samples/bpf/tracex5_kern.c                         |  1 +
->  tools/include/linux/compiler-gcc.h                 | 14 ++++
->  tools/include/linux/compiler.h                     | 10 +--
->  tools/lib/traceevent/kbuffer-parse.c               |  1 +
->  tools/lib/traceevent/plugin_function.c             |  2 +-
->  tools/perf/Documentation/perf-config.txt           | 12 ++++
->  tools/perf/Documentation/perf-diff.txt             | 15 ++++-
->  tools/perf/MANIFEST                                |  1 +
->  tools/perf/builtin-diff.c                          | 78 ++++++++++++++++++++--
->  tools/perf/builtin-kmem.c                          |  4 +-
->  tools/perf/builtin-record.c                        |  2 +-
->  tools/perf/builtin-sched.c                         |  2 +-
->  tools/perf/builtin-stat.c                          |  2 +-
->  tools/perf/builtin-top.c                           |  2 +-
->  tools/perf/tests/perf-record.c                     |  2 +-
->  tools/perf/util/evsel.c                            |  4 +-
->  tools/perf/util/evsel_fprintf.c                    |  1 -
->  tools/perf/util/machine.c                          |  2 +-
->  tools/perf/util/map.c                              |  4 +-
->  tools/perf/util/scripting-engines/Build            |  2 +-
->  .../perf/util/scripting-engines/trace-event-perl.c |  4 +-
->  tools/perf/util/symbol_fprintf.c                   |  2 +-
->  23 files changed, 145 insertions(+), 29 deletions(-)
->  create mode 100644 tools/include/linux/compiler-gcc.h
+        │25 unsigned int get_cond_maxprice(int wgt, struct jewelry *jewelry)
+        │26 {
+   0.17 │      push   %rbp
+        │      mov    %rsp,%rbp
+        │      sub    $0x30,%rsp
+   0.51 │    → callq  mcount@plt
+        │      mov    %edi,-0x24(%rbp)
+   1.53 │      mov    %rsi,-0x30(%rbp)
+        │27         /* Get maximum price based on a specific weight 
 
-Pulled, thanks a lot Arnaldo!
+        │28          * following a specific jewelry. 
 
-	Ingo
+        │29          */
+        │30         int i;
+        │31         unsigned int nr_cases = wgt/jewelry->wgt;
+        │      mov    -0x24(%rbp),%eax
+        │      mov    -0x30(%rbp),%rdx
+   0.34 │      mov    (%rdx),%esi
+   1.36 │      mov    $0x0,%edx
+   2.73 │      div    %esi
+        │      mov    %eax,-0xc(%rbp)
+        │32         unsigned int maxprice = 0;
+        │      movl   $0x0,-0x10(%rbp)
+        │33
+        │34         for (i = 1; i <= nr_cases; i++) {
+        │      movl   $0x1,-0x14(%rbp)
+        │    ↓ jmp    <get_cond_maxprice+0x84>
+        │35                 unsigned int price, rest_wgt;
+        │36
+        │37                 rest_wgt = wgt - (i * jewelry->wgt);
+   1.53 │      mov    -0x24(%rbp),%edx
+        │      mov    -0x30(%rbp),%rax
+   0.51 │      mov    (%rax),%ecx
+  10.56 │      mov    -0x14(%rbp),%eax
+   1.70 │      imul   %ecx,%eax
+   0.34 │      sub    %eax,%edx
+   1.36 │      mov    %edx,%eax
+  13.12 │      mov    %eax,-0x8(%rbp)
+        │38                 price = (i * jewelry->price) + 
+knapsack_list[rest_wgt].maxprice;
+   1.87 │      mov    -0x30(%rbp),%rax
+   0.34 │      mov    0x4(%rax),%edx
+   0.85 │      mov    -0x14(%rbp),%eax
+  10.90 │      imul   %eax,%edx
+   1.87 │      mov    knapsack_list,%rax
+        │      mov    -0x8(%rbp),%ecx
+   0.68 │      shl    $0x2,%rcx
+  11.24 │      add    %rcx,%rax
+   3.58 │      mov    (%rax),%eax
+   2.39 │      add    %edx,%eax
+   2.90 │      mov    %eax,-0x4(%rbp)
+        │39                 if (maxprice < price)
+   7.67 │      mov    -0x10(%rbp),%eax
+        │      cmp    -0x4(%rbp),%eax
+   9.71 │    ↓ jae    <get_cond_maxprice+0x80>
+        │40                         maxprice = price;
+        │      mov    -0x4(%rbp),%eax
+   0.34 │      mov    %eax,-0x10(%rbp)
+        │
+   3.58 │      addl   $0x1,-0x14(%rbp)
+   1.36 │      mov    -0x14(%rbp),%eax
+   0.34 │      cmp    -0xc(%rbp),%eax
+   2.21 │    ↑ jbe    <get_cond_maxprice+0x37>
+        │41         }
+        │42
+        │43         return maxprice;
+   1.19 │      mov    -0x10(%rbp),%eax
+        │44 }
+   0.68 │      leaveq
+   0.51 │    ← retq
+
+
+Sure, we can show only assembly code as below (this is current feature)
+(Of course, the target program hasn't debug info, perf-annotate show 
+assembly code as below)
+
+     # perf annotate
+
+   0.17 │      push   %rbp
+        │      mov    %rsp,%rbp
+        │      sub    $0x30,%rsp
+   0.51 │    → callq  mcount@plt
+        │      mov    %edi,-0x24(%rbp)
+   1.53 │      mov    %rsi,-0x30(%rbp)
+        │      mov    -0x24(%rbp),%eax
+        │      mov    -0x30(%rbp),%rdx
+   0.34 │      mov    (%rdx),%esi
+   1.36 │      mov    $0x0,%edx
+   2.73 │      div    %esi
+        │      mov    %eax,-0xc(%rbp)
+        │      movl   $0x0,-0x10(%rbp)
+        │      movl   $0x1,-0x14(%rbp)
+        │    ↓ jmp    84
+   1.53 │37:   mov    -0x24(%rbp),%edx
+        │      mov    -0x30(%rbp),%rax
+   0.51 │      mov    (%rax),%ecx
+  10.56 │      mov    -0x14(%rbp),%eax
+   1.70 │      imul   %ecx,%eax
+   0.34 │      sub    %eax,%edx
+   1.36 │      mov    %edx,%eax
+  13.12 │      mov    %eax,-0x8(%rbp)
+   1.87 │      mov    -0x30(%rbp),%rax
+   0.34 │      mov    0x4(%rax),%edx
+   0.85 │      mov    -0x14(%rbp),%eax
+  10.90 │      imul   %eax,%edx
+   1.87 │      mov    knapsack_list,%rax
+        │      mov    -0x8(%rbp),%ecx
+   0.68 │      shl    $0x2,%rcx
+  11.24 │      add    %rcx,%rax
+   3.58 │      mov    (%rax),%eax
+   2.39 │      add    %edx,%eax
+   2.90 │      mov    %eax,-0x4(%rbp)
+   7.67 │      mov    -0x10(%rbp),%eax
+        │      cmp    -0x4(%rbp),%eax
+   9.71 │    ↓ jae    80
+        │      mov    -0x4(%rbp),%eax
+   0.34 │      mov    %eax,-0x10(%rbp)
+   3.58 │80:   addl   $0x1,-0x14(%rbp)
+   1.36 │84:   mov    -0x14(%rbp),%eax
+   0.34 │      cmp    -0xc(%rbp),%eax
+   2.21 │    ↑ jbe    37
+   1.19 │      mov    -0x10(%rbp),%eax
+   0.68 │      leaveq
+   0.51 │    ← retq
+
+
+What do you think about the suggestion and some problems ?
+Just send patchset for this problems and the my suggestion ?
+
+I think the lack comes from the output of objdump command.
+perf internally handle source codes and line numbers
+by output of objdump with 'd' and 'S' as below.
+
+     # cat util/annotate.c
+...
+1436                  "%s %s%s --start-address=0x%016" PRIx64
+1437                  " --stop-address=0x%016" PRIx64
+1438                  " -l -d %s %s -C %s 2>/dev/null|grep -v %s|expand",
+1439                  objdump_path ? objdump_path : "objdump",
+1440                  disassembler_style ? "-M " : "",
+1441                  disassembler_style ? disassembler_style : "",
+1442                  map__rip_2objdump(map, sym->start),
+1443                  map__rip_2objdump(map, sym->end),
+1444                  symbol_conf.annotate_asm_raw ? "" : "--no-show-raw",
+1445                  symbol_conf.annotate_src ? "-S" : "",
+1446                  symfs_filename, symfs_filename);
+...
+
+So if we don't rely on a feature '-S' of objdump and
+if we read the actual source file,
+I think perf-annotate can provide more readable source code view per 
+function
+and more precise line numbers.
+
+Thanks,
+Taeung
