@@ -1,170 +1,399 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: re-ordering across FINISHED_ROUND observed
-Date: Sat, 04 Mar 2017 02:08:04 +0100
-Message-ID: <10267005.nzSFOMjRpY@agathebauer>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1988306.vypyQQKf0i"; micalg="sha1"; protocol="application/pkcs7-signature"
+Subject: [PATCH] perf report: enable sorting by srcline as key
+Date: Sat, 18 Mar 2017 22:49:28 +0100
+Message-ID: <20170318214928.9047-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:56050 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:60638 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751843AbdCDBYL (ORCPT
+        id S1751187AbdCRWAN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2017 20:24:11 -0500
+        Sat, 18 Mar 2017 18:00:13 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: perf group <linux-perf-users@vger.kernel.org>
+To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
 
---nextPart1988306.vypyQQKf0i
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Often it is interesting to know how costly a given source line is in
+total. Previously, one had to build these sums manually based on all
+addresses that pointed to the same source line. This patch introduces
+srcline as a sort key, which will do the aggregation for us.
 
-Hey all,
+Paired with the recent addition of showing inline frames, this makes
+perf report much more useful for many C++ work loads.
 
-I have a perf.data file which contradicts the documentation:
+The following shows the new feature in action. First, let's show the
+status quo output when we sort by address. The result contains many
+hist entries that generate the same output:
 
-> Ordering
-> 
-> The events are not necessarily in time stamp order, as they can be
-> collected in parallel on different CPUs. If the events should be
-> processed in time order they need to be sorted first. It is possible
-> to only do a partial sort using the FINISHED_ROUND event header (see
-> below). perf record guarantees that there is no reordering over a
-> FINISHED_ROUND.
+~~~~~~~~~~~~~~~~
+$ perf report --stdio --inline -g address
+# Children      Self  Command       Shared Object        Symbol
+# ........  ........  ............  ...................  .........................................
+#
+    99.89%    35.34%  cpp-inlining  cpp-inlining         [.] main
+            |
+            |--64.55%--main complex:655
+            |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+            |          /usr/include/c++/6.3.1/complex:664 (inline)
+            |          |
+            |          |--60.31%--hypot +20
+            |          |          |
+            |          |          |--8.52%--__hypot_finite +273
+            |          |          |
+            |          |          |--7.32%--__hypot_finite +411
+...
+             --35.34%--_start +4194346
+                       __libc_start_main +241
+                       |
+                       |--6.65%--main random.tcc:3326
+                       |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+                       |
+                       |--2.70%--main random.tcc:3326
+                       |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+                       |
+                       |--1.69%--main random.tcc:3326
+                       |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+...
+~~~~~~~~~~~~~~~~
 
-I see one round finishing, the maximum sample time for that round is:
+With this patch and `-g srcline` we instead get the following output:
 
-52468794009888
+~~~~~~~~~~~~~~~~
+$ perf report --stdio --inline -g srcline
+# Children      Self  Command       Shared Object        Symbol
+# ........  ........  ............  ...................  .........................................
+#
+    99.89%    35.34%  cpp-inlining  cpp-inlining         [.] main
+            |
+            |--64.55%--main complex:655
+            |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+            |          /usr/include/c++/6.3.1/complex:664 (inline)
+            |          |
+            |          |--64.02%--hypot
+            |          |          |
+            |          |           --59.81%--__hypot_finite
+            |          |
+            |           --0.53%--cabs
+            |
+             --35.34%--_start
+                       __libc_start_main
+                       |
+                       |--12.48%--main random.tcc:3326
+                       |          /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+...
+~~~~~~~~~~~~~~~~
 
-Then the next round finishes, and the first sample in this round has time:
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+---
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/ui/browsers/hists.c           |  3 +-
+ tools/perf/ui/stdio/hist.c               |  3 +-
+ tools/perf/util/annotate.c               |  3 +-
+ tools/perf/util/callchain.c              | 52 +++++++++++++++++++++++++++++---
+ tools/perf/util/callchain.h              |  3 +-
+ tools/perf/util/map.c                    |  3 +-
+ tools/perf/util/sort.c                   | 16 ++++++----
+ tools/perf/util/srcline.c                | 11 +++++--
+ tools/perf/util/util.h                   |  4 +--
+ 10 files changed, 78 insertions(+), 21 deletions(-)
 
-52468793922208
-
-I have the perf.data file, it's large though (431MB uncompressed). The .xz 
-compressed file is only ~6.2MB and can be found here:
-
-http://milianw.de/files/perf.data.heaptrack.normal.xz
-
-So, is the documentation wrong and there can actually be reordering over a 
-FINISHED_ROUND? Or is that an indication of a bug somewhere? I'm running 
-4.9.11-1-ARCH with perf from perf-core-for-mingo-4.11-20170220-1197-
-g062f29461d1e.
-
-Thanks
-
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 248bba434b53..37a175914157 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -235,6 +235,7 @@ OPTIONS
+ 	sort_key can be:
+ 	- function: compare on functions (default)
+ 	- address: compare on individual code addresses
++	- srcline: compare on source filename and line number
+ 
+ 	branch can be:
+ 	- branch: include last branch information in callgraph when available.
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 757222bc9dad..bca08be9fd78 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -851,7 +851,8 @@ static int hist_browser__show_inline(struct hist_browser *browser,
+ 			if (ui_browser__is_current_entry(&browser->b, row))
+ 				color = HE_COLORSET_SELECTED;
+ 
+-			if (callchain_param.key == CCKEY_ADDRESS) {
++			if (callchain_param.key == CCKEY_ADDRESS ||
++			    callchain_param.key == CCKEY_SRCLINE) {
+ 				if (ilist->filename != NULL)
+ 					scnprintf(buf, sizeof(buf),
+ 						  "%s:%d (inline)",
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 183470f25100..bf95b4a9a592 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -53,7 +53,8 @@ static size_t inline__fprintf(struct map *map, u64 ip, int left_margin,
+ 				ret += fprintf(fp, "          ");
+ 			}
+ 
+-			if (callchain_param.key == CCKEY_ADDRESS) {
++			if (callchain_param.key == CCKEY_ADDRESS ||
++			    callchain_param.key == CCKEY_SRCLINE) {
+ 				if (ilist->filename != NULL)
+ 					ret += fprintf(fp, "%s:%d (inline)",
+ 						       ilist->filename,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 273f21fa32b5..e7194ff88c4f 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1668,7 +1668,8 @@ static int symbol__get_source_line(struct symbol *sym, struct map *map,
+ 			goto next;
+ 
+ 		offset = start + i;
+-		src_line->path = get_srcline(map->dso, offset, NULL, false);
++		src_line->path = get_srcline(map->dso, offset, NULL,
++					     false, true);
+ 		insert_source_line(&tmp_root, src_line);
+ 
+ 	next:
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index aba953421a03..d78776a20e80 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -80,6 +80,10 @@ static int parse_callchain_sort_key(const char *value)
+ 		callchain_param.key = CCKEY_ADDRESS;
+ 		return 0;
+ 	}
++	if (!strncmp(value, "srcline", strlen(value))) {
++		callchain_param.key = CCKEY_SRCLINE;
++		return 0;
++	}
+ 	if (!strncmp(value, "branch", strlen(value))) {
+ 		callchain_param.branch_callstack = 1;
+ 		return 0;
+@@ -510,14 +514,51 @@ enum match_result {
+ 	MATCH_GT,
+ };
+ 
++static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
++					     struct callchain_list *cnode)
++{
++	char *left = get_srcline(cnode->ms.map->dso,
++				 map__rip_2objdump(cnode->ms.map, cnode->ip),
++				 cnode->ms.sym, true, false);
++	char *right = get_srcline(node->map->dso,
++				  map__rip_2objdump(node->map, node->ip),
++				  node->sym, true, false);
++	enum match_result ret = MATCH_EQ;
++	int cmp;
++
++	if (left && right)
++		cmp = strcmp(left, right);
++	else if (!left && right)
++		cmp = 1;
++	else if (left && !right)
++		cmp = -1;
++	else if (cnode->ip == node->ip)
++		cmp = 0;
++	else
++		cmp = (cnode->ip < node->ip) ? -1 : 1;
++
++	if (cmp != 0)
++		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
++
++	free_srcline(left);
++	free_srcline(right);
++	return ret;
++}
++
+ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
+ {
+ 	struct symbol *sym = node->sym;
+ 	u64 left, right;
+ 
+-	if (cnode->ms.sym && sym &&
+-	    callchain_param.key == CCKEY_FUNCTION) {
++	if (callchain_param.key == CCKEY_SRCLINE) {
++		enum match_result match = match_chain_srcline(node, cnode);
++
++		if (match != MATCH_ERROR)
++			return match;
++	}
++
++	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+ 		left = cnode->ms.sym->start;
+ 		right = sym->start;
+ 	} else {
+@@ -911,15 +952,16 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
+ char *callchain_list__sym_name(struct callchain_list *cl,
+ 			       char *bf, size_t bfsize, bool show_dso)
+ {
++	bool show_addr = callchain_param.key == CCKEY_ADDRESS;
++	bool show_srcline = show_addr || callchain_param.key == CCKEY_SRCLINE;
+ 	int printed;
+ 
+ 	if (cl->ms.sym) {
+-		if (callchain_param.key == CCKEY_ADDRESS &&
+-		    cl->ms.map && !cl->srcline)
++		if (show_srcline && cl->ms.map && !cl->srcline)
+ 			cl->srcline = get_srcline(cl->ms.map->dso,
+ 						  map__rip_2objdump(cl->ms.map,
+ 								    cl->ip),
+-						  cl->ms.sym, false);
++						  cl->ms.sym, false, show_addr);
+ 		if (cl->srcline)
+ 			printed = scnprintf(bf, bfsize, "%s %s",
+ 					cl->ms.sym->name, cl->srcline);
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 4f4b60f1558a..c56c23dbbf72 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -77,7 +77,8 @@ typedef void (*sort_chain_func_t)(struct rb_root *, struct callchain_root *,
+ 
+ enum chain_key {
+ 	CCKEY_FUNCTION,
+-	CCKEY_ADDRESS
++	CCKEY_ADDRESS,
++	CCKEY_SRCLINE
+ };
+ 
+ enum chain_value {
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 1d9ebcf9e38e..c1870ac365a3 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -405,7 +405,8 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
+ 
+ 	if (map && map->dso) {
+ 		srcline = get_srcline(map->dso,
+-				      map__rip_2objdump(map, addr), NULL, true);
++				      map__rip_2objdump(map, addr), NULL,
++				      true, true);
+ 		if (srcline != SRCLINE_UNKNOWN)
+ 			ret = fprintf(fp, "%s%s", prefix, srcline);
+ 		free_srcline(srcline);
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 8b0d4e39f640..73f3ec1cf2a0 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -323,7 +323,7 @@ char *hist_entry__get_srcline(struct hist_entry *he)
+ 		return SRCLINE_UNKNOWN;
+ 
+ 	return get_srcline(map->dso, map__rip_2objdump(map, he->ip),
+-			   he->ms.sym, true);
++			   he->ms.sym, true, true);
+ }
+ 
+ static int64_t
+@@ -366,7 +366,8 @@ sort__srcline_from_cmp(struct hist_entry *left, struct hist_entry *right)
+ 			left->branch_info->srcline_from = get_srcline(map->dso,
+ 					   map__rip_2objdump(map,
+ 							     left->branch_info->from.al_addr),
+-							 left->branch_info->from.sym, true);
++							 left->branch_info->from.sym,
++							 true, true);
+ 	}
+ 	if (!right->branch_info->srcline_from) {
+ 		struct map *map = right->branch_info->from.map;
+@@ -376,7 +377,8 @@ sort__srcline_from_cmp(struct hist_entry *left, struct hist_entry *right)
+ 			right->branch_info->srcline_from = get_srcline(map->dso,
+ 					     map__rip_2objdump(map,
+ 							       right->branch_info->from.al_addr),
+-						     right->branch_info->from.sym, true);
++						     right->branch_info->from.sym,
++						     true, true);
+ 	}
+ 	return strcmp(right->branch_info->srcline_from, left->branch_info->srcline_from);
+ }
+@@ -407,7 +409,8 @@ sort__srcline_to_cmp(struct hist_entry *left, struct hist_entry *right)
+ 			left->branch_info->srcline_to = get_srcline(map->dso,
+ 					   map__rip_2objdump(map,
+ 							     left->branch_info->to.al_addr),
+-							 left->branch_info->from.sym, true);
++							 left->branch_info->from.sym,
++							 true, true);
+ 	}
+ 	if (!right->branch_info->srcline_to) {
+ 		struct map *map = right->branch_info->to.map;
+@@ -417,7 +420,8 @@ sort__srcline_to_cmp(struct hist_entry *left, struct hist_entry *right)
+ 			right->branch_info->srcline_to = get_srcline(map->dso,
+ 					     map__rip_2objdump(map,
+ 							       right->branch_info->to.al_addr),
+-						     right->branch_info->to.sym, true);
++						     right->branch_info->to.sym,
++						     true, true);
+ 	}
+ 	return strcmp(right->branch_info->srcline_to, left->branch_info->srcline_to);
+ }
+@@ -448,7 +452,7 @@ static char *hist_entry__get_srcfile(struct hist_entry *e)
+ 		return no_srcfile;
+ 
+ 	sf = __get_srcline(map->dso, map__rip_2objdump(map, e->ip),
+-			 e->ms.sym, false, true);
++			 e->ms.sym, false, true, true);
+ 	if (!strcmp(sf, SRCLINE_UNKNOWN))
+ 		return no_srcfile;
+ 	p = strchr(sf, ':');
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index f9d4b47d1fb5..6f8651104990 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -427,7 +427,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ #define A2L_FAIL_LIMIT 123
+ 
+ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+-		  bool show_sym, bool unwind_inlines)
++		  bool show_sym, bool show_addr, bool unwind_inlines)
+ {
+ 	char *file = NULL;
+ 	unsigned line = 0;
+@@ -461,6 +461,11 @@ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+ 		dso->has_srcline = 0;
+ 		dso__free_a2l(dso);
+ 	}
++
++	if (!show_addr)
++		return (show_sym && sym) ?
++			    strndup(sym->name, sym->namelen) : NULL;
++
+ 	if (sym) {
+ 		if (asprintf(&srcline, "%s+%" PRIu64, show_sym ? sym->name : "",
+ 					addr - sym->start) < 0)
+@@ -477,9 +482,9 @@ void free_srcline(char *srcline)
+ }
+ 
+ char *get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+-		  bool show_sym)
++		  bool show_sym, bool show_addr)
+ {
+-	return __get_srcline(dso, addr, sym, show_sym, false);
++	return __get_srcline(dso, addr, sym, show_sym, show_addr, false);
+ }
+ 
+ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index cc0700d6fef0..7cf5752b38fd 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -287,9 +287,9 @@ struct symbol;
+ 
+ extern bool srcline_full_filename;
+ char *get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+-		  bool show_sym);
++		  bool show_sym, bool show_addr);
+ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+-		  bool show_sym, bool unwind_inlines);
++		  bool show_sym, bool show_addr, bool unwind_inlines);
+ void free_srcline(char *srcline);
+ 
+ int perf_event_paranoid(void);
 -- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart1988306.vypyQQKf0i
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDMwNDAxMDgwNFowIwYJKoZIhvcNAQkEMRYEFHMm63xCzwoie0GlMfN9NalACOfrMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAK9N
-Jk2u7XdAXOjGTbyGZ11epT2iH+Hj64X7LjMUFJP0GwBzd+d0+k2N3osHf3I6Q+MQsBBqfmxJVywo
-mpAel4ArsGd8wKY7KXKOjb8Dwox8X0IWvWc70TUxhRvWy3mE1EZinkSZYZ6rCtaAcodYJYdafCgZ
-Ap0dBmojT91ACkuim7LCoxp4D6pPG9NgxvNdsjkq56m3DFM79vXQUVUHGK5FLRUZcqJLYONkKCBv
-VWHh7CIb0+5pP79W4sBxLyjZ2fzUEwJbj4Ze49IORBlsDiZunxR1GFzQdKryQhgjnkJfW265Wwn1
-ISqn4fT8uuO5uU7PH9QgmgZDOZ3PE8kbxBIAAAAAAAA=
-
-
---nextPart1988306.vypyQQKf0i--
+2.12.0
