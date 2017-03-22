@@ -1,64 +1,84 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: perf software events broken in containers
-Date: Wed, 22 Mar 2017 11:24:21 -0700
-Message-ID: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
+From: William Cohen <wcohen@redhat.com>
+Subject: Re: perf software events broken in containers
+Date: Wed, 22 Mar 2017 15:15:15 -0400
+Message-ID: <8c4186d0-bfbf-6f1a-c953-9859bf057856@redhat.com>
+References: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wr0-f172.google.com ([209.85.128.172]:36709 "EHLO
-        mail-wr0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S965271AbdCVSYy (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:55072 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751539AbdCVTPQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2017 14:24:54 -0400
-Received: by mail-wr0-f172.google.com with SMTP id u108so133982406wrb.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2017 11:24:52 -0700 (PDT)
+        Wed, 22 Mar 2017 15:15:16 -0400
+In-Reply-To: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Brendan Gregg <brendan.d.gregg@gmail.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-G'Day,
+On 03/22/2017 02:24 PM, Brendan Gregg wrote:
+> G'Day,
+> 
+> I think something broke recently with using perf from within a docker
+> container. We used to be able to run "docker exec -it --privileged
+> UUID bash", and then run perf from it for CPU sampling. But we just
+> noticed on recent kernels (4.10 and updated 4.4) that it no longer
+> works. Anyone else see this?
+> 
+> perf's error message is contradictory:
+> 
+> # /perf record -F 99 -a -- sleep 1
+> perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected
+> error 1 (Operation not permitted)
+> perf_event_open(..., 0) failed unexpectedly with error 1 (Operation
+> not permitted)
+> Error:
+> You may not have permission to collect system-wide stats.
+> 
+> Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+> which controls use of the performance events system by
+> unprivileged users (without CAP_SYS_ADMIN).
+> 
+> The current value is -1:
+> 
+>   -1: Allow use of (almost) all events by all users
+>> = 0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
+>> = 1: Disallow CPU event access by users without CAP_SYS_ADMIN
+>> = 2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+> 
+> With -v, I can see that it tries the PMC based cycles, then gives up.
+> What normally happens is it then switches to the cpu-clock software
+> event, but it's not trying that anymore. Those software events are
+> also no longer visible:
+> 
+> # /perf list sw
+> 
+> List of pre-defined events (to be used in -e):
+> 
+> (no output)
+> 
+> The kernel is returning errno 1 to the sys_perf_event_open() call in
+> __perf_evsel__open(). I'm trying to find out which kernel function
+> throws the EPERM, but almost nothing is tracable via ftrace/kprobes.
+> It's pretty annoying... Thanks for any ideas,
 
-I think something broke recently with using perf from within a docker
-container. We used to be able to run "docker exec -it --privileged
-UUID bash", and then run perf from it for CPU sampling. But we just
-noticed on recent kernels (4.10 and updated 4.4) that it no longer
-works. Anyone else see this?
+Hi Brendan,
 
-perf's error message is contradictory:
+Several years ago I had a problem with the perf_event_open not working on arm machines.  I looked at the kernel source code and just kept putting systemtap one-liners like the following on the various functions used by the perf_event_open to see which function was the one returning the error code:
 
-# /perf record -F 99 -a -- sleep 1
-perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected
-error 1 (Operation not permitted)
-perf_event_open(..., 0) failed unexpectedly with error 1 (Operation
-not permitted)
-Error:
-You may not have permission to collect system-wide stats.
+stap -v -e 'probe kernel.function("idr_find").return {printf("%s %s 0x%x\n", pn(), $$parms$, $return)}'
 
-Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-which controls use of the performance events system by
-unprivileged users (without CAP_SYS_ADMIN).
 
-The current value is -1:
+Could the docker container not have the perf_event_open syscall on the whitelist of allowed syscalls?
 
-  -1: Allow use of (almost) all events by all users
->= 0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
->= 1: Disallow CPU event access by users without CAP_SYS_ADMIN
->= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+Would bcc's capable.py tool give some insight into whether there are some other capabilities that the perf_event_open might be needing?
 
-With -v, I can see that it tries the PMC based cycles, then gives up.
-What normally happens is it then switches to the cpu-clock software
-event, but it's not trying that anymore. Those software events are
-also no longer visible:
-
-# /perf list sw
-
-List of pre-defined events (to be used in -e):
-
-(no output)
-
-The kernel is returning errno 1 to the sys_perf_event_open() call in
-__perf_evsel__open(). I'm trying to find out which kernel function
-throws the EPERM, but almost nothing is tracable via ftrace/kprobes.
-It's pretty annoying... Thanks for any ideas,
-
-Brendan
+-Will
+> 
+> Brendan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
