@@ -1,107 +1,64 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/11] perf/core improvements and fixes
-Date: Tue, 21 Mar 2017 07:43:28 +0100
-Message-ID: <20170321064328.GA30094@gmail.com>
-References: <20170321011641.25763-1-acme@kernel.org>
+From: Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: perf software events broken in containers
+Date: Wed, 22 Mar 2017 11:24:21 -0700
+Message-ID: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170321011641.25763-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexander Yarygin <yarygin@linux.vnet.ibm.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@intel.com>, Clark Williams <williams@redhat.com>, David Ahern <dsahern@gmail.com>, Hemant Kumar <hemant@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Li Zhong <zhong@linux.vnet.ibm.com>, Marc Zyngier <marc.zyngier@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Paul Mackerras <paulus@ozlabs.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wr0-f172.google.com ([209.85.128.172]:36709 "EHLO
+        mail-wr0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S965271AbdCVSYy (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 22 Mar 2017 14:24:54 -0400
+Received: by mail-wr0-f172.google.com with SMTP id u108so133982406wrb.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2017 11:24:52 -0700 (PDT)
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
+G'Day,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+I think something broke recently with using perf from within a docker
+container. We used to be able to run "docker exec -it --privileged
+UUID bash", and then run perf from it for CPU sampling. But we just
+noticed on recent kernels (4.10 and updated 4.4) that it no longer
+works. Anyone else see this?
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 61f63e383784bd0ab6529cfc95ddc59c713afcc9:
-> 
->   Merge tag 'perf-core-for-mingo-4.12-20170316' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2017-03-16 17:29:23 +0100)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.12-20170320
-> 
-> for you to fetch changes up to affa6c169bae8dc9cb1a2d070c7cd2fe1939c5b8:
-> 
->   tools headers: Sync {tools/,}arch/powerpc/include/uapi/asm/kvm.h (2017-03-20 15:02:29 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> Fixes:
-> 
-> - Fix concat_probe_trace_events() in 'perf probe', it should dereference a
->   pointer, not test its value (Ravi Bangoria)
-> 
-> User visible:
-> 
-> - Handle partial AUX records, checking if 'kvm_intel.ko' is loaded and
->   if its 'vmm_exclusive' parameter is set to 0, suggesting tweaking
->   it to reduce gaps (Alexander Shishkin)
-> 
-> Infrastructure:
-> 
-> - Sync the kvm.h, cpufeatures.h and perf_event.h tools/ headers copies
->   with the kernel (Arnaldo Carvalho de Melo, Alexander Shishkin)
-> 
-> - 'perf lock' subcommands should include common options, using
->   OPT_PARENT() (Changbin Du)
-> 
-> - Ditto for 'perf timechart' (Arnaldo Carvalho de Melo)
-> 
-> Documentation:
-> 
->   Correct 'perf stat --no-aggr' description (Ravi Bangoria)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Alexander Shishkin (3):
->       tools lib api fs: Introduce sysfs__read_bool
->       tools include: Sync {,tools/}include/uapi/linux/perf_event.h
->       perf tools: Handle partial AUX records and print a warning
-> 
-> Arnaldo Carvalho de Melo (5):
->       perf lock: Make 'f' part of the common 'lock_options'
->       perf timechart: Use OPT_PARENT for common options
->       tools headers: Sync {tools/,}arch/x86/include/asm/cpufeatures.h
->       tools headers: Sync {tools/,}arch/arm{64}/include/uapi/asm/kvm.h
->       tools headers: Sync {tools/,}arch/powerpc/include/uapi/asm/kvm.h
-> 
-> Changbin Du (1):
->       perf lock: Subcommands should include common options
-> 
-> Ravi Bangoria (2):
->       perf stat: Correct --no-aggr description
->       perf probe: Fix concat_probe_trace_events
-> 
->  tools/arch/arm/include/uapi/asm/kvm.h     | 13 +++++++++++++
->  tools/arch/arm64/include/uapi/asm/kvm.h   | 13 +++++++++++++
->  tools/arch/powerpc/include/uapi/asm/kvm.h | 22 ++++++++++++++++++++++
->  tools/arch/x86/include/asm/cpufeatures.h  |  3 ++-
->  tools/include/uapi/linux/perf_event.h     |  1 +
->  tools/lib/api/fs/fs.c                     | 29 +++++++++++++++++++++++++++++
->  tools/lib/api/fs/fs.h                     |  1 +
->  tools/perf/Documentation/perf-stat.txt    |  3 +--
->  tools/perf/builtin-lock.c                 | 22 ++++++++++++----------
->  tools/perf/builtin-timechart.c            | 16 +++++++---------
->  tools/perf/util/event.c                   |  5 +++--
->  tools/perf/util/event.h                   |  1 +
->  tools/perf/util/probe-event.c             |  2 +-
->  tools/perf/util/session.c                 | 27 ++++++++++++++++++++++++---
->  14 files changed, 130 insertions(+), 28 deletions(-)
+perf's error message is contradictory:
 
-Pulled, thanks a lot Arnaldo!
+# /perf record -F 99 -a -- sleep 1
+perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected
+error 1 (Operation not permitted)
+perf_event_open(..., 0) failed unexpectedly with error 1 (Operation
+not permitted)
+Error:
+You may not have permission to collect system-wide stats.
 
-	Ingo
+Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+which controls use of the performance events system by
+unprivileged users (without CAP_SYS_ADMIN).
+
+The current value is -1:
+
+  -1: Allow use of (almost) all events by all users
+>= 0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
+>= 1: Disallow CPU event access by users without CAP_SYS_ADMIN
+>= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+
+With -v, I can see that it tries the PMC based cycles, then gives up.
+What normally happens is it then switches to the cpu-clock software
+event, but it's not trying that anymore. Those software events are
+also no longer visible:
+
+# /perf list sw
+
+List of pre-defined events (to be used in -e):
+
+(no output)
+
+The kernel is returning errno 1 to the sys_perf_event_open() call in
+__perf_evsel__open(). I'm trying to find out which kernel function
+throws the EPERM, but almost nothing is tracable via ftrace/kprobes.
+It's pretty annoying... Thanks for any ideas,
+
+Brendan
