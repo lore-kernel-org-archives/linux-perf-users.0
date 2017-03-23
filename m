@@ -1,87 +1,112 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: perf software events broken in containers
-Date: Wed, 22 Mar 2017 14:35:14 -0700
-Message-ID: <CAE40pdcbbU=e6YXTivOW1=w2urucbQknUZc9VzebPgHeiLrKqw@mail.gmail.com>
-References: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
- <8c4186d0-bfbf-6f1a-c953-9859bf057856@redhat.com> <CAE40pdd06QXckEMYfU63c=Zvrrn22A-sm-Sh37CymR5rpJZ57Q@mail.gmail.com>
- <4bf76843-d25e-4cda-30ce-0984f8778704@redhat.com>
+From: Yilong Li <yilongl@cs.stanford.edu>
+Subject: Need help in tracking down OS jitters using Intel PT
+Date: Thu, 23 Mar 2017 02:28:31 -0700
+Message-ID: <CAPJB79SqGQY-jb455rJXsyzF7cEkrLE653rwG+rPy6F4+-VQEA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f43.google.com ([74.125.82.43]:37743 "EHLO
-        mail-wm0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751799AbdCVVfq (ORCPT
+Received: from smtp2.cs.stanford.edu ([171.64.64.26]:55679 "EHLO
+        smtp2.cs.Stanford.EDU" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752005AbdCWJ2d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2017 17:35:46 -0400
-Received: by mail-wm0-f43.google.com with SMTP id n11so48637630wma.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2017 14:35:45 -0700 (PDT)
-In-Reply-To: <4bf76843-d25e-4cda-30ce-0984f8778704@redhat.com>
+        Thu, 23 Mar 2017 05:28:33 -0400
+Received: from mail-pg0-f54.google.com ([74.125.83.54]:36219)
+        by smtp2.cs.Stanford.EDU with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.88)
+        (envelope-from <yilongl@cs.stanford.edu>)
+        id 1cqz2l-00051C-UC
+        for linux-perf-users@vger.kernel.org; Thu, 23 Mar 2017 02:28:32 -0700
+Received: by mail-pg0-f54.google.com with SMTP id g2so120087645pge.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Mar 2017 02:28:31 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: William Cohen <wcohen@redhat.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 22, 2017 at 1:29 PM, William Cohen <wcohen@redhat.com> wrote:
-> On 03/22/2017 03:59 PM, Brendan Gregg wrote:
->> G'Day Will,
->>
->> On Wed, Mar 22, 2017 at 12:15 PM, William Cohen <wcohen@redhat.com> wrot=
-e:
->>> On 03/22/2017 02:24 PM, Brendan Gregg wrote:
->>>> G'Day,
->> [...]
->>>>
->>>> The kernel is returning errno 1 to the sys_perf_event_open() call in
->>>> __perf_evsel__open(). I'm trying to find out which kernel function
->>>> throws the EPERM, but almost nothing is tracable via ftrace/kprobes.
->>>> It's pretty annoying... Thanks for any ideas,
->>>
->>> Hi Brendan,
->>>
->>> Several years ago I had a problem with the perf_event_open not working =
-on arm machines.  I looked at the kernel source code and just kept putting =
-systemtap one-liners like the following on the various functions used by th=
-e perf_event_open to see which function was the one returning the error cod=
-e:
->>>
->>> stap -v -e 'probe kernel.function("idr_find").return {printf("%s %s 0x%=
-x\n", pn(), $$parms$, $return)}'
->>>
->>
->> Right, I've been doing that with ftrace/kprobes/bcc/BPF... Many of the
->> functions aren't visible, though, I suspect inlined.
->>
->
-> Hi Brendan,
->
-> Yes, the inlined functions are going to make it hard to get some of the r=
-eturn values.  However, you can probably narrow down the boundary between e=
-xecuted functions and not executed functions. Would the Intel Processor Tra=
-ce (http://halobates.de/blog/) be usable to help track down this problem?
->
+Hello,
 
-I'm in the cloud, so I usually don't even have PMCs. :)
+I have been trying to track down some OS jitters that take around
+15~16us on my machine. I created a simple test program "user_loop"
+which simply calls rdtscp in a tight loop, collects the first 100 gaps
+that take more than 30000 cycles, and sends SIGUSR2 to the `perf
+record -e intel_pt// --snapshot` process that is tracing the test
+program. The output of the test program looks like this:
+[snip]
+jitter 88: 31656 cycles, timestamp 7135093048653524
+jitter 89: 35714 cycles, timestamp 7135093052200982
+jitter 90: 31508 cycles, timestamp 7135093052820884
+jitter 91: 31183 cycles, timestamp 7135093068653931
+jitter 92: 32813 cycles, timestamp 7135093088516264
+[snip]
 
-Looks like the issue is a change with docker, I'd guess related to
-this syscall whitelisting. Doing a "docker run --cap-add cap_sys_admin
-..." results in a container that can run perf (but has sysadmin
-privilege always on), although we still need the --privileged for it
-to work fully. Previously we could run normal containers and run some
-ad hoc privileged shells only with "docker exec -it --privileged ...
-bash" for running perf.
+Then I used `perf script` to display the trace output hoping to see
+what exactly get executed during the gap. I used Andi Kleen's
+perf/xed-6 branch[1] to get the assembly. However, when I looked
+around the last rdtscp instruction in the trace output, I saw nothing
+from the kernel. The trace output looks like this:
+[snip]
+561650.137702631:                          40061b main  rdtscp
+561650.137702631:                          40061e main  shl $0x20, %rdx
+561650.137702631:                          400622 main  movl  %ecx, -0x1c(%rbp)
+561650.137702631:                          400625 main  or %rdx, %rax
+561650.137702631:                          400628 main  mov %rax, %rdx
+561650.137702631:                          40062b main  sub %rsi, %rdx
+561650.137702631:                          40062e main  cmp $0x7530, %rdx
+561650.137702631:   jcc                    400635 main  jbe 0x400618 <main+0x88>
+561650.137702631:                          400618 main  mov %rax, %rsi
+561650.137702631:                          40061b main  rdtscp
+561650.137702631:                          40061e main  shl $0x20, %rdx
+561650.137702631:                          400622 main  movl  %ecx, -0x1c(%rbp)
+561650.137702631:                          400625 main  or %rdx, %rax
+561650.137702631:                          400628 main  mov %rax, %rdx
+561650.137702631:                          40062b main  sub %rsi, %rdx
+561650.137702631:                          40062e main  cmp $0x7530, %rdx
+561650.137702631:   jcc                    400635 main  jbe 0x400618 <main+0x88>
+561650.137702631:                          400618 main  mov %rax, %rsi
+561650.137702631:                          40061b main  rdtscp
+<===========LAST ITERATION
+561650.137702631:                          40061e main  shl $0x20, %rdx
+561650.137702631:                          400622 main  movl  %ecx, -0x1c(%rbp)
+561650.137702631:                          400625 main  or %rdx, %rax
+561650.137702631:                          400628 main  mov %rax, %rdx
+561650.137702631:                          40062b main  sub %rsi, %rdx
+561650.137702631:                          40062e main  cmp $0x7530, %rdx
+561650.137702631:   jcc                    400635 main  jbe 0x400618 <main+0x88>
+561650.137702631:                          400637 main  mov %r8d, %ecx
+561650.137702631:                          40063a main  add $0x1, %r8d
+561650.137702631:                          40063e main  cmp $0x63, %r8d
+561650.137702631:                          400642 main  movq  %rdx,
+0x6013a0(,%rcx,8)
+561650.137702631:                          40064a main  movq  %rax,
+0x601080(,%rcx,8)
+561650.137702631:   jcc                    400652 main  jbe 0x400618 <main+0x88>
+561650.137702631:                          400654 main  test %edi, %edi
+561650.137702631:   jcc                    400656 main  jle 0x400662 <main+0xd2>
+561650.137702631:                          400658 main  mov $0xc, %esi
+561650.137702631:   call                   40065d main  callq
+0x400550 <kill@plt>
+561650.137702631:   jmp                    400550 kill@plt      jmpq
+0x200ada(%rip)
+561650.137702631:                          400556 kill@plt      pushq  $0x3
+561650.137702631:   jmp                    40055b kill@plt      jmp
+0x400510 <_init+0x20>
+561650.137702631:                          400510 _init pushq  0x200af2(%rip)
+561650.137702631:   jmp                    400516 _init jmpq  0x200af4(%rip)
+561650.137702631:                    7f1b8882c6a0
+_dl_runtime_resolve_avx       pushq  %rbx
+561650.137702631:                    7f1b8882c6a1
+_dl_runtime_resolve_avx       mov %rsp, %rbx
+561650.137702631:                    7f1b8882c6a4
+_dl_runtime_resolve_avx       and $0xffffffffffffffe0, %rsp
+[snip]
 
-Weirdly, the container claims it has cap_sys_admin either way, but one
-way it doesn't work and the other it does. I filed
-https://github.com/docker/docker/issues/32018
+Note: the cpu uarch on this machine is Broadwell, so the timestamps
+are very crude.
 
-We also found that docker explicitly blocks perf_event_open() by default[1]=
-:
+What am I missing? Where does the 15us go? The program and the scripts
+I used in the experiment can be found here:
+https://github.com/yilongli/OSJitterTest.
 
-"perf_event_open    Tracing/profiling syscall, which could leak a lot
-of information on the host."
+Thanks,
+Yilong
 
-[1] https://docs.docker.com/engine/security/seccomp/#significant-syscalls-b=
-locked-by-the-default-profile
-
-Brendan
+[1] https://lkml.org/lkml/2017/1/18/1125
