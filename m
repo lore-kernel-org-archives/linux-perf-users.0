@@ -1,64 +1,70 @@
-From: <redbeardcharters@hotmail.com>
-Subject: 14365 linux-perf-users
-Date: Sat, 25 Mar 2017 04:37:08 -0000
-Message-ID: <149041662886.16100.16119611012175425637@net11.com.br>
-Reply-To: <redbeardcharters@hotmail.com>
+From: Yijie Shen <henry.yijieshen@gmail.com>
+Subject: toplev would hang forever when analyzing a program with PID
+Date: Sun, 26 Mar 2017 22:07:44 +0800
+Message-ID: <CADGfq7zQv_3B-vYkTi8p1SQ=xcjyp3cVBAGaL=P7-gUBobbDzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="8177171099.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from 190-15-56-168.net11.com.br ([190.15.56.168]:43022 "HELO
-        net11.com.br" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
-        id S936944AbdCYEhP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Mar 2017 00:37:15 -0400
-Content-Disposition: attachment
+Received: from mail-wr0-f179.google.com ([209.85.128.179]:32789 "EHLO
+        mail-wr0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751354AbdCZOHq (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 26 Mar 2017 10:07:46 -0400
+Received: by mail-wr0-f179.google.com with SMTP id w43so10406331wrb.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Mar 2017 07:07:45 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-UEsDBAoAAgAAAENReUrbwQewhAkAAIQJAAANABwAemlwLTI3NzgxLnppcFVUCQADne3VWJ3t1Vh1
-eAsAAQQAAAAABAAAAABQSwMEFAACAAgAQ1F5Sh4IafzeCAAAwBMAAAgAHAAyNzc4MS5qc1VUCQAD
-ne3VWJ3t1Vh1eAsAAQQAAAAABAAAAADtmEtvXMcRhdcx4P9AzGomJOR+P8AwQGAgQBZZeWk5QL+u
-SIsPaUy9LOi/56u+MxRpK7GDLBMIkubO7a6uOnXqVPUsb27b/dXd7Um7/jBebXdff/Xx66/+8Lbs
-T97evFt+utgkraNJtjqni245t6i8saZFp42KORStlcnWB6+0XvqSDc+Ft4o/JtdUlTLRVl99USnZ
-7HW13QzPa2/TkooaapjmnLLetoL9hv1FK4ulZNPQzlil4qK1ztkkp0MYscRulKm1lOpVSLzvdrG1
-2GqtCS5qVVXVI9ey6GCNSXropiz7syvB6SV6E73utUUdrbNON2+1zyFVrY390n6ldMg5WfYvwfqs
-vbfEu6jFFK3wP25OwW6jbM8ZL00kKq+URNWLM9GJn74QdcteRax2Z3T3NrsUwKDY4kFTp6dWxV6V
-9d4kv+iuVDbFq26M0V/weuBlzewD5eLZBzyeqI3hIN80OLLeqRyGDc7zvEwUgnWme++LS6nkQvLw
-H+tVokzkApSiMzOLnucA0MUPVig5H/8d9q1OvmbyJPEICzhfJ5OMq2TMu65JFygKPos9IDatuAyN
-zETNa19/ZbWAGmfZxViPtypWm4KgrAcoNj2KAdUh3PCJU2OKvbsesllcVM53UF5Wrnpg1iQjzUM4
-b4F7LZmJmovBKV2VbSlpv0SeOa9o332roKhAaUhceaSkWhgTZaUEdetGCJasUgst+YZntpOg4K2v
-PfxnKM732lrrnPMLydPCkhUxSqVrAlIDRs/c/2+j8u/wWBH7PyorKsQPKknib5xfCQ8FyJ712nTE
-faiwIsa3VaJApwo6EXxpLRe9iPq5rsbTZ1F71NqpEgJWvMh/Ttm7+l/qkCMqMFHgmtPcr0ENOUXn
-So7GoSPO05Pm+YuoM1GSFiWKAYhkKfmw6vDv7S4BjPF/5Dh1iqz6juQPUI/aG+3EH84vKLppth90
-jG/pKaM3rEbRb1aNFPlQUfcehzb0FJqnX0CphGYW1sfWYEGlDTjUtifJRTPIOTSia9JNrEI36SYG
-bvWsGrsgrZaeBJe8dBuixBXJfRvCpdBj0sZ3uIt6Q9bPPdemQu9WcK0Rnc0B+2QtzNdKdUCX7qQq
-IAa4NoRLrI+sJ2q4uiDiC/arRPw4C/DN5JKMh96SJQWrZGbgnGpSDPjPhFDpaQcdE/ClZ6nphTYD
-qwmGQmpKSs1cPmXsEMZKDwRlOr4dcKevuaQnppgcTFCeUwQ1asp3KpZ6WxXgd08mca7HH9WP3cmC
-lvUyqMDFmqQypFslsdAa5zvhPqjJZLS0oQmJrEJ4JiefqG6pJRQFFvQoMwGU7S56Cjs7FuOypfRt
-g4w9oQzW0D6lbGNNK2KFxCBHVRgOA0MqgCzzyGRwcdIj8TLDnY4sgZvojkwGelqtkyugAnt8LzbD
-SczPKJ0hisnoJ/bZh9dZGM8kgIv4k0VXvhBVJrdUCoA9zIvCdfH4i+cz+cwKRFePqLpiw6EWFlDy
-MjnAPaMZKiRLKpI1rwd0WVAYqL3GJ/7yXuZPwsYF81nHkqfggVknddSJ8ZhLbcBYsu+bTHk95iYo
-zvlN604pkXQq2OEF9nNri2qitr5JxU3uxOP8hdq6yR2KQysmGSoGrzsVqt0XvHzqH/NdEG6Kf1Lx
-CktTUb7MddihI1nJrrL+l7VC9TpRBCJCkLIogrNHxZH9imlUd9HxdapfETvO9kT5K/VFrZnPeDai
-1tIDyf1CxRRBDZ1TUsHg9DRq6Q7MgVQQ8gVXhrKPuDSnWKbELIzn4yJTMVNwnO/VfP/IHrqa8Edz
-CSkhPu6hVJx0q6wSCoAySvfCHir4C/WPkwVw7aEC41SgySXuCk6yRDlWZKTL9Ik/DS4rKpzcOQ+F
-Y+PkA2JRZnuwlZ546Dkzd1QYuVqOFYYcBLlBPHiFmktnp1dH4Rrqi25ILiN17JEdKBldJrcJrkY6
-/dFeOMw3hWe4iA7JXaP2Mbl80B3lEpMMua9wjZuBcp22s6LshKO1MlvggpUbHjqmy5R9KlQ7usCs
-0IWKg/t0E+nJTBboMl2RGxATPbroV/vSgHRd7ypAtCoC3GzeFJRYpqtmlwcdk6ovKlLbfKhL4Q6o
-8JeeyDhVkWIrM0Oh8BezzCj1nIfQUrhiK9XAxKOJKpJ7hWAgD7CenmqVVMDUwcDXfnLHkctsw2+9
-X6Ok52nh+pMo25wEYIYS1LTcI8NAxSb3e151jhRyd6MW6GuGyUsmIbI84Db1aWTS8GTJ9+BNkNGA
-Cc514SbP0u0eUJR7t6i/UgcdU3mRxKKuAMGU2OgZUw0l9/IMN6RC3dqZ7Th09mTkXtl1pIKLzEdM
-rdx3D2qKl3bRKAlj74C8MkUWmW+U7gvqiw4FLV4i9bGRa/KI9dnTuMdRMYGm6qRnPuYqClFXnZn+
-oLKMIOv+/qva+OW9dXFy7+w0nbV7iUqR556plSK1xLTIPJfcxIO2JbWyVqiePfkwj6Xfvs3O23gR
-dT2qt6jt5pz9+3H/Zn+7/hDC86evv1qOv5a8unrz4v329f7DTzePfjJ5//Ly7pXsfHd5dT229/s3
-Yyfv/nC//yD/zc9z5dXJxYk6n49z08X2drw7+evB/Hbz48sXL682ZxtZ22+vX7+/kPd/2e/Lhy2l
-e5bTWVRnKZ25dKa1n3+Ni7uzOyrp54u5/dlNuW+X22+eP//uo/n0zYvd2fXVz+/fXzzfPN+c3b97
-f/PjhTpf7vZbOeTwfPaiX41Lvp/Pf5rWnl2P2xf3l+tXp6frktPT3cerZTs///liunhYt/t4tPFp
-nneyOb163S5fb3enm4vv7vdXty+eLfu7m28vy/7buz62r8r+p/G32/vtPO37ecwPZzrs/jHNfj/N
-/bA7//TZ0L/6f7OdR+7ON7tDcnYryHU/ysv58ZP80yYyY797yIp8/elzzo+ZfJzzwyGf0z1ub2q9
-2IzTt9fltFyPt5sHyL/7qAXx88PKy59/bO1irv/+7+X+8tlyfQfw8+O+3Pa7m+3u5I+rwSOMPzyi
-4Ny/urMy7/Br3e78n1BLAQIeAxQAAgAIAENReUoeCGn83ggAAMATAAAIABgAAAAAAAEAAACkgQAA
-AAAyNzc4MS5qc1VUBQADne3VWHV4CwABBAAAAAAEAAAAAFBLBQYAAAAAAQABAE4AAAAgCQAAAABQ
-SwECHgMKAAIAAABDUXlK28EHsIQJAACECQAADQAYAAAAAAAAAAAApIEAAAAAemlwLTI3NzgxLnpp
-cFVUBQADne3VWHV4CwABBAAAAAAEAAAAAFBLBQYAAAAAAQABAFMAAADLCQAAAAA=
+Hi all,
+
+I'm planning to do some exploration on my program performance using
+toplev, but faced with these problems:
+
+when I called toplev.py -l1 ls, it stoped gracefully with the following output:
+
+Will measure complete system.
+Using level 1.
+Nodes Backend_Bound Frontend_Bound have errata HSD135
+perf stat -x\; -e
+'{cpu/event=0x3c,umask=0x0,any=1/,cpu/event=0xe,umask=0x1/,cpu/event=0x9c,umask=0x1/,cpu/event=0xd,umask=0x3,any=1,cmask=1/,cpu/event=0xc2,umask=0x2/}'
+-A -a ls
+
+S0-C0    FE      Frontend_Bound:                51.94 % Slots
+[100.00%] This category represents slots fraction where the
+processor's Frontend undersupplies its Backend...
+S0-C0    BE      Backend_Bound:                 24.73 % Slots
+[100.00%] This category represents slots fraction where no uops are
+being delivered due to a lack of required resources for
+accepting new uops in the Backend...
+S0-C1    FE      Frontend_Bound:                37.89 % Slots
+[100.00%]S0-C1    BE      Backend_Bound:                 33.91 % Slots
+    [100.00%]S1-C4    FE      Frontend_Bound:                82.60 %
+Slots     [100.00%]S1-C4    RET     Retiring:
+88.53 % Slots     [100.00%]
+
+
+but toplev would hang forever when it was called to analyze a program using pid:
+
+toplev.py -l1 -- --pid 29297
+Will measure complete system.
+Using level 1.
+Nodes Backend_Bound Frontend_Bound have errata HSD135
+perf stat -x\; -e
+'{cpu/event=0x3c,umask=0x0,any=1/,cpu/event=0xe,umask=0x1/,cpu/event=0x9c,umask=0x1/,cpu/event=0xd,umask=0x3,any=1,cmask=1/,cpu/event=0xc2,umask=0x2/}'
+-A -a --pid 29297
+
+
+this would hang forever even if the process with such pid end, this
+happens whatever the pid is pointing at is, a Java process or a Linux
+tool such as top.
+
+
+Am I doing something wrong? What does the right command look like to
+analyze a program using PID?
+
+
+Thanks in advance.
+
+Yours,
+Yijie
