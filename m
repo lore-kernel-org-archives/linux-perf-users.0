@@ -1,38 +1,43 @@
-From: fche@redhat.com (Frank Ch. Eigler)
-Subject: Re: perf software events broken in containers
-Date: Mon, 27 Mar 2017 12:10:14 -0400
-Message-ID: <y0mpoh2og49.fsf@fche.csb>
-References: <CAE40pddXy_vJ5Xd4eunsuYbnaqCDV2bJNqfsdLcMY3kvR-hqOg@mail.gmail.com>
-        <8c4186d0-bfbf-6f1a-c953-9859bf057856@redhat.com>
-        <CAE40pdd06QXckEMYfU63c=Zvrrn22A-sm-Sh37CymR5rpJZ57Q@mail.gmail.com>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: toplev would hang forever when analyzing a program with PID
+Date: Mon, 27 Mar 2017 13:35:38 -0700
+Message-ID: <874lyewj8l.fsf@firstfloor.org>
+References: <CADGfq7zQv_3B-vYkTi8p1SQ=xcjyp3cVBAGaL=P7-gUBobbDzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:60398 "EHLO mx1.redhat.com"
+Received: from mga02.intel.com ([134.134.136.20]:1363 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751124AbdC0QKQ (ORCPT
+        id S1751677AbdC0Ufk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2017 12:10:16 -0400
-In-Reply-To: <CAE40pdd06QXckEMYfU63c=Zvrrn22A-sm-Sh37CymR5rpJZ57Q@mail.gmail.com>
-        (Brendan Gregg's message of "Wed, 22 Mar 2017 12:59:22 -0700")
+        Mon, 27 Mar 2017 16:35:40 -0400
+In-Reply-To: <CADGfq7zQv_3B-vYkTi8p1SQ=xcjyp3cVBAGaL=P7-gUBobbDzg@mail.gmail.com>
+        (Yijie Shen's message of "Sun, 26 Mar 2017 22:07:44 +0800")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: William Cohen <wcohen@redhat.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Yijie Shen <henry.yijieshen@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
 
-
-brendan.d.gregg wrote:
-
-> [...]
->> stap -v -e 'probe kernel.function("idr_find").return {printf("%s %s 0x%x\n", pn(), $$parms$, $return)}'
->>
+Yijie Shen <henry.yijieshen@gmail.com> writes:
 >
-> Right, I've been doing that with ftrace/kprobes/bcc/BPF... Many of the
-> functions aren't visible, though, I suspect inlined.
+>
+> this would hang forever even if the process with such pid end, this
+> happens whatever the pid is pointing at is, a Java process or a Linux
+> tool such as top.
+>
+>
+> Am I doing something wrong? What does the right command look like to
+> analyze a program using PID?
 
-stap is comfortable with probing inlined functions, or
-generally any statements within functions.
+You're using SMT, so toplev has to enable global monitoring (-a),
+but that does not interact well with --pid in perf.
 
-See e.g. https://sourceware.org/systemtap/examples/#general/whythefail.stp
+That's more a perf bug .
 
-- FChE
+It would work in single thread mode or without SMT, or using intervals.
+
+toplev should probably print a warning in this case.
+
+-Andi
+
+>
