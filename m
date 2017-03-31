@@ -1,198 +1,241 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2] Allow user probes on versioned symbols
-Date: Fri, 31 Mar 2017 08:33:26 +0900
-Message-ID: <20170331083326.b9940f255387481b126e3ffc@kernel.org>
-References: <7938e6cb-ed96-5d47-f0ae-02490eaebfe5@us.ibm.com>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: How to sample memory usage cheaply?
+Date: Fri, 31 Mar 2017 14:06:28 +0200
+Message-ID: <2288291.HPAjuFhd8F@agathebauer>
+References: <20170330200404.GA1915@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart11491330.Pyb4GuixS8"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:33498 "EHLO mail.kernel.org"
+Received: from mail.kdab.com ([176.9.126.58]:59822 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934604AbdC3Xdh (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2017 19:33:37 -0400
-In-Reply-To: <7938e6cb-ed96-5d47-f0ae-02490eaebfe5@us.ibm.com>
+        id S932732AbdCaMGc (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 31 Mar 2017 08:06:32 -0400
+In-Reply-To: <20170330200404.GA1915@localhost>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: pc@us.ibm.com
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Benjamin King <benjaminking@web.de>
+Cc: linux-perf-users@vger.kernel.org
 
-On Thu, 30 Mar 2017 12:00:33 -0500
-Paul Clarke <pc@us.ibm.com> wrote:
+--nextPart11491330.Pyb4GuixS8
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-> Symbol versioning, as in glibc, results in symbols being defined as:
-> <real symbol>@[@]<version>
-> (Note that "@@" identifies a default symbol, in case the symbol name
-> is repeated.)
-> 
-> perf is currently unable to deal with this, and is unable to create
-> user probes at such symbols:
-> --
-> $ nm /lib/powerpc64le-linux-gnu/libpthread.so.0 | grep pthread_create
-> 0000000000008d30 t __pthread_create_2_1
-> 0000000000008d30 T pthread_create@@GLIBC_2.17
-> $ /usr/bin/sudo perf probe -v -x /lib/powerpc64le-linux-gnu/libpthread.so.0 pthread_create
-> probe-definition(0): pthread_create
-> symbol:pthread_create file:(null) line:0 offset:0 return:0 lazy:(null)
-> 0 arguments
-> Open Debuginfo file: /usr/lib/debug/lib/powerpc64le-linux-gnu/libpthread-2.19.so
-> Try to find probe point from debuginfo.
-> Probe point 'pthread_create' not found.
->     Error: Failed to add events. Reason: No such file or directory (Code: -2)
-> --
-> 
-> One is not able to specify the fully versioned symbol, either, due to
-> syntactic conflicts with other uses of "@" by perf:
-> --
-> $ /usr/bin/sudo perf probe -v -x /lib/powerpc64le-linux-gnu/libpthread.so.0 pthread_create@@GLIBC_2.17
-> probe-definition(0): pthread_create@@GLIBC_2.17
-> Semantic error :SRC@SRC is not allowed.
-> 0 arguments
->     Error: Command Parse Error. Reason: Invalid argument (Code: -22)
-> --
-> 
-> The attached patch ignores versioning for default symbols, thus
-> allowing probes to be created for these symbols:
-> --
-> $ /usr/bin/sudo ./perf probe -x /lib/powerpc64le-linux-gnu/libpthread.so.0 pthread_create
-> Added new event:
->     probe_libpthread:pthread_create (on pthread_create in /lib/powerpc64le-linux-gnu/libpthread-2.19.so)
-> 
-> You can now use it in all perf tools, such as:
-> 
->           perf record -e probe_libpthread:pthread_create -aR sleep 1
-> 
-> $ /usr/bin/sudo ./perf record -e probe_libpthread:pthread_create -aR ./test 2
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.052 MB perf.data (2 samples) ]
-> $ /usr/bin/sudo ./perf script
->               test  2915 [000] 19124.260729: probe_libpthread:pthread_create: (3fff99248d38)
->               test  2916 [000] 19124.260962: probe_libpthread:pthread_create: (3fff99248d38)
-> $ /usr/bin/sudo ./perf probe --del=probe_libpthread:pthread_create
-> Removed event: probe_libpthread:pthread_create
-> --
-> 
+On Donnerstag, 30. M=E4rz 2017 22:04:04 CEST Benjamin King wrote:
+> Hi,
+>=20
+> I'd like to get a big picture of where a memory hogging process uses
+> physical memory. I'm interested in call graphs, but in terms of Brendans
+> treatise (http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html),
+> I'd love to analyze page faults a bit before continuing with the more
+> expensive tracing of malloc and friends.
 
-The wrapper function name may be concerned since "map__*" is usually
-used as a method for struct map. However, as c++ or other object-oriented
-langages support, I think this case is considered as a namespace(e.g. 
-map::compare_symbol_names() ), since this comparation is applicable only
-for symbol name in map.
-I'm OK for this name.
+I suggest you try out my heaptrack tool. While "expensive" it does work qui=
+te=20
+well even for applications that allocate a lot of heap memory. It's super e=
+asy=20
+to use, and if it works you don't need to venture into low-level profiling=
+=20
+like you are describing below.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+https://www.kdab.com/heaptrack-v1-0-0-release/
 
-Thank you,
+If you are actually using low-level stuff directly, i.e. have a custom memo=
+ry=20
+pool implementation, heaptrack also offers an API similar to Valgrind such=
+=20
+that you can annotate your custom heap allocations.
 
+> My problem is that we mmap some readonly files more than once to save
+> memory, but each individual mapping creates page faults.
+>=20
+> This makes sense, but how can I measure physical memory properly, then?
+> Parsing the Pss-Rows in /proc/<pid>/smaps does work, but seems a bit clum=
+sy.
+> Is there a better way (e.g. with callstacks) to measure physical memory
+> growth for a process?
 
-> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
-> ---
-> Changes in v2:
-> - move logic from arch__compare_symbol_names to new map__compare_symbol_names
-> - call through from map__compare_symbol_names to arch__compare_symbol_names
-> - redirect uses of arch__compare_symbol_names
-> - send patch to LKML
-> 
->   tools/perf/util/auxtrace.c |  2 +-
->   tools/perf/util/map.c      | 21 +++++++++++++++++++++
->   tools/perf/util/map.h      |  3 ++-
->   tools/perf/util/symbol.c   |  4 ++--
->   4 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index c5a6e0b1..f3511a6 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -1875,7 +1875,7 @@ static bool dso_sym_match(struct symbol *sym, const char *name, int *cnt,
->   			  int idx)
+=46rom what I understand, wouldn't you get this by tracing sbrk + mmap with=
+ call=20
+stacks? Do note that file-backed mmaps can be shared across processes, so=20
+you'll have to take that into account as done for Pss. But in my experience=
+,=20
+when you want to improve a single application's memory consumption, it usua=
+lly=20
+boils down to non-shared heap memory anyways. I.e. sbrk and anon mmaps.
+
+But if you look at the callstacks for these syscalls, they usually point at=
+=20
+the obvious places (i.e. mempools), but you won't see what is _actually_ us=
+ing=20
+the memory of these pools. Heaptrack or massif is much better in that regar=
+d.
+
+Hope that helps, happy profiling!
+
+> PS:
+>  Here is some measurement with a leaky toy program. It uses a 1GB
+> zero-filled file and drops file system caches prior to the measurement to
+> encourage major page faults for the first mapping only. Does not work at
+> all: -----
+> $ gcc -O0 mmap_faults.c
+> $ fallocate -z -l $((1<<30)) 1gb_of_garbage.dat
+> $ sudo sysctl -w vm.drop_caches=3D3
+> vm.drop_caches =3D 3
+> $ perf stat -eminor-faults,major-faults ./a.out
+>=20
+>  Performance counter stats for './a.out':
+>=20
+>             327,726      minor-faults
+>                   1      major-faults
+> $ cat mmap_faults.c
+> #include <fcntl.h>
+> #include <sys/mman.h>
+> #include <unistd.h>
+>=20
+> #define numMaps 20
+> #define length 1u<<30
+> #define path "1gb_of_garbage.dat"
+>=20
+> int main()
+> {
+>   int sum =3D 0;
+>   for ( int j =3D 0; j < numMaps; ++j )
 >   {
->   	/* Same name, and global or the n'th found or any */
-> -	return !arch__compare_symbol_names(name, sym->name) &&
-> +	return !map__compare_symbol_names(name, sym->name) &&
->   	       ((!idx && sym->binding == STB_GLOBAL) ||
->   		(idx > 0 && ++*cnt == idx) ||
->   		idx < 0);
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 4f9a71c..90342ee 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -330,6 +330,27 @@ int __weak arch__compare_symbol_names(const char *namea, const char *nameb)
->   	return strcmp(namea, nameb);
+>     const char *result =3D
+>       (const char*)mmap( NULL, length, PROT_READ, MAP_PRIVATE,
+>           open( path, O_RDONLY ), 0 );
+>=20
+>     for ( int i =3D 0; i < length; i +=3D 4096 )
+>       sum +=3D result[ i ];
 >   }
->   
-> +int map__compare_symbol_names(const char *namea, const char *nameb)
-> +{
-> +	int rc;
-> +	const char *namea_versioning, *nameb_versioning;
-> +
-> +	namea_versioning = strstr(namea,"@@");
-> +	if (namea_versioning)
-> +		namea = strndup(namea,namea_versioning-namea);
-> +
-> +	nameb_versioning = strstr(nameb,"@@");
-> +	if (nameb_versioning)
-> +		nameb = strndup(nameb,nameb_versioning-nameb);
-> +
-> +	rc = arch__compare_symbol_names(namea, nameb);
-> +
-> +	if (namea_versioning) free((void *)namea);
-> +	if (nameb_versioning) free((void *)nameb);
-> +
-> +	return rc;
-> +}
-> +
->   struct symbol *map__find_symbol(struct map *map, u64 addr)
->   {
->   	if (map__load(map) < 0)
-> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> index abdacf8..aaad64d 100644
-> --- a/tools/perf/util/map.h
-> +++ b/tools/perf/util/map.h
-> @@ -130,13 +130,14 @@ struct thread;
->    */
->   #define __map__for_each_symbol_by_name(map, sym_name, pos)	\
->   	for (pos = map__find_symbol_by_name(map, sym_name);	\
-> -	     pos && arch__compare_symbol_names(pos->name, sym_name) == 0;	\
-> +	     pos && map__compare_symbol_names(pos->name, sym_name) == 0;	\
->   	     pos = symbol__next_by_name(pos))
->   
->   #define map__for_each_symbol_by_name(map, sym_name, pos)		\
->   	__map__for_each_symbol_by_name(map, sym_name, (pos))
->   
->   int arch__compare_symbol_names(const char *namea, const char *nameb);
-> +int map__compare_symbol_names(const char *namea, const char *nameb);
->   void map__init(struct map *map, enum map_type type,
->   	       u64 start, u64 end, u64 pgoff, struct dso *dso);
->   struct map *map__new(struct machine *machine, u64 start, u64 len,
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index dc93940..4fb9d275 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -411,7 +411,7 @@ static struct symbol *symbols__find_by_name(struct rb_root *symbols,
->   		int cmp;
->   
->   		s = rb_entry(n, struct symbol_name_rb_node, rb_node);
-> -		cmp = arch__compare_symbol_names(name, s->sym.name);
-> +		cmp = map__compare_symbol_names(name, s->sym.name);
->   
->   		if (cmp < 0)
->   			n = n->rb_left;
-> @@ -429,7 +429,7 @@ static struct symbol *symbols__find_by_name(struct rb_root *symbols,
->   		struct symbol_name_rb_node *tmp;
->   
->   		tmp = rb_entry(n, struct symbol_name_rb_node, rb_node);
-> -		if (arch__compare_symbol_names(tmp->sym.name, s->sym.name))
-> +		if (map__compare_symbol_names(tmp->sym.name, s->sym.name))
->   			break;
->   
->   		s = tmp;
-> -- 
-> 2.1.4
-> 
-> Regards,
-> Paul Clarke
-> 
+>   return sum;
+> }
+> -----
+> Shouldn't I see ~5 Million page faults (20GB/4K)?
+> Shouldn't I see more major page faults?
+> Same thing when garbage-file is filled from /dev/urandom
+> Even weirder when MAP_POPULATE'ing the file
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-user=
+s"
+> in the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+=2D-=20
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart11491330.Pyb4GuixS8
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE3MDMzMTEyMDYyOFowIwYJKoZIhvcNAQkEMRYEFNVotK2O8+a/8S9higfV2SRJTwhTMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAA38
+7Yf0ItL7tfxvK0LJTxfR13U2DS6RjUV6gicGCN6/7WVR4VQZmGqzHd2tq5yTc8k/eLlLeHKRGzbE
+Q4/46wQ/Gkgyl0t0Sfw0vzcnCYDg9zajtqhf1rm6GV+SmYZJtsCfpzO0zhEijb7M31CP9e9hsR79
+Q+qzeEHT/0WptyRUXUnVB/uMrtgpNSHBaGb4DU5DRHH0W9TJaItbb2tjPvobPTLOffSGzT8rjCKh
+c7+S1wC94cZF/MQNxwYz+MPUcTM47EhbDnKOKFI0bkkqYTIT4E8u5cd522YdrJnfXFu1pBEOnoL6
+qPlPBRHij2G/KYGqtnSemIcyK/ILT2s16coAAAAAAAA=
+
+
+--nextPart11491330.Pyb4GuixS8--
