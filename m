@@ -1,70 +1,138 @@
-From: Paul Clarke <pc@us.ibm.com>
-Subject: Re: [PATCH v3] Allow user probes on versioned symbols
-Date: Fri, 31 Mar 2017 14:38:11 -0500
-Message-ID: <095e1578-81c6-c62a-007f-1238445406a1@us.ibm.com>
-References: <e12df271-9336-28c0-7441-2c20c6824b86@us.ibm.com>
- <20170331173123.GA18286@kernel.org>
-Reply-To: pc@us.ibm.com
+From: Benjamin King <benjaminking@web.de>
+Subject: Re: How to sample memory usage cheaply?
+Date: Sat, 1 Apr 2017 09:41:12 +0200
+Message-ID: <20170401074112.GA8989@localhost>
+References: <20170330200404.GA1915@localhost>
+ <2288291.HPAjuFhd8F@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170331173123.GA18286@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mout.web.de ([217.72.192.78]:61070 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750827AbdDAHlQ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 1 Apr 2017 03:41:16 -0400
+Content-Disposition: inline
+In-Reply-To: <2288291.HPAjuFhd8F@agathebauer>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On 03/31/2017 12:31 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Mar 31, 2017 at 11:06:16AM -0500, Paul Clarke escreveu:
->> Symbol versioning, as in glibc, results in symbols being defined as:
->> <real symbol>@[@]<version>
->> (Note that "@@" identifies a default symbol, if the symbol name
->> is repeated.)
->>
->> perf is currently unable to deal with this, and is unable to create
->> user probes at such symbols:
+Hi!
+
+On Fri, Mar 31, 2017 at 02:06:28PM +0200, Milian Wolff wrote:
+>> I'd love to analyze page faults a bit before continuing with the more
+>> expensive tracing of malloc and friends.
 >
-> On top of what tree/branch should I try to apply this?
+>I suggest you try out my heaptrack tool.
 
-I worked from torvalds/linux.
+I did! Also the heap profiler from google perftools and a homegrown approach
+using uprobes on malloc, free, mmap and munmap. My bcc-fu is too weak to do
+me any good right now. The workload that I am working with takes a few hours
+to generate, however, so more overhead means a lot of latency to observe the
+effect of changes that I do.
 
-> Trying on acme/perf/core:
+I guess that the issue I am facing currently is a bit more fundamental, since I
+don't have a good way to trace/sample instances where my process is using a
+page of physical memory *for the first time*. Bonus points to detect when the
+use count on behalf of my process drops to zero.
 
-Pardon my ignorance, but where can I find that tree?
+I'd like to tell these events apart from instances where I am using the same
+physical page from more than one virtual page. It feels like there should be
+a way to do so, but I don't know how.
 
-> [acme@jouet linux]$ patch -p1 < /wb/1.patch
-> patching file tools/perf/util/auxtrace.c
-> Hunk #1 FAILED at 1875.
-[...]
+Also, the 'perf stat' output that I sent does not make much sense to me right
+now. For example, when I add MAP_POPULATE to the flags for mmap, I only see
+~40 minor page faults, which I do not understand at all.
 
-> Apart from that, you are not checking the return of strndup, that
-> however unlikely, can fail, so must be checked.
+>> This makes sense, but how can I measure physical memory properly, then?
+>> Parsing the Pss-Rows in /proc/<pid>/smaps does work, but seems a bit clumsy.
+>> Is there a better way (e.g. with callstacks) to measure physical memory
+>> growth for a process?
+>
+From what I understand, wouldn't you get this by tracing sbrk + mmap with call
+>stacks?
 
-It's in the middle of strcmp-type function, so all return values are valid.  Shall I emit a message and call exit()?
+No, not quite, since different threads in my process mmap the same file. This
+counts them twice in terms of virtual memory but I'm interested in the load
+on physical memory.
 
-> On the style front you sometimes add a space after commas, sometimes
-> not, please make sure you add one.
 
-Ack.
+> Do note that file-backed mmaps can be shared across processes, so
+>you'll have to take that into account as done for Pss.  But in my experience,
+>when you want to improve a single application's memory consumption, it usually
+>boils down to non-shared heap memory anyways. I.e. sbrk and anon mmaps.
 
-> But apart from those problems, I think that one should be able to ask
-> for a versioned symbol, to probe just apps using that specific version,
+True, and that's what I'm after, eventually, but the multiple mappings skew
+the picture a bit right now.
 
-I agree, but wasn't trying to tackle that at the moment.  I can look into it, though.
+To make progress, I need to figure out how to properly measure physical
+memory usage more.
 
-> for instance, we should consider the whole name as two functions, which
-> in fact, they are, no?
+>But if you look at the callstacks for these syscalls, they usually point at
+>the obvious places (i.e. mempools), but you won't see what is _actually_ using
+>the memory of these pools. Heaptrack or massif is much better in that regard.
 
-I'm not sure I understand what you mean here.  Do you mean we should set a probe at every version of a given symbol name?  For example, if there are symbols:
-a@@V2
-a@V1.1
-a@V1
+>
+>Hope that helps, happy profiling!
 
-...for a request to set a probe at "a", we'd actually set a probe at all 3?
+Thanks,
+  Benjamin
 
-> Additionaly, I can't reproduce your problem here, on x86_64:
 
-I just cloned from acme/linux, and will rebase to there, if that's the best tree.
-
-PC
+>
+>> PS:
+>>  Here is some measurement with a leaky toy program. It uses a 1GB
+>> zero-filled file and drops file system caches prior to the measurement to
+>> encourage major page faults for the first mapping only. Does not work at
+>> all: -----
+>> $ gcc -O0 mmap_faults.c
+>> $ fallocate -z -l $((1<<30)) 1gb_of_garbage.dat
+>> $ sudo sysctl -w vm.drop_caches=3
+>> vm.drop_caches = 3
+>> $ perf stat -eminor-faults,major-faults ./a.out
+>>
+>>  Performance counter stats for './a.out':
+>>
+>>             327,726      minor-faults
+>>                   1      major-faults
+>> $ cat mmap_faults.c
+>> #include <fcntl.h>
+>> #include <sys/mman.h>
+>> #include <unistd.h>
+>>
+>> #define numMaps 20
+>> #define length 1u<<30
+>> #define path "1gb_of_garbage.dat"
+>>
+>> int main()
+>> {
+>>   int sum = 0;
+>>   for ( int j = 0; j < numMaps; ++j )
+>>   {
+>>     const char *result =
+>>       (const char*)mmap( NULL, length, PROT_READ, MAP_PRIVATE,
+>>           open( path, O_RDONLY ), 0 );
+>>
+>>     for ( int i = 0; i < length; i += 4096 )
+>>       sum += result[ i ];
+>>   }
+>>   return sum;
+>> }
+>> -----
+>> Shouldn't I see ~5 Million page faults (20GB/4K)?
+>> Shouldn't I see more major page faults?
+>> Same thing when garbage-file is filled from /dev/urandom
+>> Even weirder when MAP_POPULATE'ing the file
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-perf-users"
+>> in the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>-- 
+>Milian Wolff | milian.wolff@kdab.com | Software Engineer
+>KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+>Tel: +49-30-521325470
+>KDAB - The Qt Experts
