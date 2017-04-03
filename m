@@ -1,128 +1,68 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3] Allow user probes on versioned symbols
-Date: Mon, 3 Apr 2017 11:46:58 -0300
-Message-ID: <20170403144658.GA3744@kernel.org>
-References: <e12df271-9336-28c0-7441-2c20c6824b86@us.ibm.com>
- <20170331173123.GA18286@kernel.org>
- <095e1578-81c6-c62a-007f-1238445406a1@us.ibm.com>
+From: Benjamin King <benjaminking@web.de>
+Subject: Re: How to sample memory usage cheaply?
+Date: Mon, 3 Apr 2017 21:09:50 +0200
+Message-ID: <20170403190950.GA29118@localhost>
+References: <20170330200404.GA1915@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:47904 "EHLO mail.kernel.org"
+Received: from mout.web.de ([212.227.17.12]:50604 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751496AbdDCOrE (ORCPT
+        id S1751282AbdDCTJx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2017 10:47:04 -0400
+        Mon, 3 Apr 2017 15:09:53 -0400
+Received: from localhost ([31.19.65.168]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0McnuP-1cdrSQ17g1-00Hyo8 for
+ <linux-perf-users@vger.kernel.org>; Mon, 03 Apr 2017 21:09:51 +0200
 Content-Disposition: inline
-In-Reply-To: <095e1578-81c6-c62a-007f-1238445406a1@us.ibm.com>
+In-Reply-To: <20170330200404.GA1915@localhost>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Paul Clarke <pc@us.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Em Fri, Mar 31, 2017 at 02:38:11PM -0500, Paul Clarke escreveu:
-> On 03/31/2017 12:31 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Mar 31, 2017 at 11:06:16AM -0500, Paul Clarke escreveu:
-> > > Symbol versioning, as in glibc, results in symbols being defined as:
-> > > <real symbol>@[@]<version>
-> > > (Note that "@@" identifies a default symbol, if the symbol name
-> > > is repeated.)
-> > > 
-> > > perf is currently unable to deal with this, and is unable to create
-> > > user probes at such symbols:
-> > 
-> > On top of what tree/branch should I try to apply this?
-> 
-> I worked from torvalds/linux.
-> 
-> > Trying on acme/perf/core:
-> 
-> Pardon my ignorance, but where can I find that tree?
+On Thu, Mar 30, 2017 at 10:04:04PM +0200, Benjamin King wrote:
 
-see below, but I think you got it already :-)
- 
-> > [acme@jouet linux]$ patch -p1 < /wb/1.patch
-> > patching file tools/perf/util/auxtrace.c
-> > Hunk #1 FAILED at 1875.
-> [...]
-> 
-> > Apart from that, you are not checking the return of strndup, that
-> > however unlikely, can fail, so must be checked.
- 
-> It's in the middle of strcmp-type function, so all return values are
-> valid.  Shall I emit a message and call exit()?
+Hi,
 
-See below for an alternative on how to implement this
- 
-> > On the style front you sometimes add a space after commas, sometimes
-> > not, please make sure you add one.
- 
-> Ack.
- 
-> > But apart from those problems, I think that one should be able to ask
-> > for a versioned symbol, to probe just apps using that specific version,
- 
-> I agree, but wasn't trying to tackle that at the moment.  I can look into it, though.
- 
-> > for instance, we should consider the whole name as two functions, which
-> > in fact, they are, no?
- 
-> I'm not sure I understand what you mean here.  Do you mean we should set a probe at every version of a given symbol name?  For example, if there are symbols:
-> a@@V2
-> a@V1.1
-> a@V1
- 
-> ...for a request to set a probe at "a", we'd actually set a probe at all 3?
+I learned a bit more about observing memory with perf. If this is not the
+right place to discuss this any more, just tell me to shut up :-)
 
-I think that we should just probe the default for that symbol and have a
-way to probe all of them, perhaps using the wildcard, i.e.:
+wrapping this up a bit:
+>I'd like to get a big picture of where a memory hogging process uses physical
+>memory. I'm interested in call graphs, [...] I'd love to
+>analyze page faults
 
-[root@jouet linux]# nm /lib64/libpthread-2.24.so  | grep ' pthread_cond_timedwait'
-000000000000dd90 T pthread_cond_timedwait@GLIBC_2.2.5
-000000000000d6e0 T pthread_cond_timedwait@@GLIBC_2.3.2
-[root@jouet linux]#
+I have learned that first use of a physical page is called "page allocation",
+which can be traced via the event kmem:mm_page_alloc. This is the pyhsical
+analogue of and different from "page faults" that happen in virtual memory.
 
-  # perf probe -x /lib64/libpthread-2.24.so pthread_cond_timedwait
+Maping a file with MAP_POPULATE after dropping filesystem caches (sysctl -w
+vm.drop_caches=3) will show the right number in kmem:mm_page_alloc, namely
+the size/4K. 4K is the page size on my system.
 
-should be equivalent to:
+If I do the same again without dropping caches in between, mm_page_alloc does
+not show the same number, but rather the number of pages it takes to hold the
+page table entries. This is nice and fairly complete, but I still hope to
+find a way to observe when a page from the filesystem cache is referenced for
+the first time from my process. This would allow me to do without the cache
+dropping.
 
-  # perf probe -x /lib64/libpthread-2.24.so pthread_cond_timedwait@@GLIBC_2.3.2
+Page faults from virtual memory are more opaque to me. They only seem to be
+counted when the system did not prepare the process via prefetching. For
+example, MAP_POPULATE'd mappings will not count towards page faults, neither
+minor nor major ones.
 
-Which matches how these versioned symbols are resolved by the linker,
-no?
+To control some of the prefetching, there is a debugfs knob called
+/sys/kernel/debug/fault_around_bytes, but reducing this to the minimum on my
+machine does not produce a page fault number that I could easily explain, at
+least not in the MAP_POPULATE case. It might work better when actually
+reading data from the mapped file.
 
-I.e. when 'pthread_cond_timedwait' is specified and the symbol table
-lookup fails, I think we should re-lookup for
-'pthread_cond_timedwait@@*', i.e. we should have a
-symbol__find_default_by_name(), which will take the
-"pthread_cond_timedwait" and use a symbol comparison using
-strncmp(strlen(key)), matching, should then look at right after the
-common part looking for the double @@.
+Anticipating page faults and preventing them proactively is a nice service
+from the OS, but I would be delighted if there was a way to trace this as
+well, similar to how mm_page_alloc will count each and every pyhsical
+allocation.  This would make page faults more useful as a poor man's memory
+tracker.
 
-Perhaps we should somehow mark a struct dso as being versioned, i.e.
-having symbols using @@, so that we speed up the search and don't try to
-look for such symbols where there are none.
-
-And if we mark the DSO as versioned, perhaps we can just one search
-using both strcmp and, not matching, doing the strncmp +
-strcmp(strlen(key) + 1, "@@") thing, no?
- 
-> > Additionaly, I can't reproduce your problem here, on x86_64:
-> 
-> I just cloned from acme/linux, and will rebase to there, if that's the best tree.
-
-It is, to be precise:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-
-Right now it is the same as the next best thing to do perf development,
-the tip tree:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-
-You should try, on both, to use the perf/urgent branch if you think this
-is a bug fix that should go upstream ASAP, or perf/core, if it is a new
-feature or a fix for something introduced during the current development
-cycle, i.e. poised to be merged in the next Linus Torvalds merge window.
-
-- Arnaldo
+Cheers,
+  Benjamin
