@@ -1,68 +1,72 @@
-From: Benjamin King <benjaminking@web.de>
-Subject: Re: How to sample memory usage cheaply?
-Date: Mon, 3 Apr 2017 21:09:50 +0200
-Message-ID: <20170403190950.GA29118@localhost>
-References: <20170330200404.GA1915@localhost>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3] Allow user probes on versioned symbols
+Date: Tue, 4 Apr 2017 23:18:02 +0900
+Message-ID: <20170404231802.711ac3e3346fa786259ddcde@kernel.org>
+References: <e12df271-9336-28c0-7441-2c20c6824b86@us.ibm.com>
+        <20170331173123.GA18286@kernel.org>
+        <095e1578-81c6-c62a-007f-1238445406a1@us.ibm.com>
+        <20170403144658.GA3744@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.17.12]:50604 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751282AbdDCTJx (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2017 15:09:53 -0400
-Received: from localhost ([31.19.65.168]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0McnuP-1cdrSQ17g1-00Hyo8 for
- <linux-perf-users@vger.kernel.org>; Mon, 03 Apr 2017 21:09:51 +0200
-Content-Disposition: inline
-In-Reply-To: <20170330200404.GA1915@localhost>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170403144658.GA3744@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Mar 30, 2017 at 10:04:04PM +0200, Benjamin King wrote:
+On Mon, 3 Apr 2017 11:46:58 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Hi,
+> > > But apart from those problems, I think that one should be able to ask
+> > > for a versioned symbol, to probe just apps using that specific version,
+>  
+> > I agree, but wasn't trying to tackle that at the moment.  I can look into it, though.
+>  
+> > > for instance, we should consider the whole name as two functions, which
+> > > in fact, they are, no?
+>  
+> > I'm not sure I understand what you mean here.  Do you mean we should set a probe at every version of a given symbol name?  For example, if there are symbols:
+> > a@@V2
+> > a@V1.1
+> > a@V1
+>  
+> > ...for a request to set a probe at "a", we'd actually set a probe at all 3?
+> 
+> I think that we should just probe the default for that symbol and have a
+> way to probe all of them, perhaps using the wildcard, i.e.:
+> 
+> [root@jouet linux]# nm /lib64/libpthread-2.24.so  | grep ' pthread_cond_timedwait'
+> 000000000000dd90 T pthread_cond_timedwait@GLIBC_2.2.5
+> 000000000000d6e0 T pthread_cond_timedwait@@GLIBC_2.3.2
+> [root@jouet linux]#
+> 
+>   # perf probe -x /lib64/libpthread-2.24.so pthread_cond_timedwait
+> 
+> should be equivalent to:
+> 
+>   # perf probe -x /lib64/libpthread-2.24.so pthread_cond_timedwait@@GLIBC_2.3.2
+> 
+> Which matches how these versioned symbols are resolved by the linker,
+> no?
+> 
+> I.e. when 'pthread_cond_timedwait' is specified and the symbol table
+> lookup fails, I think we should re-lookup for
+> 'pthread_cond_timedwait@@*', i.e. we should have a
+> symbol__find_default_by_name(), which will take the
+> "pthread_cond_timedwait" and use a symbol comparison using
+> strncmp(strlen(key)), matching, should then look at right after the
+> common part looking for the double @@.
 
-I learned a bit more about observing memory with perf. If this is not the
-right place to discuss this any more, just tell me to shut up :-)
+Hm, this 'fallback'process sounds good idea to me.
+BTW, how would we support other SYMBOL@VERSION, since we already
+use '@' for specifying source code?
+One possible way is to support it directly in perf-probe. If it
+failed to find probe point from dwarf, try to find from symbol
+map by using '@VERSION' suffix.
 
-wrapping this up a bit:
->I'd like to get a big picture of where a memory hogging process uses physical
->memory. I'm interested in call graphs, [...] I'd love to
->analyze page faults
+Thank you,
 
-I have learned that first use of a physical page is called "page allocation",
-which can be traced via the event kmem:mm_page_alloc. This is the pyhsical
-analogue of and different from "page faults" that happen in virtual memory.
-
-Maping a file with MAP_POPULATE after dropping filesystem caches (sysctl -w
-vm.drop_caches=3) will show the right number in kmem:mm_page_alloc, namely
-the size/4K. 4K is the page size on my system.
-
-If I do the same again without dropping caches in between, mm_page_alloc does
-not show the same number, but rather the number of pages it takes to hold the
-page table entries. This is nice and fairly complete, but I still hope to
-find a way to observe when a page from the filesystem cache is referenced for
-the first time from my process. This would allow me to do without the cache
-dropping.
-
-Page faults from virtual memory are more opaque to me. They only seem to be
-counted when the system did not prepare the process via prefetching. For
-example, MAP_POPULATE'd mappings will not count towards page faults, neither
-minor nor major ones.
-
-To control some of the prefetching, there is a debugfs knob called
-/sys/kernel/debug/fault_around_bytes, but reducing this to the minimum on my
-machine does not produce a page fault number that I could easily explain, at
-least not in the MAP_POPULATE case. It might work better when actually
-reading data from the mapped file.
-
-Anticipating page faults and preventing them proactively is a nice service
-from the OS, but I would be delighted if there was a way to trace this as
-well, similar to how mm_page_alloc will count each and every pyhsical
-allocation.  This would make page faults more useful as a poor man's memory
-tracker.
-
-Cheers,
-  Benjamin
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
