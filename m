@@ -1,72 +1,80 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4] tools/perf: Allow user probes on versioned symbols
-Date: Tue, 11 Apr 2017 09:00:02 +0900
-Message-ID: <20170411090002.e74f1e80d98277b3a3f93278@kernel.org>
-References: <a459fae5-19e8-207b-6ec0-addd39b6417d@us.ibm.com>
-        <20170410221102.0a9f91d0d11aa5665e4166a3@kernel.org>
-        <87285133-a06b-da22-2737-4cc6bc0cdade@us.ibm.com>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: perf sampling frequency drops after some record rounds?
+Date: Tue, 11 Apr 2017 15:49:06 +0200
+Message-ID: <14226027.icvnRACTdJ@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:56840 "EHLO mail.kernel.org"
+Received: from mail.kdab.com ([176.9.126.58]:37612 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751861AbdDKAAJ (ORCPT
+        id S1752232AbdDKNtI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2017 20:00:09 -0400
-In-Reply-To: <87285133-a06b-da22-2737-4cc6bc0cdade@us.ibm.com>
+        Tue, 11 Apr 2017 09:49:08 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: pc@us.ibm.com
-Cc: LKML <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Perf Users <linux-perf-users@vger.kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, Nate Rogers <nate.rogers@kdab.com>
 
-On Mon, 10 Apr 2017 09:53:48 -0500
-Paul Clarke <pc@us.ibm.com> wrote:
-> >> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> >> index 5245d2f..bde2100 100644
-> >> --- a/tools/perf/util/symbol.h
-> >> +++ b/tools/perf/util/symbol.h
-> >> @@ -348,8 +348,17 @@ void arch__sym_update(struct symbol *s, GElf_Sym *sym);
-> >>   #define SYMBOL_A 0
-> >>   #define SYMBOL_B 1
-> >>
-> >> +int arch__compare_symbol_names(const char *namea, const char *nameb);
-> >> +int arch__compare_symbol_names_n(const char *namea, const char *nameb,
-> >> +				 unsigned int n);
-> >>   int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
-> >>
-> >> +#define SYMBOLS__TAG_INCLUDE_NONE 0
-> >> +#define SYMBOLS__TAG_INCLUDE_DEFAULT_ONLY 1
-> >
-> > Hmm, even if you like to pass an obvious flag, these should be
-> > defined by enum, and please choose simpler and clear flag name.
-> >
-> > E.g.
-> > enum {
-> > 	SYMBOLS__COMP_WITH_TAG,
-> > 	SYMBOLS__COMP_WITHOUT_TAG,
-> > };
-> 
-> Earlier in this thread, we discussed supporting non-default tagged symbols (those tagged with "@version").  To allow for that, I was thinking of these three cases:
-> - SYMBOLS__TAG_INCLUDE_NONE: ignore all tagged symbols (the current behavior)
-> - SYMBOLS__TAG_INCLUDE_DEFAULT_ONLY:  match tagged symbols when tagged as default ("@@"; added with this patch)
-> - SYMBOLS__TAG_INCLUDE_ALL:  match all tagged symbols ("@" and "@@"; future)
+Hello all,
 
-Ah, I see now.
+a colleague of mine (CC'ed) is encountering a strange issue with perf from 
+Ubuntu 16.04 running on a Thinkpad P50 with Intel(R) Core(TM) i7-6700HQ CPU @ 
+2.60GHz on 4.4.0-72-generic with perf version 4.4.49.
 
-> For the names of the enums, I chose "SYMBOLS__TAG..." to put it first in the SYMBOLS namespace, and second in a "TAG" sub-namespace.
+For him, the sampling frequency drops dramatically after some successful 
+records, making perf record essentially unusable afterwards:
 
-For the namespace, we should use same namespase as enum's name.
+First, everything is nice and peachy:
 
-> I'm happy to fix the discrepancy with signed/unsigned by changing to enum.
-> 
-> Let me know what enum names are preferred, given the above discussion, and I'll post a new patch.
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 20 times to write data ]
+[ perf record: Captured and wrote 4.926 MB perf.data (613 samples) ]
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 19 times to write data ]
+[ perf record: Captured and wrote 4.734 MB perf.data (591 samples) ]
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 19 times to write data ]
+[ perf record: Captured and wrote 4.750 MB perf.data (591 samples) ]
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 20 times to write data ]
+[ perf record: Captured and wrote 4.766 MB perf.data (593 samples) ]
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 19 times to write data ]
+[ perf record: Captured and wrote 4.750 MB perf.data (591 samples) ]
 
-OK, then what about enum symbol_tag and use "SYMBOL_TAG__" for namespace?
+But then, suddenly:
 
-Thank you,
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.082 MB perf.data (10 samples) ]
+Tr0g@PC:~$ perf record --call-graph dwarf -F 999 ./cpp-inlining
+6.66491e+16
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.082 MB perf.data (10 samples) ]
 
+dmesg only shows:
 
+[28449.132447] perf interrupt took too long (2510 > 2500), lowering 
+kernel.perf_event_max_sample_rate to 50000
 
+But that should still be large enough to encompass the above. Also, increasing 
+that value to, say, 100000 does not help this situation. The only known 
+workaround is to restart the machine to make it work again.
+
+Is this a known kernel bug in that version? Anything he can try out to fix 
+this situation? Anything he could do, other than restarting this machine, to 
+bring back the usable sampling frequency?
+
+Thanks
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
