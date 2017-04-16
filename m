@@ -1,75 +1,55 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v5] Allow user probes on versioned symbols.
-Date: Thu, 13 Apr 2017 15:11:39 -0300
-Message-ID: <20170413181139.GU3275@kernel.org>
-References: <967814e0-0d5a-4970-38d8-04d7dae9d5b1@us.ibm.com>
- <20170413112020.8c98e0a082ad821a43d968c3@kernel.org>
- <58e0c059-5f7f-b763-4e97-c0f785dfdb69@us.ibm.com>
+From: <redbeardcharters@hotmail.com>
+Subject: (unknown)
+Date: Sun, 16 Apr 2017 15:48:57 -0000
+Message-ID: <149235773710.20711.18078230360230612277@une.net.co>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="EMAIL_387722751_linux-perf-users.zip"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:38860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753118AbdDMSLo (ORCPT
+Received: from static-181-143-12-186.une.net.co ([181.143.12.186]:41536 "HELO
+        une.net.co" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1756106AbdDPPtB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2017 14:11:44 -0400
-Content-Disposition: inline
-In-Reply-To: <58e0c059-5f7f-b763-4e97-c0f785dfdb69@us.ibm.com>
+        Sun, 16 Apr 2017 11:49:01 -0400
+Subject: 
+Content-Disposition: attachment
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Paul Clarke <pc@us.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
 
-Em Thu, Apr 13, 2017 at 10:40:50AM -0500, Paul Clarke escreveu:
-> On 04/12/2017 09:20 PM, Masami Hiramatsu wrote:
-> > On Wed, 12 Apr 2017 09:41:51 -0500
-> > Paul Clarke <pc@us.ibm.com> wrote:
-> > >   static struct symbol *symbols__find_by_name(struct rb_root *symbols,
-> > > -					    const char *name)
-> > > +					    const char *name,
-> > > +					    unsigned int includes)
-> > 
-> > Here, you might miss replacing this 'unsigned int' with enum.
-> > (actually, enum is equal to int, not unsigned int)
-> 
-> (Ugh.) My bad. Will fix.
-> 
-> > > +enum symbols_tag_includes {
-> > > +	SYMBOLS_TAG__INCLUDE_NONE,
-> > > +	SYMBOLS_TAG__INCLUDE_DEFAULT_ONLY
-> > > +};
-> > 
-> > BTW, would we need such 's' for plural and third person singular for type name?
-> > And also, you should use enum type name for prefix so that other developers
-> > easily find the definition of enumeration, e.g.
-> > 
-> > enum symbol_tag_include {
-> > 	SYMBOL_TAG_INCLUDE__NONE = 0,
-> > 	SYMBOL_TAG_INCLUDE__DEFAULT_ONLY
-> > };
- 
-> I was thinking the top-level namespace would be "symbols", because we
-
-yeah, we have both namespaces: symbols__ and symbol__, the first for
-operations on rbtrees of the later, for instance, from symbol.h:
-
-void symbol__delete(struct symbol *sym);
-void symbols__delete(struct rb_root *symbols);
-
-symbols__delete() will call symbol__delete() for each entry in that
-rbtree.
-
-> are not necessarily working with a single symbol.  Secondary namespace
-> would be "tag", since this enum is very specific to tags.  Then, the
-> actions are whether to "include none (of tagged symbols)" or "include
-> only symbols tagged as default".
- 
-> I'm fine with your suggestion, though, and will submit a new patch incorporating that soon.
-> 
-> Regards,
-> PC
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+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
+AAAA
