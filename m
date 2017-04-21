@@ -1,38 +1,26 @@
-From: Paul Clarke <pc@us.ibm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 Subject: Re: [PATCH v6] Allow user probes on versioned symbols
-Date: Thu, 20 Apr 2017 06:38:01 -0500
-Message-ID: <c84cd8a7-27bb-14a8-2ff7-719e03c89273@us.ibm.com>
+Date: Fri, 21 Apr 2017 22:59:05 +0900
+Message-ID: <20170421225905.d3d08ba17a341ebfcfdae502@kernel.org>
 References: <27b85625-3134-9d2e-8501-36f4c2e4dbf5@us.ibm.com>
-Reply-To: pc@us.ibm.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44016 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S944911AbdDTLiH (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:51176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1161249AbdDUN7R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Apr 2017 07:38:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id v3KBY3ST098632
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2017 07:38:06 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 29xaqksu9p-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2017 07:38:06 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <pc@us.ibm.com>;
-        Thu, 20 Apr 2017 07:38:05 -0400
+        Fri, 21 Apr 2017 09:59:17 -0400
 In-Reply-To: <27b85625-3134-9d2e-8501-36f4c2e4dbf5@us.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: pc@us.ibm.com
+Cc: LKML <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
 
-ping
+On Thu, 13 Apr 2017 12:03:13 -0500
+Paul Clarke <pc@us.ibm.com> wrote:
 
-On 04/13/2017 12:03 PM, Paul Clarke wrote:
 > Symbol versioning, as in glibc, results in symbols being defined as:
 > <real symbol>@[@]<version>
 > (Note that "@@" identifies a default symbol, if the symbol name
@@ -84,6 +72,14 @@ On 04/13/2017 12:03 PM, Paul Clarke wrote:
 > $ /usr/bin/sudo ./perf probe --del=probe_libpthread:pthread_create
 > Removed event: probe_libpthread:pthread_create
 > --
+
+Sorry for replying later.
+Looks very good to me :)
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks!
+
 > 
 > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
 > ---
@@ -312,4 +308,13 @@ On 04/13/2017 12:03 PM, Paul Clarke wrote:
 >   /* structure containing an SDT note's info */
 >   struct sdt_note {
 >   	char *name;			/* name of the note*/
+> -- 
+> 2.1.4
 > 
+> Regards,
+> PC
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
