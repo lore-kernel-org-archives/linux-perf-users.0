@@ -1,46 +1,43 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v6] Allow user probes on versioned symbols
-Date: Mon, 24 Apr 2017 13:34:23 -0300
-Message-ID: <20170424163423.GD2742@kernel.org>
-References: <27b85625-3134-9d2e-8501-36f4c2e4dbf5@us.ibm.com>
+From: Justin Thomas <justin.thomas1@gmail.com>
+Subject: Re: Majordomo results: Re: Confirmation for subscribe linux-per
+Date: Mon, 24 Apr 2017 13:36:35 -0700
+Message-ID: <CAOX5HaCN54f_znzLVoTgxBdM4Scz3jjjBeObE+_6MuMeNGtUzg@mail.gmail.com>
+References: <S977312AbdDXUEL/20170424200411Z+35176@vger.kernel.org>
+ <CAOX5HaBep+=CjGrb9H9EKcE=Biz-YqdVWbDmtBWyhChXbsF2tQ@mail.gmail.com> <CAOX5HaBVNdzQNRpSmkrxi3UsC03sMkyFLY7kz46w7BPtWVkYuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:48102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S974732AbdDXQei (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2017 12:34:38 -0400
-Content-Disposition: inline
-In-Reply-To: <27b85625-3134-9d2e-8501-36f4c2e4dbf5@us.ibm.com>
+Received: from mail-qk0-f175.google.com ([209.85.220.175]:35009 "EHLO
+        mail-qk0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S977621AbdDXUgg (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 24 Apr 2017 16:36:36 -0400
+Received: by mail-qk0-f175.google.com with SMTP id f76so48507330qke.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2017 13:36:36 -0700 (PDT)
+In-Reply-To: <CAOX5HaBVNdzQNRpSmkrxi3UsC03sMkyFLY7kz46w7BPtWVkYuQ@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Paul Clarke <pc@us.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 13, 2017 at 12:03:13PM -0500, Paul Clarke escreveu:
-> v4:
-> - rebased to acme/perf/core
+Segfault when running perf record with cap_add SYS_ADMIN inside a
+docker container:
 
-Are you sure?
+ root@903... $ perf record -a -g
+perf: Segmentation fault
+Obtained 10 stack frames.
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x1efa44) [0x563c94b74a44]
+/lib/x86_64-linux-gnu/libc.so.6(+0x357f0) [0x7fcefe0e27f0]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x184bb0) [0x563c94b09bb0]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x11b71a) [0x563c94aa071a]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x11c8a1) [0x563c94aa18a1]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x177633) [0x563c94afc633]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x10a71e) [0x563c94a8f71e]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf1) [0x7fcefe0cd3f1]
+/usr/lib/linux-tools/4.10.0-19-generic/perf(+0x10a84a) [0x563c94a8f84a]
+[(nil)]
+Segmentation fault (core dumped)
 
-[acme@jouet linux]$ patch -p1 < /wb/1.patch 
-patching file tools/perf/arch/powerpc/util/sym-handling.c
-Hunk #1 FAILED at 52.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/arch/powerpc/util/sym-handling.c.rej
-patching file tools/perf/util/map.c
-Hunk #1 FAILED at 325.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/map.c.rej
-patching file tools/perf/util/map.h
-Hunk #1 FAILED at 130.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/map.h.rej
-patching file tools/perf/util/symbol.c
-Hunk #1 FAILED at 87.
-Hunk #2 FAILED at 396.
-Hunk #3 FAILED at 411.
-Hunk #4 FAILED at 424.
-Hunk #5 FAILED at 500.
-5 out of 5 hunks FAILED -- saving rejects to file tools/perf/util/symbol.c.rej
-patching file tools/perf/util/symbol.h
-Hunk #1 FAILED at 348.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/symbol.h.rej
-[acme@jouet linux]$ 
+setting: $ sudo sh -c " echo 0 > /proc/sys/kernel/kptr_restrict" on
+the host causes it to work.
+
+Also tried on kernel version 4.8, but don't remember which minor rev.
