@@ -1,57 +1,60 @@
-From: Taeung Song <treeze.taeung@gmail.com>
-Subject: Re: perf events (node-loads, node-load-misses, ...)
-Date: Tue, 2 May 2017 08:29:37 +0900
-Message-ID: <11b191d5-5322-36bb-16e6-d589485a6e5b@gmail.com>
-References: <CAC8SZUvZKWkniGBZE_afeNPJT2_9OnKBOudHWHJ_aHNmCbs1Uw@mail.gmail.com>
+From: "Jin, Yao" <yao.jin@linux.intel.com>
+Subject: Re: [PATCH] perf report: distinguish between inliners in the same
+ function
+Date: Tue, 2 May 2017 10:11:14 +0800
+Message-ID: <ec980cd2-f595-3ed5-5276-4d687480e621@linux.intel.com>
+References: <20170427215950.6649-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f52.google.com ([74.125.83.52]:34232 "EHLO
-        mail-pg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750813AbdEAX3l (ORCPT
+Received: from mga06.intel.com ([134.134.136.31]:57525 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750729AbdEBCLR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 May 2017 19:29:41 -0400
-Received: by mail-pg0-f52.google.com with SMTP id v1so51413752pgv.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2017 16:29:40 -0700 (PDT)
-In-Reply-To: <CAC8SZUvZKWkniGBZE_afeNPJT2_9OnKBOudHWHJ_aHNmCbs1Uw@mail.gmail.com>
+        Mon, 1 May 2017 22:11:17 -0400
+In-Reply-To: <20170427215950.6649-1-milian.wolff@kdab.com>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Hyojong Kim <hkim606@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>, Linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 
-Hi Hyojong,
 
-On 05/02/2017 02:03 AM, Hyojong Kim wrote:
-> Hello,
+SNIP
+
+> ~~~~~
+> $ perf report --stdio --inline --no-children
+> Failed to open [ext4], continuing without symbols
+> # To display the perf.data header info, please use --header/--header-only
+> options.
+> #
+> #
+> # Total Lost Samples: 0
+> #
+> # Samples: 499  of event 'cycles'
+> # Event count (approx.): 329354953
+> #
+> # Overhead  Command    Shared Object      Symbol
+> # ........  .........  .................  ................................
+> #
+>      96.70%  ex_random  ex_random          [.] main
+> |
+>              ---main
+>                 __libc_start_main
+>                 _start
+> ...
+> ~~~~~
 >
-> My processor has several hardware cache events, of which I am
-> interested in node-loads, node-load-misses, node-stores,
-> node-store-misses. I think it is kind of obvious that node-loads and
-> node-stores represent references to local memory (memory physically
-> attached to a processor package). However, I have no clue as to what
-> the rest represents. I have some theory that "node-load-misses"
-> represent the number of misses in local memory, or the number of
-> accesses to disk. Based on the profiled results I have
-> (page-faults:16M << node-load-misses+node-store-misses:748M), however,
-> this cannot be the raw number of disk accesses. Maybe some kind of
-> piggybacking mechanism (by some MSHR kind of structure in memory?)
-> could be the reason behind this discrepancy, but no clue. If anyone
-> has some idea on this, please share it with me.
->
-> I appreciate your help in advance!
->
-> Sincerely,
-> - Hyojong
+> Note how no inlined frames are actually shown, because the first
+> sample in main points to an IP that does not correspond to any
+> inlined frames.
 
-Could I detailedly know your test case ?
-(e.g options of perf-record, perf.data, test environment, etc)
+perf report -g address --inline --stdio
 
-Of course, you used the perf events (i.e. node-load-misses, etc),
-but if you show the correct command and options when using perf-record
-and share a link of the perf.data as the profiled results,
-it'd be more easy to investigate this situation.
+Did you try with "-g address" option? It's sorted by address.
 
+But anyway, I like this patch. It works well in my test.
 
-Thanks,
-Taeung
+Thanks
+Jin Yao
