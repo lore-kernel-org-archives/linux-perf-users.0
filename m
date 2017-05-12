@@ -1,71 +1,188 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf report: don't crash on invalid maps in `-g srcline` mode
-Date: Fri, 12 May 2017 12:23:06 +0200
-Message-ID: <1866798.U7tsNezOxe@agathebauer>
-References: <20170509205046.21473-1-milian.wolff@kdab.com> <20170510060423.GB2667@sejong>
+Subject: Re: [PATCH v2] perf report: distinguish between inliners in the same function
+Date: Fri, 12 May 2017 12:37:01 +0200
+Message-ID: <1673560.Uk8cHjlLU8@agathebauer>
+References: <20170503213536.13905-1-milian.wolff@kdab.com> <20170510055352.GA2667@sejong>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3988323.jnKMsYBGLQ"; micalg="sha1"; protocol="application/pkcs7-signature"
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37516 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751323AbdELKXK (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2017 06:23:10 -0400
-In-Reply-To: <20170510060423.GB2667@sejong>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Content-Type: multipart/signed; boundary="nextPart2022016.unbjsoJ8ad"; micalg="sha1"; protocol="application/pkcs7-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170510055352.GA2667@sejong>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+List-Id: linux-perf-users.vger.kernel.org
 
---nextPart3988323.jnKMsYBGLQ
+--nextPart2022016.unbjsoJ8ad
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Mittwoch, 10. Mai 2017 08:04:23 CEST Namhyung Kim wrote:
-> On Tue, May 09, 2017 at 10:50:46PM +0200, Milian Wolff wrote:
+On Mittwoch, 10. Mai 2017 07:53:52 CEST Namhyung Kim wrote:
+> Hi,
+> 
+> On Wed, May 03, 2017 at 11:35:36PM +0200, Milian Wolff wrote:
 
 <snip>
 
-> > diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> > index 9ab68682c6d0..295f0846fd84 100644
-> > --- a/tools/perf/util/callchain.c
-> > +++ b/tools/perf/util/callchain.c
-> > @@ -642,13 +642,22 @@ static enum match_result match_chain_strings(const
-> > char *left,> 
-> >  static enum match_result match_chain_srcline(struct callchain_cursor_node
-> >  *node,>  
-> >  					     struct callchain_list *cnode)
+> > +static enum match_result match_chain_srcline(struct callchain_cursor_node
+> > *node, +					     struct callchain_list *cnode)
+> > +{
+> > +	char *left = get_srcline(cnode->ms.map->dso,
+> > +				 map__rip_2objdump(cnode->ms.map, cnode->ip),
+> > +				 cnode->ms.sym, true, false);
+> > +	char *right = get_srcline(node->map->dso,
+> > +				  map__rip_2objdump(node->map, node->ip),
+> > +				  node->sym, true, false);
+> > +	enum match_result ret = match_chain_strings(left, right);
+> 
+> I think we need to check inlined srcline as well.  There might be a
+> case that two samples have different addresses (and from different
+> callchains) but happens to be mapped to a same srcline IMHO.
+
+I think I'm missing something, but isn't this what this function provides? The 
+function above is now being used by the match_chain_inliner function below. 
+
+Ah, or do you mean for code such as this:
+
+~~~~~
+inline_func_1(); inline_func_2();
+~~~~~
+
+Here, both branches could be inlined into the same line and the same issue 
+would occur, i.e. different branches get collapsed into the first match for 
+the given srcline?
+
+Hm yes, this should be fixed too.
+
+But, quite frankly, I think it just shows more and more that the current 
+inliner support is really fragile and leads to lots of issues throughout the 
+code base as the inlined frames are different from non-inlined frames, but 
+should most of the same be handled just like them.
+
+So, maybe it's time to once more think about going back to my initial 
+approach: Make inlined frames code-wise equal to non-inlined frames, i.e. 
+instead of requesting the inlined frames within match_chain, do it outside and 
+create callchain_node/callchain_cursor instances (not sure which one right 
+now) for the inlined frames too.
+
+This way, we should be able to centrally add support for inlined frames and 
+all areas will benefit from it:
+
+- aggregation by srcline/function will magically work
+- all browsers will automatically display them, i.e. no longer need to 
+duplicate the code for inliner support in perf script, perf report tui/
+stdio/...
+- we can easily support --inline in other tools, like `perf trace --call-
+graph`
+
+So before I invest more time trying to massage match_chain to behave well for 
+inline nodes, can I get some feedback on the above?
+
+Back then when Jin and me discussed this, noone from the core perf 
+contributors ever bothered to give us any insight in what they think is the 
+better approach.
+
+> > +
+> > 
+> >  	free_srcline(left);
+> >  	free_srcline(right);
+> >  	return ret;
+> >  
+> >  }
+> > 
+> > +static enum match_result match_chain_inliner(struct callchain_cursor_node
+> > *node, +					     struct callchain_list *cnode)
+> > +{
+> > +	u64 left_ip = map__rip_2objdump(cnode->ms.map, cnode->ip);
+> > +	u64 right_ip = map__rip_2objdump(node->map, node->ip);
+> > +	struct inline_node *left_node = NULL;
+> > +	struct inline_node *right_node = NULL;
+> > +	struct inline_list *left_entry = NULL;
+> > +	struct inline_list *right_entry = NULL;
+> > +	struct inline_list *left_last_entry = NULL;
+> > +	struct inline_list *right_last_entry = NULL;
+> > +	enum match_result ret = MATCH_EQ;
+> > +
+> > +	left_node = dso__parse_addr_inlines(cnode->ms.map->dso, left_ip);
+> > +	if (!left_node)
+> > +		return MATCH_ERROR;
+> > +
+> > +	right_node = dso__parse_addr_inlines(node->map->dso, right_ip);
+> > +	if (!right_node) {
+> > +		inline_node__delete(left_node);
+> > +		return MATCH_ERROR;
+> > +	}
+> > +
+> > +	left_entry = list_first_entry(&left_node->val,
+> > +				      struct inline_list, list);
+> > +	left_last_entry = list_last_entry(&left_node->val,
+> > +					  struct inline_list, list);
+> > +	right_entry = list_first_entry(&right_node->val,
+> > +				       struct inline_list, list);
+> > +	right_last_entry = list_last_entry(&right_node->val,
+> > +					  struct inline_list, list);
+> 
+> What about keeping number of entries in a inline_node so that we can
+> check the numbers for faster comparison?
+
+What benefit would that have? The performance cost is dominated by finding the 
+inlined nodes, not by doing the comparison on the callstack.
+
+> > +	while (ret == MATCH_EQ && (left_entry || right_entry)) {
+> > +		ret = match_chain_strings(left_entry ? left_entry->funcname : 
+NULL,
+> > +					  right_entry ? right_entry->funcname : NULL);
+> > +
+> > +		if (left_entry && left_entry != left_last_entry)
+> > +			left_entry = list_next_entry(left_entry, list);
+> > +		else
+> > +			left_entry = NULL;
+> > +
+> > +		if (right_entry && right_entry != right_last_entry)
+> > +			right_entry = list_next_entry(right_entry, list);
+> > +		else
+> > +			right_entry = NULL;
+> > +	}
+> > +
+> > +	inline_node__delete(left_node);
+> > +	inline_node__delete(right_node);
+> > +	return ret;
+> > +}
+> > +
+> > 
+> >  static enum match_result match_chain(struct callchain_cursor_node *node,
+> >  
+> >  				     struct callchain_list *cnode)
 > >  
 > >  {
 > > 
-> > -	char *left = get_srcline(cnode->ms.map->dso,
-> > -				 map__rip_2objdump(cnode->ms.map, cnode->ip),
-> > -				 cnode->ms.sym, true, false);
-> > -	char *right = get_srcline(node->map->dso,
-> > -				  map__rip_2objdump(node->map, node->ip),
-> > -				  node->sym, true, false);
-> > -	enum match_result ret = match_chain_strings(left, right);
-> > +	char *left = NULL;
-> > +	char *right = NULL;
-> > +	enum match_result ret = MATCH_ERROR;
+> > @@ -671,7 +728,13 @@ static enum match_result match_chain(struct
+> > callchain_cursor_node *node,> 
+> >  	}
+> >  	
+> >  	if (left == right) {
+> > 
+> > -		if (node->branch) {
+> > +		if (symbol_conf.inline_name && cnode->ip != node->ip) {
+> > +			enum match_result match = match_chain_inliner(node,
+> > +								      cnode);
 > > +
-> > +	if (!node->map || !cnode->ms.map)
-> > +		return ret;
+> > +			if (match != MATCH_ERROR)
+> > +				return match;
 > 
-> This makes it fall back to function/address matching below if one of
-> srcline is not available.  But it'll just show many "??:0" entries
-> IMHO.  Maybe we can use same logic in util/sort.c:cmp_null instead..
+> I guess it'd be better just returning the match result.  Otherwise
+> MATCH_ERROR will be converted to MATCH_EQ..
 
-Yes, that could be done but I think it's not directly related to the patch/fix 
-at hand. Would it be OK if I change this behavior in a separate patch?
+This is done on purpose to fall-back to the IP-based comparison. That way, 
+entries without inlined nodes will be sorted the same way as before this 
+patch.
 
-Thanks
+Cheers
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart3988323.jnKMsYBGLQ
+--nextPart2022016.unbjsoJ8ad
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -167,13 +284,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDUxMjEwMjMwNlowIwYJKoZIhvcNAQkEMRYEFAbmZTO7AeUocD0RKSjByi6fglZ3MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAHhk
-3axDSBksHFf0NkvvOrxhbr3norWHSiJX5XWTXbh0uQvzd3bNPCZSyyiPI5FEkYdAt8JgfszRU8PN
-/8kjQV/lcCwjFux+HowwwCdAPQtcnDksZ0GXBIih2H1J78MqqNo0Egr31fu7wO5rpenbx6bb79Lr
-UvhKFnk0i6cC9d+jqTaILIuuec9NA1rEE8oWi8KHG2fXPQ6iS8Hj5iVBhLUYluM6xxL3n+lQQl0L
-0sBChYzMr/+GtAqrkvBeGctd/XpdxAEXcxLeokDFoHfC1M+PVBl+2uQ948MplL4ncW9x/P+udwfj
-YqACdM1afuALwNzP2tpTNjCTGYrX4ssQRvAAAAAAAAA=
+DTE3MDUxMjEwMzcwMVowIwYJKoZIhvcNAQkEMRYEFOZq6tUdS6vKt/qgDIcoOqKKmmxJMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGyM
+4FVoj0cKMqxAA/9fwHX2FLeuy91Y/fHsq7t3/gBcugOj381F33tzOa2E2v2ayKA52QYHMmaLqv1U
+ezIaGE3+3OhPb/Hrwergxsyc4kzI09oqkk+g5A2slxsQf8s4oo9UCZ+IvsYlX2qBPlNrupL0gbPd
+l1Y/onAzK5GStii6N2oHenRHChGtZKG8qHkxuXSJVumNVPt0Ri6qQxG1GZzFzbZu0feBCN5Z+8E6
+SPPGn3kS/+PznAKePlSdhCA6VpUtkwTD7Edtb+WFTnDfKoNoX38HacAMw93u707qvfbK0riUnQSc
+JIDUCdiqjt8dpBHzJdKpBBjSFVOBHD2I5pEAAAAAAAA=
 
 
---nextPart3988323.jnKMsYBGLQ--
+--nextPart2022016.unbjsoJ8ad--
