@@ -1,106 +1,114 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: [PATCH v2] perf report: fix off-by-one for non-activation frames
-Date: Tue, 16 May 2017 18:17:26 +0200
-Message-ID: <3048427.F5Pep8qUR7@agathebauer>
-References: <20170516085951.4056-1-milian.wolff@kdab.com> <20170516143829.GA12886@danjae.aot.lge.com>
+Date: Tue, 16 May 2017 18:26:47 +0200
+Message-ID: <3393633.IVaOaPmc4x@agathebauer>
+References: <20170516085951.4056-1-milian.wolff@kdab.com> <20170516143829.GA12886@danjae.aot.lge.com> <3048427.F5Pep8qUR7@agathebauer>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1999649.KgEZJ6fEz1"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart4439779.jGcbo5zM5K"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:60498 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:33636 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750795AbdEPQRa (ORCPT
+        id S1751750AbdEPQ0u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2017 12:17:30 -0400
-In-Reply-To: <20170516143829.GA12886@danjae.aot.lge.com>
+        Tue, 16 May 2017 12:26:50 -0400
+In-Reply-To: <3048427.F5Pep8qUR7@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
---nextPart1999649.KgEZJ6fEz1
+--nextPart4439779.jGcbo5zM5K
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Dienstag, 16. Mai 2017 16:38:29 CEST Namhyung Kim wrote:
-> On Tue, May 16, 2017 at 10:59:51AM +0200, Milian Wolff wrote:
-> > As the documentation for dwfl_frame_pc says, frames that
-> > are no activation frames need to have their program counter
-> > decremented by one to properly find the function of the caller.
+On Dienstag, 16. Mai 2017 18:17:26 CEST Milian Wolff wrote:
+> On Dienstag, 16. Mai 2017 16:38:29 CEST Namhyung Kim wrote:
+> > On Tue, May 16, 2017 at 10:59:51AM +0200, Milian Wolff wrote:
+> > > As the documentation for dwfl_frame_pc says, frames that
+> > > are no activation frames need to have their program counter
+> > > decremented by one to properly find the function of the caller.
+> > > 
+> > > This fixes many cases where perf report currently attributes
+> > > the cost to the next line. I.e. I have code like this:
+> > > 
+> > > ~~~~~~~~~~~~~~~
+> > > 
+> > >   #include <thread>
+> > >   #include <chrono>
+> > >   
+> > >   using namespace std;
+> > >   
+> > >   int main()
+> > >   {
+> > >   
+> > >     this_thread::sleep_for(chrono::milliseconds(1000));
+> > >     this_thread::sleep_for(chrono::milliseconds(100));
+> > >     this_thread::sleep_for(chrono::milliseconds(10));
+> > >     
+> > >     return 0;
+> > >   
+> > >   }
+> > > 
+> > > ~~~~~~~~~~~~~~~
 > > 
-> > This fixes many cases where perf report currently attributes
-> > the cost to the next line. I.e. I have code like this:
-> > 
-> > ~~~~~~~~~~~~~~~
-> > 
-> >   #include <thread>
-> >   #include <chrono>
-> >   
-> >   using namespace std;
-> >   
-> >   int main()
-> >   {
-> >   
-> >     this_thread::sleep_for(chrono::milliseconds(1000));
-> >     this_thread::sleep_for(chrono::milliseconds(100));
-> >     this_thread::sleep_for(chrono::milliseconds(10));
-> >     
-> >     return 0;
-> >   
-> >   }
-> > 
-> > ~~~~~~~~~~~~~~~
+> > It'd be nice if the test program has a signal frame for verification.
 > 
-> It'd be nice if the test program has a signal frame for verification.
+> I have pretty much zero experience about signals. Would it be enough to add
+> a signal handler for, say, SIGUSR1 to my test application and then trigger
+> a sleep when that signal is delivered? If that should be enough, I'll write
+> and test it out.
 
-I have pretty much zero experience about signals. Would it be enough to add a 
-signal handler for, say, SIGUSR1 to my test application and then trigger a 
-sleep when that signal is delivered? If that should be enough, I'll write and 
-test it out.
+~~~~~~~~~~~~~~~
+#include <thread>
+#include <chrono>
+#include <signal.h>
 
-<snip>
+using namespace std;
 
-> > diff --git a/tools/perf/util/unwind-libunwind-local.c
-> > b/tools/perf/util/unwind-libunwind-local.c index
-> > f8455bed6e65..30ab26375c80 100644
-> > --- a/tools/perf/util/unwind-libunwind-local.c
-> > +++ b/tools/perf/util/unwind-libunwind-local.c
-> > @@ -690,8 +690,22 @@ static int get_entries(struct unwind_info *ui,
-> > unwind_entry_cb_t cb,> 
-> >  		if (ret)
-> >  		
-> >  			display_error(ret);
-> > 
-> > +		bool previous_frame_was_signal = false;
-> > 
-> >  		while (!ret && (unw_step(&c) > 0) && i < max_stack) {
-> >  		
-> >  			unw_get_reg(&c, UNW_REG_IP, &ips[i]);
-> > 
-> > +
-> > +			/*
-> > +			 * Decrement the IP for any non-activation frames.
-> > +			 * this is required to properly find the srcline
-> > +			 * for caller frames.
-> > +			 * See also the documentation for dwfl_frame_pc,
-> > +			 * which this code tries to replicate.
-> > +			 */
-> > +			bool frame_is_signal = unw_is_signal_frame(&c) > 0;
-> > +			if (!previous_frame_was_signal && !frame_is_signal)
-> > +				--ips[i];
-> > +			previous_frame_was_signal = frame_is_signal;
-> 
-> Does it need to check previous frame too?
+volatile bool run_loop = true;
 
-That's what dwfl_frame_pc does, if I'm not misunderstanding it's source code?
+void my_handler(int signum)
+{
+    this_thread::sleep_for(chrono::milliseconds(1000));
+    this_thread::sleep_for(chrono::milliseconds(100));
+    this_thread::sleep_for(chrono::milliseconds(10));
+    run_loop = false;
+}
 
-Bye
+int main()
+{
+    signal(SIGUSR1, my_handler);
 
+    while (run_loop) {}
+
+    return 0;
+}
+~~~~~~~~~~~~~~~
+
+This does not properly unwind neither before nor after this patch. I only ever 
+get:
+
+   100.00%  core.c:0
+            |
+            ---__schedule core.c:0
+               schedule
+               do_nanosleep hrtimer.c:0
+               hrtimer_nanosleep
+               sys_nanosleep
+               entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+               __nanosleep_nocancel .:0
+               std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > 
+thread:323
+
+So... should this work? Please tell me how to test this properly.
+
+Thanks
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1999649.KgEZJ6fEz1
+--nextPart4439779.jGcbo5zM5K
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -202,13 +210,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDUxNjE2MTcyNlowIwYJKoZIhvcNAQkEMRYEFGmy2O1ituNt6onWhiYnui4hu9UtMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGW3
-128aE9UHt0+ouilLwEZXFf984garUJMRABksr3KV2A1yObndI0DwHpaPXLvczVfyDWpiCraS2Y6f
-BKdS1VEY5gC29GIxTz6lprUXOLAdsbsxRls20pTR6nOc0B7yijXNDEAhDWR4ZxfS9YsDTT3VFEqr
-1azoNhh3i/LvFti8LE2fc3R6+TZ9UXdqVWO8Uh6zajRsJViHx6teMgfgp7AKHBbMDqBf9QDj4kXr
-oJPfUrc8ANeyipqLSb5Va5M825tsQgZfFY3RKPtH8jbcSsd+ZeDFGau7juJr47Kr2c3ba9TIR0Pt
-p2C4gISR+FBAaWUJd4g6rKH0TiHe/zr19XwAAAAAAAA=
+DTE3MDUxNjE2MjY0N1owIwYJKoZIhvcNAQkEMRYEFFFfTXGdz7+imSez2v1qdnLJqbjoMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAIws
+OWxOYc2HcpYdVCpDCyAcrlxvwpuwZhO6LVi8PxJEZYGk+TuK+WW0g/fWXwAvnvsxUr4v15N2fpqI
+j353uuQG9vOtMOD2cHHdFpVAYczVFtJel6N577QlvM+Ho13msYdGfn5shyv/D+8pFZf7vS27io4C
+6zjD4DV944rSaqetXqIsFEtVDCw0+1zGidfIoMMkRDAn4lFyQqD/VuvC6vq2sngNq7bQLejzCuTl
+ezzXH/zyw1RPTDATK14nKtulGeUh84JaXw7B3IAZXdhIq7TO6DMpG3pgSewnik/pi8Ea8/AUvjOI
+joaVZ7w4PGe9kIFUEqXf1TFOHFy7mEAo6VoAAAAAAAA=
 
 
---nextPart1999649.KgEZJ6fEz1--
+--nextPart4439779.jGcbo5zM5K--
