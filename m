@@ -1,38 +1,186 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf report: fix off-by-one for non-activation frames
-Date: Tue, 16 May 2017 10:57:53 +0900
-Message-ID: <20170516015753.GB4885@sejong>
-References: <20170515150444.6841-1-milian.wolff@kdab.com>
- <12254594.nNfBy6txoy@milian-kdab2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH v2] perf report: fix off-by-one for non-activation frames
+Date: Tue, 16 May 2017 10:59:51 +0200
+Message-ID: <20170516085951.4056-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEAMRELO12.lge.com ([156.147.23.52]:47256 "EHLO
-        lgeamrelo12.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751228AbdEPB54 (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:39928 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751272AbdEPI77 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2017 21:57:56 -0400
-Content-Disposition: inline
-In-Reply-To: <12254594.nNfBy6txoy@milian-kdab2>
+        Tue, 16 May 2017 04:59:59 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+To: Linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
 
-On Mon, May 15, 2017 at 05:13:06PM +0200, Milian Wolff wrote:
-> On Monday, May 15, 2017 5:04:44 PM CEST Milian Wolff wrote:
-> > As the documentation for dwfl_frame_pc says, frames that
-> > are no activation frames need to have their program counter
-> > decremented by one to properly find the function of the caller.
-> 
-> Note that this leaves the perf build against libunwind in the current, broken 
-> state. I do not know how to detect the activation property there. Does anyone 
-> else? See elfutils source code for what it is doing:
-> 
-> https://sourceware.org/git/?p=elfutils.git;a=blob;f=libdwfl/
-> dwfl_frame_pc.c;h=296c815b9c73f42d79ac1778d2a0c420b89ee4eb;hb=HEAD
+As the documentation for dwfl_frame_pc says, frames that
+are no activation frames need to have their program counter
+decremented by one to properly find the function of the caller.
 
-It seems that you can use unw_is_signal_frame().
+This fixes many cases where perf report currently attributes
+the cost to the next line. I.e. I have code like this:
 
-Thanks,
-Namhyung
+~~~~~~~~~~~~~~~
+  #include <thread>
+  #include <chrono>
+
+  using namespace std;
+
+  int main()
+  {
+    this_thread::sleep_for(chrono::milliseconds(1000));
+    this_thread::sleep_for(chrono::milliseconds(100));
+    this_thread::sleep_for(chrono::milliseconds(10));
+
+    return 0;
+  }
+~~~~~~~~~~~~~~~
+
+Now compile and record it:
+
+~~~~~~~~~~~~~~~
+g++ -std=c++11 -g -O2 test.cpp
+echo 1 | sudo tee /proc/sys/kernel/sched_schedstats
+perf record \
+    --event sched:sched_stat_sleep \
+    --event sched:sched_process_exit \
+    --event sched:sched_switch --call-graph=dwarf \
+    --output perf.data.raw \
+    ./a.out
+echo 0 | sudo tee /proc/sys/kernel/sched_schedstats
+perf inject --sched-stat --input perf.data.raw --output perf.data
+~~~~~~~~~~~~~~~
+
+Before this patch, the report clearly shows the off-by-one issue.
+Most notably, the last sleep invocation is incorrectly attributed
+to the "return 0;" line:
+
+~~~~~~~~~~~~~~~
+  Overhead  Source:Line
+  ........  ...........
+
+   100.00%  core.c:0
+            |
+            ---__schedule core.c:0
+               schedule
+               do_nanosleep hrtimer.c:0
+               hrtimer_nanosleep
+               sys_nanosleep
+               entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+               __nanosleep_nocancel .:0
+               std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
+               |
+               |--90.08%--main test.cpp:9
+               |          __libc_start_main
+               |          _start
+               |
+               |--9.01%--main test.cpp:10
+               |          __libc_start_main
+               |          _start
+               |
+                --0.91%--main test.cpp:13
+                          __libc_start_main
+                          _start
+~~~~~~~~~~~~~~~
+
+With this patch here applied, the issue is fixed. The report becomes
+much more usable:
+
+~~~~~~~~~~~~~~~
+  Overhead  Source:Line
+  ........  ...........
+
+   100.00%  core.c:0
+            |
+            ---__schedule core.c:0
+               schedule
+               do_nanosleep hrtimer.c:0
+               hrtimer_nanosleep
+               sys_nanosleep
+               entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+               __nanosleep_nocancel .:0
+               std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
+               |
+               |--90.08%--main test.cpp:8
+               |          __libc_start_main
+               |          _start
+               |
+               |--9.01%--main test.cpp:9
+               |          __libc_start_main
+               |          _start
+               |
+                --0.91%--main test.cpp:10
+                          __libc_start_main
+                          _start
+~~~~~~~~~~~~~~~
+
+Note how this patch fixes this issue for both unwinding methods, i.e.
+both dwfl and libunwind. The former case is straight-forward thanks
+to dwfl_frame_pc. For libunwind, we replace the functionality via
+unw_is_signal_frame for any but the very first frame.
+
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Yao Jin <yao.jin@linux.intel.com>
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+---
+ tools/perf/util/unwind-libdw.c           |  6 +++++-
+ tools/perf/util/unwind-libunwind-local.c | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+v2:
+- use unw_is_signal_frame to also fix this issue for libunwind
+
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index f90e11a555b2..943a06291587 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -168,12 +168,16 @@ frame_callback(Dwfl_Frame *state, void *arg)
+ {
+ 	struct unwind_info *ui = arg;
+ 	Dwarf_Addr pc;
++	bool isactivation;
+ 
+-	if (!dwfl_frame_pc(state, &pc, NULL)) {
++	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
+ 		pr_err("%s", dwfl_errmsg(-1));
+ 		return DWARF_CB_ABORT;
+ 	}
+ 
++	if (!isactivation)
++		--pc;
++
+ 	return entry(pc, ui) || !(--ui->max_stack) ?
+ 	       DWARF_CB_ABORT : DWARF_CB_OK;
+ }
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index f8455bed6e65..30ab26375c80 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -690,8 +690,22 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+ 		if (ret)
+ 			display_error(ret);
+ 
++		bool previous_frame_was_signal = false;
+ 		while (!ret && (unw_step(&c) > 0) && i < max_stack) {
+ 			unw_get_reg(&c, UNW_REG_IP, &ips[i]);
++
++			/*
++			 * Decrement the IP for any non-activation frames.
++			 * this is required to properly find the srcline
++			 * for caller frames.
++			 * See also the documentation for dwfl_frame_pc,
++			 * which this code tries to replicate.
++			 */
++			bool frame_is_signal = unw_is_signal_frame(&c) > 0;
++			if (!previous_frame_was_signal && !frame_is_signal)
++				--ips[i];
++			previous_frame_was_signal = frame_is_signal;
++
+ 			++i;
+ 		}
+ 
+-- 
+2.13.0
