@@ -1,118 +1,115 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH] perf report: do not drop last inlined frame
-Date: Tue, 16 May 2017 23:54:33 +0200
-Message-ID: <20170516215433.16556-1-milian.wolff@kdab.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf report: fix memory leak in addr2line when called by
+ addr2inlines
+Date: Wed, 17 May 2017 13:20:49 +0900
+Message-ID: <20170517042049.GA32691@danjae.aot.lge.com>
+References: <20170516215359.16356-1-milian.wolff@kdab.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:43988 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753219AbdEPVyi (ORCPT
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:34730 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750785AbdEQEVE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2017 17:54:38 -0400
+        Wed, 17 May 2017 00:21:04 -0400
+Content-Disposition: inline
+In-Reply-To: <20170516215359.16356-1-milian.wolff@kdab.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-The very last inlined frame, i.e. the one furthest away from the
-non-inlined frame, was silently dropped. This is apparent when
-comparing the output of `perf script` and `addr2line`:
+On Tue, May 16, 2017 at 11:53:59PM +0200, Milian Wolff wrote:
+> When a filename was found in addr2line it was duplicated via strdup
+> but never freed. Now we pass NULL and handle this gracefully in
+> addr2line.
+> 
+> Detected by Valgrind:
+> 
+> ==16331== 1,680 bytes in 21 blocks are definitely lost in loss record 148 of 220
+> ==16331==    at 0x4C2AF1F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+> ==16331==    by 0x672FA69: strdup (in /usr/lib/libc-2.25.so)
+> ==16331==    by 0x52769F: addr2line (srcline.c:256)
+> ==16331==    by 0x52769F: addr2inlines (srcline.c:294)
+> ==16331==    by 0x52769F: dso__parse_addr_inlines (srcline.c:502)
+> ==16331==    by 0x574D7A: inline__fprintf (hist.c:41)
+> ==16331==    by 0x574D7A: ipchain__fprintf_graph (hist.c:147)
+> ==16331==    by 0x57518A: __callchain__fprintf_graph (hist.c:212)
+> ==16331==    by 0x5753CF: callchain__fprintf_graph.constprop.6 (hist.c:337)
+> ==16331==    by 0x57738E: hist_entry__fprintf (hist.c:628)
+> ==16331==    by 0x57738E: hists__fprintf (hist.c:882)
+> ==16331==    by 0x44A20F: perf_evlist__tty_browse_hists (builtin-report.c:399)
+> ==16331==    by 0x44A20F: report__browse_hists (builtin-report.c:491)
+> ==16331==    by 0x44A20F: __cmd_report (builtin-report.c:624)
+> ==16331==    by 0x44A20F: cmd_report (builtin-report.c:1054)
+> ==16331==    by 0x4A49CE: run_builtin (perf.c:296)
+> ==16331==    by 0x4A4CC0: handle_internal_command (perf.c:348)
+> ==16331==    by 0x434371: run_argv (perf.c:392)
+> ==16331==    by 0x434371: main (perf.c:530)
+> 
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+> Cc: Yao Jin <yao.jin@linux.intel.com>
+> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> ---
+>  tools/perf/util/srcline.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index df051a52393c..62cf42c36955 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -253,10 +253,11 @@ static int addr2line(const char *dso_name, u64 addr,
+>  	}
+>  
+>  	if (a2l->found && a2l->filename) {
 
-~~~~~~
-$ perf script --inline
-...
-a.out 26722 80836.309329:      72425 cycles:
-                   21493 __hypot_finite (/usr/lib/libm-2.25.so)
-                     a4a std::abs<double> (inline) (/tmp/a.out)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
-                     a4a std::norm<double> (inline) (/tmp/a.out)
-                     a4a main (/tmp/a.out)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/tmp/a.out)
+Not related, but I think it'd be better checking "a2l->found" after
+bfd_map_over_sections() and bail out if not.
 
-$ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
-0x0000000000000a4a
-std::__complex_abs(doublecomplex )
-/usr/include/c++/6.3.1/complex:589
-double std::abs<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:597
-double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:654
-double std::norm<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:664
-main
-/tmp/inlining.cpp:14
-~~~~~
 
-Note how `std::__complex_abs` is missing from the `perf script`
-output. This is similarly showing up in `perf report`. The patch
-here fixes this issue, and the output becomes:
+> -		*file = strdup(a2l->filename);
+> -		*line = a2l->line;
+> -
+> -		if (*file)
+> +		if (file)
+> +			*file = strdup(a2l->filename);
+> +		if (line)
+> +			*line = a2l->line;
+> +		if (*a2l->filename)
 
-~~~~~
-a.out 26722 80836.309329:      72425 cycles:
-                   21493 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a std::__complex_abs (inline) (/tmp/a.out)
-                     a4a std::abs<double> (inline) (/tmp/a.out)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
-                     a4a std::norm<double> (inline) (/tmp/a.out)
-                     a4a main (/tmp/a.out)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/tmp/a.out)
-~~~~~
+Didn't you want to check a2l->filename being non-NULL instead?  And if
+so, this can be :
 
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
----
- tools/perf/util/srcline.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+		if (!file || *file)
+>  			ret = 1;
+>  	}
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 8df6b29bf984..160999c51fb0 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -208,6 +208,16 @@ static void addr2line_cleanup(struct a2l_data *a2l)
- 
- #define MAX_INLINE_NEST 1024
- 
-+static int inline_list__append_dso_a2l(struct dso *dso,
-+				       struct inline_node *node)
-+{
-+	struct a2l_data *a2l = dso->a2l;
-+	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
-+	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
-+
-+	return inline_list__append(filename, funcname, a2l->line, node, dso);
-+}
-+
- static int addr2line(const char *dso_name, u64 addr,
- 		     char **file, unsigned int *line, struct dso *dso,
- 		     bool unwind_inlines, struct inline_node *node)
-@@ -233,17 +243,15 @@ static int addr2line(const char *dso_name, u64 addr,
- 	if (a2l->found && unwind_inlines) {
- 		int cnt = 0;
- 
-+		if (node && inline_list__append_dso_a2l(dso, node))
-+			return 0;
-+
- 		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
- 					     &a2l->funcname, &a2l->line) &&
- 		       cnt++ < MAX_INLINE_NEST) {
- 
--			if (node != NULL) {
--				if (inline_list__append(strdup(a2l->filename),
--							strdup(a2l->funcname),
--							a2l->line, node,
--							dso) != 0)
--					return 0;
--			}
-+			if (node && inline_list__append_dso_a2l(dso, node))
-+				return 0;
- 		}
- 	}
- 
--- 
-2.13.0
+Thanks,
+Namhyung
+
+
+>  
+> @@ -278,8 +279,6 @@ void dso__free_a2l(struct dso *dso)
+>  static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+>  	struct dso *dso)
+>  {
+> -	char *file = NULL;
+> -	unsigned int line = 0;
+>  	struct inline_node *node;
+>  
+>  	node = zalloc(sizeof(*node));
+> @@ -291,7 +290,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+>  	INIT_LIST_HEAD(&node->val);
+>  	node->addr = addr;
+>  
+> -	if (!addr2line(dso_name, addr, &file, &line, dso, TRUE, node))
+> +	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node))
+>  		goto out_free_inline_node;
+>  
+>  	if (list_empty(&node->val))
+> -- 
+> 2.13.0
+> 
