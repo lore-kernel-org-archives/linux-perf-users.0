@@ -1,185 +1,160 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2] perf report: distinguish between inliners in the same
- function
-Date: Wed, 17 May 2017 15:13:16 +0900
-Message-ID: <20170517061316.GE32691@danjae.aot.lge.com>
-References: <20170503213536.13905-1-milian.wolff@kdab.com>
- <25337947.y8Q11MWckQ@milian-kdab2>
- <20170516005332.GA4885@sejong>
- <2100411.JFybRMHOWM@agathebauer>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH] perf report: always honor callchain order for inlined nodes
+Date: Wed, 17 May 2017 10:03:56 +0200
+Message-ID: <5193992.VfzmMJQJDB@milian-kdab2>
+References: <20170516215422.16458-1-milian.wolff@kdab.com> <20170517042645.GB32691@danjae.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; boundary="nextPart3554080.ziibCBHrbT"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:33856 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750795AbdEQGNb (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:55122 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753865AbdEQIEA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2017 02:13:31 -0400
-Content-Disposition: inline
-In-Reply-To: <2100411.JFybRMHOWM@agathebauer>
+        Wed, 17 May 2017 04:04:00 -0400
+In-Reply-To: <20170517042645.GB32691@danjae.aot.lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-On Tue, May 16, 2017 at 03:18:13PM +0200, Milian Wolff wrote:
-> On Dienstag, 16. Mai 2017 02:53:32 CEST Namhyung Kim wrote:
-> > On Mon, May 15, 2017 at 12:01:54PM +0200, Milian Wolff wrote:
-> > > On Monday, May 15, 2017 3:21:58 AM CEST Namhyung Kim wrote:
-> > > > Hi Milian,
-> > > > 
-> > > > On Sun, May 14, 2017 at 08:10:50PM +0200, Milian Wolff wrote:
-> > > > > On Freitag, 12. Mai 2017 15:01:29 CEST Namhyung Kim wrote:
-> > > > I think you'd be better adding (fake) dso and sym to keep the inline
-> > > > information.  The fake dso can be paired with the original dso and
-> > > > maintain a tree of (inlined) symbols.  You may need a fake map to
-> > > > point the fake dso then.  It seems a bit compilcated but that way the
-> > > > code will be more consistent and easier to handle (e.g. for caching
-> > > > and/or deletion) IMHO.
-> > > 
-> > > Can you expand on this please? How would that solve the problem of finding
-> > > a function name or srcline for a given inline frame?
-> > > 
-> > > I.e.: the function name is, currently, part of the sym. So the fake
-> > > dso/map
-> > > would contain an internal, fake, string table which fake symbols could
-> > > leverage for the function name?
-> > > 
-> > > Sounds like doable, but also sounds like *a lot* of work. And I don't see
-> > > how that would solve the srcline situation: That one is queried on-demand
-> > > based on the IP of a frame. I would say that inline frames should keep
-> > > the IP of the first non-inlined frame. But that would make it impossible
-> > > to find the srcline for the N'th inlined frame... Am I missing something?
+--nextPart3554080.ziibCBHrbT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Wednesday, May 17, 2017 6:26:45 AM CEST Namhyung Kim wrote:
+> On Tue, May 16, 2017 at 11:54:22PM +0200, Milian Wolff wrote:
+> > So far, the inlined nodes where only reversed when we built perf
+> > against libbfd. If that was not available, the addr2line fallback
+> > code path was missing the inline_list__reverse call.
 > > 
-> > I agree that srcline info can be kept in callchain cursor nodes, but I
-> > still think function name should be in (fake) symbols.  Sharing a
-> > symbol for all inlined frames would not work for the children mode
-> > IMHO.
+> > Now this is done at the central place inside dso__parse_addr_inlines.
 > 
-> I'm running into a bit of trouble here. I hoped to be able to store the 
-> inlined symbol in the DSO to reuse it for other inlined entries that use the 
-> same function. I also hope that this will then take care of the deletion of 
-> the fake symbols, once the dso is freed.
+> What about changing inline_list__append() instead to honor callchain
+> order?
+> 
+> 	if (ORDER_CALLEE)
+> 		list_add_tail(...);
+> 	else
+> 		list_add(...);
 
-I don't want to store inlined functions to an original DSO as it would
-confuse symbol lookups in the DSO.  As you said those inlined
-functions will have same address so multiple symbols exist for an
-address.
+good idea, I'll do that.
 
-I thought they can be kept in a fake DSO which should be linked to the
-original DSO, but it doesn't need to be a DSO.  Instead a DSO can have
-a tree that maintains lists of (inlined) symbols and srclines sorted
-by address.
+Cheers
+
+-- 
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart3554080.ziibCBHrbT
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE3MDUxNzA4MDM1NlowIwYJKoZIhvcNAQkEMRYEFNAJETtLoyoyorjtC/Zur1OfvxE9MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAH47
+mcgY7x04rsAt6YGz449ojROp2ttP4djcP43C8K5ZpTgyWwgWNm8BThQSWRI16z1wDxnkxyZVYGQc
+Qxg8rKYoZZ0kk/SA8CG6e7wwiNsTEcQ7/SYqfguUpFKu1X/mZTltVMAJgUd09kTBrTspCHEn5Z2S
+IZ+3Z+5fTeldUu1qNLQtKS2QZXWL9g3pfUVl21jzixS+Xxjcm6PBOqMTRv/o+Z1pjIJKztofJi6+
+mEmo/9V9yi9qM1GEzLQnPB9xz5VwyQtpeqFD6LBAALXDAsX8QU1hQZuUGFq0UaqMLyUVJehwMUee
+g/Au/1jf1Of8LWnbBnZxGks18PRf9XfEHq8AAAAAAAA=
 
 
-> 
-> To do this, I thought I could use dso__find_symbol_by_name and, if nothing was 
-> found, I create the new fake symbol by symbol__new and insert it via 
-> dso__insert_symbol. Apparently, I also need to update the sorted lookup table, 
-> so I call dso__sort_by_name, but that then leads to crashes:
-> 
-> ==22675== Invalid write of size 8
-> ==22675==    at 0x4D89FC: rb_link_node (rbtree.h:82)
-> ==22675==    by 0x4D89FC: symbols__insert_by_name (symbol.c:387)
-> ==22675==    by 0x4D89FC: symbols__sort_by_name (symbol.c:398)
-> ==22675==    by 0x4D89FC: dso__sort_by_name (symbol.c:512)
-> ==22675==    by 0x4EB704: unwind_entry (machine.c:2061)
-> ==22675==    by 0x55BCF7: entry (unwind-libunwind-local.c:600)
-> ==22675==    by 0x55BCF7: get_entries (unwind-libunwind-local.c:723)
-> ==22675==    by 0x55BE01: _unwind__get_entries (unwind-libunwind-local.c:745)
-> ==22675==    by 0x4E8B20: sample__resolve_callchain (callchain.c:1016)
-> ==22675==    by 0x5196F9: hist_entry_iter__add (hist.c:1039)
-> ==22675==    by 0x448044: process_sample_event (builtin-report.c:204)
-> ==22675==    by 0x4F61DD: perf_evlist__deliver_sample (session.c:1211)
-> ==22675==    by 0x4F61DD: machines__deliver_event (session.c:1248)
-> ==22675==    by 0x4F66D3: perf_session__deliver_event (session.c:1310)
-> ==22675==    by 0x4F66D3: ordered_events__deliver_event (session.c:119)
-> ==22675==    by 0x4F9CD2: __ordered_events__flush (ordered-events.c:210)
-> ==22675==    by 0x4F9CD2: ordered_events__flush.part.3 (ordered-events.c:277)
-> ==22675==    by 0x4F6DEC: perf_session__process_user_event (session.c:1349)
-> ==22675==    by 0x4F6DEC: perf_session__process_event (session.c:1475)
-> ==22675==    by 0x4F8C5C: __perf_session__process_events (session.c:1867)
-> ==22675==    by 0x4F8C5C: perf_session__process_events (session.c:1921)
-> ==22675==  Address 0xd1fae38 is 24 bytes before a block of size 54 alloc'd
-> ==22675==    at 0x4C2CF35: calloc (in /usr/lib/valgrind/vgpreload_memcheck-
-> amd64-linux.so)
-> ==22675==    by 0x4D80F0: symbol__new (symbol.c:240)
-> ==22675==    by 0x54750E: dso__load_sym (symbol-elf.c:1121)
-> ==22675==    by 0x4D9D3E: dso__load (symbol.c:1535)
-> ==22675==    by 0x4F262B: map__load (map.c:292)
-> ==22675==    by 0x4F262B: map__find_symbol (map.c:335)
-> ==22675==    by 0x4B3B55: thread__find_addr_location (event.c:1458)
-> ==22675==    by 0x55BC70: entry (unwind-libunwind-local.c:588)
-> ==22675==    by 0x55BC70: get_entries (unwind-libunwind-local.c:723)
-> ==22675==    by 0x55BE01: _unwind__get_entries (unwind-libunwind-local.c:745)
-> ==22675==    by 0x4E8B20: sample__resolve_callchain (callchain.c:1016)
-> ==22675==    by 0x5196F9: hist_entry_iter__add (hist.c:1039)
-> ==22675==    by 0x448044: process_sample_event (builtin-report.c:204)
-> ==22675==    by 0x4F61DD: perf_evlist__deliver_sample (session.c:1211)
-> ==22675==    by 0x4F61DD: machines__deliver_event (session.c:1248)
-> ==22675== 
-> 
-> Here's the patch that I tried to play around with this concept:
-> 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index a98f55a91cb2..4d1b6e58da00 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2037,6 +2037,38 @@ static int unwind_entry(struct unwind_entry *entry, 
-> void *arg)
->  
->         if (symbol_conf.hide_unresolved && entry->sym == NULL)
->                 return 0;
-> +
-> +       if (symbol_conf.inline_name && entry->map) {
-> +               u64 addr = map__rip_2objdump(entry->map, entry->ip);
-> +               struct inline_node *inline_node;
-> +               inline_node = dso__parse_addr_inlines(entry->map->dso, addr);
-> +               if (inline_node) {
-> +                       struct inline_list *ilist;
-> +                       list_for_each_entry(ilist, &inline_node->val, list) {
-> +                               struct symbol *sym;
-> +                               sym = dso__find_symbol_by_name(entry->map-
-> >dso,
-> +                                                              MAP__FUNCTION,
-> +                                                              ilist-
-> >funcname);
-> +                               if (!sym) {
-> +                                       fprintf(stderr, "create new entry\n");
-> +                                       sym = symbol__new(entry->sym->start,
-> +                                                         entry->sym->end,
-> +                                                         entry->sym->binding,
-> +                                                         ilist->funcname);
-> +                                       dso__insert_symbol(entry->map->dso,
-> +                                                          MAP__FUNCTION,
-> +                                                          sym);
-> +                                       dso__sort_by_name(entry->map->dso,
-> +                                                         MAP__FUNCTION);
-> +                                       fprintf(stderr, "%p | %p | %s | %s\n", 
-> sym,
-> +                                               
-> dso__find_symbol_by_name(entry->map->dso, MAP__FUNCTION, ilist->funcname),
-> +                                               sym->name, ilist->funcname);
-> +                               }
-> +                               fprintf(stderr, "want to add inline: %s %p\n", 
-> ilist->funcname, sym);
-> +                       }
-> +                       inline_node__delete(inline_node);
-> +               }
-> +       }
->         return callchain_cursor_append(cursor, entry->ip,
->                                        entry->map, entry->sym,
->                                        false, NULL, 0, 0);
-> ~~~~~~~~~~~~~~~
-> 
-> Any idea what I'm doing wrong here? Can I not insert into the sorted list? 
-> I.e. is it not safe to sort multiple times? Is this the wrong approach in 
-> general?
-> 
-> Also, any suggestion as to what I'd use for symbol start/end for the inlined 
-> fake symbols?
-
-Please see above.
-
-Thanks,
-Namhyung
+--nextPart3554080.ziibCBHrbT--
