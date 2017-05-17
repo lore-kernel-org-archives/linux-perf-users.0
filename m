@@ -1,134 +1,169 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf report: do not drop last inlined frame
-Date: Wed, 17 May 2017 13:27:49 +0900
-Message-ID: <20170517042749.GC32691@danjae.aot.lge.com>
-References: <20170516215433.16556-1-milian.wolff@kdab.com>
+Subject: Re: [PATCH v2] perf report: fix off-by-one for non-activation frames
+Date: Wed, 17 May 2017 14:12:21 +0900
+Message-ID: <20170517051221.GD32691@danjae.aot.lge.com>
+References: <20170516085951.4056-1-milian.wolff@kdab.com>
+ <20170516143829.GA12886@danjae.aot.lge.com>
+ <3048427.F5Pep8qUR7@agathebauer>
+ <3393633.IVaOaPmc4x@agathebauer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f195.google.com ([209.85.192.195]:36364 "EHLO
-        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752023AbdEQE2D (ORCPT
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:36504 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751104AbdEQFMg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2017 00:28:03 -0400
+        Wed, 17 May 2017 01:12:36 -0400
 Content-Disposition: inline
-In-Reply-To: <20170516215433.16556-1-milian.wolff@kdab.com>
+In-Reply-To: <3393633.IVaOaPmc4x@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Milian Wolff <milian.wolff@kdab.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-On Tue, May 16, 2017 at 11:54:33PM +0200, Milian Wolff wrote:
-> The very last inlined frame, i.e. the one furthest away from the
-> non-inlined frame, was silently dropped. This is apparent when
-> comparing the output of `perf script` and `addr2line`:
+On Tue, May 16, 2017 at 06:26:47PM +0200, Milian Wolff wrote:
+> On Dienstag, 16. Mai 2017 18:17:26 CEST Milian Wolff wrote:
+> > On Dienstag, 16. Mai 2017 16:38:29 CEST Namhyung Kim wrote:
+> > > On Tue, May 16, 2017 at 10:59:51AM +0200, Milian Wolff wrote:
+> > > > As the documentation for dwfl_frame_pc says, frames that
+> > > > are no activation frames need to have their program counter
+> > > > decremented by one to properly find the function of the caller.
+> > > > 
+> > > > This fixes many cases where perf report currently attributes
+> > > > the cost to the next line. I.e. I have code like this:
+> > > > 
+> > > > ~~~~~~~~~~~~~~~
+> > > > 
+> > > >   #include <thread>
+> > > >   #include <chrono>
+> > > >   
+> > > >   using namespace std;
+> > > >   
+> > > >   int main()
+> > > >   {
+> > > >   
+> > > >     this_thread::sleep_for(chrono::milliseconds(1000));
+> > > >     this_thread::sleep_for(chrono::milliseconds(100));
+> > > >     this_thread::sleep_for(chrono::milliseconds(10));
+> > > >     
+> > > >     return 0;
+> > > >   
+> > > >   }
+> > > > 
+> > > > ~~~~~~~~~~~~~~~
+> > > 
+> > > It'd be nice if the test program has a signal frame for verification.
+> > 
+> > I have pretty much zero experience about signals. Would it be enough to add
+> > a signal handler for, say, SIGUSR1 to my test application and then trigger
+> > a sleep when that signal is delivered? If that should be enough, I'll write
+> > and test it out.
 > 
-> ~~~~~~
-> $ perf script --inline
-> ...
-> a.out 26722 80836.309329:      72425 cycles:
->                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
->                      a4a std::abs<double> (inline) (/tmp/a.out)
->                      a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
->                      a4a std::norm<double> (inline) (/tmp/a.out)
->                      a4a main (/tmp/a.out)
->                    20510 __libc_start_main (/usr/lib/libc-2.25.so)
->                      bd9 _start (/tmp/a.out)
+> ~~~~~~~~~~~~~~~
+> #include <thread>
+> #include <chrono>
+> #include <signal.h>
 > 
-> $ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
-> 0x0000000000000a4a
-> std::__complex_abs(doublecomplex )
-> /usr/include/c++/6.3.1/complex:589
-> double std::abs<double>(std::complex<double> const&)
-> /usr/include/c++/6.3.1/complex:597
-> double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double> const&)
-> /usr/include/c++/6.3.1/complex:654
-> double std::norm<double>(std::complex<double> const&)
-> /usr/include/c++/6.3.1/complex:664
-> main
-> /tmp/inlining.cpp:14
-> ~~~~~
+> using namespace std;
 > 
-> Note how `std::__complex_abs` is missing from the `perf script`
-> output. This is similarly showing up in `perf report`. The patch
-> here fixes this issue, and the output becomes:
+> volatile bool run_loop = true;
 > 
-> ~~~~~
-> a.out 26722 80836.309329:      72425 cycles:
->                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
->                     ace3 hypot (/usr/lib/libm-2.25.so)
->                      a4a std::__complex_abs (inline) (/tmp/a.out)
->                      a4a std::abs<double> (inline) (/tmp/a.out)
->                      a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
->                      a4a std::norm<double> (inline) (/tmp/a.out)
->                      a4a main (/tmp/a.out)
->                    20510 __libc_start_main (/usr/lib/libc-2.25.so)
->                      bd9 _start (/tmp/a.out)
-> ~~~~~
+> void my_handler(int signum)
+> {
+>     this_thread::sleep_for(chrono::milliseconds(1000));
+>     this_thread::sleep_for(chrono::milliseconds(100));
+>     this_thread::sleep_for(chrono::milliseconds(10));
+>     run_loop = false;
+> }
 > 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Cc: Yao Jin <yao.jin@linux.intel.com>
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> int main()
+> {
+>     signal(SIGUSR1, my_handler);
+> 
+>     while (run_loop) {}
+> 
+>     return 0;
+> }
+> ~~~~~~~~~~~~~~~
+> 
+> This does not properly unwind neither before nor after this patch. I only ever 
+> get:
+> 
+>    100.00%  core.c:0
+>             |
+>             ---__schedule core.c:0
+>                schedule
+>                do_nanosleep hrtimer.c:0
+>                hrtimer_nanosleep
+>                sys_nanosleep
+>                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+>                __nanosleep_nocancel .:0
+>                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > 
+> thread:323
+> 
+> So... should this work? Please tell me how to test this properly.
 
-I also noticed this and thank you for fixing it.
+How did you send the SIGUSR1 to the process?
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Anyway it does nothing to do with inlining, right?  I just wrote a
+test code below to burn a cpu with or without a signal frame.
+
+  $ nl -ba frame-addr.c
+     1	#include <stdio.h>
+     2	#include <stdlib.h>
+     3	#include <signal.h>
+     4	
+     5	#define __noinline  __attribute__((noinline))
+     6	
+     7	__noinline void bar(void)
+     8	{
+     9	  volatile long cnt = 0;
+    10	
+    11	  for (cnt = 0; cnt < 100000000; cnt++);
+    12	}
+    13	
+    14	__noinline void foo(void)
+    15	{
+    16	  bar();
+    17	}
+    18	
+    19	void sig_handler(int sig)
+    20	{
+    21	  foo();
+    22	}
+    23	
+    24	int main(void)
+    25	{
+    26	  signal(SIGUSR1, sig_handler);
+    27	  raise(SIGUSR1);
+    28	
+    29	  foo();
+    30	  return 0;
+    31	}
+
+  $ gcc -O2 -g -fno-optimize-sibling-calls -o frame-addr frame-addr.c
+
+  $ perf record --call-graph dwarf ./frame-addr
+
+  $ perf report -q -g srcline | head -15
+      99.88%  frame-addr  frame-addr        [.] bar
+              |
+              ---bar frame-addr.c:11
+                 foo frame-addr.c:16
+                 |          
+                 |--51.12%--main frame-addr.c:29
+                 |          __libc_start_main
+                 |          _start
+                 |          
+                  --48.76%--sig_handler frame-addr.c:21
+                            0x33a8f
+                            raise .:0
+                            main frame-addr.c:29       <--- bad
+                            __libc_start_main
+                            _start
+
+Note that 'raise' was called at line 27.  It seems that simply
+checking current frame fixes it.
 
 Thanks,
 Namhyung
-
-
-> ---
->  tools/perf/util/srcline.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index 8df6b29bf984..160999c51fb0 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -208,6 +208,16 @@ static void addr2line_cleanup(struct a2l_data *a2l)
->  
->  #define MAX_INLINE_NEST 1024
->  
-> +static int inline_list__append_dso_a2l(struct dso *dso,
-> +				       struct inline_node *node)
-> +{
-> +	struct a2l_data *a2l = dso->a2l;
-> +	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
-> +	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
-> +
-> +	return inline_list__append(filename, funcname, a2l->line, node, dso);
-> +}
-> +
->  static int addr2line(const char *dso_name, u64 addr,
->  		     char **file, unsigned int *line, struct dso *dso,
->  		     bool unwind_inlines, struct inline_node *node)
-> @@ -233,17 +243,15 @@ static int addr2line(const char *dso_name, u64 addr,
->  	if (a2l->found && unwind_inlines) {
->  		int cnt = 0;
->  
-> +		if (node && inline_list__append_dso_a2l(dso, node))
-> +			return 0;
-> +
->  		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
->  					     &a2l->funcname, &a2l->line) &&
->  		       cnt++ < MAX_INLINE_NEST) {
->  
-> -			if (node != NULL) {
-> -				if (inline_list__append(strdup(a2l->filename),
-> -							strdup(a2l->funcname),
-> -							a2l->line, node,
-> -							dso) != 0)
-> -					return 0;
-> -			}
-> +			if (node && inline_list__append_dso_a2l(dso, node))
-> +				return 0;
->  		}
->  	}
->  
-> -- 
-> 2.13.0
-> 
