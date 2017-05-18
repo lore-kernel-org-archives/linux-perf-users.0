@@ -1,71 +1,39 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH 5/7] perf report: fall-back to function name comparison for -g srcline
-Date: Thu, 18 May 2017 21:34:09 +0200
-Message-ID: <20170518193411.22380-6-milian.wolff@kdab.com>
+Subject: [PATCH 7/7] perf script: mark inlined frames and do not print DSO for them
+Date: Thu, 18 May 2017 21:34:11 +0200
+Message-ID: <20170518193411.22380-8-milian.wolff@kdab.com>
 References: <20170518193411.22380-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:59248 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755776AbdERTeq (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 15:34:46 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170518193411.22380-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linux-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-When a callchain entry has no srcline available, we ended up
-comparing the instruction pointer. I consider this to be not
-too useful. Rather, I think we should group the entries by
-function name, which this patch adds. For people who want to
-split the data on the IP boundary, using `-g address` is the
-correct choice.
+Instead of showing the (repeated) DSO name of the non-inlined
+frame, we now show the "(inlined)" suffix instead.
 
 Before:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--56.03%--hypot
-            |          |          |
-            |          |          |--8.45%--__hypot_finite
-            |          |          |
-            |          |          |--7.62%--__hypot_finite
-            |          |          |
-            |          |          |--2.29%--__hypot_finite
-            |          |          |
-            |          |          |--2.24%--__hypot_finite
-            |          |          |
-            |          |          |--2.06%--__hypot_finite
-            |          |          |
-            |          |          |--1.81%--__hypot_finite
-...
-~~~~~
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                         std::__complex_abs (/home/milian/projects/src/perf-tests/inlining)
+                         std::abs<double> (/home/milian/projects/src/perf-tests/inlining)
+                         std::_Norm_helper<true>::_S_do_it<double> (/home/milian/projects/src/perf-tests/inlining)
+                         std::norm<double> (/home/milian/projects/src/perf-tests/inlining)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
 
 After:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--60.29%--hypot
-            |          |          |
-            |          |           --56.03%--__hypot_finite
-            |          |
-            |           --0.85%--cabs
-~~~~~
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                         std::__complex_abs (inlined)
+                         std::abs<double> (inlined)
+                         std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                         std::norm<double> (inlined)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -74,58 +42,31 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ tools/perf/util/evsel_fprintf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 3a349530fee1..211ed3713fac 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -619,11 +619,9 @@ enum match_result {
- 	MATCH_GT,
- };
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index f2c6c5ee11e8..5b9e89257aa7 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -157,7 +157,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 				}
+ 			}
  
--static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
--					     struct callchain_list *cnode)
-+static enum match_result match_chain_strings(const char *left,
-+					     const char *right)
- {
--	const char *left = cnode->srcline;
--	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
+-			if (print_dso) {
++			if (print_dso && (!node->sym || !node->sym->inlined)) {
+ 				printed += fprintf(fp, " (");
+ 				printed += map__fprintf_dsoname(node->map, fp);
+ 				printed += fprintf(fp, ")");
+@@ -166,6 +166,9 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 			if (print_srcline)
+ 				printed += map__fprintf_srcline(node->map, addr, "\n  ", fp);
  
-@@ -633,10 +631,8 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 		cmp = 1;
- 	else if (left && !right)
- 		cmp = -1;
--	else if (cnode->ip == node->ip)
--		cmp = 0;
- 	else
--		cmp = (cnode->ip < node->ip) ? -1 : 1;
-+		return MATCH_ERROR;
- 
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
-@@ -651,10 +647,18 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
- 	u64 left, right;
- 
- 	if (callchain_param.key == CCKEY_SRCLINE) {
--		enum match_result match = match_chain_srcline(node, cnode);
-+		enum match_result match = match_chain_strings(cnode->srcline,
-+							      node->srcline);
++			if (node->sym && node->sym->inlined)
++				printed += fprintf(fp, " (inlined)");
 +
-+		// if no srcline is available, fallback to symbol name
-+		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-+			match = match_chain_strings(cnode->ms.sym->name,
-+						    node->sym->name);
+ 			if (!print_oneline)
+ 				printed += fprintf(fp, "\n");
  
- 		if (match != MATCH_ERROR)
- 			return match;
-+
-+		// otherwise fall-back to IP-based comparison below
- 	}
- 
- 	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
 -- 
 2.13.0
