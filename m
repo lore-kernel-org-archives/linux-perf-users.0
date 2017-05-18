@@ -1,222 +1,85 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v2] perf report: do not drop last inlined frame
-Date: Thu, 18 May 2017 14:13:52 +0200
-Message-ID: <3505011.Hj28Kr4O0A@agathebauer>
-References: <20170518083822.14568-1-milian.wolff@kdab.com> <20170518095538.GG4885@sejong>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart55402442.nihDsAiIOq"; micalg="sha1"; protocol="application/pkcs7-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170518095538.GG4885@sejong>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
-List-Id: linux-perf-users.vger.kernel.org
+Subject: [PATCH v3] perf report: always honor callchain order for inlined nodes
+Date: Thu, 18 May 2017 14:16:52 +0200
+Message-ID: <20170518121652.16679-1-milian.wolff@kdab.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:57920 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754241AbdERMQ5 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 May 2017 08:16:57 -0400
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
 
---nextPart55402442.nihDsAiIOq
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+So far, the inlined nodes where only reversed when we built perf
+against libbfd. If that was not available, the addr2line fallback
+code path was missing the inline_list__reverse call.
 
-On Donnerstag, 18. Mai 2017 11:55:38 CEST Namhyung Kim wrote:
-> On Thu, May 18, 2017 at 10:38:22AM +0200, Milian Wolff wrote:
-> > The very last inlined frame, i.e. the one furthest away from the
-> > non-inlined frame, was silently dropped. This is apparent when
-> > comparing the output of `perf script` and `addr2line`:
-> > 
-> > ~~~~~~
-> > $ perf script --inline
-> > ...
-> > 
-> > a.out 26722 80836.309329:      72425 cycles:
-> >                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
-> >                    
-> >                      a4a std::abs<double> (inline) (/tmp/a.out)
-> >                      a4a std::_Norm_helper<true>::_S_do_it<double>
-> >                      (inline) (/tmp/a.out)
-> >                      a4a std::norm<double> (inline) (/tmp/a.out)
-> >                      a4a main (/tmp/a.out)
-> >                    
-> >                    20510 __libc_start_main (/usr/lib/libc-2.25.so)
-> >                    
-> >                      bd9 _start (/tmp/a.out)
-> > 
-> > $ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
-> > 0x0000000000000a4a
-> > std::__complex_abs(doublecomplex )
-> > /usr/include/c++/6.3.1/complex:589
-> > double std::abs<double>(std::complex<double> const&)
-> > /usr/include/c++/6.3.1/complex:597
-> > double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double>
-> > const&) /usr/include/c++/6.3.1/complex:654
-> > double std::norm<double>(std::complex<double> const&)
-> > /usr/include/c++/6.3.1/complex:664
-> > main
-> > /tmp/inlining.cpp:14
-> > ~~~~~
-> > 
-> > Note how `std::__complex_abs` is missing from the `perf script`
-> > output. This is similarly showing up in `perf report`. The patch
-> > here fixes this issue, and the output becomes:
-> > 
-> > ~~~~~
-> > 
-> > a.out 26722 80836.309329:      72425 cycles:
-> >                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
-> >                    
-> >                     ace3 hypot (/usr/lib/libm-2.25.so)
-> 
-> Why is the 'hypot' missing in the above perf script output?  Is it
-> another problem?
+Now we always add the nodes in the correct order within
+inline_list__append. This removes the need to reverse the list
+and also ensures that all callers construct the list in the right
+order.
 
-Uhm, good question. I fear I messed up by testing this with other patches 
-applied in the background. I just tested this in a stand-alone manner and I 
-cannot reproduce this issue. The script output is different, too (based on 
-your original patch). I'll update the commit message and send v3.
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Yao Jin <yao.jin@linux.intel.com>
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+---
+ tools/perf/util/srcline.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-Before:
+v3:
+- minimize code changes
 
-                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a main (/home/milian/projects/src/perf-tests/inlining)
-                         std::abs<double>
-                         std::_Norm_helper<true>::_S_do_it<double>
-                         std::norm<double>
-                         main
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/home/milian/projects/src/perf-tests/
-inlining)
+v2:
+- directly create list in correct order as suggested by Namhyung
 
-After:
-                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a main (/home/milian/projects/src/perf-tests/inlining)
-                         std::__complex_abs
-                         std::abs<double>
-                         std::_Norm_helper<true>::_S_do_it<double>
-                         std::norm<double>
-                         main
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/home/milian/projects/src/perf-tests/
-inlining)
-
-Btw, if you wonder why main is twice in there - that's going to be fixed by my 
-upcoming patch series to rework inline frames.
-
-Cheers
-
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 5e376d64d59e..6af0364cad06 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -56,7 +56,10 @@ static int inline_list__append(char *filename, char *funcname, int line_nr,
+ 		}
+ 	}
+ 
+-	list_add_tail(&ilist->list, &node->val);
++	if (callchain_param.order == ORDER_CALLEE)
++		list_add_tail(&ilist->list, &node->val);
++	else
++		list_add(&ilist->list, &node->val);
+ 
+ 	return 0;
+ }
+@@ -200,14 +203,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
+ 
+ #define MAX_INLINE_NEST 1024
+ 
+-static void inline_list__reverse(struct inline_node *node)
+-{
+-	struct inline_list *ilist, *n;
+-
+-	list_for_each_entry_safe_reverse(ilist, n, &node->val, list)
+-		list_move_tail(&ilist->list, &node->val);
+-}
+-
+ static int addr2line(const char *dso_name, u64 addr,
+ 		     char **file, unsigned int *line, struct dso *dso,
+ 		     bool unwind_inlines, struct inline_node *node)
+@@ -250,11 +245,6 @@ static int addr2line(const char *dso_name, u64 addr,
+ 				ret = 1;
+ 			}
+ 		}
+-
+-		if ((node != NULL) &&
+-		    (callchain_param.order != ORDER_CALLEE)) {
+-			inline_list__reverse(node);
+-		}
+ 	}
+ 
+ 	if (file) {
 -- 
-Milian Wolff | milian.wolff@kdab.com | Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart55402442.nihDsAiIOq
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
-ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
-MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
-VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
-ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
-CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
-bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
-BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
-KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
-6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
-Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
-1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
-AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
-NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
-hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
-MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
-SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
-k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
-x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
-+B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
-+iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
-ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
-QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
-VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
-NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
-dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
-c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
-biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
-zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
-kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
-NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
-/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
-KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
-VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
-Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
-LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
-MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
-AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
-+QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
-Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
-JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
-ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
-eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
-Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
-ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
-IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
-MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
-dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
-uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
-MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
-JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
-YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
-VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
-ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
-ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
-dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
-BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
-JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
-AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
-Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
-IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
-KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
-WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
-K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
-aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
-A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
-DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
-NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
-cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
-YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
-c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
-HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
-MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
-mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
-1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
-x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
-zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
-VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
-P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
-BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
-L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
-BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
-dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
-DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
-l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
-MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
-lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
-DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
-ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
-tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDUxODEyMTM1MlowIwYJKoZIhvcNAQkEMRYEFIPvd42bYiTQ5ZM5ElwIaXjEzqt3MCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFdA
-EEswvOEChICaJUSrCyNTjtjD43ilzdiZIc9U85djpc4lFzySZEdTXbEsb+IUET6GPlnGoKG5P2Yg
-eZHq2aiu/PPAZKChQ8oQbr44VgwCsSYiTXGGFE8i+YGUYb0GomBPu4GWTvyGGjqx7wUyQqgWGyHA
-P8r4X+lNQWoH+GjfftA3bjDmtXbPP7nK+8QIJZpzMMbxTIUHTEbWbDQBqAVaEZvV+F1oz/a4SlTI
-HWEFs2yXOmOLeAKukbW3/vB4aIFyYtz5D+GbScPtqGEkG6RcpWDbvBXd2+LBr4ael1TILpa/00Ig
-PFWHj+pjW4AAD+mVUanvxlrDbVyVFLGLQ8MAAAAAAAA=
-
-
---nextPart55402442.nihDsAiIOq--
+2.13.0
