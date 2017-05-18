@@ -1,129 +1,105 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v2] perf report: always honor callchain order for inlined nodes
-Date: Thu, 18 May 2017 12:16:22 +0200
-Message-ID: <16457710.C2StAAPfXD@agathebauer>
-References: <20170518083759.14421-1-milian.wolff@kdab.com> <20170518094820.GF4885@sejong>
+Subject: Re: [PATCH v2] perf report: do not drop last inlined frame
+Date: Thu, 18 May 2017 14:13:52 +0200
+Message-ID: <3505011.Hj28Kr4O0A@agathebauer>
+References: <20170518083822.14568-1-milian.wolff@kdab.com> <20170518095538.GG4885@sejong>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart14000933.rpDv2zc4Wb"; micalg="sha1"; protocol="application/pkcs7-signature"
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37644 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755070AbdERKQ0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 06:16:26 -0400
-In-Reply-To: <20170518094820.GF4885@sejong>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Content-Type: multipart/signed; boundary="nextPart55402442.nihDsAiIOq"; micalg="sha1"; protocol="application/pkcs7-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170518095538.GG4885@sejong>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+List-Id: linux-perf-users.vger.kernel.org
 
---nextPart14000933.rpDv2zc4Wb
+--nextPart55402442.nihDsAiIOq
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Donnerstag, 18. Mai 2017 11:48:20 CEST Namhyung Kim wrote:
-> On Thu, May 18, 2017 at 10:37:59AM +0200, Milian Wolff wrote:
-> > So far, the inlined nodes where only reversed when we built perf
-> > against libbfd. If that was not available, the addr2line fallback
-> > code path was missing the inline_list__reverse call.
+On Donnerstag, 18. Mai 2017 11:55:38 CEST Namhyung Kim wrote:
+> On Thu, May 18, 2017 at 10:38:22AM +0200, Milian Wolff wrote:
+> > The very last inlined frame, i.e. the one furthest away from the
+> > non-inlined frame, was silently dropped. This is apparent when
+> > comparing the output of `perf script` and `addr2line`:
 > > 
-> > Now we always add the nodes in the correct order within
-> > inline_list__append. This removes the need to reverse the list
-> > and also ensures that all callers construct the list in the right
-> > order.
+> > ~~~~~~
+> > $ perf script --inline
+> > ...
 > > 
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: David Ahern <dsahern@gmail.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> > Cc: Yao Jin <yao.jin@linux.intel.com>
-> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> > ---
+> > a.out 26722 80836.309329:      72425 cycles:
+> >                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
+> >                    
+> >                      a4a std::abs<double> (inline) (/tmp/a.out)
+> >                      a4a std::_Norm_helper<true>::_S_do_it<double>
+> >                      (inline) (/tmp/a.out)
+> >                      a4a std::norm<double> (inline) (/tmp/a.out)
+> >                      a4a main (/tmp/a.out)
+> >                    
+> >                    20510 __libc_start_main (/usr/lib/libc-2.25.so)
+> >                    
+> >                      bd9 _start (/tmp/a.out)
 > > 
-> >  tools/perf/util/srcline.c | 23 ++++++++---------------
-> >  1 file changed, 8 insertions(+), 15 deletions(-)
+> > $ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
+> > 0x0000000000000a4a
+> > std::__complex_abs(doublecomplex )
+> > /usr/include/c++/6.3.1/complex:589
+> > double std::abs<double>(std::complex<double> const&)
+> > /usr/include/c++/6.3.1/complex:597
+> > double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double>
+> > const&) /usr/include/c++/6.3.1/complex:654
+> > double std::norm<double>(std::complex<double> const&)
+> > /usr/include/c++/6.3.1/complex:664
+> > main
+> > /tmp/inlining.cpp:14
+> > ~~~~~
 > > 
-> > v2:
-> > - directly create list in correct order as suggested by Namhyung
+> > Note how `std::__complex_abs` is missing from the `perf script`
+> > output. This is similarly showing up in `perf report`. The patch
+> > here fixes this issue, and the output becomes:
 > > 
-> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> > index 5e376d64d59e..bbba9c69cfec 100644
-> > --- a/tools/perf/util/srcline.c
-> > +++ b/tools/perf/util/srcline.c
-> > @@ -56,7 +56,10 @@ static int inline_list__append(char *filename, char
-> > *funcname, int line_nr,> 
-> >  		}
-> >  	
-> >  	}
+> > ~~~~~
 > > 
-> > -	list_add_tail(&ilist->list, &node->val);
-> > +	if (callchain_param.order == ORDER_CALLEE)
-> > +		list_add_tail(&ilist->list, &node->val);
-> > +	else
-> > +		list_add(&ilist->list, &node->val);
-> > 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > @@ -200,14 +203,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
-> > 
-> >  #define MAX_INLINE_NEST 1024
-> > 
-> > -static void inline_list__reverse(struct inline_node *node)
-> > -{
-> > -	struct inline_list *ilist, *n;
-> > -
-> > -	list_for_each_entry_safe_reverse(ilist, n, &node->val, list)
-> > -		list_move_tail(&ilist->list, &node->val);
-> > -}
-> > -
-> > 
-> >  static int addr2line(const char *dso_name, u64 addr,
-> >  
-> >  		     char **file, unsigned int *line, struct dso *dso,
-> >  		     bool unwind_inlines, struct inline_node *node)
-> > 
-> > @@ -250,11 +245,6 @@ static int addr2line(const char *dso_name, u64 addr,
-> > 
-> >  				ret = 1;
-> >  			
-> >  			}
-> >  		
-> >  		}
-> > 
-> > -
-> > -		if ((node != NULL) &&
-> > -		    (callchain_param.order != ORDER_CALLEE)) {
-> > -			inline_list__reverse(node);
-> > -		}
-> > 
-> >  	}
-> >  	
-> >  	if (file) {
-> > 
-> > @@ -497,12 +487,15 @@ char *get_srcline(struct dso *dso, u64 addr, struct
-> > symbol *sym,> 
-> >  struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
-> >  {
-> >  
-> >  	const char *dso_name;
-> > 
-> > +	struct inline_node *node;
-> > 
-> >  	dso_name = dso__name(dso);
-> >  	if (dso_name == NULL)
-> >  	
-> >  		return NULL;
-> > 
-> > -	return addr2inlines(dso_name, addr, dso);
-> > +	node = addr2inlines(dso_name, addr, dso);
-> > +
-> > +	return node;
+> > a.out 26722 80836.309329:      72425 cycles:
+> >                    21493 __hypot_finite (/usr/lib/libm-2.25.so)
+> >                    
+> >                     ace3 hypot (/usr/lib/libm-2.25.so)
 > 
-> Looks like an unnecessary change.
+> Why is the 'hypot' missing in the above perf script output?  Is it
+> another problem?
 
-Yes, true. Will clean up and send v3.
+Uhm, good question. I fear I messed up by testing this with other patches 
+applied in the background. I just tested this in a stand-alone manner and I 
+cannot reproduce this issue. The script output is different, too (based on 
+your original patch). I'll update the commit message and send v3.
+
+Before:
+
+                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                         std::abs<double>
+                         std::_Norm_helper<true>::_S_do_it<double>
+                         std::norm<double>
+                         main
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/
+inlining)
+
+After:
+                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                         std::__complex_abs
+                         std::abs<double>
+                         std::_Norm_helper<true>::_S_do_it<double>
+                         std::norm<double>
+                         main
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/
+inlining)
+
+Btw, if you wonder why main is twice in there - that's going to be fixed by my 
+upcoming patch series to rework inline frames.
 
 Cheers
 
@@ -132,7 +108,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart14000933.rpDv2zc4Wb
+--nextPart55402442.nihDsAiIOq
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -234,13 +210,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDUxODEwMTYyMlowIwYJKoZIhvcNAQkEMRYEFNrwpKa59Lmg3xAGV441voZgwzoTMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAB9q
-8m0C1IJW3bEOk5kdSnr46Ep+ocuSgVUGLgOT9nTNpGMBma1ytSSvYTuHmOO2bocEEX3vyxF/sb+8
-lIZ4gSx1WpizmHxN4mf5x45v6xX/GQfsv5c+ZLcg83/bpKjYr3YI6qJejCR2Qb8maO2KAWKv/pVc
-swj857vqmEXPGFjCtxle9WEKMmp3BAmV7/wbzQg9IkBKDJLEqoR+umxKvxhvySzUQhm5hG4eLncp
-Isdy6Un7Mrtqn49l08oya8VCoO4QGEPUVIT9PjF8M3whx+Qy84wHP1Gx292RywW/jf9RjEGyksF+
-BcT4tJGaR0It8m5/krN+A4bkIQUC8gvVz6QAAAAAAAA=
+DTE3MDUxODEyMTM1MlowIwYJKoZIhvcNAQkEMRYEFIPvd42bYiTQ5ZM5ElwIaXjEzqt3MCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAFdA
+EEswvOEChICaJUSrCyNTjtjD43ilzdiZIc9U85djpc4lFzySZEdTXbEsb+IUET6GPlnGoKG5P2Yg
+eZHq2aiu/PPAZKChQ8oQbr44VgwCsSYiTXGGFE8i+YGUYb0GomBPu4GWTvyGGjqx7wUyQqgWGyHA
+P8r4X+lNQWoH+GjfftA3bjDmtXbPP7nK+8QIJZpzMMbxTIUHTEbWbDQBqAVaEZvV+F1oz/a4SlTI
+HWEFs2yXOmOLeAKukbW3/vB4aIFyYtz5D+GbScPtqGEkG6RcpWDbvBXd2+LBr4ael1TILpa/00Ig
+PFWHj+pjW4AAD+mVUanvxlrDbVyVFLGLQ8MAAAAAAAA=
 
 
---nextPart14000933.rpDv2zc4Wb--
+--nextPart55402442.nihDsAiIOq--
