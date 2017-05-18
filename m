@@ -1,116 +1,192 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: Why the stack frame in perf.data isn't displayed in FlameGraph?
-Date: Thu, 18 May 2017 09:32:54 +0200
-Message-ID: <9775568.X03CyG2sn6@agathebauer>
-References: <CA+MhoaM8o2yap8mMVvJsbB2iwXtn05uh+0am5aACbFV50Oud_g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf report: fix off-by-one for non-activation frames
+Date: Thu, 18 May 2017 10:19:31 +0200
+Message-ID: <3042532.ExuKuijgo8@agathebauer>
+References: <20170516085951.4056-1-milian.wolff@kdab.com> <3393633.IVaOaPmc4x@agathebauer> <20170517051221.GD32691@danjae.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart22318537.P1zgMq4Ugo"; micalg="sha1"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart78692960.I8YXeX88bk"; micalg="sha1"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37526 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:46884 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751548AbdERHc6 (ORCPT
+        id S1753810AbdERITg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 03:32:58 -0400
-In-Reply-To: <CA+MhoaM8o2yap8mMVvJsbB2iwXtn05uh+0am5aACbFV50Oud_g@mail.gmail.com>
+        Thu, 18 May 2017 04:19:36 -0400
+In-Reply-To: <20170517051221.GD32691@danjae.aot.lge.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Nan Xiao <xiaonan830818@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
---nextPart22318537.P1zgMq4Ugo
+--nextPart78692960.I8YXeX88bk
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Donnerstag, 18. Mai 2017 06:09:55 CEST Nan Xiao wrote:
-> Hi all,
+On Mittwoch, 17. Mai 2017 07:12:21 CEST Namhyung Kim wrote:
+> On Tue, May 16, 2017 at 06:26:47PM +0200, Milian Wolff wrote:
+> > On Dienstag, 16. Mai 2017 18:17:26 CEST Milian Wolff wrote:
+> > > On Dienstag, 16. Mai 2017 16:38:29 CEST Namhyung Kim wrote:
+> > > > On Tue, May 16, 2017 at 10:59:51AM +0200, Milian Wolff wrote:
+> > > > > As the documentation for dwfl_frame_pc says, frames that
+> > > > > are no activation frames need to have their program counter
+> > > > > decremented by one to properly find the function of the caller.
+> > > > > 
+> > > > > This fixes many cases where perf report currently attributes
+> > > > > the cost to the next line. I.e. I have code like this:
+> > > > > 
+> > > > > ~~~~~~~~~~~~~~~
+> > > > > 
+> > > > >   #include <thread>
+> > > > >   #include <chrono>
+> > > > >   
+> > > > >   using namespace std;
+> > > > >   
+> > > > >   int main()
+> > > > >   {
+> > > > >   
+> > > > >     this_thread::sleep_for(chrono::milliseconds(1000));
+> > > > >     this_thread::sleep_for(chrono::milliseconds(100));
+> > > > >     this_thread::sleep_for(chrono::milliseconds(10));
+> > > > >     
+> > > > >     return 0;
+> > > > >   
+> > > > >   }
+> > > > > 
+> > > > > ~~~~~~~~~~~~~~~
+> > > > 
+> > > > It'd be nice if the test program has a signal frame for verification.
+> > > 
+> > > I have pretty much zero experience about signals. Would it be enough to
+> > > add
+> > > a signal handler for, say, SIGUSR1 to my test application and then
+> > > trigger
+> > > a sleep when that signal is delivered? If that should be enough, I'll
+> > > write
+> > > and test it out.
+> > 
+> > ~~~~~~~~~~~~~~~
+> > #include <thread>
+> > #include <chrono>
+> > #include <signal.h>
+> > 
+> > using namespace std;
+> > 
+> > volatile bool run_loop = true;
+> > 
+> > void my_handler(int signum)
+> > {
+> > 
+> >     this_thread::sleep_for(chrono::milliseconds(1000));
+> >     this_thread::sleep_for(chrono::milliseconds(100));
+> >     this_thread::sleep_for(chrono::milliseconds(10));
+> >     run_loop = false;
+> > 
+> > }
+> > 
+> > int main()
+> > {
+> > 
+> >     signal(SIGUSR1, my_handler);
+> >     
+> >     while (run_loop) {}
+> >     
+> >     return 0;
+> > 
+> > }
+> > ~~~~~~~~~~~~~~~
+> > 
+> > This does not properly unwind neither before nor after this patch. I only
+> > ever> 
+> > get:
+> >    100.00%  core.c:0
+> >    
+> >             ---__schedule core.c:0
+> >             
+> >                schedule
+> >                do_nanosleep hrtimer.c:0
+> >                hrtimer_nanosleep
+> >                sys_nanosleep
+> >                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+> >                __nanosleep_nocancel .:0
+> >                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> >
+> > 
+> > thread:323
+> > 
+> > So... should this work? Please tell me how to test this properly.
 > 
-> I am a newbie of using perf tools and FlameGraph. I write a simple
-> test program which is rafacimentoed from this
-> NTL(http://www.shoup.net/ntl/doc/tour-ex3.html) program:
+> How did you send the SIGUSR1 to the process?
 > 
-> #include <NTL/ZZX.h>
+> Anyway it does nothing to do with inlining, right?  I just wrote a
+> test code below to burn a cpu with or without a signal frame.
 > 
-> using namespace std;
-> using namespace NTL;
+>   $ nl -ba frame-addr.c
+>      1	#include <stdio.h>
+>      2	#include <stdlib.h>
+>      3	#include <signal.h>
+>      4
+>      5	#define __noinline  __attribute__((noinline))
+>      6
+>      7	__noinline void bar(void)
+>      8	{
+>      9	  volatile long cnt = 0;
+>     10
+>     11	  for (cnt = 0; cnt < 100000000; cnt++);
+>     12	}
+>     13
+>     14	__noinline void foo(void)
+>     15	{
+>     16	  bar();
+>     17	}
+>     18
+>     19	void sig_handler(int sig)
+>     20	{
+>     21	  foo();
+>     22	}
+>     23
+>     24	int main(void)
+>     25	{
+>     26	  signal(SIGUSR1, sig_handler);
+>     27	  raise(SIGUSR1);
+>     28
+>     29	  foo();
+>     30	  return 0;
+>     31	}
 > 
-> void inner(int i, ZZX& t, Vec<ZZX>& phi)
-> {
->         for (long j = 1; j <= i-1; j++)
->          if (i % j == 0)
->             t *= phi(j);
-> }
+>   $ gcc -O2 -g -fno-optimize-sibling-calls -o frame-addr frame-addr.c
 > 
-> void outer(int i, Vec<ZZX>& phi)
-> {
->         ZZX t;
->         t = 1;
->         inner(i, t, phi);
->         phi(i) = (ZZX(INIT_MONO, i) - 1)/t;
->         cout << phi(i) << "\n";
-> }
+>   $ perf record --call-graph dwarf ./frame-addr
 > 
-> int main()
-> {
->    Vec<ZZX> phi(INIT_SIZE, 100);
+>   $ perf report -q -g srcline | head -15
+>       99.88%  frame-addr  frame-addr        [.] bar
 > 
->    for (long i = 1; i <= phi.length(); i++) {
->       outer(i, phi);
->    }
-> }
+>               ---bar frame-addr.c:11
+>                  foo frame-addr.c:16
 > 
-> And compile it using following command:
+>                  |--51.12%--main frame-addr.c:29
+>                  |
+>                  |          __libc_start_main
+>                  |          _start
 > 
->     g++ -pthread test.cpp -lntl -lgmp
-
-Frame pointers are missing, you probably want to use either
-
-a) `g++ -fno-omit-frame-pointers` which may work if NTL is header-only
-b) `g++ -g` to rely on dwarf debug information and then use `perf record --
-call-graph dwarf`
-
-In general, I suggest to always compile with `-O2 -g` when you want to 
-profile, otherwise you are missing a lot of compiler optimizations, and/or 
-cripple tools like perf that want to use debug information.
-
-> I use "perf record -g ./a.out" to profile the program, but "perf
-> report" can only show "main" and "outer", no "inner" function
-> (https://github.com/NanXiao/images/blob/master/perf/perf.data):
+>                   --48.76%--sig_handler frame-addr.c:21
+>                             0x33a8f
+>                             raise .:0
+>                             main frame-addr.c:29       <--- bad
+>                             __libc_start_main
+>                             _start
 > 
-> ......
-> +    7.10%     0.00%  a.out    a.out                [.] outer
-> +    7.10%     0.00%  a.out    a.out                [.] main
-> ......
+> Note that 'raise' was called at line 27.  It seems that simply
+> checking current frame fixes it.
 
-I bet that's because the "inner" function got inlined and frame pointers are 
-disabled (see above). Recompile with the command above, and then use `perf 
-record --call-graph dwarf`.
+Got it - thanks for your test case. I fixed it and will resend v3 of this 
+patch shortly.
 
-Also, to see inline frames, try to build perf from git (acme's perf/core) and 
-use `perf report --inline`.
-
-> From the
-> perf.svg(https://github.com/NanXiao/images/blob/master/perf/perf.svg),
-> there is neither "outer" nor "inner" stack frames.
-> 
-> Since there is "outer" in perf.data, why it can't display in
-> FlameGraph? Another doubt is why perf.data doesn't contain "inner"
-> stack frame?
-
-If the above fixes it for report, try to apply "[PATCH] perf script: Add --
-inline option" by Namhyung Kim. Then you can generate the flamegraph via
-
-perf script --inline | stackcollapse-perf.pl | flamegraph.pl > out.svg
-
-Which should also show the inline frames.
-
-Cheers, hope that helps
+Thanks
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart22318537.P1zgMq4Ugo
+--nextPart78692960.I8YXeX88bk
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -212,13 +288,13 @@ ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
 BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
 bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
 tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE3MDUxODA3MzI1NFowIwYJKoZIhvcNAQkEMRYEFHqWlkjS0WevEcC5iYO1zDFEWO9QMCgGCSqG
-SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGDg
-6iOx0kDRzibJTq+j05zA1AhhBGqIKnqaKxsqwYDVgjIxjNudvt8Wi0aoq+BcSq0jJvQqoZFKfey6
-sInsnY3rkA/YPZppctA4OCd3ICWxtgXEVKcAIYlGF1VMBrx9TccQ6i5hP0gmwt8o9F8XO+pAcIFh
-n0hIkIWdH63UzATcwE4JO16H1rSP+zAgadOto4tVT6mvrg0GmtyZgvGM/tHhHNMPgsT+p0vFIBbR
-gkgn6+zzThoQ2BPiTqer9ge1J6u9gD0tGmQyYGbwHGelFy8XBC03e9hiu4+PilAXj9Y890UPst50
-KO8wjpNWLYiQWkcXZo7tUmlRmwhhKEE95WoAAAAAAAA=
+DTE3MDUxODA4MTkzMVowIwYJKoZIhvcNAQkEMRYEFBYhyHGzKzNhOS22dYk3mR15o+psMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAGax
+wQyWyz84MP+eURKtoWih0AsJyp6eOdSRzc6mMzqZlCiPGCGVM45ikql0xSGHWE5jUDt1/F6PpnbG
+WRau21XD5AY8GiHsiO+zNEzdHdtl9vl2FwlhHSBTJCz2GCHc5XVbL1H6o7NC8YnHF5cCkZYPX5G7
+DioNg26H/F24HQOiEfqqJgn5tAj97ZN2ivX61oMmUmB+KGZQvPPsVGhoWdar/CshhuBU1dA0DCMD
+QRhcVK6WebqI4LEz8DVbYT2CcKnk7FQ15kwi2TR1+m3p8b2onYTOkf41ngbuQTfuSp241JoWa+il
+xQqpKjU3xUdHIX5Gf+Mgsh8jHdOQ8+m5B+0AAAAAAAA=
 
 
---nextPart22318537.P1zgMq4Ugo--
+--nextPart78692960.I8YXeX88bk--
