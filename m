@@ -1,26 +1,66 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v3] perf report: always honor callchain order for inlined nodes
-Date: Thu, 18 May 2017 14:16:52 +0200
-Message-ID: <20170518121652.16679-1-milian.wolff@kdab.com>
+Subject: [PATCH v3] perf report: do not drop last inlined frame
+Date: Thu, 18 May 2017 14:18:21 +0200
+Message-ID: <20170518121821.16906-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:57920 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:58758 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754241AbdERMQ5 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 08:16:57 -0400
+        id S932115AbdERMSZ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 May 2017 08:18:25 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Linux-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
 
-So far, the inlined nodes where only reversed when we built perf
-against libbfd. If that was not available, the addr2line fallback
-code path was missing the inline_list__reverse call.
+The very last inlined frame, i.e. the one furthest away from the
+non-inlined frame, was silently dropped. This is apparent when
+comparing the output of `perf script` and `addr2line`:
 
-Now we always add the nodes in the correct order within
-inline_list__append. This removes the need to reverse the list
-and also ensures that all callers construct the list in the right
-order.
+~~~~~~
+$ perf script --inline
+...
+a.out 26722 80836.309329:      72425 cycles:
+                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a main (a.out)
+                         std::abs<double>
+                         std::_Norm_helper<true>::_S_do_it<double>
+                         std::norm<double>
+                         main
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (a.out)
+
+$ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
+0x0000000000000a4a
+std::__complex_abs(doublecomplex )
+/usr/include/c++/6.3.1/complex:589
+double std::abs<double>(std::complex<double> const&)
+/usr/include/c++/6.3.1/complex:597
+double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double> const&)
+/usr/include/c++/6.3.1/complex:654
+double std::norm<double>(std::complex<double> const&)
+/usr/include/c++/6.3.1/complex:664
+main
+/tmp/inlining.cpp:14
+~~~~~
+
+Note how `std::__complex_abs` is missing from the `perf script`
+output. This is similarly showing up in `perf report`. The patch
+here fixes this issue, and the output becomes:
+
+~~~~~
+a.out 26722 80836.309329:      72425 cycles:
+                   21561 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a main (a.out)
+                         std::__complex_abs
+                         std::abs<double>
+                         std::_Norm_helper<true>::_S_do_it<double>
+                         std::norm<double>
+                         main
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (a.out)
+~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -29,57 +69,55 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/srcline.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ tools/perf/util/srcline.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 v3:
-- minimize code changes
+- use actual command output in commit message
 
 v2:
-- directly create list in correct order as suggested by Namhyung
+- rebase against patch fixing memleak in addr2lines
 
 diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 5e376d64d59e..6af0364cad06 100644
+index 6af0364cad06..ebc88a74e67b 100644
 --- a/tools/perf/util/srcline.c
 +++ b/tools/perf/util/srcline.c
-@@ -56,7 +56,10 @@ static int inline_list__append(char *filename, char *funcname, int line_nr,
- 		}
- 	}
- 
--	list_add_tail(&ilist->list, &node->val);
-+	if (callchain_param.order == ORDER_CALLEE)
-+		list_add_tail(&ilist->list, &node->val);
-+	else
-+		list_add(&ilist->list, &node->val);
- 
- 	return 0;
- }
-@@ -200,14 +203,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
+@@ -203,6 +203,16 @@ static void addr2line_cleanup(struct a2l_data *a2l)
  
  #define MAX_INLINE_NEST 1024
  
--static void inline_list__reverse(struct inline_node *node)
--{
--	struct inline_list *ilist, *n;
--
--	list_for_each_entry_safe_reverse(ilist, n, &node->val, list)
--		list_move_tail(&ilist->list, &node->val);
--}
--
++static int inline_list__append_dso_a2l(struct dso *dso,
++				       struct inline_node *node)
++{
++	struct a2l_data *a2l = dso->a2l;
++	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
++	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
++
++	return inline_list__append(filename, funcname, a2l->line, node, dso);
++}
++
  static int addr2line(const char *dso_name, u64 addr,
  		     char **file, unsigned int *line, struct dso *dso,
  		     bool unwind_inlines, struct inline_node *node)
-@@ -250,11 +245,6 @@ static int addr2line(const char *dso_name, u64 addr,
- 				ret = 1;
- 			}
- 		}
--
--		if ((node != NULL) &&
--		    (callchain_param.order != ORDER_CALLEE)) {
--			inline_list__reverse(node);
--		}
- 	}
+@@ -231,15 +241,15 @@ static int addr2line(const char *dso_name, u64 addr,
+ 	if (unwind_inlines) {
+ 		int cnt = 0;
  
- 	if (file) {
++		if (node && inline_list__append_dso_a2l(dso, node))
++			return 0;
++
+ 		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
+ 					     &a2l->funcname, &a2l->line) &&
+ 		       cnt++ < MAX_INLINE_NEST) {
+ 
+ 			if (node != NULL) {
+-				if (inline_list__append(strdup(a2l->filename),
+-							strdup(a2l->funcname),
+-							a2l->line, node,
+-							dso) != 0)
++				if (inline_list__append_dso_a2l(dso, node))
+ 					return 0;
+ 				// found at least one inline frame
+ 				ret = 1;
 -- 
 2.13.0
