@@ -1,113 +1,276 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v2] perf report: do not drop last inlined frame
-Date: Thu, 18 May 2017 10:38:22 +0200
-Message-ID: <20170518083822.14568-1-milian.wolff@kdab.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v3] perf report: fix off-by-one for non-activation frames
+Date: Thu, 18 May 2017 18:44:25 +0900
+Message-ID: <20170518094425.GD4885@sejong>
+References: <20170518083735.14126-1-milian.wolff@kdab.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from LGEAMRELO11.lge.com ([156.147.23.51]:48892 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753743AbdERJob (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 May 2017 05:44:31 -0400
+Content-Disposition: inline
+In-Reply-To: <20170518083735.14126-1-milian.wolff@kdab.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-The very last inlined frame, i.e. the one furthest away from the
-non-inlined frame, was silently dropped. This is apparent when
-comparing the output of `perf script` and `addr2line`:
+Hi Milian,
 
-~~~~~~
-$ perf script --inline
-...
-a.out 26722 80836.309329:      72425 cycles:
-                   21493 __hypot_finite (/usr/lib/libm-2.25.so)
-                     a4a std::abs<double> (inline) (/tmp/a.out)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
-                     a4a std::norm<double> (inline) (/tmp/a.out)
-                     a4a main (/tmp/a.out)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/tmp/a.out)
+On Thu, May 18, 2017 at 10:37:35AM +0200, Milian Wolff wrote:
+> As the documentation for dwfl_frame_pc says, frames that
+> are no activation frames need to have their program counter
+> decremented by one to properly find the function of the caller.
+> 
+> This fixes many cases where perf report currently attributes
+> the cost to the next line. I.e. I have code like this:
+> 
+> ~~~~~~~~~~~~~~~
+>   #include <thread>
+>   #include <chrono>
+> 
+>   using namespace std;
+> 
+>   int main()
+>   {
+>     this_thread::sleep_for(chrono::milliseconds(1000));
+>     this_thread::sleep_for(chrono::milliseconds(100));
+>     this_thread::sleep_for(chrono::milliseconds(10));
+> 
+>     return 0;
+>   }
+> ~~~~~~~~~~~~~~~
+> 
+> Now compile and record it:
+> 
+> ~~~~~~~~~~~~~~~
+> g++ -std=c++11 -g -O2 test.cpp
+> echo 1 | sudo tee /proc/sys/kernel/sched_schedstats
+> perf record \
+>     --event sched:sched_stat_sleep \
+>     --event sched:sched_process_exit \
+>     --event sched:sched_switch --call-graph=dwarf \
+>     --output perf.data.raw \
+>     ./a.out
+> echo 0 | sudo tee /proc/sys/kernel/sched_schedstats
+> perf inject --sched-stat --input perf.data.raw --output perf.data
+> ~~~~~~~~~~~~~~~
+> 
+> Before this patch, the report clearly shows the off-by-one issue.
+> Most notably, the last sleep invocation is incorrectly attributed
+> to the "return 0;" line:
+> 
+> ~~~~~~~~~~~~~~~
+>   Overhead  Source:Line
+>   ........  ...........
+> 
+>    100.00%  core.c:0
+>             |
+>             ---__schedule core.c:0
+>                schedule
+>                do_nanosleep hrtimer.c:0
+>                hrtimer_nanosleep
+>                sys_nanosleep
+>                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+>                __nanosleep_nocancel .:0
+>                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
+>                |
+>                |--90.08%--main test.cpp:9
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                |--9.01%--main test.cpp:10
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                 --0.91%--main test.cpp:13
+>                           __libc_start_main
+>                           _start
+> ~~~~~~~~~~~~~~~
+> 
+> With this patch here applied, the issue is fixed. The report becomes
+> much more usable:
+> 
+> ~~~~~~~~~~~~~~~
+>   Overhead  Source:Line
+>   ........  ...........
+> 
+>    100.00%  core.c:0
+>             |
+>             ---__schedule core.c:0
+>                schedule
+>                do_nanosleep hrtimer.c:0
+>                hrtimer_nanosleep
+>                sys_nanosleep
+>                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
+>                __nanosleep_nocancel .:0
+>                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
+>                |
+>                |--90.08%--main test.cpp:8
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                |--9.01%--main test.cpp:9
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                 --0.91%--main test.cpp:10
+>                           __libc_start_main
+>                           _start
+> ~~~~~~~~~~~~~~~
+> 
+> Similarly it works for signal frames:
+> 
+> ~~~~~~~~~~~~~~~
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <signal.h>
+> 
+> #define __noinline  __attribute__((noinline))
+> 
+> __noinline void bar(void)
+> {
+>   volatile long cnt = 0;
+> 
+>   for (cnt = 0; cnt < 100000000; cnt++);
+> }
+> 
+> __noinline void foo(void)
+> {
+>   bar();
+> }
+> 
+> void sig_handler(int sig)
+> {
+>   foo();
+> }
+> 
+> int main(void)
+> {
+>   signal(SIGUSR1, sig_handler);
+>   raise(SIGUSR1);
+> 
+>   foo();
+>   return 0;
+> }
+> ~~~~~~~~~~~~~~~~
+> 
+> Before, the report wrongly points to `signal.c:29` after raise():
+> 
+> ~~~~~~~~~~~~~~~~
+> $ perf report --stdio --no-children -g srcline -s srcline
+> ...
+>    100.00%  signal.c:11
+>             |
+>             ---bar signal.c:11
+>                |
+>                |--50.49%--main signal.c:29
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                 --49.51%--0x33a8f
+>                           raise .:0
+>                           main signal.c:29
+>                           __libc_start_main
+>                           _start
+> ~~~~~~~~~~~~~~~~
+> 
+> With this patch in, the issue is fixed and we instead get:
+> 
+> ~~~~~~~~~~~~~~~~
+>    100.00%  signal   signal            [.] bar
+>             |
+>             ---bar signal.c:11
+>                |
+>                |--50.49%--main signal.c:29
+>                |          __libc_start_main
+>                |          _start
+>                |
+>                 --49.51%--0x33a8f
+>                           raise .:0
+>                           main signal.c:27
+>                           __libc_start_main
+>                           _start
+> ~~~~~~~~~~~~~~~~
+> 
+> Note how this patch fixes this issue for both unwinding methods, i.e.
+> both dwfl and libunwind. The former case is straight-forward thanks
+> to dwfl_frame_pc. For libunwind, we replace the functionality via
+> unw_is_signal_frame for any but the very first frame.
+> 
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+> Cc: Yao Jin <yao.jin@linux.intel.com>
+> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 
-$ addr2line -a -f -i -e /tmp/a.out a4a | c++filt
-0x0000000000000a4a
-std::__complex_abs(doublecomplex )
-/usr/include/c++/6.3.1/complex:589
-double std::abs<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:597
-double std::_Norm_helper<true>::_S_do_it<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:654
-double std::norm<double>(std::complex<double> const&)
-/usr/include/c++/6.3.1/complex:664
-main
-/tmp/inlining.cpp:14
-~~~~~
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Note how `std::__complex_abs` is missing from the `perf script`
-output. This is similarly showing up in `perf report`. The patch
-here fixes this issue, and the output becomes:
+Thanks,
+Namhyung
 
-~~~~~
-a.out 26722 80836.309329:      72425 cycles:
-                   21493 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a std::__complex_abs (inline) (/tmp/a.out)
-                     a4a std::abs<double> (inline) (/tmp/a.out)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (inline) (/tmp/a.out)
-                     a4a std::norm<double> (inline) (/tmp/a.out)
-                     a4a main (/tmp/a.out)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/tmp/a.out)
-~~~~~
 
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
----
- tools/perf/util/srcline.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-v2:
-- rebase against patch fixing memleak in addr2lines
-
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index bbba9c69cfec..168285d37cd2 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -203,6 +203,16 @@ static void addr2line_cleanup(struct a2l_data *a2l)
- 
- #define MAX_INLINE_NEST 1024
- 
-+static int inline_list__append_dso_a2l(struct dso *dso,
-+				       struct inline_node *node)
-+{
-+	struct a2l_data *a2l = dso->a2l;
-+	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
-+	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
-+
-+	return inline_list__append(filename, funcname, a2l->line, node, dso);
-+}
-+
- static int addr2line(const char *dso_name, u64 addr,
- 		     char **file, unsigned int *line, struct dso *dso,
- 		     bool unwind_inlines, struct inline_node *node)
-@@ -231,15 +241,15 @@ static int addr2line(const char *dso_name, u64 addr,
- 	if (unwind_inlines) {
- 		int cnt = 0;
- 
-+		if (node && inline_list__append_dso_a2l(dso, node))
-+			return 0;
-+
- 		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
- 					     &a2l->funcname, &a2l->line) &&
- 		       cnt++ < MAX_INLINE_NEST) {
- 
- 			if (node != NULL) {
--				if (inline_list__append(strdup(a2l->filename),
--							strdup(a2l->funcname),
--							a2l->line, node,
--							dso) != 0)
-+				if (inline_list__append_dso_a2l(dso, node))
- 					return 0;
- 				// found at least one inline frame
- 				ret = 1;
--- 
-2.13.0
+> ---
+>  tools/perf/util/unwind-libdw.c           |  6 +++++-
+>  tools/perf/util/unwind-libunwind-local.c | 11 +++++++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> v2:
+> - use unw_is_signal_frame to also fix this issue for libunwind
+> 
+> v3:
+> - only check current signal in libunwind case, which fixes the
+>   example code provided by Namhyung. The example is added in the
+>   commit message and I confirmed that libdw and libunwind now
+>   both produce the correct results for this case
+> 
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> index f90e11a555b2..943a06291587 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -168,12 +168,16 @@ frame_callback(Dwfl_Frame *state, void *arg)
+>  {
+>  	struct unwind_info *ui = arg;
+>  	Dwarf_Addr pc;
+> +	bool isactivation;
+>  
+> -	if (!dwfl_frame_pc(state, &pc, NULL)) {
+> +	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
+>  		pr_err("%s", dwfl_errmsg(-1));
+>  		return DWARF_CB_ABORT;
+>  	}
+>  
+> +	if (!isactivation)
+> +		--pc;
+> +
+>  	return entry(pc, ui) || !(--ui->max_stack) ?
+>  	       DWARF_CB_ABORT : DWARF_CB_OK;
+>  }
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> index f8455bed6e65..84d553898e2a 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -692,6 +692,17 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+>  
+>  		while (!ret && (unw_step(&c) > 0) && i < max_stack) {
+>  			unw_get_reg(&c, UNW_REG_IP, &ips[i]);
+> +
+> +			/*
+> +			 * Decrement the IP for any non-activation frames.
+> +			 * this is required to properly find the srcline
+> +			 * for caller frames.
+> +			 * See also the documentation for dwfl_frame_pc,
+> +			 * which this code tries to replicate.
+> +			 */
+> +			if (unw_is_signal_frame(&c) <= 0)
+> +				--ips[i];
+> +
+>  			++i;
+>  		}
+>  
+> -- 
+> 2.13.0
+> 
