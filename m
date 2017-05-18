@@ -1,344 +1,176 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH 4/7] perf report: use srcline from inlined frames
-Date: Thu, 18 May 2017 21:34:08 +0200
-Message-ID: <20170518193411.22380-5-milian.wolff@kdab.com>
+Subject: Re: [PATCH 0/7] generate full callchain cursor entries for inlined frames
+Date: Thu, 18 May 2017 22:05:36 +0200
+Message-ID: <2176198.pfBDoCjSEJ@agathebauer>
 References: <20170518193411.22380-1-milian.wolff@kdab.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart373812496.SIgR8EvAlu"; micalg="sha1"; protocol="application/pkcs7-signature"
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:33812 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753250AbdERUFk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 May 2017 16:05:40 -0400
 In-Reply-To: <20170518193411.22380-1-milian.wolff@kdab.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
 
-Instead of looking up the srcline based on the IP associated with
-a given callchain entry, add a new srcline member and use that.
-This member is set either based on the IP for non-inlined frames,
-or uses the DWARF data for inlined frames.
+--nextPart373812496.SIgR8EvAlu
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-To ensure we don't duplicate the work for inlined frames, and also
-to ensure we properly free the allocated resources, the srcline
-strings are associated with the inlined_list entries cached by the
-DSO.
+On Donnerstag, 18. Mai 2017 21:34:04 CEST Milian Wolff wrote:
+> This series of patches completely reworks the way inline frames are handled.
+> Instead of querying for the inline nodes on-demand in the individual tools,
+> we now create proper callchain nodes for inlined frames. The advantages
+> this approach brings are numerous:
+> 
+> - less duplicated code in the individual browser
+> - aggregated cost for inlined frames for the --children top-down list
+> - various bug fixes that arose from querying for a srcline/symbol based on
+>   the IP of a sample, which will always point to the last inlined frame
+>   instead of the corresponding non-inlined frame
+> - overall much better support for visualizing cost for heavily-inlined C++
+>   code, which simply was confusing and unreliably before
+> - srcline honors the global setting as to whether full paths or basenames
+>   should be shown
+> 
+> For comparison, below lists the output before and after for `perf script`
+> and `perf report`. The example file I used to generate the perf data is:
 
-To enable this patch, we put the existing code to merge a fileline
-pair into a srcline string. This function honors the global
-srcline_full_filename setting, and displays only the basename if
-this is set to true (the default). Because we want to be able to
-get the basename for a `const char*` we get fro a2l, a GNU-like
-implementation of basename is added (the posix version requires
-a non-const `char*` input argument).
+And of course shortly after sending this patch series I notice the first 
+issues ;-) The new behavior shows confusing results for `-g function` because 
+match_chain uses sym->start. I fixed this locally to compare the actual 
+function name if either of the two symbols is an inlined fake symbol:
 
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
----
- tools/perf/util/callchain.c | 26 ++++++++--------------
- tools/perf/util/callchain.h |  5 +++--
- tools/perf/util/machine.c   | 19 +++++++++++++---
- tools/perf/util/srcline.c   | 53 ++++++++++++++++++++++++++++++++++-----------
- tools/perf/util/srcline.h   |  3 +--
- 5 files changed, 69 insertions(+), 37 deletions(-)
+https://github.com/milianw/linux/commit/
+a1fa4486c19976f36d6ee7df263676e888c2bdb9
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 81fc29ac798f..3a349530fee1 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -558,6 +558,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
- 		call->ip = cursor_node->ip;
- 		call->ms.sym = cursor_node->sym;
- 		call->ms.map = map__get(cursor_node->map);
-+		call->srcline = cursor_node->srcline;
- 
- 		if (cursor_node->branch) {
- 			call->branch_count = 1;
-@@ -621,12 +622,8 @@ enum match_result {
- static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 					     struct callchain_list *cnode)
- {
--	char *left = get_srcline(cnode->ms.map->dso,
--				 map__rip_2objdump(cnode->ms.map, cnode->ip),
--				 cnode->ms.sym, true, false);
--	char *right = get_srcline(node->map->dso,
--				  map__rip_2objdump(node->map, node->ip),
--				  node->sym, true, false);
-+	const char *left = cnode->srcline;
-+	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
- 
-@@ -644,8 +641,6 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
- 
--	free_srcline(left);
--	free_srcline(right);
- 	return ret;
- }
- 
-@@ -917,7 +912,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
- 	list_for_each_entry_safe(list, next_list, &src->val, list) {
- 		callchain_cursor_append(cursor, list->ip,
- 					list->ms.map, list->ms.sym,
--					false, NULL, 0, 0);
-+					false, NULL, 0, 0, list->srcline);
- 		list_del(&list->list);
- 		map__zput(list->ms.map);
- 		free(list);
-@@ -957,7 +952,7 @@ int callchain_merge(struct callchain_cursor *cursor,
- int callchain_cursor_append(struct callchain_cursor *cursor,
- 			    u64 ip, struct map *map, struct symbol *sym,
- 			    bool branch, struct branch_flags *flags,
--			    int nr_loop_iter, int samples)
-+			    int nr_loop_iter, int samples, const char *srcline)
- {
- 	struct callchain_cursor_node *node = *cursor->last;
- 
-@@ -976,6 +971,7 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
- 	node->branch = branch;
- 	node->nr_loop_iter = nr_loop_iter;
- 	node->samples = samples;
-+	node->srcline = srcline;
- 
- 	if (flags)
- 		memcpy(&node->branch_flags, flags,
-@@ -1061,12 +1057,7 @@ char *callchain_list__sym_name(struct callchain_list *cl,
- 	int printed;
- 
- 	if (cl->ms.sym) {
--		if (show_srcline && cl->ms.map && !cl->srcline)
--			cl->srcline = get_srcline(cl->ms.map->dso,
--						  map__rip_2objdump(cl->ms.map,
--								    cl->ip),
--						  cl->ms.sym, false, show_addr);
--		if (cl->srcline)
-+		if (show_srcline && cl->srcline)
- 			printed = scnprintf(bf, bfsize, "%s %s",
- 					cl->ms.sym->name, cl->srcline);
- 		else
-@@ -1454,7 +1445,8 @@ int callchain_cursor__copy(struct callchain_cursor *dst,
- 
- 		rc = callchain_cursor_append(dst, node->ip, node->map, node->sym,
- 					     node->branch, &node->branch_flags,
--					     node->nr_loop_iter, node->samples);
-+					     node->nr_loop_iter, node->samples,
-+					     node->srcline);
- 		if (rc)
- 			break;
- 
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index c56c23dbbf72..16f51a20df6a 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -119,7 +119,7 @@ struct callchain_list {
- 	u64			cycles_count;
- 	u64			iter_count;
- 	u64			samples_count;
--	char		       *srcline;
-+	const char		*srcline;
- 	struct list_head	list;
- };
- 
-@@ -133,6 +133,7 @@ struct callchain_cursor_node {
- 	u64				ip;
- 	struct map			*map;
- 	struct symbol			*sym;
-+	const char			*srcline;
- 	bool				branch;
- 	struct branch_flags		branch_flags;
- 	int				nr_loop_iter;
-@@ -198,7 +199,7 @@ static inline void callchain_cursor_reset(struct callchain_cursor *cursor)
- int callchain_cursor_append(struct callchain_cursor *cursor, u64 ip,
- 			    struct map *map, struct symbol *sym,
- 			    bool branch, struct branch_flags *flags,
--			    int nr_loop_iter, int samples);
-+			    int nr_loop_iter, int samples, const char *srcline);
- 
- /* Close a cursor writing session. Initialize for the reader */
- static inline void callchain_cursor_commit(struct callchain_cursor *cursor)
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 64bfa8b43706..df2f1e618360 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1679,6 +1679,15 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
- 	return mi;
- }
- 
-+static char *callchain_srcline(struct map *map, struct symbol *sym, u64 ip)
-+{
-+	if (!map || callchain_param.key == CCKEY_FUNCTION)
-+		return NULL;
-+
-+	return get_srcline(map->dso, map__rip_2objdump(map, ip),
-+			   sym, false, callchain_param.key == CCKEY_ADDRESS);
-+}
-+
- static int add_callchain_ip(struct thread *thread,
- 			    struct callchain_cursor *cursor,
- 			    struct symbol **parent,
-@@ -1741,7 +1750,9 @@ static int add_callchain_ip(struct thread *thread,
- 	if (symbol_conf.hide_unresolved && al.sym == NULL)
- 		return 0;
- 	return callchain_cursor_append(cursor, al.addr, al.map, al.sym,
--				       branch, flags, nr_loop_iter, samples);
-+				       branch, flags, nr_loop_iter, samples,
-+				       callchain_srcline(al.map, al.sym,
-+							 al.addr));
- }
- 
- struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
-@@ -2055,7 +2066,7 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	list_for_each_entry(ilist, &inline_node->val, list) {
- 		int ret = callchain_cursor_append(cursor, ip, map,
- 						  ilist->symbol, false,
--						  NULL, 0, 0);
-+						  NULL, 0, 0, ilist->srcline);
- 
- 		if (ret != 0)
- 			return ret;
-@@ -2076,7 +2087,9 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 
- 	return callchain_cursor_append(cursor, entry->ip,
- 				       entry->map, entry->sym,
--				       false, NULL, 0, 0);
-+				       false, NULL, 0, 0,
-+				       callchain_srcline(entry->map, entry->sym,
-+							 entry->ip));
- }
- 
- static int thread__resolve_callchain_unwind(struct thread *thread,
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 25ceed8eb790..a1fdf035d1dd 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -33,7 +33,7 @@ static const char *dso__name(struct dso *dso)
- 	return dso_name;
- }
- 
--static int inline_list__append(struct symbol *symbol, char *filename, int line_nr,
-+static int inline_list__append(struct symbol *symbol, char *srcline,
- 			       struct inline_node *node)
- {
- 	struct inline_list *ilist;
-@@ -43,8 +43,7 @@ static int inline_list__append(struct symbol *symbol, char *filename, int line_n
- 		return -1;
- 
- 	ilist->symbol = symbol;
--	ilist->filename = filename;
--	ilist->line_nr = line_nr;
-+	ilist->srcline = srcline;
- 
- 	if (callchain_param.order == ORDER_CALLEE)
- 		list_add_tail(&ilist->list, &node->val);
-@@ -54,6 +53,30 @@ static int inline_list__append(struct symbol *symbol, char *filename, int line_n
- 	return 0;
- }
- 
-+// basename version that takes a const input string
-+static const char *gnu_basename(const char *path)
-+{
-+	const char *base = strrchr(path, '/');
-+
-+	return base ? base + 1 : path;
-+}
-+
-+static char *srcline_from_fileline(const char *file, unsigned int line)
-+{
-+	char *srcline;
-+
-+	if (!file)
-+		return NULL;
-+
-+	if (!srcline_full_filename)
-+		file = gnu_basename(file);
-+
-+	if (asprintf(&srcline, "%s:%u", file, line) < 0)
-+		return NULL;
-+
-+	return srcline;
-+}
-+
- #ifdef HAVE_LIBBFD_SUPPORT
- 
- /*
-@@ -229,10 +252,13 @@ static int inline_list__append_dso_a2l(struct dso *dso,
- 				       struct symbol *sym)
- {
- 	struct a2l_data *a2l = dso->a2l;
--	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
- 	struct symbol *inline_sym = new_inline_sym(dso, sym, a2l->funcname);
-+	char *srcline = NULL;
-+
-+	if (a2l->filename)
-+		srcline = srcline_from_fileline(a2l->filename, a2l->line);
- 
--	return inline_list__append(inline_sym, filename, a2l->line, node);
-+	return inline_list__append(inline_sym, srcline, node);
- }
- 
- static int addr2line(const char *dso_name, u64 addr,
-@@ -426,12 +452,15 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- 	node->addr = addr;
- 
- 	while (getline(&filename, &len, fp) != -1) {
-+		char *srcline;
-+
- 		if (filename_split(filename, &line_nr) != 1) {
- 			free(filename);
- 			goto out;
- 		}
- 
--		if (inline_list__append(sym, filename, line_nr, node) != 0)
-+		srcline = srcline_from_fileline(filename, line_nr);
-+		if (inline_list__append(sym, srcline, node) != 0)
- 			goto out;
- 
- 		filename = NULL;
-@@ -475,16 +504,14 @@ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
- 		       unwind_inlines, NULL, sym))
- 		goto out;
- 
--	if (asprintf(&srcline, "%s:%u",
--				srcline_full_filename ? file : basename(file),
--				line) < 0) {
--		free(file);
-+	srcline = srcline_from_fileline(file, line);
-+	free(file);
-+
-+	if (!srcline)
- 		goto out;
--	}
- 
- 	dso->a2l_fails = 0;
- 
--	free(file);
- 	return srcline;
- 
- out:
-@@ -536,7 +563,7 @@ void inline_node__delete(struct inline_node *node)
- 
- 	list_for_each_entry_safe(ilist, tmp, &node->val, list) {
- 		list_del_init(&ilist->list);
--		zfree(&ilist->filename);
-+		zfree(&ilist->srcline);
- 		// only the inlined symbols are owned by the list
- 		if (ilist->symbol && ilist->symbol->inlined)
- 			symbol__delete(ilist->symbol);
-diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-index ad9726987b80..0d2aca92e8c7 100644
---- a/tools/perf/util/srcline.h
-+++ b/tools/perf/util/srcline.h
-@@ -19,8 +19,7 @@ void free_srcline(char *srcline);
- 
- struct inline_list {
- 	struct symbol		*symbol;
--	char			*filename;
--	unsigned int		line_nr;
-+	char			*srcline;
- 	struct list_head	list;
- };
- 
+Before resending this whole series, it would be great if people could review 
+the stuff in here such that I know whether I'm on the right track.
+
+You can checkout my clone from github for quick testing:
+
+https://github.com/milianw/linux/commits/wip/distinguish-inliners
+
+Thanks
+
 -- 
-2.13.0
+Milian Wolff | milian.wolff@kdab.com | Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart373812496.SIgR8EvAlu
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUdzCCBGYw
+ggNOoAMCAQICEFEmCpMc4n+cw6VfeeByroIwDQYJKoZIhvcNAQEFBQAwgZMxCzAJBgNVBAYTAlVT
+MQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRoZSBVU0VS
+VFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1c3QuY29tMRswGQYDVQQD
+ExJVVE4gLSBEQVRBQ29ycCBTR0MwHhcNMDUwNjA3MDgwOTEwWhcNMTkwNjI0MTkwNjMwWjBvMQsw
+CQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVy
+bmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/caM+byAAQtOeBOW+0fvGwPzbX6I7bO3psRM5ek
+KUx9k5+9SryT7QMa44/P5W1QWtaXKZRagLBJetsulf24yr83OC0ePpFBrXBWx/BPP+gynnTKyJBU
+6cZfD3idmkA8Dqxhql4Uj56HoWpQ3NeaTq8Fs6ZxlJxxs1BgCscTnTgHhgKo6ahpJhiQq0ywTyOr
+Ok+E2N/On+Fpb7vXQtdrROTHre5tQV9yWnEIN7N5ZaRZoJQ39wAvDcKSctrQOHLbFKhFxF0qfbe0
+1sTurM0TRLfJK91DACX6YblpalgjEbenM49WdVn1zSnXRrcKK2W200JvFbK4e/vv6V1T1TRaJwID
+AQABo4HYMIHVMB8GA1UdIwQYMBaAFFMy0bPPf/rg8aBdhU6S0p5FHbRPMB0GA1UdDgQWBBStvZh6
+NLQm9/rEJlTvA73gJMtUGjAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zARBglghkgB
+hvhCAQEEBAMCAQIwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZIAYb4QgQBMD0GA1UdHwQ2MDQw
+MqAwoC6GLGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tREFUQUNvcnBTR0MuY3JsMA0GCSqG
+SIb3DQEBBQUAA4IBAQDG7lMXaBSyUSIekFgNlP298XDlhi3DNjGPVEhG5y0IN7xsCmDhDq1RNOAS
+k+m+uKu4JrTplj0oj65kB/7gAezF45HrGKDxdX7bCuafkduvrnXfI5Fo3RcAWkv/ZGxw6wEa0JDZ
+x6bWbfYT5P+1ydIeKsuxJUMmeNkwm04NHr5p79/q/i2zzPmw3bUUypHUsrWl+wEZo0d5n52MlYc0
++B84kto2phH6a+tr6dxFeBU5BtdNQeQhyNwvh9G3v0hgdaViyyTeO2GgKSCmvsVsnMTpCmki75E6
++iav0VtBpzri+DgHQqvBW/jObboPBD8yNKzcBCjXcDAUJgbE5JuY1c94MIIEnTCCA4WgAwIBAgIQ
+ND3pK6wnNP+PyzSU+8xwVDANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEUMBIGA1UEChML
+QWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFkZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYD
+VQQDExlBZGRUcnVzdCBFeHRlcm5hbCBDQSBSb290MB4XDTA1MDYwNzA4MDkxMFoXDTIwMDUzMDEw
+NDgzOFowga4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENp
+dHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51
+c2VydHJ1c3QuY29tMTYwNAYDVQQDEy1VVE4tVVNFUkZpcnN0LUNsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgRW1haWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCyOYWk8n2rQTtiRjeu
+zcFgdbw5ZflKGkeiucxIzGqY1U01GbmkQuXOSeKKLx580jEHx060g2SdLinVomTEhb2FUTV5pE5o
+kHsceqSSqBfymBXyk8zJpDKVuwxPML2YoAuL5W4bokb6eLyib6tZXqUvz8rabaov66yhs2qqty5n
+NYt54R5piOLmRs2gpeq+C852OnoOm+r82idbPXMfIuZIYcZM82mxqC4bttQxICy8goqOpA6l14lD
+/BZarx1x1xFZ2rqHDa/68+HC8KTFZ4zW1lQ63gqkugN3s2XI/R7TdGKqGMpokx6hhX71R2XL+E1X
+KHTSNP8wtu72YjAUjCzrAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAUrb2YejS0Jvf6xCZU7wO94CTL
+VBowHQYDVR0OBBYEFImCZ33EnSZwAEu0UEh83j2uBG59MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MBEGA1UdIAQKMAgwBgYEVR0gADBEBgNVHR8EPTA7MDmgN6A1hjNodHRwOi8vY3Js
+LnVzZXJ0cnVzdC5jb20vQWRkVHJ1c3RFeHRlcm5hbENBUm9vdC5jcmwwNQYIKwYBBQUHAQEEKTAn
+MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IB
+AQABvJzjYyiw8zEBwt973WKgAZ0jMQ+cknNTUeofTPrWn8TKL2d+eDMPdBa5kYeR9Yom+mRwANge
++QsEYlCHk4HU2vUj2zS7hVa0cDRueIM3HoUcxREVkl+HF72sav3xwtHMiV+xfPA+UfI183zsYJhr
+Oivg79+zfYbrtRv1W+yifJgT1wBQudEtc94DeHThBYUxXsuauZ2UxrmUN3Vy3ET7Z+jw+iUeUqfa
+JelH4KDHPKBOsQo2+3dIn++Xivu0/uOUFKiDvFwtP9JgcWDuwnGCDOmINuPaILSjoGyqlku4gI51
+ykkH9jsUut/cBdmf2+Cy5k2geCbn5y1uf1/GHogVMIIFGjCCBAKgAwIBAgIQbRnqpxlPajMi5iIy
+eqpx3jANBgkqhkiG9w0BAQUFADCBrjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQH
+Ew5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQL
+ExhodHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xNjA0BgNVBAMTLVVUTi1VU0VSRmlyc3QtQ2xpZW50
+IEF1dGhlbnRpY2F0aW9uIGFuZCBFbWFpbDAeFw0xMTA0MjgwMDAwMDBaFw0yMDA1MzAxMDQ4Mzha
+MIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcGA1UEAxMwQ09NT0RPIENsaWVu
+dCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAkoSEW0tXmNReL4uk4UDIo1NYX2Zl8TJO958yfVXQeExVt0KU4PkncQfFxmmk
+uTLE8UAakMwnVmJ/F7Vxaa7lIBvky2NeYMqiQfZq4aP/uN8fSG1lQ4wqLitjOHffsReswtqCAtbU
+MmrUZ28gE49cNfrlVICv2HEKHTcKAlBTbJUdqRAUtJmVWRIx/wmi0kzcUtve4kABW0ho3cVKtODt
+JB86r3FfB+OsvxQ7sCVxaD30D9YXWEYVgTxoi4uDD216IVfmNLDbMn7jSuGlUnJkJpFOpZIP/+Cx
+YP0ab2hRmWONGoulzEKbm30iY9OpoPzOnpDfRBn0XFs1uhbzp5v/wQIDAQABo4IBSzCCAUcwHwYD
+VR0jBBgwFoAUiYJnfcSdJnAAS7RQSHzePa4Ebn0wHQYDVR0OBBYEFHoTTgB0W8Z4Y2QnwS/ioFu8
+ecV7MA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0g
+ADBYBgNVHR8EUTBPME2gS6BJhkdodHRwOi8vY3JsLnVzZXJ0cnVzdC5jb20vVVROLVVTRVJGaXJz
+dC1DbGllbnRBdXRoZW50aWNhdGlvbmFuZEVtYWlsLmNybDB0BggrBgEFBQcBAQRoMGYwPQYIKwYB
+BQUHMAKGMWh0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VVE5BZGRUcnVzdENsaWVudF9DQS5jcnQw
+JQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEFBQADggEB
+AIXWvnhXVW0zf0RS/kLVBqgBA4CK+w2y/Uq/9q9BSfUbWsXSrRtzbj7pJnzmTJjBMCjfy/tCPKEl
+Pgp11tA9OYZm0aGbtU2bb68obB2v5ep0WqjascDxdXovnrqTecr+4pEeVnSy+I3T4ENyG+2P/WA5
+IEf7i686ZUg8mD2lJb+972DgSeUWyOs/Q4Pw4O4NwdPNM1+b0L1garM7/vrUyTo8H+2b/5tJM75C
+KTmD7jNpLoKdRU2oadqAGx490hpdfEeZpZsIbRKZhtZdVwcbpzC+S0lEuJB+ytF5OOu0M/qgOl0m
+WJ5hVRi0IdWZ1eBDQEIwvuql55TSsP7zdfl/bucwggZKMIIFMqADAgECAhByCOhbkTwXiJtaa0d5
+K5u0MA0GCSqGSIb3DQEBBQUAMIGTMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5j
+aGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE5MDcG
+A1UEAxMwQ09NT0RPIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4X
+DTE0MDYwMjAwMDAwMFoXDTE3MDYwMTIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0GA1UEERMG
+NjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNVBAkTD05v
+cnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRhbGVucyBE
+YXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNVBAsMOklz
+c3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1hbmFnZXIx
+HzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBXb2xmZjEk
+MCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAwirYPAOcWQk9jaCoEAn84PwINg/NDs3PxsEd34f27AfCqJepwIF+ikMuBBxt
+mm1pieQwU9fcFrE4CXPCdYxfFOdcbJJ58Xzog5aFrJHnYGEFIL8KVvdBvAFeP/AJPaY2lg1JWnVI
+1jwO74VmUGMyvMG286wpwW3hWO3sepZZQN3tvXyd9EgD72AiImkvw43+BW4xy8ptOd3TvEwCJ+uN
+x8v+uILsRLvKcmSrUsLpo7No2HoifWX1doKHKSwYVVqmOT/rjJWxF98j4w2kTKRsWdQ4ENlqNpjW
+zlbtB6TM2mrnInefzALbIoLLQ2E2NFCaMVsczf7RFsMxUepM9KQQ5QIDAQABo4IBzzCCAcswHwYD
+VR0jBBgwFoAUehNOAHRbxnhjZCfBL+KgW7x5xXswHQYDVR0OBBYEFGSjHixs9BD9OyGskYjMX7mi
+P+fiMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggr
+BgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1odHRwczov
+L3NlY3VyZS5jb21vZG8ubmV0L0NQUzBXBgNVHR8EUDBOMEygSqBIhkZodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9DbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGI
+BggrBgEFBQcBAQR8MHowUgYIKwYBBQUHMAKGRmh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T0NsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0
+dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29sZmZAa2RhYi5jb20w
+DQYJKoZIhvcNAQEFBQADggEBAFvi067uXCOkiUH/D6rv4gV0/e+e8DzcvbbsUxAC5nwDXBv+47ds
+l7j8NrZstZraVz35WEWgksNmnyghcuBKzKcN3kY1KNn/ERc9wvns/0dI+yj39L0eSMzchUZoV6GY
+MtPfmLofPvUBbDesl97JQXF9vpk8FIVsI1UKKrLzfoKhue5abQHXurSFa0ts1UPmSh2Y8/QCQlFN
+lCv8ISyEwVCAkhdIqxRc3hslooBhcRVUrYhRdCLlNN6Od8yuLE9sKWH/K4wg/BpnjCJmGp4GQhU8
+DUG2r0CbOa+iZQKTWUgwdGU3Jr+WcOan/JaNzBuKk1GM3D+WcljoU7ZWtoqXPzgxggJaMIICVgIB
+ATCBqDCBkzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxOTA3BgNVBAMTMENPTU9ETyBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQcgjoW5E8F4ibWmtHeSub
+tDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE3MDUxODIwMDUzNlowIwYJKoZIhvcNAQkEMRYEFA0d6H+5PH7/Y364+o36HIR3c/OoMCgGCSqG
+SIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA0GCSqGSIb3DQEBAQUABIIBAE2M
+mGjxalry1/pcl0p5wDfUHu1EhMS+e2oYlBtGsp76gyyEfXYRmCzaN7gqVyJXEx+VTCsEoizgFeOX
+DQ6jj8Sqns2A12I4LmPOxGwRLInlB7+jzfE3hbnOAwNrBSP8/beNvjLsBQ+FkldT+5bHUrEJT3ej
+6g2WaIzsOkwPcmfCnsRZ2aT+L8qnmNUmBI/4i5XFlsOjd9g2AcHRjsNhnVghHieE6sM6GbKb/8ql
+J3FVRn2PN9L1CQ90MCVz5D1uYPHIRW3GNF1MA37KFOpPz3SDdO13yMc+6OHAH+3uftsRp7ZIilm6
+BrhoPQqdiySeNVmBBV8G9Mik3IIbiQYdv0UAAAAAAAA=
+
+
+--nextPart373812496.SIgR8EvAlu--
