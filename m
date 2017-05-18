@@ -1,205 +1,51 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v3] perf report: fix off-by-one for non-activation frames
-Date: Thu, 18 May 2017 18:44:25 +0900
-Message-ID: <20170518094425.GD4885@sejong>
-References: <20170518083735.14126-1-milian.wolff@kdab.com>
+Subject: Re: [PATCH v2] perf report: fix memory leak in addr2line when called
+ by addr2inlines
+Date: Thu, 18 May 2017 18:46:37 +0900
+Message-ID: <20170518094637.GE4885@sejong>
+References: <20170518083753.14337-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEAMRELO11.lge.com ([156.147.23.51]:48892 "EHLO
+Received: from LGEAMRELO11.lge.com ([156.147.23.51]:51876 "EHLO
         lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753743AbdERJob (ORCPT
+        with ESMTP id S1755485AbdERKBm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 05:44:31 -0400
+        Thu, 18 May 2017 06:01:42 -0400
 Content-Disposition: inline
-In-Reply-To: <20170518083735.14126-1-milian.wolff@kdab.com>
+In-Reply-To: <20170518083753.14337-1-milian.wolff@kdab.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Milian Wolff <milian.wolff@kdab.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-Hi Milian,
-
-On Thu, May 18, 2017 at 10:37:35AM +0200, Milian Wolff wrote:
-> As the documentation for dwfl_frame_pc says, frames that
-> are no activation frames need to have their program counter
-> decremented by one to properly find the function of the caller.
+On Thu, May 18, 2017 at 10:37:53AM +0200, Milian Wolff wrote:
+> When a filename was found in addr2line it was duplicated via strdup
+> but never freed. Now we pass NULL and handle this gracefully in
+> addr2line.
 > 
-> This fixes many cases where perf report currently attributes
-> the cost to the next line. I.e. I have code like this:
+> Detected by Valgrind:
 > 
-> ~~~~~~~~~~~~~~~
->   #include <thread>
->   #include <chrono>
-> 
->   using namespace std;
-> 
->   int main()
->   {
->     this_thread::sleep_for(chrono::milliseconds(1000));
->     this_thread::sleep_for(chrono::milliseconds(100));
->     this_thread::sleep_for(chrono::milliseconds(10));
-> 
->     return 0;
->   }
-> ~~~~~~~~~~~~~~~
-> 
-> Now compile and record it:
-> 
-> ~~~~~~~~~~~~~~~
-> g++ -std=c++11 -g -O2 test.cpp
-> echo 1 | sudo tee /proc/sys/kernel/sched_schedstats
-> perf record \
->     --event sched:sched_stat_sleep \
->     --event sched:sched_process_exit \
->     --event sched:sched_switch --call-graph=dwarf \
->     --output perf.data.raw \
->     ./a.out
-> echo 0 | sudo tee /proc/sys/kernel/sched_schedstats
-> perf inject --sched-stat --input perf.data.raw --output perf.data
-> ~~~~~~~~~~~~~~~
-> 
-> Before this patch, the report clearly shows the off-by-one issue.
-> Most notably, the last sleep invocation is incorrectly attributed
-> to the "return 0;" line:
-> 
-> ~~~~~~~~~~~~~~~
->   Overhead  Source:Line
->   ........  ...........
-> 
->    100.00%  core.c:0
->             |
->             ---__schedule core.c:0
->                schedule
->                do_nanosleep hrtimer.c:0
->                hrtimer_nanosleep
->                sys_nanosleep
->                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
->                __nanosleep_nocancel .:0
->                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
->                |
->                |--90.08%--main test.cpp:9
->                |          __libc_start_main
->                |          _start
->                |
->                |--9.01%--main test.cpp:10
->                |          __libc_start_main
->                |          _start
->                |
->                 --0.91%--main test.cpp:13
->                           __libc_start_main
->                           _start
-> ~~~~~~~~~~~~~~~
-> 
-> With this patch here applied, the issue is fixed. The report becomes
-> much more usable:
-> 
-> ~~~~~~~~~~~~~~~
->   Overhead  Source:Line
->   ........  ...........
-> 
->    100.00%  core.c:0
->             |
->             ---__schedule core.c:0
->                schedule
->                do_nanosleep hrtimer.c:0
->                hrtimer_nanosleep
->                sys_nanosleep
->                entry_SYSCALL_64_fastpath .tmp_entry_64.o:0
->                __nanosleep_nocancel .:0
->                std::this_thread::sleep_for<long, std::ratio<1l, 1000l> > thread:323
->                |
->                |--90.08%--main test.cpp:8
->                |          __libc_start_main
->                |          _start
->                |
->                |--9.01%--main test.cpp:9
->                |          __libc_start_main
->                |          _start
->                |
->                 --0.91%--main test.cpp:10
->                           __libc_start_main
->                           _start
-> ~~~~~~~~~~~~~~~
-> 
-> Similarly it works for signal frames:
-> 
-> ~~~~~~~~~~~~~~~
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <signal.h>
-> 
-> #define __noinline  __attribute__((noinline))
-> 
-> __noinline void bar(void)
-> {
->   volatile long cnt = 0;
-> 
->   for (cnt = 0; cnt < 100000000; cnt++);
-> }
-> 
-> __noinline void foo(void)
-> {
->   bar();
-> }
-> 
-> void sig_handler(int sig)
-> {
->   foo();
-> }
-> 
-> int main(void)
-> {
->   signal(SIGUSR1, sig_handler);
->   raise(SIGUSR1);
-> 
->   foo();
->   return 0;
-> }
-> ~~~~~~~~~~~~~~~~
-> 
-> Before, the report wrongly points to `signal.c:29` after raise():
-> 
-> ~~~~~~~~~~~~~~~~
-> $ perf report --stdio --no-children -g srcline -s srcline
-> ...
->    100.00%  signal.c:11
->             |
->             ---bar signal.c:11
->                |
->                |--50.49%--main signal.c:29
->                |          __libc_start_main
->                |          _start
->                |
->                 --49.51%--0x33a8f
->                           raise .:0
->                           main signal.c:29
->                           __libc_start_main
->                           _start
-> ~~~~~~~~~~~~~~~~
-> 
-> With this patch in, the issue is fixed and we instead get:
-> 
-> ~~~~~~~~~~~~~~~~
->    100.00%  signal   signal            [.] bar
->             |
->             ---bar signal.c:11
->                |
->                |--50.49%--main signal.c:29
->                |          __libc_start_main
->                |          _start
->                |
->                 --49.51%--0x33a8f
->                           raise .:0
->                           main signal.c:27
->                           __libc_start_main
->                           _start
-> ~~~~~~~~~~~~~~~~
-> 
-> Note how this patch fixes this issue for both unwinding methods, i.e.
-> both dwfl and libunwind. The former case is straight-forward thanks
-> to dwfl_frame_pc. For libunwind, we replace the functionality via
-> unw_is_signal_frame for any but the very first frame.
+> ==16331== 1,680 bytes in 21 blocks are definitely lost in loss record 148 of 220
+> ==16331==    at 0x4C2AF1F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+> ==16331==    by 0x672FA69: strdup (in /usr/lib/libc-2.25.so)
+> ==16331==    by 0x52769F: addr2line (srcline.c:256)
+> ==16331==    by 0x52769F: addr2inlines (srcline.c:294)
+> ==16331==    by 0x52769F: dso__parse_addr_inlines (srcline.c:502)
+> ==16331==    by 0x574D7A: inline__fprintf (hist.c:41)
+> ==16331==    by 0x574D7A: ipchain__fprintf_graph (hist.c:147)
+> ==16331==    by 0x57518A: __callchain__fprintf_graph (hist.c:212)
+> ==16331==    by 0x5753CF: callchain__fprintf_graph.constprop.6 (hist.c:337)
+> ==16331==    by 0x57738E: hist_entry__fprintf (hist.c:628)
+> ==16331==    by 0x57738E: hists__fprintf (hist.c:882)
+> ==16331==    by 0x44A20F: perf_evlist__tty_browse_hists (builtin-report.c:399)
+> ==16331==    by 0x44A20F: report__browse_hists (builtin-report.c:491)
+> ==16331==    by 0x44A20F: __cmd_report (builtin-report.c:624)
+> ==16331==    by 0x44A20F: cmd_report (builtin-report.c:1054)
+> ==16331==    by 0x4A49CE: run_builtin (perf.c:296)
+> ==16331==    by 0x4A4CC0: handle_internal_command (perf.c:348)
+> ==16331==    by 0x434371: run_argv (perf.c:392)
+> ==16331==    by 0x434371: main (perf.c:530)
 > 
 > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 > Cc: David Ahern <dsahern@gmail.com>
@@ -214,63 +60,77 @@ Namhyung
 
 
 > ---
->  tools/perf/util/unwind-libdw.c           |  6 +++++-
->  tools/perf/util/unwind-libunwind-local.c | 11 +++++++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
+>  tools/perf/util/srcline.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
 > 
 > v2:
-> - use unw_is_signal_frame to also fix this issue for libunwind
+> - keep behavior of old function when strdup failed
+> - set ret to 1 if we found any inline node
 > 
-> v3:
-> - only check current signal in libunwind case, which fixes the
->   example code provided by Namhyung. The example is added in the
->   commit message and I confirmed that libdw and libunwind now
->   both produce the correct results for this case
-> 
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> index f90e11a555b2..943a06291587 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -168,12 +168,16 @@ frame_callback(Dwfl_Frame *state, void *arg)
->  {
->  	struct unwind_info *ui = arg;
->  	Dwarf_Addr pc;
-> +	bool isactivation;
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index df051a52393c..5e376d64d59e 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -230,7 +230,10 @@ static int addr2line(const char *dso_name, u64 addr,
 >  
-> -	if (!dwfl_frame_pc(state, &pc, NULL)) {
-> +	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
->  		pr_err("%s", dwfl_errmsg(-1));
->  		return DWARF_CB_ABORT;
->  	}
+>  	bfd_map_over_sections(a2l->abfd, find_address_in_section, a2l);
 >  
-> +	if (!isactivation)
-> +		--pc;
+> -	if (a2l->found && unwind_inlines) {
+> +	if (!a2l->found)
+> +		return 0;
 > +
->  	return entry(pc, ui) || !(--ui->max_stack) ?
->  	       DWARF_CB_ABORT : DWARF_CB_OK;
->  }
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-> index f8455bed6e65..84d553898e2a 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -692,6 +692,17 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
+> +	if (unwind_inlines) {
+>  		int cnt = 0;
 >  
->  		while (!ret && (unw_step(&c) > 0) && i < max_stack) {
->  			unw_get_reg(&c, UNW_REG_IP, &ips[i]);
-> +
-> +			/*
-> +			 * Decrement the IP for any non-activation frames.
-> +			 * this is required to properly find the srcline
-> +			 * for caller frames.
-> +			 * See also the documentation for dwfl_frame_pc,
-> +			 * which this code tries to replicate.
-> +			 */
-> +			if (unw_is_signal_frame(&c) <= 0)
-> +				--ips[i];
-> +
->  			++i;
+>  		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
+> @@ -243,6 +246,8 @@ static int addr2line(const char *dso_name, u64 addr,
+>  							a2l->line, node,
+>  							dso) != 0)
+>  					return 0;
+> +				// found at least one inline frame
+> +				ret = 1;
+>  			}
 >  		}
 >  
+> @@ -252,14 +257,14 @@ static int addr2line(const char *dso_name, u64 addr,
+>  		}
+>  	}
+>  
+> -	if (a2l->found && a2l->filename) {
+> -		*file = strdup(a2l->filename);
+> -		*line = a2l->line;
+> -
+> -		if (*file)
+> -			ret = 1;
+> +	if (file) {
+> +		*file = a2l->filename ? strdup(a2l->filename) : NULL;
+> +		ret = *file ? 1 : 0;
+>  	}
+>  
+> +	if (line)
+> +		*line = a2l->line;
+> +
+>  	return ret;
+>  }
+>  
+> @@ -278,8 +283,6 @@ void dso__free_a2l(struct dso *dso)
+>  static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+>  	struct dso *dso)
+>  {
+> -	char *file = NULL;
+> -	unsigned int line = 0;
+>  	struct inline_node *node;
+>  
+>  	node = zalloc(sizeof(*node));
+> @@ -291,7 +294,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+>  	INIT_LIST_HEAD(&node->val);
+>  	node->addr = addr;
+>  
+> -	if (!addr2line(dso_name, addr, &file, &line, dso, TRUE, node))
+> +	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node))
+>  		goto out_free_inline_node;
+>  
+>  	if (list_empty(&node->val))
 > -- 
 > 2.13.0
 > 
