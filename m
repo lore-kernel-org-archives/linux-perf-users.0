@@ -1,66 +1,74 @@
-From: Nan Xiao <xiaonan830818@gmail.com>
-Subject: Re: Why the stack frame in perf.data isn't displayed in FlameGraph?
-Date: Fri, 19 May 2017 09:50:46 +0800
-Message-ID: <CA+MhoaP=HR43P6PxPdVhW5_36Zo52hrNeP4_j05CwGb6__0xDg@mail.gmail.com>
-References: <CA+MhoaM8o2yap8mMVvJsbB2iwXtn05uh+0am5aACbFV50Oud_g@mail.gmail.com>
- <9775568.X03CyG2sn6@agathebauer> <CA+MhoaOJkUe-EyP67F+YtNb04TjfteTSS=KHiN98ry4zK5WXWA@mail.gmail.com>
- <2393730.W62ke2LKls@agathebauer>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 0/7] generate full callchain cursor entries for inlined
+ frames
+Date: Mon, 22 May 2017 18:06:43 +0900
+Message-ID: <20170522090643.GA20009@sejong>
+References: <20170518193411.22380-1-milian.wolff@kdab.com>
+ <2176198.pfBDoCjSEJ@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f181.google.com ([209.85.192.181]:34346 "EHLO
-        mail-pf0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753200AbdESBur (ORCPT
+Received: from LGEAMRELO12.lge.com ([156.147.23.52]:39194 "EHLO
+        lgeamrelo12.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1757559AbdEVJGs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2017 21:50:47 -0400
-Received: by mail-pf0-f181.google.com with SMTP id 9so32167243pfj.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 May 2017 18:50:47 -0700 (PDT)
-In-Reply-To: <2393730.W62ke2LKls@agathebauer>
+        Mon, 22 May 2017 05:06:48 -0400
+Content-Disposition: inline
+In-Reply-To: <2176198.pfBDoCjSEJ@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kernel-team@lge.com
 
 Hi Milian,
 
-Thanks very much!
+On Thu, May 18, 2017 at 10:05:36PM +0200, Milian Wolff wrote:
+> On Donnerstag, 18. Mai 2017 21:34:04 CEST Milian Wolff wrote:
+> > This series of patches completely reworks the way inline frames are handled.
+> > Instead of querying for the inline nodes on-demand in the individual tools,
+> > we now create proper callchain nodes for inlined frames. The advantages
+> > this approach brings are numerous:
+> > 
+> > - less duplicated code in the individual browser
+> > - aggregated cost for inlined frames for the --children top-down list
+> > - various bug fixes that arose from querying for a srcline/symbol based on
+> >   the IP of a sample, which will always point to the last inlined frame
+> >   instead of the corresponding non-inlined frame
+> > - overall much better support for visualizing cost for heavily-inlined C++
+> >   code, which simply was confusing and unreliably before
+> > - srcline honors the global setting as to whether full paths or basenames
+> >   should be shown
+> > 
+> > For comparison, below lists the output before and after for `perf script`
+> > and `perf report`. The example file I used to generate the perf data is:
+> 
+> And of course shortly after sending this patch series I notice the first 
+> issues ;-) The new behavior shows confusing results for `-g function` because 
+> match_chain uses sym->start. I fixed this locally to compare the actual 
+> function name if either of the two symbols is an inlined fake symbol:
 
-So what is the difference between acme's perf/core and general perf
-installed by pacman/yum? Is acme's perf/core more newer? Thx!
-Best Regards
-Nan Xiao
+Why not making the fake symbol has start addr of the sample IP and
+length of 1.  The histogram sort code also compares the sym->start
+which might confuse the output of the children mode too IMHO.
+
+Thanks,
+Namhyung
 
 
-On Fri, May 19, 2017 at 3:01 AM, Milian Wolff <milian.wolff@kdab.com> wrote:
-> On Donnerstag, 18. Mai 2017 15:24:04 CEST Nan Xiao wrote:
->> Hi Milian,
->>
->> Firstly, thanks very much for your kind and detailed help!
->>
->> (1) I recompile the program use "g++ -g -O2 ...", and use "perf record
->> --call-graph dwarf" to sample. The FlameGraph can display full stack
->> frames and "inner" function appears in both FlameGraph and "perf
->> record".
->>
->> (2) > Also, to see inline frames, try to build perf from git (acme's
->> perf/core) and use `perf report --inline`.
->>
->> I find my perf version doesn't support "--inline" option, and I can't
->> figure out what is the meaning of "build perf from git (acme's
->> perf/core)". Could you elaborate it? I just install perf tools using
->> "sudo pacman -S perf".
->
-> Essentially it boils down to do this:
->
-> git clone git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux -b perf/
-> core
-> cd linux/tools/perf
-> make
-> ./perf report --inline ...
->
-> Cheers
->
-> --
+> 
+> https://github.com/milianw/linux/commit/
+> a1fa4486c19976f36d6ee7df263676e888c2bdb9
+> 
+> Before resending this whole series, it would be great if people could review 
+> the stuff in here such that I know whether I'm on the right track.
+> 
+> You can checkout my clone from github for quick testing:
+> 
+> https://github.com/milianw/linux/commits/wip/distinguish-inliners
+> 
+> Thanks
+> 
+> -- 
 > Milian Wolff | milian.wolff@kdab.com | Software Engineer
 > KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 > Tel: +49-30-521325470
