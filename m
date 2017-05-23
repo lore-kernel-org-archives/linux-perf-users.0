@@ -1,76 +1,69 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 6/7] perf report: mark inlined frames in output by "
- (inlined)" suffix
-Date: Mon, 22 May 2017 21:48:18 +0900
-Message-ID: <20170522124818.GE20009@sejong>
-References: <20170518193411.22380-1-milian.wolff@kdab.com>
- <20170518193411.22380-7-milian.wolff@kdab.com>
+From: Michael Edwards <michael@tensyr.com>
+Subject: perf/x86/intel: Collecting CPU-local performance counters from all
+ cores in parallel
+Date: Mon, 22 May 2017 22:42:29 -0700
+Message-ID: <CACFdaOz-ox4XSu-q8S-Op8xPTDwoT6FAN-yhi0988NJiazpm0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from LGEAMRELO11.lge.com ([156.147.23.51]:33916 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756362AbdEVMsV (ORCPT
+Received: from mail-wm0-f43.google.com ([74.125.82.43]:35142 "EHLO
+        mail-wm0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933266AbdEWFmv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2017 08:48:21 -0400
-Content-Disposition: inline
-In-Reply-To: <20170518193411.22380-7-milian.wolff@kdab.com>
+        Tue, 23 May 2017 01:42:51 -0400
+Received: by mail-wm0-f43.google.com with SMTP id b84so12344889wmh.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2017 22:42:50 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+To: linux-kernel@vger.kernel.org, peterz@infradead.org, linux-perf-users@vger.kernel.org
 
-On Thu, May 18, 2017 at 09:34:10PM +0200, Milian Wolff wrote:
-> The original patch that introduced inline frame output in the
-> various browsers used this suffix already. The new centralized
-> approach that uses fake symbols for inlined frames was missing
-> this approach so far.
-> 
-> Instead of changing the symbol name itself, we only print the
-> suffix where needed. This allows us to efficiently lookup
-> the symbol for a given name without first having to append the
-> suffix before the lookup.
+I'm working on a system-wide profiling tool that uses perf_event to
+gather CPU-local performance counters (L2/L3 cache misses, etc.)
+across all CPUs (hyperthreads) of a multi-socket system.  We'd like
+for the monitoring process to run on a single core, and to be able to
+sample at frequent, regular intervals (sub-millisecond), with minimal
+impact on the tasks running on other CPUs.  I've prototyped this using
+perf_events (with one event group per CPU), and on a two-socket,
+32-(logical)-CPU system the prototype reaches about 2,700 samples per
+second per CPU, at which point it's spending about 30% of its time
+inside the read() syscall.  Optimizing the other 70% (the prototype
+userland) looks fairly routine, so I'm looking at what it would take
+to get beyond 10K samples per second.
 
-You also need to do same thing for hist_entry__sym_snprintf().
+I'm aware of the mmap()/RDPMC path to sampling counters from userland,
+but I'd prefer not to go down that road; it involves mmap()ing all the
+individual perf_event fds and reading them from userland tasks on the
+relevant core, which is needlessly intrusive on the actual workload.
+The measured overheads of the IPI-dispatched __perf_event_read() are
+acceptable, if we could just dispatch it in parallel to all CPUs from
+a single read() syscall.
 
-Thanks,
-Namhyung
+I've dug through the perf_event code and think I have a fair idea of
+what it would take to implement a sort of "event meta-group" file.
+Its read() handler would be equivalent to concatenating the read()
+output of its member fds (per-CPU event group leaders), except that it
+would only take the syscall / VFS indirection / locking / copy_to_user
+overhead once, and would dispatch one IPI (with a per-cpu array of
+cache-line-aligned struct perf_read_data arguments) via
+on_each_cpu_mask() (thus effectively waiting in parallel on all the
+responses).  Implementing that is a bit tedious but it's just plumbing
+-- except for the small matter of taking all the perf_event_ctx::mutex
+locks in the right order.  There is a logical sequence (by mutex
+address; see mutex_lock_double()), but acquiring several dozen mutexes
+in every read() call may be problematic.
 
+One could add a per-meta-group mutex, and add code to
+perf_event_ctx_lock() (and other callers / variants of
+perf_event_ctx_lock_nested()) that checks for meta-group membership
+and takes the per-meta-group mutex before taking the ctx mutex.  Then
+the meta-group read() path only has to take this one mutex.  That
+means an event group can only be attached to one meta-group, but
+that's probably okay.  Still, it's fiddly code, what with the lock
+nesting - though I think it helps that we're dealing exclusively with
+the group leaders for hardware events, so the move_group code path in
+perf_event_open() isn't relevant.
 
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Cc: Yao Jin <yao.jin@linux.intel.com>
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> ---
->  tools/perf/util/callchain.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 211ed3713fac..4350c7ceaca1 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1061,11 +1061,15 @@ char *callchain_list__sym_name(struct callchain_list *cl,
->  	int printed;
->  
->  	if (cl->ms.sym) {
-> +		const char *inlined = cl->ms.sym->inlined ? " (inlined)" : "";
-> +
->  		if (show_srcline && cl->srcline)
-> -			printed = scnprintf(bf, bfsize, "%s %s",
-> -					cl->ms.sym->name, cl->srcline);
-> +			printed = scnprintf(bf, bfsize, "%s %s%s",
-> +					    cl->ms.sym->name, cl->srcline,
-> +					    inlined);
->  		else
-> -			printed = scnprintf(bf, bfsize, "%s", cl->ms.sym->name);
-> +			printed = scnprintf(bf, bfsize, "%s%s",
-> +					    cl->ms.sym->name, inlined);
->  	} else
->  		printed = scnprintf(bf, bfsize, "%#" PRIx64, cl->ip);
->  
-> -- 
-> 2.13.0
-> 
+Am I going about this wrong?  Is there some better way to pursue the
+high-level goal of gathering PMC-based statistics frequently and
+efficiently from all cores, without breaking everything else that uses
+perf_events?
