@@ -1,86 +1,43 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH 0/7] generate full callchain cursor entries for inlined frames
-Date: Wed, 24 May 2017 13:46:04 +0200
-Message-ID: <1535446.SrsFzc0SgI@milian-kdab2>
-References: <20170518193411.22380-1-milian.wolff@kdab.com> <2176198.pfBDoCjSEJ@agathebauer> <20170522090643.GA20009@sejong>
+Subject: Re: [PATCH 6/7] perf report: mark inlined frames in output by " (inlined)" suffix
+Date: Wed, 24 May 2017 13:46:29 +0200
+Message-ID: <8980559.lsJztBPc7c@milian-kdab2>
+References: <20170518193411.22380-1-milian.wolff@kdab.com> <20170518193411.22380-7-milian.wolff@kdab.com> <20170522124818.GE20009@sejong>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2917607.mr0fu6Tavo"; micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2322142.7s9emkKMr0"; micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170522090643.GA20009@sejong>
+In-Reply-To: <20170522124818.GE20009@sejong>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kernel-team@lge.com
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart2917607.mr0fu6Tavo
+--nextPart2322142.7s9emkKMr0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, May 22, 2017 11:06:43 AM CEST Namhyung Kim wrote:
-> Hi Milian,
-> 
-> On Thu, May 18, 2017 at 10:05:36PM +0200, Milian Wolff wrote:
-> > On Donnerstag, 18. Mai 2017 21:34:04 CEST Milian Wolff wrote:
-> > > This series of patches completely reworks the way inline frames are
-> > > handled. Instead of querying for the inline nodes on-demand in the
-> > > individual tools, we now create proper callchain nodes for inlined
-> > > frames. The advantages this approach brings are numerous:
-> > > 
-> > > - less duplicated code in the individual browser
-> > > - aggregated cost for inlined frames for the --children top-down list
-> > > - various bug fixes that arose from querying for a srcline/symbol based
-> > > on
-> > > 
-> > >   the IP of a sample, which will always point to the last inlined frame
-> > >   instead of the corresponding non-inlined frame
-> > > 
-> > > - overall much better support for visualizing cost for heavily-inlined
-> > > C++
-> > > 
-> > >   code, which simply was confusing and unreliably before
-> > > 
-> > > - srcline honors the global setting as to whether full paths or
-> > > basenames
-> > > 
-> > >   should be shown
-> > > 
-> > > For comparison, below lists the output before and after for `perf
-> > > script`
+On Monday, May 22, 2017 2:48:18 PM CEST Namhyung Kim wrote:
+> On Thu, May 18, 2017 at 09:34:10PM +0200, Milian Wolff wrote:
+> > The original patch that introduced inline frame output in the
+> > various browsers used this suffix already. The new centralized
+> > approach that uses fake symbols for inlined frames was missing
+> > this approach so far.
 > > 
-> > > and `perf report`. The example file I used to generate the perf data is:
-> > And of course shortly after sending this patch series I notice the first
-> > issues ;-) The new behavior shows confusing results for `-g function`
-> > because match_chain uses sym->start. I fixed this locally to compare the
-> > actual
-> > function name if either of the two symbols is an inlined fake symbol:
->
-> Why not making the fake symbol has start addr of the sample IP and
-> length of 1.  The histogram sort code also compares the sym->start
-> which might confuse the output of the children mode too IMHO.
+> > Instead of changing the symbol name itself, we only print the
+> > suffix where needed. This allows us to efficiently lookup
+> > the symbol for a given name without first having to append the
+> > suffix before the lookup.
+> 
+> You also need to do same thing for hist_entry__sym_snprintf().
 
-I can try that out, thank you for the suggestion. But I think it can easily 
-break in different ways. I.e. when the same inline function gets used at 
-different IPs, it should actually be considered to be the same function when 
-we group/merge/aggregate. I updated the `match_chain` function accordingly, to 
-do a symname / srcline comparison on inlined frames, instead of relying on the 
-symbol start/end. I think using the IP for the fake symbols won't be more 
-reliable here, don't you think?
-
-In the end, I think we'll always have to special-case inlined fake symbols 
-when we aggregate data, since the sym start/end is always going to be some 
-arbitrary value that may or may not be what we want it to be. Doing the 
-explicit comparison on e.g. srcline/symname is always going to be the most 
-reliable option, as it also directly results in a proper aggregation based on 
-the strings that the user will see in the end.
-
-Cheers
+Thank you, will do!
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2917607.mr0fu6Tavo
+--nextPart2322142.7s9emkKMr0
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -145,14 +102,14 @@ cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwNTI0MTE0NjA0WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg4C0CmVnxYg1UOiHrmeHe9KtV7HWR
-mcNTtHRJhFqNYTMwDQYJKoZIhvcNAQEBBQAEggEAMsr2VxHJZzTwFTWsWr87E+yFjhc7Ru+n/Lzz
-LF7fs+8W9z/tU6KHFNXjNO59P3+QTr7Xwlx5Fe7fF2gJv+4qKAH+5TYy6+/2m92sqKf0O8P9i9zm
-qZokKv2R/OaNt4pPoqSY8ScdDw8Ql0+qgwoBa8hGq8SxZlUXyLVctK6P8I78OmBMCz8XtuuZov4a
-5rJYH8qf2Zk8JK00dqA5bBy1TY4AU2/9anzfkCmWGUUeaMhlfT930ezOB07XrlNj+Epr6wPJax03
-jIijGJIgiOROx5dn3FbZ2L+n3oKZA64lkb5OA/QjK0+36ZvnfQuLVUP1FEGb6sNbAoajlZy0+IOl
-IAAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwNTI0MTE0NjI5WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgsHzqCFz6tE26TvXlNIe01G9gmga7
+2XzWcAmCvzlbXeEwDQYJKoZIhvcNAQEBBQAEggEAHEIk/FuPF2ArTma4GZOvAS8daK+QAoP1M7UG
+96V68KIgj7dXb6F7PLRzpqVHWtuH6DD0kSiAQze9P03Zr3FQ/2k4boVi1RbOQGQvGITOWeSdRkBG
+F3PTCGErLqdjd+7n6CpbrzH52+xUGQjmVjr8CCO8lRxvJFaZxkh99KBEaf9sVg2JI207MMFUleLO
+BJShYO0ga+Izs4SpjcZ9GBaMXV+8Ub2TMUuGWYTooRyguVH3V71xG3UL9blanRz54LTH0s8CoSSo
+kKB9F2dV/gvUzbgKuO9MSNZlxZpNNKIGghgJ7ZgAqWN77dgdnDNX4DwrIl5GIlePkZ/E+1UI0+z2
+/AAAAAAAAA==
 
 
---nextPart2917607.mr0fu6Tavo--
+--nextPart2322142.7s9emkKMr0--
