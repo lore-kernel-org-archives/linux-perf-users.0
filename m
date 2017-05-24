@@ -1,34 +1,65 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH 3/7] perf report: create real callchain entries for inlined frames
-Date: Wed, 24 May 2017 13:41:54 +0200
-Message-ID: <2671838.bjlk31QMkC@milian-kdab2>
-References: <20170518193411.22380-1-milian.wolff@kdab.com> <20170518193411.22380-4-milian.wolff@kdab.com> <20170522121946.GD20009@sejong>
+Subject: Re: [PATCH 7/7] perf script: mark inlined frames and do not print DSO for them
+Date: Wed, 24 May 2017 13:40:56 +0200
+Message-ID: <7013619.t0f2M9KGuJ@milian-kdab2>
+References: <20170518193411.22380-1-milian.wolff@kdab.com> <20170518193411.22380-8-milian.wolff@kdab.com> <20170522121158.GC20009@sejong>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2021543.BiRgkLyhvN"; micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart4928404.MXgG7F2ThW"; micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170522121946.GD20009@sejong>
+In-Reply-To: <20170522121158.GC20009@sejong>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart2021543.BiRgkLyhvN
+--nextPart4928404.MXgG7F2ThW
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Monday, May 22, 2017 2:19:46 PM CEST Namhyung Kim wrote:
-> On Thu, May 18, 2017 at 09:34:07PM +0200, Milian Wolff wrote:
-> > +
-> > +	if (strcmp(funcname, base_sym->name) == 0) {
-> > +		// reuse the real, existing symbol
+On Monday, May 22, 2017 2:11:58 PM CEST Namhyung Kim wrote:
+> On Thu, May 18, 2017 at 09:34:11PM +0200, Milian Wolff wrote:
+> > Instead of showing the (repeated) DSO name of the non-inlined
+> > frame, we now show the "(inlined)" suffix instead.
+> > 
+> > Before:
+> >                    214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+> >                    
+> >                     ace3 hypot (/usr/lib/libm-2.25.so)
+> >                     
+> >                          std::__complex_abs
+> >                          (/home/milian/projects/src/perf-tests/inlining)
+> >                          std::abs<double>
+> >                          (/home/milian/projects/src/perf-tests/inlining)
+> >                          std::_Norm_helper<true>::_S_do_it<double>
+> >                          (/home/milian/projects/src/perf-tests/inlining)
+> >                          std::norm<double>
+> >                          (/home/milian/projects/src/perf-tests/inlining)
+> >                      
+> >                      a4a main
+> >                      (/home/milian/projects/src/perf-tests/inlining)
+> >                    
+> >                    20510 __libc_start_main (/usr/lib/libc-2.25.so)
+> >                    
+> >                      bd9 _start
+> >                      (/home/milian/projects/src/perf-tests/inlining)
+> > 
+> > After:
+> >                    214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+> >                    
+> >                     ace3 hypot (/usr/lib/libm-2.25.so)
+> >                     
+> >                          std::__complex_abs (inlined)
+> >                          std::abs<double> (inlined)
+> >                          std::_Norm_helper<true>::_S_do_it<double>
+> >                          (inlined)
+> >                          std::norm<double> (inlined)
 > 
-> I don't know whether it's required by coding style guide but please
-> use C-style block comment if possible (especially for multiline comments).
+> Shouldn't they have 'a4a' too?
 
-OK. Since the patch check script didn't complain I thought it was OK to use 
-this style here.
+Yes, I think I forgot to update the commit message after I changed the 
+behavior to keep compatibility with stackcollapse-perf.pl.
 
-I'll update the patch series accordingly.
+Will update the message.
 
 Thanks
 
@@ -37,7 +68,7 @@ Milian Wolff | milian.wolff@kdab.com | Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart2021543.BiRgkLyhvN
+--nextPart4928404.MXgG7F2ThW
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -102,14 +133,14 @@ cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwNTI0MTE0MTU0WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgXtCDb9JD1mvR1YTQxGTbaVGNjfFF
-9nqobMdS2ccJZ70wDQYJKoZIhvcNAQEBBQAEggEAJFK1oi/GHU+cxG6JVSCxgsL9Kez8geg5HbTN
-7RZBFbAylovM1pnRIhaDJCj+HN7sTEMNPA8IyZWSE8k14WYYSrlSlE/tFqHt+ATLcIOvShyiwGSw
-yxpkIpcXdCYS59MM5Mu3ARm2cF6/DgzzjrRZbEieUlc+FH5Z41sMEJjRvqRLxBubO/wo2qyxfdVm
-xd9Fii/8BhBoJatoCejD6+0Fy6fEGdwmPTIWkoibYgCoHtH/yd6hZHjQP7HKMYc3s99+iVbRWH35
-l0rUfGj3oxIWfWTaz+yRKQu0VMe9eBfgb+ZCICOUkHwgmTs0Hj9mloBaRAkGApsPTdJ0cNf7Zv0s
-2AAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwNTI0MTE0MDU2WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgNzSCZCNm3dlGLJB8ffWL2EbhV9NI
+FocmPUfQ3svaVy0wDQYJKoZIhvcNAQEBBQAEggEAZY/66Qx/NsIjsbsKuvtemZnxGc/7KcKk3FdJ
+PUfH8rhWy5+TDF3Fr+5F7+mUi1AAgiH5iVzuHWPXNTb7diNP1tT6MhcD0aItNfEgLumwfif8qlQ0
+Tsgk1CCnGjeaIxVovYZrJid7z2hMTm5nTI6Ci6OivRAyDmbE1aXFS3+hGLVR8lv10wt2dmkk1Zg3
+Y35nl4cPSsE4d4DNL4YyxMVhnY2NMxnPbUvkmZsf+tt10UUO4p04WHAPEgXoq4K/Syr+AfY9Wp8r
+ulS0DrBWUdRnZKEPaSdZ+DFmVr29pGB+UA653qU371W4ZbWe5LlbGaq+c1O19sMmLFFvvi/iZMjj
+agAAAAAAAA==
 
 
---nextPart2021543.BiRgkLyhvN--
+--nextPart4928404.MXgG7F2ThW--
