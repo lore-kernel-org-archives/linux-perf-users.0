@@ -1,53 +1,71 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH 1/2] perf report: ensure the perf DSO mapping matches what libdw sees
-Date: Sat, 03 Jun 2017 13:36:13 +0200
-Message-ID: <1795475.9e16bphl78@agathebauer>
-References: <20170602143753.16907-1-milian.wolff@kdab.com> <13986004.8uJxbMKobt@agathebauer> <20170602194910.GB31764@kernel.org>
+Subject: Re: [PATCH 6/7] perf report: mark inlined frames in output by " (inlined)" suffix
+Date: Sat, 03 Jun 2017 15:51:02 +0200
+Message-ID: <2569406.pAYQppI5ax@agathebauer>
+References: <20170518193411.22380-1-milian.wolff@kdab.com> <20170518193411.22380-7-milian.wolff@kdab.com> <20170522124818.GE20009@sejong>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170602194910.GB31764@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:43240 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750765AbdFCNvH (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 3 Jun 2017 09:51:07 -0400
+In-Reply-To: <20170522124818.GE20009@sejong>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-On Freitag, 2. Juni 2017 21:49:10 CEST Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 02, 2017 at 06:21:44PM +0200, Milian Wolff escreveu:
-> > On Freitag, 2. Juni 2017 17:23:41 CEST Arnaldo Carvalho de Melo wrote:
-> > > Looks ok, having both implementations matching and the callchains making
-> > > sense for your workloads is a good way to verify the sanity, thanks.
-> > > 
-> > > I wonder if we shouldn't somehow script this, i.e. build it with one
-> > > implementation, generate output from some test workload, build it with
-> > > the other, second output, diff it, report when not the same.
+On Montag, 22. Mai 2017 14:48:18 CEST Namhyung Kim wrote:
+> On Thu, May 18, 2017 at 09:34:10PM +0200, Milian Wolff wrote:
+> > The original patch that introduced inline frame output in the
+> > various browsers used this suffix already. The new centralized
+> > approach that uses fake symbols for inlined frames was missing
+> > this approach so far.
 > > 
-> > That does sound like a good idea, but I'm unsure how to do it. Note that
-> > many "simple" tests work just fine. Only larger complicated workloads
-> > trigger this issue for me.
-> > 
-> > One potential way to test it would be `perf archive` - i.e. I send you the
-> > binaries involved and then we can use perf script diffing to ensure it all
-> > works...
+> > Instead of changing the symbol name itself, we only print the
+> > suffix where needed. This allows us to efficiently lookup
+> > the symbol for a given name without first having to append the
+> > suffix before the lookup.
 > 
-> Humm, I'm trying to cook up a:
-> 
->   perf data filter --pid 12345 --perf-data-offset 1234567 --output
-> perf.data.subset
-> 
-> to allow when finding some case like that to get a small subset of a
-> perf.data file with just the sample we want to get the backtrace from +
-> the mmaps, etc up to that point.
-> 
-> With that I could keep a repo of interesting perf.data files to have in
-> my regression tests.
+> You also need to do same thing for hist_entry__sym_snprintf().
 
-How do I find the data offset to use here? If that works, I can provide you 
-with one test file. But note how we'd also need the referenced mmap files. So 
-it's going to be perf.data + perf archive.
+Hey Namhyung,
 
-Bye
+I'm working on the next iteration of this patch series, the WIP can be found 
+here: https://github.com/milianw/linux/tree/wip/distinguish-inliners.
+
+I just stumbled upon another issue:
+
+~~~~~
+perf report --inline -s srcline -g srcline  --stdio -g none
+    61.22%     0.00%  main+378
+    61.22%     0.00%  std::_Norm_helper<true>::_S_do_it<double>+378
+    61.22%     0.00%  std::__complex_abs+378
+    61.22%     0.00%  std::abs<double>+378
+    61.22%     0.00%  std::norm<double>+378
+~~~~~
+
+The problem here is that the srcline in the hist is detached from what we 
+actually produce in the callchain nodes. We will have to somehow hand through 
+the srcline from the callchain node to the hist entry, but this seems to be a 
+super large invasive change - which is why I need your input on how to resolve 
+this.
+
+The current API seems to pass the data around mostly using the addr_location 
+struct, which is usually constructed on the stack and not always memset to 
+zero. As such, my initial plan of adding a srcline member there would require 
+me to go through all the code to ensure that we memset the struct to zero...
+
+Alternatively, I'd have to change the API of hist_iter_ops, to let the 
+callback take another `const char **srcline` out parameter. This is also going 
+to be quite a large invasive change.
+
+Do you have any suggestions on how to make this work?
+
+Thanks
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Software Engineer
