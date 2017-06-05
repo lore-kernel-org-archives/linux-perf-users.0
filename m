@@ -1,91 +1,155 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 1/2] perf report: ensure the perf DSO mapping matches
- what libdw sees
-Date: Mon, 5 Jun 2017 12:41:30 +0200
-Message-ID: <20170605104130.GB28871@krava>
+Subject: Re: [PATCH 2/2] perf report: report module before querying
+ isactivation in dwfl unwind
+Date: Mon, 5 Jun 2017 12:47:20 +0200
+Message-ID: <20170605104720.GC28871@krava>
 References: <20170602143753.16907-1-milian.wolff@kdab.com>
+ <20170602143753.16907-2-milian.wolff@kdab.com>
+ <20170602152508.GC7901@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35594 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:43468 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751338AbdFEKld (ORCPT
+        id S1751338AbdFEKrX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2017 06:41:33 -0400
+        Mon, 5 Jun 2017 06:47:23 -0400
 Content-Disposition: inline
-In-Reply-To: <20170602143753.16907-1-milian.wolff@kdab.com>
+In-Reply-To: <20170602152508.GC7901@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jan Kratochvil <jkratoch@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, Jan Kratochvil <jkratoch@redhat.com>
 
-On Fri, Jun 02, 2017 at 04:37:52PM +0200, Milian Wolff wrote:
-> In some situations the libdw unwinder stopped working properly.
-> I.e. with libunwind we see:
-> 
-> ~~~~~
-> heaptrack_gui  2228 135073.400112:     641314 cycles:
-> 	            e8ed _dl_fixup (/usr/lib/ld-2.25.so)
-> 	           15f06 _dl_runtime_resolve_sse_vex (/usr/lib/ld-2.25.so)
-> 	           ed94c KDynamicJobTracker::KDynamicJobTracker (/home/milian/projects/compiled/kf5/lib64/libKF5KIOWidgets.so.5.35.0)
-> 	           608f3 _GLOBAL__sub_I_kdynamicjobtracker.cpp (/home/milian/projects/compiled/kf5/lib64/libKF5KIOWidgets.so.5.35.0)
-> 	            f199 call_init.part.0 (/usr/lib/ld-2.25.so)
-> 	            f2a5 _dl_init (/usr/lib/ld-2.25.so)
-> 	             db9 _dl_start_user (/usr/lib/ld-2.25.so)
-> ~~~~~
-> 
-> But with libdw and without this patch this sample is not properly
-> unwound:
-> 
-> ~~~~~
-> heaptrack_gui  2228 135073.400112:     641314 cycles:
-> 	            e8ed _dl_fixup (/usr/lib/ld-2.25.so)
-> 	           15f06 _dl_runtime_resolve_sse_vex (/usr/lib/ld-2.25.so)
-> 	           ed94c KDynamicJobTracker::KDynamicJobTracker (/home/milian/projects/compiled/kf5/lib64/libKF5KIOWidgets.so.5.35.0)
-> ~~~~~
-> 
-> Debug output showed me that libdw found a module for the last frame
-> address, but it thinks it belongs to /usr/lib/ld-2.25.so. This patch
-> double-checks what libdw sees and what perf knows. If the mappings
-> mismatch, we now report the elf known to perf. This fixes the
-> situation above, and the libdw unwinder produces the same stack as
-> libunwind.
+On Fri, Jun 02, 2017 at 12:25:08PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jun 02, 2017 at 04:37:53PM +0200, Milian Wolff escreveu:
+> > The PC returned by dwfl_frame_pc may map into a not-yet-reported
+> > module. We have to report it before we continue unwinding. But when
+> > we query for the isactivation flag in dwfl_frame_pc, libdw will
+> > actually do one more unwinding step internally which can then break
+> > and lead to missed frames or broken stacks.
+> > 
+> > With libunwind we get e.g.:
 
-hum, sounds like libdw bug right? CC-ing Jan... any idea?
-
-anyway, I think we can keep that as sanity check
+sounds like a libdw design issue.. Jan is there a specific way
+to handle the case that Milian described?
 
 thanks,
 jirka
 
 > 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> ---
->  tools/perf/util/unwind-libdw.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Thanks,
 > 
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> index b4c20124d2ee..da45c4be5fb3 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -39,6 +39,14 @@ static int __report_module(struct addr_location *al, u64 ip,
->  		return 0;
+> - Arnaldo
 >  
->  	mod = dwfl_addrmodule(ui->dwfl, ip);
-> +	if (mod) {
-> +		Dwarf_Addr s;
-> +
-> +		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
-> +		if (s != al->map->start)
-> +			mod = 0;
-> +	}
-> +
->  	if (!mod)
->  		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
->  				      dso->long_name, -1, al->map->start,
-> -- 
-> 2.13.0
-> 
+> > ~~~~~
+> > heaptrack_gui  2228 135073.400474:     613969 cycles:
+> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
+> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > 
+> > heaptrack_gui  2228 135073.401156:     569521 cycles:
+> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	           f5a1c QGuiApplicationPrivate::createPlatformIntegration (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	           f650c QGuiApplicationPrivate::createEventDispatcher (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	          298524 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
+> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > ~~~~~
+> > 
+> > Note the two frames 1589e8 and 78622 in the first sample. These are
+> > missing when unwinding with libdw. The second sample's breakage is
+> > more obvious:
+> > 
+> > ~~~~~
+> > heaptrack_gui  2228 135073.400474:     613969 cycles:
+> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > 
+> > heaptrack_gui  2228 135073.401156:     569521 cycles:
+> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
+> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
+> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
+> > 	          723dbf [unknown] ([unknown])
+> > ~~~~~
+> > 
+> > This patch fixes this issue and the libdw unwinder mimicks the
+> > libunwind behavior more closely.
+> > 
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> > ---
+> >  tools/perf/util/unwind-libdw.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> > index da45c4be5fb3..7755a5e0fe5e 100644
+> > --- a/tools/perf/util/unwind-libdw.c
+> > +++ b/tools/perf/util/unwind-libdw.c
+> > @@ -178,6 +178,14 @@ frame_callback(Dwfl_Frame *state, void *arg)
+> >  	Dwarf_Addr pc;
+> >  	bool isactivation;
+> >  
+> > +	if (!dwfl_frame_pc(state, &pc, NULL)) {
+> > +		pr_err("%s", dwfl_errmsg(-1));
+> > +		return DWARF_CB_ABORT;
+> > +	}
+> > +
+> > +	// report the module before we query for isactivation
+> > +	report_module(pc, ui);
+> > +
+> >  	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
+> >  		pr_err("%s", dwfl_errmsg(-1));
+> >  		return DWARF_CB_ABORT;
+> > -- 
+> > 2.13.0
