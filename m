@@ -1,73 +1,46 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 1/3] perf: fix incorrect sample_type value for perf stat tests
-Date: Tue,  6 Jun 2017 16:31:54 +0200
-Message-ID: <20170606143156.10471-2-tmricht@linux.vnet.ibm.com>
-References: <20170606143156.10471-1-tmricht@linux.vnet.ibm.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52041 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751435AbdFFOc0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2017 10:32:26 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id v56ETS5H102051
-        for <linux-perf-users@vger.kernel.org>; Tue, 6 Jun 2017 10:32:12 -0400
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2awq378b2s-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2017 10:32:11 -0400
-Received: from localhost
-        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 6 Jun 2017 15:32:09 +0100
-In-Reply-To: <20170606143156.10471-1-tmricht@linux.vnet.ibm.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, jolsa@redhat.com
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 6/7] perf report: mark inlined frames in output by "
+ (inlined)" suffix
+Date: Tue, 6 Jun 2017 16:52:28 -0300
+Message-ID: <20170606195228.GB30074@kernel.org>
+References: <20170518193411.22380-1-milian.wolff@kdab.com>
+ <2569406.pAYQppI5ax@agathebauer>
+ <CAM9d7ch9xeuWqEQA7GNTJ=uBTvU_PkFu11D-qzsa26dyS1yuuw@mail.gmail.com>
+ <3456459.puB1FN52Ey@milian-kdab2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3456459.puB1FN52Ey@milian-kdab2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
+List-Id: linux-perf-users.vger.kernel.org
 
-Test case 14 runs 'perf stat' command to execute all
-tests/attr/test-stat* test cases. They all fail with
-a mismatch in sample_type attribute, for example:
+Em Tue, Jun 06, 2017 at 09:26:47AM +0200, Milian Wolff escreveu:
+> On Tuesday, June 6, 2017 3:33:49 AM CEST Namhyung Kim wrote:
+> > On Sat, Jun 3, 2017 at 10:51 PM, Milian Wolff <milian.wolff@kdab.com> wrote:
+> > > The current API seems to pass the data around mostly using the
+> > > addr_location struct, which is usually constructed on the stack and not
+> > > always memset to zero. As such, my initial plan of adding a srcline
+> > > member there would require me to go through all the code to ensure that
+> > > we memset the struct to zero...
 
-running './tests/attr//test-stat-basic'
-...
-compare
-  matchng [event:base-stat]
-      to [event-0-0-4]
-      ...
-      [sample_type] 0 65536
-  ->FAIL
+> > > Alternatively, I'd have to change the API of hist_iter_ops, to let the
+> > > callback take another `const char **srcline` out parameter. This is also
+> > > going to be quite a large invasive change.
 
-The reason for the failure is in create_perf_stat_counter()
-in file builtin-stat.c. When command 'perf stat record -o -'
-is used the value of perf_event_stat.sample_type is not changed.
-All other invocations of 'perf stat' change this
-member to PERF_SAMPLE_IDENTIFIER (2^16).
+> > > Do you have any suggestions on how to make this work?
 
-None of the test-stat-* tests are invoked with
-'perf stat record -o -' and the sample_type comparion fails.
+> > I think passing srcline via addr_location might not be very invasive
+> > since it calls machine__resolve() in most cases.  Missing places that
+> > set al->sym should set al->srcline as well IMHO.
 
-Fix this by changing the expected value for attribute sample_type
-in the base_stat file.
+I haven't looked if it would be invasive or not, good that it isn't, but
+then I think addr_location is the right place for this to be stored.
+ 
+> OK, perfect - I'll implement that then.
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
----
- tools/perf/tests/attr/base-stat | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
-index f4cf148..4a48d16 100644
---- a/tools/perf/tests/attr/base-stat
-+++ b/tools/perf/tests/attr/base-stat
-@@ -8,7 +8,7 @@ type=0
- size=112
- config=0
- sample_period=0
--sample_type=0
-+sample_type=65536
- read_format=3
- disabled=1
- inherit=1
--- 
-2.9.3
+- Arnaldo
