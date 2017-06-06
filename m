@@ -1,155 +1,75 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 2/2] perf report: report module before querying
- isactivation in dwfl unwind
-Date: Mon, 5 Jun 2017 12:47:20 +0200
-Message-ID: <20170605104720.GC28871@krava>
-References: <20170602143753.16907-1-milian.wolff@kdab.com>
- <20170602143753.16907-2-milian.wolff@kdab.com>
- <20170602152508.GC7901@redhat.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 6/7] perf report: mark inlined frames in output by "
+ (inlined)" suffix
+Date: Tue, 6 Jun 2017 10:33:49 +0900
+Message-ID: <CAM9d7ch9xeuWqEQA7GNTJ=uBTvU_PkFu11D-qzsa26dyS1yuuw@mail.gmail.com>
+References: <20170518193411.22380-1-milian.wolff@kdab.com> <20170518193411.22380-7-milian.wolff@kdab.com>
+ <20170522124818.GE20009@sejong> <2569406.pAYQppI5ax@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:43468 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751338AbdFEKrX (ORCPT
+Received: from mail-wm0-f49.google.com ([74.125.82.49]:33737 "EHLO
+        mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751216AbdFFBeM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2017 06:47:23 -0400
-Content-Disposition: inline
-In-Reply-To: <20170602152508.GC7901@redhat.com>
+        Mon, 5 Jun 2017 21:34:12 -0400
+In-Reply-To: <2569406.pAYQppI5ax@agathebauer>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, Jan Kratochvil <jkratoch@redhat.com>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, kernel-team@lge.com
 
-On Fri, Jun 02, 2017 at 12:25:08PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 02, 2017 at 04:37:53PM +0200, Milian Wolff escreveu:
-> > The PC returned by dwfl_frame_pc may map into a not-yet-reported
-> > module. We have to report it before we continue unwinding. But when
-> > we query for the isactivation flag in dwfl_frame_pc, libdw will
-> > actually do one more unwinding step internally which can then break
-> > and lead to missed frames or broken stacks.
-> > 
-> > With libunwind we get e.g.:
+On Sat, Jun 3, 2017 at 10:51 PM, Milian Wolff <milian.wolff@kdab.com> wrote:
+> On Montag, 22. Mai 2017 14:48:18 CEST Namhyung Kim wrote:
+>> On Thu, May 18, 2017 at 09:34:10PM +0200, Milian Wolff wrote:
+>> > The original patch that introduced inline frame output in the
+>> > various browsers used this suffix already. The new centralized
+>> > approach that uses fake symbols for inlined frames was missing
+>> > this approach so far.
+>> >
+>> > Instead of changing the symbol name itself, we only print the
+>> > suffix where needed. This allows us to efficiently lookup
+>> > the symbol for a given name without first having to append the
+>> > suffix before the lookup.
+>>
+>> You also need to do same thing for hist_entry__sym_snprintf().
+>
+> Hey Namhyung,
+>
+> I'm working on the next iteration of this patch series, the WIP can be found
+> here: https://github.com/milianw/linux/tree/wip/distinguish-inliners.
+>
+> I just stumbled upon another issue:
+>
+> ~~~~~
+> perf report --inline -s srcline -g srcline  --stdio -g none
+>     61.22%     0.00%  main+378
+>     61.22%     0.00%  std::_Norm_helper<true>::_S_do_it<double>+378
+>     61.22%     0.00%  std::__complex_abs+378
+>     61.22%     0.00%  std::abs<double>+378
+>     61.22%     0.00%  std::norm<double>+378
+> ~~~~~
+>
+> The problem here is that the srcline in the hist is detached from what we
+> actually produce in the callchain nodes. We will have to somehow hand through
+> the srcline from the callchain node to the hist entry, but this seems to be a
+> super large invasive change - which is why I need your input on how to resolve
+> this.
+>
+> The current API seems to pass the data around mostly using the addr_location
+> struct, which is usually constructed on the stack and not always memset to
+> zero. As such, my initial plan of adding a srcline member there would require
+> me to go through all the code to ensure that we memset the struct to zero...
+>
+> Alternatively, I'd have to change the API of hist_iter_ops, to let the
+> callback take another `const char **srcline` out parameter. This is also going
+> to be quite a large invasive change.
+>
+> Do you have any suggestions on how to make this work?
 
-sounds like a libdw design issue.. Jan is there a specific way
-to handle the case that Milian described?
+I think passing srcline via addr_location might not be very invasive
+since it calls machine__resolve() in most cases.  Missing places that
+set al->sym should set al->srcline as well IMHO.
 
-thanks,
-jirka
-
-> 
-> Thanks,
-> 
-> - Arnaldo
->  
-> > ~~~~~
-> > heaptrack_gui  2228 135073.400474:     613969 cycles:
-> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
-> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 
-> > heaptrack_gui  2228 135073.401156:     569521 cycles:
-> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           f5a1c QGuiApplicationPrivate::createPlatformIntegration (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           f650c QGuiApplicationPrivate::createEventDispatcher (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          298524 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
-> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > ~~~~~
-> > 
-> > Note the two frames 1589e8 and 78622 in the first sample. These are
-> > missing when unwinding with libdw. The second sample's breakage is
-> > more obvious:
-> > 
-> > ~~~~~
-> > heaptrack_gui  2228 135073.400474:     613969 cycles:
-> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 
-> > heaptrack_gui  2228 135073.401156:     569521 cycles:
-> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          723dbf [unknown] ([unknown])
-> > ~~~~~
-> > 
-> > This patch fixes this issue and the libdw unwinder mimicks the
-> > libunwind behavior more closely.
-> > 
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> > ---
-> >  tools/perf/util/unwind-libdw.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> > index da45c4be5fb3..7755a5e0fe5e 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -178,6 +178,14 @@ frame_callback(Dwfl_Frame *state, void *arg)
-> >  	Dwarf_Addr pc;
-> >  	bool isactivation;
-> >  
-> > +	if (!dwfl_frame_pc(state, &pc, NULL)) {
-> > +		pr_err("%s", dwfl_errmsg(-1));
-> > +		return DWARF_CB_ABORT;
-> > +	}
-> > +
-> > +	// report the module before we query for isactivation
-> > +	report_module(pc, ui);
-> > +
-> >  	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
-> >  		pr_err("%s", dwfl_errmsg(-1));
-> >  		return DWARF_CB_ABORT;
-> > -- 
-> > 2.13.0
+Thanks,
+Namhyung
