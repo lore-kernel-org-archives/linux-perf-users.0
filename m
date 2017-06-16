@@ -1,155 +1,167 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 2/2] perf report: report module before querying
- isactivation in dwfl unwind
-Date: Fri, 16 Jun 2017 13:06:52 -0300
-Message-ID: <20170616160652.GC3645@kernel.org>
-References: <20170602143753.16907-1-milian.wolff@kdab.com>
- <20170602143753.16907-2-milian.wolff@kdab.com>
- <20170602152508.GC7901@redhat.com>
+Subject: Re: [PATCH v2] RFC perf test 14 add platform dependency
+Date: Fri, 16 Jun 2017 13:08:17 -0300
+Message-ID: <20170616160817.GD3645@kernel.org>
+References: <20170613090937.72899-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:46544 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:46644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750750AbdFPQHB (ORCPT
+        id S1750792AbdFPQIV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2017 12:07:01 -0400
+        Fri, 16 Jun 2017 12:08:21 -0400
 Content-Disposition: inline
-In-Reply-To: <20170602152508.GC7901@redhat.com>
+In-Reply-To: <20170613090937.72899-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Jan Kratochvil <jan.kratochvil@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: jolsa@redhat.com, linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 02, 2017 at 12:25:08PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jun 02, 2017 at 04:37:53PM +0200, Milian Wolff escreveu:
-> > The PC returned by dwfl_frame_pc may map into a not-yet-reported
-> > module. We have to report it before we continue unwinding. But when
-> > we query for the isactivation flag in dwfl_frame_pc, libdw will
-> > actually do one more unwinding step internally which can then break
-> > and lead to missed frames or broken stacks.
-> > 
-> > With libunwind we get e.g.:
+Em Tue, Jun 13, 2017 at 11:09:37AM +0200, Thomas Richter escreveu:
+> This is a proposal to add platform dependency into the
+> test case 14 (perf_event_attr). It is based on a suggestion from
+> Jiri Olsa.
+> Add a new optional attribute named 'machine' in the [config] section
+> of the test case file. It is a comma separated list of architecture
+> names this test can be executed on. For example:
 > 
-> Jiri, can you review this one?
+> machine = x86_64,alpha,ppc
 
-ping
+Looks ok, Jiri?
+
+- Arnaldo
  
-> Thanks,
+> If this attribute is missing the test is executed on any platform.
+> This does not break the current setup.
+> The values listed for this attribute should be identical to
+> uname -m output.
+> If the list starts with an exclamation mark (!) the comparison is
+> inverted, for example for
 > 
-> - Arnaldo
+> machine = !s390x,ppc
+> 
+> the test is not executed on s390x or ppc platforms.
+> The exclamation mark must be at the beginnning of the list.
+> 
+> Here is an example debug output:
+> [root@s35lp76]# fgrep machine tests/attr/test-stat-C2
+> machine = x86_64,alpha,ppc
+> [root@s35lp76]# PERF_TEST_ATTR=/tmp /usr/bin/python2 ./tests/attr.py \
+>   -d ./tests/attr/ -p ./perf -vvvvv -t test-stat-C1
+> 
+> provides the following output:
+> 
+> running './tests/attr//test-stat-C1'
+> test executed only on 'x86_64,alpha,ppc' <--- new
+>   loading expected events
+>     Event event:base-stat
+>       fd = 1
+>       group_fd = -1
+>       .....
+> skipped [s390x] './tests/attr//test-stat-C1' <--- new
+> 
+> The test is skipped with return code 0.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/attr.py | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+> index d0242d8..6e71d52 100644
+> --- a/tools/perf/tests/attr.py
+> +++ b/tools/perf/tests/attr.py
+> @@ -30,6 +30,13 @@ class Fail(Exception):
+>      def getMsg(self):
+>          return '\'%s\' - %s' % (self.test.path, self.msg)
 >  
-> > ~~~~~
-> > heaptrack_gui  2228 135073.400474:     613969 cycles:
-> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
-> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 
-> > heaptrack_gui  2228 135073.401156:     569521 cycles:
-> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           f5a1c QGuiApplicationPrivate::createPlatformIntegration (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           f650c QGuiApplicationPrivate::createEventDispatcher (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          298524 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
-> > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > ~~~~~
-> > 
-> > Note the two frames 1589e8 and 78622 in the first sample. These are
-> > missing when unwinding with libdw. The second sample's breakage is
-> > more obvious:
-> > 
-> > ~~~~~
-> > heaptrack_gui  2228 135073.400474:     613969 cycles:
-> > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
-> > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
-> > 
-> > heaptrack_gui  2228 135073.401156:     569521 cycles:
-> > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
-> > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
-> > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
-> > 	          723dbf [unknown] ([unknown])
-> > ~~~~~
-> > 
-> > This patch fixes this issue and the libdw unwinder mimicks the
-> > libunwind behavior more closely.
-> > 
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> > ---
-> >  tools/perf/util/unwind-libdw.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> > index da45c4be5fb3..7755a5e0fe5e 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -178,6 +178,14 @@ frame_callback(Dwfl_Frame *state, void *arg)
-> >  	Dwarf_Addr pc;
-> >  	bool isactivation;
-> >  
-> > +	if (!dwfl_frame_pc(state, &pc, NULL)) {
-> > +		pr_err("%s", dwfl_errmsg(-1));
-> > +		return DWARF_CB_ABORT;
-> > +	}
-> > +
-> > +	// report the module before we query for isactivation
-> > +	report_module(pc, ui);
-> > +
-> >  	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
-> >  		pr_err("%s", dwfl_errmsg(-1));
-> >  		return DWARF_CB_ABORT;
-> > -- 
-> > 2.13.0
+> +class Notest(Exception):
+> +    def __init__(self, test, arch):
+> +        self.arch = arch
+> +        self.test = test
+> +    def getMsg(self):
+> +        return '[%s] \'%s\'' % (self.arch, self.test.path)
+> +
+>  class Unsup(Exception):
+>      def __init__(self, test):
+>          self.test = test
+> @@ -112,6 +119,7 @@ class Event(dict):
+>  #     'command' - perf command name
+>  #     'args'    - special command arguments
+>  #     'ret'     - expected command return value (0 by default)
+> +#     'machine' - machine specific test
+>  #
+>  # [eventX:base]
+>  #   - one or multiple instances in file
+> @@ -134,6 +142,12 @@ class Test(object):
+>          except:
+>              self.ret  = 0
+>  
+> +        try:
+> +            self.machine  = parser.get('config', 'machine')
+> +            log.warning("test limitation '%s'" % self.machine)
+> +        except:
+> +            self.machine  = ''
+> +
+>          self.expect   = {}
+>          self.result   = {}
+>          log.debug("  loading expected events");
+> @@ -145,6 +159,30 @@ class Test(object):
+>          else:
+>              return True
+>  
+> +    def skip_test(self, arch):
+> +        # If architecture not set always run test
+> +        if self.machine == '':
+> +            return False
+> +
+> +        # Allow multiple values in assignment separated by ','
+> +        machine_list = self.machine.split(',')
+> +
+> +        # Handle negated list such as !s390x,ppc
+> +        if machine_list[0][0] == '!':
+> +            machine_list[0] = machine_list[0][1:]
+> +            log.warning("excluded machine_list %s" % machine_list)
+> +            for machine_item in machine_list:
+> +                # log.warning("test for %s arch is %s" % (machine_item, arch))
+> +                if machine_item == arch:
+> +                    return True
+> +            return False
+> +
+> +        for machine_item in machine_list:
+> +            # log.warning("test for %s arch is %s" % (machine_item, arch))
+> +            if machine_item == arch:
+> +                return False
+> +        return True
+> +
+>      def load_events(self, path, events):
+>          parser_event = ConfigParser.SafeConfigParser()
+>          parser_event.read(path)
+> @@ -168,6 +206,11 @@ class Test(object):
+>              events[section] = e
+>  
+>      def run_cmd(self, tempdir):
+> +        junk1, junk2, junk3, junk4, arch = (os.uname())
+> +
+> +        if self.skip_test(arch):
+> +            raise Notest(self, arch)
+> +
+>          cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+>                self.perf, self.command, tempdir, self.args)
+>          ret = os.WEXITSTATUS(os.system(cmd))
+> @@ -267,6 +310,8 @@ def run_tests(options):
+>              Test(f, options).run()
+>          except Unsup, obj:
+>              log.warning("unsupp  %s" % obj.getMsg())
+> +        except Notest, obj:
+> +            log.warning("skipped %s" % obj.getMsg())
+>  
+>  def setup_log(verbose):
+>      global log
+> -- 
+> 2.9.3
+> 
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
 > the body of a message to majordomo@vger.kernel.org
