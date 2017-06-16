@@ -1,68 +1,167 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf test LLVM failure
-Date: Fri, 16 Jun 2017 13:09:57 -0300
-Message-ID: <20170616160957.GE3645@kernel.org>
-References: <95f0579d-ae99-1c6d-a19a-c79a77fea6e6@linux.vnet.ibm.com>
+Subject: Re: [PATCH 2/2] perf report: report module before querying
+ isactivation in dwfl unwind
+Date: Fri, 16 Jun 2017 14:36:16 -0300
+Message-ID: <20170616173616.GL3645@kernel.org>
+References: <20170602143753.16907-1-milian.wolff@kdab.com>
+ <20170602143753.16907-2-milian.wolff@kdab.com>
+ <20170602152508.GC7901@redhat.com>
+ <20170616160652.GC3645@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:46766 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:52938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750837AbdFPQKA (ORCPT
+        id S1751046AbdFPRgg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2017 12:10:00 -0400
+        Fri, 16 Jun 2017 13:36:36 -0400
 Content-Disposition: inline
-In-Reply-To: <95f0579d-ae99-1c6d-a19a-c79a77fea6e6@linux.vnet.ibm.com>
+In-Reply-To: <20170616160652.GC3645@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Jan Kratochvil <jan.kratochvil@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
 
-Em Tue, Jun 13, 2017 at 10:40:37AM +0200, Thomas-Mich Richter escreveu:
-> I have Fedora 25 with an 4.11 kernel and get this error
+Em Fri, Jun 16, 2017 at 01:06:52PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jun 02, 2017 at 12:25:08PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, Jun 02, 2017 at 04:37:53PM +0200, Milian Wolff escreveu:
+> > > The PC returned by dwfl_frame_pc may map into a not-yet-reported
+> > > module. We have to report it before we continue unwinding. But when
+> > > we query for the isactivation flag in dwfl_frame_pc, libdw will
+> > > actually do one more unwinding step internally which can then break
+> > > and lead to missed frames or broken stacks.
+> > > 
+> > > With libunwind we get e.g.:
+> > 
+> > Jiri, can you review this one?
 > 
-> [root@s8360047 perf]# ./perf test   LLVM
-> 35: LLVM search and compile                    :
-> 35.1: Basic BPF llvm compile                    : Ok
-> 35.2: kbuild searching                          : Ok
-> 35.3: Compile source for BPF prologue generation: FAILED!
-> 35.4: Compile source for BPF relocation         : Skip
-> [root@s8360047 perf]#
-> 
-> The error message is
-> libbpf: Program 'func=null_lseek file->f_mode offset orig'
-> contains non-map related relo data pointing to section 5
+> ping
 
-Wang, can you please take a look at this?
+Sorry, saw yesterday's replies now, will apply the patch with an
+Acked-by: Jan.
+
+
+Thanks,
 
 - Arnaldo
- 
-> I have installed
-> clang-3.8.1-1.fc25.s390x
-> clang-libs-3.8.1-1.fc25.s390x
-> libpfm-4.8.0-2.ibm.fc25.s390x
-> compiler-rt-3.9.1-1.fc25.s390x
-> llvm-libs-3.8.1-2.fc25.s390x
-> 
-> and when I compile the test/bpf-script-test-prologue.c manually
-> the compile does not show any error message.
-> 
-> The error comes from file ../lib/bpf/libbpf.c
-> function bpf_program__collect_reloc()
-> 
-> Any ideas what cauese this and how to fix it?
-> 
-> By the way Fedora 24 with the same kernel version as above runs fine.
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
-> --
-> Vorsitzende des Aufsichtsrats: Martina Koederitz 
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+  
+> > Thanks,
+> > 
+> > - Arnaldo
+> >  
+> > > ~~~~~
+> > > heaptrack_gui  2228 135073.400474:     613969 cycles:
+> > > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
+> > > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > > 
+> > > heaptrack_gui  2228 135073.401156:     569521 cycles:
+> > > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	           f5a1c QGuiApplicationPrivate::createPlatformIntegration (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	           f650c QGuiApplicationPrivate::createEventDispatcher (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	          298524 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	          1589e8 QApplicationPrivate::init (/usr/lib/libQt5Widgets.so.5.8.0)
+> > > 	           78622 main (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > > ~~~~~
+> > > 
+> > > Note the two frames 1589e8 and 78622 in the first sample. These are
+> > > missing when unwinding with libdw. The second sample's breakage is
+> > > more obvious:
+> > > 
+> > > ~~~~~
+> > > heaptrack_gui  2228 135073.400474:     613969 cycles:
+> > > 	          108c8e [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1093bc [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          109e7b QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1470ff [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          147f67 QSystemLocale::query (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          109fbf QLocalePrivate::updateSystemPrivate (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          10aa27 QLocale::QLocale (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1e02c3 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2113bb [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          211505 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1b5df0 QFileInfo::exists (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           92eb2 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           93423 [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           93d2a QLibraryInfo::location (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2170af [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          297c53 QCoreApplicationPrivate::init (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           f7cde QGuiApplicationPrivate::init (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	           20439 __libc_start_main (/usr/lib/libc-2.25.so)
+> > > 	           78299 _start (/home/milian/projects/compiled/other/bin/heaptrack_gui)
+> > > 
+> > > heaptrack_gui  2228 135073.401156:     569521 cycles:
+> > > 	          131633 QString::endsWith (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1a0701 QDir::cleanPath (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          21b82d [unknown] (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          1b3727 QFileInfo::canonicalFilePath (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          2780c7 QFactoryLoader::update (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	          279525 QFactoryLoader::QFactoryLoader (/usr/lib/libQt5Core.so.5.8.0)
+> > > 	           e5bd0 QPlatformIntegrationFactory::create (/usr/lib/libQt5Gui.so.5.8.0)
+> > > 	          723dbf [unknown] ([unknown])
+> > > ~~~~~
+> > > 
+> > > This patch fixes this issue and the libdw unwinder mimicks the
+> > > libunwind behavior more closely.
+> > > 
+> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Jiri Olsa <jolsa@redhat.com>
+> > > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> > > ---
+> > >  tools/perf/util/unwind-libdw.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> > > index da45c4be5fb3..7755a5e0fe5e 100644
+> > > --- a/tools/perf/util/unwind-libdw.c
+> > > +++ b/tools/perf/util/unwind-libdw.c
+> > > @@ -178,6 +178,14 @@ frame_callback(Dwfl_Frame *state, void *arg)
+> > >  	Dwarf_Addr pc;
+> > >  	bool isactivation;
+> > >  
+> > > +	if (!dwfl_frame_pc(state, &pc, NULL)) {
+> > > +		pr_err("%s", dwfl_errmsg(-1));
+> > > +		return DWARF_CB_ABORT;
+> > > +	}
+> > > +
+> > > +	// report the module before we query for isactivation
+> > > +	report_module(pc, ui);
+> > > +
+> > >  	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
+> > >  		pr_err("%s", dwfl_errmsg(-1));
+> > >  		return DWARF_CB_ABORT;
+> > > -- 
+> > > 2.13.0
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
