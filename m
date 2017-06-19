@@ -1,41 +1,73 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: perf report: fix off-by-one for non-activation frames
-Date: Mon, 19 Jun 2017 15:59:39 -0300
-Message-ID: <20170619185939.GA2170@redhat.com>
-References: <20170515150444.6841-1-milian.wolff@kdab.com>
- <CAM9d7cjqZpuxPmARtp_Zy_PhZ+Gpt7Px_ecsLe=dhguNsYW1Bw@mail.gmail.com>
- <20170617080402.GA1402@host1.jankratochvil.net>
- <1916323.ygRLzu1ryd@agathebauer>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2] RFC perf test 14 add platform dependency
+Date: Mon, 19 Jun 2017 22:59:44 +0200
+Message-ID: <20170619205944.GA19183@krava>
+References: <20170613090937.72899-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:41778 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752084AbdFSU7s (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 19 Jun 2017 16:59:48 -0400
 Content-Disposition: inline
-In-Reply-To: <1916323.ygRLzu1ryd@agathebauer>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jan Kratochvil <jan.kratochvil@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <20170613090937.72899-1-tmricht@linux.vnet.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org
 
-Em Sat, Jun 17, 2017 at 01:13:11PM +0200, Milian Wolff escreveu:
-> On Samstag, 17. Juni 2017 10:04:02 CEST Jan Kratochvil wrote:
-> > On Sat, 17 Jun 2017 09:56:57 +0200, Namhyung Kim wrote:
-> > > Not sure whether it needs be fixed or not.  If we fix it, srcline and
-> > > address would not match so it can give its own confusion to users.
-> > > Ideally it should display an addressof the instruction before the
-> > > address IMHO.
-> > 
-> > One can figure million ways how it can behave and each one has its pros and
-> > cons.  I was just describing the current behavior of GDB and LLDB which
-> > people are used to already.
+On Tue, Jun 13, 2017 at 11:09:37AM +0200, Thomas Richter wrote:
+> This is a proposal to add platform dependency into the
+> test case 14 (perf_event_attr). It is based on a suggestion from
+> Jiri Olsa.
+> Add a new optional attribute named 'machine' in the [config] section
+> of the test case file. It is a comma separated list of architecture
+> names this test can be executed on. For example:
 > 
-> Personally, I agree with Jan that we should mimick existing tool's behavior. I 
-> just fear that it's not trivial to do it with the current code base...
+> machine = x86_64,alpha,ppc
 
-But we agree it is a worthwhile change (have backtraces in perf match
-what gdb, etc show), right?
+'arch' sounds better to me, but machine is ok I guess
 
-If you can, please try to do this, your attempt will help us understand
-more the extent of the changes needed and perhaps someonw can come up
-with simplifications...
+> 
+> If this attribute is missing the test is executed on any platform.
+> This does not break the current setup.
+> The values listed for this attribute should be identical to
+> uname -m output.
+> If the list starts with an exclamation mark (!) the comparison is
+> inverted, for example for
+> 
+> machine = !s390x,ppc
+> 
+> the test is not executed on s390x or ppc platforms.
+> The exclamation mark must be at the beginnning of the list.
 
-- Arnaldo
+could that be per arch? this made me think that it's not s390 and it IS for ppc
+
+> 
+> Here is an example debug output:
+> [root@s35lp76]# fgrep machine tests/attr/test-stat-C2
+> machine = x86_64,alpha,ppc
+> [root@s35lp76]# PERF_TEST_ATTR=/tmp /usr/bin/python2 ./tests/attr.py \
+>   -d ./tests/attr/ -p ./perf -vvvvv -t test-stat-C1
+> 
+> provides the following output:
+> 
+> running './tests/attr//test-stat-C1'
+> test executed only on 'x86_64,alpha,ppc' <--- new
+>   loading expected events
+>     Event event:base-stat
+>       fd = 1
+>       group_fd = -1
+>       .....
+> skipped [s390x] './tests/attr//test-stat-C1' <--- new
+
+is this mixed output from supported and non supported archs?
+if the arch is skip there's no output other than the skip line right?
+
+
+ther than above nits it looks ok to me
+
+thanks,
+jirka
