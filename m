@@ -1,62 +1,48 @@
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
-Subject: [PATCH] perf probe: Fix probe definition for inlined functions
-Date: Wed, 21 Jun 2017 18:41:34 +0200
-Message-ID: <20170621164134.5701-1-bjorn.topel@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V3 20/37] perf script: Add 'synth' event type for
+ synthesized events
+Date: Wed, 21 Jun 2017 19:41:04 +0300
+Message-ID: <66cdc4e6-58a4-e365-8a76-112daf71baf9@intel.com>
+References: <1495786658-18063-21-git-send-email-adrian.hunter@intel.com>
+ <1498040239-32418-1-git-send-email-adrian.hunter@intel.com>
+ <20170621135145.GO13640@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:20545 "EHLO mga05.intel.com"
+Received: from mga05.intel.com ([192.55.52.43]:13109 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751028AbdFUQmN (ORCPT
+        id S1751007AbdFUQrK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2017 12:42:13 -0400
+        Wed, 21 Jun 2017 12:47:10 -0400
+In-Reply-To: <20170621135145.GO13640@kernel.org>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, magnus.karlsson@intel.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, David Ahern <dsahern@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+On 06/21/2017 04:51 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jun 21, 2017 at 01:17:19PM +0300, Adrian Hunter escreveu:
+>> +++ b/tools/perf/util/event.h
+>> @@ -252,6 +252,9 @@ enum auxtrace_error_type {
+>>        PERF_AUXTRACE_ERROR_MAX
+>> };
+> 
+>> +/* Attribute type for custom synthesized events */
+>> +#define PERF_TYPE_SYNTH		3000000000
+> 
+> Why don't you make it PERF_TYPE_MAX and bump PERF_TYPE_MAX by one? I.e.
+> this way we have what can be in attr.type in a nice enumeration, can
+> validate it more easily (attr.type < PERF_TYPE_MAX) and will not need to 
+> do those conversions to/from OUTPUT_TYPE_/PERF_TYPE_).
 
-In commit 613f050d68a8 ("perf probe: Fix to probe on gcc generated
-functions in modules"), the offset from symbol is, incorrectly, added
-to the trace point address. This leads to incorrect probe trace points
-for inlined functions and when using relative line number on symbols.
+PERF_TYPE_ is dynamically allocated above PERF_TYPE_MAX for PMUs.  Presently
+perf_pmu_register() calls idr_alloc() with end=0 which limits the allocation
+to INT_MAX.
 
-Prior this patch:
-  $ perf probe -m nf_nat -D in_range
-  p:probe/in_range nf_nat:in_range.isra.9+0
-  $ perf probe -m i40e -D i40e_clean_rx_irq
-  p:probe/i40e_clean_rx_irq i40e:i40e_napi_poll+2212
-  $ perf probe -m i40e -D i40e_clean_rx_irq:16
-  p:probe/i40e_clean_rx_irq i40e:i40e_lan_xmit_frame+626
-
-After:
-  $ perf probe -m nf_nat -D in_range
-  p:probe/in_range nf_nat:in_range.isra.9+0
-  $ perf probe -m i40e -D i40e_clean_rx_irq
-  p:probe/i40e_clean_rx_irq i40e:i40e_napi_poll+1106
-  $ perf probe -m i40e -D i40e_clean_rx_irq:16
-  p:probe/i40e_clean_rx_irq i40e:i40e_napi_poll+2665
-
-Fixes: 613f050d68a8 ("perf probe: Fix to probe on gcc generated functions in modules")
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
----
- tools/perf/util/probe-event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 84e7e698411e..a2670e9d652d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -619,7 +619,7 @@ static int post_process_probe_trace_point(struct probe_trace_point *tp,
- 					   struct map *map, unsigned long offs)
- {
- 	struct symbol *sym;
--	u64 addr = tp->address + tp->offset - offs;
-+	u64 addr = tp->address - offs;
- 
- 	sym = map__find_symbol(map, addr);
- 	if (!sym)
--- 
-2.7.4
+> Peter: now its not the PERF_RECORD_ namespace that userspaces want a
+> chunk of, its PERF_TYPE_, which so far has been pretty stable, grabing
+> _one_ for event synthesizing things like Intel PT (and ARM's coresight,
+> I think) directly at include/uapi/linux/perf_event.h's perf_type_id enum
+> looks cleaner, no?
