@@ -1,109 +1,300 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: kallsyms in buildid - broken mapping?
-Date: Wed, 28 Jun 2017 00:00:10 +0200
-Message-ID: <2160227.6G76yXCJW2@agathebauer>
-References: <6006405.Fli7mH7B85@milian-kdab2> <20170627092537.cf884ffc179e4d758d456269@arm.com>
+From: William Cohen <wcohen@redhat.com>
+Subject: "perf record --pid <pid>" not able to colect data on processes
+ quickly spawning and destroying threads
+Date: Thu, 29 Jun 2017 15:33:46 -0400
+Message-ID: <c43fed2c-0e9a-9c1e-ebc7-6913f3c4c7e3@redhat.com>
+References: <CAERM-PjZvoW_Tq3yeYnHbMXG8dKg-S_E_xD-8ZUyVLbstPoU5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/mixed;
+ boundary="------------1FF1096DDCDCFC7F4C9B83C4"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:38118 "EHLO mail.kdab.com"
+Received: from mx1.redhat.com ([209.132.183.28]:45606 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753827AbdF0WAN (ORCPT
+        id S1752841AbdF2Tds (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Jun 2017 18:00:13 -0400
-In-Reply-To: <20170627092537.cf884ffc179e4d758d456269@arm.com>
+        Thu, 29 Jun 2017 15:33:48 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B1E67AE85
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Jun 2017 19:33:48 +0000 (UTC)
+Received: from [10.13.129.142] (dhcp129-142.rdu.redhat.com [10.13.129.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E758D60F92
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Jun 2017 19:33:47 +0000 (UTC)
+In-Reply-To: <CAERM-PjZvoW_Tq3yeYnHbMXG8dKg-S_E_xD-8ZUyVLbstPoU5A@mail.gmail.com>
+Content-Language: en-MW
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Kim Phillips <kim.phillips@arm.com>
-Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On Dienstag, 27. Juni 2017 16:25:37 CEST Kim Phillips wrote:
-> On Tue, 27 Jun 2017 16:16:47 +0200
-> 
-> Milian Wolff <milian.wolff@kdab.com> wrote:
-> > a colleague of mine just sent me a `perf archive` tarball and the
-> > accompanying perf.data file. The tarball contains a kallsyms entry with
-> > build-id for `[kernel.kallsyms]`. But the file seems to be bogus, it only
-> > contains "null" mappings, i.e.:
-> > 
-> > $ head kallsyms
-> > 0000000000000000 A irq_stack_union
-> > 0000000000000000 A __per_cpu_start
-> > 0000000000000000 A exception_stacks
-> > 0000000000000000 A gdt_page
-> > 0000000000000000 A espfix_waddr
-> > 0000000000000000 A espfix_stack
-> > 0000000000000000 A cpu_info
-> > 0000000000000000 A cpu_llc_shared_map
-> > 0000000000000000 A cpu_core_map
-> > 0000000000000000 A cpu_sibling_map
-> > $ cut -f1 -d' ' < kallsyms | uniq -c
-> > 
-> >  144971 0000000000000000
-> > 
-> > He now also sent me a copy of `/proc/kallsyms` which actually seems to
-> > contain a useful mapping. Any idea what lead to the broken original
-> > mapping?
-> permissions?
-> 
-> $ cat /proc/kallsyms | cut -f1 -d' ' | uniq -c | wc -l
-> 1
-> $ sudo cat /proc/kallsyms | cut -f1 -d' ' | uniq -c | wc -l
-> 124969
+This is a multi-part message in MIME format.
+--------------1FF1096DDCDCFC7F4C9B83C4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Ah, thanks. I can reproduce it now locally:
+Hi,
 
-~~~~~
-tmp$ cat /proc/sys/kernel/kptr_restrict
-1
-tmp$ head /proc/kallsyms
-0000000000000000 A irq_stack_union
-0000000000000000 A __per_cpu_start
-0000000000000000 T startup_64
-0000000000000000 T _stext
-0000000000000000 T _text
-0000000000000000 T secondary_startup_64
-0000000000000000 T start_cpu
-0000000000000000 t verify_cpu
-0000000000000000 T start_cpu0
-0000000000000000 t bad_address
-tmp$ echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-0
-tmp$ head /proc/kallsyms 
-0000000000000000 A irq_stack_union
-0000000000000000 A __per_cpu_start
-ffffffff81000000 T startup_64
-ffffffff81000000 T _stext
-ffffffff81000000 T _text
-ffffffff81000120 T secondary_startup_64
-ffffffff810001b0 T start_cpu
-ffffffff810001c4 t verify_cpu
-ffffffff810002c0 T start_cpu0
-ffffffff810002cc t bad_address
-~~~~~
+There was a problem that came up with oprofile not being able to collect data on a running process that quickly creates and destroys threads.  I noticed that a similar problem also exists with "perf record" and the oprofile reproducer.  Using the perf from fedora 25 (perf-4.11.6-201.fc25.x86_64).  The reproducer, oprofile_multithread_test.c is in the forwarded email.  In one window build and start the reproducer:
 
-But when I try to record with a restricted kptr, perf shows this error:
 
-~~~~~
-WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-check /proc/sys/kernel/kptr_restrict.
+$ gcc -o oprofile_multithread_test oprofile_multithread_test.c -lpthread
+$  ./oprofile_multithread_test 
+Usage: oprofile_multithread_test <number of spawns> <number of threads> <number of operations per thread>
+$ ./oprofile_multithread_test -1 16 100000
 
-Samples in kernel functions may not be resolved if a suitable vmlinux
-file is not found in the buildid cache or in the vmlinux path.
+In another window attempt to collect data:
 
-Samples in kernel modules won't be resolved at all.
+$ perf record --pid `pgrep oprofile_mult`
+Error:
+The sys_perf_event_open() syscall returned with 3 (No such process) for event (cycles).
+/bin/dmesg may provide additional information.
+No CONFIG_PERF_EVENTS=y kernel support configured?
 
-If some relocation was applied (e.g. kexec) symbols may be misresolved
-even with a suitable vmlinux or kallsyms file.
-~~~~~
 
-So how could I possibly end up with such a broken kallsyms file in my build-id 
-cache?
+Note that if the oprofile_multithread_test is paused with a cntl-z when "perf record" is attaching and then oprofile_multithread_test is allowed to continue executing  "perf record" is able to get data, so it looks like there is an issue with the initial setup rather than later data collection.
 
-Thanks
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
+-Will
+
+
+
+-------- Forwarded Message --------
+Subject: 	Re: Potential deadlock in operf when using --pid
+Date: 	Fri, 2 Oct 2015 10:10:21 -0500
+From: 	大平怜 <rei.odaira@gmail.com>
+To: 	William Cohen <wcohen@redhat.com>
+CC: 	oprofile-list@lists.sourceforge.net
+
+
+
+Sorry, I sent wrong source code.  I am attaching the right one.
+
+
+Regards,
+Rei Odaira
+
+2015-10-01 18:32 GMT-05:00 大平怜 <rei.odaira@gmail.com <mailto:rei.odaira@gmail.com>>:
+
+    Hi Will,
+
+    How about the attached test program?  This almost always causes the problem in my environment.
+
+    > gcc -o oprofile_multithread_test oprofile_multithread_test.c -lpthread
+    > ./oprofile_multithread_test 
+    Usage: oprofile_multithread_test <number of spawns> <number of threads> <number of operations per thread>
+    > ./oprofile_multithread_test -1 16 100000
+
+    In this example, oprofile_multithread_test spawns threads infinitely but runs maximum 16 threads simultaneously.  Each thread performs addition 100000 times and then completes.  Please use ^C to end this program if you specify -1 to the number of spawns.
+
+    If you profile this program with operf --pid, I expect you will not be able to finish operf by a single ^C.
+
+
+    Regards,
+    Rei Odaira
+
+    2015-10-01 15:42 GMT-05:00 William Cohen <wcohen@redhat.com <mailto:wcohen@redhat.com>>:
+
+        On 09/30/2015 06:07 PM, 大平怜 wrote:
+        > Hello again,
+        >
+        > When using --pid, I have occasionally seen operf does not end by hitting ^C once. By hitting ^C multiple times, operf ends with error messages:
+
+        Hi,
+
+        I tried to replicate this on my local machine, but haven't seen it occur yet.  How often does it happen?  Also does it make a difference when the event sampling rate is changed?  There is just one monitored process and it isn't spawning new processes?
+
+        >
+        > -----
+        > operf --events=CPU_CLK_UNHALTED:100000000:0:1:1 --pid `pgrep -f CassandraDaemon`
+        > Kernel profiling is not possible with current system config.
+        > Set /proc/sys/kernel/kptr_restrict to 0 to collect kernel samples.
+        > operf: Press Ctl-c or 'kill -SIGINT 18042' to stop profiling
+        > operf: Profiler started
+        > ^C^Cwaitpid for operf-record process failed: Interrupted system call
+        > ^Cwaitpid for operf-read process failed: Interrupted system call
+        > Error running profiler
+        > -----
+        >
+        > I am using the master branch in the git repository.
+        >
+        > Here is what I found:
+        > The operf-read process was waiting for a read of a sample ID from the operf-record process to return:
+        > (gdb) bt
+        > #0  0x00007fd90e0fa480 in __read_nocancel ()
+        >     at ../sysdeps/unix/syscall-template.S:81
+        > #1  0x0000000000412999 in read (__nbytes=8, __buf=0x7ffddc82b620,
+        >     __fd=<optimized out>) at /usr/include/x86_64-linux-gnu/bits/unistd.h:44
+        > #2  __handle_fork_event (event=0x98e860) at operf_utils.cpp:125
+        > #3  OP_perf_utils::op_write_event (event=event@entry=0x98e860,
+        >     sample_type=<optimized out>) at operf_utils.cpp:834
+        > #4  0x0000000000417250 in operf_read::convertPerfData (
+        >     this=this@entry=0x648000 <operfRead>) at operf_counter.cpp:1147
+        > #5  0x000000000040a4cb in convert_sample_data () at operf.cpp:947
+        > #6  0x0000000000407482 in _run () at operf.cpp:625
+        > #7  main (argc=4, argv=0x7ffddc82be48) at operf.cpp:1539
+        >
+        > The operf-record process was waiting for a write of sample data to the operf-read process to complete.  Why did the write of the sample data block?  My guess is that the sample_data_pipe was full:
+        > (gdb) bt
+        > #0  0x00007fbe0dc9f4e0 in __write_nocancel ()
+        >     at ../sysdeps/unix/syscall-template.S:81
+        > #1  0x000000000040cd0e in OP_perf_utils::op_write_output (output=6,
+        >     buf=0x7fbe0e4e5140, size=32) at operf_utils.cpp:989
+        > #2  0x000000000040d605 in OP_perf_utils::op_get_kernel_event_data (
+        >     md=0xd3c7f0, pr=pr@entry=0xd07900) at operf_utils.cpp:1443
+        > #3  0x000000000041bc12 in operf_record::recordPerfData (this=0xd07900)
+        >     at operf_counter.cpp:846
+        > #4  0x00000000004098b8 in start_profiling () at operf.cpp:402
+        > #5  0x0000000000406305 in _run () at operf.cpp:596
+        > #6  main (argc=4, argv=0x7ffdc6fcde58) at operf.cpp:1539
+        >
+        > As a result, when I hit ^C, the operf main process sent SIGUSR1 to the operf-record process, in which the write returned with EINTR and simply got retried. Since the operf-record process did not end, the operf main process waited at waitpid(2) forever.
+        >
+        > Do you think my guess makes sense?  What would be a fundamental solution?  Simply extending the pipe size would not be appropriate....
+
+        I am wondering if there are any other nuggets of information that can be gathered by using "--verbose debug,misc" and other "--verbose" variations on the operf command line.  It would be worthwhile to take a close look at the code in operf.cpp and see how ctl-c is being handled.  There could be a problem with the order that things are shutdown, causing the problem.  I noticed around line 406 and  of operf.cpp there is the following code:
+
+        catch (const runtime_error & re) {
+                                /* If the user does ctl-c, the operf-record process may get interrupted
+                                 * in a system call, causing problems with writes to the sample data pipe.
+                                 * So we'll ignore such errors unless the user requests debug info.
+                                 */
+                                if (!ctl_c || (cverb << vmisc)) {
+                                        cerr << "Caught runtime_error: " << re.what() << endl;
+                                        exit_code = EXIT_FAILURE;
+                                }
+                                goto fail_out;
+                        }
+
+        -Will
+
+
+
+
+
+
+--------------1FF1096DDCDCFC7F4C9B83C4
+Content-Type: text/x-csrc;
+ name="oprofile_multithread_test.c"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="oprofile_multithread_test.c"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <pthread.h>
+
+static int num_ops;
+static pthread_t *thr_array;
+
+
+static void *
+thr_main(void *arg)
+{
+  int i;
+  int sum = 0;
+
+  for (i = 0; i < num_ops; i++) {
+    sum += i;
+  }
+
+  return (void *)(intptr_t)sum;
+}
+
+static void
+spawn_thread(int thr)
+{
+  int ret;
+
+  ret = pthread_create(&thr_array[thr], NULL, thr_main, NULL);
+  if (ret != 0) {
+    fprintf(stderr, "pthread_create: %s\n", strerror(ret));
+    exit(1);
+  }
+}
+
+static void
+join_thread(int thr)
+{
+  int ret;
+
+  ret = pthread_join(thr_array[thr], NULL);
+  if (ret != 0) {
+    fprintf(stderr, "pthread_join: %s\n", strerror(ret));
+    exit(1);
+  }
+}
+
+int
+main(int argc, char *argv[])
+{
+  int num_spawns;
+  int num_threads;
+  int thr;
+  int thr_saved;
+  int ret;
+  int spawn_count;
+
+  if (argc != 4) {
+    fprintf(stderr, "Usage: oprofile_multithread_test <number of spawns> <number of threads> <number of operations per thread>\n");
+    exit(1);
+  }
+
+  num_spawns = atoi(argv[1]);
+  num_threads = atoi(argv[2]);
+  num_ops = atoi(argv[3]);
+  if (num_threads < 1) {
+    fprintf(stderr, "Number of threads must be positive.\n");
+    exit(1);
+  }
+
+  thr_array = malloc(sizeof(pthread_t) * num_threads);
+  if (thr_array == NULL) {
+    fprintf(stderr, "Cannot allocate thr_array\n");
+    exit(1);
+  }
+
+  spawn_count = 0;
+  for (thr = 0; thr < num_threads; thr++) {
+    spawn_thread(thr);
+    spawn_count++;
+  }
+
+  thr = 0;
+  while  (num_spawns < 0 ? 1 /* infinite loop */ : spawn_count < num_spawns) {
+    join_thread(thr);
+    spawn_thread(thr);
+    thr = (thr + 1) % num_threads;
+    spawn_count++;
+  }
+
+  thr_saved = thr;
+  do {
+    join_thread(thr);
+    thr = (thr + 1) % num_threads;    
+  } while (thr != thr_saved);
+
+  free(thr_array);
+}
+
+--------------1FF1096DDCDCFC7F4C9B83C4
+Content-Type: text/plain; charset=UTF-8;
+ name="Attached Message Part"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="Attached Message Part"
+
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgo=
+--------------1FF1096DDCDCFC7F4C9B83C4
+Content-Type: text/plain; charset=UTF-8;
+ name="Attached Message Part"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="Attached Message Part"
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kb3Byb2Zp
+bGUtbGlzdCBtYWlsaW5nIGxpc3QKb3Byb2ZpbGUtbGlzdEBsaXN0cy5zb3VyY2Vmb3JnZS5u
+ZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vb3Byb2Zp
+bGUtbGlzdAoK
+--------------1FF1096DDCDCFC7F4C9B83C4--
