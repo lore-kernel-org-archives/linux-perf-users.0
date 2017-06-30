@@ -1,38 +1,67 @@
-From: David Ahern <dsahern@gmail.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: perf and containers
-Date: Fri, 30 Jun 2017 08:55:13 -0600
-Message-ID: <52ed4a27-498d-3f13-e9cc-236174c038c1@gmail.com>
+Date: Fri, 30 Jun 2017 19:13:10 +0200
+Message-ID: <4501889.eVrlQgCJXI@agathebauer>
 References: <CAE40pdcP42zaBP_nZa1rdG7D6gDA-X2+Y6FbMfkzfkgFTnz3qA@mail.gmail.com>
- <20170630021654.GE12064@kernel.org>
- <01937385-b6d9-d7d4-0d41-3869b1b7bb48@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:34507 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751695AbdF3Oz0 (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:45804 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751072AbdF3RNN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jun 2017 10:55:26 -0400
-Received: by mail-pg0-f65.google.com with SMTP id j186so15641464pge.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jun 2017 07:55:26 -0700 (PDT)
-In-Reply-To: <01937385-b6d9-d7d4-0d41-3869b1b7bb48@linux.vnet.ibm.com>
+        Fri, 30 Jun 2017 13:13:13 -0400
+In-Reply-To: <CAE40pdcP42zaBP_nZa1rdG7D6gDA-X2+Y6FbMfkzfkgFTnz3qA@mail.gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+To: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-On 6/30/17 1:00 AM, Thomas-Mich Richter wrote:
-> On 06/30/2017 04:16 AM, Arnaldo Carvalho de Melo wrote:
+On Donnerstag, 29. Juni 2017 22:33:37 CEST Brendan Gregg wrote:
+> G'Day perf-users,
 > 
-> [...SNIP..]
+> I've been using perf with containers a lot, running perf from the host
+> system-wide or with --cgroup for one container, and I'm wondering
+> about symbol translation and namespaces. When running "perf script" or
+> "perf report" from the host:
 > 
-> I ran into a very similar issue when I tried the latest kernel 4.12 perf name space support.
-> I was able to find the new PERF_RECORD_NAMESPACE entries in the perf.data file 
-> but do not know how to interpret the ino-numbers shown in those entries.
-> Right now the wrong symbols will be displayed...
+> - kernel symbols: works fine
 > 
-> How to interpret the inode numbers the perf NAMESPACE event emits?
+> - JIT symbols: doesn't work as /tmp/perf-PID.map is in the container,
+> not the host, and has a different PID. I currently have shell scripts
+> to copy and rename map files, but... Would it be possible for perf to
+> try opening /tmp/perf-PID.map, and if that fails, check if the PID
+> still exists in /proc, read its NSpid from /proc/PID/status, and if
+> that's different (meaning it's in a container), then read
+> /proc/PID/root/tmp/perf-NSpid.map instead?
+> 
+> - binary symbols: /usr/bin/node,
+> /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java, /lib/..., etc, may not
+> be in the host, so symbol translation fails. Could perf have a similar
+> approach where it tries from /proc/PID/root/... instead, if the PID is
+> in a container?
+> 
+> Or, are there other workarounds I don't know about for these? :) perf
+> could have a --setns flag to set the mount namespace before it
+> attempts symbol translation, which may also work for when I'm
+> analyzing one container only from the host, and could run "perf script
+> --setns=..." for that one container.
+> 
+> Using perf from within the container is totally different, and not
+> always possible (perf_event_open() can be disabled, and, some
+> containers are completely locked down, such that it's hard to run any
+> command that isn't the application)...
 
-The device and inode number can be used as an identifier (e.g., combine
-into a u64) for the namespace when processing events.
+It's a bit hacky, but in the past I resorted to passing the mount point of the 
+container root to perf via `--symfs`. That made it work quite nicely for my 
+use case, but I also recorded from within the container - not sure if that 
+plays a role here.
+
+Cheers
+
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
