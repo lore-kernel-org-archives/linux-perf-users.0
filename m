@@ -1,138 +1,142 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: perf report does not resolve symbols on s390x
-Date: Thu, 6 Jul 2017 09:23:05 +0200
-Message-ID: <7cb7a888-cb18-cbe3-f08b-39b4d062db36@linux.vnet.ibm.com>
-References: <eb00bf70-936d-e405-5867-015d4067202f@linux.vnet.ibm.com>
- <20170705155007.GH27350@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: hotspot v1.0.0 available - a GUI for Linux perf
+Date: Thu, 06 Jul 2017 13:42:56 +0200
+Message-ID: <1802261.K6oANf3Kar@milian-kdab2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart3247659.bKYb4ByfqJ"; micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1753072AbdGFHXQ (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:36458 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751923AbdGFLnE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jul 2017 03:23:16 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id v667JENE136430
-        for <linux-perf-users@vger.kernel.org>; Thu, 6 Jul 2017 03:23:10 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2bhg54sgff-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jul 2017 03:23:10 -0400
-Received: from localhost
-        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Thu, 6 Jul 2017 08:23:08 +0100
-In-Reply-To: <20170705155007.GH27350@kernel.org>
-Content-Language: en-IE
+        Thu, 6 Jul 2017 07:43:04 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 
-On 07/05/2017 05:50 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Jul 05, 2017 at 04:45:49PM +0200, Thomas-Mich Richter escreveu:
->> I use linux 4.12 kernel and the perf report --stdio does not resolve all symbols:
->> Only very few symbols are resolved and none listed in the call back chain.
->>
->> Here is an example:
->>
->>     50.00%    50.00%  true     [kernel.vmlinux]  [k] __rb_insert_augmented
->>             |
->>             ---0x6a0624
->>                0x2d7c00
->>                0x2d79c8
->>                0x2b5a26
->>                0x2da542
->>                0x2da01a
->>                0x2d6c2e
->>                0x2d6b86
->>
->>     50.00%     0.00%  true     [unknown]         [k] 0x000000000011e90a
->>             |
->>             ---0x11e90a
->>                0x2d39a4
->>                0x2d3238
->>                0x288140
->>                0x2cf404
->>                0x2df5d8
->>                0x31618c
->>                0x19b0ae
->>
->> These addresses are all in the /proc/kallsyms and valid.
->>
->> When I do a perf script it works:
->> [root@s8360046 perf]# perf script
-> 
-> This is the strange part, 'script' resolving things 'report' doesn't,
-> they should be using the same machinery... Since the DSO is not being
-> resolved on the one failing above, this would look like its some
-> PERF_RECORD_MMAP/PERF_RECORD_MMAP2 that is being missed, so you should
-> look at the processing of such records, which is done via:
-> 
->  perf_tool.mmap() and perf_tool.mmap2()
-> 
-> the perf_tool ops table is passed to:
-> 
->   perf_session__new(&file, false, &report.tool);
-> 
-> Which will call the mmap() and mmap2() functions to process those
-> records, if you look at script it has:
-> 
->   
->         struct perf_script script = {
->                 .tool = {
->                         .sample          = process_sample_event,
->                         .mmap            = perf_event__process_mmap,
->                         .mmap2           = perf_event__process_mmap2,
-> <SNIP>
-> 
-> and then:
-> 
->   session = perf_session__new(&file, false, &script.tool);
-> 
-> Which is the same as done for report:
-> 
->           struct report report = {
->                 .tool = {
->                         .sample          = process_sample_event,
->                         .mmap            = perf_event__process_mmap,
->                         .mmap2           = perf_event__process_mmap2,
-> <SNIP>
-> 
->   perf_session__new(&file, false, &report.tool);
-> 
-> I.e. both use the same functions to resolve PERF_RECORD_MMAP/MMAP2 records,
-> then you should look at how samples are processed, its static functions, tool specific
-> functions, both named process_sample_event, in tools/perf/builtin->{report,script}.c,
-> and both will basically do:
-> 
->         if (machine__resolve(machine, &al, sample) < 0) {
->                 pr_debug("problem processing %d event, skipping it.\n",
->                          event->header.type);
->                 return -1;
->         }
-> 
-> That will do lookups on trees populated by perf_event__process_mmap,
-> perf_event__process_mmap2, and the routines handling PERF_RECORD_FORK, etc.
-> 
-> Is this enough to help you go from here to investigate your problem?
-> 
-> - Arnaldo
-> 
+--nextPart3247659.bKYb4ByfqJ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Thanks a lot for the direction to dig into. I am quiet new to perf and still
-do not have an understanding of all the structures and how their interact together.
+Hey all,
 
-Maybe there is some documentation of the internals of perf someone can share with
-me? Or post it to the mailing list.
+I have the pleasure to finally announce the availability of hotspot v1.0.0. 
+Hotspot is a GUI for Linux perf. Right now, it's a drop-in replacement for 
+(parts of) `perf report`. It aims to be easier to use, but comes with powerful 
+features to analyze the profiler data:
 
-Thanks.
+- summary view
+- bottom-up, top-down and caller/callee aggregations
+- tooltips, searching, sorting etc. as expected from an interactive GUI
+- integrated flamegraph (probably the most important feature)
+- ability to show multiple event metrics side-by-side
 
+The full release announcement contains pretty screenshots:
+
+https://www.kdab.com/hotspot-gui-linux-perf-profiler/
+
+You can download the release tarball from GitHub:
+
+https://github.com/KDAB/hotspot/releases/tag/v1.0.0
+
+Thanks, hope you like it. If so, please consider contributing:
+
+Patches: https://github.com/KDAB/hotspot/pulls
+Bug Reports: https://github.com/KDAB/hotspot/issues
+
+PS: If you dislike GUIs and want to see me instead improve `perf report` 
+itself, don't worry! I've done that in the past and will continue doing so in 
+the future ;-)
+
+PPS: If you wonder why I'm developing this out-of-tree: I simply believe that 
+this is the easiest approach for me to get things done. Trying to refactor the 
+perf internals to make it work for me use-case is a daunting task.
+
+PPPS: If you wonder what that means for `perf report --gtk`, then I can't tell 
+you. It never worked for me and I believe it's rather unmaintained and 
+unfunctional anyways. I'm a C++/Qt/KDE guy, so I used the technologies I'm 
+familiar with.
+
+Cheers
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
+--nextPart3247659.bKYb4ByfqJ
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwNzA2MTE0MjU2WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgRAF7JPXW4hEtQTm+a/qxHUHaXY5u
+PAjKdhSLQNO7GqQwDQYJKoZIhvcNAQEBBQAEggEAWYsfPNL1EOcrwhz+R1Sj5Wiuhc+1IDAnvnNE
+gb8TgdQc14dSHsG6BEllYDOeN6XHOBd9EkW+PN0D3kvpD3HgxNH+J0Ue/YhsZpBjqMM5VGjNge1s
+Vb4/35MGnXZErm6sS2SXnoLZyyYlVyVHpJbAHqCEDwQbVRzPupK6aDRqf9yE2YXCkSH1DnTG7Owz
+MQGvor2u631nDPjX4VZSWW8/ZEb0uk8KTACv711PcToI9SFeSvIf9J+Ck8GhTYg2t9egatTiC28P
+x6ut/+j/O6mkP+qZwf15K+Uyl3tfWxjiDgy2xrKneQmmpZ9xfqZYypuZDCADhG9HCJNd2hDJLs2K
+SwAAAAAAAA==
+
+
+--nextPart3247659.bKYb4ByfqJ--
