@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 44/86] perf tests attr: Add test_attr__ready function
-Date: Wed, 19 Jul 2017 11:29:08 -0300
-Message-ID: <20170719142950.3747-45-acme@kernel.org>
+Subject: [PATCH 45/86] perf tests attr: Make compare_data global
+Date: Wed, 19 Jul 2017 11:29:09 -0300
+Message-ID: <20170719142950.3747-46-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,94 +12,93 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-We create many test events before the real ones just to test specific
-features. But there's no way for attr tests to separate those test
-events from those it needs to check.
-
-Adding 'ready' call from the events open interface to trigger/start
-events collection for attr test.
+Making compare_data global, so it could be used outside
+the Test class scope to compare command results.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170703145030.12903-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170703145030.12903-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/perf.h       |  1 +
- tools/perf/tests/attr.c | 10 ++++++++++
- tools/perf/util/evsel.c |  4 ++++
- 3 files changed, 15 insertions(+)
+ tools/perf/tests/attr.py | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 806c216a1078..2c010dd6a79d 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -7,6 +7,7 @@
- #include <linux/perf_event.h>
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index cdf21a9d0c35..bb671cd1d66a 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -9,6 +9,20 @@ import logging
+ import shutil
+ import ConfigParser
  
- extern bool test_attr__enabled;
-+void test_attr__ready(void);
- void test_attr__init(void);
- void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
- 		     int fd, int group_fd, unsigned long flags);
-diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
-index 08b1d5ce9020..84c0eb598a67 100644
---- a/tools/perf/tests/attr.c
-+++ b/tools/perf/tests/attr.c
-@@ -36,6 +36,7 @@
- #define ENV "PERF_TEST_ATTR"
- 
- static char *dir;
-+static bool ready;
- 
- void test_attr__init(void)
- {
-@@ -67,6 +68,9 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, int cpu,
- 	FILE *file;
- 	char path[PATH_MAX];
- 
-+	if (!ready)
-+		return 0;
++def compare_data(a, b):
++    # Allow multiple values in assignment separated by '|'
++    a_list = a.split('|')
++    b_list = b.split('|')
 +
- 	snprintf(path, PATH_MAX, "%s/event-%d-%llu-%d", dir,
- 		 attr->type, attr->config, fd);
- 
-@@ -144,6 +148,12 @@ void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
- 	errno = errno_saved;
- }
- 
-+void test_attr__ready(void)
-+{
-+	if (unlikely(test_attr__enabled) && !ready)
-+		ready = true;
-+}
++    for a_item in a_list:
++        for b_item in b_list:
++            if (a_item == b_item):
++                return True
++            elif (a_item == '*') or (b_item == '*'):
++                return True
 +
- static int run_dir(const char *d, const char *perf)
- {
- 	char v[] = "-vvvvv";
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index df567e478a0e..6dd069a41ac3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -58,6 +58,8 @@ static int perf_evsel__no_extra_init(struct perf_evsel *evsel __maybe_unused)
- 	return 0;
- }
- 
-+void __weak test_attr__ready(void) { }
++    return False
 +
- static void perf_evsel__no_extra_fini(struct perf_evsel *evsel __maybe_unused)
- {
- }
-@@ -1572,6 +1574,8 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 			pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
- 				  pid, cpus->map[cpu], group_fd, flags);
+ class Fail(Exception):
+     def __init__(self, test, msg):
+         self.msg = msg
+@@ -82,26 +96,12 @@ class Event(dict):
+         self.add(base)
+         self.add(data)
  
-+			test_attr__ready();
-+
- 			fd = sys_perf_event_open(&evsel->attr, pid, cpus->map[cpu],
- 						 group_fd, flags);
+-    def compare_data(self, a, b):
+-        # Allow multiple values in assignment separated by '|'
+-        a_list = a.split('|')
+-        b_list = b.split('|')
+-
+-        for a_item in a_list:
+-            for b_item in b_list:
+-                if (a_item == b_item):
+-                    return True
+-                elif (a_item == '*') or (b_item == '*'):
+-                    return True
+-
+-        return False
+-
+     def equal(self, other):
+         for t in Event.terms:
+             log.debug("      [%s] %s %s" % (t, self[t], other[t]));
+             if not self.has_key(t) or not other.has_key(t):
+                 return False
+-            if not self.compare_data(self[t], other[t]):
++            if not compare_data(self[t], other[t]):
+                 return False
+         return True
  
+@@ -109,7 +109,7 @@ class Event(dict):
+         for t in Event.terms:
+             if not self.has_key(t) or not other.has_key(t):
+                 continue
+-            if not self.compare_data(self[t], other[t]):
++            if not compare_data(self[t], other[t]):
+ 		log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
+ 
+ # Test file description needs to have following sections:
+@@ -218,9 +218,9 @@ class Test(object):
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
+ 
+-        log.info("  '%s' ret %d " % (cmd, ret))
++        log.info("  '%s' ret '%s', expected '%s'" % (cmd, str(ret), str(self.ret)))
+ 
+-        if ret != int(self.ret):
++        if not compare_data(str(ret), str(self.ret)):
+             raise Unsup(self)
+ 
+     def compare(self, expect, result):
 -- 
 2.9.4
