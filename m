@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 47/86] perf tests attr: Add 1s for exclude_kernel and task base bits
-Date: Wed, 19 Jul 2017 11:29:11 -0300
-Message-ID: <20170719142950.3747-48-acme@kernel.org>
+Subject: [PATCH 48/86] perf tests attr: Fix record dwarf test
+Date: Wed, 19 Jul 2017 11:29:12 -0300
+Message-ID: <20170719142950.3747-49-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,47 +12,38 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's an event open fallback which set exclude_kernel=1 in case use
-does not have enough privileges. Adding both 0|1 for this attribute,
-because we don't know what value it is.
+Following commit:
+
+  commit 5c0cf22477ea ("perf record: Store data mmaps for dwarf unwind")
+
+have enabled address sampling for dwarf unwind, we need to reflect that
+in this test by adding ADDR sample_type and enabling mmap_data.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170703145030.12903-7-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170703145030.12903-8-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr/base-record | 2 +-
- tools/perf/tests/attr/base-stat   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/attr/test-record-graph-dwarf | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-index 7e6d74946e04..cdf3adf7d389 100644
---- a/tools/perf/tests/attr/base-record
-+++ b/tools/perf/tests/attr/base-record
-@@ -15,7 +15,7 @@ inherit=1
- pinned=0
- exclusive=0
- exclude_user=0
--exclude_kernel=0
-+exclude_kernel=0|1
- exclude_hv=0
- exclude_idle=0
- mmap=1
-diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
-index f4cf148f14cb..ff9b33d4ae9e 100644
---- a/tools/perf/tests/attr/base-stat
-+++ b/tools/perf/tests/attr/base-stat
-@@ -15,7 +15,7 @@ inherit=1
- pinned=0
- exclusive=0
- exclude_user=0
--exclude_kernel=0
-+exclude_kernel=0|1
- exclude_hv=0
- exclude_idle=0
- mmap=0
+diff --git a/tools/perf/tests/attr/test-record-graph-dwarf b/tools/perf/tests/attr/test-record-graph-dwarf
+index d6f324ea578c..8321c602dc38 100644
+--- a/tools/perf/tests/attr/test-record-graph-dwarf
++++ b/tools/perf/tests/attr/test-record-graph-dwarf
+@@ -3,8 +3,9 @@ command = record
+ args    = --call-graph dwarf -- kill >/dev/null 2>&1
+ 
+ [event:base-record]
+-sample_type=12583
++sample_type=45359
+ exclude_callchain_user=1
+ sample_stack_user=8192
+ # TODO different for each arch, no support for that now
+ sample_regs_user=*
++mmap_data=1
 -- 
 2.9.4
