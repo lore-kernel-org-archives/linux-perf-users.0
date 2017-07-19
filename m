@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 65/86] perf header: Add PROCESS_STR_FUN macro
-Date: Wed, 19 Jul 2017 11:29:29 -0300
-Message-ID: <20170719142950.3747-66-acme@kernel.org>
+Subject: [PATCH 66/86] perf header: Fail on write_padded error
+Date: Wed, 19 Jul 2017 11:29:30 -0300
+Message-ID: <20170719142950.3747-67-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,8 +12,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Simplify code by adding a macro to handle the common case of processing
-header features that are a simple string.
+Do not proceed if write_padded() error failed.
+
+Also, add comments to remind that the return value of write_* functions
+in util/header.c is an errno code and not the number of bytes written.
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: David Ahern <dsahern@gmail.com>
@@ -28,101 +30,49 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-3-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170718042549.145161-4-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 65 +++++++++++++-----------------------------------
- 1 file changed, 17 insertions(+), 48 deletions(-)
+ tools/perf/util/header.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 24e842c02027..3b833f06c4e7 100644
+index 3b833f06c4e7..8dda19b68ac4 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -1603,6 +1603,23 @@ static int perf_header__read_build_ids(struct perf_header *header,
- 	return err;
+@@ -74,6 +74,7 @@ bool perf_header__has_feat(const struct perf_header *header, int feat)
+ 	return test_bit(feat, header->adds_features);
  }
  
-+/* Macro for features that simply need to read and store a string. */
-+#define FEAT_PROCESS_STR_FUN(__feat, __feat_env) \
-+static int process_##__feat(struct perf_file_section *section __maybe_unused, \
-+			    struct perf_header *ph, int fd,		      \
-+			    void *data __maybe_unused) \
-+{\
-+	ph->env.__feat_env = do_read_string(fd, ph); \
-+	return ph->env.__feat_env ? 0 : -ENOMEM; \
-+}
-+
-+FEAT_PROCESS_STR_FUN(hostname, hostname);
-+FEAT_PROCESS_STR_FUN(osrelease, os_release);
-+FEAT_PROCESS_STR_FUN(version, version);
-+FEAT_PROCESS_STR_FUN(arch, arch);
-+FEAT_PROCESS_STR_FUN(cpudesc, cpu_desc);
-+FEAT_PROCESS_STR_FUN(cpuid, cpuid);
-+
- static int process_tracing_data(struct perf_file_section *section __maybe_unused,
- 				struct perf_header *ph __maybe_unused,
- 				int fd, void *data)
-@@ -1620,38 +1637,6 @@ static int process_build_id(struct perf_file_section *section,
++/* Return: 0 if succeded, -ERR if failed. */
+ static int do_write(int fd, const void *buf, size_t size)
+ {
+ 	while (size) {
+@@ -89,6 +90,7 @@ static int do_write(int fd, const void *buf, size_t size)
  	return 0;
  }
  
--static int process_hostname(struct perf_file_section *section __maybe_unused,
--			    struct perf_header *ph, int fd,
--			    void *data __maybe_unused)
--{
--	ph->env.hostname = do_read_string(fd, ph);
--	return ph->env.hostname ? 0 : -ENOMEM;
--}
--
--static int process_osrelease(struct perf_file_section *section __maybe_unused,
--			     struct perf_header *ph, int fd,
--			     void *data __maybe_unused)
--{
--	ph->env.os_release = do_read_string(fd, ph);
--	return ph->env.os_release ? 0 : -ENOMEM;
--}
--
--static int process_version(struct perf_file_section *section __maybe_unused,
--			   struct perf_header *ph, int fd,
--			   void *data __maybe_unused)
--{
--	ph->env.version = do_read_string(fd, ph);
--	return ph->env.version ? 0 : -ENOMEM;
--}
--
--static int process_arch(struct perf_file_section *section __maybe_unused,
--			struct perf_header *ph,	int fd,
--			void *data __maybe_unused)
--{
--	ph->env.arch = do_read_string(fd, ph);
--	return ph->env.arch ? 0 : -ENOMEM;
--}
--
- static int process_nrcpus(struct perf_file_section *section __maybe_unused,
- 			  struct perf_header *ph, int fd,
- 			  void *data __maybe_unused)
-@@ -1671,22 +1656,6 @@ static int process_nrcpus(struct perf_file_section *section __maybe_unused,
- 	return 0;
- }
++/* Return: 0 if succeded, -ERR if failed. */
+ int write_padded(int fd, const void *bf, size_t count, size_t count_aligned)
+ {
+ 	static const char zero_buf[NAME_ALIGN];
+@@ -103,6 +105,7 @@ int write_padded(int fd, const void *bf, size_t count, size_t count_aligned)
+ #define string_size(str)						\
+ 	(PERF_ALIGN((strlen(str) + 1), NAME_ALIGN) + sizeof(u32))
  
--static int process_cpudesc(struct perf_file_section *section __maybe_unused,
--			   struct perf_header *ph, int fd,
--			   void *data __maybe_unused)
--{
--	ph->env.cpu_desc = do_read_string(fd, ph);
--	return ph->env.cpu_desc ? 0 : -ENOMEM;
--}
--
--static int process_cpuid(struct perf_file_section *section __maybe_unused,
--			 struct perf_header *ph,  int fd,
--			 void *data __maybe_unused)
--{
--	ph->env.cpuid = do_read_string(fd, ph);
--	return ph->env.cpuid ? 0 : -ENOMEM;
--}
--
- static int process_total_mem(struct perf_file_section *section __maybe_unused,
- 			     struct perf_header *ph, int fd,
- 			     void *data __maybe_unused)
++/* Return: 0 if succeded, -ERR if failed. */
+ static int do_write_string(int fd, const char *str)
+ {
+ 	u32 len, olen;
+@@ -3200,7 +3203,8 @@ int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd,
+ 	 */
+ 	tracing_data_put(tdata);
+ 
+-	write_padded(fd, NULL, 0, padding);
++	if (write_padded(fd, NULL, 0, padding))
++		return -1;
+ 
+ 	return aligned_size;
+ }
 -- 
 2.9.4
