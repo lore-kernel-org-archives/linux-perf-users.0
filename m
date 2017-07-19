@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 68/86] perf header: Revamp do_write()
-Date: Wed, 19 Jul 2017 11:29:32 -0300
-Message-ID: <20170719142950.3747-69-acme@kernel.org>
+Subject: [PATCH 67/86] perf util: Add const modifier to buf in "writen" function
+Date: Wed, 19 Jul 2017 11:29:31 -0300
+Message-ID: <20170719142950.3747-68-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,10 +12,12 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Now that writen takes a const buffer, use it in do_write instead of
-duplicating its functionality.
+Make buf in helper function "writen" constant to simplify the life of
+its callers.
 
-Export do_write to use it consistently in header.c and build_id.c .
+This requires to hack a cast of buf prior to passing it to "ion" which
+is simpler than the alternative of reworking the "ion" function to
+provide a read and a write paths, the latter with constant buf argument.
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: David Ahern <dsahern@gmail.com>
@@ -30,66 +32,50 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-6-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170718042549.145161-5-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/build-id.c |  2 +-
- tools/perf/util/header.c   | 14 +++++---------
- tools/perf/util/header.h   |  2 ++
- 3 files changed, 8 insertions(+), 10 deletions(-)
+ tools/perf/util/util.c | 6 ++++--
+ tools/perf/util/util.h | 2 +-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index e9665150e9b1..4baa5329439f 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -304,7 +304,7 @@ static int write_buildid(const char *name, size_t name_len, u8 *build_id,
- 	b.header.misc = misc;
- 	b.header.size = sizeof(b) + len;
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 9e4ea852f636..4c360daa4e24 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -281,6 +281,7 @@ static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
+ 	size_t left = n;
  
--	err = writen(fd, &b, sizeof(b));
-+	err = do_write(fd, &b, sizeof(b));
- 	if (err < 0)
- 		return err;
+ 	while (left) {
++		/* buf must be treated as const if !is_read. */
+ 		ssize_t ret = is_read ? read(fd, buf, left) :
+ 					write(fd, buf, left);
  
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 8dda19b68ac4..954f0ef8e712 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -75,17 +75,13 @@ bool perf_header__has_feat(const struct perf_header *header, int feat)
- }
- 
- /* Return: 0 if succeded, -ERR if failed. */
--static int do_write(int fd, const void *buf, size_t size)
-+int do_write(int fd, const void *buf, size_t size)
- {
--	while (size) {
--		int ret = write(fd, buf, size);
--
--		if (ret < 0)
--			return -errno;
-+	ssize_t ret;
- 
--		size -= ret;
--		buf += ret;
--	}
-+	ret  = writen(fd, buf, size);
-+	if (ret != (ssize_t)size)
-+		return ret < 0 ? (int)ret : -1;
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index d30109b421ee..e98489c8bba7 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -144,6 +144,8 @@ bool is_perf_magic(u64 magic);
- 
- #define NAME_ALIGN 64
- 
-+int do_write(int fd, const void *buf, size_t size);
-+
- int write_padded(int fd, const void *bf, size_t count, size_t count_aligned);
- 
+@@ -308,9 +309,10 @@ ssize_t readn(int fd, void *buf, size_t n)
  /*
+  * Write exactly 'n' bytes or return an error.
+  */
+-ssize_t writen(int fd, void *buf, size_t n)
++ssize_t writen(int fd, const void *buf, size_t n)
+ {
+-	return ion(false, fd, buf, n);
++	/* ion does not modify buf. */
++	return ion(false, fd, (void *)buf, n);
+ }
+ 
+ size_t hex_width(u64 v)
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 062dd20437f7..b136c271125f 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -38,7 +38,7 @@ int copyfile_ns(const char *from, const char *to, struct nsinfo *nsi);
+ int copyfile_offset(int fromfd, loff_t from_ofs, int tofd, loff_t to_ofs, u64 size);
+ 
+ ssize_t readn(int fd, void *buf, size_t n);
+-ssize_t writen(int fd, void *buf, size_t n);
++ssize_t writen(int fd, const void *buf, size_t n);
+ 
+ size_t hex_width(u64 v);
+ int hex2u64(const char *ptr, u64 *val);
 -- 
 2.9.4
