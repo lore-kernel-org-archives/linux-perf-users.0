@@ -1,175 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 55/86] perf tests attr: Add optional term
-Date: Wed, 19 Jul 2017 11:29:19 -0300
-Message-ID: <20170719142950.3747-56-acme@kernel.org>
+Subject: [PATCH 56/86] perf trace beauty: Export strarray for use in per-object beautifiers
+Date: Wed, 19 Jul 2017 11:29:20 -0300
+Message-ID: <20170719142950.3747-57-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some of the stat events are quite rare to find on common machines (like
-front end cycles).
+Like will be done with fcntl(fd, F_GETLEASE, F_RDLCK|F_WRLCK|F_UNLCK)
 
-Adding an 'optional' term to mark such events in attr tests. Event
-marked as optional will not fail the test case if it's not found in
-results.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170703145030.12903-15-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-3p11bgirtntjfmbixfkz8i2m@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr.py                   | 14 +++++++++++---
- tools/perf/tests/attr/test-stat-default    |  2 ++
- tools/perf/tests/attr/test-stat-detailed-1 |  2 ++
- tools/perf/tests/attr/test-stat-detailed-2 |  3 +++
- tools/perf/tests/attr/test-stat-detailed-3 |  5 +++++
- 5 files changed, 23 insertions(+), 3 deletions(-)
+ tools/perf/builtin-trace.c       | 27 +++++++--------------------
+ tools/perf/trace/beauty/beauty.h | 20 ++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index b03261c6b1ed..6bb50e82a3e3 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -105,6 +105,11 @@ class Event(dict):
-                 return False
-         return True
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 65fa0126e939..0dedce0ca0bb 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -283,34 +283,21 @@ static struct perf_evsel *perf_evsel__syscall_newtp(const char *direction, void
+ 	({ struct syscall_tp *fields = evsel->priv; \
+ 	   fields->name.pointer(&fields->name, sample); })
  
-+    def optional(self):
-+        if self.has_key('optional') and self['optional'] == '1':
-+            return True
-+        return False
+-struct strarray {
+-	int	    offset;
+-	int	    nr_entries;
+-	const char **entries;
+-};
++size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, int val)
++{
++	int idx = val - sa->offset;
+ 
+-#define DEFINE_STRARRAY(array) struct strarray strarray__##array = { \
+-	.nr_entries = ARRAY_SIZE(array), \
+-	.entries = array, \
+-}
++	if (idx < 0 || idx >= sa->nr_entries)
++		return scnprintf(bf, size, intfmt, val);
+ 
+-#define DEFINE_STRARRAY_OFFSET(array, off) struct strarray strarray__##array = { \
+-	.offset	    = off, \
+-	.nr_entries = ARRAY_SIZE(array), \
+-	.entries = array, \
++	return scnprintf(bf, size, "%s", sa->entries[idx]);
+ }
+ 
+ static size_t __syscall_arg__scnprintf_strarray(char *bf, size_t size,
+ 						const char *intfmt,
+ 					        struct syscall_arg *arg)
+ {
+-	struct strarray *sa = arg->parm;
+-	int idx = arg->val - sa->offset;
+-
+-	if (idx < 0 || idx >= sa->nr_entries)
+-		return scnprintf(bf, size, intfmt, arg->val);
+-
+-	return scnprintf(bf, size, "%s", sa->entries[idx]);
++	return strarray__scnprintf(arg->parm, bf, size, intfmt, arg->val);
+ }
+ 
+ static size_t syscall_arg__scnprintf_strarray(char *bf, size_t size,
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index 9ccf0f323fe5..f75ef7d0b303 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -1,8 +1,28 @@
+ #ifndef _PERF_TRACE_BEAUTY_H
+ #define _PERF_TRACE_BEAUTY_H
+ 
++#include <linux/kernel.h>
+ #include <linux/types.h>
+ 
++struct strarray {
++	int	    offset;
++	int	    nr_entries;
++	const char **entries;
++};
 +
-     def diff(self, other):
-         for t in Event.terms:
-             if not self.has_key(t) or not other.has_key(t):
-@@ -244,9 +249,12 @@ class Test(object):
-             log.debug("    match: [%s] matches %s" % (exp_name, str(exp_list)))
++#define DEFINE_STRARRAY(array) struct strarray strarray__##array = { \
++	.nr_entries = ARRAY_SIZE(array), \
++	.entries = array, \
++}
++
++#define DEFINE_STRARRAY_OFFSET(array, off) struct strarray strarray__##array = { \
++	.offset	    = off, \
++	.nr_entries = ARRAY_SIZE(array), \
++	.entries = array, \
++}
++
++size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, int val);
++
+ struct trace;
+ struct thread;
  
-             # we did not any matching event - fail
--            if (not exp_list):
--		exp_event.diff(res_event)
--                raise Fail(self, 'match failure');
-+            if not exp_list:
-+                if exp_event.optional():
-+                    log.debug("    %s does not match, but is optional" % exp_name)
-+                else:
-+                    exp_event.diff(res_event)
-+                    raise Fail(self, 'match failure');
- 
-             match[exp_name] = exp_list
- 
-diff --git a/tools/perf/tests/attr/test-stat-default b/tools/perf/tests/attr/test-stat-default
-index 19270f54c96e..e911dbd4eb47 100644
---- a/tools/perf/tests/attr/test-stat-default
-+++ b/tools/perf/tests/attr/test-stat-default
-@@ -38,12 +38,14 @@ config=0
- fd=6
- type=0
- config=7
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
- [event7:base-stat]
- fd=7
- type=0
- config=8
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
- [event8:base-stat]
-diff --git a/tools/perf/tests/attr/test-stat-detailed-1 b/tools/perf/tests/attr/test-stat-detailed-1
-index 51426b87153b..b39270a08e74 100644
---- a/tools/perf/tests/attr/test-stat-detailed-1
-+++ b/tools/perf/tests/attr/test-stat-detailed-1
-@@ -39,12 +39,14 @@ config=0
- fd=6
- type=0
- config=7
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
- [event7:base-stat]
- fd=7
- type=0
- config=8
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
- [event8:base-stat]
-diff --git a/tools/perf/tests/attr/test-stat-detailed-2 b/tools/perf/tests/attr/test-stat-detailed-2
-index 8de5acc31c27..45f8e6ea34f8 100644
---- a/tools/perf/tests/attr/test-stat-detailed-2
-+++ b/tools/perf/tests/attr/test-stat-detailed-2
-@@ -39,12 +39,14 @@ config=0
- fd=6
- type=0
- config=7
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
- [event7:base-stat]
- fd=7
- type=0
- config=8
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
- [event8:base-stat]
-@@ -108,6 +110,7 @@ config=65538
- fd=15
- type=3
- config=1
-+optional=1
- 
- # PERF_TYPE_HW_CACHE,
- #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-diff --git a/tools/perf/tests/attr/test-stat-detailed-3 b/tools/perf/tests/attr/test-stat-detailed-3
-index 0a1f45bf7d79..30ae0fb7a3fd 100644
---- a/tools/perf/tests/attr/test-stat-detailed-3
-+++ b/tools/perf/tests/attr/test-stat-detailed-3
-@@ -39,12 +39,14 @@ config=0
- fd=6
- type=0
- config=7
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
- [event7:base-stat]
- fd=7
- type=0
- config=8
-+optional=1
- 
- # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
- [event8:base-stat]
-@@ -108,6 +110,7 @@ config=65538
- fd=15
- type=3
- config=1
-+optional=1
- 
- # PERF_TYPE_HW_CACHE,
- #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
-@@ -162,6 +165,7 @@ config=65540
- fd=21
- type=3
- config=512
-+optional=1
- 
- # PERF_TYPE_HW_CACHE,
- #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
-@@ -171,3 +175,4 @@ config=512
- fd=22
- type=3
- config=66048
-+optional=1
 -- 
 2.9.4
