@@ -1,125 +1,181 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 79/86] perf header: Add event desc to pipe-mode header
-Date: Wed, 19 Jul 2017 11:29:43 -0300
-Message-ID: <20170719142950.3747-80-acme@kernel.org>
+Subject: [PATCH 81/86] perf/x86/intel: Record branch type
+Date: Wed, 19 Jul 2017 11:29:45 -0300
+Message-ID: <20170719142950.3747-82-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932748AbdGSOh4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jul 2017 10:37:56 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Carrillo-Cisneros <davidcc@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, He Kuang <hekuang@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Paul Turner <pjt@google.com>, Peter Zijlstra <peterz@infradead.org>, Simon Que <sque@chromium.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: David Carrillo-Cisneros <davidcc@google.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-Add event descriptor to perf header output in pipe-mode.
+Perf already has support for disassembling the branch instruction
+and using the branch type for filtering. The patch just records
+the branch type in perf_branch_entry.
 
-After this patch:
+Before recording, the patch converts the x86 branch type to
+common branch type.
 
-  $ perf record -e cycles sleep 1 | perf report --header
-  # ========
-  # captured on: Mon Jun  5 22:52:13 2017
-  # ========
-  #
-  # hostname : lphh20
-  # os release : 4.3.5-smp-801.43.0.0
-  # perf version : 4.12.rc2.g439987
-  # arch : x86_64
-  # nrcpus online : 72
-  # nrcpus avail : 72
-  # cpudesc : Intel(R) Xeon(R) CPU E5-2696 v3 @ 2.30GHz
-  # cpuid : GenuineIntel,6,63,2
-  # total memory : 264134144 kB
-  # cmdline : /root/perf record -e cycles sleep 1
-  # event : name = cycles, , size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1
-  # CPU_TOPOLOGY info available, use -I to display
-  # NUMA_TOPOLOGY info available, use -I to display
-  # pmu mappings: intel_bts = 6, cpu = 4, msr = 49, uncore_cbox_10 = 36, uncore_cbox_11 = 37, uncore_cbox_12 = 38, uncore_cbox_13 = 39, uncore_cbox_14 = 40, uncore_cbox_15 = 41, uncore_cbox_16 = 42, uncore_cbox_17 = 43, software = 1, power = 7, uncore_irp = 24, uncore_pcu = 48, tracepoint = 2, uncore_imc_0 = 16, uncore_imc_1 = 17, uncore_imc_2 = 18, uncore_imc_3 = 19, uncore_imc_4 = 20, uncore_imc_5 = 21, uncore_imc_6 = 22, uncore_imc_7 = 23, uncore_qpi_0 = 8, uncore_qpi_1 = 9, uncore_cbox_0 = 26, uncore_cbox_1 = 27, uncore_cbox_2 = 28, uncore_cbox_3 = 29, uncore_cbox_4 = 30, uncore_cbox_5 = 31, uncore_cbox_6 = 32, uncore_cbox_7 = 33, uncore_cbox_8 = 34, uncore_cbox_9 = 35, uncore_r2pcie = 13, uncore_r3qpi_0 = 10, uncore_r3qpi_1 = 11, uncore_r3qpi_2 = 12, uncore_sbox_0 = 44, uncore_sbox_1 
- = 45, uncore_sbox_2 = 46, uncore_sbox_3 = 47, breakpoint = 5, uncore_ha_0 = 14, uncore_ha_1 = 15, uncore_ubox = 25
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB (null) ]
+Change log:
 
-Prior to this patch, event was not printed.
+v10: Set the branch_map array to be static. The previous version
+     has it on stack then makes the compiler to create it every
+     time when the function gets called.
 
-Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
-Acked-by: David Ahern <dsahern@gmail.com>
+v9: Use __ffs() to find first bit in type in common_branch_type().
+    It lets the code be clear.
+
+v8: Change PERF_BR_NONE to PERF_BR_UNKNOWN.
+
+v7: Just convert following x86 branch types to common branch types.
+
+X86_BR_CALL      -> PERF_BR_CALL
+X86_BR_RET       -> PERF_BR_RET
+X86_BR_JCC       -> PERF_BR_COND
+X86_BR_JMP       -> PERF_BR_UNCOND
+X86_BR_IND_CALL  -> PERF_BR_IND_CALL
+X86_BR_ZERO_CALL -> PERF_BR_CALL
+X86_BR_IND_JMP   -> PERF_BR_IND
+X86_BR_SYSCALL   -> PERF_BR_SYSCALL
+X86_BR_SYSRET    -> PERF_BR_SYSRET
+
+Others are set to PERF_BR_NONE
+
+v6: Not changed.
+
+v5: Just fix the merge error. No other update.
+
+v4: Comparing to previous version, the major changes are:
+
+1. Uses a lookup table to convert x86 branch type to common branch
+   type.
+
+2. Move the JCC forward/JCC backward and cross page computing to
+   user space.
+
+3. Initialize branch type to 0 in intel_pmu_lbr_read_32 and
+   intel_pmu_lbr_read_64
+
+Signed-off-by: Yao Jin <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: He Kuang <hekuang@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Turner <pjt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Simon Que <sque@chromium.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-17-davidcc@google.com
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/1500379995-6449-3-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/lbr.c | 52 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 2e6036d3e584..28bf4442d577 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -67,6 +67,7 @@ struct feat_fd {
- 	void			*buf;	/* Either buf != NULL or fd >= 0 */
- 	ssize_t			offset;
- 	size_t			size;
-+	struct perf_evsel	*events;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index eb261656a320..0edda489cf36 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -109,6 +109,9 @@ enum {
+ 	X86_BR_ZERO_CALL	= 1 << 15,/* zero length call */
+ 	X86_BR_CALL_STACK	= 1 << 16,/* call stack */
+ 	X86_BR_IND_JMP		= 1 << 17,/* indirect jump */
++
++	X86_BR_TYPE_SAVE	= 1 << 18,/* indicate to save branch type */
++
  };
  
- void perf_header__set_feat(struct perf_header *header, int feat)
-@@ -1359,10 +1360,15 @@ static int __desc_attr__fprintf(FILE *fp, const char *name, const char *val,
- 
- static void print_event_desc(struct feat_fd *ff, FILE *fp)
- {
--	struct perf_evsel *evsel, *events = read_event_desc(ff);
-+	struct perf_evsel *evsel, *events;
- 	u32 j;
- 	u64 *id;
- 
-+	if (ff->events)
-+		events = ff->events;
-+	else
-+		events = read_event_desc(ff);
-+
- 	if (!events) {
- 		fprintf(fp, "# event desc: not available or unable to read\n");
- 		return;
-@@ -1387,6 +1393,7 @@ static void print_event_desc(struct feat_fd *ff, FILE *fp)
+ #define X86_BR_PLM (X86_BR_USER | X86_BR_KERNEL)
+@@ -510,6 +513,7 @@ static void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
+ 		cpuc->lbr_entries[i].in_tx	= 0;
+ 		cpuc->lbr_entries[i].abort	= 0;
+ 		cpuc->lbr_entries[i].cycles	= 0;
++		cpuc->lbr_entries[i].type	= 0;
+ 		cpuc->lbr_entries[i].reserved	= 0;
  	}
+ 	cpuc->lbr_stack.nr = i;
+@@ -596,6 +600,7 @@ static void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc)
+ 		cpuc->lbr_entries[out].in_tx	 = in_tx;
+ 		cpuc->lbr_entries[out].abort	 = abort;
+ 		cpuc->lbr_entries[out].cycles	 = cycles;
++		cpuc->lbr_entries[out].type	 = 0;
+ 		cpuc->lbr_entries[out].reserved	 = 0;
+ 		out++;
+ 	}
+@@ -673,6 +678,10 @@ static int intel_pmu_setup_sw_lbr_filter(struct perf_event *event)
  
- 	free_event_desc(events);
-+	ff->events = NULL;
+ 	if (br_type & PERF_SAMPLE_BRANCH_CALL)
+ 		mask |= X86_BR_CALL | X86_BR_ZERO_CALL;
++
++	if (br_type & PERF_SAMPLE_BRANCH_TYPE_SAVE)
++		mask |= X86_BR_TYPE_SAVE;
++
+ 	/*
+ 	 * stash actual user request into reg, it may
+ 	 * be used by fixup code for some CPU
+@@ -926,6 +935,43 @@ static int branch_type(unsigned long from, unsigned long to, int abort)
+ 	return ret;
  }
  
- static void print_total_mem(struct feat_fd *ff, FILE *fp)
-@@ -1757,10 +1764,18 @@ process_event_desc(struct feat_fd *ff, void *data __maybe_unused)
- 		return 0;
- 
- 	session = container_of(ff->ph, struct perf_session, header);
++#define X86_BR_TYPE_MAP_MAX	16
 +
-+	if (session->file->is_pipe) {
-+		/* Save events for reading later by print_event_desc,
-+		 * since they can't be read again in pipe mode. */
-+		ff->events = events;
++static int branch_map[X86_BR_TYPE_MAP_MAX] = {
++	PERF_BR_CALL,		/* X86_BR_CALL */
++	PERF_BR_RET,		/* X86_BR_RET */
++	PERF_BR_SYSCALL,	/* X86_BR_SYSCALL */
++	PERF_BR_SYSRET,		/* X86_BR_SYSRET */
++	PERF_BR_UNKNOWN,	/* X86_BR_INT */
++	PERF_BR_UNKNOWN,	/* X86_BR_IRET */
++	PERF_BR_COND,		/* X86_BR_JCC */
++	PERF_BR_UNCOND,		/* X86_BR_JMP */
++	PERF_BR_UNKNOWN,	/* X86_BR_IRQ */
++	PERF_BR_IND_CALL,	/* X86_BR_IND_CALL */
++	PERF_BR_UNKNOWN,	/* X86_BR_ABORT */
++	PERF_BR_UNKNOWN,	/* X86_BR_IN_TX */
++	PERF_BR_UNKNOWN,	/* X86_BR_NO_TX */
++	PERF_BR_CALL,		/* X86_BR_ZERO_CALL */
++	PERF_BR_UNKNOWN,	/* X86_BR_CALL_STACK */
++	PERF_BR_IND,		/* X86_BR_IND_JMP */
++};
++
++static int
++common_branch_type(int type)
++{
++	int i;
++
++	type >>= 2; /* skip X86_BR_USER and X86_BR_KERNEL */
++
++	if (type) {
++		i = __ffs(type);
++		if (i < X86_BR_TYPE_MAP_MAX)
++			return branch_map[i];
 +	}
 +
- 	for (evsel = events; evsel->attr.size; evsel++)
- 		perf_evlist__set_event_name(session->evlist, evsel);
++	return PERF_BR_UNKNOWN;
++}
++
+ /*
+  * implement actual branch filter based on user demand.
+  * Hardware may not exactly satisfy that request, thus
+@@ -942,7 +988,8 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+ 	bool compress = false;
  
--	free_event_desc(events);
-+	if (!session->file->is_pipe)
-+		free_event_desc(events);
+ 	/* if sampling all branches, then nothing to filter */
+-	if ((br_sel & X86_BR_ALL) == X86_BR_ALL)
++	if (((br_sel & X86_BR_ALL) == X86_BR_ALL) &&
++	    ((br_sel & X86_BR_TYPE_SAVE) != X86_BR_TYPE_SAVE))
+ 		return;
  
- 	return 0;
- }
+ 	for (i = 0; i < cpuc->lbr_stack.nr; i++) {
+@@ -963,6 +1010,9 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+ 			cpuc->lbr_entries[i].from = 0;
+ 			compress = true;
+ 		}
++
++		if ((br_sel & X86_BR_TYPE_SAVE) == X86_BR_TYPE_SAVE)
++			cpuc->lbr_entries[i].type = common_branch_type(type);
+ 	}
+ 
+ 	if (!compress)
 -- 
 2.9.4
