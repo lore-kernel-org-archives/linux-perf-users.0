@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 66/86] perf header: Fail on write_padded error
-Date: Wed, 19 Jul 2017 11:29:30 -0300
-Message-ID: <20170719142950.3747-67-acme@kernel.org>
+Subject: [PATCH 68/86] perf header: Revamp do_write()
+Date: Wed, 19 Jul 2017 11:29:32 -0300
+Message-ID: <20170719142950.3747-69-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,10 +12,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Do not proceed if write_padded() error failed.
+Now that writen takes a const buffer, use it in do_write instead of
+duplicating its functionality.
 
-Also, add comments to remind that the return value of write_* functions
-in util/header.c is an errno code and not the number of bytes written.
+Export do_write to use it consistently in header.c and build_id.c .
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: David Ahern <dsahern@gmail.com>
@@ -30,49 +30,66 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-4-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170718042549.145161-6-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/build-id.c |  2 +-
+ tools/perf/util/header.c   | 14 +++++---------
+ tools/perf/util/header.h   |  2 ++
+ 3 files changed, 8 insertions(+), 10 deletions(-)
 
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index e9665150e9b1..4baa5329439f 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -304,7 +304,7 @@ static int write_buildid(const char *name, size_t name_len, u8 *build_id,
+ 	b.header.misc = misc;
+ 	b.header.size = sizeof(b) + len;
+ 
+-	err = writen(fd, &b, sizeof(b));
++	err = do_write(fd, &b, sizeof(b));
+ 	if (err < 0)
+ 		return err;
+ 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 3b833f06c4e7..8dda19b68ac4 100644
+index 8dda19b68ac4..954f0ef8e712 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -74,6 +74,7 @@ bool perf_header__has_feat(const struct perf_header *header, int feat)
- 	return test_bit(feat, header->adds_features);
+@@ -75,17 +75,13 @@ bool perf_header__has_feat(const struct perf_header *header, int feat)
  }
  
-+/* Return: 0 if succeded, -ERR if failed. */
- static int do_write(int fd, const void *buf, size_t size)
+ /* Return: 0 if succeded, -ERR if failed. */
+-static int do_write(int fd, const void *buf, size_t size)
++int do_write(int fd, const void *buf, size_t size)
  {
- 	while (size) {
-@@ -89,6 +90,7 @@ static int do_write(int fd, const void *buf, size_t size)
+-	while (size) {
+-		int ret = write(fd, buf, size);
+-
+-		if (ret < 0)
+-			return -errno;
++	ssize_t ret;
+ 
+-		size -= ret;
+-		buf += ret;
+-	}
++	ret  = writen(fd, buf, size);
++	if (ret != (ssize_t)size)
++		return ret < 0 ? (int)ret : -1;
+ 
  	return 0;
  }
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index d30109b421ee..e98489c8bba7 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -144,6 +144,8 @@ bool is_perf_magic(u64 magic);
  
-+/* Return: 0 if succeded, -ERR if failed. */
- int write_padded(int fd, const void *bf, size_t count, size_t count_aligned)
- {
- 	static const char zero_buf[NAME_ALIGN];
-@@ -103,6 +105,7 @@ int write_padded(int fd, const void *bf, size_t count, size_t count_aligned)
- #define string_size(str)						\
- 	(PERF_ALIGN((strlen(str) + 1), NAME_ALIGN) + sizeof(u32))
+ #define NAME_ALIGN 64
  
-+/* Return: 0 if succeded, -ERR if failed. */
- static int do_write_string(int fd, const char *str)
- {
- 	u32 len, olen;
-@@ -3200,7 +3203,8 @@ int perf_event__synthesize_tracing_data(struct perf_tool *tool, int fd,
- 	 */
- 	tracing_data_put(tdata);
++int do_write(int fd, const void *buf, size_t size);
++
+ int write_padded(int fd, const void *bf, size_t count, size_t count_aligned);
  
--	write_padded(fd, NULL, 0, padding);
-+	if (write_padded(fd, NULL, 0, padding))
-+		return -1;
- 
- 	return aligned_size;
- }
+ /*
 -- 
 2.9.4
