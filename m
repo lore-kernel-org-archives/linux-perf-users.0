@@ -1,75 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/86] tools: Update include/uapi/linux/fcntl.h copy from the kernel
-Date: Wed, 19 Jul 2017 10:55:56 -0300
-Message-ID: <20170719135717.1285-6-acme@kernel.org>
+Subject: [PATCH 06/86] perf trace beauty: Export the strarrays scnprintf method
+Date: Wed, 19 Jul 2017 10:55:57 -0300
+Message-ID: <20170719135717.1285-7-acme@kernel.org>
 References: <20170719135717.1285-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:46492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751991AbdGSOBH (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 19 Jul 2017 10:01:07 -0400
 In-Reply-To: <20170719135717.1285-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jens Axboe <axboe@kernel.dk>, Jiri Olsa <jolsa@kernel.org>, "Martin K . Petersen" <martin.petersen@oracle.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in the commit c75b1d9421f8 ("fs: add fcntl()
-interface for setting/getting write life time hints").
-
-Silencing this perf build warning:
-
-  Warning: include/uapi/linux/fcntl.h differs from kernel
-
-We already beautify the fcntl cmd argument, so an upcoming cset will
-update the 'cmd' strarray to cover these new commands.
-
-The hints are in the 3rd arg, a pointer, so not yet supported in 'perf
-trace', for that we need to copy it somehow, probably using eBPF, a new
-attempt at doing that is planned.
+As we'll call it from the fcntl cmd scnprintf method, that needs to look
+at the cmd to mask the next fcntl argument when it is ignored.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-al471wzs3x48alql0tm3mnfa@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-fzlvkhew5vbxefneuciihgbc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fcntl.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/builtin-trace.c       | 6 ++----
+ tools/perf/trace/beauty/beauty.h | 3 +++
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/include/uapi/linux/fcntl.h b/tools/include/uapi/linux/fcntl.h
-index 813afd6eee71..ec69d55bcec7 100644
---- a/tools/include/uapi/linux/fcntl.h
-+++ b/tools/include/uapi/linux/fcntl.h
-@@ -43,6 +43,27 @@
- /* (1U << 31) is reserved for signed error codes */
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 431ef70067ed..ef1b1d4ea007 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -331,8 +331,8 @@ struct strarrays {
+ 	.entries = array, \
+ }
  
+-static size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size,
+-					       struct syscall_arg *arg)
++size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size,
++					struct syscall_arg *arg)
+ {
+ 	struct strarrays *sas = arg->parm;
+ 	int i;
+@@ -351,8 +351,6 @@ static size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size,
+ 	return scnprintf(bf, size, "%d", arg->val);
+ }
+ 
+-#define SCA_STRARRAYS syscall_arg__scnprintf_strarrays
+-
+ #if defined(__i386__) || defined(__x86_64__)
  /*
-+ * Set/Get write life time hints. {GET,SET}_RW_HINT operate on the
-+ * underlying inode, while {GET,SET}_FILE_RW_HINT operate only on
-+ * the specific file.
-+ */
-+#define F_GET_RW_HINT		(F_LINUX_SPECIFIC_BASE + 11)
-+#define F_SET_RW_HINT		(F_LINUX_SPECIFIC_BASE + 12)
-+#define F_GET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 13)
-+#define F_SET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 14)
+  * FIXME: Make this available to all arches as soon as the ioctl beautifier
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index cf50be3f17a4..a6348073a6e9 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -15,6 +15,9 @@ struct syscall_arg {
+ 	u8	      mask;
+ };
+ 
++size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size, struct syscall_arg *arg);
++#define SCA_STRARRAYS syscall_arg__scnprintf_strarrays
 +
-+/*
-+ * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
-+ * used to clear any hints previously set.
-+ */
-+#define RWF_WRITE_LIFE_NOT_SET	0
-+#define RWH_WRITE_LIFE_NONE	1
-+#define RWH_WRITE_LIFE_SHORT	2
-+#define RWH_WRITE_LIFE_MEDIUM	3
-+#define RWH_WRITE_LIFE_LONG	4
-+#define RWH_WRITE_LIFE_EXTREME	5
-+
-+/*
-  * Types of directory notifications that may be requested.
-  */
- #define DN_ACCESS	0x00000001	/* File accessed */
+ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_STATX_FLAGS syscall_arg__scnprintf_statx_flags
+ 
 -- 
 2.9.4
