@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 84/86] perf util: Create branch.c/.h for common branch functions
-Date: Wed, 19 Jul 2017 11:29:48 -0300
-Message-ID: <20170719142950.3747-85-acme@kernel.org>
+Subject: [PATCH 83/86] perf report: Refactor the branch info printing code
+Date: Wed, 19 Jul 2017 11:29:47 -0300
+Message-ID: <20170719142950.3747-84-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,27 +12,34 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-Create new util/branch.c and util/branch.h to contain the common branch
-functions. Such as:
+The branch info such as predicted/cycles/... are printed at the
+callchain entries.
 
-branch_type_count(): Count the numbers of branch types
-branch_type_name() : Return the name of branch type
-branch_type_stat_display(): Display branch type statistics info
-branch_type_str(): Construct the branch type string.
+For example: perf report --branch-history --no-children --stdio
 
-The branch type is saved in branch_flags.
+    --1.07%--main div.c:39 (predicted:52.4% cycles:1 iterations:17)
+              main div.c:44 (predicted:52.4% cycles:1)
+              main div.c:42 (cycles:2)
+              compute_flag div.c:28 (cycles:2)
+              compute_flag div.c:27 (cycles:1)
+              rand rand.c:28 (cycles:1)
+              rand rand.c:28 (cycles:1)
+              __random random.c:298 (cycles:1)
+              __random random.c:297 (cycles:1)
+              __random random.c:295 (cycles:1)
+              __random random.c:295 (cycles:1)
+              __random random.c:295 (cycles:1)
+
+But the current code is difficult to maintain and extend. This patch
+refactors the code for easy maintenance.
 
 Change log:
 
-v8: Change PERF_BR_NONE to PERF_BR_UNKNOWN.
+v6: 1. Put the multiline condition code into {} brackets in
+       counts_str_build()
 
-v7: Since the common branch type name is changed (e.g. JCC->COND),
-    this patch is performed the modification accordingly.
-
-v6: Move that multiline conditional code inside {} brackets.
-    Move branch_type_stat_display() from builtin-report.c to
-      branch.c.
-    Move branch_type_str() from callchain.c to branch.c.
+    2. Keep the original display order, that is:
+       predicted, abort, cycles, iterations
 
 v5: It's a new patch in v5 patch series.
 
@@ -43,228 +50,143 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1500379995-6449-6-git-send-email-yao.jin@linux.intel.com
-[ Don't use 'index' and 'stat' as names for variables, it shadows global decls in older distros ]
+Link: http://lkml.kernel.org/r/1500379995-6449-5-git-send-email-yao.jin@linux.intel.com
+[ Don't use 'index' as a name for a variable, it shadows a globa decl in older distros ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/Build    |   1 +
- tools/perf/util/branch.c | 147 +++++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/branch.h |  24 ++++++++
- tools/perf/util/event.h  |   3 +-
- 4 files changed, 174 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/util/branch.c
- create mode 100644 tools/perf/util/branch.h
+ tools/perf/util/callchain.c | 100 ++++++++++++++++++--------------------------
+ 1 file changed, 41 insertions(+), 59 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 7580fe4d5d30..8d49a989f193 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -93,6 +93,7 @@ libperf-y += drv_configs.o
- libperf-y += units.o
- libperf-y += time-utils.o
- libperf-y += expr-bison.o
-+libperf-y += branch.o
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index b4204b43ed58..917f4d6510ae 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -1214,83 +1214,65 @@ int callchain_branch_counts(struct callchain_root *root,
+ 						  cycles_count);
+ }
  
- libperf-$(CONFIG_LIBBPF) += bpf-loader.o
- libperf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-new file mode 100644
-index 000000000000..a4fce2729e50
---- /dev/null
-+++ b/tools/perf/util/branch.c
-@@ -0,0 +1,147 @@
-+#include "perf.h"
-+#include "util/util.h"
-+#include "util/debug.h"
-+#include "util/branch.h"
-+
-+static bool cross_area(u64 addr1, u64 addr2, int size)
++static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
 +{
-+	u64 align1, align2;
++	int printed;
 +
-+	align1 = addr1 & ~(size - 1);
-+	align2 = addr2 & ~(size - 1);
-+
-+	return (align1 != align2) ? true : false;
-+}
-+
-+#define AREA_4K		4096
-+#define AREA_2M		(2 * 1024 * 1024)
-+
-+void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
-+		       u64 from, u64 to)
-+{
-+	if (flags->type == PERF_BR_UNKNOWN || from == 0)
-+		return;
-+
-+	st->counts[flags->type]++;
-+
-+	if (flags->type == PERF_BR_COND) {
-+		if (to > from)
-+			st->cond_fwd++;
-+		else
-+			st->cond_bwd++;
-+	}
-+
-+	if (cross_area(from, to, AREA_2M))
-+		st->cross_2m++;
-+	else if (cross_area(from, to, AREA_4K))
-+		st->cross_4k++;
-+}
-+
-+const char *branch_type_name(int type)
-+{
-+	const char *branch_names[PERF_BR_MAX] = {
-+		"N/A",
-+		"COND",
-+		"UNCOND",
-+		"IND",
-+		"CALL",
-+		"IND_CALL",
-+		"RET",
-+		"SYSCALL",
-+		"SYSRET",
-+		"COND_CALL",
-+		"COND_RET"
-+	};
-+
-+	if (type >= 0 && type < PERF_BR_MAX)
-+		return branch_names[type];
-+
-+	return NULL;
-+}
-+
-+void branch_type_stat_display(FILE *fp, struct branch_type_stat *st)
-+{
-+	u64 total = 0;
-+	int i;
-+
-+	for (i = 0; i < PERF_BR_MAX; i++)
-+		total += st->counts[i];
-+
-+	if (total == 0)
-+		return;
-+
-+	fprintf(fp, "\n#");
-+	fprintf(fp, "\n# Branch Statistics:");
-+	fprintf(fp, "\n#");
-+
-+	if (st->cond_fwd > 0) {
-+		fprintf(fp, "\n%8s: %5.1f%%",
-+			"COND_FWD",
-+			100.0 * (double)st->cond_fwd / (double)total);
-+	}
-+
-+	if (st->cond_bwd > 0) {
-+		fprintf(fp, "\n%8s: %5.1f%%",
-+			"COND_BWD",
-+			100.0 * (double)st->cond_bwd / (double)total);
-+	}
-+
-+	if (st->cross_4k > 0) {
-+		fprintf(fp, "\n%8s: %5.1f%%",
-+			"CROSS_4K",
-+			100.0 * (double)st->cross_4k / (double)total);
-+	}
-+
-+	if (st->cross_2m > 0) {
-+		fprintf(fp, "\n%8s: %5.1f%%",
-+			"CROSS_2M",
-+			100.0 * (double)st->cross_2m / (double)total);
-+	}
-+
-+	for (i = 0; i < PERF_BR_MAX; i++) {
-+		if (st->counts[i] > 0)
-+			fprintf(fp, "\n%8s: %5.1f%%",
-+				branch_type_name(i),
-+				100.0 *
-+				(double)st->counts[i] / (double)total);
-+	}
-+}
-+
-+static int count_str_scnprintf(int idx, const char *str, char *bf, int size)
-+{
-+	return scnprintf(bf, size, "%s%s", (idx) ? " " : " (", str);
-+}
-+
-+int branch_type_str(struct branch_type_stat *st, char *bf, int size)
-+{
-+	int i, j = 0, printed = 0;
-+	u64 total = 0;
-+
-+	for (i = 0; i < PERF_BR_MAX; i++)
-+		total += st->counts[i];
-+
-+	if (total == 0)
-+		return 0;
-+
-+	if (st->cond_fwd > 0)
-+		printed += count_str_scnprintf(j++, "COND_FWD", bf + printed, size - printed);
-+
-+	if (st->cond_bwd > 0)
-+		printed += count_str_scnprintf(j++, "COND_BWD", bf + printed, size - printed);
-+
-+	for (i = 0; i < PERF_BR_MAX; i++) {
-+		if (i == PERF_BR_COND)
-+			continue;
-+
-+		if (st->counts[i] > 0)
-+			printed += count_str_scnprintf(j++, branch_type_name(i), bf + printed, size - printed);
-+	}
-+
-+	if (st->cross_4k > 0)
-+		printed += count_str_scnprintf(j++, "CROSS_4K", bf + printed, size - printed);
-+
-+	if (st->cross_2m > 0)
-+		printed += count_str_scnprintf(j++, "CROSS_2M", bf + printed, size - printed);
++	printed = scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
 +
 +	return printed;
 +}
-diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-new file mode 100644
-index 000000000000..686f2b65ba84
---- /dev/null
-+++ b/tools/perf/util/branch.h
-@@ -0,0 +1,24 @@
-+#ifndef _PERF_BRANCH_H
-+#define _PERF_BRANCH_H 1
 +
-+#include <stdint.h>
-+#include "../perf.h"
++static int count_float_printf(int idx, const char *str, float value, char *bf, int bfsize)
++{
++	int printed;
 +
-+struct branch_type_stat {
-+	u64 counts[PERF_BR_MAX];
-+	u64 cond_fwd;
-+	u64 cond_bwd;
-+	u64 cross_4k;
-+	u64 cross_2m;
-+};
++	printed = scnprintf(bf, bfsize, "%s%s:%.1f%%", (idx) ? " " : " (", str, value);
 +
-+struct branch_flags;
++	return printed;
++}
 +
-+void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
-+		       u64 from, u64 to);
-+
-+const char *branch_type_name(int type);
-+void branch_type_stat_display(FILE *fp, struct branch_type_stat *st);
-+int branch_type_str(struct branch_type_stat *st, char *bf, int bfsize);
-+
-+#endif /* _PERF_BRANCH_H */
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 37c5fafb549c..423ac82605f3 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -142,7 +142,8 @@ struct branch_flags {
- 	u64 in_tx:1;
- 	u64 abort:1;
- 	u64 cycles:16;
--	u64 reserved:44;
-+	u64 type:4;
-+	u64 reserved:40;
- };
+ static int counts_str_build(char *bf, int bfsize,
+ 			     u64 branch_count, u64 predicted_count,
+ 			     u64 abort_count, u64 cycles_count,
+ 			     u64 iter_count, u64 samples_count)
+ {
+-	double predicted_percent = 0.0;
+-	const char *null_str = "";
+-	char iter_str[32];
+-	char cycle_str[32];
+-	char *istr, *cstr;
+ 	u64 cycles;
++	int printed = 0, i = 0;
  
- struct branch_entry {
+ 	if (branch_count == 0)
+ 		return scnprintf(bf, bfsize, " (calltrace)");
+ 
+-	cycles = cycles_count / branch_count;
+-
+-	if (iter_count && samples_count) {
+-		if (cycles > 0)
+-			scnprintf(iter_str, sizeof(iter_str),
+-				 " iterations:%" PRId64 "",
+-				 iter_count / samples_count);
+-		else
+-			scnprintf(iter_str, sizeof(iter_str),
+-				 "iterations:%" PRId64 "",
+-				 iter_count / samples_count);
+-		istr = iter_str;
+-	} else
+-		istr = (char *)null_str;
+-
+-	if (cycles > 0) {
+-		scnprintf(cycle_str, sizeof(cycle_str),
+-			  "cycles:%" PRId64 "", cycles);
+-		cstr = cycle_str;
+-	} else
+-		cstr = (char *)null_str;
+-
+-	predicted_percent = predicted_count * 100.0 / branch_count;
++	if (predicted_count < branch_count) {
++		printed += count_float_printf(i++, "predicted",
++				predicted_count * 100.0 / branch_count,
++				bf + printed, bfsize - printed);
++	}
+ 
+-	if ((predicted_count == branch_count) && (abort_count == 0)) {
+-		if ((cycles > 0) || (istr != (char *)null_str))
+-			return scnprintf(bf, bfsize, " (%s%s)", cstr, istr);
+-		else
+-			return scnprintf(bf, bfsize, "%s", (char *)null_str);
++	if (abort_count) {
++		printed += count_float_printf(i++, "abort",
++				abort_count * 100.0 / branch_count,
++				bf + printed, bfsize - printed);
+ 	}
+ 
+-	if ((predicted_count < branch_count) && (abort_count == 0)) {
+-		if ((cycles > 0) || (istr != (char *)null_str))
+-			return scnprintf(bf, bfsize,
+-				" (predicted:%.1f%% %s%s)",
+-				predicted_percent, cstr, istr);
+-		else {
+-			return scnprintf(bf, bfsize,
+-				" (predicted:%.1f%%)",
+-				predicted_percent);
+-		}
++	cycles = cycles_count / branch_count;
++	if (cycles) {
++		printed += count_pri64_printf(i++, "cycles",
++				cycles,
++				bf + printed, bfsize - printed);
+ 	}
+ 
+-	if ((predicted_count == branch_count) && (abort_count > 0)) {
+-		if ((cycles > 0) || (istr != (char *)null_str))
+-			return scnprintf(bf, bfsize,
+-				" (abort:%" PRId64 " %s%s)",
+-				abort_count, cstr, istr);
+-		else
+-			return scnprintf(bf, bfsize,
+-				" (abort:%" PRId64 ")",
+-				abort_count);
++	if (iter_count && samples_count) {
++		printed += count_pri64_printf(i++, "iterations",
++				iter_count / samples_count,
++				bf + printed, bfsize - printed);
+ 	}
+ 
+-	if ((cycles > 0) || (istr != (char *)null_str))
+-		return scnprintf(bf, bfsize,
+-			" (predicted:%.1f%% abort:%" PRId64 " %s%s)",
+-			predicted_percent, abort_count, cstr, istr);
++	if (i)
++		return scnprintf(bf + printed, bfsize - printed, ")");
+ 
+-	return scnprintf(bf, bfsize,
+-			" (predicted:%.1f%% abort:%" PRId64 ")",
+-			predicted_percent, abort_count);
++	bf[0] = 0;
++	return 0;
+ }
+ 
+ static int callchain_counts_printf(FILE *fp, char *bf, int bfsize,
 -- 
 2.9.4
