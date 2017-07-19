@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 83/86] perf report: Refactor the branch info printing code
-Date: Wed, 19 Jul 2017 11:29:47 -0300
-Message-ID: <20170719142950.3747-84-acme@kernel.org>
+Subject: [PATCH 85/86] perf report: Show branch type statistics for stdio mode
+Date: Wed, 19 Jul 2017 11:29:49 -0300
+Message-ID: <20170719142950.3747-86-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,36 +12,61 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-The branch info such as predicted/cycles/... are printed at the
-callchain entries.
+Show the branch type statistics at the end of perf report --stdio.
 
-For example: perf report --branch-history --no-children --stdio
+For example:
 
-    --1.07%--main div.c:39 (predicted:52.4% cycles:1 iterations:17)
-              main div.c:44 (predicted:52.4% cycles:1)
-              main div.c:42 (cycles:2)
-              compute_flag div.c:28 (cycles:2)
-              compute_flag div.c:27 (cycles:1)
-              rand rand.c:28 (cycles:1)
-              rand rand.c:28 (cycles:1)
-              __random random.c:298 (cycles:1)
-              __random random.c:297 (cycles:1)
-              __random random.c:295 (cycles:1)
-              __random random.c:295 (cycles:1)
-              __random random.c:295 (cycles:1)
+  perf report --stdio
 
-But the current code is difficult to maintain and extend. This patch
-refactors the code for easy maintenance.
+  COND_FWD:  28.5%
+  COND_BWD:   9.4%
+  CROSS_4K:   0.7%
+  CROSS_2M:  14.1%
+      COND:  37.9%
+    UNCOND:   0.2%
+       IND:   6.7%
+      CALL:  26.5%
+       RET:  28.7%
+    SYSRET:   0.0%
 
-Change log:
+  The branch types are:
 
-v6: 1. Put the multiline condition code into {} brackets in
-       counts_str_build()
+   COND_FWD: conditional forward
+   COND_BWD: conditional backward
+       COND: conditional branch
+     UNCOND: unconditional branch
+        IND: indirect
+       CALL: function call
+     IND_CALL: indirect function call
+        RET: function return
+    SYSCALL: syscall
+     SYSRET: syscall return
+  COND_CALL: conditional function call
+   COND_RET: conditional function return
 
-    2. Keep the original display order, that is:
-       predicted, abort, cycles, iterations
+CROSS_4K and CROSS_2M:
 
-v5: It's a new patch in v5 patch series.
+They are the metrics checking for branches cross 4K or 2MB pages.
+It's an approximate computing. We don't know if the area is 4K or
+2MB, so always compute both.
+
+To make the output simple, if a branch crosses 2M area, CROSS_4K
+will not be incremented.
+
+Change log
+
+v7: Since the common branch type definitions are changed, some
+    tags/strings are updated accordingly.
+
+v6: Remove branch_type_stat_display() since it's moved to branch.c.
+
+v5: Remove the unnecessary sort__mode checking in
+    hist_iter__branch_callback().
+
+v4: Comparing to previous version, the major changes are:
+
+Add the computing of JCC forward/JCC backward and cross page checking
+by using the from and to addresses.
 
 Signed-off-by: Yao Jin <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -50,143 +75,101 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1500379995-6449-5-git-send-email-yao.jin@linux.intel.com
-[ Don't use 'index' as a name for a variable, it shadows a globa decl in older distros ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
+Link: http://lkml.kernel.org/r/1500379995-6449-7-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/callchain.c | 100 ++++++++++++++++++--------------------------
- 1 file changed, 41 insertions(+), 59 deletions(-)
+ tools/perf/builtin-report.c | 25 +++++++++++++++++++++++++
+ tools/perf/util/hist.c      |  5 +----
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index b4204b43ed58..917f4d6510ae 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1214,83 +1214,65 @@ int callchain_branch_counts(struct callchain_root *root,
- 						  cycles_count);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 8e752ba5e887..cea25d03f4dd 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -38,6 +38,7 @@
+ #include "util/time-utils.h"
+ #include "util/auxtrace.h"
+ #include "util/units.h"
++#include "util/branch.h"
+ 
+ #include <dlfcn.h>
+ #include <errno.h>
+@@ -73,6 +74,7 @@ struct report {
+ 	u64			queue_size;
+ 	int			socket_filter;
+ 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
++	struct branch_type_stat	brtype_stat;
+ };
+ 
+ static int report__config(const char *var, const char *value, void *cb)
+@@ -150,6 +152,22 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
+ 	return err;
  }
  
-+static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
++static int hist_iter__branch_callback(struct hist_entry_iter *iter,
++				      struct addr_location *al __maybe_unused,
++				      bool single __maybe_unused,
++				      void *arg)
 +{
-+	int printed;
++	struct hist_entry *he = iter->he;
++	struct report *rep = arg;
++	struct branch_info *bi;
 +
-+	printed = scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
++	bi = he->branch_info;
++	branch_type_count(&rep->brtype_stat, &bi->flags,
++			  bi->from.addr, bi->to.addr);
 +
-+	return printed;
-+}
-+
-+static int count_float_printf(int idx, const char *str, float value, char *bf, int bfsize)
-+{
-+	int printed;
-+
-+	printed = scnprintf(bf, bfsize, "%s%s:%.1f%%", (idx) ? " " : " (", str, value);
-+
-+	return printed;
-+}
-+
- static int counts_str_build(char *bf, int bfsize,
- 			     u64 branch_count, u64 predicted_count,
- 			     u64 abort_count, u64 cycles_count,
- 			     u64 iter_count, u64 samples_count)
- {
--	double predicted_percent = 0.0;
--	const char *null_str = "";
--	char iter_str[32];
--	char cycle_str[32];
--	char *istr, *cstr;
- 	u64 cycles;
-+	int printed = 0, i = 0;
- 
- 	if (branch_count == 0)
- 		return scnprintf(bf, bfsize, " (calltrace)");
- 
--	cycles = cycles_count / branch_count;
--
--	if (iter_count && samples_count) {
--		if (cycles > 0)
--			scnprintf(iter_str, sizeof(iter_str),
--				 " iterations:%" PRId64 "",
--				 iter_count / samples_count);
--		else
--			scnprintf(iter_str, sizeof(iter_str),
--				 "iterations:%" PRId64 "",
--				 iter_count / samples_count);
--		istr = iter_str;
--	} else
--		istr = (char *)null_str;
--
--	if (cycles > 0) {
--		scnprintf(cycle_str, sizeof(cycle_str),
--			  "cycles:%" PRId64 "", cycles);
--		cstr = cycle_str;
--	} else
--		cstr = (char *)null_str;
--
--	predicted_percent = predicted_count * 100.0 / branch_count;
-+	if (predicted_count < branch_count) {
-+		printed += count_float_printf(i++, "predicted",
-+				predicted_count * 100.0 / branch_count,
-+				bf + printed, bfsize - printed);
-+	}
- 
--	if ((predicted_count == branch_count) && (abort_count == 0)) {
--		if ((cycles > 0) || (istr != (char *)null_str))
--			return scnprintf(bf, bfsize, " (%s%s)", cstr, istr);
--		else
--			return scnprintf(bf, bfsize, "%s", (char *)null_str);
-+	if (abort_count) {
-+		printed += count_float_printf(i++, "abort",
-+				abort_count * 100.0 / branch_count,
-+				bf + printed, bfsize - printed);
- 	}
- 
--	if ((predicted_count < branch_count) && (abort_count == 0)) {
--		if ((cycles > 0) || (istr != (char *)null_str))
--			return scnprintf(bf, bfsize,
--				" (predicted:%.1f%% %s%s)",
--				predicted_percent, cstr, istr);
--		else {
--			return scnprintf(bf, bfsize,
--				" (predicted:%.1f%%)",
--				predicted_percent);
--		}
-+	cycles = cycles_count / branch_count;
-+	if (cycles) {
-+		printed += count_pri64_printf(i++, "cycles",
-+				cycles,
-+				bf + printed, bfsize - printed);
- 	}
- 
--	if ((predicted_count == branch_count) && (abort_count > 0)) {
--		if ((cycles > 0) || (istr != (char *)null_str))
--			return scnprintf(bf, bfsize,
--				" (abort:%" PRId64 " %s%s)",
--				abort_count, cstr, istr);
--		else
--			return scnprintf(bf, bfsize,
--				" (abort:%" PRId64 ")",
--				abort_count);
-+	if (iter_count && samples_count) {
-+		printed += count_pri64_printf(i++, "iterations",
-+				iter_count / samples_count,
-+				bf + printed, bfsize - printed);
- 	}
- 
--	if ((cycles > 0) || (istr != (char *)null_str))
--		return scnprintf(bf, bfsize,
--			" (predicted:%.1f%% abort:%" PRId64 " %s%s)",
--			predicted_percent, abort_count, cstr, istr);
-+	if (i)
-+		return scnprintf(bf + printed, bfsize - printed, ")");
- 
--	return scnprintf(bf, bfsize,
--			" (predicted:%.1f%% abort:%" PRId64 ")",
--			predicted_percent, abort_count);
-+	bf[0] = 0;
 +	return 0;
++}
++
+ static int process_sample_event(struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+@@ -188,6 +206,8 @@ static int process_sample_event(struct perf_tool *tool,
+ 		 */
+ 		if (!sample->branch_stack)
+ 			goto out_put;
++
++		iter.add_entry_cb = hist_iter__branch_callback;
+ 		iter.ops = &hist_iter_branch;
+ 	} else if (rep->mem_mode) {
+ 		iter.ops = &hist_iter_mem;
+@@ -410,6 +430,9 @@ static int perf_evlist__tty_browse_hists(struct perf_evlist *evlist,
+ 		perf_read_values_destroy(&rep->show_threads_values);
+ 	}
+ 
++	if (sort__mode == SORT_MODE__BRANCH)
++		branch_type_stat_display(stdout, &rep->brtype_stat);
++
+ 	return 0;
  }
  
- static int callchain_counts_printf(FILE *fp, char *bf, int bfsize,
+@@ -944,6 +967,8 @@ int cmd_report(int argc, const char **argv)
+ 	if (has_br_stack && branch_call_mode)
+ 		symbol_conf.show_branchflag_count = true;
+ 
++	memset(&report.brtype_stat, 0, sizeof(struct branch_type_stat));
++
+ 	/*
+ 	 * Branch mode is a tristate:
+ 	 * -1 means default, so decide based on the file having branch data.
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index cf0186a088c1..2f6c5e6c16f9 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -749,12 +749,9 @@ iter_prepare_branch_entry(struct hist_entry_iter *iter, struct addr_location *al
+ }
+ 
+ static int
+-iter_add_single_branch_entry(struct hist_entry_iter *iter,
++iter_add_single_branch_entry(struct hist_entry_iter *iter __maybe_unused,
+ 			     struct addr_location *al __maybe_unused)
+ {
+-	/* to avoid calling callback function */
+-	iter->he = NULL;
+-
+ 	return 0;
+ }
+ 
 -- 
 2.9.4
