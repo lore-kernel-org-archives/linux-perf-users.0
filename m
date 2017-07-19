@@ -1,37 +1,60 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/86] perf pmu-events: Support additional POWER8+ PVR in mapfile
-Date: Wed, 19 Jul 2017 11:28:52 -0300
-Message-ID: <20170719142950.3747-29-acme@kernel.org>
+Subject: [PATCH 27/86] perf trace beauty fcntl: Beautify F_GETOWN and F_SETOWN
+Date: Wed, 19 Jul 2017 11:28:51 -0300
+Message-ID: <20170719142950.3747-28-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Shriya <shriyak@linux.vnet.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Shriya <shriyak@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add support for POWER8+ PVR 004c0100 for Garrison
+By attaching the pid beautifier to the args in the F_SETOWN case and to
+the syscall return on the F_GETOWN one.
 
-Signed-off-by: Shriya <shriyak@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/1497853842-11023-1-git-send-email-shriyak@linux.vnet.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-ea1prtqvao87cdrishce7954@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/powerpc/mapfile.csv | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/trace/beauty/fcntl.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-index e925baa0c30b..f03aec70dfc9 100644
---- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-@@ -19,3 +19,4 @@
- 004d0000,1,power8.json,core
- 004d0100,1,power8.json,core
- 004d0200,1,power8.json,core
-+004c0100,1,power8.json,core
+diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fcntl.c
+index 254ae435780d..d082fd2e594f 100644
+--- a/tools/perf/trace/beauty/fcntl.c
++++ b/tools/perf/trace/beauty/fcntl.c
+@@ -34,10 +34,14 @@ size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_ar
+ 		syscall_arg__set_ret_scnprintf(arg, syscall_arg__scnprintf_fd);
+ 		goto out;
+ 	}
++	if (arg->val == F_GETOWN) {
++		syscall_arg__set_ret_scnprintf(arg, syscall_arg__scnprintf_pid);
++		goto mask_arg;
++	}
+ 	/*
+ 	 * Some commands ignore the third fcntl argument, "arg", so mask it
+ 	 */
+-	if (arg->val == F_GETOWN   || arg->val == F_GET_SEALS ||
++	if (arg->val == F_GET_SEALS ||
+ 	    arg->val == F_GETLEASE || arg->val == F_GETSIG) {
+ mask_arg:
+ 		arg->mask |= (1 << 2);
+@@ -55,6 +59,9 @@ size_t syscall_arg__scnprintf_fcntl_arg(char *bf, size_t size, struct syscall_ar
+ 
+ 	if (cmd == F_SETFL)
+ 		return open__scnprintf_flags(arg->val, bf, size);
++
++	if (cmd == F_SETOWN)
++		return syscall_arg__scnprintf_pid(bf, size, arg);
+ 	/*
+ 	 * We still don't grab the contents of pointers on entry or exit,
+ 	 * so just print them as hex numbers
 -- 
 2.9.4
