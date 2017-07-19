@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/86] perf trace beauty fcntl flags: Beautify F_SETFL arg
-Date: Wed, 19 Jul 2017 11:28:45 -0300
-Message-ID: <20170719142950.3747-22-acme@kernel.org>
+Subject: [PATCH 22/86] perf trace beauty fcntl: Beautify F_[GS]ETFD arg/return value
+Date: Wed, 19 Jul 2017 11:28:46 -0300
+Message-ID: <20170719142950.3747-23-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,33 +12,72 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Result:
+Now it will show 0 or CLOEXEC, the only !0 value returned by the kernel
+for fcntl(fd, F_GETFD).
 
-  0.011 (0.001 ms): Chrome_IOThrea/19863 fcntl(fd: 130</dev/shm/.com.google.Chrome.w5UBtZ (deleted)>, cmd: SETFL, arg: RDWR|APPEND|LARGEFILE) = 0
+And for F_SETFD:
+
+  6870.267 ( 0.004 ms): make/29812 fcntl(fd: 7</home/acme/git/linux/tools/build/Build.include>, cmd: SETFD, arg: CLOEXEC) = 0
+  6873.805 ( 0.002 ms): make/29816 fcntl(fd: 6</home/acme/git/linux/tools/build/Makefile.build>, cmd: SETFD, arg: CLOEXEC) = 0
+<SNIP>
+ 77986.150 ( 0.006 ms): alsa-sink-ALC3/2042 fcntl(fd: 45</dev/snd/pcmC1D0p>, cmd: SETFD, arg: CLOEXEC) = 0
+ 77986.271 ( 0.006 ms): alsa-sink-ALC3/2042 fcntl(fd: 23</dev/snd/controlC1>, cmd: SETFD, arg: CLOEXEC) = 0
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-qgf8ggsq9chnjblxlq954deu@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-sz9dob7t4zd6m65femazpaah@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/fcntl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/trace/beauty/fcntl.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fcntl.c
-index 8dcbc30427c9..3456bf4cdb48 100644
+index 3456bf4cdb48..384f177a4304 100644
 --- a/tools/perf/trace/beauty/fcntl.c
 +++ b/tools/perf/trace/beauty/fcntl.c
-@@ -32,6 +32,8 @@ size_t syscall_arg__scnprintf_fcntl_arg(char *bf, size_t size, struct syscall_ar
+@@ -7,19 +7,28 @@
+  */
+ 
+ #include "trace/beauty/beauty.h"
++#include <linux/kernel.h>
+ #include <uapi/linux/fcntl.h>
+ 
++static size_t fcntl__scnprintf_getfd(unsigned long val, char *bf, size_t size)
++{
++	return scnprintf(bf, size, "%s", val ? "CLOEXEC" : "0");
++}
++
+ size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg)
+ {
+ 	if (arg->val == F_GETFL) {
+ 		syscall_arg__set_ret_scnprintf(arg, open__scnprintf_flags);
+ 		goto mask_arg;
+ 	}
++	if (arg->val == F_GETFD) {
++		syscall_arg__set_ret_scnprintf(arg, fcntl__scnprintf_getfd);
++		goto mask_arg;
++	}
+ 	/*
+ 	 * Some commands ignore the third fcntl argument, "arg", so mask it
+ 	 */
+-	if (arg->val == F_GETFD	   ||
+-	    arg->val == F_GETOWN   || arg->val == F_GET_SEALS ||
++	if (arg->val == F_GETOWN   || arg->val == F_GET_SEALS ||
+ 	    arg->val == F_GETLEASE || arg->val == F_GETSIG) {
+ mask_arg:
+ 		arg->mask |= (1 << 2);
+@@ -32,6 +41,9 @@ size_t syscall_arg__scnprintf_fcntl_arg(char *bf, size_t size, struct syscall_ar
  {
  	int cmd = syscall_arg__val(arg, 1);
  
-+	if (cmd == F_SETFL)
-+		return open__scnprintf_flags(arg->val, bf, size);
++	if (cmd == F_SETFD)
++		return fcntl__scnprintf_getfd(arg->val, bf, size);
++
+ 	if (cmd == F_SETFL)
+ 		return open__scnprintf_flags(arg->val, bf, size);
  	/*
- 	 * We still don't grab the contents of pointers on entry or exit,
- 	 * so just print them as hex numbers
 -- 
 2.9.4
