@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 56/86] perf trace beauty: Export strarray for use in per-object beautifiers
-Date: Wed, 19 Jul 2017 11:29:20 -0300
-Message-ID: <20170719142950.3747-57-acme@kernel.org>
+Subject: [PATCH 57/86] perf trace beauty fcntl: Beautify F_GETLEASE and F_SETLEASE arg/return
+Date: Wed, 19 Jul 2017 11:29:21 -0300
+Message-ID: <20170719142950.3747-58-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,98 +12,69 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Like will be done with fcntl(fd, F_GETLEASE, F_RDLCK|F_WRLCK|F_UNLCK)
+One more looking prettier.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-3p11bgirtntjfmbixfkz8i2m@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-ytr7idkese8sjtvn5g60130e@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 27 +++++++--------------------
- tools/perf/trace/beauty/beauty.h | 20 ++++++++++++++++++++
- 2 files changed, 27 insertions(+), 20 deletions(-)
+ tools/perf/trace/beauty/fcntl.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 65fa0126e939..0dedce0ca0bb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -283,34 +283,21 @@ static struct perf_evsel *perf_evsel__syscall_newtp(const char *direction, void
- 	({ struct syscall_tp *fields = evsel->priv; \
- 	   fields->name.pointer(&fields->name, sample); })
+diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fcntl.c
+index d082fd2e594f..b6987c468d18 100644
+--- a/tools/perf/trace/beauty/fcntl.c
++++ b/tools/perf/trace/beauty/fcntl.c
+@@ -20,6 +20,19 @@ static size_t syscall_arg__scnprintf_fcntl_getfd(char *bf, size_t size, struct s
+ 	return fcntl__scnprintf_getfd(arg->val, bf, size);
+ }
  
--struct strarray {
--	int	    offset;
--	int	    nr_entries;
--	const char **entries;
--};
-+size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, int val)
++static size_t fcntl__scnprintf_getlease(unsigned long val, char *bf, size_t size)
 +{
-+	int idx = val - sa->offset;
- 
--#define DEFINE_STRARRAY(array) struct strarray strarray__##array = { \
--	.nr_entries = ARRAY_SIZE(array), \
--	.entries = array, \
--}
-+	if (idx < 0 || idx >= sa->nr_entries)
-+		return scnprintf(bf, size, intfmt, val);
- 
--#define DEFINE_STRARRAY_OFFSET(array, off) struct strarray strarray__##array = { \
--	.offset	    = off, \
--	.nr_entries = ARRAY_SIZE(array), \
--	.entries = array, \
-+	return scnprintf(bf, size, "%s", sa->entries[idx]);
- }
- 
- static size_t __syscall_arg__scnprintf_strarray(char *bf, size_t size,
- 						const char *intfmt,
- 					        struct syscall_arg *arg)
++	static const char *fcntl_setlease[] = { "RDLCK", "WRLCK", "UNLCK", };
++	static DEFINE_STRARRAY(fcntl_setlease);
++
++	return strarray__scnprintf(&strarray__fcntl_setlease, bf, size, "%x", val);
++}
++
++static size_t syscall_arg__scnprintf_fcntl_getlease(char *bf, size_t size, struct syscall_arg *arg)
++{
++	return fcntl__scnprintf_getlease(arg->val, bf, size);
++}
++
+ size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg)
  {
--	struct strarray *sa = arg->parm;
--	int idx = arg->val - sa->offset;
--
--	if (idx < 0 || idx >= sa->nr_entries)
--		return scnprintf(bf, size, intfmt, arg->val);
--
--	return scnprintf(bf, size, "%s", sa->entries[idx]);
-+	return strarray__scnprintf(arg->parm, bf, size, intfmt, arg->val);
- }
+ 	if (arg->val == F_GETFL) {
+@@ -38,11 +51,15 @@ size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_ar
+ 		syscall_arg__set_ret_scnprintf(arg, syscall_arg__scnprintf_pid);
+ 		goto mask_arg;
+ 	}
++	if (arg->val == F_GETLEASE) {
++		syscall_arg__set_ret_scnprintf(arg, syscall_arg__scnprintf_fcntl_getlease);
++		goto mask_arg;
++	}
+ 	/*
+ 	 * Some commands ignore the third fcntl argument, "arg", so mask it
+ 	 */
+ 	if (arg->val == F_GET_SEALS ||
+-	    arg->val == F_GETLEASE || arg->val == F_GETSIG) {
++	    arg->val == F_GETSIG) {
+ mask_arg:
+ 		arg->mask |= (1 << 2);
+ 	}
+@@ -62,6 +79,9 @@ size_t syscall_arg__scnprintf_fcntl_arg(char *bf, size_t size, struct syscall_ar
  
- static size_t syscall_arg__scnprintf_strarray(char *bf, size_t size,
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 9ccf0f323fe5..f75ef7d0b303 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -1,8 +1,28 @@
- #ifndef _PERF_TRACE_BEAUTY_H
- #define _PERF_TRACE_BEAUTY_H
- 
-+#include <linux/kernel.h>
- #include <linux/types.h>
- 
-+struct strarray {
-+	int	    offset;
-+	int	    nr_entries;
-+	const char **entries;
-+};
+ 	if (cmd == F_SETOWN)
+ 		return syscall_arg__scnprintf_pid(bf, size, arg);
 +
-+#define DEFINE_STRARRAY(array) struct strarray strarray__##array = { \
-+	.nr_entries = ARRAY_SIZE(array), \
-+	.entries = array, \
-+}
-+
-+#define DEFINE_STRARRAY_OFFSET(array, off) struct strarray strarray__##array = { \
-+	.offset	    = off, \
-+	.nr_entries = ARRAY_SIZE(array), \
-+	.entries = array, \
-+}
-+
-+size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, int val);
-+
- struct trace;
- struct thread;
- 
++	if (cmd == F_SETLEASE)
++		return fcntl__scnprintf_getlease(arg->val, bf, size);
+ 	/*
+ 	 * We still don't grab the contents of pointers on entry or exit,
+ 	 * so just print them as hex numbers
 -- 
 2.9.4
