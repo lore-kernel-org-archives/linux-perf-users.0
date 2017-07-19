@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 77/86] perf tool: Add show_feature_header to perf_tool
-Date: Wed, 19 Jul 2017 11:29:41 -0300
-Message-ID: <20170719142950.3747-78-acme@kernel.org>
+Subject: [PATCH 78/86] perf tools: Add feature header record to pipe-mode
+Date: Wed, 19 Jul 2017 11:29:42 -0300
+Message-ID: <20170719142950.3747-79-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,8 +12,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Add show_feat_hdr to control level of printed information of feature
-headers.
+Add header record types to pipe-mode, reusing the functions
+used in file-mode and leveraging the new struct feat_fd.
+
+For alignment, check that synthesized events don't exceed
+pagesize.
+
+Add the perf_event__synthesize_feature event call back to
+process the new header records.
+
+Before this patch:
+
+  $ perf record -o - -e cycles sleep 1 | perf report --stdio --header
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  ...
+
+After this patch:
+  $ perf record -o - -e cycles sleep 1 | perf report --stdio --header
+  # ========
+  # captured on: Mon May 22 16:33:43 2017
+  # ========
+  #
+  # hostname : my_hostname
+  # os release : 4.11.0-dbx-up_perf
+  # perf version : 4.11.rc6.g6277c80
+  # arch : x86_64
+  # nrcpus online : 72
+  # nrcpus avail : 72
+  # cpudesc : Intel(R) Xeon(R) CPU E5-2696 v3 @ 2.30GHz
+  # cpuid : GenuineIntel,6,63,2
+  # total memory : 263457192 kB
+  # cmdline : /root/perf record -o - -e cycles -c 100000 sleep 1
+  # HEADER_CPU_TOPOLOGY info available, use -I to display
+  # HEADER_NUMA_TOPOLOGY info available, use -I to display
+  # pmu mappings: intel_bts = 6, uncore_imc_4 = 22, uncore_sbox_1 = 47, uncore_cbox_5 = 33, uncore_ha_0 = 16, uncore_cbox
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  ...
+
+Support added for the subcommands: report, inject, annotate and script.
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: David Ahern <dsahern@gmail.com>
@@ -28,71 +66,333 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-15-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170718042549.145161-16-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 4 ++++
- tools/perf/builtin-script.c | 3 +++
- tools/perf/util/tool.h      | 7 +++++++
- 3 files changed, 14 insertions(+)
+ tools/perf/Documentation/perf.data-file-format.txt | 10 ++-
+ tools/perf/builtin-annotate.c                      |  1 +
+ tools/perf/builtin-inject.c                        |  1 +
+ tools/perf/builtin-record.c                        |  7 ++
+ tools/perf/builtin-report.c                        |  1 +
+ tools/perf/builtin-script.c                        |  1 +
+ tools/perf/util/event.c                            |  1 +
+ tools/perf/util/event.h                            |  8 ++
+ tools/perf/util/header.c                           | 98 ++++++++++++++++++++++
+ tools/perf/util/header.h                           |  9 ++
+ tools/perf/util/session.c                          |  4 +
+ tools/perf/util/tool.h                             |  3 +-
+ 12 files changed, 141 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 79a33eb1a10d..40c3a92c8006 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -988,6 +988,10 @@ int cmd_report(int argc, const char **argv)
- 	/* Force tty output for header output and per-thread stat. */
- 	if (report.header || report.header_only || report.show_threads)
- 		use_browser = 0;
-+	if (report.header || report.header_only)
-+		report.tool.show_feat_hdr = SHOW_FEAT_HEADER;
-+	if (report.show_full_info)
-+		report.tool.show_feat_hdr = SHOW_FEAT_HEADER_FULL_INFO;
- 
- 	if (strcmp(input_name, "-") != 0)
- 		setup_browser(true);
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 83cdc0a61fd6..6e44552a0551 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2972,10 +2972,13 @@ int cmd_script(int argc, const char **argv)
- 		return -1;
- 
- 	if (header || header_only) {
-+		script.tool.show_feat_hdr = SHOW_FEAT_HEADER;
- 		perf_session__fprintf_info(session, stdout, show_full_info);
- 		if (header_only)
- 			goto out_delete;
- 	}
-+	if (show_full_info)
-+		script.tool.show_feat_hdr = SHOW_FEAT_HEADER_FULL_INFO;
- 
- 	if (symbol__init(&session->header.env) < 0)
- 		goto out_delete;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 829471a1c6d7..baeca808dfda 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -34,6 +34,12 @@ typedef int (*event_oe)(struct perf_tool *tool, union perf_event *event,
- typedef s64 (*event_op3)(struct perf_tool *tool, union perf_event *event,
- 			 struct perf_session *session);
- 
-+enum show_feature_header {
-+	SHOW_FEAT_NO_HEADER = 0,
-+	SHOW_FEAT_HEADER,
-+	SHOW_FEAT_HEADER_FULL_INFO,
-+};
-+
- struct perf_tool {
- 	event_sample	sample,
- 			read;
-@@ -68,6 +74,7 @@ struct perf_tool {
- 	bool		ordered_events;
- 	bool		ordering_requires_timestamps;
- 	bool		namespace_events;
-+	enum show_feature_header show_feat_hdr;
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index de8b39dda7b8..e90c59c6d815 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -398,6 +398,11 @@ struct auxtrace_error_event {
+ 	char msg[MAX_AUXTRACE_ERROR_MSG];
  };
  
- #endif /* __PERF_TOOL_H */
++	PERF_RECORD_HEADER_FEATURE		= 80,
++
++Describes a header feature. These are records used in pipe-mode that
++contain information that otherwise would be in perf.data file's header.
++
+ Event types
+ 
+ Define the event attributes with their IDs.
+@@ -422,8 +427,9 @@ struct perf_pipe_file_header {
+ };
+ 
+ The information about attrs, data, and event_types is instead in the
+-synthesized events PERF_RECORD_ATTR, PERF_RECORD_HEADER_TRACING_DATA and
+-PERF_RECORD_HEADER_EVENT_TYPE that are generated by perf record in pipe-mode.
++synthesized events PERF_RECORD_ATTR, PERF_RECORD_HEADER_TRACING_DATA,
++PERF_RECORD_HEADER_EVENT_TYPE, and PERF_RECORD_HEADER_FEATURE
++that are generated by perf record in pipe-mode.
+ 
+ 
+ References:
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 7a5dc7e5c577..5205408e795b 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -397,6 +397,7 @@ int cmd_annotate(int argc, const char **argv)
+ 			.namespaces = perf_event__process_namespaces,
+ 			.attr	= perf_event__process_attr,
+ 			.build_id = perf_event__process_build_id,
++			.feature	= perf_event__process_feature,
+ 			.ordered_events = true,
+ 			.ordering_requires_timestamps = true,
+ 		},
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index ea8db38eedd1..2b8032908fb2 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -770,6 +770,7 @@ int cmd_inject(int argc, const char **argv)
+ 			.finished_round	= perf_event__repipe_oe_synth,
+ 			.build_id	= perf_event__repipe_op2_synth,
+ 			.id_index	= perf_event__repipe_op2_synth,
++			.feature	= perf_event__repipe_op2_synth,
+ 		},
+ 		.input_name  = "-",
+ 		.samples = LIST_HEAD_INIT(inject.samples),
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 64eef9a567d9..36d7117a7562 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -799,6 +799,13 @@ static int record__synthesize(struct record *rec, bool tail)
+ 		return 0;
+ 
+ 	if (file->is_pipe) {
++		err = perf_event__synthesize_features(
++			tool, session, rec->evlist, process_synthesized_event);
++		if (err < 0) {
++			pr_err("Couldn't synthesize features.\n");
++			return err;
++		}
++
+ 		err = perf_event__synthesize_attrs(tool, session,
+ 						   process_synthesized_event);
+ 		if (err < 0) {
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 40c3a92c8006..8e752ba5e887 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -718,6 +718,7 @@ int cmd_report(int argc, const char **argv)
+ 			.id_index	 = perf_event__process_id_index,
+ 			.auxtrace_info	 = perf_event__process_auxtrace_info,
+ 			.auxtrace	 = perf_event__process_auxtrace,
++			.feature	 = perf_event__process_feature,
+ 			.ordered_events	 = true,
+ 			.ordering_requires_timestamps = true,
+ 		},
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6e44552a0551..d430ff42208a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2682,6 +2682,7 @@ int cmd_script(int argc, const char **argv)
+ 			.attr		 = process_attr,
+ 			.event_update   = perf_event__process_event_update,
+ 			.tracing_data	 = perf_event__process_tracing_data,
++			.feature	 = perf_event__process_feature,
+ 			.build_id	 = perf_event__process_build_id,
+ 			.id_index	 = perf_event__process_id_index,
+ 			.auxtrace_info	 = perf_event__process_auxtrace_info,
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index dc5c3bb69d73..1c905ba3641b 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -57,6 +57,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_STAT_ROUND]		= "STAT_ROUND",
+ 	[PERF_RECORD_EVENT_UPDATE]		= "EVENT_UPDATE",
+ 	[PERF_RECORD_TIME_CONV]			= "TIME_CONV",
++	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
+ };
+ 
+ static const char *perf_ns__names[] = {
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 9967c87af7a6..37c5fafb549c 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -244,6 +244,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_STAT_ROUND			= 77,
+ 	PERF_RECORD_EVENT_UPDATE		= 78,
+ 	PERF_RECORD_TIME_CONV			= 79,
++	PERF_RECORD_HEADER_FEATURE		= 80,
+ 	PERF_RECORD_HEADER_MAX
+ };
+ 
+@@ -609,6 +610,12 @@ struct time_conv_event {
+ 	u64 time_zero;
+ };
+ 
++struct feature_event {
++	struct perf_event_header 	header;
++	u64				feat_id;
++	char				data[];
++};
++
+ union perf_event {
+ 	struct perf_event_header	header;
+ 	struct mmap_event		mmap;
+@@ -639,6 +646,7 @@ union perf_event {
+ 	struct stat_event		stat;
+ 	struct stat_round_event		stat_round;
+ 	struct time_conv_event		time_conv;
++	struct feature_event		feat;
+ };
+ 
+ void perf_event__print_totals(void);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 0fdbf7554ea3..2e6036d3e584 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -35,6 +35,7 @@
+ #include "data.h"
+ #include <api/fs/fs.h>
+ #include "asm/bug.h"
++#include "tool.h"
+ 
+ #include "sane_ctype.h"
+ 
+@@ -2982,6 +2983,103 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 	return err;
+ }
+ 
++int perf_event__synthesize_features(struct perf_tool *tool,
++				    struct perf_session *session,
++				    struct perf_evlist *evlist,
++				    perf_event__handler_t process)
++{
++	struct perf_header *header = &session->header;
++	struct feat_fd ff;
++	struct feature_event *fe;
++	size_t sz, sz_hdr;
++	int feat, ret;
++
++	sz_hdr = sizeof(fe->header);
++	sz = sizeof(union perf_event);
++	/* get a nice alignment */
++	sz = PERF_ALIGN(sz, page_size);
++
++	memset(&ff, 0, sizeof(ff));
++
++	ff.buf = malloc(sz);
++	if (!ff.buf)
++		return -ENOMEM;
++
++	ff.size = sz - sz_hdr;
++
++	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
++		if (!feat_ops[feat].synthesize) {
++			pr_debug("No record header feature for header :%d\n", feat);
++			continue;
++		}
++
++		ff.offset = sizeof(*fe);
++
++		ret = feat_ops[feat].write(&ff, evlist);
++		if (ret || ff.offset <= (ssize_t)sizeof(*fe)) {
++			pr_debug("Error writing feature\n");
++			continue;
++		}
++		/* ff.buf may have changed due to realloc in do_write() */
++		fe = ff.buf;
++		memset(fe, 0, sizeof(*fe));
++
++		fe->feat_id = feat;
++		fe->header.type = PERF_RECORD_HEADER_FEATURE;
++		fe->header.size = ff.offset;
++
++		ret = process(tool, ff.buf, NULL, NULL);
++		if (ret) {
++			free(ff.buf);
++			return ret;
++		}
++	}
++	free(ff.buf);
++	return 0;
++}
++
++int perf_event__process_feature(struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_session *session __maybe_unused)
++{
++	struct feat_fd ff = { .fd = 0 };
++	struct feature_event *fe = (struct feature_event *)event;
++	int type = fe->header.type;
++	u64 feat = fe->feat_id;
++
++	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
++		pr_warning("invalid record type %d in pipe-mode\n", type);
++		return 0;
++	}
++	if (feat == HEADER_RESERVED || feat > HEADER_LAST_FEATURE) {
++		pr_warning("invalid record type %d in pipe-mode\n", type);
++		return -1;
++	}
++
++	if (!feat_ops[feat].process)
++		return 0;
++
++	ff.buf  = (void *)fe->data;
++	ff.size = event->header.size - sizeof(event->header);
++	ff.ph = &session->header;
++
++	if (feat_ops[feat].process(&ff, NULL))
++		return -1;
++
++	if (!feat_ops[feat].print || !tool->show_feat_hdr)
++		return 0;
++
++	if (!feat_ops[feat].full_only ||
++	    tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
++		feat_ops[feat].print(&ff, stdout);
++	} else {
++		fprintf(stdout, "# %s info available, use -I to display\n",
++			feat_ops[feat].name);
++	}
++
++	return 0;
++}
++
+ static struct event_update_event *
+ event_update_event__new(size_t size, u64 type, u64 id)
+ {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 9d8dcd5eb727..f7a16ee527b8 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -101,6 +101,15 @@ int perf_header__process_sections(struct perf_header *header, int fd,
+ 
+ int perf_header__fprintf_info(struct perf_session *s, FILE *fp, bool full);
+ 
++int perf_event__synthesize_features(struct perf_tool *tool,
++				    struct perf_session *session,
++				    struct perf_evlist *evlist,
++				    perf_event__handler_t process);
++
++int perf_event__process_feature(struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_session *session);
++
+ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 				struct perf_event_attr *attr, u32 ids, u64 *id,
+ 				perf_event__handler_t process);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d19c40a81040..dc453f84a14c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -428,6 +428,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 		tool->stat_round = process_stat_round_stub;
+ 	if (tool->time_conv == NULL)
+ 		tool->time_conv = process_event_op2_stub;
++	if (tool->feature == NULL)
++		tool->feature = process_event_op2_stub;
+ }
+ 
+ static void swap_sample_id_all(union perf_event *event, void *data)
+@@ -1371,6 +1373,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	case PERF_RECORD_TIME_CONV:
+ 		session->time_conv = event->time_conv;
+ 		return tool->time_conv(tool, event, session);
++	case PERF_RECORD_HEADER_FEATURE:
++		return tool->feature(tool, event, session);
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index baeca808dfda..d549e50db397 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -69,7 +69,8 @@ struct perf_tool {
+ 			cpu_map,
+ 			stat_config,
+ 			stat,
+-			stat_round;
++			stat_round,
++			feature;
+ 	event_op3	auxtrace;
+ 	bool		ordered_events;
+ 	bool		ordering_requires_timestamps;
 -- 
 2.9.4
