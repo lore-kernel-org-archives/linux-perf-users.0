@@ -1,53 +1,72 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/86] tools include uapi x86: Add __NR_setns, if missing
-Date: Wed, 19 Jul 2017 11:28:56 -0300
-Message-ID: <20170719142950.3747-33-acme@kernel.org>
+Subject: [PATCH 31/86] tools include uapi x86: Grab a copy of unistd.h
+Date: Wed, 19 Jul 2017 11:28:55 -0300
+Message-ID: <20170719142950.3747-32-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Krister Johansen <kjlx@templeofstupid.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To help us provide a simple setns() in older distros.
+In older distros we were not including our copies of unistd_{32,64}.h,
+as we were relying on the system's asm/unistd.h, and a log time ago
+the files to be included were asm-{x86_64,i386}/unistd.h.
+
+Fix it by also carrying a copy of asm/unistd.h, that will be the same
+as in modern distros and will allow us to provide missing __NR_setns,
+for instance, in older distros.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-o10a85kf6j7ig87ep6crab2k@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-iwmgm0c4m1ynstktzmkjh8di@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/unistd_32.h | 3 +++
- tools/arch/x86/include/asm/unistd_64.h | 3 +++
- 2 files changed, 6 insertions(+)
+ tools/arch/x86/include/uapi/asm/unistd.h | 17 +++++++++++++++++
+ tools/perf/check-headers.sh              |  1 +
+ 2 files changed, 18 insertions(+)
+ create mode 100644 tools/arch/x86/include/uapi/asm/unistd.h
 
-diff --git a/tools/arch/x86/include/asm/unistd_32.h b/tools/arch/x86/include/asm/unistd_32.h
-index 88b3f8c8920c..0e4312ffc945 100644
---- a/tools/arch/x86/include/asm/unistd_32.h
-+++ b/tools/arch/x86/include/asm/unistd_32.h
-@@ -10,3 +10,6 @@
- #ifndef __NR_getcpu
- # define __NR_getcpu 318
- #endif
-+#ifndef __NR_setns
-+# define __NR_setns 346
+diff --git a/tools/arch/x86/include/uapi/asm/unistd.h b/tools/arch/x86/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..a26df0d75cd0
+--- /dev/null
++++ b/tools/arch/x86/include/uapi/asm/unistd.h
+@@ -0,0 +1,17 @@
++#ifndef _UAPI_ASM_X86_UNISTD_H
++#define _UAPI_ASM_X86_UNISTD_H
++
++/* x32 syscall flag bit */
++#define __X32_SYSCALL_BIT	0x40000000
++
++#ifndef __KERNEL__
++# ifdef __i386__
++#  include <asm/unistd_32.h>
++# elif defined(__ILP32__)
++#  include <asm/unistd_x32.h>
++# else
++#  include <asm/unistd_64.h>
++# endif
 +#endif
-diff --git a/tools/arch/x86/include/asm/unistd_64.h b/tools/arch/x86/include/asm/unistd_64.h
-index fbdb70ee8837..dd56bb36132a 100644
---- a/tools/arch/x86/include/asm/unistd_64.h
-+++ b/tools/arch/x86/include/asm/unistd_64.h
-@@ -10,3 +10,6 @@
- #ifndef __NR_getcpu
- # define __NR_getcpu 309
- #endif
-+#ifndef __NR_setns
-+#define __NR_setns 308
-+#endif
++
++#endif /* _UAPI_ASM_X86_UNISTD_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 83fe2202382e..47abd3325190 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -16,6 +16,7 @@ arch/x86/include/uapi/asm/perf_regs.h
+ arch/x86/include/uapi/asm/kvm.h
+ arch/x86/include/uapi/asm/kvm_perf.h
+ arch/x86/include/uapi/asm/svm.h
++arch/x86/include/uapi/asm/unistd.h
+ arch/x86/include/uapi/asm/vmx.h
+ arch/powerpc/include/uapi/asm/kvm.h
+ arch/s390/include/uapi/asm/kvm.h
 -- 
 2.9.4
