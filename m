@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/86] perf trace beauty: Mask ignored fcntl 'arg' parameter
-Date: Wed, 19 Jul 2017 11:28:32 -0300
-Message-ID: <20170719142950.3747-9-acme@kernel.org>
+Subject: [PATCH 10/86] perf trace beauty: Export the "int" and "hex" syscall arg formatters
+Date: Wed, 19 Jul 2017 11:28:34 -0300
+Message-ID: <20170719142950.3747-11-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,85 +12,66 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A series of fcntl cmds ignore the third argument, so mask it.
+The most basic ones, for pointers, unaugmented fds, etc, to be used
+in the initial fcntl 'arg' beautifier.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-6vtl3zq1tauamrhm8o380ptn@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-g0lugj4vv6p4jtge32hid6q6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       |  2 +-
- tools/perf/trace/beauty/Build    |  1 +
- tools/perf/trace/beauty/beauty.h |  3 +++
- tools/perf/trace/beauty/fcntl.c  | 23 +++++++++++++++++++++++
- 4 files changed, 28 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/trace/beauty/fcntl.c
+ tools/perf/builtin-trace.c       | 10 ++--------
+ tools/perf/trace/beauty/beauty.h |  6 ++++++
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index ef1b1d4ea007..b7f79dea3c44 100644
+index 40bc0a326096..9e171401b664 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -661,7 +661,7 @@ static struct syscall_fmt {
- 	{ .name	    = "fchownat",   .errmsg = true,
- 	  .arg_scnprintf = { [0] = SCA_FDAT, /* fd */ }, },
- 	{ .name	    = "fcntl",	    .errmsg = true,
--	  .arg_scnprintf = { [1] = SCA_STRARRAYS, /* cmd */ },
-+	  .arg_scnprintf = { [1] = SCA_FCNTL_CMD, /* cmd */ },
- 	  .arg_parm	 = { [1] = &strarrays__fcntl_cmds_arrays, /* cmd */ }, },
- 	{ .name	    = "fdatasync",  .errmsg = true, },
- 	{ .name	    = "flock",	    .errmsg = true,
-diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
-index be95ac6ce845..c9e215b806f1 100644
---- a/tools/perf/trace/beauty/Build
-+++ b/tools/perf/trace/beauty/Build
-@@ -1 +1,2 @@
-+libperf-y += fcntl.o
- libperf-y += statx.o
+@@ -392,22 +392,16 @@ static size_t syscall_arg__scnprintf_close_fd(char *bf, size_t size,
+ 
+ #define SCA_CLOSE_FD syscall_arg__scnprintf_close_fd
+ 
+-static size_t syscall_arg__scnprintf_hex(char *bf, size_t size,
+-					 struct syscall_arg *arg)
++size_t syscall_arg__scnprintf_hex(char *bf, size_t size, struct syscall_arg *arg)
+ {
+ 	return scnprintf(bf, size, "%#lx", arg->val);
+ }
+ 
+-#define SCA_HEX syscall_arg__scnprintf_hex
+-
+-static size_t syscall_arg__scnprintf_int(char *bf, size_t size,
+-					 struct syscall_arg *arg)
++size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg)
+ {
+ 	return scnprintf(bf, size, "%d", arg->val);
+ }
+ 
+-#define SCA_INT syscall_arg__scnprintf_int
+-
+ static const char *bpf_cmd[] = {
+ 	"MAP_CREATE", "MAP_LOOKUP_ELEM", "MAP_UPDATE_ELEM", "MAP_DELETE_ELEM",
+ 	"MAP_GET_NEXT_KEY", "PROG_LOAD",
 diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index a6348073a6e9..ce01079d8422 100644
+index 6fbac0c8120d..d085aacecd49 100644
 --- a/tools/perf/trace/beauty/beauty.h
 +++ b/tools/perf/trace/beauty/beauty.h
-@@ -18,6 +18,9 @@ struct syscall_arg {
+@@ -31,6 +31,12 @@ unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
  size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size, struct syscall_arg *arg);
  #define SCA_STRARRAYS syscall_arg__scnprintf_strarrays
  
-+size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_FCNTL_CMD syscall_arg__scnprintf_fcntl_cmd
++size_t syscall_arg__scnprintf_hex(char *bf, size_t size, struct syscall_arg *arg);
++#define SCA_HEX syscall_arg__scnprintf_hex
 +
- size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_STATX_FLAGS syscall_arg__scnprintf_statx_flags
++size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg);
++#define SCA_INT syscall_arg__scnprintf_int
++
+ size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_FCNTL_CMD syscall_arg__scnprintf_fcntl_cmd
  
-diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fcntl.c
-new file mode 100644
-index 000000000000..7e4582c9308e
---- /dev/null
-+++ b/tools/perf/trace/beauty/fcntl.c
-@@ -0,0 +1,23 @@
-+/*
-+ * trace/beauty/fcntl.c
-+ *
-+ *  Copyright (C) 2017, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
-+ *
-+ * Released under the GPL v2. (and only v2, not any later version)
-+ */
-+
-+#include "trace/beauty/beauty.h"
-+#include <uapi/linux/fcntl.h>
-+
-+size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	/*
-+	 * Some commands ignore the third fcntl argument, "arg", so mask it
-+	 */
-+	if (arg->val == F_GETFD	   || arg->val == F_GETFL     ||
-+	    arg->val == F_GETOWN   || arg->val == F_GET_SEALS ||
-+	    arg->val == F_GETLEASE || arg->val == F_GETSIG)
-+		arg->mask |= (1 << 2);
-+
-+	return syscall_arg__scnprintf_strarrays(bf, size, arg);
-+}
 -- 
 2.9.4
