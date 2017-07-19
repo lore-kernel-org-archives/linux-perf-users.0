@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 46/86] perf tests attr: Rename compare_data to data_equal
-Date: Wed, 19 Jul 2017 11:29:10 -0300
-Message-ID: <20170719142950.3747-47-acme@kernel.org>
+Subject: [PATCH 47/86] perf tests attr: Add 1s for exclude_kernel and task base bits
+Date: Wed, 19 Jul 2017 11:29:11 -0300
+Message-ID: <20170719142950.3747-48-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,59 +12,47 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-The data_equal name fits better to the return value of the function.
-It's true when the data is equal.
+There's an event open fallback which set exclude_kernel=1 in case use
+does not have enough privileges. Adding both 0|1 for this attribute,
+because we don't know what value it is.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170703145030.12903-6-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170703145030.12903-7-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/tests/attr/base-record | 2 +-
+ tools/perf/tests/attr/base-stat   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index bb671cd1d66a..b03261c6b1ed 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -9,7 +9,7 @@ import logging
- import shutil
- import ConfigParser
- 
--def compare_data(a, b):
-+def data_equal(a, b):
-     # Allow multiple values in assignment separated by '|'
-     a_list = a.split('|')
-     b_list = b.split('|')
-@@ -101,7 +101,7 @@ class Event(dict):
-             log.debug("      [%s] %s %s" % (t, self[t], other[t]));
-             if not self.has_key(t) or not other.has_key(t):
-                 return False
--            if not compare_data(self[t], other[t]):
-+            if not data_equal(self[t], other[t]):
-                 return False
-         return True
- 
-@@ -109,7 +109,7 @@ class Event(dict):
-         for t in Event.terms:
-             if not self.has_key(t) or not other.has_key(t):
-                 continue
--            if not compare_data(self[t], other[t]):
-+            if not data_equal(self[t], other[t]):
- 		log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
- 
- # Test file description needs to have following sections:
-@@ -220,7 +220,7 @@ class Test(object):
- 
-         log.info("  '%s' ret '%s', expected '%s'" % (cmd, str(ret), str(self.ret)))
- 
--        if not compare_data(str(ret), str(self.ret)):
-+        if not data_equal(str(ret), str(self.ret)):
-             raise Unsup(self)
- 
-     def compare(self, expect, result):
+diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
+index 7e6d74946e04..cdf3adf7d389 100644
+--- a/tools/perf/tests/attr/base-record
++++ b/tools/perf/tests/attr/base-record
+@@ -15,7 +15,7 @@ inherit=1
+ pinned=0
+ exclusive=0
+ exclude_user=0
+-exclude_kernel=0
++exclude_kernel=0|1
+ exclude_hv=0
+ exclude_idle=0
+ mmap=1
+diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
+index f4cf148f14cb..ff9b33d4ae9e 100644
+--- a/tools/perf/tests/attr/base-stat
++++ b/tools/perf/tests/attr/base-stat
+@@ -15,7 +15,7 @@ inherit=1
+ pinned=0
+ exclusive=0
+ exclude_user=0
+-exclude_kernel=0
++exclude_kernel=0|1
+ exclude_hv=0
+ exclude_idle=0
+ mmap=0
 -- 
 2.9.4
