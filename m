@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/86] perf trace beauty: Allow accessing syscall args values in a syscall arg formatter
-Date: Wed, 19 Jul 2017 11:28:33 -0300
-Message-ID: <20170719142950.3747-10-acme@kernel.org>
+Subject: [PATCH 08/86] perf trace beauty: Mask ignored fcntl 'arg' parameter
+Date: Wed, 19 Jul 2017 11:28:32 -0300
+Message-ID: <20170719142950.3747-9-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,114 +12,85 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For instance, fcntl's upcoming 'arg' formatter needs to look at the
-'cmd' value to decide how to format its value, sometimes it is a file
-flags, sometimes an fd, a pointer to a structure, etc.
+A series of fcntl cmds ignore the third argument, so mask it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-2tw2jfaqm48dtw8a4addghze@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-6vtl3zq1tauamrhm8o380ptn@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 23 ++++++++++++++++-------
- tools/perf/trace/beauty/beauty.h | 13 +++++++++++++
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c       |  2 +-
+ tools/perf/trace/beauty/Build    |  1 +
+ tools/perf/trace/beauty/beauty.h |  3 +++
+ tools/perf/trace/beauty/fcntl.c  | 23 +++++++++++++++++++++++
+ 4 files changed, 28 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/trace/beauty/fcntl.c
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index b7f79dea3c44..40bc0a326096 100644
+index ef1b1d4ea007..b7f79dea3c44 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1369,19 +1369,32 @@ static int trace__validate_ev_qualifier(struct trace *trace)
-  * variable to read it. Most notably this avoids extended load instructions
-  * on unaligned addresses
-  */
-+static unsigned long __syscall_arg__val(unsigned char *args, u8 idx)
-+{
-+	unsigned long val;
-+	unsigned char *p = args + sizeof(unsigned long) * idx;
-+
-+	memcpy(&val, p, sizeof(val));
-+	return val;
-+}
-+
-+unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx)
-+{
-+	return __syscall_arg__val(arg->args, idx);
-+}
- 
- static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 				      unsigned char *args, struct trace *trace,
- 				      struct thread *thread)
- {
- 	size_t printed = 0;
--	unsigned char *p;
- 	unsigned long val;
- 
- 	if (sc->args != NULL) {
- 		struct format_field *field;
- 		u8 bit = 1;
- 		struct syscall_arg arg = {
-+			.args	= args,
- 			.idx	= 0,
- 			.mask	= 0,
- 			.trace  = trace,
-@@ -1393,9 +1406,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			if (arg.mask & bit)
- 				continue;
- 
--			/* special care for unaligned accesses */
--			p = args + sizeof(unsigned long) * arg.idx;
--			memcpy(&val, p, sizeof(val));
-+			val = syscall_arg__val(&arg, arg.idx);
- 
- 			/*
-  			 * Suppress this argument if its value is zero and
-@@ -1431,9 +1442,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 		int i = 0;
- 
- 		while (i < 6) {
--			/* special care for unaligned accesses */
--			p = args + sizeof(unsigned long) * i;
--			memcpy(&val, p, sizeof(val));
-+			val = __syscall_arg__val(args, i);
- 			printed += scnprintf(bf + printed, size - printed,
- 					     "%sarg%d: %ld",
- 					     printed ? ", " : "", i, val);
+@@ -661,7 +661,7 @@ static struct syscall_fmt {
+ 	{ .name	    = "fchownat",   .errmsg = true,
+ 	  .arg_scnprintf = { [0] = SCA_FDAT, /* fd */ }, },
+ 	{ .name	    = "fcntl",	    .errmsg = true,
+-	  .arg_scnprintf = { [1] = SCA_STRARRAYS, /* cmd */ },
++	  .arg_scnprintf = { [1] = SCA_FCNTL_CMD, /* cmd */ },
+ 	  .arg_parm	 = { [1] = &strarrays__fcntl_cmds_arrays, /* cmd */ }, },
+ 	{ .name	    = "fdatasync",  .errmsg = true, },
+ 	{ .name	    = "flock",	    .errmsg = true,
+diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
+index be95ac6ce845..c9e215b806f1 100644
+--- a/tools/perf/trace/beauty/Build
++++ b/tools/perf/trace/beauty/Build
+@@ -1 +1,2 @@
++libperf-y += fcntl.o
+ libperf-y += statx.o
 diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index ce01079d8422..6fbac0c8120d 100644
+index a6348073a6e9..ce01079d8422 100644
 --- a/tools/perf/trace/beauty/beauty.h
 +++ b/tools/perf/trace/beauty/beauty.h
-@@ -6,8 +6,19 @@
- struct trace;
- struct thread;
- 
-+/**
-+ * @val: value of syscall argument being formatted
-+ * @args: All the args, use syscall_args__val(arg, nth) to access one
-+ * @thread: tid state (maps, pid, tid, etc)
-+ * @trace: 'perf trace' internals: all threads, etc
-+ * @parm: private area, may be an strarray, for instance
-+ * @idx: syscall arg idx (is this the first?)
-+ * @mask: a syscall arg may mask another arg, see syscall_arg__scnprintf_futex_op
-+ */
-+
- struct syscall_arg {
- 	unsigned long val;
-+	unsigned char *args;
- 	struct thread *thread;
- 	struct trace  *trace;
- 	void	      *parm;
-@@ -15,6 +26,8 @@ struct syscall_arg {
- 	u8	      mask;
- };
- 
-+unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
-+
+@@ -18,6 +18,9 @@ struct syscall_arg {
  size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size, struct syscall_arg *arg);
  #define SCA_STRARRAYS syscall_arg__scnprintf_strarrays
  
++size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg);
++#define SCA_FCNTL_CMD syscall_arg__scnprintf_fcntl_cmd
++
+ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_STATX_FLAGS syscall_arg__scnprintf_statx_flags
+ 
+diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fcntl.c
+new file mode 100644
+index 000000000000..7e4582c9308e
+--- /dev/null
++++ b/tools/perf/trace/beauty/fcntl.c
+@@ -0,0 +1,23 @@
++/*
++ * trace/beauty/fcntl.c
++ *
++ *  Copyright (C) 2017, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
++ *
++ * Released under the GPL v2. (and only v2, not any later version)
++ */
++
++#include "trace/beauty/beauty.h"
++#include <uapi/linux/fcntl.h>
++
++size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg)
++{
++	/*
++	 * Some commands ignore the third fcntl argument, "arg", so mask it
++	 */
++	if (arg->val == F_GETFD	   || arg->val == F_GETFL     ||
++	    arg->val == F_GETOWN   || arg->val == F_GET_SEALS ||
++	    arg->val == F_GETLEASE || arg->val == F_GETSIG)
++		arg->mask |= (1 << 2);
++
++	return syscall_arg__scnprintf_strarrays(bf, size, arg);
++}
 -- 
 2.9.4
