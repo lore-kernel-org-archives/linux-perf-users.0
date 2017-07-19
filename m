@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 75/86] perf header: Add a buffer to struct feat_fd
-Date: Wed, 19 Jul 2017 11:29:39 -0300
-Message-ID: <20170719142950.3747-76-acme@kernel.org>
+Subject: [PATCH 76/86] perf header: Change FEAT_OP* macros
+Date: Wed, 19 Jul 2017 11:29:40 -0300
+Message-ID: <20170719142950.3747-77-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -12,13 +12,24 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Extend struct feat_fd to use a temporal buffer in pipe-mode, instead of
-perf.data's file descriptor.
+There are three FEAT_OP* macros:
+  - FEAT_OPA: for features without process record.
+  - FEAT_OPP: for features with process record.
+  - FEAT_OPF: like FEAT_OPP but to show only if show_full_info flags
+    is set.
 
-The header features build_id and aux_trace already have logic to print
-in file-mode that heavily rely on lseek the file. For now, leave such
-features inactive in pipe-mode and print a warning if their functions
-are called in pipe-mode.
+To add pipe-mode headers we need yet another variation of the macros
+(one to specify whether a feature generates an auxiliar record).
+
+Instead, we redefine macros so that:
+  - show_full_info is specified as an argument (to remove the
+  FEAT_OPF variation) and,
+  - it always sets "process" handler (to remove the FEAT_OPA variation).
+  Individual process handlers can be NULLed individually.
+
+This allows to define two variations only:
+  - FEAT_OPR: synthesizes auxiliar event record.
+  - FEAT_OPN: doesn't synthesize an auxiliar event record.
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: David Ahern <dsahern@gmail.com>
@@ -33,155 +44,109 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20170718042549.145161-13-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170718042549.145161-14-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 75 ++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 70 insertions(+), 5 deletions(-)
+ tools/perf/util/header.c | 72 +++++++++++++++++++++++++++++-------------------
+ 1 file changed, 44 insertions(+), 28 deletions(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index d5359e3384e3..5e6d4d29a7a3 100644
+index 5e6d4d29a7a3..0fdbf7554ea3 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -62,6 +62,7 @@ struct perf_file_attr {
- struct feat_fd {
- 	struct perf_header	*ph;
- 	int			fd;
-+	void			*buf;	/* Either buf != NULL or fd >= 0 */
- 	ssize_t			offset;
- 	size_t			size;
+@@ -12,6 +12,7 @@
+ #include <linux/list.h>
+ #include <linux/kernel.h>
+ #include <linux/bitops.h>
++#include <linux/stringify.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/utsname.h>
+@@ -2139,42 +2140,57 @@ struct feature_ops {
+ 	int (*process)(struct feat_fd *ff, void *data);
+ 	const char *name;
+ 	bool full_only;
++	bool synthesize;
  };
-@@ -81,19 +82,52 @@ bool perf_header__has_feat(const struct perf_header *header, int feat)
- 	return test_bit(feat, header->adds_features);
- }
  
--/* Return: 0 if succeded, -ERR if failed. */
--int do_write(struct feat_fd *ff, const void *buf, size_t size)
-+static int __do_write_fd(struct feat_fd *ff, const void *buf, size_t size)
- {
--	ssize_t ret;
-+	ssize_t ret = writen(ff->fd, buf, size);
- 
--	ret  = writen(ff->fd, buf, size);
- 	if (ret != (ssize_t)size)
- 		return ret < 0 ? (int)ret : -1;
-+	return 0;
-+}
-+
-+static int __do_write_buf(struct feat_fd *ff,  const void *buf, size_t size)
-+{
-+	/* struct perf_event_header::size is u16 */
-+	const size_t max_size = 0xffff - sizeof(struct perf_event_header);
-+	size_t new_size = ff->size;
-+	void *addr;
-+
-+	if (size + ff->offset > max_size)
-+		return -E2BIG;
-+
-+	while (size > (new_size - ff->offset))
-+		new_size <<= 1;
-+	new_size = min(max_size, new_size);
-+
-+	if (ff->size < new_size) {
-+		addr = realloc(ff->buf, new_size);
-+		if (!addr)
-+			return -ENOMEM;
-+		ff->buf = addr;
-+		ff->size = new_size;
+-#define FEAT_OPA(n, func) \
+-	[n] = { .name = #n, .write = write_##func, .print = print_##func }
+-#define FEAT_OPP(n, func) \
+-	[n] = { .name = #n, .write = write_##func, .print = print_##func, \
+-		.process = process_##func }
+-#define FEAT_OPF(n, func) \
+-	[n] = { .name = #n, .write = write_##func, .print = print_##func, \
+-		.process = process_##func, .full_only = true }
++#define FEAT_OPR(n, func, __full_only) \
++	[HEADER_##n] = {					\
++		.name	    = __stringify(n),			\
++		.write	    = write_##func,			\
++		.print	    = print_##func,			\
++		.full_only  = __full_only,			\
++		.process    = process_##func,			\
++		.synthesize = true				\
 +	}
 +
-+	memcpy(ff->buf + ff->offset, buf, size);
-+	ff->offset += size;
++#define FEAT_OPN(n, func, __full_only) \
++	[HEADER_##n] = {					\
++		.name	    = __stringify(n),			\
++		.write	    = write_##func,			\
++		.print	    = print_##func,			\
++		.full_only  = __full_only,			\
++		.process    = process_##func			\
++	}
  
- 	return 0;
- }
+ /* feature_ops not implemented: */
+ #define print_tracing_data	NULL
+ #define print_build_id		NULL
  
- /* Return: 0 if succeded, -ERR if failed. */
-+int do_write(struct feat_fd *ff, const void *buf, size_t size)
-+{
-+	if (!ff->buf)
-+		return __do_write_fd(ff, buf, size);
-+	return __do_write_buf(ff, buf, size);
-+}
++#define process_branch_stack	NULL
++#define process_stat		NULL
 +
-+/* Return: 0 if succeded, -ERR if failed. */
- int write_padded(struct feat_fd *ff, const void *bf,
- 		 size_t count, size_t count_aligned)
- {
-@@ -126,7 +160,7 @@ static int do_write_string(struct feat_fd *ff, const char *str)
- 	return write_padded(ff, str, olen, len);
- }
- 
--static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
-+static int __do_read_fd(struct feat_fd *ff, void *addr, ssize_t size)
- {
- 	ssize_t ret = readn(ff->fd, addr, size);
- 
-@@ -135,6 +169,25 @@ static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
- 	return 0;
- }
- 
-+static int __do_read_buf(struct feat_fd *ff, void *addr, ssize_t size)
-+{
-+	if (size > (ssize_t)ff->size - ff->offset)
-+		return -1;
 +
-+	memcpy(addr, ff->buf + ff->offset, size);
-+	ff->offset += size;
-+
-+	return 0;
-+
-+}
-+
-+static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
-+{
-+	if (!ff->buf)
-+		return __do_read_fd(ff, addr, size);
-+	return __do_read_buf(ff, addr, size);
-+}
-+
- static int do_read_u32(struct feat_fd *ff, u32 *addr)
- {
- 	int ret;
-@@ -189,6 +242,9 @@ static char *do_read_string(struct feat_fd *ff)
- static int write_tracing_data(struct feat_fd *ff,
- 			      struct perf_evlist *evlist)
- {
-+	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+		return -1;
-+
- 	return read_tracing_data(ff->fd, &evlist->entries);
- }
+ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+-	FEAT_OPP(HEADER_TRACING_DATA,	tracing_data),
+-	FEAT_OPP(HEADER_BUILD_ID,	build_id),
+-	FEAT_OPP(HEADER_HOSTNAME,	hostname),
+-	FEAT_OPP(HEADER_OSRELEASE,	osrelease),
+-	FEAT_OPP(HEADER_VERSION,	version),
+-	FEAT_OPP(HEADER_ARCH,		arch),
+-	FEAT_OPP(HEADER_NRCPUS,		nrcpus),
+-	FEAT_OPP(HEADER_CPUDESC,	cpudesc),
+-	FEAT_OPP(HEADER_CPUID,		cpuid),
+-	FEAT_OPP(HEADER_TOTAL_MEM,	total_mem),
+-	FEAT_OPP(HEADER_EVENT_DESC,	event_desc),
+-	FEAT_OPP(HEADER_CMDLINE,	cmdline),
+-	FEAT_OPF(HEADER_CPU_TOPOLOGY,	cpu_topology),
+-	FEAT_OPF(HEADER_NUMA_TOPOLOGY,	numa_topology),
+-	FEAT_OPA(HEADER_BRANCH_STACK,	branch_stack),
+-	FEAT_OPP(HEADER_PMU_MAPPINGS,	pmu_mappings),
+-	FEAT_OPP(HEADER_GROUP_DESC,	group_desc),
+-	FEAT_OPP(HEADER_AUXTRACE,	auxtrace),
+-	FEAT_OPA(HEADER_STAT,		stat),
+-	FEAT_OPF(HEADER_CACHE,		cache),
++	FEAT_OPN(TRACING_DATA,	tracing_data,	false),
++	FEAT_OPN(BUILD_ID,	build_id,	false),
++	FEAT_OPR(HOSTNAME,	hostname,	false),
++	FEAT_OPR(OSRELEASE,	osrelease,	false),
++	FEAT_OPR(VERSION,	version,	false),
++	FEAT_OPR(ARCH,		arch,		false),
++	FEAT_OPR(NRCPUS,	nrcpus,		false),
++	FEAT_OPR(CPUDESC,	cpudesc,	false),
++	FEAT_OPR(CPUID,		cpuid,		false),
++	FEAT_OPR(TOTAL_MEM,	total_mem,	false),
++	FEAT_OPR(EVENT_DESC,	event_desc,	false),
++	FEAT_OPR(CMDLINE,	cmdline,	false),
++	FEAT_OPR(CPU_TOPOLOGY,	cpu_topology,	true),
++	FEAT_OPR(NUMA_TOPOLOGY,	numa_topology,	true),
++	FEAT_OPN(BRANCH_STACK,	branch_stack,	false),
++	FEAT_OPR(PMU_MAPPINGS,	pmu_mappings,	false),
++	FEAT_OPN(GROUP_DESC,	group_desc,	false),
++	FEAT_OPN(AUXTRACE,	auxtrace,	false),
++	FEAT_OPN(STAT,		stat,		false),
++	FEAT_OPN(CACHE,		cache,		true),
+ };
  
-@@ -203,6 +259,9 @@ static int write_build_id(struct feat_fd *ff,
- 	if (!perf_session__read_build_ids(session, true))
- 		return -1;
- 
-+	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+		return -1;
-+
- 	err = perf_session__write_buildid_table(session, ff);
- 	if (err < 0) {
- 		pr_debug("failed to write buildid table\n");
-@@ -912,6 +971,9 @@ static int write_auxtrace(struct feat_fd *ff,
- 	struct perf_session *session;
- 	int err;
- 
-+	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+		return -1;
-+
- 	session = container_of(ff->ph, struct perf_session, header);
- 
- 	err = auxtrace_index__write(ff->fd, &session->auxtrace_index);
-@@ -2197,6 +2259,9 @@ static int do_write_feat(struct feat_fd *ff, int type,
- 		if (!feat_ops[type].write)
- 			return -1;
- 
-+		if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+			return -1;
-+
- 		(*p)->offset = lseek(ff->fd, 0, SEEK_CUR);
- 
- 		err = feat_ops[type].write(ff, evlist);
+ struct header_print_data {
 -- 
 2.9.4
