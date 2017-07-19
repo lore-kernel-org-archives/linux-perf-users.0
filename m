@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 48/86] perf tests attr: Fix record dwarf test
-Date: Wed, 19 Jul 2017 11:29:12 -0300
-Message-ID: <20170719142950.3747-49-acme@kernel.org>
+Subject: [PATCH 49/86] perf tests attr: Fix no-delay test
+Date: Wed, 19 Jul 2017 11:29:13 -0300
+Message-ID: <20170719142950.3747-50-acme@kernel.org>
 References: <20170719142950.3747-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170719142950.3747-1-acme@kernel.org>
@@ -13,37 +13,38 @@ List-Id: linux-perf-users.vger.kernel.org
 From: Jiri Olsa <jolsa@kernel.org>
 
 Following commit:
+  commit 509051ea8427 ("perf record: Rename --no-delay to --no-buffering")
 
-  commit 5c0cf22477ea ("perf record: Store data mmaps for dwarf unwind")
-
-have enabled address sampling for dwarf unwind, we need to reflect that
-in this test by adding ADDR sample_type and enabling mmap_data.
+removed '-D' option and renamed --no-delay into --no-buffering.
+Fixing that in the attr tests.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170703145030.12903-8-jolsa@kernel.org
+Fixes: 509051ea8427 ("perf record: Rename --no-delay to --no-buffering")
+Link: http://lkml.kernel.org/r/20170703145030.12903-9-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr/test-record-graph-dwarf | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../perf/tests/attr/{test-record-no-delay => test-record-no-buffering}  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/tests/attr/{test-record-no-delay => test-record-no-buffering} (70%)
 
-diff --git a/tools/perf/tests/attr/test-record-graph-dwarf b/tools/perf/tests/attr/test-record-graph-dwarf
-index d6f324ea578c..8321c602dc38 100644
---- a/tools/perf/tests/attr/test-record-graph-dwarf
-+++ b/tools/perf/tests/attr/test-record-graph-dwarf
-@@ -3,8 +3,9 @@ command = record
- args    = --call-graph dwarf -- kill >/dev/null 2>&1
+diff --git a/tools/perf/tests/attr/test-record-no-delay b/tools/perf/tests/attr/test-record-no-buffering
+similarity index 70%
+rename from tools/perf/tests/attr/test-record-no-delay
+rename to tools/perf/tests/attr/test-record-no-buffering
+index f253b78cdbf2..0b0355af013a 100644
+--- a/tools/perf/tests/attr/test-record-no-delay
++++ b/tools/perf/tests/attr/test-record-no-buffering
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = -D kill >/dev/null 2>&1
++args    = --no-buffering kill >/dev/null 2>&1
  
  [event:base-record]
--sample_type=12583
-+sample_type=45359
- exclude_callchain_user=1
- sample_stack_user=8192
- # TODO different for each arch, no support for that now
- sample_regs_user=*
-+mmap_data=1
+ sample_period=4000
 -- 
 2.9.4
