@@ -1,128 +1,87 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/40] perf evsel: Add verbose output for sys_perf_event_open fallback
-Date: Wed, 26 Jul 2017 11:17:18 -0300
-Message-ID: <20170726141730.30750-29-acme@kernel.org>
+Subject: [PATCH 29/40] perf top: Support lookup of symbols in other mount namespaces.
+Date: Wed, 26 Jul 2017 11:17:19 -0300
+Message-ID: <20170726141730.30750-30-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Krister Johansen <kjlx@templeofstupid.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Krister Johansen <kjlx@templeofstupid.com>
 
-Adding info about what is being switched off in the sys_perf_event_open
-fallback.
+The perf top command needs to unshare its fs from the helper threads in
+order to successfully setns(2) during its symbol lookup.  It also needs
+to impelement a force flag to ignore ownership of perf-<pid>.map files.
 
-New output (notice the 'switching off' lines):
-
-  $ perf stat -e '{cycles,instructions}' -vvv ls
-  Using CPUID GenuineIntel-6-3D
-  intel_pt default config: tsc
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-    disabled                         1
-    inherit                          1
-    enable_on_exec                   1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 3591  cpu -1  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -22
-  switching off cloexec flag
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-    disabled                         1
-    inherit                          1
-    enable_on_exec                   1
-    exclude_guest                    1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 3591  cpu -1  group_fd -1  flags 0
-  sys_perf_event_open failed, error -22
-  switching off exclude_guest, exclude_host
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-    disabled                         1
-    inherit                          1
-    enable_on_exec                   1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 3591  cpu -1  group_fd -1  flags 0
-  sys_perf_event_open failed, error -22
-  switching off sample_id_all
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-    disabled                         1
-    inherit                          1
-    enable_on_exec                   1
-  ...
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170721121212.21414-2-jolsa@kernel.org
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/1499305693-1599-6-git-send-email-kjlx@templeofstupid.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/Documentation/perf-top.txt |  4 ++++
+ tools/perf/builtin-top.c              | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6dd069a41ac3..450b5fadf8cb 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1671,31 +1671,39 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 	 */
- 	if (!perf_missing_features.write_backward && evsel->attr.write_backward) {
- 		perf_missing_features.write_backward = true;
-+		pr_debug2("switching off write_backward\n");
- 		goto out_close;
- 	} else if (!perf_missing_features.clockid_wrong && evsel->attr.use_clockid) {
- 		perf_missing_features.clockid_wrong = true;
-+		pr_debug2("switching off clockid\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.clockid && evsel->attr.use_clockid) {
- 		perf_missing_features.clockid = true;
-+		pr_debug2("switching off use_clockid\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
- 		perf_missing_features.cloexec = true;
-+		pr_debug2("switching off cloexec flag\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.mmap2 && evsel->attr.mmap2) {
- 		perf_missing_features.mmap2 = true;
-+		pr_debug2("switching off mmap2\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.exclude_guest &&
- 		   (evsel->attr.exclude_guest || evsel->attr.exclude_host)) {
- 		perf_missing_features.exclude_guest = true;
-+		pr_debug2("switching off exclude_guest, exclude_host\n");
- 		goto fallback_missing_features;
- 	} else if (!perf_missing_features.sample_id_all) {
- 		perf_missing_features.sample_id_all = true;
-+		pr_debug2("switching off sample_id_all\n");
- 		goto retry_sample_id;
- 	} else if (!perf_missing_features.lbr_flags &&
- 			(evsel->attr.branch_sample_type &
- 			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
- 			  PERF_SAMPLE_BRANCH_NO_FLAGS))) {
- 		perf_missing_features.lbr_flags = true;
-+		pr_debug2("switching off branch sample type no (cycles/flags)\n");
- 		goto fallback_missing_features;
- 	}
- out_close:
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index e71d63843f45..d864ea6fd367 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -237,6 +237,10 @@ Default is to monitor all CPUS.
+ --hierarchy::
+ 	Enable hierarchy output.
+ 
++--force::
++	Don't do ownership validation.
++
++
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index e5a8f249077f..ee954bde7e3e 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -587,6 +587,13 @@ static void *display_thread_tui(void *arg)
+ 		.refresh	= top->delay_secs,
+ 	};
+ 
++	/* In order to read symbols from other namespaces perf to  needs to call
++	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
++	 * unshare(2) the fs so that we may continue to setns into namespaces
++	 * that we're observing.
++	 */
++	unshare(CLONE_FS);
++
+ 	perf_top__sort_new_samples(top);
+ 
+ 	/*
+@@ -628,6 +635,13 @@ static void *display_thread(void *arg)
+ 	struct perf_top *top = arg;
+ 	int delay_msecs, c;
+ 
++	/* In order to read symbols from other namespaces perf to  needs to call
++	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
++	 * unshare(2) the fs so that we may continue to setns into namespaces
++	 * that we're observing.
++	 */
++	unshare(CLONE_FS);
++
+ 	display_setup_sig();
+ 	pthread__unblock_sigwinch();
+ repeat:
+@@ -1206,6 +1220,7 @@ int cmd_top(int argc, const char **argv)
+ 		    "Show raw trace event output (do not use print fmt or plugins)"),
+ 	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
+ 		    "Show entries in a hierarchy"),
++	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_END()
+ 	};
+ 	const char * const top_usage[] = {
 -- 
 2.9.4
