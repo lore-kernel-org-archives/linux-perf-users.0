@@ -1,68 +1,117 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/40] perf tools: Add tools/include/uapi/asm-generic/fcntl.h to the MANIFEST
-Date: Wed, 26 Jul 2017 11:17:30 -0300
-Message-ID: <20170726141730.30750-41-acme@kernel.org>
+Subject: [PATCH 38/40] perf jevents: Make build fail on JSON parse error
+Date: Wed, 26 Jul 2017 11:17:28 -0300
+Message-ID: <20170726141730.30750-39-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-This file was copied from the kernel so that we could build tools/perf/
-on older systems where some newer defines, such as these are available:
+Today, when a JSON file fails parsing the build continues, but there are
+no json files built in, which is difficult to debug later.  Make the
+build stop on a parse error instead.
 
-    CC       trace/beauty/fcntl.o
-  trace/beauty/fcntl.c: In function ‘syscall_arg__scnprintf_fcntl_arg’:
-  trace/beauty/fcntl.c:93:13: error: ‘F_OFD_SETLK’ undeclared (first use in this function)
-        cmd == F_OFD_SETLK || cmd == F_OFD_SETLKW || cmd == F_OFD_GETLK ||
-               ^
-  trace/beauty/fcntl.c:93:13: note: each undeclared identifier is reported only once for each function it appears in
-  trace/beauty/fcntl.c:93:35: error: ‘F_OFD_SETLKW’ undeclared (first use in this function)
-        cmd == F_OFD_SETLK || cmd == F_OFD_SETLKW || cmd == F_OFD_GETLK ||
-                                     ^
-  trace/beauty/fcntl.c:93:58: error: ‘F_OFD_GETLK’ undeclared (first use in this function)
-        cmd == F_OFD_SETLK || cmd == F_OFD_SETLKW || cmd == F_OFD_GETLK ||
-                                                            ^
-  mv: cannot stat ‘trace/beauty/.fcntl.o.tmp’: No such file or directory
-  make[4]: *** [trace/beauty/fcntl.o] Error 1
-  make[3]: *** [trace/beauty] Error 2
-  make[3]: *** Waiting for unfinished jobs....
-    CC       tests/llvm.o
+v2: Add fixes from Sukadev. Now we handle architectures
+    with no JSON events correctly. And fix some stale comments.
 
-But we need to make sure that it is also in the tools/perf/MANIFEST file, that
-is used to build a tarball for detached (from the kernel sources) compilation,
-which was failing, with the above message, on a RHEL7.4 system, fix it.
+Committer note:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 84d1d8a12df3 ("tools include uapi asm-generic: Grab a copy of fcntl.h")
-Link: http://lkml.kernel.org/n/tip-2d5px7aq5stbwi24pgirwtlm@git.kernel.org
+Tested by running the cross build container tests, that were all failing
+for v1.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20170725001638.19990-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/MANIFEST | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/pmu-events/README    |  4 ----
+ tools/perf/pmu-events/jevents.c | 21 ++++++++++++++-------
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 9f2267b82eb2..705bdb147e73 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -70,6 +70,7 @@ tools/include/linux/hash.h
- tools/include/linux/kernel.h
- tools/include/linux/list.h
- tools/include/linux/log2.h
-+tools/include/uapi/asm-generic/fcntl.h
- tools/include/uapi/asm-generic/mman-common.h
- tools/include/uapi/asm-generic/mman.h
- tools/include/uapi/linux/bpf.h
+diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
+index 1408ade0d773..c2ee3e4417fe 100644
+--- a/tools/perf/pmu-events/README
++++ b/tools/perf/pmu-events/README
+@@ -85,10 +85,6 @@ users to specify events by their name:
+ 
+ where 'pm_1plus_ppc_cmpl' is a Power8 PMU event.
+ 
+-In case of errors when processing files in the tools/perf/pmu-events/arch
+-directory, 'jevents' tries to create an empty mapping file to allow the perf
+-build to succeed even if the PMU event aliases cannot be used.
+-
+ However some errors in processing may cause the perf build to fail.
+ 
+ Mapfile format
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index bd0aabb2bd0f..2350f6099a46 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -822,10 +822,6 @@ static int process_one_file(const char *fpath, const struct stat *sb,
+  * PMU event tables (see struct pmu_events_map).
+  *
+  * Write out the PMU events tables and the mapping table to pmu-event.c.
+- *
+- * If unable to process the JSON or arch files, create an empty mapping
+- * table so we can continue to build/use  perf even if we cannot use the
+- * PMU event aliases.
+  */
+ int main(int argc, char *argv[])
+ {
+@@ -836,6 +832,7 @@ int main(int argc, char *argv[])
+ 	const char *arch;
+ 	const char *output_file;
+ 	const char *start_dirname;
++	struct stat stbuf;
+ 
+ 	prog = basename(argv[0]);
+ 	if (argc < 4) {
+@@ -857,11 +854,17 @@ int main(int argc, char *argv[])
+ 		return 2;
+ 	}
+ 
++	sprintf(ldirname, "%s/%s", start_dirname, arch);
++
++	/* If architecture does not have any event lists, bail out */
++	if (stat(ldirname, &stbuf) < 0) {
++		pr_info("%s: Arch %s has no PMU event lists\n", prog, arch);
++		goto empty_map;
++	}
++
+ 	/* Include pmu-events.h first */
+ 	fprintf(eventsfp, "#include \"../../pmu-events/pmu-events.h\"\n");
+ 
+-	sprintf(ldirname, "%s/%s", start_dirname, arch);
+-
+ 	/*
+ 	 * The mapfile allows multiple CPUids to point to the same JSON file,
+ 	 * so, not sure if there is a need for symlinks within the pmu-events
+@@ -878,6 +881,9 @@ int main(int argc, char *argv[])
+ 	if (rc && verbose) {
+ 		pr_info("%s: Error walking file tree %s\n", prog, ldirname);
+ 		goto empty_map;
++	} else if (rc < 0) {
++		/* Make build fail */
++		return 1;
+ 	} else if (rc) {
+ 		goto empty_map;
+ 	}
+@@ -892,7 +898,8 @@ int main(int argc, char *argv[])
+ 
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+-		goto empty_map;
++		/* Make build fail */
++		return 1;
+ 	}
+ 
+ 	return 0;
 -- 
 2.9.4
