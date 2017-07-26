@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/40] perf script python: Add sample_read to dict
-Date: Wed, 26 Jul 2017 11:17:23 -0300
-Message-ID: <20170726141730.30750-34-acme@kernel.org>
+Subject: [PATCH 32/40] perf script python: Refactor creation of perf sample dict
+Date: Wed, 26 Jul 2017 11:17:22 -0300
+Message-ID: <20170726141730.30750-33-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arun Kalyanasundaram <arunkaly@google.com>
 
-Provide time_enabled, time_running and counter value in the perf_sample
-dict.
+Move the creation of the dict containing perf_sample entries into a
+helper function to enable its reuse in other sample processing routines.
 
 Signed-off-by: Arun Kalyanasundaram <arunkaly@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -24,80 +24,132 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Seongjae Park <sj38.park@gmail.com>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170721220422.63962-4-arunkaly@google.com
+Link: http://lkml.kernel.org/r/20170721220422.63962-3-arunkaly@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../util/scripting-engines/trace-event-python.c    | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ .../util/scripting-engines/trace-event-python.c    | 94 ++++++++++++----------
+ 1 file changed, 53 insertions(+), 41 deletions(-)
 
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 69d1b6db96f6..55a45784c910 100644
+index 8a8f4829d3e2..69d1b6db96f6 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -391,6 +391,56 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+@@ -391,6 +391,57 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
  	return pylist;
  }
  
-+static PyObject *get_sample_value_as_tuple(struct sample_read_value *value)
++static PyObject *get_perf_sample_dict(struct perf_sample *sample,
++					 struct perf_evsel *evsel,
++					 struct addr_location *al,
++					 PyObject *callchain)
 +{
-+	PyObject *t;
++	PyObject *dict, *dict_sample;
 +
-+	t = PyTuple_New(2);
-+	if (!t)
-+		Py_FatalError("couldn't create Python tuple");
-+	PyTuple_SetItem(t, 0, PyLong_FromUnsignedLongLong(value->id));
-+	PyTuple_SetItem(t, 1, PyLong_FromUnsignedLongLong(value->value));
-+	return t;
++	dict = PyDict_New();
++	if (!dict)
++		Py_FatalError("couldn't create Python dictionary");
++
++	dict_sample = PyDict_New();
++	if (!dict_sample)
++		Py_FatalError("couldn't create Python dictionary");
++
++	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
++	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
++			(const char *)&evsel->attr, sizeof(evsel->attr)));
++
++	pydict_set_item_string_decref(dict_sample, "pid",
++			PyInt_FromLong(sample->pid));
++	pydict_set_item_string_decref(dict_sample, "tid",
++			PyInt_FromLong(sample->tid));
++	pydict_set_item_string_decref(dict_sample, "cpu",
++			PyInt_FromLong(sample->cpu));
++	pydict_set_item_string_decref(dict_sample, "ip",
++			PyLong_FromUnsignedLongLong(sample->ip));
++	pydict_set_item_string_decref(dict_sample, "time",
++			PyLong_FromUnsignedLongLong(sample->time));
++	pydict_set_item_string_decref(dict_sample, "period",
++			PyLong_FromUnsignedLongLong(sample->period));
++	pydict_set_item_string_decref(dict, "sample", dict_sample);
++
++	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
++			(const char *)sample->raw_data, sample->raw_size));
++	pydict_set_item_string_decref(dict, "comm",
++			PyString_FromString(thread__comm_str(al->thread)));
++	if (al->map) {
++		pydict_set_item_string_decref(dict, "dso",
++			PyString_FromString(al->map->dso->name));
++	}
++	if (al->sym) {
++		pydict_set_item_string_decref(dict, "symbol",
++			PyString_FromString(al->sym->name));
++	}
++
++	pydict_set_item_string_decref(dict, "callchain", callchain);
++
++	return dict;
 +}
 +
-+static void set_sample_read_in_dict(PyObject *dict_sample,
-+					 struct perf_sample *sample,
-+					 struct perf_evsel *evsel)
-+{
-+	u64 read_format = evsel->attr.read_format;
-+	PyObject *values;
-+	unsigned int i;
-+
-+	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED) {
-+		pydict_set_item_string_decref(dict_sample, "time_enabled",
-+			PyLong_FromUnsignedLongLong(sample->read.time_enabled));
-+	}
-+
-+	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING) {
-+		pydict_set_item_string_decref(dict_sample, "time_running",
-+			PyLong_FromUnsignedLongLong(sample->read.time_running));
-+	}
-+
-+	if (read_format & PERF_FORMAT_GROUP)
-+		values = PyList_New(sample->read.group.nr);
-+	else
-+		values = PyList_New(1);
-+
-+	if (!values)
-+		Py_FatalError("couldn't create Python list");
-+
-+	if (read_format & PERF_FORMAT_GROUP) {
-+		for (i = 0; i < sample->read.group.nr; i++) {
-+			PyObject *t = get_sample_value_as_tuple(&sample->read.group.values[i]);
-+			PyList_SET_ITEM(values, i, t);
-+		}
-+	} else {
-+		PyObject *t = get_sample_value_as_tuple(&sample->read.one);
-+		PyList_SET_ITEM(values, 0, t);
-+	}
-+	pydict_set_item_string_decref(dict_sample, "values", values);
-+}
-+
- static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ static void python_process_tracepoint(struct perf_sample *sample,
+ 				      struct perf_evsel *evsel,
+ 				      struct addr_location *al)
+@@ -801,7 +852,7 @@ static void python_process_general_event(struct perf_sample *sample,
  					 struct perf_evsel *evsel,
- 					 struct addr_location *al,
-@@ -422,6 +472,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 			PyLong_FromUnsignedLongLong(sample->time));
- 	pydict_set_item_string_decref(dict_sample, "period",
- 			PyLong_FromUnsignedLongLong(sample->period));
-+	set_sample_read_in_dict(dict_sample, sample, evsel);
- 	pydict_set_item_string_decref(dict, "sample", dict_sample);
+ 					 struct addr_location *al)
+ {
+-	PyObject *handler, *t, *dict, *callchain, *dict_sample;
++	PyObject *handler, *t, *dict, *callchain;
+ 	static char handler_name[64];
+ 	unsigned n = 0;
  
- 	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
+@@ -819,48 +870,9 @@ static void python_process_general_event(struct perf_sample *sample,
+ 	if (!t)
+ 		Py_FatalError("couldn't create Python tuple");
+ 
+-	dict = PyDict_New();
+-	if (!dict)
+-		Py_FatalError("couldn't create Python dictionary");
+-
+-	dict_sample = PyDict_New();
+-	if (!dict_sample)
+-		Py_FatalError("couldn't create Python dictionary");
+-
+-	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
+-	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
+-			(const char *)&evsel->attr, sizeof(evsel->attr)));
+-
+-	pydict_set_item_string_decref(dict_sample, "pid",
+-			PyInt_FromLong(sample->pid));
+-	pydict_set_item_string_decref(dict_sample, "tid",
+-			PyInt_FromLong(sample->tid));
+-	pydict_set_item_string_decref(dict_sample, "cpu",
+-			PyInt_FromLong(sample->cpu));
+-	pydict_set_item_string_decref(dict_sample, "ip",
+-			PyLong_FromUnsignedLongLong(sample->ip));
+-	pydict_set_item_string_decref(dict_sample, "time",
+-			PyLong_FromUnsignedLongLong(sample->time));
+-	pydict_set_item_string_decref(dict_sample, "period",
+-			PyLong_FromUnsignedLongLong(sample->period));
+-	pydict_set_item_string_decref(dict, "sample", dict_sample);
+-
+-	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
+-			(const char *)sample->raw_data, sample->raw_size));
+-	pydict_set_item_string_decref(dict, "comm",
+-			PyString_FromString(thread__comm_str(al->thread)));
+-	if (al->map) {
+-		pydict_set_item_string_decref(dict, "dso",
+-			PyString_FromString(al->map->dso->name));
+-	}
+-	if (al->sym) {
+-		pydict_set_item_string_decref(dict, "symbol",
+-			PyString_FromString(al->sym->name));
+-	}
+-
+ 	/* ip unwinding */
+ 	callchain = python_process_callchain(sample, evsel, al);
+-	pydict_set_item_string_decref(dict, "callchain", callchain);
++	dict = get_perf_sample_dict(sample, evsel, al, callchain);
+ 
+ 	PyTuple_SetItem(t, n++, dict);
+ 	if (_PyTuple_Resize(&t, n) == -1)
 -- 
 2.9.4
