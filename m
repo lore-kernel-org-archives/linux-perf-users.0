@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/40] perf trace beauty clone: Beautify syscall arguments
-Date: Wed, 26 Jul 2017 11:17:01 -0300
-Message-ID: <20170726141730.30750-12-acme@kernel.org>
+Subject: [PATCH 10/40] tools include uapi: Grab a copy of linux/sched.h
+Date: Wed, 26 Jul 2017 11:17:00 -0300
+Message-ID: <20170726141730.30750-11-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,161 +12,107 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Now, syswide tracing, selected entries:
+So that we make sure we have recent enough defines for things
+such as 'perf trace' system call argument beautifiers.
 
-  # trace -e clone
-  24417.203 ( 0.158 ms): bash/11323 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, parent_tidptr: 0, child_tidptr: 0x7f0778e5c9d0, tls: 0x7f0778e5c700) = 11325 (bash)
-          ? (     ?   ): bash/11325  ... [continued]: clone()) = 0
-  24419.355 ( 0.093 ms): bash/10586 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, parent_tidptr: 0, child_tidptr: 0x7f0778e5c9d0, tls: 0x7f0778e5c700) = 11326 (bash)
-          ? (     ?   ): bash/11326  ... [continued]: clone()) = 0
-  24419.744 ( 0.102 ms): bash/11326 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, parent_tidptr: 0, child_tidptr: 0x7f0778e5c9d0, tls: 0x7f0778e5c700) = 11327 (bash)
-          ? (     ?   ): bash/11327  ... [continued]: clone()) = 0
-  24420.138 ( 0.105 ms): bash/11327 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, parent_tidptr: 0, child_tidptr: 0x7f0778e5c9d0, tls: 0x7f0778e5c700) = 11328 (bash)
-          ? (     ?   ): bash/11328  ... [continued]: clone()) = 0
-  35747.722 ( 0.044 ms): gpg-agent/18087 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ff0755f6ff0, parent_tidptr: 0x7ff0755f79d0, child_tidptr: 0x7ff0755f79d0, tls: 0x7ff0755f7700) = 11329 (gpg-agent)
-          ? (     ?   ): gpg-agent/11329  ... [continued]: clone()) = 0
-  35748.359 ( 0.022 ms): gpg-agent/18087 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ff075df7ff0, parent_tidptr: 0x7ff075df89d0, child_tidptr: 0x7ff075df89d0, tls: 0x7ff075df8700) = 11330 (gpg-agent)
-          ? (     ?   ): gpg-agent/11330  ... [continued]: clone()) = 0
-  35781.422 ( 0.452 ms): NetworkManager/1112 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7f2f1fffedb0, parent_tidptr: 0x7f2f1ffff9d0, child_tidptr: 0x7f2f1ffff9d0, tls: 0x7f2f1ffff700) = 11331 (NetworkManager)
-          ? (     ?   ): NetworkManager/11331  ... [continued]: clone()) = 0
-
-Need to improve the formatting of the second return, to the child, this
-cset only focused on the argument formatting.
-
-If we trace just one pid:
-
-  # trace -e clone -p 19863
-     0.349 ( 0.025 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb84eaac70, parent_tidptr: 0x7ffb84eab9d0, child_tidptr: 0x7ffb84eab9d0, tls: 0x7ffb84eab700) = 11637 (Chrome_IOThread)
-     0.392 ( 0.013 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb664b8c70, parent_tidptr: 0x7ffb664b99d0, child_tidptr: 0x7ffb664b99d0, tls: 0x7ffb664b9700) = 11638 (Chrome_IOThread)
-     0.573 ( 0.015 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb6046cc70, parent_tidptr: 0x7ffb6046d9d0, child_tidptr: 0x7ffb6046d9d0, tls: 0x7ffb6046d700) = 11639 (Chrome_IOThread)
-     0.617 ( 0.014 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb730dcc70, parent_tidptr: 0x7ffb730dd9d0, child_tidptr: 0x7ffb730dd9d0, tls: 0x7ffb730dd700) = 11640 (Chrome_IOThread)
-     4.350 ( 0.065 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb720d9c70, parent_tidptr: 0x7ffb720da9d0, child_tidptr: 0x7ffb720da9d0, tls: 0x7ffb720da700) = 11642 (Chrome_IOThread)
-     5.642 ( 0.079 ms): Chrome_IOThrea/19863 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7ffb718d8c70, parent_tidptr: 0x7ffb718d99d0, child_tidptr: 0x7ffb718d99d0, tls: 0x7ffb718d9700) = 11643 (Chrome_IOThread)
-^C#
-
-We'll also have to fix the argument ordering in different arches,
-probably having multiple syscall_fmt entries with each possible order
-and then use perf_evsel__env_arch() (if dealing with a perf.data file)
-or the current system info, for live sessions.
+For instance, the 'clone' syscall argument 'flag' needs to use
+CLONE_NEWCGROUP, and that is not available in RHEL7.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-am068uyubgj83snepolwhbfe@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-81sln0ng4a2lcxrth14vcov4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       |  7 ++++-
- tools/perf/trace/beauty/Build    |  1 +
- tools/perf/trace/beauty/beauty.h |  3 +++
- tools/perf/trace/beauty/clone.c  | 58 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 68 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/trace/beauty/clone.c
+ tools/include/uapi/linux/sched.h | 52 ++++++++++++++++++++++++++++++++++++++++
+ tools/perf/MANIFEST              |  1 +
+ tools/perf/check-headers.sh      |  1 +
+ 3 files changed, 54 insertions(+)
+ create mode 100644 tools/include/uapi/linux/sched.h
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6664293584df..9e74e675d7cb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -626,7 +626,12 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_HEX, /* brk */ }, }, },
- 	{ .name     = "clock_gettime",
- 	  .arg = { [0] = STRARRAY(clk_id, clockid), }, },
--	{ .name	    = "clone",	    .errpid = true, },
-+	{ .name	    = "clone",	    .errpid = true, .nr_args = 5,
-+	  .arg = { [0] = { .name = "flags",	    .scnprintf = SCA_CLONE_FLAGS, },
-+		   [1] = { .name = "child_stack",   .scnprintf = SCA_HEX, },
-+		   [2] = { .name = "parent_tidptr", .scnprintf = SCA_HEX, },
-+		   [3] = { .name = "child_tidptr",  .scnprintf = SCA_HEX, },
-+		   [4] = { .name = "tls",	    .scnprintf = SCA_HEX, }, }, },
- 	{ .name	    = "close",
- 	  .arg = { [0] = { .scnprintf = SCA_CLOSE_FD, /* fd */ }, }, },
- 	{ .name	    = "epoll_ctl",
-diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
-index c9e215b806f1..eaa1e8e8e100 100644
---- a/tools/perf/trace/beauty/Build
-+++ b/tools/perf/trace/beauty/Build
-@@ -1,2 +1,3 @@
-+libperf-y += clone.o
- libperf-y += fcntl.o
- libperf-y += statx.o
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index f75ef7d0b303..69a5c8a2d420 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -66,6 +66,9 @@ size_t syscall_arg__scnprintf_long(char *bf, size_t size, struct syscall_arg *ar
- size_t syscall_arg__scnprintf_pid(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_PID syscall_arg__scnprintf_pid
- 
-+size_t syscall_arg__scnprintf_clone_flags(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_CLONE_FLAGS syscall_arg__scnprintf_clone_flags
-+
- size_t syscall_arg__scnprintf_fcntl_cmd(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_FCNTL_CMD syscall_arg__scnprintf_fcntl_cmd
- 
-diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
 new file mode 100644
-index 000000000000..ab982a7c63bb
+index 000000000000..e2a6c7b3510b
 --- /dev/null
-+++ b/tools/perf/trace/beauty/clone.c
-@@ -0,0 +1,58 @@
++++ b/tools/include/uapi/linux/sched.h
+@@ -0,0 +1,52 @@
++#ifndef _UAPI_LINUX_SCHED_H
++#define _UAPI_LINUX_SCHED_H
++
 +/*
-+ * trace/beauty/cone.c
-+ *
-+ *  Copyright (C) 2017, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
-+ *
-+ * Released under the GPL v2. (and only v2, not any later version)
++ * cloning flags:
 + */
++#define CSIGNAL		0x000000ff	/* signal mask to be sent at exit */
++#define CLONE_VM	0x00000100	/* set if VM shared between processes */
++#define CLONE_FS	0x00000200	/* set if fs info shared between processes */
++#define CLONE_FILES	0x00000400	/* set if open files shared between processes */
++#define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
++#define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
++#define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
++#define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
++#define CLONE_THREAD	0x00010000	/* Same thread group? */
++#define CLONE_NEWNS	0x00020000	/* New mount namespace group */
++#define CLONE_SYSVSEM	0x00040000	/* share system V SEM_UNDO semantics */
++#define CLONE_SETTLS	0x00080000	/* create a new TLS for the child */
++#define CLONE_PARENT_SETTID	0x00100000	/* set the TID in the parent */
++#define CLONE_CHILD_CLEARTID	0x00200000	/* clear the TID in the child */
++#define CLONE_DETACHED		0x00400000	/* Unused, ignored */
++#define CLONE_UNTRACED		0x00800000	/* set if the tracing process can't force CLONE_PTRACE on this clone */
++#define CLONE_CHILD_SETTID	0x01000000	/* set the TID in the child */
++#define CLONE_NEWCGROUP		0x02000000	/* New cgroup namespace */
++#define CLONE_NEWUTS		0x04000000	/* New utsname namespace */
++#define CLONE_NEWIPC		0x08000000	/* New ipc namespace */
++#define CLONE_NEWUSER		0x10000000	/* New user namespace */
++#define CLONE_NEWPID		0x20000000	/* New pid namespace */
++#define CLONE_NEWNET		0x40000000	/* New network namespace */
++#define CLONE_IO		0x80000000	/* Clone io context */
 +
-+#include "trace/beauty/beauty.h"
-+#include <linux/kernel.h>
-+#include <sys/types.h>
-+#include <uapi/linux/sched.h>
++/*
++ * Scheduling policies
++ */
++#define SCHED_NORMAL		0
++#define SCHED_FIFO		1
++#define SCHED_RR		2
++#define SCHED_BATCH		3
++/* SCHED_ISO: reserved but not implemented yet */
++#define SCHED_IDLE		5
++#define SCHED_DEADLINE		6
 +
-+static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size)
-+{
-+	int printed = 0;
++/* Can be ORed in to make sure the process is reverted back to SCHED_NORMAL on fork */
++#define SCHED_RESET_ON_FORK     0x40000000
 +
-+#define	P_FLAG(n) \
-+	if (flags & CLONE_##n) { \
-+		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", #n); \
-+		flags &= ~CLONE_##n; \
-+	}
++/*
++ * For the sched_{set,get}attr() calls
++ */
++#define SCHED_FLAG_RESET_ON_FORK	0x01
++#define SCHED_FLAG_RECLAIM		0x02
 +
-+	P_FLAG(VM);
-+	P_FLAG(FS);
-+	P_FLAG(FILES);
-+	P_FLAG(SIGHAND);
-+	P_FLAG(PTRACE);
-+	P_FLAG(VFORK);
-+	P_FLAG(PARENT);
-+	P_FLAG(THREAD);
-+	P_FLAG(NEWNS);
-+	P_FLAG(SYSVSEM);
-+	P_FLAG(SETTLS);
-+	P_FLAG(PARENT_SETTID);
-+	P_FLAG(CHILD_CLEARTID);
-+	P_FLAG(DETACHED);
-+	P_FLAG(UNTRACED);
-+	P_FLAG(CHILD_SETTID);
-+	P_FLAG(NEWCGROUP);
-+	P_FLAG(NEWUTS);
-+	P_FLAG(NEWIPC);
-+	P_FLAG(NEWUSER);
-+	P_FLAG(NEWPID);
-+	P_FLAG(NEWNET);
-+	P_FLAG(IO);
-+#undef P_FLAG
-+
-+	if (flags)
-+		printed += scnprintf(bf + printed, size - printed, "%s%#x", printed ? "|" : "", flags);
-+
-+	return printed;
-+}
-+
-+size_t syscall_arg__scnprintf_clone_flags(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	return clone__scnprintf_flags(arg->val, bf, size);
-+}
++#endif /* _UAPI_LINUX_SCHED_H */
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index a29da46d180f..9f2267b82eb2 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -78,6 +78,7 @@ tools/include/uapi/linux/fcntl.h
+ tools/include/uapi/linux/hw_breakpoint.h
+ tools/include/uapi/linux/mman.h
+ tools/include/uapi/linux/perf_event.h
++tools/include/uapi/linux/sched.h
+ tools/include/uapi/linux/stat.h
+ tools/include/linux/poison.h
+ tools/include/linux/rbtree.h
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 47abd3325190..9b6295809a3b 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -3,6 +3,7 @@
+ HEADERS='
+ include/uapi/linux/fcntl.h
+ include/uapi/linux/perf_event.h
++include/uapi/linux/sched.h
+ include/uapi/linux/stat.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
 -- 
 2.9.4
