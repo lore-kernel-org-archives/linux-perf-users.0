@@ -1,117 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/40] perf jevents: Make build fail on JSON parse error
-Date: Wed, 26 Jul 2017 11:17:28 -0300
-Message-ID: <20170726141730.30750-39-acme@kernel.org>
+Subject: [PATCH 30/40] perf script: Remove some bogus error handling
+Date: Wed, 26 Jul 2017 11:17:20 -0300
+Message-ID: <20170726141730.30750-31-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, kernel-janitors@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Today, when a JSON file fails parsing the build continues, but there are
-no json files built in, which is difficult to debug later.  Make the
-build stop on a parse error instead.
+If script_desc__new() fails then the current code has a NULL
+dereference.  We don't actually need to do any cleanup, we can just
+return NULL.
 
-v2: Add fixes from Sukadev. Now we handle architectures
-    with no JSON events correctly. And fix some stale comments.
-
-Committer note:
-
-Tested by running the cross build container tests, that were all failing
-for v1.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20170725001638.19990-1-andi@firstfloor.org
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel-janitors@vger.kernel.org
+Link: http://lkml.kernel.org/r/20170722073610.nnsyiwdcfl6bhn4t@mwanda
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/README    |  4 ----
- tools/perf/pmu-events/jevents.c | 21 ++++++++++++++-------
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ tools/perf/builtin-script.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
-index 1408ade0d773..c2ee3e4417fe 100644
---- a/tools/perf/pmu-events/README
-+++ b/tools/perf/pmu-events/README
-@@ -85,10 +85,6 @@ users to specify events by their name:
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d430ff42208a..378f76cdf923 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2199,16 +2199,11 @@ static struct script_desc *script_desc__findnew(const char *name)
  
- where 'pm_1plus_ppc_cmpl' is a Power8 PMU event.
+ 	s = script_desc__new(name);
+ 	if (!s)
+-		goto out_delete_desc;
++		return NULL;
  
--In case of errors when processing files in the tools/perf/pmu-events/arch
--directory, 'jevents' tries to create an empty mapping file to allow the perf
--build to succeed even if the PMU event aliases cannot be used.
+ 	script_desc__add(s);
+ 
+ 	return s;
 -
- However some errors in processing may cause the perf build to fail.
- 
- Mapfile format
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index bd0aabb2bd0f..2350f6099a46 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -822,10 +822,6 @@ static int process_one_file(const char *fpath, const struct stat *sb,
-  * PMU event tables (see struct pmu_events_map).
-  *
-  * Write out the PMU events tables and the mapping table to pmu-event.c.
-- *
-- * If unable to process the JSON or arch files, create an empty mapping
-- * table so we can continue to build/use  perf even if we cannot use the
-- * PMU event aliases.
-  */
- int main(int argc, char *argv[])
- {
-@@ -836,6 +832,7 @@ int main(int argc, char *argv[])
- 	const char *arch;
- 	const char *output_file;
- 	const char *start_dirname;
-+	struct stat stbuf;
- 
- 	prog = basename(argv[0]);
- 	if (argc < 4) {
-@@ -857,11 +854,17 @@ int main(int argc, char *argv[])
- 		return 2;
- 	}
- 
-+	sprintf(ldirname, "%s/%s", start_dirname, arch);
-+
-+	/* If architecture does not have any event lists, bail out */
-+	if (stat(ldirname, &stbuf) < 0) {
-+		pr_info("%s: Arch %s has no PMU event lists\n", prog, arch);
-+		goto empty_map;
-+	}
-+
- 	/* Include pmu-events.h first */
- 	fprintf(eventsfp, "#include \"../../pmu-events/pmu-events.h\"\n");
- 
--	sprintf(ldirname, "%s/%s", start_dirname, arch);
+-out_delete_desc:
+-	script_desc__delete(s);
 -
- 	/*
- 	 * The mapfile allows multiple CPUids to point to the same JSON file,
- 	 * so, not sure if there is a need for symlinks within the pmu-events
-@@ -878,6 +881,9 @@ int main(int argc, char *argv[])
- 	if (rc && verbose) {
- 		pr_info("%s: Error walking file tree %s\n", prog, ldirname);
- 		goto empty_map;
-+	} else if (rc < 0) {
-+		/* Make build fail */
-+		return 1;
- 	} else if (rc) {
- 		goto empty_map;
- 	}
-@@ -892,7 +898,8 @@ int main(int argc, char *argv[])
+-	return NULL;
+ }
  
- 	if (process_mapfile(eventsfp, mapfile)) {
- 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
--		goto empty_map;
-+		/* Make build fail */
-+		return 1;
- 	}
- 
- 	return 0;
+ static const char *ends_with(const char *str, const char *suffix)
 -- 
 2.9.4
