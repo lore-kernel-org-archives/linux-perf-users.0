@@ -1,464 +1,75 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/40] tools include: Adopt strstarts() from the kernel
-Date: Wed, 26 Jul 2017 11:17:05 -0300
-Message-ID: <20170726141730.30750-16-acme@kernel.org>
+Subject: [PATCH 14/40] perf trace: Filter out 'sshd' in the tracer ancestry in syswide tracing
+Date: Wed, 26 Jul 2017 11:17:04 -0300
+Message-ID: <20170726141730.30750-15-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Rusty Russell <rusty@rustcorp.com.au>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Replacing prefixcmp(), same purpose, inverted result, so standardize on
-the kernel variant, to reduce silly differences among tools/ and the
-kernel sources, making it easier for people to work in both codebases.
+Avoiding a loop, so now its quite convenient to ssh to a machine and
+then simply do:
 
-And then doing:
+	# perf trace
 
-	if (strstarts(option, "no-"))
+To trace all syscalls without causing a loop.
 
-Looks clearer than doing:
+This was possible using --filter-pids, i.e. once you noticed the loop,
+get the sshd pid and add it to --filter-pids, restarting the 'perf
+trace'.
 
-	if (!prefixcmp(option, "no-"))
+Now to figure out how to do that in a X terminal, the other common
+scenario, which is way more involved, as there are multiple processes
+communicating to process terminal activity...
 
-To figure out if option starts witn "no-".
+Using --filter-pids + '-e \!syscall,names,you,dont,need' may be a good
+approximation when having to do syswide tracing on your workstation.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Rusty Russell <rusty@rustcorp.com.au>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-kaei42gi7lpa8subwtv7eug8@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-68rjeao9wnpylla41htk7xps@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/string.h      | 12 ++++++++++--
- tools/lib/string.c                |  9 ---------
- tools/lib/subcmd/help.c           |  2 +-
- tools/lib/subcmd/parse-options.c  | 18 +++++++++---------
- tools/perf/builtin-config.c       |  3 ++-
- tools/perf/builtin-ftrace.c       |  2 +-
- tools/perf/builtin-help.c         |  6 +++---
- tools/perf/perf.c                 | 16 ++++++++--------
- tools/perf/ui/browser.c           |  3 ++-
- tools/perf/ui/browsers/annotate.c |  3 ++-
- tools/perf/ui/stdio/hist.c        |  3 ++-
- tools/perf/util/bpf-loader.c      |  2 +-
- tools/perf/util/callchain.c       |  2 +-
- tools/perf/util/config.c          | 13 +++++++------
- tools/perf/util/llvm-utils.c      |  2 +-
- 15 files changed, 50 insertions(+), 46 deletions(-)
+ tools/perf/builtin-trace.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index d62b56cf8c12..a30fad536f52 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -1,8 +1,8 @@
- #ifndef _TOOLS_LINUX_STRING_H_
- #define _TOOLS_LINUX_STRING_H_
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 0ba36f08efd8..05d24b6570ee 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2241,10 +2241,24 @@ static int trace__set_ev_qualifier_filter(struct trace *trace)
  
--
- #include <linux/types.h>	/* for size_t */
-+#include <string.h>
+ static int trace__set_filter_loop_pids(struct trace *trace)
+ {
+-	int nr = 1;
++	unsigned int nr = 1;
+ 	pid_t pids[32] = {
+ 		getpid(),
+ 	};
++	struct thread *thread = machine__find_thread(trace->host, pids[0], pids[0]);
++
++	while (thread && nr < ARRAY_SIZE(pids)) {
++		struct thread *parent = machine__find_thread(trace->host, thread->ppid, thread->ppid);
++
++		if (parent == NULL)
++			break;
++
++		if (!strcmp(thread__comm_str(parent), "sshd")) {
++			pids[nr++] = parent->tid;
++			break;
++		}
++		thread = parent;
++	}
  
- void *memdup(const void *src, size_t len);
- 
-@@ -18,6 +18,14 @@ extern size_t strlcpy(char *dest, const char *src, size_t size);
- 
- char *str_error_r(int errnum, char *buf, size_t buflen);
- 
--int prefixcmp(const char *str, const char *prefix);
-+/**
-+ * strstarts - does @str start with @prefix?
-+ * @str: string to examine
-+ * @prefix: prefix to look for.
-+ */
-+static inline bool strstarts(const char *str, const char *prefix)
-+{
-+	return strncmp(str, prefix, strlen(prefix)) == 0;
-+}
- 
- #endif /* _LINUX_STRING_H_ */
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index 8e678af1c6ee..bd239bc1d557 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -87,12 +87,3 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
- 	}
- 	return ret;
+ 	return perf_evlist__set_filter_pids(trace->evlist, nr, pids);
  }
--
--int prefixcmp(const char *str, const char *prefix)
--{
--	for (; ; str++, prefix++)
--		if (!*prefix)
--			return 0;
--		else if (*str != *prefix)
--			return (unsigned char)*prefix - (unsigned char)*str;
--}
-diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-index ba970a73d053..0310520f918e 100644
---- a/tools/lib/subcmd/help.c
-+++ b/tools/lib/subcmd/help.c
-@@ -171,7 +171,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
- 	while ((de = readdir(dir)) != NULL) {
- 		int entlen;
- 
--		if (prefixcmp(de->d_name, prefix))
-+		if (!strstarts(de->d_name, prefix))
- 			continue;
- 
- 		astrcat(&buf, de->d_name);
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index 359bfa77f39c..2bd6fd0c1d40 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -368,7 +368,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
- 			return 0;
- 		}
- 		if (!rest) {
--			if (!prefixcmp(options->long_name, "no-")) {
-+			if (strstarts(options->long_name, "no-")) {
- 				/*
- 				 * The long name itself starts with "no-", so
- 				 * accept the option without "no-" so that users
-@@ -381,7 +381,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
- 					goto match;
- 				}
- 				/* Abbreviated case */
--				if (!prefixcmp(options->long_name + 3, arg)) {
-+				if (strstarts(options->long_name + 3, arg)) {
- 					flags |= OPT_UNSET;
- 					goto is_abbreviated;
- 				}
-@@ -406,7 +406,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
- 				continue;
- 			}
- 			/* negated and abbreviated very much? */
--			if (!prefixcmp("no-", arg)) {
-+			if (strstarts("no-", arg)) {
- 				flags |= OPT_UNSET;
- 				goto is_abbreviated;
- 			}
-@@ -416,7 +416,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
- 			flags |= OPT_UNSET;
- 			rest = skip_prefix(arg + 3, options->long_name);
- 			/* abbreviated and negated? */
--			if (!rest && !prefixcmp(options->long_name, arg + 3))
-+			if (!rest && strstarts(options->long_name, arg + 3))
- 				goto is_abbreviated;
- 			if (!rest)
- 				continue;
-@@ -456,7 +456,7 @@ static void check_typos(const char *arg, const struct option *options)
- 	if (strlen(arg) < 3)
- 		return;
- 
--	if (!prefixcmp(arg, "no-")) {
-+	if (strstarts(arg, "no-")) {
- 		fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)", arg);
- 		exit(129);
- 	}
-@@ -464,7 +464,7 @@ static void check_typos(const char *arg, const struct option *options)
- 	for (; options->type != OPTION_END; options++) {
- 		if (!options->long_name)
- 			continue;
--		if (!prefixcmp(options->long_name, arg)) {
-+		if (strstarts(options->long_name, arg)) {
- 			fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)", arg);
- 			exit(129);
- 		}
-@@ -933,10 +933,10 @@ int parse_options_usage(const char * const *usagestr,
- 		if (opts->long_name == NULL)
- 			continue;
- 
--		if (!prefixcmp(opts->long_name, optstr))
-+		if (strstarts(opts->long_name, optstr))
- 			print_option_help(opts, 0);
--		if (!prefixcmp("no-", optstr) &&
--		    !prefixcmp(opts->long_name, optstr + 3))
-+		if (strstarts("no-", optstr) &&
-+		    strstarts(opts->long_name, optstr + 3))
- 			print_option_help(opts, 0);
- 	}
- 
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index ece45582a48d..3ddcc6e2abeb 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -13,6 +13,7 @@
- #include "util/util.h"
- #include "util/debug.h"
- #include "util/config.h"
-+#include <linux/string.h>
- 
- static bool use_system_config, use_user_config;
- 
-@@ -79,7 +80,7 @@ static int show_spec_config(struct perf_config_set *set, const char *var)
- 		return -1;
- 
- 	perf_config_items__for_each_entry(&set->sections, section) {
--		if (prefixcmp(var, section->name) != 0)
-+		if (!strstarts(var, section->name))
- 			continue;
- 
- 		perf_config_items__for_each_entry(&section->items, item) {
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index dd26c62c9893..25a42acabee1 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -381,7 +381,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
- {
- 	struct perf_ftrace *ftrace = cb;
- 
--	if (prefixcmp(var, "ftrace."))
-+	if (!strstarts(var, "ftrace."))
- 		return 0;
- 
- 	if (strcmp(var, "ftrace.tracer"))
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 530a7f2fa0f3..dbe4e4153bcf 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -90,7 +90,7 @@ static int check_emacsclient_version(void)
- 	 */
- 	finish_command(&ec_process);
- 
--	if (prefixcmp(buffer.buf, "emacsclient")) {
-+	if (!strstarts(buffer.buf, "emacsclient")) {
- 		fprintf(stderr, "Failed to parse emacsclient version.\n");
- 		goto out;
- 	}
-@@ -283,7 +283,7 @@ static int perf_help_config(const char *var, const char *value, void *cb)
- 		add_man_viewer(value);
- 		return 0;
- 	}
--	if (!prefixcmp(var, "man."))
-+	if (!strstarts(var, "man."))
- 		return add_man_viewer_info(var, value);
- 
- 	return 0;
-@@ -313,7 +313,7 @@ static const char *cmd_to_page(const char *perf_cmd)
- 
- 	if (!perf_cmd)
- 		return "perf";
--	else if (!prefixcmp(perf_cmd, "perf"))
-+	else if (!strstarts(perf_cmd, "perf"))
- 		return perf_cmd;
- 
- 	return asprintf(&s, "perf-%s", perf_cmd) < 0 ? NULL : s;
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 628a5e412cb1..e0279babe0c0 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -89,7 +89,7 @@ struct pager_config {
- static int pager_command_config(const char *var, const char *value, void *data)
- {
- 	struct pager_config *c = data;
--	if (!prefixcmp(var, "pager.") && !strcmp(var + 6, c->cmd))
-+	if (strstarts(var, "pager.") && !strcmp(var + 6, c->cmd))
- 		c->val = perf_config_bool(var, value);
- 	return 0;
- }
-@@ -108,9 +108,9 @@ static int check_pager_config(const char *cmd)
- static int browser_command_config(const char *var, const char *value, void *data)
- {
- 	struct pager_config *c = data;
--	if (!prefixcmp(var, "tui.") && !strcmp(var + 4, c->cmd))
-+	if (strstarts(var, "tui.") && !strcmp(var + 4, c->cmd))
- 		c->val = perf_config_bool(var, value);
--	if (!prefixcmp(var, "gtk.") && !strcmp(var + 4, c->cmd))
-+	if (strstarts(var, "gtk.") && !strcmp(var + 4, c->cmd))
- 		c->val = perf_config_bool(var, value) ? 2 : 0;
- 	return 0;
- }
-@@ -192,7 +192,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
- 		/*
- 		 * Check remaining flags.
- 		 */
--		if (!prefixcmp(cmd, CMD_EXEC_PATH)) {
-+		if (strstarts(cmd, CMD_EXEC_PATH)) {
- 			cmd += strlen(CMD_EXEC_PATH);
- 			if (*cmd == '=')
- 				set_argv_exec_path(cmd + 1);
-@@ -229,7 +229,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
- 				*envchanged = 1;
- 			(*argv)++;
- 			(*argc)--;
--		} else if (!prefixcmp(cmd, CMD_DEBUGFS_DIR)) {
-+		} else if (strstarts(cmd, CMD_DEBUGFS_DIR)) {
- 			tracing_path_set(cmd + strlen(CMD_DEBUGFS_DIR));
- 			fprintf(stderr, "dir: %s\n", tracing_path);
- 			if (envchanged)
-@@ -470,14 +470,14 @@ int main(int argc, const char **argv)
- 	 * So we just directly call the internal command handler, and
- 	 * die if that one cannot handle it.
- 	 */
--	if (!prefixcmp(cmd, "perf-")) {
-+	if (strstarts(cmd, "perf-")) {
- 		cmd += 5;
- 		argv[0] = cmd;
- 		handle_internal_command(argc, argv);
- 		fprintf(stderr, "cannot handle %s internally", cmd);
- 		goto out;
- 	}
--	if (!prefixcmp(cmd, "trace")) {
-+	if (strstarts(cmd, "trace")) {
- #ifdef HAVE_LIBAUDIT_SUPPORT
- 		setup_path();
- 		argv[0] = "trace";
-@@ -495,7 +495,7 @@ int main(int argc, const char **argv)
- 	commit_pager_choice();
- 
- 	if (argc > 0) {
--		if (!prefixcmp(argv[0], "--"))
-+		if (strstarts(argv[0], "--"))
- 			argv[0] += 2;
- 	} else {
- 		/* The user didn't specify a command; give them help */
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index f73f3f13e01d..d0c2007c307b 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -8,6 +8,7 @@
- #include <linux/compiler.h>
- #include <linux/list.h>
- #include <linux/rbtree.h>
-+#include <linux/string.h>
- #include <stdlib.h>
- #include <sys/ttydefaults.h>
- #include "browser.h"
-@@ -563,7 +564,7 @@ static int ui_browser__color_config(const char *var, const char *value,
- 	int i;
- 
- 	/* same dir for all commands */
--	if (prefixcmp(var, "colors.") != 0)
-+	if (!strstarts(var, "colors.") != 0)
- 		return 0;
- 
- 	for (i = 0; ui_browser__colorsets[i].name != NULL; ++i) {
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 8d3f6f53c122..6794a8bec404 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -13,6 +13,7 @@
- #include <inttypes.h>
- #include <pthread.h>
- #include <linux/kernel.h>
-+#include <linux/string.h>
- #include <sys/ttydefaults.h>
- 
- struct disasm_line_samples {
-@@ -1198,7 +1199,7 @@ static int annotate__config(const char *var, const char *value,
- 	struct annotate_config *cfg;
- 	const char *name;
- 
--	if (prefixcmp(var, "annotate.") != 0)
-+	if (!strstarts(var, "annotate."))
- 		return 0;
- 
- 	name = var + 9;
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 2df8eb1ed3c0..5c95b8301c67 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -1,4 +1,5 @@
- #include <stdio.h>
-+#include <linux/string.h>
- 
- #include "../../util/util.h"
- #include "../../util/hist.h"
-@@ -292,7 +293,7 @@ static size_t callchain__fprintf_graph(FILE *fp, struct rb_root *root,
- 			 * displayed twice.
- 			 */
- 			if (!i++ && field_order == NULL &&
--			    sort_order && !prefixcmp(sort_order, "sym"))
-+			    sort_order && strstarts(sort_order, "sym"))
- 				continue;
- 
- 			if (!printed) {
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 4bd2d1d882af..4a1264c66101 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -1246,7 +1246,7 @@ int bpf__config_obj(struct bpf_object *obj,
- 	if (!obj || !term || !term->config)
- 		return -EINVAL;
- 
--	if (!prefixcmp(term->config, "map:")) {
-+	if (strstarts(term->config, "map:")) {
- 		key_scan_pos = sizeof("map:") - 1;
- 		err = bpf__obj_config_map(obj, term, evlist, &key_scan_pos);
- 		goto out;
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 22d413ae6025..02130e2e72c7 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -304,7 +304,7 @@ int perf_callchain_config(const char *var, const char *value)
- {
- 	char *endptr;
- 
--	if (prefixcmp(var, "call-graph."))
-+	if (!strstarts(var, "call-graph."))
- 		return 0;
- 	var += sizeof("call-graph.") - 1;
- 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 31a7dea248d0..bc75596f9e79 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -19,6 +19,7 @@
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <unistd.h>
-+#include <linux/string.h>
- 
- #include "sane_ctype.h"
- 
-@@ -433,22 +434,22 @@ static int perf_ui_config(const char *var, const char *value)
- int perf_default_config(const char *var, const char *value,
- 			void *dummy __maybe_unused)
- {
--	if (!prefixcmp(var, "core."))
-+	if (strstarts(var, "core."))
- 		return perf_default_core_config(var, value);
- 
--	if (!prefixcmp(var, "hist."))
-+	if (strstarts(var, "hist."))
- 		return perf_hist_config(var, value);
- 
--	if (!prefixcmp(var, "ui."))
-+	if (strstarts(var, "ui."))
- 		return perf_ui_config(var, value);
- 
--	if (!prefixcmp(var, "call-graph."))
-+	if (strstarts(var, "call-graph."))
- 		return perf_callchain_config(var, value);
- 
--	if (!prefixcmp(var, "llvm."))
-+	if (strstarts(var, "llvm."))
- 		return perf_llvm_config(var, value);
- 
--	if (!prefixcmp(var, "buildid."))
-+	if (strstarts(var, "buildid."))
- 		return perf_buildid_config(var, value);
- 
- 	/* Add other config variables here. */
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index c6a15f204c03..209b0c82eff4 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -33,7 +33,7 @@ struct llvm_param llvm_param = {
- 
- int perf_llvm_config(const char *var, const char *value)
- {
--	if (prefixcmp(var, "llvm."))
-+	if (!strstarts(var, "llvm."))
- 		return 0;
- 	var += sizeof("llvm.") - 1;
- 
 -- 
 2.9.4
