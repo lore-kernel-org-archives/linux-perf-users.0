@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/40] perf script python: Refactor creation of perf sample dict
-Date: Wed, 26 Jul 2017 11:17:22 -0300
-Message-ID: <20170726141730.30750-33-acme@kernel.org>
+Subject: [PATCH 34/40] perf script python: Add perf_sample dict to tracepoint handlers
+Date: Wed, 26 Jul 2017 11:17:24 -0300
+Message-ID: <20170726141730.30750-35-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,8 +12,14 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arun Kalyanasundaram <arunkaly@google.com>
 
-Move the creation of the dict containing perf_sample entries into a
-helper function to enable its reuse in other sample processing routines.
+The process_event python hook receives a dict with all perf_sample
+entries, but the tracepoint specific and trace_unhandled hooks predate
+the introduction of this dict, and do not receive it.
+
+Add the aforementioned dict as an additional argument to the affected
+handlers. To keep backwards compatibility (and avoid unnecessary work),
+do not pass the dict if the number of arguments signals that handler
+version predates this change.
 
 Signed-off-by: Arun Kalyanasundaram <arunkaly@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -24,132 +30,91 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Seongjae Park <sj38.park@gmail.com>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170721220422.63962-3-arunkaly@google.com
+Link: http://lkml.kernel.org/r/20170721220422.63962-5-arunkaly@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../util/scripting-engines/trace-event-python.c    | 94 ++++++++++++----------
- 1 file changed, 53 insertions(+), 41 deletions(-)
+ .../util/scripting-engines/trace-event-python.c    | 41 +++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 8a8f4829d3e2..69d1b6db96f6 100644
+index 55a45784c910..938b39f6ad31 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -391,6 +391,57 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
- 	return pylist;
+@@ -116,6 +116,34 @@ static PyObject *get_handler(const char *handler_name)
+ 	return handler;
  }
  
-+static PyObject *get_perf_sample_dict(struct perf_sample *sample,
-+					 struct perf_evsel *evsel,
-+					 struct addr_location *al,
-+					 PyObject *callchain)
++static int get_argument_count(PyObject *handler)
 +{
-+	PyObject *dict, *dict_sample;
++	int arg_count = 0;
 +
-+	dict = PyDict_New();
-+	if (!dict)
-+		Py_FatalError("couldn't create Python dictionary");
-+
-+	dict_sample = PyDict_New();
-+	if (!dict_sample)
-+		Py_FatalError("couldn't create Python dictionary");
-+
-+	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
-+	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
-+			(const char *)&evsel->attr, sizeof(evsel->attr)));
-+
-+	pydict_set_item_string_decref(dict_sample, "pid",
-+			PyInt_FromLong(sample->pid));
-+	pydict_set_item_string_decref(dict_sample, "tid",
-+			PyInt_FromLong(sample->tid));
-+	pydict_set_item_string_decref(dict_sample, "cpu",
-+			PyInt_FromLong(sample->cpu));
-+	pydict_set_item_string_decref(dict_sample, "ip",
-+			PyLong_FromUnsignedLongLong(sample->ip));
-+	pydict_set_item_string_decref(dict_sample, "time",
-+			PyLong_FromUnsignedLongLong(sample->time));
-+	pydict_set_item_string_decref(dict_sample, "period",
-+			PyLong_FromUnsignedLongLong(sample->period));
-+	pydict_set_item_string_decref(dict, "sample", dict_sample);
-+
-+	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
-+			(const char *)sample->raw_data, sample->raw_size));
-+	pydict_set_item_string_decref(dict, "comm",
-+			PyString_FromString(thread__comm_str(al->thread)));
-+	if (al->map) {
-+		pydict_set_item_string_decref(dict, "dso",
-+			PyString_FromString(al->map->dso->name));
++	/*
++	 * The attribute for the code object is func_code in Python 2,
++	 * whereas it is __code__ in Python 3.0+.
++	 */
++	PyObject *code_obj = PyObject_GetAttrString(handler,
++		"func_code");
++	if (PyErr_Occurred()) {
++		PyErr_Clear();
++		code_obj = PyObject_GetAttrString(handler,
++			"__code__");
 +	}
-+	if (al->sym) {
-+		pydict_set_item_string_decref(dict, "symbol",
-+			PyString_FromString(al->sym->name));
++	PyErr_Clear();
++	if (code_obj) {
++		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
++			"co_argcount");
++		if (arg_count_obj) {
++			arg_count = (int) PyInt_AsLong(arg_count_obj);
++			Py_DECREF(arg_count_obj);
++		}
++		Py_DECREF(code_obj);
 +	}
-+
-+	pydict_set_item_string_decref(dict, "callchain", callchain);
-+
-+	return dict;
++	return arg_count;
 +}
 +
- static void python_process_tracepoint(struct perf_sample *sample,
- 				      struct perf_evsel *evsel,
- 				      struct addr_location *al)
-@@ -801,7 +852,7 @@ static void python_process_general_event(struct perf_sample *sample,
- 					 struct perf_evsel *evsel,
- 					 struct addr_location *al)
+ static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
  {
--	PyObject *handler, *t, *dict, *callchain, *dict_sample;
-+	PyObject *handler, *t, *dict, *callchain;
- 	static char handler_name[64];
- 	unsigned n = 0;
+ 	PyObject *retval;
+@@ -499,7 +527,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ {
+ 	struct event_format *event = evsel->tp_format;
+ 	PyObject *handler, *context, *t, *obj = NULL, *callchain;
+-	PyObject *dict = NULL;
++	PyObject *dict = NULL, *all_entries_dict = NULL;
+ 	static char handler_name[256];
+ 	struct format_field *field;
+ 	unsigned long s, ns;
+@@ -552,6 +580,8 @@ static void python_process_tracepoint(struct perf_sample *sample,
  
-@@ -819,48 +870,9 @@ static void python_process_general_event(struct perf_sample *sample,
- 	if (!t)
- 		Py_FatalError("couldn't create Python tuple");
- 
--	dict = PyDict_New();
--	if (!dict)
--		Py_FatalError("couldn't create Python dictionary");
--
--	dict_sample = PyDict_New();
--	if (!dict_sample)
--		Py_FatalError("couldn't create Python dictionary");
--
--	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
--	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
--			(const char *)&evsel->attr, sizeof(evsel->attr)));
--
--	pydict_set_item_string_decref(dict_sample, "pid",
--			PyInt_FromLong(sample->pid));
--	pydict_set_item_string_decref(dict_sample, "tid",
--			PyInt_FromLong(sample->tid));
--	pydict_set_item_string_decref(dict_sample, "cpu",
--			PyInt_FromLong(sample->cpu));
--	pydict_set_item_string_decref(dict_sample, "ip",
--			PyLong_FromUnsignedLongLong(sample->ip));
--	pydict_set_item_string_decref(dict_sample, "time",
--			PyLong_FromUnsignedLongLong(sample->time));
--	pydict_set_item_string_decref(dict_sample, "period",
--			PyLong_FromUnsignedLongLong(sample->period));
--	pydict_set_item_string_decref(dict, "sample", dict_sample);
--
--	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
--			(const char *)sample->raw_data, sample->raw_size));
--	pydict_set_item_string_decref(dict, "comm",
--			PyString_FromString(thread__comm_str(al->thread)));
--	if (al->map) {
--		pydict_set_item_string_decref(dict, "dso",
--			PyString_FromString(al->map->dso->name));
--	}
--	if (al->sym) {
--		pydict_set_item_string_decref(dict, "symbol",
--			PyString_FromString(al->sym->name));
--	}
--
  	/* ip unwinding */
  	callchain = python_process_callchain(sample, evsel, al);
--	pydict_set_item_string_decref(dict, "callchain", callchain);
-+	dict = get_perf_sample_dict(sample, evsel, al, callchain);
++	/* Need an additional reference for the perf_sample dict */
++	Py_INCREF(callchain);
  
- 	PyTuple_SetItem(t, n++, dict);
+ 	if (!dict) {
+ 		PyTuple_SetItem(t, n++, PyInt_FromLong(cpu));
+@@ -602,6 +632,14 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	if (dict)
+ 		PyTuple_SetItem(t, n++, dict);
+ 
++	if (get_argument_count(handler) == (int) n + 1) {
++		all_entries_dict = get_perf_sample_dict(sample, evsel, al,
++			callchain);
++		PyTuple_SetItem(t, n++,	all_entries_dict);
++	} else {
++		Py_DECREF(callchain);
++	}
++
  	if (_PyTuple_Resize(&t, n) == -1)
+ 		Py_FatalError("error resizing Python tuple");
+ 
+@@ -612,6 +650,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 		Py_DECREF(dict);
+ 	}
+ 
++	Py_XDECREF(all_entries_dict);
+ 	Py_DECREF(t);
+ }
+ 
 -- 
 2.9.4
