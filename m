@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/40] perf script python: Add perf_sample dict to tracepoint handlers
-Date: Wed, 26 Jul 2017 11:17:24 -0300
-Message-ID: <20170726141730.30750-35-acme@kernel.org>
+Subject: [PATCH 35/40] perf script python: Generate hooks with additional argument
+Date: Wed, 26 Jul 2017 11:17:25 -0300
+Message-ID: <20170726141730.30750-36-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,14 +12,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arun Kalyanasundaram <arunkaly@google.com>
 
-The process_event python hook receives a dict with all perf_sample
-entries, but the tracepoint specific and trace_unhandled hooks predate
-the introduction of this dict, and do not receive it.
-
-Add the aforementioned dict as an additional argument to the affected
-handlers. To keep backwards compatibility (and avoid unnecessary work),
-do not pass the dict if the number of arguments signals that handler
-version predates this change.
+Modify the signature of tracepoint specific and trace_unhandled hooks to
+add the perf_sample dict as a new argument.
+Create a python helper function to print a dictionary.
 
 Signed-off-by: Arun Kalyanasundaram <arunkaly@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -30,91 +25,63 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Seongjae Park <sj38.park@gmail.com>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170721220422.63962-5-arunkaly@google.com
+Link: http://lkml.kernel.org/r/20170721220422.63962-6-arunkaly@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../util/scripting-engines/trace-event-python.c    | 41 +++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ .../util/scripting-engines/trace-event-python.c    | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 55a45784c910..938b39f6ad31 100644
+index 938b39f6ad31..c7187f067d31 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -116,6 +116,34 @@ static PyObject *get_handler(const char *handler_name)
- 	return handler;
- }
+@@ -1367,6 +1367,12 @@ static int python_generate_script(struct pevent *pevent, const char *outfile)
  
-+static int get_argument_count(PyObject *handler)
-+{
-+	int arg_count = 0;
+ 			fprintf(ofp, "%s", f->name);
+ 		}
++		if (not_first++)
++			fprintf(ofp, ", ");
++		if (++count % 5 == 0)
++			fprintf(ofp, "\n\t\t");
++		fprintf(ofp, "perf_sample_dict");
 +
-+	/*
-+	 * The attribute for the code object is func_code in Python 2,
-+	 * whereas it is __code__ in Python 3.0+.
-+	 */
-+	PyObject *code_obj = PyObject_GetAttrString(handler,
-+		"func_code");
-+	if (PyErr_Occurred()) {
-+		PyErr_Clear();
-+		code_obj = PyObject_GetAttrString(handler,
-+			"__code__");
-+	}
-+	PyErr_Clear();
-+	if (code_obj) {
-+		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
-+			"co_argcount");
-+		if (arg_count_obj) {
-+			arg_count = (int) PyInt_AsLong(arg_count_obj);
-+			Py_DECREF(arg_count_obj);
-+		}
-+		Py_DECREF(code_obj);
-+	}
-+	return arg_count;
-+}
+ 		fprintf(ofp, "):\n");
+ 
+ 		fprintf(ofp, "\t\tprint_header(event_name, common_cpu, "
+@@ -1436,6 +1442,9 @@ static int python_generate_script(struct pevent *pevent, const char *outfile)
+ 
+ 		fprintf(ofp, ")\n\n");
+ 
++		fprintf(ofp, "\t\tprint 'Sample: {'+"
++			"get_dict_as_string(perf_sample_dict['sample'], ', ')+'}'\n\n");
 +
- static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
- {
- 	PyObject *retval;
-@@ -499,7 +527,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- {
- 	struct event_format *event = evsel->tp_format;
- 	PyObject *handler, *context, *t, *obj = NULL, *callchain;
--	PyObject *dict = NULL;
-+	PyObject *dict = NULL, *all_entries_dict = NULL;
- 	static char handler_name[256];
- 	struct format_field *field;
- 	unsigned long s, ns;
-@@ -552,6 +580,8 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 
- 	/* ip unwinding */
- 	callchain = python_process_callchain(sample, evsel, al);
-+	/* Need an additional reference for the perf_sample dict */
-+	Py_INCREF(callchain);
- 
- 	if (!dict) {
- 		PyTuple_SetItem(t, n++, PyInt_FromLong(cpu));
-@@ -602,6 +632,14 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	if (dict)
- 		PyTuple_SetItem(t, n++, dict);
- 
-+	if (get_argument_count(handler) == (int) n + 1) {
-+		all_entries_dict = get_perf_sample_dict(sample, evsel, al,
-+			callchain);
-+		PyTuple_SetItem(t, n++,	all_entries_dict);
-+	} else {
-+		Py_DECREF(callchain);
-+	}
-+
- 	if (_PyTuple_Resize(&t, n) == -1)
- 		Py_FatalError("error resizing Python tuple");
- 
-@@ -612,6 +650,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 		Py_DECREF(dict);
+ 		fprintf(ofp, "\t\tfor node in common_callchain:");
+ 		fprintf(ofp, "\n\t\t\tif 'sym' in node:");
+ 		fprintf(ofp, "\n\t\t\t\tprint \"\\t[%%x] %%s\" %% (node['ip'], node['sym']['name'])");
+@@ -1446,15 +1455,20 @@ static int python_generate_script(struct pevent *pevent, const char *outfile)
  	}
  
-+	Py_XDECREF(all_entries_dict);
- 	Py_DECREF(t);
- }
+ 	fprintf(ofp, "def trace_unhandled(event_name, context, "
+-		"event_fields_dict):\n");
++		"event_fields_dict, perf_sample_dict):\n");
+ 
+-	fprintf(ofp, "\t\tprint ' '.join(['%%s=%%s'%%(k,str(v))"
+-		"for k,v in sorted(event_fields_dict.items())])\n\n");
++	fprintf(ofp, "\t\tprint get_dict_as_string(event_fields_dict)\n");
++	fprintf(ofp, "\t\tprint 'Sample: {'+"
++		"get_dict_as_string(perf_sample_dict['sample'], ', ')+'}'\n\n");
+ 
+ 	fprintf(ofp, "def print_header("
+ 		"event_name, cpu, secs, nsecs, pid, comm):\n"
+ 		"\tprint \"%%-20s %%5u %%05u.%%09u %%8u %%-20s \" %% \\\n\t"
+-		"(event_name, cpu, secs, nsecs, pid, comm),\n");
++		"(event_name, cpu, secs, nsecs, pid, comm),\n\n");
++
++	fprintf(ofp, "def get_dict_as_string(a_dict, delimiter=' '):\n"
++		"\treturn delimiter.join"
++		"(['%%s=%%s'%%(k,str(v))for k,v in sorted(a_dict.items())])\n");
+ 
+ 	fclose(ofp);
  
 -- 
 2.9.4
