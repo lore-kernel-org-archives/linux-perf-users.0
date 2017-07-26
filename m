@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/40] perf script python: Allocate memory only if handler exists
-Date: Wed, 26 Jul 2017 11:17:21 -0300
-Message-ID: <20170726141730.30750-32-acme@kernel.org>
+Subject: [PATCH 33/40] perf script python: Add sample_read to dict
+Date: Wed, 26 Jul 2017 11:17:23 -0300
+Message-ID: <20170726141730.30750-34-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,15 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arun Kalyanasundaram <arunkaly@google.com>
 
-Avoid allocating memory if hook handler is not available. This saves
-unused memory allocation and simplifies error path.
-
-Let handler in python_process_tracepoint point to either tracepoint
-specific or trace_unhandled hook. Use dict to check if handler points to
-trace_unhandled.
-
-Remove the exit label in python_process_general_event and return when no
-handler is available.
+Provide time_enabled, time_running and counter value in the perf_sample
+dict.
 
 Signed-off-by: Arun Kalyanasundaram <arunkaly@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -31,119 +24,80 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Seongjae Park <sj38.park@gmail.com>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170721220422.63962-2-arunkaly@google.com
+Link: http://lkml.kernel.org/r/20170721220422.63962-4-arunkaly@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../util/scripting-engines/trace-event-python.c    | 38 +++++++++++++---------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ .../util/scripting-engines/trace-event-python.c    | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 57b7a00e6f16..8a8f4829d3e2 100644
+index 69d1b6db96f6..55a45784c910 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -407,10 +407,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	void *data = sample->raw_data;
- 	unsigned long long nsecs = sample->time;
- 	const char *comm = thread__comm_str(al->thread);
--
--	t = PyTuple_New(MAX_FIELDS);
--	if (!t)
--		Py_FatalError("couldn't create Python tuple");
-+	const char *default_handler_name = "trace_unhandled";
+@@ -391,6 +391,56 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 	return pylist;
+ }
  
- 	if (!event) {
- 		snprintf(handler_name, sizeof(handler_name),
-@@ -427,10 +424,19 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 
- 	handler = get_handler(handler_name);
- 	if (!handler) {
-+		handler = get_handler(default_handler_name);
-+		if (!handler)
-+			return;
- 		dict = PyDict_New();
- 		if (!dict)
- 			Py_FatalError("couldn't create Python dict");
- 	}
++static PyObject *get_sample_value_as_tuple(struct sample_read_value *value)
++{
++	PyObject *t;
 +
-+	t = PyTuple_New(MAX_FIELDS);
++	t = PyTuple_New(2);
 +	if (!t)
 +		Py_FatalError("couldn't create Python tuple");
++	PyTuple_SetItem(t, 0, PyLong_FromUnsignedLongLong(value->id));
++	PyTuple_SetItem(t, 1, PyLong_FromUnsignedLongLong(value->value));
++	return t;
++}
 +
++static void set_sample_read_in_dict(PyObject *dict_sample,
++					 struct perf_sample *sample,
++					 struct perf_evsel *evsel)
++{
++	u64 read_format = evsel->attr.read_format;
++	PyObject *values;
++	unsigned int i;
 +
- 	s = nsecs / NSEC_PER_SEC;
- 	ns = nsecs - s * NSEC_PER_SEC;
- 
-@@ -445,7 +451,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	/* ip unwinding */
- 	callchain = python_process_callchain(sample, evsel, al);
- 
--	if (handler) {
-+	if (!dict) {
- 		PyTuple_SetItem(t, n++, PyInt_FromLong(cpu));
- 		PyTuple_SetItem(t, n++, PyInt_FromLong(s));
- 		PyTuple_SetItem(t, n++, PyInt_FromLong(ns));
-@@ -484,23 +490,23 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 		} else { /* FIELD_IS_NUMERIC */
- 			obj = get_field_numeric_entry(event, field, data);
- 		}
--		if (handler)
-+		if (!dict)
- 			PyTuple_SetItem(t, n++, obj);
- 		else
- 			pydict_set_item_string_decref(dict, field->name, obj);
- 
- 	}
- 
--	if (!handler)
-+	if (dict)
- 		PyTuple_SetItem(t, n++, dict);
- 
- 	if (_PyTuple_Resize(&t, n) == -1)
- 		Py_FatalError("error resizing Python tuple");
- 
--	if (handler) {
-+	if (!dict) {
- 		call_object(handler, t, handler_name);
- 	} else {
--		try_call_object("trace_unhandled", t);
-+		call_object(handler, t, default_handler_name);
- 		Py_DECREF(dict);
- 	}
- 
-@@ -799,6 +805,12 @@ static void python_process_general_event(struct perf_sample *sample,
- 	static char handler_name[64];
- 	unsigned n = 0;
- 
-+	snprintf(handler_name, sizeof(handler_name), "%s", "process_event");
++	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED) {
++		pydict_set_item_string_decref(dict_sample, "time_enabled",
++			PyLong_FromUnsignedLongLong(sample->read.time_enabled));
++	}
 +
-+	handler = get_handler(handler_name);
-+	if (!handler)
-+		return;
++	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING) {
++		pydict_set_item_string_decref(dict_sample, "time_running",
++			PyLong_FromUnsignedLongLong(sample->read.time_running));
++	}
 +
- 	/*
- 	 * Use the MAX_FIELDS to make the function expandable, though
- 	 * currently there is only one item for the tuple.
-@@ -815,12 +827,6 @@ static void python_process_general_event(struct perf_sample *sample,
- 	if (!dict_sample)
- 		Py_FatalError("couldn't create Python dictionary");
- 
--	snprintf(handler_name, sizeof(handler_name), "%s", "process_event");
--
--	handler = get_handler(handler_name);
--	if (!handler)
--		goto exit;
--
- 	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
- 	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
- 			(const char *)&evsel->attr, sizeof(evsel->attr)));
-@@ -861,7 +867,7 @@ static void python_process_general_event(struct perf_sample *sample,
- 		Py_FatalError("error resizing Python tuple");
- 
- 	call_object(handler, t, handler_name);
--exit:
++	if (read_format & PERF_FORMAT_GROUP)
++		values = PyList_New(sample->read.group.nr);
++	else
++		values = PyList_New(1);
 +
- 	Py_DECREF(dict);
- 	Py_DECREF(t);
- }
++	if (!values)
++		Py_FatalError("couldn't create Python list");
++
++	if (read_format & PERF_FORMAT_GROUP) {
++		for (i = 0; i < sample->read.group.nr; i++) {
++			PyObject *t = get_sample_value_as_tuple(&sample->read.group.values[i]);
++			PyList_SET_ITEM(values, i, t);
++		}
++	} else {
++		PyObject *t = get_sample_value_as_tuple(&sample->read.one);
++		PyList_SET_ITEM(values, 0, t);
++	}
++	pydict_set_item_string_decref(dict_sample, "values", values);
++}
++
+ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 					 struct perf_evsel *evsel,
+ 					 struct addr_location *al,
+@@ -422,6 +472,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 			PyLong_FromUnsignedLongLong(sample->time));
+ 	pydict_set_item_string_decref(dict_sample, "period",
+ 			PyLong_FromUnsignedLongLong(sample->period));
++	set_sample_read_in_dict(dict_sample, sample, evsel);
+ 	pydict_set_item_string_decref(dict, "sample", dict_sample);
+ 
+ 	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
 -- 
 2.9.4
