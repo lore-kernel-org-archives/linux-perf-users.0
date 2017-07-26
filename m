@@ -1,117 +1,68 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/40] perf cgroup: Fix refcount usage
-Date: Wed, 26 Jul 2017 11:17:14 -0300
-Message-ID: <20170726141730.30750-25-acme@kernel.org>
+Subject: [PATCH 25/40] perf tools: Add EXCLUDE_EXTLIBS and EXTRA_PERFLIBS to makefile
+Date: Wed, 26 Jul 2017 11:17:15 -0300
+Message-ID: <20170726141730.30750-26-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, David Carrillo-Cisneros <davidcc@google.com>, Kees Kook <keescook@chromium.org>, Krister Johansen <kjlx@templeofstupid.com>, Paul Turner <pjt@google.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Carrillo-Cisneros <davidcc@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, Kees Kook <keescook@chromium.org>, Paul Turner <pjt@google.com>, Stephane Eranian <eranian@google.com>, Sudeep Holla <sudeep.holla@arm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+From: David Carrillo-Cisneros <davidcc@google.com>
 
-When converting from atomic_t to refcount_t we didn't follow the usual
-step of initializing it to one before taking any new reference, which
-trips over checking if taking a reference for a freed refcount_t, fix
-it.
+The goal is to allow users to override linking of libraries that
+were automatically added to PERFLIBS.
 
-Brendan's report:
+EXCLUDE_EXTLIBS contains linker flags to be removed from LIBS
+while EXTRA_PERFLIBS contains linker flags to be added.
 
- ---
-It's 4.12-rc7, with node v4.4.1. I'm building 4.13-rc1 now, as I hit
-what I think is another unrelated perf bug and I'm starting to wonder
-what else is broken on that version:
+My use case is to force certain library to be build statically,
+e.g. for libelf:
 
-(root) /mnt/src/linux-4.12-rc7/tools/perf # ./perf record -F 99 -a -e
-cpu-clock --cgroup=docker/f9e9d5df065b14646e8a11edc837a13877fd90c171137b2ba3feb67a0201cb65
--g
-perf: /mnt/src/linux-4.12-rc7/tools/include/linux/refcount.h:108:
-refcount_inc: Assertion `!(!refcount_inc_not_zero(r))' failed.
-Aborted
+  EXCLUDE_EXTLIBS=-lelf EXTRA_PERFLIBS=path/libelf.a
 
-that used to work...
- ---
-
-Testing it:
-
-Before:
-
-  # perf stat -e cycles -C 0 --cgroup /
-  perf: /home/acme/git/linux/tools/include/linux/refcount.h:108: refcount_inc: Assertion `!(!refcount_inc_not_zero(r))' failed.
-  Aborted (core dumped)
-  #
-
-After:
-
-  # perf stat -e cycles -C 0 --cgroup /
-^C
-  Performance counter stats for 'CPU(s) 0':
-
-       132,081,393      cycles                    /
-
-       2.492942763 seconds time elapsed
-
-  #
-
-Reported-by: Brendan Gregg <brendan.d.gregg@gmail.com>
-Acked-by: Elena Reshetova <elena.reshetova@intel.com>
+Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
 Cc: Kees Kook <keescook@chromium.org>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Paul Turner <pjt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Cc: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 79c5fe6db8c7 ("perf cgroup: Convert cgroup_sel.refcnt from atomic_t to refcount_t")
-Link: http://lkml.kernel.org/n/tip-l7ovfblq14ip2i08m1g0fkhv@git.kernel.org
+Link: http://lkml.kernel.org/r/20170719011839.99399-3-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cgroup.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/Makefile.perf | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 03347748f3fa..0e77bc9e5f3c 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -98,8 +98,10 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
- 		cgrp = counter->cgrp;
- 		if (!cgrp)
- 			continue;
--		if (!strcmp(cgrp->name, str))
-+		if (!strcmp(cgrp->name, str)) {
-+			refcount_inc(&cgrp->refcnt);
- 			break;
-+		}
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 5008f51a08a2..100a6c1670c8 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -33,6 +33,11 @@ include ../scripts/utilities.mak
+ #
+ # Define EXTRA_CFLAGS=-m64 or EXTRA_CFLAGS=-m32 as appropriate for cross-builds.
+ #
++# Define EXCLUDE_EXTLIBS=-lmylib to exclude libmylib from the auto-generated
++# EXTLIBS.
++#
++# Define EXTRA_PERFLIBS to pass extra libraries to PERFLIBS.
++#
+ # Define NO_DWARF if you do not want debug-info analysis feature at all.
+ #
+ # Define WERROR=0 to disable treating any warnings as errors.
+@@ -352,7 +357,8 @@ ifdef ASCIIDOC8
+   export ASCIIDOC8
+ endif
  
- 		cgrp = NULL;
- 	}
-@@ -110,6 +112,7 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
- 			return -1;
+-LIBS = -Wl,--whole-archive $(PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
++EXTLIBS := $(call filter-out,$(EXCLUDE_EXTLIBS),$(EXTLIBS))
++LIBS = -Wl,--whole-archive $(PERFLIBS) $(EXTRA_PERFLIBS) -Wl,--no-whole-archive -Wl,--start-group $(EXTLIBS) -Wl,--end-group
  
- 		cgrp->name = str;
-+		refcount_set(&cgrp->refcnt, 1);
- 
- 		cgrp->fd = open_cgroup(str);
- 		if (cgrp->fd == -1) {
-@@ -128,12 +131,11 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
- 			goto found;
- 		n++;
- 	}
--	if (refcount_read(&cgrp->refcnt) == 0)
-+	if (refcount_dec_and_test(&cgrp->refcnt))
- 		free(cgrp);
- 
- 	return -1;
- found:
--	refcount_inc(&cgrp->refcnt);
- 	counter->cgrp = cgrp;
- 	return 0;
- }
+ ifeq ($(USE_CLANG), 1)
+   CLANGLIBS_LIST = AST Basic CodeGen Driver Frontend Lex Tooling Edit Sema Analysis Parse Serialization
 -- 
 2.9.4
