@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/40] perf trace beauty clone: Suppress unused args according to 'flags' arg
-Date: Wed, 26 Jul 2017 11:17:02 -0300
-Message-ID: <20170726141730.30750-13-acme@kernel.org>
+Subject: [PATCH 13/40] perf trace: Introduce filter_loop_pids()
+Date: Wed, 26 Jul 2017 11:17:03 -0300
+Message-ID: <20170726141730.30750-14-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,58 +12,53 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The 'parent_tidptr', 'child_tidptr' and 'tls' arguments to the 'clone'
-syscall are only used when certain flags are set in 'flags', suppress
-them when those aren't there.
+No change in functionality, just to make clearer that what we want when
+filtering the tracer pid in a system wide tracing session is to avoid a
+feedback loop.
 
-E.g:
-
-   9886.919 (0.236 ms): fetchmail/19298 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, child_tidptr: 0x7fe43f468590) = 19608 (fetchmail)
-  12876.052 (0.249 ms): qemu-system-x8/21238 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7f48117fc770, parent_tidptr: 0x7f48117ff9d0, child_tidptr: 0x7f48117ff9d0, tls: 0x7f48117ff700) = 19611 (qemu-system-x86)
-  12876.555 (0.048 ms): worker/19611 clone(flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, child_stack: 0x7f480f7f8770, parent_tidptr: 0x7f480f7fb9d0, child_tidptr: 0x7f480f7fb9d0, tls: 0x7f480f7fb700) = 19612 (worker)
-  16575.240 (0.469 ms): fetchmail/19298 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, child_tidptr: 0x7fe43f468590) = 19613 (fetchmail)
-  20797.270 (0.335 ms): fetchmail/19298 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, child_tidptr: 0x7fe43f468590) = 19614 (fetchmail)
-  21228.585 (0.501 ms): vim/19519 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, child_tidptr: 0x7fbad6ac27d0) = 19615 (vim)
-  21232.193 (0.137 ms): bash/19615 clone(flags: CHILD_CLEARTID|CHILD_SETTID|0x11, child_stack: 0, child_tidptr: 0x7fad8bff49d0) = 19616 (bash)
+This also paves the way for a more interesting loop avoidance algorithm,
+one that tries to figure out if we are in a ssh session, xterm, etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-0um93djul9knf239gwa5mpcb@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-5fcttc5kdjkcyp9404ezkuy9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/clone.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
-index ab982a7c63bb..d64d049ab991 100644
---- a/tools/perf/trace/beauty/clone.c
-+++ b/tools/perf/trace/beauty/clone.c
-@@ -54,5 +54,22 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size)
- 
- size_t syscall_arg__scnprintf_clone_flags(char *bf, size_t size, struct syscall_arg *arg)
- {
--	return clone__scnprintf_flags(arg->val, bf, size);
-+	unsigned long flags = arg->val;
-+	enum syscall_clone_args {
-+		SCC_FLAGS	  = (1 << 0),
-+		SCC_CHILD_STACK	  = (1 << 1),
-+		SCC_PARENT_TIDPTR = (1 << 2),
-+		SCC_CHILD_TIDPTR  = (1 << 3),
-+		SCC_TLS		  = (1 << 4),
-+	};
-+	if (!(flags & CLONE_PARENT_SETTID))
-+		arg->mask |= SCC_PARENT_TIDPTR;
-+
-+	if (!(flags & (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)))
-+		arg->mask |= SCC_CHILD_TIDPTR;
-+
-+	if (!(flags & CLONE_SETTLS))
-+		arg->mask |= SCC_TLS;
-+
-+	return clone__scnprintf_flags(flags, bf, size);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 9e74e675d7cb..0ba36f08efd8 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2239,6 +2239,16 @@ static int trace__set_ev_qualifier_filter(struct trace *trace)
+ 	goto out;
  }
+ 
++static int trace__set_filter_loop_pids(struct trace *trace)
++{
++	int nr = 1;
++	pid_t pids[32] = {
++		getpid(),
++	};
++
++	return perf_evlist__set_filter_pids(trace->evlist, nr, pids);
++}
++
+ static int trace__run(struct trace *trace, int argc, const char **argv)
+ {
+ 	struct perf_evlist *evlist = trace->evlist;
+@@ -2362,7 +2372,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (trace->filter_pids.nr > 0)
+ 		err = perf_evlist__set_filter_pids(evlist, trace->filter_pids.nr, trace->filter_pids.entries);
+ 	else if (thread_map__pid(evlist->threads, 0) == -1)
+-		err = perf_evlist__set_filter_pid(evlist, getpid());
++		err = trace__set_filter_loop_pids(trace);
+ 
+ 	if (err < 0)
+ 		goto out_error_mem;
 -- 
 2.9.4
