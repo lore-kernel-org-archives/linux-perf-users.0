@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/40] perf trace: Ditch __syscall__arg_val() variant, not needed anymore
-Date: Wed, 26 Jul 2017 11:16:57 -0300
-Message-ID: <20170726141730.30750-8-acme@kernel.org>
+Subject: [PATCH 08/40] perf trace: Allow specifying number of syscall args for tracepointless syscalls
+Date: Wed, 26 Jul 2017 11:16:58 -0300
+Message-ID: <20170726141730.30750-9-acme@kernel.org>
 References: <20170726141730.30750-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170726141730.30750-1-acme@kernel.org>
@@ -12,48 +12,51 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-All callers now can use syscall__arg_val(arg, idx), be it to iterate
-thru the syscall arguments while taking into account alignment, or to
-get values for other arguments that affect how the current argument
-should be formatted (think of fcntl's 'cmd' and 'arg' arguments).
+When we don't have syscalls:sys_{enter,exit}_NAME, we had to resort to
+dumping all the 6 syscall arguments, fix it by providing that info for
+such syscalls, like 'clone'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-wm5b156d8kro1r4y3b33eyta@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-dfq1jtrxj8dqvqoeqqpr3slu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index fc4d33a6aa58..f8b7bfdf4ee7 100644
+index f8b7bfdf4ee7..e1988d08911d 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1336,20 +1336,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
-  * variable to read it. Most notably this avoids extended load instructions
-  * on unaligned addresses
-  */
--static unsigned long __syscall_arg__val(unsigned char *args, u8 idx)
-+unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx)
+@@ -611,6 +611,7 @@ static struct syscall_fmt {
+ 	const char *name;
+ 	const char *alias;
+ 	struct syscall_arg_fmt arg[6];
++	u8	   nr_args;
+ 	bool	   errpid;
+ 	bool	   timeout;
+ 	bool	   hexret;
+@@ -1169,6 +1170,9 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
  {
- 	unsigned long val;
--	unsigned char *p = args + sizeof(unsigned long) * idx;
-+	unsigned char *p = arg->args + sizeof(unsigned long) * idx;
+ 	int idx;
  
- 	memcpy(&val, p, sizeof(val));
- 	return val;
- }
- 
--unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx)
--{
--	return __syscall_arg__val(arg->args, idx);
--}
--
- static size_t syscall__scnprintf_val(struct syscall *sc, char *bf, size_t size,
- 				     struct syscall_arg *arg, unsigned long val)
- {
++	if (nr_args == 6 && sc->fmt && sc->fmt->nr_args != 0)
++		nr_args = sc->fmt->nr_args;
++
+ 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+ 	if (sc->arg_fmt == NULL)
+ 		return -1;
+@@ -1413,7 +1417,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 		 * may end up not having any args, like with gettid(), so only
+ 		 * print the raw args when we didn't manage to read it.
+ 		 */
+-		while (arg.idx < 6) {
++		while (arg.idx < sc->nr_args) {
+ 			if (arg.mask & bit)
+ 				goto next_arg;
+ 			val = syscall_arg__val(&arg, arg.idx);
 -- 
 2.9.4
