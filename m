@@ -1,128 +1,68 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/15] perf data: Add mmap[2] events to CTF conversion
-Date: Fri, 28 Jul 2017 17:00:20 -0300
-Message-ID: <20170728200021.11389-15-acme@kernel.org>
+Subject: [PATCH 12/15] perf annotate TUI: Set appropriate column width for period/percent
+Date: Fri, 28 Jul 2017 17:00:18 -0300
+Message-ID: <20170728200021.11389-13-acme@kernel.org>
 References: <20170728200021.11389-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170728200021.11389-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, =?UTF-8?q?Genevi=C3=A8ve=20Bastien?= <gbastien@versatic.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Francis Deslauriers <francis.deslauriers@efficios.com>, Julien Desfossez <jdesfossez@efficios.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Geneviève Bastien <gbastien@versatic.net>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This adds the mmap and mmap2 events to the CTF trace obtained from perf
-data.
+Either when we start 'perf annotate' or 'perf report' with
+--show-total-period or when we, in the annotate browser, press 't' to
+toggle period/percent for the first column, we need to adjust the width
+for the 'period' case.
 
-These events will allow CTF trace visualization tools like Trace Compass
-to automatically resolve the symbols of the callchain to the
-corresponding function or origin library.
-
-To include those events, one needs to convert with the --all option.
-Here follows an output of babeltrace:
-
-  $ sudo perf data convert --all --to-ctf myctftrace
-  $ babeltrace ./myctftrace
-  [19:00:00.000000000] (+0.000000000) perf_mmap2: { cpu_id = 0 },
- { pid = 638, tid = 638, start = 0x7F54AE39E000, filename =
- "/usr/lib/ld-2.25.so" }
-  [19:00:00.000000000] (+0.000000000) perf_mmap2: { cpu_id = 0 }, { pid =
- 638, tid = 638, start = 0x7F54AE565000, filename =
- "/usr/lib/libudev.so.1.6.6" }
-  [19:00:00.000000000] (+0.000000000) perf_mmap2: { cpu_id = 0 }, { pid =
- 638, tid = 638, start = 0x7FFC093EA000, filename = "[vdso]" }
-
-Signed-off-by: Geneviève Bastien <gbastien@versatic.net>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Francis Deslauriers <francis.deslauriers@efficios.com>
-Cc: Julien Desfossez <jdesfossez@efficios.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20170727181205.24843-2-gbastien@versatic.net
+Based-on-a-patch-by: Taeung Song <treeze.taeung@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-n2np5qcs20u6qjdr9orygne6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data-convert-bt.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ tools/perf/ui/browsers/annotate.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index eeb2590a3ddf..2346cecb8ea2 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -76,6 +76,8 @@ struct ctf_writer {
- 	struct bt_ctf_event_class	*comm_class;
- 	struct bt_ctf_event_class	*exit_class;
- 	struct bt_ctf_event_class	*fork_class;
-+	struct bt_ctf_event_class	*mmap_class;
-+	struct bt_ctf_event_class	*mmap2_class;
- };
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 46f297a4e94b..80f38dab9c3a 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -110,7 +110,7 @@ static int annotate_browser__set_jumps_percent_color(struct annotate_browser *br
  
- struct convert {
-@@ -915,6 +917,18 @@ __FUNC_PROCESS_NON_SAMPLE(exit,
- 	__NON_SAMPLE_SET_FIELD(fork, u32, ptid);
- 	__NON_SAMPLE_SET_FIELD(fork, u64, time);
- )
-+__FUNC_PROCESS_NON_SAMPLE(mmap,
-+	__NON_SAMPLE_SET_FIELD(mmap, u32, pid);
-+	__NON_SAMPLE_SET_FIELD(mmap, u32, tid);
-+	__NON_SAMPLE_SET_FIELD(mmap, u64_hex, start);
-+	__NON_SAMPLE_SET_FIELD(mmap, string, filename);
-+)
-+__FUNC_PROCESS_NON_SAMPLE(mmap2,
-+	__NON_SAMPLE_SET_FIELD(mmap2, u32, pid);
-+	__NON_SAMPLE_SET_FIELD(mmap2, u32, tid);
-+	__NON_SAMPLE_SET_FIELD(mmap2, u64_hex, start);
-+	__NON_SAMPLE_SET_FIELD(mmap2, string, filename);
-+)
- #undef __NON_SAMPLE_SET_FIELD
- #undef __FUNC_PROCESS_NON_SAMPLE
- 
-@@ -1254,6 +1268,19 @@ __FUNC_ADD_NON_SAMPLE_EVENT_CLASS(exit,
- 	__NON_SAMPLE_ADD_FIELD(u64, time);
- )
- 
-+__FUNC_ADD_NON_SAMPLE_EVENT_CLASS(mmap,
-+	__NON_SAMPLE_ADD_FIELD(u32, pid);
-+	__NON_SAMPLE_ADD_FIELD(u32, tid);
-+	__NON_SAMPLE_ADD_FIELD(u64_hex, start);
-+	__NON_SAMPLE_ADD_FIELD(string, filename);
-+)
-+
-+__FUNC_ADD_NON_SAMPLE_EVENT_CLASS(mmap2,
-+	__NON_SAMPLE_ADD_FIELD(u32, pid);
-+	__NON_SAMPLE_ADD_FIELD(u32, tid);
-+	__NON_SAMPLE_ADD_FIELD(u64_hex, start);
-+	__NON_SAMPLE_ADD_FIELD(string, filename);
-+)
- #undef __NON_SAMPLE_ADD_FIELD
- #undef __FUNC_ADD_NON_SAMPLE_EVENT_CLASS
- 
-@@ -1271,6 +1298,12 @@ static int setup_non_sample_events(struct ctf_writer *cw,
- 	ret = add_fork_event(cw);
- 	if (ret)
- 		return ret;
-+	ret = add_mmap_event(cw);
-+	if (ret)
-+		return ret;
-+	ret = add_mmap2_event(cw);
-+	if (ret)
-+		return ret;
- 	return 0;
+ static int annotate_browser__pcnt_width(struct annotate_browser *ab)
+ {
+-	return 7 * ab->nr_events;
++	return (annotate_browser__opts.show_total_period ? 12 : 7) * ab->nr_events;
  }
  
-@@ -1572,6 +1605,8 @@ int bt_convert__perf2ctf(const char *input, const char *path,
- 		c.tool.comm = process_comm_event;
- 		c.tool.exit = process_exit_event;
- 		c.tool.fork = process_fork_event;
-+		c.tool.mmap = process_mmap_event;
-+		c.tool.mmap2 = process_mmap2_event;
- 	}
+ static int annotate_browser__cycles_width(struct annotate_browser *ab)
+@@ -153,7 +153,7 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 						bdl->samples[i].percent,
+ 						current_entry);
+ 			if (annotate_browser__opts.show_total_period) {
+-				ui_browser__printf(browser, "%6" PRIu64 " ",
++				ui_browser__printf(browser, "%11" PRIu64 " ",
+ 						   bdl->samples[i].he.period);
+ 			} else {
+ 				ui_browser__printf(browser, "%6.2f ",
+@@ -165,8 +165,10 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
  
- 	err = perf_config(convert__config, &c);
+ 		if (!show_title)
+ 			ui_browser__write_nstring(browser, " ", pcnt_width);
+-		else
+-			ui_browser__printf(browser, "%*s", 7, annotate_browser__opts.show_total_period ? "Period" : "Percent");
++		else {
++			ui_browser__printf(browser, "%*s", pcnt_width,
++					   annotate_browser__opts.show_total_period ? "Period" : "Percent");
++		}
+ 	}
+ 	if (ab->have_cycles) {
+ 		if (dl->ipc)
 -- 
 2.9.4
