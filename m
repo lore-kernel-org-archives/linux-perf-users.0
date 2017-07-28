@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/15] perf evsel: Add read_counter()
-Date: Fri, 28 Jul 2017 17:00:08 -0300
-Message-ID: <20170728200021.11389-3-acme@kernel.org>
+Subject: [PATCH 03/15] perf stat: Use group read for event groups
+Date: Fri, 28 Jul 2017 17:00:09 -0300
+Message-ID: <20170728200021.11389-4-acme@kernel.org>
 References: <20170728200021.11389-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170728200021.11389-1-acme@kernel.org>
@@ -12,9 +12,32 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_evsel__read_counter() to read single or group counter. After
-calling this function the counter's evsel::counts struct is filled with
-values for the counter and member of its group if there are any.
+Make perf stat use  group read if there  are groups defined. The group
+read will get the values for all member of groups within a single
+syscall instead of calling read syscall for every event.
+
+We can see considerable less amount of kernel cycles spent on single
+group read, than reading each event separately, like for following perf
+stat command:
+
+  # perf stat -e {cycles,instructions} -I 10 -a sleep 1
+
+Monitored with "perf stat -r 5 -e '{cycles:u,cycles:k}'"
+
+Before:
+
+        24,325,676      cycles:u
+       297,040,775      cycles:k
+
+       1.038554134 seconds time elapsed
+
+After:
+        25,034,418      cycles:u
+       158,256,395      cycles:k
+
+       1.036864497 seconds time elapsed
+
+The perf_evsel__open fallback changes contributed by Andi Kleen.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -22,169 +45,138 @@ Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170726120206.9099-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170726120206.9099-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 100 ++++++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.h |   2 +
- tools/perf/util/stat.c  |   4 ++
- tools/perf/util/stat.h  |   5 ++-
- 4 files changed, 109 insertions(+), 2 deletions(-)
+ tools/perf/builtin-stat.c | 30 +++++++++++++++++++++++++++---
+ tools/perf/util/counts.h  |  1 +
+ tools/perf/util/evsel.c   | 10 ++++++++++
+ 3 files changed, 38 insertions(+), 3 deletions(-)
 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 48ac53b199fc..866da7aa54bf 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -213,10 +213,20 @@ static void perf_stat__reset_stats(void)
+ static int create_perf_stat_counter(struct perf_evsel *evsel)
+ {
+ 	struct perf_event_attr *attr = &evsel->attr;
++	struct perf_evsel *leader = evsel->leader;
+ 
+-	if (stat_config.scale)
++	if (stat_config.scale) {
+ 		attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+ 				    PERF_FORMAT_TOTAL_TIME_RUNNING;
++	}
++
++	/*
++	 * The event is part of non trivial group, let's enable
++	 * the group read (for leader) and ID retrieval for all
++	 * members.
++	 */
++	if (leader->nr_members > 1)
++		attr->read_format |= PERF_FORMAT_ID|PERF_FORMAT_GROUP;
+ 
+ 	attr->inherit = !no_inherit;
+ 
+@@ -333,13 +343,21 @@ static int read_counter(struct perf_evsel *counter)
+ 			struct perf_counts_values *count;
+ 
+ 			count = perf_counts(counter->counts, cpu, thread);
+-			if (perf_evsel__read(counter, cpu, thread, count)) {
++
++			/*
++			 * The leader's group read loads data into its group members
++			 * (via perf_evsel__read_counter) and sets threir count->loaded.
++			 */
++			if (!count->loaded &&
++			    perf_evsel__read_counter(counter, cpu, thread)) {
+ 				counter->counts->scaled = -1;
+ 				perf_counts(counter->counts, cpu, thread)->ena = 0;
+ 				perf_counts(counter->counts, cpu, thread)->run = 0;
+ 				return -1;
+ 			}
+ 
++			count->loaded = false;
++
+ 			if (STAT_RECORD) {
+ 				if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
+ 					pr_err("failed to write stat event\n");
+@@ -559,6 +577,11 @@ static int store_counter_ids(struct perf_evsel *counter)
+ 	return __store_counter_ids(counter, cpus, threads);
+ }
+ 
++static bool perf_evsel__should_store_id(struct perf_evsel *counter)
++{
++	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
++}
++
+ static int __run_perf_stat(int argc, const char **argv)
+ {
+ 	int interval = stat_config.interval;
+@@ -631,7 +654,8 @@ static int __run_perf_stat(int argc, const char **argv)
+ 		if (l > unit_width)
+ 			unit_width = l;
+ 
+-		if (STAT_RECORD && store_counter_ids(counter))
++		if (perf_evsel__should_store_id(counter) &&
++		    store_counter_ids(counter))
+ 			return -1;
+ 	}
+ 
+diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+index 34d8baaf558a..cb45a6aecf9d 100644
+--- a/tools/perf/util/counts.h
++++ b/tools/perf/util/counts.h
+@@ -12,6 +12,7 @@ struct perf_counts_values {
+ 		};
+ 		u64 values[3];
+ 	};
++	bool	loaded;
+ };
+ 
+ struct perf_counts {
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4dd0fcc06db9..89aecf3a35c7 100644
+index 89aecf3a35c7..3735c9e0080d 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1302,6 +1302,106 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 	return 0;
+@@ -49,6 +49,7 @@ static struct {
+ 	bool clockid_wrong;
+ 	bool lbr_flags;
+ 	bool write_backward;
++	bool group_read;
+ } perf_missing_features;
+ 
+ static clockid_t clockid;
+@@ -1321,6 +1322,7 @@ perf_evsel__set_count(struct perf_evsel *counter, int cpu, int thread,
+ 	count->val    = val;
+ 	count->ena    = ena;
+ 	count->run    = run;
++	count->loaded = true;
  }
  
-+static int
-+perf_evsel__read_one(struct perf_evsel *evsel, int cpu, int thread)
-+{
-+	struct perf_counts_values *count = perf_counts(evsel->counts, cpu, thread);
-+
-+	return perf_evsel__read(evsel, cpu, thread, count);
-+}
-+
-+static void
-+perf_evsel__set_count(struct perf_evsel *counter, int cpu, int thread,
-+		      u64 val, u64 ena, u64 run)
-+{
-+	struct perf_counts_values *count;
-+
-+	count = perf_counts(counter->counts, cpu, thread);
-+
-+	count->val    = val;
-+	count->ena    = ena;
-+	count->run    = run;
-+}
-+
-+static int
-+perf_evsel__process_group_data(struct perf_evsel *leader,
-+			       int cpu, int thread, u64 *data)
-+{
-+	u64 read_format = leader->attr.read_format;
-+	struct sample_read_value *v;
-+	u64 nr, ena = 0, run = 0, i;
-+
-+	nr = *data++;
-+
-+	if (nr != (u64) leader->nr_members)
-+		return -EINVAL;
-+
-+	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+		ena = *data++;
-+
-+	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+		run = *data++;
-+
-+	v = (struct sample_read_value *) data;
-+
-+	perf_evsel__set_count(leader, cpu, thread,
-+			      v[0].value, ena, run);
-+
-+	for (i = 1; i < nr; i++) {
-+		struct perf_evsel *counter;
-+
-+		counter = perf_evlist__id2evsel(leader->evlist, v[i].id);
-+		if (!counter)
-+			return -EINVAL;
-+
-+		perf_evsel__set_count(counter, cpu, thread,
-+				      v[i].value, ena, run);
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+perf_evsel__read_group(struct perf_evsel *leader, int cpu, int thread)
-+{
-+	struct perf_stat_evsel *ps = leader->priv;
-+	u64 read_format = leader->attr.read_format;
-+	int size = perf_evsel__read_size(leader);
-+	u64 *data = ps->group_data;
-+
-+	if (!(read_format & PERF_FORMAT_ID))
-+		return -EINVAL;
-+
-+	if (!perf_evsel__is_group_leader(leader))
-+		return -EINVAL;
-+
-+	if (!data) {
-+		data = zalloc(size);
-+		if (!data)
-+			return -ENOMEM;
-+
-+		ps->group_data = data;
-+	}
-+
-+	if (FD(leader, cpu, thread) < 0)
-+		return -EINVAL;
-+
-+	if (readn(FD(leader, cpu, thread), data, size) <= 0)
-+		return -errno;
-+
-+	return perf_evsel__process_group_data(leader, cpu, thread, data);
-+}
-+
-+int perf_evsel__read_counter(struct perf_evsel *evsel, int cpu, int thread)
-+{
-+	u64 read_format = evsel->attr.read_format;
-+
-+	if (read_format & PERF_FORMAT_GROUP)
-+		return perf_evsel__read_group(evsel, cpu, thread);
-+	else
-+		return perf_evsel__read_one(evsel, cpu, thread);
-+}
-+
- int __perf_evsel__read_on_cpu(struct perf_evsel *evsel,
- 			      int cpu, int thread, bool scale)
- {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index fb40ca3c6519..de03c18daaf0 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -299,6 +299,8 @@ static inline bool perf_evsel__match2(struct perf_evsel *e1,
- int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 		     struct perf_counts_values *count);
- 
-+int perf_evsel__read_counter(struct perf_evsel *evsel, int cpu, int thread);
-+
- int __perf_evsel__read_on_cpu(struct perf_evsel *evsel,
- 			      int cpu, int thread, bool scale);
- 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 53b9a994a3dc..35e9848734d6 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -128,6 +128,10 @@ static int perf_evsel__alloc_stat_priv(struct perf_evsel *evsel)
- 
- static void perf_evsel__free_stat_priv(struct perf_evsel *evsel)
- {
-+	struct perf_stat_evsel *ps = evsel->priv;
-+
-+	if (ps)
-+		free(ps->group_data);
- 	zfree(&evsel->priv);
- }
- 
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 7522bf10b03e..eacaf958e19d 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -28,8 +28,9 @@ enum perf_stat_evsel_id {
- };
- 
- struct perf_stat_evsel {
--	struct stats		res_stats[3];
--	enum perf_stat_evsel_id	id;
-+	struct stats		 res_stats[3];
-+	enum perf_stat_evsel_id	 id;
-+	u64			*group_data;
- };
- 
- enum aggr_mode {
+ static int
+@@ -1677,6 +1679,8 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+ 	if (perf_missing_features.lbr_flags)
+ 		evsel->attr.branch_sample_type &= ~(PERF_SAMPLE_BRANCH_NO_FLAGS |
+ 				     PERF_SAMPLE_BRANCH_NO_CYCLES);
++	if (perf_missing_features.group_read && evsel->attr.inherit)
++		evsel->attr.read_format &= ~(PERF_FORMAT_GROUP|PERF_FORMAT_ID);
+ retry_sample_id:
+ 	if (perf_missing_features.sample_id_all)
+ 		evsel->attr.sample_id_all = 0;
+@@ -1832,6 +1836,12 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+ 		perf_missing_features.lbr_flags = true;
+ 		pr_debug2("switching off branch sample type no (cycles/flags)\n");
+ 		goto fallback_missing_features;
++	} else if (!perf_missing_features.group_read &&
++		    evsel->attr.inherit &&
++		   (evsel->attr.read_format & PERF_FORMAT_GROUP)) {
++		perf_missing_features.group_read = true;
++		pr_debug2("switching off group read\n");
++		goto fallback_missing_features;
+ 	}
+ out_close:
+ 	do {
 -- 
 2.9.4
