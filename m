@@ -1,55 +1,73 @@
 From: Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] perf build: Clarify header version warning message
-Date: Sun, 30 Jul 2017 11:37:47 +0200
-Message-ID: <20170730093747.qogjn3lp7ntwcgwg@gmail.com>
+Subject: perf build: Clarify open-coded header version warning message
+Date: Sun, 30 Jul 2017 11:51:30 +0200
+Message-ID: <20170730095130.bblldwxjz5hamybb@gmail.com>
 References: <20170728200021.11389-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:36348 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750800AbdG3Jhw (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 30 Jul 2017 05:37:52 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20170728200021.11389-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, David Carrillo-Cisneros <davidcc@google.com>, Francis Deslauriers <francis.deslauriers@efficios.com>, =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>, Jiri Olsa <jolsa@redhat.com>, Julien Desfossez <jdesfossez@efficios.com>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Paul Turner <pjt@google.com>, Peter Zijlstra <peterz@infradead.org>, Simon Que <sque@chromium.org>, Stephane Eranian <eran>
+List-Id: linux-perf-users.vger.kernel.org
 
-Change this:
+In this patch we changed the header checks:
 
-  Warning: arch/x86/include/asm/disabled-features.h differs from kernel
-  Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-  Warning: arch/powerpc/include/uapi/asm/kvm.h differs from kernel
-  Warning: arch/s390/include/uapi/asm/kvm.h differs from kernel
+  perf build: Clarify header version warning message
 
-to:
+Unfortunately the header checks were copied to various places and thus the message got
+out of sync. Fix some of them here.
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/disabled-features.h' differs from latest version at 'arch/x86/include/asm/disabled-features.h'
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  Warning: Kernel ABI header at 'tools/arch/powerpc/include/uapi/asm/kvm.h' differs from latest version at 'arch/powerpc/include/uapi/asm/kvm.h'
-  Warning: Kernel ABI header at 'tools/arch/s390/include/uapi/asm/kvm.h' differs from latest version at 'arch/s390/include/uapi/asm/kvm.h'
+Note that there's still old, misleading messages remaining in:
 
-... to make it clearer what the warning is about, and to make it easier to diff 
-the two versions when syncing up the files.
+  tools/objtool/Makefile: || echo "warning: objtool: x86 instruction decoder differs from kernel" >&2 )) || true
+  tools/objtool/Makefile: || echo "warning: objtool: orc_types.h differs from kernel" >&2 )) || true
+
+here objtool copied the perf message, plus:
+
+ tools/perf/util/intel-pt-decoder/Build: || echo "Warning: Intel PT: x86 instruction decoder differs from kernel" >&2 )) || true
+
+here the PT code regressed over the original message and only emits a vague warning
+instead of specific file names...
+
+All of this should be consolidated into tools/Build/ and used in a consistent 
+manner.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/perf/check-headers.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/bpf/Makefile       | 4 ++--
+ tools/perf/arch/x86/Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 9b6295809a3b..d87bc6af0ac2 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -47,7 +47,7 @@ check () {
-   cmd="diff $opts ../$file ../../$file > /dev/null"
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 1f5300e56b44..e87b5903f4bb 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -156,10 +156,10 @@ all_cmd: $(CMD_TARGETS)
+ $(BPF_IN): force elfdep bpfdep
+ 	@(test -f ../../../include/uapi/linux/bpf.h -a -f ../../../include/uapi/linux/bpf.h && ( \
+ 	(diff -B ../../include/uapi/linux/bpf.h ../../../include/uapi/linux/bpf.h >/dev/null) || \
+-	echo "Warning: tools/include/uapi/linux/bpf.h differs from kernel" >&2 )) || true
++	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'" >&2 )) || true
+ 	@(test -f ../../../include/uapi/linux/bpf_common.h -a -f ../../../include/uapi/linux/bpf_common.h && ( \
+ 	(diff -B ../../include/uapi/linux/bpf_common.h ../../../include/uapi/linux/bpf_common.h >/dev/null) || \
+-	echo "Warning: tools/include/uapi/linux/bpf_common.h differs from kernel" >&2 )) || true
++	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf_common.h' differs from latest version at 'include/uapi/linux/bpf_common.h'" >&2 )) || true
+ 	$(Q)$(MAKE) $(build)=libbpf
  
-   test -f ../../$file &&
--  eval $cmd || echo "Warning: $file differs from kernel" >&2
-+  eval $cmd || echo "Warning: Kernel ABI header at 'tools/$file' differs from latest version at '$file'" >&2
- }
+ $(OUTPUT)libbpf.so: $(BPF_IN)
+diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
+index 6c9211b18ec0..9a628a24c5c9 100644
+--- a/tools/perf/arch/x86/Makefile
++++ b/tools/perf/arch/x86/Makefile
+@@ -20,7 +20,7 @@ _dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+ $(header): $(sys)/syscall_64.tbl $(systbl)
+ 	@(test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
+         (diff -B arch/x86/entry/syscalls/syscall_64.tbl ../../arch/x86/entry/syscalls/syscall_64.tbl >/dev/null) \
+-        || echo "Warning: x86_64's syscall_64.tbl differs from kernel" >&2 )) || true
++        || echo "Warning: Kernel ABI header at 'tools/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'" >&2 )) || true
+ 	$(Q)$(SHELL) '$(systbl)' $(sys)/syscall_64.tbl 'x86_64' > $@
  
- 
+ clean::
