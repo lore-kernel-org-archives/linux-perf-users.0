@@ -1,273 +1,216 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/18] tools include uapi: Grab a copy of linux/vhost.h
-Date: Tue,  1 Aug 2017 16:56:43 -0300
-Message-ID: <20170801195645.16986-17-acme@kernel.org>
+Subject: [PATCH 14/18] perf trace beautify ioctl: Beautify KVM ioctl's 'cmd' arg
+Date: Tue,  1 Aug 2017 16:56:41 -0300
+Message-ID: <20170801195645.16986-15-acme@kernel.org>
 References: <20170801195645.16986-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170801195645.16986-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We will use it to generate tables for beautifying ioctl's 'cmd' arg.
+Also trying a new approach, using a copy of uapi/linux/kvm.h we auto
+generate the string tables, then include it in the ioctl cmd beautifier.
+
+This way either the KVM developers will add the new commands to the
+tools/ copy, like is happening with other areas of tools/include/ (bpf.h
+comes to mind), or we'll be notified when building perf that our copy
+drifted.
+
+E.g., a tracing a process and its threads, but would work for system wide as
+well, just drop that '-p 21238', to see ioctls for DRM, tty, sound, etc:
+
+  # perf trace -e ioctl -p 21238 2>&1 | grep -v KVM_RUN
+    7801.536 ( 0.003 ms): CPU 0/KVM/21276 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7f484c6c73c0) = 0
+  <SNIP lots of the last one>
+    7801.715 ( 0.001 ms): CPU 0/KVM/21276 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7f484c6c73e0) = 0
+   11001.051 ( 0.008 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d70) = 1
+   11001.225 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d70) = 1
+   10750.377 (249.963 ms): CPU 0/KVM/21276  ... [continued]: ioctl()) = 0
+   11011.780 ( 0.015 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d90) = 1
+   11011.929 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x7fff053e1000) = 1
+   11012.090 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d70) = 1
+   11023.127 ( 0.020 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d90) = 1
+   11000.483 (249.807 ms): CPU 0/KVM/21276  ... [continued]: ioctl()) = 0
+   25620.877 ( 0.042 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7fff053e1080) = 0
+  <SNIP several of the last one>
+   25621.025 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7fff053e10a0) = 0
+   25500.803 (120.186 ms): CPU 0/KVM/21276  ... [continued]: ioctl()) = 0
+   25621.078 ( 0.005 ms): CPU 0/KVM/21276 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7f484c6c73c0) = 0
+  <SNIP lots of the last one>
+   25621.346 ( 0.001 ms): CPU 0/KVM/21276 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQ_LINE_STATUS, arg: 0x7f484c6c73e0) = 0
+   40456.997 ( 0.100 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x30, 0x8), arg: 0x7fff053dffe0) = 0
+   40457.100 ( 0.019 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x30, 0x8), arg: 0x7fff053dffe0) = 0
+   40457.133 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (READ|WRITE, 0xaf, 0x12, 0x8), arg: 0x7fff053dff60) = 0
+   40457.139 ( 0.001 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (READ|WRITE, 0xaf, 0x12, 0x8), arg: 0x7fff053dff60) = 0
+   40458.503 ( 0.027 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfc80) = 0
+   40458.601 ( 0.030 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfc80) = 0
+   40458.649 ( 0.003 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x21, 0x8), arg: 0x7fff053dff20) = 0
+   40458.654 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x21, 0x8), arg: 0x7fff053dff20) = 0
+   40458.657 ( 0.018 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQFD, arg: 0x7fff053dff00  ) = 0
+   40459.077 ( 0.017 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQFD, arg: 0x7fff053dff00  ) = 0
+   40459.123 ( 0.017 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfd20) = 0
+  <SNIP lots of the last one>
+   40463.477 ( 0.013 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfd20) = 0
+   40464.874 ( 0.010 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_GET_VCPU_EVENTS, arg: 0x7fff053e0000) = 0
+   40464.892 ( 0.048 ms): qemu-system-x8/21238 ioctl(fd: 12</dev/kvm>, cmd: KVM_CHECK_EXTENSION, arg: 0x4c           ) = 1
+   40464.991 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_GET_CLOCK, arg: 0x7fff053e0040) = 0
+   40464.962 ( 0.013 ms): CPU 0/KVM/21276 ioctl(fd: 20<anon_inode:kvm-vcpu>, cmd: KVM_GET_MSRS, arg: 0x7f484c6c7670) = 1
+   44540.437 ( 0.103 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_GSI_ROUTING, arg: 0x563c7c93c000) = 0
+   44540.544 ( 0.008 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQFD, arg: 0x7fff053dfea0  ) = 0
+   44540.555 ( 0.029 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_GSI_ROUTING, arg: 0x563c7c93c000) = 0
+   44540.586 ( 0.003 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IRQFD, arg: 0x7fff053dfea0  ) = 0
+   44540.592 ( 0.027 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_GSI_ROUTING, arg: 0x563c7c93c000) = 0
+   44540.625 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x21, 0x8), arg: 0x7fff053dfe20) = 0
+   44540.639 ( 0.018 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_GSI_ROUTING, arg: 0x563c7c93c000) = 0
+   44540.658 ( 0.003 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x21, 0x8), arg: 0x7fff053dfe20) = 0
+   44540.686 ( 0.015 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfbe0) = 0
+   44540.727 ( 0.014 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfbe0) = 0
+   44540.748 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0, 0x8), arg: 0x7fff053dfe88) = 0
+   44540.754 ( 0.026 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x3, 0x8), arg: 0x563c7c906870) = 0
+   44540.783 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x10, 0x8), arg: 0x7fff053dff00) = 0
+   44540.787 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x12, 0x8), arg: 0x7fff053dff00) = 0
+   44540.793 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x11, 0x28), arg: 0x7fff053dfe70) = 0
+   44540.796 ( 0.010 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x20, 0x8), arg: 0x7fff053dfef0) = 0
+   44540.811 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x10, 0x8), arg: 0x7fff053dff00) = 0
+   44540.814 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x12, 0x8), arg: 0x7fff053dff00) = 0
+   44540.819 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x11, 0x28), arg: 0x7fff053dfe70) = 0
+   44540.822 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x20, 0x8), arg: 0x7fff053dfef0) = 0
+   44540.837 ( 0.006 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x30, 0x8), arg: 0x7fff053dff80) = 0
+   44540.862 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: (WRITE, 0xaf, 0x30, 0x8), arg: 0x7fff053dff80) = 0
+   44540.887 ( 0.014 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfd00) = 0
+  <SNIP lots of the last one>
+   44542.756 ( 0.020 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_IOEVENTFD, arg: 0x7fff053dfd00) = 0
+   44542.809 ( 0.007 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_VCPU_EVENTS, arg: 0x7fff053dffb0) = 0
+   44542.819 ( 0.003 ms): qemu-system-x8/21238 ioctl(fd: 12</dev/kvm>, cmd: KVM_CHECK_EXTENSION, arg: 0x4c           ) = 1
+   44543.016 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SET_CLOCK, arg: 0x7fff053dfff0) = 0
+   44543.022 ( 0.008 ms): qemu-system-x8/21238 ioctl(fd: 20<anon_inode:kvm-vcpu>, cmd: KVM_KVMCLOCK_CTRL             ) = 0
+   46952.502 ( 0.010 ms): qemu-system-x8/21238 ioctl(fd: 13<anon_inode:kvm-vm>, cmd: KVM_SIGNAL_MSI, arg: 0x563c83379d70) = 1
+   46829.292 (249.860 ms): CPU 0/KVM/21276  ... [continued]: ioctl()) = 0
+  ^C
+[root@jouet linux]#
+
+Since there are clashes in _IOC_NR() for some cases, notably ioctls with
+PPC_ and ARM_ in its name and some that depend on some internal state to
+be valid, but use the same number as others, those were removed in the
+shell script that builds the table, tools/perf/trace/beauty/kvm_ioctl.sh.
+
+Since so far we're supporting only x86 in the 'cmd' ioctl arg beautifier
+in perf trace, we can leave fully supporting these ioctls for later.
+
+There are some more to handle here, notably the one for /dev/vhost-net, will
+come later.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jason Wang <jasowang@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-nxwpq34hu6te1m2ra5m7o8n9@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-zxhebe579n338d7qrnjoctes@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/vhost.h | 209 +++++++++++++++++++++++++++++++++++++++
- tools/perf/MANIFEST              |   1 +
- tools/perf/check-headers.sh      |   1 +
- 3 files changed, 211 insertions(+)
- create mode 100644 tools/include/uapi/linux/vhost.h
+ tools/perf/Makefile.perf             | 15 +++++++++++++--
+ tools/perf/trace/beauty/ioctl.c      | 14 +++++++++++++-
+ tools/perf/trace/beauty/kvm_ioctl.sh | 11 +++++++++++
+ 3 files changed, 37 insertions(+), 3 deletions(-)
+ create mode 100755 tools/perf/trace/beauty/kvm_ioctl.sh
 
-diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
-new file mode 100644
-index 000000000000..60180c0b5dc6
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d49354d340fd..6c1be10c6749 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -406,6 +406,13 @@ sndrv_pcm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
+ $(sndrv_pcm_ioctl_array): $(sndrv_pcm_hdr_dir)/asound.h $(sndrv_pcm_ioctl_tbl)
+ 	$(Q)$(SHELL) '$(sndrv_pcm_ioctl_tbl)' $(sndrv_pcm_hdr_dir) > $@
+ 
++kvm_ioctl_array := $(beauty_ioctl_outdir)/kvm_ioctl_array.c
++kvm_hdr_dir := $(srctree)/tools/include/uapi/linux
++kvm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/kvm_ioctl.sh
++
++$(kvm_ioctl_array): $(kvm_hdr_dir)/kvm.h $(kvm_ioctl_tbl)
++	$(Q)$(SHELL) '$(kvm_ioctl_tbl)' $(kvm_hdr_dir) > $@
++
+ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ 
+ $(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST)
+@@ -500,7 +507,10 @@ endif
+ __build-dir = $(subst $(OUTPUT),,$(dir $@))
+ build-dir   = $(if $(__build-dir),$(__build-dir),.)
+ 
+-prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) $(sndrv_pcm_ioctl_array) $(sndrv_ctl_ioctl_array)
++prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
++	$(sndrv_pcm_ioctl_array) \
++	$(sndrv_ctl_ioctl_array) \
++	$(kvm_ioctl_array)
+ 
+ $(OUTPUT)%.o: %.c prepare FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
+@@ -768,7 +778,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)pmu-events/pmu-events.c \
+ 		$(OUTPUT)$(drm_ioctl_array) \
+ 		$(OUTPUT)$(sndrv_ctl_ioctl_array) \
+-		$(OUTPUT)$(sndrv_pcm_ioctl_array)
++		$(OUTPUT)$(sndrv_pcm_ioctl_array) \
++		$(OUTPUT)$(kvm_ioctl_array)
+ 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
+ 	$(python-clean)
+ 
+diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
+index ec5a5a499667..89fa4eb68247 100644
+--- a/tools/perf/trace/beauty/ioctl.c
++++ b/tools/perf/trace/beauty/ioctl.c
+@@ -77,6 +77,17 @@ static size_t ioctl__scnprintf_sndrv_ctl_cmd(int nr, char *bf, size_t size)
+ 	return scnprintf(bf, size, "(%#x, %#x)", 'U', nr);
+ }
+ 
++static size_t ioctl__scnprintf_kvm_cmd(int nr, char *bf, size_t size)
++{
++#include "trace/beauty/generated/ioctl/kvm_ioctl_array.c"
++	static DEFINE_STRARRAY(kvm_ioctl_cmds);
++
++	if (nr < strarray__kvm_ioctl_cmds.nr_entries && strarray__kvm_ioctl_cmds.entries[nr] != NULL)
++		return scnprintf(bf, size, "KVM_%s", strarray__kvm_ioctl_cmds.entries[nr]);
++
++	return scnprintf(bf, size, "(%#x, %#x)", 0xAE, nr);
++}
++
+ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
+ {
+ 	int dir	 = _IOC_DIR(cmd),
+@@ -91,7 +102,8 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
+ 			      { .type	= 'A', .scnprintf = ioctl__scnprintf_sndrv_pcm_cmd, },
+ 		['T' - 'A']=  { .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, },
+ 		['U' - 'A']=  { .type	= 'U', .scnprintf = ioctl__scnprintf_sndrv_ctl_cmd, },
+-		['d' - 'A'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, }
++		['d' - 'A'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, },
++		[0xAE - 'A'] = { .type	= 0xAE, .scnprintf = ioctl__scnprintf_kvm_cmd, },
+ 	};
+ 	const int nr_types = ARRAY_SIZE(ioctl_types);
+ 
+diff --git a/tools/perf/trace/beauty/kvm_ioctl.sh b/tools/perf/trace/beauty/kvm_ioctl.sh
+new file mode 100755
+index 000000000000..bd28817afced
 --- /dev/null
-+++ b/tools/include/uapi/linux/vhost.h
-@@ -0,0 +1,209 @@
-+#ifndef _LINUX_VHOST_H
-+#define _LINUX_VHOST_H
-+/* Userspace interface for in-kernel virtio accelerators. */
++++ b/tools/perf/trace/beauty/kvm_ioctl.sh
+@@ -0,0 +1,11 @@
++#!/bin/sh
 +
-+/* vhost is used to reduce the number of system calls involved in virtio.
-+ *
-+ * Existing virtio net code is used in the guest without modification.
-+ *
-+ * This header includes interface used by userspace hypervisor for
-+ * device configuration.
-+ */
++kvm_header_dir=$1
 +
-+#include <linux/types.h>
-+#include <linux/compiler.h>
-+#include <linux/ioctl.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_ring.h>
-+
-+struct vhost_vring_state {
-+	unsigned int index;
-+	unsigned int num;
-+};
-+
-+struct vhost_vring_file {
-+	unsigned int index;
-+	int fd; /* Pass -1 to unbind from file. */
-+
-+};
-+
-+struct vhost_vring_addr {
-+	unsigned int index;
-+	/* Option flags. */
-+	unsigned int flags;
-+	/* Flag values: */
-+	/* Whether log address is valid. If set enables logging. */
-+#define VHOST_VRING_F_LOG 0
-+
-+	/* Start of array of descriptors (virtually contiguous) */
-+	__u64 desc_user_addr;
-+	/* Used structure address. Must be 32 bit aligned */
-+	__u64 used_user_addr;
-+	/* Available structure address. Must be 16 bit aligned */
-+	__u64 avail_user_addr;
-+	/* Logging support. */
-+	/* Log writes to used structure, at offset calculated from specified
-+	 * address. Address must be 32 bit aligned. */
-+	__u64 log_guest_addr;
-+};
-+
-+/* no alignment requirement */
-+struct vhost_iotlb_msg {
-+	__u64 iova;
-+	__u64 size;
-+	__u64 uaddr;
-+#define VHOST_ACCESS_RO      0x1
-+#define VHOST_ACCESS_WO      0x2
-+#define VHOST_ACCESS_RW      0x3
-+	__u8 perm;
-+#define VHOST_IOTLB_MISS           1
-+#define VHOST_IOTLB_UPDATE         2
-+#define VHOST_IOTLB_INVALIDATE     3
-+#define VHOST_IOTLB_ACCESS_FAIL    4
-+	__u8 type;
-+};
-+
-+#define VHOST_IOTLB_MSG 0x1
-+
-+struct vhost_msg {
-+	int type;
-+	union {
-+		struct vhost_iotlb_msg iotlb;
-+		__u8 padding[64];
-+	};
-+};
-+
-+struct vhost_memory_region {
-+	__u64 guest_phys_addr;
-+	__u64 memory_size; /* bytes */
-+	__u64 userspace_addr;
-+	__u64 flags_padding; /* No flags are currently specified. */
-+};
-+
-+/* All region addresses and sizes must be 4K aligned. */
-+#define VHOST_PAGE_SIZE 0x1000
-+
-+struct vhost_memory {
-+	__u32 nregions;
-+	__u32 padding;
-+	struct vhost_memory_region regions[0];
-+};
-+
-+/* ioctls */
-+
-+#define VHOST_VIRTIO 0xAF
-+
-+/* Features bitmask for forward compatibility.  Transport bits are used for
-+ * vhost specific features. */
-+#define VHOST_GET_FEATURES	_IOR(VHOST_VIRTIO, 0x00, __u64)
-+#define VHOST_SET_FEATURES	_IOW(VHOST_VIRTIO, 0x00, __u64)
-+
-+/* Set current process as the (exclusive) owner of this file descriptor.  This
-+ * must be called before any other vhost command.  Further calls to
-+ * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
-+#define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
-+/* Give up ownership, and reset the device to default values.
-+ * Allows subsequent call to VHOST_OWNER_SET to succeed. */
-+#define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
-+
-+/* Set up/modify memory layout */
-+#define VHOST_SET_MEM_TABLE	_IOW(VHOST_VIRTIO, 0x03, struct vhost_memory)
-+
-+/* Write logging setup. */
-+/* Memory writes can optionally be logged by setting bit at an offset
-+ * (calculated from the physical address) from specified log base.
-+ * The bit is set using an atomic 32 bit operation. */
-+/* Set base address for logging. */
-+#define VHOST_SET_LOG_BASE _IOW(VHOST_VIRTIO, 0x04, __u64)
-+/* Specify an eventfd file descriptor to signal on log write. */
-+#define VHOST_SET_LOG_FD _IOW(VHOST_VIRTIO, 0x07, int)
-+
-+/* Ring setup. */
-+/* Set number of descriptors in ring. This parameter can not
-+ * be modified while ring is running (bound to a device). */
-+#define VHOST_SET_VRING_NUM _IOW(VHOST_VIRTIO, 0x10, struct vhost_vring_state)
-+/* Set addresses for the ring. */
-+#define VHOST_SET_VRING_ADDR _IOW(VHOST_VIRTIO, 0x11, struct vhost_vring_addr)
-+/* Base value where queue looks for available descriptors */
-+#define VHOST_SET_VRING_BASE _IOW(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
-+/* Get accessor: reads index, writes value in num */
-+#define VHOST_GET_VRING_BASE _IOWR(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
-+
-+/* Set the vring byte order in num. Valid values are VHOST_VRING_LITTLE_ENDIAN
-+ * or VHOST_VRING_BIG_ENDIAN (other values return -EINVAL).
-+ * The byte order cannot be changed while the device is active: trying to do so
-+ * returns -EBUSY.
-+ * This is a legacy only API that is simply ignored when VIRTIO_F_VERSION_1 is
-+ * set.
-+ * Not all kernel configurations support this ioctl, but all configurations that
-+ * support SET also support GET.
-+ */
-+#define VHOST_VRING_LITTLE_ENDIAN 0
-+#define VHOST_VRING_BIG_ENDIAN 1
-+#define VHOST_SET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x13, struct vhost_vring_state)
-+#define VHOST_GET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x14, struct vhost_vring_state)
-+
-+/* The following ioctls use eventfd file descriptors to signal and poll
-+ * for events. */
-+
-+/* Set eventfd to poll for added buffers */
-+#define VHOST_SET_VRING_KICK _IOW(VHOST_VIRTIO, 0x20, struct vhost_vring_file)
-+/* Set eventfd to signal when buffers have beed used */
-+#define VHOST_SET_VRING_CALL _IOW(VHOST_VIRTIO, 0x21, struct vhost_vring_file)
-+/* Set eventfd to signal an error */
-+#define VHOST_SET_VRING_ERR _IOW(VHOST_VIRTIO, 0x22, struct vhost_vring_file)
-+/* Set busy loop timeout (in us) */
-+#define VHOST_SET_VRING_BUSYLOOP_TIMEOUT _IOW(VHOST_VIRTIO, 0x23,	\
-+					 struct vhost_vring_state)
-+/* Get busy loop timeout (in us) */
-+#define VHOST_GET_VRING_BUSYLOOP_TIMEOUT _IOW(VHOST_VIRTIO, 0x24,	\
-+					 struct vhost_vring_state)
-+
-+/* VHOST_NET specific defines */
-+
-+/* Attach virtio net ring to a raw socket, or tap device.
-+ * The socket must be already bound to an ethernet device, this device will be
-+ * used for transmit.  Pass fd -1 to unbind from the socket and the transmit
-+ * device.  This can be used to stop the ring (e.g. for migration). */
-+#define VHOST_NET_SET_BACKEND _IOW(VHOST_VIRTIO, 0x30, struct vhost_vring_file)
-+
-+/* Feature bits */
-+/* Log all write descriptors. Can be changed while device is active. */
-+#define VHOST_F_LOG_ALL 26
-+/* vhost-net should add virtio_net_hdr for RX, and strip for TX packets. */
-+#define VHOST_NET_F_VIRTIO_NET_HDR 27
-+
-+/* VHOST_SCSI specific definitions */
-+
-+/*
-+ * Used by QEMU userspace to ensure a consistent vhost-scsi ABI.
-+ *
-+ * ABI Rev 0: July 2012 version starting point for v3.6-rc merge candidate +
-+ *            RFC-v2 vhost-scsi userspace.  Add GET_ABI_VERSION ioctl usage
-+ * ABI Rev 1: January 2013. Ignore vhost_tpgt filed in struct vhost_scsi_target.
-+ *            All the targets under vhost_wwpn can be seen and used by guset.
-+ */
-+
-+#define VHOST_SCSI_ABI_VERSION	1
-+
-+struct vhost_scsi_target {
-+	int abi_version;
-+	char vhost_wwpn[224]; /* TRANSPORT_IQN_LEN */
-+	unsigned short vhost_tpgt;
-+	unsigned short reserved;
-+};
-+
-+#define VHOST_SCSI_SET_ENDPOINT _IOW(VHOST_VIRTIO, 0x40, struct vhost_scsi_target)
-+#define VHOST_SCSI_CLEAR_ENDPOINT _IOW(VHOST_VIRTIO, 0x41, struct vhost_scsi_target)
-+/* Changing this breaks userspace. */
-+#define VHOST_SCSI_GET_ABI_VERSION _IOW(VHOST_VIRTIO, 0x42, int)
-+/* Set and get the events missed flag */
-+#define VHOST_SCSI_SET_EVENTS_MISSED _IOW(VHOST_VIRTIO, 0x43, __u32)
-+#define VHOST_SCSI_GET_EVENTS_MISSED _IOW(VHOST_VIRTIO, 0x44, __u32)
-+
-+/* VHOST_VSOCK specific defines */
-+
-+#define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
-+#define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
-+
-+#endif
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 513f52a484fd..62072822dc85 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -85,6 +85,7 @@ tools/include/uapi/linux/mman.h
- tools/include/uapi/linux/perf_event.h
- tools/include/uapi/linux/sched.h
- tools/include/uapi/linux/stat.h
-+tools/include/uapi/linux/vhost.h
- tools/include/uapi/sound/asound.h
- tools/include/linux/poison.h
- tools/include/linux/rbtree.h
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 1f009506ff63..932fda54b8a6 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -8,6 +8,7 @@ include/uapi/linux/kvm.h
- include/uapi/linux/perf_event.h
- include/uapi/linux/sched.h
- include/uapi/linux/stat.h
-+include/uapi/linux/vhost.h
- include/uapi/sound/asound.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
++printf "static const char *kvm_ioctl_cmds[] = {\n"
++regex='^#[[:space:]]*define[[:space:]]+KVM_(\w+)[[:space:]]+_IO[RW]*\([[:space:]]*KVMIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
++egrep $regex ${kvm_header_dir}/kvm.h	| \
++	sed -r "s/$regex/\2 \1/g"	| \
++	egrep -v " ((ARM|PPC|S390)_|[GS]ET_(DEBUGREGS|PIT2|XSAVE|TSC_KHZ)|CREATE_SPAPR_TCE_64)" | \
++	sort | xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n"
 -- 
 2.9.4
