@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/18] perf trace beauty ioctl: Pass _IOC_DIR to the per _IOC_TYPE scnprintf
-Date: Tue,  1 Aug 2017 16:56:42 -0300
-Message-ID: <20170801195645.16986-16-acme@kernel.org>
+Subject: [PATCH 17/18] perf trace beautify ioctl: Beautify vhost virtio ioctl's 'cmd' arg
+Date: Tue,  1 Aug 2017 16:56:44 -0300
+Message-ID: <20170801195645.16986-18-acme@kernel.org>
 References: <20170801195645.16986-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,143 +10,159 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170801195645.16986-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Not all subsystems use the fact that we may have the same _IOC_NR for
-different _IOC_DIR, as in the end it'll result in a different ioctl
-number.
+Also trying a new approach, using a copy of uapi/linux/vhost.h we auto
+generate the string tables, then include it in the ioctl cmd beautifier.
 
-So, for instance, vhost virtio has:
+This way either the KVM developers will add the new commands to the
+tools/ copy, like is happening with other areas of tools/include/ (bpf.h
+comes to mind), or we'll be notified when building perf that our copy
+drifted.
 
-  #define VHOST_GET_FEATURES      _IOR(VHOST_VIRTIO, 0x00, __u64)
-  #define VHOST_SET_FEATURES      _IOW(VHOST_VIRTIO, 0x00, __u64)
+E.g., doing syswide tracing grepping for the newly beautified VHOST
+ioctls:
 
-So same _IOC_NR (0x00) but different _IOC_DIR (R versus W), but it also
-have:
+  # perf trace -e ioctl 2>&1 | grep VHOST
+  3873.064 ( 0.099 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_NET_SET_BACKEND, arg: 0x7fff053dffe0) = 0
+  3873.168 ( 0.019 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_NET_SET_BACKEND, arg: 0x7fff053dffe0) = 0
+  3873.226 ( 0.006 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_GET_VRING_BASE, arg: 0x7fff053dff60) = 0
+  3873.244 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_GET_VRING_BASE, arg: 0x7fff053dff60) = 0
+  3873.817 ( 0.014 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_CALL, arg: 0x7fff053dff20) = 0
+  3873.838 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_CALL, arg: 0x7fff053dff20) = 0
+  4701.372 ( 0.006 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_CALL, arg: 0x7fff053dfe20) = 0
+  4701.417 ( 0.007 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_CALL, arg: 0x7fff053dfe20) = 0
+  4701.563 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_FEATURES, arg: 0x7fff053dfe88) = 0
+  4701.571 ( 0.028 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_MEM_TABLE, arg: 0x563c7c906870) = 0
+  4701.604 ( 0.003 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_NUM, arg: 0x7fff053dff00) = 0
+  4701.609 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_BASE, arg: 0x7fff053dff00) = 0
+  4701.615 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_ADDR, arg: 0x7fff053dfe70) = 0
+  4701.619 ( 0.008 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_KICK, arg: 0x7fff053dfef0) = 0
+  4701.634 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_NUM, arg: 0x7fff053dff00) = 0
+  4701.640 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_BASE, arg: 0x7fff053dff00) = 0
+  4701.644 ( 0.002 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_ADDR, arg: 0x7fff053dfe70) = 0
+  4701.648 ( 0.009 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_SET_VRING_KICK, arg: 0x7fff053dfef0) = 0
+  4701.665 ( 0.005 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_NET_SET_BACKEND, arg: 0x7fff053dff80) = 0
+  4701.672 ( 0.004 ms): qemu-system-x8/21238 ioctl(fd: 27</dev/vhost-net>, cmd: VHOST_NET_SET_BACKEND, arg: 0x7fff053dff80) = 0
+^C
 
-  #define VHOST_SET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x13, struct vhost_vring_state)
-  #define VHOST_GET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x14, struct vhost_vring_state)
-
-A "get" operation that uses a "W" _IOC_DIR, and its implementation, uses
-copy_to_user, it should've probably been _IOR().
-
-Then:
-
-  /* Base value where queue looks for available descriptors */
-  #define VHOST_SET_VRING_BASE _IOW(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
-  /* Get accessor: reads index, writes value in num */
-  #define VHOST_GET_VRING_BASE _IOWR(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
-
-So we'll need to use _IOC_DIR() to disambiguate the VHOST_VIRTIO ioctl
-bautifier.
+ '-e ioctl' uses tracepoint filters, in time this will be replaces by
+eBPF filters hooked at the syscall tracepoints and that "grep VHOST"
+will also be done with eBPF, right at the kernel, to reduce overhead.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jason Wang <jasowang@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-rq6q717ql7j2z7kuccafgq84@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-2gthnhpliunvakywjterrzz3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/ioctl.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/Makefile.perf                      | 13 +++++++++++--
+ tools/perf/trace/beauty/ioctl.c               | 14 ++++++++++++++
+ tools/perf/trace/beauty/vhost_virtio_ioctl.sh | 17 +++++++++++++++++
+ 3 files changed, 42 insertions(+), 2 deletions(-)
+ create mode 100755 tools/perf/trace/beauty/vhost_virtio_ioctl.sh
 
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 6c1be10c6749..606358d67f8a 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -413,6 +413,13 @@ kvm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/kvm_ioctl.sh
+ $(kvm_ioctl_array): $(kvm_hdr_dir)/kvm.h $(kvm_ioctl_tbl)
+ 	$(Q)$(SHELL) '$(kvm_ioctl_tbl)' $(kvm_hdr_dir) > $@
+ 
++vhost_virtio_ioctl_array := $(beauty_ioctl_outdir)/vhost_virtio_ioctl_array.c
++vhost_virtio_hdr_dir := $(srctree)/tools/include/uapi/linux
++vhost_virtio_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
++
++$(vhost_virtio_ioctl_array): $(vhost_virtio_hdr_dir)/vhost.h $(vhost_virtio_ioctl_tbl)
++	$(Q)$(SHELL) '$(vhost_virtio_ioctl_tbl)' $(vhost_virtio_hdr_dir) > $@
++
+ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ 
+ $(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST)
+@@ -510,7 +517,8 @@ build-dir   = $(if $(__build-dir),$(__build-dir),.)
+ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
+ 	$(sndrv_pcm_ioctl_array) \
+ 	$(sndrv_ctl_ioctl_array) \
+-	$(kvm_ioctl_array)
++	$(kvm_ioctl_array) \
++	$(vhost_virtio_ioctl_array)
+ 
+ $(OUTPUT)%.o: %.c prepare FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
+@@ -779,7 +787,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(drm_ioctl_array) \
+ 		$(OUTPUT)$(sndrv_ctl_ioctl_array) \
+ 		$(OUTPUT)$(sndrv_pcm_ioctl_array) \
+-		$(OUTPUT)$(kvm_ioctl_array)
++		$(OUTPUT)$(kvm_ioctl_array) \
++		$(OUTPUT)$(vhost_virtio_ioctl_array)
+ 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
+ 	$(python-clean)
+ 
 diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 89fa4eb68247..8633d96ed131 100644
+index 8633d96ed131..95434b27873d 100644
 --- a/tools/perf/trace/beauty/ioctl.c
 +++ b/tools/perf/trace/beauty/ioctl.c
-@@ -19,7 +19,7 @@
-  */
- #include <uapi/asm-generic/ioctls.h>
- 
--static size_t ioctl__scnprintf_tty_cmd(int nr, char *bf, size_t size)
-+static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
- 	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-@@ -41,10 +41,10 @@ static size_t ioctl__scnprintf_tty_cmd(int nr, char *bf, size_t size)
- 	if (nr < strarray__ioctl_tty_cmd.nr_entries && strarray__ioctl_tty_cmd.entries[nr] != NULL)
- 		return scnprintf(bf, size, "%s", strarray__ioctl_tty_cmd.entries[nr]);
- 
--	return scnprintf(bf, size, "(%#x, %#x)", 'T', nr);
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 'T', nr, dir);
+@@ -88,6 +88,19 @@ static size_t ioctl__scnprintf_kvm_cmd(int nr, int dir, char *bf, size_t size)
+ 	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAE, nr, dir);
  }
  
--static size_t ioctl__scnprintf_drm_cmd(int nr, char *bf, size_t size)
-+static size_t ioctl__scnprintf_drm_cmd(int nr, int dir, char *bf, size_t size)
- {
- #include "trace/beauty/generated/ioctl/drm_ioctl_array.c"
- 	static DEFINE_STRARRAY(drm_ioctl_cmds);
-@@ -52,10 +52,10 @@ static size_t ioctl__scnprintf_drm_cmd(int nr, char *bf, size_t size)
- 	if (nr < strarray__drm_ioctl_cmds.nr_entries && strarray__drm_ioctl_cmds.entries[nr] != NULL)
- 		return scnprintf(bf, size, "DRM_%s", strarray__drm_ioctl_cmds.entries[nr]);
- 
--	return scnprintf(bf, size, "(%#x, %#x)", 'd', nr);
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 'd', nr, dir);
- }
- 
--static size_t ioctl__scnprintf_sndrv_pcm_cmd(int nr, char *bf, size_t size)
-+static size_t ioctl__scnprintf_sndrv_pcm_cmd(int nr, int dir, char *bf, size_t size)
- {
- #include "trace/beauty/generated/ioctl/sndrv_pcm_ioctl_array.c"
- 	static DEFINE_STRARRAY(sndrv_pcm_ioctl_cmds);
-@@ -63,10 +63,10 @@ static size_t ioctl__scnprintf_sndrv_pcm_cmd(int nr, char *bf, size_t size)
- 	if (nr < strarray__sndrv_pcm_ioctl_cmds.nr_entries && strarray__sndrv_pcm_ioctl_cmds.entries[nr] != NULL)
- 		return scnprintf(bf, size, "SNDRV_PCM_%s", strarray__sndrv_pcm_ioctl_cmds.entries[nr]);
- 
--	return scnprintf(bf, size, "(%#x, %#x)", 'A', nr);
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 'A', nr, dir);
- }
- 
--static size_t ioctl__scnprintf_sndrv_ctl_cmd(int nr, char *bf, size_t size)
-+static size_t ioctl__scnprintf_sndrv_ctl_cmd(int nr, int dir, char *bf, size_t size)
- {
- #include "trace/beauty/generated/ioctl/sndrv_ctl_ioctl_array.c"
- 	static DEFINE_STRARRAY(sndrv_ctl_ioctl_cmds);
-@@ -74,10 +74,10 @@ static size_t ioctl__scnprintf_sndrv_ctl_cmd(int nr, char *bf, size_t size)
- 	if (nr < strarray__sndrv_ctl_ioctl_cmds.nr_entries && strarray__sndrv_ctl_ioctl_cmds.entries[nr] != NULL)
- 		return scnprintf(bf, size, "SNDRV_CTL_%s", strarray__sndrv_ctl_ioctl_cmds.entries[nr]);
- 
--	return scnprintf(bf, size, "(%#x, %#x)", 'U', nr);
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 'U', nr, dir);
- }
- 
--static size_t ioctl__scnprintf_kvm_cmd(int nr, char *bf, size_t size)
-+static size_t ioctl__scnprintf_kvm_cmd(int nr, int dir, char *bf, size_t size)
- {
- #include "trace/beauty/generated/ioctl/kvm_ioctl_array.c"
- 	static DEFINE_STRARRAY(kvm_ioctl_cmds);
-@@ -85,7 +85,7 @@ static size_t ioctl__scnprintf_kvm_cmd(int nr, char *bf, size_t size)
- 	if (nr < strarray__kvm_ioctl_cmds.nr_entries && strarray__kvm_ioctl_cmds.entries[nr] != NULL)
- 		return scnprintf(bf, size, "KVM_%s", strarray__kvm_ioctl_cmds.entries[nr]);
- 
--	return scnprintf(bf, size, "(%#x, %#x)", 0xAE, nr);
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAE, nr, dir);
- }
- 
++static size_t ioctl__scnprintf_vhost_virtio_cmd(int nr, int dir, char *bf, size_t size)
++{
++#include "trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c"
++	static DEFINE_STRARRAY(vhost_virtio_ioctl_cmds);
++	static DEFINE_STRARRAY(vhost_virtio_ioctl_read_cmds);
++	struct strarray *s = (dir & _IOC_READ) ? &strarray__vhost_virtio_ioctl_read_cmds : &strarray__vhost_virtio_ioctl_cmds;
++
++	if (nr < s->nr_entries && s->entries[nr] != NULL)
++		return scnprintf(bf, size, "VHOST_%s", s->entries[nr]);
++
++	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAF, nr, dir);
++}
++
  static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
-@@ -97,7 +97,7 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- 	int printed = 0;
- 	static const struct ioctl_type {
- 		int	type;
--		size_t	(*scnprintf)(int nr, char *bf, size_t size);
-+		size_t	(*scnprintf)(int nr, int dir, char *bf, size_t size);
- 	} ioctl_types[] = { /* Must be ordered by type */
- 			      { .type	= 'A', .scnprintf = ioctl__scnprintf_sndrv_pcm_cmd, },
- 		['T' - 'A']=  { .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, },
-@@ -111,7 +111,7 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- 		const int index = type - ioctl_types[0].type;
+ {
+ 	int dir	 = _IOC_DIR(cmd),
+@@ -104,6 +117,7 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
+ 		['U' - 'A']=  { .type	= 'U', .scnprintf = ioctl__scnprintf_sndrv_ctl_cmd, },
+ 		['d' - 'A'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, },
+ 		[0xAE - 'A'] = { .type	= 0xAE, .scnprintf = ioctl__scnprintf_kvm_cmd, },
++		[0xAF - 'A'] = { .type	= 0xAF, .scnprintf = ioctl__scnprintf_vhost_virtio_cmd, },
+ 	};
+ 	const int nr_types = ARRAY_SIZE(ioctl_types);
  
- 		if (ioctl_types[index].scnprintf != NULL)
--			return ioctl_types[index].scnprintf(nr, bf, size);
-+			return ioctl_types[index].scnprintf(nr, dir, bf, size);
- 	}
- 
- 	printed += scnprintf(bf + printed, size - printed, "%c", '(');
+diff --git a/tools/perf/trace/beauty/vhost_virtio_ioctl.sh b/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
+new file mode 100755
+index 000000000000..76f1de697787
+--- /dev/null
++++ b/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
+@@ -0,0 +1,17 @@
++#!/bin/sh
++
++vhost_virtio_header_dir=$1
++
++printf "static const char *vhost_virtio_ioctl_cmds[] = {\n"
++regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
++egrep $regex ${vhost_virtio_header_dir}/vhost.h | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	sort | xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n"
++
++printf "static const char *vhost_virtio_ioctl_read_cmds[] = {\n"
++regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?R\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
++egrep $regex ${vhost_virtio_header_dir}/vhost.h | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	sort | xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n"
 -- 
 2.9.4
