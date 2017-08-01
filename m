@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/18] perf trace beauty ioctl: Beautify DRM ioctl cmds
-Date: Tue,  1 Aug 2017 16:56:37 -0300
-Message-ID: <20170801195645.16986-11-acme@kernel.org>
+Subject: [PATCH 05/18] tools include uapi: Grab a copy of asm-generic/ioctls.h
+Date: Tue,  1 Aug 2017 16:56:32 -0300
+Message-ID: <20170801195645.16986-6-acme@kernel.org>
 References: <20170801195645.16986-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170801195645.16986-1-acme@kernel.org>
@@ -12,155 +12,180 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This time we try a new approach, using uapi/drm/ copies of drm.h and
-i915_drm.h we auto generate the string tables, then include it in the
-ioctl cmd beautifier.
+So that we can build on older systems where otherwise we would end up
+with:
 
-This way either the DRM developers will add the new commands to the
-tools/ copy, like is happening with other areas of tools/include/ (bpf.h
-comes to mind), or we'll be notified when building perf that our copy
-drifted.
+    CC       /tmp/build/perf/trace/beauty/ioctl.o
+  trace/beauty/ioctl.c: In function 'ioctl__scnprintf_tty_cmd':
+  trace/beauty/ioctl.c:25:17: error: 'TIOCGEXCL' undeclared (first use in this function)
+  trace/beauty/ioctl.c:25:17: note: each undeclared identifier is reported only once for each function it appears in
+  trace/beauty/ioctl.c:25:2: error: array index in initializer not of integer type
+  trace/beauty/ioctl.c:25:2: error: (near initialization for 'ioctl_tty_cmd')
 
-Either way the time from a new command being added to when 'perf trace'
-gets to know it is greatly shortened, for instance:
-
-  # strace -p 22401 -e ioctl
-  ioctl(8, DRM_IOCTL_I915_GEM_BUSY, 0x7ffc934f7600) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_SET_DOMAIN, 0x7ffc934f7550) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_SW_FINISH, 0x7ffc934f76e0) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_SW_FINISH, 0x7ffc934f7780) = 0
-  ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x64, 0x69, 0x40), 0x7ffc934f7700) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_SET_DOMAIN, 0x7ffc934f7780) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_MADVISE, 0x7ffc934f76f0) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_BUSY, 0x7ffc934f76c0) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_MADVISE, 0x7ffc934f76b0) = 0
-  ioctl(8, DRM_IOCTL_I915_GEM_SET_DOMAIN, 0x7ffc934f76d0) = 0
-  ioctl(8, DRM_IOCTL_MODE_ADDFB, 0x7ffc934f7880) = 0
-  ioctl(8, DRM_IOCTL_MODE_PAGE_FLIP, 0x7ffc934f77d0) = 0
-  ^Cstrace: Process 22401 detached
-
-versus:
-
-  # perf trace -p 22401 -e ioctl
-  1010.856 (0.006 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_BUSY, arg: 0x7ffc934f7600) = 0
-  1010.865 (0.003 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_SET_DOMAIN, arg: 0x7ffc934f7550) = 0
-  1010.872 (0.002 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_SW_FINISH, arg: 0x7ffc934f76e0) = 0
-  1010.939 (0.015 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_SW_FINISH, arg: 0x7ffc934f7780) = 0
-  1010.959 (0.085 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_EXECBUFFER2, arg: 0x7ffc934f7700) = 0
-  1011.048 (0.003 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_SET_DOMAIN, arg: 0x7ffc934f7780) = 0
-  1011.056 (0.002 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_MADVISE, arg: 0x7ffc934f76f0) = 0
-  1011.060 (0.002 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_BUSY, arg: 0x7ffc934f76c0) = 0
-  1011.064 (0.003 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_MADVISE, arg: 0x7ffc934f76b0) = 0
-  1011.068 (0.002 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_SET_DOMAIN, arg: 0x7ffc934f76d0) = 0
-  1011.074 (0.009 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_MODE_ADDFB, arg: 0x7ffc934f7880 ) = 0
-  1011.096 (0.072 ms): gnome-shell/22401 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_MODE_PAGE_FLIP, arg: 0x7ffc934f77d0) = 0
-^C[root@jouet linux]#
+This way we can build a tool on an older system and it will still be
+capable of processing perf.data files generated on newer systems.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-mly2d7v9kf28rso81dijbixq@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-8qvkv6txwuzua6d0yvt65wl3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf             | 16 ++++++++++++++--
- tools/perf/trace/beauty/drm_ioctl.sh | 13 +++++++++++++
- tools/perf/trace/beauty/ioctl.c      | 14 +++++++++++++-
- 3 files changed, 40 insertions(+), 3 deletions(-)
- create mode 100755 tools/perf/trace/beauty/drm_ioctl.sh
+ tools/include/uapi/asm-generic/ioctls.h | 118 ++++++++++++++++++++++++++++++++
+ tools/perf/MANIFEST                     |   1 +
+ tools/perf/check-headers.sh             |   1 +
+ 3 files changed, 120 insertions(+)
+ create mode 100644 tools/include/uapi/asm-generic/ioctls.h
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d66f90e6be5c..78654995b99f 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -381,6 +381,17 @@ export INSTALL SHELL_PATH
- 
- SHELL = $(SHELL_PATH)
- 
-+drm_ioctl_outdir := $(OUTPUT)trace/beauty/generated/ioctl
-+drm_ioctl_array := $(drm_ioctl_outdir)/drm_ioctl_array.c
-+drm_hdr_dir := $(srctree)/tools/include/uapi/drm
-+drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
-+
-+# Create output directory if not already present
-+_dummy := $(shell [ -d '$(drm_ioctl_outdir)' ] || mkdir -p '$(drm_ioctl_outdir)')
-+
-+$(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
-+	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
-+
- all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- 
- $(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST)
-@@ -475,7 +486,7 @@ endif
- __build-dir = $(subst $(OUTPUT),,$(dir $@))
- build-dir   = $(if $(__build-dir),$(__build-dir),.)
- 
--prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders
-+prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array)
- 
- $(OUTPUT)%.o: %.c prepare FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
-@@ -740,7 +751,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 	$(call QUIET_CLEAN, core-gen)   $(RM)  *.spec *.pyc *.pyo */*.pyc */*.pyo $(OUTPUT)common-cmds.h TAGS tags cscope* $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
- 		$(OUTPUT)util/intel-pt-decoder/inat-tables.c \
- 		$(OUTPUT)tests/llvm-src-{base,kbuild,prologue,relocation}.c \
--		$(OUTPUT)pmu-events/pmu-events.c
-+		$(OUTPUT)pmu-events/pmu-events.c \
-+		$(OUTPUT)$(drm_ioctl_array)
- 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
- 	$(python-clean)
- 
-diff --git a/tools/perf/trace/beauty/drm_ioctl.sh b/tools/perf/trace/beauty/drm_ioctl.sh
-new file mode 100755
-index 000000000000..2149d3a98e42
+diff --git a/tools/include/uapi/asm-generic/ioctls.h b/tools/include/uapi/asm-generic/ioctls.h
+new file mode 100644
+index 000000000000..14baf9f23a14
 --- /dev/null
-+++ b/tools/perf/trace/beauty/drm_ioctl.sh
-@@ -0,0 +1,13 @@
-+#!/bin/sh
++++ b/tools/include/uapi/asm-generic/ioctls.h
+@@ -0,0 +1,118 @@
++#ifndef __ASM_GENERIC_IOCTLS_H
++#define __ASM_GENERIC_IOCTLS_H
 +
-+drm_header_dir=$1
-+printf "#ifndef DRM_COMMAND_BASE\n"
-+grep "#define DRM_COMMAND_BASE" $drm_header_dir/drm.h
-+printf "#endif\n"
++#include <linux/ioctl.h>
 +
-+printf "static const char *drm_ioctl_cmds[] = {\n"
-+grep "^#define DRM_IOCTL.*DRM_IO" $drm_header_dir/drm.h | \
-+	sed -r 's/^#define +DRM_IOCTL_([A-Z0-9_]+)[	 ]+DRM_IO[A-Z]* *\( *(0x[[:xdigit:]]+),*.*/	[\2] = "\1",/g'
-+grep "^#define DRM_I915_[A-Z_0-9]\+[	 ]\+0x" $drm_header_dir/i915_drm.h | \
-+	sed -r 's/^#define +DRM_I915_([A-Z0-9_]+)[	 ]+(0x[[:xdigit:]]+)/\t[DRM_COMMAND_BASE + \2] = "I915_\1",/g'
-+printf "};\n"
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 5f0dba8aaa88..732489d141c4 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -44,6 +44,17 @@ static size_t ioctl__scnprintf_tty_cmd(int nr, char *bf, size_t size)
- 	return scnprintf(bf, size, "(%#x, %#x)", 'T', nr);
- }
- 
-+static size_t ioctl__scnprintf_drm_cmd(int nr, char *bf, size_t size)
-+{
-+#include "trace/beauty/generated/ioctl/drm_ioctl_array.c"
-+	static DEFINE_STRARRAY(drm_ioctl_cmds);
++/*
++ * These are the most common definitions for tty ioctl numbers.
++ * Most of them do not use the recommended _IOC(), but there is
++ * probably some source code out there hardcoding the number,
++ * so we might as well use them for all new platforms.
++ *
++ * The architectures that use different values here typically
++ * try to be compatible with some Unix variants for the same
++ * architecture.
++ */
 +
-+	if (nr < strarray__drm_ioctl_cmds.nr_entries && strarray__drm_ioctl_cmds.entries[nr] != NULL)
-+		return scnprintf(bf, size, "DRM_%s", strarray__drm_ioctl_cmds.entries[nr]);
++/* 0x54 is just a magic number to make these relatively unique ('T') */
 +
-+	return scnprintf(bf, size, "(%#x, %#x)", 'd', nr);
-+}
++#define TCGETS		0x5401
++#define TCSETS		0x5402
++#define TCSETSW		0x5403
++#define TCSETSF		0x5404
++#define TCGETA		0x5405
++#define TCSETA		0x5406
++#define TCSETAW		0x5407
++#define TCSETAF		0x5408
++#define TCSBRK		0x5409
++#define TCXONC		0x540A
++#define TCFLSH		0x540B
++#define TIOCEXCL	0x540C
++#define TIOCNXCL	0x540D
++#define TIOCSCTTY	0x540E
++#define TIOCGPGRP	0x540F
++#define TIOCSPGRP	0x5410
++#define TIOCOUTQ	0x5411
++#define TIOCSTI		0x5412
++#define TIOCGWINSZ	0x5413
++#define TIOCSWINSZ	0x5414
++#define TIOCMGET	0x5415
++#define TIOCMBIS	0x5416
++#define TIOCMBIC	0x5417
++#define TIOCMSET	0x5418
++#define TIOCGSOFTCAR	0x5419
++#define TIOCSSOFTCAR	0x541A
++#define FIONREAD	0x541B
++#define TIOCINQ		FIONREAD
++#define TIOCLINUX	0x541C
++#define TIOCCONS	0x541D
++#define TIOCGSERIAL	0x541E
++#define TIOCSSERIAL	0x541F
++#define TIOCPKT		0x5420
++#define FIONBIO		0x5421
++#define TIOCNOTTY	0x5422
++#define TIOCSETD	0x5423
++#define TIOCGETD	0x5424
++#define TCSBRKP		0x5425	/* Needed for POSIX tcsendbreak() */
++#define TIOCSBRK	0x5427  /* BSD compatibility */
++#define TIOCCBRK	0x5428  /* BSD compatibility */
++#define TIOCGSID	0x5429  /* Return the session ID of FD */
++#define TCGETS2		_IOR('T', 0x2A, struct termios2)
++#define TCSETS2		_IOW('T', 0x2B, struct termios2)
++#define TCSETSW2	_IOW('T', 0x2C, struct termios2)
++#define TCSETSF2	_IOW('T', 0x2D, struct termios2)
++#define TIOCGRS485	0x542E
++#ifndef TIOCSRS485
++#define TIOCSRS485	0x542F
++#endif
++#define TIOCGPTN	_IOR('T', 0x30, unsigned int) /* Get Pty Number (of pty-mux device) */
++#define TIOCSPTLCK	_IOW('T', 0x31, int)  /* Lock/unlock Pty */
++#define TIOCGDEV	_IOR('T', 0x32, unsigned int) /* Get primary device node of /dev/console */
++#define TCGETX		0x5432 /* SYS5 TCGETX compatibility */
++#define TCSETX		0x5433
++#define TCSETXF		0x5434
++#define TCSETXW		0x5435
++#define TIOCSIG		_IOW('T', 0x36, int)  /* pty: generate signal */
++#define TIOCVHANGUP	0x5437
++#define TIOCGPKT	_IOR('T', 0x38, int) /* Get packet mode state */
++#define TIOCGPTLCK	_IOR('T', 0x39, int) /* Get Pty lock state */
++#define TIOCGEXCL	_IOR('T', 0x40, int) /* Get exclusive mode state */
++#define TIOCGPTPEER	_IO('T', 0x41) /* Safely open the slave */
 +
- static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- {
- 	int dir	 = _IOC_DIR(cmd),
-@@ -55,7 +66,8 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- 		int	type;
- 		size_t	(*scnprintf)(int nr, char *bf, size_t size);
- 	} ioctl_types[] = { /* Must be ordered by type */
--		{ .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, }
-+			      { .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, },
-+		['d' - 'T'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, }
- 	};
- 	const int nr_types = ARRAY_SIZE(ioctl_types);
++#define FIONCLEX	0x5450
++#define FIOCLEX		0x5451
++#define FIOASYNC	0x5452
++#define TIOCSERCONFIG	0x5453
++#define TIOCSERGWILD	0x5454
++#define TIOCSERSWILD	0x5455
++#define TIOCGLCKTRMIOS	0x5456
++#define TIOCSLCKTRMIOS	0x5457
++#define TIOCSERGSTRUCT	0x5458 /* For debugging only */
++#define TIOCSERGETLSR   0x5459 /* Get line status register */
++#define TIOCSERGETMULTI 0x545A /* Get multiport config  */
++#define TIOCSERSETMULTI 0x545B /* Set multiport config */
++
++#define TIOCMIWAIT	0x545C	/* wait for a change on serial input line(s) */
++#define TIOCGICOUNT	0x545D	/* read serial port inline interrupt counts */
++
++/*
++ * Some arches already define FIOQSIZE due to a historical
++ * conflict with a Hayes modem-specific ioctl value.
++ */
++#ifndef FIOQSIZE
++# define FIOQSIZE	0x5460
++#endif
++
++/* Used for packet mode */
++#define TIOCPKT_DATA		 0
++#define TIOCPKT_FLUSHREAD	 1
++#define TIOCPKT_FLUSHWRITE	 2
++#define TIOCPKT_STOP		 4
++#define TIOCPKT_START		 8
++#define TIOCPKT_NOSTOP		16
++#define TIOCPKT_DOSTOP		32
++#define TIOCPKT_IOCTL		64
++
++#define TIOCSER_TEMT	0x01	/* Transmitter physically empty */
++
++#endif /* __ASM_GENERIC_IOCTLS_H */
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index 705bdb147e73..2ee433c52130 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -71,6 +71,7 @@ tools/include/linux/kernel.h
+ tools/include/linux/list.h
+ tools/include/linux/log2.h
+ tools/include/uapi/asm-generic/fcntl.h
++tools/include/uapi/asm-generic/ioctls.h
+ tools/include/uapi/asm-generic/mman-common.h
+ tools/include/uapi/asm-generic/mman.h
+ tools/include/uapi/linux/bpf.h
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index d87bc6af0ac2..ff0a5fabf055 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -31,6 +31,7 @@ include/asm-generic/bitops/__fls.h
+ include/asm-generic/bitops/fls.h
+ include/asm-generic/bitops/fls64.h
+ include/linux/coresight-pmu.h
++include/uapi/asm-generic/ioctls.h
+ include/uapi/asm-generic/mman-common.h
+ '
  
 -- 
 2.9.4
