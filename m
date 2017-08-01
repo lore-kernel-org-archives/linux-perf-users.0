@@ -1,180 +1,273 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/18] perf trace beautify ioctl: Beautify perf ioctl's 'cmd' arg
-Date: Tue,  1 Aug 2017 16:56:45 -0300
-Message-ID: <20170801195645.16986-19-acme@kernel.org>
+Subject: [PATCH 16/18] tools include uapi: Grab a copy of linux/vhost.h
+Date: Tue,  1 Aug 2017 16:56:43 -0300
+Message-ID: <20170801195645.16986-17-acme@kernel.org>
 References: <20170801195645.16986-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170801195645.16986-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Also trying a new approach, using the copy of uapi/linux/perf_event.h we
-auto generate the string tables, then include it in the ioctl cmd
-beautifier.
-
-This way either the perf developers will add the new commands to the
-tools/ copy, like is happening with other areas of tools/include/ (bpf.h
-comes to mind), or we'll be notified when building perf that our copy
-drifted.
-
-E.g., looking at some of the perf ioctls issued by the 'perf test' test cases:
-
-  # (perf trace -e perf_event_open,ioctl perf test)  2>&1 | egrep "(cmd: PERF_|perf_event_open)"
-  4: Read samples using the mmap interface      :
-   348.811 ( 0.062 ms): perf/23351 perf_event_open(attr_uptr: 0x414a5e8, pid: 23351 (perf), group_fd: -1, flags: FD_CLOEXEC) = 3
-   348.878 ( 0.039 ms): perf/23351 perf_event_open(attr_uptr: 0x414a5e8, pid: 23351 (perf), cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 4
-   348.919 ( 0.036 ms): perf/23351 perf_event_open(attr_uptr: 0x414a5e8, pid: 23351 (perf), cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 5
-   348.958 ( 0.036 ms): perf/23351 perf_event_open(attr_uptr: 0x414a5e8, pid: 23351 (perf), cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 6
-   349.070 ( 0.046 ms): perf/23351 perf_event_open(attr_uptr: 0x414aa38, pid: 23351 (perf), group_fd: -1, flags: FD_CLOEXEC) = 7
-   349.120 ( 0.037 ms): perf/23351 perf_event_open(attr_uptr: 0x414aa38, pid: 23351 (perf), cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 8
-   349.161 ( 0.036 ms): perf/23351 perf_event_open(attr_uptr: 0x414aa38, pid: 23351 (perf), cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 9
-   349.201 ( 0.035 ms): perf/23351 perf_event_open(attr_uptr: 0x414aa38, pid: 23351 (perf), cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 10
-   349.306 ( 0.041 ms): perf/23351 perf_event_open(attr_uptr: 0x414b2d8, pid: 23351 (perf), group_fd: -1, flags: FD_CLOEXEC) = 11
-   349.611 ( 0.005 ms): perf/23351 ioctl(fd: 3<anon_inode:[perf_event]>, cmd: PERF_ID, arg: 0x7fff025999b8) = 0
-   349.619 ( 0.002 ms): perf/23351 ioctl(fd: 7<anon_inode:[perf_event]>, cmd: PERF_SET_OUTPUT, arg: 0x3  ) = 0
-   349.623 ( 0.002 ms): perf/23351 ioctl(fd: 7<anon_inode:[perf_event]>, cmd: PERF_ID, arg: 0x7fff025999b8) = 0
-   349.627 ( 0.002 ms): perf/23351 ioctl(fd: 11<anon_inode:[perf_event]>, cmd: PERF_SET_OUTPUT, arg: 0x3 ) = 0
-   349.630 ( 0.001 ms): perf/23351 ioctl(fd: 11<anon_inode:[perf_event]>, cmd: PERF_ID, arg: 0x7fff025999b8) = 0
-<SNIP>
-  7: PERF_RECORD_* events & perf_sample fields  :
-   647.150 ( 0.014 ms): perf/23354 perf_event_open(attr_uptr: 0x7fff02599920, pid: -1, cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 3
-   647.197 ( 0.076 ms): perf/23354 perf_event_open(attr_uptr: 0x414b478, pid: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-   647.289 ( 0.040 ms): perf/23354 perf_event_open(attr_uptr: 0x414b478, pid: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-   647.368 ( 0.011 ms): perf/23354 perf_event_open(attr_uptr: 0x414a5e8, pid: 23355 (perf), group_fd: -1, flags: FD_CLOEXEC) = 3
-   647.381 ( 0.005 ms): perf/23354 perf_event_open(attr_uptr: 0x414a5e8, pid: 23355 (perf), cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 4
-   647.387 ( 0.005 ms): perf/23354 perf_event_open(attr_uptr: 0x414a5e8, pid: 23355 (perf), cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 5
-   647.393 ( 0.004 ms): perf/23354 perf_event_open(attr_uptr: 0x414a5e8, pid: 23355 (perf), cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 7
-   648.026 ( 0.011 ms): perf/23354 ioctl(fd: 3<anon_inode:[perf_event]>, cmd: PERF_ENABLE) = 0
-   648.038 ( 0.002 ms): perf/23354 ioctl(fd: 4<anon_inode:[perf_event]>, cmd: PERF_ENABLE) = 0
-   648.042 ( 0.002 ms): perf/23354 ioctl(fd: 5<anon_inode:[perf_event]>, cmd: PERF_ENABLE) = 0
-   648.045 ( 0.002 ms): perf/23354 ioctl(fd: 7<anon_inode:[perf_event]>, cmd: PERF_ENABLE) = 0
-<SNIP>
-  18: Breakpoint overflow signal handler         :
-  2772.721 ( 0.017 ms): perf/23375 perf_event_open(attr_uptr: 0x7fff02599d20, pid: -1, cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 3
-  2772.748 ( 0.009 ms): perf/23375 perf_event_open(attr_uptr: 0x7fff02599e60, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-  2772.768 ( 0.002 ms): perf/23375 ioctl(fd: 3, cmd: PERF_RESET) = 0
-  2772.776 ( 0.008 ms): perf/23375 perf_event_open(attr_uptr: 0x7fff02599e60, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
-  2772.788 ( 0.002 ms): perf/23375 ioctl(fd: 4, cmd: PERF_RESET) = 0
-  2772.791 ( 0.006 ms): perf/23375 perf_event_open(attr_uptr: 0x7fff02599e60, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 5
-  2772.800 ( 0.001 ms): perf/23375 ioctl(fd: 5, cmd: PERF_RESET) = 0
-  2772.803 ( 0.005 ms): perf/23375 ioctl(fd: 3, cmd: PERF_ENABLE) = 0
-  2772.810 ( 0.004 ms): perf/23375 ioctl(fd: 4, cmd: PERF_ENABLE) = 0
-  2772.815 ( 0.004 ms): perf/23375 ioctl(fd: 5, cmd: PERF_ENABLE) = 0
-<SNIP>
+We will use it to generate tables for beautifying ioctl's 'cmd' arg.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jason Wang <jasowang@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-ahotwscqt080ae0ulu3zznh2@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-nxwpq34hu6te1m2ra5m7o8n9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf              | 13 +++++++++++--
- tools/perf/trace/beauty/ioctl.c       | 24 ++++++++++++++++++------
- tools/perf/trace/beauty/perf_ioctl.sh | 10 ++++++++++
- 3 files changed, 39 insertions(+), 8 deletions(-)
- create mode 100755 tools/perf/trace/beauty/perf_ioctl.sh
+ tools/include/uapi/linux/vhost.h | 209 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/MANIFEST              |   1 +
+ tools/perf/check-headers.sh      |   1 +
+ 3 files changed, 211 insertions(+)
+ create mode 100644 tools/include/uapi/linux/vhost.h
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 606358d67f8a..c1f7884979e2 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -420,6 +420,13 @@ vhost_virtio_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/vhost_virtio_ioctl.
- $(vhost_virtio_ioctl_array): $(vhost_virtio_hdr_dir)/vhost.h $(vhost_virtio_ioctl_tbl)
- 	$(Q)$(SHELL) '$(vhost_virtio_ioctl_tbl)' $(vhost_virtio_hdr_dir) > $@
- 
-+perf_ioctl_array := $(beauty_ioctl_outdir)/perf_ioctl_array.c
-+perf_hdr_dir := $(srctree)/tools/include/uapi/linux
-+perf_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/perf_ioctl.sh
-+
-+$(perf_ioctl_array): $(perf_hdr_dir)/perf_event.h $(perf_ioctl_tbl)
-+	$(Q)$(SHELL) '$(perf_ioctl_tbl)' $(perf_hdr_dir) > $@
-+
- all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- 
- $(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST)
-@@ -518,7 +525,8 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(sndrv_pcm_ioctl_array) \
- 	$(sndrv_ctl_ioctl_array) \
- 	$(kvm_ioctl_array) \
--	$(vhost_virtio_ioctl_array)
-+	$(vhost_virtio_ioctl_array) \
-+	$(perf_ioctl_array)
- 
- $(OUTPUT)%.o: %.c prepare FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
-@@ -788,7 +796,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 		$(OUTPUT)$(sndrv_ctl_ioctl_array) \
- 		$(OUTPUT)$(sndrv_pcm_ioctl_array) \
- 		$(OUTPUT)$(kvm_ioctl_array) \
--		$(OUTPUT)$(vhost_virtio_ioctl_array)
-+		$(OUTPUT)$(vhost_virtio_ioctl_array) \
-+		$(OUTPUT)$(perf_ioctl_array)
- 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
- 	$(python-clean)
- 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 95434b27873d..1be3b4cf0827 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -101,6 +101,17 @@ static size_t ioctl__scnprintf_vhost_virtio_cmd(int nr, int dir, char *bf, size_
- 	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAF, nr, dir);
- }
- 
-+static size_t ioctl__scnprintf_perf_cmd(int nr, int dir, char *bf, size_t size)
-+{
-+#include "trace/beauty/generated/ioctl/perf_ioctl_array.c"
-+	static DEFINE_STRARRAY(perf_ioctl_cmds);
-+
-+	if (nr < strarray__perf_ioctl_cmds.nr_entries && strarray__perf_ioctl_cmds.entries[nr] != NULL)
-+		return scnprintf(bf, size, "PERF_%s", strarray__perf_ioctl_cmds.entries[nr]);
-+
-+	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAE, nr, dir);
-+}
-+
- static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- {
- 	int dir	 = _IOC_DIR(cmd),
-@@ -112,12 +123,13 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size)
- 		int	type;
- 		size_t	(*scnprintf)(int nr, int dir, char *bf, size_t size);
- 	} ioctl_types[] = { /* Must be ordered by type */
--			      { .type	= 'A', .scnprintf = ioctl__scnprintf_sndrv_pcm_cmd, },
--		['T' - 'A']=  { .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, },
--		['U' - 'A']=  { .type	= 'U', .scnprintf = ioctl__scnprintf_sndrv_ctl_cmd, },
--		['d' - 'A'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, },
--		[0xAE - 'A'] = { .type	= 0xAE, .scnprintf = ioctl__scnprintf_kvm_cmd, },
--		[0xAF - 'A'] = { .type	= 0xAF, .scnprintf = ioctl__scnprintf_vhost_virtio_cmd, },
-+			      { .type	= '$', .scnprintf = ioctl__scnprintf_perf_cmd, },
-+		['A' - '$'] = { .type	= 'A', .scnprintf = ioctl__scnprintf_sndrv_pcm_cmd, },
-+		['T' - '$'] = { .type	= 'T', .scnprintf = ioctl__scnprintf_tty_cmd, },
-+		['U' - '$'] = { .type	= 'U', .scnprintf = ioctl__scnprintf_sndrv_ctl_cmd, },
-+		['d' - '$'] = { .type	= 'd', .scnprintf = ioctl__scnprintf_drm_cmd, },
-+		[0xAE - '$'] = { .type	= 0xAE, .scnprintf = ioctl__scnprintf_kvm_cmd, },
-+		[0xAF - '$'] = { .type	= 0xAF, .scnprintf = ioctl__scnprintf_vhost_virtio_cmd, },
- 	};
- 	const int nr_types = ARRAY_SIZE(ioctl_types);
- 
-diff --git a/tools/perf/trace/beauty/perf_ioctl.sh b/tools/perf/trace/beauty/perf_ioctl.sh
-new file mode 100755
-index 000000000000..faea4237c793
+diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
+new file mode 100644
+index 000000000000..60180c0b5dc6
 --- /dev/null
-+++ b/tools/perf/trace/beauty/perf_ioctl.sh
-@@ -0,0 +1,10 @@
-+#!/bin/sh
++++ b/tools/include/uapi/linux/vhost.h
+@@ -0,0 +1,209 @@
++#ifndef _LINUX_VHOST_H
++#define _LINUX_VHOST_H
++/* Userspace interface for in-kernel virtio accelerators. */
 +
-+header_dir=$1
++/* vhost is used to reduce the number of system calls involved in virtio.
++ *
++ * Existing virtio net code is used in the guest without modification.
++ *
++ * This header includes interface used by userspace hypervisor for
++ * device configuration.
++ */
 +
-+printf "static const char *perf_ioctl_cmds[] = {\n"
-+regex='^#[[:space:]]*define[[:space:]]+PERF_EVENT_IOC_(\w+)[[:space:]]+_IO[RW]*[[:space:]]*\([[:space:]]*.\$.[[:space:]]*,[[:space:]]*([[:digit:]]+).*'
-+egrep $regex ${header_dir}/perf_event.h	| \
-+	sed -r "s/$regex/\2 \1/g"	| \
-+	sort | xargs printf "\t[%s] = \"%s\",\n"
-+printf "};\n"
++#include <linux/types.h>
++#include <linux/compiler.h>
++#include <linux/ioctl.h>
++#include <linux/virtio_config.h>
++#include <linux/virtio_ring.h>
++
++struct vhost_vring_state {
++	unsigned int index;
++	unsigned int num;
++};
++
++struct vhost_vring_file {
++	unsigned int index;
++	int fd; /* Pass -1 to unbind from file. */
++
++};
++
++struct vhost_vring_addr {
++	unsigned int index;
++	/* Option flags. */
++	unsigned int flags;
++	/* Flag values: */
++	/* Whether log address is valid. If set enables logging. */
++#define VHOST_VRING_F_LOG 0
++
++	/* Start of array of descriptors (virtually contiguous) */
++	__u64 desc_user_addr;
++	/* Used structure address. Must be 32 bit aligned */
++	__u64 used_user_addr;
++	/* Available structure address. Must be 16 bit aligned */
++	__u64 avail_user_addr;
++	/* Logging support. */
++	/* Log writes to used structure, at offset calculated from specified
++	 * address. Address must be 32 bit aligned. */
++	__u64 log_guest_addr;
++};
++
++/* no alignment requirement */
++struct vhost_iotlb_msg {
++	__u64 iova;
++	__u64 size;
++	__u64 uaddr;
++#define VHOST_ACCESS_RO      0x1
++#define VHOST_ACCESS_WO      0x2
++#define VHOST_ACCESS_RW      0x3
++	__u8 perm;
++#define VHOST_IOTLB_MISS           1
++#define VHOST_IOTLB_UPDATE         2
++#define VHOST_IOTLB_INVALIDATE     3
++#define VHOST_IOTLB_ACCESS_FAIL    4
++	__u8 type;
++};
++
++#define VHOST_IOTLB_MSG 0x1
++
++struct vhost_msg {
++	int type;
++	union {
++		struct vhost_iotlb_msg iotlb;
++		__u8 padding[64];
++	};
++};
++
++struct vhost_memory_region {
++	__u64 guest_phys_addr;
++	__u64 memory_size; /* bytes */
++	__u64 userspace_addr;
++	__u64 flags_padding; /* No flags are currently specified. */
++};
++
++/* All region addresses and sizes must be 4K aligned. */
++#define VHOST_PAGE_SIZE 0x1000
++
++struct vhost_memory {
++	__u32 nregions;
++	__u32 padding;
++	struct vhost_memory_region regions[0];
++};
++
++/* ioctls */
++
++#define VHOST_VIRTIO 0xAF
++
++/* Features bitmask for forward compatibility.  Transport bits are used for
++ * vhost specific features. */
++#define VHOST_GET_FEATURES	_IOR(VHOST_VIRTIO, 0x00, __u64)
++#define VHOST_SET_FEATURES	_IOW(VHOST_VIRTIO, 0x00, __u64)
++
++/* Set current process as the (exclusive) owner of this file descriptor.  This
++ * must be called before any other vhost command.  Further calls to
++ * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
++#define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
++/* Give up ownership, and reset the device to default values.
++ * Allows subsequent call to VHOST_OWNER_SET to succeed. */
++#define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
++
++/* Set up/modify memory layout */
++#define VHOST_SET_MEM_TABLE	_IOW(VHOST_VIRTIO, 0x03, struct vhost_memory)
++
++/* Write logging setup. */
++/* Memory writes can optionally be logged by setting bit at an offset
++ * (calculated from the physical address) from specified log base.
++ * The bit is set using an atomic 32 bit operation. */
++/* Set base address for logging. */
++#define VHOST_SET_LOG_BASE _IOW(VHOST_VIRTIO, 0x04, __u64)
++/* Specify an eventfd file descriptor to signal on log write. */
++#define VHOST_SET_LOG_FD _IOW(VHOST_VIRTIO, 0x07, int)
++
++/* Ring setup. */
++/* Set number of descriptors in ring. This parameter can not
++ * be modified while ring is running (bound to a device). */
++#define VHOST_SET_VRING_NUM _IOW(VHOST_VIRTIO, 0x10, struct vhost_vring_state)
++/* Set addresses for the ring. */
++#define VHOST_SET_VRING_ADDR _IOW(VHOST_VIRTIO, 0x11, struct vhost_vring_addr)
++/* Base value where queue looks for available descriptors */
++#define VHOST_SET_VRING_BASE _IOW(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
++/* Get accessor: reads index, writes value in num */
++#define VHOST_GET_VRING_BASE _IOWR(VHOST_VIRTIO, 0x12, struct vhost_vring_state)
++
++/* Set the vring byte order in num. Valid values are VHOST_VRING_LITTLE_ENDIAN
++ * or VHOST_VRING_BIG_ENDIAN (other values return -EINVAL).
++ * The byte order cannot be changed while the device is active: trying to do so
++ * returns -EBUSY.
++ * This is a legacy only API that is simply ignored when VIRTIO_F_VERSION_1 is
++ * set.
++ * Not all kernel configurations support this ioctl, but all configurations that
++ * support SET also support GET.
++ */
++#define VHOST_VRING_LITTLE_ENDIAN 0
++#define VHOST_VRING_BIG_ENDIAN 1
++#define VHOST_SET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x13, struct vhost_vring_state)
++#define VHOST_GET_VRING_ENDIAN _IOW(VHOST_VIRTIO, 0x14, struct vhost_vring_state)
++
++/* The following ioctls use eventfd file descriptors to signal and poll
++ * for events. */
++
++/* Set eventfd to poll for added buffers */
++#define VHOST_SET_VRING_KICK _IOW(VHOST_VIRTIO, 0x20, struct vhost_vring_file)
++/* Set eventfd to signal when buffers have beed used */
++#define VHOST_SET_VRING_CALL _IOW(VHOST_VIRTIO, 0x21, struct vhost_vring_file)
++/* Set eventfd to signal an error */
++#define VHOST_SET_VRING_ERR _IOW(VHOST_VIRTIO, 0x22, struct vhost_vring_file)
++/* Set busy loop timeout (in us) */
++#define VHOST_SET_VRING_BUSYLOOP_TIMEOUT _IOW(VHOST_VIRTIO, 0x23,	\
++					 struct vhost_vring_state)
++/* Get busy loop timeout (in us) */
++#define VHOST_GET_VRING_BUSYLOOP_TIMEOUT _IOW(VHOST_VIRTIO, 0x24,	\
++					 struct vhost_vring_state)
++
++/* VHOST_NET specific defines */
++
++/* Attach virtio net ring to a raw socket, or tap device.
++ * The socket must be already bound to an ethernet device, this device will be
++ * used for transmit.  Pass fd -1 to unbind from the socket and the transmit
++ * device.  This can be used to stop the ring (e.g. for migration). */
++#define VHOST_NET_SET_BACKEND _IOW(VHOST_VIRTIO, 0x30, struct vhost_vring_file)
++
++/* Feature bits */
++/* Log all write descriptors. Can be changed while device is active. */
++#define VHOST_F_LOG_ALL 26
++/* vhost-net should add virtio_net_hdr for RX, and strip for TX packets. */
++#define VHOST_NET_F_VIRTIO_NET_HDR 27
++
++/* VHOST_SCSI specific definitions */
++
++/*
++ * Used by QEMU userspace to ensure a consistent vhost-scsi ABI.
++ *
++ * ABI Rev 0: July 2012 version starting point for v3.6-rc merge candidate +
++ *            RFC-v2 vhost-scsi userspace.  Add GET_ABI_VERSION ioctl usage
++ * ABI Rev 1: January 2013. Ignore vhost_tpgt filed in struct vhost_scsi_target.
++ *            All the targets under vhost_wwpn can be seen and used by guset.
++ */
++
++#define VHOST_SCSI_ABI_VERSION	1
++
++struct vhost_scsi_target {
++	int abi_version;
++	char vhost_wwpn[224]; /* TRANSPORT_IQN_LEN */
++	unsigned short vhost_tpgt;
++	unsigned short reserved;
++};
++
++#define VHOST_SCSI_SET_ENDPOINT _IOW(VHOST_VIRTIO, 0x40, struct vhost_scsi_target)
++#define VHOST_SCSI_CLEAR_ENDPOINT _IOW(VHOST_VIRTIO, 0x41, struct vhost_scsi_target)
++/* Changing this breaks userspace. */
++#define VHOST_SCSI_GET_ABI_VERSION _IOW(VHOST_VIRTIO, 0x42, int)
++/* Set and get the events missed flag */
++#define VHOST_SCSI_SET_EVENTS_MISSED _IOW(VHOST_VIRTIO, 0x43, __u32)
++#define VHOST_SCSI_GET_EVENTS_MISSED _IOW(VHOST_VIRTIO, 0x44, __u32)
++
++/* VHOST_VSOCK specific defines */
++
++#define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
++#define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
++
++#endif
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index 513f52a484fd..62072822dc85 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -85,6 +85,7 @@ tools/include/uapi/linux/mman.h
+ tools/include/uapi/linux/perf_event.h
+ tools/include/uapi/linux/sched.h
+ tools/include/uapi/linux/stat.h
++tools/include/uapi/linux/vhost.h
+ tools/include/uapi/sound/asound.h
+ tools/include/linux/poison.h
+ tools/include/linux/rbtree.h
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 1f009506ff63..932fda54b8a6 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -8,6 +8,7 @@ include/uapi/linux/kvm.h
+ include/uapi/linux/perf_event.h
+ include/uapi/linux/sched.h
+ include/uapi/linux/stat.h
++include/uapi/linux/vhost.h
+ include/uapi/sound/asound.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
 -- 
 2.9.4
