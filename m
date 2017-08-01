@@ -1,19 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/18] tools include uapi: Grab a copy of linux/kvm.h
-Date: Tue,  1 Aug 2017 16:56:40 -0300
-Message-ID: <20170801195645.16986-14-acme@kernel.org>
+Subject: [PATCH 11/18] tools include uapi: Grab a copy of sound/asound.h
+Date: Tue,  1 Aug 2017 16:56:38 -0300
+Message-ID: <20170801195645.16986-12-acme@kernel.org>
 References: <20170801195645.16986-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752614AbdHAT54 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Aug 2017 15:57:56 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170801195645.16986-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -24,1463 +19,1070 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-nxwpq34hu6te1m2ra5m7o8n9@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-wit4wwmrh9d37dtgtk0glbbj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h | 1419 ++++++++++++++++++++++++++++++++++++++++
- tools/perf/MANIFEST            |    1 +
- tools/perf/check-headers.sh    |    1 +
- 3 files changed, 1421 insertions(+)
- create mode 100644 tools/include/uapi/linux/kvm.h
+ tools/include/uapi/sound/asound.h | 1026 +++++++++++++++++++++++++++++++++++++
+ tools/perf/MANIFEST               |    1 +
+ tools/perf/check-headers.sh       |    1 +
+ 3 files changed, 1028 insertions(+)
+ create mode 100644 tools/include/uapi/sound/asound.h
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+diff --git a/tools/include/uapi/sound/asound.h b/tools/include/uapi/sound/asound.h
 new file mode 100644
-index 000000000000..6cd63c18708a
+index 000000000000..87bf30b182df
 --- /dev/null
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -0,0 +1,1419 @@
-+#ifndef __LINUX_KVM_H
-+#define __LINUX_KVM_H
-+
++++ b/tools/include/uapi/sound/asound.h
+@@ -0,0 +1,1026 @@
 +/*
-+ * Userspace interface for /dev/kvm - kernel based virtual machine
++ *  Advanced Linux Sound Architecture - ALSA - Driver
++ *  Copyright (c) 1994-2003 by Jaroslav Kysela <perex@perex.cz>,
++ *                             Abramo Bagnara <abramo@alsa-project.org>
 + *
-+ * Note: you must update KVM_API_VERSION if you change this interface.
++ *
++ *   This program is free software; you can redistribute it and/or modify
++ *   it under the terms of the GNU General Public License as published by
++ *   the Free Software Foundation; either version 2 of the License, or
++ *   (at your option) any later version.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ *
++ *   You should have received a copy of the GNU General Public License
++ *   along with this program; if not, write to the Free Software
++ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
++ *
 + */
 +
++#ifndef _UAPI__SOUND_ASOUND_H
++#define _UAPI__SOUND_ASOUND_H
++
++#if defined(__KERNEL__) || defined(__linux__)
 +#include <linux/types.h>
-+#include <linux/compiler.h>
-+#include <linux/ioctl.h>
-+#include <asm/kvm.h>
++#else
++#include <sys/ioctl.h>
++#endif
 +
-+#define KVM_API_VERSION 12
-+
-+/* *** Deprecated interfaces *** */
-+
-+#define KVM_TRC_SHIFT           16
-+
-+#define KVM_TRC_ENTRYEXIT       (1 << KVM_TRC_SHIFT)
-+#define KVM_TRC_HANDLER         (1 << (KVM_TRC_SHIFT + 1))
-+
-+#define KVM_TRC_VMENTRY         (KVM_TRC_ENTRYEXIT + 0x01)
-+#define KVM_TRC_VMEXIT          (KVM_TRC_ENTRYEXIT + 0x02)
-+#define KVM_TRC_PAGE_FAULT      (KVM_TRC_HANDLER + 0x01)
-+
-+#define KVM_TRC_HEAD_SIZE       12
-+#define KVM_TRC_CYCLE_SIZE      8
-+#define KVM_TRC_EXTRA_MAX       7
-+
-+#define KVM_TRC_INJ_VIRQ         (KVM_TRC_HANDLER + 0x02)
-+#define KVM_TRC_REDELIVER_EVT    (KVM_TRC_HANDLER + 0x03)
-+#define KVM_TRC_PEND_INTR        (KVM_TRC_HANDLER + 0x04)
-+#define KVM_TRC_IO_READ          (KVM_TRC_HANDLER + 0x05)
-+#define KVM_TRC_IO_WRITE         (KVM_TRC_HANDLER + 0x06)
-+#define KVM_TRC_CR_READ          (KVM_TRC_HANDLER + 0x07)
-+#define KVM_TRC_CR_WRITE         (KVM_TRC_HANDLER + 0x08)
-+#define KVM_TRC_DR_READ          (KVM_TRC_HANDLER + 0x09)
-+#define KVM_TRC_DR_WRITE         (KVM_TRC_HANDLER + 0x0A)
-+#define KVM_TRC_MSR_READ         (KVM_TRC_HANDLER + 0x0B)
-+#define KVM_TRC_MSR_WRITE        (KVM_TRC_HANDLER + 0x0C)
-+#define KVM_TRC_CPUID            (KVM_TRC_HANDLER + 0x0D)
-+#define KVM_TRC_INTR             (KVM_TRC_HANDLER + 0x0E)
-+#define KVM_TRC_NMI              (KVM_TRC_HANDLER + 0x0F)
-+#define KVM_TRC_VMMCALL          (KVM_TRC_HANDLER + 0x10)
-+#define KVM_TRC_HLT              (KVM_TRC_HANDLER + 0x11)
-+#define KVM_TRC_CLTS             (KVM_TRC_HANDLER + 0x12)
-+#define KVM_TRC_LMSW             (KVM_TRC_HANDLER + 0x13)
-+#define KVM_TRC_APIC_ACCESS      (KVM_TRC_HANDLER + 0x14)
-+#define KVM_TRC_TDP_FAULT        (KVM_TRC_HANDLER + 0x15)
-+#define KVM_TRC_GTLB_WRITE       (KVM_TRC_HANDLER + 0x16)
-+#define KVM_TRC_STLB_WRITE       (KVM_TRC_HANDLER + 0x17)
-+#define KVM_TRC_STLB_INVAL       (KVM_TRC_HANDLER + 0x18)
-+#define KVM_TRC_PPC_INSTR        (KVM_TRC_HANDLER + 0x19)
-+
-+struct kvm_user_trace_setup {
-+	__u32 buf_size;
-+	__u32 buf_nr;
-+};
-+
-+#define __KVM_DEPRECATED_MAIN_W_0x06 \
-+	_IOW(KVMIO, 0x06, struct kvm_user_trace_setup)
-+#define __KVM_DEPRECATED_MAIN_0x07 _IO(KVMIO, 0x07)
-+#define __KVM_DEPRECATED_MAIN_0x08 _IO(KVMIO, 0x08)
-+
-+#define __KVM_DEPRECATED_VM_R_0x70 _IOR(KVMIO, 0x70, struct kvm_assigned_irq)
-+
-+struct kvm_breakpoint {
-+	__u32 enabled;
-+	__u32 padding;
-+	__u64 address;
-+};
-+
-+struct kvm_debug_guest {
-+	__u32 enabled;
-+	__u32 pad;
-+	struct kvm_breakpoint breakpoints[4];
-+	__u32 singlestep;
-+};
-+
-+#define __KVM_DEPRECATED_VCPU_W_0x87 _IOW(KVMIO, 0x87, struct kvm_debug_guest)
-+
-+/* *** End of deprecated interfaces *** */
-+
-+
-+/* for KVM_CREATE_MEMORY_REGION */
-+struct kvm_memory_region {
-+	__u32 slot;
-+	__u32 flags;
-+	__u64 guest_phys_addr;
-+	__u64 memory_size; /* bytes */
-+};
-+
-+/* for KVM_SET_USER_MEMORY_REGION */
-+struct kvm_userspace_memory_region {
-+	__u32 slot;
-+	__u32 flags;
-+	__u64 guest_phys_addr;
-+	__u64 memory_size; /* bytes */
-+	__u64 userspace_addr; /* start of the userspace allocated memory */
-+};
++#ifndef __KERNEL__
++#include <stdlib.h>
++#endif
 +
 +/*
-+ * The bit 0 ~ bit 15 of kvm_memory_region::flags are visible for userspace,
-+ * other bits are reserved for kvm internal use which are defined in
-+ * include/linux/kvm_host.h.
++ *  protocol version
 + */
-+#define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
-+#define KVM_MEM_READONLY	(1UL << 1)
 +
-+/* for KVM_IRQ_LINE */
-+struct kvm_irq_level {
-+	/*
-+	 * ACPI gsi notion of irq.
-+	 * For IA-64 (APIC model) IOAPIC0: irq 0-23; IOAPIC1: irq 24-47..
-+	 * For X86 (standard AT mode) PIC0/1: irq 0-15. IOAPIC0: 0-23..
-+	 * For ARM: See Documentation/virtual/kvm/api.txt
-+	 */
-+	union {
-+		__u32 irq;
-+		__s32 status;
-+	};
-+	__u32 level;
++#define SNDRV_PROTOCOL_VERSION(major, minor, subminor) (((major)<<16)|((minor)<<8)|(subminor))
++#define SNDRV_PROTOCOL_MAJOR(version) (((version)>>16)&0xffff)
++#define SNDRV_PROTOCOL_MINOR(version) (((version)>>8)&0xff)
++#define SNDRV_PROTOCOL_MICRO(version) ((version)&0xff)
++#define SNDRV_PROTOCOL_INCOMPATIBLE(kversion, uversion) \
++	(SNDRV_PROTOCOL_MAJOR(kversion) != SNDRV_PROTOCOL_MAJOR(uversion) || \
++	 (SNDRV_PROTOCOL_MAJOR(kversion) == SNDRV_PROTOCOL_MAJOR(uversion) && \
++	   SNDRV_PROTOCOL_MINOR(kversion) != SNDRV_PROTOCOL_MINOR(uversion)))
++
++/****************************************************************************
++ *                                                                          *
++ *        Digital audio interface					    *
++ *                                                                          *
++ ****************************************************************************/
++
++struct snd_aes_iec958 {
++	unsigned char status[24];	/* AES/IEC958 channel status bits */
++	unsigned char subcode[147];	/* AES/IEC958 subcode bits */
++	unsigned char pad;		/* nothing */
++	unsigned char dig_subframe[4];	/* AES/IEC958 subframe bits */
 +};
 +
++/****************************************************************************
++ *                                                                          *
++ *        CEA-861 Audio InfoFrame. Used in HDMI and DisplayPort		    *
++ *                                                                          *
++ ****************************************************************************/
 +
-+struct kvm_irqchip {
-+	__u32 chip_id;
-+	__u32 pad;
-+        union {
-+		char dummy[512];  /* reserving space */
-+#ifdef __KVM_HAVE_PIT
-+		struct kvm_pic_state pic;
-+#endif
-+#ifdef __KVM_HAVE_IOAPIC
-+		struct kvm_ioapic_state ioapic;
-+#endif
-+	} chip;
++struct snd_cea_861_aud_if {
++	unsigned char db1_ct_cc; /* coding type and channel count */
++	unsigned char db2_sf_ss; /* sample frequency and size */
++	unsigned char db3; /* not used, all zeros */
++	unsigned char db4_ca; /* channel allocation code */
++	unsigned char db5_dminh_lsv; /* downmix inhibit & level-shit values */
 +};
 +
-+/* for KVM_CREATE_PIT2 */
-+struct kvm_pit_config {
-+	__u32 flags;
-+	__u32 pad[15];
++/****************************************************************************
++ *                                                                          *
++ *      Section for driver hardware dependent interface - /dev/snd/hw?      *
++ *                                                                          *
++ ****************************************************************************/
++
++#define SNDRV_HWDEP_VERSION		SNDRV_PROTOCOL_VERSION(1, 0, 1)
++
++enum {
++	SNDRV_HWDEP_IFACE_OPL2 = 0,
++	SNDRV_HWDEP_IFACE_OPL3,
++	SNDRV_HWDEP_IFACE_OPL4,
++	SNDRV_HWDEP_IFACE_SB16CSP,	/* Creative Signal Processor */
++	SNDRV_HWDEP_IFACE_EMU10K1,	/* FX8010 processor in EMU10K1 chip */
++	SNDRV_HWDEP_IFACE_YSS225,	/* Yamaha FX processor */
++	SNDRV_HWDEP_IFACE_ICS2115,	/* Wavetable synth */
++	SNDRV_HWDEP_IFACE_SSCAPE,	/* Ensoniq SoundScape ISA card (MC68EC000) */
++	SNDRV_HWDEP_IFACE_VX,		/* Digigram VX cards */
++	SNDRV_HWDEP_IFACE_MIXART,	/* Digigram miXart cards */
++	SNDRV_HWDEP_IFACE_USX2Y,	/* Tascam US122, US224 & US428 usb */
++	SNDRV_HWDEP_IFACE_EMUX_WAVETABLE, /* EmuX wavetable */
++	SNDRV_HWDEP_IFACE_BLUETOOTH,	/* Bluetooth audio */
++	SNDRV_HWDEP_IFACE_USX2Y_PCM,	/* Tascam US122, US224 & US428 rawusb pcm */
++	SNDRV_HWDEP_IFACE_PCXHR,	/* Digigram PCXHR */
++	SNDRV_HWDEP_IFACE_SB_RC,	/* SB Extigy/Audigy2NX remote control */
++	SNDRV_HWDEP_IFACE_HDA,		/* HD-audio */
++	SNDRV_HWDEP_IFACE_USB_STREAM,	/* direct access to usb stream */
++	SNDRV_HWDEP_IFACE_FW_DICE,	/* TC DICE FireWire device */
++	SNDRV_HWDEP_IFACE_FW_FIREWORKS,	/* Echo Audio Fireworks based device */
++	SNDRV_HWDEP_IFACE_FW_BEBOB,	/* BridgeCo BeBoB based device */
++	SNDRV_HWDEP_IFACE_FW_OXFW,	/* Oxford OXFW970/971 based device */
++	SNDRV_HWDEP_IFACE_FW_DIGI00X,	/* Digidesign Digi 002/003 family */
++	SNDRV_HWDEP_IFACE_FW_TASCAM,	/* TASCAM FireWire series */
++	SNDRV_HWDEP_IFACE_LINE6,	/* Line6 USB processors */
++	SNDRV_HWDEP_IFACE_FW_MOTU,	/* MOTU FireWire series */
++	SNDRV_HWDEP_IFACE_FW_FIREFACE,	/* RME Fireface series */
++
++	/* Don't forget to change the following: */
++	SNDRV_HWDEP_IFACE_LAST = SNDRV_HWDEP_IFACE_FW_FIREFACE
 +};
 +
-+#define KVM_PIT_SPEAKER_DUMMY     1
-+
-+struct kvm_s390_skeys {
-+	__u64 start_gfn;
-+	__u64 count;
-+	__u64 skeydata_addr;
-+	__u32 flags;
-+	__u32 reserved[9];
++struct snd_hwdep_info {
++	unsigned int device;		/* WR: device number */
++	int card;			/* R: card number */
++	unsigned char id[64];		/* ID (user selectable) */
++	unsigned char name[80];		/* hwdep name */
++	int iface;			/* hwdep interface */
++	unsigned char reserved[64];	/* reserved for future */
 +};
 +
-+#define KVM_S390_CMMA_PEEK (1 << 0)
-+
-+/**
-+ * kvm_s390_cmma_log - Used for CMMA migration.
-+ *
-+ * Used both for input and output.
-+ *
-+ * @start_gfn: Guest page number to start from.
-+ * @count: Size of the result buffer.
-+ * @flags: Control operation mode via KVM_S390_CMMA_* flags
-+ * @remaining: Used with KVM_S390_GET_CMMA_BITS. Indicates how many dirty
-+ *             pages are still remaining.
-+ * @mask: Used with KVM_S390_SET_CMMA_BITS. Bitmap of bits to actually set
-+ *        in the PGSTE.
-+ * @values: Pointer to the values buffer.
-+ *
-+ * Used in KVM_S390_{G,S}ET_CMMA_BITS ioctls.
-+ */
-+struct kvm_s390_cmma_log {
-+	__u64 start_gfn;
-+	__u32 count;
-+	__u32 flags;
-+	union {
-+		__u64 remaining;
-+		__u64 mask;
-+	};
-+	__u64 values;
++/* generic DSP loader */
++struct snd_hwdep_dsp_status {
++	unsigned int version;		/* R: driver-specific version */
++	unsigned char id[32];		/* R: driver-specific ID string */
++	unsigned int num_dsps;		/* R: number of DSP images to transfer */
++	unsigned int dsp_loaded;	/* R: bit flags indicating the loaded DSPs */
++	unsigned int chip_ready;	/* R: 1 = initialization finished */
++	unsigned char reserved[16];	/* reserved for future use */
 +};
 +
-+struct kvm_hyperv_exit {
-+#define KVM_EXIT_HYPERV_SYNIC          1
-+#define KVM_EXIT_HYPERV_HCALL          2
-+	__u32 type;
-+	union {
-+		struct {
-+			__u32 msr;
-+			__u64 control;
-+			__u64 evt_page;
-+			__u64 msg_page;
-+		} synic;
-+		struct {
-+			__u64 input;
-+			__u64 result;
-+			__u64 params[2];
-+		} hcall;
-+	} u;
++struct snd_hwdep_dsp_image {
++	unsigned int index;		/* W: DSP index */
++	unsigned char name[64];		/* W: ID (e.g. file name) */
++	unsigned char __user *image;	/* W: binary image */
++	size_t length;			/* W: size of image in bytes */
++	unsigned long driver_data;	/* W: driver-specific data */
 +};
 +
-+#define KVM_S390_GET_SKEYS_NONE   1
-+#define KVM_S390_SKEYS_MAX        1048576
++#define SNDRV_HWDEP_IOCTL_PVERSION	_IOR ('H', 0x00, int)
++#define SNDRV_HWDEP_IOCTL_INFO		_IOR ('H', 0x01, struct snd_hwdep_info)
++#define SNDRV_HWDEP_IOCTL_DSP_STATUS	_IOR('H', 0x02, struct snd_hwdep_dsp_status)
++#define SNDRV_HWDEP_IOCTL_DSP_LOAD	_IOW('H', 0x03, struct snd_hwdep_dsp_image)
 +
-+#define KVM_EXIT_UNKNOWN          0
-+#define KVM_EXIT_EXCEPTION        1
-+#define KVM_EXIT_IO               2
-+#define KVM_EXIT_HYPERCALL        3
-+#define KVM_EXIT_DEBUG            4
-+#define KVM_EXIT_HLT              5
-+#define KVM_EXIT_MMIO             6
-+#define KVM_EXIT_IRQ_WINDOW_OPEN  7
-+#define KVM_EXIT_SHUTDOWN         8
-+#define KVM_EXIT_FAIL_ENTRY       9
-+#define KVM_EXIT_INTR             10
-+#define KVM_EXIT_SET_TPR          11
-+#define KVM_EXIT_TPR_ACCESS       12
-+#define KVM_EXIT_S390_SIEIC       13
-+#define KVM_EXIT_S390_RESET       14
-+#define KVM_EXIT_DCR              15 /* deprecated */
-+#define KVM_EXIT_NMI              16
-+#define KVM_EXIT_INTERNAL_ERROR   17
-+#define KVM_EXIT_OSI              18
-+#define KVM_EXIT_PAPR_HCALL	  19
-+#define KVM_EXIT_S390_UCONTROL	  20
-+#define KVM_EXIT_WATCHDOG         21
-+#define KVM_EXIT_S390_TSCH        22
-+#define KVM_EXIT_EPR              23
-+#define KVM_EXIT_SYSTEM_EVENT     24
-+#define KVM_EXIT_S390_STSI        25
-+#define KVM_EXIT_IOAPIC_EOI       26
-+#define KVM_EXIT_HYPERV           27
++/*****************************************************************************
++ *                                                                           *
++ *             Digital Audio (PCM) interface - /dev/snd/pcm??                *
++ *                                                                           *
++ *****************************************************************************/
 +
-+/* For KVM_EXIT_INTERNAL_ERROR */
-+/* Emulate instruction failed. */
-+#define KVM_INTERNAL_ERROR_EMULATION	1
-+/* Encounter unexpected simultaneous exceptions. */
-+#define KVM_INTERNAL_ERROR_SIMUL_EX	2
-+/* Encounter unexpected vm-exit due to delivery event. */
-+#define KVM_INTERNAL_ERROR_DELIVERY_EV	3
++#define SNDRV_PCM_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 14)
 +
-+/* for KVM_RUN, returned by mmap(vcpu_fd, offset=0) */
-+struct kvm_run {
-+	/* in */
-+	__u8 request_interrupt_window;
-+	__u8 immediate_exit;
-+	__u8 padding1[6];
++typedef unsigned long snd_pcm_uframes_t;
++typedef signed long snd_pcm_sframes_t;
 +
-+	/* out */
-+	__u32 exit_reason;
-+	__u8 ready_for_interrupt_injection;
-+	__u8 if_flag;
-+	__u16 flags;
-+
-+	/* in (pre_kvm_run), out (post_kvm_run) */
-+	__u64 cr8;
-+	__u64 apic_base;
-+
-+#ifdef __KVM_S390
-+	/* the processor status word for s390 */
-+	__u64 psw_mask; /* psw upper half */
-+	__u64 psw_addr; /* psw lower half */
-+#endif
-+	union {
-+		/* KVM_EXIT_UNKNOWN */
-+		struct {
-+			__u64 hardware_exit_reason;
-+		} hw;
-+		/* KVM_EXIT_FAIL_ENTRY */
-+		struct {
-+			__u64 hardware_entry_failure_reason;
-+		} fail_entry;
-+		/* KVM_EXIT_EXCEPTION */
-+		struct {
-+			__u32 exception;
-+			__u32 error_code;
-+		} ex;
-+		/* KVM_EXIT_IO */
-+		struct {
-+#define KVM_EXIT_IO_IN  0
-+#define KVM_EXIT_IO_OUT 1
-+			__u8 direction;
-+			__u8 size; /* bytes */
-+			__u16 port;
-+			__u32 count;
-+			__u64 data_offset; /* relative to kvm_run start */
-+		} io;
-+		/* KVM_EXIT_DEBUG */
-+		struct {
-+			struct kvm_debug_exit_arch arch;
-+		} debug;
-+		/* KVM_EXIT_MMIO */
-+		struct {
-+			__u64 phys_addr;
-+			__u8  data[8];
-+			__u32 len;
-+			__u8  is_write;
-+		} mmio;
-+		/* KVM_EXIT_HYPERCALL */
-+		struct {
-+			__u64 nr;
-+			__u64 args[6];
-+			__u64 ret;
-+			__u32 longmode;
-+			__u32 pad;
-+		} hypercall;
-+		/* KVM_EXIT_TPR_ACCESS */
-+		struct {
-+			__u64 rip;
-+			__u32 is_write;
-+			__u32 pad;
-+		} tpr_access;
-+		/* KVM_EXIT_S390_SIEIC */
-+		struct {
-+			__u8 icptcode;
-+			__u16 ipa;
-+			__u32 ipb;
-+		} s390_sieic;
-+		/* KVM_EXIT_S390_RESET */
-+#define KVM_S390_RESET_POR       1
-+#define KVM_S390_RESET_CLEAR     2
-+#define KVM_S390_RESET_SUBSYSTEM 4
-+#define KVM_S390_RESET_CPU_INIT  8
-+#define KVM_S390_RESET_IPL       16
-+		__u64 s390_reset_flags;
-+		/* KVM_EXIT_S390_UCONTROL */
-+		struct {
-+			__u64 trans_exc_code;
-+			__u32 pgm_code;
-+		} s390_ucontrol;
-+		/* KVM_EXIT_DCR (deprecated) */
-+		struct {
-+			__u32 dcrn;
-+			__u32 data;
-+			__u8  is_write;
-+		} dcr;
-+		/* KVM_EXIT_INTERNAL_ERROR */
-+		struct {
-+			__u32 suberror;
-+			/* Available with KVM_CAP_INTERNAL_ERROR_DATA: */
-+			__u32 ndata;
-+			__u64 data[16];
-+		} internal;
-+		/* KVM_EXIT_OSI */
-+		struct {
-+			__u64 gprs[32];
-+		} osi;
-+		/* KVM_EXIT_PAPR_HCALL */
-+		struct {
-+			__u64 nr;
-+			__u64 ret;
-+			__u64 args[9];
-+		} papr_hcall;
-+		/* KVM_EXIT_S390_TSCH */
-+		struct {
-+			__u16 subchannel_id;
-+			__u16 subchannel_nr;
-+			__u32 io_int_parm;
-+			__u32 io_int_word;
-+			__u32 ipb;
-+			__u8 dequeued;
-+		} s390_tsch;
-+		/* KVM_EXIT_EPR */
-+		struct {
-+			__u32 epr;
-+		} epr;
-+		/* KVM_EXIT_SYSTEM_EVENT */
-+		struct {
-+#define KVM_SYSTEM_EVENT_SHUTDOWN       1
-+#define KVM_SYSTEM_EVENT_RESET          2
-+#define KVM_SYSTEM_EVENT_CRASH          3
-+			__u32 type;
-+			__u64 flags;
-+		} system_event;
-+		/* KVM_EXIT_S390_STSI */
-+		struct {
-+			__u64 addr;
-+			__u8 ar;
-+			__u8 reserved;
-+			__u8 fc;
-+			__u8 sel1;
-+			__u16 sel2;
-+		} s390_stsi;
-+		/* KVM_EXIT_IOAPIC_EOI */
-+		struct {
-+			__u8 vector;
-+		} eoi;
-+		/* KVM_EXIT_HYPERV */
-+		struct kvm_hyperv_exit hyperv;
-+		/* Fix the size of the union. */
-+		char padding[256];
-+	};
-+
-+	/*
-+	 * shared registers between kvm and userspace.
-+	 * kvm_valid_regs specifies the register classes set by the host
-+	 * kvm_dirty_regs specified the register classes dirtied by userspace
-+	 * struct kvm_sync_regs is architecture specific, as well as the
-+	 * bits for kvm_valid_regs and kvm_dirty_regs
-+	 */
-+	__u64 kvm_valid_regs;
-+	__u64 kvm_dirty_regs;
-+	union {
-+		struct kvm_sync_regs regs;
-+		char padding[2048];
-+	} s;
-+};
-+
-+/* for KVM_REGISTER_COALESCED_MMIO / KVM_UNREGISTER_COALESCED_MMIO */
-+
-+struct kvm_coalesced_mmio_zone {
-+	__u64 addr;
-+	__u32 size;
-+	__u32 pad;
-+};
-+
-+struct kvm_coalesced_mmio {
-+	__u64 phys_addr;
-+	__u32 len;
-+	__u32 pad;
-+	__u8  data[8];
-+};
-+
-+struct kvm_coalesced_mmio_ring {
-+	__u32 first, last;
-+	struct kvm_coalesced_mmio coalesced_mmio[0];
-+};
-+
-+#define KVM_COALESCED_MMIO_MAX \
-+	((PAGE_SIZE - sizeof(struct kvm_coalesced_mmio_ring)) / \
-+	 sizeof(struct kvm_coalesced_mmio))
-+
-+/* for KVM_TRANSLATE */
-+struct kvm_translation {
-+	/* in */
-+	__u64 linear_address;
-+
-+	/* out */
-+	__u64 physical_address;
-+	__u8  valid;
-+	__u8  writeable;
-+	__u8  usermode;
-+	__u8  pad[5];
-+};
-+
-+/* for KVM_S390_MEM_OP */
-+struct kvm_s390_mem_op {
-+	/* in */
-+	__u64 gaddr;		/* the guest address */
-+	__u64 flags;		/* flags */
-+	__u32 size;		/* amount of bytes */
-+	__u32 op;		/* type of operation */
-+	__u64 buf;		/* buffer in userspace */
-+	__u8 ar;		/* the access register number */
-+	__u8 reserved[31];	/* should be set to 0 */
-+};
-+/* types for kvm_s390_mem_op->op */
-+#define KVM_S390_MEMOP_LOGICAL_READ	0
-+#define KVM_S390_MEMOP_LOGICAL_WRITE	1
-+/* flags for kvm_s390_mem_op->flags */
-+#define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
-+#define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
-+
-+/* for KVM_INTERRUPT */
-+struct kvm_interrupt {
-+	/* in */
-+	__u32 irq;
-+};
-+
-+/* for KVM_GET_DIRTY_LOG */
-+struct kvm_dirty_log {
-+	__u32 slot;
-+	__u32 padding1;
-+	union {
-+		void __user *dirty_bitmap; /* one bit per page */
-+		__u64 padding2;
-+	};
-+};
-+
-+/* for KVM_SET_SIGNAL_MASK */
-+struct kvm_signal_mask {
-+	__u32 len;
-+	__u8  sigset[0];
-+};
-+
-+/* for KVM_TPR_ACCESS_REPORTING */
-+struct kvm_tpr_access_ctl {
-+	__u32 enabled;
-+	__u32 flags;
-+	__u32 reserved[8];
-+};
-+
-+/* for KVM_SET_VAPIC_ADDR */
-+struct kvm_vapic_addr {
-+	__u64 vapic_addr;
-+};
-+
-+/* for KVM_SET_MP_STATE */
-+
-+/* not all states are valid on all architectures */
-+#define KVM_MP_STATE_RUNNABLE          0
-+#define KVM_MP_STATE_UNINITIALIZED     1
-+#define KVM_MP_STATE_INIT_RECEIVED     2
-+#define KVM_MP_STATE_HALTED            3
-+#define KVM_MP_STATE_SIPI_RECEIVED     4
-+#define KVM_MP_STATE_STOPPED           5
-+#define KVM_MP_STATE_CHECK_STOP        6
-+#define KVM_MP_STATE_OPERATING         7
-+#define KVM_MP_STATE_LOAD              8
-+
-+struct kvm_mp_state {
-+	__u32 mp_state;
-+};
-+
-+struct kvm_s390_psw {
-+	__u64 mask;
-+	__u64 addr;
-+};
-+
-+/* valid values for type in kvm_s390_interrupt */
-+#define KVM_S390_SIGP_STOP		0xfffe0000u
-+#define KVM_S390_PROGRAM_INT		0xfffe0001u
-+#define KVM_S390_SIGP_SET_PREFIX	0xfffe0002u
-+#define KVM_S390_RESTART		0xfffe0003u
-+#define KVM_S390_INT_PFAULT_INIT	0xfffe0004u
-+#define KVM_S390_INT_PFAULT_DONE	0xfffe0005u
-+#define KVM_S390_MCHK			0xfffe1000u
-+#define KVM_S390_INT_CLOCK_COMP		0xffff1004u
-+#define KVM_S390_INT_CPU_TIMER		0xffff1005u
-+#define KVM_S390_INT_VIRTIO		0xffff2603u
-+#define KVM_S390_INT_SERVICE		0xffff2401u
-+#define KVM_S390_INT_EMERGENCY		0xffff1201u
-+#define KVM_S390_INT_EXTERNAL_CALL	0xffff1202u
-+/* Anything below 0xfffe0000u is taken by INT_IO */
-+#define KVM_S390_INT_IO(ai,cssid,ssid,schid)   \
-+	(((schid)) |			       \
-+	 ((ssid) << 16) |		       \
-+	 ((cssid) << 18) |		       \
-+	 ((ai) << 26))
-+#define KVM_S390_INT_IO_MIN		0x00000000u
-+#define KVM_S390_INT_IO_MAX		0xfffdffffu
-+#define KVM_S390_INT_IO_AI_MASK		0x04000000u
-+
-+
-+struct kvm_s390_interrupt {
-+	__u32 type;
-+	__u32 parm;
-+	__u64 parm64;
-+};
-+
-+struct kvm_s390_io_info {
-+	__u16 subchannel_id;
-+	__u16 subchannel_nr;
-+	__u32 io_int_parm;
-+	__u32 io_int_word;
-+};
-+
-+struct kvm_s390_ext_info {
-+	__u32 ext_params;
-+	__u32 pad;
-+	__u64 ext_params2;
-+};
-+
-+struct kvm_s390_pgm_info {
-+	__u64 trans_exc_code;
-+	__u64 mon_code;
-+	__u64 per_address;
-+	__u32 data_exc_code;
-+	__u16 code;
-+	__u16 mon_class_nr;
-+	__u8 per_code;
-+	__u8 per_atmid;
-+	__u8 exc_access_id;
-+	__u8 per_access_id;
-+	__u8 op_access_id;
-+#define KVM_S390_PGM_FLAGS_ILC_VALID	0x01
-+#define KVM_S390_PGM_FLAGS_ILC_0	0x02
-+#define KVM_S390_PGM_FLAGS_ILC_1	0x04
-+#define KVM_S390_PGM_FLAGS_ILC_MASK	0x06
-+#define KVM_S390_PGM_FLAGS_NO_REWIND	0x08
-+	__u8 flags;
-+	__u8 pad[2];
-+};
-+
-+struct kvm_s390_prefix_info {
-+	__u32 address;
-+};
-+
-+struct kvm_s390_extcall_info {
-+	__u16 code;
-+};
-+
-+struct kvm_s390_emerg_info {
-+	__u16 code;
-+};
-+
-+#define KVM_S390_STOP_FLAG_STORE_STATUS	0x01
-+struct kvm_s390_stop_info {
-+	__u32 flags;
-+};
-+
-+struct kvm_s390_mchk_info {
-+	__u64 cr14;
-+	__u64 mcic;
-+	__u64 failing_storage_address;
-+	__u32 ext_damage_code;
-+	__u32 pad;
-+	__u8 fixed_logout[16];
-+};
-+
-+struct kvm_s390_irq {
-+	__u64 type;
-+	union {
-+		struct kvm_s390_io_info io;
-+		struct kvm_s390_ext_info ext;
-+		struct kvm_s390_pgm_info pgm;
-+		struct kvm_s390_emerg_info emerg;
-+		struct kvm_s390_extcall_info extcall;
-+		struct kvm_s390_prefix_info prefix;
-+		struct kvm_s390_stop_info stop;
-+		struct kvm_s390_mchk_info mchk;
-+		char reserved[64];
-+	} u;
-+};
-+
-+struct kvm_s390_irq_state {
-+	__u64 buf;
-+	__u32 flags;
-+	__u32 len;
-+	__u32 reserved[4];
-+};
-+
-+/* for KVM_SET_GUEST_DEBUG */
-+
-+#define KVM_GUESTDBG_ENABLE		0x00000001
-+#define KVM_GUESTDBG_SINGLESTEP		0x00000002
-+
-+struct kvm_guest_debug {
-+	__u32 control;
-+	__u32 pad;
-+	struct kvm_guest_debug_arch arch;
++enum {
++	SNDRV_PCM_CLASS_GENERIC = 0,	/* standard mono or stereo device */
++	SNDRV_PCM_CLASS_MULTI,		/* multichannel device */
++	SNDRV_PCM_CLASS_MODEM,		/* software modem class */
++	SNDRV_PCM_CLASS_DIGITIZER,	/* digitizer class */
++	/* Don't forget to change the following: */
++	SNDRV_PCM_CLASS_LAST = SNDRV_PCM_CLASS_DIGITIZER,
 +};
 +
 +enum {
-+	kvm_ioeventfd_flag_nr_datamatch,
-+	kvm_ioeventfd_flag_nr_pio,
-+	kvm_ioeventfd_flag_nr_deassign,
-+	kvm_ioeventfd_flag_nr_virtio_ccw_notify,
-+	kvm_ioeventfd_flag_nr_fast_mmio,
-+	kvm_ioeventfd_flag_nr_max,
++	SNDRV_PCM_SUBCLASS_GENERIC_MIX = 0, /* mono or stereo subdevices are mixed together */
++	SNDRV_PCM_SUBCLASS_MULTI_MIX,	/* multichannel subdevices are mixed together */
++	/* Don't forget to change the following: */
++	SNDRV_PCM_SUBCLASS_LAST = SNDRV_PCM_SUBCLASS_MULTI_MIX,
 +};
 +
-+#define KVM_IOEVENTFD_FLAG_DATAMATCH (1 << kvm_ioeventfd_flag_nr_datamatch)
-+#define KVM_IOEVENTFD_FLAG_PIO       (1 << kvm_ioeventfd_flag_nr_pio)
-+#define KVM_IOEVENTFD_FLAG_DEASSIGN  (1 << kvm_ioeventfd_flag_nr_deassign)
-+#define KVM_IOEVENTFD_FLAG_VIRTIO_CCW_NOTIFY \
-+	(1 << kvm_ioeventfd_flag_nr_virtio_ccw_notify)
-+
-+#define KVM_IOEVENTFD_VALID_FLAG_MASK  ((1 << kvm_ioeventfd_flag_nr_max) - 1)
-+
-+struct kvm_ioeventfd {
-+	__u64 datamatch;
-+	__u64 addr;        /* legal pio/mmio address */
-+	__u32 len;         /* 1, 2, 4, or 8 bytes; or 0 to ignore length */
-+	__s32 fd;
-+	__u32 flags;
-+	__u8  pad[36];
++enum {
++	SNDRV_PCM_STREAM_PLAYBACK = 0,
++	SNDRV_PCM_STREAM_CAPTURE,
++	SNDRV_PCM_STREAM_LAST = SNDRV_PCM_STREAM_CAPTURE,
 +};
 +
-+/* for KVM_ENABLE_CAP */
-+struct kvm_enable_cap {
-+	/* in */
-+	__u32 cap;
-+	__u32 flags;
-+	__u64 args[4];
-+	__u8  pad[64];
++typedef int __bitwise snd_pcm_access_t;
++#define	SNDRV_PCM_ACCESS_MMAP_INTERLEAVED	((__force snd_pcm_access_t) 0) /* interleaved mmap */
++#define	SNDRV_PCM_ACCESS_MMAP_NONINTERLEAVED	((__force snd_pcm_access_t) 1) /* noninterleaved mmap */
++#define	SNDRV_PCM_ACCESS_MMAP_COMPLEX		((__force snd_pcm_access_t) 2) /* complex mmap */
++#define	SNDRV_PCM_ACCESS_RW_INTERLEAVED		((__force snd_pcm_access_t) 3) /* readi/writei */
++#define	SNDRV_PCM_ACCESS_RW_NONINTERLEAVED	((__force snd_pcm_access_t) 4) /* readn/writen */
++#define	SNDRV_PCM_ACCESS_LAST		SNDRV_PCM_ACCESS_RW_NONINTERLEAVED
++
++typedef int __bitwise snd_pcm_format_t;
++#define	SNDRV_PCM_FORMAT_S8	((__force snd_pcm_format_t) 0)
++#define	SNDRV_PCM_FORMAT_U8	((__force snd_pcm_format_t) 1)
++#define	SNDRV_PCM_FORMAT_S16_LE	((__force snd_pcm_format_t) 2)
++#define	SNDRV_PCM_FORMAT_S16_BE	((__force snd_pcm_format_t) 3)
++#define	SNDRV_PCM_FORMAT_U16_LE	((__force snd_pcm_format_t) 4)
++#define	SNDRV_PCM_FORMAT_U16_BE	((__force snd_pcm_format_t) 5)
++#define	SNDRV_PCM_FORMAT_S24_LE	((__force snd_pcm_format_t) 6) /* low three bytes */
++#define	SNDRV_PCM_FORMAT_S24_BE	((__force snd_pcm_format_t) 7) /* low three bytes */
++#define	SNDRV_PCM_FORMAT_U24_LE	((__force snd_pcm_format_t) 8) /* low three bytes */
++#define	SNDRV_PCM_FORMAT_U24_BE	((__force snd_pcm_format_t) 9) /* low three bytes */
++#define	SNDRV_PCM_FORMAT_S32_LE	((__force snd_pcm_format_t) 10)
++#define	SNDRV_PCM_FORMAT_S32_BE	((__force snd_pcm_format_t) 11)
++#define	SNDRV_PCM_FORMAT_U32_LE	((__force snd_pcm_format_t) 12)
++#define	SNDRV_PCM_FORMAT_U32_BE	((__force snd_pcm_format_t) 13)
++#define	SNDRV_PCM_FORMAT_FLOAT_LE	((__force snd_pcm_format_t) 14) /* 4-byte float, IEEE-754 32-bit, range -1.0 to 1.0 */
++#define	SNDRV_PCM_FORMAT_FLOAT_BE	((__force snd_pcm_format_t) 15) /* 4-byte float, IEEE-754 32-bit, range -1.0 to 1.0 */
++#define	SNDRV_PCM_FORMAT_FLOAT64_LE	((__force snd_pcm_format_t) 16) /* 8-byte float, IEEE-754 64-bit, range -1.0 to 1.0 */
++#define	SNDRV_PCM_FORMAT_FLOAT64_BE	((__force snd_pcm_format_t) 17) /* 8-byte float, IEEE-754 64-bit, range -1.0 to 1.0 */
++#define	SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE ((__force snd_pcm_format_t) 18) /* IEC-958 subframe, Little Endian */
++#define	SNDRV_PCM_FORMAT_IEC958_SUBFRAME_BE ((__force snd_pcm_format_t) 19) /* IEC-958 subframe, Big Endian */
++#define	SNDRV_PCM_FORMAT_MU_LAW		((__force snd_pcm_format_t) 20)
++#define	SNDRV_PCM_FORMAT_A_LAW		((__force snd_pcm_format_t) 21)
++#define	SNDRV_PCM_FORMAT_IMA_ADPCM	((__force snd_pcm_format_t) 22)
++#define	SNDRV_PCM_FORMAT_MPEG		((__force snd_pcm_format_t) 23)
++#define	SNDRV_PCM_FORMAT_GSM		((__force snd_pcm_format_t) 24)
++#define	SNDRV_PCM_FORMAT_SPECIAL	((__force snd_pcm_format_t) 31)
++#define	SNDRV_PCM_FORMAT_S24_3LE	((__force snd_pcm_format_t) 32)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_S24_3BE	((__force snd_pcm_format_t) 33)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U24_3LE	((__force snd_pcm_format_t) 34)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U24_3BE	((__force snd_pcm_format_t) 35)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_S20_3LE	((__force snd_pcm_format_t) 36)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_S20_3BE	((__force snd_pcm_format_t) 37)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U20_3LE	((__force snd_pcm_format_t) 38)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U20_3BE	((__force snd_pcm_format_t) 39)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_S18_3LE	((__force snd_pcm_format_t) 40)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_S18_3BE	((__force snd_pcm_format_t) 41)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U18_3LE	((__force snd_pcm_format_t) 42)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_U18_3BE	((__force snd_pcm_format_t) 43)	/* in three bytes */
++#define	SNDRV_PCM_FORMAT_G723_24	((__force snd_pcm_format_t) 44) /* 8 samples in 3 bytes */
++#define	SNDRV_PCM_FORMAT_G723_24_1B	((__force snd_pcm_format_t) 45) /* 1 sample in 1 byte */
++#define	SNDRV_PCM_FORMAT_G723_40	((__force snd_pcm_format_t) 46) /* 8 Samples in 5 bytes */
++#define	SNDRV_PCM_FORMAT_G723_40_1B	((__force snd_pcm_format_t) 47) /* 1 sample in 1 byte */
++#define	SNDRV_PCM_FORMAT_DSD_U8		((__force snd_pcm_format_t) 48) /* DSD, 1-byte samples DSD (x8) */
++#define	SNDRV_PCM_FORMAT_DSD_U16_LE	((__force snd_pcm_format_t) 49) /* DSD, 2-byte samples DSD (x16), little endian */
++#define	SNDRV_PCM_FORMAT_DSD_U32_LE	((__force snd_pcm_format_t) 50) /* DSD, 4-byte samples DSD (x32), little endian */
++#define	SNDRV_PCM_FORMAT_DSD_U16_BE	((__force snd_pcm_format_t) 51) /* DSD, 2-byte samples DSD (x16), big endian */
++#define	SNDRV_PCM_FORMAT_DSD_U32_BE	((__force snd_pcm_format_t) 52) /* DSD, 4-byte samples DSD (x32), big endian */
++#define	SNDRV_PCM_FORMAT_LAST		SNDRV_PCM_FORMAT_DSD_U32_BE
++
++#ifdef SNDRV_LITTLE_ENDIAN
++#define	SNDRV_PCM_FORMAT_S16		SNDRV_PCM_FORMAT_S16_LE
++#define	SNDRV_PCM_FORMAT_U16		SNDRV_PCM_FORMAT_U16_LE
++#define	SNDRV_PCM_FORMAT_S24		SNDRV_PCM_FORMAT_S24_LE
++#define	SNDRV_PCM_FORMAT_U24		SNDRV_PCM_FORMAT_U24_LE
++#define	SNDRV_PCM_FORMAT_S32		SNDRV_PCM_FORMAT_S32_LE
++#define	SNDRV_PCM_FORMAT_U32		SNDRV_PCM_FORMAT_U32_LE
++#define	SNDRV_PCM_FORMAT_FLOAT		SNDRV_PCM_FORMAT_FLOAT_LE
++#define	SNDRV_PCM_FORMAT_FLOAT64	SNDRV_PCM_FORMAT_FLOAT64_LE
++#define	SNDRV_PCM_FORMAT_IEC958_SUBFRAME SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE
++#endif
++#ifdef SNDRV_BIG_ENDIAN
++#define	SNDRV_PCM_FORMAT_S16		SNDRV_PCM_FORMAT_S16_BE
++#define	SNDRV_PCM_FORMAT_U16		SNDRV_PCM_FORMAT_U16_BE
++#define	SNDRV_PCM_FORMAT_S24		SNDRV_PCM_FORMAT_S24_BE
++#define	SNDRV_PCM_FORMAT_U24		SNDRV_PCM_FORMAT_U24_BE
++#define	SNDRV_PCM_FORMAT_S32		SNDRV_PCM_FORMAT_S32_BE
++#define	SNDRV_PCM_FORMAT_U32		SNDRV_PCM_FORMAT_U32_BE
++#define	SNDRV_PCM_FORMAT_FLOAT		SNDRV_PCM_FORMAT_FLOAT_BE
++#define	SNDRV_PCM_FORMAT_FLOAT64	SNDRV_PCM_FORMAT_FLOAT64_BE
++#define	SNDRV_PCM_FORMAT_IEC958_SUBFRAME SNDRV_PCM_FORMAT_IEC958_SUBFRAME_BE
++#endif
++
++typedef int __bitwise snd_pcm_subformat_t;
++#define	SNDRV_PCM_SUBFORMAT_STD		((__force snd_pcm_subformat_t) 0)
++#define	SNDRV_PCM_SUBFORMAT_LAST	SNDRV_PCM_SUBFORMAT_STD
++
++#define SNDRV_PCM_INFO_MMAP		0x00000001	/* hardware supports mmap */
++#define SNDRV_PCM_INFO_MMAP_VALID	0x00000002	/* period data are valid during transfer */
++#define SNDRV_PCM_INFO_DOUBLE		0x00000004	/* Double buffering needed for PCM start/stop */
++#define SNDRV_PCM_INFO_BATCH		0x00000010	/* double buffering */
++#define SNDRV_PCM_INFO_SYNC_APPLPTR	0x00000020	/* need the explicit sync of appl_ptr update */
++#define SNDRV_PCM_INFO_INTERLEAVED	0x00000100	/* channels are interleaved */
++#define SNDRV_PCM_INFO_NONINTERLEAVED	0x00000200	/* channels are not interleaved */
++#define SNDRV_PCM_INFO_COMPLEX		0x00000400	/* complex frame organization (mmap only) */
++#define SNDRV_PCM_INFO_BLOCK_TRANSFER	0x00010000	/* hardware transfer block of samples */
++#define SNDRV_PCM_INFO_OVERRANGE	0x00020000	/* hardware supports ADC (capture) overrange detection */
++#define SNDRV_PCM_INFO_RESUME		0x00040000	/* hardware supports stream resume after suspend */
++#define SNDRV_PCM_INFO_PAUSE		0x00080000	/* pause ioctl is supported */
++#define SNDRV_PCM_INFO_HALF_DUPLEX	0x00100000	/* only half duplex */
++#define SNDRV_PCM_INFO_JOINT_DUPLEX	0x00200000	/* playback and capture stream are somewhat correlated */
++#define SNDRV_PCM_INFO_SYNC_START	0x00400000	/* pcm support some kind of sync go */
++#define SNDRV_PCM_INFO_NO_PERIOD_WAKEUP	0x00800000	/* period wakeup can be disabled */
++#define SNDRV_PCM_INFO_HAS_WALL_CLOCK   0x01000000      /* (Deprecated)has audio wall clock for audio/system time sync */
++#define SNDRV_PCM_INFO_HAS_LINK_ATIME              0x01000000  /* report hardware link audio time, reset on startup */
++#define SNDRV_PCM_INFO_HAS_LINK_ABSOLUTE_ATIME     0x02000000  /* report absolute hardware link audio time, not reset on startup */
++#define SNDRV_PCM_INFO_HAS_LINK_ESTIMATED_ATIME    0x04000000  /* report estimated link audio time */
++#define SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME 0x08000000  /* report synchronized audio/system time */
++
++#define SNDRV_PCM_INFO_DRAIN_TRIGGER	0x40000000		/* internal kernel flag - trigger in drain */
++#define SNDRV_PCM_INFO_FIFO_IN_FRAMES	0x80000000	/* internal kernel flag - FIFO size is in frames */
++
++
++
++typedef int __bitwise snd_pcm_state_t;
++#define	SNDRV_PCM_STATE_OPEN		((__force snd_pcm_state_t) 0) /* stream is open */
++#define	SNDRV_PCM_STATE_SETUP		((__force snd_pcm_state_t) 1) /* stream has a setup */
++#define	SNDRV_PCM_STATE_PREPARED	((__force snd_pcm_state_t) 2) /* stream is ready to start */
++#define	SNDRV_PCM_STATE_RUNNING		((__force snd_pcm_state_t) 3) /* stream is running */
++#define	SNDRV_PCM_STATE_XRUN		((__force snd_pcm_state_t) 4) /* stream reached an xrun */
++#define	SNDRV_PCM_STATE_DRAINING	((__force snd_pcm_state_t) 5) /* stream is draining */
++#define	SNDRV_PCM_STATE_PAUSED		((__force snd_pcm_state_t) 6) /* stream is paused */
++#define	SNDRV_PCM_STATE_SUSPENDED	((__force snd_pcm_state_t) 7) /* hardware is suspended */
++#define	SNDRV_PCM_STATE_DISCONNECTED	((__force snd_pcm_state_t) 8) /* hardware is disconnected */
++#define	SNDRV_PCM_STATE_LAST		SNDRV_PCM_STATE_DISCONNECTED
++
++enum {
++	SNDRV_PCM_MMAP_OFFSET_DATA = 0x00000000,
++	SNDRV_PCM_MMAP_OFFSET_STATUS = 0x80000000,
++	SNDRV_PCM_MMAP_OFFSET_CONTROL = 0x81000000,
 +};
 +
-+/* for KVM_PPC_GET_PVINFO */
-+
-+#define KVM_PPC_PVINFO_FLAGS_EV_IDLE   (1<<0)
-+
-+struct kvm_ppc_pvinfo {
-+	/* out */
-+	__u32 flags;
-+	__u32 hcall[4];
-+	__u8  pad[108];
++union snd_pcm_sync_id {
++	unsigned char id[16];
++	unsigned short id16[8];
++	unsigned int id32[4];
 +};
 +
-+/* for KVM_PPC_GET_SMMU_INFO */
-+#define KVM_PPC_PAGE_SIZES_MAX_SZ	8
-+
-+struct kvm_ppc_one_page_size {
-+	__u32 page_shift;	/* Page shift (or 0) */
-+	__u32 pte_enc;		/* Encoding in the HPTE (>>12) */
++struct snd_pcm_info {
++	unsigned int device;		/* RO/WR (control): device number */
++	unsigned int subdevice;		/* RO/WR (control): subdevice number */
++	int stream;			/* RO/WR (control): stream direction */
++	int card;			/* R: card number */
++	unsigned char id[64];		/* ID (user selectable) */
++	unsigned char name[80];		/* name of this device */
++	unsigned char subname[32];	/* subdevice name */
++	int dev_class;			/* SNDRV_PCM_CLASS_* */
++	int dev_subclass;		/* SNDRV_PCM_SUBCLASS_* */
++	unsigned int subdevices_count;
++	unsigned int subdevices_avail;
++	union snd_pcm_sync_id sync;	/* hardware synchronization ID */
++	unsigned char reserved[64];	/* reserved for future... */
 +};
 +
-+struct kvm_ppc_one_seg_page_size {
-+	__u32 page_shift;	/* Base page shift of segment (or 0) */
-+	__u32 slb_enc;		/* SLB encoding for BookS */
-+	struct kvm_ppc_one_page_size enc[KVM_PPC_PAGE_SIZES_MAX_SZ];
++typedef int snd_pcm_hw_param_t;
++#define	SNDRV_PCM_HW_PARAM_ACCESS	0	/* Access type */
++#define	SNDRV_PCM_HW_PARAM_FORMAT	1	/* Format */
++#define	SNDRV_PCM_HW_PARAM_SUBFORMAT	2	/* Subformat */
++#define	SNDRV_PCM_HW_PARAM_FIRST_MASK	SNDRV_PCM_HW_PARAM_ACCESS
++#define	SNDRV_PCM_HW_PARAM_LAST_MASK	SNDRV_PCM_HW_PARAM_SUBFORMAT
++
++#define	SNDRV_PCM_HW_PARAM_SAMPLE_BITS	8	/* Bits per sample */
++#define	SNDRV_PCM_HW_PARAM_FRAME_BITS	9	/* Bits per frame */
++#define	SNDRV_PCM_HW_PARAM_CHANNELS	10	/* Channels */
++#define	SNDRV_PCM_HW_PARAM_RATE		11	/* Approx rate */
++#define	SNDRV_PCM_HW_PARAM_PERIOD_TIME	12	/* Approx distance between
++						 * interrupts in us
++						 */
++#define	SNDRV_PCM_HW_PARAM_PERIOD_SIZE	13	/* Approx frames between
++						 * interrupts
++						 */
++#define	SNDRV_PCM_HW_PARAM_PERIOD_BYTES	14	/* Approx bytes between
++						 * interrupts
++						 */
++#define	SNDRV_PCM_HW_PARAM_PERIODS	15	/* Approx interrupts per
++						 * buffer
++						 */
++#define	SNDRV_PCM_HW_PARAM_BUFFER_TIME	16	/* Approx duration of buffer
++						 * in us
++						 */
++#define	SNDRV_PCM_HW_PARAM_BUFFER_SIZE	17	/* Size of buffer in frames */
++#define	SNDRV_PCM_HW_PARAM_BUFFER_BYTES	18	/* Size of buffer in bytes */
++#define	SNDRV_PCM_HW_PARAM_TICK_TIME	19	/* Approx tick duration in us */
++#define	SNDRV_PCM_HW_PARAM_FIRST_INTERVAL	SNDRV_PCM_HW_PARAM_SAMPLE_BITS
++#define	SNDRV_PCM_HW_PARAM_LAST_INTERVAL	SNDRV_PCM_HW_PARAM_TICK_TIME
++
++#define SNDRV_PCM_HW_PARAMS_NORESAMPLE	(1<<0)	/* avoid rate resampling */
++#define SNDRV_PCM_HW_PARAMS_EXPORT_BUFFER	(1<<1)	/* export buffer */
++#define SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP	(1<<2)	/* disable period wakeups */
++
++struct snd_interval {
++	unsigned int min, max;
++	unsigned int openmin:1,
++		     openmax:1,
++		     integer:1,
++		     empty:1;
 +};
 +
-+#define KVM_PPC_PAGE_SIZES_REAL		0x00000001
-+#define KVM_PPC_1T_SEGMENTS		0x00000002
++#define SNDRV_MASK_MAX	256
 +
-+struct kvm_ppc_smmu_info {
-+	__u64 flags;
-+	__u32 slb_size;
-+	__u32 pad;
-+	struct kvm_ppc_one_seg_page_size sps[KVM_PPC_PAGE_SIZES_MAX_SZ];
++struct snd_mask {
++	__u32 bits[(SNDRV_MASK_MAX+31)/32];
 +};
 +
-+/* for KVM_PPC_RESIZE_HPT_{PREPARE,COMMIT} */
-+struct kvm_ppc_resize_hpt {
-+	__u64 flags;
-+	__u32 shift;
-+	__u32 pad;
++struct snd_pcm_hw_params {
++	unsigned int flags;
++	struct snd_mask masks[SNDRV_PCM_HW_PARAM_LAST_MASK -
++			       SNDRV_PCM_HW_PARAM_FIRST_MASK + 1];
++	struct snd_mask mres[5];	/* reserved masks */
++	struct snd_interval intervals[SNDRV_PCM_HW_PARAM_LAST_INTERVAL -
++				        SNDRV_PCM_HW_PARAM_FIRST_INTERVAL + 1];
++	struct snd_interval ires[9];	/* reserved intervals */
++	unsigned int rmask;		/* W: requested masks */
++	unsigned int cmask;		/* R: changed masks */
++	unsigned int info;		/* R: Info flags for returned setup */
++	unsigned int msbits;		/* R: used most significant bits */
++	unsigned int rate_num;		/* R: rate numerator */
++	unsigned int rate_den;		/* R: rate denominator */
++	snd_pcm_uframes_t fifo_size;	/* R: chip FIFO size in frames */
++	unsigned char reserved[64];	/* reserved for future */
 +};
 +
-+#define KVMIO 0xAE
-+
-+/* machine type bits, to be used as argument to KVM_CREATE_VM */
-+#define KVM_VM_S390_UCONTROL	1
-+
-+/* on ppc, 0 indicate default, 1 should force HV and 2 PR */
-+#define KVM_VM_PPC_HV 1
-+#define KVM_VM_PPC_PR 2
-+
-+/* on MIPS, 0 forces trap & emulate, 1 forces VZ ASE */
-+#define KVM_VM_MIPS_TE		0
-+#define KVM_VM_MIPS_VZ		1
-+
-+#define KVM_S390_SIE_PAGE_OFFSET 1
-+
-+/*
-+ * ioctls for /dev/kvm fds:
-+ */
-+#define KVM_GET_API_VERSION       _IO(KVMIO,   0x00)
-+#define KVM_CREATE_VM             _IO(KVMIO,   0x01) /* returns a VM fd */
-+#define KVM_GET_MSR_INDEX_LIST    _IOWR(KVMIO, 0x02, struct kvm_msr_list)
-+
-+#define KVM_S390_ENABLE_SIE       _IO(KVMIO,   0x06)
-+/*
-+ * Check if a kvm extension is available.  Argument is extension number,
-+ * return is 1 (yes) or 0 (no, sorry).
-+ */
-+#define KVM_CHECK_EXTENSION       _IO(KVMIO,   0x03)
-+/*
-+ * Get size for mmap(vcpu_fd)
-+ */
-+#define KVM_GET_VCPU_MMAP_SIZE    _IO(KVMIO,   0x04) /* in bytes */
-+#define KVM_GET_SUPPORTED_CPUID   _IOWR(KVMIO, 0x05, struct kvm_cpuid2)
-+#define KVM_TRACE_ENABLE          __KVM_DEPRECATED_MAIN_W_0x06
-+#define KVM_TRACE_PAUSE           __KVM_DEPRECATED_MAIN_0x07
-+#define KVM_TRACE_DISABLE         __KVM_DEPRECATED_MAIN_0x08
-+#define KVM_GET_EMULATED_CPUID	  _IOWR(KVMIO, 0x09, struct kvm_cpuid2)
-+
-+/*
-+ * Extension capability list.
-+ */
-+#define KVM_CAP_IRQCHIP	  0
-+#define KVM_CAP_HLT	  1
-+#define KVM_CAP_MMU_SHADOW_CACHE_CONTROL 2
-+#define KVM_CAP_USER_MEMORY 3
-+#define KVM_CAP_SET_TSS_ADDR 4
-+#define KVM_CAP_VAPIC 6
-+#define KVM_CAP_EXT_CPUID 7
-+#define KVM_CAP_CLOCKSOURCE 8
-+#define KVM_CAP_NR_VCPUS 9       /* returns recommended max vcpus per vm */
-+#define KVM_CAP_NR_MEMSLOTS 10   /* returns max memory slots per vm */
-+#define KVM_CAP_PIT 11
-+#define KVM_CAP_NOP_IO_DELAY 12
-+#define KVM_CAP_PV_MMU 13
-+#define KVM_CAP_MP_STATE 14
-+#define KVM_CAP_COALESCED_MMIO 15
-+#define KVM_CAP_SYNC_MMU 16  /* Changes to host mmap are reflected in guest */
-+#define KVM_CAP_IOMMU 18
-+/* Bug in KVM_SET_USER_MEMORY_REGION fixed: */
-+#define KVM_CAP_DESTROY_MEMORY_REGION_WORKS 21
-+#define KVM_CAP_USER_NMI 22
-+#ifdef __KVM_HAVE_GUEST_DEBUG
-+#define KVM_CAP_SET_GUEST_DEBUG 23
-+#endif
-+#ifdef __KVM_HAVE_PIT
-+#define KVM_CAP_REINJECT_CONTROL 24
-+#endif
-+#define KVM_CAP_IRQ_ROUTING 25
-+#define KVM_CAP_IRQ_INJECT_STATUS 26
-+#define KVM_CAP_ASSIGN_DEV_IRQ 29
-+/* Another bug in KVM_SET_USER_MEMORY_REGION fixed: */
-+#define KVM_CAP_JOIN_MEMORY_REGIONS_WORKS 30
-+#ifdef __KVM_HAVE_MCE
-+#define KVM_CAP_MCE 31
-+#endif
-+#define KVM_CAP_IRQFD 32
-+#ifdef __KVM_HAVE_PIT
-+#define KVM_CAP_PIT2 33
-+#endif
-+#define KVM_CAP_SET_BOOT_CPU_ID 34
-+#ifdef __KVM_HAVE_PIT_STATE2
-+#define KVM_CAP_PIT_STATE2 35
-+#endif
-+#define KVM_CAP_IOEVENTFD 36
-+#define KVM_CAP_SET_IDENTITY_MAP_ADDR 37
-+#ifdef __KVM_HAVE_XEN_HVM
-+#define KVM_CAP_XEN_HVM 38
-+#endif
-+#define KVM_CAP_ADJUST_CLOCK 39
-+#define KVM_CAP_INTERNAL_ERROR_DATA 40
-+#ifdef __KVM_HAVE_VCPU_EVENTS
-+#define KVM_CAP_VCPU_EVENTS 41
-+#endif
-+#define KVM_CAP_S390_PSW 42
-+#define KVM_CAP_PPC_SEGSTATE 43
-+#define KVM_CAP_HYPERV 44
-+#define KVM_CAP_HYPERV_VAPIC 45
-+#define KVM_CAP_HYPERV_SPIN 46
-+#define KVM_CAP_PCI_SEGMENT 47
-+#define KVM_CAP_PPC_PAIRED_SINGLES 48
-+#define KVM_CAP_INTR_SHADOW 49
-+#ifdef __KVM_HAVE_DEBUGREGS
-+#define KVM_CAP_DEBUGREGS 50
-+#endif
-+#define KVM_CAP_X86_ROBUST_SINGLESTEP 51
-+#define KVM_CAP_PPC_OSI 52
-+#define KVM_CAP_PPC_UNSET_IRQ 53
-+#define KVM_CAP_ENABLE_CAP 54
-+#ifdef __KVM_HAVE_XSAVE
-+#define KVM_CAP_XSAVE 55
-+#endif
-+#ifdef __KVM_HAVE_XCRS
-+#define KVM_CAP_XCRS 56
-+#endif
-+#define KVM_CAP_PPC_GET_PVINFO 57
-+#define KVM_CAP_PPC_IRQ_LEVEL 58
-+#define KVM_CAP_ASYNC_PF 59
-+#define KVM_CAP_TSC_CONTROL 60
-+#define KVM_CAP_GET_TSC_KHZ 61
-+#define KVM_CAP_PPC_BOOKE_SREGS 62
-+#define KVM_CAP_SPAPR_TCE 63
-+#define KVM_CAP_PPC_SMT 64
-+#define KVM_CAP_PPC_RMA	65
-+#define KVM_CAP_MAX_VCPUS 66       /* returns max vcpus per vm */
-+#define KVM_CAP_PPC_HIOR 67
-+#define KVM_CAP_PPC_PAPR 68
-+#define KVM_CAP_SW_TLB 69
-+#define KVM_CAP_ONE_REG 70
-+#define KVM_CAP_S390_GMAP 71
-+#define KVM_CAP_TSC_DEADLINE_TIMER 72
-+#define KVM_CAP_S390_UCONTROL 73
-+#define KVM_CAP_SYNC_REGS 74
-+#define KVM_CAP_PCI_2_3 75
-+#define KVM_CAP_KVMCLOCK_CTRL 76
-+#define KVM_CAP_SIGNAL_MSI 77
-+#define KVM_CAP_PPC_GET_SMMU_INFO 78
-+#define KVM_CAP_S390_COW 79
-+#define KVM_CAP_PPC_ALLOC_HTAB 80
-+#define KVM_CAP_READONLY_MEM 81
-+#define KVM_CAP_IRQFD_RESAMPLE 82
-+#define KVM_CAP_PPC_BOOKE_WATCHDOG 83
-+#define KVM_CAP_PPC_HTAB_FD 84
-+#define KVM_CAP_S390_CSS_SUPPORT 85
-+#define KVM_CAP_PPC_EPR 86
-+#define KVM_CAP_ARM_PSCI 87
-+#define KVM_CAP_ARM_SET_DEVICE_ADDR 88
-+#define KVM_CAP_DEVICE_CTRL 89
-+#define KVM_CAP_IRQ_MPIC 90
-+#define KVM_CAP_PPC_RTAS 91
-+#define KVM_CAP_IRQ_XICS 92
-+#define KVM_CAP_ARM_EL1_32BIT 93
-+#define KVM_CAP_SPAPR_MULTITCE 94
-+#define KVM_CAP_EXT_EMUL_CPUID 95
-+#define KVM_CAP_HYPERV_TIME 96
-+#define KVM_CAP_IOAPIC_POLARITY_IGNORED 97
-+#define KVM_CAP_ENABLE_CAP_VM 98
-+#define KVM_CAP_S390_IRQCHIP 99
-+#define KVM_CAP_IOEVENTFD_NO_LENGTH 100
-+#define KVM_CAP_VM_ATTRIBUTES 101
-+#define KVM_CAP_ARM_PSCI_0_2 102
-+#define KVM_CAP_PPC_FIXUP_HCALL 103
-+#define KVM_CAP_PPC_ENABLE_HCALL 104
-+#define KVM_CAP_CHECK_EXTENSION_VM 105
-+#define KVM_CAP_S390_USER_SIGP 106
-+#define KVM_CAP_S390_VECTOR_REGISTERS 107
-+#define KVM_CAP_S390_MEM_OP 108
-+#define KVM_CAP_S390_USER_STSI 109
-+#define KVM_CAP_S390_SKEYS 110
-+#define KVM_CAP_MIPS_FPU 111
-+#define KVM_CAP_MIPS_MSA 112
-+#define KVM_CAP_S390_INJECT_IRQ 113
-+#define KVM_CAP_S390_IRQ_STATE 114
-+#define KVM_CAP_PPC_HWRNG 115
-+#define KVM_CAP_DISABLE_QUIRKS 116
-+#define KVM_CAP_X86_SMM 117
-+#define KVM_CAP_MULTI_ADDRESS_SPACE 118
-+#define KVM_CAP_GUEST_DEBUG_HW_BPS 119
-+#define KVM_CAP_GUEST_DEBUG_HW_WPS 120
-+#define KVM_CAP_SPLIT_IRQCHIP 121
-+#define KVM_CAP_IOEVENTFD_ANY_LENGTH 122
-+#define KVM_CAP_HYPERV_SYNIC 123
-+#define KVM_CAP_S390_RI 124
-+#define KVM_CAP_SPAPR_TCE_64 125
-+#define KVM_CAP_ARM_PMU_V3 126
-+#define KVM_CAP_VCPU_ATTRIBUTES 127
-+#define KVM_CAP_MAX_VCPU_ID 128
-+#define KVM_CAP_X2APIC_API 129
-+#define KVM_CAP_S390_USER_INSTR0 130
-+#define KVM_CAP_MSI_DEVID 131
-+#define KVM_CAP_PPC_HTM 132
-+#define KVM_CAP_SPAPR_RESIZE_HPT 133
-+#define KVM_CAP_PPC_MMU_RADIX 134
-+#define KVM_CAP_PPC_MMU_HASH_V3 135
-+#define KVM_CAP_IMMEDIATE_EXIT 136
-+#define KVM_CAP_MIPS_VZ 137
-+#define KVM_CAP_MIPS_TE 138
-+#define KVM_CAP_MIPS_64BIT 139
-+#define KVM_CAP_S390_GS 140
-+#define KVM_CAP_S390_AIS 141
-+#define KVM_CAP_SPAPR_TCE_VFIO 142
-+#define KVM_CAP_X86_GUEST_MWAIT 143
-+#define KVM_CAP_ARM_USER_IRQ 144
-+#define KVM_CAP_S390_CMMA_MIGRATION 145
-+#define KVM_CAP_PPC_FWNMI 146
-+#define KVM_CAP_PPC_SMT_POSSIBLE 147
-+#define KVM_CAP_HYPERV_SYNIC2 148
-+#define KVM_CAP_HYPERV_VP_INDEX 149
-+
-+#ifdef KVM_CAP_IRQ_ROUTING
-+
-+struct kvm_irq_routing_irqchip {
-+	__u32 irqchip;
-+	__u32 pin;
++enum {
++	SNDRV_PCM_TSTAMP_NONE = 0,
++	SNDRV_PCM_TSTAMP_ENABLE,
++	SNDRV_PCM_TSTAMP_LAST = SNDRV_PCM_TSTAMP_ENABLE,
 +};
 +
-+struct kvm_irq_routing_msi {
-+	__u32 address_lo;
-+	__u32 address_hi;
-+	__u32 data;
++struct snd_pcm_sw_params {
++	int tstamp_mode;			/* timestamp mode */
++	unsigned int period_step;
++	unsigned int sleep_min;			/* min ticks to sleep */
++	snd_pcm_uframes_t avail_min;		/* min avail frames for wakeup */
++	snd_pcm_uframes_t xfer_align;		/* obsolete: xfer size need to be a multiple */
++	snd_pcm_uframes_t start_threshold;	/* min hw_avail frames for automatic start */
++	snd_pcm_uframes_t stop_threshold;	/* min avail frames for automatic stop */
++	snd_pcm_uframes_t silence_threshold;	/* min distance from noise for silence filling */
++	snd_pcm_uframes_t silence_size;		/* silence block size */
++	snd_pcm_uframes_t boundary;		/* pointers wrap point */
++	unsigned int proto;			/* protocol version */
++	unsigned int tstamp_type;		/* timestamp type (req. proto >= 2.0.12) */
++	unsigned char reserved[56];		/* reserved for future */
++};
++
++struct snd_pcm_channel_info {
++	unsigned int channel;
++	__kernel_off_t offset;		/* mmap offset */
++	unsigned int first;		/* offset to first sample in bits */
++	unsigned int step;		/* samples distance in bits */
++};
++
++enum {
++	/*
++	 *  first definition for backwards compatibility only,
++	 *  maps to wallclock/link time for HDAudio playback and DEFAULT/DMA time for everything else
++	 */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_COMPAT = 0,
++
++	/* timestamp definitions */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_DEFAULT = 1,           /* DMA time, reported as per hw_ptr */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK = 2,	           /* link time reported by sample or wallclock counter, reset on startup */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_ABSOLUTE = 3,	   /* link time reported by sample or wallclock counter, not reset on startup */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_ESTIMATED = 4,    /* link time estimated indirectly */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_SYNCHRONIZED = 5, /* link time synchronized with system time */
++	SNDRV_PCM_AUDIO_TSTAMP_TYPE_LAST = SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_SYNCHRONIZED
++};
++
++struct snd_pcm_status {
++	snd_pcm_state_t state;		/* stream state */
++	struct timespec trigger_tstamp;	/* time when stream was started/stopped/paused */
++	struct timespec tstamp;		/* reference timestamp */
++	snd_pcm_uframes_t appl_ptr;	/* appl ptr */
++	snd_pcm_uframes_t hw_ptr;	/* hw ptr */
++	snd_pcm_sframes_t delay;	/* current delay in frames */
++	snd_pcm_uframes_t avail;	/* number of frames available */
++	snd_pcm_uframes_t avail_max;	/* max frames available on hw since last status */
++	snd_pcm_uframes_t overrange;	/* count of ADC (capture) overrange detections from last status */
++	snd_pcm_state_t suspended_state; /* suspended stream state */
++	__u32 audio_tstamp_data;	 /* needed for 64-bit alignment, used for configs/report to/from userspace */
++	struct timespec audio_tstamp;	/* sample counter, wall clock, PHC or on-demand sync'ed */
++	struct timespec driver_tstamp;	/* useful in case reference system tstamp is reported with delay */
++	__u32 audio_tstamp_accuracy;	/* in ns units, only valid if indicated in audio_tstamp_data */
++	unsigned char reserved[52-2*sizeof(struct timespec)]; /* must be filled with zero */
++};
++
++struct snd_pcm_mmap_status {
++	snd_pcm_state_t state;		/* RO: state - SNDRV_PCM_STATE_XXXX */
++	int pad1;			/* Needed for 64 bit alignment */
++	snd_pcm_uframes_t hw_ptr;	/* RO: hw ptr (0...boundary-1) */
++	struct timespec tstamp;		/* Timestamp */
++	snd_pcm_state_t suspended_state; /* RO: suspended stream state */
++	struct timespec audio_tstamp;	/* from sample counter or wall clock */
++};
++
++struct snd_pcm_mmap_control {
++	snd_pcm_uframes_t appl_ptr;	/* RW: appl ptr (0...boundary-1) */
++	snd_pcm_uframes_t avail_min;	/* RW: min available frames for wakeup */
++};
++
++#define SNDRV_PCM_SYNC_PTR_HWSYNC	(1<<0)	/* execute hwsync */
++#define SNDRV_PCM_SYNC_PTR_APPL		(1<<1)	/* get appl_ptr from driver (r/w op) */
++#define SNDRV_PCM_SYNC_PTR_AVAIL_MIN	(1<<2)	/* get avail_min from driver */
++
++struct snd_pcm_sync_ptr {
++	unsigned int flags;
 +	union {
-+		__u32 pad;
-+		__u32 devid;
-+	};
-+};
-+
-+struct kvm_irq_routing_s390_adapter {
-+	__u64 ind_addr;
-+	__u64 summary_addr;
-+	__u64 ind_offset;
-+	__u32 summary_offset;
-+	__u32 adapter_id;
-+};
-+
-+struct kvm_irq_routing_hv_sint {
-+	__u32 vcpu;
-+	__u32 sint;
-+};
-+
-+/* gsi routing entry types */
-+#define KVM_IRQ_ROUTING_IRQCHIP 1
-+#define KVM_IRQ_ROUTING_MSI 2
-+#define KVM_IRQ_ROUTING_S390_ADAPTER 3
-+#define KVM_IRQ_ROUTING_HV_SINT 4
-+
-+struct kvm_irq_routing_entry {
-+	__u32 gsi;
-+	__u32 type;
-+	__u32 flags;
-+	__u32 pad;
++		struct snd_pcm_mmap_status status;
++		unsigned char reserved[64];
++	} s;
 +	union {
-+		struct kvm_irq_routing_irqchip irqchip;
-+		struct kvm_irq_routing_msi msi;
-+		struct kvm_irq_routing_s390_adapter adapter;
-+		struct kvm_irq_routing_hv_sint hv_sint;
-+		__u32 pad[8];
-+	} u;
++		struct snd_pcm_mmap_control control;
++		unsigned char reserved[64];
++	} c;
 +};
 +
-+struct kvm_irq_routing {
-+	__u32 nr;
-+	__u32 flags;
-+	struct kvm_irq_routing_entry entries[0];
++struct snd_xferi {
++	snd_pcm_sframes_t result;
++	void __user *buf;
++	snd_pcm_uframes_t frames;
 +};
 +
-+#endif
-+
-+#ifdef KVM_CAP_MCE
-+/* x86 MCE */
-+struct kvm_x86_mce {
-+	__u64 status;
-+	__u64 addr;
-+	__u64 misc;
-+	__u64 mcg_status;
-+	__u8 bank;
-+	__u8 pad1[7];
-+	__u64 pad2[3];
-+};
-+#endif
-+
-+#ifdef KVM_CAP_XEN_HVM
-+struct kvm_xen_hvm_config {
-+	__u32 flags;
-+	__u32 msr;
-+	__u64 blob_addr_32;
-+	__u64 blob_addr_64;
-+	__u8 blob_size_32;
-+	__u8 blob_size_64;
-+	__u8 pad2[30];
-+};
-+#endif
-+
-+#define KVM_IRQFD_FLAG_DEASSIGN (1 << 0)
-+/*
-+ * Available with KVM_CAP_IRQFD_RESAMPLE
-+ *
-+ * KVM_IRQFD_FLAG_RESAMPLE indicates resamplefd is valid and specifies
-+ * the irqfd to operate in resampling mode for level triggered interrupt
-+ * emulation.  See Documentation/virtual/kvm/api.txt.
-+ */
-+#define KVM_IRQFD_FLAG_RESAMPLE (1 << 1)
-+
-+struct kvm_irqfd {
-+	__u32 fd;
-+	__u32 gsi;
-+	__u32 flags;
-+	__u32 resamplefd;
-+	__u8  pad[16];
++struct snd_xfern {
++	snd_pcm_sframes_t result;
++	void __user * __user *bufs;
++	snd_pcm_uframes_t frames;
 +};
 +
-+/* For KVM_CAP_ADJUST_CLOCK */
-+
-+/* Do not use 1, KVM_CHECK_EXTENSION returned it before we had flags.  */
-+#define KVM_CLOCK_TSC_STABLE		2
-+
-+struct kvm_clock_data {
-+	__u64 clock;
-+	__u32 flags;
-+	__u32 pad[9];
++enum {
++	SNDRV_PCM_TSTAMP_TYPE_GETTIMEOFDAY = 0,	/* gettimeofday equivalent */
++	SNDRV_PCM_TSTAMP_TYPE_MONOTONIC,	/* posix_clock_monotonic equivalent */
++	SNDRV_PCM_TSTAMP_TYPE_MONOTONIC_RAW,    /* monotonic_raw (no NTP) */
++	SNDRV_PCM_TSTAMP_TYPE_LAST = SNDRV_PCM_TSTAMP_TYPE_MONOTONIC_RAW,
 +};
 +
-+/* For KVM_CAP_SW_TLB */
-+
-+#define KVM_MMU_FSL_BOOKE_NOHV		0
-+#define KVM_MMU_FSL_BOOKE_HV		1
-+
-+struct kvm_config_tlb {
-+	__u64 params;
-+	__u64 array;
-+	__u32 mmu_type;
-+	__u32 array_len;
++/* channel positions */
++enum {
++	SNDRV_CHMAP_UNKNOWN = 0,
++	SNDRV_CHMAP_NA,		/* N/A, silent */
++	SNDRV_CHMAP_MONO,	/* mono stream */
++	/* this follows the alsa-lib mixer channel value + 3 */
++	SNDRV_CHMAP_FL,		/* front left */
++	SNDRV_CHMAP_FR,		/* front right */
++	SNDRV_CHMAP_RL,		/* rear left */
++	SNDRV_CHMAP_RR,		/* rear right */
++	SNDRV_CHMAP_FC,		/* front center */
++	SNDRV_CHMAP_LFE,	/* LFE */
++	SNDRV_CHMAP_SL,		/* side left */
++	SNDRV_CHMAP_SR,		/* side right */
++	SNDRV_CHMAP_RC,		/* rear center */
++	/* new definitions */
++	SNDRV_CHMAP_FLC,	/* front left center */
++	SNDRV_CHMAP_FRC,	/* front right center */
++	SNDRV_CHMAP_RLC,	/* rear left center */
++	SNDRV_CHMAP_RRC,	/* rear right center */
++	SNDRV_CHMAP_FLW,	/* front left wide */
++	SNDRV_CHMAP_FRW,	/* front right wide */
++	SNDRV_CHMAP_FLH,	/* front left high */
++	SNDRV_CHMAP_FCH,	/* front center high */
++	SNDRV_CHMAP_FRH,	/* front right high */
++	SNDRV_CHMAP_TC,		/* top center */
++	SNDRV_CHMAP_TFL,	/* top front left */
++	SNDRV_CHMAP_TFR,	/* top front right */
++	SNDRV_CHMAP_TFC,	/* top front center */
++	SNDRV_CHMAP_TRL,	/* top rear left */
++	SNDRV_CHMAP_TRR,	/* top rear right */
++	SNDRV_CHMAP_TRC,	/* top rear center */
++	/* new definitions for UAC2 */
++	SNDRV_CHMAP_TFLC,	/* top front left center */
++	SNDRV_CHMAP_TFRC,	/* top front right center */
++	SNDRV_CHMAP_TSL,	/* top side left */
++	SNDRV_CHMAP_TSR,	/* top side right */
++	SNDRV_CHMAP_LLFE,	/* left LFE */
++	SNDRV_CHMAP_RLFE,	/* right LFE */
++	SNDRV_CHMAP_BC,		/* bottom center */
++	SNDRV_CHMAP_BLC,	/* bottom left center */
++	SNDRV_CHMAP_BRC,	/* bottom right center */
++	SNDRV_CHMAP_LAST = SNDRV_CHMAP_BRC,
 +};
 +
-+struct kvm_dirty_tlb {
-+	__u64 bitmap;
-+	__u32 num_dirty;
-+};
++#define SNDRV_CHMAP_POSITION_MASK	0xffff
++#define SNDRV_CHMAP_PHASE_INVERSE	(0x01 << 16)
++#define SNDRV_CHMAP_DRIVER_SPEC		(0x02 << 16)
 +
-+/* Available with KVM_CAP_ONE_REG */
++#define SNDRV_PCM_IOCTL_PVERSION	_IOR('A', 0x00, int)
++#define SNDRV_PCM_IOCTL_INFO		_IOR('A', 0x01, struct snd_pcm_info)
++#define SNDRV_PCM_IOCTL_TSTAMP		_IOW('A', 0x02, int)
++#define SNDRV_PCM_IOCTL_TTSTAMP		_IOW('A', 0x03, int)
++#define SNDRV_PCM_IOCTL_USER_PVERSION	_IOW('A', 0x04, int)
++#define SNDRV_PCM_IOCTL_HW_REFINE	_IOWR('A', 0x10, struct snd_pcm_hw_params)
++#define SNDRV_PCM_IOCTL_HW_PARAMS	_IOWR('A', 0x11, struct snd_pcm_hw_params)
++#define SNDRV_PCM_IOCTL_HW_FREE		_IO('A', 0x12)
++#define SNDRV_PCM_IOCTL_SW_PARAMS	_IOWR('A', 0x13, struct snd_pcm_sw_params)
++#define SNDRV_PCM_IOCTL_STATUS		_IOR('A', 0x20, struct snd_pcm_status)
++#define SNDRV_PCM_IOCTL_DELAY		_IOR('A', 0x21, snd_pcm_sframes_t)
++#define SNDRV_PCM_IOCTL_HWSYNC		_IO('A', 0x22)
++#define SNDRV_PCM_IOCTL_SYNC_PTR	_IOWR('A', 0x23, struct snd_pcm_sync_ptr)
++#define SNDRV_PCM_IOCTL_STATUS_EXT	_IOWR('A', 0x24, struct snd_pcm_status)
++#define SNDRV_PCM_IOCTL_CHANNEL_INFO	_IOR('A', 0x32, struct snd_pcm_channel_info)
++#define SNDRV_PCM_IOCTL_PREPARE		_IO('A', 0x40)
++#define SNDRV_PCM_IOCTL_RESET		_IO('A', 0x41)
++#define SNDRV_PCM_IOCTL_START		_IO('A', 0x42)
++#define SNDRV_PCM_IOCTL_DROP		_IO('A', 0x43)
++#define SNDRV_PCM_IOCTL_DRAIN		_IO('A', 0x44)
++#define SNDRV_PCM_IOCTL_PAUSE		_IOW('A', 0x45, int)
++#define SNDRV_PCM_IOCTL_REWIND		_IOW('A', 0x46, snd_pcm_uframes_t)
++#define SNDRV_PCM_IOCTL_RESUME		_IO('A', 0x47)
++#define SNDRV_PCM_IOCTL_XRUN		_IO('A', 0x48)
++#define SNDRV_PCM_IOCTL_FORWARD		_IOW('A', 0x49, snd_pcm_uframes_t)
++#define SNDRV_PCM_IOCTL_WRITEI_FRAMES	_IOW('A', 0x50, struct snd_xferi)
++#define SNDRV_PCM_IOCTL_READI_FRAMES	_IOR('A', 0x51, struct snd_xferi)
++#define SNDRV_PCM_IOCTL_WRITEN_FRAMES	_IOW('A', 0x52, struct snd_xfern)
++#define SNDRV_PCM_IOCTL_READN_FRAMES	_IOR('A', 0x53, struct snd_xfern)
++#define SNDRV_PCM_IOCTL_LINK		_IOW('A', 0x60, int)
++#define SNDRV_PCM_IOCTL_UNLINK		_IO('A', 0x61)
 +
-+#define KVM_REG_ARCH_MASK	0xff00000000000000ULL
-+#define KVM_REG_GENERIC		0x0000000000000000ULL
-+
-+/*
-+ * Architecture specific registers are to be defined in arch headers and
-+ * ORed with the arch identifier.
-+ */
-+#define KVM_REG_PPC		0x1000000000000000ULL
-+#define KVM_REG_X86		0x2000000000000000ULL
-+#define KVM_REG_IA64		0x3000000000000000ULL
-+#define KVM_REG_ARM		0x4000000000000000ULL
-+#define KVM_REG_S390		0x5000000000000000ULL
-+#define KVM_REG_ARM64		0x6000000000000000ULL
-+#define KVM_REG_MIPS		0x7000000000000000ULL
-+
-+#define KVM_REG_SIZE_SHIFT	52
-+#define KVM_REG_SIZE_MASK	0x00f0000000000000ULL
-+#define KVM_REG_SIZE_U8		0x0000000000000000ULL
-+#define KVM_REG_SIZE_U16	0x0010000000000000ULL
-+#define KVM_REG_SIZE_U32	0x0020000000000000ULL
-+#define KVM_REG_SIZE_U64	0x0030000000000000ULL
-+#define KVM_REG_SIZE_U128	0x0040000000000000ULL
-+#define KVM_REG_SIZE_U256	0x0050000000000000ULL
-+#define KVM_REG_SIZE_U512	0x0060000000000000ULL
-+#define KVM_REG_SIZE_U1024	0x0070000000000000ULL
-+
-+struct kvm_reg_list {
-+	__u64 n; /* number of regs */
-+	__u64 reg[0];
-+};
-+
-+struct kvm_one_reg {
-+	__u64 id;
-+	__u64 addr;
-+};
-+
-+#define KVM_MSI_VALID_DEVID	(1U << 0)
-+struct kvm_msi {
-+	__u32 address_lo;
-+	__u32 address_hi;
-+	__u32 data;
-+	__u32 flags;
-+	__u32 devid;
-+	__u8  pad[12];
-+};
-+
-+struct kvm_arm_device_addr {
-+	__u64 id;
-+	__u64 addr;
-+};
++/*****************************************************************************
++ *                                                                           *
++ *                            MIDI v1.0 interface                            *
++ *                                                                           *
++ *****************************************************************************/
 +
 +/*
-+ * Device control API, available with KVM_CAP_DEVICE_CTRL
++ *  Raw MIDI section - /dev/snd/midi??
 + */
-+#define KVM_CREATE_DEVICE_TEST		1
 +
-+struct kvm_create_device {
-+	__u32	type;	/* in: KVM_DEV_TYPE_xxx */
-+	__u32	fd;	/* out: device handle */
-+	__u32	flags;	/* in: KVM_CREATE_DEVICE_xxx */
++#define SNDRV_RAWMIDI_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 0)
++
++enum {
++	SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
++	SNDRV_RAWMIDI_STREAM_INPUT,
++	SNDRV_RAWMIDI_STREAM_LAST = SNDRV_RAWMIDI_STREAM_INPUT,
 +};
 +
-+struct kvm_device_attr {
-+	__u32	flags;		/* no flags currently defined */
-+	__u32	group;		/* device-defined */
-+	__u64	attr;		/* group-defined */
-+	__u64	addr;		/* userspace address of attr data */
++#define SNDRV_RAWMIDI_INFO_OUTPUT		0x00000001
++#define SNDRV_RAWMIDI_INFO_INPUT		0x00000002
++#define SNDRV_RAWMIDI_INFO_DUPLEX		0x00000004
++
++struct snd_rawmidi_info {
++	unsigned int device;		/* RO/WR (control): device number */
++	unsigned int subdevice;		/* RO/WR (control): subdevice number */
++	int stream;			/* WR: stream */
++	int card;			/* R: card number */
++	unsigned int flags;		/* SNDRV_RAWMIDI_INFO_XXXX */
++	unsigned char id[64];		/* ID (user selectable) */
++	unsigned char name[80];		/* name of device */
++	unsigned char subname[32];	/* name of active or selected subdevice */
++	unsigned int subdevices_count;
++	unsigned int subdevices_avail;
++	unsigned char reserved[64];	/* reserved for future use */
 +};
 +
-+#define  KVM_DEV_VFIO_GROUP			1
-+#define   KVM_DEV_VFIO_GROUP_ADD			1
-+#define   KVM_DEV_VFIO_GROUP_DEL			2
-+#define   KVM_DEV_VFIO_GROUP_SET_SPAPR_TCE		3
-+
-+enum kvm_device_type {
-+	KVM_DEV_TYPE_FSL_MPIC_20	= 1,
-+#define KVM_DEV_TYPE_FSL_MPIC_20	KVM_DEV_TYPE_FSL_MPIC_20
-+	KVM_DEV_TYPE_FSL_MPIC_42,
-+#define KVM_DEV_TYPE_FSL_MPIC_42	KVM_DEV_TYPE_FSL_MPIC_42
-+	KVM_DEV_TYPE_XICS,
-+#define KVM_DEV_TYPE_XICS		KVM_DEV_TYPE_XICS
-+	KVM_DEV_TYPE_VFIO,
-+#define KVM_DEV_TYPE_VFIO		KVM_DEV_TYPE_VFIO
-+	KVM_DEV_TYPE_ARM_VGIC_V2,
-+#define KVM_DEV_TYPE_ARM_VGIC_V2	KVM_DEV_TYPE_ARM_VGIC_V2
-+	KVM_DEV_TYPE_FLIC,
-+#define KVM_DEV_TYPE_FLIC		KVM_DEV_TYPE_FLIC
-+	KVM_DEV_TYPE_ARM_VGIC_V3,
-+#define KVM_DEV_TYPE_ARM_VGIC_V3	KVM_DEV_TYPE_ARM_VGIC_V3
-+	KVM_DEV_TYPE_ARM_VGIC_ITS,
-+#define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
-+	KVM_DEV_TYPE_MAX,
++struct snd_rawmidi_params {
++	int stream;
++	size_t buffer_size;		/* queue size in bytes */
++	size_t avail_min;		/* minimum avail bytes for wakeup */
++	unsigned int no_active_sensing: 1; /* do not send active sensing byte in close() */
++	unsigned char reserved[16];	/* reserved for future use */
 +};
 +
-+struct kvm_vfio_spapr_tce {
-+	__s32	groupfd;
-+	__s32	tablefd;
++struct snd_rawmidi_status {
++	int stream;
++	struct timespec tstamp;		/* Timestamp */
++	size_t avail;			/* available bytes */
++	size_t xruns;			/* count of overruns since last status (in bytes) */
++	unsigned char reserved[16];	/* reserved for future use */
 +};
++
++#define SNDRV_RAWMIDI_IOCTL_PVERSION	_IOR('W', 0x00, int)
++#define SNDRV_RAWMIDI_IOCTL_INFO	_IOR('W', 0x01, struct snd_rawmidi_info)
++#define SNDRV_RAWMIDI_IOCTL_PARAMS	_IOWR('W', 0x10, struct snd_rawmidi_params)
++#define SNDRV_RAWMIDI_IOCTL_STATUS	_IOWR('W', 0x20, struct snd_rawmidi_status)
++#define SNDRV_RAWMIDI_IOCTL_DROP	_IOW('W', 0x30, int)
++#define SNDRV_RAWMIDI_IOCTL_DRAIN	_IOW('W', 0x31, int)
 +
 +/*
-+ * ioctls for VM fds
++ *  Timer section - /dev/snd/timer
 + */
-+#define KVM_SET_MEMORY_REGION     _IOW(KVMIO,  0x40, struct kvm_memory_region)
-+/*
-+ * KVM_CREATE_VCPU receives as a parameter the vcpu slot, and returns
-+ * a vcpu fd.
-+ */
-+#define KVM_CREATE_VCPU           _IO(KVMIO,   0x41)
-+#define KVM_GET_DIRTY_LOG         _IOW(KVMIO,  0x42, struct kvm_dirty_log)
-+/* KVM_SET_MEMORY_ALIAS is obsolete: */
-+#define KVM_SET_MEMORY_ALIAS      _IOW(KVMIO,  0x43, struct kvm_memory_alias)
-+#define KVM_SET_NR_MMU_PAGES      _IO(KVMIO,   0x44)
-+#define KVM_GET_NR_MMU_PAGES      _IO(KVMIO,   0x45)
-+#define KVM_SET_USER_MEMORY_REGION _IOW(KVMIO, 0x46, \
-+					struct kvm_userspace_memory_region)
-+#define KVM_SET_TSS_ADDR          _IO(KVMIO,   0x47)
-+#define KVM_SET_IDENTITY_MAP_ADDR _IOW(KVMIO,  0x48, __u64)
 +
-+/* enable ucontrol for s390 */
-+struct kvm_s390_ucas_mapping {
-+	__u64 user_addr;
-+	__u64 vcpu_addr;
-+	__u64 length;
++#define SNDRV_TIMER_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 6)
++
++enum {
++	SNDRV_TIMER_CLASS_NONE = -1,
++	SNDRV_TIMER_CLASS_SLAVE = 0,
++	SNDRV_TIMER_CLASS_GLOBAL,
++	SNDRV_TIMER_CLASS_CARD,
++	SNDRV_TIMER_CLASS_PCM,
++	SNDRV_TIMER_CLASS_LAST = SNDRV_TIMER_CLASS_PCM,
 +};
-+#define KVM_S390_UCAS_MAP        _IOW(KVMIO, 0x50, struct kvm_s390_ucas_mapping)
-+#define KVM_S390_UCAS_UNMAP      _IOW(KVMIO, 0x51, struct kvm_s390_ucas_mapping)
-+#define KVM_S390_VCPU_FAULT	 _IOW(KVMIO, 0x52, unsigned long)
 +
-+/* Device model IOC */
-+#define KVM_CREATE_IRQCHIP        _IO(KVMIO,   0x60)
-+#define KVM_IRQ_LINE              _IOW(KVMIO,  0x61, struct kvm_irq_level)
-+#define KVM_GET_IRQCHIP           _IOWR(KVMIO, 0x62, struct kvm_irqchip)
-+#define KVM_SET_IRQCHIP           _IOR(KVMIO,  0x63, struct kvm_irqchip)
-+#define KVM_CREATE_PIT            _IO(KVMIO,   0x64)
-+#define KVM_GET_PIT               _IOWR(KVMIO, 0x65, struct kvm_pit_state)
-+#define KVM_SET_PIT               _IOR(KVMIO,  0x66, struct kvm_pit_state)
-+#define KVM_IRQ_LINE_STATUS       _IOWR(KVMIO, 0x67, struct kvm_irq_level)
-+#define KVM_REGISTER_COALESCED_MMIO \
-+			_IOW(KVMIO,  0x67, struct kvm_coalesced_mmio_zone)
-+#define KVM_UNREGISTER_COALESCED_MMIO \
-+			_IOW(KVMIO,  0x68, struct kvm_coalesced_mmio_zone)
-+#define KVM_ASSIGN_PCI_DEVICE     _IOR(KVMIO,  0x69, \
-+				       struct kvm_assigned_pci_dev)
-+#define KVM_SET_GSI_ROUTING       _IOW(KVMIO,  0x6a, struct kvm_irq_routing)
-+/* deprecated, replaced by KVM_ASSIGN_DEV_IRQ */
-+#define KVM_ASSIGN_IRQ            __KVM_DEPRECATED_VM_R_0x70
-+#define KVM_ASSIGN_DEV_IRQ        _IOW(KVMIO,  0x70, struct kvm_assigned_irq)
-+#define KVM_REINJECT_CONTROL      _IO(KVMIO,   0x71)
-+#define KVM_DEASSIGN_PCI_DEVICE   _IOW(KVMIO,  0x72, \
-+				       struct kvm_assigned_pci_dev)
-+#define KVM_ASSIGN_SET_MSIX_NR    _IOW(KVMIO,  0x73, \
-+				       struct kvm_assigned_msix_nr)
-+#define KVM_ASSIGN_SET_MSIX_ENTRY _IOW(KVMIO,  0x74, \
-+				       struct kvm_assigned_msix_entry)
-+#define KVM_DEASSIGN_DEV_IRQ      _IOW(KVMIO,  0x75, struct kvm_assigned_irq)
-+#define KVM_IRQFD                 _IOW(KVMIO,  0x76, struct kvm_irqfd)
-+#define KVM_CREATE_PIT2		  _IOW(KVMIO,  0x77, struct kvm_pit_config)
-+#define KVM_SET_BOOT_CPU_ID       _IO(KVMIO,   0x78)
-+#define KVM_IOEVENTFD             _IOW(KVMIO,  0x79, struct kvm_ioeventfd)
-+#define KVM_XEN_HVM_CONFIG        _IOW(KVMIO,  0x7a, struct kvm_xen_hvm_config)
-+#define KVM_SET_CLOCK             _IOW(KVMIO,  0x7b, struct kvm_clock_data)
-+#define KVM_GET_CLOCK             _IOR(KVMIO,  0x7c, struct kvm_clock_data)
-+/* Available with KVM_CAP_PIT_STATE2 */
-+#define KVM_GET_PIT2              _IOR(KVMIO,  0x9f, struct kvm_pit_state2)
-+#define KVM_SET_PIT2              _IOW(KVMIO,  0xa0, struct kvm_pit_state2)
-+/* Available with KVM_CAP_PPC_GET_PVINFO */
-+#define KVM_PPC_GET_PVINFO	  _IOW(KVMIO,  0xa1, struct kvm_ppc_pvinfo)
-+/* Available with KVM_CAP_TSC_CONTROL */
-+#define KVM_SET_TSC_KHZ           _IO(KVMIO,  0xa2)
-+#define KVM_GET_TSC_KHZ           _IO(KVMIO,  0xa3)
-+/* Available with KVM_CAP_PCI_2_3 */
-+#define KVM_ASSIGN_SET_INTX_MASK  _IOW(KVMIO,  0xa4, \
-+				       struct kvm_assigned_pci_dev)
-+/* Available with KVM_CAP_SIGNAL_MSI */
-+#define KVM_SIGNAL_MSI            _IOW(KVMIO,  0xa5, struct kvm_msi)
-+/* Available with KVM_CAP_PPC_GET_SMMU_INFO */
-+#define KVM_PPC_GET_SMMU_INFO	  _IOR(KVMIO,  0xa6, struct kvm_ppc_smmu_info)
-+/* Available with KVM_CAP_PPC_ALLOC_HTAB */
-+#define KVM_PPC_ALLOCATE_HTAB	  _IOWR(KVMIO, 0xa7, __u32)
-+#define KVM_CREATE_SPAPR_TCE	  _IOW(KVMIO,  0xa8, struct kvm_create_spapr_tce)
-+#define KVM_CREATE_SPAPR_TCE_64	  _IOW(KVMIO,  0xa8, \
-+				       struct kvm_create_spapr_tce_64)
-+/* Available with KVM_CAP_RMA */
-+#define KVM_ALLOCATE_RMA	  _IOR(KVMIO,  0xa9, struct kvm_allocate_rma)
-+/* Available with KVM_CAP_PPC_HTAB_FD */
-+#define KVM_PPC_GET_HTAB_FD	  _IOW(KVMIO,  0xaa, struct kvm_get_htab_fd)
-+/* Available with KVM_CAP_ARM_SET_DEVICE_ADDR */
-+#define KVM_ARM_SET_DEVICE_ADDR	  _IOW(KVMIO,  0xab, struct kvm_arm_device_addr)
-+/* Available with KVM_CAP_PPC_RTAS */
-+#define KVM_PPC_RTAS_DEFINE_TOKEN _IOW(KVMIO,  0xac, struct kvm_rtas_token_args)
-+/* Available with KVM_CAP_SPAPR_RESIZE_HPT */
-+#define KVM_PPC_RESIZE_HPT_PREPARE _IOR(KVMIO, 0xad, struct kvm_ppc_resize_hpt)
-+#define KVM_PPC_RESIZE_HPT_COMMIT  _IOR(KVMIO, 0xae, struct kvm_ppc_resize_hpt)
-+/* Available with KVM_CAP_PPC_RADIX_MMU or KVM_CAP_PPC_HASH_MMU_V3 */
-+#define KVM_PPC_CONFIGURE_V3_MMU  _IOW(KVMIO,  0xaf, struct kvm_ppc_mmuv3_cfg)
-+/* Available with KVM_CAP_PPC_RADIX_MMU */
-+#define KVM_PPC_GET_RMMU_INFO	  _IOW(KVMIO,  0xb0, struct kvm_ppc_rmmu_info)
++/* slave timer classes */
++enum {
++	SNDRV_TIMER_SCLASS_NONE = 0,
++	SNDRV_TIMER_SCLASS_APPLICATION,
++	SNDRV_TIMER_SCLASS_SEQUENCER,		/* alias */
++	SNDRV_TIMER_SCLASS_OSS_SEQUENCER,	/* alias */
++	SNDRV_TIMER_SCLASS_LAST = SNDRV_TIMER_SCLASS_OSS_SEQUENCER,
++};
 +
-+/* ioctl for vm fd */
-+#define KVM_CREATE_DEVICE	  _IOWR(KVMIO,  0xe0, struct kvm_create_device)
++/* global timers (device member) */
++#define SNDRV_TIMER_GLOBAL_SYSTEM	0
++#define SNDRV_TIMER_GLOBAL_RTC		1	/* unused */
++#define SNDRV_TIMER_GLOBAL_HPET		2
++#define SNDRV_TIMER_GLOBAL_HRTIMER	3
 +
-+/* ioctls for fds returned by KVM_CREATE_DEVICE */
-+#define KVM_SET_DEVICE_ATTR	  _IOW(KVMIO,  0xe1, struct kvm_device_attr)
-+#define KVM_GET_DEVICE_ATTR	  _IOW(KVMIO,  0xe2, struct kvm_device_attr)
-+#define KVM_HAS_DEVICE_ATTR	  _IOW(KVMIO,  0xe3, struct kvm_device_attr)
++/* info flags */
++#define SNDRV_TIMER_FLG_SLAVE		(1<<0)	/* cannot be controlled */
 +
-+/*
-+ * ioctls for vcpu fds
-+ */
-+#define KVM_RUN                   _IO(KVMIO,   0x80)
-+#define KVM_GET_REGS              _IOR(KVMIO,  0x81, struct kvm_regs)
-+#define KVM_SET_REGS              _IOW(KVMIO,  0x82, struct kvm_regs)
-+#define KVM_GET_SREGS             _IOR(KVMIO,  0x83, struct kvm_sregs)
-+#define KVM_SET_SREGS             _IOW(KVMIO,  0x84, struct kvm_sregs)
-+#define KVM_TRANSLATE             _IOWR(KVMIO, 0x85, struct kvm_translation)
-+#define KVM_INTERRUPT             _IOW(KVMIO,  0x86, struct kvm_interrupt)
-+/* KVM_DEBUG_GUEST is no longer supported, use KVM_SET_GUEST_DEBUG instead */
-+#define KVM_DEBUG_GUEST           __KVM_DEPRECATED_VCPU_W_0x87
-+#define KVM_GET_MSRS              _IOWR(KVMIO, 0x88, struct kvm_msrs)
-+#define KVM_SET_MSRS              _IOW(KVMIO,  0x89, struct kvm_msrs)
-+#define KVM_SET_CPUID             _IOW(KVMIO,  0x8a, struct kvm_cpuid)
-+#define KVM_SET_SIGNAL_MASK       _IOW(KVMIO,  0x8b, struct kvm_signal_mask)
-+#define KVM_GET_FPU               _IOR(KVMIO,  0x8c, struct kvm_fpu)
-+#define KVM_SET_FPU               _IOW(KVMIO,  0x8d, struct kvm_fpu)
-+#define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
-+#define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
-+#define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-+#define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
-+/* Available with KVM_CAP_VAPIC */
-+#define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
-+/* Available with KVM_CAP_VAPIC */
-+#define KVM_SET_VAPIC_ADDR        _IOW(KVMIO,  0x93, struct kvm_vapic_addr)
-+/* valid for virtual machine (for floating interrupt)_and_ vcpu */
-+#define KVM_S390_INTERRUPT        _IOW(KVMIO,  0x94, struct kvm_s390_interrupt)
-+/* store status for s390 */
-+#define KVM_S390_STORE_STATUS_NOADDR    (-1ul)
-+#define KVM_S390_STORE_STATUS_PREFIXED  (-2ul)
-+#define KVM_S390_STORE_STATUS	  _IOW(KVMIO,  0x95, unsigned long)
-+/* initial ipl psw for s390 */
-+#define KVM_S390_SET_INITIAL_PSW  _IOW(KVMIO,  0x96, struct kvm_s390_psw)
-+/* initial reset for s390 */
-+#define KVM_S390_INITIAL_RESET    _IO(KVMIO,   0x97)
-+#define KVM_GET_MP_STATE          _IOR(KVMIO,  0x98, struct kvm_mp_state)
-+#define KVM_SET_MP_STATE          _IOW(KVMIO,  0x99, struct kvm_mp_state)
-+/* Available with KVM_CAP_USER_NMI */
-+#define KVM_NMI                   _IO(KVMIO,   0x9a)
-+/* Available with KVM_CAP_SET_GUEST_DEBUG */
-+#define KVM_SET_GUEST_DEBUG       _IOW(KVMIO,  0x9b, struct kvm_guest_debug)
-+/* MCE for x86 */
-+#define KVM_X86_SETUP_MCE         _IOW(KVMIO,  0x9c, __u64)
-+#define KVM_X86_GET_MCE_CAP_SUPPORTED _IOR(KVMIO,  0x9d, __u64)
-+#define KVM_X86_SET_MCE           _IOW(KVMIO,  0x9e, struct kvm_x86_mce)
-+/* Available with KVM_CAP_VCPU_EVENTS */
-+#define KVM_GET_VCPU_EVENTS       _IOR(KVMIO,  0x9f, struct kvm_vcpu_events)
-+#define KVM_SET_VCPU_EVENTS       _IOW(KVMIO,  0xa0, struct kvm_vcpu_events)
-+/* Available with KVM_CAP_DEBUGREGS */
-+#define KVM_GET_DEBUGREGS         _IOR(KVMIO,  0xa1, struct kvm_debugregs)
-+#define KVM_SET_DEBUGREGS         _IOW(KVMIO,  0xa2, struct kvm_debugregs)
-+/*
-+ * vcpu version available with KVM_ENABLE_CAP
-+ * vm version available with KVM_CAP_ENABLE_CAP_VM
-+ */
-+#define KVM_ENABLE_CAP            _IOW(KVMIO,  0xa3, struct kvm_enable_cap)
-+/* Available with KVM_CAP_XSAVE */
-+#define KVM_GET_XSAVE		  _IOR(KVMIO,  0xa4, struct kvm_xsave)
-+#define KVM_SET_XSAVE		  _IOW(KVMIO,  0xa5, struct kvm_xsave)
-+/* Available with KVM_CAP_XCRS */
-+#define KVM_GET_XCRS		  _IOR(KVMIO,  0xa6, struct kvm_xcrs)
-+#define KVM_SET_XCRS		  _IOW(KVMIO,  0xa7, struct kvm_xcrs)
-+/* Available with KVM_CAP_SW_TLB */
-+#define KVM_DIRTY_TLB		  _IOW(KVMIO,  0xaa, struct kvm_dirty_tlb)
-+/* Available with KVM_CAP_ONE_REG */
-+#define KVM_GET_ONE_REG		  _IOW(KVMIO,  0xab, struct kvm_one_reg)
-+#define KVM_SET_ONE_REG		  _IOW(KVMIO,  0xac, struct kvm_one_reg)
-+/* VM is being stopped by host */
-+#define KVM_KVMCLOCK_CTRL	  _IO(KVMIO,   0xad)
-+#define KVM_ARM_VCPU_INIT	  _IOW(KVMIO,  0xae, struct kvm_vcpu_init)
-+#define KVM_ARM_PREFERRED_TARGET  _IOR(KVMIO,  0xaf, struct kvm_vcpu_init)
-+#define KVM_GET_REG_LIST	  _IOWR(KVMIO, 0xb0, struct kvm_reg_list)
-+/* Available with KVM_CAP_S390_MEM_OP */
-+#define KVM_S390_MEM_OP		  _IOW(KVMIO,  0xb1, struct kvm_s390_mem_op)
-+/* Available with KVM_CAP_S390_SKEYS */
-+#define KVM_S390_GET_SKEYS      _IOW(KVMIO, 0xb2, struct kvm_s390_skeys)
-+#define KVM_S390_SET_SKEYS      _IOW(KVMIO, 0xb3, struct kvm_s390_skeys)
-+/* Available with KVM_CAP_S390_INJECT_IRQ */
-+#define KVM_S390_IRQ              _IOW(KVMIO,  0xb4, struct kvm_s390_irq)
-+/* Available with KVM_CAP_S390_IRQ_STATE */
-+#define KVM_S390_SET_IRQ_STATE	  _IOW(KVMIO, 0xb5, struct kvm_s390_irq_state)
-+#define KVM_S390_GET_IRQ_STATE	  _IOW(KVMIO, 0xb6, struct kvm_s390_irq_state)
-+/* Available with KVM_CAP_X86_SMM */
-+#define KVM_SMI                   _IO(KVMIO,   0xb7)
-+/* Available with KVM_CAP_S390_CMMA_MIGRATION */
-+#define KVM_S390_GET_CMMA_BITS      _IOWR(KVMIO, 0xb8, struct kvm_s390_cmma_log)
-+#define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
++struct snd_timer_id {
++	int dev_class;
++	int dev_sclass;
++	int card;
++	int device;
++	int subdevice;
++};
 +
-+#define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
-+#define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
-+#define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
++struct snd_timer_ginfo {
++	struct snd_timer_id tid;	/* requested timer ID */
++	unsigned int flags;		/* timer flags - SNDRV_TIMER_FLG_* */
++	int card;			/* card number */
++	unsigned char id[64];		/* timer identification */
++	unsigned char name[80];		/* timer name */
++	unsigned long reserved0;	/* reserved for future use */
++	unsigned long resolution;	/* average period resolution in ns */
++	unsigned long resolution_min;	/* minimal period resolution in ns */
++	unsigned long resolution_max;	/* maximal period resolution in ns */
++	unsigned int clients;		/* active timer clients */
++	unsigned char reserved[32];
++};
 +
-+struct kvm_assigned_pci_dev {
-+	__u32 assigned_dev_id;
-+	__u32 busnr;
-+	__u32 devfn;
-+	__u32 flags;
-+	__u32 segnr;
++struct snd_timer_gparams {
++	struct snd_timer_id tid;	/* requested timer ID */
++	unsigned long period_num;	/* requested precise period duration (in seconds) - numerator */
++	unsigned long period_den;	/* requested precise period duration (in seconds) - denominator */
++	unsigned char reserved[32];
++};
++
++struct snd_timer_gstatus {
++	struct snd_timer_id tid;	/* requested timer ID */
++	unsigned long resolution;	/* current period resolution in ns */
++	unsigned long resolution_num;	/* precise current period resolution (in seconds) - numerator */
++	unsigned long resolution_den;	/* precise current period resolution (in seconds) - denominator */
++	unsigned char reserved[32];
++};
++
++struct snd_timer_select {
++	struct snd_timer_id id;	/* bind to timer ID */
++	unsigned char reserved[32];	/* reserved */
++};
++
++struct snd_timer_info {
++	unsigned int flags;		/* timer flags - SNDRV_TIMER_FLG_* */
++	int card;			/* card number */
++	unsigned char id[64];		/* timer identificator */
++	unsigned char name[80];		/* timer name */
++	unsigned long reserved0;	/* reserved for future use */
++	unsigned long resolution;	/* average period resolution in ns */
++	unsigned char reserved[64];	/* reserved */
++};
++
++#define SNDRV_TIMER_PSFLG_AUTO		(1<<0)	/* auto start, otherwise one-shot */
++#define SNDRV_TIMER_PSFLG_EXCLUSIVE	(1<<1)	/* exclusive use, precise start/stop/pause/continue */
++#define SNDRV_TIMER_PSFLG_EARLY_EVENT	(1<<2)	/* write early event to the poll queue */
++
++struct snd_timer_params {
++	unsigned int flags;		/* flags - SNDRV_MIXER_PSFLG_* */
++	unsigned int ticks;		/* requested resolution in ticks */
++	unsigned int queue_size;	/* total size of queue (32-1024) */
++	unsigned int reserved0;		/* reserved, was: failure locations */
++	unsigned int filter;		/* event filter (bitmask of SNDRV_TIMER_EVENT_*) */
++	unsigned char reserved[60];	/* reserved */
++};
++
++struct snd_timer_status {
++	struct timespec tstamp;		/* Timestamp - last update */
++	unsigned int resolution;	/* current period resolution in ns */
++	unsigned int lost;		/* counter of master tick lost */
++	unsigned int overrun;		/* count of read queue overruns */
++	unsigned int queue;		/* used queue size */
++	unsigned char reserved[64];	/* reserved */
++};
++
++#define SNDRV_TIMER_IOCTL_PVERSION	_IOR('T', 0x00, int)
++#define SNDRV_TIMER_IOCTL_NEXT_DEVICE	_IOWR('T', 0x01, struct snd_timer_id)
++#define SNDRV_TIMER_IOCTL_TREAD		_IOW('T', 0x02, int)
++#define SNDRV_TIMER_IOCTL_GINFO		_IOWR('T', 0x03, struct snd_timer_ginfo)
++#define SNDRV_TIMER_IOCTL_GPARAMS	_IOW('T', 0x04, struct snd_timer_gparams)
++#define SNDRV_TIMER_IOCTL_GSTATUS	_IOWR('T', 0x05, struct snd_timer_gstatus)
++#define SNDRV_TIMER_IOCTL_SELECT	_IOW('T', 0x10, struct snd_timer_select)
++#define SNDRV_TIMER_IOCTL_INFO		_IOR('T', 0x11, struct snd_timer_info)
++#define SNDRV_TIMER_IOCTL_PARAMS	_IOW('T', 0x12, struct snd_timer_params)
++#define SNDRV_TIMER_IOCTL_STATUS	_IOR('T', 0x14, struct snd_timer_status)
++/* The following four ioctls are changed since 1.0.9 due to confliction */
++#define SNDRV_TIMER_IOCTL_START		_IO('T', 0xa0)
++#define SNDRV_TIMER_IOCTL_STOP		_IO('T', 0xa1)
++#define SNDRV_TIMER_IOCTL_CONTINUE	_IO('T', 0xa2)
++#define SNDRV_TIMER_IOCTL_PAUSE		_IO('T', 0xa3)
++
++struct snd_timer_read {
++	unsigned int resolution;
++	unsigned int ticks;
++};
++
++enum {
++	SNDRV_TIMER_EVENT_RESOLUTION = 0,	/* val = resolution in ns */
++	SNDRV_TIMER_EVENT_TICK,			/* val = ticks */
++	SNDRV_TIMER_EVENT_START,		/* val = resolution in ns */
++	SNDRV_TIMER_EVENT_STOP,			/* val = 0 */
++	SNDRV_TIMER_EVENT_CONTINUE,		/* val = resolution in ns */
++	SNDRV_TIMER_EVENT_PAUSE,		/* val = 0 */
++	SNDRV_TIMER_EVENT_EARLY,		/* val = 0, early event */
++	SNDRV_TIMER_EVENT_SUSPEND,		/* val = 0 */
++	SNDRV_TIMER_EVENT_RESUME,		/* val = resolution in ns */
++	/* master timer events for slave timer instances */
++	SNDRV_TIMER_EVENT_MSTART = SNDRV_TIMER_EVENT_START + 10,
++	SNDRV_TIMER_EVENT_MSTOP = SNDRV_TIMER_EVENT_STOP + 10,
++	SNDRV_TIMER_EVENT_MCONTINUE = SNDRV_TIMER_EVENT_CONTINUE + 10,
++	SNDRV_TIMER_EVENT_MPAUSE = SNDRV_TIMER_EVENT_PAUSE + 10,
++	SNDRV_TIMER_EVENT_MSUSPEND = SNDRV_TIMER_EVENT_SUSPEND + 10,
++	SNDRV_TIMER_EVENT_MRESUME = SNDRV_TIMER_EVENT_RESUME + 10,
++};
++
++struct snd_timer_tread {
++	int event;
++	struct timespec tstamp;
++	unsigned int val;
++};
++
++/****************************************************************************
++ *                                                                          *
++ *        Section for driver control interface - /dev/snd/control?          *
++ *                                                                          *
++ ****************************************************************************/
++
++#define SNDRV_CTL_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 7)
++
++struct snd_ctl_card_info {
++	int card;			/* card number */
++	int pad;			/* reserved for future (was type) */
++	unsigned char id[16];		/* ID of card (user selectable) */
++	unsigned char driver[16];	/* Driver name */
++	unsigned char name[32];		/* Short name of soundcard */
++	unsigned char longname[80];	/* name + info text about soundcard */
++	unsigned char reserved_[16];	/* reserved for future (was ID of mixer) */
++	unsigned char mixername[80];	/* visual mixer identification */
++	unsigned char components[128];	/* card components / fine identification, delimited with one space (AC97 etc..) */
++};
++
++typedef int __bitwise snd_ctl_elem_type_t;
++#define	SNDRV_CTL_ELEM_TYPE_NONE	((__force snd_ctl_elem_type_t) 0) /* invalid */
++#define	SNDRV_CTL_ELEM_TYPE_BOOLEAN	((__force snd_ctl_elem_type_t) 1) /* boolean type */
++#define	SNDRV_CTL_ELEM_TYPE_INTEGER	((__force snd_ctl_elem_type_t) 2) /* integer type */
++#define	SNDRV_CTL_ELEM_TYPE_ENUMERATED	((__force snd_ctl_elem_type_t) 3) /* enumerated type */
++#define	SNDRV_CTL_ELEM_TYPE_BYTES	((__force snd_ctl_elem_type_t) 4) /* byte array */
++#define	SNDRV_CTL_ELEM_TYPE_IEC958	((__force snd_ctl_elem_type_t) 5) /* IEC958 (S/PDIF) setup */
++#define	SNDRV_CTL_ELEM_TYPE_INTEGER64	((__force snd_ctl_elem_type_t) 6) /* 64-bit integer type */
++#define	SNDRV_CTL_ELEM_TYPE_LAST	SNDRV_CTL_ELEM_TYPE_INTEGER64
++
++typedef int __bitwise snd_ctl_elem_iface_t;
++#define	SNDRV_CTL_ELEM_IFACE_CARD	((__force snd_ctl_elem_iface_t) 0) /* global control */
++#define	SNDRV_CTL_ELEM_IFACE_HWDEP	((__force snd_ctl_elem_iface_t) 1) /* hardware dependent device */
++#define	SNDRV_CTL_ELEM_IFACE_MIXER	((__force snd_ctl_elem_iface_t) 2) /* virtual mixer device */
++#define	SNDRV_CTL_ELEM_IFACE_PCM	((__force snd_ctl_elem_iface_t) 3) /* PCM device */
++#define	SNDRV_CTL_ELEM_IFACE_RAWMIDI	((__force snd_ctl_elem_iface_t) 4) /* RawMidi device */
++#define	SNDRV_CTL_ELEM_IFACE_TIMER	((__force snd_ctl_elem_iface_t) 5) /* timer device */
++#define	SNDRV_CTL_ELEM_IFACE_SEQUENCER	((__force snd_ctl_elem_iface_t) 6) /* sequencer client */
++#define	SNDRV_CTL_ELEM_IFACE_LAST	SNDRV_CTL_ELEM_IFACE_SEQUENCER
++
++#define SNDRV_CTL_ELEM_ACCESS_READ		(1<<0)
++#define SNDRV_CTL_ELEM_ACCESS_WRITE		(1<<1)
++#define SNDRV_CTL_ELEM_ACCESS_READWRITE		(SNDRV_CTL_ELEM_ACCESS_READ|SNDRV_CTL_ELEM_ACCESS_WRITE)
++#define SNDRV_CTL_ELEM_ACCESS_VOLATILE		(1<<2)	/* control value may be changed without a notification */
++#define SNDRV_CTL_ELEM_ACCESS_TIMESTAMP		(1<<3)	/* when was control changed */
++#define SNDRV_CTL_ELEM_ACCESS_TLV_READ		(1<<4)	/* TLV read is possible */
++#define SNDRV_CTL_ELEM_ACCESS_TLV_WRITE		(1<<5)	/* TLV write is possible */
++#define SNDRV_CTL_ELEM_ACCESS_TLV_READWRITE	(SNDRV_CTL_ELEM_ACCESS_TLV_READ|SNDRV_CTL_ELEM_ACCESS_TLV_WRITE)
++#define SNDRV_CTL_ELEM_ACCESS_TLV_COMMAND	(1<<6)	/* TLV command is possible */
++#define SNDRV_CTL_ELEM_ACCESS_INACTIVE		(1<<8)	/* control does actually nothing, but may be updated */
++#define SNDRV_CTL_ELEM_ACCESS_LOCK		(1<<9)	/* write lock */
++#define SNDRV_CTL_ELEM_ACCESS_OWNER		(1<<10)	/* write lock owner */
++#define SNDRV_CTL_ELEM_ACCESS_TLV_CALLBACK	(1<<28)	/* kernel use a TLV callback */
++#define SNDRV_CTL_ELEM_ACCESS_USER		(1<<29) /* user space element */
++/* bits 30 and 31 are obsoleted (for indirect access) */
++
++/* for further details see the ACPI and PCI power management specification */
++#define SNDRV_CTL_POWER_D0		0x0000	/* full On */
++#define SNDRV_CTL_POWER_D1		0x0100	/* partial On */
++#define SNDRV_CTL_POWER_D2		0x0200	/* partial On */
++#define SNDRV_CTL_POWER_D3		0x0300	/* Off */
++#define SNDRV_CTL_POWER_D3hot		(SNDRV_CTL_POWER_D3|0x0000)	/* Off, with power */
++#define SNDRV_CTL_POWER_D3cold		(SNDRV_CTL_POWER_D3|0x0001)	/* Off, without power */
++
++#define SNDRV_CTL_ELEM_ID_NAME_MAXLEN	44
++
++struct snd_ctl_elem_id {
++	unsigned int numid;		/* numeric identifier, zero = invalid */
++	snd_ctl_elem_iface_t iface;	/* interface identifier */
++	unsigned int device;		/* device/client number */
++	unsigned int subdevice;		/* subdevice (substream) number */
++	unsigned char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];		/* ASCII name of item */
++	unsigned int index;		/* index of item */
++};
++
++struct snd_ctl_elem_list {
++	unsigned int offset;		/* W: first element ID to get */
++	unsigned int space;		/* W: count of element IDs to get */
++	unsigned int used;		/* R: count of element IDs set */
++	unsigned int count;		/* R: count of all elements */
++	struct snd_ctl_elem_id __user *pids; /* R: IDs */
++	unsigned char reserved[50];
++};
++
++struct snd_ctl_elem_info {
++	struct snd_ctl_elem_id id;	/* W: element ID */
++	snd_ctl_elem_type_t type;	/* R: value type - SNDRV_CTL_ELEM_TYPE_* */
++	unsigned int access;		/* R: value access (bitmask) - SNDRV_CTL_ELEM_ACCESS_* */
++	unsigned int count;		/* count of values */
++	__kernel_pid_t owner;		/* owner's PID of this control */
 +	union {
-+		__u32 reserved[11];
-+	};
-+};
-+
-+#define KVM_DEV_IRQ_HOST_INTX    (1 << 0)
-+#define KVM_DEV_IRQ_HOST_MSI     (1 << 1)
-+#define KVM_DEV_IRQ_HOST_MSIX    (1 << 2)
-+
-+#define KVM_DEV_IRQ_GUEST_INTX   (1 << 8)
-+#define KVM_DEV_IRQ_GUEST_MSI    (1 << 9)
-+#define KVM_DEV_IRQ_GUEST_MSIX   (1 << 10)
-+
-+#define KVM_DEV_IRQ_HOST_MASK	 0x00ff
-+#define KVM_DEV_IRQ_GUEST_MASK   0xff00
-+
-+struct kvm_assigned_irq {
-+	__u32 assigned_dev_id;
-+	__u32 host_irq; /* ignored (legacy field) */
-+	__u32 guest_irq;
-+	__u32 flags;
++		struct {
++			long min;		/* R: minimum value */
++			long max;		/* R: maximum value */
++			long step;		/* R: step (0 variable) */
++		} integer;
++		struct {
++			long long min;		/* R: minimum value */
++			long long max;		/* R: maximum value */
++			long long step;		/* R: step (0 variable) */
++		} integer64;
++		struct {
++			unsigned int items;	/* R: number of items */
++			unsigned int item;	/* W: item number */
++			char name[64];		/* R: value name */
++			__u64 names_ptr;	/* W: names list (ELEM_ADD only) */
++			unsigned int names_length;
++		} enumerated;
++		unsigned char reserved[128];
++	} value;
 +	union {
-+		__u32 reserved[12];
-+	};
++		unsigned short d[4];		/* dimensions */
++		unsigned short *d_ptr;		/* indirect - obsoleted */
++	} dimen;
++	unsigned char reserved[64-4*sizeof(unsigned short)];
 +};
 +
-+struct kvm_assigned_msix_nr {
-+	__u32 assigned_dev_id;
-+	__u16 entry_nr;
-+	__u16 padding;
++struct snd_ctl_elem_value {
++	struct snd_ctl_elem_id id;	/* W: element ID */
++	unsigned int indirect: 1;	/* W: indirect access - obsoleted */
++	union {
++		union {
++			long value[128];
++			long *value_ptr;	/* obsoleted */
++		} integer;
++		union {
++			long long value[64];
++			long long *value_ptr;	/* obsoleted */
++		} integer64;
++		union {
++			unsigned int item[128];
++			unsigned int *item_ptr;	/* obsoleted */
++		} enumerated;
++		union {
++			unsigned char data[512];
++			unsigned char *data_ptr;	/* obsoleted */
++		} bytes;
++		struct snd_aes_iec958 iec958;
++	} value;		/* RO */
++	struct timespec tstamp;
++	unsigned char reserved[128-sizeof(struct timespec)];
 +};
 +
-+#define KVM_MAX_MSIX_PER_DEV		256
-+struct kvm_assigned_msix_entry {
-+	__u32 assigned_dev_id;
-+	__u32 gsi;
-+	__u16 entry; /* The index of entry in the MSI-X table */
-+	__u16 padding[3];
++struct snd_ctl_tlv {
++	unsigned int numid;	/* control element numeric identification */
++	unsigned int length;	/* in bytes aligned to 4 */
++	unsigned int tlv[0];	/* first TLV */
 +};
 +
-+#define KVM_X2APIC_API_USE_32BIT_IDS            (1ULL << 0)
-+#define KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK  (1ULL << 1)
++#define SNDRV_CTL_IOCTL_PVERSION	_IOR('U', 0x00, int)
++#define SNDRV_CTL_IOCTL_CARD_INFO	_IOR('U', 0x01, struct snd_ctl_card_info)
++#define SNDRV_CTL_IOCTL_ELEM_LIST	_IOWR('U', 0x10, struct snd_ctl_elem_list)
++#define SNDRV_CTL_IOCTL_ELEM_INFO	_IOWR('U', 0x11, struct snd_ctl_elem_info)
++#define SNDRV_CTL_IOCTL_ELEM_READ	_IOWR('U', 0x12, struct snd_ctl_elem_value)
++#define SNDRV_CTL_IOCTL_ELEM_WRITE	_IOWR('U', 0x13, struct snd_ctl_elem_value)
++#define SNDRV_CTL_IOCTL_ELEM_LOCK	_IOW('U', 0x14, struct snd_ctl_elem_id)
++#define SNDRV_CTL_IOCTL_ELEM_UNLOCK	_IOW('U', 0x15, struct snd_ctl_elem_id)
++#define SNDRV_CTL_IOCTL_SUBSCRIBE_EVENTS _IOWR('U', 0x16, int)
++#define SNDRV_CTL_IOCTL_ELEM_ADD	_IOWR('U', 0x17, struct snd_ctl_elem_info)
++#define SNDRV_CTL_IOCTL_ELEM_REPLACE	_IOWR('U', 0x18, struct snd_ctl_elem_info)
++#define SNDRV_CTL_IOCTL_ELEM_REMOVE	_IOWR('U', 0x19, struct snd_ctl_elem_id)
++#define SNDRV_CTL_IOCTL_TLV_READ	_IOWR('U', 0x1a, struct snd_ctl_tlv)
++#define SNDRV_CTL_IOCTL_TLV_WRITE	_IOWR('U', 0x1b, struct snd_ctl_tlv)
++#define SNDRV_CTL_IOCTL_TLV_COMMAND	_IOWR('U', 0x1c, struct snd_ctl_tlv)
++#define SNDRV_CTL_IOCTL_HWDEP_NEXT_DEVICE _IOWR('U', 0x20, int)
++#define SNDRV_CTL_IOCTL_HWDEP_INFO	_IOR('U', 0x21, struct snd_hwdep_info)
++#define SNDRV_CTL_IOCTL_PCM_NEXT_DEVICE	_IOR('U', 0x30, int)
++#define SNDRV_CTL_IOCTL_PCM_INFO	_IOWR('U', 0x31, struct snd_pcm_info)
++#define SNDRV_CTL_IOCTL_PCM_PREFER_SUBDEVICE _IOW('U', 0x32, int)
++#define SNDRV_CTL_IOCTL_RAWMIDI_NEXT_DEVICE _IOWR('U', 0x40, int)
++#define SNDRV_CTL_IOCTL_RAWMIDI_INFO	_IOWR('U', 0x41, struct snd_rawmidi_info)
++#define SNDRV_CTL_IOCTL_RAWMIDI_PREFER_SUBDEVICE _IOW('U', 0x42, int)
++#define SNDRV_CTL_IOCTL_POWER		_IOWR('U', 0xd0, int)
++#define SNDRV_CTL_IOCTL_POWER_STATE	_IOR('U', 0xd1, int)
 +
-+/* Available with KVM_CAP_ARM_USER_IRQ */
++/*
++ *  Read interface.
++ */
 +
-+/* Bits for run->s.regs.device_irq_level */
-+#define KVM_ARM_DEV_EL1_VTIMER		(1 << 0)
-+#define KVM_ARM_DEV_EL1_PTIMER		(1 << 1)
-+#define KVM_ARM_DEV_PMU			(1 << 2)
++enum sndrv_ctl_event_type {
++	SNDRV_CTL_EVENT_ELEM = 0,
++	SNDRV_CTL_EVENT_LAST = SNDRV_CTL_EVENT_ELEM,
++};
 +
-+#endif /* __LINUX_KVM_H */
++#define SNDRV_CTL_EVENT_MASK_VALUE	(1<<0)	/* element value was changed */
++#define SNDRV_CTL_EVENT_MASK_INFO	(1<<1)	/* element info was changed */
++#define SNDRV_CTL_EVENT_MASK_ADD	(1<<2)	/* element was added */
++#define SNDRV_CTL_EVENT_MASK_TLV	(1<<3)	/* element TLV tree was changed */
++#define SNDRV_CTL_EVENT_MASK_REMOVE	(~0U)	/* element was removed */
++
++struct snd_ctl_event {
++	int type;	/* event type - SNDRV_CTL_EVENT_* */
++	union {
++		struct {
++			unsigned int mask;
++			struct snd_ctl_elem_id id;
++		} elem;
++		unsigned char data8[60];
++	} data;
++};
++
++/*
++ *  Control names
++ */
++
++#define SNDRV_CTL_NAME_NONE				""
++#define SNDRV_CTL_NAME_PLAYBACK				"Playback "
++#define SNDRV_CTL_NAME_CAPTURE				"Capture "
++
++#define SNDRV_CTL_NAME_IEC958_NONE			""
++#define SNDRV_CTL_NAME_IEC958_SWITCH			"Switch"
++#define SNDRV_CTL_NAME_IEC958_VOLUME			"Volume"
++#define SNDRV_CTL_NAME_IEC958_DEFAULT			"Default"
++#define SNDRV_CTL_NAME_IEC958_MASK			"Mask"
++#define SNDRV_CTL_NAME_IEC958_CON_MASK			"Con Mask"
++#define SNDRV_CTL_NAME_IEC958_PRO_MASK			"Pro Mask"
++#define SNDRV_CTL_NAME_IEC958_PCM_STREAM		"PCM Stream"
++#define SNDRV_CTL_NAME_IEC958(expl,direction,what)	"IEC958 " expl SNDRV_CTL_NAME_##direction SNDRV_CTL_NAME_IEC958_##what
++
++#endif /* _UAPI__SOUND_ASOUND_H */
 diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 35a33adefed2..513f52a484fd 100644
+index eb4ccd73e826..35a33adefed2 100644
 --- a/tools/perf/MANIFEST
 +++ b/tools/perf/MANIFEST
-@@ -80,6 +80,7 @@ tools/include/uapi/linux/bpf.h
- tools/include/uapi/linux/bpf_common.h
- tools/include/uapi/linux/fcntl.h
- tools/include/uapi/linux/hw_breakpoint.h
-+tools/include/uapi/linux/kvm.h
- tools/include/uapi/linux/mman.h
+@@ -84,6 +84,7 @@ tools/include/uapi/linux/mman.h
  tools/include/uapi/linux/perf_event.h
  tools/include/uapi/linux/sched.h
+ tools/include/uapi/linux/stat.h
++tools/include/uapi/sound/asound.h
+ tools/include/linux/poison.h
+ tools/include/linux/rbtree.h
+ tools/include/linux/rbtree_augmented.h
 diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 1e07c9b062de..1f009506ff63 100755
+index 0024525376bf..1e07c9b062de 100755
 --- a/tools/perf/check-headers.sh
 +++ b/tools/perf/check-headers.sh
-@@ -4,6 +4,7 @@ HEADERS='
- include/uapi/drm/drm.h
- include/uapi/drm/i915_drm.h
- include/uapi/linux/fcntl.h
-+include/uapi/linux/kvm.h
+@@ -7,6 +7,7 @@ include/uapi/linux/fcntl.h
  include/uapi/linux/perf_event.h
  include/uapi/linux/sched.h
  include/uapi/linux/stat.h
++include/uapi/sound/asound.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
 -- 
 2.9.4
