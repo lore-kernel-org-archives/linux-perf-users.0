@@ -1,77 +1,266 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 2/2] perf record: wrong size in perf_record_mmap for last
- kernel module
-Date: Fri, 4 Aug 2017 14:06:14 -0300
-Message-ID: <20170804170614.GP12201@kernel.org>
-References: <20170724143514.55574-1-tmricht@linux.vnet.ibm.com>
- <20170724143514.55574-2-tmricht@linux.vnet.ibm.com>
- <20170724182007.GY4134@kernel.org>
- <20170802185047.GL12201@kernel.org>
- <7e74f3d2-204d-0067-4914-1dbba3f02db2@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH v2 00/14] generate full callchain cursor entries for inlined frames
+Date: Sun,  6 Aug 2017 23:24:32 +0200
+Message-ID: <20170806212446.24925-1-milian.wolff@kdab.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
+Received: from mail.kdab.com ([176.9.126.58]:45984 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752786AbdHDRGT (ORCPT
+        id S1751342AbdHFVYy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Aug 2017 13:06:19 -0400
-Content-Disposition: inline
-In-Reply-To: <7e74f3d2-204d-0067-4914-1dbba3f02db2@linux.vnet.ibm.com>
+        Sun, 6 Aug 2017 17:24:54 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: brueckner@linux.vnet.ibm.com, zvonko.kosic@de.ibm.com, linux-perf-users@vger.kernel.org
+To: acme@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
 
-Em Thu, Aug 03, 2017 at 11:41:02AM +0200, Thomas-Mich Richter escreveu:
-> On 08/02/2017 08:50 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Jul 24, 2017 at 03:20:07PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Mon, Jul 24, 2017 at 04:35:14PM +0200, Thomas Richter escreveu:
-> >>> +++ b/tools/perf/util/machine.c
-> >>> @@ -20,6 +20,7 @@
-> >>> +#include <sys/user.h>
-> > 
-> > no need for this header, see below.
-> > 
-> >>> -static int machine__create_module(void *arg, const char *name, u64 start)
-> >>> +static int machine__create_module(void *arg, const char *name, u64 start, u64 size)
-> >>>  {
-> >>> @@ -1148,6 +1149,7 @@ static int machine__create_module(void *arg, const char *name, u64 start)
-> >>>  	map = machine__findnew_module_map(machine, start, name);
-> >>>  	if (map == NULL)
-> >>>  		return -1;
-> >>> +	map->end = roundup(start + size, PAGE_SIZE);
-> > 
-> > We have the page_size variable, that gets its value at:
-> > 
-> > tools/perf/perf.c:	page_size = sysconf(_SC_PAGE_SIZE);
-> > 
-> > always available, determined at run time.
-> > 
-> > Also, what is the reason for the roundup?
-> > 
-> 
-> Ok I missed that page_size and will use it.
-> The idea for the roundup to page size is the assumption that the kernel
-> allocates full pages for memory to load modules. The size filed in the /proc/modules
-> output refers to the module size in bytes.
-> 
-> If this is wrong we can omit the roundup.
+This series of patches completely reworks the way inline frames are handled.
+Instead of querying for the inline nodes on-demand in the individual tools,
+we now create proper callchain nodes for inlined frames. The advantages this
+approach brings are numerous:
 
-Its not wrong, just looks unnecessary, a distraction, I'll remove it, ok?
+- less duplicated code in the individual browser
+- aggregated cost for inlined frames for the --children top-down list
+- various bug fixes that arose from querying for a srcline/symbol based on
+  the IP of a sample, which will always point to the last inlined frame
+  instead of the corresponding non-inlined frame
+- overall much better support for visualizing cost for heavily-inlined C++
+  code, which simply was confusing and unreliably before
+- srcline honors the global setting as to whether full paths or basenames
+  should be shown
+- caches for inlined frames and srcline information, which allow us to
+  enable inline frame handling by default
 
-- Arnaldo
+For comparison, below lists the output before and after for `perf script`
+and `perf report`. The example file I used to generate the perf data is:
 
- 
-> -- 
-> Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
-> --
-> Vorsitzende des Aufsichtsrats: Martina Koederitz 
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~~~~~
+$ cat inlining.cpp
+#include <complex>
+#include <cmath>
+#include <random>
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    uniform_real_distribution<double> uniform(-1E5, 1E5);
+    default_random_engine engine;
+    double s = 0;
+    for (int i = 0; i < 10000000; ++i) {
+        s += norm(complex<double>(uniform(engine), uniform(engine)));
+    }
+    cout << s << '\n';
+    return 0;
+}
+$ g++ -O2 -g -o inlining inlining.cpp
+$ perf record --call-graph dwarf ./inlining
+~~~~~
+
+Now, the (broken) status-quo looks like this. Look for "NOTE:" to see some
+of my comments that outline the various issues I'm trying to solve by this
+patch series.
+
+~~~~~
+$ perf script --inline
+...
+inlining 11083 97459.356656:      33680 cycles:
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                         std::__complex_abs
+                         std::abs<double>
+                         std::_Norm_helper<true>::_S_do_it<double>
+                         std::norm<double>
+                         main
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
+# NOTE: the above inlined stack is confusing: the a4a is an address into main,
+#       which is the non-inlined symbol. the entry with the address should be
+#       at the end of the stack, where it's actually duplicated once more but
+#       there it's missing the address
+...
+$ perf report -s sym -g srcline -i perf.inlining.data --inline --stdio
+...
+             --38.86%--_start
+                       __libc_start_main
+                       |
+                       |--15.68%--main random.tcc:3326
+                       |          /home/milian/projects/src/perf-tests/inlining.cpp:14 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.tcc:3326 (inline)
+                       |
+                       |--10.36%--main random.h:143
+                       |          /home/milian/projects/src/perf-tests/inlining.cpp:14 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.tcc:3332 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:332 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:151 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:143 (inline)
+                       |
+                       |--5.66%--main random.tcc:3332
+                       |          /home/milian/projects/src/perf-tests/inlining.cpp:14 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+                       |          /usr/include/c++/6.3.1/bits/random.tcc:3332 (inline)
+...
+# NOTE: the grouping is totally off because the first and last frame of the
+        inline nodes is completely bogus, since the IP is used to find the sym/srcline
+        which is different from the actual inlined sym/srcline.
+        also, the code currently displays either the inlined function name or
+        the corresponding filename (but in full length, instead of just the basename).
+
+$ perf report -s sym -g srcline -i perf.inlining.data --inline --stdio --no-children
+...
+    38.86%  [.] main
+            |
+            |--15.68%--main random.tcc:3326
+            |          /usr/include/c++/6.3.1/bits/random.tcc:3326 (inline)
+            |          /usr/include/c++/6.3.1/bits/random.h:185 (inline)
+            |          /usr/include/c++/6.3.1/bits/random.h:1818 (inline)
+            |          /usr/include/c++/6.3.1/bits/random.h:1809 (inline)
+            |          /home/milian/projects/src/perf-tests/inlining.cpp:14 (inline)
+            |          __libc_start_main
+            |          _start
+...
+# NOTE: the srcline for main is wrong, it should be inlining.cpp:14,
+        i.e. what is displayed in the line below (see also perf script issue above)
+~~~~~
+
+Afterwards, all of the above issues are resolved (and inlined frames are
+displayed by default):
+
+~~~~~
+$ perf script
+...
+inlining 11083 97459.356656:      33680 cycles:
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a std::__complex_abs (inlined)
+                     a4a std::abs<double> (inlined)
+                     a4a std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                     a4a std::norm<double> (inlined)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
+...
+# NOTE: only one main entry, at the correct position.
+        we do display the (repeated) instruction pointer as that ensures
+        interoperability with e.g. the stackcollapse-perf.pl script
+
+$ perf report -s sym -g srcline -i perf.inlining.data --stdio
+...
+   100.00%    38.86%  [.] main
+            |
+            |--61.14%--main inlining.cpp:14
+            |          std::norm<double> complex:664 (inlined)
+            |          std::_Norm_helper<true>::_S_do_it<double> complex:654 (inlined)
+            |          std::abs<double> complex:597 (inlined)
+            |          std::__complex_abs complex:589 (inlined)
+            |          |
+            |          |--60.29%--hypot
+            |          |          |
+            |          |           --56.03%--__hypot_finite
+            |          |
+            |           --0.85%--cabs
+            |
+             --38.86%--_start
+                       __libc_start_main
+                       |
+                       |--38.19%--main inlining.cpp:14
+                       |          |
+                       |          |--35.59%--std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.h:1809 (inlined)
+                       |          |          std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.h:1818 (inlined)
+                       |          |          |
+                       |          |           --34.37%--std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() random.h:185 (inlined)
+                       |          |                     |
+                       |          |                     |--17.91%--std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.tcc:3332 (inlined)
+                       |          |                     |          |
+                       |          |                     |           --12.24%--std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() random.h:332 (inlined)
+                       |          |                     |                     std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> random.h:151 (inlined)
+                       |          |                     |                     |
+                       |          |                     |                     |--10.36%--std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc random.h:143 (inlined)
+                       |          |                     |                     |
+                       |          |                     |                      --1.88%--std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc random.h:141 (inlined)
+                       |          |                     |
+                       |          |                     |--15.68%--std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.tcc:3326 (inlined)
+                       |          |                     |
+                       |          |                      --0.79%--std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.tcc:3335 (inlined)
+                       |          |
+                       |           --1.99%--std::norm<double> complex:664 (inlined)
+                       |                     std::_Norm_helper<true>::_S_do_it<double> complex:654 (inlined)
+                       |                     std::abs<double> complex:597 (inlined)
+                       |                     std::__complex_abs complex:589 (inlined)
+                       |
+                        --0.67%--main inlining.cpp:13
+...
+
+# NOTE: still somewhat confusing due to the _start and __libc_start_main frames
+        that actually are *above* the main frame. But at least the stuff below
+        properly splits up and shows that mutiple functions got inlined into
+        inlining.cpp:14, not just one as before.
+
+$ perf report -s sym -g srcline -i perf.inlining.data --stdio --no-children
+...
+    38.86%  [.] main
+            |
+            |--15.68%--std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.tcc:3326 (inlined)
+            |          std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() random.h:185 (inlined)
+            |          std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.h:1818 (inlined)
+            |          std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > random.h:1809 (inlined)
+            |          main inlining.cpp:14
+            |          __libc_start_main
+            |          _start
+...
+# NOTE: the first and last entry of the inline stack have the correct symbol and srcline now
+        both function and srcline is shown, as well as the (inlined) suffix
+        only the basename of the srcline is shown
+
+v2 fixes some issues reported by Namhyung or found by me in further
+testing, adds caching and enables inline frames by default.
+
+Milian Wolff (14):
+  perf report: remove code to handle inline frames from browsers
+  perf util: take elf_name as const string in dso__demangle_sym
+  perf report: create real callchain entries for inlined frames
+  perf report: fall-back to function name comparison for -g srcline
+  perf report: mark inlined frames in output by " (inlined)" suffix
+  perf script: mark inlined frames and do not print DSO for them
+  perf report: compare symbol name for inlined frames when matching
+  perf report: compare symbol name for inlined frames when sorting
+  perf report: properly handle branch count in match_chain
+  perf report: cache failed lookups of inlined frames
+  perf report: cache srclines for callchain nodes
+  perf report: use srcline from callchain for hist entries
+  perf util: do not consider empty files as valid srclines
+  perf util: enable handling of inlined frames by default
+
+ tools/perf/Documentation/perf-report.txt |   3 +-
+ tools/perf/Documentation/perf-script.txt |   3 +-
+ tools/perf/ui/browsers/hists.c           | 180 ++------------------
+ tools/perf/ui/stdio/hist.c               |  77 +--------
+ tools/perf/util/callchain.c              | 151 ++++++++---------
+ tools/perf/util/callchain.h              |   6 +-
+ tools/perf/util/dso.c                    |   3 +
+ tools/perf/util/dso.h                    |   2 +
+ tools/perf/util/event.c                  |   1 +
+ tools/perf/util/evsel_fprintf.c          |  37 +----
+ tools/perf/util/hist.c                   |   7 +-
+ tools/perf/util/machine.c                |  66 +++++++-
+ tools/perf/util/sort.c                   |   6 +
+ tools/perf/util/sort.h                   |   1 -
+ tools/perf/util/srcline.c                | 271 +++++++++++++++++++++++++------
+ tools/perf/util/srcline.h                |  26 ++-
+ tools/perf/util/symbol-elf.c             |   2 +-
+ tools/perf/util/symbol-minimal.c         |   2 +-
+ tools/perf/util/symbol.c                 |   1 +
+ tools/perf/util/symbol.h                 |   4 +-
+ 20 files changed, 426 insertions(+), 423 deletions(-)
+
+-- 
+2.13.3
