@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v2 04/14] perf report: fall-back to function name comparison for -g srcline
-Date: Sun,  6 Aug 2017 23:24:36 +0200
-Message-ID: <20170806212446.24925-5-milian.wolff@kdab.com>
+Subject: [PATCH v2 07/14] perf report: compare symbol name for inlined frames when matching
+Date: Sun,  6 Aug 2017 23:24:39 +0200
+Message-ID: <20170806212446.24925-8-milian.wolff@kdab.com>
 References: <20170806212446.24925-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170806212446.24925-1-milian.wolff@kdab.com>
@@ -10,56 +10,59 @@ To: acme@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel
 Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-When a callchain entry has no srcline available, we ended up
-comparing the instruction pointer. I consider this to be not
-too useful. Rather, I think we should group the entries by
-function name, which this patch adds. For people who want to
-split the data on the IP boundary, using `-g address` is the
-correct choice.
+The fake symbols we create for inlined frames will represent
+different functions but can use the symbol start address. This leads
+to issues when different inline branches all lead to the same
+function.
 
 Before:
-
 ~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--56.03%--hypot
-            |          |          |
-            |          |          |--8.45%--__hypot_finite
-            |          |          |
-            |          |          |--7.62%--__hypot_finite
-            |          |          |
-            |          |          |--2.29%--__hypot_finite
-            |          |          |
-            |          |          |--2.24%--__hypot_finite
-            |          |          |
-            |          |          |--2.06%--__hypot_finite
-            |          |          |
-            |          |          |--1.81%--__hypot_finite
+$ perf report -s sym -i perf.inlining.data --inline --stdio -g function
 ...
+             --38.86%--_start
+                       __libc_start_main
+                       main
+                       |
+                        --37.57%--std::norm<double> (inlined)
+                                  std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                                  |
+                                   --36.36%--std::abs<double> (inlined)
+                                             std::__complex_abs (inlined)
+                                             |
+                                              --12.24%--std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
+                                                        std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
+                                                        std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
 ~~~~~
 
-After:
+Note that this backtrace representation is completely bogus.
+Complex abs does not call the linear congruential engine! It
+is just a side-effect of a longer inlined stack being appended
+to a shorter, different inlined stack, both of which originate
+in the same function (main).
+
+This patch fixes the issue:
 
 ~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--60.29%--hypot
-            |          |          |
-            |          |           --56.03%--__hypot_finite
-            |          |
-            |           --0.85%--cabs
+$ perf report -s sym -i perf.inlining.data --inline --stdio -g function
+...
+             --38.86%--_start
+                       __libc_start_main
+                       main
+                       |
+                       |--35.59%--std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |          std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |          |
+                       |           --34.37%--std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() (inlined)
+                       |                     std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |                     |
+                       |                      --12.24%--std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
+                       |                                std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
+                       |                                std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
+                       |
+                        --1.99%--std::norm<double> (inlined)
+                                  std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                                  std::abs<double> (inlined)
+                                  std::__complex_abs (inlined)
 ~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -69,58 +72,39 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ tools/perf/util/callchain.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 9854adb06ac1..6afa8ccd75b5 100644
+index 5e099fe0b9dc..45a39260a821 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -638,11 +638,9 @@ enum match_result {
- 	MATCH_GT,
- };
- 
--static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
--					     struct callchain_list *cnode)
-+static enum match_result match_chain_strings(const char *left,
-+					     const char *right)
+@@ -663,11 +663,11 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
  {
--	const char *left = cnode->srcline;
--	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
- 
-@@ -652,10 +650,8 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 		cmp = 1;
- 	else if (left && !right)
- 		cmp = -1;
--	else if (cnode->ip == node->ip)
--		cmp = 0;
- 	else
--		cmp = (cnode->ip < node->ip) ? -1 : 1;
-+		return MATCH_ERROR;
- 
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
-@@ -670,10 +666,18 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 	struct symbol *sym = node->sym;
++	enum match_result match;
  	u64 left, right;
  
  	if (callchain_param.key == CCKEY_SRCLINE) {
--		enum match_result match = match_chain_srcline(node, cnode);
-+		enum match_result match = match_chain_strings(cnode->srcline,
-+							      node->srcline);
-+
-+		// if no srcline is available, fallback to symbol name
-+		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-+			match = match_chain_strings(cnode->ms.sym->name,
-+						    node->sym->name);
+-		enum match_result match = match_chain_strings(cnode->srcline,
+-							      node->srcline);
++		match = match_chain_strings(cnode->srcline, node->srcline);
  
- 		if (match != MATCH_ERROR)
- 			return match;
-+
-+		// otherwise fall-back to IP-based comparison below
+ 		// if no srcline is available, fallback to symbol name
+ 		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+@@ -681,6 +681,12 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
  	}
  
  	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
++		// compare inlined frames based on their symbol name because
++		// different inlined frames will have the same symbol start
++		if (cnode->ms.sym->inlined || node->sym->inlined)
++			return match_chain_strings(cnode->ms.sym->name,
++						   node->sym->name);
++
+ 		left = cnode->ms.sym->start;
+ 		right = sym->start;
+ 	} else {
 -- 
 2.13.3
