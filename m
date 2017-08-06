@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v2 06/14] perf script: mark inlined frames and do not print DSO for them
-Date: Sun,  6 Aug 2017 23:24:38 +0200
-Message-ID: <20170806212446.24925-7-milian.wolff@kdab.com>
+Subject: [PATCH v2 02/14] perf util: take elf_name as const string in dso__demangle_sym
+Date: Sun,  6 Aug 2017 23:24:34 +0200
+Message-ID: <20170806212446.24925-3-milian.wolff@kdab.com>
 References: <20170806212446.24925-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170806212446.24925-1-milian.wolff@kdab.com>
@@ -10,30 +10,8 @@ To: acme@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel
 Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-Instead of showing the (repeated) DSO name of the non-inlined
-frame, we now show the "(inlined)" suffix instead.
-
-Before:
-                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a std::__complex_abs (/home/milian/projects/src/perf-tests/inlining)
-                     a4a std::abs<double> (/home/milian/projects/src/perf-tests/inlining)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (/home/milian/projects/src/perf-tests/inlining)
-                     a4a std::norm<double> (/home/milian/projects/src/perf-tests/inlining)
-                     a4a main (/home/milian/projects/src/perf-tests/inlining)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
-
-After:
-                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
-                    ace3 hypot (/usr/lib/libm-2.25.so)
-                     a4a std::__complex_abs (inlined)
-                     a4a std::abs<double> (inlined)
-                     a4a std::_Norm_helper<true>::_S_do_it<double> (inlined)
-                     a4a std::norm<double> (inlined)
-                     a4a main (/home/milian/projects/src/perf-tests/inlining)
-                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
-                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
+The input string is not modified and thus can be passed
+in as a pointer to const data.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -42,31 +20,49 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/evsel_fprintf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/symbol-elf.c     | 2 +-
+ tools/perf/util/symbol-minimal.c | 2 +-
+ tools/perf/util/symbol.h         | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index f2c6c5ee11e8..5b9e89257aa7 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -157,7 +157,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 				}
- 			}
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 502505cf236a..7cf18f14e152 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -391,7 +391,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss, struct map *
+ 	return 0;
+ }
  
--			if (print_dso) {
-+			if (print_dso && (!node->sym || !node->sym->inlined)) {
- 				printed += fprintf(fp, " (");
- 				printed += map__fprintf_dsoname(node->map, fp);
- 				printed += fprintf(fp, ")");
-@@ -166,6 +166,9 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (print_srcline)
- 				printed += map__fprintf_srcline(node->map, addr, "\n  ", fp);
+-char *dso__demangle_sym(struct dso *dso, int kmodule, char *elf_name)
++char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ {
+ 	return demangle_sym(dso, kmodule, elf_name);
+ }
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 40bf5d4c0bfd..1a5aa35b0100 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -377,7 +377,7 @@ void symbol__elf_init(void)
  
-+			if (node->sym && node->sym->inlined)
-+				printed += fprintf(fp, " (inlined)");
-+
- 			if (!print_oneline)
- 				printed += fprintf(fp, "\n");
+ char *dso__demangle_sym(struct dso *dso __maybe_unused,
+ 			int kmodule __maybe_unused,
+-			char *elf_name __maybe_unused)
++			const char *elf_name __maybe_unused)
+ {
+ 	return NULL;
+ }
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 41ebba9a2eb2..f0b08810d7fa 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -306,7 +306,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss,
+ 				struct map *map);
  
+-char *dso__demangle_sym(struct dso *dso, int kmodule, char *elf_name);
++char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
+ 
+ void __symbols__insert(struct rb_root *symbols, struct symbol *sym, bool kernel);
+ void symbols__insert(struct rb_root *symbols, struct symbol *sym);
 -- 
 2.13.3
