@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v2 11/14] perf report: cache srclines for callchain nodes
-Date: Sun,  6 Aug 2017 23:24:43 +0200
-Message-ID: <20170806212446.24925-12-milian.wolff@kdab.com>
+Subject: [PATCH v2 09/14] perf report: properly handle branch count in match_chain
+Date: Sun,  6 Aug 2017 23:24:41 +0200
+Message-ID: <20170806212446.24925-10-milian.wolff@kdab.com>
 References: <20170806212446.24925-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170806212446.24925-1-milian.wolff@kdab.com>
@@ -10,57 +10,10 @@ To: acme@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel
 Cc: linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-On one hand this ensures that the memory is properly freed when
-the DSO gets freed. On the other hand this significantly speeds up
-the processing of the callchain nodes when lots of srclines are
-requested. For one of my data files e.g.:
-
-Before:
-
- Performance counter stats for 'perf report -s srcline -g srcline --stdio':
-
-      52496.495043      task-clock (msec)         #    0.999 CPUs utilized
-               634      context-switches          #    0.012 K/sec
-                 2      cpu-migrations            #    0.000 K/sec
-           191,561      page-faults               #    0.004 M/sec
-   165,074,498,235      cycles                    #    3.144 GHz
-   334,170,832,408      instructions              #    2.02  insn per cycle
-    90,220,029,745      branches                  # 1718.591 M/sec
-       654,525,177      branch-misses             #    0.73% of all branches
-
-      52.533273822 seconds time elapsedProcessed 236605 events and lost 40 chunks!
-
-After:
-
- Performance counter stats for 'perf report -s srcline -g srcline --stdio':
-
-      22606.323706      task-clock (msec)         #    1.000 CPUs utilized
-                31      context-switches          #    0.001 K/sec
-                 0      cpu-migrations            #    0.000 K/sec
-           185,471      page-faults               #    0.008 M/sec
-    71,188,113,681      cycles                    #    3.149 GHz
-   133,204,943,083      instructions              #    1.87  insn per cycle
-    34,886,384,979      branches                  # 1543.214 M/sec
-       278,214,495      branch-misses             #    0.80% of all branches
-
-      22.609857253 seconds time elapsed
-
-Note that the difference is only this large when `--inline` is not
-passed. In such situations, we would use the inliner cache and
-thus do not run this code path that often.
-
-I think that this cache should actually be used in other places, too.
-When looking at the valgrind leak report for perf report, we see tons
-of srclines being leaked, most notably from calls to
-hist_entry__get_srcline. The problem is that get_srcline has many
-different formatting options (show_sym, show_addr, potentially even
-unwind_inlines when calling __get_srcline directly). As such, the
-srcline cannot easily be cached for all calls, or we'd have to add
-caches for all formatting combinations (6 so far). An alternative
-would be to remove the formatting options and handle that on a
-different level - i.e. print the sym/addr on demand wherever we
-actually output something. And the unwind_inlines could be moved into
-a separate function that does not return the srcline.
+Some of the code paths I introduced before returned too early
+without running the code to handle a node's branch count.
+By refactoring match_chain to only have one exit point, this
+can be remedied.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -69,161 +22,149 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/dso.c     |  1 +
- tools/perf/util/dso.h     |  1 +
- tools/perf/util/machine.c | 17 +++++++++---
- tools/perf/util/srcline.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/srcline.h |  7 +++++
- 5 files changed, 89 insertions(+), 3 deletions(-)
+ tools/perf/util/callchain.c | 115 +++++++++++++++++++++++---------------------
+ 1 file changed, 59 insertions(+), 56 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 72e6e390fd26..8c7f2862cff2 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1235,6 +1235,7 @@ void dso__delete(struct dso *dso)
- 	for (i = 0; i < MAP__NR_TYPES; ++i)
- 		symbols__delete(&dso->symbols[i]);
- 	inlines__tree_delete(&dso->inlined_nodes);
-+	srcline__tree_delete(&dso->srclines);
- 
- 	if (dso->short_name_allocated) {
- 		zfree((char **)&dso->short_name);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 7d1e2b3c1f10..ac3a65a30ff2 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -142,6 +142,7 @@ struct dso {
- 	struct rb_root	 symbols[MAP__NR_TYPES];
- 	struct rb_root	 symbol_names[MAP__NR_TYPES];
- 	struct rb_root	 inlined_nodes;
-+	struct rb_root	 srclines;
- 	struct {
- 		u64		addr;
- 		struct symbol	*symbol;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 479c42450d6a..c5ee6ba2b9ae 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1675,11 +1675,22 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
- 
- static char *callchain_srcline(struct map *map, struct symbol *sym, u64 ip)
- {
-+	char *srcline = NULL;
-+
- 	if (!map || callchain_param.key == CCKEY_FUNCTION)
--		return NULL;
-+		return srcline;
-+
-+	srcline = srcline__tree_find(&map->dso->srclines, ip);
-+	if (!srcline) {
-+		bool show_sym = false;
-+		bool show_addr = callchain_param.key == CCKEY_ADDRESS;
-+
-+		srcline = get_srcline(map->dso, map__rip_2objdump(map, ip),
-+				      sym, show_sym, show_addr);
-+		srcline__tree_insert(&map->dso->srclines, ip, srcline);
-+	}
- 
--	return get_srcline(map->dso, map__rip_2objdump(map, ip),
--			   sym, false, callchain_param.key == CCKEY_ADDRESS);
-+	return srcline;
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 45a39260a821..2c85adc1a3e2 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -659,77 +659,80 @@ static enum match_result match_chain_strings(const char *left,
+ 	return ret;
  }
  
- static int add_callchain_ip(struct thread *thread,
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 01b4d5ee51fd..0c5ee741c515 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -531,6 +531,72 @@ char *get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
- 	return __get_srcline(dso, addr, sym, show_sym, show_addr, false);
++static enum match_result match_address(u64 left, u64 right)
++{
++	if (left == right)
++		return MATCH_EQ;
++	else if (left < right)
++		return MATCH_LT;
++	else
++		return MATCH_GT;
++}
++
+ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
+ {
+-	struct symbol *sym = node->sym;
+-	enum match_result match;
+-	u64 left, right;
++	enum match_result match = MATCH_ERROR;
+ 
+-	if (callchain_param.key == CCKEY_SRCLINE) {
++	switch (callchain_param.key) {
++	case CCKEY_SRCLINE:
+ 		match = match_chain_strings(cnode->srcline, node->srcline);
+-
+-		// if no srcline is available, fallback to symbol name
+-		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+-			match = match_chain_strings(cnode->ms.sym->name,
+-						    node->sym->name);
+-
+ 		if (match != MATCH_ERROR)
+-			return match;
+-
+-		// otherwise fall-back to IP-based comparison below
+-	}
+-
+-	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+-		// compare inlined frames based on their symbol name because
+-		// different inlined frames will have the same symbol start
+-		if (cnode->ms.sym->inlined || node->sym->inlined)
+-			return match_chain_strings(cnode->ms.sym->name,
+-						   node->sym->name);
+-
+-		left = cnode->ms.sym->start;
+-		right = sym->start;
+-	} else {
+-		left = cnode->ip;
+-		right = node->ip;
++			break;
++		// else fall-through
++	case CCKEY_FUNCTION:
++		if (node->sym && cnode->ms.sym) {
++			// compare inlined frames based on their symbol name
++			// because different inlined frames will have the same
++			// symbol start. otherwise do a faster comparison based
++			// on the symbol start address
++			if (cnode->ms.sym->inlined || node->sym->inlined)
++				match = match_chain_strings(cnode->ms.sym->name,
++							    node->sym->name);
++			else
++				match = match_address(cnode->ms.sym->start,
++						      node->sym->start);
++			if (match != MATCH_ERROR)
++				break;
++		}
++		// else fall-through
++	case CCKEY_ADDRESS:
++	default:
++		match = match_address(cnode->ip, node->ip);
++		break;
+ 	}
+ 
+-	if (left == right) {
+-		if (node->branch) {
+-			cnode->branch_count++;
++	if (match == MATCH_EQ && node->branch) {
++		cnode->branch_count++;
+ 
+-			if (node->branch_from) {
+-				/*
+-				 * It's "to" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = true;
++		if (node->branch_from) {
++			/*
++			 * It's "to" of a branch
++			 */
++			cnode->brtype_stat.branch_to = true;
+ 
+-				if (node->branch_flags.predicted)
+-					cnode->predicted_count++;
++			if (node->branch_flags.predicted)
++				cnode->predicted_count++;
+ 
+-				if (node->branch_flags.abort)
+-					cnode->abort_count++;
++			if (node->branch_flags.abort)
++				cnode->abort_count++;
+ 
+-				branch_type_count(&cnode->brtype_stat,
+-						  &node->branch_flags,
+-						  node->branch_from,
+-						  node->ip);
+-			} else {
+-				/*
+-				 * It's "from" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = false;
+-				cnode->cycles_count +=
+-					node->branch_flags.cycles;
+-				cnode->iter_count += node->nr_loop_iter;
+-				cnode->samples_count += node->samples;
+-			}
++			branch_type_count(&cnode->brtype_stat,
++					  &node->branch_flags,
++					  node->branch_from,
++					  node->ip);
++		} else {
++			/*
++			 * It's "from" of a branch
++			 */
++			cnode->brtype_stat.branch_to = false;
++			cnode->cycles_count += node->branch_flags.cycles;
++			cnode->iter_count += node->nr_loop_iter;
++			cnode->samples_count += node->samples;
+ 		}
+-
+-		return MATCH_EQ;
+ 	}
+ 
+-	return left > right ? MATCH_GT : MATCH_LT;
++	return match;
  }
  
-+struct srcline_node {
-+	u64			addr;
-+	char			*srcline;
-+	struct rb_node		rb_node;
-+};
-+
-+void srcline__tree_insert(struct rb_root *tree, u64 addr, char *srcline)
-+{
-+	struct rb_node **p = &tree->rb_node;
-+	struct rb_node *parent = NULL;
-+	struct srcline_node *i, *node;
-+
-+	node = zalloc(sizeof(struct srcline_node));
-+	if (!node) {
-+		perror("not enough memory for the srcline node");
-+		return;
-+	}
-+
-+	node->addr = addr;
-+	node->srcline = srcline;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		i = rb_entry(parent, struct srcline_node, rb_node);
-+		if (addr < i->addr)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+	rb_link_node(&node->rb_node, parent, p);
-+	rb_insert_color(&node->rb_node, tree);
-+}
-+
-+char *srcline__tree_find(struct rb_root *tree, u64 addr)
-+{
-+	struct rb_node *n = tree->rb_node;
-+
-+	while (n) {
-+		struct srcline_node *i = rb_entry(n, struct srcline_node,
-+						  rb_node);
-+
-+		if (addr < i->addr)
-+			n = n->rb_left;
-+		else if (addr > i->addr)
-+			n = n->rb_right;
-+		else
-+			return i->srcline;
-+	}
-+
-+	return NULL;
-+}
-+
-+void srcline__tree_delete(struct rb_root *tree)
-+{
-+	struct srcline_node *pos;
-+	struct rb_node *next = rb_first(tree);
-+
-+	while (next) {
-+		pos = rb_entry(next, struct srcline_node, rb_node);
-+		next = rb_next(&pos->rb_node);
-+		rb_erase(&pos->rb_node, tree);
-+		free_srcline(pos->srcline);
-+		zfree(&pos);
-+	}
-+}
-+
- struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
- 					    struct symbol *sym)
- {
-diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-index 0d2aca92e8c7..187a71082cb8 100644
---- a/tools/perf/util/srcline.h
-+++ b/tools/perf/util/srcline.h
-@@ -15,6 +15,13 @@ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
- 		  bool show_sym, bool show_addr, bool unwind_inlines);
- void free_srcline(char *srcline);
- 
-+// insert the srcline into the DSO, which will take ownership
-+void srcline__tree_insert(struct rb_root *tree, u64 addr, char *srcline);
-+// find previously inserted srcline
-+char *srcline__tree_find(struct rb_root *tree, u64 addr);
-+// delete all srclines within the tree
-+void srcline__tree_delete(struct rb_root *tree);
-+
- #define SRCLINE_UNKNOWN  ((char *) "??:0")
- 
- struct inline_list {
+ /*
 -- 
 2.13.3
