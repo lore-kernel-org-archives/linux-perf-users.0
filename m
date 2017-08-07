@@ -1,30 +1,28 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 02/14] perf util: take elf_name as const string in
- dso__demangle_sym
-Date: Mon, 7 Aug 2017 12:10:21 -0300
-Message-ID: <20170807151021.GR12201@kernel.org>
+Subject: Re: [PATCH v2 13/14] perf util: do not consider empty files as valid
+ srclines
+Date: Mon, 7 Aug 2017 12:21:00 -0300
+Message-ID: <20170807152100.GS12201@kernel.org>
 References: <20170806212446.24925-1-milian.wolff@kdab.com>
- <20170806212446.24925-3-milian.wolff@kdab.com>
+ <20170806212446.24925-14-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:54772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751247AbdHGPKY (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Aug 2017 11:10:24 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170806212446.24925-3-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+In-Reply-To: <20170806212446.24925-14-milian.wolff@kdab.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Milian Wolff <milian.wolff@kdab.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Sun, Aug 06, 2017 at 11:24:34PM +0200, Milian Wolff escreveu:
-> The input string is not modified and thus can be passed
-> in as a pointer to const data.
+Em Sun, Aug 06, 2017 at 11:24:45PM +0200, Milian Wolff escreveu:
+> Sometimes we get a non-null, but empty, string for the filename from
+> bfd. This then results in srclines of the form ":0", which is
+> different from the canonical SRCLINE_UNKNOWN in the form "??:0".
+> Set the file to NULL if it is empty to fix this.
 
-Applied.
+I cherry picked this one now, i.e. looks useful even before looking at
+the other patches in depth.
 
 - Arnaldo
  
@@ -35,49 +33,32 @@ Applied.
 > Cc: Yao Jin <yao.jin@linux.intel.com>
 > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 > ---
->  tools/perf/util/symbol-elf.c     | 2 +-
->  tools/perf/util/symbol-minimal.c | 2 +-
->  tools/perf/util/symbol.h         | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  tools/perf/util/srcline.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 502505cf236a..7cf18f14e152 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -391,7 +391,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss, struct map *
->  	return 0;
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index 0c5ee741c515..7bf38b78a1ba 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -168,6 +168,9 @@ static void find_address_in_section(bfd *abfd, asection *section, void *data)
+>  	a2l->found = bfd_find_nearest_line(abfd, section, a2l->syms, pc - vma,
+>  					   &a2l->filename, &a2l->funcname,
+>  					   &a2l->line);
+> +
+> +	if (a2l->filename && !strlen(a2l->filename))
+> +		a2l->filename = NULL;
 >  }
 >  
-> -char *dso__demangle_sym(struct dso *dso, int kmodule, char *elf_name)
-> +char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
->  {
->  	return demangle_sym(dso, kmodule, elf_name);
->  }
-> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-> index 40bf5d4c0bfd..1a5aa35b0100 100644
-> --- a/tools/perf/util/symbol-minimal.c
-> +++ b/tools/perf/util/symbol-minimal.c
-> @@ -377,7 +377,7 @@ void symbol__elf_init(void)
+>  static struct a2l_data *addr2line_init(const char *path)
+> @@ -297,6 +300,9 @@ static int addr2line(const char *dso_name, u64 addr,
+>  					     &a2l->funcname, &a2l->line) &&
+>  		       cnt++ < MAX_INLINE_NEST) {
 >  
->  char *dso__demangle_sym(struct dso *dso __maybe_unused,
->  			int kmodule __maybe_unused,
-> -			char *elf_name __maybe_unused)
-> +			const char *elf_name __maybe_unused)
->  {
->  	return NULL;
->  }
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index 41ebba9a2eb2..f0b08810d7fa 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -306,7 +306,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->  int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss,
->  				struct map *map);
->  
-> -char *dso__demangle_sym(struct dso *dso, int kmodule, char *elf_name);
-> +char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
->  
->  void __symbols__insert(struct rb_root *symbols, struct symbol *sym, bool kernel);
->  void symbols__insert(struct rb_root *symbols, struct symbol *sym);
+> +			if (a2l->filename && !strlen(a2l->filename))
+> +				a2l->filename = NULL;
+> +
+>  			if (node != NULL) {
+>  				if (inline_list__append_dso_a2l(dso, node, sym))
+>  					return 0;
 > -- 
 > 2.13.3
