@@ -1,41 +1,47 @@
-From: Reza Taheri <rtaheri@vmware.com>
-Subject: Re: Not getting PMC events on Broadwell-EX
-Date: Tue, 8 Aug 2017 16:54:44 +0000
-Message-ID: <F6396932-5A73-43D3-B248-1E1A63841A7F@vmware.com>
-References: <B10BA2E5-3BC7-481F-8EC7-DFEB229526EC@vmware.com>
+From: Benjamin King <benjaminking@web.de>
+Subject: uretprobe occasionally fires twice
+Date: Tue, 8 Aug 2017 20:56:58 +0200
+Message-ID: <20170808185658.GA17828@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-by2nam01on0062.outbound.protection.outlook.com ([104.47.34.62]:12283
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752092AbdHHQyq (ORCPT
+Received: from mout.web.de ([212.227.15.14]:51520 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752356AbdHHS5A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2017 12:54:46 -0400
-In-Reply-To: <B10BA2E5-3BC7-481F-8EC7-DFEB229526EC@vmware.com>
-Content-Language: en-US
-Content-ID: <0787081F0B115D45BF26146E1485743B@namprd05.prod.outlook.com>
+        Tue, 8 Aug 2017 14:57:00 -0400
+Received: from localhost ([77.23.101.92]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MIvJx-1ddDk33UqH-002bhv for
+ <linux-perf-users@vger.kernel.org>; Tue, 08 Aug 2017 20:56:58 +0200
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
 
-SSBzZWUgbXkgbWlzdGFrZSBub3cuIEl0IHJlYWxseSBpcyB1bWFzayBmb2xsb3dlZCBieSBldmVu
-dHNlbCwgZXZlbiBpZiB0aGUgcGVyZi1zdGF0IG1hbiBwYWdlIHNheXM6DQogICAgICAgLWUsIC0t
-ZXZlbnQ9DQogICAgICAgICAgIFNlbGVjdCB0aGUgUE1VIGV2ZW50LiBTZWxlY3Rpb24gY2FuIGJl
-Og0KICAgICAgICAgICDigKIgICBhIHN5bWJvbGljIGV2ZW50IG5hbWUgKHVzZSBwZXJmIGxpc3Qg
-dG8gbGlzdCBhbGwgZXZlbnRzKQ0KICAgICAgICAgICDigKIgICBhIHJhdyBQTVUgZXZlbnQgKGV2
-ZW50c2VsK3VtYXNrKSBpbiB0aGUgZm9ybSBvZiByTk5OIHdoZXJlIE5OTiBpcyBhIGhleGFkZWNp
-bWFsIGV2ZW50IGRlc2NyaXB0b3IuDQoNCkkgcmFuIHRoZSBmb2xsb3dpbmcgdG8gY29sbGVjdCB0
-aGUgcHJvZ3JhbW1hYmxlIHZlcnNpb24gb2YgcmV0aXJlZF9pbnN0IGFuZCB1bmhhbHRlZCBjb3Jl
-X2N5Y2xlcywgYW5kIHRoZSBvdXRwdXRzIG1hdGNoIHRoZSBmaXhlZCBjb3VudGVycy4NCg0KW3Jv
-b3RAcHJtZS1wZXJmLWJyb2Fkd2VsbC0yIH5dIyBwZXJmIHN0YXQgLWEgLWUgY3ljbGVzIC1lIGlu
-c3RydWN0aW9ucyAtZSByMDNjIC1lIHIwMGMwIHNsZWVwIDEwDQoNCiBQZXJmb3JtYW5jZSBjb3Vu
-dGVyIHN0YXRzIGZvciAnc3lzdGVtIHdpZGUnOg0KDQogICAgIDIsNTA1LDUxOCw1MDMgICAgICBj
-eWNsZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICANCiAgICAgICA5MjUsMTQ1LDU2MSAgICAgIGluc3RydWN0aW9ucyAgICAgICAgICAgICAgIyAg
-ICAwLjM3ICBpbnNuIHBlciBjeWNsZSAgICAgICAgIA0KICAgICAyLDUyNiw2MjEsNTg0ICAgICAg
-cjAzYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgDQogICAgICAgOTI5LDI3Nyw3NzIgICAgICByMDBjMCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCg0KICAgICAgMTAuMDAxNDYxMDUxIHNl
-Y29uZHMgdGltZSBlbGFwc2VkDQoNClRoYW5rcywNClJlemENCg0K
+Hi,
+ 
+I have placed a uprobe and a uretprobe on the same function in libc. When
+perf record'ing a larger test where the function is called from multiple
+threads, I can occasionally see the following sequence of events in a 'perf
+script':
+  
+  1) uretprobe fires
+  2) uprobe fires
+  3) uretprobe fires again
+
+More specifically, I am tracing libc's realloc. Since I trace the size of
+the memory in question, I think that the uretprobe in 1) is called at
+function entry.
+
+This only happens occasionally and I unfortunately I could not reproduce it
+with a small testcase yet.
+
+'perf script' prints two warnings:
+  * Processed 17216221 events and lost 2 chunks!
+  * 114 out of order events recorded.
+
+Could this explain the duplicated output? Are there other known circumstances
+where a uretprobe could be unreliable in some way?
+
+Cheers,
+  Benjamin
