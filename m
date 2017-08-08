@@ -1,112 +1,71 @@
-From: "H. Taheri" <rezato@gmail.com>
-Subject: Not getting PMC events on Broadwell-EX
-Date: Mon, 7 Aug 2017 21:37:19 -0700
-Message-ID: <B10BA2E5-3BC7-481F-8EC7-DFEB229526EC@vmware.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH 2/2] perf record: wrong size in perf_record_mmap for last
+ kernel module
+Date: Tue, 8 Aug 2017 09:16:42 +0200
+Message-ID: <d3eacb65-01ce-92b6-eff9-9c2ce54019ad@linux.vnet.ibm.com>
+References: <20170724143514.55574-1-tmricht@linux.vnet.ibm.com>
+ <20170724143514.55574-2-tmricht@linux.vnet.ibm.com>
+ <20170724182007.GY4134@kernel.org> <20170802185047.GL12201@kernel.org>
+ <7e74f3d2-204d-0067-4914-1dbba3f02db2@linux.vnet.ibm.com>
+ <20170804170614.GP12201@kernel.org>
+ <d0db66fd-32ae-f644-b3e1-bb12776a793e@linux.vnet.ibm.com>
+ <20170807160549.GT12201@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f52.google.com ([74.125.83.52]:34636 "EHLO
-        mail-pg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750801AbdHHEhb (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55983 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751978AbdHHHQt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Aug 2017 00:37:31 -0400
-Received: by mail-pg0-f52.google.com with SMTP id u185so9957749pgb.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Aug 2017 21:37:31 -0700 (PDT)
-Received: from [192.168.1.158] (c-24-130-222-229.hsd1.ca.comcast.net. [24.130.222.229])
-        by smtp.gmail.com with ESMTPSA id o15sm528922pgf.22.2017.08.07.21.37.29
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Aug 2017 21:37:29 -0700 (PDT)
+        Tue, 8 Aug 2017 03:16:49 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v787Dnw3040447
+        for <linux-perf-users@vger.kernel.org>; Tue, 8 Aug 2017 03:16:49 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2c71kq18dh-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Aug 2017 03:16:49 -0400
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Tue, 8 Aug 2017 08:16:46 +0100
+In-Reply-To: <20170807160549.GT12201@kernel.org>
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: brueckner@linux.vnet.ibm.com, zvonko.kosic@de.ibm.com, linux-perf-users@vger.kernel.org
 
-Hi experts,
-I am getting 0s, or <not supported>, or <not counted>  for events that =
-are supposed to work on this processor. For example, according to Intel =
-documentation, L2_RQSTS.MISS and L2_RQSTS.REFERENCES are supported on =
-this processor with event code 0x24 and unit masks 0x3f and 0xff. But =
-when I run perf stat (also with -d -d -d to see if the built-in command =
-options can get the cache stats), I get:
+On 08/07/2017 06:05 PM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Aug 07, 2017 at 09:26:14AM +0200, Thomas-Mich Richter escreveu:
+>> On 08/04/2017 07:06 PM, Arnaldo Carvalho de Melo wrote:
+>>> Em Thu, Aug 03, 2017 at 11:41:02AM +0200, Thomas-Mich Richter escreveu:
+>>>> The idea for the roundup to page size is the assumption that the kernel
+>>>> allocates full pages for memory to load modules. The size filed in the /proc/modules
+>>>> output refers to the module size in bytes.
+> 
+>>>> If this is wrong we can omit the roundup.
+> 
+>>> Its not wrong, just looks unnecessary, a distraction, I'll remove it, ok?
+> 
+>> Sure go ahead.
+> 
+> Thanks, applied.
+> 
+> - Arnaldo
 
-[root@prme-perf-broadwell-2 intel]# perf stat -d -d -d -e cycles -e =
-instructions -e r24ff -e r243f sleep 10
+Thanks for picking this one. Out of curiosity, why didn't you pick the first
+part of the patch set:
 
-Performance counter stats for 'sleep 10':
+[PATCH 1/2] perf report fix module symbol adjustment for s390x
 
-          295,132      cycles                                            =
-        =20
-          676,801      instructions              #    2.29  insn per =
-cycle       =20
-                0      r24ff                                             =
-        =20
-                0      r243f                                             =
-        =20
-          175,865      L1-dcache-loads                                   =
-        =20
-           12,686      L1-dcache-load-misses     #    7.21% of all =
-L1-dcache hits    (67.93%)
-    <not counted>      LLC-loads                                         =
-            (0.00%)
-    <not counted>      LLC-load-misses                                   =
-            (0.00%)
-  <not supported>      L1-icache-loads                                   =
-        =20
-    <not counted>      L1-icache-load-misses                             =
-            (0.00%)
-    <not counted>      dTLB-loads                                        =
-            (0.00%)
-    <not counted>      dTLB-load-misses                                  =
-            (0.00%)
-    <not counted>      iTLB-loads                                        =
-            (0.00%)
-    <not counted>      iTLB-load-misses                                  =
-            (0.00%)
-  <not supported>      L1-dcache-prefetches                              =
-        =20
-  <not supported>      L1-dcache-prefetch-misses                         =
-        =20
+Anything wrong with it? Should I repost it?
+Thanks
 
-     10.001308205 seconds time elapsed
-
-
-This is the /proc/cpuinfo from the guest:
-
-processor       : 0
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 79
-model name      : Intel(R) Xeon(R) CPU E7-8890 v4 @ 2.20GHz
-stepping        : 1
-microcode       : 0xb00001d
-cpu MHz         : 1200.031
-cache size      : 30720 KB
-physical id     : 0
-siblings        : 48
-core id         : 0
-cpu cores       : 24
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 20
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge =
-mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe =
-syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good =
-nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 =
-monitor ds_cpl vmx smx est tm2 ssse3 fma cx16 xtpr pdcm pcid dca sse4_1 =
-sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand =
-lahf_lm abm 3dnowprefetch ida arat epb pln pts dtherm intel_pt =
-tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 =
-smep bmi2 erms invpcid rtm cqm rdseed adx smap xsaveopt cqm_llc =
-cqm_occup_llc cqm_mbm_total cqm_mbm_local
-bogomips        : 4388.87
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 46 bits physical, 48 bits virtual
-power management:
-
-Thanks,
-Reza
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
