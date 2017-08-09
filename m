@@ -1,105 +1,78 @@
 From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 1/9] perf: test 15 fix python error on empty result
-Date: Wed,  9 Aug 2017 08:40:32 +0200
-Message-ID: <20170809064040.50899-1-tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 2/9] perf test: perf test case 15 result ignored
+Date: Wed,  9 Aug 2017 08:40:33 +0200
+Message-ID: <20170809064040.50899-2-tmricht@linux.vnet.ibm.com>
+References: <20170809064040.50899-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43759 "EHLO
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38368 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1751974AbdHIGks (ORCPT
+        by vger.kernel.org with ESMTP id S1751974AbdHIGkw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Aug 2017 02:40:48 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v796cjC1071468
-        for <linux-perf-users@vger.kernel.org>; Wed, 9 Aug 2017 02:40:48 -0400
+        Wed, 9 Aug 2017 02:40:52 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v796cnNK147148
+        for <linux-perf-users@vger.kernel.org>; Wed, 9 Aug 2017 02:40:52 -0400
 Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2c7uqs5813-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2c7rp5wt52-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Aug 2017 02:40:47 -0400
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Aug 2017 02:40:52 -0400
 Received: from localhost
         by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Wed, 9 Aug 2017 07:40:46 +0100
+        Wed, 9 Aug 2017 07:40:50 +0100
+In-Reply-To: <20170809064040.50899-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@kernel.org, jolsa@redhat.com, linux-perf-users@vger.kernel.org
 Cc: brueckner@linux.vnet.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Commit d78ada4a767 ("perf tests attr: Do not store failed events")
-does not create an event file in the /tmp directory when the
-perf_open_event() system call failed.
-This can lead to a situation where not /tmp/event-xx-yy-zz result
-file exists at all (for example on a s390x virtual machine environment)
-where no CPUMF hardware is available.
+Command perf test -v 15 (Setup struct perf_event_attr test)
+always reports success even if the test case fails.
+It works correctly if you also specify -F (for don't fork).
 
-The following command then fails with a python call back chain
-instead of printing failure:
-[root@s8360046 perf]# /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-    -p ./perf -v -ttest-stat-basic
-running './tests/attr//test-stat-basic'
-Traceback (most recent call last):
-  File "./tests/attr.py", line 379, in <module>
-    main()
-  File "./tests/attr.py", line 370, in main
-    run_tests(options)
-  File "./tests/attr.py", line 311, in run_tests
-    Test(f, options).run()
-  File "./tests/attr.py", line 300, in run
-    self.compare(self.expect, self.result)
-  File "./tests/attr.py", line 248, in compare
-    exp_event.diff(res_event)
-UnboundLocalError: local variable 'res_event' referenced before assignment
-[root@s8360046 perf]#
+   root@s35lp76 perf]# ./perf test -v 15
+   15: Setup struct perf_event_attr               :
+   --- start ---
+   running './tests/attr/test-record-no-delay'
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.002 MB /tmp/tmp4E1h7R/perf.data
+     (1 samples) ]
+   expected task=0, got 1
+   expected precise_ip=0, got 3
+   expected wakeup_events=1, got 0
+   FAILED './tests/attr/test-record-no-delay' - match failure
+   test child finished with 0
+   ---- end ----
+   Setup struct perf_event_attr: Ok
 
-This patch catches this pitfall and prints an error message
-instead:
-[root@s8360047 perf]# /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-     -p ./perf  -vvv -ttest-stat-basic
-running './tests/attr//test-stat-basic'
-  loading expected events
-    Event event:base-stat
-      fd = 1
-      group_fd = -1
-      flags = 0|8
-      [....]
-      sample_regs_user = 0
-      sample_stack_user = 0
-  'PERF_TEST_ATTR=/tmp/tmpJbMQMP ./perf stat -o /tmp/tmpJbMQMP/perf.data -e cycles kill >/dev/null 2>&1' ret '1', expected '1'
-  loading result events
-  compare
-    matching [event:base-stat]
-    match: [event:base-stat] matches []
-    res_event is empty
-FAILED './tests/attr//test-stat-basic' - match failure
-[root@s8360047 perf]#
+The reason for the wrong error reporting is the return value of the
+system() library call. It is called in run_dir() file tests/attr.c
+and returns the exit status, in above case 0xff00.
+This value is given as parameter to the exit() function which
+can only handle values 0-0xff.
+The child process terminates with exit value of 0 and the parent
+does not detect any error.
+
+This patch corrects the error reporting and prints the
+correct test result.
 
 Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
 ---
- tools/perf/tests/attr.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/tests/attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index 6bb50e8..a13cd78 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -237,6 +237,7 @@ class Test(object):
-         # events in result. Fail if there's not any.
-         for exp_name, exp_event in expect.items():
-             exp_list = []
-+            res_event = {}
-             log.debug("    matching [%s]" % exp_name)
-             for res_name, res_event in result.items():
-                 log.debug("      to [%s]" % res_name)
-@@ -253,7 +254,10 @@ class Test(object):
-                 if exp_event.optional():
-                     log.debug("    %s does not match, but is optional" % exp_name)
-                 else:
--                    exp_event.diff(res_event)
-+                    if not res_event:
-+                        log.debug("    res_event is empty");
-+                    else:
-+                        exp_event.diff(res_event)
-                     raise Fail(self, 'match failure');
+diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
+index 84c0eb5..9d932c6 100644
+--- a/tools/perf/tests/attr.c
++++ b/tools/perf/tests/attr.c
+@@ -166,7 +166,7 @@ static int run_dir(const char *d, const char *perf)
+ 	snprintf(cmd, 3*PATH_MAX, PYTHON " %s/attr.py -d %s/attr/ -p %s %.*s",
+ 		 d, d, perf, vcnt, v);
  
-             match[exp_name] = exp_list
+-	return system(cmd);
++	return system(cmd) ? TEST_FAIL : TEST_OK;
+ }
+ 
+ int test__attr(int subtest __maybe_unused)
 -- 
 2.9.3
