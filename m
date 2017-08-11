@@ -1,97 +1,45 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: perf test BPF subtest bpf-prologue test fails on s390x
-Date: Fri, 11 Aug 2017 13:13:08 +0200
-Message-ID: <baf74c0b-56a8-c67b-6376-e8bdebf30636@linux.vnet.ibm.com>
-References: <20170810181319.GD3900@kernel.org>
- <53348602-8cff-e218-cdeb-b5504fd211e2@huawei.com>
- <968ebda5-abe4-8830-8d69-49f62529d151@linux.vnet.ibm.com>
- <4cd18c9a-7481-5bca-2d61-49e617ba2f96@huawei.com>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH v2 11/14] perf report: cache srclines for callchain nodes
+Date: Fri, 11 Aug 2017 13:28:27 +0200
+Message-ID: <2484111.SVxAiXXlh2@agathebauer>
+References: <20170806212446.24925-1-milian.wolff@kdab.com> <CAM9d7chNxx8_Z10dViFtDbykpH+zXdhu44AAvpxD2=6wLz_Vkg@mail.gmail.com> <20170810175845.GB3900@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53964 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751891AbdHKLNP (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2017 07:13:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v7BB9sb0136092
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2017 07:13:15 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2c95k7fur0-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2017 07:13:14 -0400
-Received: from localhost
-        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Fri, 11 Aug 2017 12:13:12 +0100
-In-Reply-To: <4cd18c9a-7481-5bca-2d61-49e617ba2f96@huawei.com>
-Content-Language: en-IE
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "Wangnan (F)" <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Zefan Li <lizefan@huawei.com>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170810175845.GB3900@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kernel-team@lge.com
+List-Id: linux-perf-users.vger.kernel.org
 
-On 08/11/2017 11:57 AM, Wangnan (F) wrote:
+On Donnerstag, 10. August 2017 19:58:45 CEST Arnaldo Carvalho de Melo wrote:
+> Em Thu, Aug 10, 2017 at 11:56:24PM +0900, Namhyung Kim escreveu:
+> > On Thu, Aug 10, 2017 at 8:51 PM, Milian Wolff <milian.wolff@kdab.com> 
+wrote:
+> > > On Donnerstag, 10. August 2017 04:13:25 CEST Namhyung Kim wrote:
+> > >> Agreed.  Also I guess no need to unwind anymore to get a srcfile for
+> > >> an entry with your change.
+> > > 
+> > > Does this mean I should respin the patch series with the above changes
+> > > integrated? Or can we get this in first and then continue with the
+> > > cleanup as described above later on?
+> > 
+> > Nop, it can be done later IMHO.  I will try to review the code next week.
 > 
-> 
-> On 2017/8/11 17:17, Thomas-Mich Richter wrote:
->> On 08/11/2017 07:19 AM, Wangnan (F) wrote:
+> Ok, I'm preparing a new batch to send to Ingo, will wait a bit more for
+> your review, ok, Millian?
 
+Considering that this is a big and somewhat invasive patch series, I'm all for 
+being conservative on it. I.e. please take your time on reviewing it. I'm 
+pretty sure there are some things that need to be improved on, e.g. my usage 
+of the rbtree code. I'm a C++ dev, this C-style copy'n'paste programming for 
+containers is foreign to me.
 
-[....]
-
-> Your analysis is correct.
-> 
->>
->> Maybe the solution is to add an endianness convertion into the gen_read_mem()
->> function.
-> 
-> That means alert the prologue. We can utilize the size field in BPF_LDX_MEM.
-> 
-> Could you please try this patch:
-> 
-> diff --git a/tools/perf/util/bpf-prologue.c b/tools/perf/util/bpf-prologue.c
-> index 6cdbee1..aadbda4 100644
-> --- a/tools/perf/util/bpf-prologue.c
-> +++ b/tools/perf/util/bpf-prologue.c
-> @@ -258,7 +258,7 @@ gen_prologue_slowpath(struct bpf_insn_pos *pos,
-> 
->         /* Final pass: read to registers */
->         for (i = 0; i < nargs; i++)
-> -               ins(BPF_LDX_MEM(BPF_DW, BPF_PROLOGUE_START_ARG_REG + i,
-> +               ins(BPF_LDX_MEM(BPF_W, BPF_PROLOGUE_START_ARG_REG + i,
->                                 BPF_REG_FP, -BPF_REG_SIZE * (i + 1)), pos);
-> 
->         ins(BPF_JMP_IMM(BPF_JA, BPF_REG_0, 0, JMP_TO_SUCCESS_CODE), pos);
-> 
-> 
-> On your platform and check if the value of f_mode is correct?
-> 
-> NOTE: 64 bit load becomes incorrect after applying this patch. I want to make sure
-> the behavior of 32 bit BPF load instruction works correct on big endian machine.
-> 
-> Thank you.
-> 
-
-This patch solves the issue with the first parameter. Now I see the correct
-value of f_mode member of struct-file.
-As you said the other loads are wrong. Here is the output of the 
-trace:
-
-           perf-13438 [000] d..2  2102.392312: : f_mode 6001f offset:0 orig:0
-            perf-13438 [000] d..2  2102.392414: : f_mode 2001d offset:0 orig:0
-            perf-13438 [000] d..2  2102.392440: : f_mode 2001d offset:0 orig:0
-            perf-13438 [000] d..2  2102.392453: : f_mode 6001f offset:0 orig:0
-
-PS: When I ran this test I undid the changes to tests/bpf-test-script-prologue.c.
-It was in its original state when this test was executed.
-
+Cheers
 
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
