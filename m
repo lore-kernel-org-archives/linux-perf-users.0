@@ -1,117 +1,117 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/2] perf/bench/numa: Add functions to detect sparse numa
- nodes
-Date: Thu, 10 Aug 2017 16:22:13 -0300
-Message-ID: <20170810192213.GE3900@kernel.org>
-References: <1502350129-10489-1-git-send-email-sathnaga@linux.vnet.ibm.com>
+From: "Wangnan (F)" <wangnan0@huawei.com>
+Subject: Re: perf test BPF subtest bpf-prologue test fails on s390x
+Date: Fri, 11 Aug 2017 13:19:16 +0800
+Message-ID: <53348602-8cff-e218-cdeb-b5504fd211e2@huawei.com>
+References: <20170810181319.GD3900@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752639AbdHJTWZ (ORCPT
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3507 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751691AbdHKFTf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Aug 2017 15:22:25 -0400
-Content-Disposition: inline
-In-Reply-To: <1502350129-10489-1-git-send-email-sathnaga@linux.vnet.ibm.com>
+        Fri, 11 Aug 2017 01:19:35 -0400
+In-Reply-To: <20170810181319.GD3900@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: sathnaga@linux.vnet.ibm.com
-Cc: mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, srikar@linux.vnet.ibm.com, bala24@linux.vnet.ibm.com
-
-Em Thu, Aug 10, 2017 at 12:58:49PM +0530, sathnaga@linux.vnet.ibm.com escreveu:
-> From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> 
-> Added functions 1) to get a count of all nodes that are exposed to
-> userspace. These nodes could be memoryless cpu nodes or cpuless memory
-> nodes, 2) to check given node is present and 3) to check given
-> node has cpus
-> 
-> This information can be used to handle sparse/discontiguous nodes.
-> 
-> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
-> ---
->  tools/perf/bench/numa.c | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> index 469d65b..efd7595 100644
-> --- a/tools/perf/bench/numa.c
-> +++ b/tools/perf/bench/numa.c
-> @@ -215,6 +215,41 @@ static const char * const numa_usage[] = {
->  	NULL
->  };
->  
-> +static int nr_numa_nodes(void)
-> +{
-> +	int node = 0, i;
-> +
-> +        for (i = 0; i < g->p.nr_nodes; i++) {
-> +		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-> +			node++;
-> +	}
-> +	return node;
-
-Humm, can you rename 'node' to 'nr_nodes'?
-
-> +}
-> +
-> +static bool is_node_present(int node)
-> +{
-> +	if (numa_bitmask_isbitset(numa_nodes_ptr, node))
-> +		return true;
-> +	else
-> +		return false;
-> +}
-
-Why four lines instead of just one? Isn't this equivalent:
-
-static bool is_node_present(int node)
-{
-	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-}
-
-?
-
-> +
-> +static bool is_node_hascpu(int node)
-
-Can you rename this function, the name is confusing :-\
-
-Based on the documentation for this function, that you left only in the
-changelog (please put it just before the function, as a comment, I think
-it should be named node_has_cpus()?
-
-> +{
-> +	struct bitmask *cpu;
-> +	unsigned int i;
-> +
-> +	cpu = numa_allocate_cpumask();
-
-Please put the line with the initialization together with the
-declaration, making it:
-
-struct bitmask *cpu = numa_allocate_cpumask();
-
-Also, this is a "alloc" function, I bet it can fail? If so, check it and
-return something useful if it fails, which probably will be difficult
-since this function returns bool?
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Zefan Li <lizefan@huawei.com>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
 
-> +	if (numa_node_to_cpus(node, cpu) == 0) {
-> +		for (i = 0; i < cpu->size; i++) {
-> +			if (numa_bitmask_isbitset(cpu, i))
-> +				return true;
-> +			}
-> +	} else
-> +		return false; // lets fall back to nocpus safely
-> +	return false;
-> +}
-> +
->  static cpu_set_t bind_to_cpu(int target_cpu)
->  {
->  	cpu_set_t orig_mask, mask;
-> -- 
-> 2.7.4
+
+On 2017/8/11 2:13, Arnaldo Carvalho de Melo wrote:
+> Thomas, please try to find who wrote that test and CC him, I'm doing it
+> this time, Wang, can you please take a look at this?
+>
+> I also added lkml to the CC list, here we have more users of perf, lkml
+> is the more developer centric perf list, as perf touches way too many
+> places in the kernel.
+>
+> Best regards,
+>
+> - Arnaldo
+>
+> Em Wed, Aug 09, 2017 at 11:24:19AM +0200, Thomas Richter escreveu:
+>> I investigate perf test BPF for s390x and have a question regarding
+>> the 38.3 subtest (bpf-prologue test) which fails on s390x.
+>>
+>> When I turn on trace_printk in tests/bpf-script-test-prologue.c
+>> I see this output in /sys/kernel/debug/tracing/trace:
+>>
+>> [root@s8360047 perf]# cat /sys/kernel/debug/tracing/trace
+>> perf-30229 [000] d..2 170161.535791: : f_mode 2001d00000000 offset:0 orig:0
+>> perf-30229 [000] d..2 170161.535809: : f_mode 6001f00000000 offset:0 orig:0
+>> perf-30229 [000] d..2 170161.535815: : f_mode 6001f00000000 offset:1 orig:0
+>> perf-30229 [000] d..2 170161.535819: : f_mode 2001d00000000 offset:1 orig:0
+>> perf-30229 [000] d..2 170161.535822: : f_mode 2001d00000000 offset:2 orig:1
+>> perf-30229 [000] d..2 170161.535825: : f_mode 6001f00000000 offset:2 orig:1
+>> perf-30229 [000] d..2 170161.535828: : f_mode 6001f00000000 offset:3 orig:1
+>> perf-30229 [000] d..2 170161.535832: : f_mode 2001d00000000 offset:3 orig:1
+>> perf-30229 [000] d..2 170161.535835: : f_mode 2001d00000000 offset:4 orig:0
+>> perf-30229 [000] d..2 170161.535841: : f_mode 6001f00000000 offset:4 orig:0
+>>
+>> [...]
+>>
+>> There are 3 parameters the eBPF program tests/bpf-script-test-prologue.c
+>> accesses: f_mode (member of struct file at offset 140) offset and orig.
+>> They are parameters of the lseek() system call triggered in this
+>> test case in function llseek_loop().
+>>
+>> What is really strange is the value of f_mode. It is an 8 byte
+>> value, whereas in the probe event it is defined as a 4 byte value.
+>> The lower 4 bytes are all zero and do not belong to member f_mode.
+>> The correct value should be 2001d for read-only and 6001f for
+>> read-write open mode.
+>>
+>> Here is the output of the 'perf test -vv bpf' trace:
+>>     Try to find probe point from debuginfo.
+>>     Matched function: null_lseek [2d9310d]
+>>     Probe point found: null_lseek+0
+>>     Searching 'file' variable in context.
+>>     Converting variable file into trace event.
+>>     converting f_mode in file
+>>     f_mode type is unsigned int.
+>>     Opening /sys/kernel/debug/tracing//README write=0
+>>     Searching 'offset' variable in context.
+>>     Converting variable offset into trace event.
+>>     offset type is long long int.
+>>     Searching 'orig' variable in context.
+>>     Converting variable orig into trace event.
+>>     orig type is int.
+>>     Found 1 probe_trace_events.
+>>     Opening /sys/kernel/debug/tracing//kprobe_events write=1
+>>     Writing event: p:perf_bpf_probe/func _text+8794224 f_mode=+140(%r2):x32
+>> 	offset=%r3:s64 orig=%r4:s32
+
+Thank you for your information. This is an endianess problem.
+
+Here f_mode is x32, so perf probe and debuginfo in vmlinux is correct.
+However, BPF prologue generator doesn't obey type, but unconditionally
+fetch 8 bytes (on 64-bit machine) and pass it to parameter of
+bpf_func__null_lseek. This is reasonable, because all args should be
+unsigned long. However, to recover its original value, we need a casting.
+
+Please help me verify if the following fix works on your platform:
+
+diff --git a/tools/perf/tests/bpf-script-test-prologue.c 
+b/tools/perf/tests/bpf-script-test-prologue.c
+index b4ebc75..43f1e16 100644
+--- a/tools/perf/tests/bpf-script-test-prologue.c
++++ b/tools/perf/tests/bpf-script-test-prologue.c
+@@ -26,9 +26,11 @@ static void (*bpf_trace_printk)(const char *fmt, int 
+fmt_size, ...) =
+         (void *) 6;
+
+  SEC("func=null_lseek file->f_mode offset orig")
+-int bpf_func__null_lseek(void *ctx, int err, unsigned long f_mode,
++int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
+                          unsigned long offset, unsigned long orig)
+  {
++       fmode_t f_mode = (fmode_t)_f_mode;
++
+         if (err)
+                 return 0;
+         if (f_mode & FMODE_WRITE)
+
+Thank you.
