@@ -1,19 +1,35 @@
 From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: perf test BPF subtest bpf-prologue test fails on s390x
-Date: Fri, 11 Aug 2017 11:17:44 +0200
-Message-ID: <968ebda5-abe4-8830-8d69-49f62529d151@linux.vnet.ibm.com>
-References: <20170810181319.GD3900@kernel.org>
- <53348602-8cff-e218-cdeb-b5504fd211e2@huawei.com>
+Subject: Fwd: Re: perf test BPF subtest bpf-prologue test fails on s390x
+Date: Fri, 11 Aug 2017 11:49:22 +0200
+Message-ID: <065d441b-c498-c6b5-6212-0bd11ea246d2@linux.vnet.ibm.com>
+References: <968ebda5-abe4-8830-8d69-49f62529d151@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53348602-8cff-e218-cdeb-b5504fd211e2@huawei.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42264 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751891AbdHKJt3 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 11 Aug 2017 05:49:29 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v7B9lhL1115792
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2017 05:49:29 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2c93r3r1y0-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Aug 2017 05:49:28 -0400
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Fri, 11 Aug 2017 10:49:26 +0100
+In-Reply-To: <968ebda5-abe4-8830-8d69-49f62529d151@linux.vnet.ibm.com>
 Content-Language: en-IE
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Wangnan (F)" <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Zefan Li <lizefan@huawei.com>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: wangnan0@huawei.com, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: alexei.starovoitov@gmail.com, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+
 
 On 08/11/2017 07:19 AM, Wangnan (F) wrote:
 > 
@@ -208,7 +224,7 @@ So the bit test for FMODE_WRITE (0x2) always fails.
 Maybe the solution is to add an endianness convertion into the gen_read_mem()
 function.
 
-Thanks a lot for your help and toughts.
+Thanks a lot for your help and thoughts.
 -- 
 Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
 --
