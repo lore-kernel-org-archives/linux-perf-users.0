@@ -1,20 +1,15 @@
 From: Wang Nan <wangnan0@huawei.com>
 Subject: [PATCH] perf test llvm: Fix f_mode endianness problem
-Date: Fri, 11 Aug 2017 05:44:44 +0000 (UTC)
-Message-ID: <20170812134901.30237-1-wangnan0@huawei.com>
+Date: Fri, 11 Aug 2017 05:44:46 +0000 (UTC)
+Message-ID: <20170812134901.30237-1-wangnan0__11794.7936327711$1502430286$gmane$org@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3508 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752208AbdHKFon (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Aug 2017 01:44:43 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Date: Sat, 12 Aug 2017 13:49:01 +0000
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, tmricht@linux.vnet.ibm.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Li Zefan <lizefan@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 Perf BPF prologue generator unconditionally fetches 8 bytes for function
 parameters. On big endian machine, a casting is resquired if the parameter
