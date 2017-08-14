@@ -1,209 +1,107 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/19] perf record: Fix wrong size in perf_record_mmap for last kernel module
-Date: Mon, 14 Aug 2017 13:27:39 -0300
-Message-ID: <20170814162741.6101-18-acme@kernel.org>
+Subject: [PATCH 19/19] perf test shell: Add uprobes + backtrace ping test
+Date: Mon, 14 Aug 2017 13:27:41 -0300
+Message-ID: <20170814162741.6101-20-acme@kernel.org>
 References: <20170814162741.6101-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170814162741.6101-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Zvonko Kosic <zvonko.kosic@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-During work on perf report for s390 I ran into the following issue:
+Installs a probe on libc's inet_pton function, that will use uprobes,
+then use 'perf trace' on a ping to localhost asking for just one packet
+with the a backtrace 3 levels deep, check that it is what we expect.
+This needs no debuginfo package, all is done using the libc ELF symtab
+and the CFI info in the binaries.
 
-0 0x318 [0x78]: PERF_RECORD_MMAP -1/0:
-        [0x3ff804d6990(0xfffffc007fb2966f) @ 0]:
-        x /lib/modules/4.12.0perf1+/kernel/drivers/s390/net/qeth_l2.ko
+Testing it:
 
-This is a PERF_RECORD_MMAP entry of the perf.data file with an invalid
-module size for qeth_l2.ko (the s390 ethernet device driver).
+  # perf test ping
+  61: probe libc's inet_pton & backtrace it with ping       : Ok
 
-Even a mainframe does not have 0xfffffc007fb2966f bytes of main memory.
+In verbose mode:
 
-It turned out that this wrong size is created by the perf record
-command.  What happens is this function call sequence from
-__cmd_record():
+  # perf test -v ping
+  61: probe libc's inet_pton & backtrace it with ping       :
+  --- start ---
+  test child forked, pid 1007
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.058 ms
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.058/0.058/0.058/0.000 ms
+  0.000 probe_libc:inet_pton:(7f75fce12a20))
+  __GI___inet_pton (/usr/lib64/libc-2.24.so)
+  getaddrinfo (/usr/lib64/libc-2.24.so)
+  _init (/usr/bin/ping)
+  test child finished with 0
+  ---- end ----
+  probe libc's inet_pton & backtrace it with ping: Ok
+  #
 
-  perf_session__new():
-    perf_session__create_kernel_maps():
-      machine__create_kernel_maps():
-        machine__create_modules():   Creates map for all loaded kernel modules.
-          modules__parse():   Reads /proc/modules and extracts module name and
-                              load address (1st and last column)
-            machine__create_module():   Called for every module found in /proc/modules.
-                              Creates a new map for every module found and enters
-                              module name and start address into the map. Since the
-                              module end address is unknown it is set to zero.
-
-This ends up with a kernel module map list sorted by module start
-addresses.  All module end addresses are zero.
-
-Last machine__create_kernel_maps() calls function map_groups__fixup_end().
-This function iterates through the maps and assigns each map entry's
-end address the successor map entry start address. The last entry of the
-map group has no successor, so ~0 is used as end to consume the remaining
-memory.
-
-Later __cmd_record calls function record__synthesize() which in turn calls
-perf_event__synthesize_kernel_mmap() and perf_event__synthesize_modules()
-to create PERF_REPORT_MMAP entries into the perf.data file.
-
-On s390 this results in the last module qeth_l2.ko
-(which has highest start address, see module table:
-        [root@s8360047 perf]# cat /proc/modules
-        qeth_l2 86016 1 - Live 0x000003ff804d6000
-        qeth 266240 1 qeth_l2, Live 0x000003ff80296000
-        ccwgroup 24576 1 qeth, Live 0x000003ff80218000
-        vmur 36864 0 - Live 0x000003ff80182000
-        qdio 143360 2 qeth_l2,qeth, Live 0x000003ff80002000
-        [root@s8360047 perf]# )
-to be the last entry and its map has an end address of ~0.
-
-When the PERF_RECORD_MMAP entry is created for kernel module qeth_l2.ko
-its start address and length is written. The length is calculated in line:
-    event->mmap.len   = pos->end - pos->start;
-and results in 0xffffffffffffffff - 0x3ff804d6990(*) = 0xfffffc007fb2966f
-
-(*) On s390 the module start address is actually determined by a __weak function
-named arch__fix_module_text_start() in machine__create_module().
-
-I think this improvable. We can use the module size (2nd column of /proc/modules)
-to get each loaded kernel module size and calculate its end address.
-Only for map entries which do not have a valid end address (end is still zero)
-we can use the heuristic we have now, that is use successor start address or ~0.
-
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Zvonko Kosic <zvonko.kosic@de.ibm.com>
-LPU-Reference: 20170803134902.47207-2-tmricht@linux.vnet.ibm.com
-Link: http://lkml.kernel.org/n/tip-nmoqij5b5vxx7rq2ckwu8iaj@git.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-idrntt4nbg15aafu8hjmv7sk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c    |  4 +++-
- tools/perf/util/symbol-elf.c |  2 +-
- tools/perf/util/symbol.c     | 21 ++++++++++++++-------
- tools/perf/util/symbol.h     |  2 +-
- 4 files changed, 19 insertions(+), 10 deletions(-)
+ .../perf/tests/shell/trace+probe_libc_inet_pton.sh | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index d4df353051af..5c8eacaca4f4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1138,7 +1138,8 @@ int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
- 	return 0;
- }
- 
--static int machine__create_module(void *arg, const char *name, u64 start)
-+static int machine__create_module(void *arg, const char *name, u64 start,
-+				  u64 size)
- {
- 	struct machine *machine = arg;
- 	struct map *map;
-@@ -1149,6 +1150,7 @@ static int machine__create_module(void *arg, const char *name, u64 start)
- 	map = machine__findnew_module_map(machine, start, name);
- 	if (map == NULL)
- 		return -1;
-+	map->end = start + size;
- 
- 	dso__kernel_module_get_build_id(map->dso, machine->root_dir);
- 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 7cf18f14e152..98deabb9b47e 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1442,7 +1442,7 @@ static int kcore_copy__parse_kallsyms(struct kcore_copy_info *kci,
- 
- static int kcore_copy__process_modules(void *arg,
- 				       const char *name __maybe_unused,
--				       u64 start)
-+				       u64 start, u64 size __maybe_unused)
- {
- 	struct kcore_copy_info *kci = arg;
- 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 971b990557b4..5909ee4c7ade 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -233,7 +233,8 @@ void __map_groups__fixup_end(struct map_groups *mg, enum map_type type)
- 		goto out_unlock;
- 
- 	for (next = map__next(curr); next; next = map__next(curr)) {
--		curr->end = next->start;
-+		if (!curr->end)
-+			curr->end = next->start;
- 		curr = next;
- 	}
- 
-@@ -241,7 +242,8 @@ void __map_groups__fixup_end(struct map_groups *mg, enum map_type type)
- 	 * We still haven't the actual symbols, so guess the
- 	 * last map final address.
- 	 */
--	curr->end = ~0ULL;
-+	if (!curr->end)
-+		curr->end = ~0ULL;
- 
- out_unlock:
- 	pthread_rwlock_unlock(&maps->lock);
-@@ -552,7 +554,7 @@ void dso__sort_by_name(struct dso *dso, enum map_type type)
- 
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
--					 u64 start))
-+					 u64 start, u64 size))
- {
- 	char *line = NULL;
- 	size_t n;
-@@ -565,8 +567,8 @@ int modules__parse(const char *filename, void *arg,
- 
- 	while (1) {
- 		char name[PATH_MAX];
--		u64 start;
--		char *sep;
-+		u64 start, size;
-+		char *sep, *endptr;
- 		ssize_t line_len;
- 
- 		line_len = getline(&line, &n, file);
-@@ -598,7 +600,11 @@ int modules__parse(const char *filename, void *arg,
- 
- 		scnprintf(name, sizeof(name), "[%s]", line);
- 
--		err = process_module(arg, name, start);
-+		size = strtoul(sep + 1, &endptr, 0);
-+		if (*endptr != ' ' && *endptr != '\t')
-+			continue;
+diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+new file mode 100755
+index 000000000000..1b9a276e2ace
+--- /dev/null
++++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+@@ -0,0 +1,40 @@
++# probe libc's inet_pton & backtrace it with ping
 +
-+		err = process_module(arg, name, start, size);
- 		if (err)
- 			break;
- 	}
-@@ -945,7 +951,8 @@ static struct module_info *find_module(const char *name,
- 	return NULL;
- }
- 
--static int __read_proc_modules(void *arg, const char *name, u64 start)
-+static int __read_proc_modules(void *arg, const char *name, u64 start,
-+			       u64 size __maybe_unused)
- {
- 	struct rb_root *modules = arg;
- 	struct module_info *mi;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index f0b08810d7fa..b221671070e2 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -273,7 +273,7 @@ int filename__read_build_id(const char *filename, void *bf, size_t size);
- int sysfs__read_build_id(const char *filename, void *bf, size_t size);
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
--					 u64 start));
-+					 u64 start, u64 size));
- int filename__read_debuglink(const char *filename, char *debuglink,
- 			     size_t size);
- 
++# Installs a probe on libc's inet_pton function, that will use uprobes,
++# then use 'perf trace' on a ping to localhost asking for just one packet
++# with the a backtrace 3 levels deep, check that it is what we expect.
++# This needs no debuginfo package, all is done using the libc ELF symtab
++# and the CFI info in the binaries.
++
++# Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
++
++trace_libc_inet_pton_backtrace() {
++	idx=0
++	expected[0]="PING.*bytes"
++	expected[1]="64 bytes from ::1.*"
++	expected[2]=".*ping statistics.*"
++	expected[3]=".*packets transmitted.*"
++	expected[4]="rtt min.*"
++	expected[5]="[0-9]+\.[0-9]+[[:space:]]+probe_libc:inet_pton:\([[:xdigit:]]+\)"
++	expected[6]=".*inet_pton[[:space:]]\(/usr/lib.*/libc-[0-9]+\.[0-9]+\.so\)$"
++	expected[7]="getaddrinfo[[:space:]]\(/usr/lib.*/libc-[0-9]+\.[0-9]+\.so\)$"
++	expected[8]=".*\(.*/bin/ping.*\)$"
++
++	perf trace --no-syscalls -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1 |& grep -v ^$ | while read line ; do
++		echo $line
++		echo "$line" | egrep -q "${expected[$idx]}"
++		if [ $? -ne 0 ] ; then
++			printf "FAIL: expected backtrace entry %d \"%s\" got \"%s\"\n" $idx "${expected[$idx]}" "$line"
++			exit 1
++		fi
++		let idx+=1
++		[ $idx -eq 9 ] && break
++	done
++}
++
++perf probe -q /lib64/libc-*.so inet_pton && \
++trace_libc_inet_pton_backtrace
++err=$?
++rm -f ${file}
++perf probe -q -d probe_libc:inet_pton
++exit $err
 -- 
 2.13.4
