@@ -1,168 +1,195 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCHv2] perf bpf: Fix endianness problem when loading
- parameters in prologue
-Date: Mon, 14 Aug 2017 13:39:15 -0300
-Message-ID: <20170814163915.GB4114@kernel.org>
-References: <20170814114644.82526-1-tmricht@linux.vnet.ibm.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/19] perf/core improvements and fixes
+Date: Mon, 14 Aug 2017 19:39:48 +0200
+Message-ID: <20170814173948.pio6tbbkmqwrksmn@gmail.com>
+References: <20170814162741.6101-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751042AbdHNQj0 (ORCPT
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:37771 "EHLO
+        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751527AbdHNRjx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Aug 2017 12:39:26 -0400
+        Mon, 14 Aug 2017 13:39:53 -0400
 Content-Disposition: inline
-In-Reply-To: <20170814114644.82526-1-tmricht@linux.vnet.ibm.com>
+In-Reply-To: <20170814162741.6101-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, brueckner@linux.vnet.ibm.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Anton Blanchard <anton@au1.ibm.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, linuxppc-dev@lists.ozlabs.org, Matt Fleming <matt.fleming@intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Michael Petlan <mpetlan@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Paul Clarke <pc@us.ibm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 
-Em Mon, Aug 14, 2017 at 01:46:44PM +0200, Thomas Richter escreveu:
-> Perf BPF prologue generator unconditionally fetches 8 bytes for function
-> parameters, which causes problem on big endian machine. Thomas gives a
-> detail analysis for this problem:
+
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
->  http://lkml.kernel.org/r/968ebda5-abe4-8830-8d69-49f62529d151@linux.vnet.ibm.com
+> 	Please consider pulling,
 > 
-> This patch parses the type of each argument and converts data from
-> memory to expected type.
+> - Arnaldo
 > 
-> Now the test runs successfully on 4.13.0-rc5:
-> [root@s8360046 perf]# ./perf test  bpf
-> 38: BPF filter                                 :
-> 38.1: Basic BPF filtering                      : Ok
-> 38.2: BPF pinning                              : Ok
-> 38.3: BPF prologue generation                  : Ok
-> 38.4: BPF relocation checker                   : Ok
-> [root@s8360046 perf]#
+> Test results at the end of this message, as usual.
 > 
-> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> Acked-by: Wang Nan <wangnan0@huawei.com>
-> Tested-by: Wang Nan <wangnan0@huawei.com>
-
-
-That is strange, who is the author of the patch? Also I think Tested-by
-is enough, being an even stronger form of Acked-by?
-
-But then you also have Signed-off-by: Wang in there...
-
-From Documentation/process/submitting-patches.rst:
-
----------
-
-12) When to use Acked-by: and Cc:
----------------------------------
-
-The Signed-off-by: tag indicates that the signer was involved in the
-development of the patch, or that he/she was in the patch's delivery path.
-
-If a person was not directly involved in the preparation or handling of a
-patch but wishes to signify and record their approval of it then they can
-ask to have an Acked-by: line added to the patch's changelog.
-
-Acked-by: is often used by the maintainer of the affected code when that
-maintainer neither contributed to nor forwarded the patch.
-
-------------------
-
-If Wang wrote the original patch and you made it better working together
-with him, probably having both of you in Signed-off-by lines should be
-enough?
-
-- Arnaldo
-
-> ---
->  tools/perf/tests/bpf-script-test-prologue.c |  4 ++-
->  tools/perf/util/bpf-prologue.c              | 49 +++++++++++++++++++++++++++--
->  2 files changed, 50 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/tests/bpf-script-test-prologue.c b/tools/perf/tests/bpf-script-test-prologue.c
-> index b4ebc75..43f1e16 100644
-> --- a/tools/perf/tests/bpf-script-test-prologue.c
-> +++ b/tools/perf/tests/bpf-script-test-prologue.c
-> @@ -26,9 +26,11 @@ static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
->  	(void *) 6;
->  
->  SEC("func=null_lseek file->f_mode offset orig")
-> -int bpf_func__null_lseek(void *ctx, int err, unsigned long f_mode,
-> +int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
->  			 unsigned long offset, unsigned long orig)
->  {
-> +	fmode_t f_mode = (fmode_t)_f_mode;
-> +
->  	if (err)
->  		return 0;
->  	if (f_mode & FMODE_WRITE)
-> diff --git a/tools/perf/util/bpf-prologue.c b/tools/perf/util/bpf-prologue.c
-> index 1356220..827f914 100644
-> --- a/tools/perf/util/bpf-prologue.c
-> +++ b/tools/perf/util/bpf-prologue.c
-> @@ -58,6 +58,46 @@ check_pos(struct bpf_insn_pos *pos)
->  	return 0;
->  }
->  
-> +/*
-> + * Convert type string (u8/u16/u32/u64/s8/s16/s32/s64 ..., see
-> + * Documentation/trace/kprobetrace.txt) to size field of BPF_LDX_MEM
-> + * instruction (BPF_{B,H,W,DW}).
-> + */
-> +static int
-> +argtype_to_ldx_size(const char *type)
-> +{
-> +	int arg_size = type ? atoi(&type[1]) : 64;
-> +
-> +	switch (arg_size) {
-> +	case 8:
-> +		return BPF_B;
-> +	case 16:
-> +		return BPF_H;
-> +	case 32:
-> +		return BPF_W;
-> +	case 64:
-> +	default:
-> +		return BPF_DW;
-> +	}
-> +}
-> +
-> +static const char *
-> +insn_sz_to_str(int insn_sz)
-> +{
-> +	switch (insn_sz) {
-> +	case BPF_B:
-> +		return "BPF_B";
-> +	case BPF_H:
-> +		return "BPF_H";
-> +	case BPF_W:
-> +		return "BPF_W";
-> +	case BPF_DW:
-> +		return "BPF_DW";
-> +	default:
-> +		return "UNKNOWN";
-> +	}
-> +}
-> +
->  /* Give it a shorter name */
->  #define ins(i, p) append_insn((i), (p))
->  
-> @@ -258,9 +298,14 @@ gen_prologue_slowpath(struct bpf_insn_pos *pos,
->  	}
->  
->  	/* Final pass: read to registers */
-> -	for (i = 0; i < nargs; i++)
-> -		ins(BPF_LDX_MEM(BPF_DW, BPF_PROLOGUE_START_ARG_REG + i,
-> +	for (i = 0; i < nargs; i++) {
-> +		int insn_sz = (args[i].ref) ? argtype_to_ldx_size(args[i].type) : BPF_DW;
-> +
-> +		pr_debug("prologue: load arg %d, insn_sz is %s\n",
-> +			 i, insn_sz_to_str(insn_sz));
-> +		ins(BPF_LDX_MEM(insn_sz, BPF_PROLOGUE_START_ARG_REG + i,
->  				BPF_REG_FP, -BPF_REG_SIZE * (i + 1)), pos);
-> +	}
->  
->  	ins(BPF_JMP_IMM(BPF_JA, BPF_REG_0, 0, JMP_TO_SUCCESS_CODE), pos);
->  
-> -- 
-> 2.9.3
+> The following changes since commit 82119cbe8e1e32cc2a941393e59816e731681310:
+> 
+>   Merge tag 'perf-core-for-mingo-4.14-20170801' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2017-08-10 17:07:02 +0200)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.14-20170814
+> 
+> for you to fetch changes up to 8fc375d7d36c72b4c2d55f5c24be022a939295d4:
+> 
+>   perf test shell: Add uprobes + backtrace ping test (2017-08-11 16:18:49 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> Infrastructure:
+> 
+> - Do not consider empty files as valid srclines (Milian Wolff)
+> 
+> - Fix wrong size in perf_record_mmap for last kernel module,
+>   which resulted in erroneous symbol resolution in at least s390x (Thomas Richter)
+> 
+> - Add missing newline to expr parser error messages (Andi Kleen)
+> 
+> - Fix saved values rbtree lookup in 'perf stat' (Andi Kleen)
+> 
+> - Add support for shell based tests in 'perf test', add a few that
+>   run 'perf probe', 'perf trace', using kprobes, uprobes to check
+>   the output of those tools and the effects on the system, checking,
+>   for instance, DWARF backtraces from uprobes (Arnaldo Carvalho de Melo)
+> 
+> Arch specific:
+> 
+> - Add ppc64le to audit uname list in the python scripting support (Naveen N. Rao)
+> 
+> - Update POWER9 vendor events tables (Sukadev Bhattiprolu)
+> 
+> - Fix module symbol adjustment for s390x (Thomas Richter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (2):
+>       perf stat: Fix saved values rbtree lookup
+>       perf tools: Add missing newline to expr parser error messages
+> 
+> Arnaldo Carvalho de Melo (10):
+>       perf test: Make 'list' subcommand match main 'perf test' numbering/matching
+>       perf test: Add 'struct test *' to the test functions
+>       perf test: Add infrastructure to run shell based tests
+>       perf test: Make 'list' use same filtering code as main 'perf test'
+>       perf test shell: Add 'probe_vfs_getname' shell test
+>       perf test shell: Install shell tests
+>       perf test shell: Move vfs_getname probe function to lib
+>       perf test shell: Add test using probe:vfs_getname and verifying results
+>       perf test shell: Add test using vfs_getname + 'perf trace'
+>       perf test shell: Add uprobes + backtrace ping test
+> 
+> Milian Wolff (2):
+>       perf util: Take elf_name as const string in dso__demangle_sym
+>       perf srcline: Do not consider empty files as valid srclines
+> 
+> Naveen N. Rao (1):
+>       perf scripting python: Add ppc64le to audit uname list
+> 
+> Sukadev Bhattiprolu (2):
+>       perf vendor events powerpc: remove suffix in mapfile
+>       perf vendor events powerpc: Update POWER9 events
+> 
+> Thomas Richter (2):
+>       perf record: Fix wrong size in perf_record_mmap for last kernel module
+>       perf report: Fix module symbol adjustment for s390x
+> 
+>  tools/perf/Makefile.perf                           |    6 +-
+>  tools/perf/arch/s390/util/sym-handling.c           |    7 +
+>  tools/perf/arch/x86/include/arch-tests.h           |   11 +-
+>  tools/perf/arch/x86/tests/insn-x86.c               |    2 +-
+>  tools/perf/arch/x86/tests/intel-cqm.c              |    2 +-
+>  tools/perf/arch/x86/tests/perf-time-to-tsc.c       |    2 +-
+>  tools/perf/arch/x86/tests/rdpmc.c                  |    2 +-
+>  tools/perf/pmu-events/arch/powerpc/mapfile.csv     |   20 +-
+>  .../perf/pmu-events/arch/powerpc/power9/cache.json |  191 +-
+>  .../arch/powerpc/power9/floating-point.json        |   42 +-
+>  .../pmu-events/arch/powerpc/power9/frontend.json   |  517 ++--
+>  .../pmu-events/arch/powerpc/power9/marked.json     |  905 +++----
+>  .../pmu-events/arch/powerpc/power9/memory.json     |  178 +-
+>  .../perf/pmu-events/arch/powerpc/power9/other.json | 2768 ++++++++++++++++----
+>  .../pmu-events/arch/powerpc/power9/pipeline.json   |  779 +++---
+>  tools/perf/pmu-events/arch/powerpc/power9/pmc.json |  167 +-
+>  .../arch/powerpc/power9/translation.json           |  314 +--
+>  .../python/Perf-Trace-Util/lib/Perf/Trace/Util.py  |    1 +
+>  tools/perf/tests/attr.c                            |    2 +-
+>  tools/perf/tests/backward-ring-buffer.c            |    2 +-
+>  tools/perf/tests/bitmap.c                          |    2 +-
+>  tools/perf/tests/bp_signal.c                       |    2 +-
+>  tools/perf/tests/bp_signal_overflow.c              |    2 +-
+>  tools/perf/tests/bpf.c                             |    4 +-
+>  tools/perf/tests/builtin-test.c                    |  184 +-
+>  tools/perf/tests/clang.c                           |    4 +-
+>  tools/perf/tests/code-reading.c                    |    2 +-
+>  tools/perf/tests/cpumap.c                          |    4 +-
+>  tools/perf/tests/dso-data.c                        |    6 +-
+>  tools/perf/tests/dwarf-unwind.c                    |    2 +-
+>  tools/perf/tests/event-times.c                     |    2 +-
+>  tools/perf/tests/event_update.c                    |    2 +-
+>  tools/perf/tests/evsel-roundtrip-name.c            |    2 +-
+>  tools/perf/tests/evsel-tp-sched.c                  |    2 +-
+>  tools/perf/tests/expr.c                            |    2 +-
+>  tools/perf/tests/fdarray.c                         |    4 +-
+>  tools/perf/tests/hists_cumulate.c                  |    2 +-
+>  tools/perf/tests/hists_filter.c                    |    2 +-
+>  tools/perf/tests/hists_link.c                      |    2 +-
+>  tools/perf/tests/hists_output.c                    |    2 +-
+>  tools/perf/tests/is_printable_array.c              |    2 +-
+>  tools/perf/tests/keep-tracking.c                   |    2 +-
+>  tools/perf/tests/kmod-path.c                       |    2 +-
+>  tools/perf/tests/llvm.c                            |    2 +-
+>  tools/perf/tests/mmap-basic.c                      |    2 +-
+>  tools/perf/tests/mmap-thread-lookup.c              |    2 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c         |    2 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c        |    2 +-
+>  tools/perf/tests/openat-syscall.c                  |    2 +-
+>  tools/perf/tests/parse-events.c                    |    2 +-
+>  tools/perf/tests/parse-no-sample-id-all.c          |    2 +-
+>  tools/perf/tests/perf-hooks.c                      |    2 +-
+>  tools/perf/tests/perf-record.c                     |    2 +-
+>  tools/perf/tests/pmu.c                             |    2 +-
+>  tools/perf/tests/python-use.c                      |    2 +-
+>  tools/perf/tests/sample-parsing.c                  |    2 +-
+>  tools/perf/tests/sdt.c                             |    4 +-
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh    |   28 +
+>  tools/perf/tests/shell/probe_vfs_getname.sh        |   10 +
+>  .../tests/shell/record+script_probe_vfs_getname.sh |   37 +
+>  .../perf/tests/shell/trace+probe_libc_inet_pton.sh |   40 +
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh  |   31 +
+>  tools/perf/tests/stat.c                            |    6 +-
+>  tools/perf/tests/sw-clock.c                        |    2 +-
+>  tools/perf/tests/switch-tracking.c                 |    2 +-
+>  tools/perf/tests/task-exit.c                       |    2 +-
+>  tools/perf/tests/tests.h                           |  113 +-
+>  tools/perf/tests/thread-map.c                      |    6 +-
+>  tools/perf/tests/thread-mg-share.c                 |    2 +-
+>  tools/perf/tests/topology.c                        |    2 +-
+>  tools/perf/tests/unit_number__scnprintf.c          |    2 +-
+>  tools/perf/tests/vmlinux-kallsyms.c                |    2 +-
+>  tools/perf/util/expr.y                             |    2 +-
+>  tools/perf/util/machine.c                          |    4 +-
+>  tools/perf/util/srcline.c                          |    6 +
+>  tools/perf/util/stat-shadow.c                      |    6 +-
+>  tools/perf/util/symbol-elf.c                       |   12 +-
+>  tools/perf/util/symbol-minimal.c                   |    2 +-
+>  tools/perf/util/symbol.c                           |   21 +-
+>  tools/perf/util/symbol.h                           |    7 +-
+>  80 files changed, 4054 insertions(+), 2479 deletions(-)
+>  create mode 100644 tools/perf/tests/shell/lib/probe_vfs_getname.sh
+>  create mode 100755 tools/perf/tests/shell/probe_vfs_getname.sh
+>  create mode 100755 tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+>  create mode 100755 tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+>  create mode 100755 tools/perf/tests/shell/trace+probe_vfs_getname.sh
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
