@@ -1,60 +1,87 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/19] perf vendor events powerpc: remove suffix in mapfile
-Date: Mon, 14 Aug 2017 13:27:24 -0300
-Message-ID: <20170814162741.6101-3-acme@kernel.org>
+Subject: [PATCH 06/19] perf test: Make 'list' subcommand match main 'perf test' numbering/matching
+Date: Mon, 14 Aug 2017 13:27:28 -0300
+Message-ID: <20170814162741.6101-7-acme@kernel.org>
 References: <20170814162741.6101-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170814162741.6101-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Anton Blanchard <anton@au1.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Matt Fleming <matt.fleming@intel.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Drop the .json suffix for events directory in the mapfile.csv.
+Before:
 
-Now that we have separate JSON files for each topic in a CPU (eg: see
-tools/perf/pmu-events/arch/powerpc/power8/*.json) the .json suffix in
-the mapfile is misleading and redundant.
+  # perf test Synth
+  39: Synthesize thread map  : Ok
+  41: Synthesize cpu map     : Ok
+  42: Synthesize stat config : Ok
+  43: Synthesize stat        : Ok
+  44: Synthesize stat round  : Ok
+  45: Synthesize attr update : Ok
+  #
+  # perf test list Synth
+   1: Synthesize thread map
+   2: Synthesize cpu map
+   3: Synthesize stat config
+   4: Synthesize stat
+   5: Synthesize stat round
+   6: Synthesize attr update
+  #
 
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Anton Blanchard <anton@au1.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20170802174617.GA32545@us.ibm.com
+After:
+
+  # perf test Synth
+  39: Synthesize thread map  : Ok
+  41: Synthesize cpu map     : Ok
+  42: Synthesize stat config : Ok
+  43: Synthesize stat        : Ok
+  44: Synthesize stat round  : Ok
+  45: Synthesize attr update : Ok
+  #
+  # perf test list Synth
+  39: Synthesize thread map
+  41: Synthesize cpu map
+  42: Synthesize stat config
+  43: Synthesize stat
+  44: Synthesize stat round
+  45: Synthesize attr update
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Matt Fleming <matt.fleming@intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-pjhuhkphs7o3tkbqrukfv6bz@git.kernel.org
+Fixes: e8210cefb7e1 ("perf tests: Introduce iterator function for tests")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/powerpc/mapfile.csv | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/tests/builtin-test.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-index 14318ef215f8..a0f3a11ca19f 100644
---- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-@@ -13,13 +13,13 @@
- #
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 3ccfd58a8c3c..436e22993909 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -465,10 +465,12 @@ static int perf_test__list(int argc, const char **argv)
+ 	int i = 0;
  
- # Power8 entries
--004b0000,1,power8.json,core
--004b0201,1,power8.json,core
--004c0000,1,power8.json,core
--004d0000,1,power8.json,core
--004d0100,1,power8.json,core
--004d0200,1,power8.json,core
--004c0100,1,power8.json,core
--004e0100,1,power9.json,core
--004e0200,1,power9.json,core
--004e1200,1,power9.json,core
-+004b0000,1,power8,core
-+004b0201,1,power8,core
-+004c0000,1,power8,core
-+004d0000,1,power8,core
-+004d0100,1,power8,core
-+004d0200,1,power8,core
-+004c0100,1,power8,core
-+004e0100,1,power9,core
-+004e0200,1,power9,core
-+004e1200,1,power9,core
+ 	for_each_test(j, t) {
++		++i;
++
+ 		if (argc > 1 && !strstr(t->desc, argv[1]))
+ 			continue;
+ 
+-		pr_info("%2d: %s\n", ++i, t->desc);
++		pr_info("%2d: %s\n", i, t->desc);
+ 	}
+ 
+ 	return 0;
 -- 
 2.13.4
