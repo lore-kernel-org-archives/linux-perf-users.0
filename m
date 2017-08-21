@@ -1,10 +1,8 @@
 From: sathnaga@linux.vnet.ibm.com
-Subject: [PATCH v3 1/2] perf/bench/numa: Add functions to detect sparse numa nodes
-Date: Mon, 21 Aug 2017 15:45:47 +0530
-Message-ID: <855c8ed2d15135f2ac32105f60a745a4fd14036b.1503310062.git.sathnaga@linux.vnet.ibm.com>
-References: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
+Subject: [PATCH v3 0/2] Fixup for discontiguous/sparse numa nodes
+Date: Mon, 21 Aug 2017 15:45:40 +0530
+Message-ID: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc: srikar@linux.vnet.ibm.com, bala24@linux.vnet.ibm.com, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
@@ -12,75 +10,87 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 
-Added functions 1) to get a count of all nodes that are exposed to
-userspace. These nodes could be memoryless cpu nodes or cpuless memory
-nodes, 2) to check given node is present and 3) to check given
-node has cpus
+Certain systems would have sparse/discontinguous
+numa nodes.
+perf bench numa doesnt work well on such nodes.
+1. It shows wrong values.
+2. It can hang.
+3. It can show redundant information for non-existant nodes.
 
-This information can be used to handle sparse/discontiguous nodes.
+ #numactl -H
+available: 2 nodes (0,8)
+node 0 cpus: 0 1 2 3 4 5 6 7
+node 0 size: 61352 MB
+node 0 free: 57168 MB
+node 8 cpus: 8 9 10 11 12 13 14 15
+node 8 size: 65416 MB
+node 8 free: 36593 MB
+node distances:
+node   0   8
+  0:  10  40
+  8:  40  10
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
----
- tools/perf/bench/numa.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Scenario 1:
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 469d65b..2483174 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -215,6 +215,50 @@ static const char * const numa_usage[] = {
- 	NULL
- };
- 
-+/*
-+ * To get number of numa nodes present.
-+ */
-+static int nr_numa_nodes(void)
-+{
-+	int i, nr_nodes = 0;
-+
-+	for (i = 0; i < g->p.nr_nodes; i++) {
-+		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-+			nr_nodes++;
-+	}
-+
-+	return nr_nodes;
-+}
-+
-+/* 
-+ * To check if given numa node is present.
-+ */
-+static int is_node_present(int node)
-+{
-+	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-+}
-+
-+/*
-+ * To check given numa node has cpus.
-+ */
-+static bool node_has_cpus(int node)
-+{
-+	struct bitmask *cpu = numa_allocate_cpumask();
-+	unsigned int i;
-+
-+	if (cpu == NULL)
-+		return false; /* lets fall back to nocpus safely */
-+
-+	if (numa_node_to_cpus(node, cpu) == 0) {
-+		for (i = 0; i < cpu->size; i++) {
-+			if (numa_bitmask_isbitset(cpu, i))
-+				return true;
-+			}
-+		}
-+
-+	return false;
-+}
-+
- static cpu_set_t bind_to_cpu(int target_cpu)
- {
- 	cpu_set_t orig_mask, mask;
+Before Fix:
+ # perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072 -T 0 -l 50 -c -s 1000
+...
+...
+ # 40 tasks will execute (on 9 nodes, 16 CPUs): ----> Wrong number of nodes
+...
+ #    2.0%  [0.2 mins]  1/1   0/0   0/0   0/0   0/0   0/0   0/0   0/0   4/1  [ 4/2 ] l:  0-0   (  0) ----> Shows info on non-existant nodes.
+
+After Fix:
+ # ./perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072 -T 0 -l 50 -c -s 1000
+...
+...
+ # 40 tasks will execute (on 2 nodes, 16 CPUs):
+... 
+ #    2.0%  [0.2 mins]  9/1   0/0  [ 9/1 ] l:  0-0   (  0)
+ #    4.0%  [0.4 mins] 21/2  19/1  [ 2/3 ] l:  0-1   (  1) {1-2}
+
+Scenario 2:
+
+Before Fix:
+ # perf bench numa all
+ # Running numa/mem benchmark...
+....
+...
+ # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0 -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+perf: bench/numa.c:306: bind_to_memnode: Assertion `!(ret)' failed. ------------> Got hung
+
+After Fix:
+ # ./perf bench numa all
+ # Running numa/mem benchmark...
+....
+...
+ # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0 -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+
+ # NOTE: ignoring bind NODEs starting at NODE#1
+ # NOTE: 0 tasks mem-bound, 1 tasks unbound
+         20.017 secs slowest (max) thread-runtime
+         20.000 secs fastest (min) thread-runtime
+         20.006 secs average thread-runtime
+          0.043 % difference between max/avg runtime
+        413.794 GB data processed, per thread
+        413.794 GB data processed, total
+          0.048 nsecs/byte/thread runtime
+         20.672 GB/sec/thread speed
+         20.672 GB/sec total speed
+
+Changes in v2:
+Fixed review comments for function names and alloc failure handle
+
+Changes in v3:
+Coding Style fixes.
+
+
+Satheesh Rajendran (2):
+  perf/bench/numa: Add functions to detect sparse numa nodes
+  perf/bench/numa: Handle discontiguous/sparse numa nodes
+
+ tools/perf/bench/numa.c | 61 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 54 insertions(+), 7 deletions(-)
+
 -- 
 2.7.4
