@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/15] perf: Fix documentation for sysctls perf_event_paranoid and perf_event_mlock_kb
-Date: Wed, 23 Aug 2017 16:36:12 -0300
-Message-ID: <20170823193614.20394-14-acme@kernel.org>
+Subject: [PATCH 14/15] perf tools: Fix static linking with libdw from elfutils
+Date: Wed, 23 Aug 2017 16:36:13 -0300
+Message-ID: <20170823193614.20394-15-acme@kernel.org>
 References: <20170823193614.20394-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170823193614.20394-1-acme@kernel.org>
@@ -12,74 +12,48 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Fix misprint CAP_IOC_LOCK -> CAP_IPC_LOCK. This capability have nothing
-to do with raw tracepoints. This part is about bypassing mlock limits.
+Fix feature test for static libdw: link required dependencies.  Backends
+of libebl are not statically linked thus libdl is required.
 
-Sysctl kernel.perf_event_paranoid = -1 allows raw and ftrace function
-tracepoints without CAP_SYS_ADMIN.
+In Debian/Ubuntu libdw-dev includes libebl.a starting from 0.166-1.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/150322916080.129746.11285255474738558340.stgit@buzz
+Link: http://lkml.kernel.org/r/150322916720.129772.7959925864494283854.stgit@buzz
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- Documentation/sysctl/kernel.txt | 13 ++++++++++++-
- tools/perf/util/evsel.c         |  4 +++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.config | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index bac23c198360..ce61d1fe08ca 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -61,6 +61,7 @@ show up in /proc/sys/kernel:
- - perf_cpu_time_max_percent
- - perf_event_paranoid
- - perf_event_max_stack
-+- perf_event_mlock_kb
- - perf_event_max_contexts_per_stack
- - pid_max
- - powersave-nap               [ PPC only ]
-@@ -654,7 +655,9 @@ Controls use of the performance events system by unprivileged
- users (without CAP_SYS_ADMIN).  The default value is 2.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 37d203c4cd1f..bb4735b92ada 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -103,8 +103,12 @@ ifdef LIBDW_DIR
+   LIBDW_CFLAGS  := -I$(LIBDW_DIR)/include
+   LIBDW_LDFLAGS := -L$(LIBDW_DIR)/lib
+ endif
++DWARFLIBS := -ldw
++ifeq ($(findstring -static,${LDFLAGS}),-static)
++  DWARFLIBS += -lelf -lebl -ldl -lz -llzma -lbz2
++endif
+ FEATURE_CHECK_CFLAGS-libdw-dwarf-unwind := $(LIBDW_CFLAGS)
+-FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) -ldw
++FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) $(DWARFLIBS)
  
-  -1: Allow use of (almost) all events by all users
-->=0: Disallow raw tracepoint access by users without CAP_IOC_LOCK
-+     Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-+>=0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
-+     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
- >=1: Disallow CPU event access by users without CAP_SYS_ADMIN
- >=2: Disallow kernel profiling by users without CAP_SYS_ADMIN
- 
-@@ -673,6 +676,14 @@ The default value is 127.
- 
- ==============================================================
- 
-+perf_event_mlock_kb:
-+
-+Control size of per-cpu ring buffer not counted agains mlock limit.
-+
-+The default value is 512 + 1 page
-+
-+==============================================================
-+
- perf_event_max_contexts_per_stack:
- 
- Controls maximum number of stack frame context entries for
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5dfb8bc4db89..a5888c704e01 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2674,7 +2674,9 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
- 		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
- 		 "The current value is %d:\n\n"
- 		 "  -1: Allow use of (almost) all events by all users\n"
--		 ">= 0: Disallow raw tracepoint access by users without CAP_IOC_LOCK\n"
-+		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
-+		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
-+		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
- 		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
- 		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
- 		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
+ # for linking with debug library, run like:
+ # make DEBUG=1 LIBBABELTRACE_DIR=/opt/libbabeltrace/
+@@ -365,10 +369,6 @@ ifndef NO_LIBELF
+     else
+       CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
+       LDFLAGS += $(LIBDW_LDFLAGS)
+-      DWARFLIBS := -ldw
+-      ifeq ($(findstring -static,${LDFLAGS}),-static)
+-	DWARFLIBS += -lelf -lebl -lz -llzma -lbz2
+-      endif
+       EXTLIBS += ${DWARFLIBS}
+       $(call detected,CONFIG_DWARF)
+     endif # PERF_HAVE_DWARF_REGS
 -- 
 2.13.5
