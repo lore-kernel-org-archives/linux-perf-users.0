@@ -1,275 +1,289 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/15] perf evsel: Fix buffer overflow while freeing events
-Date: Wed, 23 Aug 2017 16:36:01 -0300
-Message-ID: <20170823193614.20394-3-acme@kernel.org>
-References: <20170823193614.20394-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170823193614.20394-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Jack Henschel <jackdev@mailbox.org>
+Subject: Re: Filter option should follow a tracer option
+Date: Thu, 24 Aug 2017 10:36:55 +0200
+Message-ID: <673dd554-4718-20bf-5a76-38f27f3f5290@mailbox.org>
+References: <2141818167.39420.1503049431846@office.mailbox.org>
+ <20170822190011.GA31893@kernel.org>
+ <a214874a-a271-729e-d253-731e648a10e6@intel.com>
+ <98754540.17249.1503478275998@office.mailbox.org>
+ <de75121e-cafc-0389-039b-fb038e0ff7c6@intel.com>
+ <301454280.19507.1503490276770@office.mailbox.org>
+ <20170823132251.GB31893@kernel.org>
+ <f142538f-b403-2f15-5dbe-f2d2b07ab777@mailbox.org>
+ <20170823190757.GA10477@kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="R1LvGn44KSTXRpbVEbX9IVl5mid6mffl1"
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx2.mailbox.org ([80.241.60.215]:51643 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751796AbdHXIhD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 24 Aug 2017 04:37:03 -0400
+In-Reply-To: <20170823190757.GA10477@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--R1LvGn44KSTXRpbVEbX9IVl5mid6mffl1
+Content-Type: multipart/mixed; boundary="hRtVEq7MbHpB2qLoliJn9CNS1IXdhd7xh";
+ protected-headers="v1"
+From: Jack Henschel <jackdev@mailbox.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org
+Message-ID: <673dd554-4718-20bf-5a76-38f27f3f5290@mailbox.org>
+Subject: Re: Filter option should follow a tracer option
+References: <2141818167.39420.1503049431846@office.mailbox.org>
+ <20170822190011.GA31893@kernel.org>
+ <a214874a-a271-729e-d253-731e648a10e6@intel.com>
+ <98754540.17249.1503478275998@office.mailbox.org>
+ <de75121e-cafc-0389-039b-fb038e0ff7c6@intel.com>
+ <301454280.19507.1503490276770@office.mailbox.org>
+ <20170823132251.GB31893@kernel.org>
+ <f142538f-b403-2f15-5dbe-f2d2b07ab777@mailbox.org>
+ <20170823190757.GA10477@kernel.org>
+In-Reply-To: <20170823190757.GA10477@kernel.org>
 
-Fix buffer overflow for:
+--hRtVEq7MbHpB2qLoliJn9CNS1IXdhd7xh
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-  % perf stat -e msr/tsc/,cstate_core/c7-residency/ true
+On 08/23/2017 09:07 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Aug 23, 2017 at 03:40:41PM +0200, Jack Henschel escreveu:
+>> On 08/23/2017 03:22 PM, Arnaldo Carvalho de Melo wrote:
+>>> Em Wed, Aug 23, 2017 at 02:11:16PM +0200, Jack Henschel escreveu:
+>>>>> Adrian Hunter <adrian.hunter@intel.com> hat am 23. August 2017 um 1=
+2:33 geschrieben:
+>>>>> On 23/08/17 11:51, Jack Henschel wrote:
+>>>>>>> Adrian Hunter <adrian.hunter@intel.com> hat am 23. August 2017 um=
+ 08:06 geschrieben:
+>>>>>>> On 22/08/17 22:00, Arnaldo Carvalho de Melo wrote:
+>>>>>>>> Em Fri, Aug 18, 2017 at 11:43:51AM +0200, Jack Henschel escreveu=
+:
+>>>>>>>>> I'm using perf version 4.9.30 with kernel 4.9.30-2+deb9u3 on De=
+bian 9 Stretch.
+>>>
+>>>>>>> It looks like either your CPU does not support Intel PT at all, o=
+r it does not support address filtering.
+>>>
+>>>>>> My CPU (Xeon CPU E5-2680 v4) supports Intel PT (intel_pt flag is
+>>>>>> present in /proc/cpuinfo), but this is not an issue with Intel PT.=
 
-that causes glibc free list corruption. For some reason it doesn't
-trigger in valgrind, but it is visible in AS:
+>>>>>> Here are some more examples (with various syntaxes):
+>>>
+>>>>> I think that is Broadwell which doesn't have address filtering.
+>>>> Indeed, it is Broadwell.
+>>> =20
+>>>>>>> Have you checked the value of /sys/bus/event_source/devices/intel=
+_pt/nr_addr_filters ?
+>>>>>> I don't have that file:
+>>>>>
+>>>>> Which definitely means address filtering is not supported.  That is=
 
-  =================================================================
-  ==32681==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000003f5c at pc 0x0000005671ef bp 0x7ffdaaac9ac0 sp 0x7ffdaaac9ab0
-  READ of size 4 at 0x603000003f5c thread T0
-    #0 0x5671ee in perf_evsel__close_fd util/evsel.c:1196
-    #1 0x56c57a in perf_evsel__close util/evsel.c:1717
-    #2 0x55ed5f in perf_evlist__close util/evlist.c:1631
-    #3 0x4647e1 in __run_perf_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:749
-    #4 0x4648e3 in run_perf_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:767
-    #5 0x46e1bc in cmd_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:2785
-    #6 0x52f83d in run_builtin /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:296
-    #7 0x52fd49 in handle_internal_command /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:348
-    #8 0x5300de in run_argv /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:392
-    #9 0x5308f3 in main /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:530
-    #10 0x7f0672d13400 in __libc_start_main (/lib64/libc.so.6+0x20400)
-    #11 0x428419 in _start (/home/ak/hle/obj-perf/perf+0x428419)
+>>>>> mentioned in the man page for 'perf record'.
+>>>
+>>>> Ok, thanks for the clarification. It is mentioned in the perf record=
 
-  0x603000003f5c is located 0 bytes to the right of 28-byte region [0x603000003f40,0x603000003f5c)
-  allocated by thread T0 here:
-    #0 0x7f0675139020 in calloc (/lib64/libasan.so.3+0xc7020)
-    #1 0x648a2d in zalloc util/util.h:23
-    #2 0x648a88 in xyarray__new util/xyarray.c:9
-    #3 0x566419 in perf_evsel__alloc_fd util/evsel.c:1039
-    #4 0x56b427 in perf_evsel__open util/evsel.c:1529
-    #5 0x56c620 in perf_evsel__open_per_thread util/evsel.c:1730
-    #6 0x461dea in create_perf_stat_counter /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:263
-    #7 0x4637d7 in __run_perf_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:600
-    #8 0x4648e3 in run_perf_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:767
-    #9 0x46e1bc in cmd_stat /home/ak/hle/linux-hle-2.6/tools/perf/builtin-stat.c:2785
-    #10 0x52f83d in run_builtin /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:296
-    #11 0x52fd49 in handle_internal_command /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:348
-    #12 0x5300de in run_argv /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:392
-    #13 0x5308f3 in main /home/ak/hle/linux-hle-2.6/tools/perf/perf.c:530
-    #14 0x7f0672d13400 in __libc_start_main (/lib64/libc.so.6+0x20400)
+>>>> man-page, but the perf error message could be a little bit more
+>>>> specific for this issue. (e.g.
+>>>> /sys/bus/event_source/devices/intel_pt/nr_addr_filters not present -=
+>
+>>>> "CPU does not support address filtering").
+>>>
+>>> Right, I'll get that into some __strerror() function. Will CC you whe=
+n
+>>> that is done.
+>>>
+>>> E.g. __strerror() function: perf_evsel__open_strerror(), that helps t=
+he
+>>> user wrt errors returned by the perf_evsel__open() function:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/t=
+ools/perf/util/evsel.c?h=3Dperf/core#n2669
+>>
+>> Hi,
+>>
+>> I just hacked together a quick patch for this, too :-)
+>>
+>> Since you are=20
+>> a) the maintainer of affected files (as I have just found out with the=
+ get_maintainer.pl script)=20
+>> and=20
+>> b) this is my first kernel patch
+>> maybe you can give me some feedback on it. I did my best to follow all=
+ kernel coding and contributing guidelines.
+>=20
+> Ok, thank you in advance.
+>=20
+> Even in these cases, its always good to CC the development mailing list=
+,
+> which in this case is linux-kernel@vger.kernel.org, because even I'm
+> being the maintainer of tools/perf/ in general there are areas where
+> other people, like Jiri Olsa, here CCed have more experience or are the=
 
-The event is allocated with cpus == 1, but freed with cpus == real number
-When the evsel close function walks the file descriptors it exceeds the
-fd xyarray boundaries and reads random memory.
+> primary authors.
+Ok, thanks for the hint. :-)
 
-v2:
+> Having said that, from a quick look, I was expecting a even more precis=
+e
+> explanation, one tied to intel PT, where that file Adrian pointed out,
+> would have its existence checked
+> (/sys/bus/event_source/devices/intel_pt/nr_addr_filters).
+I would have made the error message more explicit, but as far as I can se=
+e this does not necessarily have anything to with intel_pt (other hardwar=
+e such as Intel RTIT may provide address filtering, too):
 
-Now that xyarrays save their original dimensions we can use these to
-iterate the two dimensional fd arrays. Fix some users (close, ioctl) in
-evsel.c to use these fields directly. This allows simplifying the code
-and dropping quite a few function arguments. Adjust all callers by
-removing the unneeded arguments.
+set_filter (util/parse-events.c) calls perf_pmu__scan to find available P=
+MUs.=20
+perf_pmu__scan (util/pmu.c) is in this case (pmu =3D=3D NULL) just a wrap=
+per over pmu_read_sysfs.
+pmu_read_sysfs (util/pmu.c) in turn just reads all available entries from=
+ EVENT_SOURCE_DEVICE_PATH (/sys/bus/event_source/devices/).
 
-The actual perf event reading still uses the original values from the
-evsel list.
+=3D> Not necessarily Intel PT specific.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170811232634.30465-2-andi@firstfloor.org
-[ Fix up xy_max_[xy]() -> xyarray__max_[xy]() ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/util/evlist.c                   | 12 +++-------
- tools/perf/util/evsel.c                    | 37 ++++++++++--------------------
- tools/perf/util/evsel.h                    |  7 +++---
- 5 files changed, 20 insertions(+), 40 deletions(-)
+> Because people that know that their CPU has Intel PT, say having a
+> broadwell, like you, would maybe think that they could use hw filters,
+> when only some later chips have that feature.
+>=20
+> Adrian, is this something that started from some specific revision that=
 
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index 87265117fd7f..9cf1c35f2ad0 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -115,7 +115,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
- 
- 	perf_evsel__free_counts(evsel);
- out_close_fd:
--	perf_evsel__close_fd(evsel, 1, threads->nr);
-+	perf_evsel__close_fd(evsel);
- out_evsel_delete:
- 	perf_evsel__delete(evsel);
- out_thread_map_delete:
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index 85bb6729d303..9dc5c5d37553 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -56,7 +56,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
- 
- 	err = 0;
- out_close_fd:
--	perf_evsel__close_fd(evsel, 1, threads->nr);
-+	perf_evsel__close_fd(evsel);
- out_evsel_delete:
- 	perf_evsel__delete(evsel);
- out_thread_map_delete:
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 078b58511595..6a0d7ffbeba0 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1419,8 +1419,6 @@ int perf_evlist__apply_filters(struct perf_evlist *evlist, struct perf_evsel **e
- {
- 	struct perf_evsel *evsel;
- 	int err = 0;
--	const int ncpus = cpu_map__nr(evlist->cpus),
--		  nthreads = thread_map__nr(evlist->threads);
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->filter == NULL)
-@@ -1430,7 +1428,7 @@ int perf_evlist__apply_filters(struct perf_evlist *evlist, struct perf_evsel **e
- 		 * filters only work for tracepoint event, which doesn't have cpu limit.
- 		 * So evlist and evsel should always be same.
- 		 */
--		err = perf_evsel__apply_filter(evsel, ncpus, nthreads, evsel->filter);
-+		err = perf_evsel__apply_filter(evsel, evsel->filter);
- 		if (err) {
- 			*err_evsel = evsel;
- 			break;
-@@ -1623,13 +1621,9 @@ void perf_evlist__set_selected(struct perf_evlist *evlist,
- void perf_evlist__close(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *evsel;
--	int ncpus = cpu_map__nr(evlist->cpus);
--	int nthreads = thread_map__nr(evlist->threads);
- 
--	evlist__for_each_entry_reverse(evlist, evsel) {
--		int n = evsel->cpus ? evsel->cpus->nr : ncpus;
--		perf_evsel__close(evsel, n, nthreads);
--	}
-+	evlist__for_each_entry_reverse(evlist, evsel)
-+		perf_evsel__close(evsel);
- }
- 
- static int perf_evlist__create_syswide_maps(struct perf_evlist *evlist)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3735c9e0080d..5dfb8bc4db89 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1051,16 +1051,13 @@ static int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthread
- 	return evsel->fd != NULL ? 0 : -ENOMEM;
- }
- 
--static int perf_evsel__run_ioctl(struct perf_evsel *evsel, int ncpus, int nthreads,
-+static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 			  int ioc,  void *arg)
- {
- 	int cpu, thread;
- 
--	if (evsel->system_wide)
--		nthreads = 1;
--
--	for (cpu = 0; cpu < ncpus; cpu++) {
--		for (thread = 0; thread < nthreads; thread++) {
-+	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
-+		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 			int fd = FD(evsel, cpu, thread),
- 			    err = ioctl(fd, ioc, arg);
- 
-@@ -1072,10 +1069,9 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel, int ncpus, int nthrea
- 	return 0;
- }
- 
--int perf_evsel__apply_filter(struct perf_evsel *evsel, int ncpus, int nthreads,
--			     const char *filter)
-+int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
- {
--	return perf_evsel__run_ioctl(evsel, ncpus, nthreads,
-+	return perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_SET_FILTER,
- 				     (void *)filter);
- }
-@@ -1122,20 +1118,14 @@ int perf_evsel__append_addr_filter(struct perf_evsel *evsel, const char *filter)
- 
- int perf_evsel__enable(struct perf_evsel *evsel)
- {
--	int nthreads = thread_map__nr(evsel->threads);
--	int ncpus = cpu_map__nr(evsel->cpus);
--
--	return perf_evsel__run_ioctl(evsel, ncpus, nthreads,
-+	return perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_ENABLE,
- 				     0);
- }
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
- {
--	int nthreads = thread_map__nr(evsel->threads);
--	int ncpus = cpu_map__nr(evsel->cpus);
--
--	return perf_evsel__run_ioctl(evsel, ncpus, nthreads,
-+	return perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_DISABLE,
- 				     0);
- }
-@@ -1185,15 +1175,12 @@ static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
- 	}
- }
- 
--void perf_evsel__close_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
-+void perf_evsel__close_fd(struct perf_evsel *evsel)
- {
- 	int cpu, thread;
- 
--	if (evsel->system_wide)
--		nthreads = 1;
--
--	for (cpu = 0; cpu < ncpus; cpu++)
--		for (thread = 0; thread < nthreads; ++thread) {
-+	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
-+		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
- 			close(FD(evsel, cpu, thread));
- 			FD(evsel, cpu, thread) = -1;
- 		}
-@@ -1854,12 +1841,12 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 	return err;
- }
- 
--void perf_evsel__close(struct perf_evsel *evsel, int ncpus, int nthreads)
-+void perf_evsel__close(struct perf_evsel *evsel)
- {
- 	if (evsel->fd == NULL)
- 		return;
- 
--	perf_evsel__close_fd(evsel, ncpus, nthreads);
-+	perf_evsel__close_fd(evsel);
- 	perf_evsel__free_fd(evsel);
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index de03c18daaf0..351d3b2d8887 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -226,7 +226,7 @@ const char *perf_evsel__group_name(struct perf_evsel *evsel);
- int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size);
- 
- int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
--void perf_evsel__close_fd(struct perf_evsel *evsel, int ncpus, int nthreads);
-+void perf_evsel__close_fd(struct perf_evsel *evsel);
- 
- void __perf_evsel__set_sample_bit(struct perf_evsel *evsel,
- 				  enum perf_event_sample_format bit);
-@@ -246,8 +246,7 @@ int perf_evsel__set_filter(struct perf_evsel *evsel, const char *filter);
- int perf_evsel__append_tp_filter(struct perf_evsel *evsel, const char *filter);
- int perf_evsel__append_addr_filter(struct perf_evsel *evsel,
- 				   const char *filter);
--int perf_evsel__apply_filter(struct perf_evsel *evsel, int ncpus, int nthreads,
--			     const char *filter);
-+int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
- int perf_evsel__enable(struct perf_evsel *evsel);
- int perf_evsel__disable(struct perf_evsel *evsel);
- 
-@@ -257,7 +256,7 @@ int perf_evsel__open_per_thread(struct perf_evsel *evsel,
- 				struct thread_map *threads);
- int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 		     struct thread_map *threads);
--void perf_evsel__close(struct perf_evsel *evsel, int ncpus, int nthreads);
-+void perf_evsel__close(struct perf_evsel *evsel);
- 
- struct perf_sample;
- 
--- 
-2.13.5
+> we could point out in the message?
+
+I spent yesterdays afternoon digging through the Intel Webpage to find ou=
+t which chips / micro-architecture supports which feature, but so far the=
+ only real resource I have found is Andi Kleen's blog post on Intel PT:
+
+CPU 	                                    Support
+Broadwell (5th generation Core, Xeon v4)    More overhead. No fine graine=
+d timing.
+Skylake (6th generation Core, Xeon v5) 	    Fine grained timing. Address =
+filtering.
+Goldmont (Apollo Lake, Denverton) 	    Fine grained timing. Address filte=
+ring.
+
+http://halobates.de/blog/p/410
+
+Greetings
+Jack
+
+
+> - Arnaldo
+> =20
+>> (see attached)
+>>
+>> Greetings
+>> Jack
+>=20
+>> From 3143fb373b16eb6e8f674cca7127801e2809e4c0 Mon Sep 17 00:00:00 2001=
+
+>> From: Jack Henschel <jackdev@mailbox.org>
+>> Date: Wed, 23 Aug 2017 15:20:40 +0200
+>> Subject: [PATCH] perf events parse: Improve error message for address =
+filters
+>>
+>> This patch improves the error message of the perf events parser
+>> when the hardware does not support address filters.
+>>
+>> Previously, the perf returned the following error:
+>>> --filter option should follow a -e tracepoint or HW tracer option
+>> This implies there is some syntax error present in the command line,
+>> which is not true. Rather, notify the user that the CPU does not have
+>> support for this feature.
+>>
+>> Signed-off-by: Jack Henschel <jackdev@mailbox.org>
+>> ---
+>>  tools/perf/util/parse-events.c | 20 ++++++++++----------
+>>  1 file changed, 10 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-ev=
+ents.c
+>> index 01e779b91c8e..7f9e3906fb81 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1833,8 +1833,11 @@ static int set_filter(struct perf_evsel *evsel,=
+ const void *arg)
+>>  	int nr_addr_filters =3D 0;
+>>  	struct perf_pmu *pmu =3D NULL;
+>> =20
+>> -	if (evsel =3D=3D NULL)
+>> -		goto err;
+>> +	if (evsel =3D=3D NULL) {
+>> +		fprintf(stderr,
+>> +			"--filter option should follow a -e tracepoint or HW tracer option=
+\n");
+>> +		return -1;
+>> +	}
+>> =20
+>>  	if (evsel->attr.type =3D=3D PERF_TYPE_TRACEPOINT) {
+>>  		if (perf_evsel__append_tp_filter(evsel, str) < 0) {
+>> @@ -1856,8 +1859,11 @@ static int set_filter(struct perf_evsel *evsel,=
+ const void *arg)
+>>  		perf_pmu__scan_file(pmu, "nr_addr_filters",
+>>  				    "%d", &nr_addr_filters);
+>> =20
+>> -	if (!nr_addr_filters)
+>> -		goto err;
+>> +	if (!nr_addr_filters) {
+>> +		fprintf(stderr,
+>> +			"This CPU does not support address filtering\n");
+>> +		return -1;
+>> +	}
+>> =20
+>>  	if (perf_evsel__append_addr_filter(evsel, str) < 0) {
+>>  		fprintf(stderr,
+>> @@ -1866,12 +1872,6 @@ static int set_filter(struct perf_evsel *evsel,=
+ const void *arg)
+>>  	}
+>> =20
+>>  	return 0;
+>> -
+>> -err:
+>> -	fprintf(stderr,
+>> -		"--filter option should follow a -e tracepoint or HW tracer option\=
+n");
+>> -
+>> -	return -1;
+>>  }
+>> =20
+>>  int parse_filter(const struct option *opt, const char *str,
+>> --=20
+>> 2.14.1
+>>
+>=20
+>=20
+>=20
+>=20
+
+
+--hRtVEq7MbHpB2qLoliJn9CNS1IXdhd7xh--
+
+--R1LvGn44KSTXRpbVEbX9IVl5mid6mffl1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJIBAEBCAAyFiEE5SNfW5QVort2C78YV5HQ+s4K8DwFAlmekCgUHGphY2tkZXZA
+bWFpbGJveC5vcmcACgkQV5HQ+s4K8DxxxA/7BuDuIHZm+KSx3qu86RFQZ8h54GAb
+kQs0DBG8zojdMzNeDZxGoIQIzWfwg+X0GvshI00lbsebryr+gu4myYQS/fvEOlo2
+O8mhUIQm6cNoMW2og08rSnMC1FCPJmiUOeiHZIaVvbB0K7YzgadSDX8Zwi1KFjou
+Iorkt+ykWA4zNAlNyYISoiEP58EsBzy9XsaIPeTMgpfFPePkh1sS2XxLpy6Ko6iE
+QZdQn/V30JlcBFNL6hDMBgngT2YzqTKgAjwmqymKZJDRLEF1PvElJqbwG6Hu57/+
+r+VC9E78OIXnoYd/2+AxFoyX5UDJW/Anb1LwOtdSaYo6f9x97QJCZn1LsYu4ISlz
+PJDOewJHcxd3s0yNPPvx2u3iUlX6yprWx19BlbTY+A1I9j7PkhV/gr1hhUVRtzJx
+jSg4MhNpaUJhJXInSWher0EafDJkjISDKtcfHOxNRFa+2gm1EHGe6amnlv5skke4
+uOgrxl+gZbwoOpykUGabrCk6aY+WzdwWt7J/n6Ymb0dhvlJffrMvo1trKyDY/5ac
+OSQNCaM49/0l54TEYgN1kTyVBqtieLI+HrliiluJ5Jxx8o9vvpKyg6kcdtIYSrVI
+OZ8QhewKStlMvQNqBFLJztFfMDNajvHX43iCZLaX8vpFJBPovTJZaAQgWZxYa0Ix
+lKjCIx8EK3uEWcI=
+=aMoT
+-----END PGP SIGNATURE-----
+
+--R1LvGn44KSTXRpbVEbX9IVl5mid6mffl1--
