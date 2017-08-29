@@ -1,111 +1,76 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/18] perf tools: Robustify detection of clang binary
-Date: Tue, 29 Aug 2017 16:42:49 -0300
-Message-ID: <20170829194254.1338-14-acme@kernel.org>
+Subject: [PATCH 17/18] perf probe: Fix kprobe blacklist checking condition
+Date: Tue, 29 Aug 2017 16:42:53 -0300
+Message-ID: <20170829194254.1338-18-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Carrillo-Cisneros <davidcc@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Paul Turner <pjt@google.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Li Bin <huawei.libin@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, zhangmengting@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: David Carrillo-Cisneros <davidcc@google.com>
+From: Li Bin <huawei.libin@huawei.com>
 
-Prior to this patch, make scripts tested for CLANG with ifeq ($(CC),
-clang), failing to detect CLANG binaries with different names. Fix it by
-testing for the existence of __clang__ macro in the list of compiler
-defined macros.
+The commit 9aaf5a5f479b ("perf probe: Check kprobes blacklist when
+adding new events"), 'perf probe' supports checking the blacklist of the
+fuctions which can not be probed.  But the checking condition is wrong,
+that the end_addr of the symbol which is the start_addr of the next
+symbol can't be included.
 
-Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170827075442.108534-5-davidcc@google.com
+Committer notes:
+
+IOW make it match its kernel counterpart in kernel/kprobes.c:
+
+  bool within_kprobe_blacklist(unsigned long addr)
+
+Each entry have as its end address not its end address, but the first
+address _outside_ that symbol, which for related functions, is the first
+address of the next symbol, like these from kernel/trace/trace_probe.c:
+
+0xffffffffbd198df0-0xffffffffbd198e40	print_type_u8
+0xffffffffbd198e40-0xffffffffbd198e90	print_type_u16
+0xffffffffbd198e90-0xffffffffbd198ee0	print_type_u32
+0xffffffffbd198ee0-0xffffffffbd198f30	print_type_u64
+0xffffffffbd198f30-0xffffffffbd198f80	print_type_s8
+0xffffffffbd198f80-0xffffffffbd198fd0	print_type_s16
+0xffffffffbd198fd0-0xffffffffbd199020	print_type_s32
+0xffffffffbd199020-0xffffffffbd199070	print_type_s64
+0xffffffffbd199070-0xffffffffbd1990c0	print_type_x8
+0xffffffffbd1990c0-0xffffffffbd199110	print_type_x16
+0xffffffffbd199110-0xffffffffbd199160	print_type_x32
+0xffffffffbd199160-0xffffffffbd1991b0	print_type_x64
+
+But not always:
+
+0xffffffffbd1997b0-0xffffffffbd1997c0	fetch_kernel_stack_address (kernel/trace/trace_probe.c)
+0xffffffffbd1c57f0-0xffffffffbd1c58b0	__context_tracking_enter   (kernel/context_tracking.c)
+
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: zhangmengting@huawei.com
+Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
+Link: http://lkml.kernel.org/r/1504011443-7269-1-git-send-email-huawei.libin@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/api/Makefile                 | 2 +-
- tools/lib/subcmd/Makefile              | 2 +-
- tools/perf/Makefile.config             | 4 ++--
- tools/perf/util/intel-pt-decoder/Build | 2 +-
- tools/scripts/Makefile.include         | 4 +++-
- 5 files changed, 8 insertions(+), 6 deletions(-)
+ tools/perf/util/probe-event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index 2538675731c7..4563ba7ede6f 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
-@@ -19,7 +19,7 @@ LIBFILE = $(OUTPUT)libapi.a
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
- CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index d7cd1142f4c6..b7aaf9b2294d 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2395,7 +2395,7 @@ kprobe_blacklist__find_by_address(struct list_head *blacklist,
+ 	struct kprobe_blacklist_node *node;
  
--ifeq ($(CC), clang)
-+ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
- else
-   CFLAGS += -O6
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index 3d1c3b5b5150..7e9f03c97e4c 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -21,7 +21,7 @@ LIBFILE = $(OUTPUT)libsubcmd.a
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
- CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
- 
--ifeq ($(CC), clang)
-+ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
- else
-   CFLAGS += -O6
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 6a64c6bbd9a5..63f534a0902f 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -148,7 +148,7 @@ ifndef DEBUG
- endif
- 
- ifeq ($(DEBUG),0)
--ifeq ($(CC), clang)
-+ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
- else
-   CFLAGS += -O6
-@@ -184,7 +184,7 @@ ifdef PYTHON_CONFIG
-   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
-   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
-   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
--  ifeq ($(CC), clang)
-+  ifeq ($(CC_NO_CLANG), 1)
-     PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
-   endif
-   FLAGS_PYTHON_EMBED := $(PYTHON_EMBED_CCOPTS) $(PYTHON_EMBED_LDOPTS)
-diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
-index 7aca5d6d7e1f..10e0814bb8d2 100644
---- a/tools/perf/util/intel-pt-decoder/Build
-+++ b/tools/perf/util/intel-pt-decoder/Build
-@@ -25,6 +25,6 @@ $(OUTPUT)util/intel-pt-decoder/intel-pt-insn-decoder.o: util/intel-pt-decoder/in
- 
- CFLAGS_intel-pt-insn-decoder.o += -I$(OUTPUT)util/intel-pt-decoder
- 
--ifneq ($(CC), clang)
-+ifeq ($(CC_NO_CLANG), 1)
-   CFLAGS_intel-pt-insn-decoder.o += -Wno-override-init
- endif
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index ccad8ce925e4..1e8b6116ba3c 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -39,7 +39,9 @@ EXTRA_WARNINGS += -Wundef
- EXTRA_WARNINGS += -Wwrite-strings
- EXTRA_WARNINGS += -Wformat
- 
--ifneq ($(CC), clang)
-+CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
-+
-+ifeq ($(CC_NO_CLANG), 1)
- EXTRA_WARNINGS += -Wstrict-aliasing=3
- endif
+ 	list_for_each_entry(node, blacklist, list) {
+-		if (node->start <= address && address <= node->end)
++		if (node->start <= address && address < node->end)
+ 			return node;
+ 	}
  
 -- 
 2.13.5
