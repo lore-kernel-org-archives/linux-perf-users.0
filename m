@@ -1,74 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/18] perf c2c: Fix remote HITM detection for Skylake
-Date: Tue, 29 Aug 2017 16:42:39 -0300
-Message-ID: <20170829194254.1338-4-acme@kernel.org>
+Subject: [PATCH 01/18] perf stat: Fix path to PMU formats in documentation
+Date: Tue, 29 Aug 2017 16:42:37 -0300
+Message-ID: <20170829194254.1338-2-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jack Henschel <jackdev@mailbox.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, trivial@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Jack Henschel <jackdev@mailbox.org>
 
-Skylake introduced new mem_remote bit in union perf_mem_data_src [1].
-It applies to any other memory level to express Remote unknown level, as
-is reported by Skylake.
+As defined in tools/perf/util/pmu.c, the EVENT_SOURCE_DEVICE_PATH is
+/sys/bus/event_source/devices/ (no traling 's' in event_source)
 
-Adding this extra check to c2c_decode_stats to properly decode remote
-HITMs on Skylake.
+This patch corrects the path in the perf stat documentation
 
-[1] http://lkml.kernel.org/r/20170816222156.19953-4-andi@firstfloor.org
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Jack Henschel <jackdev@mailbox.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170824085732.28481-1-jolsa@kernel.org
+Cc: Jack Henschel <jackdev@mailbox.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: trivial@kernel.org
+Link: http://lkml.kernel.org/r/20170824132022.10934-1-jackdev@mailbox.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mem-events.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-stat.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index ced4f3fff035..28afe5fa84d6 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -316,6 +316,11 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
- 	u64 lvl    = data_src->mem_lvl;
- 	u64 snoop  = data_src->mem_snoop;
- 	u64 lock   = data_src->mem_lock;
-+	/*
-+	 * Skylake might report unknown remote level via this
-+	 * bit, consider it when evaluating remote HITMs.
-+	 */
-+	bool mrem  = data_src->mem_remote;
- 	int err = 0;
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 698076313606..c37d61682dfb 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -41,13 +41,13 @@ report::
  
- #define HITM_INC(__f)		\
-@@ -361,7 +366,8 @@ do {				\
- 			}
+ 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
+ 	  param1 and param2 are defined as formats for the PMU in
+-	  /sys/bus/event_sources/devices/<pmu>/format/*
++	  /sys/bus/event_source/devices/<pmu>/format/*
  
- 			if ((lvl & P(LVL, REM_RAM1)) ||
--			    (lvl & P(LVL, REM_RAM2))) {
-+			    (lvl & P(LVL, REM_RAM2)) ||
-+			     mrem) {
- 				stats->rmt_dram++;
- 				if (snoop & P(SNOOP, HIT))
- 					stats->ld_shared++;
-@@ -371,7 +377,8 @@ do {				\
- 		}
+ 	- a symbolically formed event like 'pmu/config=M,config1=N,config2=K/'
+ 	  where M, N, K are numbers (in decimal, hex, octal format).
+ 	  Acceptable values for each of 'config', 'config1' and 'config2'
+ 	  parameters are defined by corresponding entries in
+-	  /sys/bus/event_sources/devices/<pmu>/format/*
++	  /sys/bus/event_source/devices/<pmu>/format/*
  
- 		if ((lvl & P(LVL, REM_CCE1)) ||
--		    (lvl & P(LVL, REM_CCE2))) {
-+		    (lvl & P(LVL, REM_CCE2)) ||
-+		     mrem) {
- 			if (snoop & P(SNOOP, HIT))
- 				stats->rmt_hit++;
- 			else if (snoop & P(SNOOP, HITM))
+ -i::
+ --no-inherit::
 -- 
 2.13.5
