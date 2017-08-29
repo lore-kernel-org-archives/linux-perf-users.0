@@ -1,76 +1,110 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/18] perf probe: Fix kprobe blacklist checking condition
-Date: Tue, 29 Aug 2017 16:42:53 -0300
-Message-ID: <20170829194254.1338-18-acme@kernel.org>
+Subject: [PATCH 15/18] tools headers: Sync cpu features kernel ABI headers with tooling headers
+Date: Tue, 29 Aug 2017 16:42:51 -0300
+Message-ID: <20170829194254.1338-16-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Li Bin <huawei.libin@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, zhangmengting@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, David Ahern <dsahern@gmail.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Li Bin <huawei.libin@huawei.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The commit 9aaf5a5f479b ("perf probe: Check kprobes blacklist when
-adding new events"), 'perf probe' supports checking the blacklist of the
-fuctions which can not be probed.  But the checking condition is wrong,
-that the end_addr of the symbol which is the start_addr of the next
-symbol can't be included.
+These changes made the tools/arch/x86/include/ headers to drift from its
+kernel origins:
 
-Committer notes:
+  910448bbed06 ("perf/x86/amd/uncore: Rename cpufeatures macro for cache counters")
+  5442c2699552 ("x86/cpufeature, kvm/svm: Rename (shorten) the new "virtualized VMSAVE/VMLOAD" CPUID flag")
+  cba4671af755 ("x86/mm: Disable PCID on 32-bit kernels")
 
-IOW make it match its kernel counterpart in kernel/kprobes.c:
+Which was detected while building perf:
 
-  bool within_kprobe_blacklist(unsigned long addr)
+  make: Entering directory '/home/acme/git/linux/tools/perf'
+    BUILD:   Doing 'make -j4' parallel build
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/disabled-features.h' differs from latest version at 'arch/x86/include/asm/disabled-features.h'
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
 
-Each entry have as its end address not its end address, but the first
-address _outside_ that symbol, which for related functions, is the first
-address of the next symbol, like these from kernel/trace/trace_probe.c:
+This sync causes just these perf object files to be rebuilt:
 
-0xffffffffbd198df0-0xffffffffbd198e40	print_type_u8
-0xffffffffbd198e40-0xffffffffbd198e90	print_type_u16
-0xffffffffbd198e90-0xffffffffbd198ee0	print_type_u32
-0xffffffffbd198ee0-0xffffffffbd198f30	print_type_u64
-0xffffffffbd198f30-0xffffffffbd198f80	print_type_s8
-0xffffffffbd198f80-0xffffffffbd198fd0	print_type_s16
-0xffffffffbd198fd0-0xffffffffbd199020	print_type_s32
-0xffffffffbd199020-0xffffffffbd199070	print_type_s64
-0xffffffffbd199070-0xffffffffbd1990c0	print_type_x8
-0xffffffffbd1990c0-0xffffffffbd199110	print_type_x16
-0xffffffffbd199110-0xffffffffbd199160	print_type_x32
-0xffffffffbd199160-0xffffffffbd1991b0	print_type_x64
+  CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
+  CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
 
-But not always:
+And the changes in the above changesets don't entail any need for change
+in the above 'perf bench' files.
 
-0xffffffffbd1997b0-0xffffffffbd1997c0	fetch_kernel_stack_address (kernel/trace/trace_probe.c)
-0xffffffffbd1c57f0-0xffffffffbd1c58b0	__context_tracking_enter   (kernel/context_tracking.c)
-
-Signed-off-by: Li Bin <huawei.libin@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Cc: zhangmengting@huawei.com
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Link: http://lkml.kernel.org/r/1504011443-7269-1-git-send-email-huawei.libin@huawei.com
+Link: http://lkml.kernel.org/n/tip-456aafouj911a4x4zwt8stkm@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/arch/x86/include/asm/cpufeatures.h       | 5 ++---
+ tools/arch/x86/include/asm/disabled-features.h | 4 +---
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index d7cd1142f4c6..b7aaf9b2294d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2395,7 +2395,7 @@ kprobe_blacklist__find_by_address(struct list_head *blacklist,
- 	struct kprobe_blacklist_node *node;
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 14f0f2913364..8ea315a11fe0 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -177,7 +177,7 @@
+ #define X86_FEATURE_PERFCTR_NB  ( 6*32+24) /* NB performance counter extensions */
+ #define X86_FEATURE_BPEXT	(6*32+26) /* data breakpoint extension */
+ #define X86_FEATURE_PTSC	( 6*32+27) /* performance time-stamp counter */
+-#define X86_FEATURE_PERFCTR_L2	( 6*32+28) /* L2 performance counter extensions */
++#define X86_FEATURE_PERFCTR_LLC	( 6*32+28) /* Last Level Cache performance counter extensions */
+ #define X86_FEATURE_MWAITX	( 6*32+29) /* MWAIT extension (MONITORX/MWAITX) */
  
- 	list_for_each_entry(node, blacklist, list) {
--		if (node->start <= address && address <= node->end)
-+		if (node->start <= address && address < node->end)
- 			return node;
- 	}
+ /*
+@@ -196,7 +196,6 @@
  
+ #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
+ #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
+-#define X86_FEATURE_SME		( 7*32+10) /* AMD Secure Memory Encryption */
+ 
+ #define X86_FEATURE_INTEL_PPIN	( 7*32+14) /* Intel Processor Inventory Number */
+ #define X86_FEATURE_INTEL_PT	( 7*32+15) /* Intel Processor Trace */
+@@ -287,7 +286,7 @@
+ #define X86_FEATURE_PAUSEFILTER (15*32+10) /* filtered pause intercept */
+ #define X86_FEATURE_PFTHRESHOLD (15*32+12) /* pause filter threshold */
+ #define X86_FEATURE_AVIC	(15*32+13) /* Virtual Interrupt Controller */
+-#define X86_FEATURE_VIRTUAL_VMLOAD_VMSAVE (15*32+15) /* Virtual VMLOAD VMSAVE */
++#define X86_FEATURE_V_VMSAVE_VMLOAD (15*32+15) /* Virtual VMSAVE VMLOAD */
+ 
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (ecx), word 16 */
+ #define X86_FEATURE_AVX512VBMI  (16*32+ 1) /* AVX512 Vector Bit Manipulation instructions*/
+diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+index c10c9128f54e..5dff775af7cd 100644
+--- a/tools/arch/x86/include/asm/disabled-features.h
++++ b/tools/arch/x86/include/asm/disabled-features.h
+@@ -21,13 +21,11 @@
+ # define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
+ # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
+ # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
+-# define DISABLE_PCID		0
+ #else
+ # define DISABLE_VME		0
+ # define DISABLE_K6_MTRR	0
+ # define DISABLE_CYRIX_ARR	0
+ # define DISABLE_CENTAUR_MCR	0
+-# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
+ #endif /* CONFIG_X86_64 */
+ 
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+@@ -51,7 +49,7 @@
+ #define DISABLED_MASK1	0
+ #define DISABLED_MASK2	0
+ #define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
+-#define DISABLED_MASK4	(DISABLE_PCID)
++#define DISABLED_MASK4	0
+ #define DISABLED_MASK5	0
+ #define DISABLED_MASK6	0
+ #define DISABLED_MASK7	0
 -- 
 2.13.5
