@@ -1,59 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/18] perf tools: Fix static build with newer toolchains
-Date: Tue, 29 Aug 2017 16:42:38 -0300
-Message-ID: <20170829194254.1338-3-acme@kernel.org>
+Subject: [PATCH 03/18] perf c2c: Fix remote HITM detection for Skylake
+Date: Tue, 29 Aug 2017 16:42:39 -0300
+Message-ID: <20170829194254.1338-4-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-We can't pass --dynamic-list list into static build anymore, because
-compilers starts to scream about that. Fedora 26 started to fail build
-with following error:
+Skylake introduced new mem_remote bit in union perf_mem_data_src [1].
+It applies to any other memory level to express Remote unknown level, as
+is reported by Skylake.
 
-  $ make LDFLAGS=-static
-  ...
-  /usr/bin/ld: dynamic STT_GNU_IFUNC symbol `strcmp' with pointer equality in `/usr/lib/gcc/x86_64-redhat-linux/7/../../../../lib64/libc.a(strcmp.o
-+)' can not be used when making an executable; recompile with -fPIE and relink with -pie
+Adding this extra check to c2c_decode_stats to properly decode remote
+HITMs on Skylake.
 
-There's no sense for --dynamic-list in static build, because there's no
-.dynsym table in static binary. Consequently the traceevent plugins have
-never worked with static build, but it was quietly passed by.
+[1] http://lkml.kernel.org/r/20170816222156.19953-4-andi@firstfloor.org
 
-To fix this in future I think we should add support to compile plugins
-within the perf binary directly for static build.
-
-Reported-and-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/n/tip-jeg6a7ff9j9hlqn8k4gllzvv@git.kernel.org
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Joe Mario <jmario@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: http://lkml.kernel.org/r/20170824085732.28481-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/mem-events.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 70ddc65f898d..a700a079a218 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -279,7 +279,13 @@ LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
- export LIBTRACEEVENT
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index ced4f3fff035..28afe5fa84d6 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -316,6 +316,11 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+ 	u64 lvl    = data_src->mem_lvl;
+ 	u64 snoop  = data_src->mem_snoop;
+ 	u64 lock   = data_src->mem_lock;
++	/*
++	 * Skylake might report unknown remote level via this
++	 * bit, consider it when evaluating remote HITMs.
++	 */
++	bool mrem  = data_src->mem_remote;
+ 	int err = 0;
  
- LIBTRACEEVENT_DYNAMIC_LIST = $(TE_PATH)libtraceevent-dynamic-list
--LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
-+
-+#
-+# The static build has no dynsym table, so this does not work for
-+# static build. Looks like linker starts to scream about that now
-+# (in Fedora 26) so we need to switch it off for static build.
-+DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
-+LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
+ #define HITM_INC(__f)		\
+@@ -361,7 +366,8 @@ do {				\
+ 			}
  
- LIBAPI = $(API_PATH)libapi.a
- export LIBAPI
+ 			if ((lvl & P(LVL, REM_RAM1)) ||
+-			    (lvl & P(LVL, REM_RAM2))) {
++			    (lvl & P(LVL, REM_RAM2)) ||
++			     mrem) {
+ 				stats->rmt_dram++;
+ 				if (snoop & P(SNOOP, HIT))
+ 					stats->ld_shared++;
+@@ -371,7 +377,8 @@ do {				\
+ 		}
+ 
+ 		if ((lvl & P(LVL, REM_CCE1)) ||
+-		    (lvl & P(LVL, REM_CCE2))) {
++		    (lvl & P(LVL, REM_CCE2)) ||
++		     mrem) {
+ 			if (snoop & P(SNOOP, HIT))
+ 				stats->rmt_hit++;
+ 			else if (snoop & P(SNOOP, HITM))
 -- 
 2.13.5
