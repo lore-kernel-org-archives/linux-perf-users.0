@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/18] perf values: Fix thread index bug
-Date: Tue, 29 Aug 2017 16:42:42 -0300
-Message-ID: <20170829194254.1338-7-acme@kernel.org>
+Subject: [PATCH 08/18] perf values: Zero value buffers
+Date: Tue, 29 Aug 2017 16:42:44 -0300
+Message-ID: <20170829194254.1338-9-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
@@ -12,8 +12,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-We are taking wrong index (+1) for first thread, which leaves thread
-with index 0 unused and uninitialized.
+We need to make sure the array of value pointers are zero initialized,
+because we use them in realloc later on and uninitialized non zero value
+will cause allocation error and aborted execution.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -22,33 +23,51 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170824162737.7813-7-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170824162737.7813-9-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/values.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/values.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/values.c b/tools/perf/util/values.c
-index 5de2e15e2eda..9ac36bf2c438 100644
+index 2c4af02f08cd..3b56aeaa8cbb 100644
 --- a/tools/perf/util/values.c
 +++ b/tools/perf/util/values.c
-@@ -98,7 +98,7 @@ static int perf_read_values__findnew_thread(struct perf_read_values *values,
- 			return i;
+@@ -12,7 +12,7 @@ int perf_read_values_init(struct perf_read_values *values)
+ 	values->threads_max = 16;
+ 	values->pid = malloc(values->threads_max * sizeof(*values->pid));
+ 	values->tid = malloc(values->threads_max * sizeof(*values->tid));
+-	values->value = malloc(values->threads_max * sizeof(*values->value));
++	values->value = zalloc(values->threads_max * sizeof(*values->value));
+ 	if (!values->pid || !values->tid || !values->value) {
+ 		pr_debug("failed to allocate read_values threads arrays");
+ 		goto out_free_pid;
+@@ -99,7 +99,8 @@ static int perf_read_values__findnew_thread(struct perf_read_values *values,
  	}
  
--	i = values->threads + 1;
-+	i = values->threads;
- 	values->value[i] = malloc(values->counters_max * sizeof(**values->value));
+ 	i = values->threads;
+-	values->value[i] = malloc(values->counters_max * sizeof(**values->value));
++
++	values->value[i] = zalloc(values->counters_max * sizeof(**values->value));
  	if (!values->value[i]) {
  		pr_debug("failed to allocate read_values counters array");
-@@ -106,7 +106,7 @@ static int perf_read_values__findnew_thread(struct perf_read_values *values,
- 	}
- 	values->pid[i] = pid;
- 	values->tid[i] = tid;
--	values->threads = i;
-+	values->threads = i + 1;
+ 		return -ENOMEM;
+@@ -130,12 +131,16 @@ static int perf_read_values__enlarge_counters(struct perf_read_values *values)
  
- 	return i;
- }
+ 	for (i = 0; i < values->threads; i++) {
+ 		u64 *value = realloc(values->value[i], counters_max * sizeof(**values->value));
++		int j;
+ 
+ 		if (!value) {
+ 			pr_debug("failed to enlarge read_values ->values array");
+ 			goto out_free_name;
+ 		}
+ 
++		for (j = values->counters_max; j < counters_max; j++)
++			value[j] = 0;
++
+ 		values->value[i] = value;
+ 	}
+ 
 -- 
 2.13.5
