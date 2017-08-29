@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/18] tools lib: Allow external definition of CC, AR and LD
-Date: Tue, 29 Aug 2017 16:42:48 -0300
-Message-ID: <20170829194254.1338-13-acme@kernel.org>
+Subject: [PATCH 10/18] tools build tests: Don't hardcode gcc name
+Date: Tue, 29 Aug 2017 16:42:46 -0300
+Message-ID: <20170829194254.1338-11-acme@kernel.org>
 References: <20170829194254.1338-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170829194254.1338-1-acme@kernel.org>
@@ -12,35 +12,31 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: David Carrillo-Cisneros <davidcc@google.com>
 
-Use already defined values for CC, AR and LD when available.
+Use $(CC) instead of harcoded gcc binary name.
 
 Signed-off-by: David Carrillo-Cisneros <davidcc@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Paul Turner <pjt@google.com>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20170827075442.108534-4-davidcc@google.com
+Link: http://lkml.kernel.org/r/20170827075442.108534-2-davidcc@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/api/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/build/tests/ex/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index eb6e0b36bfc1..2538675731c7 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
-@@ -8,9 +8,9 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- #$(info Determined 'srctree' to be $(srctree))
- endif
+diff --git a/tools/build/tests/ex/Makefile b/tools/build/tests/ex/Makefile
+index c50d5782ad5a..027d6c8a58a7 100644
+--- a/tools/build/tests/ex/Makefile
++++ b/tools/build/tests/ex/Makefile
+@@ -8,7 +8,7 @@ ex:
+ include $(srctree)/tools/build/Makefile.include
  
--CC = $(CROSS_COMPILE)gcc
--AR = $(CROSS_COMPILE)ar
--LD = $(CROSS_COMPILE)ld
-+CC ?= $(CROSS_COMPILE)gcc
-+AR ?= $(CROSS_COMPILE)ar
-+LD ?= $(CROSS_COMPILE)ld
+ ex: ex-in.o libex-in.o
+-	gcc -o $@ $^
++	$(CC) -o $@ $^
  
- MAKEFLAGS += --no-print-directory
- 
+ ex.%: fixdep FORCE
+ 	make -f $(srctree)/tools/build/Makefile.build dir=. $@
 -- 
 2.13.5
