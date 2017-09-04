@@ -1,67 +1,262 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: broken cycle counts from perf record in frequency mode [Was: Re: deducing CPU clock rate over time from cycle samples]
-Date: Mon, 04 Sep 2017 16:35:15 +0200
-Message-ID: <1788258.9pJ1GNok8V@milian-kdab2>
-References: <2900948.aeNJFYEL58@agathebauer> <3838997.nyT3JFTsVA@agathebauer> <87d17al60b.fsf@firstfloor.org>
+Subject: Re: Callgraphs split at the kernel boundary
+Date: Mon, 04 Sep 2017 18:26:21 +0200
+Message-ID: <15526878.WJkr8vPO1G@milian-kdab2>
+References: <20170903094913.ddk52e4zd44zz3vn@kazak>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1739540.gksvIPCoqn"; micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart250773195.flOSr001Tj"; micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:56064 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:45932 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753628AbdIDOfY (ORCPT
+        id S1753847AbdIDQ02 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2017 10:35:24 -0400
-In-Reply-To: <87d17al60b.fsf@firstfloor.org>
+        Mon, 4 Sep 2017 12:26:28 -0400
+In-Reply-To: <20170903094913.ddk52e4zd44zz3vn@kazak>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, peterz@infradead.org
+To: Ralph =?ISO-8859-1?Q?B=F6hme?= <slow@samba.org>
+Cc: linux-perf-users@vger.kernel.org
 
---nextPart1739540.gksvIPCoqn
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+--nextPart250773195.flOSr001Tj
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On Friday, September 1, 2017 6:48:20 PM CEST Andi Kleen wrote:
-> Milian Wolff <milian.wolff@kdab.com> writes:
-> > do you have any input on this issue? I really wonder why noone else is
-> > complaining about the frequency mode being unreliable or right out broken
-> > in many situations. Since it's the default mode, I think this urgently
-> > needs to be investigated - it makes perf unusable for a large group of
-> > users who want to use it but don't know about `-c N` as a workaround...
-> 
-> It's likely related due to the frequency algorithm starting with 0.  So
-> at the beginning the samples are very fast (like 1 cycle) and likely
-> something breaks down in perf or your frequency calculation for very
-> short samples.
-> 
-> Also for inherited events this happens on every fork. If you
-> trace fork events too you'll likely see it correlated.
-> If you use -a and disable inheritance (no-inherit=1) it will
-> also likely be only at the beginning.
-> 
-> However I fail to see what it would actually break. The frequency
-> just needs to be roughly accurate over the whole measurement
-> period to get good sampling coverage. But there's nothing
-> in the profile that uses the actual frequency. It's just a means
-> to get samples, not a measurement by itself.
+On Sunday, September 3, 2017 11:49:13 AM CEST Ralph B=F6hme wrote:
+> Hi!
+>=20
+> I'm noticing split callgraphs at the kernel boundary when recording
+> callgraphs with perf record. This happens with both DWARF and FP, eg
+>=20
+> perf record -g --call-graph fp -p 3293, or
+> perf record -g --call-graph dwarf -p 3293
+>=20
+> Here are two examples, sys_fcntl in perf script output:
+>=20
+> DWARF:
+>=20
+> smbd  3293 48551.772583:     250000 cpu-clock:
+>             7fff8183eb75 _cond_resched ([kernel.kallsyms])
+>             7fff81264bfb locks_alloc_lock ([kernel.kallsyms])
+>             7fff812680a6 fcntl_setlk ([kernel.kallsyms])
+>             7fff81224182 sys_fcntl ([kernel.kallsyms])
+>             7fff81842a72 entry_SYSCALL_64_fastpath ([kernel.kallsyms])
+>             7f9aca651687 __libc_fcntl
+> (/lib/x86_64-linux-gnu/libpthread-2.23.so) 7f9ac407d032 fcntl_lock
+> (/home/slow/git/samba/scratch/bin/default/lib/tdb/libtdb.so)
+>=20
+> FP:
+>=20
+> smbd  3293 48969.378250:     250000 cpu-clock:
+>             7fff810c5b00 __init_waitqueue_head ([kernel.kallsyms])
+>             7fff812680a6 fcntl_setlk ([kernel.kallsyms])
+>             7fff81224182 sys_fcntl ([kernel.kallsyms])
+>             7fff81842a72 entry_SYSCALL_64_fastpath ([kernel.kallsyms])
+>                    10687 __libc_fcntl
+> (/lib/x86_64-linux-gnu/libpthread-2.23.so) c [unknown] ([unknown])
+>             556e17ea6470 [unknown] ([unknown])
+>=20
+> I'm seeing this on different kernels and perf versions:
+>=20
+> # uname -a && perf -v
+> Linux kazak 4.12.8-300.fc26.x86_64 #1 SMP Thu Aug 17 15:30:20 UTC 2017
+> x86_64 x86_64 x86_64 GNU/Linux perf version 4.12.8.300.fc26.x86_64.ga6ba
+>=20
+> # uname -a && perf -v
+> Linux titan 4.4.0-79-generic #100-Ubuntu SMP Wed May 17 19:58:14 UTC 2017
+> x86_64 x86_64 x86_64 GNU/Linux perf version 4.4.67
+>=20
+> Occasionally callgraphs are not split, but this seems to be the exception:
+>=20
+> smbd 18113 298919.831823:     250000 cpu-clock:
+>                   46e9a9 path_get
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 4605d5
+> do_dentry_open (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux)
+> 461bfe vfs_open (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinu=
+x)
+> 473caf path_openat
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 475e8b
+> do_filp_open (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux)
+> 4620ea do_sys_open
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 46219e sys_op=
+en
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) a77737
+> entry_SYSCALL_64
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 1189d [unknow=
+n]
+> (/usr/lib64/libpthread-2.25.so) 1c51c6 dos_mode_check_compressed
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 1c5435 dos_mode
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 22a89d smbd_smb2_create_send
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 2269c4 smbd_smb2_request_process_create
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 219833 smbd_smb2_request_dispatch
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 21e974 smbd_smb2_io_handler
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> 21ea7a smbd_smb2_connection_handler
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> f106 epoll_event_loop
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) f73e
+> epoll_event_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) c431
+> std_event_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 51b9
+> _tevent_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 54d4
+> tevent_common_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) c4d3
+> std_event_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 5577
+> _tevent_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 200da1
+> smbd_process
+> (/home/slow/git/samba/scratch/bin/default/source3/libsmbd-base-samba4.so)
+> dd24 smbd_accept_connection
+> (/home/slow/git/samba/scratch/bin/default/source3/smbd/smbd) f106
+> epoll_event_loop
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) f73e
+> epoll_event_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) c431
+> std_event_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 51b9
+> _tevent_loop_once
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 54d4
+> tevent_common_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) c4d3
+> std_event_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) 5577
+> _tevent_loop_wait
+> (/home/slow/git/samba/scratch/bin/default/lib/tevent/libtevent.so) eb27
+> smbd_parent_loop
+> (/home/slow/git/samba/scratch/bin/default/source3/smbd/smbd) 10ce5 main
+> (/home/slow/git/samba/scratch/bin/default/source3/smbd/smbd) 2050a
+> __libc_start_main (/usr/lib64/libc-2.25.so) 6e3e258d4c544155 [unknown]
+> ([unknown])
+>=20
+> The majority of callgraphs for sys_open is split as well:
+>=20
+> smbd 18113 298923.760035:     250000 cpu-clock:
+>                   3d7de6 file_ra_state_init
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 461bfe vfs_op=
+en
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 473caf
+> path_openat (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux)
+> 475e8b do_filp_open
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 4620ea
+> do_sys_open (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux)
+> 46219e sys_open (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinu=
+x)
+> a77737 entry_SYSCALL_64
+> (/usr/lib/debug/lib/modules/4.12.8-300.fc26.x86_64/vmlinux) 1189d [unknow=
+n]
+> (/usr/lib64/libpthread-2.25.so) c70 [unknown] ([unknown])
+>               ee0000000b [unknown] ([unknown])
+>                       41 [unknown] ([unknown])
+>=20
+> As a result overhead calcuation is split between userspace and kernel:
+> # perf report --stdio -g none
+>=20
+> # To display the perf.data header info, please use --header/--header-only
+> options. #
+> # Total Lost Samples: 0
+> #
+> # Samples: 11K of event 'cpu-clock'
+> # Event count (approx.): 2754000000
+> #
+> # Children      Self  Command  Shared Object                Symbol
+> # ........  ........  .......  ...........................=20
+> ..................... #
+>     54.73%     0.60%  smbd     [kernel.vmlinux]             [k]
+> entry_SYSCALL_64e 44.62%     0.09%  smbd     libtevent.so               =
+=20
+> [.] epoll_event_loop 44.62%     0.05%  smbd     libtevent.so             =
+ =20
+>  [.] _tevent_loop_once
+>=20
+> The following flamegraph shows this as well:
+>=20
+> <https://www.samba.org/~slow/flamegraph-25453.svg>
+>=20
+> Am I missing something? This renders CPU profiling with perf pretty usele=
+ss
+> for my usecase with lots of syscalls.
 
-The cycle value gets associated with a sample via it's period value, which is 
-used by `perf report` in the analysis. If I get a single "broken" sample with 
-a cycle count of, say 1E14 and then a million other samples, each with "sane" 
-cycle counts of let's say 1E5, then the one broken sample will hold 50% of the 
-total amount of measured cycles. So perf report will show that the function 
-where the broken sample points to will have a cost of 50%.
+I'm not sure whether what I'm seeing is also related to your issue, but I j=
+ust=20
+tested this:
 
-To me, this is clearly a really big issue. Don't you think so too?
+~~~~~
+#include <complex>
+#include <cmath>
+#include <random>
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <vector>
+#include <future>
 
-Thanks
+using namespace std;
 
--- 
+mutex g_mutex;
+
+double worker()
+{
+    lock_guard<mutex> guard(g_mutex);
+    uniform_real_distribution<double> uniform(-1E5, 1E5);
+    default_random_engine engine;
+    double s =3D 0;
+    for (int i =3D 0; i < 1000; ++i) {
+        s +=3D norm(complex<double>(uniform(engine), uniform(engine)));
+    }
+    return s;
+}
+
+int main()
+{
+    vector<std::future<double>> results;
+    for (int i =3D 0; i < 10000; ++i) {
+        results.push_back(async(launch::async, worker));
+    }
+    return 0;
+}
+~~~~~
+
+Then compile and record it:
+
+~~~~~
+$ g++ --std=3Dc++11 -pthread -O2 -g test.cpp -o test
+$ perf record -c 100000 --call-graph dwarf ./test
+[ perf record: Woken up 559 times to write data ]
+[ perf record: Captured and wrote 144.038 MB perf.data (17566 samples) ]
+~~~~~
+
+The report then shows three big chunks where unwinding fails:
+
+~~~~~
+$ perf report --stdio --no-children
+=2E..
+    20.56%  test     [kernel.vmlinux]     [.] syscall_return_via_sysret
+            |
+            ---syscall_return_via_sysret
+
+    12.76%  test     [kernel.vmlinux]     [.] entry_SYSCALL_64_fastpath
+            |
+            ---entry_SYSCALL_64_fastpath
+
+     6.64%  test     [kernel.vmlinux]     [.] native_irq_return_iret
+            |
+            ---native_irq_return_iret
+~~~~~
+
+This happens with both, libunwind and elfutils' libdw.=20
+=2D-=20
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart1739540.gksvIPCoqn
+--nextPart250773195.flOSr001Tj
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -126,14 +321,14 @@ cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTA0MTQzNTE1WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQghX7MORfE2XhV2bS7AxybMX6E7o8s
-mQ8MddIua3zuHEowDQYJKoZIhvcNAQEBBQAEggEAvENWF/pxC9jHtk+2y3flLDM4Yv1ZfOOUFbQZ
-aY0Rl95ZCk3rER9fycZv5nZnspTSM+rmM6CA1Wh7Rgnn1hTaAhE7IE9+/YQAZ2vMc2+TIIxf5DFu
-g0dmNPmRqZMAcdHOZ3Vut00gACntV9LPoRZzmXxu7KMM5yGL0faKLnc0Yo51Bzp+k+V+9ACtG8i8
-ycceIvZoR52IVQ0CUa8BQ+LqGGqcwbZ4BQhtAo6ikHyui+UJwfgV7ZwgboxlOAQPknZ0sBuD9wbI
-9WPMAm4n1zBIWre4s/P04D/36OpE78M2Gb+4t+xf23awPV1jgBfv1y4Gy8eicAW9+4LxLW3BlN9G
-/gAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTA0MTYyNjIxWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgbBarGBmmj4onMhiTH1c6/bZN7w0g
+8/7uPAHK0HDKgCcwDQYJKoZIhvcNAQEBBQAEggEAX4KFbwiRwyG1PXW2COVSDlxXi9pTGnt0vKFY
+ckL9JuL/HbuQfEuipg+s17m39fpGj5X/u7VZpe7SZ1AGM2PFwzOHhFLz8kRRbeqm9DEBCYhLWNdG
+K27vkHVtQnccTGkON4B3EiAZrXuVdeqH0vJwWhgyb+zt5KSaUo7F0WiwDirAczLuTI0bLgscY+1+
+weFAr1s6fl86/oDZJoaVtlLYZxbGtfvwDyBJvbspCKJi149HzA93MgwqVtByniRQtX3WYE+h2vUP
+ZNhN4IrVeWlMTgdzKksfb75t6W4s/ouSdx19JiEND8A7Cxi5ux148YQv+M1xabCCi1uze1zz7BVJ
+2AAAAAAAAA==
 
 
---nextPart1739540.gksvIPCoqn--
+--nextPart250773195.flOSr001Tj--
