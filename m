@@ -1,25 +1,19 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/13] perf tools: Support new sample type for physical address
-Date: Mon,  4 Sep 2017 11:00:38 -0300
-Message-ID: <20170904140044.22912-8-acme@kernel.org>
+Subject: [PATCH 09/13] perf mem: Support physical address
+Date: Mon,  4 Sep 2017 11:00:40 -0300
+Message-ID: <20170904140044.22912-10-acme@kernel.org>
 References: <20170904140044.22912-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:33226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753628AbdIDOFC (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2017 10:05:02 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170904140044.22912-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@intel.com>
 
-Support new sample type PERF_SAMPLE_PHYS_ADDR for physical address.
-
-Add new option --phys-data to record sample physical address.
+Add option phys-data in "perf mem" to record/report physical address.
+The default mem sort order for physical address is changed accordingly.
 
 Signed-off-by: Kan Liang <kan.liang@intel.com>
 Tested-by: Jiri Olsa <jolsa@redhat.com>
@@ -28,151 +22,172 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1504026672-7304-2-git-send-email-kan.liang@intel.com
-[ Added missing printing in evsel.c patch sent by Jiri Olsa ]
+Link: http://lkml.kernel.org/r/1504026672-7304-4-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/perf_event.h    |  4 +++-
- tools/perf/Documentation/perf-record.txt |  5 ++++-
- tools/perf/builtin-record.c              |  2 ++
- tools/perf/perf.h                        |  1 +
- tools/perf/util/event.h                  |  1 +
- tools/perf/util/evsel.c                  | 19 ++++++++++++++++++-
- 6 files changed, 29 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-mem.txt |  4 ++
+ tools/perf/builtin-mem.c              | 97 +++++++++++++++++++++++++----------
+ 2 files changed, 75 insertions(+), 26 deletions(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 2a37ae925d85..140ae638cfd6 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -139,8 +139,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_IDENTIFIER			= 1U << 16,
- 	PERF_SAMPLE_TRANSACTION			= 1U << 17,
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
-+	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 73496320fca3..4be08a1e3f8d 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -59,6 +59,10 @@ OPTIONS
+ --ldload::
+ 	Specify desired latency for loads event.
  
--	PERF_SAMPLE_MAX = 1U << 19,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 20,		/* non-ABI */
- };
- 
- /*
-@@ -814,6 +815,7 @@ enum perf_event_type {
- 	 *	{ u64			transaction; } && PERF_SAMPLE_TRANSACTION
- 	 *	{ u64			abi; # enum perf_sample_regs_abi
- 	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
-+	 *	{ u64			phys_addr;} && PERF_SAMPLE_PHYS_ADDR
- 	 * };
- 	 */
- 	PERF_RECORD_SAMPLE			= 9,
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 9bdea047c5db..e397453e5a46 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -249,7 +249,10 @@ OPTIONS
- 
- -d::
- --data::
--	Record the sample addresses.
-+	Record the sample virtual addresses.
-+
++-p::
 +--phys-data::
-+	Record the sample physical addresses.
- 
- -T::
- --timestamp::
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 36d7117a7562..56f8142ff97f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1604,6 +1604,8 @@ static struct option __record_options[] = {
- 	OPT_BOOLEAN('s', "stat", &record.opts.inherit_stat,
- 		    "per thread counts"),
- 	OPT_BOOLEAN('d', "data", &record.opts.sample_address, "Record the sample addresses"),
-+	OPT_BOOLEAN(0, "phys-data", &record.opts.sample_phys_addr,
-+		    "Record the sample physical addresses"),
- 	OPT_BOOLEAN(0, "sample-cpu", &record.opts.sample_cpu, "Record the sample cpu"),
- 	OPT_BOOLEAN_SET('T', "timestamp", &record.opts.sample_time,
- 			&record.opts.sample_time_set,
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 2c010dd6a79d..dc442ba21bf6 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -43,6 +43,7 @@ struct record_opts {
- 	bool	     no_samples;
- 	bool	     raw_samples;
- 	bool	     sample_address;
-+	bool	     sample_phys_addr;
- 	bool	     sample_weight;
- 	bool	     sample_time;
- 	bool	     sample_time_set;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 423ac82605f3..ee7bcc898d35 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -200,6 +200,7 @@ struct perf_sample {
- 	u32 cpu;
- 	u32 raw_size;
- 	u64 data_src;
-+	u64 phys_addr;
- 	u32 flags;
- 	u16 insn_len;
- 	u8  cpumode;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d9bd632ed7db..4bb89373eb52 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -955,6 +955,9 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
- 	if (opts->sample_address)
- 		perf_evsel__set_sample_bit(evsel, DATA_SRC);
- 
-+	if (opts->sample_phys_addr)
-+		perf_evsel__set_sample_bit(evsel, PHYS_ADDR);
++	Record/Report sample physical addresses
 +
- 	if (opts->no_buffering) {
- 		attr->watermark = 0;
- 		attr->wakeup_events = 1;
-@@ -1464,7 +1467,7 @@ static void __p_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(PERIOD), bit_name(STREAM_ID), bit_name(RAW),
- 		bit_name(BRANCH_STACK), bit_name(REGS_USER), bit_name(STACK_USER),
- 		bit_name(IDENTIFIER), bit_name(REGS_INTR), bit_name(DATA_SRC),
--		bit_name(WEIGHT),
-+		bit_name(WEIGHT), bit_name(PHYS_ADDR),
- 		{ .name = NULL, }
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-report[1]
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index e001c0290793..0f15634ef82c 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -23,6 +23,7 @@ struct perf_mem {
+ 	bool			hide_unresolved;
+ 	bool			dump_raw;
+ 	bool			force;
++	bool			phys_addr;
+ 	int			operation;
+ 	const char		*cpu_list;
+ 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -101,6 +102,9 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 
+ 	rec_argv[i++] = "-d";
+ 
++	if (mem->phys_addr)
++		rec_argv[i++] = "--phys-data";
++
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+ 		if (!perf_mem_events[j].record)
+ 			continue;
+@@ -161,30 +165,60 @@ dump_raw_samples(struct perf_tool *tool,
+ 	if (al.map != NULL)
+ 		al.map->dso->hit = 1;
+ 
+-	if (symbol_conf.field_sep) {
+-		fmt = "%d%s%d%s0x%"PRIx64"%s0x%"PRIx64"%s%"PRIu64
+-		      "%s0x%"PRIx64"%s%s:%s\n";
++	if (mem->phys_addr) {
++		if (symbol_conf.field_sep) {
++			fmt = "%d%s%d%s0x%"PRIx64"%s0x%"PRIx64"%s0x%016"PRIx64
++			      "%s%"PRIu64"%s0x%"PRIx64"%s%s:%s\n";
++		} else {
++			fmt = "%5d%s%5d%s0x%016"PRIx64"%s0x016%"PRIx64
++			      "%s0x%016"PRIx64"%s%5"PRIu64"%s0x%06"PRIx64
++			      "%s%s:%s\n";
++			symbol_conf.field_sep = " ";
++		}
++
++		printf(fmt,
++			sample->pid,
++			symbol_conf.field_sep,
++			sample->tid,
++			symbol_conf.field_sep,
++			sample->ip,
++			symbol_conf.field_sep,
++			sample->addr,
++			symbol_conf.field_sep,
++			sample->phys_addr,
++			symbol_conf.field_sep,
++			sample->weight,
++			symbol_conf.field_sep,
++			sample->data_src,
++			symbol_conf.field_sep,
++			al.map ? (al.map->dso ? al.map->dso->long_name : "???") : "???",
++			al.sym ? al.sym->name : "???");
+ 	} else {
+-		fmt = "%5d%s%5d%s0x%016"PRIx64"%s0x016%"PRIx64
+-		      "%s%5"PRIu64"%s0x%06"PRIx64"%s%s:%s\n";
+-		symbol_conf.field_sep = " ";
+-	}
++		if (symbol_conf.field_sep) {
++			fmt = "%d%s%d%s0x%"PRIx64"%s0x%"PRIx64"%s%"PRIu64
++			      "%s0x%"PRIx64"%s%s:%s\n";
++		} else {
++			fmt = "%5d%s%5d%s0x%016"PRIx64"%s0x016%"PRIx64
++			      "%s%5"PRIu64"%s0x%06"PRIx64"%s%s:%s\n";
++			symbol_conf.field_sep = " ";
++		}
+ 
+-	printf(fmt,
+-		sample->pid,
+-		symbol_conf.field_sep,
+-		sample->tid,
+-		symbol_conf.field_sep,
+-		sample->ip,
+-		symbol_conf.field_sep,
+-		sample->addr,
+-		symbol_conf.field_sep,
+-		sample->weight,
+-		symbol_conf.field_sep,
+-		sample->data_src,
+-		symbol_conf.field_sep,
+-		al.map ? (al.map->dso ? al.map->dso->long_name : "???") : "???",
+-		al.sym ? al.sym->name : "???");
++		printf(fmt,
++			sample->pid,
++			symbol_conf.field_sep,
++			sample->tid,
++			symbol_conf.field_sep,
++			sample->ip,
++			symbol_conf.field_sep,
++			sample->addr,
++			symbol_conf.field_sep,
++			sample->weight,
++			symbol_conf.field_sep,
++			sample->data_src,
++			symbol_conf.field_sep,
++			al.map ? (al.map->dso ? al.map->dso->long_name : "???") : "???",
++			al.sym ? al.sym->name : "???");
++	}
+ out_put:
+ 	addr_location__put(&al);
+ 	return 0;
+@@ -224,7 +258,10 @@ static int report_raw_events(struct perf_mem *mem)
+ 	if (ret < 0)
+ 		goto out_delete;
+ 
+-	printf("# PID, TID, IP, ADDR, LOCAL WEIGHT, DSRC, SYMBOL\n");
++	if (mem->phys_addr)
++		printf("# PID, TID, IP, ADDR, PHYS ADDR, LOCAL WEIGHT, DSRC, SYMBOL\n");
++	else
++		printf("# PID, TID, IP, ADDR, LOCAL WEIGHT, DSRC, SYMBOL\n");
+ 
+ 	ret = perf_session__process_events(session);
+ 
+@@ -254,9 +291,16 @@ static int report_events(int argc, const char **argv, struct perf_mem *mem)
+ 	 * there is no weight (cost) associated with stores, so don't print
+ 	 * the column
+ 	 */
+-	if (!(mem->operation & MEM_OPERATION_LOAD))
+-		rep_argv[i++] = "--sort=mem,sym,dso,symbol_daddr,"
+-				"dso_daddr,tlb,locked";
++	if (!(mem->operation & MEM_OPERATION_LOAD)) {
++		if (mem->phys_addr)
++			rep_argv[i++] = "--sort=mem,sym,dso,symbol_daddr,"
++					"dso_daddr,tlb,locked,phys_daddr";
++		else
++			rep_argv[i++] = "--sort=mem,sym,dso,symbol_daddr,"
++					"dso_daddr,tlb,locked";
++	} else if (mem->phys_addr)
++		rep_argv[i++] = "--sort=local_weight,mem,sym,dso,symbol_daddr,"
++				"dso_daddr,snoop,tlb,locked,phys_daddr";
+ 
+ 	for (j = 1; j < argc; j++, i++)
+ 		rep_argv[i] = argv[j];
+@@ -373,6 +417,7 @@ int cmd_mem(int argc, const char **argv)
+ 		   "separator for columns, no spaces will be added"
+ 		   " between columns '.' is reserved."),
+ 	OPT_BOOLEAN('f', "force", &mem.force, "don't complain, do it"),
++	OPT_BOOLEAN('p', "phys-data", &mem.phys_addr, "Record/Report sample physical addresses"),
+ 	OPT_END()
  	};
- #undef bit_name
-@@ -2206,6 +2209,12 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 		}
- 	}
- 
-+	data->phys_addr = 0;
-+	if (type & PERF_SAMPLE_PHYS_ADDR) {
-+		data->phys_addr = *array;
-+		array++;
-+	}
-+
- 	return 0;
- }
- 
-@@ -2311,6 +2320,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 		}
- 	}
- 
-+	if (type & PERF_SAMPLE_PHYS_ADDR)
-+		result += sizeof(u64);
-+
- 	return result;
- }
- 
-@@ -2500,6 +2512,11 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
- 		}
- 	}
- 
-+	if (type & PERF_SAMPLE_PHYS_ADDR) {
-+		*array = sample->phys_addr;
-+		array++;
-+	}
-+
- 	return 0;
- }
- 
+ 	const char *const mem_subcommands[] = { "record", "report", NULL };
 -- 
 2.13.5
