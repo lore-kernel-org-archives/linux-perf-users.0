@@ -1,388 +1,174 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/13] perf vendor events powerpc: Remove duplicate events
-Date: Mon,  4 Sep 2017 11:00:37 -0300
-Message-ID: <20170904140044.22912-7-acme@kernel.org>
+Subject: [PATCH 12/13] perf stat: Only auto-merge events that are PMU aliases
+Date: Mon,  4 Sep 2017 11:00:43 -0300
+Message-ID: <20170904140044.22912-13-acme@kernel.org>
 References: <20170904140044.22912-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170904140044.22912-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Andi Kleen <andi@firstfloor.org>, Anton Blanchard <anton@au1.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some POWER PMU event names have multiple/alternate event codes. These
-alternate event codes were listed in the POWER9 JSON files for
-reference.
+Peter reported that when he explicitely asked for multiple events with
+the same name on the command line it got coalesced into just one line,
+i.e.:
 
-But the perf tool does not seem to handle duplicates cleanly. 'perf
-list' shows such duplicate events only once, but 'perf stat' ends up
-counting the first event code twice, multiplexing if necessary and we
-end up with double the event counts.
+   # perf stat -e cycles -e cycles -e cycles usleep 1
 
-Remove the duplicate event codes from the JSON files for now.
+   Performance counter stats for 'usleep 1':
 
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: Anton Blanchard <anton@au1.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Link: http://lkml.kernel.org/r/20170830231506.GB20351@us.ibm.com
+         3,269,652      cycles
+
+       0.000884123 seconds time elapsed
+
+  #
+
+And while there is the --no-merges option to disable that auto-merging,
+this is a blunt change in behaviour for such explicit request, so change
+the code so that this auto merging is done only when handling the multi
+PMU aliases with the same name that introduced this coalescing,
+restoring the previous behaviour for the explicit case:
+
+  # perf stat -e cycles -e cycles -e cycles usleep 1
+
+   Performance counter stats for 'usleep 1':
+
+         1,472,837      cycles
+         1,472,837      cycles
+         1,472,837      cycles
+
+       0.001764870 seconds time elapsed
+
+  #
+
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: 430daf2dc7af ("perf stat: Collapse identically named events")
+Link: http://lkml.kernel.org/r/20170831184122.GK4831@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/powerpc/power9/frontend.json   |   7 +-
- .../perf/pmu-events/arch/powerpc/power9/other.json | 120 ---------------------
- .../pmu-events/arch/powerpc/power9/pipeline.json   |   7 +-
- tools/perf/pmu-events/arch/powerpc/power9/pmc.json |   7 +-
- 4 files changed, 3 insertions(+), 138 deletions(-)
+ tools/perf/builtin-stat.c      |  2 +-
+ tools/perf/util/evsel.h        |  1 +
+ tools/perf/util/parse-events.c | 24 ++++++++++++++++--------
+ 3 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/frontend.json b/tools/perf/pmu-events/arch/powerpc/power9/frontend.json
-index 7e62c46d7a20..c63a919eda98 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/frontend.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/frontend.json
-@@ -80,11 +80,6 @@
-     "BriefDescription": "Load Missed L1, counted at execution time (can be greater than loads finished). LMQ merges are not included in this count. i.e. if a load instruction misses on an address that is already allocated on the LMQ, this event will not increment for that load). Note that this count is per slice, so if a load spans multiple slices this event will increment multiple times for a single load."
-   },
-   {,
--    "EventCode": "0x400F0",
--    "EventName": "PM_LD_MISS_L1",
--    "BriefDescription": "Load Missed L1, counted at execution time (can be greater than loads finished). LMQ merges are not included in this count. i.e. if a load instruction misses on an address that is already allocated on the LMQ, this event will not increment for that load). Note that this count is per slice, so if a load spans multiple slices this event will increment multiple times for a single load."
--  },
--  {,
-     "EventCode": "0x2E01A",
-     "EventName": "PM_CMPLU_STALL_LSU_FLUSH_NEXT",
-     "BriefDescription": "Completion stall of one cycle because the LSU requested to flush the next iop in the sequence. It takes 1 cycle for the ISU to process this request before the LSU instruction is allowed to complete"
-@@ -374,4 +369,4 @@
-     "EventName": "PM_IPTEG_FROM_L31_ECO_MOD",
-     "BriefDescription": "A Page Table Entry was loaded into the TLB with Modified (M) data from another core's ECO L3 on the same chip due to a instruction side request"
-   }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/other.json b/tools/perf/pmu-events/arch/powerpc/power9/other.json
-index 00f3d2a21f31..54cc3be00fc2 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/other.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/other.json
-@@ -605,11 +605,6 @@
-     "BriefDescription": "RC retries on PB for any load from core (excludes DCBFs)"
-   },
-   {,
--    "EventCode": "0x3689E",
--    "EventName": "PM_L2_RTY_LD",
--    "BriefDescription": "RC retries on PB for any load from core (excludes DCBFs)"
--  },
--  {,
-     "EventCode": "0xE08C",
-     "EventName": "PM_LSU0_ERAT_HIT",
-     "BriefDescription": "Primary ERAT hit.  There is no secondary ERAT"
-@@ -715,11 +710,6 @@
-     "BriefDescription": "Lifetime, sample of RD machine 0 valid"
-   },
-   {,
--    "EventCode": "0x468B4",
--    "EventName": "PM_L3_RD0_BUSY",
--    "BriefDescription": "Lifetime, sample of RD machine 0 valid"
--  },
--  {,
-     "EventCode": "0x46080",
-     "EventName": "PM_L2_DISP_ALL_L2MISS",
-     "BriefDescription": "All successful Ld/St dispatches for this thread that were an L2 miss (excludes i_l2mru_tch_reqs)"
-@@ -850,21 +840,11 @@
-     "BriefDescription": "RC mach 0 Busy. Used by PMU to sample ave RC lifetime (mach0 used as sample point)"
-   },
-   {,
--    "EventCode": "0x2608C",
--    "EventName": "PM_RC0_BUSY",
--    "BriefDescription": "RC mach 0 Busy. Used by PMU to sample ave RC lifetime (mach0 used as sample point)"
--  },
--  {,
-     "EventCode": "0x36082",
-     "EventName": "PM_L2_LD_DISP",
-     "BriefDescription": "All successful I-or-D side load dispatches for this thread (excludes i_l2mru_tch_reqs)."
-   },
-   {,
--    "EventCode": "0x1609E",
--    "EventName": "PM_L2_LD_DISP",
--    "BriefDescription": "All successful D side load dispatches for this thread (L2 miss + L2 hits)"
--  },
--  {,
-     "EventCode": "0xF8B0",
-     "EventName": "PM_L3_SW_PREF",
-     "BriefDescription": "L3 load prefetch, sourced from a software prefetch stream, was sent to the nest"
-@@ -1040,11 +1020,6 @@
-     "BriefDescription": "L3 castouts in Mepf state for this thread"
-   },
-   {,
--    "EventCode": "0x168A0",
--    "EventName": "PM_L3_CO_MEPF",
--    "BriefDescription": "L3 CO of line in Mep state (includes casthrough to memory).  The Mepf state indicates that a line was brought in to satisfy an L3 prefetch request"
--  },
--  {,
-     "EventCode": "0x460A2",
-     "EventName": "PM_L3_LAT_CI_HIT",
-     "BriefDescription": "L3 Lateral Castins Hit"
-@@ -1150,11 +1125,6 @@
-     "BriefDescription": "RC retries on PB for any store from core (excludes DCBFs)"
-   },
-   {,
--    "EventCode": "0x4689E",
--    "EventName": "PM_L2_RTY_ST",
--    "BriefDescription": "RC retries on PB for any store from core (excludes DCBFs)"
--  },
--  {,
-     "EventCode": "0x24040",
-     "EventName": "PM_INST_FROM_L2_MEPF",
-     "BriefDescription": "The processor's Instruction cache was reloaded from local core's L2 hit without dispatch conflicts on Mepf state. due to an instruction fetch (not prefetch)"
-@@ -1255,11 +1225,6 @@
-     "BriefDescription": "CO mach 0 Busy. Used by PMU to sample ave CO lifetime (mach0 used as sample point)"
-   },
-   {,
--    "EventCode": "0x4608C",
--    "EventName": "PM_CO0_BUSY",
--    "BriefDescription": "CO mach 0 Busy. Used by PMU to sample ave CO lifetime (mach0 used as sample point)"
--  },
--  {,
-     "EventCode": "0x2C122",
-     "EventName": "PM_MRK_DATA_FROM_L3_DISP_CONFLICT_CYC",
-     "BriefDescription": "Duration in cycles to reload from local core's L3 with dispatch conflict due to a marked load"
-@@ -1395,11 +1360,6 @@
-     "BriefDescription": "A Page Table Entry was loaded into the TLB from the local chip's Memory due to a instruction side request"
-   },
-   {,
--    "EventCode": "0x40006",
--    "EventName": "PM_ISLB_MISS",
--    "BriefDescription": "Number of ISLB misses for this thread"
--  },
--  {,
-     "EventCode": "0xD8A8",
-     "EventName": "PM_ISLB_MISS",
-     "BriefDescription": "Instruction SLB miss - Total of all segment sizes"
-@@ -1515,11 +1475,6 @@
-     "BriefDescription": "All successful I-side dispatches for this thread (excludes i_l2mru_tch reqs)."
-   },
-   {,
--    "EventCode": "0x3609E",
--    "EventName": "PM_L2_INST",
--    "BriefDescription": "All successful I-side dispatches that were an L2 miss for this thread (excludes i_l2mru_tch reqs)"
--  },
--  {,
-     "EventCode": "0x3504C",
-     "EventName": "PM_IPTEG_FROM_DL4",
-     "BriefDescription": "A Page Table Entry was loaded into the TLB from another chip's L4 on a different Node or Group (Distant) due to a instruction side request"
-@@ -1690,11 +1645,6 @@
-     "BriefDescription": "All successful I-or-D side load dispatches for this thread that were L2 hits (excludes i_l2mru_tch_reqs)"
-   },
-   {,
--    "EventCode": "0x2609E",
--    "EventName": "PM_L2_LD_HIT",
--    "BriefDescription": "All successful D side load dispatches for this thread that were L2 hits for this thread"
--  },
--  {,
-     "EventCode": "0x168AC",
-     "EventName": "PM_L3_CI_USAGE",
-     "BriefDescription": "Rotating sample of 16 CI or CO actives"
-@@ -1795,21 +1745,11 @@
-     "BriefDescription": "Rotating sample of 8 WI valid"
-   },
-   {,
--    "EventCode": "0x260B6",
--    "EventName": "PM_L3_WI0_BUSY",
--    "BriefDescription": "Rotating sample of 8 WI valid (duplicate)"
--  },
--  {,
-     "EventCode": "0x368AC",
-     "EventName": "PM_L3_CO0_BUSY",
-     "BriefDescription": "Lifetime, sample of CO machine 0 valid"
-   },
-   {,
--    "EventCode": "0x468AC",
--    "EventName": "PM_L3_CO0_BUSY",
--    "BriefDescription": "Lifetime, sample of CO machine 0 valid"
--  },
--  {,
-     "EventCode": "0x2E040",
-     "EventName": "PM_DPTEG_FROM_L2_MEPF",
-     "BriefDescription": "A Page Table Entry was loaded into the TLB from local core's L2 hit without dispatch conflicts on Mepf state. due to a data side request. When using Radix Page Translation, this count excludes PDE reloads. Only PTE reloads are included"
-@@ -1840,11 +1780,6 @@
-     "BriefDescription": "L3 PF received retry port 0, every retry counted"
-   },
-   {,
--    "EventCode": "0x260AE",
--    "EventName": "PM_L3_P0_PF_RTY",
--    "BriefDescription": "L3 PF received retry port 0, every retry counted"
--  },
--  {,
-     "EventCode": "0x268B2",
-     "EventName": "PM_L3_LOC_GUESS_WRONG",
-     "BriefDescription": "Initial scope=node (LNS) but data from out side local node (near or far or rem). Prediction too Low"
-@@ -1895,11 +1830,6 @@
-     "BriefDescription": "Lifetime, sample of snooper machine 0 valid"
-   },
-   {,
--    "EventCode": "0x460AC",
--    "EventName": "PM_L3_SN0_BUSY",
--    "BriefDescription": "Lifetime, sample of snooper machine 0 valid"
--  },
--  {,
-     "EventCode": "0x3005C",
-     "EventName": "PM_BFU_BUSY",
-     "BriefDescription": "Cycles in which all 4 Binary Floating Point units are busy. The BFU is running at capacity"
-@@ -1935,11 +1865,6 @@
-     "BriefDescription": "Lifetime, sample of PF machine 0 valid"
-   },
-   {,
--    "EventCode": "0x460B4",
--    "EventName": "PM_L3_PF0_BUSY",
--    "BriefDescription": "Lifetime, sample of PF machine 0 valid"
--  },
--  {,
-     "EventCode": "0xC0B0",
-     "EventName": "PM_LSU_FLUSH_UE",
-     "BriefDescription": "Correctable ECC error on reload data, reported at critical data forward time"
-@@ -2085,11 +2010,6 @@
-     "BriefDescription": "L3 CO received retry port 1 (memory only), every retry counted"
-   },
-   {,
--    "EventCode": "0x468AE",
--    "EventName": "PM_L3_P1_CO_RTY",
--    "BriefDescription": "L3 CO received retry port 3 (memory only), every retry counted"
--  },
--  {,
-     "EventCode": "0xC0AC",
-     "EventName": "PM_LSU_FLUSH_EMSH",
-     "BriefDescription": "An ERAT miss was detected after a set-p hit. Erat tracker indicates fail due to tlbmiss and the instruction gets flushed because the instruction was working on the wrong address"
-@@ -2195,11 +2115,6 @@
-     "BriefDescription": "SNP dispatched for a write and was M (true M); for DMA cacheinj this will pulse if rty/push is required (won't pulse if cacheinj is accepted)"
-   },
-   {,
--    "EventCode": "0x46886",
--    "EventName": "PM_L2_SN_M_WR_DONE",
--    "BriefDescription": "SNP dispatched for a write and was M (true M); for DMA cacheinj this will pulse if rty/push is required (won't pulse if cacheinj is accepted)"
--  },
--  {,
-     "EventCode": "0x489C",
-     "EventName": "PM_BR_CORECT_PRED_TAKEN_CMPL",
-     "BriefDescription": "Conditional Branch Completed in which the HW correctly predicted the direction as taken.  Counted at completion time"
-@@ -2290,21 +2205,11 @@
-     "BriefDescription": "SN mach 0 Busy. Used by PMU to sample ave SN lifetime (mach0 used as sample point)"
-   },
-   {,
--    "EventCode": "0x26090",
--    "EventName": "PM_SN0_BUSY",
--    "BriefDescription": "SN mach 0 Busy. Used by PMU to sample ave SN lifetime (mach0 used as sample point)"
--  },
--  {,
-     "EventCode": "0x360AE",
-     "EventName": "PM_L3_P0_CO_RTY",
-     "BriefDescription": "L3 CO received retry port 0 (memory only), every retry counted"
-   },
-   {,
--    "EventCode": "0x460AE",
--    "EventName": "PM_L3_P0_CO_RTY",
--    "BriefDescription": "L3 CO received retry port 0 (memory only), every retry counted"
--  },
--  {,
-     "EventCode": "0x168A8",
-     "EventName": "PM_L3_WI_USAGE",
-     "BriefDescription": "Lifetime, sample of Write Inject machine 0 valid"
-@@ -2340,26 +2245,11 @@
-     "BriefDescription": "L3 PF received retry port 1, every retry counted"
-   },
-   {,
--    "EventCode": "0x268AE",
--    "EventName": "PM_L3_P1_PF_RTY",
--    "BriefDescription": "L3 PF received retry port 3, every retry counted"
--  },
--  {,
-     "EventCode": "0x46082",
-     "EventName": "PM_L2_ST_DISP",
-     "BriefDescription": "All successful D-side store dispatches for this thread "
-   },
-   {,
--    "EventCode": "0x1689E",
--    "EventName": "PM_L2_ST_DISP",
--    "BriefDescription": "All successful D-side store dispatches for this thread (L2 miss + L2 hits)"
--  },
--  {,
--    "EventCode": "0x36880",
--    "EventName": "PM_L2_INST_MISS",
--    "BriefDescription": "All successful I-side dispatches that were an L2 miss for this thread (excludes i_l2mru_tch reqs)"
--  },
--  {,
-     "EventCode": "0x4609E",
-     "EventName": "PM_L2_INST_MISS",
-     "BriefDescription": "All successful I-side dispatches that were an L2 miss for this thread (excludes i_l2mru_tch reqs)"
-@@ -2430,11 +2320,6 @@
-     "BriefDescription": "# PPC Dispatched"
-   },
-   {,
--    "EventCode": "0x300F2",
--    "EventName": "PM_INST_DISP",
--    "BriefDescription": "# PPC Dispatched"
--  },
--  {,
-     "EventCode": "0x4E05E",
-     "EventName": "PM_TM_OUTER_TBEGIN_DISP",
-     "BriefDescription": "Number of outer tbegin instructions dispatched. The dispatch unit determines whether the tbegin instruction is outer or nested. This is a speculative count, which includes flushed instructions"
-@@ -2460,11 +2345,6 @@
-     "BriefDescription": "All successful D-side store dispatches for this thread that were L2 hits"
-   },
-   {,
--    "EventCode": "0x2689E",
--    "EventName": "PM_L2_ST_HIT",
--    "BriefDescription": "All successful D-side store dispatches that were L2 hits for this thread"
--  },
--  {,
-     "EventCode": "0x360A8",
-     "EventName": "PM_L3_CO",
-     "BriefDescription": "L3 castout occurring (does not include casthrough or log writes (cinj/dmaw))"
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json b/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
-index 47a82568a8df..bc2db636dabf 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
-@@ -420,11 +420,6 @@
-     "BriefDescription": "Final Pump Scope (Group) ended up larger than Initial Pump Scope (Chip) for an instruction fetch"
-   },
-   {,
--    "EventCode": "0x10016",
--    "EventName": "PM_DSLB_MISS",
--    "BriefDescription": "Data SLB Miss - Total of all segment sizes"
--  },
--  {,
-     "EventCode": "0xD0A8",
-     "EventName": "PM_DSLB_MISS",
-     "BriefDescription": "Data SLB Miss - Total of all segment sizes"
-@@ -554,4 +549,4 @@
-     "EventName": "PM_MRK_DATA_FROM_L21_SHR_CYC",
-     "BriefDescription": "Duration in cycles to reload with Shared (S) data from another core's L2 on the same chip due to a marked load"
-   }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/pmc.json b/tools/perf/pmu-events/arch/powerpc/power9/pmc.json
-index a2c95a99e168..3ef8a10aac86 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/pmc.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/pmc.json
-@@ -5,11 +5,6 @@
-     "BriefDescription": "Branches that are not strongly biased"
-   },
-   {,
--    "EventCode": "0x40036",
--    "EventName": "PM_BR_2PATH",
--    "BriefDescription": "Branches that are not strongly biased"
--  },
--  {,
-     "EventCode": "0x40056",
-     "EventName": "PM_MEM_LOC_THRESH_LSU_HIGH",
-     "BriefDescription": "Local memory above threshold for LSU medium"
-@@ -124,4 +119,4 @@
-     "EventName": "PM_1FLOP_CMPL",
-     "BriefDescription": "one flop (fadd, fmul, fsub, fcmp, fsel, fabs, fnabs, fres, fsqrte, fneg) operation completed"
-   }
--]
-\ No newline at end of file
-+]
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 866da7aa54bf..85e992d9215b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1257,7 +1257,7 @@ static bool collect_data(struct perf_evsel *counter,
+ 	if (counter->merged_stat)
+ 		return false;
+ 	cb(counter, data, true);
+-	if (!no_merge)
++	if (!no_merge && counter->auto_merge_stats)
+ 		collect_all_aliases(counter, cb, data);
+ 	return true;
+ }
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 351d3b2d8887..dd2c4b5112a5 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -131,6 +131,7 @@ struct perf_evsel {
+ 	bool			cmdline_group_boundary;
+ 	struct list_head	config_terms;
+ 	int			bpf_fd;
++	bool			auto_merge_stats;
+ 	bool			merged_stat;
+ 	const char *		metric_expr;
+ 	const char *		metric_name;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f44aeba51d1f..f6257fb4f08c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -310,7 +310,7 @@ static struct perf_evsel *
+ __add_event(struct list_head *list, int *idx,
+ 	    struct perf_event_attr *attr,
+ 	    char *name, struct cpu_map *cpus,
+-	    struct list_head *config_terms)
++	    struct list_head *config_terms, bool auto_merge_stats)
+ {
+ 	struct perf_evsel *evsel;
+ 
+@@ -324,6 +324,7 @@ __add_event(struct list_head *list, int *idx,
+ 	evsel->cpus        = cpu_map__get(cpus);
+ 	evsel->own_cpus    = cpu_map__get(cpus);
+ 	evsel->system_wide = !!cpus;
++	evsel->auto_merge_stats = auto_merge_stats;
+ 
+ 	if (name)
+ 		evsel->name = strdup(name);
+@@ -339,7 +340,7 @@ static int add_event(struct list_head *list, int *idx,
+ 		     struct perf_event_attr *attr, char *name,
+ 		     struct list_head *config_terms)
+ {
+-	return __add_event(list, idx, attr, name, NULL, config_terms) ? 0 : -ENOMEM;
++	return __add_event(list, idx, attr, name, NULL, config_terms, false) ? 0 : -ENOMEM;
+ }
+ 
+ static int parse_aliases(char *str, const char *names[][PERF_EVSEL__MAX_ALIASES], int size)
+@@ -1209,9 +1210,9 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 			 get_config_name(head_config), &config_terms);
+ }
+ 
+-int parse_events_add_pmu(struct parse_events_state *parse_state,
++static int __parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+-			 struct list_head *head_config)
++			 struct list_head *head_config, bool auto_merge_stats)
+ {
+ 	struct perf_event_attr attr;
+ 	struct perf_pmu_info info;
+@@ -1232,7 +1233,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 
+ 	if (!head_config) {
+ 		attr.type = pmu->type;
+-		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu->cpus, NULL);
++		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu->cpus, NULL, auto_merge_stats);
+ 		return evsel ? 0 : -ENOMEM;
+ 	}
+ 
+@@ -1254,7 +1255,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 
+ 	evsel = __add_event(list, &parse_state->idx, &attr,
+ 			    get_config_name(head_config), pmu->cpus,
+-			    &config_terms);
++			    &config_terms, auto_merge_stats);
+ 	if (evsel) {
+ 		evsel->unit = info.unit;
+ 		evsel->scale = info.scale;
+@@ -1267,6 +1268,13 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	return evsel ? 0 : -ENOMEM;
+ }
+ 
++int parse_events_add_pmu(struct parse_events_state *parse_state,
++			 struct list_head *list, char *name,
++			 struct list_head *head_config)
++{
++	return __parse_events_add_pmu(parse_state, list, name, head_config, false);
++}
++
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			       char *str, struct list_head **listp)
+ {
+@@ -1296,8 +1304,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 					return -1;
+ 				list_add_tail(&term->list, head);
+ 
+-				if (!parse_events_add_pmu(parse_state, list,
+-						  pmu->name, head)) {
++				if (!__parse_events_add_pmu(parse_state, list,
++							    pmu->name, head, true)) {
+ 					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
+ 					ok++;
 -- 
 2.13.5
