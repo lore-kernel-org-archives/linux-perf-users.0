@@ -1,180 +1,212 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/13] perf trace: Support syscall name globbing
-Date: Mon,  4 Sep 2017 11:00:34 -0300
-Message-ID: <20170904140044.22912-4-acme@kernel.org>
+Subject: [PATCH 08/13] perf sort: Add sort option for physical address
+Date: Mon,  4 Sep 2017 11:00:39 -0300
+Message-ID: <20170904140044.22912-9-acme@kernel.org>
 References: <20170904140044.22912-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170904140044.22912-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Kan Liang <kan.liang@intel.com>
 
-So now we can use:
+Add a new sort option "phys_daddr" for --mem-mode sort.  With this
+option applied, perf can sort and report by sample's physical address.
 
-  # perf trace -e pkey_*
-   532.784 ( 0.006 ms): pkey/16018 pkey_alloc(init_val: DISABLE_WRITE) = -1 EINVAL Invalid argument
-   532.795 ( 0.004 ms): pkey/16018 pkey_mprotect(start: 0x7f380d0a6000, len: 4096, prot: READ|WRITE, pkey: -1) = 0
-   532.801 ( 0.002 ms): pkey/16018 pkey_free(pkey: -1                ) = -1 EINVAL Invalid argument
-  ^C[root@jouet ~]#
-
-Or '-e epoll*', '-e *msg*', etc.
-
-Combining syscall names with perf events, tracepoints, etc, continues to
-be valid, i.e. this is possible:
-
-  # perf probe -L sys_nanosleep
-  <SyS_nanosleep@/home/acme/git/linux/kernel/time/hrtimer.c:0>
-      0  SYSCALL_DEFINE2(nanosleep, struct timespec __user *, rqtp,
-                        struct timespec __user *, rmtp)
-         {
-                struct timespec64 tu;
-
-      5         if (get_timespec64(&tu, rqtp))
-      6                 return -EFAULT;
-
-                if (!timespec64_valid(&tu))
-      9                 return -EINVAL;
-
-     11         current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
-     12         current->restart_block.nanosleep.rmtp = rmtp;
-     13         return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
-         }
-
-  # perf probe my_probe="sys_nanosleep:12 rmtp"
-  Added new event:
-    probe:my_probe       (on sys_nanosleep:12 with rmtp)
-
-  You can now use it in all perf tools, such as:
-
-	perf record -e probe:my_probe -aR sleep 1
-
-  #
-  # perf trace -e probe:my_probe/max-stack=5/,*sleep sleep 1
-     0.427 ( 0.003 ms): sleep/16690 nanosleep(rqtp: 0x7ffefc245090) ...
-     0.430 (         ): probe:my_probe:(ffffffffbd112923) rmtp=0)
-                                       sys_nanosleep ([kernel.kallsyms])
-                                       do_syscall_64 ([kernel.kallsyms])
-                                       return_from_SYSCALL_64 ([kernel.kallsyms])
-                                       __nanosleep_nocancel (/usr/lib64/libc-2.25.so)
-     0.427 (1000.208 ms): sleep/16690  ... [continued]: nanosleep()) = 0
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-elycoi8wy6y0w9dkj7ox1mzz@git.kernel.org
+Signed-off-by: Kan Liang <kan.liang@intel.com>
+Tested-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Stephane Eranian <eranian@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1504026672-7304-3-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-trace.txt |  2 +-
- tools/perf/builtin-trace.c              | 39 +++++++++++++++++++++++++++++----
- 2 files changed, 36 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.c                   |  4 +++
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/machine.c                |  8 ++++--
+ tools/perf/util/session.c                |  3 +++
+ tools/perf/util/sort.c                   | 42 ++++++++++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  1 +
+ tools/perf/util/symbol.h                 |  1 +
+ 8 files changed, 59 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index c1e3288a2dfb..d53bea6bd571 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -37,7 +37,7 @@ OPTIONS
- --expr::
- --event::
- 	List of syscalls and other perf events (tracepoints, HW cache events,
--	etc) to show.
-+	etc) to show. Globbing is supported, e.g.: "epoll_*", "*msg*", etc.
- 	See 'perf list' for a complete list of events.
- 	Prefixing with ! shows all syscalls but the ones specified.  You may
- 	need to escape it.
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d59cdadf3a79..771ddab94bb0 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1261,6 +1261,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
- 	int err = 0, i;
-+	size_t nr_allocated;
- 	struct str_node *pos;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 9fa84617181e..383a98d992ed 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -137,6 +137,7 @@ OPTIONS
+ 	- mem: type of memory access for the data at the time of the sample
+ 	- snoop: type of snoop (if any) for the data at the time of the sample
+ 	- dcacheline: the cacheline the data address is on at the time of the sample
++	- phys_daddr: physical address of data being executed on at the time of sample
  
- 	trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
-@@ -1274,13 +1275,18 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 		goto out;
- 	}
- 
-+	nr_allocated = trace->ev_qualifier_ids.nr;
- 	i = 0;
- 
- 	strlist__for_each_entry(pos, trace->ev_qualifier) {
- 		const char *sc = pos->s;
--		int id = syscalltbl__id(trace->sctbl, sc);
-+		int id = syscalltbl__id(trace->sctbl, sc), match_next = -1;
- 
- 		if (id < 0) {
-+			id = syscalltbl__strglobmatch_first(trace->sctbl, sc, &match_next);
-+			if (id >= 0)
-+				goto matches;
-+
- 			if (err == 0) {
- 				fputs("Error:\tInvalid syscall ", trace->output);
- 				err = -EINVAL;
-@@ -1290,13 +1296,37 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 
- 			fputs(sc, trace->output);
+ 	And the default sort keys are changed to local_weight, mem, sym, dso,
+ 	symbol_daddr, dso_daddr, snoop, tlb, locked, see '--mem-mode'.
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 9453b2e27015..e60d8d8ea4c2 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -167,6 +167,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 			symlen = unresolved_col_width + 4 + 2;
+ 			hists__set_unres_dso_col_len(hists, HISTC_MEM_DADDR_DSO);
  		}
--
-+matches:
- 		trace->ev_qualifier_ids.entries[i++] = id;
-+		if (match_next == -1)
-+			continue;
 +
-+		while (1) {
-+			id = syscalltbl__strglobmatch_next(trace->sctbl, sc, &match_next);
-+			if (id < 0)
-+				break;
-+			if (nr_allocated == trace->ev_qualifier_ids.nr) {
-+				void *entries;
++		hists__new_col_len(hists, HISTC_MEM_PHYS_DADDR,
++				   unresolved_col_width + 4 + 2);
 +
-+				nr_allocated += 8;
-+				entries = realloc(trace->ev_qualifier_ids.entries,
-+						  nr_allocated * sizeof(trace->ev_qualifier_ids.entries[0]));
-+				if (entries == NULL) {
-+					err = -ENOMEM;
-+					fputs("\nError:\t Not enough memory for parsing\n", trace->output);
-+					goto out_free;
-+				}
-+				trace->ev_qualifier_ids.entries = entries;
-+			}
-+			trace->ev_qualifier_ids.nr++;
-+			trace->ev_qualifier_ids.entries[i++] = id;
-+		}
- 	}
+ 	} else {
+ 		symlen = unresolved_col_width + 4 + 2;
+ 		hists__new_col_len(hists, HISTC_MEM_DADDR_SYMBOL, symlen);
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index ee3670a388df..e60dda26a920 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -47,6 +47,7 @@ enum hist_column {
+ 	HISTC_GLOBAL_WEIGHT,
+ 	HISTC_MEM_DADDR_SYMBOL,
+ 	HISTC_MEM_DADDR_DSO,
++	HISTC_MEM_PHYS_DADDR,
+ 	HISTC_MEM_LOCKED,
+ 	HISTC_MEM_TLB,
+ 	HISTC_MEM_LVL,
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 9eaa95302c86..df709363ef69 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1635,10 +1635,12 @@ static void ip__resolve_ams(struct thread *thread,
+ 	ams->al_addr = al.addr;
+ 	ams->sym = al.sym;
+ 	ams->map = al.map;
++	ams->phys_addr = 0;
+ }
  
- 	if (err < 0) {
- 		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
- 		      "\nHint:\tand: 'man syscalls'\n", trace->output);
-+out_free:
- 		zfree(&trace->ev_qualifier_ids.entries);
- 		trace->ev_qualifier_ids.nr = 0;
- 	}
-@@ -2814,7 +2844,7 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
- 	struct trace *trace = (struct trace *)opt->value;
- 	const char *s = str;
- 	char *sep = NULL, *lists[2] = { NULL, NULL, };
--	int len = strlen(str) + 1, err = -1, list;
-+	int len = strlen(str) + 1, err = -1, list, idx;
- 	char *strace_groups_dir = system_path(STRACE_GROUPS_DIR);
- 	char group_name[PATH_MAX];
+ static void ip__resolve_data(struct thread *thread,
+-			     u8 m, struct addr_map_symbol *ams, u64 addr)
++			     u8 m, struct addr_map_symbol *ams,
++			     u64 addr, u64 phys_addr)
+ {
+ 	struct addr_location al;
  
-@@ -2831,7 +2861,8 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
- 			*sep = '\0';
+@@ -1658,6 +1660,7 @@ static void ip__resolve_data(struct thread *thread,
+ 	ams->al_addr = al.addr;
+ 	ams->sym = al.sym;
+ 	ams->map = al.map;
++	ams->phys_addr = phys_addr;
+ }
  
- 		list = 0;
--		if (syscalltbl__id(trace->sctbl, s) >= 0) {
-+		if (syscalltbl__id(trace->sctbl, s) >= 0 ||
-+		    syscalltbl__strglobmatch_first(trace->sctbl, s, &idx) >= 0) {
- 			list = 1;
- 		} else {
- 			path__join(group_name, sizeof(group_name), strace_groups_dir, s);
+ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
+@@ -1669,7 +1672,8 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
+ 		return NULL;
+ 
+ 	ip__resolve_ams(al->thread, &mi->iaddr, sample->ip);
+-	ip__resolve_data(al->thread, al->cpumode, &mi->daddr, sample->addr);
++	ip__resolve_data(al->thread, al->cpumode, &mi->daddr,
++			 sample->addr, sample->phys_addr);
+ 	mi->data_src.val = sample->data_src;
+ 
+ 	return mi;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index ac863691605f..a7ebd9fe8e40 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1120,6 +1120,9 @@ static void dump_sample(struct perf_evsel *evsel, union perf_event *event,
+ 	if (sample_type & PERF_SAMPLE_DATA_SRC)
+ 		printf(" . data_src: 0x%"PRIx64"\n", sample->data_src);
+ 
++	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
++		printf(" .. phys_addr: 0x%"PRIx64"\n", sample->phys_addr);
++
+ 	if (sample_type & PERF_SAMPLE_TRANSACTION)
+ 		printf("... transaction: %" PRIx64 "\n", sample->transaction);
+ 
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 12359bd986db..eb3ab902a1c0 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1316,6 +1316,47 @@ struct sort_entry sort_mem_dcacheline = {
+ };
+ 
+ static int64_t
++sort__phys_daddr_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	uint64_t l = 0, r = 0;
++
++	if (left->mem_info)
++		l = left->mem_info->daddr.phys_addr;
++	if (right->mem_info)
++		r = right->mem_info->daddr.phys_addr;
++
++	return (int64_t)(r - l);
++}
++
++static int hist_entry__phys_daddr_snprintf(struct hist_entry *he, char *bf,
++					   size_t size, unsigned int width)
++{
++	uint64_t addr = 0;
++	size_t ret = 0;
++	size_t len = BITS_PER_LONG / 4;
++
++	addr = he->mem_info->daddr.phys_addr;
++
++	ret += repsep_snprintf(bf + ret, size - ret, "[%c] ", he->level);
++
++	ret += repsep_snprintf(bf + ret, size - ret, "%-#.*llx", len, addr);
++
++	ret += repsep_snprintf(bf + ret, size - ret, "%-*s", width - ret, "");
++
++	if (ret > width)
++		bf[width] = '\0';
++
++	return width;
++}
++
++struct sort_entry sort_mem_phys_daddr = {
++	.se_header	= "Data Physical Address",
++	.se_cmp		= sort__phys_daddr_cmp,
++	.se_snprintf	= hist_entry__phys_daddr_snprintf,
++	.se_width_idx	= HISTC_MEM_PHYS_DADDR,
++};
++
++static int64_t
+ sort__abort_cmp(struct hist_entry *left, struct hist_entry *right)
+ {
+ 	if (!left->branch_info || !right->branch_info)
+@@ -1547,6 +1588,7 @@ static struct sort_dimension memory_sort_dimensions[] = {
+ 	DIM(SORT_MEM_LVL, "mem", sort_mem_lvl),
+ 	DIM(SORT_MEM_SNOOP, "snoop", sort_mem_snoop),
+ 	DIM(SORT_MEM_DCACHELINE, "dcacheline", sort_mem_dcacheline),
++	DIM(SORT_MEM_PHYS_DADDR, "phys_daddr", sort_mem_phys_daddr),
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index b7c75597e18f..f36dc4980a6c 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -245,6 +245,7 @@ enum sort_type {
+ 	SORT_MEM_SNOOP,
+ 	SORT_MEM_DCACHELINE,
+ 	SORT_MEM_IADDR_SYMBOL,
++	SORT_MEM_PHYS_DADDR,
+ };
+ 
+ /*
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index d00a012cfdfb..2bd6a1f01a1c 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -186,6 +186,7 @@ struct addr_map_symbol {
+ 	struct symbol *sym;
+ 	u64	      addr;
+ 	u64	      al_addr;
++	u64	      phys_addr;
+ };
+ 
+ struct branch_info {
 -- 
 2.13.5
