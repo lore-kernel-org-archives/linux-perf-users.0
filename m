@@ -1,45 +1,145 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: broken cycle counts from perf record in frequency mode [Was: Re:
- deducing CPU clock rate over time from cycle samples]
-Date: Mon, 4 Sep 2017 20:40:58 -0700
-Message-ID: <20170905034058.GV2482@two.firstfloor.org>
-References: <2900948.aeNJFYEL58@agathebauer>
- <3838997.nyT3JFTsVA@agathebauer>
- <87d17al60b.fsf@firstfloor.org>
- <1788258.9pJ1GNok8V@milian-kdab2>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/13] perf/core improvements and fixes
+Date: Tue, 5 Sep 2017 07:15:34 +0200
+Message-ID: <20170905051534.p5xzgpcfrizcx67u@gmail.com>
+References: <20170904140044.22912-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from one.firstfloor.org ([193.170.194.197]:40454 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753774AbdIEDlA (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:37978 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750847AbdIEFPj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Sep 2017 23:41:00 -0400
+        Tue, 5 Sep 2017 01:15:39 -0400
 Content-Disposition: inline
-In-Reply-To: <1788258.9pJ1GNok8V@milian-kdab2>
+In-Reply-To: <20170904140044.22912-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, peterz@infradead.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Anton Blanchard <anton@au1.ibm.com>, Flavio Bruno Leitner <fbl@redhat.com>, Jack Henschel <jackdev@mailbox.org>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Stephane Eranian <eranian@google.com>, Sukadev Bhattiprolu <sukadev@linu>
 
-> The cycle value gets associated with a sample via it's period value, which is 
-> used by `perf report` in the analysis. If I get a single "broken" sample with 
 
-I always thought it just used the number of samples?
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> a cycle count of, say 1E14 and then a million other samples, each with "sane" 
-> cycle counts of let's say 1E5, then the one broken sample will hold 50% of the 
-> total amount of measured cycles. So perf report will show that the function 
-> where the broken sample points to will have a cost of 50%.
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 1b2f76d77a277bb70d38ad0991ed7f16bbc115a9:
+> 
+>   Merge tag 'perf-core-for-mingo-4.14-20170829' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2017-08-29 23:13:56 +0200)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.14-20170901
+> 
+> for you to fetch changes up to eba9fac017617e685d648339e29a1453a30cb065:
+> 
+>   perf annotate browser: Help for cycling thru hottest instructions with TAB/shift+TAB (2017-09-01 14:55:40 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Support syscall name glob matching in 'perf trace' (Arnaldo Carvalho de Melo)
+> 
+>   e.g.:
+> 
+>    # perf trace -e pkey_*
+>    32.784 (0.006 ms): pkey/16018 pkey_alloc(init_val: DISABLE_WRITE) = -1 EINVAL Invalid argument
+>    32.795 (0.004 ms): pkey/16018 pkey_mprotect(start: 0x7f380d0a6000, len: 4096, prot: READ|WRITE, pkey: -1) = 0
+>    32.801 (0.002 ms): pkey/16018 pkey_free(pkey: -1                ) = -1 EINVAL Invalid argument
+>    ^C#
+> 
+> - Do not auto merge counts for explicitely specified events in
+>   'perf stat' (Arnaldo Carvalho de Melo)
+> 
+> - Fix syntax in documentation of .perfconfig intel-pt option (Jack Henschel)
+> 
+> - Calculate the average cycles of iterations for loops detected by the
+>   branch history support in 'perf report' (Jin Yao)
+> 
+> - Support PERF_SAMPLE_PHYS_ADDR as a sort key "phys_daddr" in the 'script', 'mem',
+>   'top' and 'report'. Also add a test entry for it in 'perf test' (Kan Liang)
+> 
+> - Fix 'Object code reading' 'perf test' entry in PowerPC (Ravi Bangoria)
+> 
+> - Remove some duplicate Power9 duplicate vendor events (described in JSON
+>   files) (Sukadev Bhattiprolu)
+> 
+> - Add help entry in the TUI annotate browser about cycling thru hottest
+>   instructions with TAB/shift+TAB (Arnaldo Carvalho de Melo)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (4):
+>       perf syscalltbl: Support glob matching on syscall names
+>       perf trace: Support syscall name globbing
+>       perf stat: Only auto-merge events that are PMU aliases
+>       perf annotate browser: Help for cycling thru hottest instructions with TAB/shift+TAB
+> 
+> Jack Henschel (1):
+>       perf intel-pt: Fix syntax in documentation of config option
+> 
+> Jin Yao (1):
+>       perf report: Calculate the average cycles of iterations
+> 
+> Kan Liang (5):
+>       perf tools: Support new sample type for physical address
+>       perf sort: Add sort option for physical address
+>       perf mem: Support physical address
+>       perf script: Support physical address
+>       perf test: Add test case for PERF_SAMPLE_PHYS_ADDR
+> 
+> Ravi Bangoria (1):
+>       perf test powerpc: Fix 'Object code reading' test
+> 
+> Sukadev Bhattiprolu (1):
+>       perf vendor events powerpc: Remove duplicate events
+> 
+>  tools/include/uapi/linux/perf_event.h              |   4 +-
+>  tools/perf/Documentation/intel-pt.txt              |   2 +-
+>  tools/perf/Documentation/perf-mem.txt              |   4 +
+>  tools/perf/Documentation/perf-record.txt           |   5 +-
+>  tools/perf/Documentation/perf-report.txt           |   1 +
+>  tools/perf/Documentation/perf-script.txt           |   2 +-
+>  tools/perf/Documentation/perf-trace.txt            |   2 +-
+>  tools/perf/builtin-mem.c                           |  97 ++++++++++++-----
+>  tools/perf/builtin-record.c                        |   2 +
+>  tools/perf/builtin-script.c                        |  15 ++-
+>  tools/perf/builtin-stat.c                          |   2 +-
+>  tools/perf/builtin-trace.c                         |  39 ++++++-
+>  tools/perf/perf.h                                  |   1 +
+>  .../pmu-events/arch/powerpc/power9/frontend.json   |   7 +-
+>  .../perf/pmu-events/arch/powerpc/power9/other.json | 120 ---------------------
+>  .../pmu-events/arch/powerpc/power9/pipeline.json   |   7 +-
+>  tools/perf/pmu-events/arch/powerpc/power9/pmc.json |   7 +-
+>  tools/perf/tests/code-reading.c                    |   5 +
+>  tools/perf/tests/sample-parsing.c                  |   6 +-
+>  tools/perf/ui/browsers/annotate.c                  |   3 +-
+>  tools/perf/ui/browsers/hists.c                     |   8 +-
+>  tools/perf/ui/stdio/hist.c                         |  10 +-
+>  tools/perf/util/callchain.c                        |  49 ++++-----
+>  tools/perf/util/callchain.h                        |   9 +-
+>  tools/perf/util/event.h                            |   1 +
+>  tools/perf/util/evsel.c                            |  19 +++-
+>  tools/perf/util/evsel.h                            |   1 +
+>  tools/perf/util/hist.c                             |   4 +
+>  tools/perf/util/hist.h                             |   1 +
+>  tools/perf/util/machine.c                          |  96 ++++++++++-------
+>  tools/perf/util/parse-events.c                     |  24 +++--
+>  tools/perf/util/session.c                          |   3 +
+>  tools/perf/util/sort.c                             |  42 ++++++++
+>  tools/perf/util/sort.h                             |   1 +
+>  tools/perf/util/symbol.h                           |   1 +
+>  tools/perf/util/syscalltbl.c                       |  33 ++++++
+>  tools/perf/util/syscalltbl.h                       |   3 +
+>  37 files changed, 368 insertions(+), 268 deletions(-)
 
-I don't think I've seen such a situation. Did you?
+Pulled, thanks a lot Arnaldo!
 
-BTW I'm not arguing against fixing it, but typically I just
-recommend to avoid frequency mode. The fast sampling at the beginning
-has caused a range of low level PMU bugs and it is hard to reason about
-because of its complex behavior. Also it has no protection against
-synchronizing with repeated patterns in the execution, which
-can cause bad shadowing effects.  If you use the Intel
-event aliases they have all sensible periods set by default.
-
--Andi
+	Ingo
