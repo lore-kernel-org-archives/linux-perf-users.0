@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v3 03/13] perf report: create real callchain entries for inlined frames
-Date: Wed,  6 Sep 2017 15:54:51 +0200
-Message-ID: <20170906135501.306-4-milian.wolff@kdab.com>
+Subject: [PATCH v3 01/13] perf report: remove code to handle inline frames from browsers
+Date: Wed,  6 Sep 2017 15:54:49 +0200
+Message-ID: <20170906135501.306-2-milian.wolff@kdab.com>
 References: <20170906135501.306-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170906135501.306-1-milian.wolff@kdab.com>
@@ -10,13 +10,8 @@ To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-The inlined frames use a fake symbol that is maintained by
-inline_node which in turn is maintained by the dso->inlines tree.
-This tree is always sorted by name. All other entries of the symbol
-beside the function name are unused for inline frames. The advantage
-of this approach is that all existing users of the callchain API can
-now transparently display inlined frames without having to patch
-their code.
+The follow-up commits will make inline frames first-class citizens
+in the callchain, thereby obsoleting all of this special code.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -25,473 +20,469 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/dso.c     |   2 +
- tools/perf/util/dso.h     |   1 +
- tools/perf/util/machine.c |  37 +++++++++
- tools/perf/util/srcline.c | 186 ++++++++++++++++++++++++++++++++++++----------
- tools/perf/util/srcline.h |  19 ++++-
- tools/perf/util/symbol.h  |   1 +
- 6 files changed, 203 insertions(+), 43 deletions(-)
+ tools/perf/ui/browsers/hists.c  | 180 +++-------------------------------------
+ tools/perf/ui/stdio/hist.c      |  77 +----------------
+ tools/perf/util/evsel_fprintf.c |  32 -------
+ tools/perf/util/hist.c          |   5 --
+ tools/perf/util/sort.h          |   1 -
+ 5 files changed, 13 insertions(+), 282 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index b9e087fb8247..72e6e390fd26 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -9,6 +9,7 @@
- #include "compress.h"
- #include "path.h"
- #include "symbol.h"
-+#include "srcline.h"
- #include "dso.h"
- #include "machine.h"
- #include "auxtrace.h"
-@@ -1233,6 +1234,7 @@ void dso__delete(struct dso *dso)
- 		       dso->long_name);
- 	for (i = 0; i < MAP__NR_TYPES; ++i)
- 		symbols__delete(&dso->symbols[i]);
-+	inlines__tree_delete(&dso->inlined_nodes);
- 
- 	if (dso->short_name_allocated) {
- 		zfree((char **)&dso->short_name);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index f886141678eb..7d1e2b3c1f10 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -141,6 +141,7 @@ struct dso {
- 	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
- 	struct rb_root	 symbols[MAP__NR_TYPES];
- 	struct rb_root	 symbol_names[MAP__NR_TYPES];
-+	struct rb_root	 inlined_nodes;
- 	struct {
- 		u64		addr;
- 		struct symbol	*symbol;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 5c8286a7d7d6..206526d3b509 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2079,6 +2079,40 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 	return 0;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 13dfb0a0bdeb..3a433f370e7f 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -154,57 +154,9 @@ static void callchain_list__set_folding(struct callchain_list *cl, bool unfold)
+ 	cl->unfolded = unfold ? cl->has_children : false;
  }
  
-+static int append_inlines(struct callchain_cursor *cursor,
-+			  struct map *map, struct symbol *sym, u64 ip)
-+{
-+	struct inline_node *inline_node;
-+	struct inline_list *ilist;
-+	u64 addr;
-+
-+	if (!symbol_conf.inline_name || !map || !sym)
-+		return 1;
-+
-+	addr = map__rip_2objdump(map, ip);
-+
-+	inline_node = inlines__tree_find(&map->dso->inlined_nodes, addr);
-+	if (!inline_node) {
-+		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
-+		if (!inline_node)
-+			return 1;
-+
-+		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
-+	}
-+
-+	list_for_each_entry(ilist, &inline_node->val, list) {
-+		int ret = callchain_cursor_append(cursor, ip, map,
-+						  ilist->symbol, false,
-+						  NULL, 0, 0, 0,
-+						  ilist->srcline);
-+
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int unwind_entry(struct unwind_entry *entry, void *arg)
- {
- 	struct callchain_cursor *cursor = arg;
-@@ -2087,6 +2121,9 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 	if (symbol_conf.hide_unresolved && entry->sym == NULL)
- 		return 0;
- 
-+	if (append_inlines(cursor, entry->map, entry->sym, entry->ip) == 0)
-+		return 0;
-+
- 	srcline = callchain_srcline(entry->map, entry->sym, entry->ip);
- 	return callchain_cursor_append(cursor, entry->ip,
- 				       entry->map, entry->sym,
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index ed8e8d2de942..87f148c0d094 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -33,28 +33,17 @@ static const char *dso__name(struct dso *dso)
- 	return dso_name;
- }
- 
--static int inline_list__append(char *filename, char *funcname, int line_nr,
--			       struct inline_node *node, struct dso *dso)
-+static int inline_list__append(struct symbol *symbol, char *srcline,
-+			       struct inline_node *node)
- {
- 	struct inline_list *ilist;
--	char *demangled;
- 
- 	ilist = zalloc(sizeof(*ilist));
- 	if (ilist == NULL)
- 		return -1;
- 
--	ilist->filename = filename;
--	ilist->line_nr = line_nr;
+-static struct inline_node *inline_node__create(struct map *map, u64 ip)
+-{
+-	struct dso *dso;
+-	struct inline_node *node;
 -
--	if (dso != NULL) {
--		demangled = dso__demangle_sym(dso, 0, funcname);
--		if (demangled == NULL) {
--			ilist->funcname = funcname;
--		} else {
--			ilist->funcname = demangled;
--			free(funcname);
+-	if (map == NULL)
+-		return NULL;
+-
+-	dso = map->dso;
+-	if (dso == NULL)
+-		return NULL;
+-
+-	node = dso__parse_addr_inlines(dso,
+-				       map__rip_2objdump(map, ip));
+-
+-	return node;
+-}
+-
+-static int inline__count_rows(struct inline_node *node)
+-{
+-	struct inline_list *ilist;
+-	int i = 0;
+-
+-	if (node == NULL)
+-		return 0;
+-
+-	list_for_each_entry(ilist, &node->val, list) {
+-		if ((ilist->filename != NULL) || (ilist->funcname != NULL))
+-			i++;
+-	}
+-
+-	return i;
+-}
+-
+-static int callchain_list__inline_rows(struct callchain_list *chain)
+-{
+-	struct inline_node *node;
+-	int rows;
+-
+-	node = inline_node__create(chain->ms.map, chain->ip);
+-	if (node == NULL)
+-		return 0;
+-
+-	rows = inline__count_rows(node);
+-	inline_node__delete(node);
+-	return rows;
+-}
+-
+ static int callchain_node__count_rows_rb_tree(struct callchain_node *node)
+ {
+-	int n = 0, inline_rows;
++	int n = 0;
+ 	struct rb_node *nd;
+ 
+ 	for (nd = rb_first(&node->rb_root); nd; nd = rb_next(nd)) {
+@@ -215,12 +167,6 @@ static int callchain_node__count_rows_rb_tree(struct callchain_node *node)
+ 		list_for_each_entry(chain, &child->val, list) {
+ 			++n;
+ 
+-			if (symbol_conf.inline_name) {
+-				inline_rows =
+-					callchain_list__inline_rows(chain);
+-				n += inline_rows;
+-			}
+-
+ 			/* We need this because we may not have children */
+ 			folded_sign = callchain_list__folded(chain);
+ 			if (folded_sign == '+')
+@@ -272,7 +218,7 @@ static int callchain_node__count_rows(struct callchain_node *node)
+ {
+ 	struct callchain_list *chain;
+ 	bool unfolded = false;
+-	int n = 0, inline_rows;
++	int n = 0;
+ 
+ 	if (callchain_param.mode == CHAIN_FLAT)
+ 		return callchain_node__count_flat_rows(node);
+@@ -281,10 +227,6 @@ static int callchain_node__count_rows(struct callchain_node *node)
+ 
+ 	list_for_each_entry(chain, &node->val, list) {
+ 		++n;
+-		if (symbol_conf.inline_name) {
+-			inline_rows = callchain_list__inline_rows(chain);
+-			n += inline_rows;
+-		}
+ 
+ 		unfolded = chain->unfolded;
+ 	}
+@@ -432,19 +374,6 @@ static void hist_entry__init_have_children(struct hist_entry *he)
+ 	he->init_have_children = true;
+ }
+ 
+-static void hist_entry_init_inline_node(struct hist_entry *he)
+-{
+-	if (he->inline_node)
+-		return;
+-
+-	he->inline_node = inline_node__create(he->ms.map, he->ip);
+-
+-	if (he->inline_node == NULL)
+-		return;
+-
+-	he->has_children = true;
+-}
+-
+ static bool hist_browser__toggle_fold(struct hist_browser *browser)
+ {
+ 	struct hist_entry *he = browser->he_selection;
+@@ -476,12 +405,8 @@ static bool hist_browser__toggle_fold(struct hist_browser *browser)
+ 
+ 		if (he->unfolded) {
+ 			if (he->leaf)
+-				if (he->inline_node)
+-					he->nr_rows = inline__count_rows(
+-							he->inline_node);
+-				else
+-					he->nr_rows = callchain__count_rows(
+-							&he->sorted_chain);
++				he->nr_rows = callchain__count_rows(
++						&he->sorted_chain);
+ 			else
+ 				he->nr_rows = hierarchy_count_rows(browser, he, false);
+ 
+@@ -841,71 +766,6 @@ static bool hist_browser__check_dump_full(struct hist_browser *browser __maybe_u
+ 
+ #define LEVEL_OFFSET_STEP 3
+ 
+-static int hist_browser__show_inline(struct hist_browser *browser,
+-				     struct inline_node *node,
+-				     unsigned short row,
+-				     int offset)
+-{
+-	struct inline_list *ilist;
+-	char buf[1024];
+-	int color, width, first_row;
+-
+-	first_row = row;
+-	width = browser->b.width - (LEVEL_OFFSET_STEP + 2);
+-	list_for_each_entry(ilist, &node->val, list) {
+-		if ((ilist->filename != NULL) || (ilist->funcname != NULL)) {
+-			color = HE_COLORSET_NORMAL;
+-			if (ui_browser__is_current_entry(&browser->b, row))
+-				color = HE_COLORSET_SELECTED;
+-
+-			if (callchain_param.key == CCKEY_ADDRESS ||
+-			    callchain_param.key == CCKEY_SRCLINE) {
+-				if (ilist->filename != NULL)
+-					scnprintf(buf, sizeof(buf),
+-						  "%s:%d (inline)",
+-						  ilist->filename,
+-						  ilist->line_nr);
+-				else
+-					scnprintf(buf, sizeof(buf), "??");
+-			} else if (ilist->funcname != NULL)
+-				scnprintf(buf, sizeof(buf), "%s (inline)",
+-					  ilist->funcname);
+-			else if (ilist->filename != NULL)
+-				scnprintf(buf, sizeof(buf),
+-					  "%s:%d (inline)",
+-					  ilist->filename,
+-					  ilist->line_nr);
+-			else
+-				scnprintf(buf, sizeof(buf), "??");
+-
+-			ui_browser__set_color(&browser->b, color);
+-			hist_browser__gotorc(browser, row, 0);
+-			ui_browser__write_nstring(&browser->b, " ",
+-				LEVEL_OFFSET_STEP + offset);
+-			ui_browser__write_nstring(&browser->b, buf, width);
+-			row++;
 -		}
 -	}
-+	ilist->symbol = symbol;
-+	ilist->srcline = srcline;
+-
+-	return row - first_row;
+-}
+-
+-static size_t show_inline_list(struct hist_browser *browser, struct map *map,
+-			       u64 ip, int row, int offset)
+-{
+-	struct inline_node *node;
+-	int ret;
+-
+-	node = inline_node__create(map, ip);
+-	if (node == NULL)
+-		return 0;
+-
+-	ret = hist_browser__show_inline(browser, node, row, offset);
+-
+-	inline_node__delete(node);
+-	return ret;
+-}
+-
+ static int hist_browser__show_callchain_list(struct hist_browser *browser,
+ 					     struct callchain_node *node,
+ 					     struct callchain_list *chain,
+@@ -917,7 +777,7 @@ static int hist_browser__show_callchain_list(struct hist_browser *browser,
+ 	char bf[1024], *alloc_str;
+ 	char buf[64], *alloc_str2;
+ 	const char *str;
+-	int inline_rows = 0, ret = 1;
++	int ret = 1;
  
- 	if (callchain_param.order == ORDER_CALLEE)
- 		list_add_tail(&ilist->list, &node->val);
-@@ -64,6 +53,30 @@ static int inline_list__append(char *filename, char *funcname, int line_nr,
- 	return 0;
- }
+ 	if (arg->row_offset != 0) {
+ 		arg->row_offset--;
+@@ -954,12 +814,7 @@ static int hist_browser__show_callchain_list(struct hist_browser *browser,
+ 	free(alloc_str);
+ 	free(alloc_str2);
  
-+// basename version that takes a const input string
-+static const char *gnu_basename(const char *path)
-+{
-+	const char *base = strrchr(path, '/');
-+
-+	return base ? base + 1 : path;
-+}
-+
-+static char *srcline_from_fileline(const char *file, unsigned int line)
-+{
-+	char *srcline;
-+
-+	if (!file)
-+		return NULL;
-+
-+	if (!srcline_full_filename)
-+		file = gnu_basename(file);
-+
-+	if (asprintf(&srcline, "%s:%u", file, line) < 0)
-+		return NULL;
-+
-+	return srcline;
-+}
-+
- #ifdef HAVE_LIBBFD_SUPPORT
- 
- /*
-@@ -206,19 +219,58 @@ static void addr2line_cleanup(struct a2l_data *a2l)
- 
- #define MAX_INLINE_NEST 1024
- 
-+static struct symbol *new_inline_sym(struct dso *dso,
-+				     struct symbol *base_sym,
-+				     const char *funcname)
-+{
-+	struct symbol *inline_sym;
-+	char *demangled = NULL;
-+
-+	if (dso) {
-+		demangled = dso__demangle_sym(dso, 0, funcname);
-+		if (demangled)
-+			funcname = demangled;
-+	}
-+
-+	if (strcmp(funcname, base_sym->name) == 0) {
-+		// reuse the real, existing symbol
-+		inline_sym = base_sym;
-+		// ensure that we don't alias an inlined symbol, which could
-+		// lead to double frees in inline_node__delete
-+		assert(!base_sym->inlined);
-+	} else {
-+		// create a fake symbol for the inline frame
-+		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
-+					 base_sym ? base_sym->end : 0,
-+					 base_sym ? base_sym->binding : 0,
-+					 funcname);
-+		if (inline_sym)
-+			inline_sym->inlined = 1;
-+	}
-+
-+	free(demangled);
-+
-+	return inline_sym;
-+}
-+
- static int inline_list__append_dso_a2l(struct dso *dso,
--				       struct inline_node *node)
-+				       struct inline_node *node,
-+				       struct symbol *sym)
- {
- 	struct a2l_data *a2l = dso->a2l;
--	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
--	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
-+	struct symbol *inline_sym = new_inline_sym(dso, sym, a2l->funcname);
-+	char *srcline = NULL;
-+
-+	if (a2l->filename)
-+		srcline = srcline_from_fileline(a2l->filename, a2l->line);
- 
--	return inline_list__append(filename, funcname, a2l->line, node, dso);
-+	return inline_list__append(inline_sym, srcline, node);
- }
- 
- static int addr2line(const char *dso_name, u64 addr,
- 		     char **file, unsigned int *line, struct dso *dso,
--		     bool unwind_inlines, struct inline_node *node)
-+		     bool unwind_inlines, struct inline_node *node,
-+		     struct symbol *sym)
- {
- 	int ret = 0;
- 	struct a2l_data *a2l = dso->a2l;
-@@ -244,7 +296,7 @@ static int addr2line(const char *dso_name, u64 addr,
- 	if (unwind_inlines) {
- 		int cnt = 0;
- 
--		if (node && inline_list__append_dso_a2l(dso, node))
-+		if (node && inline_list__append_dso_a2l(dso, node, sym))
- 			return 0;
- 
- 		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
-@@ -255,7 +307,7 @@ static int addr2line(const char *dso_name, u64 addr,
- 				a2l->filename = NULL;
- 
- 			if (node != NULL) {
--				if (inline_list__append_dso_a2l(dso, node))
-+				if (inline_list__append_dso_a2l(dso, node, sym))
- 					return 0;
- 				// found at least one inline frame
- 				ret = 1;
-@@ -287,7 +339,7 @@ void dso__free_a2l(struct dso *dso)
- }
- 
- static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
--	struct dso *dso)
-+	struct dso *dso, struct symbol *sym)
- {
- 	struct inline_node *node;
- 
-@@ -300,7 +352,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- 	INIT_LIST_HEAD(&node->val);
- 	node->addr = addr;
- 
--	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node))
-+	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym))
- 		goto out_free_inline_node;
- 
- 	if (list_empty(&node->val))
-@@ -340,7 +392,8 @@ static int addr2line(const char *dso_name, u64 addr,
- 		     char **file, unsigned int *line_nr,
- 		     struct dso *dso __maybe_unused,
- 		     bool unwind_inlines __maybe_unused,
--		     struct inline_node *node __maybe_unused)
-+		     struct inline_node *node __maybe_unused,
-+		     struct symbol *sym __maybe_unused)
- {
- 	FILE *fp;
- 	char cmd[PATH_MAX];
-@@ -380,7 +433,7 @@ void dso__free_a2l(struct dso *dso __maybe_unused)
- }
- 
- static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
--	struct dso *dso __maybe_unused)
-+	struct dso *dso __maybe_unused, struct symbol *sym)
- {
- 	FILE *fp;
- 	char cmd[PATH_MAX];
-@@ -408,13 +461,15 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- 	node->addr = addr;
- 
- 	while (getline(&filename, &len, fp) != -1) {
-+		char *srcline;
-+
- 		if (filename_split(filename, &line_nr) != 1) {
- 			free(filename);
- 			goto out;
- 		}
- 
--		if (inline_list__append(filename, NULL, line_nr, node,
--					NULL) != 0)
-+		srcline = srcline_from_fileline(filename, line_nr);
-+		if (inline_list__append(sym, srcline, node) != 0)
- 			goto out;
- 
- 		filename = NULL;
-@@ -454,19 +509,18 @@ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
- 	if (dso_name == NULL)
- 		goto out;
- 
--	if (!addr2line(dso_name, addr, &file, &line, dso, unwind_inlines, NULL))
-+	if (!addr2line(dso_name, addr, &file, &line, dso,
-+		       unwind_inlines, NULL, sym))
- 		goto out;
- 
--	if (asprintf(&srcline, "%s:%u",
--				srcline_full_filename ? file : basename(file),
--				line) < 0) {
--		free(file);
-+	srcline = srcline_from_fileline(file, line);
-+	free(file);
-+
-+	if (!srcline)
- 		goto out;
+-	if (symbol_conf.inline_name) {
+-		inline_rows = show_inline_list(browser, chain->ms.map,
+-					       chain->ip, row + 1, offset);
 -	}
- 
- 	dso->a2l_fails = 0;
- 
--	free(file);
- 	return srcline;
- 
- out:
-@@ -500,7 +554,8 @@ char *get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
- 	return __get_srcline(dso, addr, sym, show_sym, show_addr, false);
+-
+-	return ret + inline_rows;
++	return ret;
  }
  
--struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
-+struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
-+					    struct symbol *sym)
- {
- 	const char *dso_name;
- 
-@@ -508,7 +563,7 @@ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
- 	if (dso_name == NULL)
- 		return NULL;
- 
--	return addr2inlines(dso_name, addr, dso);
-+	return addr2inlines(dso_name, addr, dso, sym);
- }
- 
- void inline_node__delete(struct inline_node *node)
-@@ -517,10 +572,63 @@ void inline_node__delete(struct inline_node *node)
- 
- 	list_for_each_entry_safe(ilist, tmp, &node->val, list) {
- 		list_del_init(&ilist->list);
--		zfree(&ilist->filename);
--		zfree(&ilist->funcname);
-+		zfree(&ilist->srcline);
-+		// only the inlined symbols are owned by the list
-+		if (ilist->symbol && ilist->symbol->inlined)
-+			symbol__delete(ilist->symbol);
- 		free(ilist);
+ static bool check_percent_display(struct rb_node *node, u64 parent_total)
+@@ -1383,12 +1238,6 @@ static int hist_browser__show_entry(struct hist_browser *browser,
+ 		folded_sign = hist_entry__folded(entry);
  	}
  
- 	free(node);
+-	if (symbol_conf.inline_name &&
+-	    (!entry->has_children)) {
+-		hist_entry_init_inline_node(entry);
+-		folded_sign = hist_entry__folded(entry);
+-	}
+-
+ 	if (row_offset == 0) {
+ 		struct hpp_arg arg = {
+ 			.b		= &browser->b,
+@@ -1420,8 +1269,7 @@ static int hist_browser__show_entry(struct hist_browser *browser,
+ 			}
+ 
+ 			if (first) {
+-				if (symbol_conf.use_callchain ||
+-					symbol_conf.inline_name) {
++				if (symbol_conf.use_callchain) {
+ 					ui_browser__printf(&browser->b, "%c ", folded_sign);
+ 					width -= 2;
+ 				}
+@@ -1463,15 +1311,11 @@ static int hist_browser__show_entry(struct hist_browser *browser,
+ 			.is_current_entry = current_entry,
+ 		};
+ 
+-		if (entry->inline_node)
+-			printed += hist_browser__show_inline(browser,
+-					entry->inline_node, row, 0);
+-		else
+-			printed += hist_browser__show_callchain(browser,
+-					entry, 1, row,
+-					hist_browser__show_callchain_entry,
+-					&arg,
+-					hist_browser__check_output_full);
++		printed += hist_browser__show_callchain(browser,
++				entry, 1, row,
++				hist_browser__show_callchain_entry,
++				&arg,
++				hist_browser__check_output_full);
+ 	}
+ 
+ 	return printed;
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 8bdb7a500181..b6b9baac0e3b 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -21,64 +21,6 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
+ 	return ret;
  }
-+
-+void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines)
-+{
-+	struct rb_node **p = &tree->rb_node;
-+	struct rb_node *parent = NULL;
-+	const u64 addr = inlines->addr;
-+	struct inline_node *i;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		i = rb_entry(parent, struct inline_node, rb_node);
-+		if (addr < i->addr)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+	rb_link_node(&inlines->rb_node, parent, p);
-+	rb_insert_color(&inlines->rb_node, tree);
-+}
-+
-+struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr)
-+{
-+	struct rb_node *n = tree->rb_node;
-+
-+	while (n) {
-+		struct inline_node *i = rb_entry(n, struct inline_node,
-+						 rb_node);
-+
-+		if (addr < i->addr)
-+			n = n->rb_left;
-+		else if (addr > i->addr)
-+			n = n->rb_right;
-+		else
-+			return i;
-+	}
-+
-+	return NULL;
-+}
-+
-+void inlines__tree_delete(struct rb_root *tree)
-+{
-+	struct inline_node *pos;
-+	struct rb_node *next = rb_first(tree);
-+
-+	while (next) {
-+		pos = rb_entry(next, struct inline_node, rb_node);
-+		next = rb_next(&pos->rb_node);
-+		rb_erase(&pos->rb_node, tree);
-+		inline_node__delete(pos);
-+	}
-+}
-diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-index 7b52ba88676e..0d2aca92e8c7 100644
---- a/tools/perf/util/srcline.h
-+++ b/tools/perf/util/srcline.h
-@@ -2,6 +2,7 @@
- #define PERF_SRCLINE_H
  
- #include <linux/list.h>
-+#include <linux/rbtree.h>
- #include <linux/types.h>
+-static size_t inline__fprintf(struct map *map, u64 ip, int left_margin,
+-			      int depth, int depth_mask, FILE *fp)
+-{
+-	struct dso *dso;
+-	struct inline_node *node;
+-	struct inline_list *ilist;
+-	int ret = 0, i;
+-
+-	if (map == NULL)
+-		return 0;
+-
+-	dso = map->dso;
+-	if (dso == NULL)
+-		return 0;
+-
+-	node = dso__parse_addr_inlines(dso,
+-				       map__rip_2objdump(map, ip));
+-	if (node == NULL)
+-		return 0;
+-
+-	list_for_each_entry(ilist, &node->val, list) {
+-		if ((ilist->filename != NULL) || (ilist->funcname != NULL)) {
+-			ret += callchain__fprintf_left_margin(fp, left_margin);
+-
+-			for (i = 0; i < depth; i++) {
+-				if (depth_mask & (1 << i))
+-					ret += fprintf(fp, "|");
+-				else
+-					ret += fprintf(fp, " ");
+-				ret += fprintf(fp, "          ");
+-			}
+-
+-			if (callchain_param.key == CCKEY_ADDRESS ||
+-			    callchain_param.key == CCKEY_SRCLINE) {
+-				if (ilist->filename != NULL)
+-					ret += fprintf(fp, "%s:%d (inline)",
+-						       ilist->filename,
+-						       ilist->line_nr);
+-				else
+-					ret += fprintf(fp, "??");
+-			} else if (ilist->funcname != NULL)
+-				ret += fprintf(fp, "%s (inline)",
+-					       ilist->funcname);
+-			else if (ilist->filename != NULL)
+-				ret += fprintf(fp, "%s:%d (inline)",
+-					       ilist->filename,
+-					       ilist->line_nr);
+-			else
+-				ret += fprintf(fp, "??");
+-
+-			ret += fprintf(fp, "\n");
+-		}
+-	}
+-
+-	inline_node__delete(node);
+-	return ret;
+-}
+-
+ static size_t ipchain__fprintf_graph_line(FILE *fp, int depth, int depth_mask,
+ 					  int left_margin)
+ {
+@@ -137,9 +79,6 @@ static size_t ipchain__fprintf_graph(FILE *fp, struct callchain_node *node,
+ 	fputc('\n', fp);
+ 	free(alloc_str);
  
- struct dso;
-@@ -17,18 +18,28 @@ void free_srcline(char *srcline);
- #define SRCLINE_UNKNOWN  ((char *) "??:0")
+-	if (symbol_conf.inline_name)
+-		ret += inline__fprintf(chain->ms.map, chain->ip,
+-				       left_margin, depth, depth_mask, fp);
+ 	return ret;
+ }
  
- struct inline_list {
--	char			*filename;
--	char			*funcname;
--	unsigned int		line_nr;
-+	struct symbol		*symbol;
-+	char			*srcline;
- 	struct list_head	list;
- };
+@@ -314,13 +253,6 @@ static size_t callchain__fprintf_graph(FILE *fp, struct rb_root *root,
  
- struct inline_node {
- 	u64			addr;
- 	struct list_head	val;
-+	struct rb_node		rb_node;
- };
+ 			if (++entries_printed == callchain_param.print_limit)
+ 				break;
+-
+-			if (symbol_conf.inline_name)
+-				ret += inline__fprintf(chain->ms.map,
+-						       chain->ip,
+-						       left_margin,
+-						       0, 0,
+-						       fp);
+ 		}
+ 		root = &cnode->rb_root;
+ 	}
+@@ -600,7 +532,6 @@ static int hist_entry__fprintf(struct hist_entry *he, size_t size,
+ {
+ 	int ret;
+ 	int callchain_ret = 0;
+-	int inline_ret = 0;
+ 	struct perf_hpp hpp = {
+ 		.buf		= bf,
+ 		.size		= size,
+@@ -622,13 +553,7 @@ static int hist_entry__fprintf(struct hist_entry *he, size_t size,
+ 		callchain_ret = hist_entry_callchain__fprintf(he, total_period,
+ 							      0, fp);
  
--struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr);
-+// parse inlined frames for the given address
-+struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
-+					    struct symbol *sym);
-+// free resources associated to the inline node list
- void inline_node__delete(struct inline_node *node);
+-	if (callchain_ret == 0 && symbol_conf.inline_name) {
+-		inline_ret = inline__fprintf(he->ms.map, he->ip, 0, 0, 0, fp);
+-		ret += inline_ret;
+-		if (inline_ret > 0)
+-			ret += fprintf(fp, "\n");
+-	} else
+-		ret += callchain_ret;
++	ret += callchain_ret;
  
-+// insert the inline node list into the DSO, which will take ownership
-+void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines);
-+// find previously inserted inline node list
-+struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr);
-+// delete all nodes within the tree of inline_node s
-+void inlines__tree_delete(struct rb_root *tree);
-+
- #endif /* PERF_SRCLINE_H */
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 2bd6a1f01a1c..8f072c28b6d3 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -59,6 +59,7 @@ struct symbol {
- 	u8		binding;
- 	u8		idle:1;
- 	u8		ignore:1;
-+	u8		inlined:1;
- 	u8		arch_sym;
- 	char		name[0];
- };
+ 	return ret;
+ }
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index 583f3a602506..f2c6c5ee11e8 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -169,38 +169,6 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 			if (!print_oneline)
+ 				printed += fprintf(fp, "\n");
+ 
+-			if (symbol_conf.inline_name && node->map) {
+-				struct inline_node *inode;
+-
+-				addr = map__rip_2objdump(node->map, node->ip),
+-				inode = dso__parse_addr_inlines(node->map->dso, addr);
+-
+-				if (inode) {
+-					struct inline_list *ilist;
+-
+-					list_for_each_entry(ilist, &inode->val, list) {
+-						if (print_arrow)
+-							printed += fprintf(fp, " <-");
+-
+-						/* IP is same, just skip it */
+-						if (print_ip)
+-							printed += fprintf(fp, "%c%16s",
+-									   s, "");
+-						if (print_sym)
+-							printed += fprintf(fp, " %s",
+-									   ilist->funcname);
+-						if (print_srcline)
+-							printed += fprintf(fp, "\n  %s:%d",
+-									   ilist->filename,
+-									   ilist->line_nr);
+-						if (!print_oneline)
+-							printed += fprintf(fp, "\n");
+-					}
+-
+-					inline_node__delete(inode);
+-				}
+-			}
+-
+ 			if (symbol_conf.bt_stop_list &&
+ 			    node->sym &&
+ 			    strlist__has_entry(symbol_conf.bt_stop_list,
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index e60d8d8ea4c2..b0fa9c217e1c 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1141,11 +1141,6 @@ void hist_entry__delete(struct hist_entry *he)
+ 		zfree(&he->mem_info);
+ 	}
+ 
+-	if (he->inline_node) {
+-		inline_node__delete(he->inline_node);
+-		he->inline_node = NULL;
+-	}
+-
+ 	zfree(&he->stat_acc);
+ 	free_srcline(he->srcline);
+ 	if (he->srcfile && he->srcfile[0])
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index f36dc4980a6c..507d096aee4e 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -129,7 +129,6 @@ struct hist_entry {
+ 	};
+ 	char			*srcline;
+ 	char			*srcfile;
+-	struct inline_node	*inline_node;
+ 	struct symbol		*parent;
+ 	struct branch_info	*branch_info;
+ 	struct hists		*hists;
 -- 
 2.14.1
