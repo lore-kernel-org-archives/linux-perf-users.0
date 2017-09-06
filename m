@@ -1,31 +1,62 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v3 02/13] perf util: store srcline in callchain_cursor_node
-Date: Wed,  6 Sep 2017 15:54:50 +0200
-Message-ID: <20170906135501.306-3-milian.wolff@kdab.com>
+Subject: [PATCH v3 10/13] perf report: cache failed lookups of inlined frames
+Date: Wed,  6 Sep 2017 15:54:58 +0200
+Message-ID: <20170906135501.306-11-milian.wolff@kdab.com>
 References: <20170906135501.306-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37722 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932285AbdIFNzV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2017 09:55:21 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170906135501.306-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+List-Id: linux-perf-users.vger.kernel.org
 
-This is mostly a preparation to enable the creation of
-full callchain nodes for inline frames. Such frames will
-reference the IP of the non-inlined frame, but hold the
-symbol and srcline for an inlined location. As such, we
-won't be able to query the srcline on-demand based on the
-IP alone. Instead, we will leverage the functionality provided
-by this patch here, and store the srcline for the inlined nodes
-in the new srcline member of callchain_cursor_node.
+When no inlined frames could be found for a given address,
+we did not store this information anywhere. That means we
+potentially do the costly inliner lookup repeatedly for
+cases where we know it can never succeed.
 
-Note that this patch on its own leaks the srcline, as there is
-no free_callchain_cursor_node or similar. A future patch will
-add caching of the srcline and handle deletion properly.
+This patch makes dso__parse_addr_inlines always return a
+valid inline_node. It will be empty when no inliners are
+found. This enables us to cache the empty list in the DSO,
+thereby improving the performance when many addresses
+fail to find the inliners.
+
+For my trivial example, the performance impact is already
+quite significant:
+
+Before:
+
+~~~~~
+ Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
+
+        594.804032      task-clock (msec)         #    0.998 CPUs utilized            ( +-  0.07% )
+                53      context-switches          #    0.089 K/sec                    ( +-  4.09% )
+                 0      cpu-migrations            #    0.000 K/sec                    ( +-100.00% )
+             5,687      page-faults               #    0.010 M/sec                    ( +-  0.02% )
+     2,300,918,213      cycles                    #    3.868 GHz                      ( +-  0.09% )
+     4,395,839,080      instructions              #    1.91  insn per cycle           ( +-  0.00% )
+       939,177,205      branches                  # 1578.969 M/sec                    ( +-  0.00% )
+        11,824,633      branch-misses             #    1.26% of all branches          ( +-  0.10% )
+
+       0.596246531 seconds time elapsed                                          ( +-  0.07% )
+~~~~~
+
+After:
+
+~~~~~
+ Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
+
+        113.111405      task-clock (msec)         #    0.990 CPUs utilized            ( +-  0.89% )
+                29      context-switches          #    0.255 K/sec                    ( +- 54.25% )
+                 0      cpu-migrations            #    0.000 K/sec
+             5,380      page-faults               #    0.048 M/sec                    ( +-  0.01% )
+       432,378,779      cycles                    #    3.823 GHz                      ( +-  0.75% )
+       670,057,633      instructions              #    1.55  insn per cycle           ( +-  0.01% )
+       141,001,247      branches                  # 1246.570 M/sec                    ( +-  0.01% )
+         2,346,845      branch-misses             #    1.66% of all branches          ( +-  0.19% )
+
+       0.114222393 seconds time elapsed                                          ( +-  1.19% )
+~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -34,192 +65,89 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 31 +++++++++----------------------
- tools/perf/util/callchain.h |  6 ++++--
- tools/perf/util/machine.c   | 18 ++++++++++++++++--
- 3 files changed, 29 insertions(+), 26 deletions(-)
+ tools/perf/util/machine.c | 15 +++++++--------
+ tools/perf/util/srcline.c | 18 ++----------------
+ 2 files changed, 9 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 510b513e0f01..d1c5d1d422cb 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -559,6 +559,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
- 		call->ip = cursor_node->ip;
- 		call->ms.sym = cursor_node->sym;
- 		call->ms.map = map__get(cursor_node->map);
-+		call->srcline = cursor_node->srcline;
- 
- 		if (cursor_node->branch) {
- 			call->branch_count = 1;
-@@ -640,20 +641,11 @@ enum match_result {
- static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 					     struct callchain_list *cnode)
- {
--	char *left = NULL;
--	char *right = NULL;
-+	const char *left = cnode->srcline;
-+	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
- 
--	if (cnode->ms.map)
--		left = get_srcline(cnode->ms.map->dso,
--				 map__rip_2objdump(cnode->ms.map, cnode->ip),
--				 cnode->ms.sym, true, false);
--	if (node->map)
--		right = get_srcline(node->map->dso,
--				  map__rip_2objdump(node->map, node->ip),
--				  node->sym, true, false);
--
- 	if (left && right)
- 		cmp = strcmp(left, right);
- 	else if (!left && right)
-@@ -668,8 +660,6 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
- 
--	free_srcline(left);
--	free_srcline(right);
- 	return ret;
- }
- 
-@@ -958,7 +948,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
- 	list_for_each_entry_safe(list, next_list, &src->val, list) {
- 		callchain_cursor_append(cursor, list->ip,
- 					list->ms.map, list->ms.sym,
--					false, NULL, 0, 0, 0);
-+					false, NULL, 0, 0, 0, list->srcline);
- 		list_del(&list->list);
- 		map__zput(list->ms.map);
- 		free(list);
-@@ -998,7 +988,8 @@ int callchain_merge(struct callchain_cursor *cursor,
- int callchain_cursor_append(struct callchain_cursor *cursor,
- 			    u64 ip, struct map *map, struct symbol *sym,
- 			    bool branch, struct branch_flags *flags,
--			    int nr_loop_iter, u64 iter_cycles, u64 branch_from)
-+			    int nr_loop_iter, u64 iter_cycles, u64 branch_from,
-+			    const char *srcline)
- {
- 	struct callchain_cursor_node *node = *cursor->last;
- 
-@@ -1017,6 +1008,7 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
- 	node->branch = branch;
- 	node->nr_loop_iter = nr_loop_iter;
- 	node->iter_cycles = iter_cycles;
-+	node->srcline = srcline;
- 
- 	if (flags)
- 		memcpy(&node->branch_flags, flags,
-@@ -1104,12 +1096,7 @@ char *callchain_list__sym_name(struct callchain_list *cl,
- 	int printed;
- 
- 	if (cl->ms.sym) {
--		if (show_srcline && cl->ms.map && !cl->srcline)
--			cl->srcline = get_srcline(cl->ms.map->dso,
--						  map__rip_2objdump(cl->ms.map,
--								    cl->ip),
--						  cl->ms.sym, false, show_addr);
--		if (cl->srcline)
-+		if (show_srcline && cl->srcline)
- 			printed = scnprintf(bf, bfsize, "%s %s",
- 					cl->ms.sym->name, cl->srcline);
- 		else
-@@ -1521,7 +1508,7 @@ int callchain_cursor__copy(struct callchain_cursor *dst,
- 					     node->branch, &node->branch_flags,
- 					     node->nr_loop_iter,
- 					     node->iter_cycles,
--					     node->branch_from);
-+					     node->branch_from, node->srcline);
- 		if (rc)
- 			break;
- 
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 1ed6fc61d0a5..8f67b681cde9 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -121,7 +121,7 @@ struct callchain_list {
- 	u64			iter_count;
- 	u64			iter_cycles;
- 	struct branch_type_stat brtype_stat;
--	char		       *srcline;
-+	const char		*srcline;
- 	struct list_head	list;
- };
- 
-@@ -135,6 +135,7 @@ struct callchain_cursor_node {
- 	u64				ip;
- 	struct map			*map;
- 	struct symbol			*sym;
-+	const char			*srcline;
- 	bool				branch;
- 	struct branch_flags		branch_flags;
- 	u64				branch_from;
-@@ -201,7 +202,8 @@ static inline void callchain_cursor_reset(struct callchain_cursor *cursor)
- int callchain_cursor_append(struct callchain_cursor *cursor, u64 ip,
- 			    struct map *map, struct symbol *sym,
- 			    bool branch, struct branch_flags *flags,
--			    int nr_loop_iter, u64 iter_cycles, u64 branch_from);
-+			    int nr_loop_iter, u64 iter_cycles, u64 branch_from,
-+			    const char *srcline);
- 
- /* Close a cursor writing session. Initialize for the reader */
- static inline void callchain_cursor_commit(struct callchain_cursor *cursor)
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index df709363ef69..5c8286a7d7d6 100644
+index 206526d3b509..8b3c30d24b0b 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -1679,6 +1679,15 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
- 	return mi;
- }
+@@ -2085,9 +2085,10 @@ static int append_inlines(struct callchain_cursor *cursor,
+ 	struct inline_node *inline_node;
+ 	struct inline_list *ilist;
+ 	u64 addr;
++	int ret = 1;
  
-+static char *callchain_srcline(struct map *map, struct symbol *sym, u64 ip)
-+{
-+	if (!map || callchain_param.key == CCKEY_FUNCTION)
-+		return NULL;
-+
-+	return get_srcline(map->dso, map__rip_2objdump(map, ip),
-+			   sym, false, callchain_param.key == CCKEY_ADDRESS);
-+}
-+
- struct iterations {
- 	int nr_loop_iter;
- 	u64 cycles;
-@@ -1698,6 +1707,7 @@ static int add_callchain_ip(struct thread *thread,
- 	struct addr_location al;
- 	int nr_loop_iter = 0;
- 	u64 iter_cycles = 0;
-+	const char *srcline = NULL;
+ 	if (!symbol_conf.inline_name || !map || !sym)
+-		return 1;
++		return ret;
  
- 	al.filtered = 0;
- 	al.sym = NULL;
-@@ -1753,9 +1763,10 @@ static int add_callchain_ip(struct thread *thread,
- 		iter_cycles = iter->cycles;
+ 	addr = map__rip_2objdump(map, ip);
+ 
+@@ -2095,22 +2096,20 @@ static int append_inlines(struct callchain_cursor *cursor,
+ 	if (!inline_node) {
+ 		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
+ 		if (!inline_node)
+-			return 1;
+-
++			return ret;
+ 		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
  	}
  
-+	srcline = callchain_srcline(al.map, al.sym, al.addr);
- 	return callchain_cursor_append(cursor, al.addr, al.map, al.sym,
- 				       branch, flags, nr_loop_iter,
--				       iter_cycles, branch_from);
-+				       iter_cycles, branch_from, srcline);
+ 	list_for_each_entry(ilist, &inline_node->val, list) {
+-		int ret = callchain_cursor_append(cursor, ip, map,
+-						  ilist->symbol, false,
+-						  NULL, 0, 0, 0,
+-						  ilist->srcline);
++		ret = callchain_cursor_append(cursor, ip, map,
++					      ilist->symbol, false,
++					      NULL, 0, 0, 0, ilist->srcline);
+ 
+ 		if (ret != 0)
+ 			return ret;
+ 	}
+ 
+-	return 0;
++	return ret;
  }
  
- struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
-@@ -2071,12 +2082,15 @@ static int thread__resolve_callchain_sample(struct thread *thread,
  static int unwind_entry(struct unwind_entry *entry, void *arg)
- {
- 	struct callchain_cursor *cursor = arg;
-+	const char *srcline = NULL;
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 87f148c0d094..a24bfcfa6174 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -352,17 +352,8 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ 	INIT_LIST_HEAD(&node->val);
+ 	node->addr = addr;
  
- 	if (symbol_conf.hide_unresolved && entry->sym == NULL)
- 		return 0;
-+
-+	srcline = callchain_srcline(entry->map, entry->sym, entry->ip);
- 	return callchain_cursor_append(cursor, entry->ip,
- 				       entry->map, entry->sym,
--				       false, NULL, 0, 0, 0);
-+				       false, NULL, 0, 0, 0, srcline);
+-	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym))
+-		goto out_free_inline_node;
+-
+-	if (list_empty(&node->val))
+-		goto out_free_inline_node;
+-
+-	return node;
+-
+-out_free_inline_node:
+-	inline_node__delete(node);
+-	return NULL;
++	addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym);
++        return node;
  }
  
- static int thread__resolve_callchain_unwind(struct thread *thread,
+ #else /* HAVE_LIBBFD_SUPPORT */
+@@ -478,11 +469,6 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ out:
+ 	pclose(fp);
+ 
+-	if (list_empty(&node->val)) {
+-		inline_node__delete(node);
+-		return NULL;
+-	}
+-
+ 	return node;
+ }
+ 
 -- 
 2.14.1
