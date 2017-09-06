@@ -1,70 +1,22 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v3 04/13] perf report: fall-back to function name comparison for -g srcline
-Date: Wed,  6 Sep 2017 15:54:52 +0200
-Message-ID: <20170906135501.306-5-milian.wolff@kdab.com>
+Subject: [PATCH v3 03/13] perf report: create real callchain entries for inlined frames
+Date: Wed,  6 Sep 2017 15:54:51 +0200
+Message-ID: <20170906135501.306-4-milian.wolff@kdab.com>
 References: <20170906135501.306-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:37748 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932294AbdIFNzZ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Sep 2017 09:55:25 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170906135501.306-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+List-Id: linux-perf-users.vger.kernel.org
 
-When a callchain entry has no srcline available, we ended up
-comparing the instruction pointer. I consider this to be not
-too useful. Rather, I think we should group the entries by
-function name, which this patch adds. For people who want to
-split the data on the IP boundary, using `-g address` is the
-correct choice.
-
-Before:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--56.03%--hypot
-            |          |          |
-            |          |          |--8.45%--__hypot_finite
-            |          |          |
-            |          |          |--7.62%--__hypot_finite
-            |          |          |
-            |          |          |--2.29%--__hypot_finite
-            |          |          |
-            |          |          |--2.24%--__hypot_finite
-            |          |          |
-            |          |          |--2.06%--__hypot_finite
-            |          |          |
-            |          |          |--1.81%--__hypot_finite
-...
-~~~~~
-
-After:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--60.29%--hypot
-            |          |          |
-            |          |           --56.03%--__hypot_finite
-            |          |
-            |           --0.85%--cabs
-~~~~~
+The inlined frames use a fake symbol that is maintained by
+inline_node which in turn is maintained by the dso->inlines tree.
+This tree is always sorted by name. All other entries of the symbol
+beside the function name are unused for inline frames. The advantage
+of this approach is that all existing users of the callchain API can
+now transparently display inlined frames without having to patch
+their code.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -73,58 +25,473 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ tools/perf/util/dso.c     |   2 +
+ tools/perf/util/dso.h     |   1 +
+ tools/perf/util/machine.c |  37 +++++++++
+ tools/perf/util/srcline.c | 186 ++++++++++++++++++++++++++++++++++++----------
+ tools/perf/util/srcline.h |  19 ++++-
+ tools/perf/util/symbol.h  |   1 +
+ 6 files changed, 203 insertions(+), 43 deletions(-)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index d1c5d1d422cb..daf491ea0a7f 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -638,11 +638,9 @@ enum match_result {
- 	MATCH_GT,
- };
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index b9e087fb8247..72e6e390fd26 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -9,6 +9,7 @@
+ #include "compress.h"
+ #include "path.h"
+ #include "symbol.h"
++#include "srcline.h"
+ #include "dso.h"
+ #include "machine.h"
+ #include "auxtrace.h"
+@@ -1233,6 +1234,7 @@ void dso__delete(struct dso *dso)
+ 		       dso->long_name);
+ 	for (i = 0; i < MAP__NR_TYPES; ++i)
+ 		symbols__delete(&dso->symbols[i]);
++	inlines__tree_delete(&dso->inlined_nodes);
  
--static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
--					     struct callchain_list *cnode)
-+static enum match_result match_chain_strings(const char *left,
-+					     const char *right)
+ 	if (dso->short_name_allocated) {
+ 		zfree((char **)&dso->short_name);
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index f886141678eb..7d1e2b3c1f10 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -141,6 +141,7 @@ struct dso {
+ 	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
+ 	struct rb_root	 symbols[MAP__NR_TYPES];
+ 	struct rb_root	 symbol_names[MAP__NR_TYPES];
++	struct rb_root	 inlined_nodes;
+ 	struct {
+ 		u64		addr;
+ 		struct symbol	*symbol;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 5c8286a7d7d6..206526d3b509 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2079,6 +2079,40 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 	return 0;
+ }
+ 
++static int append_inlines(struct callchain_cursor *cursor,
++			  struct map *map, struct symbol *sym, u64 ip)
++{
++	struct inline_node *inline_node;
++	struct inline_list *ilist;
++	u64 addr;
++
++	if (!symbol_conf.inline_name || !map || !sym)
++		return 1;
++
++	addr = map__rip_2objdump(map, ip);
++
++	inline_node = inlines__tree_find(&map->dso->inlined_nodes, addr);
++	if (!inline_node) {
++		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
++		if (!inline_node)
++			return 1;
++
++		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
++	}
++
++	list_for_each_entry(ilist, &inline_node->val, list) {
++		int ret = callchain_cursor_append(cursor, ip, map,
++						  ilist->symbol, false,
++						  NULL, 0, 0, 0,
++						  ilist->srcline);
++
++		if (ret != 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int unwind_entry(struct unwind_entry *entry, void *arg)
  {
--	const char *left = cnode->srcline;
--	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
+ 	struct callchain_cursor *cursor = arg;
+@@ -2087,6 +2121,9 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
+ 	if (symbol_conf.hide_unresolved && entry->sym == NULL)
+ 		return 0;
  
-@@ -652,10 +650,8 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 		cmp = 1;
- 	else if (left && !right)
- 		cmp = -1;
--	else if (cnode->ip == node->ip)
--		cmp = 0;
- 	else
--		cmp = (cnode->ip < node->ip) ? -1 : 1;
-+		return MATCH_ERROR;
- 
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
-@@ -670,10 +666,18 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
- 	u64 left, right;
- 
- 	if (callchain_param.key == CCKEY_SRCLINE) {
--		enum match_result match = match_chain_srcline(node, cnode);
-+		enum match_result match = match_chain_strings(cnode->srcline,
-+							      node->srcline);
++	if (append_inlines(cursor, entry->map, entry->sym, entry->ip) == 0)
++		return 0;
 +
-+		// if no srcline is available, fallback to symbol name
-+		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-+			match = match_chain_strings(cnode->ms.sym->name,
-+						    node->sym->name);
+ 	srcline = callchain_srcline(entry->map, entry->sym, entry->ip);
+ 	return callchain_cursor_append(cursor, entry->ip,
+ 				       entry->map, entry->sym,
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index ed8e8d2de942..87f148c0d094 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -33,28 +33,17 @@ static const char *dso__name(struct dso *dso)
+ 	return dso_name;
+ }
  
- 		if (match != MATCH_ERROR)
- 			return match;
+-static int inline_list__append(char *filename, char *funcname, int line_nr,
+-			       struct inline_node *node, struct dso *dso)
++static int inline_list__append(struct symbol *symbol, char *srcline,
++			       struct inline_node *node)
+ {
+ 	struct inline_list *ilist;
+-	char *demangled;
+ 
+ 	ilist = zalloc(sizeof(*ilist));
+ 	if (ilist == NULL)
+ 		return -1;
+ 
+-	ilist->filename = filename;
+-	ilist->line_nr = line_nr;
+-
+-	if (dso != NULL) {
+-		demangled = dso__demangle_sym(dso, 0, funcname);
+-		if (demangled == NULL) {
+-			ilist->funcname = funcname;
+-		} else {
+-			ilist->funcname = demangled;
+-			free(funcname);
+-		}
+-	}
++	ilist->symbol = symbol;
++	ilist->srcline = srcline;
+ 
+ 	if (callchain_param.order == ORDER_CALLEE)
+ 		list_add_tail(&ilist->list, &node->val);
+@@ -64,6 +53,30 @@ static int inline_list__append(char *filename, char *funcname, int line_nr,
+ 	return 0;
+ }
+ 
++// basename version that takes a const input string
++static const char *gnu_basename(const char *path)
++{
++	const char *base = strrchr(path, '/');
 +
-+		// otherwise fall-back to IP-based comparison below
++	return base ? base + 1 : path;
++}
++
++static char *srcline_from_fileline(const char *file, unsigned int line)
++{
++	char *srcline;
++
++	if (!file)
++		return NULL;
++
++	if (!srcline_full_filename)
++		file = gnu_basename(file);
++
++	if (asprintf(&srcline, "%s:%u", file, line) < 0)
++		return NULL;
++
++	return srcline;
++}
++
+ #ifdef HAVE_LIBBFD_SUPPORT
+ 
+ /*
+@@ -206,19 +219,58 @@ static void addr2line_cleanup(struct a2l_data *a2l)
+ 
+ #define MAX_INLINE_NEST 1024
+ 
++static struct symbol *new_inline_sym(struct dso *dso,
++				     struct symbol *base_sym,
++				     const char *funcname)
++{
++	struct symbol *inline_sym;
++	char *demangled = NULL;
++
++	if (dso) {
++		demangled = dso__demangle_sym(dso, 0, funcname);
++		if (demangled)
++			funcname = demangled;
++	}
++
++	if (strcmp(funcname, base_sym->name) == 0) {
++		// reuse the real, existing symbol
++		inline_sym = base_sym;
++		// ensure that we don't alias an inlined symbol, which could
++		// lead to double frees in inline_node__delete
++		assert(!base_sym->inlined);
++	} else {
++		// create a fake symbol for the inline frame
++		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
++					 base_sym ? base_sym->end : 0,
++					 base_sym ? base_sym->binding : 0,
++					 funcname);
++		if (inline_sym)
++			inline_sym->inlined = 1;
++	}
++
++	free(demangled);
++
++	return inline_sym;
++}
++
+ static int inline_list__append_dso_a2l(struct dso *dso,
+-				       struct inline_node *node)
++				       struct inline_node *node,
++				       struct symbol *sym)
+ {
+ 	struct a2l_data *a2l = dso->a2l;
+-	char *funcname = a2l->funcname ? strdup(a2l->funcname) : NULL;
+-	char *filename = a2l->filename ? strdup(a2l->filename) : NULL;
++	struct symbol *inline_sym = new_inline_sym(dso, sym, a2l->funcname);
++	char *srcline = NULL;
++
++	if (a2l->filename)
++		srcline = srcline_from_fileline(a2l->filename, a2l->line);
+ 
+-	return inline_list__append(filename, funcname, a2l->line, node, dso);
++	return inline_list__append(inline_sym, srcline, node);
+ }
+ 
+ static int addr2line(const char *dso_name, u64 addr,
+ 		     char **file, unsigned int *line, struct dso *dso,
+-		     bool unwind_inlines, struct inline_node *node)
++		     bool unwind_inlines, struct inline_node *node,
++		     struct symbol *sym)
+ {
+ 	int ret = 0;
+ 	struct a2l_data *a2l = dso->a2l;
+@@ -244,7 +296,7 @@ static int addr2line(const char *dso_name, u64 addr,
+ 	if (unwind_inlines) {
+ 		int cnt = 0;
+ 
+-		if (node && inline_list__append_dso_a2l(dso, node))
++		if (node && inline_list__append_dso_a2l(dso, node, sym))
+ 			return 0;
+ 
+ 		while (bfd_find_inliner_info(a2l->abfd, &a2l->filename,
+@@ -255,7 +307,7 @@ static int addr2line(const char *dso_name, u64 addr,
+ 				a2l->filename = NULL;
+ 
+ 			if (node != NULL) {
+-				if (inline_list__append_dso_a2l(dso, node))
++				if (inline_list__append_dso_a2l(dso, node, sym))
+ 					return 0;
+ 				// found at least one inline frame
+ 				ret = 1;
+@@ -287,7 +339,7 @@ void dso__free_a2l(struct dso *dso)
+ }
+ 
+ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+-	struct dso *dso)
++	struct dso *dso, struct symbol *sym)
+ {
+ 	struct inline_node *node;
+ 
+@@ -300,7 +352,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ 	INIT_LIST_HEAD(&node->val);
+ 	node->addr = addr;
+ 
+-	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node))
++	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym))
+ 		goto out_free_inline_node;
+ 
+ 	if (list_empty(&node->val))
+@@ -340,7 +392,8 @@ static int addr2line(const char *dso_name, u64 addr,
+ 		     char **file, unsigned int *line_nr,
+ 		     struct dso *dso __maybe_unused,
+ 		     bool unwind_inlines __maybe_unused,
+-		     struct inline_node *node __maybe_unused)
++		     struct inline_node *node __maybe_unused,
++		     struct symbol *sym __maybe_unused)
+ {
+ 	FILE *fp;
+ 	char cmd[PATH_MAX];
+@@ -380,7 +433,7 @@ void dso__free_a2l(struct dso *dso __maybe_unused)
+ }
+ 
+ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+-	struct dso *dso __maybe_unused)
++	struct dso *dso __maybe_unused, struct symbol *sym)
+ {
+ 	FILE *fp;
+ 	char cmd[PATH_MAX];
+@@ -408,13 +461,15 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ 	node->addr = addr;
+ 
+ 	while (getline(&filename, &len, fp) != -1) {
++		char *srcline;
++
+ 		if (filename_split(filename, &line_nr) != 1) {
+ 			free(filename);
+ 			goto out;
+ 		}
+ 
+-		if (inline_list__append(filename, NULL, line_nr, node,
+-					NULL) != 0)
++		srcline = srcline_from_fileline(filename, line_nr);
++		if (inline_list__append(sym, srcline, node) != 0)
+ 			goto out;
+ 
+ 		filename = NULL;
+@@ -454,19 +509,18 @@ char *__get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+ 	if (dso_name == NULL)
+ 		goto out;
+ 
+-	if (!addr2line(dso_name, addr, &file, &line, dso, unwind_inlines, NULL))
++	if (!addr2line(dso_name, addr, &file, &line, dso,
++		       unwind_inlines, NULL, sym))
+ 		goto out;
+ 
+-	if (asprintf(&srcline, "%s:%u",
+-				srcline_full_filename ? file : basename(file),
+-				line) < 0) {
+-		free(file);
++	srcline = srcline_from_fileline(file, line);
++	free(file);
++
++	if (!srcline)
+ 		goto out;
+-	}
+ 
+ 	dso->a2l_fails = 0;
+ 
+-	free(file);
+ 	return srcline;
+ 
+ out:
+@@ -500,7 +554,8 @@ char *get_srcline(struct dso *dso, u64 addr, struct symbol *sym,
+ 	return __get_srcline(dso, addr, sym, show_sym, show_addr, false);
+ }
+ 
+-struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
++struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
++					    struct symbol *sym)
+ {
+ 	const char *dso_name;
+ 
+@@ -508,7 +563,7 @@ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr)
+ 	if (dso_name == NULL)
+ 		return NULL;
+ 
+-	return addr2inlines(dso_name, addr, dso);
++	return addr2inlines(dso_name, addr, dso, sym);
+ }
+ 
+ void inline_node__delete(struct inline_node *node)
+@@ -517,10 +572,63 @@ void inline_node__delete(struct inline_node *node)
+ 
+ 	list_for_each_entry_safe(ilist, tmp, &node->val, list) {
+ 		list_del_init(&ilist->list);
+-		zfree(&ilist->filename);
+-		zfree(&ilist->funcname);
++		zfree(&ilist->srcline);
++		// only the inlined symbols are owned by the list
++		if (ilist->symbol && ilist->symbol->inlined)
++			symbol__delete(ilist->symbol);
+ 		free(ilist);
  	}
  
- 	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+ 	free(node);
+ }
++
++void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines)
++{
++	struct rb_node **p = &tree->rb_node;
++	struct rb_node *parent = NULL;
++	const u64 addr = inlines->addr;
++	struct inline_node *i;
++
++	while (*p != NULL) {
++		parent = *p;
++		i = rb_entry(parent, struct inline_node, rb_node);
++		if (addr < i->addr)
++			p = &(*p)->rb_left;
++		else
++			p = &(*p)->rb_right;
++	}
++	rb_link_node(&inlines->rb_node, parent, p);
++	rb_insert_color(&inlines->rb_node, tree);
++}
++
++struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr)
++{
++	struct rb_node *n = tree->rb_node;
++
++	while (n) {
++		struct inline_node *i = rb_entry(n, struct inline_node,
++						 rb_node);
++
++		if (addr < i->addr)
++			n = n->rb_left;
++		else if (addr > i->addr)
++			n = n->rb_right;
++		else
++			return i;
++	}
++
++	return NULL;
++}
++
++void inlines__tree_delete(struct rb_root *tree)
++{
++	struct inline_node *pos;
++	struct rb_node *next = rb_first(tree);
++
++	while (next) {
++		pos = rb_entry(next, struct inline_node, rb_node);
++		next = rb_next(&pos->rb_node);
++		rb_erase(&pos->rb_node, tree);
++		inline_node__delete(pos);
++	}
++}
+diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
+index 7b52ba88676e..0d2aca92e8c7 100644
+--- a/tools/perf/util/srcline.h
++++ b/tools/perf/util/srcline.h
+@@ -2,6 +2,7 @@
+ #define PERF_SRCLINE_H
+ 
+ #include <linux/list.h>
++#include <linux/rbtree.h>
+ #include <linux/types.h>
+ 
+ struct dso;
+@@ -17,18 +18,28 @@ void free_srcline(char *srcline);
+ #define SRCLINE_UNKNOWN  ((char *) "??:0")
+ 
+ struct inline_list {
+-	char			*filename;
+-	char			*funcname;
+-	unsigned int		line_nr;
++	struct symbol		*symbol;
++	char			*srcline;
+ 	struct list_head	list;
+ };
+ 
+ struct inline_node {
+ 	u64			addr;
+ 	struct list_head	val;
++	struct rb_node		rb_node;
+ };
+ 
+-struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr);
++// parse inlined frames for the given address
++struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
++					    struct symbol *sym);
++// free resources associated to the inline node list
+ void inline_node__delete(struct inline_node *node);
+ 
++// insert the inline node list into the DSO, which will take ownership
++void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines);
++// find previously inserted inline node list
++struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr);
++// delete all nodes within the tree of inline_node s
++void inlines__tree_delete(struct rb_root *tree);
++
+ #endif /* PERF_SRCLINE_H */
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 2bd6a1f01a1c..8f072c28b6d3 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -59,6 +59,7 @@ struct symbol {
+ 	u8		binding;
+ 	u8		idle:1;
+ 	u8		ignore:1;
++	u8		inlined:1;
+ 	u8		arch_sym;
+ 	char		name[0];
+ };
 -- 
 2.14.1
