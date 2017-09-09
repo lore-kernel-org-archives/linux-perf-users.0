@@ -1,64 +1,39 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2 03/14] perf report: create real callchain entries for
- inlined frames
-Date: Fri, 8 Sep 2017 00:16:34 +0900
-Message-ID: <CAM9d7ch7Lc7yfMRTrHKZnBop05cYNDA_kb+Hx6bznC-t6EOAUA@mail.gmail.com>
-References: <20170806212446.24925-1-milian.wolff@kdab.com> <1935427.QE1zWV8lNS@agathebauer>
- <20170907145853.GA5764@danjae.aot.lge.com> <3394979.u4vPUxEDmB@milian-kdab2>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: Prevent Kernel from resetting cycle counter
+Date: Fri, 8 Sep 2017 19:07:36 -0500
+Message-ID: <20170908190736.de99a221c13be31c10103643@arm.com>
+References: <CALk3wS2cEFTnMXoyhrzyC1R_np159B4evzDRBMNK7MsAsc8UFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3394979.u4vPUxEDmB@milian-kdab2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, "linux-kernel@vger.kernel.org" <Linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kernel-team@lge.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from foss.arm.com ([217.140.101.70]:45804 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1757173AbdIIAHi (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Sep 2017 20:07:38 -0400
+In-Reply-To: <CALk3wS2cEFTnMXoyhrzyC1R_np159B4evzDRBMNK7MsAsc8UFA@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Jason Teplitz <jason@tensyr.com>
+Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Sep 8, 2017 at 12:05 AM, Milian Wolff <milian.wolff@kdab.com> wrote:
-> On Thursday, September 7, 2017 4:58:53 PM CEST Namhyung Kim wrote:
->> Hi Milian,
->
-> Hey Namhyung!
->
->> > > > > @@ -511,10 +563,63 @@ void inline_node__delete(struct inline_node
->> > > > > *node)
->> > > > >
->> > > > >       list_for_each_entry_safe(ilist, tmp, &node->val, list) {
->> > > > >
->> > > > >               list_del_init(&ilist->list);
->> > > > >
->> > > > > -             zfree(&ilist->filename);
->> > > > > -             zfree(&ilist->funcname);
->> > > > > +             zfree(&ilist->srcline);
->> > > > > +             // only the inlined symbols are owned by the list
->> > > > > +             if (ilist->symbol && ilist->symbol->inlined)
->> > > > > +                     symbol__delete(ilist->symbol);
->> > > >
->> > > > Existing symbols are released at this moment.
->> > >
->> > > Thanks for the review, I'll try to look into these issues once I have
->> > > more
->> > > time again.
->> >
->> > OK, so I just dug into this part of the patch again. I don't think it's
->> > actually a problem after all:
->> >
->> > When an inline node reuses the real symbol, that symbol won't have its
->> > `inlined` member set to true. Thus these symbols will never get deleted by
->> > inline_node__delete.
->>
->> But ilist->symbol is a dangling pointer so accessing ->inlined would
->> be a problem, no?
->
-> Sorry, but I can't follow. Why would it be a dangling pointer? Note, again,
-> that I've tested this with both valgrind and ASAN and neither reports any
-> issues about this code.
+On Wed, 6 Sep 2017 17:36:36 -0700
+Jason Teplitz <jason@tensyr.com> wrote:
 
-IIUC, ilist->symbol can point an existing symbol.  And all existing
-symbols are freed before calling inline_node__delete().  I don't know
-why valgrind or asan didn't catch anything.. maybe I'm missing
-something.
+[adding linux-arm-kernel]
 
--- 
+> I'm reading the armv8 PMU cycle counter from userspace and noticing
+> that it gets periodically reset by something. Does anything inside the
+> kernel reset these counters? I am not using perf, so I'm not sure why
+> anything else would be touching them.
+
+PMCCNTR only shows up in kernel perf/PMU and KVM code, so yes, no
+reason for it to be reset, esp. if no arm-pmu interrupts are triggered.
+
+Is the period constant, as if to suggest a wraparound?  Can you use
+CNTVCT instead?
+
 Thanks,
-Namhyung
+
+Kim
