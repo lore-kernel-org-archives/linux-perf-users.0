@@ -1,207 +1,67 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: perf AppImage - perf stat fails to count child process
-Date: Mon, 11 Sep 2017 17:14:57 +0200
-Message-ID: <4549240.M84I420bcG@milian-kdab2>
+Subject: Re: [PATCH] perf: support running perf binaries with a dash in their name
+Date: Mon, 11 Sep 2017 17:16:11 +0200
+Message-ID: <1605058.Qn1Snd44fD@milian-kdab2>
+References: <20170911111422.31903-1-milian.wolff@kdab.com> <b7c2b440-f781-19ae-ebc7-7fba93bb4618@gmail.com> <20170911143312.GD5054@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart41825203.zCzliQ2AsB"; micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Type: multipart/signed; boundary="nextPart2238932.OZZF1z7DO6"; micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:46952 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:47040 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750715AbdIKPPD (ORCPT
+        id S1751787AbdIKPQO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2017 11:15:03 -0400
+        Mon, 11 Sep 2017 11:16:14 -0400
+In-Reply-To: <20170911143312.GD5054@redhat.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: Arnaldo Carvalho <acme@kernel.org>, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
 
---nextPart41825203.zCzliQ2AsB
+--nextPart2238932.OZZF1z7DO6
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hey all,
+On Monday, September 11, 2017 4:33:12 PM CEST Arnaldo Carvalho de Melo wrote:
+> Em Mon, Sep 11, 2017 at 07:08:18AM -0700, David Ahern escreveu:
+> > On 9/11/17 4:14 AM, Milian Wolff wrote:
+> > > Previously the part behind "perf-" was interpreted as an internal
+> > > perf command. If the suffix could not be handled, the execution
+> 
+> <SNIP>
+> 
+> > > --- a/tools/perf/perf.c
+> > > -		fprintf(stderr, "cannot handle %s internally", cmd);
+> > > -		goto out;
+> > > +		// if the command is handled, the above function does not return
+> > > +		// undo changes and fall through in such a case
+> > 
+> > Those should be /* */ not //
+> > 
+> > > +		cmd -= 5;
+> > > +		argv[0] = cmd;
+> > > 
+> > >  	}
+> > >  	if (strstarts(cmd, "trace")) {
+> > >  
+> > >  #ifdef HAVE_LIBAUDIT_SUPPORT
+> > 
+> > other than that LGTM and long over due.
+> > 
+> > Acked-by: David Ahern <dsahern@gmail.com>
+> 
+> We got those from git, agreed it should go, thanks for the Acked-by,
+> always welcome!
 
-because many people only have a pretty outdated perf userspace toolsuite 
-available, I would like to package a recent version of perf into an AppImage. 
-My current .travis.yml can be found at [1], the result is available from [2], 
-e.g. [3].
+Arnaldo, do you want me to fixup the commit, or can you handle it?
 
-[1]: https://github.com/milianw/linux/blob/wip/perf-appimage/.travis.yml
-[2]: https://travis-ci.org/milianw/linux/
-[3]: https://transfer.sh/IX3zr/perf-git.5b330557-x86_64.AppImage
+Thanks for the review guys
 
-This was build on a Ubuntu 14.04 VM using Travis CI. All libs that got bundled 
-are those available on that system, except for elfutils - for that I used a 
-custom build of the newer 0.170 release.
-
-So far so good, this actually seems to work for most purposes I've tried so 
-far. What's missing is proper `man` integration, I'll try to look into this. 
-But one issue that I've found which is puzzling me is the following:
-
-perf stat does not work when filtering on an application. I.e. when I use the 
-system wide mode, it works fine:
-
-~~~~~
-$ ./perf-git.3a73b7f9-x86_64.AppImage stat
-^C
- Performance counter stats for 'system wide':
-
-       4510.197963      cpu-clock (msec)          #    3.998 CPUs utilized          
-               205      context-switches          #    0.045 K/sec                  
-                 3      cpu-migrations            #    0.001 K/sec                  
-                 0      page-faults               #    0.000 K/sec                  
-        16,396,597      cycles                    #    0.004 GHz                    
-        13,065,398      stalled-cycles-frontend   #   79.68% frontend cycles 
-idle   
-        11,340,112      stalled-cycles-backend    #   69.16% backend cycles 
-idle    
-         5,718,881      instructions              #    0.35  insn per cycle         
-                                                  #    2.28  stalled cycles 
-per insn
-         1,197,336      branches                  #    0.265 M/sec                  
-           101,136      branch-misses             #    8.45% of all branches        
-
-       1.128056669 seconds time elapsed
-~~~~~
-
-But when I launch an application most counters are empty:
-
-~~~~~
-$ ./perf-git.3a73b7f9-x86_64.AppImage stat sleep 1
-
- Performance counter stats for 'sleep 1':
-
-     <not counted>      task-clock                                                  
-     <not counted>      context-switches                                            
-     <not counted>      cpu-migrations                                              
-     <not counted>      page-faults                                                 
-     <not counted>      cycles                                                      
-     <not counted>      stalled-cycles-frontend                                     
-     <not counted>      stalled-cycles-backend                                      
-            68,696      instructions                                                                                   
-            13,573      branches                  #    0.000 K/sec                  
-             1,410      branch-misses             #   10.39% of all branches        
-
-       0.000023100 seconds time elapsed
-~~~~~
-
-Also note how this did _not_ sleep for one second but rather quit sooner than 
-that?!
-
-Stracing (as root, due to AppImage), shows the following issue:
-
-~~~~~
-$ sudo strace -f -e fork,execve -s 1000 ./perf-git.3a73b7f9-x86_64.AppImage 
-stat sleep 1
-execve("./perf-git.3a73b7f9-x86_64.AppImage", ["./perf-git.3a73b7f9-
-x86_64.AppImage", "stat", "sleep", "1"], 0x7ffea0ec02d0 /* 18 vars */) = 0
-strace: Process 21593 attached
-strace: Process 21595 attached
-[pid 21593] +++ exited with 0 +++
-[pid 21592] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=21593, 
-si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
-strace: Process 21596 attached
-[pid 21592] execve("/tmp/.mount_perf-ggA4YJW/AppRun", ["./perf-git.3a73b7f9-
-x86_64.AppImage", "stat", "sleep", "1"], 0x1ce1b70 /* 21 vars */) = 0
-strace: Process 21597 attached
-[pid 21597] execve("/usr/libexec/perf-core/sleep", ["sleep", "1"], 0x3075650 /
-* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/tmp/./sleep", ["sleep", "1"], 0x3075650 /* 22 vars */) = 
--1 ENOENT (No such file or directory)
-[pid 21597] execve("/home/milian/.bin/sleep", ["sleep", "1"], 0x3075650 /* 22 
-vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/usr/lib/icecream/libexec/icecc/bin/sleep", ["sleep", 
-"1"], 0x3075650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/ssd2/milian/projects/compiled/other/bin/sleep", ["sleep", 
-"1"], 0x3075650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/home/milian/.bin/kf5/sleep", ["sleep", "1"], 0x3075650 /* 
-22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/ssd2/milian/projects/compiled/kf5/bin/sleep", ["sleep", 
-"1"], 0x3075650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/home/milian/projects/compiled/other/bin/sleep", ["sleep", 
-"1"], 0x3075650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/home/milian/projects/compiled/kf5/bin/sleep", ["sleep", 
-"1"], 0x3075650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/usr/local/sbin/sleep", ["sleep", "1"], 0x3075650 /* 22 
-vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/usr/local/bin/sleep", ["sleep", "1"], 0x3075650 /* 22 
-vars */) = -1 ENOENT (No such file or directory)
-[pid 21597] execve("/usr/bin/sleep", ["sleep", "1"], 0x3075650 /* 22 vars */
- Performance counter stats for 'sleep 1':
-
-     <not counted>      task-clock                                                  
-     <not counted>      context-switches                                            
-     <not counted> ) = 0
-     cpu-migrations                                              
-     <not counted>      page-faults                                                 
-     <not counted>      cycles                                                      
-     <not counted>      instructions                                                
-     <not counted>      branches                                                    
-     <not counted>      branch-misses                                               
-
-       0.000033074 seconds time elapsed
-
-Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-[pid 21597] --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=21592, 
-si_uid=0} ---
-[pid 21597] +++ killed by SIGTERM +++
-[pid 21592] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=21597, 
-si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
-[pid 21596] --- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=21595, 
-si_uid=0} ---
-[pid 21592] +++ exited with 0 +++
-[pid 21595] --- SIGHUP {si_signo=SIGHUP, si_code=SI_USER, si_pid=21595, 
-si_uid=0} ---
-[pid 21596] +++ exited with 0 +++
-+++ exited with 0 +++
-~~~~~
-
-I couldn't yet find a way to get a backtrace to the SIGTERM. I also wonder why 
-I don't see any error message anywhere...
-
-To make this even more confusing, extracting to AppImage (it's essentially a 
-squashfs image that gets loop-mounted via fuse), things start to work 
-again...:
-
-~~~~~
-$ ./perf-git.3a73b7f9-x86_64.AppImage --appimage-extract
-..
-$ ./squashfs-root/AppRun stat sleep 1
-
- Performance counter stats for 'sleep 1':
-
-          0.559792      task-clock (msec)         #    0.001 CPUs utilized          
-                 1      context-switches          #    0.002 M/sec                  
-                 0      cpu-migrations            #    0.000 K/sec                  
-                60      page-faults               #    0.107 M/sec                  
-           922,471      cycles                    #    1.648 GHz                    
-           564,261      stalled-cycles-frontend   #   61.17% frontend cycles 
-idle   
-           441,173      stalled-cycles-backend    #   47.83% backend cycles 
-idle    
-           743,424      instructions              #    0.81  insn per cycle         
-                                                  #    0.76  stalled cycles 
-per insn
-           145,166      branches                  #  259.321 M/sec                  
-             7,726      branch-misses             #    5.32% of all branches        
-
-       1.001073810 seconds time elapsed
-~~~~~~
-
-So clearly, it has something to do with the FUSE mounting / AppImage... But 
-has anyone a clue what could be going on here exactly? Any suggestions for 
-what to try in order to debug this?
-
-Thanks
 -- 
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt Experts
---nextPart41825203.zCzliQ2AsB
+--nextPart2238932.OZZF1z7DO6
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -266,14 +126,14 @@ cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTExMTUxNDU3WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgtePVcrPTdN4B2zzu1NMjhpTH6Oz2
-Png0GbJBAQTHn+EwDQYJKoZIhvcNAQEBBQAEggEAkI7jgle+Uuh+zV8Ja4QY7/lsj5uxSpYAMXMo
-vVmo2UMWP++6kugNXplPMYb+Vy8FGk3GtpeZT9XkJie47FxJTOMxkTOsDcwjSegL+GhwXr5X+GxS
-RBDgWen/zntFkgUkY0sg6K9IF0IdA8lf78EGQirn/9wkp+w7+KUKhDpZlN4VqCXuI15q3DLBLcEW
-R8oyycvcY3JB8AxqFTH3bJ3CH8JTzm9plzZJj4T7IS6wtRQGWQRBwuS/sqdv9/DzDt4n60SZ5ndT
-4sUB74WPCTUwAx+b/UOASz6LYaw1KgxFFP5G0ejLIgHuAbb5IWaaO2R7njGnWwsiP7ypRT1wZLg3
-CgAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTExMTUxNjExWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgvxHFLPEdcKFYSUk11sf4ugYAcXAI
+orxz5zAZ8V+NZy4wDQYJKoZIhvcNAQEBBQAEggEAxivV4RhqqlLFjbLz/3BTO4S8RTzgi2+q2iGt
+yrNtowUHOyzctUL8crDfrjtaEHivuda/Zu5kImh2Rpm0yKzjcaQlijRWmas/S1q84LTq0cmw4D0I
+lt6/WcJeYvRpivlcJRuzLRn8zcVxSSjPUF5tp8L2SdG+0EliGpMsAsHY9SWpAfHg+Y1zXSeAPHBN
+DPhDspjMo9wichxSXC9i1F9X9WIcG9dPWHxoCRFB0qZYUrQowZIi1grAUSn1DOG4o8RjovL/4UCL
+hzRXbp//Iel/F/CJRoH3Cdr1eyYnGM9xtC5Q8yYSwAkiWzsgziH7UK4P1sPuN9L8LsuCTod96sjw
+fQAAAAAAAA==
 
 
---nextPart41825203.zCzliQ2AsB--
+--nextPart2238932.OZZF1z7DO6--
