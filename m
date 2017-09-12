@@ -1,41 +1,56 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH] perf: support running perf binaries with a dash in their
- name
-Date: Mon, 11 Sep 2017 12:38:46 -0300
-Message-ID: <20170911153846.GE5054@redhat.com>
-References: <20170911111422.31903-1-milian.wolff@kdab.com>
- <b7c2b440-f781-19ae-ebc7-7fba93bb4618@gmail.com>
- <20170911143312.GD5054@redhat.com>
- <1605058.Qn1Snd44fD@milian-kdab2>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Question to struct map
+Date: Tue, 12 Sep 2017 17:04:53 +0200
+Message-ID: <1d758097-b01b-cbad-913a-855a61f8ce73@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:44496 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751015AbdIKPiu (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46288 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1751404AbdILPFA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Sep 2017 11:38:50 -0400
-Content-Disposition: inline
-In-Reply-To: <1605058.Qn1Snd44fD@milian-kdab2>
+        Tue, 12 Sep 2017 11:05:00 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v8CEwpJd142404
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 11:04:59 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2cxgjfn958-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 11:04:59 -0400
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Tue, 12 Sep 2017 16:04:57 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id v8CF4sbW10813692
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 15:04:54 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC8AD4C040
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 16:01:28 +0100 (BST)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B04FE4C058
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 16:01:28 +0100 (BST)
+Received: from oc2666213455.ibm.com (unknown [9.152.212.92])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 16:01:28 +0100 (BST)
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: David Ahern <dsahern@gmail.com>, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Em Mon, Sep 11, 2017 at 05:16:11PM +0200, Milian Wolff escreveu:
-> On Monday, September 11, 2017 4:33:12 PM CEST Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Sep 11, 2017 at 07:08:18AM -0700, David Ahern escreveu:
-> > > other than that LGTM and long over due.
+Hi all,
 
-> > > Acked-by: David Ahern <dsahern@gmail.com>
+I have a question regarding struct map. 
+What is the purpose is the functions pointers in struct map named map_ip and unmap_ip?
+How do they relate the to dso the struct map is refering to?
 
-> > We got those from git, agreed it should go, thanks for the Acked-by,
-> > always welcome!
- 
-> Arnaldo, do you want me to fixup the commit, or can you handle it?
- 
-> Thanks for the review guys
+This is not clear to me. Must have been on vacation for too long :-).
 
-I did it already, thanks.
-
-- Arnaldo
+Thanks a lot.
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
