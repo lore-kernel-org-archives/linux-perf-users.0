@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/41] perf vendor events: Add JSON metrics for Broadwell
-Date: Tue, 12 Sep 2017 12:10:19 -0300
-Message-ID: <20170912151029.6612-32-acme@kernel.org>
+Subject: [PATCH 37/41] perf vendor events: Add JSON metrics for Ivy Town
+Date: Tue, 12 Sep 2017 12:10:25 -0300
+Message-ID: <20170912151029.6612-38-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,164 +12,22 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Broadwell.
-
-Commiter testing:
-
-  # uname -a
-  Linux jouet 4.13.0-rc7+ #3 SMP Sat Sep 2 09:04:44 -03 2017 x86_64 x86_64 x86_64 GNU/Linux
-  # grep "model name" /proc/cpuinfo  | head -1
-  model name	: Intel(R) Core(TM) i7-5600U CPU @ 2.60GHz
-  # perf list metricgroup
-
-  List of pre-defined events (to be used in -e):
-
-  Metric Groups:
-
-  DSB
-  FLOPS
-  Frontend
-  Frontend_Bandwidth
-  Memory_BW
-  Memory_Bound
-  Memory_Lat
-  Pipeline
-  Ports_Utilization
-  Power
-  SMT
-  Summary
-  TLB
-  TopDownL1
-  Unknown_Branches
-  # perf stat -M Power --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Turbo_Utilization  C3_Core_Residency  C6_Core_Residency  C7_Core_Residency  C2_Pkg_Residency  C3_Pkg_Residency  C6_Pkg_Residency  C7_Pkg_Residency
-       1.1               0.0                 0.0               0.0                0.0               0.0               0.0               0.0
-
-         1.003502904 seconds time elapsed
-
-  #
-  # perf stat -M Memory_BW --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  MLP
-       1.7
-
-         1.001364525 seconds time elapsed
-
-  #
-  # perf stat -M TLB --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Page_Walks_Utilization
-       0.1
-
-         1.005962198 seconds time elapsed
-
-  #
-  # perf stat -M Summary --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Instructions   CPI          CLKS          CPU_Utilization   GFLOPs  SMT_2T_Utilization  Kernel_Utilization
-  7281856697.0       0.0    11150898087.0     1.0              0.0    1.0                 0.7
-
-         1.012134025 seconds time elapsed
-
-  #
-
-Running in verbose mode shows which counters and expressions are being
-used:
-
-  # perf stat -v -M Summary --metric-only -a sleep 1
-  Using CPUID GenuineIntel-6-3D
-  metric expr 1 / inst_retired.any / cycles for CPI
-  found event inst_retired.any
-  found event cycles
-  metric expr cpu_clk_unhalted.thread for CLKS
-  found event cpu_clk_unhalted.thread
-  metric expr inst_retired.any for Instructions
-  found event inst_retired.any
-  metric expr cpu_clk_unhalted.ref_tsc / msr@tsc@ for CPU_Utilization
-  found event cpu_clk_unhalted.ref_tsc
-  found event msr/tsc/
-  metric expr ( 1*( fp_arith_inst_retired.scalar_single + fp_arith_inst_retired.scalar_double ) + 2* fp_arith_inst_retired.128b_packed_double + 4*( fp_arith_inst_retired.128b_packed_single + fp_arith_inst_retired.256b_packed_double ) + 8* fp_arith_inst_retired.256b_packed_single ) / 1000000000 / duration_time for GFLOPs
-  found event fp_arith_inst_retired.scalar_single
-  found event fp_arith_inst_retired.scalar_double
-  found event fp_arith_inst_retired.128b_packed_double
-  found event fp_arith_inst_retired.128b_packed_single
-  found event fp_arith_inst_retired.256b_packed_double
-  found event fp_arith_inst_retired.256b_packed_single
-  found event duration_time
-  metric expr 1 - cpu_clk_thread_unhalted.one_thread_active / ( cpu_clk_thread_unhalted.ref_xclk_any / 2 ) if #smt_on else 0 for SMT_2T_Utilization
-  found event cpu_clk_thread_unhalted.one_thread_active
-  found event cpu_clk_thread_unhalted.ref_xclk_any
-  metric expr cpu_clk_unhalted.ref_tsc:u / cpu_clk_unhalted.ref_tsc for Kernel_Utilization
-  found event cpu_clk_unhalted.ref_tsc:u
-  found event cpu_clk_unhalted.ref_tsc
-  adding {inst_retired.any,cycles}:W,{cpu_clk_unhalted.thread}:W,{inst_retired.any}:W,{cpu_clk_unhalted.ref_tsc,msr/tsc/}:W,{fp_arith_inst_retired.scalar_single,fp_arith_inst_retired.scalar_double,fp_arith_inst_retired.128b_packed_double,fp_arith_inst_retired.128b_packed_single,fp_arith_inst_retired.256b_packed_double,fp_arith_inst_retired.256b_packed_single,duration_time}:W,{cpu_clk_thread_unhalted.one_thread_active,cpu_clk_thread_unhalted.ref_xclk_any}:W,{cpu_clk_unhalted.ref_tsc:u,cpu_clk_unhalted.ref_tsc}:W
-  inst_retired.any -> cpu/event=0xc0/
-  cpu_clk_unhalted.thread -> cpu/event=0x3c/
-  inst_retired.any -> cpu/event=0xc0/
-  cpu_clk_unhalted.ref_tsc -> cpu/umask=0x3,period=2000003,event=0/
-  fp_arith_inst_retired.scalar_single -> cpu/umask=0x2,period=2000003,event=0xc7/
-  fp_arith_inst_retired.scalar_double -> cpu/umask=0x1,period=2000003,event=0xc7/
-  fp_arith_inst_retired.128b_packed_double -> cpu/umask=0x4,period=2000003,event=0xc7/
-  fp_arith_inst_retired.128b_packed_single -> cpu/umask=0x8,period=2000003,event=0xc7/
-  fp_arith_inst_retired.256b_packed_double -> cpu/umask=0x10,period=2000003,event=0xc7/
-  fp_arith_inst_retired.256b_packed_single -> cpu/umask=0x20,period=2000003,event=0xc7/
-  cpu_clk_thread_unhalted.one_thread_active -> cpu/umask=0x2,period=2000003,event=0x3c/
-  cpu_clk_thread_unhalted.ref_xclk_any -> cpu/umask=0x1,any=1,period=2000003,event=0x3c/
-  cpu_clk_unhalted.ref_tsc -> cpu/umask=0x3,period=2000003,event=0/
-  cpu_clk_unhalted.ref_tsc -> cpu/umask=0x3,period=2000003,event=0/
-  Weak group for fp_arith_inst_retired.scalar_single/7 failed
-  Weak group for cpu_clk_unhalted.ref_tsc:u/2 failed
-  inst_retired.any: 8704146437 4026374016 619883741
-  cycles: 11180800018 4026374016 619883741
-  cpu_clk_unhalted.thread: 11140030295 4026323772 931621933
-  inst_retired.any: 8643115117 4026260510 1243595906
-  cpu_clk_unhalted.ref_tsc: 10201638510 4026184297 1247351077
-  msr/tsc/: 10378022785 4026184297 1247351077
-  fp_arith_inst_retired.scalar_single: 134697 4026102728 1559210545
-  fp_arith_inst_retired.scalar_double: 274339 4026007348 1870014984
-  fp_arith_inst_retired.128b_packed_double: 1639 4025886054 1866736918
-  fp_arith_inst_retired.128b_packed_single: 0 4025776614 2175106569
-  fp_arith_inst_retired.256b_packed_double: 0 4025681734 1235551129
-  fp_arith_inst_retired.256b_packed_single: 0 4025582962 1232398454
-  duration_time: 0 4025552913 4025552913
-  cpu_clk_thread_unhalted.one_thread_active: 10505 4025474649 923893076
-  cpu_clk_thread_unhalted.ref_xclk_any: 394992110 4025474649 923893076
-  cpu_clk_unhalted.ref_tsc:u: 5341421014 4025360315 1231634198
-  cpu_clk_unhalted.ref_tsc: 10258278508 4025252611 307909362
-
-   Performance counter stats for 'system wide':
-
-  Instructions         CPI                  CLKS                 CPU_Utilization      GFLOPs               SMT_2T_Utilization   Kernel_Utilization
-  8704146437.0             0.0            11140030295.0            1.0                 0.0                 1.0                 0.5
-
-         1.006783654 seconds time elapsed
-
-  #
+Add JSON metrics for Ivy Town.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20170905195235.GW2482@two.firstfloor.org
+Link: http://lkml.kernel.org/r/20170908180133.GA20128@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/x86/broadwell/bdw-metrics.json | 164 +++++++++++++++++++++
+ .../pmu-events/arch/x86/ivytown/ivt-metrics.json   | 164 +++++++++++++++++++++
  1 file changed, 164 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
 new file mode 100644
-index 000000000000..49c5f123d811
+index 000000000000..057a832f1a6a
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
 @@ -0,0 +1,164 @@
 +[
 +    {
@@ -186,7 +44,7 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely consumed by program instructions",
-+        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4) )",
 +        "MetricGroup": "Frontend",
 +        "MetricName": "IFetch_Line_Utilization"
 +    },
@@ -234,7 +92,7 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
-+	"MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - ( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED ) ) / RS_EVENTS.EMPTY_END",
++        "MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFETCH_STALL ) / RS_EVENTS.EMPTY_END",
 +        "MetricGroup": "Unknown_Branches",
 +        "MetricName": "BAClear_Cost"
 +    },
@@ -258,7 +116,7 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-+	"MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED)) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
 +        "MetricGroup": "TLB",
 +        "MetricName": "Page_Walks_Utilization"
 +    },
@@ -270,7 +128,7 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Giga Floating Point Operations Per Second",
-+        "MetricExpr": "( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 / duration_time",
++        "MetricExpr": "( 1*( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2* FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4*( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8* SIMD_FP_256.PACKED_SINGLE ) / 1000000000 / duration_time",
 +        "MetricGroup": "FLOPS;Summary",
 +        "MetricName": "GFLOPs"
 +    },
