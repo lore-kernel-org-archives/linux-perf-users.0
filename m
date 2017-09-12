@@ -1,85 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/9] perf tests: Fix compile when libunwind's unwind.h is available
-Date: Tue, 12 Sep 2017 16:24:31 -0300
-Message-ID: <20170912192438.1334-3-acme@kernel.org>
+Subject: [PATCH 4/9] perf tools: Open perf.data with O_CLOEXEC flag
+Date: Tue, 12 Sep 2017 16:24:33 -0300
+Message-ID: <20170912192438.1334-5-acme@kernel.org>
 References: <20170912192438.1334-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:40590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751388AbdILTY7 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 15:24:59 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912192438.1334-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Milian Wolff <milian.wolff@kdab.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-When cross compiling perf and I want to link against a self-compiled
-libunwind, I usually make the custom path where the libunwind headers
-exist visible by adding the libunwind prefix to the include path when
-compiling perf, i.e.:
+Do not carry the perf.data file descriptor into the workload process and
+close it when perf executes the workload.
 
-~~~~~
-$ ls $HOME/projects/compiled/other/include/
-libunwind-coredump.h  libunwind.h         libunwind-x86_64.h
-libunwind-common.h  libunwind-dynamic.h   libunwind-ptrace.h
-unwind.h
-$ make EXTRA_CFLAGS="-I$HOME/projects/compiled/other/include/
-~~~~~~
-
-Note the `unwind.h` header from libunwind which leads to compile
-errors when compiling tests/dwarf-unwind.c, since it shadows perf's
-util/unwind.h:
-
-~~~~~
-tests/dwarf-unwind.c:41:32: error: ‘struct unwind_entry’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
- static int unwind_entry(struct unwind_entry *entry, void *arg)
-                                ^~~~~~~~~~~~
-tests/dwarf-unwind.c: In function ‘unwind_entry’:
-tests/dwarf-unwind.c:44:22: error: dereferencing pointer to incomplete type ‘struct unwind_entry’
-  char *symbol = entry->sym ? entry->sym->name : NULL;
-                      ^~
-tests/dwarf-unwind.c: In function ‘unwind_thread’:
-tests/dwarf-unwind.c:92:8: error: implicit declaration of function ‘unwind__get_entries’; did you mean ‘unwind_entry’? [-Werror=implicit-function-declaration]
-  err = unwind__get_entries(unwind_entry, &cnt, thread,
-        ^~~~~~~~~~~~~~~~~~~
-        unwind_entry
-tests/dwarf-unwind.c:92:8: error: nested extern declaration of ‘unwind__get_entries’ [-Werror=nested-externs]
-~~~~~~
-
-Fix this compile error by specificing an explicit include of perf's
-unwind.h in the util folder.
-
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Link: http://lkml.kernel.org/r/20170906150209.12579-1-milian.wolff@kdab.com
+Link: http://lkml.kernel.org/r/20170908084621.31595-2-jolsa@kernel.org
+[ Add definitions for O_CLOEXEC for older systems ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/dwarf-unwind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/data.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 2a7b9b47bbcb..9ba1d216a89f 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -6,7 +6,7 @@
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index e84bbc8ec058..263f5a906ba5 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -10,6 +10,16 @@
+ #include "util.h"
  #include "debug.h"
- #include "machine.h"
- #include "event.h"
--#include "unwind.h"
-+#include "../util/unwind.h"
- #include "perf_regs.h"
- #include "map.h"
- #include "thread.h"
+ 
++#ifndef O_CLOEXEC
++#ifdef __sparc__
++#define O_CLOEXEC	0x400000
++#elif defined(__alpha__) || defined(__hppa__)
++#define O_CLOEXEC	010000000
++#else
++#define O_CLOEXEC	02000000
++#endif
++#endif
++
+ static bool check_pipe(struct perf_data_file *file)
+ {
+ 	struct stat st;
+@@ -96,7 +106,8 @@ static int open_file_write(struct perf_data_file *file)
+ 	if (check_backup(file))
+ 		return -1;
+ 
+-	fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
++	fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
++		  S_IRUSR|S_IWUSR);
+ 
+ 	if (fd < 0)
+ 		pr_err("failed to open %s : %s\n", file->path,
 -- 
 2.13.5
