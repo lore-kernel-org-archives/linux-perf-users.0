@@ -1,119 +1,112 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/41] perf stat: Factor out generic metric printing
-Date: Tue, 12 Sep 2017 12:09:52 -0300
-Message-ID: <20170912151029.6612-5-acme@kernel.org>
-References: <20170912151029.6612-1-acme@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH] perf stat: wait for the correct child
+Date: Tue, 12 Sep 2017 17:25:23 +0200
+Message-ID: <20170912152523.4497-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: acme@kernel.org
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+When packaging the perf userland application into an AppImage,
+the wait() call in perf stat returned too early. It turned out
+that some other child process exited, but not the one perf stat
+launched:
 
-The 'perf stat' shadow metric printing already supports generic metrics.
-Factor out the code doing that into a separate function that can be
-re-used in a later patch.
+~~~~~
+$ sudo strace -e fork,execve,clone,wait4 -f ./perf-x86_64.AppImage stat sleep 1
+execve("./perf-git.3a73b7f9-x86_64.AppImage", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x7ffec1bbf050 /* 18 vars */) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3912
+strace: Process 3912 attached
+[pid  3912] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3914
+strace: Process 3914 attached
+[pid  3912] +++ exited with 0 +++
+[pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=3912, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  3914] clone(strace: Process 3915 attached
+child_stack=0x7f6a6d9fefb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f6a6d9ff9d0, tls=0x7f6a6d9ff700, child_tidptr=0x7f6a6d9ff9d0) = 3915
+[pid  3911] execve("/tmp/.mount_perf-g6VYMpl/AppRun", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x14aab70 /* 21 vars */) = 0
+[pid  3911] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4ae113c4d0) = 3916
+strace: Process 3916 attached
+[pid  3911] wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 3912
+[pid  3916] execve("/usr/libexec/perf-core/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/tmp/./sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/home/milian/.bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/usr/lib/icecream/libexec/icecc/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/ssd2/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/home/milian/.bin/kf5/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/ssd2/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/home/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/home/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/usr/local/sbin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/usr/local/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+[pid  3916] execve("/usr/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */
+ Performance counter stats for 'sleep 1':
 
-No behavior changes.
+     <not counted>      task-clock
+     <not counted> ) = 0
+     context-switches
+     <not counted>      cpu-migrations
+     <not counted>      page-faults
+     <not counted>      cycles
+     <not counted>      instructions
+     <not counted>      branches
+     <not counted>      branch-misses
 
-v2: Fix indentation
+       0.000047194 seconds time elapsed
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-4-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[pid  3916] --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=3911, si_uid=0} ---
+[pid  3916] +++ killed by SIGTERM +++
+[pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=3916, si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
+[pid  3915] --- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=3914, si_uid=0} ---
+[pid  3911] +++ exited with 0 +++
+[pid  3915] --- SIGHUP {si_signo=SIGHUP, si_code=SI_USER, si_pid=3914, si_uid=0} ---
+[pid  3915] +++ exited with 0 +++
++++ exited with 0 +++
+~~~~~
+
+This patch uses waitpid instead to ensure the call waits for the
+debuggee application launched by perf stat. This fixes perf stat
+when launched from an AppImage:
+
+~~~~~
+$ ./perf-x86_64.AppImage stat sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+          0.357235      task-clock (msec)         #    0.000 CPUs utilized
+                 1      context-switches          #    0.003 M/sec
+                 0      cpu-migrations            #    0.000 K/sec
+                50      page-faults               #    0.140 M/sec
+           1269602      cycles                    #    3.554 GHz
+            654278      instructions              #    0.52  insn per cycle
+            129963      branches                  #  363.803 M/sec
+              7082      branch-misses             #    5.45% of all branches
+
+       1.000633420 seconds time elapsed
+~~~~~
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: http://lkml.kernel.org/r/4549240.M84I420bcG@milian-kdab2
 ---
- tools/perf/util/stat-shadow.c | 69 ++++++++++++++++++++++++++-----------------
- 1 file changed, 42 insertions(+), 27 deletions(-)
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index a04cf56d3517..96aa6cbf24d6 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -627,6 +627,46 @@ static void print_smi_cost(int cpu, struct perf_evsel *evsel,
- 	out->print_metric(out->ctx, NULL, "%4.0f", "SMI#", smi_num);
- }
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 2248ebe582ca..88f1d5fbdb48 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -752,7 +752,7 @@ static int __run_perf_stat(int argc, const char **argv)
+ 				process_interval();
+ 			}
+ 		}
+-		wait(&status);
++		waitpid(child_pid, &status, 0);
  
-+static void generic_metric(const char *metric_expr,
-+			   struct perf_evsel **metric_events,
-+			   char *name,
-+			   const char *metric_name,
-+			   double avg,
-+			   int cpu,
-+			   int ctx,
-+			   struct perf_stat_output_ctx *out)
-+{
-+	print_metric_t print_metric = out->print_metric;
-+	struct parse_ctx pctx;
-+	double ratio;
-+	int i;
-+	void *ctxp = out->ctx;
-+
-+	expr__ctx_init(&pctx);
-+	expr__add_id(&pctx, name, avg);
-+	for (i = 0; metric_events[i]; i++) {
-+		struct saved_value *v;
-+
-+		v = saved_value_lookup(metric_events[i], cpu, ctx, false);
-+		if (!v)
-+			break;
-+		expr__add_id(&pctx, metric_events[i]->name, avg_stats(&v->stats));
-+	}
-+	if (!metric_events[i]) {
-+		const char *p = metric_expr;
-+
-+		if (expr__parse(&ratio, &pctx, &p) == 0)
-+			print_metric(ctxp, NULL, "%8.1f",
-+				metric_name ?
-+				metric_name :
-+				out->force_header ?  name : "",
-+				ratio);
-+		else
-+			print_metric(ctxp, NULL, NULL, "", 0);
-+	} else
-+		print_metric(ctxp, NULL, NULL, "", 0);
-+}
-+
- void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 				   double avg, int cpu,
- 				   struct perf_stat_output_ctx *out)
-@@ -819,33 +859,8 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 		else
- 			print_metric(ctxp, NULL, NULL, name, 0);
- 	} else if (evsel->metric_expr) {
--		struct parse_ctx pctx;
--		int i;
--
--		expr__ctx_init(&pctx);
--		expr__add_id(&pctx, evsel->name, avg);
--		for (i = 0; evsel->metric_events[i]; i++) {
--			struct saved_value *v;
--
--			v = saved_value_lookup(evsel->metric_events[i], cpu, ctx, false);
--			if (!v)
--				break;
--			expr__add_id(&pctx, evsel->metric_events[i]->name,
--					     avg_stats(&v->stats));
--		}
--		if (!evsel->metric_events[i]) {
--			const char *p = evsel->metric_expr;
--
--			if (expr__parse(&ratio, &pctx, &p) == 0)
--				print_metric(ctxp, NULL, "%8.1f",
--					evsel->metric_name ?
--					evsel->metric_name :
--					out->force_header ?  evsel->name : "",
--					ratio);
--			else
--				print_metric(ctxp, NULL, NULL, "", 0);
--		} else
--			print_metric(ctxp, NULL, NULL, "", 0);
-+		generic_metric(evsel->metric_expr, evsel->metric_events, evsel->name,
-+				evsel->metric_name, avg, cpu, ctx, out);
- 	} else if (runtime_nsecs_stats[cpu].n != 0) {
- 		char unit = 'M';
- 		char unit_buf[10];
+ 		if (workload_exec_errno) {
+ 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
 -- 
-2.13.5
+2.14.1
