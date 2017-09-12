@@ -1,51 +1,51 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Question to struct map
-Date: Wed, 13 Sep 2017 12:18:34 -0300
-Message-ID: <20170913151834.GG5866@kernel.org>
-References: <1d758097-b01b-cbad-913a-855a61f8ce73@linux.vnet.ibm.com>
- <20170912151756.GB3452@kernel.org>
- <ff3ff19d-de45-61f9-cd16-5d7c39c67cf0@linux.vnet.ibm.com>
+From: Jason Teplitz <jason@tensyr.com>
+Subject: Re: Prevent Kernel from resetting cycle counter
+Date: Tue, 12 Sep 2017 11:57:48 -0700
+Message-ID: <CALk3wS0Wjo3dyYB09bFf+FrPZmWGAcCbv+Kh0i1V6KxnMYqHPw@mail.gmail.com>
+References: <CALk3wS2cEFTnMXoyhrzyC1R_np159B4evzDRBMNK7MsAsc8UFA@mail.gmail.com>
+ <20170908190736.de99a221c13be31c10103643@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751305AbdIMPSi (ORCPT
+Received: from mail-wm0-f49.google.com ([74.125.82.49]:45606 "EHLO
+        mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750810AbdILS5u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2017 11:18:38 -0400
-Content-Disposition: inline
-In-Reply-To: <ff3ff19d-de45-61f9-cd16-5d7c39c67cf0@linux.vnet.ibm.com>
+        Tue, 12 Sep 2017 14:57:50 -0400
+Received: by mail-wm0-f49.google.com with SMTP id f199so2001742wme.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Sep 2017 11:57:49 -0700 (PDT)
+In-Reply-To: <20170908190736.de99a221c13be31c10103643@arm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To: Kim Phillips <kim.phillips@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Em Wed, Sep 13, 2017 at 04:48:03PM +0200, Thomas-Mich Richter escreveu:
-> On 09/12/2017 05:17 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Sep 12, 2017 at 05:04:53PM +0200, Thomas-Mich Richter escreveu:
-> >> I have a question regarding struct map. 
-> >> What is the purpose is the functions pointers in struct map named map_ip and unmap_ip?
-> >> How do they relate the to dso the struct map is refering to?
+Hi Kim,
 
-> > A DSO has a symbol table (ELF or other kind, like the JIT ones
-> > (documented in tools/perf/Documentation/jit-interface.txt) that may be
-> > identity mapped or not, requiring or not use of relocation, etc.
+Thanks for your response.
+I talked a bit with Mark Rutland from Arm about this. He told me that
+perf can reset or modify the cycle counter from kernelspace as it
+pleases even if the user is not using perf. Reading the cycle counter
+directly from userspace is not supported. The only supported way to
+read the cycle counter is to go through the VDSO.
 
-> > The map, on the other hand, is where this DSO was loaded in memory,
-> > which will be used to add to the symbol offset to do the address
-> > resolution.
-> 
-> I think I got it now.
-> The map__map_ip() function converts a symbol's virtual memory address to the
-> byte offset of that symbol in the ELF file.
-> 
-> The map__unmap_ip() function does the opposite.
-> 
-> Thanks for the explanation.
-
-You're welcome, and if I may suggest, please consider these moments as
-opportunities to help people that, like you, scratch their heads in the
-future about these pointers, adding comments to the struct definition
-:-)
-
-- Arnaldo
+On Fri, Sep 8, 2017 at 5:07 PM, Kim Phillips <kim.phillips@arm.com> wrote:
+> On Wed, 6 Sep 2017 17:36:36 -0700
+> Jason Teplitz <jason@tensyr.com> wrote:
+>
+> [adding linux-arm-kernel]
+>
+>> I'm reading the armv8 PMU cycle counter from userspace and noticing
+>> that it gets periodically reset by something. Does anything inside the
+>> kernel reset these counters? I am not using perf, so I'm not sure why
+>> anything else would be touching them.
+>
+> PMCCNTR only shows up in kernel perf/PMU and KVM code, so yes, no
+> reason for it to be reset, esp. if no arm-pmu interrupts are triggered.
+>
+> Is the period constant, as if to suggest a wraparound?  Can you use
+> CNTVCT instead?
+>
+> Thanks,
+>
+> Kim
