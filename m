@@ -1,622 +1,265 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/41] perf stat: Support JSON metrics in perf stat
-Date: Tue, 12 Sep 2017 12:09:55 -0300
-Message-ID: <20170912151029.6612-8-acme@kernel.org>
+Subject: [PATCH 02/41] perf tools: Support weak groups in 'perf stat'
+Date: Tue, 12 Sep 2017 12:09:50 -0300
+Message-ID: <20170912151029.6612-3-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:50760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751548AbdILPK5 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 11:10:57 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add generic support for standalone metrics specified in JSON files to
-perf stat. A metric is a formula that uses multiple events to compute a
-higher level result (e.g. IPC).
+Setting up groups can be complicated due to the complicated scheduling
+restrictions of different PMUs.
 
-Previously metrics were always tied to an event and automatically
-enabled with that event. But now change it that we can have standalone
-metrics. They are in the same JSON data structure as events, but don't
-have an event name.
+User tools usually don't understand all these restrictions.
 
-We also allow to organize the metrics in metric groups, which allows a
-short cut to select several related metrics at once.
+Still in many cases it is useful to set up groups and they work most of
+the time. However if the group is set up wrong some members will not
+report any value because they never get scheduled.
 
-Add a new -M / --metrics option to perf stat that adds the metrics or
-metric groups specified.
+Add a concept of a 'weak group': try to set up a group, but if it's not
+schedulable fallback to not using a group. That gives us the best of
+both worlds: groups if they work, but still a usable fallback if they
+don't.
 
-Add the core code to manage and parse the metric groups. They are
-collected from the JSON data structures into a separate rblist.  When
-computing shadow values look for metrics in that list.  Then they are
-computed using the existing saved values infrastructure in stat-shadow.c
+In theory it would be possible to have more complex fallback strategies
+(e.g. try to split the group in half), but the simple fallback of not
+using a group seems to work for now.
 
-The actual JSON metrics are in a separate pull request.
+So far the weak group is only implemented for perf stat, not for record.
 
-  % perf stat -M Summary --metric-only -a sleep 1
+Here's an unschedulable group (on IvyBridge with SMT on)
+
+  % perf stat -e '{branches,branch-misses,l1d.replacement,l2_lines_in.all,l2_rqsts.all_code_rd}' -a sleep 1
+
+        73,806,067      branches
+         4,848,144      branch-misses             #    6.57% of all branches
+        14,754,458      l1d.replacement
+        24,905,558      l2_lines_in.all
+   <not supported>      l2_rqsts.all_code_rd         <------- will never report anything
+
+With the weak group:
+
+  % perf stat -e '{branches,branch-misses,l1d.replacement,l2_lines_in.all,l2_rqsts.all_code_rd}:W' -a sleep 1
+
+       125,366,055      branches                                                      (80.02%)
+         9,208,402      branch-misses             #    7.35% of all branches          (80.01%)
+        24,560,249      l1d.replacement                                               (80.00%)
+        43,174,971      l2_lines_in.all                                               (80.05%)
+        31,891,457      l2_rqsts.all_code_rd                                          (79.92%)
+
+The extra event scheduled with some extra multiplexing
+
+v2: Move fallback code to separate function.
+Add comment on for_each_group_member
+Adjust to new perf_evsel__close interface
+v3: Fix debug print out.
+
+Committer testing:
+
+Before:
+
+  # perf stat -e '{branches,branch-misses,l1d.replacement,l2_lines_in.all,l2_rqsts.all_code_rd}' -a sleep 1
 
    Performance counter stats for 'system wide':
 
-  Instructions   CLKS          CPU_Utilization  GFLOPs   SMT_2T_Utilization   Kernel_Utilization
-  317614222.0    1392930775.0  0.0              0.0      0.2                  0.1
+     <not counted>      branches
+     <not counted>      branch-misses
+     <not counted>      l1d.replacement
+     <not counted>      l2_lines_in.all
+   <not supported>      l2_rqsts.all_code_rd
 
-       1.001497549 seconds time elapsed
+       1.002147212 seconds time elapsed
 
-  % perf stat -M GFLOPs flops
+  # perf stat -e '{branches,l1d.replacement,l2_lines_in.all,l2_rqsts.all_code_rd}' -a sleep 1
 
-   Performance counter stats for 'flops':
+   Performance counter stats for 'system wide':
 
-     3,999,541,471  fp_comp_ops_exe.sse_scalar_single #  1.2 GFLOPs   (66.65%)
-                14  fp_comp_ops_exe.sse_scalar_double                 (66.65%)
-                 0  fp_comp_ops_exe.sse_packed_double                 (66.67%)
-                 0  fp_comp_ops_exe.sse_packed_single                 (66.70%)
-                 0  simd_fp_256.packed_double                         (66.70%)
-                 0  simd_fp_256.packed_single                         (66.67%)
-                 0  duration_time
+        83,207,892      branches
+        11,065,444      l1d.replacement
+        28,484,024      l2_lines_in.all
+        12,186,179      l2_rqsts.all_code_rd
 
-       3.238372845 seconds time elapsed
+       1.001739493 seconds time elapsed
 
-v2: Add missing header file
-v3: Move find_map to pmu.c
+After:
+
+  # perf stat -e '{branches,branch-misses,l1d.replacement,l2_lines_in.all,l2_rqsts.all_code_rd}':W -a sleep 1
+
+   Performance counter stats for 'system wide':
+
+       543,323,909      branches                                                      (80.01%)
+        27,100,512      branch-misses             #    4.99% of all branches          (80.02%)
+        50,402,905      l1d.replacement                                               (80.03%)
+        67,385,892      l2_lines_in.all                                               (80.01%)
+        21,352,885      l2_rqsts.all_code_rd                                          (79.94%)
+
+       1.001086658 seconds time elapsed
+
+  #
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-7-andi@firstfloor.org
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/20170831194036.30146-2-andi@firstfloor.org
+[ Add a "'perf stat' only, for now" comment in the man page, suggested by Jiri ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt |   7 +
- tools/perf/builtin-stat.c              |  18 +-
- tools/perf/util/Build                  |   1 +
- tools/perf/util/metricgroup.c          | 313 +++++++++++++++++++++++++++++++++
- tools/perf/util/metricgroup.h          |  31 ++++
- tools/perf/util/pmu.c                  |   5 +-
- tools/perf/util/stat-shadow.c          |  22 ++-
- tools/perf/util/stat.h                 |   4 +-
- 8 files changed, 395 insertions(+), 6 deletions(-)
- create mode 100644 tools/perf/util/metricgroup.c
- create mode 100644 tools/perf/util/metricgroup.h
+ tools/perf/Documentation/perf-list.txt |  2 ++
+ tools/perf/builtin-stat.c              | 35 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/evsel.h                |  1 +
+ tools/perf/util/parse-events.c         |  8 +++++++-
+ tools/perf/util/parse-events.l         |  2 +-
+ 5 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index c37d61682dfb..823fce7674bb 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -199,6 +199,13 @@ Aggregate counts per processor socket for system-wide mode measurements.
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index f709de54707b..75fc17f47298 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -47,6 +47,8 @@ counted. The following modifiers exist:
+  P - use maximum detected precise level
+  S - read sample value (PERF_SAMPLE_READ)
+  D - pin the event to the PMU
++ W - group is weak and will fallback to non-group if not schedulable,
++     only supported in 'perf stat' for now.
  
-+-M::
-+--metrics::
-+Print metrics or metricgroups specified in a comma separated list.
-+For a group all metrics from the group are added.
-+The events from the metrics are automatically measured.
-+See perf list output for the possble metrics and metricgroups.
-+
- -A::
- --no-aggr::
- Do not aggregate counts across all monitored CPUs.
+ The 'p' modifier can be used for specifying how precise the instruction
+ address should be. The 'p' modifier can be specified multiple times:
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index ffc9af229ec6..12884d21ef04 100644
+index 85e992d9215b..ffc9af229ec6 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -65,6 +65,7 @@
- #include "util/tool.h"
- #include "util/group.h"
- #include "util/string2.h"
-+#include "util/metricgroup.h"
- #include "asm/bug.h"
- 
- #include <linux/time64.h>
-@@ -133,6 +134,8 @@ static const char *smi_cost_attrs = {
- 
- static struct perf_evlist	*evsel_list;
- 
-+static struct rblist		 metric_events;
-+
- static struct target target = {
- 	.uid	= UINT_MAX,
- };
-@@ -1234,7 +1237,7 @@ static void printout(int id, int nr, struct perf_evsel *counter, double uval,
- 
- 	perf_stat__print_shadow_stats(counter, uval,
- 				first_shadow_cpu(counter, id),
--				&out);
-+				&out, &metric_events);
- 	if (!csv_output && !metric_only) {
- 		print_noise(counter, noise);
- 		print_running(run, ena);
-@@ -1565,7 +1568,8 @@ static void print_metric_headers(const char *prefix, bool no_indent)
- 		os.evsel = counter;
- 		perf_stat__print_shadow_stats(counter, 0,
- 					      0,
--					      &out);
-+					      &out,
-+					      &metric_events);
- 	}
- 	fputc('\n', stat_config.output);
+@@ -582,6 +582,32 @@ static bool perf_evsel__should_store_id(struct perf_evsel *counter)
+ 	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
  }
-@@ -1789,6 +1793,13 @@ static int enable_metric_only(const struct option *opt __maybe_unused,
+ 
++static struct perf_evsel *perf_evsel__reset_weak_group(struct perf_evsel *evsel)
++{
++	struct perf_evsel *c2, *leader;
++	bool is_open = true;
++
++	leader = evsel->leader;
++	pr_debug("Weak group for %s/%d failed\n",
++			leader->name, leader->nr_members);
++
++	/*
++	 * for_each_group_member doesn't work here because it doesn't
++	 * include the first entry.
++	 */
++	evlist__for_each_entry(evsel_list, c2) {
++		if (c2 == evsel)
++			is_open = false;
++		if (c2->leader == leader) {
++			if (is_open)
++				perf_evsel__close(c2);
++			c2->leader = c2;
++			c2->nr_members = 0;
++		}
++	}
++	return leader;
++}
++
+ static int __run_perf_stat(int argc, const char **argv)
+ {
+ 	int interval = stat_config.interval;
+@@ -618,6 +644,15 @@ static int __run_perf_stat(int argc, const char **argv)
+ 	evlist__for_each_entry(evsel_list, counter) {
+ try_again:
+ 		if (create_perf_stat_counter(counter) < 0) {
++
++			/* Weak group failed. Reset the group. */
++			if (errno == EINVAL &&
++			    counter->leader != counter &&
++			    counter->weak_group) {
++				counter = perf_evsel__reset_weak_group(counter);
++				goto try_again;
++			}
++
+ 			/*
+ 			 * PPC returns ENXIO for HW counters until 2.6.37
+ 			 * (behavior changed with commit b0a873e).
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index dd2c4b5112a5..db658785d828 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -137,6 +137,7 @@ struct perf_evsel {
+ 	const char *		metric_name;
+ 	struct perf_evsel	**metric_events;
+ 	bool			collect_stat;
++	bool			weak_group;
+ };
+ 
+ union u64_swap {
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f6257fb4f08c..57d7acf890e0 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1366,6 +1366,7 @@ struct event_modifier {
+ 	int exclude_GH;
+ 	int sample_read;
+ 	int pinned;
++	int weak;
+ };
+ 
+ static int get_event_modifier(struct event_modifier *mod, char *str,
+@@ -1384,6 +1385,7 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
+ 
+ 	int exclude = eu | ek | eh;
+ 	int exclude_GH = evsel ? evsel->exclude_GH : 0;
++	int weak = 0;
+ 
+ 	memset(mod, 0, sizeof(*mod));
+ 
+@@ -1421,6 +1423,8 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
+ 			sample_read = 1;
+ 		} else if (*str == 'D') {
+ 			pinned = 1;
++		} else if (*str == 'W') {
++			weak = 1;
+ 		} else
+ 			break;
+ 
+@@ -1451,6 +1455,7 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
+ 	mod->exclude_GH = exclude_GH;
+ 	mod->sample_read = sample_read;
+ 	mod->pinned = pinned;
++	mod->weak = weak;
+ 
  	return 0;
  }
+@@ -1464,7 +1469,7 @@ static int check_modifier(char *str)
+ 	char *p = str;
  
-+static int parse_metric_groups(const struct option *opt,
-+			       const char *str,
-+			       int unset __maybe_unused)
-+{
-+	return metricgroup__parse_groups(opt, str, &metric_events);
-+}
-+
- static const struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
-@@ -1854,6 +1865,9 @@ static const struct option stat_options[] = {
- 			"measure topdown level 1 statistics"),
- 	OPT_BOOLEAN(0, "smi-cost", &smi_cost,
- 			"measure SMI cost"),
-+	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
-+		     "monitor specified metrics or metric groups (separated by ,)",
-+		     parse_metric_groups),
- 	OPT_END()
- };
+ 	/* The sizeof includes 0 byte as well. */
+-	if (strlen(str) > (sizeof("ukhGHpppPSDI") - 1))
++	if (strlen(str) > (sizeof("ukhGHpppPSDIW") - 1))
+ 		return -1;
  
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 94518c1bf8b6..71ab8466714d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -34,6 +34,7 @@ libperf-y += dso.o
- libperf-y += symbol.o
- libperf-y += symbol_fprintf.o
- libperf-y += color.o
-+libperf-y += metricgroup.o
- libperf-y += header.o
- libperf-y += callchain.o
- libperf-y += values.o
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-new file mode 100644
-index 000000000000..7516b1746594
---- /dev/null
-+++ b/tools/perf/util/metricgroup.c
-@@ -0,0 +1,313 @@
-+/*
-+ * Copyright (c) 2017, Intel Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+/* Manage metrics and groups of metrics from JSON files */
-+
-+#include "metricgroup.h"
-+#include "evlist.h"
-+#include "strbuf.h"
-+#include "pmu.h"
-+#include "expr.h"
-+#include "rblist.h"
-+#include "pmu.h"
-+#include <string.h>
-+#include <stdbool.h>
-+#include <errno.h>
-+#include "pmu-events/pmu-events.h"
-+#include "strbuf.h"
-+#include "strlist.h"
-+#include <assert.h>
-+#include <ctype.h>
-+
-+struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-+					 struct perf_evsel *evsel,
-+					 bool create)
-+{
-+	struct rb_node *nd;
-+	struct metric_event me = {
-+		.evsel = evsel
-+	};
-+	nd = rblist__find(metric_events, &me);
-+	if (nd)
-+		return container_of(nd, struct metric_event, nd);
-+	if (create) {
-+		rblist__add_node(metric_events, &me);
-+		nd = rblist__find(metric_events, &me);
-+		if (nd)
-+			return container_of(nd, struct metric_event, nd);
-+	}
-+	return NULL;
-+}
-+
-+static int metric_event_cmp(struct rb_node *rb_node, const void *entry)
-+{
-+	struct metric_event *a = container_of(rb_node,
-+					      struct metric_event,
-+					      nd);
-+	const struct metric_event *b = entry;
-+
-+	if (a->evsel == b->evsel)
-+		return 0;
-+	if ((char *)a->evsel < (char *)b->evsel)
-+		return -1;
-+	return +1;
-+}
-+
-+static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
-+					const void *entry)
-+{
-+	struct metric_event *me = malloc(sizeof(struct metric_event));
-+
-+	if (!me)
-+		return NULL;
-+	memcpy(me, entry, sizeof(struct metric_event));
-+	me->evsel = ((struct metric_event *)entry)->evsel;
-+	INIT_LIST_HEAD(&me->head);
-+	return &me->nd;
-+}
-+
-+static void metricgroup__rblist_init(struct rblist *metric_events)
-+{
-+	rblist__init(metric_events);
-+	metric_events->node_cmp = metric_event_cmp;
-+	metric_events->node_new = metric_event_new;
-+}
-+
-+struct egroup {
-+	struct list_head nd;
-+	int idnum;
-+	const char **ids;
-+	const char *metric_name;
-+	const char *metric_expr;
-+};
-+
-+static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
-+				     const char **ids,
-+				     int idnum,
-+				     struct perf_evsel **metric_events)
-+{
-+	struct perf_evsel *ev, *start = NULL;
-+	int ind = 0;
-+
-+	evlist__for_each_entry (perf_evlist, ev) {
-+		if (!strcmp(ev->name, ids[ind])) {
-+			metric_events[ind] = ev;
-+			if (ind == 0)
-+				start = ev;
-+			if (++ind == idnum) {
-+				metric_events[ind] = NULL;
-+				return start;
-+			}
-+		} else {
-+			ind = 0;
-+			start = NULL;
-+		}
-+	}
-+	/*
-+	 * This can happen when an alias expands to multiple
-+	 * events, like for uncore events.
-+	 * We don't support this case for now.
-+	 */
-+	return NULL;
-+}
-+
-+static int metricgroup__setup_events(struct list_head *groups,
-+				     struct perf_evlist *perf_evlist,
-+				     struct rblist *metric_events_list)
-+{
-+	struct metric_event *me;
-+	struct metric_expr *expr;
-+	int i = 0;
-+	int ret = 0;
-+	struct egroup *eg;
-+	struct perf_evsel *evsel;
-+
-+	list_for_each_entry (eg, groups, nd) {
-+		struct perf_evsel **metric_events;
-+
-+		metric_events = calloc(sizeof(void *), eg->idnum + 1);
-+		if (!metric_events) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
-+				   metric_events);
-+		if (!evsel) {
-+			pr_debug("Cannot resolve %s: %s\n",
-+					eg->metric_name, eg->metric_expr);
-+			continue;
-+		}
-+		for (i = 0; i < eg->idnum; i++)
-+			metric_events[i]->collect_stat = true;
-+		me = metricgroup__lookup(metric_events_list, evsel, true);
-+		if (!me) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		expr = malloc(sizeof(struct metric_expr));
-+		if (!expr) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		expr->metric_expr = eg->metric_expr;
-+		expr->metric_name = eg->metric_name;
-+		expr->metric_events = metric_events;
-+		list_add(&expr->nd, &me->head);
-+	}
-+	return ret;
-+}
-+
-+static bool match_metric(const char *n, const char *list)
-+{
-+	int len;
-+	char *m;
-+
-+	if (!list)
-+		return false;
-+	if (!strcmp(list, "all"))
-+		return true;
-+	if (!n)
-+		return !strcasecmp(list, "No_group");
-+	len = strlen(list);
-+	m = strcasestr(n, list);
-+	if (!m)
-+		return false;
-+	if ((m == n || m[-1] == ';' || m[-1] == ' ') &&
-+	    (m[len] == 0 || m[len] == ';'))
-+		return true;
-+	return false;
-+}
-+
-+static int metricgroup__add_metric(const char *metric, struct strbuf *events,
-+				   struct list_head *group_list)
-+{
-+	struct pmu_events_map *map = perf_pmu__find_map();
-+	struct pmu_event *pe;
-+	int ret = -EINVAL;
-+	int i, j;
-+
-+	strbuf_init(events, 100);
-+	strbuf_addf(events, "%s", "");
-+
-+	if (!map)
-+		return 0;
-+
-+	for (i = 0; ; i++) {
-+		pe = &map->table[i];
-+
-+		if (!pe->name && !pe->metric_group && !pe->metric_name)
-+			break;
-+		if (!pe->metric_expr)
-+			continue;
-+		if (match_metric(pe->metric_group, metric) ||
-+		    match_metric(pe->metric_name, metric)) {
-+			const char **ids;
-+			int idnum;
-+			struct egroup *eg;
-+
-+			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-+
-+			if (expr__find_other(pe->metric_expr,
-+					     NULL, &ids, &idnum) < 0)
-+				continue;
-+			if (events->len > 0)
-+				strbuf_addf(events, ",");
-+			for (j = 0; j < idnum; j++) {
-+				pr_debug("found event %s\n", ids[j]);
-+				strbuf_addf(events, "%s%s",
-+					j == 0 ? "{" : ",",
-+					ids[j]);
-+			}
-+			strbuf_addf(events, "}:W");
-+
-+			eg = malloc(sizeof(struct egroup));
-+			if (!eg) {
-+				ret = -ENOMEM;
-+				break;
-+			}
-+			eg->ids = ids;
-+			eg->idnum = idnum;
-+			eg->metric_name = pe->metric_name;
-+			eg->metric_expr = pe->metric_expr;
-+			list_add_tail(&eg->nd, group_list);
-+			ret = 0;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
-+				        struct list_head *group_list)
-+{
-+	char *llist, *nlist, *p;
-+	int ret = -EINVAL;
-+
-+	nlist = strdup(list);
-+	if (!nlist)
-+		return -ENOMEM;
-+	llist = nlist;
-+	while ((p = strsep(&llist, ",")) != NULL) {
-+		ret = metricgroup__add_metric(p, events, group_list);
-+		if (ret == -EINVAL) {
-+			fprintf(stderr, "Cannot find metric or group `%s'\n",
-+					p);
-+			break;
-+		}
-+	}
-+	free(nlist);
-+	return ret;
-+}
-+
-+static void metricgroup__free_egroups(struct list_head *group_list)
-+{
-+	struct egroup *eg, *egtmp;
-+	int i;
-+
-+	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
-+		for (i = 0; i < eg->idnum; i++)
-+			free((char *)eg->ids[i]);
-+		free(eg->ids);
-+		free(eg);
-+	}
-+}
-+
-+int metricgroup__parse_groups(const struct option *opt,
-+			   const char *str,
-+			   struct rblist *metric_events)
-+{
-+	struct parse_events_error parse_error;
-+	struct perf_evlist *perf_evlist = *(struct perf_evlist **)opt->value;
-+	struct strbuf extra_events;
-+	LIST_HEAD(group_list);
-+	int ret;
-+
-+	if (metric_events->nr_entries == 0)
-+		metricgroup__rblist_init(metric_events);
-+	ret = metricgroup__add_metric_list(str, &extra_events, &group_list);
-+	if (ret)
-+		return ret;
-+	pr_debug("adding %s\n", extra_events.buf);
-+	memset(&parse_error, 0, sizeof(struct parse_events_error));
-+	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
-+	if (ret) {
-+		pr_err("Cannot set up events %s\n", extra_events.buf);
-+		goto out;
-+	}
-+	strbuf_release(&extra_events);
-+	ret = metricgroup__setup_events(&group_list, perf_evlist,
-+					metric_events);
-+out:
-+	metricgroup__free_egroups(&group_list);
-+	return ret;
-+}
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-new file mode 100644
-index 000000000000..06854e125ee7
---- /dev/null
-+++ b/tools/perf/util/metricgroup.h
-@@ -0,0 +1,31 @@
-+#ifndef METRICGROUP_H
-+#define METRICGROUP_H 1
-+
-+#include "linux/list.h"
-+#include "rblist.h"
-+#include <subcmd/parse-options.h>
-+#include "evlist.h"
-+#include "strbuf.h"
-+
-+struct metric_event {
-+	struct rb_node nd;
-+	struct perf_evsel *evsel;
-+	struct list_head head; /* list of metric_expr */
-+};
-+
-+struct metric_expr {
-+	struct list_head nd;
-+	const char *metric_expr;
-+	const char *metric_name;
-+	struct perf_evsel **metric_events;
-+};
-+
-+struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-+					 struct perf_evsel *evsel,
-+					 bool create);
-+int metricgroup__parse_groups(const struct option *opt,
-+			const char *str,
-+			struct rblist *metric_events);
-+
-+void metricgroup__print(bool metrics, bool groups, char *filter, bool raw);
-+#endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ed25d7f88731..7070638ab600 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -580,8 +580,11 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 		const char *pname;
+ 	while (*p) {
+@@ -1504,6 +1509,7 @@ int parse_events__modifier_event(struct list_head *list, char *str, bool add)
+ 		evsel->exclude_GH          = mod.exclude_GH;
+ 		evsel->sample_read         = mod.sample_read;
+ 		evsel->precise_max         = mod.precise_max;
++		evsel->weak_group	   = mod.weak;
  
- 		pe = &map->table[i++];
--		if (!pe->name)
-+		if (!pe->name) {
-+			if (pe->metric_group || pe->metric_name)
-+				continue;
- 			break;
-+		}
+ 		if (perf_evsel__is_group_leader(evsel))
+ 			evsel->attr.pinned = mod.pinned;
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index c42edeac451f..fdb5bb52f01f 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -161,7 +161,7 @@ name		[a-zA-Z_*?][a-zA-Z0-9_*?.]*
+ name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
+ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+ /* If you add a modifier you need to update check_modifier() */
+-modifier_event	[ukhpPGHSDI]+
++modifier_event	[ukhpPGHSDIW]+
+ modifier_bp	[rwx]{1,3}
  
- 		pname = pe->pmu ? pe->pmu : "cpu";
- 		if (strncmp(pname, name, strlen(pname)))
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 8c7ab29169b9..42e6c17be7ff 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -6,6 +6,7 @@
- #include "rblist.h"
- #include "evlist.h"
- #include "expr.h"
-+#include "metricgroup.h"
- 
- enum {
- 	CTX_BIT_USER	= 1 << 0,
-@@ -671,13 +672,16 @@ static void generic_metric(const char *metric_expr,
- 
- void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 				   double avg, int cpu,
--				   struct perf_stat_output_ctx *out)
-+				   struct perf_stat_output_ctx *out,
-+				   struct rblist *metric_events)
- {
- 	void *ctxp = out->ctx;
- 	print_metric_t print_metric = out->print_metric;
- 	double total, ratio = 0.0, total2;
- 	const char *color = NULL;
- 	int ctx = evsel_context(evsel);
-+	struct metric_event *me;
-+	int num = 1;
- 
- 	if (perf_evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS)) {
- 		total = avg_stats(&runtime_cycles_stats[ctx][cpu]);
-@@ -880,6 +884,20 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 	} else if (perf_stat_evsel__is(evsel, SMI_NUM)) {
- 		print_smi_cost(cpu, evsel, out);
- 	} else {
--		print_metric(ctxp, NULL, NULL, NULL, 0);
-+		num = 0;
- 	}
-+
-+	if ((me = metricgroup__lookup(metric_events, evsel, false)) != NULL) {
-+		struct metric_expr *mexp;
-+
-+		list_for_each_entry (mexp, &me->head, nd) {
-+			if (num++ > 0)
-+				out->new_line(ctxp);
-+			generic_metric(mexp->metric_expr, mexp->metric_events,
-+					evsel->name, mexp->metric_name,
-+					avg, cpu, ctx, out);
-+		}
-+	}
-+	if (num == 0)
-+		print_metric(ctxp, NULL, NULL, NULL, 0);
- }
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index eacaf958e19d..47915df346fb 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -91,9 +91,11 @@ struct perf_stat_output_ctx {
- 	bool force_header;
- };
- 
-+struct rblist;
- void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 				   double avg, int cpu,
--				   struct perf_stat_output_ctx *out);
-+				   struct perf_stat_output_ctx *out,
-+				   struct rblist *metric_events);
- void perf_stat__collect_metric_expr(struct perf_evlist *);
- 
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
+ %%
 -- 
 2.13.5
