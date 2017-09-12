@@ -1,115 +1,64 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 9/9] perf stat: Wait for the correct child
-Date: Tue, 12 Sep 2017 16:24:38 -0300
-Message-ID: <20170912192438.1334-10-acme@kernel.org>
+Subject: [PATCH 6/9] perf ui progress: Fix progress update
+Date: Tue, 12 Sep 2017 16:24:35 -0300
+Message-ID: <20170912192438.1334-7-acme@kernel.org>
 References: <20170912192438.1334-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751536AbdILTZY (ORCPT
+        id S1751388AbdILTZN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 15:25:24 -0400
+        Tue, 12 Sep 2017 15:25:13 -0400
 In-Reply-To: <20170912192438.1334-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Milian Wolff <milian.wolff@kdab.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-When packaging the perf userland application into an AppImage, the
-wait() call in perf stat returned too early. It turned out that some
-other child process exited, but not the one perf stat launched:
+We currently update the 'next' variable only with a single step value.
+But it's possible the 'adv' update is bigger than single 'step' value.
+This would leave 'next' value under counted and force unnecessary
+ui_progress__ops->update calls.
 
-  $ sudo strace -e fork,execve,clone,wait4 -f ./perf-x86_64.AppImage stat sleep 1
-  execve("./perf-git.3a73b7f9-x86_64.AppImage", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x7ffec1bbf050 /* 18 vars */) = 0
-  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3912
-  strace: Process 3912 attached
-  [pid  3912] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3914
-  strace: Process 3914 attached
-  [pid  3912] +++ exited with 0 +++
-  [pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=3912, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
-  [pid  3914] clone(strace: Process 3915 attached
-  child_stack=0x7f6a6d9fefb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f6a6d9ff9d0, tls=0x7f6a6d9ff700, child_tidptr=0x7f6a6d9ff9d0) = 3915
-  [pid  3911] execve("/tmp/.mount_perf-g6VYMpl/AppRun", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x14aab70 /* 21 vars */) = 0
-  [pid  3911] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4ae113c4d0) = 3916
-  strace: Process 3916 attached
-  [pid  3911] wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 3912
-  [pid  3916] execve("/usr/libexec/perf-core/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/tmp/./sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/home/milian/.bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/usr/lib/icecream/libexec/icecc/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/ssd2/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/home/milian/.bin/kf5/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/ssd2/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/home/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/home/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/usr/local/sbin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/usr/local/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
-  [pid  3916] execve("/usr/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */
-   Performance counter stats for 'sleep 1':
+Calculate the amount of steps we need for 'adv' update and increase the
+'next' with that amounts of steps.
 
-       <not counted>	task-clock
-       <not counted>	context-switches
-       <not counted>	cpu-migrations
-       <not counted>	page-faults
-       <not counted>	cycles
-       <not counted>	instructions
-       <not counted>      branches
-       <not counted>      branch-misses
-
-         0.000047194 seconds time elapsed
-
-  [pid  3916] --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=3911, si_uid=0} ---
-  [pid  3916] +++ killed by SIGTERM +++
-  [pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=3916, si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
-  [pid  3915] --- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=3914, si_uid=0} ---
-  [pid  3911] +++ exited with 0 +++
-  [pid  3915] --- SIGHUP {si_signo=SIGHUP, si_code=SI_USER, si_pid=3914, si_uid=0} ---
-  [pid  3915] +++ exited with 0 +++
-  +++ exited with 0 +++
-
-This patch uses waitpid instead to ensure the call waits for the
-debuggee application launched by 'perf stat'. This fixes 'perf stat'
-when launched from an AppImage:
-
-  $ ./perf-x86_64.AppImage stat sleep 1
-
-   Performance counter stats for 'sleep 1':
-
-          0.357235      task-clock (msec)         #    0.000 CPUs utilized
-                 1      context-switches          #    0.003 M/sec
-                 0      cpu-migrations            #    0.000 K/sec
-                50      page-faults               #    0.140 M/sec
-           1269602      cycles                    #    3.554 GHz
-            654278      instructions              #    0.52  insn per cycle
-            129963      branches                  #  363.803 M/sec
-              7082      branch-misses             #    5.45% of all branches
-
-       1.000633420 seconds time elapsed
-
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170912152523.4497-1-milian.wolff@kdab.com
+Link: http://lkml.kernel.org/r/20170908120510.22515-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/ui/progress.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 85e992d9215b..69523ed55894 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -707,7 +707,7 @@ static int __run_perf_stat(int argc, const char **argv)
- 				process_interval();
- 			}
- 		}
--		wait(&status);
-+		waitpid(child_pid, &status, 0);
+diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
+index a9c15804b1f6..ae91c8148edf 100644
+--- a/tools/perf/ui/progress.c
++++ b/tools/perf/ui/progress.c
+@@ -1,3 +1,4 @@
++#include <linux/kernel.h>
+ #include "../cache.h"
+ #include "progress.h"
  
- 		if (workload_exec_errno) {
- 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
+@@ -14,10 +15,14 @@ struct ui_progress_ops *ui_progress__ops = &null_progress__ops;
+ 
+ void ui_progress__update(struct ui_progress *p, u64 adv)
+ {
++	u64 last = p->curr;
++
+ 	p->curr += adv;
+ 
+ 	if (p->curr >= p->next) {
+-		p->next += p->step;
++		u64 nr = DIV_ROUND_UP(p->curr - last, p->step);
++
++		p->next += nr * p->step;
+ 		ui_progress__ops->update(p);
+ 	}
+ }
 -- 
 2.13.5
