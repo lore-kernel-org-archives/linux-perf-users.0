@@ -1,42 +1,115 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 7/9] perf config: Check not only section->from_system_config but also item's
-Date: Tue, 12 Sep 2017 16:24:36 -0300
-Message-ID: <20170912192438.1334-8-acme@kernel.org>
+Subject: [PATCH 9/9] perf stat: Wait for the correct child
+Date: Tue, 12 Sep 2017 16:24:38 -0300
+Message-ID: <20170912192438.1334-10-acme@kernel.org>
 References: <20170912192438.1334-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751536AbdILTZY (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Sep 2017 15:25:24 -0400
 In-Reply-To: <20170912192438.1334-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Taeung Song <treeze.taeung@gmail.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 
-Currently section->from_system_config is being checked multiple times.
-item->from_system_config should be checked instead, when iterating thru
-the items in a section. Fix it.
+When packaging the perf userland application into an AppImage, the
+wait() call in perf stat returned too early. It turned out that some
+other child process exited, but not the one perf stat launched:
 
-Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+  $ sudo strace -e fork,execve,clone,wait4 -f ./perf-x86_64.AppImage stat sleep 1
+  execve("./perf-git.3a73b7f9-x86_64.AppImage", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x7ffec1bbf050 /* 18 vars */) = 0
+  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3912
+  strace: Process 3912 attached
+  [pid  3912] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a6e7efe50) = 3914
+  strace: Process 3914 attached
+  [pid  3912] +++ exited with 0 +++
+  [pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=3912, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+  [pid  3914] clone(strace: Process 3915 attached
+  child_stack=0x7f6a6d9fefb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f6a6d9ff9d0, tls=0x7f6a6d9ff700, child_tidptr=0x7f6a6d9ff9d0) = 3915
+  [pid  3911] execve("/tmp/.mount_perf-g6VYMpl/AppRun", ["./perf-git.3a73b7f9-x86_64.AppIm"..., "stat", "sleep", "1"], 0x14aab70 /* 21 vars */) = 0
+  [pid  3911] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f4ae113c4d0) = 3916
+  strace: Process 3916 attached
+  [pid  3911] wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 3912
+  [pid  3916] execve("/usr/libexec/perf-core/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/tmp/./sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/home/milian/.bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/usr/lib/icecream/libexec/icecc/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/ssd2/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/home/milian/.bin/kf5/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/ssd2/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/home/milian/projects/compiled/other/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/home/milian/projects/compiled/kf5/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/usr/local/sbin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/usr/local/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */) = -1 ENOENT (No such file or directory)
+  [pid  3916] execve("/usr/bin/sleep", ["sleep", "1"], 0x27d3650 /* 22 vars */
+   Performance counter stats for 'sleep 1':
+
+       <not counted>	task-clock
+       <not counted>	context-switches
+       <not counted>	cpu-migrations
+       <not counted>	page-faults
+       <not counted>	cycles
+       <not counted>	instructions
+       <not counted>      branches
+       <not counted>      branch-misses
+
+         0.000047194 seconds time elapsed
+
+  [pid  3916] --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=3911, si_uid=0} ---
+  [pid  3916] +++ killed by SIGTERM +++
+  [pid  3911] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=3916, si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
+  [pid  3915] --- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=3914, si_uid=0} ---
+  [pid  3911] +++ exited with 0 +++
+  [pid  3915] --- SIGHUP {si_signo=SIGHUP, si_code=SI_USER, si_pid=3914, si_uid=0} ---
+  [pid  3915] +++ exited with 0 +++
+  +++ exited with 0 +++
+
+This patch uses waitpid instead to ensure the call waits for the
+debuggee application launched by 'perf stat'. This fixes 'perf stat'
+when launched from an AppImage:
+
+  $ ./perf-x86_64.AppImage stat sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+          0.357235      task-clock (msec)         #    0.000 CPUs utilized
+                 1      context-switches          #    0.003 M/sec
+                 0      cpu-migrations            #    0.000 K/sec
+                50      page-faults               #    0.140 M/sec
+           1269602      cycles                    #    3.554 GHz
+            654278      instructions              #    0.52  insn per cycle
+            129963      branches                  #  363.803 M/sec
+              7082      branch-misses             #    5.45% of all branches
+
+       1.000633420 seconds time elapsed
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/1504754325-9724-1-git-send-email-treeze.taeung@gmail.com
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: http://lkml.kernel.org/r/20170912152523.4497-1-milian.wolff@kdab.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-config.c | 2 +-
+ tools/perf/builtin-stat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index 3ddcc6e2abeb..a1d82e33282c 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -59,7 +59,7 @@ static int set_config(struct perf_config_set *set, const char *file_name,
- 		fprintf(fp, "[%s]\n", section->name);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 85e992d9215b..69523ed55894 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -707,7 +707,7 @@ static int __run_perf_stat(int argc, const char **argv)
+ 				process_interval();
+ 			}
+ 		}
+-		wait(&status);
++		waitpid(child_pid, &status, 0);
  
- 		perf_config_items__for_each_entry(&section->items, item) {
--			if (!use_system_config && section->from_system_config)
-+			if (!use_system_config && item->from_system_config)
- 				continue;
- 			if (item->value)
- 				fprintf(fp, "\t%s = %s\n",
+ 		if (workload_exec_errno) {
+ 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
 -- 
 2.13.5
