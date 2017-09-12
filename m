@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/41] perf vendor events: Add JSON metrics for Broadwell DE
-Date: Tue, 12 Sep 2017 12:10:28 -0300
-Message-ID: <20170912151029.6612-41-acme@kernel.org>
+Subject: [PATCH 41/41] perf vendor events: Add JSON metrics for Skylake server
+Date: Tue, 12 Sep 2017 12:10:29 -0300
+Message-ID: <20170912151029.6612-42-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,23 +12,23 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Broadwell DE
+Add JSON metrics for Skylake server
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Link: http://lkml.kernel.org/r/20170908180133.GA20128@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arch/x86/broadwellde/bdwde-metrics.json        | 164 +++++++++++++++++++++
- 1 file changed, 164 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+ .../pmu-events/arch/x86/skylakex/skx-metrics.json  | 182 +++++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
 new file mode 100644
-index 000000000000..49c5f123d811
+index 000000000000..68f12a26c816
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-@@ -0,0 +1,164 @@
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -0,0 +1,182 @@
 +[
 +    {
 +        "BriefDescription": "Instructions Per Cycle (per logical thread)",
@@ -44,12 +44,12 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely consumed by program instructions",
-+        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1) )",
 +        "MetricGroup": "Frontend",
 +        "MetricName": "IFetch_Line_Utilization"
 +    },
 +    {
-+        "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded Icache; or Uop Cache)",
++        "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
 +        "MetricExpr": "IDQ.DSB_UOPS / ( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS )",
 +        "MetricGroup": "DSB; Frontend_Bandwidth",
 +        "MetricName": "DSB_Coverage"
@@ -67,8 +67,8 @@ index 000000000000..49c5f123d811
 +        "MetricName": "CLKS"
 +    },
 +    {
-+        "BriefDescription": "Total issue-pipeline slots",
-+        "MetricExpr": "4*( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
++        "BriefDescription": "Total issue-pipeline slots (per-core)",
++        "MetricExpr": "4*cycles if not #SMT_on else (( CPU_CLK_UNHALTED.THREAD / 2) * (CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )) if #EBS_Mode else ( CPU_CLK_UNHALTED.THREAD_ANY / 2 )",
 +        "MetricGroup": "TopDownL1",
 +        "MetricName": "SLOTS"
 +    },
@@ -80,45 +80,63 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Instructions Per Cycle (per physical core)",
-+        "MetricExpr": "INST_RETIRED.ANY / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
++        "MetricExpr": "INST_RETIRED.ANY / cycles if not #SMT_on else (( CPU_CLK_UNHALTED.THREAD / 2) * (CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )) if #EBS_Mode else ( CPU_CLK_UNHALTED.THREAD_ANY / 2 )",
 +        "MetricGroup": "SMT",
 +        "MetricName": "CoreIPC"
 +    },
 +    {
 +        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
-+        "MetricExpr": "UOPS_EXECUTED.THREAD / ( cpu@uops_executed.core\\,cmask\\=1@ / 2) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / ( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1",
 +        "MetricGroup": "Pipeline;Ports_Utilization",
 +        "MetricName": "ILP"
 +    },
 +    {
 +        "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
-+	"MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - ( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED ) ) / RS_EVENTS.EMPTY_END",
++        "MetricExpr": "( RS_EVENTS.EMPTY_CYCLES - (ICACHE_16B.IFDATA_STALL +2* ICACHE_16B.IFDATA_STALL:c1:e1) - ICACHE_64B.IFTAG_STALL ) / RS_EVENTS.EMPTY_END",
 +        "MetricGroup": "Unknown_Branches",
 +        "MetricName": "BAClear_Cost"
 +    },
 +    {
 +        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
-+        "MetricExpr": "( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else CPU_CLK_UNHALTED.THREAD",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD if not #SMT_on else (( CPU_CLK_UNHALTED.THREAD / 2) * (CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )) if 1 else ( CPU_CLK_UNHALTED.THREAD_ANY / 2 )",
 +        "MetricGroup": "SMT",
 +        "MetricName": "CORE_CLKS"
 +    },
 +    {
 +        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS_PS + MEM_LOAD_RETIRED.FB_HIT_PS )",
 +        "MetricGroup": "Memory_Bound;Memory_Lat",
 +        "MetricName": "Load_Miss_Real_Latency"
 +    },
 +    {
 +        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least 1 such miss)",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / ( cpu@l1d_pend_miss.pending_cycles\\,any\\=1@ / 2) if #SMT_on else L1D_PEND_MISS.PENDING_CYCLES",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( L1D_PEND_MISS.PENDING_CYCLES_ANY / 2) if #SMT_on else L1D_PEND_MISS.PENDING_CYCLES",
 +        "MetricGroup": "Memory_Bound;Memory_BW",
 +        "MetricName": "MLP"
 +    },
 +    {
 +        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-+	"MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED)) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles if not #SMT_on else (( CPU_CLK_UNHALTED.THREAD / 2) * (CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )) if #EBS_Mode else ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) )",
 +        "MetricGroup": "TLB",
 +        "MetricName": "Page_Walks_Utilization"
++    },
++    {
++        "BriefDescription": "L1 cache miss per kilo instruction for demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS_PS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses;",
++        "MetricName": "L1MPKI"
++    },
++    {
++        "BriefDescription": "L2 cache miss per kilo instruction for demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS_PS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses;",
++        "MetricName": "L2MPKI"
++    },
++    {
++        "BriefDescription": "L3 cache miss per kilo instruction for demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS_PS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses;",
++        "MetricName": "L3MPKI"
 +    },
 +    {
 +        "BriefDescription": "Average CPU Utilization",
@@ -128,7 +146,7 @@ index 000000000000..49c5f123d811
 +    },
 +    {
 +        "BriefDescription": "Giga Floating Point Operations Per Second",
-+        "MetricExpr": "( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 / duration_time",
++        "MetricExpr": "( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* (FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16* FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE) / 1000000000 / duration_time",
 +        "MetricGroup": "FLOPS;Summary",
 +        "MetricName": "GFLOPs"
 +    },
