@@ -1,82 +1,80 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/41] perf stat: Fall weak group back even for EBADF
-Date: Tue, 12 Sep 2017 12:10:18 -0300
-Message-ID: <20170912151029.6612-31-acme@kernel.org>
+Subject: [PATCH 29/41] perf tools: Support running perf binaries with a dash in their name
+Date: Tue, 12 Sep 2017 12:10:17 -0300
+Message-ID: <20170912151029.6612-30-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 
-It's not possible to run a package event and a per cpu event in the same
-group. This is used by some of the power metrics.  They work correctly
-when not using a group.
+Previously the part behind "perf-" was interpreted as an internal perf
+command. If the suffix could not be handled, the execution was stopped.
+This makes it impossible to launch perf binaries that got renamed to
+have the `perf-` prefix. This is e.g. the case for appimages (e.g.
+"perf-x86_64.AppImage"), but would also apply to all other scenarios
+where users symlink or rename perf themselves:
 
-Normally weak groups should handle that, but in this case EBADF is
-returned instead of the normal EINVAL.
+Status quo with the broken behavior:
 
-  $ strace -e perf_event_open ./perf stat -v -e '{cstate_pkg/c2-residency/,msr/tsc/}:W' -a sleep 1
-  Using CPUID GenuineIntel-6-3E
-  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, PERF_FLAG_FD_CLOEXEC) = -1 EINVAL (Invalid argument)
-  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
-  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
-  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
-  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = 3
-  perf_event_open({type=0x7 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, 3, 0) = 4
-  perf_event_open({type=0x7 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 1, 0, 0) = -1 EBADF (Bad file descriptor)
+  $ ln -s ./perf ./perf-custom-suffix
+  $ ./perf-custom-suffix list
+  cannot handle custom-suffix internally$
 
-and perf errors out.
+Also note the missing newline at the end of the error message.
 
-Make weak groups trigger a fall back for EBADF too. Then this case works correctly:
+With this patch applied, the above works properly:
 
-  $ perf stat -v -e '{cstate_pkg/c2-residency/,msr/tsc/}:W' -a sleep 1
-  Using CPUID GenuineIntel-6-3E
-  Weak group for cstate_pkg/c2-residency//2 failed
-  cstate_pkg/c2-residency/: 476709882 1000598460 1000598460
-  msr/tsc/: 39625837911 12007369110 12007369110
+  $ ./perf-custom-suffix list
 
-   Performance counter stats for 'system wide':
+  List of pre-defined events (to be used in -e):
+  ...
 
-         476,709,882      cstate_pkg/c2-residency/
-      39,625,837,911      msr/tsc/
-
-         1.000697588 seconds time elapsed
-
-  This fixes perf stat -M Power ...
-
-  $ perf stat -M Power --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Turbo_Utilization  C3_Core_Residency  C6_Core_Residency C7_Core_Residency  C2_Pkg_Residency   C3_Pkg_Residency  C6_Pkg_Residency  C7_Pkg_Residency
-       1.0                 0.7                30.0               0.0               0.9                 0.1               0.4                 0.0
-
-         1.001240740 seconds time elapsed
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170905211324.32427-1-andi@firstfloor.org
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Yao Jin <yao.jin@linux.intel.com>
+Link: http://lkml.kernel.org/r/20170911111422.31903-1-milian.wolff@kdab.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/perf.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 2248ebe582ca..9af46e316e77 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -656,7 +656,7 @@ static int __run_perf_stat(int argc, const char **argv)
- 		if (create_perf_stat_counter(counter) < 0) {
- 
- 			/* Weak group failed. Reset the group. */
--			if (errno == EINVAL &&
-+			if ((errno == EINVAL || errno == EBADF) &&
- 			    counter->leader != counter &&
- 			    counter->weak_group) {
- 				counter = perf_evsel__reset_weak_group(counter);
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index e0279babe0c0..2f19e03c5c40 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -467,15 +467,21 @@ int main(int argc, const char **argv)
+ 	 *  - cannot execute it externally (since it would just do
+ 	 *    the same thing over again)
+ 	 *
+-	 * So we just directly call the internal command handler, and
+-	 * die if that one cannot handle it.
++	 * So we just directly call the internal command handler. If that one
++	 * fails to handle this, then maybe we just run a renamed perf binary
++	 * that contains a dash in its name. To handle this scenario, we just
++	 * fall through and ignore the "xxxx" part of the command string.
+ 	 */
+ 	if (strstarts(cmd, "perf-")) {
+ 		cmd += 5;
+ 		argv[0] = cmd;
+ 		handle_internal_command(argc, argv);
+-		fprintf(stderr, "cannot handle %s internally", cmd);
+-		goto out;
++		/*
++		 * If the command is handled, the above function does not
++		 * return undo changes and fall through in such a case.
++		 */
++		cmd -= 5;
++		argv[0] = cmd;
+ 	}
+ 	if (strstarts(cmd, "trace")) {
+ #ifdef HAVE_LIBAUDIT_SUPPORT
 -- 
 2.13.5
