@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 37/41] perf vendor events: Add JSON metrics for Ivy Town
-Date: Tue, 12 Sep 2017 12:10:25 -0300
-Message-ID: <20170912151029.6612-38-acme@kernel.org>
+Subject: [PATCH 39/41] perf vendor events: Add JSON metrics for Broadwell Server
+Date: Tue, 12 Sep 2017 12:10:27 -0300
+Message-ID: <20170912151029.6612-40-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,22 +12,22 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Ivy Town.
+Add JSON metrics for Broadwell Server.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Link: http://lkml.kernel.org/r/20170908180133.GA20128@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/x86/ivytown/ivt-metrics.json   | 164 +++++++++++++++++++++
+ .../arch/x86/broadwellx/bdx-metrics.json           | 164 +++++++++++++++++++++
  1 file changed, 164 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
 new file mode 100644
-index 000000000000..057a832f1a6a
+index 000000000000..4248b029d199
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
 @@ -0,0 +1,164 @@
 +[
 +    {
@@ -44,7 +44,7 @@ index 000000000000..057a832f1a6a
 +    },
 +    {
 +        "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely consumed by program instructions",
-+        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4) )",
++        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
 +        "MetricGroup": "Frontend",
 +        "MetricName": "IFetch_Line_Utilization"
 +    },
@@ -92,7 +92,7 @@ index 000000000000..057a832f1a6a
 +    },
 +    {
 +        "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
-+        "MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFETCH_STALL ) / RS_EVENTS.EMPTY_END",
++	"MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - ( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED ) ) / RS_EVENTS.EMPTY_END",
 +        "MetricGroup": "Unknown_Branches",
 +        "MetricName": "BAClear_Cost"
 +    },
@@ -116,7 +116,7 @@ index 000000000000..057a832f1a6a
 +    },
 +    {
 +        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-+        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED) ) / (2*( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
 +        "MetricGroup": "TLB",
 +        "MetricName": "Page_Walks_Utilization"
 +    },
@@ -128,7 +128,7 @@ index 000000000000..057a832f1a6a
 +    },
 +    {
 +        "BriefDescription": "Giga Floating Point Operations Per Second",
-+        "MetricExpr": "( 1*( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2* FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4*( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8* SIMD_FP_256.PACKED_SINGLE ) / 1000000000 / duration_time",
++        "MetricExpr": "( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 / duration_time",
 +        "MetricGroup": "FLOPS;Summary",
 +        "MetricName": "GFLOPs"
 +    },
