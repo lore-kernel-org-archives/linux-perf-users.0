@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/41] perf ui progress: Add ui specific init function
-Date: Tue, 12 Sep 2017 12:10:10 -0300
-Message-ID: <20170912151029.6612-23-acme@kernel.org>
+Subject: [PATCH 19/41] perf tools: Add python-clean target
+Date: Tue, 12 Sep 2017 12:10:07 -0300
+Message-ID: <20170912151029.6612-20-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,74 +12,50 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Adding ui specific init function allowing to setup the progress bar
-width based on current screen scales.
-
-Adding TUI init function to get more grained update of the progress bar.
+To be able to cleanup only python related binaries.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170908120510.22515-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170908084621.31595-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/progress.c     | 2 ++
- tools/perf/ui/progress.h     | 1 +
- tools/perf/ui/tui/progress.c | 9 +++++++--
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.perf | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
-index ae91c8148edf..3e2b5d64c55e 100644
---- a/tools/perf/ui/progress.c
-+++ b/tools/perf/ui/progress.c
-@@ -34,6 +34,8 @@ void ui_progress__init(struct ui_progress *p, u64 total, const char *title)
- 	p->total = total;
- 	p->title = title;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 91ef44bfaf3e..1df93b4c4648 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -173,7 +173,7 @@ AWK     = awk
+ # non-config cases
+ config := 1
  
-+	if (ui_progress__ops->init)
-+		ui_progress__ops->init(p);
- }
+-NON_CONFIG_TARGETS := clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
++NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
  
- void ui_progress__finish(void)
-diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
-index 717d39d3052b..e5f434a2070b 100644
---- a/tools/perf/ui/progress.h
-+++ b/tools/perf/ui/progress.h
-@@ -14,6 +14,7 @@ void ui_progress__init(struct ui_progress *p, u64 total, const char *title);
- void ui_progress__update(struct ui_progress *p, u64 adv);
+ ifdef MAKECMDGOALS
+ ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
+@@ -802,7 +802,10 @@ config-clean:
+ 	$(call QUIET_CLEAN, config)
+ 	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ $(if $(OUTPUT),OUTPUT=$(OUTPUT)feature/,) clean >/dev/null
  
- struct ui_progress_ops {
-+	void (*init)(struct ui_progress *p);
- 	void (*update)(struct ui_progress *p);
- 	void (*finish)(void);
- };
-diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
-index c4b99008e2c9..f6b8f52aad7e 100644
---- a/tools/perf/ui/tui/progress.c
-+++ b/tools/perf/ui/tui/progress.c
-@@ -5,6 +5,11 @@
- #include "tui.h"
- #include "../browser.h"
- 
-+static void __tui_progress__init(struct ui_progress *p)
-+{
-+	p->next = p->step = p->total / (SLtt_Screen_Cols - 2) ?: 1;
-+}
+-clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean
++python-clean:
++	$(python-clean)
 +
- static void tui_progress__update(struct ui_progress *p)
- {
- 	int bar, y;
-@@ -49,8 +54,8 @@ static void tui_progress__finish(void)
- 	pthread_mutex_unlock(&ui__lock);
- }
++clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean python-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIB_FILE) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
+ 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+@@ -819,7 +822,6 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(vhost_virtio_ioctl_array) \
+ 		$(OUTPUT)$(perf_ioctl_array)
+ 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
+-	$(python-clean)
  
--static struct ui_progress_ops tui_progress__ops =
--{
-+static struct ui_progress_ops tui_progress__ops = {
-+	.init   = __tui_progress__init,
- 	.update = tui_progress__update,
- 	.finish = tui_progress__finish,
- };
+ #
+ # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
 -- 
 2.13.5
