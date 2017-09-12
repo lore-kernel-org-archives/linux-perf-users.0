@@ -1,59 +1,93 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/41] perf ui progress: Fix progress update
-Date: Tue, 12 Sep 2017 12:10:09 -0300
-Message-ID: <20170912151029.6612-22-acme@kernel.org>
+Subject: [PATCH 26/41] perf config: Write a config file just once
+Date: Tue, 12 Sep 2017 12:10:14 -0300
+Message-ID: <20170912151029.6612-27-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Taeung Song <treeze.taeung@gmail.com>
 
-We currently update the 'next' variable only with a single step value.
-But it's possible the 'adv' update is bigger than single 'step' value.
-This would leave 'next' value under counted and force unnecessary
-ui_progress__ops->update calls.
+Currently set_config() can be repeatedly called for each input config on
+the below case:
 
-Calculate the amount of steps we need for 'adv' update and increase the
-'next' with that amounts of steps.
+  $ perf config kmem.default=slab report.children=false ...
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Ahern <dsahern@gmail.com>
+But it's a waste, so only once write a config file gathering all given
+config key=value pairs.
+
+Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170908120510.22515-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/1504754331-9776-1-git-send-email-treeze.taeung@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/progress.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/builtin-config.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
-index a9c15804b1f6..ae91c8148edf 100644
---- a/tools/perf/ui/progress.c
-+++ b/tools/perf/ui/progress.c
-@@ -1,3 +1,4 @@
-+#include <linux/kernel.h>
- #include "../cache.h"
- #include "progress.h"
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index a1d82e33282c..b89417d9305e 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -34,8 +34,7 @@ static struct option config_options[] = {
+ 	OPT_END()
+ };
  
-@@ -14,10 +15,14 @@ struct ui_progress_ops *ui_progress__ops = &null_progress__ops;
- 
- void ui_progress__update(struct ui_progress *p, u64 adv)
+-static int set_config(struct perf_config_set *set, const char *file_name,
+-		      const char *var, const char *value)
++static int set_config(struct perf_config_set *set, const char *file_name)
  {
-+	u64 last = p->curr;
-+
- 	p->curr += adv;
+ 	struct perf_config_section *section = NULL;
+ 	struct perf_config_item *item = NULL;
+@@ -49,7 +48,6 @@ static int set_config(struct perf_config_set *set, const char *file_name,
+ 	if (!fp)
+ 		return -1;
  
- 	if (p->curr >= p->next) {
--		p->next += p->step;
-+		u64 nr = DIV_ROUND_UP(p->curr - last, p->step);
+-	perf_config_set__collect(set, file_name, var, value);
+ 	fprintf(fp, "%s\n", first_line);
+ 
+ 	/* overwrite configvariables */
+@@ -161,6 +159,7 @@ int cmd_config(int argc, const char **argv)
+ 	struct perf_config_set *set;
+ 	char *user_config = mkpath("%s/.perfconfig", getenv("HOME"));
+ 	const char *config_filename;
++	bool changed = false;
+ 
+ 	argc = parse_options(argc, argv, config_options, config_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+@@ -231,15 +230,26 @@ int cmd_config(int argc, const char **argv)
+ 					goto out_err;
+ 				}
+ 			} else {
+-				if (set_config(set, config_filename, var, value) < 0) {
+-					pr_err("Failed to set '%s=%s' on %s\n",
+-					       var, value, config_filename);
++				if (perf_config_set__collect(set, config_filename,
++							     var, value) < 0) {
++					pr_err("Failed to add '%s=%s'\n",
++					       var, value);
+ 					free(arg);
+ 					goto out_err;
+ 				}
++				changed = true;
+ 			}
+ 			free(arg);
+ 		}
 +
-+		p->next += nr * p->step;
- 		ui_progress__ops->update(p);
++		if (!changed)
++			break;
++
++		if (set_config(set, config_filename) < 0) {
++			pr_err("Failed to set the configs on %s\n",
++			       config_filename);
++			goto out_err;
++		}
  	}
- }
+ 
+ 	ret = 0;
 -- 
 2.13.5
