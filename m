@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/41] perf pmu: Extract function to get JSON alias map
-Date: Tue, 12 Sep 2017 12:09:54 -0300
-Message-ID: <20170912151029.6612-7-acme@kernel.org>
+Subject: [PATCH 09/41] perf stat: Don't use ctx for saved values lookup
+Date: Tue, 12 Sep 2017 12:09:57 -0300
+Message-ID: <20170912151029.6612-10-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,115 +12,97 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Extract the code to get the per cpu JSON alias into a separate function
-for reuse. No behavior changes.
+We don't need to use ctx to look up events for saved values.  The
+context is already part of the evsel pointer, which is the primary key.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-6-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20170831194036.30146-9-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 49 +++++++++++++++++++++++++++++++++----------------
- tools/perf/util/pmu.h |  2 ++
- 2 files changed, 35 insertions(+), 16 deletions(-)
+ tools/perf/util/stat-shadow.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ac16a9db1fb5..ed25d7f88731 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -516,16 +516,8 @@ char * __weak get_cpuid_str(void)
- 	return NULL;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 42e6c17be7ff..664f49a9b012 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -56,7 +56,6 @@ struct saved_value {
+ 	struct rb_node rb_node;
+ 	struct perf_evsel *evsel;
+ 	int cpu;
+-	int ctx;
+ 	struct stats stats;
+ };
+ 
+@@ -67,8 +66,6 @@ static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
+ 					     rb_node);
+ 	const struct saved_value *b = entry;
+ 
+-	if (a->ctx != b->ctx)
+-		return a->ctx - b->ctx;
+ 	if (a->cpu != b->cpu)
+ 		return a->cpu - b->cpu;
+ 	if (a->evsel == b->evsel)
+@@ -90,13 +87,12 @@ static struct rb_node *saved_value_new(struct rblist *rblist __maybe_unused,
  }
  
--/*
-- * From the pmu_events_map, find the table of PMU events that corresponds
-- * to the current running CPU. Then, add all PMU events from that table
-- * as aliases.
-- */
--static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
-+static char *perf_pmu__getcpuid(void)
+ static struct saved_value *saved_value_lookup(struct perf_evsel *evsel,
+-					      int cpu, int ctx,
++					      int cpu,
+ 					      bool create)
  {
--	int i;
--	struct pmu_events_map *map;
--	struct pmu_event *pe;
- 	char *cpuid;
- 	static bool printed;
+ 	struct rb_node *nd;
+ 	struct saved_value dm = {
+ 		.cpu = cpu,
+-		.ctx = ctx,
+ 		.evsel = evsel,
+ 	};
+ 	nd = rblist__find(&runtime_saved_values, &dm);
+@@ -232,8 +228,7 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 *count,
+ 		update_stats(&runtime_aperf_stats[ctx][cpu], count[0]);
  
-@@ -535,22 +527,50 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 	if (!cpuid)
- 		cpuid = get_cpuid_str();
- 	if (!cpuid)
--		return;
-+		return NULL;
- 
- 	if (!printed) {
- 		pr_debug("Using CPUID %s\n", cpuid);
- 		printed = true;
+ 	if (counter->collect_stat) {
+-		struct saved_value *v = saved_value_lookup(counter, cpu, ctx,
+-							   true);
++		struct saved_value *v = saved_value_lookup(counter, cpu, true);
+ 		update_stats(&v->stats, count[0]);
  	}
-+	return cpuid;
-+}
-+
-+struct pmu_events_map *perf_pmu__find_map(void)
-+{
-+	struct pmu_events_map *map;
-+	char *cpuid = perf_pmu__getcpuid();
-+	int i;
- 
- 	i = 0;
--	while (1) {
-+	for (;;) {
- 		map = &pmu_events_map[i++];
--		if (!map->table)
--			goto out;
-+		if (!map->table) {
-+			map = NULL;
-+			break;
-+		}
- 
- 		if (!strcmp(map->cpuid, cpuid))
- 			break;
- 	}
-+	free(cpuid);
-+	return map;
-+}
-+
-+/*
-+ * From the pmu_events_map, find the table of PMU events that corresponds
-+ * to the current running CPU. Then, add all PMU events from that table
-+ * as aliases.
-+ */
-+static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
-+{
-+	int i;
-+	struct pmu_events_map *map;
-+	struct pmu_event *pe;
-+
-+	map = perf_pmu__find_map();
-+	if (!map)
-+		return;
- 
- 	/*
- 	 * Found a matching PMU events table. Create aliases
-@@ -575,9 +595,6 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 				(char *)pe->metric_expr,
- 				(char *)pe->metric_name);
- 	}
--
--out:
--	free(cpuid);
  }
+@@ -634,7 +629,6 @@ static void generic_metric(const char *metric_expr,
+ 			   const char *metric_name,
+ 			   double avg,
+ 			   int cpu,
+-			   int ctx,
+ 			   struct perf_stat_output_ctx *out)
+ {
+ 	print_metric_t print_metric = out->print_metric;
+@@ -648,7 +642,7 @@ static void generic_metric(const char *metric_expr,
+ 	for (i = 0; metric_events[i]; i++) {
+ 		struct saved_value *v;
  
- struct perf_event_attr * __weak
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 389e9729331f..060f6abba8ed 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -90,4 +90,6 @@ int perf_pmu__test(void);
- 
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
- 
-+struct pmu_events_map *perf_pmu__find_map(void);
-+
- #endif /* __PMU_H */
+-		v = saved_value_lookup(metric_events[i], cpu, ctx, false);
++		v = saved_value_lookup(metric_events[i], cpu, false);
+ 		if (!v)
+ 			break;
+ 		expr__add_id(&pctx, metric_events[i]->name, avg_stats(&v->stats));
+@@ -866,7 +860,7 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 			print_metric(ctxp, NULL, NULL, name, 0);
+ 	} else if (evsel->metric_expr) {
+ 		generic_metric(evsel->metric_expr, evsel->metric_events, evsel->name,
+-				evsel->metric_name, avg, cpu, ctx, out);
++				evsel->metric_name, avg, cpu, out);
+ 	} else if (runtime_nsecs_stats[cpu].n != 0) {
+ 		char unit = 'M';
+ 		char unit_buf[10];
+@@ -895,7 +889,7 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 				out->new_line(ctxp);
+ 			generic_metric(mexp->metric_expr, mexp->metric_events,
+ 					evsel->name, mexp->metric_name,
+-					avg, cpu, ctx, out);
++					avg, cpu, out);
+ 		}
+ 	}
+ 	if (num == 0)
 -- 
 2.13.5
