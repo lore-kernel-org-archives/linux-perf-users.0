@@ -1,56 +1,85 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/9] tools include linux: Guard against redefinition of some macros
-Date: Tue, 12 Sep 2017 16:24:30 -0300
-Message-ID: <20170912192438.1334-2-acme@kernel.org>
+Subject: [PATCH 2/9] perf tests: Fix compile when libunwind's unwind.h is available
+Date: Tue, 12 Sep 2017 16:24:31 -0300
+Message-ID: <20170912192438.1334-3-acme@kernel.org>
 References: <20170912192438.1334-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:40590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751388AbdILTY7 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Sep 2017 15:24:59 -0400
 In-Reply-To: <20170912192438.1334-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 
-When cross building to android r15c (and older versions) on Fedora 26
-we notice these:
+When cross compiling perf and I want to link against a self-compiled
+libunwind, I usually make the custom path where the libunwind headers
+exist visible by adding the libunwind prefix to the include path when
+compiling perf, i.e.:
 
-/opt/android-ndk-r15c/platforms/android-24/arch-arm/usr/include/sys/cdefs.h:332:0: note: this is the location of the previous definition
+~~~~~
+$ ls $HOME/projects/compiled/other/include/
+libunwind-coredump.h  libunwind.h         libunwind-x86_64.h
+libunwind-common.h  libunwind-dynamic.h   libunwind-ptrace.h
+unwind.h
+$ make EXTRA_CFLAGS="-I$HOME/projects/compiled/other/include/
+~~~~~~
 
-For __aligned, __packed and __noreturn, so guard those with ifdefs to
-avoid drowning useful warnings in these.
+Note the `unwind.h` header from libunwind which leads to compile
+errors when compiling tests/dwarf-unwind.c, since it shadows perf's
+util/unwind.h:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+~~~~~
+tests/dwarf-unwind.c:41:32: error: ‘struct unwind_entry’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
+ static int unwind_entry(struct unwind_entry *entry, void *arg)
+                                ^~~~~~~~~~~~
+tests/dwarf-unwind.c: In function ‘unwind_entry’:
+tests/dwarf-unwind.c:44:22: error: dereferencing pointer to incomplete type ‘struct unwind_entry’
+  char *symbol = entry->sym ? entry->sym->name : NULL;
+                      ^~
+tests/dwarf-unwind.c: In function ‘unwind_thread’:
+tests/dwarf-unwind.c:92:8: error: implicit declaration of function ‘unwind__get_entries’; did you mean ‘unwind_entry’? [-Werror=implicit-function-declaration]
+  err = unwind__get_entries(unwind_entry, &cnt, thread,
+        ^~~~~~~~~~~~~~~~~~~
+        unwind_entry
+tests/dwarf-unwind.c:92:8: error: nested extern declaration of ‘unwind__get_entries’ [-Werror=nested-externs]
+~~~~~~
+
+Fix this compile error by specificing an explicit include of perf's
+unwind.h in the util folder.
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-d7w3fa9c22dtmrwbedos6ie1@git.kernel.org
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Yao Jin <yao.jin@linux.intel.com>
+Link: http://lkml.kernel.org/r/20170906150209.12579-1-milian.wolff@kdab.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/compiler-gcc.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/tests/dwarf-unwind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/compiler-gcc.h b/tools/include/linux/compiler-gcc.h
-index bd39b2090ad1..3723b9f8f964 100644
---- a/tools/include/linux/compiler-gcc.h
-+++ b/tools/include/linux/compiler-gcc.h
-@@ -21,11 +21,14 @@
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
- 
- #define  noinline	__attribute__((noinline))
--
-+#ifndef __packed
- #define __packed	__attribute__((packed))
--
-+#endif
-+#ifndef __noreturn
- #define __noreturn	__attribute__((noreturn))
--
-+#endif
-+#ifndef __aligned
- #define __aligned(x)	__attribute__((aligned(x)))
-+#endif
- #define __printf(a, b)	__attribute__((format(printf, a, b)))
- #define __scanf(a, b)	__attribute__((format(scanf, a, b)))
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index 2a7b9b47bbcb..9ba1d216a89f 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
+@@ -6,7 +6,7 @@
+ #include "debug.h"
+ #include "machine.h"
+ #include "event.h"
+-#include "unwind.h"
++#include "../util/unwind.h"
+ #include "perf_regs.h"
+ #include "map.h"
+ #include "thread.h"
 -- 
 2.13.5
