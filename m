@@ -1,51 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/41] perf ui progress: Make sure we always define step value
-Date: Tue, 12 Sep 2017 12:10:08 -0300
-Message-ID: <20170912151029.6612-21-acme@kernel.org>
+Subject: [PATCH 18/41] perf tools: Open perf.data with O_CLOEXEC flag
+Date: Tue, 12 Sep 2017 12:10:06 -0300
+Message-ID: <20170912151029.6612-19-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:51158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751800AbdILPLg (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 11:11:36 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Unlikely, but we could have ui_progress__init being called with total <
-16, which would set the next and step variables to 0. That would force
-unnecessary ui_progress__ops->update calls because 'next' would never
-raise.
-
-Forcing the next and step values to be always > 0.
+Do not carry the perf.data file descriptor into the workload process and
+close it when perf executes the workload.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170908120510.22515-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170908084621.31595-2-jolsa@kernel.org
+[ Add definitions for O_CLOEXEC for older systems ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/progress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/data.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
-index a0f24c7115c5..a9c15804b1f6 100644
---- a/tools/perf/ui/progress.c
-+++ b/tools/perf/ui/progress.c
-@@ -25,7 +25,7 @@ void ui_progress__update(struct ui_progress *p, u64 adv)
- void ui_progress__init(struct ui_progress *p, u64 total, const char *title)
- {
- 	p->curr = 0;
--	p->next = p->step = total / 16;
-+	p->next = p->step = total / 16 ?: 1;
- 	p->total = total;
- 	p->title = title;
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index e84bbc8ec058..263f5a906ba5 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -10,6 +10,16 @@
+ #include "util.h"
+ #include "debug.h"
  
++#ifndef O_CLOEXEC
++#ifdef __sparc__
++#define O_CLOEXEC	0x400000
++#elif defined(__alpha__) || defined(__hppa__)
++#define O_CLOEXEC	010000000
++#else
++#define O_CLOEXEC	02000000
++#endif
++#endif
++
+ static bool check_pipe(struct perf_data_file *file)
+ {
+ 	struct stat st;
+@@ -96,7 +106,8 @@ static int open_file_write(struct perf_data_file *file)
+ 	if (check_backup(file))
+ 		return -1;
+ 
+-	fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC, S_IRUSR|S_IWUSR);
++	fd = open(file->path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
++		  S_IRUSR|S_IWUSR);
+ 
+ 	if (fd < 0)
+ 		pr_err("failed to open %s : %s\n", file->path,
 -- 
 2.13.5
