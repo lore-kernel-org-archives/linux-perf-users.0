@@ -1,134 +1,96 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/41] perf script: Support user regs
-Date: Tue, 12 Sep 2017 12:10:03 -0300
-Message-ID: <20170912151029.6612-16-acme@kernel.org>
+Subject: [PATCH 14/41] perf record: Support direct --user-regs arguments
+Date: Tue, 12 Sep 2017 12:10:02 -0300
+Message-ID: <20170912151029.6612-15-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:50954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751676AbdILPLT (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 11:11:19 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Teach perf script to print user regs.
-
-  % perf record --user-regs=ip,sp ...
-  % perf script -F ip,sym,uregs
-  ...
-   ffffffff9e060c24 native_write_msr ABI:2    SP:0x7ffd0ea06c38    IP:0x7fe77f55b637
-   ffffffff9e060c24 native_write_msr ABI:2    SP:0x7ffd0ea06c38    IP:0x7fe77f55b637
-   ffffffff9e060c24 native_write_msr ABI:2    SP:0x7ffd0ea06c38    IP:0x7fe77f55b637
-   ffffffff9e060c24 native_write_msr ABI:2    SP:0x7ffd0ea06c38    IP:0x7fe77f55b637
-   ffffffff9e00cc12 intel_pmu_handle_irq ABI:2    SP:0x7ffd0ea06c38    IP:0x7fe77f55b637
-
-v2: Rebased on top of phys-addr patches
+USER_REGS can currently only collected implicitely with call graph
+recording. Sometimes it is useful to see them separately, and filter
+them. Add a new --user-regs option to record that is similar to
+--intr-regs, but acts on user regs.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Link: http://lkml.kernel.org/r/20170905184057.26135-1-andi@firstfloor.org
-[ Use PRIu64 for regs->abi in print_sample_uregs() ]
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20170905170029.19722-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  4 ++--
- tools/perf/builtin-script.c              | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-record.txt | 2 ++
+ tools/perf/builtin-record.c              | 3 +++
+ tools/perf/perf.h                        | 1 +
+ tools/perf/util/evsel.c                  | 7 ++++++-
+ 4 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 18dfcfa38454..bcc1ba35a2d8 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -116,8 +116,8 @@ OPTIONS
- --fields::
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
--        srcline, period, iregs, brstack, brstacksym, flags, bpf-output, brstackinsn, brstackoff,
--        callindent, insn, insnlen, synth, phys_addr.
-+        srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output, brstackinsn,
-+        brstackoff, callindent, insn, insnlen, synth, phys_addr.
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 3d4c3b5e1868..725dbd3dd104 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -88,6 +88,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_BRSTACKOFF	    = 1U << 24,
- 	PERF_OUTPUT_SYNTH           = 1U << 25,
- 	PERF_OUTPUT_PHYS_ADDR       = 1U << 26,
-+	PERF_OUTPUT_UREGS	    = 1U << 27,
- };
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index e397453e5a46..68a1ffb0a8a5 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -377,6 +377,8 @@ symbolic names, e.g. on x86, ax, si. To list the available registers use
+ --intr-regs=\?. To name registers, pass a comma separated list such as
+ --intr-regs=ax,bx. The list of register is architecture dependent.
  
- struct output_option {
-@@ -109,6 +110,7 @@ struct output_option {
- 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
- 	{.str = "period", .field = PERF_OUTPUT_PERIOD},
- 	{.str = "iregs", .field = PERF_OUTPUT_IREGS},
-+	{.str = "uregs", .field = PERF_OUTPUT_UREGS},
- 	{.str = "brstack", .field = PERF_OUTPUT_BRSTACK},
- 	{.str = "brstacksym", .field = PERF_OUTPUT_BRSTACKSYM},
- 	{.str = "data_src", .field = PERF_OUTPUT_DATA_SRC},
-@@ -385,6 +387,11 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
- 					PERF_OUTPUT_IREGS))
- 		return -EINVAL;
++--user-regs::
++Capture user registers at sample time. Same arguments as -I.
  
-+	if (PRINT_FIELD(UREGS) &&
-+		perf_evsel__check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS",
-+					PERF_OUTPUT_UREGS))
-+		return -EINVAL;
-+
- 	if (PRINT_FIELD(PHYS_ADDR) &&
- 		perf_evsel__check_stype(evsel, PERF_SAMPLE_PHYS_ADDR, "PHYS_ADDR",
- 					PERF_OUTPUT_PHYS_ADDR))
-@@ -509,6 +516,24 @@ static void print_sample_iregs(struct perf_sample *sample,
+ --running-time::
+ Record running and enabled time for read events (:S)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 56f8142ff97f..9b379f3a3d99 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1643,6 +1643,9 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK_OPTARG('I', "intr-regs", &record.opts.sample_intr_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+ 		    " use -I ? to list register names", parse_regs),
++	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
++		    "sample selected machine registers on interrupt,"
++		    " use -I ? to list register names", parse_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
+ 	OPT_CALLBACK('k', "clockid", &record.opts,
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index dc442ba21bf6..fbb0a9cd0ac6 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -65,6 +65,7 @@ struct record_opts {
+ 	unsigned int user_freq;
+ 	u64          branch_stack;
+ 	u64	     sample_intr_regs;
++	u64	     sample_user_regs;
+ 	u64	     default_interval;
+ 	u64	     user_interval;
+ 	size_t	     auxtrace_snapshot_size;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4bb89373eb52..7389746c0dc4 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -678,7 +678,7 @@ void perf_evsel__config_callchain(struct perf_evsel *evsel,
+ 		if (!function) {
+ 			perf_evsel__set_sample_bit(evsel, REGS_USER);
+ 			perf_evsel__set_sample_bit(evsel, STACK_USER);
+-			attr->sample_regs_user = PERF_REGS_MASK;
++			attr->sample_regs_user |= PERF_REGS_MASK;
+ 			attr->sample_stack_user = param->dump_size;
+ 			attr->exclude_callchain_user = 1;
+ 		} else {
+@@ -931,6 +931,11 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 		perf_evsel__set_sample_bit(evsel, REGS_INTR);
  	}
- }
  
-+static void print_sample_uregs(struct perf_sample *sample,
-+			  struct perf_event_attr *attr)
-+{
-+	struct regs_dump *regs = &sample->user_regs;
-+	uint64_t mask = attr->sample_regs_user;
-+	unsigned i = 0, r;
-+
-+	if (!regs || !regs->regs)
-+		return;
-+
-+	printf(" ABI:%" PRIu64 " ", regs->abi);
-+
-+	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
-+		u64 val = regs->regs[i++];
-+		printf("%5s:0x%"PRIx64" ", perf_reg_name(r), val);
++	if (opts->sample_user_regs) {
++		attr->sample_regs_user |= opts->sample_user_regs;
++		perf_evsel__set_sample_bit(evsel, REGS_USER);
 +	}
-+}
 +
- static void print_sample_start(struct perf_sample *sample,
- 			       struct thread *thread,
- 			       struct perf_evsel *evsel)
-@@ -1444,6 +1469,9 @@ static void process_event(struct perf_script *script,
- 	if (PRINT_FIELD(IREGS))
- 		print_sample_iregs(sample, attr);
+ 	if (target__has_cpu(&opts->target) || opts->sample_cpu)
+ 		perf_evsel__set_sample_bit(evsel, CPU);
  
-+	if (PRINT_FIELD(UREGS))
-+		print_sample_uregs(sample, attr);
-+
- 	if (PRINT_FIELD(BRSTACK))
- 		print_sample_brstack(sample, thread, attr);
- 	else if (PRINT_FIELD(BRSTACKSYM))
-@@ -2739,7 +2767,7 @@ int cmd_script(int argc, const char **argv)
- 		     "+field to add and -field to remove."
- 		     "Valid types: hw,sw,trace,raw,synth. "
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
--		     "addr,symoff,period,iregs,brstack,brstacksym,flags,"
-+		     "addr,symoff,period,iregs,uregs,brstack,brstacksym,flags,"
- 		     "bpf-output,callindent,insn,insnlen,brstackinsn,synth,phys_addr",
- 		     parse_output_fields),
- 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
 -- 
 2.13.5
