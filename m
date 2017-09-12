@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/41] perf tools: Add python-clean target
-Date: Tue, 12 Sep 2017 12:10:07 -0300
-Message-ID: <20170912151029.6612-20-acme@kernel.org>
+Subject: [PATCH 21/41] perf ui progress: Fix progress update
+Date: Tue, 12 Sep 2017 12:10:09 -0300
+Message-ID: <20170912151029.6612-22-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,50 +12,48 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-To be able to cleanup only python related binaries.
+We currently update the 'next' variable only with a single step value.
+But it's possible the 'adv' update is bigger than single 'step' value.
+This would leave 'next' value under counted and force unnecessary
+ui_progress__ops->update calls.
+
+Calculate the amount of steps we need for 'adv' update and increase the
+'next' with that amounts of steps.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lkml.kernel.org/r/20170908084621.31595-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20170908120510.22515-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/ui/progress.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 91ef44bfaf3e..1df93b4c4648 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -173,7 +173,7 @@ AWK     = awk
- # non-config cases
- config := 1
+diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
+index a9c15804b1f6..ae91c8148edf 100644
+--- a/tools/perf/ui/progress.c
++++ b/tools/perf/ui/progress.c
+@@ -1,3 +1,4 @@
++#include <linux/kernel.h>
+ #include "../cache.h"
+ #include "progress.h"
  
--NON_CONFIG_TARGETS := clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
-+NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
+@@ -14,10 +15,14 @@ struct ui_progress_ops *ui_progress__ops = &null_progress__ops;
  
- ifdef MAKECMDGOALS
- ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
-@@ -802,7 +802,10 @@ config-clean:
- 	$(call QUIET_CLEAN, config)
- 	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ $(if $(OUTPUT),OUTPUT=$(OUTPUT)feature/,) clean >/dev/null
- 
--clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean
-+python-clean:
-+	$(python-clean)
+ void ui_progress__update(struct ui_progress *p, u64 adv)
+ {
++	u64 last = p->curr;
 +
-+clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean python-clean
- 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIB_FILE) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
- 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
- 	$(Q)$(RM) $(OUTPUT).config-detected
-@@ -819,7 +822,6 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 		$(OUTPUT)$(vhost_virtio_ioctl_array) \
- 		$(OUTPUT)$(perf_ioctl_array)
- 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
--	$(python-clean)
+ 	p->curr += adv;
  
- #
- # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
+ 	if (p->curr >= p->next) {
+-		p->next += p->step;
++		u64 nr = DIV_ROUND_UP(p->curr - last, p->step);
++
++		p->next += nr * p->step;
+ 		ui_progress__ops->update(p);
+ 	}
+ }
 -- 
 2.13.5
