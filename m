@@ -1,262 +1,82 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/41] perf vendor events: Add JSON metrics for Sandy Bridge
-Date: Tue, 12 Sep 2017 12:10:21 -0300
-Message-ID: <20170912151029.6612-34-acme@kernel.org>
+Subject: [PATCH 30/41] perf stat: Fall weak group back even for EBADF
+Date: Tue, 12 Sep 2017 12:10:18 -0300
+Message-ID: <20170912151029.6612-31-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Sandy Bridge.
+It's not possible to run a package event and a per cpu event in the same
+group. This is used by some of the power metrics.  They work correctly
+when not using a group.
 
-Committer testing:
+Normally weak groups should handle that, but in this case EBADF is
+returned instead of the normal EINVAL.
 
-  # grep "model name" /proc/cpuinfo | head -1
-  model name	: Intel(R) Core(TM) i5-2400 CPU @ 3.10GHz
-    # perf list metricgroup
+  $ strace -e perf_event_open ./perf stat -v -e '{cstate_pkg/c2-residency/,msr/tsc/}:W' -a sleep 1
+  Using CPUID GenuineIntel-6-3E
+  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, PERF_FLAG_FD_CLOEXEC) = -1 EINVAL (Invalid argument)
+  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
+  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
+  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = -1 EINVAL (Invalid argument)
+  perf_event_open({type=0x17 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, -1, 0) = 3
+  perf_event_open({type=0x7 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 0, 3, 0) = 4
+  perf_event_open({type=0x7 /* PERF_TYPE_??? */, size=PERF_ATTR_SIZE_VER5, config=0, ...}, -1, 1, 0, 0) = -1 EBADF (Bad file descriptor)
 
-  List of pre-defined events (to be used in -e):
+and perf errors out.
 
-  Metric Groups:
+Make weak groups trigger a fall back for EBADF too. Then this case works correctly:
 
-  DSB
-  FLOPS
-  Frontend
-  Frontend_Bandwidth
-  Pipeline
-  Ports_Utilization
-  Power
-  SMT
-  Summary
-  TopDownL1
-  # perf stat -M Power --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Turbo_Utilization  C3_Core_Residency  C6_Core_Residency  C7_Core_Residency  C2_Pkg_Residency  C3_Pkg_Residency  C6_Pkg_Residency  C7_Pkg_Residency
-     0.8               0.0                98.1               0.0                0.0               0.0               23.4              0.0
-
-       1.001153658 seconds time elapsed
-
-  # perf stat -v -M Power --metric-only -a sleep 1
-  Using CPUID GenuineIntel-6-2A
-  metric expr cpu_clk_unhalted.thread / cpu_clk_unhalted.ref_tsc for Turbo_Utilization
-  found event cpu_clk_unhalted.thread
-  found event cpu_clk_unhalted.ref_tsc
-  metric expr (cstate_core@c3\-residency@ / msr@tsc@) * 100 for C3_Core_Residency
-  found event cstate_core/c3-residency/
-  found event msr/tsc/
-  metric expr (cstate_core@c6\-residency@ / msr@tsc@) * 100 for C6_Core_Residency
-  found event cstate_core/c6-residency/
-  found event msr/tsc/
-  metric expr (cstate_core@c7\-residency@ / msr@tsc@) * 100 for C7_Core_Residency
-  found event cstate_core/c7-residency/
-  found event msr/tsc/
-  metric expr (cstate_pkg@c2\-residency@ / msr@tsc@) * 100 for C2_Pkg_Residency
-  found event cstate_pkg/c2-residency/
-  found event msr/tsc/
-  metric expr (cstate_pkg@c3\-residency@ / msr@tsc@) * 100 for C3_Pkg_Residency
-  found event cstate_pkg/c3-residency/
-  found event msr/tsc/
-  metric expr (cstate_pkg@c6\-residency@ / msr@tsc@) * 100 for C6_Pkg_Residency
-  found event cstate_pkg/c6-residency/
-  found event msr/tsc/
-  metric expr (cstate_pkg@c7\-residency@ / msr@tsc@) * 100 for C7_Pkg_Residency
-  found event cstate_pkg/c7-residency/
-  found event msr/tsc/
-  adding {cpu_clk_unhalted.thread,cpu_clk_unhalted.ref_tsc}:W,{cstate_core/c3-residency/,msr/tsc/}:W,{cstate_core/c6-residency/,msr/tsc/}:W,{cstate_core/c7-residency/,msr/tsc/}:W,{cstate_pkg/c2-residency/,msr/tsc/}:W,{cstate_pkg/c3-residency/,msr/tsc/}:W,{cstate_pkg/c6-residency/,msr/tsc/}:W,{cstate_pkg/c7-residency/,msr/tsc/}:W
-  cpu_clk_unhalted.thread -> cpu/event=0x3c/
-  cpu_clk_unhalted.ref_tsc -> cpu/umask=0x3,period=2000003,event=0/
+  $ perf stat -v -e '{cstate_pkg/c2-residency/,msr/tsc/}:W' -a sleep 1
+  Using CPUID GenuineIntel-6-3E
   Weak group for cstate_pkg/c2-residency//2 failed
-  Weak group for cstate_pkg/c3-residency//2 failed
-  Weak group for cstate_pkg/c6-residency//2 failed
-  Weak group for cstate_pkg/c7-residency//2 failed
-  cpu_clk_unhalted.thread: 5564185 4002833569 4002833569
-  cpu_clk_unhalted.ref_tsc: 7325424 4002833569 4002833569
-  cstate_core/c3-residency/: 68293 4003027101 4003027101
-  msr/tsc/: 12451294472 4003027101 4003027101
-  cstate_core/c6-residency/: 12238830163 4003260984 4003260984
-  msr/tsc/: 12452017806 4003260984 4003260984
-  cstate_core/c7-residency/: 0 4003489648 4003489648
-  msr/tsc/: 12452725162 4003489648 4003489648
-  cstate_pkg/c2-residency/: 1830054 1000913138 1000913138
-  msr/tsc/: 12453441079 4003717513 4003717513
-  cstate_pkg/c3-residency/: 0 1000973570 1000973570
-  msr/tsc/: 12454177865 4003954758 4003954758
-  cstate_pkg/c6-residency/: 2940448859 1001032370 1001032370
-  msr/tsc/: 12454833890 4004166118 4004166118
-  cstate_pkg/c7-residency/: 0 1001049818 1001049818
-  msr/tsc/: 12454919470 4004194204 4004194204
+  cstate_pkg/c2-residency/: 476709882 1000598460 1000598460
+  msr/tsc/: 39625837911 12007369110 12007369110
 
    Performance counter stats for 'system wide':
 
-  Turbo_Utilization  C3_Core_Residency  C6_Core_Residency  C7_Core_Residency  C2_Pkg_Residency  C3_Pkg_Residency  C6_Pkg_Residency  C7_Pkg_Residency
-       0.8             0.0                98.3               0.0                0.0               0.0               23.6              0.0
+         476,709,882      cstate_pkg/c2-residency/
+      39,625,837,911      msr/tsc/
 
-         1.001126519 seconds time elapsed
+         1.000697588 seconds time elapsed
 
-  #
+  This fixes perf stat -M Power ...
+
+  $ perf stat -M Power --metric-only -a sleep 1
+
+   Performance counter stats for 'system wide':
+
+  Turbo_Utilization  C3_Core_Residency  C6_Core_Residency C7_Core_Residency  C2_Pkg_Residency   C3_Pkg_Residency  C6_Pkg_Residency  C7_Pkg_Residency
+       1.0                 0.7                30.0               0.0               0.9                 0.1               0.4                 0.0
+
+         1.001240740 seconds time elapsed
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20170905195235.GW2482@two.firstfloor.org
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20170905211324.32427-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arch/x86/sandybridge/snb-metrics.json          | 140 +++++++++++++++++++++
- 1 file changed, 140 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-new file mode 100644
-index 000000000000..b35b1c153c8a
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-@@ -0,0 +1,140 @@
-+[
-+    {
-+        "BriefDescription": "Instructions Per Cycle (per logical thread)",
-+        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
-+        "MetricGroup": "TopDownL1",
-+        "MetricName": "IPC"
-+    },
-+    {
-+        "BriefDescription": "Uops Per Instruction",
-+        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
-+        "MetricGroup": "Pipeline",
-+        "MetricName": "UPI"
-+    },
-+    {
-+        "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely consumed by program instructions",
-+        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4) )",
-+        "MetricGroup": "Frontend",
-+        "MetricName": "IFetch_Line_Utilization"
-+    },
-+    {
-+        "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded Icache; or Uop Cache)",
-+        "MetricExpr": "IDQ.DSB_UOPS / ( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS )",
-+        "MetricGroup": "DSB; Frontend_Bandwidth",
-+        "MetricName": "DSB_Coverage"
-+    },
-+    {
-+        "BriefDescription": "Cycles Per Instruction (threaded)",
-+        "MetricExpr": "1 / INST_RETIRED.ANY / cycles",
-+        "MetricGroup": "Pipeline;Summary",
-+        "MetricName": "CPI"
-+    },
-+    {
-+        "BriefDescription": "Per-thread actual clocks when the logical processor is active. This is called 'Clockticks' in VTune.",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
-+        "MetricGroup": "Summary",
-+        "MetricName": "CLKS"
-+    },
-+    {
-+        "BriefDescription": "Total issue-pipeline slots",
-+        "MetricExpr": "4*( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
-+        "MetricGroup": "TopDownL1",
-+        "MetricName": "SLOTS"
-+    },
-+    {
-+        "BriefDescription": "Total number of retired Instructions",
-+        "MetricExpr": "INST_RETIRED.ANY",
-+        "MetricGroup": "Summary",
-+        "MetricName": "Instructions"
-+    },
-+    {
-+        "BriefDescription": "Instructions Per Cycle (per physical core)",
-+        "MetricExpr": "INST_RETIRED.ANY / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
-+        "MetricGroup": "SMT",
-+        "MetricName": "CoreIPC"
-+    },
-+    {
-+        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
-+	"MetricExpr": "UOPS_DISPATCHED.THREAD / ( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@",
-+        "MetricGroup": "Pipeline;Ports_Utilization",
-+        "MetricName": "ILP"
-+    },
-+    {
-+        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
-+        "MetricExpr": "( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else CPU_CLK_UNHALTED.THREAD",
-+        "MetricGroup": "SMT",
-+        "MetricName": "CORE_CLKS"
-+    },
-+    {
-+        "BriefDescription": "Average CPU Utilization",
-+        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
-+        "MetricGroup": "Summary",
-+        "MetricName": "CPU_Utilization"
-+    },
-+    {
-+        "BriefDescription": "Giga Floating Point Operations Per Second",
-+        "MetricExpr": "( 1*( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2* FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4*( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8* SIMD_FP_256.PACKED_SINGLE ) / 1000000000 / duration_time",
-+        "MetricGroup": "FLOPS;Summary",
-+        "MetricName": "GFLOPs"
-+    },
-+    {
-+        "BriefDescription": "Average Frequency Utilization relative nominal frequency",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricGroup": "Power",
-+        "MetricName": "Turbo_Utilization"
-+    },
-+    {
-+        "BriefDescription": "Fraction of cycles where both hardware threads were active",
-+        "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
-+        "MetricGroup": "SMT;Summary",
-+        "MetricName": "SMT_2T_Utilization"
-+    },
-+    {
-+        "BriefDescription": "Fraction of cycles spent in Kernel mode",
-+        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricGroup": "Summary",
-+        "MetricName": "Kernel_Utilization"
-+    },
-+    {
-+        "BriefDescription": "C3 residency percent per core",
-+        "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C3_Core_Residency"
-+    },
-+    {
-+        "BriefDescription": "C6 residency percent per core",
-+        "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C6_Core_Residency"
-+    },
-+    {
-+        "BriefDescription": "C7 residency percent per core",
-+        "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C7_Core_Residency"
-+    },
-+    {
-+        "BriefDescription": "C2 residency percent per package",
-+        "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C2_Pkg_Residency"
-+    },
-+    {
-+        "BriefDescription": "C3 residency percent per package",
-+        "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C3_Pkg_Residency"
-+    },
-+    {
-+        "BriefDescription": "C6 residency percent per package",
-+        "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C6_Pkg_Residency"
-+    },
-+    {
-+        "BriefDescription": "C7 residency percent per package",
-+        "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
-+        "MetricGroup": "Power",
-+        "MetricName": "C7_Pkg_Residency"
-+    }
-+]
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 2248ebe582ca..9af46e316e77 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -656,7 +656,7 @@ static int __run_perf_stat(int argc, const char **argv)
+ 		if (create_perf_stat_counter(counter) < 0) {
+ 
+ 			/* Weak group failed. Reset the group. */
+-			if (errno == EINVAL &&
++			if ((errno == EINVAL || errno == EBADF) &&
+ 			    counter->leader != counter &&
+ 			    counter->weak_group) {
+ 				counter = perf_evsel__reset_weak_group(counter);
 -- 
 2.13.5
