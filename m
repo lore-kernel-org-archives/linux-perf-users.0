@@ -1,61 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/41] perf sched timehist: Add pid and tid options
-Date: Tue, 12 Sep 2017 12:09:49 -0300
-Message-ID: <20170912151029.6612-2-acme@kernel.org>
+Subject: [PATCH 13/41] tools include linux: Guard against redefinition of some macros
+Date: Tue, 12 Sep 2017 12:10:01 -0300
+Message-ID: <20170912151029.6612-14-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:50916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751672AbdILPLO (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Sep 2017 11:11:14 -0400
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
-From: David Ahern <dsahern@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add options to only show event for specific pid(s) and tid(s).
+When cross building to android r15c (and older versions) on Fedora 26
+we notice these:
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
+/opt/android-ndk-r15c/platforms/android-24/arch-arm/usr/include/sys/cdefs.h:332:0: note: this is the location of the previous definition
+
+For __aligned, __packed and __noreturn, so guard those with ifdefs to
+avoid drowning useful warnings in these.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/1504288152-19690-1-git-send-email-dsahern@gmail.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-d7w3fa9c22dtmrwbedos6ie1@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-sched.txt | 8 ++++++++
- tools/perf/builtin-sched.c              | 4 ++++
- 2 files changed, 12 insertions(+)
+ tools/include/linux/compiler-gcc.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index a092a2499e8f..55b67338548e 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -106,6 +106,14 @@ OPTIONS for 'perf sched timehist'
- --max-stack::
- 	Maximum number of functions to display in backtrace, default 5.
+diff --git a/tools/include/linux/compiler-gcc.h b/tools/include/linux/compiler-gcc.h
+index bd39b2090ad1..3723b9f8f964 100644
+--- a/tools/include/linux/compiler-gcc.h
++++ b/tools/include/linux/compiler-gcc.h
+@@ -21,11 +21,14 @@
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
  
-+-p=::
-+--pid=::
-+	Only show events for given process ID (comma separated list).
-+
-+-t=::
-+--tid=::
-+	Only show events for given thread ID (comma separated list).
-+
- -s::
- --summary::
-     Show only a summary of scheduling by thread with min, max, and average
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 322b4def8411..b7e8812ee80c 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3363,6 +3363,10 @@ int cmd_sched(int argc, const char **argv)
- 	OPT_STRING(0, "time", &sched.time_str, "str",
- 		   "Time span for analysis (start,stop)"),
- 	OPT_BOOLEAN(0, "state", &sched.show_state, "Show task state when sched-out"),
-+	OPT_STRING('p', "pid", &symbol_conf.pid_list_str, "pid[,pid...]",
-+		   "analyze events only for given process id(s)"),
-+	OPT_STRING('t', "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
-+		   "analyze events only for given thread id(s)"),
- 	OPT_PARENT(sched_options)
- 	};
- 
+ #define  noinline	__attribute__((noinline))
+-
++#ifndef __packed
+ #define __packed	__attribute__((packed))
+-
++#endif
++#ifndef __noreturn
+ #define __noreturn	__attribute__((noreturn))
+-
++#endif
++#ifndef __aligned
+ #define __aligned(x)	__attribute__((aligned(x)))
++#endif
+ #define __printf(a, b)	__attribute__((format(printf, a, b)))
+ #define __scanf(a, b)	__attribute__((format(scanf, a, b)))
 -- 
 2.13.5
