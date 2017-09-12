@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 39/41] perf vendor events: Add JSON metrics for Broadwell Server
-Date: Tue, 12 Sep 2017 12:10:27 -0300
-Message-ID: <20170912151029.6612-40-acme@kernel.org>
+Subject: [PATCH 40/41] perf vendor events: Add JSON metrics for Broadwell DE
+Date: Tue, 12 Sep 2017 12:10:28 -0300
+Message-ID: <20170912151029.6612-41-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,22 +12,22 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Broadwell Server.
+Add JSON metrics for Broadwell DE
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Link: http://lkml.kernel.org/r/20170908180133.GA20128@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arch/x86/broadwellx/bdx-metrics.json           | 164 +++++++++++++++++++++
+ .../arch/x86/broadwellde/bdwde-metrics.json        | 164 +++++++++++++++++++++
  1 file changed, 164 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
 new file mode 100644
-index 000000000000..4248b029d199
+index 000000000000..49c5f123d811
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
 @@ -0,0 +1,164 @@
 +[
 +    {
@@ -116,7 +116,7 @@ index 000000000000..4248b029d199
 +    },
 +    {
 +        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-+        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED) ) / (2*( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
++	"MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED)) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
 +        "MetricGroup": "TLB",
 +        "MetricName": "Page_Walks_Utilization"
 +    },
