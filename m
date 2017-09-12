@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/41] perf vendor events: Add JSON metrics for Haswell EP
-Date: Tue, 12 Sep 2017 12:10:26 -0300
-Message-ID: <20170912151029.6612-39-acme@kernel.org>
+Subject: [PATCH 36/41] perf vendor events: Add JSON metrics for Haswell
+Date: Tue, 12 Sep 2017 12:10:24 -0300
+Message-ID: <20170912151029.6612-37-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
@@ -12,22 +12,22 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add JSON metrics for Haswell EP.
+Add JSON metrics for Haswell.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Link: http://lkml.kernel.org/r/20170908180133.GA20128@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/x86/haswellx/hsx-metrics.json  | 158 +++++++++++++++++++++
+ .../pmu-events/arch/x86/haswell/hsw-metrics.json   | 158 +++++++++++++++++++++
  1 file changed, 158 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
 new file mode 100644
-index 000000000000..0bae5eda9fb3
+index 000000000000..03d894988f0f
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
 @@ -0,0 +1,158 @@
 +[
 +    {
@@ -86,7 +86,7 @@ index 000000000000..0bae5eda9fb3
 +    },
 +    {
 +        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
-+	"MetricExpr": "( UOPS_EXECUTED.CORE / 2 / ( cpu@uops_executed.core\\,cmask\\=1@ / 2)) if #SMT_on else UOPS_EXECUTED.CORE / cpu@uops_executed.core\\,cmask\\=1@",
++	"MetricExpr": "( UOPS_EXECUTED.CORE / 2 / ( cpu@uops_executed.core\\,cmask\\=1@ / 2)) if #SMT_on else (UOPS_EXECUTED.CORE / cpu@uops_executed.core\\,cmask\\=1@)",
 +        "MetricGroup": "Pipeline;Ports_Utilization",
 +        "MetricName": "ILP"
 +    },
