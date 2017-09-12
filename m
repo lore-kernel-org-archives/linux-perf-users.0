@@ -1,52 +1,106 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Question to struct map
-Date: Tue, 12 Sep 2017 12:17:56 -0300
-Message-ID: <20170912151756.GB3452@kernel.org>
-References: <1d758097-b01b-cbad-913a-855a61f8ce73@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751534AbdILPR7 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Sep 2017 11:17:59 -0400
-Content-Disposition: inline
-In-Reply-To: <1d758097-b01b-cbad-913a-855a61f8ce73@linux.vnet.ibm.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Subject: [PATCH 11/41] perf stat: Hide internal duration_time counter
+Date: Tue, 12 Sep 2017 12:09:59 -0300
+Message-ID: <20170912151029.6612-12-acme@kernel.org>
+References: <20170912151029.6612-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Sep 12, 2017 at 05:04:53PM +0200, Thomas-Mich Richter escreveu:
-> Hi all,
-> 
-> I have a question regarding struct map. 
-> What is the purpose is the functions pointers in struct map named map_ip and unmap_ip?
-> How do they relate the to dso the struct map is refering to?
+From: Andi Kleen <ak@linux.intel.com>
 
-A DSO has a symbol table (ELF or other kind, like the JIT ones
-(documented in tools/perf/Documentation/jit-interface.txt) that may be
-identity mapped or not, requiring or not use of relocation, etc.
+Some perf stat metrics use an internal "duration_time" metric. It is not
+correctly printed however. So hide it during output to avoid confusing
+users with 0 counts.
 
-The map, on the other hand, is where this DSO was loaded in memory,
-which will be used to add to the symbol offset to do the address
-resolution.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20170831194036.30146-11-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-stat.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-- Arnaldo
-
-> This is not clear to me. Must have been on vacation for too long :-).
-> 
-> Thanks a lot.
-> -- 
-> Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
-> --
-> Vorsitzende des Aufsichtsrats: Martina Koederitz 
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 12884d21ef04..f783b498e5c5 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -195,6 +195,11 @@ static struct perf_stat_config stat_config = {
+ 	.scale		= true,
+ };
+ 
++static bool is_duration_time(struct perf_evsel *evsel)
++{
++	return !strcmp(evsel->name, "duration_time");
++}
++
+ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+ 				 struct timespec *b)
+ {
+@@ -1363,6 +1368,9 @@ static void print_aggr(char *prefix)
+ 		ad.id = id = aggr_map->map[s];
+ 		first = true;
+ 		evlist__for_each_entry(evsel_list, counter) {
++			if (is_duration_time(counter))
++				continue;
++
+ 			ad.val = ad.ena = ad.run = 0;
+ 			ad.nr = 0;
+ 			if (!collect_data(counter, aggr_cb, &ad))
+@@ -1506,6 +1514,8 @@ static void print_no_aggr_metric(char *prefix)
+ 		if (prefix)
+ 			fputs(prefix, stat_config.output);
+ 		evlist__for_each_entry(evsel_list, counter) {
++			if (is_duration_time(counter))
++				continue;
+ 			if (first) {
+ 				aggr_printout(counter, cpu, 0);
+ 				first = false;
+@@ -1560,6 +1570,8 @@ static void print_metric_headers(const char *prefix, bool no_indent)
+ 
+ 	/* Print metrics headers only */
+ 	evlist__for_each_entry(evsel_list, counter) {
++		if (is_duration_time(counter))
++			continue;
+ 		os.evsel = counter;
+ 		out.ctx = &os;
+ 		out.print_metric = print_metric_header;
+@@ -1707,12 +1719,18 @@ static void print_counters(struct timespec *ts, int argc, const char **argv)
+ 		print_aggr(prefix);
+ 		break;
+ 	case AGGR_THREAD:
+-		evlist__for_each_entry(evsel_list, counter)
++		evlist__for_each_entry(evsel_list, counter) {
++			if (is_duration_time(counter))
++				continue;
+ 			print_aggr_thread(counter, prefix);
++		}
+ 		break;
+ 	case AGGR_GLOBAL:
+-		evlist__for_each_entry(evsel_list, counter)
++		evlist__for_each_entry(evsel_list, counter) {
++			if (is_duration_time(counter))
++				continue;
+ 			print_counter_aggr(counter, prefix);
++		}
+ 		if (metric_only)
+ 			fputc('\n', stat_config.output);
+ 		break;
+@@ -1720,8 +1738,11 @@ static void print_counters(struct timespec *ts, int argc, const char **argv)
+ 		if (metric_only)
+ 			print_no_aggr_metric(prefix);
+ 		else {
+-			evlist__for_each_entry(evsel_list, counter)
++			evlist__for_each_entry(evsel_list, counter) {
++				if (is_duration_time(counter))
++					continue;
+ 				print_counter(counter, prefix);
++			}
+ 		}
+ 		break;
+ 	case AGGR_UNSET:
+-- 
+2.13.5
