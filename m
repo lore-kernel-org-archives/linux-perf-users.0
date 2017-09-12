@@ -1,80 +1,126 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/41] perf tests: Fix compile when libunwind's unwind.h is available
-Date: Tue, 12 Sep 2017 12:10:04 -0300
-Message-ID: <20170912151029.6612-17-acme@kernel.org>
+Subject: [PATCH 06/41] perf pmu: Extract function to get JSON alias map
+Date: Tue, 12 Sep 2017 12:09:54 -0300
+Message-ID: <20170912151029.6612-7-acme@kernel.org>
 References: <20170912151029.6612-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170912151029.6612-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Milian Wolff <milian.wolff@kdab.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-When cross compiling perf and I want to link against a self-compiled
-libunwind, I usually make the custom path where the libunwind headers
-exist visible by adding the libunwind prefix to the include path when
-compiling perf, i.e.:
+Extract the code to get the per cpu JSON alias into a separate function
+for reuse. No behavior changes.
 
-~~~~~
-$ ls $HOME/projects/compiled/other/include/
-libunwind-coredump.h  libunwind.h         libunwind-x86_64.h
-libunwind-common.h  libunwind-dynamic.h   libunwind-ptrace.h
-unwind.h
-$ make EXTRA_CFLAGS="-I$HOME/projects/compiled/other/include/
-~~~~~~
-
-Note the `unwind.h` header from libunwind which leads to compile
-errors when compiling tests/dwarf-unwind.c, since it shadows perf's
-util/unwind.h:
-
-~~~~~
-tests/dwarf-unwind.c:41:32: error: ‘struct unwind_entry’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
- static int unwind_entry(struct unwind_entry *entry, void *arg)
-                                ^~~~~~~~~~~~
-tests/dwarf-unwind.c: In function ‘unwind_entry’:
-tests/dwarf-unwind.c:44:22: error: dereferencing pointer to incomplete type ‘struct unwind_entry’
-  char *symbol = entry->sym ? entry->sym->name : NULL;
-                      ^~
-tests/dwarf-unwind.c: In function ‘unwind_thread’:
-tests/dwarf-unwind.c:92:8: error: implicit declaration of function ‘unwind__get_entries’; did you mean ‘unwind_entry’? [-Werror=implicit-function-declaration]
-  err = unwind__get_entries(unwind_entry, &cnt, thread,
-        ^~~~~~~~~~~~~~~~~~~
-        unwind_entry
-tests/dwarf-unwind.c:92:8: error: nested extern declaration of ‘unwind__get_entries’ [-Werror=nested-externs]
-~~~~~~
-
-Fix this compile error by specificing an explicit include of perf's
-unwind.h in the util folder.
-
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Link: http://lkml.kernel.org/r/20170906150209.12579-1-milian.wolff@kdab.com
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20170831194036.30146-6-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/dwarf-unwind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/pmu.c | 49 +++++++++++++++++++++++++++++++++----------------
+ tools/perf/util/pmu.h |  2 ++
+ 2 files changed, 35 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 2a7b9b47bbcb..9ba1d216a89f 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -6,7 +6,7 @@
- #include "debug.h"
- #include "machine.h"
- #include "event.h"
--#include "unwind.h"
-+#include "../util/unwind.h"
- #include "perf_regs.h"
- #include "map.h"
- #include "thread.h"
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index ac16a9db1fb5..ed25d7f88731 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -516,16 +516,8 @@ char * __weak get_cpuid_str(void)
+ 	return NULL;
+ }
+ 
+-/*
+- * From the pmu_events_map, find the table of PMU events that corresponds
+- * to the current running CPU. Then, add all PMU events from that table
+- * as aliases.
+- */
+-static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
++static char *perf_pmu__getcpuid(void)
+ {
+-	int i;
+-	struct pmu_events_map *map;
+-	struct pmu_event *pe;
+ 	char *cpuid;
+ 	static bool printed;
+ 
+@@ -535,22 +527,50 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
+ 	if (!cpuid)
+ 		cpuid = get_cpuid_str();
+ 	if (!cpuid)
+-		return;
++		return NULL;
+ 
+ 	if (!printed) {
+ 		pr_debug("Using CPUID %s\n", cpuid);
+ 		printed = true;
+ 	}
++	return cpuid;
++}
++
++struct pmu_events_map *perf_pmu__find_map(void)
++{
++	struct pmu_events_map *map;
++	char *cpuid = perf_pmu__getcpuid();
++	int i;
+ 
+ 	i = 0;
+-	while (1) {
++	for (;;) {
+ 		map = &pmu_events_map[i++];
+-		if (!map->table)
+-			goto out;
++		if (!map->table) {
++			map = NULL;
++			break;
++		}
+ 
+ 		if (!strcmp(map->cpuid, cpuid))
+ 			break;
+ 	}
++	free(cpuid);
++	return map;
++}
++
++/*
++ * From the pmu_events_map, find the table of PMU events that corresponds
++ * to the current running CPU. Then, add all PMU events from that table
++ * as aliases.
++ */
++static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
++{
++	int i;
++	struct pmu_events_map *map;
++	struct pmu_event *pe;
++
++	map = perf_pmu__find_map();
++	if (!map)
++		return;
+ 
+ 	/*
+ 	 * Found a matching PMU events table. Create aliases
+@@ -575,9 +595,6 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
+ 				(char *)pe->metric_expr,
+ 				(char *)pe->metric_name);
+ 	}
+-
+-out:
+-	free(cpuid);
+ }
+ 
+ struct perf_event_attr * __weak
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 389e9729331f..060f6abba8ed 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -90,4 +90,6 @@ int perf_pmu__test(void);
+ 
+ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
+ 
++struct pmu_events_map *perf_pmu__find_map(void);
++
+ #endif /* __PMU_H */
 -- 
 2.13.5
