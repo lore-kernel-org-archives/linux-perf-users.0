@@ -1,105 +1,65 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 1/2] perf test attr: fix python error on empty result
-Date: Wed, 13 Sep 2017 10:12:08 +0200
-Message-ID: <20170913081209.39570-1-tmricht@linux.vnet.ibm.com>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: Question to struct map
+Date: Wed, 13 Sep 2017 16:48:03 +0200
+Message-ID: <ff3ff19d-de45-61f9-cd16-5d7c39c67cf0@linux.vnet.ibm.com>
+References: <1d758097-b01b-cbad-913a-855a61f8ce73@linux.vnet.ibm.com>
+ <20170912151756.GB3452@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43840 "EHLO
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56528 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750737AbdIMIM0 (ORCPT
+        by vger.kernel.org with ESMTP id S1751734AbdIMOsL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Sep 2017 04:12:26 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v8D88gxm069131
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2017 04:12:26 -0400
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2cxswxys4h-1
+        Wed, 13 Sep 2017 10:48:11 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v8DEicWc048115
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2017 10:48:10 -0400
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2cy38940tv-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2017 04:12:25 -0400
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Sep 2017 10:48:10 -0400
 Received: from localhost
-        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Wed, 13 Sep 2017 09:12:23 +0100
+        Wed, 13 Sep 2017 15:48:08 +0100
+In-Reply-To: <20170912151756.GB3452@kernel.org>
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, acme@kernel.org, jolsa@redhat.com, brueckner@linux.vnet.ibm.com
-Cc: schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-Commit d78ada4a767 ("perf tests attr: Do not store failed events")
-does not create an event file in the /tmp directory when the
-perf_open_event() system call failed.
-This can lead to a situation where not /tmp/event-xx-yy-zz result
-file exists at all (for example on a s390x virtual machine environment)
-where no CPUMF hardware is available.
+On 09/12/2017 05:17 PM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Sep 12, 2017 at 05:04:53PM +0200, Thomas-Mich Richter escreveu:
+>> Hi all,
+>>
+>> I have a question regarding struct map. 
+>> What is the purpose is the functions pointers in struct map named map_ip and unmap_ip?
+>> How do they relate the to dso the struct map is refering to?
+> 
+> A DSO has a symbol table (ELF or other kind, like the JIT ones
+> (documented in tools/perf/Documentation/jit-interface.txt) that may be
+> identity mapped or not, requiring or not use of relocation, etc.
+> 
+> The map, on the other hand, is where this DSO was loaded in memory,
+> which will be used to add to the symbol offset to do the address
+> resolution.
+> 
+> - Arnaldo
+> 
 
-The following command then fails with a python call back chain
-instead of printing failure:
-[root@s8360046 perf]# /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-    -p ./perf -v -ttest-stat-basic
-running './tests/attr//test-stat-basic'
-Traceback (most recent call last):
-  File "./tests/attr.py", line 379, in <module>
-    main()
-  File "./tests/attr.py", line 370, in main
-    run_tests(options)
-  File "./tests/attr.py", line 311, in run_tests
-    Test(f, options).run()
-  File "./tests/attr.py", line 300, in run
-    self.compare(self.expect, self.result)
-  File "./tests/attr.py", line 248, in compare
-    exp_event.diff(res_event)
-UnboundLocalError: local variable 'res_event' referenced before assignment
-[root@s8360046 perf]#
+I think I got it now.
+The map__map_ip() function converts a symbol's virtual memory address to the
+byte offset of that symbol in the ELF file.
 
-This patch catches this pitfall and prints an error message
-instead:
-[root@s8360047 perf]# /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-     -p ./perf  -vvv -ttest-stat-basic
-running './tests/attr//test-stat-basic'
-  loading expected events
-    Event event:base-stat
-      fd = 1
-      group_fd = -1
-      flags = 0|8
-      [....]
-      sample_regs_user = 0
-      sample_stack_user = 0
-  'PERF_TEST_ATTR=/tmp/tmpJbMQMP ./perf stat -o /tmp/tmpJbMQMP/perf.data -e cycles kill >/dev/null 2>&1' ret '1', expected '1'
-  loading result events
-  compare
-    matching [event:base-stat]
-    match: [event:base-stat] matches []
-    res_event is empty
-FAILED './tests/attr//test-stat-basic' - match failure
-[root@s8360047 perf]#
+The map__unmap_ip() function does the opposite.
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
----
- tools/perf/tests/attr.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index 6bb50e8..a13cd78 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -237,6 +237,7 @@ class Test(object):
-         # events in result. Fail if there's not any.
-         for exp_name, exp_event in expect.items():
-             exp_list = []
-+            res_event = {}
-             log.debug("    matching [%s]" % exp_name)
-             for res_name, res_event in result.items():
-                 log.debug("      to [%s]" % res_name)
-@@ -253,7 +254,10 @@ class Test(object):
-                 if exp_event.optional():
-                     log.debug("    %s does not match, but is optional" % exp_name)
-                 else:
--                    exp_event.diff(res_event)
-+                    if not res_event:
-+                        log.debug("    res_event is empty");
-+                    else:
-+                        exp_event.diff(res_event)
-                     raise Fail(self, 'match failure');
- 
-             match[exp_name] = exp_list
+Thanks for the explanation.
 -- 
-2.9.3
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
