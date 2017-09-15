@@ -1,80 +1,60 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 2/2] perf test: fix vmlinux failure on s390x part 2
-Date: Fri, 15 Sep 2017 09:14:04 +0200
-Message-ID: <20170915071404.58398-2-tmricht@linux.vnet.ibm.com>
-References: <20170915071404.58398-1-tmricht@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: Port the period data column to centos6.7 for perf script
+Date: Fri, 15 Sep 2017 07:16:36 -0300
+Message-ID: <20170915101636.GB3774@redhat.com>
+References: <CAHCio2j0TO0dQtr1Dk+v0=k_1pzwzqhZCJBkUTHCKqFgNGdoBg@mail.gmail.com>
+ <20170915042154.GJ24844@tassilo.jf.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54932 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750865AbdIOHOe (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:33434 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750879AbdIOKQk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2017 03:14:34 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v8F7EXB4108445
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2017 03:14:34 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2d05x1bcdu-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2017 03:14:33 -0400
-Received: from localhost
-        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Fri, 15 Sep 2017 08:14:19 +0100
-In-Reply-To: <20170915071404.58398-1-tmricht@linux.vnet.ibm.com>
+        Fri, 15 Sep 2017 06:16:40 -0400
+Content-Disposition: inline
+In-Reply-To: <20170915042154.GJ24844@tassilo.jf.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: =brueckner@linux.vnet.ibm.com, =zvonko.kosic@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, David Ahern <dsahern@gmail.com>, namhyung@kernel.org, Wind Yu <yuzhoujian@didichuxing.com>, Milian Wolff <milian.wolff@kdab.com>, sj38.park@gmail.com, tardyp@gmail.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On s390x perf test 1 failed. It turned out that commit cf6383f73cf2
-("perf report: Fix kernel symbol adjustment for s390x") was incorrect.
-The previous implementation in dso__load_sym() is also
-suitable for s390x.
-Therefore this patch undoes commit cf6383f73cf2
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
----
- tools/perf/arch/s390/util/Build          |  1 -
- tools/perf/arch/s390/util/sym-handling.c | 21 ---------------------
- 2 files changed, 22 deletions(-)
- delete mode 100644 tools/perf/arch/s390/util/sym-handling.c
-
-diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
-index bd518b6..5bd7b92 100644
---- a/tools/perf/arch/s390/util/Build
-+++ b/tools/perf/arch/s390/util/Build
-@@ -1,5 +1,4 @@
- libperf-y += header.o
--libperf-y += sym-handling.o
- libperf-y += kvm-stat.o
+Em Thu, Sep 14, 2017 at 09:21:54PM -0700, Andi Kleen escreveu:
+> On Fri, Sep 15, 2017 at 10:24:15AM +0800, 禹舟键 wrote:
+> >    Hi, all.
+> >    I want to draw off-cpu flamegraph using perf script on centos6.7(kernel
+> >    version, 2.6.32-573), and I found perf script lacks the period data column
+> >    on that version. IÂ  found two related patches, and modifed
+> >    builin-script.c in reference to those patches.
+> >    perf script:Add period data column authorJiri Olsa 2014-08-25 16:45:42
+> >    +0200 commit535aeaae7de821ba5d43ee2a204ee667ca95aae4
+> >    perf script: Add period as a default output column
+> >    commite8564b710c6df2c3aeb56c507c22f4bcfa4c0b2d)
  
- libperf-$(CONFIG_DWARF) += dwarf-regs.o
-diff --git a/tools/perf/arch/s390/util/sym-handling.c b/tools/perf/arch/s390/util/sym-handling.c
-deleted file mode 100644
-index 581d4c5..0000000
---- a/tools/perf/arch/s390/util/sym-handling.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/*
-- * Architecture specific ELF symbol handling and relocation mapping.
-- *
-- * Copyright 2017 IBM Corp.
-- * Author(s): Thomas Richter <tmricht@linux.vnet.ibm.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License (version 2 only)
-- * as published by the Free Software Foundation.
-- */
--
--#include "symbol.h"
--
--#ifdef HAVE_LIBELF_SUPPORT
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
--{
--	if (ehdr.e_type == ET_EXEC)
--		return false;
--	return ehdr.e_type == ET_REL || ehdr.e_type == ET_DYN;
--}
--#endif
--- 
-2.9.3
+> I would just compile the newer perf binary for Centos6 and use that. It should
+> work with older kernels too. That's much easier than backporting, and you get
+> many more features.
+
+yeah, look at the Dockerfile I use to build it for that OS:
+
+[acme@jouet 6]$ cat Dockerfile 
+# docker.io/acmel/linux-perf-tools-build-centos:6
+FROM docker.io/centos:6
+MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
+RUN yum -y update && \
+    yum -y install make gcc flex bison bc elfutils-libelf-devel elfutils-devel \
+		   libunwind-devel audit-libs-devel openssl-devel slang-devel \
+		   gtk2-devel perl-ExtUtils-Embed python-devel binutils-devel \
+		   systemtap-sdt-devel xz-devel numactl-devel && \
+    yum -y clean all && \
+    rm -rf /usr/share/doc /usr/share/gtk-doc /usr/share/man && \
+    mkdir -m 777 -p /tmp/build/perf /tmp/build/objtool && \
+    groupadd -r perfbuilder && \
+    useradd -m -r -g perfbuilder perfbuilder
+USER perfbuilder
+ENTRYPOINT make -C /git/linux/tools/perf O=/tmp/build/perf && \
+	   rm -rf /tmp/build/perf/{.[^.]*,*} && \
+	   make NO_LIBELF=1 -C /git/linux/tools/perf O=/tmp/build/perf && \
+	   make -C /git/linux/tools/objtool O=/tmp/build/objtool
+[acme@jouet 6]$
