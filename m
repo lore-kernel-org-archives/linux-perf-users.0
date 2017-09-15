@@ -1,38 +1,98 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: Port the period data column to centos6.7 for perf script
-Date: Thu, 14 Sep 2017 21:21:54 -0700
-Message-ID: <20170915042154.GJ24844@tassilo.jf.intel.com>
-References: <CAHCio2j0TO0dQtr1Dk+v0=k_1pzwzqhZCJBkUTHCKqFgNGdoBg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 1/2] perf test: fix vmlinux failure on s390x
+Date: Fri, 15 Sep 2017 09:14:03 +0200
+Message-ID: <20170915071404.58398-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:43675 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751187AbdIOEV4 (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54876 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1750787AbdIOHOe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2017 00:21:56 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHCio2j0TO0dQtr1Dk+v0=k_1pzwzqhZCJBkUTHCKqFgNGdoBg@mail.gmail.com>
+        Fri, 15 Sep 2017 03:14:34 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v8F7EVAk108264
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2017 03:14:33 -0400
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2d05x1bcd0-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Sep 2017 03:14:33 -0400
+Received: from localhost
+        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Fri, 15 Sep 2017 08:14:17 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, David Ahern <dsahern@gmail.com>, namhyung@kernel.org, Wind Yu <yuzhoujian@didichuxing.com>, Milian Wolff <milian.wolff@kdab.com>, sj38.park@gmail.com, tardyp@gmail.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: =brueckner@linux.vnet.ibm.com, =zvonko.kosic@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-On Fri, Sep 15, 2017 at 10:24:15AM +0800, 禹舟键 wrote:
->    Hi, all.
->    I want to draw off-cpu flamegraph using perf script on centos6.7(kernel
->    version, 2.6.32-573), and I found perf script lacks the period data column
->    on that version. IÂ  found two related patches, and modifed
->    builin-script.c in reference to those patches.
->    perf script:Add period data column authorJiri Olsa 2014-08-25 16:45:42
->    +0200 commit535aeaae7de821ba5d43ee2a204ee667ca95aae4
->    perf script: Add period as a default output column
->    commite8564b710c6df2c3aeb56c507c22f4bcfa4c0b2d)
-> 
+On s390x perf test 1 failed. It turned out that commit 4a084ecfc821
+("perf report: Fix module symbol adjustment for s390x") was incorrect.
+The previous implementation in dso__load_sym() is also
+suitable for s390x.
+Therefore this patch undoes commit 4a084ecfc821.
 
-I would just compile the newer perf binary for Centos6 and use that. It should
-work with older kernels too. That's much easier than backporting, and you get
-many more features.
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+---
+ tools/perf/arch/s390/util/sym-handling.c | 8 --------
+ tools/perf/util/symbol-elf.c             | 8 +-------
+ tools/perf/util/symbol.h                 | 3 ---
+ 3 files changed, 1 insertion(+), 18 deletions(-)
 
--Andi
+diff --git a/tools/perf/arch/s390/util/sym-handling.c b/tools/perf/arch/s390/util/sym-handling.c
+index e103f6e..581d4c5 100644
+--- a/tools/perf/arch/s390/util/sym-handling.c
++++ b/tools/perf/arch/s390/util/sym-handling.c
+@@ -18,12 +18,4 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+ 		return false;
+ 	return ehdr.e_type == ET_REL || ehdr.e_type == ET_DYN;
+ }
+-
+-void arch__adjust_sym_map_offset(GElf_Sym *sym,
+-				 GElf_Shdr *shdr __maybe_unused,
+-				 struct map *map)
+-{
+-	if (map->type == MAP__FUNCTION)
+-		sym->st_value += map->start;
+-}
+ #endif
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 5c39f42..9cf781f 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -810,12 +810,6 @@ static u64 ref_reloc(struct kmap *kmap)
+ void __weak arch__sym_update(struct symbol *s __maybe_unused,
+ 		GElf_Sym *sym __maybe_unused) { }
+ 
+-void __weak arch__adjust_sym_map_offset(GElf_Sym *sym, GElf_Shdr *shdr,
+-				       struct map *map __maybe_unused)
+-{
+-	sym->st_value -= shdr->sh_addr - shdr->sh_offset;
+-}
+-
+ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		  struct symsrc *runtime_ss, int kmodule)
+ {
+@@ -996,7 +990,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 
+ 			/* Adjust symbol to map to file offset */
+ 			if (adjust_kernel_syms)
+-				arch__adjust_sym_map_offset(&sym, &shdr, map);
++				sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+ 
+ 			if (strcmp(section_name,
+ 				   (curr_dso->short_name +
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 2bd6a1f..aad99e7 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -344,9 +344,6 @@ int setup_intlist(struct intlist **list, const char *list_str,
+ #ifdef HAVE_LIBELF_SUPPORT
+ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
+ void arch__sym_update(struct symbol *s, GElf_Sym *sym);
+-void arch__adjust_sym_map_offset(GElf_Sym *sym,
+-				 GElf_Shdr *shdr __maybe_unused,
+-				 struct map *map __maybe_unused);
+ #endif
+ 
+ #define SYMBOL_A 0
+-- 
+2.9.3
