@@ -1,35 +1,45 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 1/2] perf test attr: fix python error on empty result
-Date: Fri, 15 Sep 2017 20:45:03 +0200
-Message-ID: <20170915184503.GA31734@krava>
-References: <20170913081209.39570-1-tmricht@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: yuzhoujian <ufo19890607@gmail.com>
+Subject: [PATCH 0/4] perf script: Add script per-event-dump support
+Date: Mon, 18 Sep 2017 13:55:18 +0800
+Message-ID: <1505714122-39141-1-git-send-email-yuzhoujian@didichuxing.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35032 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751648AbdIOSpG (ORCPT
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:36962 "EHLO
+        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751599AbdIRFz7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Sep 2017 14:45:06 -0400
-Content-Disposition: inline
-In-Reply-To: <20170913081209.39570-1-tmricht@linux.vnet.ibm.com>
+        Mon, 18 Sep 2017 01:55:59 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 10:12:08AM +0200, Thomas Richter wrote:
-> Commit d78ada4a767 ("perf tests attr: Do not store failed events")
-> does not create an event file in the /tmp directory when the
-> perf_open_event() system call failed.
-> This can lead to a situation where not /tmp/event-xx-yy-zz result
-> file exists at all (for example on a s390x virtual machine environment)
-> where no CPUMF hardware is available.
+Introduce a new option to print trace output to files named by the
+monitored events and update perf-script documentation accordingly.
 
-those 2 were already sent earlier if I'm not mistaken,
-I think I've already acked them, if not:
+Shown below is output of perf script command with the newly introduced
+option.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+        $perf record -e cycles -e context-switches -ag -- sleep 10
+        $perf script --per-event-dump
+        $ls /
+        cycles.stacks context-switches.stacks
 
-thanks,
-jirka
+Without per-event-dump support, drawing flamegraphs for different events
+is really hard. You can only monitor one event at a time for perf record.
+Using this option, we can get the trace output files named by the monitored
+events, and could draw flamegraphs according to the event's name.
+
+yuzhoujian (4):
+  Add a new element for the struct perf_tool, and add the
+    --per-event-dump     option for perf script
+  Makes all those related functions receive the FILE pointer
+  Add the fp_selection_helper function to set the file pointer     for
+    the related functions
+  Replace printf with fprintf for all the output functions
+
+ tools/perf/builtin-script.c | 451 +++++++++++++++++++++++++-------------------
+ tools/perf/util/tool.h      |   1 +
+ 2 files changed, 253 insertions(+), 199 deletions(-)
+
+-- 
+1.8.3.1
