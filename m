@@ -1,89 +1,131 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v3 03/13] perf report: create real callchain entries for
- inlined frames
-Date: Tue, 19 Sep 2017 14:27:27 +0200
-Message-ID: <20170919122727.GC13388@krava>
-References: <20170906135501.306-1-milian.wolff@kdab.com>
- <20170906135501.306-4-milian.wolff@kdab.com>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: Filter option should follow a tracer option
+Date: Tue, 19 Sep 2017 18:16:16 -0500
+Message-ID: <20170919181616.3f79792ed311051de61b6d3f@arm.com>
+References: <2141818167.39420.1503049431846@office.mailbox.org>
+        <20170822190011.GA31893@kernel.org>
+        <a214874a-a271-729e-d253-731e648a10e6@intel.com>
+        <98754540.17249.1503478275998@office.mailbox.org>
+        <de75121e-cafc-0389-039b-fb038e0ff7c6@intel.com>
+        <301454280.19507.1503490276770@office.mailbox.org>
+        <20170823132251.GB31893@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170906135501.306-4-milian.wolff@kdab.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56272 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751634AbdISXQT (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 19 Sep 2017 19:16:19 -0400
+In-Reply-To: <20170823132251.GB31893@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jack Henschel <jackdev@mailbox.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>Adrian Hunter <adrian.hunter@intel.com>, Jin Yao <yao.jin@linux.intel.com>, linux-kernel@vger.kernel.org
 
-On Wed, Sep 06, 2017 at 03:54:51PM +0200, Milian Wolff wrote:
-> The inlined frames use a fake symbol that is maintained by
-> inline_node which in turn is maintained by the dso->inlines tree.
-> This tree is always sorted by name. All other entries of the symbol
-> beside the function name are unused for inline frames. The advantage
-> of this approach is that all existing users of the callchain API can
-> now transparently display inlined frames without having to patch
-> their code.
+On Wed, 23 Aug 2017 10:22:51 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+Hi Arnaldo,
+
+[adding tools/perf/util/evsel.c maintainers to cc]
+
+> Em Wed, Aug 23, 2017 at 02:11:16PM +0200, Jack Henschel escreveu:
+> > > Adrian Hunter <adrian.hunter@intel.com> hat am 23. August 2017 um 12:33 geschrieben:
+> > > On 23/08/17 11:51, Jack Henschel wrote:
+> > > >> Adrian Hunter <adrian.hunter@intel.com> hat am 23. August 2017 um 08:06 geschrieben:
+> > > >> On 22/08/17 22:00, Arnaldo Carvalho de Melo wrote:
+> > > >>> Em Fri, Aug 18, 2017 at 11:43:51AM +0200, Jack Henschel escreveu:
+> > > >> Have you checked the value of /sys/bus/event_source/devices/intel_pt/nr_addr_filters ?
+> > > > I don't have that file:
+> > > 
+> > > Which definitely means address filtering is not supported.  That is
+> > > mentioned in the man page for 'perf record'.
 > 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Cc: Yao Jin <yao.jin@linux.intel.com>
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> ---
->  tools/perf/util/dso.c     |   2 +
->  tools/perf/util/dso.h     |   1 +
->  tools/perf/util/machine.c |  37 +++++++++
->  tools/perf/util/srcline.c | 186 ++++++++++++++++++++++++++++++++++++----------
->  tools/perf/util/srcline.h |  19 ++++-
->  tools/perf/util/symbol.h  |   1 +
->  6 files changed, 203 insertions(+), 43 deletions(-)
+> > Ok, thanks for the clarification. It is mentioned in the perf record
+> > man-page, but the perf error message could be a little bit more
+> > specific for this issue. (e.g.
+> > /sys/bus/event_source/devices/intel_pt/nr_addr_filters not present ->
+> > "CPU does not support address filtering").
 > 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index b9e087fb8247..72e6e390fd26 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -9,6 +9,7 @@
->  #include "compress.h"
->  #include "path.h"
->  #include "symbol.h"
-> +#include "srcline.h"
->  #include "dso.h"
->  #include "machine.h"
->  #include "auxtrace.h"
-> @@ -1233,6 +1234,7 @@ void dso__delete(struct dso *dso)
->  		       dso->long_name);
->  	for (i = 0; i < MAP__NR_TYPES; ++i)
->  		symbols__delete(&dso->symbols[i]);
-> +	inlines__tree_delete(&dso->inlined_nodes);
->  
->  	if (dso->short_name_allocated) {
->  		zfree((char **)&dso->short_name);
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index f886141678eb..7d1e2b3c1f10 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -141,6 +141,7 @@ struct dso {
->  	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
->  	struct rb_root	 symbols[MAP__NR_TYPES];
->  	struct rb_root	 symbol_names[MAP__NR_TYPES];
-> +	struct rb_root	 inlined_nodes;
+> Right, I'll get that into some __strerror() function. Will CC you when
+> that is done.
+> 
+> E.g. __strerror() function: perf_evsel__open_strerror(), that helps the
+> user wrt errors returned by the perf_evsel__open() function:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel.c?h=perf/core#n2669
 
-should you init this like below?
+I don't know if you've noticed, but I too am not very happy with the
+way perf and/or various PMU drivers cannot report exact error
+information back to the user.
 
-jirka
+I tried to inquire about alternatives to pr_err/dmesg, and gave David
+Howell's supplemental error facility "errorf" a shot [1], which worked
+nicely I thought until I chased David Howells down at Plumbers, where
+he said Linus Torvalds had nacked it (on a mailing list whose archives
+aren't publically accessible, linux-summit I think).
 
+So, for any PMU drivers that can return a single error code for multiple
+reasons, see e.g. [2], we're effectively back to square one, i.e., the
+suboptimal pr_err/dmesg.
 
----
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 53ceccdf74be..ed8cab3b51b1 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1202,6 +1202,7 @@ struct dso *dso__new(const char *name)
- 		for (i = 0; i < MAP__NR_TYPES; ++i)
- 			dso->symbols[i] = dso->symbol_names[i] = RB_ROOT;
- 		dso->data.cache = RB_ROOT;
-+		dso->inlined_nodes = RB_ROOT;
- 		dso->data.fd = -1;
- 		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
- 		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
+In this email thread's Intel-PT case, the fix is to add additional
+error message text to perf userspace's perf_evsel__open_strerror() for
+the additional possible condition(s) that can make the driver fail its
+event_init(), and tell the user what the problem is, based on the
+specific error code returned by the PMU driver.
+
+In Arm arch, however, there is a greater variety of on- and off-core
+(also called SoC) PMUs that do not have an as-consistent look and
+feel as in x86, power, or s390 arches.  I'm also seeing a trend in x86
+uncore drivers to have more error conditions than the on-core ones [3].
+
+Back on Arm, though, the naive perf user usually gets confusing
+messages, e.g., perf saying:
+
+"PMU Hardware doesn't support sampling/overflow-interrupts."
+
+if the user didn't supply an event sample period to record via -c.
+
+Or "The arm_spe_0// event is not supported." instead of something like
+"spe-pmu@0: not supported on CPU 4. Supported CPU list: 0-3"
+
+I can - and intend on - cleaning up the most general Arm cases, and
+aligning the PMU driver exit codes with new userspace text in evsel.c,
+which may or may not agree with the existing x86 content.
+
+Would you agree with this type of change, and if so, would you
+prefer an ifdef on $ARCH, or a dynamic/runtime arch check?
+
+I haven't attempted it yet, but imagine things will still be unclear
+for the user in cases where there are too many PMU driver conditions
+per single error code.  In that case, should the perf userspace report
+the error, after having gained knowledge about the specific PMU in
+use?  IOW, should userspace perf customize its error messages to the
+PMU in the record -e parameter?
+
+If yes, then consider the case of the Arm SPE driver, where the h/w
+will only accept 256, 512, 768, 1024, 1536, 2048, 3072, 4096 values for
+the event sample period (currently specified via "perf record -c <n>").
+In order to inform the user of the possible values for the particular
+version of the h/w, should the driver be modified to expose this
+numeric list to the perf tool via /sys/bus/event_source/devices/?  It
+could then emit something like this:
+
+"spe-pmu@0: invalid sample period.  Valid values are 256, 512, 768,
+1024, 1536, 2048, 3072, 4096"
+
+Thanks for your input into these important perf usage case matters.
+
+Kim
+
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1472313.html
+
+[2] https://github.com/torvalds/linux/blob/master/drivers/perf/xgene_pmu.c#L899
+https://github.com/torvalds/linux/blob/master/drivers/perf/qcom_l3_pmu.c#L486
+https://github.com/torvalds/linux/blob/master/drivers/perf/qcom_l2_pmu.c#L473
+
+[3] https://github.com/torvalds/linux/blob/master/arch/x86/events/intel/uncore_snb.c#L342
+https://github.com/torvalds/linux/blob/master/arch/x86/events/amd/uncore.c#L184
