@@ -1,120 +1,115 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v3 01/13] perf report: remove code to handle inline frames from browsers
-Date: Mon, 18 Sep 2017 14:43:27 +0200
-Message-ID: <2356867.LqFi0MajgR@milian-kdab2>
-References: <20170906135501.306-1-milian.wolff@kdab.com> <20170906135501.306-2-milian.wolff@kdab.com> <20170918115619.GA7595@krava>
+From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 0/2] Fixup for discontiguous/sparse numa nodes
+Date: Tue, 19 Sep 2017 15:04:38 +0530
+Message-ID: <1505813678.16495.5.camel@linux.vnet.ibm.com>
+References: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart150592624.bM2rC4arOz"; micalg="sha256"; protocol="application/pkcs7-signature"
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:53576 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932292AbdIRMnb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Sep 2017 08:43:31 -0400
-In-Reply-To: <20170918115619.GA7595@krava>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: acme@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: srikar@linux.vnet.ibm.com, bala24@linux.vnet.ibm.com
+List-Id: linux-perf-users.vger.kernel.org
 
---nextPart150592624.bM2rC4arOz
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Arnaldo,
 
-On Monday, September 18, 2017 1:56:19 PM CEST Jiri Olsa wrote:
-> On Wed, Sep 06, 2017 at 03:54:49PM +0200, Milian Wolff wrote:
-> > The follow-up commits will make inline frames first-class citizens
-> > in the callchain, thereby obsoleting all of this special code.
+Please let me know if any further comments.
+Thanks in advance :-)
+
+Regards,
+-Satheesh.On Mon, 2017-08-21 at 15:45 +0530, sathnaga@linux.vnet.ibm.com wrote:
+> From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 > 
-> so you're removing all the inline callchain implementation
-> in this patch and adding it back in following patches?
+> Certain systems would have sparse/discontinguous
+> numa nodes.
+> perf bench numa doesnt work well on such nodes.
+> 1. It shows wrong values.
+> 2. It can hang.
+> 3. It can show redundant information for non-existant nodes.
 > 
-> any chance you could change it gradualy? it's hard to track
-> in review if you added everything that you removed ;-)
-
-As I said before, this approach is completely different from the previous one. 
-There is no way to change it more gradually than what I have done. At least, I 
-cannot think of one.
-
-Bye
-
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
---nextPart150592624.bM2rC4arOz
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
-ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
-IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
-QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
-ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
-YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
-gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
-/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
-RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
-8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
-fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
-Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
-QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
-dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
-Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
-BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
-AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
-lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
-bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
-XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
-SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
-dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
-4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
-1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
-OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
-bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
-OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
-IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
-A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
-BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
-bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
-BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
-bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
-b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
-lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
-G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
-iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
-pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
-AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
-6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
-ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
-68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
-3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
-LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
-y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
-cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
-c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
-BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
-EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTE4MTI0MzI3WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgwFyHXcCmt5q5eho1LvFo1Zc0qUog
-4emcPEcg1nltf9owDQYJKoZIhvcNAQEBBQAEggEAGuH2xv6beM+MXcRn9ajC11k+9qTLL4aq2VtI
-fIA1isb+mufzE4/4ONKrSoobyWZ7tLQ2cY3/FqXhf5RS991OXbP+EsIeJU0aqTDICfIGkBPacxK9
-pcvpjSf7C9/RhFccdMS0TCjipQ3EwRbiXv0h1kGh3aMz9rhmLcWITl5uTaUy5YGhYzc0Z2lOYiYI
-Sgw3eGoX8nXNvHLLqLHCDLNBI9u7Jy2c1y/xUTaXgnzslJ6GHvH2t6wiALXgFid9xiM7nyKzedeB
-+1giXZDW8am4tghulBGEtQnKOvFYvwQw3zlY1dTlNLHAnK6OSA46rN8nK0Ok3Lv4vvBl2uKi7l9i
-qQAAAAAAAA==
-
-
---nextPart150592624.bM2rC4arOz--
+>  #numactl -H
+> available: 2 nodes (0,8)
+> node 0 cpus: 0 1 2 3 4 5 6 7
+> node 0 size: 61352 MB
+> node 0 free: 57168 MB
+> node 8 cpus: 8 9 10 11 12 13 14 15
+> node 8 size: 65416 MB
+> node 8 free: 36593 MB
+> node distances:
+> node   0   8
+>   0:  10  40
+>   8:  40  10
+> 
+> Scenario 1:
+> 
+> Before Fix:
+>  # perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072 -T
+> 0 -l 50 -c -s 1000
+> ...
+> ...
+>  # 40 tasks will execute (on 9 nodes, 16 CPUs): ----> Wrong number of
+> nodes
+> ...
+>  #    2.0%  [0.2
+> mins]  1/1   0/0   0/0   0/0   0/0   0/0   0/0   0/0   4/1  [ 4/2 ]
+> l:  0-0   (  0) ----> Shows info on non-existant nodes.
+> 
+> After Fix:
+>  # ./perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072
+> -T 0 -l 50 -c -s 1000
+> ...
+> ...
+>  # 40 tasks will execute (on 2 nodes, 16 CPUs):
+> ... 
+>  #    2.0%  [0.2 mins]  9/1   0/0  [ 9/1 ] l:  0-0   (  0)
+>  #    4.0%  [0.4 mins] 21/2  19/1  [ 2/3 ] l:  0-1   (  1) {1-2}
+> 
+> Scenario 2:
+> 
+> Before Fix:
+>  # perf bench numa all
+>  # Running numa/mem benchmark...
+> ....
+> ...
+>  # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0
+> -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+> perf: bench/numa.c:306: bind_to_memnode: Assertion `!(ret)' failed.
+> ------------> Got hung
+> 
+> After Fix:
+>  # ./perf bench numa all
+>  # Running numa/mem benchmark...
+> ....
+> ...
+>  # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0
+> -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+> 
+>  # NOTE: ignoring bind NODEs starting at NODE#1
+>  # NOTE: 0 tasks mem-bound, 1 tasks unbound
+>          20.017 secs slowest (max) thread-runtime
+>          20.000 secs fastest (min) thread-runtime
+>          20.006 secs average thread-runtime
+>           0.043 % difference between max/avg runtime
+>         413.794 GB data processed, per thread
+>         413.794 GB data processed, total
+>           0.048 nsecs/byte/thread runtime
+>          20.672 GB/sec/thread speed
+>          20.672 GB/sec total speed
+> 
+> Changes in v2:
+> Fixed review comments for function names and alloc failure handle
+> 
+> Changes in v3:
+> Coding Style fixes.
+> 
+> 
+> Satheesh Rajendran (2):
+>   perf/bench/numa: Add functions to detect sparse numa nodes
+>   perf/bench/numa: Handle discontiguous/sparse numa nodes
+> 
+>  tools/perf/bench/numa.c | 61
+> +++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 54 insertions(+), 7 deletions(-)
+> 
