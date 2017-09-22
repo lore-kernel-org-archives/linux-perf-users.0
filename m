@@ -1,110 +1,93 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/44] perf tools: Use scandir() to replace readdir()
-Date: Fri, 22 Sep 2017 11:41:54 -0300
-Message-ID: <20170922144220.9411-19-acme@kernel.org>
+Subject: [PATCH 19/44] perf config: Write a config file just once
+Date: Fri, 22 Sep 2017 11:41:55 -0300
+Message-ID: <20170922144220.9411-20-acme@kernel.org>
 References: <20170922144220.9411-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170922144220.9411-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Lukasz Odzioba <lukasz.odzioba@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kan Liang <kan.liang@intel.com>
+From: Taeung Song <treeze.taeung@gmail.com>
 
-In perf_event__synthesize_threads() perf goes through all proc files
-serially by readdir.
+Currently set_config() can be repeatedly called for each input config on
+the below case:
 
-scandir() does a snapshoot of /proc, which is multithreading friendly.
+  $ perf config kmem.default=slab report.children=false ...
 
-It's possible that some threads which are added during event synthesize.
-But the number of lost threads should be small.  They should not impact
-the final analysis.
+But it's a waste, so only once write a config file gathering all given
+config key=value pairs.
 
-Signed-off-by: Kan Liang <kan.liang@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Taeung Song <treeze.taeung@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Lukasz Odzioba <lukasz.odzioba@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1504806954-150842-3-git-send-email-kan.liang@intel.com
+Link: http://lkml.kernel.org/r/1504754331-9776-1-git-send-email-treeze.taeung@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/event.c | 45 +++++++++++++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+ tools/perf/builtin-config.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 1c905ba3641b..17c21ea68a72 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -683,12 +683,14 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
- 				   bool mmap_data,
- 				   unsigned int proc_map_timeout)
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index a1d82e33282c..b89417d9305e 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -34,8 +34,7 @@ static struct option config_options[] = {
+ 	OPT_END()
+ };
+ 
+-static int set_config(struct perf_config_set *set, const char *file_name,
+-		      const char *var, const char *value)
++static int set_config(struct perf_config_set *set, const char *file_name)
  {
--	DIR *proc;
--	char proc_path[PATH_MAX];
--	struct dirent *dirent;
- 	union perf_event *comm_event, *mmap_event, *fork_event;
- 	union perf_event *namespaces_event;
-+	char proc_path[PATH_MAX];
-+	struct dirent **dirent;
- 	int err = -1;
-+	char *end;
-+	pid_t pid;
-+	int n, i;
+ 	struct perf_config_section *section = NULL;
+ 	struct perf_config_item *item = NULL;
+@@ -49,7 +48,6 @@ static int set_config(struct perf_config_set *set, const char *file_name,
+ 	if (!fp)
+ 		return -1;
  
- 	if (machine__is_default_guest(machine))
- 		return 0;
-@@ -712,29 +714,32 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
- 		goto out_free_fork;
+-	perf_config_set__collect(set, file_name, var, value);
+ 	fprintf(fp, "%s\n", first_line);
  
- 	snprintf(proc_path, sizeof(proc_path), "%s/proc", machine->root_dir);
--	proc = opendir(proc_path);
-+	n = scandir(proc_path, &dirent, 0, alphasort);
+ 	/* overwrite configvariables */
+@@ -161,6 +159,7 @@ int cmd_config(int argc, const char **argv)
+ 	struct perf_config_set *set;
+ 	char *user_config = mkpath("%s/.perfconfig", getenv("HOME"));
+ 	const char *config_filename;
++	bool changed = false;
  
--	if (proc == NULL)
-+	if (n < 0)
- 		goto out_free_namespaces;
- 
--	while ((dirent = readdir(proc)) != NULL) {
--		char *end;
--		pid_t pid = strtol(dirent->d_name, &end, 10);
--
--		if (*end) /* only interested in proper numerical dirents */
-+	for (i = 0; i < n; i++) {
-+		if (!isdigit(dirent[i]->d_name[0]))
- 			continue;
--		/*
-- 		 * We may race with exiting thread, so don't stop just because
-- 		 * one thread couldn't be synthesized.
-- 		 */
--		__event__synthesize_thread(comm_event, mmap_event, fork_event,
--					   namespaces_event, pid, 1, process,
--					   tool, machine, mmap_data,
--					   proc_map_timeout);
--	}
- 
-+		pid = (pid_t)strtol(dirent[i]->d_name, &end, 10);
-+		/* only interested in proper numerical dirents */
-+		if (!*end) {
-+			/*
-+			 * We may race with exiting thread, so don't stop just because
-+			 * one thread couldn't be synthesized.
-+			 */
-+			__event__synthesize_thread(comm_event, mmap_event, fork_event,
-+						   namespaces_event, pid, 1, process,
-+						   tool, machine, mmap_data,
-+						   proc_map_timeout);
-+		}
-+		free(dirent[i]);
-+	}
-+	free(dirent);
- 	err = 0;
--	closedir(proc);
+ 	argc = parse_options(argc, argv, config_options, config_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+@@ -231,15 +230,26 @@ int cmd_config(int argc, const char **argv)
+ 					goto out_err;
+ 				}
+ 			} else {
+-				if (set_config(set, config_filename, var, value) < 0) {
+-					pr_err("Failed to set '%s=%s' on %s\n",
+-					       var, value, config_filename);
++				if (perf_config_set__collect(set, config_filename,
++							     var, value) < 0) {
++					pr_err("Failed to add '%s=%s'\n",
++					       var, value);
+ 					free(arg);
+ 					goto out_err;
+ 				}
++				changed = true;
+ 			}
+ 			free(arg);
+ 		}
 +
- out_free_namespaces:
- 	free(namespaces_event);
- out_free_fork:
++		if (!changed)
++			break;
++
++		if (set_config(set, config_filename) < 0) {
++			pr_err("Failed to set the configs on %s\n",
++			       config_filename);
++			goto out_err;
++		}
+ 	}
+ 
+ 	ret = 0;
 -- 
 2.13.5
