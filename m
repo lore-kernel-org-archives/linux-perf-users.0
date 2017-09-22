@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 4/4] Replace printf with fprintf for all the output
  functions
-Date: Fri, 22 Sep 2017 11:03:33 +0200
-Message-ID: <20170922090333.GH15856@krava>
+Date: Fri, 22 Sep 2017 11:03:04 +0200
+Message-ID: <20170922090304.GD15856@krava>
 References: <1505714122-39141-1-git-send-email-yuzhoujian@didichuxing.com>
  <1505714122-39141-5-git-send-email-yuzhoujian@didichuxing.com>
 Mime-Version: 1.0
@@ -19,29 +19,28 @@ On Mon, Sep 18, 2017 at 01:55:22PM +0800, yuzhoujian wrote:
 
 SNIP
 
->  		     data->deepest_cstate, data->last_cstate,
->  		     data->wake_reason);
->  	fprint_sample_pt_spacing(len, fp);
-> @@ -1299,10 +1299,10 @@ static void fprint_sample_synth_cbr(struct perf_sample *sample, FILE *fp)
+>  static void process_event(struct perf_script *script,
+> @@ -1389,21 +1389,30 @@ static void process_event(struct perf_script *script,
+>  	struct perf_event_attr *attr = &evsel->attr;
+>  	unsigned int type = output_type(attr->type);
+>  
+> +	const char *evname;
+> +	char *file_name;
+>  	if (output[type].fields == 0)
 >  		return;
 >  
->  	freq = (le32_to_cpu(data->freq) + 500) / 1000;
-> -	len = printf(" cbr: %2u freq: %4u MHz ", data->cbr, freq);
-> +	len = fprintf(fp, " cbr: %2u freq: %4u MHz ", data->cbr, freq);
->  	if (data->max_nonturbo) {
->  		percent = (5 + (1000 * data->cbr) / data->max_nonturbo) / 10;
-> -		len += printf("(%3u%%) ", percent);
-> +		len += fprintf(fp, "(%3u%%) ", percent);
->  	}
->  	fprint_sample_pt_spacing(len, fp);
->  }
-> @@ -1377,7 +1377,7 @@ static size_t data_src__fprintf(u64 data_src, FILE *fp)
->  	if (maxlen < len)
->  		maxlen = len;
->  
-> -	return printf("%-*s", maxlen, out);
-> +	return fprintf(fp, "%-*s", maxlen, out);
+> +	evname = perf_evsel__name(evsel);
+> +	if (script->tool.per_event_dump == true) {
+> +		if (asprintf(&file_name, "%s%s", evname, ".stack") < 0)
 
-all these 'fp' adding changes should be in separate patch
+what's the 'stack' suffix for? It's text dump, should we use .txt?
+Also I think it should be more than 'cycles.stack', more like:
 
+  <ORIGINAL PERF DATA FILE NAME>-script-dump-cycles.txt
+
+or something like this
+
+Arnaldo, thoughts?
+
+thanks,
 jirka
