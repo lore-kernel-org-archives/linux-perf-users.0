@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/44] perf vendor events: Support metric_group and no event name in JSON parser
-Date: Fri, 22 Sep 2017 11:41:39 -0300
-Message-ID: <20170922144220.9411-4-acme@kernel.org>
+Subject: [PATCH 04/44] perf stat: Factor out generic metric printing
+Date: Fri, 22 Sep 2017 11:41:40 -0300
+Message-ID: <20170922144220.9411-5-acme@kernel.org>
 References: <20170922144220.9411-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170922144220.9411-1-acme@kernel.org>
@@ -12,138 +12,108 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Some enhancements to the JSON parser to prepare for metrics support
+The 'perf stat' shadow metric printing already supports generic metrics.
+Factor out the code doing that into a separate function that can be
+re-used in a later patch.
 
-- Parse the new MetricGroup field
-- Support JSON events with no event name, that have only MetricName.
+No behavior changes.
+
+v2: Fix indentation
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-3-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20170831194036.30146-4-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c    | 24 ++++++++++++++++++------
- tools/perf/pmu-events/jevents.h    |  2 +-
- tools/perf/pmu-events/pmu-events.h |  1 +
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ tools/perf/util/stat-shadow.c | 69 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 42 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index d51dc9ca8861..9eb7047bafe4 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -292,7 +292,7 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 				    char *desc, char *long_desc,
- 				    char *pmu, char *unit, char *perpkg,
- 				    char *metric_expr,
--				    char *metric_name)
-+				    char *metric_name, char *metric_group)
- {
- 	struct perf_entry_data *pd = data;
- 	FILE *outfp = pd->outfp;
-@@ -304,8 +304,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 	 */
- 	fprintf(outfp, "{\n");
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index a04cf56d3517..96aa6cbf24d6 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -627,6 +627,46 @@ static void print_smi_cost(int cpu, struct perf_evsel *evsel,
+ 	out->print_metric(out->ctx, NULL, "%4.0f", "SMI#", smi_num);
+ }
  
--	fprintf(outfp, "\t.name = \"%s\",\n", name);
--	fprintf(outfp, "\t.event = \"%s\",\n", event);
-+	if (name)
-+		fprintf(outfp, "\t.name = \"%s\",\n", name);
-+	if (event)
-+		fprintf(outfp, "\t.event = \"%s\",\n", event);
- 	fprintf(outfp, "\t.desc = \"%s\",\n", desc);
- 	fprintf(outfp, "\t.topic = \"%s\",\n", topic);
- 	if (long_desc && long_desc[0])
-@@ -320,6 +322,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", metric_expr);
- 	if (metric_name)
- 		fprintf(outfp, "\t.metric_name = \"%s\",\n", metric_name);
-+	if (metric_group)
-+		fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
- 	fprintf(outfp, "},\n");
- 
- 	return 0;
-@@ -357,6 +361,9 @@ static char *real_event(const char *name, char *event)
- {
- 	int i;
- 
-+	if (!name)
-+		return NULL;
++static void generic_metric(const char *metric_expr,
++			   struct perf_evsel **metric_events,
++			   char *name,
++			   const char *metric_name,
++			   double avg,
++			   int cpu,
++			   int ctx,
++			   struct perf_stat_output_ctx *out)
++{
++	print_metric_t print_metric = out->print_metric;
++	struct parse_ctx pctx;
++	double ratio;
++	int i;
++	void *ctxp = out->ctx;
 +
- 	for (i = 0; fixed[i].name; i++)
- 		if (!strcasecmp(name, fixed[i].name))
- 			return (char *)fixed[i].event;
-@@ -369,7 +376,7 @@ int json_events(const char *fn,
- 		      char *long_desc,
- 		      char *pmu, char *unit, char *perpkg,
- 		      char *metric_expr,
--		      char *metric_name),
-+		      char *metric_name, char *metric_group),
- 	  void *data)
- {
- 	int err = -EIO;
-@@ -397,6 +404,7 @@ int json_events(const char *fn,
- 		char *unit = NULL;
- 		char *metric_expr = NULL;
- 		char *metric_name = NULL;
-+		char *metric_group = NULL;
- 		unsigned long long eventcode = 0;
- 		struct msrmap *msr = NULL;
- 		jsmntok_t *msrval = NULL;
-@@ -476,6 +484,8 @@ int json_events(const char *fn,
- 				addfield(map, &perpkg, "", "", val);
- 			} else if (json_streq(map, field, "MetricName")) {
- 				addfield(map, &metric_name, "", "", val);
-+			} else if (json_streq(map, field, "MetricGroup")) {
-+				addfield(map, &metric_group, "", "", val);
- 			} else if (json_streq(map, field, "MetricExpr")) {
- 				addfield(map, &metric_expr, "", "", val);
- 				for (s = metric_expr; *s; s++)
-@@ -501,10 +511,11 @@ int json_events(const char *fn,
- 			addfield(map, &event, ",", filter, NULL);
- 		if (msr != NULL)
- 			addfield(map, &event, ",", msr->pname, msrval);
--		fixname(name);
-+		if (name)
-+			fixname(name);
- 
- 		err = func(data, name, real_event(name, event), desc, long_desc,
--				pmu, unit, perpkg, metric_expr, metric_name);
-+			   pmu, unit, perpkg, metric_expr, metric_name, metric_group);
- 		free(event);
- 		free(desc);
- 		free(name);
-@@ -516,6 +527,7 @@ int json_events(const char *fn,
- 		free(unit);
- 		free(metric_expr);
- 		free(metric_name);
-+		free(metric_group);
- 		if (err)
- 			break;
- 		tok += j;
-diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-index 611fac01913d..557994754410 100644
---- a/tools/perf/pmu-events/jevents.h
-+++ b/tools/perf/pmu-events/jevents.h
-@@ -6,7 +6,7 @@ int json_events(const char *fn,
- 				char *long_desc,
- 				char *pmu,
- 				char *unit, char *perpkg, char *metric_expr,
--				char *metric_name),
-+				char *metric_name, char *metric_group),
- 		void *data);
- char *get_cpu_str(void);
- 
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 569eab3688dd..94fa1720f6fd 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -15,6 +15,7 @@ struct pmu_event {
- 	const char *perpkg;
- 	const char *metric_expr;
- 	const char *metric_name;
-+	const char *metric_group;
- };
- 
- /*
++	expr__ctx_init(&pctx);
++	expr__add_id(&pctx, name, avg);
++	for (i = 0; metric_events[i]; i++) {
++		struct saved_value *v;
++
++		v = saved_value_lookup(metric_events[i], cpu, ctx, false);
++		if (!v)
++			break;
++		expr__add_id(&pctx, metric_events[i]->name, avg_stats(&v->stats));
++	}
++	if (!metric_events[i]) {
++		const char *p = metric_expr;
++
++		if (expr__parse(&ratio, &pctx, &p) == 0)
++			print_metric(ctxp, NULL, "%8.1f",
++				metric_name ?
++				metric_name :
++				out->force_header ?  name : "",
++				ratio);
++		else
++			print_metric(ctxp, NULL, NULL, "", 0);
++	} else
++		print_metric(ctxp, NULL, NULL, "", 0);
++}
++
+ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 				   double avg, int cpu,
+ 				   struct perf_stat_output_ctx *out)
+@@ -819,33 +859,8 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 		else
+ 			print_metric(ctxp, NULL, NULL, name, 0);
+ 	} else if (evsel->metric_expr) {
+-		struct parse_ctx pctx;
+-		int i;
+-
+-		expr__ctx_init(&pctx);
+-		expr__add_id(&pctx, evsel->name, avg);
+-		for (i = 0; evsel->metric_events[i]; i++) {
+-			struct saved_value *v;
+-
+-			v = saved_value_lookup(evsel->metric_events[i], cpu, ctx, false);
+-			if (!v)
+-				break;
+-			expr__add_id(&pctx, evsel->metric_events[i]->name,
+-					     avg_stats(&v->stats));
+-		}
+-		if (!evsel->metric_events[i]) {
+-			const char *p = evsel->metric_expr;
+-
+-			if (expr__parse(&ratio, &pctx, &p) == 0)
+-				print_metric(ctxp, NULL, "%8.1f",
+-					evsel->metric_name ?
+-					evsel->metric_name :
+-					out->force_header ?  evsel->name : "",
+-					ratio);
+-			else
+-				print_metric(ctxp, NULL, NULL, "", 0);
+-		} else
+-			print_metric(ctxp, NULL, NULL, "", 0);
++		generic_metric(evsel->metric_expr, evsel->metric_events, evsel->name,
++				evsel->metric_name, avg, cpu, ctx, out);
+ 	} else if (runtime_nsecs_stats[cpu].n != 0) {
+ 		char unit = 'M';
+ 		char unit_buf[10];
 -- 
 2.13.5
