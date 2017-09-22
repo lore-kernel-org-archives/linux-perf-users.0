@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 2/4] Makes all those related functions receive the FILE
  pointer
-Date: Fri, 22 Sep 2017 11:03:12 +0200
-Message-ID: <20170922090312.GE15856@krava>
+Date: Fri, 22 Sep 2017 11:03:19 +0200
+Message-ID: <20170922090319.GF15856@krava>
 References: <1505714122-39141-1-git-send-email-yuzhoujian@didichuxing.com>
  <1505714122-39141-3-git-send-email-yuzhoujian@didichuxing.com>
 Mime-Version: 1.0
@@ -16,32 +16,26 @@ Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
 List-Id: linux-perf-users.vger.kernel.org
 
 On Mon, Sep 18, 2017 at 01:55:20PM +0800, yuzhoujian wrote:
-
-SNIP
-
->  out_put:
->  	addr_location__put(&al);
-> @@ -1605,6 +1617,7 @@ static int process_comm_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  	int ret = -1;
-> +	FILE *fp;
+> Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+> ---
+>  tools/perf/builtin-script.c | 247 ++++++++++++++++++++++++--------------------
+>  1 file changed, 136 insertions(+), 111 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 91b5225..f709f6f 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -486,8 +486,8 @@ static int perf_session__check_output_opt(struct perf_session *session)
+>  	return 0;
+>  }
 >  
->  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
->  	if (thread == NULL) {
-> @@ -1621,8 +1634,9 @@ static int process_comm_event(struct perf_tool *tool,
->  		sample->tid = event->comm.tid;
->  		sample->pid = event->comm.pid;
->  	}
-> -	print_sample_start(sample, thread, evsel);
-> -	perf_event__fprintf(event, stdout);
-> +	fp = stdout;
-> +	fprint_sample_start(sample, thread, evsel, fp);
-> +	perf_event__fprintf(event, fp);
+> -static void print_sample_iregs(struct perf_sample *sample,
+> -			  struct perf_event_attr *attr)
+> +static void fprint_sample_iregs(struct perf_sample *sample,
+> +			  struct perf_event_attr *attr, FILE *fp)
 
-please make this simple 'adding fp argument to print functions'
-change and just pass stdout in here ... and do the rest of changes
-later on
+please make sure the perf gets compiled after every change,
+I think this will break compile because of unused *fp,
+use the __maybe_unused attribute
 
-thanks,
 jirka
