@@ -1,55 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH 2/4] Makes all those related functions receive the FILE
  pointer
-Date: Fri, 22 Sep 2017 11:14:42 -0300
-Message-ID: <20170922141442.GH29668@kernel.org>
+Date: Fri, 22 Sep 2017 11:15:54 -0300
+Message-ID: <20170922141554.GI29668@kernel.org>
 References: <1505714122-39141-1-git-send-email-yuzhoujian@didichuxing.com>
  <1505714122-39141-3-git-send-email-yuzhoujian@didichuxing.com>
- <20170922090312.GE15856@krava>
+ <20170922090319.GF15856@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752332AbdIVOO4 (ORCPT
+        id S1752069AbdIVOQK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Sep 2017 10:14:56 -0400
+        Fri, 22 Sep 2017 10:16:10 -0400
 Content-Disposition: inline
-In-Reply-To: <20170922090312.GE15856@krava>
+In-Reply-To: <20170922090319.GF15856@krava>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: yuzhoujian <ufo19890607@gmail.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Fri, Sep 22, 2017 at 11:03:12AM +0200, Jiri Olsa escreveu:
+Em Fri, Sep 22, 2017 at 11:03:19AM +0200, Jiri Olsa escreveu:
 > On Mon, Sep 18, 2017 at 01:55:20PM +0800, yuzhoujian wrote:
-> 
-> SNIP
-> 
-> >  out_put:
-> >  	addr_location__put(&al);
-> > @@ -1605,6 +1617,7 @@ static int process_comm_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  	int ret = -1;
-> > +	FILE *fp;
+> > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -486,8 +486,8 @@ static int perf_session__check_output_opt(struct perf_session *session)
+> >  	return 0;
+> >  }
 > >  
-> >  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
-> >  	if (thread == NULL) {
-> > @@ -1621,8 +1634,9 @@ static int process_comm_event(struct perf_tool *tool,
-> >  		sample->tid = event->comm.tid;
-> >  		sample->pid = event->comm.pid;
-> >  	}
-> > -	print_sample_start(sample, thread, evsel);
-> > -	perf_event__fprintf(event, stdout);
-> > +	fp = stdout;
-> > +	fprint_sample_start(sample, thread, evsel, fp);
-> > +	perf_event__fprintf(event, fp);
+> > -static void print_sample_iregs(struct perf_sample *sample,
+> > -			  struct perf_event_attr *attr)
+> > +static void fprint_sample_iregs(struct perf_sample *sample,
+> > +			  struct perf_event_attr *attr, FILE *fp)
 > 
-> please make this simple 'adding fp argument to print functions'
-> change and just pass stdout in here ... and do the rest of changes
-> later on
+> please make sure the perf gets compiled after every change,
+> I think this will break compile because of unused *fp,
+> use the __maybe_unused attribute
 
-That was what I asked him when I first reviewied this patchset.
+Yes, that will save me some time, as I _will_ do this. Doing it
+judiciously will make me want to review and process your patches faster
+in the future, BTW.
+
+To know why this is important, please read about 'git bisect'.
 
 - Arnaldo
