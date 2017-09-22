@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/44] perf pmu: Extract function to get JSON alias map
-Date: Fri, 22 Sep 2017 11:41:42 -0300
-Message-ID: <20170922144220.9411-7-acme@kernel.org>
+Subject: [PATCH 08/44] perf list: Add metric groups to perf list
+Date: Fri, 22 Sep 2017 11:41:44 -0300
+Message-ID: <20170922144220.9411-9-acme@kernel.org>
 References: <20170922144220.9411-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170922144220.9411-1-acme@kernel.org>
@@ -12,115 +12,319 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Extract the code to get the per cpu JSON alias into a separate function
-for reuse. No behavior changes.
+Add code to perf list to print metric groups, and metrics
+that don't have an event name. The metricgroup code collects
+the eventgroups and events into a rblist, and then prints
+them according to the configured filters.
+
+The metricgroups are printed by default, but can be
+limited by perf list metric or perf list metricgroup
+
+  % perf list metricgroup
+  ..
+  Metric Groups:
+
+  DSB:
+    DSB_Coverage
+          [Fraction of Uops delivered by the DSB (aka Decoded Icache; or Uop Cache)]
+  FLOPS:
+    GFLOPs
+          [Giga Floating Point Operations Per Second]
+  Frontend:
+    IFetch_Line_Utilization
+          [Rough Estimation of fraction of fetched lines bytes that were likely consumed by program instructions]
+  Frontend_Bandwidth:
+    DSB_Coverage
+          [Fraction of Uops delivered by the DSB (aka Decoded Icache; or Uop Cache)]
+  Memory_BW:
+    MLP
+          [Memory-Level-Parallelism (average number of L1 miss demand load when there is at least 1 such miss)]
+
+v2: Check return value of asprintf to fix warning on FC26
+Fix key in lookup/addition for the groups list
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-6-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20170831194036.30146-8-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 49 +++++++++++++++++++++++++++++++++----------------
- tools/perf/util/pmu.h |  2 ++
- 2 files changed, 35 insertions(+), 16 deletions(-)
+ tools/perf/Documentation/perf-list.txt |   7 +-
+ tools/perf/builtin-list.c              |   7 ++
+ tools/perf/util/metricgroup.c          | 176 +++++++++++++++++++++++++++++++++
+ tools/perf/util/parse-events.c         |   3 +
+ 4 files changed, 192 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ac16a9db1fb5..ed25d7f88731 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -516,16 +516,8 @@ char * __weak get_cpuid_str(void)
- 	return NULL;
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 75fc17f47298..24679aed90b7 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -8,7 +8,8 @@ perf-list - List all symbolic event types
+ SYNOPSIS
+ --------
+ [verse]
+-'perf list' [--no-desc] [--long-desc] [hw|sw|cache|tracepoint|pmu|sdt|event_glob]
++'perf list' [--no-desc] [--long-desc]
++            [hw|sw|cache|tracepoint|pmu|sdt|metric|metricgroup|event_glob]
+ 
+ DESCRIPTION
+ -----------
+@@ -248,6 +249,10 @@ To limit the list use:
+ 
+ . 'sdt' to list all Statically Defined Tracepoint events.
+ 
++. 'metric' to list metrics
++
++. 'metricgroup' to list metricgroups with metrics.
++
+ . If none of the above is matched, it will apply the supplied glob to all
+   events, printing the ones that match.
+ 
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 4bf2cb4d25aa..b2d2ad3dd478 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -15,6 +15,7 @@
+ #include "util/cache.h"
+ #include "util/pmu.h"
+ #include "util/debug.h"
++#include "util/metricgroup.h"
+ #include <subcmd/parse-options.h>
+ 
+ static bool desc_flag = true;
+@@ -79,6 +80,10 @@ int cmd_list(int argc, const char **argv)
+ 						long_desc_flag, details_flag);
+ 		else if (strcmp(argv[i], "sdt") == 0)
+ 			print_sdt_events(NULL, NULL, raw_dump);
++		else if (strcmp(argv[i], "metric") == 0)
++			metricgroup__print(true, false, NULL, raw_dump);
++		else if (strcmp(argv[i], "metricgroup") == 0)
++			metricgroup__print(false, true, NULL, raw_dump);
+ 		else if ((sep = strchr(argv[i], ':')) != NULL) {
+ 			int sep_idx;
+ 
+@@ -96,6 +101,7 @@ int cmd_list(int argc, const char **argv)
+ 			s[sep_idx] = '\0';
+ 			print_tracepoint_events(s, s + sep_idx + 1, raw_dump);
+ 			print_sdt_events(s, s + sep_idx + 1, raw_dump);
++			metricgroup__print(true, true, s, raw_dump);
+ 			free(s);
+ 		} else {
+ 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
+@@ -112,6 +118,7 @@ int cmd_list(int argc, const char **argv)
+ 						details_flag);
+ 			print_tracepoint_events(NULL, s, raw_dump);
+ 			print_sdt_events(NULL, s, raw_dump);
++			metricgroup__print(true, true, NULL, raw_dump);
+ 			free(s);
+ 		}
+ 	}
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 7516b1746594..2d60114f1870 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -189,6 +189,182 @@ static bool match_metric(const char *n, const char *list)
+ 	return false;
  }
  
--/*
-- * From the pmu_events_map, find the table of PMU events that corresponds
-- * to the current running CPU. Then, add all PMU events from that table
-- * as aliases.
-- */
--static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
-+static char *perf_pmu__getcpuid(void)
- {
--	int i;
--	struct pmu_events_map *map;
--	struct pmu_event *pe;
- 	char *cpuid;
- 	static bool printed;
- 
-@@ -535,22 +527,50 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 	if (!cpuid)
- 		cpuid = get_cpuid_str();
- 	if (!cpuid)
--		return;
++struct mep {
++	struct rb_node nd;
++	const char *name;
++	struct strlist *metrics;
++};
++
++static int mep_cmp(struct rb_node *rb_node, const void *entry)
++{
++	struct mep *a = container_of(rb_node, struct mep, nd);
++	struct mep *b = (struct mep *)entry;
++
++	return strcmp(a->name, b->name);
++}
++
++static struct rb_node *mep_new(struct rblist *rl __maybe_unused,
++					const void *entry)
++{
++	struct mep *me = malloc(sizeof(struct mep));
++
++	if (!me)
 +		return NULL;
- 
- 	if (!printed) {
- 		pr_debug("Using CPUID %s\n", cpuid);
- 		printed = true;
- 	}
-+	return cpuid;
++	memcpy(me, entry, sizeof(struct mep));
++	me->name = strdup(me->name);
++	if (!me->name)
++		goto out_me;
++	me->metrics = strlist__new(NULL, NULL);
++	if (!me->metrics)
++		goto out_name;
++	return &me->nd;
++out_name:
++	free((char *)me->name);
++out_me:
++	free(me);
++	return NULL;
 +}
 +
-+struct pmu_events_map *perf_pmu__find_map(void)
++static struct mep *mep_lookup(struct rblist *groups, const char *name)
 +{
-+	struct pmu_events_map *map;
-+	char *cpuid = perf_pmu__getcpuid();
-+	int i;
- 
- 	i = 0;
--	while (1) {
-+	for (;;) {
- 		map = &pmu_events_map[i++];
--		if (!map->table)
--			goto out;
-+		if (!map->table) {
-+			map = NULL;
-+			break;
-+		}
- 
- 		if (!strcmp(map->cpuid, cpuid))
- 			break;
- 	}
-+	free(cpuid);
-+	return map;
++	struct rb_node *nd;
++	struct mep me = {
++		.name = name
++	};
++	nd = rblist__find(groups, &me);
++	if (nd)
++		return container_of(nd, struct mep, nd);
++	rblist__add_node(groups, &me);
++	nd = rblist__find(groups, &me);
++	if (nd)
++		return container_of(nd, struct mep, nd);
++	return NULL;
 +}
 +
-+/*
-+ * From the pmu_events_map, find the table of PMU events that corresponds
-+ * to the current running CPU. Then, add all PMU events from that table
-+ * as aliases.
-+ */
-+static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
++static void mep_delete(struct rblist *rl __maybe_unused,
++		       struct rb_node *nd)
 +{
-+	int i;
-+	struct pmu_events_map *map;
++	struct mep *me = container_of(nd, struct mep, nd);
++
++	strlist__delete(me->metrics);
++	free((void *)me->name);
++	free(me);
++}
++
++static void metricgroup__print_strlist(struct strlist *metrics, bool raw)
++{
++	struct str_node *sn;
++	int n = 0;
++
++	strlist__for_each_entry (sn, metrics) {
++		if (raw)
++			printf("%s%s", n > 0 ? " " : "", sn->s);
++		else
++			printf("  %s\n", sn->s);
++		n++;
++	}
++	if (raw)
++		putchar('\n');
++}
++
++void metricgroup__print(bool metrics, bool metricgroups, char *filter,
++			bool raw)
++{
++	struct pmu_events_map *map = perf_pmu__find_map();
 +	struct pmu_event *pe;
++	int i;
++	struct rblist groups;
++	struct rb_node *node, *next;
++	struct strlist *metriclist = NULL;
 +
-+	map = perf_pmu__find_map();
 +	if (!map)
 +		return;
++
++	if (!metricgroups) {
++		metriclist = strlist__new(NULL, NULL);
++		if (!metriclist)
++			return;
++	}
++
++	rblist__init(&groups);
++	groups.node_new = mep_new;
++	groups.node_cmp = mep_cmp;
++	groups.node_delete = mep_delete;
++	for (i = 0; ; i++) {
++		const char *g;
++		pe = &map->table[i];
++
++		if (!pe->name && !pe->metric_group && !pe->metric_name)
++			break;
++		if (!pe->metric_expr)
++			continue;
++		g = pe->metric_group;
++		if (!g && pe->metric_name) {
++			if (pe->name)
++				continue;
++			g = "No_group";
++		}
++		if (g) {
++			char *omg;
++			char *mg = strdup(g);
++
++			if (!mg)
++				return;
++			omg = mg;
++			while ((g = strsep(&mg, ";")) != NULL) {
++				struct mep *me;
++				char *s;
++
++				if (*g == 0)
++					g = "No_group";
++				while (isspace(*g))
++					g++;
++				if (filter && !strstr(g, filter))
++					continue;
++				if (raw)
++					s = (char *)pe->metric_name;
++				else {
++					if (asprintf(&s, "%s\n\t[%s]",
++						     pe->metric_name, pe->desc) < 0)
++						return;
++				}
++
++				if (!s)
++					continue;
++
++				if (!metricgroups) {
++					strlist__add(metriclist, s);
++				} else {
++					me = mep_lookup(&groups, g);
++					if (!me)
++						continue;
++					strlist__add(me->metrics, s);
++				}
++			}
++			free(omg);
++		}
++	}
++
++	if (metricgroups && !raw)
++		printf("\nMetric Groups:\n\n");
++	else if (metrics && !raw)
++		printf("\nMetrics:\n\n");
++
++	for (node = rb_first(&groups.entries); node; node = next) {
++		struct mep *me = container_of(node, struct mep, nd);
++
++		if (metricgroups)
++			printf("%s%s%s", me->name, metrics ? ":" : "", raw ? " " : "\n");
++		if (metrics)
++			metricgroup__print_strlist(me->metrics, raw);
++		next = rb_next(node);
++		rblist__remove_node(&groups, node);
++	}
++	if (!metricgroups)
++		metricgroup__print_strlist(metriclist, raw);
++	strlist__delete(metriclist);
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
+ {
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 57d7acf890e0..75588920fccc 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -28,6 +28,7 @@
+ #include "probe-file.h"
+ #include "asm/bug.h"
+ #include "util/parse-branch-options.h"
++#include "metricgroup.h"
  
- 	/*
- 	 * Found a matching PMU events table. Create aliases
-@@ -575,9 +595,6 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 				(char *)pe->metric_expr,
- 				(char *)pe->metric_name);
- 	}
--
--out:
--	free(cpuid);
+ #define MAX_NAME_LEN 100
+ 
+@@ -2380,6 +2381,8 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	print_tracepoint_events(NULL, NULL, name_only);
+ 
+ 	print_sdt_events(NULL, NULL, name_only);
++
++	metricgroup__print(true, true, NULL, name_only);
  }
  
- struct perf_event_attr * __weak
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 389e9729331f..060f6abba8ed 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -90,4 +90,6 @@ int perf_pmu__test(void);
- 
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
- 
-+struct pmu_events_map *perf_pmu__find_map(void);
-+
- #endif /* __PMU_H */
+ int parse_events__is_hardcoded_term(struct parse_events_term *term)
 -- 
 2.13.5
