@@ -1,73 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/44] perf stat: Support duration_time for metrics
-Date: Fri, 22 Sep 2017 11:41:46 -0300
-Message-ID: <20170922144220.9411-11-acme@kernel.org>
+Subject: [PATCH 12/44] perf stat: Update walltime_nsecs_stats in interval mode
+Date: Fri, 22 Sep 2017 11:41:48 -0300
+Message-ID: <20170922144220.9411-13-acme@kernel.org>
 References: <20170922144220.9411-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752694AbdIVOnk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 22 Sep 2017 10:43:40 -0400
 In-Reply-To: <20170922144220.9411-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Some of the metrics formulas (like GFLOPs) need to know how long the
-measurement period is. Support an internal event called duration_time,
-which reports time in second. It maps to the dummy event, but is special
-cased for statistics to report the walltime duration.
+Some metrics (like GFLOPs) need walltime_nsecs_stats for each interval.
+Compute it for each interval instead of only at the end.
 
-So far it is not printed, but only used internally for metrics.
+Pointed out by Jiri.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-10-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20170831194036.30146-12-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.l |  1 +
- tools/perf/util/stat-shadow.c  | 17 +++++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ tools/perf/builtin-stat.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index fdb5bb52f01f..ea2426daf7e8 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -288,6 +288,7 @@ cpu-migrations|migrations			{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COU
- alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_ALIGNMENT_FAULTS); }
- emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
- dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
-+duration_time					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
- bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
- 
- 	/*
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 664f49a9b012..a2c12d1ef32a 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -641,11 +641,20 @@ static void generic_metric(const char *metric_expr,
- 	expr__add_id(&pctx, name, avg);
- 	for (i = 0; metric_events[i]; i++) {
- 		struct saved_value *v;
-+		struct stats *stats;
-+		double scale;
- 
--		v = saved_value_lookup(metric_events[i], cpu, false);
--		if (!v)
--			break;
--		expr__add_id(&pctx, metric_events[i]->name, avg_stats(&v->stats));
-+		if (!strcmp(metric_events[i]->name, "duration_time")) {
-+			stats = &walltime_nsecs_stats;
-+			scale = 1e-9;
-+		} else {
-+			v = saved_value_lookup(metric_events[i], cpu, false);
-+			if (!v)
-+				break;
-+			stats = &v->stats;
-+			scale = 1.0;
-+		}
-+		expr__add_id(&pctx, metric_events[i]->name, avg_stats(stats)*scale);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 855890e0b70b..88f1d5fbdb48 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -415,6 +415,8 @@ static void process_interval(void)
+ 			pr_err("failed to write stat round event\n");
  	}
- 	if (!metric_events[i]) {
- 		const char *p = metric_expr;
+ 
++	init_stats(&walltime_nsecs_stats);
++	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
+ 	print_counters(&rs, 0, NULL);
+ }
+ 
 -- 
 2.13.5
