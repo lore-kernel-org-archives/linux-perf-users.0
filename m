@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/44] perf stat: Support JSON metrics in perf stat
-Date: Fri, 22 Sep 2017 11:41:43 -0300
-Message-ID: <20170922144220.9411-8-acme@kernel.org>
+Subject: [PATCH 09/44] perf stat: Don't use ctx for saved values lookup
+Date: Fri, 22 Sep 2017 11:41:45 -0300
+Message-ID: <20170922144220.9411-10-acme@kernel.org>
 References: <20170922144220.9411-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170922144220.9411-1-acme@kernel.org>
@@ -12,606 +12,97 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add generic support for standalone metrics specified in JSON files to
-perf stat. A metric is a formula that uses multiple events to compute a
-higher level result (e.g. IPC).
-
-Previously metrics were always tied to an event and automatically
-enabled with that event. But now change it that we can have standalone
-metrics. They are in the same JSON data structure as events, but don't
-have an event name.
-
-We also allow to organize the metrics in metric groups, which allows a
-short cut to select several related metrics at once.
-
-Add a new -M / --metrics option to perf stat that adds the metrics or
-metric groups specified.
-
-Add the core code to manage and parse the metric groups. They are
-collected from the JSON data structures into a separate rblist.  When
-computing shadow values look for metrics in that list.  Then they are
-computed using the existing saved values infrastructure in stat-shadow.c
-
-The actual JSON metrics are in a separate pull request.
-
-  % perf stat -M Summary --metric-only -a sleep 1
-
-   Performance counter stats for 'system wide':
-
-  Instructions   CLKS          CPU_Utilization  GFLOPs   SMT_2T_Utilization   Kernel_Utilization
-  317614222.0    1392930775.0  0.0              0.0      0.2                  0.1
-
-       1.001497549 seconds time elapsed
-
-  % perf stat -M GFLOPs flops
-
-   Performance counter stats for 'flops':
-
-     3,999,541,471  fp_comp_ops_exe.sse_scalar_single #  1.2 GFLOPs   (66.65%)
-                14  fp_comp_ops_exe.sse_scalar_double                 (66.65%)
-                 0  fp_comp_ops_exe.sse_packed_double                 (66.67%)
-                 0  fp_comp_ops_exe.sse_packed_single                 (66.70%)
-                 0  simd_fp_256.packed_double                         (66.70%)
-                 0  simd_fp_256.packed_single                         (66.67%)
-                 0  duration_time
-
-       3.238372845 seconds time elapsed
-
-v2: Add missing header file
-v3: Move find_map to pmu.c
+We don't need to use ctx to look up events for saved values.  The
+context is already part of the evsel pointer, which is the primary key.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20170831194036.30146-7-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20170831194036.30146-9-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt |   7 +
- tools/perf/builtin-stat.c              |  18 +-
- tools/perf/util/Build                  |   1 +
- tools/perf/util/metricgroup.c          | 313 +++++++++++++++++++++++++++++++++
- tools/perf/util/metricgroup.h          |  31 ++++
- tools/perf/util/pmu.c                  |   5 +-
- tools/perf/util/stat-shadow.c          |  22 ++-
- tools/perf/util/stat.h                 |   4 +-
- 8 files changed, 395 insertions(+), 6 deletions(-)
- create mode 100644 tools/perf/util/metricgroup.c
- create mode 100644 tools/perf/util/metricgroup.h
+ tools/perf/util/stat-shadow.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index c37d61682dfb..823fce7674bb 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -199,6 +199,13 @@ Aggregate counts per processor socket for system-wide mode measurements.
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.
- 
-+-M::
-+--metrics::
-+Print metrics or metricgroups specified in a comma separated list.
-+For a group all metrics from the group are added.
-+The events from the metrics are automatically measured.
-+See perf list output for the possble metrics and metricgroups.
-+
- -A::
- --no-aggr::
- Do not aggregate counts across all monitored CPUs.
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7cc61eb0d83b..874bc6dd8d60 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -65,6 +65,7 @@
- #include "util/tool.h"
- #include "util/group.h"
- #include "util/string2.h"
-+#include "util/metricgroup.h"
- #include "asm/bug.h"
- 
- #include <linux/time64.h>
-@@ -133,6 +134,8 @@ static const char *smi_cost_attrs = {
- 
- static struct perf_evlist	*evsel_list;
- 
-+static struct rblist		 metric_events;
-+
- static struct target target = {
- 	.uid	= UINT_MAX,
- };
-@@ -1234,7 +1237,7 @@ static void printout(int id, int nr, struct perf_evsel *counter, double uval,
- 
- 	perf_stat__print_shadow_stats(counter, uval,
- 				first_shadow_cpu(counter, id),
--				&out);
-+				&out, &metric_events);
- 	if (!csv_output && !metric_only) {
- 		print_noise(counter, noise);
- 		print_running(run, ena);
-@@ -1565,7 +1568,8 @@ static void print_metric_headers(const char *prefix, bool no_indent)
- 		os.evsel = counter;
- 		perf_stat__print_shadow_stats(counter, 0,
- 					      0,
--					      &out);
-+					      &out,
-+					      &metric_events);
- 	}
- 	fputc('\n', stat_config.output);
- }
-@@ -1789,6 +1793,13 @@ static int enable_metric_only(const struct option *opt __maybe_unused,
- 	return 0;
- }
- 
-+static int parse_metric_groups(const struct option *opt,
-+			       const char *str,
-+			       int unset __maybe_unused)
-+{
-+	return metricgroup__parse_groups(opt, str, &metric_events);
-+}
-+
- static const struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
-@@ -1854,6 +1865,9 @@ static const struct option stat_options[] = {
- 			"measure topdown level 1 statistics"),
- 	OPT_BOOLEAN(0, "smi-cost", &smi_cost,
- 			"measure SMI cost"),
-+	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
-+		     "monitor specified metrics or metric groups (separated by ,)",
-+		     parse_metric_groups),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 94518c1bf8b6..71ab8466714d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -34,6 +34,7 @@ libperf-y += dso.o
- libperf-y += symbol.o
- libperf-y += symbol_fprintf.o
- libperf-y += color.o
-+libperf-y += metricgroup.o
- libperf-y += header.o
- libperf-y += callchain.o
- libperf-y += values.o
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-new file mode 100644
-index 000000000000..7516b1746594
---- /dev/null
-+++ b/tools/perf/util/metricgroup.c
-@@ -0,0 +1,313 @@
-+/*
-+ * Copyright (c) 2017, Intel Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+/* Manage metrics and groups of metrics from JSON files */
-+
-+#include "metricgroup.h"
-+#include "evlist.h"
-+#include "strbuf.h"
-+#include "pmu.h"
-+#include "expr.h"
-+#include "rblist.h"
-+#include "pmu.h"
-+#include <string.h>
-+#include <stdbool.h>
-+#include <errno.h>
-+#include "pmu-events/pmu-events.h"
-+#include "strbuf.h"
-+#include "strlist.h"
-+#include <assert.h>
-+#include <ctype.h>
-+
-+struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-+					 struct perf_evsel *evsel,
-+					 bool create)
-+{
-+	struct rb_node *nd;
-+	struct metric_event me = {
-+		.evsel = evsel
-+	};
-+	nd = rblist__find(metric_events, &me);
-+	if (nd)
-+		return container_of(nd, struct metric_event, nd);
-+	if (create) {
-+		rblist__add_node(metric_events, &me);
-+		nd = rblist__find(metric_events, &me);
-+		if (nd)
-+			return container_of(nd, struct metric_event, nd);
-+	}
-+	return NULL;
-+}
-+
-+static int metric_event_cmp(struct rb_node *rb_node, const void *entry)
-+{
-+	struct metric_event *a = container_of(rb_node,
-+					      struct metric_event,
-+					      nd);
-+	const struct metric_event *b = entry;
-+
-+	if (a->evsel == b->evsel)
-+		return 0;
-+	if ((char *)a->evsel < (char *)b->evsel)
-+		return -1;
-+	return +1;
-+}
-+
-+static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
-+					const void *entry)
-+{
-+	struct metric_event *me = malloc(sizeof(struct metric_event));
-+
-+	if (!me)
-+		return NULL;
-+	memcpy(me, entry, sizeof(struct metric_event));
-+	me->evsel = ((struct metric_event *)entry)->evsel;
-+	INIT_LIST_HEAD(&me->head);
-+	return &me->nd;
-+}
-+
-+static void metricgroup__rblist_init(struct rblist *metric_events)
-+{
-+	rblist__init(metric_events);
-+	metric_events->node_cmp = metric_event_cmp;
-+	metric_events->node_new = metric_event_new;
-+}
-+
-+struct egroup {
-+	struct list_head nd;
-+	int idnum;
-+	const char **ids;
-+	const char *metric_name;
-+	const char *metric_expr;
-+};
-+
-+static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
-+				     const char **ids,
-+				     int idnum,
-+				     struct perf_evsel **metric_events)
-+{
-+	struct perf_evsel *ev, *start = NULL;
-+	int ind = 0;
-+
-+	evlist__for_each_entry (perf_evlist, ev) {
-+		if (!strcmp(ev->name, ids[ind])) {
-+			metric_events[ind] = ev;
-+			if (ind == 0)
-+				start = ev;
-+			if (++ind == idnum) {
-+				metric_events[ind] = NULL;
-+				return start;
-+			}
-+		} else {
-+			ind = 0;
-+			start = NULL;
-+		}
-+	}
-+	/*
-+	 * This can happen when an alias expands to multiple
-+	 * events, like for uncore events.
-+	 * We don't support this case for now.
-+	 */
-+	return NULL;
-+}
-+
-+static int metricgroup__setup_events(struct list_head *groups,
-+				     struct perf_evlist *perf_evlist,
-+				     struct rblist *metric_events_list)
-+{
-+	struct metric_event *me;
-+	struct metric_expr *expr;
-+	int i = 0;
-+	int ret = 0;
-+	struct egroup *eg;
-+	struct perf_evsel *evsel;
-+
-+	list_for_each_entry (eg, groups, nd) {
-+		struct perf_evsel **metric_events;
-+
-+		metric_events = calloc(sizeof(void *), eg->idnum + 1);
-+		if (!metric_events) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
-+				   metric_events);
-+		if (!evsel) {
-+			pr_debug("Cannot resolve %s: %s\n",
-+					eg->metric_name, eg->metric_expr);
-+			continue;
-+		}
-+		for (i = 0; i < eg->idnum; i++)
-+			metric_events[i]->collect_stat = true;
-+		me = metricgroup__lookup(metric_events_list, evsel, true);
-+		if (!me) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		expr = malloc(sizeof(struct metric_expr));
-+		if (!expr) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		expr->metric_expr = eg->metric_expr;
-+		expr->metric_name = eg->metric_name;
-+		expr->metric_events = metric_events;
-+		list_add(&expr->nd, &me->head);
-+	}
-+	return ret;
-+}
-+
-+static bool match_metric(const char *n, const char *list)
-+{
-+	int len;
-+	char *m;
-+
-+	if (!list)
-+		return false;
-+	if (!strcmp(list, "all"))
-+		return true;
-+	if (!n)
-+		return !strcasecmp(list, "No_group");
-+	len = strlen(list);
-+	m = strcasestr(n, list);
-+	if (!m)
-+		return false;
-+	if ((m == n || m[-1] == ';' || m[-1] == ' ') &&
-+	    (m[len] == 0 || m[len] == ';'))
-+		return true;
-+	return false;
-+}
-+
-+static int metricgroup__add_metric(const char *metric, struct strbuf *events,
-+				   struct list_head *group_list)
-+{
-+	struct pmu_events_map *map = perf_pmu__find_map();
-+	struct pmu_event *pe;
-+	int ret = -EINVAL;
-+	int i, j;
-+
-+	strbuf_init(events, 100);
-+	strbuf_addf(events, "%s", "");
-+
-+	if (!map)
-+		return 0;
-+
-+	for (i = 0; ; i++) {
-+		pe = &map->table[i];
-+
-+		if (!pe->name && !pe->metric_group && !pe->metric_name)
-+			break;
-+		if (!pe->metric_expr)
-+			continue;
-+		if (match_metric(pe->metric_group, metric) ||
-+		    match_metric(pe->metric_name, metric)) {
-+			const char **ids;
-+			int idnum;
-+			struct egroup *eg;
-+
-+			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-+
-+			if (expr__find_other(pe->metric_expr,
-+					     NULL, &ids, &idnum) < 0)
-+				continue;
-+			if (events->len > 0)
-+				strbuf_addf(events, ",");
-+			for (j = 0; j < idnum; j++) {
-+				pr_debug("found event %s\n", ids[j]);
-+				strbuf_addf(events, "%s%s",
-+					j == 0 ? "{" : ",",
-+					ids[j]);
-+			}
-+			strbuf_addf(events, "}:W");
-+
-+			eg = malloc(sizeof(struct egroup));
-+			if (!eg) {
-+				ret = -ENOMEM;
-+				break;
-+			}
-+			eg->ids = ids;
-+			eg->idnum = idnum;
-+			eg->metric_name = pe->metric_name;
-+			eg->metric_expr = pe->metric_expr;
-+			list_add_tail(&eg->nd, group_list);
-+			ret = 0;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
-+				        struct list_head *group_list)
-+{
-+	char *llist, *nlist, *p;
-+	int ret = -EINVAL;
-+
-+	nlist = strdup(list);
-+	if (!nlist)
-+		return -ENOMEM;
-+	llist = nlist;
-+	while ((p = strsep(&llist, ",")) != NULL) {
-+		ret = metricgroup__add_metric(p, events, group_list);
-+		if (ret == -EINVAL) {
-+			fprintf(stderr, "Cannot find metric or group `%s'\n",
-+					p);
-+			break;
-+		}
-+	}
-+	free(nlist);
-+	return ret;
-+}
-+
-+static void metricgroup__free_egroups(struct list_head *group_list)
-+{
-+	struct egroup *eg, *egtmp;
-+	int i;
-+
-+	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
-+		for (i = 0; i < eg->idnum; i++)
-+			free((char *)eg->ids[i]);
-+		free(eg->ids);
-+		free(eg);
-+	}
-+}
-+
-+int metricgroup__parse_groups(const struct option *opt,
-+			   const char *str,
-+			   struct rblist *metric_events)
-+{
-+	struct parse_events_error parse_error;
-+	struct perf_evlist *perf_evlist = *(struct perf_evlist **)opt->value;
-+	struct strbuf extra_events;
-+	LIST_HEAD(group_list);
-+	int ret;
-+
-+	if (metric_events->nr_entries == 0)
-+		metricgroup__rblist_init(metric_events);
-+	ret = metricgroup__add_metric_list(str, &extra_events, &group_list);
-+	if (ret)
-+		return ret;
-+	pr_debug("adding %s\n", extra_events.buf);
-+	memset(&parse_error, 0, sizeof(struct parse_events_error));
-+	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
-+	if (ret) {
-+		pr_err("Cannot set up events %s\n", extra_events.buf);
-+		goto out;
-+	}
-+	strbuf_release(&extra_events);
-+	ret = metricgroup__setup_events(&group_list, perf_evlist,
-+					metric_events);
-+out:
-+	metricgroup__free_egroups(&group_list);
-+	return ret;
-+}
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-new file mode 100644
-index 000000000000..06854e125ee7
---- /dev/null
-+++ b/tools/perf/util/metricgroup.h
-@@ -0,0 +1,31 @@
-+#ifndef METRICGROUP_H
-+#define METRICGROUP_H 1
-+
-+#include "linux/list.h"
-+#include "rblist.h"
-+#include <subcmd/parse-options.h>
-+#include "evlist.h"
-+#include "strbuf.h"
-+
-+struct metric_event {
-+	struct rb_node nd;
-+	struct perf_evsel *evsel;
-+	struct list_head head; /* list of metric_expr */
-+};
-+
-+struct metric_expr {
-+	struct list_head nd;
-+	const char *metric_expr;
-+	const char *metric_name;
-+	struct perf_evsel **metric_events;
-+};
-+
-+struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-+					 struct perf_evsel *evsel,
-+					 bool create);
-+int metricgroup__parse_groups(const struct option *opt,
-+			const char *str,
-+			struct rblist *metric_events);
-+
-+void metricgroup__print(bool metrics, bool groups, char *filter, bool raw);
-+#endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ed25d7f88731..7070638ab600 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -580,8 +580,11 @@ static void pmu_add_cpu_aliases(struct list_head *head, const char *name)
- 		const char *pname;
- 
- 		pe = &map->table[i++];
--		if (!pe->name)
-+		if (!pe->name) {
-+			if (pe->metric_group || pe->metric_name)
-+				continue;
- 			break;
-+		}
- 
- 		pname = pe->pmu ? pe->pmu : "cpu";
- 		if (strncmp(pname, name, strlen(pname)))
 diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 8c7ab29169b9..42e6c17be7ff 100644
+index 42e6c17be7ff..664f49a9b012 100644
 --- a/tools/perf/util/stat-shadow.c
 +++ b/tools/perf/util/stat-shadow.c
-@@ -6,6 +6,7 @@
- #include "rblist.h"
- #include "evlist.h"
- #include "expr.h"
-+#include "metricgroup.h"
- 
- enum {
- 	CTX_BIT_USER	= 1 << 0,
-@@ -671,13 +672,16 @@ static void generic_metric(const char *metric_expr,
- 
- void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 				   double avg, int cpu,
--				   struct perf_stat_output_ctx *out)
-+				   struct perf_stat_output_ctx *out,
-+				   struct rblist *metric_events)
- {
- 	void *ctxp = out->ctx;
- 	print_metric_t print_metric = out->print_metric;
- 	double total, ratio = 0.0, total2;
- 	const char *color = NULL;
- 	int ctx = evsel_context(evsel);
-+	struct metric_event *me;
-+	int num = 1;
- 
- 	if (perf_evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS)) {
- 		total = avg_stats(&runtime_cycles_stats[ctx][cpu]);
-@@ -880,6 +884,20 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 	} else if (perf_stat_evsel__is(evsel, SMI_NUM)) {
- 		print_smi_cost(cpu, evsel, out);
- 	} else {
--		print_metric(ctxp, NULL, NULL, NULL, 0);
-+		num = 0;
- 	}
-+
-+	if ((me = metricgroup__lookup(metric_events, evsel, false)) != NULL) {
-+		struct metric_expr *mexp;
-+
-+		list_for_each_entry (mexp, &me->head, nd) {
-+			if (num++ > 0)
-+				out->new_line(ctxp);
-+			generic_metric(mexp->metric_expr, mexp->metric_events,
-+					evsel->name, mexp->metric_name,
-+					avg, cpu, ctx, out);
-+		}
-+	}
-+	if (num == 0)
-+		print_metric(ctxp, NULL, NULL, NULL, 0);
- }
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index eacaf958e19d..47915df346fb 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -91,9 +91,11 @@ struct perf_stat_output_ctx {
- 	bool force_header;
+@@ -56,7 +56,6 @@ struct saved_value {
+ 	struct rb_node rb_node;
+ 	struct perf_evsel *evsel;
+ 	int cpu;
+-	int ctx;
+ 	struct stats stats;
  };
  
-+struct rblist;
- void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- 				   double avg, int cpu,
--				   struct perf_stat_output_ctx *out);
-+				   struct perf_stat_output_ctx *out,
-+				   struct rblist *metric_events);
- void perf_stat__collect_metric_expr(struct perf_evlist *);
+@@ -67,8 +66,6 @@ static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
+ 					     rb_node);
+ 	const struct saved_value *b = entry;
  
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
+-	if (a->ctx != b->ctx)
+-		return a->ctx - b->ctx;
+ 	if (a->cpu != b->cpu)
+ 		return a->cpu - b->cpu;
+ 	if (a->evsel == b->evsel)
+@@ -90,13 +87,12 @@ static struct rb_node *saved_value_new(struct rblist *rblist __maybe_unused,
+ }
+ 
+ static struct saved_value *saved_value_lookup(struct perf_evsel *evsel,
+-					      int cpu, int ctx,
++					      int cpu,
+ 					      bool create)
+ {
+ 	struct rb_node *nd;
+ 	struct saved_value dm = {
+ 		.cpu = cpu,
+-		.ctx = ctx,
+ 		.evsel = evsel,
+ 	};
+ 	nd = rblist__find(&runtime_saved_values, &dm);
+@@ -232,8 +228,7 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 *count,
+ 		update_stats(&runtime_aperf_stats[ctx][cpu], count[0]);
+ 
+ 	if (counter->collect_stat) {
+-		struct saved_value *v = saved_value_lookup(counter, cpu, ctx,
+-							   true);
++		struct saved_value *v = saved_value_lookup(counter, cpu, true);
+ 		update_stats(&v->stats, count[0]);
+ 	}
+ }
+@@ -634,7 +629,6 @@ static void generic_metric(const char *metric_expr,
+ 			   const char *metric_name,
+ 			   double avg,
+ 			   int cpu,
+-			   int ctx,
+ 			   struct perf_stat_output_ctx *out)
+ {
+ 	print_metric_t print_metric = out->print_metric;
+@@ -648,7 +642,7 @@ static void generic_metric(const char *metric_expr,
+ 	for (i = 0; metric_events[i]; i++) {
+ 		struct saved_value *v;
+ 
+-		v = saved_value_lookup(metric_events[i], cpu, ctx, false);
++		v = saved_value_lookup(metric_events[i], cpu, false);
+ 		if (!v)
+ 			break;
+ 		expr__add_id(&pctx, metric_events[i]->name, avg_stats(&v->stats));
+@@ -866,7 +860,7 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 			print_metric(ctxp, NULL, NULL, name, 0);
+ 	} else if (evsel->metric_expr) {
+ 		generic_metric(evsel->metric_expr, evsel->metric_events, evsel->name,
+-				evsel->metric_name, avg, cpu, ctx, out);
++				evsel->metric_name, avg, cpu, out);
+ 	} else if (runtime_nsecs_stats[cpu].n != 0) {
+ 		char unit = 'M';
+ 		char unit_buf[10];
+@@ -895,7 +889,7 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
+ 				out->new_line(ctxp);
+ 			generic_metric(mexp->metric_expr, mexp->metric_events,
+ 					evsel->name, mexp->metric_name,
+-					avg, cpu, ctx, out);
++					avg, cpu, out);
+ 		}
+ 	}
+ 	if (num == 0)
 -- 
 2.13.5
