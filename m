@@ -1,98 +1,118 @@
-From: Alexander Pozdneev <pozdneyev@gmail.com>
-Subject: The issue with `perf report -s comm`
-Date: Thu, 21 Sep 2017 17:51:56 +0300
-Message-ID: <CAE3E0fDuYbhSj_EESFh2OKzBUQS=oGKWm3+H7XJARi=m7CLxqQ@mail.gmail.com>
+From: zhangmengting <zhangmengting@huawei.com>
+Subject: [PATCH] perf report: Fix debug messages with --call-graph option
+Date: Fri, 22 Sep 2017 10:06:53 +0800
+Message-ID: <1506046013-34848-1-git-send-email-zhangmengting@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f175.google.com ([209.85.223.175]:54799 "EHLO
-        mail-io0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751734AbdIUOwh (ORCPT
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6542 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751653AbdIVCTO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Sep 2017 10:52:37 -0400
-Received: by mail-io0-f175.google.com with SMTP id h66so11352779ioh.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Sep 2017 07:52:37 -0700 (PDT)
+        Thu, 21 Sep 2017 22:19:14 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, kjlx@templeofstupid.com, milian.wolff@kdab.com, wangnan0@huawei.com, huawei.libin@huawei.com, zhangmengting@huawei.com
 
-Hello,
+With --call-graph option, perf report can display call chains using
+type, min percent threshold, optional print limit and order. And the
+default call-graph parameter is 'graph,0.5,caller,function,percent'.
 
-I have the following issue with perf `report -s comm` that seems to be
-a bug. This is how the code looks like:
+Before this patch, 'perf report --call-graph' shows incorrect debug
+messages as below:
+[root@localhost perf]# ./perf report --call-graph
+Invalid callchain mode: 0.5
+Invalid callchain order: 0.5
+Invalid callchain sort key: 0.5
+Invalid callchain config key: 0.5
+Invalid callchain mode: caller
+Invalid callchain mode: function
+Invalid callchain order: function
+Invalid callchain mode: percent
+Invalid callchain order: percent
+Invalid callchain sort key: percent
 
-int main() {
-    double a, b, c;
-    a = do_things_main(WAIT_TIME * 2); // 40% of time, a.out
-    b = do_things1(WAIT_TIME);         // 20% of time, libdo1.so
-    c = do_things2(WAIT_TIME * 2);     // 20% of time, libdo2.so
-    return (int)(a + b + c);
-}
+The patch fixes this issue.
 
-This is how I run it:
+Signed-off-by: zhangmengting <zhangmengting@huawei.com>
+---
+ tools/perf/util/callchain.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-$ LD_LIBRARY_PATH="." perf record -g ./a.out
-[ perf record: Woken up 3 times to write data ]
-[ perf record: Captured and wrote 0.743 MB perf.data (11911 samples) ]
-
-This is the regular output of `perf report`:
-
-$ perf report | grep -v '#' | head -n 12
-    39.99%    39.99%  a.out    a.out              [.] main
-            |
-            ---main
-
-    39.94%    39.94%  a.out    libdo2.so          [.] do_things2
-            |
-            ---do_things2
-
-    20.05%    20.05%  a.out    libdo1.so          [.] do_things1
-            |
-            ---do_things1
-
-It looks exactly as expected. If I sort by `dso`, the output is also OK:
-
-$ perf report -s dso | grep -v '#'
-    39.99%    39.99%  a.out
-            |
-            ---main
-
-    39.94%    39.94%  libdo2.so
-            |
-            ---do_things2
-
-    20.05%    20.05%  libdo1.so
-            |
-            ---do_things1
-
-However, If I try to sort by `comm`, the output looks strange:
-
-$ perf report -s comm | grep -v '#'
-   100.00%   100.00%  a.out
-            |
-            |--59.99%--do_things1
-            |
-             --39.99%--main
-
-Specifically, `do_things2()` is missing in the report.
-
-Here is the full source code of this example:
-https://github.com/pozdneev/perf-report-s-comm-bug
-Originally, Louis Stuber (IBM Client Center Montpellier) discovered
-this behaviour when we have been playing with Flame Graphs
-(http://www.brendangregg.com/blog/2016-04-30/linux-perf-folded.html).
-
-This is the list of Linux/perf versions that I've tried:
-
-* Ubuntu 14.04.5 (3.19.0-80-generic), perf version 3.19.8-ckt22
-* RHEL 7.3 ppc64le (3.10.0-514.el7.ppc64le), perf version
-3.10.0-514.el7.ppc64le.debug
-* My colleague confirms that he observes the same behavior with kernel
-version 4.13.
-
-Could you please check if the issue remains in the current development
-version of Linux perf?
-
-Thanks!
-
-Alexander
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 510b513..be09d77 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -65,8 +65,6 @@ static int parse_callchain_mode(const char *value)
+ 		callchain_param.mode = CHAIN_FOLDED;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain mode: %s\n", value);
+ 	return -1;
+ }
+ 
+@@ -82,8 +80,6 @@ static int parse_callchain_order(const char *value)
+ 		callchain_param.order_set = true;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain order: %s\n", value);
+ 	return -1;
+ }
+ 
+@@ -105,8 +101,6 @@ static int parse_callchain_sort_key(const char *value)
+ 		callchain_param.branch_callstack = 1;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain sort key: %s\n", value);
+ 	return -1;
+ }
+ 
+@@ -124,8 +118,6 @@ static int parse_callchain_value(const char *value)
+ 		callchain_param.value = CCVAL_COUNT;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain config key: %s\n", value);
+ 	return -1;
+ }
+ 
+@@ -319,12 +311,27 @@ int perf_callchain_config(const char *var, const char *value)
+ 
+ 		return ret;
+ 	}
+-	if (!strcmp(var, "print-type"))
+-		return parse_callchain_mode(value);
+-	if (!strcmp(var, "order"))
+-		return parse_callchain_order(value);
+-	if (!strcmp(var, "sort-key"))
+-		return parse_callchain_sort_key(value);
++	if (!strcmp(var, "print-type")){
++		int ret;
++		ret = parse_callchain_mode(value);
++		if (ret == -1)
++			pr_err("Invalid callchain mode: %s\n", value);
++		return ret;
++	}
++	if (!strcmp(var, "order")){
++		int ret;
++		ret = parse_callchain_order(value);
++		if (ret == -1)
++			pr_err("Invalid callchain order: %s\n", value);
++		return ret;
++	}
++	if (!strcmp(var, "sort-key")){
++		int ret;
++		ret = parse_callchain_sort_key(value);
++		if (ret == -1)
++			pr_err("Invalid callchain sort key: %s\n", value);
++		return ret;
++	}
+ 	if (!strcmp(var, "threshold")) {
+ 		callchain_param.min_percent = strtod(value, &endptr);
+ 		if (value == endptr) {
+-- 
+1.7.12.4
