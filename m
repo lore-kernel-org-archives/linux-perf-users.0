@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 1/4] Add a new element for the struct perf_tool, and add
  the --per-event-dump option for perf script
-Date: Fri, 22 Sep 2017 11:02:38 +0200
-Message-ID: <20170922090238.GA15856@krava>
+Date: Fri, 22 Sep 2017 11:02:45 +0200
+Message-ID: <20170922090245.GB15856@krava>
 References: <1505714122-39141-1-git-send-email-yuzhoujian@didichuxing.com>
  <1505714122-39141-2-git-send-email-yuzhoujian@didichuxing.com>
 Mime-Version: 1.0
@@ -17,11 +17,6 @@ List-Id: linux-perf-users.vger.kernel.org
 
 On Mon, Sep 18, 2017 at 01:55:19PM +0800, yuzhoujian wrote:
 > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
-
-missing changelog
-
-jirka
-
 > ---
 >  tools/perf/builtin-script.c | 11 ++++++++++-
 >  tools/perf/util/tool.h      |  1 +
@@ -66,6 +61,11 @@ jirka
 > +			script.tool.per_event_dump = true;
 > +			break;
 > +		}
+
+why do you need this? OPT_BOOLEAN loads the per_event_dump
+
+jirka
+
 > +	}
 >  	if (argc > 1 && !strncmp(argv[0], "rec", strlen("rec"))) {
 >  		rec_script_path = get_script_path(argv[1], RECORD_SUFFIX);
