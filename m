@@ -1,139 +1,102 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/7] perf report: Fix debug messages with --call-graph option
-Date: Fri, 29 Sep 2017 13:00:14 -0300
-Message-ID: <20170929160017.29335-5-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/7] perf/urgent fixes
+Date: Fri, 29 Sep 2017 19:33:05 +0200
+Message-ID: <20170929173305.vyabhunztrfk7x7n@gmail.com>
 References: <20170929160017.29335-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:37680 "EHLO
+        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751830AbdI2RdK (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 29 Sep 2017 13:33:10 -0400
+Content-Disposition: inline
 In-Reply-To: <20170929160017.29335-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mengting Zhang <zhangmengting@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Krister Johansen <kjlx@templeofstupid.com>, Li Bin <huawei.libin@huawei.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Akemi Yagi <toracat@elrepo.org>, Alan Bartlett <ajb@elrepo.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Li Bin <huawei.libin@huawei.com>, Mengting Zhang <zhangmengting@huawei.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@hu>
 
-From: Mengting Zhang <zhangmengting@huawei.com>
 
-With --call-graph option, perf report can display call chains using
-type, min percent threshold, optional print limit and order. And the
-default call-graph parameter is 'graph,0.5,caller,function,percent'.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Before this patch, 'perf report --call-graph' shows incorrect debug
-messages as below:
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit b130a699c07155a1d6ef7d971a5f3bf0e3818d5a:
+> 
+>   Merge tag 'perf-urgent-for-mingo-4.14-20170912' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2017-09-13 09:25:10 +0200)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.14-20170928
+> 
+> for you to fetch changes up to 5357413f5c067f60933e4b8d79d483fbe62b2bb5:
+> 
+>   perf test: Fix vmlinux failure on s390x part 2 (2017-09-28 13:01:42 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - Fix syscalltbl build failure (Akemi Yagi)
+> 
+> - Fix attr.exclude_kernel setting for default cycles:p, this time for
+>   !root with kernel.perf_event_paranoid = -1 (Arnaldo Carvalho de Melo)
+> 
+> - Sync kernel ABI headers with tooling headers (Ingo Molnar)
+> 
+> - Remove misleading debug messages with --call-graph option (Mengting Zhang)
+> 
+> - Revert vmlinux symbol resolution patches for s390x (Thomas Richter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Akemi Yagi (1):
+>       perf tools: Fix syscalltbl build failure
+> 
+> Arnaldo Carvalho de Melo (2):
+>       perf tools: Get all of tools/{arch,include}/ in the MANIFEST
+>       perf evsel: Fix attr.exclude_kernel setting for default cycles:p
+> 
+> Ingo Molnar (1):
+>       tools include: Sync kernel ABI headers with tooling headers
+> 
+> Mengting Zhang (1):
+>       perf report: Fix debug messages with --call-graph option
+> 
+> Thomas Richter (2):
+>       perf test: Fix vmlinux failure on s390x
+>       perf test: Fix vmlinux failure on s390x part 2
+> 
+>  tools/arch/s390/include/uapi/asm/kvm.h         |  6 ++
+>  tools/arch/x86/include/asm/cpufeatures.h       |  2 +
+>  tools/arch/x86/include/asm/disabled-features.h |  4 +-
+>  tools/include/asm-generic/hugetlb_encode.h     | 34 ++++++++++
+>  tools/include/uapi/asm-generic/mman-common.h   | 14 +----
+>  tools/include/uapi/drm/drm.h                   | 22 +++++++
+>  tools/include/uapi/drm/i915_drm.h              | 51 ++++++++++++++-
+>  tools/include/uapi/linux/bpf.h                 | 32 ++++++----
+>  tools/include/uapi/linux/kvm.h                 |  3 +-
+>  tools/include/uapi/linux/mman.h                | 24 ++++++-
+>  tools/perf/MANIFEST                            | 87 +-------------------------
+>  tools/perf/arch/s390/util/Build                |  1 -
+>  tools/perf/arch/s390/util/sym-handling.c       | 29 ---------
+>  tools/perf/util/callchain.c                    | 35 ++++++-----
+>  tools/perf/util/evsel.c                        |  7 ++-
+>  tools/perf/util/symbol-elf.c                   |  8 +--
+>  tools/perf/util/symbol.h                       |  3 -
+>  tools/perf/util/syscalltbl.c                   |  2 +-
+>  18 files changed, 195 insertions(+), 169 deletions(-)
+>  create mode 100644 tools/include/asm-generic/hugetlb_encode.h
+>  delete mode 100644 tools/perf/arch/s390/util/sym-handling.c
 
-  # perf report --call-graph
-  Invalid callchain mode: 0.5
-  Invalid callchain order: 0.5
-  Invalid callchain sort key: 0.5
-  Invalid callchain config key: 0.5
-  Invalid callchain mode: caller
-  Invalid callchain mode: function
-  Invalid callchain order: function
-  Invalid callchain mode: percent
-  Invalid callchain order: percent
-  Invalid callchain sort key: percent
+Pulled, thanks a lot Arnaldo!
 
-That is because in function __parse_callchain_report_opt(),each field of
-the call-graph parameter is passed to parse_callchain_{mode,order,
-sort_key,value} in turn until it meets the matching value.
-
-For example, the order field "caller" is passed to
-parse_callchain_mode() firstly and obviously it doesn't match any mode
-field. Therefore parse_callchain_mode() will shows the debug message
-"Invalid callchain mode: caller", which could confuse users.
-
-The patch fixes this issue by moving the warning out of the function
-parse_callchain_{mode,order,sort_key,value}.
-
-Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
-Cc: Li Bin <huawei.libin@huawei.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Link: http://lkml.kernel.org/r/1506154694-39691-1-git-send-email-zhangmengting@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/callchain.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 510b513e0f01..be09d77cade0 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -65,8 +65,6 @@ static int parse_callchain_mode(const char *value)
- 		callchain_param.mode = CHAIN_FOLDED;
- 		return 0;
- 	}
--
--	pr_err("Invalid callchain mode: %s\n", value);
- 	return -1;
- }
- 
-@@ -82,8 +80,6 @@ static int parse_callchain_order(const char *value)
- 		callchain_param.order_set = true;
- 		return 0;
- 	}
--
--	pr_err("Invalid callchain order: %s\n", value);
- 	return -1;
- }
- 
-@@ -105,8 +101,6 @@ static int parse_callchain_sort_key(const char *value)
- 		callchain_param.branch_callstack = 1;
- 		return 0;
- 	}
--
--	pr_err("Invalid callchain sort key: %s\n", value);
- 	return -1;
- }
- 
-@@ -124,8 +118,6 @@ static int parse_callchain_value(const char *value)
- 		callchain_param.value = CCVAL_COUNT;
- 		return 0;
- 	}
--
--	pr_err("Invalid callchain config key: %s\n", value);
- 	return -1;
- }
- 
-@@ -319,12 +311,27 @@ int perf_callchain_config(const char *var, const char *value)
- 
- 		return ret;
- 	}
--	if (!strcmp(var, "print-type"))
--		return parse_callchain_mode(value);
--	if (!strcmp(var, "order"))
--		return parse_callchain_order(value);
--	if (!strcmp(var, "sort-key"))
--		return parse_callchain_sort_key(value);
-+	if (!strcmp(var, "print-type")){
-+		int ret;
-+		ret = parse_callchain_mode(value);
-+		if (ret == -1)
-+			pr_err("Invalid callchain mode: %s\n", value);
-+		return ret;
-+	}
-+	if (!strcmp(var, "order")){
-+		int ret;
-+		ret = parse_callchain_order(value);
-+		if (ret == -1)
-+			pr_err("Invalid callchain order: %s\n", value);
-+		return ret;
-+	}
-+	if (!strcmp(var, "sort-key")){
-+		int ret;
-+		ret = parse_callchain_sort_key(value);
-+		if (ret == -1)
-+			pr_err("Invalid callchain sort key: %s\n", value);
-+		return ret;
-+	}
- 	if (!strcmp(var, "threshold")) {
- 		callchain_param.min_percent = strtod(value, &endptr);
- 		if (value == endptr) {
--- 
-2.13.5
+	Ingo
