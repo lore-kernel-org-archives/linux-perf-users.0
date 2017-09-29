@@ -1,79 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 7/7] perf test: Fix vmlinux failure on s390x part 2
-Date: Fri, 29 Sep 2017 13:00:17 -0300
-Message-ID: <20170929160017.29335-8-acme@kernel.org>
+Subject: [PATCH 5/7] perf tools: Fix syscalltbl build failure
+Date: Fri, 29 Sep 2017 13:00:15 -0300
+Message-ID: <20170929160017.29335-6-acme@kernel.org>
 References: <20170929160017.29335-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752535AbdI2QCA (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Sep 2017 12:02:00 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170929160017.29335-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Zvonko Kosic <zvonko.kosic@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Akemi Yagi <amyagi@gmail.com>, Akemi Yagi <toracat@elrepo.org>, Alan Bartlett <ajb@elrepo.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Akemi Yagi <amyagi@gmail.com>
 
-On s390x perf test 1 failed. It turned out that commit cf6383f73cf2
-("perf report: Fix kernel symbol adjustment for s390x") was incorrect.
+The build of kernel v4.14-rc1 for i686 fails on RHEL 6 with the error
+in tools/perf:
 
-The previous implementation in dso__load_sym() is also suitable for
-s390x.
+  util/syscalltbl.c:157: error: expected ';', ',' or ')' before '__maybe_unused'
+  mv: cannot stat `util/.syscalltbl.o.tmp': No such file or directory
 
-Therefore this patch undoes commit cf6383f73cf2
+Fix it by placing/moving:
 
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Zvonko Kosic <zvonko.kosic@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Fixes: cf6383f73cf2 ("perf report: Fix kernel symbol adjustment for s390x")
-LPU-Reference: 20170915071404.58398-2-tmricht@linux.vnet.ibm.com
-Link: http://lkml.kernel.org/n/tip-v101o8k25vuja2ogosgf15yy@git.kernel.org
+  #include <linux/compiler.h>
+
+  outside of #ifdef HAVE_SYSCALL_TABLE block.
+
+Signed-off-by: Akemi Yagi <toracat@elrepo.org>
+Cc: Alan Bartlett <ajb@elrepo.org>
+Link: http://lkml.kernel.org/r/oq41r8$1v9$1@blaine.gmane.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/Build          |  1 -
- tools/perf/arch/s390/util/sym-handling.c | 21 ---------------------
- 2 files changed, 22 deletions(-)
- delete mode 100644 tools/perf/arch/s390/util/sym-handling.c
+ tools/perf/util/syscalltbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
-index bd518b623d7a..5bd7b9260cc0 100644
---- a/tools/perf/arch/s390/util/Build
-+++ b/tools/perf/arch/s390/util/Build
-@@ -1,5 +1,4 @@
- libperf-y += header.o
--libperf-y += sym-handling.o
- libperf-y += kvm-stat.o
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index 19e5db90394c..6eea7cff3d4e 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -15,9 +15,9 @@
  
- libperf-$(CONFIG_DWARF) += dwarf-regs.o
-diff --git a/tools/perf/arch/s390/util/sym-handling.c b/tools/perf/arch/s390/util/sym-handling.c
-deleted file mode 100644
-index 581d4c5a896b..000000000000
---- a/tools/perf/arch/s390/util/sym-handling.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/*
-- * Architecture specific ELF symbol handling and relocation mapping.
-- *
-- * Copyright 2017 IBM Corp.
-- * Author(s): Thomas Richter <tmricht@linux.vnet.ibm.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License (version 2 only)
-- * as published by the Free Software Foundation.
-- */
--
--#include "symbol.h"
--
--#ifdef HAVE_LIBELF_SUPPORT
--bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
--{
--	if (ehdr.e_type == ET_EXEC)
--		return false;
--	return ehdr.e_type == ET_REL || ehdr.e_type == ET_DYN;
--}
--#endif
+ #include "syscalltbl.h"
+ #include <stdlib.h>
++#include <linux/compiler.h>
+ 
+ #ifdef HAVE_SYSCALL_TABLE
+-#include <linux/compiler.h>
+ #include <string.h>
+ #include "string2.h"
+ #include "util.h"
 -- 
 2.13.5
