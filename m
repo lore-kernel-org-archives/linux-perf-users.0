@@ -1,93 +1,139 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/7] perf test: Fix vmlinux failure on s390x
-Date: Fri, 29 Sep 2017 13:00:16 -0300
-Message-ID: <20170929160017.29335-7-acme@kernel.org>
+Subject: [PATCH 4/7] perf report: Fix debug messages with --call-graph option
+Date: Fri, 29 Sep 2017 13:00:14 -0300
+Message-ID: <20170929160017.29335-5-acme@kernel.org>
 References: <20170929160017.29335-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170929160017.29335-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Zvonko Kosic <zvonko.kosic@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mengting Zhang <zhangmengting@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Krister Johansen <kjlx@templeofstupid.com>, Li Bin <huawei.libin@huawei.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Yao Jin <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Mengting Zhang <zhangmengting@huawei.com>
 
-On s390x perf test 1 failed. It turned out that commit 4a084ecfc821
-("perf report: Fix module symbol adjustment for s390x") was incorrect.
-The previous implementation in dso__load_sym() is also suitable for
-s390x.
+With --call-graph option, perf report can display call chains using
+type, min percent threshold, optional print limit and order. And the
+default call-graph parameter is 'graph,0.5,caller,function,percent'.
 
-Therefore this patch undoes commit 4a084ecfc821.
+Before this patch, 'perf report --call-graph' shows incorrect debug
+messages as below:
 
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Zvonko Kosic <zvonko.kosic@de.ibm.com>
-Fixes: 4a084ecfc821 ("perf report: Fix module symbol adjustment for s390x")
-LPU-Reference: 20170915071404.58398-1-tmricht@linux.vnet.ibm.com
-Link: http://lkml.kernel.org/n/tip-5ani7ly57zji7s0hmzkx416l@git.kernel.org
+  # perf report --call-graph
+  Invalid callchain mode: 0.5
+  Invalid callchain order: 0.5
+  Invalid callchain sort key: 0.5
+  Invalid callchain config key: 0.5
+  Invalid callchain mode: caller
+  Invalid callchain mode: function
+  Invalid callchain order: function
+  Invalid callchain mode: percent
+  Invalid callchain order: percent
+  Invalid callchain sort key: percent
+
+That is because in function __parse_callchain_report_opt(),each field of
+the call-graph parameter is passed to parse_callchain_{mode,order,
+sort_key,value} in turn until it meets the matching value.
+
+For example, the order field "caller" is passed to
+parse_callchain_mode() firstly and obviously it doesn't match any mode
+field. Therefore parse_callchain_mode() will shows the debug message
+"Invalid callchain mode: caller", which could confuse users.
+
+The patch fixes this issue by moving the warning out of the function
+parse_callchain_{mode,order,sort_key,value}.
+
+Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
+Cc: Li Bin <huawei.libin@huawei.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Yao Jin <yao.jin@linux.intel.com>
+Link: http://lkml.kernel.org/r/1506154694-39691-1-git-send-email-zhangmengting@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/sym-handling.c | 8 --------
- tools/perf/util/symbol-elf.c             | 8 +-------
- tools/perf/util/symbol.h                 | 3 ---
- 3 files changed, 1 insertion(+), 18 deletions(-)
+ tools/perf/util/callchain.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/sym-handling.c b/tools/perf/arch/s390/util/sym-handling.c
-index e103f6e46afe..581d4c5a896b 100644
---- a/tools/perf/arch/s390/util/sym-handling.c
-+++ b/tools/perf/arch/s390/util/sym-handling.c
-@@ -18,12 +18,4 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
- 		return false;
- 	return ehdr.e_type == ET_REL || ehdr.e_type == ET_DYN;
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 510b513e0f01..be09d77cade0 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -65,8 +65,6 @@ static int parse_callchain_mode(const char *value)
+ 		callchain_param.mode = CHAIN_FOLDED;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain mode: %s\n", value);
+ 	return -1;
  }
+ 
+@@ -82,8 +80,6 @@ static int parse_callchain_order(const char *value)
+ 		callchain_param.order_set = true;
+ 		return 0;
+ 	}
 -
--void arch__adjust_sym_map_offset(GElf_Sym *sym,
--				 GElf_Shdr *shdr __maybe_unused,
--				 struct map *map)
--{
--	if (map->type == MAP__FUNCTION)
--		sym->st_value += map->start;
--}
- #endif
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 5c39f420111e..9cf781f0d8a2 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -810,12 +810,6 @@ static u64 ref_reloc(struct kmap *kmap)
- void __weak arch__sym_update(struct symbol *s __maybe_unused,
- 		GElf_Sym *sym __maybe_unused) { }
+-	pr_err("Invalid callchain order: %s\n", value);
+ 	return -1;
+ }
  
--void __weak arch__adjust_sym_map_offset(GElf_Sym *sym, GElf_Shdr *shdr,
--				       struct map *map __maybe_unused)
--{
--	sym->st_value -= shdr->sh_addr - shdr->sh_offset;
--}
+@@ -105,8 +101,6 @@ static int parse_callchain_sort_key(const char *value)
+ 		callchain_param.branch_callstack = 1;
+ 		return 0;
+ 	}
 -
- int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		  struct symsrc *runtime_ss, int kmodule)
- {
-@@ -996,7 +990,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+-	pr_err("Invalid callchain sort key: %s\n", value);
+ 	return -1;
+ }
  
- 			/* Adjust symbol to map to file offset */
- 			if (adjust_kernel_syms)
--				arch__adjust_sym_map_offset(&sym, &shdr, map);
-+				sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+@@ -124,8 +118,6 @@ static int parse_callchain_value(const char *value)
+ 		callchain_param.value = CCVAL_COUNT;
+ 		return 0;
+ 	}
+-
+-	pr_err("Invalid callchain config key: %s\n", value);
+ 	return -1;
+ }
  
- 			if (strcmp(section_name,
- 				   (curr_dso->short_name +
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 2bd6a1f01a1c..aad99e7e179b 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -344,9 +344,6 @@ int setup_intlist(struct intlist **list, const char *list_str,
- #ifdef HAVE_LIBELF_SUPPORT
- bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
- void arch__sym_update(struct symbol *s, GElf_Sym *sym);
--void arch__adjust_sym_map_offset(GElf_Sym *sym,
--				 GElf_Shdr *shdr __maybe_unused,
--				 struct map *map __maybe_unused);
- #endif
+@@ -319,12 +311,27 @@ int perf_callchain_config(const char *var, const char *value)
  
- #define SYMBOL_A 0
+ 		return ret;
+ 	}
+-	if (!strcmp(var, "print-type"))
+-		return parse_callchain_mode(value);
+-	if (!strcmp(var, "order"))
+-		return parse_callchain_order(value);
+-	if (!strcmp(var, "sort-key"))
+-		return parse_callchain_sort_key(value);
++	if (!strcmp(var, "print-type")){
++		int ret;
++		ret = parse_callchain_mode(value);
++		if (ret == -1)
++			pr_err("Invalid callchain mode: %s\n", value);
++		return ret;
++	}
++	if (!strcmp(var, "order")){
++		int ret;
++		ret = parse_callchain_order(value);
++		if (ret == -1)
++			pr_err("Invalid callchain order: %s\n", value);
++		return ret;
++	}
++	if (!strcmp(var, "sort-key")){
++		int ret;
++		ret = parse_callchain_sort_key(value);
++		if (ret == -1)
++			pr_err("Invalid callchain sort key: %s\n", value);
++		return ret;
++	}
+ 	if (!strcmp(var, "threshold")) {
+ 		callchain_param.min_percent = strtod(value, &endptr);
+ 		if (value == endptr) {
 -- 
 2.13.5
