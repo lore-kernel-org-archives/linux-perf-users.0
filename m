@@ -1,298 +1,138 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [GIT PULL 0/7] perf/urgent fixes
-Date: Fri, 29 Sep 2017 13:00:10 -0300
-Message-ID: <20170929160017.29335-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:45380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751836AbdI2QBn (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Sep 2017 12:01:43 -0400
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH 1/7] perf tools: Get all of tools/{arch,include}/ in the MANIFEST
+Date: Fri, 29 Sep 2017 13:00:11 -0300
+Message-ID: <20170929160017.29335-2-acme@kernel.org>
+References: <20170929160017.29335-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170929160017.29335-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Akemi Yagi <toracat@elrepo.org>, Alan Bartlett <ajb@elrepo.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Li Bin <huawei.libin@huawei.com>, Mengting Zhang <zhangmengting@huawei.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Thomas-Mich Richter <tmrich>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Ingo,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	Please consider pulling,
+Now that I'm switching the container builds from using a local volume
+pointing to the kernel repository with the perf sources, instead getting
+a detached tarball to be able to use a container cluster, some places
+broke because I forgot to put some of the required files in
+tools/perf/MANIFEST, namely some bitsperlong.h files.
 
-- Arnaldo
+So, to fix it do the same as for tools/build/ and pack the whole
+tools/arch/ directory.
 
-Test results at the end of this message, as usual.
-
-The following changes since commit b130a699c07155a1d6ef7d971a5f3bf0e3818d5a:
-
-  Merge tag 'perf-urgent-for-mingo-4.14-20170912' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2017-09-13 09:25:10 +0200)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.14-20170928
-
-for you to fetch changes up to 5357413f5c067f60933e4b8d79d483fbe62b2bb5:
-
-  perf test: Fix vmlinux failure on s390x part 2 (2017-09-28 13:01:42 -0300)
-
-----------------------------------------------------------------
-perf/urgent fixes:
-
-- Fix syscalltbl build failure (Akemi Yagi)
-
-- Fix attr.exclude_kernel setting for default cycles:p, this time for
-  !root with kernel.perf_event_paranoid = -1 (Arnaldo Carvalho de Melo)
-
-- Sync kernel ABI headers with tooling headers (Ingo Molnar)
-
-- Remove misleading debug messages with --call-graph option (Mengting Zhang)
-
-- Revert vmlinux symbol resolution patches for s390x (Thomas Richter)
-
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-wmenpjfjsobwdnfde30qqncj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/MANIFEST | 87 ++---------------------------------------------------
+ 1 file changed, 2 insertions(+), 85 deletions(-)
 
-----------------------------------------------------------------
-Akemi Yagi (1):
-      perf tools: Fix syscalltbl build failure
-
-Arnaldo Carvalho de Melo (2):
-      perf tools: Get all of tools/{arch,include}/ in the MANIFEST
-      perf evsel: Fix attr.exclude_kernel setting for default cycles:p
-
-Ingo Molnar (1):
-      tools include: Sync kernel ABI headers with tooling headers
-
-Mengting Zhang (1):
-      perf report: Fix debug messages with --call-graph option
-
-Thomas Richter (2):
-      perf test: Fix vmlinux failure on s390x
-      perf test: Fix vmlinux failure on s390x part 2
-
- tools/arch/s390/include/uapi/asm/kvm.h         |  6 ++
- tools/arch/x86/include/asm/cpufeatures.h       |  2 +
- tools/arch/x86/include/asm/disabled-features.h |  4 +-
- tools/include/asm-generic/hugetlb_encode.h     | 34 ++++++++++
- tools/include/uapi/asm-generic/mman-common.h   | 14 +----
- tools/include/uapi/drm/drm.h                   | 22 +++++++
- tools/include/uapi/drm/i915_drm.h              | 51 ++++++++++++++-
- tools/include/uapi/linux/bpf.h                 | 32 ++++++----
- tools/include/uapi/linux/kvm.h                 |  3 +-
- tools/include/uapi/linux/mman.h                | 24 ++++++-
- tools/perf/MANIFEST                            | 87 +-------------------------
- tools/perf/arch/s390/util/Build                |  1 -
- tools/perf/arch/s390/util/sym-handling.c       | 29 ---------
- tools/perf/util/callchain.c                    | 35 ++++++-----
- tools/perf/util/evsel.c                        |  7 ++-
- tools/perf/util/symbol-elf.c                   |  8 +--
- tools/perf/util/symbol.h                       |  3 -
- tools/perf/util/syscalltbl.c                   |  2 +-
- 18 files changed, 195 insertions(+), 169 deletions(-)
- create mode 100644 tools/include/asm-generic/hugetlb_encode.h
- delete mode 100644 tools/perf/arch/s390/util/sym-handling.c
-
-Test results:
-
-The first ones are container (docker) based builds of tools/perf with and
-without libelf support.  Where clang is available, it is also used to build
-perf with/without libelf.
-
-The objtool and samples/bpf/ builds are disabled now that I'm switching from
-using the sources in a local volume to fetching them from a http server to
-build it inside the container, to make it easier to build in a container cluster.
-Those will come back later.
-
-Several are cross builds, the ones with -x-ARCH and the android one, and those
-may not have all the features built, due to lack of multi-arch devel packages,
-available and being used so far on just a few, like
-debian:experimental-x-{arm64,mipsel}.
-
-The 'perf test' one will perform a variety of tests exercising
-tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
-with a variety of command line event specifications to then intercept the
-sys_perf_event syscall to check that the perf_event_attr fields are set up as
-expected, among a variety of other unit tests.
-
-Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
-with a variety of feature sets, exercising the build with an incomplete set of
-features as well as with a complete one. It is planned to have it run on each
-of the containers mentioned above, using some container orchestration
-infrastructure. Get in contact if interested in helping having this in place.
-
-  # dm
-   1 alpine:3.4: Ok
-   2 alpine:3.5: Ok
-   3 alpine:3.6: Ok
-   4 alpine:edge: Ok
-   5 android-ndk:r12b-arm: Ok
-   6 android-ndk:r15c-arm: Ok
-   7 centos:5: Ok
-   8 centos:6: Ok
-   9 centos:7: Ok
-  10 debian:7: Ok
-  11 debian:8: Ok
-  12 debian:9: Ok
-  13 debian:experimental: Ok
-  14 debian:experimental-x-arm64: Ok
-  15 debian:experimental-x-mips: Ok
-  16 debian:experimental-x-mips64: Ok
-  17 debian:experimental-x-mipsel: Ok
-  18 fedora:20: Ok
-  19 fedora:21: Ok
-  20 fedora:22: Ok
-  21 fedora:23: Ok
-  22 fedora:24: Ok
-  23 fedora:24-x-ARC-uClibc: FAIL
-
-This is being investigated:
-
-util/db-export.c: In function 'db_export__sample':
-util/db-export.c:429:1: internal compiler error: in change_address_1, at emit-rtl.c:2150
- }
- ^
-Please submit a full bug report,
-with preprocessed source if appropriate.
-See <https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/issues> for instructions.
-
-https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc1/arc_gnu_2017.09-rc1_prebuilt_uclibc_be_arc700_linux_install.tar.gz
-
-  24 fedora:25: Ok
-  25 fedora:26: Ok
-  26 fedora:rawhide: Ok
-  27 mageia:5: Ok
-  28 opensuse:42.1: Ok
-  29 opensuse:42.2: Ok
-  30 opensuse:42.3: Ok
-  31 opensuse:tumbleweed: Ok
-  32 oraclelinux:6: Ok
-  33 oraclelinux:7: Ok
-  34 ubuntu:12.04.5: Ok
-  35 ubuntu:14.04.4: Ok
-  36 ubuntu:14.04.4-x-linaro-arm64: Ok
-  37 ubuntu:15.10: Ok
-  38 ubuntu:16.04: Ok
-  39 ubuntu:16.04-x-arm: Ok
-  40 ubuntu:16.04-x-arm64: Ok
-  41 ubuntu:16.04-x-powerpc: Ok
-  42 ubuntu:16.04-x-powerpc64: Ok
-  43 ubuntu:16.04-x-powerpc64el: Ok
-  44 ubuntu:16.04-x-s390: Ok
-  45 ubuntu:16.10: Ok
-  46 ubuntu:17.04: Ok
-  47 ubuntu:17.10: Ok
-
-  # uname -a
-  Linux jouet 4.13.0+ #3 SMP Mon Sep 25 11:51:22 -03 2017 x86_64 x86_64 x86_64 GNU/Linux
-  # perf test
-   1: vmlinux symtab matches kallsyms                       : Ok
-   2: Detect openat syscall event                           : Ok
-   3: Detect openat syscall event on all cpus               : Ok
-   4: Read samples using the mmap interface                 : Ok
-   5: Test data source output                               : Ok
-   6: Parse event definition strings                        : Ok
-   7: Simple expression parser                              : Ok
-   8: PERF_RECORD_* events & perf_sample fields             : Ok
-   9: Parse perf pmu format                                 : Ok
-  10: DSO data read                                         : Ok
-  11: DSO data cache                                        : Ok
-  12: DSO data reopen                                       : Ok
-  13: Roundtrip evsel->name                                 : Ok
-  14: Parse sched tracepoints fields                        : Ok
-  15: syscalls:sys_enter_openat event fields                : Ok
-  16: Setup struct perf_event_attr                          : Ok
-  17: Match and link multiple hists                         : Ok
-  18: 'import perf' in python                               : Ok
-  19: Breakpoint overflow signal handler                    : Ok
-  20: Breakpoint overflow sampling                          : Ok
-  21: Number of exit events of a simple workload            : Ok
-  22: Software clock events period values                   : Ok
-  23: Object code reading                                   : Ok
-  24: Sample parsing                                        : Ok
-  25: Use a dummy software event to keep tracking           : Ok
-  26: Parse with no sample_id_all bit set                   : Ok
-  27: Filter hist entries                                   : Ok
-  28: Lookup mmap thread                                    : Ok
-  29: Share thread mg                                       : Ok
-  30: Sort output of hist entries                           : Ok
-  31: Cumulate child hist entries                           : Ok
-  32: Track with sched_switch                               : Ok
-  33: Filter fds with revents mask in a fdarray             : Ok
-  34: Add fd to a fdarray, making it autogrow               : Ok
-  35: kmod_path__parse                                      : Ok
-  36: Thread map                                            : Ok
-  37: LLVM search and compile                               :
-  37.1: Basic BPF llvm compile                              : Ok
-  37.2: kbuild searching                                    : Ok
-  37.3: Compile source for BPF prologue generation          : Ok
-  37.4: Compile source for BPF relocation                   : Ok
-  38: Session topology                                      : Ok
-  39: BPF filter                                            :
-  39.1: Basic BPF filtering                                 : Ok
-  39.2: BPF pinning                                         : Ok
-  39.3: BPF prologue generation                             : Ok
-  39.4: BPF relocation checker                              : Ok
-  40: Synthesize thread map                                 : Ok
-  41: Remove thread map                                     : Ok
-  42: Synthesize cpu map                                    : Ok
-  43: Synthesize stat config                                : Ok
-  44: Synthesize stat                                       : Ok
-  45: Synthesize stat round                                 : Ok
-  46: Synthesize attr update                                : Ok
-  47: Event times                                           : Ok
-  48: Read backward ring buffer                             : Ok
-  49: Print cpu map                                         : Ok
-  50: Probe SDT events                                      : Ok
-  51: is_printable_array                                    : Ok
-  52: Print bitmap                                          : Ok
-  53: perf hooks                                            : Ok
-  54: builtin clang support                                 : Skip (not compiled in)
-  55: unit_number__scnprintf                                : Ok
-  56: x86 rdpmc                                             : Ok
-  57: Convert perf time to TSC                              : Ok
-  58: DWARF unwind                                          : Ok
-  59: x86 instruction decoder - new instructions            : Ok
-  60: Intel cqm nmi context read                            : Skip
-  61: Use vfs_getname probe to get syscall args filenames   : Ok
-  62: probe libc's inet_pton & backtrace it with ping       : Ok
-  63: Check open filename arg using perf trace + vfs_getname: Ok
-  64: Add vfs_getname probe to get syscall args filenames   : Ok
-  #
-  
-  $ make -C tools/perf build-test
-  make: Entering directory '/home/acme/git/linux/tools/perf'
-  - tarpkg: ./tests/perf-targz-src-pkg .
-                make_minimal_O: && make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 
-                   make_pure_O: && make 
-             make_no_libnuma_O: && make NO_LIBNUMA=1 
-            make_no_auxtrace_O: && make NO_AUXTRACE=1 
-              make_clean_all_O: && make clean all 
-  make_no_libdw_dwarf_unwind_O: && make NO_LIBDW_DWARF_UNWIND=1 
-                  make_no_ui_O: && make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1 
-                   make_tags_O: && make tags 
-                  make_debug_O: && make DEBUG=1 
-             make_no_libperl_O: && make NO_LIBPERL=1 
-              make_no_libbpf_O: && make NO_LIBBPF=1 
-                make_no_newt_O: && make NO_NEWT=1 
-           make_no_libpython_O: && make NO_LIBPYTHON=1 
-           make_no_backtrace_O: && make NO_BACKTRACE=1 
-         make_with_clangllvm_O: && make LIBCLANGLLVM=1 
-            make_no_libaudit_O: && make NO_LIBAUDIT=1 
-             make_no_scripts_O: && make NO_LIBPYTHON=1 NO_LIBPERL=1 
-            make_no_demangle_O: && make NO_DEMANGLE=1 
-             make_util_map_o_O: && make util/map.o 
-                 make_static_O: && make LDFLAGS=-static 
-           make_no_libunwind_O: && make NO_LIBUNWIND=1 
-                make_no_gtk2_O: && make NO_GTK2=1 
-           make_no_libbionic_O: && make NO_LIBBIONIC=1 
-   make_install_prefix_slash_O: && make install prefix=/tmp/krava/ 
-               make_no_slang_O: && make NO_SLANG=1 
-                 make_perf_o_O: && make perf.o 
-                    make_doc_O: && make doc 
-            make_install_bin_O: && make install-bin 
-        make_with_babeltrace_O: && make LIBBABELTRACE=1 
-                make_install_O: && make install 
-         make_install_prefix_O: && make install prefix=/tmp/krava 
-                   make_help_O: && make help 
-       make_util_pmu_bison_o_O: && make util/pmu-bison.o 
-              make_no_libelf_O: && make NO_LIBELF=1 
-  OK
-  make: Leaving directory '/home/acme/git/linux/tools/perf'
-  $
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index 62072822dc85..627b7cada144 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -1,34 +1,8 @@
+ tools/perf
+-tools/arch/alpha/include/asm/barrier.h
+-tools/arch/arm/include/asm/barrier.h
+-tools/arch/arm64/include/asm/barrier.h
+-tools/arch/ia64/include/asm/barrier.h
+-tools/arch/mips/include/asm/barrier.h
+-tools/arch/powerpc/include/asm/barrier.h
+-tools/arch/s390/include/asm/barrier.h
+-tools/arch/sh/include/asm/barrier.h
+-tools/arch/sparc/include/asm/barrier.h
+-tools/arch/sparc/include/asm/barrier_32.h
+-tools/arch/sparc/include/asm/barrier_64.h
+-tools/arch/tile/include/asm/barrier.h
+-tools/arch/x86/include/asm/barrier.h
+-tools/arch/x86/include/asm/cmpxchg.h
+-tools/arch/x86/include/asm/cpufeatures.h
+-tools/arch/x86/include/asm/disabled-features.h
+-tools/arch/x86/include/asm/required-features.h
+-tools/arch/x86/include/uapi/asm/svm.h
+-tools/arch/x86/include/uapi/asm/vmx.h
+-tools/arch/x86/include/uapi/asm/kvm.h
+-tools/arch/x86/include/uapi/asm/kvm_perf.h
+-tools/arch/x86/lib/memcpy_64.S
+-tools/arch/x86/lib/memset_64.S
+-tools/arch/s390/include/uapi/asm/kvm_perf.h
+-tools/arch/s390/include/uapi/asm/sie.h
+-tools/arch/xtensa/include/asm/barrier.h
++tools/arch
+ tools/scripts
+ tools/build
+-tools/arch/x86/include/asm/atomic.h
+-tools/arch/x86/include/asm/rmwcc.h
++tools/include
+ tools/lib/traceevent
+ tools/lib/api
+ tools/lib/bpf
+@@ -42,60 +16,3 @@ tools/lib/find_bit.c
+ tools/lib/bitmap.c
+ tools/lib/str_error_r.c
+ tools/lib/vsprintf.c
+-tools/include/asm/alternative-asm.h
+-tools/include/asm/atomic.h
+-tools/include/asm/barrier.h
+-tools/include/asm/bug.h
+-tools/include/asm-generic/atomic-gcc.h
+-tools/include/asm-generic/barrier.h
+-tools/include/asm-generic/bitops/arch_hweight.h
+-tools/include/asm-generic/bitops/atomic.h
+-tools/include/asm-generic/bitops/const_hweight.h
+-tools/include/asm-generic/bitops/__ffs.h
+-tools/include/asm-generic/bitops/__ffz.h
+-tools/include/asm-generic/bitops/__fls.h
+-tools/include/asm-generic/bitops/find.h
+-tools/include/asm-generic/bitops/fls64.h
+-tools/include/asm-generic/bitops/fls.h
+-tools/include/asm-generic/bitops/hweight.h
+-tools/include/asm-generic/bitops.h
+-tools/include/linux/atomic.h
+-tools/include/linux/bitops.h
+-tools/include/linux/compiler.h
+-tools/include/linux/compiler-gcc.h
+-tools/include/linux/coresight-pmu.h
+-tools/include/linux/bug.h
+-tools/include/linux/filter.h
+-tools/include/linux/hash.h
+-tools/include/linux/kernel.h
+-tools/include/linux/list.h
+-tools/include/linux/log2.h
+-tools/include/uapi/asm-generic/fcntl.h
+-tools/include/uapi/asm-generic/ioctls.h
+-tools/include/uapi/asm-generic/mman-common.h
+-tools/include/uapi/asm-generic/mman.h
+-tools/include/uapi/drm/drm.h
+-tools/include/uapi/drm/i915_drm.h
+-tools/include/uapi/linux/bpf.h
+-tools/include/uapi/linux/bpf_common.h
+-tools/include/uapi/linux/fcntl.h
+-tools/include/uapi/linux/hw_breakpoint.h
+-tools/include/uapi/linux/kvm.h
+-tools/include/uapi/linux/mman.h
+-tools/include/uapi/linux/perf_event.h
+-tools/include/uapi/linux/sched.h
+-tools/include/uapi/linux/stat.h
+-tools/include/uapi/linux/vhost.h
+-tools/include/uapi/sound/asound.h
+-tools/include/linux/poison.h
+-tools/include/linux/rbtree.h
+-tools/include/linux/rbtree_augmented.h
+-tools/include/linux/refcount.h
+-tools/include/linux/string.h
+-tools/include/linux/stringify.h
+-tools/include/linux/types.h
+-tools/include/linux/err.h
+-tools/include/linux/bitmap.h
+-tools/include/linux/time64.h
+-tools/arch/*/include/uapi/asm/mman.h
+-tools/arch/*/include/uapi/asm/perf_regs.h
+-- 
+2.13.5
