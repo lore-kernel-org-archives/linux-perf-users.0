@@ -1,112 +1,97 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: [PATCH v3 03/13] perf report: create real callchain entries for inlined frames
-Date: Sun, 01 Oct 2017 14:40:37 +0200
-Message-ID: <3335153.DEsh8gBIbp@agathebauer>
-References: <20170906135501.306-1-milian.wolff@kdab.com> <20170906135501.306-4-milian.wolff@kdab.com> <20170919122727.GC13388@krava>
+Date: Sun, 01 Oct 2017 16:12:36 +0200
+Message-ID: <4499499.qdQhpEf76S@agathebauer>
+References: <20170906135501.306-1-milian.wolff@kdab.com> <20170906135501.306-4-milian.wolff@kdab.com> <20170919122719.GB13388@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:35278 "EHLO mail.kdab.com"
+Received: from mail.kdab.com ([176.9.126.58]:46178 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750965AbdJAMkn (ORCPT
+        id S1751191AbdJAOQl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 1 Oct 2017 08:40:43 -0400
-In-Reply-To: <20170919122727.GC13388@krava>
+        Sun, 1 Oct 2017 10:16:41 -0400
+In-Reply-To: <20170919122719.GB13388@krava>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 
-On Dienstag, 19. September 2017 14:27:27 CEST Jiri Olsa wrote:
+On Dienstag, 19. September 2017 14:27:19 CEST Jiri Olsa wrote:
 > On Wed, Sep 06, 2017 at 03:54:51PM +0200, Milian Wolff wrote:
-> > The inlined frames use a fake symbol that is maintained by
-> > inline_node which in turn is maintained by the dso->inlines tree.
-> > This tree is always sorted by name. All other entries of the symbol
-> > beside the function name are unused for inline frames. The advantage
-> > of this approach is that all existing users of the callchain API can
-> > now transparently display inlined frames without having to patch
-> > their code.
-> > 
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: David Ahern <dsahern@gmail.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> > Cc: Yao Jin <yao.jin@linux.intel.com>
-> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> > ---
-> > 
-> >  tools/perf/util/dso.c     |   2 +
-> >  tools/perf/util/dso.h     |   1 +
-> >  tools/perf/util/machine.c |  37 +++++++++
-> >  tools/perf/util/srcline.c | 186
-> >  ++++++++++++++++++++++++++++++++++++---------- tools/perf/util/srcline.h
-> >  |  19 ++++-
-> >  tools/perf/util/symbol.h  |   1 +
-> >  6 files changed, 203 insertions(+), 43 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index b9e087fb8247..72e6e390fd26 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -9,6 +9,7 @@
-> > 
-> >  #include "compress.h"
-> >  #include "path.h"
-> >  #include "symbol.h"
-> > 
-> > +#include "srcline.h"
-> > 
-> >  #include "dso.h"
-> >  #include "machine.h"
-> >  #include "auxtrace.h"
-> > 
-> > @@ -1233,6 +1234,7 @@ void dso__delete(struct dso *dso)
-> > 
-> >  		       dso->long_name);
-> >  	
-> >  	for (i = 0; i < MAP__NR_TYPES; ++i)
-> >  	
-> >  		symbols__delete(&dso->symbols[i]);
-> > 
-> > +	inlines__tree_delete(&dso->inlined_nodes);
-> > 
-> >  	if (dso->short_name_allocated) {
-> >  	
-> >  		zfree((char **)&dso->short_name);
-> > 
-> > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> > index f886141678eb..7d1e2b3c1f10 100644
-> > --- a/tools/perf/util/dso.h
-> > +++ b/tools/perf/util/dso.h
-> > @@ -141,6 +141,7 @@ struct dso {
-> > 
-> >  	struct rb_root	 *root;		/* root of rbtree that rb_node is in 
-*/
-> >  	struct rb_root	 symbols[MAP__NR_TYPES];
-> >  	struct rb_root	 symbol_names[MAP__NR_TYPES];
-> > 
-> > +	struct rb_root	 inlined_nodes;
 > 
-> should you init this like below?
+> SNIP
+> 
+> > +void inlines__tree_insert(struct rb_root *tree, struct inline_node
+> > *inlines) +{
+> > +	struct rb_node **p = &tree->rb_node;
+> > +	struct rb_node *parent = NULL;
+> > +	const u64 addr = inlines->addr;
+> > +	struct inline_node *i;
+> > +
+> > +	while (*p != NULL) {
+> > +		parent = *p;
+> > +		i = rb_entry(parent, struct inline_node, rb_node);
+> > +		if (addr < i->addr)
+> > +			p = &(*p)->rb_left;
+> > +		else
+> > +			p = &(*p)->rb_right;
+> > +	}
+> > +	rb_link_node(&inlines->rb_node, parent, p);
+> > +	rb_insert_color(&inlines->rb_node, tree);
+> > +}
+> > +
+> > +struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr)
+> > +{
+> > +	struct rb_node *n = tree->rb_node;
+> > +
+> > +	while (n) {
+> > +		struct inline_node *i = rb_entry(n, struct inline_node,
+> > +						 rb_node);
+> > +
+> > +		if (addr < i->addr)
+> > +			n = n->rb_left;
+> > +		else if (addr > i->addr)
+> > +			n = n->rb_right;
+> > +		else
+> > +			return i;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +void inlines__tree_delete(struct rb_root *tree)
+> > +{
+> > +	struct inline_node *pos;
+> > +	struct rb_node *next = rb_first(tree);
+> > +
+> > +	while (next) {
+> > +		pos = rb_entry(next, struct inline_node, rb_node);
+> > +		next = rb_next(&pos->rb_node);
+> > +		rb_erase(&pos->rb_node, tree);
+> > +		inline_node__delete(pos);
+> > +	}
+> > +}
+> 
+> could you please split the patch at least into
+> above 'adding related inline_node tree managing functions + append_inlines'
+> 
+> and below 'struct inline_list' changes
+> 
+> not sure the 'struct symbol::inlined' could be separated,
+> I'd take it as a bonus and nice gesture to reviewers ;-)
 
-Probably, I don't know enough about the rb_root API. I've added the hunk below 
-now, thanks.
+I have now split it up in three parts:
 
-> ---
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 53ceccdf74be..ed8cab3b51b1 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1202,6 +1202,7 @@ struct dso *dso__new(const char *name)
->  		for (i = 0; i < MAP__NR_TYPES; ++i)
->  			dso->symbols[i] = dso->symbol_names[i] = RB_ROOT;
->  		dso->data.cache = RB_ROOT;
-> +		dso->inlined_nodes = RB_ROOT;
->  		dso->data.fd = -1;
->  		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
->  		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
+a) use symbol in srcline api and create fake symbols
+b) use srcline string in srcline api
+c) create real callchain entries
 
+I hope that is easier to review. Thanks for the comments so far. I'll push a 
+new version of this patch series now.
+
+Cheers
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
