@@ -1,24 +1,74 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v4 07/15] perf report: mark inlined frames in output by " (inlined)" suffix
-Date: Sun,  1 Oct 2017 16:30:52 +0200
-Message-ID: <20171001143100.19988-8-milian.wolff@kdab.com>
+Subject: [PATCH v4 09/15] perf report: compare symbol name for inlined frames when matching
+Date: Sun,  1 Oct 2017 16:30:54 +0200
+Message-ID: <20171001143100.19988-10-milian.wolff@kdab.com>
 References: <20171001143100.19988-1-milian.wolff@kdab.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:47832 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751770AbdJAOb2 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 1 Oct 2017 10:31:28 -0400
 In-Reply-To: <20171001143100.19988-1-milian.wolff@kdab.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
-List-Id: linux-perf-users.vger.kernel.org
 
-The original patch that introduced inline frame output in the
-various browsers used this suffix already. The new centralized
-approach that uses fake symbols for inlined frames was missing
-this approach so far.
+The fake symbols we create for inlined frames will represent
+different functions but can use the symbol start address. This leads
+to issues when different inline branches all lead to the same
+function.
 
-Instead of changing the symbol name itself, we only print the
-suffix where needed. This allows us to efficiently lookup
-the symbol for a given name without first having to append the
-suffix before the lookup.
+Before:
+~~~~~
+$ perf report -s sym -i perf.inlining.data --inline --stdio -g function
+...
+             --38.86%--_start
+                       __libc_start_main
+                       main
+                       |
+                        --37.57%--std::norm<double> (inlined)
+                                  std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                                  |
+                                   --36.36%--std::abs<double> (inlined)
+                                             std::__complex_abs (inlined)
+                                             |
+                                              --12.24%--std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
+                                                        std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
+                                                        std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
+~~~~~
+
+Note that this backtrace representation is completely bogus.
+Complex abs does not call the linear congruential engine! It
+is just a side-effect of a longer inlined stack being appended
+to a shorter, different inlined stack, both of which originate
+in the same function (main).
+
+This patch fixes the issue:
+
+~~~~~
+$ perf report -s sym -i perf.inlining.data --inline --stdio -g function
+...
+             --38.86%--_start
+                       __libc_start_main
+                       main
+                       |
+                       |--35.59%--std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |          std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |          |
+                       |           --34.37%--std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() (inlined)
+                       |                     std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+                       |                     |
+                       |                      --12.24%--std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
+                       |                                std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
+                       |                                std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
+                       |
+                        --1.99%--std::norm<double> (inlined)
+                                  std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                                  std::abs<double> (inlined)
+                                  std::__complex_abs (inlined)
+~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -27,46 +77,40 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 10 +++++++---
- tools/perf/util/sort.c      |  3 +++
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/util/callchain.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index b335fc805472..c6a033ba2b73 100644
+index c6a033ba2b73..261823ae2ea4 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -1100,11 +1100,15 @@ char *callchain_list__sym_name(struct callchain_list *cl,
- 	int printed;
+@@ -663,11 +663,11 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
+ {
+ 	struct symbol *sym = node->sym;
++	enum match_result match;
+ 	u64 left, right;
  
- 	if (cl->ms.sym) {
-+		const char *inlined = cl->ms.sym->inlined ? " (inlined)" : "";
+ 	if (callchain_param.key == CCKEY_SRCLINE) {
+-		enum match_result match = match_chain_strings(cnode->srcline,
+-							      node->srcline);
++		match = match_chain_strings(cnode->srcline, node->srcline);
+ 
+ 		/* if no srcline is available, fallback to symbol name */
+ 		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+@@ -681,6 +681,13 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 	}
+ 
+ 	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
++		/* compare inlined frames based on their symbol name because
++		 * different inlined frames will have the same symbol start
++		 */
++		if (cnode->ms.sym->inlined || node->sym->inlined)
++			return match_chain_strings(cnode->ms.sym->name,
++						   node->sym->name);
 +
- 		if (show_srcline && cl->srcline)
--			printed = scnprintf(bf, bfsize, "%s %s",
--					cl->ms.sym->name, cl->srcline);
-+			printed = scnprintf(bf, bfsize, "%s %s%s",
-+					    cl->ms.sym->name, cl->srcline,
-+					    inlined);
- 		else
--			printed = scnprintf(bf, bfsize, "%s", cl->ms.sym->name);
-+			printed = scnprintf(bf, bfsize, "%s%s",
-+					    cl->ms.sym->name, inlined);
- 	} else
- 		printed = scnprintf(bf, bfsize, "%#" PRIx64, cl->ip);
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index eb3ab902a1c0..acb9210fd18a 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -283,6 +283,9 @@ static int _hist_entry__sym_snprintf(struct map *map, struct symbol *sym,
- 			ret += repsep_snprintf(bf + ret, size - ret, "%.*s",
- 					       width - ret,
- 					       sym->name);
-+			if (sym->inlined)
-+				ret += repsep_snprintf(bf + ret, size - ret,
-+						       " (inlined)");
- 		}
+ 		left = cnode->ms.sym->start;
+ 		right = sym->start;
  	} else {
- 		size_t len = BITS_PER_LONG / 4;
 -- 
 2.14.2
