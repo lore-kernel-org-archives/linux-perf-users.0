@@ -1,26 +1,28 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v4 05/15] perf report: create real callchain entries for inlined frames
-Date: Sun,  1 Oct 2017 16:30:50 +0200
-Message-ID: <20171001143100.19988-6-milian.wolff@kdab.com>
+Subject: [PATCH v4 02/15] perf util: store srcline in callchain_cursor_node
+Date: Sun,  1 Oct 2017 16:30:47 +0200
+Message-ID: <20171001143100.19988-3-milian.wolff@kdab.com>
 References: <20171001143100.19988-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171001143100.19988-1-milian.wolff@kdab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-The inline_node structs are maintained by the new dso->inlines
-tree. This in turn keeps ownership of the fake symbols and
-srcline string representing an inline frame.
+This is mostly a preparation to enable the creation of
+full callchain nodes for inline frames. Such frames will
+reference the IP of the non-inlined frame, but hold the
+symbol and srcline for an inlined location. As such, we
+won't be able to query the srcline on-demand based on the
+IP alone. Instead, we will leverage the functionality provided
+by this patch here, and store the srcline for the inlined nodes
+in the new srcline member of callchain_cursor_node.
 
-This tree is always sorted by name. All other entries of the symbol
-beside the function name are unused for inline frames. The advantage
-of this approach is that all existing users of the callchain API can
-now transparently display inlined frames without having to patch
-their code.
+Note that this patch on its own leaks the srcline, as there is
+no free_callchain_cursor_node or similar. A future patch will
+add caching of the srcline and handle deletion properly.
 
-Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -28,198 +30,192 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/dso.c     |  3 +++
- tools/perf/util/dso.h     |  1 +
- tools/perf/util/machine.c | 37 ++++++++++++++++++++++++++++++++++
- tools/perf/util/srcline.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/srcline.h |  9 +++++++++
- 5 files changed, 101 insertions(+)
+ tools/perf/util/callchain.c | 31 +++++++++----------------------
+ tools/perf/util/callchain.h |  6 ++++--
+ tools/perf/util/machine.c   | 18 ++++++++++++++++--
+ 3 files changed, 29 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 339e52971380..6e743dffc487 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -10,6 +10,7 @@
- #include "compress.h"
- #include "path.h"
- #include "symbol.h"
-+#include "srcline.h"
- #include "dso.h"
- #include "machine.h"
- #include "auxtrace.h"
-@@ -1201,6 +1202,7 @@ struct dso *dso__new(const char *name)
- 		for (i = 0; i < MAP__NR_TYPES; ++i)
- 			dso->symbols[i] = dso->symbol_names[i] = RB_ROOT;
- 		dso->data.cache = RB_ROOT;
-+		dso->inlined_nodes = RB_ROOT;
- 		dso->data.fd = -1;
- 		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
- 		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
-@@ -1234,6 +1236,7 @@ void dso__delete(struct dso *dso)
- 		       dso->long_name);
- 	for (i = 0; i < MAP__NR_TYPES; ++i)
- 		symbols__delete(&dso->symbols[i]);
-+	inlines__tree_delete(&dso->inlined_nodes);
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 510b513e0f01..d1c5d1d422cb 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -559,6 +559,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
+ 		call->ip = cursor_node->ip;
+ 		call->ms.sym = cursor_node->sym;
+ 		call->ms.map = map__get(cursor_node->map);
++		call->srcline = cursor_node->srcline;
  
- 	if (dso->short_name_allocated) {
- 		zfree((char **)&dso->short_name);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index a2bbb21f301c..122eca0d242d 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -141,6 +141,7 @@ struct dso {
- 	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
- 	struct rb_root	 symbols[MAP__NR_TYPES];
- 	struct rb_root	 symbol_names[MAP__NR_TYPES];
-+	struct rb_root	 inlined_nodes;
- 	struct {
- 		u64		addr;
- 		struct symbol	*symbol;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 59424c95435d..e6663b200f42 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2109,6 +2109,40 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 	return 0;
+ 		if (cursor_node->branch) {
+ 			call->branch_count = 1;
+@@ -640,20 +641,11 @@ enum match_result {
+ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
+ 					     struct callchain_list *cnode)
+ {
+-	char *left = NULL;
+-	char *right = NULL;
++	const char *left = cnode->srcline;
++	const char *right = node->srcline;
+ 	enum match_result ret = MATCH_EQ;
+ 	int cmp;
+ 
+-	if (cnode->ms.map)
+-		left = get_srcline(cnode->ms.map->dso,
+-				 map__rip_2objdump(cnode->ms.map, cnode->ip),
+-				 cnode->ms.sym, true, false);
+-	if (node->map)
+-		right = get_srcline(node->map->dso,
+-				  map__rip_2objdump(node->map, node->ip),
+-				  node->sym, true, false);
+-
+ 	if (left && right)
+ 		cmp = strcmp(left, right);
+ 	else if (!left && right)
+@@ -668,8 +660,6 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
+ 	if (cmp != 0)
+ 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
+ 
+-	free_srcline(left);
+-	free_srcline(right);
+ 	return ret;
  }
  
-+static int append_inlines(struct callchain_cursor *cursor,
-+			  struct map *map, struct symbol *sym, u64 ip)
+@@ -958,7 +948,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
+ 	list_for_each_entry_safe(list, next_list, &src->val, list) {
+ 		callchain_cursor_append(cursor, list->ip,
+ 					list->ms.map, list->ms.sym,
+-					false, NULL, 0, 0, 0);
++					false, NULL, 0, 0, 0, list->srcline);
+ 		list_del(&list->list);
+ 		map__zput(list->ms.map);
+ 		free(list);
+@@ -998,7 +988,8 @@ int callchain_merge(struct callchain_cursor *cursor,
+ int callchain_cursor_append(struct callchain_cursor *cursor,
+ 			    u64 ip, struct map *map, struct symbol *sym,
+ 			    bool branch, struct branch_flags *flags,
+-			    int nr_loop_iter, u64 iter_cycles, u64 branch_from)
++			    int nr_loop_iter, u64 iter_cycles, u64 branch_from,
++			    const char *srcline)
+ {
+ 	struct callchain_cursor_node *node = *cursor->last;
+ 
+@@ -1017,6 +1008,7 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
+ 	node->branch = branch;
+ 	node->nr_loop_iter = nr_loop_iter;
+ 	node->iter_cycles = iter_cycles;
++	node->srcline = srcline;
+ 
+ 	if (flags)
+ 		memcpy(&node->branch_flags, flags,
+@@ -1104,12 +1096,7 @@ char *callchain_list__sym_name(struct callchain_list *cl,
+ 	int printed;
+ 
+ 	if (cl->ms.sym) {
+-		if (show_srcline && cl->ms.map && !cl->srcline)
+-			cl->srcline = get_srcline(cl->ms.map->dso,
+-						  map__rip_2objdump(cl->ms.map,
+-								    cl->ip),
+-						  cl->ms.sym, false, show_addr);
+-		if (cl->srcline)
++		if (show_srcline && cl->srcline)
+ 			printed = scnprintf(bf, bfsize, "%s %s",
+ 					cl->ms.sym->name, cl->srcline);
+ 		else
+@@ -1521,7 +1508,7 @@ int callchain_cursor__copy(struct callchain_cursor *dst,
+ 					     node->branch, &node->branch_flags,
+ 					     node->nr_loop_iter,
+ 					     node->iter_cycles,
+-					     node->branch_from);
++					     node->branch_from, node->srcline);
+ 		if (rc)
+ 			break;
+ 
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 1ed6fc61d0a5..8f67b681cde9 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -121,7 +121,7 @@ struct callchain_list {
+ 	u64			iter_count;
+ 	u64			iter_cycles;
+ 	struct branch_type_stat brtype_stat;
+-	char		       *srcline;
++	const char		*srcline;
+ 	struct list_head	list;
+ };
+ 
+@@ -135,6 +135,7 @@ struct callchain_cursor_node {
+ 	u64				ip;
+ 	struct map			*map;
+ 	struct symbol			*sym;
++	const char			*srcline;
+ 	bool				branch;
+ 	struct branch_flags		branch_flags;
+ 	u64				branch_from;
+@@ -201,7 +202,8 @@ static inline void callchain_cursor_reset(struct callchain_cursor *cursor)
+ int callchain_cursor_append(struct callchain_cursor *cursor, u64 ip,
+ 			    struct map *map, struct symbol *sym,
+ 			    bool branch, struct branch_flags *flags,
+-			    int nr_loop_iter, u64 iter_cycles, u64 branch_from);
++			    int nr_loop_iter, u64 iter_cycles, u64 branch_from,
++			    const char *srcline);
+ 
+ /* Close a cursor writing session. Initialize for the reader */
+ static inline void callchain_cursor_commit(struct callchain_cursor *cursor)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 585b4a3d64a4..59424c95435d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1709,6 +1709,15 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
+ 	return mi;
+ }
+ 
++static char *callchain_srcline(struct map *map, struct symbol *sym, u64 ip)
 +{
-+	struct inline_node *inline_node;
-+	struct inline_list *ilist;
-+	u64 addr;
++	if (!map || callchain_param.key == CCKEY_FUNCTION)
++		return NULL;
 +
-+	if (!symbol_conf.inline_name || !map || !sym)
-+		return 1;
-+
-+	addr = map__rip_2objdump(map, ip);
-+
-+	inline_node = inlines__tree_find(&map->dso->inlined_nodes, addr);
-+	if (!inline_node) {
-+		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
-+		if (!inline_node)
-+			return 1;
-+
-+		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
-+	}
-+
-+	list_for_each_entry(ilist, &inline_node->val, list) {
-+		int ret = callchain_cursor_append(cursor, ip, map,
-+						  ilist->symbol, false,
-+						  NULL, 0, 0, 0,
-+						  ilist->srcline);
-+
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return 0;
++	return get_srcline(map->dso, map__rip_2objdump(map, ip),
++			   sym, false, callchain_param.key == CCKEY_ADDRESS);
 +}
 +
+ struct iterations {
+ 	int nr_loop_iter;
+ 	u64 cycles;
+@@ -1728,6 +1737,7 @@ static int add_callchain_ip(struct thread *thread,
+ 	struct addr_location al;
+ 	int nr_loop_iter = 0;
+ 	u64 iter_cycles = 0;
++	const char *srcline = NULL;
+ 
+ 	al.filtered = 0;
+ 	al.sym = NULL;
+@@ -1783,9 +1793,10 @@ static int add_callchain_ip(struct thread *thread,
+ 		iter_cycles = iter->cycles;
+ 	}
+ 
++	srcline = callchain_srcline(al.map, al.sym, al.addr);
+ 	return callchain_cursor_append(cursor, al.addr, al.map, al.sym,
+ 				       branch, flags, nr_loop_iter,
+-				       iter_cycles, branch_from);
++				       iter_cycles, branch_from, srcline);
+ }
+ 
+ struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
+@@ -2101,12 +2112,15 @@ static int thread__resolve_callchain_sample(struct thread *thread,
  static int unwind_entry(struct unwind_entry *entry, void *arg)
  {
  	struct callchain_cursor *cursor = arg;
-@@ -2117,6 +2151,9 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
++	const char *srcline = NULL;
+ 
  	if (symbol_conf.hide_unresolved && entry->sym == NULL)
  		return 0;
- 
-+	if (append_inlines(cursor, entry->map, entry->sym, entry->ip) == 0)
-+		return 0;
 +
- 	srcline = callchain_srcline(entry->map, entry->sym, entry->ip);
++	srcline = callchain_srcline(entry->map, entry->sym, entry->ip);
  	return callchain_cursor_append(cursor, entry->ip,
  				       entry->map, entry->sym,
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 07d1a058d7c4..69241d805275 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -583,3 +583,54 @@ void inline_node__delete(struct inline_node *node)
- 
- 	free(node);
+-				       false, NULL, 0, 0, 0);
++				       false, NULL, 0, 0, 0, srcline);
  }
-+
-+void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines)
-+{
-+	struct rb_node **p = &tree->rb_node;
-+	struct rb_node *parent = NULL;
-+	const u64 addr = inlines->addr;
-+	struct inline_node *i;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		i = rb_entry(parent, struct inline_node, rb_node);
-+		if (addr < i->addr)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+	rb_link_node(&inlines->rb_node, parent, p);
-+	rb_insert_color(&inlines->rb_node, tree);
-+}
-+
-+struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr)
-+{
-+	struct rb_node *n = tree->rb_node;
-+
-+	while (n) {
-+		struct inline_node *i = rb_entry(n, struct inline_node,
-+						 rb_node);
-+
-+		if (addr < i->addr)
-+			n = n->rb_left;
-+		else if (addr > i->addr)
-+			n = n->rb_right;
-+		else
-+			return i;
-+	}
-+
-+	return NULL;
-+}
-+
-+void inlines__tree_delete(struct rb_root *tree)
-+{
-+	struct inline_node *pos;
-+	struct rb_node *next = rb_first(tree);
-+
-+	while (next) {
-+		pos = rb_entry(next, struct inline_node, rb_node);
-+		next = rb_next(&pos->rb_node);
-+		rb_erase(&pos->rb_node, tree);
-+		inline_node__delete(pos);
-+	}
-+}
-diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-index 0201ed2c0b9c..ebe38cd22294 100644
---- a/tools/perf/util/srcline.h
-+++ b/tools/perf/util/srcline.h
-@@ -2,6 +2,7 @@
- #define PERF_SRCLINE_H
  
- #include <linux/list.h>
-+#include <linux/rbtree.h>
- #include <linux/types.h>
- 
- struct dso;
-@@ -25,6 +26,7 @@ struct inline_list {
- struct inline_node {
- 	u64			addr;
- 	struct list_head	val;
-+	struct rb_node		rb_node;
- };
- 
- /* parse inlined frames for the given address */
-@@ -33,4 +35,11 @@ struct inline_node *dso__parse_addr_inlines(struct dso *dso, u64 addr,
- /* free resources associated to the inline node list */
- void inline_node__delete(struct inline_node *node);
- 
-+/* insert the inline node list into the DSO, which will take ownership */
-+void inlines__tree_insert(struct rb_root *tree, struct inline_node *inlines);
-+/* find previously inserted inline node list */
-+struct inline_node *inlines__tree_find(struct rb_root *tree, u64 addr);
-+/* delete all nodes within the tree of inline_node s */
-+void inlines__tree_delete(struct rb_root *tree);
-+
- #endif /* PERF_SRCLINE_H */
+ static int thread__resolve_callchain_unwind(struct thread *thread,
 -- 
 2.14.2
