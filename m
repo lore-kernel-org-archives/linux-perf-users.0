@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v4 10/15] perf report: compare symbol name for inlined frames when sorting
-Date: Sun,  1 Oct 2017 16:30:55 +0200
-Message-ID: <20171001143100.19988-11-milian.wolff@kdab.com>
+Subject: [PATCH v4 08/15] perf script: mark inlined frames and do not print DSO for them
+Date: Sun,  1 Oct 2017 16:30:53 +0200
+Message-ID: <20171001143100.19988-9-milian.wolff@kdab.com>
 References: <20171001143100.19988-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171001143100.19988-1-milian.wolff@kdab.com>
@@ -10,55 +10,30 @@ To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-Similar to the callstack frame matching, we also have to compare
-the symbol name when sorting hist entries. The reason is twofold:
-On one hand, multiple inlined functions will use the same symbol
-start/end values of the parent, non-inlined symbol. As such, all
-of these symbols often end up missing from top-level report, as
-they get merged with the non-inlined frame. On the other hand,
-multiple different functions may end up inlining the same function,
-and we need to aggregate these values properly.
+Instead of showing the (repeated) DSO name of the non-inlined
+frame, we now show the "(inlined)" suffix instead.
 
 Before:
-
-~~~~~
-perf report --stdio --inline -g none
-# Children      Self  Command       Shared Object     Symbol
-# ........  ........  ............  ................  ...................................
-#
-   100.00%    39.69%  cpp-inlining  cpp-inlining      [.] main
-   100.00%     0.00%  cpp-inlining  cpp-inlining      [.] _start
-   100.00%     0.00%  cpp-inlining  libc-2.25.so      [.] __libc_start_main
-    97.03%     0.00%  cpp-inlining  cpp-inlining      [.] std::norm<double> (inlined)
-    59.53%     4.26%  cpp-inlining  libm-2.25.so      [.] hypot
-    55.21%    55.08%  cpp-inlining  libm-2.25.so      [.] __hypot_finite
-     0.52%     0.52%  cpp-inlining  libm-2.25.so      [.] cabs
-~~~~~
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a std::__complex_abs (/home/milian/projects/src/perf-tests/inlining)
+                     a4a std::abs<double> (/home/milian/projects/src/perf-tests/inlining)
+                     a4a std::_Norm_helper<true>::_S_do_it<double> (/home/milian/projects/src/perf-tests/inlining)
+                     a4a std::norm<double> (/home/milian/projects/src/perf-tests/inlining)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
 
 After:
-
-~~~~~
-perf report --stdio --inline -g none
-# Children      Self  Command       Shared Object     Symbol
-# ........  ........  ............  ................  ...................................................................................................................................
-#
-   100.00%    39.69%  cpp-inlining  cpp-inlining      [.] main
-   100.00%     0.00%  cpp-inlining  cpp-inlining      [.] _start
-   100.00%     0.00%  cpp-inlining  libc-2.25.so      [.] __libc_start_main
-    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::_Norm_helper<true>::_S_do_it<double> (inlined)
-    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::__complex_abs (inlined)
-    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::abs<double> (inlined)
-    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::norm<double> (inlined)
-    59.53%     4.26%  cpp-inlining  libm-2.25.so      [.] hypot
-    55.21%    55.08%  cpp-inlining  libm-2.25.so      [.] __hypot_finite
-    34.46%     0.00%  cpp-inlining  cpp-inlining      [.] std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
-    32.39%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() (inlined)
-    32.39%     0.00%  cpp-inlining  cpp-inlining      [.] std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
-    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
-    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
-    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
-     0.52%     0.52%  cpp-inlining  libm-2.25.so      [.] cabs
-~~~~~
+                   214f7 __hypot_finite (/usr/lib/libm-2.25.so)
+                    ace3 hypot (/usr/lib/libm-2.25.so)
+                     a4a std::__complex_abs (inlined)
+                     a4a std::abs<double> (inlined)
+                     a4a std::_Norm_helper<true>::_S_do_it<double> (inlined)
+                     a4a std::norm<double> (inlined)
+                     a4a main (/home/milian/projects/src/perf-tests/inlining)
+                   20510 __libc_start_main (/usr/lib/libc-2.25.so)
+                     bd9 _start (/home/milian/projects/src/perf-tests/inlining)
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -67,22 +42,31 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/sort.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/evsel_fprintf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index acb9210fd18a..006d10a0dc96 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -225,6 +225,9 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
- 	if (sym_l == sym_r)
- 		return 0;
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index f2c6c5ee11e8..5b9e89257aa7 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -157,7 +157,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 				}
+ 			}
  
-+	if (sym_l->inlined || sym_r->inlined)
-+		return strcmp(sym_l->name, sym_r->name);
+-			if (print_dso) {
++			if (print_dso && (!node->sym || !node->sym->inlined)) {
+ 				printed += fprintf(fp, " (");
+ 				printed += map__fprintf_dsoname(node->map, fp);
+ 				printed += fprintf(fp, ")");
+@@ -166,6 +166,9 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 			if (print_srcline)
+ 				printed += map__fprintf_srcline(node->map, addr, "\n  ", fp);
+ 
++			if (node->sym && node->sym->inlined)
++				printed += fprintf(fp, " (inlined)");
 +
- 	if (sym_l->start != sym_r->start)
- 		return (int64_t)(sym_r->start - sym_l->start);
+ 			if (!print_oneline)
+ 				printed += fprintf(fp, "\n");
  
 -- 
 2.14.2
