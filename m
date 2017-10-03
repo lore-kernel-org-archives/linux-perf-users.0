@@ -1,74 +1,189 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/8] perf test attr: Fix ignored test case result
-Date: Tue,  3 Oct 2017 09:55:35 -0300
-Message-ID: <20171003125540.331-4-acme@kernel.org>
+Subject: [PATCH 4/8] perf tools: Lock to protect namespaces and comm list
+Date: Tue,  3 Oct 2017 09:55:36 -0300
+Message-ID: <20171003125540.331-5-acme@kernel.org>
 References: <20171003125540.331-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171003125540.331-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, He Kuang <hekuang@huawei.com>, Lukasz Odzioba <lukasz.odzioba@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Kan Liang <kan.liang@intel.com>
 
-Command perf test -v 16 (Setup struct perf_event_attr test) always
-reports success even if the test case fails.  It works correctly if you
-also specify -F (for don't fork).
+Add two locks to protect namespaces_list and comm_list.
 
-   root@s35lp76 perf]# ./perf test -v 16
-   15: Setup struct perf_event_attr               :
-   --- start ---
-   running './tests/attr/test-record-no-delay'
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.002 MB /tmp/tmp4E1h7R/perf.data
-     (1 samples) ]
-   expected task=0, got 1
-   expected precise_ip=0, got 3
-   expected wakeup_events=1, got 0
-   FAILED './tests/attr/test-record-no-delay' - match failure
-   test child finished with 0
-   ---- end ----
-   Setup struct perf_event_attr: Ok
+The lock is only needed for multithreaded code, so using mutex wrappers
+provided by perf tool.
 
-The reason for the wrong error reporting is the return value of the
-system() library call. It is called in run_dir() file tests/attr.c and
-returns the exit status, in above case 0xff00.
+Not all the comm_list/namespaces_list accessing are protected, e.g.
+thread__exec_comm. Because the multithread code for perf top event
+synthesizing does not touch them. They don't need a lock.
 
-This value is given as parameter to the exit() function which can only
-handle values 0-0xff.
-
-The child process terminates with exit value of 0 and the parent does
-not detect any error.
-
-This patch corrects the error reporting and prints the correct test
-result.
-
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Signed-off-by: Kan Liang <kan.liang@intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-LPU-Reference: 20170913081209.39570-2-tmricht@linux.vnet.ibm.com
-Link: http://lkml.kernel.org/n/tip-rdube6rfcjsr1nzue72c7lqn@git.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Lukasz Odzioba <lukasz.odzioba@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/r/1506696477-146932-2-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/thread.c | 53 +++++++++++++++++++++++++++++++++++++++++++-----
+ tools/perf/util/thread.h |  3 +++
+ 2 files changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
-index c9aafed7da15..25ede4472465 100644
---- a/tools/perf/tests/attr.c
-+++ b/tools/perf/tests/attr.c
-@@ -166,7 +166,7 @@ static int run_dir(const char *d, const char *perf)
- 	snprintf(cmd, 3*PATH_MAX, PYTHON " %s/attr.py -d %s/attr/ -p %s %.*s",
- 		 d, d, perf, vcnt, v);
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index c09bdb509d82..bf73117b4822 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -45,6 +45,8 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		thread->cpu = -1;
+ 		INIT_LIST_HEAD(&thread->namespaces_list);
+ 		INIT_LIST_HEAD(&thread->comm_list);
++		init_rwsem(&thread->namespaces_lock);
++		init_rwsem(&thread->comm_lock);
  
--	return system(cmd);
-+	return system(cmd) ? TEST_FAIL : TEST_OK;
+ 		comm_str = malloc(32);
+ 		if (!comm_str)
+@@ -83,18 +85,26 @@ void thread__delete(struct thread *thread)
+ 		map_groups__put(thread->mg);
+ 		thread->mg = NULL;
+ 	}
++	down_write(&thread->namespaces_lock);
+ 	list_for_each_entry_safe(namespaces, tmp_namespaces,
+ 				 &thread->namespaces_list, list) {
+ 		list_del(&namespaces->list);
+ 		namespaces__free(namespaces);
+ 	}
++	up_write(&thread->namespaces_lock);
++
++	down_write(&thread->comm_lock);
+ 	list_for_each_entry_safe(comm, tmp_comm, &thread->comm_list, list) {
+ 		list_del(&comm->list);
+ 		comm__free(comm);
+ 	}
++	up_write(&thread->comm_lock);
++
+ 	unwind__finish_access(thread);
+ 	nsinfo__zput(thread->nsinfo);
+ 
++	exit_rwsem(&thread->namespaces_lock);
++	exit_rwsem(&thread->comm_lock);
+ 	free(thread);
  }
  
- int test__attr(struct test *test __maybe_unused, int subtest __maybe_unused)
+@@ -125,8 +135,8 @@ struct namespaces *thread__namespaces(const struct thread *thread)
+ 	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
+ }
+ 
+-int thread__set_namespaces(struct thread *thread, u64 timestamp,
+-			   struct namespaces_event *event)
++static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
++				    struct namespaces_event *event)
+ {
+ 	struct namespaces *new, *curr = thread__namespaces(thread);
+ 
+@@ -149,6 +159,17 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
+ 	return 0;
+ }
+ 
++int thread__set_namespaces(struct thread *thread, u64 timestamp,
++			   struct namespaces_event *event)
++{
++	int ret;
++
++	down_write(&thread->namespaces_lock);
++	ret = __thread__set_namespaces(thread, timestamp, event);
++	up_write(&thread->namespaces_lock);
++	return ret;
++}
++
+ struct comm *thread__comm(const struct thread *thread)
+ {
+ 	if (list_empty(&thread->comm_list))
+@@ -170,8 +191,8 @@ struct comm *thread__exec_comm(const struct thread *thread)
+ 	return last;
+ }
+ 
+-int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
+-		       bool exec)
++static int ____thread__set_comm(struct thread *thread, const char *str,
++				u64 timestamp, bool exec)
+ {
+ 	struct comm *new, *curr = thread__comm(thread);
+ 
+@@ -195,6 +216,17 @@ int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
+ 	return 0;
+ }
+ 
++int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
++		       bool exec)
++{
++	int ret;
++
++	down_write(&thread->comm_lock);
++	ret = ____thread__set_comm(thread, str, timestamp, exec);
++	up_write(&thread->comm_lock);
++	return ret;
++}
++
+ int thread__set_comm_from_proc(struct thread *thread)
+ {
+ 	char path[64];
+@@ -212,7 +244,7 @@ int thread__set_comm_from_proc(struct thread *thread)
+ 	return err;
+ }
+ 
+-const char *thread__comm_str(const struct thread *thread)
++static const char *__thread__comm_str(const struct thread *thread)
+ {
+ 	const struct comm *comm = thread__comm(thread);
+ 
+@@ -222,6 +254,17 @@ const char *thread__comm_str(const struct thread *thread)
+ 	return comm__str(comm);
+ }
+ 
++const char *thread__comm_str(const struct thread *thread)
++{
++	const char *str;
++
++	down_read((struct rw_semaphore *)&thread->comm_lock);
++	str = __thread__comm_str(thread);
++	up_read((struct rw_semaphore *)&thread->comm_lock);
++
++	return str;
++}
++
+ /* CHECKME: it should probably better return the max comm len from its comm list */
+ int thread__comm_len(struct thread *thread)
+ {
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index cb1a5dd5c2b9..10555d6a0b86 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -9,6 +9,7 @@
+ #include "symbol.h"
+ #include <strlist.h>
+ #include <intlist.h>
++#include "rwsem.h"
+ 
+ struct thread_stack;
+ struct unwind_libunwind_ops;
+@@ -29,7 +30,9 @@ struct thread {
+ 	int			comm_len;
+ 	bool			dead; /* if set thread has exited */
+ 	struct list_head	namespaces_list;
++	struct rw_semaphore	namespaces_lock;
+ 	struct list_head	comm_list;
++	struct rw_semaphore	comm_lock;
+ 	u64			db_id;
+ 
+ 	void			*priv;
 -- 
 2.13.6
