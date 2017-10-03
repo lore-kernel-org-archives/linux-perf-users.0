@@ -1,94 +1,105 @@
 From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/8] perf/core improvements and fixes
-Date: Tue, 3 Oct 2017 18:38:15 +0200
-Message-ID: <20171003163815.dnjrqsxpfc62f4g6@gmail.com>
+Subject: Re: [PATCH 6/8] perf top: Implement multithreading for
+ perf_event__synthesize_threads
+Date: Tue, 3 Oct 2017 19:37:30 +0200
+Message-ID: <20171003173729.k5xobn24qerr2tuw@gmail.com>
 References: <20171003125540.331-1-acme@kernel.org>
+ <20171003125540.331-7-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wr0-f194.google.com ([209.85.128.194]:34809 "EHLO
+        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751232AbdJCRhe (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 3 Oct 2017 13:37:34 -0400
 Content-Disposition: inline
-In-Reply-To: <20171003125540.331-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20171003125540.331-7-acme@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, He Kuang <hekuang@huawei.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>, Lukasz Odzioba <lukasz.odzioba@intel.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, He Kuang <hekuang@huawei.com>, Lukasz Odzioba <lukasz.odzioba@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
 
 * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Hi Ingo,
+> From: Kan Liang <kan.liang@intel.com>
 > 
-> 	I pulled tip/perf/urgent to pick up fixes, please consider
-> pulling, I've been away for a while, so I'll be harvesting outstanding
-> patches in the next few days, as well as trying and reviewing more
-> complex patchkits,
+> The proc files which is sorted with alphabetical order are evenly
+> assigned to several synthesize threads to be processed in parallel.
 > 
-> - Arnaldo
+> For 'perf top', the threads number hard code to online CPU number. The
+> following patch will introduce an option to set it.
 > 
-> Test results at the end of this message, as usual.
+> For other perf tools, the thread number is 1. Because the process
+> function is not ready for multithreading, e.g.
+> process_synthesized_event.
 > 
-> The following changes since commit c976a7d6db215481261b63a89a408cb265a9812b:
-> 
->   Merge remote-tracking branch 'tip/perf/urgent' into perf/core, to pick up fixes (2017-10-02 13:58:12 -0300)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.15-20171003
-> 
-> for you to fetch changes up to f6a9820d572bd8384d982357cbad214b3a6c04bb:
-> 
->   perf tests attr: Fix group stat tests (2017-10-03 09:41:45 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> - Multithread the synthesizing of PERF_RECORD_ events for pre-existing
->   threads in 'perf top', speeding up that phase, greatly improving the
->   user experience in systems such as Intel's Knights Mill (Kan Liang)
-> 
-> - 'perf test' fixes for the perf_event_attr test case (Jiri Olsa, Thomas Richter)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Jiri Olsa (2):
->       perf tests attr: Fix task term values
->       perf tests attr: Fix group stat tests
-> 
-> Kan Liang (4):
->       perf tools: Lock to protect namespaces and comm list
->       perf tools: Lock to protect comm_str rb tree
->       perf top: Implement multithreading for perf_event__synthesize_threads
->       perf top: Add option to set the number of thread for event synthesize
-> 
-> Thomas Richter (2):
->       perf test attr: Fix python error on empty result
->       perf test attr: Fix ignored test case result
-> 
->  tools/perf/Documentation/perf-top.txt            |   3 +
->  tools/perf/builtin-kvm.c                         |   3 +-
->  tools/perf/builtin-record.c                      |   2 +-
->  tools/perf/builtin-top.c                         |  13 +-
->  tools/perf/builtin-trace.c                       |   2 +-
->  tools/perf/tests/attr.c                          |   2 +-
->  tools/perf/tests/attr.py                         |   6 +-
->  tools/perf/tests/attr/base-record                |   2 +-
->  tools/perf/tests/attr/test-record-group          |   1 +
->  tools/perf/tests/attr/test-record-group-sampling |   2 +-
->  tools/perf/tests/attr/test-record-group1         |   1 +
->  tools/perf/tests/attr/test-stat-group            |   2 +
->  tools/perf/tests/attr/test-stat-group1           |   2 +
->  tools/perf/tests/mmap-thread-lookup.c            |   2 +-
->  tools/perf/util/comm.c                           |  18 ++-
->  tools/perf/util/event.c                          | 163 ++++++++++++++++++-----
->  tools/perf/util/event.h                          |   3 +-
->  tools/perf/util/machine.c                        |   8 +-
->  tools/perf/util/machine.h                        |   9 +-
->  tools/perf/util/thread.c                         |  53 +++++++-
->  tools/perf/util/thread.h                         |   3 +
->  tools/perf/util/top.h                            |   1 +
->  22 files changed, 249 insertions(+), 52 deletions(-)
+> This patch series only support event synthesize multithreading for 'perf
+> top'. For other tools, it can be done separately later.
 
-Pulled, thanks a lot Arnaldo!
+Just to give some quick feedback: this is really nice stuff!
+
+Is anyone working on multi-threading 'perf record' (and the recording portion of 
+'perf top' perhaps)?
+
+Especially with complex, high-frequency profiling there's alot of SMP overhead 
+coming from a single recording thread. If there was a single thread per CPU, and 
+it truly only recorded the events from its own CPU, things would become a lot more 
+scalable.
+
+For example, if we measure the current overhead of perf record of a (limited) 
+parallel kernel build:
+
+  triton:~/tip> perf stat --no-inherit --pre "make clean >/dev/null 2>&1" perf record -F 10000 make -j kernel
+  ...
+  [ perf record: Captured and wrote 5.124 MB perf.data (108400 samples) ]
+
+ Performance counter stats for 'perf record -F 10000 make -j kernel':
+
+        183.582587      task-clock (msec)         #    0.039 CPUs utilized          
+             2,496      context-switches          #    0.014 M/sec                  
+               157      cpu-migrations            #    0.855 K/sec                  
+             6,649      page-faults               #    0.036 M/sec                  
+       817,478,151      cycles                    #    4.453 GHz                    
+       416,641,913      stalled-cycles-frontend   #   50.97% frontend cycles idle   
+     1,018,336,301      instructions              #    1.25  insn per cycle         
+                                                  #    0.41  stalled cycles per insn
+       217,255,137      branches                  # 1183.419 M/sec                  
+         2,970,118      branch-misses             #    1.37% of all branches        
+
+       4.710378510 seconds time elapsed
+
+That's 1018336301 just to record 108400 samples, i.e. every sample takes 9,300 
+instructions to _record_. That's insanely high overhead from what is in essence a 
+tracing utility.
+
+
+Even if I add "-B -N" to disable buildid generation (which is the worst offender), 
+it's still very high overhead:
+
+ [ perf record: Captured and wrote 5.585 MB perf.data ]
+
+ Performance counter stats for 'perf record -B -N -F 10000 make -j kernel':
+
+         45.625321      task-clock (msec)         #    0.009 CPUs utilized          
+             2,950      context-switches          #    0.065 M/sec                  
+               204      cpu-migrations            #    0.004 M/sec                  
+             1,992      page-faults               #    0.044 M/sec                  
+       193,127,853      cycles                    #    4.233 GHz                    
+       117,098,418      stalled-cycles-frontend   #   60.63% frontend cycles idle   
+       197,899,633      instructions              #    1.02  insn per cycle         
+                                                  #    0.59  stalled cycles per insn
+        41,221,863      branches                  #  903.487 M/sec                  
+           502,158      branch-misses             #    1.22% of all branches        
+
+       4.858962925 seconds time elapsed
+
+... that's still 1,800+ instructions per event!
+
+As a comparison, ftrace has a tracing overhead of less than 100 instructions per 
+event.
+
+Thanks,
 
 	Ingo
