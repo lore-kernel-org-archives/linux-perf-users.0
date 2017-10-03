@@ -1,43 +1,44 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v3 03/13] perf report: create real callchain entries for
- inlined frames
-Date: Sun, 01 Oct 2017 10:40:37 -0700
-Message-ID: <1506879637.2274.5.camel@perches.com>
-References: <20170906135501.306-1-milian.wolff@kdab.com>
-         <20170906135501.306-4-milian.wolff@kdab.com> <20170919122711.GA13388@krava>
-         <1648232.PM1aBqIB3I@agathebauer>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2 4/4] Make all print functions receive the fp argument,
+ and opens a dump file in process_event.
+Date: Tue, 3 Oct 2017 12:43:19 +0200
+Message-ID: <20171003104319.GA13755@krava>
+References: <1506408797-23657-1-git-send-email-yuzhoujian@didichuxing.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1648232.PM1aBqIB3I@agathebauer>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>, Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:35582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751515AbdJCKnX (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 3 Oct 2017 06:43:23 -0400
+Content-Disposition: inline
+In-Reply-To: <1506408797-23657-1-git-send-email-yuzhoujian@didichuxing.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: yuzhoujian <ufo19890607@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, 2017-10-01 at 14:37 +0200, Milian Wolff wrote:
-> On Dienstag, 19. September 2017 14:27:11 CEST Jiri Olsa wrote:
-[]
-> > nit, think we prefer the /* */ comment style
-> 
-> I'll fix this, but note that there are more places outside this patch series 
-> where this style has crept in. Some of them also from past patches of mine - 
-> sorry for that.
+On Tue, Sep 26, 2017 at 02:53:17PM +0800, yuzhoujian wrote:
 
-I think c99 comments are fine.
-So did Linus Torvalds.
+SNIP
 
-http://lkml.iu.edu/hypermail/linux/kernel/1607.1/00627.html
+> -	perf_event__fprintf(event, stdout);
+> +	fp = tool->per_event_dump ? per_event_dump_file : stdout;
+> +	fprint_sample_start(sample, thread, evsel, fp);
+> +	perf_event__fprintf(event, fp);
+>  	thread__put(thread);
+>  	return 0;
+>  }
+> @@ -2852,6 +2883,8 @@ int cmd_script(int argc, const char **argv)
+>  	file.path = input_name;
+>  	file.force = symbol_conf.force;
+>  
+> +	file_name = file.path ? file.path : "perf.data";
 
-> I looks to me as if the checkpatch.pl should catch this, but it doesn't for me 
-> which is odd. Does anyone know what I need to do to enable the C99_COMMENTS 
-> check?
+you don't need file_name variable, the data file name is
+reachable from struct perf_script:
 
-Modify checkpatch
+  perf_script::session::file
 
-my $allow_c99_comments = 1;
-
-change the 1 to 0
-
-Add a runtime option if you want.
+jirka
