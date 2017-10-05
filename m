@@ -1,130 +1,254 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: perf tool and mount name space questions
-Date: Thu, 5 Oct 2017 14:55:51 +0200
-Message-ID: <3803b12b-171e-0a49-e6d0-224e4d7275c9@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54924 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751820AbdJEMz7 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Oct 2017 08:55:59 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v95CtagW103602
-        for <linux-perf-users@vger.kernel.org>; Thu, 5 Oct 2017 08:55:59 -0400
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ddkp2d522-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Oct 2017 08:55:59 -0400
-Received: from localhost
-        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Thu, 5 Oct 2017 13:55:55 +0100
-Content-Language: en-IE
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Krister Johansen <kjlx@templeofstupid.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL 0/1] perf callchain symbol resolving fix
+Date: Thu,  5 Oct 2017 14:59:12 -0300
+Message-ID: <20171005175913.16513-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Pozdneev <pozdneyev@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Krister Johansen <kjlx@templeofstupid.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Yao Jin <yao.jin@linux.intel.com>, zhangmengting@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi all,
+Hi Ingo,
 
-I investigate perf mount name space support added recently and have
-some questions on how to use it. I use 4.14.0-rc1
+	Please consider pulling,
 
-I start a small self made container with its own mount and pid
-name space and root file system.
-The container has a few executables such as ps, bash,
-hostname, ls, find, stty, ip and all required libraries. The container
-is started from my bash using:
+- Arnaldo
 
-unshare -f -n -u -p -m chroot /tmp/tryfs /con-init.sh
+Test results at the end of this message, as usual.
 
-con-init.sh is my simple init process which mounts /proc
-and /tmp and then spawns a bash shell and waits for its termination.
-Container is started and runs as expected. I can type some commands
-and see the correct output.
+The following changes since commit 1addcd55bc54d669000221b41e379458ff3e6747:
 
-Now my questions regarding perf:
-Question 1:
+  Merge tag 'perf-urgent-for-mingo-4.14-20170928' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2017-09-29 19:31:46 +0200)
 
-I run command 'perf record -a' to gather perf data until
-I hit ctrl-C. I then invoke 'perf report' for display.
-How to handle a process in the container which exited before the
-command 'perf report' runs?
+are available in the git repository at:
 
-The call chain is thread__new() --> nsinfo__new() --> nsinfo__init()
-and when the process already exited nsinfo__init() sets need_setns to
-false because /proc/<PID>/ns/mnt is gone.
-How to display correct information for a process inside the container
-which has exited before the perf report command runs?
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.14-20171005
 
-The same issue pops up when I invoke
-- perf record -p XXX --inherit
-  where XXX is the PID of my container init process. And I see only
-  the children of the init process, not the complete process tree.
-  Is there a better way to see the container process tree?
+for you to fetch changes up to c1fbc0cf81f1c464f5fda322c1104d4bb1da6711:
 
-- perf record unshare -f -n -u -p -m chroot /tmp/tryfs /con-init.sh
-  has the same issue. Command 'perf report' later on has no mount
-  name space access to the processes executed inside of the container.
+  perf callchain: Compare dsos (as well) for CCKEY_FUNCTION (2017-10-05 10:52:54 -0300)
 
+----------------------------------------------------------------
+perf/urgent fix:
 
-Question 2:
+. Two functions from different binaries can have same start address. Thus,
+  comparing only start address in match_chain() leads to inconsistent
+  callchains. Fix this by adding a check for dsos as well (Ravi Bangoria)
 
-In function dso__load() --> dso__find_perf_map() tests for a dso name
-starting with "/tmp/perf-". If true, it assumes a file with the name
-/tmp/perf-<container-pid>.map exists.
-But in function map__new() such dso names are created only for 
-certain types such anonymous memory or heaps, etc. See:
-   if ((anon || no_dso) && nsi && type == MAP__FUNCTION) {
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I think those /tmp/perf-*.map files or dso names do not exist 
-for normal containers. Is this correct?
+----------------------------------------------------------------
+Ravi Bangoria (1):
+      perf callchain: Compare dsos (as well) for CCKEY_FUNCTION
 
-Question 3:
-I investigate the PERF_RECORDS_xxx shown with command 'perf report -D':
-I see for example the init process of my container, PID 28093:
-  PERF_RECORD_FORK(28093:28093):(28090:28090)
-  PERF_RECORD_NAMESPACES 28093/28093 - nr_namespaces: 7
-  PERF_RECORD_COMM: /myinit:28093/28093
-  PERF_RECORD_MMAP2 28093/28093: .... /tmp/tryfs/myinit
-  PERF_RECORD_MMAP2 28093/28093: .... /tmp/tryfs/lib64/libc.so.6
-  ...
-This init process now forks off a bash (PID 28100):
-  PERF_RECORD_FORK(28100:28100):(28093:28093)
-  PERF_RECORD_NAMESPACES 28100/28100 - nr_namespaces: 7
-  PERF_RECORD_COMM: bash:28100/28100
-  PERF_RECORD_MMAP2 28100/28100: .... /tmp/tryfs/usr/bin/bash
-  PERF_RECORD_MMAP2 28100/28100: .... /tmp/tryfs/lib64/libc.so.6
-  ...
-Both processes are in the new mount name space setup by the unshare process.
-The fully qualified path name ensures one can read the correct file for 
-symbol resolvement in the newly setup root file system of the container.
+ tools/perf/util/callchain.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-However when I type 'ls' in my container's bash, I see this in the
-perf.data file as:
-   PERF_RECORD_FORK(28103:28103):(28100:28100)
-   PERF_RECORD_NAMESPACES 28103/28103 - nr_namespaces: 7
-   PERF_RECORD_COMM exec: ls:28103/28103
-   PERF_RECORD_MMAP2 28103/28103: .... /usr/bin/ls
-   PERF_RECORD_MMAP2 28103/28103: .... /lib64/libc.so.6
+Test results:
 
-Now command 'perf report' will look up ls and libc.so.6 in its root file system,
-not in the container's root file system. This is ok as long as both files are
-identical. How to handle this in case they differ?
+The first ones are container (docker) based builds of tools/perf with and
+without libelf support.  Where clang is available, it is also used to build
+perf with/without libelf.
 
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
 
-Question 4:
-Maybe I took the wrong approach, so what is the best way for the perf tool
-to be applied on a container, for example one created with docker?
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
 
-Thanks a lot for your help.
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
 
--- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+  # dm
+   1 alpine:3.4: Ok
+   2 alpine:3.5: Ok
+   3 alpine:3.6: Ok
+   4 alpine:edge: Ok
+   5 android-ndk:r12b-arm: Ok
+   6 android-ndk:r15c-arm: Ok
+   7 centos:5: Ok
+   8 centos:6: Ok
+   9 centos:7: Ok
+  10 debian:7: Ok
+  11 debian:8: Ok
+  12 debian:9: Ok
+  13 debian:experimental: Ok
+  14 debian:experimental-x-arm64: Ok
+  15 debian:experimental-x-mips: Ok
+  16 debian:experimental-x-mips64: Ok
+  17 debian:experimental-x-mipsel: Ok
+  18 fedora:20: Ok
+  19 fedora:21: Ok
+  20 fedora:22: Ok
+  21 fedora:23: Ok
+  22 fedora:24: Ok
+  23 fedora:24-x-ARC-uClibc: FAIL
+
+  util/db-export.c: In function 'db_export__sample':
+  util/db-export.c:429:1: internal compiler error: in change_address_1, at emit-rtl.c:2150
+   }
+   ^
+  Please submit a full bug report,
+  with preprocessed source if appropriate.
+
+  builtin-sched.c: In function 'timehist_sched_switch_event':
+  builtin-sched.c:2580:1: internal compiler error: in change_address_1, at emit-rtl.c:2150
+   }
+   ^
+
+  24 fedora:25: Ok
+  25 fedora:26: Ok
+  26 fedora:rawhide: Ok
+  27 mageia:5: Ok
+  28 opensuse:42.1: Ok
+  29 opensuse:42.2: Ok
+  30 opensuse:42.3: Ok
+  31 opensuse:tumbleweed: Ok
+  32 oraclelinux:6: Ok
+  33 oraclelinux:7: Ok
+  34 ubuntu:12.04.5: Ok
+  35 ubuntu:14.04.4: Ok
+  36 ubuntu:14.04.4-x-linaro-arm64: Ok
+  37 ubuntu:15.04: Ok
+  38 ubuntu:15.10: Ok
+  39 ubuntu:16.04: Ok
+  40 ubuntu:16.04-x-arm: Ok
+  41 ubuntu:16.04-x-arm64: Ok
+  42 ubuntu:16.04-x-powerpc: Ok
+  43 ubuntu:16.04-x-powerpc64: Ok
+  44 ubuntu:16.04-x-powerpc64el: Ok
+  45 ubuntu:16.04-x-s390: Ok
+  46 ubuntu:16.10: Ok
+  47 ubuntu:17.04: Ok
+  48 ubuntu:17.10: Ok
+  #
+
+  # uname -a
+  Linux jouet 4.13.0+ #3 SMP Mon Sep 25 11:51:22 -03 2017 x86_64 x86_64 x86_64 GNU/Linux
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: DSO data read                                         : Ok
+  11: DSO data cache                                        : Ok
+  12: DSO data reopen                                       : Ok
+  13: Roundtrip evsel->name                                 : Ok
+  14: Parse sched tracepoints fields                        : Ok
+  15: syscalls:sys_enter_openat event fields                : Ok
+  16: Setup struct perf_event_attr                          : Ok
+  17: Match and link multiple hists                         : Ok
+  18: 'import perf' in python                               : Ok
+  19: Breakpoint overflow signal handler                    : Ok
+  20: Breakpoint overflow sampling                          : Ok
+  21: Number of exit events of a simple workload            : Ok
+  22: Software clock events period values                   : Ok
+  23: Object code reading                                   : Ok
+  24: Sample parsing                                        : Ok
+  25: Use a dummy software event to keep tracking           : Ok
+  26: Parse with no sample_id_all bit set                   : Ok
+  27: Filter hist entries                                   : Ok
+  28: Lookup mmap thread                                    : Ok
+  29: Share thread mg                                       : Ok
+  30: Sort output of hist entries                           : Ok
+  31: Cumulate child hist entries                           : Ok
+  32: Track with sched_switch                               : Ok
+  33: Filter fds with revents mask in a fdarray             : Ok
+  34: Add fd to a fdarray, making it autogrow               : Ok
+  35: kmod_path__parse                                      : Ok
+  36: Thread map                                            : Ok
+  37: LLVM search and compile                               :
+  37.1: Basic BPF llvm compile                              : Ok
+  37.2: kbuild searching                                    : Ok
+  37.3: Compile source for BPF prologue generation          : Ok
+  37.4: Compile source for BPF relocation                   : Ok
+  38: Session topology                                      : Ok
+  39: BPF filter                                            :
+  39.1: Basic BPF filtering                                 : Ok
+  39.2: BPF pinning                                         : Ok
+  39.3: BPF prologue generation                             : Ok
+  39.4: BPF relocation checker                              : Ok
+  40: Synthesize thread map                                 : Ok
+  41: Remove thread map                                     : Ok
+  42: Synthesize cpu map                                    : Ok
+  43: Synthesize stat config                                : Ok
+  44: Synthesize stat                                       : Ok
+  45: Synthesize stat round                                 : Ok
+  46: Synthesize attr update                                : Ok
+  47: Event times                                           : Ok
+  48: Read backward ring buffer                             : Ok
+  49: Print cpu map                                         : Ok
+  50: Probe SDT events                                      : Ok
+  51: is_printable_array                                    : Ok
+  52: Print bitmap                                          : Ok
+  53: perf hooks                                            : Ok
+  54: builtin clang support                                 : Skip (not compiled in)
+  55: unit_number__scnprintf                                : Ok
+  56: x86 rdpmc                                             : Ok
+  57: Convert perf time to TSC                              : Ok
+  58: DWARF unwind                                          : Ok
+  59: x86 instruction decoder - new instructions            : Ok
+  60: Intel cqm nmi context read                            : Skip
+  61: Use vfs_getname probe to get syscall args filenames   : Ok
+  62: probe libc's inet_pton & backtrace it with ping       : Ok
+  63: Check open filename arg using perf trace + vfs_getname: Ok
+  64: Add vfs_getname probe to get syscall args filenames   : Ok
+  #
+
+  $ make -C tools/perf build-test
+  make: Entering directory '/home/acme/git/linux/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+                   make_help_O: && make help 
+             make_no_scripts_O: && make NO_LIBPYTHON=1 NO_LIBPERL=1 
+   make_install_prefix_slash_O: && make install prefix=/tmp/krava/ 
+                 make_static_O: && make LDFLAGS=-static 
+                  make_no_ui_O: && make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1 
+                   make_tags_O: && make tags 
+                    make_doc_O: && make doc 
+              make_clean_all_O: && make clean all 
+             make_no_libperl_O: && make NO_LIBPERL=1 
+  make_no_libdw_dwarf_unwind_O: && make NO_LIBDW_DWARF_UNWIND=1 
+         make_install_prefix_O: && make install prefix=/tmp/krava 
+              make_no_libbpf_O: && make NO_LIBBPF=1 
+              make_no_libelf_O: && make NO_LIBELF=1 
+            make_no_auxtrace_O: && make NO_AUXTRACE=1 
+            make_no_libaudit_O: && make NO_LIBAUDIT=1 
+                make_no_newt_O: && make NO_NEWT=1 
+       make_util_pmu_bison_o_O: && make util/pmu-bison.o 
+            make_no_demangle_O: && make NO_DEMANGLE=1 
+           make_no_libbionic_O: && make NO_LIBBIONIC=1 
+                 make_perf_o_O: && make perf.o 
+               make_no_slang_O: && make NO_SLANG=1 
+             make_util_map_o_O: && make util/map.o 
+                   make_pure_O: && make 
+            make_install_bin_O: && make install-bin 
+           make_no_libpython_O: && make NO_LIBPYTHON=1 
+                make_minimal_O: && make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 
+        make_with_babeltrace_O: && make LIBBABELTRACE=1 
+           make_no_backtrace_O: && make NO_BACKTRACE=1 
+           make_no_libunwind_O: && make NO_LIBUNWIND=1 
+                  make_debug_O: && make DEBUG=1 
+                make_install_O: && make install 
+             make_no_libnuma_O: && make NO_LIBNUMA=1 
+                make_no_gtk2_O: && make NO_GTK2=1 
+         make_with_clangllvm_O: && make LIBCLANGLLVM=1 
+  OK
+  $
