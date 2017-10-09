@@ -1,24 +1,64 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v5 11/16] perf report: properly handle branch count in match_chain
-Date: Mon,  9 Oct 2017 22:33:05 +0200
-Message-ID: <20171009203310.17362-12-milian.wolff@kdab.com>
+Subject: [PATCH v5 10/16] perf report: compare symbol name for inlined frames when sorting
+Date: Mon,  9 Oct 2017 22:33:04 +0200
+Message-ID: <20171009203310.17362-11-milian.wolff@kdab.com>
 References: <20171009203310.17362-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:48818 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754098AbdJIUdk (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Oct 2017 16:33:40 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171009203310.17362-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+List-Id: linux-perf-users.vger.kernel.org
 
-Some of the code paths I introduced before returned too early
-without running the code to handle a node's branch count.
-By refactoring match_chain to only have one exit point, this
-can be remedied.
+Similar to the callstack frame matching, we also have to compare
+the symbol name when sorting hist entries. The reason is twofold:
+On one hand, multiple inlined functions will use the same symbol
+start/end values of the parent, non-inlined symbol. As such, all
+of these symbols often end up missing from top-level report, as
+they get merged with the non-inlined frame. On the other hand,
+multiple different functions may end up inlining the same function,
+and we need to aggregate these values properly.
+
+Before:
+
+~~~~~
+perf report --stdio --inline -g none
+# Children      Self  Command       Shared Object     Symbol
+# ........  ........  ............  ................  ...................................
+#
+   100.00%    39.69%  cpp-inlining  cpp-inlining      [.] main
+   100.00%     0.00%  cpp-inlining  cpp-inlining      [.] _start
+   100.00%     0.00%  cpp-inlining  libc-2.25.so      [.] __libc_start_main
+    97.03%     0.00%  cpp-inlining  cpp-inlining      [.] std::norm<double> (inlined)
+    59.53%     4.26%  cpp-inlining  libm-2.25.so      [.] hypot
+    55.21%    55.08%  cpp-inlining  libm-2.25.so      [.] __hypot_finite
+     0.52%     0.52%  cpp-inlining  libm-2.25.so      [.] cabs
+~~~~~
+
+After:
+
+~~~~~
+perf report --stdio --inline -g none
+# Children      Self  Command       Shared Object     Symbol
+# ........  ........  ............  ................  ...................................................................................................................................
+#
+   100.00%    39.69%  cpp-inlining  cpp-inlining      [.] main
+   100.00%     0.00%  cpp-inlining  cpp-inlining      [.] _start
+   100.00%     0.00%  cpp-inlining  libc-2.25.so      [.] __libc_start_main
+    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::_Norm_helper<true>::_S_do_it<double> (inlined)
+    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::__complex_abs (inlined)
+    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::abs<double> (inlined)
+    62.57%     0.00%  cpp-inlining  cpp-inlining      [.] std::norm<double> (inlined)
+    59.53%     4.26%  cpp-inlining  libm-2.25.so      [.] hypot
+    55.21%    55.08%  cpp-inlining  libm-2.25.so      [.] __hypot_finite
+    34.46%     0.00%  cpp-inlining  cpp-inlining      [.] std::uniform_real_distribution<double>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+    32.39%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::_Adaptor<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>, double>::operator() (inlined)
+    32.39%     0.00%  cpp-inlining  cpp-inlining      [.] std::generate_canonical<double, 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> > (inlined)
+    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc (inlined)
+    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul> (inlined)
+    12.29%     0.00%  cpp-inlining  cpp-inlining      [.] std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator() (inlined)
+     0.52%     0.52%  cpp-inlining  libm-2.25.so      [.] cabs
+~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -27,151 +67,22 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 117 +++++++++++++++++++++++---------------------
- 1 file changed, 60 insertions(+), 57 deletions(-)
+ tools/perf/util/sort.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 3f1431bf71bd..782de047c902 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -666,78 +666,81 @@ static enum match_result match_chain_strings(const char *left,
- 	return ret;
- }
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index acb9210fd18a..006d10a0dc96 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -225,6 +225,9 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+ 	if (sym_l == sym_r)
+ 		return 0;
  
-+static enum match_result match_address(u64 left, u64 right)
-+{
-+	if (left == right)
-+		return MATCH_EQ;
-+	else if (left < right)
-+		return MATCH_LT;
-+	else
-+		return MATCH_GT;
-+}
++	if (sym_l->inlined || sym_r->inlined)
++		return strcmp(sym_l->name, sym_r->name);
 +
- static enum match_result match_chain(struct callchain_cursor_node *node,
- 				     struct callchain_list *cnode)
- {
--	struct symbol *sym = node->sym;
--	enum match_result match;
--	u64 left, right;
-+	enum match_result match = MATCH_ERROR;
+ 	if (sym_l->start != sym_r->start)
+ 		return (int64_t)(sym_r->start - sym_l->start);
  
--	if (callchain_param.key == CCKEY_SRCLINE) {
-+	switch (callchain_param.key) {
-+	case CCKEY_SRCLINE:
- 		match = match_chain_strings(cnode->srcline, node->srcline);
--
--		/* if no srcline is available, fallback to symbol name */
--		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
--			match = match_chain_strings(cnode->ms.sym->name,
--						    node->sym->name);
--
- 		if (match != MATCH_ERROR)
--			return match;
--
--		/* otherwise fall-back to IP-based comparison below */
--	}
--
--	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
--		/* compare inlined frames based on their symbol name because
--		 * different inlined frames will have the same symbol start
--		 */
--		if (cnode->ms.sym->inlined || node->sym->inlined)
--			return match_chain_strings(cnode->ms.sym->name,
--						   node->sym->name);
--
--		left = cnode->ms.sym->start;
--		right = sym->start;
--	} else {
--		left = cnode->ip;
--		right = node->ip;
-+			break;
-+		__fallthrough;
-+	case CCKEY_FUNCTION:
-+		if (node->sym && cnode->ms.sym) {
-+			/* compare inlined frames based on their symbol name
-+			 * because different inlined frames will have the same
-+			 * symbol start. otherwise do a faster comparison based
-+			 * on the symbol start address
-+			 */
-+			if (cnode->ms.sym->inlined || node->sym->inlined)
-+				match = match_chain_strings(cnode->ms.sym->name,
-+							    node->sym->name);
-+			else
-+				match = match_address(cnode->ms.sym->start,
-+						      node->sym->start);
-+			if (match != MATCH_ERROR)
-+				break;
-+		}
-+		__fallthrough;
-+	case CCKEY_ADDRESS:
-+	default:
-+		match = match_address(cnode->ip, node->ip);
-+		break;
- 	}
- 
--	if (left == right) {
--		if (node->branch) {
--			cnode->branch_count++;
-+	if (match == MATCH_EQ && node->branch) {
-+		cnode->branch_count++;
- 
--			if (node->branch_from) {
--				/*
--				 * It's "to" of a branch
--				 */
--				cnode->brtype_stat.branch_to = true;
-+		if (node->branch_from) {
-+			/*
-+			 * It's "to" of a branch
-+			 */
-+			cnode->brtype_stat.branch_to = true;
- 
--				if (node->branch_flags.predicted)
--					cnode->predicted_count++;
-+			if (node->branch_flags.predicted)
-+				cnode->predicted_count++;
- 
--				if (node->branch_flags.abort)
--					cnode->abort_count++;
-+			if (node->branch_flags.abort)
-+				cnode->abort_count++;
- 
--				branch_type_count(&cnode->brtype_stat,
--						  &node->branch_flags,
--						  node->branch_from,
--						  node->ip);
--			} else {
--				/*
--				 * It's "from" of a branch
--				 */
--				cnode->brtype_stat.branch_to = false;
--				cnode->cycles_count +=
--					node->branch_flags.cycles;
--				cnode->iter_count += node->nr_loop_iter;
--				cnode->iter_cycles += node->iter_cycles;
--			}
-+			branch_type_count(&cnode->brtype_stat,
-+					  &node->branch_flags,
-+					  node->branch_from,
-+					  node->ip);
-+		} else {
-+			/*
-+			 * It's "from" of a branch
-+			 */
-+			cnode->brtype_stat.branch_to = false;
-+			cnode->cycles_count += node->branch_flags.cycles;
-+			cnode->iter_count += node->nr_loop_iter;
-+			cnode->iter_cycles += node->iter_cycles;
- 		}
--
--		return MATCH_EQ;
- 	}
- 
--	return left > right ? MATCH_GT : MATCH_LT;
-+	return match;
- }
- 
- /*
 -- 
 2.14.2
