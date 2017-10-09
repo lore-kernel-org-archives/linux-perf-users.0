@@ -1,7 +1,7 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v5 07/16] perf report: mark inlined frames in output by " (inlined)" suffix
-Date: Mon,  9 Oct 2017 22:33:01 +0200
-Message-ID: <20171009203310.17362-8-milian.wolff@kdab.com>
+Subject: [PATCH v5 06/16] perf report: fall-back to function name comparison for -g srcline
+Date: Mon,  9 Oct 2017 22:33:00 +0200
+Message-ID: <20171009203310.17362-7-milian.wolff@kdab.com>
 References: <20171009203310.17362-1-milian.wolff@kdab.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171009203310.17362-1-milian.wolff@kdab.com>
@@ -10,15 +10,57 @@ To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 List-Id: linux-perf-users.vger.kernel.org
 
-The original patch that introduced inline frame output in the
-various browsers used this suffix already. The new centralized
-approach that uses fake symbols for inlined frames was missing
-this approach so far.
+When a callchain entry has no srcline available, we ended up
+comparing the instruction pointer. I consider this to be not
+too useful. Rather, I think we should group the entries by
+function name, which this patch adds. For people who want to
+split the data on the IP boundary, using `-g address` is the
+correct choice.
 
-Instead of changing the symbol name itself, we only print the
-suffix where needed. This allows us to efficiently lookup
-the symbol for a given name without first having to append the
-suffix before the lookup.
+Before:
+
+~~~~~
+   100.00%    38.86%  [.] main
+            |
+            |--61.14%--main inlining.cpp:14
+            |          std::norm<double> complex:664
+            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
+            |          std::abs<double> complex:597
+            |          std::__complex_abs complex:589
+            |          |
+            |          |--56.03%--hypot
+            |          |          |
+            |          |          |--8.45%--__hypot_finite
+            |          |          |
+            |          |          |--7.62%--__hypot_finite
+            |          |          |
+            |          |          |--2.29%--__hypot_finite
+            |          |          |
+            |          |          |--2.24%--__hypot_finite
+            |          |          |
+            |          |          |--2.06%--__hypot_finite
+            |          |          |
+            |          |          |--1.81%--__hypot_finite
+...
+~~~~~
+
+After:
+
+~~~~~
+   100.00%    38.86%  [.] main
+            |
+            |--61.14%--main inlining.cpp:14
+            |          std::norm<double> complex:664
+            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
+            |          std::abs<double> complex:597
+            |          std::__complex_abs complex:589
+            |          |
+            |          |--60.29%--hypot
+            |          |          |
+            |          |           --56.03%--__hypot_finite
+            |          |
+            |           --0.85%--cabs
+~~~~~
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -27,46 +69,58 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 10 +++++++---
- tools/perf/util/sort.c      |  3 +++
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/util/callchain.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 007e8364ea01..b0ff56332134 100644
+index c208cd5a5e83..007e8364ea01 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -1107,11 +1107,15 @@ char *callchain_list__sym_name(struct callchain_list *cl,
- 	int printed;
+@@ -645,11 +645,9 @@ enum match_result {
+ 	MATCH_GT,
+ };
  
- 	if (cl->ms.sym) {
-+		const char *inlined = cl->ms.sym->inlined ? " (inlined)" : "";
+-static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
+-					     struct callchain_list *cnode)
++static enum match_result match_chain_strings(const char *left,
++					     const char *right)
+ {
+-	const char *left = cnode->srcline;
+-	const char *right = node->srcline;
+ 	enum match_result ret = MATCH_EQ;
+ 	int cmp;
+ 
+@@ -659,10 +657,8 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
+ 		cmp = 1;
+ 	else if (left && !right)
+ 		cmp = -1;
+-	else if (cnode->ip == node->ip)
+-		cmp = 0;
+ 	else
+-		cmp = (cnode->ip < node->ip) ? -1 : 1;
++		return MATCH_ERROR;
+ 
+ 	if (cmp != 0)
+ 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
+@@ -677,10 +673,18 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 	u64 left, right;
+ 
+ 	if (callchain_param.key == CCKEY_SRCLINE) {
+-		enum match_result match = match_chain_srcline(node, cnode);
++		enum match_result match = match_chain_strings(cnode->srcline,
++							      node->srcline);
 +
- 		if (show_srcline && cl->srcline)
--			printed = scnprintf(bf, bfsize, "%s %s",
--					cl->ms.sym->name, cl->srcline);
-+			printed = scnprintf(bf, bfsize, "%s %s%s",
-+					    cl->ms.sym->name, cl->srcline,
-+					    inlined);
- 		else
--			printed = scnprintf(bf, bfsize, "%s", cl->ms.sym->name);
-+			printed = scnprintf(bf, bfsize, "%s%s",
-+					    cl->ms.sym->name, inlined);
- 	} else
- 		printed = scnprintf(bf, bfsize, "%#" PRIx64, cl->ip);
++		/* if no srcline is available, fallback to symbol name */
++		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
++			match = match_chain_strings(cnode->ms.sym->name,
++						    node->sym->name);
  
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index eb3ab902a1c0..acb9210fd18a 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -283,6 +283,9 @@ static int _hist_entry__sym_snprintf(struct map *map, struct symbol *sym,
- 			ret += repsep_snprintf(bf + ret, size - ret, "%.*s",
- 					       width - ret,
- 					       sym->name);
-+			if (sym->inlined)
-+				ret += repsep_snprintf(bf + ret, size - ret,
-+						       " (inlined)");
- 		}
- 	} else {
- 		size_t len = BITS_PER_LONG / 4;
+ 		if (match != MATCH_ERROR)
+ 			return match;
++
++		/* otherwise fall-back to IP-based comparison below */
+ 	}
+ 
+ 	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
 -- 
 2.14.2
