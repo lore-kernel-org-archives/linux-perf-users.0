@@ -1,66 +1,24 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v5 06/16] perf report: fall-back to function name comparison for -g srcline
-Date: Mon,  9 Oct 2017 22:33:00 +0200
-Message-ID: <20171009203310.17362-7-milian.wolff@kdab.com>
+Subject: [PATCH v5 11/16] perf report: properly handle branch count in match_chain
+Date: Mon,  9 Oct 2017 22:33:05 +0200
+Message-ID: <20171009203310.17362-12-milian.wolff@kdab.com>
 References: <20171009203310.17362-1-milian.wolff@kdab.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:48818 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754098AbdJIUdk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Oct 2017 16:33:40 -0400
 In-Reply-To: <20171009203310.17362-1-milian.wolff@kdab.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>
 Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
-List-Id: linux-perf-users.vger.kernel.org
 
-When a callchain entry has no srcline available, we ended up
-comparing the instruction pointer. I consider this to be not
-too useful. Rather, I think we should group the entries by
-function name, which this patch adds. For people who want to
-split the data on the IP boundary, using `-g address` is the
-correct choice.
-
-Before:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--56.03%--hypot
-            |          |          |
-            |          |          |--8.45%--__hypot_finite
-            |          |          |
-            |          |          |--7.62%--__hypot_finite
-            |          |          |
-            |          |          |--2.29%--__hypot_finite
-            |          |          |
-            |          |          |--2.24%--__hypot_finite
-            |          |          |
-            |          |          |--2.06%--__hypot_finite
-            |          |          |
-            |          |          |--1.81%--__hypot_finite
-...
-~~~~~
-
-After:
-
-~~~~~
-   100.00%    38.86%  [.] main
-            |
-            |--61.14%--main inlining.cpp:14
-            |          std::norm<double> complex:664
-            |          std::_Norm_helper<true>::_S_do_it<double> complex:654
-            |          std::abs<double> complex:597
-            |          std::__complex_abs complex:589
-            |          |
-            |          |--60.29%--hypot
-            |          |          |
-            |          |           --56.03%--__hypot_finite
-            |          |
-            |           --0.85%--cabs
-~~~~~
+Some of the code paths I introduced before returned too early
+without running the code to handle a node's branch count.
+By refactoring match_chain to only have one exit point, this
+can be remedied.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -69,58 +27,151 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/callchain.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ tools/perf/util/callchain.c | 117 +++++++++++++++++++++++---------------------
+ 1 file changed, 60 insertions(+), 57 deletions(-)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index c208cd5a5e83..007e8364ea01 100644
+index 3f1431bf71bd..782de047c902 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -645,11 +645,9 @@ enum match_result {
- 	MATCH_GT,
- };
+@@ -666,78 +666,81 @@ static enum match_result match_chain_strings(const char *left,
+ 	return ret;
+ }
  
--static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
--					     struct callchain_list *cnode)
-+static enum match_result match_chain_strings(const char *left,
-+					     const char *right)
++static enum match_result match_address(u64 left, u64 right)
++{
++	if (left == right)
++		return MATCH_EQ;
++	else if (left < right)
++		return MATCH_LT;
++	else
++		return MATCH_GT;
++}
++
+ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
  {
--	const char *left = cnode->srcline;
--	const char *right = node->srcline;
- 	enum match_result ret = MATCH_EQ;
- 	int cmp;
+-	struct symbol *sym = node->sym;
+-	enum match_result match;
+-	u64 left, right;
++	enum match_result match = MATCH_ERROR;
  
-@@ -659,10 +657,8 @@ static enum match_result match_chain_srcline(struct callchain_cursor_node *node,
- 		cmp = 1;
- 	else if (left && !right)
- 		cmp = -1;
--	else if (cnode->ip == node->ip)
--		cmp = 0;
- 	else
--		cmp = (cnode->ip < node->ip) ? -1 : 1;
-+		return MATCH_ERROR;
- 
- 	if (cmp != 0)
- 		ret = cmp < 0 ? MATCH_LT : MATCH_GT;
-@@ -677,10 +673,18 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
- 	u64 left, right;
- 
- 	if (callchain_param.key == CCKEY_SRCLINE) {
--		enum match_result match = match_chain_srcline(node, cnode);
-+		enum match_result match = match_chain_strings(cnode->srcline,
-+							      node->srcline);
-+
-+		/* if no srcline is available, fallback to symbol name */
-+		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-+			match = match_chain_strings(cnode->ms.sym->name,
-+						    node->sym->name);
- 
+-	if (callchain_param.key == CCKEY_SRCLINE) {
++	switch (callchain_param.key) {
++	case CCKEY_SRCLINE:
+ 		match = match_chain_strings(cnode->srcline, node->srcline);
+-
+-		/* if no srcline is available, fallback to symbol name */
+-		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+-			match = match_chain_strings(cnode->ms.sym->name,
+-						    node->sym->name);
+-
  		if (match != MATCH_ERROR)
- 			return match;
-+
-+		/* otherwise fall-back to IP-based comparison below */
+-			return match;
+-
+-		/* otherwise fall-back to IP-based comparison below */
+-	}
+-
+-	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+-		/* compare inlined frames based on their symbol name because
+-		 * different inlined frames will have the same symbol start
+-		 */
+-		if (cnode->ms.sym->inlined || node->sym->inlined)
+-			return match_chain_strings(cnode->ms.sym->name,
+-						   node->sym->name);
+-
+-		left = cnode->ms.sym->start;
+-		right = sym->start;
+-	} else {
+-		left = cnode->ip;
+-		right = node->ip;
++			break;
++		__fallthrough;
++	case CCKEY_FUNCTION:
++		if (node->sym && cnode->ms.sym) {
++			/* compare inlined frames based on their symbol name
++			 * because different inlined frames will have the same
++			 * symbol start. otherwise do a faster comparison based
++			 * on the symbol start address
++			 */
++			if (cnode->ms.sym->inlined || node->sym->inlined)
++				match = match_chain_strings(cnode->ms.sym->name,
++							    node->sym->name);
++			else
++				match = match_address(cnode->ms.sym->start,
++						      node->sym->start);
++			if (match != MATCH_ERROR)
++				break;
++		}
++		__fallthrough;
++	case CCKEY_ADDRESS:
++	default:
++		match = match_address(cnode->ip, node->ip);
++		break;
  	}
  
- 	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+-	if (left == right) {
+-		if (node->branch) {
+-			cnode->branch_count++;
++	if (match == MATCH_EQ && node->branch) {
++		cnode->branch_count++;
+ 
+-			if (node->branch_from) {
+-				/*
+-				 * It's "to" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = true;
++		if (node->branch_from) {
++			/*
++			 * It's "to" of a branch
++			 */
++			cnode->brtype_stat.branch_to = true;
+ 
+-				if (node->branch_flags.predicted)
+-					cnode->predicted_count++;
++			if (node->branch_flags.predicted)
++				cnode->predicted_count++;
+ 
+-				if (node->branch_flags.abort)
+-					cnode->abort_count++;
++			if (node->branch_flags.abort)
++				cnode->abort_count++;
+ 
+-				branch_type_count(&cnode->brtype_stat,
+-						  &node->branch_flags,
+-						  node->branch_from,
+-						  node->ip);
+-			} else {
+-				/*
+-				 * It's "from" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = false;
+-				cnode->cycles_count +=
+-					node->branch_flags.cycles;
+-				cnode->iter_count += node->nr_loop_iter;
+-				cnode->iter_cycles += node->iter_cycles;
+-			}
++			branch_type_count(&cnode->brtype_stat,
++					  &node->branch_flags,
++					  node->branch_from,
++					  node->ip);
++		} else {
++			/*
++			 * It's "from" of a branch
++			 */
++			cnode->brtype_stat.branch_to = false;
++			cnode->cycles_count += node->branch_flags.cycles;
++			cnode->iter_count += node->nr_loop_iter;
++			cnode->iter_cycles += node->iter_cycles;
+ 		}
+-
+-		return MATCH_EQ;
+ 	}
+ 
+-	return left > right ? MATCH_GT : MATCH_LT;
++	return match;
+ }
+ 
+ /*
 -- 
 2.14.2
