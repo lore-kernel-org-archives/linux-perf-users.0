@@ -1,49 +1,65 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/3] tools include uapi bpf.h: Sync kernel ABI header with tooling header
-Date: Tue, 10 Oct 2017 12:26:57 -0300
-Message-ID: <20171010152657.27435-4-acme@kernel.org>
+Subject: [PATCH 1/3] perf script: Add missing separator for "-F ip,brstack" (and brstackoff)
+Date: Tue, 10 Oct 2017 12:26:55 -0300
+Message-ID: <20171010152657.27435-2-acme@kernel.org>
 References: <20171010152657.27435-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171010152657.27435-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mark Santaniello <marksan@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, "4 . 13+" <stable@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Mark Santaniello <marksan@fb.com>
 
-Silences the checker:
+Prior to commit 55b9b50811ca ("perf script: Support -F brstack,dso and
+brstacksym,dso"), we were printing a space before the brstack data. It
+seems that this space was important.  Without it, parsing is difficult.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'
+Very sorry for the mistake.
 
-The 90caccdd8cc0 ("bpf: fix bpf_tail_call() x64 JIT") cset only updated
-a comment in uapi/bpf.h.
+Notice here how the "ip" and "brstack" run together:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@fb.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-rwx2cqbf0x1lwa1krsr6e6hd@git.kernel.org
+$ perf script -F ip,brstack | head -n 1
+          22e18c40x22e19e2/0x22e190b/P/-/-/0 0x22e19a1/0x22e19d0/P/-/-/0 0x22e195d/0x22e1990/P/-/-/0 0x22e18e9/0x22e1943/P/-/-/0 0x22e1a69/0x22e18c0/P/-/-/0 0x22e19f7/0x22e1a20/P/-/-/0 0x22e1910/0x22e19ee/P/-/-/0 0x22e19e2/0x22e190b/P/-/-/0 0x22e19a1/0x22e19d0/P/-/-/0 0x22e195d/0x22e1990/P/-/-/0 0x22e18e9/0x22e1943/P/-/-/0 0x22e1a69/0x22e18c0/P/-/-/0 0x22e19f7/0x22e1a20/P/-/-/0 0x22e1910/0x22e19ee/P/-/-/0 0x22e19e2/0x22e190b/P/-/-/0 0x22e19a1/0x22e19d0/P/-/-/0
+
+After this diff, sanity is restored:
+
+$ perf script -F ip,brstack | head -n 1
+          22e18c4 0x22e19e2/0x22e190b/P/-/-/0  0x22e19a1/0x22e19d0/P/-/-/0  0x22e195d/0x22e1990/P/-/-/0  0x22e18e9/0x22e1943/P/-/-/0  0x22e1a69/0x22e18c0/P/-/-/0  0x22e19f7/0x22e1a20/P/-/-/0  0x22e1910/0x22e19ee/P/-/-/0  0x22e19e2/0x22e190b/P/-/-/0  0x22e19a1/0x22e19d0/P/-/-/0  0x22e195d/0x22e1990/P/-/-/0  0x22e18e9/0x22e1943/P/-/-/0  0x22e1a69/0x22e18c0/P/-/-/0  0x22e19f7/0x22e1a20/P/-/-/0  0x22e1910/0x22e19ee/P/-/-/0  0x22e19e2/0x22e190b/P/-/-/0  0x22e19a1/0x22e19d0/P/-/-/0
+
+Signed-off-by: Mark Santaniello <marksan@fb.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: 4.13+ <stable@vger.kernel.org>
+Fixes: 55b9b50811ca ("perf script: Support -F brstack,dso and brstacksym,dso")
+Link: http://lkml.kernel.org/r/20171006080722.3442046-1-marksan@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-script.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 43ab5c402f98..f90860d1f897 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -312,7 +312,7 @@ union bpf_attr {
-  *     jump into another BPF program
-  *     @ctx: context pointer passed to next program
-  *     @prog_array_map: pointer to map which type is BPF_MAP_TYPE_PROG_ARRAY
-- *     @index: index inside array that selects specific program to run
-+ *     @index: 32-bit index inside array that selects specific program to run
-  *     Return: 0 on success or negative error
-  *
-  * int bpf_clone_redirect(skb, ifindex, flags)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3d4c3b5e1868..0c977b6e0f8b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -586,7 +586,7 @@ static void print_sample_brstack(struct perf_sample *sample,
+ 			thread__find_addr_map(thread, sample->cpumode, MAP__FUNCTION, to, &alt);
+ 		}
+ 
+-		printf("0x%"PRIx64, from);
++		printf(" 0x%"PRIx64, from);
+ 		if (PRINT_FIELD(DSO)) {
+ 			printf("(");
+ 			map__fprintf_dsoname(alf.map, stdout);
+@@ -681,7 +681,7 @@ static void print_sample_brstackoff(struct perf_sample *sample,
+ 		if (alt.map && !alt.map->dso->adjust_symbols)
+ 			to = map__map_ip(alt.map, to);
+ 
+-		printf("0x%"PRIx64, from);
++		printf(" 0x%"PRIx64, from);
+ 		if (PRINT_FIELD(DSO)) {
+ 			printf("(");
+ 			map__fprintf_dsoname(alf.map, stdout);
 -- 
 2.13.6
