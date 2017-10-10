@@ -1,216 +1,49 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/3] perf pmu: Unbreak perf record for arm/arm64 with events with explicit PMU
-Date: Tue, 10 Oct 2017 12:26:56 -0300
-Message-ID: <20171010152657.27435-3-acme@kernel.org>
+Subject: [PATCH 3/3] tools include uapi bpf.h: Sync kernel ABI header with tooling header
+Date: Tue, 10 Oct 2017 12:26:57 -0300
+Message-ID: <20171010152657.27435-4-acme@kernel.org>
 References: <20171010152657.27435-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:53150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932107AbdJJP1L (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Oct 2017 11:27:11 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171010152657.27435-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Borislav Petkov <bp@alien8.de>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, "4 . 12+" <stable@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Currently, perf record is broken on arm/arm64 systems when the PMU is
-specified explicitly as part of the event, e.g.
+Silences the checker:
 
-$ ./perf record -e armv8_cortex_a53/cpu_cycles/u true
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'
 
-In such cases, perf record fails to open events unless
-perf_event_paranoid is set to -1, even if the PMU in question supports
-mode exclusion. Further, even when perf_event_paranoid is toggled, no
-samples are recorded.
+The 90caccdd8cc0 ("bpf: fix bpf_tail_call() x64 JIT") cset only updated
+a comment in uapi/bpf.h.
 
-This is an unintended side effect of commit:
-
-  e3ba76deef23064f ("perf tools: Force uncore events to system wide monitoring)
-
-... which assumes that if a PMU has an associated cpu_map, it is an
-uncore PMU, and forces events for such PMUs to be system-wide.
-
-This is not true for arm/arm64 systems, which can have heterogeneous
-CPUs. To account for this, multiple CPU PMUs are exposed, each with a
-"cpus" field under sysfs, which the perf tool parses into a cpu_map. ARM
-PMUs do not have a "cpumask" file, and only have a "cpus" file. For the
-gory details as to why, see commit:
-
- 7e3fcffe95544010 ("perf pmu: Support alternative sysfs cpumask")
-
-Given all of this, we can instead identify uncore PMUs by explicitly
-checking for a "cpumask" file, and restore arm/arm64 PMU support back to
-a working state. This patch does so, adding a new perf_pmu::is_uncore
-field, and splitting the existing cpumask parsing so that it can be
-reused.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by Will Deacon <will.deacon@arm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Cc: Alexei Starovoitov <ast@fb.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: 4.12+ <stable@vger.kernel.org>
-Fixes: e3ba76deef23064f ("perf tools: Force uncore events to system wide monitoring)
-Link: http://lkml.kernel.org/r/1507315102-5942-1-git-send-email-mark.rutland@arm.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-rwx2cqbf0x1lwa1krsr6e6hd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c |  9 ++++---
- tools/perf/util/pmu.c          | 56 +++++++++++++++++++++++++++++++-----------
- tools/perf/util/pmu.h          |  1 +
- 3 files changed, 47 insertions(+), 19 deletions(-)
+ tools/include/uapi/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index f6257fb4f08c..39b15968eab1 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -309,10 +309,11 @@ static char *get_config_name(struct list_head *head_terms)
- static struct perf_evsel *
- __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
--	    char *name, struct cpu_map *cpus,
-+	    char *name, struct perf_pmu *pmu,
- 	    struct list_head *config_terms, bool auto_merge_stats)
- {
- 	struct perf_evsel *evsel;
-+	struct cpu_map *cpus = pmu ? pmu->cpus : NULL;
- 
- 	event_attr_init(attr);
- 
-@@ -323,7 +324,7 @@ __add_event(struct list_head *list, int *idx,
- 	(*idx)++;
- 	evsel->cpus        = cpu_map__get(cpus);
- 	evsel->own_cpus    = cpu_map__get(cpus);
--	evsel->system_wide = !!cpus;
-+	evsel->system_wide = pmu ? pmu->is_uncore : false;
- 	evsel->auto_merge_stats = auto_merge_stats;
- 
- 	if (name)
-@@ -1233,7 +1234,7 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
- 
- 	if (!head_config) {
- 		attr.type = pmu->type;
--		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu->cpus, NULL, auto_merge_stats);
-+		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL, auto_merge_stats);
- 		return evsel ? 0 : -ENOMEM;
- 	}
- 
-@@ -1254,7 +1255,7 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
- 		return -EINVAL;
- 
- 	evsel = __add_event(list, &parse_state->idx, &attr,
--			    get_config_name(head_config), pmu->cpus,
-+			    get_config_name(head_config), pmu,
- 			    &config_terms, auto_merge_stats);
- 	if (evsel) {
- 		evsel->unit = info.unit;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ac16a9db1fb5..1c4d7b4e4fb5 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -470,17 +470,36 @@ static void pmu_read_sysfs(void)
- 	closedir(dir);
- }
- 
-+static struct cpu_map *__pmu_cpumask(const char *path)
-+{
-+	FILE *file;
-+	struct cpu_map *cpus;
-+
-+	file = fopen(path, "r");
-+	if (!file)
-+		return NULL;
-+
-+	cpus = cpu_map__read(file);
-+	fclose(file);
-+	return cpus;
-+}
-+
-+/*
-+ * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
-+ * may have a "cpus" file.
-+ */
-+#define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
-+#define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-+
- static struct cpu_map *pmu_cpumask(const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
--	FILE *file;
- 	struct cpu_map *cpus;
- 	const char *sysfs = sysfs__mountpoint();
- 	const char *templates[] = {
--		 "%s/bus/event_source/devices/%s/cpumask",
--		 "%s/bus/event_source/devices/%s/cpus",
--		 NULL
-+		CPUS_TEMPLATE_UNCORE,
-+		CPUS_TEMPLATE_CPU,
-+		NULL
- 	};
- 	const char **template;
- 
-@@ -489,20 +508,25 @@ static struct cpu_map *pmu_cpumask(const char *name)
- 
- 	for (template = templates; *template; template++) {
- 		snprintf(path, PATH_MAX, *template, sysfs, name);
--		if (stat(path, &st) == 0)
--			break;
-+		cpus = __pmu_cpumask(path);
-+		if (cpus)
-+			return cpus;
- 	}
- 
--	if (!*template)
--		return NULL;
-+	return NULL;
-+}
- 
--	file = fopen(path, "r");
--	if (!file)
--		return NULL;
-+static bool pmu_is_uncore(const char *name)
-+{
-+	char path[PATH_MAX];
-+	struct cpu_map *cpus;
-+	const char *sysfs = sysfs__mountpoint();
- 
--	cpus = cpu_map__read(file);
--	fclose(file);
--	return cpus;
-+	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
-+	cpus = __pmu_cpumask(path);
-+	cpu_map__put(cpus);
-+
-+	return !!cpus;
- }
- 
- /*
-@@ -617,6 +641,8 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 
- 	pmu->cpus = pmu_cpumask(name);
- 
-+	pmu->is_uncore = pmu_is_uncore(name);
-+
- 	INIT_LIST_HEAD(&pmu->format);
- 	INIT_LIST_HEAD(&pmu->aliases);
- 	list_splice(&format, &pmu->format);
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 389e9729331f..fe0de0502ce2 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -22,6 +22,7 @@ struct perf_pmu {
- 	char *name;
- 	__u32 type;
- 	bool selectable;
-+	bool is_uncore;
- 	struct perf_event_attr *default_config;
- 	struct cpu_map *cpus;
- 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 43ab5c402f98..f90860d1f897 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -312,7 +312,7 @@ union bpf_attr {
+  *     jump into another BPF program
+  *     @ctx: context pointer passed to next program
+  *     @prog_array_map: pointer to map which type is BPF_MAP_TYPE_PROG_ARRAY
+- *     @index: index inside array that selects specific program to run
++ *     @index: 32-bit index inside array that selects specific program to run
+  *     Return: 0 on success or negative error
+  *
+  * int bpf_clone_redirect(skb, ifindex, flags)
 -- 
 2.13.6
