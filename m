@@ -1,69 +1,68 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/3] perf/urgent fixes
-Date: Tue, 10 Oct 2017 19:23:44 +0200
-Message-ID: <20171010172344.btom65sr3pu4d5wa@gmail.com>
-References: <20171010152657.27435-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: ufo19890607 <ufo19890607@gmail.com>
+Subject: [PATCH v3 0/4] perf script: Add script per-event-dump support
+Date: Thu, 12 Oct 2017 02:23:56 +0800
+Message-ID: <1507746240-34638-1-git-send-email-ufo19890607@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171010152657.27435-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@fb.com>, Borislav Petkov <bp@alien8.de>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Santaniello <marksan@fb.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+From: yuzhoujian <yuzhoujian@didichuxing.com>
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Introduce a new option to print trace output to files named by the 
+monitored events and update perf-script documentation accordingly.
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 874d48f2af91efc38c720e7c6450547f6ea8c843:
-> 
->   Merge tag 'perf-urgent-for-mingo-4.14-20171005' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2017-10-05 20:07:08 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.14-20171010
-> 
-> for you to fetch changes up to aa7b4e02b328f0589b6133e72aafb1289f614a79:
-> 
->   tools include uapi bpf.h: Sync kernel ABI header with tooling header (2017-10-09 15:55:45 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Unbreak 'perf record' for arm/arm64 with events with explicit PMU (Mark Rutland)
-> 
-> - Add missing separator for "perf script -F ip,brstack" (and brstackoff) (Mark Santaniello)
-> 
-> - One line, comment only, sync kernel ABI header with tooling header (Arnaldo Carvalho de Melo)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (1):
->       tools include uapi bpf.h: Sync kernel ABI header with tooling header
-> 
-> Mark Rutland (1):
->       perf pmu: Unbreak perf record for arm/arm64 with events with explicit PMU
-> 
-> Mark Santaniello (1):
->       perf script: Add missing separator for "-F ip,brstack" (and brstackoff)
-> 
->  tools/include/uapi/linux/bpf.h |  2 +-
->  tools/perf/builtin-script.c    |  4 +--
->  tools/perf/util/parse-events.c |  9 ++++---
->  tools/perf/util/pmu.c          | 56 +++++++++++++++++++++++++++++++-----------
->  tools/perf/util/pmu.h          |  1 +
->  5 files changed, 50 insertions(+), 22 deletions(-)
+Shown below is output of perf script command with the newly introduced
+option.
 
-Pulled, thanks a lot Arnaldo!
+         $perf record -e cycles -e cs -ag -- sleep 1
+         $perf script --per-event-dump
+	 [ perf script: Wrote 0.051 MB perf.data-script-dump-cycles.txt (76 samples) ]
+	 [ perf script: Wrote 0.012 MB perf.data-script-dump-cs.txt (69 samples) ]
+         $ls
+         perf.data-script-dump-cycles.txt perf.data-script-dump-cs.txt
 
-	Ingo
+Without per-event-dump support, drawing flamegraphs for different events
+would be a very troublesome thing. You can monitor only one event at a time 
+if you want to get flamegraphs for different events. Using this option, you 
+can get the trace output files named by the monitored events, and could draw 
+flamegraphs according to the event's name.
+
+
+yuzhoujian (4):
+Patch 1: Add two elements for perf_tool struct, and add three elements for
+    	perf_evsel struct, and add the per-event-dump option for perf script.
+Patch 2: Add fp argument to print functions
+Patch 3: Replace printf with fprintf for all print functions
+Patch 4: Make all print functions receive the fp argument, open and close the
+    	dump_event file for each evsel, and calculate the dump_event file's size.
+
+Changes since v2:
+- Patch 1: Add the last_evsel_name for per_tool struct and three elements for perf_evsel struct.
+- Patch 2: None
+- Patch 3: None
+- Patch 4: Remove the file_name and per_event_dump_file variables. 
+	   Add the fp_selection_helper function to select the fp and open the dump file 
+ for all print functions.
+ 	   Close the dump file for all the evsels and calculate the dump file's size at 
+ the end of the perf script.
+	   Solve the segmentation fault generated by perf script --per-event-dump --show-mmap-events
+
+Changes since v1: 
+- Patch 1: Remove the set of script.tool.per_event_dump variable.
+- Patch 2: Add the __maybe_unused attribute for the fp argument in the second patch.
+- Patch 3: remove the fp_selection_helper function for setting the fp argument.
+- Patch 2: split the original second patch(Makes all those related functions receive 
+ the FILE pointer) to two patches.
+- Patch 4: modify the file name of per-event-dump to 
+ <ORIGINAL PERF DATA FILE NAME>-script-dump-<EVENT NAME>.txt
+
+ tools/perf/builtin-script.c | 467 +++++++++++++++++++++++++-------------------
+ tools/perf/util/evsel.h     |   4 +
+ tools/perf/util/session.c   |  16 +-
+ tools/perf/util/tool.h      |   3 +
+ 4 files changed, 286 insertions(+), 204 deletions(-)
+
+-- 
+1.8.3.1
