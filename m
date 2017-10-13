@@ -1,185 +1,76 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v5 11/16] perf report: properly handle branch count in
- match_chain
-Date: Fri, 13 Oct 2017 10:39:03 -0300
-Message-ID: <20171013133903.GN3503@kernel.org>
-References: <20171009203310.17362-1-milian.wolff@kdab.com>
- <20171009203310.17362-12-milian.wolff@kdab.com>
+From: Leandro Silva <silvaleandrodp@gmail.com>
+Subject: Getting error with event modifiers
+Date: Fri, 13 Oct 2017 10:42:36 -0300
+Message-ID: <CAJ5k3oqprQSt7pS_fE2WU8-z3zsXV8N-6dCuCa++QZ7c1cGg-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:38036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1758070AbdJMNjI (ORCPT
+Received: from mail-io0-f173.google.com ([209.85.223.173]:43093 "EHLO
+        mail-io0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756659AbdJMNm5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Oct 2017 09:39:08 -0400
-Content-Disposition: inline
-In-Reply-To: <20171009203310.17362-12-milian.wolff@kdab.com>
+        Fri, 13 Oct 2017 09:42:57 -0400
+Received: by mail-io0-f173.google.com with SMTP id 134so4807326ioo.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2017 06:42:57 -0700 (PDT)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+To: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 09, 2017 at 10:33:05PM +0200, Milian Wolff escreveu:
-> Some of the code paths I introduced before returned too early
-> without running the code to handle a node's branch count.
-> By refactoring match_chain to only have one exit point, this
-> can be remedied.
+I'm trying to read the power of the system in kernel space using the
+event power/energy-cores/ with the perf tool using the :k modifier
+like below:
 
-Fixing up this one now.
- 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Cc: Yao Jin <yao.jin@linux.intel.com>
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> ---
->  tools/perf/util/callchain.c | 117 +++++++++++++++++++++++---------------------
->  1 file changed, 60 insertions(+), 57 deletions(-)
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 3f1431bf71bd..782de047c902 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -666,78 +666,81 @@ static enum match_result match_chain_strings(const char *left,
->  	return ret;
->  }
->  
-> +static enum match_result match_address(u64 left, u64 right)
-> +{
-> +	if (left == right)
-> +		return MATCH_EQ;
-> +	else if (left < right)
-> +		return MATCH_LT;
-> +	else
-> +		return MATCH_GT;
-> +}
-> +
->  static enum match_result match_chain(struct callchain_cursor_node *node,
->  				     struct callchain_list *cnode)
->  {
-> -	struct symbol *sym = node->sym;
-> -	enum match_result match;
-> -	u64 left, right;
-> +	enum match_result match = MATCH_ERROR;
->  
-> -	if (callchain_param.key == CCKEY_SRCLINE) {
-> +	switch (callchain_param.key) {
-> +	case CCKEY_SRCLINE:
->  		match = match_chain_strings(cnode->srcline, node->srcline);
-> -
-> -		/* if no srcline is available, fallback to symbol name */
-> -		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-> -			match = match_chain_strings(cnode->ms.sym->name,
-> -						    node->sym->name);
-> -
->  		if (match != MATCH_ERROR)
-> -			return match;
-> -
-> -		/* otherwise fall-back to IP-based comparison below */
-> -	}
-> -
-> -	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
-> -		/* compare inlined frames based on their symbol name because
-> -		 * different inlined frames will have the same symbol start
-> -		 */
-> -		if (cnode->ms.sym->inlined || node->sym->inlined)
-> -			return match_chain_strings(cnode->ms.sym->name,
-> -						   node->sym->name);
-> -
-> -		left = cnode->ms.sym->start;
-> -		right = sym->start;
-> -	} else {
-> -		left = cnode->ip;
-> -		right = node->ip;
-> +			break;
-> +		__fallthrough;
-> +	case CCKEY_FUNCTION:
-> +		if (node->sym && cnode->ms.sym) {
-> +			/* compare inlined frames based on their symbol name
-> +			 * because different inlined frames will have the same
-> +			 * symbol start. otherwise do a faster comparison based
-> +			 * on the symbol start address
-> +			 */
-> +			if (cnode->ms.sym->inlined || node->sym->inlined)
-> +				match = match_chain_strings(cnode->ms.sym->name,
-> +							    node->sym->name);
-> +			else
-> +				match = match_address(cnode->ms.sym->start,
-> +						      node->sym->start);
-> +			if (match != MATCH_ERROR)
-> +				break;
-> +		}
-> +		__fallthrough;
-> +	case CCKEY_ADDRESS:
-> +	default:
-> +		match = match_address(cnode->ip, node->ip);
-> +		break;
->  	}
->  
-> -	if (left == right) {
-> -		if (node->branch) {
-> -			cnode->branch_count++;
-> +	if (match == MATCH_EQ && node->branch) {
-> +		cnode->branch_count++;
->  
-> -			if (node->branch_from) {
-> -				/*
-> -				 * It's "to" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = true;
-> +		if (node->branch_from) {
-> +			/*
-> +			 * It's "to" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = true;
->  
-> -				if (node->branch_flags.predicted)
-> -					cnode->predicted_count++;
-> +			if (node->branch_flags.predicted)
-> +				cnode->predicted_count++;
->  
-> -				if (node->branch_flags.abort)
-> -					cnode->abort_count++;
-> +			if (node->branch_flags.abort)
-> +				cnode->abort_count++;
->  
-> -				branch_type_count(&cnode->brtype_stat,
-> -						  &node->branch_flags,
-> -						  node->branch_from,
-> -						  node->ip);
-> -			} else {
-> -				/*
-> -				 * It's "from" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = false;
-> -				cnode->cycles_count +=
-> -					node->branch_flags.cycles;
-> -				cnode->iter_count += node->nr_loop_iter;
-> -				cnode->iter_cycles += node->iter_cycles;
-> -			}
-> +			branch_type_count(&cnode->brtype_stat,
-> +					  &node->branch_flags,
-> +					  node->branch_from,
-> +					  node->ip);
-> +		} else {
-> +			/*
-> +			 * It's "from" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = false;
-> +			cnode->cycles_count += node->branch_flags.cycles;
-> +			cnode->iter_count += node->nr_loop_iter;
-> +			cnode->iter_cycles += node->iter_cycles;
->  		}
-> -
-> -		return MATCH_EQ;
->  	}
->  
-> -	return left > right ? MATCH_GT : MATCH_LT;
-> +	return match;
->  }
->  
->  /*
-> -- 
-> 2.14.2
+perf stat -a -e power/energy-cores/:k -I 1000 sleep 10
+
+
+user@dkphome:/sys/bus/event_source/devices/cpu$ sudo perf stat -a -e
+power/energy-cores/:k -I 1000 sleep 30
+event syntax error: '..nergy-cores/:k'
+                                   \___ parser error
+Run 'perf list' for a list of valid events
+
+  Usage: perf stat [<options>] [<command>]
+
+     -e, --event <event>   event selector. use 'perf list' to list
+available events
+
+I though that this event didn't support the :k modifier but i made
+other tests and now i think that this may be a bug or i'm trying with
+the wrong syntax. To test it i tried other event like below:
+
+The cache-misses event can be called in two ways cache-misses OR
+cpu/cache-misses/ so i tried both with the modifier
+
+user@dkphome:/sys/bus/event_source/devices/cpu$ sudo perf stat -a -e
+cache-misses:k -I 1000 sleep 5
+#           time             counts unit events
+     1.000429017            287.589      cache-misses:k
+     2.000828552            195.999      cache-misses:k
+     3.001086195            216.885      cache-misses:k
+     4.001438671            240.842      cache-misses:k
+     5.000702347            314.469      cache-misses:k
+user@dkphome:/sys/bus/event_source/devices/cpu$ sudo perf stat -a -e
+cpu/cache-misses/:k -I 1000 sleep 5
+event syntax error: '..ache-misses/:k'
+                                   \___ parser error
+Run 'perf list' for a list of valid events
+
+  Usage: perf stat [<options>] [<command>]
+
+     -e, --event <event>   event selector. use 'perf list' to list
+available events
+user@dkphome:/sys/bus/event_source/devices/cpu$ sudo perf stat -a -e
+cpu/cache-misses/ -I 1000 sleep 5
+#           time             counts unit events
+     1.000379149          1.949.866      cpu/cache-misses/
+     2.000628057          1.023.040      cpu/cache-misses/
+     3.000906500          1.284.476      cpu/cache-misses/
+     4.001197960            853.127      cpu/cache-misses/
+     5.000762257            722.242      cpu/cache-misses/
+
+Someone have a clue on how could i use the :k modifier with the
+power/energy-cores/ event?
+---
+
+Thanks for the help
+Leandro Divino Pimenta da Silva
