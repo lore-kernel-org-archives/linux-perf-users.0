@@ -1,56 +1,58 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: perf buildild-list -H dumps core
-Date: Fri, 13 Oct 2017 09:33:55 +0200
-Message-ID: <6ec683e8-f23e-0595-5674-d5ef20ae03f5@linux.vnet.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v5 16/16] perf util: use correct IP mapping to find
+ srcline for hist entry
+Date: Fri, 13 Oct 2017 13:03:20 +0200
+Message-ID: <20171013110320.GA28151@krava>
+References: <20171009203310.17362-1-milian.wolff@kdab.com>
+ <20171009203310.17362-17-milian.wolff@kdab.com>
+ <20171010044954.GA1870@sejong>
+ <2545513.2b6KD6sLaQ@agathebauer>
+ <20171012185218.GA20959@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750722AbdJMHeB (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:60148 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751480AbdJMLDZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Oct 2017 03:34:01 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9D7Xcdv087915
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2017 03:34:00 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2djjjpycq3-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2017 03:34:00 -0400
-Received: from localhost
-        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Fri, 13 Oct 2017 08:33:58 +0100
-Content-Language: en-IE
+        Fri, 13 Oct 2017 07:03:25 -0400
+Content-Disposition: inline
+In-Reply-To: <20171012185218.GA20959@krava>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, jolsa@kernel.org, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, kernel-team@lge.com
 
-Maybe this has been fixed already, but I hit a core dump when I do this:
+On Thu, Oct 12, 2017 at 08:52:18PM +0200, Jiri Olsa wrote:
+> On Thu, Oct 12, 2017 at 08:22:58PM +0200, Milian Wolff wrote:
+> 
+> SNIP
+> 
+> > > >  		return SRCLINE_UNKNOWN;
+> > > > 
+> > > > -	return get_srcline(map->dso, map__rip_2objdump(map, he->ip),
+> > > > +	return get_srcline(map->dso, map__objdump_2mem(map, he->ip),
+> > > > 
+> > > >  			   he->ms.sym, true, true);
+> > > 
+> > > I'm not sure this is right.  IIRC hist_entry->ip is a relative IP so
+> > > it needs to be changed for objdump use.  Maybe there's some bug on
+> > > translating the address but it seems that the original code is
+> > > correct.  And this change breaks srcline for my test program (which is
+> > > a PIE).
+> > 
+> > Odd, I'll have to look at that. But this is imo unrelated to the rest of the 
+> > patch series. So maybe we skip this one and apply the others. Assuming those 
+> > other patches are OK by now?
+> > 
+> > Jiri, you also reviewed it before, is there anything else missing?
+> 
+> I plan to check on it this week.. sry for delay
 
-[root@s35lp76 docker]# uname -a
-Linux s35lp76 4.14.0-rc3tmr1+ #5 SMP Thu Oct 5 10:05:43 CEST 2017 s390x s390x s390x GNU/Linux
-[root@s35lp76 docker]# ~/linux/tools/perf/perf buildid-list -i 333.perf.data 
-15dd27179a5fe664c0778b7871989c101b1ac506 /lib/modules/4.14.0-rc3tmr1+/build/vmlinux
-4d16d00bd6ed5969f2ef3176d3e52801c85ed9d8 [vdso]
-0a751d08365dbbca4ac4deb7ed2b8107d42bad80 /lib/libc.so.6
-5c0a120336206d0483d3d8112207fbb54ba00a44 /bin/find
-a70676b1cdcc5575e4c5e34a5b80746dca120f75 /bin/ls
-[root@s35lp76 docker]# ~/linux/tools/perf/perf buildid-list -H -i 333.perf.data 
-Segmentation fault (core dumped)
+I think Namhyung is right with his comment, the rest look ok,
+so for patches 1 - 15:
 
-[root@s35lp76 docker]# 
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
 
-Shouldn't I specify option -H ?
-
-I have not tried this on Intel, maybe it is platform related?
-
-Thanks for your help
--- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+thanks,
+jirka
