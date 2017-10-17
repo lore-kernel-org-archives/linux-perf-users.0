@@ -1,24 +1,24 @@
 From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH] perf buildid-cache: option -p does not delete anything
-Date: Tue, 17 Oct 2017 08:38:36 +0200
-Message-ID: <20171017063836.92664-1-tmricht@linux.vnet.ibm.com>
+Subject: [PATCHv2] perf buildid-cache: option -p does not delete anything
+Date: Tue, 17 Oct 2017 09:33:32 +0200
+Message-ID: <20171017073332.96122-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S932780AbdJQGin (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40454 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752529AbdJQHdj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Oct 2017 02:38:43 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9H6aDmZ097995
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:38:43 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2dnav6v1bc-1
+        Tue, 17 Oct 2017 03:33:39 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9H7XVlT134072
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 03:33:39 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2dn67y8xrk-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:38:43 -0400
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 03:33:39 -0400
 Received: from localhost
-        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 17 Oct 2017 07:38:41 +0100
+        Tue, 17 Oct 2017 08:33:37 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: acme@kernel.org, linux-perf-users@vger.kernel.org
@@ -64,7 +64,6 @@ index e3eb624..bcd2b0e 100644
  
  	int err;
  
-+//printf("%s filename:%s\n", __func__, filename);
  	nsinfo__mountns_enter(nsi, &nsc);
  	err = filename__read_build_id(filename, &build_id, sizeof(build_id));
  	nsinfo__mountns_exit(&nsc);
