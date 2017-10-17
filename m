@@ -1,69 +1,93 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: perf buildild-list -H dumps core
-Date: Tue, 17 Oct 2017 08:15:36 +0200
-Message-ID: <5e1a332b-78e0-5cc4-776c-d86f558444eb@linux.vnet.ibm.com>
-References: <6ec683e8-f23e-0595-5674-d5ef20ae03f5@linux.vnet.ibm.com>
- <20171013144805.GQ3503@kernel.org>
- <0dbfaac2-46dc-8c63-05b7-004f3604b8c3@linux.vnet.ibm.com>
- <20171017002831.GA2244@sejong>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf buildid-cache: option -p does not delete anything
+Date: Tue, 17 Oct 2017 08:38:36 +0200
+Message-ID: <20171017063836.92664-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57146 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752629AbdJQGPr (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S932780AbdJQGin (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Oct 2017 02:15:47 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9H6EJFX056887
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:15:46 -0400
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2dn82gj680-1
+        Tue, 17 Oct 2017 02:38:43 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9H6aDmZ097995
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:38:43 -0400
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2dnav6v1bc-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:15:46 -0400
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2017 02:38:43 -0400
 Received: from localhost
-        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 17 Oct 2017 07:15:40 +0100
-In-Reply-To: <20171017002831.GA2244@sejong>
-Content-Language: en-IE
+        Tue, 17 Oct 2017 07:38:41 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, kernel-team@lge.com
+To: acme@kernel.org, linux-perf-users@vger.kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-On 10/17/2017 02:28 AM, Namhyung Kim wrote:
+Command perf buildid-cache -p <path> should delete all entries
+in the buildid cache which start with path.  However this does not happen.
 
-[...]
+When perf buildid-cache -p /usr/bin is invoked, tracing shows in detail
+function
+build_id_cache__purge_path() is called and
+build_id_cache__list_build_ids() creates a list of file names
+	located in directory /usr/bin of the buildid-cache.
+build_id_cache__remove_s() is called for each name in the list
+	and tries to locate each file name
+	in directory .buildid/YY/ZZZ..ZZZ which fails because
+build_id_cache__linkname() expects a buildid and gets a file name.
+The file name bash is treated as .buildid/ba/sh which does not exist.
 
-> 
-> Looks like due to a NULL namespace event handler.  Does patch below
-> fix it?
-> 
-> Thanks,
-> Namhyung
+Fix this by walking along the specified path and test for the
+object type. If it is a directory, scan this subdirectory.
+If this is a file, convert the file name to a buildid and
+call function build_id_cache__remove_file().
 
-Thanks for the fix, it solves the issue.
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+---
+ tools/perf/builtin-buildid-cache.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index e3eb624..bcd2b0e 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -8,6 +8,7 @@
+  */
+ #include <sys/types.h>
+ #include <sys/time.h>
++#include <sys/stat.h>
+ #include <time.h>
+ #include <dirent.h>
+ #include <errno.h>
+@@ -197,6 +198,7 @@ static int build_id_cache__remove_file(const char *filename, struct nsinfo *nsi)
  
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index ceac0848469d..b3fd62f7e4c9 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -374,6 +374,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
->                 tool->mmap2 = process_event_stub;
->         if (tool->comm == NULL)
->                 tool->comm = process_event_stub;
-> +       if (tool->namespaces == NULL)
-> +               tool->namespaces = process_event_stub;
->         if (tool->fork == NULL)
->                 tool->fork = process_event_stub;
->         if (tool->exit == NULL;
-
+ 	int err;
+ 
++//printf("%s filename:%s\n", __func__, filename);
+ 	nsinfo__mountns_enter(nsi, &nsc);
+ 	err = filename__read_build_id(filename, &build_id, sizeof(build_id));
+ 	nsinfo__mountns_exit(&nsc);
+@@ -224,8 +226,18 @@ static int build_id_cache__purge_path(const char *pathname, struct nsinfo *nsi)
+ 		goto out;
+ 
+ 	strlist__for_each_entry(pos, list) {
+-		err = build_id_cache__remove_s(pos->s);
+-		pr_debug("Removing %s %s: %s\n", pos->s, pathname,
++		char filename[PATH_MAX];
++		struct stat st;
++
++		scnprintf(filename, sizeof(filename), "%s/%s",
++			  pathname, pos->s);
++		if (stat(filename, &st))
++			continue;
++		if (S_ISDIR(st.st_mode))
++			err = build_id_cache__purge_path(filename, nsi);
++		else
++			err = build_id_cache__remove_file(filename, nsi);
++		pr_debug("Removing %s %s: %s\n", filename, pathname,
+ 			 err ? "FAIL" : "Ok");
+ 		if (err)
+ 			break;
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.9.4
