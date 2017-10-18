@@ -1,152 +1,64 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v6 2/6] perf report: cache failed lookups of inlined frames
-Date: Wed, 18 Oct 2017 20:53:46 +0200
-Message-ID: <20171018185350.14893-3-milian.wolff@kdab.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in match_chain
+Date: Wed, 18 Oct 2017 15:41:04 -0700
+Message-ID: <871sm0hyf3.fsf@linux.intel.com>
 References: <20171018185350.14893-1-milian.wolff@kdab.com>
+        <20171018185350.14893-2-milian.wolff@kdab.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171018185350.14893-1-milian.wolff@kdab.com>
+In-Reply-To: <20171018185350.14893-2-milian.wolff@kdab.com> (Milian Wolff's
+        message of "Wed, 18 Oct 2017 20:53:45 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-When no inlined frames could be found for a given address,
-we did not store this information anywhere. That means we
-potentially do the costly inliner lookup repeatedly for
-cases where we know it can never succeed.
+Milian Wolff <milian.wolff@kdab.com> writes:
+>  
+> +static enum match_result match_address_dso(struct dso *left_dso, u64 left_ip,
+> +					   struct dso *right_dso, u64 right_ip)
+> +{
+> +	if (left_dso == right_dso && left_ip == right_ip)
+> +		return MATCH_EQ;
+> +	else if (left_ip < right_ip)
+> +		return MATCH_LT;
+> +	else
+> +		return MATCH_GT;
+> +}
 
-This patch makes dso__parse_addr_inlines always return a
-valid inline_node. It will be empty when no inliners are
-found. This enables us to cache the empty list in the DSO,
-thereby improving the performance when many addresses
-fail to find the inliners.
+So why does only the first case check the dso? Does it not matter
+for the others?
 
-For my trivial example, the performance impact is already
-quite significant:
+Either should be checked by none or by all.
 
-Before:
 
-~~~~~
- Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
+> +	case CCKEY_FUNCTION:
+> +		if (node->sym && cnode->ms.sym) {
+> +			/*
+> +			 * Compare inlined frames based on their symbol name
+> +			 * because different inlined frames will have the same
+> +			 * symbol start. Otherwise do a faster comparison based
+> +			 * on the symbol start address.
+> +			 */
+> +			if (cnode->ms.sym->inlined || node->sym->inlined)
+> +				match = match_chain_strings(cnode->ms.sym->name,
+node->sym->name);
 
-        594.804032      task-clock (msec)         #    0.998 CPUs utilized            ( +-  0.07% )
-                53      context-switches          #    0.089 K/sec                    ( +-  4.09% )
-                 0      cpu-migrations            #    0.000 K/sec                    ( +-100.00% )
-             5,687      page-faults               #    0.010 M/sec                    ( +-  0.02% )
-     2,300,918,213      cycles                    #    3.868 GHz                      ( +-  0.09% )
-     4,395,839,080      instructions              #    1.91  insn per cycle           ( +-  0.00% )
-       939,177,205      branches                  # 1578.969 M/sec                    ( +-  0.00% )
-        11,824,633      branch-misses             #    1.26% of all branches          ( +-  0.10% )
+So what happens when there are multiple symbols with the same name?
 
-       0.596246531 seconds time elapsed                                          ( +-  0.07% )
-~~~~~
+(e.g. local for a DSO or local in a file)
 
-After:
+> +					  node->ip);
+> +		} else {
+> +			/*
+> +			 * It's "from" of a branch
+> +			 */
+> +			cnode->brtype_stat.branch_to = false;
+> +			cnode->cycles_count += node->branch_flags.cycles;
+> +			cnode->iter_count += node->nr_loop_iter;
+> +			cnode->iter_cycles += node->iter_cycles;
 
-~~~~~
- Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
+I assume you tested the cycle accounting still works?
 
-        113.111405      task-clock (msec)         #    0.990 CPUs utilized            ( +-  0.89% )
-                29      context-switches          #    0.255 K/sec                    ( +- 54.25% )
-                 0      cpu-migrations            #    0.000 K/sec
-             5,380      page-faults               #    0.048 M/sec                    ( +-  0.01% )
-       432,378,779      cycles                    #    3.823 GHz                      ( +-  0.75% )
-       670,057,633      instructions              #    1.55  insn per cycle           ( +-  0.01% )
-       141,001,247      branches                  # 1246.570 M/sec                    ( +-  0.01% )
-         2,346,845      branch-misses             #    1.66% of all branches          ( +-  0.19% )
-
-       0.114222393 seconds time elapsed                                          ( +-  1.19% )
-~~~~~
-
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Yao Jin <yao.jin@linux.intel.com>
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
----
- tools/perf/util/machine.c | 15 +++++++--------
- tools/perf/util/srcline.c | 16 +---------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 3d049cb313ac..177c1d4088f8 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2115,9 +2115,10 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	struct inline_node *inline_node;
- 	struct inline_list *ilist;
- 	u64 addr;
-+	int ret = 1;
- 
- 	if (!symbol_conf.inline_name || !map || !sym)
--		return 1;
-+		return ret;
- 
- 	addr = map__rip_2objdump(map, ip);
- 
-@@ -2125,22 +2126,20 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	if (!inline_node) {
- 		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
- 		if (!inline_node)
--			return 1;
--
-+			return ret;
- 		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
- 	}
- 
- 	list_for_each_entry(ilist, &inline_node->val, list) {
--		int ret = callchain_cursor_append(cursor, ip, map,
--						  ilist->symbol, false,
--						  NULL, 0, 0, 0,
--						  ilist->srcline);
-+		ret = callchain_cursor_append(cursor, ip, map,
-+					      ilist->symbol, false,
-+					      NULL, 0, 0, 0, ilist->srcline);
- 
- 		if (ret != 0)
- 			return ret;
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int unwind_entry(struct unwind_entry *entry, void *arg)
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 8bea6621d657..fc3888664b20 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -353,17 +353,8 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- 	INIT_LIST_HEAD(&node->val);
- 	node->addr = addr;
- 
--	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym))
--		goto out_free_inline_node;
--
--	if (list_empty(&node->val))
--		goto out_free_inline_node;
--
-+	addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
- 	return node;
--
--out_free_inline_node:
--	inline_node__delete(node);
--	return NULL;
- }
- 
- #else /* HAVE_LIBBFD_SUPPORT */
-@@ -480,11 +471,6 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- out:
- 	pclose(fp);
- 
--	if (list_empty(&node->val)) {
--		inline_node__delete(node);
--		return NULL;
--	}
--
- 	return node;
- }
- 
--- 
-2.14.2
+-Andi
