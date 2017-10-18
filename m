@@ -1,64 +1,75 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3 2/4] Add fp argument to print functions
-Date: Wed, 18 Oct 2017 09:22:09 -0300
-Message-ID: <20171018122209.GF3707@kernel.org>
-References: <1507746240-34638-1-git-send-email-ufo19890607@gmail.com>
- <1507746240-34638-3-git-send-email-ufo19890607@gmail.com>
- <20171017140137.GD4204@kernel.org>
- <CAHCio2ggZapg7KvWOO3OonFTHq5CZ02c2sghTpP73QBJ0mi9jg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: yuzhoujian <ufo19890607@gmail.com>
+Subject: [PATCH v4 0/4] perf script: Add script per-event-dump support
+Date: Wed, 18 Oct 2017 22:00:29 +0800
+Message-ID: <1508335233-15970-1-git-send-email-yuzhoujian@didichuxing.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S965078AbdJRMWM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Oct 2017 08:22:12 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHCio2ggZapg7KvWOO3OonFTHq5CZ02c2sghTpP73QBJ0mi9jg@mail.gmail.com>
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:43057 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754796AbdJROA4 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 18 Oct 2017 10:00:56 -0400
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Wind Yu <yuzhoujian@didichuxing.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em Wed, Oct 18, 2017 at 07:54:13PM +0800, 禹舟键 escreveu:
-> Hi, Arnaldo
-> I have done it as you said in v1 patch, but David had told me to separate
-> the patch :"Makes all those related functions receive the FILE pointer"  to
-> two patches. Below is his opinion.
-> 
-> On 9/13/17 9:10 AM, yuzhoujian wrote:
-> > @@ -1621,8 +1634,12 @@ static int process_comm_event(struct perf_tool
-> *tool,
-> >               sample->tid = event->comm.tid;
-> >               sample->pid = event->comm.pid;
-> >       }
-> > -     print_sample_start(sample, thread, evsel);
-> > -     perf_event__fprintf(event, stdout);
-> > +     if (tool->orientation_output == false)
-> > +             fp = stdout;
-> > +     else
-> > +             fp = orientation_file;
-> > +     fprint_sample_start(sample, thread, evsel, fp);
-> > +     perf_event__fprintf(event, fp);
-> >       ret = 0;
-> >  out:
-> >       thread__put(thread);
-> 
-> "The subject of this patch is replacing printf and stdout with fprintf
-> and a given fp. Please keep it to that one change. Meaning the above
-> setting of fp something other than stdout should be a separate patch.
+Introduce a new option to print trace output to files named by the
+monitored events and update perf-script documentation accordingly.
 
-I have done exactly as described in my and David's suggestion, this
-"orientation_file" change is not in my patch.
+Shown below is output of perf script command with the newly introduced
+option.
 
-> And it would be best to have the fp selection in a helper, versus the
-> same change in so many places. "
-> 
-> So, what should I do??
+         $perf record -e cycles -e cs -ag -- sleep 1
+         $perf script --per-event-dump
+         [ perf script: Wrote 0.051 MB perf.data-script-dump-cycles.txt (76 samples) ]
+         [ perf script: Wrote 0.012 MB perf.data-script-dump-cs.txt (69 samples) ]
+         $ls
+         perf.data-script-dump-cycles.txt perf.data-script-dump-cs.txt
 
-Please consider continuing from the other suggestion I made in a recent
-message, about how to use evsel->priv to store the perf evsel FILE
-pointer.
+Without per-event-dump support, drawing flamegraphs for different events
+would be a very troublesome thing. You can monitor only one event at a time
+if you want to get flamegraphs for different events. Using this option, you
+can get the trace output files named by the monitored events, and could draw
+flamegraphs according to the event's name.
 
-- Arnaldo
+yuzhoujian (4):
+Patch 1: Add new elements for per-event-dump option
+Patch 2: Add fp argument to print functions
+Patch 3: Replace printf with fprintf for all print functions
+Patch 4: Add the fp_selection_helper to set the fp for print functions
+
+Changes since v3:
+- Patch 1: - remove three elements for perf_evsel struct and create the perf_script_evsel 
+ struct to save them.
+- Patch 2: None
+- Patch 3: None
+- Patch 4: Free the evsel->priv by zfree().
+
+Changes since v2:
+- Patch 1: Add the last_evsel_name for per_tool struct and three elements for perf_evsel struct.
+- Patch 2: None
+- Patch 3: None
+- Patch 4: Remove the file_name and per_event_dump_file variables.
+           Add the fp_selection_helper function to select the fp and open the dump file
+ for all print functions.
+           Close the dump file for all the evsels and calculate the dump file's size at
+ the end of the perf script.
+           Solve the segmentation fault generated by perf script --per-event-dump --show-mmap-events
+
+Changes since v1:
+- Patch 1: Remove the set of script.tool.per_event_dump variable.
+- Patch 2: Add the __maybe_unused attribute for the fp argument in the second patch.
+- Patch 3: remove the fp_selection_helper function for setting the fp argument.
+- Patch 2: split the original second patch(Makes all those related functions receive
+ the FILE pointer) to two patches.
+- Patch 4: modify the file name of per-event-dump to
+ <ORIGINAL PERF DATA FILE NAME>-script-dump-<EVENT NAME>.txt
+
+ tools/perf/builtin-script.c | 489 ++++++++++++++++++++++++++------------------
+ tools/perf/util/evsel.h     |  12 ++
+ tools/perf/util/session.c   |  20 +-
+ tools/perf/util/tool.h      |   2 +
+ 4 files changed, 319 insertions(+), 204 deletions(-)
+
+-- 
+1.8.3.1
