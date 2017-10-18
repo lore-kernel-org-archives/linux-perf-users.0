@@ -1,77 +1,185 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v6 5/6] perf util: enable handling of inlined frames by default
-Date: Wed, 18 Oct 2017 20:53:49 +0200
-Message-ID: <20171018185350.14893-6-milian.wolff@kdab.com>
+Subject: [PATCH v6 1/6] perf report: properly handle branch count in match_chain
+Date: Wed, 18 Oct 2017 20:53:45 +0200
+Message-ID: <20171018185350.14893-2-milian.wolff@kdab.com>
 References: <20171018185350.14893-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:57638 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751202AbdJRSyJ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Oct 2017 14:54:09 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171018185350.14893-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ingo Molnar <mingo@kernel.org>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Now that we have caches in place to speed up the process of finding
-inlined frames and srcline information repeatedly, we can enable
-this useful option by default.
+Some of the code paths I introduced before returned too early
+without running the code to handle a node's branch count.
+By refactoring match_chain to only have one exit point, this
+can be remedied.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Suggested-by: Ingo Molnar <mingo@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/Documentation/perf-report.txt | 3 ++-
- tools/perf/Documentation/perf-script.txt | 3 ++-
- tools/perf/util/symbol.c                 | 1 +
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/callchain.c | 129 +++++++++++++++++++++++---------------------
+ 1 file changed, 67 insertions(+), 62 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 383a98d992ed..ddde2b54af57 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -434,7 +434,8 @@ include::itrace.txt[]
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 35a920f09503..ac767957fd9c 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -666,83 +666,88 @@ static enum match_result match_chain_strings(const char *left,
+ 	return ret;
+ }
  
- --inline::
- 	If a callgraph address belongs to an inlined function, the inline stack
--	will be printed. Each entry is function name or file/line.
-+	will be printed. Each entry is function name or file/line. Enabled by
-+	default, disable with --no-inline.
++static enum match_result match_address_dso(struct dso *left_dso, u64 left_ip,
++					   struct dso *right_dso, u64 right_ip)
++{
++	if (left_dso == right_dso && left_ip == right_ip)
++		return MATCH_EQ;
++	else if (left_ip < right_ip)
++		return MATCH_LT;
++	else
++		return MATCH_GT;
++}
++
+ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 				     struct callchain_list *cnode)
+ {
+-	struct symbol *sym = node->sym;
+-	u64 left, right;
+-	struct dso *left_dso = NULL;
+-	struct dso *right_dso = NULL;
+-
+-	if (callchain_param.key == CCKEY_SRCLINE) {
+-		enum match_result match = match_chain_strings(cnode->srcline,
+-							      node->srcline);
+-
+-		/* if no srcline is available, fallback to symbol name */
+-		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+-			match = match_chain_strings(cnode->ms.sym->name,
+-						    node->sym->name);
++	enum match_result match = MATCH_ERROR;
  
- include::callchain-overhead-calculation.txt[]
++	switch (callchain_param.key) {
++	case CCKEY_SRCLINE:
++		match = match_chain_strings(cnode->srcline, node->srcline);
+ 		if (match != MATCH_ERROR)
+-			return match;
+-
++			break;
++		/* otherwise fall-back to symbol-based comparison below */
++		__fallthrough;
++	case CCKEY_FUNCTION:
++		if (node->sym && cnode->ms.sym) {
++			/*
++			 * Compare inlined frames based on their symbol name
++			 * because different inlined frames will have the same
++			 * symbol start. Otherwise do a faster comparison based
++			 * on the symbol start address.
++			 */
++			if (cnode->ms.sym->inlined || node->sym->inlined)
++				match = match_chain_strings(cnode->ms.sym->name,
++							    node->sym->name);
++			else
++				match = match_address_dso(cnode->ms.map->dso,
++							  cnode->ms.sym->start,
++							  node->map->dso,
++							  node->sym->start);
++			if (match != MATCH_ERROR)
++				break;
++		}
+ 		/* otherwise fall-back to IP-based comparison below */
++		__fallthrough;
++	case CCKEY_ADDRESS:
++	default:
++		match = match_address_dso(cnode->ms.map->dso, cnode->ip,
++					  node->map->dso, node->ip);
++		break;
+ 	}
  
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index bcc1ba35a2d8..25e677344728 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -327,7 +327,8 @@ include::itrace.txt[]
+-	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+-		/*
+-		 * Compare inlined frames based on their symbol name because
+-		 * different inlined frames will have the same symbol start
+-		 */
+-		if (cnode->ms.sym->inlined || node->sym->inlined)
+-			return match_chain_strings(cnode->ms.sym->name,
+-						   node->sym->name);
+-
+-		left = cnode->ms.sym->start;
+-		right = sym->start;
+-		left_dso = cnode->ms.map->dso;
+-		right_dso = node->map->dso;
+-	} else {
+-		left = cnode->ip;
+-		right = node->ip;
+-	}
+-
+-	if (left == right && left_dso == right_dso) {
+-		if (node->branch) {
+-			cnode->branch_count++;
++	if (match == MATCH_EQ && node->branch) {
++		cnode->branch_count++;
  
- --inline::
- 	If a callgraph address belongs to an inlined function, the inline stack
--	will be printed. Each entry has function name and file/line.
-+	will be printed. Each entry has function name and file/line. Enabled by
-+	default, disable with --no-inline.
+-			if (node->branch_from) {
+-				/*
+-				 * It's "to" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = true;
++		if (node->branch_from) {
++			/*
++			 * It's "to" of a branch
++			 */
++			cnode->brtype_stat.branch_to = true;
  
- SEE ALSO
- --------
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 066e38aa4063..ce6993bebf8c 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -45,6 +45,7 @@ struct symbol_conf symbol_conf = {
- 	.show_hist_headers	= true,
- 	.symfs			= "",
- 	.event_group		= true,
-+	.inline_name		= true,
- };
+-				if (node->branch_flags.predicted)
+-					cnode->predicted_count++;
++			if (node->branch_flags.predicted)
++				cnode->predicted_count++;
  
- static enum dso_binary_type binary_type_symtab[] = {
+-				if (node->branch_flags.abort)
+-					cnode->abort_count++;
++			if (node->branch_flags.abort)
++				cnode->abort_count++;
+ 
+-				branch_type_count(&cnode->brtype_stat,
+-						  &node->branch_flags,
+-						  node->branch_from,
+-						  node->ip);
+-			} else {
+-				/*
+-				 * It's "from" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = false;
+-				cnode->cycles_count +=
+-					node->branch_flags.cycles;
+-				cnode->iter_count += node->nr_loop_iter;
+-				cnode->iter_cycles += node->iter_cycles;
+-			}
++			branch_type_count(&cnode->brtype_stat,
++					  &node->branch_flags,
++					  node->branch_from,
++					  node->ip);
++		} else {
++			/*
++			 * It's "from" of a branch
++			 */
++			cnode->brtype_stat.branch_to = false;
++			cnode->cycles_count += node->branch_flags.cycles;
++			cnode->iter_count += node->nr_loop_iter;
++			cnode->iter_cycles += node->iter_cycles;
+ 		}
+-
+-		return MATCH_EQ;
+ 	}
+ 
+-	return left > right ? MATCH_GT : MATCH_LT;
++	return match;
+ }
+ 
+ /*
 -- 
 2.14.2
