@@ -1,104 +1,155 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 8/8] perf test shell trace+probe_libc_inet_pton.sh: Be compatible with Debian/Ubuntu
-Date: Thu, 19 Oct 2017 14:45:15 -0300
-Message-ID: <20171019174515.7407-9-acme@kernel.org>
+Subject: [PATCH 7/8] perf xyarray: Fix wrong processing when closing evsel fd
+Date: Thu, 19 Oct 2017 14:45:14 -0300
+Message-ID: <20171019174515.7407-8-acme@kernel.org>
 References: <20171019174515.7407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171019174515.7407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Li Zhijian <lizhijian@cn.fujitsu.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, Peter Zijlstra <peterz@infradead.org>, Philip Li <philip.li@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Li Zhijian <lizhijian@cn.fujitsu.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-In debian/ubuntu, libc.so is located at a different place,
-/lib/x86_64-linux-gnu/libc-2.23.so, so it outputs like this when testing:
+In current xyarray code, xyarray__max_x() returns max_y, and xyarray__max_y()
+returns max_x.
 
-  PING ::1(::1) 56 data bytes
-  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.040 ms
+It's confusing and for code logic it looks not correct.
 
-  --- ::1 ping statistics ---
-  1 packets transmitted, 1 received, 0% packet loss, time 0ms
-  rtt min/avg/max/mdev = 0.040/0.040/0.040/0.000 ms
-  0.000 probe_libc:inet_pton:(7f0e2db741c0))
-  __GI___inet_pton (/lib/x86_64-linux-gnu/libc-2.23.so)
-  getaddrinfo (/lib/x86_64-linux-gnu/libc-2.23.so)
-  [0xffffa9d40f34ff4d] (/bin/ping)
+Error happens when closing evsel fd. Let's see this scenario:
 
-Fix up the libc path to make sure this test works in more OSes.
+1. Allocate an fd (pseudo-code)
 
-Committer testing:
+  perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+  {
+	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
+  }
 
-When this test fails one can use 'perf test -v', i.e. in verbose mode, where
-it'll show the expected backtrace, so, after applying this test:
+  xyarray__new(int xlen, int ylen, size_t entry_size)
+  {
+	size_t row_size = ylen * entry_size;
+	struct xyarray *xy = zalloc(sizeof(*xy) + xlen * row_size);
 
-On Fedora 26:
+	xy->entry_size = entry_size;
+	xy->row_size   = row_size;
+	xy->entries    = xlen * ylen;
+	xy->max_x      = xlen;
+	xy->max_y      = ylen;
+	......
+  }
 
-  # perf test -v ping
-  62: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 23322
-  PING ::1(::1) 56 data bytes
-  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.058 ms
-  --- ::1 ping statistics ---
-  1 packets transmitted, 1 received, 0% packet loss, time 0ms
-  rtt min/avg/max/mdev = 0.058/0.058/0.058/0.000 ms
-  0.000 probe_libc:inet_pton:(7fe344310d80))
-  __GI___inet_pton (/usr/lib64/libc-2.25.so)
-  getaddrinfo (/usr/lib64/libc-2.25.so)
-  _init (/usr/bin/ping)
-  test child finished with 0
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: Ok
-  #
+So max_x is ncpus, max_y is nthreads and row_size = nthreads * 4.
 
-Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+2. Use perf syscall and get the fd
+
+  int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+		     struct thread_map *threads)
+  {
+	for (cpu = 0; cpu < cpus->nr; cpu++) {
+
+		for (thread = 0; thread < nthreads; thread++) {
+			int fd, group_fd;
+
+			fd = sys_perf_event_open(&evsel->attr, pid, cpus->map[cpu],
+						 group_fd, flags);
+
+			FD(evsel, cpu, thread) = fd;
+	}
+  }
+
+  static inline void *xyarray__entry(struct xyarray *xy, int x, int y)
+  {
+	return &xy->contents[x * xy->row_size + y * xy->entry_size];
+  }
+
+These codes don't have issues. The issue happens in the closing of fd.
+
+3. Close fd.
+
+  void perf_evsel__close_fd(struct perf_evsel *evsel)
+  {
+	int cpu, thread;
+
+	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
+		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
+			close(FD(evsel, cpu, thread));
+			FD(evsel, cpu, thread) = -1;
+		}
+  }
+
+  Since xyarray__max_x() returns max_y (nthreads) and xyarry__max_y()
+  returns max_x (ncpus), so above code is actually to be:
+
+        for (cpu = 0; cpu < nthreads; cpu++)
+                for (thread = 0; thread < ncpus; ++thread) {
+                        close(FD(evsel, cpu, thread));
+                        FD(evsel, cpu, thread) = -1;
+                }
+
+  It's not correct!
+
+This change is introduced by "475fb533fb7d" ("perf evsel: Fix buffer overflow
+while freeing events")
+
+This fix is to let xyarray__max_x() return max_x (ncpus) and
+let xyarry__max_y() return max_y (nthreads)
+
+Committer note:
+
+This was also fixed by Ravi Bangoria, who provided the same patch,
+noticing the problem with 'perf record':
+
+<quote Ravi>
+I see 'perf record -p <pid>' crashes with following log:
+
+   *** Error in `./perf': free(): invalid next size (normal): 0x000000000298b340 ***
+   ======= Backtrace: =========
+   /lib/x86_64-linux-gnu/libc.so.6(+0x777e5)[0x7f7fd85c87e5]
+   /lib/x86_64-linux-gnu/libc.so.6(+0x8037a)[0x7f7fd85d137a]
+   /lib/x86_64-linux-gnu/libc.so.6(cfree+0x4c)[0x7f7fd85d553c]
+   ./perf(perf_evsel__close+0xb4)[0x4b7614]
+   ./perf(perf_evlist__delete+0x100)[0x4ab180]
+   ./perf(cmd_record+0x1d9)[0x43a5a9]
+   ./perf[0x49aa2f]
+   ./perf(main+0x631)[0x427841]
+   /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf0)[0x7f7fd8571830]
+   ./perf(_start+0x29)[0x427a59]
+</>
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Li Zhijian <lizhijian@cn.fujitsu.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Philip Li <philip.li@intel.com>
-Link: http://lkml.kernel.org/r/1508315649-18836-1-git-send-email-lizhijian@cn.fujitsu.com
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Fixes: d74be4767367 ("perf xyarray: Save max_x, max_y")
+Link: http://lkml.kernel.org/r/1508339478-26674-1-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1508327446-15302-1-git-send-email-ravi.bangoria@linux.vnet.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/xyarray.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-index 462fc755092e..7a84d73324e3 100755
---- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-@@ -10,6 +10,9 @@
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
+index 4ba726c90870..54af60462130 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/util/xyarray.h
+@@ -23,12 +23,12 @@ static inline void *xyarray__entry(struct xyarray *xy, int x, int y)
  
- . $(dirname $0)/lib/probe.sh
- 
-+ld=$(realpath /lib64/ld*.so.* | uniq)
-+libc=$(echo $ld | sed 's/ld/libc/g')
-+
- trace_libc_inet_pton_backtrace() {
- 	idx=0
- 	expected[0]="PING.*bytes"
-@@ -18,8 +21,8 @@ trace_libc_inet_pton_backtrace() {
- 	expected[3]=".*packets transmitted.*"
- 	expected[4]="rtt min.*"
- 	expected[5]="[0-9]+\.[0-9]+[[:space:]]+probe_libc:inet_pton:\([[:xdigit:]]+\)"
--	expected[6]=".*inet_pton[[:space:]]\(/usr/lib.*/libc-[0-9]+\.[0-9]+\.so\)$"
--	expected[7]="getaddrinfo[[:space:]]\(/usr/lib.*/libc-[0-9]+\.[0-9]+\.so\)$"
-+	expected[6]=".*inet_pton[[:space:]]\($libc\)$"
-+	expected[7]="getaddrinfo[[:space:]]\($libc\)$"
- 	expected[8]=".*\(.*/bin/ping.*\)$"
- 
- 	perf trace --no-syscalls -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1 2>&1 | grep -v ^$ | while read line ; do
-@@ -35,7 +38,7 @@ trace_libc_inet_pton_backtrace() {
+ static inline int xyarray__max_y(struct xyarray *xy)
+ {
+-	return xy->max_x;
++	return xy->max_y;
  }
  
- skip_if_no_perf_probe && \
--perf probe -q /lib64/libc-*.so inet_pton && \
-+perf probe -q $libc inet_pton && \
- trace_libc_inet_pton_backtrace
- err=$?
- rm -f ${file}
+ static inline int xyarray__max_x(struct xyarray *xy)
+ {
+-	return xy->max_y;
++	return xy->max_x;
+ }
+ 
+ #endif /* _PERF_XYARRAY_H_ */
 -- 
 2.13.6
