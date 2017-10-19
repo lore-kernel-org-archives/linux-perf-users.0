@@ -1,107 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/8] perf tools: Check wether the eBPF file exists in event parsing
-Date: Thu, 19 Oct 2017 14:45:10 -0300
-Message-ID: <20171019174515.7407-4-acme@kernel.org>
+Subject: [PATCH 1/8] perf hists: Fix crash in perf_hpp__reset_output_field()
+Date: Thu, 19 Oct 2017 14:45:08 -0300
+Message-ID: <20171019174515.7407-2-acme@kernel.org>
 References: <20171019174515.7407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171019174515.7407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Adding the check wether the eBPF file exists, to consider it
-as eBPF input file. This way we can differentiate eBPF events
-from events that end up with same suffix as eBPF file.
+Du Changbin reported crash [1] when calling perf_hpp__reset_output_field()
+after unregistering field via perf_hpp__column_unregister().
 
-Before:
+This ends up in calling following list_del* sequence on
+the same format:
 
-  $ perf stat -e 'cpu/uops_executed.core/'  true
-  bpf: builtin compilation failed: -95, try external compiler
-  WARNING:        unable to get correct kernel building directory.
-  Hint:   Set correct kbuild directory using 'kbuild-dir' option in [llvm]
-          section of ~/.perfconfig or set it to "" to suppress kbuild
-          detection.
+  perf_hpp__column_unregister:
+    list_del(&format->list);
+  perf_hpp__reset_output_field:
+    list_del_init(&fmt->list);
 
-  event syntax error: 'cpu/uops_executed.core/'
-                       \___ Failed to load cpu/uops_executed.c from source: 'version' section incorrect or lost
+where the later list_del_init might touch already freed formats.
 
-After:
+Fixing this by replacing list_del() with list_del_init() in
+perf_hpp__column_unregister().
 
-  $ perf stat -e 'cpu/uops_executed.core/'  true
+[1] http://marc.info/?l=linux-kernel&m=149059595826019&w=2
 
-   Performance counter stats for 'true':
-
-             181,533      cpu/uops_executed.core/:u
-
-         0.002795447 seconds time elapsed
-
-If user makes type in the eBPF file, we prioritize the event syntax
-and show following warning:
-
-  $ perf stat -e 'krava.c//'  true
-  event syntax error: 'krava.c//'
-                       \___ Cannot find PMU `krava.c'. Missing kernel support?
-
-Reported-and-Tested-by: Andi Kleen <ak@linux.intel.com>
+Reported-by: Changbin Du <changbin.du@intel.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Changbin Du <changbin.du@intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20171013083736.15037-9-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20171013083736.15037-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.l | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/ui/hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index c42edeac451f..dcfdafdc2f1c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -8,6 +8,9 @@
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index ddb2c6fbdf91..6ee6b36bbc76 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -532,7 +532,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
  
- %{
- #include <errno.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
- #include "../perf.h"
- #include "parse-events.h"
- #include "parse-events-bison.h"
-@@ -53,9 +56,8 @@ static int str(yyscan_t scanner, int token)
- 	return token;
- }
- 
--static bool isbpf(yyscan_t scanner)
-+static bool isbpf_suffix(char *text)
+ void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
  {
--	char *text = parse_events_get_text(scanner);
- 	int len = strlen(text);
- 
- 	if (len < 2)
-@@ -68,6 +70,17 @@ static bool isbpf(yyscan_t scanner)
- 	return false;
+-	list_del(&format->list);
++	list_del_init(&format->list);
  }
  
-+static bool isbpf(yyscan_t scanner)
-+{
-+	char *text = parse_events_get_text(scanner);
-+	struct stat st;
-+
-+	if (!isbpf_suffix(text))
-+		return false;
-+
-+	return stat(text, &st) == 0;
-+}
-+
- /*
-  * This function is called when the parser gets two kind of input:
-  *
+ void perf_hpp__cancel_cumulate(void)
 -- 
 2.13.6
