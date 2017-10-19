@@ -1,155 +1,108 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 7/8] perf xyarray: Fix wrong processing when closing evsel fd
-Date: Thu, 19 Oct 2017 14:45:14 -0300
-Message-ID: <20171019174515.7407-8-acme@kernel.org>
+Subject: [PATCH 6/8] perf buildid-list: Fix crash when processing PERF_RECORD_NAMESPACE
+Date: Thu, 19 Oct 2017 14:45:13 -0300
+Message-ID: <20171019174515.7407-7-acme@kernel.org>
 References: <20171019174515.7407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171019174515.7407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
 
-In current xyarray code, xyarray__max_x() returns max_y, and xyarray__max_y()
-returns max_x.
+Thomas reported that 'perf buildid-list' gets a SEGFAULT due to NULL
+pointer deref when he ran it on a data with namespace events.  It was
+because the buildid_id__mark_dso_hit_ops lacks the namespace event
+handler and perf_too__fill_default() didn't set it.
 
-It's confusing and for code logic it looks not correct.
+  Program received signal SIGSEGV, Segmentation fault.
+  0x0000000000000000 in ?? ()
+  Missing separate debuginfos, use: dnf debuginfo-install audit-libs-2.7.7-1.fc25.s390x bzip2-libs-1.0.6-21.fc25.s390x elfutils-libelf-0.169-1.fc25.s390x
+  +elfutils-libs-0.169-1.fc25.s390x libcap-ng-0.7.8-1.fc25.s390x numactl-libs-2.0.11-2.ibm.fc25.s390x openssl-libs-1.1.0e-1.1.ibm.fc25.s390x perl-libs-5.24.1-386.fc25.s390x
+  +python-libs-2.7.13-2.fc25.s390x slang-2.3.0-7.fc25.s390x xz-libs-5.2.3-2.fc25.s390x zlib-1.2.8-10.fc25.s390x
+  (gdb) where
+  #0  0x0000000000000000 in ?? ()
+  #1  0x00000000010fad6a in machines__deliver_event (machines=<optimized out>, machines@entry=0x2c6fd18,
+      evlist=<optimized out>, event=event@entry=0x3fffdf00470, sample=0x3ffffffe880, sample@entry=0x3ffffffe888,
+      tool=tool@entry=0x1312968 <build_id.mark_dso_hit_ops>, file_offset=1136) at util/session.c:1287
+  #2  0x00000000010fbf4e in perf_session__deliver_event (file_offset=1136, tool=0x1312968 <build_id.mark_dso_hit_ops>,
+      sample=0x3ffffffe888, event=0x3fffdf00470, session=0x2c6fc30) at util/session.c:1340
+  #3  perf_session__process_event (session=0x2c6fc30, session@entry=0x0, event=event@entry=0x3fffdf00470,
+      file_offset=file_offset@entry=1136) at util/session.c:1522
+  #4  0x00000000010fddde in __perf_session__process_events (file_size=11880, data_size=<optimized out>,
+      data_offset=<optimized out>, session=0x0) at util/session.c:1899
+  #5  perf_session__process_events (session=0x0, session@entry=0x2c6fc30) at util/session.c:1953
+  #6  0x000000000103b2ac in perf_session__list_build_ids (with_hits=<optimized out>, force=<optimized out>)
+      at builtin-buildid-list.c:83
+  #7  cmd_buildid_list (argc=<optimized out>, argv=<optimized out>) at builtin-buildid-list.c:115
+  #8  0x00000000010a026c in run_builtin (p=0x1311f78 <commands+24>, argc=argc@entry=2, argv=argv@entry=0x3fffffff3c0)
+      at perf.c:296
+  #9  0x000000000102bc00 in handle_internal_command (argv=<optimized out>, argc=2) at perf.c:348
+  #10 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:392
+  #11 main (argc=<optimized out>, argv=0x3fffffff3c0) at perf.c:536
+  (gdb)
 
-Error happens when closing evsel fd. Let's see this scenario:
+Fix it by adding a stub event handler for namespace event.
 
-1. Allocate an fd (pseudo-code)
+Committer testing:
 
-  perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
-  {
-	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
-  }
+Further clarifying, plain using 'perf buildid-list' will not end up in a
+SEGFAULT when processing a perf.data file with namespace info:
 
-  xyarray__new(int xlen, int ylen, size_t entry_size)
-  {
-	size_t row_size = ylen * entry_size;
-	struct xyarray *xy = zalloc(sizeof(*xy) + xlen * row_size);
+  # perf record -a --namespaces sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 2.024 MB perf.data (1058 samples) ]
+  # perf buildid-list | wc -l
+  38
+  # perf buildid-list | head -5
+  e2a171c7b905826fc8494f0711ba76ab6abbd604 /lib/modules/4.14.0-rc3+/build/vmlinux
+  874840a02d8f8a31cedd605d0b8653145472ced3 /lib/modules/4.14.0-rc3+/kernel/arch/x86/kvm/kvm-intel.ko
+  ea7223776730cd8a22f320040aae4d54312984bc /lib/modules/4.14.0-rc3+/kernel/drivers/gpu/drm/i915/i915.ko
+  5961535e6732a8edb7f22b3f148bb2fa2e0be4b9 /lib/modules/4.14.0-rc3+/kernel/drivers/gpu/drm/drm.ko
+  f045f54aa78cf1931cc893f78b6cbc52c72a8cb1 /usr/lib64/libc-2.25.so
+  #
 
-	xy->entry_size = entry_size;
-	xy->row_size   = row_size;
-	xy->entries    = xlen * ylen;
-	xy->max_x      = xlen;
-	xy->max_y      = ylen;
-	......
-  }
+It is only when one asks for checking what of those entries actually had
+samples, i.e. when we use either -H or --with-hits, that we will process
+all the PERF_RECORD_ events, and since tools/perf/builtin-buildid-list.c
+neither explicitely set a perf_tool.namespaces() callback nor the
+default stub was set that we end up, when processing a
+PERF_RECORD_NAMESPACE record, causing a SEGFAULT:
 
-So max_x is ncpus, max_y is nthreads and row_size = nthreads * 4.
+  # perf buildid-list -H
+  Segmentation fault (core dumped)
+  ^C
+  #
 
-2. Use perf syscall and get the fd
-
-  int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
-		     struct thread_map *threads)
-  {
-	for (cpu = 0; cpu < cpus->nr; cpu++) {
-
-		for (thread = 0; thread < nthreads; thread++) {
-			int fd, group_fd;
-
-			fd = sys_perf_event_open(&evsel->attr, pid, cpus->map[cpu],
-						 group_fd, flags);
-
-			FD(evsel, cpu, thread) = fd;
-	}
-  }
-
-  static inline void *xyarray__entry(struct xyarray *xy, int x, int y)
-  {
-	return &xy->contents[x * xy->row_size + y * xy->entry_size];
-  }
-
-These codes don't have issues. The issue happens in the closing of fd.
-
-3. Close fd.
-
-  void perf_evsel__close_fd(struct perf_evsel *evsel)
-  {
-	int cpu, thread;
-
-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
-		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
-			close(FD(evsel, cpu, thread));
-			FD(evsel, cpu, thread) = -1;
-		}
-  }
-
-  Since xyarray__max_x() returns max_y (nthreads) and xyarry__max_y()
-  returns max_x (ncpus), so above code is actually to be:
-
-        for (cpu = 0; cpu < nthreads; cpu++)
-                for (thread = 0; thread < ncpus; ++thread) {
-                        close(FD(evsel, cpu, thread));
-                        FD(evsel, cpu, thread) = -1;
-                }
-
-  It's not correct!
-
-This change is introduced by "475fb533fb7d" ("perf evsel: Fix buffer overflow
-while freeing events")
-
-This fix is to let xyarray__max_x() return max_x (ncpus) and
-let xyarry__max_y() return max_y (nthreads)
-
-Committer note:
-
-This was also fixed by Ravi Bangoria, who provided the same patch,
-noticing the problem with 'perf record':
-
-<quote Ravi>
-I see 'perf record -p <pid>' crashes with following log:
-
-   *** Error in `./perf': free(): invalid next size (normal): 0x000000000298b340 ***
-   ======= Backtrace: =========
-   /lib/x86_64-linux-gnu/libc.so.6(+0x777e5)[0x7f7fd85c87e5]
-   /lib/x86_64-linux-gnu/libc.so.6(+0x8037a)[0x7f7fd85d137a]
-   /lib/x86_64-linux-gnu/libc.so.6(cfree+0x4c)[0x7f7fd85d553c]
-   ./perf(perf_evsel__close+0xb4)[0x4b7614]
-   ./perf(perf_evlist__delete+0x100)[0x4ab180]
-   ./perf(cmd_record+0x1d9)[0x43a5a9]
-   ./perf[0x49aa2f]
-   ./perf(main+0x631)[0x427841]
-   /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf0)[0x7f7fd8571830]
-   ./perf(_start+0x29)[0x427a59]
-</>
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
+Reported-and-Tested-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Fixes: d74be4767367 ("perf xyarray: Save max_x, max_y")
-Link: http://lkml.kernel.org/r/1508339478-26674-1-git-send-email-yao.jin@linux.intel.com
-Link: http://lkml.kernel.org/r/1508327446-15302-1-git-send-email-ravi.bangoria@linux.vnet.ibm.com
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
+Link: http://lkml.kernel.org/r/20171017132900.11043-1-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/xyarray.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
-index 4ba726c90870..54af60462130 100644
---- a/tools/perf/util/xyarray.h
-+++ b/tools/perf/util/xyarray.h
-@@ -23,12 +23,12 @@ static inline void *xyarray__entry(struct xyarray *xy, int x, int y)
- 
- static inline int xyarray__max_y(struct xyarray *xy)
- {
--	return xy->max_x;
-+	return xy->max_y;
- }
- 
- static inline int xyarray__max_x(struct xyarray *xy)
- {
--	return xy->max_y;
-+	return xy->max_x;
- }
- 
- #endif /* _PERF_XYARRAY_H_ */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a7ebd9fe8e40..76ab0709a20c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -374,6 +374,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 		tool->mmap2 = process_event_stub;
+ 	if (tool->comm == NULL)
+ 		tool->comm = process_event_stub;
++	if (tool->namespaces == NULL)
++		tool->namespaces = process_event_stub;
+ 	if (tool->fork == NULL)
+ 		tool->fork = process_event_stub;
+ 	if (tool->exit == NULL)
 -- 
 2.13.6
