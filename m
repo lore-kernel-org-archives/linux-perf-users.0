@@ -1,45 +1,47 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v7 1/5] perf report: properly handle branch count in match_chain
-Date: Thu, 19 Oct 2017 13:42:18 +0200
-Message-ID: <1895125.rrirNAUR4a@agathebauer>
-References: <20171019113836.5548-1-milian.wolff@kdab.com> <20171019113836.5548-2-milian.wolff@kdab.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in
+ match_chain
+Date: Thu, 19 Oct 2017 06:55:19 -0700
+Message-ID: <20171019135519.GC5109@tassilo.jf.intel.com>
+References: <20171018185350.14893-1-milian.wolff@kdab.com>
+ <20171018185350.14893-2-milian.wolff@kdab.com>
+ <871sm0hyf3.fsf@linux.intel.com>
+ <2888255.JE21v0kgr3@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:36644 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752742AbdJSLmV (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Oct 2017 07:42:21 -0400
-In-Reply-To: <20171019113836.5548-2-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@kernel.org
-Cc: jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2888255.JE21v0kgr3@agathebauer>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-On Donnerstag, 19. Oktober 2017 13:38:32 CEST Milian Wolff wrote:
-> Some of the code paths I introduced before returned too early
-> without running the code to handle a node's branch count.
-> By refactoring match_chain to only have one exit point, this
-> can be remedied.
+On Thu, Oct 19, 2017 at 12:59:14PM +0200, Milian Wolff wrote:
+> On Donnerstag, 19. Oktober 2017 00:41:04 CEST Andi Kleen wrote:
+> > Milian Wolff <milian.wolff@kdab.com> writes:
+> > > +static enum match_result match_address_dso(struct dso *left_dso, u64
+> > > left_ip, +					   struct dso *right_dso, u64 right_ip)
+> > > +{
+> > > +	if (left_dso == right_dso && left_ip == right_ip)
+> > > +		return MATCH_EQ;
+> > > +	else if (left_ip < right_ip)
+> > > +		return MATCH_LT;
+> > > +	else
+> > > +		return MATCH_GT;
+> > > +}
+> > 
+> > So why does only the first case check the dso? Does it not matter
+> > for the others?
+> > 
+> > Either should be checked by none or by all.
+> 
+> I don't see why it should be checked. It is only required to prevent two 
+> addresses to be considered equal while they are not. So only the one check is 
+> required, otherwise we return either LT or GT.
 
-Note: I tested this with some of the code I have available, but I'm unsure I'm 
-doing it right. On my system, I never get avg_cycles != 0. I tried:
+When the comparison is always in the same process (which I think
+is not the case) just checking the addresses is sufficient. If they are not then you
+always need to check the DSO and only compare inside the same DSO.
 
-perf record -b --call-graph dwarf <some binary>
-perf report --branch-history --no-children --stdio
-
-I see predicted and iter values as before, so I think nothing is breaking. But 
-I'm somewhat unsure. Can someone paste an example source code and the perf 
-commands to get some meaningful avg_cycles? Or does this depend on a newer 
-Intel CPU? I have currently only a Intel(R) Core(TM) i7-5600U CPU @ 2.60GHz 
-available.
-
-Cheers
-
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
+-Andi
