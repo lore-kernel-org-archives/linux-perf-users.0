@@ -1,157 +1,72 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH v7 2/5] perf report: cache failed lookups of inlined frames
-Date: Thu, 19 Oct 2017 13:38:33 +0200
-Message-ID: <20171019113836.5548-3-milian.wolff@kdab.com>
+Subject: [PATCH v7 5/5] perf util: enable handling of inlined frames by default
+Date: Thu, 19 Oct 2017 13:38:36 +0200
+Message-ID: <20171019113836.5548-6-milian.wolff@kdab.com>
 References: <20171019113836.5548-1-milian.wolff@kdab.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:35886 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752705AbdJSLis (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Oct 2017 07:38:48 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171019113836.5548-1-milian.wolff@kdab.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ingo Molnar <mingo@kernel.org>
+List-Id: linux-perf-users.vger.kernel.org
 
-When no inlined frames could be found for a given address,
-we did not store this information anywhere. That means we
-potentially do the costly inliner lookup repeatedly for
-cases where we know it can never succeed.
-
-This patch makes dso__parse_addr_inlines always return a
-valid inline_node. It will be empty when no inliners are
-found. This enables us to cache the empty list in the DSO,
-thereby improving the performance when many addresses
-fail to find the inliners.
-
-For my trivial example, the performance impact is already
-quite significant:
-
-Before:
-
-~~~~~
- Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
-
-        594.804032      task-clock (msec)         #    0.998 CPUs utilized            ( +-  0.07% )
-                53      context-switches          #    0.089 K/sec                    ( +-  4.09% )
-                 0      cpu-migrations            #    0.000 K/sec                    ( +-100.00% )
-             5,687      page-faults               #    0.010 M/sec                    ( +-  0.02% )
-     2,300,918,213      cycles                    #    3.868 GHz                      ( +-  0.09% )
-     4,395,839,080      instructions              #    1.91  insn per cycle           ( +-  0.00% )
-       939,177,205      branches                  # 1578.969 M/sec                    ( +-  0.00% )
-        11,824,633      branch-misses             #    1.26% of all branches          ( +-  0.10% )
-
-       0.596246531 seconds time elapsed                                          ( +-  0.07% )
-~~~~~
-
-After:
-
-~~~~~
- Performance counter stats for 'perf report --stdio --inline -g srcline -s srcline' (5 runs):
-
-        113.111405      task-clock (msec)         #    0.990 CPUs utilized            ( +-  0.89% )
-                29      context-switches          #    0.255 K/sec                    ( +- 54.25% )
-                 0      cpu-migrations            #    0.000 K/sec
-             5,380      page-faults               #    0.048 M/sec                    ( +-  0.01% )
-       432,378,779      cycles                    #    3.823 GHz                      ( +-  0.75% )
-       670,057,633      instructions              #    1.55  insn per cycle           ( +-  0.01% )
-       141,001,247      branches                  # 1246.570 M/sec                    ( +-  0.01% )
-         2,346,845      branch-misses             #    1.66% of all branches          ( +-  0.19% )
-
-       0.114222393 seconds time elapsed                                          ( +-  1.19% )
-~~~~~
+Now that we have caches in place to speed up the process of finding
+inlined frames and srcline information repeatedly, we can enable
+this useful option by default.
 
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Yao Jin <yao.jin@linux.intel.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
 ---
- tools/perf/util/machine.c | 15 +++++++--------
- tools/perf/util/srcline.c | 16 +---------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
+ tools/perf/Documentation/perf-report.txt | 3 ++-
+ tools/perf/Documentation/perf-script.txt | 3 ++-
+ tools/perf/util/symbol.c                 | 1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 3d049cb313ac..177c1d4088f8 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2115,9 +2115,10 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	struct inline_node *inline_node;
- 	struct inline_list *ilist;
- 	u64 addr;
-+	int ret = 1;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 383a98d992ed..ddde2b54af57 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -434,7 +434,8 @@ include::itrace.txt[]
  
- 	if (!symbol_conf.inline_name || !map || !sym)
--		return 1;
-+		return ret;
+ --inline::
+ 	If a callgraph address belongs to an inlined function, the inline stack
+-	will be printed. Each entry is function name or file/line.
++	will be printed. Each entry is function name or file/line. Enabled by
++	default, disable with --no-inline.
  
- 	addr = map__rip_2objdump(map, ip);
+ include::callchain-overhead-calculation.txt[]
  
-@@ -2125,22 +2126,20 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	if (!inline_node) {
- 		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
- 		if (!inline_node)
--			return 1;
--
-+			return ret;
- 		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
- 	}
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index bcc1ba35a2d8..25e677344728 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -327,7 +327,8 @@ include::itrace.txt[]
  
- 	list_for_each_entry(ilist, &inline_node->val, list) {
--		int ret = callchain_cursor_append(cursor, ip, map,
--						  ilist->symbol, false,
--						  NULL, 0, 0, 0,
--						  ilist->srcline);
-+		ret = callchain_cursor_append(cursor, ip, map,
-+					      ilist->symbol, false,
-+					      NULL, 0, 0, 0, ilist->srcline);
+ --inline::
+ 	If a callgraph address belongs to an inlined function, the inline stack
+-	will be printed. Each entry has function name and file/line.
++	will be printed. Each entry has function name and file/line. Enabled by
++	default, disable with --no-inline.
  
- 		if (ret != 0)
- 			return ret;
- 	}
+ SEE ALSO
+ --------
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 066e38aa4063..ce6993bebf8c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -45,6 +45,7 @@ struct symbol_conf symbol_conf = {
+ 	.show_hist_headers	= true,
+ 	.symfs			= "",
+ 	.event_group		= true,
++	.inline_name		= true,
+ };
  
--	return 0;
-+	return ret;
- }
- 
- static int unwind_entry(struct unwind_entry *entry, void *arg)
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 8bea6621d657..fc3888664b20 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -353,17 +353,8 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- 	INIT_LIST_HEAD(&node->val);
- 	node->addr = addr;
- 
--	if (!addr2line(dso_name, addr, NULL, NULL, dso, TRUE, node, sym))
--		goto out_free_inline_node;
--
--	if (list_empty(&node->val))
--		goto out_free_inline_node;
--
-+	addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
- 	return node;
--
--out_free_inline_node:
--	inline_node__delete(node);
--	return NULL;
- }
- 
- #else /* HAVE_LIBBFD_SUPPORT */
-@@ -480,11 +471,6 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
- out:
- 	pclose(fp);
- 
--	if (list_empty(&node->val)) {
--		inline_node__delete(node);
--		return NULL;
--	}
--
- 	return node;
- }
- 
+ static enum dso_binary_type binary_type_symtab[] = {
 -- 
 2.14.2
