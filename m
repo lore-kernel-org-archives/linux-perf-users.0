@@ -1,195 +1,252 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf buildid-cache -p <path> question
-Date: Fri, 20 Oct 2017 13:20:56 -0300
-Message-ID: <20171020162056.GH30002@kernel.org>
-References: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
- <20171016141222.GC5311@kernel.org>
- <20171021011259.5d6368a7fd1f54004b6ae1da@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in match_chain
+Date: Fri, 20 Oct 2017 21:52:22 +0200
+Message-ID: <8670562.FB6oiuN3E3@agathebauer>
+References: <20171018185350.14893-1-milian.wolff@kdab.com> <20171018185350.14893-2-milian.wolff@kdab.com> <20171020152222.GE30002@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:47082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752322AbdJTQU7 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Oct 2017 12:20:59 -0400
-Content-Disposition: inline
-In-Reply-To: <20171021011259.5d6368a7fd1f54004b6ae1da@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171020152222.GE30002@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Sat, Oct 21, 2017 at 01:12:59AM +0900, Masami Hiramatsu escreveu:
-> On Mon, 16 Oct 2017 11:12:22 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Freitag, 20. Oktober 2017 17:22:22 CEST Arnaldo Carvalho de Melo wrote:
+> Em Wed, Oct 18, 2017 at 08:53:45PM +0200, Milian Wolff escreveu:
+> > Some of the code paths I introduced before returned too early
+> > without running the code to handle a node's branch count.
+> > By refactoring match_chain to only have one exit point, this
+> > can be remedied.
+> > +	case CCKEY_FUNCTION:
+> > +		if (node->sym && cnode->ms.sym) {
+> > +			/*
+> > +			 * Compare inlined frames based on their symbol name
+> > +			 * because different inlined frames will have the same
+> > +			 * symbol start. Otherwise do a faster comparison based
+> > +			 * on the symbol start address.
+> > +			 */
+> > +			if (cnode->ms.sym->inlined || node->sym->inlined)
+> > +				match = match_chain_strings(cnode->ms.sym->name,
+> > +							    node->sym->name);
+> > +			else
+> > +				match = match_address_dso(cnode->ms.map->dso,
+> > +							  cnode->ms.sym->start,
+> > +							  node->map->dso,
+> > +							  node->sym->start);
+> > +			if (match != MATCH_ERROR)
+> > +				break;
+> > +		}
+> > 
+> >  		/* otherwise fall-back to IP-based comparison below */
+> > 
+> > +		__fallthrough;
 > 
-> > Em Mon, Oct 16, 2017 at 02:24:11PM +0200, Thomas-Mich Richter escreveu:
-> > > Maybe its me misunderstanding the buildid cache completely, but I ran into the following issue:
-> > > 
-> > > I can add and remove files using the perf buildid-cache command. For example 
-> > > perf buildid-cache -a /usr/bin/tar adds the tar executable to the buildid-cache directory
-> > > .debug/usr/bin/tar 
-> > > and creates the <buildid> subdirectory
-> > > .debug/usr/bin/tar/e54c9946802bbbcb85760ffeb80700a5fd35ebe7/elf file.
-> > 
-> > That is correct.
-> > 
-> > > Also a symbolic link from the directory
-> > > .debug/.buildid/e5/4c9946802bbbcb85760ffeb80700a5fd35ebe7 --> ../../usr/bin/tar/<buildid>/
-> > > is created.
-> > > 
-> > > Command perf buildid-cache -a /usr/bin/tar
-> > 
-> > Nope, command 'perf buildid-cache -r /usr/bin/tar' does it:
-> 
-> Wait, -r is remove command.
+> If we take this __falltrough because cnode->sym or cnode->ms.sym is
+> NULL, then cnode->ms.map may be NULL if we got a sample for which we
+> somehow couldn't find a map.
 
-Yes, of course, please see his original message, he stated that to
-remove a file from the buildid cache one should use 'perf buildid-cache -a':
+Yes, that was fixed in v7.
 
-On 10/16/2017 02:24 PM, Thomas-Mich Richter wrote:
-> Command perf buildid-cache -a /usr/bin/tar
-> removes these entries.
+> And we don't really need to deal with DSOs, just with MAPs, to go from
+> relative to absolute when we _have_ a symbol resolved, cnode->ip and
+> node->ip are already absolute.
 
-> > [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
-> > lrwxrwxrwx. 1 root root 58 Oct 16 10:50 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > [root@jouet ~]# 
-> > 
-> > [root@jouet ~]# perf buildid-cache -r /usr/bin/tar
-> > [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > ls: cannot access '/root/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
-> > [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
-> > ls: cannot access '/root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
-> > [root@jouet ~]# 
-> > 
-> > > removes these entries.
-> > > 
-> > > Now when I run ./perf buildid-cache -p /usr/bin
-> > > nothing happens and success is reported:
-> > 
-> > When you do '-p' after a '-a' or after a '-r'? From what you wrote
-> > below, that is after you do a '-a /usr/bin/tar', as it is being purged
-> > as well.
-> > 
-> > Masami?
-> 
-> Yeah, should be. 
-> 
-> OK, -p and -r is slightly different. That is for handling "versioning" caches.
-> 
-> For example, you have a /usr/bin/tar (this is old tar) and its buildid-cache
-> in cache directory by perf buildid-cache -a /usr/bin/tar.
-> And at some point, you will update the /usr/bin/tar (this is new tar).
-> This new tar binary is not same as old one, so if you also do
-> perf buildid-cache -a /usr/bin/tar, it creates another version of buildid
-> cache in cache directory.
-> 
-> At this moment,
-> $ perf buildid-cache -r /usr/bin/tar
-> will remove only new tar's buildid cache, but old one remains.
-> 
-> On the other hand,
-> $ perf buildid-cache -p /usr/bin/tar
-> will remove all the caches related to /usr/bin/tar from buildid cache.
-> 
-> And since the -p is supposed to be used for cleanup, it doesn't return
-> error even if there is no buildid cache remaining.
-> 
-> > 
-> > > [root@s35lp76 perf]# ./perf buildid-cache -vp /usr/bin/
-> > > Removing bash /usr/bin/: Ok
-> > > Removing dbus-daemon /usr/bin/: Ok
-> > > Removing ls /usr/bin/: Ok
-> > > Removing readlink /usr/bin/: Ok
-> > > Removing sleep /usr/bin/: Ok
-> > > Removing tar /usr/bin/: Ok
-> > > Removing time /usr/bin/: Ok
-> > > Removing vim /usr/bin/: Ok
-> > > Purging /usr/bin/: Ok
-> 
-> Hmm, curious...
-> 
-> > 
-> > In my test it works as advertised:
-> > 
-> > [root@jouet ~]# perf buildid-cache -a /usr/bin/tar
-> > [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
-> > lrwxrwxrwx. 1 root root 58 Oct 16 10:56 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > total 424
-> > drwxr-xr-x. 2 root root   4096 Oct 16 10:56 .
-> > drwxr-xr-x. 3 root root   4096 Oct 16 10:56 ..
-> > -rwxr-xr-x. 2 root root 425032 Jul 19 05:55 elf
-> > -rw-r--r--. 1 root root      0 Oct 16 10:56 probes
-> > [root@jouet ~]# perf buildid-cache -vp /usr/bin/tar
-> > Removing 4c10f253c0cb8459dd846235c0bc18929e4758ea /usr/bin/tar: Ok
-> > Purging /usr/bin/tar: Ok
-> > [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > ls: cannot access '/root/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
-> > [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
-> > ls: cannot access '/root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
-> > [root@jouet ~]#
-> > 
-> > It was purged.
-> 
-> OK. it seems good.
-> 
-> > 
-> > Now lets try what you did, which is to ask for a path that will match
-> > with multiple binaries:
-> > 
-> > [root@jouet ~]# perf buildid-cache -v -a /usr/bin/tar
-> > Adding 4c10f253c0cb8459dd846235c0bc18929e4758ea /usr/bin/tar: Ok
-> > [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
-> > lrwxrwxrwx. 1 root root 58 Oct 16 10:58 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
-> > total 424
-> > drwxr-xr-x. 2 root root   4096 Oct 16 10:58 .
-> > drwxr-xr-x. 3 root root   4096 Oct 16 10:58 ..
-> > -rwxr-xr-x. 2 root root 425032 Jul 19 05:55 elf
-> > -rw-r--r--. 1 root root      0 Oct 16 10:58 probes
-> > [root@jouet ~]# perf buildid-cache -vp /usr/bin
-> > Removing as /usr/bin: FAIL
-> > Purging /usr/bin: FAIL
-> > /usr/bin wasn't in the cache
-> 
-> I think -p does only support a file not a path like that.
-> 
-> > [root@jouet ~]# perf buildid-cache -vp /usr/bin/
-> > Removing as /usr/bin/: FAIL
-> > Purging /usr/bin/: FAIL
-> > /usr/bin/ wasn't in the cache
-> > [root@jouet ~]#
-> > 
-> > This is when --purge was added:
-> > 
-> > commit 8d8c8e4cb3014fcc51f0e127b4316043306f5bb0
-> > Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-> > Date:   Fri Feb 27 13:50:26 2015 +0900
-> > 
-> >     perf buildid-cache: Add --purge FILE to remove all caches of FILE
-> > 
-> > -----------------------
-> >  
-> > > I have done some more debugging and there is something wrong. 
-> > > The function
-> > > build_id_cache__purge_path() is called and 
-> > > build_id_cache__list_build_ids() creates a list of file names located in /usr/bin of the buildid-cache.
-> > > build_id_cache__remove_s() is called for each name in the list and tries to locate each file name
-> > > 	in directory .buildid/YY/ZZZ..ZZZ which fails because 
-> > > build_id_cache__linkname() expects a buildid and gets a file name.
-> > > The file name bash is treated as .buildid/ba/sh which does not exist.
-> > 
-> > probably this got broken when the /elf, /probe separation was added,
-> > humm, unsure if a 'git bisect' would help here...
-> > 
-> > Masami?
-> 
-> Should it work for a directory instead of a file too?
-> I need to investigate it too.
+That's confusing, can you rephrase? Either we have a MAP/DSO and the ip can be 
+relative or absolute. Or we don't, and then we don't have a symbol and the ip 
+will remain absolute as we cannot remap it to the relative address. So is the 
+sentence above maybe missing a negation somewhere? I.e. "when we _have *not*_ 
+resolved a symbol, cnode->ip and node->ip are already absolute"?
 
-Isn't that implemented by I patch by Thomas?
+> > +	case CCKEY_ADDRESS:
+> > +	default:
+> > +		match = match_address_dso(cnode->ms.map->dso, cnode->ip,
+> > +					  node->map->dso, node->ip);
+> 
+> Ok, below is this patch updated on top of my previous patch, please take
+> a look, I'll be adding all this to my tmp.perf/core branch, holler if
+> you disagree on moving it to perf/core, which I'd like to do soon.
 
-- Arnaldo
+I'll have a look at tmp.perf/core now, thanks.
+
+> commit ab950c4f4a262af1afd8cfb02c0f71acfc4eafe9
+> Author: Milian Wolff <milian.wolff@kdab.com>
+> Date:   Fri Oct 20 12:14:47 2017 -0300
+> 
+>     perf report: Properly handle branch count in match_chain()
+> 
+>     Some of the code paths I introduced before returned too early without
+>     running the code to handle a node's branch count.  By refactoring
+>     match_chain to only have one exit point, this can be remedied.
+> 
+>     Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+>     Cc: David Ahern <dsahern@gmail.com>
+>     Cc: Jin Yao <yao.jin@linux.intel.com>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+>     Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+>     [ Fixed up wrt always using absolute addresses ]
+>     Link:
+> http://lkml.kernel.org/r/20171018185350.14893-2-milian.wolff@kdab.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 1ac3f4a5afab..eac1c9bc9d5b 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -666,79 +666,88 @@ static enum match_result match_chain_strings(const
+> char *left, return ret;
+>  }
+> 
+> +static enum match_result match_chain_addresses(u64 left_ip, u64 right_ip)
+> +{
+> +	if (left_ip == right_ip)
+> +               return MATCH_EQ;
+> +       else if (left_ip < right_ip)
+> +               return MATCH_LT;
+> +       else
+> +               return MATCH_GT;
+> +}
+> +
+>  static enum match_result match_chain(struct callchain_cursor_node *node,
+>  				     struct callchain_list *cnode)
+>  {
+> -	struct symbol *sym = node->sym;
+> -	u64 left, right;
+> -
+> -	if (callchain_param.key == CCKEY_SRCLINE) {
+> -		enum match_result match = match_chain_strings(cnode->srcline,
+> -							      node->srcline);
+> -
+> -		/* if no srcline is available, fallback to symbol name */
+> -		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+> -			match = match_chain_strings(cnode->ms.sym->name,
+> -						    node->sym->name);
+> +	enum match_result match = MATCH_ERROR;
+> 
+> +	switch (callchain_param.key) {
+> +	case CCKEY_SRCLINE:
+> +		match = match_chain_strings(cnode->srcline, node->srcline);
+>  		if (match != MATCH_ERROR)
+> -			return match;
+> +			break;
+> +		/* otherwise fall-back to symbol-based comparison below */
+> +		__fallthrough;
+> +	case CCKEY_FUNCTION:
+> +		if (node->sym && cnode->ms.sym) {
+> +			/*
+> +			 * Compare inlined frames based on their symbol name
+> +			 * because different inlined frames will have the same
+> +			 * symbol start. Otherwise do a faster comparison based
+> +			 * on the symbol start address.
+> +			 */
+> +			if (cnode->ms.sym->inlined || node->sym->inlined) {
+> +				match = match_chain_strings(cnode->ms.sym->name,
+> +							    node->sym->name);
+> +				if (match != MATCH_ERROR)
+> +					break;
+> +			} else {
+> +				u64 left = cnode->ms.map->unmap_ip(cnode->ms.map,
+> cnode->ms.sym->start), +				    right = node->map->unmap_ip(node-
+>map,
+> node->sym->start);
+> 
+> +				match = match_chain_addresses(left, right);
+> +				break;
+> +			}
+> +		}
+>  		/* otherwise fall-back to IP-based comparison below */
+> +		__fallthrough;
+> +	case CCKEY_ADDRESS:
+> +	default:
+> +		match = match_chain_addresses(cnode->ip, node->ip);
+> +		break;
+>  	}
+> 
+> -	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+> -		/*
+> -		 * Compare inlined frames based on their symbol name because
+> -		 * different inlined frames will have the same symbol start
+> -		 */
+> -		if (cnode->ms.sym->inlined || node->sym->inlined)
+> -			return match_chain_strings(cnode->ms.sym->name,
+> -						   node->sym->name);
+> -
+> -		left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode->ms.sym->start);
+> -		right = node->map->unmap_ip(node->map, sym->start);
+> -	} else {
+> -		left = cnode->ip;
+> -		right = node->ip;
+> -	}
+> -
+> -	if (left == right) {
+> -		if (node->branch) {
+> -			cnode->branch_count++;
+> +	if (match == MATCH_EQ && node->branch) {
+> +		cnode->branch_count++;
+> 
+> -			if (node->branch_from) {
+> -				/*
+> -				 * It's "to" of a branch
+> -				 */
+> -				cnode->brtype_stat.branch_to = true;
+> +		if (node->branch_from) {
+> +			/*
+> +			 * It's "to" of a branch
+> +			 */
+> +			cnode->brtype_stat.branch_to = true;
+> 
+> -				if (node->branch_flags.predicted)
+> -					cnode->predicted_count++;
+> +			if (node->branch_flags.predicted)
+> +				cnode->predicted_count++;
+> 
+> -				if (node->branch_flags.abort)
+> -					cnode->abort_count++;
+> +			if (node->branch_flags.abort)
+> +				cnode->abort_count++;
+> 
+> -				branch_type_count(&cnode->brtype_stat,
+> -						  &node->branch_flags,
+> -						  node->branch_from,
+> -						  node->ip);
+> -			} else {
+> -				/*
+> -				 * It's "from" of a branch
+> -				 */
+> -				cnode->brtype_stat.branch_to = false;
+> -				cnode->cycles_count +=
+> -					node->branch_flags.cycles;
+> -				cnode->iter_count += node->nr_loop_iter;
+> -				cnode->iter_cycles += node->iter_cycles;
+> -			}
+> +			branch_type_count(&cnode->brtype_stat,
+> +					  &node->branch_flags,
+> +					  node->branch_from,
+> +					  node->ip);
+> +		} else {
+> +			/*
+> +			 * It's "from" of a branch
+> +			 */
+> +			cnode->brtype_stat.branch_to = false;
+> +			cnode->cycles_count += node->branch_flags.cycles;
+> +			cnode->iter_count += node->nr_loop_iter;
+> +			cnode->iter_cycles += node->iter_cycles;
+>  		}
+> -
+> -		return MATCH_EQ;
+>  	}
+> 
+> -	return left > right ? MATCH_GT : MATCH_LT;
+> +	return match;
+>  }
+> 
+>  /*
+
+
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
