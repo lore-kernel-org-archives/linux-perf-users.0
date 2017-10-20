@@ -1,124 +1,720 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v7 0/5] generate full callchain cursor entries for inlined frames
-Date: Fri, 20 Oct 2017 22:21:03 +0200
-Message-ID: <3662337.Ysj1km7A8r@agathebauer>
-References: <20171019113836.5548-1-milian.wolff@kdab.com> <20171020161540.GG30002@kernel.org>
+From: =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>
+Subject: [PATCH] perf: Add Python 3 support
+Date: Sat, 21 Oct 2017 00:36:14 +0200
+Message-ID: <20171020223614.30787-1-jskarvad@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kdab.com ([176.9.126.58]:41296 "EHLO mail.kdab.com"
+Received: from mx1.redhat.com ([209.132.183.28]:57040 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751071AbdJTUVG (ORCPT
+        id S1752469AbdJTWgl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Oct 2017 16:21:06 -0400
-In-Reply-To: <20171020161540.GG30002@kernel.org>
+        Fri, 20 Oct 2017 18:36:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 485C068CC
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2017 22:36:41 +0000 (UTC)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+To: linux-perf-users@vger.kernel.org
+Cc: =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>
 
-On Freitag, 20. Oktober 2017 18:15:40 CEST Arnaldo Carvalho de Melo wrote:
-> Em Thu, Oct 19, 2017 at 01:38:31PM +0200, Milian Wolff escreveu:
-> > This series of patches completely reworks the way inline frames are
-> > handled. Instead of querying for the inline nodes on-demand in the
-> > individual tools, we now create proper callchain nodes for inlined
-> > frames. The advantages this approach brings are numerous:
-> > 
-> > - less duplicated code in the individual browser
-> > - aggregated cost for inlined frames for the --children top-down list
-> > - various bug fixes that arose from querying for a srcline/symbol based on
-> > 
-> >   the IP of a sample, which will always point to the last inlined frame
-> >   instead of the corresponding non-inlined frame
-> > 
-> > - overall much better support for visualizing cost for heavily-inlined C++
-> > 
-> >   code, which simply was confusing and unreliably before
-> > 
-> > - srcline honors the global setting as to whether full paths or basenames
-> > 
-> >   should be shown
-> > 
-> > - caches for inlined frames and srcline information, which allow us to
-> > 
-> >   enable inline frame handling by default
-> > 
-> > For comparison, below lists the output before and after for `perf script`
-> 
-> > and `perf report`. The example file I used to generate the perf data is:
->
-> So, please check my tmp.perf/core branch, it has this patchset + the fix
-> I proposed for the match_chain() to always use absolute addresses.
+Added Python 3 support while keeping Python < 3 compatibility.
 
-OK, so I've looked at it. I think there are some style issues with the 
-indentation in match_chain_addresses. Also, the unmap_ip lines are too long 
-for checkpatch.pl
+Signed-off-by: Jaroslav Škarvada <jskarvad@redhat.com>
+---
+ .../perf/scripts/python/Perf-Trace-Util/Context.c  |  34 ++++-
+ tools/perf/util/python.c                           |  95 ++++++++++---
+ .../util/scripting-engines/trace-event-python.c    | 147 +++++++++++++++------
+ tools/perf/util/setup.py                           |   6 +-
+ 4 files changed, 215 insertions(+), 67 deletions(-)
 
-Additionally, we can now still run into the CCKEY_ADDRESS code path (when 
-match_chain_strings for inlined symbols returns MATCH_ERROR, or when either 
-cnode->ms.sym or node->sym is invalid), but won't unmap the IP properly then.
-
-Can we maybe instead use something like this on top of your patch?
-
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 01fc95fdd1e0..92bca95be202 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -669,11 +669,16 @@ static enum match_result match_chain_strings(const char 
-*left,
- static enum match_result match_chain_addresses(u64 left_ip, u64 right_ip)
- {
- 	if (left_ip == right_ip)
--               return MATCH_EQ;
--       else if (left_ip < right_ip)
--               return MATCH_LT;
--       else
--               return MATCH_GT;
-+		return MATCH_EQ;
-+	else if (left_ip < right_ip)
-+		return MATCH_LT;
-+	else
-+		return MATCH_GT;
-+}
+diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+index fcd1dd66..1a0d2775 100644
+--- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
++++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
+@@ -23,7 +23,17 @@
+ #include "../../../perf.h"
+ #include "../../../util/trace-event.h"
+ 
++#if PY_MAJOR_VERSION < 3
++#define _PyCapsule_GetPointer(arg1, arg2) \
++  PyCObject_AsVoidPtr(arg1)
 +
-+static u64 unmap_ip(struct map *map, u64 ip)
+ PyMODINIT_FUNC initperf_trace_context(void);
++#else
++#define _PyCapsule_GetPointer(arg1, arg2) \
++  PyCapsule_GetPointer((arg1), (arg2))
++
++PyMODINIT_FUNC PyInit_perf_trace_context(void);
++#endif
+ 
+ static PyObject *perf_trace_context_common_pc(PyObject *obj, PyObject *args)
+ {
+@@ -34,7 +44,7 @@ static PyObject *perf_trace_context_common_pc(PyObject *obj, PyObject *args)
+ 	if (!PyArg_ParseTuple(args, "O", &context))
+ 		return NULL;
+ 
+-	scripting_context = PyCObject_AsVoidPtr(context);
++	scripting_context = _PyCapsule_GetPointer(context, NULL);
+ 	retval = common_pc(scripting_context);
+ 
+ 	return Py_BuildValue("i", retval);
+@@ -50,7 +60,7 @@ static PyObject *perf_trace_context_common_flags(PyObject *obj,
+ 	if (!PyArg_ParseTuple(args, "O", &context))
+ 		return NULL;
+ 
+-	scripting_context = PyCObject_AsVoidPtr(context);
++	scripting_context = _PyCapsule_GetPointer(context, NULL);
+ 	retval = common_flags(scripting_context);
+ 
+ 	return Py_BuildValue("i", retval);
+@@ -66,7 +76,7 @@ static PyObject *perf_trace_context_common_lock_depth(PyObject *obj,
+ 	if (!PyArg_ParseTuple(args, "O", &context))
+ 		return NULL;
+ 
+-	scripting_context = PyCObject_AsVoidPtr(context);
++	scripting_context = _PyCapsule_GetPointer(context, NULL);
+ 	retval = common_lock_depth(scripting_context);
+ 
+ 	return Py_BuildValue("i", retval);
+@@ -82,7 +92,25 @@ static PyMethodDef ContextMethods[] = {
+ 	{ NULL, NULL, 0, NULL}
+ };
+ 
++#if PY_MAJOR_VERSION < 3
+ PyMODINIT_FUNC initperf_trace_context(void)
+ {
+ 	(void) Py_InitModule("perf_trace_context", ContextMethods);
+ }
++#else
++PyMODINIT_FUNC PyInit_perf_trace_context(void)
 +{
-+	return map ? map->unmap_ip(map, ip) : ip;
++	static struct PyModuleDef moduledef = {
++		PyModuleDef_HEAD_INIT,
++		"perf_trace_context",	/* m_name */
++		"",			/* m_doc */
++		-1,			/* m_size */
++		ContextMethods,		/* m_methods */
++		NULL,			/* m_reload */
++		NULL,			/* m_traverse */
++		NULL,			/* m_clear */
++		NULL,			/* m_free */
++	};
++	return PyModule_Create(&moduledef);
++}
++#endif
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index c129e991..37fa07ec 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -11,6 +11,30 @@
+ #include "print_binary.h"
+ #include "thread_map.h"
+ 
++#if PY_MAJOR_VERSION < 3
++#define _PyUnicode_FromString(arg) \
++  PyString_FromString(arg)
++#define _PyUnicode_AsString(arg) \
++  PyString_AsString(arg)
++#define _PyUnicode_FromFormat(...) \
++  PyString_FromFormat(__VA_ARGS__)
++#define _PyLong_FromLong(arg) \
++  PyInt_FromLong(arg)
++
++#else
++
++#define _PyUnicode_FromString(arg) \
++  PyUnicode_FromString(arg)
++#define _PyUnicode_FromFormat(...) \
++  PyUnicode_FromFormat(__VA_ARGS__)
++#define _PyLong_FromLong(arg) \
++  PyLong_FromLong(arg)
++#endif
++
++#ifndef Py_TYPE
++#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
++#endif
++
+ /*
+  * Provide these two so that we don't have to link against callchain.c and
+  * start dragging hist.c, etc.
+@@ -48,7 +72,11 @@ int eprintf(int level, int var, const char *fmt, ...)
+ # define PyVarObject_HEAD_INIT(type, size) PyObject_HEAD_INIT(type) size,
+ #endif
+ 
++#if PY_MAJOR_VERSION < 3
+ PyMODINIT_FUNC initperf(void);
++#else
++PyMODINIT_FUNC PyInit_perf(void);
++#endif
+ 
+ #define member_def(type, member, ptype, help) \
+ 	{ #member, ptype, \
+@@ -106,7 +134,7 @@ static PyObject *pyrf_mmap_event__repr(struct pyrf_event *pevent)
+ 		     pevent->event.mmap.pgoff, pevent->event.mmap.filename) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = PyString_FromString(s);
++		ret = _PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -137,7 +165,7 @@ static PyMemberDef pyrf_task_event__members[] = {
+ 
+ static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
+ {
+-	return PyString_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
++	return _PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
+ 				   "ptid: %u, time: %" PRIu64 "}",
+ 				   pevent->event.header.type == PERF_RECORD_FORK ? "fork" : "exit",
+ 				   pevent->event.fork.pid,
+@@ -170,7 +198,7 @@ static PyMemberDef pyrf_comm_event__members[] = {
+ 
+ static PyObject *pyrf_comm_event__repr(struct pyrf_event *pevent)
+ {
+-	return PyString_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
++	return _PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+ 				   pevent->event.comm.pid,
+ 				   pevent->event.comm.tid,
+ 				   pevent->event.comm.comm);
+@@ -201,7 +229,7 @@ static PyObject *pyrf_throttle_event__repr(struct pyrf_event *pevent)
+ {
+ 	struct throttle_event *te = (struct throttle_event *)(&pevent->event.header + 1);
+ 
+-	return PyString_FromFormat("{ type: %sthrottle, time: %" PRIu64 ", id: %" PRIu64
++	return _PyUnicode_FromFormat("{ type: %sthrottle, time: %" PRIu64 ", id: %" PRIu64
+ 				   ", stream_id: %" PRIu64 " }",
+ 				   pevent->event.header.type == PERF_RECORD_THROTTLE ? "" : "un",
+ 				   te->time, te->id, te->stream_id);
+@@ -236,7 +264,7 @@ static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
+ 		     pevent->event.lost.id, pevent->event.lost.lost) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = PyString_FromString(s);
++		ret = _PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -263,7 +291,7 @@ static PyMemberDef pyrf_read_event__members[] = {
+ 
+ static PyObject *pyrf_read_event__repr(struct pyrf_event *pevent)
+ {
+-	return PyString_FromFormat("{ type: read, pid: %u, tid: %u }",
++	return _PyUnicode_FromFormat("{ type: read, pid: %u, tid: %u }",
+ 				   pevent->event.read.pid,
+ 				   pevent->event.read.tid);
+ 	/*
+@@ -298,7 +326,7 @@ static PyObject *pyrf_sample_event__repr(struct pyrf_event *pevent)
+ 	if (asprintf(&s, "{ type: sample }") < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = PyString_FromString(s);
++		ret = _PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -329,7 +357,7 @@ tracepoint_field(struct pyrf_event *pe, struct format_field *field)
+ 		}
+ 		if (field->flags & FIELD_IS_STRING &&
+ 		    is_printable_array(data + offset, len)) {
+-			ret = PyString_FromString((char *)data + offset);
++			ret = _PyUnicode_FromString((char *)data + offset);
+ 		} else {
+ 			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+ 			field->flags &= ~FIELD_IS_STRING;
+@@ -351,7 +379,7 @@ tracepoint_field(struct pyrf_event *pe, struct format_field *field)
+ static PyObject*
+ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
+ {
+-	const char *str = PyString_AsString(PyObject_Str(attr_name));
++	const char *str = _PyUnicode_AsString(PyObject_Str(attr_name));
+ 	struct perf_evsel *evsel = pevent->evsel;
+ 	struct format_field *field;
+ 
+@@ -415,7 +443,7 @@ static PyObject *pyrf_context_switch_event__repr(struct pyrf_event *pevent)
+ 		     !!(pevent->event.header.misc & PERF_RECORD_MISC_SWITCH_OUT)) < 0) {
+ 		ret = PyErr_NoMemory();
+ 	} else {
+-		ret = PyString_FromString(s);
++		ret = _PyUnicode_FromString(s);
+ 		free(s);
+ 	}
+ 	return ret;
+@@ -527,7 +555,7 @@ static int pyrf_cpu_map__init(struct pyrf_cpu_map *pcpus,
+ static void pyrf_cpu_map__delete(struct pyrf_cpu_map *pcpus)
+ {
+ 	cpu_map__put(pcpus->cpus);
+-	pcpus->ob_type->tp_free((PyObject*)pcpus);
++	Py_TYPE(pcpus)->tp_free((PyObject*)pcpus);
  }
  
- static enum match_result match_chain(struct callchain_cursor_node *node,
-@@ -702,9 +707,10 @@ static enum match_result match_chain(struct 
-callchain_cursor_node *node,
- 				if (match != MATCH_ERROR)
- 					break;
- 			} else {
--				u64 left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode-
->ms.sym->start),
--				    right = node->map->unmap_ip(node->map, node->sym->start);
--
-+				u64 left = unmap_ip(cnode->ms.map,
-+						    cnode->ms.sym->start);
-+				u64 right = unmap_ip(node->map,
-+						     node->sym->start);
- 				match = match_chain_addresses(left, right);
- 				break;
+ static Py_ssize_t pyrf_cpu_map__length(PyObject *obj)
+@@ -596,7 +624,7 @@ static int pyrf_thread_map__init(struct pyrf_thread_map *pthreads,
+ static void pyrf_thread_map__delete(struct pyrf_thread_map *pthreads)
+ {
+ 	thread_map__put(pthreads->threads);
+-	pthreads->ob_type->tp_free((PyObject*)pthreads);
++	Py_TYPE(pthreads)->tp_free((PyObject*)pthreads);
+ }
+ 
+ static Py_ssize_t pyrf_thread_map__length(PyObject *obj)
+@@ -758,7 +786,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
+ static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
+ {
+ 	perf_evsel__exit(&pevsel->evsel);
+-	pevsel->ob_type->tp_free((PyObject*)pevsel);
++	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
+ }
+ 
+ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
+@@ -849,7 +877,7 @@ static int pyrf_evlist__init(struct pyrf_evlist *pevlist,
+ static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
+ {
+ 	perf_evlist__exit(&pevlist->evlist);
+-	pevlist->ob_type->tp_free((PyObject*)pevlist);
++	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
+ }
+ 
+ static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
+@@ -901,12 +929,16 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
+ 
+ 	for (i = 0; i < evlist->pollfd.nr; ++i) {
+ 		PyObject *file;
++#if PY_MAJOR_VERSION < 3
+ 		FILE *fp = fdopen(evlist->pollfd.entries[i].fd, "r");
+ 
+ 		if (fp == NULL)
+ 			goto free_list;
+ 
+ 		file = PyFile_FromFile(fp, "perf", "r", NULL);
++#else
++		file = PyFile_FromFd(evlist->pollfd.entries[i].fd, "perf", "r", -1, NULL, NULL, NULL, 1);
++#endif
+ 		if (file == NULL)
+ 			goto free_list;
+ 
+@@ -1193,9 +1225,9 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ 
+ 	tp_format = trace_event__tp_format(sys, name);
+ 	if (IS_ERR(tp_format))
+-		return PyInt_FromLong(-1);
++		return _PyLong_FromLong(-1);
+ 
+-	return PyInt_FromLong(tp_format->id);
++	return _PyLong_FromLong(tp_format->id);
+ }
+ 
+ static PyMethodDef perf__methods[] = {
+@@ -1208,11 +1240,31 @@ static PyMethodDef perf__methods[] = {
+ 	{ .ml_name = NULL, }
+ };
+ 
++#if PY_MAJOR_VERSION < 3
+ PyMODINIT_FUNC initperf(void)
++#else
++PyMODINIT_FUNC PyInit_perf(void)
++#endif
+ {
+ 	PyObject *obj;
+ 	int i;
+-	PyObject *dict, *module = Py_InitModule("perf", perf__methods);
++	PyObject *dict;
++#if PY_MAJOR_VERSION < 3
++	PyObject *module = Py_InitModule("perf", perf__methods);
++#else
++	static struct PyModuleDef moduledef = {
++		PyModuleDef_HEAD_INIT,
++		"perf",			/* m_name */
++		"",			/* m_doc */
++		-1,			/* m_size */
++		perf__methods,		/* m_methods */
++		NULL,			/* m_reload */
++		NULL,			/* m_traverse */
++		NULL,			/* m_clear */
++		NULL,			/* m_free */
++	};
++	PyObject *module = PyModule_Create(&moduledef);
++#endif
+ 
+ 	if (module == NULL ||
+ 	    pyrf_event__setup_types() < 0 ||
+@@ -1220,7 +1272,11 @@ PyMODINIT_FUNC initperf(void)
+ 	    pyrf_evsel__setup_types() < 0 ||
+ 	    pyrf_thread_map__setup_types() < 0 ||
+ 	    pyrf_cpu_map__setup_types() < 0)
++#if PY_MAJOR_VERSION < 3
+ 		return;
++#else
++		return module;
++#endif
+ 
+ 	/* The page_size is placed in util object. */
+ 	page_size = sysconf(_SC_PAGE_SIZE);
+@@ -1269,7 +1325,7 @@ PyMODINIT_FUNC initperf(void)
+ 		goto error;
+ 
+ 	for (i = 0; perf__constants[i].name != NULL; i++) {
+-		obj = PyInt_FromLong(perf__constants[i].value);
++		obj = _PyLong_FromLong(perf__constants[i].value);
+ 		if (obj == NULL)
+ 			goto error;
+ 		PyDict_SetItemString(dict, perf__constants[i].name, obj);
+@@ -1279,6 +1335,9 @@ PyMODINIT_FUNC initperf(void)
+ error:
+ 	if (PyErr_Occurred())
+ 		PyErr_SetString(PyExc_ImportError, "perf: Init failed!");
++#if PY_MAJOR_VERSION >= 3
++	return module;
++#endif
+ }
+ 
+ /*
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index c7187f06..3a868834 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -50,7 +50,37 @@
+ #include "print_binary.h"
+ #include "stat.h"
+ 
++#if PY_MAJOR_VERSION < 3
++#define _PyUnicode_FromString(arg) \
++  PyString_FromString(arg)
++#define _PyUnicode_FromStringAndSize(arg1, arg2) \
++  PyString_FromStringAndSize((arg1), (arg2))
++#define _PyBytes_FromStringAndSize(arg1, arg2) \
++  PyString_FromStringAndSize((arg1), (arg2))
++#define _PyLong_FromLong(arg) \
++  PyInt_FromLong(arg)
++#define _PyLong_AsLong(arg) \
++  PyInt_AsLong(arg)
++#define _PyCapsule_New(arg1, arg2, arg3) \
++  PyCObject_FromVoidPtr((arg1), (arg2))
++
+ PyMODINIT_FUNC initperf_trace_context(void);
++#else
++#define _PyUnicode_FromString(arg) \
++  PyUnicode_FromString(arg)
++#define _PyUnicode_FromStringAndSize(arg1, arg2) \
++  PyUnicode_FromStringAndSize((arg1), (arg2))
++#define _PyBytes_FromStringAndSize(arg1, arg2) \
++  PyBytes_FromStringAndSize((arg1), (arg2))
++#define _PyLong_FromLong(arg) \
++  PyLong_FromLong(arg)
++#define _PyLong_AsLong(arg) \
++  PyLong_AsLong(arg)
++#define _PyCapsule_New(arg1, arg2, arg3) \
++  PyCapsule_New((arg1), (arg2), (arg3))
++
++PyMODINIT_FUNC PyInit_perf_trace_context(void);
++#endif
+ 
+ #define TRACE_EVENT_TYPE_MAX				\
+ 	((1 << (sizeof(unsigned short) * 8)) - 1)
+@@ -136,7 +166,7 @@ static int get_argument_count(PyObject *handler)
+ 		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
+ 			"co_argcount");
+ 		if (arg_count_obj) {
+-			arg_count = (int) PyInt_AsLong(arg_count_obj);
++			arg_count = (int) _PyLong_AsLong(arg_count_obj);
+ 			Py_DECREF(arg_count_obj);
+ 		}
+ 		Py_DECREF(code_obj);
+@@ -183,10 +213,10 @@ static void define_value(enum print_arg_type field_type,
+ 
+ 	value = eval_flag(field_value);
+ 
+-	PyTuple_SetItem(t, n++, PyString_FromString(ev_name));
+-	PyTuple_SetItem(t, n++, PyString_FromString(field_name));
+-	PyTuple_SetItem(t, n++, PyInt_FromLong(value));
+-	PyTuple_SetItem(t, n++, PyString_FromString(field_str));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(ev_name));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(field_name));
++	PyTuple_SetItem(t, n++, _PyLong_FromLong(value));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(field_str));
+ 
+ 	try_call_object(handler_name, t);
+ 
+@@ -224,10 +254,10 @@ static void define_field(enum print_arg_type field_type,
+ 	if (!t)
+ 		Py_FatalError("couldn't create Python tuple");
+ 
+-	PyTuple_SetItem(t, n++, PyString_FromString(ev_name));
+-	PyTuple_SetItem(t, n++, PyString_FromString(field_name));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(ev_name));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(field_name));
+ 	if (field_type == PRINT_FLAGS)
+-		PyTuple_SetItem(t, n++, PyString_FromString(delim));
++		PyTuple_SetItem(t, n++, _PyUnicode_FromString(delim));
+ 
+ 	try_call_object(handler_name, t);
+ 
+@@ -326,12 +356,12 @@ static PyObject *get_field_numeric_entry(struct event_format *event,
+ 		if (field->flags & FIELD_IS_SIGNED) {
+ 			if ((long long)val >= LONG_MIN &&
+ 					(long long)val <= LONG_MAX)
+-				obj = PyInt_FromLong(val);
++				obj = _PyLong_FromLong(val);
+ 			else
+ 				obj = PyLong_FromLongLong(val);
+ 		} else {
+ 			if (val <= LONG_MAX)
+-				obj = PyInt_FromLong(val);
++				obj = _PyLong_FromLong(val);
+ 			else
+ 				obj = PyLong_FromUnsignedLongLong(val);
+ 		}
+@@ -390,9 +420,9 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 			pydict_set_item_string_decref(pysym, "end",
+ 					PyLong_FromUnsignedLongLong(node->sym->end));
+ 			pydict_set_item_string_decref(pysym, "binding",
+-					PyInt_FromLong(node->sym->binding));
++					_PyLong_FromLong(node->sym->binding));
+ 			pydict_set_item_string_decref(pysym, "name",
+-					PyString_FromStringAndSize(node->sym->name,
++					_PyUnicode_FromStringAndSize(node->sym->name,
+ 							node->sym->namelen));
+ 			pydict_set_item_string_decref(pyelem, "sym", pysym);
+ 		}
+@@ -407,7 +437,7 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 					dsoname = map->dso->name;
  			}
-@@ -713,7 +719,9 @@ static enum match_result match_chain(struct 
-callchain_cursor_node *node,
- 		__fallthrough;
- 	case CCKEY_ADDRESS:
- 	default:
--		match = match_chain_addresses(cnode->ip, node->ip);
-+		match = match_chain_addresses(unmap_ip(cnode->ms.map,
-+						       cnode->ip),
-+					      unmap_ip(node->map, node->ip));
- 		break;
+ 			pydict_set_item_string_decref(pyelem, "dso",
+-					PyString_FromString(dsoname));
++					_PyUnicode_FromString(dsoname));
+ 		}
+ 
+ 		callchain_cursor_advance(&callchain_cursor);
+@@ -484,16 +514,16 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	if (!dict_sample)
+ 		Py_FatalError("couldn't create Python dictionary");
+ 
+-	pydict_set_item_string_decref(dict, "ev_name", PyString_FromString(perf_evsel__name(evsel)));
+-	pydict_set_item_string_decref(dict, "attr", PyString_FromStringAndSize(
++	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
++	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
+ 			(const char *)&evsel->attr, sizeof(evsel->attr)));
+ 
+ 	pydict_set_item_string_decref(dict_sample, "pid",
+-			PyInt_FromLong(sample->pid));
++			_PyLong_FromLong(sample->pid));
+ 	pydict_set_item_string_decref(dict_sample, "tid",
+-			PyInt_FromLong(sample->tid));
++			_PyLong_FromLong(sample->tid));
+ 	pydict_set_item_string_decref(dict_sample, "cpu",
+-			PyInt_FromLong(sample->cpu));
++			_PyLong_FromLong(sample->cpu));
+ 	pydict_set_item_string_decref(dict_sample, "ip",
+ 			PyLong_FromUnsignedLongLong(sample->ip));
+ 	pydict_set_item_string_decref(dict_sample, "time",
+@@ -503,17 +533,17 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	set_sample_read_in_dict(dict_sample, sample, evsel);
+ 	pydict_set_item_string_decref(dict, "sample", dict_sample);
+ 
+-	pydict_set_item_string_decref(dict, "raw_buf", PyString_FromStringAndSize(
++	pydict_set_item_string_decref(dict, "raw_buf", _PyBytes_FromStringAndSize(
+ 			(const char *)sample->raw_data, sample->raw_size));
+ 	pydict_set_item_string_decref(dict, "comm",
+-			PyString_FromString(thread__comm_str(al->thread)));
++			_PyUnicode_FromString(thread__comm_str(al->thread)));
+ 	if (al->map) {
+ 		pydict_set_item_string_decref(dict, "dso",
+-			PyString_FromString(al->map->dso->name));
++			_PyUnicode_FromString(al->map->dso->name));
+ 	}
+ 	if (al->sym) {
+ 		pydict_set_item_string_decref(dict, "symbol",
+-			PyString_FromString(al->sym->name));
++			_PyUnicode_FromString(al->sym->name));
  	}
  
-Cheers
+ 	pydict_set_item_string_decref(dict, "callchain", callchain);
+@@ -573,9 +603,9 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	scripting_context->event_data = data;
+ 	scripting_context->pevent = evsel->tp_format->pevent;
+ 
+-	context = PyCObject_FromVoidPtr(scripting_context, NULL);
++	context = _PyCapsule_New(scripting_context, NULL, NULL);
+ 
+-	PyTuple_SetItem(t, n++, PyString_FromString(handler_name));
++	PyTuple_SetItem(t, n++, _PyUnicode_FromString(handler_name));
+ 	PyTuple_SetItem(t, n++, context);
+ 
+ 	/* ip unwinding */
+@@ -584,18 +614,18 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	Py_INCREF(callchain);
+ 
+ 	if (!dict) {
+-		PyTuple_SetItem(t, n++, PyInt_FromLong(cpu));
+-		PyTuple_SetItem(t, n++, PyInt_FromLong(s));
+-		PyTuple_SetItem(t, n++, PyInt_FromLong(ns));
+-		PyTuple_SetItem(t, n++, PyInt_FromLong(pid));
+-		PyTuple_SetItem(t, n++, PyString_FromString(comm));
++		PyTuple_SetItem(t, n++, _PyLong_FromLong(cpu));
++		PyTuple_SetItem(t, n++, _PyLong_FromLong(s));
++		PyTuple_SetItem(t, n++, _PyLong_FromLong(ns));
++		PyTuple_SetItem(t, n++, _PyLong_FromLong(pid));
++		PyTuple_SetItem(t, n++, _PyUnicode_FromString(comm));
+ 		PyTuple_SetItem(t, n++, callchain);
+ 	} else {
+-		pydict_set_item_string_decref(dict, "common_cpu", PyInt_FromLong(cpu));
+-		pydict_set_item_string_decref(dict, "common_s", PyInt_FromLong(s));
+-		pydict_set_item_string_decref(dict, "common_ns", PyInt_FromLong(ns));
+-		pydict_set_item_string_decref(dict, "common_pid", PyInt_FromLong(pid));
+-		pydict_set_item_string_decref(dict, "common_comm", PyString_FromString(comm));
++		pydict_set_item_string_decref(dict, "common_cpu", _PyLong_FromLong(cpu));
++		pydict_set_item_string_decref(dict, "common_s", _PyLong_FromLong(s));
++		pydict_set_item_string_decref(dict, "common_ns", _PyLong_FromLong(ns));
++		pydict_set_item_string_decref(dict, "common_pid", _PyLong_FromLong(pid));
++		pydict_set_item_string_decref(dict, "common_comm", _PyUnicode_FromString(comm));
+ 		pydict_set_item_string_decref(dict, "common_callchain", callchain);
+ 	}
+ 	for (field = event->format.fields; field; field = field->next) {
+@@ -614,7 +644,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 			}
+ 			if (field->flags & FIELD_IS_STRING &&
+ 			    is_printable_array(data + offset, len)) {
+-				obj = PyString_FromString((char *) data + offset);
++				obj = _PyUnicode_FromString((char *) data + offset);
+ 			} else {
+ 				obj = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+ 				field->flags &= ~FIELD_IS_STRING;
+@@ -667,7 +697,7 @@ static PyObject *tuple_new(unsigned int sz)
+ static int tuple_set_u64(PyObject *t, unsigned int pos, u64 val)
+ {
+ #if BITS_PER_LONG == 64
+-	return PyTuple_SetItem(t, pos, PyInt_FromLong(val));
++	return PyTuple_SetItem(t, pos, _PyLong_FromLong(val));
+ #endif
+ #if BITS_PER_LONG == 32
+ 	return PyTuple_SetItem(t, pos, PyLong_FromLongLong(val));
+@@ -676,12 +706,12 @@ static int tuple_set_u64(PyObject *t, unsigned int pos, u64 val)
+ 
+ static int tuple_set_s32(PyObject *t, unsigned int pos, s32 val)
+ {
+-	return PyTuple_SetItem(t, pos, PyInt_FromLong(val));
++	return PyTuple_SetItem(t, pos, _PyLong_FromLong(val));
+ }
+ 
+ static int tuple_set_string(PyObject *t, unsigned int pos, const char *s)
+ {
+-	return PyTuple_SetItem(t, pos, PyString_FromString(s));
++	return PyTuple_SetItem(t, pos, _PyUnicode_FromString(s));
+ }
+ 
+ static int python_export_evsel(struct db_export *dbe, struct perf_evsel *evsel)
+@@ -1028,8 +1058,8 @@ process_stat(struct perf_evsel *counter, int cpu, int thread, u64 tstamp,
+ 		return;
+ 	}
+ 
+-	PyTuple_SetItem(t, n++, PyInt_FromLong(cpu));
+-	PyTuple_SetItem(t, n++, PyInt_FromLong(thread));
++	PyTuple_SetItem(t, n++, _PyLong_FromLong(cpu));
++	PyTuple_SetItem(t, n++, _PyLong_FromLong(thread));
+ 
+ 	tuple_set_u64(t, n++, tstamp);
+ 	tuple_set_u64(t, n++, count->val);
+@@ -1211,27 +1241,58 @@ static void set_table_handlers(struct tables *tables)
+ 	SET_TABLE_HANDLER(call_return);
+ }
+ 
++#if PY_MAJOR_VERSION < 3
++static void _free_command_line(const char **command_line, int num)
++{
++	free(command_line);
++}
++#else
++static void _free_command_line(wchar_t **command_line, int num)
++{
++	int i;
++	for (i = 0; i < num; i++)
++		PyMem_RawFree(command_line[i]);
++	free(command_line);
++}
++#endif
++
++
+ /*
+  * Start trace script
+  */
+ static int python_start_script(const char *script, int argc, const char **argv)
+ {
+ 	struct tables *tables = &tables_global;
++#if PY_MAJOR_VERSION < 3
+ 	const char **command_line;
++#else
++	wchar_t **command_line;
++#endif
+ 	char buf[PATH_MAX];
+ 	int i, err = 0;
+ 	FILE *fp;
+ 
++#if PY_MAJOR_VERSION < 3
+ 	command_line = malloc((argc + 1) * sizeof(const char *));
+ 	command_line[0] = script;
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = argv[i - 1];
++#else
++	command_line = malloc((argc + 1) * sizeof(wchar_t *));
++	command_line[0] = Py_DecodeLocale(script, NULL);
++	for (i = 1; i < argc + 1; i++)
++		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
++#endif
+ 
+ 	Py_Initialize();
+ 
++#if PY_MAJOR_VERSION < 3
+ 	initperf_trace_context();
+-
+ 	PySys_SetArgv(argc + 1, (char **)command_line);
++#else
++	PyInit_perf_trace_context();
++	PySys_SetArgv(argc + 1, command_line);
++#endif
+ 
+ 	fp = fopen(script, "r");
+ 	if (!fp) {
+@@ -1261,12 +1322,12 @@ static int python_start_script(const char *script, int argc, const char **argv)
+ 			goto error;
+ 	}
+ 
+-	free(command_line);
++	_free_command_line(command_line, argc + 1);
+ 
+ 	return err;
+ error:
+ 	Py_Finalize();
+-	free(command_line);
++	_free_command_line(command_line, argc + 1);
+ 
+ 	return err;
+ }
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index af415feb..6891635b 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python2
++#!/usr/bin/python
+ 
+ from os import getenv
+ 
+@@ -35,11 +35,11 @@ build_tmp = getenv('PYTHON_EXTBUILD_TMP')
+ libtraceevent = getenv('LIBTRACEEVENT')
+ libapikfs = getenv('LIBAPI')
+ 
+-ext_sources = [f.strip() for f in file('util/python-ext-sources')
++ext_sources = [f.strip() for f in open('util/python-ext-sources')
+ 				if len(f.strip()) > 0 and f[0] != '#']
+ 
+ # use full paths with source files
+-ext_sources = map(lambda x: '%s/%s' % (src_perf, x) , ext_sources)
++ext_sources = list(map(lambda x: '%s/%s' % (src_perf, x) , ext_sources))
+ 
+ perf = Extension('perf',
+ 		  sources = ext_sources,
 -- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
+2.13.6
