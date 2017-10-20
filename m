@@ -1,250 +1,122 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in match_chain
-Date: Fri, 20 Oct 2017 21:52:22 +0200
-Message-ID: <8670562.FB6oiuN3E3@agathebauer>
-References: <20171018185350.14893-1-milian.wolff@kdab.com> <20171018185350.14893-2-milian.wolff@kdab.com> <20171020152222.GE30002@kernel.org>
+Subject: Re: [PATCH v7 0/5] generate full callchain cursor entries for inlined frames
+Date: Fri, 20 Oct 2017 22:21:03 +0200
+Message-ID: <3662337.Ysj1km7A8r@agathebauer>
+References: <20171019113836.5548-1-milian.wolff@kdab.com> <20171020161540.GG30002@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171020152222.GE30002@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:41296 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751071AbdJTUVG (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 20 Oct 2017 16:21:06 -0400
+In-Reply-To: <20171020161540.GG30002@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 
-On Freitag, 20. Oktober 2017 17:22:22 CEST Arnaldo Carvalho de Melo wrote:
-> Em Wed, Oct 18, 2017 at 08:53:45PM +0200, Milian Wolff escreveu:
-> > Some of the code paths I introduced before returned too early
-> > without running the code to handle a node's branch count.
-> > By refactoring match_chain to only have one exit point, this
-> > can be remedied.
-> > +	case CCKEY_FUNCTION:
-> > +		if (node->sym && cnode->ms.sym) {
-> > +			/*
-> > +			 * Compare inlined frames based on their symbol name
-> > +			 * because different inlined frames will have the same
-> > +			 * symbol start. Otherwise do a faster comparison based
-> > +			 * on the symbol start address.
-> > +			 */
-> > +			if (cnode->ms.sym->inlined || node->sym->inlined)
-> > +				match = match_chain_strings(cnode->ms.sym->name,
-> > +							    node->sym->name);
-> > +			else
-> > +				match = match_address_dso(cnode->ms.map->dso,
-> > +							  cnode->ms.sym->start,
-> > +							  node->map->dso,
-> > +							  node->sym->start);
-> > +			if (match != MATCH_ERROR)
-> > +				break;
-> > +		}
+On Freitag, 20. Oktober 2017 18:15:40 CEST Arnaldo Carvalho de Melo wrote:
+> Em Thu, Oct 19, 2017 at 01:38:31PM +0200, Milian Wolff escreveu:
+> > This series of patches completely reworks the way inline frames are
+> > handled. Instead of querying for the inline nodes on-demand in the
+> > individual tools, we now create proper callchain nodes for inlined
+> > frames. The advantages this approach brings are numerous:
 > > 
-> >  		/* otherwise fall-back to IP-based comparison below */
+> > - less duplicated code in the individual browser
+> > - aggregated cost for inlined frames for the --children top-down list
+> > - various bug fixes that arose from querying for a srcline/symbol based on
 > > 
-> > +		__fallthrough;
+> >   the IP of a sample, which will always point to the last inlined frame
+> >   instead of the corresponding non-inlined frame
+> > 
+> > - overall much better support for visualizing cost for heavily-inlined C++
+> > 
+> >   code, which simply was confusing and unreliably before
+> > 
+> > - srcline honors the global setting as to whether full paths or basenames
+> > 
+> >   should be shown
+> > 
+> > - caches for inlined frames and srcline information, which allow us to
+> > 
+> >   enable inline frame handling by default
+> > 
+> > For comparison, below lists the output before and after for `perf script`
 > 
-> If we take this __falltrough because cnode->sym or cnode->ms.sym is
-> NULL, then cnode->ms.map may be NULL if we got a sample for which we
-> somehow couldn't find a map.
+> > and `perf report`. The example file I used to generate the perf data is:
+>
+> So, please check my tmp.perf/core branch, it has this patchset + the fix
+> I proposed for the match_chain() to always use absolute addresses.
 
-Yes, that was fixed in v7.
+OK, so I've looked at it. I think there are some style issues with the 
+indentation in match_chain_addresses. Also, the unmap_ip lines are too long 
+for checkpatch.pl
 
-> And we don't really need to deal with DSOs, just with MAPs, to go from
-> relative to absolute when we _have_ a symbol resolved, cnode->ip and
-> node->ip are already absolute.
+Additionally, we can now still run into the CCKEY_ADDRESS code path (when 
+match_chain_strings for inlined symbols returns MATCH_ERROR, or when either 
+cnode->ms.sym or node->sym is invalid), but won't unmap the IP properly then.
 
-That's confusing, can you rephrase? Either we have a MAP/DSO and the ip can be 
-relative or absolute. Or we don't, and then we don't have a symbol and the ip 
-will remain absolute as we cannot remap it to the relative address. So is the 
-sentence above maybe missing a negation somewhere? I.e. "when we _have *not*_ 
-resolved a symbol, cnode->ip and node->ip are already absolute"?
+Can we maybe instead use something like this on top of your patch?
 
-> > +	case CCKEY_ADDRESS:
-> > +	default:
-> > +		match = match_address_dso(cnode->ms.map->dso, cnode->ip,
-> > +					  node->map->dso, node->ip);
-> 
-> Ok, below is this patch updated on top of my previous patch, please take
-> a look, I'll be adding all this to my tmp.perf/core branch, holler if
-> you disagree on moving it to perf/core, which I'd like to do soon.
-
-I'll have a look at tmp.perf/core now, thanks.
-
-> commit ab950c4f4a262af1afd8cfb02c0f71acfc4eafe9
-> Author: Milian Wolff <milian.wolff@kdab.com>
-> Date:   Fri Oct 20 12:14:47 2017 -0300
-> 
->     perf report: Properly handle branch count in match_chain()
-> 
->     Some of the code paths I introduced before returned too early without
->     running the code to handle a node's branch count.  By refactoring
->     match_chain to only have one exit point, this can be remedied.
-> 
->     Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
->     Cc: David Ahern <dsahern@gmail.com>
->     Cc: Jin Yao <yao.jin@linux.intel.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
->     Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
->     [ Fixed up wrt always using absolute addresses ]
->     Link:
-> http://lkml.kernel.org/r/20171018185350.14893-2-milian.wolff@kdab.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 1ac3f4a5afab..eac1c9bc9d5b 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -666,79 +666,88 @@ static enum match_result match_chain_strings(const
-> char *left, return ret;
->  }
-> 
-> +static enum match_result match_chain_addresses(u64 left_ip, u64 right_ip)
-> +{
-> +	if (left_ip == right_ip)
-> +               return MATCH_EQ;
-> +       else if (left_ip < right_ip)
-> +               return MATCH_LT;
-> +       else
-> +               return MATCH_GT;
-> +}
-> +
->  static enum match_result match_chain(struct callchain_cursor_node *node,
->  				     struct callchain_list *cnode)
->  {
-> -	struct symbol *sym = node->sym;
-> -	u64 left, right;
-> -
-> -	if (callchain_param.key == CCKEY_SRCLINE) {
-> -		enum match_result match = match_chain_strings(cnode->srcline,
-> -							      node->srcline);
-> -
-> -		/* if no srcline is available, fallback to symbol name */
-> -		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-> -			match = match_chain_strings(cnode->ms.sym->name,
-> -						    node->sym->name);
-> +	enum match_result match = MATCH_ERROR;
-> 
-> +	switch (callchain_param.key) {
-> +	case CCKEY_SRCLINE:
-> +		match = match_chain_strings(cnode->srcline, node->srcline);
->  		if (match != MATCH_ERROR)
-> -			return match;
-> +			break;
-> +		/* otherwise fall-back to symbol-based comparison below */
-> +		__fallthrough;
-> +	case CCKEY_FUNCTION:
-> +		if (node->sym && cnode->ms.sym) {
-> +			/*
-> +			 * Compare inlined frames based on their symbol name
-> +			 * because different inlined frames will have the same
-> +			 * symbol start. Otherwise do a faster comparison based
-> +			 * on the symbol start address.
-> +			 */
-> +			if (cnode->ms.sym->inlined || node->sym->inlined) {
-> +				match = match_chain_strings(cnode->ms.sym->name,
-> +							    node->sym->name);
-> +				if (match != MATCH_ERROR)
-> +					break;
-> +			} else {
-> +				u64 left = cnode->ms.map->unmap_ip(cnode->ms.map,
-> cnode->ms.sym->start), +				    right = node->map->unmap_ip(node-
->map,
-> node->sym->start);
-> 
-> +				match = match_chain_addresses(left, right);
-> +				break;
-> +			}
-> +		}
->  		/* otherwise fall-back to IP-based comparison below */
-> +		__fallthrough;
-> +	case CCKEY_ADDRESS:
-> +	default:
-> +		match = match_chain_addresses(cnode->ip, node->ip);
-> +		break;
->  	}
-> 
-> -	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
-> -		/*
-> -		 * Compare inlined frames based on their symbol name because
-> -		 * different inlined frames will have the same symbol start
-> -		 */
-> -		if (cnode->ms.sym->inlined || node->sym->inlined)
-> -			return match_chain_strings(cnode->ms.sym->name,
-> -						   node->sym->name);
-> -
-> -		left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode->ms.sym->start);
-> -		right = node->map->unmap_ip(node->map, sym->start);
-> -	} else {
-> -		left = cnode->ip;
-> -		right = node->ip;
-> -	}
-> -
-> -	if (left == right) {
-> -		if (node->branch) {
-> -			cnode->branch_count++;
-> +	if (match == MATCH_EQ && node->branch) {
-> +		cnode->branch_count++;
-> 
-> -			if (node->branch_from) {
-> -				/*
-> -				 * It's "to" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = true;
-> +		if (node->branch_from) {
-> +			/*
-> +			 * It's "to" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = true;
-> 
-> -				if (node->branch_flags.predicted)
-> -					cnode->predicted_count++;
-> +			if (node->branch_flags.predicted)
-> +				cnode->predicted_count++;
-> 
-> -				if (node->branch_flags.abort)
-> -					cnode->abort_count++;
-> +			if (node->branch_flags.abort)
-> +				cnode->abort_count++;
-> 
-> -				branch_type_count(&cnode->brtype_stat,
-> -						  &node->branch_flags,
-> -						  node->branch_from,
-> -						  node->ip);
-> -			} else {
-> -				/*
-> -				 * It's "from" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = false;
-> -				cnode->cycles_count +=
-> -					node->branch_flags.cycles;
-> -				cnode->iter_count += node->nr_loop_iter;
-> -				cnode->iter_cycles += node->iter_cycles;
-> -			}
-> +			branch_type_count(&cnode->brtype_stat,
-> +					  &node->branch_flags,
-> +					  node->branch_from,
-> +					  node->ip);
-> +		} else {
-> +			/*
-> +			 * It's "from" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = false;
-> +			cnode->cycles_count += node->branch_flags.cycles;
-> +			cnode->iter_count += node->nr_loop_iter;
-> +			cnode->iter_cycles += node->iter_cycles;
->  		}
-> -
-> -		return MATCH_EQ;
->  	}
-> 
-> -	return left > right ? MATCH_GT : MATCH_LT;
-> +	return match;
->  }
-> 
->  /*
-
-
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 01fc95fdd1e0..92bca95be202 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -669,11 +669,16 @@ static enum match_result match_chain_strings(const char 
+*left,
+ static enum match_result match_chain_addresses(u64 left_ip, u64 right_ip)
+ {
+ 	if (left_ip == right_ip)
+-               return MATCH_EQ;
+-       else if (left_ip < right_ip)
+-               return MATCH_LT;
+-       else
+-               return MATCH_GT;
++		return MATCH_EQ;
++	else if (left_ip < right_ip)
++		return MATCH_LT;
++	else
++		return MATCH_GT;
++}
++
++static u64 unmap_ip(struct map *map, u64 ip)
++{
++	return map ? map->unmap_ip(map, ip) : ip;
+ }
+ 
+ static enum match_result match_chain(struct callchain_cursor_node *node,
+@@ -702,9 +707,10 @@ static enum match_result match_chain(struct 
+callchain_cursor_node *node,
+ 				if (match != MATCH_ERROR)
+ 					break;
+ 			} else {
+-				u64 left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode-
+>ms.sym->start),
+-				    right = node->map->unmap_ip(node->map, node->sym->start);
+-
++				u64 left = unmap_ip(cnode->ms.map,
++						    cnode->ms.sym->start);
++				u64 right = unmap_ip(node->map,
++						     node->sym->start);
+ 				match = match_chain_addresses(left, right);
+ 				break;
+ 			}
+@@ -713,7 +719,9 @@ static enum match_result match_chain(struct 
+callchain_cursor_node *node,
+ 		__fallthrough;
+ 	case CCKEY_ADDRESS:
+ 	default:
+-		match = match_chain_addresses(cnode->ip, node->ip);
++		match = match_chain_addresses(unmap_ip(cnode->ms.map,
++						       cnode->ip),
++					      unmap_ip(node->map, node->ip));
+ 		break;
+ 	}
+ 
+Cheers
 -- 
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
