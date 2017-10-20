@@ -1,41 +1,194 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v6 0/6] generate full callchain cursor entries for
- inlined frames
-Date: Fri, 20 Oct 2017 12:43:04 -0300
-Message-ID: <20171020154304.GF30002@kernel.org>
-References: <20171018185350.14893-1-milian.wolff@kdab.com>
- <87wp3sgjqo.fsf@linux.intel.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: perf buildid-cache -p <path> question
+Date: Sat, 21 Oct 2017 01:12:59 +0900
+Message-ID: <20171021011259.5d6368a7fd1f54004b6ae1da@kernel.org>
+References: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
+        <20171016141222.GC5311@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751857AbdJTPnH (ORCPT
+        id S1752635AbdJTQNB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Oct 2017 11:43:07 -0400
-Content-Disposition: inline
-In-Reply-To: <87wp3sgjqo.fsf@linux.intel.com>
+        Fri, 20 Oct 2017 12:13:01 -0400
+In-Reply-To: <20171016141222.GC5311@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@kernel.org, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>
 
-Em Wed, Oct 18, 2017 at 03:43:27PM -0700, Andi Kleen escreveu:
-> Milian Wolff <milian.wolff@kdab.com> writes:
+On Mon, 16 Oct 2017 11:12:22 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Em Mon, Oct 16, 2017 at 02:24:11PM +0200, Thomas-Mich Richter escreveu:
+> > Maybe its me misunderstanding the buildid cache completely, but I ran into the following issue:
+> > 
+> > I can add and remove files using the perf buildid-cache command. For example 
+> > perf buildid-cache -a /usr/bin/tar adds the tar executable to the buildid-cache directory
+> > .debug/usr/bin/tar 
+> > and creates the <buildid> subdirectory
+> > .debug/usr/bin/tar/e54c9946802bbbcb85760ffeb80700a5fd35ebe7/elf file.
 > 
-> > This series of patches completely reworks the way inline frames are handled.
-> > Instead of querying for the inline nodes on-demand in the individual tools,
-> > we now create proper callchain nodes for inlined frames. The advantages this
-> > approach brings are numerous:
+> That is correct.
 > 
-> Except for the comments on the one patch the other patches all look
-> good to me.
+> > Also a symbolic link from the directory
+> > .debug/.buildid/e5/4c9946802bbbcb85760ffeb80700a5fd35ebe7 --> ../../usr/bin/tar/<buildid>/
+> > is created.
+> > 
+> > Command perf buildid-cache -a /usr/bin/tar
+> 
+> Nope, command 'perf buildid-cache -r /usr/bin/tar' does it:
 
-I think I addressed this concern by always using absolute addresses,
-right?
- 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Wait, -r is remove command.
 
-So I'm adding this to the patches, ok?
+> 
+> [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
+> lrwxrwxrwx. 1 root root 58 Oct 16 10:50 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> [root@jouet ~]# 
+> 
+> [root@jouet ~]# perf buildid-cache -r /usr/bin/tar
+> [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> ls: cannot access '/root/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
+> [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
+> ls: cannot access '/root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
+> [root@jouet ~]# 
+> 
+> > removes these entries.
+> > 
+> > Now when I run ./perf buildid-cache -p /usr/bin
+> > nothing happens and success is reported:
+> 
+> When you do '-p' after a '-a' or after a '-r'? From what you wrote
+> below, that is after you do a '-a /usr/bin/tar', as it is being purged
+> as well.
+> 
+> Masami?
 
-- Arnaldo
+Yeah, should be. 
+
+OK, -p and -r is slightly different. That is for handling "versioning" caches.
+
+For example, you have a /usr/bin/tar (this is old tar) and its buildid-cache
+in cache directory by perf buildid-cache -a /usr/bin/tar.
+And at some point, you will update the /usr/bin/tar (this is new tar).
+This new tar binary is not same as old one, so if you also do
+perf buildid-cache -a /usr/bin/tar, it creates another version of buildid
+cache in cache directory.
+
+At this moment,
+$ perf buildid-cache -r /usr/bin/tar
+will remove only new tar's buildid cache, but old one remains.
+
+On the other hand,
+$ perf buildid-cache -p /usr/bin/tar
+will remove all the caches related to /usr/bin/tar from buildid cache.
+
+And since the -p is supposed to be used for cleanup, it doesn't return
+error even if there is no buildid cache remaining.
+
+> 
+> > [root@s35lp76 perf]# ./perf buildid-cache -vp /usr/bin/
+> > Removing bash /usr/bin/: Ok
+> > Removing dbus-daemon /usr/bin/: Ok
+> > Removing ls /usr/bin/: Ok
+> > Removing readlink /usr/bin/: Ok
+> > Removing sleep /usr/bin/: Ok
+> > Removing tar /usr/bin/: Ok
+> > Removing time /usr/bin/: Ok
+> > Removing vim /usr/bin/: Ok
+> > Purging /usr/bin/: Ok
+
+Hmm, curious...
+
+> 
+> In my test it works as advertised:
+> 
+> [root@jouet ~]# perf buildid-cache -a /usr/bin/tar
+> [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
+> lrwxrwxrwx. 1 root root 58 Oct 16 10:56 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> total 424
+> drwxr-xr-x. 2 root root   4096 Oct 16 10:56 .
+> drwxr-xr-x. 3 root root   4096 Oct 16 10:56 ..
+> -rwxr-xr-x. 2 root root 425032 Jul 19 05:55 elf
+> -rw-r--r--. 1 root root      0 Oct 16 10:56 probes
+> [root@jouet ~]# perf buildid-cache -vp /usr/bin/tar
+> Removing 4c10f253c0cb8459dd846235c0bc18929e4758ea /usr/bin/tar: Ok
+> Purging /usr/bin/tar: Ok
+> [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> ls: cannot access '/root/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
+> [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
+> ls: cannot access '/root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea': No such file or directory
+> [root@jouet ~]#
+> 
+> It was purged.
+
+OK. it seems good.
+
+> 
+> Now lets try what you did, which is to ask for a path that will match
+> with multiple binaries:
+> 
+> [root@jouet ~]# perf buildid-cache -v -a /usr/bin/tar
+> Adding 4c10f253c0cb8459dd846235c0bc18929e4758ea /usr/bin/tar: Ok
+> [root@jouet ~]# ls -la ~/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea
+> lrwxrwxrwx. 1 root root 58 Oct 16 10:58 /root/.debug/.build-id/4c/10f253c0cb8459dd846235c0bc18929e4758ea -> ../../usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> [root@jouet ~]# ls -la ~/.debug/usr/bin/tar/4c10f253c0cb8459dd846235c0bc18929e4758ea
+> total 424
+> drwxr-xr-x. 2 root root   4096 Oct 16 10:58 .
+> drwxr-xr-x. 3 root root   4096 Oct 16 10:58 ..
+> -rwxr-xr-x. 2 root root 425032 Jul 19 05:55 elf
+> -rw-r--r--. 1 root root      0 Oct 16 10:58 probes
+> [root@jouet ~]# perf buildid-cache -vp /usr/bin
+> Removing as /usr/bin: FAIL
+> Purging /usr/bin: FAIL
+> /usr/bin wasn't in the cache
+
+I think -p does only support a file not a path like that.
+
+> [root@jouet ~]# perf buildid-cache -vp /usr/bin/
+> Removing as /usr/bin/: FAIL
+> Purging /usr/bin/: FAIL
+> /usr/bin/ wasn't in the cache
+> [root@jouet ~]#
+> 
+> This is when --purge was added:
+> 
+> commit 8d8c8e4cb3014fcc51f0e127b4316043306f5bb0
+> Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> Date:   Fri Feb 27 13:50:26 2015 +0900
+> 
+>     perf buildid-cache: Add --purge FILE to remove all caches of FILE
+> 
+> -----------------------
+>  
+> > I have done some more debugging and there is something wrong. 
+> > The function
+> > build_id_cache__purge_path() is called and 
+> > build_id_cache__list_build_ids() creates a list of file names located in /usr/bin of the buildid-cache.
+> > build_id_cache__remove_s() is called for each name in the list and tries to locate each file name
+> > 	in directory .buildid/YY/ZZZ..ZZZ which fails because 
+> > build_id_cache__linkname() expects a buildid and gets a file name.
+> > The file name bash is treated as .buildid/ba/sh which does not exist.
+> 
+> probably this got broken when the /elf, /probe separation was added,
+> humm, unsure if a 'git bisect' would help here...
+> 
+> Masami?
+
+Should it work for a directory instead of a file too?
+I need to investigate it too.
+
+Thanks,
+
+>  
+> > This seems to be a simple mistake so I wonder if I do something wrong.
+> 
+> - Arnaldo
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
