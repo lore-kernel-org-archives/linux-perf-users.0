@@ -1,90 +1,74 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/8] perf/urgent fixes
-Date: Fri, 20 Oct 2017 09:16:48 +0200
-Message-ID: <20171020071648.lb6nnqlpnyil5qmw@gmail.com>
-References: <20171019174515.7407-1-acme@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in match_chain
+Date: Fri, 20 Oct 2017 12:21:35 +0200
+Message-ID: <4075632.NPQJP4Tzi9@agathebauer>
+References: <20171018185350.14893-1-milian.wolff@kdab.com> <20171019135519.GC5109@tassilo.jf.intel.com> <20171019150108.GA24104@danjae.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171019174515.7407-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>, Kim Phillips <kim.phillips@arm.com>, Li Zhijian <lizhijian@cn.fujitsu.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Philip Li <philip.li@intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Taeung Song <treeze.taeung@gmail.com>, Thomas-Mich Richter <tmricht@l>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kdab.com ([176.9.126.58]:37546 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752628AbdJTKVk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 20 Oct 2017 06:21:40 -0400
+In-Reply-To: <20171019150108.GA24104@danjae.aot.lge.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>, acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, kernel-team@lge.com
 
+On Donnerstag, 19. Oktober 2017 17:01:08 CEST Namhyung Kim wrote:
+> Hi Andi,
+> 
+> On Thu, Oct 19, 2017 at 06:55:19AM -0700, Andi Kleen wrote:
+> > On Thu, Oct 19, 2017 at 12:59:14PM +0200, Milian Wolff wrote:
+> > > On Donnerstag, 19. Oktober 2017 00:41:04 CEST Andi Kleen wrote:
+> > > > Milian Wolff <milian.wolff@kdab.com> writes:
+> > > > > +static enum match_result match_address_dso(struct dso *left_dso,
+> > > > > u64
+> > > > > left_ip, +					   struct dso *right_dso, u64 right_ip)
+> > > > > +{
+> > > > > +	if (left_dso == right_dso && left_ip == right_ip)
+> > > > > +		return MATCH_EQ;
+> > > > > +	else if (left_ip < right_ip)
+> > > > > +		return MATCH_LT;
+> > > > > +	else
+> > > > > +		return MATCH_GT;
+> > > > > +}
+> > > > 
+> > > > So why does only the first case check the dso? Does it not matter
+> > > > for the others?
+> > > > 
+> > > > Either should be checked by none or by all.
+> > > 
+> > > I don't see why it should be checked. It is only required to prevent two
+> > > addresses to be considered equal while they are not. So only the one
+> > > check is required, otherwise we return either LT or GT.
+> > 
+> > When the comparison is always in the same process (which I think
+> > is not the case) just checking the addresses is sufficient. If they are
+> > not then you always need to check the DSO and only compare inside the
+> > same DSO.
+>
+> As far as I know, the node->ip is a relative address (inside a DSO).
+> So it should compare the dso as well even in the same process.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Sorry guys, I seem to be slow at understanding your review comments.
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 47a74bdcbfeff543f706dc0e385eebbb5d655ed2:
-> 
->   Merge tag 'perf-urgent-for-mingo-4.14-20171010' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2017-10-10 19:21:37 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.14-20171019
-> 
-> for you to fetch changes up to 74f8e22c153f4464060a0c2e4cfd1d6e51af2109:
-> 
->   perf test shell trace+probe_libc_inet_pton.sh: Be compatible with Debian/Ubuntu (2017-10-18 09:14:18 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Fix crash in perf_hpp__reset_output_field() (Jiri Olsa)
-> 
-> - Fix eBPF file/vendor events ambiguity in event specification (Jiri Olsa)
-> 
-> - Fix closing evsel fd in 'perf stat' (Jin Yao)
-> 
-> - Make perf test shell trace+probe_libc_inet_pton.sh pass in Debian/Ubuntu (Li Zhijian)
-> 
-> - Fix 'perf buildid-list --with-hits' crash when processing PERF_RECORD_NAMESPACE (Namhyung Kim)
-> 
-> - Fix documentation for a inexistent option 'perf record -l' (Taeung Song)
-> 
-> - Add long time reviewers to MAINTAINERS (Arnaldo Carvalho de Melo)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (1):
->       perf tools: Add long time reviewers to MAINTAINERS
-> 
-> Jin Yao (1):
->       perf xyarray: Fix wrong processing when closing evsel fd
-> 
-> Jiri Olsa (3):
->       perf hists: Fix crash in perf_hpp__reset_output_field()
->       perf hists: Add extra integrity checks to fmt_free()
->       perf tools: Check wether the eBPF file exists in event parsing
-> 
-> Li Zhijian (1):
->       perf test shell trace+probe_libc_inet_pton.sh: Be compatible with Debian/Ubuntu
-> 
-> Namhyung Kim (1):
->       perf buildid-list: Fix crash when processing PERF_RECORD_NAMESPACE
-> 
-> Taeung Song (1):
->       perf record: Fix documentation for a inexistent option '-l'
-> 
->  MAINTAINERS                                          |  2 ++
->  tools/perf/Documentation/perf-record.txt             |  4 ++--
->  tools/perf/tests/shell/trace+probe_libc_inet_pton.sh |  9 ++++++---
->  tools/perf/ui/hist.c                                 |  9 ++++++++-
->  tools/perf/util/parse-events.l                       | 17 +++++++++++++++--
->  tools/perf/util/session.c                            |  2 ++
->  tools/perf/util/xyarray.h                            |  4 ++--
->  7 files changed, 37 insertions(+), 10 deletions(-)
+match_address_dso should impose a sort order on two relative addresses. The 
+order should ensure that relative addresses in a different DSO are not 
+considered equal. But if the DSOs are different, it doesn't matter whether we 
+return LT or GT - or?
 
-Pulled, thanks a lot Arnaldo!
+Put differently, how would you write this function to take care of the DSO in 
+the other two branches? I.e. what to return if the DSOs are different - a 
+MATCH_ERROR?
 
-	Ingo
+Bye
+
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
