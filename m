@@ -1,100 +1,159 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: perf buildid-cache -p <path> question
-Date: Sun, 22 Oct 2017 00:17:03 +0900
-Message-ID: <20171022001703.c56a77784dbc49b258d36bf7@kernel.org>
-References: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in
+ match_chain
+Date: Mon, 23 Oct 2017 14:19:38 +0900
+Message-ID: <20171023051938.GA19110@sejong>
+References: <20171018185350.14893-1-milian.wolff@kdab.com>
+ <20171019150108.GA24104@danjae.aot.lge.com>
+ <4075632.NPQJP4Tzi9@agathebauer>
+ <1542636.JzONsm6D9Z@agathebauer>
+ <20171020133935.GD30002@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932099AbdJUPRG (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Oct 2017 11:17:06 -0400
-In-Reply-To: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171020133935.GD30002@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Milian Wolff <milian.wolff@kdab.com>, Andi Kleen <ak@linux.intel.com>, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, kernel-team@lge.com
+List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, 16 Oct 2017 14:24:11 +0200
-Thomas-Mich Richter <tmricht@linux.vnet.ibm.com> wrote:
+Hi Arnaldo and Milian,
 
-> Maybe its me misunderstanding the buildid cache completely, but I ran into the following issue:
+On Fri, Oct 20, 2017 at 10:39:35AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Oct 20, 2017 at 01:38:23PM +0200, Milian Wolff escreveu:
+> > On Freitag, 20. Oktober 2017 12:21:35 CEST Milian Wolff wrote:
+> > > On Donnerstag, 19. Oktober 2017 17:01:08 CEST Namhyung Kim wrote:
+> > > > Hi Andi,
+> > > > 
+> > > > On Thu, Oct 19, 2017 at 06:55:19AM -0700, Andi Kleen wrote:
+> > > > > On Thu, Oct 19, 2017 at 12:59:14PM +0200, Milian Wolff wrote:
+> > > > > > On Donnerstag, 19. Oktober 2017 00:41:04 CEST Andi Kleen wrote:
+> > > > > > > Milian Wolff <milian.wolff@kdab.com> writes:
+> > > > > > > > +static enum match_result match_address_dso(struct dso *left_dso,
+> > > > > > > > u64
+> > > > > > > > left_ip, +					   struct dso *right_dso, u64 right_ip)
+> > > > > > > > +{
+> > > > > > > > +	if (left_dso == right_dso && left_ip == right_ip)
+> > > > > > > > +		return MATCH_EQ;
+> > > > > > > > +	else if (left_ip < right_ip)
+> > > > > > > > +		return MATCH_LT;
+> > > > > > > > +	else
+> > > > > > > > +		return MATCH_GT;
+> > > > > > > > +}
+> > > > > > > 
+> > > > > > > So why does only the first case check the dso? Does it not matter
+> > > > > > > for the others?
+> > > > > > > 
+> > > > > > > Either should be checked by none or by all.
+> > > > > > 
+> > > > > > I don't see why it should be checked. It is only required to prevent
+> > > > > > two
+> > > > > > addresses to be considered equal while they are not. So only the one
+> > > > > > check is required, otherwise we return either LT or GT.
+> > > > > 
+> > > > > When the comparison is always in the same process (which I think
+> > > > > is not the case) just checking the addresses is sufficient. If they are
+> > > > > not then you always need to check the DSO and only compare inside the
+> > > > > same DSO.
+> > > > 
+> > > > As far as I know, the node->ip is a relative address (inside a DSO).
+> > > > So it should compare the dso as well even in the same process.
+> > > 
+> > > Sorry guys, I seem to be slow at understanding your review comments.
+> > > 
+> > > match_address_dso should impose a sort order on two relative addresses. The
+> > > order should ensure that relative addresses in a different DSO are not
+> > > considered equal. But if the DSOs are different, it doesn't matter whether
+> > > we return LT or GT - or?
+> > > 
+> > > Put differently, how would you write this function to take care of the DSO
+> > > in the other two branches? I.e. what to return if the DSOs are different -
+> > > a MATCH_ERROR?
+> > 
+> > Thinking a bit more about this. Are you guys maybe hinting at my 
+> > implementation breaking the strict ordering rules (is that the right word?). 
+> > I.e. a < b && b > a iff a == b ? Potentially my implementation would break 
+> > this assumption when the relative IPs are the same, but the DSO is different.
+> > 
+> > So is this what you want:
+> > 
+> > +static enum match_result match_address_dso(struct dso *left_dso, u64
+> >  left_ip, +                                         struct dso *right_dso, u64 
+> > right_ip)
+> >  +{
+> >  +       if (left_dso == right_dso && left_ip == right_ip)
+> >  +               return MATCH_EQ;
+> >  +       else if (left_dso < right_dso || left_ip < right_ip)
+> >  +               return MATCH_LT;
+> >  +       else
+> >  +               return MATCH_GT;
+> >  +}
+
+How about
+
+	if (left_dso != right_dso)
+		return left_dso < right_dso ? MATCH_LT : MATCH_GT;
+	else if (left_ip != right_ip)
+		return left_ip < right_ip ? MATCH_LT : MATCH_GT;
+	else
+		return MATCH_EQ;
+
+?
+
+
 > 
-> I can add and remove files using the perf buildid-cache command. For example 
-> perf buildid-cache -a /usr/bin/tar adds the tar executable to the buildid-cache directory
-> .debug/usr/bin/tar 
-> and creates the <buildid> subdirectory
-> .debug/usr/bin/tar/e54c9946802bbbcb85760ffeb80700a5fd35ebe7/elf file.
-> Also a symbolic link from the directory
-> .debug/.buildid/e5/4c9946802bbbcb85760ffeb80700a5fd35ebe7 --> ../../usr/bin/tar/<buildid>/
-> is created.
-> 
-> Command perf buildid-cache -a /usr/bin/tar
-> removes these entries.
-> 
-> Now when I run ./perf buildid-cache -p /usr/bin
-> nothing happens and success is reported:
-> [root@s35lp76 perf]# ./perf buildid-cache -vp /usr/bin/
-> Removing bash /usr/bin/: Ok
-> Removing dbus-daemon /usr/bin/: Ok
-> Removing ls /usr/bin/: Ok
-> Removing readlink /usr/bin/: Ok
-> Removing sleep /usr/bin/: Ok
-> Removing tar /usr/bin/: Ok
-> Removing time /usr/bin/: Ok
-> Removing vim /usr/bin/: Ok
-> Purging /usr/bin/: Ok
+> Why not do all in terms of absolute addresses? Comparing relative
+> addresses seems nonsensical anyway.
 
-How did you do that? 
+???
 
-At first, perf buildid-cache -p only accept target binary path, not a directory. Because -p (--purge) is for removing all "histrical" caches of target binary, that should be compatible to -r (--remove) option.
+It needs to compare symbols of callchains from different address
+spaces (i.e. tasks) too.  We do the same when comparing symbols of
+samples - please see sort__sym_cmp().
 
-Anyway, if I tries below, I got just an error.
 
-[mhiramat@devbox perf]$ rm -rf ~/.debug/
-[mhiramat@devbox perf]$ ./perf buildid-cache -a /usr/bin/tar
-[mhiramat@devbox perf]$ ./perf buildid-cache -vp /usr/bin
-Removing tar /usr/bin: FAIL
-Purging /usr/bin: FAIL
-/usr/bin wasn't in the cache
+> Perhaps something like the patch
+> below, and note that cnode->ip and node->ip already already are absolute
+> addresses.
 
-Because "/usr/bin" is a directory and not cached. Also, if I add /usr/bin as below, it's just refused.
+Only if it couldn't find a map?
 
-[mhiramat@devbox perf]$ ./perf buildid-cache -a /usr/bin
-Couldn't add /usr/bin: Is a directory
+Thanks,
+Namhyung
 
-So, I wonder how did you do that.
-
-Thank you,
 
 > 
-> I have done some more debugging and there is something wrong. 
-> The function
-> build_id_cache__purge_path() is called and 
-> build_id_cache__list_build_ids() creates a list of file names located in /usr/bin of the buildid-cache.
-> build_id_cache__remove_s() is called for each name in the list and tries to locate each file name
-> 	in directory .buildid/YY/ZZZ..ZZZ which fails because 
-> build_id_cache__linkname() expects a buildid and gets a file name.
-> The file name bash is treated as .buildid/ba/sh which does not exist.
-> 
-> 
-> This seems to be a simple mistake so I wonder if I do something wrong.
-> 
-> Thanks
-> -- 
-> Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
-> --
-> Vorsitzende des Aufsichtsrats: Martina Koederitz 
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 35a920f09503..1ac3f4a5afab 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -671,8 +671,6 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+>  {
+>  	struct symbol *sym = node->sym;
+>  	u64 left, right;
+> -	struct dso *left_dso = NULL;
+> -	struct dso *right_dso = NULL;
+>  
+>  	if (callchain_param.key == CCKEY_SRCLINE) {
+>  		enum match_result match = match_chain_strings(cnode->srcline,
+> @@ -698,16 +696,14 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+>  			return match_chain_strings(cnode->ms.sym->name,
+>  						   node->sym->name);
+>  
+> -		left = cnode->ms.sym->start;
+> -		right = sym->start;
+> -		left_dso = cnode->ms.map->dso;
+> -		right_dso = node->map->dso;
+> +		left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode->ms.sym->start);
+> +		right = node->map->unmap_ip(node->map, sym->start);
+>  	} else {
+>  		left = cnode->ip;
+>  		right = node->ip;
+>  	}
+>  
+> -	if (left == right && left_dso == right_dso) {
+> +	if (left == right) {
+>  		if (node->branch) {
+>  			cnode->branch_count++;
+>  
