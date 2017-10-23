@@ -1,159 +1,66 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v6 1/6] perf report: properly handle branch count in
- match_chain
-Date: Mon, 23 Oct 2017 14:19:38 +0900
-Message-ID: <20171023051938.GA19110@sejong>
-References: <20171018185350.14893-1-milian.wolff@kdab.com>
- <20171019150108.GA24104@danjae.aot.lge.com>
- <4075632.NPQJP4Tzi9@agathebauer>
- <1542636.JzONsm6D9Z@agathebauer>
- <20171020133935.GD30002@kernel.org>
+From: zhangmengting <zhangmengting@huawei.com>
+Subject: Re: [PATCH] perf script: Add option to display guest samples in host
+Date: Mon, 23 Oct 2017 14:40:59 +0800
+Message-ID: <c656c7fc-8b32-2a32-bbc9-58aa13ac9d39@huawei.com>
+References: <1508310594-51519-1-git-send-email-zhangmengting@huawei.com>
+ <a1e7fa6d-a427-9e0f-baad-4853d63078cb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171020133935.GD30002@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, Andi Kleen <ak@linux.intel.com>, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Yao Jin <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, kernel-team@lge.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50032 "EHLO huawei.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750756AbdJWG5g (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 23 Oct 2017 02:57:36 -0400
+In-Reply-To: <a1e7fa6d-a427-9e0f-baad-4853d63078cb@gmail.com>
+Content-Language: en-US
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: David Ahern <dsahern@gmail.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, dsa@cumulusnetworks.com, wangnan0@huawei.com, huawei.libin@huawei.com
 
-Hi Arnaldo and Milian,
+Hi all,
+For sched_switch tracepoint, I guess maybe it would be more reasonable 
+to show guest samples together with host samples by default, instead of 
+setting an option to display guest samples when we meet with this 
+confused situation.
+To take care of this issue, the code should be changed as below:
 
-On Fri, Oct 20, 2017 at 10:39:35AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Oct 20, 2017 at 01:38:23PM +0200, Milian Wolff escreveu:
-> > On Freitag, 20. Oktober 2017 12:21:35 CEST Milian Wolff wrote:
-> > > On Donnerstag, 19. Oktober 2017 17:01:08 CEST Namhyung Kim wrote:
-> > > > Hi Andi,
-> > > > 
-> > > > On Thu, Oct 19, 2017 at 06:55:19AM -0700, Andi Kleen wrote:
-> > > > > On Thu, Oct 19, 2017 at 12:59:14PM +0200, Milian Wolff wrote:
-> > > > > > On Donnerstag, 19. Oktober 2017 00:41:04 CEST Andi Kleen wrote:
-> > > > > > > Milian Wolff <milian.wolff@kdab.com> writes:
-> > > > > > > > +static enum match_result match_address_dso(struct dso *left_dso,
-> > > > > > > > u64
-> > > > > > > > left_ip, +					   struct dso *right_dso, u64 right_ip)
-> > > > > > > > +{
-> > > > > > > > +	if (left_dso == right_dso && left_ip == right_ip)
-> > > > > > > > +		return MATCH_EQ;
-> > > > > > > > +	else if (left_ip < right_ip)
-> > > > > > > > +		return MATCH_LT;
-> > > > > > > > +	else
-> > > > > > > > +		return MATCH_GT;
-> > > > > > > > +}
-> > > > > > > 
-> > > > > > > So why does only the first case check the dso? Does it not matter
-> > > > > > > for the others?
-> > > > > > > 
-> > > > > > > Either should be checked by none or by all.
-> > > > > > 
-> > > > > > I don't see why it should be checked. It is only required to prevent
-> > > > > > two
-> > > > > > addresses to be considered equal while they are not. So only the one
-> > > > > > check is required, otherwise we return either LT or GT.
-> > > > > 
-> > > > > When the comparison is always in the same process (which I think
-> > > > > is not the case) just checking the addresses is sufficient. If they are
-> > > > > not then you always need to check the DSO and only compare inside the
-> > > > > same DSO.
-> > > > 
-> > > > As far as I know, the node->ip is a relative address (inside a DSO).
-> > > > So it should compare the dso as well even in the same process.
-> > > 
-> > > Sorry guys, I seem to be slow at understanding your review comments.
-> > > 
-> > > match_address_dso should impose a sort order on two relative addresses. The
-> > > order should ensure that relative addresses in a different DSO are not
-> > > considered equal. But if the DSOs are different, it doesn't matter whether
-> > > we return LT or GT - or?
-> > > 
-> > > Put differently, how would you write this function to take care of the DSO
-> > > in the other two branches? I.e. what to return if the DSOs are different -
-> > > a MATCH_ERROR?
-> > 
-> > Thinking a bit more about this. Are you guys maybe hinting at my 
-> > implementation breaking the strict ordering rules (is that the right word?). 
-> > I.e. a < b && b > a iff a == b ? Potentially my implementation would break 
-> > this assumption when the relative IPs are the same, but the DSO is different.
-> > 
-> > So is this what you want:
-> > 
-> > +static enum match_result match_address_dso(struct dso *left_dso, u64
-> >  left_ip, +                                         struct dso *right_dso, u64 
-> > right_ip)
-> >  +{
-> >  +       if (left_dso == right_dso && left_ip == right_ip)
-> >  +               return MATCH_EQ;
-> >  +       else if (left_dso < right_dso || left_ip < right_ip)
-> >  +               return MATCH_LT;
-> >  +       else
-> >  +               return MATCH_GT;
-> >  +}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 0c977b6..dcfab00 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1557,7 +1557,7 @@ static int process_sample_event(struct perf_tool 
+*tool,
+          return -1;
+      }
 
-How about
+-    if (al.filtered)
++    if (al.filtered && !(strcmp(evsel->name, "sched:sched_switch")== 0 
+&& perf_host &&(al.filtered & (1 << HIST_FILTER__GUEST))))
+          goto out_put;
 
-	if (left_dso != right_dso)
-		return left_dso < right_dso ? MATCH_LT : MATCH_GT;
-	else if (left_ip != right_ip)
-		return left_ip < right_ip ? MATCH_LT : MATCH_GT;
-	else
-		return MATCH_EQ;
+      if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
 
-?
-
-
-> 
-> Why not do all in terms of absolute addresses? Comparing relative
-> addresses seems nonsensical anyway.
-
-???
-
-It needs to compare symbols of callchains from different address
-spaces (i.e. tasks) too.  We do the same when comparing symbols of
-samples - please see sort__sym_cmp().
-
-
-> Perhaps something like the patch
-> below, and note that cnode->ip and node->ip already already are absolute
-> addresses.
-
-Only if it couldn't find a map?
+Right?
 
 Thanks,
-Namhyung
+Mengting Zhang
 
 
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 35a920f09503..1ac3f4a5afab 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -671,8 +671,6 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
->  {
->  	struct symbol *sym = node->sym;
->  	u64 left, right;
-> -	struct dso *left_dso = NULL;
-> -	struct dso *right_dso = NULL;
->  
->  	if (callchain_param.key == CCKEY_SRCLINE) {
->  		enum match_result match = match_chain_strings(cnode->srcline,
-> @@ -698,16 +696,14 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
->  			return match_chain_strings(cnode->ms.sym->name,
->  						   node->sym->name);
->  
-> -		left = cnode->ms.sym->start;
-> -		right = sym->start;
-> -		left_dso = cnode->ms.map->dso;
-> -		right_dso = node->map->dso;
-> +		left = cnode->ms.map->unmap_ip(cnode->ms.map, cnode->ms.sym->start);
-> +		right = node->map->unmap_ip(node->map, sym->start);
->  	} else {
->  		left = cnode->ip;
->  		right = node->ip;
->  	}
->  
-> -	if (left == right && left_dso == right_dso) {
-> +	if (left == right) {
->  		if (node->branch) {
->  			cnode->branch_count++;
->  
+On 2017/10/18 22:37, David Ahern wrote:
+> On 10/18/17 1:09 AM, Mengting Zhang wrote:
+>> @@ -2771,6 +2772,8 @@ int cmd_script(int argc, const char **argv)
+>>   		    "Show context switch events (if recorded)"),
+>>   	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
+>>   		    "Show namespace events (if recorded)"),
+>> +	OPT_BOOLEAN('\0', "show-guest-samples", &script.show_guest_samples,
+>> +		    "Show guest samples (if recorded)"),
+>>   	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>>   	OPT_INTEGER(0, "max-blocks", &max_blocks,
+>>   		    "Maximum number of code blocks to dump with brstackinsn"),
+> At this point we need a 'show-all' option.
+>
+> .
+>
