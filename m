@@ -1,14 +1,19 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/24] perf vendor events: Update JSON metrics for Haswell Server
-Date: Mon, 23 Oct 2017 20:47:16 -0300
-Message-ID: <20171023234736.5335-5-acme@kernel.org>
+Subject: [PATCH 02/24] perf vendor events: Update JSON metrics for Broadwell Server
+Date: Mon, 23 Oct 2017 20:47:14 -0300
+Message-ID: <20171023234736.5335-3-acme@kernel.org>
 References: <20171023234736.5335-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751432AbdJWXrz (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 23 Oct 2017 19:47:55 -0400
 In-Reply-To: <20171023234736.5335-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
@@ -16,13 +21,13 @@ Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Link: http://lkml.kernel.org/r/20170914200748.GA13837@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../pmu-events/arch/x86/broadwellx/bdx-metrics.json    | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-index 0bae5eda9fb3..5ab5c78fe580 100644
---- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+index 4248b029d199..4d9a1175a5cc 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
 @@ -13,7 +13,7 @@
      },
      {
@@ -61,15 +66,15 @@ index 0bae5eda9fb3..5ab5c78fe580 100644
      },
      {
          "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
--	"MetricExpr": "( UOPS_EXECUTED.CORE / 2 / ( cpu@uops_executed.core\\,cmask\\=1@ / 2)) if #SMT_on else UOPS_EXECUTED.CORE / cpu@uops_executed.core\\,cmask\\=1@",
-+        "MetricExpr": "( UOPS_EXECUTED.CORE / 2 / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@) ) if #SMT_on else UOPS_EXECUTED.CORE / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@)",
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / ( cpu@uops_executed.core\\,cmask\\=1@ / 2) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
          "MetricGroup": "Pipeline;Ports_Utilization",
          "MetricName": "ILP"
      },
      {
          "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
--        "MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - ( 14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURATION ) ) / RS_EVENTS.EMPTY_END",
-+        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURATION )) ) / RS_EVENTS.EMPTY_END)",
+-	"MetricExpr": "2* ( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - ( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED ) ) / RS_EVENTS.EMPTY_END",
++        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURATION:c1 + 7* ITLB_MISSES.WALK_COMPLETED )) ) / RS_EVENTS.EMPTY_END)",
          "MetricGroup": "Unknown_Branches",
          "MetricName": "BAClear_Cost"
      },
@@ -84,10 +89,19 @@ index 0bae5eda9fb3..5ab5c78fe580 100644
      },
      {
          "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
--        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles",
-+        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED) ) / (2*( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED) ) / (2*(( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles))",
          "MetricGroup": "TLB",
          "MetricName": "Page_Walks_Utilization"
+     },
+@@ -97,7 +97,7 @@
+     },
+     {
+         "BriefDescription": "Giga Floating Point Operations Per Second",
+-        "MetricExpr": "( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 / duration_time",
++        "MetricExpr": "(( 1*( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2* FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4*( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8* FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
      },
 -- 
 2.13.6
