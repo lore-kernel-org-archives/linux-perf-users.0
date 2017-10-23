@@ -1,92 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/24] perf vendor events: Fix incorrect cmask syntax for some Intel metrics
-Date: Mon, 23 Oct 2017 20:47:30 -0300
-Message-ID: <20171023234736.5335-19-acme@kernel.org>
+Subject: [PATCH 17/24] perf tools: Do not check ABI headers in a detached tarball build
+Date: Mon, 23 Oct 2017 20:47:29 -0300
+Message-ID: <20171023234736.5335-18-acme@kernel.org>
 References: <20171023234736.5335-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171023234736.5335-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some of the metrics use an incorrect syntax for specifying the cmask for
-an event. Convert to perf syntax so that they can be resolved.
+When we use one of:
 
-Fixes metrics on Broadwell, SandyBridge.
+  [acme@jouet linux]$ make help | grep perf
+    perf-tar-src-pkg    - Build perf-4.14.0-rc3.tar source tarball
+    perf-targz-src-pkg  - Build perf-4.14.0-rc3.tar.gz source tarball
+    perf-tarbz2-src-pkg - Build perf-4.14.0-rc3.tar.bz2 source tarball
+    perf-tarxz-src-pkg  - Build perf-4.14.0-rc3.tar.xz source tarball
+  [acme@jouet linux]$
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Link: http://lkml.kernel.org/n/tip-3k3fkfj8obek9dkmryyrqzhu@git.kernel.org
+I.e. when we create a detached tarball to build perf outside outside the
+enveloping kernel sources (from a kernel tarball or a checked out
+linux.git directory) we by definition can't check for differences among
+the tools/{include,arch}, etc files we originally copied from the
+kernel, so bail out in that case, to avoid warnings when doing the
+detached builds.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-vbrga0mhplv7niwxr3ghjyxv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json   | 4 ++--
- tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json  | 2 +-
- tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json    | 2 +-
- tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/check-headers.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-index 7372c3207092..00bfdb5c5acb 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-@@ -61,7 +61,7 @@
-     },
-     {
-         "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
--        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURATION:c1 + 7* ITLB_MISSES.WALK_COMPLETED )) ) / RS_EVENTS.EMPTY_END)",
-+        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED )) ) / RS_EVENTS.EMPTY_END)",
-         "MetricGroup": "Unknown_Branches",
-         "MetricName": "BAClear_Cost"
-     },
-@@ -85,7 +85,7 @@
-     },
-     {
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
--        "MetricExpr": "( ITLB_MISSES.WALK_DURATION:c1 + DTLB_LOAD_MISSES.WALK_DURATION:c1 + DTLB_STORE_MISSES.WALK_DURATION:c1 + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED)) / (( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
-+        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7*(DTLB_STORE_MISSES.WALK_COMPLETED+DTLB_LOAD_MISSES.WALK_COMPLETED+ITLB_MISSES.WALK_COMPLETED)) / (( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else cycles)",
-         "MetricGroup": "TLB",
-         "MetricName": "Page_Walks_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-index 4d9a1175a5cc..5a7f1ec24200 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-@@ -61,7 +61,7 @@
-     },
-     {
-         "BriefDescription": "Average Branch Address Clear Cost (fraction of cycles)",
--        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURATION:c1 + 7* ITLB_MISSES.WALK_COMPLETED )) ) / RS_EVENTS.EMPTY_END)",
-+        "MetricExpr": "2* (( RS_EVENTS.EMPTY_CYCLES - ICACHE.IFDATA_STALL  - (( 14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + 7* ITLB_MISSES.WALK_COMPLETED )) ) / RS_EVENTS.EMPTY_END)",
-         "MetricGroup": "Unknown_Branches",
-         "MetricName": "BAClear_Cost"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-index 2b18008cf482..fd7d7c438226 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-@@ -55,7 +55,7 @@
-     },
-     {
-         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
--        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( UOPS_DISPATCHED.CORE:c1 / 2) if #SMT_on else UOPS_DISPATCHED.CORE:c1)",
-+        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
-         "MetricGroup": "Pipeline;Ports_Utilization",
-         "MetricName": "ILP"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-index 2b18008cf482..fd7d7c438226 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-@@ -55,7 +55,7 @@
-     },
-     {
-         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
--        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( UOPS_DISPATCHED.CORE:c1 / 2) if #SMT_on else UOPS_DISPATCHED.CORE:c1)",
-+        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
-         "MetricGroup": "Pipeline;Ports_Utilization",
-         "MetricName": "ILP"
-     },
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 932fda54b8a6..322629423b49 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -57,6 +57,11 @@ check () {
+ }
+ 
+ 
++# Check if we have the kernel headers (tools/perf/../../include), else
++# we're probably on a detached tarball, so no point in trying to check
++# differences.
++test -d ../../include || exit 0
++
+ # simple diff check
+ for i in $HEADERS; do
+   check $i -B
 -- 
 2.13.6
