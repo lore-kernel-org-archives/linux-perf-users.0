@@ -1,100 +1,247 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: perf buildid-cache -p <path> question
-Date: Tue, 24 Oct 2017 09:56:02 +0200
-Message-ID: <140bd721-4929-22ee-ce77-b7fe575a470c@linux.vnet.ibm.com>
-References: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
- <20171016141222.GC5311@kernel.org>
- <20171021011259.5d6368a7fd1f54004b6ae1da@kernel.org>
- <20171020162056.GH30002@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH v6 6/6] perf util: use correct IP mapping to find srcline for hist entry
+Date: Tue, 24 Oct 2017 10:51:43 +0200
+Message-ID: <8383335.eDmCaHkkAL@agathebauer>
+References: <20171018185350.14893-1-milian.wolff@kdab.com> <3026429.kO1GvhRXjL@agathebauer> <20171020051533.GA2746@sejong>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53900 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1751674AbdJXH4J (ORCPT
+Received: from mail.kdab.com ([176.9.126.58]:39194 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751470AbdJXI7y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Oct 2017 03:56:09 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9O7sJLb003742
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2017 03:56:08 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2dt0dhcktw-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2017 03:56:08 -0400
-Received: from localhost
-        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 24 Oct 2017 08:56:06 +0100
-In-Reply-To: <20171020162056.GH30002@kernel.org>
-Content-Language: en-IE
+        Tue, 24 Oct 2017 04:59:54 -0400
+In-Reply-To: <20171020051533.GA2746@sejong>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Yao Jin <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, kernel-team@lge.com
 
-On 10/20/2017 06:20 PM, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Oct 21, 2017 at 01:12:59AM +0900, Masami Hiramatsu escreveu:
->> On Mon, 16 Oct 2017 11:12:22 -0300
->> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>
->>
->> For example, you have a /usr/bin/tar (this is old tar) and its buildid-cache
->> in cache directory by perf buildid-cache -a /usr/bin/tar.
->> And at some point, you will update the /usr/bin/tar (this is new tar).
->> This new tar binary is not same as old one, so if you also do
->> perf buildid-cache -a /usr/bin/tar, it creates another version of buildid
->> cache in cache directory.
->>
->> At this moment,
->> $ perf buildid-cache -r /usr/bin/tar
->> will remove only new tar's buildid cache, but old one remains.
->>
->> On the other hand,
->> $ perf buildid-cache -p /usr/bin/tar
->> will remove all the caches related to /usr/bin/tar from buildid cache.
->>
->> And since the -p is supposed to be used for cleanup, it doesn't return
->> error even if there is no buildid cache remaining.
->>
->>
->> Should it work for a directory instead of a file too?
->> I need to investigate it too.
+On Freitag, 20. Oktober 2017 07:15:33 CEST Namhyung Kim wrote:
+> Hi Milian,
 > 
-> Isn't that implemented by I patch by Thomas?
+> On Thu, Oct 19, 2017 at 12:54:18PM +0200, Milian Wolff wrote:
+> > On Mittwoch, 18. Oktober 2017 20:53:50 CEST Milian Wolff wrote:
+> > > When inline frame resolution is disabled, a bogus srcline is obtained
+> > > for hist entries:
+> > > 
+> > > ~~~~~
+> > > $ perf report -s sym,srcline --no-inline --stdio -g none
+> > > 
+> > >     95.21%     0.00%  [.] __libc_start_main
+> > > 
+> > > __libc_start_main+18446603358170398953 95.21%     0.00%  [.] _start
+> > > 
+> > >                          _start+18446650082411225129 46.67%     0.00% 
+> > >                          [.]
+> > > 
+> > > main
+> > > 
+> > >                                         main+18446650082411225208 38.75%
+> > >  
+> > >  0.00%  [.] hypot
+> > > 
+> > > hypot+18446603358164312084 23.75%     0.00%  [.] main
+> > > 
+> > >              main+18446650082411225151 20.83%    20.83%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  random.h:143 18.12%     0.00%  [.] main
+> > >   
+> > >   main+18446650082411225165 13.12%    13.12%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  random.tcc:3330 4.17%     4.17%  [.] __hypot_finite
+> > > >  
+> > >     __hypot_finite+163 4.17%     4.17%  [.]
+> > >     std::generate_canonical<double,
+> > > 
+> > > 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul> >  random.tcc:3333 4.17%     0.00%  [.] __hypot_finite
+> > > 
+> > >                   __hypot_finite+18446603358164312227 4.17%     0.00% 
+> > >                   [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  std::generate_canonical<double, 53ul, std::line 2.92%     0.00%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  std::generate_canonical<double, 53ul, std::line 2.50%     2.50%  [.]
+> > > 
+> > > __hypot_finite
+> > > 
+> > >                                         __hypot_finite+11 2.50%    
+> > >                                         2.50%
+> > > 
+> > > [.] __hypot_finite
+> > > 
+> > >                                             __hypot_finite+24 2.50%
+> > > 
+> > > 0.00%  [.] __hypot_finite
+> > > 
+> > > __hypot_finite+18446603358164312075 2.50%     0.00%  [.] __hypot_finite
+> > > 
+> > >                      __hypot_finite+18446603358164312088 ~~~~~
+> > > 
+> > > Note how we get very large offsets to main and cannot see any srcline
+> > > from one of the complex or random headers, even though the instruction
+> > > pointers actually lie in code inlined from there.
+> > > 
+> > > This patch fixes the mapping to use map__objdump_2mem instead of
+> > > map__objdump_2mem in hist_entry__get_srcline. This fixes the srcline
+> > > values for me when inline resolution is disabled:
+> > > 
+> > > ~~~~~
+> > > $ perf report -s sym,srcline --no-inline --stdio -g none
+> > > 
+> > >     95.21%     0.00%  [.] __libc_start_main
+> > > 
+> > > __libc_start_main+233 95.21%     0.00%  [.] _start
+> > > 
+> > >         _start+41 46.88%     0.00%  [.] main
+> > >     
+> > >     complex:589 43.96%     0.00%  [.] main
+> > >   
+> > >   random.h:185 38.75%     0.00%  [.] hypot
+> > >  
+> > >  hypot+20 20.83%     0.00%  [.] std::generate_canonical<double, 53ul,
+> > > 
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  random.h:143 13.12%     0.00%  [.] std::generate_canonical<double,
+> > > >  53ul,
+> > > 
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  random.tcc:3330 4.17%     4.17%  [.] __hypot_finite
+> > > >  
+> > >     __hypot_finite+140715545239715 4.17%     4.17%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  std::generate_canonical<double, 53ul, std::line 4.17%     0.00%  [.]
+> > > 
+> > > __hypot_finite
+> > > 
+> > >                                         __hypot_finite+163 4.17%    
+> > >                                         0.00%
+> > > 
+> > > [.] std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  random.tcc:3333 2.92%     2.92%  [.] std::generate_canonical<double,
+> > > 
+> > > 53ul, std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul> >  std::generate_canonical<double, 53ul, std::line 2.50%
+> > > 2.50%  [.] __hypot_finite
+> > > 
+> > > __hypot_finite+140715545239563 2.50%     2.50%  [.] __hypot_finite
+> > > 
+> > >                 __hypot_finite+140715545239576 2.50%     2.50%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  std::generate_canonical<double, 53ul, std::line 2.50%     2.50%  [.]
+> > > 
+> > > std::generate_canonical<double, 53ul,
+> > > std::linear_congruential_engine<unsigned long, 16807ul, 0ul,
+> > > 2147483647ul>
+> > > 
+> > > >  std::generate_canonical<double, 53ul, std::line 2.50%     0.00%  [.]
+> > > 
+> > > __hypot_finite
+> > > 
+> > >                                         __hypot_finite+11 ~~~~~
+> > > 
+> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Yao Jin <yao.jin@linux.intel.com>
+> > > Cc: Jiri Olsa <jolsa@redhat.com>
+> > > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> > > 
+> > > Note how most of the large offset values are now gone. Most notably,
+> > > we get proper srcline resolution for the random.h and complex headers.
+> > > ---
+> > > 
+> > >  tools/perf/util/sort.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > index 006d10a0dc96..6f3d109078a3 100644
+> > > --- a/tools/perf/util/sort.c
+> > > +++ b/tools/perf/util/sort.c
+> > > @@ -334,7 +334,7 @@ char *hist_entry__get_srcline(struct hist_entry *he)
+> > > 
+> > >  	if (!map)
+> > >  	
+> > >  		return SRCLINE_UNKNOWN;
+> > > 
+> > > -	return get_srcline(map->dso, map__rip_2objdump(map, he->ip),
+> > > +	return get_srcline(map->dso, map__objdump_2mem(map, he->ip),
+> > > 
+> > >  			   he->ms.sym, true, true);
+> > >  
+> > >  }
+> > 
+> > Sorry, this patch was declined by Nahmyung before, please discard it - I
+> > forgot to do that before resending v6.
 > 
-> - Arnaldo
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I looked into it and found a bug handling cumulative (children)
+> entries.  For chilren entries that has no self period, the al->addr
+> (so he->ip) ends up having an doubly-mapped address.
 > 
+> It seems to be there from the beginning but only affects entries that
+> have no srclines - finding srcline itself is done using a different
+> address but it will show the invalid address if no srcline was found.
+> I think we should fix the commit c7405d85d7a3 ("perf tools: Update
+> cpumode for each cumulative entry").
+> 
+> Could you please test the following patch works for you?
 
-Ok, I have understood the behavior of commands
-perf buildid-cache -a
-and
-perf buildid-cache -r.
+Sorry for the delay, nearly forgot about this mail. The patch below does help 
+in my situation, thanks! Can you commit it please?
 
-Same with command perf buildid-cache -p /usr/bin/tar.
-It works correctly if you specify a file name and not a directory as I did
-in my previous append.
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 35a920f09503..d18cdcc8d132 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1074,10 +1074,7 @@ int fill_callchain_info(struct addr_location *al,
+> struct callchain_cursor_node * {
+>         al->map = node->map;
+>         al->sym = node->sym;
+> -       if (node->map)
+> -               al->addr = node->map->map_ip(node->map, node->ip);
+> -       else
+> -               al->addr = node->ip;
+> +       al->addr = node->ip;
+> 
+>         if (al->sym == NULL) {
+>                 if (hide_unresolved)
 
-I was mislead by the man page which says
-"file list" for option -a
-"file(s) to remove" for option -r
-"path(s) to remove (remove old caches too)' for option -p
 
-I just find it confusing to explicitly mention files for
-option -a and -r whereas option -p mentions path.
-
-We can drop my patch but I would like to clarify the man page
-to explicitly mention "file(s)" or "file list" instead of path for option -p.
-
-What do you think?                                                                             
 
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
