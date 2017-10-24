@@ -1,168 +1,224 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/24] perf/core improvements and fixes
-Date: Tue, 24 Oct 2017 11:13:39 +0200
-Message-ID: <20171024091338.wk5ogkkmzntnedsp@gmail.com>
-References: <20171023234736.5335-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v7 0/5] generate full callchain cursor entries for
+ inlined frames
+Date: Tue, 24 Oct 2017 10:27:42 -0300
+Message-ID: <20171024132742.GE7045@kernel.org>
+References: <20171019113836.5548-1-milian.wolff@kdab.com>
+ <3662337.Ysj1km7A8r@agathebauer>
+ <20171023190453.GD21936@kernel.org>
+ <1707691.qaJ269GSZW@agathebauer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:46335 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932152AbdJXJNn (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Oct 2017 05:13:43 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171023234736.5335-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Li Zhijian <lizhijian@cn.fujitsu.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+In-Reply-To: <1707691.qaJ269GSZW@agathebauer>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
+Em Mon, Oct 23, 2017 at 09:39:57PM +0200, Milian Wolff escreveu:
+> So to fix this all, I guess the suggested approach by Namhyung would be best, 
+> i.e. fixup my initial match_addresses to take the map, and then if the map is 
+> valid also take the dso into account when comparing the addresses:
+> 
+>         if (left_dso != right_dso)
+>                 return left_dso < right_dso ? MATCH_LT : MATCH_GT;
+>         else if (left_ip != right_ip)
+>                 return left_ip < right_ip ? MATCH_LT : MATCH_GT;
+>         else
+>                 return MATCH_EQ;
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+So, can you check that the patch below is the one we should commit to?
+Namhyung? I'm looking at your latest patch kit, v7, to see if the branch
+parts, further below, are as you submitted or if I have any issues with
+it.
 
-> Hi Ingo,
-> 
-> 	Please consider pulling, hopefully the next batch will have a
-> few other interesting patchkits, from Jin Yao, Kan Liang and Milian
-> Wolff.
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 8776fe75dc0e263ed2056ea9896c2267599dc447:
-> 
->   lkdtm, kprobes: Convert from jprobes to kprobes (2017-10-23 13:52:45 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.15-20171023
-> 
-> for you to fetch changes up to 65db92e0965ab56e8031d5c804f26d5be0e47047:
-> 
->   perf vendor events: Add Goldmont Plus V1 event file (2017-10-23 16:30:54 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> - Update vendor events JSON metrics for Intel's Broadwell, Broadwell
->   Server, Haswell, Haswell Server, IvyBridge, IvyTown, JakeTown, Sandy
->   Bridge, Skylake and SkyLake Server (Andi Kleen)
-> 
-> - Add vendor event file for Intel's Goldmont Plus V1 (Kan Liang)
-> 
-> - Move perf_mmap methods from 'perf record' and evlist.c to a separate
->   mmap.[ch] pair, to better separate things and pave the way for further
->   work on multithreading tools (Arnaldo Carvalho de Melo)
-> 
-> - Do not check ABI headers in a detached tarball build, as it the kernel
->   headers from where we copied tools/include/ are by definition not
->   available (Arnaldo Carvalho de Melo)
-> 
-> - Make 'perf script' use fprintf() like printing, i.e. receiving a FILE
->   pointer so that it gets consistent with other tools/ code and allows
->   for printing to per-event files (Arnaldo Carvalho de Melo)
-> 
-> - Error handling fixes (resource release on exit) for 'perf script'
->   and 'perf kmem' (Christophe JAILLET)
-> 
-> - Make some 'perf event attr' tests optional on virtual machines, where
->   tested counters are not available (Jiri Olsa)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Andi Kleen (12):
->       perf vendor events: Update JSON metrics for Broadwell
->       perf vendor events: Update JSON metrics for Broadwell Server
->       perf vendor events: Update JSON metrics for Haswell
->       perf vendor events: Update JSON metrics for Haswell Server
->       perf vendor events: Update JSON metrics for IvyBridge
->       perf vendor events: Update JSON metrics for IvyTown
->       perf vendor events: Update JSON metrics for JakeTown
->       perf vendor events: Update JSON metrics for Sandy Bridge
->       perf vendor events: Update JSON metrics for Skylake
->       perf vendor events: Update JSON metrics for Skylake Server
->       perf list: Fix group description in the man page
->       perf vendor events: Fix incorrect cmask syntax for some Intel metrics
-> 
-> Arnaldo Carvalho de Melo (7):
->       perf mmap: Move perf_mmap and methods to separate mmap.[ch] files
->       perf record: Make record__mmap_read generic
->       perf mmap: Adopt push method from builtin-record.c
->       perf tools: Do not check ABI headers in a detached tarball build
->       perf tools: Introduce binary__fprintf()
->       perf script: Use fprintf like printing uniformly
->       perf namespaces: Add more appropriate set of headers
-> 
-> Christophe JAILLET (2):
->       perf script: Fix error handling path
->       perf kmem: Perform some cleanup if '--time' is given an invalid value
-> 
-> Jiri Olsa (2):
->       perf tests attr: Make hw events optional
->       perf annotate: Remove arch::cpuid_parse callback
-> 
-> Kan Liang (1):
->       perf vendor events: Add Goldmont Plus V1 event file
-> 
->  tools/perf/Documentation/perf-list.txt             |    2 +-
->  tools/perf/arch/arm/annotate/instructions.c        |    3 +-
->  tools/perf/arch/arm64/annotate/instructions.c      |    3 +-
->  tools/perf/arch/powerpc/annotate/instructions.c    |    4 +-
->  tools/perf/arch/s390/annotate/instructions.c       |    4 +-
->  tools/perf/arch/x86/annotate/instructions.c        |   14 +
->  tools/perf/builtin-kmem.c                          |    3 +-
->  tools/perf/builtin-record.c                        |  104 +-
->  tools/perf/builtin-script.c                        |  527 +++----
->  tools/perf/builtin-trace.c                         |   14 +-
->  tools/perf/check-headers.sh                        |    5 +
->  .../pmu-events/arch/x86/broadwell/bdw-metrics.json |   18 +-
->  .../arch/x86/broadwellx/bdx-metrics.json           |   18 +-
->  .../pmu-events/arch/x86/goldmontplus/cache.json    | 1453 ++++++++++++++++++++
->  .../pmu-events/arch/x86/goldmontplus/frontend.json |   62 +
->  .../pmu-events/arch/x86/goldmontplus/memory.json   |   38 +
->  .../pmu-events/arch/x86/goldmontplus/other.json    |   98 ++
->  .../pmu-events/arch/x86/goldmontplus/pipeline.json |  544 ++++++++
->  .../arch/x86/goldmontplus/virtual-memory.json      |  218 +++
->  .../pmu-events/arch/x86/haswell/hsw-metrics.json   |   16 +-
->  .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |   16 +-
->  .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |   18 +-
->  .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |   18 +-
->  .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |   12 +-
->  tools/perf/pmu-events/arch/x86/mapfile.csv         |    1 +
->  .../arch/x86/sandybridge/snb-metrics.json          |   12 +-
->  .../pmu-events/arch/x86/skylake/skl-metrics.json   |   20 +-
->  .../pmu-events/arch/x86/skylakex/skx-metrics.json  |   42 +-
->  tools/perf/tests/attr/test-stat-C0                 |    1 +
->  tools/perf/tests/attr/test-stat-basic              |    1 +
->  tools/perf/tests/attr/test-stat-default            |    4 +
->  tools/perf/tests/attr/test-stat-detailed-1         |    8 +
->  tools/perf/tests/attr/test-stat-detailed-2         |   13 +
->  tools/perf/tests/attr/test-stat-detailed-3         |   13 +
->  tools/perf/tests/attr/test-stat-no-inherit         |    1 +
->  tools/perf/util/Build                              |    1 +
->  tools/perf/util/annotate.c                         |   10 +-
->  tools/perf/util/debug.c                            |   31 +-
->  tools/perf/util/evlist.c                           |  248 ----
->  tools/perf/util/evlist.h                           |   76 +-
->  tools/perf/util/mmap.c                             |  352 +++++
->  tools/perf/util/mmap.h                             |   97 ++
->  tools/perf/util/namespaces.h                       |    5 +-
->  tools/perf/util/print_binary.c                     |   30 +-
->  tools/perf/util/print_binary.h                     |   18 +-
->  tools/perf/util/python-ext-sources                 |    1 +
->  46 files changed, 3367 insertions(+), 830 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/virtual-memory.json
->  create mode 100644 tools/perf/util/mmap.c
->  create mode 100644 tools/perf/util/mmap.h
+I've updated my perf/core branch with all this.
 
-Pulled, thanks a lot Arnaldo!
+commit 275049196c64cc1233837c9f066b4b87e32cd1df
+Author: Milian Wolff <milian.wolff@kdab.com>
+Date:   Fri Oct 20 12:14:47 2017 -0300
 
-	Ingo
+    perf report: Properly handle branch count in match_chain()
+    
+    Some of the code paths I introduced before returned too early without
+    running the code to handle a node's branch count.  By refactoring
+    match_chain to only have one exit point, this can be remedied.
+    
+    Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+    Cc: David Ahern <dsahern@gmail.com>
+    Cc: Jin Yao <yao.jin@linux.intel.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+    Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+    Link: http://lkml.kernel.org/r/1707691.qaJ269GSZW@agathebauer
+    Link: http://lkml.kernel.org/r/20171018185350.14893-2-milian.wolff@kdab.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 35a920f09503..19bfcadcf891 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -666,83 +666,99 @@ static enum match_result match_chain_strings(const char *left,
+ 	return ret;
+ }
+ 
+-static enum match_result match_chain(struct callchain_cursor_node *node,
+-				     struct callchain_list *cnode)
++/*
++ * We need to always use relative addresses because we're aggregating
++ * callchains from multiple threads, i.e. different address spaces, so
++ * comparing absolute addresses make no sense as a symbol in a DSO may end up
++ * in a different address when used in a different binary or even the same
++ * binary but with some sort of address randomization technique, thus we need
++ * to compare just relative addresses. -acme
++ */
++static enum match_result match_chain_dso_addresses(struct map *left_map, u64 left_ip,
++						   struct map *right_map, u64 right_ip)
+ {
+-	struct symbol *sym = node->sym;
+-	u64 left, right;
+-	struct dso *left_dso = NULL;
+-	struct dso *right_dso = NULL;
++	struct dso *left_dso = left_map ? left_map->dso : NULL;
++	struct dso *right_dso = right_map ? right_map->dso : NULL;
+ 
+-	if (callchain_param.key == CCKEY_SRCLINE) {
+-		enum match_result match = match_chain_strings(cnode->srcline,
+-							      node->srcline);
++	if (left_dso != right_dso)
++		return left_dso < right_dso ? MATCH_LT : MATCH_GT;
+ 
+-		/* if no srcline is available, fallback to symbol name */
+-		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
+-			match = match_chain_strings(cnode->ms.sym->name,
+-						    node->sym->name);
++	if (left_ip != right_ip)
++ 		return left_ip < right_ip ? MATCH_LT : MATCH_GT;
+ 
+-		if (match != MATCH_ERROR)
+-			return match;
++	return MATCH_EQ;
++}
+ 
+-		/* otherwise fall-back to IP-based comparison below */
+-	}
++static enum match_result match_chain(struct callchain_cursor_node *node,
++				     struct callchain_list *cnode)
++{
++	enum match_result match = MATCH_ERROR;
+ 
+-	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
+-		/*
+-		 * Compare inlined frames based on their symbol name because
+-		 * different inlined frames will have the same symbol start
+-		 */
+-		if (cnode->ms.sym->inlined || node->sym->inlined)
+-			return match_chain_strings(cnode->ms.sym->name,
+-						   node->sym->name);
+-
+-		left = cnode->ms.sym->start;
+-		right = sym->start;
+-		left_dso = cnode->ms.map->dso;
+-		right_dso = node->map->dso;
+-	} else {
+-		left = cnode->ip;
+-		right = node->ip;
++	switch (callchain_param.key) {
++	case CCKEY_SRCLINE:
++		match = match_chain_strings(cnode->srcline, node->srcline);
++		if (match != MATCH_ERROR)
++			break;
++		/* otherwise fall-back to symbol-based comparison below */
++		__fallthrough;
++	case CCKEY_FUNCTION:
++		if (node->sym && cnode->ms.sym) {
++			/*
++			 * Compare inlined frames based on their symbol name
++			 * because different inlined frames will have the same
++			 * symbol start. Otherwise do a faster comparison based
++			 * on the symbol start address.
++			 */
++			if (cnode->ms.sym->inlined || node->sym->inlined) {
++				match = match_chain_strings(cnode->ms.sym->name,
++							    node->sym->name);
++				if (match != MATCH_ERROR)
++					break;
++			} else {
++				match = match_chain_dso_addresses(cnode->ms.map, cnode->ms.sym->start,
++								  node->map, node->sym->start);
++				break;
++			}
++		}
++		/* otherwise fall-back to IP-based comparison below */
++		__fallthrough;
++	case CCKEY_ADDRESS:
++	default:
++		match = match_chain_dso_addresses(cnode->ms.map, cnode->ip, node->map, node->ip);
++		break;
+ 	}
+ 
+-	if (left == right && left_dso == right_dso) {
+-		if (node->branch) {
+-			cnode->branch_count++;
++	if (match == MATCH_EQ && node->branch) {
++		cnode->branch_count++;
+ 
+-			if (node->branch_from) {
+-				/*
+-				 * It's "to" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = true;
++		if (node->branch_from) {
++			/*
++			 * It's "to" of a branch
++			 */
++			cnode->brtype_stat.branch_to = true;
+ 
+-				if (node->branch_flags.predicted)
+-					cnode->predicted_count++;
++			if (node->branch_flags.predicted)
++				cnode->predicted_count++;
+ 
+-				if (node->branch_flags.abort)
+-					cnode->abort_count++;
++			if (node->branch_flags.abort)
++				cnode->abort_count++;
+ 
+-				branch_type_count(&cnode->brtype_stat,
+-						  &node->branch_flags,
+-						  node->branch_from,
+-						  node->ip);
+-			} else {
+-				/*
+-				 * It's "from" of a branch
+-				 */
+-				cnode->brtype_stat.branch_to = false;
+-				cnode->cycles_count +=
+-					node->branch_flags.cycles;
+-				cnode->iter_count += node->nr_loop_iter;
+-				cnode->iter_cycles += node->iter_cycles;
+-			}
++			branch_type_count(&cnode->brtype_stat,
++					  &node->branch_flags,
++					  node->branch_from,
++					  node->ip);
++		} else {
++			/*
++			 * It's "from" of a branch
++			 */
++			cnode->brtype_stat.branch_to = false;
++			cnode->cycles_count += node->branch_flags.cycles;
++			cnode->iter_count += node->nr_loop_iter;
++			cnode->iter_cycles += node->iter_cycles;
+ 		}
+-
+-		return MATCH_EQ;
+ 	}
+ 
+-	return left > right ? MATCH_GT : MATCH_LT;
++	return match;
+ }
+ 
+ /*
