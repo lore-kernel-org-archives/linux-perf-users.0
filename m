@@ -1,235 +1,101 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v7 0/5] generate full callchain cursor entries for
- inlined frames
-Date: Wed, 25 Oct 2017 11:09:14 +0900
-Message-ID: <20171025020914.GB12785@sejong>
-References: <20171019113836.5548-1-milian.wolff@kdab.com>
- <3662337.Ysj1km7A8r@agathebauer>
- <20171023190453.GD21936@kernel.org>
- <1707691.qaJ269GSZW@agathebauer>
- <20171024132742.GE7045@kernel.org>
+Subject: Re: [PATCH] perf/tools : remove default system_wide in sched record
+Date: Wed, 25 Oct 2017 11:23:26 +0900
+Message-ID: <20171025022326.GD12785@sejong>
+References: <1508831134-151993-1-git-send-email-cj.chengjian@huawei.com>
+ <20171024134644.GF7045@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171024132742.GE7045@kernel.org>
+In-Reply-To: <20171024134644.GF7045@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, kernel-team@lge.com
+Cc: Cheng Jian <cj.chengjian@huawei.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, xiexiuqi@huawei.com, huawei.libin@huawei.com, zhangmengting@huawei.com, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,
-
-On Tue, Oct 24, 2017 at 10:27:42AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 23, 2017 at 09:39:57PM +0200, Milian Wolff escreveu:
-> > So to fix this all, I guess the suggested approach by Namhyung would be best, 
-> > i.e. fixup my initial match_addresses to take the map, and then if the map is 
-> > valid also take the dso into account when comparing the addresses:
+On Tue, Oct 24, 2017 at 10:46:44AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Oct 24, 2017 at 03:45:34PM +0800, Cheng Jian escreveu:
+> > When running perf sched record, there is a bug.
 > > 
-> >         if (left_dso != right_dso)
-> >                 return left_dso < right_dso ? MATCH_LT : MATCH_GT;
-> >         else if (left_ip != right_ip)
-> >                 return left_ip < right_ip ? MATCH_LT : MATCH_GT;
-> >         else
-> >                 return MATCH_EQ;
+> > It's system_wide when we specify a command line.
 > 
-> So, can you check that the patch below is the one we should commit to?
-> Namhyung? I'm looking at your latest patch kit, v7, to see if the branch
-> parts, further below, are as you submitted or if I have any issues with
-> it.
+> Humm, isn't this because if you trace just a workload you will miss the
+> sched-in events?
 > 
-> I've updated my perf/core branch with all this.
-> 
-> commit 275049196c64cc1233837c9f066b4b87e32cd1df
-> Author: Milian Wolff <milian.wolff@kdab.com>
-> Date:   Fri Oct 20 12:14:47 2017 -0300
-> 
->     perf report: Properly handle branch count in match_chain()
->     
->     Some of the code paths I introduced before returned too early without
->     running the code to handle a node's branch count.  By refactoring
->     match_chain to only have one exit point, this can be remedied.
->     
->     Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
->     Cc: David Ahern <dsahern@gmail.com>
->     Cc: Jin Yao <yao.jin@linux.intel.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
->     Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
->     Link: http://lkml.kernel.org/r/1707691.qaJ269GSZW@agathebauer
->     Link: http://lkml.kernel.org/r/20171018185350.14893-2-milian.wolff@kdab.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Perhaps with PERF_RECORD_SWITCH we can solve that... I.e. still get the
+> sched-in events while tracing just one workload, not requiring
+> system_wide like it is the case now, right?
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Yes, but it will lose other task's comm, also (at least) sched-wakeup
+(from other task) events are still needed.
 
 Thanks,
 Namhyung
 
 
 > 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 35a920f09503..19bfcadcf891 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -666,83 +666,99 @@ static enum match_result match_chain_strings(const char *left,
->  	return ret;
->  }
+> - Arnaldo
 >  
-> -static enum match_result match_chain(struct callchain_cursor_node *node,
-> -				     struct callchain_list *cnode)
-> +/*
-> + * We need to always use relative addresses because we're aggregating
-> + * callchains from multiple threads, i.e. different address spaces, so
-> + * comparing absolute addresses make no sense as a symbol in a DSO may end up
-> + * in a different address when used in a different binary or even the same
-> + * binary but with some sort of address randomization technique, thus we need
-> + * to compare just relative addresses. -acme
-> + */
-> +static enum match_result match_chain_dso_addresses(struct map *left_map, u64 left_ip,
-> +						   struct map *right_map, u64 right_ip)
->  {
-> -	struct symbol *sym = node->sym;
-> -	u64 left, right;
-> -	struct dso *left_dso = NULL;
-> -	struct dso *right_dso = NULL;
-> +	struct dso *left_dso = left_map ? left_map->dso : NULL;
-> +	struct dso *right_dso = right_map ? right_map->dso : NULL;
->  
-> -	if (callchain_param.key == CCKEY_SRCLINE) {
-> -		enum match_result match = match_chain_strings(cnode->srcline,
-> -							      node->srcline);
-> +	if (left_dso != right_dso)
-> +		return left_dso < right_dso ? MATCH_LT : MATCH_GT;
->  
-> -		/* if no srcline is available, fallback to symbol name */
-> -		if (match == MATCH_ERROR && cnode->ms.sym && node->sym)
-> -			match = match_chain_strings(cnode->ms.sym->name,
-> -						    node->sym->name);
-> +	if (left_ip != right_ip)
-> + 		return left_ip < right_ip ? MATCH_LT : MATCH_GT;
->  
-> -		if (match != MATCH_ERROR)
-> -			return match;
-> +	return MATCH_EQ;
-> +}
->  
-> -		/* otherwise fall-back to IP-based comparison below */
-> -	}
-> +static enum match_result match_chain(struct callchain_cursor_node *node,
-> +				     struct callchain_list *cnode)
-> +{
-> +	enum match_result match = MATCH_ERROR;
->  
-> -	if (cnode->ms.sym && sym && callchain_param.key == CCKEY_FUNCTION) {
-> -		/*
-> -		 * Compare inlined frames based on their symbol name because
-> -		 * different inlined frames will have the same symbol start
-> -		 */
-> -		if (cnode->ms.sym->inlined || node->sym->inlined)
-> -			return match_chain_strings(cnode->ms.sym->name,
-> -						   node->sym->name);
-> -
-> -		left = cnode->ms.sym->start;
-> -		right = sym->start;
-> -		left_dso = cnode->ms.map->dso;
-> -		right_dso = node->map->dso;
-> -	} else {
-> -		left = cnode->ip;
-> -		right = node->ip;
-> +	switch (callchain_param.key) {
-> +	case CCKEY_SRCLINE:
-> +		match = match_chain_strings(cnode->srcline, node->srcline);
-> +		if (match != MATCH_ERROR)
-> +			break;
-> +		/* otherwise fall-back to symbol-based comparison below */
-> +		__fallthrough;
-> +	case CCKEY_FUNCTION:
-> +		if (node->sym && cnode->ms.sym) {
-> +			/*
-> +			 * Compare inlined frames based on their symbol name
-> +			 * because different inlined frames will have the same
-> +			 * symbol start. Otherwise do a faster comparison based
-> +			 * on the symbol start address.
-> +			 */
-> +			if (cnode->ms.sym->inlined || node->sym->inlined) {
-> +				match = match_chain_strings(cnode->ms.sym->name,
-> +							    node->sym->name);
-> +				if (match != MATCH_ERROR)
-> +					break;
-> +			} else {
-> +				match = match_chain_dso_addresses(cnode->ms.map, cnode->ms.sym->start,
-> +								  node->map, node->sym->start);
-> +				break;
-> +			}
-> +		}
-> +		/* otherwise fall-back to IP-based comparison below */
-> +		__fallthrough;
-> +	case CCKEY_ADDRESS:
-> +	default:
-> +		match = match_chain_dso_addresses(cnode->ms.map, cnode->ip, node->map, node->ip);
-> +		break;
->  	}
->  
-> -	if (left == right && left_dso == right_dso) {
-> -		if (node->branch) {
-> -			cnode->branch_count++;
-> +	if (match == MATCH_EQ && node->branch) {
-> +		cnode->branch_count++;
->  
-> -			if (node->branch_from) {
-> -				/*
-> -				 * It's "to" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = true;
-> +		if (node->branch_from) {
-> +			/*
-> +			 * It's "to" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = true;
->  
-> -				if (node->branch_flags.predicted)
-> -					cnode->predicted_count++;
-> +			if (node->branch_flags.predicted)
-> +				cnode->predicted_count++;
->  
-> -				if (node->branch_flags.abort)
-> -					cnode->abort_count++;
-> +			if (node->branch_flags.abort)
-> +				cnode->abort_count++;
->  
-> -				branch_type_count(&cnode->brtype_stat,
-> -						  &node->branch_flags,
-> -						  node->branch_from,
-> -						  node->ip);
-> -			} else {
-> -				/*
-> -				 * It's "from" of a branch
-> -				 */
-> -				cnode->brtype_stat.branch_to = false;
-> -				cnode->cycles_count +=
-> -					node->branch_flags.cycles;
-> -				cnode->iter_count += node->nr_loop_iter;
-> -				cnode->iter_cycles += node->iter_cycles;
-> -			}
-> +			branch_type_count(&cnode->brtype_stat,
-> +					  &node->branch_flags,
-> +					  node->branch_from,
-> +					  node->ip);
-> +		} else {
-> +			/*
-> +			 * It's "from" of a branch
-> +			 */
-> +			cnode->brtype_stat.branch_to = false;
-> +			cnode->cycles_count += node->branch_flags.cycles;
-> +			cnode->iter_count += node->nr_loop_iter;
-> +			cnode->iter_cycles += node->iter_cycles;
->  		}
-> -
-> -		return MATCH_EQ;
->  	}
->  
-> -	return left > right ? MATCH_GT : MATCH_LT;
-> +	return match;
->  }
->  
->  /*
+> > $ perf sched record ls
+> > $ perf script
+> >          swapper     0 [001] 1312209.826144:
+> > sched:sched_wakeup: crash:21979 [120] success=1 CPU:001
+> >          swapper     0 [001] 1312209.826148:
+> > sched:sched_switch: swapper/1:0 [120] R ==> crash:21979 [120]
+> >            crash 21979 [001] 1312209.826151:
+> > sched:sched_stat_runtime: comm=crash pid=21979
+> > runtime=8161 [ns] vruntime=1591295759555 [ns]
+> >            crash 21979 [001] 1312209.826185:
+> > sched:sched_switch: crash:21979 [120] S ==> swapper/1:0 [120]
+> >               ls 148873 [169] 1312209.826818:
+> > sched:sched_stat_runtime: comm=ls pid=148873
+> > runtime=999532 [ns] vruntime=8099789362030 [ns]
+> >             perf 148872 [109] 1312209.826818:
+> > sched:sched_stat_runtime: comm=perf pid=148872
+> > runtime=1001606 [ns] vruntime=7794318690006 [ns]
+> > 
+> > This is because '-a'(system_wide) is set in record_args.
+> > so just remove it.
+> > 
+> > After :
+> > 	  swapper     0 [109] 1313349.767284:
+> > sched:sched_wakeup: comm=perf pid=149865 prio=120 success=1 target_cpu=109
+> >               ls 149865 [133] 1313349.769066: sched:sched_stat_runtime:
+> > comm=ls pid=149865 runtime=1001167 [ns] vruntime=7871277236086 [ns]
+> >               ls 149865 [133] 1313349.770062:
+> > sched:sched_stat_runtime: comm=ls pid=149865
+> > runtime=998985 [ns] vruntime=7871278235071 [ns]
+> >               ls 149865 [133] 1313349.770731:
+> > sched:sched_wakeup: comm=kworker/133:2 pid=137042
+> > prio=120 success=1 target_cpu=133
+> > 
+> > Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+> > Signed-off-by: Zhang MengTing <zhangmengting@huawei.com>
+> > ---
+> >  tools/perf/builtin-sched.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 322b4de..47b79fc 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -3248,7 +3248,6 @@ static int __cmd_record(int argc, const char **argv)
+> >  	const char **rec_argv;
+> >  	const char * const record_args[] = {
+> >  		"record",
+> > -		"-a",
+> >  		"-R",
+> >  		"-m", "1024",
+> >  		"-c", "1",
+> > -- 
+> > 1.8.3.1
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
