@@ -1,101 +1,78 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf/tools : remove default system_wide in sched record
-Date: Wed, 25 Oct 2017 11:23:26 +0900
-Message-ID: <20171025022326.GD12785@sejong>
-References: <1508831134-151993-1-git-send-email-cj.chengjian@huawei.com>
- <20171024134644.GF7045@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171024134644.GF7045@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Cheng Jian <cj.chengjian@huawei.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, xiexiuqi@huawei.com, huawei.libin@huawei.com, zhangmengting@huawei.com, kernel-team@lge.com
-List-Id: linux-perf-users.vger.kernel.org
+From: yuzhoujian <ufo19890607@gmail.com>
+Subject: [PATCH v5 0/2] perf script: Add script per-event-dump support
+Date: Wed, 25 Oct 2017 16:53:17 +0800
+Message-ID: <1508921599-10832-1-git-send-email-yuzhoujian@didichuxing.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:53801 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932217AbdJYIyC (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 25 Oct 2017 04:54:02 -0400
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-On Tue, Oct 24, 2017 at 10:46:44AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Oct 24, 2017 at 03:45:34PM +0800, Cheng Jian escreveu:
-> > When running perf sched record, there is a bug.
-> > 
-> > It's system_wide when we specify a command line.
-> 
-> Humm, isn't this because if you trace just a workload you will miss the
-> sched-in events?
-> 
-> Perhaps with PERF_RECORD_SWITCH we can solve that... I.e. still get the
-> sched-in events while tracing just one workload, not requiring
-> system_wide like it is the case now, right?
+Introduce a new option to dump trace output to files named by the
+monitored events and update perf-script documentation accordingly.
 
-Yes, but it will lose other task's comm, also (at least) sched-wakeup
-(from other task) events are still needed.
+Shown below is output of perf script command with the newly introduced
+option.
 
-Thanks,
-Namhyung
+         $perf record -e cycles -e cs -ag -- sleep 1
+         $perf script --per-event-dump
+         [ perf script: Wrote 0.051 MB perf.data-script-dump-cycles.txt (76 samples) ]
+         [ perf script: Wrote 0.012 MB perf.data-script-dump-cs.txt (69 samples) ]
+         $ls
+         perf.data-script-dump-cycles.txt perf.data-script-dump-cs.txt
 
+Without per-event-dump support, drawing flamegraphs for different events
+would be a very troublesome thing. You can monitor only one event at a time
+if you want to get flamegraphs for different events. Using this option, you
+can get the trace output files named by the monitored events, and could draw
+flamegraphs according to the event's name.
 
-> 
-> - Arnaldo
->  
-> > $ perf sched record ls
-> > $ perf script
-> >          swapper     0 [001] 1312209.826144:
-> > sched:sched_wakeup: crash:21979 [120] success=1 CPU:001
-> >          swapper     0 [001] 1312209.826148:
-> > sched:sched_switch: swapper/1:0 [120] R ==> crash:21979 [120]
-> >            crash 21979 [001] 1312209.826151:
-> > sched:sched_stat_runtime: comm=crash pid=21979
-> > runtime=8161 [ns] vruntime=1591295759555 [ns]
-> >            crash 21979 [001] 1312209.826185:
-> > sched:sched_switch: crash:21979 [120] S ==> swapper/1:0 [120]
-> >               ls 148873 [169] 1312209.826818:
-> > sched:sched_stat_runtime: comm=ls pid=148873
-> > runtime=999532 [ns] vruntime=8099789362030 [ns]
-> >             perf 148872 [109] 1312209.826818:
-> > sched:sched_stat_runtime: comm=perf pid=148872
-> > runtime=1001606 [ns] vruntime=7794318690006 [ns]
-> > 
-> > This is because '-a'(system_wide) is set in record_args.
-> > so just remove it.
-> > 
-> > After :
-> > 	  swapper     0 [109] 1313349.767284:
-> > sched:sched_wakeup: comm=perf pid=149865 prio=120 success=1 target_cpu=109
-> >               ls 149865 [133] 1313349.769066: sched:sched_stat_runtime:
-> > comm=ls pid=149865 runtime=1001167 [ns] vruntime=7871277236086 [ns]
-> >               ls 149865 [133] 1313349.770062:
-> > sched:sched_stat_runtime: comm=ls pid=149865
-> > runtime=998985 [ns] vruntime=7871278235071 [ns]
-> >               ls 149865 [133] 1313349.770731:
-> > sched:sched_wakeup: comm=kworker/133:2 pid=137042
-> > prio=120 success=1 target_cpu=133
-> > 
-> > Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
-> > Signed-off-by: Zhang MengTing <zhangmengting@huawei.com>
-> > ---
-> >  tools/perf/builtin-sched.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 322b4de..47b79fc 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -3248,7 +3248,6 @@ static int __cmd_record(int argc, const char **argv)
-> >  	const char **rec_argv;
-> >  	const char * const record_args[] = {
-> >  		"record",
-> > -		"-a",
-> >  		"-R",
-> >  		"-m", "1024",
-> >  		"-c", "1",
-> > -- 
-> > 1.8.3.1
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yuzhoujian (4):
+Patch 1: Add new elements for per-event-dump option
+Patch 2: Add the fp_selection_helper to set the fp for print functions
+
+Changes since v4:
+- Patch 1: None
+- Patch 2: The fp_selection_helper will be invoked by process_event not process_sample_event 
+	   Replace some printf with fprintf in process_event
+
+Changes since v3:
+- Patch 1: Remove three elements for perf_evsel struct and create the perf_script_evsel
+ struct to save them.
+- Patch 2: None
+- Patch 3: None
+- Patch 4: Free the evsel->priv by zfree().
+
+Changes since v2:
+- Patch 1: Add the last_evsel_name for per_tool struct and three elements for perf_evsel struct.
+- Patch 2: None
+- Patch 3: None
+- Patch 4: Remove the file_name and per_event_dump_file variables.
+           Add the fp_selection_helper function to select the fp and open the dump file
+ for all print functions.
+           Close the dump file for all the evsels and calculate the dump file's size at
+ the end of the perf script.
+           Solve the segmentation fault generated by perf script --per-event-dump --show-mmap-events
+
+Changes since v1:
+- Patch 1: Remove the set of script.tool.per_event_dump variable.
+- Patch 2: Add the __maybe_unused attribute for the fp argument in the second patch.
+- Patch 3: remove the fp_selection_helper function for setting the fp argument.
+- Patch 2: split the original second patch(Makes all those related functions receive
+ the FILE pointer) to two patches.
+- Patch 4: modify the file name of per-event-dump to
+ <ORIGINAL PERF DATA FILE NAME>-script-dump-<EVENT NAME>.txt
+
+ tools/perf/builtin-script.c | 110 ++++++++++++++++++++++++++++++++++++--------
+ tools/perf/util/evsel.h     |  11 +++++
+ tools/perf/util/session.c   |  19 ++++++++
+ tools/perf/util/tool.h      |   2 +
+ 4 files changed, 122 insertions(+), 20 deletions(-)
+
+-- 
+1.8.3.1
