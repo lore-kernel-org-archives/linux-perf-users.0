@@ -1,32 +1,75 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [GIT PULL 00/15] perf/core inlining improvements
-Date: Thu, 26 Oct 2017 11:03:45 +0200
-Message-ID: <3067276.6W5rmBhtP5@agathebauer>
-References: <20171025160013.11136-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171025160013.11136-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: yuzhoujian <ufo19890607@gmail.com>
+Subject: lost some call trace for sleep function
+Date: Thu, 26 Oct 2017 18:24:56 +0800
+Message-ID: <1509013496-12486-1-git-send-email-yuzhoujian@didichuxing.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-pg0-f46.google.com ([74.125.83.46]:52229 "EHLO
+        mail-pg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751162AbdJZKZd (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 26 Oct 2017 06:25:33 -0400
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-On Mittwoch, 25. Oktober 2017 17:59:58 CEST Arnaldo Carvalho de Melo wrote:
-> Hi Ingo,
-> 
-> 	Please consider pulling, this is Milian's v7 plus some fixes
-> acked by Namhyung after some discussion among the three of us, I
-> probably need to pick some more patches that are related to this area,
-> but lets make some progress and merge this kit,
+Hi, all.
+I find a strange problem. Perf cannot record call stack which contains sleep functions.
+The last function of the call trace is always "__GI___libc_nanosleep" for each sample.
+one of the sample for perf script is below:
 
-Thanks a lot for everyone involved in reviewing this series. Much appreciated!
+test_sleep 12275 185233.961287:          1 cycles:ppp: 
+        ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
+        ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
+        ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
+        ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
+        ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
+        ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
+        ffffffff81690e00 __schedule ([kernel.kallsyms])
+        ffffffff81691409 schedule ([kernel.kallsyms])
+        ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
+        ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
+        ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
+        ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
+		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
 
-Cheers
+Below is the source code of test_sleep:
 
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt Experts
+void f2()
+{
+        sleep(1);
+}
+void f1()
+{
+        f2();
+}
+int main()
+{
+  	while(1)
+     		f1();
+   	return 0;
+}
+
+I think the right call stack should contain the __sleep function in glibc, just as follow
+
+test_sleep 12275 185233.961287:          1 cycles:ppp: 
+        ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
+        ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
+        ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
+        ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
+        ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
+        ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
+        ffffffff81690e00 __schedule ([kernel.kallsyms])
+        ffffffff81691409 schedule ([kernel.kallsyms])
+        ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
+        ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
+        ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
+        ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
+		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
+		   bef70 __sleep (/usr/lib64/libc-2.17.so)
+        	   5a1 f2 (/home/test_sleep)
+        	   5c1 f1 (/home/test_sleep)
+        	   5d1 main (/home/test_sleep)
+        	   21c05 __libc_start_main (/usr/lib64/libc-2.17.so)
+
+Is it a bug for perf record ??
