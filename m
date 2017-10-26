@@ -1,75 +1,139 @@
-From: yuzhoujian <ufo19890607@gmail.com>
-Subject: lost some call trace for sleep function
-Date: Thu, 26 Oct 2017 18:24:56 +0800
-Message-ID: <1509013496-12486-1-git-send-email-yuzhoujian@didichuxing.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v5 1/2] Add new elements for per-event-dump option
+Date: Thu, 26 Oct 2017 10:01:43 -0300
+Message-ID: <20171026130143.GH7045@kernel.org>
+References: <1508921599-10832-1-git-send-email-yuzhoujian@didichuxing.com>
+ <1508921599-10832-2-git-send-email-yuzhoujian@didichuxing.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f46.google.com ([74.125.83.46]:52229 "EHLO
-        mail-pg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751162AbdJZKZd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Oct 2017 06:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932204AbdJZNBq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 26 Oct 2017 09:01:46 -0400
+Content-Disposition: inline
+In-Reply-To: <1508921599-10832-2-git-send-email-yuzhoujian@didichuxing.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: yuzhoujian <ufo19890607@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-Hi, all.
-I find a strange problem. Perf cannot record call stack which contains sleep functions.
-The last function of the call trace is always "__GI___libc_nanosleep" for each sample.
-one of the sample for perf script is below:
+Em Wed, Oct 25, 2017 at 04:53:18PM +0800, yuzhoujian escreveu:
+> This patch will add two elements for perf_tool struct: per_event_dump
+> is used to mark the per-event-dump option, last_evsel_name is used
+> to save last evsel's name. Add a new struct perf_script_evsel to
+> save evsel's specific data. There are three elements in this new struct:
+> dump_evsel_fp is used to save the file pointer of the dump_event file,
+> filename is used to save the file name of the dump_event file, samples
+> is used to save the number of samples for each evsel. The perf_script_evsel
+> struct will be saved in the evsel->priv. Add the OPT_BOOLEAN for per-event-dump
+> in the perf_data_file struct.
+> 
+> Changes since v4:
+> - none.
+> 
+> Changes since v3:
+> - remove three elements for perf_evsel struct and create a new struct:
+>  perf_script_evsel to save them.
+> 
+> Changes since v2:
+> - add the last_evsel_name for per_tool struct to save last evsel's name.
+> - add three elements for perf_evsel struct:dump_event_fp is used to save
+>  the file pointer of the dump_event file, filename is used to save the file
+>  name of the dump_event file, samples is used to save the number of samples
+>  for each evsel.
+> 
+> Changes since v1:
+> - remove the set for script.tool.per_event_dump variable,since the OPT_BOOLEAN
+>  will do the same thing.
+> 
+> Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+> ---
+>  tools/perf/builtin-script.c |  3 +++
+>  tools/perf/util/evsel.h     | 11 +++++++++++
+>  tools/perf/util/tool.h      |  2 ++
+>  3 files changed, 16 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index a3add2c..81f141f 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2758,6 +2758,7 @@ int cmd_script(int argc, const char **argv)
+>  			.cpu_map	 = process_cpu_map_event,
+>  			.ordered_events	 = true,
+>  			.ordering_requires_timestamps = true,
+> +			.per_event_dump	 = false,
 
-test_sleep 12275 185233.961287:          1 cycles:ppp: 
-        ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
-        ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
-        ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
-        ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
-        ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
-        ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
-        ffffffff81690e00 __schedule ([kernel.kallsyms])
-        ffffffff81691409 schedule ([kernel.kallsyms])
-        ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
-        ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
-        ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
-        ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
-		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
+No need for this, if you simply don't init it, it will be set to false.
 
-Below is the source code of test_sleep:
+>  		},
+>  	};
+>  	struct perf_data_file file = {
+> @@ -2828,6 +2829,8 @@ int cmd_script(int argc, const char **argv)
+>  		    "Show context switch events (if recorded)"),
+>  	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
+>  		    "Show namespace events (if recorded)"),
+> +	OPT_BOOLEAN('\0', "per-event-dump", &script.tool.per_event_dump,
+> +		    "Dump trace output to files named by the monitored events"),
 
-void f2()
-{
-        sleep(1);
-}
-void f1()
-{
-        f2();
-}
-int main()
-{
-  	while(1)
-     		f1();
-   	return 0;
-}
+this becomes:
 
-I think the right call stack should contain the __sleep function in glibc, just as follow
++	OPT_BOOLEAN('\0', "per-event-dump", &script.per_event_dump,
++		    "Dump trace output to files named by the monitored events"),
 
-test_sleep 12275 185233.961287:          1 cycles:ppp: 
-        ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
-        ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
-        ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
-        ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
-        ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
-        ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
-        ffffffff81690e00 __schedule ([kernel.kallsyms])
-        ffffffff81691409 schedule ([kernel.kallsyms])
-        ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
-        ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
-        ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
-        ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
-		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
-		   bef70 __sleep (/usr/lib64/libc-2.17.so)
-        	   5a1 f2 (/home/test_sleep)
-        	   5c1 f1 (/home/test_sleep)
-        	   5d1 main (/home/test_sleep)
-        	   21c05 __libc_start_main (/usr/lib64/libc-2.17.so)
+>  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>  	OPT_INTEGER(0, "max-blocks", &max_blocks,
+>  		    "Maximum number of code blocks to dump with brstackinsn"),
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index db65878..abe728d 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -5,6 +5,7 @@
+>  #include <stdbool.h>
+>  #include <stddef.h>
+>  #include <linux/perf_event.h>
+> +#include <stdio.h>
+>  #include <linux/types.h>
+>  #include "xyarray.h"
+>  #include "symbol.h"
+> @@ -51,6 +52,16 @@ enum {
+>  	PERF_EVSEL__CONFIG_TERM_MAX,
+>  };
+>  
+> +/*
+> + * The struct perf_script_evsel is used to save the dump file's name,
+> + * dump file's fp and the total number of samples for each evsel.
+> + */
+> +struct perf_script_evsel {
+> +	char 		*filename;
+> +	FILE		*dump_evsel_fp;
+> +	unsigned long	samples;
+> +};
+> +
 
-Is it a bug for perf record ??
+Don't pollute evsel.h with things that specific to some tool, this is
+not the place to put this.
+
+>  struct perf_evsel_config_term {
+>  	struct list_head	list;
+>  	int	type;
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index d549e50..2cbcee4 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -75,6 +75,8 @@ struct perf_tool {
+>  	bool		ordered_events;
+>  	bool		ordering_requires_timestamps;
+>  	bool		namespace_events;
+> +	bool		per_event_dump;
+> +	const char	*last_evsel_name;
+>  	enum show_feature_header show_feat_hdr;
+
+Ditto, this should be in struct perf_script.
+
+I'm cooking a patch...
+
+>  };
+>  
+> -- 
+> 1.8.3.1
