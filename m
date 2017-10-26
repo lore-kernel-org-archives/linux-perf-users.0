@@ -1,116 +1,82 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/15] perf/core inlining improvements
-Date: Wed, 25 Oct 2017 19:10:47 +0200
-Message-ID: <20171025171047.hvskdv5t47zhstk6@gmail.com>
-References: <20171025160013.11136-1-acme@kernel.org>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: perf buildid-cache -p <path> question
+Date: Thu, 26 Oct 2017 09:05:33 +0200
+Message-ID: <b10e060a-2027-5c9e-66e0-15b82cb09394@linux.vnet.ibm.com>
+References: <8594e11c-9aa1-f600-3f04-eb80058c9abf@linux.vnet.ibm.com>
+ <20171016141222.GC5311@kernel.org>
+ <20171021011259.5d6368a7fd1f54004b6ae1da@kernel.org>
+ <20171020162056.GH30002@kernel.org>
+ <140bd721-4929-22ee-ce77-b7fe575a470c@linux.vnet.ibm.com>
+ <20171026020408.053d2985bdd1e4fef824fbcb@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:46705 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751702AbdJYRKw (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1750997AbdJZHFi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Oct 2017 13:10:52 -0400
-Content-Disposition: inline
-In-Reply-To: <20171025160013.11136-1-acme@kernel.org>
+        Thu, 26 Oct 2017 03:05:38 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9Q74rnK099620
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2017 03:05:38 -0400
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2du58pph7t-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2017 03:05:37 -0400
+Received: from localhost
+        by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Thu, 26 Oct 2017 08:05:36 +0100
+In-Reply-To: <20171026020408.053d2985bdd1e4fef824fbcb@kernel.org>
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+
+On 10/25/2017 07:04 PM, Masami Hiramatsu wrote:
+> On Tue, 24 Oct 2017 09:56:02 +0200
+> Thomas-Mich Richter <tmricht@linux.vnet.ibm.com> wrote:
+
+...
+
+>>
+>> Ok, I have understood the behavior of commands
+>> perf buildid-cache -a
+>> and
+>> perf buildid-cache -r.
+>>
+>> Same with command perf buildid-cache -p /usr/bin/tar.
+>> It works correctly if you specify a file name and not a directory as I did
+>> in my previous append.
+>>
+>> I was mislead by the man page which says
+>> "file list" for option -a
+>> "file(s) to remove" for option -r
+>> "path(s) to remove (remove old caches too)' for option -p
+>>
+>> I just find it confusing to explicitly mention files for
+>> option -a and -r whereas option -p mentions path.
+>>
+>> We can drop my patch but I would like to clarify the man page
+>> to explicitly mention "file(s)" or "file list" instead of path for option -p.
+>>
+>> What do you think?
+> 
+> Indeed. Originally the "file" means existing file but "path" means the path in the
+> cache, which can be already removed. However, that can mislead users.
+> So I agree that is unified to "file list".
+> 
+> Thank you,
+> 
+
+Ok, do you change the man page or should I submit a patch?
 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Hi Ingo,
-> 
-> 	Please consider pulling, this is Milian's v7 plus some fixes
-> acked by Namhyung after some discussion among the three of us, I
-> probably need to pick some more patches that are related to this area,
-> but lets make some progress and merge this kit,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 9b7c85473cc2fa6fc4a7f87636ff2b69742b82b7:
-> 
->   Merge tag 'perf-core-for-mingo-4.15-20171023' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2017-10-24 10:53:04 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.15-20171025
-> 
-> for you to fetch changes up to d8a88dd243a170a226aba33e7c53704db2f82aa6:
-> 
->   perf util: Enable handling of inlined frames by default (2017-10-25 10:50:47 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core inline improvements:
-> 
-> From Milian's cover letter: (Milian Wolff)
-> 
-> This series of patches completely reworks the way inline frames are
-> handled.  Instead of querying for the inline nodes on-demand in the
-> individual tools, we now create proper callchain nodes for inlined
-> frames. The advantages this approach brings are numerous:
-> 
-> - Less duplicated code in the individual browser
-> 
-> - Aggregated cost for inlined frames for the --children top-down list
-> 
-> - Various bug fixes that arose from querying for a srcline/symbol based on
->   the IP of a sample, which will always point to the last inlined frame
->   instead of the corresponding non-inlined frame
-> 
-> - Overall much better support for visualizing cost for heavily-inlined C++
->   code, which simply was confusing and unreliable before
-> 
-> - srcline honors the global setting as to whether full paths or basenames
->   should be shown
-> 
-> - Caches for inlined frames and srcline information, which allow us to
->   enable inline frame handling by default
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Milian Wolff (15):
->       perf report: Remove code to handle inline frames from browsers
->       perf callchain: Store srcline in callchain_cursor_node
->       perf callchain: Refactor inline_list to operate on symbols
->       perf callchain: Refactor inline_list to store srcline string directly
->       perf callchain: Create real callchain entries for inlined frames
->       perf report: Fall-back to function name comparison for -g srcline
->       perf callchain: Mark inlined frames in output by " (inlined)" suffix
->       perf script: Mark inlined frames and do not print DSO for them
->       perf callchain: Compare symbol name for inlined frames when matching
->       perf report: Compare symbol name for inlined frames when sorting
->       perf report: Properly handle branch count in match_chain()
->       perf report: Cache failed lookups of inlined frames
->       perf report: Cache srclines for callchain nodes
->       perf report: Use srcline from callchain for hist entries
->       perf util: Enable handling of inlined frames by default
-> 
->  tools/perf/Documentation/perf-report.txt |   3 +-
->  tools/perf/Documentation/perf-script.txt |   3 +-
->  tools/perf/ui/browsers/hists.c           | 180 ++-------------------
->  tools/perf/ui/stdio/hist.c               |  77 +--------
->  tools/perf/util/callchain.c              | 174 +++++++++++---------
->  tools/perf/util/callchain.h              |   6 +-
->  tools/perf/util/dso.c                    |   7 +
->  tools/perf/util/dso.h                    |   2 +
->  tools/perf/util/event.c                  |   1 +
->  tools/perf/util/evsel_fprintf.c          |  37 +----
->  tools/perf/util/hist.c                   |   7 +-
->  tools/perf/util/machine.c                |  65 +++++++-
->  tools/perf/util/sort.c                   |   6 +
->  tools/perf/util/sort.h                   |   1 -
->  tools/perf/util/srcline.c                | 268 +++++++++++++++++++++++++------
->  tools/perf/util/srcline.h                |  26 ++-
->  tools/perf/util/symbol.c                 |   1 +
->  tools/perf/util/symbol.h                 |   2 +
->  18 files changed, 443 insertions(+), 423 deletions(-)
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
