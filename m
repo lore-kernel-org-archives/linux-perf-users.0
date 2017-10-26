@@ -1,71 +1,117 @@
-From: Michael Sartain <mikesart@fastmail.com>
-Subject: Dropped Events
-Date: Thu, 26 Oct 2017 11:21:07 -0600
-Message-ID: <20171026172107.kr3dcdbhfwwf4p2e@mikesart-cos>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: lost some call trace for sleep function
+Date: Thu, 26 Oct 2017 14:32:54 -0300
+Message-ID: <20171026173254.GM7045@kernel.org>
+References: <1509013496-12486-1-git-send-email-yuzhoujian@didichuxing.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43091 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S932127AbdJZRVK (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Oct 2017 13:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932309AbdJZRc5 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 26 Oct 2017 13:32:57 -0400
 Content-Disposition: inline
+In-Reply-To: <1509013496-12486-1-git-send-email-yuzhoujian@didichuxing.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: Pierre-Loup Griffais <pgriffais@valvesoftware.com>
+To: yuzhoujian <ufo19890607@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-We are doing some fairly simple ftrace captures using trace-cmd and we're
-missing chunks of events. We are starting the trace via something like ~ this:
+Em Thu, Oct 26, 2017 at 06:24:56PM +0800, yuzhoujian escreveu:
+> Hi, all.
+> I find a strange problem. Perf cannot record call stack which contains sleep functions.
+> The last function of the call trace is always "__GI___libc_nanosleep" for each sample.
+> one of the sample for perf script is below:
 
-    trace-cmd record -i -k -b 2000 -o $startTrace__traceFile \
-        -e "amdgpu:amdgpu_vm_flush" -e "amdgpu:amdgpu_cs_ioctl" \
-        -e "amdgpu:amdgpu_sched_run_job" -e "drm:drm_vblank_event" \
-        -e "*fence:*fence_signaled" -e "amdgpu:amdgpu_ttm_bo_move" \
-        -e "sched:sched_switch" &
+How are you recording it? Please state the exact command line you use for 'record'.
 
-And then the capture is done with a kill -9 $(pidof trace-cmd)
+Here are some attempts at doing that on a fedora 26 x86_64 system:
 
-We've tried not capturing sched_switch events (which were about 75% of the
-events), but we are still seeing missing events such as the drm_vblank events
-(81 - 85) in the example below [1]. "trace-cmd report --stat" reports 0 dropped
-events, no overruns, etc.
+[acme@jouet linux]$ uname -a
+Linux jouet 4.14.0-rc3+ #1 SMP Fri Oct 13 12:21:12 -03 2017 x86_64 x86_64 x86_64 GNU/Linux
 
-I'm going to try and set up a repro case and debug what's going on, but before
-doing that I thought I would ask here since I've seen two places online mention
-dropped events [2,3] and was wondering if there was more information on this.
-Ie, is this expected behavior? Is it logged anywhere? Any way to mitigate?
+# perf trace -e nanosleep --max-stack=10 sleep 1
+     0.649 (1000.121 ms): sleep/9566 nanosleep(rqtp: 0x7ffe56769570                                        ) = 0
+                                       __nanosleep_nocancel (/usr/lib64/libc-2.25.so)
+                                       rpl_nanosleep (/usr/bin/sleep)
+                                       xnanosleep (/usr/bin/sleep)
+                                       main (/usr/bin/sleep)
+                                       __libc_start_main (/usr/lib64/libc-2.25.so)
+                                       _start (/usr/bin/sleep)
+#
 
-Thanks much.
- -Mike
+Which is equivalent to:
 
-[1] trace-cmd report trace.dat | grep drm_vblank_event
-....
- <idle>-0 [001] 537337.235498: drm_vblank_event: crtc=0 seq=31330580
- <idle>-0 [001] 537337.302508: drm_vblank_event: crtc=0 seq=31330586
- <idle>-0 [001] 537337.313674: drm_vblank_event: crtc=0 seq=31330587
- <idle>-0 [001] 537337.324862: drm_vblank_event: crtc=0 seq=31330588
- <idle>-0 [001] 537337.336011: drm_vblank_event: crtc=0 seq=31330589
- <idle>-0 [001] 537337.347189: drm_vblank_event: crtc=0 seq=31330590
- <idle>-0 [001] 537337.358352: drm_vblank_event: crtc=0 seq=31330591
- <idle>-0 [001] 537337.369535: drm_vblank_event: crtc=0 seq=31330592
- <idle>-0 [001] 537337.380688: drm_vblank_event: crtc=0 seq=31330593
+# perf record -e syscalls:sys_enter_nanosleep/call-graph=dwarf,max-stack=10/ sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.027 MB perf.data (1 samples) ]
+# perf script
+sleep  9629 [001] 210689.400780: syscalls:sys_enter_nanosleep: rqtp: 0x7ffd6a99b180, rmtp: 0x00000000
+                   d4420 __nanosleep_nocancel (/usr/lib64/libc-2.25.so)
+                    46c6 rpl_nanosleep (/usr/bin/sleep)
+                    449f xnanosleep (/usr/bin/sleep)
+                    1773 main (/usr/bin/sleep)
+                   20509 __libc_start_main (/usr/lib64/libc-2.25.so)
+                    1869 _start (/usr/bin/sleep)
 
+# 
 
-[2] https://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg02326.html
+But why are you trying to sample CPU cycles used on a function that sleeps?
 
-> Actually one thing that came to mind that I would like to clarification about.
-> I know that tracepoints are “lossy” and that if the “reader” of the pipe is not
-> consuming fast enough and the ring buffers get full then tracepoint information
-> gets dropped and pipe logs that it lost events. When I run “perf record”, is it
-> also recording every tracepoint or is it sampling (which I don’t exactly
-> understand but I think of it as it just periodically captures the tracepoint
-> info which basically means it’s losing them intentionally)?
-
-[3] http://codearcana.com/posts/2016/01/03/dtrace-isnt-just-a-tool-its-a-philosophy.html
-
-> Unfortunately, tracing all scheduler events is very high overhead in perf and
-> the lack of in-kernel aggregation means that events probably will be dropped if
-> load is high.
+- Arnaldo
+ 
+> test_sleep 12275 185233.961287:          1 cycles:ppp: 
+>         ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
+>         ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
+>         ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
+>         ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
+>         ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
+>         ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
+>         ffffffff81690e00 __schedule ([kernel.kallsyms])
+>         ffffffff81691409 schedule ([kernel.kallsyms])
+>         ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
+>         ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
+>         ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
+>         ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
+> 		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
+> 
+> Below is the source code of test_sleep:
+> 
+> void f2()
+> {
+>         sleep(1);
+> }
+> void f1()
+> {
+>         f2();
+> }
+> int main()
+> {
+>   	while(1)
+>      		f1();
+>    	return 0;
+> }
+> 
+> I think the right call stack should contain the __sleep function in glibc, just as follow
+> 
+> test_sleep 12275 185233.961287:          1 cycles:ppp: 
+>         ffffffff8100add0 intel_bts_enable_local ([kernel.kallsyms])
+>         ffffffff81008f20 intel_pmu_enable_all ([kernel.kallsyms])
+>         ffffffff810057ec x86_pmu_enable ([kernel.kallsyms])
+>         ffffffff81173e57 perf_pmu_enable ([kernel.kallsyms])
+>         ffffffff81175404 __perf_event_task_sched_in ([kernel.kallsyms])
+>         ffffffff810c1aa8 finish_task_switch ([kernel.kallsyms])
+>         ffffffff81690e00 __schedule ([kernel.kallsyms])
+>         ffffffff81691409 schedule ([kernel.kallsyms])
+>         ffffffff816902d6 do_nanosleep ([kernel.kallsyms])
+>         ffffffff810b747b hrtimer_nanosleep ([kernel.kallsyms])
+>         ffffffff810b75be sys_nanosleep ([kernel.kallsyms])
+>         ffffffff8169c749 system_call_fastpath ([kernel.kallsyms])
+> 		   bf190 __GI___libc_nanosleep (/usr/lib64/libc-2.17.so)
+> 		   bef70 __sleep (/usr/lib64/libc-2.17.so)
+>         	   5a1 f2 (/home/test_sleep)
+>         	   5c1 f1 (/home/test_sleep)
+>         	   5d1 main (/home/test_sleep)
+>         	   21c05 __libc_start_main (/usr/lib64/libc-2.17.so)
+> 
+> Is it a bug for perf record ??
