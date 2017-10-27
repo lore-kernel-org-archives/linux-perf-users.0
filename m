@@ -1,101 +1,81 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/2] perf symbols: Fix memory corruption because of zero length symbols
-Date: Fri, 27 Oct 2017 16:50:46 -0300
-Message-ID: <20171027195047.27132-2-acme@kernel.org>
+Subject: [PATCH 2/2] perf tools: Unwind properly location after REJECT
+Date: Fri, 27 Oct 2017 16:50:47 -0300
+Message-ID: <20171027195047.27132-3-acme@kernel.org>
 References: <20171027195047.27132-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932143AbdJ0Tu7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Oct 2017 15:50:59 -0400
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171027195047.27132-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Perf top is often crashing at very random locations on powerpc.  After
-investigating, I found the crash only happens when sample is of zero
-length symbol. Powerpc kernel has many such symbols which does not
-contain length details in vmlinux binary and thus start and end
-addresses of such symbols are same.
+We have defined YY_USER_ACTION to keep trace of the column location
+during events parsing, but we need to clean it up when we call REJECT.
 
-Structure
+When REJECT is called, the lexer shrinks the text and re-runs the
+matching, so we need to address it in resuming the previous location
+value to keep it correct for error display, like:
 
-  struct sym_hist {
-        u64                   nr_samples;
-        u64                   period;
-        struct sym_hist_entry addr[0];
-  };
+Before:
+  $ perf stat -e 'cpu/uops_executed.core,krava/'  true
+  event syntax error: '..38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;1\
+1;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;\
+21;38;50
+�'
+                                  \___ unknown term
 
-has last member 'addr[]' of size zero. 'addr[]' is an array of addresses
-that belongs to one symbol (function). If function consist of 100
-instructions, 'addr' points to an array of 100 'struct sym_hist_entry'
-elements. For zero length symbol, it points to the *empty* array, i.e.
-no members in the array and thus offset 0 is also invalid for such
-array.
+After:
+  $ ./perf stat -e 'cpu/uops_executed.core,krava/'  true
+  event syntax error: '..cuted.core,krava/'
+                                    \___ unknown term
 
-  static int __symbol__inc_addr_samples(...)
-  {
-        ...
-        offset = addr - sym->start;
-        h = annotation__histogram(notes, evidx);
-        h->nr_samples++;
-        h->addr[offset].nr_samples++;
-        h->period += sample->period;
-        h->addr[offset].period += sample->period;
-        ...
-  }
-
-Here, when 'addr' is same as 'sym->start', 'offset' becomes 0, which is
-valid for normal symbols but *invalid* for zero length symbols and thus
-updating h->addr[offset] causes memory corruption.
-
-Fix this by adding one dummy element for zero length symbols.
-
-Link: https://lkml.org/lkml/2016/10/10/148
-Fixes: edee44be5919 ("perf annotate: Don't throw error for zero length symbols")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Andi Kleen <ak@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: http://lkml.kernel.org/r/1508854806-10542-1-git-send-email-ravi.bangoria@linux.vnet.ibm.com
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-vug2hchlny30jfsfrumbym26@git.kernel.org
+Link: http://lkml.kernel.org/r/20171009140944.GD28623@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.l | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 4397a8b6e6cd..aa66791b1bfc 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -606,9 +606,19 @@ static struct arch *arch__find(const char *name)
- int symbol__alloc_hist(struct symbol *sym)
- {
- 	struct annotation *notes = symbol__annotation(sym);
--	const size_t size = symbol__size(sym);
-+	size_t size = symbol__size(sym);
- 	size_t sizeof_sym_hist;
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index dcfdafdc2f1c..6680e4fb7967 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -154,6 +154,10 @@ do {							\
+ 	yycolumn += yyleng;				\
+ } while (0);
  
-+	/*
-+	 * Add buffer of one element for zero length symbol.
-+	 * When sample is taken from first instruction of
-+	 * zero length symbol, perf still resolves it and
-+	 * shows symbol name in perf report and allows to
-+	 * annotate it.
-+	 */
-+	if (size == 0)
-+		size = 1;
++#define USER_REJECT		\
++	yycolumn -= yyleng;	\
++	REJECT
 +
- 	/* Check for overflow when calculating sizeof_sym_hist */
- 	if (size > (SIZE_MAX - sizeof(struct sym_hist)) / sizeof(struct sym_hist_entry))
- 		return -1;
+ %}
+ 
+ %x mem
+@@ -335,8 +339,8 @@ r{num_raw_hex}		{ return raw(yyscanner); }
+ {num_hex}		{ return value(yyscanner, 16); }
+ 
+ {modifier_event}	{ return str(yyscanner, PE_MODIFIER_EVENT); }
+-{bpf_object}		{ if (!isbpf(yyscanner)) REJECT; return str(yyscanner, PE_BPF_OBJECT); }
+-{bpf_source}		{ if (!isbpf(yyscanner)) REJECT; return str(yyscanner, PE_BPF_SOURCE); }
++{bpf_object}		{ if (!isbpf(yyscanner)) USER_REJECT; return str(yyscanner, PE_BPF_OBJECT); }
++{bpf_source}		{ if (!isbpf(yyscanner)) USER_REJECT; return str(yyscanner, PE_BPF_SOURCE); }
+ {name}			{ return pmu_str_check(yyscanner); }
+ "/"			{ BEGIN(config); return '/'; }
+ -			{ return '-'; }
 -- 
 2.13.6
