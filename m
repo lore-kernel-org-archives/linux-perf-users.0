@@ -1,89 +1,54 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Dropped Events
-Date: Thu, 26 Oct 2017 17:18:38 -0300
-Message-ID: <20171026201838.GN7045@kernel.org>
-References: <20171026172107.kr3dcdbhfwwf4p2e@mikesart-cos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf buildid-cache: update help text for purge command
+Date: Fri, 27 Oct 2017 13:01:26 +0200
+Message-ID: <20171027110126.72520-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751533AbdJZUSr (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752161AbdJ0LBv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Oct 2017 16:18:47 -0400
-Content-Disposition: inline
-In-Reply-To: <20171026172107.kr3dcdbhfwwf4p2e@mikesart-cos>
+        Fri, 27 Oct 2017 07:01:51 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id v9RB1UWS084823
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2017 07:01:50 -0400
+Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2duvcf5310-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2017 07:01:50 -0400
+Received: from localhost
+        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Fri, 27 Oct 2017 12:01:46 +0100
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Sartain <mikesart@fastmail.com>
-Cc: linux-perf-users@vger.kernel.org, Pierre-Loup Griffais <pgriffais@valvesoftware.com>
+To: acme@kernel.org, linux-perf-users@vger.kernel.org, mhiramat@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Em Thu, Oct 26, 2017 at 11:21:07AM -0600, Michael Sartain escreveu:
-> We are doing some fairly simple ftrace captures using trace-cmd and we're
-> missing chunks of events. We are starting the trace via something like ~ this:
-> 
->     trace-cmd record -i -k -b 2000 -o $startTrace__traceFile \
->         -e "amdgpu:amdgpu_vm_flush" -e "amdgpu:amdgpu_cs_ioctl" \
->         -e "amdgpu:amdgpu_sched_run_job" -e "drm:drm_vblank_event" \
->         -e "*fence:*fence_signaled" -e "amdgpu:amdgpu_ttm_bo_move" \
->         -e "sched:sched_switch" &
-> 
-> And then the capture is done with a kill -9 $(pidof trace-cmd)
+Clarify the perf buildid-cache help text for the purge operation.
+The purge subcommand takes a list of files (binaries) as
+option parameter. Make the wording the same as for the add
+and remove operation.
 
-Can you try with the equivalent 'perf record' (or perf trace) call?
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/builtin-buildid-cache.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[root@jouet ~]# perf record -m 16384 -e i915:intel_gpu_freq_change,drm:drm_vblank_event,fence*:*fence_signaled,sched:sched_switch^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.792 MB perf.data (2895 samples) ]
-
-[root@jouet ~]#
-
-It'll report lost events, replace the i915 with the amdgpu events.
-
-- Arnaldo
- 
-> We've tried not capturing sched_switch events (which were about 75% of the
-> events), but we are still seeing missing events such as the drm_vblank events
-> (81 - 85) in the example below [1]. "trace-cmd report --stat" reports 0 dropped
-> events, no overruns, etc.
-> 
-> I'm going to try and set up a repro case and debug what's going on, but before
-> doing that I thought I would ask here since I've seen two places online mention
-> dropped events [2,3] and was wondering if there was more information on this.
-> Ie, is this expected behavior? Is it logged anywhere? Any way to mitigate?
-> 
-> Thanks much.
->  -Mike
-> 
-> [1] trace-cmd report trace.dat | grep drm_vblank_event
-> ....
->  <idle>-0 [001] 537337.235498: drm_vblank_event: crtc=0 seq=31330580
->  <idle>-0 [001] 537337.302508: drm_vblank_event: crtc=0 seq=31330586
->  <idle>-0 [001] 537337.313674: drm_vblank_event: crtc=0 seq=31330587
->  <idle>-0 [001] 537337.324862: drm_vblank_event: crtc=0 seq=31330588
->  <idle>-0 [001] 537337.336011: drm_vblank_event: crtc=0 seq=31330589
->  <idle>-0 [001] 537337.347189: drm_vblank_event: crtc=0 seq=31330590
->  <idle>-0 [001] 537337.358352: drm_vblank_event: crtc=0 seq=31330591
->  <idle>-0 [001] 537337.369535: drm_vblank_event: crtc=0 seq=31330592
->  <idle>-0 [001] 537337.380688: drm_vblank_event: crtc=0 seq=31330593
-> 
-> 
-> [2] https://www.mail-archive.com/linux-perf-users@vger.kernel.org/msg02326.html
-> 
-> > Actually one thing that came to mind that I would like to clarification about.
-> > I know that tracepoints are “lossy” and that if the “reader” of the pipe is not
-> > consuming fast enough and the ring buffers get full then tracepoint information
-> > gets dropped and pipe logs that it lost events. When I run “perf record”, is it
-> > also recording every tracepoint or is it sampling (which I don’t exactly
-> > understand but I think of it as it just periodically captures the tracepoint
-> > info which basically means it’s losing them intentionally)?
-> 
-> [3] http://codearcana.com/posts/2016/01/03/dtrace-isnt-just-a-tool-its-a-philosophy.html
-> 
-> > Unfortunately, tracing all scheduler events is very high overhead in perf and
-> > the lack of in-kernel aggregation means that events probably will be dropped if
-> > load is high.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index bcd2b0e..04164d5 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -336,8 +336,8 @@ int cmd_buildid_cache(int argc, const char **argv)
+ 		   "file", "kcore file to add"),
+ 	OPT_STRING('r', "remove", &remove_name_list_str, "file list",
+ 		    "file(s) to remove"),
+-	OPT_STRING('p', "purge", &purge_name_list_str, "path list",
+-		    "path(s) to remove (remove old caches too)"),
++	OPT_STRING('p', "purge", &purge_name_list_str, "file list",
++		    "file(s) to remove (remove old caches too)"),
+ 	OPT_STRING('M', "missing", &missing_filename, "file",
+ 		   "to find missing build ids in the cache"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+-- 
+2.9.4
