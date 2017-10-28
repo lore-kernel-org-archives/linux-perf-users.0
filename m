@@ -1,81 +1,63 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/2] perf tools: Unwind properly location after REJECT
-Date: Fri, 27 Oct 2017 16:50:47 -0300
-Message-ID: <20171027195047.27132-3-acme@kernel.org>
-References: <20171027195047.27132-1-acme@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] perf buildid-cache: update help text for purge command
+Date: Sun, 29 Oct 2017 01:15:30 +0900
+Message-ID: <20171029011530.5371d73ef81c571141cf47a5@kernel.org>
+References: <20171027110126.72520-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171027195047.27132-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:41546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751189AbdJ1QPd (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 28 Oct 2017 12:15:33 -0400
+In-Reply-To: <20171027110126.72520-1-tmricht@linux.vnet.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Fri, 27 Oct 2017 13:01:26 +0200
+Thomas Richter <tmricht@linux.vnet.ibm.com> wrote:
 
-We have defined YY_USER_ACTION to keep trace of the column location
-during events parsing, but we need to clean it up when we call REJECT.
+> Clarify the perf buildid-cache help text for the purge operation.
+> The purge subcommand takes a list of files (binaries) as
+> option parameter. Make the wording the same as for the add
+> and remove operation.
+> 
 
-When REJECT is called, the lexer shrinks the text and re-runs the
-matching, so we need to address it in resuming the previous location
-value to keep it correct for error display, like:
+Looks good to me.
 
-Before:
-  $ perf stat -e 'cpu/uops_executed.core,krava/'  true
-  event syntax error: '..38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;1\
-1;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;\
-21;38;50
-�'
-                                  \___ unknown term
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-After:
-  $ ./perf stat -e 'cpu/uops_executed.core,krava/'  true
-  event syntax error: '..cuted.core,krava/'
-                                    \___ unknown term
+Thanks!
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-vug2hchlny30jfsfrumbym26@git.kernel.org
-Link: http://lkml.kernel.org/r/20171009140944.GD28623@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/parse-events.l | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+> ---
+>  tools/perf/builtin-buildid-cache.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+> index bcd2b0e..04164d5 100644
+> --- a/tools/perf/builtin-buildid-cache.c
+> +++ b/tools/perf/builtin-buildid-cache.c
+> @@ -336,8 +336,8 @@ int cmd_buildid_cache(int argc, const char **argv)
+>  		   "file", "kcore file to add"),
+>  	OPT_STRING('r', "remove", &remove_name_list_str, "file list",
+>  		    "file(s) to remove"),
+> -	OPT_STRING('p', "purge", &purge_name_list_str, "path list",
+> -		    "path(s) to remove (remove old caches too)"),
+> +	OPT_STRING('p', "purge", &purge_name_list_str, "file list",
+> +		    "file(s) to remove (remove old caches too)"),
+>  	OPT_STRING('M', "missing", &missing_filename, "file",
+>  		   "to find missing build ids in the cache"),
+>  	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+> -- 
+> 2.9.4
+> 
 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index dcfdafdc2f1c..6680e4fb7967 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -154,6 +154,10 @@ do {							\
- 	yycolumn += yyleng;				\
- } while (0);
- 
-+#define USER_REJECT		\
-+	yycolumn -= yyleng;	\
-+	REJECT
-+
- %}
- 
- %x mem
-@@ -335,8 +339,8 @@ r{num_raw_hex}		{ return raw(yyscanner); }
- {num_hex}		{ return value(yyscanner, 16); }
- 
- {modifier_event}	{ return str(yyscanner, PE_MODIFIER_EVENT); }
--{bpf_object}		{ if (!isbpf(yyscanner)) REJECT; return str(yyscanner, PE_BPF_OBJECT); }
--{bpf_source}		{ if (!isbpf(yyscanner)) REJECT; return str(yyscanner, PE_BPF_SOURCE); }
-+{bpf_object}		{ if (!isbpf(yyscanner)) USER_REJECT; return str(yyscanner, PE_BPF_OBJECT); }
-+{bpf_source}		{ if (!isbpf(yyscanner)) USER_REJECT; return str(yyscanner, PE_BPF_SOURCE); }
- {name}			{ return pmu_str_check(yyscanner); }
- "/"			{ BEGIN(config); return '/'; }
- -			{ return '-'; }
+
 -- 
-2.13.6
+Masami Hiramatsu <mhiramat@kernel.org>
