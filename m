@@ -1,78 +1,125 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Adding a recording delay interferes with symbols/call-stack
-Date: Tue, 31 Oct 2017 11:25:37 -0300
-Message-ID: <20171031142537.GT7045@kernel.org>
-References: <CABYXEksdehm6S9-WGO6MV1wQaWHCsk-Ofp-sDaxY+qwQSNPp8Q@mail.gmail.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 1/2] perf/bench/numa: Add functions to detect sparse
+ numa nodes
+Date: Tue, 31 Oct 2017 20:44:53 +0530
+Message-ID: <20171031151453.pe2ef33hyjl6bcxo@naverao1-tp.localdomain>
+References: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
+ <855c8ed2d15135f2ac32105f60a745a4fd14036b.1503310062.git.sathnaga@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752191AbdJaOZk (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Oct 2017 10:25:40 -0400
-Received: from jouet.infradead.org (unknown [190.15.121.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D149D21869
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 Oct 2017 14:25:39 +0000 (UTC)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABYXEksdehm6S9-WGO6MV1wQaWHCsk-Ofp-sDaxY+qwQSNPp8Q@mail.gmail.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Bram Stolk <b.stolk@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <855c8ed2d15135f2ac32105f60a745a4fd14036b.1503310062.git.sathnaga@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sathnaga@linux.vnet.ibm.com
+Cc: acme@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, srikar@linux.vnet.ibm.com, bala24@linux.vnet.ibm.com
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Oct 30, 2017 at 01:25:08PM -0700, Bram Stolk escreveu:
-> If I record with callstacks like this:
-> 
-> $ perf record --freq 2000 --call-graph dwarf ./bench
-> 
-> then it works just fine: I see callstacks, and symbols in the report.
-> 
-> If I delay the recording by 1 second with the --delay flag, like this:
-> 
-> $ perf record --delay=1000 --freq 2000 --call-graph dwarf ./bench
-> 
-> Then I lose all callstack information, and even all symbol information
-> on my program in the report.
-> 
-> Is this a known issue, that --delay interferes with symbol resolution?
-> 
-> Thanks!
-> 
->   Bram
-> 
-> PS: I am on 64b Ubuntu, and perf version 4.4.87
+Hi Satheesh,
 
-Works for me: :-)
+On 2017/08/21 10:15AM, sathnaga@linux.vnet.ibm.com wrote:
+> From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> 
+> Added functions 1) to get a count of all nodes that are exposed to
+> userspace. These nodes could be memoryless cpu nodes or cpuless memory
+> nodes, 2) to check given node is present and 3) to check given
+> node has cpus
+> 
+> This information can be used to handle sparse/discontiguous nodes.
+> 
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
+> ---
+>  tools/perf/bench/numa.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+> index 469d65b..2483174 100644
+> --- a/tools/perf/bench/numa.c
+> +++ b/tools/perf/bench/numa.c
+> @@ -215,6 +215,50 @@ static const char * const numa_usage[] = {
+>  	NULL
+>  };
+> 
+> +/*
+> + * To get number of numa nodes present.
+> + */
+> +static int nr_numa_nodes(void)
+> +{
+> +	int i, nr_nodes = 0;
+> +
+> +	for (i = 0; i < g->p.nr_nodes; i++) {
+> +		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
+> +			nr_nodes++;
+> +	}
+> +
+> +	return nr_nodes;
+> +}
+> +
+> +/* 
 
-[root@jouet ~]# perf record --delay=1000 --freq 2000 --call-graph dwarf sleep 5
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.050 MB perf.data (4 samples) ]
-[root@jouet ~]# perf script
-perf 30567 248464.097254:          1 cycles:ppp: 
-                  3b233a __perf_event_task_sched_in (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  2be207 finish_task_switch (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  a44d21 __sched_text_start (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  a45368 schedule (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  a49679 do_nanosleep (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  30c816 hrtimer_nanosleep (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  30c96e sys_nanosleep (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  203a41 do_syscall_64 (/lib/modules/4.14.0-rc3+/build/vmlinux)
-                  a4ad67 return_from_SYSCALL_64 (/lib/modules/4.14.0-rc3+/build/vmlinux)
+Please run patches through scripts/checkpatch.pl. There is a trailing 
+whitespace above...
 
-perf 30567 248464.097288:          1 cycles:ppp: 
-                  20d1d0 intel_bts_enable_local (/lib/modules/4.14.0-rc3+/build/vmlinux)
+> + * To check if given numa node is present.
+> + */
+> +static int is_node_present(int node)
+> +{
+> +	return numa_bitmask_isbitset(numa_nodes_ptr, node);
+> +}
+> +
+> +/*
+> + * To check given numa node has cpus.
+> + */
+> +static bool node_has_cpus(int node)
+> +{
+> +	struct bitmask *cpu = numa_allocate_cpumask();
+> +	unsigned int i;
+> +
+> +	if (cpu == NULL)
+> +		return false; /* lets fall back to nocpus safely */
+> +
+> +	if (numa_node_to_cpus(node, cpu) == 0) {
 
-perf 30567 248464.097302:          3 cycles:ppp: 
-                  223111 native_sched_clock (/lib/modules/4.14.0-rc3+/build/vmlinux)
+This can be simplified to:
+	if (cpu && !numa_node_to_cpus(node, cpu)) {
 
-perf 30567 248464.097317:         16 cycles:ppp: 
-                  223111 native_sched_clock (/lib/modules/4.14.0-rc3+/build/vmlinux)
+> +		for (i = 0; i < cpu->size; i++) {
+> +			if (numa_bitmask_isbitset(cpu, i))
+> +				return true;
+> +			}
+> +		}
 
-[root@jouet ~]# perf -v
-perf version 4.14.rc6.gd688d0
-[root@jouet ~]# uname -a
-Linux jouet 4.14.0-rc3+ #1 SMP Fri Oct 13 12:21:12 -03 2017 x86_64 x86_64 x86_64 GNU/Linux
-[root@jouet ~]#
+The indentation on those brackets look to be wrong.
+
+> +
+> +	return false;
+> +}
+> +
+
+More importantly, you've introduced few functions in this patch, but 
+none of those are being used. This is not a useful way to split your 
+patches. In fact, this hurts bisect since trying to build perf with just 
+this patch applied throws errors.
+
+You seem to be addressing a few different issues related to perf bench 
+numa. You might want to split your patch based on the specific issue(s) 
+each change fixes.
+
+
+- Naveen
+
+
+>  static cpu_set_t bind_to_cpu(int target_cpu)
+>  {
+>  	cpu_set_t orig_mask, mask;
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
