@@ -1,50 +1,251 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/19] perf script: Use event_format__fprintf()
-Date: Fri,  3 Nov 2017 10:54:47 -0300
-Message-ID: <20171103135503.4921-4-acme@kernel.org>
+Subject: [PATCH 06/19] tools include uapi: Grab a copy of linux/prctl.h
+Date: Fri,  3 Nov 2017 10:54:50 -0300
+Message-ID: <20171103135503.4921-7-acme@kernel.org>
 References: <20171103135503.4921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171103135503.4921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, yuzhoujian <yuzhoujian@didichuxing.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Andy Lutomirski <luto@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Another case where we a1a587073ccd ("perf script: Use fprintf like
-printing uniformly") forgot to redirect output to the FILE descriptor,
-fix this too.
+We will use it to generate tables for beautifying prctl's 'option' arg
+and some of the others eventually.
 
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Link: http://lkml.kernel.org/n/tip-jmwx4pgfezw98ezfoj9t957s@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-cg8mpmz4hk9nfih685emnbk9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/include/uapi/linux/prctl.h | 200 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/check-headers.sh      |   1 +
+ 2 files changed, 201 insertions(+)
+ create mode 100644 tools/include/uapi/linux/prctl.h
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index af0267072d43..b27f21638207 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1465,9 +1465,10 @@ static void process_event(struct perf_script *script,
- 		return;
- 	}
- 
--	if (PRINT_FIELD(TRACE))
--		event_format__print(evsel->tp_format, sample->cpu,
--				    sample->raw_data, sample->raw_size);
-+	if (PRINT_FIELD(TRACE)) {
-+		event_format__fprintf(evsel->tp_format, sample->cpu,
-+				      sample->raw_data, sample->raw_size, fp);
-+	}
- 
- 	if (attr->type == PERF_TYPE_SYNTH && PRINT_FIELD(SYNTH))
- 		perf_sample__fprintf_synth(sample, evsel, fp);
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
+new file mode 100644
+index 000000000000..a8d0759a9e40
+--- /dev/null
++++ b/tools/include/uapi/linux/prctl.h
+@@ -0,0 +1,200 @@
++#ifndef _LINUX_PRCTL_H
++#define _LINUX_PRCTL_H
++
++#include <linux/types.h>
++
++/* Values to pass as first argument to prctl() */
++
++#define PR_SET_PDEATHSIG  1  /* Second arg is a signal */
++#define PR_GET_PDEATHSIG  2  /* Second arg is a ptr to return the signal */
++
++/* Get/set current->mm->dumpable */
++#define PR_GET_DUMPABLE   3
++#define PR_SET_DUMPABLE   4
++
++/* Get/set unaligned access control bits (if meaningful) */
++#define PR_GET_UNALIGN	  5
++#define PR_SET_UNALIGN	  6
++# define PR_UNALIGN_NOPRINT	1	/* silently fix up unaligned user accesses */
++# define PR_UNALIGN_SIGBUS	2	/* generate SIGBUS on unaligned user access */
++
++/* Get/set whether or not to drop capabilities on setuid() away from
++ * uid 0 (as per security/commoncap.c) */
++#define PR_GET_KEEPCAPS   7
++#define PR_SET_KEEPCAPS   8
++
++/* Get/set floating-point emulation control bits (if meaningful) */
++#define PR_GET_FPEMU  9
++#define PR_SET_FPEMU 10
++# define PR_FPEMU_NOPRINT	1	/* silently emulate fp operations accesses */
++# define PR_FPEMU_SIGFPE	2	/* don't emulate fp operations, send SIGFPE instead */
++
++/* Get/set floating-point exception mode (if meaningful) */
++#define PR_GET_FPEXC	11
++#define PR_SET_FPEXC	12
++# define PR_FP_EXC_SW_ENABLE	0x80	/* Use FPEXC for FP exception enables */
++# define PR_FP_EXC_DIV		0x010000	/* floating point divide by zero */
++# define PR_FP_EXC_OVF		0x020000	/* floating point overflow */
++# define PR_FP_EXC_UND		0x040000	/* floating point underflow */
++# define PR_FP_EXC_RES		0x080000	/* floating point inexact result */
++# define PR_FP_EXC_INV		0x100000	/* floating point invalid operation */
++# define PR_FP_EXC_DISABLED	0	/* FP exceptions disabled */
++# define PR_FP_EXC_NONRECOV	1	/* async non-recoverable exc. mode */
++# define PR_FP_EXC_ASYNC	2	/* async recoverable exception mode */
++# define PR_FP_EXC_PRECISE	3	/* precise exception mode */
++
++/* Get/set whether we use statistical process timing or accurate timestamp
++ * based process timing */
++#define PR_GET_TIMING   13
++#define PR_SET_TIMING   14
++# define PR_TIMING_STATISTICAL  0       /* Normal, traditional,
++                                                   statistical process timing */
++# define PR_TIMING_TIMESTAMP    1       /* Accurate timestamp based
++                                                   process timing */
++
++#define PR_SET_NAME    15		/* Set process name */
++#define PR_GET_NAME    16		/* Get process name */
++
++/* Get/set process endian */
++#define PR_GET_ENDIAN	19
++#define PR_SET_ENDIAN	20
++# define PR_ENDIAN_BIG		0
++# define PR_ENDIAN_LITTLE	1	/* True little endian mode */
++# define PR_ENDIAN_PPC_LITTLE	2	/* "PowerPC" pseudo little endian */
++
++/* Get/set process seccomp mode */
++#define PR_GET_SECCOMP	21
++#define PR_SET_SECCOMP	22
++
++/* Get/set the capability bounding set (as per security/commoncap.c) */
++#define PR_CAPBSET_READ 23
++#define PR_CAPBSET_DROP 24
++
++/* Get/set the process' ability to use the timestamp counter instruction */
++#define PR_GET_TSC 25
++#define PR_SET_TSC 26
++# define PR_TSC_ENABLE		1	/* allow the use of the timestamp counter */
++# define PR_TSC_SIGSEGV		2	/* throw a SIGSEGV instead of reading the TSC */
++
++/* Get/set securebits (as per security/commoncap.c) */
++#define PR_GET_SECUREBITS 27
++#define PR_SET_SECUREBITS 28
++
++/*
++ * Get/set the timerslack as used by poll/select/nanosleep
++ * A value of 0 means "use default"
++ */
++#define PR_SET_TIMERSLACK 29
++#define PR_GET_TIMERSLACK 30
++
++#define PR_TASK_PERF_EVENTS_DISABLE		31
++#define PR_TASK_PERF_EVENTS_ENABLE		32
++
++/*
++ * Set early/late kill mode for hwpoison memory corruption.
++ * This influences when the process gets killed on a memory corruption.
++ */
++#define PR_MCE_KILL	33
++# define PR_MCE_KILL_CLEAR   0
++# define PR_MCE_KILL_SET     1
++
++# define PR_MCE_KILL_LATE    0
++# define PR_MCE_KILL_EARLY   1
++# define PR_MCE_KILL_DEFAULT 2
++
++#define PR_MCE_KILL_GET 34
++
++/*
++ * Tune up process memory map specifics.
++ */
++#define PR_SET_MM		35
++# define PR_SET_MM_START_CODE		1
++# define PR_SET_MM_END_CODE		2
++# define PR_SET_MM_START_DATA		3
++# define PR_SET_MM_END_DATA		4
++# define PR_SET_MM_START_STACK		5
++# define PR_SET_MM_START_BRK		6
++# define PR_SET_MM_BRK			7
++# define PR_SET_MM_ARG_START		8
++# define PR_SET_MM_ARG_END		9
++# define PR_SET_MM_ENV_START		10
++# define PR_SET_MM_ENV_END		11
++# define PR_SET_MM_AUXV			12
++# define PR_SET_MM_EXE_FILE		13
++# define PR_SET_MM_MAP			14
++# define PR_SET_MM_MAP_SIZE		15
++
++/*
++ * This structure provides new memory descriptor
++ * map which mostly modifies /proc/pid/stat[m]
++ * output for a task. This mostly done in a
++ * sake of checkpoint/restore functionality.
++ */
++struct prctl_mm_map {
++	__u64	start_code;		/* code section bounds */
++	__u64	end_code;
++	__u64	start_data;		/* data section bounds */
++	__u64	end_data;
++	__u64	start_brk;		/* heap for brk() syscall */
++	__u64	brk;
++	__u64	start_stack;		/* stack starts at */
++	__u64	arg_start;		/* command line arguments bounds */
++	__u64	arg_end;
++	__u64	env_start;		/* environment variables bounds */
++	__u64	env_end;
++	__u64	*auxv;			/* auxiliary vector */
++	__u32	auxv_size;		/* vector size */
++	__u32	exe_fd;			/* /proc/$pid/exe link file */
++};
++
++/*
++ * Set specific pid that is allowed to ptrace the current task.
++ * A value of 0 mean "no process".
++ */
++#define PR_SET_PTRACER 0x59616d61
++# define PR_SET_PTRACER_ANY ((unsigned long)-1)
++
++#define PR_SET_CHILD_SUBREAPER	36
++#define PR_GET_CHILD_SUBREAPER	37
++
++/*
++ * If no_new_privs is set, then operations that grant new privileges (i.e.
++ * execve) will either fail or not grant them.  This affects suid/sgid,
++ * file capabilities, and LSMs.
++ *
++ * Operations that merely manipulate or drop existing privileges (setresuid,
++ * capset, etc.) will still work.  Drop those privileges if you want them gone.
++ *
++ * Changing LSM security domain is considered a new privilege.  So, for example,
++ * asking selinux for a specific new context (e.g. with runcon) will result
++ * in execve returning -EPERM.
++ *
++ * See Documentation/prctl/no_new_privs.txt for more details.
++ */
++#define PR_SET_NO_NEW_PRIVS	38
++#define PR_GET_NO_NEW_PRIVS	39
++
++#define PR_GET_TID_ADDRESS	40
++
++#define PR_SET_THP_DISABLE	41
++#define PR_GET_THP_DISABLE	42
++
++/*
++ * Tell the kernel to start/stop helping userspace manage bounds tables.
++ */
++#define PR_MPX_ENABLE_MANAGEMENT  43
++#define PR_MPX_DISABLE_MANAGEMENT 44
++
++#define PR_SET_FP_MODE		45
++#define PR_GET_FP_MODE		46
++# define PR_FP_MODE_FR		(1 << 0)	/* 64b FP registers */
++# define PR_FP_MODE_FRE		(1 << 1)	/* 32b compatibility */
++
++/* Control the ambient capability set */
++#define PR_CAP_AMBIENT			47
++# define PR_CAP_AMBIENT_IS_SET		1
++# define PR_CAP_AMBIENT_RAISE		2
++# define PR_CAP_AMBIENT_LOWER		3
++# define PR_CAP_AMBIENT_CLEAR_ALL	4
++
++#endif /* _LINUX_PRCTL_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 322629423b49..8d8b37198666 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -6,6 +6,7 @@ include/uapi/drm/i915_drm.h
+ include/uapi/linux/fcntl.h
+ include/uapi/linux/kvm.h
+ include/uapi/linux/perf_event.h
++include/uapi/linux/prctl.h
+ include/uapi/linux/sched.h
+ include/uapi/linux/stat.h
+ include/uapi/linux/vhost.h
 -- 
 2.13.6
