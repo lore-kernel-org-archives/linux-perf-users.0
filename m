@@ -1,102 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/19] perf stat: Make --per-thread update shadow stats to show metrics
-Date: Fri,  3 Nov 2017 10:54:57 -0300
-Message-ID: <20171103135503.4921-14-acme@kernel.org>
+Subject: [PATCH 11/19] perf tools: Add perf_data_file__write function
+Date: Fri,  3 Nov 2017 10:54:55 -0300
+Message-ID: <20171103135503.4921-12-acme@kernel.org>
 References: <20171103135503.4921-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:60746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1756458AbdKCN4Q (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 3 Nov 2017 09:56:16 -0400
 In-Reply-To: <20171103135503.4921-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-We should support this because it would allow easily to collect metrics
-for different threads in applications.
+Adding perf_data_file__write function to provide single file write
+operation.
 
-Original patch from posted by Jin Yao in here [1].
-
-1. Current output, for example:
-
-root@skl:/tmp# perf stat --per-thread -p 21623
-^C
- Performance counter stats for process id '21623':
-
-          vmstat-21623              0.517479      task-clock (msec)         #    0.000 CPUs utilized
-          vmstat-21623                     1      context-switches
-          vmstat-21623                     0      cpu-migrations
-          vmstat-21623                     0      page-faults
-          vmstat-21623               461,306      cycles
-          vmstat-21623               630,724      instructions
-          vmstat-21623               136,265      branches
-          vmstat-21623                 2,520      branch-misses
-
-       1.444020756 seconds time elapsed
-
-root@skl:/tmp# perf stat --per-thread --metrics ipc -p 21623
-^C
- Performance counter stats for process id '21623':
-
-          vmstat-21623               631,185      inst_retired.any
-          vmstat-21623               605,893      cpu_clk_unhalted.thread
-
-       1.415679293 seconds time elapsed
-
-2. With this patch, the result would be:
-
-root@skl:/tmp# perf stat --per-thread -p 21623
-^C
- Performance counter stats for process id '21623':
-
-          vmstat-21623              0.533759      task-clock (msec)         #    0.000 CPUs utilized
-          vmstat-21623                     1      context-switches          #    0.002 M/sec
-          vmstat-21623                     0      cpu-migrations            #    0.000 K/sec
-          vmstat-21623                     0      page-faults               #    0.000 K/sec
-          vmstat-21623               473,896      cycles                    #    0.888 GHz
-          vmstat-21623               631,072      instructions              #    1.33  insn per cycle
-          vmstat-21623               136,307      branches                  #  255.372 M/sec
-          vmstat-21623                 2,524      branch-misses             #    1.85% of all branches
-
-       1.544862861 seconds time elapsed
-
-root@skl:/tmp# perf stat --per-thread --metrics ipc -p 21623
-^C
- Performance counter stats for process id '21623':
-
-          vmstat-21623             1,259,104      inst_retired.any          #      1.2 IPC
-          vmstat-21623             1,056,756      cpu_clk_unhalted.thread
-
-       2.040954502 seconds time elapsed
-
-[1] https://marc.info/?l=linux-kernel&m=150777054620511&w=2
-
-Originally-from: Jin Yao <yao.jin@linux.intel.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: Changbin Du <changbin.du@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-tr8ntktxmy4qc5769ajg5u6c@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-c3f9p4xzykr845ktqcek6p4t@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/data.c | 8 +++++++-
+ tools/perf/util/data.h | 2 ++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index ef00c91e2553..203f5d8d11d1 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -278,6 +278,8 @@ process_counter_values(struct perf_stat_config *config, struct perf_evsel *evsel
- 		perf_counts_values__scale(count, config->scale, NULL);
- 		if (config->aggr_mode == AGGR_NONE)
- 			perf_stat__update_shadow_stats(evsel, count->val, cpu);
-+		if (config->aggr_mode == AGGR_THREAD)
-+			perf_stat__update_shadow_stats(evsel, count->val, 0);
- 		break;
- 	case AGGR_GLOBAL:
- 		aggr->val += count->val;
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 07ef56a4123c..f80a23d031d6 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -144,10 +144,16 @@ void perf_data__close(struct perf_data *data)
+ 	close(data->file.fd);
+ }
+ 
++ssize_t perf_data_file__write(struct perf_data_file *file,
++			      void *buf, size_t size)
++{
++	return writen(file->fd, buf, size);
++}
++
+ ssize_t perf_data__write(struct perf_data *data,
+ 			      void *buf, size_t size)
+ {
+-	return writen(data->file.fd, buf, size);
++	return perf_data_file__write(&data->file, buf, size);
+ }
+ 
+ int perf_data__switch(struct perf_data *data,
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 1797bed3aa4b..000c43bbb7ac 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -50,6 +50,8 @@ int perf_data__open(struct perf_data *data);
+ void perf_data__close(struct perf_data *data);
+ ssize_t perf_data__write(struct perf_data *data,
+ 			      void *buf, size_t size);
++ssize_t perf_data_file__write(struct perf_data_file *file,
++			      void *buf, size_t size);
+ /*
+  * If at_exit is set, only rename current perf.data to
+  * perf.data.<postfix>, continue write on original data.
 -- 
 2.13.6
