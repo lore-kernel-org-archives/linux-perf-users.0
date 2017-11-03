@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/19] tools include uapi: Grab a copy of linux/kcmp.h
-Date: Fri,  3 Nov 2017 10:54:59 -0300
-Message-ID: <20171103135503.4921-16-acme@kernel.org>
+Subject: [PATCH 16/19] perf trace beauty: Implement pid_fd beautifier
+Date: Fri,  3 Nov 2017 10:55:00 -0300
+Message-ID: <20171103135503.4921-17-acme@kernel.org>
 References: <20171103135503.4921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171103135503.4921-1-acme@kernel.org>
@@ -12,7 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We will use it to generate tables for beautifying kcmp's 'type' arg.
+One that given a pid and a fd, will try to get the path for that fd.
+Will be used in the upcoming kcmp's KCMP_FILE beautifier.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andrey Vagin <avagin@openvz.org>
@@ -21,58 +22,61 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-r35zr79invmpinfe1zu57cas@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-7ketygp2dvs9h13wuakfncws@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kcmp.h | 27 +++++++++++++++++++++++++++
- tools/perf/check-headers.sh     |  1 +
- 2 files changed, 28 insertions(+)
- create mode 100644 tools/include/uapi/linux/kcmp.h
+ tools/perf/builtin-trace.c       | 17 +++++++++++++++++
+ tools/perf/trace/beauty/beauty.h |  3 +++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/tools/include/uapi/linux/kcmp.h b/tools/include/uapi/linux/kcmp.h
-new file mode 100644
-index 000000000000..481e103da78e
---- /dev/null
-+++ b/tools/include/uapi/linux/kcmp.h
-@@ -0,0 +1,27 @@
-+#ifndef _UAPI_LINUX_KCMP_H
-+#define _UAPI_LINUX_KCMP_H
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index c373f9a3e4a9..0c1461416ef1 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -988,6 +988,23 @@ size_t syscall_arg__scnprintf_fd(char *bf, size_t size, struct syscall_arg *arg)
+ 	return printed;
+ }
+ 
++size_t pid__scnprintf_fd(struct trace *trace, pid_t pid, int fd, char *bf, size_t size)
++{
++        size_t printed = scnprintf(bf, size, "%d", fd);
++	struct thread *thread = machine__find_thread(trace->host, pid, pid);
 +
-+#include <linux/types.h>
++	if (thread) {
++		const char *path = thread__fd_path(thread, fd, trace);
 +
-+/* Comparison type */
-+enum kcmp_type {
-+	KCMP_FILE,
-+	KCMP_VM,
-+	KCMP_FILES,
-+	KCMP_FS,
-+	KCMP_SIGHAND,
-+	KCMP_IO,
-+	KCMP_SYSVSEM,
-+	KCMP_EPOLL_TFD,
++		if (path)
++			printed += scnprintf(bf + printed, size - printed, "<%s>", path);
 +
-+	KCMP_TYPES,
-+};
++		thread__put(thread);
++	}
 +
-+/* Slot for KCMP_EPOLL_TFD */
-+struct kcmp_epoll_slot {
-+	__u32 efd;		/* epoll file descriptor */
-+	__u32 tfd;		/* target file number */
-+	__u32 toff;		/* target offset within same numbered sequence */
-+};
++        return printed;
++}
 +
-+#endif /* _UAPI_LINUX_KCMP_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 8d8b37198666..a3a041b0d35e 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -4,6 +4,7 @@ HEADERS='
- include/uapi/drm/drm.h
- include/uapi/drm/i915_drm.h
- include/uapi/linux/fcntl.h
-+include/uapi/linux/kcmp.h
- include/uapi/linux/kvm.h
- include/uapi/linux/perf_event.h
- include/uapi/linux/prctl.h
+ static size_t syscall_arg__scnprintf_close_fd(char *bf, size_t size,
+ 					      struct syscall_arg *arg)
+ {
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index b29f94ef5d6a..365bb6fecc1c 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
++#include <sys/types.h>
+ 
+ struct strarray {
+ 	int	    offset;
+@@ -26,6 +27,8 @@ size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const cha
+ struct trace;
+ struct thread;
+ 
++size_t pid__scnprintf_fd(struct trace *trace, pid_t pid, int fd, char *bf, size_t size);
++
+ /**
+  * @val: value of syscall argument being formatted
+  * @args: All the args, use syscall_args__val(arg, nth) to access one
 -- 
 2.13.6
