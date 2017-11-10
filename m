@@ -1,38 +1,65 @@
-From: Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: perf utility question: "Sky high iTLB-load-misses"
-Date: Thu, 9 Nov 2017 14:37:46 -0500 (EST)
-Message-ID: <alpine.DEB.2.20.1711091434560.27723@macbook-air>
-References: <20171108163440.GA10004@redhat.com> <alpine.DEB.2.20.1711081152280.1975@macbook-air> <20171109135325.GJ4333@kernel.org> <20171109143838.GY2482@two.firstfloor.org> <20171109185047.GC10004@redhat.com>
- <CABYXEkuMqU=EXZ8h7x7BK+_rX-fB7SHMNHm4LBV+V7kH2kcQng@mail.gmail.com>
+From: Mengting Zhang <zhangmengting@huawei.com>
+Subject: [PATCH] perf evsel: Fix incorrect precise_ip in default event name
+Date: Fri, 10 Nov 2017 13:49:06 +0800
+Message-ID: <1510292946-23686-1-git-send-email-zhangmengting@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-it0-f41.google.com ([209.85.214.41]:46629 "EHLO
-        mail-it0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752824AbdKITh7 (ORCPT
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10431 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751083AbdKJF5x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Nov 2017 14:37:59 -0500
-Received: by mail-it0-f41.google.com with SMTP id f187so12721061itb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Nov 2017 11:37:59 -0800 (PST)
-In-Reply-To: <CABYXEkuMqU=EXZ8h7x7BK+_rX-fB7SHMNHm4LBV+V7kH2kcQng@mail.gmail.com>
+        Fri, 10 Nov 2017 00:57:53 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Bram Stolk <b.stolk@gmail.com>
-Cc: =?ISO-8859-15?Q?Jan_Pokorn=FD?= <poki@redhat.com>, Andi Kleen <andi@firstfloor.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
+To: jolsa@redhat.com, namhyung@kernel.org, alexander.shishkin@linux.intel.com
+Cc: acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com, zhangmengting@huawei.com
 
-On Thu, 9 Nov 2017, Bram Stolk wrote:
+When no event is specified with -e option, perf will specify a
+"cycles" event with the highest level of precision available in
+perf_event_attr.precise_ip as the default event. But the evsel name
+shows an incorrect precise ip, fix it.
 
-> Vince mentioned that two values are compared which do not relate well.
-> I would say the two possible approaches would then be:
-> (1) report absolute numbers only, no percentage.
-> (2) don't report it.
+For example, with a highest precision perf_event_attr.precise_ip = 2,
+the evsel name "cycles:ppp" shows a wrong precision available.
 
-Well they possibly don't relate well.  You would need an advanced degree 
-in computer architecture and/or an NDA with Intel to know for sure what's 
-really going on.
+Before:
+$./perf record sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.014 MB perf.data (21 samples) ]
+$./perf evlist -v
+cycles:ppp: size: 112, { sample_period, sample_freq }: 4000, 
+sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
+comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
+sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
 
-On modern procesors any event more complicated than "cycles" and 
-"instructions" can be nearly impossible to understand, and even cycles has 
-a lot of corner cases.
+After:
+$./perf record sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.014 MB perf.data (16 samples) ]
+$./perf evlist -v
+cycles:pp: size: 112, { sample_period, sample_freq }: 4000,
+sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
+comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
+sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
 
-Vince
+Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
+---
+ tools/perf/util/evsel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 0dccdb8..94cf11d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -312,7 +312,7 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
+ 	if (asprintf(&evsel->name, "cycles%s%s%.*s",
+ 		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
+ 		     attr.exclude_kernel ? "u" : "",
+-		     attr.precise_ip ? attr.precise_ip + 1 : 0, "ppp") < 0)
++		     attr.precise_ip ? attr.precise_ip : 0, "ppp") < 0)
+ 		goto error_free;
+ out:
+ 	return evsel;
+-- 
+1.7.12.4
