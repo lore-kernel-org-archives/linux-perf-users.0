@@ -1,75 +1,90 @@
-From: Namhyung Kim <namhyung@kernel.org>
+From: zhangmengting <zhangmengting@huawei.com>
 Subject: Re: [PATCH] perf evsel: Fix incorrect precise_ip in default event
  name
-Date: Fri, 10 Nov 2017 15:30:53 +0900
-Message-ID: <20171110063053.GA1544@danjae.aot.lge.com>
+Date: Fri, 10 Nov 2017 15:56:17 +0800
+Message-ID: <520952d1-334b-d385-7e64-b8c963e01846@huawei.com>
 References: <1510292946-23686-1-git-send-email-zhangmengting@huawei.com>
+ <20171110063053.GA1544@danjae.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f66.google.com ([74.125.83.66]:55581 "EHLO
-        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751113AbdKJGdZ (ORCPT
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10482 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750793AbdKJH5n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Nov 2017 01:33:25 -0500
-Content-Disposition: inline
-In-Reply-To: <1510292946-23686-1-git-send-email-zhangmengting@huawei.com>
+        Fri, 10 Nov 2017 02:57:43 -0500
+In-Reply-To: <20171110063053.GA1544@danjae.aot.lge.com>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mengting Zhang <zhangmengting@huawei.com>
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: jolsa@redhat.com, alexander.shishkin@linux.intel.com, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com, kernel-team@lge.com
 
-Hello,
+Hi Namhyung,
 
-On Fri, Nov 10, 2017 at 01:49:06PM +0800, Mengting Zhang wrote:
-> When no event is specified with -e option, perf will specify a
-> "cycles" event with the highest level of precision available in
-> perf_event_attr.precise_ip as the default event. But the evsel name
-> shows an incorrect precise ip, fix it.
-> 
-> For example, with a highest precision perf_event_attr.precise_ip = 2,
-> the evsel name "cycles:ppp" shows a wrong precision available.
-> 
-> Before:
-> $./perf record sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.014 MB perf.data (21 samples) ]
-> $./perf evlist -v
-> cycles:ppp: size: 112, { sample_period, sample_freq }: 4000, 
-> sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
-> comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
-> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
-> 
-> After:
-> $./perf record sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.014 MB perf.data (16 samples) ]
-> $./perf evlist -v
-> cycles:pp: size: 112, { sample_period, sample_freq }: 4000,
-> sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
-> comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
-> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
-> 
-> Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
-> ---
->  tools/perf/util/evsel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 0dccdb8..94cf11d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -312,7 +312,7 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
->  	if (asprintf(&evsel->name, "cycles%s%s%.*s",
->  		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
->  		     attr.exclude_kernel ? "u" : "",
-> -		     attr.precise_ip ? attr.precise_ip + 1 : 0, "ppp") < 0)
-> +		     attr.precise_ip ? attr.precise_ip : 0, "ppp") < 0)
-
-I think you don't need to check value of the precise_ip anymore.
-The following should be ok:
-
-		     attr.precise_ip, "ppp") < 0)
+Yeah, you are right. I'll send a new patch later.
 
 Thanks,
-Namhyung
+
+Mengting Zhang
+
+
+On 2017/11/10 14:30, Namhyung Kim wrote:
+> Hello,
+>
+> On Fri, Nov 10, 2017 at 01:49:06PM +0800, Mengting Zhang wrote:
+>> When no event is specified with -e option, perf will specify a
+>> "cycles" event with the highest level of precision available in
+>> perf_event_attr.precise_ip as the default event. But the evsel name
+>> shows an incorrect precise ip, fix it.
+>>
+>> For example, with a highest precision perf_event_attr.precise_ip = 2,
+>> the evsel name "cycles:ppp" shows a wrong precision available.
+>>
+>> Before:
+>> $./perf record sleep 1
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.014 MB perf.data (21 samples) ]
+>> $./perf evlist -v
+>> cycles:ppp: size: 112, { sample_period, sample_freq }: 4000,
+>> sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
+>> comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
+>> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
+>>
+>> After:
+>> $./perf record sleep 1
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.014 MB perf.data (16 samples) ]
+>> $./perf evlist -v
+>> cycles:pp: size: 112, { sample_period, sample_freq }: 4000,
+>> sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1,
+>> comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 2,
+>> sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
+>>
+>> Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
+>> ---
+>>   tools/perf/util/evsel.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index 0dccdb8..94cf11d 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -312,7 +312,7 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
+>>   	if (asprintf(&evsel->name, "cycles%s%s%.*s",
+>>   		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
+>>   		     attr.exclude_kernel ? "u" : "",
+>> -		     attr.precise_ip ? attr.precise_ip + 1 : 0, "ppp") < 0)
+>> +		     attr.precise_ip ? attr.precise_ip : 0, "ppp") < 0)
+> I think you don't need to check value of the precise_ip anymore.
+> The following should be ok:
+>
+> 		     attr.precise_ip, "ppp") < 0)
+>
+> Thanks,
+> Namhyung
+>
+>
+> .
+>
