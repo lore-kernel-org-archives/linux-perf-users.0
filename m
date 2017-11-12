@@ -1,66 +1,61 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf parse events: Fix invalid precise_ip handling
-Date: Fri, 10 Nov 2017 11:39:00 +0100
-Message-ID: <20171110103900.GA10233@krava>
-References: <1510302517-33383-1-git-send-email-zhangmengting@huawei.com>
+From: Alan Bartlett <ajb@elrepo.org>
+Subject: [PATCH] perf build fix linux-4.4.X branch and RHEL7.4
+Date: Sun, 12 Nov 2017 00:11:10 +0000
+Message-ID: <5a07919e.z+O+Phd/vA/MPaXS%ajb@elrepo.org>
+Reply-To: Alan Bartlett <ajb@elrepo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:59338 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751683AbdKJKjD (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:39471 "EHLO
+        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752274AbdKLALO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Nov 2017 05:39:03 -0500
-Content-Disposition: inline
-In-Reply-To: <1510302517-33383-1-git-send-email-zhangmengting@huawei.com>
+        Sat, 11 Nov 2017 19:11:14 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mengting Zhang <zhangmengting@huawei.com>
-Cc: namhyung@kernel.org, alexander.shishkin@linux.intel.com, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com
+To: linux-kernel@vger.kernel.org
+Cc: phil@elrepo.org, toracat@elrepo.org, acme@kernel.org, linux-perf-users@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 04:28:37PM +0800, Mengting Zhang wrote:
+[Please Cc me, as I am not subscribed to the list.]
 
-SNIP
+With the update of RHEL7.3 to RHEL7.4 the perf sub-system
+of the stable linux-4.4.X branch fails to build.
 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 39b1596..25225f4 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1369,6 +1369,32 @@ struct event_modifier {
->  	int pinned;
->  };
->  
-> +static int perf_get_max_precise_ip(void)
-> +{
-> +       int max_precise_ip = 0;
-> +       struct perf_event_attr attr = {
-> +               .type   = PERF_TYPE_HARDWARE,
-> +               .config = PERF_COUNT_HW_CPU_CYCLES,
-> +       };
-> +
-> +       event_attr_init(&attr);
-> +       
-> +       attr.precise_ip = 3;
-> +       attr.sample_period = 1;
-> +
-> +       while (attr.precise_ip != 0) {
-> +               int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-> +               if (fd != -1){
-> +                       close(fd);
-> +                       break;
-> +               }
-> +               --attr.precise_ip;
-> +       }
-> +       max_precise_ip = attr.precise_ip;
-> +
-> +       return max_precise_ip;
-> +}
+tools/perf/bench/futex.h:36:10: error: 'SYS_futex' undeclared
+tools/perf/tests/mmap-thread-lookup.c:42:20: error: 'SYS_gettid' undeclared
 
-we already have a function for that, please check perf_event_attr__set_max_precise_ip
+Fix by inserting two conditional hash-defines.
 
-also I think the precise level is not generic for all the events,
-so you should check it for specific perf_event_attr later, when
-the attr is ready, not in modifier parsing
+Signed-off-by: Alan Bartlett <ajb@elrepo.org>
+Cc: Akemi Yagi <toracat@elrepo.org>
+Cc: Philip J Perry <phil@elrepo.org>
 
-thanks,
-jirka
+diff -Npru a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+--- a/tools/perf/bench/futex.h	2017-11-02 04:40:50.000000000 -0400
++++ b/tools/perf/bench/futex.h	2017-11-05 19:59:35.063971553 -0500
+@@ -12,6 +12,10 @@
+ #include <sys/types.h>
+ #include <linux/futex.h>
+ 
++#ifndef SYS_futex
++#define SYS_futex __NR_futex
++#endif
++
+ /**
+  * futex() - SYS_futex syscall wrapper
+  * @uaddr:	address of first futex
+diff -Npru a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+--- a/tools/perf/tests/tests.h	2017-11-02 04:40:50.000000000 -0400
++++ b/tools/perf/tests/tests.h	2017-11-05 20:00:59.702007286 -0500
+@@ -1,6 +1,10 @@
+ #ifndef TESTS_H
+ #define TESTS_H
+ 
++#ifndef SYS_gettid
++#define SYS_gettid __NR_gettid
++#endif
++
+ #define TEST_ASSERT_VAL(text, cond)					 \
+ do {									 \
+ 	if (!(cond)) {							 \
