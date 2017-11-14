@@ -1,151 +1,77 @@
-From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 1/2] perf/bench/numa: Add functions to detect sparse
- numa nodes
-Date: Tue, 14 Nov 2017 18:17:46 +0530
-Message-ID: <1510663666.24275.41.camel@linux.vnet.ibm.com>
-References: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
-         <855c8ed2d15135f2ac32105f60a745a4fd14036b.1503310062.git.sathnaga@linux.vnet.ibm.com>
-         <20171031151453.pe2ef33hyjl6bcxo@naverao1-tp.localdomain>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf test fix check open filename arg using perf trace
+ on s390x
+Date: Tue, 14 Nov 2017 10:13:44 -0300
+Message-ID: <20171114131344.GL8836@kernel.org>
+References: <20171114071847.2381-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58286 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1754544AbdKNMsC (ORCPT
+Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752752AbdKNNNq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Nov 2017 07:48:02 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAECiTGg091027
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2017 07:48:02 -0500
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2e7wbs3nc4-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2017 07:48:01 -0500
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <sathnaga@linux.vnet.ibm.com>;
-        Tue, 14 Nov 2017 07:48:01 -0500
-In-Reply-To: <20171031151453.pe2ef33hyjl6bcxo@naverao1-tp.localdomain>
+        Tue, 14 Nov 2017 08:13:46 -0500
+Content-Disposition: inline
+In-Reply-To: <20171114071847.2381-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc: acme@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, srikar@linux.vnet.ibm.com, bala24@linux.vnet.ibm.com
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com
 
-Hi Naveen,Thanks for detailed review, my comments inline.
+Em Tue, Nov 14, 2017 at 08:18:46AM +0100, Thomas Richter escreveu:
+> This perf test case fails on s390x. The touch command on s390x uses
+> the openat system call to open the file named on the command line:
 
-On Tue, 2017-10-31 at 20:44 +0530, Naveen N. Rao wrote:
-> Hi Satheesh,
-> 
-> On 2017/08/21 10:15AM, sathnaga@linux.vnet.ibm.com wrote:
-> > 
-> > From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> > 
-> > Added functions 1) to get a count of all nodes that are exposed to
-> > userspace. These nodes could be memoryless cpu nodes or cpuless
-> > memory
-> > nodes, 2) to check given node is present and 3) to check given
-> > node has cpus
-> > 
-> > This information can be used to handle sparse/discontiguous nodes.
-> > 
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> > Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> > Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
-> > ---
-> >  tools/perf/bench/numa.c | 44
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> > 
-> > diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> > index 469d65b..2483174 100644
-> > --- a/tools/perf/bench/numa.c
-> > +++ b/tools/perf/bench/numa.c
-> > @@ -215,6 +215,50 @@ static const char * const numa_usage[] = {
-> >  	NULL
-> >  };
-> > 
-> > +/*
-> > + * To get number of numa nodes present.
-> > + */
-> > +static int nr_numa_nodes(void)
-> > +{
-> > +	int i, nr_nodes = 0;
-> > +
-> > +	for (i = 0; i < g->p.nr_nodes; i++) {
-> > +		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-> > +			nr_nodes++;
-> > +	}
-> > +
-> > +	return nr_nodes;
-> > +}
-> > +
-> > +/* 
-> Please run patches through scripts/checkpatch.pl. There is a
-> trailing 
-> whitespace above...
-> 
-Sure
-> > 
-> > + * To check if given numa node is present.
-> > + */
-> > +static int is_node_present(int node)
-> > +{
-> > +	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-> > +}
-> > +
-> > +/*
-> > + * To check given numa node has cpus.
-> > + */
-> > +static bool node_has_cpus(int node)
-> > +{
-> > +	struct bitmask *cpu = numa_allocate_cpumask();
-> > +	unsigned int i;
-> > +
-> > +	if (cpu == NULL)
-> > +		return false; /* lets fall back to nocpus safely
-> > */
-> > +
-> > +	if (numa_node_to_cpus(node, cpu) == 0) {
-> This can be simplified to:
-> 	if (cpu && !numa_node_to_cpus(node, cpu)) {
-> 
-> > 
-> > +		for (i = 0; i < cpu->size; i++) {
-> > +			if (numa_bitmask_isbitset(cpu, i))
-> > +				return true;
-> > +			}
-> > +		}
-> The indentation on those brackets look to be wrong.
-> 
-Sure
-> > 
-> > +
-> > +	return false;
-> > +}
-> > +
-> More importantly, you've introduced few functions in this patch, but 
-> none of those are being used. This is not a useful way to split your 
-> patches. In fact, this hurts bisect since trying to build perf with
-> just 
-> this patch applied throws errors.
-> 
-Sure, This can be merged to single patch, will do it in next version.
+Thanks, tested on x86_64 and applied!
 
-> You seem to be addressing a few different issues related to perf
-> bench 
-> numa. You might want to split your patch based on the specific
-> issue(s) 
-> each change fixes.
+- Arnaldo
+ 
+> [root@s35lp76 perf]# ./perf probe -l
+>   probe:vfs_getname    (on getname_flags:72@fs/namei.c with pathname)
+> [root@s35lp76 perf]# ./perf trace -e open touch /tmp/abc
+>      0.400 ( 0.015 ms): touch/27542 open(filename:
+> 		/usr/lib/locale/locale-archive, flags: CLOEXEC         ) = 3
+> [root@s35lp76 perf]#
 > 
+> There is no open system call for file /tmp/abc. Instead openat
+> system call is used:
 > 
-> - Naveen
+> [root@s35lp76 perf]# strace touch /tmp/abc
+>     execve("/usr/bin/touch", ["touch", "/tmp/abc"], 0x3ffd547ec98
+> 			/* 30 vars */) = 0
+>     [...]
+>     openat(AT_FDCWD, "/tmp/abc", O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, 0666) = 3
+>     [...]
 > 
+> On s390x the egrep command does not find a matching pattern and returns
+> an error.
 > 
-Regards,
--Satheesh.
-> > 
-> >  static cpu_set_t bind_to_cpu(int target_cpu)
-> >  {
-> >  	cpu_set_t orig_mask, mask;
+> Fix this for the s390x platform and create a platform dependend command
+> line to enable the perf probe to listen to openat system call on s390x
+> and get the correct perf trace output.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> index 2e68c5f120da..2a9ef080efd0 100755
+> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> @@ -17,8 +17,10 @@ skip_if_no_perf_probe || exit 2
+>  file=$(mktemp /tmp/temporary_file.XXXXX)
+>  
+>  trace_open_vfs_getname() {
+> -	perf trace -e open touch $file 2>&1 | \
+> -	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open\(filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+> +	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
+> +
+> +	perf trace -e ${svc:-open} touch $file 2>&1 | \
+> +	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+>  }
+>  
+>  
+> -- 
+> 2.13.4
