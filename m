@@ -1,97 +1,77 @@
-From: zhangmengting <zhangmengting@huawei.com>
-Subject: Re: [PATCH] perf parse events: Fix invalid precise_ip handling
-Date: Wed, 15 Nov 2017 09:00:03 +0800
-Message-ID: <6dc43edb-0c33-6d82-71a3-3d7cac10a881@huawei.com>
-References: <1510302517-33383-1-git-send-email-zhangmengting@huawei.com>
- <20171110103900.GA10233@krava>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 2/2] perf/bench/numa: Handle discontiguous/sparse numa
+ nodes
+Date: Wed, 15 Nov 2017 15:13:57 +0530
+Message-ID: <1510738564.k2rtmh3mkn.naveen@linux.ibm.com>
+References: <cover.1503310062.git.sathnaga@linux.vnet.ibm.com>
+        <67b88aa2de6dd199d57bacdecf35d26958780feb.1503310062.git.sathnaga@linux.vnet.ibm.com>
+        <20171031151658.clq6qmdfw3gj6afg@naverao1-tp.localdomain>
+        <1510663562.24275.38.camel@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10923 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752199AbdKOBBZ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Nov 2017 20:01:25 -0500
-In-Reply-To: <20171110103900.GA10233@krava>
-Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: namhyung@kernel.org, alexander.shishkin@linux.intel.com, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1510663562.24275.38.camel@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: acme@kernel.org, bala24@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, mingo@kernel.org, srikar@linux.vnet.ibm.com
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Jiri, thanks for your detailed review, please see my comments inline.
+Hi Satheesh,
+
+Satheesh Rajendran wrote:
+> Hi Naveen,
+> 
+> 
+> On Tue, 2017-10-31 at 20:46 +0530, Naveen N. Rao wrote:
+>> 
+>> >  	}
+>> >  	BUG_ON(nr_min > nr_max);
+>> > -
+>> Looks like an un-necessary change there.
+>> 
+>> - Naveen
+>> 
+> I had hit with this compilation error, so had to move the
+> initialization above.
+
+I suppose you intended to reply to Arnaldo's comment about the 
+declaration being moved, since my comment above was about a blank line 
+being deleted in your patch. It's preferable to not do any un-related 
+changes/cleanups in a patch.
+
+> Please advice. Thanks.
+> 
+>   CC       bench/numa.o
+> bench/numa.c: In function ‘calc_convergence’:
+> bench/numa.c:1035:3: error: ISO C90 forbids mixed declarations and code
+> [-Werror=declaration-after-statement]
+>    int processes = count_node_processes(node);
+>    ^
+
+Not sure what changes you made, but from the error message, I'm guessing
+you placed the above statement _after_ the check for is_node_present().  
+What Arnaldo recommended is to retain the processes declaration within 
+the scope where it's used - in this case, the for() loop - rather than 
+moving it out to the start of the function.
 
 
-On 2017/11/10 18:39, Jiri Olsa wrote:
-> On Fri, Nov 10, 2017 at 04:28:37PM +0800, Mengting Zhang wrote:
->
-> SNIP
->
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> index 39b1596..25225f4 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -1369,6 +1369,32 @@ struct event_modifier {
->>   	int pinned;
->>   };
->>   
->> +static int perf_get_max_precise_ip(void)
->> +{
->> +       int max_precise_ip = 0;
->> +       struct perf_event_attr attr = {
->> +               .type   = PERF_TYPE_HARDWARE,
->> +               .config = PERF_COUNT_HW_CPU_CYCLES,
->> +       };
->> +
->> +       event_attr_init(&attr);
->> +
->> +       attr.precise_ip = 3;
->> +       attr.sample_period = 1;
->> +
->> +       while (attr.precise_ip != 0) {
->> +               int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
->> +               if (fd != -1){
->> +                       close(fd);
->> +                       break;
->> +               }
->> +               --attr.precise_ip;
->> +       }
->> +       max_precise_ip = attr.precise_ip;
->> +
->> +       return max_precise_ip;
->> +}
-> we already have a function for that, please check perf_event_attr__set_max_precise_ip
-Yeah, I've checked that function. But 
-perf_event_attr__set_max_precise_ip() will change attr.precise_ip
-into the max precise ip available.
+- Naveen
 
-In this case, perf should only check whether the user-specified 
-precise_ip is greater than the max
-precise_ip without changing it into maximum.  Here, introduce 
-perf_get_max_precise_ip() to return
-the max precise ip and do not change attr.precise_ip.
 
-But you reminds me that perf_get_max_precise_ip() can be simplied.
-> also I think the precise level is not generic for all the events,
-> so you should check it for specific perf_event_attr later, when
-> the attr is ready, not in modifier parsing
-You are right, and I would check it for specific perf_event_attr.
-
-BTW, I have a question. If the user-specified precise_ip is greater than 
-the max precise_ip, I wonder
-whether it is better to adjust the user-specified precise_ip to the 
-maximum available.
-
-Thanks
-Mengting Zhang
-
-> thanks,
-> jirka
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> .
->
+> cc1: all warnings being treated as errors
+> mv: cannot stat ‘bench/.numa.o.tmp’: No such file or directory
+> make[4]: *** [bench/numa.o] Error 1
+> make[3]: *** [bench] Error 2
+> make[2]: *** [perf-in.o] Error 2
+> make[1]: *** [sub-make] Error 2
+> make: *** [all] Error 2
+> 
+> Regards,
+> -Satheesh.
+>> > 
+>> >  	BUG_ON(sum > g->p.nr_tasks);
+>> > 
+>> >  	if (0 && (sum < g->p.nr_tasks))
+> @@ -1027,8 +1029,9 @@ static void calc_convergence(double 
+> 
