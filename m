@@ -1,54 +1,97 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf test: fix test case probe libc's inet_pton on s390x
-Date: Tue, 14 Nov 2017 11:58:37 -0300
-Message-ID: <20171114145837.GR8836@kernel.org>
-References: <20171114071847.2381-1-tmricht@linux.vnet.ibm.com>
- <20171114071847.2381-2-tmricht@linux.vnet.ibm.com>
- <20171114132625.GM8836@kernel.org>
- <20171114133409.GN8836@kernel.org>
- <20171114134724.GP8836@kernel.org>
- <b44439ef-9852-c132-ea8a-d16e7b6b6ab8@linux.vnet.ibm.com>
+From: zhangmengting <zhangmengting@huawei.com>
+Subject: Re: [PATCH] perf parse events: Fix invalid precise_ip handling
+Date: Wed, 15 Nov 2017 09:00:03 +0800
+Message-ID: <6dc43edb-0c33-6d82-71a3-3d7cac10a881@huawei.com>
+References: <1510302517-33383-1-git-send-email-zhangmengting@huawei.com>
+ <20171110103900.GA10233@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:45504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751665AbdKNO6j (ORCPT
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10923 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752199AbdKOBBZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Nov 2017 09:58:39 -0500
-Content-Disposition: inline
-In-Reply-To: <b44439ef-9852-c132-ea8a-d16e7b6b6ab8@linux.vnet.ibm.com>
+        Tue, 14 Nov 2017 20:01:25 -0500
+In-Reply-To: <20171110103900.GA10233@krava>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: namhyung@kernel.org, alexander.shishkin@linux.intel.com, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com
 
-Em Tue, Nov 14, 2017 at 02:55:48PM +0100, Thomas-Mich Richter escreveu:
-> On 11/14/2017 02:47 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Nov 14, 2017 at 10:34:09AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >>> Different name, same contents, need to look at the inode... ;-\
-> >>
-> >> Nah, lets ask the kernel how is it that it sees libc, please test the
-> >> following, works for me:
-> 
-> works for me too.
-> 
-> > 
-> > BTW, this is what I sticked on that cset:
-> > 
-> >     Committer changes:
-> >     
-> >     We can't really use ldd for libc, as in some systems, such as x86_64, it
-> >     has hardlinks and then ldd sees one and the kernel the other, so grep
-> >     for libc in /proc/self/maps to get the one we'll receive from
-> >     PERF_RECORD_MMAP.
-> > 
-> > - Arnaldo
-> > 
-> 
-> Yes I am fine with this changes.
-> Go ahead.
+Hi Jiri, thanks for your detailed review, please see my comments inline.
 
-Thanks for checking, committed.
 
-- Arnaldo
+On 2017/11/10 18:39, Jiri Olsa wrote:
+> On Fri, Nov 10, 2017 at 04:28:37PM +0800, Mengting Zhang wrote:
+>
+> SNIP
+>
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>> index 39b1596..25225f4 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1369,6 +1369,32 @@ struct event_modifier {
+>>   	int pinned;
+>>   };
+>>   
+>> +static int perf_get_max_precise_ip(void)
+>> +{
+>> +       int max_precise_ip = 0;
+>> +       struct perf_event_attr attr = {
+>> +               .type   = PERF_TYPE_HARDWARE,
+>> +               .config = PERF_COUNT_HW_CPU_CYCLES,
+>> +       };
+>> +
+>> +       event_attr_init(&attr);
+>> +
+>> +       attr.precise_ip = 3;
+>> +       attr.sample_period = 1;
+>> +
+>> +       while (attr.precise_ip != 0) {
+>> +               int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+>> +               if (fd != -1){
+>> +                       close(fd);
+>> +                       break;
+>> +               }
+>> +               --attr.precise_ip;
+>> +       }
+>> +       max_precise_ip = attr.precise_ip;
+>> +
+>> +       return max_precise_ip;
+>> +}
+> we already have a function for that, please check perf_event_attr__set_max_precise_ip
+Yeah, I've checked that function. But 
+perf_event_attr__set_max_precise_ip() will change attr.precise_ip
+into the max precise ip available.
+
+In this case, perf should only check whether the user-specified 
+precise_ip is greater than the max
+precise_ip without changing it into maximum.  Here, introduce 
+perf_get_max_precise_ip() to return
+the max precise ip and do not change attr.precise_ip.
+
+But you reminds me that perf_get_max_precise_ip() can be simplied.
+> also I think the precise level is not generic for all the events,
+> so you should check it for specific perf_event_attr later, when
+> the attr is ready, not in modifier parsing
+You are right, and I would check it for specific perf_event_attr.
+
+BTW, I have a question. If the user-specified precise_ip is greater than 
+the max precise_ip, I wonder
+whether it is better to adjust the user-specified precise_ip to the 
+maximum available.
+
+Thanks
+Mengting Zhang
+
+> thanks,
+> jirka
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> .
+>
