@@ -1,119 +1,179 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 77/83] perf ordered_events: Pass timestamp arg in perf_session__queue_event
-Date: Fri, 17 Nov 2017 17:15:55 -0300
-Message-ID: <20171117201601.24110-78-acme@kernel.org>
+Subject: [PATCH 76/83] perf evlist: Add perf_evlist__parse_sample_timestamp function
+Date: Fri, 17 Nov 2017 17:15:54 -0300
+Message-ID: <20171117201601.24110-77-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1161784AbdKQUU0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:20:26 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need to pass whole sample data, because it's only timestamp
-that is used.
+Add perf_evlist__parse_sample_timestamp to retrieve the timestamp of the
+sample.
+
+The idea is to use this function instead of the full sample parsing
+before we queue the sample. At that time only the timestamp is needed
+and we parse the sample once again later on delivery.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-xd1hpoze3kgb1rb639o3vehb@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-o7syqo8lipj4or7renpu8e8y@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-kvm.c         | 2 +-
- tools/perf/util/ordered-events.c | 3 +--
- tools/perf/util/ordered-events.h | 2 +-
- tools/perf/util/session.c        | 6 +++---
- tools/perf/util/session.h        | 2 +-
- 5 files changed, 7 insertions(+), 8 deletions(-)
+ tools/perf/util/evlist.c | 11 ++++++++
+ tools/perf/util/evlist.h |  4 +++
+ tools/perf/util/evsel.c  | 65 +++++++++++++++++++++++++++++++++++++++++++-----
+ tools/perf/util/evsel.h  |  4 +++
+ 4 files changed, 78 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 0c36f2ac6a0e..cd253db6917f 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -754,7 +754,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
- 			return -1;
- 		}
- 
--		err = perf_session__queue_event(kvm->session, event, &sample, 0);
-+		err = perf_session__queue_event(kvm->session, event, sample.time, 0);
- 		/*
- 		 * FIXME: Here we can't consume the event, as perf_session__queue_event will
- 		 *        point to it, and it'll get possibly overwritten by the kernel.
-diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-index 8e09fd2d842f..bad9e0296e9a 100644
---- a/tools/perf/util/ordered-events.c
-+++ b/tools/perf/util/ordered-events.c
-@@ -157,9 +157,8 @@ void ordered_events__delete(struct ordered_events *oe, struct ordered_event *eve
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index b62e523a7035..199bb82efbcd 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1582,6 +1582,17 @@ int perf_evlist__parse_sample(struct perf_evlist *evlist, union perf_event *even
+ 	return perf_evsel__parse_sample(evsel, event, sample);
  }
  
- int ordered_events__queue(struct ordered_events *oe, union perf_event *event,
--			  struct perf_sample *sample, u64 file_offset)
-+			  u64 timestamp, u64 file_offset)
++int perf_evlist__parse_sample_timestamp(struct perf_evlist *evlist,
++					union perf_event *event,
++					u64 *timestamp)
++{
++	struct perf_evsel *evsel = perf_evlist__event2evsel(evlist, event);
++
++	if (!evsel)
++		return -EFAULT;
++	return perf_evsel__parse_sample_timestamp(evsel, event, timestamp);
++}
++
+ size_t perf_evlist__fprintf(struct perf_evlist *evlist, FILE *fp)
  {
--	u64 timestamp = sample->time;
- 	struct ordered_event *oevent;
+ 	struct perf_evsel *evsel;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 491f69542920..4e8131dacbd7 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -205,6 +205,10 @@ u16 perf_evlist__id_hdr_size(struct perf_evlist *evlist);
+ int perf_evlist__parse_sample(struct perf_evlist *evlist, union perf_event *event,
+ 			      struct perf_sample *sample);
  
- 	if (!timestamp || timestamp == ~0ULL)
-diff --git a/tools/perf/util/ordered-events.h b/tools/perf/util/ordered-events.h
-index 96e5292d88e2..8c7a2948593e 100644
---- a/tools/perf/util/ordered-events.h
-+++ b/tools/perf/util/ordered-events.h
-@@ -45,7 +45,7 @@ struct ordered_events {
- };
++int perf_evlist__parse_sample_timestamp(struct perf_evlist *evlist,
++					union perf_event *event,
++					u64 *timestamp);
++
+ bool perf_evlist__valid_sample_type(struct perf_evlist *evlist);
+ bool perf_evlist__valid_sample_id_all(struct perf_evlist *evlist);
+ bool perf_evlist__valid_read_format(struct perf_evlist *evlist);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 03d7abcdc6b7..95853c51c0ca 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1962,6 +1962,20 @@ static inline bool overflow(const void *endp, u16 max_size, const void *offset,
+ #define OVERFLOW_CHECK_u64(offset) \
+ 	OVERFLOW_CHECK(offset, sizeof(u64), sizeof(u64))
  
- int ordered_events__queue(struct ordered_events *oe, union perf_event *event,
--			  struct perf_sample *sample, u64 file_offset);
-+			  u64 timestamp, u64 file_offset);
- void ordered_events__delete(struct ordered_events *oe, struct ordered_event *event);
- int ordered_events__flush(struct ordered_events *oe, enum oe_flush how);
- void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5c412310f266..8976e417eab2 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -873,9 +873,9 @@ static int process_finished_round(struct perf_tool *tool __maybe_unused,
- }
- 
- int perf_session__queue_event(struct perf_session *s, union perf_event *event,
--			      struct perf_sample *sample, u64 file_offset)
-+			      u64 timestamp, u64 file_offset)
++static int
++perf_event__check_size(union perf_event *event, unsigned int sample_size)
++{
++	/*
++	 * The evsel's sample_size is based on PERF_SAMPLE_MASK which includes
++	 * up to PERF_SAMPLE_PERIOD.  After that overflow() must be used to
++	 * check the format does not go past the end of the event.
++	 */
++	if (sample_size + sizeof(event->header) > event->header.size)
++		return -EFAULT;
++
++	return 0;
++}
++
+ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 			     struct perf_sample *data)
  {
--	return ordered_events__queue(&s->ordered_events, event, sample, file_offset);
-+	return ordered_events__queue(&s->ordered_events, event, timestamp, file_offset);
+@@ -1994,12 +2008,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 
+ 	array = event->sample.array;
+ 
+-	/*
+-	 * The evsel's sample_size is based on PERF_SAMPLE_MASK which includes
+-	 * up to PERF_SAMPLE_PERIOD.  After that overflow() must be used to
+-	 * check the format does not go past the end of the event.
+-	 */
+-	if (evsel->sample_size + sizeof(event->header) > event->header.size)
++	if (perf_event__check_size(event, evsel->sample_size))
+ 		return -EFAULT;
+ 
+ 	if (type & PERF_SAMPLE_IDENTIFIER) {
+@@ -2232,6 +2241,50 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 	return 0;
  }
  
- static void callchain__lbr_callstack_printf(struct perf_sample *sample)
-@@ -1517,7 +1517,7 @@ static s64 perf_session__process_event(struct perf_session *session,
- 		return ret;
++int perf_evsel__parse_sample_timestamp(struct perf_evsel *evsel,
++				       union perf_event *event,
++				       u64 *timestamp)
++{
++	u64 type = evsel->attr.sample_type;
++	const u64 *array;
++
++	if (!(type & PERF_SAMPLE_TIME))
++		return -1;
++
++	if (event->header.type != PERF_RECORD_SAMPLE) {
++		struct perf_sample data = {
++			.time = -1ULL,
++		};
++
++		if (!evsel->attr.sample_id_all)
++			return -1;
++		if (perf_evsel__parse_id_sample(evsel, event, &data))
++			return -1;
++
++		*timestamp = data.time;
++		return 0;
++	}
++
++	array = event->sample.array;
++
++	if (perf_event__check_size(event, evsel->sample_size))
++		return -EFAULT;
++
++	if (type & PERF_SAMPLE_IDENTIFIER)
++		array++;
++
++	if (type & PERF_SAMPLE_IP)
++		array++;
++
++	if (type & PERF_SAMPLE_TID)
++		array++;
++
++	if (type & PERF_SAMPLE_TIME)
++		*timestamp = *array;
++
++	return 0;
++}
++
+ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 				     u64 read_format)
+ {
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 0688880227e1..c3663a70c9b9 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -338,6 +338,10 @@ static inline int perf_evsel__read_on_cpu_scaled(struct perf_evsel *evsel,
+ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 			     struct perf_sample *sample);
  
- 	if (tool->ordered_events) {
--		ret = perf_session__queue_event(session, event, &sample, file_offset);
-+		ret = perf_session__queue_event(session, event, sample.time, file_offset);
- 		if (ret != -ETIME)
- 			return ret;
- 	}
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 80bc80de8362..5b1c32b3694a 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -53,7 +53,7 @@ int perf_session__peek_event(struct perf_session *session, off_t file_offset,
- int perf_session__process_events(struct perf_session *session);
- 
- int perf_session__queue_event(struct perf_session *s, union perf_event *event,
--			      struct perf_sample *sample, u64 file_offset);
-+			      u64 timestamp, u64 file_offset);
- 
- void perf_tool__fill_defaults(struct perf_tool *tool);
- 
++int perf_evsel__parse_sample_timestamp(struct perf_evsel *evsel,
++				       union perf_event *event,
++				       u64 *timestamp);
++
+ static inline struct perf_evsel *perf_evsel__next(struct perf_evsel *evsel)
+ {
+ 	return list_entry(evsel->node.next, struct perf_evsel, node);
 -- 
 2.13.6
