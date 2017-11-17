@@ -1,49 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 51/83] perf tests: Set evlist of test__backward_ring_buffer() to !overwrite
-Date: Fri, 17 Nov 2017 17:15:29 -0300
-Message-ID: <20171117201601.24110-52-acme@kernel.org>
+Subject: [PATCH 58/83] perf test shell: Fix check open filename arg using 'perf trace' on s390x
+Date: Fri, 17 Nov 2017 17:15:36 -0300
+Message-ID: <20171117201601.24110-59-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750776AbdKQUTO (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:19:14 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Wang Nan <wangnan0@huawei.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Setting overwrite in perf_evlist__mmap() is meaningless because the
-event in this evlist is already have 'overwrite' postfix and goes to
-backward ring buffer automatically. Pass 'false' to perf_evlist__mmap()
-to make it similar to others.
+This 'perf test' case fails on s390x. The 'touch' command on s390x uses
+the 'openat' system call to open the file named on the command line:
 
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20171113013809.212417-3-wangnan0@huawei.com
+[root@s35lp76 perf]# perf probe -l
+  probe:vfs_getname    (on getname_flags:72@fs/namei.c with pathname)
+[root@s35lp76 perf]# perf trace -e open touch /tmp/abc
+     0.400 ( 0.015 ms): touch/27542 open(filename:
+		/usr/lib/locale/locale-archive, flags: CLOEXEC) = 3
+[root@s35lp76 perf]#
+
+There is no 'open' system call for file '/tmp/abc'. Instead the 'openat'
+system call is used:
+
+[root@s35lp76 perf]# strace touch /tmp/abc
+    execve("/usr/bin/touch", ["touch", "/tmp/abc"], 0x3ffd547ec98
+			/* 30 vars */) = 0
+    [...]
+    openat(AT_FDCWD, "/tmp/abc", O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, 0666) = 3
+    [...]
+
+On s390x the 'egrep' command does not find a matching pattern and
+returns an error.
+
+Fix this for s390x create a platform dependent command line to enable
+the 'perf probe' call to listen to the 'openat' system call and get the
+expected output.
+
+Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+LPU-Reference: 20171114071847.2381-1-tmricht@linux.vnet.ibm.com
+Link: http://lkml.kernel.org/n/tip-3qf38jk0prz54rhmhyu871my@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/backward-ring-buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index 71b9a0b613d2..43a8c6ac4070 100644
---- a/tools/perf/tests/backward-ring-buffer.c
-+++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -59,7 +59,7 @@ static int do_test(struct perf_evlist *evlist, int mmap_pages,
- 	int err;
- 	char sbuf[STRERR_BUFSIZE];
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 2e68c5f120da..2a9ef080efd0 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -17,8 +17,10 @@ skip_if_no_perf_probe || exit 2
+ file=$(mktemp /tmp/temporary_file.XXXXX)
  
--	err = perf_evlist__mmap(evlist, mmap_pages, true);
-+	err = perf_evlist__mmap(evlist, mmap_pages, false);
- 	if (err < 0) {
- 		pr_debug("perf_evlist__mmap: %s\n",
- 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ trace_open_vfs_getname() {
+-	perf trace -e open touch $file 2>&1 | \
+-	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open\(filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
++	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
++
++	perf trace -e ${svc:-open} touch $file 2>&1 | \
++	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ }
+ 
+ 
 -- 
 2.13.6
