@@ -1,67 +1,58 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 69/83] perf trace: Document missing option, colons
-Date: Fri, 17 Nov 2017 17:15:47 -0300
-Message-ID: <20171117201601.24110-70-acme@kernel.org>
+Subject: [PATCH 65/83] perf evsel: Say which PMU Hardware event doesn't support sampling/overflow-interrupts
+Date: Fri, 17 Nov 2017 17:15:43 -0300
+Message-ID: <20171117201601.24110-66-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sihyeon Jang <uneedsihyeon@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sihyeon Jang <uneedsihyeon@gmail.com>
+From: Kim Phillips <kim.phillips@arm.com>
 
-Add missing --force option to the man page.
+Help identify to the user the event with the unsupported sampling error.
+Also suggest a corrective action.
 
-Signed-off-by: Sihyeon Jang <uneedsihyeon@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+BEFORE:
+
+$ sudo ./oldperf record -e armv8_pmuv3/mem_access/,ccn/cycles/,armv8_pmuv3/l2d_cache/ true
+Error:
+PMU Hardware doesn't support sampling/overflow-interrupts.
+
+AFTER:
+
+$ sudo ./newperf record -e armv8_pmuv3/mem_access/,ccn/cycles/,armv8_pmuv3/l2d_cache/ true
+Error:
+ccn/cycles/: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/1510842367-11011-2-git-send-email-uneedsihyeon@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20171114150452.e846f2e23684c7d7d8ee706f@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-trace.txt | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ tools/perf/util/evsel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index d53bea6bd571..6909cf1e0eea 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -86,18 +86,18 @@ comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-
- In per-thread mode with inheritance mode on (default), Events are captured only when
- the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 
----duration:
-+--duration::
- 	Show only events that had a duration greater than N.M ms.
- 
----sched:
-+--sched::
- 	Accrue thread runtime and provide a summary at the end of the session.
- 
---i
----input
-+-i::
-+--input::
- 	Process events from a given perf data file.
- 
---T
----time
-+-T::
-+--time::
- 	Print full timestamp rather time relative to first sample.
- 
- --comm::
-@@ -117,6 +117,10 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	Show tool stats such as number of times fd->pathname was discovered thru
- 	hooking the open syscall return + vfs_getname or via reading /proc/pid/fd, etc.
- 
-+-f::
-+--force::
-+	Don't complain, do it.
-+
- -F=[all|min|maj]::
- --pf=[all|min|maj]::
- 	Trace pagefaults. Optionally, you can specify whether you want minor,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index cb9bcdb065ea..b8e9def77f44 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2745,8 +2745,9 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
+ 		break;
+ 	case EOPNOTSUPP:
+ 		if (evsel->attr.sample_period != 0)
+-			return scnprintf(msg, size, "%s",
+-	"PMU Hardware doesn't support sampling/overflow-interrupts.");
++			return scnprintf(msg, size,
++	"%s: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'",
++					 perf_evsel__name(evsel));
+ 		if (evsel->attr.precise_ip)
+ 			return scnprintf(msg, size, "%s",
+ 	"\'precise\' request may not be supported. Try removing 'p' modifier.");
 -- 
 2.13.6
