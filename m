@@ -1,196 +1,137 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/83] perf annotate: Add symbol__annotate function
-Date: Fri, 17 Nov 2017 17:14:44 -0300
-Message-ID: <20171117201601.24110-7-acme@kernel.org>
+Subject: [PATCH 14/83] perf annotate: Move rb_node to struct annotation_line
+Date: Fri, 17 Nov 2017 17:14:52 -0300
+Message-ID: <20171117201601.24110-15-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934534AbdKQUQi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:16:38 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add symbol__annotate function to have generic annotation function to be
-called for all annotation sources.
+Move rb_node to struct annotation_line to make struct annotation_line
+the rb tree node for sorted lines used in both stdio and TUI code.
 
-It calls the generic annotation init and then the specific annotation
-data retrieval function.
+This way we can unite the sorted lines lines codes for both TUI and
+stdio in the following patches.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171011150158.11895-6-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20171011150158.11895-14-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c          |  2 +-
- tools/perf/ui/browsers/annotate.c |  6 ++--
- tools/perf/ui/gtk/annotate.c      |  4 +--
- tools/perf/util/annotate.c        | 58 ++++++++++++++++++++++-----------------
- tools/perf/util/annotate.h        |  6 ++--
- 5 files changed, 42 insertions(+), 34 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 30 ++++++++++++++++--------------
+ tools/perf/util/annotate.h        |  1 +
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 477a8699f0b5..adfeeb488f1a 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -134,7 +134,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 		return err;
- 	}
- 
--	err = symbol__disassemble(sym, map, NULL, 0, NULL, NULL);
-+	err = symbol__annotate(sym, map, NULL, 0, NULL, NULL);
- 	if (err == 0) {
- out_assign:
- 		top->sym_filter_entry = he;
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index d1aff2f7cb6c..d77994c1cba9 100644
+index 881ad6122057..cfde5a2ca3f4 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -1120,9 +1120,9 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
- 		  (nr_pcnt - 1);
+@@ -26,7 +26,6 @@ struct disasm_line_samples {
+ #define CYCLES_WIDTH 6
+ 
+ struct browser_disasm_line {
+-	struct rb_node			rb_node;
+ 	u32				idx;
+ 	int				idx_asm;
+ 	int				jump_sources;
+@@ -362,9 +361,11 @@ static unsigned int annotate_browser__refresh(struct ui_browser *browser)
+ 	return ret;
+ }
+ 
+-static int disasm__cmp(struct browser_disasm_line *a,
+-		       struct browser_disasm_line *b, int nr_pcnt)
++static int disasm__cmp(struct disasm_line *da,
++		       struct disasm_line *db, int nr_pcnt)
+ {
++	struct browser_disasm_line *a = disasm_line__browser(da);
++	struct browser_disasm_line *b = disasm_line__browser(db);
+ 	int i;
+ 
+ 	for (i = 0; i < nr_pcnt; i++) {
+@@ -375,24 +376,24 @@ static int disasm__cmp(struct browser_disasm_line *a,
+ 	return 0;
+ }
+ 
+-static void disasm_rb_tree__insert(struct rb_root *root, struct browser_disasm_line *bdl,
++static void disasm_rb_tree__insert(struct rb_root *root, struct disasm_line *dl,
+ 				   int nr_events)
+ {
+ 	struct rb_node **p = &root->rb_node;
+ 	struct rb_node *parent = NULL;
+-	struct browser_disasm_line *l;
++	struct disasm_line *l;
+ 
+ 	while (*p != NULL) {
+ 		parent = *p;
+-		l = rb_entry(parent, struct browser_disasm_line, rb_node);
++		l = rb_entry(parent, struct disasm_line, al.rb_node);
+ 
+-		if (disasm__cmp(bdl, l, nr_events))
++		if (disasm__cmp(dl, l, nr_events))
+ 			p = &(*p)->rb_left;
+ 		else
+ 			p = &(*p)->rb_right;
  	}
- 
--	err = symbol__disassemble(sym, map, perf_evsel__env_arch(evsel),
--				  sizeof_bdl, &browser.arch,
--				  perf_evsel__env_cpuid(evsel));
-+	err = symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
-+			       sizeof_bdl, &browser.arch,
-+			       perf_evsel__env_cpuid(evsel));
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index 162f15712d2d..b498f1a92bb1 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -169,8 +169,8 @@ static int symbol__gtk_annotate(struct symbol *sym, struct map *map,
- 	if (map->dso->annotate_warned)
- 		return -1;
- 
--	err = symbol__disassemble(sym, map, perf_evsel__env_arch(evsel),
--				  0, NULL, NULL);
-+	err = symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
-+			       0, NULL, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e8b69001229d..f0093918882d 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1425,13 +1425,11 @@ static const char *annotate__norm_arch(const char *arch_name)
- 	return normalize_arch((char *)arch_name);
+-	rb_link_node(&bdl->rb_node, parent, p);
+-	rb_insert_color(&bdl->rb_node, root);
++	rb_link_node(&dl->al.rb_node, parent, p);
++	rb_insert_color(&dl->al.rb_node, root);
  }
  
--int symbol__disassemble(struct symbol *sym, struct map *map,
--			const char *arch_name, size_t privsize,
--			struct arch **parch, char *cpuid)
-+static int symbol__disassemble(struct symbol *sym, struct map *map,
-+			       size_t privsize, struct arch *arch)
- {
- 	struct dso *dso = map->dso;
- 	char command[PATH_MAX * 2];
--	struct arch *arch = NULL;
- 	FILE *file;
- 	char symfs_filename[PATH_MAX];
- 	struct kcore_extract kce;
-@@ -1445,25 +1443,6 @@ int symbol__disassemble(struct symbol *sym, struct map *map,
- 	if (err)
- 		return err;
+ static void annotate_browser__set_top(struct annotate_browser *browser,
+@@ -425,8 +426,9 @@ static void annotate_browser__set_rb_top(struct annotate_browser *browser,
+ 	struct disasm_line *pos;
+ 	u32 idx;
  
--	arch_name = annotate__norm_arch(arch_name);
--	if (!arch_name)
--		return -1;
--
--	arch = arch__find(arch_name);
--	if (arch == NULL)
--		return -ENOTSUP;
--
--	if (parch)
--		*parch = arch;
--
--	if (arch->init) {
--		err = arch->init(arch, cpuid);
--		if (err) {
--			pr_err("%s: failed to initialize %s arch priv area\n", __func__, arch->name);
--			return err;
--		}
--	}
--
- 	pr_debug("%s: filename=%s, sym=%s, start=%#" PRIx64 ", end=%#" PRIx64 "\n", __func__,
- 		 symfs_filename, sym->name, map->unmap_ip(map, sym->start),
- 		 map->unmap_ip(map, sym->end));
-@@ -1581,6 +1560,35 @@ int symbol__disassemble(struct symbol *sym, struct map *map,
- 	goto out_remove_tmp;
- }
+-	bpos = rb_entry(nd, struct browser_disasm_line, rb_node);
+-	pos = ((struct disasm_line *)bpos) - 1;
++	pos = rb_entry(nd, struct disasm_line, al.rb_node);
++	bpos = disasm_line__browser(pos);
++
+ 	idx = bpos->idx;
+ 	if (annotate_browser__opts.hide_src_code)
+ 		idx = bpos->idx_asm;
+@@ -455,7 +457,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+ 		int i;
  
-+int symbol__annotate(struct symbol *sym, struct map *map,
-+		     const char *arch_name, size_t privsize,
-+		     struct arch **parch, char *cpuid)
-+{
-+	struct arch *arch;
-+	int err;
-+
-+	arch_name = annotate__norm_arch(arch_name);
-+	if (!arch_name)
-+		return -1;
-+
-+	arch = arch__find(arch_name);
-+	if (arch == NULL)
-+		return -ENOTSUP;
-+
-+	if (parch)
-+		*parch = arch;
-+
-+	if (arch->init) {
-+		err = arch->init(arch, cpuid);
-+		if (err) {
-+			pr_err("%s: failed to initialize %s arch priv area\n", __func__, arch->name);
-+			return err;
-+		}
-+	}
-+
-+	return symbol__disassemble(sym, map, privsize, arch);
-+}
-+
- static void insert_source_line(struct rb_root *root, struct source_line *src_line)
- {
- 	struct source_line *iter;
-@@ -1954,8 +1962,8 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
- 	struct rb_root source_line = RB_ROOT;
- 	u64 len;
+ 		if (pos->al.offset == -1) {
+-			RB_CLEAR_NODE(&bpos->rb_node);
++			RB_CLEAR_NODE(&pos->al.rb_node);
+ 			continue;
+ 		}
  
--	if (symbol__disassemble(sym, map, perf_evsel__env_arch(evsel),
--				0, NULL, NULL) < 0)
-+	if (symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
-+			     0, NULL, NULL) < 0)
- 		return -1;
+@@ -476,10 +478,10 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+ 		}
  
- 	len = symbol__size(sym);
+ 		if (max_percent < 0.01 && pos->al.ipc == 0) {
+-			RB_CLEAR_NODE(&bpos->rb_node);
++			RB_CLEAR_NODE(&pos->al.rb_node);
+ 			continue;
+ 		}
+-		disasm_rb_tree__insert(&browser->entries, bpos,
++		disasm_rb_tree__insert(&browser->entries, pos,
+ 				       browser->nr_events);
+ 	}
+ 	pthread_mutex_unlock(&notes->lock);
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index a822c0a4987e..e577f9d13a58 100644
+index 43bef6cacbc4..6f01e6117936 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -173,9 +173,9 @@ int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *samp
- int symbol__alloc_hist(struct symbol *sym);
- void symbol__annotate_zero_histograms(struct symbol *sym);
+@@ -61,6 +61,7 @@ struct annotation;
  
--int symbol__disassemble(struct symbol *sym, struct map *map,
--			const char *arch_name, size_t privsize,
--			struct arch **parch, char *cpuid);
-+int symbol__annotate(struct symbol *sym, struct map *map,
-+		     const char *arch_name, size_t privsize,
-+		     struct arch **parch, char *cpuid);
- 
- enum symbol_disassemble_errno {
- 	SYMBOL_ANNOTATE_ERRNO__SUCCESS		= 0,
+ struct annotation_line {
+ 	struct list_head	 node;
++	struct rb_node		 rb_node;
+ 	s64			 offset;
+ 	char			*line;
+ 	int			 line_nr;
 -- 
 2.13.6
