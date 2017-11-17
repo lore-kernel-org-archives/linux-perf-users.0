@@ -1,105 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 44/83] perf script: Fix --per-event-dump for auxtrace synth evsels
-Date: Fri, 17 Nov 2017 17:15:22 -0300
-Message-ID: <20171117201601.24110-45-acme@kernel.org>
+Subject: [PATCH 42/83] perf evsel: Fix up leftover perf_evsel_stat usage via evsel->priv
+Date: Fri, 17 Nov 2017 17:15:20 -0300
+Message-ID: <20171117201601.24110-43-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58562 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753289AbdKQUSm (ORCPT
+        id S1753150AbdKQUSf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:18:42 -0500
+        Fri, 17 Nov 2017 15:18:35 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, yuzhoujian <yuzhoujian@didichuxing.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When processing PERF_RECORD_AUXTRACE_INFO several perf_evsel entries
-will be synthesized and inserted into session->evlist, eventually ending
-in perf_script.tool.sample(), which ends up calling builtin-script.c's
-process_event(), that expects evsel->priv to be a perf_evsel_script
-object with a valid FILE pointer in fp.
+I forgot one conversion, which got noticed by Thomas when running:
 
-So we need to intercept the processing of PERF_RECORD_AUXTRACE_INFO and
-then setup evsel->priv for these newly created perf_evsel instances, do
-it to fix the segfault in process_event() trying to use a NULL for that
-FILE pointer.
+  $ perf stat  -e '{cpu-clock,instructions}' kill
+  kill: not enough arguments
+  Segmentation fault (core dumped)
+  $
 
-Reported-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fix it, those stats are in evsel->stats, not anymore in evsel->priv.
+
+Reported-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Fixes: a14390fde64e ("perf script: Allow creating per-event dump files")
-Link: http://lkml.kernel.org/n/tip-bthnur8r8de01gxvn2qayx6e@git.kernel.org
-[ Merge fix by Ravi Bangoria before pushing upstream to preserv bisectability ]
+Fixes: e669e833da8d ("perf evsel: Restore evsel->priv as a tool private area")
+Link: http://lkml.kernel.org/r/20171109150046.GN4333@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 68f36dc0344f..9b43bda45a41 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1955,6 +1955,16 @@ static int perf_script__fopen_per_event_dump(struct perf_script *script)
- 	struct perf_evsel *evsel;
- 
- 	evlist__for_each_entry(script->session->evlist, evsel) {
-+		/*
-+		 * Already setup? I.e. we may be called twice in cases like
-+		 * Intel PT, one for the intel_pt// and dummy events, then
-+		 * for the evsels syntheized from the auxtrace info.
-+		 *
-+		 * Ses perf_script__process_auxtrace_info.
-+		 */
-+		if (evsel->priv != NULL)
-+			continue;
-+
- 		evsel->priv = perf_evsel_script__new(evsel, script->session->data);
- 		if (evsel->priv == NULL)
- 			goto out_err_fclose;
-@@ -2838,6 +2848,25 @@ int process_cpu_map_event(struct perf_tool *tool __maybe_unused,
- 	return set_maps(script);
- }
- 
-+#ifdef HAVE_AUXTRACE_SUPPORT
-+static int perf_script__process_auxtrace_info(struct perf_tool *tool,
-+					      union perf_event *event,
-+					      struct perf_session *session)
-+{
-+	int ret = perf_event__process_auxtrace_info(tool, event, session);
-+
-+	if (ret == 0) {
-+		struct perf_script *script = container_of(tool, struct perf_script, tool);
-+
-+		ret = perf_script__setup_per_event_dump(script);
-+	}
-+
-+	return ret;
-+}
-+#else
-+#define perf_script__process_auxtrace_info 0
-+#endif
-+
- int cmd_script(int argc, const char **argv)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4376cdfaea49..cb9bcdb065ea 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1377,7 +1377,7 @@ perf_evsel__process_group_data(struct perf_evsel *leader,
+ static int
+ perf_evsel__read_group(struct perf_evsel *leader, int cpu, int thread)
  {
- 	bool show_full_info = false;
-@@ -2866,7 +2895,7 @@ int cmd_script(int argc, const char **argv)
- 			.feature	 = perf_event__process_feature,
- 			.build_id	 = perf_event__process_build_id,
- 			.id_index	 = perf_event__process_id_index,
--			.auxtrace_info	 = perf_event__process_auxtrace_info,
-+			.auxtrace_info	 = perf_script__process_auxtrace_info,
- 			.auxtrace	 = perf_event__process_auxtrace,
- 			.auxtrace_error	 = perf_event__process_auxtrace_error,
- 			.stat		 = perf_event__process_stat_event,
+-	struct perf_stat_evsel *ps = leader->priv;
++	struct perf_stat_evsel *ps = leader->stats;
+ 	u64 read_format = leader->attr.read_format;
+ 	int size = perf_evsel__read_size(leader);
+ 	u64 *data = ps->group_data;
 -- 
 2.13.6
