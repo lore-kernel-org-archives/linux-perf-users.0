@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 60/83] perf evlist: Add helper to check if attr.exclude_kernel is set in all evsels
-Date: Fri, 17 Nov 2017 17:15:38 -0300
-Message-ID: <20171117201601.24110-61-acme@kernel.org>
+Subject: [PATCH 63/83] perf top: Ignore kptr_restrict when not sampling the kernel
+Date: Fri, 17 Nov 2017 17:15:41 -0300
+Message-ID: <20171117201601.24110-64-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58906 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1759516AbdKQUTb (ORCPT
+        id S1760105AbdKQUTl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:19:31 -0500
+        Fri, 17 Nov 2017 15:19:41 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,8 +17,8 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carv
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The warning about kptr_restrict needs to be emitted only when it is set
-and we ask for kernel space samples, so add a helper to help with that.
+If all events have attr.exclude_kernel set, no need to look at
+kptr_restrict.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -26,43 +26,35 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-fh7drty6yljei9gxxzer6eup@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-yegpzg5bf2im69g0tfizqaqz@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 12 ++++++++++++
- tools/perf/util/evlist.h |  2 ++
- 2 files changed, 14 insertions(+)
+ tools/perf/builtin-top.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ccb749f9a83f..b62e523a7035 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1786,3 +1786,15 @@ void perf_evlist__toggle_bkw_mmap(struct perf_evlist *evlist,
- state_err:
- 	return;
- }
-+
-+bool perf_evlist__exclude_kernel(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel->attr.exclude_kernel)
-+			return false;
-+	}
-+
-+	return true;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index e72ae64c11ac..491f69542920 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -312,4 +312,6 @@ perf_evlist__find_evsel_by_str(struct perf_evlist *evlist, const char *str);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 68320ac5e9b0..865191281591 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -735,14 +735,16 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 	if (!machine->kptr_restrict_warned &&
+ 	    symbol_conf.kptr_restrict &&
+ 	    al.cpumode == PERF_RECORD_MISC_KERNEL) {
+-		ui__warning(
++		if (!perf_evlist__exclude_kernel(top->session->evlist)) {
++			ui__warning(
+ "Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+ "Check /proc/sys/kernel/kptr_restrict.\n\n"
+ "Kernel%s samples will not be resolved.\n",
+ 			  al.map && !RB_EMPTY_ROOT(&al.map->dso->symbols[MAP__FUNCTION]) ?
+ 			  " modules" : "");
+-		if (use_browser <= 0)
+-			sleep(5);
++			if (use_browser <= 0)
++				sleep(5);
++		}
+ 		machine->kptr_restrict_warned = true;
+ 	}
  
- struct perf_evsel *perf_evlist__event2evsel(struct perf_evlist *evlist,
- 					    union perf_event *event);
-+
-+bool perf_evlist__exclude_kernel(struct perf_evlist *evlist);
- #endif /* __PERF_EVLIST_H */
 -- 
 2.13.6
