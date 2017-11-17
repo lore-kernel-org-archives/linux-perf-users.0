@@ -1,119 +1,139 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/83] perf annotate browser: Use struct annotation_line in browser top
-Date: Fri, 17 Nov 2017 17:15:12 -0300
-Message-ID: <20171117201601.24110-35-acme@kernel.org>
+Subject: [PATCH 33/83] perf annotate browser: Use struct annotation_line in find functions
+Date: Fri, 17 Nov 2017 17:15:11 -0300
+Message-ID: <20171117201601.24110-34-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:58292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1758382AbdKQUSI (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Nov 2017 15:18:08 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Use struct annotation_line in browser::b::top.
+Use struct annotation_line in find functions:
+
+  annotate_browser__find_string
+  annotate_browser__find_string_reverse
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171011150158.11895-34-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20171011150158.11895-33-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 40 +++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 8f75e56aedc2..f0f27cf9db85 100644
+index fb83deb8c909..8f75e56aedc2 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -390,7 +390,7 @@ static void disasm_rb_tree__insert(struct rb_root *root, struct annotation_line
+@@ -606,23 +606,23 @@ static bool annotate_browser__jump(struct annotate_browser *browser)
  }
  
- static void annotate_browser__set_top(struct annotate_browser *browser,
--				      struct disasm_line *pos, u32 idx)
-+				      struct annotation_line *pos, u32 idx)
+ static
+-struct disasm_line *annotate_browser__find_string(struct annotate_browser *browser,
++struct annotation_line *annotate_browser__find_string(struct annotate_browser *browser,
+ 					  char *s, s64 *idx)
  {
- 	unsigned back;
+ 	struct map_symbol *ms = browser->b.priv;
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct disasm_line *pos = disasm_line(browser->selection);
++	struct annotation_line *al = browser->selection;
  
-@@ -399,16 +399,16 @@ static void annotate_browser__set_top(struct annotate_browser *browser,
- 	browser->b.top_idx = browser->b.index = idx;
- 
- 	while (browser->b.top_idx != 0 && back != 0) {
--		pos = list_entry(pos->al.node.prev, struct disasm_line, al.node);
-+		pos = list_entry(pos->node.prev, struct annotation_line, node);
- 
+ 	*idx = browser->b.index;
+-	list_for_each_entry_continue(pos, &notes->src->source, al.node) {
 -		if (disasm_line__filter(&browser->b, &pos->al.node))
-+		if (disasm_line__filter(&browser->b, &pos->node))
++	list_for_each_entry_continue(al, &notes->src->source, node) {
++		if (disasm_line__filter(&browser->b, &al->node))
  			continue;
  
- 		--browser->b.top_idx;
- 		--back;
+ 		++*idx;
+ 
+-		if (pos->al.line && strstr(pos->al.line, s) != NULL)
+-			return pos;
++		if (al->line && strstr(al->line, s) != NULL)
++			return al;
  	}
  
--	browser->b.top = &pos->al;
-+	browser->b.top = pos;
- 	browser->b.navkeypressed = true;
- }
+ 	return NULL;
+@@ -630,38 +630,38 @@ struct disasm_line *annotate_browser__find_string(struct annotate_browser *brows
  
-@@ -416,11 +416,11 @@ static void annotate_browser__set_rb_top(struct annotate_browser *browser,
- 					 struct rb_node *nd)
- {
- 	struct browser_line *bpos;
--	struct disasm_line *pos;
-+	struct annotation_line *pos;
- 	u32 idx;
- 
--	pos = rb_entry(nd, struct disasm_line, al.rb_node);
--	bpos = browser_line(&pos->al);
-+	pos = rb_entry(nd, struct annotation_line, rb_node);
-+	bpos = browser_line(pos);
- 
- 	idx = bpos->idx;
- 	if (annotate_browser__opts.hide_src_code)
-@@ -472,13 +472,13 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 
- static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+ static bool __annotate_browser__search(struct annotate_browser *browser)
  {
 -	struct disasm_line *dl;
 +	struct annotation_line *al;
- 	struct browser_line *bl;
- 	off_t offset = browser->b.index - browser->b.top_idx;
+ 	s64 idx;
  
- 	browser->b.seek(&browser->b, offset, SEEK_CUR);
--	dl = list_entry(browser->b.top, struct disasm_line, al.node);
--	bl = browser_line(&dl->al);
-+	al = list_entry(browser->b.top, struct annotation_line, node);
-+	bl = browser_line(al);
- 
- 	if (annotate_browser__opts.hide_src_code) {
- 		if (bl->idx_asm < offset)
-@@ -600,7 +600,7 @@ static bool annotate_browser__jump(struct annotate_browser *browser)
- 		return true;
+-	dl = annotate_browser__find_string(browser, browser->search_bf, &idx);
+-	if (dl == NULL) {
++	al = annotate_browser__find_string(browser, browser->search_bf, &idx);
++	if (al == NULL) {
+ 		ui_helpline__puts("String not found!");
+ 		return false;
  	}
  
 -	annotate_browser__set_top(browser, dl, idx);
-+	annotate_browser__set_top(browser, &dl->al, idx);
- 
- 	return true;
- }
-@@ -639,7 +639,7 @@ static bool __annotate_browser__search(struct annotate_browser *browser)
- 		return false;
- 	}
- 
--	annotate_browser__set_top(browser, disasm_line(al), idx);
-+	annotate_browser__set_top(browser, al, idx);
++	annotate_browser__set_top(browser, disasm_line(al), idx);
  	browser->searching_backwards = false;
  	return true;
  }
-@@ -678,7 +678,7 @@ static bool __annotate_browser__search_reverse(struct annotate_browser *browser)
+ 
+ static
+-struct disasm_line *annotate_browser__find_string_reverse(struct annotate_browser *browser,
++struct annotation_line *annotate_browser__find_string_reverse(struct annotate_browser *browser,
+ 						  char *s, s64 *idx)
+ {
+ 	struct map_symbol *ms = browser->b.priv;
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct disasm_line *pos = disasm_line(browser->selection);
++	struct annotation_line *al = browser->selection;
+ 
+ 	*idx = browser->b.index;
+-	list_for_each_entry_continue_reverse(pos, &notes->src->source, al.node) {
+-		if (disasm_line__filter(&browser->b, &pos->al.node))
++	list_for_each_entry_continue_reverse(al, &notes->src->source, node) {
++		if (disasm_line__filter(&browser->b, &al->node))
+ 			continue;
+ 
+ 		--*idx;
+ 
+-		if (pos->al.line && strstr(pos->al.line, s) != NULL)
+-			return pos;
++		if (al->line && strstr(al->line, s) != NULL)
++			return al;
+ 	}
+ 
+ 	return NULL;
+@@ -669,16 +669,16 @@ struct disasm_line *annotate_browser__find_string_reverse(struct annotate_browse
+ 
+ static bool __annotate_browser__search_reverse(struct annotate_browser *browser)
+ {
+-	struct disasm_line *dl;
++	struct annotation_line *al;
+ 	s64 idx;
+ 
+-	dl = annotate_browser__find_string_reverse(browser, browser->search_bf, &idx);
+-	if (dl == NULL) {
++	al = annotate_browser__find_string_reverse(browser, browser->search_bf, &idx);
++	if (al == NULL) {
+ 		ui_helpline__puts("String not found!");
  		return false;
  	}
  
--	annotate_browser__set_top(browser, disasm_line(al), idx);
-+	annotate_browser__set_top(browser, al, idx);
+-	annotate_browser__set_top(browser, dl, idx);
++	annotate_browser__set_top(browser, disasm_line(al), idx);
  	browser->searching_backwards = true;
  	return true;
  }
