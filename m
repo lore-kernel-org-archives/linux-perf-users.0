@@ -1,74 +1,81 @@
 From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Subject: [PATCH] perf: correct segfault in nsinfo__copy()
-Date: Fri, 17 Nov 2017 16:13:52 +0100
-Message-ID: <1510931632-28355-1-git-send-email-brueckner@linux.vnet.ibm.com>
+Subject: Running perf in namespaces and questions on its isolation
+Date: Fri, 17 Nov 2017 16:32:24 +0100
+Message-ID: <20171117153224.GE4347@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38226 "EHLO
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50960 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750888AbdKQPOK (ORCPT
+        by vger.kernel.org with ESMTP id S965139AbdKQPcb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 10:14:10 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAHFDxPb114584
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Nov 2017 10:14:09 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ea13f3h8x-1
+        Fri, 17 Nov 2017 10:32:31 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAHFTOxH126869
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Nov 2017 10:32:30 -0500
+Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2e9y9p1df1-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Nov 2017 10:14:09 -0500
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Nov 2017 10:32:30 -0500
 Received: from localhost
-        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Fri, 17 Nov 2017 15:14:06 -0000
+        Fri, 17 Nov 2017 15:32:28 -0000
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, linux-s390 <linux-s390@vger.kernel.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 
-When running perf in a namespace, workload from other namespaces
-are accounted to PID 0.  During thread initialization for PID 0,
-nsinfo__new(PID 0) returns NULL.
-Later, a missing NULL pointer check in nsinfo__copy() that is
-called from map__new() to handle vdso maps might cause a
-segmentation fault.
+Hi Arnaldo, et al.,
 
-For example, the segmentation fault can be seen when running
-perf top in a namespace created with:
-	unshare --fork --pid --mount-proc /bin/bash
-while running some workload, e.g., find /, in a different
-namespace.  The resulting stack trace might look like:
+I have just played around with running perf within a namespace. Beside an
+issue with namespace copying for which I have already posted a patch, I
+have a more general issue:
 
-  (gdb)
-  #0  nsinfo__copy (nsi=0x0) at util/namespaces.c:143
-  #1  0x000000010010fe3a in map__new (machine=<optimized out>, start=132816, len=<optimized out>, pgoff=<optimized out>, d_maj=<optimized out>, d_min=0, ino=0,
-      ino_gen=0, prot=5, flags=4098, filename=0x3fffcb01180 "[vdso]", type=MAP__FUNCTION, thread=0x101c3c050) at util/map.c:192
-  #2  0x000000010010e1a4 in machine__process_mmap2_event (machine=0x101c3bab8, event=0x3fffcb01138, sample=<optimized out>) at util/machine.c:1397
-  #3  0x00000001000659d8 in perf_top__mmap_read_idx (top=top@entry=0x3ffffff91d0, idx=idx@entry=0) at builtin-top.c:863
-  #4  0x00000001000680ae in perf_top__mmap_read (top=0x3ffffff91d0) at builtin-top.c:876
-  #5  __cmd_top (top=0x3ffffff91d0) at builtin-top.c:1021
-  #6  cmd_top (argc=<optimized out>, argv=<optimized out>) at builtin-top.c:1352
-  #7  0x00000001000b643c in run_builtin (p=0x100277b08 <commands+336>, argc=<optimized out>, argv=0x3ffffffede0) at perf.c:297
-  #8  0x00000001000419e0 in handle_internal_command (argv=<optimized out>, argc=1) at perf.c:349
-  #9  run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:393
-  #10 main (argc=<optimized out>, argv=0x3ffffffede0) at perf.c:537
+I created a (PID) namespace has been created by using:
+"unshare --fork --pid --mount-proc /bin/bash".
 
-Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
----
- tools/perf/util/namespaces.c | 3 +++
- 1 file changed, 3 insertions(+)
+Within the created PID namespace, a "perf record -a -e cpu-clock" session is
+started.  While it runs, perform some commands outside of this namespace,
+for example, df, find, cat.
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 5be0217..cf8bd12 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -139,6 +139,9 @@ struct nsinfo *nsinfo__copy(struct nsinfo *nsi)
- {
- 	struct nsinfo *nnsi;
- 
-+	if (nsi == NULL)
-+		return NULL;
-+
- 	nnsi = calloc(1, sizeof(*nnsi));
- 	if (nnsi != NULL) {
- 		nnsi->pid = nsi->pid;
--- 
-1.8.3.1
+Then, perf record is stopped and its report reads:
+
+perf report --stdio --sort comm,pid
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 158K of event 'cpu-clock'
+# Event count (approx.): 39529250000
+#
+# Overhead  Command      Pid:Command
+# ........  .......  ...............
+# 
+    32.93%  df             0:df
+    29.45%  find           0:find
+    25.09%  swapper        0:swapper
+    12.48%  cat            0:cat
+     0.05%  perf          67:perf
+
+
+According to this output, perf record receives PERF_RECORD_COMM events
+of processes from outside its namespace.  The is also indicated by the
+PID 0. (Processes that do not exist in a PID namespace (where perf record
+ran) are translated to zero.  See also perf_event_pid() in
+kernel/events/core.c).
+
+I wonder whether this is the intended behavior or should better be fixed to
+provide isolation among different namespace.  Further, with user stack
+sampling, an namespace could also access stack information from processes
+running in a different namespace.  That might result in an security issue.
+
+So it would be great to know and understand what the correct behavior of
+running perf within a namespace would be.
+
+Thanks.
+
+Kind regards,
+  Hendrik
