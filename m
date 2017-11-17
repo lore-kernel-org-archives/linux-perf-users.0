@@ -1,14 +1,13 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 80/83] perf top: Use signal interface for SIGWINCH handler
-Date: Fri, 17 Nov 2017 17:15:58 -0300
-Message-ID: <20171117201601.24110-81-acme@kernel.org>
+Subject: [PATCH 81/83] perf top: Fix crash when annotating symbol
+Date: Fri, 17 Nov 2017 17:15:59 -0300
+Message-ID: <20171117201601.24110-82-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1161805AbdKQUUg (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:20:36 -0500
+        id S965630AbdKQUUj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Nov 2017 15:20:39 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,9 +16,17 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <j
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need for SA_SIGINFO data in SIGWINCH handler, switching it to
-register the handler via signal interface as we do for the rest of the
-signals in perf top.
+Ravi reported crash in perf top --stdio when annotating a function [1].
+The issue was, that we don't pass evsel pointer into symbol__annotate()
+function, which got over looked in the last annotation changes.
+
+[1] https://marc.info/?l=linux-kernel&m=151060884412702&w=2
+
+Committer note:
+
+This fixes the crash, but makes it stumble into another bug, double
+locking the annotation data structures, that is in turn fixed by the
+next patch in this series.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
@@ -29,53 +36,32 @@ Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-elxp1vdnaog1scaj13cx7cu0@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-6eol035redpoqvxqnuiqudtc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ tools/perf/builtin-top.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 4cbd3dd14a33..a29a98334f33 100644
+index a29a98334f33..0077724fb24f 100644
 --- a/tools/perf/builtin-top.c
 +++ b/tools/perf/builtin-top.c
-@@ -86,8 +86,7 @@ static void perf_top__update_print_entries(struct perf_top *top)
- 	top->print_entries = top->winsize.ws_row - HEADER_LINE_NR;
- }
+@@ -99,6 +99,7 @@ static void perf_top__resize(struct perf_top *top)
  
--static void perf_top__sig_winch(int sig __maybe_unused,
--				siginfo_t *info __maybe_unused, void *arg __maybe_unused)
-+static void winch_sig(int sig __maybe_unused)
+ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
  {
- 	resize = 1;
- }
-@@ -480,12 +479,8 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
- 		case 'e':
- 			prompt_integer(&top->print_entries, "Enter display entries (lines)");
- 			if (top->print_entries == 0) {
--				struct sigaction act = {
--					.sa_sigaction = perf_top__sig_winch,
--					.sa_flags     = SA_SIGINFO,
--				};
- 				perf_top__resize(top);
--				sigaction(SIGWINCH, &act, NULL);
-+				signal(SIGWINCH, winch_sig);
- 			} else {
- 				signal(SIGWINCH, SIG_DFL);
- 			}
-@@ -1366,12 +1361,8 @@ int cmd_top(int argc, const char **argv)
- 
- 	get_term_dimensions(&top.winsize);
- 	if (top.print_entries == 0) {
--		struct sigaction act = {
--			.sa_sigaction = perf_top__sig_winch,
--			.sa_flags     = SA_SIGINFO,
--		};
- 		perf_top__update_print_entries(&top);
--		sigaction(SIGWINCH, &act, NULL);
-+		signal(SIGWINCH, winch_sig);
++	struct perf_evsel *evsel = hists_to_evsel(he->hists);
+ 	struct symbol *sym;
+ 	struct annotation *notes;
+ 	struct map *map;
+@@ -137,7 +138,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+ 		return err;
  	}
  
- 	status = __cmd_top(&top);
+-	err = symbol__annotate(sym, map, NULL, 0, NULL, NULL);
++	err = symbol__annotate(sym, map, evsel, 0, NULL, NULL);
+ 	if (err == 0) {
+ out_assign:
+ 		top->sym_filter_entry = he;
 -- 
 2.13.6
