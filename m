@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/83] perf annotate: Add annotated_source__purge function
-Date: Fri, 17 Nov 2017 17:14:54 -0300
-Message-ID: <20171117201601.24110-17-acme@kernel.org>
+Subject: [PATCH 21/83] perf annotate: Remove disasm__calc_percent() from annotate_browser__calc_percent()
+Date: Fri, 17 Nov 2017 17:14:59 -0300
+Message-ID: <20171117201601.24110-22-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:57990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1161310AbdKQURL (ORCPT
+        id S1758265AbdKQUR2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:17:11 -0500
+        Fri, 17 Nov 2017 15:17:28 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,92 +17,65 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <j
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Mov disasm__purge() to annotated_source__purge() to make it work over a
-generic struct annotation_line.
+Remove disasm__calc_percent() from annotate_browser__calc_percent(),
+because we already have the data calculated in struct annotation_line.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171011150158.11895-16-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20171011150158.11895-21-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c |  8 +++-----
- tools/perf/util/annotate.c        | 12 ++++++------
- tools/perf/util/annotate.h        |  2 +-
- 3 files changed, 10 insertions(+), 12 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 7ca5ae625cc9..4c54d5e76008 100644
+index 4c54d5e76008..613682432940 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -1084,7 +1084,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
- 			 struct perf_evsel *evsel,
- 			 struct hist_browser_timer *hbt)
- {
--	struct disasm_line *pos, *n;
-+	struct disasm_line *pos;
- 	struct annotation *notes;
- 	size_t size;
- 	struct map_symbol ms = {
-@@ -1180,10 +1180,8 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
- 	annotate_browser__update_addr_width(&browser);
+@@ -444,17 +444,16 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+ 	struct map_symbol *ms = browser->b.priv;
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct annotation_line *next;
+ 	struct disasm_line *pos;
+-	s64 len = symbol__size(sym);
  
- 	ret = annotate_browser__run(&browser, evsel, hbt);
--	list_for_each_entry_safe(pos, n, &notes->src->source, al.node) {
--		list_del(&pos->al.node);
--		disasm_line__free(pos);
--	}
+ 	browser->entries = RB_ROOT;
+ 
+ 	pthread_mutex_lock(&notes->lock);
+ 
++	symbol__calc_percent(sym, evsel);
 +
-+	annotated_source__purge(notes->src);
+ 	list_for_each_entry(pos, &notes->src->source, al.node) {
+ 		struct browser_disasm_line *bpos = disasm_line__browser(pos);
+-		const char *path = NULL;
+ 		double max_percent = 0.0;
+ 		int i;
  
- out_free_offsets:
- 	free(browser.offsets);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 7c74700ae6d7..0c2eb95ba90a 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1985,13 +1985,13 @@ void symbol__annotate_decay_histogram(struct symbol *sym, int evidx)
- 	}
- }
+@@ -463,17 +462,11 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+ 			continue;
+ 		}
  
--void disasm__purge(struct list_head *head)
-+void annotated_source__purge(struct annotated_source *as)
- {
--	struct disasm_line *pos, *n;
-+	struct annotation_line *al, *n;
+-		next = annotation_line__next(&pos->al, &notes->src->source);
+-
+ 		for (i = 0; i < browser->nr_events; i++) {
+-			struct sym_hist_entry sample;
+-
+-			bpos->samples[i].percent = disasm__calc_percent(notes,
+-						evsel->idx + i,
+-						pos->al.offset,
+-						next ? next->offset : len,
+-						&path, &sample);
+-			bpos->samples[i].he = sample;
++			struct annotation_data *sample = &pos->al.samples[i];
++
++			bpos->samples[i].percent = sample->percent;
++			bpos->samples[i].he      = sample->he;
  
--	list_for_each_entry_safe(pos, n, head, al.node) {
--		list_del(&pos->al.node);
--		disasm_line__free(pos);
-+	list_for_each_entry_safe(al, n, &as->source, node) {
-+		list_del(&al->node);
-+		disasm_line__free(disasm_line(al));
- 	}
- }
- 
-@@ -2047,7 +2047,7 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
- 	if (print_lines)
- 		symbol__free_source_line(sym, len);
- 
--	disasm__purge(&symbol__annotation(sym)->src->source);
-+	annotated_source__purge(symbol__annotation(sym)->src);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 2e7a08afb04f..cb60cafae1fb 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -212,7 +212,7 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
- 			    int min_pcnt, int max_lines, int context);
- void symbol__annotate_zero_histogram(struct symbol *sym, int evidx);
- void symbol__annotate_decay_histogram(struct symbol *sym, int evidx);
--void disasm__purge(struct list_head *head);
-+void annotated_source__purge(struct annotated_source *as);
- 
- bool ui__has_annotation(void);
- 
+ 			if (max_percent < bpos->samples[i].percent)
+ 				max_percent = bpos->samples[i].percent;
 -- 
 2.13.6
