@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/83] perf annotate: Remove disasm__calc_percent function
-Date: Fri, 17 Nov 2017 17:15:00 -0300
-Message-ID: <20171117201601.24110-23-acme@kernel.org>
+Subject: [PATCH 16/83] perf annotate: Add annotated_source__purge function
+Date: Fri, 17 Nov 2017 17:14:54 -0300
+Message-ID: <20171117201601.24110-17-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1161440AbdKQURb (ORCPT
+        id S1161310AbdKQURL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:17:31 -0500
+        Fri, 17 Nov 2017 15:17:11 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,87 +17,92 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <j
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Remove disasm__calc_percent() function, because it's no longer needed.
+Mov disasm__purge() to annotated_source__purge() to make it work over a
+generic struct annotation_line.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171011150158.11895-22-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20171011150158.11895-16-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 44 --------------------------------------------
- tools/perf/util/annotate.h |  2 --
- 2 files changed, 46 deletions(-)
+ tools/perf/ui/browsers/annotate.c |  8 +++-----
+ tools/perf/util/annotate.c        | 12 ++++++------
+ tools/perf/util/annotate.h        |  2 +-
+ 3 files changed, 10 insertions(+), 12 deletions(-)
 
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 7ca5ae625cc9..4c54d5e76008 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -1084,7 +1084,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			 struct perf_evsel *evsel,
+ 			 struct hist_browser_timer *hbt)
+ {
+-	struct disasm_line *pos, *n;
++	struct disasm_line *pos;
+ 	struct annotation *notes;
+ 	size_t size;
+ 	struct map_symbol ms = {
+@@ -1180,10 +1180,8 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 	annotate_browser__update_addr_width(&browser);
+ 
+ 	ret = annotate_browser__run(&browser, evsel, hbt);
+-	list_for_each_entry_safe(pos, n, &notes->src->source, al.node) {
+-		list_del(&pos->al.node);
+-		disasm_line__free(pos);
+-	}
++
++	annotated_source__purge(notes->src);
+ 
+ out_free_offsets:
+ 	free(browser.offsets);
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 209a25545542..29cf2a5ef620 100644
+index 7c74700ae6d7..0c2eb95ba90a 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1010,50 +1010,6 @@ annotation_line__next(struct annotation_line *pos, struct list_head *head)
- 	return NULL;
+@@ -1985,13 +1985,13 @@ void symbol__annotate_decay_histogram(struct symbol *sym, int evidx)
+ 	}
  }
  
--double disasm__calc_percent(struct annotation *notes, int evidx, s64 offset,
--			    s64 end, const char **path, struct sym_hist_entry *sample)
--{
--	struct source_line *src_line = notes->src->lines;
--	double percent = 0.0;
--
--	sample->nr_samples = sample->period = 0;
--
--	if (src_line) {
--		size_t sizeof_src_line = sizeof(*src_line) +
--				sizeof(src_line->samples) * (src_line->nr_pcnt - 1);
--
--		while (offset < end) {
--			src_line = (void *)notes->src->lines +
--					(sizeof_src_line * offset);
--
--			if (*path == NULL)
--				*path = src_line->path;
--
--			percent += src_line->samples[evidx].percent;
--			sample->nr_samples += src_line->samples[evidx].nr;
--			offset++;
--		}
--	} else {
--		struct sym_hist *h = annotation__histogram(notes, evidx);
--		unsigned int hits = 0;
--		u64 period = 0;
--
--		while (offset < end) {
--			hits   += h->addr[offset].nr_samples;
--			period += h->addr[offset].period;
--			++offset;
--		}
--
--		if (h->nr_samples) {
--			sample->period	   = period;
--			sample->nr_samples = hits;
--			percent = 100.0 * hits / h->nr_samples;
--		}
--	}
--
--	return percent;
--}
--
- static const char *annotate__address_color(struct block_range *br)
+-void disasm__purge(struct list_head *head)
++void annotated_source__purge(struct annotated_source *as)
  {
- 	double cov = block_range__coverage(br);
+-	struct disasm_line *pos, *n;
++	struct annotation_line *al, *n;
+ 
+-	list_for_each_entry_safe(pos, n, head, al.node) {
+-		list_del(&pos->al.node);
+-		disasm_line__free(pos);
++	list_for_each_entry_safe(al, n, &as->source, node) {
++		list_del(&al->node);
++		disasm_line__free(disasm_line(al));
+ 	}
+ }
+ 
+@@ -2047,7 +2047,7 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
+ 	if (print_lines)
+ 		symbol__free_source_line(sym, len);
+ 
+-	disasm__purge(&symbol__annotation(sym)->src->source);
++	annotated_source__purge(symbol__annotation(sym)->src);
+ 
+ 	return 0;
+ }
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 927810b19f0d..f98acb2ad721 100644
+index 2e7a08afb04f..cb60cafae1fb 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -107,8 +107,6 @@ struct annotation_line *
- annotation_line__next(struct annotation_line *pos, struct list_head *head);
- int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
--double disasm__calc_percent(struct annotation *notes, int evidx, s64 offset,
--			    s64 end, const char **path, struct sym_hist_entry *sample);
- int symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
+@@ -212,7 +212,7 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
+ 			    int min_pcnt, int max_lines, int context);
+ void symbol__annotate_zero_histogram(struct symbol *sym, int evidx);
+ void symbol__annotate_decay_histogram(struct symbol *sym, int evidx);
+-void disasm__purge(struct list_head *head);
++void annotated_source__purge(struct annotated_source *as);
  
- struct sym_hist {
+ bool ui__has_annotation(void);
+ 
 -- 
 2.13.6
