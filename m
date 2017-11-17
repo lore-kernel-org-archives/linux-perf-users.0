@@ -1,126 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/83] perf annotate: Add evsel into struct annotation_line_args
-Date: Fri, 17 Nov 2017 17:14:49 -0300
-Message-ID: <20171117201601.24110-12-acme@kernel.org>
+Subject: [PATCH 02/83] perf record: Generate PERF_RECORD_{MMAP,COMM,EXEC} with --delay
+Date: Fri, 17 Nov 2017 17:14:40 -0300
+Message-ID: <20171117201601.24110-3-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S935667AbdKQUQy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:16:54 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add evsel into struct annotate_args to reduce the number of arguments
-that need to travel all the way to line allocation.
+When we use an initial delay, e.g.: 'perf record --delay 1000', we do not
+enable the events until that delay has passed after we started the workload,
+including the tracking event, i.e. the one for which we have attr.mmap, etc,
+enabled to ask the kernel to generate the PERF_RECORD_{MMAP,COMM,EXEC} metadata
+events that will then allow us to resolve addresses in samples to the map, dso
+and symbol. There will be a shadow that even synthesizing samples won't cover,
+i.e. the workload that we start and other processes forking while we
+wait for the initial delay to expire.
 
-This change also allow us to move the arch name initialization under
-symbol__annotate function.
+So use a dummy event to be the tracking one and make it be enabled on exec.
 
-Link: http://lkml.kernel.org/n/tip-a9ok53rrgt1s5e8uglyvy6qt@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <andi@firstfloor.org>
+Before:
+
+  # perf record --delay 1000 stress --cpu 1 --timeout 5
+  stress: info: [9029] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+  stress: info: [9029] successful run completed in 5s
+  [ perf record: Woken up 3 times to write data ]
+  [ perf record: Captured and wrote 0.624 MB perf.data (15908 samples) ]
+  # perf script | head
+      :9031 9031 32001.826888:       1 cycles:ppp: ffffffff831aa30d event_function (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826893:       1 cycles:ppp: ffffffff8300d1a0 intel_bts_enable_local (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826895:       7 cycles:ppp: ffffffff83023870 sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826897:     103 cycles:ppp: ffffffff8300c331 intel_pmu_handle_irq (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826899:    1615 cycles:ppp: ffffffff830231f8 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826902:   26724 cycles:ppp: ffffffff8384c6a7 native_irq_return_iret (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826913:  329739 cycles:ppp:     7fb2a5410932 [unknown] ([unknown])
+      :9031 9031 32001.827033: 1225451 cycles:ppp:     7fb2a5410930 [unknown] ([unknown])
+      :9031 9031 32001.827474: 1391725 cycles:ppp:     7fb2a5410930 [unknown] ([unknown])
+      :9031 9031 32001.827978: 1233697 cycles:ppp:     7fb2a5410928 [unknown] ([unknown])
+  #
+
+After:
+
+  # perf record --delay 1000 stress --cpu 1 --timeout 5
+  stress: info: [9741] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+  stress: info: [9741] successful run completed in 5s
+  [ perf record: Woken up 3 times to write data ]
+  [ perf record: Captured and wrote 0.751 MB perf.data (15976 samples) ]
+  # perf script | head
+     stress  9742 32110.959106:          1 cycles:ppp:  ffffffff831b26f6 __perf_event_task_sched_in (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959110:       1 cycles:ppp: ffffffff8300c2e9 intel_pmu_handle_irq (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959112:       7 cycles:ppp: ffffffff830231e0 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959115:     101 cycles:ppp: ffffffff83023870 sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959117:    1533 cycles:ppp: ffffffff830231f8 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959119:   23992 cycles:ppp: ffffffff831b0900 ctx_sched_in (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959129:  329406 cycles:ppp:     7f4b1b661930 __random_r (/usr/lib64/libc-2.25.so)
+     stress 9742 32110.959249: 1288322 cycles:ppp:     5566e1e7cbc9 hogcpu (/usr/bin/stress)
+     stress 9742 32110.959712: 1464046 cycles:ppp:     7f4b1b66179e __random (/usr/lib64/libc-2.25.so)
+     stress 9742 32110.960241: 1266918 cycles:ppp:     7f4b1b66195b __random_r (/usr/lib64/libc-2.25.so)
+  #
+
+Reported-by: Bram Stolk <b.stolk@gmail.com>
+Tested-by: Bram Stolk <b.stolk@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171011150158.11895-11-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: 6619a53ef757 ("perf record: Add --initial-delay option")
+Link: http://lkml.kernel.org/n/tip-nrdfchshqxf7diszhxcecqb9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c |  2 +-
- tools/perf/ui/gtk/annotate.c      |  3 +--
- tools/perf/util/annotate.c        | 11 ++++++++---
- tools/perf/util/annotate.h        |  2 +-
- 4 files changed, 11 insertions(+), 7 deletions(-)
+ tools/perf/builtin-record.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index d77994c1cba9..3b72519c085f 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -1120,7 +1120,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
- 		  (nr_pcnt - 1);
- 	}
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 3d7f33e19df2..5f78ce943407 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -339,6 +339,22 @@ static int record__open(struct record *rec)
+ 	struct perf_evsel_config_term *err_term;
+ 	int rc = 0;
  
--	err = symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
-+	err = symbol__annotate(sym, map, evsel,
- 			       sizeof_bdl, &browser.arch,
- 			       perf_evsel__env_cpuid(evsel));
- 	if (err) {
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index b498f1a92bb1..5e0a56df0b4c 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -169,8 +169,7 @@ static int symbol__gtk_annotate(struct symbol *sym, struct map *map,
- 	if (map->dso->annotate_warned)
- 		return -1;
- 
--	err = symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
--			       0, NULL, NULL);
-+	err = symbol__annotate(sym, map, evsel, 0, NULL, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 681c9c4ce9f9..75f54eab22c8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -882,6 +882,7 @@ struct annotate_args {
- 	size_t			 privsize;
- 	struct arch		*arch;
- 	struct map		*map;
-+	struct perf_evsel	*evsel;
- 	s64			 offset;
- 	char			*line;
- 	int			 line_nr;
-@@ -1570,16 +1571,21 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- }
- 
- int symbol__annotate(struct symbol *sym, struct map *map,
--		     const char *arch_name, size_t privsize,
-+		     struct perf_evsel *evsel, size_t privsize,
- 		     struct arch **parch, char *cpuid)
- {
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.map		= map,
-+		.evsel		= evsel,
- 	};
-+	const char *arch_name = NULL;
- 	struct arch *arch;
- 	int err;
- 
-+	if (evsel)
-+		arch_name = perf_evsel__env_arch(evsel);
++	/*
++	 * For initial_delay we need to add a dummy event so that we can track
++	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
++	 * real events, the ones asked by the user.
++	 */
++	if (opts->initial_delay) {
++		if (perf_evlist__add_dummy(evlist))
++			return -ENOMEM;
 +
- 	arch_name = annotate__norm_arch(arch_name);
- 	if (!arch_name)
- 		return -1;
-@@ -1975,8 +1981,7 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
- 	struct rb_root source_line = RB_ROOT;
- 	u64 len;
++		pos = perf_evlist__first(evlist);
++		pos->tracking = 0;
++		pos = perf_evlist__last(evlist);
++		pos->tracking = 1;
++		pos->attr.enable_on_exec = 1;
++	}
++
+ 	perf_evlist__config(evlist, opts, &callchain_param);
  
--	if (symbol__annotate(sym, map, perf_evsel__env_arch(evsel),
--			     0, NULL, NULL) < 0)
-+	if (symbol__annotate(sym, map, evsel, 0, NULL, NULL) < 0)
- 		return -1;
- 
- 	len = symbol__size(sym);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index e577f9d13a58..baf34032504a 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -174,7 +174,7 @@ int symbol__alloc_hist(struct symbol *sym);
- void symbol__annotate_zero_histograms(struct symbol *sym);
- 
- int symbol__annotate(struct symbol *sym, struct map *map,
--		     const char *arch_name, size_t privsize,
-+		     struct perf_evsel *evsel, size_t privsize,
- 		     struct arch **parch, char *cpuid);
- 
- enum symbol_disassemble_errno {
+ 	evlist__for_each_entry(evlist, pos) {
 -- 
 2.13.6
