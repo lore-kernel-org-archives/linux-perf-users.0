@@ -1,98 +1,81 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 82/83] perf tools: Change (symbol|annotation)__calc_percent return type to void
-Date: Fri, 17 Nov 2017 17:16:00 -0300
-Message-ID: <20171117201601.24110-83-acme@kernel.org>
+Subject: [PATCH 80/83] perf top: Use signal interface for SIGWINCH handler
+Date: Fri, 17 Nov 2017 17:15:58 -0300
+Message-ID: <20171117201601.24110-81-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1161839AbdKQUUn (ORCPT
+        id S1161805AbdKQUUg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:20:43 -0500
+        Fri, 17 Nov 2017 15:20:36 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need for symbol__calc_percent and annotation__calc_percent
-functions to return any value, since it's always zero. Changing both
-function to return void.
+There's no need for SA_SIGINFO data in SIGWINCH handler, switching it to
+register the handler via signal interface as we do for the rest of the
+signals in perf top.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-z0gs28hh24m4gia1t1ctraye@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-elxp1vdnaog1scaj13cx7cu0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 17 ++++++++---------
- tools/perf/util/annotate.h |  2 +-
- 2 files changed, 9 insertions(+), 10 deletions(-)
+ tools/perf/builtin-top.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 30d74dabdc42..846abb4955ac 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1584,8 +1584,8 @@ static void calc_percent(struct sym_hist *hist,
- 	}
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 4cbd3dd14a33..a29a98334f33 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -86,8 +86,7 @@ static void perf_top__update_print_entries(struct perf_top *top)
+ 	top->print_entries = top->winsize.ws_row - HEADER_LINE_NR;
  }
  
--static int annotation__calc_percent(struct annotation *notes,
--				    struct perf_evsel *evsel, s64 len)
-+static void annotation__calc_percent(struct annotation *notes,
-+				     struct perf_evsel *evsel, s64 len)
+-static void perf_top__sig_winch(int sig __maybe_unused,
+-				siginfo_t *info __maybe_unused, void *arg __maybe_unused)
++static void winch_sig(int sig __maybe_unused)
  {
- 	struct annotation_line *al, *next;
+ 	resize = 1;
+ }
+@@ -480,12 +479,8 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ 		case 'e':
+ 			prompt_integer(&top->print_entries, "Enter display entries (lines)");
+ 			if (top->print_entries == 0) {
+-				struct sigaction act = {
+-					.sa_sigaction = perf_top__sig_winch,
+-					.sa_flags     = SA_SIGINFO,
+-				};
+ 				perf_top__resize(top);
+-				sigaction(SIGWINCH, &act, NULL);
++				signal(SIGWINCH, winch_sig);
+ 			} else {
+ 				signal(SIGWINCH, SIG_DFL);
+ 			}
+@@ -1366,12 +1361,8 @@ int cmd_top(int argc, const char **argv)
  
-@@ -1609,15 +1609,13 @@ static int annotation__calc_percent(struct annotation *notes,
- 			calc_percent(hist, sample, al->offset, end);
- 		}
+ 	get_term_dimensions(&top.winsize);
+ 	if (top.print_entries == 0) {
+-		struct sigaction act = {
+-			.sa_sigaction = perf_top__sig_winch,
+-			.sa_flags     = SA_SIGINFO,
+-		};
+ 		perf_top__update_print_entries(&top);
+-		sigaction(SIGWINCH, &act, NULL);
++		signal(SIGWINCH, winch_sig);
  	}
--
--	return 0;
- }
  
--int symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel)
-+void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel)
- {
- 	struct annotation *notes = symbol__annotation(sym);
- 
--	return annotation__calc_percent(notes, evsel, symbol__size(sym));
-+	annotation__calc_percent(notes, evsel, symbol__size(sym));
- }
- 
- int symbol__annotate(struct symbol *sym, struct map *map,
-@@ -1656,10 +1654,11 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 	}
- 
- 	err = symbol__disassemble(sym, &args);
--	if (err)
--		return err;
-+	if (!err)
-+		symbol__calc_percent(sym, evsel);
-+
-+	return err;
- 
--	return symbol__calc_percent(sym, evsel);
- }
- 
- static void insert_source_line(struct rb_root *root, struct annotation_line *al)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 4fc805a271d2..6d7289e88fa3 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -107,7 +107,7 @@ struct annotation_line *
- annotation_line__next(struct annotation_line *pos, struct list_head *head);
- int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
--int symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
-+void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
- 
- struct sym_hist {
- 	u64		      nr_samples;
+ 	status = __cmd_top(&top);
 -- 
 2.13.6
