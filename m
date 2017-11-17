@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 52/83] perf tests: Set evlist of test__sw_clock_freq() to !overwrite
-Date: Fri, 17 Nov 2017 17:15:30 -0300
-Message-ID: <20171117201601.24110-53-acme@kernel.org>
+Subject: [PATCH 51/83] perf tests: Set evlist of test__backward_ring_buffer() to !overwrite
+Date: Fri, 17 Nov 2017 17:15:29 -0300
+Message-ID: <20171117201601.24110-52-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58782 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755002AbdKQUTP (ORCPT
+        id S1750776AbdKQUTO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:19:15 -0500
+        Fri, 17 Nov 2017 15:19:14 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,32 +17,33 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wang Nan <wa
 
 From: Wang Nan <wangnan0@huawei.com>
 
-Unsetting overwrite when calling perf_evlist__mmap is harmless. This
-commit passes false to it, makes following commits eliminate the
-overwrite argument easier.
+Setting overwrite in perf_evlist__mmap() is meaningless because the
+event in this evlist is already have 'overwrite' postfix and goes to
+backward ring buffer automatically. Pass 'false' to perf_evlist__mmap()
+to make it similar to others.
 
 Signed-off-by: Wang Nan <wangnan0@huawei.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20171113013809.212417-4-wangnan0@huawei.com
+Link: http://lkml.kernel.org/r/20171113013809.212417-3-wangnan0@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/sw-clock.c | 2 +-
+ tools/perf/tests/backward-ring-buffer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 725a196991a8..c6937ed12e6b 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -78,7 +78,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 		goto out_delete_evlist;
- 	}
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 71b9a0b613d2..43a8c6ac4070 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -59,7 +59,7 @@ static int do_test(struct perf_evlist *evlist, int mmap_pages,
+ 	int err;
+ 	char sbuf[STRERR_BUFSIZE];
  
--	err = perf_evlist__mmap(evlist, 128, true);
-+	err = perf_evlist__mmap(evlist, 128, false);
+-	err = perf_evlist__mmap(evlist, mmap_pages, true);
++	err = perf_evlist__mmap(evlist, mmap_pages, false);
  	if (err < 0) {
- 		pr_debug("failed to mmap event: %d (%s)\n", errno,
+ 		pr_debug("perf_evlist__mmap: %s\n",
  			 str_error_r(errno, sbuf, sizeof(sbuf)));
 -- 
 2.13.6
