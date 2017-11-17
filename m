@@ -1,42 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 72/83] perf evlist: Document missing --force option
-Date: Fri, 17 Nov 2017 17:15:50 -0300
-Message-ID: <20171117201601.24110-73-acme@kernel.org>
+Subject: [PATCH 66/83] perf lock: Document missing options
+Date: Fri, 17 Nov 2017 17:15:44 -0300
+Message-ID: <20171117201601.24110-67-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753198AbdKQUTu (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Nov 2017 15:19:50 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sihyeon Jang <uneedsihyeon@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Sihyeon Jang <uneedsihyeon@gmail.com>
 
-Add --force to the man page.
+Add man page entry for --force.
 
 Signed-off-by: Sihyeon Jang <uneedsihyeon@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/1510842367-11011-5-git-send-email-uneedsihyeon@gmail.com
+Link: http://lkml.kernel.org/r/1510837609-6277-1-git-send-email-uneedsihyeon@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-evlist.txt | 4 ++++
+ tools/perf/Documentation/perf-lock.txt | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-evlist.txt b/tools/perf/Documentation/perf-evlist.txt
-index 6f7200fb85cf..c0a66400a960 100644
---- a/tools/perf/Documentation/perf-evlist.txt
-+++ b/tools/perf/Documentation/perf-evlist.txt
-@@ -20,6 +20,10 @@ OPTIONS
- --input=::
-         Input file name. (default: perf.data unless stdin is a fifo)
+diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+index ab25be28c9dc..74d774592196 100644
+--- a/tools/perf/Documentation/perf-lock.txt
++++ b/tools/perf/Documentation/perf-lock.txt
+@@ -42,6 +42,10 @@ COMMON OPTIONS
+ --dump-raw-trace::
+         Dump raw trace in ASCII.
  
 +-f::
 +--force::
-+	Don't complain, do it.
++	Don't complan, do it.
 +
- -F::
- --freq=::
- 	Show just the sample frequency used for each event.
+ REPORT OPTIONS
+ --------------
+ 
 -- 
 2.13.6
