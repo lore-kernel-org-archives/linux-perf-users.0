@@ -1,60 +1,114 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 64/83] perf c2c: Fix spelling mistakes in browser help text
-Date: Fri, 17 Nov 2017 17:15:42 -0300
-Message-ID: <20171117201601.24110-65-acme@kernel.org>
+Subject: [PATCH 62/83] perf record: Ignore kptr_restrict when not sampling the kernel
+Date: Fri, 17 Nov 2017 17:15:40 -0300
+Message-ID: <20171117201601.24110-63-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58878 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753708AbdKQUTo (ORCPT
+        id S1760079AbdKQUTi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:19:44 -0500
+        Fri, 17 Nov 2017 15:19:38 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
-From: Kim Phillips <kim.phillips@arm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Togle -> Toggle, lenght -> length.
+If we're not sampling the kernel, we shouldn't care about kptr_restrict
+neither synthesize anything for assisting in resolving kernel samples,
+like the reference relocation symbol or kernel modules information.
 
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Before:
+
+  $ cat /proc/sys/kernel/kptr_restrict /proc/sys/kernel/perf_event_paranoid
+  2
+  2
+  $ perf record sleep 1
+  WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
+  check /proc/sys/kernel/kptr_restrict.
+
+  Samples in kernel functions may not be resolved if a suitable vmlinux
+  file is not found in the buildid cache or in the vmlinux path.
+
+  Samples in kernel modules won't be resolved at all.
+
+  If some relocation was applied (e.g. kexec) symbols may be misresolved
+  even with a suitable vmlinux or kallsyms file.
+
+  Couldn't record kernel reference relocation symbol
+  Symbol resolution may be skewed if relocation was used (e.g. kexec).
+  Check /proc/kallsyms permission or run as root.
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.001 MB perf.data (8 samples) ]
+  $ perf evlist -v
+  cycles:uppp: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, exclude_kernel: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
+  $
+
+After:
+
+  $ perf record sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.001 MB perf.data (10 samples) ]
+  $
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171114150447.f4b63bc5d97c83cdaa8bf7dc@arm.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-t025e9zftbx2b8cq2w01g5e5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-c2c.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-record.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 17855c4626a0..f1da9b0833c0 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2224,9 +2224,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 	struct hist_browser *browser;
- 	int key = -1;
- 	const char help[] =
--	" ENTER         Togle callchains (if present) \n"
--	" n             Togle Node details info \n"
--	" s             Togle full lenght of symbol and source line columns \n"
-+	" ENTER         Toggle callchains (if present) \n"
-+	" n             Toggle Node details info \n"
-+	" s             Toggle full length of symbol and source line columns \n"
- 	" q             Return back to cacheline list \n";
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 5f78ce943407..003255910c05 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -765,17 +765,19 @@ static int record__synthesize(struct record *rec, bool tail)
+ 			goto out;
+ 	}
  
- 	/* Display compact version first. */
-@@ -2303,7 +2303,7 @@ static int perf_c2c__hists_browse(struct hists *hists)
- 	int key = -1;
- 	const char help[] =
- 	" d             Display cacheline details \n"
--	" ENTER         Togle callchains (if present) \n"
-+	" ENTER         Toggle callchains (if present) \n"
- 	" q             Quit \n";
+-	err = perf_event__synthesize_kernel_mmap(tool, process_synthesized_event,
+-						 machine);
+-	WARN_ONCE(err < 0, "Couldn't record kernel reference relocation symbol\n"
+-			   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
+-			   "Check /proc/kallsyms permission or run as root.\n");
+-
+-	err = perf_event__synthesize_modules(tool, process_synthesized_event,
+-					     machine);
+-	WARN_ONCE(err < 0, "Couldn't record kernel module information.\n"
+-			   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
+-			   "Check /proc/modules permission or run as root.\n");
++	if (!perf_evlist__exclude_kernel(rec->evlist)) {
++		err = perf_event__synthesize_kernel_mmap(tool, process_synthesized_event,
++							 machine);
++		WARN_ONCE(err < 0, "Couldn't record kernel reference relocation symbol\n"
++				   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
++				   "Check /proc/kallsyms permission or run as root.\n");
++
++		err = perf_event__synthesize_modules(tool, process_synthesized_event,
++						     machine);
++		WARN_ONCE(err < 0, "Couldn't record kernel module information.\n"
++				   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
++				   "Check /proc/modules permission or run as root.\n");
++	}
  
- 	browser = perf_c2c_browser__new(hists);
+ 	if (perf_guest) {
+ 		machines__process_guests(&session->machines,
+@@ -1709,7 +1711,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	err = -ENOMEM;
+ 
+-	if (symbol_conf.kptr_restrict)
++	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
+ 		pr_warning(
+ "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
+ "check /proc/sys/kernel/kptr_restrict.\n\n"
 -- 
 2.13.6
