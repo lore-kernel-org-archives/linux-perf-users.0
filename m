@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 48/83] perf script: Allow printing period for non freq mode groups
-Date: Fri, 17 Nov 2017 17:15:26 -0300
-Message-ID: <20171117201601.24110-49-acme@kernel.org>
+Subject: [PATCH 47/83] perf tools: Document some missing perf.data headers
+Date: Fri, 17 Nov 2017 17:15:25 -0300
+Message-ID: <20171117201601.24110-48-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753413AbdKQUSx (ORCPT
+        id S1758724AbdKQUSv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Nov 2017 15:18:53 -0500
+        Fri, 17 Nov 2017 15:18:51 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,63 +17,49 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <
 
 From: Andi Kleen <ak@linux.intel.com>
 
-When using leader sampling the values of the not sampled but counted
-events are shown by perf script in "period".
-
-Currently printing period is only allowed when the main event has a
-period, that is it is in frequency mode.
-
-This implies that we cannot dump the values of counted events when the
-leader event is not in frequency mode.
-
-Just remove the check that the period must be set on all events. It will
-just be printed as 0 instead if it's not available.
-
-This fixes the following:
-
-  $ perf record -c 100000 -e '{cycles,branches}:S'
-  $ perf script -F event,period
-
-Further commentary by Jiri Olsa:
-
-The period will be the value of configured period, not 0:
-
-int perf_evsel__parse_sample(struct ...
-  ...
-  data->period = evsel->attr.sample_period;
-
-  $ perf record -c 100000
-  $ perf script -F event,period | head -3
-  Failed to open /tmp/perf-2048.map, continuing without symbols
-      100000 cycles:ppp:
-      100000 cycles:ppp:
-
-other than that I think we can remove that check, because we will have
-always sane number in period
+Document STAT and CACHE header entries.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20171109145528.23371-4-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20171109145528.23371-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 5 -----
- 1 file changed, 5 deletions(-)
+ tools/perf/Documentation/perf.data-file-format.txt | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 9b43bda45a41..ee7c7aaaae72 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -423,11 +423,6 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
- 					   PERF_OUTPUT_CPU, allow_user_set))
- 		return -EINVAL;
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index e90c59c6d815..15e8b48077ba 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -238,6 +238,29 @@ struct auxtrace_index {
+ 	struct auxtrace_index_entry entries[PERF_AUXTRACE_INDEX_ENTRY_COUNT];
+ };
  
--	if (PRINT_FIELD(PERIOD) &&
--		perf_evsel__check_stype(evsel, PERF_SAMPLE_PERIOD, "PERIOD",
--					PERF_OUTPUT_PERIOD))
--		return -EINVAL;
--
- 	if (PRINT_FIELD(IREGS) &&
- 		perf_evsel__check_stype(evsel, PERF_SAMPLE_REGS_INTR, "IREGS",
- 					PERF_OUTPUT_IREGS))
++	HEADER_STAT = 19,
++
++This is merely a flag signifying that the data section contains data
++recorded from perf stat record.
++
++	HEADER_CACHE = 20,
++
++Description of the cache hierarchy. Based on the Linux sysfs format
++in /sys/devices/system/cpu/cpu*/cache/
++
++	u32 version	Currently always 1
++	u32 number_of_cache_levels
++
++struct {
++	u32	level;
++	u32	line_size;
++	u32	sets;
++	u32	ways;
++	struct perf_header_string type;
++	struct perf_header_string size;
++	struct perf_header_string map;
++}[number_of_cache_levels];
++
+ 	other bits are reserved and should ignored for now
+ 	HEADER_FEAT_BITS	= 256,
+ 
 -- 
 2.13.6
