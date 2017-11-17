@@ -1,130 +1,69 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 57/83] perf annotate: Do not truncate instruction names at 6 chars
-Date: Fri, 17 Nov 2017 17:15:35 -0300
-Message-ID: <20171117201601.24110-58-acme@kernel.org>
+Subject: [PATCH 55/83] perf machine: Guard against NULL in machine__exit()
+Date: Fri, 17 Nov 2017 17:15:33 -0300
+Message-ID: <20171117201601.24110-56-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrei Vagin <avagin@openvz.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Vasily Averin <vvs@virtuozzo.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There are many instructions, esp on PowerPC, whose mnemonics are longer
-than 6 characters. Using precision limit causes truncation of such
-mnemonics.
+A recent fix for 'perf trace' introduced a bug where
+machine__exit(trace->host) could be called while trace->host was still
+NULL, so make this more robust by guarding against NULL, just like
+free() does.
 
-Fix this by removing precision limit. Note that, 'width' is still 6, so
-alignment won't get affected for length <= 6.
+The problem happens, for instance, when !root users try to run 'perf
+trace':
 
-Before:
+  [acme@jouet linux]$ trace
+  Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
 
-   li     r11,-1
-   xscvdp vs1,vs1
-   add.   r10,r10,r11
+  perf: Segmentation fault
+  Obtained 7 stack frames.
+  [0x4f1b2e]
+  /lib64/libc.so.6(+0x3671f) [0x7f43a1dd971f]
+  [0x4f3fec]
+  [0x47468b]
+  [0x42a2db]
+  /lib64/libc.so.6(__libc_start_main+0xe9) [0x7f43a1dc3509]
+  [0x42a6c9]
+  Segmentation fault (core dumped)
+  [acme@jouet linux]$
 
-After:
-
-  li     r11,-1
-  xscvdpsxds vs1,vs1
-  add.   r10,r10,r11
-
-Reported-by: Donald Stence <dstence@us.ibm.com>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: http://lkml.kernel.org/r/20171114032540.4564-1-ravi.bangoria@linux.vnet.ibm.com
+Cc: Vasily Averin <vvs@virtuozzo.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: 33974a414ce2 ("perf trace: Call machine__exit() at exit")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/machine.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index eab4a8e3c679..30d74dabdc42 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -165,7 +165,7 @@ static void ins__delete(struct ins_operands *ops)
- static int ins__raw_scnprintf(struct ins *ins, char *bf, size_t size,
- 			      struct ins_operands *ops)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 6a8d03c3d9b7..270f3223c6df 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -172,6 +172,9 @@ void machine__exit(struct machine *machine)
  {
--	return scnprintf(bf, size, "%-6.6s %s", ins->name, ops->raw);
-+	return scnprintf(bf, size, "%-6s %s", ins->name, ops->raw);
- }
+ 	int i;
  
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
-@@ -230,12 +230,12 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops)
- {
- 	if (ops->target.name)
--		return scnprintf(bf, size, "%-6.6s %s", ins->name, ops->target.name);
-+		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.name);
- 
- 	if (ops->target.addr == 0)
- 		return ins__raw_scnprintf(ins, bf, size, ops);
- 
--	return scnprintf(bf, size, "%-6.6s *%" PRIx64, ins->name, ops->target.addr);
-+	return scnprintf(bf, size, "%-6s *%" PRIx64, ins->name, ops->target.addr);
- }
- 
- static struct ins_ops call_ops = {
-@@ -299,7 +299,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			c++;
- 	}
- 
--	return scnprintf(bf, size, "%-6.6s %.*s%" PRIx64,
-+	return scnprintf(bf, size, "%-6s %.*s%" PRIx64,
- 			 ins->name, c ? c - ops->raw : 0, ops->raw,
- 			 ops->target.offset);
- }
-@@ -372,7 +372,7 @@ static int lock__scnprintf(struct ins *ins, char *bf, size_t size,
- 	if (ops->locked.ins.ops == NULL)
- 		return ins__raw_scnprintf(ins, bf, size, ops);
- 
--	printed = scnprintf(bf, size, "%-6.6s ", ins->name);
-+	printed = scnprintf(bf, size, "%-6s ", ins->name);
- 	return printed + ins__scnprintf(&ops->locked.ins, bf + printed,
- 					size - printed, ops->locked.ops);
- }
-@@ -448,7 +448,7 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map *m
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops)
- {
--	return scnprintf(bf, size, "%-6.6s %s,%s", ins->name,
-+	return scnprintf(bf, size, "%-6s %s,%s", ins->name,
- 			 ops->source.name ?: ops->source.raw,
- 			 ops->target.name ?: ops->target.raw);
- }
-@@ -488,7 +488,7 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
- static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops)
- {
--	return scnprintf(bf, size, "%-6.6s %s", ins->name,
-+	return scnprintf(bf, size, "%-6s %s", ins->name,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
-@@ -500,7 +500,7 @@ static struct ins_ops dec_ops = {
- static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
- 			  struct ins_operands *ops __maybe_unused)
- {
--	return scnprintf(bf, size, "%-6.6s", "nop");
-+	return scnprintf(bf, size, "%-6s", "nop");
- }
- 
- static struct ins_ops nop_ops = {
-@@ -990,7 +990,7 @@ void disasm_line__free(struct disasm_line *dl)
- int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw)
- {
- 	if (raw || !dl->ins.ops)
--		return scnprintf(bf, size, "%-6.6s %s", dl->ins.name, dl->ops.raw);
-+		return scnprintf(bf, size, "%-6s %s", dl->ins.name, dl->ops.raw);
- 
- 	return ins__scnprintf(&dl->ins, bf, size, &dl->ops);
- }
++	if (machine == NULL)
++		return;
++
+ 	machine__destroy_kernel_maps(machine);
+ 	map_groups__exit(&machine->kmaps);
+ 	dsos__exit(&machine->dsos);
 -- 
 2.13.6
