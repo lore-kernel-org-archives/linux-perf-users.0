@@ -1,58 +1,43 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 67/83] perf: Fix header.size for namespace events
-Date: Fri, 17 Nov 2017 17:15:45 -0300
-Message-ID: <20171117201601.24110-68-acme@kernel.org>
+Subject: [PATCH 74/83] perf callchain: Reset cursor arg instead of callchain_cursor
+Date: Fri, 17 Nov 2017 17:15:52 -0300
+Message-ID: <20171117201601.24110-75-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Reset header size for namespace events, otherwise it only gets bigger in
-ctx iterations.
+We already pass cursor into thread__resolve_callchain function, so
+there's no point in resetting the global instance.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Fixes: e422267322cd ("perf: Add PERF_RECORD_NAMESPACES to include namespaces related info")
-Link: http://lkml.kernel.org/n/tip-nlo4gonz9d4guyb8153ukzt0@git.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/n/tip-puk015qvuppao9m1xtdy9v7j@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/machine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 81dd57b9e5e3..aa21555972aa 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6640,6 +6640,7 @@ static void perf_event_namespaces_output(struct perf_event *event,
- 	struct perf_namespaces_event *namespaces_event = data;
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
-+	u16 header_size = namespaces_event->event_id.header.size;
- 	int ret;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 270f3223c6df..64d255f6a537 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2204,7 +2204,7 @@ int thread__resolve_callchain(struct thread *thread,
+ {
+ 	int ret = 0;
  
- 	if (!perf_event_namespaces_match(event))
-@@ -6650,7 +6651,7 @@ static void perf_event_namespaces_output(struct perf_event *event,
- 	ret = perf_output_begin(&handle, event,
- 				namespaces_event->event_id.header.size);
- 	if (ret)
--		return;
-+		goto out;
+-	callchain_cursor_reset(&callchain_cursor);
++	callchain_cursor_reset(cursor);
  
- 	namespaces_event->event_id.pid = perf_event_pid(event,
- 							namespaces_event->task);
-@@ -6662,6 +6663,8 @@ static void perf_event_namespaces_output(struct perf_event *event,
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
-+out:
-+	namespaces_event->event_id.header.size = header_size;
- }
- 
- static void perf_fill_ns_link_info(struct perf_ns_link_info *ns_link_info,
+ 	if (callchain_param.order == ORDER_CALLEE) {
+ 		ret = thread__resolve_callchain_sample(thread, cursor,
 -- 
 2.13.6
