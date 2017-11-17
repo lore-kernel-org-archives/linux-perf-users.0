@@ -1,167 +1,86 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/83] perf annotate browser: Change selection to struct annotation_line
-Date: Fri, 17 Nov 2017 17:15:08 -0300
-Message-ID: <20171117201601.24110-31-acme@kernel.org>
+Subject: [PATCH 59/83] perf test shell: Fix test case probe libc's inet_pton on s390x
+Date: Fri, 17 Nov 2017 17:15:37 -0300
+Message-ID: <20171117201601.24110-60-acme@kernel.org>
 References: <20171117201601.24110-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:58878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1759254AbdKQUT2 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Nov 2017 15:19:28 -0500
 In-Reply-To: <20171117201601.24110-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Use struct annotation_line as a browser::selection.
+The 'perf test' case "probe libc's inet_pton & backtrace it with ping"
+fails on s390x. The reason is the 'realpath /lib64/ld*.so.* | uniq' line
+which returns 2 libraries:
 
-We want to be able to use the annotate_browser for all sorts of source
-data, so it needs to be able to work over the generic struct
-annotation_line.
+        root@s35lp76 shell]# realpath /lib64/ld*.so.* | uniq
+        /usr/lib64/ld-2.26.so
+        /usr/lib64/ld_pre_smc.so.1.0.1
+        [root@s35lp76 shell]
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171106105617.GC20858@krava
+This output makes the "perf probe" command lines invalid.
+
+Use ldd tool to find out the libraries required by "bash" and check if
+symbol "inet_pton" is part of the "libc" library.  Some distros do not
+have a /lib64 directory.
+
+I have also added a check for the existence of an IPv6 network interface
+before it is being used.
+
+Committer changes:
+
+We can't really use ldd for libc, as in some systems, such as x86_64, it
+has hardlinks and then ldd sees one and the kernel the other, so grep
+for libc in /proc/self/maps to get the one we'll receive from
+PERF_RECORD_MMAP.
+
+Thomas checked this change and acked it.
+
+Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20171114133409.GN8836@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 63 +++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
+ tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 3691dc8cef4c..657811669a6c 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -47,26 +47,26 @@ static struct annotate_browser_opt {
- struct arch;
+diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+index 7a84d73324e3..8b3da21a08f1 100755
+--- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+@@ -10,8 +10,8 @@
  
- struct annotate_browser {
--	struct ui_browser b;
--	struct rb_root	  entries;
--	struct rb_node	  *curr_hot;
--	struct disasm_line  *selection;
--	struct disasm_line  **offsets;
--	struct arch	    *arch;
--	int		    nr_events;
--	u64		    start;
--	int		    nr_asm_entries;
--	int		    nr_entries;
--	int		    max_jump_sources;
--	int		    nr_jumps;
--	bool		    searching_backwards;
--	bool		    have_cycles;
--	u8		    addr_width;
--	u8		    jumps_width;
--	u8		    target_width;
--	u8		    min_addr_width;
--	u8		    max_addr_width;
--	char		    search_bf[128];
-+	struct ui_browser	    b;
-+	struct rb_root		    entries;
-+	struct rb_node		   *curr_hot;
-+	struct annotation_line	   *selection;
-+	struct disasm_line	  **offsets;
-+	struct arch		   *arch;
-+	int			    nr_events;
-+	u64			    start;
-+	int			    nr_asm_entries;
-+	int			    nr_entries;
-+	int			    max_jump_sources;
-+	int			    nr_jumps;
-+	bool			    searching_backwards;
-+	bool			    have_cycles;
-+	u8			    addr_width;
-+	u8			    jumps_width;
-+	u8			    target_width;
-+	u8			    min_addr_width;
-+	u8			    max_addr_width;
-+	char			    search_bf[128];
- };
+ . $(dirname $0)/lib/probe.sh
  
- static inline struct browser_line *browser_line(struct disasm_line *dl)
-@@ -265,7 +265,7 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	}
+-ld=$(realpath /lib64/ld*.so.* | uniq)
+-libc=$(echo $ld | sed 's/ld/libc/g')
++libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
++nm -g $libc 2>/dev/null | fgrep -q inet_pton || exit 254
  
- 	if (current_entry)
--		ab->selection = dl;
-+		ab->selection = &dl->al;
+ trace_libc_inet_pton_backtrace() {
+ 	idx=0
+@@ -37,6 +37,9 @@ trace_libc_inet_pton_backtrace() {
+ 	done
  }
  
- static bool disasm_line__is_valid_jump(struct disasm_line *dl, struct symbol *sym)
-@@ -301,7 +301,8 @@ static bool is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
- static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- {
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
--	struct disasm_line *cursor = ab->selection, *target;
-+	struct disasm_line *cursor = disasm_line(ab->selection);
-+	struct disasm_line *target;
- 	struct browser_line *btarget, *bcursor;
- 	unsigned int from, to;
- 	struct map_symbol *ms = ab->b.priv;
-@@ -526,7 +527,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 				    struct hist_browser_timer *hbt)
- {
- 	struct map_symbol *ms = browser->b.priv;
--	struct disasm_line *dl = browser->selection;
-+	struct disasm_line *dl = disasm_line(browser->selection);
- 	struct annotation *notes;
- 	struct addr_map_symbol target = {
- 		.map = ms->map,
-@@ -584,7 +585,7 @@ struct disasm_line *annotate_browser__find_offset(struct annotate_browser *brows
- 
- static bool annotate_browser__jump(struct annotate_browser *browser)
- {
--	struct disasm_line *dl = browser->selection;
-+	struct disasm_line *dl = disasm_line(browser->selection);
- 	u64 offset;
- 	s64 idx;
- 
-@@ -610,7 +611,7 @@ struct disasm_line *annotate_browser__find_string(struct annotate_browser *brows
- 	struct map_symbol *ms = browser->b.priv;
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
--	struct disasm_line *pos = browser->selection;
-+	struct disasm_line *pos = disasm_line(browser->selection);
- 
- 	*idx = browser->b.index;
- 	list_for_each_entry_continue(pos, &notes->src->source, al.node) {
-@@ -649,7 +650,7 @@ struct disasm_line *annotate_browser__find_string_reverse(struct annotate_browse
- 	struct map_symbol *ms = browser->b.priv;
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
--	struct disasm_line *pos = browser->selection;
-+	struct disasm_line *pos = disasm_line(browser->selection);
- 
- 	*idx = browser->b.index;
- 	list_for_each_entry_continue_reverse(pos, &notes->src->source, al.node) {
-@@ -882,13 +883,16 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			continue;
- 		case K_ENTER:
- 		case K_RIGHT:
-+		{
-+			struct disasm_line *dl = disasm_line(browser->selection);
++# Check for IPv6 interface existence
++ip a sh lo | fgrep -q inet6 || exit 2
 +
- 			if (browser->selection == NULL)
- 				ui_helpline__puts("Huh? No selection. Report to linux-kernel@vger.kernel.org");
--			else if (browser->selection->al.offset == -1)
-+			else if (browser->selection->offset == -1)
- 				ui_helpline__puts("Actions are only available for assembly lines.");
--			else if (!browser->selection->ins.ops)
-+			else if (!dl->ins.ops)
- 				goto show_sup_ins;
--			else if (ins__is_ret(&browser->selection->ins))
-+			else if (ins__is_ret(&dl->ins))
- 				goto out;
- 			else if (!(annotate_browser__jump(browser) ||
- 				     annotate_browser__callq(browser, evsel, hbt))) {
-@@ -896,6 +900,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 				ui_helpline__puts("Actions are only available for function call/return & jump/branch instructions.");
- 			}
- 			continue;
-+		}
- 		case 't':
- 			if (annotate_browser__opts.show_total_period) {
- 				annotate_browser__opts.show_total_period = false;
+ skip_if_no_perf_probe && \
+ perf probe -q $libc inet_pton && \
+ trace_libc_inet_pton_backtrace
 -- 
 2.13.6
