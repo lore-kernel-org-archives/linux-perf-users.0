@@ -1,93 +1,49 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf parse events: Fix invalid precise_ip handling
-Date: Mon, 20 Nov 2017 08:33:41 +0100
-Message-ID: <20171120073341.GA5497@krava>
-References: <1510302517-33383-1-git-send-email-zhangmengting@huawei.com>
- <20171110103900.GA10233@krava>
- <6dc43edb-0c33-6d82-71a3-3d7cac10a881@huawei.com>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: measuring system wide CPU usage ignoring idle process
+Date: Mon, 20 Nov 2017 15:00:46 +0100
+Message-ID: <3344812.IFj9h2T05j@agathebauer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:32834 "EHLO mx1.redhat.com"
+Received: from mail.kdab.com ([176.9.126.58]:41342 "EHLO mail.kdab.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751061AbdKTHdo (ORCPT
+        id S1751100AbdKTOAs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Nov 2017 02:33:44 -0500
-Content-Disposition: inline
-In-Reply-To: <6dc43edb-0c33-6d82-71a3-3d7cac10a881@huawei.com>
+        Mon, 20 Nov 2017 09:00:48 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: zhangmengting <zhangmengting@huawei.com>
-Cc: namhyung@kernel.org, alexander.shishkin@linux.intel.com, acme@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, huawei.libin@huawei.com, wangnan0@huawei.com
+To: linux-perf-users@vger.kernel.org
+Cc: acme@kernel.org, namhyung@kernel.org, Jiri Olsa <jolsa@redhat.com>
 
-On Wed, Nov 15, 2017 at 09:00:03AM +0800, zhangmengting wrote:
-> Hi Jiri, thanks for your detailed review, please see my comments inline.
-> 
-> 
-> On 2017/11/10 18:39, Jiri Olsa wrote:
-> > On Fri, Nov 10, 2017 at 04:28:37PM +0800, Mengting Zhang wrote:
-> > 
-> > SNIP
-> > 
-> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > > index 39b1596..25225f4 100644
-> > > --- a/tools/perf/util/parse-events.c
-> > > +++ b/tools/perf/util/parse-events.c
-> > > @@ -1369,6 +1369,32 @@ struct event_modifier {
-> > >   	int pinned;
-> > >   };
-> > > +static int perf_get_max_precise_ip(void)
-> > > +{
-> > > +       int max_precise_ip = 0;
-> > > +       struct perf_event_attr attr = {
-> > > +               .type   = PERF_TYPE_HARDWARE,
-> > > +               .config = PERF_COUNT_HW_CPU_CYCLES,
-> > > +       };
-> > > +
-> > > +       event_attr_init(&attr);
-> > > +
-> > > +       attr.precise_ip = 3;
-> > > +       attr.sample_period = 1;
-> > > +
-> > > +       while (attr.precise_ip != 0) {
-> > > +               int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-> > > +               if (fd != -1){
-> > > +                       close(fd);
-> > > +                       break;
-> > > +               }
-> > > +               --attr.precise_ip;
-> > > +       }
-> > > +       max_precise_ip = attr.precise_ip;
-> > > +
-> > > +       return max_precise_ip;
-> > > +}
-> > we already have a function for that, please check perf_event_attr__set_max_precise_ip
-> Yeah, I've checked that function. But perf_event_attr__set_max_precise_ip()
-> will change attr.precise_ip
-> into the max precise ip available.
-> 
-> In this case, perf should only check whether the user-specified precise_ip
-> is greater than the max
-> precise_ip without changing it into maximum.  Here, introduce
-> perf_get_max_precise_ip() to return
-> the max precise ip and do not change attr.precise_ip.
-> 
-> But you reminds me that perf_get_max_precise_ip() can be simplied.
+Hey all,
 
-well both do the same.. probe kernel for max precise level,
-so we can keep just one function for that
+colleagues of mine just brought this inconvenient perf stat behavior to my 
+attention:
 
-> > also I think the precise level is not generic for all the events,
-> > so you should check it for specific perf_event_attr later, when
-> > the attr is ready, not in modifier parsing
-> You are right, and I would check it for specific perf_event_attr.
-> 
-> BTW, I have a question. If the user-specified precise_ip is greater than the
-> max precise_ip, I wonder
-> whether it is better to adjust the user-specified precise_ip to the maximum
-> available.
+$ perf stat -a -e cpu-clock,task-clock,cycles,instructions sleep 1
 
-no, I think that user defined precise level should stay the
-way the user wants it.. we don't want more angry users ;-)
+ Performance counter stats for 'system wide':
 
-jirka
+       4004.501439      cpu-clock (msec)          #    4.000 CPUs utilized          
+       4004.526474      task-clock (msec)         #    4.000 CPUs utilized          
+       945,906,029      cycles                    #    0.236 GHz                    
+       461,861,241      instructions              #    0.49  insn per cycle         
+
+       1.001247082 seconds time elapsed
+
+This shows that cpu-clock and task-clock are incremented also for the idle 
+processes. Is there some trick to exclude that time, such that the CPU 
+utilization drops below 100% when doing `perf stat -a`?
+
+Or should one ignore these clock measurements for system wide stats and only 
+look at the cycles/instructions etc.? This does go somewhat in the direction 
+of http://www.brendangregg.com/blog/2017-05-09/cpu-utilization-is-wrong.html 
+anyways, so I'm not opposed to this.
+
+Thanks
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH&Co KG, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt Experts
