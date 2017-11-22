@@ -1,145 +1,118 @@
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 1/1] perf/bench/numa: Fixup discontiguous/sparse numa
- nodes
-Date: Wed, 22 Nov 2017 21:39:38 +0530
-Message-ID: <1511366847.k4y13an79p.naveen@linux.ibm.com>
-References: <1511336642-15389-1-git-send-email-sathnaga@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+From: sathnaga@linux.vnet.ibm.com
+Subject: [PATCH v5 0/1] Fixup for discontiguous/sparse numa nodes
+Date: Wed, 22 Nov 2017 22:13:11 +0530
+Message-ID: <cover.1511368645.git.sathnaga@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751476AbdKVQJw (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51042 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1751458AbdKVQnZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Nov 2017 11:09:52 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAMG9ouq007469
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2017 11:09:52 -0500
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2edaqxf3rg-1
+        Wed, 22 Nov 2017 11:43:25 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAMGe7xc140792
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2017 11:43:24 -0500
+Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2eda46b7ga-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2017 11:09:51 -0500
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2017 11:43:24 -0500
 Received: from localhost
-        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 22 Nov 2017 16:09:43 -0000
-In-Reply-To: <1511336642-15389-1-git-send-email-sathnaga@linux.vnet.ibm.com>
+        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <sathnaga@linux.vnet.ibm.com>;
+        Wed, 22 Nov 2017 16:43:22 -0000
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, mingo@kernel.org, sathnaga@linux.vnet.ibm.com
-Cc: bala24@linux.vnet.ibm.com, srikar@linux.vnet.ibm.com
+To: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, mingo@kernel.org
+Cc: bala24@linux.vnet.ibm.com, srikar@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 
-sathnaga@linux.vnet.ibm.com wrote:
-> From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> 
-> Certain systems are designed to have sparse/discontiguous nodes.
-> On such systems, perf bench numa hangs, shows wrong number of nodes
-> and shows values for non-existent nodes. Handle this by only
-> taking nodes that are exposed by kernel to userspace.
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
-> ---
->  tools/perf/bench/numa.c | 57 +++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 51 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> index d95fdcc..ed7db12 100644
-> --- a/tools/perf/bench/numa.c
-> +++ b/tools/perf/bench/numa.c
-> @@ -216,6 +216,47 @@ static const char * const numa_usage[] = {
->  	NULL
->  };
-> 
-> +/*
-> + * To get number of numa nodes present.
-> + */
-> +static int nr_numa_nodes(void)
-> +{
-> +	int i, nr_nodes = 0;
-> +
-> +	for (i = 0; i < g->p.nr_nodes; i++) {
-> +		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-> +			nr_nodes++;
-> +	}
-> +
-> +	return nr_nodes;
-> +}
-> +
-> +/*
-> + * To check if given numa node is present.
-> + */
-> +static int is_node_present(int node)
-> +{
-> +	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-> +}
-> +
-> +/*
-> + * To check given numa node has cpus.
-> + */
-> +static bool node_has_cpus(int node)
-> +{
-> +	struct bitmask *cpu = numa_allocate_cpumask();
-> +	unsigned int i;
-> +
-> +	if (cpu && !numa_node_to_cpus(node, cpu)) {
-> +		for (i = 0; i < cpu->size; i++) {
-> +			if (numa_bitmask_isbitset(cpu, i))
-> +				return true;
-> +		}
-> +	}
-> +
-> +	return false; /* lets fall back to nocpus safely */
-> +}
-> +
->  static cpu_set_t bind_to_cpu(int target_cpu)
->  {
->  	cpu_set_t orig_mask, mask;
-> @@ -244,12 +285,12 @@ static cpu_set_t bind_to_cpu(int target_cpu)
-> 
->  static cpu_set_t bind_to_node(int target_node)
->  {
-> -	int cpus_per_node = g->p.nr_cpus/g->p.nr_nodes;
-> +	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
->  	cpu_set_t orig_mask, mask;
->  	int cpu;
->  	int ret;
-> 
-> -	BUG_ON(cpus_per_node*g->p.nr_nodes != g->p.nr_cpus);
-> +	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
->  	BUG_ON(!cpus_per_node);
-> 
->  	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
-> @@ -649,7 +690,7 @@ static int parse_setup_node_list(void)
->  			int i;
-> 
->  			for (i = 0; i < mul; i++) {
-> -				if (t >= g->p.nr_tasks) {
-> +				if (t >= g->p.nr_tasks || !node_has_cpus(bind_node)) {
->  					printf("\n# NOTE: ignoring bind NODEs starting at NODE#%d\n", bind_node);
->  					goto out;
->  				}
-> @@ -964,13 +1005,14 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
->  	sum = 0;
-> 
->  	for (node = 0; node < g->p.nr_nodes; node++) {
-> +		if (!is_node_present(node))
-> +			continue;
->  		nr = nodes[node];
->  		nr_min = min(nr, nr_min);
->  		nr_max = max(nr, nr_max);
->  		sum += nr;
->  	}
->  	BUG_ON(nr_min > nr_max);
-> -
->  	BUG_ON(sum > g->p.nr_tasks);
+From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 
-Looks like that change to remove a blank line did slip in, but that's a 
-small nit. Apart from that, the patch looks good to me.
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Certain systems would have sparse/discontinguous
+numa nodes.
+perf bench numa doesnt work well on such nodes.
+1. It shows wrong values.
+2. It can hang.
+3. It can show redundant information for non-existant nodes.
 
-- Naveen
+ #numactl -H
+available: 2 nodes (0,8)
+node 0 cpus: 0 1 2 3 4 5 6 7
+node 0 size: 61352 MB
+node 0 free: 57168 MB
+node 8 cpus: 8 9 10 11 12 13 14 15
+node 8 size: 65416 MB
+node 8 free: 36593 MB
+node distances:
+node   0   8
+  0:  10  40
+  8:  40  10
+
+Scenario 1:
+
+Before Fix:
+ # perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072 -T 0 -l 50 -c -s 1000
+...
+...
+ # 40 tasks will execute (on 9 nodes, 16 CPUs): ----> Wrong number of nodes
+...
+ #    2.0%  [0.2 mins]  1/1   0/0   0/0   0/0   0/0   0/0   0/0   0/0   4/1  [ 4/2 ] l:  0-0   (  0) ----> Shows info on non-existant nodes.
+
+After Fix:
+ # ./perf bench numa mem --no-data_rand_walk -p 2 -t 20 -G 0 -P 3072 -T 0 -l 50 -c -s 1000
+...
+...
+ # 40 tasks will execute (on 2 nodes, 16 CPUs):
+... 
+ #    2.0%  [0.2 mins]  9/1   0/0  [ 9/1 ] l:  0-0   (  0)
+ #    4.0%  [0.4 mins] 21/2  19/1  [ 2/3 ] l:  0-1   (  1) {1-2}
+
+Scenario 2:
+
+Before Fix:
+ # perf bench numa all
+ # Running numa/mem benchmark...
+....
+...
+ # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0 -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+perf: bench/numa.c:306: bind_to_memnode: Assertion `!(ret)' failed. ------------> Got hung
+
+After Fix:
+ # ./perf bench numa all
+ # Running numa/mem benchmark...
+....
+...
+ # Running RAM-bw-remote, "perf bench numa mem -p 1 -t 1 -P 1024 -C 0 -M 1 -s 20 -zZq --thp  1 --no-data_rand_walk"
+
+ # NOTE: ignoring bind NODEs starting at NODE#1
+ # NOTE: 0 tasks mem-bound, 1 tasks unbound
+         20.017 secs slowest (max) thread-runtime
+         20.000 secs fastest (min) thread-runtime
+         20.006 secs average thread-runtime
+          0.043 % difference between max/avg runtime
+        413.794 GB data processed, per thread
+        413.794 GB data processed, total
+          0.048 nsecs/byte/thread runtime
+         20.672 GB/sec/thread speed
+         20.672 GB/sec total speed
+
+Changes in v2:
+Fixed review comments for function names and alloc failure handle
+
+Changes in v3:
+Coding Style fixes.
+
+Changes in v4:
+Address review comments from Naveen and Arnaldo.
+Merge two commits into single.
+
+Changes in v5:
+Removed a unwanted change and Added Acked-by.
+
+
+Satheesh Rajendran (1):
+  perf/bench/numa: Fixup discontiguous/sparse numa nodes
+
+ tools/perf/bench/numa.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 51 insertions(+), 5 deletions(-)
+
+-- 
+2.7.4
