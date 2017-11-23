@@ -1,39 +1,57 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v4 1/1] perf/bench/numa: Fixup discontiguous/sparse numa
- nodes
-Date: Thu, 23 Nov 2017 12:23:11 -0300
-Message-ID: <20171123152311.GH8789@kernel.org>
-References: <1511336642-15389-1-git-send-email-sathnaga@linux.vnet.ibm.com>
- <1511366847.k4y13an79p.naveen@linux.ibm.com>
- <1511369293.11553.2.camel@linux.vnet.ibm.com>
+Subject: Re: measuring system wide CPU usage ignoring idle process
+Date: Thu, 23 Nov 2017 15:59:41 -0300
+Message-ID: <20171123185941.GN8789@kernel.org>
+References: <3344812.IFj9h2T05j@agathebauer>
+ <215895928.dRJQAAs51a@agathebauer>
+ <20171120234438.GA22397@krava>
+ <6754554.PRelPk1P9n@milian-kdab2>
+ <20171123140931.GA5575@krava>
+ <20171123142100.GA7066@krava>
+ <20171123144220.GB8789@kernel.org>
+ <20171123151205.GA8342@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753195AbdKWS7p (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 23 Nov 2017 13:59:45 -0500
 Content-Disposition: inline
-In-Reply-To: <1511369293.11553.2.camel@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, mingo@kernel.org, bala24@linux.vnet.ibm.com, srikar@linux.vnet.ibm.com
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <20171123151205.GA8342@krava>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
 
-Em Wed, Nov 22, 2017 at 10:18:13PM +0530, Satheesh Rajendran escreveu:
-> On Wed, 2017-11-22 at 21:39 +0530, Naveen N. Rao wrote:
-> > >               sum += nr;
-> > >       }
-> > >       BUG_ON(nr_min > nr_max);
-> > > -
-> > >       BUG_ON(sum > g->p.nr_tasks);
-> > 
-> > Looks like that change to remove a blank line did slip in, but that's
-> > a 
-> > small nit. Apart from that, the patch looks good to me.
-> > Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> > 
-> Hi Naveen,
-> 
-> Thanks, have sent v5 with that addressed :-)
+Em Thu, Nov 23, 2017 at 04:12:05PM +0100, Jiri Olsa escreveu:
+> On Thu, Nov 23, 2017 at 11:42:20AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Nov 23, 2017 at 03:21:00PM +0100, Jiri Olsa escreveu:
+> > > On Thu, Nov 23, 2017 at 03:09:31PM +0100, Jiri Olsa wrote:
+> > > > On Thu, Nov 23, 2017 at 02:40:36PM +0100, Milian Wolff wrote:
+> > > > > > > Sorry for being unclear: I was talking about the task-clock and cpu-clock
+> > > > > > > values which you omitted from your measurements below. My example also
+> > > > > > > shows that the counts for cycles and instructions are fine. But the
+> > > > > > > cpu-clock and task-clock are useless as they always sum up to essentially
+> > > > > > > `$nproc*$runtime`. What I'm hoping for are fractional values for the "N
+> > > > > > > CPUs utilized".
 
-Thanks, applied.
+> > > > > > ugh my bad.. anyway by using -a you create cpu counters
+> > > > > > which never unschedule, so those times will be same
+> > > > > > as the 'sleep 1' run length
+
+> > Humm, what role perf_event_attr.exclude_idle has here?
+
+> it's used for omiting samples from idle process.. but looks like it's
+> enforced for software clock events
+
+looks like it is NOT enforced?
+ 
+> AFAICS it's not used in counting mode
+
+But it should? I think it should, as we see from Milian's use case.
+
+PeterZ sent a patch, I guess we should continue from there :-)
 
 - Arnaldo
