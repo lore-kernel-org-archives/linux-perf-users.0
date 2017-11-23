@@ -1,7 +1,7 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: measuring system wide CPU usage ignoring idle process
-Date: Thu, 23 Nov 2017 16:12:05 +0100
-Message-ID: <20171123151205.GA8342@krava>
+Date: Thu, 23 Nov 2017 16:15:36 +0100
+Message-ID: <20171123151536.3vzjtbs5e4pccxpw@hirez.programming.kicks-ass.net>
 References: <3344812.IFj9h2T05j@agathebauer>
  <215895928.dRJQAAs51a@agathebauer>
  <20171120234438.GA22397@krava>
@@ -12,72 +12,89 @@ References: <3344812.IFj9h2T05j@agathebauer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752445AbdKWPMI (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:53108 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751532AbdKWPPq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Nov 2017 10:12:08 -0500
+        Thu, 23 Nov 2017 10:15:46 -0500
 Content-Disposition: inline
 In-Reply-To: <20171123144220.GB8789@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
 On Thu, Nov 23, 2017 at 11:42:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 23, 2017 at 03:21:00PM +0100, Jiri Olsa escreveu:
-> > On Thu, Nov 23, 2017 at 03:09:31PM +0100, Jiri Olsa wrote:
-> > > On Thu, Nov 23, 2017 at 02:40:36PM +0100, Milian Wolff wrote:
-> > > > On Tuesday, November 21, 2017 12:44:38 AM CET Jiri Olsa wrote:
-> > > > > On Mon, Nov 20, 2017 at 09:24:42PM +0100, Milian Wolff wrote:
-> > > > > > On Montag, 20. November 2017 15:29:08 CET Jiri Olsa wrote:
-> > > > > > > On Mon, Nov 20, 2017 at 03:00:46PM +0100, Milian Wolff wrote:
-> > > > > > > > Hey all,
-> > > > > > > > 
-> > > > > > > > colleagues of mine just brought this inconvenient perf stat behavior
-> > > > > > > > to my
-> > > > > > > > attention:
-> > > > > > > > 
-> > > > > > > > $ perf stat -a -e cpu-clock,task-clock,cycles,instructions sleep 1
-> > > > > > > > 
-> > > > > > > >  Performance counter stats for 'system wide':
-> > > > > > > >        4004.501439      cpu-clock (msec)          #    4.000 CPUs
-> > > > > > > >        utilized
-> > > > > > > >        4004.526474      task-clock (msec)         #    4.000 CPUs
-> > > > > > > >        utilized
-> > > > > > > >        945,906,029      cycles                    #    0.236 GHz
-> > > > > > > >        461,861,241      instructions              #    0.49  insn per
-> > > > > > > >        cycle
-> > > > > > > >        
-> > > > > > > >        1.001247082 seconds time elapsed
-> > > > > > > > 
-> > > > > > > > This shows that cpu-clock and task-clock are incremented also for the
-> > > > > > > > idle
-> > > > > > > > processes. Is there some trick to exclude that time, such that the CPU
-> > > > > > > > utilization drops below 100% when doing `perf stat -a`?
-> > > > > > > 
-> > > > > > > I dont think it's the idle process you see, I think it's the managing
-> > > > > > > overhead before the 'sleep 1' task goes actualy to sleep
-> > > > > > > 
-> > > > > > > there's some user space code before it gets into the sleep syscall,
-> > > > > > > and there's some possible kernel scheduling/syscall/irq code with
-> > > > > > > events already enabled and counting
-> > > > > > 
-> > > > > > Sorry for being unclear: I was talking about the task-clock and cpu-clock
-> > > > > > values which you omitted from your measurements below. My example also
-> > > > > > shows that the counts for cycles and instructions are fine. But the
-> > > > > > cpu-clock and task-clock are useless as they always sum up to essentially
-> > > > > > `$nproc*$runtime`. What I'm hoping for are fractional values for the "N
-> > > > > > CPUs utilized".
-> > > > > ugh my bad.. anyway by using -a you create cpu counters
-> > > > > which never unschedule, so those times will be same
-> > > > > as the 'sleep 1' run length
-> 
-> Humm, what role perf_event_attr.exclude_idle has here?
+> What is wrong with perf_event_attr.exclude_idle? :-)
 
-it's used for omiting samples from idle process.. but looks
-like it's enforced for software clock events
+Neither task- nor cpu-clock actually implement that..
 
-AFAICS it's not used in counting mode
+Something like the _completely_untested_ below might cure that for
+cpu-clock. I have the nagging feeling we actually already account the
+idle time _somewhere_, but I couldn't remember and was too lazy to go
+find -- but someone should if this were to become an actual patch.
 
-jirka
+
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a59fe11558a4..5386d551b373 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8900,6 +8908,10 @@ static void cpu_clock_event_update(struct perf_event *event)
+ 	u64 now;
+ 
+ 	now = local_clock();
++
++	if (event->attr.exclude_idle)
++		now -= idle_task(event->oncpu)->se.sum_exec_runtime;
++
+ 	prev = local64_xchg(&event->hw.prev_count, now);
+ 	local64_add(now - prev, &event->count);
+ }
+diff --git a/kernel/sched/idle_task.c b/kernel/sched/idle_task.c
+index d518664cce4f..419c620510c6 100644
+--- a/kernel/sched/idle_task.c
++++ b/kernel/sched/idle_task.c
+@@ -27,9 +27,14 @@ static void check_preempt_curr_idle(struct rq *rq, struct task_struct *p, int fl
+ static struct task_struct *
+ pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
++	struct task_struct *idle = rq->idle;
++
+ 	put_prev_task(rq, prev);
+ 	update_idle_core(rq);
+ 	schedstat_inc(rq->sched_goidle);
++
++	idle->se.exec_start = rq_clock_task(rq);
++
+ 	return rq->idle;
+ }
+ 
+@@ -48,6 +53,17 @@ dequeue_task_idle(struct rq *rq, struct task_struct *p, int flags)
+ 
+ static void put_prev_task_idle(struct rq *rq, struct task_struct *prev)
+ {
++	struct task_struct *idle = rq->idle;
++	u64 delta, now;
++
++	now = rq_clock_task(rq);
++	delta = now - idle->se.exec_start;
++	if (unlikely((s64)delta < 0))
++		delta = 0;
++
++	idle->se.sum_exec_runtime += delta;
++	idle->se.exec_start = now;
++
+ 	rq_last_tick_reset(rq);
+ }
+ 
+@@ -57,6 +73,9 @@ static void task_tick_idle(struct rq *rq, struct task_struct *curr, int queued)
+ 
+ static void set_curr_task_idle(struct rq *rq)
+ {
++	struct task_struct *idle = rq->idle;
++
++	idle->se.exec_start = rq_clock_task(rq);
+ }
+ 
+ static void switched_to_idle(struct rq *rq, struct task_struct *p)
