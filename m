@@ -1,138 +1,77 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/11] perf bench numa: Fixup discontiguous/sparse numa nodes
-Date: Fri, 24 Nov 2017 12:02:23 -0300
-Message-ID: <20171124150232.18676-3-acme@kernel.org>
+Subject: [PATCH 06/11] perf record: Synthesize thread map and cpu map
+Date: Fri, 24 Nov 2017 12:02:27 -0300
+Message-ID: <20171124150232.18676-7-acme@kernel.org>
 References: <20171124150232.18676-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171124150232.18676-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>, Balamuruhan S <bala24@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Certain systems are designed to have sparse/discontiguous nodes.  On
-such systems, 'perf bench numa' hangs, shows wrong number of nodes and
-shows values for non-existent nodes. Handle this by only taking nodes
-that are exposed by kernel to userspace.
+Synthesize the per attr thread maps and cpu maps in 'perf record'.
 
-Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/1edbcd353c009e109e93d78f2f46381930c340fe.1511368645.git.sathnaga@linux.vnet.ibm.com
-Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
+This allows code from 'perf stat' called from 'perf script' to access
+this information.
+
+Committer testing:
+
+Please see the PERF_RECORD_THREAD_MAP and PERF_RECORD_CPU_MAP records,
+added by this patch:
+
+  $ perf record sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.001 MB perf.data (8 samples) ]
+  $ perf report -D | grep PERF_RECORD_ | head
+  0xe8 [0x20]: PERF_RECORD_TIME_CONV: unhandled!
+  0x108 [0x28]: PERF_RECORD_THREAD_MAP nr: 1 thread: 23568
+  0x130 [0x18]: PERF_RECORD_CPU_MAP: 0-3
+  0 0x148 [0x28]: PERF_RECORD_COMM: perf:23568/23568
+  0x570 [0x8]: PERF_RECORD_FINISHED_ROUND
+  445342677837144 0x170 [0x28]: PERF_RECORD_COMM exec: sleep:23568/23568
+  445342677847339 0x198 [0x68]: PERF_RECORD_MMAP2 23568/23568: [0x564c943a4000(0x208000) @ 0 fd:00 3147174 2566255743]: r-xp /usr/bin/sleep
+  445342677862450 0x200 [0x70]: PERF_RECORD_MMAP2 23568/23568: [0x7f25968a8000(0x229000) @ 0 fd:00 3151761 2566238119]: r-xp /usr/lib64/ld-2.25.so
+  445342677873174 0x270 [0x60]: PERF_RECORD_MMAP2 23568/23568: [0x7ffc98176000(0x2000) @ 0 00:00 0 0]: r-xp [vdso]
+  445342677891928 0x2d0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4002): 23568/23568: 0xffffffff8f84c7e7 period: 1 addr: 0
+  $
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/20171117214300.32746-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/numa.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 51 insertions(+), 5 deletions(-)
+ tools/perf/builtin-record.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index d95fdcc26f4b..944070e98a2c 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -216,6 +216,47 @@ static const char * const numa_usage[] = {
- 	NULL
- };
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b92d6d67bca8..e304bc47fe9b 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -793,6 +793,21 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err)
+ 		goto out;
  
-+/*
-+ * To get number of numa nodes present.
-+ */
-+static int nr_numa_nodes(void)
-+{
-+	int i, nr_nodes = 0;
-+
-+	for (i = 0; i < g->p.nr_nodes; i++) {
-+		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-+			nr_nodes++;
++	err = perf_event__synthesize_thread_map2(&rec->tool, rec->evlist->threads,
++						 process_synthesized_event,
++						NULL);
++	if (err < 0) {
++		pr_err("Couldn't synthesize thread map.\n");
++		return err;
 +	}
 +
-+	return nr_nodes;
-+}
-+
-+/*
-+ * To check if given numa node is present.
-+ */
-+static int is_node_present(int node)
-+{
-+	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-+}
-+
-+/*
-+ * To check given numa node has cpus.
-+ */
-+static bool node_has_cpus(int node)
-+{
-+	struct bitmask *cpu = numa_allocate_cpumask();
-+	unsigned int i;
-+
-+	if (cpu && !numa_node_to_cpus(node, cpu)) {
-+		for (i = 0; i < cpu->size; i++) {
-+			if (numa_bitmask_isbitset(cpu, i))
-+				return true;
-+		}
++	err = perf_event__synthesize_cpu_map(&rec->tool, rec->evlist->cpus,
++					     process_synthesized_event, NULL);
++	if (err < 0) {
++		pr_err("Couldn't synthesize cpu map.\n");
++		return err;
 +	}
 +
-+	return false; /* lets fall back to nocpus safely */
-+}
-+
- static cpu_set_t bind_to_cpu(int target_cpu)
- {
- 	cpu_set_t orig_mask, mask;
-@@ -244,12 +285,12 @@ static cpu_set_t bind_to_cpu(int target_cpu)
- 
- static cpu_set_t bind_to_node(int target_node)
- {
--	int cpus_per_node = g->p.nr_cpus/g->p.nr_nodes;
-+	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
- 	cpu_set_t orig_mask, mask;
- 	int cpu;
- 	int ret;
- 
--	BUG_ON(cpus_per_node*g->p.nr_nodes != g->p.nr_cpus);
-+	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
- 	BUG_ON(!cpus_per_node);
- 
- 	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
-@@ -649,7 +690,7 @@ static int parse_setup_node_list(void)
- 			int i;
- 
- 			for (i = 0; i < mul; i++) {
--				if (t >= g->p.nr_tasks) {
-+				if (t >= g->p.nr_tasks || !node_has_cpus(bind_node)) {
- 					printf("\n# NOTE: ignoring bind NODEs starting at NODE#%d\n", bind_node);
- 					goto out;
- 				}
-@@ -964,6 +1005,8 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 	sum = 0;
- 
- 	for (node = 0; node < g->p.nr_nodes; node++) {
-+		if (!is_node_present(node))
-+			continue;
- 		nr = nodes[node];
- 		nr_min = min(nr, nr_min);
- 		nr_max = max(nr, nr_max);
-@@ -984,8 +1027,11 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 	process_groups = 0;
- 
- 	for (node = 0; node < g->p.nr_nodes; node++) {
--		int processes = count_node_processes(node);
-+		int processes;
- 
-+		if (!is_node_present(node))
-+			continue;
-+		processes = count_node_processes(node);
- 		nr = nodes[node];
- 		tprintf(" %2d/%-2d", nr, processes);
- 
-@@ -1291,7 +1337,7 @@ static void print_summary(void)
- 
- 	printf("\n ###\n");
- 	printf(" # %d %s will execute (on %d nodes, %d CPUs):\n",
--		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", g->p.nr_nodes, g->p.nr_cpus);
-+		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", nr_numa_nodes(), g->p.nr_cpus);
- 	printf(" #      %5dx %5ldMB global  shared mem operations\n",
- 			g->p.nr_loops, g->p.bytes_global/1024/1024);
- 	printf(" #      %5dx %5ldMB process shared mem operations\n",
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->threads,
+ 					    process_synthesized_event, opts->sample_address,
+ 					    opts->proc_map_timeout, 1);
 -- 
 2.13.6
