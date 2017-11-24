@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/11] perf script: Allow computing 'perf stat' style metrics
-Date: Fri, 24 Nov 2017 12:02:28 -0300
-Message-ID: <20171124150232.18676-8-acme@kernel.org>
+Subject: [PATCH 05/11] perf record: Synthesize unit/scale/... in event update
+Date: Fri, 24 Nov 2017 12:02:26 -0300
+Message-ID: <20171124150232.18676-6-acme@kernel.org>
 References: <20171124150232.18676-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171124150232.18676-1-acme@kernel.org>
@@ -12,319 +12,225 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add support for computing 'perf stat' style metrics in 'perf script'.
+Move the code to synthesize event updates for scale/unit/cpus to a
+common utility file, and use it both from stat and record.
 
-When using leader sampling we can get metrics for each sampling period
-by computing formulas over the values of the different group members.
-
-This allows things like fine grained IPC tracking through sampling, much
-more fine grained than with 'perf stat'.
-
-The metric is still averaged over the sampling period, it is not just
-for the sampling point.
-
-This patch adds a new metric output field for 'perf script' that uses
-the existing 'perf stat' metrics infrastructure to compute any metrics
-supported by 'perf stat'.
-
-For example to sample IPC:
-
-  $ perf record -e '{ref-cycles,cycles,instructions}:S' -a sleep 1
-  $ perf script -F metric,ip,sym,time,cpu,comm
-  ...
-   alsa-sink-ALC32 [000] 42815.856074:      7fd65937d6cc [unknown]
-   alsa-sink-ALC32 [000] 42815.856074:      7fd65937d6cc [unknown]
-   alsa-sink-ALC32 [000] 42815.856074:      7fd65937d6cc [unknown]
-   alsa-sink-ALC32 [000] 42815.856074:    metric:    0.13  insn per cycle
-           swapper [000] 42815.857961:  ffffffff81655df0 __schedule
-           swapper [000] 42815.857961:  ffffffff81655df0 __schedule
-           swapper [000] 42815.857961:  ffffffff81655df0 __schedule
-           swapper [000] 42815.857961:    metric:    0.23  insn per cycle
-   qemu-system-x86 [000] 42815.858130:  ffffffff8165ad0e _raw_spin_unlock_irqrestore
-   qemu-system-x86 [000] 42815.858130:  ffffffff8165ad0e _raw_spin_unlock_irqrestore
-   qemu-system-x86 [000] 42815.858130:  ffffffff8165ad0e _raw_spin_unlock_irqrestore
-   qemu-system-x86 [000] 42815.858130:    metric:    0.46  insn per cycle
-             :4972 [000] 42815.858312:  ffffffffa080e5f2 vmx_vcpu_run
-             :4972 [000] 42815.858312:  ffffffffa080e5f2 vmx_vcpu_run
-             :4972 [000] 42815.858312:  ffffffffa080e5f2 vmx_vcpu_run
-             :4972 [000] 42815.858312:    metric:    0.45  insn per cycle
-
-TopDown:
-
-This requires disabling SMT if you have it enabled, because SMT would
-require sampling per core, which is not supported.
-
-  $ perf record -e '{ref-cycles,topdown-fetch-bubbles,\
-                     topdown-recovery-bubbles,\
-                     topdown-slots-retired,topdown-total-slots,\
-                     topdown-slots-issued}:S' -a sleep 1
-  $ perf script --header -I -F cpu,ip,sym,event,metric,period
-  ...
-  [000]     121108               ref-cycles:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]     190350    topdown-fetch-bubbles:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]       2055 topdown-recovery-bubbles:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]     148729    topdown-slots-retired:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]     144324      topdown-total-slots:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]     160852     topdown-slots-issued:  ffffffff8165222e copy_user_enhanced_fast_string
-  [000]   metric:     33.0% frontend bound
-  [000]   metric:      3.5% bad speculation
-  [000]   metric:     25.8% retiring
-  [000]   metric:     37.7% backend bound
-  [000]     112112               ref-cycles:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]     357222    topdown-fetch-bubbles:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]       3325 topdown-recovery-bubbles:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]     323553    topdown-slots-retired:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]     270507      topdown-total-slots:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]     341226     topdown-slots-issued:  ffffffff8165aec8 _raw_spin_lock_irqsave
-  [000]   metric:     33.0% frontend bound
-  [000]   metric:      2.9% bad speculation
-  [000]   metric:     29.9% retiring
-  [000]   metric:     34.2% backend bound
-...
-
-v2:
-Use evsel->priv for new fields
-Port to new base line, support fp output.
-Handle stats in ->stats, not ->priv
-Minor cleanups
-
-Extra explanation about the use of the term 'averaging', from Andi in the
-thread in the Link: tag below:
-
-<quote Andi>
-The current samples contains the sum of event counts for a sampling period.
-
-EventA-1           EventA-2                EventA-3      EventA-4
-EventB-1     EventB-2                             EventC-3
-
-                         gap with no events                overflow
-|-----------------------------------------------------------------|
-period-start                                             period-end
-^                                                                 ^
-|                                                                 |
-previous sample                                      current sample
-
-So EventA = 4 and EventB = 3 at the sample point
-
-I generate a metric, let's say EventA / EventB. It applies to the whole period.
-
-But the metric is over a longer time which does not have the same behavior. For
-example the gap above doesn't have any events, while they are clustered at the
-beginning and end of the sample period.
-
-But we're summing everything together. The metric doesn't know that the gap is
-different than the busy period.
-
-That's what I'm trying to express with averaging.
-</quote>
+This allows to access scale and other extra qualifiers from perf script.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20171117214300.32746-4-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20171117214300.32746-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt | 10 +++-
- tools/perf/builtin-script.c              | 97 +++++++++++++++++++++++++++++++-
- tools/perf/util/metricgroup.c            |  4 ++
- 3 files changed, 108 insertions(+), 3 deletions(-)
+ tools/perf/builtin-record.c |  9 ++++++
+ tools/perf/builtin-stat.c   | 62 +++--------------------------------------
+ tools/perf/util/header.c    | 68 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/header.h    |  5 ++++
+ 4 files changed, 86 insertions(+), 58 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2811fcf684cb..974ceb12c7f3 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -117,7 +117,7 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output, brstackinsn,
--        brstackoff, callindent, insn, insnlen, synth, phys_addr.
-+	brstackoff, callindent, insn, insnlen, synth, phys_addr, metric.
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-@@ -217,6 +217,14 @@ OPTIONS
- 
- 	The brstackoff field will print an offset into a specific dso/binary.
- 
-+	With the metric option perf script can compute metrics for
-+	sampling periods, similar to perf stat. This requires
-+	specifying a group with multiple metrics with the :S option
-+	for perf record. perf will sample on the first event, and
-+	compute metrics for all the events in the group. Please note
-+	that the metric computed is averaged over the whole sampling
-+	period, not just for the sample point.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 003255910c05..b92d6d67bca8 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -372,6 +372,8 @@ static int record__open(struct record *rec)
+ 			ui__error("%s\n", msg);
+ 			goto out;
+ 		}
 +
- -k::
- --vmlinux=<file>::
-         vmlinux pathname
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index ee7c7aaaae72..39d8b55f0db3 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -22,6 +22,7 @@
- #include "util/cpumap.h"
- #include "util/thread_map.h"
- #include "util/stat.h"
-+#include "util/color.h"
- #include "util/string2.h"
- #include "util/thread-stack.h"
- #include "util/time-utils.h"
-@@ -90,6 +91,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_SYNTH           = 1U << 25,
- 	PERF_OUTPUT_PHYS_ADDR       = 1U << 26,
- 	PERF_OUTPUT_UREGS	    = 1U << 27,
-+	PERF_OUTPUT_METRIC	    = 1U << 28,
- };
- 
- struct output_option {
-@@ -124,6 +126,7 @@ struct output_option {
- 	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
- 	{.str = "synth", .field = PERF_OUTPUT_SYNTH},
- 	{.str = "phys_addr", .field = PERF_OUTPUT_PHYS_ADDR},
-+	{.str = "metric", .field = PERF_OUTPUT_METRIC},
- };
- 
- enum {
-@@ -215,12 +218,20 @@ struct perf_evsel_script {
-        char *filename;
-        FILE *fp;
-        u64  samples;
-+       /* For metric output */
-+       u64  val;
-+       int  gnum;
- };
- 
-+static inline struct perf_evsel_script *evsel_script(struct perf_evsel *evsel)
-+{
-+	return (struct perf_evsel_script *)evsel->priv;
-+}
-+
- static struct perf_evsel_script *perf_evsel_script__new(struct perf_evsel *evsel,
- 							struct perf_data *data)
- {
--	struct perf_evsel_script *es = malloc(sizeof(*es));
-+	struct perf_evsel_script *es = zalloc(sizeof(*es));
- 
- 	if (es != NULL) {
- 		if (asprintf(&es->filename, "%s.%s.dump", data->file.path, perf_evsel__name(evsel)) < 0)
-@@ -228,7 +239,6 @@ static struct perf_evsel_script *perf_evsel_script__new(struct perf_evsel *evsel
- 		es->fp = fopen(es->filename, "w");
- 		if (es->fp == NULL)
- 			goto out_free_filename;
--		es->samples = 0;
++		pos->supported = true;
  	}
  
- 	return es;
-@@ -1472,6 +1482,86 @@ static int data_src__fprintf(u64 data_src, FILE *fp)
- 	return fprintf(fp, "%-*s", maxlen, out);
+ 	if (perf_evlist__apply_filters(evlist, &pos)) {
+@@ -784,6 +786,13 @@ static int record__synthesize(struct record *rec, bool tail)
+ 					 perf_event__synthesize_guest_os, tool);
+ 	}
+ 
++	err = perf_event__synthesize_extra_attr(&rec->tool,
++						rec->evlist,
++						process_synthesized_event,
++						data->is_pipe);
++	if (err)
++		goto out;
++
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->threads,
+ 					    process_synthesized_event, opts->sample_address,
+ 					    opts->proc_map_timeout, 1);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 59af5a8419e2..a027b4712e48 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -458,19 +458,8 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+ 	workload_exec_errno = info->si_value.sival_int;
  }
  
-+struct metric_ctx {
-+	struct perf_sample	*sample;
-+	struct thread		*thread;
-+	struct perf_evsel	*evsel;
-+	FILE 			*fp;
-+};
-+
-+static void script_print_metric(void *ctx, const char *color,
-+			        const char *fmt,
-+			        const char *unit, double val)
+-static bool has_unit(struct perf_evsel *counter)
+-{
+-	return counter->unit && *counter->unit;
+-}
+-
+-static bool has_scale(struct perf_evsel *counter)
+-{
+-	return counter->scale != 1;
+-}
+-
+ static int perf_stat_synthesize_config(bool is_pipe)
+ {
+-	struct perf_evsel *counter;
+ 	int err;
+ 
+ 	if (is_pipe) {
+@@ -482,53 +471,10 @@ static int perf_stat_synthesize_config(bool is_pipe)
+ 		}
+ 	}
+ 
+-	/*
+-	 * Synthesize other events stuff not carried within
+-	 * attr event - unit, scale, name
+-	 */
+-	evlist__for_each_entry(evsel_list, counter) {
+-		if (!counter->supported)
+-			continue;
+-
+-		/*
+-		 * Synthesize unit and scale only if it's defined.
+-		 */
+-		if (has_unit(counter)) {
+-			err = perf_event__synthesize_event_update_unit(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel unit.\n");
+-				return err;
+-			}
+-		}
+-
+-		if (has_scale(counter)) {
+-			err = perf_event__synthesize_event_update_scale(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel scale.\n");
+-				return err;
+-			}
+-		}
+-
+-		if (counter->own_cpus) {
+-			err = perf_event__synthesize_event_update_cpus(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel scale.\n");
+-				return err;
+-			}
+-		}
+-
+-		/*
+-		 * Name is needed only for pipe output,
+-		 * perf.data carries event names.
+-		 */
+-		if (is_pipe) {
+-			err = perf_event__synthesize_event_update_name(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel name.\n");
+-				return err;
+-			}
+-		}
+-	}
++	err = perf_event__synthesize_extra_attr(NULL,
++						evsel_list,
++						process_synthesized_event,
++						is_pipe);
+ 
+ 	err = perf_event__synthesize_thread_map2(NULL, evsel_list->threads,
+ 						process_synthesized_event,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7c0e9d587bfa..5890e08e0754 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3258,6 +3258,74 @@ int perf_event__synthesize_attrs(struct perf_tool *tool,
+ 	return err;
+ }
+ 
++static bool has_unit(struct perf_evsel *counter)
 +{
-+	struct metric_ctx *mctx = ctx;
-+
-+	if (!fmt)
-+		return;
-+	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
-+				   mctx->fp);
-+	fputs("\tmetric: ", mctx->fp);
-+	if (color)
-+		color_fprintf(mctx->fp, color, fmt, val);
-+	else
-+		printf(fmt, val);
-+	fprintf(mctx->fp, " %s\n", unit);
++	return counter->unit && *counter->unit;
 +}
 +
-+static void script_new_line(void *ctx)
++static bool has_scale(struct perf_evsel *counter)
 +{
-+	struct metric_ctx *mctx = ctx;
-+
-+	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
-+				   mctx->fp);
-+	fputs("\tmetric: ", mctx->fp);
++	return counter->scale != 1;
 +}
 +
-+static void perf_sample__fprint_metric(struct perf_script *script,
-+				       struct thread *thread,
-+				       struct perf_evsel *evsel,
-+				       struct perf_sample *sample,
-+				       FILE *fp)
++int perf_event__synthesize_extra_attr(struct perf_tool *tool,
++				      struct perf_evlist *evsel_list,
++				      perf_event__handler_t process,
++				      bool is_pipe)
 +{
-+	struct perf_stat_output_ctx ctx = {
-+		.print_metric = script_print_metric,
-+		.new_line = script_new_line,
-+		.ctx = &(struct metric_ctx) {
-+				.sample = sample,
-+				.thread = thread,
-+				.evsel  = evsel,
-+				.fp     = fp,
-+			 },
-+		.force_header = false,
-+	};
-+	struct perf_evsel *ev2;
-+	static bool init;
-+	u64 val;
++	struct perf_evsel *counter;
++	int err;
 +
-+	if (!init) {
-+		perf_stat__init_shadow_stats();
-+		init = true;
-+	}
-+	if (!evsel->stats)
-+		perf_evlist__alloc_stats(script->session->evlist, false);
-+	if (evsel_script(evsel->leader)->gnum++ == 0)
-+		perf_stat__reset_shadow_stats();
-+	val = sample->period * evsel->scale;
-+	perf_stat__update_shadow_stats(evsel,
-+				       val,
-+				       sample->cpu);
-+	evsel_script(evsel)->val = val;
-+	if (evsel_script(evsel->leader)->gnum == evsel->leader->nr_members) {
-+		for_each_group_member (ev2, evsel->leader) {
-+			perf_stat__print_shadow_stats(ev2,
-+						      evsel_script(ev2)->val,
-+						      sample->cpu,
-+						      &ctx,
-+						      NULL);
++	/*
++	 * Synthesize other events stuff not carried within
++	 * attr event - unit, scale, name
++	 */
++	evlist__for_each_entry(evsel_list, counter) {
++		if (!counter->supported)
++			continue;
++
++		/*
++		 * Synthesize unit and scale only if it's defined.
++		 */
++		if (has_unit(counter)) {
++			err = perf_event__synthesize_event_update_unit(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel unit.\n");
++				return err;
++			}
 +		}
-+		evsel_script(evsel->leader)->gnum = 0;
++
++		if (has_scale(counter)) {
++			err = perf_event__synthesize_event_update_scale(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel counter.\n");
++				return err;
++			}
++		}
++
++		if (counter->own_cpus) {
++			err = perf_event__synthesize_event_update_cpus(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel cpus.\n");
++				return err;
++			}
++		}
++
++		/*
++		 * Name is needed only for pipe output,
++		 * perf.data carries event names.
++		 */
++		if (is_pipe) {
++			err = perf_event__synthesize_event_update_name(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel name.\n");
++				return err;
++			}
++		}
 +	}
++	return 0;
 +}
 +
- static void process_event(struct perf_script *script,
- 			  struct perf_sample *sample, struct perf_evsel *evsel,
- 			  struct addr_location *al,
-@@ -1559,6 +1649,9 @@ static void process_event(struct perf_script *script,
- 	if (PRINT_FIELD(PHYS_ADDR))
- 		fprintf(fp, "%16" PRIx64, sample->phys_addr);
- 	fprintf(fp, "\n");
-+
-+	if (PRINT_FIELD(METRIC))
-+		perf_sample__fprint_metric(script, thread, evsel, sample, fp);
- }
+ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 			     union perf_event *event,
+ 			     struct perf_evlist **pevlist)
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 29ccbfdf8724..91befc3b550d 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -107,6 +107,11 @@ int perf_event__synthesize_features(struct perf_tool *tool,
+ 				    struct perf_evlist *evlist,
+ 				    perf_event__handler_t process);
  
- static struct scripting_ops	*scripting_ops;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 0ddd9c199227..6fd709017bbc 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -38,6 +38,10 @@ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 	struct metric_event me = {
- 		.evsel = evsel
- 	};
++int perf_event__synthesize_extra_attr(struct perf_tool *tool,
++				      struct perf_evlist *evsel_list,
++				      perf_event__handler_t process,
++				      bool is_pipe);
 +
-+	if (!metric_events)
-+		return NULL;
-+
- 	nd = rblist__find(metric_events, &me);
- 	if (nd)
- 		return container_of(nd, struct metric_event, nd);
+ int perf_event__process_feature(struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_session *session);
 -- 
 2.13.6
