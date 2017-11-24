@@ -1,47 +1,43 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/11] perf test: Disable test cases 19 and 20 on s390x
-Date: Fri, 24 Nov 2017 12:02:24 -0300
-Message-ID: <20171124150232.18676-4-acme@kernel.org>
+Subject: [PATCH 01/11] tools headers: Follow the upstream UAPI header version 100% differ from the kernel
+Date: Fri, 24 Nov 2017 12:02:22 -0300
+Message-ID: <20171124150232.18676-2-acme@kernel.org>
 References: <20171124150232.18676-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171124150232.18676-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Ingo Molnar <mingo@kernel.org>
 
-The s390x CPU sampling and measurement facilities do not support perf
-events of type PERF_TYPE_BREAKPOINT. The test cases are executed and
-fail with -ENOENT due to missing hardware support.
+Remove this from check-headers.sh:
 
-Disable the execution of both test cases based on a
-platform check. This is the same approach as done for
-PowerPC.
+  opts="--ignore-blank-lines --ignore-space-change"
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-LPU-Reference: 20171123074623.20817-1-tmricht@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/n/tip-uqvoy6a1tsu8jddo5jjg4h85@git.kernel.org
+as the easiest policy is to just follow the upstream UAPI header version 100%.
+Pure space-only changes are comparatively rare.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Link: http://lkml.kernel.org/r/20171121084111.y6p5zwqso2cbms5s@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/check-headers.sh | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 335b695f4970..a467615c5a0e 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -296,7 +296,7 @@ bool test__bp_signal_is_supported(void)
-  * instruction breakpoint using the perf event interface.
-  * Once it's there we can release this.
-  */
--#ifdef __powerpc__
-+#if defined(__powerpc__) || defined(__s390x__)
- 	return false;
- #else
- 	return true;
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 77406d25e521..e66a8a7bcced 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -45,7 +45,6 @@ include/uapi/asm-generic/mman-common.h
+ 
+ check () {
+   file=$1
+-  opts="--ignore-blank-lines --ignore-space-change"
+ 
+   shift
+   while [ -n "$*" ]; do
 -- 
 2.13.6
