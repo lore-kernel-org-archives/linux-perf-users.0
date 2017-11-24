@@ -1,64 +1,67 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: measuring system wide CPU usage ignoring idle process
-Date: Fri, 24 Nov 2017 09:14:42 +0100
-Message-ID: <20171124081442.GA11086@krava>
-References: <3344812.IFj9h2T05j@agathebauer>
- <215895928.dRJQAAs51a@agathebauer>
- <20171120234438.GA22397@krava>
- <6754554.PRelPk1P9n@milian-kdab2>
- <20171123140931.GA5575@krava>
- <20171123142100.GA7066@krava>
- <20171123144220.GB8789@kernel.org>
- <20171123151205.GA8342@krava>
- <20171123185941.GN8789@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf test: Fix test 21 for s390x
+Date: Fri, 24 Nov 2017 10:43:12 +0100
+Message-ID: <20171124094312.55024-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:53188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751631AbdKXIOo (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36858 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752600AbdKXJnd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Nov 2017 03:14:44 -0500
-Content-Disposition: inline
-In-Reply-To: <20171123185941.GN8789@kernel.org>
+        Fri, 24 Nov 2017 04:43:33 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAO9fhmx032821
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2017 04:43:32 -0500
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2eeex6nx4m-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2017 04:43:31 -0500
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Fri, 24 Nov 2017 09:43:29 -0000
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-On Thu, Nov 23, 2017 at 03:59:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 23, 2017 at 04:12:05PM +0100, Jiri Olsa escreveu:
-> > On Thu, Nov 23, 2017 at 11:42:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Nov 23, 2017 at 03:21:00PM +0100, Jiri Olsa escreveu:
-> > > > On Thu, Nov 23, 2017 at 03:09:31PM +0100, Jiri Olsa wrote:
-> > > > > On Thu, Nov 23, 2017 at 02:40:36PM +0100, Milian Wolff wrote:
-> > > > > > > > Sorry for being unclear: I was talking about the task-clock and cpu-clock
-> > > > > > > > values which you omitted from your measurements below. My example also
-> > > > > > > > shows that the counts for cycles and instructions are fine. But the
-> > > > > > > > cpu-clock and task-clock are useless as they always sum up to essentially
-> > > > > > > > `$nproc*$runtime`. What I'm hoping for are fractional values for the "N
-> > > > > > > > CPUs utilized".
-> 
-> > > > > > > ugh my bad.. anyway by using -a you create cpu counters
-> > > > > > > which never unschedule, so those times will be same
-> > > > > > > as the 'sleep 1' run length
-> 
-> > > Humm, what role perf_event_attr.exclude_idle has here?
-> 
-> > it's used for omiting samples from idle process.. but looks like it's
-> > enforced for software clock events
-> 
-> looks like it is NOT enforced?
+Test case 21 (Number of exit events of a simple workload) fails
+on s390x. The reason is the invalid sample frequency supplied for
+this test. On s390x the minimum sample frequency is much higher
+(see output of /proc/service_levels:
 
-yea.. NOT ;-)
+[root@s35lp76 linux-devel]# cat /proc/service_levels 
+CPU-MF: Counter facility: version=3.5 authorization=002f
+CPU-MF: Sampling facility: min_rate=18228 max_rate=170650536 cpu_speed=5208
+...
+[root@s35lp76 linux-devel]#
+).
 
->  
-> > AFAICS it's not used in counting mode
-> 
-> But it should? I think it should, as we see from Milian's use case.
-> 
-> PeterZ sent a patch, I guess we should continue from there :-)
+Supply a save sample frequency value for s390x to fix this.
+The value will be adjusted by the s390x CPUMF frequency
+convertion function to a value well below the
+sysctl kernel.perf_event_max_sample_rate value.
 
-right
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/tests/task-exit.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-jirka
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index bc4a7344e274..1073670dd1f2 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -84,7 +84,11 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 
+ 	evsel = perf_evlist__first(evlist);
+ 	evsel->attr.task = 1;
++#ifdef __s390x__
++	evsel->attr.sample_freq = 1000000;
++#else
+ 	evsel->attr.sample_freq = 1;
++#endif
+ 	evsel->attr.inherit = 0;
+ 	evsel->attr.watermark = 0;
+ 	evsel->attr.wakeup_events = 1;
+-- 
+2.13.4
