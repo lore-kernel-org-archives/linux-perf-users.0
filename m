@@ -1,67 +1,92 @@
 From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH] perf test: Fix test 21 for s390x
-Date: Fri, 24 Nov 2017 10:43:12 +0100
-Message-ID: <20171124094312.55024-1-tmricht@linux.vnet.ibm.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36858 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752600AbdKXJnd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Nov 2017 04:43:33 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAO9fhmx032821
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2017 04:43:32 -0500
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2eeex6nx4m-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2017 04:43:31 -0500
-Received: from localhost
-        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Fri, 24 Nov 2017 09:43:29 -0000
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH] perf annotate: Fix unnecessary memory allocation for s390x
+Date: Fri, 24 Nov 2017 10:46:37 +0100
+Message-ID: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-Test case 21 (Number of exit events of a simple workload) fails
-on s390x. The reason is the invalid sample frequency supplied for
-this test. On s390x the minimum sample frequency is much higher
-(see output of /proc/service_levels:
+This patch fixes a bug introduced with commit d9f8dfa9baf9
+("perf annotate s390: Implement jump types for perf annotate").
 
-[root@s35lp76 linux-devel]# cat /proc/service_levels 
-CPU-MF: Counter facility: version=3.5 authorization=002f
-CPU-MF: Sampling facility: min_rate=18228 max_rate=170650536 cpu_speed=5208
-...
-[root@s35lp76 linux-devel]#
-).
+Perf annotate displays annotated assembler output by reading
+output of command objdump and parsing the disassembled lines. For
+each shown mnemonic this function sequence is executed:
 
-Supply a save sample frequency value for s390x to fix this.
-The value will be adjusted by the s390x CPUMF frequency
-convertion function to a value well below the
-sysctl kernel.perf_event_max_sample_rate value.
+  disasm_line__new()
+  |
+  +--> disasm_line__init_ins()
+       |
+       +--> ins__find()
+            |
+            +--> arch->associate_instruction_ops()
+
+The s390x specific function assigned to function pointer
+associate_instruction_ops refers to function
+s390__associate_ins_ops(). This function checks for supported
+mnemonics and assigns a NULL pointer to unsupported mnemonics.
+However even the NULL pointer is added to the architecture
+dependend instruction array.
+
+This leads to an extremely large architecture instruction array
+(due to array resize logic in function arch__grow_instructions()).
+Depending on the objdump output being parsed the array can end up
+with several ten-thousand elements.
+
+This patch checks if a mnemonic is supported and only adds
+supported ones into the architecture instruction array. The
+array does not contain elements with NULL pointers anymore.
+
+Before the patch (With some debug printf output):
+[root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxbb
+
+real	8m49.679s
+user	7m13.008s
+sys	0m1.649s
+[root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+			/tmp/xxxbb | tail -1
+__ins__find sorted:1 nr_instructions:87433 ins:0x341583c0
+[root@s35lp76 perf]#
+
+The number of different s390x branch/jump/call/return instructions
+entered into the array is 87433.
+
+After the patch (With some printf debug output:)
+
+[root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxaa
+
+real	1m24.553s
+user	0m0.587s
+sys	0m1.530s
+[root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+			/tmp/xxxaa | tail -1
+__ins__find sorted:1 nr_instructions:56 ins:0x3f406570
+[root@s35lp76 perf]#
+
+The number of different s390x branch/jump/call/return instructions
+entered into the array is 56 which is sensible.
 
 Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 ---
- tools/perf/tests/task-exit.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/arch/s390/annotate/instructions.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index bc4a7344e274..1073670dd1f2 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -84,7 +84,11 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index c9a81673e8aa..89f0b6c00e3f 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -16,7 +16,8 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+ 	if (!strcmp(name, "br"))
+ 		ops = &ret_ops;
  
- 	evsel = perf_evlist__first(evlist);
- 	evsel->attr.task = 1;
-+#ifdef __s390x__
-+	evsel->attr.sample_freq = 1000000;
-+#else
- 	evsel->attr.sample_freq = 1;
-+#endif
- 	evsel->attr.inherit = 0;
- 	evsel->attr.watermark = 0;
- 	evsel->attr.wakeup_events = 1;
+-	arch__associate_ins_ops(arch, name, ops);
++	if (ops)
++		arch__associate_ins_ops(arch, name, ops);
+ 	return ops;
+ }
+ 
 -- 
 2.13.4
