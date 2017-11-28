@@ -1,141 +1,81 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/30] perf record: Fix -c/-F options for cpu event aliases
-Date: Tue, 28 Nov 2017 12:01:53 -0300
-Message-ID: <20171128150220.5064-4-acme@kernel.org>
+Subject: [PATCH 11/30] perf test shell: Fix test case probe libc's inet_pton on s390x
+Date: Tue, 28 Nov 2017 12:02:01 -0300
+Message-ID: <20171128150220.5064-12-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-The Intel PMU event aliases have a implicit period= specifier to set the
-default period.
+The 'perf test' case "probe libc's inet_pton & backtrace it with ping"
+fails on s390x. The reason is the 'realpath /lib64/ld*.so.* | uniq' line
+which returns 2 libraries:
 
-Unfortunately this breaks overriding these periods with -c or -F,
-because the alias terms look like they are user specified to the
-internal parser, and user specified event qualifiers override the
-command line options.
+        root@s35lp76 shell]# realpath /lib64/ld*.so.* | uniq
+        /usr/lib64/ld-2.26.so
+        /usr/lib64/ld_pre_smc.so.1.0.1
+        [root@s35lp76 shell]
 
-Track that they are coming from aliases by adding a "weak" state to the
-term. Any weak terms don't override command line options.
+This output makes the "perf probe" command lines invalid.
 
-I only did it for -c/-F for now, I think that's the only case that's
-broken currently.
+Use ldd tool to find out the libraries required by "bash" and check if
+symbol "inet_pton" is part of the "libc" library.  Some distros do not
+have a /lib64 directory.
 
-Before:
+I have also added a check for the existence of an IPv6 network interface
+before it is being used.
 
-$ perf record -c 1000 -vv -e uops_issued.any
-...
-  { sample_period, sample_freq }   2000003
+Committer changes:
 
-After:
+We can't really use ldd for libc, as in some systems, such as x86_64, it
+has hardlinks and then ldd sees one and the kernel the other, so grep
+for libc in /proc/self/maps to get the one we'll receive from
+PERF_RECORD_MMAP.
 
-$ perf record -c 1000 -vv -e uops_issued.any
-...
-  { sample_period, sample_freq }   1000
+Thomas checked this change and acked it.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20171020202755.21410-2-andi@firstfloor.org
+Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20171114133409.GN8836@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c        | 12 ++++++++----
- tools/perf/util/evsel.h        |  1 +
- tools/perf/util/parse-events.c |  2 ++
- tools/perf/util/parse-events.h |  3 +++
- tools/perf/util/pmu.c          |  5 +++++
- 5 files changed, 19 insertions(+), 4 deletions(-)
+ tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f894893c203d..bfde6a7a80f2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -733,12 +733,16 @@ static void apply_config_terms(struct perf_evsel *evsel,
- 	list_for_each_entry(term, config_terms, list) {
- 		switch (term->type) {
- 		case PERF_EVSEL__CONFIG_TERM_PERIOD:
--			attr->sample_period = term->val.period;
--			attr->freq = 0;
-+			if (!(term->weak && opts->user_interval != ULLONG_MAX)) {
-+				attr->sample_period = term->val.period;
-+				attr->freq = 0;
-+			}
- 			break;
- 		case PERF_EVSEL__CONFIG_TERM_FREQ:
--			attr->sample_freq = term->val.freq;
--			attr->freq = 1;
-+			if (!(term->weak && opts->user_freq != UINT_MAX)) {
-+				attr->sample_freq = term->val.freq;
-+				attr->freq = 1;
-+			}
- 			break;
- 		case PERF_EVSEL__CONFIG_TERM_TIME:
- 			if (term->val.time)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 9277df96ffda..157f49e8a772 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -67,6 +67,7 @@ struct perf_evsel_config_term {
- 		bool	overwrite;
- 		char	*branch;
- 	} val;
-+	bool weak;
- };
+diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+index 7a84d73324e3..8b3da21a08f1 100755
+--- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+@@ -10,8 +10,8 @@
  
- struct perf_stat_evsel;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index a7fcd95961ef..170316795a18 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1116,6 +1116,7 @@ do {								\
- 	INIT_LIST_HEAD(&__t->list);				\
- 	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
- 	__t->val.__name = __val;				\
-+	__t->weak	= term->weak;				\
- 	list_add_tail(&__t->list, head_terms);			\
- } while (0)
+ . $(dirname $0)/lib/probe.sh
  
-@@ -2410,6 +2411,7 @@ static int new_term(struct parse_events_term **_term,
+-ld=$(realpath /lib64/ld*.so.* | uniq)
+-libc=$(echo $ld | sed 's/ld/libc/g')
++libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
++nm -g $libc 2>/dev/null | fgrep -q inet_pton || exit 254
  
- 	*term = *temp;
- 	INIT_LIST_HEAD(&term->list);
-+	term->weak = false;
+ trace_libc_inet_pton_backtrace() {
+ 	idx=0
+@@ -37,6 +37,9 @@ trace_libc_inet_pton_backtrace() {
+ 	done
+ }
  
- 	switch (term->type_val) {
- 	case PARSE_EVENTS__TERM_TYPE_NUM:
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index be337c266697..88108cd11b4c 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -101,6 +101,9 @@ struct parse_events_term {
- 	/* error string indexes for within parsed string */
- 	int err_term;
- 	int err_val;
++# Check for IPv6 interface existence
++ip a sh lo | fgrep -q inet6 || exit 2
 +
-+	/* Coming from implicit alias */
-+	bool weak;
- };
- 
- struct parse_events_error {
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 07cb2ac041d7..80fb1593913a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -405,6 +405,11 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
- 			parse_events_terms__purge(&list);
- 			return ret;
- 		}
-+		/*
-+		 * Weak terms don't override command line options,
-+		 * which we don't want for implicit terms in aliases.
-+		 */
-+		cloned->weak = true;
- 		list_add_tail(&cloned->list, &list);
- 	}
- 	list_splice(&list, terms);
+ skip_if_no_perf_probe && \
+ perf probe -q $libc inet_pton && \
+ trace_libc_inet_pton_backtrace
 -- 
 2.13.6
