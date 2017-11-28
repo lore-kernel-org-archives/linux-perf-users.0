@@ -1,54 +1,55 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/30] perf evsel: Fix up leftover perf_evsel_stat usage via evsel->priv
-Date: Tue, 28 Nov 2017 12:01:55 -0300
-Message-ID: <20171128150220.5064-6-acme@kernel.org>
+Subject: [PATCH 15/30] perf top: Ignore kptr_restrict when not sampling the kernel
+Date: Tue, 28 Nov 2017 12:02:05 -0300
+Message-ID: <20171128150220.5064-16-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I forgot one conversion, which got noticed by Thomas when running:
+If all events have attr.exclude_kernel set, no need to look at
+kptr_restrict.
 
-  $ perf stat  -e '{cpu-clock,instructions}' kill
-  kill: not enough arguments
-  Segmentation fault (core dumped)
-  $
-
-Fix it, those stats are in evsel->stats, not anymore in evsel->priv.
-
-Reported-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Tested-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: e669e833da8d ("perf evsel: Restore evsel->priv as a tool private area")
-Link: http://lkml.kernel.org/r/20171109150046.GN4333@kernel.org
+Link: http://lkml.kernel.org/n/tip-yegpzg5bf2im69g0tfizqaqz@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-top.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index bfde6a7a80f2..d5fbcf8c7aa7 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1375,7 +1375,7 @@ perf_evsel__process_group_data(struct perf_evsel *leader,
- static int
- perf_evsel__read_group(struct perf_evsel *leader, int cpu, int thread)
- {
--	struct perf_stat_evsel *ps = leader->priv;
-+	struct perf_stat_evsel *ps = leader->stats;
- 	u64 read_format = leader->attr.read_format;
- 	int size = perf_evsel__read_size(leader);
- 	u64 *data = ps->group_data;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 477a8699f0b5..1b01c277bab9 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -732,14 +732,16 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 	if (!machine->kptr_restrict_warned &&
+ 	    symbol_conf.kptr_restrict &&
+ 	    al.cpumode == PERF_RECORD_MISC_KERNEL) {
+-		ui__warning(
++		if (!perf_evlist__exclude_kernel(top->session->evlist)) {
++			ui__warning(
+ "Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+ "Check /proc/sys/kernel/kptr_restrict.\n\n"
+ "Kernel%s samples will not be resolved.\n",
+ 			  al.map && !RB_EMPTY_ROOT(&al.map->dso->symbols[MAP__FUNCTION]) ?
+ 			  " modules" : "");
+-		if (use_browser <= 0)
+-			sleep(5);
++			if (use_browser <= 0)
++				sleep(5);
++		}
+ 		machine->kptr_restrict_warned = true;
+ 	}
+ 
 -- 
 2.13.6
