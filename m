@@ -1,63 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/30] perf evlist: Add helper to check if attr.exclude_kernel is set in all evsels
-Date: Tue, 28 Nov 2017 12:02:02 -0300
-Message-ID: <20171128150220.5064-13-acme@kernel.org>
+Subject: [PATCH 10/30] perf test shell: Fix check open filename arg using 'perf trace' on s390x
+Date: Tue, 28 Nov 2017 12:02:00 -0300
+Message-ID: <20171128150220.5064-11-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-The warning about kptr_restrict needs to be emitted only when it is set
-and we ask for kernel space samples, so add a helper to help with that.
+This 'perf test' case fails on s390x. The 'touch' command on s390x uses
+the 'openat' system call to open the file named on the command line:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-fh7drty6yljei9gxxzer6eup@git.kernel.org
+[root@s35lp76 perf]# perf probe -l
+  probe:vfs_getname    (on getname_flags:72@fs/namei.c with pathname)
+[root@s35lp76 perf]# perf trace -e open touch /tmp/abc
+     0.400 ( 0.015 ms): touch/27542 open(filename:
+		/usr/lib/locale/locale-archive, flags: CLOEXEC) = 3
+[root@s35lp76 perf]#
+
+There is no 'open' system call for file '/tmp/abc'. Instead the 'openat'
+system call is used:
+
+[root@s35lp76 perf]# strace touch /tmp/abc
+    execve("/usr/bin/touch", ["touch", "/tmp/abc"], 0x3ffd547ec98
+			/* 30 vars */) = 0
+    [...]
+    openat(AT_FDCWD, "/tmp/abc", O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, 0666) = 3
+    [...]
+
+On s390x the 'egrep' command does not find a matching pattern and
+returns an error.
+
+Fix this for s390x create a platform dependent command line to enable
+the 'perf probe' call to listen to the 'openat' system call and get the
+expected output.
+
+Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+LPU-Reference: 20171114071847.2381-1-tmricht@linux.vnet.ibm.com
+Link: http://lkml.kernel.org/n/tip-3qf38jk0prz54rhmhyu871my@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 12 ++++++++++++
- tools/perf/util/evlist.h |  2 ++
- 2 files changed, 14 insertions(+)
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ccb749f9a83f..b62e523a7035 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1786,3 +1786,15 @@ void perf_evlist__toggle_bkw_mmap(struct perf_evlist *evlist,
- state_err:
- 	return;
- }
-+
-+bool perf_evlist__exclude_kernel(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel->attr.exclude_kernel)
-+			return false;
-+	}
-+
-+	return true;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index e72ae64c11ac..491f69542920 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -312,4 +312,6 @@ perf_evlist__find_evsel_by_str(struct perf_evlist *evlist, const char *str);
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 2e68c5f120da..2a9ef080efd0 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -17,8 +17,10 @@ skip_if_no_perf_probe || exit 2
+ file=$(mktemp /tmp/temporary_file.XXXXX)
  
- struct perf_evsel *perf_evlist__event2evsel(struct perf_evlist *evlist,
- 					    union perf_event *event);
+ trace_open_vfs_getname() {
+-	perf trace -e open touch $file 2>&1 | \
+-	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open\(filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
++	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
 +
-+bool perf_evlist__exclude_kernel(struct perf_evlist *evlist);
- #endif /* __PERF_EVLIST_H */
++	perf trace -e ${svc:-open} touch $file 2>&1 | \
++	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ }
+ 
+ 
 -- 
 2.13.6
