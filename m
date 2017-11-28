@@ -1,71 +1,65 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/30] perf test shell: Fix check open filename arg using 'perf trace' on s390x
-Date: Tue, 28 Nov 2017 12:02:00 -0300
-Message-ID: <20171128150220.5064-11-acme@kernel.org>
+Subject: [PATCH 08/30] perf help: Fix a bug during strstart() conversion
+Date: Tue, 28 Nov 2017 12:01:58 -0300
+Message-ID: <20171128150220.5064-9-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:45028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753086AbdK1PC5 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 28 Nov 2017 10:02:57 -0500
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Sihyeon Jang <uneedsihyeon@gmail.com>, kernel-team@lge.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Namhyung Kim <namhyung@kernel.org>
 
-This 'perf test' case fails on s390x. The 'touch' command on s390x uses
-the 'openat' system call to open the file named on the command line:
+The commit 8e99b6d4533c changed prefixcmp() to strstart() but missed to
+change the return value in some place.  It makes perf help print
+annoying output even for sane config items like below:
 
-[root@s35lp76 perf]# perf probe -l
-  probe:vfs_getname    (on getname_flags:72@fs/namei.c with pathname)
-[root@s35lp76 perf]# perf trace -e open touch /tmp/abc
-     0.400 ( 0.015 ms): touch/27542 open(filename:
-		/usr/lib/locale/locale-archive, flags: CLOEXEC) = 3
-[root@s35lp76 perf]#
+  $ perf help
+  '.root': unsupported man viewer sub key.
+  ...
 
-There is no 'open' system call for file '/tmp/abc'. Instead the 'openat'
-system call is used:
-
-[root@s35lp76 perf]# strace touch /tmp/abc
-    execve("/usr/bin/touch", ["touch", "/tmp/abc"], 0x3ffd547ec98
-			/* 30 vars */) = 0
-    [...]
-    openat(AT_FDCWD, "/tmp/abc", O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, 0666) = 3
-    [...]
-
-On s390x the 'egrep' command does not find a matching pattern and
-returns an error.
-
-Fix this for s390x create a platform dependent command line to enable
-the 'perf probe' call to listen to the 'openat' system call and get the
-expected output.
-
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-LPU-Reference: 20171114071847.2381-1-tmricht@linux.vnet.ibm.com
-Link: http://lkml.kernel.org/n/tip-3qf38jk0prz54rhmhyu871my@git.kernel.org
+Tested-by: Taeung Song <treeze.taeung@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Sihyeon Jang <uneedsihyeon@gmail.com>
+Cc: kernel-team@lge.com
+Link: http://lkml.kernel.org/r/20171114001542.GA16464@sejong
+Fixes: 8e99b6d4533c ("tools include: Adopt strstarts() from the kernel")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-help.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 2e68c5f120da..2a9ef080efd0 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -17,8 +17,10 @@ skip_if_no_perf_probe || exit 2
- file=$(mktemp /tmp/temporary_file.XXXXX)
+diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
+index bd1fedef3d1c..a0f7ed2b869b 100644
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -284,7 +284,7 @@ static int perf_help_config(const char *var, const char *value, void *cb)
+ 		add_man_viewer(value);
+ 		return 0;
+ 	}
+-	if (!strstarts(var, "man."))
++	if (strstarts(var, "man."))
+ 		return add_man_viewer_info(var, value);
  
- trace_open_vfs_getname() {
--	perf trace -e open touch $file 2>&1 | \
--	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open\(filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
-+	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
-+
-+	perf trace -e ${svc:-open} touch $file 2>&1 | \
-+	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
- }
+ 	return 0;
+@@ -314,7 +314,7 @@ static const char *cmd_to_page(const char *perf_cmd)
  
+ 	if (!perf_cmd)
+ 		return "perf";
+-	else if (!strstarts(perf_cmd, "perf"))
++	else if (strstarts(perf_cmd, "perf"))
+ 		return perf_cmd;
  
+ 	return asprintf(&s, "perf-%s", perf_cmd) < 0 ? NULL : s;
 -- 
 2.13.6
