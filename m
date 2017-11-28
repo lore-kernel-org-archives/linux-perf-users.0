@@ -1,81 +1,69 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/30] perf test shell: Fix test case probe libc's inet_pton on s390x
-Date: Tue, 28 Nov 2017 12:02:01 -0300
-Message-ID: <20171128150220.5064-12-acme@kernel.org>
+Subject: [PATCH 07/30] perf machine: Guard against NULL in machine__exit()
+Date: Tue, 28 Nov 2017 12:01:57 -0300
+Message-ID: <20171128150220.5064-8-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrei Vagin <avagin@openvz.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Vasily Averin <vvs@virtuozzo.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The 'perf test' case "probe libc's inet_pton & backtrace it with ping"
-fails on s390x. The reason is the 'realpath /lib64/ld*.so.* | uniq' line
-which returns 2 libraries:
+A recent fix for 'perf trace' introduced a bug where
+machine__exit(trace->host) could be called while trace->host was still
+NULL, so make this more robust by guarding against NULL, just like
+free() does.
 
-        root@s35lp76 shell]# realpath /lib64/ld*.so.* | uniq
-        /usr/lib64/ld-2.26.so
-        /usr/lib64/ld_pre_smc.so.1.0.1
-        [root@s35lp76 shell]
+The problem happens, for instance, when !root users try to run 'perf
+trace':
 
-This output makes the "perf probe" command lines invalid.
+  [acme@jouet linux]$ trace
+  Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
 
-Use ldd tool to find out the libraries required by "bash" and check if
-symbol "inet_pton" is part of the "libc" library.  Some distros do not
-have a /lib64 directory.
+  perf: Segmentation fault
+  Obtained 7 stack frames.
+  [0x4f1b2e]
+  /lib64/libc.so.6(+0x3671f) [0x7f43a1dd971f]
+  [0x4f3fec]
+  [0x47468b]
+  [0x42a2db]
+  /lib64/libc.so.6(__libc_start_main+0xe9) [0x7f43a1dc3509]
+  [0x42a6c9]
+  Segmentation fault (core dumped)
+  [acme@jouet linux]$
 
-I have also added a check for the existence of an IPv6 network interface
-before it is being used.
-
-Committer changes:
-
-We can't really use ldd for libc, as in some systems, such as x86_64, it
-has hardlinks and then ldd sees one and the kernel the other, so grep
-for libc in /proc/self/maps to get the one we'll receive from
-PERF_RECORD_MMAP.
-
-Thomas checked this change and acked it.
-
-Signed-off-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Suggested-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brückner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20171114133409.GN8836@kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vasily Averin <vvs@virtuozzo.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: 33974a414ce2 ("perf trace: Call machine__exit() at exit")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/machine.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-index 7a84d73324e3..8b3da21a08f1 100755
---- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-@@ -10,8 +10,8 @@
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 6a8d03c3d9b7..270f3223c6df 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -172,6 +172,9 @@ void machine__exit(struct machine *machine)
+ {
+ 	int i;
  
- . $(dirname $0)/lib/probe.sh
- 
--ld=$(realpath /lib64/ld*.so.* | uniq)
--libc=$(echo $ld | sed 's/ld/libc/g')
-+libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
-+nm -g $libc 2>/dev/null | fgrep -q inet_pton || exit 254
- 
- trace_libc_inet_pton_backtrace() {
- 	idx=0
-@@ -37,6 +37,9 @@ trace_libc_inet_pton_backtrace() {
- 	done
- }
- 
-+# Check for IPv6 interface existence
-+ip a sh lo | fgrep -q inet6 || exit 2
++	if (machine == NULL)
++		return;
 +
- skip_if_no_perf_probe && \
- perf probe -q $libc inet_pton && \
- trace_libc_inet_pton_backtrace
+ 	machine__destroy_kernel_maps(machine);
+ 	map_groups__exit(&machine->kmaps);
+ 	dsos__exit(&machine->dsos);
 -- 
 2.13.6
