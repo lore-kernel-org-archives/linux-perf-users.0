@@ -1,52 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/30] tools headers: Synchronize kernel ABI headers wrt SPDX tags
-Date: Tue, 28 Nov 2017 12:02:13 -0300
-Message-ID: <20171128150220.5064-24-acme@kernel.org>
+Subject: [PATCH 20/30] perf test: Fix test 21 for s390x
+Date: Tue, 28 Nov 2017 12:02:10 -0300
+Message-ID: <20171128150220.5064-21-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Two more, that were just in perf/core and thus weren't covered by Ingo's
-latest headers synch, kcmp.h and prctl.h, silencing this:
+Test case 21 (Number of exit events of a simple workload) fails on
+s390x. The reason is the invalid sample frequency supplied for this
+test. On s390x the minimum sample frequency is much higher (see output
+of /proc/service_levels).
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kcmp.h' differs from latest version at 'include/uapi/linux/kcmp.h'
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/prctl.h' differs from latest version at 'include/uapi/linux/prctl.h'
+Supply a save sample frequency value for s390x to fix this.  The value
+will be adjusted by the s390x CPUMF frequency convertion function to a
+value well below the sysctl kernel.perf_event_max_sample_rate value.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-2a0r7iybyqpkftllyy5t9hfk@git.kernel.org
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+LPU-Reference: 20171123114611.93397-1-tmricht@linux.vnet.ibm.com
+Link: https://lkml.kernel.org/n/tip-1ynblyhi1n81idpido59nt1y@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kcmp.h  | 1 +
- tools/include/uapi/linux/prctl.h | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/tests/task-exit.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/include/uapi/linux/kcmp.h b/tools/include/uapi/linux/kcmp.h
-index 481e103da78e..ef1305010925 100644
---- a/tools/include/uapi/linux/kcmp.h
-+++ b/tools/include/uapi/linux/kcmp.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
- #ifndef _UAPI_LINUX_KCMP_H
- #define _UAPI_LINUX_KCMP_H
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index bc4a7344e274..89c8e1604ca7 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -84,7 +84,11 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
  
-diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
-index a8d0759a9e40..b640071421f7 100644
---- a/tools/include/uapi/linux/prctl.h
-+++ b/tools/include/uapi/linux/prctl.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
- #ifndef _LINUX_PRCTL_H
- #define _LINUX_PRCTL_H
- 
+ 	evsel = perf_evlist__first(evlist);
+ 	evsel->attr.task = 1;
++#ifdef __s390x__
++	evsel->attr.sample_freq = 1000000;
++#else
+ 	evsel->attr.sample_freq = 1;
++#endif
+ 	evsel->attr.inherit = 0;
+ 	evsel->attr.watermark = 0;
+ 	evsel->attr.wakeup_events = 1;
 -- 
 2.13.6
