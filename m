@@ -1,138 +1,58 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/30] perf bench numa: Fixup discontiguous/sparse numa nodes
-Date: Tue, 28 Nov 2017 12:02:09 -0300
-Message-ID: <20171128150220.5064-20-acme@kernel.org>
+Subject: [PATCH 16/30] perf: Fix header.size for namespace events
+Date: Tue, 28 Nov 2017 12:02:06 -0300
+Message-ID: <20171128150220.5064-17-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>, Balamuruhan S <bala24@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Certain systems are designed to have sparse/discontiguous nodes.  On
-such systems, 'perf bench numa' hangs, shows wrong number of nodes and
-shows values for non-existent nodes. Handle this by only taking nodes
-that are exposed by kernel to userspace.
+Reset header size for namespace events, otherwise it only gets bigger in
+ctx iterations.
 
-Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/1edbcd353c009e109e93d78f2f46381930c340fe.1511368645.git.sathnaga@linux.vnet.ibm.com
-Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: e422267322cd ("perf: Add PERF_RECORD_NAMESPACES to include namespaces related info")
+Link: http://lkml.kernel.org/n/tip-nlo4gonz9d4guyb8153ukzt0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/numa.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 51 insertions(+), 5 deletions(-)
+ kernel/events/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index d95fdcc26f4b..944070e98a2c 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -216,6 +216,47 @@ static const char * const numa_usage[] = {
- 	NULL
- };
- 
-+/*
-+ * To get number of numa nodes present.
-+ */
-+static int nr_numa_nodes(void)
-+{
-+	int i, nr_nodes = 0;
-+
-+	for (i = 0; i < g->p.nr_nodes; i++) {
-+		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
-+			nr_nodes++;
-+	}
-+
-+	return nr_nodes;
-+}
-+
-+/*
-+ * To check if given numa node is present.
-+ */
-+static int is_node_present(int node)
-+{
-+	return numa_bitmask_isbitset(numa_nodes_ptr, node);
-+}
-+
-+/*
-+ * To check given numa node has cpus.
-+ */
-+static bool node_has_cpus(int node)
-+{
-+	struct bitmask *cpu = numa_allocate_cpumask();
-+	unsigned int i;
-+
-+	if (cpu && !numa_node_to_cpus(node, cpu)) {
-+		for (i = 0; i < cpu->size; i++) {
-+			if (numa_bitmask_isbitset(cpu, i))
-+				return true;
-+		}
-+	}
-+
-+	return false; /* lets fall back to nocpus safely */
-+}
-+
- static cpu_set_t bind_to_cpu(int target_cpu)
- {
- 	cpu_set_t orig_mask, mask;
-@@ -244,12 +285,12 @@ static cpu_set_t bind_to_cpu(int target_cpu)
- 
- static cpu_set_t bind_to_node(int target_node)
- {
--	int cpus_per_node = g->p.nr_cpus/g->p.nr_nodes;
-+	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
- 	cpu_set_t orig_mask, mask;
- 	int cpu;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 9404c631bd3f..08c8b0d06235 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6639,6 +6639,7 @@ static void perf_event_namespaces_output(struct perf_event *event,
+ 	struct perf_namespaces_event *namespaces_event = data;
+ 	struct perf_output_handle handle;
+ 	struct perf_sample_data sample;
++	u16 header_size = namespaces_event->event_id.header.size;
  	int ret;
  
--	BUG_ON(cpus_per_node*g->p.nr_nodes != g->p.nr_cpus);
-+	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
- 	BUG_ON(!cpus_per_node);
+ 	if (!perf_event_namespaces_match(event))
+@@ -6649,7 +6650,7 @@ static void perf_event_namespaces_output(struct perf_event *event,
+ 	ret = perf_output_begin(&handle, event,
+ 				namespaces_event->event_id.header.size);
+ 	if (ret)
+-		return;
++		goto out;
  
- 	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
-@@ -649,7 +690,7 @@ static int parse_setup_node_list(void)
- 			int i;
+ 	namespaces_event->event_id.pid = perf_event_pid(event,
+ 							namespaces_event->task);
+@@ -6661,6 +6662,8 @@ static void perf_event_namespaces_output(struct perf_event *event,
+ 	perf_event__output_id_sample(event, &handle, &sample);
  
- 			for (i = 0; i < mul; i++) {
--				if (t >= g->p.nr_tasks) {
-+				if (t >= g->p.nr_tasks || !node_has_cpus(bind_node)) {
- 					printf("\n# NOTE: ignoring bind NODEs starting at NODE#%d\n", bind_node);
- 					goto out;
- 				}
-@@ -964,6 +1005,8 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 	sum = 0;
+ 	perf_output_end(&handle);
++out:
++	namespaces_event->event_id.header.size = header_size;
+ }
  
- 	for (node = 0; node < g->p.nr_nodes; node++) {
-+		if (!is_node_present(node))
-+			continue;
- 		nr = nodes[node];
- 		nr_min = min(nr, nr_min);
- 		nr_max = max(nr, nr_max);
-@@ -984,8 +1027,11 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 	process_groups = 0;
- 
- 	for (node = 0; node < g->p.nr_nodes; node++) {
--		int processes = count_node_processes(node);
-+		int processes;
- 
-+		if (!is_node_present(node))
-+			continue;
-+		processes = count_node_processes(node);
- 		nr = nodes[node];
- 		tprintf(" %2d/%-2d", nr, processes);
- 
-@@ -1291,7 +1337,7 @@ static void print_summary(void)
- 
- 	printf("\n ###\n");
- 	printf(" # %d %s will execute (on %d nodes, %d CPUs):\n",
--		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", g->p.nr_nodes, g->p.nr_cpus);
-+		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", nr_numa_nodes(), g->p.nr_cpus);
- 	printf(" #      %5dx %5ldMB global  shared mem operations\n",
- 			g->p.nr_loops, g->p.bytes_global/1024/1024);
- 	printf(" #      %5dx %5ldMB process shared mem operations\n",
+ static void perf_fill_ns_link_info(struct perf_ns_link_info *ns_link_info,
 -- 
 2.13.6
