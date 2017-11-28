@@ -1,76 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/30] perf top: Use signal interface for SIGWINCH handler
-Date: Tue, 28 Nov 2017 12:02:08 -0300
-Message-ID: <20171128150220.5064-19-acme@kernel.org>
+Subject: [PATCH 29/30] tools headers: Syncronize mman.h ABI header
+Date: Tue, 28 Nov 2017 12:02:19 -0300
+Message-ID: <20171128150220.5064-30-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:45796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753782AbdK1PDy (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 28 Nov 2017 10:03:54 -0500
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@gmail.com>, Jan Kara <jack@suse.cz>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There's no need for SA_SIGINFO data in SIGWINCH handler, switching it to
-register the handler via signal interface as we do for the rest of the
-signals in perf top.
+To add support for the MAP_SYNC flag introduced in:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  b6fb293f2497 ("mm: Define MAP_SYNC and VM_SYNC flags")
+
+Update tools/perf/trace/beauty/mmap.c to support that flag.
+
+This silences this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman.h' differs from latest version at 'include/uapi/asm-generic/mman.h'
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-elxp1vdnaog1scaj13cx7cu0@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-14zyk3iywrj37c7g1eagmzbo@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ tools/include/uapi/asm-generic/mman.h | 1 +
+ tools/perf/trace/beauty/mmap.c        | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 489573883936..9e0d2645ae13 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -86,8 +86,7 @@ static void perf_top__update_print_entries(struct perf_top *top)
- 	top->print_entries = top->winsize.ws_row - HEADER_LINE_NR;
- }
+diff --git a/tools/include/uapi/asm-generic/mman.h b/tools/include/uapi/asm-generic/mman.h
+index 2dffcbf705b3..653687d9771b 100644
+--- a/tools/include/uapi/asm-generic/mman.h
++++ b/tools/include/uapi/asm-generic/mman.h
+@@ -13,6 +13,7 @@
+ #define MAP_NONBLOCK	0x10000		/* do not block on IO */
+ #define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
+ #define MAP_HUGETLB	0x40000		/* create a huge page mapping */
++#define MAP_SYNC	0x80000		/* perform synchronous page faults for the mapping */
  
--static void perf_top__sig_winch(int sig __maybe_unused,
--				siginfo_t *info __maybe_unused, void *arg __maybe_unused)
-+static void winch_sig(int sig __maybe_unused)
- {
- 	resize = 1;
- }
-@@ -477,12 +476,8 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
- 		case 'e':
- 			prompt_integer(&top->print_entries, "Enter display entries (lines)");
- 			if (top->print_entries == 0) {
--				struct sigaction act = {
--					.sa_sigaction = perf_top__sig_winch,
--					.sa_flags     = SA_SIGINFO,
--				};
- 				perf_top__resize(top);
--				sigaction(SIGWINCH, &act, NULL);
-+				signal(SIGWINCH, winch_sig);
- 			} else {
- 				signal(SIGWINCH, SIG_DFL);
- 			}
-@@ -1363,12 +1358,8 @@ int cmd_top(int argc, const char **argv)
+ /* Bits [26:31] are reserved, see mman-common.h for MAP_HUGETLB usage */
  
- 	get_term_dimensions(&top.winsize);
- 	if (top.print_entries == 0) {
--		struct sigaction act = {
--			.sa_sigaction = perf_top__sig_winch,
--			.sa_flags     = SA_SIGINFO,
--		};
- 		perf_top__update_print_entries(&top);
--		sigaction(SIGWINCH, &act, NULL);
-+		signal(SIGWINCH, winch_sig);
- 	}
+diff --git a/tools/perf/trace/beauty/mmap.c b/tools/perf/trace/beauty/mmap.c
+index 9e1668b2c5d7..417e3ecfe9d7 100644
+--- a/tools/perf/trace/beauty/mmap.c
++++ b/tools/perf/trace/beauty/mmap.c
+@@ -62,6 +62,9 @@ static size_t syscall_arg__scnprintf_mmap_flags(char *bf, size_t size,
+ 	P_MMAP_FLAG(POPULATE);
+ 	P_MMAP_FLAG(STACK);
+ 	P_MMAP_FLAG(UNINITIALIZED);
++#ifdef MAP_SYNC
++	P_MMAP_FLAG(SYNC);
++#endif
+ #undef P_MMAP_FLAG
  
- 	status = __cmd_top(&top);
+ 	if (flags)
 -- 
 2.13.6
