@@ -1,120 +1,122 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/30] tools headers: Synchronize drm/i915_drm.h
-Date: Tue, 28 Nov 2017 12:02:16 -0300
-Message-ID: <20171128150220.5064-27-acme@kernel.org>
+Subject: [PATCH 25/30] tools headers uapi: Synchronize drm/drm.h
+Date: Tue, 28 Nov 2017 12:02:15 -0300
+Message-ID: <20171128150220.5064-26-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753749AbdK1PDp (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Nov 2017 10:03:45 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Dave Airlie <airlied@redhat.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Keith Packard <keithp@keithp.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up the changes from these csets:
+To pick up the new ioctls added in these csets:
 
-  bf64e0b00e1f ("drm/i915: Expand I915_PARAM_HAS_SCHEDULER into a capability bitmask")
-  ac14fbd460d0 ("drm/i915/scheduler: Support user-defined priorities")
-  822a4b673284 ("drm/i915: Don't use BIT() in UAPI section")
-  3fd3a6ffe279 ("drm/i915: Simplify i915_reg_read_ioctl")
+  3064abfa932b ("drm: Add CRTC_GET_SEQUENCE and CRTC_QUEUE_SEQUENCE ioctls [v3]")
+  62884cd386b8 ("drm: Add four ioctls for managing drm mode object leases [v7]")
 
-None of them affects how the tools are built, this os done just to
-silence this perf build warning:
+That will be automatically decoded (the ioctl cmd parameter, the structs
+will be supported when we start using eBPF for that, which is in the
+works).
 
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
+This silences this warning when building tools/perf:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/drm/drm.h' differs from latest version at 'include/uapi/drm/drm.h'
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Dave Airlie <airlied@redhat.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Keith Packard <keithp@keithp.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-d2gor8brpcowe7bcxovjhqwm@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bivwf1pkfmi1ugpswbsxd9e9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/i915_drm.h | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ tools/include/uapi/drm/drm.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-index 9816590d3ad2..ac3c6503ca27 100644
---- a/tools/include/uapi/drm/i915_drm.h
-+++ b/tools/include/uapi/drm/i915_drm.h
-@@ -397,10 +397,20 @@ typedef struct drm_i915_irq_wait {
- #define I915_PARAM_MIN_EU_IN_POOL	 39
- #define I915_PARAM_MMAP_GTT_VERSION	 40
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 97677cd6964d..6fdff5945c8a 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -737,6 +737,28 @@ struct drm_syncobj_array {
+ 	__u32 pad;
+ };
  
--/* Query whether DRM_I915_GEM_EXECBUFFER2 supports user defined execution
-+/*
-+ * Query whether DRM_I915_GEM_EXECBUFFER2 supports user defined execution
-  * priorities and the driver will attempt to execute batches in priority order.
-+ * The param returns a capability bitmask, nonzero implies that the scheduler
-+ * is enabled, with different features present according to the mask.
-+ *
-+ * The initial priority for each batch is supplied by the context and is
-+ * controlled via I915_CONTEXT_PARAM_PRIORITY.
-  */
- #define I915_PARAM_HAS_SCHEDULER	 41
-+#define   I915_SCHEDULER_CAP_ENABLED	(1ul << 0)
-+#define   I915_SCHEDULER_CAP_PRIORITY	(1ul << 1)
-+#define   I915_SCHEDULER_CAP_PREEMPTION	(1ul << 2)
++/* Query current scanout sequence number */
++struct drm_crtc_get_sequence {
++	__u32 crtc_id;		/* requested crtc_id */
++	__u32 active;		/* return: crtc output is active */
++	__u64 sequence;		/* return: most recent vblank sequence */
++	__s64 sequence_ns;	/* return: most recent time of first pixel out */
++};
 +
- #define I915_PARAM_HUC_STATUS		 42
- 
- /* Query whether DRM_I915_GEM_EXECBUFFER2 supports the ability to opt-out of
-@@ -1309,14 +1319,16 @@ struct drm_i915_reg_read {
- 	 * be specified
- 	 */
- 	__u64 offset;
-+#define I915_REG_READ_8B_WA (1ul << 0)
++/* Queue event to be delivered at specified sequence. Time stamp marks
++ * when the first pixel of the refresh cycle leaves the display engine
++ * for the display
++ */
++#define DRM_CRTC_SEQUENCE_RELATIVE		0x00000001	/* sequence is relative to current */
++#define DRM_CRTC_SEQUENCE_NEXT_ON_MISS		0x00000002	/* Use next sequence if we've missed */
 +
- 	__u64 val; /* Return value */
- };
- /* Known registers:
-  *
-  * Render engine timestamp - 0x2358 + 64bit - gen7+
-  * - Note this register returns an invalid value if using the default
-- *   single instruction 8byte read, in order to workaround that use
-- *   offset (0x2538 | 1) instead.
-+ *   single instruction 8byte read, in order to workaround that pass
-+ *   flag I915_REG_READ_8B_WA in offset field.
-  *
-  */
- 
-@@ -1359,6 +1371,10 @@ struct drm_i915_gem_context_param {
- #define I915_CONTEXT_PARAM_GTT_SIZE	0x3
- #define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE	0x4
- #define I915_CONTEXT_PARAM_BANNABLE	0x5
-+#define I915_CONTEXT_PARAM_PRIORITY	0x6
-+#define   I915_CONTEXT_MAX_USER_PRIORITY	1023 /* inclusive */
-+#define   I915_CONTEXT_DEFAULT_PRIORITY		0
-+#define   I915_CONTEXT_MIN_USER_PRIORITY	-1023 /* inclusive */
- 	__u64 value;
- };
- 
-@@ -1510,9 +1526,14 @@ struct drm_i915_perf_oa_config {
- 	__u32 n_boolean_regs;
- 	__u32 n_flex_regs;
- 
--	__u64 __user mux_regs_ptr;
--	__u64 __user boolean_regs_ptr;
--	__u64 __user flex_regs_ptr;
-+	/*
-+	 * These fields are pointers to tuples of u32 values (register
-+	 * address, value). For example the expected length of the buffer
-+	 * pointed by mux_regs_ptr is (2 * sizeof(u32) * n_mux_regs).
-+	 */
-+	__u64 mux_regs_ptr;
-+	__u64 boolean_regs_ptr;
-+	__u64 flex_regs_ptr;
- };
- 
++struct drm_crtc_queue_sequence {
++	__u32 crtc_id;
++	__u32 flags;
++	__u64 sequence;		/* on input, target sequence. on output, actual sequence */
++	__u64 user_data;	/* user data passed to event */
++};
++
  #if defined(__cplusplus)
+ }
+ #endif
+@@ -819,6 +841,9 @@ extern "C" {
+ 
+ #define DRM_IOCTL_WAIT_VBLANK		DRM_IOWR(0x3a, union drm_wait_vblank)
+ 
++#define DRM_IOCTL_CRTC_GET_SEQUENCE	DRM_IOWR(0x3b, struct drm_crtc_get_sequence)
++#define DRM_IOCTL_CRTC_QUEUE_SEQUENCE	DRM_IOWR(0x3c, struct drm_crtc_queue_sequence)
++
+ #define DRM_IOCTL_UPDATE_DRAW		DRM_IOW(0x3f, struct drm_update_draw)
+ 
+ #define DRM_IOCTL_MODE_GETRESOURCES	DRM_IOWR(0xA0, struct drm_mode_card_res)
+@@ -863,6 +888,11 @@ extern "C" {
+ #define DRM_IOCTL_SYNCOBJ_RESET		DRM_IOWR(0xC4, struct drm_syncobj_array)
+ #define DRM_IOCTL_SYNCOBJ_SIGNAL	DRM_IOWR(0xC5, struct drm_syncobj_array)
+ 
++#define DRM_IOCTL_MODE_CREATE_LEASE	DRM_IOWR(0xC6, struct drm_mode_create_lease)
++#define DRM_IOCTL_MODE_LIST_LESSEES	DRM_IOWR(0xC7, struct drm_mode_list_lessees)
++#define DRM_IOCTL_MODE_GET_LEASE	DRM_IOWR(0xC8, struct drm_mode_get_lease)
++#define DRM_IOCTL_MODE_REVOKE_LEASE	DRM_IOWR(0xC9, struct drm_mode_revoke_lease)
++
+ /**
+  * Device specific ioctls should only be in their respective headers
+  * The device specific ioctl range is from 0x40 to 0x9f.
+@@ -893,6 +923,7 @@ struct drm_event {
+ 
+ #define DRM_EVENT_VBLANK 0x01
+ #define DRM_EVENT_FLIP_COMPLETE 0x02
++#define DRM_EVENT_CRTC_SEQUENCE	0x03
+ 
+ struct drm_event_vblank {
+ 	struct drm_event base;
+@@ -903,6 +934,16 @@ struct drm_event_vblank {
+ 	__u32 crtc_id; /* 0 on older kernels that do not support this */
+ };
+ 
++/* Event delivered at sequence. Time stamp marks when the first pixel
++ * of the refresh cycle leaves the display engine for the display
++ */
++struct drm_event_crtc_sequence {
++	struct drm_event	base;
++	__u64			user_data;
++	__s64			time_ns;
++	__u64			sequence;
++};
++
+ /* typedef area */
+ #ifndef __KERNEL__
+ typedef struct drm_clip_rect drm_clip_rect_t;
 -- 
 2.13.6
