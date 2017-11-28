@@ -1,100 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/30] perf script: Fix --per-event-dump for auxtrace synth evsels
-Date: Tue, 28 Nov 2017 12:01:56 -0300
-Message-ID: <20171128150220.5064-7-acme@kernel.org>
+Subject: [PATCH 02/30] perf record: Generate PERF_RECORD_{MMAP,COMM,EXEC} with --delay
+Date: Tue, 28 Nov 2017 12:01:52 -0300
+Message-ID: <20171128150220.5064-3-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, yuzhoujian <yuzhoujian@didichuxing.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When processing PERF_RECORD_AUXTRACE_INFO several perf_evsel entries
-will be synthesized and inserted into session->evlist, eventually ending
-in perf_script.tool.sample(), which ends up calling builtin-script.c's
-process_event(), that expects evsel->priv to be a perf_evsel_script
-object with a valid FILE pointer in fp.
+When we use an initial delay, e.g.: 'perf record --delay 1000', we do not
+enable the events until that delay has passed after we started the workload,
+including the tracking event, i.e. the one for which we have attr.mmap, etc,
+enabled to ask the kernel to generate the PERF_RECORD_{MMAP,COMM,EXEC} metadata
+events that will then allow us to resolve addresses in samples to the map, dso
+and symbol. There will be a shadow that even synthesizing samples won't cover,
+i.e. the workload that we start and other processes forking while we
+wait for the initial delay to expire.
 
-So we need to intercept the processing of PERF_RECORD_AUXTRACE_INFO and
-then setup evsel->priv for these newly created perf_evsel instances, do
-it to fix the segfault in process_event() trying to use a NULL for that
-FILE pointer.
+So use a dummy event to be the tracking one and make it be enabled on exec.
 
-Reported-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Before:
+
+  # perf record --delay 1000 stress --cpu 1 --timeout 5
+  stress: info: [9029] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+  stress: info: [9029] successful run completed in 5s
+  [ perf record: Woken up 3 times to write data ]
+  [ perf record: Captured and wrote 0.624 MB perf.data (15908 samples) ]
+  # perf script | head
+      :9031 9031 32001.826888:       1 cycles:ppp: ffffffff831aa30d event_function (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826893:       1 cycles:ppp: ffffffff8300d1a0 intel_bts_enable_local (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826895:       7 cycles:ppp: ffffffff83023870 sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826897:     103 cycles:ppp: ffffffff8300c331 intel_pmu_handle_irq (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826899:    1615 cycles:ppp: ffffffff830231f8 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826902:   26724 cycles:ppp: ffffffff8384c6a7 native_irq_return_iret (/lib/modules/4.14.0-rc6+/build/vmlinux)
+      :9031 9031 32001.826913:  329739 cycles:ppp:     7fb2a5410932 [unknown] ([unknown])
+      :9031 9031 32001.827033: 1225451 cycles:ppp:     7fb2a5410930 [unknown] ([unknown])
+      :9031 9031 32001.827474: 1391725 cycles:ppp:     7fb2a5410930 [unknown] ([unknown])
+      :9031 9031 32001.827978: 1233697 cycles:ppp:     7fb2a5410928 [unknown] ([unknown])
+  #
+
+After:
+
+  # perf record --delay 1000 stress --cpu 1 --timeout 5
+  stress: info: [9741] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
+  stress: info: [9741] successful run completed in 5s
+  [ perf record: Woken up 3 times to write data ]
+  [ perf record: Captured and wrote 0.751 MB perf.data (15976 samples) ]
+  # perf script | head
+     stress  9742 32110.959106:          1 cycles:ppp:  ffffffff831b26f6 __perf_event_task_sched_in (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959110:       1 cycles:ppp: ffffffff8300c2e9 intel_pmu_handle_irq (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959112:       7 cycles:ppp: ffffffff830231e0 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959115:     101 cycles:ppp: ffffffff83023870 sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959117:    1533 cycles:ppp: ffffffff830231f8 native_sched_clock (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959119:   23992 cycles:ppp: ffffffff831b0900 ctx_sched_in (/lib/modules/4.14.0-rc6+/build/vmlinux)
+     stress 9742 32110.959129:  329406 cycles:ppp:     7f4b1b661930 __random_r (/usr/lib64/libc-2.25.so)
+     stress 9742 32110.959249: 1288322 cycles:ppp:     5566e1e7cbc9 hogcpu (/usr/bin/stress)
+     stress 9742 32110.959712: 1464046 cycles:ppp:     7f4b1b66179e __random (/usr/lib64/libc-2.25.so)
+     stress 9742 32110.960241: 1266918 cycles:ppp:     7f4b1b66195b __random_r (/usr/lib64/libc-2.25.so)
+  #
+
+Reported-by: Bram Stolk <b.stolk@gmail.com>
+Tested-by: Bram Stolk <b.stolk@gmail.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Fixes: a14390fde64e ("perf script: Allow creating per-event dump files")
-Link: http://lkml.kernel.org/n/tip-bthnur8r8de01gxvn2qayx6e@git.kernel.org
-[ Merge fix by Ravi Bangoria before pushing upstream to preserv bisectability ]
+Fixes: 6619a53ef757 ("perf record: Add --initial-delay option")
+Link: http://lkml.kernel.org/n/tip-nrdfchshqxf7diszhxcecqb9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 68f36dc0344f..9b43bda45a41 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1955,6 +1955,16 @@ static int perf_script__fopen_per_event_dump(struct perf_script *script)
- 	struct perf_evsel *evsel;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 3d7f33e19df2..5f78ce943407 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -339,6 +339,22 @@ static int record__open(struct record *rec)
+ 	struct perf_evsel_config_term *err_term;
+ 	int rc = 0;
  
- 	evlist__for_each_entry(script->session->evlist, evsel) {
-+		/*
-+		 * Already setup? I.e. we may be called twice in cases like
-+		 * Intel PT, one for the intel_pt// and dummy events, then
-+		 * for the evsels syntheized from the auxtrace info.
-+		 *
-+		 * Ses perf_script__process_auxtrace_info.
-+		 */
-+		if (evsel->priv != NULL)
-+			continue;
++	/*
++	 * For initial_delay we need to add a dummy event so that we can track
++	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
++	 * real events, the ones asked by the user.
++	 */
++	if (opts->initial_delay) {
++		if (perf_evlist__add_dummy(evlist))
++			return -ENOMEM;
 +
- 		evsel->priv = perf_evsel_script__new(evsel, script->session->data);
- 		if (evsel->priv == NULL)
- 			goto out_err_fclose;
-@@ -2838,6 +2848,25 @@ int process_cpu_map_event(struct perf_tool *tool __maybe_unused,
- 	return set_maps(script);
- }
- 
-+#ifdef HAVE_AUXTRACE_SUPPORT
-+static int perf_script__process_auxtrace_info(struct perf_tool *tool,
-+					      union perf_event *event,
-+					      struct perf_session *session)
-+{
-+	int ret = perf_event__process_auxtrace_info(tool, event, session);
-+
-+	if (ret == 0) {
-+		struct perf_script *script = container_of(tool, struct perf_script, tool);
-+
-+		ret = perf_script__setup_per_event_dump(script);
++		pos = perf_evlist__first(evlist);
++		pos->tracking = 0;
++		pos = perf_evlist__last(evlist);
++		pos->tracking = 1;
++		pos->attr.enable_on_exec = 1;
 +	}
 +
-+	return ret;
-+}
-+#else
-+#define perf_script__process_auxtrace_info 0
-+#endif
-+
- int cmd_script(int argc, const char **argv)
- {
- 	bool show_full_info = false;
-@@ -2866,7 +2895,7 @@ int cmd_script(int argc, const char **argv)
- 			.feature	 = perf_event__process_feature,
- 			.build_id	 = perf_event__process_build_id,
- 			.id_index	 = perf_event__process_id_index,
--			.auxtrace_info	 = perf_event__process_auxtrace_info,
-+			.auxtrace_info	 = perf_script__process_auxtrace_info,
- 			.auxtrace	 = perf_event__process_auxtrace,
- 			.auxtrace_error	 = perf_event__process_auxtrace_error,
- 			.stat		 = perf_event__process_stat_event,
+ 	perf_evlist__config(evlist, opts, &callchain_param);
+ 
+ 	evlist__for_each_entry(evlist, pos) {
 -- 
 2.13.6
