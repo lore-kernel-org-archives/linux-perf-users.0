@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/30] perf record: Ignore kptr_restrict when not sampling the kernel
-Date: Tue, 28 Nov 2017 12:02:04 -0300
-Message-ID: <20171128150220.5064-15-acme@kernel.org>
+Subject: [PATCH 12/30] perf evlist: Add helper to check if attr.exclude_kernel is set in all evsels
+Date: Tue, 28 Nov 2017 12:02:02 -0300
+Message-ID: <20171128150220.5064-13-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
@@ -12,42 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If we're not sampling the kernel, we shouldn't care about kptr_restrict
-neither synthesize anything for assisting in resolving kernel samples,
-like the reference relocation symbol or kernel modules information.
-
-Before:
-
-  $ cat /proc/sys/kernel/kptr_restrict /proc/sys/kernel/perf_event_paranoid
-  2
-  2
-  $ perf record sleep 1
-  WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-  check /proc/sys/kernel/kptr_restrict.
-
-  Samples in kernel functions may not be resolved if a suitable vmlinux
-  file is not found in the buildid cache or in the vmlinux path.
-
-  Samples in kernel modules won't be resolved at all.
-
-  If some relocation was applied (e.g. kexec) symbols may be misresolved
-  even with a suitable vmlinux or kallsyms file.
-
-  Couldn't record kernel reference relocation symbol
-  Symbol resolution may be skewed if relocation was used (e.g. kexec).
-  Check /proc/kallsyms permission or run as root.
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data (8 samples) ]
-  $ perf evlist -v
-  cycles:uppp: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, exclude_kernel: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
-  $
-
-After:
-
-  $ perf record sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data (10 samples) ]
-  $
+The warning about kptr_restrict needs to be emitted only when it is set
+and we ask for kernel space samples, so add a helper to help with that.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -55,55 +21,43 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-t025e9zftbx2b8cq2w01g5e5@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-fh7drty6yljei9gxxzer6eup@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ tools/perf/util/evlist.c | 12 ++++++++++++
+ tools/perf/util/evlist.h |  2 ++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 5f78ce943407..003255910c05 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -765,17 +765,19 @@ static int record__synthesize(struct record *rec, bool tail)
- 			goto out;
- 	}
- 
--	err = perf_event__synthesize_kernel_mmap(tool, process_synthesized_event,
--						 machine);
--	WARN_ONCE(err < 0, "Couldn't record kernel reference relocation symbol\n"
--			   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
--			   "Check /proc/kallsyms permission or run as root.\n");
--
--	err = perf_event__synthesize_modules(tool, process_synthesized_event,
--					     machine);
--	WARN_ONCE(err < 0, "Couldn't record kernel module information.\n"
--			   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
--			   "Check /proc/modules permission or run as root.\n");
-+	if (!perf_evlist__exclude_kernel(rec->evlist)) {
-+		err = perf_event__synthesize_kernel_mmap(tool, process_synthesized_event,
-+							 machine);
-+		WARN_ONCE(err < 0, "Couldn't record kernel reference relocation symbol\n"
-+				   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
-+				   "Check /proc/kallsyms permission or run as root.\n");
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ccb749f9a83f..b62e523a7035 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1786,3 +1786,15 @@ void perf_evlist__toggle_bkw_mmap(struct perf_evlist *evlist,
+ state_err:
+ 	return;
+ }
 +
-+		err = perf_event__synthesize_modules(tool, process_synthesized_event,
-+						     machine);
-+		WARN_ONCE(err < 0, "Couldn't record kernel module information.\n"
-+				   "Symbol resolution may be skewed if relocation was used (e.g. kexec).\n"
-+				   "Check /proc/modules permission or run as root.\n");
++bool perf_evlist__exclude_kernel(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (!evsel->attr.exclude_kernel)
++			return false;
 +	}
++
++	return true;
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index e72ae64c11ac..491f69542920 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -312,4 +312,6 @@ perf_evlist__find_evsel_by_str(struct perf_evlist *evlist, const char *str);
  
- 	if (perf_guest) {
- 		machines__process_guests(&session->machines,
-@@ -1709,7 +1711,7 @@ int cmd_record(int argc, const char **argv)
- 
- 	err = -ENOMEM;
- 
--	if (symbol_conf.kptr_restrict)
-+	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
- 		pr_warning(
- "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
- "check /proc/sys/kernel/kptr_restrict.\n\n"
+ struct perf_evsel *perf_evlist__event2evsel(struct perf_evlist *evlist,
+ 					    union perf_event *event);
++
++bool perf_evlist__exclude_kernel(struct perf_evlist *evlist);
+ #endif /* __PERF_EVLIST_H */
 -- 
 2.13.6
