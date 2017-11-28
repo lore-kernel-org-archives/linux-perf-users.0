@@ -1,51 +1,138 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/30] perf test: Fix test 21 for s390x
-Date: Tue, 28 Nov 2017 12:02:10 -0300
-Message-ID: <20171128150220.5064-21-acme@kernel.org>
+Subject: [PATCH 19/30] perf bench numa: Fixup discontiguous/sparse numa nodes
+Date: Tue, 28 Nov 2017 12:02:09 -0300
+Message-ID: <20171128150220.5064-20-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>, Balamuruhan S <bala24@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 
-Test case 21 (Number of exit events of a simple workload) fails on
-s390x. The reason is the invalid sample frequency supplied for this
-test. On s390x the minimum sample frequency is much higher (see output
-of /proc/service_levels).
+Certain systems are designed to have sparse/discontiguous nodes.  On
+such systems, 'perf bench numa' hangs, shows wrong number of nodes and
+shows values for non-existent nodes. Handle this by only taking nodes
+that are exposed by kernel to userspace.
 
-Supply a save sample frequency value for s390x to fix this.  The value
-will be adjusted by the s390x CPUMF frequency convertion function to a
-value well below the sysctl kernel.perf_event_max_sample_rate value.
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-LPU-Reference: 20171123114611.93397-1-tmricht@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/n/tip-1ynblyhi1n81idpido59nt1y@git.kernel.org
+Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/1edbcd353c009e109e93d78f2f46381930c340fe.1511368645.git.sathnaga@linux.vnet.ibm.com
+Signed-off-by: Balamuruhan S <bala24@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/task-exit.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/bench/numa.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index bc4a7344e274..89c8e1604ca7 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -84,7 +84,11 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index d95fdcc26f4b..944070e98a2c 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -216,6 +216,47 @@ static const char * const numa_usage[] = {
+ 	NULL
+ };
  
- 	evsel = perf_evlist__first(evlist);
- 	evsel->attr.task = 1;
-+#ifdef __s390x__
-+	evsel->attr.sample_freq = 1000000;
-+#else
- 	evsel->attr.sample_freq = 1;
-+#endif
- 	evsel->attr.inherit = 0;
- 	evsel->attr.watermark = 0;
- 	evsel->attr.wakeup_events = 1;
++/*
++ * To get number of numa nodes present.
++ */
++static int nr_numa_nodes(void)
++{
++	int i, nr_nodes = 0;
++
++	for (i = 0; i < g->p.nr_nodes; i++) {
++		if (numa_bitmask_isbitset(numa_nodes_ptr, i))
++			nr_nodes++;
++	}
++
++	return nr_nodes;
++}
++
++/*
++ * To check if given numa node is present.
++ */
++static int is_node_present(int node)
++{
++	return numa_bitmask_isbitset(numa_nodes_ptr, node);
++}
++
++/*
++ * To check given numa node has cpus.
++ */
++static bool node_has_cpus(int node)
++{
++	struct bitmask *cpu = numa_allocate_cpumask();
++	unsigned int i;
++
++	if (cpu && !numa_node_to_cpus(node, cpu)) {
++		for (i = 0; i < cpu->size; i++) {
++			if (numa_bitmask_isbitset(cpu, i))
++				return true;
++		}
++	}
++
++	return false; /* lets fall back to nocpus safely */
++}
++
+ static cpu_set_t bind_to_cpu(int target_cpu)
+ {
+ 	cpu_set_t orig_mask, mask;
+@@ -244,12 +285,12 @@ static cpu_set_t bind_to_cpu(int target_cpu)
+ 
+ static cpu_set_t bind_to_node(int target_node)
+ {
+-	int cpus_per_node = g->p.nr_cpus/g->p.nr_nodes;
++	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
+ 	cpu_set_t orig_mask, mask;
+ 	int cpu;
+ 	int ret;
+ 
+-	BUG_ON(cpus_per_node*g->p.nr_nodes != g->p.nr_cpus);
++	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
+ 	BUG_ON(!cpus_per_node);
+ 
+ 	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
+@@ -649,7 +690,7 @@ static int parse_setup_node_list(void)
+ 			int i;
+ 
+ 			for (i = 0; i < mul; i++) {
+-				if (t >= g->p.nr_tasks) {
++				if (t >= g->p.nr_tasks || !node_has_cpus(bind_node)) {
+ 					printf("\n# NOTE: ignoring bind NODEs starting at NODE#%d\n", bind_node);
+ 					goto out;
+ 				}
+@@ -964,6 +1005,8 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
+ 	sum = 0;
+ 
+ 	for (node = 0; node < g->p.nr_nodes; node++) {
++		if (!is_node_present(node))
++			continue;
+ 		nr = nodes[node];
+ 		nr_min = min(nr, nr_min);
+ 		nr_max = max(nr, nr_max);
+@@ -984,8 +1027,11 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
+ 	process_groups = 0;
+ 
+ 	for (node = 0; node < g->p.nr_nodes; node++) {
+-		int processes = count_node_processes(node);
++		int processes;
+ 
++		if (!is_node_present(node))
++			continue;
++		processes = count_node_processes(node);
+ 		nr = nodes[node];
+ 		tprintf(" %2d/%-2d", nr, processes);
+ 
+@@ -1291,7 +1337,7 @@ static void print_summary(void)
+ 
+ 	printf("\n ###\n");
+ 	printf(" # %d %s will execute (on %d nodes, %d CPUs):\n",
+-		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", g->p.nr_nodes, g->p.nr_cpus);
++		g->p.nr_tasks, g->p.nr_tasks == 1 ? "task" : "tasks", nr_numa_nodes(), g->p.nr_cpus);
+ 	printf(" #      %5dx %5ldMB global  shared mem operations\n",
+ 			g->p.nr_loops, g->p.bytes_global/1024/1024);
+ 	printf(" #      %5dx %5ldMB process shared mem operations\n",
 -- 
 2.13.6
