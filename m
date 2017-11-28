@@ -1,100 +1,120 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/30] tools headers: Synchronize KVM arch ABI headers
-Date: Tue, 28 Nov 2017 12:02:17 -0300
-Message-ID: <20171128150220.5064-28-acme@kernel.org>
+Subject: [PATCH 26/30] tools headers: Synchronize drm/i915_drm.h
+Date: Tue, 28 Nov 2017 12:02:16 -0300
+Message-ID: <20171128150220.5064-27-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753749AbdK1PDp (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 28 Nov 2017 10:03:45 -0500
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Christoffer Dall <cdall@linaro.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up changes from these csets:
+To pick up the changes from these csets:
 
-  da9a1446d248 ("KVM: s390: provide a capability for AIS state migration")
-  5c5196da4e96 ("KVM: arm/arm64: Support EL1 phys timer register access in set/get reg")
+  bf64e0b00e1f ("drm/i915: Expand I915_PARAM_HAS_SCHEDULER into a capability bitmask")
+  ac14fbd460d0 ("drm/i915/scheduler: Support user-defined priorities")
+  822a4b673284 ("drm/i915: Don't use BIT() in UAPI section")
+  3fd3a6ffe279 ("drm/i915: Simplify i915_reg_read_ioctl")
 
-None of which affects buildint tools/perf/.
+None of them affects how the tools are built, this os done just to
+silence this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Christoffer Dall <cdall@linaro.org>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-dd72s6izo4qdzt1isowlz8ji@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-d2gor8brpcowe7bcxovjhqwm@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm/include/uapi/asm/kvm.h   | 7 +++++++
- tools/arch/arm64/include/uapi/asm/kvm.h | 7 +++++++
- tools/include/uapi/linux/kvm.h          | 1 +
- 3 files changed, 15 insertions(+)
+ tools/include/uapi/drm/i915_drm.h | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/tools/arch/arm/include/uapi/asm/kvm.h b/tools/arch/arm/include/uapi/asm/kvm.h
-index 1f57bbe82b6f..6edd177bb1c7 100644
---- a/tools/arch/arm/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm/include/uapi/asm/kvm.h
-@@ -152,6 +152,12 @@ struct kvm_arch_memory_slot {
- 	(__ARM_CP15_REG(op1, 0, crm, 0) | KVM_REG_SIZE_U64)
- #define ARM_CP15_REG64(...) __ARM_CP15_REG64(__VA_ARGS__)
+diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
+index 9816590d3ad2..ac3c6503ca27 100644
+--- a/tools/include/uapi/drm/i915_drm.h
++++ b/tools/include/uapi/drm/i915_drm.h
+@@ -397,10 +397,20 @@ typedef struct drm_i915_irq_wait {
+ #define I915_PARAM_MIN_EU_IN_POOL	 39
+ #define I915_PARAM_MMAP_GTT_VERSION	 40
  
-+/* PL1 Physical Timer Registers */
-+#define KVM_REG_ARM_PTIMER_CTL		ARM_CP15_REG32(0, 14, 2, 1)
-+#define KVM_REG_ARM_PTIMER_CNT		ARM_CP15_REG64(0, 14)
-+#define KVM_REG_ARM_PTIMER_CVAL		ARM_CP15_REG64(2, 14)
+-/* Query whether DRM_I915_GEM_EXECBUFFER2 supports user defined execution
++/*
++ * Query whether DRM_I915_GEM_EXECBUFFER2 supports user defined execution
+  * priorities and the driver will attempt to execute batches in priority order.
++ * The param returns a capability bitmask, nonzero implies that the scheduler
++ * is enabled, with different features present according to the mask.
++ *
++ * The initial priority for each batch is supplied by the context and is
++ * controlled via I915_CONTEXT_PARAM_PRIORITY.
+  */
+ #define I915_PARAM_HAS_SCHEDULER	 41
++#define   I915_SCHEDULER_CAP_ENABLED	(1ul << 0)
++#define   I915_SCHEDULER_CAP_PRIORITY	(1ul << 1)
++#define   I915_SCHEDULER_CAP_PREEMPTION	(1ul << 2)
 +
-+/* Virtual Timer Registers */
- #define KVM_REG_ARM_TIMER_CTL		ARM_CP15_REG32(0, 14, 3, 1)
- #define KVM_REG_ARM_TIMER_CNT		ARM_CP15_REG64(1, 14)
- #define KVM_REG_ARM_TIMER_CVAL		ARM_CP15_REG64(3, 14)
-@@ -216,6 +222,7 @@ struct kvm_arch_memory_slot {
- #define   KVM_DEV_ARM_ITS_SAVE_TABLES		1
- #define   KVM_DEV_ARM_ITS_RESTORE_TABLES	2
- #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
-+#define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+ #define I915_PARAM_HUC_STATUS		 42
  
- /* KVM_IRQ_LINE irq field index values */
- #define KVM_ARM_IRQ_TYPE_SHIFT		24
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index 51149ec75fe4..9abbf3044654 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -196,6 +196,12 @@ struct kvm_arch_memory_slot {
- 
- #define ARM64_SYS_REG(...) (__ARM64_SYS_REG(__VA_ARGS__) | KVM_REG_SIZE_U64)
- 
-+/* Physical Timer EL0 Registers */
-+#define KVM_REG_ARM_PTIMER_CTL		ARM64_SYS_REG(3, 3, 14, 2, 1)
-+#define KVM_REG_ARM_PTIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 2, 2)
-+#define KVM_REG_ARM_PTIMER_CNT		ARM64_SYS_REG(3, 3, 14, 0, 1)
+ /* Query whether DRM_I915_GEM_EXECBUFFER2 supports the ability to opt-out of
+@@ -1309,14 +1319,16 @@ struct drm_i915_reg_read {
+ 	 * be specified
+ 	 */
+ 	__u64 offset;
++#define I915_REG_READ_8B_WA (1ul << 0)
 +
-+/* EL0 Virtual Timer Registers */
- #define KVM_REG_ARM_TIMER_CTL		ARM64_SYS_REG(3, 3, 14, 3, 1)
- #define KVM_REG_ARM_TIMER_CNT		ARM64_SYS_REG(3, 3, 14, 3, 2)
- #define KVM_REG_ARM_TIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 0, 2)
-@@ -228,6 +234,7 @@ struct kvm_arch_memory_slot {
- #define   KVM_DEV_ARM_ITS_SAVE_TABLES           1
- #define   KVM_DEV_ARM_ITS_RESTORE_TABLES        2
- #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
-+#define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+ 	__u64 val; /* Return value */
+ };
+ /* Known registers:
+  *
+  * Render engine timestamp - 0x2358 + 64bit - gen7+
+  * - Note this register returns an invalid value if using the default
+- *   single instruction 8byte read, in order to workaround that use
+- *   offset (0x2538 | 1) instead.
++ *   single instruction 8byte read, in order to workaround that pass
++ *   flag I915_REG_READ_8B_WA in offset field.
+  *
+  */
  
- /* Device Control API on vcpu fd */
- #define KVM_ARM_VCPU_PMU_V3_CTRL	0
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 7e99999d6236..282d7613fce8 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -931,6 +931,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_SMT_POSSIBLE 147
- #define KVM_CAP_HYPERV_SYNIC2 148
- #define KVM_CAP_HYPERV_VP_INDEX 149
-+#define KVM_CAP_S390_AIS_MIGRATION 150
+@@ -1359,6 +1371,10 @@ struct drm_i915_gem_context_param {
+ #define I915_CONTEXT_PARAM_GTT_SIZE	0x3
+ #define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE	0x4
+ #define I915_CONTEXT_PARAM_BANNABLE	0x5
++#define I915_CONTEXT_PARAM_PRIORITY	0x6
++#define   I915_CONTEXT_MAX_USER_PRIORITY	1023 /* inclusive */
++#define   I915_CONTEXT_DEFAULT_PRIORITY		0
++#define   I915_CONTEXT_MIN_USER_PRIORITY	-1023 /* inclusive */
+ 	__u64 value;
+ };
  
- #ifdef KVM_CAP_IRQ_ROUTING
+@@ -1510,9 +1526,14 @@ struct drm_i915_perf_oa_config {
+ 	__u32 n_boolean_regs;
+ 	__u32 n_flex_regs;
  
+-	__u64 __user mux_regs_ptr;
+-	__u64 __user boolean_regs_ptr;
+-	__u64 __user flex_regs_ptr;
++	/*
++	 * These fields are pointers to tuples of u32 values (register
++	 * address, value). For example the expected length of the buffer
++	 * pointed by mux_regs_ptr is (2 * sizeof(u32) * n_mux_regs).
++	 */
++	__u64 mux_regs_ptr;
++	__u64 boolean_regs_ptr;
++	__u64 flex_regs_ptr;
+ };
+ 
+ #if defined(__cplusplus)
 -- 
 2.13.6
