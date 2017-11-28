@@ -1,89 +1,87 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH] perf annotate: Fix objdump comment parsing for Intel mov dissassembly
-Date: Tue, 28 Nov 2017 08:56:32 +0100
-Message-ID: <20171128075632.72182-1-tmricht@linux.vnet.ibm.com>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Question to perf annotate handling mov ...(%rip) instructions
+Date: Tue, 28 Nov 2017 11:42:16 +0100
+Message-ID: <f241fe0b-7a3f-cb6a-51ee-4833bce81e70@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750850AbdK1H4n (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44570 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S932462AbdK1KmW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Nov 2017 02:56:43 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAS7sSFB029734
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2017 02:56:42 -0500
-Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2eh1hgddvb-1
+        Tue, 28 Nov 2017 05:42:22 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vASAdNIl060132
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2017 05:42:22 -0500
+Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2eh45c645m-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2017 02:56:42 -0500
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2017 05:42:21 -0500
 Received: from localhost
-        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 28 Nov 2017 07:56:39 -0000
+        Tue, 28 Nov 2017 10:42:20 -0000
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
 
-The command 'perf annotate' parses the output of objdump and also
-investigates the comments produced by objdump. For example the
-output of objdump produces (on x86):
+I am confused by perf annotate internals.
 
-23eee:  4c 8b 3d 13 01 21 00 mov 0x210113(%rip),%r15
-                                # 234008 <stderr@@GLIBC_2.2.5+0x9a8>
+Perf annotate examines a perf.data file and shows disassembler output.
+However the output differs depending on the output option specified:
 
-and the function mov__parse() is called to investigate the complete
-line. Mov__parse() breaks this line into several parts and finally
-calls function comment__symbol() to parse the data after the comment
-character '#'. Comment__symbol() expects a hexadecimal address followed
-by a symbol in '<' and '>' brackets.
+‑‑stdio: Output to stdout, also selected implicitly when output piped to another
+process or redirected to a file. The function call sequence is 
 
-However the 2nd parameter given to function comment__symbol()
-always points to the comment character '#'. The address parsing
-always returns 0 because the character '#' is not a digit and
-strtoull() fails without being noticed.
+symbol__tty_annotate() –> symbol__annotate_printf() –> disasm_line__print().
 
-Fix this by advancing the second parameter to function comment__symbol()
-by one byte before invocation and add an error check after strtoull()
-has been called.
+This output style does not annotate the branch instructions nor does it use special 
+printing functions in the util/annotate.c, for example mov__scnprintf().
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
----
- tools/perf/util/annotate.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+‑‑tui: Default. there are annotations to augment branches, jumps, fct returns 
+with arrows for interactive usage. The function call stack starts with 
+symbol__tui_annotate(). 
+There is also special treatment for the Intel mov instructions of the form:
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index aa66791b1bfc..900147454fe9 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -323,6 +323,8 @@ static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
- 		return 0;
- 
- 	*addrp = strtoull(comment, &endptr, 16);
-+	if (endptr == comment)
-+		return 0;
- 	name = strchr(endptr, '<');
- 	if (name == NULL)
- 		return -1;
-@@ -436,8 +438,8 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map *m
- 		return 0;
- 
- 	comment = ltrim(comment);
--	comment__symbol(ops->source.raw, comment, &ops->source.addr, &ops->source.name);
--	comment__symbol(ops->target.raw, comment, &ops->target.addr, &ops->target.name);
-+	comment__symbol(ops->source.raw, comment + 1, &ops->source.addr, &ops->source.name);
-+	comment__symbol(ops->target.raw, comment + 1, &ops->target.addr, &ops->target.name);
- 
- 	return 0;
- 
-@@ -481,7 +483,7 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
- 		return 0;
- 
- 	comment = ltrim(comment);
--	comment__symbol(ops->target.raw, comment, &ops->target.addr, &ops->target.name);
-+	comment__symbol(ops->target.raw, comment + 1, &ops->target.addr, &ops->target.name);
- 
- 	return 0;
- }
+00000000000060b0 <_init@@Base>: 
+.... 
+60b4:       48 8b 05 35 cd 22 00    mov 0x22cd35(%rip),%rax   # 232df0 <__gmon_start__>     
+
+Commit 6de783b6f50f7f1db18a3fda0aa34b2e84b5771d ("perf annotate: Resolve symbols 
+using objdump comment") added this support.
+
+Special code for Intel platform handles the mov  at address 60b4: 
+This is dynamic linkage against the PLT. Function mov__parse() is always called 
+to parse the objdump comment following the '#' character. 
+However the function mov__scnprintf() to replace the text '0x22cd35(%rip)' by the 
+target function name __gmon_start__ is only called in tui mode and not in stdio mode.
+
+Now to the confusion:
+Function mov__parse() calls comment__symbol() which contains:
+
+   static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
+   {
+        char *endptr, *name, *t;
+
+        if (strstr(raw, "(%rip)") == NULL)
+                return 0;
+
+This is architecture specific and does not work for non-Intel platforms.
+
+I would like to fix perf annotate for s390x and above move instruction on s390x
+is
+     
+    655a:       c0 10 00 01 9c eb       larl    %r1,39f30 <__gmon_start__>
+
+There is a need to handle PLT resolution in an architecture independent way.
+
+Ideas and suggestions?
+
 -- 
-2.13.4
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
