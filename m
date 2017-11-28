@@ -1,69 +1,54 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/30] perf machine: Guard against NULL in machine__exit()
-Date: Tue, 28 Nov 2017 12:01:57 -0300
-Message-ID: <20171128150220.5064-8-acme@kernel.org>
+Subject: [PATCH 05/30] perf evsel: Fix up leftover perf_evsel_stat usage via evsel->priv
+Date: Tue, 28 Nov 2017 12:01:55 -0300
+Message-ID: <20171128150220.5064-6-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrei Vagin <avagin@openvz.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Vasily Averin <vvs@virtuozzo.com>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A recent fix for 'perf trace' introduced a bug where
-machine__exit(trace->host) could be called while trace->host was still
-NULL, so make this more robust by guarding against NULL, just like
-free() does.
+I forgot one conversion, which got noticed by Thomas when running:
 
-The problem happens, for instance, when !root users try to run 'perf
-trace':
-
-  [acme@jouet linux]$ trace
-  Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
-  Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
-
-  perf: Segmentation fault
-  Obtained 7 stack frames.
-  [0x4f1b2e]
-  /lib64/libc.so.6(+0x3671f) [0x7f43a1dd971f]
-  [0x4f3fec]
-  [0x47468b]
-  [0x42a2db]
-  /lib64/libc.so.6(__libc_start_main+0xe9) [0x7f43a1dc3509]
-  [0x42a6c9]
+  $ perf stat  -e '{cpu-clock,instructions}' kill
+  kill: not enough arguments
   Segmentation fault (core dumped)
-  [acme@jouet linux]$
+  $
 
+Fix it, those stats are in evsel->stats, not anymore in evsel->priv.
+
+Reported-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vasily Averin <vvs@virtuozzo.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 33974a414ce2 ("perf trace: Call machine__exit() at exit")
+Fixes: e669e833da8d ("perf evsel: Restore evsel->priv as a tool private area")
+Link: http://lkml.kernel.org/r/20171109150046.GN4333@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/evsel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 6a8d03c3d9b7..270f3223c6df 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -172,6 +172,9 @@ void machine__exit(struct machine *machine)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index bfde6a7a80f2..d5fbcf8c7aa7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1375,7 +1375,7 @@ perf_evsel__process_group_data(struct perf_evsel *leader,
+ static int
+ perf_evsel__read_group(struct perf_evsel *leader, int cpu, int thread)
  {
- 	int i;
- 
-+	if (machine == NULL)
-+		return;
-+
- 	machine__destroy_kernel_maps(machine);
- 	map_groups__exit(&machine->kmaps);
- 	dsos__exit(&machine->dsos);
+-	struct perf_stat_evsel *ps = leader->priv;
++	struct perf_stat_evsel *ps = leader->stats;
+ 	u64 read_format = leader->attr.read_format;
+ 	int size = perf_evsel__read_size(leader);
+ 	u64 *data = ps->group_data;
 -- 
 2.13.6
