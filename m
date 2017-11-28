@@ -1,46 +1,88 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/30] perf report: Ignore kptr_restrict when not sampling the kernel
-Date: Tue, 28 Nov 2017 12:02:03 -0300
-Message-ID: <20171128150220.5064-14-acme@kernel.org>
+Subject: [PATCH 17/30] perf top: Fix window dimensions change handling
+Date: Tue, 28 Nov 2017 12:02:07 -0300
+Message-ID: <20171128150220.5064-18-acme@kernel.org>
 References: <20171128150220.5064-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171128150220.5064-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-If none of the evsels has attr.exclude_kernel set to zero, no kernel
-samples, so no point in warning the user about problems in processing
-kernel samples, as there will be none.
+The stdio perf top crashes when we change the terminal
+window size. The reason is that we assumed we get the
+perf_top pointer as a signal handler argument which is
+not the case.
 
+Changing the SIGWINCH handler logic to change global
+resize variable, which is checked in the main thread
+loop.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/n/tip-7dn926v3at8txxkky92aesz2@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-ysuzwz77oev1ftgvdscn9bpu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/builtin-top.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1394cd8d96f7..af5dd038195e 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -441,6 +441,9 @@ static void report__warn_kptr_restrict(const struct report *rep)
- 	struct map *kernel_map = machine__kernel_map(&rep->session->machines.host);
- 	struct kmap *kernel_kmap = kernel_map ? map__kmap(kernel_map) : NULL;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1b01c277bab9..489573883936 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -77,6 +77,7 @@
+ #include "sane_ctype.h"
  
-+	if (perf_evlist__exclude_kernel(rep->session->evlist))
-+		return;
+ static volatile int done;
++static volatile int resize;
+ 
+ #define HEADER_LINE_NR  5
+ 
+@@ -86,10 +87,13 @@ static void perf_top__update_print_entries(struct perf_top *top)
+ }
+ 
+ static void perf_top__sig_winch(int sig __maybe_unused,
+-				siginfo_t *info __maybe_unused, void *arg)
++				siginfo_t *info __maybe_unused, void *arg __maybe_unused)
+ {
+-	struct perf_top *top = arg;
++	resize = 1;
++}
+ 
++static void perf_top__resize(struct perf_top *top)
++{
+ 	get_term_dimensions(&top->winsize);
+ 	perf_top__update_print_entries(top);
+ }
+@@ -477,7 +481,7 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ 					.sa_sigaction = perf_top__sig_winch,
+ 					.sa_flags     = SA_SIGINFO,
+ 				};
+-				perf_top__sig_winch(SIGWINCH, NULL, top);
++				perf_top__resize(top);
+ 				sigaction(SIGWINCH, &act, NULL);
+ 			} else {
+ 				signal(SIGWINCH, SIG_DFL);
+@@ -1032,6 +1036,11 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 		if (hits == top->samples)
+ 			ret = perf_evlist__poll(top->evlist, 100);
 +
- 	if (kernel_map == NULL ||
- 	    (kernel_map->dso->hit &&
- 	     (kernel_kmap->ref_reloc_sym == NULL ||
++		if (resize) {
++			perf_top__resize(top);
++			resize = 0;
++		}
+ 	}
+ 
+ 	ret = 0;
 -- 
 2.13.6
