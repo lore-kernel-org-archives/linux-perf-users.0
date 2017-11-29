@@ -1,65 +1,90 @@
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
 Subject: Re: [PATCH] perf annotate: Fix objdump comment parsing for Intel mov
  dissassembly
-Date: Wed, 29 Nov 2017 18:54:02 +0530
-Message-ID: <69859e3b-cb22-a536-79ca-ffc44c3f86a8@linux.vnet.ibm.com>
+Date: Wed, 29 Nov 2017 16:03:07 +0100
+Message-ID: <d2e2818d-6d49-c208-68f5-8cd28034bbfc@linux.vnet.ibm.com>
 References: <20171128075632.72182-1-tmricht@linux.vnet.ibm.com>
+ <69859e3b-cb22-a536-79ca-ffc44c3f86a8@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33078 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1752681AbdK2NXg (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34308 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1755071AbdK2PDR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Nov 2017 08:23:36 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vATDKk9o059014
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 08:23:36 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ehurtnsbt-1
+        Wed, 29 Nov 2017 10:03:17 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vATF17d1124631
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 10:03:16 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ehwkhn538-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 08:23:35 -0500
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 10:03:15 -0500
 Received: from localhost
-        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <ravi.bangoria@linux.vnet.ibm.com>;
-        Wed, 29 Nov 2017 13:23:34 -0000
-In-Reply-To: <20171128075632.72182-1-tmricht@linux.vnet.ibm.com>
-Content-Language: en-US
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Wed, 29 Nov 2017 15:03:12 -0000
+In-Reply-To: <69859e3b-cb22-a536-79ca-ffc44c3f86a8@linux.vnet.ibm.com>
+Content-Language: en-IE
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+To: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+
+On 11/29/2017 02:24 PM, Ravi Bangoria wrote:
+> 
+> 
+> On 11/28/2017 01:26 PM, Thomas Richter wrote:
+>> The command 'perf annotate' parses the output of objdump and also
+>> investigates the comments produced by objdump. For example the
+>> output of objdump produces (on x86):
+>>
+>> 23eee:  4c 8b 3d 13 01 21 00 mov 0x210113(%rip),%r15
+>>                                 # 234008 <stderr@@GLIBC_2.2.5+0x9a8>
+>>
+>> and the function mov__parse() is called to investigate the complete
+>> line. Mov__parse() breaks this line into several parts and finally
+>> calls function comment__symbol() to parse the data after the comment
+>> character '#'. Comment__symbol() expects a hexadecimal address followed
+>> by a symbol in '<' and '>' brackets.
+>>
+>> However the 2nd parameter given to function comment__symbol()
+>> always points to the comment character '#'. The address parsing
+>> always returns 0 because the character '#' is not a digit and
+>> strtoull() fails without being noticed.
+>>
+>> Fix this by advancing the second parameter to function comment__symbol()
+>> by one byte before invocation and add an error check after strtoull()
+>> has been called.
+> 
+> Yeah, looks like it fails to get correct value in 'addrp'.
+> 
+> Can you please show the difference in perf annotate output before
+> and after patch.
+> 
+> Thanks,
+> Ravi
+> 
 
 
+There is no difference in output of --stdio. The adress value is not
+read and remains 0x0 in ops->source.addr or ops->target.addr.
+That is not visible because in function mov__scnprintf() that wrong
+address is not printed:
 
-On 11/28/2017 01:26 PM, Thomas Richter wrote:
-> The command 'perf annotate' parses the output of objdump and also
-> investigates the comments produced by objdump. For example the
-> output of objdump produces (on x86):
->
-> 23eee:  4c 8b 3d 13 01 21 00 mov 0x210113(%rip),%r15
->                                 # 234008 <stderr@@GLIBC_2.2.5+0x9a8>
->
-> and the function mov__parse() is called to investigate the complete
-> line. Mov__parse() breaks this line into several parts and finally
-> calls function comment__symbol() to parse the data after the comment
-> character '#'. Comment__symbol() expects a hexadecimal address followed
-> by a symbol in '<' and '>' brackets.
->
-> However the 2nd parameter given to function comment__symbol()
-> always points to the comment character '#'. The address parsing
-> always returns 0 because the character '#' is not a digit and
-> strtoull() fails without being noticed.
->
-> Fix this by advancing the second parameter to function comment__symbol()
-> by one byte before invocation and add an error check after strtoull()
-> has been called.
+static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
+                           struct ins_operands *ops)
+{
+        return scnprintf(bf, size, "%-6.6s %s,%s", ins->name,
+                         ops->source.name ?: ops->source.raw,
+                         ops->target.name ?: ops->target.raw);
+}
 
-Yeah, looks like it fails to get correct value in 'addrp'.
 
-Can you please show the difference in perf annotate output before
-and after patch.
-
-Thanks,
-Ravi
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
