@@ -1,102 +1,65 @@
 From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf annotate: Fix unnecessary memory allocation for
- s390x
-Date: Wed, 29 Nov 2017 18:04:56 +0530
-Message-ID: <a5f06775-0d93-d57d-809a-cb198578ebfc@linux.vnet.ibm.com>
-References: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf annotate: Fix objdump comment parsing for Intel mov
+ dissassembly
+Date: Wed, 29 Nov 2017 18:54:02 +0530
+Message-ID: <69859e3b-cb22-a536-79ca-ffc44c3f86a8@linux.vnet.ibm.com>
+References: <20171128075632.72182-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33078 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1752681AbdK2NXg (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 29 Nov 2017 08:23:36 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vATDKk9o059014
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 08:23:36 -0500
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ehurtnsbt-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 08:23:35 -0500
+Received: from localhost
+        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <ravi.bangoria@linux.vnet.ibm.com>;
+        Wed, 29 Nov 2017 13:23:34 -0000
+In-Reply-To: <20171128075632.72182-1-tmricht@linux.vnet.ibm.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>, acme@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 
 
 
-On 11/24/2017 03:16 PM, Thomas Richter wrote:
-> This patch fixes a bug introduced with commit d9f8dfa9baf9
-> ("perf annotate s390: Implement jump types for perf annotate").
+On 11/28/2017 01:26 PM, Thomas Richter wrote:
+> The command 'perf annotate' parses the output of objdump and also
+> investigates the comments produced by objdump. For example the
+> output of objdump produces (on x86):
 >
-> Perf annotate displays annotated assembler output by reading
-> output of command objdump and parsing the disassembled lines. For
-> each shown mnemonic this function sequence is executed:
+> 23eee:  4c 8b 3d 13 01 21 00 mov 0x210113(%rip),%r15
+>                                 # 234008 <stderr@@GLIBC_2.2.5+0x9a8>
 >
->   disasm_line__new()
->   |
->   +--> disasm_line__init_ins()
->        |
->        +--> ins__find()
->             |
->             +--> arch->associate_instruction_ops()
+> and the function mov__parse() is called to investigate the complete
+> line. Mov__parse() breaks this line into several parts and finally
+> calls function comment__symbol() to parse the data after the comment
+> character '#'. Comment__symbol() expects a hexadecimal address followed
+> by a symbol in '<' and '>' brackets.
 >
-> The s390x specific function assigned to function pointer
-> associate_instruction_ops refers to function
-> s390__associate_ins_ops(). This function checks for supported
-> mnemonics and assigns a NULL pointer to unsupported mnemonics.
-> However even the NULL pointer is added to the architecture
-> dependend instruction array.
+> However the 2nd parameter given to function comment__symbol()
+> always points to the comment character '#'. The address parsing
+> always returns 0 because the character '#' is not a digit and
+> strtoull() fails without being noticed.
 >
-> This leads to an extremely large architecture instruction array
-> (due to array resize logic in function arch__grow_instructions()).
-> Depending on the objdump output being parsed the array can end up
-> with several ten-thousand elements.
->
-> This patch checks if a mnemonic is supported and only adds
-> supported ones into the architecture instruction array. The
-> array does not contain elements with NULL pointers anymore.
->
-> Before the patch (With some debug printf output):
-> [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxbb
->
-> real	8m49.679s
-> user	7m13.008s
-> sys	0m1.649s
-> [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
-> 			/tmp/xxxbb | tail -1
-> __ins__find sorted:1 nr_instructions:87433 ins:0x341583c0
-> [root@s35lp76 perf]#
->
-> The number of different s390x branch/jump/call/return instructions
-> entered into the array is 87433.
->
-> After the patch (With some printf debug output:)
->
-> [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxaa
->
-> real	1m24.553s
-> user	0m0.587s
-> sys	0m1.530s
-> [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
-> 			/tmp/xxxaa | tail -1
-> __ins__find sorted:1 nr_instructions:56 ins:0x3f406570
-> [root@s35lp76 perf]#
->
-> The number of different s390x branch/jump/call/return instructions
-> entered into the array is 56 which is sensible.
+> Fix this by advancing the second parameter to function comment__symbol()
+> by one byte before invocation and add an error check after strtoull()
+> has been called.
 
-Ack-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Yeah, looks like it fails to get correct value in 'addrp'.
 
-> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-> ---
->  tools/perf/arch/s390/annotate/instructions.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-> index c9a81673e8aa..89f0b6c00e3f 100644
-> --- a/tools/perf/arch/s390/annotate/instructions.c
-> +++ b/tools/perf/arch/s390/annotate/instructions.c
-> @@ -16,7 +16,8 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
->  	if (!strcmp(name, "br"))
->  		ops = &ret_ops;
->
-> -	arch__associate_ins_ops(arch, name, ops);
-> +	if (ops)
-> +		arch__associate_ins_ops(arch, name, ops);
->  	return ops;
->  }
->
+Can you please show the difference in perf annotate output before
+and after patch.
+
+Thanks,
+Ravi
