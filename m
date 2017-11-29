@@ -1,103 +1,102 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: Question to perf annotate handling mov ...(%rip) instructions
-Date: Wed, 29 Nov 2017 10:26:59 +0100
-Message-ID: <25a6897f-dc5d-f515-aba9-1f44d140b36c@linux.vnet.ibm.com>
-References: <f241fe0b-7a3f-cb6a-51ee-4833bce81e70@linux.vnet.ibm.com>
- <20171128145030.GG3298@kernel.org> <20171129082950.GA26610@krava>
+From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf annotate: Fix unnecessary memory allocation for
+ s390x
+Date: Wed, 29 Nov 2017 18:04:56 +0530
+Message-ID: <a5f06775-0d93-d57d-809a-cb198578ebfc@linux.vnet.ibm.com>
+References: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1753178AbdK2J1I (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Nov 2017 04:27:08 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAT9NhrD031937
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 04:27:08 -0500
-Received: from e06smtp14.uk.ibm.com (e06smtp14.uk.ibm.com [195.75.94.110])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2eht7m84fm-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2017 04:27:05 -0500
-Received: from localhost
-        by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Wed, 29 Nov 2017 09:27:03 -0000
-In-Reply-To: <20171129082950.GA26610@krava>
-Content-Language: en-IE
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>, acme@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-On 11/29/2017 09:29 AM, Jiri Olsa wrote:
-> On Tue, Nov 28, 2017 at 11:50:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> SNIP
-> 
->>> Function mov__parse() calls comment__symbol() which contains:
->>>
->>>    static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
->>>    {
->>>         char *endptr, *name, *t;
->>>
->>>         if (strstr(raw, "(%rip)") == NULL)
->>>                 return 0;
->>>
->>> This is architecture specific and does not work for non-Intel platforms.
->>>
->>> I would like to fix perf annotate for s390x and above move instruction on s390x
->>> is
->>>      
->>>     655a:       c0 10 00 01 9c eb       larl    %r1,39f30 <__gmon_start__>
->>>
->>> There is a need to handle PLT resolution in an architecture independent way.
->>>
->>> Ideas and suggestions?
->>
->> Some historical background there, busy now, but you seem to be on the
->> right track and IIRC you already sent a patch for this, right? I'll try
->> to look at it.
->>
->> Jiri may as well, since he worked a lot recently in this codebase, to
->> refactor it some more to make it useful for annotating python code, perl
->> next, other scripted languages should follow too.
-> 
-> so we try to parse each line out of objdump using arch specific
-> ops callbacks, check:
-> 
-> disasm_line__new
->   disasm_line__init_ins
->     dl->ins.ops->parse(...
-> 
-> the ops stuff are defined in:
-> 
-> static struct arch architectures[] = { 
-> 
->         {
->                 .name = "s390",
->                 .init = s390__annotate_init,
->                 .objdump =  {
->                         .comment_char = '#',
->                 },
->         },
-> 
-> I'd check s390__annotate_init, there's some mechanism
-> of associating ops for arch and try to fit in ;-)
-> 
-> jirka
-> 
 
-Ahhhh, I get it now. The code in util/annotate.c (for example mov__parse())
-is in a common code file, but these functions are called via architecture 
-depended triggers.
 
-I'll go and try something for s390x to handle PLT resolution.
+On 11/24/2017 03:16 PM, Thomas Richter wrote:
+> This patch fixes a bug introduced with commit d9f8dfa9baf9
+> ("perf annotate s390: Implement jump types for perf annotate").
+>
+> Perf annotate displays annotated assembler output by reading
+> output of command objdump and parsing the disassembled lines. For
+> each shown mnemonic this function sequence is executed:
+>
+>   disasm_line__new()
+>   |
+>   +--> disasm_line__init_ins()
+>        |
+>        +--> ins__find()
+>             |
+>             +--> arch->associate_instruction_ops()
+>
+> The s390x specific function assigned to function pointer
+> associate_instruction_ops refers to function
+> s390__associate_ins_ops(). This function checks for supported
+> mnemonics and assigns a NULL pointer to unsupported mnemonics.
+> However even the NULL pointer is added to the architecture
+> dependend instruction array.
+>
+> This leads to an extremely large architecture instruction array
+> (due to array resize logic in function arch__grow_instructions()).
+> Depending on the objdump output being parsed the array can end up
+> with several ten-thousand elements.
+>
+> This patch checks if a mnemonic is supported and only adds
+> supported ones into the architecture instruction array. The
+> array does not contain elements with NULL pointers anymore.
+>
+> Before the patch (With some debug printf output):
+> [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxbb
+>
+> real	8m49.679s
+> user	7m13.008s
+> sys	0m1.649s
+> [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+> 			/tmp/xxxbb | tail -1
+> __ins__find sorted:1 nr_instructions:87433 ins:0x341583c0
+> [root@s35lp76 perf]#
+>
+> The number of different s390x branch/jump/call/return instructions
+> entered into the array is 87433.
+>
+> After the patch (With some printf debug output:)
+>
+> [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxaa
+>
+> real	1m24.553s
+> user	0m0.587s
+> sys	0m1.530s
+> [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+> 			/tmp/xxxaa | tail -1
+> __ins__find sorted:1 nr_instructions:56 ins:0x3f406570
+> [root@s35lp76 perf]#
+>
+> The number of different s390x branch/jump/call/return instructions
+> entered into the array is 56 which is sensible.
 
--- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Ack-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+> ---
+>  tools/perf/arch/s390/annotate/instructions.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+> index c9a81673e8aa..89f0b6c00e3f 100644
+> --- a/tools/perf/arch/s390/annotate/instructions.c
+> +++ b/tools/perf/arch/s390/annotate/instructions.c
+> @@ -16,7 +16,8 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+>  	if (!strcmp(name, "br"))
+>  		ops = &ret_ops;
+>
+> -	arch__associate_ins_ops(arch, name, ops);
+> +	if (ops)
+> +		arch__associate_ins_ops(arch, name, ops);
+>  	return ops;
+>  }
+>
