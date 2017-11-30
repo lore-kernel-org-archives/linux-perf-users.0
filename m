@@ -1,143 +1,112 @@
-From: Arnaldo de Melo <acme@redhat.com>
-Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
- trace'
-Date: Thu, 30 Nov 2017 13:59:22 -0200
-Message-ID: <20171130155922.GB2893@redhat.com>
-References: <alpine.LRH.2.20.1711291656270.9416@Diego>
- <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
- <20171130155642.GA2893@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf annotate: Fix unnecessary memory allocation for
+ s390x
+Date: Thu, 30 Nov 2017 16:05:25 -0300
+Message-ID: <20171130190525.GR3298@kernel.org>
+References: <20171124094637.55558-1-tmricht@linux.vnet.ibm.com>
+ <a5f06775-0d93-d57d-809a-cb198578ebfc@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:47380 "EHLO mx1.redhat.com"
+Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752135AbdK3P72 (ORCPT
+        id S1750890AbdK3TF2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Nov 2017 10:59:28 -0500
+        Thu, 30 Nov 2017 14:05:28 -0500
 Content-Disposition: inline
-In-Reply-To: <20171130155642.GA2893@redhat.com>
+In-Reply-To: <a5f06775-0d93-d57d-809a-cb198578ebfc@linux.vnet.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
+To: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 
-Em Thu, Nov 30, 2017 at 01:56:42PM -0200, Arnaldo de Melo escreveu:
-> Em Thu, Nov 30, 2017 at 11:28:33AM +0100, Thomas-Mich Richter escreveu:
-> > On 11/29/2017 06:27 PM, Michael Petlan wrote:
-> > > Hi Arnaldo, Jiri and others!
-> > > 
-> > > Posting a fix for perf test "Check open filename arg using perf trace + vfs_getname".
-> > > 
-> > > The commit f231af789b11a2f1a3795acc3228a3e178a80c21 adds an exception for s390x to
-> > > use openat() syscall instead of open(). This exception is not s390x-only, thus I
-> > > adjusted the test to accept both open and openat syscalls, no matter which arch it
-> > > runs on. Does it sound reasonable to you?
-> > > 
-> > > 
-> > > When testing on 4.15.0-rc1, I also hit the following issue:
-> > > 
-> > > # perf probe "vfs_getname=getname_flags:72 pathname=result->name:string"
-> > > Failed to find 'result' in this function.
-> > >   Error: Failed to add events.
-> > > 
-> > > # perf probe -L getname_flags 
-> > > [...]
-> > >      72         result->uptr = filename;
-> > >      73         result->aname = NULL;
-> > > [...]
-> > > 
-> > > # perf probe "vfs_getname=getname_flags:72 pathname=result->uptr:string"
-> > > Failed to find 'result' in this function.
-> > >   Error: Failed to add events.
-> > > 
-> > > ... When the probed var is changed to "filename", it seems to work:
-> > > 
-> > > # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
-> > > Added new event:
-> > >   probe:vfs_getname    (on getname_flags:72 with pathname=filename:string)
-> > > 
-> > > You can now use it in all perf tools, such as:
-> > > 
-> > > 	perf record -e probe:vfs_getname -aR sleep 1
-> > > 
-> > > 
-> > > So maybe the second attached patch is necessary too, not sure. Just thinking
-> > > that "filename" might be less change-prone, as a func. arg... ?
-> > > 
-> > > Thank you.
-> > > 
-> > > Cheers,
-> > > Michael
-> > > 
-> > 
-> > Maybe I have done something wrong when I tried your patch. I have download
-> > latest 4.15.0rc1 but your patch does not work for me.
-> > My perf tool does not handle wild cards on events:
-> > 
-> > root@s35lp76 shell]# /root/linux/tools/perf/perf  trace -e 'open' touch /tmp/xxx
-> >      0.000 ( 0.013 ms): touch/28615 open(filename: 0xbc990692, flags: CLOEXEC                             ) = 3
-> > [root@s35lp76 shell]# /root/linux/tools/perf/perf  trace -e 'openat' touch /tmp/xxx
-> >      0.000 ( 0.011 ms): touch/28617 openat(dfd: CWD, filename: 0xa7324328, flags: CLOEXEC                 ) = 3
-> >      0.037 ( 0.009 ms): touch/28617 openat(dfd: CWD, filename: 0xa737de60, flags: CLOEXEC                 ) = 3
-> >      0.454 ( 0.015 ms): touch/28617 openat(dfd: CWD, filename: 0xeebff57c, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> > [root@s35lp76 shell]# /root/linux/tools/perf/perf  trace -e 'open*' touch /tmp/xxx
-> > event syntax error: 'open*'
-> >                      \___ Cannot find PMU `open*'. Missing kernel support?
-> > Run 'perf list' for a list of valid events
-> > 
-> >  Usage: perf trace [<options>] [<command>]
-> >     or: perf trace [<options>] -- <command> [<options>]
-> >     or: perf trace record [<options>] [<command>]
-> >     or: perf trace record [<options>] -- <command> [<options>]
-> > 
-> >     -e, --event <event>   event/syscall selector. use 'perf list' to list available events
-> > [root@s35lp76 shell]# 
-> > 
-> > Is this a configuration error on my side?
+Em Wed, Nov 29, 2017 at 06:04:56PM +0530, Ravi Bangoria escreveu:
 > 
-> [acme@jouet linux]$ git log -1 27702bcfe8a125a1feeeb5f07526d63b20cac47f --oneline
-> 27702bcfe8a1 perf trace: Support syscall name globbing
-> [acme@jouet linux]$
 > 
-> Is in v4.14 final.
+> On 11/24/2017 03:16 PM, Thomas Richter wrote:
+> > This patch fixes a bug introduced with commit d9f8dfa9baf9
+> > ("perf annotate s390: Implement jump types for perf annotate").
+> >
+> > Perf annotate displays annotated assembler output by reading
+> > output of command objdump and parsing the disassembled lines. For
+> > each shown mnemonic this function sequence is executed:
+> >
+> >   disasm_line__new()
+> >   |
+> >   +--> disasm_line__init_ins()
+> >        |
+> >        +--> ins__find()
+> >             |
+> >             +--> arch->associate_instruction_ops()
+> >
+> > The s390x specific function assigned to function pointer
+> > associate_instruction_ops refers to function
+> > s390__associate_ins_ops(). This function checks for supported
+> > mnemonics and assigns a NULL pointer to unsupported mnemonics.
+> > However even the NULL pointer is added to the architecture
+> > dependend instruction array.
+> >
+> > This leads to an extremely large architecture instruction array
+> > (due to array resize logic in function arch__grow_instructions()).
+> > Depending on the objdump output being parsed the array can end up
+> > with several ten-thousand elements.
+> >
+> > This patch checks if a mnemonic is supported and only adds
+> > supported ones into the architecture instruction array. The
+> > array does not contain elements with NULL pointers anymore.
+> >
+> > Before the patch (With some debug printf output):
+> > [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxbb
+> >
+> > real	8m49.679s
+> > user	7m13.008s
+> > sys	0m1.649s
+> > [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+> > 			/tmp/xxxbb | tail -1
+> > __ins__find sorted:1 nr_instructions:87433 ins:0x341583c0
+> > [root@s35lp76 perf]#
+> >
+> > The number of different s390x branch/jump/call/return instructions
+> > entered into the array is 87433.
+> >
+> > After the patch (With some printf debug output:)
+> >
+> > [root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxaa
+> >
+> > real	1m24.553s
+> > user	0m0.587s
+> > sys	0m1.530s
+> > [root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
+> > 			/tmp/xxxaa | tail -1
+> > __ins__find sorted:1 nr_instructions:56 ins:0x3f406570
+> > [root@s35lp76 perf]#
+> >
+> > The number of different s390x branch/jump/call/return instructions
+> > entered into the array is 56 which is sensible.
 > 
-> Testing with/without those quotes:
-> 
-> [root@jouet ~]# perf trace -e open* touch /etc/passwd
->      0.000 ( 0.007 ms): touch/17246 open(filename: 0x99747e37, flags: CLOEXEC                             ) = 3
->      0.022 ( 0.004 ms): touch/17246 open(filename: 0x9994b640, flags: CLOEXEC                             ) = 3
->      0.189 ( 0.004 ms): touch/17246 open(filename: 0x994f1c70, flags: CLOEXEC                             ) = 3
->      0.224 ( 0.056 ms): touch/17246 open(filename: 0xaa80a32a, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> [root@jouet ~]# perf trace -e 'open*' touch /etc/passwd
->      0.000 ( 0.039 ms): touch/17250 open(filename: 0xf1445e37, flags: CLOEXEC                             ) = 3
->      0.107 ( 0.030 ms): touch/17250 open(filename: 0xf1649640, flags: CLOEXEC                             ) = 3
->      0.976 ( 0.009 ms): touch/17250 open(filename: 0xf11efc70, flags: CLOEXEC                             ) = 3
->      1.032 ( 0.008 ms): touch/17250 open(filename: 0x9357432a, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> [root@jouet ~]#
-> 
-> What differs from x86 to others is that x86 uses syscalltbl, not requiring
-> audit-libs to map syscall numbers to names, so perhaps it is something in there...
+> Ack-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 
-Yeah :-\
-
-int syscalltbl__strglobmatch_next(struct syscalltbl *tbl __maybe_unused,
-                                  const char *syscall_glob __maybe_unused, int *idx __maybe_unused)
-{
-        return -1;
-}
-
-int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char
-*syscall_glob, int *idx)
-{
-        return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
-}
-#endif /* HAVE_SYSCALL_TABLE */
-
------
-
-So someone needs to implement syscalltbl__strglobmatch_next() for arches
-that don't HAVE_SYSCALL_TABLE, which is basically at this stage !x86.
-
-Shouldn't be that difficult, but remains to be done.
+Thanks, applied.
 
 - Arnaldo
+ 
+> > Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> > Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+> > ---
+> >  tools/perf/arch/s390/annotate/instructions.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+> > index c9a81673e8aa..89f0b6c00e3f 100644
+> > --- a/tools/perf/arch/s390/annotate/instructions.c
+> > +++ b/tools/perf/arch/s390/annotate/instructions.c
+> > @@ -16,7 +16,8 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+> >  	if (!strcmp(name, "br"))
+> >  		ops = &ret_ops;
+> >
+> > -	arch__associate_ins_ops(arch, name, ops);
+> > +	if (ops)
+> > +		arch__associate_ins_ops(arch, name, ops);
+> >  	return ops;
+> >  }
+> >
