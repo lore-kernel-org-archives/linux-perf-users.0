@@ -1,47 +1,51 @@
-From: bhargavb <bhargavaramudu@gmail.com>
-Subject: uprobes enable condition (user space) - sysfs interface
-Date: Thu, 30 Nov 2017 00:04:23 +0530
-Message-ID: <CA+bpL9+McSzeKW+eXHfMJMFRm-EenC9_0pGZkGpSdFzOVozKiw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-Sender: linux-rt-users-owner@vger.kernel.org
-To: linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Subject: [PATCH] perf s390: always build with -fPIC
+Date: Thu, 30 Nov 2017 09:49:25 +0100
+Message-ID: <1512031765-9382-1-git-send-email-brueckner@linux.vnet.ibm.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751395AbdK3Ito (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 30 Nov 2017 03:49:44 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vAU8icF7125204
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2017 03:49:44 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ejcwkd0yh-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2017 03:49:44 -0500
+Received: from localhost
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
+        Thu, 30 Nov 2017 08:49:41 -0000
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linux perf users list <linux-perf-users@vger.kernel.org>, Linux s390 list <linux-s390@vger.kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, jonathan.hermann@de.ibm.com
 
-Hello,
+On s390, object files must be compiled with position-indepedent code
+in order to be incrementally linked or linked to shared libraries.
+Therefore, add -fPIC to the CFLAGS for s390 to ensure each object
+file is built properly.
 
-I am trying to understand user space profiling using linux inbuilt
-mechanism. (Trying with perf also but could not get complete clear
-documentation and could not proceed, so retained linux-perf-users in
-to list as the underlying interface used is same for both).
+Reported-by: Jonathan Hermann <jonathan.hermann@de.ibm.com>
+Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/Makefile.config | 1 +
+ 1 file changed, 1 insertion(+)
 
-I observed below behaviour when I tried as per directions using URL:
-https://opensource.com/article/17/7/dynamic-tracing-linux-user-and-kernel-space#comment-136366
-:
-
-
-echo 'p:<func_entry> ./test:0x420' >
-/sys/kernel/debug/tracing/uprobe_events              (for creating
-uprobe)
-echo 1 > /sys/kernel/debug/tracing/events/enable
-                                (enabling uproble)
-There is another enable parameter:
-/sys/kernel/debug/tracing/events/uprobes/enable
-
-I understand unless enabled both events/enable and
-events/uprobes/enable, the /sys/kernel/debug/tracing/trace is not
-complete. I do not understand the relevance of
-.....events/uprobes/enable as I could not get any trace data in trace
-log for 'func_entry' the user space function being added for tracing.
-Irrespective of the probe function added, the trace log shows complete
-system trace log during the period of execution of the user
-application being traced.
-
-Can this be clearly mentioned as to when to use one of them, role of
-both and and also, I could not see uprobe function in particular at
-all but generic trace in /sys/kernel/debug/tracing/trace. Kindly guide
-me in understanding uprobe enable logic in user space in detail.
-
-Regards,
-Bhargav
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index ed65e82..0833d9f 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -55,6 +55,7 @@ endif
+ 
+ ifeq ($(ARCH),s390)
+   NO_PERF_REGS := 0
++  CFLAGS += -fPIC
+ endif
+ 
+ ifeq ($(NO_PERF_REGS),0)
+-- 
+1.8.3.1
