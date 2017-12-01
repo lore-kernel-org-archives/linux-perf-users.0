@@ -1,166 +1,58 @@
-From: "Wangnan (F)" <wangnan0@huawei.com>
-Subject: Re: Question to perf spending a large amount of time monitoring a
- java process
-Date: Fri, 1 Dec 2017 16:03:25 +0800
-Message-ID: <fdd35498-4678-7e0a-79b2-9a8ea604a0e0@huawei.com>
-References: <20d3fa12-295c-84d3-2eae-aa32b5757d19@huawei.com>
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf s390: always build with -fPIC
+Date: Fri, 1 Dec 2017 15:12:45 +0100
+Message-ID: <20171201141245.GD6452@linux.vnet.ibm.com>
+References: <1512031765-9382-1-git-send-email-brueckner@linux.vnet.ibm.com>
+ <20171201021709.GB30867@sejong>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2242 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750891AbdLAIDq (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33040 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751311AbdLAOMx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Dec 2017 03:03:46 -0500
-In-Reply-To: <20d3fa12-295c-84d3-2eae-aa32b5757d19@huawei.com>
+        Fri, 1 Dec 2017 09:12:53 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vB1E9OcF026645
+        for <linux-perf-users@vger.kernel.org>; Fri, 1 Dec 2017 09:12:53 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ek67tqqb4-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Dec 2017 09:12:52 -0500
+Received: from localhost
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
+        Fri, 1 Dec 2017 14:12:50 -0000
+Content-Disposition: inline
+In-Reply-To: <20171201021709.GB30867@sejong>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: zhangmengting <zhangmengting@huawei.com>, linux-perf-users@vger.kernel.org
-Cc: acme@redhat.com, namhyung@kernel.org, jolsa@redhat.com, huawei.libin@huawei.com, cj.chengjian@huawei.com, Andi Kleen <andi@firstfloor.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Linux perf users list <linux-perf-users@vger.kernel.org>, Linux s390 list <linux-s390@vger.kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, jonathan.hermann@de.ibm.com, kernel-team@lge.com, jolsa@kernel.org
 
-I have contacted Mengting by phone. My suggestion is listed below.
+Hi Namhyung,
 
-I think what she wants is generating data to do a top-down analysis on 
-ARM64. Append Andi Kleen to cc list to see if he has any suggestion on it.
+On Fri, Dec 01, 2017 at 11:17:09AM +0900, Namhyung Kim wrote:
+> On Thu, Nov 30, 2017 at 09:49:25AM +0100, Hendrik Brueckner wrote:
+> > On s390, object files must be compiled with position-indepedent code
+> > in order to be incrementally linked or linked to shared libraries.
+> > Therefore, add -fPIC to the CFLAGS for s390 to ensure each object
+> > file is built properly.
+> 
+> Could you please tell me what was the actual problem?  I guess this is
+> somewhat related to the Jiri's Fedora build fix.
 
-On 2017/12/1 15:32, zhangmengting wrote:
-> Hi all,
->
-> I found that perf spends a large amount of time attaching and monitoring
-> a java process with lock, although the execution time of the java process
-> is below 1 minute.
->
-> Attachment 1(ContextSwitchTest.java) is the java source code used to
-> reproduce the problem. The code is compiled and run with the following
-> commands. The arguments of the process are <number of RUNS>
-> (how many times the test code will be excuated) and <lock ITERATES>
-> (how many times the thread acquires lock).
-> With arguments <1, 1000000>, the execution time of the process is just 
-> one minute.
->
-> $javac ContextSwitchTest.java
->
-> $java ContextSwitchTest
-> Usage:
-> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest  <number of RUNS>  <lock ITERATES>
-> Example:
-> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest 1 1000000
->
-> I've tested the problem on both x86 and ARM64 platform with 4.14 
-> kernel and 4.14 perf.
-> And for convenience, I've add time check code to detect the execution 
-> time for perf record.
-> Attachment 2 is the time check patch 
-> (0001-perf-record-add-execution-time-check-code.patch)
->
-> The test result is shown below:
-> 1) On x86 platform
-> a. The execution time of this java process
-> $java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest 1 1000000
-> RUNS : 1, ITERATES : 1000000
-> Name : Thread-0, 21
-> Name : Thread-1, 22
-> parks: 979010
-> parks: 978929
-> Average time: 28642ns
-> Total time: 56081313428ns = 56s
-> b. The execution time of perf monitoring this process with several 
-> event groups
-> $perf record -N -B -T -g -e 
-> '{cycles,r008,r01b,r10c,r009},{cycles,r100,r102,r107,r108},\
-> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\ 
->
-> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\ 
->
-> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\ 
->
-> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108}'\ 
->
+Building, linking of perf did not work (I think it was on a Fedora 27)
+resulting in an error message like:
 
-There are too many event groups. It introduce heavy overhead to context 
-switch, which
-is the benchmark you are using. A '-a' may help to reduce event group 
-switching
-overhead.
+/usr/bin/ld: perf-in.o: `__printf_chk@@GLIBC_2.4' non-PLT reloc for symbol
+defined in shared library and accessed from executable (rebuild file with
+-fPIC ?)
+/usr/bin/ld: final link failed: Bad value
 
-> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest 1 1000000
-> record_open_RUN is 0.235386s
-> RUNS : 1, ITERATES : 1000000
-> Name : Thread-0, 21
-> Name : Thread-1, 22
-> parks: 997895
-> parks: 998116
-> Average time: 72197ns
-> Total time: 144107437593ns = 144s
-> pollfd_RUN is 169.4294951967s
-> [ perf record: Woken up 148 times to write data ]
-> [ perf record: Captured and wrote 0.060 MB perf.data ]
-> Record_RUN is 170.4294783665s
->
-> 2) On ARM64 platform
-> a. The execution time of this java process
-> $java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest 1 1000000
-> RUNS : 1, ITERATES : 1000000
-> Name : Thread-0, 24
-> Name : Thread-1, 25
-> parks: 977285
-> parks: 977279
-> Average time: 4708ns
-> Total time: 9203640720ns = 9s
-> b. The execution time of perf monitoring this process with several 
-> event groups
-> $perf record -N -B -T -g -e'{cycles,r008,r01b,r10c,r009,r010,r012},\
-> {cycles,r100,r102,r107,r108,r076,r078},{cycles,r001,r002,r014,r179,r177},\ 
->
-> {cycles,r121,r122,r123,r124,r125,r126},{cycles,r040,r042,r050,r052,r060,r061},\ 
->
-> {cycles,r003,r004,r005,r016,r017},{cycles,r070,r071,r073,r074,r075,r077},\ 
->
-> {cycles,r112,r113,r12c,r111,r120},{cycles,r06c,r06d,r06e,r07c,r07d,r07e},\ 
->
-> {cycles,r150,r151,r152,r16a,r079,r07a}' \
-> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints 
-> ContextSwitchTest 1 1000000
-> record_open_RUN is 0.40954s
-> RUNS : 1, ITERATES : 1000000
-> Name : Thread-0, 24
-> Name : Thread-1, 25
-> parks: 1008468
-> parks: 1003826
-> Average time: 1154505ns
-> Total time: 2323208237220ns = 2323s
-> pollfd_RUN is 2326.645806s
-> [ perf record: Woken up 18463 times to write data ]
-> [ perf record: Captured and wrote 6263.982 MB perf.data ]
+On s390, objects must be compiled with -fPIC when used for shared object
+or position-indendepent executables (PIE). In doubt, it is better to
+build with -fPIC (there are no performance degration).
 
-Event frequency seems too high. Please try -F or -C to control data
-rate. When using '-a', you need '--exclude-perf' to filter out those
-events generated by perf itself.
-
-To reduce IO overhead, you can increase ring buffer using '-m' or switch
-to overwrite mode.
-
-> Record_RUN is 2328.4294867157s
->
-> The test result shows that perf consumes most of the time polling fds.
-> In addtion, it seems that when tracing a great amount of events, perf may
-> extend the execution time of the traced process, especially on ARM64 
-> platform.
-> A process that runs only 10 seconds now needs an hour execution time, 
-> which is
-> somewhat insane.
->
-> I confuses that how perf affects the traced process and whether the
-> final perf.data is still accurate since perf has affected the traced 
-> process?
-> Is there something wrong with perf?
->
-> Thanks,
-> Mengting Zhang
->
+Thanks and kind regards,
+  Hendrik
