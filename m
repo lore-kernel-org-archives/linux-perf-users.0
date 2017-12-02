@@ -1,69 +1,61 @@
-From: Arnab <arnabjyotikalita35@gmail.com>
-Subject: Modify the output of perf script
-Date: Fri, 1 Dec 2017 20:26:40 -0500
-Message-ID: <37e8d06f-a1c2-e85f-7ba8-03d0e7f2ae52@gmail.com>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
+ trace'
+Date: Sun, 3 Dec 2017 00:21:10 +0100 (CET)
+Message-ID: <alpine.LRH.2.20.1712030017560.9416@Diego>
+References: <alpine.LRH.2.20.1711291656270.9416@Diego> <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com> <20171130155642.GA2893@redhat.com> <20171201023314.GC30867@sejong> <20171201151628.GB3298@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-qk0-f176.google.com ([209.85.220.176]:46779 "EHLO
-        mail-qk0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751468AbdLBB0q (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:41104 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751786AbdLBXVO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Dec 2017 20:26:46 -0500
-Received: by mail-qk0-f176.google.com with SMTP id b184so15403639qkc.13
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Dec 2017 17:26:46 -0800 (PST)
-Received: from [10.22.20.122] (compas.cs.stonybrook.edu. [130.245.158.1])
-        by smtp.gmail.com with ESMTPSA id v89sm5512763qkv.80.2017.12.01.17.26.43
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Dec 2017 17:26:44 -0800 (PST)
-Content-Language: en-US
+        Sat, 2 Dec 2017 18:21:14 -0500
+In-Reply-To: <20171201151628.GB3298@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, kernel-team@lge.com
 
-Hello,
+On Fri, 1 Dec 2017, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 01, 2017 at 11:33:14AM +0900, Namhyung Kim escreveu:
+> > On Thu, Nov 30, 2017 at 01:56:42PM -0200, Arnaldo de Melo wrote:
+> > > Em Thu, Nov 30, 2017 at 11:28:33AM +0100, Thomas-Mich Richter escreveu:
+> > > > On 11/29/2017 06:27 PM, Michael Petlan wrote:
+> > > > > The commit f231af789b11a2f1a3795acc3228a3e178a80c21 adds an exception for s390x to
+> > > > > use openat() syscall instead of open(). This exception is not s390x-only, thus I
+> > > > > adjusted the test to accept both open and openat syscalls, no matter which arch it
+> > > > > runs on. Does it sound reasonable to you?
+>  
+> > It seems glibc 2.26 changed the behavior:
+>  
+> >   https://lwn.net/Articles/738694/
+> 
+> interesting
+>  
+> > > What differs from x86 to others is that x86 uses syscalltbl, not requiring
+> > > audit-libs to map syscall numbers to names, so perhaps it is something in there...
+>  
+> > If it only needs to consider open or openat, why not specifying the
+> > both directly?
+>  
+> >   # perf trace -e open -e openat touch /etc/passwd
+> 
+> Same effect, works with other perf trace versions, but one suggestion to
+> make it shorter:
+> 
+> 	perf trace -e open,openat touch /etc/passwd
+> 
+> Does the same thing :-)
+> 
+> Michael, can you please take that into account and resubmit the patch?
+> 
 
-I have been using IntelPT and perf-kvm to collect guest VM generated PT 
-packets from the host. I use the below command to record the IntelPT 
-traces :-
+Sure, I will retry that again. However, as I can remember last time trying that,
+it was failing in case one of them was missing on the arch... I have thought that
+-e open,openat may succeed only in case both are successfully traced... Maybe I
+am wrong. I will retry that on various kernels on Monday and see.
 
-./perf kvm --guest -guestkallsyms=~/guest-kallsyms 
--guestmodules=~/guest-modules -e intel_pt//
-
-I am using the latest stable Linux kernel version that is 4.14.3 and I 
-am using an Ubuntu 17.04 machine running on architecture x86_64.
-
-The above command works fine and is giving me the correct outputs as I 
-expect. Now I am trying to see the raw trace dump using perf script -D
-
-./perf script -D -i perf.data.guest
-
-I see all the event records and all their outputs correctly. But what I 
-wanted was to make perf script only display me the events corresponding 
-to IntelPT trace packets.
-
-This means that I am especially not interested in events like 
-PERF_RECORD_COMM and PERF_RECORD_FORK etc and even 
-PERF_RECORD_MMAP/PERF_RECORD_MMAP2. I only want perf script to display 
-me the raw trace packets under PERF_RECORD_AUXTRACE.
-
-There are obviously two cases here which I have so far considered but 
-have not been able to get anywhere :
-
-1. I have tried making perf record stop recording events, which I do not 
-want like PERF_RECORD_MMAP, PERF_RECORD_FORK etc. I have been 
-unsuccessful and I also think this is not the right approach.
-
-2. The other approach that I have tried is making perf script -D to not 
-print the MMAP and FORK events instead but keep recording them. I have 
-not been able to do this as I have not been able to trace back in the 
-linux-kernel code where the actual print is happening. This looks 
-correct and probably easier to achieve.
-
-How can I achieve one of the two goals stated above ? How can I make 
-perf script dump me exactly what I want ?
-
-Thanks and Regards,
-Arnab
+> - Arnaldo
+> 
