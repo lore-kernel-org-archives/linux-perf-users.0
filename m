@@ -1,61 +1,247 @@
-From: Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
- trace'
-Date: Sun, 3 Dec 2017 00:21:10 +0100 (CET)
-Message-ID: <alpine.LRH.2.20.1712030017560.9416@Diego>
-References: <alpine.LRH.2.20.1711291656270.9416@Diego> <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com> <20171130155642.GA2893@redhat.com> <20171201023314.GC30867@sejong> <20171201151628.GB3298@kernel.org>
+From: bhargavb <bhargavaramudu@gmail.com>
+Subject: Re: uprobes enable condition (user space) - sysfs interface
+Date: Sun, 3 Dec 2017 22:44:22 +0530
+Message-ID: <CA+bpL9L3OYjEU5OUEnFQQSncpaVLM+3+h-rV9_gMa2F9xQRfWA@mail.gmail.com>
+References: <CA+bpL9+McSzeKW+eXHfMJMFRm-EenC9_0pGZkGpSdFzOVozKiw@mail.gmail.com>
+ <20171201164039.GC3298@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41104 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751786AbdLBXVO (ORCPT
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:44370 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752155AbdLCROZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Dec 2017 18:21:14 -0500
-In-Reply-To: <20171201151628.GB3298@kernel.org>
+        Sun, 3 Dec 2017 12:14:25 -0500
+In-Reply-To: <20171201164039.GC3298@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, kernel-team@lge.com
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
 
-On Fri, 1 Dec 2017, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Dec 01, 2017 at 11:33:14AM +0900, Namhyung Kim escreveu:
-> > On Thu, Nov 30, 2017 at 01:56:42PM -0200, Arnaldo de Melo wrote:
-> > > Em Thu, Nov 30, 2017 at 11:28:33AM +0100, Thomas-Mich Richter escreveu:
-> > > > On 11/29/2017 06:27 PM, Michael Petlan wrote:
-> > > > > The commit f231af789b11a2f1a3795acc3228a3e178a80c21 adds an exception for s390x to
-> > > > > use openat() syscall instead of open(). This exception is not s390x-only, thus I
-> > > > > adjusted the test to accept both open and openat syscalls, no matter which arch it
-> > > > > runs on. Does it sound reasonable to you?
->  
-> > It seems glibc 2.26 changed the behavior:
->  
-> >   https://lwn.net/Articles/738694/
-> 
-> interesting
->  
-> > > What differs from x86 to others is that x86 uses syscalltbl, not requiring
-> > > audit-libs to map syscall numbers to names, so perhaps it is something in there...
->  
-> > If it only needs to consider open or openat, why not specifying the
-> > both directly?
->  
-> >   # perf trace -e open -e openat touch /etc/passwd
-> 
-> Same effect, works with other perf trace versions, but one suggestion to
-> make it shorter:
-> 
-> 	perf trace -e open,openat touch /etc/passwd
-> 
-> Does the same thing :-)
-> 
-> Michael, can you please take that into account and resubmit the patch?
-> 
+Dear Arnaldo,
+Exactly, the last one was what I was looking for. Thank you very much...
+That apart I am also exploring various profiling options that can give
+me a full control of monitoring running processes (user space
+profiling ).
+sysfs seems powerful and very useful, though I got to know lately (and
+not much mentioned, I think as tools like perf etc).  I was confused
+when u said tracefs in your response, I understand it is same as
+sysfs. Please correct me if I am wrong.
 
-Sure, I will retry that again. However, as I can remember last time trying that,
-it was failing in case one of them was missing on the arch... I have thought that
--e open,openat may succeed only in case both are successfully traced... Maybe I
-am wrong. I will retry that on various kernels on Monday and see.
+Thanks and regards,
+bhargav
 
-> - Arnaldo
-> 
+
+On Fri, Dec 1, 2017 at 10:10 PM, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+> Adding Masami to the CC list, to see if he can come up with a fix for
+> the 'perf probe' failure below, improving the message or ignoring
+> versioned symbols (with a warning perhaps).
+>
+> Em Thu, Nov 30, 2017 at 12:04:23AM +0530, bhargavb escreveu:
+>> Hello,
+>>
+>> I am trying to understand user space profiling using linux inbuilt
+>> mechanism. (Trying with perf also but could not get complete clear
+>> documentation and could not proceed, so retained linux-perf-users in
+>> to list as the underlying interface used is same for both).
+>
+> So yo uwant to trace function entry/exit in some userspace library? You
+> can try using the tracefs as below or leave it to perf to do that, first
+> you set up the probes, say for some glibc functions:
+>
+> [root@jouet ~]# perf probe -F -x /lib64/libc-2.25.so  | grep ^malloc
+> malloc
+> malloc_check
+> malloc_consolidate.part.1
+> malloc_get_state@GLIBC_2.2.5
+> malloc_hook_ini
+> malloc_info
+> malloc_printerr
+> malloc_set_state@GLIBC_2.2.5
+> malloc_stats
+> malloc_trim
+> malloc_usable_size
+> mallochook
+> [root@jouet ~]#
+>
+> [root@jouet ~]# perf probe -x /lib64/libc-2.25.so malloc*
+> Failed to write event: Invalid argument
+>   Error: Failed to add events.
+> [root@jouet ~]#
+>
+> For now ignore that error, its a bug I just found, what matters is that
+> it _has_ put in place probes for most of those functions, as you can see
+> by looking at:
+>
+> [root@jouet ~]# perf probe -l
+>   probe_libc:malloc    (on __malloc in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_check (on malloc_check in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_consolidate (on malloc_consolidate.part.1 in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_hook_ini (on malloc_hook_ini in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_info (on __malloc_info in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_printerr (on malloc_printerr in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_stats (on __malloc_stats in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_trim (on __malloc_trim in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_usable_size (on __malloc_usable_size in /usr/lib64/libc-2.25.so)
+>   probe_libc:mallochook (on mallochook in /usr/lib64/libc-2.25.so)
+> [root@jouet ~]#
+>
+> Masami, this one also doesn't work:
+>
+> [root@jouet ~]# perf probe -x /lib64/libc-2.25.so 'malloc*%return'
+> Error: event "malloc_printerr" already exists.
+> <SNIP>
+>
+> doing it a bit differently:
+>
+> [root@jouet ~]# perf probe -F -x /lib64/libc-2.25.so | egrep ^malloc[^@]+$ | while read function ; do perf probe -x /lib64/libc-2.25.so "${function}_return=$function%return" ; done
+> Added new event:
+>   probe_libc:malloc_check_return (on malloc_check%return in /usr/lib64/libc-2.25.so)
+>
+> You can now use it in all perf tools, such as:
+>
+>         perf record -e probe_libc:malloc_check_return -aR sleep 1
+>
+> <SNIP>
+> -----------
+>
+> This now makes us have:
+>
+> [root@jouet ~]# perf probe -l
+>   probe:check_stack_object (on check_stack_object%return@acme/git/linux/mm/usercopy.c with ret)
+>   probe_libc:malloc    (on __malloc in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_check (on malloc_check in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_consolidate (on malloc_consolidate.part.1 in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_hook_ini (on malloc_hook_ini in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_info (on __malloc_info in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_printerr (on malloc_printerr in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_stats (on __malloc_stats in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_trim (on __malloc_trim in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_usable_size (on __malloc_usable_size in /usr/lib64/libc-2.25.so)
+>   probe_libc:mallochook (on mallochook in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_check_return (on malloc_check%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_hook_ini_return (on malloc_hook_ini%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_info_return (on __malloc_info%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_printerr_return (on malloc_printerr%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_stats_return (on __malloc_stats%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_trim_return (on __malloc_trim%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_usable_size_return (on __malloc_usable_size%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:mallochook_return (on mallochook%return in /usr/lib64/libc-2.25.so)
+>   probe_libc:malloc_return (on __malloc%return in /usr/lib64/libc-2.25.so)
+> [root@jouet ~]#
+>
+> There were some usability snags that prevented this from being put in
+> place, so do it manually:
+>
+> [root@jouet ~]# perf probe -x /lib64/libc-2.25.so 'malloc_consolidate_return=malloc_consolidate.part.1%return'
+> Added new event:
+>   probe_libc:malloc_consolidate_return (on malloc_consolidate.part.1%return in /usr/lib64/libc-2.25.so)
+>
+> You can now use it in all perf tools, such as:
+>
+>         perf record -e probe_libc:malloc_consolidate_return -aR sleep 1
+>
+> [root@jouet ~]#
+>
+> Ok, now we can trace this syswide using:
+>
+> [root@jouet ~]# perf trace --no-syscalls -e probe_libc:*
+> <BIG SNIP>
+>    339.557 probe_libc:malloc:(7fda55c22970))
+>    339.562 probe_libc:malloc_return:(7fda55c22970 <- 7fda55c23918))
+>    339.567 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>    339.570 probe_libc:malloc_consolidate_return:(7fda55c1b7b0 <- 7fda55c1f886))
+>    339.596 probe_libc:malloc:(7fda55c22970))
+>    339.600 probe_libc:malloc_return:(7fda55c22970 <- 7fda55c23918))
+>    339.622 probe_libc:malloc:(7fda55c22970))
+>    339.626 probe_libc:malloc_return:(7fda55c22970 <- 7fda56ba9a39))
+>    339.631 probe_libc:malloc:(7fda55c22970))
+>    339.634 probe_libc:malloc_return:(7fda55c22970 <- 7fda578f1713))
+>    339.637 probe_libc:malloc:(7fda55c22970))
+>    339.641 probe_libc:malloc_return:(7fda55c22970 <- 7fda578f14ae))
+>    339.657 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>    339.661 probe_libc:malloc_consolidate_return:(7fda55c1b7b0 <- 7fda55c1dbd6))
+>    339.664 probe_libc:malloc:(7fda55c22970))
+>    339.667 probe_libc:malloc_return:(7fda55c22970 <- 7fda55c23918))
+>    339.670 probe_libc:malloc:(7fda55c22970))
+>    339.673 probe_libc:malloc_return:(7fda55c22970 <- 7fda55c23918))
+>    339.678 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>    339.681 probe_libc:malloc_consolidate_return:(7fda55c1b7b0 <- 7fda55c1f886))
+>    339.685 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>    339.688 probe_libc:malloc_consolidate_return:(7fda55c1b7b0 <- 7fda55c1f886))
+>    339.693 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>    339.696 probe_libc:malloc_consolidate_return:(7fda55c1b7b0 <- 7fda55c1f886))
+>    339.778 probe_libc:malloc:(7fda55c22970))
+>    339.783 probe_libc:malloc_return:(7fda55c22970 <- 7fda55c23918))
+>    339.788 probe_libc:malloc_consolidate:(7fda55c1b7b0))
+>   ^C(7fda55c22970 <- 7fda578f14ae))
+> [root@jouet ~]#
+>
+> It works as well with 'perf record' + 'perf script'.
+>
+> Other features from perf can be added to the mix, like callchains, etc.
+>
+> But see below for doing it via tracefs
+>
+>> I observed below behaviour when I tried as per directions using URL:
+>> https://opensource.com/article/17/7/dynamic-tracing-linux-user-and-kernel-space#comment-136366
+>> :
+>>
+>>
+>> echo 'p:<func_entry> ./test:0x420' >
+>> /sys/kernel/debug/tracing/uprobe_events              (for creating
+>> uprobe)
+>> echo 1 > /sys/kernel/debug/tracing/events/enable
+>>                                 (enabling uproble)
+>> There is another enable parameter:
+>> /sys/kernel/debug/tracing/events/uprobes/enable
+>>
+>> I understand unless enabled both events/enable and
+>> events/uprobes/enable, the /sys/kernel/debug/tracing/trace is not
+>> complete. I do not understand the relevance of
+>> .....events/uprobes/enable as I could not get any trace data in trace
+>> log for 'func_entry' the user space function being added for tracing.
+>> Irrespective of the probe function added, the trace log shows complete
+>> system trace log during the period of execution of the user
+>> application being traced.
+>
+> Is this what you want:
+>
+> [root@jouet ~]# cd /sys/kernel/debug/tracing/
+> [root@jouet tracing]# cat available_tracers
+> hwlat blk mmiotrace function_graph wakeup_dl wakeup_rt wakeup function nop
+> [root@jouet tracing]# echo nop > current_tracer
+> [root@jouet tracing]# echo 1 > events/probe_libc/malloc/enable
+> [root@jouet tracing]# echo 1 > tracing_on
+> [root@jouet tracing]# tail trace
+>             tail-1581  [002] d... 118484.507167: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507172: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507189: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507193: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507198: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507203: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507208: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507214: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507224: malloc: (0x7fdb32d67970)
+>             tail-1581  [002] d... 118484.507237: malloc: (0x7fdb32d67970)
+> [root@jouet tracing]#
+>
+> ?
+>
+>> Can this be clearly mentioned as to when to use one of them, role of
+>> both and and also, I could not see uprobe function in particular at
+>> all but generic trace in /sys/kernel/debug/tracing/trace. Kindly guide
+>> me in understanding uprobe enable logic in user space in detail.
+>>
+>> Regards,
+>> Bhargav
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Bhargav
