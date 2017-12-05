@@ -1,91 +1,149 @@
-From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
- trace'
-Date: Tue, 5 Dec 2017 16:39:49 +0100
-Message-ID: <20171205153949.GA4370@linux.vnet.ibm.com>
-References: <alpine.LRH.2.20.1711291656270.9416@Diego>
- <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
- <20171130155642.GA2893@redhat.com>
- <20171130155922.GB2893@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: Question to perf spending a large amount of time monitoring a java process
+Date: Tue, 05 Dec 2017 09:40:01 -0800
+Message-ID: <87bmjdjcpa.fsf@linux.intel.com>
+References: <20d3fa12-295c-84d3-2eae-aa32b5757d19@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51098 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752515AbdLEPj4 (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:6974 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752126AbdLERkC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Dec 2017 10:39:56 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vB5Fb79x077982
-        for <linux-perf-users@vger.kernel.org>; Tue, 5 Dec 2017 10:39:56 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2envb5perb-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2017 10:39:54 -0500
-Received: from localhost
-        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Tue, 5 Dec 2017 15:39:52 -0000
-Content-Disposition: inline
-In-Reply-To: <20171130155922.GB2893@redhat.com>
+        Tue, 5 Dec 2017 12:40:02 -0500
+In-Reply-To: <20d3fa12-295c-84d3-2eae-aa32b5757d19@huawei.com>
+        (zhangmengting@huawei.com's message of "Fri, 1 Dec 2017 15:32:06
+        +0800")
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo de Melo <acme@redhat.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
+To: zhangmengting <zhangmengting@huawei.com>
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org, jolsa@redhat.com, huawei.libin@huawei.com, cj.chengjian@huawei.com, peterz@infradead.org, alexey.budankov@intel.com
 
-Hi Arnaldo,
+zhangmengting <zhangmengting@huawei.com> writes:
 
-On Thu, Nov 30, 2017 at 01:59:22PM -0200, Arnaldo de Melo wrote:
-> Em Thu, Nov 30, 2017 at 01:56:42PM -0200, Arnaldo de Melo escreveu:
-> > Em Thu, Nov 30, 2017 at 11:28:33AM +0100, Thomas-Mich Richter escreveu:
-> > > On 11/29/2017 06:27 PM, Michael Petlan wrote:
-> > [acme@jouet linux]$ git log -1 27702bcfe8a125a1feeeb5f07526d63b20cac47f --oneline
-> > 27702bcfe8a1 perf trace: Support syscall name globbing
-> > [acme@jouet linux]$
-> > 
-> > Is in v4.14 final.
-> > 
-> > Testing with/without those quotes:
-> > 
-> > [root@jouet ~]# perf trace -e open* touch /etc/passwd
-> >      0.000 ( 0.007 ms): touch/17246 open(filename: 0x99747e37, flags: CLOEXEC                             ) = 3
-> >      0.022 ( 0.004 ms): touch/17246 open(filename: 0x9994b640, flags: CLOEXEC                             ) = 3
-> >      0.189 ( 0.004 ms): touch/17246 open(filename: 0x994f1c70, flags: CLOEXEC                             ) = 3
-> >      0.224 ( 0.056 ms): touch/17246 open(filename: 0xaa80a32a, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> > [root@jouet ~]# perf trace -e 'open*' touch /etc/passwd
-> >      0.000 ( 0.039 ms): touch/17250 open(filename: 0xf1445e37, flags: CLOEXEC                             ) = 3
-> >      0.107 ( 0.030 ms): touch/17250 open(filename: 0xf1649640, flags: CLOEXEC                             ) = 3
-> >      0.976 ( 0.009 ms): touch/17250 open(filename: 0xf11efc70, flags: CLOEXEC                             ) = 3
-> >      1.032 ( 0.008 ms): touch/17250 open(filename: 0x9357432a, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> > [root@jouet ~]#
-> > 
-> > What differs from x86 to others is that x86 uses syscalltbl, not requiring
-> > audit-libs to map syscall numbers to names, so perhaps it is something in there...
-> 
-> Yeah :-\
-> 
-> int syscalltbl__strglobmatch_next(struct syscalltbl *tbl __maybe_unused,
->                                   const char *syscall_glob __maybe_unused, int *idx __maybe_unused)
-> {
->         return -1;
-> }
-> 
-> int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char
-> *syscall_glob, int *idx)
-> {
->         return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
-> }
-> #endif /* HAVE_SYSCALL_TABLE */
-> 
-> -----
-> 
-> So someone needs to implement syscalltbl__strglobmatch_next() for arches
-> that don't HAVE_SYSCALL_TABLE, which is basically at this stage !x86.
-> 
-> Shouldn't be that difficult, but remains to be done.
+> Hi all,
+>
+> I found that perf spends a large amount of time attaching and monitoring
+> a java process with lock, although the execution time of the java process
+> is below 1 minute.
 
-Thanks for pointing in that direction.  I looked at it and will post a
-patch to add syscall tables for s390 too.
+You could check if this patchkit helps
 
-Kind regards,
-  Hendrik
+https://lkml.org/lkml/2017/9/8/118
+
+Not sure why it's not moved forward. Peter?
+
+-Andi
+
+Keeping for context:
+
+>
+> Attachment 1(ContextSwitchTest.java) is the java source code used to
+> reproduce the problem. The code is compiled and run with the following
+> commands. The arguments of the process are <number of RUNS>
+> (how many times the test code will be excuated) and <lock ITERATES>
+> (how many times the thread acquires lock).
+> With arguments <1, 1000000>, the execution time of the process is just
+> one minute.
+>
+> $javac ContextSwitchTest.java
+>
+> $java ContextSwitchTest
+> Usage:
+> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest  <number of RUNS>  <lock ITERATES>
+> Example:
+> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest 1 1000000
+>
+> I've tested the problem on both x86 and ARM64 platform with 4.14
+> kernel and 4.14 perf.
+> And for convenience, I've add time check code to detect the execution
+> time for perf record.
+> Attachment 2 is the time check patch
+> (0001-perf-record-add-execution-time-check-code.patch)
+>
+> The test result is shown below:
+> 1) On x86 platform
+> a. The execution time of this java process
+> $java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest 1 1000000
+> RUNS : 1, ITERATES : 1000000
+> Name : Thread-0, 21
+> Name : Thread-1, 22
+> parks: 979010
+> parks: 978929
+> Average time: 28642ns
+> Total time: 56081313428ns = 56s
+> b. The execution time of perf monitoring this process with several
+> event groups
+> $perf record -N -B -T -g -e 
+> '{cycles,r008,r01b,r10c,r009},{cycles,r100,r102,r107,r108},\
+> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\
+> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\
+> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},\
+> {cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108},{cycles,r100,r102,r107,r108}'\
+> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest 1 1000000
+> record_open_RUN is 0.235386s
+> RUNS : 1, ITERATES : 1000000
+> Name : Thread-0, 21
+> Name : Thread-1, 22
+> parks: 997895
+> parks: 998116
+> Average time: 72197ns
+> Total time: 144107437593ns = 144s
+> pollfd_RUN is 169.4294951967s
+> [ perf record: Woken up 148 times to write data ]
+> [ perf record: Captured and wrote 0.060 MB perf.data ]
+> Record_RUN is 170.4294783665s
+>
+> 2) On ARM64 platform
+> a. The execution time of this java process
+> $java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest 1 1000000
+> RUNS : 1, ITERATES : 1000000
+> Name : Thread-0, 24
+> Name : Thread-1, 25
+> parks: 977285
+> parks: 977279
+> Average time: 4708ns
+> Total time: 9203640720ns = 9s
+> b. The execution time of perf monitoring this process with several
+> event groups
+> $perf record -N -B -T -g -e'{cycles,r008,r01b,r10c,r009,r010,r012},\
+> {cycles,r100,r102,r107,r108,r076,r078},{cycles,r001,r002,r014,r179,r177},\
+> {cycles,r121,r122,r123,r124,r125,r126},{cycles,r040,r042,r050,r052,r060,r061},\
+> {cycles,r003,r004,r005,r016,r017},{cycles,r070,r071,r073,r074,r075,r077},\
+> {cycles,r112,r113,r12c,r111,r120},{cycles,r06c,r06d,r06e,r07c,r07d,r07e},\
+> {cycles,r150,r151,r152,r16a,r079,r07a}' \
+> java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints
+> ContextSwitchTest 1 1000000
+> record_open_RUN is 0.40954s
+> RUNS : 1, ITERATES : 1000000
+> Name : Thread-0, 24
+> Name : Thread-1, 25
+> parks: 1008468
+> parks: 1003826
+> Average time: 1154505ns
+> Total time: 2323208237220ns = 2323s
+> pollfd_RUN is 2326.645806s
+> [ perf record: Woken up 18463 times to write data ]
+> [ perf record: Captured and wrote 6263.982 MB perf.data ]
+> Record_RUN is 2328.4294867157s
+>
+> The test result shows that perf consumes most of the time polling fds.
+> In addtion, it seems that when tracing a great amount of events, perf may
+> extend the execution time of the traced process, especially on ARM64
+> platform.
+> A process that runs only 10 seconds now needs an hour execution time,
+> which is
+> somewhat insane.
+>
+> I confuses that how perf affects the traced process and whether the
+> final perf.data is still accurate since perf has affected the traced
+> process?
+> Is there something wrong with perf?
+>
+> Thanks,
+> Mengting Zhang
