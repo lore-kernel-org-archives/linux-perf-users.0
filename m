@@ -1,18 +1,18 @@
 From: Mengting Zhang <zhangmengting@huawei.com>
 Subject: [PATCH] perf evsel: Enable ignore_missing_thread for pid option
-Date: Tue, 5 Dec 2017 16:53:47 +0800
-Message-ID: <1512464027-36169-1-git-send-email-zhangmengting@huawei.com>
+Date: Tue, 5 Dec 2017 17:03:33 +0800
+Message-ID: <1512464613-44634-1-git-send-email-zhangmengting@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11505 "EHLO
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11509 "EHLO
         szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752644AbdLEJCe (ORCPT
+        with ESMTP id S1752644AbdLEJNQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Dec 2017 04:02:34 -0500
+        Tue, 5 Dec 2017 04:13:16 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: acme@redhat.com, jolsa@redhat.com, huawei.libin@huawei.com, wangnan0@huawei.com, cj.chengjian@huawei.com, zhangmengting@huawei.com
 
 While monitoring a multithread process with pid option, perf sometimes
