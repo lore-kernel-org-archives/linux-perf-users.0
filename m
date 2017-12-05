@@ -1,136 +1,74 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 4/5] perf-probe: Find versioned symbols from map
-Date: Wed,  6 Dec 2017 12:08:15 +0900
-Message-ID: <151252969529.12861.15385115001254086477.stgit@devbox>
-References: <151252958056.12861.954203514347167563.stgit@devbox>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
+ trace'
+Date: Wed, 6 Dec 2017 00:18:59 +0100 (CET)
+Message-ID: <alpine.LRH.2.20.1712060007430.9416@Diego>
+References: <alpine.LRH.2.20.1711291656270.9416@Diego> <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com> <20171130155642.GA2893@redhat.com> <20171201023314.GC30867@sejong> <20171201151628.GB3298@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <151252958056.12861.954203514347167563.stgit@devbox>
-Sender: linux-rt-users-owner@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:44457 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752734AbdLEXTD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 5 Dec 2017 18:19:03 -0500
+In-Reply-To: <20171201151628.GB3298@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, kernel-team@lge.com
 
-Find versioned symbols correctly from map.
-Commit d80406453ad4 ("perf symbols: Allow user probes on
-versioned symbols") allows user to find default versioned
-symbols (with "@@") in map. However, it did not enable
-normal versioned symbol (with "@") for perf-probe.
-E.g.
+On Fri, 1 Dec 2017, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 01, 2017 at 11:33:14AM +0900, Namhyung Kim escreveu:
+[...]
+>  
+> > > What differs from x86 to others is that x86 uses syscalltbl, not requiring
+> > > audit-libs to map syscall numbers to names, so perhaps it is something in there...
+>  
+> > If it only needs to consider open or openat, why not specifying the
+> > both directly?
+>  
+> >   # perf trace -e open -e openat touch /etc/passwd
+> 
+> Same effect, works with other perf trace versions, but one suggestion to
+> make it shorter:
+> 
+> 	perf trace -e open,openat touch /etc/passwd
+> 
+> Does the same thing :-)
 
-  =====
-  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state
-  Failed to find symbol malloc_get_state in /usr/lib64/libc-2.25.so
-    Error: Failed to add events.
-  =====
+Well, do I understand it correctly, that we prefer the "-e open,openat" over
+the "-e 'open*'" because there are issues with the globbing feature on some
+architectures?
 
-This solves above issue by improving perf-probe symbol
-search function, as below.
+I see a disadvantage of "-e open,openat" concept in that it does not work
+in case any of them is unavailable. So in case some kernel does not contain
+e.g. open in favor of openat, perf-trace fails to trace them. This can be
+easily simulated like `perf trace -e open,openit`:
 
-  =====
-  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state
-  Added new event:
-    probe_libc:malloc_get_state (on malloc_get_state in /usr/lib64/libc-2.25.so)
+event syntax error: 'openit'
+                     \___ Cannot find PMU `openit'. Missing kernel support?
+Run 'perf list' for a list of valid events
 
-  You can now use it in all perf tools, such as:
+Since it is possible that open is not even supported, having both of them
+there is fragile. The "-e 'open*'" approach should expand only to supported
+syscalls.
 
-	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+The '' are necessary there, since just open* can expand to some filename.
 
-  # ./perf probe -l
-    probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
-  =====
+.....
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/perf/arch/powerpc/util/sym-handling.c |    8 ++++++++
- tools/perf/util/probe-event.c               |   16 +++++++++++++++-
- tools/perf/util/symbol.c                    |    5 +++++
- tools/perf/util/symbol.h                    |    1 +
- 4 files changed, 29 insertions(+), 1 deletion(-)
+I also see problems with globbing on my aarch64 with 4.14, so that makes
+the "-e 'open*'" fragile too...
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 9c4e23d8c8ce..a3613c8d97b6 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -64,6 +64,14 @@ int arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 
- 	return strncmp(namea, nameb, n);
- }
-+
-+const char *arch__normalize_symbol_name(const char *name)
-+{
-+	/* Skip over initial dot */
-+	if (*name == '.')
-+		name++;
-+	return name;
-+}
- #endif
- 
- #if defined(_CALL_ELF) && _CALL_ELF == 2
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 959c4d2ef455..94acc5846e2a 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2801,16 +2801,30 @@ static int find_probe_functions(struct map *map, char *name,
- 	int found = 0;
- 	struct symbol *sym;
- 	struct rb_node *tmp;
-+	const char *norm, *ver;
-+	char *buf = NULL;
- 
- 	if (map__load(map) < 0)
- 		return 0;
- 
- 	map__for_each_symbol(map, sym, tmp) {
--		if (strglobmatch(sym->name, name)) {
-+		norm = arch__normalize_symbol_name(sym->name);
-+		if (!norm)
-+			continue;
-+
-+		/* We don't care about default symbol or not */
-+		ver = strchr(norm, '@');
-+		if (ver) {
-+			buf = strndup(norm, ver - norm);
-+			norm = buf;
-+		}
-+		if (strglobmatch(norm, name)) {
- 			found++;
- 			if (syms && found < probe_conf.max_probes)
- 				syms[found - 1] = sym;
- 		}
-+		if (buf)
-+			zfree(&buf);
- 	}
- 
- 	return found;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 1b67a8639dfe..cc065d4bfafc 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -94,6 +94,11 @@ static int prefix_underscores_count(const char *str)
- 	return tail - str;
- }
- 
-+const char * __weak arch__normalize_symbol_name(const char *name)
-+{
-+	return name;
-+}
-+
- int __weak arch__compare_symbol_names(const char *namea, const char *nameb)
- {
- 	return strcmp(namea, nameb);
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index a4f0075b4e5c..0563f33c1eb3 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -349,6 +349,7 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
- void arch__sym_update(struct symbol *s, GElf_Sym *sym);
- #endif
- 
-+const char *arch__normalize_symbol_name(const char *name);
- #define SYMBOL_A 0
- #define SYMBOL_B 1
- 
+Ideas?
 
+> 
+> Michael, can you please take that into account and resubmit the patch?
+> 
+> - Arnaldo
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
