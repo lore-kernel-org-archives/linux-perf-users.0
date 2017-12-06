@@ -1,96 +1,83 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/36] perf pmu: Add helper function is_pmu_core to detect PMU CORE devices
-Date: Wed,  6 Dec 2017 11:41:00 -0300
-Message-ID: <20171206144115.15097-22-acme@kernel.org>
+Subject: [PATCH 24/36] perf tools: Fix up build in hardnened environments
+Date: Wed,  6 Dec 2017 11:41:03 -0300
+Message-ID: <20171206144115.15097-25-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-On some platforms, PMU core devices sysfs name is not cpu.
-Adding function is_pmu_core to detect PMU core devices using
-core device specific hints in sysfs.
+On Fedora systems the perl and python CFLAGS/LDFLAGS include the
+hardened specs from redhat-rpm-config package. We apply them only for
+perl/python objects, which makes them not compatible with the rest of
+the objects and the build fails with:
 
-For arm64 platforms, all core devices have file "cpus" in sysfs.
+  /usr/bin/ld: perf-in.o: relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a shared object; recompile with -f
++PIC
+  /usr/bin/ld: libperf.a(libperf-in.o): relocation R_X86_64_32S against `.text' can not be used when making a shared object; recompile w
++ith -fPIC
+  /usr/bin/ld: final link failed: Nonrepresentable section on output
+  collect2: error: ld returned 1 exit status
+  make[2]: *** [Makefile.perf:507: perf] Error 1
+  make[1]: *** [Makefile.perf:210: sub-make] Error 2
+  make: *** [Makefile:69: all] Error 2
 
-Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Tested-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Tested-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/n/tip-y1woxt1k2pqqwpprhonnft2s@git.kernel.org
+Mainly it's caused by perl/python objects being compiled with:
+
+  -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
+
+which prevent the final link impossible, because it will check
+for 'proper' objects with following option:
+
+  -specs=/usr/lib/rpm/redhat/redhat-hardened-ld
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20171204082437.GC30564@krava
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 39 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 4 deletions(-)
+ tools/perf/Makefile.config | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 4e7dd3a0f123..732ff579ec65 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -537,6 +537,34 @@ static bool pmu_is_uncore(const char *name)
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index bf86c09ca889..808066c823f7 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -185,9 +185,7 @@ ifdef PYTHON_CONFIG
+   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
+   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
+   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
+-  ifeq ($(CC_NO_CLANG), 1)
+-    PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
+-  endif
++  PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
+   FLAGS_PYTHON_EMBED := $(PYTHON_EMBED_CCOPTS) $(PYTHON_EMBED_LDOPTS)
+ endif
  
- /*
-+ *  PMU CORE devices have different name other than cpu in sysfs on some
-+ *  platforms. looking for possible sysfs files to identify as core device.
-+ */
-+static int is_pmu_core(const char *name)
-+{
-+	struct stat st;
-+	char path[PATH_MAX];
-+	const char *sysfs = sysfs__mountpoint();
-+
-+	if (!sysfs)
-+		return 0;
-+
-+	/* Look for cpu sysfs (x86 and others) */
-+	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu", sysfs);
-+	if ((stat(path, &st) == 0) &&
-+			(strncmp(name, "cpu", strlen("cpu")) == 0))
-+		return 1;
-+
-+	/* Look for cpu sysfs (specific to arm) */
-+	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
-+				sysfs, name);
-+	if (stat(path, &st) == 0)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/*
-  * Return the CPU id as a raw string.
-  *
-  * Each architecture should provide a more precise id string that
-@@ -609,7 +637,6 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 	 */
- 	i = 0;
- 	while (1) {
--		const char *pname;
+@@ -577,7 +575,6 @@ ifndef NO_GTK2
+   endif
+ endif
  
- 		pe = &map->table[i++];
- 		if (!pe->name) {
-@@ -618,9 +645,13 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 			break;
- 		}
+-
+ ifdef NO_LIBPERL
+   CFLAGS += -DNO_LIBPERL
+ else
+@@ -585,6 +582,8 @@ else
+   PERL_EMBED_LDFLAGS = $(call strip-libs,$(PERL_EMBED_LDOPTS))
+   PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
+   PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
++  PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
++  PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
+   FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
  
--		pname = pe->pmu ? pe->pmu : "cpu";
--		if (strncmp(pname, name, strlen(pname)))
--			continue;
-+		if (!is_pmu_core(name)) {
-+			/* check for uncore devices */
-+			if (pe->pmu == NULL)
-+				continue;
-+			if (strncmp(pe->pmu, name, strlen(pe->pmu)))
-+				continue;
-+		}
- 
- 		/* need type casts to override 'const' */
- 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
+   ifneq ($(feature-libperl), 1)
 -- 
 2.13.6
