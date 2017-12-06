@@ -1,105 +1,93 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf evsel: Enable ignore_missing_thread for pid option
-Date: Wed, 6 Dec 2017 13:59:25 +0100
-Message-ID: <20171206125925.GA8717@krava>
-References: <1512464613-44634-1-git-send-email-zhangmengting@huawei.com>
+From: Arnaldo de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
+ trace'
+Date: Wed, 6 Dec 2017 12:28:56 -0200
+Message-ID: <20171206142856.GA3138@redhat.com>
+References: <alpine.LRH.2.20.1711291656270.9416@Diego>
+ <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
+ <20171130155642.GA2893@redhat.com>
+ <20171201023314.GC30867@sejong>
+ <20171201151628.GB3298@kernel.org>
+ <alpine.LRH.2.20.1712060007430.9416@Diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:54175 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:43932 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751443AbdLFM71 (ORCPT
+        id S1751989AbdLFO3A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Dec 2017 07:59:27 -0500
+        Wed, 6 Dec 2017 09:29:00 -0500
 Content-Disposition: inline
-In-Reply-To: <1512464613-44634-1-git-send-email-zhangmengting@huawei.com>
+In-Reply-To: <alpine.LRH.2.20.1712060007430.9416@Diego>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Mengting Zhang <zhangmengting@huawei.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, huawei.libin@huawei.com, wangnan0@huawei.com, cj.chengjian@huawei.com
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, kernel-team@lge.com
 
-On Tue, Dec 05, 2017 at 05:03:33PM +0800, Mengting Zhang wrote:
-> While monitoring a multithread process with pid option, perf sometimes
-> may return sys_perf_event_open failure with 3(No such process) if any
-> of the process's threads die before we open the event. However, we want
-> perf continue monitoring the remaining threads and do not exit with error.
+Em Wed, Dec 06, 2017 at 12:18:59AM +0100, Michael Petlan escreveu:
+> On Fri, 1 Dec 2017, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Dec 01, 2017 at 11:33:14AM +0900, Namhyung Kim escreveu:
+> [...]
+> >  
+> > > > What differs from x86 to others is that x86 uses syscalltbl, not requiring
+> > > > audit-libs to map syscall numbers to names, so perhaps it is something in there...
+> >  
+> > > If it only needs to consider open or openat, why not specifying the
+> > > both directly?
+> >  
+> > >   # perf trace -e open -e openat touch /etc/passwd
+> > 
+> > Same effect, works with other perf trace versions, but one suggestion to
+> > make it shorter:
+> > 
+> > 	perf trace -e open,openat touch /etc/passwd
+> > 
+> > Does the same thing :-)
 > 
-> Here, the patch enables perf_evsel::ignore_missing_thread for -p option
-> to ignore complete failure if any of threads die before we open the event.
-> But it may still return sys_perf_event_open failure with 22(Invalid) if we
-> monitors several event groups.
+> Well, do I understand it correctly, that we prefer the "-e open,openat" over
+> the "-e 'open*'" because there are issues with the globbing feature on some
+> architectures?
+
+The best one is '-e open*', but then wildcard support is recent, so not
+all backports have it, so I thought about '-e open,openat', but that
+shouldn't be used due to reasons you pointed out, so probably we should
+try to one that works most of the time and then check if it worked, if
+not, try the other one
+ 
+> I see a disadvantage of "-e open,openat" concept in that it does not work
+> in case any of them is unavailable. So in case some kernel does not contain
+> e.g. open in favor of openat, perf-trace fails to trace them. This can be
+> easily simulated like `perf trace -e open,openit`:
 > 
-> 	sys_perf_event_open: pid 28960  cpu 40  group_fd 118202  flags 0x8
-> 	sys_perf_event_open: pid 28961  cpu 40  group_fd 118203  flags 0x8
-> 	WARNING: Ignored open failure for pid 28962
-> 	sys_perf_event_open: pid 28962  cpu 40  group_fd [118203]  flags 0x8
-> 	sys_perf_event_open failed, error -22
+> event syntax error: 'openit'
+>                      \___ Cannot find PMU `openit'. Missing kernel support?
+> Run 'perf list' for a list of valid events
 > 
-> That is because when we ignore a missing thread, we change the thread_idx
-> without dealing with its fds, FD(evsel, cpu, thread). Then get_group_fd()
-> may return a wrong group_fd for the next thread and sys_perf_event_open()
-> return with 22.
+> Since it is possible that open is not even supported, having both of them
+> there is fragile. The "-e 'open*'" approach should expand only to supported
+> syscalls.
+> 
+> The '' are necessary there, since just open* can expand to some filename.
+> 
+> .....
+> 
+> I also see problems with globbing on my aarch64 with 4.14, so that makes
 
-oops, nice catch
+Right, only x86 has support for globbing, a fallback method for using
+audit-libs to get the list of syscall names to apply the glob and get
+the result (open, openat) from open* remains to be done.
 
-SNIP
+For s/390 it is being worked on by Hendrik, IIRC without using
+audit-libs.
 
-> +static int group_fd__remove(struct perf_evsel *evsel,
-> +			    int nr_cpus, int cpu_idx,
-> +			    int nr_threads, int thread_idx)
+So, for the tiem being, it seems the best way is to do something like:
 
-please call this something more generic like update_fds,
-I think it affects more stuff than just group_fds
+[root@jouet acme]# perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_(.*) +\[.*/-e \1/'
+-e open                           
+-e openat                         
+[root@jouet acme]# 
 
-> +{
-> +	struct perf_evsel *pos;
-> +	struct perf_evlist *evlist = evsel->evlist;
-> +
-> +	if (nr_cpus < 1 || nr_threads < 1)
-> +		return -EINVAL;
+Because 'perf list' should have glob support for long enough for use to
+use it here?
 
-we already have check for threads->nr == 1 in ignore_missing_thread
-also not sure how possible is to get nr_cpus < 1, but ok
-
-> +
-> +	if (cpu_idx >= nr_cpus || thread_idx >= nr_threads)
-> +		return -EINVAL;
-> +
-> +	evlist__for_each_entry(evlist, pos) {
-> +		if (pos != evsel) {
-> +			for (int cpu = 0; cpu < nr_cpus; cpu++)
-> +				for (int thread = thread_idx; thread < nr_threads; thread++)
-> +					FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-> +		}
-> +		else {
-> +			for (int cpu = 0; cpu < cpu_idx; cpu++)
-> +				for (int thread = thread_idx; thread < nr_threads; thread++)
-> +					FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-> +			break;
-> +		}
-> +	}
-
-could you please put this into some generic function, like:
-
-	void perf_evsel__remove_thread(evsel, nr_cpus, nr_threads, int thread_idx)
-	{
-		for (int cpu = 0; cpu < nr_cpus; cpu++)
-			for (int thread = thread_idx; thread < nr_threads; thread++)
-				FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-	}
-
-
-with the loop would be like:
-
-	evlist__for_each_entry(evlist, pos) {
-		int nr_cpus = pos != evsel ? nr_cpus : cpu_idx;
-
-		perf_evsel__remove_thread(evsel, nr_cpus, nr_threads, thread_idx)
-	}
-
-or something along those lines...
-
-
-thanks for catching this
-
-jirka
+- Arnaldo
