@@ -1,103 +1,84 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/36] perf annotate: Fix unnecessary memory allocation for s390x
-Date: Wed,  6 Dec 2017 11:40:52 -0300
-Message-ID: <20171206144115.15097-14-acme@kernel.org>
+Subject: [PATCH 15/36] perf rblist: Create rblist__exit() function
+Date: Wed,  6 Dec 2017 11:40:54 -0300
+Message-ID: <20171206144115.15097-16-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-This patch fixes a bug introduced with commit d9f8dfa9baf9 ("perf
-annotate s390: Implement jump types for perf annotate").
+Currently we have a rblist__delete() which is used to delete a rblist.
+While rblist__delete() will free the pointer of rblist at the end.
 
-'perf annotate' displays annotated assembler output by reading output of
-command objdump and parsing the disassembled lines. For each shown
-mnemonic this function sequence is executed:
+It's an inconvenience for the user to delete a rblist which is not
+allocated by something like malloc(). For example, the rblist is
+embedded in a larger data structure.
 
-  disasm_line__new()
-  |
-  +--> disasm_line__init_ins()
-       |
-       +--> ins__find()
-            |
-            +--> arch->associate_instruction_ops()
+This patch creates a new function rblist__exit() which is similar to
+rblist__delete() but it will not free the pointer of rblist.
 
-The s390x specific function assigned to function pointer
-associate_instruction_ops refers to function s390__associate_ins_ops().
-
-This function checks for supported mnemonics and assigns a NULL pointer
-to unsupported mnemonics.  However even the NULL pointer is added to the
-architecture dependend instruction array.
-
-This leads to an extremely large architecture instruction array
-(due to array resize logic in function arch__grow_instructions()).
-
-Depending on the objdump output being parsed the array can end up
-with several ten-thousand elements.
-
-This patch checks if a mnemonic is supported and only adds supported
-ones into the architecture instruction array. The array does not contain
-elements with NULL pointers anymore.
-
-Before the patch (With some debug printf output):
-
-[root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxbb
-
-real	8m49.679s
-user	7m13.008s
-sys	0m1.649s
-[root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
-			/tmp/xxxbb | tail -1
-__ins__find sorted:1 nr_instructions:87433 ins:0x341583c0
-[root@s35lp76 perf]#
-
-The number of different s390x branch/jump/call/return instructions
-entered into the array is 87433.
-
-After the patch (With some printf debug output:)
-
-[root@s35lp76 perf]# time ./perf annotate --stdio > /tmp/xxxaa
-
-real	1m24.553s
-user	0m0.587s
-sys	0m1.530s
-[root@s35lp76 perf]# fgrep '__ins__find sorted:1 nr_instructions:'
-			/tmp/xxxaa | tail -1
-__ins__find sorted:1 nr_instructions:56 ins:0x3f406570
-[root@s35lp76 perf]#
-
-The number of different s390x branch/jump/call/return instructions
-entered into the array is 56 which is sensible.
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Acked-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20171124094637.55558-1-tmricht@linux.vnet.ibm.com
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1512125856-22056-2-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/rblist.c | 19 ++++++++++++-------
+ tools/perf/util/rblist.h |  1 +
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index e0e466c650df..8c72b44444cb 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -18,7 +18,8 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
- 	if (!strcmp(name, "br"))
- 		ops = &ret_ops;
- 
--	arch__associate_ins_ops(arch, name, ops);
-+	if (ops)
-+		arch__associate_ins_ops(arch, name, ops);
- 	return ops;
+diff --git a/tools/perf/util/rblist.c b/tools/perf/util/rblist.c
+index 0dfe27d99458..0efc3258c648 100644
+--- a/tools/perf/util/rblist.c
++++ b/tools/perf/util/rblist.c
+@@ -101,16 +101,21 @@ void rblist__init(struct rblist *rblist)
+ 	return;
  }
  
++void rblist__exit(struct rblist *rblist)
++{
++	struct rb_node *pos, *next = rb_first(&rblist->entries);
++
++	while (next) {
++		pos = next;
++		next = rb_next(pos);
++		rblist__remove_node(rblist, pos);
++	}
++}
++
+ void rblist__delete(struct rblist *rblist)
+ {
+ 	if (rblist != NULL) {
+-		struct rb_node *pos, *next = rb_first(&rblist->entries);
+-
+-		while (next) {
+-			pos = next;
+-			next = rb_next(pos);
+-			rblist__remove_node(rblist, pos);
+-		}
++		rblist__exit(rblist);
+ 		free(rblist);
+ 	}
+ }
+diff --git a/tools/perf/util/rblist.h b/tools/perf/util/rblist.h
+index 4c8638a22571..76df15c27f5f 100644
+--- a/tools/perf/util/rblist.h
++++ b/tools/perf/util/rblist.h
+@@ -29,6 +29,7 @@ struct rblist {
+ };
+ 
+ void rblist__init(struct rblist *rblist);
++void rblist__exit(struct rblist *rblist);
+ void rblist__delete(struct rblist *rblist);
+ int rblist__add_node(struct rblist *rblist, const void *new_entry);
+ void rblist__remove_node(struct rblist *rblist, struct rb_node *rb_node);
 -- 
 2.13.6
