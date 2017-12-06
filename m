@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/36] perf evlist: Remove 'overwrite' parameter from perf_evlist__mmap_ex
-Date: Wed,  6 Dec 2017 11:41:05 -0300
-Message-ID: <20171206144115.15097-27-acme@kernel.org>
+Subject: [PATCH 28/36] perf mmap: Remove overwrite from arguments list of perf_mmap__push
+Date: Wed,  6 Dec 2017 11:41:07 -0300
+Message-ID: <20171206144115.15097-29-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
@@ -12,85 +12,77 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Wang Nan <wangnan0@huawei.com>
 
-All users of perf_evlist__mmap_ex set !overwrite. Remove it from its
-arguments list.
+'overwrite' argument is always 'false'. Remove it from arguments list of
+perf_mmap__push().
 
 Signed-off-by: Wang Nan <wangnan0@huawei.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@intel.com>
-Link: http://lkml.kernel.org/r/20171203020044.81680-3-wangnan0@huawei.com
+Link: http://lkml.kernel.org/r/20171203020044.81680-5-wangnan0@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/builtin-record.c | 2 +-
- tools/perf/util/evlist.c    | 8 ++++----
- tools/perf/util/evlist.h    | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/util/mmap.c      | 6 +++---
+ tools/perf/util/mmap.h      | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e304bc47fe9b..08070f87d489 100644
+index 3bc6ceeae1f9..26b8571d0fdb 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -301,7 +301,7 @@ static int record__mmap_evlist(struct record *rec,
- 	struct record_opts *opts = &rec->opts;
- 	char msg[512];
+@@ -500,7 +500,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 		struct auxtrace_mmap *mm = &maps[i].auxtrace_mmap;
  
--	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages, false,
-+	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
- 				 opts->auxtrace_mmap_pages,
- 				 opts->auxtrace_snapshot_mode) < 0) {
- 		if (errno == EPERM) {
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3c1778b500e0..93272d932407 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1052,14 +1052,14 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
-  * Return: %0 on success, negative error code otherwise.
-  */
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
--			 bool overwrite, unsigned int auxtrace_pages,
-+			 unsigned int auxtrace_pages,
- 			 bool auxtrace_overwrite)
- {
- 	struct perf_evsel *evsel;
- 	const struct cpu_map *cpus = evlist->cpus;
- 	const struct thread_map *threads = evlist->threads;
- 	struct mmap_params mp = {
--		.prot = PROT_READ | (overwrite ? 0 : PROT_WRITE),
-+		.prot = PROT_READ | PROT_WRITE,
- 	};
- 
- 	if (!evlist->mmap)
-@@ -1070,7 +1070,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
- 		return -ENOMEM;
- 
--	evlist->overwrite = overwrite;
-+	evlist->overwrite = false;
- 	evlist->mmap_len = perf_evlist__mmap_size(pages);
- 	pr_debug("mmap size %zuB\n", evlist->mmap_len);
- 	mp.mask = evlist->mmap_len - page_size - 1;
-@@ -1093,7 +1093,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
- {
--	return perf_evlist__mmap_ex(evlist, pages, false, 0, false);
-+	return perf_evlist__mmap_ex(evlist, pages, 0, false);
+ 		if (maps[i].base) {
+-			if (perf_mmap__push(&maps[i], false, backward, rec, record__pushfn) != 0) {
++			if (perf_mmap__push(&maps[i], backward, rec, record__pushfn) != 0) {
+ 				rc = -1;
+ 				goto out;
+ 			}
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 9fe5f9c7d577..703ed41a9269 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -299,7 +299,7 @@ static int rb_find_range(void *data, int mask, u64 head, u64 old,
+ 	return backward_rb_find_range(data, mask, head, start, end);
  }
  
- int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index f0f2c8b2504b..424a3d6015af 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -169,7 +169,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt,
- unsigned long perf_event_mlock_kb_in_pages(void);
+-int perf_mmap__push(struct perf_mmap *md, bool overwrite, bool backward,
++int perf_mmap__push(struct perf_mmap *md, bool backward,
+ 		    void *to, int push(void *to, void *buf, size_t size))
+ {
+ 	u64 head = perf_mmap__read_head(md);
+@@ -321,7 +321,7 @@ int perf_mmap__push(struct perf_mmap *md, bool overwrite, bool backward,
+ 		WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
  
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
--			 bool overwrite, unsigned int auxtrace_pages,
-+			 unsigned int auxtrace_pages,
- 			 bool auxtrace_overwrite);
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
- void perf_evlist__munmap(struct perf_evlist *evlist);
+ 		md->prev = head;
+-		perf_mmap__consume(md, overwrite || backward);
++		perf_mmap__consume(md, backward);
+ 		return 0;
+ 	}
+ 
+@@ -346,7 +346,7 @@ int perf_mmap__push(struct perf_mmap *md, bool overwrite, bool backward,
+ 	}
+ 
+ 	md->prev = head;
+-	perf_mmap__consume(md, overwrite || backward);
++	perf_mmap__consume(md, backward);
+ out:
+ 	return rc;
+ }
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index efd78b827b05..2c3d291785de 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -89,7 +89,7 @@ static inline void perf_mmap__write_tail(struct perf_mmap *md, u64 tail)
+ union perf_event *perf_mmap__read_forward(struct perf_mmap *map, bool check_messup);
+ union perf_event *perf_mmap__read_backward(struct perf_mmap *map);
+ 
+-int perf_mmap__push(struct perf_mmap *md, bool overwrite, bool backward,
++int perf_mmap__push(struct perf_mmap *md, bool backward,
+ 		    void *to, int push(void *to, void *buf, size_t size));
+ 
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
 -- 
 2.13.6
