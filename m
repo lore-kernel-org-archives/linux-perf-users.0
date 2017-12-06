@@ -1,99 +1,138 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/36] perf mmap: Don't discard prev in backward mode
-Date: Wed,  6 Dec 2017 11:41:14 -0300
-Message-ID: <20171206144115.15097-36-acme@kernel.org>
+Subject: [PATCH 34/36] perf mmap: Fix perf backward recording
+Date: Wed,  6 Dec 2017 11:41:13 -0300
+Message-ID: <20171206144115.15097-35-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Mengting Zhang <zhangmengting@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Mengting Zhang <zhangmengting@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Wang Nan <wangnan0@huawei.com>
 
-'perf record' can switch its output data file. The new output should
-only store the data after switching. However, in overwrite backward
-mode, the new output still can have data from before switching. That
-also brings extra overhead.
+'perf record' backward recording doesn't work as we expected: it never
+overwrites when ring buffer gets full.
 
-At the end of mmap_read(), the position of the processed ring buffer is
-saved in md->prev. Next mmap_read should be end in md->prev if it is not
-overwriten. That avoids processing duplicate data.  However, md->prev is
-discarded. So next the mmap_read() has to process whole valid ring
-buffer, which probably includes old processed data.
+Test:
 
-Avoid calling backward_rb_find_range() when md->prev is still
-available.
+Run a busy python printing task background like this:
+
+ while True:
+     print 123
+
+send SIGUSR2 to perf to capture snapshot, then:
+
+ # ./perf record --overwrite -e raw_syscalls:sys_enter -e raw_syscalls:sys_exit --exclude-perf -a --switch-output
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101520743 ]
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101521251 ]
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101521692 ]
+ ^C[ perf record: Woken up 1 times to write data ]
+ [ perf record: Dump perf.data.2017110101521936 ]
+ [ perf record: Captured and wrote 0.826 MB perf.data.<timestamp> ]
+
+ # ./perf script -i ./perf.data.2017110101520743 | head -n3
+             perf  2717 [000] 12449.310785: raw_syscalls:sys_enter: NR 16 (5, 2400, 0, 59, 100, 0)
+             perf  2717 [000] 12449.310790: raw_syscalls:sys_enter: NR 7 (4112340, 2, ffffffff, 3df, 100, 0)
+           python  2545 [000] 12449.310800:  raw_syscalls:sys_exit: NR 1 = 4
+ # ./perf script -i ./perf.data.2017110101521251 | head -n3
+             perf  2717 [000] 12449.310785: raw_syscalls:sys_enter: NR 16 (5, 2400, 0, 59, 100, 0)
+             perf  2717 [000] 12449.310790: raw_syscalls:sys_enter: NR 7 (4112340, 2, ffffffff, 3df, 100, 0)
+           python  2545 [000] 12449.310800:  raw_syscalls:sys_exit: NR 1 = 4
+ # ./perf script -i ./perf.data.2017110101521692 | head -n3
+             perf  2717 [000] 12449.310785: raw_syscalls:sys_enter: NR 16 (5, 2400, 0, 59, 100, 0)
+             perf  2717 [000] 12449.310790: raw_syscalls:sys_enter: NR 7 (4112340, 2, ffffffff, 3df, 100, 0)
+           python  2545 [000] 12449.310800:  raw_syscalls:sys_exit: NR 1 = 4
+
+Timestamps never change, but my background task is a dead loop, can
+easily overwhelm the ring buffer.
+
+This patch fixes it by forcing unsetting PROT_WRITE for a backward ring
+buffer, so all backward ring buffers become overwrite ring buffers.
+
+Test result:
+
+ # ./perf record --overwrite -e raw_syscalls:sys_enter -e raw_syscalls:sys_exit --exclude-perf -a --switch-output
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101285323 ]
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101290053 ]
+ [ perf record: dump data: Woken up 1 times ]
+ [ perf record: Dump perf.data.2017110101290446 ]
+ ^C[ perf record: Woken up 1 times to write data ]
+ [ perf record: Dump perf.data.2017110101290837 ]
+ [ perf record: Captured and wrote 0.826 MB perf.data.<timestamp> ]
+ # ./perf script -i ./perf.data.2017110101285323 | head -n3
+           python  2545 [000] 11064.268083:  raw_syscalls:sys_exit: NR 1 = 4
+           python  2545 [000] 11064.268084: raw_syscalls:sys_enter: NR 1 (1, 12cc330, 4, 7fc237280370, 7fc2373d0700, 2c7b0)
+           python  2545 [000] 11064.268086:  raw_syscalls:sys_exit: NR 1 = 4
+ # ./perf script -i ./perf.data.2017110101290 | head -n3
+ failed to open ./perf.data.2017110101290: No such file or directory
+ # ./perf script -i ./perf.data.2017110101290053 | head -n3
+           python  2545 [000] 11071.564062: raw_syscalls:sys_enter: NR 1 (1, 12cc330, 4, 7fc237280370, 7fc2373d0700, 2c7b0)
+           python  2545 [000] 11071.564064:  raw_syscalls:sys_exit: NR 1 = 4
+           python  2545 [000] 11071.564066: raw_syscalls:sys_enter: NR 1 (1, 12cc330, 4, 7fc237280370, 7fc2373d0700, 2c7b0)
+ # ./perf script -i ./perf.data.2017110101290 | head -n3
+ perf.data.2017110101290053  perf.data.2017110101290446  perf.data.2017110101290837
+ # ./perf script -i ./perf.data.2017110101290446 | head -n3
+             sshd  1321 [000] 11075.499473:  raw_syscalls:sys_exit: NR 14 = 0
+             sshd  1321 [000] 11075.499474: raw_syscalls:sys_enter: NR 14 (2, 7ffe98899490, 0, 8, 0, 3000)
+             sshd  1321 [000] 11075.499474:  raw_syscalls:sys_exit: NR 14 = 0
+ # ./perf script -i ./perf.data.2017110101290837 | head -n3
+           python  2545 [000] 11079.280844:  raw_syscalls:sys_exit: NR 1 = 4
+           python  2545 [000] 11079.280847: raw_syscalls:sys_enter: NR 1 (1, 12cc330, 4, 7fc237280370, 7fc2373d0700, 2c7b0)
+           python  2545 [000] 11079.280850:  raw_syscalls:sys_exit: NR 1 = 4
 
 Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Tested-by: Kan Liang <kan.liang@intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Mengting Zhang <zhangmengting@huawei.com>
-Link: http://lkml.kernel.org/r/20171204165107.95327-3-wangnan0@huawei.com
+Link: http://lkml.kernel.org/r/20171204165107.95327-2-wangnan0@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 33 +++++++++++++++------------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+ tools/perf/util/evlist.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 3f262e707a41..5f8cb1583e53 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -267,18 +267,6 @@ static int backward_rb_find_range(void *buf, int mask, u64 head, u64 *start, u64
- 	return -1;
- }
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 68c1f9546650..b1cea711232b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -812,6 +812,7 @@ static int perf_evlist__mmap_per_evsel(struct perf_evlist *evlist, int idx,
+ 		int fd;
+ 		int cpu;
  
--static int rb_find_range(void *data, int mask, u64 head, u64 old,
--			 u64 *start, u64 *end, bool backward)
--{
--	if (!backward) {
--		*start = old;
--		*end = head;
--		return 0;
--	}
--
--	return backward_rb_find_range(data, mask, head, start, end);
--}
--
- int perf_mmap__push(struct perf_mmap *md, bool backward,
- 		    void *to, int push(void *to, void *buf, size_t size))
- {
-@@ -290,19 +278,28 @@ int perf_mmap__push(struct perf_mmap *md, bool backward,
- 	void *buf;
- 	int rc = 0;
++		mp->prot = PROT_READ | PROT_WRITE;
+ 		if (evsel->attr.write_backward) {
+ 			output = _output_backward;
+ 			maps = evlist->backward_mmap;
+@@ -824,6 +825,7 @@ static int perf_evlist__mmap_per_evsel(struct perf_evlist *evlist, int idx,
+ 				if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
+ 					perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
+ 			}
++			mp->prot &= ~PROT_WRITE;
+ 		}
  
--	if (rb_find_range(data, md->mask, head, old, &start, &end, backward))
--		return -1;
-+	start = backward ? head : old;
-+	end = backward ? old : head;
+ 		if (evsel->system_wide && thread)
+@@ -1058,9 +1060,12 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	struct perf_evsel *evsel;
+ 	const struct cpu_map *cpus = evlist->cpus;
+ 	const struct thread_map *threads = evlist->threads;
+-	struct mmap_params mp = {
+-		.prot = PROT_READ | PROT_WRITE,
+-	};
++	/*
++	 * Delay setting mp.prot: set it before calling perf_mmap__mmap.
++	 * Its value is decided by evsel's write_backward.
++	 * So &mp should not be passed through const pointer.
++	 */
++	struct mmap_params mp;
  
- 	if (start == end)
- 		return 0;
- 
- 	size = end - start;
- 	if (size > (unsigned long)(md->mask) + 1) {
--		WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
-+		if (!backward) {
-+			WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
- 
--		md->prev = head;
--		perf_mmap__consume(md, backward);
--		return 0;
-+			md->prev = head;
-+			perf_mmap__consume(md, backward);
-+			return 0;
-+		}
-+
-+		/*
-+		 * Backward ring buffer is full. We still have a chance to read
-+		 * most of data from it.
-+		 */
-+		if (backward_rb_find_range(data, md->mask, head, &start, &end))
-+			return -1;
- 	}
- 
- 	if ((start & md->mask) + size != (end & md->mask)) {
+ 	if (!evlist->mmap)
+ 		evlist->mmap = perf_evlist__alloc_mmap(evlist);
 -- 
 2.13.6
