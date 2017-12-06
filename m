@@ -1,67 +1,46 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/36] perf stat: Add rbtree node_delete op
-Date: Wed,  6 Dec 2017 11:40:55 -0300
-Message-ID: <20171206144115.15097-17-acme@kernel.org>
+Subject: [PATCH 18/36] perf s390: Always build with -fPIC
+Date: Wed,  6 Dec 2017 11:40:57 -0300
+Message-ID: <20171206144115.15097-19-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752769AbdLFOmb (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Dec 2017 09:42:31 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, linux s390 list <linux-s390@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 
-In current stat-shadow.c, the rbtree deleting is ignored.
+On s390, object files must be compiled with position-indepedent code in
+order to be incrementally linked or linked to shared libraries.
+Therefore, add -fPIC to the CFLAGS for s390 to ensure each object file
+is built properly.
 
-The patch adds the implementation to node_delete method of rblist.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512125856-22056-5-git-send-email-yao.jin@linux.intel.com
+Reported-by: Jonathan Hermann <jonathan.hermann@de.ibm.com>
+Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux s390 list <linux-s390@vger.kernel.org>
+LPU-Reference: 1512031765-9382-1-git-send-email-brueckner@linux.vnet.ibm.com
+Link: https://lkml.kernel.org/n/tip-a8wga8hrl0d0r84cal96fmgv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 855e35cbb1dc..57ec22513971 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -87,6 +87,16 @@ static struct rb_node *saved_value_new(struct rblist *rblist __maybe_unused,
- 	return &nd->rb_node;
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 2c437baf8364..bf86c09ca889 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -41,6 +41,7 @@ ifeq ($(SRCARCH),x86)
+     LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
+   endif
+   NO_PERF_REGS := 0
++  CFLAGS += -fPIC
+ endif
  
-+static void saved_value_delete(struct rblist *rblist __maybe_unused,
-+			       struct rb_node *rb_node)
-+{
-+	struct saved_value *v;
-+
-+	BUG_ON(!rb_node);
-+	v = container_of(rb_node, struct saved_value, rb_node);
-+	free(v);
-+}
-+
- static struct saved_value *saved_value_lookup(struct perf_evsel *evsel,
- 					      int cpu,
- 					      bool create)
-@@ -114,7 +124,7 @@ void perf_stat__init_shadow_stats(void)
- 	rblist__init(&runtime_saved_values);
- 	runtime_saved_values.node_cmp = saved_value_cmp;
- 	runtime_saved_values.node_new = saved_value_new;
--	/* No delete for now */
-+	runtime_saved_values.node_delete = saved_value_delete;
- }
- 
- static int evsel_context(struct perf_evsel *evsel)
+ ifeq ($(SRCARCH),arm)
 -- 
 2.13.6
