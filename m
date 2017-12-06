@@ -1,48 +1,236 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/36] tools headers: Follow the upstream UAPI header version 100% differ from the kernel
-Date: Wed,  6 Dec 2017 11:40:40 -0300
-Message-ID: <20171206144115.15097-2-acme@kernel.org>
+Subject: [PATCH 03/36] perf record: Synthesize unit/scale/... in event update
+Date: Wed,  6 Dec 2017 11:40:42 -0300
+Message-ID: <20171206144115.15097-4-acme@kernel.org>
 References: <20171206144115.15097-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751570AbdLFOln (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Dec 2017 09:41:43 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Ingo Molnar <mingo@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-Remove this from check-headers.sh:
+Move the code to synthesize event updates for scale/unit/cpus to a
+common utility file, and use it both from stat and record.
 
-  opts="--ignore-blank-lines --ignore-space-change"
+This allows to access scale and other extra qualifiers from perf script.
 
-as the easiest policy is to just follow the upstream UAPI header version 100%.
-Pure space-only changes are comparatively rare.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Link: http://lkml.kernel.org/r/20171121084111.y6p5zwqso2cbms5s@gmail.com
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20171117214300.32746-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/check-headers.sh | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/builtin-record.c |  9 ++++++
+ tools/perf/builtin-stat.c   | 62 +++--------------------------------------
+ tools/perf/util/header.c    | 68 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/header.h    |  5 ++++
+ 4 files changed, 86 insertions(+), 58 deletions(-)
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 77406d25e521..e66a8a7bcced 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -45,7 +45,6 @@ include/uapi/asm-generic/mman-common.h
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 003255910c05..b92d6d67bca8 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -372,6 +372,8 @@ static int record__open(struct record *rec)
+ 			ui__error("%s\n", msg);
+ 			goto out;
+ 		}
++
++		pos->supported = true;
+ 	}
  
- check () {
-   file=$1
--  opts="--ignore-blank-lines --ignore-space-change"
+ 	if (perf_evlist__apply_filters(evlist, &pos)) {
+@@ -784,6 +786,13 @@ static int record__synthesize(struct record *rec, bool tail)
+ 					 perf_event__synthesize_guest_os, tool);
+ 	}
  
-   shift
-   while [ -n "$*" ]; do
++	err = perf_event__synthesize_extra_attr(&rec->tool,
++						rec->evlist,
++						process_synthesized_event,
++						data->is_pipe);
++	if (err)
++		goto out;
++
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->threads,
+ 					    process_synthesized_event, opts->sample_address,
+ 					    opts->proc_map_timeout, 1);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 59af5a8419e2..a027b4712e48 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -458,19 +458,8 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+ 	workload_exec_errno = info->si_value.sival_int;
+ }
+ 
+-static bool has_unit(struct perf_evsel *counter)
+-{
+-	return counter->unit && *counter->unit;
+-}
+-
+-static bool has_scale(struct perf_evsel *counter)
+-{
+-	return counter->scale != 1;
+-}
+-
+ static int perf_stat_synthesize_config(bool is_pipe)
+ {
+-	struct perf_evsel *counter;
+ 	int err;
+ 
+ 	if (is_pipe) {
+@@ -482,53 +471,10 @@ static int perf_stat_synthesize_config(bool is_pipe)
+ 		}
+ 	}
+ 
+-	/*
+-	 * Synthesize other events stuff not carried within
+-	 * attr event - unit, scale, name
+-	 */
+-	evlist__for_each_entry(evsel_list, counter) {
+-		if (!counter->supported)
+-			continue;
+-
+-		/*
+-		 * Synthesize unit and scale only if it's defined.
+-		 */
+-		if (has_unit(counter)) {
+-			err = perf_event__synthesize_event_update_unit(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel unit.\n");
+-				return err;
+-			}
+-		}
+-
+-		if (has_scale(counter)) {
+-			err = perf_event__synthesize_event_update_scale(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel scale.\n");
+-				return err;
+-			}
+-		}
+-
+-		if (counter->own_cpus) {
+-			err = perf_event__synthesize_event_update_cpus(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel scale.\n");
+-				return err;
+-			}
+-		}
+-
+-		/*
+-		 * Name is needed only for pipe output,
+-		 * perf.data carries event names.
+-		 */
+-		if (is_pipe) {
+-			err = perf_event__synthesize_event_update_name(NULL, counter, process_synthesized_event);
+-			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel name.\n");
+-				return err;
+-			}
+-		}
+-	}
++	err = perf_event__synthesize_extra_attr(NULL,
++						evsel_list,
++						process_synthesized_event,
++						is_pipe);
+ 
+ 	err = perf_event__synthesize_thread_map2(NULL, evsel_list->threads,
+ 						process_synthesized_event,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7c0e9d587bfa..5890e08e0754 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3258,6 +3258,74 @@ int perf_event__synthesize_attrs(struct perf_tool *tool,
+ 	return err;
+ }
+ 
++static bool has_unit(struct perf_evsel *counter)
++{
++	return counter->unit && *counter->unit;
++}
++
++static bool has_scale(struct perf_evsel *counter)
++{
++	return counter->scale != 1;
++}
++
++int perf_event__synthesize_extra_attr(struct perf_tool *tool,
++				      struct perf_evlist *evsel_list,
++				      perf_event__handler_t process,
++				      bool is_pipe)
++{
++	struct perf_evsel *counter;
++	int err;
++
++	/*
++	 * Synthesize other events stuff not carried within
++	 * attr event - unit, scale, name
++	 */
++	evlist__for_each_entry(evsel_list, counter) {
++		if (!counter->supported)
++			continue;
++
++		/*
++		 * Synthesize unit and scale only if it's defined.
++		 */
++		if (has_unit(counter)) {
++			err = perf_event__synthesize_event_update_unit(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel unit.\n");
++				return err;
++			}
++		}
++
++		if (has_scale(counter)) {
++			err = perf_event__synthesize_event_update_scale(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel counter.\n");
++				return err;
++			}
++		}
++
++		if (counter->own_cpus) {
++			err = perf_event__synthesize_event_update_cpus(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel cpus.\n");
++				return err;
++			}
++		}
++
++		/*
++		 * Name is needed only for pipe output,
++		 * perf.data carries event names.
++		 */
++		if (is_pipe) {
++			err = perf_event__synthesize_event_update_name(tool, counter, process);
++			if (err < 0) {
++				pr_err("Couldn't synthesize evsel name.\n");
++				return err;
++			}
++		}
++	}
++	return 0;
++}
++
+ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 			     union perf_event *event,
+ 			     struct perf_evlist **pevlist)
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 29ccbfdf8724..91befc3b550d 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -107,6 +107,11 @@ int perf_event__synthesize_features(struct perf_tool *tool,
+ 				    struct perf_evlist *evlist,
+ 				    perf_event__handler_t process);
+ 
++int perf_event__synthesize_extra_attr(struct perf_tool *tool,
++				      struct perf_evlist *evsel_list,
++				      perf_event__handler_t process,
++				      bool is_pipe);
++
+ int perf_event__process_feature(struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_session *session);
 -- 
 2.13.6
