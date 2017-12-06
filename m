@@ -1,47 +1,41 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/36] perf test: Disable test cases 19 and 20 on s390x
-Date: Wed,  6 Dec 2017 11:40:41 -0300
-Message-ID: <20171206144115.15097-3-acme@kernel.org>
-References: <20171206144115.15097-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171206144115.15097-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
+ trace'
+Date: Wed, 6 Dec 2017 13:34:43 -0300
+Message-ID: <20171206163443.GA16781@kernel.org>
+References: <alpine.LRH.2.20.1711291656270.9416@Diego>
+ <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
+ <20171130155642.GA2893@redhat.com>
+ <20171130155922.GB2893@redhat.com>
+ <20171205153949.GA4370@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:52038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751208AbdLFQet (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 6 Dec 2017 11:34:49 -0500
+Content-Disposition: inline
+In-Reply-To: <20171205153949.GA4370@linux.vnet.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Em Tue, Dec 05, 2017 at 04:39:49PM +0100, Hendrik Brueckner escreveu:
+> On Thu, Nov 30, 2017 at 01:59:22PM -0200, Arnaldo de Melo wrote:
+> > So someone needs to implement syscalltbl__strglobmatch_next() for arches
+> > that don't HAVE_SYSCALL_TABLE, which is basically at this stage !x86.
 
-The s390x CPU sampling and measurement facilities do not support perf
-events of type PERF_TYPE_BREAKPOINT. The test cases are executed and
-fail with -ENOENT due to missing hardware support.
+> > Shouldn't be that difficult, but remains to be done.
+ 
+> Thanks for pointing in that direction.  I looked at it and will post a
+> patch to add syscall tables for s390 too.
 
-Disable the execution of both test cases based on a
-platform check. This is the same approach as done for
-PowerPC.
+Will you do it the way I did for x86? That would be the best, as we
+would then reduce the need for audit-libs to be linked with perf.
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-LPU-Reference: 20171123074623.20817-1-tmricht@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/n/tip-uqvoy6a1tsu8jddo5jjg4h85@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/bp_signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We really need to reduce the number of libraries that perf links to :-\
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 335b695f4970..a467615c5a0e 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -296,7 +296,7 @@ bool test__bp_signal_is_supported(void)
-  * instruction breakpoint using the perf event interface.
-  * Once it's there we can release this.
-  */
--#ifdef __powerpc__
-+#if defined(__powerpc__) || defined(__s390x__)
- 	return false;
- #else
- 	return true;
--- 
-2.13.6
+- Arnaldo
