@@ -1,63 +1,101 @@
 From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
- trace'
-Date: Thu, 7 Dec 2017 08:39:12 +0100
-Message-ID: <20171207073912.GB4889@linux.vnet.ibm.com>
-References: <alpine.LRH.2.20.1711291656270.9416@Diego>
- <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
- <20171130155642.GA2893@redhat.com>
- <20171130155922.GB2893@redhat.com>
- <20171205153949.GA4370@linux.vnet.ibm.com>
- <20171206163443.GA16781@kernel.org>
+Subject: Re: [PATCH 18/36] perf s390: Always build with -fPIC
+Date: Thu, 7 Dec 2017 09:09:51 +0100
+Message-ID: <20171207080951.GC4889@linux.vnet.ibm.com>
+References: <20171206144115.15097-1-acme@kernel.org>
+ <20171206144115.15097-19-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44384 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750807AbdLGHjV (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1752312AbdLGIJ6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Dec 2017 02:39:21 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vB77bB71115643
-        for <linux-perf-users@vger.kernel.org>; Thu, 7 Dec 2017 02:39:20 -0500
-Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2epyhrc9rq-1
+        Thu, 7 Dec 2017 03:09:58 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vB7899UA073519
+        for <linux-perf-users@vger.kernel.org>; Thu, 7 Dec 2017 03:09:58 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2eq1nbrpb6-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2017 02:39:19 -0500
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2017 03:09:57 -0500
 Received: from localhost
-        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Thu, 7 Dec 2017 07:39:17 -0000
+        Thu, 7 Dec 2017 08:09:56 -0000
 Content-Disposition: inline
-In-Reply-To: <20171206163443.GA16781@kernel.org>
+In-Reply-To: <20171206144115.15097-19-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, linux s390 list <linux-s390@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On Wed, Dec 06, 2017 at 01:34:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 05, 2017 at 04:39:49PM +0100, Hendrik Brueckner escreveu:
-> > On Thu, Nov 30, 2017 at 01:59:22PM -0200, Arnaldo de Melo wrote:
-> > > So someone needs to implement syscalltbl__strglobmatch_next() for arches
-> > > that don't HAVE_SYSCALL_TABLE, which is basically at this stage !x86.
+Hi Arnaldo,
+
+On Wed, Dec 06, 2017 at 11:40:57AM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 > 
-> > > Shouldn't be that difficult, but remains to be done.
+> On s390, object files must be compiled with position-indepedent code in
+> order to be incrementally linked or linked to shared libraries.
+> Therefore, add -fPIC to the CFLAGS for s390 to ensure each object file
+> is built properly.
 > 
-> > Thanks for pointing in that direction.  I looked at it and will post a
-> > patch to add syscall tables for s390 too.
+> Reported-by: Jonathan Hermann <jonathan.hermann@de.ibm.com>
+> Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> Cc: linux s390 list <linux-s390@vger.kernel.org>
+> LPU-Reference: 1512031765-9382-1-git-send-email-brueckner@linux.vnet.ibm.com
+> Link: https://lkml.kernel.org/n/tip-a8wga8hrl0d0r84cal96fmgv@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/Makefile.config | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Will you do it the way I did for x86? That would be the best, as we
-> would then reduce the need for audit-libs to be linked with perf.
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 2c437baf8364..bf86c09ca889 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -41,6 +41,7 @@ ifeq ($(SRCARCH),x86)
+>      LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
+>    endif
+>    NO_PERF_REGS := 0
+> +  CFLAGS += -fPIC
+>  endif
 
-It looks similar to x86 but at the time being, s390 does not have a
-system call table like x86.  So the input is different, the output
-will follow what x86 provides to perf.
+I was just rebasing my syscall table work on top of your perf/core tree.
+It looks like that there is a significant difference compared to linux
+master tree.
 
-> 
-> We really need to reduce the number of libraries that perf links to :-\
+With f704ef44602fbf403e6722c7ed13f62d17e8cb20 ("s390/perf: add support for
+perf_regs and libdw"), Heiko introduced a change in the Makefile.config:
 
-I have prepared two patches to get rid of the auditlibs dependency for
-those arch's that have system call tables.  Going to post this today.
+	--- a/tools/perf/Makefile.config
+	+++ b/tools/perf/Makefile.config
+	@@ -53,6 +53,10 @@ ifeq ($(SRCARCH),arm64)
+	   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+	    endif
+	     
+	+ifeq ($(ARCH),s390)
+	+  NO_PERF_REGS := 0
+	+endif
+	+
+	ifeq ($(NO_PERF_REGS),0)
 
-Thanks and kind regards,
-  Hendrik
+The CFLAGS actually should applied to the s390 block and not in the x86
+block.  Somehow this got messed up with git cherryp-pick / am.  So actually,
+this should go into the section above:
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index ed65e82..0833d9f 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -55,6 +55,7 @@ endif
+ 
+ ifeq ($(ARCH),s390)
+   NO_PERF_REGS := 0
++  CFLAGS += -fPIC
+ endif
+ 
+ ifeq ($(NO_PERF_REGS),0)
