@@ -1,110 +1,38 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 3/3] perf trace: no longer require auditlibs if syscall
- tables are present
-Date: Thu, 7 Dec 2017 14:53:52 -0300
-Message-ID: <20171207175352.GH3173@kernel.org>
-References: <1512635281-20733-1-git-send-email-brueckner@linux.vnet.ibm.com>
- <1512635281-20733-4-git-send-email-brueckner@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 2/5] perf-probe: Cut off the version suffix from event
+ name
+Date: Thu, 7 Dec 2017 14:55:29 -0300
+Message-ID: <20171207175529.GI3173@kernel.org>
+References: <151263115609.13843.6362262297053841418.stgit@devbox>
+ <151263122864.13843.10998234736675352577.stgit@devbox>
+ <20171207165659.GD3173@kernel.org>
+ <8f1f552c-c5d0-40e3-14d9-96a4a38b33c6@us.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:52528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752234AbdLGRx4 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Dec 2017 12:53:56 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1512635281-20733-4-git-send-email-brueckner@linux.vnet.ibm.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
+In-Reply-To: <8f1f552c-c5d0-40e3-14d9-96a4a38b33c6@us.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Clarke <pc@us.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Dec 07, 2017 at 09:28:01AM +0100, Hendrik Brueckner escreveu:
-> Change the Makefile and build process to no longer require auditlibs
-> interfaces when the architecture provides system call tables.
+Em Thu, Dec 07, 2017 at 11:24:47AM -0600, Paul Clarke escreveu:
+> On 12/07/2017 10:56 AM, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Dec 07, 2017 at 04:20:28PM +0900, Masami Hiramatsu escreveu:
+> > See also Paul Clarke's question and suggestion, which I agree, i.e.
+> > instead of chopping off the version, just replace the chars with valid
+> > ones or better, do what Paul suggests, be more flexible in interpreting
+> > @, i.e. if it is a number and/or fails to point to any file, interpret
+> > it as versioning.
+ 
+> It's a nit, and subjective, but I'd favor checking for versioning
+> first, then file.  The namespaces are very unlikely to intersect, but
+> I could foresee symbols like "sym@implA.c" and "sym@implB.c" more
+> likely than a symbol in a file "GLIBC_2.2.5".
+ 
+> Perhaps straying toward bikeshedding...
 
-And this one will have to wait for the fix in how the errno translation
-tables are generated, ok?
+Nah, those are valid concerns, and I share them.
 
 - Arnaldo
- 
-> Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-> ---
->  tools/perf/Makefile.config          | 10 ++++++++--
->  tools/perf/builtin-help.c           |  2 +-
->  tools/perf/perf.c                   |  4 ++--
->  tools/perf/util/generate-cmdlist.sh |  2 +-
->  4 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d8447b1..6a948bf 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -531,8 +531,14 @@ endif
->  
->  ifndef NO_LIBAUDIT
->    ifneq ($(feature-libaudit), 1)
-> -    msg := $(warning No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev);
-> -    NO_LIBAUDIT := 1
-> +    ifeq ($(NO_SYSCALL_TABLE), 1)
-> +      msg := $(warning No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev);
-> +      NO_LIBAUDIT := 1
-> +    else
-> +      # With syscall table support, auditlibs are no longer required to build
-> +      # the trace tool.
-> +      $(call detected,CONFIG_AUDIT)
-> +    endif
->    else
->      CFLAGS += -DHAVE_LIBAUDIT_SUPPORT
->      EXTLIBS += -laudit
-> diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-> index a0f7ed2..4aca13f 100644
-> --- a/tools/perf/builtin-help.c
-> +++ b/tools/perf/builtin-help.c
-> @@ -439,7 +439,7 @@ int cmd_help(int argc, const char **argv)
->  #ifdef HAVE_LIBELF_SUPPORT
->  		"probe",
->  #endif
-> -#ifdef HAVE_LIBAUDIT_SUPPORT
-> +#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE)
->  		"trace",
->  #endif
->  	NULL };
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index 62b1351..1b3fc8e 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -73,7 +73,7 @@ struct cmd_struct {
->  	{ "lock",	cmd_lock,	0 },
->  	{ "kvm",	cmd_kvm,	0 },
->  	{ "test",	cmd_test,	0 },
-> -#ifdef HAVE_LIBAUDIT_SUPPORT
-> +#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE)
->  	{ "trace",	cmd_trace,	0 },
->  #endif
->  	{ "inject",	cmd_inject,	0 },
-> @@ -485,7 +485,7 @@ int main(int argc, const char **argv)
->  		argv[0] = cmd;
->  	}
->  	if (strstarts(cmd, "trace")) {
-> -#ifdef HAVE_LIBAUDIT_SUPPORT
-> +#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE)
->  		setup_path();
->  		argv[0] = "trace";
->  		return cmd_trace(argc, argv);
-> diff --git a/tools/perf/util/generate-cmdlist.sh b/tools/perf/util/generate-cmdlist.sh
-> index 9bbcec4..ff17920 100755
-> --- a/tools/perf/util/generate-cmdlist.sh
-> +++ b/tools/perf/util/generate-cmdlist.sh
-> @@ -38,7 +38,7 @@ do
->  done
->  echo "#endif /* HAVE_LIBELF_SUPPORT */"
->  
-> -echo "#ifdef HAVE_LIBAUDIT_SUPPORT"
-> +echo "#if defined(HAVE_LIBAUDIT_SUPPORT) || defined(HAVE_SYSCALL_TABLE)"
->  sed -n -e 's/^perf-\([^ 	]*\)[ 	].* audit*/\1/p' command-list.txt |
->  sort |
->  while read cmd
-> -- 
-> 1.8.3.1
