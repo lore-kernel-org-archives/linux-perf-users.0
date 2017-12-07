@@ -1,308 +1,63 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v2 5/5] perf-probe: Support escaped character in parser
-Date: Thu,  7 Dec 2017 16:21:54 +0900
-Message-ID: <151263131450.13843.8886849773180714443.stgit@devbox>
-References: <151263115609.13843.6362262297053841418.stgit@devbox>
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf test shell: Fix check open filename arg using 'perf
+ trace'
+Date: Thu, 7 Dec 2017 08:39:12 +0100
+Message-ID: <20171207073912.GB4889@linux.vnet.ibm.com>
+References: <alpine.LRH.2.20.1711291656270.9416@Diego>
+ <84d4a40a-dfbf-6d9b-9eb2-6912dc6f57e4@linux.vnet.ibm.com>
+ <20171130155642.GA2893@redhat.com>
+ <20171130155922.GB2893@redhat.com>
+ <20171205153949.GA4370@linux.vnet.ibm.com>
+ <20171206163443.GA16781@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <151263115609.13843.6362262297053841418.stgit@devbox>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750807AbdLGHjV (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 7 Dec 2017 02:39:21 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vB77bB71115643
+        for <linux-perf-users@vger.kernel.org>; Thu, 7 Dec 2017 02:39:20 -0500
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2epyhrc9rq-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2017 02:39:19 -0500
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
+        Thu, 7 Dec 2017 07:39:17 -0000
+Content-Disposition: inline
+In-Reply-To: <20171206163443.GA16781@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo de Melo <acme@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>
 
-Support the special characters escaped by '\' in parser.
-This allows user to specify versions directly like below.
+On Wed, Dec 06, 2017 at 01:34:43PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 05, 2017 at 04:39:49PM +0100, Hendrik Brueckner escreveu:
+> > On Thu, Nov 30, 2017 at 01:59:22PM -0200, Arnaldo de Melo wrote:
+> > > So someone needs to implement syscalltbl__strglobmatch_next() for arches
+> > > that don't HAVE_SYSCALL_TABLE, which is basically at this stage !x86.
+> 
+> > > Shouldn't be that difficult, but remains to be done.
+> 
+> > Thanks for pointing in that direction.  I looked at it and will post a
+> > patch to add syscall tables for s390 too.
+> 
+> Will you do it the way I did for x86? That would be the best, as we
+> would then reduce the need for audit-libs to be linked with perf.
 
-  =====
-  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
-  Added new event:
-    probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+It looks similar to x86 but at the time being, s390 does not have a
+system call table like x86.  So the input is different, the output
+will follow what x86 provides to perf.
 
-  You can now use it in all perf tools, such as:
+> 
+> We really need to reduce the number of libraries that perf links to :-\
 
-	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+I have prepared two patches to get rid of the auditlibs dependency for
+those arch's that have system call tables.  Going to post this today.
 
-  =====
-
-Or, you can use separators in source filename, e.g.
-
-  =====
-  # ./perf probe -x /opt/test/a.out foo+bar.c:3
-  Semantic error :There is non-digit character in offset.
-    Error: Command Parse Error.
-  =====
-
-Usually "+" in source file cause parser error, but
-
-  =====
-  # ./perf probe -x /opt/test/a.out foo\\+bar.c:4
-  Added new event:
-    probe_a:main         (on @foo+bar.c:4 in /opt/test/a.out)
-
-  You can now use it in all perf tools, such as:
-
-	  perf record -e probe_a:main -aR sleep 1
-  =====
-
-escaped "\+" allows you to specify that.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Changes in v2:
-  - Add a description and samples in Documentation/perf-probe.txt
----
- tools/perf/Documentation/perf-probe.txt |   16 +++++++++
- tools/perf/util/probe-event.c           |   54 +++++++++++++++++++------------
- tools/perf/util/string.c                |   46 ++++++++++++++++++++++++++
- tools/perf/util/string2.h               |    2 +
- 4 files changed, 97 insertions(+), 21 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index f96382692f42..b6866a05edd2 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -182,6 +182,14 @@ Note that before using the SDT event, the target binary (on which SDT events are
- For details of the SDT, see below.
- https://sourceware.org/gdb/onlinedocs/gdb/Static-Probe-Points.html
- 
-+ESCAPED CHARACTER
-+-----------------
-+
-+In the probe syntax, '=', '@', '+', ':' and ';' are treated as a special character. You can use a backslash ('\') to escape the special characters.
-+This is useful if you need to probe on a specific versioned symbols, like @GLIBC_... suffixes, or also you need to specify a source file which includes the special characters.
-+Note that usually single backslash is consumed by shell, so you might need to pass double backslash (\\) or wrapping with single quotes (\'AAA\@BBB').
-+See EXAMPLES how it is used.
-+
- PROBE ARGUMENT
- --------------
- Each probe argument follows below syntax.
-@@ -277,6 +285,14 @@ Add a USDT probe to a target process running in a different mount namespace
- 
-  ./perf probe --target-ns <target pid> -x /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el7_3.x86_64/jre/lib/amd64/server/libjvm.so %sdt_hotspot:thread__sleep__end
- 
-+Add a probe on specific versioned symbol by backslash escape
-+
-+ ./perf probe -x /lib64/libc-2.25.so 'malloc_get_state\@GLIBC_2.2.5'
-+
-+Add a probe in a source file using special characters by backslash escape
-+
-+ ./perf probe -x /opt/test/a.out 'foo\+bar.c:4'
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 94acc5846e2a..c082a27982e5 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1325,27 +1325,30 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
- {
- 	char *ptr;
- 
--	ptr = strchr(*arg, ':');
-+	ptr = strpbrk_esc(*arg, ":");
- 	if (ptr) {
- 		*ptr = '\0';
- 		if (!pev->sdt && !is_c_func_name(*arg))
- 			goto ng_name;
--		pev->group = strdup(*arg);
-+		pev->group = strdup_esc(*arg);
- 		if (!pev->group)
- 			return -ENOMEM;
- 		*arg = ptr + 1;
- 	} else
- 		pev->group = NULL;
--	if (!pev->sdt && !is_c_func_name(*arg)) {
-+
-+	pev->event = strdup_esc(*arg);
-+	if (pev->event == NULL)
-+		return -ENOMEM;
-+
-+	if (!pev->sdt && !is_c_func_name(pev->event)) {
-+		zfree(&pev->event);
- ng_name:
-+		zfree(&pev->group);
- 		semantic_error("%s is bad for event name -it must "
- 			       "follow C symbol-naming rule.\n", *arg);
- 		return -EINVAL;
- 	}
--	pev->event = strdup(*arg);
--	if (pev->event == NULL)
--		return -ENOMEM;
--
- 	return 0;
- }
- 
-@@ -1373,7 +1376,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 			arg++;
- 	}
- 
--	ptr = strpbrk(arg, ";=@+%");
-+	ptr = strpbrk_esc(arg, ";=@+%");
- 	if (pev->sdt) {
- 		if (ptr) {
- 			if (*ptr != '@') {
-@@ -1387,7 +1390,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				pev->target = build_id_cache__origname(tmp);
- 				free(tmp);
- 			} else
--				pev->target = strdup(ptr + 1);
-+				pev->target = strdup_esc(ptr + 1);
- 			if (!pev->target)
- 				return -ENOMEM;
- 			*ptr = '\0';
-@@ -1421,13 +1424,14 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 	 *
- 	 * Otherwise, we consider arg to be a function specification.
- 	 */
--	if (!strpbrk(arg, "+@%") && (ptr = strpbrk(arg, ";:")) != NULL) {
-+	if (!strpbrk_esc(arg, "+@%")) {
-+		ptr = strpbrk_esc(arg, ";:");
- 		/* This is a file spec if it includes a '.' before ; or : */
--		if (memchr(arg, '.', ptr - arg))
-+		if (ptr && memchr(arg, '.', ptr - arg))
- 			file_spec = true;
- 	}
- 
--	ptr = strpbrk(arg, ";:+@%");
-+	ptr = strpbrk_esc(arg, ";:+@%");
- 	if (ptr) {
- 		nc = *ptr;
- 		*ptr++ = '\0';
-@@ -1436,7 +1440,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 	if (arg[0] == '\0')
- 		tmp = NULL;
- 	else {
--		tmp = strdup(arg);
-+		tmp = strdup_esc(arg);
- 		if (tmp == NULL)
- 			return -ENOMEM;
- 	}
-@@ -1469,12 +1473,12 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 		arg = ptr;
- 		c = nc;
- 		if (c == ';') {	/* Lazy pattern must be the last part */
--			pp->lazy_line = strdup(arg);
-+			pp->lazy_line = strdup(arg); /* let leave escapes */
- 			if (pp->lazy_line == NULL)
- 				return -ENOMEM;
- 			break;
- 		}
--		ptr = strpbrk(arg, ";:+@%");
-+		ptr = strpbrk_esc(arg, ";:+@%");
- 		if (ptr) {
- 			nc = *ptr;
- 			*ptr++ = '\0';
-@@ -1501,7 +1505,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				semantic_error("SRC@SRC is not allowed.\n");
- 				return -EINVAL;
- 			}
--			pp->file = strdup(arg);
-+			pp->file = strdup_esc(arg);
- 			if (pp->file == NULL)
- 				return -ENOMEM;
- 			break;
-@@ -2803,21 +2807,29 @@ static int find_probe_functions(struct map *map, char *name,
- 	struct rb_node *tmp;
- 	const char *norm, *ver;
- 	char *buf = NULL;
-+	bool cut_version = true;
- 
- 	if (map__load(map) < 0)
- 		return 0;
- 
-+	/* If user gives a version, don't cut off the version from symbols */
-+	if (strchr(name, '@'))
-+		cut_version = false;
-+
- 	map__for_each_symbol(map, sym, tmp) {
- 		norm = arch__normalize_symbol_name(sym->name);
- 		if (!norm)
- 			continue;
- 
--		/* We don't care about default symbol or not */
--		ver = strchr(norm, '@');
--		if (ver) {
--			buf = strndup(norm, ver - norm);
--			norm = buf;
-+		if (cut_version) {
-+			/* We don't care about default symbol or not */
-+			ver = strchr(norm, '@');
-+			if (ver) {
-+				buf = strndup(norm, ver - norm);
-+				norm = buf;
-+			}
- 		}
-+
- 		if (strglobmatch(norm, name)) {
- 			found++;
- 			if (syms && found < probe_conf.max_probes)
-diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-index aaa08ee8c717..d8bfd0c4d2cb 100644
---- a/tools/perf/util/string.c
-+++ b/tools/perf/util/string.c
-@@ -396,3 +396,49 @@ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints
- 	free(expr);
- 	return NULL;
- }
-+
-+/* Like strpbrk(), but not break if it is right after a backslash (escaped) */
-+char *strpbrk_esc(char *str, const char *stopset)
-+{
-+	char *ptr;
-+
-+	do {
-+		ptr = strpbrk(str, stopset);
-+		if (ptr == str ||
-+		    (ptr == str + 1 && *(ptr - 1) != '\\'))
-+			break;
-+		str = ptr + 1;
-+	} while (ptr && *(ptr - 1) == '\\' && *(ptr - 2) != '\\');
-+
-+	return ptr;
-+}
-+
-+/* Like strdup, but do not copy a single backslash */
-+char *strdup_esc(const char *str)
-+{
-+	char *s, *d, *p, *ret = strdup(str);
-+
-+	if (!ret)
-+		return NULL;
-+
-+	d = strchr(ret, '\\');
-+	if (!d)
-+		return ret;
-+
-+	s = d + 1;
-+	do {
-+		if (*s == '\0') {
-+			*d = '\0';
-+			break;
-+		}
-+		p = strchr(s + 1, '\\');
-+		if (p) {
-+			memmove(d, s, p - s);
-+			d += p - s;
-+			s = p + 1;
-+		} else
-+			memmove(d, s, strlen(s) + 1);
-+	} while (p);
-+
-+	return ret;
-+}
-diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-index ee14ca5451ab..4c68a09b97e8 100644
---- a/tools/perf/util/string2.h
-+++ b/tools/perf/util/string2.h
-@@ -39,5 +39,7 @@ static inline char *asprintf_expr_not_in_ints(const char *var, size_t nints, int
- 	return asprintf_expr_inout_ints(var, false, nints, ints);
- }
- 
-+char *strpbrk_esc(char *str, const char *stopset);
-+char *strdup_esc(const char *str);
- 
- #endif /* PERF_STRING_H */
+Thanks and kind regards,
+  Hendrik
