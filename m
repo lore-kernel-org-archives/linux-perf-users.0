@@ -1,37 +1,55 @@
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 Subject: Re: [PATCH 0/5] perf-probe: Improve probing on versioned symbols
-Date: Thu, 7 Dec 2017 10:13:28 +0530
-Message-ID: <0db660f7-2211-39b0-7491-7fb3cc4fbb8f@linux.vnet.ibm.com>
+Date: Thu, 7 Dec 2017 15:11:03 +0900
+Message-ID: <20171207151103.38554540d085bf76fb5a6b7c@kernel.org>
 References: <151252958056.12861.954203514347167563.stgit@devbox>
+        <0db660f7-2211-39b0-7491-7fb3cc4fbb8f@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rt-users-owner@vger.kernel.org>
-In-Reply-To: <151252958056.12861.954203514347167563.stgit@devbox>
-Content-Language: en-US
-Sender: linux-rt-users-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:38972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750779AbdLGGLG (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 7 Dec 2017 01:11:06 -0500
+In-Reply-To: <0db660f7-2211-39b0-7491-7fb3cc4fbb8f@linux.vnet.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Hi Masami,
+On Thu, 7 Dec 2017 10:13:28 +0530
+Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com> wrote:
+
+> Hi Masami,
+> 
+> 
+> On 12/06/2017 08:36 AM, Masami Hiramatsu wrote:
+> > [4/5] Find versioned symbol from map without wildcard.
+> >    This allows user to specify a symbol without version
+> >    suffix nor wildcard. Anyway, at this point we have
+> >    no way to specify version suffix, because parser
+> >    recognizes "@" is a separator of "function@file"
+> >    syntax. This is fixed in next patch.
+> > [5/5] Allow user to use backslash-escaped characters
+> >    on command line. This has 2 effects, user can specify
+> >    version suffix directly, and we can use special
+> >    characters in source file.
+> 
+> Just a thought. Will it be good to describe / illustrate this
+> in man page as well?
+
+Good catch! I forgot that...
+
+Thanks!
 
 
-On 12/06/2017 08:36 AM, Masami Hiramatsu wrote:
-> [4/5] Find versioned symbol from map without wildcard.
->    This allows user to specify a symbol without version
->    suffix nor wildcard. Anyway, at this point we have
->    no way to specify version suffix, because parser
->    recognizes "@" is a separator of "function@file"
->    syntax. This is fixed in next patch.
-> [5/5] Allow user to use backslash-escaped characters
->    on command line. This has 2 effects, user can specify
->    version suffix directly, and we can use special
->    characters in source file.
+> 
+> Thanks,
+> Ravi
+> 
 
-Just a thought. Will it be good to describe / illustrate this
-in man page as well?
 
-Thanks,
-Ravi
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
