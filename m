@@ -1,50 +1,85 @@
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 0/5] perf-probe: Improve probing on versioned symbols
-Date: Fri, 8 Dec 2017 22:43:43 +0530
-Message-ID: <16d9f5f8-d605-7ea5-3e22-ca6193ddfae9@linux.vnet.ibm.com>
-References: <151263115609.13843.6362262297053841418.stgit@devbox>
- <15c9f3d9-e1c0-72eb-6ba6-28b8355f457b@linux.vnet.ibm.com>
- <20171209012408.d383f5f299621b10fd9e6bc3@kernel.org>
+From: Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH v2] perf test shell: Fix check open filename arg using 'perf
+ trace
+Date: Fri, 8 Dec 2017 18:48:17 +0100 (CET)
+Message-ID: <alpine.LRH.2.20.1712081845230.9416@Diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171209012408.d383f5f299621b10fd9e6bc3@kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: multipart/mixed; BOUNDARY="571116033-1820064210-1512755299=:9416"
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:44688 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752100AbdLHRsU (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Dec 2017 12:48:20 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2CC7EC0AA54A
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Dec 2017 17:48:20 +0000 (UTC)
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-perf-users@vger.kernel.org
+Cc: Arnaldo de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--571116033-1820064210-1512755299=:9416
+Content-Type: text/plain; charset=US-ASCII
 
-On 12/08/2017 09:54 PM, Masami Hiramatsu wrote:
-> On Thu, 7 Dec 2017 18:17:51 +0530
-> Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com> wrote:
->
->>
->> On 12/07/2017 12:49 PM, Masami Hiramatsu wrote:
->>> Hi,
->>>
->>> Here is the 2nd version of the series for probing on
->>> versioned symbols in libraries. This includes 5 patches
->>> to fix the issues discussed on perf-users ML 
->>> (https://www.spinics.net/lists/linux-perf-users/msg04637.html)
->>>
->>> The first version is here; https://lkml.org/lkml/2017/12/5/1124
->>>
->>> Here is the updates;
->>>
->>> [3/5] Add a description in Documentation/perf-probe.txt
->>> [5/5] Add a description and examples in Documentation/perf-probe.txt
->>>
->>> Thank you,
->> Ack-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-> Thanks!, is that OK for series? and Acked-by ? B-)
+Hi Arnaldo, so I have tried what you've suggested and looks good.
+Patch is attached. Sorry for not posting it in-text, but I need to
+fix my mail client first, since it screwes some patches up due to
+flowed-text...
+Cheers,
+Michael
 
-Yes Masami, Acked for the series.
+--571116033-1820064210-1512755299=:9416
+Content-Type: text/plain; charset=US-ASCII; name=perf_test_shell_fix_check_open_filename_arg__v2.patch
+Content-Transfer-Encoding: BASE64
+Content-ID: <alpine.LRH.2.20.1712081848170.9416@Diego>
+Content-Description: 
+Content-Disposition: attachment; filename=perf_test_shell_fix_check_open_filename_arg__v2.patch
 
-( Sorry, I just forgot to add 'ed' in Acked-by :) )
+Y29tbWl0IDkyMjgxYTlmZjczZjk4ZDhhY2E3NTk1NTA0MzQwYTI1YzkyYjlm
+MWENCkF1dGhvcjogTWljaGFlbCBQZXRsYW4gPG1wZXRsYW5AcmVkaGF0LmNv
+bT4NCkRhdGU6ICAgRnJpIERlYyA4IDE4OjQzOjE4IDIwMTcgKzAxMDANCg0K
+ICAgIHBlcmYgdGVzdCBzaGVsbDogRml4IGNoZWNrIG9wZW4gZmlsZW5hbWUg
+YXJnIHVzaW5nICdwZXJmIHRyYWNlJw0KICAgIA0KICAgIFRoZSBmb2xsb3dp
+bmcgY29tbWl0IGFkZGVkIGFuIGV4Y2VwdGlvbiBmb3IgczM5MHggdG8gdXNl
+IG9wZW5hdCgpDQogICAgaW5zdGVhZCBvZiBvcGVuKCkgaW4gdGhlIHRlc3Q6
+DQogICAgDQogICAgICBjb21taXQgZjIzMWFmNzg5YjExYTJmMWEzNzk1YWNj
+MzIyOGEzZTE3OGE4MGMyMQ0KICAgICAgQXV0aG9yOiBUaG9tYXMgUmljaHRl
+ciA8dG1yaWNodEBsaW51eC52bmV0LmlibS5jb20+DQogICAgICBEYXRlOiAg
+IFR1ZSBOb3YgMTQgMDg6MTg6NDYgMjAxNyArMDEwMA0KICAgIA0KICAgIFNp
+bmNlIHRoZSBwcm9ibGVtIGlzIG5vdCBzMzkweC1zcGVjaWZpYywgdGhpcyBw
+YXRjaCBtYWtlcyBpdCBtb3JlDQogICAgZ2VuZXJpYywgc28gdGhlIHRlc3Qg
+aGFuZGxlcyBib3RoIG9wZW4oKSBhbmQgb3BlbmF0KCkgbm8gbWF0dGVyDQog
+ICAgd2hpY2ggYXJjaGl0ZWN0dXJlIGl0IGlzIHJ1bm5pbmcgb24uDQogICAg
+DQogICAgU2lnbmVkLW9mZi1ieTogTWljaGFlbCBQZXRsYW4gPG1wZXRsYW5A
+cmVkaGF0LmNvbT4NCg0KZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdGVzdHMv
+c2hlbGwvdHJhY2UrcHJvYmVfdmZzX2dldG5hbWUuc2ggYi90b29scy9wZXJm
+L3Rlc3RzL3NoZWxsL3RyYWNlK3Byb2JlX3Zmc19nZXRuYW1lLnNoDQppbmRl
+eCAyYTllZjA4Li5lZGQxMDczIDEwMDc1NQ0KLS0tIGEvdG9vbHMvcGVyZi90
+ZXN0cy9zaGVsbC90cmFjZStwcm9iZV92ZnNfZ2V0bmFtZS5zaA0KKysrIGIv
+dG9vbHMvcGVyZi90ZXN0cy9zaGVsbC90cmFjZStwcm9iZV92ZnNfZ2V0bmFt
+ZS5zaA0KQEAgLTE3LDEwICsxNyw5IEBAIHNraXBfaWZfbm9fcGVyZl9wcm9i
+ZSB8fCBleGl0IDINCiBmaWxlPSQobWt0ZW1wIC90bXAvdGVtcG9yYXJ5X2Zp
+bGUuWFhYWFgpDQogDQogdHJhY2Vfb3Blbl92ZnNfZ2V0bmFtZSgpIHsNCi0J
+dGVzdCAiJCh1bmFtZSAtbSkiID0gczM5MHggJiYgeyBzdmM9Im9wZW5hdCI7
+IHR4dD0iZGZkOiArQ1dELCArIjsgfQ0KLQ0KLQlwZXJmIHRyYWNlIC1lICR7
+c3ZjOi1vcGVufSB0b3VjaCAkZmlsZSAyPiYxIHwgXA0KLQllZ3JlcCAiICtb
+MC05XStcLlswLTldKyArXCggK1swLTldK1wuWzAtOV0rIG1zXCk6ICt0b3Vj
+aFwvWzAtOV0rICR7c3ZjOi1vcGVufVwoJHt0eHR9ZmlsZW5hbWU6ICske2Zp
+bGV9LCArZmxhZ3M6IENSRUFUXHxOT0NUVFlcfE5PTkJMT0NLXHxXUk9OTFks
+ICttb2RlOiArSVJVR09cfElXVUdPXCkgKz0gK1swLTldKyQiDQorCWV2dHM9
+YHBlcmYgbGlzdCBzeXNjYWxsczpzeXNfZW50ZXJfb3BlbiogfCYgZWdyZXAg
+J29wZW4oYXQpPyAnIHwgc2VkIC1yICdzLy4qc3lzX2VudGVyXyguKikgK1xb
+LiovLWUgXDEvJ2ANCisJcGVyZiB0cmFjZSAkZXZ0cyB0b3VjaCAkZmlsZSAy
+PiYxIHwgXA0KKwllZ3JlcCAiICtbMC05XStcLlswLTldKyArXCggK1swLTld
+K1wuWzAtOV0rIG1zXCk6ICt0b3VjaFwvWzAtOV0rIG9wZW4oYXQpP1woKGRm
+ZDogK0NXRCwgKyk/ZmlsZW5hbWU6ICske2ZpbGV9LCArZmxhZ3M6IENSRUFU
+XHxOT0NUVFlcfE5PTkJMT0NLXHxXUk9OTFksICttb2RlOiArSVJVR09cfElX
+VUdPXCkgKz0gK1swLTldKyQiDQogfQ0KIA0KIA0K
 
-Thanks,
-Ravi
+--571116033-1820064210-1512755299=:9416--
