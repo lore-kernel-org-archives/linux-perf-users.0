@@ -1,71 +1,46 @@
 From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/3] perf s390: generate system call table from
- asm/unistd.h
-Date: Mon, 11 Dec 2017 10:06:39 +0100
-Message-ID: <20171211090639.GC4369@linux.vnet.ibm.com>
+Subject: Re: [PATCH 3/3] perf trace: no longer require auditlibs if syscall
+ tables are present
+Date: Mon, 11 Dec 2017 10:35:48 +0100
+Message-ID: <20171211093548.GE4369@linux.vnet.ibm.com>
 References: <1512635281-20733-1-git-send-email-brueckner@linux.vnet.ibm.com>
- <1512635281-20733-2-git-send-email-brueckner@linux.vnet.ibm.com>
- <20171207153040.GB3173@kernel.org>
- <20171207173731.GF3173@kernel.org>
+ <1512635281-20733-4-git-send-email-brueckner@linux.vnet.ibm.com>
+ <20171207175352.GH3173@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50568 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1751759AbdLKJJY (ORCPT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57932 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751307AbdLKJf4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Dec 2017 04:09:24 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vBB99J0h124535
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2017 04:09:23 -0500
+        Mon, 11 Dec 2017 04:35:56 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vBB9VMmN107903
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2017 04:35:56 -0500
 Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2espjuhqg2-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2espbkkhhv-1
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2017 04:09:22 -0500
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2017 04:35:54 -0500
 Received: from localhost
         by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Mon, 11 Dec 2017 09:06:42 -0000
+        Mon, 11 Dec 2017 09:35:51 -0000
 Content-Disposition: inline
-In-Reply-To: <20171207173731.GF3173@kernel.org>
+In-Reply-To: <20171207175352.GH3173@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
 
-Hi Arnaldo,
+On Thu, Dec 07, 2017 at 02:53:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Dec 07, 2017 at 09:28:01AM +0100, Hendrik Brueckner escreveu:
+> > Change the Makefile and build process to no longer require auditlibs
+> > interfaces when the architecture provides system call tables.
+> 
+> And this one will have to wait for the fix in how the errno translation
+> tables are generated, ok?
 
-On Thu, Dec 07, 2017 at 02:37:31PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Dec 07, 2017 at 12:30:40PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Dec 07, 2017 at 09:27:59AM +0100, Hendrik Brueckner escreveu:
-> > > This should speed up accessing new system calls introduced with
-> > > the kernel rather than waiting for libaudit updates to include
-> > > them.
-> > 
-> > So, this needs to be split in multiple patches, one grabbing the
-> > tools/arch/s390/include/uapi/asm/unistd.h copy and adding it to
-> > check-headers.sh (cool, you did it! :))
-> > 
-> > I'll take a stab at splitting it here.
-> 
-> So, splitted it into three patches and tested the generation, showing
-> the steps and results on the second patch commit message:
-> 
-> [acme@jouet perf]$ git log -3 --oneline
-> b91e81b8e967 (HEAD -> perf/core, acme.korg/perf/core) perf trace: Use generated syscall table on s390 too
-> 8fe39fe5058d perf s390: Generate system call table from asm/unistd.h
-> fdd7d74b2782 tools include s390: Grab a copy of arch/s390/include/uapi/asm/unistd.h
-> [acme@jouet perf]$
-> 
-> And pushed it to my perf/core branch on:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> 
-> Please take a look and check that I didn't mess anything up :-)
+Yes, it has to wait.
 
-
-They look fine.  I have tested them again.  Many thanks for splitting them.
-I will try to follow your split guidelines for future commits.
-
-Thanks,
+Regards,
   Hendrik
