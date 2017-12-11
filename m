@@ -1,65 +1,84 @@
-From: Arnaldo de Melo <acme@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
  'perf trace
-Date: Mon, 11 Dec 2017 13:43:12 -0200
-Message-ID: <20171211154312.GC2221@redhat.com>
+Date: Mon, 11 Dec 2017 14:07:50 -0300
+Message-ID: <20171211170750.GE3958@kernel.org>
 References: <alpine.LRH.2.20.1712081845230.9416@Diego>
+ <20171211154312.GC2221@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751628AbdLKRHx (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 11 Dec 2017 12:07:53 -0500
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.1712081845230.9416@Diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, acme@kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <20171211154312.GC2221@redhat.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo de Melo <acme@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-Em Fri, Dec 08, 2017 at 06:48:17PM +0100, Michael Petlan escreveu:
-> Hi Arnaldo, so I have tried what you've suggested and looks good.
-> Patch is attached. Sorry for not posting it in-text, but I need to
-> fix my mail client first, since it screwes some patches up due to
-> flowed-text...
-> Cheers,
-> Michael
+Em Mon, Dec 11, 2017 at 01:43:12PM -0200, Arnaldo de Melo escreveu:
+> Em Fri, Dec 08, 2017 at 06:48:17PM +0100, Michael Petlan escreveu:
+> > Hi Arnaldo, so I have tried what you've suggested and looks good.
+> > Patch is attached. Sorry for not posting it in-text, but I need to
+> > fix my mail client first, since it screwes some patches up due to
+> > flowed-text...
+> > Cheers,
+> > Michael
+> 
+> Thanks, applying.
 
-Thanks, applying.
+It is not working here:
+
+[root@jouet mnt]# perf test -v 62
+62: Check open filename arg using perf trace + vfs_getname:
+--- start ---
+test child forked, pid 4919
+Added new event:
+  probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+test child finished with -1
+---- end ----
+Check open filename arg using perf trace + vfs_getname: FAILED!
+[root@jouet mnt]#
+
+and when I run this with strace -e open to see if it is picking the
+right script, it is:
+
+open("/home/acme/libexec/perf-core/tests/shell/record+script_probe_vfs_getname.sh", O_RDONLY) = 4
+open("/home/acme/libexec/perf-core/tests/shell/trace+probe_libc_inet_pton.sh", O_RDONLY) = 4
+open("/home/acme/libexec/perf-core/tests/shell/trace+probe_vfs_getname.sh", O_RDONLY) = 4
+62: Check open filename arg using perf trace + vfs_getname:
+--- start ---
+test child forked, pid 4947
+Added new event:
+  probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=4947, si_uid=0, si_status=255, si_utime=0, si_stime=0} ---
+test child finished with -1
+---- end ----
+Check open filename arg using perf trace + vfs_getname: FAILED!
+open("/home/acme/libexec/perf-core/tests/shell/probe_vfs_getname.sh", O_RDONLY) = 4
++++ exited with 0 +++
+[root@jouet mnt]# 
+
+[acme@jouet linux]$ diff -u /home/acme/libexec/perf-core/tests/shell/probe_vfs_getname.sh tools/perf/tests/shell/probe_vfs_getname.sh 
+[acme@jouet linux]$ git log --oneline -1
+0553ba305e4e (HEAD -> perf/core) perf test shell: Fix check open filename arg using 'perf trace
+[acme@jouet linux]$ 
+
+So can you please check if the file you're using is the one in this
+patch submission?
 
 - Arnaldo
-
-> commit 92281a9ff73f98d8aca7595504340a25c92b9f1a
-> Author: Michael Petlan <mpetlan@redhat.com>
-> Date:   Fri Dec 8 18:43:18 2017 +0100
-> 
->     perf test shell: Fix check open filename arg using 'perf trace'
->     
->     The following commit added an exception for s390x to use openat()
->     instead of open() in the test:
->     
->       commit f231af789b11a2f1a3795acc3228a3e178a80c21
->       Author: Thomas Richter <tmricht@linux.vnet.ibm.com>
->       Date:   Tue Nov 14 08:18:46 2017 +0100
->     
->     Since the problem is not s390x-specific, this patch makes it more
->     generic, so the test handles both open() and openat() no matter
->     which architecture it is running on.
->     
->     Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> 
-> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> index 2a9ef08..edd1073 100755
-> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> @@ -17,10 +17,9 @@ skip_if_no_perf_probe || exit 2
->  file=$(mktemp /tmp/temporary_file.XXXXX)
->  
->  trace_open_vfs_getname() {
-> -	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
-> -
-> -	perf trace -e ${svc:-open} touch $file 2>&1 | \
-> -	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
-> +	evts=`perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_(.*) +\[.*/-e \1/'`
-> +	perf trace $evts touch $file 2>&1 | \
-> +	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
->  }
->  
->  
