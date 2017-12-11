@@ -1,84 +1,152 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
- 'perf trace
-Date: Mon, 11 Dec 2017 14:07:50 -0300
-Message-ID: <20171211170750.GE3958@kernel.org>
-References: <alpine.LRH.2.20.1712081845230.9416@Diego>
- <20171211154312.GC2221@redhat.com>
+Subject: Re: [PATCH v2 2/5] perf-probe: Cut off the version suffix from event
+ name
+Date: Mon, 11 Dec 2017 15:25:47 -0300
+Message-ID: <20171211182547.GH3958@kernel.org>
+References: <151263115609.13843.6362262297053841418.stgit@devbox>
+ <151263122864.13843.10998234736675352577.stgit@devbox>
+ <dd7ab590-f5bc-e7bb-6807-210c099072fe@us.ibm.com>
+ <20171208120148.63dcf5fb271cb8654e70b5cf@kernel.org>
+ <3cfc7d95-0956-3e7b-9d36-db5bda9dc753@us.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751628AbdLKRHx (ORCPT
+        id S1752405AbdLKS1j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Dec 2017 12:07:53 -0500
+        Mon, 11 Dec 2017 13:27:39 -0500
 Content-Disposition: inline
-In-Reply-To: <20171211154312.GC2221@redhat.com>
+In-Reply-To: <3cfc7d95-0956-3e7b-9d36-db5bda9dc753@us.ibm.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo de Melo <acme@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Paul Clarke <pc@us.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 11, 2017 at 01:43:12PM -0200, Arnaldo de Melo escreveu:
-> Em Fri, Dec 08, 2017 at 06:48:17PM +0100, Michael Petlan escreveu:
-> > Hi Arnaldo, so I have tried what you've suggested and looks good.
-> > Patch is attached. Sorry for not posting it in-text, but I need to
-> > fix my mail client first, since it screwes some patches up due to
-> > flowed-text...
-> > Cheers,
-> > Michael
+Em Fri, Dec 08, 2017 at 08:49:46AM -0600, Paul Clarke escreveu:
 > 
-> Thanks, applying.
+> 
+> On 12/07/2017 09:01 PM, Masami Hiramatsu wrote:
+> > On Thu, 7 Dec 2017 10:34:51 -0600
+> > Paul Clarke <pc@us.ibm.com> wrote:
+> >> On 12/07/2017 01:20 AM, Masami Hiramatsu wrote:
+> >>> Cut off the version suffix (e.g. @GLIBC_2.2.5 etc.) from
+> >>> automatic generated event name. This fixes wildcard event
+> >>> adding like below case;
+> >>>
+> >>>   =====
+> >>>   # perf probe -x /lib64/libc-2.25.so malloc*
+> >>>   Internal error: "malloc_get_state@GLIBC_2" is wrong event name.
+> >>>     Error: Failed to add events.
+> >>>   =====
+> >>>
+> >>> This failure was caused by a versioned suffix symbol.
+> >>> With this fix, perf probe automatically cuts the
+> >>> suffix after @ as below.
+> >>>
+> >>>   =====
+> >>>   # ./perf probe -x /lib64/libc-2.25.so malloc*
+> >>>   Added new events:
+> >>>     probe_libc:malloc_printerr (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_consolidate (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_check (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_hook_ini (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc    (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_trim (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_usable_size (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_stats (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_info (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:mallochook (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_get_state (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>     probe_libc:malloc_set_state (on malloc* in /usr/lib64/libc-2.25.so)
+> >>>
+> >>>   You can now use it in all perf tools, such as:
+> >>>
+> >>> 	  perf record -e probe_libc:malloc_set_state -aR sleep 1
+> >>>
+> >>>   =====
+> >>
+> >> I think this will still fall over for a case where there are multiple versions of the same base symbol, like:
+> >>
+> >> $ nm /lib64/libc.so.6 | egrep ' sched_getaffinity'
+> >> 0000000000134430 T sched_getaffinity@GLIBC_2.3.3
+> >> 00000000000dcf00 T sched_getaffinity@@GLIBC_2.3.4
+> > 
+> > No, in that case perf probe adds number suffix (_1, _2...) for new events :)
+> > 
+> > This feature (number suffix) is anyway required for the case that inlined
+> > function is spreaded in multiple places. I think this is natural for perf probe.
+> 
+> I can live with that.
+> 
+> Is the versioning tag retained for display with "perf probe -l" display, so the probe points can be distinguished?
+> 
+> In other words, will one see:
+> # perf probe -l
+>   probe_libc:sched_getaffinity (on sched_getaffinity@GLIBC_2.3.3 in /usr/lib64/libc-2.17.so)
+>   probe_libc:sched_getaffinity_1 (on sched_getaffinity@@GLIBC_2.3.4 in /usr/lib64/libc-2.17.so)
+> or
+> # perf probe -l
+>   probe_libc:sched_getaffinity (on sched_getaffinity in /usr/lib64/libc-2.17.so)
+>   probe_libc:sched_getaffinity_1 (on sched_getaffinity in /usr/lib64/libc-2.17.so)
 
-It is not working here:
-
-[root@jouet mnt]# perf test -v 62
-62: Check open filename arg using perf trace + vfs_getname:
---- start ---
-test child forked, pid 4919
-Added new event:
-  probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
+[root@jouet ~]# perf probe -x /lib64/libc-2.25.so malloc*
+Added new events:
+  probe_libc:malloc_printerr (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_consolidate (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_check (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_hook_ini (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc    (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_trim (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_usable_size (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_stats (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_info (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:mallochook (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_get_state (on malloc* in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_set_state (on malloc* in /usr/lib64/libc-2.25.so)
 
 You can now use it in all perf tools, such as:
 
-	perf record -e probe:vfs_getname -aR sleep 1
+	perf record -e probe_libc:malloc_set_state -aR sleep 1
 
-test child finished with -1
----- end ----
-Check open filename arg using perf trace + vfs_getname: FAILED!
-[root@jouet mnt]#
+[root@jouet ~]# perf probe -l
+  probe_libc:malloc    (on 0xd22a6973 in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_check (on 0x25db6f5a in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_consolidate (on 0x88f7c44a in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_hook_ini (on 0x8de2b533 in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_info (on 0x8b327bde in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_printerr (on 0x8fff087c in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_set_state (on 0x861940e6 in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_stats (on 0x51fa3cdc in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_trim (on 0xa9fa4e43 in /usr/lib64/libc-2.25.so)
+  probe_libc:malloc_usable_size (on 0xceb5e090 in /usr/lib64/libc-2.25.so)
+  probe_libc:mallochook (on 0x6ebc00f5 in /usr/lib64/libc-2.25.so)
+[root@jouet ~]#
 
-and when I run this with strace -e open to see if it is picking the
-right script, it is:
+[acme@jouet perf]$ nm /lib64/libc-2.25.so | grep malloc_get_state
+0000000000151ba0 T malloc_get_state@GLIBC_2.2.5
+[acme@jouet perf]$
 
-open("/home/acme/libexec/perf-core/tests/shell/record+script_probe_vfs_getname.sh", O_RDONLY) = 4
-open("/home/acme/libexec/perf-core/tests/shell/trace+probe_libc_inet_pton.sh", O_RDONLY) = 4
-open("/home/acme/libexec/perf-core/tests/shell/trace+probe_vfs_getname.sh", O_RDONLY) = 4
-62: Check open filename arg using perf trace + vfs_getname:
---- start ---
-test child forked, pid 4947
-Added new event:
-  probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
+For your example it finds two symbols, adds two but I couldn't find a
+simple way of mapping one to the other, would be nice if 'perf probe -l'
+showed them like 'nm' does.
+
+[root@jouet ~]# nm /lib64/libc-2.25.so | grep ' sched_getaffinity'
+0000000000151cd0 T sched_getaffinity@GLIBC_2.3.3
+00000000000f3c10 T sched_getaffinity@@GLIBC_2.3.4
+[root@jouet ~]#
+
+[root@jouet ~]# perf probe -x /lib64/libc-2.25.so sched_getaffinity*
+Added new events:
+  probe_libc:sched_getaffinity (on sched_getaffinity* in /usr/lib64/libc-2.25.so)
+  probe_libc:sched_getaffinity_1 (on sched_getaffinity* in /usr/lib64/libc-2.25.so)
 
 You can now use it in all perf tools, such as:
 
-	perf record -e probe:vfs_getname -aR sleep 1
+	perf record -e probe_libc:sched_getaffinity_1 -aR sleep 1
 
---- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=4947, si_uid=0, si_status=255, si_utime=0, si_stime=0} ---
-test child finished with -1
----- end ----
-Check open filename arg using perf trace + vfs_getname: FAILED!
-open("/home/acme/libexec/perf-core/tests/shell/probe_vfs_getname.sh", O_RDONLY) = 4
-+++ exited with 0 +++
-[root@jouet mnt]# 
-
-[acme@jouet linux]$ diff -u /home/acme/libexec/perf-core/tests/shell/probe_vfs_getname.sh tools/perf/tests/shell/probe_vfs_getname.sh 
-[acme@jouet linux]$ git log --oneline -1
-0553ba305e4e (HEAD -> perf/core) perf test shell: Fix check open filename arg using 'perf trace
-[acme@jouet linux]$ 
-
-So can you please check if the file you're using is the one in this
-patch submission?
-
-- Arnaldo
+[root@jouet ~]# perf probe -l
+  probe_libc:sched_getaffinity (on 0x5fd95e7c in /usr/lib64/libc-2.25.so)
+  probe_libc:sched_getaffinity_1 (on 0xd8d51601 in /usr/lib64/libc-2.25.so)
+[root@jouet ~]#
