@@ -1,52 +1,34 @@
 From: Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 2/2] perf test shell: Fix pathname arg in
- probe_vfs_getname.sh
-Date: Tue, 12 Dec 2017 11:22:32 -0500 (EST)
-Message-ID: <1645592263.12835937.1513095752603.JavaMail.zimbra@redhat.com>
-References: <b6d31ae26f8615d6bd020f4392980950d4c70c96.1513095505.git.mpetlan@redhat.com>
+Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
+ 'perf trace
+Date: Tue, 12 Dec 2017 17:24:43 +0100 (CET)
+Message-ID: <alpine.LRH.2.20.1712121723290.9416@Diego>
+References: <alpine.LRH.2.20.1712081845230.9416@Diego> <20171211154312.GC2221@redhat.com> <20171211170750.GE3958@kernel.org> <alpine.LRH.2.20.1712120133380.9416@Diego> <20171212145707.GL3958@kernel.org> <20171212151948.GN3958@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:43800 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:39566 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751577AbdLLQWc (ORCPT
+        id S1751688AbdLLQYr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Dec 2017 11:22:32 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B3F02C060215
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2017 16:22:32 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC301600D3
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2017 16:22:32 +0000 (UTC)
-In-Reply-To: <b6d31ae26f8615d6bd020f4392980950d4c70c96.1513095505.git.mpetlan@redhat.com>
+        Tue, 12 Dec 2017 11:24:47 -0500
+In-Reply-To: <20171212151948.GN3958@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: acme@redhat.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Having 'filename' variable there seems to be more stable, since
-'result->name' has recently changed to 'result->uptr'.
+Hey Arnaldo, this one did not remove the s390x hack and also, won't work
+on arm. Please use the one I just have sent, few seconds ago...
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 30a950c..3759582 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -13,7 +13,7 @@ add_probe_vfs_getname() {
- 	local verbose=$1
- 	if [ $had_vfs_getname -eq 1 ] ; then
- 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
--		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=result->name:string"
-+		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
- 	fi
- }
- 
--- 
-1.8.3.1
+On Tue, 12 Dec 2017, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 12, 2017 at 11:57:07AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > So the patch below does the trick for me, can you please check if does
+> > for you?
+> 
+> So I've put this with a long explanation at:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=ba15be2acc9e35dc9f034fef3aa292406b518b04
+> 
+> - Arnaldo
+> 
