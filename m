@@ -1,34 +1,124 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
- 'perf trace
-Date: Tue, 12 Dec 2017 12:19:48 -0300
-Message-ID: <20171212151948.GN3958@kernel.org>
-References: <alpine.LRH.2.20.1712081845230.9416@Diego>
- <20171211154312.GC2221@redhat.com>
- <20171211170750.GE3958@kernel.org>
- <alpine.LRH.2.20.1712120133380.9416@Diego>
- <20171212145707.GL3958@kernel.org>
+Subject: Re: [PATCH v4] perf-probe: Support escaped character in parser
+Date: Tue, 12 Dec 2017 12:27:24 -0300
+Message-ID: <20171212152724.GO3958@kernel.org>
+References: <151309111236.18107.5634753157435343410.stgit@devbox>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:39816 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:41090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751234AbdLLPTv (ORCPT
+        id S1751653AbdLLP11 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Dec 2017 10:19:51 -0500
+        Tue, 12 Dec 2017 10:27:27 -0500
 Content-Disposition: inline
-In-Reply-To: <20171212145707.GL3958@kernel.org>
+In-Reply-To: <151309111236.18107.5634753157435343410.stgit@devbox>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 12, 2017 at 11:57:07AM -0300, Arnaldo Carvalho de Melo escreveu:
-> So the patch below does the trick for me, can you please check if does
-> for you?
+Em Wed, Dec 13, 2017 at 12:05:12AM +0900, Masami Hiramatsu escreveu:
+> Support the special characters escaped by '\' in parser.
+> This allows user to specify versions directly like below.
+> 
+>   =====
+>   # ./perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
+>   Added new event:
+>     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+> 	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+> 
+>   =====
+> 
+> Or, you can use separators in source filename, e.g.
+> 
+>   =====
+>   # ./perf probe -x /opt/test/a.out foo+bar.c:3
+>   Semantic error :There is non-digit character in offset.
+>     Error: Command Parse Error.
+>   =====
+> 
+> Usually "+" in source file cause parser error, but
+> 
+>   =====
+>   # ./perf probe -x /opt/test/a.out foo\\+bar.c:4
+>   Added new event:
+>     probe_a:main         (on @foo+bar.c:4 in /opt/test/a.out)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+> 	  perf record -e probe_a:main -aR sleep 1
+>   =====
+> 
+> escaped "\+" allows you to specify that.
 
-So I've put this with a long explanation at:
+<SNIP>
+ 
+>  Changes in v4:
+>   - Fix a build error (Thanks for Arnaldo!)
+>     This time, I ensured that I ran "make build-test" and it passed.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=ba15be2acc9e35dc9f034fef3aa292406b518b04
+Thanks, testing it I still have that artifact:
+
+ ---------------------------------------
+
+[root@jouet perf]# perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
+Added new event:
+  probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_libc:malloc_get_state -aR sleep 1
+
+[root@jouet perf]# perf probe -l
+Failed to find debug information for address dd38eca7
+  probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+[root@jouet perf]#
+
+ ---------------------------------------
+
+I mean the "on 0xdd38eca7" part:
+
+
+That failed to find debug information part:
+
+[root@jouet perf]# perf probe -vv -l
+Add filter: *
+Opening /sys/kernel/debug/tracing//kprobe_events write=0
+Opening /sys/kernel/debug/tracing//uprobe_events write=0
+Parsing probe_events: p:probe_libc/malloc_get_state /usr/lib64/libc-2.25.so:0x00000000dd38eca7
+Group:probe_libc Event:malloc_get_state probe:p
+try to find information at dd38eca7 in /usr/lib64/libc-2.25.so
+Open Debuginfo file: /usr/lib/debug/usr/lib64/libc-2.25.so.debug
+Failed to find debug information for address dd38eca7
+Failed to find corresponding probes from debuginfo.
+symsrc__init: build id mismatch for /usr/lib/debug/usr/lib64/libc-2.25.so.debug.
+Failed to find probe point from both of dwarf and map.
+  probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+[root@jouet perf]#
+
+Ok, so build-id mismatch, lets see:
+
+[root@jouet perf]# rpm -q glibc glibc-debuginfo
+glibc-2.25-10.fc26.x86_64
+glibc-2.25-10.fc26.i686
+glibc-debuginfo-2.25-12.fc26.x86_64
+[root@jouet perf]#
+
+Ok, the debuginfo file is newer than the glibc installed, updating glibc
+now...
+
+We could have a more informative message in this case, right? I.e.
+something like:
+
+[root@jouet perf]# perf probe -l
+There was a build-id mismatch while trying to resolve 0xdd38eca7, please
+check your system's debuginfo files for mismatches, e.g. check the
+versions for glibc and glibc-debuginfo.
+  probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+[root@jouet perf]#
 
 - Arnaldo
