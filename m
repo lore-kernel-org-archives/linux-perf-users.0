@@ -1,126 +1,89 @@
-From: Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
- 'perf trace
-Date: Tue, 12 Dec 2017 17:30:08 +0100 (CET)
-Message-ID: <alpine.LRH.2.20.1712121725080.9416@Diego>
-References: <alpine.LRH.2.20.1712081845230.9416@Diego> <20171211154312.GC2221@redhat.com> <20171211170750.GE3958@kernel.org> <alpine.LRH.2.20.1712120133380.9416@Diego> <20171212145707.GL3958@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 2/2] perf test shell: Fix pathname arg in
+ probe_vfs_getname.sh
+Date: Tue, 12 Dec 2017 14:11:06 -0300
+Message-ID: <20171212171106.GP3958@kernel.org>
+References: <b6d31ae26f8615d6bd020f4392980950d4c70c96.1513095505.git.mpetlan@redhat.com>
+ <1645592263.12835937.1513095752603.JavaMail.zimbra@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212145707.GL3958@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751688AbdLLRLL (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Dec 2017 12:11:11 -0500
+Content-Disposition: inline
+In-Reply-To: <1645592263.12835937.1513095752603.JavaMail.zimbra@redhat.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com
 
-On Tue, 12 Dec 2017, Arnaldo Carvalho de Melo wrote:
-[...]
-> the point here is not to add any new patch for perf trace, etc, but find
-> a way to fix just this test, so I think this works:
+Em Tue, Dec 12, 2017 at 11:22:32AM -0500, Michael Petlan escreveu:
+> Having 'filename' variable there seems to be more stable, since
+> 'result->name' has recently changed to 'result->uptr'.
+
+Here it fails:
+
+[root@jouet perf]# perf probe 'vfs_getname=getname_flags:72 pathname=filename:string'
+Added new event:
+  probe:vfs_getname    (on getname_flags:72 with pathname=filename:string)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+[root@jouet perf]# perf trace -e open,openat touch /tmp/temporary_file.zbMD1
+     0.042 ( 0.017 ms): touch/7761 open(filename: , flags: CLOEXEC                                       ) = 3
+     0.096 ( 0.018 ms): touch/7761 open(filename: , flags: CLOEXEC                                       ) = 3
+     0.679 ( 0.040 ms): touch/7761 open(filename: , flags: CLOEXEC                                       ) = 3
+     0.817 ( 0.252 ms): touch/7761 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+[root@jouet perf]#
+
+And result->name is still there:
+
+[root@jouet perf]# pahole -C filename ../build/v4.15.0-rc2+/fs/namei.o
+struct filename {
+	const char  *              name;                 /*     0     8 */
+	const char  *              uptr;                 /*     8     8 */
+	struct audit_names *       aname;                /*    16     8 */
+	int                        refcnt;               /*    24     4 */
+	const char const           iname;                /*    28     0 */
+
+	/* size: 32, cachelines: 1, members: 5 */
+	/* padding: 4 */
+	/* last cacheline: 32 bytes */
+};
+[root@jouet perf]#
+
+At getname_flags:72 result->name has it as expected, at least up to
+v4.15.0-rc2+, where are you experiencing problems?
+
+- Arnaldo
+ 
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> ---
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> # evts=$(echo $(perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
-> # echo $evts
-> open,openat
-> [root@jouet ~]#
-
-Just sent you patches with this approach.
-
-> I'll work on a 'perf list -x,'  that will print all events matching as a
-> CSV with the informed delimiter, seems handy :-)
-
-Really looking forward to have that. It will make all my parsing much easier!
-
-> So the patch below does the trick for me, can you please check if does
-> for you?
-
-As said, the patch below does not remove the s390x-hack:
-
-test "$(uname -m)" = s390x && { txt="dfd: +CWD, +"; }
-
-My patch gets rid of this and makes it work on non-s390x openat-only envs
-(which was the original purpose :))
-
-> 
-> With regards to the other patches, please consider submitting them in
-> separate messages, stating their purpose in a commit log, with example
-> usage, etc. Then people will be able to review it on its own.
-
-I have just done it.
-
-> 
-> Running it here I get:
-> 
-> [root@jouet perf]# sh -x tools/perf/tests/shell/trace+probe_vfs_getname.sh 
-> ++ dirname tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> + . tools/perf/tests/shell/lib/probe.sh
-> + skip_if_no_perf_probe
-> + perf probe
-> + grep -q 'is not a perf-command'
-> + return 0
-> ++ dirname tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> + . tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> ++ perf probe -l
-> ++ grep -q probe:vfs_getname
-> ++ had_vfs_getname=1
-> ++ mktemp /tmp/temporary_file.XXXXX
-> + file=/tmp/temporary_file.pSzKC
-> + add_probe_vfs_getname
-> + local verbose=
-> + '[' 1 -eq 1 ']'
-> ++ perf probe -L getname_flags
-> ++ egrep 'result.*=.*filename;'
-> ++ sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/'
-> + line=72
-> + perf probe 'vfs_getname=getname_flags:72 pathname=result->name:string'
-> Added new event:
->   probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe:vfs_getname -aR sleep 1
-> 
-> + err=0
-> + '[' 0 -ne 0 ']'
-> + trace_open_vfs_getname
-> ++ uname -m
-> + test x86_64 = s390x
-> ++ sed 's/ /,/'
-> +++ egrep 'open(at)? '
-> +++ perf list 'syscalls:sys_enter_open*'
-> +++ sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/'
-> ++ echo open openat
-> + svc=open,openat
-> + perf trace -e open,openat touch /tmp/temporary_file.pSzKC
-> + egrep ' +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\(filename: +/tmp/temporary_file.pSzKC, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$'
->      1.479 ( 0.073 ms): touch/27884 open(filename: /tmp/temporary_file.pSzKC, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-> + err=0
-> + rm -f /tmp/temporary_file.pSzKC
-> + cleanup_probe_vfs_getname
-> + '[' 1 -eq 1 ']'
-> + perf probe -q -d probe:vfs_getname
-> + exit 0
-> [root@jouet perf]#
-> 
-> 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> index 2a9ef080efd0..d22f08568226 100755
-> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> @@ -17,10 +17,10 @@ skip_if_no_perf_probe || exit 2
->  file=$(mktemp /tmp/temporary_file.XXXXX)
->  
->  trace_open_vfs_getname() {
-> -	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
-> -
-> -	perf trace -e ${svc:-open} touch $file 2>&1 | \
-> -	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
-> +	test "$(uname -m)" = s390x && { txt="dfd: +CWD, +"; }
-> +	svc=$(echo $(perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
-> +	perf trace -e ${svc} touch $file 2>&1 | \
-> +	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 30a950c..3759582 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -13,7 +13,7 @@ add_probe_vfs_getname() {
+>  	local verbose=$1
+>  	if [ $had_vfs_getname -eq 1 ] ; then
+>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+> -		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=result->name:string"
+> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+>  	fi
 >  }
 >  
->  
+> -- 
+> 1.8.3.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
