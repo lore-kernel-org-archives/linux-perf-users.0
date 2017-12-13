@@ -1,8 +1,8 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH v3] perf evsel: Enable ignore_missing_thread for pid
  option
-Date: Wed, 13 Dec 2017 17:54:10 -0300
-Message-ID: <20171213205409.GB10463@kernel.org>
+Date: Wed, 13 Dec 2017 17:56:45 -0300
+Message-ID: <20171213205645.GC10463@kernel.org>
 References: <1513148513-6974-1-git-send-email-zhangmengting@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -19,16 +19,7 @@ Em Wed, Dec 13, 2017 at 03:01:53PM +0800, Mengting Zhang escreveu:
 > may return sys_perf_event_open failure with 3(No such process) if any
 > of the process's threads die before we open the event. However, we want
 > perf continue monitoring the remaining threads and do not exit with error.
-
-Right, I saw this while testing Jin Yao's 'perf stat --per-thread' in
-system wide mode, where it enumerates (or tries to) all threads using
-/proc, which, of couse, has races and leads to something this patch
-claims (I haven't tested 8-)) to fix,
-
-thanks in advance,
-
-- Arnaldo
- 
+> 
 > Here, the patch enables perf_evsel::ignore_missing_thread for -p option
 > to ignore complete failure if any of threads die before we open the event.
 > But it may still return sys_perf_event_open failure with 22(Invalid) if we
@@ -111,6 +102,13 @@ thanks in advance,
 > +{
 > +	struct perf_evsel *pos;
 > +	struct perf_evlist *evlist = evsel->evlist;
+
+Minor nit, using this evlist variable to shorten later usage (avoid
+multiple evsel->evlist uses) seems nice and I'm ok with it, but here it
+is used just once, in the for_each_entry case, so seems excessive.
+
+I'll remove this extra line when after I test this.
+
 > +
 > +	if (cpu_idx >= nr_cpus || thread_idx >= nr_threads)
 > +		return -EINVAL;
