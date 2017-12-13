@@ -1,164 +1,136 @@
-From: Mengting Zhang <zhangmengting@huawei.com>
-Subject: [PATCH v3] perf evsel: Enable ignore_missing_thread for pid option
-Date: Wed, 13 Dec 2017 15:01:53 +0800
-Message-ID: <1513148513-6974-1-git-send-email-zhangmengting@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4] perf-probe: Support escaped character in parser
+Date: Wed, 13 Dec 2017 22:40:24 +0900
+Message-ID: <20171213224024.f4d4e5dde81582f80b132be3@kernel.org>
+References: <151309111236.18107.5634753157435343410.stgit@devbox>
+        <20171212152724.GO3958@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2675 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750751AbdLMHKn (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Dec 2017 02:10:43 -0500
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: acme@redhat.com, jolsa@redhat.com, huawei.libin@huawei.com, wangnan0@huawei.com, cj.chengjian@huawei.com, zhangmengting@huawei.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171212152724.GO3958@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: bhargavb <bhargavaramudu@gmail.com>, linux-kernel@vger.kernel.org, Paul Clarke <pc@us.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, linux-rt-users@vger.kernel.org, linux-perf-users@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-While monitoring a multithread process with pid option, perf sometimes
-may return sys_perf_event_open failure with 3(No such process) if any
-of the process's threads die before we open the event. However, we want
-perf continue monitoring the remaining threads and do not exit with error.
+On Tue, 12 Dec 2017 12:27:24 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Here, the patch enables perf_evsel::ignore_missing_thread for -p option
-to ignore complete failure if any of threads die before we open the event.
-But it may still return sys_perf_event_open failure with 22(Invalid) if we
-monitors several event groups.
+> Em Wed, Dec 13, 2017 at 12:05:12AM +0900, Masami Hiramatsu escreveu:
+> > Support the special characters escaped by '\' in parser.
+> > This allows user to specify versions directly like below.
+> > 
+> >   =====
+> >   # ./perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
+> >   Added new event:
+> >     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+> > 
+> >   You can now use it in all perf tools, such as:
+> > 
+> > 	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+> > 
+> >   =====
+> > 
+> > Or, you can use separators in source filename, e.g.
+> > 
+> >   =====
+> >   # ./perf probe -x /opt/test/a.out foo+bar.c:3
+> >   Semantic error :There is non-digit character in offset.
+> >     Error: Command Parse Error.
+> >   =====
+> > 
+> > Usually "+" in source file cause parser error, but
+> > 
+> >   =====
+> >   # ./perf probe -x /opt/test/a.out foo\\+bar.c:4
+> >   Added new event:
+> >     probe_a:main         (on @foo+bar.c:4 in /opt/test/a.out)
+> > 
+> >   You can now use it in all perf tools, such as:
+> > 
+> > 	  perf record -e probe_a:main -aR sleep 1
+> >   =====
+> > 
+> > escaped "\+" allows you to specify that.
+> 
+> <SNIP>
+>  
+> >  Changes in v4:
+> >   - Fix a build error (Thanks for Arnaldo!)
+> >     This time, I ensured that I ran "make build-test" and it passed.
+> 
+> Thanks, testing it I still have that artifact:
+> 
+>  ---------------------------------------
+> 
+> [root@jouet perf]# perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
+> Added new event:
+>   probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+> 
+> You can now use it in all perf tools, such as:
+> 
+> 	perf record -e probe_libc:malloc_get_state -aR sleep 1
+> 
+> [root@jouet perf]# perf probe -l
+> Failed to find debug information for address dd38eca7
+>   probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+> [root@jouet perf]#
+> 
+>  ---------------------------------------
+> 
+> I mean the "on 0xdd38eca7" part:
+> 
+> 
+> That failed to find debug information part:
+> 
+> [root@jouet perf]# perf probe -vv -l
+> Add filter: *
+> Opening /sys/kernel/debug/tracing//kprobe_events write=0
+> Opening /sys/kernel/debug/tracing//uprobe_events write=0
+> Parsing probe_events: p:probe_libc/malloc_get_state /usr/lib64/libc-2.25.so:0x00000000dd38eca7
+> Group:probe_libc Event:malloc_get_state probe:p
+> try to find information at dd38eca7 in /usr/lib64/libc-2.25.so
+> Open Debuginfo file: /usr/lib/debug/usr/lib64/libc-2.25.so.debug
+> Failed to find debug information for address dd38eca7
+> Failed to find corresponding probes from debuginfo.
+> symsrc__init: build id mismatch for /usr/lib/debug/usr/lib64/libc-2.25.so.debug.
+> Failed to find probe point from both of dwarf and map.
+>   probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
+> [root@jouet perf]#
 
-        sys_perf_event_open: pid 28960  cpu 40  group_fd 118202  flags 0x8
-        sys_perf_event_open: pid 28961  cpu 40  group_fd 118203  flags 0x8
-        WARNING: Ignored open failure for pid 28962
-        sys_perf_event_open: pid 28962  cpu 40  group_fd [118203]  flags 0x8
-        sys_perf_event_open failed, error -22
+Ah, I got it. So symsrc__init checks debugfile to get symbols,
+but failed.
 
-That is because when we ignore a missing thread, we change the thread_idx
-without dealing with its fds, FD(evsel, cpu, thread). Then get_group_fd()
-may return a wrong group_fd for the next thread and sys_perf_event_open()
-return with 22.
+> 
+> Ok, so build-id mismatch, lets see:
+> 
+> [root@jouet perf]# rpm -q glibc glibc-debuginfo
+> glibc-2.25-10.fc26.x86_64
+> glibc-2.25-10.fc26.i686
+> glibc-debuginfo-2.25-12.fc26.x86_64
+> [root@jouet perf]#
+> 
+> Ok, the debuginfo file is newer than the glibc installed, updating glibc
+> now...
+> 
+> We could have a more informative message in this case, right? I.e.
+> something like:
+> 
+> [root@jouet perf]# perf probe -l
+> There was a build-id mismatch while trying to resolve 0xdd38eca7, please
+> check your system's debuginfo files for mismatches, e.g. check the
+> versions for glibc and glibc-debuginfo.
+>   probe_libc:malloc_get_state (on 0xdd38eca7 in /usr/lib64/libc-2.25.so)
 
-        sys_perf_event_open(){
-           ...
-           if (group_fd != -1)
-               perf_fget_light()//to get corresponding group_leader by group_fd
-           ...
-           if (group_leader)
-              if (group_leader->ctx->task != ctx->task)//should on the same task
-                   goto err_context
-           ...
-        }
+OK, I'll try to check how debuginfo is searched in such environment.
 
-This patch also fixes this bug by introducing perf_evsel__remove_fd() and
-update_fds to allow removing fds for the missing thread.
+Thank you,
 
-Changes since v1:
-- Change group_fd__remove() into a more genetic way without changing code logic
-- Remove redundant condition
+> [root@jouet perf]#
+> 
+> - Arnaldo
 
-Changes since v2:
-- Use a proper function name and add some comment.
-- Multiline comment style fixes.
 
-Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
----
- tools/perf/builtin-record.c |  4 ++--
- tools/perf/util/evsel.c     | 48 +++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 48 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0032559..36b6213 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1781,8 +1781,8 @@ int cmd_record(int argc, const char **argv)
- 		goto out;
- 	}
- 
--	/* Enable ignoring missing threads when -u option is defined. */
--	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX;
-+	/* Enable ignoring missing threads when -u/-p option is defined. */
-+	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
- 
- 	err = -ENOMEM;
- 	if (perf_evlist__create_maps(rec->evlist, &rec->opts.target) < 0)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d5fbcf8..a0a3df7 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1596,10 +1596,47 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
- 	return fprintf(fp, "  %-32s %s\n", name, val);
- }
- 
-+static void perf_evsel__remove_fd(struct perf_evsel *pos,
-+				  int nr_cpus, int nr_threads,
-+				  int thread_idx)
-+{
-+	for (int cpu = 0; cpu < nr_cpus; cpu++)
-+		for (int thread = thread_idx; thread < nr_threads - 1; thread++)
-+			FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-+}
-+
-+static int update_fds(struct perf_evsel *evsel,
-+		      int nr_cpus, int cpu_idx,
-+		      int nr_threads, int thread_idx)
-+{
-+	struct perf_evsel *pos;
-+	struct perf_evlist *evlist = evsel->evlist;
-+
-+	if (cpu_idx >= nr_cpus || thread_idx >= nr_threads)
-+		return -EINVAL;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		nr_cpus = pos != evsel ? nr_cpus : cpu_idx;
-+
-+		perf_evsel__remove_fd(pos, nr_cpus, nr_threads, thread_idx);
-+
-+		/*
-+		 * Since fds for next evsel has not been created,
-+		 * there is no need to iterate whole event list.
-+		 */
-+		if (pos == evsel)
-+			break;
-+	}
-+	return 0;
-+}
-+
- static bool ignore_missing_thread(struct perf_evsel *evsel,
-+				  int nr_cpus, int cpu,
- 				  struct thread_map *threads,
- 				  int thread, int err)
- {
-+	pid_t ignore_pid = thread_map__pid(threads, thread);
-+
- 	if (!evsel->ignore_missing_thread)
- 		return false;
- 
-@@ -1615,11 +1652,18 @@ static bool ignore_missing_thread(struct perf_evsel *evsel,
- 	if (threads->nr == 1)
- 		return false;
- 
-+	/*
-+	 * We should remove fd for missing_thread first
-+	 * because thread_map__remove() will decrease threads->nr.
-+	 */
-+	if (update_fds(evsel, nr_cpus, cpu, threads->nr, thread))
-+		return false;
-+
- 	if (thread_map__remove(threads, thread))
- 		return false;
- 
- 	pr_warning("WARNING: Ignored open failure for pid %d\n",
--		   thread_map__pid(threads, thread));
-+		   ignore_pid);
- 	return true;
- }
- 
-@@ -1724,7 +1768,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 			if (fd < 0) {
- 				err = -errno;
- 
--				if (ignore_missing_thread(evsel, threads, thread, err)) {
-+				if (ignore_missing_thread(evsel, cpus->nr, cpu, threads, thread, err)) {
- 					/*
- 					 * We just removed 1 thread, so take a step
- 					 * back on thread index and lower the upper
 -- 
-1.7.12.4
+Masami Hiramatsu <mhiramat@kernel.org>
