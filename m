@@ -1,57 +1,85 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
- 'perf trace
-Date: Thu, 14 Dec 2017 11:03:42 -0300
-Message-ID: <20171214140342.GE10463@kernel.org>
-References: <alpine.LRH.2.20.1712081845230.9416@Diego>
- <20171211154312.GC2221@redhat.com>
- <20171211170750.GE3958@kernel.org>
- <alpine.LRH.2.20.1712120133380.9416@Diego>
- <20171212145707.GL3958@kernel.org>
- <20171212151948.GN3958@kernel.org>
- <alpine.LRH.2.20.1712121723290.9416@Diego>
- <20171212171259.GQ3958@kernel.org>
- <ab23fe42-1080-a46b-503e-744e097f414f@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab23fe42-1080-a46b-503e-744e097f414f@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Subject: [PATCH 02/34] perf stat: Extend rbtree to support per-thread shadow stats
+Date: Thu, 14 Dec 2017 14:42:15 -0300
+Message-ID: <20171214174247.16841-3-acme@kernel.org>
+References: <20171214174247.16841-1-acme@kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753679AbdLNRnD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 14 Dec 2017 12:43:03 -0500
+In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Em Thu, Dec 14, 2017 at 01:08:45PM +0100, Thomas-Mich Richter escreveu:
-> On 12/12/2017 06:12 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Dec 12, 2017 at 05:24:43PM +0100, Michael Petlan escreveu:
-> >> Hey Arnaldo, this one did not remove the s390x hack and also, won't work
-> >> on arm. Please use the one I just have sent, few seconds ago...
-> > 
-> > Ok, I have you latest in, with the cset log I wrote, which clarifies
-> > that this is not a arch issue, but a glibc one, its only that some
-> > arches have distros where glibc was already at 2.26, where open() calls
-> > are mapped to openat() syscalls.
-> > 
-> > - Arnaldo
-> > 
-> >> On Tue, 12 Dec 2017, Arnaldo Carvalho de Melo wrote:
-> >>> Em Tue, Dec 12, 2017 at 11:57:07AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >>>> So the patch below does the trick for me, can you please check if does
-> >>>> for you?
-> >>>
-> >>> So I've put this with a long explanation at:
-> >>>
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=ba15be2acc9e35dc9f034fef3aa292406b518b04
-> >>>
-> >>> - Arnaldo
-> >>>
-> > 
-> 
-> I have extracted the latest patch with commit id 6c23b4f 
-> ("perf test shell: Fix check open filename arg using 'perf trace'") from the git
-> repository perf/core today and it works for me.
+From: Jin Yao <yao.jin@linux.intel.com>
 
-Thanks for checking, I'll add a Tested-by: you then.
+Previously the rbtree was used to link generic metrics.
 
-- Arnaldo
+This patches adds new ctx/type/stat into rbtree keys because we will use
+this rbtree to maintain shadow metrics to replace original a couple of
+static arrays for supporting per-thread shadow stats.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1512482591-4646-3-git-send-email-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/stat-shadow.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 93aac2788056..528be3e8d13b 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -45,7 +45,10 @@ struct stats walltime_nsecs_stats;
+ struct saved_value {
+ 	struct rb_node rb_node;
+ 	struct perf_evsel *evsel;
++	enum stat_type type;
++	int ctx;
+ 	int cpu;
++	struct runtime_stat *stat;
+ 	struct stats stats;
+ };
+ 
+@@ -58,6 +61,30 @@ static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
+ 
+ 	if (a->cpu != b->cpu)
+ 		return a->cpu - b->cpu;
++
++	/*
++	 * Previously the rbtree was used to link generic metrics.
++	 * The keys were evsel/cpu. Now the rbtree is extended to support
++	 * per-thread shadow stats. For shadow stats case, the keys
++	 * are cpu/type/ctx/stat (evsel is NULL). For generic metrics
++	 * case, the keys are still evsel/cpu (type/ctx/stat are 0 or NULL).
++	 */
++	if (a->type != b->type)
++		return a->type - b->type;
++
++	if (a->ctx != b->ctx)
++		return a->ctx - b->ctx;
++
++	if (a->evsel == NULL && b->evsel == NULL) {
++		if (a->stat == b->stat)
++			return 0;
++
++		if ((char *)a->stat < (char *)b->stat)
++			return -1;
++
++		return 1;
++	}
++
+ 	if (a->evsel == b->evsel)
+ 		return 0;
+ 	if ((char *)a->evsel < (char *)b->evsel)
+-- 
+2.13.6
