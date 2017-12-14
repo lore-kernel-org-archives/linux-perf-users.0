@@ -1,162 +1,131 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/34] perf perf: Remove duplicate includes
-Date: Thu, 14 Dec 2017 14:42:27 -0300
-Message-ID: <20171214174247.16841-15-acme@kernel.org>
+Subject: [PATCH 16/34] perf s390: Generate system call table from asm/unistd.h
+Date: Thu, 14 Dec 2017 14:42:29 -0300
+Message-ID: <20171214174247.16841-17-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Pravin Shedge <pravin.shedge4linux@gmail.com>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Michael Petlan <mpetlan@redhat.com>, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Pravin Shedge <pravin.shedge4linux@gmail.com>
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 
-These duplicate includes have been found with scripts/checkincludes.pl
-but they have been removed manually to avoid removing false positives.
+This should speed up accessing new system calls introduced with
+the kernel rather than waiting for libaudit updates to include
+them.
 
-Signed-off-by: Pravin Shedge <pravin.shedge4linux@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Committer testing:
+
+  $ rm -rf /tmp/build/perf
+  $ mkdir /tmp/build/perf
+  $ make srctree=/home/acme/git/perf -C tools/perf/arch/s390 OUTPUT=/tmp/build/perf/ archheaders
+  make: Entering directory '/home/acme/git/perf/tools/perf/arch/s390'
+  /bin/sh '/home/acme/git/perf/tools/perf/arch/s390/entry/syscalls//mksyscalltbl' 'cc' /home/acme/git/perf/tools/arch/s390/include/uapi/asm/unistd.h > /tmp/build/perf/arch/s390/include/generated/asm/syscalls_64.c
+  make: Leaving directory '/home/acme/git/perf/tools/perf/arch/s390'
+  $ head -5 /tmp/build/perf/arch/s390/include/generated/asm/syscalls_64.c
+  static const char *syscalltbl_s390_64[] = {
+	[1] = "exit",
+	[2] = "fork",
+	[3] = "read",
+	[4] = "write",
+  $ tail -5 /tmp/build/perf/arch/s390/include/generated/asm/syscalls_64.c
+	[378] = "s390_guarded_storage",
+	[379] = "statx",
+	[380] = "s390_sthyi",
+  };
+  #define SYSCALLTBL_S390_64_MAX_ID 380
+  $
+
+Now to plug this into 'perf trace' proper.
+
+Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1512582204-6493-1-git-send-email-pravin.shedge4linux@gmail.com
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-s390@vger.kernel.org
+LPU-Reference: 1512635281-20733-2-git-send-email-brueckner@linux.vnet.ibm.com
+Link: https://lkml.kernel.org/n/tip-h5km60rdg3rqxvsys85q50l3@git.kernel.org
+[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/futex-hash.c                          | 1 -
- tools/perf/builtin-c2c.c                               | 3 ---
- tools/perf/builtin-record.c                            | 1 -
- tools/perf/builtin-stat.c                              | 1 -
- tools/perf/tests/parse-events.c                        | 1 -
- tools/perf/util/auxtrace.c                             | 3 ---
- tools/perf/util/header.c                               | 2 --
- tools/perf/util/metricgroup.c                          | 2 --
- tools/perf/util/scripting-engines/trace-event-python.c | 1 -
- 9 files changed, 15 deletions(-)
+ tools/perf/arch/s390/Makefile                    | 21 ++++++++++++++
+ tools/perf/arch/s390/entry/syscalls/mksyscalltbl | 36 ++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
+ create mode 100755 tools/perf/arch/s390/entry/syscalls/mksyscalltbl
 
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index 2defb6df7fd0..9aa3a674829b 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -27,7 +27,6 @@
- #include "cpumap.h"
- 
- #include <err.h>
--#include <sys/time.h>
- 
- static unsigned int nthreads = 0;
- static unsigned int nsecs    = 10;
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index f1da9b0833c0..c0debc3f79b6 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -27,13 +27,10 @@
- #include "sort.h"
- #include "tool.h"
- #include "data.h"
--#include "sort.h"
- #include "event.h"
- #include "evlist.h"
- #include "evsel.h"
--#include <asm/bug.h>
- #include "ui/browsers/hists.h"
--#include "evlist.h"
- #include "thread.h"
- 
- struct c2c_hists {
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0a5749ef8b94..98da8cb8de93 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -51,7 +51,6 @@
- #include <signal.h>
- #include <sys/mman.h>
- #include <sys/wait.h>
--#include <asm/bug.h>
- #include <linux/time64.h>
- 
- struct switch_output {
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 58d501d1f5fd..98bf9d32f222 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -63,7 +63,6 @@
- #include "util/group.h"
- #include "util/session.h"
- #include "util/tool.h"
--#include "util/group.h"
- #include "util/string2.h"
- #include "util/metricgroup.h"
- #include "asm/bug.h"
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index f0679613bd18..18b06444f230 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -13,7 +13,6 @@
- #include <unistd.h>
- #include <linux/kernel.h>
- #include <linux/hw_breakpoint.h>
--#include <api/fs/fs.h>
- #include <api/fs/tracing_path.h>
- 
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a33491416400..c76687e42344 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -31,9 +31,6 @@
- #include <sys/param.h>
- #include <stdlib.h>
- #include <stdio.h>
--#include <string.h>
--#include <limits.h>
--#include <errno.h>
- #include <linux/list.h>
- 
- #include "../perf.h"
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 5890e08e0754..ca73aa7be708 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -15,9 +15,7 @@
- #include <linux/bitops.h>
- #include <linux/stringify.h>
- #include <sys/stat.h>
--#include <sys/types.h>
- #include <sys/utsname.h>
--#include <unistd.h>
- 
- #include "evlist.h"
- #include "evsel.h"
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index e48410c99b39..1ddc3d1d0147 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -20,12 +20,10 @@
- #include "pmu.h"
- #include "expr.h"
- #include "rblist.h"
--#include "pmu.h"
- #include <string.h>
- #include <stdbool.h>
- #include <errno.h>
- #include "pmu-events/pmu-events.h"
--#include "strbuf.h"
- #include "strlist.h"
- #include <assert.h>
- #include <ctype.h>
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index c7187f067d31..c1848b543f27 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -43,7 +43,6 @@
- #include "../db-export.h"
- #include "../thread-stack.h"
- #include "../trace-event.h"
--#include "../machine.h"
- #include "../call-path.h"
- #include "thread_map.h"
- #include "cpumap.h"
+diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
+index 09ba923debe8..48228de415d0 100644
+--- a/tools/perf/arch/s390/Makefile
++++ b/tools/perf/arch/s390/Makefile
+@@ -3,3 +3,24 @@ PERF_HAVE_DWARF_REGS := 1
+ endif
+ HAVE_KVM_STAT_SUPPORT := 1
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
++
++#
++# Syscall table generation for perf
++#
++
++out    := $(OUTPUT)arch/s390/include/generated/asm
++header := $(out)/syscalls_64.c
++sysdef := $(srctree)/tools/arch/s390/include/uapi/asm/unistd.h
++sysprf := $(srctree)/tools/perf/arch/s390/entry/syscalls/
++systbl := $(sysprf)/mksyscalltbl
++
++# Create output directory if not already present
++_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
++
++$(header): $(sysdef) $(systbl)
++	$(Q)$(SHELL) '$(systbl)' '$(CC)' $(sysdef) > $@
++
++clean::
++	$(call QUIET_CLEAN, s390) $(RM) $(header)
++
++archheaders: $(header)
+diff --git a/tools/perf/arch/s390/entry/syscalls/mksyscalltbl b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
+new file mode 100755
+index 000000000000..7fa0d0abd419
+--- /dev/null
++++ b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
+@@ -0,0 +1,36 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Generate system call table for perf
++#
++#
++# Copyright IBM Corp. 2017
++# Author(s):  Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
++#
++
++gcc=$1
++input=$2
++
++if ! test -r $input; then
++	echo "Could not read input file" >&2
++	exit 1
++fi
++
++create_table()
++{
++	local max_nr
++
++	echo 'static const char *syscalltbl_s390_64[] = {'
++	while read sc nr; do
++		printf '\t[%d] = "%s",\n' $nr $sc
++		max_nr=$nr
++	done
++	echo '};'
++	echo "#define SYSCALLTBL_S390_64_MAX_ID $max_nr"
++}
++
++
++$gcc -m64 -E -dM -x c  $input	       \
++	|sed -ne 's/^#define __NR_//p' \
++	|sort -t' ' -k2 -nu	       \
++	|create_table
 -- 
 2.13.6
