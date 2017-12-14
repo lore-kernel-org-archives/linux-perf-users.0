@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/34] perf stat: Allocate shadow stats buffer for threads
-Date: Thu, 14 Dec 2017 14:42:20 -0300
-Message-ID: <20171214174247.16841-8-acme@kernel.org>
+Subject: [PATCH 09/34] perf thread_map: Enumerate all threads from /proc
+Date: Thu, 14 Dec 2017 14:42:22 -0300
+Message-ID: <20171214174247.16841-10-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
@@ -12,14 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-After perf_evlist__create_maps() being executed, we can get all threads
-from /proc. And via thread_map__nr(), we can also get the number of
-threads.
-
-With the number of threads, the patch allocates a buffer which will
-record the shadow stats for these threads.
-
-The buffer pointer is saved in stat_config.
+This patch calls thread_map__new_all_cpus() to enumerate all threads
+from /proc if per-thread flag is enabled.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -27,105 +21,77 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512482591-4646-8-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1512482591-4646-10-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/stat.h    |  2 ++
- 2 files changed, 47 insertions(+), 1 deletion(-)
+ tools/perf/tests/thread-map.c | 2 +-
+ tools/perf/util/evlist.c      | 3 ++-
+ tools/perf/util/thread_map.c  | 5 ++++-
+ tools/perf/util/thread_map.h  | 2 +-
+ 4 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 097a694d16f2..4c492ac3ac07 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -214,8 +214,13 @@ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
+index dbcb6a19b375..4de1939b58ba 100644
+--- a/tools/perf/tests/thread-map.c
++++ b/tools/perf/tests/thread-map.c
+@@ -105,7 +105,7 @@ int test__thread_map_remove(struct test *test __maybe_unused, int subtest __mayb
+ 	TEST_ASSERT_VAL("failed to allocate map string",
+ 			asprintf(&str, "%d,%d", getpid(), getppid()) >= 0);
  
- static void perf_stat__reset_stats(void)
+-	threads = thread_map__new_str(str, NULL, 0);
++	threads = thread_map__new_str(str, NULL, 0, false);
+ 
+ 	TEST_ASSERT_VAL("failed to allocate thread_map",
+ 			threads);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 3570355bcf39..f0a5e09c4071 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1105,7 +1105,8 @@ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
+ 	struct cpu_map *cpus;
+ 	struct thread_map *threads;
+ 
+-	threads = thread_map__new_str(target->pid, target->tid, target->uid);
++	threads = thread_map__new_str(target->pid, target->tid, target->uid,
++				      target->per_thread);
+ 
+ 	if (!threads)
+ 		return -1;
+diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+index 2b653853eec2..3e1038f6491c 100644
+--- a/tools/perf/util/thread_map.c
++++ b/tools/perf/util/thread_map.c
+@@ -323,7 +323,7 @@ struct thread_map *thread_map__new_by_tid_str(const char *tid_str)
+ }
+ 
+ struct thread_map *thread_map__new_str(const char *pid, const char *tid,
+-				       uid_t uid)
++				       uid_t uid, bool per_thread)
  {
-+	int i;
+ 	if (pid)
+ 		return thread_map__new_by_pid_str(pid);
+@@ -331,6 +331,9 @@ struct thread_map *thread_map__new_str(const char *pid, const char *tid,
+ 	if (!tid && uid != UINT_MAX)
+ 		return thread_map__new_by_uid(uid);
+ 
++	if (per_thread)
++		return thread_map__new_all_cpus();
 +
- 	perf_evlist__reset_stats(evsel_list);
- 	perf_stat__reset_shadow_stats();
-+
-+	for (i = 0; i < stat_config.stats_num; i++)
-+		perf_stat__reset_shadow_per_stat(&stat_config.stats[i]);
+ 	return thread_map__new_by_tid_str(tid);
  }
  
- static int create_perf_stat_counter(struct perf_evsel *evsel)
-@@ -2495,6 +2500,35 @@ int process_cpu_map_event(struct perf_tool *tool,
- 	return set_maps(st);
- }
+diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
+index 07a765fb22bb..0a806b99e73c 100644
+--- a/tools/perf/util/thread_map.h
++++ b/tools/perf/util/thread_map.h
+@@ -31,7 +31,7 @@ struct thread_map *thread_map__get(struct thread_map *map);
+ void thread_map__put(struct thread_map *map);
  
-+static int runtime_stat_new(struct perf_stat_config *config, int nthreads)
-+{
-+	int i;
-+
-+	config->stats = calloc(nthreads, sizeof(struct runtime_stat));
-+	if (!config->stats)
-+		return -1;
-+
-+	config->stats_num = nthreads;
-+
-+	for (i = 0; i < nthreads; i++)
-+		runtime_stat__init(&config->stats[i]);
-+
-+	return 0;
-+}
-+
-+static void runtime_stat_delete(struct perf_stat_config *config)
-+{
-+	int i;
-+
-+	if (!config->stats)
-+		return;
-+
-+	for (i = 0; i < config->stats_num; i++)
-+		runtime_stat__exit(&config->stats[i]);
-+
-+	free(config->stats);
-+}
-+
- static const char * const stat_report_usage[] = {
- 	"perf stat report [<options>]",
- 	NULL,
-@@ -2750,8 +2784,15 @@ int cmd_stat(int argc, const char **argv)
- 	 * Initialize thread_map with comm names,
- 	 * so we could print it out on output.
- 	 */
--	if (stat_config.aggr_mode == AGGR_THREAD)
-+	if (stat_config.aggr_mode == AGGR_THREAD) {
- 		thread_map__read_comms(evsel_list->threads);
-+		if (target.system_wide) {
-+			if (runtime_stat_new(&stat_config,
-+				thread_map__nr(evsel_list->threads))) {
-+				goto out;
-+			}
-+		}
-+	}
+ struct thread_map *thread_map__new_str(const char *pid,
+-		const char *tid, uid_t uid);
++		const char *tid, uid_t uid, bool per_thread);
  
- 	if (interval && interval < 100) {
- 		if (interval < 10) {
-@@ -2841,5 +2882,8 @@ int cmd_stat(int argc, const char **argv)
- 		sysfs__write_int(FREEZE_ON_SMI_PATH, 0);
+ struct thread_map *thread_map__new_by_tid_str(const char *tid_str);
  
- 	perf_evlist__delete(evsel_list);
-+
-+	runtime_stat_delete(&stat_config);
-+
- 	return status;
- }
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index cfe4fb899633..2ed95dc72784 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -90,6 +90,8 @@ struct perf_stat_config {
- 	bool		scale;
- 	FILE		*output;
- 	unsigned int	interval;
-+	struct runtime_stat *stats;
-+	int		stats_num;
- };
- 
- void update_stats(struct stats *stats, u64 val);
 -- 
 2.13.6
