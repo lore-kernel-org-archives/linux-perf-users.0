@@ -1,66 +1,153 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/34] perf test shell: Fix check open filename arg using 'perf trace'
-Date: Thu, 14 Dec 2017 14:42:41 -0300
-Message-ID: <20171214174247.16841-29-acme@kernel.org>
+Subject: [PATCH 24/34] perf probe: Find versioned symbols from map
+Date: Thu, 14 Dec 2017 14:42:37 -0300
+Message-ID: <20171214174247.16841-25-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Paul Clarke <pc@us.ibm.com>, bhargavb <bhargavaramudu@gmail.com>, linux-rt-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Commit f231af789b11 ("perf test shell: Fix check open filename arg using
-'perf trace' on s390x") added an exception for s390x to use openat()
-instead of open() in the test that intercepts a open syscall to look for
-the filename argument as obtained by the vfs_getname 'perf probe' it
-puts in place at the getname_flags kernel function.
+Commit d80406453ad4 ("perf symbols: Allow user probes on versioned
+symbols") allows user to find default versioned symbols (with "@@") in
+map. However, it did not enable normal versioned symbol (with "@") for
+perf-probe.  E.g.
 
-Its not just s390x that uses openat() instead of open(), so use 'perf
-list' to look for the syscall:sys_enter_open(at)? present in the system
-being tested instead of checking if the system is s390x.
+  =====
+  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state
+  Failed to find symbol malloc_get_state in /usr/lib64/libc-2.25.so
+    Error: Failed to add events.
+  =====
 
-In fact Namhyung pointed out that glibc 2.26 changed this behaviour, as
-described in https://lwn.net/Articles/738694/, so systems where glibc is
->= 2.26 will need this patch for this test to work, which already took
-place in some distros for architectures such as s390x, while Fedora 26
-x86_64 is at glibc 2.25, i.e. still uses open().
+This solves above issue by improving perf-probe symbol search function,
+as below.
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+  =====
+  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state
+  Added new event:
+    probe_libc:malloc_get_state (on malloc_get_state in /usr/lib64/libc-2.25.so)
+
+  You can now use it in all perf tools, such as:
+
+	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+
+  # ./perf probe -l
+    probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+  =====
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-LPU-Reference: 1275675985.12835754.1513095723265.JavaMail.zimbra@redhat.com
-Link: https://lkml.kernel.org/n/tip-j2wbz9av1rw3thr3t0g4dtuk@git.kernel.org
+Cc: Paul Clarke <pc@us.ibm.com>
+Cc: bhargavb <bhargavaramudu@gmail.com>
+Cc: linux-rt-users@vger.kernel.org
+Link: http://lkml.kernel.org/r/151275049269.24652.1639103455496216255.stgit@devbox
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace+probe_vfs_getname.sh | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/arch/powerpc/util/sym-handling.c |  8 ++++++++
+ tools/perf/util/probe-event.c               | 20 ++++++++++++++++++--
+ tools/perf/util/symbol.c                    |  5 +++++
+ tools/perf/util/symbol.h                    |  1 +
+ 4 files changed, 32 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 2a9ef080efd0..55ad9793d544 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -17,10 +17,9 @@ skip_if_no_perf_probe || exit 2
- file=$(mktemp /tmp/temporary_file.XXXXX)
+diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+index 9c4e23d8c8ce..53d83d7e6a09 100644
+--- a/tools/perf/arch/powerpc/util/sym-handling.c
++++ b/tools/perf/arch/powerpc/util/sym-handling.c
+@@ -64,6 +64,14 @@ int arch__compare_symbol_names_n(const char *namea, const char *nameb,
  
- trace_open_vfs_getname() {
--	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
--
--	perf trace -e ${svc:-open} touch $file 2>&1 | \
--	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
-+	evts=$(echo $(perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
-+	perf trace -e $evts touch $file 2>&1 | \
-+	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ 	return strncmp(namea, nameb, n);
+ }
++
++const char *arch__normalize_symbol_name(const char *name)
++{
++	/* Skip over initial dot */
++	if (name && *name == '.')
++		name++;
++	return name;
++}
+ #endif
+ 
+ #if defined(_CALL_ELF) && _CALL_ELF == 2
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index a68141d360b0..0d6c66d51939 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2801,16 +2801,32 @@ static int find_probe_functions(struct map *map, char *name,
+ 	int found = 0;
+ 	struct symbol *sym;
+ 	struct rb_node *tmp;
++	const char *norm, *ver;
++	char *buf = NULL;
+ 
+ 	if (map__load(map) < 0)
+ 		return 0;
+ 
+ 	map__for_each_symbol(map, sym, tmp) {
+-		if (strglobmatch(sym->name, name)) {
++		norm = arch__normalize_symbol_name(sym->name);
++		if (!norm)
++			continue;
++
++		/* We don't care about default symbol or not */
++		ver = strchr(norm, '@');
++		if (ver) {
++			buf = strndup(norm, ver - norm);
++			if (!buf)
++				return -ENOMEM;
++			norm = buf;
++		}
++		if (strglobmatch(norm, name)) {
+ 			found++;
+ 			if (syms && found < probe_conf.max_probes)
+ 				syms[found - 1] = sym;
+ 		}
++		if (buf)
++			zfree(&buf);
+ 	}
+ 
+ 	return found;
+@@ -2856,7 +2872,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
+ 	 * same name but different addresses, this lists all the symbols.
+ 	 */
+ 	num_matched_functions = find_probe_functions(map, pp->function, syms);
+-	if (num_matched_functions == 0) {
++	if (num_matched_functions <= 0) {
+ 		pr_err("Failed to find symbol %s in %s\n", pp->function,
+ 			pev->target ? : "kernel");
+ 		ret = -ENOENT;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 1b67a8639dfe..cc065d4bfafc 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -94,6 +94,11 @@ static int prefix_underscores_count(const char *str)
+ 	return tail - str;
  }
  
++const char * __weak arch__normalize_symbol_name(const char *name)
++{
++	return name;
++}
++
+ int __weak arch__compare_symbol_names(const char *namea, const char *nameb)
+ {
+ 	return strcmp(namea, nameb);
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index a4f0075b4e5c..0563f33c1eb3 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -349,6 +349,7 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr);
+ void arch__sym_update(struct symbol *s, GElf_Sym *sym);
+ #endif
+ 
++const char *arch__normalize_symbol_name(const char *name);
+ #define SYMBOL_A 0
+ #define SYMBOL_B 1
  
 -- 
 2.13.6
