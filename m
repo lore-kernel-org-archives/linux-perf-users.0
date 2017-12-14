@@ -1,160 +1,254 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/34] perf annotate: Get the cpuid from evsel->evlist->env in symbol__annotate()
-Date: Thu, 14 Dec 2017 14:42:31 -0300
-Message-ID: <20171214174247.16841-19-acme@kernel.org>
+Subject: [PATCH 26/34] perf probe: Support escaped character in parser
+Date: Thu, 14 Dec 2017 14:42:39 -0300
+Message-ID: <20171214174247.16841-27-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:43160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754248AbdLNRn6 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 14 Dec 2017 12:43:58 -0500
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Paul Clarke <pc@us.ibm.com>, bhargavb <bhargavaramudu@gmail.com>, linux-rt-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-To reduce its function signature, since we get this from 'evsel' which
-is already one of its arguments.
+Support the special characters escaped by '\' in parser.  This allows
+user to specify versions directly like below.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-070eap7t6uicg9c3w086xy2z@git.kernel.org
+  =====
+  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
+  Added new event:
+    probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+
+  You can now use it in all perf tools, such as:
+
+	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+
+  =====
+
+Or, you can use separators in source filename, e.g.
+
+  =====
+  # ./perf probe -x /opt/test/a.out foo+bar.c:3
+  Semantic error :There is non-digit character in offset.
+    Error: Command Parse Error.
+  =====
+
+Usually "+" in source file cause parser error, but
+
+  =====
+  # ./perf probe -x /opt/test/a.out foo\\+bar.c:4
+  Added new event:
+    probe_a:main         (on @foo+bar.c:4 in /opt/test/a.out)
+
+  You can now use it in all perf tools, such as:
+
+	  perf record -e probe_a:main -aR sleep 1
+  =====
+
+escaped "\+" allows you to specify that.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Paul Clarke <pc@us.ibm.com>
+Cc: bhargavb <bhargavaramudu@gmail.com>
+Cc: linux-rt-users@vger.kernel.org
+Link: http://lkml.kernel.org/r/151309111236.18107.5634753157435343410.stgit@devbox
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c          | 2 +-
- tools/perf/ui/browsers/annotate.c | 4 +---
- tools/perf/ui/gtk/annotate.c      | 2 +-
- tools/perf/util/annotate.c        | 7 ++++---
- tools/perf/util/annotate.h        | 2 +-
- tools/perf/util/evsel.c           | 6 +++---
- tools/perf/util/evsel.h           | 2 +-
- 7 files changed, 12 insertions(+), 13 deletions(-)
+ tools/perf/Documentation/perf-probe.txt | 16 +++++++++
+ tools/perf/util/probe-event.c           | 58 ++++++++++++++++++++-------------
+ 2 files changed, 51 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 540461f5e345..c6ccda52117d 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -138,7 +138,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 		return err;
+diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
+index f96382692f42..b6866a05edd2 100644
+--- a/tools/perf/Documentation/perf-probe.txt
++++ b/tools/perf/Documentation/perf-probe.txt
+@@ -182,6 +182,14 @@ Note that before using the SDT event, the target binary (on which SDT events are
+ For details of the SDT, see below.
+ https://sourceware.org/gdb/onlinedocs/gdb/Static-Probe-Points.html
+ 
++ESCAPED CHARACTER
++-----------------
++
++In the probe syntax, '=', '@', '+', ':' and ';' are treated as a special character. You can use a backslash ('\') to escape the special characters.
++This is useful if you need to probe on a specific versioned symbols, like @GLIBC_... suffixes, or also you need to specify a source file which includes the special characters.
++Note that usually single backslash is consumed by shell, so you might need to pass double backslash (\\) or wrapping with single quotes (\'AAA\@BBB').
++See EXAMPLES how it is used.
++
+ PROBE ARGUMENT
+ --------------
+ Each probe argument follows below syntax.
+@@ -277,6 +285,14 @@ Add a USDT probe to a target process running in a different mount namespace
+ 
+  ./perf probe --target-ns <target pid> -x /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el7_3.x86_64/jre/lib/amd64/server/libjvm.so %sdt_hotspot:thread__sleep__end
+ 
++Add a probe on specific versioned symbol by backslash escape
++
++ ./perf probe -x /lib64/libc-2.25.so 'malloc_get_state\@GLIBC_2.2.5'
++
++Add a probe in a source file using special characters by backslash escape
++
++ ./perf probe -x /opt/test/a.out 'foo\+bar.c:4'
++
+ 
+ SEE ALSO
+ --------
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 0d6c66d51939..e1dbc9821617 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1325,27 +1325,30 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
+ {
+ 	char *ptr;
+ 
+-	ptr = strchr(*arg, ':');
++	ptr = strpbrk_esc(*arg, ":");
+ 	if (ptr) {
+ 		*ptr = '\0';
+ 		if (!pev->sdt && !is_c_func_name(*arg))
+ 			goto ng_name;
+-		pev->group = strdup(*arg);
++		pev->group = strdup_esc(*arg);
+ 		if (!pev->group)
+ 			return -ENOMEM;
+ 		*arg = ptr + 1;
+ 	} else
+ 		pev->group = NULL;
+-	if (!pev->sdt && !is_c_func_name(*arg)) {
++
++	pev->event = strdup_esc(*arg);
++	if (pev->event == NULL)
++		return -ENOMEM;
++
++	if (!pev->sdt && !is_c_func_name(pev->event)) {
++		zfree(&pev->event);
+ ng_name:
++		zfree(&pev->group);
+ 		semantic_error("%s is bad for event name -it must "
+ 			       "follow C symbol-naming rule.\n", *arg);
+ 		return -EINVAL;
+ 	}
+-	pev->event = strdup(*arg);
+-	if (pev->event == NULL)
+-		return -ENOMEM;
+-
+ 	return 0;
+ }
+ 
+@@ -1373,7 +1376,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 			arg++;
  	}
  
--	err = symbol__annotate(sym, map, evsel, 0, NULL, NULL);
-+	err = symbol__annotate(sym, map, evsel, 0, NULL);
- 	if (err == 0) {
- out_assign:
- 		top->sym_filter_entry = he;
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 03b7363a49c9..286427975112 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -1116,9 +1116,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
- 	if (perf_evsel__is_group_event(evsel))
- 		nr_pcnt = evsel->nr_members;
+-	ptr = strpbrk(arg, ";=@+%");
++	ptr = strpbrk_esc(arg, ";=@+%");
+ 	if (pev->sdt) {
+ 		if (ptr) {
+ 			if (*ptr != '@') {
+@@ -1387,7 +1390,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 				pev->target = build_id_cache__origname(tmp);
+ 				free(tmp);
+ 			} else
+-				pev->target = strdup(ptr + 1);
++				pev->target = strdup_esc(ptr + 1);
+ 			if (!pev->target)
+ 				return -ENOMEM;
+ 			*ptr = '\0';
+@@ -1421,13 +1424,14 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 	 *
+ 	 * Otherwise, we consider arg to be a function specification.
+ 	 */
+-	if (!strpbrk(arg, "+@%") && (ptr = strpbrk(arg, ";:")) != NULL) {
++	if (!strpbrk_esc(arg, "+@%")) {
++		ptr = strpbrk_esc(arg, ";:");
+ 		/* This is a file spec if it includes a '.' before ; or : */
+-		if (memchr(arg, '.', ptr - arg))
++		if (ptr && memchr(arg, '.', ptr - arg))
+ 			file_spec = true;
+ 	}
  
--	err = symbol__annotate(sym, map, evsel,
--			       sizeof(struct browser_line), &browser.arch,
--			       perf_evsel__env_cpuid(evsel));
-+	err = symbol__annotate(sym, map, evsel, sizeof(struct browser_line), &browser.arch);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index cdb5ecf91666..aeeaf15029f0 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -169,7 +169,7 @@ static int symbol__gtk_annotate(struct symbol *sym, struct map *map,
- 	if (map->dso->annotate_warned)
- 		return -1;
+-	ptr = strpbrk(arg, ";:+@%");
++	ptr = strpbrk_esc(arg, ";:+@%");
+ 	if (ptr) {
+ 		nc = *ptr;
+ 		*ptr++ = '\0';
+@@ -1436,7 +1440,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 	if (arg[0] == '\0')
+ 		tmp = NULL;
+ 	else {
+-		tmp = strdup(arg);
++		tmp = strdup_esc(arg);
+ 		if (tmp == NULL)
+ 			return -ENOMEM;
+ 	}
+@@ -1469,12 +1473,12 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 		arg = ptr;
+ 		c = nc;
+ 		if (c == ';') {	/* Lazy pattern must be the last part */
+-			pp->lazy_line = strdup(arg);
++			pp->lazy_line = strdup(arg); /* let leave escapes */
+ 			if (pp->lazy_line == NULL)
+ 				return -ENOMEM;
+ 			break;
+ 		}
+-		ptr = strpbrk(arg, ";:+@%");
++		ptr = strpbrk_esc(arg, ";:+@%");
+ 		if (ptr) {
+ 			nc = *ptr;
+ 			*ptr++ = '\0';
+@@ -1501,7 +1505,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 				semantic_error("SRC@SRC is not allowed.\n");
+ 				return -EINVAL;
+ 			}
+-			pp->file = strdup(arg);
++			pp->file = strdup_esc(arg);
+ 			if (pp->file == NULL)
+ 				return -ENOMEM;
+ 			break;
+@@ -2803,23 +2807,31 @@ static int find_probe_functions(struct map *map, char *name,
+ 	struct rb_node *tmp;
+ 	const char *norm, *ver;
+ 	char *buf = NULL;
++	bool cut_version = true;
  
--	err = symbol__annotate(sym, map, evsel, 0, NULL, NULL);
-+	err = symbol__annotate(sym, map, evsel, 0, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index facad1e279a8..bc34b28373f4 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1622,13 +1622,14 @@ void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel)
+ 	if (map__load(map) < 0)
+ 		return 0;
  
- int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct perf_evsel *evsel, size_t privsize,
--		     struct arch **parch, char *cpuid)
-+		     struct arch **parch)
- {
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.map		= map,
- 		.evsel		= evsel,
- 	};
-+	struct perf_env *env = perf_evsel__env(evsel);
- 	const char *arch_name = NULL;
- 	struct arch *arch;
- 	int err;
-@@ -1648,7 +1649,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		*parch = arch;
++	/* If user gives a version, don't cut off the version from symbols */
++	if (strchr(name, '@'))
++		cut_version = false;
++
+ 	map__for_each_symbol(map, sym, tmp) {
+ 		norm = arch__normalize_symbol_name(sym->name);
+ 		if (!norm)
+ 			continue;
  
- 	if (arch->init) {
--		err = arch->init(arch, cpuid);
-+		err = arch->init(arch, env ? env->cpuid : NULL);
- 		if (err) {
- 			pr_err("%s: failed to initialize %s arch priv area\n", __func__, arch->name);
- 			return err;
-@@ -1999,7 +2000,7 @@ int symbol__tty_annotate(struct symbol *sym, struct map *map,
- 	struct dso *dso = map->dso;
- 	struct rb_root source_line = RB_ROOT;
- 
--	if (symbol__annotate(sym, map, evsel, 0, NULL, NULL) < 0)
-+	if (symbol__annotate(sym, map, evsel, 0, NULL) < 0)
- 		return -1;
- 
- 	symbol__calc_percent(sym, evsel);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 6d7289e88fa3..ce427445671f 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -179,7 +179,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym);
- 
- int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct perf_evsel *evsel, size_t privsize,
--		     struct arch **parch, char *cpuid);
-+		     struct arch **parch);
- 
- enum symbol_disassemble_errno {
- 	SYMBOL_ANNOTATE_ERRNO__SUCCESS		= 0,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 95853c51c0ca..541897049c6c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2842,9 +2842,9 @@ char *perf_evsel__env_arch(struct perf_evsel *evsel)
- 	return NULL;
- }
- 
--char *perf_evsel__env_cpuid(struct perf_evsel *evsel)
-+struct perf_env *perf_evsel__env(struct perf_evsel *evsel)
- {
--	if (evsel && evsel->evlist && evsel->evlist->env)
--		return evsel->evlist->env->cpuid;
-+	if (evsel && evsel->evlist)
-+		return evsel->evlist->env;
- 	return NULL;
- }
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index c3663a70c9b9..0e961ce60a9c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -447,6 +447,6 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 			     attr__fprintf_f attr__fprintf, void *priv);
- 
- char *perf_evsel__env_arch(struct perf_evsel *evsel);
--char *perf_evsel__env_cpuid(struct perf_evsel *evsel);
-+struct perf_env *perf_evsel__env(struct perf_evsel *evsel);
- 
- #endif /* __PERF_EVSEL_H */
+-		/* We don't care about default symbol or not */
+-		ver = strchr(norm, '@');
+-		if (ver) {
+-			buf = strndup(norm, ver - norm);
+-			if (!buf)
+-				return -ENOMEM;
+-			norm = buf;
++		if (cut_version) {
++			/* We don't care about default symbol or not */
++			ver = strchr(norm, '@');
++			if (ver) {
++				buf = strndup(norm, ver - norm);
++				if (!buf)
++					return -ENOMEM;
++				norm = buf;
++			}
+ 		}
++
+ 		if (strglobmatch(norm, name)) {
+ 			found++;
+ 			if (syms && found < probe_conf.max_probes)
 -- 
 2.13.6
