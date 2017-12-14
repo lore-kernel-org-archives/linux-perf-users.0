@@ -1,48 +1,105 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/34] tools headers: Synchronize kernel x86 UAPI headers
-Date: Thu, 14 Dec 2017 14:42:43 -0300
-Message-ID: <20171214174247.16841-31-acme@kernel.org>
+Subject: [PATCH 27/34] perf evsel: Fix swap for samples with raw data
+Date: Thu, 14 Dec 2017 14:42:40 -0300
+Message-ID: <20171214174247.16841-28-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Rudolf Marek <r.marek@assembler.cz>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Two x86 headers got modified in this merge window:
+When we detect a different endianity we swap event before processing.
+It's tricky for samples because we have no idea what's inside. We treat
+it as an array of u64s, swap them and later on we swap back parts which
+are different.
 
-     arch/x86/include/asm/cpufeatures.h
+We mangle this way also the tracepoint raw data, which ends up in report
+showing wrong data:
 
-By e3811a3f74bd ("x86/cpufeatures: Make X86_BUG_FXSAVE_LEAK detectable in CPUID on AMD")
+  1.95%  comm=Q^B pid=29285 prio=16777216 target_cpu=000
+  1.67%  comm=l^B pid=0 prio=16777216 target_cpu=000
 
-None of those changes have an effect on tooling, so do a plain copy.
+Luckily the traceevent library handles the endianity by itself (thank
+you Steven!), so we can pass the RAW data directly in the other
+endianity.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+  2.51%  comm=beah-rhts-task pid=1175 prio=120 target_cpu=002
+  2.23%  comm=kworker/0:0 pid=11566 prio=120 target_cpu=000
+
+The fix is basically to swap back the raw data if different endianity is
+detected.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Rudolf Marek <r.marek@assembler.cz>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-bpysmu66yx90ii9yggifmrgb@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20171129184346.3656-1-jolsa@kernel.org
+[ Add util/memswap.c to python-ext-sources to link missing mem_bswap_64() ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/evsel.c            | 20 +++++++++++++++++---
+ tools/perf/util/python-ext-sources |  1 +
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index c0b0e9e8aa66..800104c8a3ed 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -266,6 +266,7 @@
- /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
- #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
- #define X86_FEATURE_IRPERF		(13*32+ 1) /* Instructions Retired Count */
-+#define X86_FEATURE_XSAVEERPTR		(13*32+ 2) /* Always save/restore FP error pointers */
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4718f0a460df..1cf044cbae36 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -36,6 +36,7 @@
+ #include "debug.h"
+ #include "trace-event.h"
+ #include "stat.h"
++#include "memswap.h"
+ #include "util/parse-branch-options.h"
  
- /* Thermal and Power Management Leaf, CPUID level 0x00000006 (EAX), word 14 */
- #define X86_FEATURE_DTHERM		(14*32+ 0) /* Digital Thermal Sensor */
+ #include "sane_ctype.h"
+@@ -2131,14 +2132,27 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 	if (type & PERF_SAMPLE_RAW) {
+ 		OVERFLOW_CHECK_u64(array);
+ 		u.val64 = *array;
+-		if (WARN_ONCE(swapped,
+-			      "Endianness of raw data not corrected!\n")) {
+-			/* undo swap of u64, then swap on individual u32s */
++
++		/*
++		 * Undo swap of u64, then swap on individual u32s,
++		 * get the size of the raw area and undo all of the
++		 * swap. The pevent interface handles endianity by
++		 * itself.
++		 */
++		if (swapped) {
+ 			u.val64 = bswap_64(u.val64);
+ 			u.val32[0] = bswap_32(u.val32[0]);
+ 			u.val32[1] = bswap_32(u.val32[1]);
+ 		}
+ 		data->raw_size = u.val32[0];
++
++		/*
++		 * The raw data is aligned on 64bits including the
++		 * u32 size, so it's safe to use mem_bswap_64.
++		 */
++		if (swapped)
++			mem_bswap_64((void *) array, data->raw_size);
++
+ 		array = (void *)array + sizeof(u32);
+ 
+ 		OVERFLOW_CHECK(array, data->raw_size, max_size);
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index b4f2f06722a7..7aa0ea64544e 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -10,6 +10,7 @@ util/ctype.c
+ util/evlist.c
+ util/evsel.c
+ util/cpumap.c
++util/memswap.c
+ util/mmap.c
+ util/namespaces.c
+ ../lib/bitmap.c
 -- 
 2.13.6
