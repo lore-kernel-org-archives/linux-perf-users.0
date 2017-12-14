@@ -1,75 +1,162 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/34] perf test: Handle properly readdir DT_UNKNOWN
-Date: Thu, 14 Dec 2017 14:42:26 -0300
-Message-ID: <20171214174247.16841-14-acme@kernel.org>
+Subject: [PATCH 14/34] perf perf: Remove duplicate includes
+Date: Thu, 14 Dec 2017 14:42:27 -0300
+Message-ID: <20171214174247.16841-15-acme@kernel.org>
 References: <20171214174247.16841-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171214174247.16841-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Pravin Shedge <pravin.shedge4linux@gmail.com>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Pravin Shedge <pravin.shedge4linux@gmail.com>
 
-Some system can return DT_UNKNOWN in readdir's struct dirent::d_type and
-we must handle it properly. In this case we can directly check if the
-entity we found is directory and skip it.
+These duplicate includes have been found with scripts/checkincludes.pl
+but they have been removed manually to avoid removing false positives.
 
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Pravin Shedge <pravin.shedge4linux@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20171206174535.25380-1-jolsa@kernel.org
-[ Split from a larger patch ]
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1512582204-6493-1-git-send-email-pravin.shedge4linux@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/bench/futex-hash.c                          | 1 -
+ tools/perf/builtin-c2c.c                               | 3 ---
+ tools/perf/builtin-record.c                            | 1 -
+ tools/perf/builtin-stat.c                              | 1 -
+ tools/perf/tests/parse-events.c                        | 1 -
+ tools/perf/util/auxtrace.c                             | 3 ---
+ tools/perf/util/header.c                               | 2 --
+ tools/perf/util/metricgroup.c                          | 2 --
+ tools/perf/util/scripting-engines/trace-event-python.c | 1 -
+ 9 files changed, 15 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 766573e236e4..fafa014240cd 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -411,9 +411,9 @@ static const char *shell_test__description(char *description, size_t size,
- 	return description ? trim(description + 1) : NULL;
- }
+diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+index 2defb6df7fd0..9aa3a674829b 100644
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -27,7 +27,6 @@
+ #include "cpumap.h"
  
--#define for_each_shell_test(dir, ent)		\
-+#define for_each_shell_test(dir, base, ent)	\
- 	while ((ent = readdir(dir)) != NULL)	\
--		if (ent->d_type == DT_REG && ent->d_name[0] != '.')
-+		if (!is_directory(base, ent))
+ #include <err.h>
+-#include <sys/time.h>
  
- static const char *shell_tests__dir(char *path, size_t size)
- {
-@@ -452,7 +452,7 @@ static int shell_tests__max_desc_width(void)
- 	if (!dir)
- 		return -1;
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 10;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index f1da9b0833c0..c0debc3f79b6 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -27,13 +27,10 @@
+ #include "sort.h"
+ #include "tool.h"
+ #include "data.h"
+-#include "sort.h"
+ #include "event.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include <asm/bug.h>
+ #include "ui/browsers/hists.h"
+-#include "evlist.h"
+ #include "thread.h"
  
--	for_each_shell_test(dir, ent) {
-+	for_each_shell_test(dir, path, ent) {
- 		char bf[256];
- 		const char *desc = shell_test__description(bf, sizeof(bf), path, ent->d_name);
+ struct c2c_hists {
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0a5749ef8b94..98da8cb8de93 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -51,7 +51,6 @@
+ #include <signal.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+-#include <asm/bug.h>
+ #include <linux/time64.h>
  
-@@ -504,7 +504,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
- 	if (!dir)
- 		return -1;
+ struct switch_output {
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 58d501d1f5fd..98bf9d32f222 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -63,7 +63,6 @@
+ #include "util/group.h"
+ #include "util/session.h"
+ #include "util/tool.h"
+-#include "util/group.h"
+ #include "util/string2.h"
+ #include "util/metricgroup.h"
+ #include "asm/bug.h"
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index f0679613bd18..18b06444f230 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -13,7 +13,6 @@
+ #include <unistd.h>
+ #include <linux/kernel.h>
+ #include <linux/hw_breakpoint.h>
+-#include <api/fs/fs.h>
+ #include <api/fs/tracing_path.h>
  
--	for_each_shell_test(dir, ent) {
-+	for_each_shell_test(dir, st.dir, ent) {
- 		int curr = i++;
- 		char desc[256];
- 		struct test test = {
-@@ -614,7 +614,7 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
- 	if (!dir)
- 		return -1;
+ #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index a33491416400..c76687e42344 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -31,9 +31,6 @@
+ #include <sys/param.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+-#include <string.h>
+-#include <limits.h>
+-#include <errno.h>
+ #include <linux/list.h>
  
--	for_each_shell_test(dir, ent) {
-+	for_each_shell_test(dir, path, ent) {
- 		int curr = i++;
- 		char bf[256];
- 		struct test t = {
+ #include "../perf.h"
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 5890e08e0754..ca73aa7be708 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -15,9 +15,7 @@
+ #include <linux/bitops.h>
+ #include <linux/stringify.h>
+ #include <sys/stat.h>
+-#include <sys/types.h>
+ #include <sys/utsname.h>
+-#include <unistd.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index e48410c99b39..1ddc3d1d0147 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -20,12 +20,10 @@
+ #include "pmu.h"
+ #include "expr.h"
+ #include "rblist.h"
+-#include "pmu.h"
+ #include <string.h>
+ #include <stdbool.h>
+ #include <errno.h>
+ #include "pmu-events/pmu-events.h"
+-#include "strbuf.h"
+ #include "strlist.h"
+ #include <assert.h>
+ #include <ctype.h>
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index c7187f067d31..c1848b543f27 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -43,7 +43,6 @@
+ #include "../db-export.h"
+ #include "../thread-stack.h"
+ #include "../trace-event.h"
+-#include "../machine.h"
+ #include "../call-path.h"
+ #include "thread_map.h"
+ #include "cpumap.h"
 -- 
 2.13.6
