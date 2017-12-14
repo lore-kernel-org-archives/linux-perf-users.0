@@ -1,176 +1,57 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3] perf evsel: Enable ignore_missing_thread for pid
- option
-Date: Wed, 13 Dec 2017 17:56:45 -0300
-Message-ID: <20171213205645.GC10463@kernel.org>
-References: <1513148513-6974-1-git-send-email-zhangmengting@huawei.com>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] perf test shell: Fix check open filename arg using
+ 'perf trace
+Date: Thu, 14 Dec 2017 13:08:45 +0100
+Message-ID: <ab23fe42-1080-a46b-503e-744e097f414f@linux.vnet.ibm.com>
+References: <alpine.LRH.2.20.1712081845230.9416@Diego>
+ <20171211154312.GC2221@redhat.com> <20171211170750.GE3958@kernel.org>
+ <alpine.LRH.2.20.1712120133380.9416@Diego> <20171212145707.GL3958@kernel.org>
+ <20171212151948.GN3958@kernel.org> <alpine.LRH.2.20.1712121723290.9416@Diego>
+ <20171212171259.GQ3958@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513148513-6974-1-git-send-email-zhangmengting@huawei.com>
+In-Reply-To: <20171212171259.GQ3958@kernel.org>
+Content-Language: en-IE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mengting Zhang <zhangmengting@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@redhat.com, jolsa@redhat.com, huawei.libin@huawei.com, wangnan0@huawei.com, cj.chengjian@huawei.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Dec 13, 2017 at 03:01:53PM +0800, Mengting Zhang escreveu:
-> While monitoring a multithread process with pid option, perf sometimes
-> may return sys_perf_event_open failure with 3(No such process) if any
-> of the process's threads die before we open the event. However, we want
-> perf continue monitoring the remaining threads and do not exit with error.
+On 12/12/2017 06:12 PM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 12, 2017 at 05:24:43PM +0100, Michael Petlan escreveu:
+>> Hey Arnaldo, this one did not remove the s390x hack and also, won't work
+>> on arm. Please use the one I just have sent, few seconds ago...
 > 
-> Here, the patch enables perf_evsel::ignore_missing_thread for -p option
-> to ignore complete failure if any of threads die before we open the event.
-> But it may still return sys_perf_event_open failure with 22(Invalid) if we
-> monitors several event groups.
+> Ok, I have you latest in, with the cset log I wrote, which clarifies
+> that this is not a arch issue, but a glibc one, its only that some
+> arches have distros where glibc was already at 2.26, where open() calls
+> are mapped to openat() syscalls.
 > 
->         sys_perf_event_open: pid 28960  cpu 40  group_fd 118202  flags 0x8
->         sys_perf_event_open: pid 28961  cpu 40  group_fd 118203  flags 0x8
->         WARNING: Ignored open failure for pid 28962
->         sys_perf_event_open: pid 28962  cpu 40  group_fd [118203]  flags 0x8
->         sys_perf_event_open failed, error -22
+> - Arnaldo
 > 
-> That is because when we ignore a missing thread, we change the thread_idx
-> without dealing with its fds, FD(evsel, cpu, thread). Then get_group_fd()
-> may return a wrong group_fd for the next thread and sys_perf_event_open()
-> return with 22.
+>> On Tue, 12 Dec 2017, Arnaldo Carvalho de Melo wrote:
+>>> Em Tue, Dec 12, 2017 at 11:57:07AM -0300, Arnaldo Carvalho de Melo escreveu:
+>>>> So the patch below does the trick for me, can you please check if does
+>>>> for you?
+>>>
+>>> So I've put this with a long explanation at:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=ba15be2acc9e35dc9f034fef3aa292406b518b04
+>>>
+>>> - Arnaldo
+>>>
 > 
->         sys_perf_event_open(){
->            ...
->            if (group_fd != -1)
->                perf_fget_light()//to get corresponding group_leader by group_fd
->            ...
->            if (group_leader)
->               if (group_leader->ctx->task != ctx->task)//should on the same task
->                    goto err_context
->            ...
->         }
-> 
-> This patch also fixes this bug by introducing perf_evsel__remove_fd() and
-> update_fds to allow removing fds for the missing thread.
-> 
-> Changes since v1:
-> - Change group_fd__remove() into a more genetic way without changing code logic
-> - Remove redundant condition
-> 
-> Changes since v2:
-> - Use a proper function name and add some comment.
-> - Multiline comment style fixes.
-> 
-> Signed-off-by: Mengting Zhang <zhangmengting@huawei.com>
-> ---
->  tools/perf/builtin-record.c |  4 ++--
->  tools/perf/util/evsel.c     | 48 +++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 48 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 0032559..36b6213 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1781,8 +1781,8 @@ int cmd_record(int argc, const char **argv)
->  		goto out;
->  	}
->  
-> -	/* Enable ignoring missing threads when -u option is defined. */
-> -	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX;
-> +	/* Enable ignoring missing threads when -u/-p option is defined. */
-> +	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
->  
->  	err = -ENOMEM;
->  	if (perf_evlist__create_maps(rec->evlist, &rec->opts.target) < 0)
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d5fbcf8..a0a3df7 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1596,10 +1596,47 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
->  	return fprintf(fp, "  %-32s %s\n", name, val);
->  }
->  
-> +static void perf_evsel__remove_fd(struct perf_evsel *pos,
-> +				  int nr_cpus, int nr_threads,
-> +				  int thread_idx)
-> +{
-> +	for (int cpu = 0; cpu < nr_cpus; cpu++)
-> +		for (int thread = thread_idx; thread < nr_threads - 1; thread++)
-> +			FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-> +}
-> +
-> +static int update_fds(struct perf_evsel *evsel,
-> +		      int nr_cpus, int cpu_idx,
-> +		      int nr_threads, int thread_idx)
-> +{
-> +	struct perf_evsel *pos;
-> +	struct perf_evlist *evlist = evsel->evlist;
 
-Minor nit, using this evlist variable to shorten later usage (avoid
-multiple evsel->evlist uses) seems nice and I'm ok with it, but here it
-is used just once, in the for_each_entry case, so seems excessive.
+I have extracted the latest patch with commit id 6c23b4f 
+("perf test shell: Fix check open filename arg using 'perf trace'") from the git
+repository perf/core today and it works for me.
 
-I'll remove this extra line when after I test this.
 
-> +
-> +	if (cpu_idx >= nr_cpus || thread_idx >= nr_threads)
-> +		return -EINVAL;
-> +
-> +	evlist__for_each_entry(evlist, pos) {
-> +		nr_cpus = pos != evsel ? nr_cpus : cpu_idx;
-> +
-> +		perf_evsel__remove_fd(pos, nr_cpus, nr_threads, thread_idx);
-> +
-> +		/*
-> +		 * Since fds for next evsel has not been created,
-> +		 * there is no need to iterate whole event list.
-> +		 */
-> +		if (pos == evsel)
-> +			break;
-> +	}
-> +	return 0;
-> +}
-> +
->  static bool ignore_missing_thread(struct perf_evsel *evsel,
-> +				  int nr_cpus, int cpu,
->  				  struct thread_map *threads,
->  				  int thread, int err)
->  {
-> +	pid_t ignore_pid = thread_map__pid(threads, thread);
-> +
->  	if (!evsel->ignore_missing_thread)
->  		return false;
->  
-> @@ -1615,11 +1652,18 @@ static bool ignore_missing_thread(struct perf_evsel *evsel,
->  	if (threads->nr == 1)
->  		return false;
->  
-> +	/*
-> +	 * We should remove fd for missing_thread first
-> +	 * because thread_map__remove() will decrease threads->nr.
-> +	 */
-> +	if (update_fds(evsel, nr_cpus, cpu, threads->nr, thread))
-> +		return false;
-> +
->  	if (thread_map__remove(threads, thread))
->  		return false;
->  
->  	pr_warning("WARNING: Ignored open failure for pid %d\n",
-> -		   thread_map__pid(threads, thread));
-> +		   ignore_pid);
->  	return true;
->  }
->  
-> @@ -1724,7 +1768,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
->  			if (fd < 0) {
->  				err = -errno;
->  
-> -				if (ignore_missing_thread(evsel, threads, thread, err)) {
-> +				if (ignore_missing_thread(evsel, cpus->nr, cpu, threads, thread, err)) {
->  					/*
->  					 * We just removed 1 thread, so take a step
->  					 * back on thread index and lower the upper
-> -- 
-> 1.7.12.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
