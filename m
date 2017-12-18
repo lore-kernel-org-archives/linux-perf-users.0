@@ -1,208 +1,83 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/5] x86/asm: Allow again using asm.h when building for the 'bpf' clang target
-Date: Mon, 18 Dec 2017 11:39:12 -0300
-Message-ID: <20171218143912.6036-6-acme@kernel.org>
+Subject: [PATCH 2/5] perf tools: Fix up build in hardened environments
+Date: Mon, 18 Dec 2017 11:39:09 -0300
+Message-ID: <20171218143912.6036-3-acme@kernel.org>
 References: <20171218143912.6036-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171218143912.6036-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Potapenko <glider@google.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Dmitriy Vyukov <dvyukov@google.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Matthias Kaehlcke <mka@chromium.org>, Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thom
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Up to f5caf621ee35 ("x86/asm: Fix inline asm call constraints for Clang")
-we were able to use x86 headers to build to the 'bpf' clang target, as
-done by the BPF code in tools/perf/.
+On Fedora systems the perl and python CFLAGS/LDFLAGS include the
+hardened specs from redhat-rpm-config package. We apply them only for
+perl/python objects, which makes them not compatible with the rest of
+the objects and the build fails with:
 
-With that commit, we ended up with following failure for 'perf test LLVM', this
-is because "clang ... -target bpf ..." fails since 4.0 does not have bpf inline
-asm support and 6.0 does not recognize the register 'esp', fix it by guarding
-that part with an #ifndef __BPF__, that is defined by clang when building to
-the "bpf" target.
+  /usr/bin/ld: perf-in.o: relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a shared object; recompile with -f
++PIC
+  /usr/bin/ld: libperf.a(libperf-in.o): relocation R_X86_64_32S against `.text' can not be used when making a shared object; recompile w
++ith -fPIC
+  /usr/bin/ld: final link failed: Nonrepresentable section on output
+  collect2: error: ld returned 1 exit status
+  make[2]: *** [Makefile.perf:507: perf] Error 1
+  make[1]: *** [Makefile.perf:210: sub-make] Error 2
+  make: *** [Makefile:69: all] Error 2
 
-  # perf test -v LLVM
-  37: LLVM search and compile                               :
-  37.1: Basic BPF llvm compile                              :
-  --- start ---
-  test child forked, pid 25526
-  Kernel build dir is set to /lib/modules/4.14.0+/build
-  set env: KBUILD_DIR=/lib/modules/4.14.0+/build
-  unset env: KBUILD_OPTS
-  include option is set to  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/7/include -I/home/acme/git/linux/arch/x86/include -I./arch/x86/include/generated  -I/home/acme/git/linux/include -I./include -I/home/acme/git/linux/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/acme/git/linux/include/uapi -I./include/generated/uapi -include /home/acme/git/linux/include/linux/kconfig.h
-  set env: NR_CPUS=4
-  set env: LINUX_VERSION_CODE=0x40e00
-  set env: CLANG_EXEC=/usr/local/bin/clang
-  set env: CLANG_OPTIONS=-xc
-  set env: KERNEL_INC_OPTIONS= -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/7/include -I/home/acme/git/linux/arch/x86/include -I./arch/x86/include/generated  -I/home/acme/git/linux/include -I./include -I/home/acme/git/linux/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/acme/git/linux/include/uapi -I./include/generated/uapi -include /home/acme/git/linux/include/linux/kconfig.h
-  set env: WORKING_DIR=/lib/modules/4.14.0+/build
-  set env: CLANG_SOURCE=-
-  llvm compiling command template: echo '/*
-   * bpf-script-example.c
-   * Test basic LLVM building
-   */
-  #ifndef LINUX_VERSION_CODE
-  # error Need LINUX_VERSION_CODE
-  # error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-  #endif
-  #define BPF_ANY 0
-  #define BPF_MAP_TYPE_ARRAY 2
-  #define BPF_FUNC_map_lookup_elem 1
-  #define BPF_FUNC_map_update_elem 2
+Mainly it's caused by perl/python objects being compiled with:
 
-  static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	  (void *) BPF_FUNC_map_lookup_elem;
-  static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	  (void *) BPF_FUNC_map_update_elem;
+  -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
 
-  struct bpf_map_def {
-	  unsigned int type;
-	  unsigned int key_size;
-	  unsigned int value_size;
-	  unsigned int max_entries;
-  };
+which prevent the final link impossible, because it will check
+for 'proper' objects with following option:
 
-  #define SEC(NAME) __attribute__((section(NAME), used))
-  struct bpf_map_def SEC("maps") flip_table = {
-	  .type = BPF_MAP_TYPE_ARRAY,
-	  .key_size = sizeof(int),
-	  .value_size = sizeof(int),
-	  .max_entries = 1,
-  };
+  -specs=/usr/lib/rpm/redhat/redhat-hardened-ld
 
-  SEC("func=SyS_epoll_wait")
-  int bpf_func__SyS_epoll_wait(void *ctx)
-  {
-	  int ind =0;
-	  int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	  int new_flag;
-	  if (!flag)
-		  return 0;
-	  /* flip flag and store back */
-	  new_flag = !*flag;
-	  bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	  return new_flag;
-  }
-  char _license[] SEC("license") = "GPL";
-  int _version SEC("version") = LINUX_VERSION_CODE;
-  ' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf -O2 -o -
-  test child finished with 0
-  ---- end ----
-  LLVM search and compile subtest 0: Ok
-  37.2: kbuild searching                                    :
-  --- start ---
-  test child forked, pid 25950
-  Kernel build dir is set to /lib/modules/4.14.0+/build
-  set env: KBUILD_DIR=/lib/modules/4.14.0+/build
-  unset env: KBUILD_OPTS
-  include option is set to  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/7/include -I/home/acme/git/linux/arch/x86/include -I./arch/x86/include/generated  -I/home/acme/git/linux/include -I./include -I/home/acme/git/linux/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/acme/git/linux/include/uapi -I./include/generated/uapi -include /home/acme/git/linux/include/linux/kconfig.h
-  set env: NR_CPUS=4
-  set env: LINUX_VERSION_CODE=0x40e00
-  set env: CLANG_EXEC=/usr/local/bin/clang
-  set env: CLANG_OPTIONS=-xc
-  set env: KERNEL_INC_OPTIONS= -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/7/include -I/home/acme/git/linux/arch/x86/include -I./arch/x86/include/generated  -I/home/acme/git/linux/include -I./include -I/home/acme/git/linux/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/acme/git/linux/include/uapi -I./include/generated/uapi -include /home/acme/git/linux/include/linux/kconfig.h
-  set env: WORKING_DIR=/lib/modules/4.14.0+/build
-  set env: CLANG_SOURCE=-
-  llvm compiling command template: echo '/*
-   * bpf-script-test-kbuild.c
-   * Test include from kernel header
-   */
-  #ifndef LINUX_VERSION_CODE
-  # error Need LINUX_VERSION_CODE
-  # error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-  #endif
-  #define SEC(NAME) __attribute__((section(NAME), used))
-
-  #include <uapi/linux/fs.h>
-  #include <uapi/asm/ptrace.h>
-
-  SEC("func=vfs_llseek")
-  int bpf_func__vfs_llseek(void *ctx)
-  {
-	  return 0;
-  }
-
-  char _license[] SEC("license") = "GPL";
-  int _version SEC("version") = LINUX_VERSION_CODE;
-  ' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf -O2 -o -
-  In file included from <stdin>:12:
-  In file included from /home/acme/git/linux/arch/x86/include/uapi/asm/ptrace.h:5:
-  In file included from /home/acme/git/linux/include/linux/compiler.h:242:
-  In file included from /home/acme/git/linux/arch/x86/include/asm/barrier.h:5:
-  In file included from /home/acme/git/linux/arch/x86/include/asm/alternative.h:10:
-  /home/acme/git/linux/arch/x86/include/asm/asm.h:145:50: error: unknown register name 'esp' in asm
-  register unsigned long current_stack_pointer asm(_ASM_SP);
-                                                   ^
-  /home/acme/git/linux/arch/x86/include/asm/asm.h:44:18: note: expanded from macro '_ASM_SP'
-  #define _ASM_SP         __ASM_REG(sp)
-                          ^
-  /home/acme/git/linux/arch/x86/include/asm/asm.h:27:32: note: expanded from macro '__ASM_REG'
-  #define __ASM_REG(reg)         __ASM_SEL_RAW(e##reg, r##reg)
-                                 ^
-  /home/acme/git/linux/arch/x86/include/asm/asm.h:18:29: note: expanded from macro '__ASM_SEL_RAW'
-  # define __ASM_SEL_RAW(a,b) __ASM_FORM_RAW(a)
-                              ^
-  /home/acme/git/linux/arch/x86/include/asm/asm.h:11:32: note: expanded from macro '__ASM_FORM_RAW'
-  # define __ASM_FORM_RAW(x)     #x
-                                 ^
-  <scratch space>:4:1: note: expanded from here
-  "esp"
-  ^
-  1 error generated.
-  ERROR:	unable to compile -
-  Hint:	Check error message shown above.
-  Hint:	You can also pre-compile it into .o using:
-     		  clang -target bpf -O2 -c -
-     	  with proper -I and -D options.
-  Failed to compile test case: 'kbuild searching'
-  test child finished with -1
-  ---- end ----
-  LLVM search and compile subtest 1: FAILED!
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Dmitriy Vyukov <dvyukov@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/r/20171128175948.GL3298@kernel.org
+Link: https://lkml.kernel.org/r/20171204082437.GC30564@krava
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/include/asm/asm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/Makefile.config | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 219faaec51df..386a6900e206 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -136,6 +136,7 @@
- #endif
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 710623ddb8af..0294bfb6c5f8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -188,9 +188,7 @@ ifdef PYTHON_CONFIG
+   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
+   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
+   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
+-  ifeq ($(CC_NO_CLANG), 1)
+-    PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
+-  endif
++  PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
+   FLAGS_PYTHON_EMBED := $(PYTHON_EMBED_CCOPTS) $(PYTHON_EMBED_LDOPTS)
+ endif
  
- #ifndef __ASSEMBLY__
-+#ifndef __BPF__
- /*
-  * This output constraint should be used for any inline asm which has a "call"
-  * instruction.  Otherwise the asm may be inserted before the frame pointer
-@@ -145,5 +146,6 @@
- register unsigned long current_stack_pointer asm(_ASM_SP);
- #define ASM_CALL_CONSTRAINT "+r" (current_stack_pointer)
- #endif
-+#endif
+@@ -576,7 +574,6 @@ ifndef NO_GTK2
+   endif
+ endif
  
- #endif /* _ASM_X86_ASM_H */
+-
+ ifdef NO_LIBPERL
+   CFLAGS += -DNO_LIBPERL
+ else
+@@ -584,6 +581,8 @@ else
+   PERL_EMBED_LDFLAGS = $(call strip-libs,$(PERL_EMBED_LDOPTS))
+   PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
+   PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
++  PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
++  PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
+   FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
+ 
+   ifneq ($(feature-libperl), 1)
 -- 
 2.13.6
