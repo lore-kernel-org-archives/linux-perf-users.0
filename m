@@ -1,83 +1,82 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/5] perf tools: Fix up build in hardened environments
-Date: Mon, 18 Dec 2017 11:39:09 -0300
-Message-ID: <20171218143912.6036-3-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/5] perf/urgent fixes
+Date: Mon, 18 Dec 2017 18:11:59 +0100
+Message-ID: <20171218171159.j4zlcmutdtuf7iw3@gmail.com>
 References: <20171218143912.6036-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20171218143912.6036-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Potapenko <glider@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ben Gainey <ben.gainey@arm.com>, Colin King <colin.king@canonical.com>, Daniel Borkmann <daniel@iogearbox.net>, Darren Hart <dvhart@infradead.org>, David Ahern <dsahern@gmail.com>, Dmitriy Vyukov <dvyukov@google.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Kim Phillips <kim>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
 
-On Fedora systems the perl and python CFLAGS/LDFLAGS include the
-hardened specs from redhat-rpm-config package. We apply them only for
-perl/python objects, which makes them not compatible with the rest of
-the objects and the build fails with:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-  /usr/bin/ld: perf-in.o: relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a shared object; recompile with -f
-+PIC
-  /usr/bin/ld: libperf.a(libperf-in.o): relocation R_X86_64_32S against `.text' can not be used when making a shared object; recompile w
-+ith -fPIC
-  /usr/bin/ld: final link failed: Nonrepresentable section on output
-  collect2: error: ld returned 1 exit status
-  make[2]: *** [Makefile.perf:507: perf] Error 1
-  make[1]: *** [Makefile.perf:210: sub-make] Error 2
-  make: *** [Makefile:69: all] Error 2
+> Hi Ingo,
+> 
+> 	This was ready already before my short vacations, and get things
+> building on the recently released fedora 27 and make 'perf test' pass
+> all entries, so please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 34c9ca37aaec2e307b837bb099d3b44f0ea04ddc:
+> 
+>   tooling/headers: Synchronize updated s390 and x86 UAPI headers (2017-12-06 22:45:24 +0100)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.15-20171218
+> 
+> for you to fetch changes up to 38ab834165924bf86fe7ee67bb5dbea56240b03f:
+> 
+>   x86/asm: Allow again using asm.h when building for the 'bpf' clang target (2017-12-15 12:30:16 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - Fix up build in hardened environments, such as fedora 27 (Jiri Olsa)
+> 
+> - Do not include header files from the kernel sources for the s/390 arch,
+>   fixing the detached tarball building (Arnaldo Carvalho de Melo)
+> 
+> - Allow again using asm.h when building for the 'bpf' clang target,
+>   guarding x86 specific bits under ifndef __BPF__ (Arnaldo Carvalho de Melo)
+> 
+> - Generate correct debug information for inlined code when generating
+>   ELF images for JITted java programs (Ben Gainey)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (2):
+>       tools arch s390: Do not include header files from the kernel sources
+>       x86/asm: Allow again using asm.h when building for the 'bpf' clang target
+> 
+> Ben Gainey (1):
+>       perf jvmti: Generate correct debug information for inlined code
+> 
+> Jiri Olsa (2):
+>       perf tools: Use shell function for perl cflags retrieval
+>       perf tools: Fix up build in hardened environments
+> 
+>  arch/x86/include/asm/asm.h                   |   2 +
+>  tools/arch/s390/include/uapi/asm/perf_regs.h |  43 ++++++++
+>  tools/perf/Makefile.config                   |   9 +-
+>  tools/perf/arch/s390/include/perf_regs.h     |   2 +-
+>  tools/perf/check-headers.sh                  |   1 +
+>  tools/perf/jvmti/jvmti_agent.c               |  16 +--
+>  tools/perf/jvmti/jvmti_agent.h               |   7 +-
+>  tools/perf/jvmti/libjvmti.c                  | 147 ++++++++++++++++++++++-----
+>  8 files changed, 185 insertions(+), 42 deletions(-)
+>  create mode 100644 tools/arch/s390/include/uapi/asm/perf_regs.h
 
-Mainly it's caused by perl/python objects being compiled with:
+Pulled, thanks a lot Arnaldo!
 
-  -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
-
-which prevent the final link impossible, because it will check
-for 'proper' objects with following option:
-
-  -specs=/usr/lib/rpm/redhat/redhat-hardened-ld
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20171204082437.GC30564@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Makefile.config | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 710623ddb8af..0294bfb6c5f8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -188,9 +188,7 @@ ifdef PYTHON_CONFIG
-   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
-   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
-   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
--  ifeq ($(CC_NO_CLANG), 1)
--    PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
--  endif
-+  PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
-   FLAGS_PYTHON_EMBED := $(PYTHON_EMBED_CCOPTS) $(PYTHON_EMBED_LDOPTS)
- endif
- 
-@@ -576,7 +574,6 @@ ifndef NO_GTK2
-   endif
- endif
- 
--
- ifdef NO_LIBPERL
-   CFLAGS += -DNO_LIBPERL
- else
-@@ -584,6 +581,8 @@ else
-   PERL_EMBED_LDFLAGS = $(call strip-libs,$(PERL_EMBED_LDOPTS))
-   PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
-   PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
-+  PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
-+  PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
-   FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
- 
-   ifneq ($(feature-libperl), 1)
--- 
-2.13.6
+	Ingo
