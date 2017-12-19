@@ -1,82 +1,141 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/5] perf/urgent fixes
-Date: Mon, 18 Dec 2017 18:11:59 +0100
-Message-ID: <20171218171159.j4zlcmutdtuf7iw3@gmail.com>
-References: <20171218143912.6036-1-acme@kernel.org>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Perf test case probe libc's inet_pton & backtrace
+Date: Tue, 19 Dec 2017 13:57:23 +0100
+Message-ID: <0bc902bb-6b94-1c95-d89f-743b5f5b369d@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171218143912.6036-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Potapenko <glider@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ben Gainey <ben.gainey@arm.com>, Colin King <colin.king@canonical.com>, Daniel Borkmann <daniel@iogearbox.net>, Darren Hart <dvhart@infradead.org>, David Ahern <dsahern@gmail.com>, Dmitriy Vyukov <dvyukov@google.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Kim Phillips <kim>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39894 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751863AbdLSM53 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 19 Dec 2017 07:57:29 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id vBJCumim080225
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Dec 2017 07:57:29 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ey2asavf5-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Dec 2017 07:57:28 -0500
+Received: from localhost
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Tue, 19 Dec 2017 12:57:26 -0000
+Content-Language: en-IE
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 
+ I am debugging perf test case "probe libc's inet_pton & backtrace
+ it with ping" on Linux 4.15.0rc4
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+This is the output on my Intel VM (where is test case succeeds):
+[root@f27 perf]# ./perf trace --no-syscalls
+        -e probe_libc:inet_pton/max-stack=3/ -- ping -c1 -6 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.023 ms
 
-> Hi Ingo,
-> 
-> 	This was ready already before my short vacations, and get things
-> building on the recently released fedora 27 and make 'perf test' pass
-> all entries, so please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 34c9ca37aaec2e307b837bb099d3b44f0ea04ddc:
-> 
->   tooling/headers: Synchronize updated s390 and x86 UAPI headers (2017-12-06 22:45:24 +0100)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.15-20171218
-> 
-> for you to fetch changes up to 38ab834165924bf86fe7ee67bb5dbea56240b03f:
-> 
->   x86/asm: Allow again using asm.h when building for the 'bpf' clang target (2017-12-15 12:30:16 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Fix up build in hardened environments, such as fedora 27 (Jiri Olsa)
-> 
-> - Do not include header files from the kernel sources for the s/390 arch,
->   fixing the detached tarball building (Arnaldo Carvalho de Melo)
-> 
-> - Allow again using asm.h when building for the 'bpf' clang target,
->   guarding x86 specific bits under ifndef __BPF__ (Arnaldo Carvalho de Melo)
-> 
-> - Generate correct debug information for inlined code when generating
->   ELF images for JITted java programs (Ben Gainey)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (2):
->       tools arch s390: Do not include header files from the kernel sources
->       x86/asm: Allow again using asm.h when building for the 'bpf' clang target
-> 
-> Ben Gainey (1):
->       perf jvmti: Generate correct debug information for inlined code
-> 
-> Jiri Olsa (2):
->       perf tools: Use shell function for perl cflags retrieval
->       perf tools: Fix up build in hardened environments
-> 
->  arch/x86/include/asm/asm.h                   |   2 +
->  tools/arch/s390/include/uapi/asm/perf_regs.h |  43 ++++++++
->  tools/perf/Makefile.config                   |   9 +-
->  tools/perf/arch/s390/include/perf_regs.h     |   2 +-
->  tools/perf/check-headers.sh                  |   1 +
->  tools/perf/jvmti/jvmti_agent.c               |  16 +--
->  tools/perf/jvmti/jvmti_agent.h               |   7 +-
->  tools/perf/jvmti/libjvmti.c                  | 147 ++++++++++++++++++++++-----
->  8 files changed, 185 insertions(+), 42 deletions(-)
->  create mode 100644 tools/arch/s390/include/uapi/asm/perf_regs.h
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.023/0.023/0.023/0.000 ms
+     0.000 probe_libc:inet_pton:(7fc7a82df8a0))
+               __GI___inet_pton (/usr/lib64/libc-2.26.so)
+               getaddrinfo (/usr/lib64/libc-2.26.so)
+               main (/usr/bin/ping)
+[root@f27 perf]#
 
-Pulled, thanks a lot Arnaldo!
+On s390x this test case fails because the call stack can not be
+unwinded:
+[root@s35lp76 perf]# ./perf trace --no-syscalls
+        -e probe_libc:inet_pton/max-stack=3/ -- ping -c1 -6 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.034 ms
 
-	Ingo
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.034/0.034/0.034/0.000 ms
+     0.000 probe_libc:inet_pton:(3ff92042060))
+[root@s35lp76 perf]#
+
+Debugging shows the difference between both platforms.
+On Intel function trace__handle_event() is called several times
+and one invocation has the sample->callchain pointer set
+(gdb) p *sample->callchain
+$16 = {nr = 4, ips = 0x7ffff7f55628}
+(gdb)
+
+It looks like it has 4 entries, all referring to the addresses
+of the probed function and its back trace.
+
+On s390x there is also one event with sample->callchain pointer set
+but it has only 1 entry, the probed function.
+
+Now when I change the parameters for perf_event_attr in function
+trace__run()
+ - perf_evlist()
+    - perf_evsel__open()
+       - sys_perf_event_open()
+to include:
+
+  evsel->attr.sample_type |= PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER;
+  evsel->attr.sample_stack_user = 8192;
+  evsel->attr.sample_regs_user = 0x3FFFFFFFF;
+
+to actually include user stack and register values in the probe,
+the output of the perf trace command is:
+
+[root@s35lp76 perf]# ./perf trace --no-syscalls
+        -e probe_libc:inet_pton/max-stack=3/ -- ping -c1 -6 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.035 ms
+
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.035/0.035/0.035/0.000 ms
+     0.000 probe_libc:inet_pton:(3ffb5442060))
+               __GI___inet_pton (/usr/lib64/libc-2.26.so)
+               gaih_inet (inlined)
+               __GI_getaddrinfo (inlined)
+               main (/usr/bin/ping)
+               __libc_start_main (/usr/lib64/libc-2.26.so)
+               _start (/usr/bin/ping)
+[root@s35lp76 perf]#
+
+This looks much better than before (however not identical to the
+output of my Intel VM), but is is identical to the output
+of command 'perf trace record ...'
+
+ ./perf trace record -g -e probe_libc:inet_pton --call-graph=dwarf
+        -- ping -c1 -6 ::1
+
+which creates a perf.data file with this contents:
+
+ ./perf report
+
+Samples: 1  of event 'probe_libc:inet_pton', Event count (approx.): 1
+Children      Self  Trace output
+-  100.00%   100.00%  (3ffbb142060)
+    _start
+    __libc_start_main
+    main
+    __GI_getaddrinfo (inlined)
+    gaih_inet (inlined)
+    __GI___inet_pton
+
+How to proceed?
+Should I change the invocation of the sys_perf_open_event() function
+to include the USER/STACK stuff, which makes that part of the code
+platform dependent as well as the test case which parses this output.
+
+Other Ideas?
+I somehow lack the knowledge on how to handle this in a common way
+for all platforms.
+
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
