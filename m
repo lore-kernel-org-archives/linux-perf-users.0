@@ -1,118 +1,44 @@
-From: Hadrien Grasland <grasland@lal.in2p3.fr>
-Subject: Re: Trying to understand some strange samples in a perf profile
-Date: Thu, 21 Dec 2017 17:02:09 +0100
-Message-ID: <9c47802d-a568-1a39-bfa4-6a12d0622a4e@lal.in2p3.fr>
-References: <db0e4795-de77-ac92-6bab-4b4d451daf26@lal.in2p3.fr>
- <9831756.pFeoWVMjH9@milian-kdab2>
- <6d2adf7a-b181-a8ed-2069-6063abadf6a1@lal.in2p3.fr>
- <2337765.oK3dqqyzHo@milian-kdab2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: ufo19890607 <ufo19890607@gmail.com>
+Subject: Php-fpm will crash when perf runs with call graph option
+Date: Mon, 25 Dec 2017 07:56:43 +0100
+Message-ID: <1514185003-17428-1-git-send-email-ufo19890607@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from smtp1.lal.in2p3.fr ([134.158.88.100]:60938 "EHLO
-        smtp1.lal.in2p3.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751406AbdLUP5Z (ORCPT
+Received: from mail-pf0-f179.google.com ([209.85.192.179]:42357 "EHLO
+        mail-pf0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750714AbdLYG5F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Dec 2017 10:57:25 -0500
-In-Reply-To: <2337765.oK3dqqyzHo@milian-kdab2>
-Content-Language: en-US
+        Mon, 25 Dec 2017 01:57:05 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: linux-perf-users@vger.kernel.org
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-Hey,
+From: yuzhoujian <yuzhoujian@didichuxing.com>
 
-First of all, let me be even more aggressive with e-mail quote removal :)
+#0  0x00007f044ff447bd in re_compile_fastmap_iter (bufp=0x7f044ff447bd <re_compile_fastmap_iter+1165>, 
+		    fastmap=0x46 <Address 0x46 out of bounds>, init_state=<optimized out>, init_state=<optimized out>) at regcomp.c:407
+407			      if (__wcrtomb (buf, towlower (cset->mbchars[i]), &state)
+		(gdb) bt
+#0  0x00007f044ff447bd in re_compile_fastmap_iter (bufp=0x7f044ff447bd <re_compile_fastmap_iter+1165>, 
+	    fastmap=0x46 <Address 0x46 out of bounds>, init_state=<optimized out>, init_state=<optimized out>) at regcomp.c:407
+#1  0x0000000000831160 in virtual_file_ex (state=0x7fff9c1a4f70, path=<optimized out>, verify_path=0x0, use_realpath=1)
+		    at /home/xiaoju/phpng/php-7.0.6/Zend/zend_virtual_cwd.c:1335
+#2  0x00000000007aacee in expand_filepath_with_mode (
+	    filepath=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", 
+	        real_path=0x7fff9c1a4fc0 "\360X\032\234\377\177", relative_to=<optimized out>, relative_to_len=0, realpath_mode=1)
+		        at /home/xiaoju/phpng/php-7.0.6/main/fopen_wrappers.c:812
+#3  0x00000000007c1536 in _php_stream_fopen (
+	    filename=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", mode=0xdbb1f1 "rb", 
+	        opened_path=0x0, options=0) at /home/xiaoju/phpng/php-7.0.6/main/streams/plain_wrapper.c:970
+#4  0x00000000007bd084 in _php_stream_open_wrapper_ex (
+	    path=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", mode=0xdbb1f1 "rb", options=8, 
+	        opened_path=0x0, context=0x7f044d65f4c0) at /home/xiaoju/phpng/php-7.0.6/main/streams/streams.c:2060
+#5  0x000000000071722b in zif_file_get_contents (execute_data=<optimized out>, return_value=0x7f044d615540)
+			    at /home/xiaoju/phpng/php-7.0.6/ext/standard/file.c:544
+#6  0x000000000065387c in phar_file_get_contents (execute_data=0x7f044d615570, return_value=0x7f044d615540)
+			        at /home/xiaoju/phpng/php-7.0.6/ext/phar/func_interceptors.c:224))
 
-> <snip>
->
->>>> Can you help me check if my understanding of the other samples is
->>>> correct, and give me some clues about what could happen for these last
->>>> few weird ones?
->>>>
->>>> I can provide perf.data files and archives on demand, but since the
->>>> original is a rather big upload/download ( 2.7 GB ), I thought I would
->>>> wait until you can give me some specific requests or a way to produce
->>>> skimmed datasets with only the samples that you are looking for.
->>> The perf.data file wouldn't be enough, we'd need access to all of the
->>> so/dbg files too. perf archive could be used for that purpose, but I've
->>> seen many situations where not all DSOs encountered had a build-id, and
->>> thus where not put into the archive...
->> Yes, back when I discussed the ffffffffffffffff samples with Jiri on
->> IRC, we had this problem that perf archive failed to include all
->> necessary DSOs for analysis. So I'm not sure if it would work here.
->>
->> If there is anything else which I can do to help you here, just tell me!
-> I never took the time to debug this, but I personally consider this a big
-> problem with perf. These broken backtraces make analysis often much harder
-> compared to others tools like VTune which apparently do not suffer from this
-> issue. At least there, I have never seen it - maybe it's just less of a
-> problem there for some reason.
->
-> So to debug this, I guess we need to sit down and actually find a way to
-> reproduce the issue with a smaller test case. I actually have something that
-> is much smaller than your code base and also shows this issue sometimes:
->
-> https://github.com/KDAB/hotspot/blob/master/tests/test-clients/cpp-inlining/
-> main.cpp
->
-> perf record --call-graph dwarf -c 1000000 ./a.out
-> ..
-> cpp-inlining 25448 258803.904661:     100000 cycles:uppp:
->          ffffffff815fd197 [unknown] ([unknown])
-> ..
-> cpp-inlining 25448 258803.907014:     100000 cycles:uppp:
->                     23783 __hypot_finite (/usr/lib/libm-2.26.so)
->          40e3491ebf75199b [unknown] ([unknown])
-> ..
-> cpp-inlining 25448 258804.312048:     100000 cycles:uppp:
->                     23783 __hypot_finite (/usr/lib/libm-2.26.so)
->          40f204e9aa06ab79 [unknown] ([unknown])
->
-> Interestingly, the last broken state repeats, and the address in libm is
-> always the same (0x23783). So that's why I believe that the problem might be
-> in libunwind/libdw or in the DWARF emitter in GCC/Clang... We'd have to debug
-> this. I guess for that we'd have to do something along the following:
->
-> - build a minimal "unwinder" application for libunwind e.g.
-> - notify libunwind about all mmap events
-> - install the register and stack state from the per.data file
-> - try to unwind, see what happens
->
-> This should give us a MWE that we could also show to Dave Watson and others
-> from libunwind. Similarly, we can easily check what libdwfl does there and
-> could show it to Mark Wielaard and others from elfutils. I'm pretty sure that
-> together we can then figure out what to blame:
->
-> - are the register values correct?
-> - is the stack state correct?
-> - is the DWARF info correct?
-> - ...?
->
-> It sounds like a lot of work, but it's certainly doable. Fixing this issue
-> would make me very happy, and I bet a lot of other users would appreciate this
-> too. Right now, I often have to tell people who use perf "deal with broken
-> backtraces, try to guesstimate from the surroundings what actually happened".
-> But this is of course far from optimal!
+I add some output info in the php source code, and found that virtual_file_ex functions's rbp value is really strange,etc 0x1, 0x31. I guess when the perf collects samples for all the cpus with -g option, it may destroy the php-fpm's stack. When the perf is running without -g option, the php-fpm is normal. Who have ever encountered similar problems?
 
-This discussion is getting a bit far from my technological comfort zone, 
-and I am very likely to say something stupid or repeat what you just 
-said in a different way. But if I look at the libunwind documentation, I 
-see that there seems to be a way to attach to a process and generate a 
-backtrace of it like a debugger would.
-
-If so, couldn't we bisect the issue and discriminate whether this is 
-perf's fault by just using this capability to build a minimal poor man 
-profiler, which uses libunwind to print a stack trace of an application 
-at regular intervals? To the best of my understanding, if we get broken 
-stack traces there, the blame would lie on the side of libunwind or the 
-compiler-generated DWARF info, whereas if we get correct stack traces, 
-the blame would lie on perf's facilities for copying register and stack 
-state.
-
-Am I overlooking something here?
-
-Bye,
-Hadrien
+BTW, OS in the server: Centos7.3  , Kernel version: 3.10.0-514.16.1.el7.x86_64. php-fpm version: 7.0.6 
+Processor info: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz 
