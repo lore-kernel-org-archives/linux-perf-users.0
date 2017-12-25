@@ -1,19 +1,24 @@
 From: ufo19890607 <ufo19890607@gmail.com>
 Subject: Php-fpm will crash when perf runs with call graph option
-Date: Mon, 25 Dec 2017 07:56:43 +0100
-Message-ID: <1514185003-17428-1-git-send-email-ufo19890607@gmail.com>
+Date: Mon, 25 Dec 2017 07:58:43 +0100
+Message-ID: <1514185123-18136-1-git-send-email-ufo19890607@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pf0-f179.google.com ([209.85.192.179]:42357 "EHLO
-        mail-pf0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750714AbdLYG5F (ORCPT
+Received: from mail-pl0-f53.google.com ([209.85.160.53]:40446 "EHLO
+        mail-pl0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750744AbdLYG7D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Dec 2017 01:57:05 -0500
+        Mon, 25 Dec 2017 01:59:03 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
 From: yuzhoujian <yuzhoujian@didichuxing.com>
+
+I use perf to analyze the performance overhead for the server. 
+There are several dockers in the server. The php-fpm in the docker
+will crash as long as the perf collects samples for all the cpus with call graph option(perf record -ag). Below is the stack trace
+in the coredump.
 
 #0  0x00007f044ff447bd in re_compile_fastmap_iter (bufp=0x7f044ff447bd <re_compile_fastmap_iter+1165>, 
 		    fastmap=0x46 <Address 0x46 out of bounds>, init_state=<optimized out>, init_state=<optimized out>) at regcomp.c:407
