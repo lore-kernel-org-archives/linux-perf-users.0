@@ -1,62 +1,61 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: Php-fpm will crash when perf runs with call graph option
-Date: Mon, 25 Dec 2017 22:38:46 +0100
-Message-ID: <20171225213846.GA25478@krava>
-References: <1514185003-17428-1-git-send-email-ufo19890607@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: changbin.du@intel.com
+Subject: [PATCH] perf ftrace: Fix the buffer size in __write_tracing_file
+Date: Tue, 26 Dec 2017 17:26:56 +0800
+Message-ID: <1514280416-29659-1-git-send-email-changbin.du@intel.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:52414 "EHLO mx1.redhat.com"
+Received: from mga14.intel.com ([192.55.52.115]:18222 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752815AbdLYVjG (ORCPT
+        id S1750705AbdLZJfA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Dec 2017 16:39:06 -0500
-Content-Disposition: inline
-In-Reply-To: <1514185003-17428-1-git-send-email-ufo19890607@gmail.com>
+        Tue, 26 Dec 2017 04:35:00 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: ufo19890607 <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
 
-On Mon, Dec 25, 2017 at 07:56:43AM +0100, ufo19890607 wrote:
-> From: yuzhoujian <yuzhoujian@didichuxing.com>
-> 
-> #0  0x00007f044ff447bd in re_compile_fastmap_iter (bufp=0x7f044ff447bd <re_compile_fastmap_iter+1165>, 
-> 		    fastmap=0x46 <Address 0x46 out of bounds>, init_state=<optimized out>, init_state=<optimized out>) at regcomp.c:407
-> 407			      if (__wcrtomb (buf, towlower (cset->mbchars[i]), &state)
-> 		(gdb) bt
-> #0  0x00007f044ff447bd in re_compile_fastmap_iter (bufp=0x7f044ff447bd <re_compile_fastmap_iter+1165>, 
-> 	    fastmap=0x46 <Address 0x46 out of bounds>, init_state=<optimized out>, init_state=<optimized out>) at regcomp.c:407
-> #1  0x0000000000831160 in virtual_file_ex (state=0x7fff9c1a4f70, path=<optimized out>, verify_path=0x0, use_realpath=1)
-> 		    at /home/xiaoju/phpng/php-7.0.6/Zend/zend_virtual_cwd.c:1335
-> #2  0x00000000007aacee in expand_filepath_with_mode (
-> 	    filepath=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", 
-> 	        real_path=0x7fff9c1a4fc0 "\360X\032\234\377\177", relative_to=<optimized out>, relative_to_len=0, realpath_mode=1)
-> 		        at /home/xiaoju/phpng/php-7.0.6/main/fopen_wrappers.c:812
-> #3  0x00000000007c1536 in _php_stream_fopen (
-> 	    filename=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", mode=0xdbb1f1 "rb", 
-> 	        opened_path=0x0, options=0) at /home/xiaoju/phpng/php-7.0.6/main/streams/plain_wrapper.c:970
-> #4  0x00000000007bd084 in _php_stream_open_wrapper_ex (
-> 	    path=0x7f044d6020d8 "/home/xiaoju/ep/as/store//toggles/beatles_api_discovery_is_open_by_app", mode=0xdbb1f1 "rb", options=8, 
-> 	        opened_path=0x0, context=0x7f044d65f4c0) at /home/xiaoju/phpng/php-7.0.6/main/streams/streams.c:2060
-> #5  0x000000000071722b in zif_file_get_contents (execute_data=<optimized out>, return_value=0x7f044d615540)
-> 			    at /home/xiaoju/phpng/php-7.0.6/ext/standard/file.c:544
-> #6  0x000000000065387c in phar_file_get_contents (execute_data=0x7f044d615570, return_value=0x7f044d615540)
-> 			        at /home/xiaoju/phpng/php-7.0.6/ext/phar/func_interceptors.c:224))
-> 
-> I add some output info in the php source code, and found that virtual_file_ex functions's rbp value is really strange,etc 0x1, 0x31. I guess when the perf collects samples for all the cpus with -g option, it may destroy the php-fpm's stack. When the perf is running without -g option, the php-fpm is normal. Who have ever encountered similar problems?
+From: Changbin Du <changbin.du@intel.com>
 
-hum, except for speed there shouldn't be other influence on perf-ed program,
-does it happen always? whats the perf record's command line?
+The terminal character '\0' should take into account as size of the string
+buffer. Without this fix, the '--graph-funcs', '--nograph-funcs' and
+'--trace-funcs' options didn't work as expected when the <func> doesn't
+exist.
 
-it's possible you're hitting some php-fpm race issue due to the speed degradation
+I didn't dive into kernel ftrace fops, but strace shows that if usersapce
+writes a non-terminated string, the kernel side will return success but
+no filter applied. After this fix in userspace, the kernel will return an
+error.
 
-> BTW, OS in the server: Centos7.3  , Kernel version: 3.10.0-514.16.1.el7.x86_64. php-fpm version: 7.0.6 
-> Processor info: Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz 
+$ sudo ./perf ftrace -a --graph-depth 1 --graph-funcs abcdefg
+ 0)   0.140 us    |  rcu_all_qs();
+ 3)   0.304 us    |  mutex_unlock();
+ 0)   0.153 us    |  find_vma();
+ 3)   0.088 us    |  __fsnotify_parent();
+ 0)   6.145 us    |  handle_mm_fault();
+ 3)   0.089 us    |  fsnotify();
+ 3)   0.161 us    |  __sb_end_write();
+ 3)   0.710 us    |  SyS_close();
+ 3)   7.848 us    |  exit_to_usermode_loop();
 
-is there a single way to reproduce?
+On above example, I specified function filter 'abcdefg' but all functions
+are enabled.
 
-As already mentioned by Wang, does it happen on recent kernel?
+Signed-off-by: Changbin Du <changbin.du@intel.com>
+---
+ tools/perf/builtin-ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
-jirka
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 25a42ac..2604a64 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -69,7 +69,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+ {
+ 	char *file;
+ 	int fd, ret = -1;
+-	ssize_t size = strlen(val);
++	ssize_t size = strlen(val) + 1;
+ 	int flags = O_WRONLY;
+ 	char errbuf[512];
+ 
+-- 
+2.7.4
