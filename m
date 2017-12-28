@@ -1,123 +1,112 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/35] perf stat: Remove --per-thread pid/tid limitation
-Date: Thu, 28 Dec 2017 11:30:02 -0300
-Message-ID: <20171228143027.30547-11-acme@kernel.org>
+Subject: [PATCH 12/35] perf utils: Move is_directory() to path.h
+Date: Thu, 28 Dec 2017 11:30:04 -0300
+Message-ID: <20171228143027.30547-13-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Currently, if we execute 'perf stat --per-thread' without specifying
-pid/tid, perf will return error.
+So that it can be used more widely, like in the next patch, when it will
+be used to fix a bug in 'perf test' handling of dirent.d_type ==
+DT_UNKNOWN.
 
-root@skl:/tmp# perf stat --per-thread
-The --per-thread option is only available when monitoring via -p -t options.
-    -p, --pid <pid>       stat events on existing process id
-    -t, --tid <tid>       stat events on existing thread id
-
-This patch removes this limitation. If no pid/tid specified, it returns
-all threads (get threads from /proc).
-
-Note that it doesn't support cpu_list yet so if it's a cpu_list case,
-then skip.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512482591-4646-11-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/20171206174535.25380-1-jolsa@kernel.org
+[ Split from a larger patch, removed needless includes in path.h ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 23 +++++++++++++++--------
- tools/perf/util/target.h  |  7 +++++++
- 2 files changed, 22 insertions(+), 8 deletions(-)
+ tools/perf/builtin-script.c | 14 +-------------
+ tools/perf/util/path.c      | 14 ++++++++++++++
+ tools/perf/util/path.h      |  3 +++
+ 3 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f4129a5fbb01..ee708ba6f79a 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -277,7 +277,7 @@ static int create_perf_stat_counter(struct perf_evsel *evsel)
- 			attr->enable_on_exec = 1;
- 	}
- 
--	if (target__has_cpu(&target))
-+	if (target__has_cpu(&target) && !target__has_per_thread(&target))
- 		return perf_evsel__open_per_cpu(evsel, perf_evsel__cpus(evsel));
- 
- 	return perf_evsel__open_per_thread(evsel, evsel_list->threads);
-@@ -340,7 +340,7 @@ static int read_counter(struct perf_evsel *counter)
- 	int nthreads = thread_map__nr(evsel_list->threads);
- 	int ncpus, cpu, thread;
- 
--	if (target__has_cpu(&target))
-+	if (target__has_cpu(&target) && !target__has_per_thread(&target))
- 		ncpus = perf_evsel__nr_cpus(counter);
- 	else
- 		ncpus = 1;
-@@ -2743,12 +2743,16 @@ int cmd_stat(int argc, const char **argv)
- 		run_count = 1;
- 	}
- 
--	if ((stat_config.aggr_mode == AGGR_THREAD) && !target__has_task(&target)) {
--		fprintf(stderr, "The --per-thread option is only available "
--			"when monitoring via -p -t options.\n");
--		parse_options_usage(NULL, stat_options, "p", 1);
--		parse_options_usage(NULL, stat_options, "t", 1);
--		goto out;
-+	if ((stat_config.aggr_mode == AGGR_THREAD) &&
-+		!target__has_task(&target)) {
-+		if (!target.system_wide || target.cpu_list) {
-+			fprintf(stderr, "The --per-thread option is only "
-+				"available when monitoring via -p -t -a "
-+				"options or only --per-thread.\n");
-+			parse_options_usage(NULL, stat_options, "p", 1);
-+			parse_options_usage(NULL, stat_options, "t", 1);
-+			goto out;
-+		}
- 	}
- 
- 	/*
-@@ -2772,6 +2776,9 @@ int cmd_stat(int argc, const char **argv)
- 
- 	target__validate(&target);
- 
-+	if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
-+		target.per_thread = true;
-+
- 	if (perf_evlist__create_maps(evsel_list, &target) < 0) {
- 		if (target__has_task(&target)) {
- 			pr_err("Problems finding threads of monitor\n");
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index 446aa7a56f25..6ef01a83b24e 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -64,6 +64,11 @@ static inline bool target__none(struct target *target)
- 	return !target__has_task(target) && !target__has_cpu(target);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index fac6f053e4da..77e47cf39f2c 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -26,6 +26,7 @@
+ #include "util/string2.h"
+ #include "util/thread-stack.h"
+ #include "util/time-utils.h"
++#include "util/path.h"
+ #include "print_binary.h"
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+@@ -2401,19 +2402,6 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
+ 	return rc;
  }
  
-+static inline bool target__has_per_thread(struct target *target)
+-/* Helper function for filesystems that return a dent->d_type DT_UNKNOWN */
+-static int is_directory(const char *base_path, const struct dirent *dent)
+-{
+-	char path[PATH_MAX];
+-	struct stat st;
+-
+-	sprintf(path, "%s/%s", base_path, dent->d_name);
+-	if (stat(path, &st))
+-		return 0;
+-
+-	return S_ISDIR(st.st_mode);
+-}
+-
+ #define for_each_lang(scripts_path, scripts_dir, lang_dirent)		\
+ 	while ((lang_dirent = readdir(scripts_dir)) != NULL)		\
+ 		if ((lang_dirent->d_type == DT_DIR ||			\
+diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
+index 933f5c6bffb4..ca56ba2dd3da 100644
+--- a/tools/perf/util/path.c
++++ b/tools/perf/util/path.c
+@@ -18,6 +18,7 @@
+ #include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <dirent.h>
+ #include <unistd.h>
+ 
+ static char bad_path[] = "/bad-path/";
+@@ -77,3 +78,16 @@ bool is_regular_file(const char *file)
+ 
+ 	return S_ISREG(st.st_mode);
+ }
++
++/* Helper function for filesystems that return a dent->d_type DT_UNKNOWN */
++bool is_directory(const char *base_path, const struct dirent *dent)
 +{
-+	return target->system_wide && target->per_thread;
-+}
++	char path[PATH_MAX];
++	struct stat st;
 +
- static inline bool target__uses_dummy_map(struct target *target)
- {
- 	bool use_dummy = false;
-@@ -73,6 +78,8 @@ static inline bool target__uses_dummy_map(struct target *target)
- 	else if (target__has_task(target) ||
- 	         (!target__has_cpu(target) && !target->uses_mmap))
- 		use_dummy = true;
-+	else if (target__has_per_thread(target))
-+		use_dummy = true;
++	sprintf(path, "%s/%s", base_path, dent->d_name);
++	if (stat(path, &st))
++		return false;
++
++	return S_ISDIR(st.st_mode);
++}
+diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
+index 14a254ada7eb..f014f905df50 100644
+--- a/tools/perf/util/path.h
++++ b/tools/perf/util/path.h
+@@ -2,9 +2,12 @@
+ #ifndef _PERF_PATH_H
+ #define _PERF_PATH_H
  
- 	return use_dummy;
- }
++struct dirent;
++
+ int path__join(char *bf, size_t size, const char *path1, const char *path2);
+ int path__join3(char *bf, size_t size, const char *path1, const char *path2, const char *path3);
+ 
+ bool is_regular_file(const char *file);
++bool is_directory(const char *base_path, const struct dirent *dent);
+ 
+ #endif /* _PERF_PATH_H */
 -- 
 2.13.6
