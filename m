@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/35] perf thread_map: Enumerate all threads from /proc
-Date: Thu, 28 Dec 2017 11:30:01 -0300
-Message-ID: <20171228143027.30547-10-acme@kernel.org>
+Subject: [PATCH 10/35] perf stat: Remove --per-thread pid/tid limitation
+Date: Thu, 28 Dec 2017 11:30:02 -0300
+Message-ID: <20171228143027.30547-11-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
@@ -12,8 +12,19 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-This patch calls thread_map__new_all_cpus() to enumerate all threads
-from /proc if per-thread flag is enabled.
+Currently, if we execute 'perf stat --per-thread' without specifying
+pid/tid, perf will return error.
+
+root@skl:/tmp# perf stat --per-thread
+The --per-thread option is only available when monitoring via -p -t options.
+    -p, --pid <pid>       stat events on existing process id
+    -t, --tid <tid>       stat events on existing thread id
+
+This patch removes this limitation. If no pid/tid specified, it returns
+all threads (get threads from /proc).
+
+Note that it doesn't support cpu_list yet so if it's a cpu_list case,
+then skip.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -21,77 +32,92 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512482591-4646-10-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1512482591-4646-11-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/thread-map.c | 2 +-
- tools/perf/util/evlist.c      | 3 ++-
- tools/perf/util/thread_map.c  | 5 ++++-
- tools/perf/util/thread_map.h  | 2 +-
- 4 files changed, 8 insertions(+), 4 deletions(-)
+ tools/perf/builtin-stat.c | 23 +++++++++++++++--------
+ tools/perf/util/target.h  |  7 +++++++
+ 2 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index dbcb6a19b375..4de1939b58ba 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -105,7 +105,7 @@ int test__thread_map_remove(struct test *test __maybe_unused, int subtest __mayb
- 	TEST_ASSERT_VAL("failed to allocate map string",
- 			asprintf(&str, "%d,%d", getpid(), getppid()) >= 0);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index f4129a5fbb01..ee708ba6f79a 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -277,7 +277,7 @@ static int create_perf_stat_counter(struct perf_evsel *evsel)
+ 			attr->enable_on_exec = 1;
+ 	}
  
--	threads = thread_map__new_str(str, NULL, 0);
-+	threads = thread_map__new_str(str, NULL, 0, false);
+-	if (target__has_cpu(&target))
++	if (target__has_cpu(&target) && !target__has_per_thread(&target))
+ 		return perf_evsel__open_per_cpu(evsel, perf_evsel__cpus(evsel));
  
- 	TEST_ASSERT_VAL("failed to allocate thread_map",
- 			threads);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3570355bcf39..f0a5e09c4071 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1105,7 +1105,8 @@ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
- 	struct cpu_map *cpus;
- 	struct thread_map *threads;
+ 	return perf_evsel__open_per_thread(evsel, evsel_list->threads);
+@@ -340,7 +340,7 @@ static int read_counter(struct perf_evsel *counter)
+ 	int nthreads = thread_map__nr(evsel_list->threads);
+ 	int ncpus, cpu, thread;
  
--	threads = thread_map__new_str(target->pid, target->tid, target->uid);
-+	threads = thread_map__new_str(target->pid, target->tid, target->uid,
-+				      target->per_thread);
+-	if (target__has_cpu(&target))
++	if (target__has_cpu(&target) && !target__has_per_thread(&target))
+ 		ncpus = perf_evsel__nr_cpus(counter);
+ 	else
+ 		ncpus = 1;
+@@ -2743,12 +2743,16 @@ int cmd_stat(int argc, const char **argv)
+ 		run_count = 1;
+ 	}
  
- 	if (!threads)
- 		return -1;
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index 2b653853eec2..3e1038f6491c 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -323,7 +323,7 @@ struct thread_map *thread_map__new_by_tid_str(const char *tid_str)
- }
+-	if ((stat_config.aggr_mode == AGGR_THREAD) && !target__has_task(&target)) {
+-		fprintf(stderr, "The --per-thread option is only available "
+-			"when monitoring via -p -t options.\n");
+-		parse_options_usage(NULL, stat_options, "p", 1);
+-		parse_options_usage(NULL, stat_options, "t", 1);
+-		goto out;
++	if ((stat_config.aggr_mode == AGGR_THREAD) &&
++		!target__has_task(&target)) {
++		if (!target.system_wide || target.cpu_list) {
++			fprintf(stderr, "The --per-thread option is only "
++				"available when monitoring via -p -t -a "
++				"options or only --per-thread.\n");
++			parse_options_usage(NULL, stat_options, "p", 1);
++			parse_options_usage(NULL, stat_options, "t", 1);
++			goto out;
++		}
+ 	}
  
- struct thread_map *thread_map__new_str(const char *pid, const char *tid,
--				       uid_t uid)
-+				       uid_t uid, bool per_thread)
- {
- 	if (pid)
- 		return thread_map__new_by_pid_str(pid);
-@@ -331,6 +331,9 @@ struct thread_map *thread_map__new_str(const char *pid, const char *tid,
- 	if (!tid && uid != UINT_MAX)
- 		return thread_map__new_by_uid(uid);
+ 	/*
+@@ -2772,6 +2776,9 @@ int cmd_stat(int argc, const char **argv)
  
-+	if (per_thread)
-+		return thread_map__new_all_cpus();
+ 	target__validate(&target);
+ 
++	if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
++		target.per_thread = true;
 +
- 	return thread_map__new_by_tid_str(tid);
+ 	if (perf_evlist__create_maps(evsel_list, &target) < 0) {
+ 		if (target__has_task(&target)) {
+ 			pr_err("Problems finding threads of monitor\n");
+diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
+index 446aa7a56f25..6ef01a83b24e 100644
+--- a/tools/perf/util/target.h
++++ b/tools/perf/util/target.h
+@@ -64,6 +64,11 @@ static inline bool target__none(struct target *target)
+ 	return !target__has_task(target) && !target__has_cpu(target);
  }
  
-diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
-index 07a765fb22bb..0a806b99e73c 100644
---- a/tools/perf/util/thread_map.h
-+++ b/tools/perf/util/thread_map.h
-@@ -31,7 +31,7 @@ struct thread_map *thread_map__get(struct thread_map *map);
- void thread_map__put(struct thread_map *map);
++static inline bool target__has_per_thread(struct target *target)
++{
++	return target->system_wide && target->per_thread;
++}
++
+ static inline bool target__uses_dummy_map(struct target *target)
+ {
+ 	bool use_dummy = false;
+@@ -73,6 +78,8 @@ static inline bool target__uses_dummy_map(struct target *target)
+ 	else if (target__has_task(target) ||
+ 	         (!target__has_cpu(target) && !target->uses_mmap))
+ 		use_dummy = true;
++	else if (target__has_per_thread(target))
++		use_dummy = true;
  
- struct thread_map *thread_map__new_str(const char *pid,
--		const char *tid, uid_t uid);
-+		const char *tid, uid_t uid, bool per_thread);
- 
- struct thread_map *thread_map__new_by_tid_str(const char *tid_str);
- 
+ 	return use_dummy;
+ }
 -- 
 2.13.6
