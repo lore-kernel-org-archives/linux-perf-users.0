@@ -1,249 +1,72 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/35] perf probe: Support escaped character in parser
-Date: Thu, 28 Dec 2017 11:30:18 -0300
-Message-ID: <20171228143027.30547-27-acme@kernel.org>
+Subject: [PATCH 28/35] perf test shell: Fix check open filename arg using 'perf trace'
+Date: Thu, 28 Dec 2017 11:30:20 -0300
+Message-ID: <20171228143027.30547-29-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753394AbdL1Oc3 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 28 Dec 2017 09:32:29 -0500
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Paul Clarke <pc@us.ibm.com>, bhargavb <bhargavaramudu@gmail.com>, linux-rt-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Michael Petlan <mpetlan@redhat.com>
 
-Support the special characters escaped by '\' in parser.  This allows
-user to specify versions directly like below.
+Commit f231af789b11 ("perf test shell: Fix check open filename arg using
+'perf trace' on s390x") added an exception for s390x to use openat()
+instead of open() in the test that intercepts a open syscall to look for
+the filename argument as obtained by the vfs_getname 'perf probe' it
+puts in place at the getname_flags kernel function.
 
-  =====
-  # ./perf probe -x /lib64/libc-2.25.so malloc_get_state\\@GLIBC_2.2.5
-  Added new event:
-    probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+Its not just s390x that uses openat() instead of open(), so use 'perf
+list' to look for the syscall:sys_enter_open(at)? present in the system
+being tested instead of checking if the system is s390x.
 
-  You can now use it in all perf tools, such as:
+In fact Namhyung pointed out that glibc 2.26 changed this behaviour, as
+described in https://lwn.net/Articles/738694/, so systems where glibc is
+>= 2.26 will need this patch for this test to work, which already took
+place in some distros for architectures such as s390x, while Fedora 26
+x86_64 is at glibc 2.25, i.e. still uses open().
 
-	  perf record -e probe_libc:malloc_get_state -aR sleep 1
-
-  =====
-
-Or, you can use separators in source filename, e.g.
-
-  =====
-  # ./perf probe -x /opt/test/a.out foo+bar.c:3
-  Semantic error :There is non-digit character in offset.
-    Error: Command Parse Error.
-  =====
-
-Usually "+" in source file cause parser error, but
-
-  =====
-  # ./perf probe -x /opt/test/a.out foo\\+bar.c:4
-  Added new event:
-    probe_a:main         (on @foo+bar.c:4 in /opt/test/a.out)
-
-  You can now use it in all perf tools, such as:
-
-	  perf record -e probe_a:main -aR sleep 1
-  =====
-
-escaped "\+" allows you to specify that.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Acked-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: bhargavb <bhargavaramudu@gmail.com>
-Cc: linux-rt-users@vger.kernel.org
-Link: http://lkml.kernel.org/r/151309111236.18107.5634753157435343410.stgit@devbox
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Link: https://lkml.kernel.org/r/ab23fe42-1080-a46b-503e-744e097f414f@linux.vnet.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+LPU-Reference: 1275675985.12835754.1513095723265.JavaMail.zimbra@redhat.com
+Link: https://lkml.kernel.org/n/tip-j2wbz9av1rw3thr3t0g4dtuk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-probe.txt | 16 +++++++++
- tools/perf/util/probe-event.c           | 58 ++++++++++++++++++++-------------
- 2 files changed, 51 insertions(+), 23 deletions(-)
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index f96382692f42..b6866a05edd2 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -182,6 +182,14 @@ Note that before using the SDT event, the target binary (on which SDT events are
- For details of the SDT, see below.
- https://sourceware.org/gdb/onlinedocs/gdb/Static-Probe-Points.html
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 2a9ef080efd0..55ad9793d544 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -17,10 +17,9 @@ skip_if_no_perf_probe || exit 2
+ file=$(mktemp /tmp/temporary_file.XXXXX)
  
-+ESCAPED CHARACTER
-+-----------------
-+
-+In the probe syntax, '=', '@', '+', ':' and ';' are treated as a special character. You can use a backslash ('\') to escape the special characters.
-+This is useful if you need to probe on a specific versioned symbols, like @GLIBC_... suffixes, or also you need to specify a source file which includes the special characters.
-+Note that usually single backslash is consumed by shell, so you might need to pass double backslash (\\) or wrapping with single quotes (\'AAA\@BBB').
-+See EXAMPLES how it is used.
-+
- PROBE ARGUMENT
- --------------
- Each probe argument follows below syntax.
-@@ -277,6 +285,14 @@ Add a USDT probe to a target process running in a different mount namespace
- 
-  ./perf probe --target-ns <target pid> -x /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el7_3.x86_64/jre/lib/amd64/server/libjvm.so %sdt_hotspot:thread__sleep__end
- 
-+Add a probe on specific versioned symbol by backslash escape
-+
-+ ./perf probe -x /lib64/libc-2.25.so 'malloc_get_state\@GLIBC_2.2.5'
-+
-+Add a probe in a source file using special characters by backslash escape
-+
-+ ./perf probe -x /opt/test/a.out 'foo\+bar.c:4'
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 0d6c66d51939..e1dbc9821617 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1325,27 +1325,30 @@ static int parse_perf_probe_event_name(char **arg, struct perf_probe_event *pev)
- {
- 	char *ptr;
- 
--	ptr = strchr(*arg, ':');
-+	ptr = strpbrk_esc(*arg, ":");
- 	if (ptr) {
- 		*ptr = '\0';
- 		if (!pev->sdt && !is_c_func_name(*arg))
- 			goto ng_name;
--		pev->group = strdup(*arg);
-+		pev->group = strdup_esc(*arg);
- 		if (!pev->group)
- 			return -ENOMEM;
- 		*arg = ptr + 1;
- 	} else
- 		pev->group = NULL;
--	if (!pev->sdt && !is_c_func_name(*arg)) {
-+
-+	pev->event = strdup_esc(*arg);
-+	if (pev->event == NULL)
-+		return -ENOMEM;
-+
-+	if (!pev->sdt && !is_c_func_name(pev->event)) {
-+		zfree(&pev->event);
- ng_name:
-+		zfree(&pev->group);
- 		semantic_error("%s is bad for event name -it must "
- 			       "follow C symbol-naming rule.\n", *arg);
- 		return -EINVAL;
- 	}
--	pev->event = strdup(*arg);
--	if (pev->event == NULL)
--		return -ENOMEM;
+ trace_open_vfs_getname() {
+-	test "$(uname -m)" = s390x && { svc="openat"; txt="dfd: +CWD, +"; }
 -
- 	return 0;
+-	perf trace -e ${svc:-open} touch $file 2>&1 | \
+-	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ ${svc:-open}\(${txt}filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
++	evts=$(echo $(perf list syscalls:sys_enter_open* |& egrep 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
++	perf trace -e $evts touch $file 2>&1 | \
++	egrep " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
  }
  
-@@ -1373,7 +1376,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 			arg++;
- 	}
  
--	ptr = strpbrk(arg, ";=@+%");
-+	ptr = strpbrk_esc(arg, ";=@+%");
- 	if (pev->sdt) {
- 		if (ptr) {
- 			if (*ptr != '@') {
-@@ -1387,7 +1390,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				pev->target = build_id_cache__origname(tmp);
- 				free(tmp);
- 			} else
--				pev->target = strdup(ptr + 1);
-+				pev->target = strdup_esc(ptr + 1);
- 			if (!pev->target)
- 				return -ENOMEM;
- 			*ptr = '\0';
-@@ -1421,13 +1424,14 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 	 *
- 	 * Otherwise, we consider arg to be a function specification.
- 	 */
--	if (!strpbrk(arg, "+@%") && (ptr = strpbrk(arg, ";:")) != NULL) {
-+	if (!strpbrk_esc(arg, "+@%")) {
-+		ptr = strpbrk_esc(arg, ";:");
- 		/* This is a file spec if it includes a '.' before ; or : */
--		if (memchr(arg, '.', ptr - arg))
-+		if (ptr && memchr(arg, '.', ptr - arg))
- 			file_spec = true;
- 	}
- 
--	ptr = strpbrk(arg, ";:+@%");
-+	ptr = strpbrk_esc(arg, ";:+@%");
- 	if (ptr) {
- 		nc = *ptr;
- 		*ptr++ = '\0';
-@@ -1436,7 +1440,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 	if (arg[0] == '\0')
- 		tmp = NULL;
- 	else {
--		tmp = strdup(arg);
-+		tmp = strdup_esc(arg);
- 		if (tmp == NULL)
- 			return -ENOMEM;
- 	}
-@@ -1469,12 +1473,12 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 		arg = ptr;
- 		c = nc;
- 		if (c == ';') {	/* Lazy pattern must be the last part */
--			pp->lazy_line = strdup(arg);
-+			pp->lazy_line = strdup(arg); /* let leave escapes */
- 			if (pp->lazy_line == NULL)
- 				return -ENOMEM;
- 			break;
- 		}
--		ptr = strpbrk(arg, ";:+@%");
-+		ptr = strpbrk_esc(arg, ";:+@%");
- 		if (ptr) {
- 			nc = *ptr;
- 			*ptr++ = '\0';
-@@ -1501,7 +1505,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 				semantic_error("SRC@SRC is not allowed.\n");
- 				return -EINVAL;
- 			}
--			pp->file = strdup(arg);
-+			pp->file = strdup_esc(arg);
- 			if (pp->file == NULL)
- 				return -ENOMEM;
- 			break;
-@@ -2803,23 +2807,31 @@ static int find_probe_functions(struct map *map, char *name,
- 	struct rb_node *tmp;
- 	const char *norm, *ver;
- 	char *buf = NULL;
-+	bool cut_version = true;
- 
- 	if (map__load(map) < 0)
- 		return 0;
- 
-+	/* If user gives a version, don't cut off the version from symbols */
-+	if (strchr(name, '@'))
-+		cut_version = false;
-+
- 	map__for_each_symbol(map, sym, tmp) {
- 		norm = arch__normalize_symbol_name(sym->name);
- 		if (!norm)
- 			continue;
- 
--		/* We don't care about default symbol or not */
--		ver = strchr(norm, '@');
--		if (ver) {
--			buf = strndup(norm, ver - norm);
--			if (!buf)
--				return -ENOMEM;
--			norm = buf;
-+		if (cut_version) {
-+			/* We don't care about default symbol or not */
-+			ver = strchr(norm, '@');
-+			if (ver) {
-+				buf = strndup(norm, ver - norm);
-+				if (!buf)
-+					return -ENOMEM;
-+				norm = buf;
-+			}
- 		}
-+
- 		if (strglobmatch(norm, name)) {
- 			found++;
- 			if (syms && found < probe_conf.max_probes)
 -- 
 2.13.6
