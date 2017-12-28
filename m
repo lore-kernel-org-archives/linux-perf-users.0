@@ -1,52 +1,108 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/35] perf s390: Always build with -fPIC
-Date: Thu, 28 Dec 2017 11:30:22 -0300
-Message-ID: <20171228143027.30547-31-acme@kernel.org>
+Subject: [PATCH 32/35] perf probe arm64: Fix symbol fixup issues due to ELF type
+Date: Thu, 28 Dec 2017 11:30:24 -0300
+Message-ID: <20171228143027.30547-33-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753724AbdL1Ocf (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Dec 2017 09:32:35 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, linux s390 list <linux-s390@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+From: Kim Phillips <kim.phillips@arm.com>
 
-On s390, object files must be compiled with position-indepedent code in
-order to be incrementally linked or linked to shared libraries.
+On an arm64 machine running a CONFIG_RANDOMIZE_BASE=y kernel, perf
+kernel symbol resolution fails.  Debugging saw symsrc_init calling the
+default elf__needs_adjust_symbols() where checks for an ET_DYN (3)
+ehdr.e_type failed when they should have succeeded.
 
-Therefore, add -fPIC to the CFLAGS for s390 to ensure each object file
-is built properly.
+Fix by adopting powerpc version of the weak elf__needs_adjust_symbols()
+function, as done in commit d2332098331f ("perf probe ppc: Fix symbol
+fixup issues due to ELF type").
 
-Reported-by: Jonathan Hermann <jonathan.hermann@de.ibm.com>
-Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux s390 list <linux-s390@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20171207080951.GC4889@linux.vnet.ibm.com
+Prior to this patch, perf test 1 would fail:
+
+  $ sudo oldperf test -v 1 |& head
+   1: vmlinux symtab matches kallsyms                       :
+  test child forked, pid 33374
+  Looking at the vmlinux_path (8 entries long)
+  Using /usr/lib/debug/boot/vmlinux for symbols
+  ERR : 0xfffe0000100f1000: do_undefinstr not on kallsyms
+  ERR : 0xfffe0000100f1320: do_sysinstr not on kallsyms
+  ERR : 0xfffe0000100f13b0: do_debug_exception not on kallsyms
+  ERR : 0xfffe0000100f1498: do_mem_abort not on kallsyms
+  ERR : 0xfffe0000100f1580: do_sp_pc_abort not on kallsyms
+  ...
+
+After applying this patch, perf test 1 now succeeds:
+
+  $ sudo ./newperf test -v 1 |& head
+   1: vmlinux symtab matches kallsyms                       :
+  test child forked, pid 33378
+  Looking at the vmlinux_path (8 entries long)
+  Using /usr/lib/debug/boot/vmlinux for symbols
+  WARN: 0xffff000008081000: diff name v: do_undefinstr k: __exception_text_start
+  WARN: 0xffff0000080819e8: diff name v: __irqentry_text_end k: __softirqentry_text_start
+  WARN: 0xffff000008081d08: diff name v: __entry_text_start k: __softirqentry_text_end
+  WARN: 0xffff00000809db5c: diff name v: flush_icache_range k: __flush_cache_user_range
+  WARN: 0xffff000008101908: diff name v: sys_ni_syscall k: sys_vm86old
+  ...
+
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20171214175242.e30450f17f93ad675d968fa3@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/arm64/util/Build          |  1 +
+ tools/perf/arch/arm64/util/sym-handling.c | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 tools/perf/arch/arm64/util/sym-handling.c
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index eb6bd99be0bd..f050f38d8fa3 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -58,7 +58,7 @@ endif
- ifeq ($(ARCH),s390)
-   NO_PERF_REGS := 0
-   NO_SYSCALL_TABLE := 0
--  CFLAGS += -I$(OUTPUT)arch/s390/include/generated
-+  CFLAGS += -fPIC -I$(OUTPUT)arch/s390/include/generated
- endif
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index b1ab72d2a42e..e04f6cdd6f32 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -1,4 +1,5 @@
+ libperf-y += header.o
++libperf-y += sym-handling.o
+ libperf-$(CONFIG_DWARF)     += dwarf-regs.o
+ libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
  
- ifeq ($(NO_PERF_REGS),0)
+diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
+new file mode 100644
+index 000000000000..0051b1ee8450
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/sym-handling.c
+@@ -0,0 +1,22 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License, version 2, as
++ * published by the Free Software Foundation.
++ *
++ * Copyright (C) 2015 Naveen N. Rao, IBM Corporation
++ */
++
++#include "debug.h"
++#include "symbol.h"
++#include "map.h"
++#include "probe-event.h"
++#include "probe-file.h"
++
++#ifdef HAVE_LIBELF_SUPPORT
++bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
++{
++	return ehdr.e_type == ET_EXEC ||
++	       ehdr.e_type == ET_REL ||
++	       ehdr.e_type == ET_DYN;
++}
++#endif
 -- 
 2.13.6
