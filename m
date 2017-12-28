@@ -1,463 +1,162 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/35] tools include s390: Grab a copy of arch/s390/include/uapi/asm/unistd.h
-Date: Thu, 28 Dec 2017 11:30:07 -0300
-Message-ID: <20171228143027.30547-16-acme@kernel.org>
+Subject: [PATCH 14/35] perf perf: Remove duplicate includes
+Date: Thu, 28 Dec 2017 11:30:06 -0300
+Message-ID: <20171228143027.30547-15-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Michael Petlan <mpetlan@redhat.com>, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Pravin Shedge <pravin.shedge4linux@gmail.com>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+From: Pravin Shedge <pravin.shedge4linux@gmail.com>
 
-Will be used for generating the syscall id/string translation table.
+These duplicate includes have been found with scripts/checkincludes.pl
+but they have been removed manually to avoid removing false positives.
 
-Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Signed-off-by: Pravin Shedge <pravin.shedge4linux@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-s390@vger.kernel.org
-LPU-Reference: 1512635281-20733-2-git-send-email-brueckner@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/n/tip-vjfbfvgjrnqnbdluqd7leo98@git.kernel.org
-[ split from a larger patch ]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1512582204-6493-1-git-send-email-pravin.shedge4linux@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/s390/include/uapi/asm/unistd.h | 412 ++++++++++++++++++++++++++++++
- tools/perf/check-headers.sh               |   1 +
- 2 files changed, 413 insertions(+)
- create mode 100644 tools/arch/s390/include/uapi/asm/unistd.h
+ tools/perf/bench/futex-hash.c                          | 1 -
+ tools/perf/builtin-c2c.c                               | 3 ---
+ tools/perf/builtin-record.c                            | 1 -
+ tools/perf/builtin-stat.c                              | 1 -
+ tools/perf/tests/parse-events.c                        | 1 -
+ tools/perf/util/auxtrace.c                             | 3 ---
+ tools/perf/util/header.c                               | 2 --
+ tools/perf/util/metricgroup.c                          | 2 --
+ tools/perf/util/scripting-engines/trace-event-python.c | 1 -
+ 9 files changed, 15 deletions(-)
 
-diff --git a/tools/arch/s390/include/uapi/asm/unistd.h b/tools/arch/s390/include/uapi/asm/unistd.h
-new file mode 100644
-index 000000000000..725120939051
---- /dev/null
-+++ b/tools/arch/s390/include/uapi/asm/unistd.h
-@@ -0,0 +1,412 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ *  S390 version
-+ *
-+ *  Derived from "include/asm-i386/unistd.h"
-+ */
-+
-+#ifndef _UAPI_ASM_S390_UNISTD_H_
-+#define _UAPI_ASM_S390_UNISTD_H_
-+
-+/*
-+ * This file contains the system call numbers.
-+ */
-+
-+#define __NR_exit                 1
-+#define __NR_fork                 2
-+#define __NR_read                 3
-+#define __NR_write                4
-+#define __NR_open                 5
-+#define __NR_close                6
-+#define __NR_restart_syscall	  7
-+#define __NR_creat                8
-+#define __NR_link                 9
-+#define __NR_unlink              10
-+#define __NR_execve              11
-+#define __NR_chdir               12
-+#define __NR_mknod               14
-+#define __NR_chmod               15
-+#define __NR_lseek               19
-+#define __NR_getpid              20
-+#define __NR_mount               21
-+#define __NR_umount              22
-+#define __NR_ptrace              26
-+#define __NR_alarm               27
-+#define __NR_pause               29
-+#define __NR_utime               30
-+#define __NR_access              33
-+#define __NR_nice                34
-+#define __NR_sync                36
-+#define __NR_kill                37
-+#define __NR_rename              38
-+#define __NR_mkdir               39
-+#define __NR_rmdir               40
-+#define __NR_dup                 41
-+#define __NR_pipe                42
-+#define __NR_times               43
-+#define __NR_brk                 45
-+#define __NR_signal              48
-+#define __NR_acct                51
-+#define __NR_umount2             52
-+#define __NR_ioctl               54
-+#define __NR_fcntl               55
-+#define __NR_setpgid             57
-+#define __NR_umask               60
-+#define __NR_chroot              61
-+#define __NR_ustat               62
-+#define __NR_dup2                63
-+#define __NR_getppid             64
-+#define __NR_getpgrp             65
-+#define __NR_setsid              66
-+#define __NR_sigaction           67
-+#define __NR_sigsuspend          72
-+#define __NR_sigpending          73
-+#define __NR_sethostname         74
-+#define __NR_setrlimit           75
-+#define __NR_getrusage           77
-+#define __NR_gettimeofday        78
-+#define __NR_settimeofday        79
-+#define __NR_symlink             83
-+#define __NR_readlink            85
-+#define __NR_uselib              86
-+#define __NR_swapon              87
-+#define __NR_reboot              88
-+#define __NR_readdir             89
-+#define __NR_mmap                90
-+#define __NR_munmap              91
-+#define __NR_truncate            92
-+#define __NR_ftruncate           93
-+#define __NR_fchmod              94
-+#define __NR_getpriority         96
-+#define __NR_setpriority         97
-+#define __NR_statfs              99
-+#define __NR_fstatfs            100
-+#define __NR_socketcall         102
-+#define __NR_syslog             103
-+#define __NR_setitimer          104
-+#define __NR_getitimer          105
-+#define __NR_stat               106
-+#define __NR_lstat              107
-+#define __NR_fstat              108
-+#define __NR_lookup_dcookie     110
-+#define __NR_vhangup            111
-+#define __NR_idle               112
-+#define __NR_wait4              114
-+#define __NR_swapoff            115
-+#define __NR_sysinfo            116
-+#define __NR_ipc                117
-+#define __NR_fsync              118
-+#define __NR_sigreturn          119
-+#define __NR_clone              120
-+#define __NR_setdomainname      121
-+#define __NR_uname              122
-+#define __NR_adjtimex           124
-+#define __NR_mprotect           125
-+#define __NR_sigprocmask        126
-+#define __NR_create_module      127
-+#define __NR_init_module        128
-+#define __NR_delete_module      129
-+#define __NR_get_kernel_syms    130
-+#define __NR_quotactl           131
-+#define __NR_getpgid            132
-+#define __NR_fchdir             133
-+#define __NR_bdflush            134
-+#define __NR_sysfs              135
-+#define __NR_personality        136
-+#define __NR_afs_syscall        137 /* Syscall for Andrew File System */
-+#define __NR_getdents           141
-+#define __NR_flock              143
-+#define __NR_msync              144
-+#define __NR_readv              145
-+#define __NR_writev             146
-+#define __NR_getsid             147
-+#define __NR_fdatasync          148
-+#define __NR__sysctl            149
-+#define __NR_mlock              150
-+#define __NR_munlock            151
-+#define __NR_mlockall           152
-+#define __NR_munlockall         153
-+#define __NR_sched_setparam             154
-+#define __NR_sched_getparam             155
-+#define __NR_sched_setscheduler         156
-+#define __NR_sched_getscheduler         157
-+#define __NR_sched_yield                158
-+#define __NR_sched_get_priority_max     159
-+#define __NR_sched_get_priority_min     160
-+#define __NR_sched_rr_get_interval      161
-+#define __NR_nanosleep          162
-+#define __NR_mremap             163
-+#define __NR_query_module       167
-+#define __NR_poll               168
-+#define __NR_nfsservctl         169
-+#define __NR_prctl              172
-+#define __NR_rt_sigreturn       173
-+#define __NR_rt_sigaction       174
-+#define __NR_rt_sigprocmask     175
-+#define __NR_rt_sigpending      176
-+#define __NR_rt_sigtimedwait    177
-+#define __NR_rt_sigqueueinfo    178
-+#define __NR_rt_sigsuspend      179
-+#define __NR_pread64            180
-+#define __NR_pwrite64           181
-+#define __NR_getcwd             183
-+#define __NR_capget             184
-+#define __NR_capset             185
-+#define __NR_sigaltstack        186
-+#define __NR_sendfile           187
-+#define __NR_getpmsg		188
-+#define __NR_putpmsg		189
-+#define __NR_vfork		190
-+#define __NR_pivot_root         217
-+#define __NR_mincore            218
-+#define __NR_madvise            219
-+#define __NR_getdents64		220
-+#define __NR_readahead		222
-+#define __NR_setxattr		224
-+#define __NR_lsetxattr		225
-+#define __NR_fsetxattr		226
-+#define __NR_getxattr		227
-+#define __NR_lgetxattr		228
-+#define __NR_fgetxattr		229
-+#define __NR_listxattr		230
-+#define __NR_llistxattr		231
-+#define __NR_flistxattr		232
-+#define __NR_removexattr	233
-+#define __NR_lremovexattr	234
-+#define __NR_fremovexattr	235
-+#define __NR_gettid		236
-+#define __NR_tkill		237
-+#define __NR_futex		238
-+#define __NR_sched_setaffinity	239
-+#define __NR_sched_getaffinity	240
-+#define __NR_tgkill		241
-+/* Number 242 is reserved for tux */
-+#define __NR_io_setup		243
-+#define __NR_io_destroy		244
-+#define __NR_io_getevents	245
-+#define __NR_io_submit		246
-+#define __NR_io_cancel		247
-+#define __NR_exit_group		248
-+#define __NR_epoll_create	249
-+#define __NR_epoll_ctl		250
-+#define __NR_epoll_wait		251
-+#define __NR_set_tid_address	252
-+#define __NR_fadvise64		253
-+#define __NR_timer_create	254
-+#define __NR_timer_settime	255
-+#define __NR_timer_gettime	256
-+#define __NR_timer_getoverrun	257
-+#define __NR_timer_delete	258
-+#define __NR_clock_settime	259
-+#define __NR_clock_gettime	260
-+#define __NR_clock_getres	261
-+#define __NR_clock_nanosleep	262
-+/* Number 263 is reserved for vserver */
-+#define __NR_statfs64		265
-+#define __NR_fstatfs64		266
-+#define __NR_remap_file_pages	267
-+#define __NR_mbind		268
-+#define __NR_get_mempolicy	269
-+#define __NR_set_mempolicy	270
-+#define __NR_mq_open		271
-+#define __NR_mq_unlink		272
-+#define __NR_mq_timedsend	273
-+#define __NR_mq_timedreceive	274
-+#define __NR_mq_notify		275
-+#define __NR_mq_getsetattr	276
-+#define __NR_kexec_load		277
-+#define __NR_add_key		278
-+#define __NR_request_key	279
-+#define __NR_keyctl		280
-+#define __NR_waitid		281
-+#define __NR_ioprio_set		282
-+#define __NR_ioprio_get		283
-+#define __NR_inotify_init	284
-+#define __NR_inotify_add_watch	285
-+#define __NR_inotify_rm_watch	286
-+#define __NR_migrate_pages	287
-+#define __NR_openat		288
-+#define __NR_mkdirat		289
-+#define __NR_mknodat		290
-+#define __NR_fchownat		291
-+#define __NR_futimesat		292
-+#define __NR_unlinkat		294
-+#define __NR_renameat		295
-+#define __NR_linkat		296
-+#define __NR_symlinkat		297
-+#define __NR_readlinkat		298
-+#define __NR_fchmodat		299
-+#define __NR_faccessat		300
-+#define __NR_pselect6		301
-+#define __NR_ppoll		302
-+#define __NR_unshare		303
-+#define __NR_set_robust_list	304
-+#define __NR_get_robust_list	305
-+#define __NR_splice		306
-+#define __NR_sync_file_range	307
-+#define __NR_tee		308
-+#define __NR_vmsplice		309
-+#define __NR_move_pages		310
-+#define __NR_getcpu		311
-+#define __NR_epoll_pwait	312
-+#define __NR_utimes		313
-+#define __NR_fallocate		314
-+#define __NR_utimensat		315
-+#define __NR_signalfd		316
-+#define __NR_timerfd		317
-+#define __NR_eventfd		318
-+#define __NR_timerfd_create	319
-+#define __NR_timerfd_settime	320
-+#define __NR_timerfd_gettime	321
-+#define __NR_signalfd4		322
-+#define __NR_eventfd2		323
-+#define __NR_inotify_init1	324
-+#define __NR_pipe2		325
-+#define __NR_dup3		326
-+#define __NR_epoll_create1	327
-+#define	__NR_preadv		328
-+#define	__NR_pwritev		329
-+#define __NR_rt_tgsigqueueinfo	330
-+#define __NR_perf_event_open	331
-+#define __NR_fanotify_init	332
-+#define __NR_fanotify_mark	333
-+#define __NR_prlimit64		334
-+#define __NR_name_to_handle_at	335
-+#define __NR_open_by_handle_at	336
-+#define __NR_clock_adjtime	337
-+#define __NR_syncfs		338
-+#define __NR_setns		339
-+#define __NR_process_vm_readv	340
-+#define __NR_process_vm_writev	341
-+#define __NR_s390_runtime_instr 342
-+#define __NR_kcmp		343
-+#define __NR_finit_module	344
-+#define __NR_sched_setattr	345
-+#define __NR_sched_getattr	346
-+#define __NR_renameat2		347
-+#define __NR_seccomp		348
-+#define __NR_getrandom		349
-+#define __NR_memfd_create	350
-+#define __NR_bpf		351
-+#define __NR_s390_pci_mmio_write	352
-+#define __NR_s390_pci_mmio_read		353
-+#define __NR_execveat		354
-+#define __NR_userfaultfd	355
-+#define __NR_membarrier		356
-+#define __NR_recvmmsg		357
-+#define __NR_sendmmsg		358
-+#define __NR_socket		359
-+#define __NR_socketpair		360
-+#define __NR_bind		361
-+#define __NR_connect		362
-+#define __NR_listen		363
-+#define __NR_accept4		364
-+#define __NR_getsockopt		365
-+#define __NR_setsockopt		366
-+#define __NR_getsockname	367
-+#define __NR_getpeername	368
-+#define __NR_sendto		369
-+#define __NR_sendmsg		370
-+#define __NR_recvfrom		371
-+#define __NR_recvmsg		372
-+#define __NR_shutdown		373
-+#define __NR_mlock2		374
-+#define __NR_copy_file_range	375
-+#define __NR_preadv2		376
-+#define __NR_pwritev2		377
-+#define __NR_s390_guarded_storage	378
-+#define __NR_statx		379
-+#define __NR_s390_sthyi		380
-+#define NR_syscalls 381
-+
-+/* 
-+ * There are some system calls that are not present on 64 bit, some
-+ * have a different name although they do the same (e.g. __NR_chown32
-+ * is __NR_chown on 64 bit).
-+ */
-+#ifndef __s390x__
-+
-+#define __NR_time		 13
-+#define __NR_lchown		 16
-+#define __NR_setuid		 23
-+#define __NR_getuid		 24
-+#define __NR_stime		 25
-+#define __NR_setgid		 46
-+#define __NR_getgid		 47
-+#define __NR_geteuid		 49
-+#define __NR_getegid		 50
-+#define __NR_setreuid		 70
-+#define __NR_setregid		 71
-+#define __NR_getrlimit		 76
-+#define __NR_getgroups		 80
-+#define __NR_setgroups		 81
-+#define __NR_fchown		 95
-+#define __NR_ioperm		101
-+#define __NR_setfsuid		138
-+#define __NR_setfsgid		139
-+#define __NR__llseek		140
-+#define __NR__newselect 	142
-+#define __NR_setresuid		164
-+#define __NR_getresuid		165
-+#define __NR_setresgid		170
-+#define __NR_getresgid		171
-+#define __NR_chown		182
-+#define __NR_ugetrlimit		191	/* SuS compliant getrlimit */
-+#define __NR_mmap2		192
-+#define __NR_truncate64		193
-+#define __NR_ftruncate64	194
-+#define __NR_stat64		195
-+#define __NR_lstat64		196
-+#define __NR_fstat64		197
-+#define __NR_lchown32		198
-+#define __NR_getuid32		199
-+#define __NR_getgid32		200
-+#define __NR_geteuid32		201
-+#define __NR_getegid32		202
-+#define __NR_setreuid32		203
-+#define __NR_setregid32		204
-+#define __NR_getgroups32	205
-+#define __NR_setgroups32	206
-+#define __NR_fchown32		207
-+#define __NR_setresuid32	208
-+#define __NR_getresuid32	209
-+#define __NR_setresgid32	210
-+#define __NR_getresgid32	211
-+#define __NR_chown32		212
-+#define __NR_setuid32		213
-+#define __NR_setgid32		214
-+#define __NR_setfsuid32		215
-+#define __NR_setfsgid32		216
-+#define __NR_fcntl64		221
-+#define __NR_sendfile64		223
-+#define __NR_fadvise64_64	264
-+#define __NR_fstatat64		293
-+
-+#else
-+
-+#define __NR_select		142
-+#define __NR_getrlimit		191	/* SuS compliant getrlimit */
-+#define __NR_lchown  		198
-+#define __NR_getuid  		199
-+#define __NR_getgid  		200
-+#define __NR_geteuid  		201
-+#define __NR_getegid  		202
-+#define __NR_setreuid  		203
-+#define __NR_setregid  		204
-+#define __NR_getgroups  	205
-+#define __NR_setgroups  	206
-+#define __NR_fchown  		207
-+#define __NR_setresuid  	208
-+#define __NR_getresuid  	209
-+#define __NR_setresgid  	210
-+#define __NR_getresgid  	211
-+#define __NR_chown  		212
-+#define __NR_setuid  		213
-+#define __NR_setgid  		214
-+#define __NR_setfsuid  		215
-+#define __NR_setfsgid  		216
-+#define __NR_newfstatat		293
-+
-+#endif
-+
-+#endif /* _UAPI_ASM_S390_UNISTD_H_ */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index ea602cd1b43a..f81ca508700c 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -33,6 +33,7 @@ arch/s390/include/uapi/asm/kvm.h
- arch/s390/include/uapi/asm/kvm_perf.h
- arch/s390/include/uapi/asm/ptrace.h
- arch/s390/include/uapi/asm/sie.h
-+arch/s390/include/uapi/asm/unistd.h
- arch/arm/include/uapi/asm/kvm.h
- arch/arm64/include/uapi/asm/kvm.h
- include/asm-generic/bitops/arch_hweight.h
+diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+index 2defb6df7fd0..9aa3a674829b 100644
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -27,7 +27,6 @@
+ #include "cpumap.h"
+ 
+ #include <err.h>
+-#include <sys/time.h>
+ 
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 10;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index f1da9b0833c0..c0debc3f79b6 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -27,13 +27,10 @@
+ #include "sort.h"
+ #include "tool.h"
+ #include "data.h"
+-#include "sort.h"
+ #include "event.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include <asm/bug.h>
+ #include "ui/browsers/hists.h"
+-#include "evlist.h"
+ #include "thread.h"
+ 
+ struct c2c_hists {
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0a5749ef8b94..98da8cb8de93 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -51,7 +51,6 @@
+ #include <signal.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+-#include <asm/bug.h>
+ #include <linux/time64.h>
+ 
+ struct switch_output {
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 58d501d1f5fd..98bf9d32f222 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -63,7 +63,6 @@
+ #include "util/group.h"
+ #include "util/session.h"
+ #include "util/tool.h"
+-#include "util/group.h"
+ #include "util/string2.h"
+ #include "util/metricgroup.h"
+ #include "asm/bug.h"
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index f0679613bd18..18b06444f230 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -13,7 +13,6 @@
+ #include <unistd.h>
+ #include <linux/kernel.h>
+ #include <linux/hw_breakpoint.h>
+-#include <api/fs/fs.h>
+ #include <api/fs/tracing_path.h>
+ 
+ #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index a33491416400..c76687e42344 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -31,9 +31,6 @@
+ #include <sys/param.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+-#include <string.h>
+-#include <limits.h>
+-#include <errno.h>
+ #include <linux/list.h>
+ 
+ #include "../perf.h"
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 5890e08e0754..ca73aa7be708 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -15,9 +15,7 @@
+ #include <linux/bitops.h>
+ #include <linux/stringify.h>
+ #include <sys/stat.h>
+-#include <sys/types.h>
+ #include <sys/utsname.h>
+-#include <unistd.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index e48410c99b39..1ddc3d1d0147 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -20,12 +20,10 @@
+ #include "pmu.h"
+ #include "expr.h"
+ #include "rblist.h"
+-#include "pmu.h"
+ #include <string.h>
+ #include <stdbool.h>
+ #include <errno.h>
+ #include "pmu-events/pmu-events.h"
+-#include "strbuf.h"
+ #include "strlist.h"
+ #include <assert.h>
+ #include <ctype.h>
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index c7187f067d31..c1848b543f27 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -43,7 +43,6 @@
+ #include "../db-export.h"
+ #include "../thread-stack.h"
+ #include "../trace-event.h"
+-#include "../machine.h"
+ #include "../call-path.h"
+ #include "thread_map.h"
+ #include "cpumap.h"
 -- 
 2.13.6
