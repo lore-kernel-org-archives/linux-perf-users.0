@@ -1,105 +1,102 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/35] perf evsel: Fix swap for samples with raw data
-Date: Thu, 28 Dec 2017 11:30:19 -0300
-Message-ID: <20171228143027.30547-28-acme@kernel.org>
+Subject: [PATCH 25/35] perf string: Add {strdup,strpbrk}_esc()
+Date: Thu, 28 Dec 2017 11:30:17 -0300
+Message-ID: <20171228143027.30547-26-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932447AbdL1OcS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 28 Dec 2017 09:32:18 -0500
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Paul Clarke <pc@us.ibm.com>, bhargavb <bhargavaramudu@gmail.com>, linux-rt-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-When we detect a different endianity we swap event before processing.
-It's tricky for samples because we have no idea what's inside. We treat
-it as an array of u64s, swap them and later on we swap back parts which
-are different.
+To support the special characters escaped by '\' in 'perf probe' event parser.
 
-We mangle this way also the tracepoint raw data, which ends up in report
-showing wrong data:
-
-  1.95%  comm=Q^B pid=29285 prio=16777216 target_cpu=000
-  1.67%  comm=l^B pid=0 prio=16777216 target_cpu=000
-
-Luckily the traceevent library handles the endianity by itself (thank
-you Steven!), so we can pass the RAW data directly in the other
-endianity.
-
-  2.51%  comm=beah-rhts-task pid=1175 prio=120 target_cpu=002
-  2.23%  comm=kworker/0:0 pid=11566 prio=120 target_cpu=000
-
-The fix is basically to swap back the raw data if different endianity is
-detected.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20171129184346.3656-1-jolsa@kernel.org
-[ Add util/memswap.c to python-ext-sources to link missing mem_bswap_64() ]
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Paul Clarke <pc@us.ibm.com>
+Cc: bhargavb <bhargavaramudu@gmail.com>
+Cc: linux-rt-users@vger.kernel.org
+Link: http://lkml.kernel.org/r/151275052163.24652.18205979384585484358.stgit@devbox
+[ Split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c            | 20 +++++++++++++++++---
- tools/perf/util/python-ext-sources |  1 +
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ tools/perf/util/string.c  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/string2.h |  2 ++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4718f0a460df..1cf044cbae36 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -36,6 +36,7 @@
- #include "debug.h"
- #include "trace-event.h"
- #include "stat.h"
-+#include "memswap.h"
- #include "util/parse-branch-options.h"
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index aaa08ee8c717..d8bfd0c4d2cb 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -396,3 +396,49 @@ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints
+ 	free(expr);
+ 	return NULL;
+ }
++
++/* Like strpbrk(), but not break if it is right after a backslash (escaped) */
++char *strpbrk_esc(char *str, const char *stopset)
++{
++	char *ptr;
++
++	do {
++		ptr = strpbrk(str, stopset);
++		if (ptr == str ||
++		    (ptr == str + 1 && *(ptr - 1) != '\\'))
++			break;
++		str = ptr + 1;
++	} while (ptr && *(ptr - 1) == '\\' && *(ptr - 2) != '\\');
++
++	return ptr;
++}
++
++/* Like strdup, but do not copy a single backslash */
++char *strdup_esc(const char *str)
++{
++	char *s, *d, *p, *ret = strdup(str);
++
++	if (!ret)
++		return NULL;
++
++	d = strchr(ret, '\\');
++	if (!d)
++		return ret;
++
++	s = d + 1;
++	do {
++		if (*s == '\0') {
++			*d = '\0';
++			break;
++		}
++		p = strchr(s + 1, '\\');
++		if (p) {
++			memmove(d, s, p - s);
++			d += p - s;
++			s = p + 1;
++		} else
++			memmove(d, s, strlen(s) + 1);
++	} while (p);
++
++	return ret;
++}
+diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
+index ee14ca5451ab..4c68a09b97e8 100644
+--- a/tools/perf/util/string2.h
++++ b/tools/perf/util/string2.h
+@@ -39,5 +39,7 @@ static inline char *asprintf_expr_not_in_ints(const char *var, size_t nints, int
+ 	return asprintf_expr_inout_ints(var, false, nints, ints);
+ }
  
- #include "sane_ctype.h"
-@@ -2131,14 +2132,27 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 	if (type & PERF_SAMPLE_RAW) {
- 		OVERFLOW_CHECK_u64(array);
- 		u.val64 = *array;
--		if (WARN_ONCE(swapped,
--			      "Endianness of raw data not corrected!\n")) {
--			/* undo swap of u64, then swap on individual u32s */
-+
-+		/*
-+		 * Undo swap of u64, then swap on individual u32s,
-+		 * get the size of the raw area and undo all of the
-+		 * swap. The pevent interface handles endianity by
-+		 * itself.
-+		 */
-+		if (swapped) {
- 			u.val64 = bswap_64(u.val64);
- 			u.val32[0] = bswap_32(u.val32[0]);
- 			u.val32[1] = bswap_32(u.val32[1]);
- 		}
- 		data->raw_size = u.val32[0];
-+
-+		/*
-+		 * The raw data is aligned on 64bits including the
-+		 * u32 size, so it's safe to use mem_bswap_64.
-+		 */
-+		if (swapped)
-+			mem_bswap_64((void *) array, data->raw_size);
-+
- 		array = (void *)array + sizeof(u32);
++char *strpbrk_esc(char *str, const char *stopset);
++char *strdup_esc(const char *str);
  
- 		OVERFLOW_CHECK(array, data->raw_size, max_size);
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index b4f2f06722a7..7aa0ea64544e 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -10,6 +10,7 @@ util/ctype.c
- util/evlist.c
- util/evsel.c
- util/cpumap.c
-+util/memswap.c
- util/mmap.c
- util/namespaces.c
- ../lib/bitmap.c
+ #endif /* PERF_STRING_H */
 -- 
 2.13.6
