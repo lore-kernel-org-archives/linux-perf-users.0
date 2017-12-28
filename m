@@ -1,108 +1,150 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/35] perf probe arm64: Fix symbol fixup issues due to ELF type
-Date: Thu, 28 Dec 2017 11:30:24 -0300
-Message-ID: <20171228143027.30547-33-acme@kernel.org>
+Subject: [PATCH 33/35] perf tool: Improve bash command line auto-complete for multiple events with comma
+Date: Thu, 28 Dec 2017 11:30:25 -0300
+Message-ID: <20171228143027.30547-34-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kim Phillips <kim.phillips@arm.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-On an arm64 machine running a CONFIG_RANDOMIZE_BASE=y kernel, perf
-kernel symbol resolution fails.  Debugging saw symsrc_init calling the
-default elf__needs_adjust_symbols() where checks for an ET_DYN (3)
-ehdr.e_type failed when they should have succeeded.
+perf has perf-completion.sh to define command line auto-completion in
+bash/zsh.
 
-Fix by adopting powerpc version of the weak elf__needs_adjust_symbols()
-function, as done in commit d2332098331f ("perf probe ppc: Fix symbol
-fixup issues due to ELF type").
+For record/stat -e it works for single events, but isn't working when
+specifying multiple events with comma.
 
-Prior to this patch, perf test 1 would fail:
+It would be very useful if it could be fixed to make it easier by
+supporting multiple events, comma separated.
 
-  $ sudo oldperf test -v 1 |& head
-   1: vmlinux symtab matches kallsyms                       :
-  test child forked, pid 33374
-  Looking at the vmlinux_path (8 entries long)
-  Using /usr/lib/debug/boot/vmlinux for symbols
-  ERR : 0xfffe0000100f1000: do_undefinstr not on kallsyms
-  ERR : 0xfffe0000100f1320: do_sysinstr not on kallsyms
-  ERR : 0xfffe0000100f13b0: do_debug_exception not on kallsyms
-  ERR : 0xfffe0000100f1498: do_mem_abort not on kallsyms
-  ERR : 0xfffe0000100f1580: do_sp_pc_abort not on kallsyms
-  ...
+With this patch, the result can be like this:
 
-After applying this patch, perf test 1 now succeeds:
+1. Support the events returned from 'perf list --raw-dump'
 
-  $ sudo ./newperf test -v 1 |& head
-   1: vmlinux symtab matches kallsyms                       :
-  test child forked, pid 33378
-  Looking at the vmlinux_path (8 entries long)
-  Using /usr/lib/debug/boot/vmlinux for symbols
-  WARN: 0xffff000008081000: diff name v: do_undefinstr k: __exception_text_start
-  WARN: 0xffff0000080819e8: diff name v: __irqentry_text_end k: __softirqentry_text_start
-  WARN: 0xffff000008081d08: diff name v: __entry_text_start k: __softirqentry_text_end
-  WARN: 0xffff00000809db5c: diff name v: flush_icache_range k: __flush_cache_user_range
-  WARN: 0xffff000008101908: diff name v: sys_ni_syscall k: sys_vm86old
-  ...
+root@skl:/tmp# perf stat -e cpu/cache<TAB>
+cpu/cache-misses/      cpu/cache-references/
 
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+root@skl:/tmp# perf stat -e cpu/cache-misses/,cpu/branch-<TAB>
+cpu/branch-instructions/  cpu/branch-misses/
+
+root@skl:/tmp# perf stat -e cpu/cache-misses/,cpu/branch-i<TAB>
+root@skl:/tmp# perf stat -e cpu/cache-misses/,cpu/branch-instructions/
+
+2. Support the events listed in /sys/bus/event_source/devices/cpu/events
+
+root@skl:/tmp# perf stat -e cycle<TAB>
+cycle_activity.cycles_l1d_miss  cycle_activity.stalls_l3_miss
+cycle_activity.cycles_l2_miss   cycle_activity.stalls_mem_any
+cycle_activity.cycles_l3_miss   cycle_activity.stalls_total
+cycle_activity.cycles_mem_any   cycles-ct
+cycle_activity.stalls_l1d_miss  cycles-t
+cycle_activity.stalls_l2_miss
+
+root@skl:/tmp# perf stat -e cycles-<TAB>
+cycles-ct  cycles-t
+
+root@skl:/tmp# perf stat -e cycles-t,cpu/c<TAB>
+cpu/cache-misses/      cpu/cpu-cycles/        cpu/cycles-t/
+cpu/cache-references/  cpu/cycles-ct/
+
+root@skl:/tmp# perf stat -e cycles-t,cpu/cache-<TAB>
+cpu/cache-misses/      cpu/cache-references/
+
+root@skl:/tmp# perf stat -e cycles-t,cpu/cache-misses/
+
+3. Support the uppercase event which is with prefix "cpu/"
+
+root@skl:/tmp# perf stat -e cpu/c<TAB>
+cpu/cache-misses/      cpu/cpu-cycles/        cpu/cycles-t/
+cpu/cache-references/  cpu/cycles-ct/
+
+root@skl:/tmp# perf stat -e cpu/cache-misses/,cpu/C<TAB>
+cpu/CACHE-MISSES/      cpu/CPU-CYCLES/        cpu/CYCLES-T/
+cpu/CACHE-REFERENCES/  cpu/CYCLES-CT/
+
+root@skl:/tmp# perf stat -e cpu/cache-misses/,cpu/CACHE-REFERENCES/
+
+Note that:
+
+a) This patch only supports bash.
+
+b) It doesn't support the cases like {},{} or {...,...}.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20171214175242.e30450f17f93ad675d968fa3@arm.com
+Link: http://lkml.kernel.org/r/1513848370-8098-1-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/util/Build          |  1 +
- tools/perf/arch/arm64/util/sym-handling.c | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+)
- create mode 100644 tools/perf/arch/arm64/util/sym-handling.c
+ tools/perf/perf-completion.sh | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index b1ab72d2a42e..e04f6cdd6f32 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -1,4 +1,5 @@
- libperf-y += header.o
-+libperf-y += sym-handling.o
- libperf-$(CONFIG_DWARF)     += dwarf-regs.o
- libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- 
-diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
-new file mode 100644
-index 000000000000..0051b1ee8450
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/sym-handling.c
-@@ -0,0 +1,22 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License, version 2, as
-+ * published by the Free Software Foundation.
-+ *
-+ * Copyright (C) 2015 Naveen N. Rao, IBM Corporation
-+ */
+diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
+index 345f5d6e9ed5..d8310830a18b 100644
+--- a/tools/perf/perf-completion.sh
++++ b/tools/perf/perf-completion.sh
+@@ -162,8 +162,33 @@ __perf_main ()
+ 	# List possible events for -e option
+ 	elif [[ $prev == @("-e"|"--event") &&
+ 		$prev_skip_opts == @(record|stat|top) ]]; then
+-		evts=$($cmd list --raw-dump)
+-		__perfcomp_colon "$evts" "$cur"
 +
-+#include "debug.h"
-+#include "symbol.h"
-+#include "map.h"
-+#include "probe-event.h"
-+#include "probe-file.h"
++		local cur1=${COMP_WORDS[COMP_CWORD]}
++		local raw_evts=$($cmd list --raw-dump)
++		local arr s tmp result
 +
-+#ifdef HAVE_LIBELF_SUPPORT
-+bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
-+{
-+	return ehdr.e_type == ET_EXEC ||
-+	       ehdr.e_type == ET_REL ||
-+	       ehdr.e_type == ET_DYN;
-+}
-+#endif
++		if [[ "$cur1" == */* && ${cur1#*/} =~ ^[A-Z] ]]; then
++			OLD_IFS="$IFS"
++			IFS=" "
++			arr=($raw_evts)
++			IFS="$OLD_IFS"
++
++			for s in ${arr[@]}
++			do
++				if [[ "$s" == *cpu/* ]]; then
++					tmp=${s#*cpu/}
++					result=$result" ""cpu/"${tmp^^}
++				else
++					result=$result" "$s
++				fi
++			done
++
++			evts=${result}+$(ls /sys/bus/event_source/devices/cpu/events)
++		else
++			evts=${raw_evts}+$(ls /sys/bus/event_source/devices/cpu/events)
++		fi
++
++		__perfcomp_colon "$evts" "$cur1"
+ 	else
+ 		# List subcommands for perf commands
+ 		if [[ $prev_skip_opts == @(kvm|kmem|mem|lock|sched|
+@@ -246,11 +271,16 @@ fi
+ type perf &>/dev/null &&
+ _perf()
+ {
++	if [[ "$COMP_WORDBREAKS" != *,* ]]; then
++		COMP_WORDBREAKS="${COMP_WORDBREAKS},"
++		export COMP_WORDBREAKS
++	fi
++
+ 	local cur words cword prev
+ 	if [ $preload_get_comp_words_by_ref = "true" ]; then
+-		_get_comp_words_by_ref -n =: cur words cword prev
++		_get_comp_words_by_ref -n =:, cur words cword prev
+ 	else
+-		__perf_get_comp_words_by_ref -n =: cur words cword prev
++		__perf_get_comp_words_by_ref -n =:, cur words cword prev
+ 	fi
+ 	__perf_main
+ } &&
 -- 
 2.13.6
