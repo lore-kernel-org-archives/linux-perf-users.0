@@ -1,36 +1,39 @@
 From: David Hinkle <david.hinkle@securly.com>
-Subject: How do I troubleshoot Dwarf Unwinding Issuess?
-Date: Thu, 28 Dec 2017 14:53:37 -0800
-Message-ID: <CAOrDofT4WWsDZC6tY+Kh3tPDczRAJO+iu-DzNx5ct45AG-aomQ@mail.gmail.com>
+Subject: Re: Trying to understand some strange samples in a perf profile
+Date: Thu, 28 Dec 2017 15:31:41 -0800
+Message-ID: <CAOrDofTn68XiBjEvF=boM94LwfXUt_W-AhCoOsK7aijiOknyfQ@mail.gmail.com>
+References: <db0e4795-de77-ac92-6bab-4b4d451daf26@lal.in2p3.fr>
+ <9831756.pFeoWVMjH9@milian-kdab2> <6d2adf7a-b181-a8ed-2069-6063abadf6a1@lal.in2p3.fr>
+ <2337765.oK3dqqyzHo@milian-kdab2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-io0-f170.google.com ([209.85.223.170]:40107 "EHLO
-        mail-io0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753861AbdL1Wxi (ORCPT
+Received: from mail-it0-f52.google.com ([209.85.214.52]:46570 "EHLO
+        mail-it0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754269AbdL1Xbm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Dec 2017 17:53:38 -0500
-Received: by mail-io0-f170.google.com with SMTP id v30so7902206iov.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Dec 2017 14:53:38 -0800 (PST)
+        Thu, 28 Dec 2017 18:31:42 -0500
+Received: by mail-it0-f52.google.com with SMTP id c16so5459548itc.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Dec 2017 15:31:42 -0800 (PST)
+In-Reply-To: <2337765.oK3dqqyzHo@milian-kdab2>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Hadrien Grasland <grasland@lal.in2p3.fr>, linux-perf-users@vger.kernel.org
 
-A problem I'm running into with Kernel 4.9.70 on Amazon Linux:
+> - build a minimal "unwinder" application for libunwind e.g.
+> - notify libunwind about all mmap events
+> - install the register and stack state from the per.data file
+> - try to unwind, see what happens
 
-I have a bunch of samples with empty call stacks.  I edited the
-"stackcollapse.pl" so I can see what the symbol is and what dso that
-symbol is in (There was a bug that prevented the display of the symbol
-in the case where a call stack existed but was empty, as opposed to
-not existing).
+I'm having some problems with perf dwarf stack unwindings that stop at
+the kernel/userspace boundary and some userspace stacks that aren't
+unwinding at all on 4.9.70 I'd really love to shed some light on.
+Similar situation, in my case the stacks are in libc-2.17.so, which I
+think is symbolized properly (Other traces are unwinding through this
+library fine).  I'm also using libdw for unwinding and not libunwind.
 
-For example "vprintf" in "/lib64/libc-2.17.so" has an empty callstack,
-but the debug symbols for "/lib64/libc-2.17.so" are installed and
-other samples of symbols inside "/lib64/libc-2.17.so" have stack
-traces.
-
-Any suggestions on how I can get some traction on this issue?  Perhaps
-there is there any way I can obtain the stack and run it through
-libunwind manually?  Just anything for a lead at this point.
-
-- David
+I'd love to be able to do the above 4 things in an app and see if I
+can figure out why it's not unwinding properly.   Do you have some
+example code that can do that?  If you do now or you write it please
+share.
