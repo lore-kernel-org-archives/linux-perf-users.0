@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/35] perf annotate: Use perf_env when obtaining the arch name
-Date: Thu, 28 Dec 2017 11:30:11 -0300
-Message-ID: <20171228143027.30547-20-acme@kernel.org>
+Subject: [PATCH 20/35] perf env: Adopt perf_env__arch() from the annotate code
+Date: Thu, 28 Dec 2017 11:30:12 -0300
+Message-ID: <20171228143027.30547-21-acme@kernel.org>
 References: <20171228143027.30547-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171228143027.30547-1-acme@kernel.org>
@@ -12,8 +12,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Paving the way to reuse these routines in other areas, like when
-generating errno tables.
+And use it in the libunwind case, with both passing a valid perf_env to
+extract the arch to be normalized from and passing NULL with the same
+semantic as in the annotate code: to get it from uname() uts.machine.
+
+Now the code to generate per arch errno translation tables (int/string)
+can use it to decode perf.data files recorded in a different arch than
+that where 'perf trace' (or any other analysis tool) runs.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -23,87 +28,234 @@ Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-rh1qv051vb8gfdcswskrn53h@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-p2epffgash69w38kvj3ntpc9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 17 ++++++++---------
- tools/perf/util/evsel.c    |  7 -------
- tools/perf/util/evsel.h    |  1 -
- 3 files changed, 8 insertions(+), 17 deletions(-)
+ tools/perf/arch/common.c           | 44 +++--------------------------------
+ tools/perf/arch/common.h           |  1 -
+ tools/perf/util/annotate.c         | 16 -------------
+ tools/perf/util/env.c              | 47 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h              |  2 ++
+ tools/perf/util/unwind-libunwind.c |  4 ++--
+ 6 files changed, 54 insertions(+), 60 deletions(-)
 
+diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+index 8c0cfeb55f8e..c6f373508a4f 100644
+--- a/tools/perf/arch/common.c
++++ b/tools/perf/arch/common.c
+@@ -1,12 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <stdio.h>
+-#include <sys/utsname.h>
+ #include "common.h"
++#include "../util/env.h"
+ #include "../util/util.h"
+ #include "../util/debug.h"
+ 
+-#include "sane_ctype.h"
+-
+ const char *const arm_triplets[] = {
+ 	"arm-eabi-",
+ 	"arm-linux-androideabi-",
+@@ -120,55 +118,19 @@ static int lookup_triplets(const char *const *triplets, const char *name)
+ 	return -1;
+ }
+ 
+-/*
+- * Return architecture name in a normalized form.
+- * The conversion logic comes from the Makefile.
+- */
+-const char *normalize_arch(char *arch)
+-{
+-	if (!strcmp(arch, "x86_64"))
+-		return "x86";
+-	if (arch[0] == 'i' && arch[2] == '8' && arch[3] == '6')
+-		return "x86";
+-	if (!strcmp(arch, "sun4u") || !strncmp(arch, "sparc", 5))
+-		return "sparc";
+-	if (!strcmp(arch, "aarch64") || !strcmp(arch, "arm64"))
+-		return "arm64";
+-	if (!strncmp(arch, "arm", 3) || !strcmp(arch, "sa110"))
+-		return "arm";
+-	if (!strncmp(arch, "s390", 4))
+-		return "s390";
+-	if (!strncmp(arch, "parisc", 6))
+-		return "parisc";
+-	if (!strncmp(arch, "powerpc", 7) || !strncmp(arch, "ppc", 3))
+-		return "powerpc";
+-	if (!strncmp(arch, "mips", 4))
+-		return "mips";
+-	if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
+-		return "sh";
+-
+-	return arch;
+-}
+-
+ static int perf_env__lookup_binutils_path(struct perf_env *env,
+ 					  const char *name, const char **path)
+ {
+ 	int idx;
+-	const char *arch, *cross_env;
+-	struct utsname uts;
++	const char *arch = perf_env__arch(env), *cross_env;
+ 	const char *const *path_list;
+ 	char *buf = NULL;
+ 
+-	arch = normalize_arch(env->arch);
+-
+-	if (uname(&uts) < 0)
+-		goto out;
+-
+ 	/*
+ 	 * We don't need to try to find objdump path for native system.
+ 	 * Just use default binutils path (e.g.: "objdump").
+ 	 */
+-	if (!strcmp(normalize_arch(uts.machine), arch))
++	if (!strcmp(perf_env__arch(NULL), arch))
+ 		goto out;
+ 
+ 	cross_env = getenv("CROSS_COMPILE");
+diff --git a/tools/perf/arch/common.h b/tools/perf/arch/common.h
+index a1546509ad24..2d875baa92e6 100644
+--- a/tools/perf/arch/common.h
++++ b/tools/perf/arch/common.h
+@@ -7,6 +7,5 @@
+ extern const char *objdump_path;
+ 
+ int perf_env__lookup_objdump(struct perf_env *env);
+-const char *normalize_arch(char *arch);
+ 
+ #endif /* ARCH_PERF_COMMON_H */
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index bc34b28373f4..eac45ccd5c32 100644
+index eac45ccd5c32..68e687d1bf99 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1420,16 +1420,19 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+@@ -26,7 +26,6 @@
+ #include <pthread.h>
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
+-#include <sys/utsname.h>
+ 
+ #include "sane_ctype.h"
+ 
+@@ -1420,21 +1419,6 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
  	return 0;
  }
  
--static const char *annotate__norm_arch(const char *arch_name)
-+static const char *perf_env__arch(struct perf_env *env)
+-static const char *perf_env__arch(struct perf_env *env)
+-{
+-	struct utsname uts;
+-	char *arch_name;
+-
+-	if (!env) { /* Assume local operation */
+-		if (uname(&uts) < 0)
+-			return NULL;
+-		arch_name = uts.machine;
+-	} else
+-		arch_name = env->arch;
+-
+-	return normalize_arch(arch_name);
+-}
+-
+ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
  {
- 	struct utsname uts;
-+	char *arch_name;
+ 	struct map *map = args->map;
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 6276b340f893..6d311868d850 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -1,8 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "cpumap.h"
+ #include "env.h"
++#include "sane_ctype.h"
+ #include "util.h"
+ #include <errno.h>
++#include <sys/utsname.h>
  
--	if (!arch_name) { /* Assume we are annotating locally. */
+ struct perf_env perf_env;
+ 
+@@ -93,3 +95,48 @@ void cpu_cache_level__free(struct cpu_cache_level *cache)
+ 	free(cache->map);
+ 	free(cache->size);
+ }
++
++/*
++ * Return architecture name in a normalized form.
++ * The conversion logic comes from the Makefile.
++ */
++static const char *normalize_arch(char *arch)
++{
++	if (!strcmp(arch, "x86_64"))
++		return "x86";
++	if (arch[0] == 'i' && arch[2] == '8' && arch[3] == '6')
++		return "x86";
++	if (!strcmp(arch, "sun4u") || !strncmp(arch, "sparc", 5))
++		return "sparc";
++	if (!strcmp(arch, "aarch64") || !strcmp(arch, "arm64"))
++		return "arm64";
++	if (!strncmp(arch, "arm", 3) || !strcmp(arch, "sa110"))
++		return "arm";
++	if (!strncmp(arch, "s390", 4))
++		return "s390";
++	if (!strncmp(arch, "parisc", 6))
++		return "parisc";
++	if (!strncmp(arch, "powerpc", 7) || !strncmp(arch, "ppc", 3))
++		return "powerpc";
++	if (!strncmp(arch, "mips", 4))
++		return "mips";
++	if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
++		return "sh";
++
++	return arch;
++}
++
++const char *perf_env__arch(struct perf_env *env)
++{
++	struct utsname uts;
++	char *arch_name;
++
 +	if (!env) { /* Assume local operation */
- 		if (uname(&uts) < 0)
- 			return NULL;
- 		arch_name = uts.machine;
--	}
--	return normalize_arch((char *)arch_name);
++		if (uname(&uts) < 0)
++			return NULL;
++		arch_name = uts.machine;
 +	} else
 +		arch_name = env->arch;
 +
 +	return normalize_arch(arch_name);
- }
++}
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 1eb35b190b34..bf970f57dce0 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -65,4 +65,6 @@ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
+ int perf_env__read_cpu_topology_map(struct perf_env *env);
  
- static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
-@@ -1630,14 +1633,10 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		.evsel		= evsel,
- 	};
- 	struct perf_env *env = perf_evsel__env(evsel);
--	const char *arch_name = NULL;
-+	const char *arch_name = perf_env__arch(env);
- 	struct arch *arch;
- 	int err;
+ void cpu_cache_level__free(struct cpu_cache_level *cache);
++
++const char *perf_env__arch(struct perf_env *env);
+ #endif /* __PERF_ENV_H */
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 647a1e6b4c7b..b029a5e9ae49 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -3,7 +3,7 @@
+ #include "thread.h"
+ #include "session.h"
+ #include "debug.h"
+-#include "arch/common.h"
++#include "env.h"
  
--	if (evsel)
--		arch_name = perf_evsel__env_arch(evsel);
--
--	arch_name = annotate__norm_arch(arch_name);
- 	if (!arch_name)
- 		return -1;
+ struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
+@@ -39,7 +39,7 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
+ 	if (dso_type == DSO__TYPE_UNKNOWN)
+ 		return 0;
  
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 541897049c6c..4718f0a460df 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2835,13 +2835,6 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
- 			 perf_evsel__name(evsel));
- }
+-	arch = normalize_arch(thread->mg->machine->env->arch);
++	arch = perf_env__arch(thread->mg->machine->env);
  
--char *perf_evsel__env_arch(struct perf_evsel *evsel)
--{
--	if (evsel && evsel->evlist && evsel->evlist->env)
--		return evsel->evlist->env->arch;
--	return NULL;
--}
--
- struct perf_env *perf_evsel__env(struct perf_evsel *evsel)
- {
- 	if (evsel && evsel->evlist)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 0e961ce60a9c..846e41644525 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -446,7 +446,6 @@ typedef int (*attr__fprintf_f)(FILE *, const char *, const char *, void *);
- int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 			     attr__fprintf_f attr__fprintf, void *priv);
- 
--char *perf_evsel__env_arch(struct perf_evsel *evsel);
- struct perf_env *perf_evsel__env(struct perf_evsel *evsel);
- 
- #endif /* __PERF_EVSEL_H */
+ 	if (!strcmp(arch, "x86")) {
+ 		if (dso_type != DSO__TYPE_64BIT)
 -- 
 2.13.6
