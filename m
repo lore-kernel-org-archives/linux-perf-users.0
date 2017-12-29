@@ -1,39 +1,134 @@
-From: David Hinkle <david.hinkle@securly.com>
-Subject: Re: Trying to understand some strange samples in a perf profile
-Date: Thu, 28 Dec 2017 15:31:41 -0800
-Message-ID: <CAOrDofTn68XiBjEvF=boM94LwfXUt_W-AhCoOsK7aijiOknyfQ@mail.gmail.com>
-References: <db0e4795-de77-ac92-6bab-4b4d451daf26@lal.in2p3.fr>
- <9831756.pFeoWVMjH9@milian-kdab2> <6d2adf7a-b181-a8ed-2069-6063abadf6a1@lal.in2p3.fr>
- <2337765.oK3dqqyzHo@milian-kdab2>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 0/2] perf-probe: Improve warning message for buildid
+ mismatch
+Date: Fri, 29 Dec 2017 11:52:48 +0900
+Message-ID: <20171229115248.51bec125a52f84df690f650c@kernel.org>
+References: <151358211494.25261.16134489192749792799.stgit@devbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-it0-f52.google.com ([209.85.214.52]:46570 "EHLO
-        mail-it0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754269AbdL1Xbm (ORCPT
+Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752196AbdL2Cwv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Dec 2017 18:31:42 -0500
-Received: by mail-it0-f52.google.com with SMTP id c16so5459548itc.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Dec 2017 15:31:42 -0800 (PST)
-In-Reply-To: <2337765.oK3dqqyzHo@milian-kdab2>
+        Thu, 28 Dec 2017 21:52:51 -0500
+In-Reply-To: <151358211494.25261.16134489192749792799.stgit@devbox>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Hadrien Grasland <grasland@lal.in2p3.fr>, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-> - build a minimal "unwinder" application for libunwind e.g.
-> - notify libunwind about all mmap events
-> - install the register and stack state from the per.data file
-> - try to unwind, see what happens
+Hello Arnaldo,
 
-I'm having some problems with perf dwarf stack unwindings that stop at
-the kernel/userspace boundary and some userspace stacks that aren't
-unwinding at all on 4.9.70 I'd really love to shed some light on.
-Similar situation, in my case the stacks are in libc-2.17.so, which I
-think is symbolized properly (Other traces are unwinding through this
-library fine).  I'm also using libdw for unwinding and not libunwind.
+Could you review it?
 
-I'd love to be able to do the above 4 things in an app and see if I
-can figure out why it's not unwinding properly.   Do you have some
-example code that can do that?  If you do now or you write it please
-share.
+Thank you,
+
+On Mon, 18 Dec 2017 16:28:35 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hello,
+> 
+> This series ensure the build-ids for target binary and debuginfo
+> are matched. If there is a mismatch, it warns user to check the
+> package versions.
+> 
+> To reproduce the problematic environment (on Fedora26),
+> I did following operations;
+> 
+>   =====
+>   # rpm -q glibc glibc-debuginfo
+>   glibc-2.25-12.fc26.x86_64
+>   package glibc-debuginfo is not installed
+> 
+>   # dnf debuginfo-install glibc
+>   [...]
+>   Installed:
+>     glibc-debuginfo.x86_64 2.25-12.fc26
+>     glibc-debuginfo-common.x86_64 2.25-12.fc26
+> 
+>   Complete!
+> 
+>   # dnf downgrade glibc        
+>   [...]
+>   Downgraded:
+>     glibc.x86_64 2.25-6.fc26                 glibc-common.x86_64 2.25-6.fc26   
+>     glibc-devel.x86_64 2.25-6.fc26           glibc-headers.x86_64 2.25-6.fc26  
+>     glibc-langpack-en.x86_64 2.25-6.fc26     libcrypt-nss.x86_64 2.25-6.fc26   
+> 
+>   Complete!
+> 
+>   # rpm -q glibc glibc-debuginfo
+>   glibc-2.25-6.fc26.x86_64
+>   glibc-debuginfo-2.25-12.fc26.x86_64
+>   =====
+> 
+> OK, so you can see now we have different versions of glibc and
+> glibc-debuginfo. Each debuginfo must be different.
+> 
+> With this series, defining new events also warns :)
+> 
+>   =====
+>   # perf probe -x /usr/lib64/libc-2.25.so -a malloc_get_state\\@GLIBC_2.2.5
+>   WARN: There is a build-id mismatch between
+>    /usr/lib/debug/usr/lib64/libc-2.25.so.debug
+>    and
+>    /usr/lib64/libc-2.25.so
+>   Please check your system's debuginfo files for mismatches, e.g. check the versions for the target package and debuginfo package.
+>   Added new event:
+>     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+> 	  perf record -e probe_libc:malloc_get_state -aR sleep 1
+> 
+>   =====
+> 
+> And listing up events warns.
+> 
+>   =====
+>   # perf probe -l | more
+>   WARN: There is a build-id mismatch between
+>    /usr/lib/debug/usr/lib64/libc-2.25.so.debug
+>    and
+>    /usr/lib64/libc-2.25.so
+>   Please check your system's debuginfo files for mismatches, e.g. check the versions for the target package and debuginfo package.
+>     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+>   =====
+> 
+> With [1/2], this warning messages repeated on same target (glibc). To suppress
+> this, [2/2] introduces no-debuginfo blacklist to skip it 2nd time as below.
+> 
+>   =====
+>   # perf probe -l | more
+>   WARN: There is a build-id mismatch between
+>    /usr/lib/debug/usr/lib64/libc-2.25.so.debug
+>    and
+>    /usr/lib64/libc-2.25.so
+>   Please check your system's debuginfo files for mismatches, e.g. check the versions for the target package and debuginfo package.
+>     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+>     probe_libc:malloc_get_state_1 (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+>     probe_libc:malloc_get_state_2 (on malloc_get_state@GLIBC_2.2.5 in /usr/lib64/libc-2.25.so)
+>   =====
+> 
+> Arnaldo, would this match to your request?
+> 
+> 
+> Thank you,
+> ---
+> 
+> Masami Hiramatsu (2):
+>       perf-probe: Ensure debuginfo's build-id is correct
+>       perf-probe: Skip searching debuginfo if we know no debuginfo
+> 
+> 
+>  tools/perf/util/probe-finder.c |   34 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> --
+> Masami Hiramatsu (Linaro Ltd.) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
