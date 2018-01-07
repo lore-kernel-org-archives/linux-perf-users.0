@@ -1,126 +1,31 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 1/2] perf-probe: Ensure debuginfo's build-id is correct
-Date: Sat, 6 Jan 2018 23:11:15 +0900
-Message-ID: <20180106231115.cc3718ea40daeaedf3c4481b@kernel.org>
-References: <151358211494.25261.16134489192749792799.stgit@devbox>
-        <151358214328.25261.6660021248431426149.stgit@devbox>
-        <20180104161728.GC14721@kernel.org>
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+Subject: Re: perf memory metrics on ec2 instance
+Date: Sun, 7 Jan 2018 16:37:11 +0100
+Message-ID: <CA+q6zcWn=J6s-9=AyVYgQW+J56edeEn3EuBX78oP2QwmQKTgog@mail.gmail.com>
+References: <CA+q6zcXGsPT3bXhUS2gNf0_JPm+jLHBaSH+T_5CNPkZ3A9GK7g@mail.gmail.com>
+ <87608i5xcd.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753145AbeAFOLU (ORCPT
+Received: from mail-io0-f177.google.com ([209.85.223.177]:35049 "EHLO
+        mail-io0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752898AbeAGPhw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Jan 2018 09:11:20 -0500
-In-Reply-To: <20180104161728.GC14721@kernel.org>
+        Sun, 7 Jan 2018 10:37:52 -0500
+Received: by mail-io0-f177.google.com with SMTP id 14so10480490iou.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 07 Jan 2018 07:37:52 -0800 (PST)
+In-Reply-To: <87608i5xcd.fsf@linux.intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
 
-On Thu, 4 Jan 2018 13:17:28 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> On 4 January 2018 at 00:36, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> perf mem requires PEBS.  PEBS is currently not supported in VMs. You
+> should let Amazon know that you need it though, so it could be possibly
+> implemented.
 
-> Em Mon, Dec 18, 2017 at 04:29:03PM +0900, Masami Hiramatsu escreveu:
-> > Ensure that the build-id of debuginfo is correctly
-> > matched to target build-id, if not, it warns user
-> > to check the system debuginfo package is correctly
-> > installed.
-> 
-> So we look at a variety of files looking for one that has a matching
-> build-id, I think the warning message should state that the file with
-> the unmatched build-id is simply being skipped, no?
-
-That is a corner case. In most cases, the debuginfo file will not be
-found and silently skipped. We warn only if the debuginfo file exist,
-but the version is not matched.
-
-> And why do this at 'perf probe -l' time? I.e. at that point whatever
-> probes that are in place already have all the needed debug info?
-
-This is shown not only for perf probe -l, but also other debuginfo
-usecases. So, if you installed an old debuginfo but has same filename
-with new one, this message will be shown if you try perf probe -a func:line etc. 
-
-
-> 
-> I.e. the warning should be done at probe creation time only?
-
-I think both are good, because if you see this warning, you will
-incorrectly install debuginfo files or perf's debuginfo detection
-doesn't work correctly on that environment (e.g. new distro).
-
-Thank you, 
-
-> 
-> - Arnaldo
->  
-> > E.g. on such environment, you will see below warning.
-> >   ======
-> >   # perf probe -l
-> >   WARN: There is a build-id mismatch between
-> >    /usr/lib/debug/usr/lib64/libc-2.25.so.debug
-> >    and
-> >    /usr/lib64/libc-2.25.so
-> >   Please check your system's debuginfo files for mismatches, e.g. check
-> >   the versions for the target package and debuginfo package.
-> >     probe_libc:malloc_get_state (on malloc_get_state@GLIBC_2.2.5 in /us
-> >   r/lib64/libc-2.25.so)
-> >   ======
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/perf/util/probe-finder.c |   18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> > index a5731de0e5eb..5bb71e056b21 100644
-> > --- a/tools/perf/util/probe-finder.c
-> > +++ b/tools/perf/util/probe-finder.c
-> > @@ -119,9 +119,11 @@ enum dso_binary_type distro_dwarf_types[] = {
-> >  
-> >  struct debuginfo *debuginfo__new(const char *path)
-> >  {
-> > +	u8 bid[BUILD_ID_SIZE], bid2[BUILD_ID_SIZE];
-> >  	enum dso_binary_type *type;
-> >  	char buf[PATH_MAX], nil = '\0';
-> >  	struct dso *dso;
-> > +	bool have_build_id = false;
-> >  	struct debuginfo *dinfo = NULL;
-> >  
-> >  	/* Try to open distro debuginfo files */
-> > @@ -129,12 +131,28 @@ struct debuginfo *debuginfo__new(const char *path)
-> >  	if (!dso)
-> >  		goto out;
-> >  
-> > +	if (filename__read_build_id(path, bid, BUILD_ID_SIZE) > 0)
-> > +		have_build_id = true;
-> > +
-> >  	for (type = distro_dwarf_types;
-> >  	     !dinfo && *type != DSO_BINARY_TYPE__NOT_FOUND;
-> >  	     type++) {
-> >  		if (dso__read_binary_type_filename(dso, *type, &nil,
-> >  						   buf, PATH_MAX) < 0)
-> >  			continue;
-> > +
-> > +		if (have_build_id) {
-> > +			/* This can be fail because the file doesn't exist */
-> > +			if (filename__read_build_id(buf, bid2,
-> > +						    BUILD_ID_SIZE) < 0)
-> > +				continue;
-> > +			if (memcmp(bid, bid2, BUILD_ID_SIZE)) {
-> > +				pr_warning("WARN: There is a build-id mismatch between\n %s\n and\n %s\n"
-> > +					"Please check your system's debuginfo files for mismatches, e.g. check the "
-> > +					"versions for the target package and debuginfo package.\n", buf, path);
-> > +				continue;
-> > +			}
-> > +		}
-> >  		dinfo = __debuginfo__new(buf);
-> >  	}
-> >  	dso__put(dso);
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks for the explanation. Is there any alternative way to get memory
+counters? If I need to know only how many times an event appeared, can I do
+more or less the same with perf stat -e 'counter_name' without PEBS support?
