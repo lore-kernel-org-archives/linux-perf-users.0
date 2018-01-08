@@ -1,55 +1,69 @@
-From: Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: perf memory metrics on ec2 instance
-Date: Sun, 7 Jan 2018 13:59:00 -0800
-Message-ID: <CAE40pdcrX-kpE84jgH2rut9Beq8_3TU5BDOc0c5VhFmiTqT+ZA@mail.gmail.com>
-References: <CA+q6zcXGsPT3bXhUS2gNf0_JPm+jLHBaSH+T_5CNPkZ3A9GK7g@mail.gmail.com>
- <87608i5xcd.fsf@linux.intel.com>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH] perf ftrace: Fix the buffer size in __write_tracing_file
+Date: Mon, 8 Jan 2018 11:05:12 +0800
+Message-ID: <20180108030512.begv5uoo66kh5biu@intel.com>
+References: <1514280416-29659-1-git-send-email-changbin.du@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f42.google.com ([74.125.82.42]:36723 "EHLO
-        mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754557AbeAGV7c (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Jan 2018 16:59:32 -0500
-Received: by mail-wm0-f42.google.com with SMTP id b76so11125943wmg.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Jan 2018 13:59:31 -0800 (PST)
-In-Reply-To: <87608i5xcd.fsf@linux.intel.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Dmitry Dolgov <9erthalion6@gmail.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1514280416-29659-1-git-send-email-changbin.du@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, changbin.du@intel.com
+List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Jan 3, 2018 at 3:36 PM, Andi Kleen <ak@linux.intel.com> wrote:
->
-> Dmitry Dolgov <9erthalion6@gmail.com> writes:
-> >
-> > It's quite confusing for me, because the same works fine on my local machine,
-> > but this error I've got is not about something being not supported. Can you tell
-> > me what I'm doing wrong?
->
-> perf mem requires PEBS.  PEBS is currently not supported in VMs. You
-> should let Amazon know that you need it though, so it could be possibly
-> implemented.
+Hi Olsa,
+What about this fix now? Thanks!
 
-Right. Clouds like AWS have millions of customers asking for various
-things. Relatively speaking, those of us asking for PMCs, PEBS, BTS,
-etc (which was hopefully more than just me), are a speck of dust. But
-they do listen, and they did ship architectural PMCs on many large
-instance types early last year (eg, m4.16xl). Since late last year,
-most/all PMCs are now available on the Nitro hypervisor instances (c5,
-m5, etc), and now everything is available on the new bare metal
-instance type (preview only).
+On Tue, Dec 26, 2017 at 05:26:56PM +0800, changbin.du@intel.com wrote:
+> From: Changbin Du <changbin.du@intel.com>
+> 
+> The terminal character '\0' should take into account as size of the string
+> buffer. Without this fix, the '--graph-funcs', '--nograph-funcs' and
+> '--trace-funcs' options didn't work as expected when the <func> doesn't
+> exist.
+> 
+> I didn't dive into kernel ftrace fops, but strace shows that if usersapce
+> writes a non-terminated string, the kernel side will return success but
+> no filter applied. After this fix in userspace, the kernel will return an
+> error.
+> 
+> $ sudo ./perf ftrace -a --graph-depth 1 --graph-funcs abcdefg
+>  0)   0.140 us    |  rcu_all_qs();
+>  3)   0.304 us    |  mutex_unlock();
+>  0)   0.153 us    |  find_vma();
+>  3)   0.088 us    |  __fsnotify_parent();
+>  0)   6.145 us    |  handle_mm_fault();
+>  3)   0.089 us    |  fsnotify();
+>  3)   0.161 us    |  __sb_end_write();
+>  3)   0.710 us    |  SyS_close();
+>  3)   7.848 us    |  exit_to_usermode_loop();
+> 
+> On above example, I specified function filter 'abcdefg' but all functions
+> are enabled.
+> 
+> Signed-off-by: Changbin Du <changbin.du@intel.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 25a42ac..2604a64 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -69,7 +69,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+>  {
+>  	char *file;
+>  	int fd, ret = -1;
+> -	ssize_t size = strlen(val);
+> +	ssize_t size = strlen(val) + 1;
+>  	int flags = O_WRONLY;
+>  	char errbuf[512];
+>  
+> -- 
+> 2.7.4
+> 
 
-If anyone wants PEBS right now in EC2, get on the public preview of
-the bare metal instance type.
-
-Brendan
-
->
->
-> -Andi
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks,
+Changbin Du
