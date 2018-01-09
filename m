@@ -1,62 +1,58 @@
 From: changbin.du@intel.com
-Subject: [PATCH 2/3] tracing: make sure the parsed string always terminates with '\0'
-Date: Tue,  9 Jan 2018 17:55:47 +0800
-Message-ID: <1515491748-25926-3-git-send-email-changbin.du@intel.com>
+Subject: [PATCH 3/3] tracing: don't set parser->cont if it has reached the end of input buffer
+Date: Tue,  9 Jan 2018 17:55:48 +0800
+Message-ID: <1515491748-25926-4-git-send-email-changbin.du@intel.com>
 References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: rostedt@goodmis.org
-Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>, stable@vger.kernel.org
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@intel.com>
 
-The parser parse every string into parser.buffer. And some of the callers
-assume that parser.buffer contains a C string. So it is dangerous that the
-parser returns a unterminated string. The userspace can leverage this to
-attack the kernel.
+We should not set parser->cont if it has reached the end of input buffer.
+And since some callers (like ftrace_graph_write()) treat it as an error
+condition if trace_parser_cont() returns true.
+
+For example, if userspace set 'set_ftrace_filter' by writing:
+write(3, "abcdefg", 7)
+
+Then in the kernel function ftrace_regex_write(), ftrace_process_regex()
+will not be executed. The result is that the given filter will not be
+applied at all.
+
+ftrace_regex_write() {
+	...
+	read = trace_get_user(parser, ubuf, cnt, ppos);
+	if (read >= 0 && trace_parser_loaded(parser) &&
+	    !trace_parser_cont(parser)) {
+		ret = ftrace_process_regex(iter, parser->buffer,
+					   parser->idx, enable);
+		...
+	}
+	...
+}
 
 Signed-off-by: Changbin Du <changbin.du@intel.com>
-Cc: stable@vger.kernel.org
 ---
- kernel/trace/trace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 18526a1..e1baca0 100644
+index e1baca0..79fdce2 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -530,8 +530,6 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 		ubuf += ret;
- 		cnt -= ret;
- 
--		parser.buffer[parser.idx] = 0;
--
- 		ret = -EINVAL;
- 		if (kstrtoul(parser.buffer, 0, &val))
- 			break;
-@@ -1253,7 +1251,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 
- 	/* read the non-space input */
- 	while (cnt && !is_space_or_zero(ch)) {
--		if (parser->idx < parser->size - 1)
-+		if (parser->idx < parser->size - 2)
- 			parser->buffer[parser->idx++] = ch;
- 		else {
- 			ret = -EINVAL;
-@@ -1270,9 +1268,11 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 	if (is_space_or_zero(ch)) {
+@@ -1269,7 +1269,8 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
  		parser->buffer[parser->idx] = 0;
  		parser->cont = false;
--	} else if (parser->idx < parser->size - 1) {
-+	} else if (parser->idx < parser->size - 2) {
- 		parser->cont = true;
+ 	} else if (parser->idx < parser->size - 2) {
+-		parser->cont = true;
++		parser->cont = !!cnt;
++
  		parser->buffer[parser->idx++] = ch;
-+		/* Make sure the parsed string always terminates with '\0'. */
-+		parser->buffer[parser->idx] = 0;
- 	} else {
- 		ret = -EINVAL;
- 		goto out;
+ 		/* Make sure the parsed string always terminates with '\0'. */
+ 		parser->buffer[parser->idx] = 0;
 -- 
 2.7.4
