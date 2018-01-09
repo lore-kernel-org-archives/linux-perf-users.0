@@ -1,19 +1,26 @@
-From: "Du, Changbin" <changbin.du@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
 Subject: Re: [PATCH] perf ftrace: Fix the buffer size in __write_tracing_file
-Date: Tue, 9 Jan 2018 14:10:33 +0800
-Message-ID: <20180109061033.hxlwz2j2xfzwiknn@intel.com>
+Date: Tue, 9 Jan 2018 15:35:33 +0900
+Message-ID: <20180109063533.GB7138@sejong>
 References: <1514280416-29659-1-git-send-email-changbin.du@intel.com>
  <20180108030512.begv5uoo66kh5biu@intel.com>
  <20180108143457.GA18380@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from LGEAMRELO12.lge.com ([156.147.23.52]:37476 "EHLO
+        lgeamrelo12.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754165AbeAIGff (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Jan 2018 01:35:35 -0500
 Content-Disposition: inline
 In-Reply-To: <20180108143457.GA18380@krava>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@redhat.com>
-Cc: "Du, Changbin" <changbin.du@intel.com>, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Cc: "Du, Changbin" <changbin.du@intel.com>, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kernel-team@lge.com
+
+Hi,
 
 On Mon, Jan 08, 2018 at 03:34:57PM +0100, Jiri Olsa wrote:
 > On Mon, Jan 08, 2018 at 11:05:12AM +0800, Du, Changbin wrote:
@@ -55,19 +62,18 @@ On Mon, Jan 08, 2018 at 03:34:57PM +0100, Jiri Olsa wrote:
 > write ' ' to tracing/set_ftrace_pid failed: Invalid argument
 > [root@krava perf]# ./perf ftrace -vv -a --graph-depth 1 --graph-funcs fsnotify
 > write ' ' to tracing/set_ftrace_pid failed: Invalid argument
->
-Thanks for your test. I forgot to test normal case and thought the err is expected...
 
-This time I dived into kernel side, and found 3 issues (if I am all right) at the
-kernel function trace_get_user(). This function has problems to process both complete
-C string or not.
+Hmm.. it seems writing a whitespace alone caused the failure.
 
-I will send the kernel patches and Cc you guys. And I still think it is better
-let perf write a complete C string.
+The filter files are handled little bit different in that they process
+the given string when it find a whitespace or at the close() if not.
+But the thing is that it's gonna lose the return value if handled at
+close().
 
-Thanks!
-Changbin Du
+Anyway adding a NUL character at the end won't make different IMHO
+since it's not a whitespace.  And I think it needs a separate function
+to set filters with a whitespace.  But this will change the program
+behavior on invalid filter inputs.
 
-> jirka
->
-[...] 
+Thanks,
+Namhyung
