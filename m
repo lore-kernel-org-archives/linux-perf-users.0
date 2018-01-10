@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/27] perf script: Support time percent and multiple time ranges
-Date: Wed, 10 Jan 2018 18:28:29 -0300
-Message-ID: <20180110212844.12441-13-acme@kernel.org>
+Subject: [PATCH 08/27] perf record: Record the first and last sample time in the header
+Date: Wed, 10 Jan 2018 18:28:25 -0300
+Message-ID: <20180110212844.12441-9-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
@@ -12,35 +12,57 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-perf script has a --time option to limit the time range of output.  It
-only supports absolute time.
+In the default 'perf record' configuration, all samples are processed,
+to create the HEADER_BUILD_ID table. So it's very easy to get the
+first/last samples and save the time to perf file header via the
+function write_sample_time().
 
-Now this option is extended to support multiple time ranges and support
-the percent of time.
+Later, at post processing time, perf report/script will fetch the time
+from perf file header.
 
-For example:
+Committer testing:
 
-1. Select the first and second 10% time slices:
-
-   perf script --time 10%/1,10%/2
-
-2. Select from 0% to 10% and 30% to 40% slices:
-
-   perf script --time 0%-10%,30%-40%
+  # perf record -a sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 2.099 MB perf.data (1101 samples) ]
+  [root@jouet home]# perf report --header | grep "time of "
+  # time of first sample : 22947.909226
+  # time of last sample : 22948.910704
+  #
+  # perf report -D | grep PERF_RECORD_SAMPLE\(
+  0 22947909226101 0x20bb68 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 0/0: 0xffffffffa21b1af3 period: 1 addr: 0
+  0 22947909229928 0x20bb98 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 0/0: 0xffffffffa200d204 period: 1 addr: 0
+  <SNIP>
+  3 22948910397351 0x219360 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 28251/28251: 0xffffffffa22071d8 period: 169518 addr: 0
+  0 22948910652380 0x20f120 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 0/0: 0xffffffffa2856816 period: 198807 addr: 0
+  2 22948910704034 0x2172d0 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 0/0: 0xffffffffa2856816 period: 88111 addr: 0
+  #
 
 Changelog:
 
-v6: Fix the merge issue with latest perf/core branch.
-    No functional changes.
+v7: Just update the patch description according to Arnaldo's suggestion.
 
-v5: Add checking of first/last sample time to detect if it's recorded
-    in perf.data. If it's not recorded, returns error message to user.
+v6: Currently '--buildid-all' is not enabled at default. So the walking
+    on all samples is the default operation. There is no big overhead
+    to calculate the timestamp boundary in process_sample_event handler
+    once we already go through all samples. So the timestamp boundary
+    calculation is enabled by default when '--buildid-all' is not enabled.
 
-v4: Remove perf_time__skip_sample, only uses perf_time__ranges_skip_sample
+    While if '--buildid-all' is enabled, we creates a new option
+    "--timestamp-boundary" for user to decide if it enables the
+    timestamp boundary calculation.
 
-v3: Since the definitions of first_sample_time/last_sample_time
-    are moved from perf_session to perf_evlist so change the
-    related code.
+v5: There is an issue that the sample walking can only work when
+    '--buildid-all' is not enabled. So we need to let the walking
+    be able to work even if '--buildid-all' is enabled and let the
+    processing skips the dso hit marking for this case.
+
+    At first, I want to provide a new option "--record-time-boundaries".
+    While after consideration, I think a new option is not very
+    necessary.
+
+v3: Remove the definitions of first_sample_time and last_sample_time
+    from struct record and directly save them in perf_evlist.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -49,106 +71,78 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512738826-2628-7-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1512738826-2628-3-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt | 16 +++++++++++++++
- tools/perf/builtin-script.c              | 34 ++++++++++++++++++++++++++------
- 2 files changed, 44 insertions(+), 6 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  3 +++
+ tools/perf/builtin-record.c              | 18 +++++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 974ceb12c7f3..7b622a812a72 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -329,6 +329,22 @@ include::itrace.txt[]
- 	stop time is not given (i.e, time string is 'x.y,') then analysis goes
- 	to end of file.
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 5a626ef666c2..3eea6de35a38 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -430,6 +430,9 @@ Configure all used events to run in user space.
+ --timestamp-filename
+ Append timestamp to output file name.
  
-+	Also support time percent with multipe time range. Time string is
-+	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'. The maximum number of slices is 10.
++--timestamp-boundary::
++Record timestamp boundary (time of first/last samples).
 +
-+	For example:
-+	Select the second 10% time slice
-+	perf script --time 10%/2
+ --switch-output[=mode]::
+ Generate multiple perf.data files, timestamp prefixed, switching to a new one
+ based on 'mode' value:
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 50385d89c497..65681a1a292a 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -78,6 +78,7 @@ struct record {
+ 	bool			no_buildid_cache_set;
+ 	bool			buildid_all;
+ 	bool			timestamp_filename;
++	bool			timestamp_boundary;
+ 	struct switch_output	switch_output;
+ 	unsigned long long	samples;
+ };
+@@ -409,8 +410,15 @@ static int process_sample_event(struct perf_tool *tool,
+ {
+ 	struct record *rec = container_of(tool, struct record, tool);
+ 
+-	rec->samples++;
++	if (rec->evlist->first_sample_time == 0)
++		rec->evlist->first_sample_time = sample->time;
 +
-+	Select from 0% to 10% time slice
-+	perf script --time 0%-10%
++	rec->evlist->last_sample_time = sample->time;
+ 
++	if (rec->buildid_all)
++		return 0;
 +
-+	Select the first and second 10% time slices
-+	perf script --time 10%/1,10%/2
-+
-+	Select from 0% to 10% and 30% to 40% slices
-+	perf script --time 0%-10%,30%-40%
-+
- --max-blocks::
- 	Set the maximum number of program blocks to print with brstackasm for
- 	each sample.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 77e47cf39f2c..330dcd9b9b8f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1436,6 +1436,8 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
- 	return 0;
++	rec->samples++;
+ 	return build_id__mark_dso_hit(tool, event, sample, evsel, machine);
  }
  
-+#define PTIME_RANGE_MAX	10
-+
- struct perf_script {
- 	struct perf_tool	tool;
- 	struct perf_session	*session;
-@@ -1449,7 +1451,8 @@ struct perf_script {
- 	struct thread_map	*threads;
- 	int			name_width;
- 	const char              *time_str;
--	struct perf_time_interval ptime;
-+	struct perf_time_interval ptime_range[PTIME_RANGE_MAX];
-+	int			range_num;
- };
+@@ -435,9 +443,11 @@ static int process_buildids(struct record *rec)
  
- static int perf_evlist__max_name_len(struct perf_evlist *evlist)
-@@ -1734,8 +1737,10 @@ static int process_sample_event(struct perf_tool *tool,
- 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
- 	struct addr_location al;
+ 	/*
+ 	 * If --buildid-all is given, it marks all DSO regardless of hits,
+-	 * so no need to process samples.
++	 * so no need to process samples. But if timestamp_boundary is enabled,
++	 * it still needs to walk on all samples to get the timestamps of
++	 * first/last samples.
+ 	 */
+-	if (rec->buildid_all)
++	if (rec->buildid_all && !rec->timestamp_boundary)
+ 		rec->tool.sample = NULL;
  
--	if (perf_time__skip_sample(&scr->ptime, sample->time))
-+	if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_num,
-+					  sample->time)) {
- 		return 0;
-+	}
- 
- 	if (debug_mode) {
- 		if (sample->time < last_timestamp) {
-@@ -3360,10 +3365,27 @@ int cmd_script(int argc, const char **argv)
- 		goto out_delete;
- 
- 	/* needs to be parsed after looking up reference time */
--	if (perf_time__parse_str(&script.ptime, script.time_str) != 0) {
--		pr_err("Invalid time string\n");
--		err = -EINVAL;
--		goto out_delete;
-+	if (perf_time__parse_str(script.ptime_range, script.time_str) != 0) {
-+		if (session->evlist->first_sample_time == 0 &&
-+		    session->evlist->last_sample_time == 0) {
-+			pr_err("No first/last sample time in perf data\n");
-+			err = -EINVAL;
-+			goto out_delete;
-+		}
-+
-+		script.range_num = perf_time__percent_parse_str(
-+					script.ptime_range, PTIME_RANGE_MAX,
-+					script.time_str,
-+					session->evlist->first_sample_time,
-+					session->evlist->last_sample_time);
-+
-+		if (script.range_num < 0) {
-+			pr_err("Invalid time string\n");
-+			err = -EINVAL;
-+			goto out_delete;
-+		}
-+	} else {
-+		script.range_num = 1;
- 	}
- 
- 	err = __cmd_script(&script);
+ 	return perf_session__process_events(session);
+@@ -1621,6 +1631,8 @@ static struct option __record_options[] = {
+ 		    "Record build-id of all DSOs regardless of hits"),
+ 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
+ 		    "append timestamp to output filename"),
++	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
++		    "Record timestamp boundary (time of first/last samples)"),
+ 	OPT_STRING_OPTARG_SET(0, "switch-output", &record.switch_output.str,
+ 			  &record.switch_output.set, "signal,size,time",
+ 			  "Switch output when receive SIGUSR2 or cross size,time threshold",
 -- 
 2.14.3
