@@ -1,145 +1,96 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/27] perf report: Add --stats option to display quick data statistics
-Date: Wed, 10 Jan 2018 18:28:40 -0300
-Message-ID: <20180110212844.12441-24-acme@kernel.org>
+Subject: [PATCH 27/27] tools headers: Synchronize kernel <-> tooling headers
+Date: Wed, 10 Jan 2018 18:28:44 -0300
+Message-ID: <20180110212844.12441-28-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753997AbeAJVaP (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 10 Jan 2018 16:30:15 -0500
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Wang Nan <wangnan0@huawei.com>
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add --stats option to display quick data statistics of event numbers,
-without any further processing, like the one at the end of the perf
-report -D command.
+Two kernel headers got modified recently due to meltdown/spectre, in:
 
-  $ perf report --stat
+  a89f040fa34e ("x86/cpufeatures: Add X86_BUG_CPU_INSECURE")
 
-  Aggregated stats:
-             TOTAL events:       4566
-              MMAP events:        113
-              LOST events:         19
-              COMM events:          3
-              FORK events:        400
-            SAMPLE events:       3315
-             MMAP2 events:         32
-    FINISHED_ROUND events:        681
-        THREAD_MAP events:          1
-           CPU_MAP events:          1
-         TIME_CONV events:          1
+which are used by tooling as well:
 
-I found this useful when hunting lost events for another change.
+  arch/x86/include/asm/cpufeatures.h
+  arch/x86/include/asm/disabled-features.h
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+None of those changes have an effect on tooling, so do a plain copy.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180107160356.28203-12-jolsa@kernel.org
-[ Rename it to --stats, plural ]
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-qqzcs8ri3vks8cypg0puk0ae@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt |  4 ++++
- tools/perf/builtin-report.c              | 26 +++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ tools/arch/x86/include/asm/cpufeatures.h       | 4 +++-
+ tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 1e02c4e1a81f..a7d11ef2fe25 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -457,6 +457,10 @@ include::itrace.txt[]
- 	will be printed. Each entry is function name or file/line. Enabled by
- 	default, disable with --no-inline.
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 800104c8a3ed..21ac898df2d8 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -197,11 +197,12 @@
+ #define X86_FEATURE_CAT_L3		( 7*32+ 4) /* Cache Allocation Technology L3 */
+ #define X86_FEATURE_CAT_L2		( 7*32+ 5) /* Cache Allocation Technology L2 */
+ #define X86_FEATURE_CDP_L3		( 7*32+ 6) /* Code and Data Prioritization L3 */
++#define X86_FEATURE_INVPCID_SINGLE	( 7*32+ 7) /* Effectively INVPCID && CR4.PCIDE=1 */
  
-+--stats::
-+	Display overall events statistics without any further processing.
-+	(like the one at the end of the perf report -D command)
+ #define X86_FEATURE_HW_PSTATE		( 7*32+ 8) /* AMD HW-PState */
+ #define X86_FEATURE_PROC_FEEDBACK	( 7*32+ 9) /* AMD ProcFeedbackInterface */
+ #define X86_FEATURE_SME			( 7*32+10) /* AMD Secure Memory Encryption */
+-
++#define X86_FEATURE_PTI			( 7*32+11) /* Kernel Page Table Isolation enabled */
+ #define X86_FEATURE_INTEL_PPIN		( 7*32+14) /* Intel Processor Inventory Number */
+ #define X86_FEATURE_INTEL_PT		( 7*32+15) /* Intel Processor Trace */
+ #define X86_FEATURE_AVX512_4VNNIW	( 7*32+16) /* AVX-512 Neural Network Instructions */
+@@ -340,5 +341,6 @@
+ #define X86_BUG_SWAPGS_FENCE		X86_BUG(11) /* SWAPGS without input dep on GS */
+ #define X86_BUG_MONITOR			X86_BUG(12) /* IPI required to wake up remote CPU */
+ #define X86_BUG_AMD_E400		X86_BUG(13) /* CPU is among the affected by Erratum 400 */
++#define X86_BUG_CPU_MELTDOWN		X86_BUG(14) /* CPU is affected by meltdown attack and needs kernel page table isolation */
+ 
+ #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+index 14d6d5007314..b027633e7300 100644
+--- a/tools/arch/x86/include/asm/disabled-features.h
++++ b/tools/arch/x86/include/asm/disabled-features.h
+@@ -50,6 +50,12 @@
+ # define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
+ #endif
+ 
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++# define DISABLE_PTI		0
++#else
++# define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
++#endif
 +
- include::callchain-overhead-calculation.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 770bf8a614f2..8e67a8c25ab1 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -62,6 +62,7 @@ struct report {
- 	bool			show_threads;
- 	bool			inverted_callchain;
- 	bool			mem_mode;
-+	bool			stats_mode;
- 	bool			header;
- 	bool			header_only;
- 	bool			nonany_branch_mode;
-@@ -588,6 +589,20 @@ static void report__output_resort(struct report *rep)
- 	ui_progress__finish();
- }
- 
-+static void stats_setup(struct report *rep)
-+{
-+	memset(&rep->tool, 0, sizeof(rep->tool));
-+	rep->tool.no_warn = true;
-+}
-+
-+static int stats_print(struct report *rep)
-+{
-+	struct perf_session *session = rep->session;
-+
-+	perf_session__fprintf_nr_events(session, stdout);
-+	return 0;
-+}
-+
- static int __cmd_report(struct report *rep)
- {
- 	int ret;
-@@ -619,12 +634,18 @@ static int __cmd_report(struct report *rep)
- 		return ret;
- 	}
- 
-+	if (rep->stats_mode)
-+		stats_setup(rep);
-+
- 	ret = perf_session__process_events(session);
- 	if (ret) {
- 		ui__error("failed to process sample\n");
- 		return ret;
- 	}
- 
-+	if (rep->stats_mode)
-+		return stats_print(rep);
-+
- 	report__warn_kptr_restrict(rep);
- 
- 	evlist__for_each_entry(session->evlist, pos)
-@@ -781,6 +802,7 @@ int cmd_report(int argc, const char **argv)
- 	OPT_BOOLEAN('q', "quiet", &quiet, "Do not show any message"),
- 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
- 		    "dump raw trace in ASCII"),
-+	OPT_BOOLEAN(0, "stats", &report.stats_mode, "Display event stats"),
- 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
- 		   "file", "vmlinux pathname"),
- 	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
-@@ -1042,6 +1064,8 @@ int cmd_report(int argc, const char **argv)
- 		report.tool.show_feat_hdr = SHOW_FEAT_HEADER;
- 	if (report.show_full_info)
- 		report.tool.show_feat_hdr = SHOW_FEAT_HEADER_FULL_INFO;
-+	if (report.stats_mode)
-+		use_browser = 0;
- 
- 	if (strcmp(input_name, "-") != 0)
- 		setup_browser(true);
-@@ -1064,7 +1088,7 @@ int cmd_report(int argc, const char **argv)
- 			ret = 0;
- 			goto error;
- 		}
--	} else if (use_browser == 0 && !quiet) {
-+	} else if (use_browser == 0 && !quiet && !report.stats_mode) {
- 		fputs("# To display the perf.data header info, please use --header/--header-only options.\n#\n",
- 		      stdout);
- 	}
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -60,7 +66,7 @@
+ #define DISABLED_MASK4	(DISABLE_PCID)
+ #define DISABLED_MASK5	0
+ #define DISABLED_MASK6	0
+-#define DISABLED_MASK7	0
++#define DISABLED_MASK7	(DISABLE_PTI)
+ #define DISABLED_MASK8	0
+ #define DISABLED_MASK9	(DISABLE_MPX)
+ #define DISABLED_MASK10	0
 -- 
 2.14.3
