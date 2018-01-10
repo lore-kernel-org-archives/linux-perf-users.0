@@ -1,92 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/27] perf: Allocate context task_ctx_data for child event
-Date: Wed, 10 Jan 2018 18:28:32 -0300
-Message-ID: <20180110212844.12441-16-acme@kernel.org>
+Subject: [PATCH 13/27] perf tools: Enable LIBBABELTRACE by default
+Date: Wed, 10 Jan 2018 18:28:30 -0300
+Message-ID: <20180110212844.12441-14-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753664AbeAJV3i (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Jan 2018 16:29:38 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Currently we use perf_event_context::task_ctx_data to save and restore
-the LBR status when the task is scheduled out and in.
-
-We don't allocate it for child contexts, which results in shorter task's
-LBR stack, because we don't save the history from previous run and start
-over every time we schedule the task in.
-
-I made a test to generate samples with LBR call stack and got higher
-numbers on bigger chain depths:
-
-                            before:     after:
-  LBR call chain: nr: 1       60561     498127
-  LBR call chain: nr: 2           0          0
-  LBR call chain: nr: 3      107030       2172
-  LBR call chain: nr: 4      466685      62758
-  LBR call chain: nr: 5     2307319     878046
-  LBR call chain: nr: 6       48713     495218
-  LBR call chain: nr: 7        1040       4551
-  LBR call chain: nr: 8         481        172
-  LBR call chain: nr: 9         878        120
-  LBR call chain: nr: 10       2377       6698
-  LBR call chain: nr: 11      28830     151487
-  LBR call chain: nr: 12      29347     339867
-  LBR call chain: nr: 13          4         22
-  LBR call chain: nr: 14          3         53
+There's no reason anymore to treat babel trace in a special way, because
+a) we no longer display its state b) the needed babeltrace library is
+now out and well adopted among distros.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 4af57ef28c2c ("perf: Add pmu specific data for perf task context")
-Link: http://lkml.kernel.org/r/20180107160356.28203-4-jolsa@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180107160356.28203-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/Makefile.config | 2 +-
+ tools/perf/Makefile.perf   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4df5b695bf0d..55fb648a32b0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10703,6 +10703,19 @@ inherit_event(struct perf_event *parent_event,
- 	if (IS_ERR(child_event))
- 		return child_event;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index f050f38d8fa3..12dec6ea5ed2 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -780,7 +780,7 @@ else
+   NO_PERF_READ_VDSOX32 := 1
+ endif
  
-+
-+	if ((child_event->attach_state & PERF_ATTACH_TASK_DATA) &&
-+	    !child_ctx->task_ctx_data) {
-+		struct pmu *pmu = child_event->pmu;
-+
-+		child_ctx->task_ctx_data = kzalloc(pmu->task_ctx_size,
-+						   GFP_KERNEL);
-+		if (!child_ctx->task_ctx_data) {
-+			free_event(child_event);
-+			return NULL;
-+		}
-+	}
-+
- 	/*
- 	 * is_orphaned_event() and list_add_tail(&parent_event->child_list)
- 	 * must be under the same lock in order to serialize against
-@@ -10713,6 +10726,7 @@ inherit_event(struct perf_event *parent_event,
- 	if (is_orphaned_event(parent_event) ||
- 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
- 		mutex_unlock(&parent_event->child_mutex);
-+		/* task_ctx_data is freed with child_ctx */
- 		free_event(child_event);
- 		return NULL;
- 	}
+-ifdef LIBBABELTRACE
++ifndef NO_LIBBABELTRACE
+   $(call feature_check,libbabeltrace)
+   ifeq ($(feature-libbabeltrace), 1)
+     CFLAGS += -DHAVE_LIBBABELTRACE_SUPPORT $(LIBBABELTRACE_CFLAGS)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 68cf1360a3f3..9fdefd748e2e 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -77,7 +77,7 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_ZLIB if you do not want to support compressed kernel modules
+ #
+-# Define LIBBABELTRACE if you DO want libbabeltrace support
++# Define NO_LIBBABELTRACE if you do not want libbabeltrace support
+ # for CTF data format.
+ #
+ # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
 -- 
 2.14.3
