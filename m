@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/27] perf header: Add infrastructure to record first and last sample time
-Date: Wed, 10 Jan 2018 18:28:24 -0300
-Message-ID: <20180110212844.12441-8-acme@kernel.org>
+Subject: [PATCH 09/27] perf tools: Create function to parse time percent
+Date: Wed, 10 Jan 2018 18:28:26 -0300
+Message-ID: <20180110212844.12441-10-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
@@ -12,223 +12,314 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-perf report/script/... have a --time option to limit the time range of
-output. That's very useful to slice large traces, e.g. when processing
-the output of perf script for some analysis.
+Current perf report/script/... have a --time option to limit the time
+range of output. But right now it only supports absolute time, add
+support for time percentage.
 
-But right now --time only supports absolute time. Also there is no fast
-way to get the start/end times of a given trace except for looking at
-it.  This makes it hard to e.g. only decode the first half of the trace,
-which is useful for parallelization of scripts
+For example:
 
-Another problem is that perf records are variable size and there is no
-synchronization mechanism. So the only way to find the last sample
-reliably would be to walk all samples. But we want to avoid that in perf
-report/...  because it is already quite expensive. That is why storing
-the first sample time and last sample time in perf record is better.
+1. Select the second 10% time slice
+   perf report --time 10%/2
 
-This patch creates a new header feature type HEADER_SAMPLE_TIME and
-related ops. Save the first sample time and the last sample time to the
-feature section in perf file header. That will be done when, for
-instance, processing build-ids, where we already have to process all
-samples to create the build-id table, take advantage of that to further
-amortize that processing by storing HEADER_SAMPLE_TIME to make 'perf
-report/script' faster when using --time.
+2. Select from 0% to 10% time slice
+   perf report --time 0%-10%
 
-Committer testing:
+It also support the multiple time ranges.
 
-After this patch is applied the header is written with zeroes, we need
-the next patch, for "perf record" to actually write the timestamps:
+3. Select the first and second 10% time slices
+   perf report --time 10%/1,10%/2
 
-  # perf report -D | grep PERF_RECORD_SAMPLE\(
-  22501155244406 0x44f0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 25016/25016: 0xffffffffa21be8c5 period: 1 addr: 0
-  <SNIP>
-  22501155793625 0x4a30 [0x28]: PERF_RECORD_SAMPLE(IP, 0x4001): 25016/25016: 0xffffffffa21ffd50 period: 2828043 addr: 0
-  # perf report --header | grep "time of "
-  # time of first sample : 0.000000
-  # time of last sample : 0.000000
-  #
+4. Select from 0% to 10% and 30% to 40% slices
+   perf report --time 0%-10%,30%-40%
 
 Changelog:
 
-v7: 1. Rebase to latest perf/core branch.
+v4: An issue is found. Following passes.
+    perf script --time 10%/10x12321xsdfdasfdsafdsafdsa
 
-    2. Add following clarification in patch description according to
-       Arnaldo's suggestion.
+    Now it uses strtol to replace atoi.
 
-       "That will be done when, for instance, processing build-ids,
-	where we already have to process all samples to create the
-	build-id table, take advantage of that to further amortize
-	that processing by storing HEADER_SAMPLE_TIME to make
-	'perf report/script' faster when using --time."
+Committer notes:
 
-v4: Use perf script time style for timestamp printing. Also add with
-    the printing of sample duration.
-
-v3: Remove the definitions of first_sample_time/last_sample_time from
-    perf_session. Just define them in perf_evlist
+This just puts in place the infrastructure, so the examples in this cset
+comment will only work later, after more patches in this series are
+applied.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1512738826-2628-2-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1512738826-2628-4-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf.data-file-format.txt |  4 ++
- tools/perf/util/evlist.h                           |  2 +
- tools/perf/util/header.c                           | 60 ++++++++++++++++++++++
- tools/perf/util/header.h                           |  1 +
- 4 files changed, 67 insertions(+)
+ tools/perf/util/time-utils.c | 205 ++++++++++++++++++++++++++++++++++++++++---
+ tools/perf/util/time-utils.h |   3 +
+ 2 files changed, 196 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index 15e8b48077ba..f7d85e89a98a 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -261,6 +261,10 @@ struct {
- 	struct perf_header_string map;
- }[number_of_cache_levels];
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 81927d027417..61c46022de0b 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -6,6 +6,7 @@
+ #include <time.h>
+ #include <errno.h>
+ #include <inttypes.h>
++#include <math.h>
  
-+	HEADER_SAMPLE_TIME = 21,
-+
-+Two uint64_t for the time of first sample and the time of last sample.
-+
- 	other bits are reserved and should ignored for now
- 	HEADER_FEAT_BITS	= 256,
- 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 75160666d305..e7fbca69cbac 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -50,6 +50,8 @@ struct perf_evlist {
- 	struct perf_evsel *selected;
- 	struct events_stats stats;
- 	struct perf_env	*env;
-+	u64		first_sample_time;
-+	u64		last_sample_time;
- };
- 
- struct perf_evsel_str_handler {
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index ca73aa7be708..a326e0d8b5b6 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -16,6 +16,7 @@
- #include <linux/stringify.h>
- #include <sys/stat.h>
- #include <sys/utsname.h>
-+#include <linux/time64.h>
- 
- #include "evlist.h"
- #include "evsel.h"
-@@ -35,6 +36,7 @@
- #include <api/fs/fs.h>
- #include "asm/bug.h"
- #include "tool.h"
-+#include "time-utils.h"
- 
- #include "sane_ctype.h"
- 
-@@ -1180,6 +1182,20 @@ static int write_stat(struct feat_fd *ff __maybe_unused,
+ #include "perf.h"
+ #include "debug.h"
+@@ -60,11 +61,10 @@ static int parse_timestr_sec_nsec(struct perf_time_interval *ptime,
  	return 0;
  }
  
-+static int write_sample_time(struct feat_fd *ff,
-+			     struct perf_evlist *evlist)
-+{
-+	int ret;
-+
-+	ret = do_write(ff, &evlist->first_sample_time,
-+		       sizeof(evlist->first_sample_time));
-+	if (ret < 0)
-+		return ret;
-+
-+	return do_write(ff, &evlist->last_sample_time,
-+			sizeof(evlist->last_sample_time));
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
+-int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr)
++static int split_start_end(char **start, char **end, const char *ostr, char ch)
  {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1505,6 +1521,28 @@ static void print_group_desc(struct feat_fd *ff, FILE *fp)
+ 	char *start_str, *end_str;
+ 	char *d, *str;
+-	int rc = 0;
+ 
+ 	if (ostr == NULL || *ostr == '\0')
+ 		return 0;
+@@ -74,25 +74,35 @@ int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr)
+ 	if (str == NULL)
+ 		return -ENOMEM;
+ 
+-	ptime->start = 0;
+-	ptime->end = 0;
+-
+-	/* str has the format: <start>,<stop>
+-	 * variations: <start>,
+-	 *             ,<stop>
+-	 *             ,
+-	 */
+ 	start_str = str;
+-	d = strchr(start_str, ',');
++	d = strchr(start_str, ch);
+ 	if (d) {
+ 		*d = '\0';
+ 		++d;
  	}
- }
+ 	end_str = d;
  
-+static void print_sample_time(struct feat_fd *ff, FILE *fp)
-+{
-+	struct perf_session *session;
-+	char time_buf[32];
-+	double d;
++	*start = start_str;
++	*end = end_str;
 +
-+	session = container_of(ff->ph, struct perf_session, header);
-+
-+	timestamp__scnprintf_usec(session->evlist->first_sample_time,
-+				  time_buf, sizeof(time_buf));
-+	fprintf(fp, "# time of first sample : %s\n", time_buf);
-+
-+	timestamp__scnprintf_usec(session->evlist->last_sample_time,
-+				  time_buf, sizeof(time_buf));
-+	fprintf(fp, "# time of last sample : %s\n", time_buf);
-+
-+	d = (double)(session->evlist->last_sample_time -
-+		session->evlist->first_sample_time) / NSEC_PER_MSEC;
-+
-+	fprintf(fp, "# sample duration : %10.3f ms\n", d);
-+}
-+
- static int __event_process_build_id(struct build_id_event *bev,
- 				    char *filename,
- 				    struct perf_session *session)
-@@ -2146,6 +2184,27 @@ static int process_cache(struct feat_fd *ff, void *data __maybe_unused)
- 	return -1;
- }
- 
-+static int process_sample_time(struct feat_fd *ff, void *data __maybe_unused)
-+{
-+	struct perf_session *session;
-+	u64 first_sample_time, last_sample_time;
-+	int ret;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+
-+	ret = do_read_u64(ff, &first_sample_time);
-+	if (ret)
-+		return -1;
-+
-+	ret = do_read_u64(ff, &last_sample_time);
-+	if (ret)
-+		return -1;
-+
-+	session->evlist->first_sample_time = first_sample_time;
-+	session->evlist->last_sample_time = last_sample_time;
 +	return 0;
 +}
 +
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2203,6 +2262,7 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(AUXTRACE,	auxtrace,	false),
- 	FEAT_OPN(STAT,		stat,		false),
- 	FEAT_OPN(CACHE,		cache,		true),
-+	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
- };
++int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr)
++{
++	char *start_str = NULL, *end_str;
++	int rc;
++
++	rc = split_start_end(&start_str, &end_str, ostr, ',');
++	if (rc || !start_str)
++		return rc;
++
++	ptime->start = 0;
++	ptime->end = 0;
++
+ 	rc = parse_timestr_sec_nsec(ptime, start_str, end_str);
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 317fb901e47f..f28aaaa3a440 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -35,6 +35,7 @@ enum {
- 	HEADER_AUXTRACE,
- 	HEADER_STAT,
- 	HEADER_CACHE,
-+	HEADER_SAMPLE_TIME,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+-	free(str);
++	free(start_str);
+ 
+ 	/* make sure end time is after start time if it was given */
+ 	if (rc == 0 && ptime->end && ptime->end < ptime->start)
+@@ -104,6 +114,177 @@ int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr)
+ 	return rc;
+ }
+ 
++static int parse_percent(double *pcnt, char *str)
++{
++	char *c;
++
++	c = strchr(str, '%');
++	if (c)
++		*c = '\0';
++	else
++		return -1;
++
++	*pcnt = atof(str) / 100.0;
++
++	return 0;
++}
++
++static int percent_slash_split(char *str, struct perf_time_interval *ptime,
++			       u64 start, u64 end)
++{
++	char *p, *end_str;
++	double pcnt, start_pcnt, end_pcnt;
++	u64 total = end - start;
++	int i;
++
++	/*
++	 * Example:
++	 * 10%/2: select the second 10% slice and the third 10% slice
++	 */
++
++	/* We can modify this string since the original one is copied */
++	p = strchr(str, '/');
++	if (!p)
++		return -1;
++
++	*p = '\0';
++	if (parse_percent(&pcnt, str) < 0)
++		return -1;
++
++	p++;
++	i = (int)strtol(p, &end_str, 10);
++	if (*end_str)
++		return -1;
++
++	if (pcnt <= 0.0)
++		return -1;
++
++	start_pcnt = pcnt * (i - 1);
++	end_pcnt = pcnt * i;
++
++	if (start_pcnt < 0.0 || start_pcnt > 1.0 ||
++	    end_pcnt < 0.0 || end_pcnt > 1.0) {
++		return -1;
++	}
++
++	ptime->start = start + round(start_pcnt * total);
++	ptime->end = start + round(end_pcnt * total);
++
++	return 0;
++}
++
++static int percent_dash_split(char *str, struct perf_time_interval *ptime,
++			      u64 start, u64 end)
++{
++	char *start_str = NULL, *end_str;
++	double start_pcnt, end_pcnt;
++	u64 total = end - start;
++	int ret;
++
++	/*
++	 * Example: 0%-10%
++	 */
++
++	ret = split_start_end(&start_str, &end_str, str, '-');
++	if (ret || !start_str)
++		return ret;
++
++	if ((parse_percent(&start_pcnt, start_str) != 0) ||
++	    (parse_percent(&end_pcnt, end_str) != 0)) {
++		free(start_str);
++		return -1;
++	}
++
++	free(start_str);
++
++	if (start_pcnt < 0.0 || start_pcnt > 1.0 ||
++	    end_pcnt < 0.0 || end_pcnt > 1.0 ||
++	    start_pcnt > end_pcnt) {
++		return -1;
++	}
++
++	ptime->start = start + round(start_pcnt * total);
++	ptime->end = start + round(end_pcnt * total);
++
++	return 0;
++}
++
++typedef int (*time_pecent_split)(char *, struct perf_time_interval *,
++				 u64 start, u64 end);
++
++static int percent_comma_split(struct perf_time_interval *ptime_buf, int num,
++			       const char *ostr, u64 start, u64 end,
++			       time_pecent_split func)
++{
++	char *str, *p1, *p2;
++	int len, ret, i = 0;
++
++	str = strdup(ostr);
++	if (str == NULL)
++		return -ENOMEM;
++
++	len = strlen(str);
++	p1 = str;
++
++	while (p1 < str + len) {
++		if (i >= num) {
++			free(str);
++			return -1;
++		}
++
++		p2 = strchr(p1, ',');
++		if (p2)
++			*p2 = '\0';
++
++		ret = (func)(p1, &ptime_buf[i], start, end);
++		if (ret < 0) {
++			free(str);
++			return -1;
++		}
++
++		pr_debug("start time %d: %" PRIu64 ", ", i, ptime_buf[i].start);
++		pr_debug("end time %d: %" PRIu64 "\n", i, ptime_buf[i].end);
++
++		i++;
++
++		if (p2)
++			p1 = p2 + 1;
++		else
++			break;
++	}
++
++	free(str);
++	return i;
++}
++
++int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
++				 const char *ostr, u64 start, u64 end)
++{
++	char *c;
++
++	/*
++	 * ostr example:
++	 * 10%/2,10%/3: select the second 10% slice and the third 10% slice
++	 * 0%-10%,30%-40%: multiple time range
++	 */
++
++	memset(ptime_buf, 0, sizeof(*ptime_buf) * num);
++
++	c = strchr(ostr, '/');
++	if (c) {
++		return percent_comma_split(ptime_buf, num, ostr, start,
++					   end, percent_slash_split);
++	}
++
++	c = strchr(ostr, '-');
++	if (c) {
++		return percent_comma_split(ptime_buf, num, ostr, start,
++					   end, percent_dash_split);
++	}
++
++	return -1;
++}
++
+ bool perf_time__skip_sample(struct perf_time_interval *ptime, u64 timestamp)
+ {
+ 	/* if time is not set don't drop sample */
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 15b475c50ccf..23087231785a 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -13,6 +13,9 @@ int parse_nsec_time(const char *str, u64 *ptime);
+ 
+ int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr);
+ 
++int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
++				 const char *ostr, u64 start, u64 end);
++
+ bool perf_time__skip_sample(struct perf_time_interval *ptime, u64 timestamp);
+ 
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
 -- 
 2.14.3
