@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/27] perf: Add sample_id to PERF_RECORD_ITRACE_START event comment
-Date: Wed, 10 Jan 2018 18:28:33 -0300
-Message-ID: <20180110212844.12441-17-acme@kernel.org>
+Subject: [PATCH 14/27] perf tools: Display perf_event_attr::namespaces debug info
+Date: Wed, 10 Jan 2018 18:28:31 -0300
+Message-ID: <20180110212844.12441-15-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
@@ -12,8 +12,14 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Adding missing sample_id line into PERF_RECORD_ITRACE_START
-event comment.
+Display namespaces bit in -vv debug display:
+
+  $ perf record -vv --namespaces ...
+  ...
+  perf_event_attr:
+    size                             112
+    ...
+    namespaces                       1
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -21,37 +27,23 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180107160356.28203-5-jolsa@kernel.org
-[ Update the tools/include/uapi/linux copy ]
+Link: http://lkml.kernel.org/r/20180107160356.28203-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- include/uapi/linux/perf_event.h       | 1 +
- tools/include/uapi/linux/perf_event.h | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/util/evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index b9a4953018ed..8bb66e8da945 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -864,6 +864,7 @@ enum perf_event_type {
- 	 *	struct perf_event_header	header;
- 	 *	u32				pid;
- 	 *	u32				tid;
-+	 *	struct sample_id		sample_id;
- 	 * };
- 	 */
- 	PERF_RECORD_ITRACE_START		= 12,
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index b9a4953018ed..8bb66e8da945 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -864,6 +864,7 @@ enum perf_event_type {
- 	 *	struct perf_event_header	header;
- 	 *	u32				pid;
- 	 *	u32				tid;
-+	 *	struct sample_id		sample_id;
- 	 * };
- 	 */
- 	PERF_RECORD_ITRACE_START		= 12,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a4d256ea0dc4..c435b2444153 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1577,6 +1577,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(use_clockid, p_unsigned);
+ 	PRINT_ATTRf(context_switch, p_unsigned);
+ 	PRINT_ATTRf(write_backward, p_unsigned);
++	PRINT_ATTRf(namespaces, p_unsigned);
+ 
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
 -- 
 2.14.3
