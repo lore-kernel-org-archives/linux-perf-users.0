@@ -1,101 +1,92 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/27] perf: Make perf_callchain function static
-Date: Wed, 10 Jan 2018 18:28:34 -0300
-Message-ID: <20180110212844.12441-18-acme@kernel.org>
+Subject: [PATCH 15/27] perf: Allocate context task_ctx_data for child event
+Date: Wed, 10 Jan 2018 18:28:32 -0300
+Message-ID: <20180110212844.12441-16-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753664AbeAJV3i (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 10 Jan 2018 16:29:38 -0500
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-And move it to core.c, because there's no caller of this function other
-than the one in core.c
+Currently we use perf_event_context::task_ctx_data to save and restore
+the LBR status when the task is scheduled out and in.
+
+We don't allocate it for child contexts, which results in shorter task's
+LBR stack, because we don't save the history from previous run and start
+over every time we schedule the task in.
+
+I made a test to generate samples with LBR call stack and got higher
+numbers on bigger chain depths:
+
+                            before:     after:
+  LBR call chain: nr: 1       60561     498127
+  LBR call chain: nr: 2           0          0
+  LBR call chain: nr: 3      107030       2172
+  LBR call chain: nr: 4      466685      62758
+  LBR call chain: nr: 5     2307319     878046
+  LBR call chain: nr: 6       48713     495218
+  LBR call chain: nr: 7        1040       4551
+  LBR call chain: nr: 8         481        172
+  LBR call chain: nr: 9         878        120
+  LBR call chain: nr: 10       2377       6698
+  LBR call chain: nr: 11      28830     151487
+  LBR call chain: nr: 12      29347     339867
+  LBR call chain: nr: 13          4         22
+  LBR call chain: nr: 14          3         53
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180107160356.28203-6-jolsa@kernel.org
+Fixes: 4af57ef28c2c ("perf: Add pmu specific data for perf task context")
+Link: http://lkml.kernel.org/r/20180107160356.28203-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/callchain.c | 15 ---------------
- kernel/events/core.c      | 16 ++++++++++++++++
- kernel/events/internal.h  |  4 ----
- 3 files changed, 16 insertions(+), 19 deletions(-)
+ kernel/events/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 1b2be63c8528..772a43fea825 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -178,21 +178,6 @@ put_callchain_entry(int rctx)
- 	put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
- }
- 
--struct perf_callchain_entry *
--perf_callchain(struct perf_event *event, struct pt_regs *regs)
--{
--	bool kernel = !event->attr.exclude_callchain_kernel;
--	bool user   = !event->attr.exclude_callchain_user;
--	/* Disallow cross-task user callchains. */
--	bool crosstask = event->ctx->task && event->ctx->task != current;
--	const u32 max_stack = event->attr.sample_max_stack;
--
--	if (!kernel && !user)
--		return NULL;
--
--	return get_perf_callchain(regs, 0, kernel, user, max_stack, crosstask, true);
--}
--
- struct perf_callchain_entry *
- get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		   u32 max_stack, bool crosstask, bool add_mark)
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 55fb648a32b0..5fc1ded4b450 100644
+index 4df5b695bf0d..55fb648a32b0 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5980,6 +5980,22 @@ static u64 perf_virt_to_phys(u64 virt)
- 	return phys_addr;
- }
+@@ -10703,6 +10703,19 @@ inherit_event(struct perf_event *parent_event,
+ 	if (IS_ERR(child_event))
+ 		return child_event;
  
-+static struct perf_callchain_entry *
-+perf_callchain(struct perf_event *event, struct pt_regs *regs)
-+{
-+	bool kernel = !event->attr.exclude_callchain_kernel;
-+	bool user   = !event->attr.exclude_callchain_user;
-+	/* Disallow cross-task user callchains. */
-+	bool crosstask = event->ctx->task && event->ctx->task != current;
-+	const u32 max_stack = event->attr.sample_max_stack;
 +
-+	if (!kernel && !user)
-+		return NULL;
++	if ((child_event->attach_state & PERF_ATTACH_TASK_DATA) &&
++	    !child_ctx->task_ctx_data) {
++		struct pmu *pmu = child_event->pmu;
 +
-+	return get_perf_callchain(regs, 0, kernel, user,
-+				  max_stack, crosstask, true);
-+}
++		child_ctx->task_ctx_data = kzalloc(pmu->task_ctx_size,
++						   GFP_KERNEL);
++		if (!child_ctx->task_ctx_data) {
++			free_event(child_event);
++			return NULL;
++		}
++	}
 +
- void perf_prepare_sample(struct perf_event_header *header,
- 			 struct perf_sample_data *data,
- 			 struct perf_event *event,
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index 09b1537ae06c..6dc725a7e7bc 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -201,10 +201,6 @@ arch_perf_out_copy_user(void *dst, const void *src, unsigned long n)
- 
- DEFINE_OUTPUT_COPY(__output_copy_user, arch_perf_out_copy_user)
- 
--/* Callchain handling */
--extern struct perf_callchain_entry *
--perf_callchain(struct perf_event *event, struct pt_regs *regs);
--
- static inline int get_recursion_context(int *recursion)
- {
- 	int rctx;
+ 	/*
+ 	 * is_orphaned_event() and list_add_tail(&parent_event->child_list)
+ 	 * must be under the same lock in order to serialize against
+@@ -10713,6 +10726,7 @@ inherit_event(struct perf_event *parent_event,
+ 	if (is_orphaned_event(parent_event) ||
+ 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
+ 		mutex_unlock(&parent_event->child_mutex);
++		/* task_ctx_data is freed with child_ctx */
+ 		free_event(child_event);
+ 		return NULL;
+ 	}
 -- 
 2.14.3
