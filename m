@@ -1,55 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/27] perf tools: Fix compile error with libunwind x86
-Date: Wed, 10 Jan 2018 18:28:21 -0300
-Message-ID: <20180110212844.12441-5-acme@kernel.org>
+Subject: [PATCH 02/27] perf test bpf: Use designated struct field initializers
+Date: Wed, 10 Jan 2018 18:28:19 -0300
+Message-ID: <20180110212844.12441-3-acme@kernel.org>
 References: <20180110212844.12441-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Wang Nan <wangnan0@huawei.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fix a compile error:
+To follow standard practice in the kernel sources, documenting the
+initialization better and helping quickly finding the value for some
+field in a struct with many entries.
 
- ...
-   CC       util/libunwind/x86_32.o
- In file included from util/libunwind/x86_32.c:33:0:
- util/libunwind/../../arch/x86/util/unwind-libunwind.c: In function 'libunwind__x86_reg_id':
- util/libunwind/../../arch/x86/util/unwind-libunwind.c:110:11: error: 'EINVAL' undeclared (first use in this function)
-    return -EINVAL;
-            ^
- util/libunwind/../../arch/x86/util/unwind-libunwind.c:110:11: note: each undeclared identifier is reported only once for each function it appears in
- mv: cannot stat 'util/libunwind/.x86_32.o.tmp': No such file or directory
- make[4]: *** [util/libunwind/x86_32.o] Error 1
- make[3]: *** [util] Error 2
- make[2]: *** [libperf-in.o] Error 2
- make[1]: *** [sub-make] Error 2
- make: *** [all] Error 2
-
-It happens when libunwind-x86 feature is detected.
-
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20171206015040.114574-1-wangnan0@huawei.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-syn3hz9hz7ukxlxbx5x6hv20@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/unwind-libunwind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/bpf.c | 59 +++++++++++++++++++++++---------------------------
+ 1 file changed, 27 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
-index 9c917f80c906..05920e3edf7a 100644
---- a/tools/perf/arch/x86/util/unwind-libunwind.c
-+++ b/tools/perf/arch/x86/util/unwind-libunwind.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+index 057c6b8fdb53..0512f1b5bfdb 100644
+--- a/tools/perf/tests/bpf.c
++++ b/tools/perf/tests/bpf.c
+@@ -63,46 +63,41 @@ static struct {
+ 	bool	pin;
+ } bpf_testcase_table[] = {
+ 	{
+-		LLVM_TESTCASE_BASE,
+-		"Basic BPF filtering",
+-		"[basic_bpf_test]",
+-		"fix 'perf test LLVM' first",
+-		"load bpf object failed",
+-		&epoll_wait_loop,
+-		(NR_ITERS + 1) / 2,
+-		false,
++		.prog_id	  = LLVM_TESTCASE_BASE,
++		.desc		  = "Basic BPF filtering",
++		.name		  = "[basic_bpf_test]",
++		.msg_compile_fail = "fix 'perf test LLVM' first",
++		.msg_load_fail	  = "load bpf object failed",
++		.target_func	  = &epoll_wait_loop,
++		.expect_result	  = (NR_ITERS + 1) / 2,
+ 	},
+ 	{
+-		LLVM_TESTCASE_BASE,
+-		"BPF pinning",
+-		"[bpf_pinning]",
+-		"fix kbuild first",
+-		"check your vmlinux setting?",
+-		&epoll_wait_loop,
+-		(NR_ITERS + 1) / 2,
+-		true,
++		.prog_id	  = LLVM_TESTCASE_BASE,
++		.desc		  = "BPF pinning",
++		.name		  = "[bpf_pinning]",
++		.msg_compile_fail = "fix kbuild first",
++		.msg_load_fail	  = "check your vmlinux setting?",
++		.target_func	  = &epoll_wait_loop,
++		.expect_result	  = (NR_ITERS + 1) / 2,
++		.pin 		  = true,
+ 	},
+ #ifdef HAVE_BPF_PROLOGUE
+ 	{
+-		LLVM_TESTCASE_BPF_PROLOGUE,
+-		"BPF prologue generation",
+-		"[bpf_prologue_test]",
+-		"fix kbuild first",
+-		"check your vmlinux setting?",
+-		&llseek_loop,
+-		(NR_ITERS + 1) / 4,
+-		false,
++		.prog_id	  = LLVM_TESTCASE_BPF_PROLOGUE,
++		.desc		  = "BPF prologue generation",
++		.name		  = "[bpf_prologue_test]",
++		.msg_compile_fail = "fix kbuild first",
++		.msg_load_fail	  = "check your vmlinux setting?",
++		.target_func	  = &llseek_loop,
++		.expect_result	  = (NR_ITERS + 1) / 4,
+ 	},
+ #endif
+ 	{
+-		LLVM_TESTCASE_BPF_RELOCATION,
+-		"BPF relocation checker",
+-		"[bpf_relocation_test]",
+-		"fix 'perf test LLVM' first",
+-		"libbpf error when dealing with relocation",
+-		NULL,
+-		0,
+-		false,
++		.prog_id	  = LLVM_TESTCASE_BPF_RELOCATION,
++		.desc		  = "BPF relocation checker",
++		.name		  = "[bpf_relocation_test]",
++		.msg_compile_fail = "fix 'perf test LLVM' first",
++		.msg_load_fail	  = "libbpf error when dealing with relocation",
+ 	},
+ };
  
--#ifndef REMOTE_UNWIND_LIBUNWIND
- #include <errno.h>
-+#ifndef REMOTE_UNWIND_LIBUNWIND
- #include <libunwind.h>
- #include "perf_regs.h"
- #include "../../util/unwind.h"
 -- 
 2.14.3
