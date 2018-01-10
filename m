@@ -1,101 +1,103 @@
-From: "Du, Changbin" <changbin.du@intel.com>
-Subject: Re: [PATCH 3/3] tracing: don't set parser->cont if it has reached
- the end of input buffer
-Date: Wed, 10 Jan 2018 11:18:23 +0800
-Message-ID: <20180110031823.kewjaztlecxgrhad@intel.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/3] tracing: detect the string termination character
+ when parsing user input string
+Date: Tue, 9 Jan 2018 23:09:17 -0500
+Message-ID: <20180109230917.19eaed97@vmware.local.home>
 References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
- <1515491748-25926-4-git-send-email-changbin.du@intel.com>
- <20180109181241.6b3f5ffb@vmware.local.home>
+        <1515491748-25926-2-git-send-email-changbin.du@intel.com>
+        <20180109175434.77163e52@vmware.local.home>
+        <20180110030119.sl6odftbzjdu3dop@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:37385 "EHLO mga01.intel.com"
+Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S965043AbeAJD0j (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Jan 2018 22:26:39 -0500
-Content-Disposition: inline
-In-Reply-To: <20180109181241.6b3f5ffb@vmware.local.home>
+        id S1751991AbeAJEJW (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Jan 2018 23:09:22 -0500
+In-Reply-To: <20180110030119.sl6odftbzjdu3dop@intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: changbin.du@intel.com, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: "Du, Changbin" <changbin.du@intel.com>
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Tue, Jan 09, 2018 at 06:12:41PM -0500, Steven Rostedt wrote:
-> On Tue,  9 Jan 2018 17:55:48 +0800
-> changbin.du@intel.com wrote:
+On Wed, 10 Jan 2018 11:01:20 +0800
+"Du, Changbin" <changbin.du@intel.com> wrote:
+
+> hi Rostedt,
 > 
-> > From: Changbin Du <changbin.du@intel.com>
+> On Tue, Jan 09, 2018 at 05:54:34PM -0500, Steven Rostedt wrote:
+> > On Tue,  9 Jan 2018 17:55:46 +0800
+> > changbin.du@intel.com wrote:
+> >   
+> > > From: Changbin Du <changbin.du@intel.com>
+> > > 
+> > > The usersapce can give a '\0' terminated C string or even has '\0' at the
+> > > middle of input buffer. We need handle both these two cases correctly.  
 > > 
-> > We should not set parser->cont if it has reached the end of input buffer.
-> > And since some callers (like ftrace_graph_write()) treat it as an error
-> > condition if trace_parser_cont() returns true.
+> > What do you define as correctly. Because I'm not seeing it.
+> >  
+> Soory I don't fully understand your question. What I meant is want to get clear that
+> how will tracing parser below strings.
+>   "", "  ",  "\0", " \0 ", "aa\0bb"
+> The parser may only recognize certain formats, but whatever the behaviour should
+> be clear and coherent for all tracing interfaces.
+
+We have a lack of communication here, because now I'm confused by what
+exactly you are asking. ;-)
+
 > 
-> This will break existing use cases. In fact you are removing the entire
-> point of this code. It NEEDS to continue if it reached the end of the
-> input buffer.
-> 
-> I do things like:
-> 
->  # cat file > set_ftrace_filter
-> 
-> where the file has a list of function names. It writes in blocks, and
-> it could very well have a function name split between two writes where
-> the write is at the end of the buffer but not finished writing the
-> function name.
->
+> > > 
+> > > Before this change, trace_get_user() will return a parsed string "\0" in
+> > > below case. It is not expected (expects it skip all inputs) and cause the
+> > > caller failed.
+> > > 
+> > > open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
+> > > write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)  
 > > 
-> > For example, if userspace set 'set_ftrace_filter' by writing:
-> > write(3, "abcdefg", 7)
-> 
-> From my point of view, the above isn't done writing the function name
-> yet and we SHOULD continue waiting for more input.
-> 
-hmm, thanks for the background. Your above case is a postive use case. So by
-this design, instead of write(3, "abcdefg", 7), it should be
-write(3, "abcdefg\0", 8), right?
+> > That looks more like a feature and not a bug.
+> >   
+> I point this out because I think the parser should take this as an emptry string
+> per the comments of trace_get_user().
+> /*
+>  * trace_get_user - reads the user input string separated by  space
+>  * (matched by isspace(ch))
+>  *
+>  * For each string found the 'struct trace_parser' is updated,
+>  * and the function returns.
+>  *
+>  * Returns number of bytes read.
+>  *
+>  * See kernel/trace/trace.h for 'struct trace_parser' details.
+>  */
 
-If true, it means kernel expect userspace write every string terminated with
-'\0'. So to fix this issue:
-open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
-write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+I'm also confused about the inconsistency you see here.
 
-Fix would be:
-write(3, "\0", 1)?
-
-So far, I am still confused. Some of the tracing debugfs entry accept '\0'
-while some not. AFIK, 'echo xxx > <path to tracing file>' always has a '\0'
-terminated.
-
-> BIG NACK on this patch. Sorry.
 > 
-> I'm guessing you have some program that writes only the strlen() of
-> these strings. That's wrong, you need to write "strlen()+1". Write some
-> real white space between calls, it will work. Add a "write(fd, " ", 1)"
-> between calls if you need to. Please don't change the kernel to fix
-> some bad use case. Especially when your fix will break existing use
-> cases.
-> 
-> -- Steve
-> 
+> > > 
+> > > This patch try to make the parser '\0' aware to fix such issue.  
 > > 
-> > Then in the kernel function ftrace_regex_write(), ftrace_process_regex()
-> > will not be executed. The result is that the given filter will not be
-> > applied at all.
+> > Why?
+> >   
+> 
+> > > 
+> > > Since the caller expects trace_get_user() to parse whole input buffer, so
+> > > this patch treat '\0' as a separator as whitespace.  
 > > 
-> > ftrace_regex_write() {
-> > 	...
-> > 	read = trace_get_user(parser, ubuf, cnt, ppos);
-> > 	if (read >= 0 && trace_parser_loaded(parser) &&
-> > 	    !trace_parser_cont(parser)) {
-> > 		ret = ftrace_process_regex(iter, parser->buffer,
-> > 					   parser->idx, enable);
-> > 		...
-> > 	}
-> > 	...
-> > }
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@intel.com>
+> > It looks more like we are trying to fix a userspace bug via the kernel.
+> >   
+> 
+> > I'm not liking this. So NACK.
 
--- 
-Thanks,
-Changbin Du
+Thinking about this more, I may not be so against it. I'm guessing you
+want to do something like:
+
+	write(fd, "func1", 6);
+	write(fd, "func2", 6);
+
+And have it add both func1 and func2, where the '\0' is the separator.
+
+If so, I can see that as a legitimate use case.
+
+-- Steve
