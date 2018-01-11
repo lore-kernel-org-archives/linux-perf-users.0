@@ -1,109 +1,63 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/27] perf test bpf: Use designated struct field initializers
-Date: Wed, 10 Jan 2018 18:28:19 -0300
-Message-ID: <20180110212844.12441-3-acme@kernel.org>
-References: <20180110212844.12441-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180110212844.12441-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: linxiulei@gmail.com
+Subject: [PATCH] perf/core: Fix installing cgroup event into cpu
+Date: Thu, 11 Jan 2018 11:09:58 +0800
+Message-ID: <20180111030958.8627-1-linxiulei@gmail.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-oi0-f67.google.com ([209.85.218.67]:45756 "EHLO
+        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753084AbeAKDMD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 10 Jan 2018 22:12:03 -0500
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com
+Cc: yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-To follow standard practice in the kernel sources, documenting the
-initialization better and helping quickly finding the value for some
-field in a struct with many entries.
+Do not install cgroup event into the CPU context if the cgroup
+is not running on this CPU
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-syn3hz9hz7ukxlxbx5x6hv20@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+While there is no task of cgroup running specified CPU, current
+kernel still install cgroup event into CPU context, that causes
+another cgroup event can't be installed into this CPU.
+
+Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
 ---
- tools/perf/tests/bpf.c | 59 +++++++++++++++++++++++---------------------------
- 1 file changed, 27 insertions(+), 32 deletions(-)
+ kernel/events/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 057c6b8fdb53..0512f1b5bfdb 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -63,46 +63,41 @@ static struct {
- 	bool	pin;
- } bpf_testcase_table[] = {
- 	{
--		LLVM_TESTCASE_BASE,
--		"Basic BPF filtering",
--		"[basic_bpf_test]",
--		"fix 'perf test LLVM' first",
--		"load bpf object failed",
--		&epoll_wait_loop,
--		(NR_ITERS + 1) / 2,
--		false,
-+		.prog_id	  = LLVM_TESTCASE_BASE,
-+		.desc		  = "Basic BPF filtering",
-+		.name		  = "[basic_bpf_test]",
-+		.msg_compile_fail = "fix 'perf test LLVM' first",
-+		.msg_load_fail	  = "load bpf object failed",
-+		.target_func	  = &epoll_wait_loop,
-+		.expect_result	  = (NR_ITERS + 1) / 2,
- 	},
- 	{
--		LLVM_TESTCASE_BASE,
--		"BPF pinning",
--		"[bpf_pinning]",
--		"fix kbuild first",
--		"check your vmlinux setting?",
--		&epoll_wait_loop,
--		(NR_ITERS + 1) / 2,
--		true,
-+		.prog_id	  = LLVM_TESTCASE_BASE,
-+		.desc		  = "BPF pinning",
-+		.name		  = "[bpf_pinning]",
-+		.msg_compile_fail = "fix kbuild first",
-+		.msg_load_fail	  = "check your vmlinux setting?",
-+		.target_func	  = &epoll_wait_loop,
-+		.expect_result	  = (NR_ITERS + 1) / 2,
-+		.pin 		  = true,
- 	},
- #ifdef HAVE_BPF_PROLOGUE
- 	{
--		LLVM_TESTCASE_BPF_PROLOGUE,
--		"BPF prologue generation",
--		"[bpf_prologue_test]",
--		"fix kbuild first",
--		"check your vmlinux setting?",
--		&llseek_loop,
--		(NR_ITERS + 1) / 4,
--		false,
-+		.prog_id	  = LLVM_TESTCASE_BPF_PROLOGUE,
-+		.desc		  = "BPF prologue generation",
-+		.name		  = "[bpf_prologue_test]",
-+		.msg_compile_fail = "fix kbuild first",
-+		.msg_load_fail	  = "check your vmlinux setting?",
-+		.target_func	  = &llseek_loop,
-+		.expect_result	  = (NR_ITERS + 1) / 4,
- 	},
- #endif
- 	{
--		LLVM_TESTCASE_BPF_RELOCATION,
--		"BPF relocation checker",
--		"[bpf_relocation_test]",
--		"fix 'perf test LLVM' first",
--		"libbpf error when dealing with relocation",
--		NULL,
--		0,
--		false,
-+		.prog_id	  = LLVM_TESTCASE_BPF_RELOCATION,
-+		.desc		  = "BPF relocation checker",
-+		.name		  = "[bpf_relocation_test]",
-+		.msg_compile_fail = "fix 'perf test LLVM' first",
-+		.msg_load_fail	  = "libbpf error when dealing with relocation",
- 	},
- };
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4df5b69..19c587b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2284,6 +2284,7 @@ static int  __perf_install_in_context(void *info)
+ 	struct perf_event_context *ctx = event->ctx;
+ 	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+ 	struct perf_event_context *task_ctx = cpuctx->task_ctx;
++	struct perf_cgroup *cgrp;
+ 	bool reprogram = true;
+ 	int ret = 0;
  
+@@ -2311,6 +2312,19 @@ static int  __perf_install_in_context(void *info)
+ 		raw_spin_lock(&task_ctx->lock);
+ 	}
+ 
++	if (event->cgrp) {
++		/*
++		 * Only care about cgroup events.
++		 *
++		 * If only the task belongs to cgroup of this event,
++		 * we will continue the installment
++		 */
++		cgrp = perf_cgroup_from_task(current, ctx);
++		if (!cgroup_is_descendant(cgrp->css.cgroup,
++					event->cgrp->css.cgroup))
++			goto unlock;
++	}
++
+ 	if (reprogram) {
+ 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+ 		add_event_to_ctx(event, ctx);
 -- 
-2.14.3
+2.8.4.31.g9ed660f
