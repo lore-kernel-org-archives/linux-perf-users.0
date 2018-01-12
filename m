@@ -1,184 +1,191 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf trace: Fix missing handling of --call-graph dwarf
-Date: Fri, 12 Jan 2018 12:01:42 -0300
-Message-ID: <20180112150142.GC9655@kernel.org>
-References: <20180112100355.6456-1-tmricht@linux.vnet.ibm.com>
- <20180112142032.GB9655@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 3/3] tracing: don't set parser->cont if it has reached
+ the end of input buffer
+Date: Fri, 12 Jan 2018 10:31:08 -0500
+Message-ID: <20180112103108.21a8fa22@gandalf.local.home>
+References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
+        <1515491748-25926-4-git-send-email-changbin.du@intel.com>
+        <20180109181241.6b3f5ffb@vmware.local.home>
+        <20180110031823.kewjaztlecxgrhad@intel.com>
+        <20180109231936.17e91d51@vmware.local.home>
+        <20180112040513.hozeldo7p7jwr455@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:56420 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933984AbeALPBs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Jan 2018 10:01:48 -0500
-Content-Disposition: inline
-In-Reply-To: <20180112142032.GB9655@kernel.org>
+        id S933926AbeALPbM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Jan 2018 10:31:12 -0500
+In-Reply-To: <20180112040513.hozeldo7p7jwr455@intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: "Du, Changbin" <changbin.du@intel.com>
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 12, 2018 at 11:20:32AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jan 12, 2018 at 11:03:55AM +0100, Thomas Richter escreveu:
-> > On Intel platform when I execute test case
-> >    probe libc's inet_pton & backtrace it with ping
-> > I get this output which is correct:
+On Fri, 12 Jan 2018 12:05:13 +0800
+"Du, Changbin" <changbin.du@intel.com> wrote:
 
-> > [root@f27 perf]# ./perf trace --no-syscalls
-> > 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-> > PING ::1(::1) 56 data bytes
-> > 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.064 ms
-
-> >  --- ::1 ping statistics ---
-> > 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> > rtt min/avg/max/mdev = 0.064/0.064/0.064/0.000 ms
-> >      0.000 probe_libc:inet_pton:(7f26a88498a0))
-> > 	   __GI___inet_pton (/usr/lib64/libc-2.26.so)
-> > 	   getaddrinfo (/usr/lib64/libc-2.26.so)
-> > 	   main (/usr/bin/ping)
-> > [root@f27 perf]#
+> Hi Rostedt,
+> On Tue, Jan 09, 2018 at 11:19:36PM -0500, Steven Rostedt wrote:
+> > On Wed, 10 Jan 2018 11:18:23 +0800
+> > "Du, Changbin" <changbin.du@intel.com> wrote:
+> >   
+> > > write(3, "abcdefg", 7)    
+> > > > 
+> > > > From my point of view, the above isn't done writing the function name
+> > > > yet and we SHOULD continue waiting for more input.
+> > > >     
+> > > hmm, thanks for the background. Your above case is a postive use case. So by
+> > > this design, instead of write(3, "abcdefg", 7), it should be
+> > > write(3, "abcdefg\0", 8), right?  
 > > 
-> > However when I add the global --call-graph dwarf to the command
-> > line I get the exactly same result which is wrong:
+> > BTW, gcc would translate the above string to 'abcdefg\0\0'. When
+> > defining strings with "", gcc (and all C compilers) append a '\0' to
+> > the end.
+> >   
+> I should clarify the expression here first. :) All the strings here is to express
+> all the content of a string buffer, including the compiler appended '\0'. (Just like
+> the output of 'strace').
+> If this description is still not clear, please let me know!
+
+I was just saying that:
+
+	write(3, "abcdefg\0", 8);
+
+is exactly the same as;
+
+	write(3, "abcdefg", 8);
+
+The '\0' is redundant, as the quoted string adds it. In other words
+
+	sizeof("abcdefg") returns 8
+
+> 
+> > But I replied to the first patch, saying that allowing \0 as whitespace
+> > may be OK, given the usecase I showed.
+> >   
+> > > 
+> > > If true, it means kernel expect userspace write every string terminated with
+> > > '\0'. So to fix this issue:
+> > > open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
+> > > write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+> > > 
+> > > Fix would be:
+> > > write(3, "\0", 1)?
+> > > 
+> > > So far, I am still confused. Some of the tracing debugfs entr0y accept '\0'
+> > > while some not. AFIK, 'echo xxx > <path to tracing file>' always has a '\0'
+> > > terminated.  
 > > 
-> > [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> > 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
+> > I don't believe that's true.
 > > 
-> > My understanding is that the '--call-graph dwarf' option should be global
-> > and applies to all events. However it is ignored.
+> >  $ echo -n abc > /tmp/abc
+> >  $ wc /tmp/abc
+> >  0 1 3 /tmp/abc
+> > 
+> > Echo writes only the characters you put on the line, nothing more.
+> >   
+> Sorry, I misundertood it. The extra character is '\n'.
+>   $ echo abc > set_ftrace_filter
+>     0.000 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x4)
+>   $ echo -n abc > set_ftrace_filter
+>     8889.832 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x3)
 > 
-> It is global, but then, per-event settings can override it.
+> > Note, when the file descriptor is closed, the code also executes on
+> > what was written but not terminated. That is:
+> > 
+> > 	write(fd, "abc", 3);
+> > 	close(fd);
+> > 
+> > Will keep the "abc" in the continue buffer, but the closing of the file
+> > descriptor will flush it, and execute it.
+> >   
+> Thanks, so now I unstand why below corner case. The userspace try to set the
+> filter with a unrecognized symbole name (e.g "abcdefg").
+> open("/sys/kernel/debug/tracing/set_ftrace_filter", O_WRONLY|O_TRUNC) = 3
+> write(3, "abcdefg", 7)
 > 
-> So if you say that the following call (without that /max-stack=3/, which
-> implies DWARF, which is the safest bet for userspace callchains):
-> [root@jouet ~]# perf trace --no-syscalls --call-graph dwarf -e probe_libc:inet_pton ping -6 -c 1 ::1
-> PING ::1(::1) 56 data bytes
-> 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.086 ms
+> Since "abcdefg" is not in the symbole list, so we would expect the write return
+> -EINVAL, right? As below:
+> # echo abcdefg > set_ftrace_filter
+> bash: echo: write error: Invalid argument
+
+The write itself doesn't finish the operation. There may be another
+write. In other words:
+
+	write(3, "do_", 3);
+	write(3, "IRQ\n", 4);
+
+Should both return success, even though it only enabled do_IRQ.
+
 > 
-> --- ::1 ping statistics ---
-> 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> rtt min/avg/max/mdev = 0.086/0.086/0.086/0.000 ms
->      0.000 probe_libc:inet_pton:(7fafee7ce350))
-> [root@jouet ~]#
+> But the above mechanism hide the error. It return success actually no filter is
+> apllied at all.
+> # echo -n abcdefg > set_ftrace_filter
 > 
-> And it doesn't work, right, that is a bug. I'll check if your patch
-> fixes that and then will correct the cset log, i.e. this part:
+> I think in this case kernel may request the userspace append a '\0' or space to the
+> string buffer so everything can work.
 > 
-> [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
+> Also there is another corner case. Below write dosn't work.
+> open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
+> write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
 > 
-> Should read:
+> While these works:
+> # echo "" > set_ftrace_pid
+> # echo " " > set_ftrace_pid
+> # echo -n " " > set_ftrace_pid
 > 
-> [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> 		-e probe_libc:inet_pton ping -6 -c 1 ::1
-> 
-> And _should_ produce a call-graph, without a stack limit, ok?
-> 
-> I'll reply to this message after testing your patch.
+> These is the reason why I think '\0' should be recognized by the parser.
 
-You patch works as advertised, but we only get the callgraph if we
-specify max-stack in the event definition, which is odd, i.e. it serves
-to ask for callgraphs, but then its value is ignored, to make it clear,
-with your patch applied I get:
+Hmm, thinking about this more, I do partially agree with you. We should
+accept '\0' but I disagree that it should be treated as a space. I
+don't want hidden code.
 
-[root@jouet ~]# perf trace --no-syscalls --call-graph dwarf -e probe_libc:inet_pton ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.079 ms
+It should be treated as a terminator. And carefully as well.
 
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.079/0.079/0.079/0.000 ms
-     0.000 probe_libc:inet_pton:(7f4585f7d350))
-[root@jouet ~]# 
+	write(3, "do_IRQ", 7);
 
-Which is a bug, the global setting should have been applied to the only
-event set.
+Which will send to the kernel 'd' 'o' '_' 'I' 'R' 'Q' '\0' when the
+kernel sees the '\0', and the write has not sent anything else, it
+should go ahead and execute 'do_IRQ'
 
-Also:
+This will allow for this to work:
 
-[root@jouet ~]# perf trace --no-syscalls --call-graph dwarf --max-stack=3 -e probe_libc:inet_pton ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.065 ms
+	char *funcs[] = { "do_IRQ", "schedule", NULL };
 
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.065/0.065/0.065/0.000 ms
-     0.000 probe_libc:inet_pton:(7ffac40fa350))
-[root@jouet ~]# 
+	for (i = 0; funcs[i]; i++) {
+		ret = write(3, funcs[i], strlen(funcs[i]) + 1);
+		if (ret < 0)
+			exit(-1);
+	}
 
-Also doesn't work, which also is a bug, DWARF callgraphs should have
-been set _and_ limited to 3 levels.
 
-[root@jouet ~]# perf trace --no-syscalls -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.063 ms
+Now if someone were to write:
 
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.063/0.063/0.063/0.000 ms
-     0.000 probe_libc:inet_pton:(7f79a0312350))
-                                       __GI___inet_pton (/usr/lib64/libc-2.26.so)
-                                       getaddrinfo (/usr/lib64/libc-2.26.so)
-                                       [0xffffa9fef2875f40] (/usr/bin/ping)
-[root@jouet ~]#
+	write(3, "do_IRQ\0schedule", 16);
 
-Works as advertised, i.e. it sets DWARF callgraphs for that event only
-and limits it to 3.
+That should return an error.
 
-Then if we try with your patch:
+Why?
 
-[root@jouet ~]# perf trace --no-syscalls --call-graph dwarf -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.082 ms
+Because these are strings, and most tools treat '\0' as a nul
+terminator to a string. If we allow for tools to send data after that
+nul terminator, we are opening up a way for those interacting with
+these tools to sneak in strings that are not visible.
 
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.082/0.082/0.082/0.000 ms
-     0.000 probe_libc:inet_pton:(7f4c3d953350))
-                                       __inet_pton (inlined)
-                                       gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
-                                       __GI_getaddrinfo (inlined)
-                                       [0xffffaa1b49e1ef3f] (/usr/bin/ping)
-                                       __libc_start_main (/usr/lib64/libc-2.26.so)
-                                       [0xffffaa1b49e1f379] (/usr/bin/ping)
-[root@jouet ~]#
+Say we have some admin tools that is doing tracing, and takes input.
+And all the input is logged. And say the tool does something like:
 
-It works but ignores the max-stack setting, which is wrong, as per-event
-setting should override global ones.
 
-So what I think is happening is that --call-graph is only affecting
-syscall events, i.e.:
+	r = read(0, buf, sizeof(buf));
+	if (r < 0 || r > sizeof(buf) - 1)
+		return -1;
+	log("Adding to output %s\n", buf);
+	write(3, buf, r);
 
-[root@jouet ~]# perf trace -e nanosleep sleep 1
-     1.047 (1000.182 ms): sleep/11767 nanosleep(rqtp: 0x7ffc7fbdf060) = 0
-[root@jouet ~]# perf trace --call-graph dwarf -e nanosleep sleep 1
-no symbols found in /usr/bin/sleep, maybe install a debug package?
-     0.380 (1000.161 ms): sleep/11772 nanosleep(rqtp: 0x7ffffe08a460) = 0
-                                       __GI___nanosleep (inlined)
-                                       [0xffffa9e3d99a0856] (/usr/bin/sleep)
-                                       [0xffffa9e3d99a062f] (/usr/bin/sleep)
-                                       [0xffffa9e3d999d903] (/usr/bin/sleep)
-                                       __libc_start_main (/usr/lib64/libc-2.26.so)
-                                       [0xffffa9e3d999d9f9] (/usr/bin/sleep)
-[root@jouet ~]# perf trace --call-graph dwarf --max-stack 3 -e nanosleep sleep 1
-no symbols found in /usr/bin/sleep, maybe install a debug package?
-     0.954 (1000.160 ms): sleep/11786 nanosleep(rqtp: 0x7ffdd19d42c0) = 0
-                                       __GI___nanosleep (inlined)
-                                       [0xffffa9ed007bd856] (/usr/bin/sleep)
-                                       [0xffffa9ed007bd62f] (/usr/bin/sleep)
-[root@jouet ~]# perf trace --max-stack 3 -e nanosleep sleep 1
-no symbols found in /usr/bin/sleep, maybe install a debug package?
-     0.745 (1000.170 ms): sleep/11791 nanosleep(rqtp: 0x7ffd0f665590) = 0
-                                       __GI___nanosleep (inlined)
-                                       [0xffffaa6de4631856] (/usr/bin/sleep)
-                                       [0xffffaa6de463162f] (/usr/bin/sleep)
-[root@jouet ~]#
+The "Adding to output" would only show up to the '\0', but if we allow
+that write to process after the '\0' then we just allowed the user to
+circumvent the log.
 
-So what we should fix is the setting of --call-graph and --max-stack in
-the non syscall events, that became supported by 'perf trace' later, so
-I'm not applying your patch and will try later to fix this, unless you
-beat me to it.
-
-Thanks!
-
-- Arnaldo
+-- Steve
