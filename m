@@ -1,116 +1,38 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf trace: Fix missing handling of --call-graph dwarf
-Date: Fri, 12 Jan 2018 13:47:06 -0300
-Message-ID: <20180112164706.GE9655@kernel.org>
-References: <20180112100355.6456-1-tmricht@linux.vnet.ibm.com>
- <20180112142032.GB9655@kernel.org>
- <20180112150142.GC9655@kernel.org>
+Subject: Re: Perf stat: add the date for each measurement
+Date: Fri, 12 Jan 2018 13:48:13 -0300
+Message-ID: <20180112164813.GF9655@kernel.org>
+References: <416177EA-7E58-419F-8E1B-81118DEB8152@hpe.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:35886 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934027AbeALQrJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Jan 2018 11:47:09 -0500
+        id S934081AbeALQsR (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Jan 2018 11:48:17 -0500
 Content-Disposition: inline
-In-Reply-To: <20180112150142.GC9655@kernel.org>
+In-Reply-To: <416177EA-7E58-419F-8E1B-81118DEB8152@hpe.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: "Pourroy, Jean" <jean.pourroy@hpe.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Em Fri, Jan 12, 2018 at 12:01:42PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jan 12, 2018 at 11:20:32AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Jan 12, 2018 at 11:03:55AM +0100, Thomas Richter escreveu:
-> > > On Intel platform when I execute test case
-> > >    probe libc's inet_pton & backtrace it with ping
-> > > I get this output which is correct:
+Em Thu, Jan 11, 2018 at 03:09:15PM +0000, Pourroy, Jean escreveu:
+> Hello everyone,
 > 
-> > > [root@f27 perf]# ./perf trace --no-syscalls
-> > > 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-> > > PING ::1(::1) 56 data bytes
-> > > 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.064 ms
+> Do you know if there is a way to add the date on each line of the « perf stat » results (first column in the example above).
+> Here an example of what I want to get:
 > 
-> > >  --- ::1 ping statistics ---
-> > > 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> > > rtt min/avg/max/mdev = 0.064/0.064/0.064/0.000 ms
-> > >      0.000 probe_libc:inet_pton:(7f26a88498a0))
-> > > 	   __GI___inet_pton (/usr/lib64/libc-2.26.so)
-> > > 	   getaddrinfo (/usr/lib64/libc-2.26.so)
-> > > 	   main (/usr/bin/ping)
-> > > [root@f27 perf]#
-> > > 
-> > > However when I add the global --call-graph dwarf to the command
-> > > line I get the exactly same result which is wrong:
-> > > 
-> > > [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> > > 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-> > > 
-> > > My understanding is that the '--call-graph dwarf' option should be global
-> > > and applies to all events. However it is ignored.
-> > 
-> > It is global, but then, per-event settings can override it.
-> > 
-> > So if you say that the following call (without that /max-stack=3/, which
-> > implies DWARF, which is the safest bet for userspace callchains):
-> > [root@jouet ~]# perf trace --no-syscalls --call-graph dwarf -e probe_libc:inet_pton ping -6 -c 1 ::1
-> > PING ::1(::1) 56 data bytes
-> > 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.086 ms
-> > 
-> > --- ::1 ping statistics ---
-> > 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> > rtt min/avg/max/mdev = 0.086/0.086/0.086/0.000 ms
-> >      0.000 probe_libc:inet_pton:(7fafee7ce350))
-> > [root@jouet ~]#
-> > 
-> > And it doesn't work, right, that is a bug. I'll check if your patch
-> > fixes that and then will correct the cset log, i.e. this part:
-> > 
-> > [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> > 		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-> > 
-> > Should read:
-> > 
-> > [root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
-> > 		-e probe_libc:inet_pton ping -6 -c 1 ::1
-> > 
-> > And _should_ produce a call-graph, without a stack limit, ok?
-> > 
-> > I'll reply to this message after testing your patch.
 > 
-> You patch works as advertised, but we only get the callgraph if we
-> specify max-stack in the event definition, which is odd, i.e. it serves
-> to ask for callgraphs, but then its value is ignored, to make it clear,
-> with your patch applied I get:
+> @../test > perf stat -a  -e uncore_imc_0/cas_count_read/  -I 1000 sleep 3
 > 
-> [root@jouet ~]# perf trace --no-syscalls --call-graph dwarf -e probe_libc:inet_pton ping -6 -c 1 ::1
-> PING ::1(::1) 56 data bytes
-> 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.079 ms
-> 
-> --- ::1 ping statistics ---
-> 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> rtt min/avg/max/mdev = 0.079/0.079/0.079/0.000 ms
->      0.000 probe_libc:inet_pton:(7f4585f7d350))
-> [root@jouet ~]# 
-> 
-> Which is a bug, the global setting should have been applied to the only
-> event set.
+> # <date +%s>		time counts	unit 		events
+> 1515682946     	1.001277764 	1.72 MiB  uncore_imc_0/cas_count_read/
+> 1515682947     	2.002748567 	1.90 MiB  uncore_imc_0/cas_count_read/
+> 1515682948		3.003294258 	4.68 MiB  uncore_imc_0/cas_count_read/
+> …
 
-Please pull my perf/core branch, there are two csets there that should
-fix this:
-
-[acme@jouet perf]$ git log --oneline -2
-cc28fec89f2a (HEAD -> perf/core, acme.korg/perf/core) perf trace: Fix setting of --call-graph/--max-stack for non-syscall events
-236d812c55c2 perf trace: No need to set PERF_SAMPLE_IDENTIFIER explicitely
-[acme@jouet perf]$
-
-https://git.kernel.org/acme/c/cc28fec89f2a
-https://git.kernel.org/acme/c/236d812c55c2
-
-236d812c55c2 is just a simplification to make cc28fec89f2a smaller and
-with just one purpose.
-
-There is still room for improvement, I noticed overriding is not working
-for the probe event, investigating it now.
+Not that I can remember, but a patch for that would be welcome :-)
 
 - Arnaldo
