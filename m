@@ -1,101 +1,120 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 1/2] perf-probe: Ensure debuginfo's build-id is correct
-Date: Fri, 12 Jan 2018 01:21:19 +0900
-Message-ID: <20180112012119.224a695b87e106e7bd205da1@kernel.org>
-References: <151358211494.25261.16134489192749792799.stgit@devbox>
-        <151358214328.25261.6660021248431426149.stgit@devbox>
-        <20180104161728.GC14721@kernel.org>
-        <20180111213119.b5e03409d6beb27e3f34fc5a@kernel.org>
-        <20180111145932.GB3025@kernel.org>
-        <20180111150631.GC3025@kernel.org>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH 3/3] tracing: don't set parser->cont if it has reached
+ the end of input buffer
+Date: Fri, 12 Jan 2018 12:05:13 +0800
+Message-ID: <20180112040513.hozeldo7p7jwr455@intel.com>
+References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
+ <1515491748-25926-4-git-send-email-changbin.du@intel.com>
+ <20180109181241.6b3f5ffb@vmware.local.home>
+ <20180110031823.kewjaztlecxgrhad@intel.com>
+ <20180109231936.17e91d51@vmware.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180111150631.GC3025@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: mhiramat@kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:24700 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932860AbeALENa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Jan 2018 23:13:30 -0500
+Content-Disposition: inline
+In-Reply-To: <20180109231936.17e91d51@vmware.local.home>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Du, Changbin" <changbin.du@intel.com>, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Thu, 11 Jan 2018 12:06:31 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Em Thu, Jan 11, 2018 at 11:59:32AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Jan 11, 2018 at 09:31:19PM +0900, Masami Hiramatsu escreveu:
-> > > On Thu, 4 Jan 2018 13:17:28 -0300
-> > > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > Em Mon, Dec 18, 2017 at 04:29:03PM +0900, Masami Hiramatsu escreveu:
-> > > > > Ensure that the build-id of debuginfo is correctly matched to
-> > > > > target build-id, if not, it warns user to check the system
-> > > > > debuginfo package is correctly installed.
+Hi Rostedt,
+On Tue, Jan 09, 2018 at 11:19:36PM -0500, Steven Rostedt wrote:
+> On Wed, 10 Jan 2018 11:18:23 +0800
+> "Du, Changbin" <changbin.du@intel.com> wrote:
 > 
-> > > > So we look at a variety of files looking for one that has a matching
-> > > > build-id, I think the warning message should state that the file with
-> > > > the unmatched build-id is simply being skipped, no?
+> > write(3, "abcdefg", 7)  
+> > > 
+> > > From my point of view, the above isn't done writing the function name
+> > > yet and we SHOULD continue waiting for more input.
+> > >   
+> > hmm, thanks for the background. Your above case is a postive use case. So by
+> > this design, instead of write(3, "abcdefg", 7), it should be
+> > write(3, "abcdefg\0", 8), right?
 > 
-> > > Actually, this patch series came from your request that you faced
-> > > buildid mismatch between running binary and debuginfo binary, and
-> > > you asked me to show the message to tell user what he needs to
-> > > check.
+> BTW, gcc would translate the above string to 'abcdefg\0\0'. When
+> defining strings with "", gcc (and all C compilers) append a '\0' to
+> the end.
 > 
-> > > > And why do this at 'perf probe -l' time? I.e. at that point whatever
-> > > > probes that are in place already have all the needed debug info?
+I should clarify the expression here first. :) All the strings here is to express
+all the content of a string buffer, including the compiler appended '\0'. (Just like
+the output of 'strace').
+If this description is still not clear, please let me know!
+
+> But I replied to the first patch, saying that allowing \0 as whitespace
+> may be OK, given the usecase I showed.
 > 
-> > > As I pointed, this is not only for perf-probe -l but also perf-probe -a
 > > 
-> > yeah, I recently noticed this while doind a gdb session, where it warned
-> > about buildid mismatches.
->  
-> > I'll apply your patch, thanks for working on it!
+> > If true, it means kernel expect userspace write every string terminated with
+> > '\0'. So to fix this issue:
+> > open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
+> > write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+> > 
+> > Fix would be:
+> > write(3, "\0", 1)?
+> > 
+> > So far, I am still confused. Some of the tracing debugfs entry accept '\0'
+> > while some not. AFIK, 'echo xxx > <path to tracing file>' always has a '\0'
+> > terminated.
 > 
-> Trying to test it, got no warning for the vmlinux case, need to
-> investigate, but have not time right now, so, just for documenting it
-> here and letting you know:
+> I don't believe that's true.
+> 
+>  $ echo -n abc > /tmp/abc
+>  $ wc /tmp/abc
+>  0 1 3 /tmp/abc
+> 
+> Echo writes only the characters you put on the line, nothing more.
+> 
+Sorry, I misundertood it. The extra character is '\n'.
+  $ echo abc > set_ftrace_filter
+    0.000 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x4)
+  $ echo -n abc > set_ftrace_filter
+    8889.832 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x3)
 
-Thank you for reporting! hmm, I just tested glibc. So I need to
-recheck with vmlinux case. Tomorrow I'll investigate it.
+> Note, when the file descriptor is closed, the code also executes on
+> what was written but not terminated. That is:
+> 
+> 	write(fd, "abc", 3);
+> 	close(fd);
+> 
+> Will keep the "abc" in the continue buffer, but the closing of the file
+> descriptor will flush it, and execute it.
+> 
+Thanks, so now I unstand why below corner case. The userspace try to set the
+filter with a unrecognized symbole name (e.g "abcdefg").
+open("/sys/kernel/debug/tracing/set_ftrace_filter", O_WRONLY|O_TRUNC) = 3
+write(3, "abcdefg", 7)
 
-Thanks!
+Since "abcdefg" is not in the symbole list, so we would expect the write return
+-EINVAL, right? As below:
+# echo abcdefg > set_ftrace_filter
+bash: echo: write error: Invalid argument
 
-> 
-> [root@jouet ~]# perf probe $verbose "vfs_getname=getname_flags:72 pathname=result->name:string"
-> Added new event:
->   probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe:vfs_getname -aR sleep 1
-> 
-> [root@jouet ~]# perf probe -l
->   probe:vfs_getname    (on getname_flags:72@acme/git/linux/fs/namei.c with pathname)
-> [root@jouet ~]# 
-> [root@jouet ~]# uname -a
-> Linux jouet 4.15.0-rc7+ #6 SMP Thu Jan 11 11:39:11 -03 2018 x86_64 x86_64 x86_64 GNU/Linux
-> [root@jouet ~]# mv /lib/modules/4.15.0-rc7+/build/vmlinux /lib/modules/4.15.0-rc7+/build/vmlinux.OFF
-> [root@jouet ~]# cp /lib/modules/4.14.0+/build/vmlinux /lib/modules/4.15.0-rc7+/build/vmlinux
-> [root@jouet ~]# perf probe -l
->   probe:vfs_getname    (on getname_flags+147 with pathname)
-> [root@jouet ~]# perf probe -v -l
-> Opening /sys/kernel/debug/tracing//kprobe_events write=0
-> Opening /sys/kernel/debug/tracing//uprobe_events write=0
-> Parsing probe_events: p:probe/vfs_getname _text+2601267 pathname=+0(+0(%bx)):string
-> Group:probe Event:vfs_getname probe:p
-> Looking at the vmlinux_path (8 entries long)
-> symsrc__init: build id mismatch for /lib/modules/4.15.0-rc7+/build/vmlinux.
-> symsrc__init: cannot get elf header.
-> Using /proc/kcore for kernel object code
-> Using /proc/kallsyms for symbols
-> try to find information at 27b133 in kernel
-> Looking at the vmlinux_path (8 entries long)
-> symsrc__init: build id mismatch for /lib/modules/4.15.0-rc7+/build/vmlinux.
-> Failed to find the path for kernel: No such file or directory
-> Failed to find corresponding probes from debuginfo.
->   probe:vfs_getname    (on getname_flags+147 with pathname)
-> [root@jouet ~]#
-> 
-> - Arnaldo
+But the above mechanism hide the error. It return success actually no filter is
+apllied at all.
+# echo -n abcdefg > set_ftrace_filter
 
+I think in this case kernel may request the userspace append a '\0' or space to the
+string buffer so everything can work.
+
+Also there is another corner case. Below write dosn't work.
+open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
+write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+
+While these works:
+# echo "" > set_ftrace_pid
+# echo " " > set_ftrace_pid
+# echo -n " " > set_ftrace_pid
+
+These is the reason why I think '\0' should be recognized by the parser.
+
+> -- Steve
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Changbin Du
