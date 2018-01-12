@@ -1,120 +1,171 @@
-From: "Du, Changbin" <changbin.du@intel.com>
-Subject: Re: [PATCH 3/3] tracing: don't set parser->cont if it has reached
- the end of input buffer
-Date: Fri, 12 Jan 2018 12:05:13 +0800
-Message-ID: <20180112040513.hozeldo7p7jwr455@intel.com>
-References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
- <1515491748-25926-4-git-send-email-changbin.du@intel.com>
- <20180109181241.6b3f5ffb@vmware.local.home>
- <20180110031823.kewjaztlecxgrhad@intel.com>
- <20180109231936.17e91d51@vmware.local.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH v2] perf trace: Fix missing handling of --call-graph dwarf
+Date: Fri, 12 Jan 2018 11:03:55 +0100
+Message-ID: <20180112100355.6456-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:24700 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932860AbeALENa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Jan 2018 23:13:30 -0500
-Content-Disposition: inline
-In-Reply-To: <20180109231936.17e91d51@vmware.local.home>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44138 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1754483AbeALKEF (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Jan 2018 05:04:05 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w0CA3l7Z162426
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jan 2018 05:04:04 -0500
+Received: from e06smtp13.uk.ibm.com (e06smtp13.uk.ibm.com [195.75.94.109])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2fesbjc1w0-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jan 2018 05:04:04 -0500
+Received: from localhost
+        by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Fri, 12 Jan 2018 10:04:02 -0000
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Du, Changbin" <changbin.du@intel.com>, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
+On Intel platform when I execute test case
+   probe libc's inet_pton & backtrace it with ping
+I get this output which is correct:
 
-Hi Rostedt,
-On Tue, Jan 09, 2018 at 11:19:36PM -0500, Steven Rostedt wrote:
-> On Wed, 10 Jan 2018 11:18:23 +0800
-> "Du, Changbin" <changbin.du@intel.com> wrote:
-> 
-> > write(3, "abcdefg", 7)  
-> > > 
-> > > From my point of view, the above isn't done writing the function name
-> > > yet and we SHOULD continue waiting for more input.
-> > >   
-> > hmm, thanks for the background. Your above case is a postive use case. So by
-> > this design, instead of write(3, "abcdefg", 7), it should be
-> > write(3, "abcdefg\0", 8), right?
-> 
-> BTW, gcc would translate the above string to 'abcdefg\0\0'. When
-> defining strings with "", gcc (and all C compilers) append a '\0' to
-> the end.
-> 
-I should clarify the expression here first. :) All the strings here is to express
-all the content of a string buffer, including the compiler appended '\0'. (Just like
-the output of 'strace').
-If this description is still not clear, please let me know!
+[root@f27 perf]# ./perf trace --no-syscalls
+		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.064 ms
 
-> But I replied to the first patch, saying that allowing \0 as whitespace
-> may be OK, given the usecase I showed.
-> 
-> > 
-> > If true, it means kernel expect userspace write every string terminated with
-> > '\0'. So to fix this issue:
-> > open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
-> > write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
-> > 
-> > Fix would be:
-> > write(3, "\0", 1)?
-> > 
-> > So far, I am still confused. Some of the tracing debugfs entry accept '\0'
-> > while some not. AFIK, 'echo xxx > <path to tracing file>' always has a '\0'
-> > terminated.
-> 
-> I don't believe that's true.
-> 
->  $ echo -n abc > /tmp/abc
->  $ wc /tmp/abc
->  0 1 3 /tmp/abc
-> 
-> Echo writes only the characters you put on the line, nothing more.
-> 
-Sorry, I misundertood it. The extra character is '\n'.
-  $ echo abc > set_ftrace_filter
-    0.000 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x4)
-  $ echo -n abc > set_ftrace_filter
-    8889.832 probe:ftrace_filter_write_line0:(ffffffffa7b8db80) ubuf=0xc77408 cnt=0x3)
+ --- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.064/0.064/0.064/0.000 ms
+     0.000 probe_libc:inet_pton:(7f26a88498a0))
+	   __GI___inet_pton (/usr/lib64/libc-2.26.so)
+	   getaddrinfo (/usr/lib64/libc-2.26.so)
+	   main (/usr/bin/ping)
+[root@f27 perf]#
 
-> Note, when the file descriptor is closed, the code also executes on
-> what was written but not terminated. That is:
-> 
-> 	write(fd, "abc", 3);
-> 	close(fd);
-> 
-> Will keep the "abc" in the continue buffer, but the closing of the file
-> descriptor will flush it, and execute it.
-> 
-Thanks, so now I unstand why below corner case. The userspace try to set the
-filter with a unrecognized symbole name (e.g "abcdefg").
-open("/sys/kernel/debug/tracing/set_ftrace_filter", O_WRONLY|O_TRUNC) = 3
-write(3, "abcdefg", 7)
+However when I add the global --call-graph dwarf to the command
+line I get the exactly same result which is wrong:
 
-Since "abcdefg" is not in the symbole list, so we would expect the write return
--EINVAL, right? As below:
-# echo abcdefg > set_ftrace_filter
-bash: echo: write error: Invalid argument
+[root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
+		-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
 
-But the above mechanism hide the error. It return success actually no filter is
-apllied at all.
-# echo -n abcdefg > set_ftrace_filter
+My understanding is that the '--call-graph dwarf' option should be global
+and applies to all events. However it is ignored.
+The issue is buried in function apply_config_terms() called from
+trace__run()
+ --> perf_evlist__config()
+     --> perf_evsel__config()
+           --> apply_config_terms()
 
-I think in this case kernel may request the userspace append a '\0' or space to the
-string buffer so everything can work.
+This function iterates over all additional terms and handles the
+/max-stack=<xx>/ case. However if there is no additional call-graph=dwarf
+setting as in -e probe_libc:inet_pton/max-stack=3,call-graph=dwarf/
+the function defaults to "fp" regardless of the value of --call-graph
+global command line flag.
 
-Also there is another corner case. Below write dosn't work.
-open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
-write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+So when I add ,call-graph=dwarf to the event I get a good result:
 
-While these works:
-# echo "" > set_ftrace_pid
-# echo " " > set_ftrace_pid
-# echo -n " " > set_ftrace_pid
+[root@f27 perf]# ./perf trace --no-syscalls
+	-e probe_libc:inet_pton/max-stack=3,call-graph=dwarf/
+	ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.084 ms
 
-These is the reason why I think '\0' should be recognized by the parser.
+ --- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.084/0.084/0.084/0.000 ms
+     0.000 probe_libc:inet_pton:(7f9372a988a0))
+	   __inet_pton (inlined)
+	   gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+	   __GI_getaddrinfo (inlined)
+	   main (/usr/bin/ping)
+	   __libc_start_main (/usr/lib64/libc-2.26.so)
+	   _start (/usr/bin/ping)
+[root@f27 perf]#
 
-> -- Steve
+In fact the looks pretty similar to the output on s390x which only has
+dwarf support.
+Ok the max-stack is not observed, but this time the global --max-stack <x>
+comes to rescue and limits the output:
 
+[root@f27 perf]# ./perf trace --no-syscalls --max-stack 4
+	-e probe_libc:inet_pton/max-stack=3,call-graph=dwarf/ ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.061 ms
+
+ --- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.061/0.061/0.061/0.000 ms
+     0.000 probe_libc:inet_pton:(7fc9f6c188a0))
+	   __inet_pton (inlined)
+	   gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+	   __GI_getaddrinfo (inlined)
+	   main (/usr/bin/ping)
+[root@f27 perf]#
+
+This patch applies the global --call-graph <xxx> setting to the individual
+events.
+
+With this patch applied:
+[root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf
+	-e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.066 ms
+
+ --- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.066/0.066/0.066/0.000 ms
+     0.000 probe_libc:inet_pton:(7fe74f8358a0))
+	   __inet_pton (inlined)
+	   gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+	   __GI_getaddrinfo (inlined)
+	   main (/usr/bin/ping)
+	   __libc_start_main (/usr/lib64/libc-2.26.so)
+	   _start (/usr/bin/ping)
+[root@f27 perf]#
+
+When using dwarf the /max-stack=<x>/ is not observed.
+The reason is that for call-graph=fp the kernel stack unwinder
+is used and it stops after unwinding x entries.
+For dwarf the complete stack data is returned and the unwinding
+is done by perf itself and it uses --max-stack <x>
+command line flag.
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/util/evsel.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d5fbcf8c7aa7..d1c25aafb821 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -788,8 +788,24 @@ static void apply_config_terms(struct perf_evsel *evsel,
+ 	if ((callgraph_buf != NULL) || (dump_size > 0) || max_stack) {
+ 		if (max_stack) {
+ 			param.max_stack = max_stack;
+-			if (callgraph_buf == NULL)
+-				callgraph_buf = "fp";
++			if (callgraph_buf == NULL) {
++				switch (callchain_param.record_mode) {
++				case CALLCHAIN_DWARF:
++					callgraph_buf = "dwarf";
++					break;
++				case CALLCHAIN_NONE:
++				case CALLCHAIN_FP:
++					callgraph_buf = "fp";
++					break;
++				case CALLCHAIN_LBR:
++					callgraph_buf = "lbr";
++					break;
++				default:
++				case CALLCHAIN_MAX:
++					callgraph_buf = "no";
++					break;
++				}
++			}
+ 		}
+ 
+ 		/* parse callgraph parameters */
 -- 
-Thanks,
-Changbin Du
+2.14.3
