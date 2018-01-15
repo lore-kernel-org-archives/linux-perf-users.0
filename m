@@ -1,73 +1,120 @@
-From: changbin.du@intel.com
-Subject: [PATCH v2 1/3] tracing: detect the string termination character when parsing user input string
-Date: Mon, 15 Jan 2018 19:41:12 +0800
-Message-ID: <1516016474-5581-2-git-send-email-changbin.du@intel.com>
-References: <1516016474-5581-1-git-send-email-changbin.du@intel.com>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] perf trace: Fix missing handling of --call-graph dwarf
+Date: Mon, 15 Jan 2018 13:31:00 +0100
+Message-ID: <8d20a732-25af-968c-f3a9-1a1336854851@linux.vnet.ibm.com>
+References: <20180112100355.6456-1-tmricht@linux.vnet.ibm.com>
+ <20180112142032.GB9655@kernel.org> <20180112150142.GC9655@kernel.org>
+ <20180112164706.GE9655@kernel.org> <20180112200229.GI9655@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516016474-5581-1-git-send-email-changbin.du@intel.com>
+In-Reply-To: <20180112200229.GI9655@kernel.org>
+Content-Language: en-IE
 Sender: linux-kernel-owner@vger.kernel.org
-To: rostedt@goodmis.org
-Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Changbin Du <changbin.du@intel.com>
+On 01/12/2018 09:02 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 12, 2018 at 01:47:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+>> There is still room for improvement, I noticed overriding is not working
+>> for the probe event, investigating it now.
+> 
+> So, I had to fix this another way to get the possibility of overwriting
+> the global options (--max-stack, --call-graph) in an specific tracepoint
+> event:
+> 
+> http://git.kernel.org/acme/c/08e26396c6f2
+> 
+> replaced that HEAD.
+> 
+> This cset may take some more minutes to show up, just pushed.
+> 
 
-The usersapce can give a '\0' terminated C string in the input buffer.
-Before this change, trace_get_user() will return a parsed string "\0" in
-below case which is not expected (expects it skip all inputs) and cause the
-caller failed.
+I have installed your perf/core tree on my Fedora 27 Virtual Machine
+running on my Intel notebook.
 
-open("/sys/kernel/debug/tracing//set_ftrace_pid", O_WRONLY|O_TRUNC) = 3
-write(3, " \0", 2)                      = -1 EINVAL (Invalid argument)
+Here are some commands and the output on an Intel platform:
 
-while parse can handle spaces, so below works.
+[root@f27 perf]# uname -a
+Linux f27 4.15.0-rc6acme+ #1 SMP Mon Jan 15 12:35:23 CET 2018 x86_64 x86_64 x86_64 GNU/Linux
+[root@f27 perf]#
 
-$ echo "" > set_ftrace_pid
-$ echo " " > set_ftrace_pid
-$ echo -n " " > set_ftrace_pid
+[root@f27 perf]# ./perf trace --no-syscalls --call-graph fp --max-stack 3
+        -e probe_libc:inet_pton ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.022 ms
+     0.000 probe_libc:inet_pton:
+ --- ::1 ping statistics ---
+(7f8fc407d8a0))
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.022/0.022/0.022/0.000 ms
+[root@f27 perf]#
 
-This patch try to make the parser '\0' aware to fix such issue. When parser
-sees a '\0' it stops further parsing. With this change, write(3, " \0", 2)
-will work.
+--> No call graph at all, the kernel as been compiled with ORC unwinder.
 
-Signed-off-by: Changbin Du <changbin.du@intel.com>
+[root@f27 perf]# ./perf trace --no-syscalls --call-graph dwarf --max-stack 3
+        -e probe_libc:inet_pton ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.024 ms
 
----
-  v2: Stop parsing when '\0' found.
----
- kernel/trace/trace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.024/0.024/0.024/0.000 ms
+0.000 probe_libc:inet_pton:(7f7ff38488a0))
+[root@f27 perf]#
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2a8d8a2..144d08e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1237,7 +1237,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		}
- 
- 		/* only spaces were written */
--		if (isspace(ch)) {
-+		if (isspace(ch) || !ch) {
- 			*ppos += read;
- 			ret = read;
- 			goto out;
-@@ -1247,7 +1247,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 	}
- 
- 	/* read the non-space input */
--	while (cnt && !isspace(ch)) {
-+	while (cnt && !isspace(ch) && ch) {
- 		if (parser->idx < parser->size - 1)
- 			parser->buffer[parser->idx++] = ch;
- 		else {
-@@ -1262,7 +1262,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 	}
- 
- 	/* We either got finished input or we have to wait for another call. */
--	if (isspace(ch)) {
-+	if (isspace(ch) || !ch) {
- 		parser->buffer[parser->idx] = 0;
- 		parser->cont = false;
- 	} else if (parser->idx < parser->size - 1) {
+--> No call graph at all, the kernel as been compiled with OCR unwinder.
+
+[root@f27 perf]# ./perf trace --no-syscalls
+        -e probe_libc:inet_pton/call-graph=dwarf,max-stack=4/
+        ping -6 -c 1 ::1PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.019 ms
+
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.019/0.019/0.019/0.000 ms
+     0.000 probe_libc:inet_pton:(7fc985d658a0))
+           __inet_pton (inlined)
+           gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+           __GI_getaddrinfo (inlined)
+           main (/usr/bin/ping)
+           __libc_start_main (/usr/lib64/libc-2.26.so)
+           _start (/usr/bin/ping)
+[root@f27 perf]#
+
+--> Dwarf call graph, but max-stack=4 not honoured when specified as
+        event specific restriction.
+
+[root@f27 perf]# ./perf trace --no-syscalls --max-stack 4
+        -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+PING ::1(::1) 56 data bytes
+64 bytes from ::1: icmp_seq=1 ttl=64 time=0.020 ms
+
+--- ::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.020/0.020/0.020/0.000 ms
+     0.000 probe_libc:inet_pton:(7ffbc5f768a0))
+            __inet_pton (inlined)
+            gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+            __GI_getaddrinfo (inlined)
+            main (/usr/bin/ping)
+[root@f27 perf]#
+
+
+--> Dwarf call graph and --max-stack 4 is also honoured.
+
+I have the feeling that your fix does not work very well when
+used with the --no-syscalls option.
+Omitting --no-syscalls shows your explained behavior.
+
+So there must be a difference between --no-syscalls and --syscalls
+invocation.     
+
 -- 
-2.7.4
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
