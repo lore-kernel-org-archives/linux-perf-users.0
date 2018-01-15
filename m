@@ -1,137 +1,65 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] perf trace: Fix missing handling of --call-graph dwarf
-Date: Mon, 15 Jan 2018 10:11:02 +0100
-Message-ID: <866e5b29-9d48-b946-c705-fc7c790e4fb5@linux.vnet.ibm.com>
-References: <20180112100355.6456-1-tmricht@linux.vnet.ibm.com>
- <20180112142032.GB9655@kernel.org> <20180112150142.GC9655@kernel.org>
- <20180112164706.GE9655@kernel.org> <20180112200229.GI9655@kernel.org>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH 2/3] tracing: make sure the parsed string always
+ terminates with '\0'
+Date: Mon, 15 Jan 2018 18:49:50 +0800
+Message-ID: <20180115104950.u33gj7h4of7mlekx@intel.com>
+References: <1515491748-25926-1-git-send-email-changbin.du@intel.com>
+ <1515491748-25926-3-git-send-email-changbin.du@intel.com>
+ <20180109180258.3936e10a@vmware.local.home>
+ <20180110030206.wciy7y4mvtqoqjz3@intel.com>
+ <20180109231022.5e9ca245@vmware.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180112200229.GI9655@kernel.org>
-Content-Language: en-IE
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mga04.intel.com ([192.55.52.120]:30270 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753648AbeAOK6I (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 15 Jan 2018 05:58:08 -0500
+Content-Disposition: inline
+In-Reply-To: <20180109231022.5e9ca245@vmware.local.home>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Du, Changbin" <changbin.du@intel.com>, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, stable@vger.kernel.org
 
-On 01/12/2018 09:02 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jan 12, 2018 at 01:47:06PM -0300, Arnaldo Carvalho de Melo escreveu:
->> There is still room for improvement, I noticed overriding is not working
->> for the probe event, investigating it now.
+On Tue, Jan 09, 2018 at 11:10:22PM -0500, Steven Rostedt wrote:
+> On Wed, 10 Jan 2018 11:02:06 +0800
+> "Du, Changbin" <changbin.du@intel.com> wrote:
 > 
-> So, I had to fix this another way to get the possibility of overwriting
-> the global options (--max-stack, --call-graph) in an specific tracepoint
-> event:
+> > On Tue, Jan 09, 2018 at 06:02:58PM -0500, Steven Rostedt wrote:
+> > > On Tue,  9 Jan 2018 17:55:47 +0800
+> > > changbin.du@intel.com wrote:
+> > >   
+> > > > From: Changbin Du <changbin.du@intel.com>
+> > > > 
+> > > > The parser parse every string into parser.buffer. And some of the callers
+> > > > assume that parser.buffer contains a C string. So it is dangerous that the
+> > > > parser returns a unterminated string. The userspace can leverage this to
+> > > > attack the kernel.  
+> > > 
+> > > Is this only a bug if we apply your first patch?
+> > >  
+> > I don't think so. Seems it is there already.
+> >  
 > 
-> http://git.kernel.org/acme/c/08e26396c6f2
+> OK. I'll have to take a deeper look into this so that I completely
+> understand the problem and your solution. I'm currently traveling and
+> may not get to do that this week. Please ping me next week if you don't
+> hear back from me on this issue.
 > 
-> replaced that HEAD.
+> Thanks!
 > 
-> This cset may take some more minutes to show up, just pushed.
-> 
+> -- Steve
 
-Sorry this does *not* work on my s390x.
+I checked every trace_get_user() clients again and found it is not an issue in
+current kernel. The client has checked trace_parser_cont() before using parsed
+string or append '\0'.
 
-I have cloned your perf/core tree and above commit is included.
-Here is the command I tried:
-
-[root@s8360047 perf]# ./perf trace -vv --no-syscalls  --max-stack 4 --call-graph dwarf 
-           -e probe_libc:inet_pton -- ping -6 -c 1 ::1
-callchain: type DWARF
-callchain: stack dump size 8192
-------------------------------------------------------------
-perf_event_attr:
-  type                             2
-  size                             112
-  config                           0x45f
-  { sample_period, sample_freq }   1
-  sample_type                      IP|TID|TIME|ADDR|CPU|PERIOD|RAW|DATA_SRC
-  disabled                         1
-  inherit                          1
-  mmap                             1
-  comm                             1
-  enable_on_exec                   1
-  task                             1
-  mmap_data                        1
-  sample_id_all                    1
-  exclude_guest                    1
-  mmap2                            1
-  comm_exec                        1
-  { wakeup_events, wakeup_watermark } 1
-------------------------------------------------------------
-sys_perf_event_open: pid 6735  cpu 0  group_fd -1  flags 0x8 = 3
-sys_perf_event_open: pid 6735  cpu 1  group_fd -1  flags 0x8 = 4
-mmap size 2101248B
-perf event ring buffer mmapped per cpu
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.070 ms
-
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.070/0.070/0.070/0.000 ms
-     0.000 probe_libc:inet_pton:(3ffada42060))
-[root@s8360047 perf]# 
-
-I do miss in sample_type bits for CALLCHAIN, STACK_USER and REG_USER
-in the debug output of the perf_event_open() attribute printout.
-
-When I invoke the command with
-[root@s8360047 perf]# ./perf trace -vv --no-syscalls 
-	-e probe_libc:inet_pton/call-graph=dwarf,max-stack=3/ -- ping -6 -c 1 ::1
-callchain: type DWARF
-callchain: stack dump size 8192
-------------------------------------------------------------
-perf_event_attr:
-  type                             2
-  size                             112
-  config                           0x45f
-  { sample_period, sample_freq }   1
-  sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|RAW|REGS_USER|STACK_USER
-  disabled                         1
-  inherit                          1
-  mmap                             1
-  comm                             1
-  enable_on_exec                   1
-  task                             1
-  sample_id_all                    1
-  exclude_guest                    1
-  exclude_callchain_user           1
-  mmap2                            1
-  comm_exec                        1
-  { wakeup_events, wakeup_watermark } 1
-  sample_regs_user                 0x3ffffffff
-  sample_stack_user                8192
-  sample_max_stack                 3
-------------------------------------------------------------
-sys_perf_event_open: pid 6768  cpu 0  group_fd -1  flags 0x8 = 3
-sys_perf_event_open: pid 6768  cpu 1  group_fd -1  flags 0x8 = 4
-mmap size 528384B
-perf event ring buffer mmapped per cpu
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.074 ms
-
---- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.074/0.074/0.074/0.000 ms
-[... snip ....]
-
-unwind: _start:ip = 0x2aa1e38457b (0x457b)
-     0.000 probe_libc:inet_pton:(3ff9b142060))
-                                       __GI___inet_pton (/usr/lib64/libc-2.26.so)
-                                       gaih_inet (inlined)
-                                       __GI_getaddrinfo (inlined)
-                                       main (/usr/bin/ping)
-                                       __libc_start_main (/usr/lib64/libc-2.26.so)
-                                       _start (/usr/bin/ping)
-[root@s8360047 perf]# 
-
-I see the proper result as expected.
+I still want to make the parser returns a '\0' terminated string. Then we don't
+require the clients append it. I think this would be better since we are dealing
+with strings.
 
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks,
+Changbin Du
