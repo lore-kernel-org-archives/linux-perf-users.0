@@ -1,38 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [RFC 0/5] per-event settings fixes
-Date: Tue, 16 Jan 2018 11:24:33 -0300
-Message-ID: <20180116142438.19520-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:52418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750750AbeAPOYw (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Jan 2018 09:24:52 -0500
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH 1/5] perf callchain: Fix attr.sample_max_stack setting
+Date: Tue, 16 Jan 2018 11:24:34 -0300
+Message-ID: <20180116142438.19520-2-acme@kernel.org>
+References: <20180116142438.19520-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180116142438.19520-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Noel Grandin <noelgrandin@gmail.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi guys,
+When setting the "dwarf" unwinder for a specific event and not
+specifying the max-stack, the attr.sample_max_stack ended up using an
+uninitialized callchain_param.max_stack, fix it by using designated
+initializers for that callchain_param variable, zeroing all non
+explicitely initialized struct members.
 
-	Jiri asked me to post this series, so here it is, please take a
-look, I'd love to harvest your Reviewed-by/Tested-by/Acked-by,
+Here is what happened:
 
-- Arnaldo
+  # perf trace -vv --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  callchain: type DWARF
+  callchain: stack dump size 8192
+  perf_event_attr:
+    type                             2
+    size                             112
+    config                           0x730
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|ADDR|CALLCHAIN|CPU|PERIOD|RAW|REGS_USER|STACK_USER|DATA_SRC
+    exclude_callchain_user           1
+    { wakeup_events, wakeup_watermark } 1
+    sample_regs_user                 0xff0fff
+    sample_stack_user                8192
+    sample_max_stack                 50656
+  sys_perf_event_open failed, error -75
+  Value too large for defined data type
+  # perf trace -vv --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  callchain: type DWARF
+  callchain: stack dump size 8192
+  perf_event_attr:
+    type                             2
+    size                             112
+    config                           0x730
+    sample_type                      IP|TID|TIME|ADDR|CALLCHAIN|CPU|PERIOD|RAW|REGS_USER|STACK_USER|DATA_SRC
+    exclude_callchain_user           1
+    sample_regs_user                 0xff0fff
+    sample_stack_user                8192
+    sample_max_stack                 30448
+  sys_perf_event_open failed, error -75
+  Value too large for defined data type
+  #
 
-Arnaldo Carvalho de Melo (5):
-  perf callchain: Fix attr.sample_max_stack setting
-  perf unwind: Do not look at globals
-  perf trace: Setup DWARF callchains for non-syscall events when --max-stack is used
-  perf trace: Allow overriding global --max-stack per event
-  perf callchains: Ask for PERF_RECORD_MMAP for data mmaps for DWARF unwinding
+Now the attr.sample_max_stack is set to zero and the above works as
+expected:
 
- tools/perf/builtin-trace.c               | 19 ++++++++++++++++---
- tools/perf/util/evsel.c                  | 24 +++++++++++++++++-------
- tools/perf/util/unwind-libunwind-local.c |  9 ---------
- 3 files changed, 33 insertions(+), 19 deletions(-)
+  # perf trace --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.072 ms
 
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.072/0.072/0.072/0.000 ms
+       0.000 probe_libc:inet_pton:(7feb7a998350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+                                         [0xffffaa39b6108f3f] (/usr/bin/ping)
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-is9tramondqa9jlxxsgcm9iz@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index efa2e629a669..8f971a2301d1 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -731,14 +731,14 @@ static void apply_config_terms(struct perf_evsel *evsel,
+ 	struct perf_evsel_config_term *term;
+ 	struct list_head *config_terms = &evsel->config_terms;
+ 	struct perf_event_attr *attr = &evsel->attr;
+-	struct callchain_param param;
++	/* callgraph default */
++	struct callchain_param param = {
++		.record_mode = callchain_param.record_mode,
++	};
+ 	u32 dump_size = 0;
+ 	int max_stack = 0;
+ 	const char *callgraph_buf = NULL;
+ 
+-	/* callgraph default */
+-	param.record_mode = callchain_param.record_mode;
+-
+ 	list_for_each_entry(term, config_terms, list) {
+ 		switch (term->type) {
+ 		case PERF_EVSEL__CONFIG_TERM_PERIOD:
 -- 
 2.14.3
