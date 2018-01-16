@@ -1,146 +1,119 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: [RFC 0/5] per-event settings fixes
-Date: Tue, 16 Jan 2018 16:27:52 +0100
-Message-ID: <5e418aa0-d966-59d4-f024-a5fc61500f8d@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 2/5] perf unwind: Do not look at globals
+Date: Tue, 16 Jan 2018 12:36:21 -0300
+Message-ID: <20180116153621.GC16107@kernel.org>
 References: <20180116142438.19520-1-acme@kernel.org>
+ <20180116142438.19520-3-acme@kernel.org>
+ <20180116151915.GC17819@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180116142438.19520-1-acme@kernel.org>
-Content-Language: en-IE
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Noel Grandin <noelgrandin@gmail.com>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:39984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751287AbeAPPgZ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 16 Jan 2018 10:36:25 -0500
+Content-Disposition: inline
+In-Reply-To: <20180116151915.GC17819@krava>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 
-On 01/16/2018 03:24 PM, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Em Tue, Jan 16, 2018 at 04:19:15PM +0100, Jiri Olsa escreveu:
+> On Tue, Jan 16, 2018 at 11:24:35AM -0300, Arnaldo Carvalho de Melo wrote:
 > 
-> Hi guys,
+> SNIP
 > 
-> 	Jiri asked me to post this series, so here it is, please take a
-> look, I'd love to harvest your Reviewed-by/Tested-by/Acked-by,
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: David Ahern <dsahern@gmail.com>
+> > Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> > Cc: Wang Nan <wangnan0@huawei.com>
+> > Link: https://lkml.kernel.org/n/tip-skbth8ufepbtw8xar7gdsb6l@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/unwind-libunwind-local.c | 9 ---------
+> >  1 file changed, 9 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> > index 7a42f703e858..02dc5a9d8f72 100644
+> > --- a/tools/perf/util/unwind-libunwind-local.c
+> > +++ b/tools/perf/util/unwind-libunwind-local.c
+> > @@ -631,9 +631,6 @@ static unw_accessors_t accessors = {
+> >  
+> >  static int _unwind__prepare_access(struct thread *thread)
+> >  {
+> > -	if (callchain_param.record_mode != CALLCHAIN_DWARF)
+> > -		return 0;
+> > -
 > 
-> - Arnaldo
+> this would create thread->addr_space also for data without
+> dwarf callchains data, so I think we need to keep it
 > 
-> Arnaldo Carvalho de Melo (5):
->   perf callchain: Fix attr.sample_max_stack setting
->   perf unwind: Do not look at globals
->   perf trace: Setup DWARF callchains for non-syscall events when --max-stack is used
->   perf trace: Allow overriding global --max-stack per event
->   perf callchains: Ask for PERF_RECORD_MMAP for data mmaps for DWARF unwinding
+> it should get set in apply_config_terms which calls parse_callchain_record
+
+No, it should not set the global parameter, as this is just for a
+specific event, i.e. we can have something like:
+
+	perf record -e cycles/call-graph=dwarf/ \
+		    -e instructions/call-graph=lbr/
+		    -e cache-misses/call-graph=fp
+
+And then get these samples for the same thread.
+
+If you want to avoid creating thread->addr_space, and we do want that,
+sure, a followup patch should address that, we need to postpone
+allocating it till we get a DWARF callchain in a sample for that
+specific thread, when we then should allocate thread->addr_space.
+
+But then we need to break that prepare routine, the part that needs the
+map needs to set something in the 'struct thread' to mark what kind of
+unwind ops should be used if we ever get a sample with a DWARF
+callchain for that thread later on the perf.data (or live session), and
+when that happens, look if the thread->addr_space is allocated and
+allocate it if not.
+
+> once it detects some 'call-graph' term setup.. something's probably wrong
+> there?
+
+See above. The fix in this patch is the quickest, i.e. we make sure that
+if we ever find DWARF callchains, what we need will be there. We could
+introduce a new global variable that would be touched by
+apply_config_terms() now, and touch that, not the global config, that
+may be used by other code, that would think that hey, DWARF is globally
+configured, when it is just by some of the events.
+
+But if we do that, we will waste some space anyway since not all threads
+will have DWARF callchains, e.g. in a system wide session.
+
+- Arnaldo
+ 
+> jirka
 > 
->  tools/perf/builtin-trace.c               | 19 ++++++++++++++++---
->  tools/perf/util/evsel.c                  | 24 +++++++++++++++++-------
->  tools/perf/util/unwind-libunwind-local.c |  9 ---------
->  3 files changed, 33 insertions(+), 19 deletions(-)
-> 
-
-I have tested your patches on my s390x. I applied
-them on top of your perf/core branch.
-
-Here is the output:
-[root@s8360047 perf]# ./perf trace --no-syscalls
-        -e probe_libc:inet_pton ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.046 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.046/0.046/0.046/0.000 ms
-     0.000 probe_libc:inet_pton:(3ffa4ec2060))
-[root@s8360047 perf]#
-
-Test ok !
-
-[root@s8360047 perf]# ./perf trace --no-syscalls
-        -e probe_libc:inet_pton/max-stack=5,call-graph=dwarf/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.054 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.054/0.054/0.054/0.000 ms
-     0.000 probe_libc:inet_pton:(3ff7e742060))
-           __GI___inet_pton (/usr/lib64/libc-2.26.so)
-           gaih_inet (inlined)
-           __GI_getaddrinfo (inlined)
-           main (/usr/bin/ping)
-           __libc_start_main (/usr/lib64/libc-2.26.so)
-[root@s8360047 perf]#
-
-Test ok!
-
-[root@s8360047 perf]# ./perf trace --no-syscalls
-        -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.062 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.062/0.062/0.062/0.000 ms
-     0.000 probe_libc:inet_pton:(3ff86642060))
-           __GI___inet_pton (/usr/lib64/libc-2.26.so)
-           gaih_inet (inlined)
-           __GI_getaddrinfo (inlined)
-           main (/usr/bin/ping)
-           __libc_start_main (/usr/lib64/libc-2.26.so)
-           _start (/usr/bin/ping)
-[root@s8360047 perf]#
-
-Test ok:
-
-[root@s8360047 perf]# ./perf trace --no-syscalls --call-graph dwarf
-        --max-stack 4  -e probe_libc:inet_pton ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.031 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.031/0.031/0.031/0.000 ms
-     0.000 probe_libc:inet_pton:(3ffa1bc2060))
-           __GI___inet_pton (/usr/lib64/libc-2.26.so)
-           gaih_inet (inlined)
-           __GI_getaddrinfo (inlined)
-           main (/usr/bin/ping)
-[root@s8360047 perf]#
-
-Test ok, also when --max-stack 4 is omitted the complete
-backchain is printed.
-
-[root@s8360047 perf]# ./perf trace --no-syscalls --call-graph dwarf
-        -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.047 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.047/0.047/0.047/0.000 ms
-     0.000 probe_libc:inet_pton:(3ffb4bc2060))
-[root@s8360047 perf]#
-
-Test fails, I would have expected some callchain output.
-
-[root@s8360047 perf]# ./perf trace --no-syscalls --call-graph dwarf --max-stack 4
-        -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-PING ::1(::1) 56 data bytes
-64 bytes from ::1: icmp_seq=1 ttl=64 time=0.055 ms
-
- --- ::1 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 0.055/0.055/0.055/0.000 ms
-     0.000 probe_libc:inet_pton:(3ff7e6c2060))
-[root@s8360047 perf]#
-
-Test fails, I would have expected some callchain output.
-
-It looks like /max-stack=3/ without ,call-graph=dwarf
-does not trigger the stack unwinding.
-
--- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> >  	thread->addr_space = unw_create_addr_space(&accessors, 0);
+> >  	if (!thread->addr_space) {
+> >  		pr_err("unwind: Can't create unwind address space.\n");
+> > @@ -646,17 +643,11 @@ static int _unwind__prepare_access(struct thread *thread)
+> >  
+> >  static void _unwind__flush_access(struct thread *thread)
+> >  {
+> > -	if (callchain_param.record_mode != CALLCHAIN_DWARF)
+> > -		return;
+> > -
+> >  	unw_flush_cache(thread->addr_space, 0, 0);
+> >  }
+> >  
+> >  static void _unwind__finish_access(struct thread *thread)
+> >  {
+> > -	if (callchain_param.record_mode != CALLCHAIN_DWARF)
+> > -		return;
+> > -
+> >  	unw_destroy_addr_space(thread->addr_space);
+> >  }
+> >  
+> > -- 
+> > 2.14.3
+> > 
