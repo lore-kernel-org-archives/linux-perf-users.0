@@ -1,50 +1,34 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC 0/5] per-event settings fixes
-Date: Tue, 16 Jan 2018 12:38:05 -0300
-Message-ID: <20180116153805.GD16107@kernel.org>
-References: <20180116142438.19520-1-acme@kernel.org>
- <5e418aa0-d966-59d4-f024-a5fc61500f8d@linux.vnet.ibm.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 0/3] tracing: Fix the parser when processing strings
+ w/ or w/o terminated '\0'
+Date: Tue, 16 Jan 2018 12:42:26 -0500
+Message-ID: <20180116124226.73d2c7e2@gandalf.local.home>
+References: <1516093350-12045-1-git-send-email-changbin.du@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750764AbeAPPiI (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Jan 2018 10:38:08 -0500
-Content-Disposition: inline
-In-Reply-To: <5e418aa0-d966-59d4-f024-a5fc61500f8d@linux.vnet.ibm.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Noel Grandin <noelgrandin@gmail.com>, Wang Nan <wangnan0@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516093350-12045-1-git-send-email-changbin.du@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: changbin.du@intel.com
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jan 16, 2018 at 04:27:52PM +0100, Thomas-Mich Richter escreveu:
->  --- ::1 ping statistics ---
-> 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> rtt min/avg/max/mdev = 0.047/0.047/0.047/0.000 ms
->      0.000 probe_libc:inet_pton:(3ffb4bc2060))
-> [root@s8360047 perf]#
-> 
-> Test fails, I would have expected some callchain output.
-> 
-> [root@s8360047 perf]# ./perf trace --no-syscalls --call-graph dwarf --max-stack 4
->         -e probe_libc:inet_pton/max-stack=3/ ping -6 -c 1 ::1
-> PING ::1(::1) 56 data bytes
-> 64 bytes from ::1: icmp_seq=1 ttl=64 time=0.055 ms
-> 
->  --- ::1 ping statistics ---
-> 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-> rtt min/avg/max/mdev = 0.055/0.055/0.055/0.000 ms
->      0.000 probe_libc:inet_pton:(3ff7e6c2060))
-> [root@s8360047 perf]#
-> 
-> Test fails, I would have expected some callchain output.
-> 
-> It looks like /max-stack=3/ without ,call-graph=dwarf
-> does not trigger the stack unwinding.
+On Tue, 16 Jan 2018 17:02:27 +0800
+changbin.du@intel.com wrote:
 
-Ok, will work on those, then redo all the tests you did, grr, tricky
-stuff.
+> From: Changbin Du <changbin.du@intel.com>
+> 
+> I found there are some problems in the tracing parser when I investiage the root
+> cause of issues mentioned in below patch.
+> https://patchwork.kernel.org/patch/10132953/
 
-- Arnaldo
+I pulled in your patches and tweaked the change logs of the other two
+patches as well. You can see my temporary git tree here, but it may
+rebase.
+
+git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+
+ ftrace/core
+
+-- Steve
