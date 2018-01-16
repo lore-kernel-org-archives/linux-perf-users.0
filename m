@@ -1,61 +1,26 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/5] perf callchain: Fix attr.sample_max_stack setting
-Date: Tue, 16 Jan 2018 11:24:34 -0300
-Message-ID: <20180116142438.19520-2-acme@kernel.org>
+Subject: [PATCH 4/5] perf trace: Allow overriding global --max-stack per event
+Date: Tue, 16 Jan 2018 11:24:37 -0300
+Message-ID: <20180116142438.19520-5-acme@kernel.org>
 References: <20180116142438.19520-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751195AbeAPOZF (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 16 Jan 2018 09:25:05 -0500
 In-Reply-To: <20180116142438.19520-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When setting the "dwarf" unwinder for a specific event and not
-specifying the max-stack, the attr.sample_max_stack ended up using an
-uninitialized callchain_param.max_stack, fix it by using designated
-initializers for that callchain_param variable, zeroing all non
-explicitely initialized struct members.
+The per-event max-stack setting wasn't overriding the global --max-stack
+setting:
 
-Here is what happened:
-
-  # perf trace -vv --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
-  callchain: type DWARF
-  callchain: stack dump size 8192
-  perf_event_attr:
-    type                             2
-    size                             112
-    config                           0x730
-    { sample_period, sample_freq }   1
-    sample_type                      IP|TID|TIME|ADDR|CALLCHAIN|CPU|PERIOD|RAW|REGS_USER|STACK_USER|DATA_SRC
-    exclude_callchain_user           1
-    { wakeup_events, wakeup_watermark } 1
-    sample_regs_user                 0xff0fff
-    sample_stack_user                8192
-    sample_max_stack                 50656
-  sys_perf_event_open failed, error -75
-  Value too large for defined data type
-  # perf trace -vv --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
-  callchain: type DWARF
-  callchain: stack dump size 8192
-  perf_event_attr:
-    type                             2
-    size                             112
-    config                           0x730
-    sample_type                      IP|TID|TIME|ADDR|CALLCHAIN|CPU|PERIOD|RAW|REGS_USER|STACK_USER|DATA_SRC
-    exclude_callchain_user           1
-    sample_regs_user                 0xff0fff
-    sample_stack_user                8192
-    sample_max_stack                 30448
-  sys_perf_event_open failed, error -75
-  Value too large for defined data type
-  #
-
-Now the attr.sample_max_stack is set to zero and the above works as
-expected:
-
-  # perf trace --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  # perf trace --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf,max-stack=2/ ping -6 -c 1 ::1
   PING ::1(::1) 56 data bytes
   64 bytes from ::1: icmp_seq=1 ttl=64 time=0.072 ms
 
@@ -69,6 +34,20 @@ expected:
                                          [0xffffaa39b6108f3f] (/usr/bin/ping)
   #
 
+Fix it:
+
+  # perf trace --no-syscalls --max-stack 4 -e probe_libc:inet_pton/call-graph=dwarf,max-stack=2/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.073 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.073/0.073/0.073/0.000 ms
+       0.000 probe_libc:inet_pton:(7f1083221350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+  #
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
@@ -76,34 +55,43 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-is9tramondqa9jlxxsgcm9iz@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3uqo18od1m7pul581b9vjtj5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index efa2e629a669..8f971a2301d1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -731,14 +731,14 @@ static void apply_config_terms(struct perf_evsel *evsel,
- 	struct perf_evsel_config_term *term;
- 	struct list_head *config_terms = &evsel->config_terms;
- 	struct perf_event_attr *attr = &evsel->attr;
--	struct callchain_param param;
-+	/* callgraph default */
-+	struct callchain_param param = {
-+		.record_mode = callchain_param.record_mode,
-+	};
- 	u32 dump_size = 0;
- 	int max_stack = 0;
- 	const char *callgraph_buf = NULL;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index ee85c29dbf70..531d43bf57e1 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1644,7 +1644,7 @@ static int trace__resolve_callchain(struct trace *trace, struct perf_evsel *evse
+ 	struct addr_location al;
  
--	/* callgraph default */
--	param.record_mode = callchain_param.record_mode;
--
- 	list_for_each_entry(term, config_terms, list) {
- 		switch (term->type) {
- 		case PERF_EVSEL__CONFIG_TERM_PERIOD:
+ 	if (machine__resolve(trace->host, &al, sample) < 0 ||
+-	    thread__resolve_callchain(al.thread, cursor, evsel, sample, NULL, NULL, trace->max_stack))
++	    thread__resolve_callchain(al.thread, cursor, evsel, sample, NULL, NULL, evsel->attr.sample_max_stack))
+ 		return -1;
+ 
+ 	return 0;
+@@ -2423,6 +2423,18 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	trace->multiple_threads = thread_map__pid(evlist->threads, 0) == -1 ||
+ 				  evlist->threads->nr > 1 ||
+ 				  perf_evlist__first(evlist)->attr.inherit;
++
++	/*
++	 * Now that we already used evsel->attr to ask the kernel to setup the
++	 * events, lets reuse evsel->attr.sample_max_stack as the limit in
++	 * trace__resolve_callchain(), allowing per-event max-stack settings
++	 * to override an explicitely set --max-stack global setting.
++	 */
++	evlist__for_each_entry(evlist, evsel) {
++		if ((evsel->attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
++		    evsel->attr.sample_max_stack == 0)
++			evsel->attr.sample_max_stack = trace->max_stack;
++	}
+ again:
+ 	before = trace->nr_events;
+ 
 -- 
 2.14.3
