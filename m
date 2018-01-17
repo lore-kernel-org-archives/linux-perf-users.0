@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/32] tools lib traceevent: Handle new pointer processing of bprint strings
-Date: Wed, 17 Jan 2018 13:12:02 -0300
-Message-ID: <20180117161222.15611-13-acme@kernel.org>
+Subject: [PATCH 17/32] tools lib traceevent: Fix get_field_str() for dynamic strings
+Date: Wed, 17 Jan 2018 13:12:07 -0300
+Message-ID: <20180117161222.15611-18-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
@@ -12,78 +12,51 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The Linux kernel printf() has some extended use cases that dereference
-the pointer. This is dangerouse for tracing because the pointer that is
-dereferenced can change or even be unmapped. It also causes issues when
-the trace data is extracted, because user space does not have access to
-the contents of the pointer even if it still exists.
+If a field is a dynamic string, get_field_str() returned just the
+offset/size value and not the string. Have it parse the offset/size
+correctly to return the actual string. Otherwise filtering fails when
+trying to filter fields that are dynamic strings.
 
-To handle this, the kernel was updated to process these dereferenced
-pointers at the time they are recorded, and not post processed. Now they
-exist in the tracing buffer, and no dereference is needed at the time of
-reading the trace.
-
-The event parsing library needs to handle this new case.
-
+Reported-by: Gopanapalli Pradeep <prap_hai@yahoo.com>
 Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: http://lkml.kernel.org/r/20180112004822.403349289@goodmis.org
+Link: http://lkml.kernel.org/r/20180112004823.146333275@goodmis.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 8757dd64e42c..344a034a8fbc 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4300,6 +4300,26 @@ static struct print_arg *make_bprint_args(char *fmt, void *data, int size, struc
- 				goto process_again;
- 			case 'p':
- 				ls = 1;
-+				if (isalnum(ptr[1])) {
-+					ptr++;
-+					/* Check for special pointers */
-+					switch (*ptr) {
-+					case 's':
-+					case 'S':
-+					case 'f':
-+					case 'F':
-+						break;
-+					default:
-+						/*
-+						 * Older kernels do not process
-+						 * dereferenced pointers.
-+						 * Only process if the pointer
-+						 * value is a printable.
-+						 */
-+						if (isprint(*(char *)bptr))
-+							goto process_string;
-+					}
-+				}
- 				/* fall through */
- 			case 'd':
- 			case 'u':
-@@ -4352,6 +4372,7 @@ static struct print_arg *make_bprint_args(char *fmt, void *data, int size, struc
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 2b9048f90bae..431e8b309f6e 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1877,17 +1877,25 @@ static const char *get_field_str(struct filter_arg *arg, struct pevent_record *r
+ 	struct pevent *pevent;
+ 	unsigned long long addr;
+ 	const char *val = NULL;
++	unsigned int size;
+ 	char hex[64];
  
- 				break;
- 			case 's':
-+ process_string:
- 				arg = alloc_arg();
- 				if (!arg) {
- 					do_warning_event(event, "%s(%d): not enough memory!",
-@@ -4959,6 +4980,11 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct event
- 				if (isalnum(ptr[1]))
- 					ptr++;
- 
-+				if (arg->type == PRINT_BSTRING) {
-+					trace_seq_puts(s, arg->string.string);
-+					break;
-+				}
+ 	/* If the field is not a string convert it */
+ 	if (arg->str.field->flags & FIELD_IS_STRING) {
+ 		val = record->data + arg->str.field->offset;
++		size = arg->str.field->size;
 +
- 				if (*ptr == 'F' || *ptr == 'f' ||
- 				    *ptr == 'S' || *ptr == 's') {
- 					show_func = *ptr;
++		if (arg->str.field->flags & FIELD_IS_DYNAMIC) {
++			addr = *(unsigned int *)val;
++			val = record->data + (addr & 0xffff);
++			size = addr >> 16;
++		}
+ 
+ 		/*
+ 		 * We need to copy the data since we can't be sure the field
+ 		 * is null terminated.
+ 		 */
+-		if (*(val + arg->str.field->size - 1)) {
++		if (*(val + size - 1)) {
+ 			/* copy it */
+ 			memcpy(arg->str.buffer, val, arg->str.field->size);
+ 			/* the buffer is already NULL terminated */
 -- 
 2.14.3
