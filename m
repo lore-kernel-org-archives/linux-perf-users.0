@@ -1,67 +1,202 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/32] tools lib traceevent: Simplify pointer print logic and fix %pF
-Date: Wed, 17 Jan 2018 13:12:01 -0300
-Message-ID: <20180117161222.15611-12-acme@kernel.org>
+Subject: [PATCH 07/32] perf trace: Fix setting of --call-graph/--max-stack for non-syscall events
+Date: Wed, 17 Jan 2018 13:11:57 -0300
+Message-ID: <20180117161222.15611-8-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When processing %pX in pretty_print(), simplify the logic slightly by
-incrementing the ptr to the format string if isalnum(ptr[1]) is true.
-This follows the logic a bit more closely to what is in the kernel.
+The raw_syscalls:sys_{enter,exit} were first supported in 'perf trace',
+together with minor and major page faults, then we supported
+--call-graph, then --max-stack, but when the other tracepoints got
+supported, and bpf, etc, I forgot to make those global call-graph
+settings apply to them.
 
-Also, this fixes a small bug where %pF was not giving the offset of the
-function.
+Fix it by realizing that the global --max-stack and --call-graph
+settings are done via:
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: http://lkml.kernel.org/r/20180112004822.260262257@goodmis.org
+        OPT_CALLBACK(0, "call-graph", &trace.opts,
+                     "record_mode[,record_size]", record_callchain_help,
+                     &record_parse_callchain_opt),
+
+And then, when we go to parse the events in -e via:
+
+        OPT_CALLBACK('e', "event", &trace, "event",
+                     "event/syscall selector. use 'perf list' to list available events",
+                     trace__parse_events_option),
+
+And trace__parse_sevents_option() calls:
+
+                struct option o = OPT_CALLBACK('e', "event", &trace->evlist, "event",
+                                               "event selector. use 'perf list' to list available events",
+                                               parse_events_option);
+                err = parse_events_option(&o, lists[0], 0);
+
+parse_events_option() will override the global --call-graph and
+--max-stack if the "call-graph" and/or "max-stack" terms are in the
+event definition, such as in the probe_libc:inet_pton event in one of the
+examples below (-e probe_libc:inet_pton/max-stack=2).
+
+Before:
+
+  # perf trace --mmap 1024 --call-graph dwarf -e sendto,probe_libc:inet_pton ping -6 -c 1 ::1
+       1.525 (         ): probe_libc:inet_pton:(7f77f3ac9350))
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.071 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.071/0.071/0.071/0.000 ms
+       1.677 ( 0.081 ms): ping/31296 sendto(fd: 3, buff: 0x55681b652720, len: 64, addr: 0x55681b650640, addr_len: 28) = 64
+                                         __libc_sendto (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa97e4bc9cef] (/usr/bin/ping)
+                                         [0xffffaa97e4bc656d] (/usr/bin/ping)
+                                         [0xffffaa97e4bc7d0a] (/usr/bin/ping)
+                                         [0xffffaa97e4bca447] (/usr/bin/ping)
+                                         [0xffffaa97e4bc2f91] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa97e4bc3379] (/usr/bin/ping)
+  #
+
+After:
+
+  # perf trace --mmap 1024 --call-graph dwarf -e sendto,probe_libc:inet_pton ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.089 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.089/0.089/0.089/0.000 ms
+       1.955 (         ): probe_libc:inet_pton:(7f383a311350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+                                         [0xffffaa5d91444f3f] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa5d91445379] (/usr/bin/ping)
+       2.140 ( 0.101 ms): ping/32047 sendto(fd: 3, buff: 0x55a26edd0720, len: 64, addr: 0x55a26edce640, addr_len: 28) = 64
+                                         __libc_sendto (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa5d9144bcef] (/usr/bin/ping)
+                                         [0xffffaa5d9144856d] (/usr/bin/ping)
+                                         [0xffffaa5d91449d0a] (/usr/bin/ping)
+                                         [0xffffaa5d9144c447] (/usr/bin/ping)
+                                         [0xffffaa5d91444f91] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa5d91445379] (/usr/bin/ping)
+  #
+
+Same thing for --max-stack, the global one:
+
+  # perf trace --max-stack 3 -e sendto,probe_libc:inet_pton ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.097 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.097/0.097/0.097/0.000 ms
+       1.577 (         ): probe_libc:inet_pton:(7f32f3957350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+       1.738 ( 0.108 ms): ping/32103 sendto(fd: 3, buff: 0x55c3132d7720, len: 64, addr: 0x55c3132d5640, addr_len: 28) = 64
+                                         __libc_sendto (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa3cecf44cef] (/usr/bin/ping)
+                                         [0xffffaa3cecf4156d] (/usr/bin/ping)
+  #
+
+And then setting up a global setting (dwarf, max-stack=4), that will
+affect the raw_syscall:sys_enter for the 'sendto' syscall and that will
+be overriden in the probe_libc:inet_pton call to just one entry.
+
+  # perf trace --max-stack=4 --call-graph dwarf -e sendto -e probe_libc:inet_pton/max-stack=1/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.090 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.090/0.090/0.090/0.000 ms
+       2.140 (         ): probe_libc:inet_pton:(7f9fe9337350))
+                                         __GI___inet_pton (/usr/lib64/libc-2.26.so)
+       2.283 ( 0.103 ms): ping/31804 sendto(fd: 3, buff: 0x55c7f3e19720, len: 64, addr: 0x55c7f3e17640, addr_len: 28) = 64
+                                         __libc_sendto (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa380c402cef] (/usr/bin/ping)
+                                         [0xffffaa380c3ff56d] (/usr/bin/ping)
+                                         [0xffffaa380c400d0a] (/usr/bin/ping)
+  #
+
+Install iputils-debuginfo to get those /usr/bin/ping addresses resolved,
+those routines are not on its .dymsym nor .symtab :-)
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-qgl2gse8elhh9zztw4ajopg3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ tools/perf/builtin-trace.c | 20 +++++---------------
+ 1 file changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 87757eabbb08..8757dd64e42c 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4956,21 +4956,22 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct event
- 				else
- 					ls = 2;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e84816d02117..0362974854e9 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2222,6 +2222,9 @@ static int trace__add_syscall_newtp(struct trace *trace)
+ 	if (perf_evsel__init_sc_tp_uint_field(sys_exit, ret))
+ 		goto out_delete_sys_exit;
  
--				if (*(ptr+1) == 'F' || *(ptr+1) == 'f' ||
--				    *(ptr+1) == 'S' || *(ptr+1) == 's') {
-+				if (isalnum(ptr[1]))
- 					ptr++;
++	perf_evsel__config_callchain(sys_enter, &trace->opts, &callchain_param);
++	perf_evsel__config_callchain(sys_exit, &trace->opts, &callchain_param);
 +
-+				if (*ptr == 'F' || *ptr == 'f' ||
-+				    *ptr == 'S' || *ptr == 's') {
- 					show_func = *ptr;
--				} else if (*(ptr+1) == 'M' || *(ptr+1) == 'm') {
--					print_mac_arg(s, *(ptr+1), data, size, event, arg);
--					ptr++;
-+				} else if (*ptr == 'M' || *ptr == 'm') {
-+					print_mac_arg(s, *ptr, data, size, event, arg);
- 					arg = arg->next;
- 					break;
--				} else if (*(ptr+1) == 'I' || *(ptr+1) == 'i') {
-+				} else if (*ptr == 'I' || *ptr == 'i') {
- 					int n;
+ 	perf_evlist__add(evlist, sys_enter);
+ 	perf_evlist__add(evlist, sys_exit);
  
--					n = print_ip_arg(s, ptr+1, data, size, event, arg);
-+					n = print_ip_arg(s, ptr, data, size, event, arg);
- 					if (n > 0) {
--						ptr += n;
-+						ptr += n - 1;
- 						arg = arg->next;
- 						break;
- 					}
+@@ -2318,6 +2321,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		pgfault_maj = perf_evsel__new_pgfault(PERF_COUNT_SW_PAGE_FAULTS_MAJ);
+ 		if (pgfault_maj == NULL)
+ 			goto out_error_mem;
++		perf_evsel__config_callchain(pgfault_maj, &trace->opts, &callchain_param);
+ 		perf_evlist__add(evlist, pgfault_maj);
+ 	}
+ 
+@@ -2325,6 +2329,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		pgfault_min = perf_evsel__new_pgfault(PERF_COUNT_SW_PAGE_FAULTS_MIN);
+ 		if (pgfault_min == NULL)
+ 			goto out_error_mem;
++		perf_evsel__config_callchain(pgfault_min, &trace->opts, &callchain_param);
+ 		perf_evlist__add(evlist, pgfault_min);
+ 	}
+ 
+@@ -2347,21 +2352,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 
+ 	perf_evlist__config(evlist, &trace->opts, NULL);
+ 
+-	if (callchain_param.enabled) {
+-		if (trace->syscalls.events.sys_exit) {
+-			perf_evsel__config_callchain(trace->syscalls.events.sys_exit,
+-						     &trace->opts, &callchain_param);
+-		}
+-
+-		if (pgfault_maj) {
+-			perf_evsel__config_callchain(pgfault_maj, &trace->opts, &callchain_param);
+-		}
+-
+-		if (pgfault_min) {
+-			perf_evsel__config_callchain(pgfault_min, &trace->opts, &callchain_param);
+-		}
+-	}
+-
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
+ 
 -- 
 2.14.3
