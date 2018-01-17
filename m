@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/32] perf report: Add an indication of what time slices are used
-Date: Wed, 17 Jan 2018 13:12:18 -0300
-Message-ID: <20180117161222.15611-29-acme@kernel.org>
+Subject: [PATCH 26/32] perf util: Improve error checking for time percent input
+Date: Wed, 17 Jan 2018 13:12:16 -0300
+Message-ID: <20180117161222.15611-27-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
@@ -12,44 +12,54 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-Add a time slices indication to the perf report header.
+The command line like 'perf report --stdio --time 1abc%/1' could be
+accepted by perf. It looks not very good.
 
-For example,
+This patch uses strtod() to replace original atof() and check the entire
+string. Now for the same command line, it would return error message
+"Invalid time string".
 
-  # perf report --stdio --time 10%
-
-  # Total Lost Samples: 0
-  #
-  # Samples: 9K of event 'cycles:ppp' (time slices: 10%)
-  # Event count (approx.): 8951288803
+root@skl:/tmp# perf report --stdio --time 1abc%/1
+Invalid time string
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Suggested--by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1515596433-24653-6-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1515596433-24653-4-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/time-utils.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 7d4f0a5de326..4aaaa37262a8 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -404,6 +404,9 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	if (evname != NULL)
- 		ret += fprintf(fp, " of event '%s'", evname);
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 3f7f18f06982..88510ab6450e 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -116,7 +116,8 @@ int perf_time__parse_str(struct perf_time_interval *ptime, const char *ostr)
  
-+	if (rep->time_str)
-+		ret += fprintf(fp, " (time slices: %s)", rep->time_str);
-+
- 	if (symbol_conf.show_ref_callgraph &&
- 	    strstr(evname, "call-graph=no")) {
- 		ret += fprintf(fp, ", show reference callgraph");
+ static int parse_percent(double *pcnt, char *str)
+ {
+-	char *c;
++	char *c, *endptr;
++	double d;
+ 
+ 	c = strchr(str, '%');
+ 	if (c)
+@@ -124,8 +125,11 @@ static int parse_percent(double *pcnt, char *str)
+ 	else
+ 		return -1;
+ 
+-	*pcnt = atof(str) / 100.0;
++	d = strtod(str, &endptr);
++	if (endptr != str + strlen(str))
++		return -1;
+ 
++	*pcnt = d / 100.0;
+ 	return 0;
+ }
+ 
 -- 
 2.14.3
