@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/32] perf script: Improve error msg when no first/last sample time found
-Date: Wed, 17 Jan 2018 13:12:15 -0300
-Message-ID: <20180117161222.15611-26-acme@kernel.org>
+Subject: [PATCH 27/32] perf util: Support no index time percent slice
+Date: Wed, 17 Jan 2018 13:12:17 -0300
+Message-ID: <20180117161222.15611-28-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
@@ -12,40 +12,89 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-The following message will be returned to user when executing 'perf
-script --time' if perf data file doesn't contain the first/last sample
-time.
+Previously, the time percent slice needs an index to specify which one
+the user wants.
 
-"HINT: no first/last sample time found in perf data.
- Please use latest perf binary to execute 'perf record'
- (if '--buildid-all' is enabled, needs to set '--timestamp-boundary')."
+It may be easier to use if the index can be omitted.  So with this
+patch, for example,
+
+perf report --stdio --time 10%/1 should be equivalent to
+perf report --stdio --time 10%
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1515596433-24653-3-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1515596433-24653-5-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/time-utils.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 08bc818f371b..ac781916e51e 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3449,7 +3449,9 @@ int cmd_script(int argc, const char **argv)
- 	if (perf_time__parse_str(script.ptime_range, script.time_str) != 0) {
- 		if (session->evlist->first_sample_time == 0 &&
- 		    session->evlist->last_sample_time == 0) {
--			pr_err("No first/last sample time in perf data\n");
-+			pr_err("HINT: no first/last sample time found in perf data.\n"
-+			       "Please use latest perf binary to execute 'perf record'\n"
-+			       "(if '--buildid-all' is enabled, please set '--timestamp-boundary').\n");
- 			err = -EINVAL;
- 			goto out_delete;
- 		}
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 88510ab6450e..5769f972c23e 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -261,6 +261,37 @@ static int percent_comma_split(struct perf_time_interval *ptime_buf, int num,
+ 	return i;
+ }
+ 
++static int one_percent_convert(struct perf_time_interval *ptime_buf,
++			       const char *ostr, u64 start, u64 end, char *c)
++{
++	char *str;
++	int len = strlen(ostr), ret;
++
++	/*
++	 * c points to '%'.
++	 * '%' should be the last character
++	 */
++	if (ostr + len - 1 != c)
++		return -1;
++
++	/*
++	 * Construct a string like "xx%/1"
++	 */
++	str = malloc(len + 3);
++	if (str == NULL)
++		return -ENOMEM;
++
++	memcpy(str, ostr, len);
++	strcpy(str + len, "/1");
++
++	ret = percent_slash_split(str, ptime_buf, start, end);
++	if (ret == 0)
++		ret = 1;
++
++	free(str);
++	return ret;
++}
++
+ int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
+ 				 const char *ostr, u64 start, u64 end)
+ {
+@@ -270,6 +301,7 @@ int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
+ 	 * ostr example:
+ 	 * 10%/2,10%/3: select the second 10% slice and the third 10% slice
+ 	 * 0%-10%,30%-40%: multiple time range
++	 * 50%: just one percent
+ 	 */
+ 
+ 	memset(ptime_buf, 0, sizeof(*ptime_buf) * num);
+@@ -286,6 +318,10 @@ int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
+ 					   end, percent_dash_split);
+ 	}
+ 
++	c = strchr(ostr, '%');
++	if (c)
++		return one_percent_convert(ptime_buf, ostr, start, end, c);
++
+ 	return -1;
+ }
+ 
 -- 
 2.14.3
