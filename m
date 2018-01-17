@@ -1,44 +1,69 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/32] perf evlist: Remove trailing semicolon
-Date: Wed, 17 Jan 2018 13:11:52 -0300
-Message-ID: <20180117161222.15611-3-acme@kernel.org>
+Subject: [PATCH 06/32] perf evsel: Check if callchain is enabled before setting it up
+Date: Wed, 17 Jan 2018 13:11:56 -0300
+Message-ID: <20180117161222.15611-7-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Luis de Bethencourt <luisbg@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Joe Perches <joe@perches.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Luis de Bethencourt <luisbg@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The trailing semicolon is an empty statement that does no operation.
-Removing it since it doesn't do anything.
+The construct:
 
-Signed-off-by: Luis de Bethencourt <luisbg@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Joe Perches <joe@perches.com>
+	if (callchain_param)
+		perf_evsel__config_callchain(evsel, opts, &callchain_param);
+
+happens in several places, so make perf_evsel__config_callchain() work
+just like free(NULL), do nothing if param->enabled is not set.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180111155020.9782-1-luisbg@kernel.org
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-ykk0qzxnxwx3o611ctjnmxav@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index f0a5e09c4071..120efd85f2c8 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1760,7 +1760,7 @@ void perf_evlist__toggle_bkw_mmap(struct perf_evlist *evlist,
- 	switch (old_state) {
- 	case BKW_MMAP_NOTREADY: {
- 		if (state != BKW_MMAP_RUNNING)
--			goto state_err;;
-+			goto state_err;
- 		break;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4eea3b404507..efa2e629a669 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -651,9 +651,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
+ 	return ret;
+ }
+ 
+-void perf_evsel__config_callchain(struct perf_evsel *evsel,
+-				  struct record_opts *opts,
+-				  struct callchain_param *param)
++static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
++					   struct record_opts *opts,
++					   struct callchain_param *param)
+ {
+ 	bool function = perf_evsel__is_function_event(evsel);
+ 	struct perf_event_attr *attr = &evsel->attr;
+@@ -699,6 +699,14 @@ void perf_evsel__config_callchain(struct perf_evsel *evsel,
  	}
- 	case BKW_MMAP_RUNNING: {
+ }
+ 
++void perf_evsel__config_callchain(struct perf_evsel *evsel,
++				  struct record_opts *opts,
++				  struct callchain_param *param)
++{
++	if (param->enabled)
++		return __perf_evsel__config_callchain(evsel, opts, param);
++}
++
+ static void
+ perf_evsel__reset_callgraph(struct perf_evsel *evsel,
+ 			    struct callchain_param *param)
 -- 
 2.14.3
