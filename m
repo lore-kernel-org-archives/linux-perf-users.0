@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/32] perf util: Support no index time percent slice
-Date: Wed, 17 Jan 2018 13:12:17 -0300
-Message-ID: <20180117161222.15611-28-acme@kernel.org>
+Subject: [PATCH 31/32] perf script: Remove the time slices number limitation
+Date: Wed, 17 Jan 2018 13:12:21 -0300
+Message-ID: <20180117161222.15611-32-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
@@ -12,89 +12,112 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-Previously, the time percent slice needs an index to specify which one
-the user wants.
+Previously it was only allowed to use at most 10 time slices in 'perf
+script --time'.
 
-It may be easier to use if the index can be omitted.  So with this
-patch, for example,
+This patch removes this limitation.
+For example, following command line is OK (12 time slices)
 
-perf report --stdio --time 10%/1 should be equivalent to
-perf report --stdio --time 10%
+perf script --time 1%/1,1%/2,1%/3,1%/4,1%/5,1%/6,1%/7,1%/8,1%/9,1%/10,1%/11,1%/12
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1515596433-24653-5-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1515596433-24653-9-git-send-email-yao.jin@linux.intel.com
+[ No need to check for NULL to call free, use zfree ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ tools/perf/Documentation/perf-script.txt | 10 +++++-----
+ tools/perf/builtin-script.c              | 16 ++++++++++++----
+ 2 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 88510ab6450e..5769f972c23e 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -261,6 +261,37 @@ static int percent_comma_split(struct perf_time_interval *ptime_buf, int num,
- 	return i;
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 806ec6391fd6..7730c1d2b5d3 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -351,19 +351,19 @@ include::itrace.txt[]
+ 	to end of file.
+ 
+ 	Also support time percent with multipe time range. Time string is
+-	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'. The maximum number of slices is 10.
++	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
+ 
+ 	For example:
+-	Select the second 10% time slice
++	Select the second 10% time slice:
+ 	perf script --time 10%/2
+ 
+-	Select from 0% to 10% time slice
++	Select from 0% to 10% time slice:
+ 	perf script --time 0%-10%
+ 
+-	Select the first and second 10% time slices
++	Select the first and second 10% time slices:
+ 	perf script --time 10%/1,10%/2
+ 
+-	Select from 0% to 10% and 30% to 40% slices
++	Select from 0% to 10% and 30% to 40% slices:
+ 	perf script --time 0%-10%,30%-40%
+ 
+ --max-blocks::
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ac781916e51e..3499d68e1d70 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1480,8 +1480,6 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
+ 	return 0;
  }
  
-+static int one_percent_convert(struct perf_time_interval *ptime_buf,
-+			       const char *ostr, u64 start, u64 end, char *c)
-+{
-+	char *str;
-+	int len = strlen(ostr), ret;
-+
-+	/*
-+	 * c points to '%'.
-+	 * '%' should be the last character
-+	 */
-+	if (ostr + len - 1 != c)
-+		return -1;
-+
-+	/*
-+	 * Construct a string like "xx%/1"
-+	 */
-+	str = malloc(len + 3);
-+	if (str == NULL)
-+		return -ENOMEM;
-+
-+	memcpy(str, ostr, len);
-+	strcpy(str + len, "/1");
-+
-+	ret = percent_slash_split(str, ptime_buf, start, end);
-+	if (ret == 0)
-+		ret = 1;
-+
-+	free(str);
-+	return ret;
-+}
-+
- int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
- 				 const char *ostr, u64 start, u64 end)
- {
-@@ -270,6 +301,7 @@ int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
- 	 * ostr example:
- 	 * 10%/2,10%/3: select the second 10% slice and the third 10% slice
- 	 * 0%-10%,30%-40%: multiple time range
-+	 * 50%: just one percent
- 	 */
+-#define PTIME_RANGE_MAX	10
+-
+ struct perf_script {
+ 	struct perf_tool	tool;
+ 	struct perf_session	*session;
+@@ -1496,7 +1494,8 @@ struct perf_script {
+ 	struct thread_map	*threads;
+ 	int			name_width;
+ 	const char              *time_str;
+-	struct perf_time_interval ptime_range[PTIME_RANGE_MAX];
++	struct perf_time_interval *ptime_range;
++	int			range_size;
+ 	int			range_num;
+ };
  
- 	memset(ptime_buf, 0, sizeof(*ptime_buf) * num);
-@@ -286,6 +318,10 @@ int perf_time__percent_parse_str(struct perf_time_interval *ptime_buf, int num,
- 					   end, percent_dash_split);
- 	}
+@@ -3445,6 +3444,13 @@ int cmd_script(int argc, const char **argv)
+ 	if (err < 0)
+ 		goto out_delete;
  
-+	c = strchr(ostr, '%');
-+	if (c)
-+		return one_percent_convert(ptime_buf, ostr, start, end, c);
++	script.ptime_range = perf_time__range_alloc(script.time_str,
++						    &script.range_size);
++	if (!script.ptime_range) {
++		err = -ENOMEM;
++		goto out_delete;
++	}
 +
- 	return -1;
- }
+ 	/* needs to be parsed after looking up reference time */
+ 	if (perf_time__parse_str(script.ptime_range, script.time_str) != 0) {
+ 		if (session->evlist->first_sample_time == 0 &&
+@@ -3457,7 +3463,7 @@ int cmd_script(int argc, const char **argv)
+ 		}
+ 
+ 		script.range_num = perf_time__percent_parse_str(
+-					script.ptime_range, PTIME_RANGE_MAX,
++					script.ptime_range, script.range_size,
+ 					script.time_str,
+ 					session->evlist->first_sample_time,
+ 					session->evlist->last_sample_time);
+@@ -3476,6 +3482,8 @@ int cmd_script(int argc, const char **argv)
+ 	flush_scripting();
+ 
+ out_delete:
++	zfree(&script.ptime_range);
++
+ 	perf_evlist__free_stats(session->evlist);
+ 	perf_session__delete(session);
  
 -- 
 2.14.3
