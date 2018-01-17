@@ -1,147 +1,268 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/32] tools lib traceevent: Use asprintf when possible
-Date: Wed, 17 Jan 2018 13:12:04 -0300
-Message-ID: <20180117161222.15611-15-acme@kernel.org>
+Subject: [PATCH 20/32] perf unwind: Do not look just at the global callchain_param.record_mode
+Date: Wed, 17 Jan 2018 13:12:10 -0300
+Message-ID: <20180117161222.15611-21-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Federico Vaga <federico.vaga@vaga.pv.it>, Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Federico Vaga <federico.vaga@vaga.pv.it>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It makes the code clearer and less error prone.
+When setting up DWARF callchains on specific events, without using
+'record' or 'trace' --call-graph, but instead doing it like:
 
-clearer:
-- less code
-- the code is now using the same format to create strings dynamically
+	perf trace -e cycles/call-graph=dwarf/
 
-less error prone:
-- no magic number +2 +9 +5 to compute the size
-- no copy&paste of the strings to compute the size and to concatenate
+The unwind__prepare_access() call in thread__insert_map() when we
+process PERF_RECORD_MMAP(2) metadata events were not being performed,
+precluding us from using per-event DWARF callchains, handling them just
+when we asked for all events to be DWARF, using "--call-graph dwarf".
 
-The function `asprintf` is not POSIX standard but the program
-was already using it. Later it can be decided to use only POSIX
-functions, then we can easly replace all the `asprintf(3)` with a local
-implementation of that function.
+We do it in the PERF_RECORD_MMAP because we have to look at one of the
+executable maps to figure out the executable type (64-bit, 32-bit) of
+the DSO laid out in that mmap. Also to look at the architecture where
+the perf.data file was recorded.
 
-Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+All this probably should be deferred to when we process a sample for
+some thread that has callchains, so that we do this processing only for
+the threads with samples, not for all of them.
+
+For now, fix using DWARF on specific events.
+
+Before:
+
+  # perf trace --no-syscalls -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.048 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.048/0.048/0.048/0.000 ms
+     0.000 probe_libc:inet_pton:(7fe9597bb350))
+  Problem processing probe_libc:inet_pton callchain, skipping...
+  #
+
+After:
+
+  # perf trace --no-syscalls -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.060 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.060/0.060/0.060/0.000 ms
+       0.000 probe_libc:inet_pton:(7fd4aa930350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+                                         [0xffffaa804e51af3f] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa804e51b379] (/usr/bin/ping)
+  #
+  # perf trace --call-graph=dwarf --no-syscalls -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.057 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.057/0.057/0.057/0.000 ms
+       0.000 probe_libc:inet_pton:(7f9363b9e350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+                                         [0xffffa9e8a14e0f3f] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffa9e8a14e1379] (/usr/bin/ping)
+  #
+  # perf trace --call-graph=fp --no-syscalls -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.077 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.077/0.077/0.077/0.000 ms
+       0.000 probe_libc:inet_pton:(7f4947e1c350))
+                                         __inet_pton (inlined)
+                                         gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+                                         __GI_getaddrinfo (inlined)
+                                         [0xffffaa716d88ef3f] (/usr/bin/ping)
+                                         __libc_start_main (/usr/lib64/libc-2.26.so)
+                                         [0xffffaa716d88f379] (/usr/bin/ping)
+  #
+  # perf trace --no-syscalls -e probe_libc:inet_pton/call-graph=fp/ ping -6 -c 1 ::1
+  PING ::1(::1) 56 data bytes
+  64 bytes from ::1: icmp_seq=1 ttl=64 time=0.078 ms
+
+  --- ::1 ping statistics ---
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.078/0.078/0.078/0.000 ms
+       0.000 probe_libc:inet_pton:(7fa157696350))
+                                         __GI___inet_pton (/usr/lib64/libc-2.26.so)
+                                         getaddrinfo (/usr/lib64/libc-2.26.so)
+                                         [0xffffa9ba39c74f40] (/usr/bin/ping)
+  #
+
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Federico Vaga <federico.vaga@vaga.pv.it>
-Link: http://lkml.kernel.org/r/20170802221558.9684-2-federico.vaga@vaga.pv.it
-Link: http://lkml.kernel.org/r/20180112004822.686281649@goodmis.org
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/r/20180116182650.GE16107@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-plugin.c | 24 +++++++++---------------
- tools/lib/traceevent/parse-filter.c | 11 ++++-------
- 2 files changed, 13 insertions(+), 22 deletions(-)
+ tools/perf/builtin-c2c.c                 |  5 +++--
+ tools/perf/builtin-report.c              |  5 +++--
+ tools/perf/builtin-script.c              |  5 +++--
+ tools/perf/tests/dwarf-unwind.c          |  1 +
+ tools/perf/util/callchain.c              | 10 ++++++++++
+ tools/perf/util/callchain.h              |  2 ++
+ tools/perf/util/unwind-libunwind-local.c |  9 +++------
+ 7 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index a16756ae3526..d542cb60ca1a 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -120,12 +120,12 @@ char **traceevent_plugin_list_options(void)
- 		for (op = reg->options; op->name; op++) {
- 			char *alias = op->plugin_alias ? op->plugin_alias : op->file;
- 			char **temp = list;
-+			int ret;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index c0debc3f79b6..c0815a37fdb5 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2390,9 +2390,10 @@ static int setup_callchain(struct perf_evlist *evlist)
+ 	enum perf_call_graph_mode mode = CALLCHAIN_NONE;
  
--			name = malloc(strlen(op->name) + strlen(alias) + 2);
--			if (!name)
-+			ret = asprintf(&name, "%s:%s", alias, op->name);
-+			if (ret < 0)
- 				goto err;
+ 	if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+-	    (sample_type & PERF_SAMPLE_STACK_USER))
++	    (sample_type & PERF_SAMPLE_STACK_USER)) {
+ 		mode = CALLCHAIN_DWARF;
+-	else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
++		dwarf_callchain_users = true;
++	} else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
+ 		mode = CALLCHAIN_LBR;
+ 	else if (sample_type & PERF_SAMPLE_CALLCHAIN)
+ 		mode = CALLCHAIN_FP;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index dd4df9a5cd06..6593779224d5 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -338,9 +338,10 @@ static int report__setup_sample_type(struct report *rep)
  
--			sprintf(name, "%s:%s", alias, op->name);
- 			list = realloc(list, count + 2);
- 			if (!list) {
- 				list = temp;
-@@ -290,17 +290,14 @@ load_plugin(struct pevent *pevent, const char *path,
- 	const char *alias;
- 	char *plugin;
- 	void *handle;
-+	int ret;
+ 	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
+ 		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+-		    (sample_type & PERF_SAMPLE_STACK_USER))
++		    (sample_type & PERF_SAMPLE_STACK_USER)) {
+ 			callchain_param.record_mode = CALLCHAIN_DWARF;
+-		else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
++			dwarf_callchain_users = true;
++		} else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
+ 			callchain_param.record_mode = CALLCHAIN_LBR;
+ 		else
+ 			callchain_param.record_mode = CALLCHAIN_FP;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c1cce474c0f1..08bc818f371b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2919,9 +2919,10 @@ static void script__setup_sample_type(struct perf_script *script)
  
--	plugin = malloc(strlen(path) + strlen(file) + 2);
--	if (!plugin) {
-+	ret = asprintf(&plugin, "%s/%s", path, file);
-+	if (ret < 0) {
- 		warning("could not allocate plugin memory\n");
- 		return;
+ 	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
+ 		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+-		    (sample_type & PERF_SAMPLE_STACK_USER))
++		    (sample_type & PERF_SAMPLE_STACK_USER)) {
+ 			callchain_param.record_mode = CALLCHAIN_DWARF;
+-		else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
++			dwarf_callchain_users = true;
++		} else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
+ 			callchain_param.record_mode = CALLCHAIN_LBR;
+ 		else
+ 			callchain_param.record_mode = CALLCHAIN_FP;
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index ac40e05bcab4..260418969120 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
+@@ -173,6 +173,7 @@ int test__dwarf_unwind(struct test *test __maybe_unused, int subtest __maybe_unu
  	}
  
--	strcpy(plugin, path);
--	strcat(plugin, "/");
--	strcat(plugin, file);
+ 	callchain_param.record_mode = CALLCHAIN_DWARF;
++	dwarf_callchain_users = true;
+ 
+ 	if (init_live_machine(machine)) {
+ 		pr_err("Could not init machine\n");
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 082505d08d72..32ef7bdca1cf 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -37,6 +37,15 @@ struct callchain_param callchain_param = {
+ 	CALLCHAIN_PARAM_DEFAULT
+ };
+ 
++/*
++ * Are there any events usind DWARF callchains?
++ *
++ * I.e.
++ *
++ * -e cycles/call-graph=dwarf/
++ */
++bool dwarf_callchain_users;
++
+ struct callchain_param callchain_param_default = {
+ 	CALLCHAIN_PARAM_DEFAULT
+ };
+@@ -265,6 +274,7 @@ int parse_callchain_record(const char *arg, struct callchain_param *param)
+ 			ret = 0;
+ 			param->record_mode = CALLCHAIN_DWARF;
+ 			param->dump_size = default_stack_dump_size;
++			dwarf_callchain_users = true;
+ 
+ 			tok = strtok_r(NULL, ",", &saveptr);
+ 			if (tok) {
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index b79ef2478a57..154560b1eb65 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -89,6 +89,8 @@ enum chain_value {
+ 	CCVAL_COUNT,
+ };
+ 
++extern bool dwarf_callchain_users;
++
+ struct callchain_param {
+ 	bool			enabled;
+ 	enum perf_call_graph_mode record_mode;
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 7a42f703e858..af873044d33a 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -631,9 +631,8 @@ static unw_accessors_t accessors = {
+ 
+ static int _unwind__prepare_access(struct thread *thread)
+ {
+-	if (callchain_param.record_mode != CALLCHAIN_DWARF)
++	if (!dwarf_callchain_users)
+ 		return 0;
 -
- 	handle = dlopen(plugin, RTLD_NOW | RTLD_GLOBAL);
- 	if (!handle) {
- 		warning("could not load plugin '%s'\n%s\n",
-@@ -391,6 +388,7 @@ load_plugins(struct pevent *pevent, const char *suffix,
- 	char *home;
- 	char *path;
- 	char *envdir;
-+	int ret;
+ 	thread->addr_space = unw_create_addr_space(&accessors, 0);
+ 	if (!thread->addr_space) {
+ 		pr_err("unwind: Can't create unwind address space.\n");
+@@ -646,17 +645,15 @@ static int _unwind__prepare_access(struct thread *thread)
  
- 	if (pevent->flags & PEVENT_DISABLE_PLUGINS)
+ static void _unwind__flush_access(struct thread *thread)
+ {
+-	if (callchain_param.record_mode != CALLCHAIN_DWARF)
++	if (!dwarf_callchain_users)
  		return;
-@@ -421,16 +419,12 @@ load_plugins(struct pevent *pevent, const char *suffix,
- 	if (!home)
- 		return;
- 
--	path = malloc(strlen(home) + strlen(LOCAL_PLUGIN_DIR) + 2);
--	if (!path) {
-+	ret = asprintf(&path, "%s/%s", home, LOCAL_PLUGIN_DIR);
-+	if (ret < 0) {
- 		warning("could not allocate plugin memory\n");
- 		return;
- 	}
- 
--	strcpy(path, home);
--	strcat(path, "/");
--	strcat(path, LOCAL_PLUGIN_DIR);
 -
- 	load_plugins_dir(pevent, suffix, path, load_plugin, data);
+ 	unw_flush_cache(thread->addr_space, 0, 0);
+ }
  
- 	free(path);
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 315df0a70265..2410afdcbcfe 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -287,12 +287,10 @@ find_event(struct pevent *pevent, struct event_list **events,
- 		sys_name = NULL;
- 	}
- 
--	reg = malloc(strlen(event_name) + 3);
--	if (reg == NULL)
-+	ret = asprintf(&reg, "^%s$", event_name);
-+	if (ret < 0)
- 		return PEVENT_ERRNO__MEM_ALLOC_FAILED;
- 
--	sprintf(reg, "^%s$", event_name);
+ static void _unwind__finish_access(struct thread *thread)
+ {
+-	if (callchain_param.record_mode != CALLCHAIN_DWARF)
++	if (!dwarf_callchain_users)
+ 		return;
 -
- 	ret = regcomp(&ereg, reg, REG_ICASE|REG_NOSUB);
- 	free(reg);
+ 	unw_destroy_addr_space(thread->addr_space);
+ }
  
-@@ -300,13 +298,12 @@ find_event(struct pevent *pevent, struct event_list **events,
- 		return PEVENT_ERRNO__INVALID_EVENT_NAME;
- 
- 	if (sys_name) {
--		reg = malloc(strlen(sys_name) + 3);
--		if (reg == NULL) {
-+		ret = asprintf(&reg, "^%s$", sys_name);
-+		if (ret < 0) {
- 			regfree(&ereg);
- 			return PEVENT_ERRNO__MEM_ALLOC_FAILED;
- 		}
- 
--		sprintf(reg, "^%s$", sys_name);
- 		ret = regcomp(&sreg, reg, REG_ICASE|REG_NOSUB);
- 		free(reg);
- 		if (ret) {
 -- 
 2.14.3
