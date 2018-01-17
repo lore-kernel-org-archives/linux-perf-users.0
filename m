@@ -1,50 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf record: Fix failed memory allocation for
- get_cpuid_str
-Date: Wed, 17 Jan 2018 10:31:56 -0300
-Message-ID: <20180117133156.GG30880@kernel.org>
-References: <20180117131611.34319-1-tmricht@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH 01/32] perf evsel: Fix incorrect handling of type _TERM_DRV_CFG
+Date: Wed, 17 Jan 2018 13:11:51 -0300
+Message-ID: <20180117161222.15611-2-acme@kernel.org>
+References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180117131611.34319-1-tmricht@linux.vnet.ibm.com>
+In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Jan 17, 2018 at 02:16:11PM +0100, Thomas Richter escreveu:
-> In x86 architecture dependend part function
-> get_cpuid_str() mallocs a 128 byte buffer, but does not
-> check if the memory allocation succeeded or not.
-> When the memory allocation fails, function __get_cpuid()
-> is called with first parameter being a NULL pointer.
-> However this function references its first parameter
-> and operates on a NULL pointer which might cause core
-> dumps.
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Thanks, applied.
+Commit ("d0565132605f perf evsel: Enable type checking for
+perf_evsel_config_term types") assumes PERF_EVSEL__CONFIG_TERM_DRV_CFG
+isn't used and as such adds a BUG_ON().
 
-- Arnaldo
- 
-> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> ---
->  tools/perf/arch/x86/util/header.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-> index 33027c5e6f92..c6b5204e0280 100644
-> --- a/tools/perf/arch/x86/util/header.c
-> +++ b/tools/perf/arch/x86/util/header.c
-> @@ -70,7 +70,7 @@ get_cpuid_str(void)
->  {
->  	char *buf = malloc(128);
->  
-> -	if (__get_cpuid(buf, 128, "%s-%u-%X$") < 0) {
-> +	if (buf && __get_cpuid(buf, 128, "%s-%u-%X$") < 0) {
->  		free(buf);
->  		return NULL;
->  	}
-> -- 
-> 2.13.4
+Since the enumeration type is used in macro ADD_CONFIG_TERM() the change
+break CoreSight trace acquisition.
+
+This patch restores the original code.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: d0565132605f ("perf evsel: Enable type checking for perf_evsel_config_term types")
+Link: http://lkml.kernel.org/r/1515617211-32024-1-git-send-email-mathieu.poirier@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d934f04e3110..4eea3b404507 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -781,7 +781,7 @@ static void apply_config_terms(struct perf_evsel *evsel,
+ 			attr->write_backward = term->val.overwrite ? 1 : 0;
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_DRV_CFG:
+-			BUG_ON(1);
++			break;
+ 		default:
+ 			break;
+ 		}
+-- 
+2.14.3
