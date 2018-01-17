@@ -1,44 +1,49 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/32] tools lib traceevent: Fix bad force_token escape sequence
-Date: Wed, 17 Jan 2018 13:11:58 -0300
-Message-ID: <20180117161222.15611-9-acme@kernel.org>
+Subject: [PATCH 05/32] perf tools: Fix copyfile_offset update of output offset
+Date: Wed, 17 Jan 2018 13:11:55 -0300
+Message-ID: <20180117161222.15611-6-acme@kernel.org>
 References: <20180117161222.15611-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Sartain <mikesart@fastmail.com>, Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Sartain <mikesart@fastmail.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Older kernels have a bug that creates invalid symbols. event-parse.c
-handles them by replacing them with a "%s" token. But the fix included
-an extra backslash, and "\%s" was added incorrectly.
+We need to increase output offset in each iteration, not decrease it as
+we currently do.
 
-Signed-off-by: Michael Sartain <mikesart@fastmail.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: http://lkml.kernel.org/r/20180112004821.827168881@goodmis.org
-Link: http://lkml.kernel.org/r/d320000d37c10ce0912851e1fb78d1e0c946bcd9.1497486273.git.mikesart@fastmail.com
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+I guess we were lucky to finish in most cases in first iteration, so the
+bug never showed. However it shows a lot when working with big (~4GB)
+size data.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 9c9f5a2f1944 ("perf tools: Introduce copyfile_offset() function")
+Link: http://lkml.kernel.org/r/20180109133923.25406-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
+ tools/perf/util/util.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 7ce724fc0544..0bc1a6df8a27 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1094,7 +1094,7 @@ static enum event_type __read_token(char **tok)
- 		if (strcmp(*tok, "LOCAL_PR_FMT") == 0) {
- 			free(*tok);
- 			*tok = NULL;
--			return force_token("\"\%s\" ", tok);
-+			return force_token("\"%s\" ", tok);
- 		} else if (strcmp(*tok, "STA_PR_FMT") == 0) {
- 			free(*tok);
- 			*tok = NULL;
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index a789f952b3e9..443892dabedb 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -210,7 +210,7 @@ static int copyfile_offset(int ifd, loff_t off_in, int ofd, loff_t off_out, u64
+ 
+ 		size -= ret;
+ 		off_in += ret;
+-		off_out -= ret;
++		off_out += ret;
+ 	}
+ 	munmap(ptr, off_in + size);
+ 
 -- 
 2.14.3
