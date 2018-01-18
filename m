@@ -1,74 +1,74 @@
-From: Lin Xiulei <linxiulei@gmail.com>
-Subject: Re: [PATCH] perf/core: Fix installing cgroup event into cpu
-Date: Thu, 18 Jan 2018 09:57:40 +0800
-Message-ID: <CALPjY3k3NQv0_VtgcOR86kchDxMQuJoWMDuzzw7QTQbQ5c8-1g@mail.gmail.com>
-References: <20180111030958.8627-1-linxiulei@gmail.com>
+From: Dmitry Menshikov <d.menshikov@gmail.com>
+Subject: Slow tcp_write_xmit/tcp_ack syscalls with a lot of save_stack calls
+ on OpenVZ kernel
+Date: Thu, 18 Jan 2018 10:28:35 +0200
+Message-ID: <CAFNYHvrWHfUr3bbid1iEfGTwP53g5r=fGmvSsRRtamSfJLFO=w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-vk0-f66.google.com ([209.85.213.66]:40322 "EHLO
-        mail-vk0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752965AbeARB5l (ORCPT
+Received: from mail-lf0-f48.google.com ([209.85.215.48]:37946 "EHLO
+        mail-lf0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750931AbeARI2i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Jan 2018 20:57:41 -0500
-In-Reply-To: <20180111030958.8627-1-linxiulei@gmail.com>
+        Thu, 18 Jan 2018 03:28:38 -0500
+Received: by mail-lf0-f48.google.com with SMTP id g72so19992666lfg.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jan 2018 00:28:37 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@redhat.com>, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, Stephane Eranian <eranian@gmail.com>, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, Brendan Gregg <brendan.d.gregg@gmail.com>
+To: linux-perf-users@vger.kernel.org
 
-Hi Peter
+Hi! I'm new in kernel debugging, so I'm asking for help.
 
-Could you please have a look of this
+I ran into a trouble with bad network performance on Centos. The issue
+was observed on the latest OpenVZ RHEL7 kernel (3.10 based) on Dell
+server with 24 cores and Broadcom 5720 NIC. No matter it was host
+system or OpenVZ container. Server receives RTMP connections and
+reproxy RTMP streams to another consumers. Reads and writes was
+unstable and streams froze periodically for a few seconds.
 
-thanks
+I've started to check system using strace and perf. Strace affects
+system heavily and seems that only perf may help. I've used OpenVZ
+debug kernel with debugfs enabled. I've found that system spends too
+much time in swapper process (according to perf data). I've built
+flame graph for the system under load (100mbit in data, 200 mbit out)
+and have noticed that kernel spent too much time in tcp_write_xmit and
+tcp_ack. On the top of these calls I see save_stack syscalls.
 
-2018-01-11 11:09 GMT+08:00  <linxiulei@gmail.com>:
-> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
->
-> Do not install cgroup event into the CPU context if the cgroup
-> is not running on this CPU
->
-> While there is no task of cgroup running specified CPU, current
-> kernel still install cgroup event into CPU context, that causes
-> another cgroup event can't be installed into this CPU.
->
-> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
-> ---
->  kernel/events/core.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4df5b69..19c587b 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2284,6 +2284,7 @@ static int  __perf_install_in_context(void *info)
->         struct perf_event_context *ctx = event->ctx;
->         struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
->         struct perf_event_context *task_ctx = cpuctx->task_ctx;
-> +       struct perf_cgroup *cgrp;
->         bool reprogram = true;
->         int ret = 0;
->
-> @@ -2311,6 +2312,19 @@ static int  __perf_install_in_context(void *info)
->                 raw_spin_lock(&task_ctx->lock);
->         }
->
-> +       if (event->cgrp) {
-> +               /*
-> +                * Only care about cgroup events.
-> +                *
-> +                * If only the task belongs to cgroup of this event,
-> +                * we will continue the installment
-> +                */
-> +               cgrp = perf_cgroup_from_task(current, ctx);
-> +               if (!cgroup_is_descendant(cgrp->css.cgroup,
-> +                                       event->cgrp->css.cgroup))
-> +                       goto unlock;
-> +       }
-> +
->         if (reprogram) {
->                 ctx_sched_out(ctx, cpuctx, EVENT_TIME);
->                 add_event_to_ctx(event, ctx);
-> --
-> 2.8.4.31.g9ed660f
->
+On another hand, I tested the same scenario on Amazon EC2 instance
+(latest Amazon Linux AMI 2017.09) and perf doesn't track such issues.
+Total amount of samples was 300000, system spends 82% of time
+according to perf samples in swapper, but net_rx_action (and as
+consequent tcp_write_xmit and tcp_ack) in swapper takes only 1797
+samples (0.59% of total amount of samples). On the top of
+net_rx_action call in flame graph I don't see any calls related to
+stack traces.
+
+https://i.stack.imgur.com/XdnBT.png
+
+Output of OpenVZ system looks differently. Among 1833152 samples
+500892 (27%) was in swapper process, 194289 samples (10.5%) was in
+net_rx_action.
+
+https://i.stack.imgur.com/BCtil.png
+
+Full svg of calls on vzkernel7 is here
+(https://www.dropbox.com/s/n2g2cywakhl58mb/vzkernel7_all_processes.svg?dl=0)
+and svg of EC2 instance calls is here
+(https://www.dropbox.com/s/gh0uxltxa1ws0ir/ec2_all_processes.svg?dl=0).
+
+So, I want to ask for help and I have few questions.
+
+1) Why flame graph from EC2 instance doesn't contain so much
+save_stack calls like my server?
+2) Does perf forces system to call save_stack or it's some kernel
+setting? May it be disabled and how?
+3) Does Xen on EC2 guest process all tcp_ack and other syscalls? Is it
+possible that host system on EC2 server makes some job and guest
+system doesn't see it?
+
+Thank you for a help.
+
+
+-- 
+Yours truly, Dmitry Menshikov
+http://dmenshikov.com
