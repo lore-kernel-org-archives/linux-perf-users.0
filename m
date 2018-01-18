@@ -1,8 +1,8 @@
-From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 3/5] perf util: Introduce architecture specific
  errno/name mapping
-Date: Thu, 18 Jan 2018 12:33:20 +0100
-Message-ID: <20180118113320.GC4600@linux.vnet.ibm.com>
+Date: Thu, 18 Jan 2018 13:19:26 +0100
+Message-ID: <20180118121926.GA25983@krava>
 References: <1516095991-16337-1-git-send-email-brueckner@linux.vnet.ibm.com>
  <1516095991-16337-4-git-send-email-brueckner@linux.vnet.ibm.com>
  <20180118100733.GA18567@krava>
@@ -10,28 +10,17 @@ References: <1516095991-16337-1-git-send-email-brueckner@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750841AbeARLd2 (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:46604 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750947AbeARMT2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Jan 2018 06:33:28 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w0IBVkRm159917
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jan 2018 06:33:27 -0500
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2fjtk2rve8-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jan 2018 06:33:27 -0500
-Received: from localhost
-        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Thu, 18 Jan 2018 11:33:25 -0000
+        Thu, 18 Jan 2018 07:19:28 -0500
 Content-Disposition: inline
 In-Reply-To: <20180118104953.GA18383@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 
 On Thu, Jan 18, 2018 at 07:49:53AM -0300, Arnaldo Carvalho de Melo wrote:
 > Em Thu, Jan 18, 2018 at 11:07:33AM +0100, Jiri Olsa escreveu:
@@ -82,25 +71,8 @@ On Thu, Jan 18, 2018 at 07:49:53AM -0300, Arnaldo Carvalho de Melo wrote:
 > On an arm64 system:
 > 
 > 	perf trace record -a sleep 1
-> 
-> scp that to an x86_64 system and do:
-> 
-> 	perf trace -i perf.data
-> 
-> But doing that strcmp per call seems excessive, perhaps we could have
-> something like:
-> 
-> 	trace->arch = arch_syscalls__init(arch_name);
-> 
-> 	char *s = arch_syscalls__strerrno(trace->arch, err);
-> 
-> Have to look at the code to find the right naming according to what we
-> already have.
 
-Another idea to get rid of the strcmp's is to introduce an arch enum
-and let normalize_arch() in util/env.c return an enum number and handle
-the arch stuff then on the enum.  Where necessary, the arch string can
-be used.  But for "internal" purposes, an enum would be better.
+oops, forgot we can store in perf trace.. ok then ;-)
 
-Thanks and kind regards,
-  Hendrik
+thanks,
+jirka
