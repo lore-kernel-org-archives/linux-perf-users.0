@@ -1,83 +1,74 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/32] perf trace: No need to set PERF_SAMPLE_IDENTIFIER explicitely
-Date: Wed, 17 Jan 2018 13:11:54 -0300
-Message-ID: <20180117161222.15611-5-acme@kernel.org>
-References: <20180117161222.15611-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180117161222.15611-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Hendrick Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Lin Xiulei <linxiulei@gmail.com>
+Subject: Re: [PATCH] perf/core: Fix installing cgroup event into cpu
+Date: Thu, 18 Jan 2018 09:57:40 +0800
+Message-ID: <CALPjY3k3NQv0_VtgcOR86kchDxMQuJoWMDuzzw7QTQbQ5c8-1g@mail.gmail.com>
+References: <20180111030958.8627-1-linxiulei@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-vk0-f66.google.com ([209.85.213.66]:40322 "EHLO
+        mail-vk0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752965AbeARB5l (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 17 Jan 2018 20:57:41 -0500
+In-Reply-To: <20180111030958.8627-1-linxiulei@gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@redhat.com>, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, Stephane Eranian <eranian@gmail.com>, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, Brendan Gregg <brendan.d.gregg@gmail.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Peter
 
-Since 75562573bab3 ("perf tools: Add support for
-PERF_SAMPLE_IDENTIFIER") we don't need explicitely set
-PERF_SAMPLE_IDENTIFIER, as perf_evlist__config() will do this for us,
-i.e. when there are more than one evsel in an evlist, it will check if
-some evsel has a sample_type different than the one on the first evsel
-in the list, setting PERF_SAMPLE_IDENTIFIER in that case.
+Could you please have a look of this
 
-So, to simplify 'perf trace' codebase, ditch that check.
+thanks
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrick Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-12xq6orhwttee2tdtu96ucrp@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 23 -----------------------
- 1 file changed, 23 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 71e64bdca86f..e84816d02117 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2348,40 +2348,17 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	perf_evlist__config(evlist, &trace->opts, NULL);
- 
- 	if (callchain_param.enabled) {
--		bool use_identifier = false;
--
- 		if (trace->syscalls.events.sys_exit) {
- 			perf_evsel__config_callchain(trace->syscalls.events.sys_exit,
- 						     &trace->opts, &callchain_param);
--			use_identifier = true;
- 		}
- 
- 		if (pgfault_maj) {
- 			perf_evsel__config_callchain(pgfault_maj, &trace->opts, &callchain_param);
--			use_identifier = true;
- 		}
- 
- 		if (pgfault_min) {
- 			perf_evsel__config_callchain(pgfault_min, &trace->opts, &callchain_param);
--			use_identifier = true;
--		}
--
--		if (use_identifier) {
--		       /*
--			* Now we have evsels with different sample_ids, use
--			* PERF_SAMPLE_IDENTIFIER to map from sample to evsel
--			* from a fixed position in each ring buffer record.
--			*
--			* As of this the changeset introducing this comment, this
--			* isn't strictly needed, as the fields that can come before
--			* PERF_SAMPLE_ID are all used, but we'll probably disable
--			* some of those for things like copying the payload of
--			* pointer syscall arguments, and for vfs_getname we don't
--			* need PERF_SAMPLE_ADDR and PERF_SAMPLE_IP, so do this
--			* here as a warning we need to use PERF_SAMPLE_IDENTIFIER.
--			*/
--			perf_evlist__set_sample_bit(evlist, IDENTIFIER);
--			perf_evlist__reset_sample_bit(evlist, ID);
- 		}
- 	}
- 
--- 
-2.14.3
+2018-01-11 11:09 GMT+08:00  <linxiulei@gmail.com>:
+> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+>
+> Do not install cgroup event into the CPU context if the cgroup
+> is not running on this CPU
+>
+> While there is no task of cgroup running specified CPU, current
+> kernel still install cgroup event into CPU context, that causes
+> another cgroup event can't be installed into this CPU.
+>
+> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+> ---
+>  kernel/events/core.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4df5b69..19c587b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2284,6 +2284,7 @@ static int  __perf_install_in_context(void *info)
+>         struct perf_event_context *ctx = event->ctx;
+>         struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+>         struct perf_event_context *task_ctx = cpuctx->task_ctx;
+> +       struct perf_cgroup *cgrp;
+>         bool reprogram = true;
+>         int ret = 0;
+>
+> @@ -2311,6 +2312,19 @@ static int  __perf_install_in_context(void *info)
+>                 raw_spin_lock(&task_ctx->lock);
+>         }
+>
+> +       if (event->cgrp) {
+> +               /*
+> +                * Only care about cgroup events.
+> +                *
+> +                * If only the task belongs to cgroup of this event,
+> +                * we will continue the installment
+> +                */
+> +               cgrp = perf_cgroup_from_task(current, ctx);
+> +               if (!cgroup_is_descendant(cgrp->css.cgroup,
+> +                                       event->cgrp->css.cgroup))
+> +                       goto unlock;
+> +       }
+> +
+>         if (reprogram) {
+>                 ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+>                 add_event_to_ctx(event, ctx);
+> --
+> 2.8.4.31.g9ed660f
+>
