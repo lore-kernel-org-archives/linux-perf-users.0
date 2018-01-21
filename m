@@ -1,45 +1,47 @@
-From: Jaroslav Skarvada <jskarvad@redhat.com>
-Subject: Re: [PATCH] perf: add Python 3 support
-Date: Fri, 19 Jan 2018 16:01:25 -0500 (EST)
-Message-ID: <1953812760.1652541.1516395685287.JavaMail.zimbra@redhat.com>
-References: <20180119205641.24242-1-jskarvad@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 5/5] perf trace: Remove audit-libs dependency if
+ syscall tables are present
+Date: Sun, 21 Jan 2018 09:27:48 -0300
+Message-ID: <20180121122748.GF23453@kernel.org>
+References: <1516352177-11106-1-git-send-email-brueckner@linux.vnet.ibm.com>
+ <1516352177-11106-6-git-send-email-brueckner@linux.vnet.ibm.com>
+ <20180119140426.GB23453@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:49818 "EHLO mx1.redhat.com"
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751466AbeASVBZ (ORCPT
+        id S1751019AbeAUM1w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Jan 2018 16:01:25 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7FC02DF14
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2018 21:01:25 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73A9260C9B
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2018 21:01:25 +0000 (UTC)
-Received: from zmail22.collab.prod.int.phx2.redhat.com (zmail22.collab.prod.int.phx2.redhat.com [10.5.83.26])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 69D7D1800B60
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2018 21:01:25 +0000 (UTC)
-In-Reply-To: <20180119205641.24242-1-jskarvad@redhat.com>
+        Sun, 21 Jan 2018 07:27:52 -0500
+Content-Disposition: inline
+In-Reply-To: <20180119140426.GB23453@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
+To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is an updated patch for kernel-4.15.0-0.rc8. It also applies to
-linux-stable HEAD. Our project Tuned is consumer of python-perf.
-We are trying to switch Tuned to Python 3 and the python-perf is
-the only blocker for us at the moment.
+Em Fri, Jan 19, 2018 at 11:04:26AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jan 19, 2018 at 09:56:17AM +0100, Hendrik Brueckner escreveu:
+> > Change the Makefile and build process to no longer require audit-libs
+> > interfaces when the architecture provides system call tables.
+> > 
+> > Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+> > Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> 
+> So, I need this extra patch to really stop linking against
+> audit-libs-devel (aka libaudit), which I merged with this 5/5 patch and
+> have now in my tree, thanks for your work!
 
-Downstream Fedora bugzilla containing the scratch build and
-Fedora Spec patch:
-https://bugzilla.redhat.com/show_bug.cgi?id=1536656
+So, test building it on centos:5 fails:
 
-The patch needs testing, but with our use case in Tuned
-it seems to work. Any comments or patch updates are welcome
+  CC       /tmp/build/perf/bench/sched-messaging.o
+In file included from trace/beauty/arch_errno_names.c:1,
+                 from builtin-trace.c:547:
+/tmp/build/perf/trace/beauty/generated/arch_errno_name_array.c:1708:2: error: no newline at end of file
 
-thanks & regards
+I'm fixing this up.
 
-Jaroslav
+- Arnaldo
