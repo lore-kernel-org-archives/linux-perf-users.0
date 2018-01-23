@@ -1,230 +1,442 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 36/43] perf tools: Add mechanic to synthesise CoreSight trace packets
-Date: Tue, 23 Jan 2018 10:12:44 -0300
-Message-ID: <20180123131251.28197-37-acme@kernel.org>
+Subject: [PATCH 26/43] perf vendor events intel: Update IvyBridge files to V20
+Date: Tue, 23 Jan 2018 10:12:34 -0300
+Message-ID: <20180123131251.28197-27-acme@kernel.org>
 References: <20180123131251.28197-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180123131251.28197-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, Mike Leach <mike.leach@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-Once decoded from trace packets information on trace range needs
-to be communicated to the perf synthesis infrastructure so that it
-is available to the perf tools built-in rendering tools and scripts.
-
-Co-authored-by: Tor Jeremiassen <tor@ti.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Mike Leach <mike.leach@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1516211539-5166-10-git-send-email-mathieu.poirier@linaro.org
+Link: https://lkml.kernel.org/r/20180118234518.GA27753@tassilo.jf.intel.com
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 168 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
+ .../perf/pmu-events/arch/x86/ivybridge/cache.json  | 324 +++++++++++++++++++++
+ .../perf/pmu-events/arch/x86/ivybridge/memory.json |  72 +++++
+ 2 files changed, 396 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 407095af1456..b9f0a53dfa65 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -453,6 +453,157 @@ static void  cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
- 	}
- }
- 
-+/*
-+ * The cs etm packet encodes an instruction range between a branch target
-+ * and the next taken branch. Generate sample accordingly.
-+ */
-+static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
-+				       struct cs_etm_packet *packet)
-+{
-+	int ret = 0;
-+	struct cs_etm_auxtrace *etm = etmq->etm;
-+	struct perf_sample sample = {.ip = 0,};
-+	union perf_event *event = etmq->event_buf;
-+	u64 start_addr = packet->start_addr;
-+	u64 end_addr = packet->end_addr;
-+
-+	event->sample.header.type = PERF_RECORD_SAMPLE;
-+	event->sample.header.misc = PERF_RECORD_MISC_USER;
-+	event->sample.header.size = sizeof(struct perf_event_header);
-+
-+	sample.ip = start_addr;
-+	sample.pid = etmq->pid;
-+	sample.tid = etmq->tid;
-+	sample.addr = end_addr;
-+	sample.id = etmq->etm->branches_id;
-+	sample.stream_id = etmq->etm->branches_id;
-+	sample.period = 1;
-+	sample.cpu = packet->cpu;
-+	sample.flags = 0;
-+	sample.cpumode = PERF_RECORD_MISC_USER;
-+
-+	ret = perf_session__deliver_synth_event(etm->session, event, &sample);
-+
-+	if (ret)
-+		pr_err(
-+		"CS ETM Trace: failed to deliver instruction event, error %d\n",
-+		ret);
-+
-+	return ret;
-+}
-+
-+struct cs_etm_synth {
-+	struct perf_tool dummy_tool;
-+	struct perf_session *session;
-+};
-+
-+static int cs_etm__event_synth(struct perf_tool *tool,
-+			       union perf_event *event,
-+			       struct perf_sample *sample __maybe_unused,
-+			       struct machine *machine __maybe_unused)
-+{
-+	struct cs_etm_synth *cs_etm_synth =
-+		      container_of(tool, struct cs_etm_synth, dummy_tool);
-+
-+	return perf_session__deliver_synth_event(cs_etm_synth->session,
-+						 event, NULL);
-+}
-+
-+static int cs_etm__synth_event(struct perf_session *session,
-+			       struct perf_event_attr *attr, u64 id)
-+{
-+	struct cs_etm_synth cs_etm_synth;
-+
-+	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
-+	cs_etm_synth.session = session;
-+
-+	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
-+					   &id, cs_etm__event_synth);
-+}
-+
-+static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
-+				struct perf_session *session)
-+{
-+	struct perf_evlist *evlist = session->evlist;
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr;
-+	bool found = false;
-+	u64 id;
-+	int err;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->attr.type == etm->pmu_type) {
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		pr_debug("No selected events with CoreSight Trace data\n");
-+		return 0;
-+	}
-+
-+	memset(&attr, 0, sizeof(struct perf_event_attr));
-+	attr.size = sizeof(struct perf_event_attr);
-+	attr.type = PERF_TYPE_HARDWARE;
-+	attr.sample_type = evsel->attr.sample_type & PERF_SAMPLE_MASK;
-+	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
-+			    PERF_SAMPLE_PERIOD;
-+	if (etm->timeless_decoding)
-+		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
-+	else
-+		attr.sample_type |= PERF_SAMPLE_TIME;
-+
-+	attr.exclude_user = evsel->attr.exclude_user;
-+	attr.exclude_kernel = evsel->attr.exclude_kernel;
-+	attr.exclude_hv = evsel->attr.exclude_hv;
-+	attr.exclude_host = evsel->attr.exclude_host;
-+	attr.exclude_guest = evsel->attr.exclude_guest;
-+	attr.sample_id_all = evsel->attr.sample_id_all;
-+	attr.read_format = evsel->attr.read_format;
-+
-+	/* create new id val to be a fixed offset from evsel id */
-+	id = evsel->id[0] + 1000000000;
-+
-+	if (!id)
-+		id = 1;
-+
-+	if (etm->synth_opts.branches) {
-+		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
-+		attr.sample_period = 1;
-+		attr.sample_type |= PERF_SAMPLE_ADDR;
-+		err = cs_etm__synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		etm->sample_branches = true;
-+		etm->branches_sample_type = attr.sample_type;
-+		etm->branches_id = id;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cs_etm__sample(struct cs_etm_queue *etmq)
-+{
-+	int ret;
-+	struct cs_etm_packet packet;
-+
-+	while (1) {
-+		ret = cs_etm_decoder__get_packet(etmq->decoder, &packet);
-+		if (ret <= 0)
-+			return ret;
-+
-+		/*
-+		 * If the packet contains an instruction range, generate an
-+		 * instruction sequence event.
-+		 */
-+		if (packet.sample_type & CS_ETM_RANGE)
-+			cs_etm__synth_branch_sample(etmq, &packet);
-+	}
-+
-+	return 0;
-+}
-+
- static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
- {
- 	struct cs_etm_auxtrace *etm = etmq->etm;
-@@ -494,6 +645,12 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
- 
- 		etmq->offset += processed;
- 		buffer_used += processed;
-+
-+		/*
-+		 * Nothing to do with an error condition, let's hope the next
-+		 * chunk will be better.
-+		 */
-+		err = cs_etm__sample(etmq);
- 	} while (buffer.len > buffer_used);
- 
- goto more;
-@@ -828,6 +985,17 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 		return 0;
- 	}
- 
-+	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-+		etm->synth_opts = *session->itrace_synth_opts;
-+	} else {
-+		itrace_synth_opts__set_default(&etm->synth_opts);
-+		etm->synth_opts.callchain = false;
-+	}
-+
-+	err = cs_etm__synth_events(etm, session);
-+	if (err)
-+		goto err_free_queues;
-+
- 	err = auxtrace_queues__process_index(&etm->queues, session);
- 	if (err)
- 		goto err_free_queues;
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/cache.json b/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
+index 3c0a28e27d73..999a01bc6467 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
+@@ -774,5 +774,329 @@
+         "SampleAfterValue": "100003",
+         "BriefDescription": "Split locks in SQ",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0244",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch code reads that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0244",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand & prefetch code reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0091",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch data reads that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x4003c0091",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand & prefetch data reads that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10003c0091",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand & prefetch data reads that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0091",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand & prefetch data reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0122",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch RFOs that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0122",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand & prefetch RFOs that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10008",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.COREWB.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all writebacks from the core to the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0004",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand code reads that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0004",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand code reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand data reads that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x4003c0001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data reads that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10003c0001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data reads that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3f803c0002",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand data writes (RFOs) that hit in the LLC",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10003c0002",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.HITM_OTHER_CORE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data writes (RFOs) that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x1003c0002",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.NO_SNOOP_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data writes (RFOs) that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x18000",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.OTHER.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts miscellaneous accesses that include port i/o, MMIO and uncacheable memory accesses. It also includes L2 hints sent to LLC to keep a line from being evicted out of the core caches",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10400",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.SPLIT_LOCK_UC_LOCK.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts requests where the address of an atomic lock instruction spans a cache line boundary or the lock instruction is executed on uncacheable address ",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x10800",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.STREAMING_STORES.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts non-temporal stores",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x00010001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand data reads ",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x00010002",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand rfo's ",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x00010004",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand code reads",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x000105B3",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch data reads",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x00010122",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch prefetch RFOs ",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x000107F7",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_READS.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all data/code/rfo references (demand & prefetch) ",
++        "CounterHTOff": "0,1,2,3"
+     }
+ ]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/memory.json b/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
+index 6005b364c580..a74d54f56192 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
+@@ -160,5 +160,77 @@
+         "PRECISE_STORE": "1",
+         "TakenAlone": "1",
+         "CounterHTOff": "3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x300400244",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch code reads that miss the LLC  and the data returned from dram",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x300400091",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all demand & prefetch data reads that miss the LLC  and the data returned from dram",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x3004003f7",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the LLC  and the data returned from dram",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x300400004",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand code reads that miss the LLC and the data returned from dram",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x300400001",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts demand data reads that miss the LLC and the data returned from dram",
++        "CounterHTOff": "0,1,2,3"
++    },
++    {
++        "EventCode": "0xB7, 0xBB",
++        "MSRValue": "0x6004001b3",
++        "Counter": "0,1,2,3",
++        "UMask": "0x1",
++        "Offcore": "1",
++        "EventName": "OFFCORE_RESPONSE.DATA_IN_SOCKET.LLC_MISS.LOCAL_DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "SampleAfterValue": "100003",
++        "BriefDescription": "Counts LLC replacements",
++        "CounterHTOff": "0,1,2,3"
+     }
+ ]
+\ No newline at end of file
 -- 
 2.14.3
