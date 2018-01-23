@@ -1,63 +1,40 @@
-From: linxiulei@gmail.com
-Subject: [PATCH RESEND] perf/core: Fix installing cgroup event into cpu
-Date: Tue, 23 Jan 2018 12:13:06 +0800
-Message-ID: <20180123041306.15431-1-linxiulei@gmail.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:44524 "EHLO
-        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751293AbeAWEP3 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Jan 2018 23:15:29 -0500
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com
-Cc: yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 02/43] perf evsel: Ensure reserved member of PERF_SAMPLE_CPU is zero in perf_event__synthesize_sample()
+Date: Tue, 23 Jan 2018 10:12:10 -0300
+Message-ID: <20180123131251.28197-3-acme@kernel.org>
+References: <20180123131251.28197-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180123131251.28197-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Do not install cgroup event into the CPU context if the cgroup
-is not running on this CPU
+PERF_SAMPLE_CPU contains the cpu number in the first 4 bytes and the
+second 4 bytes are reserved. Ensure the reserved bytes are zero in
+perf_event__synthesize_sample().
 
-While there is no task of cgroup running specified CPU, current
-kernel still install cgroup event into CPU context, that causes
-another cgroup event can't be installed into this CPU.
-
-Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/1516108492-21401-3-git-send-email-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/util/evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4df5b69..19c587b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2284,6 +2284,7 @@ static int  __perf_install_in_context(void *info)
- 	struct perf_event_context *ctx = event->ctx;
- 	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
- 	struct perf_event_context *task_ctx = cpuctx->task_ctx;
-+	struct perf_cgroup *cgrp;
- 	bool reprogram = true;
- 	int ret = 0;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 85eb84dfdf91..44032679180f 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2533,6 +2533,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
  
-@@ -2311,6 +2312,19 @@ static int  __perf_install_in_context(void *info)
- 		raw_spin_lock(&task_ctx->lock);
- 	}
- 
-+	if (event->cgrp) {
-+		/*
-+		 * Only care about cgroup events.
-+		 *
-+		 * If only the task belongs to cgroup of this event,
-+		 * we will continue the installment
-+		 */
-+		cgrp = perf_cgroup_from_task(current, ctx);
-+		if (!cgroup_is_descendant(cgrp->css.cgroup,
-+					event->cgrp->css.cgroup))
-+			goto unlock;
-+	}
-+
- 	if (reprogram) {
- 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
- 		add_event_to_ctx(event, ctx);
+ 	if (type & PERF_SAMPLE_CPU) {
+ 		u.val32[0] = sample->cpu;
++		u.val32[1] = 0;
+ 		if (swapped) {
+ 			/*
+ 			 * Inverse of what is done in perf_evsel__parse_sample
 -- 
-2.8.4.31.g9ed660f
+2.14.3
