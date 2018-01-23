@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/43] perf vendor events intel: Update IvyTown events to V20
-Date: Tue, 23 Jan 2018 10:12:29 -0300
-Message-ID: <20180123131251.28197-22-acme@kernel.org>
+Subject: [PATCH 20/43] perf vendor events intel: Update IvyBridge events to V20
+Date: Tue, 23 Jan 2018 10:12:28 -0300
+Message-ID: <20180123131251.28197-21-acme@kernel.org>
 References: <20180123131251.28197-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180123131251.28197-1-acme@kernel.org>
@@ -16,18 +16,18 @@ Link: https://lkml.kernel.org/r/20180118234518.GA27753@tassilo.jf.intel.com
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/ivytown/cache.json  | 692 +++--------------
- .../perf/pmu-events/arch/x86/ivytown/frontend.json | 122 +--
- tools/perf/pmu-events/arch/x86/ivytown/memory.json | 368 +--------
- tools/perf/pmu-events/arch/x86/ivytown/other.json  |  20 +-
- .../perf/pmu-events/arch/x86/ivytown/pipeline.json | 822 +++++++++++----------
- .../arch/x86/ivytown/virtual-memory.json           |  60 +-
- 6 files changed, 635 insertions(+), 1449 deletions(-)
+ .../perf/pmu-events/arch/x86/ivybridge/cache.json  | 567 +++-----------
+ .../pmu-events/arch/x86/ivybridge/frontend.json    | 122 +--
+ .../perf/pmu-events/arch/x86/ivybridge/memory.json |  92 +--
+ .../perf/pmu-events/arch/x86/ivybridge/other.json  |  20 +-
+ .../pmu-events/arch/x86/ivybridge/pipeline.json    | 822 +++++++++++----------
+ .../arch/x86/ivybridge/virtual-memory.json         |  60 +-
+ 6 files changed, 634 insertions(+), 1049 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/cache.json b/tools/perf/pmu-events/arch/x86/ivytown/cache.json
-index ff27a620edd8..d8cc93b3a04c 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/cache.json b/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
+index f1ee6d4853c5..3c0a28e27d73 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/cache.json
 @@ -9,6 +9,16 @@
          "BriefDescription": "Demand Data Read requests that hit L2 cache",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
@@ -391,7 +391,7 @@ index ff27a620edd8..d8cc93b3a04c 100644
          "EventCode": "0xD1",
          "Counter": "0,1,2,3",
          "UMask": "0x20",
-@@ -510,67 +538,61 @@
+@@ -510,61 +538,56 @@
      },
      {
          "PEBS": "1",
@@ -455,21 +455,24 @@ index ff27a620edd8..d8cc93b3a04c 100644
      },
      {
 -        "PublicDescription": "Retired load uop whose Data Source was: local DRAM either Snoop not needed or Snoop Miss (RspI)",
++        "PublicDescription": "Retired load uops whose data source was local memory (cross-socket snoop not needed or missed).",
          "EventCode": "0xD3",
          "Counter": "0,1,2,3",
--        "UMask": "0x1",
-+        "UMask": "0x3",
-         "EventName": "MEM_LOAD_UOPS_LLC_MISS_RETIRED.LOCAL_DRAM",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Retired load uops which data sources missed LLC but serviced from local dram.",
-+        "BriefDescription": "Retired load uops whose data source was local DRAM (Snoop not needed, Snoop Miss, or Snoop Hit data not forwarded).",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -778,495 +800,5 @@
+         "UMask": "0x1",
+@@ -751,373 +774,5 @@
          "SampleAfterValue": "100003",
          "BriefDescription": "Split locks in SQ",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
+-    },
+-    {
+-        "PublicDescription": "Retired load uops whose data source was local memory (cross-socket snoop not needed or missed).",
+-        "EventCode": "0xD3",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "EventName": "MEM_LOAD_UOPS_LLC_MISS_RETIRED.LOCAL_DRAM",
+-        "SampleAfterValue": "100007",
+-        "BriefDescription": "Retired load uops which data sources missed LLC but serviced from local dram.",
+-        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "PublicDescription": "Cycles with at least 6 offcore outstanding Demand Data Read transactions in uncore queue.",
@@ -504,6 +507,42 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -        "BriefDescription": "Cycles a demand request was blocked due to Fill Buffers inavailability",
 -        "CounterMask": "1",
 -        "CounterHTOff": "0,1,2,3,4,5,6,7"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x3f803c0244",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_HIT.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand & prefetch code reads that hit in the LLC",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x1003c0244",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_HIT.NO_SNOOP_NEEDED",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts demand & prefetch code reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x3f803c0091",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand & prefetch data reads that hit in the LLC",
+-        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
@@ -543,134 +582,26 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c0091",
+-        "MSRValue": "0x3f803c0122",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.SNOOP_MISS",
+-        "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.ANY_RESPONSE",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand & prefetch data reads that hit in the LLC and sibling core snoop returned a clean response",
+-        "BriefDescription": "Counts all demand & prefetch RFOs that hit in the LLC",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0090",
+-        "MSRValue": "0x1003c0122",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.LLC_HIT.ANY_RESPONSE",
+-        "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.NO_SNOOP_NEEDED",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x4003c0090",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch data reads that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0090",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch data reads that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1003c0090",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.LLC_HIT.NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch data reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c0090",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.LLC_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch data reads that hit in the LLC and sibling core snoop returned a clean response",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c03f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x4003c03f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c03f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1003c03f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c03f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the LLC and sibling core snoop returned a clean response",
+-        "BriefDescription": "Counts demand & prefetch RFOs that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
@@ -695,6 +626,18 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
 -        "BriefDescription": "Counts all demand code reads that hit in the LLC",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x1003c0004",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_HIT.NO_SNOOP_NEEDED",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts demand code reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
@@ -747,14 +690,14 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c0001",
+-        "MSRValue": "0x3f803c0002",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT.SNOOP_MISS",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.ANY_RESPONSE",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the LLC and sibling core snoop returned a clean response",
+-        "BriefDescription": "Counts all demand data writes (RFOs) that hit in the LLC",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
@@ -771,170 +714,26 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x803c8000",
+-        "MSRValue": "0x1003c0002",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.OTHER.LRU_HINTS",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.NO_SNOOP_NEEDED",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts L2 hints sent to LLC to keep a line from being evicted out of the core caches",
+-        "BriefDescription": "Counts demand data writes (RFOs) that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x23ffc08000",
+-        "MSRValue": "0x18000",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.OTHER.PORTIO_MMIO_UC",
+-        "EventName": "OFFCORE_RESPONSE.OTHER.ANY_RESPONSE",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts miscellaneous accesses that include port i/o, MMIO and uncacheable memory accesses",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0040",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.LLC_HIT.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) code reads that hit in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_HIT.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that hit in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x4003c0010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1003c0010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_HIT.NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c0010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that hit in the LLC and the snoops sent to sibling cores return clean response",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0200",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_CODE_RD.LLC_HIT.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads that hit in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_HIT.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that hit in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x4003c0080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that hit in the LLC and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that hit in the LLC and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1003c0080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_HIT.NO_SNOOP_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that hit in the LLC and sibling core snoops are not needed as either the core-valid bit is not set or the shared line is present in multiple cores",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2003c0080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that hit in the LLC and the snoops sent to sibling cores return clean response",
+-        "BriefDescription": "Counts miscellaneous accesses that include port i/o, MMIO and uncacheable memory accesses. It also includes L2 hints sent to LLC to keep a line from being evicted out of the core caches",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
@@ -946,7 +745,7 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -        "EventName": "OFFCORE_RESPONSE.SPLIT_LOCK_UC_LOCK.ANY_RESPONSE",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts requests where the address of an atomic lock instruction spans a cache line boundary or the lock instruction is executed on uncacheable address",
+-        "BriefDescription": "Counts requests where the address of an atomic lock instruction spans a cache line boundary or the lock instruction is executed on uncacheable address ",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
@@ -960,13 +759,85 @@ index ff27a620edd8..d8cc93b3a04c 100644
 -        "SampleAfterValue": "100003",
 -        "BriefDescription": "Counts non-temporal stores",
 -        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x00010001",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand data reads ",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x00010002",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand rfo's ",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x00010004",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand code reads",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x000105B3",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand & prefetch data reads",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x00010122",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_RFO.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all demand & prefetch prefetch RFOs ",
+-        "CounterHTOff": "0,1,2,3"
+-    },
+-    {
+-        "EventCode": "0xB7, 0xBB",
+-        "MSRValue": "0x000107F7",
+-        "Counter": "0,1,2,3",
+-        "UMask": "0x1",
+-        "Offcore": "1",
+-        "EventName": "OFFCORE_RESPONSE.ALL_READS.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "SampleAfterValue": "100003",
+-        "BriefDescription": "Counts all data/code/rfo references (demand & prefetch) ",
+-        "CounterHTOff": "0,1,2,3"
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/frontend.json b/tools/perf/pmu-events/arch/x86/ivytown/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/frontend.json b/tools/perf/pmu-events/arch/x86/ivybridge/frontend.json
 index de72b84b3536..efaa949ead31 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/frontend.json
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/frontend.json
 @@ -20,76 +20,45 @@
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
@@ -1146,11 +1017,11 @@ index de72b84b3536..efaa949ead31 100644
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/memory.json b/tools/perf/pmu-events/arch/x86/ivytown/memory.json
-index 437d98f3e344..4ec94df8d70b 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/memory.json
-@@ -28,18 +28,6 @@
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/memory.json b/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
+index e1c6a1d4a4d5..6005b364c580 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/memory.json
+@@ -37,18 +37,6 @@
          "BriefDescription": "Counts the number of machine clears due to memory order conflicts.",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
@@ -1169,355 +1040,79 @@ index 437d98f3e344..4ec94df8d70b 100644
      {
          "PEBS": "2",
          "PublicDescription": "Loads with latency value being above 4.",
-@@ -153,351 +141,15 @@
+@@ -162,75 +150,15 @@
          "CounterHTOff": "3"
      },
      {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc00244",
+-        "MSRValue": "0x300400244",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.ANY_RESPONSE",
+-        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch code reads that miss the LLC",
+-        "BriefDescription": "Counts all demand & prefetch code reads that miss the LLC  and the data returned from dram",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67f800244",
+-        "MSRValue": "0x300400091",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.REMOTE_DRAM",
+-        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch code reads that miss the LLC  and the data returned from remote dram",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss the LLC  and the data returned from dram",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x87f800244",
+-        "MSRValue": "0x3004003f7",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.REMOTE_HIT_FORWARD",
+-        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch code reads that miss the LLC  and the data forwarded from remote cache",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the LLC  and the data returned from dram",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20091",
+-        "MSRValue": "0x300400004",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.ANY_RESPONSE",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that hits the LLC",
+-        "BriefDescription": "Counts demand code reads that miss the LLC and the data returned from dram",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc203f7",
+-        "MSRValue": "0x300400001",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.ANY_RESPONSE",
+-        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit the LLC",
+-        "BriefDescription": "Counts demand data reads that miss the LLC and the data returned from dram",
 -        "CounterHTOff": "0,1,2,3"
 -    },
 -    {
 -        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x6004003f7",
+-        "MSRValue": "0x6004001b3",
 -        "Counter": "0,1,2,3",
 -        "UMask": "0x1",
 -        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.LOCAL_DRAM",
+-        "EventName": "OFFCORE_RESPONSE.DATA_IN_SOCKET.LLC_MISS.LOCAL_DRAM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the LLC  and the data returned from local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x87f8203f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.REMOTE_HIT_FORWARD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the LLC  and the data forwarded from remote cache",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x107fc003f7",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.REMOTE_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the LLC  the data is found in M state in remote cache and forwarded from there",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20004",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x600400004",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the LLC  and the data returned from local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67f800004",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.REMOTE_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the LLC  and the data returned from remote dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x87f820004",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.REMOTE_HIT_FORWARD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the LLC  and the data forwarded from remote cache",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x107fc00004",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.LLC_MISS.REMOTE_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the LLC  the data is found in M state in remote cache and forwarded from there",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67fc00001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.ANY_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the LLC  and the data returned from remote & local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x600400001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the LLC  and the data returned from local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67f800001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.REMOTE_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the LLC  and the data returned from remote dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x87f820001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.REMOTE_HIT_FORWARD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the LLC  and the data forwarded from remote cache",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x107fc00001",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.REMOTE_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the LLC  the data is found in M state in remote cache and forwarded from there",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x107fc20002",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_MISS.REMOTE_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that miss the LLC and the data is found in M state in remote cache and forwarded from there.",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20040",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) code reads that miss the LLC  and the data returned from remote & local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67fc00010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.ANY_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the LLC  and the data returned from remote & local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x600400010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the LLC  and the data returned from local dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x67f800010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.REMOTE_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads  that miss the LLC  and the data returned from remote dram",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x87f820010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.REMOTE_HIT_FORWARD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the LLC  and the data forwarded from remote cache",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x107fc00010",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.LLC_MISS.REMOTE_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data reads that miss the LLC  the data is found in M state in remote cache and forwarded from there",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20200",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_CODE_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC only) code reads that miss in the LLC",
--        "CounterHTOff": "0,1,2,3"
--    },
--    {
--        "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fffc20080",
--        "Counter": "0,1,2,3",
--        "UMask": "0x1",
--        "Offcore": "1",
--        "EventName": "OFFCORE_RESPONSE.PF_LLC_DATA_RD.LLC_MISS.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only) data reads that miss in the LLC",
+-        "BriefDescription": "Counts LLC replacements",
 -        "CounterHTOff": "0,1,2,3"
 +        "PEBS": "2",
 +        "EventCode": "0xCD",
@@ -1532,10 +1127,10 @@ index 437d98f3e344..4ec94df8d70b 100644
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/other.json b/tools/perf/pmu-events/arch/x86/ivytown/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/other.json b/tools/perf/pmu-events/arch/x86/ivybridge/other.json
 index 9c2dd0511a32..4eb83ee40412 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/other.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/other.json
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/other.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/other.json
 @@ -9,16 +9,6 @@
          "BriefDescription": "Unhalted core cycles when the thread is in ring 0",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
@@ -1570,10 +1165,10 @@ index 9c2dd0511a32..4eb83ee40412 100644
      {
          "PublicDescription": "Cycles in which the L1D and L2 are locked, due to a UC lock or split lock.",
          "EventCode": "0x63",
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
 index 2145c28193f7..0afbfd95ea30 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/pipeline.json
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/pipeline.json
 @@ -1,30 +1,41 @@
  [
      {
@@ -2728,11 +2323,11 @@ index 2145c28193f7..0afbfd95ea30 100644
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/virtual-memory.json b/tools/perf/pmu-events/arch/x86/ivytown/virtual-memory.json
-index c8de548b78fa..4645e9d3f460 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/virtual-memory.json
-@@ -1,4 +1,14 @@
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/virtual-memory.json b/tools/perf/pmu-events/arch/x86/ivybridge/virtual-memory.json
+index f036f5398906..f243551b4d12 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/virtual-memory.json
+@@ -1,4 +1,34 @@
  [
 +    {
 +        "PublicDescription": "Misses in all TLB levels that cause a page walk of any page size from demand loads.",
@@ -2744,13 +2339,6 @@ index c8de548b78fa..4645e9d3f460 100644
 +        "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes an page walk of any page size.",
 +        "CounterHTOff": "0,1,2,3,4,5,6,7"
 +    },
-     {
-         "EventCode": "0x08",
-         "Counter": "0,1,2,3",
-@@ -8,6 +18,16 @@
-         "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes a page walk that completes of any page size.",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
 +    {
 +        "PublicDescription": "Misses in all TLB levels that caused page walk completed of any size by demand loads.",
 +        "EventCode": "0x08",
@@ -2761,13 +2349,6 @@ index c8de548b78fa..4645e9d3f460 100644
 +        "BriefDescription": "Demand load Miss in all translation lookaside buffer (TLB) levels causes a page walk that completes of any page size.",
 +        "CounterHTOff": "0,1,2,3,4,5,6,7"
 +    },
-     {
-         "EventCode": "0x08",
-         "Counter": "0,1,2,3",
-@@ -17,6 +37,16 @@
-         "BriefDescription": "Demand load cycles page miss handler (PMH) is busy with this walk.",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
 +    {
 +        "PublicDescription": "Cycle PMH is busy with a walk due to demand loads.",
 +        "EventCode": "0x08",
@@ -2781,7 +2362,7 @@ index c8de548b78fa..4645e9d3f460 100644
      {
          "EventCode": "0x08",
          "Counter": "0,1,2,3",
-@@ -164,35 +194,5 @@
+@@ -146,35 +176,5 @@
          "SampleAfterValue": "100007",
          "BriefDescription": "STLB flush attempts",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
