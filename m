@@ -1,32 +1,20 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/43] perf tools: Add functionality to communicate with the
- openCSD decoder
-Date: Tue, 23 Jan 2018 10:12:41 -0300
-Message-ID: <20180123131251.28197-34-acme@kernel.org>
+Subject: [PATCH 36/43] perf tools: Add mechanic to synthesise CoreSight trace packets
+Date: Tue, 23 Jan 2018 10:12:44 -0300
+Message-ID: <20180123131251.28197-37-acme@kernel.org>
 References: <20180123131251.28197-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180123131251.28197-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Mike Leach <mike.leach@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, Mike Leach <mike.leach@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-This patch adds functions to communicate with the openCSD trace decoder,
-more specifically to access program memory, fetch trace packets and
-reset the decoder.
+Once decoded from trace packets information on trace range needs
+to be communicated to the perf synthesis infrastructure so that it
+is available to the perf tools built-in rendering tools and scripts.
 
 Co-authored-by: Tor Jeremiassen <tor@ti.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -39,101 +27,204 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1516211539-5166-7-git-send-email-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/1516211539-5166-10-git-send-email-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 60 +++++++++++++++++++++++++
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.h |  9 ++++
- 2 files changed, 69 insertions(+)
+ tools/perf/util/cs-etm.c | 168 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 168 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 57b020b0b36f..1fb01849f1c7 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -45,6 +45,66 @@ struct cs_etm_decoder {
- 	struct cs_etm_packet packet_buffer[MAX_BUFFER];
- };
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 407095af1456..b9f0a53dfa65 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -453,6 +453,157 @@ static void  cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
+ 	}
+ }
  
-+static u32
-+cs_etm_decoder__mem_access(const void *context,
-+			   const ocsd_vaddr_t address,
-+			   const ocsd_mem_space_acc_t mem_space __maybe_unused,
-+			   const u32 req_size,
-+			   u8 *buffer)
++/*
++ * The cs etm packet encodes an instruction range between a branch target
++ * and the next taken branch. Generate sample accordingly.
++ */
++static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
++				       struct cs_etm_packet *packet)
 +{
-+	struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
++	int ret = 0;
++	struct cs_etm_auxtrace *etm = etmq->etm;
++	struct perf_sample sample = {.ip = 0,};
++	union perf_event *event = etmq->event_buf;
++	u64 start_addr = packet->start_addr;
++	u64 end_addr = packet->end_addr;
 +
-+	return decoder->mem_access(decoder->data,
-+				   address,
-+				   req_size,
-+				   buffer);
++	event->sample.header.type = PERF_RECORD_SAMPLE;
++	event->sample.header.misc = PERF_RECORD_MISC_USER;
++	event->sample.header.size = sizeof(struct perf_event_header);
++
++	sample.ip = start_addr;
++	sample.pid = etmq->pid;
++	sample.tid = etmq->tid;
++	sample.addr = end_addr;
++	sample.id = etmq->etm->branches_id;
++	sample.stream_id = etmq->etm->branches_id;
++	sample.period = 1;
++	sample.cpu = packet->cpu;
++	sample.flags = 0;
++	sample.cpumode = PERF_RECORD_MISC_USER;
++
++	ret = perf_session__deliver_synth_event(etm->session, event, &sample);
++
++	if (ret)
++		pr_err(
++		"CS ETM Trace: failed to deliver instruction event, error %d\n",
++		ret);
++
++	return ret;
 +}
 +
-+int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
-+				      u64 start, u64 end,
-+				      cs_etm_mem_cb_type cb_func)
++struct cs_etm_synth {
++	struct perf_tool dummy_tool;
++	struct perf_session *session;
++};
++
++static int cs_etm__event_synth(struct perf_tool *tool,
++			       union perf_event *event,
++			       struct perf_sample *sample __maybe_unused,
++			       struct machine *machine __maybe_unused)
 +{
-+	decoder->mem_access = cb_func;
++	struct cs_etm_synth *cs_etm_synth =
++		      container_of(tool, struct cs_etm_synth, dummy_tool);
 +
-+	if (ocsd_dt_add_callback_mem_acc(decoder->dcd_tree, start, end,
-+					 OCSD_MEM_SPACE_ANY,
-+					 cs_etm_decoder__mem_access, decoder))
-+		return -1;
-+
-+	return 0;
++	return perf_session__deliver_synth_event(cs_etm_synth->session,
++						 event, NULL);
 +}
 +
-+int cs_etm_decoder__reset(struct cs_etm_decoder *decoder)
++static int cs_etm__synth_event(struct perf_session *session,
++			       struct perf_event_attr *attr, u64 id)
 +{
-+	ocsd_datapath_resp_t dp_ret;
++	struct cs_etm_synth cs_etm_synth;
 +
-+	dp_ret = ocsd_dt_process_data(decoder->dcd_tree, OCSD_OP_RESET,
-+				      0, 0, NULL, NULL);
-+	if (OCSD_DATA_RESP_IS_FATAL(dp_ret))
-+		return -1;
++	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
++	cs_etm_synth.session = session;
 +
-+	return 0;
++	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
++					   &id, cs_etm__event_synth);
 +}
 +
-+int cs_etm_decoder__get_packet(struct cs_etm_decoder *decoder,
-+			       struct cs_etm_packet *packet)
++static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
++				struct perf_session *session)
 +{
-+	if (!decoder || !packet)
-+		return -EINVAL;
++	struct perf_evlist *evlist = session->evlist;
++	struct perf_evsel *evsel;
++	struct perf_event_attr attr;
++	bool found = false;
++	u64 id;
++	int err;
 +
-+	/* Nothing to do, might as well just return */
-+	if (decoder->packet_count == 0)
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->attr.type == etm->pmu_type) {
++			found = true;
++			break;
++		}
++	}
++
++	if (!found) {
++		pr_debug("No selected events with CoreSight Trace data\n");
 +		return 0;
++	}
 +
-+	*packet = decoder->packet_buffer[decoder->head];
++	memset(&attr, 0, sizeof(struct perf_event_attr));
++	attr.size = sizeof(struct perf_event_attr);
++	attr.type = PERF_TYPE_HARDWARE;
++	attr.sample_type = evsel->attr.sample_type & PERF_SAMPLE_MASK;
++	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
++			    PERF_SAMPLE_PERIOD;
++	if (etm->timeless_decoding)
++		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
++	else
++		attr.sample_type |= PERF_SAMPLE_TIME;
 +
-+	decoder->head = (decoder->head + 1) & (MAX_BUFFER - 1);
++	attr.exclude_user = evsel->attr.exclude_user;
++	attr.exclude_kernel = evsel->attr.exclude_kernel;
++	attr.exclude_hv = evsel->attr.exclude_hv;
++	attr.exclude_host = evsel->attr.exclude_host;
++	attr.exclude_guest = evsel->attr.exclude_guest;
++	attr.sample_id_all = evsel->attr.sample_id_all;
++	attr.read_format = evsel->attr.read_format;
 +
-+	decoder->packet_count--;
++	/* create new id val to be a fixed offset from evsel id */
++	id = evsel->id[0] + 1000000000;
 +
-+	return 1;
++	if (!id)
++		id = 1;
++
++	if (etm->synth_opts.branches) {
++		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
++		attr.sample_period = 1;
++		attr.sample_type |= PERF_SAMPLE_ADDR;
++		err = cs_etm__synth_event(session, &attr, id);
++		if (err)
++			return err;
++		etm->sample_branches = true;
++		etm->branches_sample_type = attr.sample_type;
++		etm->branches_id = id;
++	}
++
++	return 0;
 +}
 +
- static void cs_etm_decoder__gen_etmv4_config(struct cs_etm_trace_params *params,
- 					     ocsd_etmv4_cfg *config)
++static int cs_etm__sample(struct cs_etm_queue *etmq)
++{
++	int ret;
++	struct cs_etm_packet packet;
++
++	while (1) {
++		ret = cs_etm_decoder__get_packet(etmq->decoder, &packet);
++		if (ret <= 0)
++			return ret;
++
++		/*
++		 * If the packet contains an instruction range, generate an
++		 * instruction sequence event.
++		 */
++		if (packet.sample_type & CS_ETM_RANGE)
++			cs_etm__synth_branch_sample(etmq, &packet);
++	}
++
++	return 0;
++}
++
+ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
  {
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-index a1e9b0ac5965..3d2e6205d186 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-@@ -93,4 +93,13 @@ cs_etm_decoder__new(int num_cpu,
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+@@ -494,6 +645,12 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
  
- void cs_etm_decoder__free(struct cs_etm_decoder *decoder);
+ 		etmq->offset += processed;
+ 		buffer_used += processed;
++
++		/*
++		 * Nothing to do with an error condition, let's hope the next
++		 * chunk will be better.
++		 */
++		err = cs_etm__sample(etmq);
+ 	} while (buffer.len > buffer_used);
  
-+int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
-+				      u64 start, u64 end,
-+				      cs_etm_mem_cb_type cb_func);
+ goto more;
+@@ -828,6 +985,17 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ 		return 0;
+ 	}
+ 
++	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
++		etm->synth_opts = *session->itrace_synth_opts;
++	} else {
++		itrace_synth_opts__set_default(&etm->synth_opts);
++		etm->synth_opts.callchain = false;
++	}
 +
-+int cs_etm_decoder__get_packet(struct cs_etm_decoder *decoder,
-+			       struct cs_etm_packet *packet);
++	err = cs_etm__synth_events(etm, session);
++	if (err)
++		goto err_free_queues;
 +
-+int cs_etm_decoder__reset(struct cs_etm_decoder *decoder);
-+
- #endif /* INCLUDE__CS_ETM_DECODER_H__ */
+ 	err = auxtrace_queues__process_index(&etm->queues, session);
+ 	if (err)
+ 		goto err_free_queues;
 -- 
 2.14.3
