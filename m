@@ -1,47 +1,63 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 5/5] perf trace: Remove audit-libs dependency if
- syscall tables are present
-Date: Sun, 21 Jan 2018 09:27:48 -0300
-Message-ID: <20180121122748.GF23453@kernel.org>
-References: <1516352177-11106-1-git-send-email-brueckner@linux.vnet.ibm.com>
- <1516352177-11106-6-git-send-email-brueckner@linux.vnet.ibm.com>
- <20180119140426.GB23453@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: linxiulei@gmail.com
+Subject: [PATCH RESEND] perf/core: Fix installing cgroup event into cpu
+Date: Tue, 23 Jan 2018 12:13:06 +0800
+Message-ID: <20180123041306.15431-1-linxiulei@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751019AbeAUM1w (ORCPT
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:44524 "EHLO
+        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751293AbeAWEP3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 21 Jan 2018 07:27:52 -0500
-Content-Disposition: inline
-In-Reply-To: <20180119140426.GB23453@kernel.org>
+        Mon, 22 Jan 2018 23:15:29 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com
+Cc: yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-Em Fri, Jan 19, 2018 at 11:04:26AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jan 19, 2018 at 09:56:17AM +0100, Hendrik Brueckner escreveu:
-> > Change the Makefile and build process to no longer require audit-libs
-> > interfaces when the architecture provides system call tables.
-> > 
-> > Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-> > Reviewed-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> 
-> So, I need this extra patch to really stop linking against
-> audit-libs-devel (aka libaudit), which I merged with this 5/5 patch and
-> have now in my tree, thanks for your work!
+From: "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-So, test building it on centos:5 fails:
+Do not install cgroup event into the CPU context if the cgroup
+is not running on this CPU
 
-  CC       /tmp/build/perf/bench/sched-messaging.o
-In file included from trace/beauty/arch_errno_names.c:1,
-                 from builtin-trace.c:547:
-/tmp/build/perf/trace/beauty/generated/arch_errno_name_array.c:1708:2: error: no newline at end of file
+While there is no task of cgroup running specified CPU, current
+kernel still install cgroup event into CPU context, that causes
+another cgroup event can't be installed into this CPU.
 
-I'm fixing this up.
+Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+---
+ kernel/events/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-- Arnaldo
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4df5b69..19c587b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2284,6 +2284,7 @@ static int  __perf_install_in_context(void *info)
+ 	struct perf_event_context *ctx = event->ctx;
+ 	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+ 	struct perf_event_context *task_ctx = cpuctx->task_ctx;
++	struct perf_cgroup *cgrp;
+ 	bool reprogram = true;
+ 	int ret = 0;
+ 
+@@ -2311,6 +2312,19 @@ static int  __perf_install_in_context(void *info)
+ 		raw_spin_lock(&task_ctx->lock);
+ 	}
+ 
++	if (event->cgrp) {
++		/*
++		 * Only care about cgroup events.
++		 *
++		 * If only the task belongs to cgroup of this event,
++		 * we will continue the installment
++		 */
++		cgrp = perf_cgroup_from_task(current, ctx);
++		if (!cgroup_is_descendant(cgrp->css.cgroup,
++					event->cgrp->css.cgroup))
++			goto unlock;
++	}
++
+ 	if (reprogram) {
+ 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+ 		add_event_to_ctx(event, ctx);
+-- 
+2.8.4.31.g9ed660f
