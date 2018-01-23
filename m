@@ -1,58 +1,73 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/43] perf report: Fix regression when decoding intel_pt traces
-Date: Tue, 23 Jan 2018 10:12:16 -0300
-Message-ID: <20180123131251.28197-9-acme@kernel.org>
+Subject: [PATCH 06/43] perf tools: Move conditional O_CLOEXEC to util.h
+Date: Tue, 23 Jan 2018 10:12:14 -0300
+Message-ID: <20180123131251.28197-7-acme@kernel.org>
 References: <20180123131251.28197-1-acme@kernel.org>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:46774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752072AbeAWNNU (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Jan 2018 08:13:20 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180123131251.28197-1-acme@kernel.org>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Wang YanQing <udknight@gmail.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Commit (93d10af26bb7 perf tools: Optimize sample parsing for ordered
-events) breaks intelPT trace decoding by invariably returning an error
-if the event type isn't a PERF_SAMPLE_TIME.
+To be more generally available and get the build on centos:5 to
+work after we use O_CLOEXEC in the next patch, in the util/dso.c file.
 
-With this patch the timestamp is initialised and processing is allowed
-to continue if the error returned by function
-perf_evlist__parse_sample_timestamp() is not a fault.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 93d10af26bb7 ("perf tools: Optimize sample parsing for ordered events")
-Link: http://lkml.kernel.org/r/1515616312-27645-1-git-send-email-mathieu.poirier@linaro.org
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Wang YanQing <udknight@gmail.com>
+Link: https://lkml.kernel.org/n/tip-vsjbiydh15pfqomxw1kx64ex@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/data.c | 10 ----------
+ tools/perf/util/util.h | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 8d0fa2f8da16..c71ced7db152 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1508,10 +1508,10 @@ static s64 perf_session__process_event(struct perf_session *session,
- 		return perf_session__process_user_event(session, event, file_offset);
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 48094fde0a68..d8cfc19ddb10 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -12,16 +12,6 @@
+ #include "util.h"
+ #include "debug.h"
  
- 	if (tool->ordered_events) {
--		u64 timestamp;
-+		u64 timestamp = -1ULL;
+-#ifndef O_CLOEXEC
+-#ifdef __sparc__
+-#define O_CLOEXEC	0x400000
+-#elif defined(__alpha__) || defined(__hppa__)
+-#define O_CLOEXEC	010000000
+-#else
+-#define O_CLOEXEC	02000000
+-#endif
+-#endif
+-
+ static bool check_pipe(struct perf_data *data)
+ {
+ 	struct stat st;
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 01434509c2e9..9496365da3d7 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -68,4 +68,14 @@ extern bool perf_singlethreaded;
+ void perf_set_singlethreaded(void);
+ void perf_set_multithreaded(void);
  
- 		ret = perf_evlist__parse_sample_timestamp(evlist, event, &timestamp);
--		if (ret)
-+		if (ret && ret != -1)
- 			return ret;
- 
- 		ret = perf_session__queue_event(session, event, timestamp, file_offset);
++#ifndef O_CLOEXEC
++#ifdef __sparc__
++#define O_CLOEXEC      0x400000
++#elif defined(__alpha__) || defined(__hppa__)
++#define O_CLOEXEC      010000000
++#else
++#define O_CLOEXEC      02000000
++#endif
++#endif
++
+ #endif /* GIT_COMPAT_UTIL_H */
 -- 
 2.14.3
