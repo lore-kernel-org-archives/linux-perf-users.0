@@ -1,86 +1,101 @@
-From: Peter Zijlstra <peterz@infradead.org>
+From: Lin Xiulei <linxiulei@gmail.com>
 Subject: Re: [PATCH v2] perf/core: Fix installing cgroup event into cpu
-Date: Wed, 24 Jan 2018 09:20:36 +0100
-Message-ID: <20180124082036.GL2228@hirez.programming.kicks-ass.net>
-References: <20180124075010.83296-1-linxiulei@gmail.com>
+Date: Wed, 24 Jan 2018 16:32:38 +0800
+Message-ID: <CALPjY3mj7--oAmObtECYDw5GaJ3wLroBVrQ5eQztqmYMCm=8Cw@mail.gmail.com>
+References: <20180124075010.83296-1-linxiulei@gmail.com> <20180124082036.GL2228@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:51652 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932136AbeAXIU7 (ORCPT
+Received: from mail-vk0-f68.google.com ([209.85.213.68]:32896 "EHLO
+        mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752423AbeAXIcj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Jan 2018 03:20:59 -0500
-Content-Disposition: inline
-In-Reply-To: <20180124075010.83296-1-linxiulei@gmail.com>
+        Wed, 24 Jan 2018 03:32:39 -0500
+In-Reply-To: <20180124082036.GL2228@hirez.programming.kicks-ass.net>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linxiulei@gmail.com
-Cc: jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, Stephane Eranian <eranian@gmail.com>, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, Brendan Gregg <brendan.d.gregg@gmail.com>, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-On Wed, Jan 24, 2018 at 03:50:10PM +0800, linxiulei@gmail.com wrote:
-> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
-> 
-> Do not install cgroup event into the CPU context if the cgroup
-> is not running on this CPU
-> 
-> While there is no task of cgroup running specified CPU, current
-> kernel still install cgroup event into CPU context, that causes
-> another cgroup event can't be installed into this CPU.
+2018-01-24 16:20 GMT+08:00 Peter Zijlstra <peterz@infradead.org>:
+> On Wed, Jan 24, 2018 at 03:50:10PM +0800, linxiulei@gmail.com wrote:
+>> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+>>
+>> Do not install cgroup event into the CPU context if the cgroup
+>> is not running on this CPU
+>>
+>> While there is no task of cgroup running specified CPU, current
+>> kernel still install cgroup event into CPU context, that causes
+>> another cgroup event can't be installed into this CPU.
+>
+> This changelog doesn't really cover the extend of the changes done.
+>
 
-This changelog doesn't really cover the extend of the changes done.
+See below please
 
+>
+>> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+>> ---
+>>  kernel/events/core.c | 44 +++++++++++++++++++++++++++++++-------------
+>>  1 file changed, 31 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 4df5b69..f766b60 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -933,31 +933,36 @@ list_update_cgroup_event(struct perf_event *event,
+>>  {
+>>       struct perf_cpu_context *cpuctx;
+>>       struct list_head *cpuctx_entry;
+>> +     struct perf_cgroup *cgrp;
+>>
+>>       if (!is_cgroup_event(event))
+>>               return;
+>>
+>>       /*
+>>        * Because cgroup events are always per-cpu events,
+>>        * this will always be called from the right CPU.
+>>        */
+>>       cpuctx = __get_cpu_context(ctx);
+>> +     cgrp = perf_cgroup_from_task(current, ctx);
+>>
+>> +     /* cpuctx->cgrp is NULL unless a cgroup event is running in this CPU .*/
+>> +     if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
+>> +             if (add)
+>>                       cpuctx->cgrp = cgrp;
+>> +             else
+>> +                     cpuctx->cgrp = NULL;
+>>       }
+>> +
+>> +     if (add && ctx->nr_cgroups++)
+>> +             return;
+>> +     else if (!add && --ctx->nr_cgroups)
+>> +             return;
+>> +
+>> +     cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+>> +     if (add)
+>> +             list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
+>> +     else
+>> +             list_del(cpuctx_entry);
+>>  }
+>
+> I'm a little confused; you unconditionally set cpuctx->cgrp for every
+> add/delete.
+>
+> So if we have >1 cgroup events on, and we remove one, you still clear
+> cpuctx->cgrp, that seems wrong.
+>
+> Why did you change that? The Changelog doesn't include enough clues for
+> me to know what you were trying to do.
 
-> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
-> ---
->  kernel/events/core.c | 44 +++++++++++++++++++++++++++++++-------------
->  1 file changed, 31 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4df5b69..f766b60 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -933,31 +933,36 @@ list_update_cgroup_event(struct perf_event *event,
->  {
->  	struct perf_cpu_context *cpuctx;
->  	struct list_head *cpuctx_entry;
-> +	struct perf_cgroup *cgrp;
->  
->  	if (!is_cgroup_event(event))
->  		return;
->  
->  	/*
->  	 * Because cgroup events are always per-cpu events,
->  	 * this will always be called from the right CPU.
->  	 */
->  	cpuctx = __get_cpu_context(ctx);
-> +	cgrp = perf_cgroup_from_task(current, ctx);
->  
-> +	/* cpuctx->cgrp is NULL unless a cgroup event is running in this CPU .*/
-> +	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
-> +		if (add)
->  			cpuctx->cgrp = cgrp;
-> +		else
-> +			cpuctx->cgrp = NULL;
->  	}
-> +
-> +	if (add && ctx->nr_cgroups++)
-> +		return;
-> +	else if (!add && --ctx->nr_cgroups)
-> +		return;
-> +
-> +	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
-> +	if (add)
-> +		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
-> +	else
-> +		list_del(cpuctx_entry);
->  }
+if we have > 1 cgroup events on, whenever a cgroup was really to be
+deleted, only if
+this cgroup is the same as the cgroup running on this cpu, I would
+clear cpuctx->cgrp.
+Reverse is the same.
 
-I'm a little confused; you unconditionally set cpuctx->cgrp for every
-add/delete.
-
-So if we have >1 cgroup events on, and we remove one, you still clear
-cpuctx->cgrp, that seems wrong.
-
-Why did you change that? The Changelog doesn't include enough clues for
-me to know what you were trying to do.
+Here is the problem, previous version didn't set cpuctx->cgrp anymore
+if ctx->nr_cgroups > 1,
+which cases a second event would not be activated immediately because
+cpuctx->cgrp isn't equal
+to event->cgrp at event_filter_match()
