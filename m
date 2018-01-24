@@ -1,61 +1,107 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: perf stat: Add support to print counts for fixed times
-Date: Wed, 24 Jan 2018 08:48:13 +0100
-Message-ID: <20180124074813.GC8473@krava>
-References: <1516761799-25350-1-git-send-email-ufo19890607@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: linxiulei@gmail.com
+Subject: [PATCH v2] perf/core: Fix installing cgroup event into cpu
+Date: Wed, 24 Jan 2018 15:50:10 +0800
+Message-ID: <20180124075010.83296-1-linxiulei@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516761799-25350-1-git-send-email-ufo19890607@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ufo19890607 <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com
+Cc: yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Jan 24, 2018 at 03:43:19AM +0100, ufo19890607 wrote:
-> From: yuzhoujian <yuzhoujian@didichuxing.com>
-> 
-> Hi Jirka
-> And how can you control the output for perf stat, if I don't want to use the 
-> "sleep" workload, like some user programs. I want to check the "cycles"
-> for this program when it just begin to run.
-> 
-> root@node10:/home$ gcc -g -o malloc malloc.c
-> root@node10:/home$ ./perf stat -e cycles -I 1000 --times-print 3 ./malloc &
-> [1] 32586
-> #           time             counts unit events
->      1.000094153      2,914,162,979      cycles                                                      
->      2.000323667      3,062,832,799      cycles                                                      
->      3.000443807      3,063,146,609      cycles
+From: "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-yea, we can't do that now.. we have the exat oposit option in record,
-because sometimes you want to skip the initialization phase of the
-workload.. any special reason why you want to see just the begining?
+Do not install cgroup event into the CPU context if the cgroup
+is not running on this CPU
 
-we can add this, but maybe change the option name a bit
+While there is no task of cgroup running specified CPU, current
+kernel still install cgroup event into CPU context, that causes
+another cgroup event can't be installed into this CPU.
 
-your code now allows this even if it's not in interval mode
+Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+---
+ kernel/events/core.c | 44 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
 
-	[jolsa@krava perf]$ sudo ./perf stat -e cycles -a --times-print 3
-
-	 Performance counter stats for 'system wide':
-
-	     1,469,288,467      cycles                                                      
-
-	       3.000502814 seconds time elapsed
-
-
-I think we should either keep it interval specific:
-
-  perf stat -e cycles -I 1000 --interval-count=3
-
-or make the option general and time based:
-
-  perf stat -e cycles --time=3000
-
-
-or maybe both ;-)
-
-thanks,
-jirka
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4df5b69..f766b60 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -933,31 +933,36 @@ list_update_cgroup_event(struct perf_event *event,
+ {
+ 	struct perf_cpu_context *cpuctx;
+ 	struct list_head *cpuctx_entry;
++	struct perf_cgroup *cgrp;
+ 
+ 	if (!is_cgroup_event(event))
+ 		return;
+ 
+-	if (add && ctx->nr_cgroups++)
+-		return;
+-	else if (!add && --ctx->nr_cgroups)
+-		return;
+ 	/*
+ 	 * Because cgroup events are always per-cpu events,
+ 	 * this will always be called from the right CPU.
+ 	 */
+ 	cpuctx = __get_cpu_context(ctx);
+-	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+-	/* cpuctx->cgrp is NULL unless a cgroup event is active in this CPU .*/
+-	if (add) {
+-		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
++	cgrp = perf_cgroup_from_task(current, ctx);
+ 
+-		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
+-		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
++	/* cpuctx->cgrp is NULL unless a cgroup event is running in this CPU .*/
++	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
++		if (add)
+ 			cpuctx->cgrp = cgrp;
+-	} else {
+-		list_del(cpuctx_entry);
+-		cpuctx->cgrp = NULL;
++		else
++			cpuctx->cgrp = NULL;
+ 	}
++
++	if (add && ctx->nr_cgroups++)
++		return;
++	else if (!add && --ctx->nr_cgroups)
++		return;
++
++	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
++	if (add)
++		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
++	else
++		list_del(cpuctx_entry);
+ }
+ 
+ #else /* !CONFIG_CGROUP_PERF */
+@@ -2284,6 +2289,7 @@ static int  __perf_install_in_context(void *info)
+ 	struct perf_event_context *ctx = event->ctx;
+ 	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+ 	struct perf_event_context *task_ctx = cpuctx->task_ctx;
++	struct perf_cgroup *cgrp;
+ 	bool reprogram = true;
+ 	int ret = 0;
+ 
+@@ -2311,6 +2317,18 @@ static int  __perf_install_in_context(void *info)
+ 		raw_spin_lock(&task_ctx->lock);
+ 	}
+ 
++	if (is_cgroup_event(event)) {
++		/*
++		 * Only care about cgroup events.
++		 *
++		 * If only the task belongs to cgroup of this event,
++		 * we will continue the installment
++		 */
++		cgrp = perf_cgroup_from_task(current, ctx);
++		reprogram = cgroup_is_descendant(cgrp->css.cgroup,
++					event->cgrp->css.cgroup);
++	}
++
+ 	if (reprogram) {
+ 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+ 		add_event_to_ctx(event, ctx);
+-- 
+2.8.4.31.g9ed660f
