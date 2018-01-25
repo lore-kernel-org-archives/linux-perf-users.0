@@ -1,169 +1,86 @@
-From: ufo19890607 <ufo19890607@gmail.com>
-Subject: [PATCH v2 2/2] perf stat: Add support to print counts after a period of time
-Date: Thu, 25 Jan 2018 10:10:04 +0100
-Message-ID: <1516871404-31920-3-git-send-email-ufo19890607@gmail.com>
-References: <1516871404-31920-1-git-send-email-ufo19890607@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516871404-31920-1-git-send-email-ufo19890607@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
-List-Id: linux-perf-users.vger.kernel.org
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 0/5] perf trace: Introduce arch-specific errno
+ code/name mappings
+Date: Thu, 25 Jan 2018 06:28:09 -0300
+Message-ID: <20180125092809.GB23548@kernel.org>
+References: <1516352177-11106-1-git-send-email-brueckner@linux.vnet.ibm.com>
+ <23f01b64-0584-bbaf-2418-e34c229bcce0@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751380AbeAYJ2N (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 25 Jan 2018 04:28:13 -0500
+Content-Disposition: inline
+In-Reply-To: <23f01b64-0584-bbaf-2418-e34c229bcce0@linux.vnet.ibm.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
 
-From: yuzhoujian <yuzhoujian@didichuxing.com>
+Em Thu, Jan 25, 2018 at 01:30:13PM +0530, Ravi Bangoria escreveu:
+> Hi Hendrik,
+> 
+> On 01/19/2018 02:26 PM, Hendrik Brueckner wrote:
+> > Introduce an interface to perf to resolve errno codes to their names.
+> > This is used by perf trace to display the errno name, for example, ENOENT,
+> > for an system call.  The previous implementation used the errno_to_name()
+> > function from the audit library.
+> >
+> > With this change, a table of errno codes and their names are created for
+> > each architecture on which perf is supported (others can be easily added
+> > if necessary).  The errno_to_name() function from the audit library is
+> > replaced with an arch-specific one, arch_errno_to_name().
+> >
+> > The benefit is that perf trace does not longer have a direct dependency
+> > for the audit library and the perf trace output can be displayed across
+> > architectures.  For example, collect trace output on s390 and display it
+> > on x86.
+> 
+> I haven't tested this but are you sure that we can do cross-arch perf-trace
+> after this patch set?
 
-Introduce a new option to print counts after N milliseconds
-and update perf-stat documentation accordingly.
-
-Show below is the output of the new option for perf stat.
-
-        $ perf stat --time 2000 -e cycles -a
-        Performance counter stats for 'system wide':
-
-                157,260,423      cycles
-
-                2.003060766 seconds time elapsed
-
-We can print the count deltas after N milliseconds with this new
-introduced option. This option is not supported with "-I" option.
-
-Changes since v1:
-- none.
-
-Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
----
- tools/perf/Documentation/perf-stat.txt |  7 ++++++-
- tools/perf/builtin-stat.c              | 29 ++++++++++++++++++++++++++---
- tools/perf/util/stat.h                 |  1 +
- 3 files changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 47a21645f60c..8270a0708ea2 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -149,7 +149,12 @@ The overhead percentage could be high in some cases, for instance with small, su
- --interval-count times::
- Print count deltas for fixed number of times.
- This option should be used together with "-I" option.
--	example: 'perf stat -I 1000 --interval-count 2 -e cycles -a'
-+	example: 'perf stat -I 1000 --times-print 2 -e cycles -a'
-+
-+--time msecs::
-+Print count deltas after N milliseconds (minimum: 10 ms).
-+This option is not supported with "-I" option.
-+	example: 'perf stat --time 2000 -e cycles -a'
+This patch is a step in that direction
  
- --metric-only::
- Only print computed metrics. Print them in a single line.
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 406f546ad74c..427f06dc35cc 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -573,6 +573,7 @@ static int __run_perf_stat(int argc, const char **argv)
- {
- 	int interval = stat_config.interval;
- 	int times = stat_config.times;
-+	int time = stat_config.time;
- 	char msg[BUFSIZ];
- 	unsigned long long t0, t1;
- 	struct perf_evsel *counter;
-@@ -586,6 +587,9 @@ static int __run_perf_stat(int argc, const char **argv)
- 	if (interval) {
- 		ts.tv_sec  = interval / USEC_PER_MSEC;
- 		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
-+	} else if (time) {
-+		ts.tv_sec  = time / USEC_PER_MSEC;
-+		ts.tv_nsec = (time % USEC_PER_MSEC) * NSEC_PER_MSEC;
- 	} else {
- 		ts.tv_sec  = 1;
- 		ts.tv_nsec = 0;
-@@ -698,9 +702,11 @@ static int __run_perf_stat(int argc, const char **argv)
- 		perf_evlist__start_workload(evsel_list);
- 		enable_counters();
+> Why I'm curious is because, we embed arch specific syscall table in the perf
+> binary at compile time:
+> 
+>     $ cat tools/perf/util/syscalltbl.c
+> 
+>     #if defined(__x86_64__)
+>     #include <asm/syscalls_64.c>
+>     const int syscalltbl_native_max_id = SYSCALLTBL_x86_64_MAX_ID;
+>     static const char **syscalltbl_native = syscalltbl_x86_64;
+>     #elif defined(__s390x__)
+>     #include <asm/syscalls_64.c>
+>     const int syscalltbl_native_max_id = SYSCALLTBL_S390_64_MAX_ID;
+>     static const char **syscalltbl_native = syscalltbl_s390_64;
+>     #endif
+> 
+> If we don't have, let's say, s390 syscall table in perf compiled on x86 machine,
+> we won't be able to do perf-trace across architecture. Right ?
+
+Right.
  
--		if (interval) {
-+		if (interval || time) {
- 			while (!waitpid(child_pid, &status, WNOHANG)) {
- 				nanosleep(&ts, NULL);
-+				if (time)
-+					break;
- 				process_interval();
- 				if (interval_count == true) {
- 					if (--times == 0)
-@@ -722,7 +728,9 @@ static int __run_perf_stat(int argc, const char **argv)
- 		enable_counters();
- 		while (!done) {
- 			nanosleep(&ts, NULL);
--			if (interval) {
-+			if (interval || time) {
-+				if (time)
-+					break;
- 				process_interval();
- 				if (interval_count == true) {
- 					if (--times == 0)
-@@ -1904,6 +1912,8 @@ static const struct option stat_options[] = {
- 		    "print counts at regular interval in ms (>= 10)"),
- 	OPT_INTEGER(0, "interval-count", &stat_config.times,
- 		    "print counts for fixed number of times"),
-+	OPT_UINTEGER(0, "time", &stat_config.time,
-+		    "print counts after a period of time in ms (>= 10)"),
- 	OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
- 	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
-@@ -2701,7 +2711,7 @@ int cmd_stat(int argc, const char **argv)
- 	int status = -EINVAL, run_idx;
- 	const char *mode;
- 	FILE *output = stderr;
--	unsigned int interval;
-+	unsigned int interval, time;
- 	int times;
- 	const char * const stat_subcommands[] = { "record", "report" };
+> Please let me know if I'm missing anything.
+
+You are not, we need to start testing running 'perf trace record' for
+some workloads on a, say, PowerPC machine, run perf trace -i on that
+file to do the beautification, copy this formatted output file + its
+perf.data file, copy that to x86_64 or s/390 and try to get the same
+output.
+
+We will not, and the differences will tell us what to work on :-)
+
+- Arnaldo
  
-@@ -2734,6 +2744,7 @@ int cmd_stat(int argc, const char **argv)
- 
- 	interval = stat_config.interval;
- 	times = stat_config.times;
-+	time = stat_config.time;
- 
- 	/*
- 	 * For record command the -o is already taken care of.
-@@ -2885,6 +2896,7 @@ int cmd_stat(int argc, const char **argv)
- 				   "The overhead percentage could be high in some cases. "
- 				   "Please proceed with caution.\n");
- 	}
-+
- 	if (times && interval)
- 		interval_count = true;
- 	else if (times && !interval) {
-@@ -2895,6 +2907,17 @@ int cmd_stat(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	if (time && time < 10) {
-+		pr_err("time must be >= 10ms.\n");
-+		parse_options_usage(stat_usage, stat_options, "time", 0);
-+		goto out;
-+	} else if (time && interval) {
-+		pr_err("time option is not supported with interval-print.\n");
-+		parse_options_usage(stat_usage, stat_options, "time", 0);
-+		parse_options_usage(stat_usage, stat_options, "I", 1);
-+		goto out;
-+	}
-+
- 	if (perf_evlist__alloc_stats(evsel_list, interval))
- 		goto out;
- 
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b2f8a347d358..6c621951fda8 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -90,6 +90,7 @@ struct perf_stat_config {
- 	bool		scale;
- 	FILE		*output;
- 	unsigned int	interval;
-+	unsigned int	time;
- 	int				times;
- 	struct runtime_stat *stats;
- 	int		stats_num;
--- 
-2.14.1
+> Thanks,
+> Ravi
+> 
+> P.S.: Seems I can remove libaudit dependency for syscalls on PowerPC as well.
+> Will prepare patches for that very soon.
+
+Great!
