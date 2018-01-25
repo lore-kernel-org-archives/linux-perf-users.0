@@ -1,92 +1,137 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Lyson=c4=9bk?= <olysonek@redhat.com>
-Subject: Re: [PATCH] perf: add Python 3 support
-Date: Wed, 24 Jan 2018 14:57:03 +0100
-Message-ID: <ae57aa63-9142-fe73-1d94-1065c4dbe618@redhat.com>
-References: <20180119205641.24242-1-jskarvad@redhat.com>
+From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 0/5] perf trace: Introduce arch-specific errno
+ code/name mappings
+Date: Thu, 25 Jan 2018 13:30:13 +0530
+Message-ID: <23f01b64-0584-bbaf-2418-e34c229bcce0@linux.vnet.ibm.com>
+References: <1516352177-11106-1-git-send-email-brueckner@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:49744 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933642AbeAXN5G (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Jan 2018 08:57:06 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C29EB54146
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2018 13:57:06 +0000 (UTC)
-In-Reply-To: <20180119205641.24242-1-jskarvad@redhat.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60958 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751176AbeAYH6r (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 25 Jan 2018 02:58:47 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w0P7u50t028972
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2018 02:58:46 -0500
+Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2fq99yvgm9-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2018 02:58:46 -0500
+Received: from localhost
+        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <ravi.bangoria@linux.vnet.ibm.com>;
+        Thu, 25 Jan 2018 07:58:44 -0000
+In-Reply-To: <1516352177-11106-1-git-send-email-brueckner@linux.vnet.ibm.com>
 Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: Jaroslav Skarvada <jskarvad@redhat.com>
+To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 
-Hi,
+Hi Hendrik,
 
-I tested the patch a bit and it seems to work fine. Some things I noticed:
+On 01/19/2018 02:26 PM, Hendrik Brueckner wrote:
+> Introduce an interface to perf to resolve errno codes to their names.
+> This is used by perf trace to display the errno name, for example, ENOENT,
+> for an system call.  The previous implementation used the errno_to_name()
+> function from the audit library.
+>
+> With this change, a table of errno codes and their names are created for
+> each architecture on which perf is supported (others can be easily added
+> if necessary).  The errno_to_name() function from the audit library is
+> replaced with an arch-specific one, arch_errno_to_name().
+>
+> The benefit is that perf trace does not longer have a direct dependency
+> for the audit library and the perf trace output can be displayed across
+> architectures.  For example, collect trace output on s390 and display it
+> on x86.
 
->  	if (module == NULL ||
->  	    pyrf_event__setup_types() < 0 ||
-> @@ -1221,7 +1273,11 @@ PyMODINIT_FUNC initperf(void)
->  	    pyrf_evsel__setup_types() < 0 ||
->  	    pyrf_thread_map__setup_types() < 0 ||
->  	    pyrf_cpu_map__setup_types() < 0)
-> +#if PY_MAJOR_VERSION < 3
->  		return;
-> +#else
-> +		return module;
-> +#endif
+I haven't tested this but are you sure that we can do cross-arch perf-trace
+after this patch set?
 
-Wouldn't it make sense to clean up the partially loaded module
-and return NULL if module != NULL, but the .*setup_types() fail?
+Why I'm curious is because, we embed arch specific syscall table in the perf
+binary at compile time:
 
-There also seems to be a bug, even without Jaroslav's patch, where
-e.g. event.prev_comm, event being a perf.sample_event, is _most
-of the time_ a bytestring. I think it should be, and was intended to be,
-a unicode string. I say most of the time, because if the string has the
-right length, it will in fact be returned as a unicode string.
+    $ cat tools/perf/util/syscalltbl.c
 
-The problem can be reproduced with the script perf/python/tracepoint.py,
-when run using python3. Most of the time, you will see something like
-the following in the output:
+    #if defined(__x86_64__)
+    #include <asm/syscalls_64.c>
+    const int syscalltbl_native_max_id = SYSCALLTBL_x86_64_MAX_ID;
+    static const char **syscalltbl_native = syscalltbl_x86_64;
+    #elif defined(__s390x__)
+    #include <asm/syscalls_64.c>
+    const int syscalltbl_native_max_id = SYSCALLTBL_S390_64_MAX_ID;
+    static const char **syscalltbl_native = syscalltbl_s390_64;
+    #endif
 
-prev_comm=bytearray(b'python3\x000\x00\x00\x00\x00\x00\x00\x00')
+If we don't have, let's say, s390 syscall table in perf compiled on x86 machine,
+we won't be able to do perf-trace across architecture. Right ?
 
-But if the length of prev_comm is just right, you'll get:
-prev_comm=aaaaaaaaaaaaaaa
+Please let me know if I'm missing anything.
 
-The problem is in perf/util/python.c:tracepoint_field(), calling
-is_printable_array(data + offset, len). 'len' is the size of the whole
-array where the string is stored, not of the string itself. It could be
-resolved by passing the actual string length to is_printable_array()
-somehow, or maybe with the following patch (it was not tested, and might
-have unintended consequences):
+Thanks,
+Ravi
 
-diff --git a/tools/perf/util/print_binary.c b/tools/perf/util/print_binary.c
-index 23e367063446..f124127ace3b 100644
---- a/tools/perf/util/print_binary.c
-+++ b/tools/perf/util/print_binary.c
-@@ -50,9 +50,13 @@ int is_printable_array(char *p, unsigned int len)
+P.S.: Seems I can remove libaudit dependency for syscalls on PowerPC as well.
+Will prepare patches for that very soon.
 
-        len--;
-
--       for (i = 0; i < len; i++) {
-+       for (i = 0; i < len && p[i] != 0; i++) {
-                if (!isprint(p[i]) && !isspace(p[i]))
-                        return 0;
-        }
-+       for (++i; i < len; ++i)  {
-+               if (p[i] != 0)
-+                       return 0;
-+       }
-        return 1;
- }
---
-
-I'd prepare a proper patch myself, but unfortunatelly I don't have
-the time right now and I'm not familiar with the codebase.
-
-Best regards
-Ondřej Lysoněk
+>
+> The audit library dependency can be further reduced and completely removed
+> for architectures that support system call tables in perf (see last commit).
+>
+> See also discussion on:
+> - https://www.spinics.net/lists/linux-perf-users/msg04782.html
+> - https://www.spinics.net/lists/linux-perf-users/msg05005.html
+>
+> Please note that this patch set is bases on the perf/core branch.
+>
+> Changes in v2:
+> As the arch_errno_to_name() mapping is used by perf trace only,
+> move all the scripts and generated files from tools/perf/util/
+> to the tools/perf/trace/beauty/{generated/} directories.
+> See also https://www.spinics.net/lists/linux-perf-users/msg05037.html
+>
+>
+> Hendrik Brueckner (5):
+>   tools include arch: Grab a copy of errno.h for arch's supported by
+>     perf
+>   tools include asm-generic: Grab errno.h and errno-base.h
+>   perf util: Introduce architecture specific errno/name mapping
+>   perf trace: Obtain errno values by using arch_syscalls__strerrno()
+>   perf trace: Remove audit-libs dependency if syscall tables are present
+>
+>  tools/arch/alpha/include/uapi/asm/errno.h   | 128 +++++++++++++++++++++++++++
+>  tools/arch/mips/include/asm/errno.h         |  17 ++++
+>  tools/arch/mips/include/uapi/asm/errno.h    | 130 ++++++++++++++++++++++++++++
+>  tools/arch/parisc/include/uapi/asm/errno.h  | 128 +++++++++++++++++++++++++++
+>  tools/arch/powerpc/include/uapi/asm/errno.h |  10 +++
+>  tools/arch/sparc/include/uapi/asm/errno.h   | 118 +++++++++++++++++++++++++
+>  tools/arch/x86/include/uapi/asm/errno.h     |   1 +
+>  tools/include/uapi/asm-generic/errno-base.h |  40 +++++++++
+>  tools/include/uapi/asm-generic/errno.h      | 123 ++++++++++++++++++++++++++
+>  tools/perf/Makefile.config                  |  10 ++-
+>  tools/perf/Makefile.perf                    |  13 ++-
+>  tools/perf/builtin-help.c                   |   2 +-
+>  tools/perf/builtin-trace.c                  |  14 ++-
+>  tools/perf/check-headers.sh                 |   9 ++
+>  tools/perf/perf.c                           |   4 +-
+>  tools/perf/trace/beauty/arch_errno_names.c  |   1 +
+>  tools/perf/trace/beauty/arch_errno_names.sh | 100 +++++++++++++++++++++
+>  tools/perf/trace/beauty/beauty.h            |   2 +
+>  tools/perf/util/generate-cmdlist.sh         |   2 +-
+>  19 files changed, 841 insertions(+), 11 deletions(-)
+>  create mode 100644 tools/arch/alpha/include/uapi/asm/errno.h
+>  create mode 100644 tools/arch/mips/include/asm/errno.h
+>  create mode 100644 tools/arch/mips/include/uapi/asm/errno.h
+>  create mode 100644 tools/arch/parisc/include/uapi/asm/errno.h
+>  create mode 100644 tools/arch/powerpc/include/uapi/asm/errno.h
+>  create mode 100644 tools/arch/sparc/include/uapi/asm/errno.h
+>  create mode 100644 tools/arch/x86/include/uapi/asm/errno.h
+>  create mode 100644 tools/include/uapi/asm-generic/errno-base.h
+>  create mode 100644 tools/include/uapi/asm-generic/errno.h
+>  create mode 100644 tools/perf/trace/beauty/arch_errno_names.c
+>  create mode 100755 tools/perf/trace/beauty/arch_errno_names.sh
+>
