@@ -1,67 +1,63 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2 2/2] perf stat: Add support to print counts after a
- period of time
-Date: Fri, 26 Jan 2018 08:51:04 +0100
-Message-ID: <20180126075104.GA4754@krava>
-References: <1516871404-31920-1-git-send-email-ufo19890607@gmail.com>
- <1516871404-31920-3-git-send-email-ufo19890607@gmail.com>
- <20180125122712.GA9096@krava>
- <CAHCio2hg-C55Ue=bUzu-6sYyGXaCw916AAZ7CzJFW-x1dyWmyw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: ufo19890607 <ufo19890607@gmail.com>
+Subject: [PATCH v3 0/2] perf stat: Add interval-count and time support
+Date: Fri, 26 Jan 2018 10:06:55 +0100
+Message-ID: <1516957617-23985-1-git-send-email-ufo19890607@gmail.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42648 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752065AbeAZHvM (ORCPT
+Received: from mail-pg0-f65.google.com ([74.125.83.65]:45704 "EHLO
+        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752490AbeAZJHK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Jan 2018 02:51:12 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHCio2hg-C55Ue=bUzu-6sYyGXaCw916AAZ7CzJFW-x1dyWmyw@mail.gmail.com>
+        Fri, 26 Jan 2018 04:07:10 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Wind Yu <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, Kan.liang@intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-On Fri, Jan 26, 2018 at 09:59:02AM +0800, 禹舟键 wrote:
-> 2018-01-25 20:27 GMT+08:00 Jiri Olsa <jolsa@redhat.com>:
-> 
-> > On Thu, Jan 25, 2018 at 10:10:04AM +0100, ufo19890607 wrote:
-> >
-> > SNIP
-> >
-> > >  --metric-only::
-> > >  Only print computed metrics. Print them in a single line.
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index 406f546ad74c..427f06dc35cc 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -573,6 +573,7 @@ static int __run_perf_stat(int argc, const char
-> > **argv)
-> > >  {
-> > >       int interval = stat_config.interval;
-> > >       int times = stat_config.times;
-> > > +     int time = stat_config.time;
-> > >       char msg[BUFSIZ];
-> > >       unsigned long long t0, t1;
-> > >       struct perf_evsel *counter;
-> > > @@ -586,6 +587,9 @@ static int __run_perf_stat(int argc, const char
-> > **argv)
-> > >       if (interval) {
-> > >               ts.tv_sec  = interval / USEC_PER_MSEC;
-> > >               ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
-> > > +     } else if (time) {
-> > > +             ts.tv_sec  = time / USEC_PER_MSEC;
-> > > +             ts.tv_nsec = (time % USEC_PER_MSEC) * NSEC_PER_MSEC;
-> >
-> > I like the idea.. it won't work with -I option, but let's
-> > keep it like that until someone needs it ;-)
-> >
-> >
-> Hi Jirka
-> 
-> What do you mean by this sentence？？？
+From: yuzhoujian <yuzhoujian@didichuxing.com>
 
-that I'm ok with the patch with small fixes I mentioned
+Introduce two new options for perf stat and update perf-stat documentation
+accordingly.
 
-jirka
+The interval-count option can be used to print counts for fixed number of
+times, and it should be used specifically with "-I" option.
+
+Show below is the output of the interval-count option for perf stat.
+
+        $ perf stat -I 1000 --interval-count 2 -e cycles -a
+	#           time             counts unit events
+             1.002827089         93,884,870      cycles
+             2.004231506         56,573,446      cycles
+    
+The time option can be used to print counts after a period of time, and it
+should not be used with "-I" option.
+
+Show below is the output of the time option for perf stat.
+
+        $ perf stat --time 2000 -e cycles -a
+        Performance counter stats for 'system wide':
+
+                157,260,423      cycles
+
+                2.003060766 seconds time elapsed
+
+yuzhoujian (2):
+  perf stat: Add support to print counts for fixed times
+  perf stat: Add support to print counts after a period of time
+
+Changes since v2:
+- modify the time check in __run_perf_stat func to keep some consistency
+  with the workload case.
+- add the warning when the time is set between 10ms to 100ms.
+- add the pr_err when the time is set below 10ms.
+
+Changes since v1:
+- change the name of the new option "times-print" to "interval-count".
+- keep the interval-count option interval specifically.
+
+ tools/perf/Documentation/perf-stat.txt | 10 ++++++
+ tools/perf/builtin-stat.c              | 59 ++++++++++++++++++++++++++++++++--
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 68 insertions(+), 3 deletions(-)
+
+-- 
+2.14.1
