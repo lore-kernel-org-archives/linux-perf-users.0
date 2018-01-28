@@ -1,59 +1,84 @@
-From: Masami Hiramatsu <masami.hiramatsu@gmail.com>
-Subject: Re: perf probe and bitfields
-Date: Sat, 27 Jan 2018 14:04:59 +0900
-Message-ID: <20180127140459.8e54eefcf9d74609cbcaa739@gmail.com>
-References: <52f06b83-1065-dc88-756e-7f8fffc5c21e@gmail.com>
-        <20180126065656.GD22737@sejong>
-        <b506165b-22bf-db70-0ef5-30c4ee4e2295@gmail.com>
+From: weiping zhang <zhangweiping@didichuxing.com>
+Subject: [RFC PATCH] perf cgroup: simplify arguments if track multiple events
+ for a cgroup
+Date: Sun, 28 Jan 2018 13:31:48 +0800
+Message-ID: <20180128053143.GA13597@localhost.didichuxing.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-pg0-f41.google.com ([74.125.83.41]:37389 "EHLO
-        mail-pg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751198AbeA0FFD (ORCPT
+Received: from mx2.didichuxing.com ([36.110.17.22]:10232 "EHLO
+        BJEXCAS007.didichuxing.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1751032AbeA1FcI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 Jan 2018 00:05:03 -0500
-Received: by mail-pg0-f41.google.com with SMTP id z17so1437730pgc.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jan 2018 21:05:03 -0800 (PST)
-In-Reply-To: <b506165b-22bf-db70-0ef5-30c4ee4e2295@gmail.com>
+        Sun, 28 Jan 2018 00:32:08 -0500
+Content-Disposition: inline
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Perf Users <linux-perf-users@vger.kernel.org>, kernel-team@lge.com
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Fri, 26 Jan 2018 09:28:49 -0700
-David Ahern <dsahern@gmail.com> wrote:
+if use -G with one cgroup and -e with multiple events, only the first
+event has correct cgroup setting, all events from the second will track
+system-wide events.
 
-> On 1/25/18 11:56 PM, Namhyung Kim wrote:
-> > Hi David,
-> > 
-> > On Fri, Jan 19, 2018 at 08:43:50AM -0800, David Ahern wrote:
-> >> Hi Arnaldo / Masami:
-> >>
-> >> Are there known issues / limitations with perf probe and bitfields?
-> >>
-> >> Here's an example: pkt_type is a bitfield in sk_buff. When I put a probe
-> >> in arp_rcv to examine the pkt_type value:
-> >>
-> >> $ perf probe 'arp_rcv ptype=skb->pkt_type dev=dev->name:string'
-> > 
-> > Bitfield type takes 3 parameters according to the Doc/perf-probe.txt.
-> > Maybe it's like 'ptype=skb->pkt_type:b3@0/8' ?
-> 
-> missed that. Thanks, Namyhung.
+if user want track multiple events for a specific cgroup, user must give
+parameters like follow:
+$ perf stat -e e1 -e e2 -e e3 -G test,test,test
+this patch simplify this case, just type one cgroup, like following:
+$ perf stat -e e1 -e e2 -e e3 -G test
 
+reproduce:
+$ mkdir -p /sys/fs/cgroup/perf_event/test
+$ perf stat -e cycles -e cache-misses  -a -I 1000 -G test
 
+before:
+     1.001007226      <not counted>      cycles                    test
+     1.001007226              7,506      cache-misses
 
-Hmm, if you have debuginfo, it must be automatically translated.
-E.g.
+after:
+     1.000834097      <not counted>      cycles                    test
+     1.000834097      <not counted>      cache-misses              test
 
-$ sudo perf probe -D "arp_rcv ptype=skb->pkt_type dev=dev->name:string"
-p:probe/arp_rcv _text+8135904 ptype=+144(%di):b3@5/8 dev=+0(%si):string
+Signed-off-by: weiping zhang <zhangweiping@didichuxing.com>
+---
+ tools/perf/util/cgroup.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-So as you can see the ptype automatically has ":b3@5/8" types.
-
-Thanks,
-
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index d9ffc1e..38aaeb2 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -154,9 +154,11 @@ int parse_cgroups(const struct option *opt __maybe_unused, const char *str,
+ 		  int unset __maybe_unused)
+ {
+ 	struct perf_evlist *evlist = *(struct perf_evlist **)opt->value;
++	struct perf_evsel *counter;
++	struct cgroup_sel *cgrp = NULL;
+ 	const char *p, *e, *eos = str + strlen(str);
+ 	char *s;
+-	int ret;
++	int ret, i;
+ 
+ 	if (list_empty(&evlist->entries)) {
+ 		fprintf(stderr, "must define events before cgroups\n");
+@@ -185,5 +187,18 @@ int parse_cgroups(const struct option *opt __maybe_unused, const char *str,
+ 			break;
+ 		str = p+1;
+ 	}
++	/* for the case one cgroup combine to multiple events */
++	i = 0;
++	if (nr_cgroups == 1) {
++		evlist__for_each_entry(evlist, counter) {
++			if (i == 0)
++				cgrp = counter->cgrp;
++			else {
++				counter->cgrp = cgrp;
++				refcount_inc(&cgrp->refcnt);
++			}
++			i++;
++		}
++	}
+ 	return 0;
+ }
 -- 
-Masami Hiramatsu
+2.9.4
