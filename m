@@ -1,82 +1,64 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v3 1/2] perf stat: Add support to print counts for fixed
- times
-Date: Mon, 29 Jan 2018 08:29:49 +0100
-Message-ID: <20180129072949.GB8162@krava>
-References: <1516957617-23985-1-git-send-email-ufo19890607@gmail.com>
- <1516957617-23985-2-git-send-email-ufo19890607@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: ufo19890607 <ufo19890607@gmail.com>
+Subject: [PATCH v4 0/2] perf stat: Add interval-count and time support
+Date: Mon, 29 Jan 2018 10:25:21 +0100
+Message-ID: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516957617-23985-2-git-send-email-ufo19890607@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ufo19890607 <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, Kan.liang@intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, Kan.liang@intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Jan 26, 2018 at 10:06:56AM +0100, ufo19890607 wrote:
+From: yuzhoujian <yuzhoujian@didichuxing.com>
 
-SNIP
+Introduce two new options for perf stat and update perf-stat documentation
+accordingly.
 
-> @@ -1891,6 +1902,8 @@ static const struct option stat_options[] = {
->  			"command to run after to the measured command"),
->  	OPT_UINTEGER('I', "interval-print", &stat_config.interval,
->  		    "print counts at regular interval in ms (>= 10)"),
-> +	OPT_INTEGER(0, "interval-count", &stat_config.times,
-> +		    "print counts for fixed number of times"),
->  	OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
->  		     "aggregate counts per processor socket", AGGR_SOCKET),
->  	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
-> @@ -2689,6 +2702,7 @@ int cmd_stat(int argc, const char **argv)
->  	const char *mode;
->  	FILE *output = stderr;
->  	unsigned int interval;
-> +	int times;
->  	const char * const stat_subcommands[] = { "record", "report" };
->  
->  	setlocale(LC_ALL, "");
-> @@ -2719,6 +2733,7 @@ int cmd_stat(int argc, const char **argv)
->  		return __cmd_report(argc, argv);
->  
->  	interval = stat_config.interval;
-> +	times = stat_config.times;
->  
->  	/*
->  	 * For record command the -o is already taken care of.
-> @@ -2870,6 +2885,15 @@ int cmd_stat(int argc, const char **argv)
->  				   "The overhead percentage could be high in some cases. "
->  				   "Please proceed with caution.\n");
->  	}
-> +	if (times && interval)
-> +		interval_count = true;
-> +	else if (times && !interval) {
+The interval-count option can be used to print counts for fixed number of
+times, and it should be used specifically with "-I" option.
 
-you can use stat_config.times in here, no need for 'times' copy
+Show below is the output of the interval-count option for perf stat.
 
-jirka
+        $ perf stat -I 1000 --interval-count 2 -e cycles -a
+        #           time             counts unit events
+             1.002827089         93,884,870      cycles
+             2.004231506         56,573,446      cycles
+    
+The time option can be used to print counts after a period of time, and it
+should not be used with "-I" option.
 
-> +		pr_err("interval-count option should be used together with "
-> +				"interval-print.\n");
-> +		parse_options_usage(stat_usage, stat_options, "interval-count", 0);
-> +		parse_options_usage(stat_usage, stat_options, "I", 1);
-> +		goto out;
-> +	}
->  
->  	if (perf_evlist__alloc_stats(evsel_list, interval))
->  		goto out;
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index dbc6f7134f61..b2f8a347d358 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -90,6 +90,7 @@ struct perf_stat_config {
->  	bool		scale;
->  	FILE		*output;
->  	unsigned int	interval;
-> +	int				times;
->  	struct runtime_stat *stats;
->  	int		stats_num;
->  };
-> -- 
-> 2.14.1
-> 
+Show below is the output of the time option for perf stat.
+
+        $ perf stat --time 2000 -e cycles -a
+        Performance counter stats for 'system wide':
+
+                157,260,423      cycles
+
+                2.003060766 seconds time elapsed
+
+yuzhoujian (2):
+  perf stat: Add support to print counts for fixed times
+  perf stat: Add support to print counts after a period of time
+
+Changes since v3: 
+- merge interval_count check and times check to one line.
+- fix the wrong indent in stat.h
+- use stat_config.times instead of 'times' in cmd_stat function.
+
+Changes since v2: 
+- modify the time check in __run_perf_stat func to keep some consistency
+  with the workload case.
+- add the warning when the time is set between 10ms to 100ms.
+- add the pr_err when the time is set below 10ms.
+
+Changes since v1:
+- change the name of the new option "times-print" to "interval-count".
+- keep the interval-count option interval specifically.
+
+
+ tools/perf/Documentation/perf-stat.txt | 10 +++++++
+ tools/perf/builtin-stat.c              | 53 ++++++++++++++++++++++++++++++++--
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 62 insertions(+), 3 deletions(-)
+
+-- 
+2.14.1
