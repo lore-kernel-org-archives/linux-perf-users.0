@@ -1,77 +1,83 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v4 0/2] perf stat: Add interval-count and time support
-Date: Mon, 29 Jan 2018 11:25:58 +0100
-Message-ID: <20180129102558.GA14925@krava>
-References: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
+Subject: Re: [RFC PATCH] perf cgroup: simplify arguments if track multiple
+ events for a cgroup
+Date: Mon, 29 Jan 2018 11:39:26 +0100
+Message-ID: <20180129103926.GA20848@krava>
+References: <20180128053143.GA13597@localhost.didichuxing.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:53780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750913AbeA2Kj3 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 29 Jan 2018 05:39:29 -0500
 Content-Disposition: inline
-In-Reply-To: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ufo19890607 <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, Kan.liang@intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <20180128053143.GA13597@localhost.didichuxing.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 10:25:21AM +0100, ufo19890607 wrote:
-> From: yuzhoujian <yuzhoujian@didichuxing.com>
+On Sun, Jan 28, 2018 at 01:31:48PM +0800, weiping zhang wrote:
+> if use -G with one cgroup and -e with multiple events, only the first
+> event has correct cgroup setting, all events from the second will track
+> system-wide events.
 > 
-> Introduce two new options for perf stat and update perf-stat documentation
-> accordingly.
+> if user want track multiple events for a specific cgroup, user must give
+> parameters like follow:
+> $ perf stat -e e1 -e e2 -e e3 -G test,test,test
+> this patch simplify this case, just type one cgroup, like following:
+> $ perf stat -e e1 -e e2 -e e3 -G test
 > 
-> The interval-count option can be used to print counts for fixed number of
-> times, and it should be used specifically with "-I" option.
+> reproduce:
+> $ mkdir -p /sys/fs/cgroup/perf_event/test
+> $ perf stat -e cycles -e cache-misses  -a -I 1000 -G test
 > 
-> Show below is the output of the interval-count option for perf stat.
+> before:
+>      1.001007226      <not counted>      cycles                    test
+>      1.001007226              7,506      cache-misses
 > 
->         $ perf stat -I 1000 --interval-count 2 -e cycles -a
->         #           time             counts unit events
->              1.002827089         93,884,870      cycles
->              2.004231506         56,573,446      cycles
->     
-> The time option can be used to print counts after a period of time, and it
-> should not be used with "-I" option.
+> after:
+>      1.000834097      <not counted>      cycles                    test
+>      1.000834097      <not counted>      cache-misses              test
 > 
-> Show below is the output of the time option for perf stat.
-> 
->         $ perf stat --time 2000 -e cycles -a
->         Performance counter stats for 'system wide':
-> 
->                 157,260,423      cycles
-> 
->                 2.003060766 seconds time elapsed
-> 
-> yuzhoujian (2):
->   perf stat: Add support to print counts for fixed times
->   perf stat: Add support to print counts after a period of time
-> 
-> Changes since v3: 
-> - merge interval_count check and times check to one line.
-> - fix the wrong indent in stat.h
-> - use stat_config.times instead of 'times' in cmd_stat function.
+> Signed-off-by: weiping zhang <zhangweiping@didichuxing.com>
+> ---
+>  tools/perf/util/cgroup.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+please update the -G option documentation
+
+> 
+> diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+> index d9ffc1e..38aaeb2 100644
+> --- a/tools/perf/util/cgroup.c
+> +++ b/tools/perf/util/cgroup.c
+> @@ -154,9 +154,11 @@ int parse_cgroups(const struct option *opt __maybe_unused, const char *str,
+>  		  int unset __maybe_unused)
+>  {
+>  	struct perf_evlist *evlist = *(struct perf_evlist **)opt->value;
+> +	struct perf_evsel *counter;
+> +	struct cgroup_sel *cgrp = NULL;
+>  	const char *p, *e, *eos = str + strlen(str);
+>  	char *s;
+> -	int ret;
+> +	int ret, i;
+>  
+>  	if (list_empty(&evlist->entries)) {
+>  		fprintf(stderr, "must define events before cgroups\n");
+> @@ -185,5 +187,18 @@ int parse_cgroups(const struct option *opt __maybe_unused, const char *str,
+>  			break;
+>  		str = p+1;
+>  	}
+> +	/* for the case one cgroup combine to multiple events */
+> +	i = 0;
+> +	if (nr_cgroups == 1) {
+> +		evlist__for_each_entry(evlist, counter) {
+> +			if (i == 0)
+> +				cgrp = counter->cgrp;
+
+what if the only group is not defined for the first event? like  -G ,,krava
 
 thanks,
 jirka
-
-> 
-> Changes since v2: 
-> - modify the time check in __run_perf_stat func to keep some consistency
->   with the workload case.
-> - add the warning when the time is set between 10ms to 100ms.
-> - add the pr_err when the time is set below 10ms.
-> 
-> Changes since v1:
-> - change the name of the new option "times-print" to "interval-count".
-> - keep the interval-count option interval specifically.
-> 
-> 
->  tools/perf/Documentation/perf-stat.txt | 10 +++++++
->  tools/perf/builtin-stat.c              | 53 ++++++++++++++++++++++++++++++++--
->  tools/perf/util/stat.h                 |  2 ++
->  3 files changed, 62 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.14.1
-> 
