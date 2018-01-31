@@ -1,43 +1,89 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2] perf cgroup: simplify arguments if track multiple
- events for a cgroup
-Date: Wed, 31 Jan 2018 10:22:16 +0100
-Message-ID: <20180131092216.GB3313@krava>
-References: <20180129154805.GA6284@localhost.didichuxing.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180129154805.GA6284@localhost.didichuxing.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-List-Id: linux-perf-users.vger.kernel.org
+From: changbin.du@intel.com
+Subject: [PATCH] tracing/fgraph: Missed irq return mark for leaf entry
+Date: Wed, 31 Jan 2018 23:48:49 +0800
+Message-ID: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:36002 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752300AbeAaP5j (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 31 Jan 2018 10:57:39 -0500
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: rostedt@goodmis.org
+Cc: mingo@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
 
-On Mon, Jan 29, 2018 at 11:48:09PM +0800, weiping zhang wrote:
-> if use -G with one cgroup and -e with multiple events, only the first
-> event has correct cgroup setting, all events from the second will track
-> system-wide events.
-> 
-> if user want track multiple events for a specific cgroup, user must give
-> parameters like follow:
-> $ perf stat -e e1 -e e2 -e e3 -G test,test,test
-> this patch simplify this case, just type one cgroup, like following:
-> $ perf stat -e e1 -e e2 -e e3 -G test
-> 
-> $ mkdir -p /sys/fs/cgroup/perf_event/test
-> $ perf stat -e cycles -e cache-misses  -a -I 1000 -G test
-> 
-> before:
->      1.001007226      <not counted>      cycles                    test
->      1.001007226              7,506      cache-misses
-> 
-> after:
->      1.000834097      <not counted>      cycles                    test
->      1.000834097      <not counted>      cache-misses              test
-> 
-> Signed-off-by: weiping zhang <zhangweiping@didichuxing.com>
+From: Changbin Du <changbin.du@intel.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+The fgraph forget to print irq return mark for leaf entry. Then we can see
+unbalanced irq mark in the trace. This patch fix this.
 
-thanks,
-jirka
+Before:
+ 1)               |  SyS_write() {
+ 1)               |    __fdget_pos() {
+ 1)   0.061 us    |      __fget_light();
+ 1)   0.289 us    |    }
+ 1)               |    vfs_write() {
+ 1)   0.049 us    |      rw_verify_area();
+ 1) + 15.424 us   |      __vfs_write();
+ 1)   ==========> |
+ 1)   6.003 us    |      smp_apic_timer_interrupt();
+ 1)   0.055 us    |      __fsnotify_parent();
+ 1)   0.073 us    |      fsnotify();
+ 1) + 23.665 us   |    }
+ 1) + 24.501 us   |  }
+
+After:
+ 0)               |  SyS_write() {
+ 0)               |    __fdget_pos() {
+ 0)   0.052 us    |      __fget_light();
+ 0)   0.328 us    |    }
+ 0)               |    vfs_write() {
+ 0)   0.057 us    |      rw_verify_area();
+ 0)               |      __vfs_write() {
+ 0)   ==========> |
+ 0)   8.548 us    |      smp_apic_timer_interrupt();
+ 0)   <========== |
+ 0) + 36.507 us   |      } /* __vfs_write */
+ 0)   0.049 us    |      __fsnotify_parent();
+ 0)   0.066 us    |      fsnotify();
+ 0) + 50.064 us   |    }
+ 0) + 50.952 us   |  }
+
+Signed-off-by: Changbin Du <changbin.du@intel.com>
+---
+ kernel/trace/trace_functions_graph.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 23c0b0c..169b3c4 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -831,6 +831,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 	struct ftrace_graph_ret *graph_ret;
+ 	struct ftrace_graph_ent *call;
+ 	unsigned long long duration;
++	int cpu = iter->cpu;
+ 	int i;
+ 
+ 	graph_ret = &ret_entry->ret;
+@@ -839,7 +840,6 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 
+ 	if (data) {
+ 		struct fgraph_cpu_data *cpu_data;
+-		int cpu = iter->cpu;
+ 
+ 		cpu_data = per_cpu_ptr(data->cpu_data, cpu);
+ 
+@@ -869,6 +869,9 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 
+ 	trace_seq_printf(s, "%ps();\n", (void *)call->func);
+ 
++	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
++			cpu, iter->ent->pid, flags);
++
+ 	return trace_handle_return(s);
+ }
+ 
+-- 
+2.7.4
