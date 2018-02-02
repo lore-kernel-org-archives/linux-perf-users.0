@@ -1,89 +1,59 @@
-From: changbin.du@intel.com
-Subject: [PATCH] tracing/fgraph: Missed irq return mark for leaf entry
-Date: Wed, 31 Jan 2018 23:48:49 +0800
-Message-ID: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
+From: "Vuille, Martin (Martin)" <vmartin@avaya.com>
+Subject: Not finding symbol information
+Date: Fri, 2 Feb 2018 14:06:32 +0000
+Message-ID: <30C2D590D16A5C46ADFE65219103779892609BF7@AZ-US1EXMB02.global.avaya.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:36002 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752300AbeAaP5j (ORCPT
+Received: from p-us1-iereast-outbound.us1.avaya.com ([135.11.29.13]:46822 "EHLO
+        p-us1-iereast-outbound.us1.avaya.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751900AbeBBOQu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Jan 2018 10:57:39 -0500
+        Fri, 2 Feb 2018 09:16:50 -0500
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: rostedt@goodmis.org
-Cc: mingo@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-From: Changbin Du <changbin.du@intel.com>
+We are using 'perf record' to collect information on an embedded ARM board (the target)
+and then using 'perf report' on a PC (the host) to interpret the data.
 
-The fgraph forget to print irq return mark for leaf entry. Then we can see
-unbalanced irq mark in the trace. This patch fix this.
+The host has a copy of the rootfs of the target that also includes debug info. We pass the
+'--symfs' option to 'perf report' to point to the rootfs.
 
-Before:
- 1)               |  SyS_write() {
- 1)               |    __fdget_pos() {
- 1)   0.061 us    |      __fget_light();
- 1)   0.289 us    |    }
- 1)               |    vfs_write() {
- 1)   0.049 us    |      rw_verify_area();
- 1) + 15.424 us   |      __vfs_write();
- 1)   ==========> |
- 1)   6.003 us    |      smp_apic_timer_interrupt();
- 1)   0.055 us    |      __fsnotify_parent();
- 1)   0.073 us    |      fsnotify();
- 1) + 23.665 us   |    }
- 1) + 24.501 us   |  }
+Whenever an event in the data corresponds to a DSO that exists on the host, 'perf report'
+complains that the debug info is not available, even though that info is in fact available in
+the rootfs.
 
-After:
- 0)               |  SyS_write() {
- 0)               |    __fdget_pos() {
- 0)   0.052 us    |      __fget_light();
- 0)   0.328 us    |    }
- 0)               |    vfs_write() {
- 0)   0.057 us    |      rw_verify_area();
- 0)               |      __vfs_write() {
- 0)   ==========> |
- 0)   8.548 us    |      smp_apic_timer_interrupt();
- 0)   <========== |
- 0) + 36.507 us   |      } /* __vfs_write */
- 0)   0.049 us    |      __fsnotify_parent();
- 0)   0.066 us    |      fsnotify();
- 0) + 50.064 us   |    }
- 0) + 50.952 us   |  }
+What seems to be happening is that 'perf report' "sees" the host's copy of the DSO first,
+"remembers" this DSO's buildid (which is incorrect), then "sees" the debug info in the
+rootfs but rejects it because it doesn't match the buildid "remembered" earlier, and then
+concludes that there is no debug info available.
 
-Signed-off-by: Changbin Du <changbin.du@intel.com>
----
- kernel/trace/trace_functions_graph.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Using /bin/bash as an example, selected output from 'perf report -v':
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 23c0b0c..169b3c4 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -831,6 +831,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 	struct ftrace_graph_ret *graph_ret;
- 	struct ftrace_graph_ent *call;
- 	unsigned long long duration;
-+	int cpu = iter->cpu;
- 	int i;
- 
- 	graph_ret = &ret_entry->ret;
-@@ -839,7 +840,6 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 
- 	if (data) {
- 		struct fgraph_cpu_data *cpu_data;
--		int cpu = iter->cpu;
- 
- 		cpu_data = per_cpu_ptr(data->cpu_data, cpu);
- 
-@@ -869,6 +869,9 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 
- 	trace_seq_printf(s, "%ps();\n", (void *)call->func);
- 
-+	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
-+			cpu, iter->ent->pid, flags);
-+
- 	return trace_handle_return(s);
- }
- 
--- 
-2.7.4
+...
+build id event received for /bin/bash: a35856957f6f165a1ca4ea98afbd1a986dfa785c
+...
+symsrc__init: build id mismatch for sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/bash.
+symsrc__init: build id mismatch for sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/bash.
+symsrc__init: build id mismatch for sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/.debug/bash.
+/bin/bash with build id 04eca96c5bf3e9a300952a29ef3218f00487d37b not found, continuing without symbols
+...
+
+$ file /bin/bash
+/bin/bash: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=04eca96c5bf3e9a300952a29ef3218f00487d37b, stripped
+
+$ file sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/bash
+sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/bash: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for GNU/Linux 3.2.0, BuildID[sha1]=a35856957f6f165a1ca4ea98afbd1a986dfa785c, stripped
+
+$ file sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/.debug/bash
+sip96x1_prod/cp/lib/dvf99/sysroots/armv5te-dspg-linux-gnueabi///bin/.debug/bash: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter *empty*, for GNU/Linux 3.2.0, BuildID[sha1]=a35856957f6f165a1ca4ea98afbd1a986dfa785c, not stripped
+
+We are using Linux 4.4-11 on the target and 4.4.0-109-generic (Ubuntu 16.04) on the host.
+
+Is this a known issue? Has it been addressed in a more recent kernel?
+
+Thanks in advance,
+MV
