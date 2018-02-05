@@ -1,48 +1,95 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/10] tools headers: Synchronize uapi/linux/sched.h
-Date: Mon,  5 Feb 2018 16:56:14 -0300
-Message-ID: <20180205195620.9010-5-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/10] perf/urgent fixes
+Date: Mon, 5 Feb 2018 22:28:01 +0100
+Message-ID: <20180205212801.p5iqjeglg2vowng2@gmail.com>
 References: <20180205195620.9010-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:36253 "EHLO
+        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752056AbeBEV2H (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 5 Feb 2018 16:28:07 -0500
+Content-Disposition: inline
 In-Reply-To: <20180205195620.9010-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Juri Lelli <juri.lelli@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
-List-Id: linux-perf-users.vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, David Ahern <dsahern@gmail.com>, David Woodhouse <dwmw@amazon.co.uk>, Fenghua Yu <fenghua.yu@intel.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Juri Lelli <juri.lelli@gmail.com>, Kan Liang <kan.liang@intel.com>, "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Paul Mackerras <paulus@ozlabs.org>, Peter
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the tools copy updated with the changes in 34be39305a77
-("sched/deadline: Implement "runtime overrun signal" support"), that
-cause no effect on the tools, will be used when we start copying the
-sched_attr struct argument to the sched_get/setattr syscalls.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Juri Lelli <juri.lelli@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-8rododhs87x8hv9k83qcdtne@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/sched.h | 5 +++++
- 1 file changed, 5 insertions(+)
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 72906f38934a49faf4d2d38ea9ae32adcf7d5d0c:
+> 
+>   Merge branch 'x86-hyperv-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2018-01-30 13:04:50 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.16-20180205
+> 
+> for you to fetch changes up to 2fe2230d4183d2c311bbb7b426491ac486216a16:
+> 
+>   perf tools: Add trace/beauty/generated/ into .gitignore (2018-02-05 13:58:02 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - 'period' and 'freq' handling fixes for 'perf record', also
+>   related: add Add PERF_SAMPLE_PERIOD into PEBS_FREERUNNING_FLAGS
+>   in the x86 perf kernel driver (Jiri Olsa)
+> 
+> - Fix 'perf trace -i perf.data' callgraph handling (Ravi Bangoria)
+> 
+> - Synchronize tooling headers for asound, s390 and powerpc KVM,
+>   sched and x86 features (Arnaldo Carvalho de Melo)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (5):
+>       tools headers: Synchronize sound/asound.h
+>       tooling headers: Synchronize updated s390 kvm UAPI headers
+>       tools headers: Sync {tools/,}arch/powerpc/include/uapi/asm/kvm.h
+>       tools headers: Synchronize uapi/linux/sched.h
+>       tools headers: Synchoronize x86 features UAPI headers
+> 
+> Jiri Olsa (3):
+>       perf evsel: Fix period/freq terms setup
+>       perf record: Fix period option handling
+>       x86/events/intel/ds: Add PERF_SAMPLE_PERIOD into PEBS_FREERUNNING_FLAGS
+> 
+> Ravi Bangoria (2):
+>       perf trace: Fix call-graph output
+>       perf tools: Add trace/beauty/generated/ into .gitignore
+> 
+>  arch/x86/events/perf_event.h                   |  3 ++-
+>  tools/arch/powerpc/include/uapi/asm/kvm.h      | 25 +++++++++++++++++++++++++
+>  tools/arch/s390/include/uapi/asm/kvm.h         |  5 ++++-
+>  tools/arch/x86/include/asm/cpufeatures.h       | 24 ++++++++++++++++++++----
+>  tools/arch/x86/include/asm/disabled-features.h |  3 ++-
+>  tools/arch/x86/include/asm/required-features.h |  3 ++-
+>  tools/include/uapi/linux/kvm.h                 |  4 ++++
+>  tools/include/uapi/linux/sched.h               |  5 +++++
+>  tools/include/uapi/sound/asound.h              |  9 +++++++++
+>  tools/perf/.gitignore                          |  1 +
+>  tools/perf/builtin-record.c                    |  3 ++-
+>  tools/perf/builtin-trace.c                     |  5 ++++-
+>  tools/perf/perf.h                              |  1 +
+>  tools/perf/util/evsel.c                        | 13 ++++++++++---
+>  14 files changed, 91 insertions(+), 13 deletions(-)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 30a9e51bbb1e..22627f80063e 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -49,5 +49,10 @@
-  */
- #define SCHED_FLAG_RESET_ON_FORK	0x01
- #define SCHED_FLAG_RECLAIM		0x02
-+#define SCHED_FLAG_DL_OVERRUN		0x04
-+
-+#define SCHED_FLAG_ALL	(SCHED_FLAG_RESET_ON_FORK	| \
-+			 SCHED_FLAG_RECLAIM		| \
-+			 SCHED_FLAG_DL_OVERRUN)
- 
- #endif /* _UAPI_LINUX_SCHED_H */
--- 
-2.14.3
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
