@@ -1,95 +1,47 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/10] perf/urgent fixes
-Date: Mon, 5 Feb 2018 22:28:01 +0100
-Message-ID: <20180205212801.p5iqjeglg2vowng2@gmail.com>
-References: <20180205195620.9010-1-acme@kernel.org>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: Not finding symbol information
+Date: Mon, 5 Feb 2018 17:35:41 -0600
+Message-ID: <20180205173541.ce7e8fdf3d4c9230a2a70c96@arm.com>
+References: <30C2D590D16A5C46ADFE65219103779892609BF7@AZ-US1EXMB02.global.avaya.com>
+        <1590706.6giPFGD14k@milian-kdab2>
+        <20180202183829.8ca5ac81d7c48bfafc7b79d1@arm.com>
+        <30C2D590D16A5C46ADFE6521910377989260A050@AZ-US1EXMB02.global.avaya.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:36253 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752056AbeBEV2H (ORCPT
+Received: from foss.arm.com ([217.140.101.70]:59020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750724AbeBEXfn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Feb 2018 16:28:07 -0500
-Content-Disposition: inline
-In-Reply-To: <20180205195620.9010-1-acme@kernel.org>
+        Mon, 5 Feb 2018 18:35:43 -0500
+In-Reply-To: <30C2D590D16A5C46ADFE6521910377989260A050@AZ-US1EXMB02.global.avaya.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, David Ahern <dsahern@gmail.com>, David Woodhouse <dwmw@amazon.co.uk>, Fenghua Yu <fenghua.yu@intel.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Juri Lelli <juri.lelli@gmail.com>, Kan Liang <kan.liang@intel.com>, "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Paul Mackerras <paulus@ozlabs.org>, Peter
+To: "Vuille, Martin (Martin)" <vmartin@avaya.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
+On Sat, 3 Feb 2018 03:30:02 +0000
+"Vuille, Martin (Martin)" <vmartin@avaya.com> wrote:
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> BTW, I found some odd behaviour around that too. 'perf report --symfs PATH' is
+> looking for the buildid cache in 'PATH/$HOME/.debug', not '$HOME/.debug'.
+> Not sure whether that's design intent or a bug.
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 72906f38934a49faf4d2d38ea9ae32adcf7d5d0c:
-> 
->   Merge branch 'x86-hyperv-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2018-01-30 13:04:50 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.16-20180205
-> 
-> for you to fetch changes up to 2fe2230d4183d2c311bbb7b426491ac486216a16:
-> 
->   perf tools: Add trace/beauty/generated/ into .gitignore (2018-02-05 13:58:02 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - 'period' and 'freq' handling fixes for 'perf record', also
->   related: add Add PERF_SAMPLE_PERIOD into PEBS_FREERUNNING_FLAGS
->   in the x86 perf kernel driver (Jiri Olsa)
-> 
-> - Fix 'perf trace -i perf.data' callgraph handling (Ravi Bangoria)
-> 
-> - Synchronize tooling headers for asound, s390 and powerpc KVM,
->   sched and x86 features (Arnaldo Carvalho de Melo)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (5):
->       tools headers: Synchronize sound/asound.h
->       tooling headers: Synchronize updated s390 kvm UAPI headers
->       tools headers: Sync {tools/,}arch/powerpc/include/uapi/asm/kvm.h
->       tools headers: Synchronize uapi/linux/sched.h
->       tools headers: Synchoronize x86 features UAPI headers
-> 
-> Jiri Olsa (3):
->       perf evsel: Fix period/freq terms setup
->       perf record: Fix period option handling
->       x86/events/intel/ds: Add PERF_SAMPLE_PERIOD into PEBS_FREERUNNING_FLAGS
-> 
-> Ravi Bangoria (2):
->       perf trace: Fix call-graph output
->       perf tools: Add trace/beauty/generated/ into .gitignore
-> 
->  arch/x86/events/perf_event.h                   |  3 ++-
->  tools/arch/powerpc/include/uapi/asm/kvm.h      | 25 +++++++++++++++++++++++++
->  tools/arch/s390/include/uapi/asm/kvm.h         |  5 ++++-
->  tools/arch/x86/include/asm/cpufeatures.h       | 24 ++++++++++++++++++++----
->  tools/arch/x86/include/asm/disabled-features.h |  3 ++-
->  tools/arch/x86/include/asm/required-features.h |  3 ++-
->  tools/include/uapi/linux/kvm.h                 |  4 ++++
->  tools/include/uapi/linux/sched.h               |  5 +++++
->  tools/include/uapi/sound/asound.h              |  9 +++++++++
->  tools/perf/.gitignore                          |  1 +
->  tools/perf/builtin-record.c                    |  3 ++-
->  tools/perf/builtin-trace.c                     |  5 ++++-
->  tools/perf/perf.h                              |  1 +
->  tools/perf/util/evsel.c                        | 13 ++++++++++---
->  14 files changed, 91 insertions(+), 13 deletions(-)
+Yeah, that doesn't sound right: the manpage just says "Look for files
+with symbols relative to this directory."
 
-Pulled, thanks a lot Arnaldo!
+> > It might also be worth trying running the report on the target, if possible.  I'll
+> > try and take a look next week...I need to revive my
+> > arm32 boxes...
+> 
+> Unfortunately the stripped binaries just barely fit on the target, so getting the
+> debug info on there is out of the question.
 
-	Ingo
+OK, in that case can you try cherry-picking commit 9b200653518e "perf
+symbols: Take into account symfs setting when reading file build ID"?
+It looks highly relevant but I haven't been able to make sure yet.
+
+Thanks,
+
+Kim
