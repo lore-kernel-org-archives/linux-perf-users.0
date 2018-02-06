@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/21] perf top: Remove lost events checking
-Date: Tue,  6 Feb 2018 13:53:45 -0300
-Message-ID: <20180206165350.2570-17-acme@kernel.org>
+Subject: [PATCH 18/21] perf top: Check the latency of perf_top__mmap_read()
+Date: Tue,  6 Feb 2018 13:53:47 -0300
+Message-ID: <20180206165350.2570-19-acme@kernel.org>
 References: <20180206165350.2570-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:43214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753081AbeBFQyq (ORCPT
+        id S1752759AbeBFQyw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Feb 2018 11:54:46 -0500
+        Tue, 6 Feb 2018 11:54:52 -0500
 In-Reply-To: <20180206165350.2570-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,11 +17,8 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <k
 
 From: Kan Liang <kan.liang@intel.com>
 
-There would be some records lost in overwrite mode because of pausing
-the ringbuffer. It has little impact for the accuracy of the snapshot
-and could be tolerated by 'perf top'.
-
-Remove the lost events checking.
+The latency of perf_top__mmap_read() should be lower than refresh time.
+If not, give some hints to reduce the latency.
 
 Signed-off-by: Kan Liang <kan.liang@intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -30,37 +27,40 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1516310792-208685-16-git-send-email-kan.liang@intel.com
+Link: http://lkml.kernel.org/r/1516310792-208685-18-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/builtin-top.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 7def861a9ec4..59653062bb48 100644
+index 2b4914f34ed6..b7c823ba8374 100644
 --- a/tools/perf/builtin-top.c
 +++ b/tools/perf/builtin-top.c
-@@ -283,8 +283,9 @@ static void perf_top__print_sym_table(struct perf_top *top)
+@@ -889,8 +889,10 @@ static void perf_top__mmap_read(struct perf_top *top)
+ {
+ 	bool overwrite = top->record_opts.overwrite;
+ 	struct perf_evlist *evlist = top->evlist;
++	unsigned long long start, end;
+ 	int i;
  
- 	printf("%-*.*s\n", win_width, win_width, graph_dotted_line);
++	start = rdclock();
+ 	if (overwrite)
+ 		perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_DATA_PENDING);
  
--	if (hists->stats.nr_lost_warned !=
--	    hists->stats.nr_events[PERF_RECORD_LOST]) {
-+	if (!top->record_opts.overwrite &&
-+	    (hists->stats.nr_lost_warned !=
-+	    hists->stats.nr_events[PERF_RECORD_LOST])) {
- 		hists->stats.nr_lost_warned =
- 			      hists->stats.nr_events[PERF_RECORD_LOST];
- 		color_fprintf(stdout, PERF_COLOR_RED,
-@@ -611,7 +612,8 @@ static void *display_thread_tui(void *arg)
+@@ -901,6 +903,13 @@ static void perf_top__mmap_read(struct perf_top *top)
+ 		perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_EMPTY);
+ 		perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
+ 	}
++	end = rdclock();
++
++	if ((end - start) > (unsigned long long)top->delay_secs * NSEC_PER_SEC)
++		ui__warning("Too slow to read ring buffer.\n"
++			    "Please try increasing the period (-c) or\n"
++			    "decreasing the freq (-F) or\n"
++			    "limiting the number of CPUs (-C)\n");
+ }
  
- 	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
- 				      top->min_percent,
--				      &top->session->header.env, true);
-+				      &top->session->header.env,
-+				      !top->record_opts.overwrite);
- 
- 	done = 1;
- 	return NULL;
+ /*
 -- 
 2.14.3
