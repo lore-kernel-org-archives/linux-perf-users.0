@@ -1,44 +1,73 @@
-From: "Business Group (gclkjvq)" <wfpzy-Y9sIeH5OGRo@public.gmane.org>
-Subject: =?windows-1251?B?UmU6WzVdIGxpbnV4LW5ldEB2Z2VyLmtlcm5l?=
- =?windows-1251?B?bC5vcmcgV2Ugb2ZmZXIgRS1tYWlsIGRhdGFi?=
- =?windows-1251?B?YXNlcyB3aXRoIDgwJSBkaXNjb3VudCAvIM/w?=
- =?windows-1251?B?5eTr4OPg5ewgRS1tYWlsIOHg5/sg8SA4MCUg?=
- =?windows-1251?B?8ero5Oru6Q==?=
-Date: Tue, 6 Feb 2018 07:54:40 +0300
-Message-ID: <0702B4E7EC3817F4282D64F3F79EF66C@263.net>
-Reply-To: "Business Group \(gclkjvq\)" <dwtwwoj-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH 02/10] tooling headers: Synchronize updated s390 kvm UAPI
+ headers
+Date: Tue, 6 Feb 2018 09:42:31 +0100
+Message-ID: <b2534b23-ea52-4721-e2cb-f838a931b405@de.ibm.com>
+References: <20180205195620.9010-1-acme@kernel.org>
+ <20180205195620.9010-3-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="cp1251"
-Content-Transfer-Encoding: base64
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linux-net-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-net-4ESfhGDvgol+CIkdHa1UOg@public.gmane.org, linux-nfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ntfs-dev-TtF/mJH4Jtrk1uMJSBkQmQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, linux-nvme-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-open-source-P3Mejjx7fphMeHKdZgrLhA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-OBmyj6YDURU@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-parport-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-jyMamyUUXNJG4ohzP4jBZS1Fcj925eT/@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pcisupport-ZM4KX8k1dDJhUPSOf7nbvg@public.gmane.org, linux-pcmcia-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-perf-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180205195620.9010-3-acme@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGVsbG8gbGludXgtbmV0QHZnZXIua2VybmVsLm9yZwpXZSBvZmZlciB5b3UgYW4gRS1tYWlsIGRh
-dGFiYXNlIGZvciBhbnkgY291bnRyeSBpbiB0aGUgV29ybGQgd2l0aCA4MCUgZGlzY291bnQuW3d4
-Y3pwYWh1XSAKRm9yIGVmZmVjdGl2ZSBtYXJrZXRpbmcsIGFkdmVydGlzaW5nLCBuZXdzbGV0dGVy
-cy5bY3F0YWxdCkluIG9yZGVyIHRvIHF1aWNrbHkgYXR0cmFjdCBjdXN0b21lcnMgZm9yIHlvdXIg
-YnVzaW5lc3MuW2RienRkXSAKQ3VzdG9tZXJzIHdobyBib3VnaHQgb3VyIGRhdGFiYXNlLCB0cmFp
-bmluZyBhbmQgYWR2aWNlIGZvciBmcmVlLltjeHVoaG12ZV0gCkh1cnJ5LCBkaXNjb3VudHMgYXJl
-IG9ubHkgMiB3ZWVrcy5bZndibGVqYm9dIApEZXRhaWxzIGJ5IGUtbWFpbDogYW5kcmV5MTAwMDc3
-QGdtYWlsLmNvbSBvciBieSBJQ1E6IDY2Njc4NDQzMCBbamd3cHd3bGNdIAoKxO7h8PvpIOTl7fwg
-bGludXgtbmV0QHZnZXIua2VybmVsLm9yZwrP8OXk6+Dj4OXsIMLg7CBFLW1haWwg4eDn+yDv7iDr
-/uHu6SDx8vDg7eUgzOjw4CDxIDgwJSDx6ujk6u7pLlt5dW9haGNdCsTr/yD99PTl6vLo4u376SDs
-4PDq5fLo7ePu4vv1LCDw5err4Ozt+/UsIPDg8fH76+7qLltmY3d3YWZnXSAK0SD25ev8/iDh+/Hy
-8O7j7iDv8Oji6+X35e3o/yDq6+jl7fLu4iDk6/8gwuD45ePuIOHo5+3l8eAuW3JncnZ6eWZhXSAK
-yuvo5e3y4OwsIOrz7+ji+OjsIPMg7eDxIOHg5/ssIO7h8/fl7ejlIOgg6u7t8fPr/PLg9ujoIOHl
-8e/r4PLt7i5bY2tiaHFdIArR7+X46PLlLCDx6ujk6ugg8u7r/OruIDIg7eXk5evoLltiYWJwYmpv
-bl0gCsfgIOTl8uDr/O3u6SDo7fTu8Ozg9ujl6SDu4fDg+eDp8uXx/DogW2xyc3BrZF0gCndiYXNl
-QGxpc3QucnUg6OvoIO/uIElDUTogNjY2Nzg0NDMwIFtrY2N5Z10gCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LW52ZGltbSBtYWlsaW5nIGxpc3QK
-TGludXgtbnZkaW1tQGxpc3RzLjAxLm9yZwpodHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LW52ZGltbQo=
+Arnaldo
+
+what is the proposed way of forwarding kvm uapi changes to the perf copy?
+Are you going to detect and fixup that yourself? Do you want to be notified?
+Or do you even want to have a patch?
+
+
+On 02/05/2018 08:56 PM, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> The 35b3fde6203b ("KVM: s390: wire up bpb feature") was noticed by the
+> perf build process:
+> 
+>   Warning: Kernel ABI header at 'tools/arch/s390/include/uapi/asm/kvm.h' differs from latest version at 'arch/s390/include/uapi/asm/kvm.h'
+> 
+> The changes in this cset don't cause or require changes in tools/perf/,
+> so just update the copy to silence the build warning.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> Link: https://lkml.kernel.org/n/tip-kif2fdkcaewj8iqw6lwyil8s@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/arch/s390/include/uapi/asm/kvm.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/arch/s390/include/uapi/asm/kvm.h b/tools/arch/s390/include/uapi/asm/kvm.h
+> index 38535a57fef8..4cdaa55fabfe 100644
+> --- a/tools/arch/s390/include/uapi/asm/kvm.h
+> +++ b/tools/arch/s390/include/uapi/asm/kvm.h
+> @@ -224,6 +224,7 @@ struct kvm_guest_debug_arch {
+>  #define KVM_SYNC_RICCB  (1UL << 7)
+>  #define KVM_SYNC_FPRS   (1UL << 8)
+>  #define KVM_SYNC_GSCB   (1UL << 9)
+> +#define KVM_SYNC_BPBC   (1UL << 10)
+>  /* length and alignment of the sdnx as a power of two */
+>  #define SDNXC 8
+>  #define SDNXL (1UL << SDNXC)
+> @@ -247,7 +248,9 @@ struct kvm_sync_regs {
+>  	};
+>  	__u8  reserved[512];	/* for future vector expansion */
+>  	__u32 fpc;		/* valid on KVM_SYNC_VRS or KVM_SYNC_FPRS */
+> -	__u8 padding1[52];	/* riccb needs to be 64byte aligned */
+> +	__u8 bpbc : 1;		/* bp mode */
+> +	__u8 reserved2 : 7;
+> +	__u8 padding1[51];	/* riccb needs to be 64byte aligned */
+>  	__u8 riccb[64];		/* runtime instrumentation controls block */
+>  	__u8 padding2[192];	/* sdnx needs to be 256byte aligned */
+>  	union {
+> 
