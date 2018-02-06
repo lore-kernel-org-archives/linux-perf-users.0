@@ -1,14 +1,14 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/21] perf test: Update mmap read functions for backward-ring-buffer test
-Date: Tue,  6 Feb 2018 13:53:39 -0300
-Message-ID: <20180206165350.2570-11-acme@kernel.org>
+Subject: [PATCH 06/21] perf mmap: Add new return value logic for perf_mmap__read_init()
+Date: Tue,  6 Feb 2018 13:53:35 -0300
+Message-ID: <20180206165350.2570-7-acme@kernel.org>
 References: <20180206165350.2570-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:42900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752932AbeBFQy2 (ORCPT
+        id S1752721AbeBFQyR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Feb 2018 11:54:28 -0500
+        Tue, 6 Feb 2018 11:54:17 -0500
 In-Reply-To: <20180206165350.2570-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -17,65 +17,68 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <k
 
 From: Kan Liang <kan.liang@intel.com>
 
-Use the new perf_mmap__read_* interfaces for overwrite ringbuffer test.
+Improve the readability by using meaningful enum (-EAGAIN, -EINVAL and
+0) to replace the three returning states (0, -1 and 1).
 
-Commiter notes:
-
-Testing:
-
-  [root@seventh ~]# perf test -v backward
-  48: Read backward ring buffer                             :
-  --- start ---
-  test child forked, pid 8309
-  Using CPUID GenuineIntel-6-9E
-  mmap size 1052672B
-  mmap size 8192B
-  Finished reading overwrite ring buffer: rewind
-  test child finished with 0
-  ---- end ----
-  Read backward ring buffer: Ok
-  [root@seventh ~]#
-
+Suggested-by: Wang Nan <wangnan0@huawei.com>
 Signed-off-by: Kan Liang <kan.liang@intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1516310792-208685-10-git-send-email-kan.liang@intel.com
+Link: http://lkml.kernel.org/r/1516310792-208685-6-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/backward-ring-buffer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/mmap.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index 4035d43523c3..e0b1b414d466 100644
---- a/tools/perf/tests/backward-ring-buffer.c
-+++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -31,10 +31,12 @@ static int count_samples(struct perf_evlist *evlist, int *sample_count,
- 	int i;
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index c19a4e640e8e..38fa69dc635e 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -282,7 +282,7 @@ int perf_mmap__read_init(struct perf_mmap *md, bool overwrite,
+ 	*endp = overwrite ? old : head;
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
-+		struct perf_mmap *map = &evlist->overwrite_mmap[i];
- 		union perf_event *event;
-+		u64 start, end;
+ 	if (*startp == *endp)
+-		return 0;
++		return -EAGAIN;
  
--		perf_mmap__read_catchup(&evlist->overwrite_mmap[i]);
--		while ((event = perf_mmap__read_backward(&evlist->overwrite_mmap[i])) != NULL) {
-+		perf_mmap__read_init(map, true, &start, &end);
-+		while ((event = perf_mmap__read_event(map, true, &start, end)) != NULL) {
- 			const u32 type = event->header.type;
+ 	size = *endp - *startp;
+ 	if (size > (unsigned long)(md->mask) + 1) {
+@@ -291,7 +291,7 @@ int perf_mmap__read_init(struct perf_mmap *md, bool overwrite,
  
- 			switch (type) {
-@@ -49,6 +51,7 @@ static int count_samples(struct perf_evlist *evlist, int *sample_count,
- 				return TEST_FAIL;
- 			}
+ 			md->prev = head;
+ 			perf_mmap__consume(md, overwrite);
+-			return 0;
++			return -EAGAIN;
  		}
-+		perf_mmap__read_done(map);
+ 
+ 		/*
+@@ -299,10 +299,10 @@ int perf_mmap__read_init(struct perf_mmap *md, bool overwrite,
+ 		 * most of data from it.
+ 		 */
+ 		if (overwrite_rb_find_range(data, md->mask, head, startp, endp))
+-			return -1;
++			return -EINVAL;
  	}
- 	return TEST_OK;
+ 
+-	return 1;
++	return 0;
  }
+ 
+ int perf_mmap__push(struct perf_mmap *md, bool overwrite,
+@@ -316,8 +316,8 @@ int perf_mmap__push(struct perf_mmap *md, bool overwrite,
+ 	int rc = 0;
+ 
+ 	rc = perf_mmap__read_init(md, overwrite, &start, &end);
+-	if (rc < 1)
+-		return rc;
++	if (rc < 0)
++		return (rc == -EAGAIN) ? 0 : -1;
+ 
+ 	size = end - start;
+ 
 -- 
 2.14.3
