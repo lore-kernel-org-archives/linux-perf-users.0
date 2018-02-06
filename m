@@ -1,48 +1,66 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/21] perf data: Document missing --force option
-Date: Tue,  6 Feb 2018 13:53:49 -0300
-Message-ID: <20180206165350.2570-21-acme@kernel.org>
+Subject: [PATCH 16/21] perf top: Remove lost events checking
+Date: Tue,  6 Feb 2018 13:53:45 -0300
+Message-ID: <20180206165350.2570-17-acme@kernel.org>
 References: <20180206165350.2570-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:43262 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753199AbeBFQy5 (ORCPT
+        id S1753081AbeBFQyq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Feb 2018 11:54:57 -0500
+        Tue, 6 Feb 2018 11:54:46 -0500
 In-Reply-To: <20180206165350.2570-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sangwon Hong <qpakzk@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Sangwon Hong <qpakzk@gmail.com>
+From: Kan Liang <kan.liang@intel.com>
 
-Add the --force option to the man page.
+There would be some records lost in overwrite mode because of pausing
+the ringbuffer. It has little impact for the accuracy of the snapshot
+and could be tolerated by 'perf top'.
 
-Signed-off-by: Sangwon Hong <qpakzk@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Remove the lost events checking.
+
+Signed-off-by: Kan Liang <kan.liang@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: http://lkml.kernel.org/r/1517831315-31490-1-git-send-email-qpakzk@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/r/1516310792-208685-16-git-send-email-kan.liang@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-data.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-top.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
-index f0796a47dfa3..90bb4aabe4f8 100644
---- a/tools/perf/Documentation/perf-data.txt
-+++ b/tools/perf/Documentation/perf-data.txt
-@@ -30,6 +30,10 @@ OPTIONS for 'convert'
- -i::
- 	Specify input perf data file path.
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 7def861a9ec4..59653062bb48 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -283,8 +283,9 @@ static void perf_top__print_sym_table(struct perf_top *top)
  
-+-f::
-+--force::
-+	Don't complain, do it.
-+
- -v::
- --verbose::
-         Be more verbose (show counter open errors, etc).
+ 	printf("%-*.*s\n", win_width, win_width, graph_dotted_line);
+ 
+-	if (hists->stats.nr_lost_warned !=
+-	    hists->stats.nr_events[PERF_RECORD_LOST]) {
++	if (!top->record_opts.overwrite &&
++	    (hists->stats.nr_lost_warned !=
++	    hists->stats.nr_events[PERF_RECORD_LOST])) {
+ 		hists->stats.nr_lost_warned =
+ 			      hists->stats.nr_events[PERF_RECORD_LOST];
+ 		color_fprintf(stdout, PERF_COLOR_RED,
+@@ -611,7 +612,8 @@ static void *display_thread_tui(void *arg)
+ 
+ 	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
+ 				      top->min_percent,
+-				      &top->session->header.env, true);
++				      &top->session->header.env,
++				      !top->record_opts.overwrite);
+ 
+ 	done = 1;
+ 	return NULL;
 -- 
 2.14.3
