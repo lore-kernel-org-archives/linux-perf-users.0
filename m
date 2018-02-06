@@ -1,115 +1,81 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/21] perf mmap: Introduce perf_mmap__read_event()
-Date: Tue,  6 Feb 2018 13:53:38 -0300
-Message-ID: <20180206165350.2570-10-acme@kernel.org>
+Subject: [PATCH 13/21] perf evsel: Expose the perf_missing_features struct
+Date: Tue,  6 Feb 2018 13:53:42 -0300
+Message-ID: <20180206165350.2570-14-acme@kernel.org>
 References: <20180206165350.2570-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180206165350.2570-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kan Liang <kan.liang@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Except for 'perf record', the other perf tools read events one by one
-from the ring buffer using perf_mmap__read_forward(). But it only
-supports non-overwrite mode.
+As tools may need to adjust to missing features, as 'perf top' will, in
+the next csets, to cope with a missing 'write_backward' feature.
 
-Introduce perf_mmap__read_event() to support both non-overwrite and
-overwrite mode.
-
-Usage:
-perf_mmap__read_init()
-while(event = perf_mmap__read_event()) {
-        //process the event
-        perf_mmap__consume()
-}
-perf_mmap__read_done()
-
-It cannot use perf_mmap__read_backward(). Because it always reads the
-stale buffer which is already processed. Furthermore, the forward and
-backward concepts have been removed. The perf_mmap__read_backward() will
-be replaced and discarded later.
-
-Signed-off-by: Kan Liang <kan.liang@intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1516310792-208685-9-git-send-email-kan.liang@intel.com
+Link: https://lkml.kernel.org/n/tip-jelngl9q1ooaizvkcput9tic@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 39 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/mmap.h |  4 ++++
- 2 files changed, 43 insertions(+)
+ tools/perf/util/evsel.c | 12 +-----------
+ tools/perf/util/evsel.h | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 4f59eaefc706..f804926778b7 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -113,6 +113,45 @@ union perf_event *perf_mmap__read_backward(struct perf_mmap *map)
- 	return perf_mmap__read(map, &map->prev, end);
- }
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ff359c9ece2e..ef351688b797 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -41,17 +41,7 @@
  
-+/*
-+ * Read event from ring buffer one by one.
-+ * Return one event for each call.
-+ *
-+ * Usage:
-+ * perf_mmap__read_init()
-+ * while(event = perf_mmap__read_event()) {
-+ *	//process the event
-+ *	perf_mmap__consume()
-+ * }
-+ * perf_mmap__read_done()
-+ */
-+union perf_event *perf_mmap__read_event(struct perf_mmap *map,
-+					bool overwrite,
-+					u64 *startp, u64 end)
-+{
-+	union perf_event *event;
-+
-+	/*
-+	 * Check if event was unmapped due to a POLLHUP/POLLERR.
-+	 */
-+	if (!refcount_read(&map->refcnt))
-+		return NULL;
-+
-+	if (startp == NULL)
-+		return NULL;
-+
-+	/* non-overwirte doesn't pause the ringbuffer */
-+	if (!overwrite)
-+		end = perf_mmap__read_head(map);
-+
-+	event = perf_mmap__read(map, startp, end);
-+
-+	if (!overwrite)
-+		map->prev = *startp;
-+
-+	return event;
-+}
-+
- void perf_mmap__read_catchup(struct perf_mmap *map)
- {
- 	u64 head;
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index 95549d4af943..28718543dd42 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -89,6 +89,10 @@ static inline void perf_mmap__write_tail(struct perf_mmap *md, u64 tail)
- union perf_event *perf_mmap__read_forward(struct perf_mmap *map);
- union perf_event *perf_mmap__read_backward(struct perf_mmap *map);
+ #include "sane_ctype.h"
  
-+union perf_event *perf_mmap__read_event(struct perf_mmap *map,
-+					bool overwrite,
-+					u64 *startp, u64 end);
-+
- int perf_mmap__push(struct perf_mmap *md, bool backward,
- 		    void *to, int push(void *to, void *buf, size_t size));
+-static struct {
+-	bool sample_id_all;
+-	bool exclude_guest;
+-	bool mmap2;
+-	bool cloexec;
+-	bool clockid;
+-	bool clockid_wrong;
+-	bool lbr_flags;
+-	bool write_backward;
+-	bool group_read;
+-} perf_missing_features;
++struct perf_missing_features perf_missing_features;
  
+ static clockid_t clockid;
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 846e41644525..a7487c6d1866 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -149,6 +149,20 @@ union u64_swap {
+ 	u32 val32[2];
+ };
+ 
++struct perf_missing_features {
++	bool sample_id_all;
++	bool exclude_guest;
++	bool mmap2;
++	bool cloexec;
++	bool clockid;
++	bool clockid_wrong;
++	bool lbr_flags;
++	bool write_backward;
++	bool group_read;
++};
++
++extern struct perf_missing_features perf_missing_features;
++
+ struct cpu_map;
+ struct target;
+ struct thread_map;
 -- 
 2.14.3
