@@ -1,70 +1,73 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/21] perf mmap: Introduce perf_mmap__read_done()
-Date: Tue,  6 Feb 2018 13:53:37 -0300
-Message-ID: <20180206165350.2570-9-acme@kernel.org>
+Subject: [PATCH 19/21] perf tools: Substitute yet another strtoull()
+Date: Tue,  6 Feb 2018 13:53:48 -0300
+Message-ID: <20180206165350.2570-20-acme@kernel.org>
 References: <20180206165350.2570-1-acme@kernel.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:42950 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:43234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752910AbeBFQyX (ORCPT
+        id S1752988AbeBFQyy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Feb 2018 11:54:23 -0500
+        Tue, 6 Feb 2018 11:54:54 -0500
 In-Reply-To: <20180206165350.2570-1-acme@kernel.org>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 
-From: Kan Liang <kan.liang@intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The direction of overwrite mode is backward. The last perf_mmap__read()
-will set tail to map->prev. Need to correct the map->prev to head which
-is the end of next read.
+Instead of home grown function let's use what library provides us.
 
-It will be used later.
-
-Signed-off-by: Kan Liang <kan.liang@intel.com>
+Signed-off-by: Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1516310792-208685-8-git-send-email-kan.liang@intel.com
+Link: http://lkml.kernel.org/r/20180129130359.1490-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 11 +++++++++++
- tools/perf/util/mmap.h |  1 +
- 2 files changed, 12 insertions(+)
+ tools/perf/util/util.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 125bfda9d037..4f59eaefc706 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -338,3 +338,14 @@ int perf_mmap__push(struct perf_mmap *md, bool overwrite,
- out:
- 	return rc;
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 443892dabedb..1019bbc5dbd8 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -340,35 +340,15 @@ size_t hex_width(u64 v)
+ 	return n;
  }
-+
-+/*
-+ * Mandatory for overwrite mode
-+ * The direction of overwrite mode is backward.
-+ * The last perf_mmap__read() will set tail to map->prev.
-+ * Need to correct the map->prev to head which is the end of next read.
-+ */
-+void perf_mmap__read_done(struct perf_mmap *map)
-+{
-+	map->prev = perf_mmap__read_head(map);
-+}
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index 9ab2b48df65b..95549d4af943 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -96,4 +96,5 @@ size_t perf_mmap__mmap_len(struct perf_mmap *map);
  
- int perf_mmap__read_init(struct perf_mmap *md, bool overwrite,
- 			 u64 *startp, u64 *endp);
-+void perf_mmap__read_done(struct perf_mmap *map);
- #endif /*__PERF_MMAP_H */
+-static int hex(char ch)
+-{
+-	if ((ch >= '0') && (ch <= '9'))
+-		return ch - '0';
+-	if ((ch >= 'a') && (ch <= 'f'))
+-		return ch - 'a' + 10;
+-	if ((ch >= 'A') && (ch <= 'F'))
+-		return ch - 'A' + 10;
+-	return -1;
+-}
+-
+ /*
+  * While we find nice hex chars, build a long_val.
+  * Return number of chars processed.
+  */
+ int hex2u64(const char *ptr, u64 *long_val)
+ {
+-	const char *p = ptr;
+-	*long_val = 0;
+-
+-	while (*p) {
+-		const int hex_val = hex(*p);
++	char *p;
+ 
+-		if (hex_val < 0)
+-			break;
+-
+-		*long_val = (*long_val << 4) | hex_val;
+-		p++;
+-	}
++	*long_val = strtoull(ptr, &p, 16);
+ 
+ 	return p - ptr;
+ }
 -- 
 2.14.3
