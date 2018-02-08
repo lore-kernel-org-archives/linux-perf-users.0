@@ -1,120 +1,41 @@
-From: linxiulei@gmail.com
-Subject: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
-Date: Thu,  8 Feb 2018 11:33:44 +0800
-Message-ID: <20180208033344.71933-1-linxiulei@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: perf sched record with -p option
+Date: Thu, 8 Feb 2018 14:07:08 +0900
+Message-ID: <20180208050708.GC24686@sejong>
+References: <30C2D590D16A5C46ADFE65219103779892616691@AZ-US1EXMB02.global.avaya.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ot0-f196.google.com ([74.125.82.196]:39310 "EHLO
-        mail-ot0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750767AbeBHDhP (ORCPT
+Received: from LGEAMRELO11.lge.com ([156.147.23.51]:45483 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750711AbeBHFHR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Feb 2018 22:37:15 -0500
+        Thu, 8 Feb 2018 00:07:17 -0500
+Content-Disposition: inline
+In-Reply-To: <30C2D590D16A5C46ADFE65219103779892616691@AZ-US1EXMB02.global.avaya.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, brendan.d.gregg@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+To: "Vuille, Martin (Martin)" <vmartin@avaya.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, kernel-team@lge.com
 
-From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+Hello,
 
-Do not install cgroup event into the CPU context and schedule it
-if the cgroup is not running on this CPU
+On Sun, Feb 04, 2018 at 05:31:07PM +0000, Vuille, Martin (Martin) wrote:
+> The data files collected by 'perf sched record' are very large and our embedded
+> system target has limited storage, so I thought of using the '-p PID' option on
+> 'perf sched record' to focus only on a single PID and its threads/children and
+> thus reduce the amount of data.
+> 
+> However, when I review the results with 'perf sched latency', the results from
+> data collected with '-p PID' are significantly different (e.g., ten-times longer
+> latencies) that those from data collected without the '-p PID' option. Workloads
+> are the same.
+> 
+> Is there some reason why using '-p PID' option on 'perf sched record' wouldn't
+> make sense?
 
-While there is no task of cgroup running specified CPU, current
-kernel still install cgroup event into CPU context that causes
-another cgroup event can't be installed into this CPU.
+I think it's because perf missed sched-in and wakeup events for the PID
+since they are from different tasks.
 
-This patch prevent scheduling events at __perf_install_in_context()
-and installing events at list_update_cgroup_event() if cgroup isn't
-running on specified CPU.
-
-Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
----
- v2: Set cpuctx->cgrp only if the same cgroup is running on this
-   CPU otherwise following events couldn't be activated immediately
- v3: Enhance the comments and commit message
- v4: Adjust to config
-
- kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4df5b69..fd28d61 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
- {
- 	struct perf_cpu_context *cpuctx;
- 	struct list_head *cpuctx_entry;
-+	struct perf_cgroup *cgrp;
- 
- 	if (!is_cgroup_event(event))
- 		return;
- 
--	if (add && ctx->nr_cgroups++)
--		return;
--	else if (!add && --ctx->nr_cgroups)
--		return;
- 	/*
- 	 * Because cgroup events are always per-cpu events,
- 	 * this will always be called from the right CPU.
- 	 */
- 	cpuctx = __get_cpu_context(ctx);
--	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
--	/* cpuctx->cgrp is NULL unless a cgroup event is active in this CPU .*/
--	if (add) {
--		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
-+	cgrp = perf_cgroup_from_task(current, ctx);
- 
--		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
--		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
-+	/*
-+	 * if only the cgroup is running on this cpu,
-+	 * we put/remove this cgroup into cpu context.
-+	 * Or it would case mismatch in following cgroup
-+	 * events at event_filter_match()
-+	 */
-+	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
-+		if (add)
- 			cpuctx->cgrp = cgrp;
--	} else {
--		list_del(cpuctx_entry);
--		cpuctx->cgrp = NULL;
-+		else
-+			cpuctx->cgrp = NULL;
- 	}
-+
-+	if (add && ctx->nr_cgroups++)
-+		return;
-+	else if (!add && --ctx->nr_cgroups)
-+		return;
-+
-+	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
-+	if (add)
-+		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
-+	else
-+		list_del(cpuctx_entry);
- }
- 
- #else /* !CONFIG_CGROUP_PERF */
-@@ -2311,6 +2321,20 @@ static int  __perf_install_in_context(void *info)
- 		raw_spin_lock(&task_ctx->lock);
- 	}
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	if (is_cgroup_event(event)) {
-+		/*
-+		 * Only care about cgroup events.
-+		 *
-+		 * If only the task belongs to cgroup of this event,
-+		 * we will continue the installment
-+		 */
-+		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
-+		reprogram = cgroup_is_descendant(cgrp->css.cgroup,
-+					event->cgrp->css.cgroup);
-+	}
-+#endif
-+
- 	if (reprogram) {
- 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
- 		add_event_to_ctx(event, ctx);
--- 
-2.8.4.31.g9ed660f
+Thanks,
+Namhyung
