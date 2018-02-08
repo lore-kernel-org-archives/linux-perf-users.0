@@ -1,45 +1,95 @@
-From: "Christian Hansen (chansen3)" <chansen3@cisco.com>
-Subject: Recording memory addresses on ARM
-Date: Thu, 8 Feb 2018 15:17:33 +0000
-Message-ID: <42BDBD72-87FE-4DFA-8A5D-6CEB2DAF1262@cisco.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
+Date: Thu, 8 Feb 2018 16:36:48 +0100
+Message-ID: <20180208153648.GC12817@krava>
+References: <20180208033344.71933-1-linxiulei@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from alln-iport-1.cisco.com ([173.37.142.88]:59987 "EHLO
-        alln-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751544AbeBHP1A (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Feb 2018 10:27:00 -0500
-Received: from XCH-ALN-011.cisco.com (xch-aln-011.cisco.com [173.36.7.21])
-        by rcdn-core-6.cisco.com (8.14.5/8.14.5) with ESMTP id w18FHXWA014668
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
-        for <linux-perf-users@vger.kernel.org>; Thu, 8 Feb 2018 15:17:33 GMT
-Content-Language: en-US
-Content-ID: <B64F51C3E4FD7C4798DF958CF09C5B68@emea.cisco.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180208033344.71933-1-linxiulei@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linxiulei@gmail.com
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, brendan.d.gregg@gmail.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-SXMgaXMgcG9zc2libGUgdG8gY2FwdHVyZSB0aGUgYWRkcmVzcyBvZiBtZW1vcnkgYWNjZXNzZXMg
-dXNpbmcgcGVyZiBvbiBBUk0/ICBJbml0aWFsbHksIEkgdGhvdWdodCBwZXJmLW1lbSB3b3VsZCBk
-byB0aGUgdHJpY2ssIGJ1dCBhcHBhcmVudGx5IGl0cyBmdW5jdGlvbmFsaXR5IGlzIGVudGlyZWx5
-IGRlcGVuZGVudCBvbiBJbnRlbCBDUFVzIHdpdGggUEVCUy4gIFRoZW4gSSBub3RpY2VkIHRoYXQg
-cGVyZi1yZWNvcmQgdGFrZXMgYSAtZCBmbGFnICh1c2VkIGJ5IHBlcmYtbWVtKS4gIEFsdGhvdWdo
-IHRoZSBkZXNjcmlwdGlvbiBvZiB0aGF0IGZsYWcgaXMgdmFndWUgKGNhcHR1cmUgd2hhdCBhZGRy
-ZXNzZXM/KSwgd2hlbiB1c2VkIGFzIHN1Y2ggInBlcmYgcmVjb3JkIC1lIGFybXY4X2NvcnRleF9h
-NzIvbWVtX2FjY2Vzcy91IC1kIC1wIDE2OTYzIHNsZWVwIDXigJ0gYW5kIHRoZW4gZHVtcGluZyB0
-aGUgdHJhY2UgdmlhIOKAnHBlcmYgcmVwb3J0IOKAlG1lbS1tb2Rl4oCdIEkgZ2V0IDBzIGluIHRo
-ZSBkYXRhIHN5bWJvbCBjb2x1bW4uICBTbyB0aGlzIGFsc28gYXBwZWFycyB0byBoYXZlIG5vIGVm
-ZmVjdCBvbiBteSBoYXJkd2FyZS4gIEFzIHRoZSBjb21tYW5kIHVzZWQgcmV2ZWFscywgSeKAmW0g
-dXNpbmcgcGVyZiBvbiBhIENvcnRleCBBNzIgYW5kIG9uIExpbnV4IDQuNC4NCg0KSeKAmW0gYXdh
-cmUgdGhhdCBmb3IgQVJNIHRoZXJl4oCZcyBhIFN0YXRpc3RpY2FsIFByb2ZpbGluZyBFeHRlbnNp
-b24gZm9yIHdoaWNoIHN1cHBvcnQgd2VudCBpbnRvIHRoZSBrZXJuZWwgcmVjZW50bHkgYW5kIHdo
-aWNoIGNvdWxkIHBvdGVudGlhbGx5IHN1cHBvcnQgdGhpcyBpbmZvcm1hdGlvbiwgYnV0IHRoYXQg
-cmVxdWlyZXMgQVJNdjguMi4gIFRoZXJl4oCZcyBhbiBFbWJlZGRlZCBUcmFjZSBNYWNyb2NlbGwg
-b24gbXkgQ1BVIGFuZCBwZXJmIHN1cHBvcnQgaXMgYWxzbyBpbiB0aGUga2VybmVsLCBidXQgbXkg
-dW5kZXJzdGFuZGluZyBpcyB0aGF0IGNhcHR1cmluZyBhIGRhdGEgdHJhY2UgaXMgbm90IGF2YWls
-YWJsZSBmb3IgQSBwcm9maWxlIENQVXMsIHdoaWNoIGlzIHdoYXQgSSBoYXZlLg0KDQpBbSBJIG92
-ZXJsb29raW5nIHNvbWUgc29mdHdhcmUgc3VwcG9ydCBmb3IgdGhpcyBpbiBwZXJmIG9yIGFtIEkg
-c2ltcGx5IGFza2luZyB0aGUgaW1wb3NzaWJsZT8NCg0KVGhhbmsgeW91LA0KQ2hyaXN0aWFuIEhh
-bnNlbg==
+On Thu, Feb 08, 2018 at 11:33:44AM +0800, linxiulei@gmail.com wrote:
+> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+> 
+> Do not install cgroup event into the CPU context and schedule it
+> if the cgroup is not running on this CPU
+> 
+> While there is no task of cgroup running specified CPU, current
+> kernel still install cgroup event into CPU context that causes
+> another cgroup event can't be installed into this CPU.
+> 
+> This patch prevent scheduling events at __perf_install_in_context()
+> and installing events at list_update_cgroup_event() if cgroup isn't
+> running on specified CPU.
+> 
+> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+> ---
+>  v2: Set cpuctx->cgrp only if the same cgroup is running on this
+>    CPU otherwise following events couldn't be activated immediately
+>  v3: Enhance the comments and commit message
+>  v4: Adjust to config
+> 
+>  kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4df5b69..fd28d61 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
+>  {
+>  	struct perf_cpu_context *cpuctx;
+>  	struct list_head *cpuctx_entry;
+> +	struct perf_cgroup *cgrp;
+>  
+>  	if (!is_cgroup_event(event))
+>  		return;
+>  
+> -	if (add && ctx->nr_cgroups++)
+> -		return;
+> -	else if (!add && --ctx->nr_cgroups)
+> -		return;
+
+I might be missing something, but should this check stay on
+the top regardles of the cgroup_is_descendant check below?
+
+you could put NULL into cpuctx->cgrp on context with cgroup
+event in the list
+
+thanks,
+jirka
+
+>  	/*
+>  	 * Because cgroup events are always per-cpu events,
+>  	 * this will always be called from the right CPU.
+>  	 */
+>  	cpuctx = __get_cpu_context(ctx);
+> -	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+> -	/* cpuctx->cgrp is NULL unless a cgroup event is active in this CPU .*/
+> -	if (add) {
+> -		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
+> +	cgrp = perf_cgroup_from_task(current, ctx);
+>  
+> -		list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
+> -		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
+> +	/*
+> +	 * if only the cgroup is running on this cpu,
+> +	 * we put/remove this cgroup into cpu context.
+> +	 * Or it would case mismatch in following cgroup
+> +	 * events at event_filter_match()
+> +	 */
+> +	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
+> +		if (add)
+>  			cpuctx->cgrp = cgrp;
+> -	} else {
+> -		list_del(cpuctx_entry);
+> -		cpuctx->cgrp = NULL;
+> +		else
+> +			cpuctx->cgrp = NULL;
+
+SNIP
