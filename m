@@ -1,76 +1,84 @@
 From: changbin.du@intel.com
-Subject: [PATCH v2] perf ftrace: Fix the buffer size in __write_tracing_file
-Date: Thu,  8 Feb 2018 16:13:20 +0800
-Message-ID: <1518077600-19615-1-git-send-email-changbin.du@intel.com>
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:20671 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750986AbeBHIW2 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Feb 2018 03:22:28 -0500
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
+Subject: [PATCH] perf sched map: re-annotate shortname if thread comm changed
+Date: Thu,  8 Feb 2018 18:03:08 +0800
+Message-ID: <1518084188-29576-1-git-send-email-changbin.du@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: jolsa@redhat.com
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
+List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@intel.com>
 
-The terminal character '\0' should take into account into size of the
-string buffer. Without this fix, the '--graph-funcs', '--nograph-funcs'
-and '--trace-funcs' options didn't work as expected when the <func>
-doesn't exist. If usersapce writes a non-terminated string, the kernel
-side will always return success but actually no filter applied.
+This is to show the real name of thread that created via fork-exec.
+See below example for shortname *A0*.
 
-As discussed before, the kernel now support '\0' to mark the end of string:
-https://lkml.org/lkml/2018/1/16/116
-
-After this fix in userspace, the perf will report correct error state. Also
-let it print an error if reset_tracing_files() fails.
-
-The problem:
-$ sudo ./perf ftrace -a --graph-depth 1 --graph-funcs abcdefg
- 0)   0.140 us    |  rcu_all_qs();
- 3)   0.304 us    |  mutex_unlock();
- 0)   0.153 us    |  find_vma();
- 3)   0.088 us    |  __fsnotify_parent();
- 0)   6.145 us    |  handle_mm_fault();
- 3)   0.089 us    |  fsnotify();
- 3)   0.161 us    |  __sb_end_write();
- 3)   0.710 us    |  SyS_close();
- 3)   7.848 us    |  exit_to_usermode_loop();
-
-On above example, I specified function filter 'abcdefg' but all functions
-are enabled. The expected error is hidden.
+$ sudo ./perf sched map
+              *A0   80393.050639 secs A0 => perf:22368
+          *.   A0   80393.050748 secs .  => swapper:0
+           .  *.    80393.050887 secs
+      *B0  .   .    80393.052735 secs B0 => rcu_sched:8
+      *.   .   .    80393.052743 secs
+       .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
+       .  *A0  .    80393.056270 secs
+       .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
+       .  *A0  .    80393.056804 secs A0 => pi:22368
+       .  *.   .    80393.056854 secs
+      *B0  .   .    80393.060727 secs
+      ...
 
 Signed-off-by: Changbin Du <changbin.du@intel.com>
 ---
- tools/perf/builtin-ftrace.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-sched.c | 4 +++-
+ tools/perf/util/thread.c   | 1 +
+ tools/perf/util/thread.h   | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 25a42ac..a87e9b3 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -69,7 +69,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
- {
- 	char *file;
- 	int fd, ret = -1;
--	ssize_t size = strlen(val);
-+	ssize_t size = strlen(val) + 1;
- 	int flags = O_WRONLY;
- 	char errbuf[512];
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 83283fe..53bb8df 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1580,7 +1580,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
  
-@@ -280,8 +280,10 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGPIPE, sig_handler);
+ 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+ 	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+-	if (new_shortname || (verbose > 0 && sched_in->tid)) {
++	if (new_shortname || sched_in->comm_changed || (verbose > 0 && sched_in->tid)) {
+ 		const char *pid_color = color;
  
--	if (reset_tracing_files(ftrace) < 0)
-+	if (reset_tracing_files(ftrace) < 0) {
-+		pr_err("failed to reset ftrace\n");
- 		goto out;
-+	}
+ 		if (thread__has_color(sched_in))
+@@ -1588,6 +1588,8 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
  
- 	/* reset ftrace buffer */
- 	if (write_tracing_file("trace", "0") < 0)
+ 		color_fprintf(stdout, pid_color, "%s => %s:%d",
+ 		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
++
++		sched_in->comm_changed = false;
+ 	}
+ 
+ 	if (sched->map.comp && new_cpu)
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 68b65b1..c660fe6 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -212,6 +212,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 			unwind__flush_access(thread);
+ 	}
+ 
++	thread->comm_changed = true;
+ 	thread->comm_set = true;
+ 
+ 	return 0;
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 40cfa36..b9a328b 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -27,6 +27,7 @@ struct thread {
+ 	int			cpu;
+ 	refcount_t		refcnt;
+ 	char			shortname[3];
++	bool			comm_changed;
+ 	bool			comm_set;
+ 	int			comm_len;
+ 	bool			dead; /* if set thread has exited */
 -- 
 2.7.4
