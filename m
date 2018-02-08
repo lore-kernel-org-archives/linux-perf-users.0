@@ -1,115 +1,45 @@
-From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Subject: [PATCH 3/3] perf s390: Rework system call table creation by using syscall.tbl
-Date: Thu,  8 Feb 2018 12:47:50 +0100
-Message-ID: <1518090470-2899-4-git-send-email-brueckner@linux.vnet.ibm.com>
-References: <1518090470-2899-1-git-send-email-brueckner@linux.vnet.ibm.com>
+From: "Christian Hansen (chansen3)" <chansen3@cisco.com>
+Subject: Recording memory addresses on ARM
+Date: Thu, 8 Feb 2018 15:17:33 +0000
+Message-ID: <42BDBD72-87FE-4DFA-8A5D-6CEB2DAF1262@cisco.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752056AbeBHLsD (ORCPT
+Received: from alln-iport-1.cisco.com ([173.37.142.88]:59987 "EHLO
+        alln-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751544AbeBHP1A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Feb 2018 06:48:03 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w18BjeJv102362
-        for <linux-perf-users@vger.kernel.org>; Thu, 8 Feb 2018 06:48:03 -0500
-Received: from e06smtp10.uk.ibm.com (e06smtp10.uk.ibm.com [195.75.94.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2g0nk9h3c7-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Feb 2018 06:48:02 -0500
-Received: from localhost
-        by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
-        Thu, 8 Feb 2018 11:48:00 -0000
-In-Reply-To: <1518090470-2899-1-git-send-email-brueckner@linux.vnet.ibm.com>
+        Thu, 8 Feb 2018 10:27:00 -0500
+Received: from XCH-ALN-011.cisco.com (xch-aln-011.cisco.com [173.36.7.21])
+        by rcdn-core-6.cisco.com (8.14.5/8.14.5) with ESMTP id w18FHXWA014668
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
+        for <linux-perf-users@vger.kernel.org>; Thu, 8 Feb 2018 15:17:33 GMT
+Content-Language: en-US
+Content-ID: <B64F51C3E4FD7C4798DF958CF09C5B68@emea.cisco.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-Recently, s390 uses a syscall.tbl input file to generate its system
-call table and unistd uapi header files.  Hence, update mksyscalltbl
-to use it as input to create the system table for perf.
-
-Signed-off-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com
----
- tools/perf/arch/s390/Makefile                    | 10 +++++++---
- tools/perf/arch/s390/entry/syscalls/mksyscalltbl | 18 +++++++-----------
- 2 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-index 48228de..dfa6e31 100644
---- a/tools/perf/arch/s390/Makefile
-+++ b/tools/perf/arch/s390/Makefile
-@@ -10,15 +10,19 @@ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- 
- out    := $(OUTPUT)arch/s390/include/generated/asm
- header := $(out)/syscalls_64.c
--sysdef := $(srctree)/tools/arch/s390/include/uapi/asm/unistd.h
--sysprf := $(srctree)/tools/perf/arch/s390/entry/syscalls/
-+syskrn := $(srctree)/arch/s390/kernel/syscalls/syscall.tbl
-+sysprf := $(srctree)/tools/perf/arch/s390/entry/syscalls
-+sysdef := $(sysprf)/syscall.tbl
- systbl := $(sysprf)/mksyscalltbl
- 
- # Create output directory if not already present
- _dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
- 
- $(header): $(sysdef) $(systbl)
--	$(Q)$(SHELL) '$(systbl)' '$(CC)' $(sysdef) > $@
-+	@(test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
-+        (diff -B $(sysdef) $(syskrn) >/dev/null) \
-+        || echo "Warning: Kernel ABI header at '$(sysdef)' differs from latest version at '$(syskrn)'" >&2 )) || true
-+	$(Q)$(SHELL) '$(systbl)' $(sysdef) > $@
- 
- clean::
- 	$(call QUIET_CLEAN, s390) $(RM) $(header)
-diff --git a/tools/perf/arch/s390/entry/syscalls/mksyscalltbl b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-index 7fa0d0a..72ecbb6 100755
---- a/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/s390/entry/syscalls/mksyscalltbl
-@@ -3,25 +3,23 @@
- #
- # Generate system call table for perf
- #
--#
--# Copyright IBM Corp. 2017
-+# Copyright IBM Corp. 2017, 2018
- # Author(s):  Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
- #
- 
--gcc=$1
--input=$2
-+SYSCALL_TBL=$1
- 
--if ! test -r $input; then
-+if ! test -r $SYSCALL_TBL; then
- 	echo "Could not read input file" >&2
- 	exit 1
- fi
- 
- create_table()
- {
--	local max_nr
-+	local max_nr nr abi sc discard
- 
- 	echo 'static const char *syscalltbl_s390_64[] = {'
--	while read sc nr; do
-+	while read nr abi sc discard; do
- 		printf '\t[%d] = "%s",\n' $nr $sc
- 		max_nr=$nr
- 	done
-@@ -29,8 +27,6 @@ create_table()
- 	echo "#define SYSCALLTBL_S390_64_MAX_ID $max_nr"
- }
- 
--
--$gcc -m64 -E -dM -x c  $input	       \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -nu	       \
-+grep -E "^[[:digit:]]+[[:space:]]+(common|64)" $SYSCALL_TBL	\
-+	|sort -k1 -n					\
- 	|create_table
--- 
-1.8.3.1
+SXMgaXMgcG9zc2libGUgdG8gY2FwdHVyZSB0aGUgYWRkcmVzcyBvZiBtZW1vcnkgYWNjZXNzZXMg
+dXNpbmcgcGVyZiBvbiBBUk0/ICBJbml0aWFsbHksIEkgdGhvdWdodCBwZXJmLW1lbSB3b3VsZCBk
+byB0aGUgdHJpY2ssIGJ1dCBhcHBhcmVudGx5IGl0cyBmdW5jdGlvbmFsaXR5IGlzIGVudGlyZWx5
+IGRlcGVuZGVudCBvbiBJbnRlbCBDUFVzIHdpdGggUEVCUy4gIFRoZW4gSSBub3RpY2VkIHRoYXQg
+cGVyZi1yZWNvcmQgdGFrZXMgYSAtZCBmbGFnICh1c2VkIGJ5IHBlcmYtbWVtKS4gIEFsdGhvdWdo
+IHRoZSBkZXNjcmlwdGlvbiBvZiB0aGF0IGZsYWcgaXMgdmFndWUgKGNhcHR1cmUgd2hhdCBhZGRy
+ZXNzZXM/KSwgd2hlbiB1c2VkIGFzIHN1Y2ggInBlcmYgcmVjb3JkIC1lIGFybXY4X2NvcnRleF9h
+NzIvbWVtX2FjY2Vzcy91IC1kIC1wIDE2OTYzIHNsZWVwIDXigJ0gYW5kIHRoZW4gZHVtcGluZyB0
+aGUgdHJhY2UgdmlhIOKAnHBlcmYgcmVwb3J0IOKAlG1lbS1tb2Rl4oCdIEkgZ2V0IDBzIGluIHRo
+ZSBkYXRhIHN5bWJvbCBjb2x1bW4uICBTbyB0aGlzIGFsc28gYXBwZWFycyB0byBoYXZlIG5vIGVm
+ZmVjdCBvbiBteSBoYXJkd2FyZS4gIEFzIHRoZSBjb21tYW5kIHVzZWQgcmV2ZWFscywgSeKAmW0g
+dXNpbmcgcGVyZiBvbiBhIENvcnRleCBBNzIgYW5kIG9uIExpbnV4IDQuNC4NCg0KSeKAmW0gYXdh
+cmUgdGhhdCBmb3IgQVJNIHRoZXJl4oCZcyBhIFN0YXRpc3RpY2FsIFByb2ZpbGluZyBFeHRlbnNp
+b24gZm9yIHdoaWNoIHN1cHBvcnQgd2VudCBpbnRvIHRoZSBrZXJuZWwgcmVjZW50bHkgYW5kIHdo
+aWNoIGNvdWxkIHBvdGVudGlhbGx5IHN1cHBvcnQgdGhpcyBpbmZvcm1hdGlvbiwgYnV0IHRoYXQg
+cmVxdWlyZXMgQVJNdjguMi4gIFRoZXJl4oCZcyBhbiBFbWJlZGRlZCBUcmFjZSBNYWNyb2NlbGwg
+b24gbXkgQ1BVIGFuZCBwZXJmIHN1cHBvcnQgaXMgYWxzbyBpbiB0aGUga2VybmVsLCBidXQgbXkg
+dW5kZXJzdGFuZGluZyBpcyB0aGF0IGNhcHR1cmluZyBhIGRhdGEgdHJhY2UgaXMgbm90IGF2YWls
+YWJsZSBmb3IgQSBwcm9maWxlIENQVXMsIHdoaWNoIGlzIHdoYXQgSSBoYXZlLg0KDQpBbSBJIG92
+ZXJsb29raW5nIHNvbWUgc29mdHdhcmUgc3VwcG9ydCBmb3IgdGhpcyBpbiBwZXJmIG9yIGFtIEkg
+c2ltcGx5IGFza2luZyB0aGUgaW1wb3NzaWJsZT8NCg0KVGhhbmsgeW91LA0KQ2hyaXN0aWFuIEhh
+bnNlbg==
