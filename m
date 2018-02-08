@@ -1,84 +1,54 @@
-From: changbin.du@intel.com
-Subject: [PATCH] perf sched map: re-annotate shortname if thread comm changed
-Date: Thu,  8 Feb 2018 18:03:08 +0800
-Message-ID: <1518084188-29576-1-git-send-email-changbin.du@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jolsa@redhat.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Subject: [PATCH 0/3] perf s390: Use syscall.tbl to create the perf syscall table
+Date: Thu,  8 Feb 2018 12:47:47 +0100
+Message-ID: <1518090470-2899-1-git-send-email-brueckner@linux.vnet.ibm.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751066AbeBHLr7 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 8 Feb 2018 06:47:59 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w18BiGd7104288
+        for <linux-perf-users@vger.kernel.org>; Thu, 8 Feb 2018 06:47:59 -0500
+Received: from e06smtp11.uk.ibm.com (e06smtp11.uk.ibm.com [195.75.94.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2g0nvrg9fa-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Feb 2018 06:47:59 -0500
+Received: from localhost
+        by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <brueckner@linux.vnet.ibm.com>;
+        Thu, 8 Feb 2018 11:47:57 -0000
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
 
-From: Changbin Du <changbin.du@intel.com>
+With commit 857f46b "s390/syscalls: add system call table", I have
+introduced a syscall.tbl file to generate the system call table for
+s390, as well as, respective unistd.h header files for 64-bit and compat
+system calls.
 
-This is to show the real name of thread that created via fork-exec.
-See below example for shortname *A0*.
+Because the unistd.h is now generated, update perf with a copy of the
+syscall.tbl file and adapt the script that generates the system call
+table for perf trace to support wildcard syscall matches.
 
-$ sudo ./perf sched map
-              *A0   80393.050639 secs A0 => perf:22368
-          *.   A0   80393.050748 secs .  => swapper:0
-           .  *.    80393.050887 secs
-      *B0  .   .    80393.052735 secs B0 => rcu_sched:8
-      *.   .   .    80393.052743 secs
-       .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
-       .  *A0  .    80393.056270 secs
-       .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
-       .  *A0  .    80393.056804 secs A0 => pi:22368
-       .  *.   .    80393.056854 secs
-      *B0  .   .    80393.060727 secs
-      ...
+The patch set is based on the perf/core branch.
 
-Signed-off-by: Changbin Du <changbin.du@intel.com>
----
- tools/perf/builtin-sched.c | 4 +++-
- tools/perf/util/thread.c   | 1 +
- tools/perf/util/thread.h   | 1 +
- 3 files changed, 5 insertions(+), 1 deletion(-)
+Hendrik Brueckner (3):
+  Revert "tools include s390: Grab a copy of
+    arch/s390/include/uapi/asm/unistd.h"
+  perf s390: Grab a copy of arch/s390/kernel/syscall/syscall.tbl
+  perf s390: Rework system call table creation by using syscall.tbl
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 83283fe..53bb8df 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1580,7 +1580,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 
- 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
- 	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
--	if (new_shortname || (verbose > 0 && sched_in->tid)) {
-+	if (new_shortname || sched_in->comm_changed || (verbose > 0 && sched_in->tid)) {
- 		const char *pid_color = color;
- 
- 		if (thread__has_color(sched_in))
-@@ -1588,6 +1588,8 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 
- 		color_fprintf(stdout, pid_color, "%s => %s:%d",
- 		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
-+
-+		sched_in->comm_changed = false;
- 	}
- 
- 	if (sched->map.comp && new_cpu)
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 68b65b1..c660fe6 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -212,6 +212,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
- 			unwind__flush_access(thread);
- 	}
- 
-+	thread->comm_changed = true;
- 	thread->comm_set = true;
- 
- 	return 0;
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 40cfa36..b9a328b 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -27,6 +27,7 @@ struct thread {
- 	int			cpu;
- 	refcount_t		refcnt;
- 	char			shortname[3];
-+	bool			comm_changed;
- 	bool			comm_set;
- 	int			comm_len;
- 	bool			dead; /* if set thread has exited */
+ tools/arch/s390/include/uapi/asm/unistd.h        | 412 -----------------------
+ tools/perf/arch/s390/Makefile                    |  10 +-
+ tools/perf/arch/s390/entry/syscalls/mksyscalltbl |  18 +-
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl  | 390 +++++++++++++++++++++
+ tools/perf/check-headers.sh                      |   1 -
+ 5 files changed, 404 insertions(+), 427 deletions(-)
+ delete mode 100644 tools/arch/s390/include/uapi/asm/unistd.h
+ create mode 100644 tools/perf/arch/s390/entry/syscalls/syscall.tbl
+
 -- 
-2.7.4
+1.8.3.1
