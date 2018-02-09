@@ -1,34 +1,161 @@
-From: "Vuille, Martin (Martin)" <vmartin@avaya.com>
-Subject: RE: Records call-graphs on ARM, reporting on x86_64
-Date: Thu, 8 Feb 2018 17:09:44 +0000
-Message-ID: <30C2D590D16A5C46ADFE6521910377989262C1A9@AZ-US1EXMB02.global.avaya.com>
-References: <30C2D590D16A5C46ADFE6521910377989262C15B@AZ-US1EXMB02.global.avaya.com>
- <2197547.58bztnllri@milian-kdab2>
+From: Lin Xiulei <linxiulei@gmail.com>
+Subject: Re: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
+Date: Fri, 9 Feb 2018 09:52:46 +0800
+Message-ID: <CALPjY3ky4kKbJbVfbigZ87MMiqpn8Q1EX1EKwJ8F+e8P=euzzg@mail.gmail.com>
+References: <20180208033344.71933-1-linxiulei@gmail.com> <20180208153648.GC12817@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from p-us1-iereast-outbound.us1.avaya.com ([135.11.29.13]:63381 "EHLO
-        p-us1-iereast-outbound.us1.avaya.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752010AbeBHRJy (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Feb 2018 12:09:54 -0500
-In-Reply-To: <2197547.58bztnllri@milian-kdab2>
-Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180208153648.GC12817@krava>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, Stephane Eranian <eranian@gmail.com>, torvalds@linux-foundation.org, Brendan Gregg <brendan.d.gregg@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-> Afaik this is not yet implemented in perf report when you use libunwind.
-> When
-> you use elfutils instead of unwinding, it could work if I'm not mistaken.
+2018-02-08 23:36 GMT+08:00 Jiri Olsa <jolsa@redhat.com>:
+>
+> On Thu, Feb 08, 2018 at 11:33:44AM +0800, linxiulei@gmail.com wrote:
+> > From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+> >
+> > Do not install cgroup event into the CPU context and schedule it
+> > if the cgroup is not running on this CPU
+> >
+> > While there is no task of cgroup running specified CPU, current
+> > kernel still install cgroup event into CPU context that causes
+> > another cgroup event can't be installed into this CPU.
+> >
+> > This patch prevent scheduling events at __perf_install_in_context()
+> > and installing events at list_update_cgroup_event() if cgroup isn't
+> > running on specified CPU.
+> >
+> > Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+> > ---
+> >  v2: Set cpuctx->cgrp only if the same cgroup is running on this
+> >    CPU otherwise following events couldn't be activated immediately
+> >  v3: Enhance the comments and commit message
+> >  v4: Adjust to config
+> >
+> >  kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
+> >  1 file changed, 37 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 4df5b69..fd28d61 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
+> >  {
+> >       struct perf_cpu_context *cpuctx;
+> >       struct list_head *cpuctx_entry;
+> > +     struct perf_cgroup *cgrp;
+> >
+> >       if (!is_cgroup_event(event))
+> >               return;
+> >
+> > -     if (add && ctx->nr_cgroups++)
+> > -             return;
+> > -     else if (!add && --ctx->nr_cgroups)
+> > -             return;
+>
+> I might be missing something, but should this check stay on
+> the top regardles of the cgroup_is_descendant check below?
+>
 
-I rebuilt my host perf with NO_LIBUNWIND=1 to use libdw. I don't see any difference
-in the results.
- 
-> Independently from that, hotspot [1] should support the above usecase just
-> fine.
+I don't think so,  if event A on cgroup A is opened and immediately
+followed by a event B opened on cgroup B, then
+"if (add && ctx->nr_cgroups++)" would __return__ with
+ cpuctx->cgrp = cgroup A, that is incorrect.
 
-Will give it a try, thanks.
-MV
+And previous thread is here https://lkml.org/lkml/2018/1/24/79
+
+>
+> you could put NULL into cpuctx->cgrp on context with cgroup
+> event in the list
+>
+
+what's the harm? It's invoked by perf_remove_from_context() when
+an event is ready to be released. And whenever process/cgroup is
+scheduled, cpuctx->cgrp will be set
+
+In case that the patch was not sorted well, I put the patched code
+
+```
+static inline void
+list_update_cgroup_event(struct perf_event *event,
+             struct perf_event_context *ctx, bool add)
+{
+    struct perf_cpu_context *cpuctx;
+    struct list_head *cpuctx_entry;
+    struct perf_cgroup *cgrp;
+
+    if (!is_cgroup_event(event))
+        return;
+
+    /*
+     * Because cgroup events are always per-cpu events,
+     * this will always be called from the right CPU.
+     */
+    cpuctx = __get_cpu_context(ctx);
+    cgrp = perf_cgroup_from_task(current, ctx);
+
+    /*
+     * if only the cgroup is running on this cpu,
+     * we put/remove this cgroup into cpu context.
+     * Or it would case mismatch in following cgroup
+     * events at event_filter_match()
+     */
+    if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
+        if (add)
+            cpuctx->cgrp = cgrp;
+        else
+            cpuctx->cgrp = NULL;
+    }
+
+    if (add && ctx->nr_cgroups++)
+        return;
+    else if (!add && --ctx->nr_cgroups)
+        return;
+
+    cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+    if (add)
+        list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
+    else
+        list_del(cpuctx_entry);
+}
+```
+
+thanks
+
+>
+> thanks,
+> jirka
+>
+> >       /*
+> >        * Because cgroup events are always per-cpu events,
+> >        * this will always be called from the right CPU.
+> >        */
+> >       cpuctx = __get_cpu_context(ctx);
+> > -     cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+> > -     /* cpuctx->cgrp is NULL unless a cgroup event is active in this CPU .*/
+> > -     if (add) {
+> > -             struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
+> > +     cgrp = perf_cgroup_from_task(current, ctx);
+> >
+> > -             list_add(cpuctx_entry, this_cpu_ptr(&cgrp_cpuctx_list));
+> > -             if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
+> > +     /*
+> > +      * if only the cgroup is running on this cpu,
+> > +      * we put/remove this cgroup into cpu context.
+> > +      * Or it would case mismatch in following cgroup
+> > +      * events at event_filter_match()
+> > +      */
+> > +     if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
+> > +             if (add)
+> >                       cpuctx->cgrp = cgrp;
+> > -     } else {
+> > -             list_del(cpuctx_entry);
+> > -             cpuctx->cgrp = NULL;
+> > +             else
+> > +                     cpuctx->cgrp = NULL;
+>
+> SNIP
+>
