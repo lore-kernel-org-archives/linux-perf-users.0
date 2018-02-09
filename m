@@ -1,101 +1,110 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
-Date: Fri, 9 Feb 2018 11:11:28 +0100
-Message-ID: <20180209101128.GF25181@hirez.programming.kicks-ass.net>
-References: <20180208033344.71933-1-linxiulei@gmail.com>
+From: Mike Leach <Mike.Leach@arm.com>
+Subject: RE: Recording memory addresses on ARM
+Date: Fri, 9 Feb 2018 10:56:23 +0000
+Message-ID: <DB6PR0802MB2198CEFEE0D25892864824C28CF20@DB6PR0802MB2198.eurprd08.prod.outlook.com>
+References: <42BDBD72-87FE-4DFA-8A5D-6CEB2DAF1262@cisco.com>
+ <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:52662 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750895AbeBIKLp (ORCPT
+Received: from mail-eopbgr30083.outbound.protection.outlook.com ([40.107.3.83]:27427
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750828AbeBIK40 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Feb 2018 05:11:45 -0500
-Content-Disposition: inline
-In-Reply-To: <20180208033344.71933-1-linxiulei@gmail.com>
+        Fri, 9 Feb 2018 05:56:26 -0500
+In-Reply-To: <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linxiulei@gmail.com
-Cc: jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, brendan.d.gregg@gmail.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+To: Kim Phillips <Kim.Phillips@arm.com>, "Christian Hansen (chansen3)" <chansen3@cisco.com>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-On Thu, Feb 08, 2018 at 11:33:44AM +0800, linxiulei@gmail.com wrote:
-> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
-> 
-> Do not install cgroup event into the CPU context and schedule it
-> if the cgroup is not running on this CPU
-> 
-> While there is no task of cgroup running specified CPU, current
-> kernel still install cgroup event into CPU context that causes
-> another cgroup event can't be installed into this CPU.
-> 
-> This patch prevent scheduling events at __perf_install_in_context()
-> and installing events at list_update_cgroup_event() if cgroup isn't
-> running on specified CPU.
-> 
-> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
-> ---
->  v2: Set cpuctx->cgrp only if the same cgroup is running on this
->    CPU otherwise following events couldn't be activated immediately
->  v3: Enhance the comments and commit message
->  v4: Adjust to config
-> 
->  kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4df5b69..fd28d61 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
->  {
->  	struct perf_cpu_context *cpuctx;
->  	struct list_head *cpuctx_entry;
-> +	struct perf_cgroup *cgrp;
->  
->  	if (!is_cgroup_event(event))
->  		return;
->  
->  	/*
->  	 * Because cgroup events are always per-cpu events,
->  	 * this will always be called from the right CPU.
->  	 */
->  	cpuctx = __get_cpu_context(ctx);
-> +	cgrp = perf_cgroup_from_task(current, ctx);
->  
-> +	/*
-> +	 * if only the cgroup is running on this cpu,
-> +	 * we put/remove this cgroup into cpu context.
-> +	 * Or it would case mismatch in following cgroup
-> +	 * events at event_filter_match()
-> +	 */
-> +	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
-> +		if (add)
->  			cpuctx->cgrp = cgrp;
-> +		else
-> +			cpuctx->cgrp = NULL;
->  	}
-
-I am still not convinced this is correct.
-
-Suppose we have
-
-   R
-  / \
- A   B
-    / \
-   C
-
-And our current task is of B, and B has an event.
-
-We then install an event in C, if we then destroy our event in C, it
-would clear cpuctx->cgrp, which is wrong, since there is still an event
-in B.
-
-Simpler still, if B were to have 2 events, and we'd remove one, that
-would still clear cpuctx->cgrp, even though there is an event left.
-
-This is the exact issue I pointed out last time, and I still don't see
-how it would now be correct.
-
-Northing explains why its ok to have NULL cpuctx->cgrp when there are in
-fact still cgroup events on the CPU.
+SGksDQoNCg0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBDb3JlU2lnaHQg
+W21haWx0bzpjb3Jlc2lnaHQtYm91bmNlc0BsaXN0cy5saW5hcm8ub3JnXSBPbiBCZWhhbGYgT2Yg
+S2ltDQo+UGhpbGxpcHMNCj5TZW50OiAwOSBGZWJydWFyeSAyMDE4IDAzOjIwDQo+VG86IENocmlz
+dGlhbiBIYW5zZW4gKGNoYW5zZW4zKSA8Y2hhbnNlbjNAY2lzY28uY29tPjsNCj5jb3Jlc2lnaHRA
+bGlzdHMubGluYXJvLm9yZw0KPkNjOiBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZw0K
+PlN1YmplY3Q6IFJlOiBSZWNvcmRpbmcgbWVtb3J5IGFkZHJlc3NlcyBvbiBBUk0NCj4NCj5PbiBU
+aHUsIDggRmViIDIwMTggMTU6MTc6MzMgKzAwMDANCj4iQ2hyaXN0aWFuIEhhbnNlbiAoY2hhbnNl
+bjMpIiA8Y2hhbnNlbjNAY2lzY28uY29tPiB3cm90ZToNCj4NCj4+IElzIGlzIHBvc3NpYmxlIHRv
+IGNhcHR1cmUgdGhlIGFkZHJlc3Mgb2YgbWVtb3J5IGFjY2Vzc2VzIHVzaW5nIHBlcmYgb24NCj4+
+IEFSTT8gIEluaXRpYWxseSwgSSB0aG91Z2h0IHBlcmYtbWVtIHdvdWxkIGRvIHRoZSB0cmljaywg
+YnV0IGFwcGFyZW50bHkNCj4+IGl0cyBmdW5jdGlvbmFsaXR5IGlzIGVudGlyZWx5IGRlcGVuZGVu
+dCBvbiBJbnRlbCBDUFVzIHdpdGggUEVCUy4NCj4NCj5SaWdodC4NCj4NCj4+IFRoZW4gSSBub3Rp
+Y2VkIHRoYXQgcGVyZi1yZWNvcmQgdGFrZXMgYSAtZCBmbGFnICh1c2VkIGJ5IHBlcmYtbWVtKS4N
+Cj4+IEFsdGhvdWdoIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGF0IGZsYWcgaXMgdmFndWUgKGNhcHR1
+cmUgd2hhdCBhZGRyZXNzZXM/DQo+PiApLCB3aGVuIHVzZWQgYXMgc3VjaCAicGVyZiByZWNvcmQg
+LWUgYXJtdjhfY29ydGV4X2E3Mi9tZW1fYWNjZXNzL3UgLWQNCj4+IC1wIDE2OTYzIHNsZWVwIDXi
+gJ0gYW5kIHRoZW4gZHVtcGluZyB0aGUgdHJhY2UgdmlhIOKAnHBlcmYgcmVwb3J0IOKAlA0KPj4g
+bWVtLW1vZGXigJ0gSSBnZXQgMHMgaW4gdGhlIGRhdGEgc3ltYm9sIGNvbHVtbi4gIFNvIHRoaXMg
+YWxzbyBhcHBlYXJzIHRvDQo+PiBoYXZlIG5vIGVmZmVjdCBvbiBteSBoYXJkd2FyZS4gIEFzIHRo
+ZSBjb21tYW5kIHVzZWQgcmV2ZWFscywgSeKAmW0gdXNpbmcNCj4+IHBlcmYgb24gYSBDb3J0ZXgg
+QTcyIGFuZCBvbiBMaW51eCA0LjQuDQo+DQo+SSBzZWUgLi9wZXJmIHJlcG9ydCAtLWhlbHAgc2F5
+czoNCj4NCj4gICAgICAgLS1tZW0tbW9kZQ0KPiAgICAgICAgICAgVXNlIHRoZSBkYXRhIGFkZHJl
+c3NlcyBvZiBzYW1wbGVzIGluIGFkZGl0aW9uIHRvIGluc3RydWN0aW9uIGFkZHJlc3Nlcw0KPnRv
+IGJ1aWxkIHRoZSBoaXN0b2dyYW1zLiBUbyBnZW5lcmF0ZSBtZWFuaW5nZnVsIG91dHB1dCwNCj4g
+ICAgICAgICAgIHRoZSBwZXJmLmRhdGEgZmlsZSBtdXN0IGhhdmUgYmVlbiBvYnRhaW5lZCB1c2lu
+ZyBwZXJmIHJlY29yZCAtZCAtVyBhbmQNCj51c2luZyBhIHNwZWNpYWwgZXZlbnQgLWUgY3B1L21l
+bS1sb2Fkcy8gb3IgLWUNCj4gICAgICAgICAgIGNwdS9tZW0tc3RvcmVzLy4gU2VlIHBlcmYgbWVt
+IGZvciBzaW1wbGVyIGFjY2Vzcy4NCj4NCj55ZXQgcGVyZiByZWNvcmQncyAtVyBzd2l0Y2ggaXNu
+J3Qgb24gcmVjb3JkJ3MgbWFucGFnZSwgYW5kIHRyeWluZyB0aGUNCj5pbnZvY2F0aW9uIHNlcXVl
+bmNlIG9uIHg4NiB1c2luZyBhIHBlcmYgYnVpbHQgZnJvbSB0b2RheSdzIGFjbWUncyBwZXJmL3Vy
+Z2VudA0KPmJyYW5jaDoNCj4NCj4kIC4vcGVyZiB2ZXJzaW9uDQo+cGVyZiB2ZXJzaW9uIDQuMTMu
+cmM1Lmc1OTQxMGY1DQo+JCAuL3BlcmYgcmVjb3JkIC1lIGNwdS9tZW0tbG9hZHMvdSAtZCAtVyAt
+cCAzNzIyIHNsZWVwIDEgWyBwZXJmIHJlY29yZDoNCj5Xb2tlbiB1cCAxIHRpbWVzIHRvIHdyaXRl
+IGRhdGEgXSBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgOC45NzggTUINCj5wZXJm
+LmRhdGEgXSAkIC4vcGVyZiByZXBvcnQgLS1tZW0tbW9kZSAtLXN0ZGlvDQo+RXJyb3I6DQo+VGhl
+IHBlcmYuZGF0YSBmaWxlIGhhcyBubyBzYW1wbGVzIQ0KPiMgVG8gZGlzcGxheSB0aGUgcGVyZi5k
+YXRhIGhlYWRlciBpbmZvLCBwbGVhc2UgdXNlIC0taGVhZGVyLy0taGVhZGVyLW9ubHkNCj5vcHRp
+b25zLg0KPiMNCj4kDQo+DQo+QSAncGVyZiBtZW0gcmVjb3JkIHNsZWVwIDE7IHBlcmYgbWVtIHJl
+cG9ydCcgc2VxdWVuY2UgcHJvZHVjZXMgc2FtcGxlcyBpbg0KPml0cyBvdXRwdXQsIGJ1dCAnbWVt
+IHJlY29yZCcgZG9lc24ndCB0YWtlIGEgLXAgc3dpdGNoIGZvciB0aGUgUElELCByYXRoZXIsIC1w
+DQo+bWVhbnMgLS1waHlzLWRhdGEsICJSZWNvcmQvUmVwb3J0IHNhbXBsZSBwaHlzaWNhbCBhZGRy
+ZXNzZXMiLCB3aGljaCBhbHNvDQo+ZG9lc24ndCBzZWVtIHRvIHdvcms6DQo+DQo+JCBwZXJmIG1l
+bSAtcCByZWNvcmQgc2xlZXAgMQ0KPkVycm9yOg0KPlRoZSBzeXNfcGVyZl9ldmVudF9vcGVuKCkg
+c3lzY2FsbCByZXR1cm5lZCB3aXRoIDIyIChJbnZhbGlkIGFyZ3VtZW50KSBmb3INCj5ldmVudCAo
+Y3B1L21lbS1sb2FkcyxsZGxhdD0zMC9QKS4NCj4vYmluL2RtZXNnIG1heSBwcm92aWRlIGFkZGl0
+aW9uYWwgaW5mb3JtYXRpb24uDQo+Tm8gQ09ORklHX1BFUkZfRVZFTlRTPXkga2VybmVsIHN1cHBv
+cnQgY29uZmlndXJlZD8NCj4NCj5OZXZlcnRoZWxlc3MsIG9uIEFybSwgdGhlIGFybXY4X2NvcnRl
+eF9hNzIvbWVtX2FjY2Vzcy8gaXMgYSBjb3VudGluZw0KPlBNVSwgc28gaXQgZG9lc24ndCByZWNv
+cmQgdGhlIGFkZHJlc3Mgb2YgdGhlIG1lbW9yeSBhY2Nlc3MsIGp1c3Qgd2hlcmUgaW4NCj50aGUg
+Y29kZSB0aGUgYWNjZXNzIGNhbWUgZnJvbS4NCj4NCj4+IEnigJltIGF3YXJlIHRoYXQgZm9yIEFS
+TSB0aGVyZeKAmXMgYSBTdGF0aXN0aWNhbCBQcm9maWxpbmcgRXh0ZW5zaW9uIGZvcg0KPj4gd2hp
+Y2ggc3VwcG9ydCB3ZW50IGludG8gdGhlIGtlcm5lbCByZWNlbnRseSBhbmQgd2hpY2ggY291bGQN
+Cj4+IHBvdGVudGlhbGx5IHN1cHBvcnQgdGhpcyBpbmZvcm1hdGlvbiwgYnV0IHRoYXQgcmVxdWly
+ZXMgQVJNdjguMi4NCj4+IFRoZXJl4oCZcyBhbg0KPg0KPkFjay4NCj4NCj4+IEVtYmVkZGVkIFRy
+YWNlIE1hY3JvY2VsbCBvbiBteSBDUFUgYW5kIHBlcmYgc3VwcG9ydCBpcyBhbHNvIGluIHRoZQ0K
+Pj4ga2VybmVsLCBidXQgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IGNhcHR1cmluZyBhIGRhdGEg
+dHJhY2UgaXMgbm90DQo+PiBhdmFpbGFibGUgZm9yIEEgcHJvZmlsZSBDUFVzLCB3aGljaCBpcyB3
+aGF0IEkgaGF2ZS4NCj4NCj5ObywgQ29ydGV4LUFzIHNob3VsZCBiZSBzdXBwb3J0ZWQgYnkgdGhl
+IENvcmVzaWdodCBkcml2ZXIgbm8gcHJvYmxlbS4NCj5UcnkgYWNtZSdzIHBlcmYvY29yZSB0cmVl
+LCB3aGVyZSBzdXBwb3J0IGZvciBsaW5raW5nIHdpdGggZGVjb2RlDQo+DQo+PiBBbSBJIG92ZXJs
+b29raW5nIHNvbWUgc29mdHdhcmUgc3VwcG9ydCBmb3IgdGhpcyBpbiBwZXJmIG9yIGFtIEkgc2lt
+cGx5DQo+YXNraW5nIHRoZSBpbXBvc3NpYmxlPw0KPg0KPllvdSdyZSBvbiB0aGUgcmlnaHQgdHJh
+Y2s6IENvcmVzaWdodCB0cmFjZSBoL3cgaXMgYWJsZSB0byByZWNvcmQgbWVtb3J5DQo+YWNjZXNz
+ZXMsIGJ1dCBJIGRvbid0IGtub3cgaXRzIGVuYWJsZW1lbnQgc3RhdHVzLCBzbyBJJ20gYWRkaW5n
+IHRoZSBjb3Jlc2lnaHQNCj5tYWlsaW5nIGxpc3QgdG8gY2MgaW4gY2FzZSBhbnlvbmUgdGhlcmUg
+Y2FuIGNoaW1lIGluIGFuZCBoZWxwLg0KPg0KDQpDb3J0ZXggQSBjbGFzcyBjb3JlcyBoYXZlLCBi
+eSBhcmNoaXRlY3R1cmFsIGRlc2lnbiosIGluc3RydWN0aW9uIHRyYWNlIG9ubHkuIFRoaXMgbWVh
+bnMgdGhhdCB3aGlsZSB0aGUgaW5zdHJ1Y3Rpb25zIHRoYXQgYWNjZXNzIG1lbW9yeSBhcmUgdHJh
+Y2VkIGFzIHBhcnQgb2YgdGhlIGluc3RydWN0aW9uIHN0cmVhbSwgd2l0aG91dCBkYXRhIHRyYWNl
+LCBkYXRhIGFkZHJlc3NlcyBhbmQgdmFsdWVzIGFyZSBub3QuDQoNCkRhdGEgdHJhY2UgaXMgYW4g
+b3B0aW9uIGZvciBSIGFuZCBNIGNsYXNzIGNvcmVzLg0KDQpSZWdhcmRzDQoNCk1pa2UNCg0KKkFS
+TSBFVE0gU3BlYyBFVE12NC4wIC0gRVRNdjQuMzsgU2VjdGlvbiAxLjMuNCAgLSBmdW5jdGlvbmFs
+IGNvbmZpZ3VyYXRpb25zIG9mIEVUTXY0IHRyYWNlIHVuaXQuDQoNCihhcyBhbiBhc2lkZSAtIGVh
+cmx5IHY3IEEgY2xhc3MgY29yZXMgZS5nLiBBOCwgdXNlZCBFVE12My54IHNvIHNvbWUgZGlkIGlu
+IGZhY3QgaGF2ZSBkYXRhIHRyYWNlIGFzIGFuIG9wdGlvbiBhdCBoYXJkd2FyZSBTb0MgZGVzaWdu
+IHRpbWUuIEhvd2V2ZXIsIGxhdGVyIHZhcmlhbnRzIGUuZy4gQTksIG1vdmVkIHRvIFBUTSAtIG5v
+IGRhdGEgdHJhY2Ugb3B0aW9uIGF0IGFsbCAtIG9yIEVUTXY0IC0gYXMgYWJvdmUgZGF0YSB0cmFj
+ZSBvbmx5IGZvciBSIGFuZCBNKQ0KDQo+VGhhbmtzLA0KPg0KPktpbQ0KPl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+Q29yZVNpZ2h0IG1haWxpbmcgbGlz
+dA0KPkNvcmVTaWdodEBsaXN0cy5saW5hcm8ub3JnDQo+aHR0cHM6Ly9saXN0cy5saW5hcm8ub3Jn
+L21haWxtYW4vbGlzdGluZm8vY29yZXNpZ2h0DQpJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVu
+dHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5k
+IG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
+cGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRp
+c2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBw
+dXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBU
+aGFuayB5b3UuDQo=
