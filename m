@@ -1,110 +1,40 @@
-From: Mike Leach <Mike.Leach@arm.com>
-Subject: RE: Recording memory addresses on ARM
-Date: Fri, 9 Feb 2018 10:56:23 +0000
-Message-ID: <DB6PR0802MB2198CEFEE0D25892864824C28CF20@DB6PR0802MB2198.eurprd08.prod.outlook.com>
-References: <42BDBD72-87FE-4DFA-8A5D-6CEB2DAF1262@cisco.com>
- <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Andi Kleen <andi@firstfloor.org>
+Subject: [PATCH] perf, tools, report: Fix description for --mem-mode
+Date: Fri,  9 Feb 2018 08:39:09 -0800
+Message-ID: <20180209163909.9240-1-andi@firstfloor.org>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-eopbgr30083.outbound.protection.outlook.com ([40.107.3.83]:27427
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750828AbeBIK40 (ORCPT
+Received: from mga18.intel.com ([134.134.136.126]:4171 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751024AbeBIQj2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Feb 2018 05:56:26 -0500
-In-Reply-To: <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com>
-Content-Language: en-US
+        Fri, 9 Feb 2018 11:39:28 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Kim Phillips <Kim.Phillips@arm.com>, "Christian Hansen (chansen3)" <chansen3@cisco.com>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: acme@kernel.org
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 
-SGksDQoNCg0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBDb3JlU2lnaHQg
-W21haWx0bzpjb3Jlc2lnaHQtYm91bmNlc0BsaXN0cy5saW5hcm8ub3JnXSBPbiBCZWhhbGYgT2Yg
-S2ltDQo+UGhpbGxpcHMNCj5TZW50OiAwOSBGZWJydWFyeSAyMDE4IDAzOjIwDQo+VG86IENocmlz
-dGlhbiBIYW5zZW4gKGNoYW5zZW4zKSA8Y2hhbnNlbjNAY2lzY28uY29tPjsNCj5jb3Jlc2lnaHRA
-bGlzdHMubGluYXJvLm9yZw0KPkNjOiBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZw0K
-PlN1YmplY3Q6IFJlOiBSZWNvcmRpbmcgbWVtb3J5IGFkZHJlc3NlcyBvbiBBUk0NCj4NCj5PbiBU
-aHUsIDggRmViIDIwMTggMTU6MTc6MzMgKzAwMDANCj4iQ2hyaXN0aWFuIEhhbnNlbiAoY2hhbnNl
-bjMpIiA8Y2hhbnNlbjNAY2lzY28uY29tPiB3cm90ZToNCj4NCj4+IElzIGlzIHBvc3NpYmxlIHRv
-IGNhcHR1cmUgdGhlIGFkZHJlc3Mgb2YgbWVtb3J5IGFjY2Vzc2VzIHVzaW5nIHBlcmYgb24NCj4+
-IEFSTT8gIEluaXRpYWxseSwgSSB0aG91Z2h0IHBlcmYtbWVtIHdvdWxkIGRvIHRoZSB0cmljaywg
-YnV0IGFwcGFyZW50bHkNCj4+IGl0cyBmdW5jdGlvbmFsaXR5IGlzIGVudGlyZWx5IGRlcGVuZGVu
-dCBvbiBJbnRlbCBDUFVzIHdpdGggUEVCUy4NCj4NCj5SaWdodC4NCj4NCj4+IFRoZW4gSSBub3Rp
-Y2VkIHRoYXQgcGVyZi1yZWNvcmQgdGFrZXMgYSAtZCBmbGFnICh1c2VkIGJ5IHBlcmYtbWVtKS4N
-Cj4+IEFsdGhvdWdoIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGF0IGZsYWcgaXMgdmFndWUgKGNhcHR1
-cmUgd2hhdCBhZGRyZXNzZXM/DQo+PiApLCB3aGVuIHVzZWQgYXMgc3VjaCAicGVyZiByZWNvcmQg
-LWUgYXJtdjhfY29ydGV4X2E3Mi9tZW1fYWNjZXNzL3UgLWQNCj4+IC1wIDE2OTYzIHNsZWVwIDXi
-gJ0gYW5kIHRoZW4gZHVtcGluZyB0aGUgdHJhY2UgdmlhIOKAnHBlcmYgcmVwb3J0IOKAlA0KPj4g
-bWVtLW1vZGXigJ0gSSBnZXQgMHMgaW4gdGhlIGRhdGEgc3ltYm9sIGNvbHVtbi4gIFNvIHRoaXMg
-YWxzbyBhcHBlYXJzIHRvDQo+PiBoYXZlIG5vIGVmZmVjdCBvbiBteSBoYXJkd2FyZS4gIEFzIHRo
-ZSBjb21tYW5kIHVzZWQgcmV2ZWFscywgSeKAmW0gdXNpbmcNCj4+IHBlcmYgb24gYSBDb3J0ZXgg
-QTcyIGFuZCBvbiBMaW51eCA0LjQuDQo+DQo+SSBzZWUgLi9wZXJmIHJlcG9ydCAtLWhlbHAgc2F5
-czoNCj4NCj4gICAgICAgLS1tZW0tbW9kZQ0KPiAgICAgICAgICAgVXNlIHRoZSBkYXRhIGFkZHJl
-c3NlcyBvZiBzYW1wbGVzIGluIGFkZGl0aW9uIHRvIGluc3RydWN0aW9uIGFkZHJlc3Nlcw0KPnRv
-IGJ1aWxkIHRoZSBoaXN0b2dyYW1zLiBUbyBnZW5lcmF0ZSBtZWFuaW5nZnVsIG91dHB1dCwNCj4g
-ICAgICAgICAgIHRoZSBwZXJmLmRhdGEgZmlsZSBtdXN0IGhhdmUgYmVlbiBvYnRhaW5lZCB1c2lu
-ZyBwZXJmIHJlY29yZCAtZCAtVyBhbmQNCj51c2luZyBhIHNwZWNpYWwgZXZlbnQgLWUgY3B1L21l
-bS1sb2Fkcy8gb3IgLWUNCj4gICAgICAgICAgIGNwdS9tZW0tc3RvcmVzLy4gU2VlIHBlcmYgbWVt
-IGZvciBzaW1wbGVyIGFjY2Vzcy4NCj4NCj55ZXQgcGVyZiByZWNvcmQncyAtVyBzd2l0Y2ggaXNu
-J3Qgb24gcmVjb3JkJ3MgbWFucGFnZSwgYW5kIHRyeWluZyB0aGUNCj5pbnZvY2F0aW9uIHNlcXVl
-bmNlIG9uIHg4NiB1c2luZyBhIHBlcmYgYnVpbHQgZnJvbSB0b2RheSdzIGFjbWUncyBwZXJmL3Vy
-Z2VudA0KPmJyYW5jaDoNCj4NCj4kIC4vcGVyZiB2ZXJzaW9uDQo+cGVyZiB2ZXJzaW9uIDQuMTMu
-cmM1Lmc1OTQxMGY1DQo+JCAuL3BlcmYgcmVjb3JkIC1lIGNwdS9tZW0tbG9hZHMvdSAtZCAtVyAt
-cCAzNzIyIHNsZWVwIDEgWyBwZXJmIHJlY29yZDoNCj5Xb2tlbiB1cCAxIHRpbWVzIHRvIHdyaXRl
-IGRhdGEgXSBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgOC45NzggTUINCj5wZXJm
-LmRhdGEgXSAkIC4vcGVyZiByZXBvcnQgLS1tZW0tbW9kZSAtLXN0ZGlvDQo+RXJyb3I6DQo+VGhl
-IHBlcmYuZGF0YSBmaWxlIGhhcyBubyBzYW1wbGVzIQ0KPiMgVG8gZGlzcGxheSB0aGUgcGVyZi5k
-YXRhIGhlYWRlciBpbmZvLCBwbGVhc2UgdXNlIC0taGVhZGVyLy0taGVhZGVyLW9ubHkNCj5vcHRp
-b25zLg0KPiMNCj4kDQo+DQo+QSAncGVyZiBtZW0gcmVjb3JkIHNsZWVwIDE7IHBlcmYgbWVtIHJl
-cG9ydCcgc2VxdWVuY2UgcHJvZHVjZXMgc2FtcGxlcyBpbg0KPml0cyBvdXRwdXQsIGJ1dCAnbWVt
-IHJlY29yZCcgZG9lc24ndCB0YWtlIGEgLXAgc3dpdGNoIGZvciB0aGUgUElELCByYXRoZXIsIC1w
-DQo+bWVhbnMgLS1waHlzLWRhdGEsICJSZWNvcmQvUmVwb3J0IHNhbXBsZSBwaHlzaWNhbCBhZGRy
-ZXNzZXMiLCB3aGljaCBhbHNvDQo+ZG9lc24ndCBzZWVtIHRvIHdvcms6DQo+DQo+JCBwZXJmIG1l
-bSAtcCByZWNvcmQgc2xlZXAgMQ0KPkVycm9yOg0KPlRoZSBzeXNfcGVyZl9ldmVudF9vcGVuKCkg
-c3lzY2FsbCByZXR1cm5lZCB3aXRoIDIyIChJbnZhbGlkIGFyZ3VtZW50KSBmb3INCj5ldmVudCAo
-Y3B1L21lbS1sb2FkcyxsZGxhdD0zMC9QKS4NCj4vYmluL2RtZXNnIG1heSBwcm92aWRlIGFkZGl0
-aW9uYWwgaW5mb3JtYXRpb24uDQo+Tm8gQ09ORklHX1BFUkZfRVZFTlRTPXkga2VybmVsIHN1cHBv
-cnQgY29uZmlndXJlZD8NCj4NCj5OZXZlcnRoZWxlc3MsIG9uIEFybSwgdGhlIGFybXY4X2NvcnRl
-eF9hNzIvbWVtX2FjY2Vzcy8gaXMgYSBjb3VudGluZw0KPlBNVSwgc28gaXQgZG9lc24ndCByZWNv
-cmQgdGhlIGFkZHJlc3Mgb2YgdGhlIG1lbW9yeSBhY2Nlc3MsIGp1c3Qgd2hlcmUgaW4NCj50aGUg
-Y29kZSB0aGUgYWNjZXNzIGNhbWUgZnJvbS4NCj4NCj4+IEnigJltIGF3YXJlIHRoYXQgZm9yIEFS
-TSB0aGVyZeKAmXMgYSBTdGF0aXN0aWNhbCBQcm9maWxpbmcgRXh0ZW5zaW9uIGZvcg0KPj4gd2hp
-Y2ggc3VwcG9ydCB3ZW50IGludG8gdGhlIGtlcm5lbCByZWNlbnRseSBhbmQgd2hpY2ggY291bGQN
-Cj4+IHBvdGVudGlhbGx5IHN1cHBvcnQgdGhpcyBpbmZvcm1hdGlvbiwgYnV0IHRoYXQgcmVxdWly
-ZXMgQVJNdjguMi4NCj4+IFRoZXJl4oCZcyBhbg0KPg0KPkFjay4NCj4NCj4+IEVtYmVkZGVkIFRy
-YWNlIE1hY3JvY2VsbCBvbiBteSBDUFUgYW5kIHBlcmYgc3VwcG9ydCBpcyBhbHNvIGluIHRoZQ0K
-Pj4ga2VybmVsLCBidXQgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IGNhcHR1cmluZyBhIGRhdGEg
-dHJhY2UgaXMgbm90DQo+PiBhdmFpbGFibGUgZm9yIEEgcHJvZmlsZSBDUFVzLCB3aGljaCBpcyB3
-aGF0IEkgaGF2ZS4NCj4NCj5ObywgQ29ydGV4LUFzIHNob3VsZCBiZSBzdXBwb3J0ZWQgYnkgdGhl
-IENvcmVzaWdodCBkcml2ZXIgbm8gcHJvYmxlbS4NCj5UcnkgYWNtZSdzIHBlcmYvY29yZSB0cmVl
-LCB3aGVyZSBzdXBwb3J0IGZvciBsaW5raW5nIHdpdGggZGVjb2RlDQo+DQo+PiBBbSBJIG92ZXJs
-b29raW5nIHNvbWUgc29mdHdhcmUgc3VwcG9ydCBmb3IgdGhpcyBpbiBwZXJmIG9yIGFtIEkgc2lt
-cGx5DQo+YXNraW5nIHRoZSBpbXBvc3NpYmxlPw0KPg0KPllvdSdyZSBvbiB0aGUgcmlnaHQgdHJh
-Y2s6IENvcmVzaWdodCB0cmFjZSBoL3cgaXMgYWJsZSB0byByZWNvcmQgbWVtb3J5DQo+YWNjZXNz
-ZXMsIGJ1dCBJIGRvbid0IGtub3cgaXRzIGVuYWJsZW1lbnQgc3RhdHVzLCBzbyBJJ20gYWRkaW5n
-IHRoZSBjb3Jlc2lnaHQNCj5tYWlsaW5nIGxpc3QgdG8gY2MgaW4gY2FzZSBhbnlvbmUgdGhlcmUg
-Y2FuIGNoaW1lIGluIGFuZCBoZWxwLg0KPg0KDQpDb3J0ZXggQSBjbGFzcyBjb3JlcyBoYXZlLCBi
-eSBhcmNoaXRlY3R1cmFsIGRlc2lnbiosIGluc3RydWN0aW9uIHRyYWNlIG9ubHkuIFRoaXMgbWVh
-bnMgdGhhdCB3aGlsZSB0aGUgaW5zdHJ1Y3Rpb25zIHRoYXQgYWNjZXNzIG1lbW9yeSBhcmUgdHJh
-Y2VkIGFzIHBhcnQgb2YgdGhlIGluc3RydWN0aW9uIHN0cmVhbSwgd2l0aG91dCBkYXRhIHRyYWNl
-LCBkYXRhIGFkZHJlc3NlcyBhbmQgdmFsdWVzIGFyZSBub3QuDQoNCkRhdGEgdHJhY2UgaXMgYW4g
-b3B0aW9uIGZvciBSIGFuZCBNIGNsYXNzIGNvcmVzLg0KDQpSZWdhcmRzDQoNCk1pa2UNCg0KKkFS
-TSBFVE0gU3BlYyBFVE12NC4wIC0gRVRNdjQuMzsgU2VjdGlvbiAxLjMuNCAgLSBmdW5jdGlvbmFs
-IGNvbmZpZ3VyYXRpb25zIG9mIEVUTXY0IHRyYWNlIHVuaXQuDQoNCihhcyBhbiBhc2lkZSAtIGVh
-cmx5IHY3IEEgY2xhc3MgY29yZXMgZS5nLiBBOCwgdXNlZCBFVE12My54IHNvIHNvbWUgZGlkIGlu
-IGZhY3QgaGF2ZSBkYXRhIHRyYWNlIGFzIGFuIG9wdGlvbiBhdCBoYXJkd2FyZSBTb0MgZGVzaWdu
-IHRpbWUuIEhvd2V2ZXIsIGxhdGVyIHZhcmlhbnRzIGUuZy4gQTksIG1vdmVkIHRvIFBUTSAtIG5v
-IGRhdGEgdHJhY2Ugb3B0aW9uIGF0IGFsbCAtIG9yIEVUTXY0IC0gYXMgYWJvdmUgZGF0YSB0cmFj
-ZSBvbmx5IGZvciBSIGFuZCBNKQ0KDQo+VGhhbmtzLA0KPg0KPktpbQ0KPl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+Q29yZVNpZ2h0IG1haWxpbmcgbGlz
-dA0KPkNvcmVTaWdodEBsaXN0cy5saW5hcm8ub3JnDQo+aHR0cHM6Ly9saXN0cy5saW5hcm8ub3Jn
-L21haWxtYW4vbGlzdGluZm8vY29yZXNpZ2h0DQpJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVu
-dHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5k
-IG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
-cGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRp
-c2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBw
-dXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBU
-aGFuayB5b3UuDQo=
+From: Andi Kleen <ak@linux.intel.com>
+
+The mem-loads event only works when PEBS is enabled, so add
+/p to the examples.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/perf-report.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 907e505b6309..2884a9e2d27c 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -367,7 +367,7 @@ OPTIONS
+ 	Use the data addresses of samples in addition to instruction addresses
+ 	to build the histograms.  To generate meaningful output, the perf.data
+ 	file must have been obtained using perf record -d -W and using a
+-	special event -e cpu/mem-loads/ or -e cpu/mem-stores/. See
++	special event -e cpu/mem-loads/p or -e cpu/mem-stores/p. See
+ 	'perf mem' for simpler access.
+ 
+ --percent-limit::
+-- 
+2.14.3
