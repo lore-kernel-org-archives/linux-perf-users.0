@@ -1,46 +1,101 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: Recording memory addresses on ARM
-Date: Thu, 08 Feb 2018 21:21:55 -0800
-Message-ID: <87y3k2vito.fsf@linux.intel.com>
-References: <42BDBD72-87FE-4DFA-8A5D-6CEB2DAF1262@cisco.com>
-        <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
+Date: Fri, 9 Feb 2018 11:11:28 +0100
+Message-ID: <20180209101128.GF25181@hirez.programming.kicks-ass.net>
+References: <20180208033344.71933-1-linxiulei@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:17710 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750778AbeBIFWJ (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:52662 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750895AbeBIKLp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Feb 2018 00:22:09 -0500
-In-Reply-To: <20180208212021.3bc3adc85abdcfb2cd4fd2e7@arm.com> (Kim Phillips's
-        message of "Thu, 8 Feb 2018 21:20:21 -0600")
+        Fri, 9 Feb 2018 05:11:45 -0500
+Content-Disposition: inline
+In-Reply-To: <20180208033344.71933-1-linxiulei@gmail.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Kim Phillips <kim.phillips@arm.com>
-Cc: "Christian Hansen (chansen3)" <chansen3@cisco.com>, coresight@lists.linaro.org, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linxiulei@gmail.com
+Cc: jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, brendan.d.gregg@gmail.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 
-Kim Phillips <kim.phillips@arm.com> writes:
->
-> I see ./perf report --help says:
->
->        --mem-mode
->            Use the data addresses of samples in addition to instruction addresses to build the histograms. To generate meaningful output,
->            the perf.data file must have been obtained using perf record -d -W and using a special event -e cpu/mem-loads/ or -e
->            cpu/mem-stores/. See perf mem for simpler access.
->
-> yet perf record's -W switch isn't on record's manpage, and trying the
-> invocation sequence on x86 using a perf built from today's acme's
-> perf/urgent branch:
->
-> $ ./perf version
-> perf version 4.13.rc5.g59410f5
-> $ ./perf record -e cpu/mem-loads/u -d -W -p 3722 sleep 1
+On Thu, Feb 08, 2018 at 11:33:44AM +0800, linxiulei@gmail.com wrote:
+> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
+> 
+> Do not install cgroup event into the CPU context and schedule it
+> if the cgroup is not running on this CPU
+> 
+> While there is no task of cgroup running specified CPU, current
+> kernel still install cgroup event into CPU context that causes
+> another cgroup event can't be installed into this CPU.
+> 
+> This patch prevent scheduling events at __perf_install_in_context()
+> and installing events at list_update_cgroup_event() if cgroup isn't
+> running on specified CPU.
+> 
+> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
+> ---
+>  v2: Set cpuctx->cgrp only if the same cgroup is running on this
+>    CPU otherwise following events couldn't be activated immediately
+>  v3: Enhance the comments and commit message
+>  v4: Adjust to config
+> 
+>  kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4df5b69..fd28d61 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
+>  {
+>  	struct perf_cpu_context *cpuctx;
+>  	struct list_head *cpuctx_entry;
+> +	struct perf_cgroup *cgrp;
+>  
+>  	if (!is_cgroup_event(event))
+>  		return;
+>  
+>  	/*
+>  	 * Because cgroup events are always per-cpu events,
+>  	 * this will always be called from the right CPU.
+>  	 */
+>  	cpuctx = __get_cpu_context(ctx);
+> +	cgrp = perf_cgroup_from_task(current, ctx);
+>  
+> +	/*
+> +	 * if only the cgroup is running on this cpu,
+> +	 * we put/remove this cgroup into cpu context.
+> +	 * Or it would case mismatch in following cgroup
+> +	 * events at event_filter_match()
+> +	 */
+> +	if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
+> +		if (add)
+>  			cpuctx->cgrp = cgrp;
+> +		else
+> +			cpuctx->cgrp = NULL;
+>  	}
 
+I am still not convinced this is correct.
 
-The help suggestion seems to be incorrect, this needs to be cpu/mem-loads/upp
-(pp to enable PEBS)
+Suppose we have
 
-With PEBS the event produces no samples.
+   R
+  / \
+ A   B
+    / \
+   C
 
+And our current task is of B, and B has an event.
 
--Andi
+We then install an event in C, if we then destroy our event in C, it
+would clear cpuctx->cgrp, which is wrong, since there is still an event
+in B.
+
+Simpler still, if B were to have 2 events, and we'd remove one, that
+would still clear cpuctx->cgrp, even though there is an event left.
+
+This is the exact issue I pointed out last time, and I still don't see
+how it would now be correct.
+
+Northing explains why its ok to have NULL cpuctx->cgrp when there are in
+fact still cgroup events on the CPU.
