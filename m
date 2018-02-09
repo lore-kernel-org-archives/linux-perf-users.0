@@ -1,40 +1,48 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH] perf, tools, report: Fix description for --mem-mode
-Date: Fri,  9 Feb 2018 08:39:09 -0800
-Message-ID: <20180209163909.9240-1-andi@firstfloor.org>
+From: "Vuille, Martin (Martin)" <vmartin@avaya.com>
+Subject: RE: Records call-graphs on ARM, reporting on x86_64
+Date: Fri, 9 Feb 2018 18:06:03 +0000
+Message-ID: <30C2D590D16A5C46ADFE6521910377989262D993@AZ-US1EXMB02.global.avaya.com>
+References: <30C2D590D16A5C46ADFE6521910377989262C15B@AZ-US1EXMB02.global.avaya.com>
+ <2197547.58bztnllri@milian-kdab2>
+ <30C2D590D16A5C46ADFE6521910377989262C1A9@AZ-US1EXMB02.global.avaya.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga18.intel.com ([134.134.136.126]:4171 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751024AbeBIQj2 (ORCPT
+Received: from p-us1-iereast-outbound.us1.avaya.com ([135.11.29.13]:9294 "EHLO
+        p-us1-iereast-outbound.us1.avaya.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752649AbeBISGF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Feb 2018 11:39:28 -0500
+        Fri, 9 Feb 2018 13:06:05 -0500
+In-Reply-To: <30C2D590D16A5C46ADFE6521910377989262C1A9@AZ-US1EXMB02.global.avaya.com>
+Content-Language: en-US
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: "Vuille, Martin (Martin)" <vmartin@avaya.com>, Milian Wolff <milian.wolff@kdab.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-From: Andi Kleen <ak@linux.intel.com>
+> > Afaik this is not yet implemented in perf report when you use libunwind.
+> > When
+> > you use elfutils instead of unwinding, it could work if I'm not mistaken.
+> 
 
-The mem-loads event only works when PEBS is enabled, so add
-/p to the examples.
+After further investigation, here's what I have found:
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/Documentation/perf-report.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+1) With the perf code as it stands, it is absolutely impossible to do cross-platform
+     unwinding because the unwinding code selects Program Counter and Stack Pointer
+     registers based on the host architecture, not the architecture of the ELF file.
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 907e505b6309..2884a9e2d27c 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -367,7 +367,7 @@ OPTIONS
- 	Use the data addresses of samples in addition to instruction addresses
- 	to build the histograms.  To generate meaningful output, the perf.data
- 	file must have been obtained using perf record -d -W and using a
--	special event -e cpu/mem-loads/ or -e cpu/mem-stores/. See
-+	special event -e cpu/mem-loads/p or -e cpu/mem-stores/p. See
- 	'perf mem' for simpler access.
- 
- --percent-limit::
--- 
-2.14.3
+After doing an ugly hack to work around this, I found:
+
+2) The DSO path passed to libdw does not account for --symfs option. So libdw
+     cannot find the debug information, ever.
+
+I think I can tackle fixing (2).
+
+It seems (1) is more of an architectural issue. If I understand correctly, perf can only
+support one architecture, which is selected with conditional compilation based on
+the architecture of the machine on which perf is built. This would have to change
+to be able to dynamically select the architecture based on ELF content, same as libdw
+does.
+
+MV
