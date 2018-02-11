@@ -1,51 +1,40 @@
 From: Martin Vuille <jpmv27@aim.com>
-Subject: [RFC PATCH 1/1] perf annotate: Don't prepend symfs path to vmlinux path
-Date: Sun, 11 Feb 2018 15:32:10 -0500
-Message-ID: <20180211203210.12738-2-jpmv27@aim.com>
-References: <20180211203210.12738-1-jpmv27@aim.com>
+Subject: [PATCH] perf unwind: Report error from dwfl_attach_state
+Date: Sun, 11 Feb 2018 15:58:22 -0500
+Message-ID: <20180211205822.17080-1-jpmv27@aim.com>
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from omr-m016e.mx.aol.com ([204.29.186.16]:37060 "EHLO
-        omr-m016e.mx.aol.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932080AbeBKUc2 (ORCPT
+Received: from omr-a011e.mx.aol.com ([204.29.186.59]:47365 "EHLO
+        omr-a011e.mx.aol.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753685AbeBKU62 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Feb 2018 15:32:28 -0500
-In-Reply-To: <20180211203210.12738-1-jpmv27@aim.com>
+        Sun, 11 Feb 2018 15:58:28 -0500
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
 To: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 
-When selecting the filename to pass to objdump for disassembly, if there is
-no entry for vmlinux in the build-id cache then the fallback code prepends
-symfs path to vmlinux path. If the vmlinux option was specified, this is
-unnecessary and, as a result, vmlinux is not found.
+In verbose level 2, errors returned by libdw are reported in most cases,
+but not when calling dwfl_attach_state.
 
-Don't prepend symfs path if DSO is [kernel.kallsyms]
-
-Signed-off-by: Martin Vuille <jpmv27@aim.com>
+Since elfutils v 0.160 (2014), dwfl_attach_state sets the error code to
+report failure cause. On failure, log the reported error.
 ---
- tools/perf/util/annotate.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/util/unwind-libdw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 425b7f0760ec..0b78cc4fb155 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1412,7 +1412,14 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 		 * cache, or is just a kallsyms file, well, lets hope that this
- 		 * DSO is the same as when 'perf record' ran.
- 		 */
--		__symbol__join_symfs(filename, filename_size, dso->long_name);
-+		if (!strstr(dso->short_name, DSO__NAME_KALLSYMS))
-+		{
-+			__symbol__join_symfs(filename, filename_size, dso->long_name);
-+		}
-+		else
-+		{
-+			scnprintf(filename, filename_size, "%s", dso->long_name);
-+		}
- 	}
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 1e9c974faf67..967323c958fd 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -236,7 +236,8 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 	if (err)
+ 		goto out;
  
- 	free(build_id_path);
+-	if (!dwfl_attach_state(ui->dwfl, EM_NONE, thread->tid, &callbacks, ui))
++	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread->tid, &callbacks, ui);
++	if (err)
+ 		goto out;
+ 
+ 	err = dwfl_getthread_frames(ui->dwfl, thread->tid, frame_callback, ui);
 -- 
 2.13.6
