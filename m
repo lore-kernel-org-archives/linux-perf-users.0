@@ -1,120 +1,103 @@
-From: Lin Xiulei <linxiulei@gmail.com>
-Subject: Re: [PATCH RESEND v4] perf/core: Fix installing cgroup event into cpu
-Date: Sat, 10 Feb 2018 20:28:00 +0800
-Message-ID: <CALPjY3mtVfWOqGRZ6gnrJ76wQmgtHfH2TXfKMDFfAQqwDLU0LA@mail.gmail.com>
-References: <20180208033344.71933-1-linxiulei@gmail.com> <20180209101128.GF25181@hirez.programming.kicks-ass.net>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH] tracing/fgraph: Missed irq return mark for leaf entry
+Date: Sun, 11 Feb 2018 18:51:36 +0800
+Message-ID: <20180211105135.6imp6wpawftfqd3f@intel.com>
+References: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mail-ua0-f193.google.com ([209.85.217.193]:39793 "EHLO
-        mail-ua0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751275AbeBJM2C (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:28766 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752922AbeBKLAS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 10 Feb 2018 07:28:02 -0500
-In-Reply-To: <20180209101128.GF25181@hirez.programming.kicks-ass.net>
+        Sun, 11 Feb 2018 06:00:18 -0500
+Content-Disposition: inline
+In-Reply-To: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, tglx@linutronix.de, Stephane Eranian <eranian@gmail.com>, torvalds@linux-foundation.org, Brendan Gregg <brendan.d.gregg@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yang_oliver@hotmail.com, jinli.zjl@alibaba-inc.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+To: changbin.du@intel.com
+Cc: rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 
-2018-02-09 18:11 GMT+08:00 Peter Zijlstra <peterz@infradead.org>:
-> On Thu, Feb 08, 2018 at 11:33:44AM +0800, linxiulei@gmail.com wrote:
->> From: "leilei.lin" <leilei.lin@alibaba-inc.com>
->>
->> Do not install cgroup event into the CPU context and schedule it
->> if the cgroup is not running on this CPU
->>
->> While there is no task of cgroup running specified CPU, current
->> kernel still install cgroup event into CPU context that causes
->> another cgroup event can't be installed into this CPU.
->>
->> This patch prevent scheduling events at __perf_install_in_context()
->> and installing events at list_update_cgroup_event() if cgroup isn't
->> running on specified CPU.
->>
->> Signed-off-by: leilei.lin <leilei.lin@alibaba-inc.com>
->> ---
->>  v2: Set cpuctx->cgrp only if the same cgroup is running on this
->>    CPU otherwise following events couldn't be activated immediately
->>  v3: Enhance the comments and commit message
->>  v4: Adjust to config
->>
->>  kernel/events/core.c | 50 +++++++++++++++++++++++++++++++++++++-------------
->>  1 file changed, 37 insertions(+), 13 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 4df5b69..fd28d61 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -933,31 +933,41 @@ list_update_cgroup_event(struct perf_event *event,
->>  {
->>       struct perf_cpu_context *cpuctx;
->>       struct list_head *cpuctx_entry;
->> +     struct perf_cgroup *cgrp;
->>
->>       if (!is_cgroup_event(event))
->>               return;
->>
->>       /*
->>        * Because cgroup events are always per-cpu events,
->>        * this will always be called from the right CPU.
->>        */
->>       cpuctx = __get_cpu_context(ctx);
->> +     cgrp = perf_cgroup_from_task(current, ctx);
->>
->> +     /*
->> +      * if only the cgroup is running on this cpu,
->> +      * we put/remove this cgroup into cpu context.
->> +      * Or it would case mismatch in following cgroup
->> +      * events at event_filter_match()
->> +      */
->> +     if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup)) {
->> +             if (add)
->>                       cpuctx->cgrp = cgrp;
->> +             else
->> +                     cpuctx->cgrp = NULL;
->>       }
->
-> I am still not convinced this is correct.
->
-> Suppose we have
->
->    R
->   / \
->  A   B
->     / \
->    C
->
-> And our current task is of B, and B has an event.
->
-> We then install an event in C, if we then destroy our event in C, it
-> would clear cpuctx->cgrp, which is wrong, since there is still an event
-> in B.
->
-> Simpler still, if B were to have 2 events, and we'd remove one, that
-> would still clear cpuctx->cgrp, even though there is an event left.
->
-> This is the exact issue I pointed out last time, and I still don't see
-> how it would now be correct.
->
-> Northing explains why its ok to have NULL cpuctx->cgrp when there are in
-> fact still cgroup events on the CPU.
+Hi Rostedt,
+What abount this fix? Thanks!
 
-I got your point now, sorry for misunderstanding it last time. I wanna
-confirm it
-that logic in __add__ is correct and I'd like to make a slight improvement
+On Wed, Jan 31, 2018 at 11:48:49PM +0800, changbin.du@intel.com wrote:
+> From: Changbin Du <changbin.du@intel.com>
+> 
+> The fgraph forget to print irq return mark for leaf entry. Then we can see
+> unbalanced irq mark in the trace. This patch fix this.
+> 
+> Before:
+>  1)               |  SyS_write() {
+>  1)               |    __fdget_pos() {
+>  1)   0.061 us    |      __fget_light();
+>  1)   0.289 us    |    }
+>  1)               |    vfs_write() {
+>  1)   0.049 us    |      rw_verify_area();
+>  1) + 15.424 us   |      __vfs_write();
+>  1)   ==========> |
+>  1)   6.003 us    |      smp_apic_timer_interrupt();
+>  1)   0.055 us    |      __fsnotify_parent();
+>  1)   0.073 us    |      fsnotify();
+>  1) + 23.665 us   |    }
+>  1) + 24.501 us   |  }
+> 
+> After:
+>  0)               |  SyS_write() {
+>  0)               |    __fdget_pos() {
+>  0)   0.052 us    |      __fget_light();
+>  0)   0.328 us    |    }
+>  0)               |    vfs_write() {
+>  0)   0.057 us    |      rw_verify_area();
+>  0)               |      __vfs_write() {
+>  0)   ==========> |
+>  0)   8.548 us    |      smp_apic_timer_interrupt();
+>  0)   <========== |
+>  0) + 36.507 us   |      } /* __vfs_write */
+>  0)   0.049 us    |      __fsnotify_parent();
+>  0)   0.066 us    |      fsnotify();
+>  0) + 50.064 us   |    }
+>  0) + 50.952 us   |  }
+> 
+> Signed-off-by: Changbin Du <changbin.du@intel.com>
+> ---
+>  kernel/trace/trace_functions_graph.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+> index 23c0b0c..169b3c4 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
+> @@ -831,6 +831,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+>  	struct ftrace_graph_ret *graph_ret;
+>  	struct ftrace_graph_ent *call;
+>  	unsigned long long duration;
+> +	int cpu = iter->cpu;
+>  	int i;
+>  
+>  	graph_ret = &ret_entry->ret;
+> @@ -839,7 +840,6 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+>  
+>  	if (data) {
+>  		struct fgraph_cpu_data *cpu_data;
+> -		int cpu = iter->cpu;
+>  
+>  		cpu_data = per_cpu_ptr(data->cpu_data, cpu);
+>  
+> @@ -869,6 +869,9 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+>  
+>  	trace_seq_printf(s, "%ps();\n", (void *)call->func);
+>  
+> +	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
+> +			cpu, iter->ent->pid, flags);
+> +
+>  	return trace_handle_return(s);
+>  }
+>  
+> -- 
+> 2.7.4
+> 
 
-```
-/* We only have to care about the first time of initiating cpuctx->cgrp,
- * which is when cpuctx->cgrp == NULL, otherwise cpuctx->cgrp was set
- * in perf_cgroup_switch() correctly.
- */
-if (add && !cpuctx->cgrp &&
-     cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
-    cpuctx->cgrp = cgrp;
-```
-
-And logic in __del__ should be rolled back to previous code that once
-ctx->nr_cgroups == 0, set cpuctx->cgrp to NULL.
-
-thanks
+-- 
+Thanks,
+Changbin Du
