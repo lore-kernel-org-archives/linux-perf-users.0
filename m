@@ -1,103 +1,33 @@
-From: "Du, Changbin" <changbin.du@intel.com>
-Subject: Re: [PATCH] tracing/fgraph: Missed irq return mark for leaf entry
-Date: Sun, 11 Feb 2018 18:51:36 +0800
-Message-ID: <20180211105135.6imp6wpawftfqd3f@intel.com>
-References: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:28766 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752922AbeBKLAS (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Feb 2018 06:00:18 -0500
-Content-Disposition: inline
-In-Reply-To: <1517413729-20411-1-git-send-email-changbin.du@intel.com>
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: changbin.du@intel.com
-Cc: rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+From: Martin Vuille <jpmv27@aim.com>
+Subject: [PATCH] perf annotate: Don't prepend symfs path to build_id_filename
+Date: Sun, 11 Feb 2018 14:19:37 -0500
+Message-ID: <20180211191937.9703-1-jpmv27@aim.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: linux-perf-users.vger.kernel.org
 
-Hi Rostedt,
-What abount this fix? Thanks!
+build_id_filename already contains symfs path if applicable, so
+don't prepend it a second time.
 
-On Wed, Jan 31, 2018 at 11:48:49PM +0800, changbin.du@intel.com wrote:
-> From: Changbin Du <changbin.du@intel.com>
-> 
-> The fgraph forget to print irq return mark for leaf entry. Then we can see
-> unbalanced irq mark in the trace. This patch fix this.
-> 
-> Before:
->  1)               |  SyS_write() {
->  1)               |    __fdget_pos() {
->  1)   0.061 us    |      __fget_light();
->  1)   0.289 us    |    }
->  1)               |    vfs_write() {
->  1)   0.049 us    |      rw_verify_area();
->  1) + 15.424 us   |      __vfs_write();
->  1)   ==========> |
->  1)   6.003 us    |      smp_apic_timer_interrupt();
->  1)   0.055 us    |      __fsnotify_parent();
->  1)   0.073 us    |      fsnotify();
->  1) + 23.665 us   |    }
->  1) + 24.501 us   |  }
-> 
-> After:
->  0)               |  SyS_write() {
->  0)               |    __fdget_pos() {
->  0)   0.052 us    |      __fget_light();
->  0)   0.328 us    |    }
->  0)               |    vfs_write() {
->  0)   0.057 us    |      rw_verify_area();
->  0)               |      __vfs_write() {
->  0)   ==========> |
->  0)   8.548 us    |      smp_apic_timer_interrupt();
->  0)   <========== |
->  0) + 36.507 us   |      } /* __vfs_write */
->  0)   0.049 us    |      __fsnotify_parent();
->  0)   0.066 us    |      fsnotify();
->  0) + 50.064 us   |    }
->  0) + 50.952 us   |  }
-> 
-> Signed-off-by: Changbin Du <changbin.du@intel.com>
-> ---
->  kernel/trace/trace_functions_graph.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> index 23c0b0c..169b3c4 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -831,6 +831,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
->  	struct ftrace_graph_ret *graph_ret;
->  	struct ftrace_graph_ent *call;
->  	unsigned long long duration;
-> +	int cpu = iter->cpu;
->  	int i;
->  
->  	graph_ret = &ret_entry->ret;
-> @@ -839,7 +840,6 @@ print_graph_entry_leaf(struct trace_iterator *iter,
->  
->  	if (data) {
->  		struct fgraph_cpu_data *cpu_data;
-> -		int cpu = iter->cpu;
->  
->  		cpu_data = per_cpu_ptr(data->cpu_data, cpu);
->  
-> @@ -869,6 +869,9 @@ print_graph_entry_leaf(struct trace_iterator *iter,
->  
->  	trace_seq_printf(s, "%ps();\n", (void *)call->func);
->  
-> +	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
-> +			cpu, iter->ent->pid, flags);
-> +
->  	return trace_handle_return(s);
->  }
->  
-> -- 
-> 2.7.4
-> 
+Signed-off-by: Martin Vuille <jpmv27@aim.com>
+---
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 28b233c3dcbe..425b7f0760ec 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1381,7 +1381,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 
+ 	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+ 	if (build_id_filename) {
+-		__symbol__join_symfs(filename, filename_size, build_id_filename);
++		scnprintf(filename, filename_size, "%s", build_id_filename);
+ 		free(build_id_filename);
+ 	} else {
+ 		if (dso->has_build_id)
 -- 
-Thanks,
-Changbin Du
+2.13.6
