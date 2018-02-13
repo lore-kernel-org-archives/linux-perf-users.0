@@ -1,7 +1,7 @@
 From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 4/4] perf test: Fix test case 23 for s390 z/VM or KVM guests
-Date: Tue, 13 Feb 2018 16:14:19 +0100
-Message-ID: <20180213151419.80737-4-tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 2/4] perf annotate: Scan cpuid for s390 and save machine type
+Date: Tue, 13 Feb 2018 16:14:17 +0100
+Message-ID: <20180213151419.80737-2-tmricht@linux.vnet.ibm.com>
 References: <20180213151419.80737-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180213151419.80737-1-tmricht@linux.vnet.ibm.com>
@@ -10,72 +10,57 @@ To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On s390 perf can be executed on a LPAR with support
-for hardware events (i. e. cycles) or on a z/VM or KVM guest
-where no hardware events are supported. In this
-environment use software event named cpu-clock
-for this test case.
-
-Use the cpuid infrastructure functions to determine
-the cpuid on s390 which contains an indication of the
-cpu counter facility availability.
+Scan the cpuid string and extract the type number for later
+use.
 
 Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 ---
- tools/perf/tests/code-reading.c | 33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+ tools/perf/arch/s390/annotate/instructions.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 3bf7b145b826..c7115d369511 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -482,6 +482,34 @@ static void fs_something(void)
- 	}
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index 8c72b44444cb..01df9d8303e1 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -23,12 +23,37 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+ 	return ops;
  }
  
-+static const char *do_determine_event(bool excl_kernel)
++static int s390__cpuid_parse(struct arch *arch, char *cpuid)
 +{
-+	const char *event = excl_kernel ? "cycles:u" : "cycles";
-+
-+#ifdef __s390x__
-+	char cpuid[128], model[16], model_c[16], cpum_cf_v[16];
 +	unsigned int family;
-+	int ret, cpum_cf_a;
++	char model[16], model_c[16], cpumf_v[16], cpumf_a[16];
++	int ret;
 +
-+	if (get_cpuid(cpuid, sizeof(cpuid)))
-+		goto out_clocks;
-+	ret = sscanf(cpuid, "%*[^,],%u,%[^,],%[^,],%[^,],%x", &family, model_c,
-+		     model, cpum_cf_v, &cpum_cf_a);
-+	if (ret != 5)		 /* Not available */
-+		goto out_clocks;
-+	if (excl_kernel && (cpum_cf_a & 4))
-+		return event;
-+	if (!excl_kernel && (cpum_cf_a & 2))
-+		return event;
++	/*
++	 * cpuid string format:
++	 * "IBM,family,model-capacity,model[,cpum_cf-version,cpum_cf-authorization]"
++	 */
++	ret = sscanf(cpuid, "%*[^,],%u,%[^,],%[^,],%[^,],%s", &family, model_c,
++		     model, cpumf_v, cpumf_a);
++	if (ret >= 2) {
++		arch->family = family;
++		arch->model = 0;
++		return 0;
++	}
 +
-+	/* Fall through: missing authorization */
-+out_clocks:
-+	event = excl_kernel ? "cpu-clock:u" : "cpu-clock";
-+
-+#endif
-+	return event;
++	return -1;
 +}
 +
- static void do_something(void)
+ static int s390__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
  {
- 	fs_something();
-@@ -592,10 +620,7 @@ static int do_test_code_reading(bool try_kcore)
++	int err = 0;
++
+ 	if (!arch->initialized) {
+ 		arch->initialized = true;
+ 		arch->associate_instruction_ops = s390__associate_ins_ops;
++		if (cpuid)
++			err = s390__cpuid_parse(arch, cpuid);
+ 	}
  
- 		perf_evlist__set_maps(evlist, cpus, threads);
- 
--		if (excl_kernel)
--			str = "cycles:u";
--		else
--			str = "cycles";
-+		str = do_determine_event(excl_kernel);
- 		pr_debug("Parsing event '%s'\n", str);
- 		ret = parse_events(evlist, str, NULL);
- 		if (ret < 0) {
+-	return 0;
++	return err;
+ }
 -- 
 2.14.3
