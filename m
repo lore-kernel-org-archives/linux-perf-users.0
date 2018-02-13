@@ -1,46 +1,202 @@
-From: "Vuille, Martin (Martin)" <vmartin@avaya.com>
-Subject: RE: perf sched record with -p option
-Date: Tue, 13 Feb 2018 13:11:33 +0000
-Message-ID: <30C2D590D16A5C46ADFE6521910377989263E81C@AZ-US1EXMB02.global.avaya.com>
-References: <30C2D590D16A5C46ADFE65219103779892616691@AZ-US1EXMB02.global.avaya.com>
- <20180208050708.GC24686@sejong>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from co300216-co-outbound.net.avaya.com ([198.152.13.100]:12087 "EHLO
-        co300216-co-outbound.net.avaya.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S935116AbeBMNLr (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Feb 2018 08:11:47 -0500
-In-Reply-To: <20180208050708.GC24686@sejong>
-Content-Language: en-US
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "kernel-team@lge.com" <kernel-team@lge.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 1/4] perf record: Provide detailed information on s390 CPU
+Date: Tue, 13 Feb 2018 16:14:16 +0100
+Message-ID: <20180213151419.80737-1-tmricht@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-PiBPbiBTdW4sIEZlYiAwNCwgMjAxOCBhdCAwNTozMTowN1BNICswMDAwLCBWdWlsbGUsIE1hcnRp
-biAoTWFydGluKSB3cm90ZToNCj4gPiBUaGUgZGF0YSBmaWxlcyBjb2xsZWN0ZWQgYnkgJ3BlcmYg
-c2NoZWQgcmVjb3JkJyBhcmUgdmVyeSBsYXJnZSBhbmQgb3VyDQo+ID4gZW1iZWRkZWQgc3lzdGVt
-IHRhcmdldCBoYXMgbGltaXRlZCBzdG9yYWdlLCBzbyBJIHRob3VnaHQgb2YgdXNpbmcgdGhlDQo+
-ID4gJy1wIFBJRCcgb3B0aW9uIG9uICdwZXJmIHNjaGVkIHJlY29yZCcgdG8gZm9jdXMgb25seSBv
-biBhIHNpbmdsZSBQSUQNCj4gPiBhbmQgaXRzIHRocmVhZHMvY2hpbGRyZW4gYW5kIHRodXMgcmVk
-dWNlIHRoZSBhbW91bnQgb2YgZGF0YS4NCj4gPg0KPiA+IEhvd2V2ZXIsIHdoZW4gSSByZXZpZXcg
-dGhlIHJlc3VsdHMgd2l0aCAncGVyZiBzY2hlZCBsYXRlbmN5JywgdGhlDQo+ID4gcmVzdWx0cyBm
-cm9tIGRhdGEgY29sbGVjdGVkIHdpdGggJy1wIFBJRCcgYXJlIHNpZ25pZmljYW50bHkgZGlmZmVy
-ZW50DQo+ID4gKGUuZy4sIHRlbi10aW1lcyBsb25nZXINCj4gPiBsYXRlbmNpZXMpIHRoYXQgdGhv
-c2UgZnJvbSBkYXRhIGNvbGxlY3RlZCB3aXRob3V0IHRoZSAnLXAgUElEJyBvcHRpb24uDQo+ID4g
-V29ya2xvYWRzIGFyZSB0aGUgc2FtZS4NCj4gPg0KPiA+IElzIHRoZXJlIHNvbWUgcmVhc29uIHdo
-eSB1c2luZyAnLXAgUElEJyBvcHRpb24gb24gJ3BlcmYgc2NoZWQgcmVjb3JkJw0KPiA+IHdvdWxk
-bid0IG1ha2Ugc2Vuc2U/DQo+IA0KPiBJIHRoaW5rIGl0J3MgYmVjYXVzZSBwZXJmIG1pc3NlZCBz
-Y2hlZC1pbiBhbmQgd2FrZXVwIGV2ZW50cyBmb3IgdGhlIFBJRCBzaW5jZQ0KPiB0aGV5IGFyZSBm
-cm9tIGRpZmZlcmVudCB0YXNrcy4NCg0KVGhhbmtzLg0KDQpJIGFtIGNoZWNraW5nIHRoZSBjb2xs
-ZWN0ZWQgZXZlbnRzIGFuZCBjb21wYXJpbmcgd2l0aCBhbmQgd2l0aG91dCAtcCBvcHRpb24uDQoN
-CkkgYW0gY29sbGVjdGluZyBkYXRhIGZvciA2MCBzZWNvbmRzIChwYXNzaW5nIGNvbW1hbmQgJ3Ns
-ZWVwIDYwJyB0byBwZXJmLikNCg0KSSBoYXZlIGZvdW5kIHNvbWV0aGluZyB2ZXJ5LCB2ZXJ5IG9k
-ZC4gV2hlbiBJIGluY2x1ZGUgdGhlIC1wIG9wdGlvbiwgZm9yIHRoZQ0KZmlyc3QgNTAgb3Igc28g
-c2Vjb25kcyBvZiB0aGUgY2FwdHVyZSwgdGhlcmUgYXJlIG9ubHkgc2NoZWRfd2FrZXVwIGV2ZW50
-cw0KcmVjb3JkZWQuIEFmdGVyIHRoYXQsIEkgc3RhcnQgc2VlaW5nIGFsbCB0aGUgZXZlbnRzLCBz
-Y2hlZF93YWtldXAsIHNjaGVkX3N3aXRjaCwNCmV0Yy4NCg0KQW55IHRob3VnaHRzPw0KDQpSZWdh
-cmRzLA0KTVYNCg==
+When perf record ... is setup to record data, the s390
+cpu information was a fixed string "IBM/S390".
+
+Replace this string with one containing more information
+about the machine. The information included in the cpuid is
+a comma separated list:
+   manufacturer,type,model-capacity,model[,version,authorization]
+with
+
+- manufacturer: up to 16 byte name of the manufacturer (IBM).
+- type: a four digit number refering to the machine
+  generation.
+- model-capacitiy: up to 16 characters describing number
+  of cpus etc.
+- model: up to 16 characters describing model.
+- version: the CPU-MF counter facility version number,
+  available on LPARs only, omitted on z/VM guests.
+- authorization: the CPU-MF counter facility authorization level,
+  available on LPARs only, omitted on z/VM guests.
+
+Before:
+[root@s8360047 perf]# ./perf record -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.001 MB perf.data (4 samples) ]
+[root@s8360047 perf]# ./perf report --header | fgrep cpuid
+ # cpuid : IBM/S390
+[root@s8360047 perf]#
+
+After:
+[root@s35lp76 perf]# ./perf report --header|fgrep cpuid
+ # cpuid : IBM,3906,704,M03,3.5,002f
+[root@s35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/arch/s390/util/header.c | 126 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 121 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
+index 9fa6c3e5782c..3d29ba47edce 100644
+--- a/tools/perf/arch/s390/util/header.c
++++ b/tools/perf/arch/s390/util/header.c
+@@ -1,8 +1,9 @@
+ /*
+  * Implementation of get_cpuid().
+  *
+- * Copyright 2014 IBM Corp.
++ * Copyright IBM Corp. 2014, 2018
+  * Author(s): Alexander Yarygin <yarygin@linux.vnet.ibm.com>
++ *	      Thomas Richter <tmricht@linux.vnet.ibm.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License (version 2 only)
+@@ -13,16 +14,131 @@
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <ctype.h>
+ 
+ #include "../../util/header.h"
++#include "../../util/util.h"
++
++#define SYSINFO_MANU	"Manufacturer:"
++#define SYSINFO_TYPE	"Type:"
++#define SYSINFO_MODEL	"Model:"
++#define SRVLVL_CPUMF	"CPU-MF:"
++#define SRVLVL_VERSION	"version="
++#define SRVLVL_AUTHORIZATION	"authorization="
++#define SYSINFO		"/proc/sysinfo"
++#define SRVLVL		"/proc/service_levels"
+ 
+ int get_cpuid(char *buffer, size_t sz)
+ {
+-	const char *cpuid = "IBM/S390";
++	char *cp, *line = NULL, *line2;
++	char type[8], model[33], version[8], manufacturer[32], authorization[8];
++	int read;
++	unsigned long line_sz;
++	size_t nbytes;
++	FILE *sysinfo;
++
++	/*
++	 * Scan /proc/sysinfo line by line and read out values for
++	 * Manufacturer:, Type: and Model:, for example:
++	 * Manufacturer:    IBM
++	 * Type:            2964
++	 * Model:           702              N96
++	 * The first word is the Model Capacity and the second word is
++	 * Model (can be omitted). Both words have a maximum size of 16
++	 * bytes.
++	 */
++	memset(manufacturer, 0, sizeof(manufacturer));
++	memset(type, 0, sizeof(type));
++	memset(model, 0, sizeof(model));
++	memset(version, 0, sizeof(version));
++	memset(authorization, 0, sizeof(authorization));
++
++	sysinfo = fopen(SYSINFO, "r");
++	if (sysinfo == NULL)
++		return -1;
++
++	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
++		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
++			line2 = line + strlen(SYSINFO_MANU);
++
++			while ((cp = strtok_r(line2, "\n ", &line2)))
++				strncat(manufacturer, cp, sizeof(manufacturer));
++		}
++
++		if (!strncmp(line, SYSINFO_TYPE, strlen(SYSINFO_TYPE))) {
++			line2 = line + strlen(SYSINFO_TYPE);
++
++			while ((cp = strtok_r(line2, "\n ", &line2)))
++				strncat(type, cp, sizeof(type));
++		}
++
++		if (!strncmp(line, SYSINFO_MODEL, strlen(SYSINFO_MODEL))) {
++			line2 = line + strlen(SYSINFO_MODEL);
++
++			while ((cp = strtok_r(line2, "\n ", &line2))) {
++				if (model[0])
++					strcat(model, ",");
++				if (strlen(model) + strlen(cp) < sizeof(model))
++					strncat(model, cp, strlen(cp));
++			}
++			break;
++		}
++	}
++	fclose(sysinfo);
+ 
+-	if (strlen(cpuid) + 1 > sz)
++	/* Missing manufacturer, type or model information should not happen */
++	if (!manufacturer[0] || !type[0] || !model[0])
+ 		return -1;
+ 
+-	strcpy(buffer, cpuid);
+-	return 0;
++	/*
++	 * Scan /proc/service_levels and return the CPU-MF counter facility
++	 * version number and authorization level.
++	 * Optional, does not exist on z/VM guests.
++	 */
++	sysinfo = fopen(SRVLVL, "r");
++	if (sysinfo == NULL)
++		goto skip_sysinfo;
++	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
++		if (strncmp(line, SRVLVL_CPUMF, strlen(SRVLVL_CPUMF)))
++			continue;
++
++		line2 = line + strlen(SRVLVL_CPUMF);
++		while ((cp = strtok_r(line2, "\n ", &line2))) {
++			if (!strncmp(cp, SRVLVL_VERSION,
++				     strlen(SRVLVL_VERSION))) {
++				char *sep = strchr(cp, '=');
++
++				strncat(version, sep + 1, sizeof(version));
++			}
++			if (!strncmp(cp, SRVLVL_AUTHORIZATION,
++				     strlen(SRVLVL_AUTHORIZATION))) {
++				char *sep = strchr(cp, '=');
++
++				strncat(authorization, sep + 1,
++					sizeof(authorization));
++			}
++		}
++	}
++	fclose(sysinfo);
++
++skip_sysinfo:
++	free(line);
++
++	if (version[0] && authorization[0] )
++		nbytes = snprintf(buffer, sz, "%s,%s,%s,%s,%s",
++				  manufacturer, type, model, version,
++				  authorization);
++	else
++		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
++				  model);
++	return (nbytes >= sz) ? -1 : 0;
++}
++
++char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
++{
++	char *buf = malloc(128);
++
++	if (buf && get_cpuid(buf, 128) < 0)
++		zfree(&buf);
++	return buf;
+ }
+-- 
+2.14.3
