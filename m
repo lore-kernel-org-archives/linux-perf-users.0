@@ -1,158 +1,70 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH 3/4] perf cpuid: Introduce a platform specfic cpuid compare function
-Date: Tue, 13 Feb 2018 16:14:18 +0100
-Message-ID: <20180213151419.80737-3-tmricht@linux.vnet.ibm.com>
-References: <20180213151419.80737-1-tmricht@linux.vnet.ibm.com>
+From: William Cohen <wcohen@redhat.com>
+Subject: Monitoring NUMA Machine Memory Hierarchy Performance
+Date: Tue, 13 Feb 2018 11:11:16 -0500
+Message-ID: <87851944-4680-6177-120a-156794d5b76c@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48566 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S965228AbeBMPOj (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Feb 2018 10:14:39 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w1DFAYj6112605
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 10:14:39 -0500
-Received: from e06smtp15.uk.ibm.com (e06smtp15.uk.ibm.com [195.75.94.111])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2g41skj46v-1
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 10:14:38 -0500
-Received: from localhost
-        by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
-        Tue, 13 Feb 2018 15:14:36 -0000
-In-Reply-To: <20180213151419.80737-1-tmricht@linux.vnet.ibm.com>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73]:59858 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S934544AbeBMQLQ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 13 Feb 2018 11:11:16 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B86040FB645
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 16:11:16 +0000 (UTC)
+Received: from [10.13.129.233] (dhcp129-233.rdu.redhat.com [10.13.129.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 32D3894598
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 16:11:16 +0000 (UTC)
+Content-Language: en-MW
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 
-The function get_cpuid_str() is called by perf_pmu__getcpuid()
-and on s390 returns a complete description of the CPU and its
-capabilities, which is a comma separated list.
+The available events listed for the "Hardware cache event" category
+produced by "perf list" on some machines (for example CPUID
+AuthenticAMD-16-2) only list *-loads and *-load-misses there is no
+*-stores or *-store-misses.  Looking through the event code in the
+kernel to set up these events it appears these *-load* events without
+similar *-store* events are really covering both read and write
+accesses for x86 processors. Is that the case? Is there some place
+that this sould be clarified in the documentation?
 
-To map the CPU type with the value defined in the
-pmu-events/arch/s390/mapfile.csv, introduce an architecture
-specific cpuid compare function named strcmp_cpuid_str()
+The AMD and Intel implementation of the node-* "hardware cache event"
+events are very different.  Is the following correct about how these
+events work on AMD and Intel?
 
-The currently used regex algorithm is defined as the
-weak default and will be used if no platform specific
-one is defined. This matches the current behavior.
+Intel implementation uses a single OFFCORE_RESPONSE register to select
+the operation to be monitored, if more than one node-load,
+node-load-misses node-stores, and node-store-misses being used
+simultaneously they are multiplexed.  The resulting values measured
+need to be scaled by their duty cycle.
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
----
- tools/perf/arch/s390/util/header.c | 18 +++++++++++++++
- tools/perf/util/header.h           |  1 +
- tools/perf/util/pmu.c              | 47 +++++++++++++++++++++++---------------
- 3 files changed, 48 insertions(+), 18 deletions(-)
+AMD implementation uses a normal on-CPU performance monitoring events
+and both node-load-misses and node-loads can be collected at the same
+time.
 
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 3d29ba47edce..90360272ced6 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -142,3 +142,21 @@ char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 		zfree(&buf);
- 	return buf;
- }
-+
-+/*
-+ * Compare the cpuid string returned by get_cpuid() function
-+ * with the name generated by the jevents file read from
-+ * pmu-events/arch/s390/mapfile.csv.
-+ *
-+ * Parameter mapcpuid is the cpuid as stored in the
-+ * pmu-events/arch/s390/mapfile.csv. This is just the type number.
-+ * Parameter cpuid is the cpuid returned by function get_cpuid().
-+ */
-+int strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
-+{
-+	char *cp = strchr(cpuid, ',');
-+
-+	if (cp == NULL)
-+		return -1;
-+	return strncmp(cp + 1, mapcpuid, strlen(mapcpuid));
-+}
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index f28aaaa3a440..942bdec6d70d 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -174,4 +174,5 @@ int write_padded(struct feat_fd *fd, const void *bf,
- int get_cpuid(char *buffer, size_t sz);
- 
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
-+int strcmp_cpuid_str(const char *s1, const char *s2);
- #endif /* __PERF_HEADER_H */
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 57e38fdf0b34..1111d5bf15ca 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -576,6 +576,34 @@ char * __weak get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
- }
- 
-+/* Return zero when the cpuid from the mapfile.csv matches the
-+ * cpuid string generated on this platform.
-+ * Otherwise return non-zero.
-+ */
-+int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
-+{
-+	regex_t re;
-+	regmatch_t pmatch[1];
-+	int match;
-+
-+	if (regcomp(&re, mapcpuid, REG_EXTENDED) != 0) {
-+		/* Warn unable to generate match particular string. */
-+		pr_info("Invalid regular expression %s\n", mapcpuid);
-+		return 1;
-+	}
-+
-+	match = !regexec(&re, cpuid, 1, pmatch, 0);
-+	regfree(&re);
-+	if (match) {
-+		size_t match_len = (pmatch[0].rm_eo - pmatch[0].rm_so);
-+
-+		/* Verify the entire string matched. */
-+		if (match_len == strlen(cpuid))
-+			return 0;
-+	}
-+	return 1;
-+}
-+
- static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
- {
- 	char *cpuid;
-@@ -610,31 +638,14 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
- 
- 	i = 0;
- 	for (;;) {
--		regex_t re;
--		regmatch_t pmatch[1];
--		int match;
--
- 		map = &pmu_events_map[i++];
- 		if (!map->table) {
- 			map = NULL;
- 			break;
- 		}
- 
--		if (regcomp(&re, map->cpuid, REG_EXTENDED) != 0) {
--			/* Warn unable to generate match particular string. */
--			pr_info("Invalid regular expression %s\n", map->cpuid);
-+		if (!strcmp_cpuid_str(map->cpuid, cpuid))
- 			break;
--		}
--
--		match = !regexec(&re, cpuid, 1, pmatch, 0);
--		regfree(&re);
--		if (match) {
--			size_t match_len = (pmatch[0].rm_eo - pmatch[0].rm_so);
--
--			/* Verify the entire string matched. */
--			if (match_len == strlen(cpuid))
--				break;
--		}
- 	}
- 	free(cpuid);
- 	return map;
--- 
-2.14.3
+
+Is the following a reasonable method to obtain local vs remote memory?
+
+# perf stat -a --scale --per-socket -e node-loads-misses,node-loads
+
+^C
+ Performance counter stats for 'system wide':
+
+S0        4          6,525,428      node-loads-misses                                             (30.04%)
+S0        4         19,866,811      node-loads                                                    (15.99%)
+S1        4          7,942,866      node-loads-misses                                             (27.35%)
+S1        4         19,680,169      node-loads                                                    (16.92%)
+
+      14.657431853 seconds time elapsed
+
+
+The "perf-stat" page mentioned producing additional statistics that
+include memory hierarchy information with "-d", "-d -d", and "-d -d
+-d".  Would it make sense to have some option includes the node-*
+metric information for "perf stat"?
+
+-Will
