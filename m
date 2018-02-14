@@ -1,70 +1,98 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: Monitoring NUMA Machine Memory Hierarchy Performance
-Date: Tue, 13 Feb 2018 11:11:16 -0500
-Message-ID: <87851944-4680-6177-120a-156794d5b76c@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73]:59858 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S934544AbeBMQLQ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Feb 2018 11:11:16 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B86040FB645
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 16:11:16 +0000 (UTC)
-Received: from [10.13.129.233] (dhcp129-233.rdu.redhat.com [10.13.129.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32D3894598
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2018 16:11:16 +0000 (UTC)
-Content-Language: en-MW
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+From: changbin.du@intel.com
+Subject: [PATCH v3] perf ftrace: Append an EOL when write tracing files
+Date: Wed, 14 Feb 2018 10:44:24 +0800
+Message-ID: <1518576264-16436-1-git-send-email-changbin.du@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jolsa@redhat.com
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
+List-Id: linux-perf-users.vger.kernel.org
 
-The available events listed for the "Hardware cache event" category
-produced by "perf list" on some machines (for example CPUID
-AuthenticAMD-16-2) only list *-loads and *-load-misses there is no
-*-stores or *-store-misses.  Looking through the event code in the
-kernel to set up these events it appears these *-load* events without
-similar *-store* events are really covering both read and write
-accesses for x86 processors. Is that the case? Is there some place
-that this sould be clarified in the documentation?
+From: Changbin Du <changbin.du@intel.com>
 
-The AMD and Intel implementation of the node-* "hardware cache event"
-events are very different.  Is the following correct about how these
-events work on AMD and Intel?
+Before this change, the '--graph-funcs', '--nograph-funcs' and
+'--trace-funcs' options didn't work as expected when the <func> doesn't
+exist. Because the kernel side hid possible errors.
 
-Intel implementation uses a single OFFCORE_RESPONSE register to select
-the operation to be monitored, if more than one node-load,
-node-load-misses node-stores, and node-store-misses being used
-simultaneously they are multiplexed.  The resulting values measured
-need to be scaled by their duty cycle.
+$ sudo ./perf ftrace -a --graph-depth 1 --graph-funcs abcdefg
+ 0)   0.140 us    |  rcu_all_qs();
+ 3)   0.304 us    |  mutex_unlock();
+ 0)   0.153 us    |  find_vma();
+ 3)   0.088 us    |  __fsnotify_parent();
+ 0)   6.145 us    |  handle_mm_fault();
+ 3)   0.089 us    |  fsnotify();
+ 3)   0.161 us    |  __sb_end_write();
+ 3)   0.710 us    |  SyS_close();
+ 3)   7.848 us    |  exit_to_usermode_loop();
 
-AMD implementation uses a normal on-CPU performance monitoring events
-and both node-load-misses and node-loads can be collected at the same
-time.
+On above example, I specified function filter 'abcdefg' but all functions
+are enabled. The expected error is hidden.
 
+The original fix is to make the kernel support '\0' as end of string:
+https://lkml.org/lkml/2018/1/16/116
 
-Is the following a reasonable method to obtain local vs remote memory?
+But above fix cannot be compatible with old kernels. Then Namhyung Kim
+suggest adding a space after function name.
 
-# perf stat -a --scale --per-socket -e node-loads-misses,node-loads
+This patch will append an '\n' when write tracing file. After this fix,
+the perf will report correct error state. Also let it print an error if
+reset_tracing_files() fails.
 
-^C
- Performance counter stats for 'system wide':
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Changbin Du <changbin.du@intel.com>
 
-S0        4          6,525,428      node-loads-misses                                             (30.04%)
-S0        4         19,866,811      node-loads                                                    (15.99%)
-S1        4          7,942,866      node-loads-misses                                             (27.35%)
-S1        4         19,680,169      node-loads                                                    (16.92%)
+---
+v3: Took Kim's suggestion that add a space after function name.
+v2: Rebase.
+---
+ tools/perf/builtin-ftrace.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-      14.657431853 seconds time elapsed
-
-
-The "perf-stat" page mentioned producing additional statistics that
-include memory hierarchy information with "-d", "-d -d", and "-d -d
--d".  Would it make sense to have some option includes the node-*
-metric information for "perf stat"?
-
--Will
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 25a42ac..9ffd748 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -72,6 +72,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+ 	ssize_t size = strlen(val);
+ 	int flags = O_WRONLY;
+ 	char errbuf[512];
++	char *val_copy;
+ 
+ 	file = get_tracing_file(name);
+ 	if (!file) {
+@@ -91,12 +92,20 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+ 		goto out;
+ 	}
+ 
+-	if (write(fd, val, size) == size)
++	/*
++	 * Copy the original value and append a '\n'. Without this,
++	 * the kernel can hide possible errors.
++	 */
++	val_copy = strdup(val);
++	val_copy[size] = '\n';
++
++	if (write(fd, val_copy, size + 1) == size + 1)
+ 		ret = 0;
+ 	else
+ 		pr_debug("write '%s' to tracing/%s failed: %s\n",
+ 			 val, name, str_error_r(errno, errbuf, sizeof(errbuf)));
+ 
++	free(val_copy);
+ 	close(fd);
+ out:
+ 	put_tracing_file(file);
+@@ -280,8 +289,10 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGPIPE, sig_handler);
+ 
+-	if (reset_tracing_files(ftrace) < 0)
++	if (reset_tracing_files(ftrace) < 0) {
++		pr_err("failed to reset ftrace\n");
+ 		goto out;
++	}
+ 
+ 	/* reset ftrace buffer */
+ 	if (write_tracing_file("trace", "0") < 0)
+-- 
+2.7.4
