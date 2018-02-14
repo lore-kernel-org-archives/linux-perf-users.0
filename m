@@ -1,98 +1,75 @@
-From: changbin.du@intel.com
-Subject: [PATCH v3] perf ftrace: Append an EOL when write tracing files
-Date: Wed, 14 Feb 2018 10:44:24 +0800
-Message-ID: <1518576264-16436-1-git-send-email-changbin.du@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jolsa@redhat.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
-List-Id: linux-perf-users.vger.kernel.org
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf test: Fix test case inet_pton to accept inlines.
+Date: Wed, 14 Feb 2018 08:03:03 +0100
+Message-ID: <20180214070303.55757-1-tmricht@linux.vnet.ibm.com>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1754469AbeBNHD2 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 14 Feb 2018 02:03:28 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id w1E6wwnX069109
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2018 02:03:27 -0500
+Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2g4eshba2x-1
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2018 02:03:27 -0500
+Received: from localhost
+        by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-perf-users@vger.kernel.org> from <tmricht@linux.vnet.ibm.com>;
+        Wed, 14 Feb 2018 07:03:26 -0000
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-From: Changbin Du <changbin.du@intel.com>
+Using Fedora 27 and latest Linux kernel the test case
+trace+probe_libc_inet_pton.sh fails again on s390.
+This time is the inlining of functions which does not match.
+After an update of the glibc (from 2.26-16 to 2.26-24)
+the output is different
 
-Before this change, the '--graph-funcs', '--nograph-funcs' and
-'--trace-funcs' options didn't work as expected when the <func> doesn't
-exist. Because the kernel side hid possible errors.
+The expected output is:
+           __inet_pton (/usr/lib64/libc-2.26.so)
+           gaih_inet (inlined)
+           ....
 
-$ sudo ./perf ftrace -a --graph-depth 1 --graph-funcs abcdefg
- 0)   0.140 us    |  rcu_all_qs();
- 3)   0.304 us    |  mutex_unlock();
- 0)   0.153 us    |  find_vma();
- 3)   0.088 us    |  __fsnotify_parent();
- 0)   6.145 us    |  handle_mm_fault();
- 3)   0.089 us    |  fsnotify();
- 3)   0.161 us    |  __sb_end_write();
- 3)   0.710 us    |  SyS_close();
- 3)   7.848 us    |  exit_to_usermode_loop();
+The actual output is:
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.061/0.061/0.061/0.000 ms
+     0.000 probe_libc:inet_pton:(3ffb2140448))
+           __inet_pton (inlined)
+           gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+           ...
 
-On above example, I specified function filter 'abcdefg' but all functions
-are enabled. The expected error is hidden.
+Fix this by being less strict on 'inlined' verses library
+name and accept both
 
-The original fix is to make the kernel support '\0' as end of string:
-https://lkml.org/lkml/2018/1/16/116
-
-But above fix cannot be compatible with old kernels. Then Namhyung Kim
-suggest adding a space after function name.
-
-This patch will append an '\n' when write tracing file. After this fix,
-the perf will report correct error state. Also let it print an error if
-reset_tracing_files() fails.
-
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Changbin Du <changbin.du@intel.com>
-
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
 ---
-v3: Took Kim's suggestion that add a space after function name.
-v2: Rebase.
----
- tools/perf/builtin-ftrace.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 25a42ac..9ffd748 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -72,6 +72,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
- 	ssize_t size = strlen(val);
- 	int flags = O_WRONLY;
- 	char errbuf[512];
-+	char *val_copy;
- 
- 	file = get_tracing_file(name);
- 	if (!file) {
-@@ -91,12 +92,20 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
- 		goto out;
- 	}
- 
--	if (write(fd, val, size) == size)
-+	/*
-+	 * Copy the original value and append a '\n'. Without this,
-+	 * the kernel can hide possible errors.
-+	 */
-+	val_copy = strdup(val);
-+	val_copy[size] = '\n';
-+
-+	if (write(fd, val_copy, size + 1) == size + 1)
- 		ret = 0;
- 	else
- 		pr_debug("write '%s' to tracing/%s failed: %s\n",
- 			 val, name, str_error_r(errno, errbuf, sizeof(errbuf)));
- 
-+	free(val_copy);
- 	close(fd);
- out:
- 	put_tracing_file(file);
-@@ -280,8 +289,10 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGPIPE, sig_handler);
- 
--	if (reset_tracing_files(ftrace) < 0)
-+	if (reset_tracing_files(ftrace) < 0) {
-+		pr_err("failed to reset ftrace\n");
- 		goto out;
-+	}
- 
- 	/* reset ftrace buffer */
- 	if (write_tracing_file("trace", "0") < 0)
+diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+index c446c894b297..8c4ab0b390c0 100755
+--- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+@@ -21,12 +21,12 @@ trace_libc_inet_pton_backtrace() {
+ 	expected[3]=".*packets transmitted.*"
+ 	expected[4]="rtt min.*"
+ 	expected[5]="[0-9]+\.[0-9]+[[:space:]]+probe_libc:inet_pton:\([[:xdigit:]]+\)"
+-	expected[6]=".*inet_pton[[:space:]]\($libc\)$"
++	expected[6]=".*inet_pton[[:space:]]\($libc|inlined\)$"
+ 	case "$(uname -m)" in
+ 	s390x)
+ 		eventattr='call-graph=dwarf'
+-		expected[7]="gaih_inet[[:space:]]\(inlined\)$"
+-		expected[8]="__GI_getaddrinfo[[:space:]]\(inlined\)$"
++		expected[7]="gaih_inet.*[[:space:]]\($libc|inlined\)$"
++		expected[8]="__GI_getaddrinfo[[:space:]]\($libc|inlined\)$"
+ 		expected[9]="main[[:space:]]\(.*/bin/ping.*\)$"
+ 		expected[10]="__libc_start_main[[:space:]]\($libc\)$"
+ 		expected[11]="_start[[:space:]]\(.*/bin/ping.*\)$"
 -- 
-2.7.4
+2.14.3
