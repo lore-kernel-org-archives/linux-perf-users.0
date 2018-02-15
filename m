@@ -1,137 +1,100 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] tools/headers: Synchronize kernel ABI headers, v4.16-rc1
-Date: Wed, 14 Feb 2018 10:41:55 -0300
-Message-ID: <20180214134155.GA3974@kernel.org>
-References: <20180206165350.2570-1-acme@kernel.org>
- <20180213115953.ofveezu2tlcxjrnh@gmail.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v4 0/2] perf stat: Add interval-count and time support
+Date: Thu, 15 Feb 2018 11:44:42 +0100
+Message-ID: <20180215104442.GA12714@krava>
+References: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
+ <20180129102558.GA14925@krava>
+ <CAHCio2iVBoEXEv3mXzq34FsDZXJT9Oig+SfDwv3vneYfZQ089g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mx3-rdu2.redhat.com ([66.187.233.73]:60882 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1755304AbeBOKos (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 15 Feb 2018 05:44:48 -0500
 Content-Disposition: inline
-In-Reply-To: <20180213115953.ofveezu2tlcxjrnh@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andriy Shevchenko <andriy.shevchenko@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sangwon Hong <qpakzk@gmail.com>, Taeung Song <treeze.taeung@gmail.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, William Cohen <wcohen@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
+In-Reply-To: <CAHCio2iVBoEXEv3mXzq34FsDZXJT9Oig+SfDwv3vneYfZQ089g@mail.gmail.com>
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
+To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Wind Yu <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, Kan.liang@intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 
-Em Tue, Feb 13, 2018 at 12:59:53PM +0100, Ingo Molnar escreveu:
+On Thu, Feb 15, 2018 at 05:33:07PM +0800, 禹舟键 wrote:
+> PING
 > 
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
-> > Hi Ingo,
-> > 
-> > 	Please consider pulling,
-> > 
-> > - Arnaldo
-> > 
-> > Test results at the end of this message, as usual.
-> > 
-> > The following changes since commit 33ea4b24277b06dbc55d7f5772a46f029600255e:
-> > 
-> >   perf/core: Implement the 'perf_uprobe' PMU (2018-02-06 11:29:28 +0100)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180206
-> > 
-> > for you to fetch changes up to 52a37001d51a320c1019269fb3ba473a1363650d:
-> > 
-> >   perf test: Fix test trace+probe_libc_inet_pton.sh for s390x (2018-02-06 10:46:58 -0300)
-> > 
-> > ----------------------------------------------------------------
-> > perf/core improvements and fixes:
-> > 
-> > - perf_mmap overwrite mode overhaul, prep work to get 'perf top'
-> >   using it, making it bearable to use it in large core count systems
-> >   such as Knights Landing/Mill Intel systems (Kan Liang)
-> > 
-> > - Add perf vendor JSON metrics for ARM Cortex-A53 Processor (William Cohen)
-> > 
-> > - Use strtoull() instead of home grown function (Andy Shevchenko)
-> > 
-> > - Document missing 'perf data --force' option (Sangwon Hong)
-> > 
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > ----------------------------------------------------------------
-> > Andy Shevchenko (1):
-> >       perf tools: Substitute yet another strtoull()
-> > 
-> > Arnaldo Carvalho de Melo (1):
-> >       perf evsel: Expose the perf_missing_features struct
-> > 
-> > Kan Liang (16):
-> >       perf evlist: Remove stale mmap read for backward
-> >       perf mmap: Recalculate size for overwrite mode
-> >       perf mmap: Cleanup perf_mmap__push()
-> >       perf mmap: Introduce perf_mmap__read_init()
-> >       perf mmap: Add new return value logic for perf_mmap__read_init()
-> >       perf mmap: Discard 'prev' in perf_mmap__read()
-> >       perf mmap: Introduce perf_mmap__read_done()
-> >       perf mmap: Introduce perf_mmap__read_event()
-> >       perf test: Update mmap read functions for backward-ring-buffer test
-> >       perf mmap: Discard legacy interface for mmap read
-> >       perf top: Check per-event overwrite term
-> >       perf top: Add overwrite fall back
-> >       perf hists browser: Add parameter to disable lost event warning
-> >       perf top: Remove lost events checking
-> >       perf top: Switch default mode to overwrite mode
-> >       perf top: Check the latency of perf_top__mmap_read()
-> > 
-> > Sangwon Hong (1):
-> >       perf data: Document missing --force option
-> > 
-> > Thomas Richter (1):
-> >       perf test: Fix test trace+probe_libc_inet_pton.sh for s390x
-> > 
-> > William Cohen (1):
-> >       perf vendor events aarch64: Add JSON metrics for ARM Cortex-A53 Processor
-> > 
-> >  tools/perf/Documentation/perf-data.txt             |   4 +
-> >  tools/perf/builtin-c2c.c                           |   4 +-
-> >  tools/perf/builtin-report.c                        |   3 +-
-> >  tools/perf/builtin-top.c                           | 150 ++++++++++++++++++++-
-> >  .../pmu-events/arch/arm64/cortex-a53/branch.json   |  27 ++++
-> >  .../perf/pmu-events/arch/arm64/cortex-a53/bus.json |  22 +++
-> >  .../pmu-events/arch/arm64/cortex-a53/cache.json    |  27 ++++
-> >  .../pmu-events/arch/arm64/cortex-a53/memory.json   |  22 +++
-> >  .../pmu-events/arch/arm64/cortex-a53/other.json    |  32 +++++
-> >  .../pmu-events/arch/arm64/cortex-a53/pipeline.json |  52 +++++++
-> >  tools/perf/pmu-events/arch/arm64/mapfile.csv       |   1 +
-> >  tools/perf/tests/backward-ring-buffer.c            |   7 +-
-> >  .../perf/tests/shell/trace+probe_libc_inet_pton.sh |  23 +++-
-> >  tools/perf/ui/browsers/hists.c                     |  38 ++++--
-> >  tools/perf/ui/browsers/hists.h                     |   3 +-
-> >  tools/perf/util/evlist.c                           |  17 ---
-> >  tools/perf/util/evlist.h                           |   4 -
-> >  tools/perf/util/evsel.c                            |  12 +-
-> >  tools/perf/util/evsel.h                            |  14 ++
-> >  tools/perf/util/hist.h                             |   6 +-
-> >  tools/perf/util/mmap.c                             | 141 ++++++++++---------
-> >  tools/perf/util/mmap.h                             |  10 +-
-> >  tools/perf/util/util.c                             |  24 +---
-> >  23 files changed, 492 insertions(+), 151 deletions(-)
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/branch.json
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/bus.json
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/cache.json
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/memory.json
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/other.json
-> >  create mode 100644 tools/perf/pmu-events/arch/arm64/cortex-a53/pipeline.json
-> 
-> Pulled into tip:perf/urgent, thanks a lot Arnaldo!
-> 
-> Note, I also performed a header sync with v4.16-rc1, see the patch below.
-> 
-> The only exception is:
-> 
->   Warning: Kernel ABI header at 'tools/arch/s390/include/uapi/asm/unistd.h' differs  from latest version at 'arch/s390/include/uapi/asm/unistd.h'
-> 
-> ... which I'm unsure how to resolve: the new upstream header includes unistd_64.h, 
-> but neither s390 nor asm-generic has no such a file.
+> 2018-01-29 18:25 GMT+08:00 Jiri Olsa <jolsa@redhat.com>:
 
-There is a patch for that from Hendrik, IIRC, I'll merge it. They worked
-on making the syscall table generation process to be similar to the one
-used in x86_64 after being exposed to it by means of how 'perf trace'
-creates its id->string syscall tables.
+Arnaldo, could you pelase check on this?
 
-- Arnaldo
+thanks,
+jirka
+
+> 
+> > On Mon, Jan 29, 2018 at 10:25:21AM +0100, ufo19890607 wrote:
+> > > From: yuzhoujian <yuzhoujian@didichuxing.com>
+> > >
+> > > Introduce two new options for perf stat and update perf-stat
+> > documentation
+> > > accordingly.
+> > >
+> > > The interval-count option can be used to print counts for fixed number of
+> > > times, and it should be used specifically with "-I" option.
+> > >
+> > > Show below is the output of the interval-count option for perf stat.
+> > >
+> > >         $ perf stat -I 1000 --interval-count 2 -e cycles -a
+> > >         #           time             counts unit events
+> > >              1.002827089         93,884,870      cycles
+> > >              2.004231506         56,573,446      cycles
+> > >
+> > > The time option can be used to print counts after a period of time, and
+> > it
+> > > should not be used with "-I" option.
+> > >
+> > > Show below is the output of the time option for perf stat.
+> > >
+> > >         $ perf stat --time 2000 -e cycles -a
+> > >         Performance counter stats for 'system wide':
+> > >
+> > >                 157,260,423      cycles
+> > >
+> > >                 2.003060766 seconds time elapsed
+> > >
+> > > yuzhoujian (2):
+> > >   perf stat: Add support to print counts for fixed times
+> > >   perf stat: Add support to print counts after a period of time
+> > >
+> > > Changes since v3:
+> > > - merge interval_count check and times check to one line.
+> > > - fix the wrong indent in stat.h
+> > > - use stat_config.times instead of 'times' in cmd_stat function.
+> >
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> >
+> > thanks,
+> > jirka
+> >
+> > >
+> > > Changes since v2:
+> > > - modify the time check in __run_perf_stat func to keep some consistency
+> > >   with the workload case.
+> > > - add the warning when the time is set between 10ms to 100ms.
+> > > - add the pr_err when the time is set below 10ms.
+> > >
+> > > Changes since v1:
+> > > - change the name of the new option "times-print" to "interval-count".
+> > > - keep the interval-count option interval specifically.
+> > >
+> > >
+> > >  tools/perf/Documentation/perf-stat.txt | 10 +++++++
+> > >  tools/perf/builtin-stat.c              | 53
+> > ++++++++++++++++++++++++++++++++--
+> > >  tools/perf/util/stat.h                 |  2 ++
+> > >  3 files changed, 62 insertions(+), 3 deletions(-)
+> > >
+> > > --
+> > > 2.14.1
+> > >
+> >
