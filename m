@@ -1,100 +1,27 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v4 0/2] perf stat: Add interval-count and time support
-Date: Thu, 15 Feb 2018 11:44:42 +0100
-Message-ID: <20180215104442.GA12714@krava>
-References: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
- <20180129102558.GA14925@krava>
- <CAHCio2iVBoEXEv3mXzq34FsDZXJT9Oig+SfDwv3vneYfZQ089g@mail.gmail.com>
+From: Hemant Jain <hemu.mits@gmail.com>
+Subject: "perf top" what does high CPU use in _schedule means?
+Date: Thu, 15 Feb 2018 16:28:10 +0530
+Message-ID: <CAOrc50R1iVsqXGBF+L_WnYrXsb82mY0JLDaMPhCsSjUX4=fJDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73]:60882 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1755304AbeBOKos (ORCPT
+Received: from mail-ua0-f170.google.com ([209.85.217.170]:37696 "EHLO
+        mail-ua0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S966589AbeBOK6b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Feb 2018 05:44:48 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHCio2iVBoEXEv3mXzq34FsDZXJT9Oig+SfDwv3vneYfZQ089g@mail.gmail.com>
+        Thu, 15 Feb 2018 05:58:31 -0500
+Received: by mail-ua0-f170.google.com with SMTP id q8so15559663uae.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Feb 2018 02:58:31 -0800 (PST)
 Sender: linux-perf-users-owner@vger.kernel.org
 List-ID: <linux-perf-users.vger.kernel.org>
-To: =?utf-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Wind Yu <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, Kan.liang@intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 05:33:07PM +0800, 禹舟键 wrote:
-> PING
-> 
-> 2018-01-29 18:25 GMT+08:00 Jiri Olsa <jolsa@redhat.com>:
+In one of my test env I am setting perf top is showing ~20% time CPU
+spent in _schedule function.
+What does means ?
 
-Arnaldo, could you pelase check on this?
+In my setup I have 6 cores and lot of threads are running.
+CPU usage is also very less during this time.(~10%)
+My application has some data to process but is not doing any processing.
 
-thanks,
-jirka
-
-> 
-> > On Mon, Jan 29, 2018 at 10:25:21AM +0100, ufo19890607 wrote:
-> > > From: yuzhoujian <yuzhoujian@didichuxing.com>
-> > >
-> > > Introduce two new options for perf stat and update perf-stat
-> > documentation
-> > > accordingly.
-> > >
-> > > The interval-count option can be used to print counts for fixed number of
-> > > times, and it should be used specifically with "-I" option.
-> > >
-> > > Show below is the output of the interval-count option for perf stat.
-> > >
-> > >         $ perf stat -I 1000 --interval-count 2 -e cycles -a
-> > >         #           time             counts unit events
-> > >              1.002827089         93,884,870      cycles
-> > >              2.004231506         56,573,446      cycles
-> > >
-> > > The time option can be used to print counts after a period of time, and
-> > it
-> > > should not be used with "-I" option.
-> > >
-> > > Show below is the output of the time option for perf stat.
-> > >
-> > >         $ perf stat --time 2000 -e cycles -a
-> > >         Performance counter stats for 'system wide':
-> > >
-> > >                 157,260,423      cycles
-> > >
-> > >                 2.003060766 seconds time elapsed
-> > >
-> > > yuzhoujian (2):
-> > >   perf stat: Add support to print counts for fixed times
-> > >   perf stat: Add support to print counts after a period of time
-> > >
-> > > Changes since v3:
-> > > - merge interval_count check and times check to one line.
-> > > - fix the wrong indent in stat.h
-> > > - use stat_config.times instead of 'times' in cmd_stat function.
-> >
-> > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> >
-> > thanks,
-> > jirka
-> >
-> > >
-> > > Changes since v2:
-> > > - modify the time check in __run_perf_stat func to keep some consistency
-> > >   with the workload case.
-> > > - add the warning when the time is set between 10ms to 100ms.
-> > > - add the pr_err when the time is set below 10ms.
-> > >
-> > > Changes since v1:
-> > > - change the name of the new option "times-print" to "interval-count".
-> > > - keep the interval-count option interval specifically.
-> > >
-> > >
-> > >  tools/perf/Documentation/perf-stat.txt | 10 +++++++
-> > >  tools/perf/builtin-stat.c              | 53
-> > ++++++++++++++++++++++++++++++++--
-> > >  tools/perf/util/stat.h                 |  2 ++
-> > >  3 files changed, 62 insertions(+), 3 deletions(-)
-> > >
-> > > --
-> > > 2.14.1
-> > >
-> >
+I am new to this mailing list. Hope I am using correct mailing list alias :).
