@@ -1,40 +1,60 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: Re: "perf top" what does high CPU use in _schedule means?
-Date: Thu, 15 Feb 2018 14:41:44 -0500
-Message-ID: <67f13f80-9a40-3db5-207b-afdd9be3e6b0@redhat.com>
-References: <CAOrc50R1iVsqXGBF+L_WnYrXsb82mY0JLDaMPhCsSjUX4=fJDg@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v4 2/2] perf stat: Add support to print counts after a
+ period of time
+Date: Fri, 16 Feb 2018 10:18:15 -0300
+Message-ID: <20180216131815.GB24436@kernel.org>
+References: <1517217923-8302-1-git-send-email-ufo19890607@gmail.com>
+ <1517217923-8302-3-git-send-email-ufo19890607@gmail.com>
+ <20180215133921.GC22818@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-perf-users-owner@vger.kernel.org>
-Received: from mx3-rdu2.redhat.com ([66.187.233.73]:43622 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751512AbeBOTlp (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Feb 2018 14:41:45 -0500
-In-Reply-To: <CAOrc50R1iVsqXGBF+L_WnYrXsb82mY0JLDaMPhCsSjUX4=fJDg@mail.gmail.com>
-Content-Language: en-MW
-Sender: linux-perf-users-owner@vger.kernel.org
-List-ID: <linux-perf-users.vger.kernel.org>
-To: Hemant Jain <hemu.mits@gmail.com>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180215133921.GC22818@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ufo19890607 <ufo19890607@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, Kan.liang@intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+List-Id: linux-perf-users.vger.kernel.org
 
-On 02/15/2018 05:58 AM, Hemant Jain wrote:
-> In one of my test env I am setting perf top is showing ~20% time CPU
-> spent in _schedule function.
-> What does means ?
+Em Thu, Feb 15, 2018 at 10:39:21AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Jan 29, 2018 at 10:25:23AM +0100, ufo19890607 escreveu:
+> > From: yuzhoujian <yuzhoujian@didichuxing.com>
+> > 
+> > Introduce a new option to print counts after N milliseconds
 > 
-> In my setup I have 6 cores and lot of threads are running.
-> CPU usage is also very less during this time.(~10%)
-> My application has some data to process but is not doing any processing.
+> This doesn't just print counts after N ms, it _stops_ the workload after
+> that time _and_ prints the counts, right?
 > 
-> I am new to this mailing list. Hope I am using correct mailing list alias :).
+> Can you please send a followup patch fixing the description and
+> documentation?
+> 
+> I've applied this already, but clarifying what this option does is in
+> demand.
 
-Hi,
+So, this fails to build on centos:5 and centos:6 and similar systems
+where the use of 'time' for a variable name breaks the build:
 
-When "perf top" is running you might use the cursor keys to select the function you are interested in ("_schedule") and then select the following line:
+  CC       /tmp/build/perf/builtin-stat.o
+cc1: warnings being treated as errors
+builtin-stat.c: In function '__run_perf_stat':
+builtin-stat.c:576: warning: declaration of 'time' shadows a global declaration
+/usr/include/time.h:187: warning: shadowed declaration is here
+builtin-stat.c: In function 'cmd_stat':
+builtin-stat.c:2710: warning: declaration of 'time' shadows a global declaration
+/usr/include/time.h:187: warning: shadowed declaration is here
+mv: cannot stat `/tmp/build/perf/.builtin-stat.o.tmp': No such file or directory
+make[3]: *** [/tmp/build/perf/builtin-stat.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+  MKDIR    /tmp/build/perf/util/
+  CC       /tmp/build/perf/util/evsel_fprintf.o
+make[2]: *** [/tmp/build/perf/perf-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
 
-Annotate _schedule
+So since I had to rename that I replaced it with 'timeout', so that it
+gets clear that when you specify this option you are setting a timeout
+period that if hit will stop the 'perf stat' session and then print the
+specified counters.
 
-It should give more detail about where in _schedule code that time is being spent.  If you have debuginfo for the kernel installed, it will intermix the source code lines with the assembly code.  The compiler optimization will make this inexact meshing of the assembly language and the source code, but it can help.
+Please let us know if you have any strong objection to this,
 
--Will
+- Arnaldo
