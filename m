@@ -1,58 +1,69 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/41] perf auxtrace arm: Fixing uninitialised variable
-Date: Fri, 16 Feb 2018 16:17:27 -0300
-Message-ID: <20180216191746.11095-23-acme@kernel.org>
+Subject: [PATCH 40/41] perf test: Fix test case inet_pton to accept inlines.
+Date: Fri, 16 Feb 2018 16:17:45 -0300
+Message-ID: <20180216191746.11095-41-acme@kernel.org>
 References: <20180216191746.11095-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180216191746.11095-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-When working natively on arm64 the compiler gets pesky and complains
-that variable 'i' is uninitialised, something that breaks the
-compilation.  Here no further checks are needed since variable
-'found_spe' can only be true if variable 'i' has been initialised as
-part of the for loop.
+Using Fedora 27 and latest Linux kernel the test case
+trace+probe_libc_inet_pton.sh fails again on s390.  This time is the
+inlining of functions which does not match.  After an update of the
+glibc (from 2.26-16 to 2.26-24) the output is different
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1518467557-18505-4-git-send-email-mathieu.poirier@linaro.org
+The expected output is:
+
+             __inet_pton (/usr/lib64/libc-2.26.so)
+             gaih_inet (inlined)
+             ....
+
+The actual output is:
+
+  1 packets transmitted, 1 received, 0% packet loss, time 0ms
+  rtt min/avg/max/mdev = 0.061/0.061/0.061/0.000 ms
+       0.000 probe_libc:inet_pton:(3ffb2140448))
+             __inet_pton (inlined)
+             gaih_inet.constprop.7 (/usr/lib64/libc-2.26.so)
+             ...
+
+Fix this by being less strict on 'inlined' verses library name and
+accept both
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20180214070303.55757-1-tmricht@linux.vnet.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/util/auxtrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/trace+probe_libc_inet_pton.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 2323581b157d..fa639e3e52ac 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -68,7 +68,7 @@ struct auxtrace_record
- 	bool found_spe = false;
- 	static struct perf_pmu **arm_spe_pmus = NULL;
- 	static int nr_spes = 0;
--	int i;
-+	int i = 0;
- 
- 	if (!evlist)
- 		return NULL;
+diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+index c446c894b297..8c4ab0b390c0 100755
+--- a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
+@@ -21,12 +21,12 @@ trace_libc_inet_pton_backtrace() {
+ 	expected[3]=".*packets transmitted.*"
+ 	expected[4]="rtt min.*"
+ 	expected[5]="[0-9]+\.[0-9]+[[:space:]]+probe_libc:inet_pton:\([[:xdigit:]]+\)"
+-	expected[6]=".*inet_pton[[:space:]]\($libc\)$"
++	expected[6]=".*inet_pton[[:space:]]\($libc|inlined\)$"
+ 	case "$(uname -m)" in
+ 	s390x)
+ 		eventattr='call-graph=dwarf'
+-		expected[7]="gaih_inet[[:space:]]\(inlined\)$"
+-		expected[8]="__GI_getaddrinfo[[:space:]]\(inlined\)$"
++		expected[7]="gaih_inet.*[[:space:]]\($libc|inlined\)$"
++		expected[8]="__GI_getaddrinfo[[:space:]]\($libc|inlined\)$"
+ 		expected[9]="main[[:space:]]\(.*/bin/ping.*\)$"
+ 		expected[10]="__libc_start_main[[:space:]]\($libc\)$"
+ 		expected[11]="_start[[:space:]]\(.*/bin/ping.*\)$"
 -- 
 2.14.3
