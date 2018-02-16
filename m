@@ -1,292 +1,213 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/41] perf machine: Move kernel mmap name into struct machine
-Date: Fri, 16 Feb 2018 16:17:19 -0300
-Message-ID: <20180216191746.11095-15-acme@kernel.org>
+Subject: [PATCH 10/41] perf stat: Add support to print counts after a period of time
+Date: Fri, 16 Feb 2018 16:17:15 -0300
+Message-ID: <20180216191746.11095-11-acme@kernel.org>
 References: <20180216191746.11095-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180216191746.11095-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, yuzhoujian <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Kan Liang <kan.liang@intel.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: yuzhoujian <yuzhoujian@didichuxing.com>
 
-It simplifies and centralizes the code. The kernel mmap name is set for
-machine type, which we know from the beginning, so there's no reason to
-generate it every time we need it.
+Introduce a new option to print counts after N milliseconds and update
+'perf stat' documentation accordingly.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Show below is the output of the new option for perf stat.
+
+  $ perf stat --time 2000 -e cycles -a
+  Performance counter stats for 'system wide':
+
+        157,260,423      cycles
+
+        2.003060766 seconds time elapsed
+
+We can print the count deltas after N milliseconds with this new
+introduced option. This option is not supported with "-I" option.
+
+In addition, according to Kangliang's patch(19afd10410957), the
+monitoring overhead for system-wide core event could be very high if the
+interval-print parameter was below 100ms, and the limitation value is
+10ms.
+
+So the same warning will be displayed when the time is set between 10ms
+to 100ms, and the minimal time is limited to 10ms. Users can make a
+decision according to their spcific cases.
+
+Committer notes:
+
+This actually stops the workload after the specified time, then prints
+the counts.
+
+So I renamed the option to --timeout and updated the documentation to
+state that it will not just print the counts after the specified time,
+but will really stop the 'perf stat' session and print the counts.
+
+The rename from 'time' to 'timeout' also fixes the build in systems
+where 'time' is used by glibc and can't be used as a name of a variable,
+such as centos:5 and centos:6.
+
+Changes since v3:
+- none.
+
+Changes since v2:
+- modify the time check in __run_perf_stat func to keep some consistency
+  with the workload case.
+- add the warning when the time is set between 10ms to 100ms.
+- add the pr_err when the time is set below 10ms.
+
+Changes since v1:
+- none.
+
+Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180215122635.24029-5-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/r/1517217923-8302-3-git-send-email-ufo19890607@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/build-id.c | 10 +++----
- tools/perf/util/event.c    |  5 +---
- tools/perf/util/machine.c  | 67 +++++++++++++++++++++++-----------------------
- tools/perf/util/machine.h  |  3 +--
- tools/perf/util/symbol.c   |  3 +--
- 5 files changed, 39 insertions(+), 49 deletions(-)
+ tools/perf/Documentation/perf-stat.txt |  5 +++++
+ tools/perf/builtin-stat.c              | 33 +++++++++++++++++++++++++++++++--
+ tools/perf/util/stat.h                 |  1 +
+ 3 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 7f8553630c4d..537eadd81914 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -316,7 +316,6 @@ static int machine__write_buildid_table(struct machine *machine,
- 					struct feat_fd *fd)
- {
- 	int err = 0;
--	char nm[PATH_MAX];
- 	struct dso *pos;
- 	u16 kmisc = PERF_RECORD_MISC_KERNEL,
- 	    umisc = PERF_RECORD_MISC_USER;
-@@ -338,9 +337,8 @@ static int machine__write_buildid_table(struct machine *machine,
- 			name = pos->short_name;
- 			name_len = pos->short_name_len;
- 		} else if (dso__is_kcore(pos)) {
--			machine__mmap_name(machine, nm, sizeof(nm));
--			name = nm;
--			name_len = strlen(nm);
-+			name = machine->mmap_name;
-+			name_len = strlen(name);
- 		} else {
- 			name = pos->long_name;
- 			name_len = pos->long_name_len;
-@@ -813,12 +811,10 @@ static int dso__cache_build_id(struct dso *dso, struct machine *machine)
- 	bool is_kallsyms = dso__is_kallsyms(dso);
- 	bool is_vdso = dso__is_vdso(dso);
- 	const char *name = dso->long_name;
--	char nm[PATH_MAX];
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 47a21645f60c..2bbe79a50d3c 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -151,6 +151,11 @@ Print count deltas for fixed number of times.
+ This option should be used together with "-I" option.
+ 	example: 'perf stat -I 1000 --interval-count 2 -e cycles -a'
  
- 	if (dso__is_kcore(dso)) {
- 		is_kallsyms = true;
--		machine__mmap_name(machine, nm, sizeof(nm));
--		name = nm;
-+		name = machine->mmap_name;
- 	}
- 	return build_id_cache__add_b(dso->build_id, sizeof(dso->build_id), name,
- 				     dso->nsinfo, is_kallsyms, is_vdso);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 44e603c27944..4644e751a3e3 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -894,8 +894,6 @@ int perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 				       struct machine *machine)
- {
- 	size_t size;
--	const char *mmap_name;
--	char name_buff[PATH_MAX];
- 	struct map *map = machine__kernel_map(machine);
- 	struct kmap *kmap;
- 	int err;
-@@ -918,7 +916,6 @@ int perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 		return -1;
- 	}
- 
--	mmap_name = machine__mmap_name(machine, name_buff, sizeof(name_buff));
- 	if (machine__is_host(machine)) {
- 		/*
- 		 * kernel uses PERF_RECORD_MISC_USER for user space maps,
-@@ -931,7 +928,7 @@ int perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 
- 	kmap = map__kmap(map);
- 	size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
--			"%s%s", mmap_name, kmap->ref_reloc_sym->name) + 1;
-+			"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
- 	size = PERF_ALIGN(size, sizeof(u64));
- 	event->mmap.header.type = PERF_RECORD_MMAP;
- 	event->mmap.header.size = (sizeof(event->mmap) -
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index c976384f9022..b1f1961b13f4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -48,6 +48,27 @@ static void machine__threads_init(struct machine *machine)
- 	}
- }
- 
-+static int machine__set_mmap_name(struct machine *machine)
-+{
-+	if (machine__is_host(machine)) {
-+		if (symbol_conf.vmlinux_name)
-+			machine->mmap_name = strdup(symbol_conf.vmlinux_name);
-+		else
-+			machine->mmap_name = strdup("[kernel.kallsyms]");
-+	} else if (machine__is_default_guest(machine)) {
-+		if (symbol_conf.default_guest_vmlinux_name)
-+			machine->mmap_name = strdup(symbol_conf.default_guest_vmlinux_name);
-+		else
-+			machine->mmap_name = strdup("[guest.kernel.kallsyms]");
-+	} else {
-+		if (asprintf(&machine->mmap_name, "[guest.kernel.kallsyms.%d]",
-+			 machine->pid) < 0)
-+			machine->mmap_name = NULL;
-+	}
++--timeout msecs::
++Stop the 'perf stat' session and print count deltas after N milliseconds (minimum: 10 ms).
++This option is not supported with the "-I" option.
++	example: 'perf stat --time 2000 -e cycles -a'
 +
-+	return machine->mmap_name ? 0 : -ENOMEM;
-+}
-+
- int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
+ --metric-only::
+ Only print computed metrics. Print them in a single line.
+ Don't show any raw values. Not supported with --per-thread.
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7d1d7613bf56..2d49eccf98f2 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -573,6 +573,7 @@ static int __run_perf_stat(int argc, const char **argv)
  {
- 	int err = -ENOMEM;
-@@ -75,6 +96,9 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	if (machine->root_dir == NULL)
- 		return -ENOMEM;
- 
-+	if (machine__set_mmap_name(machine))
-+		goto out;
-+
- 	if (pid != HOST_KERNEL_ID) {
- 		struct thread *thread = machine__findnew_thread(machine, -1,
- 								pid);
-@@ -92,8 +116,10 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	err = 0;
- 
- out:
--	if (err)
-+	if (err) {
- 		zfree(&machine->root_dir);
-+		zfree(&machine->mmap_name);
-+	}
- 	return 0;
- }
- 
-@@ -186,6 +212,7 @@ void machine__exit(struct machine *machine)
- 	dsos__exit(&machine->dsos);
- 	machine__exit_vdso(machine);
- 	zfree(&machine->root_dir);
-+	zfree(&machine->mmap_name);
- 	zfree(&machine->current_tid);
- 
- 	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
-@@ -328,20 +355,6 @@ void machines__process_guests(struct machines *machines,
- 	}
- }
- 
--char *machine__mmap_name(struct machine *machine, char *bf, size_t size)
--{
--	if (machine__is_host(machine))
--		snprintf(bf, size, "[%s]", "kernel.kallsyms");
--	else if (machine__is_default_guest(machine))
--		snprintf(bf, size, "[%s]", "guest.kernel.kallsyms");
--	else {
--		snprintf(bf, size, "[%s.%d]", "guest.kernel.kallsyms",
--			 machine->pid);
--	}
--
--	return bf;
--}
--
- void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size)
- {
- 	struct rb_node *node;
-@@ -777,25 +790,13 @@ size_t machine__fprintf(struct machine *machine, FILE *fp)
- 
- static struct dso *machine__get_kernel(struct machine *machine)
- {
--	const char *vmlinux_name = NULL;
-+	const char *vmlinux_name = machine->mmap_name;
- 	struct dso *kernel;
- 
- 	if (machine__is_host(machine)) {
--		vmlinux_name = symbol_conf.vmlinux_name;
--		if (!vmlinux_name)
--			vmlinux_name = DSO__NAME_KALLSYMS;
--
- 		kernel = machine__findnew_kernel(machine, vmlinux_name,
- 						 "[kernel]", DSO_TYPE_KERNEL);
+ 	int interval = stat_config.interval;
+ 	int times = stat_config.times;
++	int timeout = stat_config.timeout;
+ 	char msg[BUFSIZ];
+ 	unsigned long long t0, t1;
+ 	struct perf_evsel *counter;
+@@ -586,6 +587,9 @@ static int __run_perf_stat(int argc, const char **argv)
+ 	if (interval) {
+ 		ts.tv_sec  = interval / USEC_PER_MSEC;
+ 		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
++	} else if (timeout) {
++		ts.tv_sec  = timeout / USEC_PER_MSEC;
++		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
  	} else {
--		char bf[PATH_MAX];
--
--		if (machine__is_default_guest(machine))
--			vmlinux_name = symbol_conf.default_guest_vmlinux_name;
--		if (!vmlinux_name)
--			vmlinux_name = machine__mmap_name(machine, bf,
--							  sizeof(bf));
--
- 		kernel = machine__findnew_kernel(machine, vmlinux_name,
- 						 "[guest.kernel]",
- 						 DSO_TYPE_GUEST_KERNEL);
-@@ -1295,7 +1296,6 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 					      union perf_event *event)
- {
- 	struct map *map;
--	char kmmap_prefix[PATH_MAX];
- 	enum dso_kernel_type kernel_type;
- 	bool is_kernel_mmap;
+ 		ts.tv_sec  = 1;
+ 		ts.tv_nsec = 0;
+@@ -698,9 +702,11 @@ static int __run_perf_stat(int argc, const char **argv)
+ 		perf_evlist__start_workload(evsel_list);
+ 		enable_counters();
  
-@@ -1303,15 +1303,14 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 	if (machine__uses_kcore(machine))
- 		return 0;
+-		if (interval) {
++		if (interval || timeout) {
+ 			while (!waitpid(child_pid, &status, WNOHANG)) {
+ 				nanosleep(&ts, NULL);
++				if (timeout)
++					break;
+ 				process_interval();
+ 				if (interval_count && !(--times))
+ 					break;
+@@ -720,6 +726,8 @@ static int __run_perf_stat(int argc, const char **argv)
+ 		enable_counters();
+ 		while (!done) {
+ 			nanosleep(&ts, NULL);
++			if (timeout)
++				break;
+ 			if (interval) {
+ 				process_interval();
+ 				if (interval_count && !(--times))
+@@ -1900,6 +1908,8 @@ static const struct option stat_options[] = {
+ 		    "print counts at regular interval in ms (>= 10)"),
+ 	OPT_INTEGER(0, "interval-count", &stat_config.times,
+ 		    "print counts for fixed number of times"),
++	OPT_UINTEGER(0, "timeout", &stat_config.timeout,
++		    "stop workload and print counts after a timeout period in ms (>= 10ms)"),
+ 	OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
+ 		     "aggregate counts per processor socket", AGGR_SOCKET),
+ 	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
+@@ -2697,7 +2707,7 @@ int cmd_stat(int argc, const char **argv)
+ 	int status = -EINVAL, run_idx;
+ 	const char *mode;
+ 	FILE *output = stderr;
+-	unsigned int interval;
++	unsigned int interval, timeout;
+ 	const char * const stat_subcommands[] = { "record", "report" };
  
--	machine__mmap_name(machine, kmmap_prefix, sizeof(kmmap_prefix));
- 	if (machine__is_host(machine))
- 		kernel_type = DSO_TYPE_KERNEL;
- 	else
- 		kernel_type = DSO_TYPE_GUEST_KERNEL;
+ 	setlocale(LC_ALL, "");
+@@ -2728,6 +2738,7 @@ int cmd_stat(int argc, const char **argv)
+ 		return __cmd_report(argc, argv);
  
- 	is_kernel_mmap = memcmp(event->mmap.filename,
--				kmmap_prefix,
--				strlen(kmmap_prefix) - 1) == 0;
-+				machine->mmap_name,
-+				strlen(machine->mmap_name) - 1) == 0;
- 	if (event->mmap.filename[0] == '/' ||
- 	    (!is_kernel_mmap && event->mmap.filename[0] == '[')) {
- 		map = machine__findnew_module_map(machine, event->mmap.start,
-@@ -1322,7 +1321,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		map->end = map->start + event->mmap.len;
- 	} else if (is_kernel_mmap) {
- 		const char *symbol_name = (event->mmap.filename +
--				strlen(kmmap_prefix));
-+				strlen(machine->mmap_name));
- 		/*
- 		 * Should be there already, from the build-id table in
- 		 * the header.
-@@ -1363,7 +1362,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		up_read(&machine->dsos.lock);
+ 	interval = stat_config.interval;
++	timeout = stat_config.timeout;
  
- 		if (kernel == NULL)
--			kernel = machine__findnew_dso(machine, kmmap_prefix);
-+			kernel = machine__findnew_dso(machine, machine->mmap_name);
- 		if (kernel == NULL)
- 			goto out_problem;
- 
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 5ce860b64c74..cb0a20f3a96b 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -43,6 +43,7 @@ struct machine {
- 	bool		  comm_exec;
- 	bool		  kptr_restrict_warned;
- 	char		  *root_dir;
-+	char		  *mmap_name;
- 	struct threads    threads[THREADS__TABLE_SIZE];
- 	struct vdso_info  *vdso_info;
- 	struct perf_env   *env;
-@@ -142,8 +143,6 @@ struct machine *machines__find(struct machines *machines, pid_t pid);
- struct machine *machines__findnew(struct machines *machines, pid_t pid);
- 
- void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size);
--char *machine__mmap_name(struct machine *machine, char *bf, size_t size);
--
- void machines__set_comm_exec(struct machines *machines, bool comm_exec);
- 
- struct machine *machine__new_host(void);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index e366e3060e6b..a1a312d99f30 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1958,8 +1958,7 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
- 		pr_debug("Using %s for symbols\n", kallsyms_filename);
- 	if (err > 0 && !dso__is_kcore(dso)) {
- 		dso->binary_type = DSO_BINARY_TYPE__GUEST_KALLSYMS;
--		machine__mmap_name(machine, path, sizeof(path));
--		dso__set_long_name(dso, strdup(path), true);
-+		dso__set_long_name(dso, machine->mmap_name, false);
- 		map__fixup_start(map);
- 		map__fixup_end(map);
+ 	/*
+ 	 * For record command the -o is already taken care of.
+@@ -2879,6 +2890,7 @@ int cmd_stat(int argc, const char **argv)
+ 				   "The overhead percentage could be high in some cases. "
+ 				   "Please proceed with caution.\n");
  	}
++
+ 	if (stat_config.times && interval)
+ 		interval_count = true;
+ 	else if (stat_config.times && !interval) {
+@@ -2889,6 +2901,23 @@ int cmd_stat(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
++	if (timeout && timeout < 100) {
++		if (timeout < 10) {
++			pr_err("timeout must be >= 10ms.\n");
++			parse_options_usage(stat_usage, stat_options, "timeout", 0);
++			goto out;
++		} else
++			pr_warning("timeout < 100ms. "
++				   "The overhead percentage could be high in some cases. "
++				   "Please proceed with caution.\n");
++	}
++	if (timeout && interval) {
++		pr_err("timeout option is not supported with interval-print.\n");
++		parse_options_usage(stat_usage, stat_options, "timeout", 0);
++		parse_options_usage(stat_usage, stat_options, "I", 1);
++		goto out;
++	}
++
+ 	if (perf_evlist__alloc_stats(evsel_list, interval))
+ 		goto out;
+ 
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 540fbb350e53..2f44e386a0e8 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -90,6 +90,7 @@ struct perf_stat_config {
+ 	bool		scale;
+ 	FILE		*output;
+ 	unsigned int	interval;
++	unsigned int	timeout;
+ 	int		times;
+ 	struct runtime_stat *stats;
+ 	int		stats_num;
 -- 
 2.14.3
