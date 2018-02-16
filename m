@@ -1,216 +1,105 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/41] perf tests: Fix dwarf unwind for stripped binaries
-Date: Fri, 16 Feb 2018 16:17:10 -0300
-Message-ID: <20180216191746.11095-6-acme@kernel.org>
+Subject: [PATCH 17/41] perf machine: Remove machine__load_kallsyms()
+Date: Fri, 16 Feb 2018 16:17:22 -0300
+Message-ID: <20180216191746.11095-18-acme@kernel.org>
 References: <20180216191746.11095-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-perf-users-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753597AbeBPTTB (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 16 Feb 2018 14:19:01 -0500
 In-Reply-To: <20180216191746.11095-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-perf-users-owner@vger.kernel.org
+List-ID: <linux-perf-users.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-When we strip the perf binary, dwarf unwind test stop
-to work. The reason is that strip will remove static
-function symbols, which we need to check for unwind.
-
-This change will keep this test working in cases where
-the global symbols are put into dynamic symbol table,
-which is the case on x86. It still won't work on powerpc.
-
-Making those 5 local functions global, and adding
-'test_dwarf_unwind__' to their names.
-
-Committer testing:
-
-Before:
-
-  # perf test dwarf
-  58: DWARF unwind                               : Ok
-  # strip ~/bin/perf
-  # perf test dwarf
-  58: DWARF unwind                               : FAILED!
-  # perf test -v dwarf
-  58: DWARF unwind                               :
-  --- start ---
-  test child forked, pid 6590
-  unwind: thread map already set, dso=/home/acme/bin/perf
-  <SNIP>
-  unwind: access_mem addr 0x7ffce6c48098 val 48563f, offset 1144
-  unwind: test__dwarf_unwind:ip = 0x4a54e5 (0xa54e5)
-  got: test__dwarf_unwind 0xa54e5, expecting test__dwarf_unwind
-  unwind: '':ip = 0x4a50bb (0xa50bb)
-  failed: got unresolved address 0xa50bb
-  unwind failed
-  test child finished with -1
-  ---- end ----
-  DWARF unwind: FAILED!
-  #
-
-After:
-
-  # perf test dwarf
-  58: DWARF unwind                               : Ok
-  # strip ~/bin/perf
-  # perf test dwarf
-  58: DWARF unwind                               : Ok
-  #
-  # perf test -v dwarf
-  58: DWARF unwind                               :
-  --- start ---
-  test child forked, pid 7219
-  unwind: thread map already set, dso=/home/acme/bin/perf
-  <SNIP>
-  unwind: access_mem addr 0x7fff007da2c8 val 48575f, offset 1144
-  unwind: test__arch_unwind_sample:ip = 0x589044 (0x189044)
-  got: test__arch_unwind_sample 0x189044, expecting test__arch_unwind_sample
-  unwind: test_dwarf_unwind__thread:ip = 0x4a52f7 (0xa52f7)
-  got: test_dwarf_unwind__thread 0xa52f7, expecting test_dwarf_unwind__thread
-  unwind: test_dwarf_unwind__compare:ip = 0x4a5468 (0xa5468)
-  got: test_dwarf_unwind__compare 0xa5468, expecting test_dwarf_unwind__compare
-  unwind: bsearch:ip = 0x7f6608ae94d8 (0x394d8)
-  got: bsearch 0x394d8, expecting bsearch
-  unwind: test_dwarf_unwind__krava_3:ip = 0x4a54d1 (0xa54d1)
-  got: test_dwarf_unwind__krava_3 0xa54d1, expecting test_dwarf_unwind__krava_3
-  unwind: test_dwarf_unwind__krava_2:ip = 0x4a550b (0xa550b)
-  got: test_dwarf_unwind__krava_2 0xa550b, expecting test_dwarf_unwind__krava_2
-  unwind: test_dwarf_unwind__krava_1:ip = 0x4a554b (0xa554b)
-  got: test_dwarf_unwind__krava_1 0xa554b, expecting test_dwarf_unwind__krava_1
-  unwind: test__dwarf_unwind:ip = 0x4a5605 (0xa5605)
-  got: test__dwarf_unwind 0xa5605, expecting test__dwarf_unwind
-  test child finished with 0
-  ---- end ----
-  DWARF unwind: Ok
-  #
+The current machine__load_kallsyms() function has no caller, so replace
+it directly with __machine__load_kallsyms().  Also remove the no_kcore
+argument as it was always called with a 'true' value.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180206181813.10943-17-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180215122635.24029-8-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/dwarf-unwind.c | 46 +++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 16 deletions(-)
+ tools/perf/tests/vmlinux-kallsyms.c |  2 +-
+ tools/perf/util/machine.c           | 14 ++++----------
+ tools/perf/util/machine.h           |  2 --
+ 3 files changed, 5 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 260418969120..2f008067d989 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -37,6 +37,19 @@ static int init_live_machine(struct machine *machine)
- 						  mmap_handler, machine, true, 500);
- }
- 
-+/*
-+ * We need to keep these functions global, despite the
-+ * fact that they are used only locally in this object,
-+ * in order to keep them around even if the binary is
-+ * stripped. If they are gone, the unwind check for
-+ * symbol fails.
-+ */
-+int test_dwarf_unwind__thread(struct thread *thread);
-+int test_dwarf_unwind__compare(void *p1, void *p2);
-+int test_dwarf_unwind__krava_3(struct thread *thread);
-+int test_dwarf_unwind__krava_2(struct thread *thread);
-+int test_dwarf_unwind__krava_1(struct thread *thread);
-+
- #define MAX_STACK 8
- 
- static int unwind_entry(struct unwind_entry *entry, void *arg)
-@@ -45,12 +58,12 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 	char *symbol = entry->sym ? entry->sym->name : NULL;
- 	static const char *funcs[MAX_STACK] = {
- 		"test__arch_unwind_sample",
--		"unwind_thread",
--		"compare",
-+		"test_dwarf_unwind__thread",
-+		"test_dwarf_unwind__compare",
- 		"bsearch",
--		"krava_3",
--		"krava_2",
--		"krava_1",
-+		"test_dwarf_unwind__krava_3",
-+		"test_dwarf_unwind__krava_2",
-+		"test_dwarf_unwind__krava_1",
- 		"test__dwarf_unwind"
- 	};
- 	/*
-@@ -77,7 +90,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 	return strcmp((const char *) symbol, funcs[idx]);
- }
- 
--static noinline int unwind_thread(struct thread *thread)
-+noinline int test_dwarf_unwind__thread(struct thread *thread)
- {
- 	struct perf_sample sample;
- 	unsigned long cnt = 0;
-@@ -108,7 +121,7 @@ static noinline int unwind_thread(struct thread *thread)
- 
- static int global_unwind_retval = -INT_MAX;
- 
--static noinline int compare(void *p1, void *p2)
-+noinline int test_dwarf_unwind__compare(void *p1, void *p2)
- {
- 	/* Any possible value should be 'thread' */
- 	struct thread *thread = *(struct thread **)p1;
-@@ -117,17 +130,17 @@ static noinline int compare(void *p1, void *p2)
- 		/* Call unwinder twice for both callchain orders. */
- 		callchain_param.order = ORDER_CALLER;
- 
--		global_unwind_retval = unwind_thread(thread);
-+		global_unwind_retval = test_dwarf_unwind__thread(thread);
- 		if (!global_unwind_retval) {
- 			callchain_param.order = ORDER_CALLEE;
--			global_unwind_retval = unwind_thread(thread);
-+			global_unwind_retval = test_dwarf_unwind__thread(thread);
- 		}
- 	}
- 
- 	return p1 - p2;
- }
- 
--static noinline int krava_3(struct thread *thread)
-+noinline int test_dwarf_unwind__krava_3(struct thread *thread)
- {
- 	struct thread *array[2] = {thread, thread};
- 	void *fp = &bsearch;
-@@ -141,18 +154,19 @@ static noinline int krava_3(struct thread *thread)
- 			size_t, int (*)(void *, void *));
- 
- 	_bsearch = fp;
--	_bsearch(array, &thread, 2, sizeof(struct thread **), compare);
-+	_bsearch(array, &thread, 2, sizeof(struct thread **),
-+		 test_dwarf_unwind__compare);
- 	return global_unwind_retval;
- }
- 
--static noinline int krava_2(struct thread *thread)
-+noinline int test_dwarf_unwind__krava_2(struct thread *thread)
- {
--	return krava_3(thread);
-+	return test_dwarf_unwind__krava_3(thread);
- }
- 
--static noinline int krava_1(struct thread *thread)
-+noinline int test_dwarf_unwind__krava_1(struct thread *thread)
- {
--	return krava_2(thread);
-+	return test_dwarf_unwind__krava_2(thread);
- }
- 
- int test__dwarf_unwind(struct test *test __maybe_unused, int subtest __maybe_unused)
-@@ -189,7 +203,7 @@ int test__dwarf_unwind(struct test *test __maybe_unused, int subtest __maybe_unu
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index f6789fb029d6..58349297f9fb 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -56,7 +56,7 @@ int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest
+ 	 * be compacted against the list of modules found in the "vmlinux"
+ 	 * code and with the one got from /proc/modules from the "kallsyms" code.
+ 	 */
+-	if (__machine__load_kallsyms(&kallsyms, "/proc/kallsyms", type, true) <= 0) {
++	if (machine__load_kallsyms(&kallsyms, "/proc/kallsyms", type) <= 0) {
+ 		pr_debug("dso__load_kallsyms ");
  		goto out;
  	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2db8d7dd0f80..fe27ef55cbb9 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -151,7 +151,7 @@ struct machine *machine__new_kallsyms(void)
+ 	 *    ask for not using the kcore parsing code, once this one is fixed
+ 	 *    to create a map per module.
+ 	 */
+-	if (machine && __machine__load_kallsyms(machine, "/proc/kallsyms", MAP__FUNCTION, true) <= 0) {
++	if (machine && machine__load_kallsyms(machine, "/proc/kallsyms", MAP__FUNCTION) <= 0) {
+ 		machine__delete(machine);
+ 		machine = NULL;
+ 	}
+@@ -991,11 +991,11 @@ int machines__create_kernel_maps(struct machines *machines, pid_t pid)
+ 	return machine__create_kernel_maps(machine);
+ }
  
--	err = krava_1(thread);
-+	err = test_dwarf_unwind__krava_1(thread);
- 	thread__put(thread);
+-int __machine__load_kallsyms(struct machine *machine, const char *filename,
+-			     enum map_type type, bool no_kcore)
++int machine__load_kallsyms(struct machine *machine, const char *filename,
++			     enum map_type type)
+ {
+ 	struct map *map = machine__kernel_map(machine);
+-	int ret = __dso__load_kallsyms(map->dso, filename, map, no_kcore);
++	int ret = __dso__load_kallsyms(map->dso, filename, map, true);
  
-  out:
+ 	if (ret > 0) {
+ 		dso__set_loaded(map->dso, type);
+@@ -1010,12 +1010,6 @@ int __machine__load_kallsyms(struct machine *machine, const char *filename,
+ 	return ret;
+ }
+ 
+-int machine__load_kallsyms(struct machine *machine, const char *filename,
+-			   enum map_type type)
+-{
+-	return __machine__load_kallsyms(machine, filename, type, false);
+-}
+-
+ int machine__load_vmlinux_path(struct machine *machine, enum map_type type)
+ {
+ 	struct map *map = machine__kernel_map(machine);
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 50d587d34459..66cc200ef86f 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -225,8 +225,6 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename);
+ int arch__fix_module_text_start(u64 *start, const char *name);
+ 
+-int __machine__load_kallsyms(struct machine *machine, const char *filename,
+-			     enum map_type type, bool no_kcore);
+ int machine__load_kallsyms(struct machine *machine, const char *filename,
+ 			   enum map_type type);
+ int machine__load_vmlinux_path(struct machine *machine, enum map_type type);
 -- 
 2.14.3
