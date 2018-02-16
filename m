@@ -1,60 +1,162 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/41] perf annotate: Add missing arguments in Man page
-Date: Fri, 16 Feb 2018 16:17:29 -0300
-Message-ID: <20180216191746.11095-25-acme@kernel.org>
+Subject: [PATCH 16/41] perf machine: Don't search for active kernel start in __machine__create_kernel_maps
+Date: Fri, 16 Feb 2018 16:17:21 -0300
+Message-ID: <20180216191746.11095-17-acme@kernel.org>
 References: <20180216191746.11095-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180216191746.11095-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jaecheol Shin <jcgod413@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jaecheol Shin <jcgod413@gmail.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Some options must require an argument. But input, stdio-color, cpu have
-no them.  So I added it.
+We should not search for the kernel start address in
+__machine__create_kernel_maps(), because it's being used in the 'report'
+code path, where we are interested in kernel MMAP data address (the one
+recorded via 'perf record', possibly on another machine, or an older or
+newer kernel on the same machine where analysis is being performed)
+instead of in current kernel address.
 
-Signed-off-by: Jaecheol Shin <jcgod413@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+The __machine__create_kernel_maps() function serves purely for creating
+the machines kernel maps and setting up the kmap group. The report code
+path then sets the address based on the data from kernel MMAP event in
+the machine__set_kernel_mmap() function.
+
+The kallsyms search address logic is used for test code, that calls
+machine__create_kernel_maps() to get current maps and calls
+machine__get_running_kernel_start() to get kernel starting address.
+
+Use machine__set_kernel_mmap() to set the kernel maps start address and
+moving map_groups__fixup_end to be call when all maps are in place.
+
+Also make __machine__create_kernel_maps static, because there's no
+external user.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: http://lkml.kernel.org/r/20180207095205.62715-1-jcgod413@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180215122635.24029-7-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-annotate.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/machine.c | 55 ++++++++++++++++++++++-------------------------
+ tools/perf/util/machine.h |  1 -
+ 2 files changed, 26 insertions(+), 30 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index c635eab6af54..292809c3c0ca 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -21,7 +21,7 @@ If there is no debug info in the object, then annotated assembly is displayed.
- OPTIONS
- -------
- -i::
----input=::
-+--input=<file>::
-         Input file name. (default: perf.data unless stdin is a fifo)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 292e70c774bd..2db8d7dd0f80 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -856,13 +856,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
+ 	return 0;
+ }
  
- -d::
-@@ -69,7 +69,7 @@ OPTIONS
+-int __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
++static int
++__machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
+ {
+ 	int type;
+-	u64 start = 0;
+-
+-	if (machine__get_running_kernel_start(machine, NULL, &start))
+-		return -1;
  
- --stdio:: Use the stdio interface.
+ 	/* In case of renewal the kernel map, destroy previous one */
+ 	machine__destroy_kernel_maps(machine);
+@@ -871,7 +868,7 @@ int __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
+ 		struct kmap *kmap;
+ 		struct map *map;
  
----stdio-color::
-+--stdio-color=<mode>::
- 	'always', 'never' or 'auto', allowing configuring color output
- 	via the command line, in addition to via "color.ui" .perfconfig.
- 	Use '--stdio-color always' to generate color even when redirecting
-@@ -84,7 +84,7 @@ OPTIONS
- --gtk:: Use the GTK interface.
+-		machine->vmlinux_maps[type] = map__new2(start, kernel, type);
++		machine->vmlinux_maps[type] = map__new2(0, kernel, type);
+ 		if (machine->vmlinux_maps[type] == NULL)
+ 			return -1;
  
- -C::
----cpu:: Only report samples for the list of CPUs provided. Multiple CPUs can
-+--cpu=<cpu>:: Only report samples for the list of CPUs provided. Multiple CPUs can
- 	be provided as a comma-separated list with no space: 0,1. Ranges of
- 	CPUs are specified with -: 0-2. Default is to report samples on all
- 	CPUs.
+@@ -1222,6 +1219,24 @@ static int machine__create_modules(struct machine *machine)
+ 	return 0;
+ }
+ 
++static void machine__set_kernel_mmap(struct machine *machine,
++				     u64 start, u64 end)
++{
++	int i;
++
++	for (i = 0; i < MAP__NR_TYPES; i++) {
++		machine->vmlinux_maps[i]->start = start;
++		machine->vmlinux_maps[i]->end   = end;
++
++		/*
++		 * Be a bit paranoid here, some perf.data file came with
++		 * a zero sized synthesized MMAP event for the kernel.
++		 */
++		if (machine->vmlinux_maps[i]->end == 0)
++			machine->vmlinux_maps[i]->end = ~0ULL;
++	}
++}
++
+ int machine__create_kernel_maps(struct machine *machine)
+ {
+ 	struct dso *kernel = machine__get_kernel(machine);
+@@ -1246,40 +1261,22 @@ int machine__create_kernel_maps(struct machine *machine)
+ 				 "continuing anyway...\n", machine->pid);
+ 	}
+ 
+-	/*
+-	 * Now that we have all the maps created, just set the ->end of them:
+-	 */
+-	map_groups__fixup_end(&machine->kmaps);
+-
+ 	if (!machine__get_running_kernel_start(machine, &name, &addr)) {
+ 		if (name &&
+ 		    maps__set_kallsyms_ref_reloc_sym(machine->vmlinux_maps, name, addr)) {
+ 			machine__destroy_kernel_maps(machine);
+ 			return -1;
+ 		}
++		machine__set_kernel_mmap(machine, addr, 0);
+ 	}
+ 
++	/*
++	 * Now that we have all the maps created, just set the ->end of them:
++	 */
++	map_groups__fixup_end(&machine->kmaps);
+ 	return 0;
+ }
+ 
+-static void machine__set_kernel_mmap(struct machine *machine,
+-				     u64 start, u64 end)
+-{
+-	int i;
+-
+-	for (i = 0; i < MAP__NR_TYPES; i++) {
+-		machine->vmlinux_maps[i]->start = start;
+-		machine->vmlinux_maps[i]->end   = end;
+-
+-		/*
+-		 * Be a bit paranoid here, some perf.data file came with
+-		 * a zero sized synthesized MMAP event for the kernel.
+-		 */
+-		if (machine->vmlinux_maps[i]->end == 0)
+-			machine->vmlinux_maps[i]->end = ~0ULL;
+-	}
+-}
+-
+ static bool machine__uses_kcore(struct machine *machine)
+ {
+ 	struct dso *dso;
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index cb0a20f3a96b..50d587d34459 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -238,7 +238,6 @@ size_t machines__fprintf_dsos_buildid(struct machines *machines, FILE *fp,
+ 				     bool (skip)(struct dso *dso, int parm), int parm);
+ 
+ void machine__destroy_kernel_maps(struct machine *machine);
+-int __machine__create_kernel_maps(struct machine *machine, struct dso *kernel);
+ int machine__create_kernel_maps(struct machine *machine);
+ 
+ int machines__create_kernel_maps(struct machines *machines, pid_t pid);
 -- 
 2.14.3
