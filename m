@@ -1,131 +1,97 @@
-From: Agustin Vega-Frias <agustinv@codeaurora.org>
-Subject: Re: [RFC 3/3] perf pmu: Restore auto-merging of PMU events created by
- prefix match
-Date: Wed, 28 Feb 2018 08:50:00 -0500
-Message-ID: <54b6a1da83f451309da13e4b8eee1bc5@codeaurora.org>
-References: <1519770848-26738-1-git-send-email-agustinv@codeaurora.org>
- <1519770848-26738-4-git-send-email-agustinv@codeaurora.org>
- <20180228094038.GA9474@krava> <20180228124524.GA6102@kernel.org>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [RESEND PATCH] perf sched map: re-annotate shortname if thread
+ comm changed
+Date: Fri, 2 Mar 2018 18:52:54 +0800
+Message-ID: <20180302105254.234axj7b3nixakav@intel.com>
+References: <1519386040-25874-1-git-send-email-changbin.du@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228124524.GA6102@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1519386040-25874-1-git-send-email-changbin.du@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
+Cc: acme@kernel.org, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2018-02-28 07:45, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Feb 28, 2018 at 10:40:38AM +0100, Jiri Olsa escreveu:
->> On Tue, Feb 27, 2018 at 05:34:08PM -0500, Agustin Vega-Frias wrote:
->> > This was disabled when auto-merging of non-alias events was disabled in
->> > commit 63ce844 (perf stat: Only auto-merge events that are PMU aliases).
->> 
->> this changes the output, right? please provide before/after output
-> 
-> Yes, please show how it was and how it became, also please update the
-> documentation, as pointed out by Andi.
+Hello, any comment?
 
-Thanks all for the feedback, I'll make the updates requested and submit
-a follow up.
-
-Agustín
-
+On Fri, Feb 23, 2018 at 07:40:40PM +0800, changbin.du@intel.com wrote:
+> From: Changbin Du <changbin.du@intel.com>
 > 
-> - Arnaldo
+> This is to show the real name of thread that created via fork-exec.
+> See below example for shortname *A0*.
 > 
->> thanks,
->> jirka
->> 
->> >
->> > Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
->> > ---
->> >  tools/perf/util/parse-events.c | 13 +++----------
->> >  tools/perf/util/parse-events.h |  2 +-
->> >  tools/perf/util/parse-events.y |  4 ++--
->> >  3 files changed, 6 insertions(+), 13 deletions(-)
->> >
->> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> > index bafc91e..4e80ca3 100644
->> > --- a/tools/perf/util/parse-events.c
->> > +++ b/tools/perf/util/parse-events.c
->> > @@ -1217,7 +1217,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
->> >  			 get_config_name(head_config), &config_terms);
->> >  }
->> >
->> > -static int __parse_events_add_pmu(struct parse_events_state *parse_state,
->> > +int parse_events_add_pmu(struct parse_events_state *parse_state,
->> >  			 struct list_head *list, char *name,
->> >  			 struct list_head *head_config, bool auto_merge_stats)
->> >  {
->> > @@ -1287,13 +1287,6 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
->> >  	return evsel ? 0 : -ENOMEM;
->> >  }
->> >
->> > -int parse_events_add_pmu(struct parse_events_state *parse_state,
->> > -			 struct list_head *list, char *name,
->> > -			 struct list_head *head_config)
->> > -{
->> > -	return __parse_events_add_pmu(parse_state, list, name, head_config, false);
->> > -}
->> > -
->> >  int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->> >  			       char *str, struct list_head **listp)
->> >  {
->> > @@ -1323,8 +1316,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->> >  					return -1;
->> >  				list_add_tail(&term->list, head);
->> >
->> > -				if (!__parse_events_add_pmu(parse_state, list,
->> > -							    pmu->name, head, true)) {
->> > +				if (!parse_events_add_pmu(parse_state, list,
->> > +							  pmu->name, head, true)) {
->> >  					pr_debug("%s -> %s/%s/\n", str,
->> >  						 pmu->name, alias->str);
->> >  					ok++;
->> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
->> > index 88108cd..5015cfd 100644
->> > --- a/tools/perf/util/parse-events.h
->> > +++ b/tools/perf/util/parse-events.h
->> > @@ -167,7 +167,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
->> >  				void *ptr, char *type, u64 len);
->> >  int parse_events_add_pmu(struct parse_events_state *parse_state,
->> >  			 struct list_head *list, char *name,
->> > -			 struct list_head *head_config);
->> > +			 struct list_head *head_config, bool auto_merge_stats);
->> >
->> >  int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->> >  			       char *str,
->> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
->> > index c528469..b51278f 100644
->> > --- a/tools/perf/util/parse-events.y
->> > +++ b/tools/perf/util/parse-events.y
->> > @@ -232,7 +232,7 @@ PE_NAME opt_event_config
->> >  		YYABORT;
->> >
->> >  	ALLOC_LIST(list);
->> > -	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
->> > +	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
->> >  		struct perf_pmu *pmu = NULL;
->> >  		int ok = 0;
->> >
->> > @@ -245,7 +245,7 @@ PE_NAME opt_event_config
->> >  			if (!strncmp($1, name, strlen($1)) || !fnmatch($1, name, 0)) {
->> >  				if (parse_events_copy_term_list(orig_terms, &terms))
->> >  					YYABORT;
->> > -				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
->> > +				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true))
->> >  					ok++;
->> >  				parse_events_terms__delete(terms);
->> >  			}
->> > --
->> > 2.7.4
->> >
+> $ sudo ./perf sched map
+>               *A0   80393.050639 secs A0 => perf:22368
+>           *.   A0   80393.050748 secs .  => swapper:0
+>            .  *.    80393.050887 secs
+>       *B0  .   .    80393.052735 secs B0 => rcu_sched:8
+>       *.   .   .    80393.052743 secs
+>        .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
+>        .  *A0  .    80393.056270 secs
+>        .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
+>        .  *A0  .    80393.056804 secs A0 => pi:22368
+>        .  *.   .    80393.056854 secs
+>       *B0  .   .    80393.060727 secs
+>       ...
+> 
+> Signed-off-by: Changbin Du <changbin.du@intel.com>
+> ---
+>  tools/perf/builtin-sched.c | 4 +++-
+>  tools/perf/util/thread.c   | 1 +
+>  tools/perf/util/thread.h   | 1 +
+>  3 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 83283fe..53bb8df 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1580,7 +1580,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  
+>  	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+>  	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+> -	if (new_shortname || (verbose > 0 && sched_in->tid)) {
+> +	if (new_shortname || sched_in->comm_changed || (verbose > 0 && sched_in->tid)) {
+>  		const char *pid_color = color;
+>  
+>  		if (thread__has_color(sched_in))
+> @@ -1588,6 +1588,8 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  
+>  		color_fprintf(stdout, pid_color, "%s => %s:%d",
+>  		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
+> +
+> +		sched_in->comm_changed = false;
+>  	}
+>  
+>  	if (sched->map.comp && new_cpu)
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index 68b65b1..c660fe6 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -212,6 +212,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
+>  			unwind__flush_access(thread);
+>  	}
+>  
+> +	thread->comm_changed = true;
+>  	thread->comm_set = true;
+>  
+>  	return 0;
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 40cfa36..b9a328b 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -27,6 +27,7 @@ struct thread {
+>  	int			cpu;
+>  	refcount_t		refcnt;
+>  	char			shortname[3];
+> +	bool			comm_changed;
+>  	bool			comm_set;
+>  	int			comm_len;
+>  	bool			dead; /* if set thread has exited */
+> -- 
+> 2.7.4
+> 
 
 -- 
-Qualcomm Datacenter Technologies, Inc. on behalf of the Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a 
-Linux Foundation Collaborative Project.
+Thanks,
+Changbin Du
