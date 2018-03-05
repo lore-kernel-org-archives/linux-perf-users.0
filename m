@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/28] perf test: Switch to new perf_mmap__read_event() interface for mmap-basic
-Date: Mon,  5 Mar 2018 11:29:25 -0300
-Message-ID: <20180305142932.16921-22-acme@kernel.org>
+Subject: [PATCH 19/28] perf test: Switch to new perf_mmap__read_event() interface for 'code reading' test
+Date: Mon,  5 Mar 2018 11:29:23 -0300
+Message-ID: <20180305142932.16921-20-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
@@ -12,16 +12,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The perf test 'mmap-basic' still use the legacy interface.
+The perf test 'object code reading' still use the legacy interface.
 
 No functional change.
 
 Committer notes:
 
-Testing it:
+Testing:
 
-  # perf test "mmap interface"
-   4: Read samples using the mmap interface                 : Ok
+  # perf test reading
+  23: Object code reading: Ok
   #
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
@@ -30,51 +30,41 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1519945751-37786-7-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1519945751-37786-5-git-send-email-kan.liang@linux.intel.com
 [ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/mmap-basic.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/tests/code-reading.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index c0e971da965c..44c58d69cd87 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -38,6 +38,8 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 		     expected_nr_events[nsyscalls], i, j;
- 	struct perf_evsel *evsels[nsyscalls], *evsel;
- 	char sbuf[STRERR_BUFSIZE];
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index c7115d369511..03ed8c77b1bb 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -409,15 +409,22 @@ static int process_events(struct machine *machine, struct perf_evlist *evlist,
+ 			  struct state *state)
+ {
+ 	union perf_event *event;
 +	struct perf_mmap *md;
 +	u64 end, start;
+ 	int i, ret;
  
- 	threads = thread_map__new(-1, getpid(), UINT_MAX);
- 	if (threads == NULL) {
-@@ -106,7 +108,11 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 			++foo;
- 		}
- 
--	while ((event = perf_evlist__mmap_read(evlist, 0)) != NULL) {
-+	md = &evlist->mmap[0];
-+	if (perf_mmap__read_init(md, false, &start, &end) < 0)
-+		goto out_init;
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+-		while ((event = perf_evlist__mmap_read(evlist, i)) != NULL) {
++		md = &evlist->mmap[i];
++		if (perf_mmap__read_init(md, false, &start, &end) < 0)
++			continue;
 +
-+	while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
- 		struct perf_sample sample;
- 
- 		if (event->header.type != PERF_RECORD_SAMPLE) {
-@@ -129,9 +135,11 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 			goto out_delete_evlist;
++		while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
+ 			ret = process_event(machine, evlist, event, state);
+-			perf_evlist__mmap_consume(evlist, i);
++			perf_mmap__consume(md, false);
+ 			if (ret < 0)
+ 				return ret;
  		}
- 		nr_events[evsel->idx]++;
--		perf_evlist__mmap_consume(evlist, 0);
-+		perf_mmap__consume(md, false);
++		perf_mmap__read_done(md);
  	}
-+	perf_mmap__read_done(md);
- 
-+out_init:
- 	err = 0;
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (nr_events[evsel->idx] != expected_nr_events[evsel->idx]) {
+ 	return 0;
+ }
 -- 
 2.14.3
