@@ -1,127 +1,94 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/28] perf record: Throttle user defined frequencies to the maximum allowed
-Date: Mon,  5 Mar 2018 11:29:16 -0300
-Message-ID: <20180305142932.16921-13-acme@kernel.org>
+Subject: [PATCH 17/28] perf python: Switch to new perf_mmap__read_event() interface
+Date: Mon,  5 Mar 2018 11:29:21 -0300
+Message-ID: <20180305142932.16921-18-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-  # perf record -F 200000 sleep 1
-  warning: Maximum frequency rate (15,000 Hz) exceeded, throttling from 200,000 Hz to 15,000 Hz.
-           The limit can be raised via /proc/sys/kernel/perf_event_max_sample_rate.
-           The kernel will lower it when perf's interrupts take too long.
-	   Use --strict-freq to disable this throttling, refusing to record.
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.019 MB perf.data (15 samples) ]
-  # perf evlist -v
-  cycles:ppp: size: 112, { sample_period, sample_freq }: 15000, sample_type: IP|TID|TIME|PERIOD, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1
+The perf python binding still use the legacy interface.
 
-For those wanting that it fails if the desired frequency can't be used:
+No functional change.
 
-  # perf record --strict-freq -F 200000 sleep 1
-  error: Maximum frequency rate (15,000 Hz) exceeded.
-         Please use -F freq option with a lower value or consider
-         tweaking /proc/sys/kernel/perf_event_max_sample_rate.
-  #
+Committer notes:
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Tested before and after with:
+
+  [root@jouet perf]# export PYTHONPATH=/tmp/build/perf/python
+  [root@jouet perf]# tools/perf/python/twatch.py
+  cpu: 0, pid: 1183, tid: 6293 { type: exit, pid: 1183, ppid: 1183, tid: 6293, ptid: 6293, time: 17886646588257}
+  cpu: 2, pid: 13820, tid: 13820 { type: fork, pid: 13820, ppid: 13820, tid: 6306, ptid: 13820, time: 17886869099529}
+  cpu: 1, pid: 13820, tid: 6306 { type: comm, pid: 13820, tid: 6306, comm: TaskSchedulerFo }
+  ^CTraceback (most recent call last):
+    File "tools/perf/python/twatch.py", line 68, in <module>
+      main()
+    File "tools/perf/python/twatch.py", line 40, in main
+      evlist.poll(timeout = -1)
+  KeyboardInterrupt
+  [root@jouet perf]#
+
+No problems found.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-oyebruc44nlja499nqkr1nzn@git.kernel.org
+Link: http://lkml.kernel.org/r/1519945751-37786-3-git-send-email-kan.liang@linux.intel.com
+[ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  7 ++++++-
- tools/perf/builtin-record.c              |  2 ++
- tools/perf/perf.h                        |  1 +
- tools/perf/util/record.c                 | 20 +++++++++++++++-----
- 4 files changed, 24 insertions(+), 6 deletions(-)
+ tools/perf/util/python.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 94f2faebc7f0..cc37b3a4be76 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -191,11 +191,16 @@ OPTIONS
- -i::
- --no-inherit::
- 	Child tasks do not inherit counters.
-+
- -F::
- --freq=::
- 	Profile at this frequency. Use 'max' to use the currently maximum
- 	allowed frequency, i.e. the value in the kernel.perf_event_max_sample_rate
--	sysctl.
-+	sysctl. Will throttle down to the currently maximum allowed frequency.
-+	See --strict-freq.
-+
-+--strict-freq::
-+	Fail if the specified frequency can't be used.
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 2918cac7a142..35fb5ef7d290 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -983,13 +983,19 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+ 	union perf_event *event;
+ 	int sample_id_all = 1, cpu;
+ 	static char *kwlist[] = { "cpu", "sample_id_all", NULL };
++	struct perf_mmap *md;
++	u64 end, start;
+ 	int err;
  
- -m::
- --mmap-pages=::
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e1821eea14ef..62387942a1d5 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1543,6 +1543,8 @@ static struct option __record_options[] = {
- 	OPT_BOOLEAN(0, "tail-synthesize", &record.opts.tail_synthesize,
- 		    "synthesize non-sample events at the end of output"),
- 	OPT_BOOLEAN(0, "overwrite", &record.opts.overwrite, "use overwrite mode"),
-+	OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
-+		    "Fail if the specified frequency can't be used"),
- 	OPT_CALLBACK('F', "freq", &record.opts, "freq or 'max'",
- 		     "profile at this frequency",
- 		      record__parse_freq),
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index a5df8bf73a68..007e0dfd5ce3 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -61,6 +61,7 @@ struct record_opts {
- 	bool	     tail_synthesize;
- 	bool	     overwrite;
- 	bool	     ignore_missing_thread;
-+	bool	     strict_freq;
- 	unsigned int freq;
- 	unsigned int mmap_pages;
- 	unsigned int auxtrace_mmap_pages;
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index acabf54ceccb..4f1a82e76d39 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -216,11 +216,21 @@ static int record_opts__config_freq(struct record_opts *opts)
- 	 * User specified frequency is over current maximum.
- 	 */
- 	if (user_freq && (max_rate < opts->freq)) {
--		pr_err("Maximum frequency rate (%u) reached.\n"
--		   "Please use -F freq option with lower value or consider\n"
--		   "tweaking /proc/sys/kernel/perf_event_max_sample_rate.\n",
--		   max_rate);
--		return -1;
-+		if (opts->strict_freq) {
-+			pr_err("error: Maximum frequency rate (%'u Hz) exceeded.\n"
-+			       "       Please use -F freq option with a lower value or consider\n"
-+			       "       tweaking /proc/sys/kernel/perf_event_max_sample_rate.\n",
-+			       max_rate);
-+			return -1;
-+		} else {
-+			pr_warning("warning: Maximum frequency rate (%'u Hz) exceeded, throttling from %'u Hz to %'u Hz.\n"
-+				   "         The limit can be raised via /proc/sys/kernel/perf_event_max_sample_rate.\n"
-+				   "         The kernel will lower it when perf's interrupts take too long.\n"
-+				   "         Use --strict-freq to disable this throttling, refusing to record.\n",
-+				   max_rate, opts->freq, max_rate);
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist,
+ 					 &cpu, &sample_id_all))
+ 		return NULL;
+ 
+-	event = perf_evlist__mmap_read(evlist, cpu);
++	md = &evlist->mmap[cpu];
++	if (perf_mmap__read_init(md, false, &start, &end) < 0)
++		goto end;
 +
-+			opts->freq = max_rate;
-+		}
++	event = perf_mmap__read_event(md, false, &start, end);
+ 	if (event != NULL) {
+ 		PyObject *pyevent = pyrf_event__new(event);
+ 		struct pyrf_event *pevent = (struct pyrf_event *)pyevent;
+@@ -1007,14 +1013,14 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+ 		err = perf_evsel__parse_sample(evsel, event, &pevent->sample);
+ 
+ 		/* Consume the even only after we parsed it out. */
+-		perf_evlist__mmap_consume(evlist, cpu);
++		perf_mmap__consume(md, false);
+ 
+ 		if (err)
+ 			return PyErr_Format(PyExc_OSError,
+ 					    "perf: can't parse sample, err=%d", err);
+ 		return pyevent;
  	}
- 
- 	/*
+-
++end:
+ 	Py_INCREF(Py_None);
+ 	return Py_None;
+ }
 -- 
 2.14.3
