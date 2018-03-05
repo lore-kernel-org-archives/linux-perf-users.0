@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/28] perf test: Switch to new perf_mmap__read_event() interface for "keep tracking" test
-Date: Mon,  5 Mar 2018 11:29:24 -0300
-Message-ID: <20180305142932.16921-21-acme@kernel.org>
+Subject: [PATCH 23/28] perf test: Switch to new perf_mmap__read_event() interface for perf-record
+Date: Mon,  5 Mar 2018 11:29:27 -0300
+Message-ID: <20180305142932.16921-24-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
@@ -12,14 +12,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The perf test 'keep tracking' still use the legacy interface.
+The perf test 'perf-record' still use the legacy interface.
 
 No functional change.
 
-Committer testing:
+Committer notes:
 
-  # perf test tracking
-  25: Use a dummy software event to keep tracking           : Ok
+Testing it:
+
+  # perf test PERF_RECORD
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
   #
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
@@ -28,43 +30,43 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1519945751-37786-6-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1519945751-37786-9-git-send-email-kan.liang@linux.intel.com
 [ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/keep-tracking.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/perf/tests/perf-record.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index c46530918938..4590d8fb91ab 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -27,18 +27,24 @@
- static int find_comm(struct perf_evlist *evlist, const char *comm)
- {
- 	union perf_event *event;
-+	struct perf_mmap *md;
-+	u64 end, start;
- 	int i, found;
+diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+index 0afafab85238..31f3f70adca6 100644
+--- a/tools/perf/tests/perf-record.c
++++ b/tools/perf/tests/perf-record.c
+@@ -164,8 +164,14 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
  
- 	found = 0;
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
--		while ((event = perf_evlist__mmap_read(evlist, i)) != NULL) {
-+		md = &evlist->mmap[i];
-+		if (perf_mmap__read_init(md, false, &start, &end) < 0)
-+			continue;
-+		while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
- 			if (event->header.type == PERF_RECORD_COMM &&
- 			    (pid_t)event->comm.pid == getpid() &&
- 			    (pid_t)event->comm.tid == getpid() &&
- 			    strcmp(event->comm.comm, comm) == 0)
- 				found += 1;
--			perf_evlist__mmap_consume(evlist, i);
-+			perf_mmap__consume(md, false);
+ 		for (i = 0; i < evlist->nr_mmaps; i++) {
+ 			union perf_event *event;
++			struct perf_mmap *md;
++			u64 end, start;
+ 
+-			while ((event = perf_evlist__mmap_read(evlist, i)) != NULL) {
++			md = &evlist->mmap[i];
++			if (perf_mmap__read_init(md, false, &start, &end) < 0)
++				continue;
++
++			while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
+ 				const u32 type = event->header.type;
+ 				const char *name = perf_event__name(type);
+ 
+@@ -266,8 +272,9 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+ 					++errs;
+ 				}
+ 
+-				perf_evlist__mmap_consume(evlist, i);
++				perf_mmap__consume(md, false);
+ 			}
++			perf_mmap__read_done(md);
  		}
-+		perf_mmap__read_done(md);
- 	}
- 	return found;
- }
+ 
+ 		/*
 -- 
 2.14.3
