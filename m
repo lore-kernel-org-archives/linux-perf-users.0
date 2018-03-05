@@ -1,116 +1,46 @@
-From: "Du, Changbin" <changbin.du@intel.com>
-Subject: Re: [RESEND PATCH] perf sched map: re-annotate shortname if thread
- comm changed
-Date: Mon, 5 Mar 2018 15:14:12 +0800
-Message-ID: <20180305071412.kem6yrxsg6nkskms@intel.com>
-References: <1519386040-25874-1-git-send-email-changbin.du@intel.com>
- <20180302144312.GC4086@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 01/28] perf kallsyms: Fix the usage on the man page
+Date: Mon,  5 Mar 2018 11:29:05 -0300
+Message-ID: <20180305142932.16921-2-acme@kernel.org>
+References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180302144312.GC4086@kernel.org>
+In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: changbin.du@intel.com, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sangwon Hong <qpakzk@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Mar 02, 2018 at 11:43:12AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Feb 23, 2018 at 07:40:40PM +0800, changbin.du@intel.com escreveu:
-> > From: Changbin Du <changbin.du@intel.com>
-> > 
-> > This is to show the real name of thread that created via fork-exec.
-> > See below example for shortname *A0*.
-> 
-> Can you ellaborate a bit more and perhaps provide before and after
-> outputs?
-> 
-> - Arnaldo
->
-Arnaldo, please see below diff stat.
-              *A0   80393.050639 secs A0 => perf:22368
-          *.   A0   80393.050748 secs .  => swapper:0
-           .  *.    80393.050887 secs
-      *B0  .   .    80393.052735 secs B0 => rcu_sched:8
-      *.   .   .    80393.052743 secs
-       .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
-       .  *A0  .    80393.056270 secs
-       .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
--      .  *A0  .    80393.056804 secs
-+      .  *A0  .    80393.056804 secs A0 => pi:22368
-       .  *.   .    80393.056854 secs
+From: Sangwon Hong <qpakzk@gmail.com>
 
+First, all man pages highlight only perf and subcommands except 'perf
+kallsyms', which includes the full usage. Fix it for commands to
+monopolize underlines.
 
-> > $ sudo ./perf sched map
-> >               *A0   80393.050639 secs A0 => perf:22368
-> >           *.   A0   80393.050748 secs .  => swapper:0
-> >            .  *.    80393.050887 secs
-> >       *B0  .   .    80393.052735 secs B0 => rcu_sched:8
-> >       *.   .   .    80393.052743 secs
-> >        .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
-> >        .  *A0  .    80393.056270 secs
-> >        .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
-> >        .  *A0  .    80393.056804 secs A0 => pi:22368
-> >        .  *.   .    80393.056854 secs
-> >       *B0  .   .    80393.060727 secs
-> >       ...
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@intel.com>
-> > ---
-> >  tools/perf/builtin-sched.c | 4 +++-
-> >  tools/perf/util/thread.c   | 1 +
-> >  tools/perf/util/thread.h   | 1 +
-> >  3 files changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 83283fe..53bb8df 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -1580,7 +1580,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
-> >  
-> >  	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
-> >  	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
-> > -	if (new_shortname || (verbose > 0 && sched_in->tid)) {
-> > +	if (new_shortname || sched_in->comm_changed || (verbose > 0 && sched_in->tid)) {
-> >  		const char *pid_color = color;
-> >  
-> >  		if (thread__has_color(sched_in))
-> > @@ -1588,6 +1588,8 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
-> >  
-> >  		color_fprintf(stdout, pid_color, "%s => %s:%d",
-> >  		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
-> > +
-> > +		sched_in->comm_changed = false;
-> >  	}
-> >  
-> >  	if (sched->map.comp && new_cpu)
-> > diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> > index 68b65b1..c660fe6 100644
-> > --- a/tools/perf/util/thread.c
-> > +++ b/tools/perf/util/thread.c
-> > @@ -212,6 +212,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
-> >  			unwind__flush_access(thread);
-> >  	}
-> >  
-> > +	thread->comm_changed = true;
-> >  	thread->comm_set = true;
-> >  
-> >  	return 0;
-> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> > index 40cfa36..b9a328b 100644
-> > --- a/tools/perf/util/thread.h
-> > +++ b/tools/perf/util/thread.h
-> > @@ -27,6 +27,7 @@ struct thread {
-> >  	int			cpu;
-> >  	refcount_t		refcnt;
-> >  	char			shortname[3];
-> > +	bool			comm_changed;
-> >  	bool			comm_set;
-> >  	int			comm_len;
-> >  	bool			dead; /* if set thread has exited */
-> > -- 
-> > 2.7.4
+Second, options can be ommited when executing 'perf kallsyms', so add
+square brackets between <option>.
 
+Signed-off-by: Sangwon Hong <qpakzk@gmail.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Link: http://lkml.kernel.org/r/1518377864-20353-1-git-send-email-qpakzk@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Documentation/perf-kallsyms.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-kallsyms.txt b/tools/perf/Documentation/perf-kallsyms.txt
+index 954ea9e21236..cf9f4040ea5c 100644
+--- a/tools/perf/Documentation/perf-kallsyms.txt
++++ b/tools/perf/Documentation/perf-kallsyms.txt
+@@ -8,7 +8,7 @@ perf-kallsyms - Searches running kernel for symbols
+ SYNOPSIS
+ --------
+ [verse]
+-'perf kallsyms <options> symbol_name[,symbol_name...]'
++'perf kallsyms' [<options>] symbol_name[,symbol_name...]
+ 
+ DESCRIPTION
+ -----------
 -- 
-Thanks,
-Changbin Du
+2.14.3
