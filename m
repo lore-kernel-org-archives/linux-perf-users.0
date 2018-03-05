@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/28] perf mmap: Discard legacy interfaces for mmap read forward
-Date: Mon,  5 Mar 2018 11:29:32 -0300
-Message-ID: <20180305142932.16921-29-acme@kernel.org>
+Subject: [PATCH 25/28] perf test: Switch to new perf_mmap__read_event() interface for sw-clock
+Date: Mon,  5 Mar 2018 11:29:29 -0300
+Message-ID: <20180305142932.16921-26-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
@@ -12,120 +12,67 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Discards legacy interfaces perf_evlist__mmap_read_forward(),
-perf_evlist__mmap_read() and perf_evlist__mmap_consume().
+The perf test 'sw-clock' still use the legacy interface.
 
-No tools use them.
+No functional change.
+
+Committer testing:
+
+  # perf test clock
+  22: Software clock events period values                   : Ok
+  #
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1519945751-37786-14-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1519945751-37786-11-git-send-email-kan.liang@linux.intel.com
+[ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 25 +------------------------
- tools/perf/util/evlist.h |  4 ----
- tools/perf/util/mmap.c   | 21 +--------------------
- 3 files changed, 2 insertions(+), 48 deletions(-)
+ tools/perf/tests/sw-clock.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 7b7d535396f7..41a4666f1519 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -702,29 +702,6 @@ static int perf_evlist__resume(struct perf_evlist *evlist)
- 	return perf_evlist__set_paused(evlist, false);
- }
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index f6c72f915d48..e6320e267ba5 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -39,6 +39,8 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 	};
+ 	struct cpu_map *cpus;
+ 	struct thread_map *threads;
++	struct perf_mmap *md;
++	u64 end, start;
  
--union perf_event *perf_evlist__mmap_read_forward(struct perf_evlist *evlist, int idx)
--{
--	struct perf_mmap *md = &evlist->mmap[idx];
--
--	/*
--	 * Check messup is required for forward overwritable ring buffer:
--	 * memory pointed by md->prev can be overwritten in this case.
--	 * No need for read-write ring buffer: kernel stop outputting when
--	 * it hit md->prev (perf_mmap__consume()).
--	 */
--	return perf_mmap__read_forward(md);
--}
--
--union perf_event *perf_evlist__mmap_read(struct perf_evlist *evlist, int idx)
--{
--	return perf_evlist__mmap_read_forward(evlist, idx);
--}
--
--void perf_evlist__mmap_consume(struct perf_evlist *evlist, int idx)
--{
--	perf_mmap__consume(&evlist->mmap[idx], false);
--}
--
- static void perf_evlist__munmap_nofree(struct perf_evlist *evlist)
- {
- 	int i;
-@@ -761,7 +738,7 @@ static struct perf_mmap *perf_evlist__alloc_mmap(struct perf_evlist *evlist)
- 		map[i].fd = -1;
- 		/*
- 		 * When the perf_mmap() call is made we grab one refcount, plus
--		 * one extra to let perf_evlist__mmap_consume() get the last
-+		 * one extra to let perf_mmap__consume() get the last
- 		 * events after all real references (perf_mmap__get()) are
- 		 * dropped.
- 		 *
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 336b838e6957..6c41b2f78713 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -129,10 +129,6 @@ struct perf_sample_id *perf_evlist__id2sid(struct perf_evlist *evlist, u64 id);
+ 	attr.sample_freq = 500;
  
- void perf_evlist__toggle_bkw_mmap(struct perf_evlist *evlist, enum bkw_mmap_state state);
+@@ -93,7 +95,11 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
  
--union perf_event *perf_evlist__mmap_read(struct perf_evlist *evlist, int idx);
--
--union perf_event *perf_evlist__mmap_read_forward(struct perf_evlist *evlist,
--						 int idx);
- void perf_evlist__mmap_consume(struct perf_evlist *evlist, int idx);
+ 	perf_evlist__disable(evlist);
  
- int perf_evlist__open(struct perf_evlist *evlist);
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 91531a7c8fbf..4f27c464ce0b 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -63,25 +63,6 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
- 	return event;
- }
+-	while ((event = perf_evlist__mmap_read(evlist, 0)) != NULL) {
++	md = &evlist->mmap[0];
++	if (perf_mmap__read_init(md, false, &start, &end) < 0)
++		goto out_init;
++
++	while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
+ 		struct perf_sample sample;
  
--/*
-- * legacy interface for mmap read.
-- * Don't use it. Use perf_mmap__read_event().
-- */
--union perf_event *perf_mmap__read_forward(struct perf_mmap *map)
--{
--	u64 head;
--
--	/*
--	 * Check if event was unmapped due to a POLLHUP/POLLERR.
--	 */
--	if (!refcount_read(&map->refcnt))
--		return NULL;
--
--	head = perf_mmap__read_head(map);
--
--	return perf_mmap__read(map, &map->prev, head);
--}
--
- /*
-  * Read event from ring buffer one by one.
-  * Return one event for each call.
-@@ -191,7 +172,7 @@ void perf_mmap__munmap(struct perf_mmap *map)
- int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd)
- {
- 	/*
--	 * The last one will be done at perf_evlist__mmap_consume(), so that we
-+	 * The last one will be done at perf_mmap__consume(), so that we
- 	 * make sure we don't prevent tools from consuming every last event in
- 	 * the ring buffer.
- 	 *
+ 		if (event->header.type != PERF_RECORD_SAMPLE)
+@@ -108,9 +114,11 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		total_periods += sample.period;
+ 		nr_samples++;
+ next_event:
+-		perf_evlist__mmap_consume(evlist, 0);
++		perf_mmap__consume(md, false);
+ 	}
++	perf_mmap__read_done(md);
+ 
++out_init:
+ 	if ((u64) nr_samples == total_periods) {
+ 		pr_debug("All (%d) samples have period value of 1!\n",
+ 			 nr_samples);
 -- 
 2.14.3
