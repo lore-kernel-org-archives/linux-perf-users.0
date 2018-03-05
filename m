@@ -1,119 +1,167 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/28] perf kvm: Switch to new perf_mmap__read_event() interface
-Date: Mon,  5 Mar 2018 11:29:19 -0300
-Message-ID: <20180305142932.16921-16-acme@kernel.org>
+Subject: [PATCH 13/28] perf annotate: Find 'call' instruction target symbol at parsing time
+Date: Mon,  5 Mar 2018 11:29:17 -0300
+Message-ID: <20180305142932.16921-14-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The perf kvm still use the legacy interface.
+So that we do it just once, not everytime we press enter or -> on a
+'call' instruction line.
 
-Switch to the new perf_mmap__read_event() interface for perf kvm.
-
-No functional change.
-
-Committer notes:
-
-Tested before and after running:
-
-  # perf kvm stat record
-
-On a machine with a kvm guest, then used:
-
-  # perf kvm stat report
-
-Before/after results match and look like:
-
-  # perf kvm stat record -a sleep 5
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 2.132 MB perf.data.guest (1828 samples) ]
-  # perf kvm stat report
-
-  Analyze events for all VMs, all VCPUs:
-
-             VM-EXIT Samples Samples%  Time% Min Time    Max Time    Avg time
-
-      IO_INSTRUCTION     258   40.06%  0.08%   3.51us    122.54us     14.87us (+- 6.76%)
-           MSR_WRITE     178   27.64%  0.01%   0.47us      6.34us      2.18us (+- 4.80%)
-       EPT_MISCONFIG     148   22.98%  0.03%   3.76us     65.60us     11.22us (+- 8.14%)
-                 HLT      47    7.30% 99.88% 181.69us 249988.06us 102061.36us (+-13.49%)
-   PAUSE_INSTRUCTION       5    0.78%  0.00%   0.38us      0.79us      0.47us (+-17.05%)
-            MSR_READ       4    0.62%  0.00%   1.14us      3.33us      2.67us (+-19.35%)
-  EXTERNAL_INTERRUPT       2    0.31%  0.00%   2.15us      2.17us      2.16us (+- 0.30%)
-   PENDING_INTERRUPT       1    0.16%  0.00%   2.56us      2.56us      2.56us (+- 0.00%)
-    PREEMPTION_TIMER       1    0.16%  0.00%   3.21us      3.21us      3.21us (+- 0.00%)
-
-  Total Samples:644, Total events handled time:4802790.72us.
-
-  #
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1519945751-37786-1-git-send-email-kan.liang@linux.intel.com
-[ Changed bool parameters from 0 to 'false', as per Jiri comment ]
+Link: https://lkml.kernel.org/n/tip-uysyojl1e6nm94amzzzs08tf@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-kvm.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 17 +++++------------
+ tools/perf/util/annotate.c        | 38 +++++++++++++++++++++-----------------
+ tools/perf/util/annotate.h        |  1 +
+ 3 files changed, 27 insertions(+), 29 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 55d919dc5bc6..d2703d3b8366 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -743,16 +743,24 @@ static bool verify_vcpu(int vcpu)
- static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
- 				   u64 *mmap_time)
- {
-+	struct perf_evlist *evlist = kvm->evlist;
- 	union perf_event *event;
-+	struct perf_mmap *md;
-+	u64 end, start;
- 	u64 timestamp;
- 	s64 n = 0;
- 	int err;
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 6ff6839558b0..618edf96353c 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -568,35 +568,28 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 	struct map_symbol *ms = browser->b.priv;
+ 	struct disasm_line *dl = disasm_line(browser->selection);
+ 	struct annotation *notes;
+-	struct addr_map_symbol target = {
+-		.map = ms->map,
+-		.addr = map__objdump_2mem(ms->map, dl->ops.target.addr),
+-	};
+ 	char title[SYM_TITLE_MAX_SIZE];
  
- 	*mmap_time = ULLONG_MAX;
--	while ((event = perf_evlist__mmap_read(kvm->evlist, idx)) != NULL) {
--		err = perf_evlist__parse_sample_timestamp(kvm->evlist, event, &timestamp);
-+	md = &evlist->mmap[idx];
-+	err = perf_mmap__read_init(md, false, &start, &end);
-+	if (err < 0)
-+		return (err == -EAGAIN) ? 0 : -1;
-+
-+	while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
-+		err = perf_evlist__parse_sample_timestamp(evlist, event, &timestamp);
- 		if (err) {
--			perf_evlist__mmap_consume(kvm->evlist, idx);
-+			perf_mmap__consume(md, false);
- 			pr_err("Failed to parse sample\n");
- 			return -1;
- 		}
-@@ -762,7 +770,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
- 		 * FIXME: Here we can't consume the event, as perf_session__queue_event will
- 		 *        point to it, and it'll get possibly overwritten by the kernel.
- 		 */
--		perf_evlist__mmap_consume(kvm->evlist, idx);
-+		perf_mmap__consume(md, false);
+ 	if (!ins__is_call(&dl->ins))
+ 		return false;
  
- 		if (err) {
- 			pr_err("Failed to enqueue sample: %d\n", err);
-@@ -779,6 +787,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
- 			break;
+-	if (map_groups__find_ams(&target) ||
+-	    map__rip_2objdump(target.map, target.map->map_ip(target.map,
+-							     target.addr)) !=
+-	    dl->ops.target.addr) {
++	if (!dl->ops.target.sym) {
+ 		ui_helpline__puts("The called function was not found.");
+ 		return true;
  	}
  
-+	perf_mmap__read_done(md);
- 	return n;
+-	notes = symbol__annotation(target.sym);
++	notes = symbol__annotation(dl->ops.target.sym);
+ 	pthread_mutex_lock(&notes->lock);
+ 
+-	if (notes->src == NULL && symbol__alloc_hist(target.sym) < 0) {
++	if (notes->src == NULL && symbol__alloc_hist(dl->ops.target.sym) < 0) {
+ 		pthread_mutex_unlock(&notes->lock);
+ 		ui__warning("Not enough memory for annotating '%s' symbol!\n",
+-			    target.sym->name);
++			    dl->ops.target.sym->name);
+ 		return true;
+ 	}
+ 
+ 	pthread_mutex_unlock(&notes->lock);
+-	symbol__tui_annotate(target.sym, target.map, evsel, hbt);
++	symbol__tui_annotate(dl->ops.target.sym, ms->map, evsel, hbt);
+ 	sym_title(ms->sym, ms->map, title, sizeof(title));
+ 	ui_browser__show_title(&browser->b, title);
+ 	return true;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 28b233c3dcbe..49ff825f745c 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -187,6 +187,9 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
+ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map *map)
+ {
+ 	char *endptr, *tok, *name;
++	struct addr_map_symbol target = {
++		.map = map,
++	};
+ 
+ 	ops->target.addr = strtoull(ops->raw, &endptr, 16);
+ 
+@@ -208,28 +211,29 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map *
+ 	ops->target.name = strdup(name);
+ 	*tok = '>';
+ 
+-	return ops->target.name == NULL ? -1 : 0;
++	if (ops->target.name == NULL)
++		return -1;
++find_target:
++	target.addr = map__objdump_2mem(map, ops->target.addr);
+ 
+-indirect_call:
+-	tok = strchr(endptr, '*');
+-	if (tok == NULL) {
+-		struct symbol *sym = map__find_symbol(map, map->map_ip(map, ops->target.addr));
+-		if (sym != NULL)
+-			ops->target.name = strdup(sym->name);
+-		else
+-			ops->target.addr = 0;
+-		return 0;
+-	}
++	if (map_groups__find_ams(&target) == 0 &&
++	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
++		ops->target.sym = target.sym;
+ 
+-	ops->target.addr = strtoull(tok + 1, NULL, 16);
+ 	return 0;
++
++indirect_call:
++	tok = strchr(endptr, '*');
++	if (tok != NULL)
++		ops->target.addr = strtoull(tok + 1, NULL, 16);
++	goto find_target;
  }
  
+ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+ 			   struct ins_operands *ops)
+ {
+-	if (ops->target.name)
+-		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.name);
++	if (ops->target.sym)
++		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
+ 
+ 	if (ops->target.addr == 0)
+ 		return ins__raw_scnprintf(ins, bf, size, ops);
+@@ -1283,8 +1287,8 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
+ 		dl->ops.target.offset_avail = true;
+ 	}
+ 
+-	/* kcore has no symbols, so add the call target name */
+-	if (dl->ins.ops && ins__is_call(&dl->ins) && !dl->ops.target.name) {
++	/* kcore has no symbols, so add the call target symbol */
++	if (dl->ins.ops && ins__is_call(&dl->ins) && !dl->ops.target.sym) {
+ 		struct addr_map_symbol target = {
+ 			.map = map,
+ 			.addr = dl->ops.target.addr,
+@@ -1292,7 +1296,7 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
+ 
+ 		if (!map_groups__find_ams(&target) &&
+ 		    target.sym->start == target.al_addr)
+-			dl->ops.target.name = strdup(target.sym->name);
++			dl->ops.target.sym = target.sym;
+ 	}
+ 
+ 	annotation_line__add(&dl->al, &notes->src->source);
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index ce427445671f..7e914e834101 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -24,6 +24,7 @@ struct ins_operands {
+ 	struct {
+ 		char	*raw;
+ 		char	*name;
++		struct symbol *sym;
+ 		u64	addr;
+ 		s64	offset;
+ 		bool	offset_avail;
 -- 
 2.14.3
