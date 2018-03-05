@@ -1,59 +1,60 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/28] perf stat: Use xyarray dimensions to iterate fds
-Date: Mon,  5 Mar 2018 11:29:06 -0300
-Message-ID: <20180305142932.16921-3-acme@kernel.org>
-References: <20180305142932.16921-1-acme@kernel.org>
+From: Agustin Vega-Frias <agustinv@codeaurora.org>
+Subject: Re: [RFC V2 1/3] perf, tools: Support wildcards on pmu name in
+ dynamic pmu events
+Date: Mon, 05 Mar 2018 10:08:18 -0500
+Message-ID: <1ddac3f4900267b0c9a69ef4c598be51@codeaurora.org>
+References: <1520034092-35275-1-git-send-email-agustinv@codeaurora.org>
+ <1520034092-35275-2-git-send-email-agustinv@codeaurora.org>
+ <20180303143436.GA14563@krava> <20180304171245.GB25017@tassilo.jf.intel.com>
+ <20180304181010.GA7030@krava>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
+In-Reply-To: <20180304181010.GA7030@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On 2018-03-04 13:10, Jiri Olsa wrote:
+> On Sun, Mar 04, 2018 at 09:12:45AM -0800, Andi Kleen wrote:
+>> > > +#include <fnmatch.h>
+>> > >  #include <linux/compiler.h>
+>> > >  #include <linux/list.h>
+>> > >  #include <linux/types.h>
+>> > > @@ -241,7 +242,7 @@ PE_NAME opt_event_config
+>> > >  			if (!strncmp(name, "uncore_", 7) &&
+>> > >  			    strncmp($1, "uncore_", 7))
+>> > >  				name += 7;
+>> > > -			if (!strncmp($1, name, strlen($1))) {
+>> > > +			if (!strncmp($1, name, strlen($1)) || !fnmatch($1, name, 0)) {
+>> >
+>> > could we now get rid of the strncmp in here and keep the
+>> > glob matching only?
+>> 
+>> That would break existing command lines. Not a good idea.
+> 
+> I hoped that only you guys are using this and would rewrite your 
+> scripts ;-)
+> 
+> I had no idea there's fnmatch func before.. too bad, ok
+> 
+> jirka
 
-Now that the xyarray stores the dimensions we can use those
-to iterate over the FDs for a evsel.
+An option to keep backward compatibility and consistency would be
+to wrap the pattern/string passed in *'s, that way we can just use
+fnmatch and have all the examples Jiri brought up work the same.
+With that in place we can actually also drop the explicit ignoring
+of the uncore_ prefix since the globbing would take care of that.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20171006020029.13339-1-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-stat.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+Thoughts?
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 2d49eccf98f2..fadcff52cd09 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -508,14 +508,13 @@ static int perf_stat_synthesize_config(bool is_pipe)
- 
- #define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
- 
--static int __store_counter_ids(struct perf_evsel *counter,
--			       struct cpu_map *cpus,
--			       struct thread_map *threads)
-+static int __store_counter_ids(struct perf_evsel *counter)
- {
- 	int cpu, thread;
- 
--	for (cpu = 0; cpu < cpus->nr; cpu++) {
--		for (thread = 0; thread < threads->nr; thread++) {
-+	for (cpu = 0; cpu < xyarray__max_x(counter->fd); cpu++) {
-+		for (thread = 0; thread < xyarray__max_y(counter->fd);
-+		     thread++) {
- 			int fd = FD(counter, cpu, thread);
- 
- 			if (perf_evlist__id_add_fd(evsel_list, counter,
-@@ -535,7 +534,7 @@ static int store_counter_ids(struct perf_evsel *counter)
- 	if (perf_evsel__alloc_id(counter, cpus->nr, threads->nr))
- 		return -ENOMEM;
- 
--	return __store_counter_ids(counter, cpus, threads);
-+	return __store_counter_ids(counter);
- }
- 
- static bool perf_evsel__should_store_id(struct perf_evsel *counter)
+Agustín
+
 -- 
-2.14.3
+Qualcomm Datacenter Technologies, Inc. on behalf of the Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a 
+Linux Foundation Collaborative Project.
