@@ -1,35 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/28] perf tests: Rename trace+probe_libc_inet_pton to record+probe_libc_inet_pton
-Date: Mon,  5 Mar 2018 11:29:12 -0300
-Message-ID: <20180305142932.16921-9-acme@kernel.org>
+Subject: [PATCH 18/28] perf test: Switch to new perf_mmap__read_event() interface for bpf
+Date: Mon,  5 Mar 2018 11:29:22 -0300
+Message-ID: <20180305142932.16921-19-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Because the test is no longer using perf trace but perf record instead.
+The perf test 'bpf' still use the legacy interface.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+No functional change.
+
+Committer notes:
+
+Tested with:
+
+  # perf test bpf
+  39: BPF filter                                            :
+  39.1: Basic BPF filtering                                 : Ok
+  39.2: BPF pinning                                         : Ok
+  39.3: BPF prologue generation                             : Ok
+  39.4: BPF relocation checker                              : Ok
+  #
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180301165215.6780-2-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/r/1519945751-37786-4-git-send-email-kan.liang@linux.intel.com
+[ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../{trace+probe_libc_inet_pton.sh => record+probe_libc_inet_pton.sh}     | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename tools/perf/tests/shell/{trace+probe_libc_inet_pton.sh => record+probe_libc_inet_pton.sh} (100%)
+ tools/perf/tests/bpf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-similarity index 100%
-rename from tools/perf/tests/shell/trace+probe_libc_inet_pton.sh
-rename to tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+index e8399beca62b..09c9c9f9e827 100644
+--- a/tools/perf/tests/bpf.c
++++ b/tools/perf/tests/bpf.c
+@@ -176,13 +176,20 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+ 		union perf_event *event;
++		struct perf_mmap *md;
++		u64 end, start;
+ 
+-		while ((event = perf_evlist__mmap_read(evlist, i)) != NULL) {
++		md = &evlist->mmap[i];
++		if (perf_mmap__read_init(md, false, &start, &end) < 0)
++			continue;
++
++		while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
+ 			const u32 type = event->header.type;
+ 
+ 			if (type == PERF_RECORD_SAMPLE)
+ 				count ++;
+ 		}
++		perf_mmap__read_done(md);
+ 	}
+ 
+ 	if (count != expect) {
 -- 
 2.14.3
