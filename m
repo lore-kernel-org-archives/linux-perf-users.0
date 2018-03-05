@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/28] perf trace: Switch to new perf_mmap__read_event() interface
-Date: Mon,  5 Mar 2018 11:29:20 -0300
-Message-ID: <20180305142932.16921-17-acme@kernel.org>
+Subject: [PATCH 15/28] perf kvm: Switch to new perf_mmap__read_event() interface
+Date: Mon,  5 Mar 2018 11:29:19 -0300
+Message-ID: <20180305142932.16921-16-acme@kernel.org>
 References: <20180305142932.16921-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
@@ -12,11 +12,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The 'perf trace' utility still use the legacy interface.
+The perf kvm still use the legacy interface.
 
-Switch to the new perf_mmap__read_event() interface.
+Switch to the new perf_mmap__read_event() interface for perf kvm.
 
 No functional change.
+
+Committer notes:
+
+Tested before and after running:
+
+  # perf kvm stat record
+
+On a machine with a kvm guest, then used:
+
+  # perf kvm stat report
+
+Before/after results match and look like:
+
+  # perf kvm stat record -a sleep 5
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 2.132 MB perf.data.guest (1828 samples) ]
+  # perf kvm stat report
+
+  Analyze events for all VMs, all VCPUs:
+
+             VM-EXIT Samples Samples%  Time% Min Time    Max Time    Avg time
+
+      IO_INSTRUCTION     258   40.06%  0.08%   3.51us    122.54us     14.87us (+- 6.76%)
+           MSR_WRITE     178   27.64%  0.01%   0.47us      6.34us      2.18us (+- 4.80%)
+       EPT_MISCONFIG     148   22.98%  0.03%   3.76us     65.60us     11.22us (+- 8.14%)
+                 HLT      47    7.30% 99.88% 181.69us 249988.06us 102061.36us (+-13.49%)
+   PAUSE_INSTRUCTION       5    0.78%  0.00%   0.38us      0.79us      0.47us (+-17.05%)
+            MSR_READ       4    0.62%  0.00%   1.14us      3.33us      2.67us (+-19.35%)
+  EXTERNAL_INTERRUPT       2    0.31%  0.00%   2.15us      2.17us      2.16us (+- 0.30%)
+   PENDING_INTERRUPT       1    0.16%  0.00%   2.56us      2.56us      2.56us (+- 0.00%)
+    PREEMPTION_TIMER       1    0.16%  0.00%   3.21us      3.21us      3.21us (+- 0.00%)
+
+  Total Samples:644, Total events handled time:4802790.72us.
+
+  #
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -24,49 +59,61 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1519945751-37786-2-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1519945751-37786-1-git-send-email-kan.liang@linux.intel.com
 [ Changed bool parameters from 0 to 'false', as per Jiri comment ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kvm.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e7f1b182fc15..1a93debc1e8d 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2472,8 +2472,14 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 55d919dc5bc6..d2703d3b8366 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -743,16 +743,24 @@ static bool verify_vcpu(int vcpu)
+ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
+ 				   u64 *mmap_time)
+ {
++	struct perf_evlist *evlist = kvm->evlist;
+ 	union perf_event *event;
++	struct perf_mmap *md;
++	u64 end, start;
+ 	u64 timestamp;
+ 	s64 n = 0;
+ 	int err;
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		union perf_event *event;
-+		struct perf_mmap *md;
-+		u64 end, start;
- 
--		while ((event = perf_evlist__mmap_read(evlist, i)) != NULL) {
-+		md = &evlist->mmap[i];
-+		if (perf_mmap__read_init(md, false, &start, &end) < 0)
-+			continue;
+ 	*mmap_time = ULLONG_MAX;
+-	while ((event = perf_evlist__mmap_read(kvm->evlist, idx)) != NULL) {
+-		err = perf_evlist__parse_sample_timestamp(kvm->evlist, event, &timestamp);
++	md = &evlist->mmap[idx];
++	err = perf_mmap__read_init(md, false, &start, &end);
++	if (err < 0)
++		return (err == -EAGAIN) ? 0 : -1;
 +
-+		while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
- 			struct perf_sample sample;
- 
- 			++trace->nr_events;
-@@ -2486,7 +2492,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 
- 			trace__handle_event(trace, event, &sample);
- next_event:
--			perf_evlist__mmap_consume(evlist, i);
++	while ((event = perf_mmap__read_event(md, false, &start, end)) != NULL) {
++		err = perf_evlist__parse_sample_timestamp(evlist, event, &timestamp);
+ 		if (err) {
+-			perf_evlist__mmap_consume(kvm->evlist, idx);
 +			perf_mmap__consume(md, false);
- 
- 			if (interrupted)
- 				goto out_disable;
-@@ -2496,6 +2502,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 				draining = true;
- 			}
+ 			pr_err("Failed to parse sample\n");
+ 			return -1;
  		}
-+		perf_mmap__read_done(md);
+@@ -762,7 +770,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
+ 		 * FIXME: Here we can't consume the event, as perf_session__queue_event will
+ 		 *        point to it, and it'll get possibly overwritten by the kernel.
+ 		 */
+-		perf_evlist__mmap_consume(kvm->evlist, idx);
++		perf_mmap__consume(md, false);
+ 
+ 		if (err) {
+ 			pr_err("Failed to enqueue sample: %d\n", err);
+@@ -779,6 +787,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
+ 			break;
  	}
  
- 	if (trace->nr_events == before) {
++	perf_mmap__read_done(md);
+ 	return n;
+ }
+ 
 -- 
 2.14.3
