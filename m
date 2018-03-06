@@ -1,48 +1,49 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/9] tools headers: Sync x86's cpufeatures.h
-Date: Tue,  6 Mar 2018 14:23:40 -0300
-Message-ID: <20180306172343.16546-7-acme@kernel.org>
+Subject: [PATCH 7/9] perf stat: Fix CVS output format for non-supported counters
+Date: Tue,  6 Mar 2018 14:23:41 -0300
+Message-ID: <20180306172343.16546-8-acme@kernel.org>
 References: <20180306172343.16546-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180306172343.16546-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, David Woodhouse <dwmw@amazon.co.uk>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ilya Pronin <ipronin@twitter.com>, Andi Kleen <ak@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Ilya Pronin <ipronin@twitter.com>
 
-The changes in dd84441a7971 ("x86/speculation: Use IBRS if available
-before calling into firmware") don't need any kind of special treatment
-in the current tools/perf/ codebase, so just update the copy to get rid
-of the perf build warning:
+When printing stats in CSV mode, 'perf stat' appends extra separators
+when a counter is not supported:
 
-  BUILD:   Doing 'make -j4' parallel build
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+<not supported>,,L1-dcache-store-misses,mesos/bd442f34-2b4a-47df-b966-9b281f9f56fc,0,100.00,,,,
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-mzmuxocrf96v922xkerey3ns@git.kernel.org
+Which causes a failure when parsing fields. The numbers of separators
+should be the same for each line, no matter if the counter is or not
+supported.
+
+Signed-off-by: Ilya Pronin <ipronin@twitter.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20180306064353.31930-1-xiyou.wangcong@gmail.com
+Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 0dfe4d3f74e2..f41079da38c5 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -213,6 +213,7 @@
- #define X86_FEATURE_SEV			( 7*32+20) /* AMD Secure Encrypted Virtualization */
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 98bf9d32f222..54a4c152edb3 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -917,7 +917,7 @@ static void print_metric_csv(void *ctx,
+ 	char buf[64], *vals, *ends;
  
- #define X86_FEATURE_USE_IBPB		( 7*32+21) /* "" Indirect Branch Prediction Barrier enabled */
-+#define X86_FEATURE_USE_IBRS_FW		( 7*32+22) /* "" Use IBRS during runtime firmware calls */
- 
- /* Virtualization flags: Linux defined, word 8 */
- #define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
+ 	if (unit == NULL || fmt == NULL) {
+-		fprintf(out, "%s%s%s%s", csv_sep, csv_sep, csv_sep, csv_sep);
++		fprintf(out, "%s%s", csv_sep, csv_sep);
+ 		return;
+ 	}
+ 	snprintf(buf, sizeof(buf), fmt, val);
 -- 
 2.14.3
