@@ -1,86 +1,88 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/9] tools headers: Sync copy of kvm UAPI headers
-Date: Tue,  6 Mar 2018 14:23:39 -0300
-Message-ID: <20180306172343.16546-6-acme@kernel.org>
+Subject: [PATCH 9/9] perf tools: Fix trigger class trigger_on()
+Date: Tue,  6 Mar 2018 14:23:43 -0300
+Message-ID: <20180306172343.16546-10-acme@kernel.org>
 References: <20180306172343.16546-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180306172343.16546-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-In 801e459a6f3a ("KVM: x86: Add a framework for supporting MSR-based
-features") a new ioctl was introduced, which with this sync of the kvm
-UAPI headers, makes 'perf trace' know about it:
+trigger_on() means that the trigger is available but not ready, however
+trigger_on() was making it ready. That can segfault if the signal comes
+before trigger_ready(). e.g. (USR2 signal delivery not shown)
 
-  $ cd /tmp/build/perf/trace/beauty/generated/ioctl/
-  $ diff -u kvm_ioctl_array.c.old kvm_ioctl_array.c
-  --- /tmp/kvm_ioctl_array.c	2018-03-05 11:55:38.409145056 -0300
-  +++ /tmp/build/perf/trace/beauty/generated/ioctl/kvm_ioctl_array.c	2018-03-05 11:56:17.456153501 -0300
-  @@ -6,6 +6,7 @@
- 	[0x04] = "GET_VCPU_MMAP_SIZE",
- 	[0x05] = "GET_SUPPORTED_CPUID",
- 	[0x09] = "GET_EMULATED_CPUID",
-  +	[0x0a] = "GET_MSR_FEATURE_INDEX_LIST",
- 	[0x40] = "SET_MEMORY_REGION",
- 	[0x41] = "CREATE_VCPU",
- 	[0x42] = "GET_DIRTY_LOG",
+  $ perf record -e intel_pt//u -S sleep 1
+  perf: Segmentation fault
+  Obtained 16 stack frames.
+  /home/ahunter/bin/perf(sighandler_dump_stack+0x40) [0x4ec550]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x36caf) [0x7fa76411acaf]
+  /home/ahunter/bin/perf(perf_evsel__disable+0x26) [0x4b9dd6]
+  /home/ahunter/bin/perf() [0x43a45b]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x36caf) [0x7fa76411acaf]
+  /lib/x86_64-linux-gnu/libc.so.6(__xstat64+0x15) [0x7fa7641d2cc5]
+  /home/ahunter/bin/perf() [0x4ec6c9]
+  /home/ahunter/bin/perf() [0x4ec73b]
+  /home/ahunter/bin/perf() [0x4ec73b]
+  /home/ahunter/bin/perf() [0x4ec73b]
+  /home/ahunter/bin/perf() [0x4eca15]
+  /home/ahunter/bin/perf(machine__create_kernel_maps+0x257) [0x4f0b77]
+  /home/ahunter/bin/perf(perf_session__new+0xc0) [0x4f86f0]
+  /home/ahunter/bin/perf(cmd_record+0x722) [0x43c132]
+  /home/ahunter/bin/perf() [0x4a11ae]
+  /home/ahunter/bin/perf(main+0x5d4) [0x427fb4]
 
-So when using 'perf trace -e ioctl' that will appear along with the
-others, like in this excerpt of a system wide session:
+Note, for testing purposes, this is hard to hit unless you add some sleep()
+in builtin-record.c before record__open().
 
-  14.556 ( 0.006 ms): CPU 0/KVM/16077 ioctl(fd: 19<anon_inode:kvm-vcpu:0>, cmd: KVM_RUN) = 0
-  14.565 ( 0.006 ms): CPU 0/KVM/16077 ioctl(fd: 19<anon_inode:kvm-vcpu:0>, cmd: KVM_RUN) = 0
-  14.573 (         ): CPU 0/KVM/16077 ioctl(fd: 19<anon_inode:kvm-vcpu:0>, cmd: KVM_RUN) ...
-  34.075 ( 0.016 ms): gnome-shell/2192 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_BUSY, arg: 0x7ffe4e73e850) = 0
-  40.549 ( 0.012 ms): gnome-shell/2192 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_BUSY, arg: 0x7ffe4e73ece0) = 0
-  40.625 ( 0.005 ms): gnome-shell/2192 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_BUSY, arg: 0x7ffe4e73e940) = 0
-  40.632 ( 0.003 ms): gnome-shell/2192 ioctl(fd: 8</dev/dri/card0>, cmd: DRM_I915_GEM_MADVISE, arg: 0x7ffe4e73e9b0) = 0
-
-This also silences the perf build header copy drift verifier:
-
-  make: Entering directory '/home/acme/git/perf/tools/perf'
-    BUILD:   Doing 'make -j4' parallel build
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-h31oz5g0mt1dh2s2ajq6o6no@git.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: 3dcc4436fa6f ("perf tools: Introduce trigger class")
+Link: http://lkml.kernel.org/r/1519807144-30694-1-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/trigger.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 0fb5ef939732..7b26d4b0b052 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -761,6 +761,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_TRACE_PAUSE           __KVM_DEPRECATED_MAIN_0x07
- #define KVM_TRACE_DISABLE         __KVM_DEPRECATED_MAIN_0x08
- #define KVM_GET_EMULATED_CPUID	  _IOWR(KVMIO, 0x09, struct kvm_cpuid2)
-+#define KVM_GET_MSR_FEATURE_INDEX_LIST    _IOWR(KVMIO, 0x0a, struct kvm_msr_list)
+diff --git a/tools/perf/util/trigger.h b/tools/perf/util/trigger.h
+index 370138e7e35c..88223bc7c82b 100644
+--- a/tools/perf/util/trigger.h
++++ b/tools/perf/util/trigger.h
+@@ -12,7 +12,7 @@
+  * States and transits:
+  *
+  *
+- *  OFF--(on)--> READY --(hit)--> HIT
++ *  OFF--> ON --> READY --(hit)--> HIT
+  *                 ^               |
+  *                 |            (ready)
+  *                 |               |
+@@ -27,8 +27,9 @@ struct trigger {
+ 	volatile enum {
+ 		TRIGGER_ERROR		= -2,
+ 		TRIGGER_OFF		= -1,
+-		TRIGGER_READY		= 0,
+-		TRIGGER_HIT		= 1,
++		TRIGGER_ON		= 0,
++		TRIGGER_READY		= 1,
++		TRIGGER_HIT		= 2,
+ 	} state;
+ 	const char *name;
+ };
+@@ -50,7 +51,7 @@ static inline bool trigger_is_error(struct trigger *t)
+ static inline void trigger_on(struct trigger *t)
+ {
+ 	TRIGGER_WARN_ONCE(t, TRIGGER_OFF);
+-	t->state = TRIGGER_READY;
++	t->state = TRIGGER_ON;
+ }
  
- /*
-  * Extension capability list.
-@@ -934,6 +935,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_AIS_MIGRATION 150
- #define KVM_CAP_PPC_GET_CPU_CHAR 151
- #define KVM_CAP_S390_BPB 152
-+#define KVM_CAP_GET_MSR_FEATURES 153
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
+ static inline void trigger_ready(struct trigger *t)
 -- 
 2.14.3
