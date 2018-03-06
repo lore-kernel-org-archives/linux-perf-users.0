@@ -1,181 +1,248 @@
-From: Agustin Vega-Frias <agustinv@codeaurora.org>
-Subject: [RFC V3 2/3] perf, tools: Display pmu name when printing unmerged events in stat
-Date: Tue,  6 Mar 2018 09:04:43 -0500
-Message-ID: <1520345084-42646-3-git-send-email-agustinv@codeaurora.org>
-References: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 1/2] perf sched: move thread::shortname to
+ thread_runtime
+Date: Tue, 6 Mar 2018 11:09:19 -0300
+Message-ID: <20180306140919.GF10176@kernel.org>
+References: <1520307457-23668-1-git-send-email-changbin.du@intel.com>
+ <1520307457-23668-2-git-send-email-changbin.du@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1520307457-23668-2-git-send-email-changbin.du@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: timur@codeaurora.org, agustinv@codeaurora.org
+To: changbin.du@intel.com
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-To simplify creation of events accross multiple instances of the same type
-of PMU stat supports two methods for creating multiple events from a single
-event specification:
-1. A prefix or glob can be used in the PMU name.
-2. Aliases, which are listed immediately after the Kernel PMU events
-   by perf list, are used.
+Em Tue, Mar 06, 2018 at 11:37:36AM +0800, changbin.du@intel.com escreveu:
+> From: Changbin Du <changbin.du@intel.com>
+> 
+> The thread::shortname only used by sched command, so move it
+> to sched private structure.
+> 
+> Signed-off-by: Changbin Du <changbin.du@intel.com>
+> ---
+>  tools/perf/builtin-sched.c | 95 +++++++++++++++++++++++++++-------------------
+>  tools/perf/util/thread.h   |  1 -
+>  2 files changed, 55 insertions(+), 41 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 83283fe..5bfc8d5 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -255,6 +255,8 @@ struct thread_runtime {
+>  
+>  	int last_state;
+>  	u64 migrations;
+> +
+> +	char shortname[3];
+>  };
 
-When the --no-merge option is passed and these events are displayed
-individually the PMU name is lost and it's not possible to see which
-count corresponds to which pmu:
+So, what we have for this struct right now is:
 
-    $ ./perf stat -a -e l3cache/read-miss/ --no-merge ls > /dev/null
+[root@jouet perf]# pahole -C thread_runtime ~/bin/perf
+struct thread_runtime {
+	u64                        last_time;            /*     0     8 */
+	u64                        dt_run;               /*     8     8 */
+	u64                        dt_sleep;             /*    16     8 */
+	u64                        dt_iowait;            /*    24     8 */
+	u64                        dt_preempt;           /*    32     8 */
+	u64                        dt_delay;             /*    40     8 */
+	u64                        ready_to_run;         /*    48     8 */
+	struct stats               run_stats;            /*    56    40 */
+	/* --- cacheline 1 boundary (64 bytes) was 32 bytes ago --- */
+	u64                        total_run_time;       /*    96     8 */
+	u64                        total_sleep_time;     /*   104     8 */
+	u64                        total_iowait_time;    /*   112     8 */
+	u64                        total_preempt_time;   /*   120     8 */
+	/* --- cacheline 2 boundary (128 bytes) --- */
+	u64                        total_delay_time;     /*   128     8 */
+	int                        last_state;           /*   136     4 */
 
-     Performance counter stats for 'system wide':
+	/* XXX 4 bytes hole, try to pack */
 
-                    67      l3cache/read-miss/
-                    67      l3cache/read-miss/
-                    63      l3cache/read-miss/
-                    60      l3cache/read-miss/
+	u64                        migrations;           /*   144     8 */
 
-           0.001675706 seconds time elapsed
+	/* size: 152, cachelines: 3, members: 15 */
+	/* sum members: 148, holes: 1, sum holes: 4 */
+	/* last cacheline: 24 bytes */
+};
+[root@jouet perf]#
 
-    $ ./perf stat -a -e l3cache_read_miss --no-merge ls > /dev/null
+So I'll move this shortname member to just before 'migrations', then the
+bool you'll add on the second patch to right after 'shortname' so that
+this gets optimally packed.
 
-     Performance counter stats for 'system wide':
+Thanks,
 
-                    12      l3cache_read_miss
-                    17      l3cache_read_miss
-                    10      l3cache_read_miss
-                     8      l3cache_read_miss
-
-           0.001661305 seconds time elapsed
-
-This change adds the original pmu name to the event. For dynamic pmu
-events the pmu name is restored in the event name:
-
-    $ ./perf stat -a -e l3cache/read-miss/ --no-merge ls > /dev/null
-
-     Performance counter stats for 'system wide':
-
-                    63      l3cache_0_3/read-miss/
-                    74      l3cache_0_1/read-miss/
-                    64      l3cache_0_2/read-miss/
-                    74      l3cache_0_0/read-miss/
-
-           0.001675706 seconds time elapsed
-
-For alias events the name is added after the event name:
-
-    $ ./perf stat -a -e l3cache_read_miss --no-merge ls > /dev/null
-
-     Performance counter stats for 'system wide':
-
-                    10      l3cache_read_miss [l3cache_0_3]
-                    12      l3cache_read_miss [l3cache_0_1]
-                    10      l3cache_read_miss [l3cache_0_2]
-                    17      l3cache_read_miss [l3cache_0_0]
-
-           0.001661305 seconds time elapsed
-
-Change-Id: I8056b9eda74bda33e95065056167ad96e97cb1fb
-Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
----
- tools/perf/builtin-stat.c      | 29 ++++++++++++++++++++++++++++-
- tools/perf/util/evsel.c        |  1 +
- tools/perf/util/evsel.h        |  1 +
- tools/perf/util/parse-events.c |  8 +++++++-
- 4 files changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 98bf9d3..d196972 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1225,6 +1225,31 @@ static void aggr_update_shadow(void)
- 	}
- }
- 
-+static void uniquify_event_name(struct perf_evsel *counter)
-+{
-+	char *new_name;
-+	char *config;
-+
-+	if (!counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
-+					   strlen(counter->pmu_name)))
-+		return;
-+
-+	config = strchr(counter->name, '/');
-+	if (config) {
-+		if (asprintf(&new_name,
-+			     "%s%s", counter->pmu_name, config) > 0) {
-+			free(counter->name);
-+			counter->name = new_name;
-+		}
-+	} else {
-+		if (asprintf(&new_name,
-+			     "%s [%s]", counter->name, counter->pmu_name) > 0) {
-+			free(counter->name);
-+			counter->name = new_name;
-+		}
-+	}
-+}
-+
- static void collect_all_aliases(struct perf_evsel *counter,
- 			    void (*cb)(struct perf_evsel *counter, void *data,
- 				       bool first),
-@@ -1253,7 +1278,9 @@ static bool collect_data(struct perf_evsel *counter,
- 	if (counter->merged_stat)
- 		return false;
- 	cb(counter, data, true);
--	if (!no_merge && counter->auto_merge_stats)
-+	if (no_merge)
-+		uniquify_event_name(counter);
-+	else if (counter->auto_merge_stats)
- 		collect_all_aliases(counter, cb, data);
- 	return true;
- }
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ef35168..4841000 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -244,6 +244,7 @@ void perf_evsel__init(struct perf_evsel *evsel,
- 	evsel->metric_name   = NULL;
- 	evsel->metric_events = NULL;
- 	evsel->collect_stat  = false;
-+	evsel->pmu_name      = NULL;
- }
- 
- struct perf_evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a7487c6..c2ac16a 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -142,6 +142,7 @@ struct perf_evsel {
- 	struct perf_evsel	**metric_events;
- 	bool			collect_stat;
- 	bool			weak_group;
-+	const char		*pmu_name;
- };
- 
- union u64_swap {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 34589c4..bafc91e 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1247,7 +1247,12 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
- 	if (!head_config) {
- 		attr.type = pmu->type;
- 		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL, auto_merge_stats);
--		return evsel ? 0 : -ENOMEM;
-+		if (evsel) {
-+			evsel->pmu_name = name;
-+			return 0;
-+		} else {
-+			return -ENOMEM;
-+		}
- 	}
- 
- 	if (perf_pmu__check_alias(pmu, head_config, &info))
-@@ -1276,6 +1281,7 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
- 		evsel->snapshot = info.snapshot;
- 		evsel->metric_expr = info.metric_expr;
- 		evsel->metric_name = info.metric_name;
-+		evsel->pmu_name = name;
- 	}
- 
- 	return evsel ? 0 : -ENOMEM;
--- 
-Qualcomm Datacenter Technologies, Inc. on behalf of the Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+- Arnaldo
+  
+>  /* per event run time data */
+> @@ -897,6 +899,37 @@ struct sort_dimension {
+>  	struct list_head	list;
+>  };
+>  
+> +/*
+> + * handle runtime stats saved per thread
+> + */
+> +static struct thread_runtime *thread__init_runtime(struct thread *thread)
+> +{
+> +	struct thread_runtime *r;
+> +
+> +	r = zalloc(sizeof(struct thread_runtime));
+> +	if (!r)
+> +		return NULL;
+> +
+> +	init_stats(&r->run_stats);
+> +	thread__set_priv(thread, r);
+> +
+> +	return r;
+> +}
+> +
+> +static struct thread_runtime *thread__get_runtime(struct thread *thread)
+> +{
+> +	struct thread_runtime *tr;
+> +
+> +	tr = thread__priv(thread);
+> +	if (tr == NULL) {
+> +		tr = thread__init_runtime(thread);
+> +		if (tr == NULL)
+> +			pr_debug("Failed to malloc memory for runtime data.\n");
+> +	}
+> +
+> +	return tr;
+> +}
+> +
+>  static int
+>  thread_lat_cmp(struct list_head *list, struct work_atoms *l, struct work_atoms *r)
+>  {
+> @@ -1480,6 +1513,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  {
+>  	const u32 next_pid = perf_evsel__intval(evsel, sample, "next_pid");
+>  	struct thread *sched_in;
+> +	struct thread_runtime *tr;
+>  	int new_shortname;
+>  	u64 timestamp0, timestamp = sample->time;
+>  	s64 delta;
+> @@ -1519,22 +1553,28 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  	if (sched_in == NULL)
+>  		return -1;
+>  
+> +	tr = thread__get_runtime(sched_in);
+> +	if (tr == NULL) {
+> +		thread__put(sched_in);
+> +		return -1;
+> +	}
+> +
+>  	sched->curr_thread[this_cpu] = thread__get(sched_in);
+>  
+>  	printf("  ");
+>  
+>  	new_shortname = 0;
+> -	if (!sched_in->shortname[0]) {
+> +	if (!tr->shortname[0]) {
+>  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+>  			/*
+>  			 * Don't allocate a letter-number for swapper:0
+>  			 * as a shortname. Instead, we use '.' for it.
+>  			 */
+> -			sched_in->shortname[0] = '.';
+> -			sched_in->shortname[1] = ' ';
+> +			tr->shortname[0] = '.';
+> +			tr->shortname[1] = ' ';
+>  		} else {
+> -			sched_in->shortname[0] = sched->next_shortname1;
+> -			sched_in->shortname[1] = sched->next_shortname2;
+> +			tr->shortname[0] = sched->next_shortname1;
+> +			tr->shortname[1] = sched->next_shortname2;
+>  
+>  			if (sched->next_shortname1 < 'Z') {
+>  				sched->next_shortname1++;
+> @@ -1552,6 +1592,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  	for (i = 0; i < cpus_nr; i++) {
+>  		int cpu = sched->map.comp ? sched->map.comp_cpus[i] : i;
+>  		struct thread *curr_thread = sched->curr_thread[cpu];
+> +		struct thread_runtime *curr_tr;
+>  		const char *pid_color = color;
+>  		const char *cpu_color = color;
+>  
+> @@ -1569,9 +1610,14 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  		else
+>  			color_fprintf(stdout, cpu_color, "*");
+>  
+> -		if (sched->curr_thread[cpu])
+> -			color_fprintf(stdout, pid_color, "%2s ", sched->curr_thread[cpu]->shortname);
+> -		else
+> +		if (sched->curr_thread[cpu]) {
+> +			curr_tr = thread__get_runtime(sched->curr_thread[cpu]);
+> +			if (curr_tr == NULL) {
+> +				thread__put(sched_in);
+> +				return -1;
+> +			}
+> +			color_fprintf(stdout, pid_color, "%2s ", curr_tr->shortname);
+> +		} else
+>  			color_fprintf(stdout, color, "   ");
+>  	}
+>  
+> @@ -1587,7 +1633,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+>  			pid_color = COLOR_PIDS;
+>  
+>  		color_fprintf(stdout, pid_color, "%s => %s:%d",
+> -		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
+> +		       tr->shortname, thread__comm_str(sched_in), sched_in->tid);
+>  	}
+>  
+>  	if (sched->map.comp && new_cpu)
+> @@ -2200,37 +2246,6 @@ static void save_idle_callchain(struct idle_thread_runtime *itr,
+>  	callchain_cursor__copy(&itr->cursor, &callchain_cursor);
+>  }
+>  
+> -/*
+> - * handle runtime stats saved per thread
+> - */
+> -static struct thread_runtime *thread__init_runtime(struct thread *thread)
+> -{
+> -	struct thread_runtime *r;
+> -
+> -	r = zalloc(sizeof(struct thread_runtime));
+> -	if (!r)
+> -		return NULL;
+> -
+> -	init_stats(&r->run_stats);
+> -	thread__set_priv(thread, r);
+> -
+> -	return r;
+> -}
+> -
+> -static struct thread_runtime *thread__get_runtime(struct thread *thread)
+> -{
+> -	struct thread_runtime *tr;
+> -
+> -	tr = thread__priv(thread);
+> -	if (tr == NULL) {
+> -		tr = thread__init_runtime(thread);
+> -		if (tr == NULL)
+> -			pr_debug("Failed to malloc memory for runtime data.\n");
+> -	}
+> -
+> -	return tr;
+> -}
+> -
+>  static struct thread *timehist_get_thread(struct perf_sched *sched,
+>  					  struct perf_sample *sample,
+>  					  struct machine *machine,
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 40cfa36..14d44c3 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -26,7 +26,6 @@ struct thread {
+>  	pid_t			ppid;
+>  	int			cpu;
+>  	refcount_t		refcnt;
+> -	char			shortname[3];
+>  	bool			comm_set;
+>  	int			comm_len;
+>  	bool			dead; /* if set thread has exited */
+> -- 
+> 2.7.4
