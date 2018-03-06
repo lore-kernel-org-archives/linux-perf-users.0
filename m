@@ -1,93 +1,46 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/9] perf annotate browser: Be more robust when drawing jump arrows
-Date: Tue,  6 Mar 2018 14:23:37 -0300
-Message-ID: <20180306172343.16546-4-acme@kernel.org>
+Subject: [PATCH 1/9] perf kallsyms: Fix the usage on the man page
+Date: Tue,  6 Mar 2018 14:23:35 -0300
+Message-ID: <20180306172343.16546-2-acme@kernel.org>
 References: <20180306172343.16546-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180306172343.16546-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sangwon Hong <qpakzk@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Sangwon Hong <qpakzk@gmail.com>
 
-This first happened with a gcc function, _cpp_lex_token, that has the
-usual jumps:
+First, all man pages highlight only perf and subcommands except 'perf
+kallsyms', which includes the full usage. Fix it for commands to
+monopolize underlines.
 
- │1159e6c: ↓ jne    115aa32 <_cpp_lex_token@@Base+0xf92>
+Second, options can be ommited when executing 'perf kallsyms', so add
+square brackets between <option>.
 
-I.e. jumps to a label inside that function (_cpp_lex_token), and those
-works, but also this kind:
-
- │1159e8b: ↓ jne    c469be <cpp_named_operator2name@@Base+0xa72>
-
-I.e. jumps to another function, outside _cpp_lex_token, which are not
-being correctly handled generating as a side effect references to
-ab->offset[] entries that are set to NULL, so to make this code more
-robust, check that here.
-
-A proper fix for will be put in place, looking at the function name
-right after the '<' token and probably treating this like a 'call'
-instruction.
-
-For now just don't draw the arrow.
-
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Ingo Molnar <mingo@kernel.org>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
+Signed-off-by: Sangwon Hong <qpakzk@gmail.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Link: https://lkml.kernel.org/n/tip-5tzvb875ep2sel03aeefgmud@git.kernel.org
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Link: http://lkml.kernel.org/r/1518377864-20353-1-git-send-email-qpakzk@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ tools/perf/Documentation/perf-kallsyms.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 286427975112..fbf927cf775d 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -327,7 +327,32 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 	if (!disasm_line__is_valid_jump(cursor, sym))
- 		return;
+diff --git a/tools/perf/Documentation/perf-kallsyms.txt b/tools/perf/Documentation/perf-kallsyms.txt
+index 954ea9e21236..cf9f4040ea5c 100644
+--- a/tools/perf/Documentation/perf-kallsyms.txt
++++ b/tools/perf/Documentation/perf-kallsyms.txt
+@@ -8,7 +8,7 @@ perf-kallsyms - Searches running kernel for symbols
+ SYNOPSIS
+ --------
+ [verse]
+-'perf kallsyms <options> symbol_name[,symbol_name...]'
++'perf kallsyms' [<options>] symbol_name[,symbol_name...]
  
-+	/*
-+	 * This first was seen with a gcc function, _cpp_lex_token, that
-+	 * has the usual jumps:
-+	 *
-+	 *  │1159e6c: ↓ jne    115aa32 <_cpp_lex_token@@Base+0xf92>
-+	 *
-+	 * I.e. jumps to a label inside that function (_cpp_lex_token), and
-+	 * those works, but also this kind:
-+	 *
-+	 *  │1159e8b: ↓ jne    c469be <cpp_named_operator2name@@Base+0xa72>
-+	 *
-+	 *  I.e. jumps to another function, outside _cpp_lex_token, which
-+	 *  are not being correctly handled generating as a side effect references
-+	 *  to ab->offset[] entries that are set to NULL, so to make this code
-+	 *  more robust, check that here.
-+	 *
-+	 *  A proper fix for will be put in place, looking at the function
-+	 *  name right after the '<' token and probably treating this like a
-+	 *  'call' instruction.
-+	 */
- 	target = ab->offsets[cursor->ops.target.offset];
-+	if (target == NULL) {
-+		ui_helpline__printf("WARN: jump target inconsistency, press 'o', ab->offsets[%#x] = NULL\n",
-+				    cursor->ops.target.offset);
-+		return;
-+	}
- 
- 	bcursor = browser_line(&cursor->al);
- 	btarget = browser_line(target);
+ DESCRIPTION
+ -----------
 -- 
 2.14.3
