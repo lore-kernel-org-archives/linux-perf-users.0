@@ -1,107 +1,62 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH Resent] perf annotate: Fix s390 target function
- disassembly
-Date: Tue, 6 Mar 2018 12:20:30 -0300
-Message-ID: <20180306152030.GB3382@kernel.org>
-References: <20180306123955.98802-1-tmricht@linux.vnet.ibm.com>
- <20180306140449.GD10176@kernel.org>
- <f37513cc-1819-6a66-03b5-73b30bbbb966@linux.vnet.ibm.com>
+Subject: [PATCH 2/9] perf top: Fix annoying fallback message on older kernels
+Date: Tue,  6 Mar 2018 14:23:36 -0300
+Message-ID: <20180306172343.16546-3-acme@kernel.org>
+References: <20180306172343.16546-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f37513cc-1819-6a66-03b5-73b30bbbb966@linux.vnet.ibm.com>
+In-Reply-To: <20180306172343.16546-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <Kan.liang@intel.com>, Kan Liang <kan.liang@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Mar 06, 2018 at 03:52:35PM +0100, Thomas-Mich Richter escreveu:
-> On 03/06/2018 03:04 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Mar 06, 2018 at 01:39:55PM +0100, Thomas Richter escreveu:
-> >> Perf annotate displays function call assembler instructions
-> >> with a right arrow. Hitting enter on this line/instruction
-> >> causes the browser to disassemble this target function and
-> >> show it on the screen.  On s390 this results in an error
-> >> message 'The called function was not found.'
-> >>
-> >> The function call assembly line parsing does not handle
-> >> the s390 bras and brasl instructions. Function call__parse
-> >> expects the target as first operand:
-> >> 	callq	e9140 <__fxstat>
-> >> S390 has a register number as first operand:
-> >> 	brasl	%r14,41d60 <abort>
-> >> Therefore the target addresses on s390 are always zero
-> >> which is an invalid address.
-> >>
-> >> Fix this by skipping the first operand on s390.
-> >>
-> >> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> >> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> >> Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-> >> ---
-> >>  tools/perf/util/annotate.c | 8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> >> index 49ff825f745c..feb6006b676d 100644
-> >> --- a/tools/perf/util/annotate.c
-> >> +++ b/tools/perf/util/annotate.c
-> >> @@ -192,6 +192,14 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map *
-> >>  	};
-> >>  
-> >>  	ops->target.addr = strtoull(ops->raw, &endptr, 16);
-> >> +	if (!strcmp(arch->name, "s390")) {
-> >> +		/* s390 function call 1st operand is register */
-> >> +		tok = strchr(ops->raw, ',');
-> >> +		if (tok)
-> >> +			ops->target.addr = strtoull(tok + 1, &endptr, 16);
-> >> +		else
-> >> +			ops->target.addr = 0;
-> >> +	} else
-> >> +		ops->target.addr = strtoull(ops->raw, &endptr, 16);
-> > 
-> > Do we have to do this here? Can't we have a s390_call__parse() and set
-> > that in the s/390 instructions?
-> 
-> 
-> Originally I wanted to add an architecture specific weak function to handle s390
-> This did not work because file util/annotate.c includes the architecture specific versions
-> around line 100:
-> 
-> #include "arch/arm/annotate/instructions.c"
-> #include "arch/arm64/annotate/instructions.c"
-> #include "arch/x86/annotate/instructions.c"
-> #include "arch/powerpc/annotate/instructions.c"
-> #include "arch/s390/annotate/instructions.c"
-> 
-> This includes the C file for s390 so we end up having function call__parse defined twice,
-> one with a weak definition and one without which results in a compiler error.
-> 
-> I will use  a s390 specific call__parse function and sent another patch.
+From: Kan Liang <Kan.liang@intel.com>
 
-So, in tools/perf/arch/s390/annotate/instructions.c you have that
-function s390__associate_ins_ops() where it sets the handler for the
-"brasl" asm instruction to be 'call__ops', what I am proposing is that
-instead you provide a brasl__ops and use it, this ops knows that it is a
-'call', but the target is not where call__ops expects it to be, thus we
-have a separate ops for that, got it?
+On older (e.g. v4.4) kernels, an annoying fallback message can be
+observed in 'perf top':
 
-- Arnaldo
+	┌─Warning:──────────────────────┐
+	│fall back to non-overwrite mode│
+	│                               │
+	│                               │
+	│Press any key...               │
+	└───────────────────────────────┘
+
+The 'perf top' utility has been changed to overwrite mode since commit
+ebebbf082357 ("perf top: Switch default mode to overwrite mode").
+
+For older kernels which don't have overwrite mode support, 'perf top'
+will fall back to non-overwrite mode and print out the fallback message
+using ui__warning(), which needs user's input to close.
+
+The fallback message is not critical for end users. Turning it to debug
+message which is printed when running with -vv.
+
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kan Liang <kan.liang@intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Fixes: ebebbf082357 ("perf top: Switch default mode to overwrite mode")
+Link: http://lkml.kernel.org/r/1519669030-176549-1-git-send-email-kan.liang@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-top.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index b7c823ba8374..35ac016fcb98 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -991,7 +991,7 @@ static int perf_top_overwrite_fallback(struct perf_top *top,
+ 	evlist__for_each_entry(evlist, counter)
+ 		counter->attr.write_backward = false;
+ 	opts->overwrite = false;
+-	ui__warning("fall back to non-overwrite mode\n");
++	pr_debug2("fall back to non-overwrite mode\n");
+ 	return 1;
+ }
  
-> >> -- 
-> >> 2.14.3
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> 
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
-> --
-> Vorsitzende des Aufsichtsrats: Martina Koederitz 
-> Gesch�ftsf�hrung: Dirk Wittkopp
-> Sitz der Gesellschaft: B�blingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+-- 
+2.14.3
