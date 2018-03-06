@@ -1,203 +1,173 @@
-From: changbin.du@intel.com
-Subject: [PATCH v2 1/2] perf sched: move thread::shortname to thread_runtime
-Date: Tue,  6 Mar 2018 11:37:36 +0800
-Message-ID: <1520307457-23668-2-git-send-email-changbin.du@intel.com>
-References: <1520307457-23668-1-git-send-email-changbin.du@intel.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/28] perf/core improvements and fixes
+Date: Tue, 6 Mar 2018 07:35:17 +0100
+Message-ID: <20180306063517.47az4nz7el3jp4we@gmail.com>
+References: <20180305142932.16921-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520307457-23668-1-git-send-email-changbin.du@intel.com>
+Content-Disposition: inline
+In-Reply-To: <20180305142932.16921-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, jolsa@redhat.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sangwon Hong <qpakzk@gmail.com>, Taeung Song <treeze.taeung@gmail.com>, Wang Nan <wangnan0@huawei.com>, weiping zhang <zhangweiping@didichuxing.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Changbin Du <changbin.du@intel.com>
 
-The thread::shortname only used by sched command, so move it
-to sched private structure.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Signed-off-by: Changbin Du <changbin.du@intel.com>
----
- tools/perf/builtin-sched.c | 95 +++++++++++++++++++++++++++-------------------
- tools/perf/util/thread.h   |  1 -
- 2 files changed, 55 insertions(+), 41 deletions(-)
+> Hi Ingo,
+> 
+> 	Please consider pulling, I'll cherry pick some into a separate
+> perf/urgent pull request, like the jump-to-another-function one, after
+> the usual round of tests, but since I've been working on then in my
+> perf/core branch, lets flush them now.
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+>   
+> The following changes since commit ddc4becca1409541c2ebb7ecb99b5cef44cf17e4:
+> 
+>   Merge tag 'perf-core-for-mingo-4.17-20180220' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-02-21 08:50:45 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180305
+> 
+> for you to fetch changes up to 6afad54d2f0ddebacfcf3b829147d7fed8dab298:
+> 
+>   perf mmap: Discard legacy interfaces for mmap read forward (2018-03-05 10:51:10 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Be more robust when drawing arrows in the annotation TUI, avoiding a
+>   segfault when jump instructions have as a target addresses in functions
+>   other that the one currently being annotated. The full fix will come in
+>   the following days, when jumping to other functions will work as call
+>   instructions (Arnaldo Carvalho de Melo)
+> 
+> - Allow asking for the maximum allowed sample rate in 'top' and
+>   'record', i.e. 'perf record -F max' will read the
+>   kernel.perf_event_max_sample_rate sysctl and use it (Arnaldo Carvalho de Melo)
+> 
+> - When the user specifies a freq above kernel.perf_event_max_sample_rate,
+>   Throttle it down to that max freq, and warn the user about it, add as
+>   well --strict-freq so that the previous behaviour of not starting the
+>   session when the desired freq can't be used can be selected (Arnaldo Carvalho de Melo)
+> 
+> - Find 'call' instruction target symbol at parsing time, used so far in
+>   the TUI, part of the infrastructure changes that will end up allowing
+>   for jumps to navigate to other functions, just like 'call'
+>   instructions. (Arnaldo Carvalho de Melo)
+> 
+> - Use xyarray dimensions to iterate fds in 'perf stat' (Andi Kleen)
+> 
+> - Ignore threads for which the current user hasn't permissions when
+>   enabling system-wide --per-thread (Jin Yao)
+> 
+> - Fix some backtrace perf test cases to use 'perf record' + 'perf script'
+>   instead, till 'perf trace' starts using ordered_events or equivalent
+>   to avoid symbol resolving artifacts due to reordering of
+>   PERF_RECORD_MMAP events (Jiri Olsa)
+> 
+> - Fix crash in 'perf record' pipe mode, it needs to allocate the ID
+>   array even for a single event, unlike non-pipe mode (Jiri Olsa)
+> 
+> - Make annoying fallback message on older kernels with newer 'perf top'
+>   binaries trying to use overwrite mode and that not being present
+>   in the older kernels (Kan Liang)
+> 
+> - Switch last users of old APIs to the newer perf_mmap__read_event()
+>   one, then discard those old mmap read forward APIs (Kan Liang)
+> 
+> - Fix the usage on the 'perf kallsyms' man page (Sangwon Hong)
+> 
+> - Simplify cgroup arguments when tracking multiple events (weiping zhang)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (1):
+>       perf stat: Use xyarray dimensions to iterate fds
+> 
+> Arnaldo Carvalho de Melo (6):
+>       perf annotate browser: Be more robust when drawing jump arrows
+>       perf record: Allow asking for the maximum allowed sample rate
+>       perf top browser: Show sample_freq in browser title line
+>       perf top: Allow asking for the maximum allowed sample rate
+>       perf record: Throttle user defined frequencies to the maximum allowed
+>       perf annotate: Find 'call' instruction target symbol at parsing time
+> 
+> Jin Yao (1):
+>       perf stat: Ignore error thread when enabling system-wide --per-thread
+> 
+> Jiri Olsa (3):
+>       perf tests: Switch trace+probe_libc_inet_pton to use record
+>       perf tests: Rename trace+probe_libc_inet_pton to record+probe_libc_inet_pton
+>       perf record: Fix crash in pipe mode
+> 
+> Kan Liang (15):
+>       perf top: Fix annoying fallback message on older kernels
+>       perf kvm: Switch to new perf_mmap__read_event() interface
+>       perf trace: Switch to new perf_mmap__read_event() interface
+>       perf python: Switch to new perf_mmap__read_event() interface
+>       perf test: Switch to new perf_mmap__read_event() interface for bpf
+>       perf test: Switch to new perf_mmap__read_event() interface for 'code reading' test
+>       perf test: Switch to new perf_mmap__read_event() interface for "keep tracking" test
+>       perf test: Switch to new perf_mmap__read_event() interface for mmap-basic
+>       perf test: Switch to new perf_mmap__read_event() interface for tp fields
+>       perf test: Switch to new perf_mmap__read_event() interface for perf-record
+>       perf test: Switch to new perf_mmap__read_event() interface for time-to-tsc
+>       perf test: Switch to new perf_mmap__read_event() interface for sw-clock
+>       perf test: Switch to new perf_mmap__read_event() interface for switch-tracking
+>       perf test: Switch to new perf_mmap__read_event() interface for task-exit
+>       perf mmap: Discard legacy interfaces for mmap read forward
+> 
+> Sangwon Hong (1):
+>       perf kallsyms: Fix the usage on the man page
+> 
+> weiping zhang (1):
+>       perf cgroup: Simplify arguments when tracking multiple events
+> 
+>  tools/perf/Documentation/perf-kallsyms.txt         |  2 +-
+>  tools/perf/Documentation/perf-record.txt           | 15 ++++++-
+>  tools/perf/Documentation/perf-stat.txt             |  6 ++-
+>  tools/perf/Documentation/perf-top.txt              |  4 +-
+>  tools/perf/arch/x86/tests/perf-time-to-tsc.c       | 11 ++++-
+>  tools/perf/builtin-kvm.c                           | 17 ++++++--
+>  tools/perf/builtin-record.c                        | 18 +++++++-
+>  tools/perf/builtin-stat.c                          | 25 ++++++++---
+>  tools/perf/builtin-top.c                           |  6 ++-
+>  tools/perf/builtin-trace.c                         | 11 ++++-
+>  tools/perf/perf.h                                  |  4 ++
+>  tools/perf/tests/bpf.c                             |  9 +++-
+>  tools/perf/tests/code-reading.c                    | 11 ++++-
+>  tools/perf/tests/keep-tracking.c                   | 10 ++++-
+>  tools/perf/tests/mmap-basic.c                      | 12 ++++-
+>  tools/perf/tests/openat-syscall-tp-fields.c        | 11 ++++-
+>  tools/perf/tests/perf-record.c                     | 11 ++++-
+>  ...inet_pton.sh => record+probe_libc_inet_pton.sh} | 30 ++++++-------
+>  tools/perf/tests/sw-clock.c                        | 12 ++++-
+>  tools/perf/tests/switch-tracking.c                 | 11 ++++-
+>  tools/perf/tests/task-exit.c                       | 12 ++++-
+>  tools/perf/ui/browsers/annotate.c                  | 42 +++++++++++++-----
+>  tools/perf/ui/browsers/hists.c                     | 10 +++--
+>  tools/perf/util/annotate.c                         | 38 ++++++++--------
+>  tools/perf/util/annotate.h                         |  1 +
+>  tools/perf/util/cgroup.c                           | 17 +++++++-
+>  tools/perf/util/evlist.c                           | 25 +----------
+>  tools/perf/util/evlist.h                           |  4 --
+>  tools/perf/util/evsel.c                            |  3 ++
+>  tools/perf/util/mmap.c                             | 21 +--------
+>  tools/perf/util/python.c                           | 12 +++--
+>  tools/perf/util/record.c                           | 51 +++++++++++++++++++---
+>  tools/perf/util/thread_map.c                       |  1 +
+>  tools/perf/util/thread_map.h                       |  1 +
+>  34 files changed, 328 insertions(+), 146 deletions(-)
+>  rename tools/perf/tests/shell/{trace+probe_libc_inet_pton.sh => record+probe_libc_inet_pton.sh} (61%)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 83283fe..5bfc8d5 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -255,6 +255,8 @@ struct thread_runtime {
- 
- 	int last_state;
- 	u64 migrations;
-+
-+	char shortname[3];
- };
- 
- /* per event run time data */
-@@ -897,6 +899,37 @@ struct sort_dimension {
- 	struct list_head	list;
- };
- 
-+/*
-+ * handle runtime stats saved per thread
-+ */
-+static struct thread_runtime *thread__init_runtime(struct thread *thread)
-+{
-+	struct thread_runtime *r;
-+
-+	r = zalloc(sizeof(struct thread_runtime));
-+	if (!r)
-+		return NULL;
-+
-+	init_stats(&r->run_stats);
-+	thread__set_priv(thread, r);
-+
-+	return r;
-+}
-+
-+static struct thread_runtime *thread__get_runtime(struct thread *thread)
-+{
-+	struct thread_runtime *tr;
-+
-+	tr = thread__priv(thread);
-+	if (tr == NULL) {
-+		tr = thread__init_runtime(thread);
-+		if (tr == NULL)
-+			pr_debug("Failed to malloc memory for runtime data.\n");
-+	}
-+
-+	return tr;
-+}
-+
- static int
- thread_lat_cmp(struct list_head *list, struct work_atoms *l, struct work_atoms *r)
- {
-@@ -1480,6 +1513,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- {
- 	const u32 next_pid = perf_evsel__intval(evsel, sample, "next_pid");
- 	struct thread *sched_in;
-+	struct thread_runtime *tr;
- 	int new_shortname;
- 	u64 timestamp0, timestamp = sample->time;
- 	s64 delta;
-@@ -1519,22 +1553,28 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 	if (sched_in == NULL)
- 		return -1;
- 
-+	tr = thread__get_runtime(sched_in);
-+	if (tr == NULL) {
-+		thread__put(sched_in);
-+		return -1;
-+	}
-+
- 	sched->curr_thread[this_cpu] = thread__get(sched_in);
- 
- 	printf("  ");
- 
- 	new_shortname = 0;
--	if (!sched_in->shortname[0]) {
-+	if (!tr->shortname[0]) {
- 		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
- 			/*
- 			 * Don't allocate a letter-number for swapper:0
- 			 * as a shortname. Instead, we use '.' for it.
- 			 */
--			sched_in->shortname[0] = '.';
--			sched_in->shortname[1] = ' ';
-+			tr->shortname[0] = '.';
-+			tr->shortname[1] = ' ';
- 		} else {
--			sched_in->shortname[0] = sched->next_shortname1;
--			sched_in->shortname[1] = sched->next_shortname2;
-+			tr->shortname[0] = sched->next_shortname1;
-+			tr->shortname[1] = sched->next_shortname2;
- 
- 			if (sched->next_shortname1 < 'Z') {
- 				sched->next_shortname1++;
-@@ -1552,6 +1592,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 	for (i = 0; i < cpus_nr; i++) {
- 		int cpu = sched->map.comp ? sched->map.comp_cpus[i] : i;
- 		struct thread *curr_thread = sched->curr_thread[cpu];
-+		struct thread_runtime *curr_tr;
- 		const char *pid_color = color;
- 		const char *cpu_color = color;
- 
-@@ -1569,9 +1610,14 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 		else
- 			color_fprintf(stdout, cpu_color, "*");
- 
--		if (sched->curr_thread[cpu])
--			color_fprintf(stdout, pid_color, "%2s ", sched->curr_thread[cpu]->shortname);
--		else
-+		if (sched->curr_thread[cpu]) {
-+			curr_tr = thread__get_runtime(sched->curr_thread[cpu]);
-+			if (curr_tr == NULL) {
-+				thread__put(sched_in);
-+				return -1;
-+			}
-+			color_fprintf(stdout, pid_color, "%2s ", curr_tr->shortname);
-+		} else
- 			color_fprintf(stdout, color, "   ");
- 	}
- 
-@@ -1587,7 +1633,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 			pid_color = COLOR_PIDS;
- 
- 		color_fprintf(stdout, pid_color, "%s => %s:%d",
--		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
-+		       tr->shortname, thread__comm_str(sched_in), sched_in->tid);
- 	}
- 
- 	if (sched->map.comp && new_cpu)
-@@ -2200,37 +2246,6 @@ static void save_idle_callchain(struct idle_thread_runtime *itr,
- 	callchain_cursor__copy(&itr->cursor, &callchain_cursor);
- }
- 
--/*
-- * handle runtime stats saved per thread
-- */
--static struct thread_runtime *thread__init_runtime(struct thread *thread)
--{
--	struct thread_runtime *r;
--
--	r = zalloc(sizeof(struct thread_runtime));
--	if (!r)
--		return NULL;
--
--	init_stats(&r->run_stats);
--	thread__set_priv(thread, r);
--
--	return r;
--}
--
--static struct thread_runtime *thread__get_runtime(struct thread *thread)
--{
--	struct thread_runtime *tr;
--
--	tr = thread__priv(thread);
--	if (tr == NULL) {
--		tr = thread__init_runtime(thread);
--		if (tr == NULL)
--			pr_debug("Failed to malloc memory for runtime data.\n");
--	}
--
--	return tr;
--}
--
- static struct thread *timehist_get_thread(struct perf_sched *sched,
- 					  struct perf_sample *sample,
- 					  struct machine *machine,
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 40cfa36..14d44c3 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -26,7 +26,6 @@ struct thread {
- 	pid_t			ppid;
- 	int			cpu;
- 	refcount_t		refcnt;
--	char			shortname[3];
- 	bool			comm_set;
- 	int			comm_len;
- 	bool			dead; /* if set thread has exited */
--- 
-2.7.4
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
