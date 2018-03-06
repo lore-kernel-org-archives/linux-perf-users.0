@@ -1,73 +1,52 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH Resent] perf annotate: Fix s390 target function
- disassembly
-Date: Tue, 6 Mar 2018 11:04:49 -0300
-Message-ID: <20180306140449.GD10176@kernel.org>
-References: <20180306123955.98802-1-tmricht@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Agustin Vega-Frias <agustinv@codeaurora.org>
+Subject: [RFC V3 0/3] perf stat: improvements for handling of multiple PMUs
+Date: Tue,  6 Mar 2018 09:04:41 -0500
+Message-ID: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180306123955.98802-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: timur@codeaurora.org, agustinv@codeaurora.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Mar 06, 2018 at 01:39:55PM +0100, Thomas Richter escreveu:
-> Perf annotate displays function call assembler instructions
-> with a right arrow. Hitting enter on this line/instruction
-> causes the browser to disassemble this target function and
-> show it on the screen.  On s390 this results in an error
-> message 'The called function was not found.'
-> 
-> The function call assembly line parsing does not handle
-> the s390 bras and brasl instructions. Function call__parse
-> expects the target as first operand:
-> 	callq	e9140 <__fxstat>
-> S390 has a register number as first operand:
-> 	brasl	%r14,41d60 <abort>
-> Therefore the target addresses on s390 are always zero
-> which is an invalid address.
-> 
-> Fix this by skipping the first operand on s390.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-> ---
->  tools/perf/util/annotate.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 49ff825f745c..feb6006b676d 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -192,6 +192,14 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map *
->  	};
->  
->  	ops->target.addr = strtoull(ops->raw, &endptr, 16);
-> +	if (!strcmp(arch->name, "s390")) {
-> +		/* s390 function call 1st operand is register */
-> +		tok = strchr(ops->raw, ',');
-> +		if (tok)
-> +			ops->target.addr = strtoull(tok + 1, &endptr, 16);
-> +		else
-> +			ops->target.addr = 0;
-> +	} else
-> +		ops->target.addr = strtoull(ops->raw, &endptr, 16);
+This series of patches adds some simple improvements to the way perf stat
+handles PMUs that have multiple instances by:
 
-Do we have to do this here? Can't we have a s390_call__parse() and set
-that in the s/390 instructions?
+1. Adding glob-like matching in addition to the prefix-based matching
+   introduced previously (patch 1).
+2. Adding the ability to recover the PMU names when printing the events
+   separately with the --no-merge option (patch 2).
+3. Restoring auto-merge for events created by prefix or glob-like match
+   (patch 3). Note that this still keeps the behavior that disables
+   auto-merging of legacy symbolic events (e.g. cycles).
 
-We should avoid arch specific stuff in the common code, and we could
-even have a call_reg__parse() perhaps? One that knows that the first
-operand is a reg and it should _always_ skip te first one, be it on
-s/390 or elsewhere?
+V3:
 
-- Arnaldo
-  
->  	name = strchr(endptr, '<');
->  	if (name == NULL)
-> -- 
-> 2.14.3
+- Consolidated prefix and glob matching into a single glob match with a
+  trailing * to maintain prefix matching and have more consistent behavior.
+  E.g., all of these match all the uncore_imc PMUs: imc, imc*, *imc, *imc*
+
+V2:
+
+- Updated the documentation to explain prefix and glob matching of PMU
+  names, and event auto-merging.
+- Added sample output to the third patch.
+
+Agustin Vega-Frias (3):
+  perf, tools: Support wildcards on pmu name in dynamic pmu events
+  perf, tools: Display pmu name when printing unmerged events in stat
+  perf pmu: Auto-merge PMU events created by prefix or glob match
+
+ tools/perf/Documentation/perf-list.txt |  8 +++++++-
+ tools/perf/Documentation/perf-stat.txt | 17 +++++++++++++++++
+ tools/perf/builtin-stat.c              | 29 ++++++++++++++++++++++++++++-
+ tools/perf/util/evsel.c                |  1 +
+ tools/perf/util/evsel.h                |  1 +
+ tools/perf/util/parse-events.c         | 21 ++++++++++-----------
+ tools/perf/util/parse-events.h         |  2 +-
+ tools/perf/util/parse-events.l         |  2 +-
+ tools/perf/util/parse-events.y         | 23 ++++++++++++++---------
+ 9 files changed, 80 insertions(+), 24 deletions(-)
+
+--
+Qualcomm Datacenter Technologies, Inc. on behalf of the Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
