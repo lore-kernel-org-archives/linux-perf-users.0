@@ -1,8 +1,8 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [RFC V3 1/3] perf, tools: Support wildcards on pmu name in
  dynamic pmu events
-Date: Wed, 7 Mar 2018 21:21:14 +0100
-Message-ID: <20180307202114.GA2926@krava>
+Date: Wed, 7 Mar 2018 17:33:06 -0300
+Message-ID: <20180307203306.GY3701@kernel.org>
 References: <1520345084-42646-2-git-send-email-agustinv@codeaurora.org>
  <20180307160224.GN3701@kernel.org>
  <d3bd59db56fbc13b931ae45573bf94d8@codeaurora.org>
@@ -20,13 +20,73 @@ Content-Disposition: inline
 In-Reply-To: <0ba091eaa6676498b4554978606d8016@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Agustin Vega-Frias <agustinv@codeaurora.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
+Cc: Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Mar 07, 2018 at 03:09:08PM -0500, Agustin Vega-Frias wrote:
-
-SNIP
-
+Em Wed, Mar 07, 2018 at 03:09:08PM -0500, Agustin Vega-Frias escreveu:
+> On 2018-03-07 14:58, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Mar 07, 2018 at 02:49:50PM -0500, Agustin Vega-Frias escreveu:
+> > > On 2018-03-07 14:39, Arnaldo Carvalho de Melo wrote:
+> > > > Em Wed, Mar 07, 2018 at 04:05:43PM -0300, Arnaldo Carvalho de Melo
+> > > > escreveu:
+> > > > > Em Wed, Mar 07, 2018 at 04:05:09PM -0300, Arnaldo Carvalho de Melo
+> > > > > escreveu:
+> > > > > > Em Wed, Mar 07, 2018 at 10:54:15AM -0800, Andi Kleen escreveu:
+> > > > > > > > Sorry about that. That's probably because FNM_EXTMATCH is a GNU extension,
+> > > > > > > > not POSIX, and the Alpine and Android runtimes likely don't implement
+> > > > > > > > that...
+> > > > > > > > I'll send a fix reverting back to the strncmp to ignore the uncore_ prefix,
+> > > > > > > > and dropping that extension.
+> > > > > > >
+> > > > > > > Just don't set it? Even the basic glob patterns are useful.
+> > > > > >
+> > > > > > Or use:
+> > > > > >
+> > > > > > #ifndef FNM_EXTMATCH
+> > > > > > #define FNM_EXTMATCH 0
+> > > > > > #endif
+> > > > > >
+> > > > > > So on systems without it, its not used, while on GNU systems, we have
+> > > > > > that functionality (pretty fancy, someone may need that... ;-))
+> > > > >
+> > > > > I'll try this route, btw, no need to send more patches for now.
+> > > >
+> > > > So, with the patch at the end of this message, it works now in those
+> > > > systems:
+> > > >
+> > > > [root@jouet ~]# dm
+> > > >    1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+> > > >    2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1
+> > > > 20160822
+> > > >    3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+> > > >    4 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
+> > > >    5 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623
+> > > > (Red Hat 4.8.5-11)
+> > > >    6 amazonlinux:2                 : Ok   gcc (GCC) 7.2.1 20170915
+> > > > (Red Hat 7.2.1-2)
+> > > >    7 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc
+> > > > (GCC) 4.9.x 20150123 (prerelease)
+> > > >    8 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc
+> > > > (GCC) 4.9.x 20150123 (prerelease)
+> > > >    9 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704
+> > > > (Red Hat 4.1.2-55)
+> > > >   10 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313
+> > > > (Red Hat 4.4.7-18)
+> > > >
+> > > > I stopped the test at this point to process some more patches, will
+> > > > restart the tests with those extra patches and if all goes well with the
+> > > > other 46 build environments, push upstream, thanks.
+> > > >
+> > > > - Arnaldo
+> > > >
+> > > > diff --git a/tools/perf/util/parse-events.y
+> > > > b/tools/perf/util/parse-events.y
+> > > > index 316ac073aa78..18473be7d787 100644
+> > > > --- a/tools/perf/util/parse-events.y
+> > > > +++ b/tools/perf/util/parse-events.y
+> > > > @@ -9,6 +9,13 @@
+> > > >  #define YYDEBUG 1
+> > > >
 > > > >  #include <fnmatch.h>
 > > > > +/*
 > > > > + * GNU extension, so better define it to 0 for systems such
@@ -57,12 +117,6 @@ SNIP
 > I'd prefer we fix this. I have the new patch ready, do you want me to just
 > send you that patch instead of the series?
 
-we could also detect the extension via build features
-and have HAVE_FEATURE_ macro defined for it, so we'd
-have full functionality on system with its support
+Just that patch is ok.
 
-but maybe that's little too much for feature this size,
-or we can add it later.. now I'd be ok with the limited
-functionality as well
-
-jirka
+- Arnaldo
