@@ -1,52 +1,134 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC V3 0/3] perf stat: improvements for handling of multiple
- PMUs
-Date: Wed, 7 Mar 2018 11:30:04 -0300
-Message-ID: <20180307143004.GH3701@kernel.org>
-References: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
- <20180307100408.GA22848@krava>
- <20180307133630.GD3701@kernel.org>
- <20180307135105.GA9080@krava>
+Subject: Re: [PATCH v2] perf annotate: Fix s390 target function disassembly
+Date: Wed, 7 Mar 2018 11:43:25 -0300
+Message-ID: <20180307144325.GK3701@kernel.org>
+References: <20180307134325.96106-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180307135105.GA9080@krava>
+In-Reply-To: <20180307134325.96106-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>, Agustin Vega-Frias <agustinv@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Mar 07, 2018 at 02:51:05PM +0100, Jiri Olsa escreveu:
-> On Wed, Mar 07, 2018 at 10:36:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Mar 07, 2018 at 11:04:08AM +0100, Jiri Olsa escreveu:
-> > > On Tue, Mar 06, 2018 at 09:04:41AM -0500, Agustin Vega-Frias wrote:
-> > > > This series of patches adds some simple improvements to the way perf stat
-> > > > handles PMUs that have multiple instances by:
-> > > > 
-> > > > 1. Adding glob-like matching in addition to the prefix-based matching
-> > > >    introduced previously (patch 1).
-> > > > 2. Adding the ability to recover the PMU names when printing the events
-> > > >    separately with the --no-merge option (patch 2).
-> > > > 3. Restoring auto-merge for events created by prefix or glob-like match
-> > > >    (patch 3). Note that this still keeps the behavior that disables
-> > > >    auto-merging of legacy symbolic events (e.g. cycles).
-> > > > 
-> > > > V3:
-> > > > 
-> > > > - Consolidated prefix and glob matching into a single glob match with a
-> > > >   trailing * to maintain prefix matching and have more consistent behavior.
-> > > >   E.g., all of these match all the uncore_imc PMUs: imc, imc*, *imc, *imc*
-> > > 
-> > > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> > 
-> > Thanks, applied.
-> > 
-> > I guess Andi had Acked or Reviewed this, no?
+Em Wed, Mar 07, 2018 at 02:43:25PM +0100, Thomas Richter escreveu:
+> Perf annotate displays function call assembler instructions
+> with a right arrow. Hitting enter on this line/instruction
+> causes the browser to disassemble this target function and
+> show it on the screen.  On s390 this results in an error
+> message 'The called function was not found.'
 > 
-> not the latest version.. please wait for his ack
+> The function call assembly line parsing does not handle
+> the s390 bras and brasl instructions. Function call__parse
+> expects the target as first operand:
+> 	callq	e9140 <__fxstat>
+> S390 has a register number as first operand:
+> 	brasl	%r14,41d60 <abort>
+> Therefore the target addresses on s390 are always zero
+> which is an invalid address.
+> 
+> Introduce a s390 specific call parsing function which skips
+> the first operand on s390.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> ---
+>  tools/perf/arch/s390/annotate/instructions.c | 53 +++++++++++++++++++++++++++-
+>  tools/perf/util/annotate.c                   |  2 +-
+>  2 files changed, 53 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+> index 8c72b44444cb..0a3e39b5143d 100644
+> --- a/tools/perf/arch/s390/annotate/instructions.c
+> +++ b/tools/perf/arch/s390/annotate/instructions.c
+> @@ -1,6 +1,57 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/compiler.h>
+>  
+> +static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
+> +			    struct map *map)
+> +{
+> +	char *endptr, *tok, *name;
+> +	struct addr_map_symbol target = {
+> +		.map = map,
+> +	};
+> +
+> +	tok = strchr(ops->raw, ',');
+> +	if (!tok)
+> +		return -1;
+> +
+> +	ops->target.addr = strtoull(tok + 1, &endptr, 16);
+> +
+> +	name = strchr(endptr, '<');
+> +	if (name == NULL)
+> +		return -1;
+> +
+> +	name++;
+> +
+> +	if (arch->objdump.skip_functions_char &&
+> +	    strchr(name, arch->objdump.skip_functions_char))
+> +		return -1;
+> +
+> +	tok = strchr(name, '>');
+> +	if (tok == NULL)
+> +		return -1;
+> +
+> +	*tok = '\0';
+> +	ops->target.name = strdup(name);
+> +	*tok = '>';
+> +
+> +	if (ops->target.name == NULL)
+> +		return -1;
+> +	target.addr = map__objdump_2mem(map, ops->target.addr);
+> +
+> +	if (map_groups__find_ams(&target) == 0 &&
+> +	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
+> +		ops->target.sym = target.sym;
+> +
+> +	return 0;
+> +}
+> +
+> +static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+> +			   struct ins_operands *ops);
+> +
+> +static struct ins_ops s390_call_ops = {
+> +	.parse	   = s390_call__parse,
+> +	.scnprintf = call__scnprintf,
+> +};
+> +
+>  static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
+>  {
+>  	struct ins_ops *ops = NULL;
+> @@ -14,7 +65,7 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+>  	if (!strcmp(name, "bras") ||
+>  	    !strcmp(name, "brasl") ||
+>  	    !strcmp(name, "basr"))
+> -		ops = &call_ops;
+> +		ops = &s390_call_ops;
+>  	if (!strcmp(name, "br"))
+>  		ops = &ret_ops;
+>  
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 49ff825f745c..bc3302da702b 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -248,7 +248,7 @@ static struct ins_ops call_ops = {
+>  
+>  bool ins__is_call(const struct ins *ins)
+>  {
+> -	return ins->ops == &call_ops;
+> +	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
 
-Sure, I have this applied to my local branch, and will add his acks or
-drop the patches if he still has any objection, Andi?
+This is good enough so far, but I think we may end up just making this
+be:
+
+bool ins__is_call(const struct ins *ins)
+{
+	return ins->ops->is_call;
+}
+
+This way we remove this arch specific stuff from the core annotate.c
+code, applying this patch, this can be done on top, later.
 
 - Arnaldo
