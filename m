@@ -1,203 +1,28 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC V3 1/3] perf, tools: Support wildcards on pmu name in
- dynamic pmu events
-Date: Wed, 7 Mar 2018 13:02:24 -0300
-Message-ID: <20180307160224.GN3701@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC V3 0/3] perf stat: improvements for handling of multiple
+ PMUs
+Date: Wed, 7 Mar 2018 09:09:18 -0800
+Message-ID: <20180307170918.GJ25017@tassilo.jf.intel.com>
 References: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
- <1520345084-42646-2-git-send-email-agustinv@codeaurora.org>
+ <20180307100408.GA22848@krava>
+ <20180307133630.GD3701@kernel.org>
+ <20180307135105.GA9080@krava>
+ <20180307143004.GH3701@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520345084-42646-2-git-send-email-agustinv@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Agustin Vega-Frias <agustinv@codeaurora.org>
-Cc: Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, timur@codeaurora.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180307143004.GH3701@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <andi@firstfloor.org>, Agustin Vega-Frias <agustinv@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Mar 06, 2018 at 09:04:42AM -0500, Agustin Vega-Frias escreveu:
-> Starting on v4.12 event parsing code for dynamic pmu events already
-> supports prefix-based matching of multiple pmus when creating dynamic
-> events. E.g., in a system with the following dynamic pmus:
-> 
->     mypmu_0
->     mypmu_1
->     mypmu_2
->     mypmu_4
-> 
-> passing mypmu/<config>/ as an event spec will result in the creation
-> of the event in all of the pmus. This change expands this matching
-> through the use of fnmatch so glob-like expressions can be used to
-> create events in multiple pmus. E.g., in the system described above
-> if a user only wants to create the event in mypmu_0 and mypmu_1,
-> mypmu_[01]/<config>/ can be passed.
-> 
-> Change-Id: Icb25653fc5d5239c20f3bffdfdf4ab4c9c9bb20b
-> Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
-> ---
->  tools/perf/Documentation/perf-list.txt |  8 +++++++-
->  tools/perf/Documentation/perf-stat.txt | 13 +++++++++++++
->  tools/perf/util/parse-events.l         |  2 +-
->  tools/perf/util/parse-events.y         | 19 ++++++++++++-------
->  4 files changed, 33 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> index e2a897a..2549c34 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -141,7 +141,13 @@ on the first memory controller on socket 0 of a Intel Xeon system
->  
->  Each memory controller has its own PMU.  Measuring the complete system
->  bandwidth would require specifying all imc PMUs (see perf list output),
-> -and adding the values together.
-> +and adding the values together. To simplify creation of multiple events,
-> +prefix and glob matching is supported in the PMU name, and the prefix
-> +'uncore_' is also ignored when performing the match. So the command above
-> +can be expanded to all memory controllers by using the syntaxes:
-> +
-> +  perf stat -C 0 -a imc/cas_count_read/,imc/cas_count_write/ -I 1000 ...
-> +  perf stat -C 0 -a *imc*/cas_count_read/,*imc*/cas_count_write/ -I 1000 ...
->  
->  This example measures the combined core power every second
->  
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 823fce7..5ee954f 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -49,6 +49,13 @@ report::
->  	  parameters are defined by corresponding entries in
->  	  /sys/bus/event_source/devices/<pmu>/format/*
->  
-> +	Note that the last two syntaxes support prefix and glob matching in
-> +	the PMU name to simplify creation of events accross multiple instances
-> +	of the same type of PMU in large systems (e.g. memory controller PMUs).
-> +	Multiple PMU instances are typical for uncore PMUs, so the prefix
-> +	'uncore_' is also ignored when performing this match.
-> +
-> +
->  -i::
->  --no-inherit::
->          child tasks do not inherit counters
-> @@ -246,6 +253,12 @@ taskset.
->  --no-merge::
->  Do not merge results from same PMUs.
->  
-> +When multiple events are created from a single event alias, stat will,
-> +by default, aggregate the event counts and show the result in a single
-> +row. This option disables that behavior and shows the individual events
-> +and counts. Aliases are listed immediately after the Kernel PMU events
-> +by perf list.
-> +
->  --smi-cost::
->  Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
->  
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> index 655ecff..a1a01b1 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -175,7 +175,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
->  num_dec		[0-9]+
->  num_hex		0x[a-fA-F0-9]+
->  num_raw_hex	[a-fA-F0-9]+
-> -name		[a-zA-Z_*?][a-zA-Z0-9_*?.]*
-> +name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]]*
->  name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
->  drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
->  /* If you add a modifier you need to update check_modifier() */
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index e81a20e..316ac07 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -8,6 +8,7 @@
->  
->  #define YYDEBUG 1
->  
-> +#include <fnmatch.h>
->  #include <linux/compiler.h>
->  #include <linux/list.h>
->  #include <linux/types.h>
-> @@ -234,21 +235,25 @@ PE_NAME opt_event_config
->  	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
->  		struct perf_pmu *pmu = NULL;
->  		int ok = 0;
-> +		char *pattern;
->  
-> -		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> -			char *name = pmu->name;
-> +		if (asprintf(&pattern, "?(uncore_)%s*", $1) < 0)
-> +			YYABORT;
->  
-> -			if (!strncmp(name, "uncore_", 7) &&
-> -			    strncmp($1, "uncore_", 7))
-> -				name += 7;
-> -			if (!strncmp($1, name, strlen($1))) {
-> -				if (parse_events_copy_term_list(orig_terms, &terms))
-> +		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> +			if (!fnmatch(pattern, pmu->name, FNM_EXTMATCH)) {
-> +				if (parse_events_copy_term_list(orig_terms, &terms)) {
-> +					free(pattern);
+> Sure, I have this applied to my local branch, and will add his acks or
+> drop the patches if he still has any objection, Andi?
 
-This breaks the build in at least Alpine Linux 3.4, 3.5 and 3.6 and android-ndk:r15c-arm
+Patches looks good to me.
 
-Alpine 3.6 build failure:
+Acked-by: Andi Kleen <ak@linux.intel.com>
 
-  CC       /tmp/build/perf/util/parse-events-bison.o
-util/parse-events.y: In function 'parse_events_parse':
-util/parse-events.y:244:37: error: 'FNM_EXTMATCH' undeclared (first use in this function)
-    if (!fnmatch(pattern, pmu->name, FNM_EXTMATCH)) {
-                                     ^~~~~~~~~~~~
-util/parse-events.y:244:37: note: each undeclared identifier is reported only once for each function it appears in
-  CC       /tmp/build/perf/bench/mem-functions.o
-mv: can't rename '/tmp/build/perf/util/.parse-events-bison.o.tmp': No such file or directory
-make[4]: *** [/git/linux/tools/build/Makefile.build:96: /tmp/build/perf/util/parse-events-bison.o] Error 1
-make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
-make[2]: *** [Makefile.perf:623: /tmp/build/perf/libperf-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-
-Android NDK r15c ARM, cross built from, IIRC, Fedora 24:
-
- CC       /tmp/build/perf/util/parse-events-bison.o
-util/parse-events.y: In function 'parse_events_parse':
-util/parse-events.y:244:37: error: 'FNM_EXTMATCH' undeclared (first use in this function)
-    if (!fnmatch(pattern, pmu->name, FNM_EXTMATCH)) {
-                                     ^
-util/parse-events.y:244:37: note: each undeclared identifier is reported only once for each function it appears in
-mv: cannot stat '/tmp/build/perf/util/.parse-events-bison.o.tmp': No such file or directory
-make[4]: *** [/git/linux/tools/build/Makefile.build:96: /tmp/build/perf/util/parse-events-bison.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  CC       /tmp/build/perf/builtin-kmem.o
-make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
-make[2]: *** [Makefile.perf:623: /tmp/build/perf/libperf-in.o] Error 2
-
-
-Probably others, I'll investigate later, feel free to do it if you have
-the time now :-)
-
-Extra info:
-
-
-   1    46.29 alpine:3.4                    : FAIL gcc (Alpine 5.3.0) 5.3.0
-   2    53.37 alpine:3.5                    : FAIL gcc (Alpine 6.2.1) 6.2.1 20160822
-   3    48.42 alpine:3.6                    : FAIL gcc (Alpine 6.3.0) 6.3.0
-   4    35.88 alpine:edge                   : FAIL gcc (Alpine 6.4.0) 6.4.0
-   5    96.79 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)
-   6   116.40 amazonlinux:2                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2)
-   7    34.30 android-ndk:r12b-arm          : FAIL arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-   8    33.69 android-ndk:r15c-arm          : FAIL arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-   9    60.50 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
-  10    88.54 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-18)
-  11   108.89 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-16)
-
-
-The builds are still ongoing.
-
-- Arnaldo
+-Andi
