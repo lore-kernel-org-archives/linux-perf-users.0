@@ -1,47 +1,26 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC V3 0/3] perf stat: improvements for handling of multiple
- PMUs
-Date: Wed, 7 Mar 2018 14:51:05 +0100
-Message-ID: <20180307135105.GA9080@krava>
-References: <1520345084-42646-1-git-send-email-agustinv@codeaurora.org>
- <20180307100408.GA22848@krava>
- <20180307133630.GD3701@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [GIT PULL 0/9] perf/urgent fixes
+Date: Wed, 7 Mar 2018 11:23:35 -0300
+Message-ID: <20180307142335.GF3701@kernel.org>
+References: <20180306172343.16546-1-acme@kernel.org>
+ <20180307082258.ldhidzjvdekhhi5g@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180307133630.GD3701@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Andi Kleen <andi@firstfloor.org>, Agustin Vega-Frias <agustinv@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, timur@codeaurora.org
+In-Reply-To: <20180307082258.ldhidzjvdekhhi5g@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, David Ahern <dsahern@gmail.com>, David Woodhouse <dwmw@amazon.co.uk>, Ilya Pronin <ipronin@twitter.com>, Jin Yao <yao.jin@intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Sangwon Hong <qpakzk@gmail.com>, stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>, Tom Lendacky <thomas.lendacky@amd.com>, Wang Nan <wangnan0@huawei.>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Mar 07, 2018 at 10:36:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Mar 07, 2018 at 11:04:08AM +0100, Jiri Olsa escreveu:
-> > On Tue, Mar 06, 2018 at 09:04:41AM -0500, Agustin Vega-Frias wrote:
-> > > This series of patches adds some simple improvements to the way perf stat
-> > > handles PMUs that have multiple instances by:
-> > > 
-> > > 1. Adding glob-like matching in addition to the prefix-based matching
-> > >    introduced previously (patch 1).
-> > > 2. Adding the ability to recover the PMU names when printing the events
-> > >    separately with the --no-merge option (patch 2).
-> > > 3. Restoring auto-merge for events created by prefix or glob-like match
-> > >    (patch 3). Note that this still keeps the behavior that disables
-> > >    auto-merging of legacy symbolic events (e.g. cycles).
-> > > 
-> > > V3:
-> > > 
-> > > - Consolidated prefix and glob matching into a single glob match with a
-> > >   trailing * to maintain prefix matching and have more consistent behavior.
-> > >   E.g., all of these match all the uncore_imc PMUs: imc, imc*, *imc, *imc*
-> > 
-> > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Thanks, applied.
-> 
-> I guess Andi had Acked or Reviewed this, no?
+Em Wed, Mar 07, 2018 at 09:22:58AM +0100, Ingo Molnar escreveu:
+> Pulled, thanks a lot Arnaldo!
+ 
+> Note that there's a new, minor conflict between perf/core and perf/urgent - I 
+> resolved it and merged perf/urgent into perf/core, please double check my 
+> resolution.
 
-not the latest version.. please wait for his ack
+Thanks, everything seems well and dandy,
 
-jirka
+- Arnaldo
