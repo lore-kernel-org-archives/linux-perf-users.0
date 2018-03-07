@@ -1,129 +1,67 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/9] perf record: Fix crash in pipe mode
-Date: Tue,  6 Mar 2018 14:23:38 -0300
-Message-ID: <20180306172343.16546-5-acme@kernel.org>
-References: <20180306172343.16546-1-acme@kernel.org>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH v2 0/2] perf sched map: re-annotate shortname if thread
+ comm changed
+Date: Wed, 7 Mar 2018 10:28:57 +0800
+Message-ID: <20180307022857.kqxmo24we5r54nlh@intel.com>
+References: <1520307457-23668-1-git-send-email-changbin.du@intel.com>
+ <20180306075302.GA19895@krava>
+ <20180306141707.GG10176@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180306172343.16546-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180306141707.GG10176@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, changbin.du@intel.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Tue, Mar 06, 2018 at 11:17:07AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Mar 06, 2018 at 08:53:02AM +0100, Jiri Olsa escreveu:
+> > On Tue, Mar 06, 2018 at 11:37:35AM +0800, changbin.du@intel.com wrote:
+> > > From: Changbin Du <changbin.du@intel.com>
+> > > 
+> > > v2:
+> > >   o add a patch to move thread::shortname to thread_runtime
+> > >   o add function perf_sched__process_comm() to process PERF_RECORD_COMM event.
+> > > 
+> > > Changbin Du (2):
+> > >   perf sched: move thread::shortname to thread_runtime
+> > >   perf sched map: re-annotate shortname if thread comm changed
+> > 
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Thanks, applied both, the final layout for 'struct thread_runtime':
+> 
+> [root@jouet perf]# pahole -C thread_runtime ~/bin/perf
+> struct thread_runtime {
+> 	u64                        last_time;            /*     0     8 */
+> 	u64                        dt_run;               /*     8     8 */
+> 	u64                        dt_sleep;             /*    16     8 */
+> 	u64                        dt_iowait;            /*    24     8 */
+> 	u64                        dt_preempt;           /*    32     8 */
+> 	u64                        dt_delay;             /*    40     8 */
+> 	u64                        ready_to_run;         /*    48     8 */
+> 	struct stats               run_stats;            /*    56    40 */
+> 	/* --- cacheline 1 boundary (64 bytes) was 32 bytes ago --- */
+> 	u64                        total_run_time;       /*    96     8 */
+> 	u64                        total_sleep_time;     /*   104     8 */
+> 	u64                        total_iowait_time;    /*   112     8 */
+> 	u64                        total_preempt_time;   /*   120     8 */
+> 	/* --- cacheline 2 boundary (128 bytes) --- */
+> 	u64                        total_delay_time;     /*   128     8 */
+> 	int                        last_state;           /*   136     4 */
+> 	char                       shortname[3];         /*   140     3 */
+> 	_Bool                      comm_changed;         /*   143     1 */
+> 	u64                        migrations;           /*   144     8 */
+> 
+> 	/* size: 152, cachelines: 3, members: 17 */
+> 	/* last cacheline: 24 bytes */
+> };
+> [root@jouet perf]#
 
-Currently we can crash perf record when running in pipe mode, like:
+Hi Arnaldo, thanks for your patient optimization for this!
 
-  $ perf record ls | perf report
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  perf: Segmentation fault
-  Error:
-  The - file has no samples!
-
-The callstack of the crash is:
-
-    0x0000000000515242 in perf_event__synthesize_event_update_name
-  3513            ev = event_update_event__new(len + 1, PERF_EVENT_UPDATE__NAME, evsel->id[0]);
-  (gdb) bt
-  #0  0x0000000000515242 in perf_event__synthesize_event_update_name
-  #1  0x00000000005158a4 in perf_event__synthesize_extra_attr
-  #2  0x0000000000443347 in record__synthesize
-  #3  0x00000000004438e3 in __cmd_record
-  #4  0x000000000044514e in cmd_record
-  #5  0x00000000004cbc95 in run_builtin
-  #6  0x00000000004cbf02 in handle_internal_command
-  #7  0x00000000004cc054 in run_argv
-  #8  0x00000000004cc422 in main
-
-The reason of the crash is that the evsel does not have ids array
-allocated and the pipe's synthesize code tries to access it.
-
-We don't force evsel ids allocation when we have single event, because
-it's not needed. However we need it when we are in pipe mode even for
-single event as a key for evsel update event.
-
-Fixing this by forcing evsel ids allocation event for single event, when
-we are in pipe mode.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180302161354.30192-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-record.c | 9 +++++++++
- tools/perf/perf.h           | 1 +
- tools/perf/util/record.c    | 8 ++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index bf4ca749d1ac..a217623fec2e 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -881,6 +881,15 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		}
- 	}
- 
-+	/*
-+	 * If we have just single event and are sending data
-+	 * through pipe, we need to force the ids allocation,
-+	 * because we synthesize event name through the pipe
-+	 * and need the id for that.
-+	 */
-+	if (data->is_pipe && rec->evlist->nr_entries == 1)
-+		rec->opts.sample_id = true;
-+
- 	if (record__open(rec) != 0) {
- 		err = -1;
- 		goto out_child;
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index cfe46236a5e5..57b9b342d533 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -61,6 +61,7 @@ struct record_opts {
- 	bool	     tail_synthesize;
- 	bool	     overwrite;
- 	bool	     ignore_missing_thread;
-+	bool	     sample_id;
- 	unsigned int freq;
- 	unsigned int mmap_pages;
- 	unsigned int auxtrace_mmap_pages;
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 1e97937b03a9..6f09e4962dad 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -137,6 +137,7 @@ void perf_evlist__config(struct perf_evlist *evlist, struct record_opts *opts,
- 	struct perf_evsel *evsel;
- 	bool use_sample_identifier = false;
- 	bool use_comm_exec;
-+	bool sample_id = opts->sample_id;
- 
- 	/*
- 	 * Set the evsel leader links before we configure attributes,
-@@ -163,8 +164,7 @@ void perf_evlist__config(struct perf_evlist *evlist, struct record_opts *opts,
- 		 * match the id.
- 		 */
- 		use_sample_identifier = perf_can_sample_identifier();
--		evlist__for_each_entry(evlist, evsel)
--			perf_evsel__set_sample_id(evsel, use_sample_identifier);
-+		sample_id = true;
- 	} else if (evlist->nr_entries > 1) {
- 		struct perf_evsel *first = perf_evlist__first(evlist);
- 
-@@ -174,6 +174,10 @@ void perf_evlist__config(struct perf_evlist *evlist, struct record_opts *opts,
- 			use_sample_identifier = perf_can_sample_identifier();
- 			break;
- 		}
-+		sample_id = true;
-+	}
-+
-+	if (sample_id) {
- 		evlist__for_each_entry(evlist, evsel)
- 			perf_evsel__set_sample_id(evsel, use_sample_identifier);
- 	}
 -- 
-2.14.3
+Thanks,
+Changbin Du
