@@ -1,145 +1,112 @@
-From: Agustin Vega-Frias <agustinv@codeaurora.org>
-Subject: [RFC V4] perf, tools: Support wildcards on pmu name in dynamic pmu events
-Date: Wed,  7 Mar 2018 15:35:47 -0500
-Message-ID: <1520454947-16977-1-git-send-email-agustinv@codeaurora.org>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf annotate: Handle s390 pc relative load and store instruction.
+Date: Thu,  8 Mar 2018 13:09:13 +0100
+Message-ID: <20180308120913.14802-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: timur@codeaurora.org, agustinv@codeaurora.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Starting on v4.12 event parsing code for dynamic pmu events already
-supports prefix-based matching of multiple pmus when creating dynamic
-events. E.g., in a system with the following dynamic pmus:
+S390 has several load and store instructions with target operand
+addressing relative to the program counter, for example lrl, lgrl,
+strl, stgrl.
 
-    mypmu_0
-    mypmu_1
-    mypmu_2
-    mypmu_4
+These instructions are handled similar to x86. Objdump output
+displays those instructions as:
+   9595c: c4 2d 00 09 9c 54   lgrl   %r7,1c8540 <mp_+0x60>
+This output is parsed (like on x86) and perf annotate shows those
+lines as:
+   lgrl   %r7,mp_+0x60
 
-passing mypmu/<config>/ as an event spec will result in the creation
-of the event in all of the pmus. This change expands this matching
-through the use of fnmatch so glob-like expressions can be used to
-create events in multiple pmus. E.g., in the system described above
-if a user only wants to create the event in mypmu_0 and mypmu_1,
-mypmu_[01]/<config>/ can be passed.
+This patch handles the s390 specific instruction parsing for
+pc relative load and store instructions.
 
-Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
 ---
- tools/perf/Documentation/perf-list.txt |  8 +++++++-
- tools/perf/Documentation/perf-stat.txt | 13 +++++++++++++
- tools/perf/util/parse-events.l         |  2 +-
- tools/perf/util/parse-events.y         | 14 ++++++++++++--
- 4 files changed, 33 insertions(+), 4 deletions(-)
+ tools/perf/arch/s390/annotate/instructions.c | 63 ++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index e2a897a..2549c34 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -141,7 +141,13 @@ on the first memory controller on socket 0 of a Intel Xeon system
-
- Each memory controller has its own PMU.  Measuring the complete system
- bandwidth would require specifying all imc PMUs (see perf list output),
--and adding the values together.
-+and adding the values together. To simplify creation of multiple events,
-+prefix and glob matching is supported in the PMU name, and the prefix
-+'uncore_' is also ignored when performing the match. So the command above
-+can be expanded to all memory controllers by using the syntaxes:
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index 0a3e39b5143d..0c54f1b33ac0 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -52,6 +52,61 @@ static struct ins_ops s390_call_ops = {
+ 	.scnprintf = call__scnprintf,
+ };
+ 
++static int s390_mov__parse(struct arch *arch __maybe_unused,
++			   struct ins_operands *ops,
++			   struct map *map __maybe_unused)
++{
++	char *s = strchr(ops->raw, ','), *target, *endptr;
 +
-+  perf stat -C 0 -a imc/cas_count_read/,imc/cas_count_write/ -I 1000 ...
-+  perf stat -C 0 -a *imc*/cas_count_read/,*imc*/cas_count_write/ -I 1000 ...
-
- This example measures the combined core power every second
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 823fce7..5ee954f 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -49,6 +49,13 @@ report::
- 	  parameters are defined by corresponding entries in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
-
-+	Note that the last two syntaxes support prefix and glob matching in
-+	the PMU name to simplify creation of events accross multiple instances
-+	of the same type of PMU in large systems (e.g. memory controller PMUs).
-+	Multiple PMU instances are typical for uncore PMUs, so the prefix
-+	'uncore_' is also ignored when performing this match.
++	if (s == NULL)
++		return -1;
 +
++	*s = '\0';
++	ops->source.raw = strdup(ops->raw);
++	*s = ',';
 +
- -i::
- --no-inherit::
-         child tasks do not inherit counters
-@@ -246,6 +253,12 @@ taskset.
- --no-merge::
- Do not merge results from same PMUs.
-
-+When multiple events are created from a single event alias, stat will,
-+by default, aggregate the event counts and show the result in a single
-+row. This option disables that behavior and shows the individual events
-+and counts. Aliases are listed immediately after the Kernel PMU events
-+by perf list.
++	if (ops->source.raw == NULL)
++		return -1;
 +
- --smi-cost::
- Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
-
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 655ecff..a1a01b1 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -175,7 +175,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]+
- num_raw_hex	[a-fA-F0-9]+
--name		[a-zA-Z_*?][a-zA-Z0-9_*?.]*
-+name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]]*
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
- /* If you add a modifier you need to update check_modifier() */
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index e81a20e..dedf184 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -8,6 +8,7 @@
-
- #define YYDEBUG 1
-
-+#include <fnmatch.h>
- #include <linux/compiler.h>
- #include <linux/list.h>
- #include <linux/types.h>
-@@ -234,6 +235,10 @@ PE_NAME opt_event_config
- 	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
-+		char *pattern;
++	target = ++s;
++	ops->target.raw = strdup(target);
++	if (ops->target.raw == NULL)
++		goto out_free_source;
 +
-+		if (asprintf(&pattern, "%s*", $1) < 0)
-+			YYABORT;
-
- 		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 			char *name = pmu->name;
-@@ -241,14 +246,19 @@ PE_NAME opt_event_config
- 			if (!strncmp(name, "uncore_", 7) &&
- 			    strncmp($1, "uncore_", 7))
- 				name += 7;
--			if (!strncmp($1, name, strlen($1))) {
--				if (parse_events_copy_term_list(orig_terms, &terms))
-+			if (!fnmatch(pattern, name, 0)) {
-+				if (parse_events_copy_term_list(orig_terms, &terms)) {
-+					free(pattern);
- 					YYABORT;
-+				}
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
- 					ok++;
- 				parse_events_terms__delete(terms);
- 			}
- 		}
++	ops->target.addr = strtoull(target, &endptr, 16);
++	if (endptr == target)
++		goto out_free_target;
 +
-+		free(pattern);
++	s = strchr(endptr, '<');
++	if (s == NULL)
++		goto out_free_target;
++	endptr = strchr(s + 1, '>');
++	if (endptr == NULL)
++		goto out_free_target;
 +
- 		if (!ok)
- 			YYABORT;
- 	}
---
-Qualcomm Datacenter Technologies, Inc. on behalf of the Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
++	*endptr = '\0';
++	ops->target.name = strdup(s + 1);
++	*endptr = '>';
++	if (ops->target.name == NULL)
++		goto out_free_target;
++
++	return 0;
++
++out_free_target:
++	zfree(&ops->target.raw);
++out_free_source:
++	zfree(&ops->source.raw);
++	return -1;
++}
++
++static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
++			  struct ins_operands *ops);
++
++static struct ins_ops s390_mov_ops = {
++	.parse	   = s390_mov__parse,
++	.scnprintf = mov__scnprintf,
++};
++
+ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
+ {
+ 	struct ins_ops *ops = NULL;
+@@ -68,6 +123,14 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+ 		ops = &s390_call_ops;
+ 	if (!strcmp(name, "br"))
+ 		ops = &ret_ops;
++	/* override load/store relative to PC */
++	if (!strcmp(name, "lrl") ||
++	    !strcmp(name, "lgrl") ||
++	    !strcmp(name, "lgfrl") ||
++	    !strcmp(name, "llgfrl") ||
++	    !strcmp(name, "strl") ||
++	    !strcmp(name, "stgrl"))
++		ops = &s390_mov_ops;
+ 
+ 	if (ops)
+ 		arch__associate_ins_ops(arch, name, ops);
+-- 
+2.14.3
