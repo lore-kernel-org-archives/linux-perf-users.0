@@ -1,80 +1,86 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/54] perf cgroup: Add evlist__findnew_cgroup()
-Date: Thu,  8 Mar 2018 16:49:46 -0300
-Message-ID: <20180308195029.14991-12-acme@kernel.org>
+Subject: [PATCH 16/54] perf auxtrace: Rename some buffer-queuing functions
+Date: Thu,  8 Mar 2018 16:49:51 -0300
+Message-ID: <20180308195029.14991-17-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Similar to machine__findnew_thread(), etc, i.e. try to find, get a
-refcount if found and return it, otherwise return a new cgroup object.
+Rename some buffer-queuing functions in preparation for supporting AUX area
+sampling buffers.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-im1omevlihhyneiic4nl3g24@git.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/1520327598-1317-5-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cgroup.c | 17 ++++++++++-------
- tools/perf/util/cgroup.h |  4 ++++
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ tools/perf/util/auxtrace.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 26a837037797..6fd33ffc2488 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -128,18 +128,21 @@ static struct cgroup *cgroup__new(char *name)
- 	return NULL;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 6470ea2aa25e..6ea840ec5b7f 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -233,9 +233,9 @@ static void *auxtrace_copy_data(u64 size, struct perf_session *session)
+ 	return p;
  }
  
-+struct cgroup *evlist__findnew_cgroup(struct perf_evlist *evlist, char *name)
-+{
-+	struct cgroup *cgroup = evlist__find_cgroup(evlist, name);
-+
-+	return cgroup ?: cgroup__new(name);
-+}
-+
- static int add_cgroup(struct perf_evlist *evlist, char *str)
+-static int auxtrace_queues__add_buffer(struct auxtrace_queues *queues,
+-				       unsigned int idx,
+-				       struct auxtrace_buffer *buffer)
++static int auxtrace_queues__queue_buffer(struct auxtrace_queues *queues,
++					 unsigned int idx,
++					 struct auxtrace_buffer *buffer)
  {
- 	struct perf_evsel *counter;
--	struct cgroup *cgrp = evlist__find_cgroup(evlist, str);
-+	struct cgroup *cgrp = evlist__findnew_cgroup(evlist, str);
- 	int n;
+ 	struct auxtrace_queue *queue;
+ 	int err;
+@@ -286,7 +286,7 @@ static int auxtrace_queues__split_buffer(struct auxtrace_queues *queues,
+ 			return -ENOMEM;
+ 		b->size = BUFFER_LIMIT_FOR_32_BIT;
+ 		b->consecutive = consecutive;
+-		err = auxtrace_queues__add_buffer(queues, idx, b);
++		err = auxtrace_queues__queue_buffer(queues, idx, b);
+ 		if (err) {
+ 			auxtrace_buffer__free(b);
+ 			return err;
+@@ -302,10 +302,10 @@ static int auxtrace_queues__split_buffer(struct auxtrace_queues *queues,
+ 	return 0;
+ }
  
--	if (!cgrp) {
--		cgrp = cgroup__new(str);
--		if (!cgrp)
--			return -1;
--	}
--
-+	if (!cgrp)
-+		return -1;
- 	/*
- 	 * find corresponding event
- 	 * if add cgroup N, then need to find event N
-diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-index 34a6c11543dc..0e377e6340dd 100644
---- a/tools/perf/util/cgroup.h
-+++ b/tools/perf/util/cgroup.h
-@@ -18,6 +18,10 @@ extern int nr_cgroups; /* number of explicit cgroups defined */
- struct cgroup *cgroup__get(struct cgroup *cgroup);
- void cgroup__put(struct cgroup *cgroup);
+-static int auxtrace_queues__add_event_buffer(struct auxtrace_queues *queues,
+-					     struct perf_session *session,
+-					     unsigned int idx,
+-					     struct auxtrace_buffer *buffer)
++static int auxtrace_queues__add_buffer(struct auxtrace_queues *queues,
++				       struct perf_session *session,
++				       unsigned int idx,
++				       struct auxtrace_buffer *buffer)
+ {
+ 	if (session->one_mmap) {
+ 		buffer->data = buffer->data_offset - session->one_mmap_offset +
+@@ -324,7 +324,7 @@ static int auxtrace_queues__add_event_buffer(struct auxtrace_queues *queues,
+ 			return err;
+ 	}
  
-+struct perf_evlist;
-+
-+struct cgroup *evlist__findnew_cgroup(struct perf_evlist *evlist, char *name);
-+
- int parse_cgroups(const struct option *opt, const char *str, int unset);
+-	return auxtrace_queues__add_buffer(queues, idx, buffer);
++	return auxtrace_queues__queue_buffer(queues, idx, buffer);
+ }
  
- #endif /* __CGROUP_H__ */
+ static bool filter_cpu(struct perf_session *session, int cpu)
+@@ -359,7 +359,7 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+ 	buffer->size = event->auxtrace.size;
+ 	idx = event->auxtrace.idx;
+ 
+-	err = auxtrace_queues__add_event_buffer(queues, session, idx, buffer);
++	err = auxtrace_queues__add_buffer(queues, session, idx, buffer);
+ 	if (err)
+ 		goto out_err;
+ 
 -- 
 2.14.3
