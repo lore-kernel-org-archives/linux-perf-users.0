@@ -1,170 +1,57 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/54] perf pmu: Support wildcards on pmu name in dynamic pmu
- events
-Date: Thu,  8 Mar 2018 16:49:54 -0300
-Message-ID: <20180308195029.14991-20-acme@kernel.org>
+Subject: [PATCH 41/54] perf report: Display perf.data header info
+Date: Thu,  8 Mar 2018 16:50:16 -0300
+Message-ID: <20180308195029.14991-42-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Timur Tabi <timur@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org, Agustin Vega-Frias <agustinv@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Agustin Vega-Frias <agustinv@codeaurora.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Starting on v4.12 event parsing code for dynamic pmu events already
-supports prefix-based matching of multiple pmus when creating dynamic
-events. E.g., in a system with the following dynamic pmus:
+Display more header info from perf.data file, following values:
 
-    mypmu_0
-    mypmu_1
-    mypmu_2
-    mypmu_4
+  $ perf report -i perf.data --header-only
+  ...
+  # header version : 1
+  # data offset    : 424
+  # data size      : 3364280
+  # feat offset    : 3364704
 
-passing mypmu/<config>/ as an event spec will result in the creation of
-the event in all of the pmus. This change expands this matching through
-the use of fnmatch so glob-like expressions can be used to create events
-in multiple pmus. E.g., in the system described above if a user only
-wants to create the event in mypmu_0 and mypmu_1, mypmu_[01]/<config>/
-can be passed.
+It's handy for debuging.
 
-Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
-Acked-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Timur Tabi <timur@codeaurora.org>
-Change-Id: Icb25653fc5d5239c20f3bffdfdf4ab4c9c9bb20b
-Link: http://lkml.kernel.org/r/1520454947-16977-1-git-send-email-agustinv@codeaurora.org
+Link: http://lkml.kernel.org/r/20180307155020.32613-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-list.txt |  8 +++++++-
- tools/perf/Documentation/perf-stat.txt | 13 +++++++++++++
- tools/perf/util/parse-events.l         |  2 +-
- tools/perf/util/parse-events.y         | 14 ++++++++++++--
- 4 files changed, 33 insertions(+), 4 deletions(-)
+ tools/perf/util/header.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index e2a897ae3596..2549c34a7895 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -141,7 +141,13 @@ on the first memory controller on socket 0 of a Intel Xeon system
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index a326e0d8b5b6..e0c3cad0fd8d 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2318,7 +2318,12 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
+ 	if (ret == -1)
+ 		return -1;
  
- Each memory controller has its own PMU.  Measuring the complete system
- bandwidth would require specifying all imc PMUs (see perf list output),
--and adding the values together.
-+and adding the values together. To simplify creation of multiple events,
-+prefix and glob matching is supported in the PMU name, and the prefix
-+'uncore_' is also ignored when performing the match. So the command above
-+can be expanded to all memory controllers by using the syntaxes:
+-	fprintf(fp, "# captured on: %s", ctime(&st.st_ctime));
++	fprintf(fp, "# captured on    : %s", ctime(&st.st_ctime));
 +
-+  perf stat -C 0 -a imc/cas_count_read/,imc/cas_count_write/ -I 1000 ...
-+  perf stat -C 0 -a *imc*/cas_count_read/,*imc*/cas_count_write/ -I 1000 ...
++	fprintf(fp, "# header version : %u\n", header->version);
++	fprintf(fp, "# data offset    : %" PRIu64 "\n", header->data_offset);
++	fprintf(fp, "# data size      : %" PRIu64 "\n", header->data_size);
++	fprintf(fp, "# feat offset    : %" PRIu64 "\n", header->feat_offset);
  
- This example measures the combined core power every second
- 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 2b38e222016a..628026dbedc5 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -49,6 +49,13 @@ report::
- 	  parameters are defined by corresponding entries in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
- 
-+	Note that the last two syntaxes support prefix and glob matching in
-+	the PMU name to simplify creation of events accross multiple instances
-+	of the same type of PMU in large systems (e.g. memory controller PMUs).
-+	Multiple PMU instances are typical for uncore PMUs, so the prefix
-+	'uncore_' is also ignored when performing this match.
-+
-+
- -i::
- --no-inherit::
-         child tasks do not inherit counters
-@@ -260,6 +267,12 @@ taskset.
- --no-merge::
- Do not merge results from same PMUs.
- 
-+When multiple events are created from a single event alias, stat will,
-+by default, aggregate the event counts and show the result in a single
-+row. This option disables that behavior and shows the individual events
-+and counts. Aliases are listed immediately after the Kernel PMU events
-+by perf list.
-+
- --smi-cost::
- Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
- 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 655ecff636a8..a1a01b1ac8b8 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -175,7 +175,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]+
- num_raw_hex	[a-fA-F0-9]+
--name		[a-zA-Z_*?][a-zA-Z0-9_*?.]*
-+name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]]*
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
- /* If you add a modifier you need to update check_modifier() */
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index e81a20ea8d7d..dedf184b5bed 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -8,6 +8,7 @@
- 
- #define YYDEBUG 1
- 
-+#include <fnmatch.h>
- #include <linux/compiler.h>
- #include <linux/list.h>
- #include <linux/types.h>
-@@ -234,6 +235,10 @@ PE_NAME opt_event_config
- 	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
-+		char *pattern;
-+
-+		if (asprintf(&pattern, "%s*", $1) < 0)
-+			YYABORT;
- 
- 		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 			char *name = pmu->name;
-@@ -241,14 +246,19 @@ PE_NAME opt_event_config
- 			if (!strncmp(name, "uncore_", 7) &&
- 			    strncmp($1, "uncore_", 7))
- 				name += 7;
--			if (!strncmp($1, name, strlen($1))) {
--				if (parse_events_copy_term_list(orig_terms, &terms))
-+			if (!fnmatch(pattern, name, 0)) {
-+				if (parse_events_copy_term_list(orig_terms, &terms)) {
-+					free(pattern);
- 					YYABORT;
-+				}
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
- 					ok++;
- 				parse_events_terms__delete(terms);
- 			}
- 		}
-+
-+		free(pattern);
-+
- 		if (!ok)
- 			YYABORT;
- 	}
+ 	perf_header__process_sections(header, fd, &hd,
+ 				      perf_file_section__fprintf_info);
 -- 
 2.14.3
