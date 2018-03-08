@@ -1,58 +1,132 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/54] perf intel-pt: Adjust overlap-checking to support sampling mode
-Date: Thu,  8 Mar 2018 16:50:13 -0300
-Message-ID: <20180308195029.14991-39-acme@kernel.org>
+Subject: [PATCH 39/54] perf annotate: Fix s390 target function disassembly
+Date: Thu,  8 Mar 2018 16:50:14 -0300
+Message-ID: <20180308195029.14991-40-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-Adjust overlap-checking to support sampling mode.
+'perf annotate' displays function call assembler instructions with a
+right arrow. Hitting enter on this line/instruction causes the browser
+to disassemble this target function and show it on the screen.  On s390
+this results in an error message 'The called function was not found.'
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520431349-30689-10-git-send-email-adrian.hunter@intel.com
+The function call assembly line parsing does not handle the s390 bras
+and brasl instructions. Function call__parse expects the target as first
+operand:
+
+	callq	e9140 <__fxstat>
+
+S390 has a register number as first operand:
+
+	brasl	%r14,41d60 <abort>
+
+Therefore the target addresses on s390 are always zero which is an
+invalid address.
+
+Introduce a s390 specific call parsing function which skips the first
+operand on s390.
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20180307134325.96106-1-tmricht@linux.vnet.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/arch/s390/annotate/instructions.c | 53 +++++++++++++++++++++++++++-
+ tools/perf/util/annotate.c                   |  2 +-
+ 2 files changed, 53 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 5c5c155fba78..0effaff57020 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -230,6 +230,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 	struct auxtrace_buffer *buffer = ptq->buffer;
- 	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
- 	struct auxtrace_queue *queue;
-+	bool might_overlap;
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index 01df9d8303e1..e80589fc5b58 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -1,6 +1,57 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
  
- 	if (ptq->stop) {
- 		b->len = 0;
-@@ -256,7 +257,8 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 			return -ENOMEM;
- 	}
++static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
++			    struct map *map)
++{
++	char *endptr, *tok, *name;
++	struct addr_map_symbol target = {
++		.map = map,
++	};
++
++	tok = strchr(ops->raw, ',');
++	if (!tok)
++		return -1;
++
++	ops->target.addr = strtoull(tok + 1, &endptr, 16);
++
++	name = strchr(endptr, '<');
++	if (name == NULL)
++		return -1;
++
++	name++;
++
++	if (arch->objdump.skip_functions_char &&
++	    strchr(name, arch->objdump.skip_functions_char))
++		return -1;
++
++	tok = strchr(name, '>');
++	if (tok == NULL)
++		return -1;
++
++	*tok = '\0';
++	ops->target.name = strdup(name);
++	*tok = '>';
++
++	if (ops->target.name == NULL)
++		return -1;
++	target.addr = map__objdump_2mem(map, ops->target.addr);
++
++	if (map_groups__find_ams(&target) == 0 &&
++	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
++		ops->target.sym = target.sym;
++
++	return 0;
++}
++
++static int call__scnprintf(struct ins *ins, char *bf, size_t size,
++			   struct ins_operands *ops);
++
++static struct ins_ops s390_call_ops = {
++	.parse	   = s390_call__parse,
++	.scnprintf = call__scnprintf,
++};
++
+ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
+ {
+ 	struct ins_ops *ops = NULL;
+@@ -14,7 +65,7 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
+ 	if (!strcmp(name, "bras") ||
+ 	    !strcmp(name, "brasl") ||
+ 	    !strcmp(name, "basr"))
+-		ops = &call_ops;
++		ops = &s390_call_ops;
+ 	if (!strcmp(name, "br"))
+ 		ops = &ret_ops;
  
--	if (ptq->pt->snapshot_mode && !buffer->consecutive && old_buffer &&
-+	might_overlap = ptq->pt->snapshot_mode || ptq->pt->sampling_mode;
-+	if (might_overlap && !buffer->consecutive && old_buffer &&
- 	    intel_pt_do_fix_overlap(ptq->pt, old_buffer, buffer))
- 		return -ENOMEM;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 49ff825f745c..bc3302da702b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -248,7 +248,7 @@ static struct ins_ops call_ops = {
  
-@@ -269,8 +271,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 	}
- 	b->ref_timestamp = buffer->reference;
+ bool ins__is_call(const struct ins *ins)
+ {
+-	return ins->ops == &call_ops;
++	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
+ }
  
--	if (!old_buffer || ptq->pt->sampling_mode || (ptq->pt->snapshot_mode &&
--						      !buffer->consecutive)) {
-+	if (!old_buffer || (might_overlap && !buffer->consecutive)) {
- 		b->consecutive = false;
- 		b->trace_nr = buffer->buffer_nr + 1;
- 	} else {
+ static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map *map __maybe_unused)
 -- 
 2.14.3
