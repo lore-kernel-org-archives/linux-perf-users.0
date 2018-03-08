@@ -1,191 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/54] perf pmu: Auto-merge PMU events created by prefix or
- glob match
-Date: Thu,  8 Mar 2018 16:49:56 -0300
-Message-ID: <20180308195029.14991-22-acme@kernel.org>
+Subject: [PATCH 48/54] perf build: Add llvm/clang/cxx make tests into FEATURE_TESTS_EXTRA
+Date: Thu,  8 Mar 2018 16:50:23 -0300
+Message-ID: <20180308195029.14991-49-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Timur Tabi <timur@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org, Agustin Vega-Frias <agustinv@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Agustin Vega-Frias <agustinv@codeaurora.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Auto-merge for these events was disabled when auto-merging of non-alias
-events was disabled in commit 63ce844 (perf stat: Only auto-merge events
-that are PMU aliases).
+So we can see the status when we build perf, like:
 
-Non-merging of legacy events is preserved:
+  $ make LIBCLANGLLVM=1 VF=1
+  ...                           cxx: [ on  ]
+  ...                          llvm: [ on  ]
+  ...                  llvm-version: [ on  ]
+  ...                         clang: [ on  ]
 
-    $ perf stat -ag -e cache-misses,cache-misses sleep 1
-
-     Performance counter stats for 'system wide':
-
-                86,323      cache-misses
-                86,323      cache-misses
-
-           1.002623307 seconds time elapsed
-
-But prefix or glob matching auto-merges the events created:
-
-    $ perf stat -a -e l3cache/read-miss/ sleep 1
-
-     Performance counter stats for 'system wide':
-
-                   328      l3cache/read-miss/
-
-           1.002627008 seconds time elapsed
-
-    $ perf stat -a -e l3cache_0_[01]/read-miss/ sleep 1
-
-     Performance counter stats for 'system wide':
-
-                   172      l3cache/read-miss/
-
-           1.002627008 seconds time elapsed
-
-As with events created with aliases, auto-merging can be suppressed with
-the --no-merge option:
-
-    $ perf stat -a -e l3cache/read-miss/ --no-merge sleep 1
-
-     Performance counter stats for 'system wide':
-
-                    67      l3cache/read-miss/
-                    67      l3cache/read-miss/
-                    63      l3cache/read-miss/
-                    60      l3cache/read-miss/
-
-           1.002622192 seconds time elapsed
-
-Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
-Acked-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Timur Tabi <timur@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Change-Id: I0a47eed54c05e1982ca964d743b37f50f60c508c
-Link: http://lkml.kernel.org/r/1520345084-42646-4-git-send-email-agustinv@codeaurora.org
+Link: http://lkml.kernel.org/r/20180307155020.32613-18-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt | 14 +++++++++-----
- tools/perf/util/parse-events.c         | 13 +++----------
- tools/perf/util/parse-events.h         |  2 +-
- tools/perf/util/parse-events.y         |  4 ++--
- 4 files changed, 15 insertions(+), 18 deletions(-)
+ tools/build/Makefile.feature | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 628026dbedc5..f15b306be183 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -267,11 +267,15 @@ taskset.
- --no-merge::
- Do not merge results from same PMUs.
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index c378f003b007..5b6dda3b1ca8 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -82,7 +82,11 @@ FEATURE_TESTS_EXTRA :=                  \
+          liberty-z                      \
+          libunwind-debug-frame          \
+          libunwind-debug-frame-arm      \
+-         libunwind-debug-frame-aarch64
++         libunwind-debug-frame-aarch64  \
++         cxx                            \
++         llvm                           \
++         llvm-version                   \
++         clang
  
--When multiple events are created from a single event alias, stat will,
--by default, aggregate the event counts and show the result in a single
--row. This option disables that behavior and shows the individual events
--and counts. Aliases are listed immediately after the Kernel PMU events
--by perf list.
-+When multiple events are created from a single event specification,
-+stat will, by default, aggregate the event counts and show the result
-+in a single row. This option disables that behavior and shows
-+the individual events and counts.
-+
-+Multiple events are created from a single event specification when:
-+1. Prefix or glob matching is used for the PMU name.
-+2. Aliases, which are listed immediately after the Kernel PMU events
-+   by perf list, are used.
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
  
- --smi-cost::
- Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index bafc91edcb44..4e80ca320399 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1217,7 +1217,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 			 get_config_name(head_config), &config_terms);
- }
- 
--static int __parse_events_add_pmu(struct parse_events_state *parse_state,
-+int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config, bool auto_merge_stats)
- {
-@@ -1287,13 +1287,6 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
- 	return evsel ? 0 : -ENOMEM;
- }
- 
--int parse_events_add_pmu(struct parse_events_state *parse_state,
--			 struct list_head *list, char *name,
--			 struct list_head *head_config)
--{
--	return __parse_events_add_pmu(parse_state, list, name, head_config, false);
--}
--
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			       char *str, struct list_head **listp)
- {
-@@ -1323,8 +1316,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 					return -1;
- 				list_add_tail(&term->list, head);
- 
--				if (!__parse_events_add_pmu(parse_state, list,
--							    pmu->name, head, true)) {
-+				if (!parse_events_add_pmu(parse_state, list,
-+							  pmu->name, head, true)) {
- 					pr_debug("%s -> %s/%s/\n", str,
- 						 pmu->name, alias->str);
- 					ok++;
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 88108cd11b4c..5015cfd58277 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -167,7 +167,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
- 				void *ptr, char *type, u64 len);
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
--			 struct list_head *head_config);
-+			 struct list_head *head_config, bool auto_merge_stats);
- 
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			       char *str,
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index dedf184b5bed..7afeb80cc39e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -232,7 +232,7 @@ PE_NAME opt_event_config
- 		YYABORT;
- 
- 	ALLOC_LIST(list);
--	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
-+	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
- 		char *pattern;
-@@ -251,7 +251,7 @@ PE_NAME opt_event_config
- 					free(pattern);
- 					YYABORT;
- 				}
--				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
-+				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true))
- 					ok++;
- 				parse_events_terms__delete(terms);
- 			}
 -- 
 2.14.3
