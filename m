@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 36/54] perf intel-pt: Tidy old_buffer handling in intel_pt_get_trace()
-Date: Thu,  8 Mar 2018 16:50:11 -0300
-Message-ID: <20180308195029.14991-37-acme@kernel.org>
+Subject: [PATCH 38/54] perf intel-pt: Adjust overlap-checking to support sampling mode
+Date: Thu,  8 Mar 2018 16:50:13 -0300
+Message-ID: <20180308195029.14991-39-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
@@ -12,86 +12,47 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-intel_pt_get_trace() fixes overlaps between the current buffer and the
-previous buffer ('old_buffer').
-
-However the previous buffer might not have had usable data (no PSB) so
-the comparison must be made against the previous buffer that had usable
-data.
-
-Tidy that by keeping a pointer for that purpose in struct intel_pt_queue.
+Adjust overlap-checking to support sampling mode.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520431349-30689-8-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1520431349-30689-10-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ tools/perf/util/intel-pt.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index cfb3614f5def..9a4f9cdb752f 100644
+index 5c5c155fba78..0effaff57020 100644
 --- a/tools/perf/util/intel-pt.c
 +++ b/tools/perf/util/intel-pt.c
-@@ -132,6 +132,7 @@ struct intel_pt_queue {
- 	struct intel_pt *pt;
- 	unsigned int queue_nr;
- 	struct auxtrace_buffer *buffer;
-+	struct auxtrace_buffer *old_buffer;
- 	void *decoder;
- 	const struct intel_pt_state *state;
- 	struct ip_callchain *chain;
-@@ -226,7 +227,8 @@ static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *
- static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- {
- 	struct intel_pt_queue *ptq = data;
--	struct auxtrace_buffer *buffer = ptq->buffer, *old_buffer = buffer;
-+	struct auxtrace_buffer *buffer = ptq->buffer;
-+	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
+@@ -230,6 +230,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ 	struct auxtrace_buffer *buffer = ptq->buffer;
+ 	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
  	struct auxtrace_queue *queue;
++	bool might_overlap;
  
  	if (ptq->stop) {
-@@ -235,7 +237,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ 		b->len = 0;
+@@ -256,7 +257,8 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ 			return -ENOMEM;
  	}
  
- 	queue = &ptq->pt->queues.queue_array[ptq->queue_nr];
--next:
-+
- 	buffer = auxtrace_buffer__next(queue, buffer);
- 	if (!buffer) {
- 		if (old_buffer)
-@@ -267,16 +269,6 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+-	if (ptq->pt->snapshot_mode && !buffer->consecutive && old_buffer &&
++	might_overlap = ptq->pt->snapshot_mode || ptq->pt->sampling_mode;
++	if (might_overlap && !buffer->consecutive && old_buffer &&
+ 	    intel_pt_do_fix_overlap(ptq->pt, old_buffer, buffer))
+ 		return -ENOMEM;
+ 
+@@ -269,8 +271,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
  	}
  	b->ref_timestamp = buffer->reference;
  
--	/*
--	 * If in snapshot mode and the buffer has no usable data, get next
--	 * buffer and again check overlap against old_buffer.
--	 */
--	if (ptq->pt->snapshot_mode && !b->len)
--		goto next;
--
--	if (old_buffer)
--		auxtrace_buffer__drop_data(old_buffer);
--
- 	if (!old_buffer || ptq->pt->sampling_mode || (ptq->pt->snapshot_mode &&
- 						      !buffer->consecutive)) {
+-	if (!old_buffer || ptq->pt->sampling_mode || (ptq->pt->snapshot_mode &&
+-						      !buffer->consecutive)) {
++	if (!old_buffer || (might_overlap && !buffer->consecutive)) {
  		b->consecutive = false;
-@@ -288,8 +280,14 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 	if (ptq->step_through_buffers)
- 		ptq->stop = true;
- 
--	if (!b->len)
-+	if (b->len) {
-+		if (old_buffer)
-+			auxtrace_buffer__drop_data(old_buffer);
-+		ptq->old_buffer = buffer;
-+	} else {
-+		auxtrace_buffer__drop_data(buffer);
- 		return intel_pt_get_trace(b, data);
-+	}
- 
- 	return 0;
- }
+ 		b->trace_nr = buffer->buffer_nr + 1;
+ 	} else {
 -- 
 2.14.3
