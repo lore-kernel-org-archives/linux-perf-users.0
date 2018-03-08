@@ -1,85 +1,90 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/54] perf auxtrace: Make auxtrace_queues__add_buffer() return buffer_ptr
-Date: Thu,  8 Mar 2018 16:49:52 -0300
-Message-ID: <20180308195029.14991-18-acme@kernel.org>
+Subject: [PATCH 18/54] perf tools: Correct title markers for asciidoctor
+Date: Thu,  8 Mar 2018 16:49:53 -0300
+Message-ID: <20180308195029.14991-19-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-In preparation for supporting AUX area sampling buffers,
-auxtrace_queues__add_buffer() needs to be more generic. To that end, make
-it return buffer_ptr instead of the caller.
+I've tested to process the perf man pages with asciidoctor that is
+picker than asciidoc, and it revealed minor syntax errors in some
+documents.  Namely, the title markers aren't aligned with the previous
+line, hence asciidoctor didn't recognize as titles.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520327598-1317-6-git-send-email-adrian.hunter@intel.com
+This patch corrects these markers to be processed properly.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180307105441.28512-1-tiwai@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ tools/perf/Documentation/perf-data.txt        | 2 +-
+ tools/perf/Documentation/perf-ftrace.txt      | 2 +-
+ tools/perf/Documentation/perf-kallsyms.txt    | 2 +-
+ tools/perf/Documentation/perf-sched.txt       | 2 +-
+ tools/perf/Documentation/perf-script-perl.txt | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 6ea840ec5b7f..fb357a00dd86 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -305,8 +305,11 @@ static int auxtrace_queues__split_buffer(struct auxtrace_queues *queues,
- static int auxtrace_queues__add_buffer(struct auxtrace_queues *queues,
- 				       struct perf_session *session,
- 				       unsigned int idx,
--				       struct auxtrace_buffer *buffer)
-+				       struct auxtrace_buffer *buffer,
-+				       struct auxtrace_buffer **buffer_ptr)
- {
-+	int err;
-+
- 	if (session->one_mmap) {
- 		buffer->data = buffer->data_offset - session->one_mmap_offset +
- 			       session->one_mmap_addr;
-@@ -317,14 +320,20 @@ static int auxtrace_queues__add_buffer(struct auxtrace_queues *queues,
- 		buffer->data_needs_freeing = true;
- 	} else if (BITS_PER_LONG == 32 &&
- 		   buffer->size > BUFFER_LIMIT_FOR_32_BIT) {
--		int err;
--
- 		err = auxtrace_queues__split_buffer(queues, idx, buffer);
- 		if (err)
- 			return err;
- 	}
+diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
+index 90bb4aabe4f8..c87180764829 100644
+--- a/tools/perf/Documentation/perf-data.txt
++++ b/tools/perf/Documentation/perf-data.txt
+@@ -1,5 +1,5 @@
+ perf-data(1)
+-==============
++============
  
--	return auxtrace_queues__queue_buffer(queues, idx, buffer);
-+	err = auxtrace_queues__queue_buffer(queues, idx, buffer);
-+	if (err)
-+		return err;
-+
-+	/* FIXME: Doesn't work for split buffer */
-+	if (buffer_ptr)
-+		*buffer_ptr = buffer;
-+
-+	return 0;
- }
+ NAME
+ ----
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index 721a447f046e..b80c84307dc9 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -1,5 +1,5 @@
+ perf-ftrace(1)
+-=============
++==============
  
- static bool filter_cpu(struct perf_session *session, int cpu)
-@@ -359,13 +368,11 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
- 	buffer->size = event->auxtrace.size;
- 	idx = event->auxtrace.idx;
+ NAME
+ ----
+diff --git a/tools/perf/Documentation/perf-kallsyms.txt b/tools/perf/Documentation/perf-kallsyms.txt
+index cf9f4040ea5c..f3c620951f6e 100644
+--- a/tools/perf/Documentation/perf-kallsyms.txt
++++ b/tools/perf/Documentation/perf-kallsyms.txt
+@@ -1,5 +1,5 @@
+ perf-kallsyms(1)
+-==============
++================
  
--	err = auxtrace_queues__add_buffer(queues, session, idx, buffer);
-+	err = auxtrace_queues__add_buffer(queues, session, idx, buffer,
-+					  buffer_ptr);
- 	if (err)
- 		goto out_err;
+ NAME
+ ----
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index c7e50f263887..bb33601a823b 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -1,5 +1,5 @@
+ perf-sched(1)
+-==============
++=============
  
--	if (buffer_ptr)
--		*buffer_ptr = buffer;
--
- 	return 0;
+ NAME
+ ----
+diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
+index 142606c0ec9c..5a1f68122f50 100644
+--- a/tools/perf/Documentation/perf-script-perl.txt
++++ b/tools/perf/Documentation/perf-script-perl.txt
+@@ -1,5 +1,5 @@
+ perf-script-perl(1)
+-==================
++===================
  
- out_err:
+ NAME
+ ----
 -- 
 2.14.3
