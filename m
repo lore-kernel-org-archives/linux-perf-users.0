@@ -1,80 +1,208 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/54] perf cgroup: Introduce cgroup__new() out of open coded equivalent
-Date: Thu,  8 Mar 2018 16:49:42 -0300
-Message-ID: <20180308195029.14991-8-acme@kernel.org>
+Subject: [PATCH 08/54] perf sched: Move thread::shortname to thread_runtime
+Date: Thu,  8 Mar 2018 16:49:43 -0300
+Message-ID: <20180308195029.14991-9-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Changbin Du <changbin.du@intel.com>
 
-To follow the namespacing convention in tools/perf.
+The thread::shortname only used by sched command, so move it to sched
+private structure.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Changbin Du <changbin.du@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-jaalyl6bkvvji4r5u8wqw4n4@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1520307457-23668-2-git-send-email-changbin.du@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cgroup.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ tools/perf/builtin-sched.c | 95 +++++++++++++++++++++++++++-------------------
+ tools/perf/util/thread.h   |  1 -
+ 2 files changed, 55 insertions(+), 41 deletions(-)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 84dfc34a6d0f..26a837037797 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -109,6 +109,25 @@ static struct cgroup *evlist__find_cgroup(struct perf_evlist *evlist, char *str)
- 	return cgrp;
- }
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 83283fedb00f..0a632a6b6228 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -254,6 +254,8 @@ struct thread_runtime {
+ 	u64 total_delay_time;
  
-+static struct cgroup *cgroup__new(char *name)
+ 	int last_state;
++
++	char shortname[3];
+ 	u64 migrations;
+ };
+ 
+@@ -897,6 +899,37 @@ struct sort_dimension {
+ 	struct list_head	list;
+ };
+ 
++/*
++ * handle runtime stats saved per thread
++ */
++static struct thread_runtime *thread__init_runtime(struct thread *thread)
 +{
-+	struct cgroup *cgroup = zalloc(sizeof(*cgroup));
++	struct thread_runtime *r;
 +
-+	if (cgroup != NULL) {
-+		cgroup->name = name;
-+		refcount_set(&cgroup->refcnt, 1);
++	r = zalloc(sizeof(struct thread_runtime));
++	if (!r)
++		return NULL;
 +
-+		cgroup->fd = open_cgroup(name);
-+		if (cgroup->fd == -1)
-+			goto out_err;
-+	}
++	init_stats(&r->run_stats);
++	thread__set_priv(thread, r);
 +
-+	return cgroup;
-+out_err:
-+	free(cgroup);
-+	return NULL;
++	return r;
 +}
 +
- static int add_cgroup(struct perf_evlist *evlist, char *str)
++static struct thread_runtime *thread__get_runtime(struct thread *thread)
++{
++	struct thread_runtime *tr;
++
++	tr = thread__priv(thread);
++	if (tr == NULL) {
++		tr = thread__init_runtime(thread);
++		if (tr == NULL)
++			pr_debug("Failed to malloc memory for runtime data.\n");
++	}
++
++	return tr;
++}
++
+ static int
+ thread_lat_cmp(struct list_head *list, struct work_atoms *l, struct work_atoms *r)
  {
- 	struct perf_evsel *counter;
-@@ -116,18 +135,9 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
- 	int n;
+@@ -1480,6 +1513,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+ {
+ 	const u32 next_pid = perf_evsel__intval(evsel, sample, "next_pid");
+ 	struct thread *sched_in;
++	struct thread_runtime *tr;
+ 	int new_shortname;
+ 	u64 timestamp0, timestamp = sample->time;
+ 	s64 delta;
+@@ -1519,22 +1553,28 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+ 	if (sched_in == NULL)
+ 		return -1;
  
- 	if (!cgrp) {
--		cgrp = zalloc(sizeof(*cgrp));
-+		cgrp = cgroup__new(str);
- 		if (!cgrp)
- 			return -1;
--
--		cgrp->name = str;
--		refcount_set(&cgrp->refcnt, 1);
--
--		cgrp->fd = open_cgroup(str);
--		if (cgrp->fd == -1) {
--			free(cgrp);
--			return -1;
--		}
++	tr = thread__get_runtime(sched_in);
++	if (tr == NULL) {
++		thread__put(sched_in);
++		return -1;
++	}
++
+ 	sched->curr_thread[this_cpu] = thread__get(sched_in);
+ 
+ 	printf("  ");
+ 
+ 	new_shortname = 0;
+-	if (!sched_in->shortname[0]) {
++	if (!tr->shortname[0]) {
+ 		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+ 			/*
+ 			 * Don't allocate a letter-number for swapper:0
+ 			 * as a shortname. Instead, we use '.' for it.
+ 			 */
+-			sched_in->shortname[0] = '.';
+-			sched_in->shortname[1] = ' ';
++			tr->shortname[0] = '.';
++			tr->shortname[1] = ' ';
+ 		} else {
+-			sched_in->shortname[0] = sched->next_shortname1;
+-			sched_in->shortname[1] = sched->next_shortname2;
++			tr->shortname[0] = sched->next_shortname1;
++			tr->shortname[1] = sched->next_shortname2;
+ 
+ 			if (sched->next_shortname1 < 'Z') {
+ 				sched->next_shortname1++;
+@@ -1552,6 +1592,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+ 	for (i = 0; i < cpus_nr; i++) {
+ 		int cpu = sched->map.comp ? sched->map.comp_cpus[i] : i;
+ 		struct thread *curr_thread = sched->curr_thread[cpu];
++		struct thread_runtime *curr_tr;
+ 		const char *pid_color = color;
+ 		const char *cpu_color = color;
+ 
+@@ -1569,9 +1610,14 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+ 		else
+ 			color_fprintf(stdout, cpu_color, "*");
+ 
+-		if (sched->curr_thread[cpu])
+-			color_fprintf(stdout, pid_color, "%2s ", sched->curr_thread[cpu]->shortname);
+-		else
++		if (sched->curr_thread[cpu]) {
++			curr_tr = thread__get_runtime(sched->curr_thread[cpu]);
++			if (curr_tr == NULL) {
++				thread__put(sched_in);
++				return -1;
++			}
++			color_fprintf(stdout, pid_color, "%2s ", curr_tr->shortname);
++		} else
+ 			color_fprintf(stdout, color, "   ");
  	}
  
- 	/*
+@@ -1587,7 +1633,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
+ 			pid_color = COLOR_PIDS;
+ 
+ 		color_fprintf(stdout, pid_color, "%s => %s:%d",
+-		       sched_in->shortname, thread__comm_str(sched_in), sched_in->tid);
++		       tr->shortname, thread__comm_str(sched_in), sched_in->tid);
+ 	}
+ 
+ 	if (sched->map.comp && new_cpu)
+@@ -2200,37 +2246,6 @@ static void save_idle_callchain(struct idle_thread_runtime *itr,
+ 	callchain_cursor__copy(&itr->cursor, &callchain_cursor);
+ }
+ 
+-/*
+- * handle runtime stats saved per thread
+- */
+-static struct thread_runtime *thread__init_runtime(struct thread *thread)
+-{
+-	struct thread_runtime *r;
+-
+-	r = zalloc(sizeof(struct thread_runtime));
+-	if (!r)
+-		return NULL;
+-
+-	init_stats(&r->run_stats);
+-	thread__set_priv(thread, r);
+-
+-	return r;
+-}
+-
+-static struct thread_runtime *thread__get_runtime(struct thread *thread)
+-{
+-	struct thread_runtime *tr;
+-
+-	tr = thread__priv(thread);
+-	if (tr == NULL) {
+-		tr = thread__init_runtime(thread);
+-		if (tr == NULL)
+-			pr_debug("Failed to malloc memory for runtime data.\n");
+-	}
+-
+-	return tr;
+-}
+-
+ static struct thread *timehist_get_thread(struct perf_sched *sched,
+ 					  struct perf_sample *sample,
+ 					  struct machine *machine,
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 40cfa36c022a..14d44c3235b8 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -26,7 +26,6 @@ struct thread {
+ 	pid_t			ppid;
+ 	int			cpu;
+ 	refcount_t		refcnt;
+-	char			shortname[3];
+ 	bool			comm_set;
+ 	int			comm_len;
+ 	bool			dead; /* if set thread has exited */
 -- 
 2.14.3
