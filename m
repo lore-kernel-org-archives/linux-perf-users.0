@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/54] perf report: Display perf.data header info
-Date: Thu,  8 Mar 2018 16:50:16 -0300
-Message-ID: <20180308195029.14991-42-acme@kernel.org>
+Subject: [PATCH 43/54] perf record: Remove progname from struct record
+Date: Thu,  8 Mar 2018 16:50:18 -0300
+Message-ID: <20180308195029.14991-44-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
@@ -12,46 +12,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Display more header info from perf.data file, following values:
-
-  $ perf report -i perf.data --header-only
-  ...
-  # header version : 1
-  # data offset    : 424
-  # data size      : 3364280
-  # feat offset    : 3364704
-
-It's handy for debuging.
+It's no longer used.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180307155020.32613-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180307155020.32613-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index a326e0d8b5b6..e0c3cad0fd8d 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2318,7 +2318,12 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	if (ret == -1)
- 		return -1;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 31d4d70e2f6a..b81494587120 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -71,7 +71,6 @@ struct record {
+ 	struct auxtrace_record	*itr;
+ 	struct perf_evlist	*evlist;
+ 	struct perf_session	*session;
+-	const char		*progname;
+ 	int			realtime_prio;
+ 	bool			no_buildid;
+ 	bool			no_buildid_set;
+@@ -861,8 +860,6 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	bool disabled = false, draining = false;
+ 	int fd;
  
--	fprintf(fp, "# captured on: %s", ctime(&st.st_ctime));
-+	fprintf(fp, "# captured on    : %s", ctime(&st.st_ctime));
-+
-+	fprintf(fp, "# header version : %u\n", header->version);
-+	fprintf(fp, "# data offset    : %" PRIu64 "\n", header->data_offset);
-+	fprintf(fp, "# data size      : %" PRIu64 "\n", header->data_size);
-+	fprintf(fp, "# feat offset    : %" PRIu64 "\n", header->feat_offset);
- 
- 	perf_header__process_sections(header, fd, &hd,
- 				      perf_file_section__fprintf_info);
+-	rec->progname = argv[0];
+-
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
 -- 
 2.14.3
