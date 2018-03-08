@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/54] perf intel-pt/bts: In auxtrace_record__init_intel() evlist is never NULL
-Date: Thu,  8 Mar 2018 16:50:09 -0300
-Message-ID: <20180308195029.14991-35-acme@kernel.org>
+Subject: [PATCH 36/54] perf intel-pt: Tidy old_buffer handling in intel_pt_get_trace()
+Date: Thu,  8 Mar 2018 16:50:11 -0300
+Message-ID: <20180308195029.14991-37-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
@@ -12,41 +12,86 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Tidy auxtrace_record__init_intel() slightly by recognizing that evlist is
-never NULL.
+intel_pt_get_trace() fixes overlaps between the current buffer and the
+previous buffer ('old_buffer').
+
+However the previous buffer might not have had usable data (no PSB) so
+the comparison must be made against the previous buffer that had usable
+data.
+
+Tidy that by keeping a pointer for that purpose in struct intel_pt_queue.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520431349-30689-6-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1520431349-30689-8-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/auxtrace.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ tools/perf/util/intel-pt.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-index 6aa3f2a38321..b135af62011c 100644
---- a/tools/perf/arch/x86/util/auxtrace.c
-+++ b/tools/perf/arch/x86/util/auxtrace.c
-@@ -37,15 +37,11 @@ struct auxtrace_record *auxtrace_record__init_intel(struct perf_evlist *evlist,
- 	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
- 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index cfb3614f5def..9a4f9cdb752f 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -132,6 +132,7 @@ struct intel_pt_queue {
+ 	struct intel_pt *pt;
+ 	unsigned int queue_nr;
+ 	struct auxtrace_buffer *buffer;
++	struct auxtrace_buffer *old_buffer;
+ 	void *decoder;
+ 	const struct intel_pt_state *state;
+ 	struct ip_callchain *chain;
+@@ -226,7 +227,8 @@ static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *
+ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ {
+ 	struct intel_pt_queue *ptq = data;
+-	struct auxtrace_buffer *buffer = ptq->buffer, *old_buffer = buffer;
++	struct auxtrace_buffer *buffer = ptq->buffer;
++	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
+ 	struct auxtrace_queue *queue;
  
--	if (evlist) {
--		evlist__for_each_entry(evlist, evsel) {
--			if (intel_pt_pmu &&
--			    evsel->attr.type == intel_pt_pmu->type)
--				found_pt = true;
--			if (intel_bts_pmu &&
--			    evsel->attr.type == intel_bts_pmu->type)
--				found_bts = true;
--		}
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (intel_pt_pmu && evsel->attr.type == intel_pt_pmu->type)
-+			found_pt = true;
-+		if (intel_bts_pmu && evsel->attr.type == intel_bts_pmu->type)
-+			found_bts = true;
+ 	if (ptq->stop) {
+@@ -235,7 +237,7 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
  	}
  
- 	if (found_pt && found_bts) {
+ 	queue = &ptq->pt->queues.queue_array[ptq->queue_nr];
+-next:
++
+ 	buffer = auxtrace_buffer__next(queue, buffer);
+ 	if (!buffer) {
+ 		if (old_buffer)
+@@ -267,16 +269,6 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ 	}
+ 	b->ref_timestamp = buffer->reference;
+ 
+-	/*
+-	 * If in snapshot mode and the buffer has no usable data, get next
+-	 * buffer and again check overlap against old_buffer.
+-	 */
+-	if (ptq->pt->snapshot_mode && !b->len)
+-		goto next;
+-
+-	if (old_buffer)
+-		auxtrace_buffer__drop_data(old_buffer);
+-
+ 	if (!old_buffer || ptq->pt->sampling_mode || (ptq->pt->snapshot_mode &&
+ 						      !buffer->consecutive)) {
+ 		b->consecutive = false;
+@@ -288,8 +280,14 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ 	if (ptq->step_through_buffers)
+ 		ptq->stop = true;
+ 
+-	if (!b->len)
++	if (b->len) {
++		if (old_buffer)
++			auxtrace_buffer__drop_data(old_buffer);
++		ptq->old_buffer = buffer;
++	} else {
++		auxtrace_buffer__drop_data(buffer);
+ 		return intel_pt_get_trace(b, data);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.14.3
