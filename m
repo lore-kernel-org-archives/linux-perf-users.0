@@ -1,95 +1,80 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/54] perf record: Combine some auxtrace initialization into a single function
-Date: Thu,  8 Mar 2018 16:49:45 -0300
-Message-ID: <20180308195029.14991-11-acme@kernel.org>
+Subject: [PATCH 11/54] perf cgroup: Add evlist__findnew_cgroup()
+Date: Thu,  8 Mar 2018 16:49:46 -0300
+Message-ID: <20180308195029.14991-12-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In preparation for adding AUX area sampling support, combine some
-auxtrace initialization into a single function.
+Similar to machine__findnew_thread(), etc, i.e. try to find, get a
+refcount if found and return it, otherwise return a new cgroup object.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520327598-1317-2-git-send-email-adrian.hunter@intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-im1omevlihhyneiic4nl3g24@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ tools/perf/util/cgroup.c | 17 ++++++++++-------
+ tools/perf/util/cgroup.h |  4 ++++
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 12230ddb6506..14d82f0fe5cc 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -274,6 +274,24 @@ static void record__read_auxtrace_snapshot(struct record *rec)
- 	}
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 26a837037797..6fd33ffc2488 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -128,18 +128,21 @@ static struct cgroup *cgroup__new(char *name)
+ 	return NULL;
  }
  
-+static int record__auxtrace_init(struct record *rec)
++struct cgroup *evlist__findnew_cgroup(struct perf_evlist *evlist, char *name)
 +{
-+	int err;
++	struct cgroup *cgroup = evlist__find_cgroup(evlist, name);
 +
-+	if (!rec->itr) {
-+		rec->itr = auxtrace_record__init(rec->evlist, &err);
-+		if (err)
-+			return err;
-+	}
-+
-+	err = auxtrace_parse_snapshot_options(rec->itr, &rec->opts,
-+					      rec->opts.auxtrace_snapshot_opts);
-+	if (err)
-+		return err;
-+
-+	return auxtrace_parse_filters(rec->evlist);
++	return cgroup ?: cgroup__new(name);
 +}
 +
- #else
+ static int add_cgroup(struct perf_evlist *evlist, char *str)
+ {
+ 	struct perf_evsel *counter;
+-	struct cgroup *cgrp = evlist__find_cgroup(evlist, str);
++	struct cgroup *cgrp = evlist__findnew_cgroup(evlist, str);
+ 	int n;
  
- static inline
-@@ -294,6 +312,11 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
- 	return 0;
- }
- 
-+static int record__auxtrace_init(struct record *rec __maybe_unused)
-+{
-+	return 0;
-+}
-+
- #endif
- 
- static int record__mmap_evlist(struct record *rec,
-@@ -1727,17 +1750,6 @@ int cmd_record(int argc, const char **argv)
- 		alarm(rec->switch_output.time);
- 	}
- 
--	if (!rec->itr) {
--		rec->itr = auxtrace_record__init(rec->evlist, &err);
--		if (err)
--			goto out;
+-	if (!cgrp) {
+-		cgrp = cgroup__new(str);
+-		if (!cgrp)
+-			return -1;
 -	}
 -
--	err = auxtrace_parse_snapshot_options(rec->itr, &rec->opts,
--					      rec->opts.auxtrace_snapshot_opts);
--	if (err)
--		goto out;
--
++	if (!cgrp)
++		return -1;
  	/*
- 	 * Allow aliases to facilitate the lookup of symbols for address
- 	 * filters. Refer to auxtrace_parse_filters().
-@@ -1746,7 +1758,7 @@ int cmd_record(int argc, const char **argv)
+ 	 * find corresponding event
+ 	 * if add cgroup N, then need to find event N
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 34a6c11543dc..0e377e6340dd 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -18,6 +18,10 @@ extern int nr_cgroups; /* number of explicit cgroups defined */
+ struct cgroup *cgroup__get(struct cgroup *cgroup);
+ void cgroup__put(struct cgroup *cgroup);
  
- 	symbol__init(NULL);
++struct perf_evlist;
++
++struct cgroup *evlist__findnew_cgroup(struct perf_evlist *evlist, char *name);
++
+ int parse_cgroups(const struct option *opt, const char *str, int unset);
  
--	err = auxtrace_parse_filters(rec->evlist);
-+	err = record__auxtrace_init(rec);
- 	if (err)
- 		goto out;
- 
+ #endif /* __CGROUP_H__ */
 -- 
 2.14.3
