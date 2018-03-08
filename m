@@ -1,482 +1,191 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 46/54] perf tools: Add MEM_TOPOLOGY feature to perf data file
-Date: Thu,  8 Mar 2018 16:50:21 -0300
-Message-ID: <20180308195029.14991-47-acme@kernel.org>
+Subject: [PATCH 21/54] perf pmu: Auto-merge PMU events created by prefix or
+ glob match
+Date: Thu,  8 Mar 2018 16:49:56 -0300
+Message-ID: <20180308195029.14991-22-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Timur Tabi <timur@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org, Agustin Vega-Frias <agustinv@codeaurora.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Agustin Vega-Frias <agustinv@codeaurora.org>
 
-Adding MEM_TOPOLOGY feature to perf data file,
-that will carry physical memory map and its
-node assignments.
+Auto-merge for these events was disabled when auto-merging of non-alias
+events was disabled in commit 63ce844 (perf stat: Only auto-merge events
+that are PMU aliases).
 
-The format of data in MEM_TOPOLOGY is as follows:
+Non-merging of legacy events is preserved:
 
-  0 - version          | for future changes
-  8 - block_size_bytes | /sys/devices/system/memory/block_size_bytes
- 16 - count            | number of nodes
+    $ perf stat -ag -e cache-misses,cache-misses sleep 1
 
- For each node we store map of physical indexes for
- each node:
+     Performance counter stats for 'system wide':
 
- 32 - node id          | node index
- 40 - size             | size of bitmap
- 48 - bitmap           | bitmap of memory indexes that belongs to node
-                       | /sys/devices/system/node/node<NODE>/memory<INDEX>
+                86,323      cache-misses
+                86,323      cache-misses
 
-The MEM_TOPOLOGY could be displayed with following
-report command:
+           1.002623307 seconds time elapsed
 
-  $ perf report --header-only -I
-  ...
-  # memory nodes (nr 1, block size 0x8000000):
-  #    0 [7G]: 0-23,32-69
+But prefix or glob matching auto-merges the events created:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    $ perf stat -a -e l3cache/read-miss/ sleep 1
+
+     Performance counter stats for 'system wide':
+
+                   328      l3cache/read-miss/
+
+           1.002627008 seconds time elapsed
+
+    $ perf stat -a -e l3cache_0_[01]/read-miss/ sleep 1
+
+     Performance counter stats for 'system wide':
+
+                   172      l3cache/read-miss/
+
+           1.002627008 seconds time elapsed
+
+As with events created with aliases, auto-merging can be suppressed with
+the --no-merge option:
+
+    $ perf stat -a -e l3cache/read-miss/ --no-merge sleep 1
+
+     Performance counter stats for 'system wide':
+
+                    67      l3cache/read-miss/
+                    67      l3cache/read-miss/
+                    63      l3cache/read-miss/
+                    60      l3cache/read-miss/
+
+           1.002622192 seconds time elapsed
+
+Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180307155020.32613-8-jolsa@kernel.org
-[ Rename 'index' to 'idx', as this breaks the build in rhel5, 6 and other systems where this is used by glibc headers ]
+Cc: Timur Tabi <timur@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Change-Id: I0a47eed54c05e1982ca964d743b37f50f60c508c
+Link: http://lkml.kernel.org/r/1520345084-42646-4-git-send-email-agustinv@codeaurora.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/bitmap.h |   2 +-
- tools/perf/util/env.h        |   9 ++
- tools/perf/util/header.c     | 305 +++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/header.h     |   1 +
- 4 files changed, 316 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-stat.txt | 14 +++++++++-----
+ tools/perf/util/parse-events.c         | 13 +++----------
+ tools/perf/util/parse-events.h         |  2 +-
+ tools/perf/util/parse-events.y         |  4 ++--
+ 4 files changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-index ca160270fdfa..63440cc8d618 100644
---- a/tools/include/linux/bitmap.h
-+++ b/tools/include/linux/bitmap.h
-@@ -98,7 +98,7 @@ static inline int test_and_set_bit(int nr, unsigned long *addr)
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 628026dbedc5..f15b306be183 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -267,11 +267,15 @@ taskset.
+ --no-merge::
+ Do not merge results from same PMUs.
  
- /**
-  * bitmap_alloc - Allocate bitmap
-- * @nr: Bit to set
-+ * @nbits: Number of bits
-  */
- static inline unsigned long *bitmap_alloc(int nbits)
+-When multiple events are created from a single event alias, stat will,
+-by default, aggregate the event counts and show the result in a single
+-row. This option disables that behavior and shows the individual events
+-and counts. Aliases are listed immediately after the Kernel PMU events
+-by perf list.
++When multiple events are created from a single event specification,
++stat will, by default, aggregate the event counts and show the result
++in a single row. This option disables that behavior and shows
++the individual events and counts.
++
++Multiple events are created from a single event specification when:
++1. Prefix or glob matching is used for the PMU name.
++2. Aliases, which are listed immediately after the Kernel PMU events
++   by perf list, are used.
+ 
+ --smi-cost::
+ Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index bafc91edcb44..4e80ca320399 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1217,7 +1217,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 			 get_config_name(head_config), &config_terms);
+ }
+ 
+-static int __parse_events_add_pmu(struct parse_events_state *parse_state,
++int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+ 			 struct list_head *head_config, bool auto_merge_stats)
  {
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index bf970f57dce0..c4ef2e523367 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -27,6 +27,12 @@ struct numa_node {
- 	struct cpu_map	*map;
- };
- 
-+struct memory_node {
-+	u64		 node;
-+	u64		 size;
-+	unsigned long	*set;
-+};
-+
- struct perf_env {
- 	char			*hostname;
- 	char			*os_release;
-@@ -43,6 +49,7 @@ struct perf_env {
- 	int			nr_sibling_cores;
- 	int			nr_sibling_threads;
- 	int			nr_numa_nodes;
-+	int			nr_memory_nodes;
- 	int			nr_pmu_mappings;
- 	int			nr_groups;
- 	char			*cmdline;
-@@ -54,6 +61,8 @@ struct perf_env {
- 	struct cpu_cache_level	*caches;
- 	int			 caches_cnt;
- 	struct numa_node	*numa_nodes;
-+	struct memory_node	*memory_nodes;
-+	unsigned long long	 memory_bsize;
- };
- 
- extern struct perf_env perf_env;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e0c3cad0fd8d..e14b3f7c7212 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -17,6 +17,7 @@
- #include <sys/stat.h>
- #include <sys/utsname.h>
- #include <linux/time64.h>
-+#include <dirent.h>
- 
- #include "evlist.h"
- #include "evsel.h"
-@@ -37,6 +38,7 @@
- #include "asm/bug.h"
- #include "tool.h"
- #include "time-utils.h"
-+#include "units.h"
- 
- #include "sane_ctype.h"
- 
-@@ -131,6 +133,25 @@ int do_write(struct feat_fd *ff, const void *buf, size_t size)
- 	return __do_write_buf(ff, buf, size);
+@@ -1287,13 +1287,6 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	return evsel ? 0 : -ENOMEM;
  }
  
-+/* Return: 0 if succeded, -ERR if failed. */
-+static int do_write_bitmap(struct feat_fd *ff, unsigned long *set, u64 size)
-+{
-+	u64 *p = (u64 *) set;
-+	int i, ret;
-+
-+	ret = do_write(ff, &size, sizeof(size));
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; (u64) i < BITS_TO_U64(size); i++) {
-+		ret = do_write(ff, p + i, sizeof(*p));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /* Return: 0 if succeded, -ERR if failed. */
- int write_padded(struct feat_fd *ff, const void *bf,
- 		 size_t count, size_t count_aligned)
-@@ -243,6 +264,38 @@ static char *do_read_string(struct feat_fd *ff)
- 	return NULL;
- }
- 
-+/* Return: 0 if succeded, -ERR if failed. */
-+static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
-+{
-+	unsigned long *set;
-+	u64 size, *p;
-+	int i, ret;
-+
-+	ret = do_read_u64(ff, &size);
-+	if (ret)
-+		return ret;
-+
-+	set = bitmap_alloc(size);
-+	if (!set)
-+		return -ENOMEM;
-+
-+	bitmap_zero(set, size);
-+
-+	p = (u64 *) set;
-+
-+	for (i = 0; (u64) i < BITS_TO_U64(size); i++) {
-+		ret = do_read_u64(ff, p + i);
-+		if (ret < 0) {
-+			free(set);
-+			return ret;
-+		}
-+	}
-+
-+	*pset  = set;
-+	*psize = size;
-+	return 0;
-+}
-+
- static int write_tracing_data(struct feat_fd *ff,
- 			      struct perf_evlist *evlist)
+-int parse_events_add_pmu(struct parse_events_state *parse_state,
+-			 struct list_head *list, char *name,
+-			 struct list_head *head_config)
+-{
+-	return __parse_events_add_pmu(parse_state, list, name, head_config, false);
+-}
+-
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			       char *str, struct list_head **listp)
  {
-@@ -1196,6 +1249,176 @@ static int write_sample_time(struct feat_fd *ff,
- 			sizeof(evlist->last_sample_time));
- }
+@@ -1323,8 +1316,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 					return -1;
+ 				list_add_tail(&term->list, head);
  
-+
-+static int memory_node__read(struct memory_node *n, unsigned long idx)
-+{
-+	unsigned int phys, size = 0;
-+	char path[PATH_MAX];
-+	struct dirent *ent;
-+	DIR *dir;
-+
-+#define for_each_memory(mem, dir)					\
-+	while ((ent = readdir(dir)))					\
-+		if (strcmp(ent->d_name, ".") &&				\
-+		    strcmp(ent->d_name, "..") &&			\
-+		    sscanf(ent->d_name, "memory%u", &mem) == 1)
-+
-+	scnprintf(path, PATH_MAX,
-+		  "%s/devices/system/node/node%lu",
-+		  sysfs__mountpoint(), idx);
-+
-+	dir = opendir(path);
-+	if (!dir) {
-+		pr_warning("failed: cant' open memory sysfs data\n");
-+		return -1;
-+	}
-+
-+	for_each_memory(phys, dir) {
-+		size = max(phys, size);
-+	}
-+
-+	size++;
-+
-+	n->set = bitmap_alloc(size);
-+	if (!n->set) {
-+		closedir(dir);
-+		return -ENOMEM;
-+	}
-+
-+	bitmap_zero(n->set, size);
-+	n->node = idx;
-+	n->size = size;
-+
-+	rewinddir(dir);
-+
-+	for_each_memory(phys, dir) {
-+		set_bit(phys, n->set);
-+	}
-+
-+	closedir(dir);
-+	return 0;
-+}
-+
-+static int memory_node__sort(const void *a, const void *b)
-+{
-+	const struct memory_node *na = a;
-+	const struct memory_node *nb = b;
-+
-+	return na->node - nb->node;
-+}
-+
-+static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
-+{
-+	char path[PATH_MAX];
-+	struct dirent *ent;
-+	DIR *dir;
-+	u64 cnt = 0;
-+	int ret = 0;
-+
-+	scnprintf(path, PATH_MAX, "%s/devices/system/node/",
-+		  sysfs__mountpoint());
-+
-+	dir = opendir(path);
-+	if (!dir) {
-+		pr_warning("failed: can't open node sysfs data\n");
-+		return -1;
-+	}
-+
-+	while (!ret && (ent = readdir(dir))) {
-+		unsigned int idx;
-+		int r;
-+
-+		if (!strcmp(ent->d_name, ".") ||
-+		    !strcmp(ent->d_name, ".."))
-+			continue;
-+
-+		r = sscanf(ent->d_name, "node%u", &idx);
-+		if (r != 1)
-+			continue;
-+
-+		if (WARN_ONCE(cnt >= size,
-+			      "failed to write MEM_TOPOLOGY, way too many nodes\n"))
-+			return -1;
-+
-+		ret = memory_node__read(&nodes[cnt++], idx);
-+	}
-+
-+	*cntp = cnt;
-+	closedir(dir);
-+
-+	if (!ret)
-+		qsort(nodes, cnt, sizeof(nodes[0]), memory_node__sort);
-+
-+	return ret;
-+}
-+
-+#define MAX_MEMORY_NODES 2000
-+
-+/*
-+ * The MEM_TOPOLOGY holds physical memory map for every
-+ * node in system. The format of data is as follows:
-+ *
-+ *  0 - version          | for future changes
-+ *  8 - block_size_bytes | /sys/devices/system/memory/block_size_bytes
-+ * 16 - count            | number of nodes
-+ *
-+ * For each node we store map of physical indexes for
-+ * each node:
-+ *
-+ * 32 - node id          | node index
-+ * 40 - size             | size of bitmap
-+ * 48 - bitmap           | bitmap of memory indexes that belongs to node
-+ */
-+static int write_mem_topology(struct feat_fd *ff __maybe_unused,
-+			      struct perf_evlist *evlist __maybe_unused)
-+{
-+	static struct memory_node nodes[MAX_MEMORY_NODES];
-+	u64 bsize, version = 1, i, nr;
-+	int ret;
-+
-+	ret = sysfs__read_xll("devices/system/memory/block_size_bytes",
-+			      (unsigned long long *) &bsize);
-+	if (ret)
-+		return ret;
-+
-+	ret = build_mem_topology(&nodes[0], MAX_MEMORY_NODES, &nr);
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &version, sizeof(version));
-+	if (ret < 0)
-+		goto out;
-+
-+	ret = do_write(ff, &bsize, sizeof(bsize));
-+	if (ret < 0)
-+		goto out;
-+
-+	ret = do_write(ff, &nr, sizeof(nr));
-+	if (ret < 0)
-+		goto out;
-+
-+	for (i = 0; i < nr; i++) {
-+		struct memory_node *n = &nodes[i];
-+
-+		#define _W(v)						\
-+			ret = do_write(ff, &n->v, sizeof(n->v));	\
-+			if (ret < 0)					\
-+				goto out;
-+
-+		_W(node)
-+		_W(size)
-+
-+		#undef _W
-+
-+		ret = do_write_bitmap(ff, n->set, n->size);
-+		if (ret < 0)
-+			goto out;
-+	}
-+
-+out:
-+	return ret;
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1543,6 +1766,35 @@ static void print_sample_time(struct feat_fd *ff, FILE *fp)
- 	fprintf(fp, "# sample duration : %10.3f ms\n", d);
- }
+-				if (!__parse_events_add_pmu(parse_state, list,
+-							    pmu->name, head, true)) {
++				if (!parse_events_add_pmu(parse_state, list,
++							  pmu->name, head, true)) {
+ 					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
+ 					ok++;
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 88108cd11b4c..5015cfd58277 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -167,7 +167,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
+ 				void *ptr, char *type, u64 len);
+ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+-			 struct list_head *head_config);
++			 struct list_head *head_config, bool auto_merge_stats);
  
-+static void memory_node__fprintf(struct memory_node *n,
-+				 unsigned long long bsize, FILE *fp)
-+{
-+	char buf_map[100], buf_size[50];
-+	unsigned long long size;
-+
-+	size = bsize * bitmap_weight(n->set, n->size);
-+	unit_number__scnprintf(buf_size, 50, size);
-+
-+	bitmap_scnprintf(n->set, n->size, buf_map, 100);
-+	fprintf(fp, "#  %3" PRIu64 " [%s]: %s\n", n->node, buf_size, buf_map);
-+}
-+
-+static void print_mem_topology(struct feat_fd *ff, FILE *fp)
-+{
-+	struct memory_node *nodes;
-+	int i, nr;
-+
-+	nodes = ff->ph->env.memory_nodes;
-+	nr    = ff->ph->env.nr_memory_nodes;
-+
-+	fprintf(fp, "# memory nodes (nr %d, block size 0x%llx):\n",
-+		nr, ff->ph->env.memory_bsize);
-+
-+	for (i = 0; i < nr; i++) {
-+		memory_node__fprintf(&nodes[i], ff->ph->env.memory_bsize, fp);
-+	}
-+}
-+
- static int __event_process_build_id(struct build_id_event *bev,
- 				    char *filename,
- 				    struct perf_session *session)
-@@ -2205,6 +2457,58 @@ static int process_sample_time(struct feat_fd *ff, void *data __maybe_unused)
- 	return 0;
- }
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			       char *str,
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index dedf184b5bed..7afeb80cc39e 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -232,7 +232,7 @@ PE_NAME opt_event_config
+ 		YYABORT;
  
-+static int process_mem_topology(struct feat_fd *ff,
-+				void *data __maybe_unused)
-+{
-+	struct memory_node *nodes;
-+	u64 version, i, nr, bsize;
-+	int ret = -1;
-+
-+	if (do_read_u64(ff, &version))
-+		return -1;
-+
-+	if (version != 1)
-+		return -1;
-+
-+	if (do_read_u64(ff, &bsize))
-+		return -1;
-+
-+	if (do_read_u64(ff, &nr))
-+		return -1;
-+
-+	nodes = zalloc(sizeof(*nodes) * nr);
-+	if (!nodes)
-+		return -1;
-+
-+	for (i = 0; i < nr; i++) {
-+		struct memory_node n;
-+
-+		#define _R(v)				\
-+			if (do_read_u64(ff, &n.v))	\
-+				goto out;		\
-+
-+		_R(node)
-+		_R(size)
-+
-+		#undef _R
-+
-+		if (do_read_bitmap(ff, &n.set, &n.size))
-+			goto out;
-+
-+		nodes[i] = n;
-+	}
-+
-+	ff->ph->env.memory_bsize    = bsize;
-+	ff->ph->env.memory_nodes    = nodes;
-+	ff->ph->env.nr_memory_nodes = nr;
-+	ret = 0;
-+
-+out:
-+	if (ret)
-+		free(nodes);
-+	return ret;
-+}
-+
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2263,6 +2567,7 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(STAT,		stat,		false),
- 	FEAT_OPN(CACHE,		cache,		true),
- 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
-+	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
- };
- 
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 942bdec6d70d..90d4577a92dc 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -36,6 +36,7 @@ enum {
- 	HEADER_STAT,
- 	HEADER_CACHE,
- 	HEADER_SAMPLE_TIME,
-+	HEADER_MEM_TOPOLOGY,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+ 	ALLOC_LIST(list);
+-	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
++	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
+ 		struct perf_pmu *pmu = NULL;
+ 		int ok = 0;
+ 		char *pattern;
+@@ -251,7 +251,7 @@ PE_NAME opt_event_config
+ 					free(pattern);
+ 					YYABORT;
+ 				}
+-				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
++				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true))
+ 					ok++;
+ 				parse_events_terms__delete(terms);
+ 			}
 -- 
 2.14.3
