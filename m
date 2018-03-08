@@ -1,122 +1,63 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/54] perf sched map: Re-annotate shortname if thread comm changed
-Date: Thu,  8 Mar 2018 16:49:44 -0300
-Message-ID: <20180308195029.14991-10-acme@kernel.org>
+Subject: [PATCH 06/54] perf cgroup: Introduce find_cgroup() method
+Date: Thu,  8 Mar 2018 16:49:41 -0300
+Message-ID: <20180308195029.14991-7-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Changbin Du <changbin.du@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is to show the real name of thread that created via fork-exec.  See
-below example for shortname *A0*.
+To break down complexity in add_cgroup().
 
-$ sudo ./perf sched map
-              *A0   80393.050639 secs A0 => perf:22368
-          *.   A0   80393.050748 secs .  => swapper:0
-           .  *.    80393.050887 secs
-      *B0  .   .    80393.052735 secs B0 => rcu_sched:8
-      *.   .   .    80393.052743 secs
-       .  *C0  .    80393.056264 secs C0 => kworker/2:1H:287
-       .  *A0  .    80393.056270 secs
-       .  *D0  .    80393.056769 secs D0 => ksoftirqd/2:22
--      .  *A0  .    80393.056804 secs
-+      .  *A0  .    80393.056804 secs A0 => pi:22368
-       .  *.   .    80393.056854 secs
-      *B0  .   .    80393.060727 secs
-      ...
-
-Signed-off-by: Changbin Du <changbin.du@intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1520307457-23668-3-git-send-email-changbin.du@intel.com
-[ Optimally pack struct thread_runtime when adding the new bool member ]
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-5yqshcf5hm837n7c86u7lhjf@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+ tools/perf/util/cgroup.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 0a632a6b6228..4dfdee668b0c 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -256,6 +256,8 @@ struct thread_runtime {
- 	int last_state;
- 
- 	char shortname[3];
-+	bool comm_changed;
-+
- 	u64 migrations;
- };
- 
-@@ -1626,7 +1628,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 
- 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
- 	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
--	if (new_shortname || (verbose > 0 && sched_in->tid)) {
-+	if (new_shortname || tr->comm_changed || (verbose > 0 && sched_in->tid)) {
- 		const char *pid_color = color;
- 
- 		if (thread__has_color(sched_in))
-@@ -1634,6 +1636,7 @@ static int map_switch_event(struct perf_sched *sched, struct perf_evsel *evsel,
- 
- 		color_fprintf(stdout, pid_color, "%s => %s:%d",
- 		       tr->shortname, thread__comm_str(sched_in), sched_in->tid);
-+		tr->comm_changed = false;
- 	}
- 
- 	if (sched->map.comp && new_cpu)
-@@ -1737,6 +1740,37 @@ static int perf_sched__process_tracepoint_sample(struct perf_tool *tool __maybe_
- 	return err;
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 8ea964461eb7..84dfc34a6d0f 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -90,11 +90,10 @@ static int open_cgroup(char *name)
+ 	return fd;
  }
  
-+static int perf_sched__process_comm(struct perf_tool *tool __maybe_unused,
-+				    union perf_event *event,
-+				    struct perf_sample *sample,
-+				    struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct thread_runtime *tr;
-+	int err;
-+
-+	err = perf_event__process_comm(tool, event, sample, machine);
-+	if (err)
-+		return err;
-+
-+	thread = machine__find_thread(machine, sample->pid, sample->tid);
-+	if (!thread) {
-+		pr_err("Internal error: can't find thread\n");
-+		return -1;
-+	}
-+
-+	tr = thread__get_runtime(thread);
-+	if (tr == NULL) {
-+		thread__put(thread);
-+		return -1;
-+	}
-+
-+	tr->comm_changed = true;
-+	thread__put(thread);
-+
-+	return 0;
+-static int add_cgroup(struct perf_evlist *evlist, char *str)
++static struct cgroup *evlist__find_cgroup(struct perf_evlist *evlist, char *str)
+ {
+ 	struct perf_evsel *counter;
+ 	struct cgroup *cgrp = NULL;
+-	int n;
+ 	/*
+ 	 * check if cgrp is already defined, if so we reuse it
+ 	 */
+@@ -107,6 +106,15 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
+ 		}
+ 	}
+ 
++	return cgrp;
 +}
 +
- static int perf_sched__read_events(struct perf_sched *sched)
- {
- 	const struct perf_evsel_str_handler handlers[] = {
-@@ -3306,7 +3340,7 @@ int cmd_sched(int argc, const char **argv)
- 	struct perf_sched sched = {
- 		.tool = {
- 			.sample		 = perf_sched__process_tracepoint_sample,
--			.comm		 = perf_event__process_comm,
-+			.comm		 = perf_sched__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
- 			.lost		 = perf_event__process_lost,
- 			.fork		 = perf_sched__process_fork_event,
++static int add_cgroup(struct perf_evlist *evlist, char *str)
++{
++	struct perf_evsel *counter;
++	struct cgroup *cgrp = evlist__find_cgroup(evlist, str);
++	int n;
++
+ 	if (!cgrp) {
+ 		cgrp = zalloc(sizeof(*cgrp));
+ 		if (!cgrp)
 -- 
 2.14.3
