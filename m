@@ -1,132 +1,170 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 39/54] perf annotate: Fix s390 target function disassembly
-Date: Thu,  8 Mar 2018 16:50:14 -0300
-Message-ID: <20180308195029.14991-40-acme@kernel.org>
+Subject: [PATCH 19/54] perf pmu: Support wildcards on pmu name in dynamic pmu
+ events
+Date: Thu,  8 Mar 2018 16:49:54 -0300
+Message-ID: <20180308195029.14991-20-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Timur Tabi <timur@codeaurora.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org, Agustin Vega-Frias <agustinv@codeaurora.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: Agustin Vega-Frias <agustinv@codeaurora.org>
 
-'perf annotate' displays function call assembler instructions with a
-right arrow. Hitting enter on this line/instruction causes the browser
-to disassemble this target function and show it on the screen.  On s390
-this results in an error message 'The called function was not found.'
+Starting on v4.12 event parsing code for dynamic pmu events already
+supports prefix-based matching of multiple pmus when creating dynamic
+events. E.g., in a system with the following dynamic pmus:
 
-The function call assembly line parsing does not handle the s390 bras
-and brasl instructions. Function call__parse expects the target as first
-operand:
+    mypmu_0
+    mypmu_1
+    mypmu_2
+    mypmu_4
 
-	callq	e9140 <__fxstat>
+passing mypmu/<config>/ as an event spec will result in the creation of
+the event in all of the pmus. This change expands this matching through
+the use of fnmatch so glob-like expressions can be used to create events
+in multiple pmus. E.g., in the system described above if a user only
+wants to create the event in mypmu_0 and mypmu_1, mypmu_[01]/<config>/
+can be passed.
 
-S390 has a register number as first operand:
-
-	brasl	%r14,41d60 <abort>
-
-Therefore the target addresses on s390 are always zero which is an
-invalid address.
-
-Introduce a s390 specific call parsing function which skips the first
-operand on s390.
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180307134325.96106-1-tmricht@linux.vnet.ibm.com
+Signed-off-by: Agustin Vega-Frias <agustinv@codeaurora.org>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Timur Tabi <timur@codeaurora.org>
+Change-Id: Icb25653fc5d5239c20f3bffdfdf4ab4c9c9bb20b
+Link: http://lkml.kernel.org/r/1520454947-16977-1-git-send-email-agustinv@codeaurora.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c | 53 +++++++++++++++++++++++++++-
- tools/perf/util/annotate.c                   |  2 +-
- 2 files changed, 53 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-list.txt |  8 +++++++-
+ tools/perf/Documentation/perf-stat.txt | 13 +++++++++++++
+ tools/perf/util/parse-events.l         |  2 +-
+ tools/perf/util/parse-events.y         | 14 ++++++++++++--
+ 4 files changed, 33 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index 01df9d8303e1..e80589fc5b58 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -1,6 +1,57 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index e2a897ae3596..2549c34a7895 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -141,7 +141,13 @@ on the first memory controller on socket 0 of a Intel Xeon system
+ 
+ Each memory controller has its own PMU.  Measuring the complete system
+ bandwidth would require specifying all imc PMUs (see perf list output),
+-and adding the values together.
++and adding the values together. To simplify creation of multiple events,
++prefix and glob matching is supported in the PMU name, and the prefix
++'uncore_' is also ignored when performing the match. So the command above
++can be expanded to all memory controllers by using the syntaxes:
++
++  perf stat -C 0 -a imc/cas_count_read/,imc/cas_count_write/ -I 1000 ...
++  perf stat -C 0 -a *imc*/cas_count_read/,*imc*/cas_count_write/ -I 1000 ...
+ 
+ This example measures the combined core power every second
+ 
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 2b38e222016a..628026dbedc5 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -49,6 +49,13 @@ report::
+ 	  parameters are defined by corresponding entries in
+ 	  /sys/bus/event_source/devices/<pmu>/format/*
+ 
++	Note that the last two syntaxes support prefix and glob matching in
++	the PMU name to simplify creation of events accross multiple instances
++	of the same type of PMU in large systems (e.g. memory controller PMUs).
++	Multiple PMU instances are typical for uncore PMUs, so the prefix
++	'uncore_' is also ignored when performing this match.
++
++
+ -i::
+ --no-inherit::
+         child tasks do not inherit counters
+@@ -260,6 +267,12 @@ taskset.
+ --no-merge::
+ Do not merge results from same PMUs.
+ 
++When multiple events are created from a single event alias, stat will,
++by default, aggregate the event counts and show the result in a single
++row. This option disables that behavior and shows the individual events
++and counts. Aliases are listed immediately after the Kernel PMU events
++by perf list.
++
+ --smi-cost::
+ Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
+ 
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 655ecff636a8..a1a01b1ac8b8 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -175,7 +175,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
+ num_dec		[0-9]+
+ num_hex		0x[a-fA-F0-9]+
+ num_raw_hex	[a-fA-F0-9]+
+-name		[a-zA-Z_*?][a-zA-Z0-9_*?.]*
++name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]]*
+ name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
+ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+ /* If you add a modifier you need to update check_modifier() */
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index e81a20ea8d7d..dedf184b5bed 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -8,6 +8,7 @@
+ 
+ #define YYDEBUG 1
+ 
++#include <fnmatch.h>
  #include <linux/compiler.h>
+ #include <linux/list.h>
+ #include <linux/types.h>
+@@ -234,6 +235,10 @@ PE_NAME opt_event_config
+ 	if (parse_events_add_pmu(_parse_state, list, $1, $2)) {
+ 		struct perf_pmu *pmu = NULL;
+ 		int ok = 0;
++		char *pattern;
++
++		if (asprintf(&pattern, "%s*", $1) < 0)
++			YYABORT;
  
-+static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
-+			    struct map *map)
-+{
-+	char *endptr, *tok, *name;
-+	struct addr_map_symbol target = {
-+		.map = map,
-+	};
+ 		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 			char *name = pmu->name;
+@@ -241,14 +246,19 @@ PE_NAME opt_event_config
+ 			if (!strncmp(name, "uncore_", 7) &&
+ 			    strncmp($1, "uncore_", 7))
+ 				name += 7;
+-			if (!strncmp($1, name, strlen($1))) {
+-				if (parse_events_copy_term_list(orig_terms, &terms))
++			if (!fnmatch(pattern, name, 0)) {
++				if (parse_events_copy_term_list(orig_terms, &terms)) {
++					free(pattern);
+ 					YYABORT;
++				}
+ 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms))
+ 					ok++;
+ 				parse_events_terms__delete(terms);
+ 			}
+ 		}
 +
-+	tok = strchr(ops->raw, ',');
-+	if (!tok)
-+		return -1;
++		free(pattern);
 +
-+	ops->target.addr = strtoull(tok + 1, &endptr, 16);
-+
-+	name = strchr(endptr, '<');
-+	if (name == NULL)
-+		return -1;
-+
-+	name++;
-+
-+	if (arch->objdump.skip_functions_char &&
-+	    strchr(name, arch->objdump.skip_functions_char))
-+		return -1;
-+
-+	tok = strchr(name, '>');
-+	if (tok == NULL)
-+		return -1;
-+
-+	*tok = '\0';
-+	ops->target.name = strdup(name);
-+	*tok = '>';
-+
-+	if (ops->target.name == NULL)
-+		return -1;
-+	target.addr = map__objdump_2mem(map, ops->target.addr);
-+
-+	if (map_groups__find_ams(&target) == 0 &&
-+	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
-+		ops->target.sym = target.sym;
-+
-+	return 0;
-+}
-+
-+static int call__scnprintf(struct ins *ins, char *bf, size_t size,
-+			   struct ins_operands *ops);
-+
-+static struct ins_ops s390_call_ops = {
-+	.parse	   = s390_call__parse,
-+	.scnprintf = call__scnprintf,
-+};
-+
- static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *name)
- {
- 	struct ins_ops *ops = NULL;
-@@ -14,7 +65,7 @@ static struct ins_ops *s390__associate_ins_ops(struct arch *arch, const char *na
- 	if (!strcmp(name, "bras") ||
- 	    !strcmp(name, "brasl") ||
- 	    !strcmp(name, "basr"))
--		ops = &call_ops;
-+		ops = &s390_call_ops;
- 	if (!strcmp(name, "br"))
- 		ops = &ret_ops;
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 49ff825f745c..bc3302da702b 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -248,7 +248,7 @@ static struct ins_ops call_ops = {
- 
- bool ins__is_call(const struct ins *ins)
- {
--	return ins->ops == &call_ops;
-+	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
- }
- 
- static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map *map __maybe_unused)
+ 		if (!ok)
+ 			YYABORT;
+ 	}
 -- 
 2.14.3
