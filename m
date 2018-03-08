@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/54] perf mmap: Use the stored data in perf_mmap__read_event()
-Date: Thu,  8 Mar 2018 16:50:00 -0300
-Message-ID: <20180308195029.14991-26-acme@kernel.org>
+Subject: [PATCH 22/54] perf evlist: Store 'overwrite' in struct perf_mmap
+Date: Thu,  8 Mar 2018 16:49:57 -0300
+Message-ID: <20180308195029.14991-23-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
@@ -12,62 +12,77 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Using the 'start', 'end' and 'overwrite' which are stored in
-struct perf_mmap to replace the parameters of perf_mmap__read_event().
-The parameters will be discarded later.
+It has been determined that the map is for overwrite mode
+(evlist->overwrite_mmap) or non-overwrite mode (evlist->mmap) when
+calling perf_evlist__alloc_mmap().
 
-No functional change.
+Store the information in struct perf_mmap, which will be used later to
+simplify the perf_mmap__read*() interfaces.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/1520350567-80082-4-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1520350567-80082-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ tools/perf/util/evlist.c | 8 +++++---
+ tools/perf/util/mmap.h   | 1 +
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 8c1d033638c2..2933942abfe2 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -76,8 +76,9 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
-  * perf_mmap__read_done()
-  */
- union perf_event *perf_mmap__read_event(struct perf_mmap *map,
--					bool overwrite,
--					u64 *startp, u64 end)
-+					bool overwrite __maybe_unused,
-+					u64 *startp __maybe_unused,
-+					u64 end __maybe_unused)
- {
- 	union perf_event *event;
- 
-@@ -87,17 +88,14 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map,
- 	if (!refcount_read(&map->refcnt))
- 		return NULL;
- 
--	if (startp == NULL)
--		return NULL;
--
- 	/* non-overwirte doesn't pause the ringbuffer */
--	if (!overwrite)
--		end = perf_mmap__read_head(map);
-+	if (!map->overwrite)
-+		map->end = perf_mmap__read_head(map);
- 
--	event = perf_mmap__read(map, startp, end);
-+	event = perf_mmap__read(map, &map->start, map->end);
- 
--	if (!overwrite)
--		map->prev = *startp;
-+	if (!map->overwrite)
-+		map->prev = map->start;
- 
- 	return event;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 41a4666f1519..a59281d64368 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -722,7 +722,8 @@ void perf_evlist__munmap(struct perf_evlist *evlist)
+ 	zfree(&evlist->overwrite_mmap);
  }
+ 
+-static struct perf_mmap *perf_evlist__alloc_mmap(struct perf_evlist *evlist)
++static struct perf_mmap *perf_evlist__alloc_mmap(struct perf_evlist *evlist,
++						 bool overwrite)
+ {
+ 	int i;
+ 	struct perf_mmap *map;
+@@ -736,6 +737,7 @@ static struct perf_mmap *perf_evlist__alloc_mmap(struct perf_evlist *evlist)
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+ 		map[i].fd = -1;
++		map[i].overwrite = overwrite;
+ 		/*
+ 		 * When the perf_mmap() call is made we grab one refcount, plus
+ 		 * one extra to let perf_mmap__consume() get the last
+@@ -779,7 +781,7 @@ static int perf_evlist__mmap_per_evsel(struct perf_evlist *evlist, int idx,
+ 			maps = evlist->overwrite_mmap;
+ 
+ 			if (!maps) {
+-				maps = perf_evlist__alloc_mmap(evlist);
++				maps = perf_evlist__alloc_mmap(evlist, true);
+ 				if (!maps)
+ 					return -1;
+ 				evlist->overwrite_mmap = maps;
+@@ -1029,7 +1031,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	struct mmap_params mp;
+ 
+ 	if (!evlist->mmap)
+-		evlist->mmap = perf_evlist__alloc_mmap(evlist);
++		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+ 	if (!evlist->mmap)
+ 		return -ENOMEM;
+ 
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index ec7d3a24e276..71137977af28 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -20,6 +20,7 @@ struct perf_mmap {
+ 	int		 fd;
+ 	refcount_t	 refcnt;
+ 	u64		 prev;
++	bool		 overwrite;
+ 	struct auxtrace_mmap auxtrace_mmap;
+ 	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
+ };
 -- 
 2.14.3
