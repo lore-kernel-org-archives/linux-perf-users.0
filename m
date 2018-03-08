@@ -1,91 +1,43 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/54] perf intel-pt: Get rid of intel_pt_use_buffer_pid_tid()
-Date: Thu,  8 Mar 2018 16:50:10 -0300
-Message-ID: <20180308195029.14991-36-acme@kernel.org>
+Subject: [PATCH 32/54] perf intel-pt: Fix error recovery from missing TIP packet
+Date: Thu,  8 Mar 2018 16:50:07 -0300
+Message-ID: <20180308195029.14991-33-acme@kernel.org>
 References: <20180308195029.14991-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-With the new way sampling support will be implemented,
-intel_pt_use_buffer_pid_tid() will not be needed. Get rid of it.
+When a TIP packet is expected but there is a different packet, it is an
+error. However the unexpected packet might be something important like a
+TSC packet, so after the error, it is necessary to continue from there,
+rather than the next packet. That is achieved by setting pkt_step to
+zero.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/1520431349-30689-7-git-send-email-adrian.hunter@intel.com
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/1520431349-30689-4-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 39 +++------------------------------------
- 1 file changed, 3 insertions(+), 36 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 0979a6e8b2b7..cfb3614f5def 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -222,32 +222,6 @@ static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *
- 	return 0;
- }
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index 00f25f4b5f48..5e4d0bbafc8b 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1616,6 +1616,7 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+ 		case INTEL_PT_PWRX:
+ 			intel_pt_log("ERROR: Missing TIP after FUP\n");
+ 			decoder->pkt_state = INTEL_PT_STATE_ERR3;
++			decoder->pkt_step = 0;
+ 			return -ENOENT;
  
--static void intel_pt_use_buffer_pid_tid(struct intel_pt_queue *ptq,
--					struct auxtrace_queue *queue,
--					struct auxtrace_buffer *buffer)
--{
--	if (queue->cpu == -1 && buffer->cpu != -1)
--		ptq->cpu = buffer->cpu;
--
--	ptq->pid = buffer->pid;
--	ptq->tid = buffer->tid;
--
--	intel_pt_log("queue %u cpu %d pid %d tid %d\n",
--		     ptq->queue_nr, ptq->cpu, ptq->pid, ptq->tid);
--
--	thread__zput(ptq->thread);
--
--	if (ptq->tid != -1) {
--		if (ptq->pid != -1)
--			ptq->thread = machine__findnew_thread(ptq->pt->machine,
--							      ptq->pid,
--							      ptq->tid);
--		else
--			ptq->thread = machine__find_thread(ptq->pt->machine, -1,
--							   ptq->tid);
--	}
--}
--
- /* This function assumes data is processed sequentially only */
- static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- {
-@@ -311,10 +285,6 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 		b->consecutive = true;
- 	}
- 
--	if (ptq->use_buffer_pid_tid && (ptq->pid != buffer->pid ||
--					ptq->tid != buffer->tid))
--		intel_pt_use_buffer_pid_tid(ptq, queue, buffer);
--
- 	if (ptq->step_through_buffers)
- 		ptq->stop = true;
- 
-@@ -958,12 +928,9 @@ static int intel_pt_setup_queue(struct intel_pt *pt,
- 			ptq->cpu = queue->cpu;
- 		ptq->tid = queue->tid;
- 
--		if (pt->sampling_mode) {
--			if (pt->timeless_decoding)
--				ptq->step_through_buffers = true;
--			if (pt->timeless_decoding || !pt->have_sched_switch)
--				ptq->use_buffer_pid_tid = true;
--		}
-+		if (pt->sampling_mode && !pt->snapshot_mode &&
-+		    pt->timeless_decoding)
-+			ptq->step_through_buffers = true;
- 
- 		ptq->sync_switch = pt->sync_switch;
- 	}
+ 		case INTEL_PT_OVF:
 -- 
 2.14.3
