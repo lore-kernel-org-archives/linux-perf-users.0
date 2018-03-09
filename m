@@ -1,108 +1,196 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/54] perf cgroup: Rename 'struct cgroup_sel' to 'struct cgroup'
-Date: Thu,  8 Mar 2018 16:49:37 -0300
-Message-ID: <20180308195029.14991-3-acme@kernel.org>
-References: <20180308195029.14991-1-acme@kernel.org>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: [PATCH] perf tools arm64: Add libdw DWARF post unwind support for
+ ARM64
+Date: Thu, 8 Mar 2018 21:10:30 -0600
+Message-ID: <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
+References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
+        <20180226142726.cd413c792d0782f77b60a23e@arm.com>
+        <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
+        <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
+In-Reply-To: <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
+To: "Christian Hansen (chansen3)" <chansen3@cisco.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Based on prior work:
 
-That name isn't used, is shorter, lets switch to it.
+https://lkml.org/lkml/2014/5/6/395
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+and how other arches add libdw unwind support.  Includes support for
+running the unwind test, e.g., on a system with only elfutils' libdw
+0.170, the test now runs, and successfully:
+
+$ ./perf test unwind
+56: Test dwarf unwind                                     : Ok
+
+Reported-by: Christian Hansen <chansen3@cisco.com>
+Originally-by: Jean Pihet <jean.pihet@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-e51yphwgvepd1y4f5fjptmjq@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 ---
- tools/perf/util/cgroup.c | 6 +++---
- tools/perf/util/cgroup.h | 5 +++--
- tools/perf/util/evsel.h  | 4 ++--
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ tools/perf/Makefile.config                 |  2 +-
+ tools/perf/arch/arm64/include/arch-tests.h | 12 ++++++
+ tools/perf/arch/arm64/tests/Build          |  3 ++
+ tools/perf/arch/arm64/tests/arch-tests.c   | 16 ++++++++
+ tools/perf/arch/arm64/util/Build           |  1 +
+ tools/perf/arch/arm64/util/unwind-libdw.c  | 60 ++++++++++++++++++++++++++++++
+ 6 files changed, 93 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/arm64/include/arch-tests.h
+ create mode 100644 tools/perf/arch/arm64/tests/arch-tests.c
+ create mode 100644 tools/perf/arch/arm64/util/unwind-libdw.c
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 2e2aa6c86107..6ce291f45f2d 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -93,7 +93,7 @@ static int open_cgroup(char *name)
- static int add_cgroup(struct perf_evlist *evlist, char *str)
- {
- 	struct perf_evsel *counter;
--	struct cgroup_sel *cgrp = NULL;
-+	struct cgroup *cgrp = NULL;
- 	int n;
- 	/*
- 	 * check if cgrp is already defined, if so we reuse it
-@@ -144,7 +144,7 @@ static int add_cgroup(struct perf_evlist *evlist, char *str)
- 	return 0;
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 89cb2a36b8ff..98ff73648b51 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -75,7 +75,7 @@ endif
+ # Disable it on all other architectures in case libdw unwind
+ # support is detected in system. Add supported architectures
+ # to the check.
+-ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm powerpc s390))
++ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390))
+   NO_LIBDW_DWARF_UNWIND := 1
+ endif
  
--void close_cgroup(struct cgroup_sel *cgrp)
-+void close_cgroup(struct cgroup *cgrp)
- {
- 	if (cgrp && refcount_dec_and_test(&cgrp->refcnt)) {
- 		close(cgrp->fd);
-@@ -158,7 +158,7 @@ int parse_cgroups(const struct option *opt, const char *str,
- {
- 	struct perf_evlist *evlist = *(struct perf_evlist **)opt->value;
- 	struct perf_evsel *counter;
--	struct cgroup_sel *cgrp = NULL;
-+	struct cgroup *cgrp = NULL;
- 	const char *p, *e, *eos = str + strlen(str);
- 	char *s;
- 	int ret, i;
-diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-index afafc87e9201..934daa8e4c19 100644
---- a/tools/perf/util/cgroup.h
-+++ b/tools/perf/util/cgroup.h
-@@ -6,7 +6,7 @@
- 
- struct option;
- 
--struct cgroup_sel {
-+struct cgroup {
- 	char *name;
- 	int fd;
- 	refcount_t refcnt;
-@@ -14,7 +14,8 @@ struct cgroup_sel {
- 
- 
- extern int nr_cgroups; /* number of explicit cgroups defined */
--void close_cgroup(struct cgroup_sel *cgrp);
-+void close_cgroup(struct cgroup *cgrp);
+diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
+new file mode 100644
+index 000000000000..90ec4c8cb880
+--- /dev/null
++++ b/tools/perf/arch/arm64/include/arch-tests.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_TESTS_H
++#define ARCH_TESTS_H
 +
- int parse_cgroups(const struct option *opt, const char *str, int unset);
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++struct thread;
++struct perf_sample;
++#endif
++
++extern struct test arch_tests[];
++
++#endif
+diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
+index b30eff9bcc83..ca5630e73474 100644
+--- a/tools/perf/arch/arm64/tests/Build
++++ b/tools/perf/arch/arm64/tests/Build
+@@ -1,2 +1,5 @@
+ libperf-y += regs_load.o
+ libperf-y += dwarf-unwind.o
++
++libperf-y += arch-tests.o
++
+diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
+new file mode 100644
+index 000000000000..5b1543c98022
+--- /dev/null
++++ b/tools/perf/arch/arm64/tests/arch-tests.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <string.h>
++#include "tests/tests.h"
++#include "arch-tests.h"
++
++struct test arch_tests[] = {
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++	{
++		.desc = "DWARF unwind",
++		.func = test__dwarf_unwind,
++	},
++#endif
++	{
++		.func = NULL,
++	},
++};
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index c0b8dfef98ba..68f8a8eb3ad0 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -2,6 +2,7 @@ libperf-y += header.o
+ libperf-y += sym-handling.o
+ libperf-$(CONFIG_DWARF)     += dwarf-regs.o
+ libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
++libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
  
- #endif /* __CGROUP_H__ */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a7487c6d1866..92ba001b627f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -30,7 +30,7 @@ struct perf_sample_id {
- 	u64			period;
- };
- 
--struct cgroup_sel;
-+struct cgroup;
- 
- /*
-  * The 'struct perf_evsel_config_term' is used to pass event
-@@ -107,7 +107,7 @@ struct perf_evsel {
- 	struct perf_stat_evsel  *stats;
- 	void			*priv;
- 	u64			db_id;
--	struct cgroup_sel	*cgrp;
-+	struct cgroup		*cgrp;
- 	void			*handler;
- 	struct cpu_map		*cpus;
- 	struct cpu_map		*own_cpus;
+ libperf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
+ 			      ../../arm/util/auxtrace.o \
+diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
+new file mode 100644
+index 000000000000..7623d85e77f3
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/unwind-libdw.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <elfutils/libdwfl.h>
++#include "../../util/unwind-libdw.h"
++#include "../../util/perf_regs.h"
++#include "../../util/event.h"
++
++bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
++{
++	struct unwind_info *ui = arg;
++	struct regs_dump *user_regs = &ui->sample->user_regs;
++	Dwarf_Word dwarf_regs[PERF_REG_ARM64_MAX], dwarf_pc;
++
++#define REG(r) ({						\
++	Dwarf_Word val = 0;					\
++	perf_reg_value(&val, user_regs, PERF_REG_ARM64_##r);	\
++	val;							\
++})
++
++	dwarf_regs[0]  = REG(X0);
++	dwarf_regs[1]  = REG(X1);
++	dwarf_regs[2]  = REG(X2);
++	dwarf_regs[3]  = REG(X3);
++	dwarf_regs[4]  = REG(X4);
++	dwarf_regs[5]  = REG(X5);
++	dwarf_regs[6]  = REG(X6);
++	dwarf_regs[7]  = REG(X7);
++	dwarf_regs[8]  = REG(X8);
++	dwarf_regs[9]  = REG(X9);
++	dwarf_regs[10] = REG(X10);
++	dwarf_regs[11] = REG(X11);
++	dwarf_regs[12] = REG(X12);
++	dwarf_regs[13] = REG(X13);
++	dwarf_regs[14] = REG(X14);
++	dwarf_regs[15] = REG(X15);
++	dwarf_regs[16] = REG(X16);
++	dwarf_regs[17] = REG(X17);
++	dwarf_regs[18] = REG(X18);
++	dwarf_regs[19] = REG(X19);
++	dwarf_regs[20] = REG(X20);
++	dwarf_regs[21] = REG(X21);
++	dwarf_regs[22] = REG(X22);
++	dwarf_regs[23] = REG(X23);
++	dwarf_regs[24] = REG(X24);
++	dwarf_regs[25] = REG(X25);
++	dwarf_regs[26] = REG(X26);
++	dwarf_regs[27] = REG(X27);
++	dwarf_regs[28] = REG(X28);
++	dwarf_regs[29] = REG(X29);
++	dwarf_regs[30] = REG(LR);
++	dwarf_regs[31] = REG(SP);
++
++	if (!dwfl_thread_state_registers(thread, 0, PERF_REG_ARM64_MAX,
++					 dwarf_regs))
++		return false;
++
++	dwarf_pc = REG(PC);
++	dwfl_thread_state_register_pc(thread, dwarf_pc);
++
++	return true;
++}
 -- 
-2.14.3
+2.16.2
