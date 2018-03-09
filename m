@@ -1,45 +1,64 @@
 From: Martin Vuille <jpmv27@aim.com>
-Subject: Re: [PATCH] perf tools arm64: Add libdw DWARF post unwind support for
- ARM64
-Date: Fri, 9 Mar 2018 14:17:43 -0500
-Message-ID: <b3b296cc-9d49-5ccf-9b23-2bfdaed63225@aim.com>
-References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
- <20180226142726.cd413c792d0782f77b60a23e@arm.com>
- <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
- <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
- <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
- <20180309150627.GB8347@kernel.org>
- <20180309120720.9358515dbff3b1d1fdf70cc8@arm.com>
- <20180309182440.GA25111@kernel.org>
- <cde0e6f4-155f-3d7e-8d84-fd482f729976@aim.com>
- <20180309131508.54003466f8aedfafaee4e7a8@arm.com>
+Subject: Re: [PATCH] perf annotate: Don't prepend symfs path to
+ build_id_filename
+Date: Fri, 9 Mar 2018 14:26:27 -0500
+Message-ID: <9dfd677b-14b9-caec-d12e-b0043f541ec4@aim.com>
+References: <20180211191937.9703-1-jpmv27@aim.com>
+ <20180309190715.GB25111@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309131508.54003466f8aedfafaee4e7a8@arm.com>
+In-Reply-To: <20180309190715.GB25111@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "Christian Hansen (chansen3)" <chansen3@cisco.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, "Vuille, Martin (Martin)" <vmartin@avaya.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Yes, thought of doing that.
+dso__build_id_filename calls build_id_cache__linkname
 
-Unfortunately it was sent directly from git, so I do not have a copy of the message that was sent.
+build_id_cache__linkname uses buildid_dir
+
+symbol__config_symfs includes the symfs directory in buildid_dir
+
+So it's not necessary to prepend it again.
+
+
+Should've included those notes in the original submission.
+
+Will do better next time.
 
 MV
 
 
-On 03/09/18 14:15, Kim Phillips wrote:
-> On Fri, 9 Mar 2018 13:49:50 -0500
-> Martin Vuille <jpmv27@aim.com> wrote:
+On 03/09/18 14:07, Arnaldo Carvalho de Melo wrote:
+> Em Sun, Feb 11, 2018 at 02:19:37PM -0500, Martin Vuille escreveu:
+>> build_id_filename already contains symfs path if applicable, so
+>> don't prepend it a second time.
+> Where is the analysis that shows that that is the case? I looked here at
+> the implementation for dso__build_id_filename() and couldn't find where
+> was it that the symfs would be appended, can you clarify?
 >
->> For https://patchwork.kernel.org/patch/10211483/, I'm not sure how to go about doing a reply to all.
-> Hit reply-all from the copy in your Sent folder.
->
-> Kim
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> - Arnaldo
+>   
+>> Signed-off-by: Martin Vuille <jpmv27@aim.com>
+>> ---
+>>   tools/perf/util/annotate.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+>> index 28b233c3dcbe..425b7f0760ec 100644
+>> --- a/tools/perf/util/annotate.c
+>> +++ b/tools/perf/util/annotate.c
+>> @@ -1381,7 +1381,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+>>   
+>>   	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+>>   	if (build_id_filename) {
+>> -		__symbol__join_symfs(filename, filename_size, build_id_filename);
+>> +		scnprintf(filename, filename_size, "%s", build_id_filename);
+>>   		free(build_id_filename);
+>>   	} else {
+>>   		if (dso->has_build_id)
+>> -- 
+>> 2.13.6
