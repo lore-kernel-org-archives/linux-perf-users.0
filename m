@@ -1,196 +1,242 @@
-From: Kim Phillips <kim.phillips@arm.com>
-Subject: [PATCH] perf tools arm64: Add libdw DWARF post unwind support for
- ARM64
-Date: Thu, 8 Mar 2018 21:10:30 -0600
-Message-ID: <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
-References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
-        <20180226142726.cd413c792d0782f77b60a23e@arm.com>
-        <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
-        <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/54] perf/core improvements and fixes
+Date: Fri, 9 Mar 2018 08:29:32 +0100
+Message-ID: <20180309072932.nphzr4smyxzupzbt@gmail.com>
+References: <20180308195029.14991-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
+Content-Disposition: inline
+In-Reply-To: <20180308195029.14991-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Christian Hansen (chansen3)" <chansen3@cisco.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Agustin Vega-Frias <agustinv@codeaurora.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Lakshman Annadorai <lakshmana@google.com>, linux-arm-kernel@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Based on prior work:
 
-https://lkml.org/lkml/2014/5/6/395
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-and how other arches add libdw unwind support.  Includes support for
-running the unwind test, e.g., on a system with only elfutils' libdw
-0.170, the test now runs, and successfully:
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 3f986eefc89c528bf2d398a6dc3637b743a7139e:
+> 
+>   Merge branch 'perf/urgent' into perf/core, to resolve conflict (2018-03-07 09:23:12 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180308
+> 
+> for you to fetch changes up to 2427b432e63b4b911100f717c48289195b7a7d62:
+> 
+>   perf tools: Update quipper information (2018-03-08 11:30:54 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Support to display the IPC/Cycle in 'annotate' TUI, for systems
+>   where this info can be obtained, like Intel's >= Skylake (Jin Yao)
+> 
+> - Support wildcards on PMU name in dynamic PMU events (Agustin Vega-Frias)
+> 
+> - Display pmu name when printing unmerged events in stat (Agustin Vega-Frias)
+> 
+> - Auto-merge PMU events created by prefix or glob match (Agustin Vega-Frias)
+> 
+> - Fix s390 'call' operations target function annotation (Thomas Richter)
+> 
+> - Handle s390 PC relative load and store instruction in the augmented
+>   'annotate', code, used so far in the TUI modes of 'perf report' and
+>   'perf annotate' (Thomas Richter)
+> 
+> - Provide libtraceevent with a kernel symbol resolver, so that
+>   symbols in tracepoint fields can be resolved when showing them in
+>   tools such as 'perf report' (Wang YanQing)
+> 
+> - Refactor the cgroups code to look more like other code in tools/perf,
+>   using cgroup__{put,get} for refcount operations instead of its
+>   open-coded equivalent, breaking larger functions, etc (Arnaldo Carvalho de Melo)
+> 
+> - Implement support for the -G/--cgroup target in 'perf trace', allowing
+>   strace like tracing (plus other events, backtraces, etc) for cgroups
+>   (Arnaldo Carvalho de Melo)
+> 
+> - Update thread shortname in 'perf sched map' when the thread's COMM
+>   changes (Changbin Du)
+> 
+> - refcount 'struct mem_info', for better sharing it over several
+>   users, avoid duplicating structs and fixing crashes related to
+>   use after free (Jiri Olsa)
+> 
+> - Display perf.data version, offsets in 'perf report --header' (Jiri Olsa)
+> 
+> - Record the machine's memory topology information in a perf.data
+>   feature section, to be used by tools such as 'perf c2c' (Jiri Olsa)
+> 
+> - Fix output of forced groups in the header for 'perf report' --stdio
+>   and --tui (Jiri Olsa)
+> 
+> - Better support llvm, clang, cxx make tests in the build process (Jiri Olsa)
+> 
+> - Streamline the 'struct perf_mmap' methods, storing some info in the
+>   struct instead of passing it via various methods, shortening its
+>   signatures (Kan Liang)
+> 
+> - Update the quipper perf.data parser library site information (Stephane Eranian)
+> 
+> - Correct perf's man pages title markers for asciidoctor (Takashi Iwai)
+> 
+> - Intel PT fixes and refactorings paving the way for implementing
+>   support for AUX area sampling (Adrian Hunter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (13):
+>       perf record: Combine some auxtrace initialization into a single function
+>       perf auxtrace: Add missing parameters from kernel-doc comments
+>       perf auxtrace: Rename some buffer-queuing functions
+>       perf auxtrace: Make auxtrace_queues__add_buffer() return buffer_ptr
+>       perf intel-pt: Fix overlap detection to identify consecutive buffers correctly
+>       perf intel-pt: Fix sync_switch
+>       perf intel-pt: Fix error recovery from missing TIP packet
+>       perf intel-pt: Fix timestamp following overflow
+>       perf intel-pt/bts: In auxtrace_record__init_intel() evlist is never NULL
+>       perf intel-pt: Get rid of intel_pt_use_buffer_pid_tid()
+>       perf intel-pt: Tidy old_buffer handling in intel_pt_get_trace()
+>       perf intel-pt: Remove a check for sampling mode
+>       perf intel-pt: Adjust overlap-checking to support sampling mode
+> 
+> Agustin Vega-Frias (3):
+>       perf pmu: Support wildcards on pmu name in dynamic pmu events
+>       perf pmu: Display pmu name when printing unmerged events in stat
+>       perf pmu: Auto-merge PMU events created by prefix or glob match
+> 
+> Arnaldo Carvalho de Melo (11):
+>       perf cgroup: Remove misplaced __maybe_unused
+>       perf cgroup: Rename 'struct cgroup_sel' to 'struct cgroup'
+>       perf cgroup: Introduce cgroup__delete()
+>       perf cgroup: Rename close_cgroup() to cgroup__put()
+>       perf cgroup: Introduce cgroup__get()
+>       perf cgroup: Introduce find_cgroup() method
+>       perf cgroup: Introduce cgroup__new() out of open coded equivalent
+>       perf cgroup: Add evlist__findnew_cgroup()
+>       perf cgroup: Add evlist__add_default_cgroup()
+>       perf cgroup: Make the cgroup name be const char *
+>       perf trace: Support setting cgroups as targets
+> 
+> Changbin Du (2):
+>       perf sched: Move thread::shortname to thread_runtime
+>       perf sched map: Re-annotate shortname if thread comm changed
+> 
+> Jin Yao (1):
+>       perf annotate: Support to display the IPC/Cycle in TUI mode
+> 
+> Jiri Olsa (11):
+>       perf report: Fix the output for stdio events list
+>       perf report: Display perf.data header info
+>       perf record: Move machine variable down the function
+>       perf record: Remove progname from struct record
+>       perf tools: Add refcnt into struct mem_info
+>       perf c2c: Use mem_info refcnt logic
+>       perf tools: Add MEM_TOPOLOGY feature to perf data file
+>       perf tools: Update tags with .cpp files
+>       perf build: Add llvm/clang/cxx make tests into FEATURE_TESTS_EXTRA
+>       perf build: Add llvm/clang make targets to FILES
+>       perf build: Force llvm/clang test compile output to .make.output
+> 
+> Kan Liang (8):
+>       perf evlist: Store 'overwrite' in struct perf_mmap
+>       perf mmap: Store mmap scope in struct perf_mmap()
+>       perf mmap: Use the stored scope data in perf_mmap__push()
+>       perf mmap: Use the stored data in perf_mmap__read_event()
+>       perf mmap: Use stored 'overwrite' in perf_mmap__consume()
+>       perf mmap: Simplify perf_mmap__consume()
+>       perf mmap: Simplify perf_mmap__read_event()
+>       perf mmap: Simplify perf_mmap__read_init()
+> 
+> Stephane Eranian (1):
+>       perf tools: Update quipper information
+> 
+> Takashi Iwai (1):
+>       perf tools: Correct title markers for asciidoctor
+> 
+> Thomas Richter (2):
+>       perf annotate: Fix s390 target function disassembly
+>       perf annotate: Handle s390 PC relative load and store instruction.
+> 
+> Wang YanQing (1):
+>       perf report: Provide libtraceevent with a kernel symbol resolver
+> 
+>  tools/build/Makefile.feature                       |   6 +-
+>  tools/build/feature/Makefile                       |  14 +-
+>  tools/include/linux/bitmap.h                       |   2 +-
+>  tools/perf/Documentation/perf-data.txt             |   2 +-
+>  tools/perf/Documentation/perf-ftrace.txt           |   2 +-
+>  tools/perf/Documentation/perf-kallsyms.txt         |   2 +-
+>  tools/perf/Documentation/perf-list.txt             |   8 +-
+>  tools/perf/Documentation/perf-sched.txt            |   2 +-
+>  tools/perf/Documentation/perf-script-perl.txt      |   2 +-
+>  tools/perf/Documentation/perf-stat.txt             |  17 ++
+>  tools/perf/Documentation/perf-trace.txt            |  25 ++
+>  tools/perf/Documentation/perf.data-file-format.txt |   7 +-
+>  tools/perf/Makefile.perf                           |   6 +-
+>  tools/perf/arch/s390/annotate/instructions.c       | 116 +++++++-
+>  tools/perf/arch/x86/tests/perf-time-to-tsc.c       |   7 +-
+>  tools/perf/arch/x86/util/auxtrace.c                |  14 +-
+>  tools/perf/builtin-annotate.c                      |  88 +++++-
+>  tools/perf/builtin-c2c.c                           |  24 +-
+>  tools/perf/builtin-kvm.c                           |   9 +-
+>  tools/perf/builtin-record.c                        |  45 +--
+>  tools/perf/builtin-report.c                        |  26 +-
+>  tools/perf/builtin-sched.c                         | 133 ++++++---
+>  tools/perf/builtin-stat.c                          |  29 +-
+>  tools/perf/builtin-top.c                           |   7 +-
+>  tools/perf/builtin-trace.c                         |  57 +++-
+>  tools/perf/tests/backward-ring-buffer.c            |   5 +-
+>  tools/perf/tests/bpf.c                             |   5 +-
+>  tools/perf/tests/code-reading.c                    |   7 +-
+>  tools/perf/tests/keep-tracking.c                   |   7 +-
+>  tools/perf/tests/mmap-basic.c                      |   7 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c        |   7 +-
+>  tools/perf/tests/perf-record.c                     |   7 +-
+>  tools/perf/tests/sw-clock.c                        |   7 +-
+>  tools/perf/tests/switch-tracking.c                 |   7 +-
+>  tools/perf/tests/task-exit.c                       |   7 +-
+>  tools/perf/ui/browsers/hists.c                     |   5 +-
+>  tools/perf/util/annotate.c                         |   2 +-
+>  tools/perf/util/auxtrace.c                         |  37 ++-
+>  tools/perf/util/auxtrace.h                         |   2 +
+>  tools/perf/util/cgroup.c                           | 111 +++++---
+>  tools/perf/util/cgroup.h                           |  13 +-
+>  tools/perf/util/env.h                              |   9 +
+>  tools/perf/util/evlist.c                           |   8 +-
+>  tools/perf/util/evsel.c                            |  23 +-
+>  tools/perf/util/evsel.h                            |   6 +-
+>  tools/perf/util/header.c                           | 312 ++++++++++++++++++++-
+>  tools/perf/util/header.h                           |   1 +
+>  tools/perf/util/hist.c                             |   4 +-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  64 ++---
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |   2 +-
+>  tools/perf/util/intel-pt.c                         | 110 ++++----
+>  tools/perf/util/machine.c                          |   2 +-
+>  tools/perf/util/mmap.c                             |  63 ++---
+>  tools/perf/util/mmap.h                             |  16 +-
+>  tools/perf/util/parse-events.c                     |  21 +-
+>  tools/perf/util/parse-events.h                     |   2 +-
+>  tools/perf/util/parse-events.l                     |   2 +-
+>  tools/perf/util/parse-events.y                     |  18 +-
+>  tools/perf/util/python.c                           |   7 +-
+>  tools/perf/util/symbol.c                           |  22 ++
+>  tools/perf/util/symbol.h                           |  19 +-
+>  tools/perf/util/thread.h                           |   1 -
+>  62 files changed, 1197 insertions(+), 401 deletions(-)
 
-$ ./perf test unwind
-56: Test dwarf unwind                                     : Ok
+Pulled, thanks a lot Arnaldo!
 
-Reported-by: Christian Hansen <chansen3@cisco.com>
-Originally-by: Jean Pihet <jean.pihet@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
----
- tools/perf/Makefile.config                 |  2 +-
- tools/perf/arch/arm64/include/arch-tests.h | 12 ++++++
- tools/perf/arch/arm64/tests/Build          |  3 ++
- tools/perf/arch/arm64/tests/arch-tests.c   | 16 ++++++++
- tools/perf/arch/arm64/util/Build           |  1 +
- tools/perf/arch/arm64/util/unwind-libdw.c  | 60 ++++++++++++++++++++++++++++++
- 6 files changed, 93 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/arch/arm64/include/arch-tests.h
- create mode 100644 tools/perf/arch/arm64/tests/arch-tests.c
- create mode 100644 tools/perf/arch/arm64/util/unwind-libdw.c
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 89cb2a36b8ff..98ff73648b51 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -75,7 +75,7 @@ endif
- # Disable it on all other architectures in case libdw unwind
- # support is detected in system. Add supported architectures
- # to the check.
--ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm powerpc s390))
-+ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390))
-   NO_LIBDW_DWARF_UNWIND := 1
- endif
- 
-diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
-new file mode 100644
-index 000000000000..90ec4c8cb880
---- /dev/null
-+++ b/tools/perf/arch/arm64/include/arch-tests.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ARCH_TESTS_H
-+#define ARCH_TESTS_H
-+
-+#ifdef HAVE_DWARF_UNWIND_SUPPORT
-+struct thread;
-+struct perf_sample;
-+#endif
-+
-+extern struct test arch_tests[];
-+
-+#endif
-diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-index b30eff9bcc83..ca5630e73474 100644
---- a/tools/perf/arch/arm64/tests/Build
-+++ b/tools/perf/arch/arm64/tests/Build
-@@ -1,2 +1,5 @@
- libperf-y += regs_load.o
- libperf-y += dwarf-unwind.o
-+
-+libperf-y += arch-tests.o
-+
-diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
-new file mode 100644
-index 000000000000..5b1543c98022
---- /dev/null
-+++ b/tools/perf/arch/arm64/tests/arch-tests.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <string.h>
-+#include "tests/tests.h"
-+#include "arch-tests.h"
-+
-+struct test arch_tests[] = {
-+#ifdef HAVE_DWARF_UNWIND_SUPPORT
-+	{
-+		.desc = "DWARF unwind",
-+		.func = test__dwarf_unwind,
-+	},
-+#endif
-+	{
-+		.func = NULL,
-+	},
-+};
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index c0b8dfef98ba..68f8a8eb3ad0 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -2,6 +2,7 @@ libperf-y += header.o
- libperf-y += sym-handling.o
- libperf-$(CONFIG_DWARF)     += dwarf-regs.o
- libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-+libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- 
- libperf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
- 			      ../../arm/util/auxtrace.o \
-diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
-new file mode 100644
-index 000000000000..7623d85e77f3
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/unwind-libdw.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <elfutils/libdwfl.h>
-+#include "../../util/unwind-libdw.h"
-+#include "../../util/perf_regs.h"
-+#include "../../util/event.h"
-+
-+bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-+{
-+	struct unwind_info *ui = arg;
-+	struct regs_dump *user_regs = &ui->sample->user_regs;
-+	Dwarf_Word dwarf_regs[PERF_REG_ARM64_MAX], dwarf_pc;
-+
-+#define REG(r) ({						\
-+	Dwarf_Word val = 0;					\
-+	perf_reg_value(&val, user_regs, PERF_REG_ARM64_##r);	\
-+	val;							\
-+})
-+
-+	dwarf_regs[0]  = REG(X0);
-+	dwarf_regs[1]  = REG(X1);
-+	dwarf_regs[2]  = REG(X2);
-+	dwarf_regs[3]  = REG(X3);
-+	dwarf_regs[4]  = REG(X4);
-+	dwarf_regs[5]  = REG(X5);
-+	dwarf_regs[6]  = REG(X6);
-+	dwarf_regs[7]  = REG(X7);
-+	dwarf_regs[8]  = REG(X8);
-+	dwarf_regs[9]  = REG(X9);
-+	dwarf_regs[10] = REG(X10);
-+	dwarf_regs[11] = REG(X11);
-+	dwarf_regs[12] = REG(X12);
-+	dwarf_regs[13] = REG(X13);
-+	dwarf_regs[14] = REG(X14);
-+	dwarf_regs[15] = REG(X15);
-+	dwarf_regs[16] = REG(X16);
-+	dwarf_regs[17] = REG(X17);
-+	dwarf_regs[18] = REG(X18);
-+	dwarf_regs[19] = REG(X19);
-+	dwarf_regs[20] = REG(X20);
-+	dwarf_regs[21] = REG(X21);
-+	dwarf_regs[22] = REG(X22);
-+	dwarf_regs[23] = REG(X23);
-+	dwarf_regs[24] = REG(X24);
-+	dwarf_regs[25] = REG(X25);
-+	dwarf_regs[26] = REG(X26);
-+	dwarf_regs[27] = REG(X27);
-+	dwarf_regs[28] = REG(X28);
-+	dwarf_regs[29] = REG(X29);
-+	dwarf_regs[30] = REG(LR);
-+	dwarf_regs[31] = REG(SP);
-+
-+	if (!dwfl_thread_state_registers(thread, 0, PERF_REG_ARM64_MAX,
-+					 dwarf_regs))
-+		return false;
-+
-+	dwarf_pc = REG(PC);
-+	dwfl_thread_state_register_pc(thread, dwarf_pc);
-+
-+	return true;
-+}
--- 
-2.16.2
+	Ingo
