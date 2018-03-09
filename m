@@ -1,204 +1,120 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf tools arm64: Add libdw DWARF post unwind support
- for ARM64
-Date: Fri, 9 Mar 2018 12:06:27 -0300
-Message-ID: <20180309150627.GB8347@kernel.org>
-References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
- <20180226142726.cd413c792d0782f77b60a23e@arm.com>
- <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
- <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
- <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
+Subject: Re: [PATCH] perf stat: Fix core dump when flag T is used
+Date: Fri, 9 Mar 2018 12:17:34 -0300
+Message-ID: <20180309151734.GC8347@kernel.org>
+References: <20180308145735.64717-1-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
+In-Reply-To: <20180308145735.64717-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@arm.com>, Jean Pihet <jean.pihet@linaro.org>
-Cc: "Christian Hansen (chansen3)" <chansen3@cisco.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Mar 08, 2018 at 09:10:30PM -0600, Kim Phillips escreveu:
-> Based on prior work:
+Em Thu, Mar 08, 2018 at 03:57:35PM +0100, Thomas Richter escreveu:
+> Executing command 'perf stat -T -- ls' dumps core on x86 and s390.
+> Here is the call back chain (done on x86):
+>  # gdb ./perf
+>  ....
+>  (gdb) r stat -T -- ls
+> ...
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
+> (gdb) where
+>  #0  0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
+>  #1  0x00007ffff56ae484 in asprintf () from /lib64/libc.so.6
+>  #2  0x00000000004f1982 in __parse_events_add_pmu (parse_state=0x7fffffffd580,
+>     list=0xbfb970, name=0xbf3ef0 "cpu",
+>     head_config=0xbfb930, auto_merge_stats=false) at util/parse-events.c:1233
+>  #3  0x00000000004f1c8e in parse_events_add_pmu (parse_state=0x7fffffffd580,
+>     list=0xbfb970, name=0xbf3ef0 "cpu",
+>     head_config=0xbfb930) at util/parse-events.c:1288
+>  #4  0x0000000000537ce3 in parse_events_parse (_parse_state=0x7fffffffd580,
+>     scanner=0xbf4210) at util/parse-events.y:234
+>  #5  0x00000000004f2c7a in parse_events__scanner (str=0x6b66c0
+>     "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}",
+>     parse_state=0x7fffffffd580, start_token=258) at util/parse-events.c:1673
+>  #6  0x00000000004f2e23 in parse_events (evlist=0xbe9990, str=0x6b66c0
+>     "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}", err=0x0)
+>     at util/parse-events.c:1713
+>  #7  0x000000000044e137 in add_default_attributes () at builtin-stat.c:2281
+>  #8  0x000000000044f7b5 in cmd_stat (argc=1, argv=0x7fffffffe3b0) at
+>     builtin-stat.c:2828
+>  #9  0x00000000004c8b0f in run_builtin (p=0xab01a0 <commands+288>, argc=4,
+>     argv=0x7fffffffe3b0) at perf.c:297
+>  #10 0x00000000004c8d7c in handle_internal_command (argc=4,
+>     argv=0x7fffffffe3b0) at perf.c:349
+>  #11 0x00000000004c8ece in run_argv (argcp=0x7fffffffe20c,
+>    argv=0x7fffffffe200) at perf.c:393
+>  #12 0x00000000004c929c in main (argc=4, argv=0x7fffffffe3b0) at perf.c:537
+> (gdb)
 > 
-> https://lkml.org/lkml/2014/5/6/395
+> It turns out that a NULL pointer is referenced. Here are the
+> function calls:
+> 
+>   ...
+>   cmd_stat()
+>   +---> add_default_attributes()
+> 	+---> parse_events(evsel_list, transaction_attrs, NULL);
+> 	             3rd parameter set to NULL
+> 
+> Function parse_events(xx, xx, struct parse_events_error *err) dives
+> into a bison generated scanner and creates
+> parser state information for it first:
+> 
+>    struct parse_events_state parse_state = {
+>                 .list   = LIST_HEAD_INIT(parse_state.list),
+>                 .idx    = evlist->nr_entries,
+>                 .error  = err,   <--- NULL POINTER !!!
+>                 .evlist = evlist,
+>         };
+> 
+> Now various functions inside the bison scanner are called to end up
+> in __parse_events_add_pmu(struct parse_events_state *parse_state, ..)
+> with first parameter being a pointer to above structure definition.
+> 
+> Now the PMU event name is not found (because being executed in a VM)
+> and this function tries to create an error message with
+>    asprintf(&parse_state->error.str, ....)
+> which references a NULL pointer and dumps core.
+> 
+> Fix this by providing a pointer to the necessary error information
+> instead of NULL. Technically only the else part is needed to avoid
+> the core dump, just lets be save...
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+> ---
+>  tools/perf/builtin-stat.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 98bf9d32f222..86c8c8a9229c 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2274,11 +2274,16 @@ static int add_default_attributes(void)
+>  		return 0;
+>  
+>  	if (transaction_run) {
+> +		struct parse_events_error errinfo;
+> +
+>  		if (pmu_have_event("cpu", "cycles-ct") &&
+>  		    pmu_have_event("cpu", "el-start"))
+> -			err = parse_events(evsel_list, transaction_attrs, NULL);
+> +			err = parse_events(evsel_list, transaction_attrs,
+> +					   &errinfo);
+>  		else
+> -			err = parse_events(evsel_list, transaction_limited_attrs, NULL);
+> +			err = parse_events(evsel_list,
+> +					   transaction_limited_attrs,
+> +					   &errinfo);
+>  		if (err) {
+>  			fprintf(stderr, "Cannot set up transaction events\n");
+>  			return -1;
 
-Thanks, looks good, applying.
-
-Jean, is everything ok with you on this?
+Ok, I'm applying this, but then I think some other patch, on top of
+this, is in demand to actually use that errinfo filled struct to tell
+something more descriptive to the user in that fprintf() call?
 
 - Arnaldo
- 
-> and how other arches add libdw unwind support.  Includes support for
-> running the unwind test, e.g., on a system with only elfutils' libdw
-> 0.170, the test now runs, and successfully:
-> 
-> $ ./perf test unwind
-> 56: Test dwarf unwind                                     : Ok
-> 
-> Reported-by: Christian Hansen <chansen3@cisco.com>
-> Originally-by: Jean Pihet <jean.pihet@linaro.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
-> Signed-off-by: Kim Phillips <kim.phillips@arm.com>
-> ---
->  tools/perf/Makefile.config                 |  2 +-
->  tools/perf/arch/arm64/include/arch-tests.h | 12 ++++++
->  tools/perf/arch/arm64/tests/Build          |  3 ++
->  tools/perf/arch/arm64/tests/arch-tests.c   | 16 ++++++++
->  tools/perf/arch/arm64/util/Build           |  1 +
->  tools/perf/arch/arm64/util/unwind-libdw.c  | 60 ++++++++++++++++++++++++++++++
->  6 files changed, 93 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/arch/arm64/include/arch-tests.h
->  create mode 100644 tools/perf/arch/arm64/tests/arch-tests.c
->  create mode 100644 tools/perf/arch/arm64/util/unwind-libdw.c
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 89cb2a36b8ff..98ff73648b51 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -75,7 +75,7 @@ endif
->  # Disable it on all other architectures in case libdw unwind
->  # support is detected in system. Add supported architectures
->  # to the check.
-> -ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm powerpc s390))
-> +ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390))
->    NO_LIBDW_DWARF_UNWIND := 1
->  endif
->  
-> diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
-> new file mode 100644
-> index 000000000000..90ec4c8cb880
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/include/arch-tests.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef ARCH_TESTS_H
-> +#define ARCH_TESTS_H
-> +
-> +#ifdef HAVE_DWARF_UNWIND_SUPPORT
-> +struct thread;
-> +struct perf_sample;
-> +#endif
-> +
-> +extern struct test arch_tests[];
-> +
-> +#endif
-> diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-> index b30eff9bcc83..ca5630e73474 100644
-> --- a/tools/perf/arch/arm64/tests/Build
-> +++ b/tools/perf/arch/arm64/tests/Build
-> @@ -1,2 +1,5 @@
->  libperf-y += regs_load.o
->  libperf-y += dwarf-unwind.o
-> +
-> +libperf-y += arch-tests.o
-> +
-> diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
-> new file mode 100644
-> index 000000000000..5b1543c98022
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/tests/arch-tests.c
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <string.h>
-> +#include "tests/tests.h"
-> +#include "arch-tests.h"
-> +
-> +struct test arch_tests[] = {
-> +#ifdef HAVE_DWARF_UNWIND_SUPPORT
-> +	{
-> +		.desc = "DWARF unwind",
-> +		.func = test__dwarf_unwind,
-> +	},
-> +#endif
-> +	{
-> +		.func = NULL,
-> +	},
-> +};
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-> index c0b8dfef98ba..68f8a8eb3ad0 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -2,6 +2,7 @@ libperf-y += header.o
->  libperf-y += sym-handling.o
->  libperf-$(CONFIG_DWARF)     += dwarf-regs.o
->  libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-> +libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
->  
->  libperf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
->  			      ../../arm/util/auxtrace.o \
-> diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
-> new file mode 100644
-> index 000000000000..7623d85e77f3
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/util/unwind-libdw.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <elfutils/libdwfl.h>
-> +#include "../../util/unwind-libdw.h"
-> +#include "../../util/perf_regs.h"
-> +#include "../../util/event.h"
-> +
-> +bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +{
-> +	struct unwind_info *ui = arg;
-> +	struct regs_dump *user_regs = &ui->sample->user_regs;
-> +	Dwarf_Word dwarf_regs[PERF_REG_ARM64_MAX], dwarf_pc;
-> +
-> +#define REG(r) ({						\
-> +	Dwarf_Word val = 0;					\
-> +	perf_reg_value(&val, user_regs, PERF_REG_ARM64_##r);	\
-> +	val;							\
-> +})
-> +
-> +	dwarf_regs[0]  = REG(X0);
-> +	dwarf_regs[1]  = REG(X1);
-> +	dwarf_regs[2]  = REG(X2);
-> +	dwarf_regs[3]  = REG(X3);
-> +	dwarf_regs[4]  = REG(X4);
-> +	dwarf_regs[5]  = REG(X5);
-> +	dwarf_regs[6]  = REG(X6);
-> +	dwarf_regs[7]  = REG(X7);
-> +	dwarf_regs[8]  = REG(X8);
-> +	dwarf_regs[9]  = REG(X9);
-> +	dwarf_regs[10] = REG(X10);
-> +	dwarf_regs[11] = REG(X11);
-> +	dwarf_regs[12] = REG(X12);
-> +	dwarf_regs[13] = REG(X13);
-> +	dwarf_regs[14] = REG(X14);
-> +	dwarf_regs[15] = REG(X15);
-> +	dwarf_regs[16] = REG(X16);
-> +	dwarf_regs[17] = REG(X17);
-> +	dwarf_regs[18] = REG(X18);
-> +	dwarf_regs[19] = REG(X19);
-> +	dwarf_regs[20] = REG(X20);
-> +	dwarf_regs[21] = REG(X21);
-> +	dwarf_regs[22] = REG(X22);
-> +	dwarf_regs[23] = REG(X23);
-> +	dwarf_regs[24] = REG(X24);
-> +	dwarf_regs[25] = REG(X25);
-> +	dwarf_regs[26] = REG(X26);
-> +	dwarf_regs[27] = REG(X27);
-> +	dwarf_regs[28] = REG(X28);
-> +	dwarf_regs[29] = REG(X29);
-> +	dwarf_regs[30] = REG(LR);
-> +	dwarf_regs[31] = REG(SP);
-> +
-> +	if (!dwfl_thread_state_registers(thread, 0, PERF_REG_ARM64_MAX,
-> +					 dwarf_regs))
-> +		return false;
-> +
-> +	dwarf_pc = REG(PC);
-> +	dwfl_thread_state_register_pc(thread, dwarf_pc);
-> +
-> +	return true;
-> +}
-> -- 
-> 2.16.2
