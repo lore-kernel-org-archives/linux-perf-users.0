@@ -1,40 +1,49 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RESEND v5] perf/core: Fix installing arbitrary cgroup
- event into cpu
-Date: Mon, 12 Mar 2018 08:53:07 +0100
-Message-ID: <20180312075307.iut52znscixqcpag@gmail.com>
-References: <20180306093637.28247-1-linxiulei@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH] perf stat: Make function perf_stat_evsel_id_init static
+Date: Mon, 12 Mar 2018 11:38:07 +0100
+Message-ID: <20180312103807.45069-2-tmricht@linux.vnet.ibm.com>
+References: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180306093637.28247-1-linxiulei@gmail.com>
+In-Reply-To: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linxiulei@gmail.com
-Cc: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com, yang_oliver@hotmail.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Function perf_stat_evsel_id_init() has global linkage
+but is only used in util/stat.c. Make it static.
 
-* linxiulei@gmail.com <linxiulei@gmail.com> wrote:
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+---
+ tools/perf/util/stat.c | 2 +-
+ tools/perf/util/stat.h | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
->  	/*
->  	 * Because cgroup events are always per-cpu events,
->  	 * this will always be called from the right CPU.
->  	 */
-
-> +	/*
-> +	 * if only the cgroup is running on this cpu
-> +	 * and cpuctx->cgrp == NULL (otherwise it would've
-> +	 * been set with running cgroup), we put this cgroup
-> +	 * into cpu context. Or it would case mismatch in
-> +	 * following cgroup events at event_filter_match()
-> +	 */
-
-Beyond making sure that what you comment on makes sense, please also follow 
-existing comment style, which I quoted above.
-
-There's 3 separate mistakes in that paragraph alone.
-
-Thanks,
-
-	Ingo
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 32235657c1ac..a0061e0b0fad 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -92,7 +92,7 @@ static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
+ };
+ #undef ID
+ 
+-void perf_stat_evsel_id_init(struct perf_evsel *evsel)
++static void perf_stat_evsel_id_init(struct perf_evsel *evsel)
+ {
+ 	struct perf_stat_evsel *ps = evsel->stats;
+ 	int i;
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index dbc6f7134f61..679994a5cd07 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -126,8 +126,6 @@ bool __perf_evsel_stat__is(struct perf_evsel *evsel,
+ #define perf_stat_evsel__is(evsel, id) \
+ 	__perf_evsel_stat__is(evsel, PERF_STAT_EVSEL_ID__ ## id)
+ 
+-void perf_stat_evsel_id_init(struct perf_evsel *evsel);
+-
+ extern struct runtime_stat rt_stat;
+ extern struct stats walltime_nsecs_stats;
+ 
+-- 
+2.14.3
