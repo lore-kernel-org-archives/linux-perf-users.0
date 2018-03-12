@@ -1,45 +1,40 @@
-From: Martin Vuille <jpmv27@aim.com>
-Subject: Re: [PATCH] perf tools arm64: Add libdw DWARF post unwind support for
- ARM64
-Date: Fri, 9 Mar 2018 14:35:02 -0500
-Message-ID: <9a28d255-faa4-1e2f-4280-a4160d6efeb7@aim.com>
-References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
- <20180226142726.cd413c792d0782f77b60a23e@arm.com>
- <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
- <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
- <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
- <20180309150627.GB8347@kernel.org>
- <20180309120720.9358515dbff3b1d1fdf70cc8@arm.com>
- <20180309182440.GA25111@kernel.org>
- <cde0e6f4-155f-3d7e-8d84-fd482f729976@aim.com>
- <20180309192919.GC25111@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RESEND v5] perf/core: Fix installing arbitrary cgroup
+ event into cpu
+Date: Mon, 12 Mar 2018 08:53:07 +0100
+Message-ID: <20180312075307.iut52znscixqcpag@gmail.com>
+References: <20180306093637.28247-1-linxiulei@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309192919.GC25111@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180306093637.28247-1-linxiulei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kim Phillips <kim.phillips@arm.com>, Jiri Olsa <jolsa@kernel.org>, "Christian Hansen (chansen3)" <chansen3@cisco.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, "Vuille, Martin (Martin)" <vmartin@avaya.com>
+To: linxiulei@gmail.com
+Cc: peterz@infradead.org, jolsa@redhat.com, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, eranian@gmail.com, torvalds@linux-foundation.org, linux-perf-users@vger.kernel.org, brendan.d.gregg@gmail.com, yang_oliver@hotmail.com, "leilei.lin" <leilei.lin@alibaba-inc.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Thanks.
 
-I replied to your message with additional information.
+* linxiulei@gmail.com <linxiulei@gmail.com> wrote:
 
-I will update the commit message and resubmit the patch.
+>  	/*
+>  	 * Because cgroup events are always per-cpu events,
+>  	 * this will always be called from the right CPU.
+>  	 */
 
-MV
+> +	/*
+> +	 * if only the cgroup is running on this cpu
+> +	 * and cpuctx->cgrp == NULL (otherwise it would've
+> +	 * been set with running cgroup), we put this cgroup
+> +	 * into cpu context. Or it would case mismatch in
+> +	 * following cgroup events at event_filter_match()
+> +	 */
 
+Beyond making sure that what you comment on makes sense, please also follow 
+existing comment style, which I quoted above.
 
-On 03/09/18 14:29, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Mar 09, 2018 at 01:49:50PM -0500, Martin Vuille escreveu:
->> Hi,
->>
->> I made two other submissions that may also have been overlooked:
->>
->> https://patchwork.kernel.org/patch/10211401/ -- This one has the S-o-B
-> Ok, replied to that one, I can't see where is it that the symfs is being
-> first appended, please clarify that in the patch commit log message.
->   
+There's 3 separate mistakes in that paragraph alone.
+
+Thanks,
+
+	Ingo
