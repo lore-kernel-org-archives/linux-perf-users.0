@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/31] perf vendor events: Drop support for unused topic directories
-Date: Tue, 13 Mar 2018 09:04:50 -0300
-Message-ID: <20180313120508.29327-14-acme@kernel.org>
+Subject: [PATCH 14/31] perf vendor events: Add support for pmu events vendor subdirectory
+Date: Tue, 13 Mar 2018 09:04:51 -0300
+Message-ID: <20180313120508.29327-15-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
@@ -12,19 +12,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: John Garry <john.garry@huawei.com>
 
-Currently a topic subdirectory is supported in the pmu-events dir, in
-the following sample structure: /arch/platform/subtopic/mysubtopic.json
+For some architectures (like arm), it is required to support a vendor
+subdirectory and not locate all the JSONs for a specific vendor in the
+same folder.
 
-Upto 256 levels of topic subdirectories are supported. So this means
-that JSONs may be located in a topic dir as well as the platform dir.
+This is because all the events for the same vendor will be placed in the
+same pmu events table, which may cause conflict.  This conflict would be
+in the instance that a vendor's custom implemented events do have the
+same meaning on different platforms, so events in the pmu table would
+conflict. In addition, per list command may show events which are not
+even supported for a given platform.
 
-This topic subdirectory causes problems if we want to add support for a
-vendor dir in the pmu-events structure (in the form
-arch/platform/vendor), in that we cannot differentiate between a vendor
-dir and a topic dir.
+This patch adds support for a arch/vendor/platform directory hierarchy,
+while maintaining backwards-compatibility for existing arch/platform
+structure. In this, each platform would always have its own pmu events
+table.
 
-Since the topic dir feature is not used, drop it so it does not block
-adding vendor subdirectory support.
+In generated file pmu_events.c, each platform table name is in the
+format pme{_vendor}_platform, like this:
+
+struct pmu_events_map pmu_events_map[] = {
+{
+	.cpuid = "0x00000000420f5160",
+	.version = "v1",
+	.type = "core",
+	.table = pme_cavium_thunderx2
+},
+{
+	.cpuid = 0,
+	.version = 0,
+	.type = 0,
+	.table = 0,
+},
+};
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -38,85 +58,140 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: William Cohen <wcohen@redhat.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1520506716-197429-4-git-send-email-john.garry@huawei.com
+Link: http://lkml.kernel.org/r/1520506716-197429-5-git-send-email-john.garry@huawei.com
+[ Add missing limits.h include, fixing the build on at least all Alpine Linux versions tested (3.4 to 3.7 + edge) ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c | 37 ++++++++++---------------------------
- 1 file changed, 10 insertions(+), 27 deletions(-)
+ tools/perf/pmu-events/README    |  4 +++
+ tools/perf/pmu-events/jevents.c | 65 +++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 63 insertions(+), 6 deletions(-)
 
+diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
+index 2407abc1d441..655286ff8767 100644
+--- a/tools/perf/pmu-events/README
++++ b/tools/perf/pmu-events/README
+@@ -28,6 +28,10 @@ sub directory. Thus for the Silvermont X86 CPU:
+ 	Cache.json 	Memory.json 	Virtual-Memory.json
+ 	Frontend.json 	Pipeline.json
+ 
++The JSONs folder for a CPU model/family may be placed in the root arch
++folder, or may be placed in a vendor sub-folder under the arch folder
++for instances where the arch and vendor are not the same.
++
+ Using the JSON files and the mapfile, 'jevents' generates the C source file,
+ 'pmu-events.c', which encodes the two sets of tables:
+ 
 diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index edff989fbcea..1d02fafdc34d 100644
+index 1d02fafdc34d..b08dffeac4bd 100644
 --- a/tools/perf/pmu-events/jevents.c
 +++ b/tools/perf/pmu-events/jevents.c
-@@ -256,25 +256,18 @@ static const char *field_to_perf(struct map *table, char *map, jsmntok_t *val)
- 	goto out_free;						\
- } } while (0)
+@@ -39,6 +39,7 @@
+ #include <unistd.h>
+ #include <stdarg.h>
+ #include <libgen.h>
++#include <limits.h>
+ #include <dirent.h>
+ #include <sys/time.h>			/* getrlimit */
+ #include <sys/resource.h>		/* getrlimit */
+@@ -572,7 +573,7 @@ static char *file_name_to_table_name(char *fname)
+ 	 * Derive rest of table name from basename of the JSON file,
+ 	 * replacing hyphens and stripping out .json suffix.
+ 	 */
+-	n = asprintf(&tblname, "pme_%s", basename(fname));
++	n = asprintf(&tblname, "pme_%s", fname);
+ 	if (n < 0) {
+ 		pr_info("%s: asprintf() error %s for file %s\n", prog,
+ 				strerror(errno), fname);
+@@ -582,7 +583,7 @@ static char *file_name_to_table_name(char *fname)
+ 	for (i = 0; i < strlen(tblname); i++) {
+ 		c = tblname[i];
  
--#define TOPIC_DEPTH 256
--static char *topic_array[TOPIC_DEPTH];
--static int   topic_level;
-+static char *topic;
+-		if (c == '-')
++		if (c == '-' || c == '/')
+ 			tblname[i] = '_';
+ 		else if (c == '.') {
+ 			tblname[i] = '\0';
+@@ -739,25 +740,77 @@ static int get_maxfds(void)
+ static FILE *eventsfp;
+ static char *mapfile;
  
- static char *get_topic(void)
++static int is_leaf_dir(const char *fpath)
++{
++	DIR *d;
++	struct dirent *dir;
++	int res = 1;
++
++	d = opendir(fpath);
++	if (!d)
++		return 0;
++
++	while ((dir = readdir(d)) != NULL) {
++		if (dir->d_type == DT_DIR && dir->d_name[0] != '.') {
++			res = 0;
++			break;
++		} else if (dir->d_type == DT_UNKNOWN) {
++			char path[PATH_MAX];
++			struct stat st;
++
++			sprintf(path, "%s/%s", fpath, dir->d_name);
++			if (stat(path, &st))
++				break;
++
++			if (S_ISDIR(st.st_mode)) {
++				res = 0;
++				break;
++			}
++		}
++	}
++
++	closedir(d);
++
++	return res;
++}
++
+ static int process_one_file(const char *fpath, const struct stat *sb,
+ 			    int typeflag, struct FTW *ftwbuf)
  {
--	char *tp_old, *tp = NULL;
-+	char *tp;
- 	int i;
+-	char *tblname, *bname  = (char *) fpath + ftwbuf->base;
++	char *tblname, *bname;
+ 	int is_dir  = typeflag == FTW_D;
+ 	int is_file = typeflag == FTW_F;
+ 	int level   = ftwbuf->level;
+ 	int err = 0;
  
--	for (i = 0; i < topic_level + 1; i++) {
--		int n;
--
--		tp_old = tp;
--		n = asprintf(&tp, "%s%s", tp ?: "", topic_array[i]);
--		if (n < 0) {
--			pr_info("%s: asprintf() error %s\n", prog);
--			return NULL;
--		}
--		free(tp_old);
-+	/* tp is free'd in process_one_file() */
-+	i = asprintf(&tp, "%s", topic);
-+	if (i < 0) {
-+		pr_info("%s: asprintf() error %s\n", prog);
-+		return NULL;
- 	}
++	if (level == 2 && is_dir) {
++		/*
++		 * For level 2 directory, bname will include parent name,
++		 * like vendor/platform. So search back from platform dir
++		 * to find this.
++		 */
++		bname = (char *) fpath + ftwbuf->base - 2;
++		for (;;) {
++			if (*bname == '/')
++				break;
++			bname--;
++		}
++		bname++;
++	} else
++		bname = (char *) fpath + ftwbuf->base;
++
+ 	pr_debug("%s %d %7jd %-20s %s\n",
+ 		 is_file ? "f" : is_dir ? "d" : "x",
+ 		 level, sb->st_size, bname, fpath);
  
- 	for (i = 0; i < (int) strlen(tp); i++) {
-@@ -291,25 +284,15 @@ static char *get_topic(void)
- 	return tp;
- }
+-	/* base dir */
+-	if (level == 0)
++	/* base dir or too deep */
++	if (level == 0 || level > 3)
+ 		return 0;
  
--static int add_topic(int level, char *bname)
-+static int add_topic(char *bname)
- {
--	char *topic;
--
--	level -= 2;
--
--	if (level >= TOPIC_DEPTH)
--		return -EINVAL;
--
-+	free(topic);
- 	topic = strdup(bname);
- 	if (!topic) {
- 		pr_info("%s: strdup() error %s for file %s\n", prog,
- 				strerror(errno), bname);
- 		return -ENOMEM;
- 	}
--
--	free(topic_array[topic_level]);
--	topic_array[topic_level] = topic;
--	topic_level              = level;
- 	return 0;
- }
++
+ 	/* model directory, reset topic */
+-	if (level == 1 && is_dir) {
++	if ((level == 1 && is_dir && is_leaf_dir(fpath)) ||
++	    (level == 2 && is_dir)) {
+ 		if (close_table)
+ 			print_events_table_suffix(eventsfp);
  
-@@ -824,7 +807,7 @@ static int process_one_file(const char *fpath, const struct stat *sb,
- 		}
- 	}
- 
--	if (level > 1 && add_topic(level, bname))
-+	if (level > 1 && add_topic(bname))
- 		return -ENOMEM;
- 
- 	/*
 -- 
 2.14.3
