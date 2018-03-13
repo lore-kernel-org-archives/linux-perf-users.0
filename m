@@ -1,222 +1,38 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/31] perf tools: Add mem2node object
-Date: Tue, 13 Mar 2018 09:04:39 -0300
-Message-ID: <20180313120508.29327-3-acme@kernel.org>
-References: <20180313120508.29327-1-acme@kernel.org>
+From: Martin Vuille <jpmv27@aim.com>
+Subject: [PATCH RESEND] perf annotate: Don't prepend symfs path to build_id_filename
+Date: Tue, 13 Mar 2018 09:56:18 -0400
+Message-ID: <20180313135618.2900-1-jpmv27@aim.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Martin Vuille <jpmv27@aim.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+build_id_filename already contains symfs path if applicable, so
+don't prepend it a second time.
 
-Adding mem2node object to allow the easy lookup of the node for the
-physical address.
+- dso__build_id_filename calls build_id_cache__linkname
+- build_id_cache__linkname uses buildid_dir
+- when symfs option is specified, symbol__config_symfs sets
+  buildid_dir to include the symfs directory
 
-It has following interface:
-
-  int  mem2node__init(struct mem2node *map, struct perf_env *env);
-  void mem2node__exit(struct mem2node *map);
-  int  mem2node__node(struct mem2node *map, u64 addr);
-
-The mem2node__toolsinit initialize object from the perf data file
-MEM_TOPOLOGY feature data. Following calls to mem2node__node will return
-node number for given physical address. The mem2node__exit function
-frees the object.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180309101442.9224-3-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Martin Vuille <jpmv27@aim.com>
 ---
- tools/perf/util/Build      |   1 +
- tools/perf/util/mem2node.c | 134 +++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/mem2node.h |  19 +++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 tools/perf/util/mem2node.c
- create mode 100644 tools/perf/util/mem2node.h
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index ea0a452550b0..8052373bcd6a 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -106,6 +106,7 @@ libperf-y += units.o
- libperf-y += time-utils.o
- libperf-y += expr-bison.o
- libperf-y += branch.o
-+libperf-y += mem2node.o
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 007170efa014..0b78cc4fb155 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1381,7 +1381,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
  
- libperf-$(CONFIG_LIBBPF) += bpf-loader.o
- libperf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
-diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-new file mode 100644
-index 000000000000..c6fd81c02586
---- /dev/null
-+++ b/tools/perf/util/mem2node.c
-@@ -0,0 +1,134 @@
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <linux/bitmap.h>
-+#include "mem2node.h"
-+#include "util.h"
-+
-+struct phys_entry {
-+	struct rb_node	rb_node;
-+	u64	start;
-+	u64	end;
-+	u64	node;
-+};
-+
-+static void phys_entry__insert(struct phys_entry *entry, struct rb_root *root)
-+{
-+	struct rb_node **p = &root->rb_node;
-+	struct rb_node *parent = NULL;
-+	struct phys_entry *e;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		e = rb_entry(parent, struct phys_entry, rb_node);
-+
-+		if (entry->start < e->start)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+
-+	rb_link_node(&entry->rb_node, parent, p);
-+	rb_insert_color(&entry->rb_node, root);
-+}
-+
-+static void
-+phys_entry__init(struct phys_entry *entry, u64 start, u64 bsize, u64 node)
-+{
-+	entry->start = start;
-+	entry->end   = start + bsize;
-+	entry->node  = node;
-+	RB_CLEAR_NODE(&entry->rb_node);
-+}
-+
-+int mem2node__init(struct mem2node *map, struct perf_env *env)
-+{
-+	struct memory_node *n, *nodes = &env->memory_nodes[0];
-+	struct phys_entry *entries, *tmp_entries;
-+	u64 bsize = env->memory_bsize;
-+	int i, j = 0, max = 0;
-+
-+	memset(map, 0x0, sizeof(*map));
-+	map->root = RB_ROOT;
-+
-+	for (i = 0; i < env->nr_memory_nodes; i++) {
-+		n = &nodes[i];
-+		max += bitmap_weight(n->set, n->size);
-+	}
-+
-+	entries = zalloc(sizeof(*entries) * max);
-+	if (!entries)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < env->nr_memory_nodes; i++) {
-+		u64 bit;
-+
-+		n = &nodes[i];
-+
-+		for (bit = 0; bit < n->size; bit++) {
-+			u64 start;
-+
-+			if (!test_bit(bit, n->set))
-+				continue;
-+
-+			start = bit * bsize;
-+
-+			/*
-+			 * Merge nearby areas, we walk in order
-+			 * through the bitmap, so no need to sort.
-+			 */
-+			if (j > 0) {
-+				struct phys_entry *prev = &entries[j - 1];
-+
-+				if ((prev->end == start) &&
-+				    (prev->node == n->node)) {
-+					prev->end += bsize;
-+					continue;
-+				}
-+			}
-+
-+			phys_entry__init(&entries[j++], start, bsize, n->node);
-+		}
-+	}
-+
-+	/* Cut unused entries, due to merging. */
-+	tmp_entries = realloc(entries, sizeof(*entries) * j);
-+	if (tmp_entries)
-+		entries = tmp_entries;
-+
-+	for (i = 0; i < j; i++) {
-+		pr_debug("mem2node %03" PRIu64 " [0x%016" PRIx64 "-0x%016" PRIx64 "]\n",
-+			 entries[i].node, entries[i].start, entries[i].end);
-+
-+		phys_entry__insert(&entries[i], &map->root);
-+	}
-+
-+	map->entries = entries;
-+	return 0;
-+}
-+
-+void mem2node__exit(struct mem2node *map)
-+{
-+	zfree(&map->entries);
-+}
-+
-+int mem2node__node(struct mem2node *map, u64 addr)
-+{
-+	struct rb_node **p, *parent = NULL;
-+	struct phys_entry *entry;
-+
-+	p = &map->root.rb_node;
-+	while (*p != NULL) {
-+		parent = *p;
-+		entry = rb_entry(parent, struct phys_entry, rb_node);
-+		if (addr < entry->start)
-+			p = &(*p)->rb_left;
-+		else if (addr >= entry->end)
-+			p = &(*p)->rb_right;
-+		else
-+			goto out;
-+	}
-+
-+	entry = NULL;
-+out:
-+	return entry ? (int) entry->node : -1;
-+}
-diff --git a/tools/perf/util/mem2node.h b/tools/perf/util/mem2node.h
-new file mode 100644
-index 000000000000..59c4752a2181
---- /dev/null
-+++ b/tools/perf/util/mem2node.h
-@@ -0,0 +1,19 @@
-+#ifndef __MEM2NODE_H
-+#define __MEM2NODE_H
-+
-+#include <linux/rbtree.h>
-+#include "env.h"
-+
-+struct phys_entry;
-+
-+struct mem2node {
-+	struct rb_root		 root;
-+	struct phys_entry	*entries;
-+	int			 cnt;
-+};
-+
-+int  mem2node__init(struct mem2node *map, struct perf_env *env);
-+void mem2node__exit(struct mem2node *map);
-+int  mem2node__node(struct mem2node *map, u64 addr);
-+
-+#endif /* __MEM2NODE_H */
+ 	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+ 	if (build_id_filename) {
+-		__symbol__join_symfs(filename, filename_size, build_id_filename);
++		scnprintf(filename, filename_size, "%s", build_id_filename);
+ 		free(build_id_filename);
+ 	} else {
+ 		if (dso->has_build_id)
 -- 
-2.14.3
+2.13.6
