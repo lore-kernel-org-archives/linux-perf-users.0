@@ -1,81 +1,49 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 18/31] perf vendor events arm64: Add armv8-recommended.json
-Date: Tue, 13 Mar 2018 12:23:28 -0300
-Message-ID: <20180313152328.GD29837@kernel.org>
-References: <20180313120508.29327-1-acme@kernel.org>
- <20180313120508.29327-19-acme@kernel.org>
- <20180313142618.36je6syqg6ppwhbp@gmail.com>
- <6c485ee7-87d1-dc51-db34-94169b9ede08@huawei.com>
- <20180313150838.j6mfywse64o5ixhd@gmail.com>
+From: Martin Vuille <jpmv27@aim.com>
+Subject: Re: [PATCH] perf tools arm64: Add libdw DWARF post unwind support for
+ ARM64
+Date: Tue, 13 Mar 2018 11:23:12 -0400
+Message-ID: <3307bb0b-0257-9151-2b1c-95a6661ac5d4@aim.com>
+References: <A5E405FE-1BA3-46FC-9A43-CF19A4B369C5@cisco.com>
+ <20180226142726.cd413c792d0782f77b60a23e@arm.com>
+ <20180226174040.6998bd3c0a79b2f19c491e4d@arm.com>
+ <9B701F46-6AEA-48D8-9103-71D35C83776D@cisco.com>
+ <20180308211030.4ee4a0d6ff6dc5cda1b567d4@arm.com>
+ <20180309150627.GB8347@kernel.org>
+ <20180309120720.9358515dbff3b1d1fdf70cc8@arm.com>
+ <20180309182440.GA25111@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180313150838.j6mfywse64o5ixhd@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.garry@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, William Cohen <wcohen@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309182440.GA25111@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Kim Phillips <kim.phillips@arm.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: "Christian Hansen (chansen3)" <chansen3@cisco.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, "Vuille, Martin (Martin)" <vmartin@avaya.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Mar 13, 2018 at 04:08:38PM +0100, Ingo Molnar escreveu:
-> 
-> * John Garry <john.garry@huawei.com> wrote:
-> 
-> > On 13/03/2018 14:26, Ingo Molnar wrote:
-> > > 
-> > > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > 
-> > > > From: John Garry <john.garry@huawei.com>
-> > > > 
-> > > > Add JSON for ARMv8 IMPLEMENTATION DEFINED recommended events.
-> > > > 
-> > > > The JSON is copied from ARMv8 architecture reference manual, available
-> > > > here:
-> > > > 
-> > > > 	https://static.docs.arm.com/ddi0487/ca/DDI0487C_a_armv8_arm.pdf
-> > > > 
-> > > > Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> > > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > > Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-> > > > Cc: Jiri Olsa <jolsa@redhat.com>
-> > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> > > > Cc: Will Deacon <will.deacon@arm.com>
-> > > > Cc: William Cohen <wcohen@redhat.com>
-> > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > Cc: linuxarm@huawei.com
-> > > > Link: http://lkml.kernel.org/r/1520506716-197429-9-git-send-email-john.garry@huawei.com
-> > > > Signed-off-by: John Garry <john.garry@huawei.com>
-> > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > That's not a valid SOB chain, author != first-Signed-off-by.
-> > > 
-> > 
-> > Right, so my SOB can go first.
-> > 
-> > Let me know how to help remedy.
-> 
-> Well, it depends on what role Shaokun Zhang had in the creation of the patch: if 
-> he co-authored the patch and you finished it then you can add him as:
-> 
->   Originally-from: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> 
-> or if he tested/reviewed the patch then his entry should be Reviewed-by/Acked-by 
-> or Tested-by.
 
-yeah, please clarify what his role was and I'll do the necessary
-changes, in addition to adding more code to my pre-commit scripts,
-something long overdue...
 
-- Arnaldo
+On 03/09/18 13:24, Arnaldo Carvalho de Melo wrote:
+>
+>> - "perf unwind: Report error from dwfl_attach_state"
+>>    https://patchwork.kernel.org/patch/10211483/
+>>    [Martin, I guess it would help if you replied-all that patch and
+>>     added your signed-off-by.]
+> Right, the S-o-B is needed
+
+S-o-B has been provided by reply to this email. If you prefer, I can
+resubmit the patch with the S-o-B included.
+
+>   
+>> - "perf unwind: Unwind with libdw doesn't take symfs into account"
+>>    https://patchwork.kernel.org/patch/10211599/
+> This one has the S-o-B, applying, Jiri, holler if you disagree,
+>
+> - Arnaldo
+>   
+
+Thanks.
+
+Regards,
+MV
