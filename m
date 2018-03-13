@@ -1,25 +1,24 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf stat: Make function perf_stat_evsel_id_init static
-Date: Mon, 12 Mar 2018 12:10:41 -0300
-Message-ID: <20180312151041.GB23720@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf stat: Add support for s390 transaction counters
+Date: Mon, 12 Mar 2018 20:23:42 -0700
+Message-ID: <87tvtk64ld.fsf@linux.intel.com>
 References: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
- <20180312103807.45069-2-tmricht@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180312103807.45069-2-tmricht@linux.vnet.ibm.com>
+In-Reply-To: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com> (Thomas
+        Richter's message of "Mon, 12 Mar 2018 11:38:06 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Mar 12, 2018 at 11:38:07AM +0100, Thomas Richter escreveu:
-> Function perf_stat_evsel_id_init() has global linkage
-> but is only used in util/stat.c. Make it static.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Thomas Richter <tmricht@linux.vnet.ibm.com> writes:
 
-Thanks, applied.
+> Right now there is only hard coded support for x86.
 
-- Arnaldo
+That's not true. There is support for generic transaction events in perf.
+
+As far as I can tell your events would map 1:1 to the generic tx-* events.
+
+-Andi
