@@ -1,34 +1,90 @@
-From: Martin Vuille <jpmv27@aim.com>
-Subject: Re: [PATCH] perf annotate: Don't prepend symfs path to
- build_id_filename
-Date: Tue, 13 Mar 2018 11:24:17 -0400
-Message-ID: <e036d7fc-7787-3005-93f5-19ebfa339882@aim.com>
-References: <20180211191937.9703-1-jpmv27@aim.com>
- <20180309190715.GB25111@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 18/31] perf vendor events arm64: Add
+ armv8-recommended.json
+Date: Tue, 13 Mar 2018 15:27:05 +0000
+Message-ID: <3ea1dc12-3cf1-39a5-ccb8-6ab85bce6f3d@huawei.com>
+References: <20180313120508.29327-1-acme@kernel.org>
+ <20180313120508.29327-19-acme@kernel.org>
+ <20180313142618.36je6syqg6ppwhbp@gmail.com>
+ <6c485ee7-87d1-dc51-db34-94169b9ede08@huawei.com>
+ <20180313150838.j6mfywse64o5ixhd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309190715.GB25111@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20180313150838.j6mfywse64o5ixhd@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, William Cohen <wcohen@redhat.com>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 03/09/18 14:07, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Feb 11, 2018 at 02:19:37PM -0500, Martin Vuille escreveu:
->> build_id_filename already contains symfs path if applicable, so
->> don't prepend it a second time.
-> Where is the analysis that shows that that is the case? I looked here at
-> the implementation for dso__build_id_filename() and couldn't find where
-> was it that the symfs would be appended, can you clarify?
+On 13/03/2018 15:08, Ingo Molnar wrote:
 >
-> - Arnaldo
->   
-Patch resubmitted with additional details in commit message:
+> * John Garry <john.garry@huawei.com> wrote:
+>
+>> On 13/03/2018 14:26, Ingo Molnar wrote:
+>>>
+>>> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>>
+>>>> From: John Garry <john.garry@huawei.com>
+>>>>
+>>>> Add JSON for ARMv8 IMPLEMENTATION DEFINED recommended events.
+>>>>
+>>>> The JSON is copied from ARMv8 architecture reference manual, available
+>>>> here:
+>>>>
+>>>> 	https://static.docs.arm.com/ddi0487/ca/DDI0487C_a_armv8_arm.pdf
+>>>>
+>>>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-https://patchwork.kernel.org/patch/10279077/
+Originally-from: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-Regards,
-MV
+>>>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>>>> Cc: Andi Kleen <ak@linux.intel.com>
+>>>> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+>>>> Cc: Jiri Olsa <jolsa@redhat.com>
+>>>> Cc: Namhyung Kim <namhyung@kernel.org>
+>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>> Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Cc: William Cohen <wcohen@redhat.com>
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linuxarm@huawei.com
+>>>> Link: http://lkml.kernel.org/r/1520506716-197429-9-git-send-email-john.garry@huawei.com
+>>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>>
+>>> That's not a valid SOB chain, author != first-Signed-off-by.
+>>>
+>>
+>> Right, so my SOB can go first.
+>>
+>> Let me know how to help remedy.
+>
+> Well, it depends on what role Shaokun Zhang had in the creation of the patch: if
+> he co-authored the patch and you finished it then you can add him as:
+>
+>   Originally-from: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>
+> or if he tested/reviewed the patch then his entry should be Reviewed-by/Acked-by
+> or Tested-by.
+>
+
+Hi Ingo, Arnaldo,
+
+I think it would be fair to say the former, that is: "he co-authored the 
+patch and you finished it".
+
+Thanks,
+John
+
+> Thanks,
+>
+> 	Ingo
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
