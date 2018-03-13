@@ -1,123 +1,317 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/31] perf stat: Fix core dump when flag T is used
-Date: Tue, 13 Mar 2018 09:04:59 -0300
-Message-ID: <20180313120508.29327-23-acme@kernel.org>
+Subject: [PATCH 20/31] perf vendor events arm64: fixup A53 to use recommended events
+Date: Tue, 13 Mar 2018 09:04:57 -0300
+Message-ID: <20180313120508.29327-21-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: John Garry <john.garry@huawei.com>
 
-Executing command 'perf stat -T -- ls' dumps core on x86 and s390.
+This patch fixes the ARM Cortex-A53 json to use event definition from
+the ARMv8 recommended events.
 
-Here is the call back chain (done on x86):
+In addition to this change, other changes were made:
 
- # gdb ./perf
- ....
- (gdb) r stat -T -- ls
-...
-Program received signal SIGSEGV, Segmentation fault.
-0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
-(gdb) where
- #0  0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
- #1  0x00007ffff56ae484 in asprintf () from /lib64/libc.so.6
- #2  0x00000000004f1982 in __parse_events_add_pmu (parse_state=0x7fffffffd580,
-    list=0xbfb970, name=0xbf3ef0 "cpu",
-    head_config=0xbfb930, auto_merge_stats=false) at util/parse-events.c:1233
- #3  0x00000000004f1c8e in parse_events_add_pmu (parse_state=0x7fffffffd580,
-    list=0xbfb970, name=0xbf3ef0 "cpu",
-    head_config=0xbfb930) at util/parse-events.c:1288
- #4  0x0000000000537ce3 in parse_events_parse (_parse_state=0x7fffffffd580,
-    scanner=0xbf4210) at util/parse-events.y:234
- #5  0x00000000004f2c7a in parse_events__scanner (str=0x6b66c0
-    "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}",
-    parse_state=0x7fffffffd580, start_token=258) at util/parse-events.c:1673
- #6  0x00000000004f2e23 in parse_events (evlist=0xbe9990, str=0x6b66c0
-    "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}", err=0x0)
-    at util/parse-events.c:1713
- #7  0x000000000044e137 in add_default_attributes () at builtin-stat.c:2281
- #8  0x000000000044f7b5 in cmd_stat (argc=1, argv=0x7fffffffe3b0) at
-    builtin-stat.c:2828
- #9  0x00000000004c8b0f in run_builtin (p=0xab01a0 <commands+288>, argc=4,
-    argv=0x7fffffffe3b0) at perf.c:297
- #10 0x00000000004c8d7c in handle_internal_command (argc=4,
-    argv=0x7fffffffe3b0) at perf.c:349
- #11 0x00000000004c8ece in run_argv (argcp=0x7fffffffe20c,
-   argv=0x7fffffffe200) at perf.c:393
- #12 0x00000000004c929c in main (argc=4, argv=0x7fffffffe3b0) at perf.c:537
-(gdb)
+- remove stray ','
+- remove mirrored events in memory.json and bus.json
+- fixed indentation to be consistent with other ARM
+  JSONs
 
-It turns out that a NULL pointer is referenced. Here are the
-function calls:
-
-  ...
-  cmd_stat()
-  +---> add_default_attributes()
-	+---> parse_events(evsel_list, transaction_attrs, NULL);
-	             3rd parameter set to NULL
-
-Function parse_events(xx, xx, struct parse_events_error *err) dives
-into a bison generated scanner and creates
-parser state information for it first:
-
-   struct parse_events_state parse_state = {
-                .list   = LIST_HEAD_INIT(parse_state.list),
-                .idx    = evlist->nr_entries,
-                .error  = err,   <--- NULL POINTER !!!
-                .evlist = evlist,
-        };
-
-Now various functions inside the bison scanner are called to end up in
-__parse_events_add_pmu(struct parse_events_state *parse_state, ..) with
-first parameter being a pointer to above structure definition.
-
-Now the PMU event name is not found (because being executed in a VM) and
-this function tries to create an error message with
-
-   asprintf(&parse_state->error.str, ....)
-
-which references a NULL pointer and dumps core.
-
-Fix this by providing a pointer to the necessary error information
-instead of NULL. Technically only the else part is needed to avoid the
-core dump, just lets be safe...
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180308145735.64717-1-tmricht@linux.vnet.ibm.com
+Signed-off-by: John Garry <john.garry@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: William Cohen <wcohen@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxarm@huawei.com
+Link: http://lkml.kernel.org/r/1520506716-197429-11-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../arch/arm64/arm/cortex-a53/branch.json          | 14 +++----
+ .../pmu-events/arch/arm64/arm/cortex-a53/bus.json  | 22 ++---------
+ .../arch/arm64/arm/cortex-a53/cache.json           | 40 ++++++++++----------
+ .../arch/arm64/arm/cortex-a53/memory.json          | 14 +------
+ .../arch/arm64/arm/cortex-a53/other.json           | 44 ++++++++++------------
+ .../arch/arm64/arm/cortex-a53/pipeline.json        | 20 +++++-----
+ 6 files changed, 62 insertions(+), 92 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 0fa9ea3a6d92..f5c454855908 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2331,11 +2331,16 @@ static int add_default_attributes(void)
- 		return 0;
- 
- 	if (transaction_run) {
-+		struct parse_events_error errinfo;
-+
- 		if (pmu_have_event("cpu", "cycles-ct") &&
- 		    pmu_have_event("cpu", "el-start"))
--			err = parse_events(evsel_list, transaction_attrs, NULL);
-+			err = parse_events(evsel_list, transaction_attrs,
-+					   &errinfo);
- 		else
--			err = parse_events(evsel_list, transaction_limited_attrs, NULL);
-+			err = parse_events(evsel_list,
-+					   transaction_limited_attrs,
-+					   &errinfo);
- 		if (err) {
- 			fprintf(stderr, "Cannot set up transaction events\n");
- 			return -1;
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+index 3b6208763e50..0b0e6b26605b 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+@@ -1,25 +1,23 @@
+ [
+-  {,
+-    "EventCode": "0x7A",
+-    "EventName": "BR_INDIRECT_SPEC",
+-    "BriefDescription": "Branch speculatively executed - Indirect branch"
++  {
++    "ArchStdEvent":  "BR_INDIRECT_SPEC",
+   },
+-  {,
++  {
+     "EventCode": "0xC9",
+     "EventName": "BR_COND",
+     "BriefDescription": "Conditional branch executed"
+   },
+-  {,
++  {
+     "EventCode": "0xCA",
+     "EventName": "BR_INDIRECT_MISPRED",
+     "BriefDescription": "Indirect branch mispredicted"
+   },
+-  {,
++  {
+     "EventCode": "0xCB",
+     "EventName": "BR_INDIRECT_MISPRED_ADDR",
+     "BriefDescription": "Indirect branch mispredicted because of address miscompare"
+   },
+-  {,
++  {
+     "EventCode": "0xCC",
+     "EventName": "BR_COND_MISPRED",
+     "BriefDescription": "Conditional branch mispredicted"
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+index 480d9f7460ab..ce33b2553277 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+@@ -1,22 +1,8 @@
+ [
+-  {,
+-    "EventCode": "0x60",
+-    "EventName": "BUS_ACCESS_LD",
+-    "BriefDescription": "Bus access - Read"
++  {
++        "ArchStdEvent": "BUS_ACCESS_RD",
+   },
+-  {,
+-    "EventCode": "0x61",
+-    "EventName": "BUS_ACCESS_ST",
+-    "BriefDescription": "Bus access - Write"
+-  },
+-  {,
+-    "EventCode": "0xC0",
+-    "EventName": "EXT_MEM_REQ",
+-    "BriefDescription": "External memory request"
+-  },
+-  {,
+-    "EventCode": "0xC1",
+-    "EventName": "EXT_MEM_REQ_NC",
+-    "BriefDescription": "Non-cacheable external memory request"
++  {
++        "ArchStdEvent": "BUS_ACCESS_WR",
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json
+index 11baad6344b9..5dfbec43c9f9 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json
+@@ -1,27 +1,27 @@
+ [
+-  {,
+-    "EventCode": "0xC2",
+-    "EventName": "PREFETCH_LINEFILL",
+-    "BriefDescription": "Linefill because of prefetch"
++  {
++        "EventCode": "0xC2",
++        "EventName": "PREFETCH_LINEFILL",
++        "BriefDescription": "Linefill because of prefetch"
+   },
+-  {,
+-    "EventCode": "0xC3",
+-    "EventName": "PREFETCH_LINEFILL_DROP",
+-    "BriefDescription": "Instruction Cache Throttle occurred"
++  {
++        "EventCode": "0xC3",
++        "EventName": "PREFETCH_LINEFILL_DROP",
++        "BriefDescription": "Instruction Cache Throttle occurred"
+   },
+-  {,
+-    "EventCode": "0xC4",
+-    "EventName": "READ_ALLOC_ENTER",
+-    "BriefDescription": "Entering read allocate mode"
++  {
++        "EventCode": "0xC4",
++        "EventName": "READ_ALLOC_ENTER",
++        "BriefDescription": "Entering read allocate mode"
+   },
+-  {,
+-    "EventCode": "0xC5",
+-    "EventName": "READ_ALLOC",
+-    "BriefDescription": "Read allocate mode"
++  {
++        "EventCode": "0xC5",
++        "EventName": "READ_ALLOC",
++        "BriefDescription": "Read allocate mode"
+   },
+-  {,
+-    "EventCode": "0xC8",
+-    "EventName": "EXT_SNOOP",
+-    "BriefDescription": "SCU Snooped data from another CPU for this CPU"
++  {
++        "EventCode": "0xC8",
++        "EventName": "EXT_SNOOP",
++        "BriefDescription": "SCU Snooped data from another CPU for this CPU"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json
+index 480d9f7460ab..25ae642ba381 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json
+@@ -1,20 +1,10 @@
+ [
+-  {,
+-    "EventCode": "0x60",
+-    "EventName": "BUS_ACCESS_LD",
+-    "BriefDescription": "Bus access - Read"
+-  },
+-  {,
+-    "EventCode": "0x61",
+-    "EventName": "BUS_ACCESS_ST",
+-    "BriefDescription": "Bus access - Write"
+-  },
+-  {,
++  {
+     "EventCode": "0xC0",
+     "EventName": "EXT_MEM_REQ",
+     "BriefDescription": "External memory request"
+   },
+-  {,
++  {
+     "EventCode": "0xC1",
+     "EventName": "EXT_MEM_REQ_NC",
+     "BriefDescription": "Non-cacheable external memory request"
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+index 73a22402d003..6cc6cbd7bf0b 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+@@ -1,32 +1,28 @@
+ [
+-  {,
+-    "EventCode": "0x86",
+-    "EventName": "EXC_IRQ",
+-    "BriefDescription": "Exception taken, IRQ"
++  {
++        "ArchStdEvent": "EXC_IRQ",
+   },
+-  {,
+-    "EventCode": "0x87",
+-    "EventName": "EXC_FIQ",
+-    "BriefDescription": "Exception taken, FIQ"
++  {
++        "ArchStdEvent": "EXC_FIQ",
+   },
+-  {,
+-    "EventCode": "0xC6",
+-    "EventName": "PRE_DECODE_ERR",
+-    "BriefDescription": "Pre-decode error"
++  {
++        "EventCode": "0xC6",
++        "EventName": "PRE_DECODE_ERR",
++        "BriefDescription": "Pre-decode error"
+   },
+-  {,
+-    "EventCode": "0xD0",
+-    "EventName": "L1I_CACHE_ERR",
+-    "BriefDescription": "L1 Instruction Cache (data or tag) memory error"
++  {
++        "EventCode": "0xD0",
++        "EventName": "L1I_CACHE_ERR",
++        "BriefDescription": "L1 Instruction Cache (data or tag) memory error"
+   },
+-  {,
+-    "EventCode": "0xD1",
+-    "EventName": "L1D_CACHE_ERR",
+-    "BriefDescription": "L1 Data Cache (data, tag or dirty) memory error, correctable or non-correctable"
++  {
++        "EventCode": "0xD1",
++        "EventName": "L1D_CACHE_ERR",
++        "BriefDescription": "L1 Data Cache (data, tag or dirty) memory error, correctable or non-correctable"
+   },
+-  {,
+-    "EventCode": "0xD2",
+-    "EventName": "TLB_ERR",
+-    "BriefDescription": "TLB memory error"
++  {
++        "EventCode": "0xD2",
++        "EventName": "TLB_ERR",
++        "BriefDescription": "TLB memory error"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json
+index 3149fb90555a..f45a6b5d0025 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json
+@@ -1,50 +1,50 @@
+ [
+-  {,
++  {
+     "EventCode": "0xC7",
+     "EventName": "STALL_SB_FULL",
+     "BriefDescription": "Data Write operation that stalls the pipeline because the store buffer is full"
+   },
+-  {,
++  {
+     "EventCode": "0xE0",
+     "EventName": "OTHER_IQ_DEP_STALL",
+     "BriefDescription": "Cycles that the DPU IQ is empty and that is not because of a recent micro-TLB miss, instruction cache miss or pre-decode error"
+   },
+-  {,
++  {
+     "EventCode": "0xE1",
+     "EventName": "IC_DEP_STALL",
+     "BriefDescription": "Cycles the DPU IQ is empty and there is an instruction cache miss being processed"
+   },
+-  {,
++  {
+     "EventCode": "0xE2",
+     "EventName": "IUTLB_DEP_STALL",
+     "BriefDescription": "Cycles the DPU IQ is empty and there is an instruction micro-TLB miss being processed"
+   },
+-  {,
++  {
+     "EventCode": "0xE3",
+     "EventName": "DECODE_DEP_STALL",
+     "BriefDescription": "Cycles the DPU IQ is empty and there is a pre-decode error being processed"
+   },
+-  {,
++  {
+     "EventCode": "0xE4",
+     "EventName": "OTHER_INTERLOCK_STALL",
+     "BriefDescription": "Cycles there is an interlock other than  Advanced SIMD/Floating-point instructions or load/store instruction"
+   },
+-  {,
++  {
+     "EventCode": "0xE5",
+     "EventName": "AGU_DEP_STALL",
+     "BriefDescription": "Cycles there is an interlock for a load/store instruction waiting for data to calculate the address in the AGU"
+   },
+-  {,
++  {
+     "EventCode": "0xE6",
+     "EventName": "SIMD_DEP_STALL",
+     "BriefDescription": "Cycles there is an interlock for an Advanced SIMD/Floating-point operation."
+   },
+-  {,
++  {
+     "EventCode": "0xE7",
+     "EventName": "LD_DEP_STALL",
+     "BriefDescription": "Cycles there is a stall in the Wr stage because of a load miss"
+   },
+-  {,
++  {
+     "EventCode": "0xE8",
+     "EventName": "ST_DEP_STALL",
+     "BriefDescription": "Cycles there is a stall in the Wr stage because of a store"
 -- 
 2.14.3
