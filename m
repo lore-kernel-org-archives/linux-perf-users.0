@@ -1,86 +1,60 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/31] perf machine: Fix mmap name setup
-Date: Tue, 13 Mar 2018 09:05:07 -0300
-Message-ID: <20180313120508.29327-31-acme@kernel.org>
+Subject: [PATCH 31/31] perf test: Fix exit code for record+probe_libc_inet_pton.sh
+Date: Tue, 13 Mar 2018 09:05:08 -0300
+Message-ID: <20180313120508.29327-32-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Sandipan Das <sandipan@linux.vnet.ibm.com>
 
-Leo reported broken -k option behavior. The reason is that we used
-symbol_conf.vmlinux_name as a source for mmap event name, but in fact
-it's a vmlinux path.
+This fixes record+probe_libc_inet_pton.sh from always exiting with code
+0 and making the test pass even if the perf script output does not match
+the expected pattern.
 
-Moving the symbol_conf.vmlinux_name check for both host and guest to the
-proper place and out of the machine__set_mmap_name function.
+The issue can be observed if this test is run with the verbose flags as
+shown below:
 
-Reported-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: commit ("8c7f1bb37b29 perf machine: Move kernel mmap name into struct machine")
-Link: http://lkml.kernel.org/r/20180312152406.10141-1-jolsa@kernel.org
+  60: probe libc's inet_pton & backtrace it with ping       :
+  ...
+  ping 19602 [006] 16988.413767: probe_libc:inet_pton: (7fff9a2c42e8)
+  1842e8 __GI___inet_pton (/usr/lib64/libc-2.26.so)
+  130db4 getaddrinfo (/usr/lib64/libc-2.26.so)
+
+  FAIL: expected backtrace entry 3 ".*\(.*/bin/ping.*\)$" got ""
+  test child finished with 0
+  ...
+  probe libc's inet_pton & backtrace it with ping: Ok
+
+Signed-off-by: Sandipan Das <sandipan@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Fixes: e07d585e2454 ("perf tests: Switch trace+probe_libc_inet_pton to use record")
+Link: http://lkml.kernel.org/r/20180312124450.30371-1-sandipan@linux.vnet.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 43fbbee409ec..2eca8478e24f 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -50,21 +50,13 @@ static void machine__threads_init(struct machine *machine)
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 52c3ee701a89..1ecc1f0ff84a 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -47,7 +47,10 @@ trace_libc_inet_pton_backtrace() {
+ 		[ -z "${expected[$idx]}" ] && break
+ 	done
  
- static int machine__set_mmap_name(struct machine *machine)
- {
--	if (machine__is_host(machine)) {
--		if (symbol_conf.vmlinux_name)
--			machine->mmap_name = strdup(symbol_conf.vmlinux_name);
--		else
--			machine->mmap_name = strdup("[kernel.kallsyms]");
--	} else if (machine__is_default_guest(machine)) {
--		if (symbol_conf.default_guest_vmlinux_name)
--			machine->mmap_name = strdup(symbol_conf.default_guest_vmlinux_name);
--		else
--			machine->mmap_name = strdup("[guest.kernel.kallsyms]");
--	} else {
--		if (asprintf(&machine->mmap_name, "[guest.kernel.kallsyms.%d]",
--			 machine->pid) < 0)
--			machine->mmap_name = NULL;
--	}
-+	if (machine__is_host(machine))
-+		machine->mmap_name = strdup("[kernel.kallsyms]");
-+	else if (machine__is_default_guest(machine))
-+		machine->mmap_name = strdup("[guest.kernel.kallsyms]");
-+	else if (asprintf(&machine->mmap_name, "[guest.kernel.kallsyms.%d]",
-+			  machine->pid) < 0)
-+		machine->mmap_name = NULL;
- 
- 	return machine->mmap_name ? 0 : -ENOMEM;
+-	rm -f $file
++	# If any statements are executed from this point onwards,
++	# the exit code of the last among these will be reflected
++	# in err below. If the exit code is 0, the test will pass
++	# even if the perf script output does not match.
  }
-@@ -794,9 +786,15 @@ static struct dso *machine__get_kernel(struct machine *machine)
- 	struct dso *kernel;
  
- 	if (machine__is_host(machine)) {
-+		if (symbol_conf.vmlinux_name)
-+			vmlinux_name = symbol_conf.vmlinux_name;
-+
- 		kernel = machine__findnew_kernel(machine, vmlinux_name,
- 						 "[kernel]", DSO_TYPE_KERNEL);
- 	} else {
-+		if (symbol_conf.default_guest_vmlinux_name)
-+			vmlinux_name = symbol_conf.default_guest_vmlinux_name;
-+
- 		kernel = machine__findnew_kernel(machine, vmlinux_name,
- 						 "[guest.kernel]",
- 						 DSO_TYPE_GUEST_KERNEL);
+ # Check for IPv6 interface existence
 -- 
 2.14.3
