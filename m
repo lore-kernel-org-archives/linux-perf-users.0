@@ -1,134 +1,123 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/31] perf report: Show zero counters as well in 'perf report --stat'
-Date: Tue, 13 Mar 2018 09:05:00 -0300
-Message-ID: <20180313120508.29327-24-acme@kernel.org>
+Subject: [PATCH 22/31] perf stat: Fix core dump when flag T is used
+Date: Tue, 13 Mar 2018 09:04:59 -0300
+Message-ID: <20180313120508.29327-23-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ingo Molnar <mingo@kernel.org>
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
 
-When recently using 'perf report --stat' it was not clear to me from the
-output whether a particular statistics field (LOST_SAMPLES) was not
-present, or just zero:
+Executing command 'perf stat -T -- ls' dumps core on x86 and s390.
 
-  fomalhaut:~> perf report --stat
+Here is the call back chain (done on x86):
 
-  Aggregated stats:
-           TOTAL events:     495984
-            MMAP events:         85
-            COMM events:       3389
-            EXIT events:       1605
-        THROTTLE events:          2
-      UNTHROTTLE events:          2
-            FORK events:       3377
-          SAMPLE events:     472629
-           MMAP2 events:      14753
-  FINISHED_ROUND events:        139
-      THREAD_MAP events:          1
-         CPU_MAP events:          1
-       TIME_CONV events:          1
+ # gdb ./perf
+ ....
+ (gdb) r stat -T -- ls
+...
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
+(gdb) where
+ #0  0x00007ffff56d1963 in vasprintf () from /lib64/libc.so.6
+ #1  0x00007ffff56ae484 in asprintf () from /lib64/libc.so.6
+ #2  0x00000000004f1982 in __parse_events_add_pmu (parse_state=0x7fffffffd580,
+    list=0xbfb970, name=0xbf3ef0 "cpu",
+    head_config=0xbfb930, auto_merge_stats=false) at util/parse-events.c:1233
+ #3  0x00000000004f1c8e in parse_events_add_pmu (parse_state=0x7fffffffd580,
+    list=0xbfb970, name=0xbf3ef0 "cpu",
+    head_config=0xbfb930) at util/parse-events.c:1288
+ #4  0x0000000000537ce3 in parse_events_parse (_parse_state=0x7fffffffd580,
+    scanner=0xbf4210) at util/parse-events.y:234
+ #5  0x00000000004f2c7a in parse_events__scanner (str=0x6b66c0
+    "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}",
+    parse_state=0x7fffffffd580, start_token=258) at util/parse-events.c:1673
+ #6  0x00000000004f2e23 in parse_events (evlist=0xbe9990, str=0x6b66c0
+    "task-clock,{instructions,cycles,cpu/cycles-t/,cpu/tx-start/}", err=0x0)
+    at util/parse-events.c:1713
+ #7  0x000000000044e137 in add_default_attributes () at builtin-stat.c:2281
+ #8  0x000000000044f7b5 in cmd_stat (argc=1, argv=0x7fffffffe3b0) at
+    builtin-stat.c:2828
+ #9  0x00000000004c8b0f in run_builtin (p=0xab01a0 <commands+288>, argc=4,
+    argv=0x7fffffffe3b0) at perf.c:297
+ #10 0x00000000004c8d7c in handle_internal_command (argc=4,
+    argv=0x7fffffffe3b0) at perf.c:349
+ #11 0x00000000004c8ece in run_argv (argcp=0x7fffffffe20c,
+   argv=0x7fffffffe200) at perf.c:393
+ #12 0x00000000004c929c in main (argc=4, argv=0x7fffffffe3b0) at perf.c:537
+(gdb)
 
-I had to check the output several times to ascertain that I'm not
-misreading the output, that the field didn't change and that I didn't
-misremember the name. In fact I had to look into the perf source to make
-sure that zero fields are indeed not shown.
+It turns out that a NULL pointer is referenced. Here are the
+function calls:
 
-With the patch applied:
+  ...
+  cmd_stat()
+  +---> add_default_attributes()
+	+---> parse_events(evsel_list, transaction_attrs, NULL);
+	             3rd parameter set to NULL
 
-  fomalhaut:~> perf report --stat
+Function parse_events(xx, xx, struct parse_events_error *err) dives
+into a bison generated scanner and creates
+parser state information for it first:
 
-  Aggregated stats:
-           TOTAL events:     495984
-            MMAP events:         85
-            LOST events:          0
-            COMM events:       3389
-            EXIT events:       1605
-        THROTTLE events:          2
-      UNTHROTTLE events:          2
-            FORK events:       3377
-            READ events:          0
-          SAMPLE events:     472629
-           MMAP2 events:      14753
-             AUX events:          0
-    ITRACE_START events:          0
-    LOST_SAMPLES events:          0
-          SWITCH events:          0
- SWITCH_CPU_WIDE events:          0
-      NAMESPACES events:          0
-            ATTR events:          0
-      EVENT_TYPE events:          0
-    TRACING_DATA events:          0
-        BUILD_ID events:          0
-  FINISHED_ROUND events:        139
-        ID_INDEX events:          0
-   AUXTRACE_INFO events:          0
-        AUXTRACE events:          0
-  AUXTRACE_ERROR events:          0
-      THREAD_MAP events:          1
-         CPU_MAP events:          1
-     STAT_CONFIG events:          0
-            STAT events:          0
-      STAT_ROUND events:          0
-    EVENT_UPDATE events:          0
-       TIME_CONV events:          1
-         FEATURE events:          0
+   struct parse_events_state parse_state = {
+                .list   = LIST_HEAD_INIT(parse_state.list),
+                .idx    = evlist->nr_entries,
+                .error  = err,   <--- NULL POINTER !!!
+                .evlist = evlist,
+        };
 
-It's pretty clear at a glance that LOST_SAMPLES is present but zero.
+Now various functions inside the bison scanner are called to end up in
+__parse_events_add_pmu(struct parse_events_state *parse_state, ..) with
+first parameter being a pointer to above structure definition.
 
-The original output can still be gotten via:
+Now the PMU event name is not found (because being executed in a VM) and
+this function tries to create an error message with
 
-  fomalhaut:~> perf report --stat | grep -vw 0
+   asprintf(&parse_state->error.str, ....)
 
-  Aggregated stats:
-           TOTAL events:     495984
-            MMAP events:         85
-            COMM events:       3389
-            EXIT events:       1605
-        THROTTLE events:          2
-      UNTHROTTLE events:          2
-            FORK events:       3377
-          SAMPLE events:     472629
-           MMAP2 events:      14753
-  FINISHED_ROUND events:        139
-      THREAD_MAP events:          1
-         CPU_MAP events:          1
-       TIME_CONV events:          1
+which references a NULL pointer and dumps core.
 
-So I don't think there's any real loss in functionality.
+Fix this by providing a pointer to the necessary error information
+instead of NULL. Technically only the else part is needed to avoid the
+core dump, just lets be safe...
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20180307152430.7e5h7e657b7bgd7q@gmail.com
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20180308145735.64717-1-tmricht@linux.vnet.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/stdio/hist.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ tools/perf/builtin-stat.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 25dd1e0ecc58..6832fcb2e6ff 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -840,15 +840,11 @@ size_t events_stats__fprintf(struct events_stats *stats, FILE *fp)
- 	for (i = 0; i < PERF_RECORD_HEADER_MAX; ++i) {
- 		const char *name;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 0fa9ea3a6d92..f5c454855908 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2331,11 +2331,16 @@ static int add_default_attributes(void)
+ 		return 0;
  
--		if (stats->nr_events[i] == 0)
--			continue;
--
- 		name = perf_event__name(i);
- 		if (!strcmp(name, "UNKNOWN"))
- 			continue;
- 
--		ret += fprintf(fp, "%16s events: %10d\n", name,
--			       stats->nr_events[i]);
-+		ret += fprintf(fp, "%16s events: %10d\n", name, stats->nr_events[i]);
- 	}
- 
- 	return ret;
+ 	if (transaction_run) {
++		struct parse_events_error errinfo;
++
+ 		if (pmu_have_event("cpu", "cycles-ct") &&
+ 		    pmu_have_event("cpu", "el-start"))
+-			err = parse_events(evsel_list, transaction_attrs, NULL);
++			err = parse_events(evsel_list, transaction_attrs,
++					   &errinfo);
+ 		else
+-			err = parse_events(evsel_list, transaction_limited_attrs, NULL);
++			err = parse_events(evsel_list,
++					   transaction_limited_attrs,
++					   &errinfo);
+ 		if (err) {
+ 			fprintf(stderr, "Cannot set up transaction events\n");
+ 			return -1;
 -- 
 2.14.3
