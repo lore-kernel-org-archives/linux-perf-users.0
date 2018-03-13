@@ -1,56 +1,84 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 29/31] perf stat: Make function perf_stat_evsel_id_init static
-Date: Tue, 13 Mar 2018 09:05:06 -0300
-Message-ID: <20180313120508.29327-30-acme@kernel.org>
+Subject: [PATCH 12/31] perf vendor events: Fix error code in json_events()
+Date: Tue, 13 Mar 2018 09:04:49 -0300
+Message-ID: <20180313120508.29327-13-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.garry@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+From: John Garry <john.garry@huawei.com>
 
-Function perf_stat_evsel_id_init() has global linkage but is only used
-in util/stat.c. Make it static.
+When EXPECT macro fails an assertion, the error code is not properly set
+after the first loop of tokens in function json_events().
 
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180312103807.45069-2-tmricht@linux.vnet.ibm.com
+This is because err is set to the return value from func function
+pointer call, which must be 0 to continue to loop, yet it is not reset
+for for each loop. I assume that this was not the intention, so change
+the code so err is set appropriately in EXPECT macro itself.
+
+In addition to this, the indention in EXPECT macro is tidied. The
+current indention alludes that the 2 statements following the if
+statement are in the body, which is not true.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: William Cohen <wcohen@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxarm@huawei.com
+Link: http://lkml.kernel.org/r/1520506716-197429-3-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat.c | 2 +-
- tools/perf/util/stat.h | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ tools/perf/pmu-events/jevents.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 32235657c1ac..a0061e0b0fad 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -92,7 +92,7 @@ static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
- };
- #undef ID
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 9e0a21e74a67..edff989fbcea 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -249,9 +249,10 @@ static const char *field_to_perf(struct map *table, char *map, jsmntok_t *val)
+ 	jsmntok_t *loc = (t);					\
+ 	if (!(t)->start && (t) > tokens)			\
+ 		loc = (t) - 1;					\
+-		pr_err("%s:%d: " m ", got %s\n", fn,		\
+-			json_line(map, loc),			\
+-			json_name(t));				\
++	pr_err("%s:%d: " m ", got %s\n", fn,			\
++	       json_line(map, loc),				\
++	       json_name(t));					\
++	err = -EIO;						\
+ 	goto out_free;						\
+ } } while (0)
  
--void perf_stat_evsel_id_init(struct perf_evsel *evsel)
-+static void perf_stat_evsel_id_init(struct perf_evsel *evsel)
+@@ -416,7 +417,7 @@ int json_events(const char *fn,
+ 		      char *metric_name, char *metric_group),
+ 	  void *data)
  {
- 	struct perf_stat_evsel *ps = evsel->stats;
- 	int i;
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 2f44e386a0e8..8f56ba4fd258 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -128,8 +128,6 @@ bool __perf_evsel_stat__is(struct perf_evsel *evsel,
- #define perf_stat_evsel__is(evsel, id) \
- 	__perf_evsel_stat__is(evsel, PERF_STAT_EVSEL_ID__ ## id)
- 
--void perf_stat_evsel_id_init(struct perf_evsel *evsel);
--
- extern struct runtime_stat rt_stat;
- extern struct stats walltime_nsecs_stats;
- 
+-	int err = -EIO;
++	int err;
+ 	size_t size;
+ 	jsmntok_t *tokens, *tok;
+ 	int i, j, len;
 -- 
 2.14.3
