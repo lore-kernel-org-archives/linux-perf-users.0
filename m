@@ -1,84 +1,79 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/31] perf vendor events: Fix error code in json_events()
-Date: Tue, 13 Mar 2018 09:04:49 -0300
-Message-ID: <20180313120508.29327-13-acme@kernel.org>
+Subject: [PATCH 28/31] perf llvm: Display eBPF compiling command in debug output
+Date: Tue, 13 Mar 2018 09:05:05 -0300
+Message-ID: <20180313120508.29327-29-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.garry@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-When EXPECT macro fails an assertion, the error code is not properly set
-after the first loop of tokens in function json_events().
+In addition to template, display also the real compile command line with
+all the variables substituted.
 
-This is because err is set to the return value from func function
-pointer call, which must be 0 to continue to loop, yet it is not reset
-for for each loop. I assume that this was not the intention, so change
-the code so err is set appropriately in EXPECT macro itself.
+  llvm compiling command template: $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS ...
+  llvm compiling command : /usr/bin/clang -D__KERNEL__ -D__NR_CPUS__=24 -DLINUX_VERSION_CODE=0x41000 ...
 
-In addition to this, the indention in EXPECT macro is tidied. The
-current indention alludes that the 2 statements following the if
-statement are in the body, which is not true.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: William Cohen <wcohen@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1520506716-197429-3-git-send-email-john.garry@huawei.com
+Link: http://lkml.kernel.org/r/20180312094313.18738-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/util/llvm-utils.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 9e0a21e74a67..edff989fbcea 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -249,9 +249,10 @@ static const char *field_to_perf(struct map *table, char *map, jsmntok_t *val)
- 	jsmntok_t *loc = (t);					\
- 	if (!(t)->start && (t) > tokens)			\
- 		loc = (t) - 1;					\
--		pr_err("%s:%d: " m ", got %s\n", fn,		\
--			json_line(map, loc),			\
--			json_name(t));				\
-+	pr_err("%s:%d: " m ", got %s\n", fn,			\
-+	       json_line(map, loc),				\
-+	       json_name(t));					\
-+	err = -EIO;						\
- 	goto out_free;						\
- } } while (0)
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index 4952b429caa7..1cca0a2fa641 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -433,6 +433,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 	char serr[STRERR_BUFSIZE];
+ 	char *kbuild_dir = NULL, *kbuild_include_opts = NULL;
+ 	const char *template = llvm_param.clang_bpf_cmd_template;
++	char *command_echo, *command_out;
  
-@@ -416,7 +417,7 @@ int json_events(const char *fn,
- 		      char *metric_name, char *metric_group),
- 	  void *data)
- {
--	int err = -EIO;
-+	int err;
- 	size_t size;
- 	jsmntok_t *tokens, *tok;
- 	int i, j, len;
+ 	if (path[0] != '-' && realpath(path, abspath) == NULL) {
+ 		err = errno;
+@@ -487,6 +488,16 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 		      (path[0] == '-') ? path : abspath);
+ 
+ 	pr_debug("llvm compiling command template: %s\n", template);
++
++	if (asprintf(&command_echo, "echo -n \"%s\"", template) < 0)
++		goto errout;
++
++	err = read_from_pipe(command_echo, (void **) &command_out, NULL);
++	if (err)
++		goto errout;
++
++	pr_debug("llvm compiling command : %s\n", command_out);
++
+ 	err = read_from_pipe(template, &obj_buf, &obj_buf_sz);
+ 	if (err) {
+ 		pr_err("ERROR:\tunable to compile %s\n", path);
+@@ -497,6 +508,8 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 		goto errout;
+ 	}
+ 
++	free(command_echo);
++	free(command_out);
+ 	free(kbuild_dir);
+ 	free(kbuild_include_opts);
+ 
+@@ -509,6 +522,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 		*p_obj_buf_sz = obj_buf_sz;
+ 	return 0;
+ errout:
++	free(command_echo);
+ 	free(kbuild_dir);
+ 	free(kbuild_include_opts);
+ 	free(obj_buf);
 -- 
 2.14.3
