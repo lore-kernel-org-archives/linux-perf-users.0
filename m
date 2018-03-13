@@ -1,56 +1,25 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/31] perf vendor events: Add support for pmu events vendor subdirectory
-Date: Tue, 13 Mar 2018 09:04:51 -0300
-Message-ID: <20180313120508.29327-15-acme@kernel.org>
+Subject: [PATCH 16/31] perf vendor events arm64: Relocate Cortex A53 JSONs to arm subdirectory
+Date: Tue, 13 Mar 2018 09:04:53 -0300
+Message-ID: <20180313120508.29327-17-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: John Garry <john.garry@huawei.com>
 
-For some architectures (like arm), it is required to support a vendor
-subdirectory and not locate all the JSONs for a specific vendor in the
-same folder.
-
-This is because all the events for the same vendor will be placed in the
-same pmu events table, which may cause conflict.  This conflict would be
-in the instance that a vendor's custom implemented events do have the
-same meaning on different platforms, so events in the pmu table would
-conflict. In addition, per list command may show events which are not
-even supported for a given platform.
-
-This patch adds support for a arch/vendor/platform directory hierarchy,
-while maintaining backwards-compatibility for existing arch/platform
-structure. In this, each platform would always have its own pmu events
-table.
-
-In generated file pmu_events.c, each platform table name is in the
-format pme{_vendor}_platform, like this:
-
-struct pmu_events_map pmu_events_map[] = {
-{
-	.cpuid = "0x00000000420f5160",
-	.version = "v1",
-	.type = "core",
-	.table = pme_cavium_thunderx2
-},
-{
-	.cpuid = 0,
-	.version = 0,
-	.type = 0,
-	.table = 0,
-},
-};
+Since jevents now supports vendor subdirectory, relocate the Cortex-A53
+JSONs to arm subdirectory.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
@@ -58,140 +27,58 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: William Cohen <wcohen@redhat.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1520506716-197429-5-git-send-email-john.garry@huawei.com
-[ Add missing limits.h include, fixing the build on at least all Alpine Linux versions tested (3.4 to 3.7 + edge) ]
+Link: http://lkml.kernel.org/r/1520506716-197429-7-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/README    |  4 +++
- tools/perf/pmu-events/jevents.c | 65 +++++++++++++++++++++++++++++++++++++----
- 2 files changed, 63 insertions(+), 6 deletions(-)
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/branch.json   | 0
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/bus.json      | 0
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/cache.json    | 0
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/memory.json   | 0
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/other.json    | 0
+ tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/pipeline.json | 0
+ tools/perf/pmu-events/arch/arm64/mapfile.csv                        | 2 +-
+ 7 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/branch.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/bus.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/cache.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/memory.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/other.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/{ => arm}/cortex-a53/pipeline.json (100%)
 
-diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
-index 2407abc1d441..655286ff8767 100644
---- a/tools/perf/pmu-events/README
-+++ b/tools/perf/pmu-events/README
-@@ -28,6 +28,10 @@ sub directory. Thus for the Silvermont X86 CPU:
- 	Cache.json 	Memory.json 	Virtual-Memory.json
- 	Frontend.json 	Pipeline.json
- 
-+The JSONs folder for a CPU model/family may be placed in the root arch
-+folder, or may be placed in a vendor sub-folder under the arch folder
-+for instances where the arch and vendor are not the same.
-+
- Using the JSON files and the mapfile, 'jevents' generates the C source file,
- 'pmu-events.c', which encodes the two sets of tables:
- 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 1d02fafdc34d..b08dffeac4bd 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -39,6 +39,7 @@
- #include <unistd.h>
- #include <stdarg.h>
- #include <libgen.h>
-+#include <limits.h>
- #include <dirent.h>
- #include <sys/time.h>			/* getrlimit */
- #include <sys/resource.h>		/* getrlimit */
-@@ -572,7 +573,7 @@ static char *file_name_to_table_name(char *fname)
- 	 * Derive rest of table name from basename of the JSON file,
- 	 * replacing hyphens and stripping out .json suffix.
- 	 */
--	n = asprintf(&tblname, "pme_%s", basename(fname));
-+	n = asprintf(&tblname, "pme_%s", fname);
- 	if (n < 0) {
- 		pr_info("%s: asprintf() error %s for file %s\n", prog,
- 				strerror(errno), fname);
-@@ -582,7 +583,7 @@ static char *file_name_to_table_name(char *fname)
- 	for (i = 0; i < strlen(tblname); i++) {
- 		c = tblname[i];
- 
--		if (c == '-')
-+		if (c == '-' || c == '/')
- 			tblname[i] = '_';
- 		else if (c == '.') {
- 			tblname[i] = '\0';
-@@ -739,25 +740,77 @@ static int get_maxfds(void)
- static FILE *eventsfp;
- static char *mapfile;
- 
-+static int is_leaf_dir(const char *fpath)
-+{
-+	DIR *d;
-+	struct dirent *dir;
-+	int res = 1;
-+
-+	d = opendir(fpath);
-+	if (!d)
-+		return 0;
-+
-+	while ((dir = readdir(d)) != NULL) {
-+		if (dir->d_type == DT_DIR && dir->d_name[0] != '.') {
-+			res = 0;
-+			break;
-+		} else if (dir->d_type == DT_UNKNOWN) {
-+			char path[PATH_MAX];
-+			struct stat st;
-+
-+			sprintf(path, "%s/%s", fpath, dir->d_name);
-+			if (stat(path, &st))
-+				break;
-+
-+			if (S_ISDIR(st.st_mode)) {
-+				res = 0;
-+				break;
-+			}
-+		}
-+	}
-+
-+	closedir(d);
-+
-+	return res;
-+}
-+
- static int process_one_file(const char *fpath, const struct stat *sb,
- 			    int typeflag, struct FTW *ftwbuf)
- {
--	char *tblname, *bname  = (char *) fpath + ftwbuf->base;
-+	char *tblname, *bname;
- 	int is_dir  = typeflag == FTW_D;
- 	int is_file = typeflag == FTW_F;
- 	int level   = ftwbuf->level;
- 	int err = 0;
- 
-+	if (level == 2 && is_dir) {
-+		/*
-+		 * For level 2 directory, bname will include parent name,
-+		 * like vendor/platform. So search back from platform dir
-+		 * to find this.
-+		 */
-+		bname = (char *) fpath + ftwbuf->base - 2;
-+		for (;;) {
-+			if (*bname == '/')
-+				break;
-+			bname--;
-+		}
-+		bname++;
-+	} else
-+		bname = (char *) fpath + ftwbuf->base;
-+
- 	pr_debug("%s %d %7jd %-20s %s\n",
- 		 is_file ? "f" : is_dir ? "d" : "x",
- 		 level, sb->st_size, bname, fpath);
- 
--	/* base dir */
--	if (level == 0)
-+	/* base dir or too deep */
-+	if (level == 0 || level > 3)
- 		return 0;
- 
-+
- 	/* model directory, reset topic */
--	if (level == 1 && is_dir) {
-+	if ((level == 1 && is_dir && is_leaf_dir(fpath)) ||
-+	    (level == 2 && is_dir)) {
- 		if (close_table)
- 			print_events_table_suffix(eventsfp);
- 
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/branch.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/branch.json
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/bus.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/cache.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/memory.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/other.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/other.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/other.json
+diff --git a/tools/perf/pmu-events/arch/arm64/cortex-a53/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/cortex-a53/pipeline.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a53/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index 952a05cbf675..cf14e23b6404 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -12,5 +12,5 @@
+ #
+ #
+ #Family-model,Version,Filename,EventType
++0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+-0x00000000410fd03[[:xdigit:]],v1,cortex-a53,core
 -- 
 2.14.3
