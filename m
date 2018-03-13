@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/31] perf vendor events arm64: add HiSilicon hip08 JSON file
-Date: Tue, 13 Mar 2018 09:04:58 -0300
-Message-ID: <20180313120508.29327-22-acme@kernel.org>
+Subject: [PATCH 17/31] perf vendor events: Add support for arch standard events
+Date: Tue, 13 Mar 2018 09:04:54 -0300
+Message-ID: <20180313120508.29327-18-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
@@ -12,8 +12,38 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: John Garry <john.garry@huawei.com>
 
-This patch adds the HiSilicon hip08 JSON file. This platform follows the
-ARMv8 recommended IMPLEMENTATION DEFINED events, where applicable.
+For some architectures (like arm), there are architecture- defined
+events. Sometimes these events may be "recommended" according to the
+architecture standard, in that the implementer is free ignore the
+"recommendation" and create its custom event.
+
+This patch adds support for parsing standard events from arch-defined
+JSONs, and fixing up vendor events when they have implemented these
+events as standard.
+
+Support is also ensured that the vendor may implement their own custom
+events.
+
+A new step is added to the pmu events parsing to fix up the vendor
+events with the arch-standard events.
+
+The arch-defined JSONs must be placed in the arch root folder for
+preprocessing prior to tree JSON processing.
+
+In the vendor JSON, to specify that the arch event is supported, the
+keyword "ArchStdEvent" should be used, like this:
+
+[
+    {
+        "ArchStdEvent": "L1D_CACHE_WR",
+    },
+]
+
+Matching is based on the "EventName" field in the architecture JSON.
+
+No other JSON objects are strictly required. However, for other objects
+added, these take precedence over architecture defined standard events,
+thus supporting separate events which have the same event code.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -27,150 +57,302 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: William Cohen <wcohen@redhat.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1520506716-197429-12-git-send-email-john.garry@huawei.com
+Link: http://lkml.kernel.org/r/1520506716-197429-8-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arch/arm64/hisilicon/hip08/core-imp-def.json   | 122 +++++++++++++++++++++
- tools/perf/pmu-events/arch/arm64/mapfile.csv       |   1 +
- 2 files changed, 123 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+ tools/perf/pmu-events/Build     |   2 +
+ tools/perf/pmu-events/README    |   6 ++
+ tools/perf/pmu-events/jevents.c | 167 +++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 172 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
-new file mode 100644
-index 000000000000..9f0f15d15f75
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
-@@ -0,0 +1,122 @@
-+[
-+    {
-+        "ArchStdEvent": "L1D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_INVAL",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_INVAL",
-+    },
-+    {
-+        "PublicDescription": "Level 1 instruction cache prefetch access count",
-+        "EventCode": "0x102e",
-+        "EventName": "L1I_CACHE_PRF",
-+        "BriefDescription": "L1I cache prefetch access count",
-+    },
-+    {
-+        "PublicDescription": "Level 1 instruction cache miss due to prefetch access count",
-+        "EventCode": "0x102f",
-+        "EventName": "L1I_CACHE_PRF_REFILL",
-+        "BriefDescription": "L1I cache miss due to prefetch access count",
-+    },
-+    {
-+        "PublicDescription": "Instruction queue is empty",
-+        "EventCode": "0x1043",
-+        "EventName": "IQ_IS_EMPTY",
-+        "BriefDescription": "Instruction queue is empty",
-+    },
-+    {
-+        "PublicDescription": "Instruction fetch stall cycles",
-+        "EventCode": "0x1044",
-+        "EventName": "IF_IS_STALL",
-+        "BriefDescription": "Instruction fetch stall cycles",
-+    },
-+    {
-+        "PublicDescription": "Instructions can receive, but not send",
-+        "EventCode": "0x2014",
-+        "EventName": "FETCH_BUBBLE",
-+        "BriefDescription": "Instructions can receive, but not send",
-+    },
-+    {
-+        "PublicDescription": "Prefetch request from LSU",
-+        "EventCode": "0x6013",
-+        "EventName": "PRF_REQ",
-+        "BriefDescription": "Prefetch request from LSU",
-+    },
-+    {
-+        "PublicDescription": "Hit on prefetched data",
-+        "EventCode": "0x6014",
-+        "EventName": "HIT_ON_PRF",
-+        "BriefDescription": "Hit on prefetched data",
-+    },
-+    {
-+        "PublicDescription": "Cycles of that the number of issuing micro operations are less than 4",
-+        "EventCode": "0x7001",
-+        "EventName": "EXE_STALL_CYCLE",
-+        "BriefDescription": "Cycles of that the number of issue ups are less than 4",
-+    },
-+    {
-+        "PublicDescription": "No any micro operation is issued and meanwhile any load operation is not resolved",
-+        "EventCode": "0x7004",
-+        "EventName": "MEM_STALL_ANYLOAD",
-+        "BriefDescription": "No any micro operation is issued and meanwhile any load operation is not resolved",
-+    },
-+    {
-+        "PublicDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill",
-+        "EventCode": "0x7006",
-+        "EventName": "MEM_STALL_L1MISS",
-+        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill",
-+    },
-+    {
-+        "PublicDescription": "No any micro operation is issued and meanwhile there is any load operation missing both L1 and L2 cache and pending data refill from L3 cache",
-+        "EventCode": "0x7007",
-+        "EventName": "MEM_STALL_L2MISS",
-+        "BriefDescription": "No any micro operation is issued and meanwhile there is any load operation missing both L1 and L2 cache and pending data refill from L3 cache",
-+    },
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index cf14e23b6404..8f11aeb003a9 100644
---- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -14,3 +14,4 @@
- #Family-model,Version,Filename,EventType
- 0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
- 0x00000000420f5160,v1,cavium/thunderx2,core
-+0x00000000480fd010,v1,hisilicon/hip08,core
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 999a4e878162..17783913d330 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,10 +1,12 @@
+ hostprogs := jevents
+ 
+ jevents-y	+= json.o jsmn.o jevents.o
++CHOSTFLAGS_jevents.o	= -I$(srctree)/tools/include
+ pmu-events-y	+= pmu-events.o
+ JDIR		=  pmu-events/arch/$(SRCARCH)
+ JSON		=  $(shell [ -d $(JDIR) ] &&				\
+ 			find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
++
+ #
+ # Locate/process JSON files in pmu-events/arch/
+ # directory and create tables in pmu-events.c.
+diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
+index 655286ff8767..e62b09b6a844 100644
+--- a/tools/perf/pmu-events/README
++++ b/tools/perf/pmu-events/README
+@@ -16,6 +16,12 @@ tree tools/perf/pmu-events/arch/foo.
+ 
+ 	- Directories are traversed, but all other files are ignored.
+ 
++	- To reduce JSON event duplication per architecture, platform JSONs may
++	  use "ArchStdEvent" keyword to dereference an "Architecture standard
++	  events", defined in architecture standard JSONs.
++	  Architecture standard JSONs must be located in the architecture root
++	  folder. Matching is based on the "EventName" field.
++
+ The PMU events supported by a CPU model are expected to grouped into topics
+ such as Pipelining, Cache, Memory, Floating-point etc. All events for a topic
+ should be placed in a separate JSON file - where the file name identifies
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index b08dffeac4bd..1c018445e757 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -45,6 +45,7 @@
+ #include <sys/resource.h>		/* getrlimit */
+ #include <ftw.h>
+ #include <sys/stat.h>
++#include <linux/list.h>
+ #include "jsmn.h"
+ #include "json.h"
+ #include "jevents.h"
+@@ -351,6 +352,81 @@ static int print_events_table_entry(void *data, char *name, char *event,
+ 	return 0;
+ }
+ 
++struct event_struct {
++	struct list_head list;
++	char *name;
++	char *event;
++	char *desc;
++	char *long_desc;
++	char *pmu;
++	char *unit;
++	char *perpkg;
++	char *metric_expr;
++	char *metric_name;
++	char *metric_group;
++};
++
++#define ADD_EVENT_FIELD(field) do { if (field) {		\
++	es->field = strdup(field);				\
++	if (!es->field)						\
++		goto out_free;					\
++} } while (0)
++
++#define FREE_EVENT_FIELD(field) free(es->field)
++
++#define TRY_FIXUP_FIELD(field) do { if (es->field && !*field) {\
++	*field = strdup(es->field);				\
++	if (!*field)						\
++		return -ENOMEM;					\
++} } while (0)
++
++#define FOR_ALL_EVENT_STRUCT_FIELDS(op) do {			\
++	op(name);						\
++	op(event);						\
++	op(desc);						\
++	op(long_desc);						\
++	op(pmu);						\
++	op(unit);						\
++	op(perpkg);						\
++	op(metric_expr);					\
++	op(metric_name);					\
++	op(metric_group);					\
++} while (0)
++
++static LIST_HEAD(arch_std_events);
++
++static void free_arch_std_events(void)
++{
++	struct event_struct *es, *next;
++
++	list_for_each_entry_safe(es, next, &arch_std_events, list) {
++		FOR_ALL_EVENT_STRUCT_FIELDS(FREE_EVENT_FIELD);
++		list_del(&es->list);
++		free(es);
++	}
++}
++
++static int save_arch_std_events(void *data, char *name, char *event,
++				char *desc, char *long_desc, char *pmu,
++				char *unit, char *perpkg, char *metric_expr,
++				char *metric_name, char *metric_group)
++{
++	struct event_struct *es;
++	struct stat *sb = data;
++
++	es = malloc(sizeof(*es));
++	if (!es)
++		return -ENOMEM;
++	memset(es, 0, sizeof(*es));
++	FOR_ALL_EVENT_STRUCT_FIELDS(ADD_EVENT_FIELD);
++	list_add_tail(&es->list, &arch_std_events);
++	return 0;
++out_free:
++	FOR_ALL_EVENT_STRUCT_FIELDS(FREE_EVENT_FIELD);
++	free(es);
++	return -ENOMEM;
++}
++
+ static void print_events_table_suffix(FILE *outfp)
+ {
+ 	fprintf(outfp, "{\n");
+@@ -392,6 +468,32 @@ static char *real_event(const char *name, char *event)
+ 	return event;
+ }
+ 
++static int
++try_fixup(const char *fn, char *arch_std, char **event, char **desc,
++	  char **name, char **long_desc, char **pmu, char **filter,
++	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
++	  char **metric_group, unsigned long long eventcode)
++{
++	/* try to find matching event from arch standard values */
++	struct event_struct *es;
++
++	list_for_each_entry(es, &arch_std_events, list) {
++		if (!strcmp(arch_std, es->name)) {
++			if (!eventcode && es->event) {
++				/* allow EventCode to be overridden */
++				free(*event);
++				*event = NULL;
++			}
++			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
++			return 0;
++		}
++	}
++
++	pr_err("%s: could not find matching %s for %s\n",
++					prog, arch_std, fn);
++	return -1;
++}
++
+ /* Call func with each event in the json file */
+ int json_events(const char *fn,
+ 	  int (*func)(void *data, char *name, char *event, char *desc,
+@@ -427,6 +529,7 @@ int json_events(const char *fn,
+ 		char *metric_expr = NULL;
+ 		char *metric_name = NULL;
+ 		char *metric_group = NULL;
++		char *arch_std = NULL;
+ 		unsigned long long eventcode = 0;
+ 		struct msrmap *msr = NULL;
+ 		jsmntok_t *msrval = NULL;
+@@ -512,6 +615,10 @@ int json_events(const char *fn,
+ 				addfield(map, &metric_expr, "", "", val);
+ 				for (s = metric_expr; *s; s++)
+ 					*s = tolower(*s);
++			} else if (json_streq(map, field, "ArchStdEvent")) {
++				addfield(map, &arch_std, "", "", val);
++				for (s = arch_std; *s; s++)
++					*s = tolower(*s);
+ 			}
+ 			/* ignore unknown fields */
+ 		}
+@@ -536,8 +643,21 @@ int json_events(const char *fn,
+ 		if (name)
+ 			fixname(name);
+ 
++		if (arch_std) {
++			/*
++			 * An arch standard event is referenced, so try to
++			 * fixup any unassigned values.
++			 */
++			err = try_fixup(fn, arch_std, &event, &desc, &name,
++					&long_desc, &pmu, &filter, &perpkg,
++					&unit, &metric_expr, &metric_name,
++					&metric_group, eventcode);
++			if (err)
++				goto free_strings;
++		}
+ 		err = func(data, name, real_event(name, event), desc, long_desc,
+ 			   pmu, unit, perpkg, metric_expr, metric_name, metric_group);
++free_strings:
+ 		free(event);
+ 		free(desc);
+ 		free(name);
+@@ -550,6 +670,8 @@ int json_events(const char *fn,
+ 		free(metric_expr);
+ 		free(metric_name);
+ 		free(metric_group);
++		free(arch_std);
++
+ 		if (err)
+ 			break;
+ 		tok += j;
+@@ -774,6 +896,32 @@ static int is_leaf_dir(const char *fpath)
+ 	return res;
+ }
+ 
++static int is_json_file(const char *name)
++{
++	const char *suffix;
++
++	if (strlen(name) < 5)
++		return 0;
++
++	suffix = name + strlen(name) - 5;
++
++	if (strncmp(suffix, ".json", 5) == 0)
++		return 1;
++	return 0;
++}
++
++static int preprocess_arch_std_files(const char *fpath, const struct stat *sb,
++				int typeflag, struct FTW *ftwbuf)
++{
++	int level = ftwbuf->level;
++	int is_file = typeflag == FTW_F;
++
++	if (level == 1 && is_file && is_json_file(fpath))
++		return json_events(fpath, save_arch_std_events, (void *)sb);
++
++	return 0;
++}
++
+ static int process_one_file(const char *fpath, const struct stat *sb,
+ 			    int typeflag, struct FTW *ftwbuf)
+ {
+@@ -851,9 +999,7 @@ static int process_one_file(const char *fpath, const struct stat *sb,
+ 	 * ignore it. It could be a readme.txt for instance.
+ 	 */
+ 	if (is_file) {
+-		char *suffix = bname + strlen(bname) - 5;
+-
+-		if (strncmp(suffix, ".json", 5)) {
++		if (!is_json_file(bname)) {
+ 			pr_info("%s: Ignoring file without .json suffix %s\n", prog,
+ 				fpath);
+ 			return 0;
+@@ -959,12 +1105,26 @@ int main(int argc, char *argv[])
+ 
+ 	maxfds = get_maxfds();
+ 	mapfile = NULL;
++	rc = nftw(ldirname, preprocess_arch_std_files, maxfds, 0);
++	if (rc && verbose) {
++		pr_info("%s: Error preprocessing arch standard files %s\n",
++			prog, ldirname);
++		goto empty_map;
++	} else if (rc < 0) {
++		/* Make build fail */
++		free_arch_std_events();
++		return 1;
++	} else if (rc) {
++		goto empty_map;
++	}
++
+ 	rc = nftw(ldirname, process_one_file, maxfds, 0);
+ 	if (rc && verbose) {
+ 		pr_info("%s: Error walking file tree %s\n", prog, ldirname);
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+ 		goto empty_map;
+@@ -989,5 +1149,6 @@ int main(int argc, char *argv[])
+ empty_map:
+ 	fclose(eventsfp);
+ 	create_empty_mapping(output_file);
++	free_arch_std_events();
+ 	return 0;
+ }
 -- 
 2.14.3
