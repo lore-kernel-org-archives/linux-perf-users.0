@@ -1,48 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/31] perf vendor events arm64: Enable JSON events for ThunderX2 B0
-Date: Tue, 13 Mar 2018 09:05:01 -0300
-Message-ID: <20180313120508.29327-25-acme@kernel.org>
+Subject: [PATCH 26/31] perf record: Avoid duplicate call of perf_default_config()
+Date: Tue, 13 Mar 2018 09:05:03 -0300
+Message-ID: <20180313120508.29327-27-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ganapatrao Kulkarni <gpkulkarni@gklkml16.com>, Jayachandran C <jnair@caviumnetworks.com>, Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Robert Richter <robert.richter@cavium.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yisheng Xie <xieyisheng1@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+From: Yisheng Xie <xieyisheng1@huawei.com>
 
-There is MIDR change on ThunderX2 B0, adding an entry to mapfile to
-enable JSON events for B0.
+We have brought perf_default_config to the very beginning at main(), so
+it no need to call perf_default_config() once more for most of config in
+perf-record but only for record.call-graph.
 
-Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ganapatrao Kulkarni <gpkulkarni@gklkml16.com>
-Cc: Jayachandran C <jnair@caviumnetworks.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robert Richter <robert.richter@cavium.com>
-Cc: William Cohen <wcohen@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20180307110803.32418-1-ganapatrao.kulkarni@cavium.com
-[ Fixup wrt recent patchset by John Garry ]
+Link: http://lkml.kernel.org/r/1520853957-36106-2-git-send-email-xieyisheng1@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-record.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 8f11aeb003a9..f03e26ecb658 100644
---- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -14,4 +14,5 @@
- #Family-model,Version,Filename,EventType
- 0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
- 0x00000000420f5160,v1,cavium/thunderx2,core
-+0x00000000430f0af0,v1,cavium/thunderx2,core
- 0x00000000480fd010,v1,hisilicon/hip08,core
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b81494587120..d33103291b02 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1279,10 +1279,12 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+ 			return -1;
+ 		return 0;
+ 	}
+-	if (!strcmp(var, "record.call-graph"))
+-		var = "call-graph.record-mode"; /* fall-through */
++	if (!strcmp(var, "record.call-graph")) {
++		var = "call-graph.record-mode";
++		return perf_default_config(var, value, cb);
++	}
+ 
+-	return perf_default_config(var, value, cb);
++	return 0;
+ }
+ 
+ struct clockid_map {
 -- 
 2.14.3
