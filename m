@@ -1,38 +1,50 @@
-From: Martin Vuille <jpmv27@aim.com>
-Subject: [PATCH RESEND] perf annotate: Don't prepend symfs path to build_id_filename
-Date: Tue, 13 Mar 2018 09:56:18 -0400
-Message-ID: <20180313135618.2900-1-jpmv27@aim.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 18/31] perf vendor events arm64: Add
+ armv8-recommended.json
+Date: Tue, 13 Mar 2018 15:26:18 +0100
+Message-ID: <20180313142618.36je6syqg6ppwhbp@gmail.com>
+References: <20180313120508.29327-1-acme@kernel.org>
+ <20180313120508.29327-19-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180313120508.29327-19-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Martin Vuille <jpmv27@aim.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-build_id_filename already contains symfs path if applicable, so
-don't prepend it a second time.
 
-- dso__build_id_filename calls build_id_cache__linkname
-- build_id_cache__linkname uses buildid_dir
-- when symfs option is specified, symbol__config_symfs sets
-  buildid_dir to include the symfs directory
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Signed-off-by: Martin Vuille <jpmv27@aim.com>
----
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: John Garry <john.garry@huawei.com>
+> 
+> Add JSON for ARMv8 IMPLEMENTATION DEFINED recommended events.
+> 
+> The JSON is copied from ARMv8 architecture reference manual, available
+> here:
+> 
+> 	https://static.docs.arm.com/ddi0487/ca/DDI0487C_a_armv8_arm.pdf
+> 
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: William Cohen <wcohen@redhat.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linuxarm@huawei.com
+> Link: http://lkml.kernel.org/r/1520506716-197429-9-git-send-email-john.garry@huawei.com
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 007170efa014..0b78cc4fb155 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1381,7 +1381,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 
- 	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
- 	if (build_id_filename) {
--		__symbol__join_symfs(filename, filename_size, build_id_filename);
-+		scnprintf(filename, filename_size, "%s", build_id_filename);
- 		free(build_id_filename);
- 	} else {
- 		if (dso->has_build_id)
--- 
-2.13.6
+That's not a valid SOB chain, author != first-Signed-off-by.
+
+Thanks,
+
+	Ingo
