@@ -1,358 +1,157 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/31] perf vendor events: Add support for arch standard events
-Date: Tue, 13 Mar 2018 09:04:54 -0300
-Message-ID: <20180313120508.29327-18-acme@kernel.org>
+Subject: [PATCH 09/31] perf c2c report: Add cacheline address count column
+Date: Tue, 13 Mar 2018 09:04:46 -0300
+Message-ID: <20180313120508.29327-10-acme@kernel.org>
 References: <20180313120508.29327-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180313120508.29327-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-For some architectures (like arm), there are architecture- defined
-events. Sometimes these events may be "recommended" according to the
-architecture standard, in that the implementer is free ignore the
-"recommendation" and create its custom event.
+Adding the 'PA cnt' column grouped under data cacheline address.
 
-This patch adds support for parsing standard events from arch-defined
-JSONs, and fixing up vendor events when they have implemented these
-events as standard.
+It shows how many times the physical addresses changed for the hist
+entry. It does not show the number of different physical addresses for
+entry, because we don't store those. We only track the number of times
+we got different address than we currently hold, which is not expensive
+and gives similar info.
 
-Support is also ensured that the vendor may implement their own custom
-events.
+  $ perf c2c report --stdio
 
-A new step is added to the pmu events parsing to fix up the vendor
-events with the arch-standard events.
+  #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----
+  # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt
+  # .....  ..................  ....  ......  .......  .......  .......  .......  .......
+  #
+        0  0xffff9ad56dca0a80     0       9       10    7.69%        2        2        0
+        1  0xffff9ad56dce0a80     0       9        9    7.69%        2        2        0
+        2  0xffff9ad37659ad80     0       1        2    3.85%        1        1        0
 
-The arch-defined JSONs must be placed in the arch root folder for
-preprocessing prior to tree JSON processing.
+  ...
 
-In the vendor JSON, to specify that the arch event is supported, the
-keyword "ArchStdEvent" should be used, like this:
+  #        ----- HITM -----  -- Store Refs --  --------- Data address ---------
+  #   Num      Rmt      Lcl   L1 Hit  L1 Miss              Offset  Node  PA cnt      Pid
+  # .....  .......  .......  .......  .......  ..................  ....  ......  .......
+  #
+    -------------------------------------------------------------
+        0        0        2        3        0  0xffff9ad56dca0a80
+    -------------------------------------------------------------
+             0.00%    0.00%   33.33%    0.00%                 0x0     0       1     2510
+             0.00%    0.00%   33.33%    0.00%                 0x4     0       1     2476
+             0.00%    0.00%   33.33%    0.00%                0x20     0       1        0
+             0.00%  100.00%    0.00%    0.00%                0x38     0       1        0
 
-[
-    {
-        "ArchStdEvent": "L1D_CACHE_WR",
-    },
-]
-
-Matching is based on the "EventName" field in the architecture JSON.
-
-No other JSON objects are strictly required. However, for other objects
-added, these take precedence over architecture defined standard events,
-thus supporting separate events which have the same event code.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Joe Mario <jmario@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: William Cohen <wcohen@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1520506716-197429-8-git-send-email-john.garry@huawei.com
+Link: http://lkml.kernel.org/r/20180309101442.9224-10-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/Build     |   2 +
- tools/perf/pmu-events/README    |   6 ++
- tools/perf/pmu-events/jevents.c | 167 +++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 172 insertions(+), 3 deletions(-)
+ tools/perf/builtin-c2c.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index 999a4e878162..17783913d330 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -1,10 +1,12 @@
- hostprogs := jevents
- 
- jevents-y	+= json.o jsmn.o jevents.o
-+CHOSTFLAGS_jevents.o	= -I$(srctree)/tools/include
- pmu-events-y	+= pmu-events.o
- JDIR		=  pmu-events/arch/$(SRCARCH)
- JSON		=  $(shell [ -d $(JDIR) ] &&				\
- 			find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
-+
- #
- # Locate/process JSON files in pmu-events/arch/
- # directory and create tables in pmu-events.c.
-diff --git a/tools/perf/pmu-events/README b/tools/perf/pmu-events/README
-index 655286ff8767..e62b09b6a844 100644
---- a/tools/perf/pmu-events/README
-+++ b/tools/perf/pmu-events/README
-@@ -16,6 +16,12 @@ tree tools/perf/pmu-events/arch/foo.
- 
- 	- Directories are traversed, but all other files are ignored.
- 
-+	- To reduce JSON event duplication per architecture, platform JSONs may
-+	  use "ArchStdEvent" keyword to dereference an "Architecture standard
-+	  events", defined in architecture standard JSONs.
-+	  Architecture standard JSONs must be located in the architecture root
-+	  folder. Matching is based on the "EventName" field.
-+
- The PMU events supported by a CPU model are expected to grouped into topics
- such as Pipelining, Cache, Memory, Floating-point etc. All events for a topic
- should be placed in a separate JSON file - where the file name identifies
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index b08dffeac4bd..1c018445e757 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -45,6 +45,7 @@
- #include <sys/resource.h>		/* getrlimit */
- #include <ftw.h>
- #include <sys/stat.h>
-+#include <linux/list.h>
- #include "jsmn.h"
- #include "json.h"
- #include "jevents.h"
-@@ -351,6 +352,81 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 	return 0;
- }
- 
-+struct event_struct {
-+	struct list_head list;
-+	char *name;
-+	char *event;
-+	char *desc;
-+	char *long_desc;
-+	char *pmu;
-+	char *unit;
-+	char *perpkg;
-+	char *metric_expr;
-+	char *metric_name;
-+	char *metric_group;
-+};
-+
-+#define ADD_EVENT_FIELD(field) do { if (field) {		\
-+	es->field = strdup(field);				\
-+	if (!es->field)						\
-+		goto out_free;					\
-+} } while (0)
-+
-+#define FREE_EVENT_FIELD(field) free(es->field)
-+
-+#define TRY_FIXUP_FIELD(field) do { if (es->field && !*field) {\
-+	*field = strdup(es->field);				\
-+	if (!*field)						\
-+		return -ENOMEM;					\
-+} } while (0)
-+
-+#define FOR_ALL_EVENT_STRUCT_FIELDS(op) do {			\
-+	op(name);						\
-+	op(event);						\
-+	op(desc);						\
-+	op(long_desc);						\
-+	op(pmu);						\
-+	op(unit);						\
-+	op(perpkg);						\
-+	op(metric_expr);					\
-+	op(metric_name);					\
-+	op(metric_group);					\
-+} while (0)
-+
-+static LIST_HEAD(arch_std_events);
-+
-+static void free_arch_std_events(void)
-+{
-+	struct event_struct *es, *next;
-+
-+	list_for_each_entry_safe(es, next, &arch_std_events, list) {
-+		FOR_ALL_EVENT_STRUCT_FIELDS(FREE_EVENT_FIELD);
-+		list_del(&es->list);
-+		free(es);
-+	}
-+}
-+
-+static int save_arch_std_events(void *data, char *name, char *event,
-+				char *desc, char *long_desc, char *pmu,
-+				char *unit, char *perpkg, char *metric_expr,
-+				char *metric_name, char *metric_group)
-+{
-+	struct event_struct *es;
-+	struct stat *sb = data;
-+
-+	es = malloc(sizeof(*es));
-+	if (!es)
-+		return -ENOMEM;
-+	memset(es, 0, sizeof(*es));
-+	FOR_ALL_EVENT_STRUCT_FIELDS(ADD_EVENT_FIELD);
-+	list_add_tail(&es->list, &arch_std_events);
-+	return 0;
-+out_free:
-+	FOR_ALL_EVENT_STRUCT_FIELDS(FREE_EVENT_FIELD);
-+	free(es);
-+	return -ENOMEM;
-+}
-+
- static void print_events_table_suffix(FILE *outfp)
- {
- 	fprintf(outfp, "{\n");
-@@ -392,6 +468,32 @@ static char *real_event(const char *name, char *event)
- 	return event;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index a6336e4e2850..2126bfbcb385 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -507,6 +507,17 @@ dcacheline_node_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, c2c_he->nodestr);
  }
  
 +static int
-+try_fixup(const char *fn, char *arch_std, char **event, char **desc,
-+	  char **name, char **long_desc, char **pmu, char **filter,
-+	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
-+	  char **metric_group, unsigned long long eventcode)
++dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		      struct hist_entry *he)
 +{
-+	/* try to find matching event from arch standard values */
-+	struct event_struct *es;
++	struct c2c_hist_entry *c2c_he;
++	int width = c2c_width(fmt, hpp, he->hists);
 +
-+	list_for_each_entry(es, &arch_std_events, list) {
-+		if (!strcmp(arch_std, es->name)) {
-+			if (!eventcode && es->event) {
-+				/* allow EventCode to be overridden */
-+				free(*event);
-+				*event = NULL;
-+			}
-+			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
-+			return 0;
-+		}
-+	}
-+
-+	pr_err("%s: could not find matching %s for %s\n",
-+					prog, arch_std, fn);
-+	return -1;
++	c2c_he = container_of(he, struct c2c_hist_entry, he);
++	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
 +}
 +
- /* Call func with each event in the json file */
- int json_events(const char *fn,
- 	  int (*func)(void *data, char *name, char *event, char *desc,
-@@ -427,6 +529,7 @@ int json_events(const char *fn,
- 		char *metric_expr = NULL;
- 		char *metric_name = NULL;
- 		char *metric_group = NULL;
-+		char *arch_std = NULL;
- 		unsigned long long eventcode = 0;
- 		struct msrmap *msr = NULL;
- 		jsmntok_t *msrval = NULL;
-@@ -512,6 +615,10 @@ int json_events(const char *fn,
- 				addfield(map, &metric_expr, "", "", val);
- 				for (s = metric_expr; *s; s++)
- 					*s = tolower(*s);
-+			} else if (json_streq(map, field, "ArchStdEvent")) {
-+				addfield(map, &arch_std, "", "", val);
-+				for (s = arch_std; *s; s++)
-+					*s = tolower(*s);
- 			}
- 			/* ignore unknown fields */
- 		}
-@@ -536,8 +643,21 @@ int json_events(const char *fn,
- 		if (name)
- 			fixname(name);
- 
-+		if (arch_std) {
-+			/*
-+			 * An arch standard event is referenced, so try to
-+			 * fixup any unassigned values.
-+			 */
-+			err = try_fixup(fn, arch_std, &event, &desc, &name,
-+					&long_desc, &pmu, &filter, &perpkg,
-+					&unit, &metric_expr, &metric_name,
-+					&metric_group, eventcode);
-+			if (err)
-+				goto free_strings;
-+		}
- 		err = func(data, name, real_event(name, event), desc, long_desc,
- 			   pmu, unit, perpkg, metric_expr, metric_name, metric_group);
-+free_strings:
- 		free(event);
- 		free(desc);
- 		free(name);
-@@ -550,6 +670,8 @@ int json_events(const char *fn,
- 		free(metric_expr);
- 		free(metric_name);
- 		free(metric_group);
-+		free(arch_std);
-+
- 		if (err)
- 			break;
- 		tok += j;
-@@ -774,6 +896,32 @@ static int is_leaf_dir(const char *fpath)
- 	return res;
- }
- 
-+static int is_json_file(const char *name)
-+{
-+	const char *suffix;
-+
-+	if (strlen(name) < 5)
-+		return 0;
-+
-+	suffix = name + strlen(name) - 5;
-+
-+	if (strncmp(suffix, ".json", 5) == 0)
-+		return 1;
-+	return 0;
-+}
-+
-+static int preprocess_arch_std_files(const char *fpath, const struct stat *sb,
-+				int typeflag, struct FTW *ftwbuf)
-+{
-+	int level = ftwbuf->level;
-+	int is_file = typeflag == FTW_F;
-+
-+	if (level == 1 && is_file && is_json_file(fpath))
-+		return json_events(fpath, save_arch_std_events, (void *)sb);
-+
-+	return 0;
-+}
-+
- static int process_one_file(const char *fpath, const struct stat *sb,
- 			    int typeflag, struct FTW *ftwbuf)
+ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 			struct hist_entry *he)
  {
-@@ -851,9 +999,7 @@ static int process_one_file(const char *fpath, const struct stat *sb,
- 	 * ignore it. It could be a readme.txt for instance.
- 	 */
- 	if (is_file) {
--		char *suffix = bname + strlen(bname) - 5;
--
--		if (strncmp(suffix, ".json", 5)) {
-+		if (!is_json_file(bname)) {
- 			pr_info("%s: Ignoring file without .json suffix %s\n", prog,
- 				fpath);
- 			return 0;
-@@ -959,12 +1105,26 @@ int main(int argc, char *argv[])
+@@ -1252,7 +1263,7 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	}
  
- 	maxfds = get_maxfds();
- 	mapfile = NULL;
-+	rc = nftw(ldirname, preprocess_arch_std_files, maxfds, 0);
-+	if (rc && verbose) {
-+		pr_info("%s: Error preprocessing arch standard files %s\n",
-+			prog, ldirname);
-+		goto empty_map;
-+	} else if (rc < 0) {
-+		/* Make build fail */
-+		free_arch_std_events();
-+		return 1;
-+	} else if (rc) {
-+		goto empty_map;
-+	}
+ static struct c2c_dimension dim_dcacheline = {
+-	.header		= HEADER_SPAN("--- Cacheline ----", "Address", 1),
++	.header		= HEADER_SPAN("--- Cacheline ----", "Address", 2),
+ 	.name		= "dcacheline",
+ 	.cmp		= dcacheline_cmp,
+ 	.entry		= dcacheline_entry,
+@@ -1267,10 +1278,18 @@ static struct c2c_dimension dim_dcacheline_node = {
+ 	.width		= 4,
+ };
+ 
+-static struct c2c_header header_offset_tui = HEADER_SPAN("-----", "Off", 1);
++static struct c2c_dimension dim_dcacheline_count = {
++	.header		= HEADER_LOW("PA cnt"),
++	.name		= "dcacheline_count",
++	.cmp		= empty_cmp,
++	.entry		= dcacheline_node_count,
++	.width		= 6,
++};
 +
- 	rc = nftw(ldirname, process_one_file, maxfds, 0);
- 	if (rc && verbose) {
- 		pr_info("%s: Error walking file tree %s\n", prog, ldirname);
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
- 		goto empty_map;
-@@ -989,5 +1149,6 @@ int main(int argc, char *argv[])
- empty_map:
- 	fclose(eventsfp);
- 	create_empty_mapping(output_file);
-+	free_arch_std_events();
- 	return 0;
- }
++static struct c2c_header header_offset_tui = HEADER_SPAN("-----", "Off", 2);
+ 
+ static struct c2c_dimension dim_offset = {
+-	.header		= HEADER_SPAN("--- Data address -", "Offset", 1),
++	.header		= HEADER_SPAN("--- Data address -", "Offset", 2),
+ 	.name		= "offset",
+ 	.cmp		= offset_cmp,
+ 	.entry		= offset_entry,
+@@ -1605,6 +1624,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
+ static struct c2c_dimension *dimensions[] = {
+ 	&dim_dcacheline,
+ 	&dim_dcacheline_node,
++	&dim_dcacheline_count,
+ 	&dim_offset,
+ 	&dim_offset_node,
+ 	&dim_iaddr,
+@@ -2496,7 +2516,8 @@ static int ui_quirks(void)
+ 
+ 	/* Fix the zero line for dcacheline column. */
+ 	buf = fill_line("Cacheline", dim_dcacheline.width +
+-				     dim_dcacheline_node.width + 2);
++				     dim_dcacheline_node.width +
++				     dim_dcacheline_count.width + 4);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -2504,7 +2525,8 @@ static int ui_quirks(void)
+ 
+ 	/* Fix the zero line for offset column. */
+ 	buf = fill_line(nodestr, dim_offset.width +
+-			      dim_offset_node.width + 2);
++			         dim_offset_node.width +
++				 dim_dcacheline_count.width + 4);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -2626,7 +2648,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 		"percent_lcl_hitm,"
+ 		"percent_stores_l1hit,"
+ 		"percent_stores_l1miss,"
+-		"offset,offset_node,",
++		"offset,offset_node,dcacheline_count,",
+ 		add_pid   ? "pid," : "",
+ 		add_tid   ? "tid," : "",
+ 		add_iaddr ? "iaddr," : "",
+@@ -2789,6 +2811,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 			"cl_idx,"
+ 			"dcacheline,"
+ 			"dcacheline_node,"
++			"dcacheline_count,"
+ 			"tot_recs,"
+ 			"percent_hitm,"
+ 			"tot_hitm,lcl_hitm,rmt_hitm,"
 -- 
 2.14.3
