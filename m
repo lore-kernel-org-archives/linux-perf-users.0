@@ -1,54 +1,95 @@
-From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf stat: Add support for s390 transaction counters
-Date: Wed, 14 Mar 2018 09:34:48 +0100
-Message-ID: <f7240f60-2a1d-58f9-8d6f-05d27557620a@linux.vnet.ibm.com>
-References: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
- <87tvtk64ld.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 2/2 v2] perf stat: Add support for flag T on s390
+Date: Wed, 14 Mar 2018 13:40:04 +0100
+Message-ID: <20180314124004.98937-2-tmricht@linux.vnet.ibm.com>
+References: <20180314124004.98937-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87tvtk64ld.fsf@linux.intel.com>
-Content-Language: en-IE
+In-Reply-To: <20180314124004.98937-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 03/13/2018 04:23 AM, Andi Kleen wrote:
-> Thomas Richter <tmricht@linux.vnet.ibm.com> writes:
-> 
->> Right now there is only hard coded support for x86.
-> 
-> That's not true. There is support for generic transaction events in perf.
-> 
-> As far as I can tell your events would map 1:1 to the generic tx-* events.
-> 
-> -Andi
-> 
+This patch adds support for command 'perf stat -T' on s390.
+It adds s390 specfic counter table for transactions.
+The architecture is queried and the event string for
+transaction counters is constructed
+depending on the s390 type and model CPU measurement
+facility counter list.
 
-I might be wrong, but when I look at function add_default_attributes()
-in file buildin-stat.c the string variables transaction_attrs
-and transaction_limited_attrs are used when flag T is specified on command line:
+Output Before:
+[root@s35lp76 perf]# perf stat -T -- sleep 1
+Cannot set up transaction events
+[root@s35lp76 perf]#
 
-/* Default events used for perf stat -T */
-static const char *transaction_attrs = {
-        "task-clock,"
-        "{"
-        "instructions,"
-        "cycles,"
-        "cpu/cycles-t/,"
-        "cpu/tx-start/,"
-        "cpu/el-start/,"
-        "cpu/cycles-ct/"
-        "}"
-};
+Output after:
+[root@s35lp76 perf]# ./perf stat -T -- sleep 1
 
-These PMU events show up on my x86 notebook but no on the s390.
-That's why I came to this conclusion. I have not tried other architectures.
+ Performance counter stats for 'sleep 1':
+
+   0.939985      task-clock (msec)         #    0.001 CPUs utilized
+  2,557,145      instructions              #    0.53  insn per cycle
+  4,785,929      cycles                    #    5.091 GHz
+          0      cpum_cf/TX_C_TABORT_NO_SPECIAL/ #    0.000 K/sec
+          0      cpum_cf/TX_C_TABORT_SPECIAL/ #    0.000 K/sec
+          0      cpum_cf/TX_C_TEND/        #    0.000 K/sec
+          0      cpum_cf/TX_NC_TABORT/     #    0.000 K/sec
+          0      cpum_cf/TX_NC_TEND/       #    0.000 K/sec
+
+  1.001934710 seconds time elapsed
+
+[root@s35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/builtin-stat.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 8d7b97c708e4..943ed3648049 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2162,10 +2162,40 @@ static struct pmu_tx_events x86_tx_events[] = {/* x86 transaction counters */
+ 	}
+ };
+ 
++static struct pmu_tx_events s390_tx_events[] = {/* s390 transaction counters */
++	{
++		.pmu = "cpum_cf",
++		.name = "TX_C_TABORT_NO_SPECIAL",
++	},
++	{
++		.pmu = "cpum_cf",
++		.name = "TX_C_TABORT_SPECIAL",
++	},
++	{
++		.pmu = "cpum_cf",
++		.name = "TX_C_TEND",
++	},
++	{
++		.pmu = "cpum_cf",
++		.name = "TX_NC_TABORT",
++	},
++	{
++		.pmu = "cpum_cf",
++		.name = "TX_NC_TEND",
++	},
++	{
++		.pmu = 0
++	}
++};
++
+ struct arch_pmu_tx_events {
+ 	const char *archname;		/* Architecture name */
+ 	struct pmu_tx_events *tx;	/* Architecture specific counters */
+ } arch_pmu_tx_events[] = {
++	{
++		.archname = "s390",
++		.tx = s390_tx_events
++	},
+ 	{
+ 		.archname = "x86",
+ 		.tx = x86_tx_events
 -- 
-Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.14.3
