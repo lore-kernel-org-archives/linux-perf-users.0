@@ -1,39 +1,54 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 18/31] perf vendor events arm64: Add
- armv8-recommended.json
-Date: Wed, 14 Mar 2018 08:17:51 +0100
-Message-ID: <20180314071751.aglkde77apjjffku@gmail.com>
-References: <20180313120508.29327-1-acme@kernel.org>
- <20180313120508.29327-19-acme@kernel.org>
- <20180313142618.36je6syqg6ppwhbp@gmail.com>
- <20180313182730.GA7987@kernel.org>
- <20180314015417.GB19781@kernel.org>
+From: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf stat: Add support for s390 transaction counters
+Date: Wed, 14 Mar 2018 09:34:48 +0100
+Message-ID: <f7240f60-2a1d-58f9-8d6f-05d27557620a@linux.vnet.ibm.com>
+References: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
+ <87tvtk64ld.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180314015417.GB19781@kernel.org>
+In-Reply-To: <87tvtk64ld.fsf@linux.intel.com>
+Content-Language: en-IE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will.deacon@arm.com>, William Cohen <wcohen@redhat.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Tue, Mar 13, 2018 at 03:27:30PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Mar 13, 2018 at 03:26:18PM +0100, Ingo Molnar escreveu:
-> > > That's not a valid SOB chain, author != first-Signed-off-by.
->  
-> > I removed that cset for now, can you please check if the
-> > perf-core-for-mingo-4.17-20180313-2 tag is allright?
+On 03/13/2018 04:23 AM, Andi Kleen wrote:
+> Thomas Richter <tmricht@linux.vnet.ibm.com> writes:
 > 
-> So, since there is this problem with powerpc and jevents, Ingo, please
-> hold on a bit more... Hopefully tomorrow things will be in a better
-> shape.
+>> Right now there is only hard coded support for x86.
+> 
+> That's not true. There is support for generic transaction events in perf.
+> 
+> As far as I can tell your events would map 1:1 to the generic tx-* events.
+> 
+> -Andi
+> 
 
-Sure, no problem!
+I might be wrong, but when I look at function add_default_attributes()
+in file buildin-stat.c the string variables transaction_attrs
+and transaction_limited_attrs are used when flag T is specified on command line:
 
-Thanks,
+/* Default events used for perf stat -T */
+static const char *transaction_attrs = {
+        "task-clock,"
+        "{"
+        "instructions,"
+        "cycles,"
+        "cpu/cycles-t/,"
+        "cpu/tx-start/,"
+        "cpu/el-start/,"
+        "cpu/cycles-ct/"
+        "}"
+};
 
-	Ingo
+These PMU events show up on my x86 notebook but no on the s390.
+That's why I came to this conclusion. I have not tried other architectures.
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
