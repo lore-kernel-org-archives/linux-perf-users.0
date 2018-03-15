@@ -1,31 +1,38 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] perf stat: Add support for s390 transaction counters
-Date: Wed, 14 Mar 2018 10:31:28 -0700
-Message-ID: <20180314173128.GH13724@tassilo.jf.intel.com>
-References: <20180312103807.45069-1-tmricht@linux.vnet.ibm.com>
- <87tvtk64ld.fsf@linux.intel.com>
- <f7240f60-2a1d-58f9-8d6f-05d27557620a@linux.vnet.ibm.com>
- <20180314131850.GA27335@kernel.org>
- <a863f62d-e460-639a-b69b-3437b9d4e4c5@linux.vnet.ibm.com>
- <20180314154317.GG13724@tassilo.jf.intel.com>
- <20180314164236.GB5297@linux.vnet.ibm.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] perf trace: __print_array should print hex format
+ instead of dec
+Date: Thu, 15 Mar 2018 13:20:25 -0400
+Message-ID: <20180315132025.5825df8c@vmware.local.home>
+References: <1520937557-24895-1-git-send-email-changbin.du@intel.com>
+        <20180313142732.GA29837@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180314164236.GB5297@linux.vnet.ibm.com>
+In-Reply-To: <20180313142732.GA29837@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Thomas-Mich Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: changbin.du@intel.com, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, yan.y.zhao@intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-> Displaying these different types for s390 is important from my point of
-> view.  Of course, I could create a mapping of TX_NC_TABORT/TX_NC_TEND
-> to tx-commit/tx-abort.  The remaining events would still appear to be specific
-> to the cpum_cf.
+On Tue, 13 Mar 2018 11:27:32 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-If you want more generic metrics you can just use the new json generic metrics /
-metric group support in the eventlist. In fact if we did it today I wouldn't
-add perf stat -T at all, but just use that.
+> Em Tue, Mar 13, 2018 at 06:39:17PM +0800, changbin.du@intel.com escreveu:
+> > From: Changbin Du <changbin.du@intel.com>
+> > 
+> > The token '__print_array' is to print the array in hex format, but not
+> > decimal numbers. The implementation of __print_array in kernel side is:
+> > __print_array()->trace_print_array_seq()
+> > 
+> > This patch align the perf's behavior with kernel so we have a consistent
+> > event format.  
+> 
+> Look ok, i.e. makes the userspace formatting do what the equivalent
+> kernel code does, Rostedt, Ack?
+> 
 
--Andi
+Thanks for sending this to me. I'll see how it affects trace-cmd, and
+let you know.
+
+-- Steve
