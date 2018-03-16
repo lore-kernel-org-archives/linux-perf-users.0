@@ -1,49 +1,100 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf trace: __print_array should print hex format
- instead of dec
-Date: Thu, 15 Mar 2018 14:49:50 -0300
-Message-ID: <20180315174950.GF3690@kernel.org>
-References: <1520937557-24895-1-git-send-email-changbin.du@intel.com>
- <20180313142732.GA29837@kernel.org>
- <20180315132025.5825df8c@vmware.local.home>
- <20180315133156.3389b762@vmware.local.home>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] perf-probe: Fix to convert array type collectly
+Date: Fri, 16 Mar 2018 16:25:47 +0900
+Message-ID: <152118514751.28861.9842632501370007663.stgit@devbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180315133156.3389b762@vmware.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: changbin.du@intel.com, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, yan.y.zhao@intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, stable@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Mar 15, 2018 at 01:31:56PM -0400, Steven Rostedt escreveu:
-> On Thu, 15 Mar 2018 13:20:25 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Tue, 13 Mar 2018 11:27:32 -0300
-> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > 
-> > > Em Tue, Mar 13, 2018 at 06:39:17PM +0800, changbin.du@intel.com escreveu:  
-> > > > From: Changbin Du <changbin.du@intel.com>
-> > > > 
-> > > > The token '__print_array' is to print the array in hex format, but not
-> > > > decimal numbers. The implementation of __print_array in kernel side is:
-> > > > __print_array()->trace_print_array_seq()
-> > > > 
-> > > > This patch align the perf's behavior with kernel so we have a consistent
-> > > > event format.    
-> > > 
-> > > Look ok, i.e. makes the userspace formatting do what the equivalent
-> > > kernel code does, Rostedt, Ack?
-> > >   
-> > 
-> > Thanks for sending this to me. I'll see how it affects trace-cmd, and
-> > let you know.
-> >
-> 
-> Looks good!
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fix to convert array element type collectly.
+Current perf-probe converts the type of array-elements
+incorrectly. It always converts the types as a pointer
+of array. This passes the "array" type DIE to the type
+converter so that it can get correct "element of array"
+type DIE from it.
 
-thanks, applying
+E.g.
+  ====
+  $ cat hello.c
+  #include <stdio.h>
+
+  void foo(int a[])
+  {
+	  printf("%d\n", a[1]);
+  }
+
+  void main()
+  {
+	  int a[3] = {4, 5, 6};
+	  printf("%d\n", a[0]);
+	  foo(a);
+  }
+
+  $ gcc -g hello.c -o hello
+  $ perf probe -x ./hello -D "foo a[1]"
+  ====
+
+Without this fix, above outputs
+  ====
+  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):u64
+  ====
+The "u64" means "int *", but a[1] is "int".
+
+With this,
+  ====
+  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):s32
+  ====
+So, "int" correctly converted to "s32"
+
+Fixes: b2a3c12b7442 ("perf probe: Support tracing an entry of array")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ tools/perf/util/probe-finder.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index a5731de0e5eb..c37fbef1711d 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -423,20 +423,20 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 		pr_warning("Failed to get the type of %s.\n", varname);
+ 		return -ENOENT;
+ 	}
+-	pr_debug2("Var real type: (%x)\n", (unsigned)dwarf_dieoffset(&type));
++	pr_debug2("Var real type: %s (%x)\n", dwarf_diename(&type),
++		  (unsigned)dwarf_dieoffset(&type));
+ 	tag = dwarf_tag(&type);
+ 
+ 	if (field->name[0] == '[' &&
+ 	    (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)) {
+-		if (field->next)
+-			/* Save original type for next field */
+-			memcpy(die_mem, &type, sizeof(*die_mem));
++		/* Save original type for next field or type */
++		memcpy(die_mem, &type, sizeof(*die_mem));
+ 		/* Get the type of this array */
+ 		if (die_get_real_type(&type, &type) == NULL) {
+ 			pr_warning("Failed to get the type of %s.\n", varname);
+ 			return -ENOENT;
+ 		}
+-		pr_debug2("Array real type: (%x)\n",
++		pr_debug2("Array real type: %s (%x)\n", dwarf_diename(&type),
+ 			 (unsigned)dwarf_dieoffset(&type));
+ 		if (tag == DW_TAG_pointer_type) {
+ 			ref = zalloc(sizeof(struct probe_trace_arg_ref));
+@@ -448,9 +448,6 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 				*ref_ptr = ref;
+ 		}
+ 		ref->offset += dwarf_bytesize(&type) * field->index;
+-		if (!field->next)
+-			/* Save vr_die for converting types */
+-			memcpy(die_mem, vr_die, sizeof(*die_mem));
+ 		goto next;
+ 	} else if (tag == DW_TAG_pointer_type) {
+ 		/* Check the pointer and dereference */
