@@ -1,100 +1,50 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] perf-probe: Fix to convert array type collectly
-Date: Fri, 16 Mar 2018 16:25:47 +0900
-Message-ID: <152118514751.28861.9842632501370007663.stgit@devbox>
+From: "Du, Changbin" <changbin.du@intel.com>
+Subject: Re: [PATCH] perf trace: remove redundant ')'
+Date: Fri, 16 Mar 2018 15:51:09 +0800
+Message-ID: <20180316075108.xwenvklz3a6scodh@intel.com>
+References: <1520937601-24952-1-git-send-email-changbin.du@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1520937601-24952-1-git-send-email-changbin.du@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, stable@vger.kernel.org
+To: changbin.du@intel.com
+Cc: acme@kernel.org, jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Fix to convert array element type collectly.
-Current perf-probe converts the type of array-elements
-incorrectly. It always converts the types as a pointer
-of array. This passes the "array" type DIE to the type
-converter so that it can get correct "element of array"
-type DIE from it.
+Hi Arnaldo, How about this simple one? Thanks.
 
-E.g.
-  ====
-  $ cat hello.c
-  #include <stdio.h>
+On Tue, Mar 13, 2018 at 06:40:01PM +0800, changbin.du@intel.com wrote:
+> From: Changbin Du <changbin.du@intel.com>
+> 
+> There is a redundant ')' at the tail of each event. So remove it.
+> $ sudo perf trace --no-syscalls -e 'kmem:*' -a
+>    899.342 kmem:kfree:(vfs_writev+0xb9) call_site=ffffffff9c453979 ptr=(nil))
+>    899.344 kmem:kfree:(___sys_recvmsg+0x188) call_site=ffffffff9c9b8b88 ptr=(nil))
+> 
+> Signed-off-by: Changbin Du <changbin.du@intel.com>
+> ---
+>  tools/perf/builtin-trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index e7f1b18..7273f5f 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1959,7 +1959,7 @@ static int trace__event_handler(struct trace *trace, struct perf_evsel *evsel,
+>  				      trace->output);
+>  	}
+>  
+> -	fprintf(trace->output, ")\n");
+> +	fprintf(trace->output, "\n");
+>  
+>  	if (callchain_ret > 0)
+>  		trace__fprintf_callchain(trace, sample);
+> -- 
+> 2.7.4
+> 
 
-  void foo(int a[])
-  {
-	  printf("%d\n", a[1]);
-  }
-
-  void main()
-  {
-	  int a[3] = {4, 5, 6};
-	  printf("%d\n", a[0]);
-	  foo(a);
-  }
-
-  $ gcc -g hello.c -o hello
-  $ perf probe -x ./hello -D "foo a[1]"
-  ====
-
-Without this fix, above outputs
-  ====
-  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):u64
-  ====
-The "u64" means "int *", but a[1] is "int".
-
-With this,
-  ====
-  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):s32
-  ====
-So, "int" correctly converted to "s32"
-
-Fixes: b2a3c12b7442 ("perf probe: Support tracing an entry of array")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- tools/perf/util/probe-finder.c |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index a5731de0e5eb..c37fbef1711d 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -423,20 +423,20 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		pr_warning("Failed to get the type of %s.\n", varname);
- 		return -ENOENT;
- 	}
--	pr_debug2("Var real type: (%x)\n", (unsigned)dwarf_dieoffset(&type));
-+	pr_debug2("Var real type: %s (%x)\n", dwarf_diename(&type),
-+		  (unsigned)dwarf_dieoffset(&type));
- 	tag = dwarf_tag(&type);
- 
- 	if (field->name[0] == '[' &&
- 	    (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)) {
--		if (field->next)
--			/* Save original type for next field */
--			memcpy(die_mem, &type, sizeof(*die_mem));
-+		/* Save original type for next field or type */
-+		memcpy(die_mem, &type, sizeof(*die_mem));
- 		/* Get the type of this array */
- 		if (die_get_real_type(&type, &type) == NULL) {
- 			pr_warning("Failed to get the type of %s.\n", varname);
- 			return -ENOENT;
- 		}
--		pr_debug2("Array real type: (%x)\n",
-+		pr_debug2("Array real type: %s (%x)\n", dwarf_diename(&type),
- 			 (unsigned)dwarf_dieoffset(&type));
- 		if (tag == DW_TAG_pointer_type) {
- 			ref = zalloc(sizeof(struct probe_trace_arg_ref));
-@@ -448,9 +448,6 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				*ref_ptr = ref;
- 		}
- 		ref->offset += dwarf_bytesize(&type) * field->index;
--		if (!field->next)
--			/* Save vr_die for converting types */
--			memcpy(die_mem, vr_die, sizeof(*die_mem));
- 		goto next;
- 	} else if (tag == DW_TAG_pointer_type) {
- 		/* Check the pointer and dereference */
+-- 
+Thanks,
+Changbin Du
