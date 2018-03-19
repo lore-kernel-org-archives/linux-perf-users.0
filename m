@@ -1,110 +1,85 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/14] perf probe: Use right type to access array elements
-Date: Mon, 19 Mar 2018 16:01:34 -0300
-Message-ID: <20180319190136.7441-13-acme@kernel.org>
+Subject: [PATCH 09/14] perf tools: Fix python extension build for gcc 8
+Date: Mon, 19 Mar 2018 16:01:31 -0300
+Message-ID: <20180319190136.7441-10-acme@kernel.org>
 References: <20180319190136.7441-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180319190136.7441-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kselftest@vger.kernel.org, linux-trace-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Current 'perf probe' converts the type of array-elements incorrectly. It
-always converts the types as a pointer of array. This passes the "array"
-type DIE to the type converter so that it can get correct "element of
-array" type DIE from it.
+The gcc 8 compiler won't compile the python extension code with the
+following errors (one example):
 
-E.g.
-  ====
-  $ cat hello.c
-  #include <stdio.h>
+  python.c:830:15: error: cast between incompatible  function types from              \
+  ‘PyObject * (*)(struct pyrf_evsel *, PyObject *, PyObject *)’                       \
+  uct _object * (*)(struct pyrf_evsel *, struct _object *, struct _object *)’} to     \
+  ‘PyObject * (*)(PyObject *, PyObject *)’ {aka ‘struct _object * (*)(struct _objeuct \
+  _object *)’} [-Werror=cast-function-type]
+     .ml_meth  = (PyCFunction)pyrf_evsel__open,
 
-  void foo(int a[])
-  {
-	  printf("%d\n", a[1]);
-  }
+The problem with the PyMethodDef::ml_meth callback is that its type is
+determined based on the PyMethodDef::ml_flags value, which we set as
+METH_VARARGS | METH_KEYWORDS.
 
-  void main()
-  {
-	  int a[3] = {4, 5, 6};
-	  printf("%d\n", a[0]);
-	  foo(a);
-  }
+That indicates that the callback is expecting an extra PyObject* arg, and is
+actually PyCFunctionWithKeywords type, but the base PyMethodDef::ml_meth type
+stays PyCFunction.
 
-  $ gcc -g hello.c -o hello
-  $ perf probe -x ./hello -D "foo a[1]"
-  ====
+Previous gccs did not find this, gcc8 now does. Fixing this by silencing this
+warning for python.c build.
 
-Without this fix, above outputs
-  ====
-  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):u64
-  ====
-The "u64" means "int *", but a[1] is "int".
+Commiter notes:
 
-With this,
-  ====
-  p:probe_hello/foo /tmp/hello:0x4d3 a=+4(-8(%bp)):s32
-  ====
-So, "int" correctly converted to "s32"
+Do not do that for CC=clang, as it breaks the build in some clang
+versions, like the ones in fedora up to fedora27:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+  fedora:25:error: unknown warning option '-Wno-cast-function-type'; did you mean '-Wno-bad-function-cast'? [-Werror,-Wunknown-warning-option]
+  fedora:26:error: unknown warning option '-Wno-cast-function-type'; did you mean '-Wno-bad-function-cast'? [-Werror,-Wunknown-warning-option]
+  fedora:27:error: unknown warning option '-Wno-cast-function-type'; did you mean '-Wno-bad-function-cast'? [-Werror,-Wunknown-warning-option]
+  #
+
+those have:
+
+  clang version 3.9.1 (tags/RELEASE_391/final)
+
+The one in rawhide accepts that:
+
+  clang version 6.0.0 (tags/RELEASE_600/final)
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-trace-users@vger.kernel.org
-Fixes: b2a3c12b7442 ("perf probe: Support tracing an entry of array")
-Link: http://lkml.kernel.org/r/152129114502.31874.2474068470011496356.stgit@devbox
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Link: http://lkml.kernel.org/r/20180319082902.4518-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index a5731de0e5eb..c37fbef1711d 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -423,20 +423,20 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		pr_warning("Failed to get the type of %s.\n", varname);
- 		return -ENOENT;
- 	}
--	pr_debug2("Var real type: (%x)\n", (unsigned)dwarf_dieoffset(&type));
-+	pr_debug2("Var real type: %s (%x)\n", dwarf_diename(&type),
-+		  (unsigned)dwarf_dieoffset(&type));
- 	tag = dwarf_tag(&type);
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 6891635b50c3..001be4f9d3b9 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -28,6 +28,8 @@ class install_lib(_install_lib):
+ cflags = getenv('CFLAGS', '').split()
+ # switch off several checks (need to be at the end of cflags list)
+ cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter' ]
++if cc != "clang":
++    cflags += ['-Wno-cast-function-type' ]
  
- 	if (field->name[0] == '[' &&
- 	    (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)) {
--		if (field->next)
--			/* Save original type for next field */
--			memcpy(die_mem, &type, sizeof(*die_mem));
-+		/* Save original type for next field or type */
-+		memcpy(die_mem, &type, sizeof(*die_mem));
- 		/* Get the type of this array */
- 		if (die_get_real_type(&type, &type) == NULL) {
- 			pr_warning("Failed to get the type of %s.\n", varname);
- 			return -ENOENT;
- 		}
--		pr_debug2("Array real type: (%x)\n",
-+		pr_debug2("Array real type: %s (%x)\n", dwarf_diename(&type),
- 			 (unsigned)dwarf_dieoffset(&type));
- 		if (tag == DW_TAG_pointer_type) {
- 			ref = zalloc(sizeof(struct probe_trace_arg_ref));
-@@ -448,9 +448,6 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				*ref_ptr = ref;
- 		}
- 		ref->offset += dwarf_bytesize(&type) * field->index;
--		if (!field->next)
--			/* Save vr_die for converting types */
--			memcpy(die_mem, vr_die, sizeof(*die_mem));
- 		goto next;
- 	} else if (tag == DW_TAG_pointer_type) {
- 		/* Check the pointer and dereference */
+ src_perf  = getenv('srctree') + '/tools/perf'
+ build_lib = getenv('PYTHON_EXTBUILD_LIB')
 -- 
 2.14.3
