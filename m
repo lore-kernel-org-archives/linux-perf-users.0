@@ -1,136 +1,47 @@
-From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Subject: [PATCH] perf list: Add s390 support for detailed/verbose pmu event description
-Date: Wed, 21 Mar 2018 07:53:53 +0100
-Message-ID: <20180321065353.102797-1-tmricht@linux.vnet.ibm.com>
+From: Martin Vuille <jpmv27@aim.com>
+Subject: Re: [PATCH RESEND] perf annotate: Don't prepend symfs path to
+ build_id_filename
+Date: Fri, 23 Mar 2018 08:16:57 -0400
+Message-ID: <3f18ff8d-ef93-a48c-2f27-c8780edc1bf7@aim.com>
+References: <20180313135618.2900-1-jpmv27@aim.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180313135618.2900-1-jpmv27@aim.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Perf list with flags -d and -v print a description (-d) or
-a very verbose explanation (-v) of CPU specific counter events.
-These descriptions are provided with the json files in
-directory pmu-events/arch/s390/*.json.
+Ping?
 
-Display of these descriptions on s390 requires the
-corresponding json files.
 
-On s390 this does not work because function is_pmu_core()
-does not detect the s390 directory name where the
-CPU specific events are listed. On x86 it is
-  /sys/bus/event_source/devices/cpu
-whereas on s390 it is
-  /sys/bus/event_source/devices/cpum_cf
-  /sys/bus/event_source/devices/cpum_sf
-
-Fix this by adding s390 directory name testing to
-function is_pmu_core(). This is the same approach as taken for
-arm platform.
-
-Output before:
-[root@s35lp76 perf]# ./perf list -d pmu
-List of pre-defined events (to be used in -e):
-
-  cpum_cf/AES_BLOCKED_CYCLES/      [Kernel PMU event]
-  cpum_cf/AES_BLOCKED_FUNCTIONS/   [Kernel PMU event]
-  cpum_cf/AES_CYCLES/              [Kernel PMU event]
-  cpum_cf/AES_FUNCTIONS/           [Kernel PMU event]
-  ....
-  cpum_cf/TX_NC_TEND/              [Kernel PMU event]
-  cpum_cf/VX_BCD_EXECUTION_SLOTS/  [Kernel PMU event]
-  cpum_sf/SF_CYCLES_BASIC/         [Kernel PMU event]
-
-Output after:
-[root@s35lp76 perf]# ./perf list -d pmu
-List of pre-defined events (to be used in -e):
-
-  cpum_cf/AES_BLOCKED_CYCLES/      [Kernel PMU event]
-  cpum_cf/AES_BLOCKED_FUNCTIONS/   [Kernel PMU event]
-  cpum_cf/AES_CYCLES/              [Kernel PMU event]
-  cpum_cf/AES_FUNCTIONS/           [Kernel PMU event]
-  ....
-  cpum_cf/TX_NC_TEND/              [Kernel PMU event]
-  cpum_cf/VX_BCD_EXECUTION_SLOTS/  [Kernel PMU event]
-  cpum_sf/SF_CYCLES_BASIC/         [Kernel PMU event]
-
-3906:
-  bcd_dfp_execution_slots
-       [BCD DFP Execution Slots]
-  decimal_instructions
-       [Decimal Instructions]
-  dtlb2_gpage_writes
-       [DTLB2 GPAGE Writes]
-  dtlb2_hpage_writes
-       [DTLB2 HPAGE Writes]
-  dtlb2_misses
-       [DTLB2 Misses]
-  dtlb2_writes
-       [DTLB2 Writes]
-  itlb2_misses
-       [ITLB2 Misses]
-  itlb2_writes
-       [ITLB2 Writes]
-  l1c_tlb2_misses
-       [L1C TLB2 Misses]
-  .....
-
-cfvn 3:
-  cpu_cycles
-       [CPU Cycles]
-  instructions
-       [Instructions]
-  l1d_dir_writes
-       [L1D Directory Writes]
-  l1d_penalty_cycles
-       [L1D Penalty Cycles]
-  l1i_dir_writes
-       [L1I Directory Writes]
-  l1i_penalty_cycles
-       [L1I Penalty Cycles]
-  problem_state_cpu_cycles
-       [Problem State CPU Cycles]
-  problem_state_instructions
-       [Problem State Instructions]
-  ....
-
-csvn generic:
-  aes_blocked_cycles
-       [AES Blocked Cycles]
-  aes_blocked_functions
-       [AES Blocked Functions]
-  aes_cycles
-       [AES Cycles]
-  aes_functions
-       [AES Functions]
-  dea_blocked_cycles
-       [DEA Blocked Cycles]
-  dea_blocked_functions
-       [DEA Blocked Functions]
-  ....
-
-Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
----
- tools/perf/util/pmu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 1111d5bf15ca..8675ddf558c6 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -562,6 +562,12 @@ static int is_pmu_core(const char *name)
- 	if (stat(path, &st) == 0)
- 		return 1;
- 
-+	/* Look for cpu sysfs (specific to s390) */
-+	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s",
-+		  sysfs, name);
-+	if (stat(path, &st) == 0)
-+		return 1;
-+
- 	return 0;
- }
- 
--- 
-2.14.3
+On 03/13/18 09:56, Martin Vuille wrote:
+> build_id_filename already contains symfs path if applicable, so
+> don't prepend it a second time.
+>
+> - dso__build_id_filename calls build_id_cache__linkname
+> - build_id_cache__linkname uses buildid_dir
+> - when symfs option is specified, symbol__config_symfs sets
+>    buildid_dir to include the symfs directory
+>
+> Signed-off-by: Martin Vuille <jpmv27@aim.com>
+> ---
+>   tools/perf/util/annotate.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 007170efa014..0b78cc4fb155 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1381,7 +1381,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+>   
+>   	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+>   	if (build_id_filename) {
+> -		__symbol__join_symfs(filename, filename_size, build_id_filename);
+> +		scnprintf(filename, filename_size, "%s", build_id_filename);
+>   		free(build_id_filename);
+>   	} else {
+>   		if (dso->has_build_id)
