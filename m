@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/44] perf annotate: Introduce annotation_line__print_start() out of TUI code
-Date: Sat, 24 Mar 2018 17:01:53 -0300
-Message-ID: <20180324200211.21326-27-acme@kernel.org>
+Subject: [PATCH 23/44] perf annotate: Introduce symbol__annotate2 method
+Date: Sat, 24 Mar 2018 17:01:50 -0300
+Message-ID: <20180324200211.21326-24-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
@@ -12,9 +12,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For the --tui and --stdio2 cases using callbacks for print() and
-set_percent_color() end up being the easiest path, real GUI remains as
-an exercise.
+That does all the extended boilerplate the TUI browser did, leaving the
+symbol__annotate() function to be used by the old --stdio output mode.
+
+Now the upcoming --stdio2 output mode should just use this one to set
+things up.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -23,225 +25,145 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-1o7az1ng55g2g6ppr2jpeuct@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-e2x8wuf6gvdhzdryo229vj4i@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 82 ++++++++++-----------------------------
- tools/perf/util/annotate.c        | 75 +++++++++++++++++++++++++++++++++++
- tools/perf/util/annotate.h        |  5 +++
- 3 files changed, 101 insertions(+), 61 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 28 +---------------------------
+ tools/perf/util/annotate.c        | 39 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/annotate.h        |  4 ++++
+ 3 files changed, 44 insertions(+), 27 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 05f79f36e906..9b77a016e299 100644
+index 06ad5ecaa67a..ab21739f27ae 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -105,6 +105,20 @@ static void disasm_line__write(struct disasm_line *dl, struct ui_browser *browse
- 	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset);
- }
- 
-+static void annotate_browser__set_percent_color(void *browser, double percent, bool current)
-+{
-+	ui_browser__set_percent_color(browser, percent, current);
-+}
-+
-+static void annotate_browser__printf(void *browser, const char *fmt, ...)
-+{
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	ui_browser__vprintf(browser, fmt, args);
-+	va_end(args);
-+}
-+
- static void annotate_browser__write(struct ui_browser *browser, void *entry, int row)
+@@ -910,7 +910,6 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			 struct hist_browser_timer *hbt)
  {
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
-@@ -115,65 +129,13 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 			     (!current_entry || (browser->use_navkeypressed &&
- 					         !browser->navkeypressed)));
- 	int width = browser->width, printed;
--	int i, pcnt_width = annotation__pcnt_width(notes),
--	       cycles_width = annotation__cycles_width(notes);
--	double percent_max = annotation_line__max_percent(al, notes);
-+	int pcnt_width = annotation__pcnt_width(notes),
-+	    cycles_width = annotation__cycles_width(notes);
- 	char bf[256];
--	bool show_title = false;
--
--	if ((row == 0) && (al->offset == -1 || percent_max == 0.0)) {
--		if (notes->have_cycles) {
--			if (al->ipc == 0.0 && al->cycles == 0)
--				show_title = true;
--		} else
--			show_title = true;
--	}
--
--	if (al->offset != -1 && percent_max != 0.0) {
--		for (i = 0; i < notes->nr_events; i++) {
--			ui_browser__set_percent_color(browser,
--						al->samples[i].percent,
--						current_entry);
--			if (notes->options->show_total_period) {
--				ui_browser__printf(browser, "%11" PRIu64 " ",
--						   al->samples[i].he.period);
--			} else if (notes->options->show_nr_samples) {
--				ui_browser__printf(browser, "%6" PRIu64 " ",
--						   al->samples[i].he.nr_samples);
--			} else {
--				ui_browser__printf(browser, "%6.2f ",
--						   al->samples[i].percent);
--			}
--		}
--	} else {
--		ui_browser__set_percent_color(browser, 0, current_entry);
--
--		if (!show_title)
--			ui_browser__write_nstring(browser, " ", pcnt_width);
--		else {
--			ui_browser__printf(browser, "%*s", pcnt_width,
--					   notes->options->show_total_period ? "Period" :
--					   notes->options->show_nr_samples ? "Samples" : "Percent");
--		}
--	}
--	if (notes->have_cycles) {
--		if (al->ipc)
--			ui_browser__printf(browser, "%*.2f ", ANNOTATION__IPC_WIDTH - 1, al->ipc);
--		else if (!show_title)
--			ui_browser__write_nstring(browser, " ", ANNOTATION__IPC_WIDTH);
--		else
--			ui_browser__printf(browser, "%*s ", ANNOTATION__IPC_WIDTH - 1, "IPC");
--
--		if (al->cycles)
--			ui_browser__printf(browser, "%*" PRIu64 " ",
--					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles);
--		else if (!show_title)
--			ui_browser__write_nstring(browser, " ", ANNOTATION__CYCLES_WIDTH);
--		else
--			ui_browser__printf(browser, "%*s ", ANNOTATION__CYCLES_WIDTH - 1, "Cycle");
--	}
+ 	struct annotation *notes = symbol__annotation(sym);
+-	size_t size;
+ 	struct map_symbol ms = {
+ 		.map = map,
+ 		.sym = sym,
+@@ -926,28 +925,14 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 		},
+ 	};
+ 	int ret = -1, err;
+-	int nr_pcnt = 1;
  
--	SLsmg_write_char(' ');
-+	annotation_line__print_start(al, notes, row == 0, current_entry, browser,
-+				     annotate_browser__set_percent_color,
-+				     annotate_browser__printf);
+ 	if (sym == NULL)
+ 		return -1;
  
- 	/* The scroll bar isn't being used */
- 	if (!browser->navkeypressed)
-@@ -183,11 +145,9 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 		ui_browser__write_nstring(browser, " ", width - pcnt_width - cycles_width);
- 	else if (al->offset == -1) {
- 		if (al->line_nr && notes->options->show_linenr)
--			printed = scnprintf(bf, sizeof(bf), "%-*d ",
--					notes->widths.addr + 1, al->line_nr);
-+			printed = scnprintf(bf, sizeof(bf), "%-*d ", notes->widths.addr + 1, al->line_nr);
- 		else
--			printed = scnprintf(bf, sizeof(bf), "%*s  ",
--				    notes->widths.addr, " ");
-+			printed = scnprintf(bf, sizeof(bf), "%*s  ", notes->widths.addr, " ");
- 		ui_browser__write_nstring(browser, bf, printed);
- 		ui_browser__write_nstring(browser, al->line, width - printed - pcnt_width - cycles_width + 1);
- 	} else {
+-	size = symbol__size(sym);
+-
+ 	if (map->dso->annotate_warned)
+ 		return -1;
+ 
+-	notes->options = &annotate_browser__opts;
+-
+-	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
+-	if (notes->offsets == NULL) {
+-		ui__error("Not enough memory!");
+-		return -1;
+-	}
+-
+-	if (perf_evsel__is_group_event(evsel))
+-		nr_pcnt = evsel->nr_members;
+-
+-	err = symbol__annotate(sym, map, evsel, 0, &browser.arch);
++	err = symbol__annotate2(sym, map, evsel, &annotate_browser__opts, &browser.arch);
+ 	if (err) {
+ 		char msg[BUFSIZ];
+ 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
+@@ -955,18 +940,9 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 		goto out_free_offsets;
+ 	}
+ 
+-	symbol__calc_percent(sym, evsel);
+-
+ 	ui_helpline__push("Press ESC to exit");
+ 
+-	notes->start = map__rip_2objdump(map, sym->start);
+-
+-	annotation__set_offsets(notes, size);
+ 	browser.b.width = notes->max_line_len;
+-	annotation__mark_jump_targets(notes, sym);
+-	annotation__compute_ipc(notes, size);
+-	annotation__init_column_widths(notes, sym);
+-	notes->nr_events = nr_pcnt;
+ 	browser.b.nr_entries = notes->nr_entries;
+ 	browser.b.entries = &notes->src->source,
+ 	browser.b.width += 18; /* Percentage */
+@@ -974,8 +950,6 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 	if (notes->options->hide_src_code)
+ 		ui_browser__init_asm_mode(&browser.b);
+ 
+-	annotation__update_column_widths(notes);
+-
+ 	ret = annotate_browser__run(&browser, evsel, hbt);
+ 
+ 	annotated_source__purge(notes->src);
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 3bd6f9b0147f..046feda11052 100644
+index 9c05b534f428..7ad6400a0d4f 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -2198,6 +2198,81 @@ double annotation_line__max_percent(struct annotation_line *al, struct annotatio
- 	return percent_max;
- }
- 
-+static void set_percent_color_stub(void *obj __maybe_unused,
-+				   double percent __maybe_unused,
-+				   bool current __maybe_unused)
-+{
-+}
-+
-+void annotation_line__print_start(struct annotation_line *al, struct annotation *notes,
-+				  bool first_line, bool current_entry,
-+				  void *obj,
-+				  void (*obj__set_percent_color)(void *obj, double percent, bool current),
-+				  void (*obj__printf)(void *obj, const char *fmt, ...))
-+{
-+	double percent_max = annotation_line__max_percent(al, notes);
-+	bool show_title = false;
-+
-+	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
-+		if (notes->have_cycles) {
-+			if (al->ipc == 0.0 && al->cycles == 0)
-+				show_title = true;
-+		} else
-+			show_title = true;
-+	}
-+
-+	if (!obj__set_percent_color)
-+		obj__set_percent_color = set_percent_color_stub;
-+
-+	if (al->offset != -1 && percent_max != 0.0) {
-+		int i;
-+
-+		for (i = 0; i < notes->nr_events; i++) {
-+			obj__set_percent_color(obj, al->samples[i].percent, current_entry);
-+			if (notes->options->show_total_period) {
-+				obj__printf(obj, "%11" PRIu64 " ", al->samples[i].he.period);
-+			} else if (notes->options->show_nr_samples) {
-+				obj__printf(obj, "%6" PRIu64 " ",
-+						   al->samples[i].he.nr_samples);
-+			} else {
-+				obj__printf(obj, "%6.2f ",
-+						   al->samples[i].percent);
-+			}
-+		}
-+	} else {
-+		int pcnt_width = annotation__pcnt_width(notes);
-+
-+		obj__set_percent_color(obj, 0, current_entry);
-+
-+		if (!show_title)
-+			obj__printf(obj, "%*s", pcnt_width, " ");
-+		else {
-+			obj__printf(obj, "%*s", pcnt_width,
-+					   notes->options->show_total_period ? "Period" :
-+					   notes->options->show_nr_samples ? "Samples" : "Percent");
-+		}
-+	}
-+
-+	if (notes->have_cycles) {
-+		if (al->ipc)
-+			obj__printf(obj, "%*.2f ", ANNOTATION__IPC_WIDTH - 1, al->ipc);
-+		else if (!show_title)
-+			obj__printf(obj, "%*s", ANNOTATION__IPC_WIDTH, " ");
-+		else
-+			obj__printf(obj, "%*s ", ANNOTATION__IPC_WIDTH - 1, "IPC");
-+
-+		if (al->cycles)
-+			obj__printf(obj, "%*" PRIu64 " ",
-+					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles);
-+		else if (!show_title)
-+			obj__printf(obj, "%*s", ANNOTATION__CYCLES_WIDTH, " ");
-+		else
-+			obj__printf(obj, "%*s ", ANNOTATION__CYCLES_WIDTH - 1, "Cycle");
-+	}
-+
-+	obj__printf(obj, " ");
-+}
-+
- int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *evsel,
- 		      struct annotation_options *options, struct arch **parch)
+@@ -2183,3 +2183,42 @@ bool ui__has_annotation(void)
  {
+ 	return use_browser == 1 && perf_hpp_list.sym;
+ }
++
++int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *evsel,
++		      struct annotation_options *options, struct arch **parch)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	size_t size = symbol__size(sym);
++	int nr_pcnt = 1, err;
++
++	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
++	if (notes->offsets == NULL)
++		return -1;
++
++	if (perf_evsel__is_group_event(evsel))
++		nr_pcnt = evsel->nr_members;
++
++	err = symbol__annotate(sym, map, evsel, 0, parch);
++	if (err)
++		goto out_free_offsets;
++
++	notes->options = options;
++
++	symbol__calc_percent(sym, evsel);
++
++	notes->start = map__rip_2objdump(map, sym->start);
++
++	annotation__set_offsets(notes, size);
++	annotation__mark_jump_targets(notes, sym);
++	annotation__compute_ipc(notes, size);
++	annotation__init_column_widths(notes, sym);
++	notes->nr_events = nr_pcnt;
++
++	annotation__update_column_widths(notes);
++
++	return 0;
++
++out_free_offsets:
++	zfree(&notes->offsets);
++	return -1;
++}
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 83484e236f33..84c99774bfed 100644
+index c4528e03a031..f93c805473f9 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -126,6 +126,11 @@ struct annotation_line *
- annotation_line__next(struct annotation_line *pos, struct list_head *head);
+@@ -233,6 +233,10 @@ void symbol__annotate_zero_histograms(struct symbol *sym);
+ int symbol__annotate(struct symbol *sym, struct map *map,
+ 		     struct perf_evsel *evsel, size_t privsize,
+ 		     struct arch **parch);
++int symbol__annotate2(struct symbol *sym, struct map *map,
++		      struct perf_evsel *evsel,
++		      struct annotation_options *options,
++		      struct arch **parch);
  
- double annotation_line__max_percent(struct annotation_line *al, struct annotation *notes);
-+void annotation_line__print_start(struct annotation_line *al, struct annotation *notes,
-+				  bool first_line, bool current_entry,
-+				  void *obj,
-+				  void (*obj__set_percent_color)(void *obj, double percent, bool current),
-+				  void (*obj__printf)(void *obj, const char *fmt, ...));
- 
- int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
+ enum symbol_disassemble_errno {
+ 	SYMBOL_ANNOTATE_ERRNO__SUCCESS		= 0,
 -- 
 2.14.3
