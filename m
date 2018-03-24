@@ -1,215 +1,145 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/44] perf annotate: Pass function descriptor to its instruction parsing routines
-Date: Sat, 24 Mar 2018 17:02:05 -0300
-Message-ID: <20180324200211.21326-39-acme@kernel.org>
+Subject: [PATCH 39/44] perf annotate: Mark jumps to outher functions with the call arrow
+Date: Sat, 24 Mar 2018 17:02:06 -0300
+Message-ID: <20180324200211.21326-40-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We need that to figure out if jumps have targets in a different
-function.
+Things like this in _cpp_lex_token (gcc's cc1 program):
 
-E.g. _cpp_lex_token(), in /usr/libexec/gcc/x86_64-redhat-linux/5.3.1/cc1
-has a line like this:
+     cpp_named_operator2name@@Base+0xa72
 
-  jne    c469be <cpp_named_operator2name@@Base+0xa72>
+Point to a place that is after the cpp_named_operator2name boundaries,
+i.e.  in the ELF symbol table for cc1 cpp_named_operator2name is marked
+as being 32-bytes long, but it in fact is much larger than that, so we
+seem to need a symbols__find() routine that looks for >= current->start
+and  < next_symbol->start, possibly just for C++ objects?
+
+For now lets just make some progress by marking jumps to outside the
+current function as call like.
+
+Actual navigation will come next, with further understanding of how the
+symbol searching and disassembly should be done.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ris0ioziyp469pofpzix2atb@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-aiys0a0bsgm3e00hbi6fg7yy@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c |  5 +++--
- tools/perf/util/annotate.c                   | 30 ++++++++++++++++------------
- tools/perf/util/annotate.h                   |  2 +-
- 3 files changed, 21 insertions(+), 16 deletions(-)
+ tools/perf/util/annotate.c | 55 +++++++++++++++++++++++++++++++++++++++++++---
+ tools/perf/util/annotate.h |  1 +
+ 2 files changed, 53 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index 46c21831f2ac..cee4e2f7c057 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -2,9 +2,10 @@
- #include <linux/compiler.h>
- 
- static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
--			    struct map *map)
-+			    struct map_symbol *ms)
- {
- 	char *endptr, *tok, *name;
-+	struct map *map = ms->map;
- 	struct addr_map_symbol target = {
- 		.map = map,
- 	};
-@@ -54,7 +55,7 @@ static struct ins_ops s390_call_ops = {
- 
- static int s390_mov__parse(struct arch *arch __maybe_unused,
- 			   struct ins_operands *ops,
--			   struct map *map __maybe_unused)
-+			   struct map_symbol *ms __maybe_unused)
- {
- 	char *s = strchr(ops->raw, ','), *target, *endptr;
- 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 666f62c58e1a..3ff829d89178 100644
+index 3ff829d89178..c299881c640a 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -202,9 +202,10 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
- 	return arch->ins_is_fused(arch, ins1, ins2);
- }
- 
--static int call__parse(struct arch *arch, struct ins_operands *ops, struct map *map)
-+static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
- {
- 	char *endptr, *tok, *name;
-+	struct map *map = ms->map;
- 	struct addr_map_symbol target = {
- 		.map = map,
- 	};
-@@ -272,7 +273,7 @@ bool ins__is_call(const struct ins *ins)
+@@ -273,11 +273,27 @@ bool ins__is_call(const struct ins *ins)
  	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
  }
  
--static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map *map __maybe_unused)
-+static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms __maybe_unused)
+-static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms __maybe_unused)
++static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms)
  {
++	struct map *map = ms->map;
++	struct symbol *sym = ms->sym;
++	struct addr_map_symbol target = {
++		.map = map,
++	};
  	const char *s = strchr(ops->raw, '+');
  	const char *c = strchr(ops->raw, ',');
-@@ -365,7 +366,7 @@ static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
- 	return 0;
- }
- 
--static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map *map)
-+static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
- {
- 	ops->locked.ops = zalloc(sizeof(*ops->locked.ops));
- 	if (ops->locked.ops == NULL)
-@@ -380,7 +381,7 @@ static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map *
- 		goto out_free_ops;
- 
- 	if (ops->locked.ins.ops->parse &&
--	    ops->locked.ins.ops->parse(arch, ops->locked.ops, map) < 0)
-+	    ops->locked.ins.ops->parse(arch, ops->locked.ops, ms) < 0)
- 		goto out_free_ops;
- 
- 	return 0;
-@@ -423,7 +424,7 @@ static struct ins_ops lock_ops = {
- 	.scnprintf = lock__scnprintf,
- };
- 
--static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map *map __maybe_unused)
-+static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms __maybe_unused)
- {
- 	char *s = strchr(ops->raw, ','), *target, *comment, prev;
- 
-@@ -484,7 +485,7 @@ static struct ins_ops mov_ops = {
- 	.scnprintf = mov__scnprintf,
- };
- 
--static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map *map __maybe_unused)
-+static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms __maybe_unused)
- {
- 	char *target, *comment, *s, prev;
- 
-@@ -923,14 +924,14 @@ int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *samp
- 	return symbol__inc_addr_samples(he->ms.sym, he->ms.map, evidx, ip, sample);
- }
- 
--static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map *map)
-+static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
- {
- 	dl->ins.ops = ins__find(arch, dl->ins.name);
- 
- 	if (!dl->ins.ops)
- 		return;
- 
--	if (dl->ins.ops->parse && dl->ins.ops->parse(arch, &dl->ops, map) < 0)
-+	if (dl->ins.ops->parse && dl->ins.ops->parse(arch, &dl->ops, ms) < 0)
- 		dl->ins.ops = NULL;
- }
- 
-@@ -967,7 +968,7 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- struct annotate_args {
- 	size_t			 privsize;
- 	struct arch		*arch;
--	struct map		*map;
-+	struct map_symbol	 ms;
- 	struct perf_evsel	*evsel;
- 	s64			 offset;
- 	char			*line;
-@@ -1049,7 +1050,7 @@ static struct disasm_line *disasm_line__new(struct annotate_args *args)
- 			if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
- 				goto out_free_line;
- 
--			disasm_line__init_ins(dl, args->arch, args->map);
-+			disasm_line__init_ins(dl, args->arch, &args->ms);
- 		}
+-
++	u64 start, end;
++	/*
++	 * Examples of lines to parse for the _cpp_lex_token@@Base
++	 * function:
++	 *
++	 * 1159e6c: jne    115aa32 <_cpp_lex_token@@Base+0xf92>
++	 * 1159e8b: jne    c469be <cpp_named_operator2name@@Base+0xa72>
++	 *
++	 * The first is a jump to an offset inside the same function,
++	 * the second is to another function, i.e. that 0xa72 is an
++	 * offset in the cpp_named_operator2name@@base function.
++	 */
+ 	/*
+ 	 * skip over possible up to 2 operands to get to address, e.g.:
+ 	 * tbnz	 w0, #26, ffff0000083cd190 <security_file_permission+0xd0>
+@@ -293,6 +309,35 @@ static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *op
+ 		ops->target.addr = strtoull(ops->raw, NULL, 16);
  	}
  
-@@ -1307,7 +1308,7 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
- 				      struct annotate_args *args,
- 				      int *line_nr)
- {
--	struct map *map = args->map;
-+	struct map *map = args->ms.map;
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct disasm_line *dl;
- 	char *line = NULL, *parsed_line, *tmp, *tmp2;
-@@ -1354,6 +1355,7 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
- 	args->offset  = offset;
- 	args->line    = parsed_line;
- 	args->line_nr = *line_nr;
-+	args->ms.sym  = sym;
- 
- 	dl = disasm_line__new(args);
- 	free(line);
-@@ -1506,7 +1508,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 
- static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- {
--	struct map *map = args->map;
-+	struct map *map = args->ms.map;
- 	struct dso *dso = map->dso;
- 	char *command;
- 	FILE *file;
-@@ -1705,7 +1707,6 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- {
- 	struct annotate_args args = {
- 		.privsize	= privsize,
--		.map		= map,
- 		.evsel		= evsel,
- 	};
- 	struct perf_env *env = perf_evsel__env(evsel);
-@@ -1731,6 +1732,9 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		}
- 	}
- 
-+	args.ms.map = map;
-+	args.ms.sym = sym;
++	target.addr = map__objdump_2mem(map, ops->target.addr);
++	start = map->unmap_ip(map, sym->start),
++	end = map->unmap_ip(map, sym->end);
 +
- 	return symbol__disassemble(sym, &args);
- }
++	ops->target.outside = target.addr < start || target.addr > end;
++
++	/*
++	 * FIXME: things like this in _cpp_lex_token (gcc's cc1 program):
++
++		cpp_named_operator2name@@Base+0xa72
++
++	 * Point to a place that is after the cpp_named_operator2name
++	 * boundaries, i.e.  in the ELF symbol table for cc1
++	 * cpp_named_operator2name is marked as being 32-bytes long, but it in
++	 * fact is much larger than that, so we seem to need a symbols__find()
++	 * routine that looks for >= current->start and  < next_symbol->start,
++	 * possibly just for C++ objects?
++	 *
++	 * For now lets just make some progress by marking jumps to outside the
++	 * current function as call like.
++	 *
++	 * Actual navigation will come next, with further understanding of how
++	 * the symbol searching and disassembly should be done.
++
++	if (map_groups__find_ams(&target) == 0 &&
++	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
++		ops->target.sym = target.sym;
++	 */
++
+ 	if (s++ != NULL) {
+ 		ops->target.offset = strtoull(s, NULL, 16);
+ 		ops->target.offset_avail = true;
+@@ -2355,11 +2400,15 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
+ {
+ 	if (dl->ins.ops && dl->ins.ops->scnprintf) {
+ 		if (ins__is_jump(&dl->ins)) {
+-			bool fwd = dl->ops.target.offset > dl->al.offset;
++			bool fwd;
  
++			if (dl->ops.target.outside)
++				goto call_like;
++			fwd = dl->ops.target.offset > dl->al.offset;
+ 			obj__write_graph(obj, fwd ? DARROW_CHAR : UARROW_CHAR);
+ 			obj__printf(obj, " ");
+ 		} else if (ins__is_call(&dl->ins)) {
++call_like:
+ 			obj__write_graph(obj, RARROW_CHAR);
+ 			obj__printf(obj, " ");
+ 		} else if (ins__is_ret(&dl->ins)) {
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 365e9df888cf..c0bf0554a9ea 100644
+index c0bf0554a9ea..ad8baafaf9f9 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -46,7 +46,7 @@ struct arch;
- 
- struct ins_ops {
- 	void (*free)(struct ins_operands *ops);
--	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map *map);
-+	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms);
- 	int (*scnprintf)(struct ins *ins, char *bf, size_t size,
- 			 struct ins_operands *ops);
- };
+@@ -28,6 +28,7 @@ struct ins_operands {
+ 		u64	addr;
+ 		s64	offset;
+ 		bool	offset_avail;
++		bool	outside;
+ 	} target;
+ 	union {
+ 		struct {
 -- 
 2.14.3
