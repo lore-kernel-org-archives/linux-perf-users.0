@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/44] perf annotate: Move annotation_options out of the TUI browser
-Date: Sat, 24 Mar 2018 17:01:29 -0300
-Message-ID: <20180324200211.21326-3-acme@kernel.org>
+Subject: [PATCH 04/44] perf annotate tui: Use annotate_browser__cycles_width() mroe
+Date: Sat, 24 Mar 2018 17:01:31 -0300
+Message-ID: <20180324200211.21326-5-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
@@ -12,11 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This will be useful when making parts of the TUI browser generic enough
-to be used for a new stdio mode, available even when the TUI is not
-built in, for explicit user decision or when the necessary library devel
-files, for the slang library currently, are not available in the build
-system.
+Instead of an open coded equivalent, will reduce a bit noise in
+the following patches.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -25,54 +22,34 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-45twzienhz7ypbad0sbvojku@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pnwn1dg9345zawhgiorpsadf@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 10 +---------
- tools/perf/util/annotate.h        | 10 ++++++++++
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 618edf96353c..69ec968ac0be 100644
+index ca3d99c1e4d9..0f84a52b4088 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -31,15 +31,7 @@ struct browser_line {
- 	int	jump_sources;
- };
+@@ -308,7 +308,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+ 	struct map_symbol *ms = ab->b.priv;
+ 	struct symbol *sym = ms->sym;
+ 	u8 pcnt_width = annotate_browser__pcnt_width(ab);
+-	int width = 0;
++	int width;
  
--static struct annotate_browser_opt {
--	bool hide_src_code,
--	     use_offset,
--	     jump_arrows,
--	     show_linenr,
--	     show_nr_jumps,
--	     show_nr_samples,
--	     show_total_period;
--} annotate_browser__opts = {
-+static struct annotation_options annotate_browser__opts = {
- 	.use_offset	= true,
- 	.jump_arrows	= true,
- };
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 7e914e834101..e924033432a3 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -58,6 +58,16 @@ bool ins__is_lock(const struct ins *ins);
- int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
+ 	/* PLT symbols contain external offsets */
+ 	if (strstr(sym->name, "@plt"))
+@@ -355,8 +355,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+ 		to = (u64)btarget->idx;
+ 	}
  
-+struct annotation_options {
-+	bool hide_src_code,
-+	     use_offset,
-+	     jump_arrows,
-+	     show_linenr,
-+	     show_nr_jumps,
-+	     show_nr_samples,
-+	     show_total_period;
-+};
-+
- struct annotation;
+-	if (ab->have_cycles)
+-		width = ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH;
++	width = annotate_browser__cycles_width(ab);
  
- struct sym_hist_entry {
+ 	ui_browser__set_color(browser, HE_COLORSET_JUMP_ARROWS);
+ 	__ui_browser__line_arrow(browser,
 -- 
 2.14.3
