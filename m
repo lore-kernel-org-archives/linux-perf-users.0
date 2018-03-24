@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/44] perf annotate tui: Add browser__annotation() helper
-Date: Sat, 24 Mar 2018 17:01:38 -0300
-Message-ID: <20180324200211.21326-12-acme@kernel.org>
+Subject: [PATCH 08/44] perf annotate: Move nr_events from annotate_browser to annotation struct
+Date: Sat, 24 Mar 2018 17:01:35 -0300
+Message-ID: <20180324200211.21326-9-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To reduce the boilerplate to get to the symbol being annotated from the
-struct browser ->priv area.
+Paving the way to move more stuff out of TUI and into the generic
+annotation library.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -22,132 +22,74 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ficdyqhe9esjseflvkriskwn@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-8vqax6wgfqohelot8j8zsfvs@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 40 ++++++++++++++++-----------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 11 ++++++-----
+ tools/perf/util/annotate.h        |  1 +
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 3b030ee4505f..c995d28d1a58 100644
+index 353edff3fdbb..8a110765b328 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -55,6 +55,12 @@ struct annotate_browser {
- 	char			    search_bf[128];
- };
+@@ -41,7 +41,6 @@ struct annotate_browser {
+ 	struct rb_node		   *curr_hot;
+ 	struct annotation_line	   *selection;
+ 	struct arch		   *arch;
+-	int			    nr_events;
+ 	u64			    start;
+ 	int			    nr_asm_entries;
+ 	int			    nr_entries;
+@@ -97,7 +96,9 @@ static int annotate_browser__set_jumps_percent_color(struct annotate_browser *br
  
-+static inline struct annotation *browser__annotation(struct ui_browser *browser)
-+{
-+	struct map_symbol *ms = browser->priv;
-+	return symbol__annotation(ms->sym);
-+}
-+
- static inline struct browser_line *browser_line(struct annotation_line *al)
+ static int annotate_browser__pcnt_width(struct annotate_browser *ab)
  {
- 	void *ptr = al;
-@@ -65,8 +71,7 @@ static inline struct browser_line *browser_line(struct annotation_line *al)
+-	return (annotate_browser__opts.show_total_period ? 12 : 7) * ab->nr_events;
++	struct map_symbol *ms = ab->b.priv;
++	struct annotation *notes = symbol__annotation(ms->sym);
++	return (annotate_browser__opts.show_total_period ? 12 : 7) * notes->nr_events;
+ }
  
- static bool disasm_line__filter(struct ui_browser *browser, void *entry)
- {
--	struct map_symbol *ms = browser->priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(browser);
- 
- 	if (notes->options->hide_src_code) {
- 		struct annotation_line *al = list_entry(entry, struct annotation_line, node);
-@@ -99,8 +104,7 @@ static int annotate_browser__set_jumps_percent_color(struct annotate_browser *br
  static void disasm_line__write(struct disasm_line *dl, struct ui_browser *browser,
- 			       char *bf, size_t size)
- {
--	struct map_symbol *ms = browser->priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(browser);
+@@ -145,7 +146,7 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	char bf[256];
+ 	bool show_title = false;
  
- 	if (dl->ins.ops && dl->ins.ops->scnprintf) {
- 		if (ins__is_jump(&dl->ins)) {
-@@ -128,9 +132,7 @@ static void disasm_line__write(struct disasm_line *dl, struct ui_browser *browse
- static void annotate_browser__write(struct ui_browser *browser, void *entry, int row)
- {
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
--	struct map_symbol *ms = browser->priv;
--	struct symbol *sym = ms->sym;
--	struct annotation *notes = symbol__annotation(sym);
-+	struct annotation *notes = browser__annotation(browser);
- 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
- 	struct browser_line *bl = browser_line(al);
- 	bool current_entry = ui_browser__is_current_entry(browser, row);
-@@ -368,8 +370,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+-	for (i = 0; i < ab->nr_events; i++) {
++	for (i = 0; i < notes->nr_events; i++) {
+ 		if (al->samples[i].percent > percent_max)
+ 			percent_max = al->samples[i].percent;
+ 	}
+@@ -159,7 +160,7 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	}
  
- static unsigned int annotate_browser__refresh(struct ui_browser *browser)
- {
--	struct map_symbol *ms = browser->priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(browser);
- 	int ret = ui_browser__list_head_refresh(browser);
- 	int pcnt_width = annotation__pcnt_width(notes);
- 
-@@ -438,8 +439,7 @@ static void annotate_browser__set_top(struct annotate_browser *browser,
- static void annotate_browser__set_rb_top(struct annotate_browser *browser,
- 					 struct rb_node *nd)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 	struct browser_line *bpos;
- 	struct annotation_line *pos;
- 	u32 idx;
-@@ -497,8 +497,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 
- static bool annotate_browser__toggle_source(struct annotate_browser *browser)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 	struct annotation_line *al;
- 	struct browser_line *bl;
- 	off_t offset = browser->b.index - browser->b.top_idx;
-@@ -588,9 +587,7 @@ static
- struct disasm_line *annotate_browser__find_offset(struct annotate_browser *browser,
- 					  s64 offset, s64 *idx)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct symbol *sym = ms->sym;
--	struct annotation *notes = symbol__annotation(sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 	struct disasm_line *pos;
- 
- 	*idx = 0;
-@@ -629,9 +626,7 @@ static
- struct annotation_line *annotate_browser__find_string(struct annotate_browser *browser,
- 					  char *s, s64 *idx)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct symbol *sym = ms->sym;
--	struct annotation *notes = symbol__annotation(sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 	struct annotation_line *al = browser->selection;
- 
- 	*idx = browser->b.index;
-@@ -668,9 +663,7 @@ static
- struct annotation_line *annotate_browser__find_string_reverse(struct annotate_browser *browser,
- 						  char *s, s64 *idx)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct symbol *sym = ms->sym;
--	struct annotation *notes = symbol__annotation(sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 	struct annotation_line *al = browser->selection;
- 
- 	*idx = browser->b.index;
-@@ -753,8 +746,7 @@ bool annotate_browser__continue_search_reverse(struct annotate_browser *browser,
- 
- static void annotate_browser__update_addr_width(struct annotate_browser *browser)
- {
--	struct map_symbol *ms = browser->b.priv;
--	struct annotation *notes = symbol__annotation(ms->sym);
-+	struct annotation *notes = browser__annotation(&browser->b);
- 
- 	if (notes->options->use_offset)
- 		browser->target_width = browser->min_addr_width;
+ 	if (al->offset != -1 && percent_max != 0.0) {
+-		for (i = 0; i < ab->nr_events; i++) {
++		for (i = 0; i < notes->nr_events; i++) {
+ 			ui_browser__set_percent_color(browser,
+ 						al->samples[i].percent,
+ 						current_entry);
+@@ -1099,7 +1100,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 	browser.addr_width = browser.target_width = browser.min_addr_width = hex_width(size);
+ 	browser.max_addr_width = hex_width(sym->end);
+ 	browser.jumps_width = width_jumps(browser.max_jump_sources);
+-	browser.nr_events = nr_pcnt;
++	notes->nr_events = nr_pcnt;
+ 	browser.b.nr_entries = browser.nr_entries;
+ 	browser.b.entries = &notes->src->source,
+ 	browser.b.width += 18; /* Percentage */
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 21fa5d7cd9e0..5d15cdf22fc9 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -165,6 +165,7 @@ struct annotation {
+ 	pthread_mutex_t		lock;
+ 	u64			max_coverage;
+ 	struct annotation_line	**offsets;
++	int			nr_events;
+ 	bool			have_cycles;
+ 	struct annotated_source *src;
+ };
 -- 
 2.14.3
