@@ -1,44 +1,78 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/44] perf unwind: Report error from dwfl_attach_state
-Date: Sat, 24 Mar 2018 17:01:28 -0300
-Message-ID: <20180324200211.21326-2-acme@kernel.org>
+Subject: [PATCH 02/44] perf annotate: Move annotation_options out of the TUI browser
+Date: Sat, 24 Mar 2018 17:01:29 -0300
+Message-ID: <20180324200211.21326-3-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Martin Vuille <jpmv27@aim.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Martin Vuille <jpmv27@aim.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In verbose level 2, errors returned by libdw are reported in most cases,
-but not when calling dwfl_attach_state.
+This will be useful when making parts of the TUI browser generic enough
+to be used for a new stdio mode, available even when the TUI is not
+built in, for explicit user decision or when the necessary library devel
+files, for the slang library currently, are not available in the build
+system.
 
-Since elfutils v 0.160 (2014), dwfl_attach_state sets the error code to
-report failure cause. On failure, log the reported error.
-
-Signed-off-by: Martin Vuille <jpmv27@aim.com>
-Reviewed-by: Kim Phillips <kim.phillips@arm.com>
-Link: http://lkml.kernel.org/r/20180318175053.4222-1-jpmv27@aim.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-45twzienhz7ypbad0sbvojku@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/unwind-libdw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/annotate.c | 10 +---------
+ tools/perf/util/annotate.h        | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 8e969f28cc59..7bdd239c795c 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -236,7 +236,8 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 	if (err)
- 		goto out;
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 618edf96353c..69ec968ac0be 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -31,15 +31,7 @@ struct browser_line {
+ 	int	jump_sources;
+ };
  
--	if (!dwfl_attach_state(ui->dwfl, EM_NONE, thread->tid, &callbacks, ui))
-+	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread->tid, &callbacks, ui);
-+	if (err)
- 		goto out;
+-static struct annotate_browser_opt {
+-	bool hide_src_code,
+-	     use_offset,
+-	     jump_arrows,
+-	     show_linenr,
+-	     show_nr_jumps,
+-	     show_nr_samples,
+-	     show_total_period;
+-} annotate_browser__opts = {
++static struct annotation_options annotate_browser__opts = {
+ 	.use_offset	= true,
+ 	.jump_arrows	= true,
+ };
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 7e914e834101..e924033432a3 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -58,6 +58,16 @@ bool ins__is_lock(const struct ins *ins);
+ int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
+ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
  
- 	err = dwfl_getthread_frames(ui->dwfl, thread->tid, frame_callback, ui);
++struct annotation_options {
++	bool hide_src_code,
++	     use_offset,
++	     jump_arrows,
++	     show_linenr,
++	     show_nr_jumps,
++	     show_nr_samples,
++	     show_total_period;
++};
++
+ struct annotation;
+ 
+ struct sym_hist_entry {
 -- 
 2.14.3
