@@ -1,8 +1,11 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/44] perf report: Introduce --ignore-vmlinux command line option
-Date: Sat, 24 Mar 2018 17:02:02 -0300
-Message-ID: <20180324200211.21326-36-acme@kernel.org>
+Subject: [PATCH 36/44] perf annotate browser: Add 'P' hotkey to dump annotation to file
+Date: Sat, 24 Mar 2018 17:02:03 -0300
+Message-ID: <20180324200211.21326-37-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -12,9 +15,41 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We've had this in 'perf top' for quite a while, useful if one wishes
-to force using /proc/kcore to do annotation using the patched kernel
-instead of the ELF image it started from, aka vmlinux.
+Just like we have in the histograms browser used as the main screen for
+'perf top --tui' and 'perf report --tui', to print the current
+annotation to a file with a named composed by the symbol name and the
+".annotation" suffix.
+
+Here is one example of pressing 'A' on 'perf top' to live annotate a
+kernel function and then press 'P' to dump that annotation, the
+resulting file:
+
+  # cat _raw_spin_lock_irqsave.annotation
+  _raw_spin_lock_irqsave() /proc/kcore
+  Event: cycles:ppp
+
+    7.14        nop
+   21.43        push   %rbx
+    7.14        pushfq
+                pop    %rax
+                nop
+                mov    %rax,%rbx
+                cli
+                nop
+                xor    %eax,%eax
+                mov    $0x1,%edx
+   64.29        lock   cmpxchg %edx,(%rdi)
+                test   %eax,%eax
+              ↓ jne    2b
+                mov    %rbx,%rax
+                pop    %rbx
+              ← retq
+          2b:   mov    %eax,%esi
+              → callq  queued_spin_lock_slowpath
+                mov    %rbx,%rax
+                pop    %rbx
+              ← retq
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -23,39 +58,90 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ircpvox4wzsv7gasrpb28fw9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-zzmnrwugb5vtk7bvg0rbx150@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt | 3 +++
- tools/perf/builtin-report.c              | 2 ++
- 2 files changed, 5 insertions(+)
+ tools/perf/ui/browsers/annotate.c |  4 ++++
+ tools/perf/util/annotate.c        | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/annotate.h        |  2 ++
+ 3 files changed, 37 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index cba16d8a970e..e1a660e60849 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -296,6 +296,9 @@ OPTIONS
- --vmlinux=<file>::
-         vmlinux pathname
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 916f237c1df8..3834b264ba41 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -661,6 +661,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		"t             Circulate percent, total period, samples view\n"
+ 		"/             Search string\n"
+ 		"k             Toggle line numbers\n"
++		"P             Print to [symbol_name].annotation file.\n"
+ 		"r             Run available scripts\n"
+ 		"?             Search string backwards\n");
+ 			continue;
+@@ -737,6 +738,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			}
+ 			continue;
+ 		}
++		case 'P':
++			map_symbol__annotation_dump(ms, evsel);
++			continue;
+ 		case 't':
+ 			if (notes->options->show_total_period) {
+ 				notes->options->show_total_period = false;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 7a6a85f9fea6..a7111871440e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2037,6 +2037,37 @@ int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
+ 	return 0;
+ }
  
-+--ignore-vmlinux::
-+	Ignore vmlinux files.
++int map_symbol__annotation_dump(struct map_symbol *ms, struct perf_evsel *evsel)
++{
++	const char *ev_name = perf_evsel__name(evsel);
++	char buf[1024];
++	char *filename;
++	int err = -1;
++	FILE *fp;
 +
- --kallsyms=<file>::
-         kallsyms pathname
++	if (asprintf(&filename, "%s.annotation", ms->sym->name) < 0)
++		return -1;
++
++	fp = fopen(filename, "w");
++	if (fp == NULL)
++		goto out_free_filename;
++
++	if (perf_evsel__is_group_event(evsel)) {
++		perf_evsel__group_desc(evsel, buf, sizeof(buf));
++		ev_name = buf;
++	}
++
++	fprintf(fp, "%s() %s\nEvent: %s\n\n",
++		ms->sym->name, ms->map->dso->long_name, ev_name);
++	symbol__annotate_fprintf2(ms->sym, fp);
++
++	fclose(fp);
++	err = 0;
++out_free_filename:
++	free(filename);
++	return err;
++}
++
+ void symbol__annotate_zero_histogram(struct symbol *sym, int evidx)
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 3faa58045b22..365e9df888cf 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -288,6 +288,8 @@ void symbol__annotate_zero_histogram(struct symbol *sym, int evidx);
+ void symbol__annotate_decay_histogram(struct symbol *sym, int evidx);
+ void annotated_source__purge(struct annotated_source *as);
  
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1a82f38671a8..0f198f6d9b77 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1018,6 +1018,8 @@ int cmd_report(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "mmaps", &report.mmaps_mode, "Display recorded tasks memory maps"),
- 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
- 		   "file", "vmlinux pathname"),
-+	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
-+                    "don't load vmlinux even if found"),
- 	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
- 		   "file", "kallsyms pathname"),
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
++int map_symbol__annotation_dump(struct map_symbol *ms, struct perf_evsel *evsel);
++
+ bool ui__has_annotation(void);
+ 
+ int symbol__tty_annotate(struct symbol *sym, struct map *map,
 -- 
 2.14.3
