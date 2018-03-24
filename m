@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/44] perf annotate: Move jumps_percent_color to ui_browser
-Date: Sat, 24 Mar 2018 17:01:40 -0300
-Message-ID: <20180324200211.21326-14-acme@kernel.org>
+Subject: [PATCH 12/44] perf annotate: Move max_jump_sources to struct annotation
+Date: Sat, 24 Mar 2018 17:01:39 -0300
+Message-ID: <20180324200211.21326-13-acme@kernel.org>
 References: <20180324200211.21326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
@@ -12,7 +12,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since all it needs is in ui_browser and annotation structs members.
+This is not useful only for the TUI, we'll want to somehow mark the
+--stdio2 lines with the most jump sources too.
+
+And moving this will allow us to change some function signatures from
+annotate_browser to ui_browser, reducing boilerplate.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -21,57 +25,69 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-9f8c2f9aetbibcw33d615y9o@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-vyggbbqd05k3k4mvv7z9l5px@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 11 ++++++-----
+ tools/perf/util/annotate.h        |  1 +
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 3bc003fe0b1d..6e2eea09a9b0 100644
+index c995d28d1a58..3bc003fe0b1d 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -81,12 +81,11 @@ static bool disasm_line__filter(struct ui_browser *browser, void *entry)
- 	return false;
- }
- 
--static int annotate_browser__jumps_percent_color(struct annotate_browser *browser,
--						 int nr, bool current)
-+static int ui_browser__jumps_percent_color(struct ui_browser *browser, int nr, bool current)
+@@ -44,7 +44,6 @@ struct annotate_browser {
+ 	u64			    start;
+ 	int			    nr_asm_entries;
+ 	int			    nr_entries;
+-	int			    max_jump_sources;
+ 	int			    nr_jumps;
+ 	bool			    searching_backwards;
+ 	u8			    addr_width;
+@@ -85,9 +84,11 @@ static bool disasm_line__filter(struct ui_browser *browser, void *entry)
+ static int annotate_browser__jumps_percent_color(struct annotate_browser *browser,
+ 						 int nr, bool current)
  {
--	struct annotation *notes = browser__annotation(&browser->b);
-+	struct annotation *notes = browser__annotation(browser);
- 
--	if (current && (!browser->b.use_navkeypressed || browser->b.navkeypressed))
-+	if (current && (!browser->use_navkeypressed || browser->navkeypressed))
++	struct annotation *notes = browser__annotation(&browser->b);
++
+ 	if (current && (!browser->b.use_navkeypressed || browser->b.navkeypressed))
  		return HE_COLORSET_SELECTED;
- 	if (nr == notes->max_jump_sources)
+-	if (nr == browser->max_jump_sources)
++	if (nr == notes->max_jump_sources)
  		return HE_COLORSET_TOP;
-@@ -95,11 +94,10 @@ static int annotate_browser__jumps_percent_color(struct annotate_browser *browse
- 	return HE_COLORSET_NORMAL;
- }
+ 	if (nr > 1)
+ 		return HE_COLORSET_MEDIUM;
+@@ -998,8 +999,8 @@ static void annotate_browser__mark_jump_targets(struct annotate_browser *browser
+ 			continue;
  
--static int annotate_browser__set_jumps_percent_color(struct annotate_browser *browser,
--						     int nr, bool current)
-+static int ui_browser__set_jumps_percent_color(struct ui_browser *browser, int nr, bool current)
- {
--	 int color = annotate_browser__jumps_percent_color(browser, nr, current);
--	 return ui_browser__set_color(&browser->b, color);
-+	 int color = ui_browser__jumps_percent_color(browser, nr, current);
-+	 return ui_browser__set_color(browser, color);
- }
+ 		blt = browser_line(al);
+-		if (++blt->jump_sources > browser->max_jump_sources)
+-			browser->max_jump_sources = blt->jump_sources;
++		if (++blt->jump_sources > notes->max_jump_sources)
++			notes->max_jump_sources = blt->jump_sources;
  
- static void disasm_line__write(struct disasm_line *dl, struct ui_browser *browser,
-@@ -237,8 +235,8 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 					printed = scnprintf(bf, sizeof(bf), "%*d ",
- 							    ab->jumps_width,
- 							    bl->jump_sources);
--					prev = annotate_browser__set_jumps_percent_color(ab, bl->jump_sources,
--											 current_entry);
-+					prev = ui_browser__set_jumps_percent_color(browser, bl->jump_sources,
-+										   current_entry);
- 					ui_browser__write_nstring(browser, bf, printed);
- 					ui_browser__set_color(browser, prev);
- 				}
+ 		++browser->nr_jumps;
+ 	}
+@@ -1099,7 +1100,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 
+ 	browser.addr_width = browser.target_width = browser.min_addr_width = hex_width(size);
+ 	browser.max_addr_width = hex_width(sym->end);
+-	browser.jumps_width = width_jumps(browser.max_jump_sources);
++	browser.jumps_width = width_jumps(notes->max_jump_sources);
+ 	notes->nr_events = nr_pcnt;
+ 	browser.b.nr_entries = browser.nr_entries;
+ 	browser.b.entries = &notes->src->source,
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 17cd5d274fe5..b8aca936ed55 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -167,6 +167,7 @@ struct annotation {
+ 	struct annotation_options *options;
+ 	struct annotation_line	**offsets;
+ 	int			nr_events;
++	int			max_jump_sources;
+ 	bool			have_cycles;
+ 	struct annotated_source *src;
+ };
 -- 
 2.14.3
