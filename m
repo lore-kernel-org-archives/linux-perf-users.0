@@ -1,105 +1,152 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/44] perf annotate: Move cycles/IPC formatting width constants outside TUI
-Date: Sat, 24 Mar 2018 17:01:30 -0300
-Message-ID: <20180324200211.21326-4-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/44] perf/core improvements and fixes
+Date: Sun, 25 Mar 2018 10:40:06 +0200
+Message-ID: <20180325084006.gbwscxn7mu5dfibg@gmail.com>
 References: <20180324200211.21326-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kim Phillips <kim.phillips@arm.com>, Linus Torvalds <torvalds@linux-foundation.org>, Martin Vuille <jpmv27@aim.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Petr Machata <petrm@mellanox.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-These will be used in --stdio2 so lets move it first to reduce noise in
-the following patches.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-fisud7pcak3prk7uwsvs3g2e@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/ui/browsers/annotate.c | 19 ++++++++-----------
- tools/perf/util/annotate.h        |  3 +++
- 2 files changed, 11 insertions(+), 11 deletions(-)
+> Hi Ingo,
+> 
+> 	Mostly a 'perf annotate' refactoring to allow reusing the TUI
+> formatting routines in a --stdio2 mode for 'perf annotate' that at some
+> point should replace --stdio, leaving that old code deprecated for a
+> while, then ditching it.
+> 
+> 	That will take a while yet because there is some stuff in the
+> --stdio code that needs to be done in the annotation UI agnostic core to
+> then get used in --tui and --stdio2.
+> 
+> 	There is also some improvements for issues Linus reported in the
+> TUI annotation code for ASM functions.
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit ecd380b8dead1bad67e3af87e2ddfe826c3da79d:
+> 
+>   Merge tag 'perf-core-for-mingo-4.17-20180319' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-03-19 20:37:48 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180323
+> 
+> for you to fetch changes up to 980b68ec0694f250e967cb18c5705ef5de10fdd5:
+> 
+>   perf annotate: Use absolute addresses to calculate jump target offsets (2018-03-23 16:46:53 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Move non-TUI specific annotation routines out of the TUI browser so
+>   that it can be used in other UIs, and to demonstrate that introduce
+>   a 'perf annotate --stdio2' option that will apply those formatting
+>   routines to provide a non-interactive annotation mode (Arnaldo Carvalho de Melo)
+> 
+> - Add 'P' hotkey to the annotation TUI, so dump the current annotated
+>   symbol to a file, easing report thru e-mail, by getting rid of the
+>   spaces + right hand side scrollbar chars (Arnaldo Carvalho de Melo)
+> 
+> - Support --ignore-vmlinux to 'perf report' and 'perf annotate', that
+>   was already present in 'perf top', to use /proc/{kcore,kallsyms},
+>   allowing to see what is in fact running (patched stuff, alternatives,
+>   ftrace, etc), not the initial state of the kernel (vmlinux) (Arnaldo Carvalho de Melo)
+> 
+> - Support 'jump' instructions to a different function, treating them
+>   as 'call' instructions (Arnaldo Carvalho de Melo)
+> 
+> - Fix some jump artifacts when using vmlinux + ASM functions, where
+>   the ELF symtab for instance, for entry_SYSCALL_64 includes that and
+>   what comes after the 'syscall_return_via_sysret' label, but the
+>   objdump -dS prints the jump targets + offsets using the
+>   syscall_return_via_sysret address, which was confusing 'perf annotate'.
+>   See the cset comments for further info (Arnaldo Carvalho de Melo)
+> 
+> - Report error from dwfl_attach_state() in the unwind code (Martin Vuille)
+> 
+> - Reference Py_None before returning it in the python extension (Petr Machata)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (42):
+>       perf annotate: Move annotation_options out of the TUI browser
+>       perf annotate: Move cycles/IPC formatting width constants outside TUI
+>       perf annotate tui: Use annotate_browser__cycles_width() mroe
+>       perf annotate tui: Move have_cycles to struct annotation
+>       perf annotate: Move annotation_line array from TUI to generic code
+>       perf annotate: Move compute_ipc() to annotation library
+>       perf annotate: Move nr_events from annotate_browser to annotation struct
+>       perf annotate: Stop using a global config struct
+>       perf annotate: Move pcnt_with() to the annotation library
+>       perf annotate tui: Add browser__annotation() helper
+>       perf annotate: Move max_jump_sources to struct annotation
+>       perf annotate: Move jumps_percent_color to ui_browser
+>       perf annotate: Move nr_jumps to struct annotation
+>       perf annotate: Move mark_jump_targets from the TUI to the annotation library
+>       perf annotate: Nuke struct browser_line
+>       perf annotate: Move 'start' to struct annotation
+>       perf annotate: Move nr_{asm_}entries to struct annotation
+>       perf annotate: Introduce set_offsets() method out of TUI code
+>       perf annotate: Move the column widths from the TUI to generic lib
+>       perf annotate: Move update_column_widths() to the generic lib
+>       perf annotate: Introduce init_column_widths() method out of TUI code
+>       perf annotate: Introduce symbol__annotate2 method
+>       perf annotate: Introduce annotation_line__max_percent()
+>       perf ui browser: Add vprintf() method
+>       perf annotate: Introduce annotation_line__print_start() out of TUI code
+>       perf annotate: Finish the generalization of annotate_browser__write()
+>       perf annotate: Use a ops table for annotation_line__write()
+>       perf annotate: Introduce annotation_line__filter()
+>       perf annotate: Introduce the --stdio2 output mode
+>       perf annotate: Move the default annotate options to the library
+>       perf annotate: Use the default annotation options for --stdio2
+>       perf annotate: Add function header to --stdio2
+>       perf annotate: Introduce --ignore-vmlinux command line option
+>       perf report: Introduce --ignore-vmlinux command line option
+>       perf annotate browser: Add 'P' hotkey to dump annotation to file
+>       perf annotate: No need to calculate notes->start twice
+>       perf annotate: Pass function descriptor to its instruction parsing routines
+>       perf annotate: Mark jumps to outher functions with the call arrow
+>       perf annotate: Add "_local" to jump/offset validation routines
+>       perf annotate: Support jumping from one function to another
+>       perf annotate: Defer searching for comma in raw line till it is needed
+>       perf annotate: Use absolute addresses to calculate jump target offsets
+> 
+> Martin Vuille (1):
+>       perf unwind: Report error from dwfl_attach_state
+> 
+> Petr Machata (1):
+>       perf python: Reference Py_None before returning it
+> 
+>  tools/perf/Documentation/perf-annotate.txt   |   5 +
+>  tools/perf/Documentation/perf-report.txt     |   3 +
+>  tools/perf/arch/s390/annotate/instructions.c |   5 +-
+>  tools/perf/builtin-annotate.c                |  27 +-
+>  tools/perf/builtin-report.c                  |   3 +
+>  tools/perf/builtin-top.c                     |   2 +
+>  tools/perf/ui/browser.c                      |   9 +-
+>  tools/perf/ui/browser.h                      |   3 +-
+>  tools/perf/ui/browsers/annotate.c            | 686 ++++++---------------------
+>  tools/perf/util/annotate.c                   | 679 +++++++++++++++++++++++++-
+>  tools/perf/util/annotate.h                   | 102 +++-
+>  tools/perf/util/python.c                     |   4 +-
+>  tools/perf/util/unwind-libdw.c               |   3 +-
+>  13 files changed, 944 insertions(+), 587 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 69ec968ac0be..ca3d99c1e4d9 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -22,9 +22,6 @@ struct disasm_line_samples {
- 	struct sym_hist_entry he;
- };
- 
--#define IPC_WIDTH 6
--#define CYCLES_WIDTH 6
--
- struct browser_line {
- 	u32	idx;
- 	int	idx_asm;
-@@ -107,7 +104,7 @@ static int annotate_browser__pcnt_width(struct annotate_browser *ab)
- 
- static int annotate_browser__cycles_width(struct annotate_browser *ab)
- {
--	return ab->have_cycles ? IPC_WIDTH + CYCLES_WIDTH : 0;
-+	return ab->have_cycles ? ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH : 0;
- }
- 
- static void disasm_line__write(struct disasm_line *dl, struct ui_browser *browser,
-@@ -194,19 +191,19 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	}
- 	if (ab->have_cycles) {
- 		if (al->ipc)
--			ui_browser__printf(browser, "%*.2f ", IPC_WIDTH - 1, al->ipc);
-+			ui_browser__printf(browser, "%*.2f ", ANNOTATION__IPC_WIDTH - 1, al->ipc);
- 		else if (!show_title)
--			ui_browser__write_nstring(browser, " ", IPC_WIDTH);
-+			ui_browser__write_nstring(browser, " ", ANNOTATION__IPC_WIDTH);
- 		else
--			ui_browser__printf(browser, "%*s ", IPC_WIDTH - 1, "IPC");
-+			ui_browser__printf(browser, "%*s ", ANNOTATION__IPC_WIDTH - 1, "IPC");
- 
- 		if (al->cycles)
- 			ui_browser__printf(browser, "%*" PRIu64 " ",
--					   CYCLES_WIDTH - 1, al->cycles);
-+					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles);
- 		else if (!show_title)
--			ui_browser__write_nstring(browser, " ", CYCLES_WIDTH);
-+			ui_browser__write_nstring(browser, " ", ANNOTATION__CYCLES_WIDTH);
- 		else
--			ui_browser__printf(browser, "%*s ", CYCLES_WIDTH - 1, "Cycle");
-+			ui_browser__printf(browser, "%*s ", ANNOTATION__CYCLES_WIDTH - 1, "Cycle");
- 	}
- 
- 	SLsmg_write_char(' ');
-@@ -359,7 +356,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 	}
- 
- 	if (ab->have_cycles)
--		width = IPC_WIDTH + CYCLES_WIDTH;
-+		width = ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH;
- 
- 	ui_browser__set_color(browser, HE_COLORSET_JUMP_ARROWS);
- 	__ui_browser__line_arrow(browser,
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index e924033432a3..0407234b5157 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -58,6 +58,9 @@ bool ins__is_lock(const struct ins *ins);
- int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
- 
-+#define ANNOTATION__IPC_WIDTH 6
-+#define ANNOTATION__CYCLES_WIDTH 6
-+
- struct annotation_options {
- 	bool hide_src_code,
- 	     use_offset,
--- 
-2.14.3
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
