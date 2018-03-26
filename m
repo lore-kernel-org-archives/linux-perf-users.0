@@ -1,152 +1,373 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/44] perf/core improvements and fixes
-Date: Sun, 25 Mar 2018 10:40:06 +0200
-Message-ID: <20180325084006.gbwscxn7mu5dfibg@gmail.com>
-References: <20180324200211.21326-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: [PATCH 2/5] perf list: Add pmu event json file for IBM z196
+Date: Mon, 26 Mar 2018 10:25:35 +0200
+Message-ID: <20180326082538.2258-2-tmricht@linux.vnet.ibm.com>
+References: <20180326082538.2258-1-tmricht@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180324200211.21326-1-acme@kernel.org>
+In-Reply-To: <20180326082538.2258-1-tmricht@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kim Phillips <kim.phillips@arm.com>, Linus Torvalds <torvalds@linux-foundation.org>, Martin Vuille <jpmv27@aim.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Petr Machata <petrm@mellanox.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Add CPU measurement counter facility event description
+files (json files) for IBM z196.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+---
+ tools/perf/pmu-events/arch/s390/cf_z196/basic.json |  74 +++++++++++
+ .../perf/pmu-events/arch/s390/cf_z196/crypto.json  |  98 ++++++++++++++
+ .../pmu-events/arch/s390/cf_z196/extended.json     | 146 +++++++++++++++++++++
+ tools/perf/pmu-events/arch/s390/mapfile.csv        |   1 +
+ 4 files changed, 319 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/basic.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/crypto.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/extended.json
 
-> Hi Ingo,
-> 
-> 	Mostly a 'perf annotate' refactoring to allow reusing the TUI
-> formatting routines in a --stdio2 mode for 'perf annotate' that at some
-> point should replace --stdio, leaving that old code deprecated for a
-> while, then ditching it.
-> 
-> 	That will take a while yet because there is some stuff in the
-> --stdio code that needs to be done in the annotation UI agnostic core to
-> then get used in --tui and --stdio2.
-> 
-> 	There is also some improvements for issues Linus reported in the
-> TUI annotation code for ASM functions.
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit ecd380b8dead1bad67e3af87e2ddfe826c3da79d:
-> 
->   Merge tag 'perf-core-for-mingo-4.17-20180319' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-03-19 20:37:48 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180323
-> 
-> for you to fetch changes up to 980b68ec0694f250e967cb18c5705ef5de10fdd5:
-> 
->   perf annotate: Use absolute addresses to calculate jump target offsets (2018-03-23 16:46:53 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> - Move non-TUI specific annotation routines out of the TUI browser so
->   that it can be used in other UIs, and to demonstrate that introduce
->   a 'perf annotate --stdio2' option that will apply those formatting
->   routines to provide a non-interactive annotation mode (Arnaldo Carvalho de Melo)
-> 
-> - Add 'P' hotkey to the annotation TUI, so dump the current annotated
->   symbol to a file, easing report thru e-mail, by getting rid of the
->   spaces + right hand side scrollbar chars (Arnaldo Carvalho de Melo)
-> 
-> - Support --ignore-vmlinux to 'perf report' and 'perf annotate', that
->   was already present in 'perf top', to use /proc/{kcore,kallsyms},
->   allowing to see what is in fact running (patched stuff, alternatives,
->   ftrace, etc), not the initial state of the kernel (vmlinux) (Arnaldo Carvalho de Melo)
-> 
-> - Support 'jump' instructions to a different function, treating them
->   as 'call' instructions (Arnaldo Carvalho de Melo)
-> 
-> - Fix some jump artifacts when using vmlinux + ASM functions, where
->   the ELF symtab for instance, for entry_SYSCALL_64 includes that and
->   what comes after the 'syscall_return_via_sysret' label, but the
->   objdump -dS prints the jump targets + offsets using the
->   syscall_return_via_sysret address, which was confusing 'perf annotate'.
->   See the cset comments for further info (Arnaldo Carvalho de Melo)
-> 
-> - Report error from dwfl_attach_state() in the unwind code (Martin Vuille)
-> 
-> - Reference Py_None before returning it in the python extension (Petr Machata)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (42):
->       perf annotate: Move annotation_options out of the TUI browser
->       perf annotate: Move cycles/IPC formatting width constants outside TUI
->       perf annotate tui: Use annotate_browser__cycles_width() mroe
->       perf annotate tui: Move have_cycles to struct annotation
->       perf annotate: Move annotation_line array from TUI to generic code
->       perf annotate: Move compute_ipc() to annotation library
->       perf annotate: Move nr_events from annotate_browser to annotation struct
->       perf annotate: Stop using a global config struct
->       perf annotate: Move pcnt_with() to the annotation library
->       perf annotate tui: Add browser__annotation() helper
->       perf annotate: Move max_jump_sources to struct annotation
->       perf annotate: Move jumps_percent_color to ui_browser
->       perf annotate: Move nr_jumps to struct annotation
->       perf annotate: Move mark_jump_targets from the TUI to the annotation library
->       perf annotate: Nuke struct browser_line
->       perf annotate: Move 'start' to struct annotation
->       perf annotate: Move nr_{asm_}entries to struct annotation
->       perf annotate: Introduce set_offsets() method out of TUI code
->       perf annotate: Move the column widths from the TUI to generic lib
->       perf annotate: Move update_column_widths() to the generic lib
->       perf annotate: Introduce init_column_widths() method out of TUI code
->       perf annotate: Introduce symbol__annotate2 method
->       perf annotate: Introduce annotation_line__max_percent()
->       perf ui browser: Add vprintf() method
->       perf annotate: Introduce annotation_line__print_start() out of TUI code
->       perf annotate: Finish the generalization of annotate_browser__write()
->       perf annotate: Use a ops table for annotation_line__write()
->       perf annotate: Introduce annotation_line__filter()
->       perf annotate: Introduce the --stdio2 output mode
->       perf annotate: Move the default annotate options to the library
->       perf annotate: Use the default annotation options for --stdio2
->       perf annotate: Add function header to --stdio2
->       perf annotate: Introduce --ignore-vmlinux command line option
->       perf report: Introduce --ignore-vmlinux command line option
->       perf annotate browser: Add 'P' hotkey to dump annotation to file
->       perf annotate: No need to calculate notes->start twice
->       perf annotate: Pass function descriptor to its instruction parsing routines
->       perf annotate: Mark jumps to outher functions with the call arrow
->       perf annotate: Add "_local" to jump/offset validation routines
->       perf annotate: Support jumping from one function to another
->       perf annotate: Defer searching for comma in raw line till it is needed
->       perf annotate: Use absolute addresses to calculate jump target offsets
-> 
-> Martin Vuille (1):
->       perf unwind: Report error from dwfl_attach_state
-> 
-> Petr Machata (1):
->       perf python: Reference Py_None before returning it
-> 
->  tools/perf/Documentation/perf-annotate.txt   |   5 +
->  tools/perf/Documentation/perf-report.txt     |   3 +
->  tools/perf/arch/s390/annotate/instructions.c |   5 +-
->  tools/perf/builtin-annotate.c                |  27 +-
->  tools/perf/builtin-report.c                  |   3 +
->  tools/perf/builtin-top.c                     |   2 +
->  tools/perf/ui/browser.c                      |   9 +-
->  tools/perf/ui/browser.h                      |   3 +-
->  tools/perf/ui/browsers/annotate.c            | 686 ++++++---------------------
->  tools/perf/util/annotate.c                   | 679 +++++++++++++++++++++++++-
->  tools/perf/util/annotate.h                   | 102 +++-
->  tools/perf/util/python.c                     |   4 +-
->  tools/perf/util/unwind-libdw.c               |   3 +-
->  13 files changed, 944 insertions(+), 587 deletions(-)
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z196/basic.json b/tools/perf/pmu-events/arch/s390/cf_z196/basic.json
+new file mode 100644
+index 000000000000..8bf16759ca53
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z196/basic.json
+@@ -0,0 +1,74 @@
++[
++	{
++		"EventCode": "0",
++		"EventName": "CPU_CYCLES",
++		"BriefDescription": "CPU Cycles",
++		"PublicDescription": "Cycle Count"
++	},
++	{
++		"EventCode": "1",
++		"EventName": "INSTRUCTIONS",
++		"BriefDescription": "Instructions",
++		"PublicDescription": "Instruction Count"
++	},
++	{
++		"EventCode": "2",
++		"EventName": "L1I_DIR_WRITES",
++		"BriefDescription": "L1I Directory Writes",
++		"PublicDescription": "Level-1 I-Cache Directory Write Count"
++	},
++	{
++		"EventCode": "3",
++		"EventName": "L1I_PENALTY_CYCLES",
++		"BriefDescription": "L1I Penalty Cycles",
++		"PublicDescription": "Level-1 I-Cache Penalty Cycle Count"
++	},
++	{
++		"EventCode": "4",
++		"EventName": "L1D_DIR_WRITES",
++		"BriefDescription": "L1D Directory Writes",
++		"PublicDescription": "Level-1 D-Cache Directory Write Count"
++	},
++	{
++		"EventCode": "5",
++		"EventName": "L1D_PENALTY_CYCLES",
++		"BriefDescription": "L1D Penalty Cycles",
++		"PublicDescription": "Level-1 D-Cache Penalty Cycle Count"
++	},
++	{
++		"EventCode": "32",
++		"EventName": "PROBLEM_STATE_CPU_CYCLES",
++		"BriefDescription": "Problem-State CPU Cycles",
++		"PublicDescription": "Problem-State Cycle Count"
++	},
++	{
++		"EventCode": "33",
++		"EventName": "PROBLEM_STATE_INSTRUCTIONS",
++		"BriefDescription": "Problem-State Instructions",
++		"PublicDescription": "Problem-State Instruction Count"
++	},
++	{
++		"EventCode": "34",
++		"EventName": "PROBLEM_STATE_L1I_DIR_WRITES",
++		"BriefDescription": "Problem-State L1I Directory Writes",
++		"PublicDescription": "Problem-State Level-1 I-Cache Directory Write Count"
++	},
++	{
++		"EventCode": "35",
++		"EventName": "PROBLEM_STATE_L1I_PENALTY_CYCLES",
++		"BriefDescription": "Problem-State L1I Penalty Cycles",
++		"PublicDescription": "Problem-State Level-1 I-Cache Penalty Cycle Count"
++	},
++	{
++		"EventCode": "36",
++		"EventName": "PROBLEM_STATE_L1D_DIR_WRITES",
++		"BriefDescription": "Problem-State L1D Directory Writes",
++		"PublicDescription": "Problem-State Level-1 D-Cache Directory Write Count"
++	},
++	{
++		"EventCode": "37",
++		"EventName": "PROBLEM_STATE_L1D_PENALTY_CYCLES",
++		"BriefDescription": "Problem-State L1D Penalty Cycles",
++		"PublicDescription": "Problem-State Level-1 D-Cache Penalty Cycle Count"
++	},
++]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z196/crypto.json b/tools/perf/pmu-events/arch/s390/cf_z196/crypto.json
+new file mode 100644
+index 000000000000..7e5b72492141
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z196/crypto.json
+@@ -0,0 +1,98 @@
++[
++	{
++		"EventCode": "64",
++		"EventName": "PRNG_FUNCTIONS",
++		"BriefDescription": "PRNG Functions",
++		"PublicDescription": "Total number of the PRNG functions issued by the CPU"
++	},
++	{
++		"EventCode": "65",
++		"EventName": "PRNG_CYCLES",
++		"BriefDescription": "PRNG Cycles",
++		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing PRNG functions issued by the CPU"
++	},
++	{
++		"EventCode": "66",
++		"EventName": "PRNG_BLOCKED_FUNCTIONS",
++		"BriefDescription": "PRNG Blocked Functions",
++		"PublicDescription": "Total number of the PRNG functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "67",
++		"EventName": "PRNG_BLOCKED_CYCLES",
++		"BriefDescription": "PRNG Blocked Cycles",
++		"PublicDescription": "Total number of CPU cycles blocked for the PRNG functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "68",
++		"EventName": "SHA_FUNCTIONS",
++		"BriefDescription": "SHA Functions",
++		"PublicDescription": "Total number of SHA functions issued by the CPU"
++	},
++	{
++		"EventCode": "69",
++		"EventName": "SHA_CYCLES",
++		"BriefDescription": "SHA Cycles",
++		"PublicDescription": "Total number of CPU cycles when the SHA coprocessor is busy performing the SHA functions issued by the CPU"
++	},
++	{
++		"EventCode": "70",
++		"EventName": "SHA_BLOCKED_FUNCTIONS",
++		"BriefDescription": "SHA Blocked Functions",
++		"PublicDescription": "Total number of the SHA functions that are issued by the CPU and are blocked because the SHA coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "71",
++		"EventName": "SHA_BLOCKED_CYCLES",
++		"BriefDescription": "SHA Bloced Cycles",
++		"PublicDescription": "Total number of CPU cycles blocked for the SHA functions issued by the CPU because the SHA coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "72",
++		"EventName": "DEA_FUNCTIONS",
++		"BriefDescription": "DEA Functions",
++		"PublicDescription": "Total number of the DEA functions issued by the CPU"
++	},
++	{
++		"EventCode": "73",
++		"EventName": "DEA_CYCLES",
++		"BriefDescription": "DEA Cycles",
++		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing the DEA functions issued by the CPU"
++	},
++	{
++		"EventCode": "74",
++		"EventName": "DEA_BLOCKED_FUNCTIONS",
++		"BriefDescription": "DEA Blocked Functions",
++		"PublicDescription": "Total number of the DEA functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "75",
++		"EventName": "DEA_BLOCKED_CYCLES",
++		"BriefDescription": "DEA Blocked Cycles",
++		"PublicDescription": "Total number of CPU cycles blocked for the DEA functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "76",
++		"EventName": "AES_FUNCTIONS",
++		"BriefDescription": "AES Functions",
++		"PublicDescription": "Total number of AES functions issued by the CPU"
++	},
++	{
++		"EventCode": "77",
++		"EventName": "AES_CYCLES",
++		"BriefDescription": "AES Cycles",
++		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing the AES functions issued by the CPU"
++	},
++	{
++		"EventCode": "78",
++		"EventName": "AES_BLOCKED_FUNCTIONS",
++		"BriefDescription": "AES Blocked Functions",
++		"PublicDescription": "Total number of AES functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++	{
++		"EventCode": "79",
++		"EventName": "AES_BLOCKED_CYCLES",
++		"BriefDescription": "AES Blocked Cycles",
++		"PublicDescription": "Total number of CPU cycles blocked for the AES functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
++	},
++]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z196/extended.json b/tools/perf/pmu-events/arch/s390/cf_z196/extended.json
+new file mode 100644
+index 000000000000..b6d7fec7c2e7
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z196/extended.json
+@@ -0,0 +1,146 @@
++[
++	{
++		"EventCode": "128",
++		"EventName": "L1D_L2_SOURCED_WRITES",
++		"BriefDescription": "L1D L2 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from the Level-2 cache"
++	},
++	{
++		"EventCode": "129",
++		"EventName": "L1I_L2_SOURCED_WRITES",
++		"BriefDescription": "L1I L2 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from the Level-2 cache"
++	},
++	{
++		"EventCode": "130",
++		"EventName": "DTLB1_MISSES",
++		"BriefDescription": "DTLB1 Misses",
++		"PublicDescription": "Level-1 Data TLB miss in progress. Incremented by one for every cycle a DTLB1 miss is in progress."
++	},
++	{
++		"EventCode": "131",
++		"EventName": "ITLB1_MISSES",
++		"BriefDescription": "ITLB1 Misses",
++		"PublicDescription": "Level-1 Instruction TLB miss in progress. Incremented by one for every cycle a ITLB1 miss is in progress."
++	},
++	{
++		"EventCode": "133",
++		"EventName": "L2C_STORES_SENT",
++		"BriefDescription": "L2C Stores Sent",
++		"PublicDescription": "Incremented by one for every store sent to Level-2 cache"
++	},
++	{
++		"EventCode": "134",
++		"EventName": "L1D_OFFBOOK_L3_SOURCED_WRITES",
++		"BriefDescription": "L1D Off-Book L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from an Off Book Level-3 cache"
++	},
++	{
++		"EventCode": "135",
++		"EventName": "L1D_ONBOOK_L4_SOURCED_WRITES",
++		"BriefDescription": "L1D On-Book L4 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from an On Book Level-4 cache"
++	},
++	{
++		"EventCode": "136",
++		"EventName": "L1I_ONBOOK_L4_SOURCED_WRITES",
++		"BriefDescription": "L1I On-Book L4 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from an On Book Level-4 cache"
++	},
++	{
++		"EventCode": "137",
++		"EventName": "L1D_RO_EXCL_WRITES",
++		"BriefDescription": "L1D Read-only Exclusive Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
++	},
++	{
++		"EventCode": "138",
++		"EventName": "L1D_OFFBOOK_L4_SOURCED_WRITES",
++		"BriefDescription": "L1D Off-Book L4 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from an Off Book Level-4 cache"
++	},
++	{
++		"EventCode": "139",
++		"EventName": "L1I_OFFBOOK_L4_SOURCED_WRITES",
++		"BriefDescription": "L1I Off-Book L4 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from an Off Book Level-4 cache"
++	},
++	{
++		"EventCode": "140",
++		"EventName": "DTLB1_HPAGE_WRITES",
++		"BriefDescription": "DTLB1 One-Megabyte Page Writes",
++		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer for a one-megabyte page"
++	},
++	{
++		"EventCode": "141",
++		"EventName": "L1D_LMEM_SOURCED_WRITES",
++		"BriefDescription": "L1D Local Memory Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache where the installed cache line was sourced from memory that is attached to the same book as the Data cache (Local Memory)"
++	},
++	{
++		"EventCode": "142",
++		"EventName": "L1I_LMEM_SOURCED_WRITES",
++		"BriefDescription": "L1I Local Memory Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache where the installed cache line was sourced from memory that is attached to the same book as the Instruction cache (Local Memory)"
++	},
++	{
++		"EventCode": "143",
++		"EventName": "L1I_OFFBOOK_L3_SOURCED_WRITES",
++		"BriefDescription": "L1I Off-Book L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from an Off Book Level-3 cache"
++	},
++	{
++		"EventCode": "144",
++		"EventName": "DTLB1_WRITES",
++		"BriefDescription": "DTLB1 Writes",
++		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer"
++	},
++	{
++		"EventCode": "145",
++		"EventName": "ITLB1_WRITES",
++		"BriefDescription": "ITLB1 Writes",
++		"PublicDescription": "A translation entry has been written to the Level-1 Instruction Translation Lookaside Buffer"
++	},
++	{
++		"EventCode": "146",
++		"EventName": "TLB2_PTE_WRITES",
++		"BriefDescription": "TLB2 PTE Writes",
++		"PublicDescription": "A translation entry has been written to the Level-2 TLB Page Table Entry arrays"
++	},
++	{
++		"EventCode": "147",
++		"EventName": "TLB2_CRSTE_HPAGE_WRITES",
++		"BriefDescription": "TLB2 CRSTE One-Megabyte Page Writes",
++		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays for a one-megabyte large page translation"
++	},
++	{
++		"EventCode": "148",
++		"EventName": "TLB2_CRSTE_WRITES",
++		"BriefDescription": "TLB2 CRSTE Writes",
++		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays"
++	},
++	{
++		"EventCode": "150",
++		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES",
++		"BriefDescription": "L1D On-Chip L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from an On Chip Level-3 cache"
++	},
++	{
++		"EventCode": "152",
++		"EventName": "L1D_OFFCHIP_L3_SOURCED_WRITES",
++		"BriefDescription": "L1D Off-Chip L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the returned cache line was sourced from an Off Chip/On Book Level-3 cache"
++	},
++	{
++		"EventCode": "153",
++		"EventName": "L1I_ONCHIP_L3_SOURCED_WRITES",
++		"BriefDescription": "L1I On-Chip L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from an On Chip Level-3 cache"
++	},
++	{
++		"EventCode": "155",
++		"EventName": "L1I_OFFCHIP_L3_SOURCED_WRITES",
++		"BriefDescription": "L1I Off-Chip L3 Sourced Writes",
++		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from an Off Chip/On Book Level-3 cache"
++	},
++]
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index 735159593c2c..b9c673087011 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -1,2 +1,3 @@
+ Family-model,Version,Filename,EventType
+ 209[78],1,cf_z10,core
++281[78],1,cf_z196,core
+-- 
+2.14.3
