@@ -1,51 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/8] perf mmap: Fix accessing unmapped mmap in perf_mmap__read_done()
-Date: Wed, 28 Mar 2018 15:49:13 -0300
-Message-ID: <20180328184919.32287-3-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/8] perf/core improvements and fixes
+Date: Thu, 29 Mar 2018 09:23:42 +0200
+Message-ID: <20180329072342.o42m6ot5ro2ac6jg@gmail.com>
 References: <20180328184919.32287-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180328184919.32287-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-There is a segmentation fault when running 'perf trace'. For example:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-  [root@jouet e]# perf trace -e *chdir -o /tmp/bla perf report --ignore-vmlinux -i ../perf.data
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 631fe154edb0a37308d0116a0f9b7bba9dca6218:
+> 
+>   perf/x86: Update rdpmc_always_available static key to the modern API (2018-03-27 07:53:00 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180328
+> 
+> for you to fetch changes up to 109d59b900e78834c66657dd4748fcedb9a1fe8d:
+> 
+>   perf vendor events s390: Add JSON files for IBM z14 (2018-03-27 13:13:39 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Be consistent when checking if a perf_mmap instance had
+>   its ring buffer unmmaped, fixing segfaults noticed in
+>   'perf trace' (Kan Liang, Arnaldo Carvalho de Melo)
+> 
+> - Avoid adding the same option multiple times to the 'diff'
+>   command in check-headers.sh (Jiri Olsa)
+> 
+> - Add vendor event files (JSON format) to various IBM
+>   s390 models (z10EC, z10BC, z196, zEC12, zBC12, z13
+>   and z14) (Thomas Richter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (1):
+>       perf mmap: Be consistent when checking for an unmaped ring buffer
+> 
+> Jiri Olsa (1):
+>       perf build: Fix check-headers.sh opts assignment
+> 
+> Kan Liang (1):
+>       perf mmap: Fix accessing unmapped mmap in perf_mmap__read_done()
+> 
+> Thomas Richter (5):
+>       perf vendor events s390: Add JSON files for IBM z10EC z10BC
+>       perf vendor events s390: Add JSON files for IBM z196
+>       perf vendor events s390: Add JSON files for IBM zEC12 zBC12
+>       perf vendor events s390: Add JSON files for IBM z13
+>       perf vendor events s390: Add JSON files for IBM z14
+> 
+>  tools/perf/check-headers.sh                        |   1 +
+>  tools/perf/pmu-events/arch/s390/cf_z10/basic.json  |  74 +++++
+>  tools/perf/pmu-events/arch/s390/cf_z10/crypto.json |  98 ++++++
+>  .../perf/pmu-events/arch/s390/cf_z10/extended.json | 110 +++++++
+>  tools/perf/pmu-events/arch/s390/cf_z13/basic.json  |  74 +++++
+>  tools/perf/pmu-events/arch/s390/cf_z13/crypto.json |  98 ++++++
+>  .../perf/pmu-events/arch/s390/cf_z13/extended.json | 338 +++++++++++++++++++++
+>  tools/perf/pmu-events/arch/s390/cf_z14/basic.json  |  50 +++
+>  tools/perf/pmu-events/arch/s390/cf_z14/crypto.json |  98 ++++++
+>  .../perf/pmu-events/arch/s390/cf_z14/extended.json | 320 +++++++++++++++++++
+>  tools/perf/pmu-events/arch/s390/cf_z196/basic.json |  74 +++++
+>  .../perf/pmu-events/arch/s390/cf_z196/crypto.json  |  98 ++++++
+>  .../pmu-events/arch/s390/cf_z196/extended.json     | 146 +++++++++
+>  .../perf/pmu-events/arch/s390/cf_zec12/basic.json  |  74 +++++
+>  .../perf/pmu-events/arch/s390/cf_zec12/crypto.json |  98 ++++++
+>  .../pmu-events/arch/s390/cf_zec12/extended.json    | 212 +++++++++++++
+>  tools/perf/pmu-events/arch/s390/mapfile.csv        |   6 +
+>  tools/perf/util/mmap.c                             |  19 +-
+>  18 files changed, 1987 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/basic.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/extended.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/basic.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/crypto.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/extended.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/basic.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/basic.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/crypto.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/extended.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/basic.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/crypto.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/extended.json
+>  create mode 100644 tools/perf/pmu-events/arch/s390/mapfile.csv
 
-The perf_mmap__consume() could unmap the mmap. It needs to check the
-refcnt in perf_mmap__read_done().
+Pulled, thanks a lot Arnaldo!
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: ee023de05f35 ("perf mmap: Introduce perf_mmap__read_done()")
-Link: http://lkml.kernel.org/r/1522071729-16776-1-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/mmap.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 38ca3ffb9d61..f6cfc52ff1fe 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -317,5 +317,11 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
-  */
- void perf_mmap__read_done(struct perf_mmap *map)
- {
-+	/*
-+	 * Check if event was unmapped due to a POLLHUP/POLLERR.
-+	 */
-+	if (!refcount_read(&map->refcnt))
-+		return;
-+
- 	map->prev = perf_mmap__read_head(map);
- }
--- 
-2.14.3
+	Ingo
