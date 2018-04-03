@@ -1,110 +1,73 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/8] perf/core improvements and fixes
-Date: Thu, 29 Mar 2018 09:23:42 +0200
-Message-ID: <20180329072342.o42m6ot5ro2ac6jg@gmail.com>
-References: <20180328184919.32287-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf trace: remove redundant ')'
+Date: Tue, 3 Apr 2018 16:19:07 -0300
+Message-ID: <20180403191907.GE23295@kernel.org>
+References: <1520937601-24952-1-git-send-email-changbin.du@intel.com>
+ <20180316075108.xwenvklz3a6scodh@intel.com>
+ <20180316125045.GC10026@kernel.org>
+ <20180328072631.gj72odnaimsohkmc@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180328184919.32287-1-acme@kernel.org>
+In-Reply-To: <20180328072631.gj72odnaimsohkmc@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: "Du, Changbin" <changbin.du@intel.com>
+Cc: jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Wed, Mar 28, 2018 at 03:26:31PM +0800, Du, Changbin escreveu:
+> Hi Arnaldo,
+> Just a kind reminder. Hope you didn't forget this.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Ok, applied.
 
-> Hi Ingo,
+- Arnaldo
+ 
+> On Fri, Mar 16, 2018 at 09:50:45AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Mar 16, 2018 at 03:51:09PM +0800, Du, Changbin escreveu:
+> > > Hi Arnaldo, How about this simple one? Thanks.
+> > > 
+> > > On Tue, Mar 13, 2018 at 06:40:01PM +0800, changbin.du@intel.com wrote:
+> > > > From: Changbin Du <changbin.du@intel.com>
+> > > > 
+> > > > There is a redundant ')' at the tail of each event. So remove it.
+> > > > $ sudo perf trace --no-syscalls -e 'kmem:*' -a
+> > > >    899.342 kmem:kfree:(vfs_writev+0xb9) call_site=ffffffff9c453979 ptr=(nil))
+> > > >    899.344 kmem:kfree:(___sys_recvmsg+0x188) call_site=ffffffff9c9b8b88 ptr=(nil))
+> > > > 
+> > > > Signed-off-by: Changbin Du <changbin.du@intel.com>
+> > > > ---
+> > > >  tools/perf/builtin-trace.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > > index e7f1b18..7273f5f 100644
+> > > > --- a/tools/perf/builtin-trace.c
+> > > > +++ b/tools/perf/builtin-trace.c
+> > > > @@ -1959,7 +1959,7 @@ static int trace__event_handler(struct trace *trace, struct perf_evsel *evsel,
+> > > >  				      trace->output);
+> > > >  	}
+> > > >  
+> > > > -	fprintf(trace->output, ")\n");
+> > > > +	fprintf(trace->output, "\n");
+> > 
+> > It looks simple on the surface, but I couldn't quickly recall why this
+> > ')' was put there in the first place... So I left for later to do a 'git
+> > blame' on this file, etc.
+> > 
+> > - Arnaldo
+> > 
+> > > >  	if (callchain_ret > 0)
+> > > >  		trace__fprintf_callchain(trace, sample);
+> > > > -- 
+> > > > 2.7.4
+> > > > 
+> > > 
+> > > -- 
+> > > Thanks,
+> > > Changbin Du
 > 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 631fe154edb0a37308d0116a0f9b7bba9dca6218:
-> 
->   perf/x86: Update rdpmc_always_available static key to the modern API (2018-03-27 07:53:00 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.17-20180328
-> 
-> for you to fetch changes up to 109d59b900e78834c66657dd4748fcedb9a1fe8d:
-> 
->   perf vendor events s390: Add JSON files for IBM z14 (2018-03-27 13:13:39 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> - Be consistent when checking if a perf_mmap instance had
->   its ring buffer unmmaped, fixing segfaults noticed in
->   'perf trace' (Kan Liang, Arnaldo Carvalho de Melo)
-> 
-> - Avoid adding the same option multiple times to the 'diff'
->   command in check-headers.sh (Jiri Olsa)
-> 
-> - Add vendor event files (JSON format) to various IBM
->   s390 models (z10EC, z10BC, z196, zEC12, zBC12, z13
->   and z14) (Thomas Richter)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (1):
->       perf mmap: Be consistent when checking for an unmaped ring buffer
-> 
-> Jiri Olsa (1):
->       perf build: Fix check-headers.sh opts assignment
-> 
-> Kan Liang (1):
->       perf mmap: Fix accessing unmapped mmap in perf_mmap__read_done()
-> 
-> Thomas Richter (5):
->       perf vendor events s390: Add JSON files for IBM z10EC z10BC
->       perf vendor events s390: Add JSON files for IBM z196
->       perf vendor events s390: Add JSON files for IBM zEC12 zBC12
->       perf vendor events s390: Add JSON files for IBM z13
->       perf vendor events s390: Add JSON files for IBM z14
-> 
->  tools/perf/check-headers.sh                        |   1 +
->  tools/perf/pmu-events/arch/s390/cf_z10/basic.json  |  74 +++++
->  tools/perf/pmu-events/arch/s390/cf_z10/crypto.json |  98 ++++++
->  .../perf/pmu-events/arch/s390/cf_z10/extended.json | 110 +++++++
->  tools/perf/pmu-events/arch/s390/cf_z13/basic.json  |  74 +++++
->  tools/perf/pmu-events/arch/s390/cf_z13/crypto.json |  98 ++++++
->  .../perf/pmu-events/arch/s390/cf_z13/extended.json | 338 +++++++++++++++++++++
->  tools/perf/pmu-events/arch/s390/cf_z14/basic.json  |  50 +++
->  tools/perf/pmu-events/arch/s390/cf_z14/crypto.json |  98 ++++++
->  .../perf/pmu-events/arch/s390/cf_z14/extended.json | 320 +++++++++++++++++++
->  tools/perf/pmu-events/arch/s390/cf_z196/basic.json |  74 +++++
->  .../perf/pmu-events/arch/s390/cf_z196/crypto.json  |  98 ++++++
->  .../pmu-events/arch/s390/cf_z196/extended.json     | 146 +++++++++
->  .../perf/pmu-events/arch/s390/cf_zec12/basic.json  |  74 +++++
->  .../perf/pmu-events/arch/s390/cf_zec12/crypto.json |  98 ++++++
->  .../pmu-events/arch/s390/cf_zec12/extended.json    | 212 +++++++++++++
->  tools/perf/pmu-events/arch/s390/mapfile.csv        |   6 +
->  tools/perf/util/mmap.c                             |  19 +-
->  18 files changed, 1987 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/basic.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z10/extended.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/basic.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/crypto.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z13/extended.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/basic.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z14/extended.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/basic.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/crypto.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z196/extended.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/basic.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/crypto.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_zec12/extended.json
->  create mode 100644 tools/perf/pmu-events/arch/s390/mapfile.csv
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+> -- 
+> Thanks,
+> Changbin Du
