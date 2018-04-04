@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/17] perf annotate stdio2: Print more descriptive event information header
-Date: Tue,  3 Apr 2018 23:21:57 -0300
-Message-ID: <20180404022158.12190-17-acme@kernel.org>
+Subject: [PATCH 12/17] perf hists: Move hists__scnprintf_title() away from the TUI code
+Date: Tue,  3 Apr 2018 23:21:53 -0300
+Message-ID: <20180404022158.12190-13-acme@kernel.org>
 References: <20180404022158.12190-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,33 +15,12 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To match the recently added event header information to --tui, e.g.:
+The previous patch made this function useful to non-TUI parts of the
+tools, but left it where the function from what it was carved, so that
+the patch showed more clearly the process.
 
-  # perf annotate --ignore-vmlinux --stdio2 _raw_spin_lock_irqsave
-  Samples: 128  of event 'cycles:ppp', 4000 Hz, Event count (approx.): 48617682
-  _raw_spin_lock_irqsave() /proc/kcore
-    0.78        nop
-    7.03        push   %rbx
-    3.12        pushfq
-    6.25        pop    %rax
-                nop
-                mov    %rax,%rbx
-    3.12        cli
-                nop
-                xor    %eax,%eax
-                mov    $0x1,%edx
-   79.69        lock   cmpxchg %edx,(%rdi)
-                test   %eax,%eax
-              ↓ jne    2b
-                mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-          2b:   mov    %eax,%esi
-              → callq  *ffffffffb30eaed0
-                mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-  #
+Now just move it outside the TUI parts so that we can finally use it,
+even when the TUI code doesn't get built/linked.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -49,39 +28,209 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Martin Liška <mliska@suse.cz>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ujy46x7cldyhyxelyf2b9quy@git.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=196935
+Link: https://lkml.kernel.org/n/tip-hqj7hvcr3mu5lvcqp3cssio6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ tools/perf/ui/browsers/hists.c | 79 ----------------------------------------
+ tools/perf/util/hist.c         | 81 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 79 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index b956bb7eabcf..fffe16af9797 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2325,7 +2325,7 @@ int symbol__tty_annotate2(struct symbol *sym, struct map *map,
- 	struct dso *dso = map->dso;
- 	struct rb_root source_line = RB_ROOT;
- 	struct annotation_options opts = annotation__default_options;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index c20f0ad22f34..cde9bab5061d 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2208,85 +2208,6 @@ static inline bool is_report_browser(void *timer)
+ 	return timer == NULL;
+ }
+ 
+-int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool show_freq)
+-{
+-	char unit;
+-	int printed;
+-	const struct dso *dso = hists->dso_filter;
+-	const struct thread *thread = hists->thread_filter;
+-	int socket_id = hists->socket_filter;
+-	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
+-	u64 nr_events = hists->stats.total_period;
+-	struct perf_evsel *evsel = hists_to_evsel(hists);
 -	const char *ev_name = perf_evsel__name(evsel);
-+	struct annotation *notes = symbol__annotation(sym);
- 	char buf[1024];
- 
- 	if (symbol__annotate2(sym, map, evsel, &opts, NULL) < 0)
-@@ -2337,12 +2337,8 @@ int symbol__tty_annotate2(struct symbol *sym, struct map *map,
- 		print_summary(&source_line, dso->long_name);
- 	}
- 
--	if (perf_evsel__is_group_event(evsel)) {
--		perf_evsel__group_desc(evsel, buf, sizeof(buf));
--		ev_name = buf;
+-	char buf[512], sample_freq_str[64] = "";
+-	size_t buflen = sizeof(buf);
+-	char ref[30] = " show reference callgraph, ";
+-	bool enable_ref = false;
+-
+-	if (symbol_conf.filter_relative) {
+-		nr_samples = hists->stats.nr_non_filtered_samples;
+-		nr_events = hists->stats.total_non_filtered_period;
 -	}
 -
--	fprintf(stdout, "%s() %s\nEvent: %s\n\n", sym->name, dso->long_name, ev_name);
-+	annotation__scnprintf_samples_period(notes, buf, sizeof(buf), evsel);
-+	fprintf(stdout, "%s\n%s() %s\n", buf, sym->name, dso->long_name);
- 	symbol__annotate_fprintf2(sym, stdout);
+-	if (perf_evsel__is_group_event(evsel)) {
+-		struct perf_evsel *pos;
+-
+-		perf_evsel__group_desc(evsel, buf, buflen);
+-		ev_name = buf;
+-
+-		for_each_group_member(pos, evsel) {
+-			struct hists *pos_hists = evsel__hists(pos);
+-
+-			if (symbol_conf.filter_relative) {
+-				nr_samples += pos_hists->stats.nr_non_filtered_samples;
+-				nr_events += pos_hists->stats.total_non_filtered_period;
+-			} else {
+-				nr_samples += pos_hists->stats.nr_events[PERF_RECORD_SAMPLE];
+-				nr_events += pos_hists->stats.total_period;
+-			}
+-		}
+-	}
+-
+-	if (symbol_conf.show_ref_callgraph &&
+-	    strstr(ev_name, "call-graph=no"))
+-		enable_ref = true;
+-
+-	if (show_freq)
+-		scnprintf(sample_freq_str, sizeof(sample_freq_str), " %d Hz,", evsel->attr.sample_freq);
+-
+-	nr_samples = convert_unit(nr_samples, &unit);
+-	printed = scnprintf(bf, size,
+-			   "Samples: %lu%c of event%s '%s',%s%sEvent count (approx.): %" PRIu64,
+-			   nr_samples, unit, evsel->nr_members > 1 ? "s" : "",
+-			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
+-
+-
+-	if (hists->uid_filter_str)
+-		printed += snprintf(bf + printed, size - printed,
+-				    ", UID: %s", hists->uid_filter_str);
+-	if (thread) {
+-		if (hists__has(hists, thread)) {
+-			printed += scnprintf(bf + printed, size - printed,
+-				    ", Thread: %s(%d)",
+-				     (thread->comm_set ? thread__comm_str(thread) : ""),
+-				    thread->tid);
+-		} else {
+-			printed += scnprintf(bf + printed, size - printed,
+-				    ", Thread: %s",
+-				     (thread->comm_set ? thread__comm_str(thread) : ""));
+-		}
+-	}
+-	if (dso)
+-		printed += scnprintf(bf + printed, size - printed,
+-				    ", DSO: %s", dso->short_name);
+-	if (socket_id > -1)
+-		printed += scnprintf(bf + printed, size - printed,
+-				    ", Processor Socket: %d", socket_id);
+-
+-	return printed;
+-}
+-
+ static int hists_browser__scnprintf_title(struct hist_browser *browser, char *bf, size_t size)
+ {
+ 	struct hist_browser_timer *hbt = browser->hbt;
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 7d968892ee39..4d602fba40b2 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -6,6 +6,7 @@
+ #include "session.h"
+ #include "namespaces.h"
+ #include "sort.h"
++#include "units.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "annotate.h"
+@@ -14,6 +15,7 @@
+ #include "ui/progress.h"
+ #include <errno.h>
+ #include <math.h>
++#include <inttypes.h>
+ #include <sys/param.h>
  
- 	annotated_source__purge(symbol__annotation(sym)->src);
+ static bool hists__filter_entry_by_dso(struct hists *hists,
+@@ -2454,6 +2456,85 @@ u64 hists__total_period(struct hists *hists)
+ 		hists->stats.total_period;
+ }
+ 
++int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool show_freq)
++{
++	char unit;
++	int printed;
++	const struct dso *dso = hists->dso_filter;
++	const struct thread *thread = hists->thread_filter;
++	int socket_id = hists->socket_filter;
++	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
++	u64 nr_events = hists->stats.total_period;
++	struct perf_evsel *evsel = hists_to_evsel(hists);
++	const char *ev_name = perf_evsel__name(evsel);
++	char buf[512], sample_freq_str[64] = "";
++	size_t buflen = sizeof(buf);
++	char ref[30] = " show reference callgraph, ";
++	bool enable_ref = false;
++
++	if (symbol_conf.filter_relative) {
++		nr_samples = hists->stats.nr_non_filtered_samples;
++		nr_events = hists->stats.total_non_filtered_period;
++	}
++
++	if (perf_evsel__is_group_event(evsel)) {
++		struct perf_evsel *pos;
++
++		perf_evsel__group_desc(evsel, buf, buflen);
++		ev_name = buf;
++
++		for_each_group_member(pos, evsel) {
++			struct hists *pos_hists = evsel__hists(pos);
++
++			if (symbol_conf.filter_relative) {
++				nr_samples += pos_hists->stats.nr_non_filtered_samples;
++				nr_events += pos_hists->stats.total_non_filtered_period;
++			} else {
++				nr_samples += pos_hists->stats.nr_events[PERF_RECORD_SAMPLE];
++				nr_events += pos_hists->stats.total_period;
++			}
++		}
++	}
++
++	if (symbol_conf.show_ref_callgraph &&
++	    strstr(ev_name, "call-graph=no"))
++		enable_ref = true;
++
++	if (show_freq)
++		scnprintf(sample_freq_str, sizeof(sample_freq_str), " %d Hz,", evsel->attr.sample_freq);
++
++	nr_samples = convert_unit(nr_samples, &unit);
++	printed = scnprintf(bf, size,
++			   "Samples: %lu%c of event%s '%s',%s%sEvent count (approx.): %" PRIu64,
++			   nr_samples, unit, evsel->nr_members > 1 ? "s" : "",
++			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
++
++
++	if (hists->uid_filter_str)
++		printed += snprintf(bf + printed, size - printed,
++				    ", UID: %s", hists->uid_filter_str);
++	if (thread) {
++		if (hists__has(hists, thread)) {
++			printed += scnprintf(bf + printed, size - printed,
++				    ", Thread: %s(%d)",
++				     (thread->comm_set ? thread__comm_str(thread) : ""),
++				    thread->tid);
++		} else {
++			printed += scnprintf(bf + printed, size - printed,
++				    ", Thread: %s",
++				     (thread->comm_set ? thread__comm_str(thread) : ""));
++		}
++	}
++	if (dso)
++		printed += scnprintf(bf + printed, size - printed,
++				    ", DSO: %s", dso->short_name);
++	if (socket_id > -1)
++		printed += scnprintf(bf + printed, size - printed,
++				    ", Processor Socket: %d", socket_id);
++
++	return printed;
++}
++
+ int parse_filter_percentage(const struct option *opt __maybe_unused,
+ 			    const char *arg, int unset __maybe_unused)
+ {
 -- 
 2.14.3
