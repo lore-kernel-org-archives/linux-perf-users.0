@@ -1,85 +1,70 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Date: Fri, 6 Apr 2018 14:41:01 +0200
-Message-ID: <20180406124101.paxuoeueyycas5lw@gmail.com>
-References: <20180406112439.21685-1-acme@kernel.org>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v5 0/3] perf/core: expose thread context switch out event type
+ to user space
+Date: Mon, 9 Apr 2018 10:20:49 +0300
+Message-ID: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180406112439.21685-1-acme@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Chris Wilson <chris@chris-wilson.co.uk>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Namhyung Kim <namhyung@kernel.org>, Tvrtko Ursulin <tvrtko.ursulin@intel.com>, Wang Nan <wangnan0@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Implement preempting context switch out event as a part of 
+PERF_RECORD_SWITCH[_CPU_WIDE] record. The event is treated as preemption 
+one when task->state value of the thread being switched out is TASK_RUNNING;
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit d1e7e602cd64cf61f87dbf30df07c24df9eb1d99:
-> 
->   perf/x86/intel: Move regs->flags EXACT bit init (2018-04-05 09:28:40 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180406
-> 
-> for you to fetch changes up to 01f97511f13cbf2ba3d23b2bffa06258dc81e283:
-> 
->   tools headers uapi: Synchronize i915_drm.h (2018-04-05 14:48:51 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Show group details on the title line in the annotate browser
->   and 'perf annotate --stdio2' output, so that the per-event
->   columns can have headers (Arnaldo Carvalho de Melo)
-> 
-> - Fixup vertical line separating metrics from instructions and
->   cleaning unused lines at the bottom, both in the annotate TUI
->   browser (Arnaldo Carvalho de Melo)
-> 
-> - Remove duplicated 'samples' in lost samples warning in
->   'perf report' (Arnaldo Carvalho de Melo)
-> 
-> - Synchronize i915_drm.h, silencing the perf build process,
->   automagically adding support for the new DRM_I915_QUERY
->   ioctl (Arnaldo Carvalho de Melo)
-> 
-> - Make auxtrace_queues__add_buffer() allocate struct buffer,
->   from a patchkit already applied (Adrian Hunter)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf auxtrace: Make auxtrace_queues__add_buffer() allocate struct buffer
-> 
-> Arnaldo Carvalho de Melo (5):
->       perf annotate: Show group details on the title line
->       perf annotate browser: Fixup vertical line separating metrics from instructions
->       perf ui browser: Fixup cleaning unused lines at the bottom
->       perf report: Remove duplicated 'samples' in lost samples warning
->       tools headers uapi: Synchronize i915_drm.h
-> 
->  tools/include/uapi/drm/i915_drm.h | 112 ++++++++++++++++++++++++++++++++++++--
->  tools/perf/ui/browser.c           |   4 +-
->  tools/perf/ui/browsers/annotate.c |   2 +-
->  tools/perf/util/annotate.c        |   7 ++-
->  tools/perf/util/auxtrace.c        |  54 ++++++++----------
->  tools/perf/util/session.c         |   2 +-
->  6 files changed, 141 insertions(+), 40 deletions(-)
+Percentage of preempting and non-preempting context switches help 
+understanding the nature of workloads (CPU or IO bound) that are running 
+on the machine;
 
-Pulled, thanks a lot Arnaldo!
+Event type encoding is implemented using a new
+PERF_RECORD_MISC_SWITCH_OUT_PREEMPT bit in misc field of event record header;
 
-Thanks,
+Perf tool report and script commands have been extended to decode 
+new PREEMPT bit and the updated output looks like this:
 
-	Ingo
+tools/perf/perf report -D -i perf.data | grep _SWITCH
+
+0 768361415226 0x27f076 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     8/8    
+4 768362216813 0x28f45e [0x28]: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
+4 768362217824 0x28f486 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  4073/4073 
+0 768362414027 0x27f0ce [0x28]: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:     8/8    
+0 768362414367 0x27f0f6 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
+
+perf script --show-switch-events -F +misc -I -i perf.data:
+
+          hdparm  4073 [004] U       762.198265:     380194 cycles:ppp:      7faf727f5a23 strchr (/usr/lib64/ld-2.26.so)
+          hdparm  4073 [004] K       762.198366:     441572 cycles:ppp:  ffffffffb9218435 alloc_set_pte (/lib/modules/4.16.0-rc6+/build/vmlinux)
+          hdparm  4073 [004] S       762.198391: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
+         swapper     0 [004]         762.198392: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  4073/4073 
+         swapper     0 [004] Sp      762.198477: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  4073/4073 
+          hdparm  4073 [004]         762.198478: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
+         swapper     0 [007] K       762.198514:    2303073 cycles:ppp:  ffffffffb98b0c66 intel_idle (/lib/modules/4.16.0-rc6+/build/vmlinux)
+         swapper     0 [007] Sp      762.198561: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  1134/1134 
+  kworker/u16:18  1134 [007]         762.198562: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
+  kworker/u16:18  1134 [007] S       762.198567: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
+
+The documentation has been updated to mention PREEMPT switch out events 
+and its decoding symbols in perf script output.
+
+The changes have been manually tested on Fedora 27 with the patched kernel:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+
+---
+ Alexey Budankov (3):
+	perf/core: store context switch out type into Perf trace
+	perf report: extend raw dump (-D) out with switch out event type
+	perf script: extend misc field decoding with switch out event type
+
+ include/uapi/linux/perf_event.h          | 18 +++++++++++++++---
+ kernel/events/core.c                     |  4 ++++
+ tools/include/uapi/linux/perf_event.h    | 18 +++++++++++++++---
+ tools/perf/Documentation/perf-script.txt | 17 +++++++++--------
+ tools/perf/builtin-script.c              |  5 ++++-
+ tools/perf/util/event.c                  |  4 +++-
+ 6 files changed, 50 insertions(+), 16 deletions(-)
