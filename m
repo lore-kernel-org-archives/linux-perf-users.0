@@ -1,86 +1,54 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v5 3/3] perf script: extend misc field decoding with switch
- out event type
-Date: Mon, 9 Apr 2018 10:26:46 +0300
-Message-ID: <5fc65ce7-8ca5-53ae-8858-8ddd27290575@linux.intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v5 1/3] perf/core: store context switch out type into
+ Perf trace
+Date: Mon, 9 Apr 2018 11:26:03 +0200
+Message-ID: <20180409092603.GY4043@hirez.programming.kicks-ass.net>
 References: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
+ <9ff84e83-a0ca-dd82-a6d0-cb951689be74@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9ff84e83-a0ca-dd82-a6d0-cb951689be74@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On Mon, Apr 09, 2018 at 10:25:32AM +0300, Alexey Budankov wrote:
+> 
+> Store preempting context switch out event into Perf trace as a part of 
+> PERF_RECORD_SWITCH[_CPU_WIDE] record.
+> 
+> Percentage of preempting and non-preempting context switches help 
+> understanding the nature of workloads (CPU or IO bound) that are running 
+> on a machine;
+> 
+> The event is treated as preemption one when task->state value of the 
+> thread being switched out is TASK_RUNNING. Event type encoding is 
+> implemented using PERF_RECORD_MISC_SWITCH_OUT_PREEMPT bit;
+> 	
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Append 'p' sign to 'S' tag designating the type of context switch out event so 
-'Sp' means preemption context switch. Documentation is extended to cover 
-new presentation changes.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-perf script --show-switch-events -F +misc -I -i perf.data:
+Acme, I'm thinking you should route this, since most of the changes are
+actually to the tool.
 
-          hdparm  4073 [004] U       762.198265:     380194 cycles:ppp:      7faf727f5a23 strchr (/usr/lib64/ld-2.26.so)
-          hdparm  4073 [004] K       762.198366:     441572 cycles:ppp:  ffffffffb9218435 alloc_set_pte (/lib/modules/4.16.0-rc6+/build/vmlinux)
-          hdparm  4073 [004] S       762.198391: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
-         swapper     0 [004]         762.198392: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  4073/4073 
-         swapper     0 [004] Sp      762.198477: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  4073/4073 
-          hdparm  4073 [004]         762.198478: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
-         swapper     0 [007] K       762.198514:    2303073 cycles:ppp:  ffffffffb98b0c66 intel_idle (/lib/modules/4.16.0-rc6+/build/vmlinux)
-         swapper     0 [007] Sp      762.198561: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  1134/1134 
-  kworker/u16:18  1134 [007]         762.198562: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
-  kworker/u16:18  1134 [007] S       762.198567: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index fc1c330c6bd6..872a5aaa77eb 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7584,6 +7584,10 @@ static void perf_event_switch(struct task_struct *task,
+>  		},
+>  	};
+>  
+> +	if (!sched_in && task->state == TASK_RUNNING)
+> +		switch_event.event_id.header.misc |=
+> +				PERF_RECORD_MISC_SWITCH_OUT_PREEMPT;
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-script.txt | 17 +++++++++--------
- tools/perf/builtin-script.c              |  5 ++++-
- 2 files changed, 13 insertions(+), 9 deletions(-)
+I typically prefer {} over any multi-line expression.
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 36ec0257f8d3..afdafe2110a1 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -228,14 +228,15 @@ OPTIONS
- 	For sample events it's possible to display misc field with -F +misc option,
- 	following letters are displayed for each bit:
- 
--	  PERF_RECORD_MISC_KERNEL        K
--	  PERF_RECORD_MISC_USER          U
--	  PERF_RECORD_MISC_HYPERVISOR    H
--	  PERF_RECORD_MISC_GUEST_KERNEL  G
--	  PERF_RECORD_MISC_GUEST_USER    g
--	  PERF_RECORD_MISC_MMAP_DATA*    M
--	  PERF_RECORD_MISC_COMM_EXEC     E
--	  PERF_RECORD_MISC_SWITCH_OUT    S
-+	  PERF_RECORD_MISC_KERNEL               K
-+	  PERF_RECORD_MISC_USER                 U
-+	  PERF_RECORD_MISC_HYPERVISOR           H
-+	  PERF_RECORD_MISC_GUEST_KERNEL         G
-+	  PERF_RECORD_MISC_GUEST_USER           g
-+	  PERF_RECORD_MISC_MMAP_DATA*           M
-+	  PERF_RECORD_MISC_COMM_EXEC            E
-+	  PERF_RECORD_MISC_SWITCH_OUT           S
-+	  PERF_RECORD_MISC_SWITCH_OUT_PREEMPT   Sp
- 
- 	  $ perf script -F +misc ...
- 	   sched-messaging  1414 K     28690.636582:       4590 cycles ...
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 313c42423393..0f916e8e1835 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -657,8 +657,11 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 			break;
- 		case PERF_RECORD_SWITCH:
- 		case PERF_RECORD_SWITCH_CPU_WIDE:
--			if (has(SWITCH_OUT))
-+			if (has(SWITCH_OUT)) {
- 				ret += fprintf(fp, "S");
-+				if (sample->misc & PERF_RECORD_MISC_SWITCH_OUT_PREEMPT)
-+					ret += fprintf(fp, "p");
-+			}
- 		default:
- 			break;
- 		}
+>  	perf_iterate_sb(perf_event_switch_output,
+>  		       &switch_event,
+>  		       NULL);
