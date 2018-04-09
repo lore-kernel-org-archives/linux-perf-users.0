@@ -1,12 +1,14 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v5 0/3] perf/core: expose thread context switch out event type
- to user space
-Date: Mon, 9 Apr 2018 10:20:49 +0300
-Message-ID: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
+Subject: [PATCH v5 1/3] perf/core: store context switch out type into Perf
+ trace
+Date: Mon, 9 Apr 2018 10:25:32 +0300
+Message-ID: <9ff84e83-a0ca-dd82-a6d0-cb951689be74@linux.intel.com>
+References: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -14,57 +16,98 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@re
 List-Id: linux-perf-users.vger.kernel.org
 
 
-Implement preempting context switch out event as a part of 
-PERF_RECORD_SWITCH[_CPU_WIDE] record. The event is treated as preemption 
-one when task->state value of the thread being switched out is TASK_RUNNING;
+Store preempting context switch out event into Perf trace as a part of 
+PERF_RECORD_SWITCH[_CPU_WIDE] record.
 
 Percentage of preempting and non-preempting context switches help 
 understanding the nature of workloads (CPU or IO bound) that are running 
-on the machine;
+on a machine;
 
-Event type encoding is implemented using a new
-PERF_RECORD_MISC_SWITCH_OUT_PREEMPT bit in misc field of event record header;
-
-Perf tool report and script commands have been extended to decode 
-new PREEMPT bit and the updated output looks like this:
-
-tools/perf/perf report -D -i perf.data | grep _SWITCH
-
-0 768361415226 0x27f076 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     8/8    
-4 768362216813 0x28f45e [0x28]: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
-4 768362217824 0x28f486 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  4073/4073 
-0 768362414027 0x27f0ce [0x28]: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:     8/8    
-0 768362414367 0x27f0f6 [0x28]: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
-
-perf script --show-switch-events -F +misc -I -i perf.data:
-
-          hdparm  4073 [004] U       762.198265:     380194 cycles:ppp:      7faf727f5a23 strchr (/usr/lib64/ld-2.26.so)
-          hdparm  4073 [004] K       762.198366:     441572 cycles:ppp:  ffffffffb9218435 alloc_set_pte (/lib/modules/4.16.0-rc6+/build/vmlinux)
-          hdparm  4073 [004] S       762.198391: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
-         swapper     0 [004]         762.198392: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:  4073/4073 
-         swapper     0 [004] Sp      762.198477: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  4073/4073 
-          hdparm  4073 [004]         762.198478: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
-         swapper     0 [007] K       762.198514:    2303073 cycles:ppp:  ffffffffb98b0c66 intel_idle (/lib/modules/4.16.0-rc6+/build/vmlinux)
-         swapper     0 [007] Sp      762.198561: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid:  1134/1134 
-  kworker/u16:18  1134 [007]         762.198562: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:     0/0    
-  kworker/u16:18  1134 [007] S       762.198567: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:     0/0    
-
-The documentation has been updated to mention PREEMPT switch out events 
-and its decoding symbols in perf script output.
-
-The changes have been manually tested on Fedora 27 with the patched kernel:
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-
+The event is treated as preemption one when task->state value of the 
+thread being switched out is TASK_RUNNING. Event type encoding is 
+implemented using PERF_RECORD_MISC_SWITCH_OUT_PREEMPT bit;
+	
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- Alexey Budankov (3):
-	perf/core: store context switch out type into Perf trace
-	perf report: extend raw dump (-D) out with switch out event type
-	perf script: extend misc field decoding with switch out event type
+ include/uapi/linux/perf_event.h       | 18 +++++++++++++++---
+ kernel/events/core.c                  |  4 ++++
+ tools/include/uapi/linux/perf_event.h | 18 +++++++++++++++---
+ 3 files changed, 34 insertions(+), 6 deletions(-)
 
- include/uapi/linux/perf_event.h          | 18 +++++++++++++++---
- kernel/events/core.c                     |  4 ++++
- tools/include/uapi/linux/perf_event.h    | 18 +++++++++++++++---
- tools/perf/Documentation/perf-script.txt | 17 +++++++++--------
- tools/perf/builtin-script.c              |  5 ++++-
- tools/perf/util/event.c                  |  4 +++-
- 6 files changed, 50 insertions(+), 16 deletions(-)
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 912b85b52344..b8e288a1f740 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -650,11 +650,23 @@ struct perf_event_mmap_page {
+ #define PERF_RECORD_MISC_COMM_EXEC		(1 << 13)
+ #define PERF_RECORD_MISC_SWITCH_OUT		(1 << 13)
+ /*
+- * Indicates that the content of PERF_SAMPLE_IP points to
+- * the actual instruction that triggered the event. See also
+- * perf_event_attr::precise_ip.
++ * These PERF_RECORD_MISC_* flags below are safely reused
++ * for the following events:
++ *
++ *   PERF_RECORD_MISC_EXACT_IP           - PERF_RECORD_SAMPLE of precise events
++ *   PERF_RECORD_MISC_SWITCH_OUT_PREEMPT - PERF_RECORD_SWITCH* events
++ *
++ *
++ * PERF_RECORD_MISC_EXACT_IP:
++ *   Indicates that the content of PERF_SAMPLE_IP points to
++ *   the actual instruction that triggered the event. See also
++ *   perf_event_attr::precise_ip.
++ *
++ * PERF_RECORD_MISC_SWITCH_OUT_PREEMPT:
++ *   Indicates that thread was preempted in TASK_RUNNING state.
+  */
+ #define PERF_RECORD_MISC_EXACT_IP		(1 << 14)
++#define PERF_RECORD_MISC_SWITCH_OUT_PREEMPT	(1 << 14)
+ /*
+  * Reserve the last bit to indicate some extended misc field
+  */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index fc1c330c6bd6..872a5aaa77eb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7584,6 +7584,10 @@ static void perf_event_switch(struct task_struct *task,
+ 		},
+ 	};
+ 
++	if (!sched_in && task->state == TASK_RUNNING)
++		switch_event.event_id.header.misc |=
++				PERF_RECORD_MISC_SWITCH_OUT_PREEMPT;
++
+ 	perf_iterate_sb(perf_event_switch_output,
+ 		       &switch_event,
+ 		       NULL);
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 912b85b52344..b8e288a1f740 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -650,11 +650,23 @@ struct perf_event_mmap_page {
+ #define PERF_RECORD_MISC_COMM_EXEC		(1 << 13)
+ #define PERF_RECORD_MISC_SWITCH_OUT		(1 << 13)
+ /*
+- * Indicates that the content of PERF_SAMPLE_IP points to
+- * the actual instruction that triggered the event. See also
+- * perf_event_attr::precise_ip.
++ * These PERF_RECORD_MISC_* flags below are safely reused
++ * for the following events:
++ *
++ *   PERF_RECORD_MISC_EXACT_IP           - PERF_RECORD_SAMPLE of precise events
++ *   PERF_RECORD_MISC_SWITCH_OUT_PREEMPT - PERF_RECORD_SWITCH* events
++ *
++ *
++ * PERF_RECORD_MISC_EXACT_IP:
++ *   Indicates that the content of PERF_SAMPLE_IP points to
++ *   the actual instruction that triggered the event. See also
++ *   perf_event_attr::precise_ip.
++ *
++ * PERF_RECORD_MISC_SWITCH_OUT_PREEMPT:
++ *   Indicates that thread was preempted in TASK_RUNNING state.
+  */
+ #define PERF_RECORD_MISC_EXACT_IP		(1 << 14)
++#define PERF_RECORD_MISC_SWITCH_OUT_PREEMPT	(1 << 14)
+ /*
+  * Reserve the last bit to indicate some extended misc field
+  */
