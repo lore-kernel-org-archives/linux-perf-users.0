@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/13] perf annotate browser: Fixup vertical line separating metrics from instructions
-Date: Mon,  9 Apr 2018 16:34:27 -0300
-Message-ID: <20180409193437.14199-4-acme@kernel.org>
+Subject: [PATCH 02/13] perf annotate: Show group details on the title line
+Date: Mon,  9 Apr 2018 16:34:26 -0300
+Message-ID: <20180409193437.14199-3-acme@kernel.org>
 References: <20180409193437.14199-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,16 +15,26 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Now that we can have extra title lines we should use ui_browser->rows
-and not ->height when drawing lines, as it will use ui_browser__gotorc()
-and that will take the extra title lines into account, which was causing
-an off by one at the end of the vertical line drawn by
-__ui_browser__vline(), fix it.
+To match what is shown in the main 'perf report/top' title lines, i.e.
+if a group is being shown, either a real group (recorded with "-e
+'{a,b,c}') or a forced group (using 'perf report --group' for a
+perf.data file recorded without {}) we will show multiple columns,
+one per event, but we were failing to show the group details, so, for:
 
-The visual effect was that the last line, with status messages, was
-being overwritten by the vertical line, looking like:
+ # perf report --header-only | grep cmdline
+ # cmdline : /home/acme/bin/perf record -e {cycles,instructions,cache-misses}
+ # perf report --group
 
-Press 'h' for help on│key bindings
+The first line was showing just "cycles", now it shows the correct line,
+which is:
+
+  Samples: 578  of events 'anon group { cycles, instructions, cache-misses }', 4000 Hz, Event count (approx.): 487421794
+  syscall_return_via_sysret  /lib/modules/4.16.0-rc7/build/vmlinux
+    0.22   2.97   0.00 │    ↓ jmp    6c
+                       │      mov    %cr3,%rdi
+    1.33  10.89   4.00 │    ↓ jmp    62
+                       │      mov    %rdi,%rax
+<SNIP>
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -33,25 +43,38 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: ef9ff6017e3c ("perf ui browser: Move the extra title lines from the hists browser")
-Link: https://lkml.kernel.org/n/tip-08y1ln3xjn76zvizz1i1dsvn@git.kernel.org
+Fixes: 6920e2854e9a ("perf annotate browser: Show extra title line with event information")
+Link: https://lkml.kernel.org/n/tip-i41tqh17c2dabnyzjh99r1oz@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 78bcd220f1b6..12c099a87f8b 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -218,7 +218,7 @@ static unsigned int annotate_browser__refresh(struct ui_browser *browser)
- 		annotate_browser__draw_current_jump(browser);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index fffe16af9797..fbad8dfbb186 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2600,7 +2600,7 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
+ 					   bool show_freq)
+ {
+ 	const char *ev_name = perf_evsel__name(evsel);
+-	char ref[30] = " show reference callgraph, ";
++	char buf[1024], ref[30] = " show reference callgraph, ";
+ 	char sample_freq_str[64] = "";
+ 	unsigned long nr_samples = 0;
+ 	int nr_members = 1;
+@@ -2609,8 +2609,11 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
+ 	char unit;
+ 	int i;
  
- 	ui_browser__set_color(browser, HE_COLORSET_NORMAL);
--	__ui_browser__vline(browser, pcnt_width, 0, browser->height - 1);
-+	__ui_browser__vline(browser, pcnt_width, 0, browser->rows - 1);
- 	return ret;
- }
+-	if (perf_evsel__is_group_event(evsel))
++	if (perf_evsel__is_group_event(evsel)) {
++		perf_evsel__group_desc(evsel, buf, sizeof(buf));
++		ev_name = buf;
+                 nr_members = evsel->nr_members;
++	}
  
+ 	for (i = 0; i < nr_members; i++) {
+ 		struct sym_hist *ah = annotation__histogram(notes, evsel->idx + i);
 -- 
 2.14.3
