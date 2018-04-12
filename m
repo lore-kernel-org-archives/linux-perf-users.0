@@ -1,101 +1,62 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Adapt test case record+probe_libc_inet_pton.sh for s390
-Date: Thu, 12 Apr 2018 10:19:59 +0200
-Message-ID: <20180412081959.85193-1-tmricht@linux.ibm.com>
+Subject: [PATCH] perf record: Remove unnecessary warning for missing sysfs entry
+Date: Thu, 12 Apr 2018 13:47:23 +0200
+Message-ID: <20180412114723.48550-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-perf test case 58 (record+probe_libc_inet_pton.sh)
-executed on s390x using kernel 4.16.0rc3
-displays this result:
- # ./perf trace --no-syscalls
-           -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
-     probe_libc:inet_pton: (3ffa0240448)
-	      __GI___inet_pton (/usr/lib64/libc-2.26.so)
-	      gaih_inet (inlined)
-	      __GI_getaddrinfo (inlined)
-	      main (/usr/bin/ping)
-	      __libc_start_main (/usr/lib64/libc-2.26.so)
-	     _start (/usr/bin/ping)
+Using perf on 4.16.0 kernel on s390 shows warning
+   failed: can't open node sysfs data
+each time I run command perf record ... for example:
 
-After I installed kernel 4.16.0 the same tests uses
-commands
- # perf record -e probe_libc:inet_pton/call-graph=dwarf/
-      -o /tmp/perf.data.abc ping -6 -c 1 ::1
- # perf script -i /tmp/perf.data.abc
-and displays:
- ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
-	       140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-	       fbde1 gaih_inet (inlined)
-	       fe2b9 __GI_getaddrinfo (inlined)
-	        398d main (/usr/bin/ping)
+[root@s35lp76 perf]# ./perf record -e rB0000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+failed: can't open node sysfs data
+[ perf record: Captured and wrote 0.001 MB perf.data (4 samples) ]
+[root@s35lp76 perf]#
 
-Nothing else changed including glibc elfutils and other libraries
-picked up by the build.
-The entries for __libc_start_main and _start are missing.
+BTW: I find this error message not very informative.
 
-I bisected missing __libc_start_main and _start to commit
-3d20c6246690219881786de10d2dda93f616d0ac
-("perf unwind: Unwind with libdw doesn't take symfs into account")
+It turns out commit e2091cedd51bf ("perf tools: Add MEM_TOPOLOGY
+feature to perf data file") tries to open directory named
+/sys/devices/system/node/ which does not exist on s390.
 
-When I undo this commit I get this call stack on s390:
- [root@s35lp76 perf]# ./perf script  -i /tmp/perf.data.abc
- ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
-	140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-	 fbde1 gaih_inet (inlined)
-	 fe2b9 __GI_getaddrinfo (inlined)
-	  398d main (/usr/bin/ping)
-	 22fbd __libc_start_main (/usr/lib64/libc-2.26.so)
-	  457b _start (/usr/bin/ping)
+This is the call stack:
+ __cmd_record
+ +---> perf_session__write_header
+       +---> perf_header__adds_write
+             +---> do_write_feat
+	           +---> write_mem_topology
+		         +---> build_mem_topology
+			       prints warning
+The issue starts in do_write_feat() which unconditionally
+loops over all features and now includes HEADER_MEM_TOPOLOGY and calls
+write_mem_topology().
+Function record__init_features() at the beginning of __cmd_record()
+sets all features and then turns off some.
 
-Looks like dwarf functions dwfl_xxx  create different call back
-stack trace when using file
-/usr/lib/debug/usr/bin/ping-20161105-7.fc27.s390x.debug instead of
-file /usr/bin/ping.
-
-Fix this test case on s390 and do not expect any call back stack
-entry after the main() function. Also be more robust and accept a
-leading __GI_ prefix in front of getaddrinfo.
-
-On x86 this test case shows the same call stack using
-both kernel versions 4.16.0rc3 and 4.16.0 and also
-stops at main:
-
-[root@f27 perf]# ./perf script -i /tmp/perf.data.tmr
-ping  4446 [000]   172.027088: probe_libc:inet_pton: (7fdfa08c93c0)
-	           1393c0 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-	            fe60d getaddrinfo (/usr/lib64/libc-2.26.so)
-	             2f40 main (/usr/bin/ping)
-
-[root@f27 perf]#
+Fix this by removed the warning, if the directory is not present
+memory node information is not available and won't be displayed.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/perf/util/header.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 1ecc1f0ff84a..016882dbbc16 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -19,12 +19,10 @@ trace_libc_inet_pton_backtrace() {
- 	expected[1]=".*inet_pton[[:space:]]\($libc\)$"
- 	case "$(uname -m)" in
- 	s390x)
--		eventattr='call-graph=dwarf'
-+		eventattr='call-graph=dwarf,max-stack=4'
- 		expected[2]="gaih_inet.*[[:space:]]\($libc|inlined\)$"
--		expected[3]="__GI_getaddrinfo[[:space:]]\($libc|inlined\)$"
-+		expected[3]="(__GI_)?getaddrinfo[[:space:]]\($libc|inlined\)$"
- 		expected[4]="main[[:space:]]\(.*/bin/ping.*\)$"
--		expected[5]="__libc_start_main[[:space:]]\($libc\)$"
--		expected[6]="_start[[:space:]]\(.*/bin/ping.*\)$"
- 		;;
- 	*)
- 		eventattr='max-stack=3'
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 121df1683c36..4a3bfc900a68 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1320,7 +1320,6 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+ 
+ 	dir = opendir(path);
+ 	if (!dir) {
+-		pr_warning("failed: can't open node sysfs data\n");
+ 		return -1;
+ 	}
+ 
 -- 
 2.14.3
