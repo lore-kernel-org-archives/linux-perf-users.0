@@ -1,42 +1,48 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/17] perf sched: Fix documentation for timehist
-Date: Fri, 13 Apr 2018 11:01:06 -0300
-Message-ID: <20180413140111.25313-13-acme@kernel.org>
+Subject: [PATCH 06/17] perf jvmti: Give hints about package names needed to build
+Date: Fri, 13 Apr 2018 11:01:00 -0300
+Message-ID: <20180413140111.25313-7-acme@kernel.org>
 References: <20180413140111.25313-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180413140111.25313-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Takuya Yamamoto <tkydevel@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, William Cohen <wcohen@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Takuya Yamamoto <tkydevel@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fixed a incorrect option and usage to those shown by "perf sched timehist -h",
-i.e. the default is really --call-graph, which is equivalent to -g.
+Give as examples of package names to install to have this built for
+fedora and debian, to help the user a bit.
 
-Signed-off-by: Takuya Yamamoto <tkydevel@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/n/tip-8fzo0dlsi1mku5aqx8brep5s@git.kernel.org
+The part from 'e.g.:' onwards:
+
+  No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+Cc: Andi Kleen <andi@firstfloor.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: William Cohen <wcohen@redhat.com>
+Link: https://lkml.kernel.org/n/tip-edbi4r2pvzn7no6ebxbtczng@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-sched.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index bb33601a823b..63f938b887dd 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -104,8 +104,8 @@ OPTIONS for 'perf sched timehist'
-     kallsyms pathname
- 
- -g::
----no-call-graph::
--	Do not display call chains if present.
-+--call-graph::
-+	Display call chains if present (default on).
- 
- --max-stack::
- 	Maximum number of functions to display in backtrace, default 5.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index c7abd83a8e19..6b307e97dc57 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -847,7 +847,7 @@ ifndef NO_JVMTI
+   ifeq ($(feature-jvmti), 1)
+     $(call detected_var,JDIR)
+   else
+-    $(warning No openjdk development package found, please install JDK package)
++    $(warning No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel)
+     NO_JVMTI := 1
+   endif
+ endif
 -- 
 2.14.3
