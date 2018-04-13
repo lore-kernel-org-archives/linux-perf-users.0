@@ -1,57 +1,69 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2]: perf/x86: expose user space frame-pointer value on a
- sample
-Date: Fri, 13 Apr 2018 14:43:02 +0200
-Message-ID: <20180413124302.GC28241@krava>
-References: <e702f8c9-1bb4-e9fd-cc53-452ed9a82762@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 02/17] tools headers: Restore READ_ONCE() C++ compatibility
+Date: Fri, 13 Apr 2018 11:00:56 -0300
+Message-ID: <20180413140111.25313-3-acme@kernel.org>
+References: <20180413140111.25313-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e702f8c9-1bb4-e9fd-cc53-452ed9a82762@linux.intel.com>
+In-Reply-To: <20180413140111.25313-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Apr 10, 2018 at 06:40:04PM +0300, Alexey Budankov wrote:
+From: Mark Rutland <mark.rutland@arm.com>
 
-SNIP
+Our userspace <linux/compiler.h> defines READ_ONCE() in a way that clang
+doesn't like, as we have an anonymous union in which neither field is
+initialized.
 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
-> Changes in v2:
-> - lifted restriction on frame pointer architecture so it's value is provided
->   as for i386 as for x86_64 processes
-> 
-> MAINTAINERS file lacks references to appropriate folks for reviewing 
->   changes at arch/x86/kernel/perf_regs.c so probably it makes sense to 
->   update the file as well in this respect. 
-> ---
->  arch/x86/kernel/perf_regs.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-> index e47b2dbbdef3..8d68658eff7f 100644
-> --- a/arch/x86/kernel/perf_regs.c
-> +++ b/arch/x86/kernel/perf_regs.c
-> @@ -156,7 +156,13 @@ void perf_get_regs_user(struct perf_regs *regs_user,
->  	 * Most system calls don't save these registers, don't report them.
->  	 */
->  	regs_user_copy->bx = -1;
-> -	regs_user_copy->bp = -1;
-> +	/*
-> +	 * Store user space frame-pointer value on sample
-> +	 * to facilitate stack unwinding for cases when
-> +	 * user space executable code has such support
-> +	 * enabled at compile time;
-> +	 */
-> +	regs_user_copy->bp = user_regs->bp;
->  	regs_user_copy->r12 = -1;
->  	regs_user_copy->r13 = -1;
->  	regs_user_copy->r14 = -1;
+WRITE_ONCE() is fine since it initializes the __val field. For
+READ_ONCE() we can keep clang and GCC happy with a dummy initialization
+of the __c field, so let's do that.
 
-looks ok to me
+At the same time, let's split READ_ONCE() and WRITE_ONCE() over several
+lines for legibility, as we do in the in-kernel <linux/compiler.h>.
 
-thanks,
-jirka
+Reported-by: Li Zhijian <lizhijian@cn.fujitsu.com>
+Reported-by: Sandipan Das <sandipan@linux.vnet.ibm.com>
+Tested-by: Sandipan Das <sandipan@linux.vnet.ibm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Fixes: 6aa7de059173a986 ("locking/atomics: COCCINELLE/treewide: Convert trivial ACCESS_ONCE() patterns to READ_ONCE()/WRITE_ONCE()")
+Link: http://lkml.kernel.org/r/20180404163445.16492-1-mark.rutland@arm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/linux/compiler.h | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
+index 04e32f965ad7..1827c2f973f9 100644
+--- a/tools/include/linux/compiler.h
++++ b/tools/include/linux/compiler.h
+@@ -151,11 +151,21 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+  * required ordering.
+  */
+ 
+-#define READ_ONCE(x) \
+-	({ union { typeof(x) __val; char __c[1]; } __u; __read_once_size(&(x), __u.__c, sizeof(x)); __u.__val; })
+-
+-#define WRITE_ONCE(x, val) \
+-	({ union { typeof(x) __val; char __c[1]; } __u = { .__val = (val) }; __write_once_size(&(x), __u.__c, sizeof(x)); __u.__val; })
++#define READ_ONCE(x)					\
++({							\
++	union { typeof(x) __val; char __c[1]; } __u =	\
++		{ .__c = { 0 } };			\
++	__read_once_size(&(x), __u.__c, sizeof(x));	\
++	__u.__val;					\
++})
++
++#define WRITE_ONCE(x, val)				\
++({							\
++	union { typeof(x) __val; char __c[1]; } __u =	\
++		{ .__val = (val) }; 			\
++	__write_once_size(&(x), __u.__c, sizeof(x));	\
++	__u.__val;					\
++})
+ 
+ 
+ #ifndef __fallthrough
+-- 
+2.14.3
