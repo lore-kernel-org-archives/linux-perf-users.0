@@ -1,91 +1,86 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/17] perf stat: Enable 1ms interval for printing event counters values
-Date: Fri, 13 Apr 2018 11:00:55 -0300
-Message-ID: <20180413140111.25313-2-acme@kernel.org>
+Subject: [PATCH 03/17] perf tests: Run dwarf unwind test on arm32
+Date: Fri, 13 Apr 2018 11:00:57 -0300
+Message-ID: <20180413140111.25313-4-acme@kernel.org>
 References: <20180413140111.25313-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180413140111.25313-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Brian Robbins <brianrob@microsoft.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Kim Phillips <kim.phillips@arm.com>
 
-Currently print count interval for performance counters values is
-limited by 10ms so reading the values at frequencies higher than 100Hz
-is restricted by the tool.
+Enable the unwind test on arm32:
 
-This change makes perf stat -I possible on frequencies up to 1KHz and,
-to some extent, makes perf stat -I to be on-par with perf record
-sampling profiling.
+  $ perf test unwind
+  58: DWARF unwind                                          : Ok
 
-When running perf stat -I for monitoring e.g. PCIe uncore counters and
-at the same time profiling some I/O workload by perf record e.g. for
-cpu-cycles and context switches, it is then possible to observe
-consolidated CPU/OS/IO(Uncore) performance picture for that workload.
-
-Tool overhead warning printed when specifying -v option can be missed
-due to screen scrolling in case you have output to the console
-so message is moved into help available by running perf stat -h.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Brian Robbins <brianrob@microsoft.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/b842ad6a-d606-32e4-afe5-974071b5198e@linux.intel.com
+Link: http://lkml.kernel.org/r/20180410191624.a3a468670dd4548c66d3d094@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt |  2 +-
- tools/perf/builtin-stat.c              | 14 ++------------
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ tools/perf/arch/arm/include/arch-tests.h | 12 ++++++++++++
+ tools/perf/arch/arm/tests/Build          |  2 ++
+ tools/perf/arch/arm/tests/arch-tests.c   | 16 ++++++++++++++++
+ 3 files changed, 30 insertions(+)
+ create mode 100644 tools/perf/arch/arm/include/arch-tests.h
+ create mode 100644 tools/perf/arch/arm/tests/arch-tests.c
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index f15b306be183..e6c3b4e555c2 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -153,7 +153,7 @@ perf stat --repeat 10 --null --sync --pre 'make -s O=defconfig-build/clean' -- m
- 
- -I msecs::
- --interval-print msecs::
--Print count deltas every N milliseconds (minimum: 10ms)
-+Print count deltas every N milliseconds (minimum: 1ms)
- The overhead percentage could be high in some cases, for instance with small, sub 100ms intervals.  Use with caution.
- 	example: 'perf stat -I 1000 -e cycles -a sleep 5'
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f5c454855908..147a27e8c937 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1943,7 +1943,8 @@ static const struct option stat_options[] = {
- 	OPT_STRING(0, "post", &post_cmd, "command",
- 			"command to run after to the measured command"),
- 	OPT_UINTEGER('I', "interval-print", &stat_config.interval,
--		    "print counts at regular interval in ms (>= 10)"),
-+		    "print counts at regular interval in ms "
-+		    "(overhead is possible for values <= 100ms)"),
- 	OPT_INTEGER(0, "interval-count", &stat_config.times,
- 		    "print counts for fixed number of times"),
- 	OPT_UINTEGER(0, "timeout", &stat_config.timeout,
-@@ -2923,17 +2924,6 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
--	if (interval && interval < 100) {
--		if (interval < 10) {
--			pr_err("print interval must be >= 10ms\n");
--			parse_options_usage(stat_usage, stat_options, "I", 1);
--			goto out;
--		} else
--			pr_warning("print interval < 100ms. "
--				   "The overhead percentage could be high in some cases. "
--				   "Please proceed with caution.\n");
--	}
--
- 	if (stat_config.times && interval)
- 		interval_count = true;
- 	else if (stat_config.times && !interval) {
+diff --git a/tools/perf/arch/arm/include/arch-tests.h b/tools/perf/arch/arm/include/arch-tests.h
+new file mode 100644
+index 000000000000..90ec4c8cb880
+--- /dev/null
++++ b/tools/perf/arch/arm/include/arch-tests.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_TESTS_H
++#define ARCH_TESTS_H
++
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++struct thread;
++struct perf_sample;
++#endif
++
++extern struct test arch_tests[];
++
++#endif
+diff --git a/tools/perf/arch/arm/tests/Build b/tools/perf/arch/arm/tests/Build
+index b30eff9bcc83..883c57ff0c08 100644
+--- a/tools/perf/arch/arm/tests/Build
++++ b/tools/perf/arch/arm/tests/Build
+@@ -1,2 +1,4 @@
+ libperf-y += regs_load.o
+ libperf-y += dwarf-unwind.o
++
++libperf-y += arch-tests.o
+diff --git a/tools/perf/arch/arm/tests/arch-tests.c b/tools/perf/arch/arm/tests/arch-tests.c
+new file mode 100644
+index 000000000000..5b1543c98022
+--- /dev/null
++++ b/tools/perf/arch/arm/tests/arch-tests.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <string.h>
++#include "tests/tests.h"
++#include "arch-tests.h"
++
++struct test arch_tests[] = {
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++	{
++		.desc = "DWARF unwind",
++		.func = test__dwarf_unwind,
++	},
++#endif
++	{
++		.func = NULL,
++	},
++};
 -- 
 2.14.3
