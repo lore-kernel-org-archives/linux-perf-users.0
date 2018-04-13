@@ -1,24 +1,57 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf record: Change warning for missing sysfs entry to
- debug
-Date: Thu, 12 Apr 2018 14:22:52 -0300
-Message-ID: <20180412172252.GF9818@kernel.org>
-References: <20180412133246.92801-1-tmricht@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2]: perf/x86: expose user space frame-pointer value on a
+ sample
+Date: Fri, 13 Apr 2018 14:43:02 +0200
+Message-ID: <20180413124302.GC28241@krava>
+References: <e702f8c9-1bb4-e9fd-cc53-452ed9a82762@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180412133246.92801-1-tmricht@linux.ibm.com>
+In-Reply-To: <e702f8c9-1bb4-e9fd-cc53-452ed9a82762@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 12, 2018 at 03:32:46PM +0200, Thomas Richter escreveu:
-> Using perf on 4.16.0 kernel on s390 shows warning
->    failed: can't open node sysfs data
-> each time I run command perf record ... for example:
+On Tue, Apr 10, 2018 at 06:40:04PM +0300, Alexey Budankov wrote:
 
-Thanks, applied.
+SNIP
 
-- Arnaldo
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+> Changes in v2:
+> - lifted restriction on frame pointer architecture so it's value is provided
+>   as for i386 as for x86_64 processes
+> 
+> MAINTAINERS file lacks references to appropriate folks for reviewing 
+>   changes at arch/x86/kernel/perf_regs.c so probably it makes sense to 
+>   update the file as well in this respect. 
+> ---
+>  arch/x86/kernel/perf_regs.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+> index e47b2dbbdef3..8d68658eff7f 100644
+> --- a/arch/x86/kernel/perf_regs.c
+> +++ b/arch/x86/kernel/perf_regs.c
+> @@ -156,7 +156,13 @@ void perf_get_regs_user(struct perf_regs *regs_user,
+>  	 * Most system calls don't save these registers, don't report them.
+>  	 */
+>  	regs_user_copy->bx = -1;
+> -	regs_user_copy->bp = -1;
+> +	/*
+> +	 * Store user space frame-pointer value on sample
+> +	 * to facilitate stack unwinding for cases when
+> +	 * user space executable code has such support
+> +	 * enabled at compile time;
+> +	 */
+> +	regs_user_copy->bp = user_regs->bp;
+>  	regs_user_copy->r12 = -1;
+>  	regs_user_copy->r13 = -1;
+>  	regs_user_copy->r14 = -1;
+
+looks ok to me
+
+thanks,
+jirka
