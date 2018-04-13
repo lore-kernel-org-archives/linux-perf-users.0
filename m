@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/17] perf tests bpf: Remove unused ptrace.h include from LLVM test
-Date: Fri, 13 Apr 2018 11:01:01 -0300
-Message-ID: <20180413140111.25313-8-acme@kernel.org>
+Subject: [PATCH 08/17] Revert "x86/asm: Allow again using asm.h when building for the 'bpf' clang target"
+Date: Fri, 13 Apr 2018 11:01:02 -0300
+Message-ID: <20180413140111.25313-9-acme@kernel.org>
 References: <20180413140111.25313-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180413140111.25313-1-acme@kernel.org>
@@ -12,23 +12,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The bpf-script-test-kbuild.c script, used in one of the LLVM subtests,
-includes ptrace.h unnecessarily, and that ends up making it include a
-header that uses asm(_ASM_SP), a feature that is not supported by clang
-<= 4.0, breaking that 'perf test' entry.
+This reverts commit ca26cffa4e4aaeb09bb9e308f95c7835cb149248.
 
-This ended up leading to the ca26cffa4e4a ("x86/asm: Allow again using
-asm.h when building for the 'bpf' clang target"), adding an ifndef
-__BPF__ to the arch/x86/include/asm/asm.h file.
-
-Newer clang versions accept that asm(_ASM_SP) construct, so just remove
-the ptrace.h include, which paves the way for reverting ca26cffa4e4a
-("x86/asm: Allow again using asm.h when building for the 'bpf' clang
-target").
+Newer clang versions accept that asm(_ASM_SP) construct, and now that
+the bpf-script-test-kbuild.c script, used in one of the 'perf test LLVM'
+subtests doesn't include ptrace.h, which ended up including
+arch/x86/include/asm/asm.h, we can revert this patch.
 
 Suggested-by: Yonghong Song <yhs@fb.com>
-Acked-by: Yonghong Song <yhs@fb.com>
 Link: https://lkml.kernel.org/r/613f0a0d-c433-8f4d-dcc1-c9889deae39e@fb.com
+Acked-by: Yonghong Song <yhs@fb.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Potapenko <glider@google.com>
 Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
@@ -47,23 +40,30 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-clbcnzbakdp18ibme4wt43ib@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-nqozcv8loq40tkqpfw997993@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bpf-script-test-kbuild.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/include/asm/asm.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/tests/bpf-script-test-kbuild.c b/tools/perf/tests/bpf-script-test-kbuild.c
-index 3626924740d8..ff3ec8337f0a 100644
---- a/tools/perf/tests/bpf-script-test-kbuild.c
-+++ b/tools/perf/tests/bpf-script-test-kbuild.c
-@@ -9,7 +9,6 @@
- #define SEC(NAME) __attribute__((section(NAME), used))
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 386a6900e206..219faaec51df 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -136,7 +136,6 @@
+ #endif
  
- #include <uapi/linux/fs.h>
--#include <uapi/asm/ptrace.h>
+ #ifndef __ASSEMBLY__
+-#ifndef __BPF__
+ /*
+  * This output constraint should be used for any inline asm which has a "call"
+  * instruction.  Otherwise the asm may be inserted before the frame pointer
+@@ -146,6 +145,5 @@
+ register unsigned long current_stack_pointer asm(_ASM_SP);
+ #define ASM_CALL_CONSTRAINT "+r" (current_stack_pointer)
+ #endif
+-#endif
  
- SEC("func=vfs_llseek")
- int bpf_func__vfs_llseek(void *ctx)
+ #endif /* _ASM_X86_ASM_H */
 -- 
 2.14.3
