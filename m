@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/17] perf annotate: Allow setting the offset level in .perfconfig
-Date: Fri, 13 Apr 2018 11:01:10 -0300
-Message-ID: <20180413140111.25313-17-acme@kernel.org>
+Subject: [PATCH 17/17] perf annotate: Handle variables in 'sub', 'or' and many other instructions
+Date: Fri, 13 Apr 2018 11:01:11 -0300
+Message-ID: <20180413140111.25313-18-acme@kernel.org>
 References: <20180413140111.25313-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,104 +15,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The default is 1 (jump_target):
+Just like is done for 'mov' and others that can have as source or
+targets variables resolved by objdump, to make them more compact:
 
-  # perf annotate --ignore-vmlinux --stdio2 _raw_spin_lock_irqsave
-  Samples: 3K of event 'cycles:ppp', 3000 Hz, Event count (approx.): 2766398574
-  _raw_spin_lock_irqsave() /proc/kcore
-    0.26        nop
-    4.61        push   %rbx
-   19.33        pushfq
-    7.97        pop    %rax
-    0.32        nop
-    0.06        mov    %rax,%rbx
-   14.63        cli
-    0.06        nop
-                xor    %eax,%eax
-                mov    $0x1,%edx
-   49.94        lock   cmpxchg %edx,(%rdi)
-    0.16        test   %eax,%eax
-              ↓ jne    2b
-    2.66        mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-          2b:   mov    %eax,%esi
-              → callq  *ffffffffb30eaed0
-                mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-  #
-
-But one can ask for showing offsets for call instructions by setting
-this:
-
-  # perf annotate --ignore-vmlinux --stdio2 _raw_spin_lock_irqsave
-  Samples: 3K of event 'cycles:ppp', 3000 Hz, Event count (approx.): 2766398574
-  _raw_spin_lock_irqsave() /proc/kcore
-    0.26        nop
-    4.61        push   %rbx
-   19.33        pushfq
-    7.97        pop    %rax
-    0.32        nop
-    0.06        mov    %rax,%rbx
-   14.63        cli
-    0.06        nop
-                xor    %eax,%eax
-                mov    $0x1,%edx
-   49.94        lock   cmpxchg %edx,(%rdi)
-    0.16        test   %eax,%eax
-              ↓ jne    2b
-    2.66        mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-          2b:   mov    %eax,%esi
-          2d: → callq  *ffffffffb30eaed0
-                mov    %rbx,%rax
-                pop    %rbx
-              ← retq
-  #
-
-Or using a big value to ask for all offsets to be shown:
-
-  # cat ~/.perfconfig
-  [annotate]
-
-	offset_level = 100
-
-	hide_src_code = true
-  # perf annotate --ignore-vmlinux --stdio2 _raw_spin_lock_irqsave
-  Samples: 3K of event 'cycles:ppp', 3000 Hz, Event count (approx.): 2766398574
-  _raw_spin_lock_irqsave() /proc/kcore
-    0.26   0:   nop
-    4.61   5:   push   %rbx
-   19.33   6:   pushfq
-    7.97   7:   pop    %rax
-    0.32   8:   nop
-    0.06   d:   mov    %rax,%rbx
-   14.63  10:   cli
-    0.06  11:   nop
-          17:   xor    %eax,%eax
-          19:   mov    $0x1,%edx
-   49.94  1e:   lock   cmpxchg %edx,(%rdi)
-    0.16  22:   test   %eax,%eax
-          24: ↓ jne    2b
-    2.66  26:   mov    %rbx,%rax
-          29:   pop    %rbx
-          2a: ← retq
-          2b:   mov    %eax,%esi
-          2d: → callq  *ffffffffb30eaed0
-          32:   mov    %rbx,%rax
-          35:   pop    %rbx
-          36: ← retq
-   #
-
-This also affects the TUI, i.e. the default 'perf annotate' and 'perf
-top/report' -> A hotkey -> annotate interfaces, when slang-devel is present
-in the build, i.e.:
-
-  # perf version --build-options | grep slang
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-  #
+-               orb    $0x4,0x224d71(%rip)        # 226ca4 <_rtld_global+0xca4>
++               orb    $0x4,_rtld_global+0xca4
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -124,64 +31,129 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-venm6x5zrt40eu8hxdsmqxz6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-efex7746id4w4wa03nqxvh3m@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt |  5 +++++
- tools/perf/util/annotate.c               | 15 ++++++++++++---
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ tools/perf/arch/x86/annotate/instructions.c | 67 ++++++++++++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 5b4fff3adc4b..32f4a898e3f2 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -334,6 +334,11 @@ annotate.*::
+diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+index 5bd1ba8c0282..44f5aba78210 100644
+--- a/tools/perf/arch/x86/annotate/instructions.c
++++ b/tools/perf/arch/x86/annotate/instructions.c
+@@ -1,21 +1,43 @@
+ // SPDX-License-Identifier: GPL-2.0
+ static struct ins x86__instructions[] = {
++	{ .name = "adc",	.ops = &mov_ops,  },
++	{ .name = "adcb",	.ops = &mov_ops,  },
++	{ .name = "adcl",	.ops = &mov_ops,  },
+ 	{ .name = "add",	.ops = &mov_ops,  },
+ 	{ .name = "addl",	.ops = &mov_ops,  },
+ 	{ .name = "addq",	.ops = &mov_ops,  },
++	{ .name = "addsd",	.ops = &mov_ops,  },
+ 	{ .name = "addw",	.ops = &mov_ops,  },
+ 	{ .name = "and",	.ops = &mov_ops,  },
++	{ .name = "andb",	.ops = &mov_ops,  },
++	{ .name = "andl",	.ops = &mov_ops,  },
++	{ .name = "andpd",	.ops = &mov_ops,  },
++	{ .name = "andps",	.ops = &mov_ops,  },
++	{ .name = "andq",	.ops = &mov_ops,  },
++	{ .name = "andw",	.ops = &mov_ops,  },
++	{ .name = "bsr",	.ops = &mov_ops,  },
++	{ .name = "bt",		.ops = &mov_ops,  },
++	{ .name = "btr",	.ops = &mov_ops,  },
+ 	{ .name = "bts",	.ops = &mov_ops,  },
++	{ .name = "btsq",	.ops = &mov_ops,  },
+ 	{ .name = "call",	.ops = &call_ops, },
+ 	{ .name = "callq",	.ops = &call_ops, },
++	{ .name = "cmovbe",	.ops = &mov_ops,  },
++	{ .name = "cmove",	.ops = &mov_ops,  },
++	{ .name = "cmovae",	.ops = &mov_ops,  },
+ 	{ .name = "cmp",	.ops = &mov_ops,  },
+ 	{ .name = "cmpb",	.ops = &mov_ops,  },
+ 	{ .name = "cmpl",	.ops = &mov_ops,  },
+ 	{ .name = "cmpq",	.ops = &mov_ops,  },
+ 	{ .name = "cmpw",	.ops = &mov_ops,  },
+ 	{ .name = "cmpxch",	.ops = &mov_ops,  },
++	{ .name = "cmpxchg",	.ops = &mov_ops,  },
++	{ .name = "cs",		.ops = &mov_ops,  },
+ 	{ .name = "dec",	.ops = &dec_ops,  },
+ 	{ .name = "decl",	.ops = &dec_ops,  },
++	{ .name = "divsd",	.ops = &mov_ops,  },
++	{ .name = "divss",	.ops = &mov_ops,  },
++	{ .name = "gs",		.ops = &mov_ops,  },
+ 	{ .name = "imul",	.ops = &mov_ops,  },
+ 	{ .name = "inc",	.ops = &dec_ops,  },
+ 	{ .name = "incl",	.ops = &dec_ops,  },
+@@ -57,25 +79,68 @@ static struct ins x86__instructions[] = {
+ 	{ .name = "lea",	.ops = &mov_ops,  },
+ 	{ .name = "lock",	.ops = &lock_ops, },
+ 	{ .name = "mov",	.ops = &mov_ops,  },
++	{ .name = "movapd",	.ops = &mov_ops,  },
++	{ .name = "movaps",	.ops = &mov_ops,  },
+ 	{ .name = "movb",	.ops = &mov_ops,  },
+ 	{ .name = "movdqa",	.ops = &mov_ops,  },
++	{ .name = "movdqu",	.ops = &mov_ops,  },
+ 	{ .name = "movl",	.ops = &mov_ops,  },
+ 	{ .name = "movq",	.ops = &mov_ops,  },
++	{ .name = "movsd",	.ops = &mov_ops,  },
+ 	{ .name = "movslq",	.ops = &mov_ops,  },
++	{ .name = "movss",	.ops = &mov_ops,  },
++	{ .name = "movupd",	.ops = &mov_ops,  },
++	{ .name = "movups",	.ops = &mov_ops,  },
++	{ .name = "movw",	.ops = &mov_ops,  },
+ 	{ .name = "movzbl",	.ops = &mov_ops,  },
+ 	{ .name = "movzwl",	.ops = &mov_ops,  },
++	{ .name = "mulsd",	.ops = &mov_ops,  },
++	{ .name = "mulss",	.ops = &mov_ops,  },
+ 	{ .name = "nop",	.ops = &nop_ops,  },
+ 	{ .name = "nopl",	.ops = &nop_ops,  },
+ 	{ .name = "nopw",	.ops = &nop_ops,  },
+ 	{ .name = "or",		.ops = &mov_ops,  },
++	{ .name = "orb",	.ops = &mov_ops,  },
+ 	{ .name = "orl",	.ops = &mov_ops,  },
++	{ .name = "orps",	.ops = &mov_ops,  },
++	{ .name = "orq",	.ops = &mov_ops,  },
++	{ .name = "pand",	.ops = &mov_ops,  },
++	{ .name = "paddq",	.ops = &mov_ops,  },
++	{ .name = "pcmpeqb",	.ops = &mov_ops,  },
++	{ .name = "por",	.ops = &mov_ops,  },
++	{ .name = "rclb",	.ops = &mov_ops,  },
++	{ .name = "rcll",	.ops = &mov_ops,  },
++	{ .name = "retq",	.ops = &ret_ops,  },
++	{ .name = "sbb",	.ops = &mov_ops,  },
++	{ .name = "sbbl",	.ops = &mov_ops,  },
++	{ .name = "sete",	.ops = &mov_ops,  },
++	{ .name = "sub",	.ops = &mov_ops,  },
++	{ .name = "subl",	.ops = &mov_ops,  },
++	{ .name = "subq",	.ops = &mov_ops,  },
++	{ .name = "subsd",	.ops = &mov_ops,  },
++	{ .name = "subw",	.ops = &mov_ops,  },
+ 	{ .name = "test",	.ops = &mov_ops,  },
+ 	{ .name = "testb",	.ops = &mov_ops,  },
+ 	{ .name = "testl",	.ops = &mov_ops,  },
++	{ .name = "ucomisd",	.ops = &mov_ops,  },
++	{ .name = "ucomiss",	.ops = &mov_ops,  },
++	{ .name = "vaddsd",	.ops = &mov_ops,  },
++	{ .name = "vandpd",	.ops = &mov_ops,  },
++	{ .name = "vmovdqa",	.ops = &mov_ops,  },
++	{ .name = "vmovq",	.ops = &mov_ops,  },
++	{ .name = "vmovsd",	.ops = &mov_ops,  },
++	{ .name = "vmulsd",	.ops = &mov_ops,  },
++	{ .name = "vorpd",	.ops = &mov_ops,  },
++	{ .name = "vsubsd",	.ops = &mov_ops,  },
++	{ .name = "vucomisd",	.ops = &mov_ops,  },
+ 	{ .name = "xadd",	.ops = &mov_ops,  },
+ 	{ .name = "xbeginl",	.ops = &jump_ops, },
+ 	{ .name = "xbeginq",	.ops = &jump_ops, },
+-	{ .name = "retq",	.ops = &ret_ops,  },
++	{ .name = "xchg",	.ops = &mov_ops,  },
++	{ .name = "xor",	.ops = &mov_ops, },
++	{ .name = "xorb",	.ops = &mov_ops, },
++	{ .name = "xorpd",	.ops = &mov_ops, },
++	{ .name = "xorps",	.ops = &mov_ops, },
+ };
  
- 		99.93 │      mov    %eax,%eax
- 
-+	annotate.offset_level::
-+		Default is '1', meaning just jump targets will have offsets show right beside
-+		the instruction. When set to '2' 'call' instructions will also have its offsets
-+		shown, 3 or higher will show offsets for all instructions.
-+
- hist.*::
- 	hist.percentage::
- 		This option control the way to calculate overhead of filtered entries -
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5edc565d86c4..536ee148bff8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2649,10 +2649,11 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
-  */
- static struct annotation_config {
- 	const char *name;
--	bool *value;
-+	void *value;
- } annotation__configs[] = {
- 	ANNOTATION__CFG(hide_src_code),
- 	ANNOTATION__CFG(jump_arrows),
-+	ANNOTATION__CFG(offset_level),
- 	ANNOTATION__CFG(show_linenr),
- 	ANNOTATION__CFG(show_nr_jumps),
- 	ANNOTATION__CFG(show_nr_samples),
-@@ -2684,8 +2685,16 @@ static int annotation__config(const char *var, const char *value,
- 
- 	if (cfg == NULL)
- 		pr_debug("%s variable unknown, ignoring...", var);
--	else
--		*cfg->value = perf_config_bool(name, value);
-+	else if (strcmp(var, "annotate.offset_level") == 0) {
-+		perf_config_int(cfg->value, name, value);
-+
-+		if (*(int *)cfg->value > ANNOTATION__MAX_OFFSET_LEVEL)
-+			*(int *)cfg->value = ANNOTATION__MAX_OFFSET_LEVEL;
-+		else if (*(int *)cfg->value < ANNOTATION__MIN_OFFSET_LEVEL)
-+			*(int *)cfg->value = ANNOTATION__MIN_OFFSET_LEVEL;
-+	} else {
-+		*(bool *)cfg->value = perf_config_bool(name, value);
-+	}
- 	return 0;
- }
- 
+ static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
 -- 
 2.14.3
