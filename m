@@ -1,8 +1,8 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH v5 1/3] perf/core: store context switch out type into
  Perf trace
-Date: Mon, 16 Apr 2018 10:59:57 -0300
-Message-ID: <20180416135957.GC23802@kernel.org>
+Date: Mon, 16 Apr 2018 11:28:45 -0300
+Message-ID: <20180416142845.GA18171@kernel.org>
 References: <ff228fc5-5742-a5fe-8cad-79704742672c@linux.intel.com>
  <9ff84e83-a0ca-dd82-a6d0-cb951689be74@linux.intel.com>
  <20180409092603.GY4043@hirez.programming.kicks-ass.net>
@@ -43,28 +43,10 @@ Em Mon, Apr 16, 2018 at 11:29:03AM +0300, Alexey Budankov escreveu:
 > 
 > This is just to make sure it doesn't sneak out of your attention 
 > in hope the plan is still the same as Peter mentioned above.
-
-Will look into this now.
- 
+> 
 > Thanks,
 > Alexey
-> 
-> > 
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index fc1c330c6bd6..872a5aaa77eb 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -7584,6 +7584,10 @@ static void perf_event_switch(struct task_struct *task,
-> >>  		},
-> >>  	};
-> >>  
-> >> +	if (!sched_in && task->state == TASK_RUNNING)
-> >> +		switch_event.event_id.header.misc |=
-> >> +				PERF_RECORD_MISC_SWITCH_OUT_PREEMPT;
-> > 
-> > I typically prefer {} over any multi-line expression.
-> > 
-> >>  	perf_iterate_sb(perf_event_switch_output,
-> >>  		       &switch_event,
-> >>  		       NULL);
-> > 
+
+Applying, rebuilding a kernel with this and testing,
+
+- Arnaldo
