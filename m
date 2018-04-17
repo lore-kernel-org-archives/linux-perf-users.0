@@ -1,59 +1,66 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] perf list: Add s390 support for detailed/verbose pmu
- event description
-Date: Mon, 16 Apr 2018 15:43:34 +0100
-Message-ID: <20180416144334.zkzxyhhnlm3ia5gy@lakrids.cambridge.arm.com>
-References: <20180416132314.33249-1-tmricht@linux.ibm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 17/17] perf annotate: Handle variables in 'sub', 'or' and
+ many other instructions
+Date: Tue, 17 Apr 2018 11:56:28 +0900
+Message-ID: <20180417025628.GB31947@sejong>
+References: <20180413140111.25313-1-acme@kernel.org>
+ <20180413140111.25313-18-acme@kernel.org>
+ <20180413162043.GD6694@tassilo.jf.intel.com>
+ <20180413172035.GB26496@kernel.org>
+ <20180413173940.GE6694@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180416132314.33249-1-tmricht@linux.ibm.com>
+In-Reply-To: <20180413173940.GE6694@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Apr 16, 2018 at 03:23:14PM +0200, Thomas Richter wrote:
-> From: Thomas Richter <tmricht@linux.vnet.ibm.com>
-> 
-> Perf list with flags -d and -v print a description (-d) or
-> a very verbose explanation (-v) of CPU specific counter events.
-> These descriptions are provided with the json files in
-> directory pmu-events/arch/s390/*.json.
-> 
-> Display of these descriptions on s390 requires the
-> corresponding json files.
-> 
-> On s390 this does not work because function is_pmu_core()
-> does not detect the s390 directory name where the
-> CPU specific events are listed. On x86 it is
->   /sys/bus/event_source/devices/cpu
-> whereas on s390 it is
->   /sys/bus/event_source/devices/cpum_cf
->   /sys/bus/event_source/devices/cpum_sf
-> 
-> Fix this by adding s390 directory name testing to
-> function is_pmu_core(). This is the same approach as taken for
-> arm platform.
+Hi,
 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 1111d5bf15ca..8675ddf558c6 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -562,6 +562,12 @@ static int is_pmu_core(const char *name)
->  	if (stat(path, &st) == 0)
->  		return 1;
->  
-> +	/* Look for cpu sysfs (specific to s390) */
-> +	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s",
-> +		  sysfs, name);
-> +	if (stat(path, &st) == 0 && !strncmp(name, "cpum_", 5))
-> +		return 1;
-> +
+On Fri, Apr 13, 2018 at 10:39:40AM -0700, Andi Kleen wrote:
+> > What do I miss? Or where is it that I'm misinterpreting the calculations
+> > that objdump did in its output?
+> 
+> The calculations are right, but these are still two different address modes.
+> You cannot just turn one silently into the other.
+> 
+> I think it would be ok to use the syntax in the assembler
+> 
+> symbol(%rip)  with no # ...
 
-This shouldn't adversely affect ARM, so FWIW:
+One thing I find useful is to show string constant if the address is
+in the rodata (and printable of course).  Maybe something like below..
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+  lea    0x1234(%rip),%rdi    # "hello world\n"
+  callq  printf
 
-Mark.
+
+Just an idea.
+
+Thanks,
+Namhyung
+
+
+> 
+> > About something mildly related: what do you think about this:
+> > http://ref.x86asm.net/, there is a xml file there[1] I'm thinking about
+> > using, if available on the developer's HOME or some other standard place,
+> > to provide help about the instructions :-)
+> 
+> I don't know how well it's going to be maintained. x86 changes a lot
+> and I've seen a lot of disassembler libraries etc. go stale as the
+> owner cannot keep up.
+> 
+> The only semi official maintained descriptions are the XED tables (but those
+> don't have descriptions) or the PDFs from Intel/AMD.
+> I suppose could have some hack that talks to a PDF reader and automatically
+> downloads/searches the PDF.
+> 
+> If unofficial is ok I would rather port some functionality
+> from https://github.com/HJLebbink/asm-dude
+> which has a lot of cool stuff.
+> 
+> -Andi
