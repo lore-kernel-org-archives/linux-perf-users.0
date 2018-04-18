@@ -1,101 +1,73 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: measuring system wide CPU usage ignoring idle process
-Date: Tue, 17 Apr 2018 10:41:31 -0300
-Message-ID: <20180417134131.GA3027@kernel.org>
-References: <3344812.IFj9h2T05j@agathebauer>
- <215895928.dRJQAAs51a@agathebauer>
- <20171120234438.GA22397@krava>
- <6754554.PRelPk1P9n@milian-kdab2>
- <20171123140931.GA5575@krava>
- <20171123142100.GA7066@krava>
- <20171123144220.GB8789@kernel.org>
- <20171123151536.3vzjtbs5e4pccxpw@hirez.programming.kicks-ass.net>
+From: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Subject: Re: [PATCH v2] perf list: Add s390 support for detailed/verbose pmu
+ event description
+Date: Wed, 18 Apr 2018 16:09:53 +0200
+Message-ID: <a6aefb3d-08c7-7d12-e087-428245ae399b@linux.ibm.com>
+References: <20180416132314.33249-1-tmricht@linux.ibm.com>
+ <20180416144334.zkzxyhhnlm3ia5gy@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171123151536.3vzjtbs5e4pccxpw@hirez.programming.kicks-ass.net>
+In-Reply-To: <20180416144334.zkzxyhhnlm3ia5gy@lakrids.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephane Eranian <eranian@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>, acme@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Nov 23, 2017 at 04:15:36PM +0100, Peter Zijlstra escreveu:
-> On Thu, Nov 23, 2017 at 11:42:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> > What is wrong with perf_event_attr.exclude_idle? :-)
+On 04/16/2018 04:43 PM, Mark Rutland wrote:
+> On Mon, Apr 16, 2018 at 03:23:14PM +0200, Thomas Richter wrote:
+>> From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+>>
+>> Perf list with flags -d and -v print a description (-d) or
+>> a very verbose explanation (-v) of CPU specific counter events.
+>> These descriptions are provided with the json files in
+>> directory pmu-events/arch/s390/*.json.
+>>
+>> Display of these descriptions on s390 requires the
+>> corresponding json files.
+>>
+>> On s390 this does not work because function is_pmu_core()
+>> does not detect the s390 directory name where the
+>> CPU specific events are listed. On x86 it is
+>>   /sys/bus/event_source/devices/cpu
+>> whereas on s390 it is
+>>   /sys/bus/event_source/devices/cpum_cf
+>>   /sys/bus/event_source/devices/cpum_sf
+>>
+>> Fix this by adding s390 directory name testing to
+>> function is_pmu_core(). This is the same approach as taken for
+>> arm platform.
 > 
-> Neither task- nor cpu-clock actually implement that..
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 1111d5bf15ca..8675ddf558c6 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -562,6 +562,12 @@ static int is_pmu_core(const char *name)
+>>  	if (stat(path, &st) == 0)
+>>  		return 1;
+>>  
+>> +	/* Look for cpu sysfs (specific to s390) */
+>> +	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s",
+>> +		  sysfs, name);
+>> +	if (stat(path, &st) == 0 && !strncmp(name, "cpum_", 5))
+>> +		return 1;
+>> +
 > 
-> Something like the _completely_untested_ below might cure that for
-> cpu-clock. I have the nagging feeling we actually already account the
-> idle time _somewhere_, but I couldn't remember and was too lazy to go
-> find -- but someone should if this were to become an actual patch.
+> This shouldn't adversely affect ARM, so FWIW:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 > 
 
-Stephane, this was the thread,
+Arnaldo,
 
-- Arnaldo
- 
-> ---
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a59fe11558a4..5386d551b373 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8900,6 +8908,10 @@ static void cpu_clock_event_update(struct perf_event *event)
->  	u64 now;
->  
->  	now = local_clock();
-> +
-> +	if (event->attr.exclude_idle)
-> +		now -= idle_task(event->oncpu)->se.sum_exec_runtime;
-> +
->  	prev = local64_xchg(&event->hw.prev_count, now);
->  	local64_add(now - prev, &event->count);
->  }
-> diff --git a/kernel/sched/idle_task.c b/kernel/sched/idle_task.c
-> index d518664cce4f..419c620510c6 100644
-> --- a/kernel/sched/idle_task.c
-> +++ b/kernel/sched/idle_task.c
-> @@ -27,9 +27,14 @@ static void check_preempt_curr_idle(struct rq *rq, struct task_struct *p, int fl
->  static struct task_struct *
->  pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
->  {
-> +	struct task_struct *idle = rq->idle;
-> +
->  	put_prev_task(rq, prev);
->  	update_idle_core(rq);
->  	schedstat_inc(rq->sched_goidle);
-> +
-> +	idle->se.exec_start = rq_clock_task(rq);
-> +
->  	return rq->idle;
->  }
->  
-> @@ -48,6 +53,17 @@ dequeue_task_idle(struct rq *rq, struct task_struct *p, int flags)
->  
->  static void put_prev_task_idle(struct rq *rq, struct task_struct *prev)
->  {
-> +	struct task_struct *idle = rq->idle;
-> +	u64 delta, now;
-> +
-> +	now = rq_clock_task(rq);
-> +	delta = now - idle->se.exec_start;
-> +	if (unlikely((s64)delta < 0))
-> +		delta = 0;
-> +
-> +	idle->se.sum_exec_runtime += delta;
-> +	idle->se.exec_start = now;
-> +
->  	rq_last_tick_reset(rq);
->  }
->  
-> @@ -57,6 +73,9 @@ static void task_tick_idle(struct rq *rq, struct task_struct *curr, int queued)
->  
->  static void set_curr_task_idle(struct rq *rq)
->  {
-> +	struct task_struct *idle = rq->idle;
-> +
-> +	idle->se.exec_start = rq_clock_task(rq);
->  }
->  
->  static void switched_to_idle(struct rq *rq, struct task_struct *p)
+with Mark Acked-by can you please apply the patch.
+
+Thanks a lot.
+-- 
+Thomas Richter, Dept 3303, IBM LTC Boeblingen Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
