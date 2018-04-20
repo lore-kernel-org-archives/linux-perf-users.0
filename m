@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/17] perf hists browser: Clarify top/report browser help
-Date: Fri, 20 Apr 2018 11:32:21 -0300
-Message-ID: <20180420143227.16030-12-acme@kernel.org>
+Subject: [PATCH 13/17] perf record: Remove suggestion to enable APIC
+Date: Fri, 20 Apr 2018 11:32:23 -0300
+Message-ID: <20180420143227.16030-14-acme@kernel.org>
 References: <20180420143227.16030-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180420143227.16030-1-acme@kernel.org>
@@ -12,29 +12,34 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Clarify in the browser help that ESC in tui mode may go back to the
-previous screen instead of just exiting (was not clear to me)
+'perf record' suggests to enable the APIC on errors.
+
+APIC is practically always used today and the problem is usually
+somewhere else.
+
+Just remove the outdated suggestion.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20180406203812.3087-3-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20180406203812.3087-5-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 0eec06c105c6..e5f247247daa 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2714,7 +2714,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 	"h/?/F1        Show this window\n"				\
- 	"UP/DOWN/PGUP\n"						\
- 	"PGDN/SPACE    Navigate\n"					\
--	"q/ESC/CTRL+C  Exit browser\n\n"				\
-+	"q/ESC/CTRL+C  Exit browser or go back to previous screen\n\n"	\
- 	"For multiple event sessions:\n\n"				\
- 	"TAB/UNTAB     Switch events\n\n"				\
- 	"For symbolic views (--sort has sym):\n\n"			\
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 66b62570c855..3e87486c28fe 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2870,8 +2870,7 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
+ #if defined(__i386__) || defined(__x86_64__)
+ 		if (evsel->attr.type == PERF_TYPE_HARDWARE)
+ 			return scnprintf(msg, size, "%s",
+-	"No hardware sampling interrupt available.\n"
+-	"No APIC? If so then you can boot the kernel with the \"lapic\" boot parameter to force-enable it.");
++	"No hardware sampling interrupt available.\n");
+ #endif
+ 		break;
+ 	case EBUSY:
 -- 
 2.14.3
