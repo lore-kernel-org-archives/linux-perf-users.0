@@ -1,59 +1,73 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/17] perf: Remove superfluous allocation error check
-Date: Fri, 20 Apr 2018 11:32:18 -0300
-Message-ID: <20180420143227.16030-9-acme@kernel.org>
+Subject: [PATCH 09/17] perf trace: Support MAP_FIXED_NOREPLACE
+Date: Fri, 20 Apr 2018 11:32:19 -0300
+Message-ID: <20180420143227.16030-10-acme@kernel.org>
 References: <20180420143227.16030-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180420143227.16030-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <andi@firstfloor.org>, "H . Peter Anvin" <hpa@zytor.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, syzkaller-bugs@googlegroups.com, x86@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If the get_callchain_buffers fails to allocate the buffer it will
-decrease the nr_callchain_events right away.
+Introduced in a4ff8e8620d3 ("mm: introduce MAP_FIXED_NOREPLACE"), and
+now that we have that define in the just syncronized
+tools/arch/*/include/uapi/asm/mman.h files, add support for it.
 
-There's no point of checking the allocation error for
-nr_callchain_events > 1. Removing that check.
+This should really transition to autogeneration of string tables as
+done for various other things:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
+  $ ls /tmp/build/perf/trace/beauty/generated/*.c
+  arch_errno_name_array.c kcmp_type_array.c madvise_behavior_array.c
+  pkey_alloc_access_rights_array.c prctl_option_array.c
+  $ head /tmp/build/perf/trace/beauty/generated/madvise_behavior_array.c
+  static const char *madvise_advices[] = {
+	[0] = "NORMAL",
+	[1] = "RANDOM",
+	[2] = "SEQUENTIAL",
+	[3] = "WILLNEED",
+	[4] = "DONTNEED",
+	[8] = "FREE",
+	[9] = "REMOVE",
+	[10] = "DONTFORK",
+	[11] = "DOFORK",
+  $
+
+Till then, add support for this the old way.
+
+Also it has to be ifdef'ed, because arches like mips still don't define
+it. The proper solution will be to have per-arch tables for these
+values to support cross-analysis.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: syzkaller-bugs@googlegroups.com
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/20180415092352.12403-3-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-td9t5vhjltqnlzaurkkgq8cn@git.kernel.org
+Signef-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/callchain.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ tools/perf/trace/beauty/mmap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 73cc26e321de..c187aa3df3c8 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -131,14 +131,8 @@ int get_callchain_buffers(int event_max_stack)
- 		goto exit;
- 	}
- 
--	if (count > 1) {
--		/* If the allocation failed, give up */
--		if (!callchain_cpus_entries)
--			err = -ENOMEM;
--		goto exit;
--	}
--
--	err = alloc_callchain_buffers();
-+	if (count == 1)
-+		err = alloc_callchain_buffers();
- exit:
- 	if (err)
- 		atomic_dec(&nr_callchain_events);
+diff --git a/tools/perf/trace/beauty/mmap.c b/tools/perf/trace/beauty/mmap.c
+index 417e3ecfe9d7..9f68077b241b 100644
+--- a/tools/perf/trace/beauty/mmap.c
++++ b/tools/perf/trace/beauty/mmap.c
+@@ -54,6 +54,9 @@ static size_t syscall_arg__scnprintf_mmap_flags(char *bf, size_t size,
+ 	P_MMAP_FLAG(EXECUTABLE);
+ 	P_MMAP_FLAG(FILE);
+ 	P_MMAP_FLAG(FIXED);
++#ifdef MAP_FIXED_NOREPLACE
++	P_MMAP_FLAG(FIXED_NOREPLACE);
++#endif
+ 	P_MMAP_FLAG(GROWSDOWN);
+ 	P_MMAP_FLAG(HUGETLB);
+ 	P_MMAP_FLAG(LOCKED);
 -- 
 2.14.3
