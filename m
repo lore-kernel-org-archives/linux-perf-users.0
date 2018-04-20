@@ -1,72 +1,66 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/17] perf tools: Add '\n' at the end of parse-options error messages
-Date: Fri, 20 Apr 2018 11:32:24 -0300
-Message-ID: <20180420143227.16030-15-acme@kernel.org>
+Subject: [PATCH 15/17] perf tests mmap: Show which tracepoint is failing
+Date: Fri, 20 Apr 2018 11:32:25 -0300
+Message-ID: <20180420143227.16030-16-acme@kernel.org>
 References: <20180420143227.16030-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180420143227.16030-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Krister Johansen <kjlx@templeofstupid.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Philippe Ombredanne <pombredanne@nexb.com>, Sihyeon Jang <uneedsihyeon@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Dominik Brodowski <linux@dominikbrodowski.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Few error messages does not have '\n' at the end and thus next prompt
-gets printed in the same line. Ex,
+In the 'perf test "mmap interface"' we try creating events for several
+tracepoints, but when perf_evsel__new() fails we're not showing which
+one is failing, fix that to help diagnosing problems, such as the
+syscall tracepoints ones being found and fixes in this merge window.
 
-  linux~$ perf buildid-cache -verbose --add ./a.out
-   Error: did you mean `--verbose` (with two dashes ?)linux~$
+Now the failing tests shows:
 
-Fix it.
+  # perf test -v "mmap interface"
+ 4: Read samples using the mmap interface                 :
+  --- start ---
+  test child forked, pid 14311
+  <SNIP>
+  perf_evsel__new(sys_enter_getppid)
+  test child finished with -1
+  ---- end ----
+  Read samples using the mmap interface: FAILED!
+  #
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
+Now to check why the syscalls:sys_enter_getppid is failing...
+
+  # ls -la /sys/kernel/debug/tracing/events/syscalls/sys_enter_getppid
+  ls: cannot access '/sys/kernel/debug/tracing/events/syscalls/sys_enter_getppid': No such file or directory
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Sihyeon Jang <uneedsihyeon@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20180417041346.5617-2-ravi.bangoria@linux.vnet.ibm.com
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-44xk0ycdzrfzx1o9rklf5itl@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/subcmd/parse-options.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/mmap-basic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index f6a1babcbac4..cb7154eccbdc 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -433,7 +433,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
- 
- 	if (ambiguous_option) {
- 		 fprintf(stderr,
--			 " Error: Ambiguous option: %s (could be --%s%s or --%s%s)",
-+			 " Error: Ambiguous option: %s (could be --%s%s or --%s%s)\n",
- 			 arg,
- 			 (ambiguous_flags & OPT_UNSET) ?  "no-" : "",
- 			 ambiguous_option->long_name,
-@@ -458,7 +458,7 @@ static void check_typos(const char *arg, const struct option *options)
- 		return;
- 
- 	if (strstarts(arg, "no-")) {
--		fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)", arg);
-+		fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)\n", arg);
- 		exit(129);
- 	}
- 
-@@ -466,7 +466,7 @@ static void check_typos(const char *arg, const struct option *options)
- 		if (!options->long_name)
- 			continue;
- 		if (strstarts(options->long_name, arg)) {
--			fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)", arg);
-+			fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)\n", arg);
- 			exit(129);
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index bb8e6bcb0d96..0919b0793e5b 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -75,7 +75,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		snprintf(name, sizeof(name), "sys_enter_%s", syscall_names[i]);
+ 		evsels[i] = perf_evsel__newtp("syscalls", name);
+ 		if (IS_ERR(evsels[i])) {
+-			pr_debug("perf_evsel__new\n");
++			pr_debug("perf_evsel__new(%s)\n", name);
+ 			goto out_delete_evlist;
  		}
- 	}
+ 
 -- 
 2.14.3
