@@ -1,92 +1,92 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/17] perf script: Extend misc field decoding with switch out event type
-Date: Fri, 20 Apr 2018 11:32:14 -0300
-Message-ID: <20180420143227.16030-5-acme@kernel.org>
-References: <20180420143227.16030-1-acme@kernel.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf list: Remove s390 specific strcmp_cpuid_cmp function
+Date: Mon, 23 Apr 2018 10:17:45 +0200
+Message-ID: <20180423081745.3672-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420143227.16030-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Make the type field in pmu-events/arch/s390/mapfile.cvs
+more generic to match the created cpuid string for s390.
+The pattern also checks for the counter first version
+number and counter second version number ([13]\.[1-5])
+and the authorization field which follows. These numbers do
+not exist in the cpuid identification string when perf
+commands are executed on a z/VM environment (which does
+not support CPU counter measurement facility).
+CPUID string for LPAR:
+   cpuid : IBM,3906,704,M03,3.5,002f
+CPUID string for z/VM:
+   cpuid : IBM,2964,702,N96
 
-Append 'p' sign to 'S' tag designating the type of context switch out event so
-'Sp' means preemption context switch. Documentation is extended to cover
-new presentation changes.
+This allows the removal of s390 specific cpuid compare code
+and uses the common compare function with its regular
+expression matching algorithm.
 
-  $ perf script --show-switch-events -F +misc -I -i perf.data:
-
-          hdparm 4073 [004] U  762.198265:     380194 cycles:ppp:      7faf727f5a23 strchr (/usr/lib64/ld-2.26.so)
-          hdparm 4073 [004] K  762.198366:     441572 cycles:ppp:  ffffffffb9218435 alloc_set_pte (/lib/modules/4.16.0-rc6+/build/vmlinux)
-          hdparm 4073 [004] S  762.198391: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:    0/0
-         swapper    0 [004]    762.198392: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid: 4073/4073
-         swapper    0 [004] Sp 762.198477: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid: 4073/4073
-          hdparm 4073 [004]    762.198478: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:    0/0
-         swapper    0 [007] K  762.198514:    2303073 cycles:ppp:  ffffffffb98b0c66 intel_idle (/lib/modules/4.16.0-rc6+/build/vmlinux)
-         swapper    0 [007] Sp 762.198561: PERF_RECORD_SWITCH_CPU_WIDE OUT preempt  next pid/tid: 1134/1134
-  kworker/u16:18 1134 [007]    762.198562: PERF_RECORD_SWITCH_CPU_WIDE IN           prev pid/tid:    0/0
-  kworker/u16:18 1134 [007] S  762.198567: PERF_RECORD_SWITCH_CPU_WIDE OUT          next pid/tid:    0/0
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/5fc65ce7-8ca5-53ae-8858-8ddd27290575@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 ---
- tools/perf/Documentation/perf-script.txt | 17 +++++++++--------
- tools/perf/builtin-script.c              |  5 ++++-
- 2 files changed, 13 insertions(+), 9 deletions(-)
+ tools/perf/arch/s390/util/header.c          | 18 ------------------
+ tools/perf/pmu-events/arch/s390/mapfile.csv | 10 +++++-----
+ tools/perf/util/pmu.c                       |  2 +-
+ 3 files changed, 6 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 36ec0257f8d3..afdafe2110a1 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -228,14 +228,15 @@ OPTIONS
- 	For sample events it's possible to display misc field with -F +misc option,
- 	following letters are displayed for each bit:
- 
--	  PERF_RECORD_MISC_KERNEL        K
--	  PERF_RECORD_MISC_USER          U
--	  PERF_RECORD_MISC_HYPERVISOR    H
--	  PERF_RECORD_MISC_GUEST_KERNEL  G
--	  PERF_RECORD_MISC_GUEST_USER    g
--	  PERF_RECORD_MISC_MMAP_DATA*    M
--	  PERF_RECORD_MISC_COMM_EXEC     E
--	  PERF_RECORD_MISC_SWITCH_OUT    S
-+	  PERF_RECORD_MISC_KERNEL               K
-+	  PERF_RECORD_MISC_USER                 U
-+	  PERF_RECORD_MISC_HYPERVISOR           H
-+	  PERF_RECORD_MISC_GUEST_KERNEL         G
-+	  PERF_RECORD_MISC_GUEST_USER           g
-+	  PERF_RECORD_MISC_MMAP_DATA*           M
-+	  PERF_RECORD_MISC_COMM_EXEC            E
-+	  PERF_RECORD_MISC_SWITCH_OUT           S
-+	  PERF_RECORD_MISC_SWITCH_OUT_PREEMPT   Sp
- 
- 	  $ perf script -F +misc ...
- 	   sched-messaging  1414 K     28690.636582:       4590 cycles ...
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b17edbcd98cc..e0a9845b6cbc 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -657,8 +657,11 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 			break;
- 		case PERF_RECORD_SWITCH:
- 		case PERF_RECORD_SWITCH_CPU_WIDE:
--			if (has(SWITCH_OUT))
-+			if (has(SWITCH_OUT)) {
- 				ret += fprintf(fp, "S");
-+				if (sample->misc & PERF_RECORD_MISC_SWITCH_OUT_PREEMPT)
-+					ret += fprintf(fp, "p");
-+			}
- 		default:
- 			break;
- 		}
+diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
+index a4c30f1c70be..163b92f33998 100644
+--- a/tools/perf/arch/s390/util/header.c
++++ b/tools/perf/arch/s390/util/header.c
+@@ -146,21 +146,3 @@ char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ 		zfree(&buf);
+ 	return buf;
+ }
+-
+-/*
+- * Compare the cpuid string returned by get_cpuid() function
+- * with the name generated by the jevents file read from
+- * pmu-events/arch/s390/mapfile.csv.
+- *
+- * Parameter mapcpuid is the cpuid as stored in the
+- * pmu-events/arch/s390/mapfile.csv. This is just the type number.
+- * Parameter cpuid is the cpuid returned by function get_cpuid().
+- */
+-int strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
+-{
+-	char *cp = strchr(cpuid, ',');
+-
+-	if (cp == NULL)
+-		return -1;
+-	return strncmp(cp + 1, mapcpuid, strlen(mapcpuid));
+-}
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index ca7682748a4b..af6386ba3df4 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -1,6 +1,6 @@
+ Family-model,Version,Filename,EventType
+-209[78],1,cf_z10,core
+-281[78],1,cf_z196,core
+-282[78],1,cf_zec12,core
+-296[45],1,cf_z13,core
+-3906,3,cf_z14,core
++^IBM.209[78].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z10,core
++^IBM.281[78].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z196,core
++^IBM.282[78].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_zec12,core
++^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
++^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 8675ddf558c6..08e39197c77d 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -586,7 +586,7 @@ char * __weak get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+  * cpuid string generated on this platform.
+  * Otherwise return non-zero.
+  */
+-int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
++int strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
+ {
+ 	regex_t re;
+ 	regmatch_t pmatch[1];
 -- 
 2.14.3
