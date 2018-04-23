@@ -1,37 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf list: Remove s390 specific strcmp_cpuid_cmp
- function
-Date: Mon, 23 Apr 2018 11:03:52 -0300
-Message-ID: <20180423140352.GD3254@kernel.org>
-References: <20180423081745.3672-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH v2] perf test: Adapt test case
+ record+probe_libc_inet_pton.sh for s390
+Date: Mon, 23 Apr 2018 11:12:04 -0300
+Message-ID: <20180423141204.GA30324@kernel.org>
+References: <20180423082428.7930-1-tmricht@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180423081745.3672-1-tmricht@linux.ibm.com>
+In-Reply-To: <20180423082428.7930-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Apr 23, 2018 at 10:17:45AM +0200, Thomas Richter escreveu:
-> Make the type field in pmu-events/arch/s390/mapfile.cvs
-> more generic to match the created cpuid string for s390.
-> The pattern also checks for the counter first version
-> number and counter second version number ([13]\.[1-5])
-> and the authorization field which follows. These numbers do
-> not exist in the cpuid identification string when perf
-> commands are executed on a z/VM environment (which does
-> not support CPU counter measurement facility).
-> CPUID string for LPAR:
->    cpuid : IBM,3906,704,M03,3.5,002f
-> CPUID string for z/VM:
->    cpuid : IBM,2964,702,N96
+Em Mon, Apr 23, 2018 at 10:24:28AM +0200, Thomas Richter escreveu:
+> perf test case 58 (record+probe_libc_inet_pton.sh)
+> executed on s390x using kernel 4.16.0rc3
+> displays this result:
+>  # ./perf trace --no-syscalls
+>            -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
+>      probe_libc:inet_pton: (3ffa0240448)
+> 	      __GI___inet_pton (/usr/lib64/libc-2.26.so)
+> 	      gaih_inet (inlined)
+> 	      __GI_getaddrinfo (inlined)
+> 	      main (/usr/bin/ping)
+> 	      __libc_start_main (/usr/lib64/libc-2.26.so)
+> 	     _start (/usr/bin/ping)
 > 
-> This allows the removal of s390 specific cpuid compare code
-> and uses the common compare function with its regular
-> expression matching algorithm.
+> After I installed kernel 4.16.0 the same tests uses
+> commands
+>  # perf record -e probe_libc:inet_pton/call-graph=dwarf/
+>       -o /tmp/perf.data.abc ping -6 -c 1 ::1
+>  # perf script -i /tmp/perf.data.abc
+> and displays:
+>  ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
+> 	       140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
+> 	       fbde1 gaih_inet (inlined)
+> 	       fe2b9 __GI_getaddrinfo (inlined)
+> 	        398d main (/usr/bin/ping)
+> 
+> Nothing else changed including glibc elfutils and other libraries
+> picked up by the build.
+> The entries for __libc_start_main and _start are missing.
+> 
+> I bisected missing __libc_start_main and _start to commit
+> 3d20c6246690219881786de10d2dda93f616d0ac
+> ("perf unwind: Unwind with libdw doesn't take symfs into account")
+> 
+> When I undo this commit I get this call stack on s390:
+>  [root@s35lp76 perf]# ./perf script  -i /tmp/perf.data.abc
+>  ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
+> 	140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
+> 	 fbde1 gaih_inet (inlined)
+> 	 fe2b9 __GI_getaddrinfo (inlined)
+> 	  398d main (/usr/bin/ping)
+> 	 22fbd __libc_start_main (/usr/lib64/libc-2.26.so)
+> 	  457b _start (/usr/bin/ping)
+> 
+> Looks like dwarf functions dwfl_xxx  create different call back
+> stack trace when using file
+> /usr/lib/debug/usr/bin/ping-20161105-7.fc27.s390x.debug instead of
+> file /usr/bin/ping.
+> 
+> Fix this test case on s390 and do not expect any call back stack
+> entry after the main() function. Also be more robust and accept a
+> leading __GI_ prefix in front of getaddrinfo.
+> 
+> On x86 this test case shows the same call stack using
+> both kernel versions 4.16.0rc3 and 4.16.0 and also
+> stops at main:
 
 Thanks, applied.
-
-- Arnaldo
