@@ -1,74 +1,43 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf test: Adapt test case
- record+probe_libc_inet_pton.sh for s390
-Date: Mon, 23 Apr 2018 11:12:04 -0300
-Message-ID: <20180423141204.GA30324@kernel.org>
-References: <20180423082428.7930-1-tmricht@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf record: Fix s390 random record__auxtrace_init return value
+Date: Mon, 23 Apr 2018 16:29:40 +0200
+Message-ID: <20180423142940.21143-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180423082428.7930-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Apr 23, 2018 at 10:24:28AM +0200, Thomas Richter escreveu:
-> perf test case 58 (record+probe_libc_inet_pton.sh)
-> executed on s390x using kernel 4.16.0rc3
-> displays this result:
->  # ./perf trace --no-syscalls
->            -e probe_libc:inet_pton/call-graph=dwarf/ ping -6 -c 1 ::1
->      probe_libc:inet_pton: (3ffa0240448)
-> 	      __GI___inet_pton (/usr/lib64/libc-2.26.so)
-> 	      gaih_inet (inlined)
-> 	      __GI_getaddrinfo (inlined)
-> 	      main (/usr/bin/ping)
-> 	      __libc_start_main (/usr/lib64/libc-2.26.so)
-> 	     _start (/usr/bin/ping)
-> 
-> After I installed kernel 4.16.0 the same tests uses
-> commands
->  # perf record -e probe_libc:inet_pton/call-graph=dwarf/
->       -o /tmp/perf.data.abc ping -6 -c 1 ::1
->  # perf script -i /tmp/perf.data.abc
-> and displays:
->  ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
-> 	       140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-> 	       fbde1 gaih_inet (inlined)
-> 	       fe2b9 __GI_getaddrinfo (inlined)
-> 	        398d main (/usr/bin/ping)
-> 
-> Nothing else changed including glibc elfutils and other libraries
-> picked up by the build.
-> The entries for __libc_start_main and _start are missing.
-> 
-> I bisected missing __libc_start_main and _start to commit
-> 3d20c6246690219881786de10d2dda93f616d0ac
-> ("perf unwind: Unwind with libdw doesn't take symfs into account")
-> 
-> When I undo this commit I get this call stack on s390:
->  [root@s35lp76 perf]# ./perf script  -i /tmp/perf.data.abc
->  ping 39048 [006] 84230.381198: probe_libc:inet_pton: (3ffa0240448)
-> 	140448 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-> 	 fbde1 gaih_inet (inlined)
-> 	 fe2b9 __GI_getaddrinfo (inlined)
-> 	  398d main (/usr/bin/ping)
-> 	 22fbd __libc_start_main (/usr/lib64/libc-2.26.so)
-> 	  457b _start (/usr/bin/ping)
-> 
-> Looks like dwarf functions dwfl_xxx  create different call back
-> stack trace when using file
-> /usr/lib/debug/usr/bin/ping-20161105-7.fc27.s390x.debug instead of
-> file /usr/bin/ping.
-> 
-> Fix this test case on s390 and do not expect any call back stack
-> entry after the main() function. Also be more robust and accept a
-> leading __GI_ prefix in front of getaddrinfo.
-> 
-> On x86 this test case shows the same call stack using
-> both kernel versions 4.16.0rc3 and 4.16.0 and also
-> stops at main:
+Command perf record calls
+cmd_report
++---> record__auxtrace_init
+      +---> auxtrace_record__init()
 
-Thanks, applied.
+On s390 function auxtrace_record__init() returns random return
+value due to missing initialization.
+This sometime causes perf record to exit immediately without
+error message and creating a perf.data file.
+
+Fix this by setting error return code to zero before return
+from platform specific function which does not set the
+error code in call cases.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/arch/s390/util/auxtrace.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
+index 6cb48e4cffd9..3afe8256eff2 100644
+--- a/tools/perf/arch/s390/util/auxtrace.c
++++ b/tools/perf/arch/s390/util/auxtrace.c
+@@ -87,6 +87,7 @@ struct auxtrace_record *auxtrace_record__init(struct perf_evlist *evlist,
+ 	struct perf_evsel *pos;
+ 	int diagnose = 0;
+ 
++	*err = 0;
+ 	if (evlist->nr_entries == 0)
+ 		return NULL;
+ 
+-- 
+2.14.3
