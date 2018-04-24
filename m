@@ -1,43 +1,120 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf record: Fix s390 random record__auxtrace_init return value
-Date: Mon, 23 Apr 2018 16:29:40 +0200
-Message-ID: <20180423142940.21143-1-tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [RFC PATCH] perf tools: allow map files to specify DSO
+Date: Tue, 24 Apr 2018 16:27:31 -0300
+Message-ID: <20180424192731.GC4427@kernel.org>
+References: <1524595749-26688-1-git-send-email-johunt@akamai.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1524595749-26688-1-git-send-email-johunt@akamai.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Josh Hunt <johunt@akamai.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Pekka Enberg <penberg@cs.helsinki.fi>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Command perf record calls
-cmd_report
-+---> record__auxtrace_init
-      +---> auxtrace_record__init()
+Em Tue, Apr 24, 2018 at 02:49:09PM -0400, Josh Hunt escreveu:
+> Add the ability to specify a DSO in the /tmp/perf-<PID>.map file.
+> The DSO should be the first line in the file and readable by the
+> running user. If a valid DSO is found all other contents of the
+> file will be ignored. This allows things like callchain unwinding
+> with DWARF to work.
 
-On s390 function auxtrace_record__init() returns random return
-value due to missing initialization.
-This sometime causes perf record to exit immediately without
-error message and creating a perf.data file.
+Pekka, Andi, Stephane, do you guys see any problems with this?
 
-Fix this by setting error return code to zero before return
-from platform specific function which does not set the
-error code in call cases.
+If this flies, tools/perf/Documentation/jit-interface.txt needs
+updating.
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/arch/s390/util/auxtrace.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
-index 6cb48e4cffd9..3afe8256eff2 100644
---- a/tools/perf/arch/s390/util/auxtrace.c
-+++ b/tools/perf/arch/s390/util/auxtrace.c
-@@ -87,6 +87,7 @@ struct auxtrace_record *auxtrace_record__init(struct perf_evlist *evlist,
- 	struct perf_evsel *pos;
- 	int diagnose = 0;
+- Arnaldo
  
-+	*err = 0;
- 	if (evlist->nr_entries == 0)
- 		return NULL;
- 
--- 
-2.14.3
+> Suggested-by: Wang Nan <wangnan0@huawei.com>
+> Signed-off-by: Josh Hunt <johunt@akamai.com>
+> 
+> ---
+> We have an application which uses huge pages for its text section, but
+> still needs the ability to do callchain unwinding with DWARF. We use
+> the perf-<PID>.map file setup to do symbol resolution and that works
+> great, but callchain unwinding fails.
+> 
+> A few months ago I mentioned this to Wang Nan and he suggested a way
+> around this problem could be to specify the path of the DSO in the map
+> file. The attached patch is my initial hack at this. Running with this
+> patch I can now get full callchain unwinding with DWARF.
+> 
+> FWIW LBR + map file works with callchains, but unfortunately there are
+> some cases where we still need DWARF.
+> 
+> I was hoping to get feedback on whether this is the right way to solve
+> this problem, and if not what should I do to get this working? If the
+> idea is OK I will clean this up and resubmit an official patch. Current
+> patch is against 4.14 stable.
+> 
+> Thanks!
+> ---
+>  tools/perf/util/map.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 4e7bd2750122..98d6af2c854d 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -143,12 +143,37 @@ void map__init(struct map *map, enum map_type type,
+>  	RB_CLEAR_NODE(&map->rb_node);
+>  	map->groups   = NULL;
+>  	map->erange_warned = false;
+>  	refcount_set(&map->refcnt, 1);
+>  }
+>  
+> +static bool replace_anon(char *mapfilename)
+> +{
+> +	FILE *file = NULL;
+> +	bool ret = false;
+> +
+> +	file = fopen(mapfilename, "r");
+> +	if (file != NULL) {
+> +		char *line;
+> +		size_t line_len, linesz=0;
+> +
+> +		line_len = getline(&line, &linesz, file);
+> +		if (line_len > 0) {
+> +			line[--line_len] = '\0';
+> +			if (!access(line, R_OK)) {
+> +				strlcpy(mapfilename, line, line_len+1);
+> +				ret = true;
+> +			}
+> +			free(line);
+> +		}
+> +		fclose(file);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  struct map *map__new(struct machine *machine, u64 start, u64 len,
+>  		     u64 pgoff, u32 d_maj, u32 d_min, u64 ino,
+>  		     u64 ino_gen, u32 prot, u32 flags, char *filename,
+>  		     enum map_type type, struct thread *thread)
+>  {
+>  	struct map *map = malloc(sizeof(*map));
+> @@ -174,12 +199,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>  		nsi = nsinfo__get(thread->nsinfo);
+>  
+>  		if ((anon || no_dso) && nsi && type == MAP__FUNCTION) {
+>  			snprintf(newfilename, sizeof(newfilename),
+>  				 "/tmp/perf-%d.map", nsi->pid);
+>  			filename = newfilename;
+> +			/*
+> +			 * Check to see if map file references DSO to use, if so, use it.
+> +			 */
+> +			if (anon && replace_anon(newfilename)) {
+> +				anon = 0;
+> +				filename = newfilename;
+> +			}
+>  		}
+>  
+>  		if (android) {
+>  			if (replace_android_lib(filename, newfilename))
+>  				filename = newfilename;
+>  		}
+> -- 
+> 1.9.1
