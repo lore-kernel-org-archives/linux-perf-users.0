@@ -1,54 +1,116 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/12] perf record: Fix s390 undefined record__auxtrace_init() return value
-Date: Wed, 25 Apr 2018 13:00:04 -0300
-Message-ID: <20180425160008.3407-9-acme@kernel.org>
+Subject: [PATCH 09/12] perf pmu: Fix core PMU alias list for X86 platform
+Date: Wed, 25 Apr 2018 13:00:05 -0300
+Message-ID: <20180425160008.3407-10-acme@kernel.org>
 References: <20180425160008.3407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Agustin Vega-Frias <agustinv@codeaurora.org>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Command 'perf record' calls:
+When counting uncore event with alias, core event is mistakenly
+involved, for example:
 
-  cmd_report()
-    record__auxtrace_init()
-       auxtrace_record__init()
+  perf stat --no-merge -e "unc_m_cas_count.all" -C0  sleep 1
 
-On s390 function auxtrace_record__init() returns random return value due
-to missing initialization.
+  Performance counter stats for 'CPU(s) 0':
 
-This sometime causes 'perf record' to exit immediately without error
-message and creating a perf.data file.
+                 0      unc_m_cas_count.all [uncore_imc_4]
+                 0      unc_m_cas_count.all [uncore_imc_2]
+                 0      unc_m_cas_count.all [uncore_imc_0]
+           153,640      unc_m_cas_count.all [cpu]
+                 0      unc_m_cas_count.all [uncore_imc_5]
+            25,026      unc_m_cas_count.all [uncore_imc_3]
+                 0      unc_m_cas_count.all [uncore_imc_1]
 
-Fix this by setting error the return code to zero before returning from
-platform specific functions which may not set the error code in call
-cases.
+       1.001447890 seconds time elapsed
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180423142940.21143-1-tmricht@linux.ibm.com
+The reason is that current implementation doesn't check PMU name of a
+event when adding its alias into the alias list for core PMU. The
+uncore event aliases are mistakenly added.
+
+This bug was introduced in:
+  commit 14b22ae028de ("perf pmu: Add helper function is_pmu_core to
+  detect PMU CORE devices")
+
+Checking the PMU name for all PMUs on X86 and other architectures except
+ARM.
+There is no behavior change for ARM.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Agustin Vega-Frias <agustinv@codeaurora.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Fixes: 14b22ae028de ("perf pmu: Add helper function is_pmu_core to detect PMU CORE devices")
+Link: http://lkml.kernel.org/r/1524594014-79243-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/auxtrace.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/pmu.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
-index 6cb48e4cffd9..3afe8256eff2 100644
---- a/tools/perf/arch/s390/util/auxtrace.c
-+++ b/tools/perf/arch/s390/util/auxtrace.c
-@@ -87,6 +87,7 @@ struct auxtrace_record *auxtrace_record__init(struct perf_evlist *evlist,
- 	struct perf_evsel *pos;
- 	int diagnose = 0;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index af4bedf4cf98..d2fb597c9a8c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -539,9 +539,10 @@ static bool pmu_is_uncore(const char *name)
  
-+	*err = 0;
- 	if (evlist->nr_entries == 0)
- 		return NULL;
+ /*
+  *  PMU CORE devices have different name other than cpu in sysfs on some
+- *  platforms. looking for possible sysfs files to identify as core device.
++ *  platforms.
++ *  Looking for possible sysfs files to identify the arm core device.
+  */
+-static int is_pmu_core(const char *name)
++static int is_arm_pmu_core(const char *name)
+ {
+ 	struct stat st;
+ 	char path[PATH_MAX];
+@@ -550,12 +551,6 @@ static int is_pmu_core(const char *name)
+ 	if (!sysfs)
+ 		return 0;
+ 
+-	/* Look for cpu sysfs (x86 and others) */
+-	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu", sysfs);
+-	if ((stat(path, &st) == 0) &&
+-			(strncmp(name, "cpu", strlen("cpu")) == 0))
+-		return 1;
+-
+ 	/* Look for cpu sysfs (specific to arm) */
+ 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+ 				sysfs, name);
+@@ -668,6 +663,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ 	struct pmu_events_map *map;
+ 	struct pmu_event *pe;
+ 	const char *name = pmu->name;
++	const char *pname;
+ 
+ 	map = perf_pmu__find_map(pmu);
+ 	if (!map)
+@@ -686,11 +682,9 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ 			break;
+ 		}
+ 
+-		if (!is_pmu_core(name)) {
+-			/* check for uncore devices */
+-			if (pe->pmu == NULL)
+-				continue;
+-			if (strncmp(pe->pmu, name, strlen(pe->pmu)))
++		if (!is_arm_pmu_core(name)) {
++			pname = pe->pmu ? pe->pmu : "cpu";
++			if (strncmp(pname, name, strlen(pname)))
+ 				continue;
+ 		}
  
 -- 
 2.14.3
