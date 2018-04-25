@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/12] perf pmu: Fix pmu events parsing rule
-Date: Wed, 25 Apr 2018 13:00:01 -0300
-Message-ID: <20180425160008.3407-6-acme@kernel.org>
+Subject: [PATCH 04/12] perf stat: Keep the / modifier separator in fallback
+Date: Wed, 25 Apr 2018 13:00:00 -0300
+Message-ID: <20180425160008.3407-5-acme@kernel.org>
 References: <20180425160008.3407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
@@ -12,68 +12,56 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Currently all the event parsing fails end up in the event_pmu rule, and
-display misleading help like:
+The 'perf stat' fallback for EACCES error sets the exclude_kernel
+perf_event_attr and tries perf_event_open() again with it. In addition,
+it also changes the name of the event to reflect that change by adding
+the 'u' modifier.
 
-  $ perf stat -e inst kill
-  event syntax error: 'inst'
-                       \___ Cannot find PMU `inst'. Missing kernel support?
+But it does not take into account the '/' separator, so the event name
+can end up mangled, like: (note the '/:' characters)
+
+  $ perf stat -e cpu/cpu-cycles/ kill
   ...
+             386,832      cpu/cpu-cycles/:u
 
-The reason is that the event_pmu is too strong and match also single
-string. Changing it to force the '/' separators to be part of the rule,
-and getting the proper error now:
+Adding the code to check on the '/' separator and set the following
+correct event name:
 
-  $ perf stat -e inst kill
-  event syntax error: 'inst'
-                       \___ parser error
-  Run 'perf list' for a list of valid events
+  $ perf stat -e cpu/cpu-cycles/ kill
   ...
+             388,548      cpu/cpu-cycles/u
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reported-by: Ingo Molnar <mingo@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180423090823.32309-5-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180423090823.32309-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.y | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 7afeb80cc39e..d14464c42714 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -224,15 +224,15 @@ event_def: event_pmu |
- 	   event_bpf_file
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3e87486c28fe..7eb1e9850abf 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2754,8 +2754,14 @@ bool perf_evsel__fallback(struct perf_evsel *evsel, int err,
+ 		   (paranoid = perf_event_paranoid()) > 1) {
+ 		const char *name = perf_evsel__name(evsel);
+ 		char *new_name;
++		const char *sep = ":";
  
- event_pmu:
--PE_NAME opt_event_config
-+PE_NAME '/' event_config '/'
- {
- 	struct list_head *list, *orig_terms, *terms;
+-		if (asprintf(&new_name, "%s%su", name, strchr(name, ':') ? "" : ":") < 0)
++		/* Is there already the separator in the name. */
++		if (strchr(name, '/') ||
++		    strchr(name, ':'))
++			sep = "";
++
++		if (asprintf(&new_name, "%s%su", name, sep) < 0)
+ 			return false;
  
--	if (parse_events_copy_term_list($2, &orig_terms))
-+	if (parse_events_copy_term_list($3, &orig_terms))
- 		YYABORT;
- 
- 	ALLOC_LIST(list);
--	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
-+	if (parse_events_add_pmu(_parse_state, list, $1, $3, false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
- 		char *pattern;
-@@ -262,7 +262,7 @@ PE_NAME opt_event_config
- 		if (!ok)
- 			YYABORT;
- 	}
--	parse_events_terms__delete($2);
-+	parse_events_terms__delete($3);
- 	parse_events_terms__delete(orig_terms);
- 	$$ = list;
- }
+ 		if (evsel->name)
 -- 
 2.14.3
