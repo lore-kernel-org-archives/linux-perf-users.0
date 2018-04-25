@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/12] perf stat: Fix duplicate PMU name for interval print
-Date: Wed, 25 Apr 2018 13:00:08 -0300
-Message-ID: <20180425160008.3407-13-acme@kernel.org>
+Subject: [PATCH 10/12] perf stat: Print out hint for mixed PMU group error
+Date: Wed, 25 Apr 2018 13:00:06 -0300
+Message-ID: <20180425160008.3407-11-acme@kernel.org>
 References: <20180425160008.3407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
@@ -12,36 +12,21 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-PMU name is printed repeatedly for interval print, for example:
+Perf doesn't support mixed events from different PMUs (except software
+event) in a group. For this case, only "<not counted>" or "<not
+supported>" are printed out. There is no hint which guides users to fix
+the issue.
 
-  perf stat --no-merge -e 'unc_m_clockticks' -a -I 1000
-  #           time             counts unit events
-     1.001053069        243,702,144      unc_m_clockticks [uncore_imc_4]
-     1.001053069        244,268,304      unc_m_clockticks [uncore_imc_2]
-     1.001053069        244,427,386      unc_m_clockticks [uncore_imc_0]
-     1.001053069        244,583,760      unc_m_clockticks [uncore_imc_5]
-     1.001053069        244,738,971      unc_m_clockticks [uncore_imc_3]
-     1.001053069        244,880,309      unc_m_clockticks [uncore_imc_1]
-     2.002024821        240,818,200      unc_m_clockticks [uncore_imc_4] [uncore_imc_4]
-     2.002024821        240,767,812      unc_m_clockticks [uncore_imc_2] [uncore_imc_2]
-     2.002024821        240,764,215      unc_m_clockticks [uncore_imc_0] [uncore_imc_0]
-     2.002024821        240,759,504      unc_m_clockticks [uncore_imc_5] [uncore_imc_5]
-     2.002024821        240,755,992      unc_m_clockticks [uncore_imc_3] [uncore_imc_3]
-     2.002024821        240,750,403      unc_m_clockticks [uncore_imc_1] [uncore_imc_1]
+Checking the PMU type of events to determine if they are from the same
+PMU. There may be false alarm for the checking. E.g. the core PMU has
+different PMU type. But it should not happen often.
 
-For each print, the PMU name is unconditionally appended to the
-counter->name.
+The false alarm can also be tolerated, because:
 
-Need to check the counter->name first. If the PMU name is already
-appended, do nothing.
-
-Committer notes:
-
-Add and use perf_evsel->uniquified_name bool instead of doing the more
-expensive strstr(event->name, pmu->name).
+- It only happens on error path.
+- It just provides a possible solution for the issue.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Agustin Vega-Frias <agustinv@codeaurora.org>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
@@ -51,48 +36,79 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Fixes: 8c5421c016a4 ("perf pmu: Display pmu name when printing unmerged events in stat")
-Link: http://lkml.kernel.org/r/1524594014-79243-5-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1524594014-79243-2-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 5 ++++-
- tools/perf/util/evsel.h   | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 30e6b374e095..f17dc601b0f3 100644
+index 147a27e8c937..30e6b374e095 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -1284,7 +1284,8 @@ static void uniquify_event_name(struct perf_evsel *counter)
- 	char *new_name;
- 	char *config;
+@@ -172,6 +172,7 @@ static bool			interval_count;
+ static const char		*output_name;
+ static int			output_fd;
+ static int			print_free_counters_hint;
++static int			print_mixed_hw_group_error;
  
--	if (!counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
-+	if (counter->uniquified_name ||
-+	    !counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
- 					   strlen(counter->pmu_name)))
- 		return;
- 
-@@ -1302,6 +1303,8 @@ static void uniquify_event_name(struct perf_evsel *counter)
- 			counter->name = new_name;
- 		}
- 	}
-+
-+	counter->uniquified_name = true;
+ struct perf_stat {
+ 	bool			 record;
+@@ -1126,6 +1127,30 @@ static void abs_printout(int id, int nr, struct perf_evsel *evsel, double avg)
+ 		fprintf(output, "%s%s", csv_sep, evsel->cgrp->name);
  }
  
- static void collect_all_aliases(struct perf_evsel *counter,
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index d3ee3af618ef..92ec009a292d 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -115,6 +115,7 @@ struct perf_evsel {
- 	unsigned int		sample_size;
- 	int			id_pos;
- 	int			is_pos;
-+	bool			uniquified_name;
- 	bool			snapshot;
- 	bool 			supported;
- 	bool 			needs_swap;
++static bool is_mixed_hw_group(struct perf_evsel *counter)
++{
++	struct perf_evlist *evlist = counter->evlist;
++	u32 pmu_type = counter->attr.type;
++	struct perf_evsel *pos;
++
++	if (counter->nr_members < 2)
++		return false;
++
++	evlist__for_each_entry(evlist, pos) {
++		/* software events can be part of any hardware group */
++		if (pos->attr.type == PERF_TYPE_SOFTWARE)
++			continue;
++		if (pmu_type == PERF_TYPE_SOFTWARE) {
++			pmu_type = pos->attr.type;
++			continue;
++		}
++		if (pmu_type != pos->attr.type)
++			return true;
++	}
++
++	return false;
++}
++
+ static void printout(int id, int nr, struct perf_evsel *counter, double uval,
+ 		     char *prefix, u64 run, u64 ena, double noise,
+ 		     struct runtime_stat *st)
+@@ -1178,8 +1203,11 @@ static void printout(int id, int nr, struct perf_evsel *counter, double uval,
+ 			counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
+ 			csv_sep);
+ 
+-		if (counter->supported)
++		if (counter->supported) {
+ 			print_free_counters_hint = 1;
++			if (is_mixed_hw_group(counter))
++				print_mixed_hw_group_error = 1;
++		}
+ 
+ 		fprintf(stat_config.output, "%-*s%s",
+ 			csv_output ? 0 : unit_width,
+@@ -1757,6 +1785,11 @@ static void print_footer(void)
+ "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
+ "	perf stat ...\n"
+ "	echo 1 > /proc/sys/kernel/nmi_watchdog\n");
++
++	if (print_mixed_hw_group_error)
++		fprintf(output,
++			"The events in group usually have to be from "
++			"the same PMU. Try reorganizing the group.\n");
+ }
+ 
+ static void print_counters(struct timespec *ts, int argc, const char **argv)
 -- 
 2.14.3
