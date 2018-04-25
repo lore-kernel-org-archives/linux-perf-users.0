@@ -1,114 +1,79 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/12] perf stat: Print out hint for mixed PMU group error
-Date: Wed, 25 Apr 2018 13:00:06 -0300
-Message-ID: <20180425160008.3407-11-acme@kernel.org>
+Subject: [PATCH 05/12] perf pmu: Fix pmu events parsing rule
+Date: Wed, 25 Apr 2018 13:00:01 -0300
+Message-ID: <20180425160008.3407-6-acme@kernel.org>
 References: <20180425160008.3407-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Agustin Vega-Frias <agustinv@codeaurora.org>, Andi Kleen <ak@linux.intel.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Will Deacon <will.deacon@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Perf doesn't support mixed events from different PMUs (except software
-event) in a group. For this case, only "<not counted>" or "<not
-supported>" are printed out. There is no hint which guides users to fix
-the issue.
+Currently all the event parsing fails end up in the event_pmu rule, and
+display misleading help like:
 
-Checking the PMU type of events to determine if they are from the same
-PMU. There may be false alarm for the checking. E.g. the core PMU has
-different PMU type. But it should not happen often.
+  $ perf stat -e inst kill
+  event syntax error: 'inst'
+                       \___ Cannot find PMU `inst'. Missing kernel support?
+  ...
 
-The false alarm can also be tolerated, because:
+The reason is that the event_pmu is too strong and match also single
+string. Changing it to force the '/' separators to be part of the rule,
+and getting the proper error now:
 
-- It only happens on error path.
-- It just provides a possible solution for the issue.
+  $ perf stat -e inst kill
+  event syntax error: 'inst'
+                       \___ parser error
+  Run 'perf list' for a list of valid events
+  ...
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Agustin Vega-Frias <agustinv@codeaurora.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: http://lkml.kernel.org/r/1524594014-79243-2-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/20180423090823.32309-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.y | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 147a27e8c937..30e6b374e095 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -172,6 +172,7 @@ static bool			interval_count;
- static const char		*output_name;
- static int			output_fd;
- static int			print_free_counters_hint;
-+static int			print_mixed_hw_group_error;
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 7afeb80cc39e..d14464c42714 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -224,15 +224,15 @@ event_def: event_pmu |
+ 	   event_bpf_file
  
- struct perf_stat {
- 	bool			 record;
-@@ -1126,6 +1127,30 @@ static void abs_printout(int id, int nr, struct perf_evsel *evsel, double avg)
- 		fprintf(output, "%s%s", csv_sep, evsel->cgrp->name);
+ event_pmu:
+-PE_NAME opt_event_config
++PE_NAME '/' event_config '/'
+ {
+ 	struct list_head *list, *orig_terms, *terms;
+ 
+-	if (parse_events_copy_term_list($2, &orig_terms))
++	if (parse_events_copy_term_list($3, &orig_terms))
+ 		YYABORT;
+ 
+ 	ALLOC_LIST(list);
+-	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
++	if (parse_events_add_pmu(_parse_state, list, $1, $3, false)) {
+ 		struct perf_pmu *pmu = NULL;
+ 		int ok = 0;
+ 		char *pattern;
+@@ -262,7 +262,7 @@ PE_NAME opt_event_config
+ 		if (!ok)
+ 			YYABORT;
+ 	}
+-	parse_events_terms__delete($2);
++	parse_events_terms__delete($3);
+ 	parse_events_terms__delete(orig_terms);
+ 	$$ = list;
  }
- 
-+static bool is_mixed_hw_group(struct perf_evsel *counter)
-+{
-+	struct perf_evlist *evlist = counter->evlist;
-+	u32 pmu_type = counter->attr.type;
-+	struct perf_evsel *pos;
-+
-+	if (counter->nr_members < 2)
-+		return false;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		/* software events can be part of any hardware group */
-+		if (pos->attr.type == PERF_TYPE_SOFTWARE)
-+			continue;
-+		if (pmu_type == PERF_TYPE_SOFTWARE) {
-+			pmu_type = pos->attr.type;
-+			continue;
-+		}
-+		if (pmu_type != pos->attr.type)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static void printout(int id, int nr, struct perf_evsel *counter, double uval,
- 		     char *prefix, u64 run, u64 ena, double noise,
- 		     struct runtime_stat *st)
-@@ -1178,8 +1203,11 @@ static void printout(int id, int nr, struct perf_evsel *counter, double uval,
- 			counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
- 			csv_sep);
- 
--		if (counter->supported)
-+		if (counter->supported) {
- 			print_free_counters_hint = 1;
-+			if (is_mixed_hw_group(counter))
-+				print_mixed_hw_group_error = 1;
-+		}
- 
- 		fprintf(stat_config.output, "%-*s%s",
- 			csv_output ? 0 : unit_width,
-@@ -1757,6 +1785,11 @@ static void print_footer(void)
- "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
- "	perf stat ...\n"
- "	echo 1 > /proc/sys/kernel/nmi_watchdog\n");
-+
-+	if (print_mixed_hw_group_error)
-+		fprintf(output,
-+			"The events in group usually have to be from "
-+			"the same PMU. Try reorganizing the group.\n");
- }
- 
- static void print_counters(struct timespec *ts, int argc, const char **argv)
 -- 
 2.14.3
