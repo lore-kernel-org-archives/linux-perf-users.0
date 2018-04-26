@@ -1,125 +1,52 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/12] perf/urgent fixes
-Date: Thu, 26 Apr 2018 07:33:00 +0200
-Message-ID: <20180426053300.hftu657w62235euc@gmail.com>
-References: <20180425160008.3407-1-acme@kernel.org>
+From: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Subject: Re: [PATCH] perf test: Adapt test case record+probe_libc_inet_pton.sh
+ for s390
+Date: Thu, 26 Apr 2018 10:09:00 +0200
+Message-ID: <151b93fd-8e12-4abf-1e69-329de6eab777@linux.ibm.com>
+References: <20180412081959.85193-1-tmricht@linux.ibm.com>
+ <20180412131012.GC9818@kernel.org>
+ <25418aa4-60bb-9f16-c880-8caaf8a20931@aim.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
+In-Reply-To: <25418aa4-60bb-9f16-c880-8caaf8a20931@aim.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Agustin Vega-Frias <agustinv@codeaurora.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, kernel-team@lge.com, Kim Phillips <kim.phillips@arm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Martin Vuille <jpmv27@aim.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sangwon Hong <qpakzk@gmail.>
+To: Martin Vuille <jpmv27@aim.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+On 04/25/2018 04:19 PM, Martin Vuille wrote:
+> Apologies for any problems my patch may be causing.
+> 
+> I'm unclear on what is the proposed fix, other than reverting the commit.
+> 
+> In the problem scenario, is a --symfs option used? Is the debug info being obtained from the symfs directory?
+> 
+> Unfortunately, I've had to change my focus for the time being, so won't be able to investigate further for a while.
+> 
+> Arnaldo, I'm fine with you reverting this change for now.
+> 
+> Regards,
+> 
+> MV
+> 
+> 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Martin,
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit c042f7e9bb6ad9429ea0f2c9138dc06413198967:
-> 
->   Merge tag 'perf-urgent-for-mingo-4.17-20180420' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-04-21 09:38:33 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180425
-> 
-> for you to fetch changes up to 80ee8c588afde077cb0439e15129579a267916c4:
-> 
->   perf stat: Fix duplicate PMU name for interval print (2018-04-24 16:12:00 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf stat:
-> 
-> - Keep the '/' event modifier separator in fallback, for example when
->   fallbacking from 'cpu/cpu-cycles/' to user level only, where it should
->   become 'cpu/cpu-cycles/u' and not 'cpu/cpu-cycles/:u' (Jiri Olsa)
-> 
-> - Fix PMU events parsing rule, improving error reporting for
->   invalid events (Jiri Olsa)
-> 
-> - Disable write_backward and other event attributes for !group
->   events in a group, fixing, for instance this group: '{cycles,msr/aperf/}:S'
->   that has leader sampling (:S) and where just the 'cycles',
->   the leader event, should have the write_backward attribute
->   set, in this case it all fails because the PMU where 'msr/aperf/'
->   lives doesn't accepts write_backward style sampling (Jiri Olsa)
-> 
-> - Only fall back group read for leader (Kan Liang)
-> 
-> - Fix core PMU alias list for X86 platform (Kan Liang)
-> 
-> - Print out hint for mixed PMU group error (Kan Liang)
-> 
-> - Fix duplicate PMU name for interval print (Kan Liang)
-> 
-> Core:
-> 
-> - Set main kernel end address properly when reading kernel and
->   module maps (Namhyung Kim)
-> 
-> perf mem:
-> 
-> - Fix incorrect entries and add missing man options (Sangwon Hong)
-> 
-> s/390:
-> 
-> - Remove s390 specific strcmp_cpuid_cmp function (Thomas Richter)
-> 
-> - Adapt 'perf test' case record+probe_libc_inet_pton.sh for s390
-> 
-> - Fix s390 undefined record__auxtrace_init() return value in
->   'perf record' (Thomas Richter)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Jiri Olsa (3):
->       perf stat: Keep the / modifier separator in fallback
->       perf pmu: Fix pmu events parsing rule
->       perf evsel: Disable write_backward for leader sampling group events
-> 
-> Kan Liang (4):
->       perf pmu: Fix core PMU alias list for X86 platform
->       perf stat: Print out hint for mixed PMU group error
->       perf evsel: Only fall back group read for leader
->       perf stat: Fix duplicate PMU name for interval print
-> 
-> Namhyung Kim (1):
->       perf machine: Set main kernel end address properly
-> 
-> Sangwon Hong (1):
->       perf mem: Document incorrect and missing options
-> 
-> Thomas Richter (3):
->       perf list: Remove s390 specific strcmp_cpuid_cmp function
->       perf test: Adapt test case record+probe_libc_inet_pton.sh for s390
->       perf record: Fix s390 undefined record__auxtrace_init() return value
-> 
->  tools/perf/Documentation/perf-mem.txt              | 41 +++++++++++++++-------
->  tools/perf/arch/s390/util/auxtrace.c               |  1 +
->  tools/perf/arch/s390/util/header.c                 | 18 ----------
->  tools/perf/builtin-stat.c                          | 40 +++++++++++++++++++--
->  tools/perf/pmu-events/arch/s390/mapfile.csv        | 10 +++---
->  tools/perf/tests/attr/test-record-group-sampling   |  3 ++
->  .../tests/shell/record+probe_libc_inet_pton.sh     |  6 ++--
->  tools/perf/util/evsel.c                            | 18 +++++++---
->  tools/perf/util/evsel.h                            |  1 +
->  tools/perf/util/machine.c                          | 30 +++++++++-------
->  tools/perf/util/parse-events.y                     |  8 ++---
->  tools/perf/util/pmu.c                              | 22 +++++-------
->  12 files changed, 123 insertions(+), 75 deletions(-)
+there is no need to revert the patch. I have adopted the test case for s390 and it
+now stops at main, which is identical to x86.
 
-Pulled, thanks a lot Arnaldo!
+The --symfs option was not used, however the debug file selected for dwarf examination
+was different. With you patch it changed from /usr/lib64/libc.so (old) to
+/usr/lib/debug/lib64/libc-2.26.so.debug (new)
+and I think that this file has not all the info (at least on s390).
 
-	Ingo
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzende des Aufsichtsrats: Martina Koederitz 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
