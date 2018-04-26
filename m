@@ -1,97 +1,125 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/12] perf machine: Set main kernel end address properly
-Date: Wed, 25 Apr 2018 12:59:57 -0300
-Message-ID: <20180425160008.3407-2-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/12] perf/urgent fixes
+Date: Thu, 26 Apr 2018 07:33:00 +0200
+Message-ID: <20180426053300.hftu657w62235euc@gmail.com>
 References: <20180425160008.3407-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180425160008.3407-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kernel-team@lge.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Agustin Vega-Frias <agustinv@codeaurora.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, kernel-team@lge.com, Kim Phillips <kim.phillips@arm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Martin Vuille <jpmv27@aim.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sangwon Hong <qpakzk@gmail.>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
 
-map_groups__fixup_end() was called to set the end addresses of kernel
-and module maps.  But now since machine__create_modules() sets the end
-address of modules properly, the only remaining piece is the kernel map.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-We can set it with adjacent module's address directly instead of calling
-map_groups__fixup_end().  If there's no module after the kernel map, the
-end address will be ~0ULL.
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit c042f7e9bb6ad9429ea0f2c9138dc06413198967:
+> 
+>   Merge tag 'perf-urgent-for-mingo-4.17-20180420' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-04-21 09:38:33 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180425
+> 
+> for you to fetch changes up to 80ee8c588afde077cb0439e15129579a267916c4:
+> 
+>   perf stat: Fix duplicate PMU name for interval print (2018-04-24 16:12:00 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf stat:
+> 
+> - Keep the '/' event modifier separator in fallback, for example when
+>   fallbacking from 'cpu/cpu-cycles/' to user level only, where it should
+>   become 'cpu/cpu-cycles/u' and not 'cpu/cpu-cycles/:u' (Jiri Olsa)
+> 
+> - Fix PMU events parsing rule, improving error reporting for
+>   invalid events (Jiri Olsa)
+> 
+> - Disable write_backward and other event attributes for !group
+>   events in a group, fixing, for instance this group: '{cycles,msr/aperf/}:S'
+>   that has leader sampling (:S) and where just the 'cycles',
+>   the leader event, should have the write_backward attribute
+>   set, in this case it all fails because the PMU where 'msr/aperf/'
+>   lives doesn't accepts write_backward style sampling (Jiri Olsa)
+> 
+> - Only fall back group read for leader (Kan Liang)
+> 
+> - Fix core PMU alias list for X86 platform (Kan Liang)
+> 
+> - Print out hint for mixed PMU group error (Kan Liang)
+> 
+> - Fix duplicate PMU name for interval print (Kan Liang)
+> 
+> Core:
+> 
+> - Set main kernel end address properly when reading kernel and
+>   module maps (Namhyung Kim)
+> 
+> perf mem:
+> 
+> - Fix incorrect entries and add missing man options (Sangwon Hong)
+> 
+> s/390:
+> 
+> - Remove s390 specific strcmp_cpuid_cmp function (Thomas Richter)
+> 
+> - Adapt 'perf test' case record+probe_libc_inet_pton.sh for s390
+> 
+> - Fix s390 undefined record__auxtrace_init() return value in
+>   'perf record' (Thomas Richter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Jiri Olsa (3):
+>       perf stat: Keep the / modifier separator in fallback
+>       perf pmu: Fix pmu events parsing rule
+>       perf evsel: Disable write_backward for leader sampling group events
+> 
+> Kan Liang (4):
+>       perf pmu: Fix core PMU alias list for X86 platform
+>       perf stat: Print out hint for mixed PMU group error
+>       perf evsel: Only fall back group read for leader
+>       perf stat: Fix duplicate PMU name for interval print
+> 
+> Namhyung Kim (1):
+>       perf machine: Set main kernel end address properly
+> 
+> Sangwon Hong (1):
+>       perf mem: Document incorrect and missing options
+> 
+> Thomas Richter (3):
+>       perf list: Remove s390 specific strcmp_cpuid_cmp function
+>       perf test: Adapt test case record+probe_libc_inet_pton.sh for s390
+>       perf record: Fix s390 undefined record__auxtrace_init() return value
+> 
+>  tools/perf/Documentation/perf-mem.txt              | 41 +++++++++++++++-------
+>  tools/perf/arch/s390/util/auxtrace.c               |  1 +
+>  tools/perf/arch/s390/util/header.c                 | 18 ----------
+>  tools/perf/builtin-stat.c                          | 40 +++++++++++++++++++--
+>  tools/perf/pmu-events/arch/s390/mapfile.csv        | 10 +++---
+>  tools/perf/tests/attr/test-record-group-sampling   |  3 ++
+>  .../tests/shell/record+probe_libc_inet_pton.sh     |  6 ++--
+>  tools/perf/util/evsel.c                            | 18 +++++++---
+>  tools/perf/util/evsel.h                            |  1 +
+>  tools/perf/util/machine.c                          | 30 +++++++++-------
+>  tools/perf/util/parse-events.y                     |  8 ++---
+>  tools/perf/util/pmu.c                              | 22 +++++-------
+>  12 files changed, 123 insertions(+), 75 deletions(-)
 
-Since it also changes the start address of the kernel map, it needs to
-re-insert the map to the kmaps in order to keep a correct ordering.  Kim
-reported that it caused problems on ARM64.
+Pulled, thanks a lot Arnaldo!
 
-Reported-by: Kim Phillips <kim.phillips@arm.com>
-Tested-by: Kim Phillips <kim.phillips@arm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-team@lge.com
-Link: http://lkml.kernel.org/r/20180419235915.GA19067@sejong
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2eca8478e24f..32d50492505d 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1019,13 +1019,6 @@ int machine__load_vmlinux_path(struct machine *machine, enum map_type type)
- 	return ret;
- }
- 
--static void map_groups__fixup_end(struct map_groups *mg)
--{
--	int i;
--	for (i = 0; i < MAP__NR_TYPES; ++i)
--		__map_groups__fixup_end(mg, i);
--}
--
- static char *get_kernel_version(const char *root_dir)
- {
- 	char version[PATH_MAX];
-@@ -1233,6 +1226,7 @@ int machine__create_kernel_maps(struct machine *machine)
- {
- 	struct dso *kernel = machine__get_kernel(machine);
- 	const char *name = NULL;
-+	struct map *map;
- 	u64 addr = 0;
- 	int ret;
- 
-@@ -1259,13 +1253,25 @@ int machine__create_kernel_maps(struct machine *machine)
- 			machine__destroy_kernel_maps(machine);
- 			return -1;
- 		}
--		machine__set_kernel_mmap(machine, addr, 0);
-+
-+		/* we have a real start address now, so re-order the kmaps */
-+		map = machine__kernel_map(machine);
-+
-+		map__get(map);
-+		map_groups__remove(&machine->kmaps, map);
-+
-+		/* assume it's the last in the kmaps */
-+		machine__set_kernel_mmap(machine, addr, ~0ULL);
-+
-+		map_groups__insert(&machine->kmaps, map);
-+		map__put(map);
- 	}
- 
--	/*
--	 * Now that we have all the maps created, just set the ->end of them:
--	 */
--	map_groups__fixup_end(&machine->kmaps);
-+	/* update end address of the kernel map using adjacent module address */
-+	map = map__next(machine__kernel_map(machine));
-+	if (map)
-+		machine__set_kernel_mmap(machine, addr, map->start);
-+
- 	return 0;
- }
- 
--- 
-2.14.3
+	Ingo
