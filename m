@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/52] perf tests vmlinux-kallsyms: Use map__for_each_symbol() instead of open coded equivalent
-Date: Wed,  2 May 2018 12:19:14 -0300
-Message-ID: <20180502151942.20542-25-acme@kernel.org>
+Subject: [PATCH 26/52] perf ui stdio: Use map_groups__fprintf()
+Date: Wed,  2 May 2018 12:19:16 -0300
+Message-ID: <20180502151942.20542-27-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
@@ -12,32 +12,33 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We had this much shorter map__for_each_symbol() helper for ages, use it
-and kill one more map_type use outside the code, in the tools.
+Instead of the variant that allows asking for just a specific map_type,
+because that map_type split will go away.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-iswqjy1elghc5jjvr0nds3nc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-eya0jvmu26qvro0nxxd49xia@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/vmlinux-kallsyms.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/ui/stdio/hist.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index c7f43afd5f89..a99b0c118541 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -108,7 +108,7 @@ int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest
- 	 * in the kallsyms dso. For the ones that are in both, check its names and
- 	 * end addresses too.
- 	 */
--	for (nd = rb_first(&vmlinux_map->dso->symbols[type]); nd; nd = rb_next(nd)) {
-+	map__for_each_symbol(vmlinux_map, sym, nd) {
- 		struct symbol *pair, *first_pair;
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 6832fcb2e6ff..c1eb476da91b 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -819,8 +819,7 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
+ 		}
  
- 		sym  = rb_entry(nd, struct symbol, rb_node);
+ 		if (h->ms.map == NULL && verbose > 1) {
+-			__map_groups__fprintf_maps(h->thread->mg,
+-						   MAP__FUNCTION, fp);
++			map_groups__fprintf(h->thread->mg, fp);
+ 			fprintf(fp, "%.10s end\n", graph_dotted_line);
+ 		}
+ 	}
 -- 
 2.14.3
