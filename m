@@ -1,53 +1,65 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/52] perf script: Use thread__find_symbol() instead of ad-hoc equivalent
-Date: Wed,  2 May 2018 12:19:05 -0300
-Message-ID: <20180502151942.20542-16-acme@kernel.org>
+Subject: [PATCH 13/52] perf tests: Let 'perf test list' display subtests
+Date: Wed,  2 May 2018 12:19:03 -0300
+Message-ID: <20180502151942.20542-14-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hendrik Brueckner <brueckner@linux.ibm.com>, Michael Petlan <mpetlan@redhat.com>, linux-s390@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Hendrik Brueckner <brueckner@linux.ibm.com>
 
-In dc323ce8e72d ("perf script: Enable printing of branch stack") it
-first tries to find the map for an address, then the symbol in the DSO
-backing that map, for that address, well, this is what
-thread__find_symbol() does, so just use it and make the code shorter.
+The output of perf test and perf test list differ because perf test list
+does not display subtests.  Correct this behavior and also let perf test
+list report subtests.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-03nx3aod955yqnf9l06im28j@git.kernel.org
+For example:
+
+	$ ./perf test 2>&1 |wc -l
+	65
+
+Without this commit:
+	$ ./perf test list 2>&1 |wc -l
+	57
+
+With this commit:
+	$ ./perf test list 2>&1 |wc -l
+	65
+
+Signed-off-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-s390@vger.kernel.org
+LPU-Reference: 1523605343-11970-1-git-send-email-brueckner@linux.ibm.com
+Link: https://lkml.kernel.org/n/tip-efb74jw7x2xs2bucp5hf4ilu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ tools/perf/tests/builtin-test.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5ec1c73bbfaf..ffd02faee87b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -764,13 +764,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
- 		from = br->entries[i].from;
- 		to   = br->entries[i].to;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index cac8f8889bc3..2bde505e2e7e 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -654,6 +654,15 @@ static int perf_test__list(int argc, const char **argv)
+ 			continue;
  
--		thread__find_map(thread, sample->cpumode, from, &alf);
--		if (alf.map)
--			alf.sym = map__find_symbol(alf.map, alf.addr);
--
--		thread__find_map(thread, sample->cpumode, to, &alt);
--		if (alt.map)
--			alt.sym = map__find_symbol(alt.map, alt.addr);
-+		thread__find_symbol(thread, sample->cpumode, from, &alf);
-+		thread__find_symbol(thread, sample->cpumode, to, &alt);
+ 		pr_info("%2d: %s\n", i, t->desc);
++
++		if (t->subtest.get_nr) {
++			int subn = t->subtest.get_nr();
++			int subi;
++
++			for (subi = 0; subi < subn; subi++)
++				pr_info("%2d:%1d: %s\n", i, subi + 1,
++					t->subtest.get_desc(subi));
++		}
+ 	}
  
- 		printed += symbol__fprintf_symname_offs(alf.sym, &alf, fp);
- 		if (PRINT_FIELD(DSO)) {
+ 	perf_test__list_shell(argc, argv, i);
 -- 
 2.14.3
