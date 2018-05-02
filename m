@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/52] perf symbols: Remove map_type arg from dso__find_symbol()
-Date: Wed,  2 May 2018 12:19:22 -0300
-Message-ID: <20180502151942.20542-33-acme@kernel.org>
+Subject: [PATCH 29/52] perf tools: Use kallsyms__is_function()
+Date: Wed,  2 May 2018 12:19:19 -0300
+Message-ID: <20180502151942.20542-30-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
@@ -12,109 +12,70 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-One more step to ditch MAP__{VARIABLE,FUNCTION}
+Replacing equivalent, the equivalent and longer variation:
+
+	 symbol__is_a(type, MAP__FUNCTION);
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-919d1k13ts62pjipnpibvgwd@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-9t3dqogher54owfl9o2mir52@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/db-export.c |  3 +--
- tools/perf/util/map.c       |  4 ++--
- tools/perf/util/symbol.c    | 10 +++++-----
- tools/perf/util/symbol.h    | 12 ++++++++----
- 4 files changed, 16 insertions(+), 13 deletions(-)
+ tools/perf/util/auxtrace.c   | 4 ++--
+ tools/perf/util/event.c      | 2 +-
+ tools/perf/util/symbol-elf.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index b0c2b5c5d337..04fb1a99c737 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -315,8 +315,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		al.addr = node->ip;
- 
- 		if (al.map && !al.sym)
--			al.sym = dso__find_symbol(al.map->dso, MAP__FUNCTION,
--						  al.addr);
-+			al.sym = dso__find_symbol(al.map->dso, al.addr);
- 
- 		db_ids_from_al(dbe, &al, &dso_db_id, &sym_db_id, &offset);
- 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 91e2afb010f8..ab12f2bc7669 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -353,7 +353,7 @@ struct symbol *map__find_symbol(struct map *map, u64 addr)
- 	if (map__load(map) < 0)
- 		return NULL;
- 
--	return dso__find_symbol(map->dso, map->type, addr);
-+	return __dso__find_symbol(map->dso, map->type, addr);
- }
- 
- struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
-@@ -364,7 +364,7 @@ struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
- 	if (!dso__sorted_by_name(map->dso, map->type))
- 		dso__sort_by_name(map->dso, map->type);
- 
--	return dso__find_symbol_by_name(map->dso, map->type, name);
-+	return __dso__find_symbol_by_name(map->dso, map->type, name);
- }
- 
- struct map *map__clone(struct map *from)
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5d77c60e63bf..2b81ccc94a7e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -504,8 +504,8 @@ void dso__insert_symbol(struct dso *dso, enum map_type type, struct symbol *sym)
- 	}
- }
- 
--struct symbol *dso__find_symbol(struct dso *dso,
--				enum map_type type, u64 addr)
-+struct symbol *__dso__find_symbol(struct dso *dso,
-+				  enum map_type type, u64 addr)
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index eaf1e10ae755..d056447520a2 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1679,7 +1679,7 @@ struct sym_args {
+ static bool kern_sym_match(struct sym_args *args, const char *name, char type)
  {
- 	if (dso->last_find_result[type].addr != addr || dso->last_find_result[type].symbol == NULL) {
- 		dso->last_find_result[type].addr   = addr;
-@@ -549,10 +549,10 @@ struct symbol *symbol__next_by_name(struct symbol *sym)
- }
- 
-  /*
--  * Teturns first symbol that matched with @name.
-+  * Returns first symbol that matched with @name.
-   */
--struct symbol *dso__find_symbol_by_name(struct dso *dso, enum map_type type,
--					const char *name)
-+struct symbol *__dso__find_symbol_by_name(struct dso *dso, enum map_type type,
-+					  const char *name)
+ 	/* A function with the same name, and global or the n'th found or any */
+-	return symbol_type__is_a(type, MAP__FUNCTION) &&
++	return kallsyms__is_function(type) &&
+ 	       !strcmp(name, args->name) &&
+ 	       ((args->global && isupper(type)) ||
+ 		(args->selected && ++(args->cnt) == args->idx) ||
+@@ -1784,7 +1784,7 @@ static int find_entire_kern_cb(void *arg, const char *name __maybe_unused,
  {
- 	struct symbol *s = symbols__find_by_name(&dso->symbol_names[type], name,
- 						 SYMBOL_TAG_INCLUDE__NONE);
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 924f465307b1..2b985ff2e725 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -262,10 +262,14 @@ int dso__load_kallsyms(struct dso *dso, const char *filename, struct map *map);
- void dso__insert_symbol(struct dso *dso, enum map_type type,
- 			struct symbol *sym);
+ 	struct sym_args *args = arg;
  
--struct symbol *dso__find_symbol(struct dso *dso, enum map_type type,
--				u64 addr);
--struct symbol *dso__find_symbol_by_name(struct dso *dso, enum map_type type,
--					const char *name);
-+struct symbol *__dso__find_symbol(struct dso *dso, enum map_type type, u64 addr);
-+struct symbol *__dso__find_symbol_by_name(struct dso *dso, enum map_type type, const char *name);
-+
-+static inline struct symbol *dso__find_symbol(struct dso *dso, u64 addr)
-+{
-+	return __dso__find_symbol(dso, MAP__FUNCTION, addr);
-+}
-+
- struct symbol *symbol__next_by_name(struct symbol *sym);
+-	if (!symbol_type__is_a(type, MAP__FUNCTION))
++	if (!kallsyms__is_function(type))
+ 		return 0;
  
- struct symbol *dso__first_symbol(struct dso *dso);
+ 	if (!args->started) {
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index a8739cd0d8ca..241d3c827fae 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -868,7 +868,7 @@ static int find_symbol_cb(void *arg, const char *name, char type,
+ 	 * Must be a function or at least an alias, as in PARISC64, where "_text" is
+ 	 * an 'A' to the same address as "_stext".
+ 	 */
+-	if (!(symbol_type__is_a(type, MAP__FUNCTION) ||
++	if (!(kallsyms__is_function(type) ||
+ 	      type == 'A') || strcmp(name, args->name))
+ 		return 0;
+ 
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 75f578f3ed8e..b6be6062cae0 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1413,7 +1413,7 @@ static int kcore_copy__process_kallsyms(void *arg, const char *name, char type,
+ {
+ 	struct kcore_copy_info *kci = arg;
+ 
+-	if (!symbol_type__is_a(type, MAP__FUNCTION))
++	if (!kallsyms__is_function(type))
+ 		return 0;
+ 
+ 	if (strchr(name, '[')) {
 -- 
 2.14.3
