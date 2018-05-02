@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/52] perf machine: Use machine__find_kernel_function() instead of open coded version
-Date: Wed,  2 May 2018 12:19:24 -0300
-Message-ID: <20180502151942.20542-35-acme@kernel.org>
+Subject: [PATCH 32/52] perf symbols: Remove map_type arg from dso__find_symbol()
+Date: Wed,  2 May 2018 12:19:22 -0300
+Message-ID: <20180502151942.20542-33-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
@@ -12,31 +12,109 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We have that equivalent, shorter helper, use it.
+One more step to ditch MAP__{VARIABLE,FUNCTION}
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-1hcgu3k7vxdy4vknqf3kbtzt@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-919d1k13ts62pjipnpibvgwd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/db-export.c |  3 +--
+ tools/perf/util/map.c       |  4 ++--
+ tools/perf/util/symbol.c    | 10 +++++-----
+ tools/perf/util/symbol.h    | 12 ++++++++----
+ 4 files changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 10364e829aba..a00e82b83e0a 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2367,7 +2367,7 @@ char *machine__resolve_kernel_addr(void *vmachine, unsigned long long *addrp, ch
- {
- 	struct machine *machine = vmachine;
- 	struct map *map;
--	struct symbol *sym = map_groups__find_symbol(&machine->kmaps, MAP__FUNCTION, *addrp, &map);
-+	struct symbol *sym = machine__find_kernel_function(machine, *addrp, &map);
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index b0c2b5c5d337..04fb1a99c737 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -315,8 +315,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
+ 		al.addr = node->ip;
  
- 	if (sym == NULL)
+ 		if (al.map && !al.sym)
+-			al.sym = dso__find_symbol(al.map->dso, MAP__FUNCTION,
+-						  al.addr);
++			al.sym = dso__find_symbol(al.map->dso, al.addr);
+ 
+ 		db_ids_from_al(dbe, &al, &dso_db_id, &sym_db_id, &offset);
+ 
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 91e2afb010f8..ab12f2bc7669 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -353,7 +353,7 @@ struct symbol *map__find_symbol(struct map *map, u64 addr)
+ 	if (map__load(map) < 0)
  		return NULL;
+ 
+-	return dso__find_symbol(map->dso, map->type, addr);
++	return __dso__find_symbol(map->dso, map->type, addr);
+ }
+ 
+ struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
+@@ -364,7 +364,7 @@ struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
+ 	if (!dso__sorted_by_name(map->dso, map->type))
+ 		dso__sort_by_name(map->dso, map->type);
+ 
+-	return dso__find_symbol_by_name(map->dso, map->type, name);
++	return __dso__find_symbol_by_name(map->dso, map->type, name);
+ }
+ 
+ struct map *map__clone(struct map *from)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 5d77c60e63bf..2b81ccc94a7e 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -504,8 +504,8 @@ void dso__insert_symbol(struct dso *dso, enum map_type type, struct symbol *sym)
+ 	}
+ }
+ 
+-struct symbol *dso__find_symbol(struct dso *dso,
+-				enum map_type type, u64 addr)
++struct symbol *__dso__find_symbol(struct dso *dso,
++				  enum map_type type, u64 addr)
+ {
+ 	if (dso->last_find_result[type].addr != addr || dso->last_find_result[type].symbol == NULL) {
+ 		dso->last_find_result[type].addr   = addr;
+@@ -549,10 +549,10 @@ struct symbol *symbol__next_by_name(struct symbol *sym)
+ }
+ 
+  /*
+-  * Teturns first symbol that matched with @name.
++  * Returns first symbol that matched with @name.
+   */
+-struct symbol *dso__find_symbol_by_name(struct dso *dso, enum map_type type,
+-					const char *name)
++struct symbol *__dso__find_symbol_by_name(struct dso *dso, enum map_type type,
++					  const char *name)
+ {
+ 	struct symbol *s = symbols__find_by_name(&dso->symbol_names[type], name,
+ 						 SYMBOL_TAG_INCLUDE__NONE);
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 924f465307b1..2b985ff2e725 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -262,10 +262,14 @@ int dso__load_kallsyms(struct dso *dso, const char *filename, struct map *map);
+ void dso__insert_symbol(struct dso *dso, enum map_type type,
+ 			struct symbol *sym);
+ 
+-struct symbol *dso__find_symbol(struct dso *dso, enum map_type type,
+-				u64 addr);
+-struct symbol *dso__find_symbol_by_name(struct dso *dso, enum map_type type,
+-					const char *name);
++struct symbol *__dso__find_symbol(struct dso *dso, enum map_type type, u64 addr);
++struct symbol *__dso__find_symbol_by_name(struct dso *dso, enum map_type type, const char *name);
++
++static inline struct symbol *dso__find_symbol(struct dso *dso, u64 addr)
++{
++	return __dso__find_symbol(dso, MAP__FUNCTION, addr);
++}
++
+ struct symbol *symbol__next_by_name(struct symbol *sym);
+ 
+ struct symbol *dso__first_symbol(struct dso *dso);
 -- 
 2.14.3
