@@ -1,161 +1,144 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/52] perf Documentation: Support for asciidoctor
-Date: Wed,  2 May 2018 12:19:09 -0300
-Message-ID: <20180502151942.20542-20-acme@kernel.org>
+Subject: [PATCH 18/52] perf map: Shorten map_groups__find_by_name() signature
+Date: Wed,  2 May 2018 12:19:08 -0300
+Message-ID: <20180502151942.20542-19-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The asciidoc package seems behind the recent big wave of python3
-conversion, and we were advised to switch to asciidoctor instead.  It's
-almost compatible but some extensions used for perf documentation don't
-work with it.  Here is the patch to cover them, and add the proper
-support for asciidoctor.
+Another step in the road to elliminate the MAP_{FUNCTION,VARIABLE}
+separation, reducing the exposure to these details in the tools using
+the symbol APIs.
 
-Pass USE_ASCIIDOCTOR=yes to make for using asciidoctor instead of
-asciidoc.  The man source and manual attributes are passed via command
-options.  The support for these attributes have been fixed in the
-latest asciidoctor code.
-
-Since asciidoctor can covert to a man page and an HTML directly, we
-can omit the dependency on xmlto when USE_ASCIIDOCTOR is set.
-
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180424150456.17353-1-tiwai@suse.de
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-8a1hvrqe3r5i0kw865u3uxwt@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/Makefile                  | 29 ++++++++++++++++++----
- tools/perf/Documentation/asciidoctor-extensions.rb | 29 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 5 deletions(-)
- create mode 100644 tools/perf/Documentation/asciidoctor-extensions.rb
+ tools/perf/tests/vmlinux-kallsyms.c | 2 +-
+ tools/perf/util/machine.c           | 6 ++----
+ tools/perf/util/map.h               | 8 ++++++--
+ tools/perf/util/probe-event.c       | 2 +-
+ tools/perf/util/symbol-elf.c        | 2 +-
+ tools/perf/util/symbol.c            | 6 ++----
+ 6 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index db11478e30b4..42261a9b280e 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -47,7 +47,8 @@ man5dir=$(mandir)/man5
- man7dir=$(mandir)/man7
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index 1e5adb65632a..d80416e07f4b 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -183,7 +183,7 @@ int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest
+ 		 * so use the short name, less descriptive but the same ("[kernel]" in
+ 		 * both cases.
+ 		 */
+-		pair = map_groups__find_by_name(&kallsyms.kmaps, type,
++		pair = map_groups__find_by_name(&kallsyms.kmaps,
+ 						(map->dso->kernel ?
+ 							map->dso->short_name :
+ 							map->dso->name));
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index e354d94a68e8..fc71f2c69c8b 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -673,8 +673,7 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 	if (kmod_path__parse_name(&m, filename))
+ 		return NULL;
  
- ASCIIDOC=asciidoc
--ASCIIDOC_EXTRA = --unsafe
-+ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-+ASCIIDOC_HTML = xhtml11
- MANPAGE_XSL = manpage-normal.xsl
- XMLTO_EXTRA =
- INSTALL?=install
-@@ -55,6 +56,14 @@ RM ?= rm -f
- DOC_REF = origin/man
- HTML_REF = origin/html
+-	map = map_groups__find_by_name(&machine->kmaps, MAP__FUNCTION,
+-				       m.name);
++	map = map_groups__find_by_name(&machine->kmaps, m.name);
+ 	if (map) {
+ 		/*
+ 		 * If the map's dso is an offline module, give dso__load()
+@@ -1055,10 +1054,9 @@ static bool is_kmod_dso(struct dso *dso)
+ static int map_groups__set_module_path(struct map_groups *mg, const char *path,
+ 				       struct kmod_path *m)
+ {
+-	struct map *map;
+ 	char *long_name;
++	struct map *map = map_groups__find_by_name(mg, m->name);
  
-+ifdef USE_ASCIIDOCTOR
-+ASCIIDOC = asciidoctor
-+ASCIIDOC_EXTRA = -a compat-mode
-+ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
-+ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
-+ASCIIDOC_HTML = xhtml5
-+endif
+-	map = map_groups__find_by_name(mg, MAP__FUNCTION, m->name);
+ 	if (map == NULL)
+ 		return 0;
+ 
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index fc91bac8fed0..8ff75be0a965 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -254,8 +254,12 @@ struct symbol *map_groups__find_function_by_name(struct map_groups *mg,
+ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map,
+ 				   FILE *fp);
+ 
+-struct map *map_groups__find_by_name(struct map_groups *mg,
+-				     enum map_type type, const char *name);
++struct map *__map_groups__find_by_name(struct map_groups *mg, enum map_type type, const char *name);
 +
- infodir?=$(prefix)/share/info
- MAKEINFO=makeinfo
- INSTALL_INFO=install-info
-@@ -73,10 +82,12 @@ ifeq ($(_tmp_tool_path),)
- 	missing_tools = $(ASCIIDOC)
- endif
++static inline struct map *map_groups__find_by_name(struct map_groups *mg, const char *name)
++{
++	return __map_groups__find_by_name(mg, MAP__FUNCTION, name);
++}
  
-+ifndef USE_ASCIIDOCTOR
- _tmp_tool_path := $(call get-executable,$(XMLTO))
- ifeq ($(_tmp_tool_path),)
- 	missing_tools += $(XMLTO)
- endif
-+endif
+ bool __map__is_kernel(const struct map *map);
  
- #
- # For asciidoc ...
-@@ -264,9 +275,17 @@ clean:
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index e1dbc9821617..d5e2516d5981 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -341,7 +341,7 @@ static int kernel_get_module_dso(const char *module, struct dso **pdso)
+ 		char module_name[128];
  
- $(MAN_HTML): $(OUTPUT)%.html : %.txt
- 	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
--	$(ASCIIDOC) -b xhtml11 -d manpage -f asciidoc.conf \
-+	$(ASCIIDOC) -b $(ASCIIDOC_HTML) -d manpage \
-+		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
-+	mv $@+ $@
-+
-+ifdef USE_ASCIIDOCTOR
-+$(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.txt
-+	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
-+	$(ASCIIDOC) -b manpage -d manpage \
- 		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
- 	mv $@+ $@
-+endif
+ 		snprintf(module_name, sizeof(module_name), "[%s]", module);
+-		map = map_groups__find_by_name(&host_machine->kmaps, MAP__FUNCTION, module_name);
++		map = map_groups__find_by_name(&host_machine->kmaps, module_name);
+ 		if (map) {
+ 			dso = map->dso;
+ 			goto found;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 2de770511e70..75f578f3ed8e 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1042,7 +1042,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 			snprintf(dso_name, sizeof(dso_name),
+ 				 "%s%s", dso->short_name, section_name);
  
- $(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
- 	$(QUIET_XMLTO)$(RM) $@ && \
-@@ -274,7 +293,7 @@ $(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
+-			curr_map = map_groups__find_by_name(kmaps, map->type, dso_name);
++			curr_map = __map_groups__find_by_name(kmaps, map->type, dso_name);
+ 			if (curr_map == NULL) {
+ 				u64 start = sym.st_value;
  
- $(OUTPUT)%.xml : %.txt
- 	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
--	$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
-+	$(ASCIIDOC) -b docbook -d manpage \
- 		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
- 	mv $@+ $@
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 2b6292cff719..0bf4cf76f36a 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -792,8 +792,7 @@ static int dso__split_kallsyms(struct dso *dso, struct map *map, u64 delta)
+ 							curr_map->type);
+ 				}
  
-@@ -321,13 +340,13 @@ howto-index.txt: howto-index.sh $(wildcard howto/*.txt)
- 	mv $@+ $@
+-				curr_map = map_groups__find_by_name(kmaps,
+-							map->type, module);
++				curr_map = __map_groups__find_by_name(kmaps, map->type, module);
+ 				if (curr_map == NULL) {
+ 					pr_debug("%s/proc/{kallsyms,modules} "
+ 					         "inconsistency while looking "
+@@ -1667,8 +1666,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 	return ret;
+ }
  
- $(patsubst %,%.html,$(ARTICLES)) : %.html : %.txt
--	$(QUIET_ASCIIDOC)$(ASCIIDOC) -b xhtml11 $*.txt
-+	$(QUIET_ASCIIDOC)$(ASCIIDOC) -b $(ASCIIDOC_HTML) $*.txt
- 
- WEBDOC_DEST = /pub/software/tools/perf/docs
- 
- $(patsubst %.txt,%.html,$(wildcard howto/*.txt)): %.html : %.txt
- 	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
--	sed -e '1,/^$$/d' $< | $(ASCIIDOC) -b xhtml11 - >$@+ && \
-+	sed -e '1,/^$$/d' $< | $(ASCIIDOC) -b $(ASCIIDOC_HTML) - >$@+ && \
- 	mv $@+ $@
- 
- # UNIMPLEMENTED
-diff --git a/tools/perf/Documentation/asciidoctor-extensions.rb b/tools/perf/Documentation/asciidoctor-extensions.rb
-new file mode 100644
-index 000000000000..d148fe95c0c4
---- /dev/null
-+++ b/tools/perf/Documentation/asciidoctor-extensions.rb
-@@ -0,0 +1,29 @@
-+require 'asciidoctor'
-+require 'asciidoctor/extensions'
-+
-+module Perf
-+  module Documentation
-+    class LinkPerfProcessor < Asciidoctor::Extensions::InlineMacroProcessor
-+      use_dsl
-+
-+      named :chrome
-+
-+      def process(parent, target, attrs)
-+        if parent.document.basebackend? 'html'
-+          %(<a href="#{target}.html">#{target}(#{attrs[1]})</a>\n)
-+        elsif parent.document.basebackend? 'manpage'
-+          "#{target}(#{attrs[1]})"
-+        elsif parent.document.basebackend? 'docbook'
-+          "<citerefentry>\n" \
-+            "<refentrytitle>#{target}</refentrytitle>" \
-+            "<manvolnum>#{attrs[1]}</manvolnum>\n" \
-+          "</citerefentry>\n"
-+        end
-+      end
-+    end
-+  end
-+end
-+
-+Asciidoctor::Extensions.register do
-+  inline_macro Perf::Documentation::LinkPerfProcessor, :linkperf
-+end
+-struct map *map_groups__find_by_name(struct map_groups *mg,
+-				     enum map_type type, const char *name)
++struct map *__map_groups__find_by_name(struct map_groups *mg, enum map_type type, const char *name)
+ {
+ 	struct maps *maps = &mg->maps[type];
+ 	struct map *map;
 -- 
 2.14.3
