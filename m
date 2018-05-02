@@ -1,114 +1,53 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/52] perf stat: Display time in precision based on std deviation
-Date: Wed,  2 May 2018 12:18:55 -0300
-Message-ID: <20180502151942.20542-6-acme@kernel.org>
+Subject: [PATCH 09/52] perf symbols: Use __map__is_kernel() instead of ad-hoc equivalent code
+Date: Wed,  2 May 2018 12:18:59 -0300
+Message-ID: <20180502151942.20542-10-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Ingo suggested to display elapsed time for multirun workload (perf stat
--e) with precision based on the precision of the standard deviation.
+Shorter, should be equivalent code, use it.
 
-In his own words:
-
-  > This output is a slightly bit misleading:
-
-  >  Performance counter stats for 'make -j128' (10 runs):
-  >      27.988995256 seconds time elapsed                  ( +-  0.39% )
-
-  > The 9 significant digits in the result, while only 1 is valid, suggests accuracy
-  > where none exists.
-
-  > It would be better if 'perf stat' would display elapsed time with a precision
-  > adjusted to stddev, it should display at most 2 more significant digits than
-  > the stddev inaccuracy.
-
-  > I.e. in the above case 0.39% is 0.109, so we only have accuracy for 1 digit, and
-  > so we should only display 3:
-
-  >        27.988 seconds time elapsed                       ( +-  0.39% )
-
-Plus a suggestion about the output, which is small enough and connected
-with the above change that I merged both changes together.
-
-  > Small output style nit - I think it would be nice if with --repeat the stddev was
-  > also displayed in absolute values, besides percentage:
-  >
-  >       27.988 +- 0.109 seconds time elapsed   ( +- 0.39% )
-
-The output is now:
-
-   Performance counter stats for './perf bench sched pipe' (5 runs):
-   SNIP
-           13.3667 +- 0.0256 seconds time elapsed  ( +-  0.19% )
-
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180423090823.32309-7-jolsa@kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-q90olng8sfkvrnsrwu7xnul6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ tools/perf/util/symbol.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f17dc601b0f3..3a94647ef6bc 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1764,19 +1764,37 @@ static void print_header(int argc, const char **argv)
- 	}
- }
- 
-+static int get_precision(double num)
-+{
-+	if (num > 1)
-+		return 0;
-+
-+	return lround(ceil(-log10(num)));
-+}
-+
- static void print_footer(void)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 1466814ebada..2b6292cff719 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1163,7 +1163,6 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 			   const char *kallsyms_filename)
  {
-+	double avg = avg_stats(&walltime_nsecs_stats) / NSEC_PER_SEC;
- 	FILE *output = stat_config.output;
- 	int n;
+ 	struct map_groups *kmaps = map__kmaps(map);
+-	struct machine *machine;
+ 	struct kcore_mapfn_data md;
+ 	struct map *old_map, *new_map, *replacement_map = NULL;
+ 	bool is_64_bit;
+@@ -1174,10 +1173,8 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	if (!kmaps)
+ 		return -EINVAL;
  
- 	if (!null_run)
- 		fprintf(output, "\n");
--	fprintf(output, " %17.9f seconds time elapsed",
--			avg_stats(&walltime_nsecs_stats) / NSEC_PER_SEC);
--	if (run_count > 1) {
--		fprintf(output, "                                        ");
--		print_noise_pct(stddev_stats(&walltime_nsecs_stats),
--				avg_stats(&walltime_nsecs_stats));
-+
-+	if (run_count == 1) {
-+		fprintf(output, " %17.9f seconds time elapsed", avg);
-+	} else {
-+		double sd = stddev_stats(&walltime_nsecs_stats) / NSEC_PER_SEC;
-+		/*
-+		 * Display at most 2 more significant
-+		 * digits than the stddev inaccuracy.
-+		 */
-+		int precision = get_precision(sd) + 2;
-+
-+		fprintf(output, " %17.*f +- %.*f seconds time elapsed",
-+			precision, avg, precision, sd);
-+
-+		print_noise_pct(sd, avg);
- 	}
- 	fprintf(output, "\n\n");
+-	machine = kmaps->machine;
+-
+ 	/* This function requires that the map is the kernel map */
+-	if (map != machine->vmlinux_maps[map->type])
++	if (!__map__is_kernel(map))
+ 		return -EINVAL;
  
+ 	if (!filename_from_kallsyms_filename(kcore_filename, "kcore",
 -- 
 2.14.3
