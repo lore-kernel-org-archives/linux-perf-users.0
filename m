@@ -1,43 +1,72 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 51/52] perf tools: Fix spelling mistake: "builid" -> "buildid"
-Date: Wed,  2 May 2018 12:19:41 -0300
-Message-ID: <20180502151942.20542-52-acme@kernel.org>
+Subject: [PATCH 49/52] perf symbols: kallsyms__delta() needs the kmap, not the map
+Date: Wed,  2 May 2018 12:19:39 -0300
+Message-ID: <20180502151942.20542-50-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Colin Ian King <colin.king@canonical.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kernel-janitors@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Trivial fix to spelling mistake in error message text
+It was only using the map to obtain its kmap, so do the validation in
+its called, __dso__load_kallsyms() and pass the kmap, that will be used
+in the following patches in similar simplifications.
 
-Signed-off-by: Colin King <colin.king@canonical.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-janitors@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180427193158.17932-1-colin.king@canonical.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-u6p9hbonlqzpl6o1z9xzxd75@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/genelf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/symbol.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index c540d47583e7..aafbe54fd3fa 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -114,7 +114,7 @@ gen_build_id(struct buildid_note *note,
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 2517f2c2454f..76de63cecf98 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1267,14 +1267,10 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+  * If the kernel is relocated at boot time, kallsyms won't match.  Compute the
+  * delta based on the relocation reference symbol.
+  */
+-static int kallsyms__delta(struct map *map, const char *filename, u64 *delta)
++static int kallsyms__delta(struct kmap *kmap, const char *filename, u64 *delta)
+ {
+-	struct kmap *kmap = map__kmap(map);
+ 	u64 addr;
  
- 	fd = open("/dev/urandom", O_RDONLY);
- 	if (fd == -1)
--		err(1, "cannot access /dev/urandom for builid");
-+		err(1, "cannot access /dev/urandom for buildid");
+-	if (!kmap)
+-		return -1;
+-
+ 	if (!kmap->ref_reloc_sym || !kmap->ref_reloc_sym->name)
+ 		return 0;
  
- 	sret = read(fd, note->build_id, sz);
+@@ -1288,15 +1284,19 @@ static int kallsyms__delta(struct map *map, const char *filename, u64 *delta)
+ int __dso__load_kallsyms(struct dso *dso, const char *filename,
+ 			 struct map *map, bool no_kcore)
+ {
++	struct kmap *kmap = map__kmap(map);
+ 	u64 delta = 0;
  
+ 	if (symbol__restricted_filename(filename, "/proc/kallsyms"))
+ 		return -1;
+ 
++	if (!kmap || !kmap->kmaps)
++		return -1;
++
+ 	if (dso__load_all_kallsyms(dso, filename) < 0)
+ 		return -1;
+ 
+-	if (kallsyms__delta(map, filename, &delta))
++	if (kallsyms__delta(kmap, filename, &delta))
+ 		return -1;
+ 
+ 	symbols__fixup_end(&dso->symbols);
 -- 
 2.14.3
