@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/52] tools lib symbols: Introduce kallsyms__is_function()
-Date: Wed,  2 May 2018 12:19:18 -0300
-Message-ID: <20180502151942.20542-29-acme@kernel.org>
+Subject: [PATCH 30/52] perf symbols: Unexport symbol_type__is_a()
+Date: Wed,  2 May 2018 12:19:20 -0300
+Message-ID: <20180502151942.20542-31-acme@kernel.org>
 References: <20180502151942.20542-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180502151942.20542-1-acme@kernel.org>
@@ -12,51 +12,45 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Out of symbol_type__is_a(type, MAP__FUNCTION), which is the only variant
-used so far, useful in a kallsyms library and one more step in ditching
-the MAP__FUNCTION/VARIABLE split.
+Now this is only used in the symbols.c file, where it will finally
+disappear when we remove the MAP_{FUNCTION,VARIABLE} split.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-faonqs76n5808z9mq77edr94@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-a9t4d4hfrycczq9vpsk5sr8q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/symbol/kallsyms.c | 6 ++++++
- tools/lib/symbol/kallsyms.h | 2 ++
- 2 files changed, 8 insertions(+)
+ tools/perf/util/symbol.c | 2 +-
+ tools/perf/util/symbol.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-index 689b6a130dd7..96d830545bbb 100644
---- a/tools/lib/symbol/kallsyms.c
-+++ b/tools/lib/symbol/kallsyms.c
-@@ -10,6 +10,12 @@ u8 kallsyms2elf_type(char type)
- 	return (type == 't' || type == 'w') ? STT_FUNC : STT_OBJECT;
- }
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 7aa32372f08c..8d9967357354 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -70,7 +70,7 @@ static enum dso_binary_type binary_type_symtab[] = {
  
-+bool kallsyms__is_function(char symbol_type)
-+{
-+	symbol_type = toupper(symbol_type);
-+	return symbol_type == 'T' || symbol_type == 'W';
-+}
-+
- int kallsyms__parse(const char *filename, void *arg,
- 		    int (*process_symbol)(void *arg, const char *name,
- 					  char type, u64 start))
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index bc40101d72c1..72ab9870454b 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -20,6 +20,8 @@ static inline u8 kallsyms2elf_binding(char type)
+ #define DSO_BINARY_TYPE__SYMTAB_CNT ARRAY_SIZE(binary_type_symtab)
  
- u8 kallsyms2elf_type(char type);
+-bool symbol_type__is_a(char symbol_type, enum map_type map_type)
++static bool symbol_type__is_a(char symbol_type, enum map_type map_type)
+ {
+ 	symbol_type = toupper(symbol_type);
  
-+bool kallsyms__is_function(char symbol_type);
-+
- int kallsyms__parse(const char *filename, void *arg,
- 		    int (*process_symbol)(void *arg, const char *name,
- 					  char type, u64 start));
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 0e95d9478783..924f465307b1 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -300,7 +300,6 @@ size_t __symbol__fprintf_symname(const struct symbol *sym,
+ 				 bool unknown_as_addr, FILE *fp);
+ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp);
+ size_t symbol__fprintf(struct symbol *sym, FILE *fp);
+-bool symbol_type__is_a(char symbol_type, enum map_type map_type);
+ bool symbol__restricted_filename(const char *filename,
+ 				 const char *restricted_filename);
+ int symbol__config_symfs(const struct option *opt __maybe_unused,
 -- 
 2.14.3
