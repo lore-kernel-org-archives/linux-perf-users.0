@@ -1,57 +1,39 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/6] tools headers kvm: Sync uapi/linux/kvm.h with the kernel sources
-Date: Mon,  7 May 2018 17:13:31 -0300
-Message-ID: <20180507201333.26990-5-acme@kernel.org>
+Subject: [PATCH 2/6] perf vendor events intel: Remove duplicated entry for westmereep-dp in mapfile.csv
+Date: Mon,  7 May 2018 17:13:29 -0300
+Message-ID: <20180507201333.26990-3-acme@kernel.org>
 References: <20180507201333.26990-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180507201333.26990-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, KarimAllah Ahmed <karahmed@amazon.de>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, William Cohen <wcohen@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: William Cohen <wcohen@redhat.com>
 
-The changes in 5e62493f1a70 ("x86/headers/UAPI: Move DISABLE_EXITS KVM
-capability bits to the UAPI") do not requires changes in the tooling nor
-will trigger the automatic update of used ioctl string tables, copy it
-to silence this build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
+Signed-off-by: William Cohen <wcohen@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-8o5auh1lqglsgl1q97x00tlv@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180503195032.28871-1-wcohen@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/pmu-events/arch/x86/mapfile.csv | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 1065006c9bf5..b02c41e53d56 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -676,6 +676,13 @@ struct kvm_ioeventfd {
- 	__u8  pad[36];
- };
- 
-+#define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
-+#define KVM_X86_DISABLE_EXITS_HTL            (1 << 1)
-+#define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
-+#define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
-+                                              KVM_X86_DISABLE_EXITS_HTL | \
-+                                              KVM_X86_DISABLE_EXITS_PAUSE)
-+
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
- 	/* in */
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 93656f2fd53a..7e3cce3bcf3b 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -29,7 +29,6 @@ GenuineIntel-6-4D,v13,silvermont,core
+ GenuineIntel-6-4C,v13,silvermont,core
+ GenuineIntel-6-2A,v15,sandybridge,core
+ GenuineIntel-6-2C,v2,westmereep-dp,core
+-GenuineIntel-6-2C,v2,westmereep-dp,core
+ GenuineIntel-6-25,v2,westmereep-sp,core
+ GenuineIntel-6-2F,v2,westmereex,core
+ GenuineIntel-6-55,v1,skylakex,core
 -- 
 2.14.3
