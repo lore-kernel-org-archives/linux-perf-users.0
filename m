@@ -1,78 +1,57 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/6] Revert "perf pmu: Fix pmu events parsing rule"
-Date: Mon,  7 May 2018 17:13:33 -0300
-Message-ID: <20180507201333.26990-7-acme@kernel.org>
+Subject: [PATCH 4/6] tools headers kvm: Sync uapi/linux/kvm.h with the kernel sources
+Date: Mon,  7 May 2018 17:13:31 -0300
+Message-ID: <20180507201333.26990-5-acme@kernel.org>
 References: <20180507201333.26990-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180507201333.26990-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, KarimAllah Ahmed <karahmed@amazon.de>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As reported by Adrian Hunter, this breaks intel_pt event parsing:
+The changes in 5e62493f1a70 ("x86/headers/UAPI: Move DISABLE_EXITS KVM
+capability bits to the UAPI") do not requires changes in the tooling nor
+will trigger the automatic update of used ioctl string tables, copy it
+to silence this build warning:
 
-  # perf record -e intel_pt//u uname
-  event syntax error: 'intel_pt//u'
-                               \___ parser error
-  Run 'perf list' for a list of valid events
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
 
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
-
-      -e, --event <event>   event selector. use 'perf list' to list available events
-  #
-
-This reverts commit 9a4a931ce847f4aaa12edf11b2e050e18bf45910.
-
-Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: KarimAllah Ahmed <karahmed@amazon.de>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ye1o2mji7x68xotiot1tn1gp@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-8o5auh1lqglsgl1q97x00tlv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.y | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/include/uapi/linux/kvm.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index d14464c42714..7afeb80cc39e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -224,15 +224,15 @@ event_def: event_pmu |
- 	   event_bpf_file
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 1065006c9bf5..b02c41e53d56 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -676,6 +676,13 @@ struct kvm_ioeventfd {
+ 	__u8  pad[36];
+ };
  
- event_pmu:
--PE_NAME '/' event_config '/'
-+PE_NAME opt_event_config
- {
- 	struct list_head *list, *orig_terms, *terms;
- 
--	if (parse_events_copy_term_list($3, &orig_terms))
-+	if (parse_events_copy_term_list($2, &orig_terms))
- 		YYABORT;
- 
- 	ALLOC_LIST(list);
--	if (parse_events_add_pmu(_parse_state, list, $1, $3, false)) {
-+	if (parse_events_add_pmu(_parse_state, list, $1, $2, false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
- 		char *pattern;
-@@ -262,7 +262,7 @@ PE_NAME '/' event_config '/'
- 		if (!ok)
- 			YYABORT;
- 	}
--	parse_events_terms__delete($3);
-+	parse_events_terms__delete($2);
- 	parse_events_terms__delete(orig_terms);
- 	$$ = list;
- }
++#define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
++#define KVM_X86_DISABLE_EXITS_HTL            (1 << 1)
++#define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
++#define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
++                                              KVM_X86_DISABLE_EXITS_HTL | \
++                                              KVM_X86_DISABLE_EXITS_PAUSE)
++
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+ 	/* in */
 -- 
 2.14.3
