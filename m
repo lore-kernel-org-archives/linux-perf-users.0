@@ -1,7 +1,7 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH 05/12] perf pmu: Fix pmu events parsing rule
-Date: Mon, 7 May 2018 21:16:53 +0200
-Message-ID: <20180507191653.GA1924@krava>
+Date: Mon, 7 May 2018 16:24:08 -0300
+Message-ID: <20180507192408.GD13491@kernel.org>
 References: <20180425160008.3407-1-acme@kernel.org>
  <20180425160008.3407-6-acme@kernel.org>
  <448c4e21-8232-3d04-cac4-49b95c8bca3a@intel.com>
@@ -16,11 +16,10 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20180507183749.GA2095@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kan.liang@linux.intel.com
+Cc: Andi Kleen <ak@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kan.liang@linux.intel.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, May 07, 2018 at 03:37:49PM -0300, Arnaldo Carvalho de Melo wrote:
+Em Mon, May 07, 2018 at 03:37:49PM -0300, Arnaldo Carvalho de Melo escreveu:
 > Em Sat, May 05, 2018 at 08:43:11PM -0700, Andi Kleen escreveu:
 > > Jiri Olsa <jolsa@redhat.com> writes:
 > > 
@@ -31,8 +30,37 @@ On Mon, May 07, 2018 at 03:37:49PM -0300, Arnaldo Carvalho de Melo wrote:
 > misleading error message, so it can wait for the discussion about the
 > parser fixes to come to a conclusion and a proper patch to be submitted.
 
-ok, I was waiting for some feedback on the new patch.. I'll merge
-it with the one you reverted now
+... and I'm adding this to my perf/core branch, so that we notice this
+faster in the future:
 
-thanks,
-jirka
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 18b06444f230..6829dd416a99 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1309,6 +1309,14 @@ static int test__checkevent_config_cache(struct perf_evlist *evlist)
+ 	return 0;
+ }
+ 
++static int test__intel_pt(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel = perf_evlist__first(evlist);
++
++	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "intel_pt//u") == 0);
++	return 0;
++}
++
+ static int count_tracepoints(void)
+ {
+ 	struct dirent *events_ent;
+@@ -1637,6 +1645,11 @@ static struct evlist_test test__events[] = {
+ 		.check = test__checkevent_config_cache,
+ 		.id    = 51,
+ 	},
++	{
++		.name  = "intel_pt//u",
++		.check = test__intel_pt,
++		.id    = 52,
++	},
+ };
+ 
+ static struct evlist_test test__events_pmu[] = {
