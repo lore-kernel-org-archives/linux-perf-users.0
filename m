@@ -1,7 +1,7 @@
-From: "Liang, Kan" <kan.liang@linux.intel.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 Subject: Re: [PATCH] perf tools: Fix parser for empty pmu terms case
-Date: Sun, 6 May 2018 12:34:48 -0400
-Message-ID: <6a9f5464-eae8-c22e-d518-215c4c30019f@linux.intel.com>
+Date: Mon, 7 May 2018 10:21:42 +0300
+Message-ID: <97dc8045-0136-0c9b-8413-1957ceeae5d3@intel.com>
 References: <20180425160008.3407-1-acme@kernel.org>
  <20180425160008.3407-6-acme@kernel.org>
  <448c4e21-8232-3d04-cac4-49b95c8bca3a@intel.com>
@@ -10,19 +10,17 @@ References: <20180425160008.3407-1-acme@kernel.org>
  <20180504160228.GA25229@krava> <87a7tdphyo.fsf@linux.intel.com>
  <20180506142830.GA18865@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180506142830.GA18865@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, kan.liang@linux.intel.com
 List-Id: linux-perf-users.vger.kernel.org
 
-
-
-On 5/6/2018 10:28 AM, Jiri Olsa wrote:
+On 06/05/18 17:28, Jiri Olsa wrote:
 > On Sat, May 05, 2018 at 08:43:11PM -0700, Andi Kleen wrote:
 >> Jiri Olsa <jolsa@redhat.com> writes:
 >>
@@ -38,10 +36,10 @@ On 5/6/2018 10:28 AM, Jiri Olsa wrote:
 > ---
 > Adrian reported broken event parsing for Intel PT:
 > 
->    $ perf record -e intel_pt//u uname
->    event syntax error: 'intel_pt//u'
->                                 \___ parser error
->    Run 'perf list' for a list of valid events
+>   $ perf record -e intel_pt//u uname
+>   event syntax error: 'intel_pt//u'
+>                                \___ parser error
+>   Run 'perf list' for a list of valid events
 > 
 > It's caused by recent change in parsing grammar
 > (see Fixes: for commit).
@@ -49,52 +47,81 @@ On 5/6/2018 10:28 AM, Jiri Olsa wrote:
 > Adding special rule with empty terms config to handle
 > the reported case and moving the common rule code into
 > new parse_events_pmu function.
+
+Hi
+
+Can you explain why that is needed instead of just changing the grammar e.g.
+
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 7afeb80cc39e..28806e0c7950 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -73,6 +73,7 @@ static void inc_group_count(struct list_head *list,
+ %type <num> value_sym
+ %type <head> event_config
+ %type <head> opt_event_config
++%type <head> opt_pmu_config
+ %type <term> event_term
+ %type <head> event_pmu
+ %type <head> event_legacy_symbol
+@@ -224,7 +225,7 @@ event_def: event_pmu |
+ 	   event_bpf_file
+
+ event_pmu:
+-PE_NAME opt_event_config
++PE_NAME opt_pmu_config
+ {
+ 	struct list_head *list, *orig_terms, *terms;
+
+@@ -496,6 +497,17 @@ opt_event_config:
+ 	$$ = NULL;
+ }
+
++opt_pmu_config:
++'/' event_config '/'
++{
++	$$ = $2;
++}
++|
++'/' '/'
++{
++	$$ = NULL;
++}
++
+ start_terms: event_config
+ {
+ 	struct parse_events_state *parse_state = _parse_state;
+
+
+
 > 
 > Fixes: 9a4a931ce847 ("perf pmu: Fix pmu events parsing rule")
 > Reported-by: Adrian Hunter <adrian.hunter@intel.com>
 > Cc: Andi Kleen <ak@linux.intel.com>
 > Link: http://lkml.kernel.org/n/tip-uorb0azuem7b7ydace7cf6vc@git.kernel.org
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-The patch looks good to me.
-I tested my latest change and Intel PT. Both looks good.
-
-./perf stat -e '{unc_m_cas_count.all,unc_m_clockticks}' -a -I 1000   # 
-         time             counts unit events
-      1.001556622             95,686      unc_m_cas_count.all
-      1.001556622      1,900,544,149      unc_m_clockticks
-      2.002722048            159,598      unc_m_cas_count.all
-      2.002722048      2,339,028,614      unc_m_clockticks
-
-./perf record -e intel_pt//u
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.044 MB perf.data ]
-
-
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
-
 > ---
->   tools/perf/util/parse-events.c | 46 +++++++++++++++++++++++++++++++++++++
->   tools/perf/util/parse-events.h |  3 +++
->   tools/perf/util/parse-events.y | 51 +++++++++++++-----------------------------
->   3 files changed, 65 insertions(+), 35 deletions(-)
+>  tools/perf/util/parse-events.c | 46 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/parse-events.h |  3 +++
+>  tools/perf/util/parse-events.y | 51 +++++++++++++-----------------------------
+>  3 files changed, 65 insertions(+), 35 deletions(-)
 > 
 > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
 > index 3576aaaa9e4c..7cf326a8effe 100644
 > --- a/tools/perf/util/parse-events.c
 > +++ b/tools/perf/util/parse-events.c
 > @@ -8,6 +8,7 @@
->   #include <sys/stat.h>
->   #include <fcntl.h>
->   #include <sys/param.h>
+>  #include <sys/stat.h>
+>  #include <fcntl.h>
+>  #include <sys/param.h>
 > +#include <fnmatch.h>
->   #include "term.h"
->   #include "../perf.h"
->   #include "evlist.h"
+>  #include "term.h"
+>  #include "../perf.h"
+>  #include "evlist.h"
 > @@ -1294,6 +1295,51 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->   	return evsel ? 0 : -ENOMEM;
->   }
->   
+>  	return evsel ? 0 : -ENOMEM;
+>  }
+>  
 > +int parse_events_pmu(struct parse_events_state *parse_state,
 > +		     struct list_head *list, char *name,
 > +		     struct list_head *head_config)
@@ -140,48 +167,48 @@ Tested-by: Kan Liang <kan.liang@linux.intel.com>
 > +	return ok ? 0 : -1;
 > +}
 > +
->   int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->   			       char *str, struct list_head **listp)
->   {
+>  int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  			       char *str, struct list_head **listp)
+>  {
 > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
 > index 4473dac27aee..553fcaf5d23e 100644
 > --- a/tools/perf/util/parse-events.h
 > +++ b/tools/perf/util/parse-events.h
 > @@ -170,6 +170,9 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->   			 struct list_head *head_config,
->   			 bool auto_merge_stats,
->   			 bool use_alias);
+>  			 struct list_head *head_config,
+>  			 bool auto_merge_stats,
+>  			 bool use_alias);
 > +int parse_events_pmu(struct parse_events_state *parse_state,
 > +		     struct list_head *list, char *name,
 > +		     struct list_head *head_config);
->   
->   int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->   			       char *str,
+>  
+>  int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  			       char *str,
 > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
 > index 47f6399a309a..d44599bece43 100644
 > --- a/tools/perf/util/parse-events.y
 > +++ b/tools/perf/util/parse-events.y
 > @@ -8,7 +8,6 @@
->   
->   #define YYDEBUG 1
->   
+>  
+>  #define YYDEBUG 1
+>  
 > -#include <fnmatch.h>
->   #include <linux/compiler.h>
->   #include <linux/list.h>
->   #include <linux/types.h>
+>  #include <linux/compiler.h>
+>  #include <linux/list.h>
+>  #include <linux/types.h>
 > @@ -226,44 +225,26 @@ event_def: event_pmu |
->   event_pmu:
->   PE_NAME '/' event_config '/'
->   {
+>  event_pmu:
+>  PE_NAME '/' event_config '/'
+>  {
 > -	struct list_head *list, *orig_terms, *terms;
 > +	struct list_head *list;
 > +
 > +	ALLOC_LIST(list);
->   
+>  
 > -	if (parse_events_copy_term_list($3, &orig_terms))
 > +	if (parse_events_pmu(_parse_state, list, $1, $3))
->   		YYABORT;
->   
+>  		YYABORT;
+>  
 > -	ALLOC_LIST(list);
 > -	if (parse_events_add_pmu(_parse_state, list, $1, $3, false, false)) {
 > -		struct perf_pmu *pmu = NULL;
@@ -213,7 +240,7 @@ Tested-by: Kan Liang <kan.liang@linux.intel.com>
 > -		if (!ok)
 > -			YYABORT;
 > -	}
->   	parse_events_terms__delete($3);
+>  	parse_events_terms__delete($3);
 > -	parse_events_terms__delete(orig_terms);
 > +	$$ = list;
 > +}
@@ -227,7 +254,7 @@ Tested-by: Kan Liang <kan.liang@linux.intel.com>
 > +	if (parse_events_pmu(_parse_state, list, $1, NULL))
 > +		YYABORT;
 > +
->   	$$ = list;
->   }
->   |
+>  	$$ = list;
+>  }
+>  |
 > 
