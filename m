@@ -1,32 +1,32 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 05/12] perf pmu: Fix pmu events parsing rule
-Date: Mon, 7 May 2018 15:37:49 -0300
-Message-ID: <20180507183749.GA2095@redhat.com>
-References: <20180425160008.3407-1-acme@kernel.org>
- <20180425160008.3407-6-acme@kernel.org>
- <448c4e21-8232-3d04-cac4-49b95c8bca3a@intel.com>
- <20180503103717.GA14776@krava>
- <0c33d3f9-4b76-c94c-7306-e93e8cd8d4aa@intel.com>
- <20180504160228.GA25229@krava>
- <87a7tdphyo.fsf@linux.intel.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v2] perf tools: allow map files to specify DSO
+Date: Mon, 7 May 2018 11:40:01 -0700
+Message-ID: <20180507184001.GE4050@tassilo.jf.intel.com>
+References: <1525717456-21475-1-git-send-email-johunt@akamai.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87a7tdphyo.fsf@linux.intel.com>
+In-Reply-To: <1525717456-21475-1-git-send-email-johunt@akamai.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, kan.liang@linux.intel.com
+To: Josh Hunt <johunt@akamai.com>
+Cc: mingo@redhat.com, acme@kernel.org, peterz@infradead.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Sat, May 05, 2018 at 08:43:11PM -0700, Andi Kleen escreveu:
-> Jiri Olsa <jolsa@redhat.com> writes:
-> 
-> Please fix this quickly, PT is currently totally non functional in Linus
-> mainline.
+On Mon, May 07, 2018 at 02:24:16PM -0400, Josh Hunt wrote:
+> Add the ability to specify a DSO in the /tmp/perf-<PID>.map file.
+> The DSO should be the first line in the file and readable by the
+> running user. If a valid DSO is found all other contents of the
+> file will be ignored. This allows things like callchain unwinding
+> with DWARF to work.
 
-Ok, so I'm reverting this patch, the previous situation was just a
-misleading error message, so it can wait for the discussion about the
-parser fixes to come to a conclusion and a proper patch to be submitted.
+FWIW it's ok, but also obsolete with Kirill's large-pages-in-tmpfs
+work in newer kernels. With that you can just copy the executable into
+a 2MB tmpfs and disable the manual huge page copying and everything
+should work as usually.
 
-- Arnaldo
+So essentially it's only a hack for old kernels and old binaries.
+
+But doesn't hurt I guess.
+
+-Andi
