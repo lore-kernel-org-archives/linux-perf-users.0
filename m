@@ -1,39 +1,39 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/6] perf vendor events intel: Remove duplicated entry for westmereep-dp in mapfile.csv
-Date: Mon,  7 May 2018 17:13:29 -0300
-Message-ID: <20180507201333.26990-3-acme@kernel.org>
-References: <20180507201333.26990-1-acme@kernel.org>
+From: Josh Hunt <johunt@akamai.com>
+Subject: Re: [PATCH v2] perf tools: allow map files to specify DSO
+Date: Mon, 7 May 2018 14:30:32 -0700
+Message-ID: <e6272e7c-25fd-0d2d-4199-fcf3ec604546@akamai.com>
+References: <1525717456-21475-1-git-send-email-johunt@akamai.com>
+ <20180507184001.GE4050@tassilo.jf.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180507201333.26990-1-acme@kernel.org>
+In-Reply-To: <20180507184001.GE4050@tassilo.jf.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, William Cohen <wcohen@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: mingo@redhat.com, acme@kernel.org, peterz@infradead.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
 List-Id: linux-perf-users.vger.kernel.org
 
-From: William Cohen <wcohen@redhat.com>
+On 05/07/2018 11:40 AM, Andi Kleen wrote:
+> On Mon, May 07, 2018 at 02:24:16PM -0400, Josh Hunt wrote:
+>> Add the ability to specify a DSO in the /tmp/perf-<PID>.map file.
+>> The DSO should be the first line in the file and readable by the
+>> running user. If a valid DSO is found all other contents of the
+>> file will be ignored. This allows things like callchain unwinding
+>> with DWARF to work.
+> 
+> FWIW it's ok, but also obsolete with Kirill's large-pages-in-tmpfs
+> work in newer kernels. With that you can just copy the executable into
+> a 2MB tmpfs and disable the manual huge page copying and everything
+> should work as usually.
+> 
+> So essentially it's only a hack for old kernels and old binaries.
+> 
+> But doesn't hurt I guess.
 
-Signed-off-by: William Cohen <wcohen@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180503195032.28871-1-wcohen@redhat.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv | 1 -
- 1 file changed, 1 deletion(-)
+Ah, very interesting. I wasn't aware of this. Can you point me to some 
+more details on this process?
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 93656f2fd53a..7e3cce3bcf3b 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -29,7 +29,6 @@ GenuineIntel-6-4D,v13,silvermont,core
- GenuineIntel-6-4C,v13,silvermont,core
- GenuineIntel-6-2A,v15,sandybridge,core
- GenuineIntel-6-2C,v2,westmereep-dp,core
--GenuineIntel-6-2C,v2,westmereep-dp,core
- GenuineIntel-6-25,v2,westmereep-sp,core
- GenuineIntel-6-2F,v2,westmereex,core
- GenuineIntel-6-55,v1,skylakex,core
--- 
-2.14.3
+Thanks
+Josh
