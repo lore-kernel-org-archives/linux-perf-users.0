@@ -1,7 +1,7 @@
 From: Jeremy Cline <jeremy@jcline.org>
-Subject: [PATCH 7/8] perf scripts python: Add Python 3 support to stat-cpi.py
-Date: Tue, 8 May 2018 21:27:51 +0000
-Message-ID: <0100016341a74569-b9ac2ac6-f99b-41ed-be0d-f7cb3c69e6de-000000@email.amazonses.com>
+Subject: [PATCH 8/8] perf tests: Add Python 3 support to attr.py
+Date: Tue, 8 May 2018 21:27:50 +0000
+Message-ID: <0100016341a7413b-a8e15991-fe45-42e9-9209-8143734f0511-000000@email.amazonses.com>
 References: <cover.1525811971.git.jeremy@jcline.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1525811971.git.jeremy@jcline.org>
@@ -10,36 +10,126 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "Herton R . Krzesinski" <herton@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Jeremy Cline <jeremy@jcline.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python 2 and Python 3 in stat-cpi.py. This should have no
+Support both Python 2 and Python 3 in attr.py. This should have no
 functional change.
 
 Signed-off-by: Jeremy Cline <jeremy@jcline.org>
 ---
- tools/perf/scripts/python/stat-cpi.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/attr.py | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/scripts/python/stat-cpi.py b/tools/perf/scripts/python/stat-cpi.py
-index 8410672efb8b..fc53a03da412 100644
---- a/tools/perf/scripts/python/stat-cpi.py
-+++ b/tools/perf/scripts/python/stat-cpi.py
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index ff9b60b99f52..15fbf38450fe 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
 @@ -1,6 +1,8 @@
- #!/usr/bin/env python
+ #! /usr/bin/python
  # SPDX-License-Identifier: GPL-2.0
  
 +from __future__ import print_function
 +
- data    = {}
- times   = []
- threads = []
-@@ -59,7 +61,8 @@ def stat__interval(time):
-             if ins != 0:
-                 cpi = cyc/float(ins)
+ import os
+ import sys
+ import glob
+@@ -8,7 +10,11 @@ import optparse
+ import tempfile
+ import logging
+ import shutil
+-import ConfigParser
++try:
++    import ConfigParser as configparser
++except ImportError:
++    # Python 3 renamed ConfigParser to configparser
++    import configparser
  
--            print "%15f: cpu %d, thread %d -> cpi %f (%d/%d)" % (time/(float(1000000000)), cpu, thread, cpi, cyc, ins)
-+            print("%15f: cpu %d, thread %d -> cpi %f (%d/%d)" %
-+                  (time/(float(1000000000)), cpu, thread, cpi, cyc, ins))
+ def data_equal(a, b):
+     # Allow multiple values in assignment separated by '|'
+@@ -100,23 +106,23 @@ class Event(dict):
+     def equal(self, other):
+         for t in Event.terms:
+             log.debug("      [%s] %s %s" % (t, self[t], other[t]));
+-            if not self.has_key(t) or not other.has_key(t):
++            if t not in self or t not in other:
+                 return False
+             if not data_equal(self[t], other[t]):
+                 return False
+         return True
  
- def trace_end():
-     pass
+     def optional(self):
+-        if self.has_key('optional') and self['optional'] == '1':
++        if 'optional' in self and self['optional'] == '1':
+             return True
+         return False
+ 
+     def diff(self, other):
+         for t in Event.terms:
+-            if not self.has_key(t) or not other.has_key(t):
++            if t not in self or t not in other:
+                 continue
+             if not data_equal(self[t], other[t]):
+-		log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
++                log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
+ 
+ # Test file description needs to have following sections:
+ # [config]
+@@ -134,7 +140,7 @@ class Event(dict):
+ #   - expected values assignments
+ class Test(object):
+     def __init__(self, path, options):
+-        parser = ConfigParser.SafeConfigParser()
++        parser = configparser.SafeConfigParser()
+         parser.read(path)
+ 
+         log.warning("running '%s'" % path)
+@@ -193,7 +199,7 @@ class Test(object):
+         return True
+ 
+     def load_events(self, path, events):
+-        parser_event = ConfigParser.SafeConfigParser()
++        parser_event = configparser.SafeConfigParser()
+         parser_event.read(path)
+ 
+         # The event record section header contains 'event' word,
+@@ -207,7 +213,7 @@ class Test(object):
+             # Read parent event if there's any
+             if (':' in section):
+                 base = section[section.index(':') + 1:]
+-                parser_base = ConfigParser.SafeConfigParser()
++                parser_base = configparser.SafeConfigParser()
+                 parser_base.read(self.test_dir + '/' + base)
+                 base_items = parser_base.items('event')
+ 
+@@ -322,9 +328,9 @@ def run_tests(options):
+     for f in glob.glob(options.test_dir + '/' + options.test):
+         try:
+             Test(f, options).run()
+-        except Unsup, obj:
++        except Unsup as obj:
+             log.warning("unsupp  %s" % obj.getMsg())
+-        except Notest, obj:
++        except Notest as obj:
+             log.warning("skipped %s" % obj.getMsg())
+ 
+ def setup_log(verbose):
+@@ -373,7 +379,7 @@ def main():
+     setup_log(options.verbose)
+ 
+     if not options.test_dir:
+-        print 'FAILED no -d option specified'
++        print('FAILED no -d option specified')
+         sys.exit(-1)
+ 
+     if not options.test:
+@@ -382,8 +388,8 @@ def main():
+     try:
+         run_tests(options)
+ 
+-    except Fail, obj:
+-        print "FAILED %s" % obj.getMsg();
++    except Fail as obj:
++        print("FAILED %s" % obj.getMsg())
+         sys.exit(-1)
+ 
+     sys.exit(0)
 -- 
 2.17.0
