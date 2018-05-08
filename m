@@ -1,32 +1,44 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf: test 60 fails on s390 inline missing on s390
-Date: Tue, 8 May 2018 11:23:11 -0300
-Message-ID: <20180508142311.GF13491@kernel.org>
-References: <20180503065837.71043-1-tmricht@linux.ibm.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v2]: perf/x86: store user space frame-pointer value on a
+ sample
+Date: Tue, 8 May 2018 18:21:36 +0300
+Message-ID: <31205dc8-b756-e12b-0249-2ed06c2db9c9@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180503065837.71043-1-tmricht@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, May 03, 2018 at 08:58:37AM +0200, Thomas Richter escreveu:
-> perf test 60: probe libc's inet_pton & backtrace it with ping
-> fails on 4.17.0rc3. It turned out that function __inet_pton
-> is reported as inline:
-> 
-> [root@s8360047 perf]# ./perf script -i /tmp/perf.data.111
-> ping 12457 [000]  1584.478959: probe_libc:inet_pton: (3ffb5a347e8)
->                   1347e8 __inet_pton (inlined)
->                    f19d7 gaih_inet.constprop.5 (/usr/lib64/libc-2.24.so)
->                    f4c3f __GI_getaddrinfo (inlined)
->                     410b main (/usr/bin/ping)
-> 
-> Allow __inet_pton listed as inline.
 
-Thanks, applied,
+Store user space frame-pointer value (BP register) into Perf trace 
+on a sample for a process so the value becomes available when 
+unwinding call stacks for functions gaining event samples.
 
-- Arnaldo
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ arch/x86/kernel/perf_regs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index e47b2dbbdef3..8d68658eff7f 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -156,7 +156,13 @@ void perf_get_regs_user(struct perf_regs *regs_user,
+ 	 * Most system calls don't save these registers, don't report them.
+ 	 */
+ 	regs_user_copy->bx = -1;
+-	regs_user_copy->bp = -1;
++	/*
++	 * Store user space frame-pointer value on sample
++	 * to facilitate stack unwinding for cases when
++	 * user space executable code has such support
++	 * enabled at compile time;
++	 */
++	regs_user_copy->bp = user_regs->bp;
+ 	regs_user_copy->r12 = -1;
+ 	regs_user_copy->r13 = -1;
+ 	regs_user_copy->r14 = -1;
