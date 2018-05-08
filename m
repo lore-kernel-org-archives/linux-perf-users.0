@@ -1,7 +1,7 @@
 From: Jeremy Cline <jeremy@jcline.org>
-Subject: [PATCH 4/8] perf scripts python: Add Python 3 support to Util.py
-Date: Tue, 8 May 2018 21:27:46 +0000
-Message-ID: <0100016341a730c6-8db8b9b1-da2d-4ee3-96bf-47e0ae9796bd-000000@email.amazonses.com>
+Subject: [PATCH 2/8] perf scripts python: Add Python 3 support to Core.py
+Date: Tue, 8 May 2018 21:27:45 +0000
+Message-ID: <0100016341a72ebe-e572899e-f445-4765-98f0-c314935727f9-000000@email.amazonses.com>
 References: <cover.1525811971.git.jeremy@jcline.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1525811971.git.jeremy@jcline.org>
@@ -10,50 +10,80 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "Herton R . Krzesinski" <herton@redhat.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Jeremy Cline <jeremy@jcline.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python 2 and Python 3 in Util.py. The dict class no longer
-has a ``has_key`` method and print is now a function rather than a
-statement. This should have no functional change.
+Support both Python 2 and Python 3 in Core.py. This should have no
+functional change.
 
 Signed-off-by: Jeremy Cline <jeremy@jcline.org>
 ---
- .../python/Perf-Trace-Util/lib/Perf/Trace/Util.py     | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ .../Perf-Trace-Util/lib/Perf/Trace/Core.py    | 40 ++++++++-----------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py
-index f6c84966e4f8..7384dcb628c4 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py
-@@ -5,6 +5,7 @@
- # This software may be distributed under the terms of the GNU General
- # Public License ("GPL") version 2 as published by the Free Software
- # Foundation.
-+from __future__ import print_function
+diff --git a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
+index 38dfb720fb6f..54ace2f6bc36 100644
+--- a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
++++ b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
+@@ -31,10 +31,8 @@ def flag_str(event_name, field_name, value):
+     string = ""
  
- import errno, os
+     if flag_fields[event_name][field_name]:
+-	print_delim = 0
+-        keys = flag_fields[event_name][field_name]['values'].keys()
+-        keys.sort()
+-        for idx in keys:
++        print_delim = 0
++        for idx in sorted(flag_fields[event_name][field_name]['values']):
+             if not value and not idx:
+                 string += flag_fields[event_name][field_name]['values'][idx]
+                 break
+@@ -51,14 +49,12 @@ def symbol_str(event_name, field_name, value):
+     string = ""
  
-@@ -33,7 +34,7 @@ def nsecs_str(nsecs):
-     return str
+     if symbolic_fields[event_name][field_name]:
+-        keys = symbolic_fields[event_name][field_name]['values'].keys()
+-        keys.sort()
+-        for idx in keys:
++        for idx in sorted(symbolic_fields[event_name][field_name]['values']):
+             if not value and not idx:
+-		string = symbolic_fields[event_name][field_name]['values'][idx]
++                string = symbolic_fields[event_name][field_name]['values'][idx]
+                 break
+-	    if (value == idx):
+-		string = symbolic_fields[event_name][field_name]['values'][idx]
++            if (value == idx):
++                string = symbolic_fields[event_name][field_name]['values'][idx]
+                 break
  
- def add_stats(dict, key, value):
--	if not dict.has_key(key):
-+	if key not in dict:
- 		dict[key] = (value, value, value, 1)
- 	else:
- 		min, max, avg, count = dict[key]
-@@ -72,10 +73,10 @@ try:
- except:
- 	if not audit_package_warned:
- 		audit_package_warned = True
--		print "Install the audit-libs-python package to get syscall names.\n" \
--                    "For example:\n  # apt-get install python-audit (Ubuntu)" \
--                    "\n  # yum install audit-libs-python (Fedora)" \
--                    "\n  etc.\n"
-+		print("Install the audit-libs-python package to get syscall names.\n"
-+                    "For example:\n  # apt-get install python-audit (Ubuntu)"
-+                    "\n  # yum install audit-libs-python (Fedora)"
-+                    "\n  etc.\n")
+     return string
+@@ -74,19 +70,17 @@ def trace_flag_str(value):
+     string = ""
+     print_delim = 0
  
- def syscall_name(id):
- 	try:
+-    keys = trace_flags.keys()
+-
+-    for idx in keys:
+-	if not value and not idx:
+-	    string += "NONE"
+-	    break
+-
+-	if idx and (value & idx) == idx:
+-	    if print_delim:
+-		string += " | ";
+-	    string += trace_flags[idx]
+-	    print_delim = 1
+-	    value &= ~idx
++    for idx in trace_flags:
++        if not value and not idx:
++            string += "NONE"
++            break
++
++        if idx and (value & idx) == idx:
++            if print_delim:
++                string += " | ";
++            string += trace_flags[idx]
++            print_delim = 1
++            value &= ~idx
+ 
+     return string
+ 
 -- 
 2.17.0
