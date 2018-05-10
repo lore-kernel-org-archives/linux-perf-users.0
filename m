@@ -1,43 +1,78 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v2]: perf/x86: store user space frame-pointer value on a
- sample
-Date: Thu, 10 May 2018 13:29:28 +0300
-Message-ID: <6be7739b-8c6c-bbd8-6866-a26d8d25266d@linux.intel.com>
-References: <31205dc8-b756-e12b-0249-2ed06c2db9c9@linux.intel.com>
- <20180509145436.GV12217@hirez.programming.kicks-ass.net>
- <3ecedd91-1c01-6fc5-4648-89eaf5ff0930@linux.intel.com>
- <20180510101406.GA12217@hirez.programming.kicks-ass.net>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/6] perf/urgent fixes
+Date: Thu, 10 May 2018 20:10:09 +0200
+Message-ID: <20180510181009.fayjnnt5swpb75ym@gmail.com>
+References: <20180507201333.26990-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180510101406.GA12217@hirez.programming.kicks-ass.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180507201333.26990-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Fenghua Yu <fenghua.yu@intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, KarimAllah Ahmed <karahmed@amazon.de>, Marc Zyngier <marc.zyngier@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Wang Nan <wangnan0@huawei.com>, William Cohen <wcohen@redhat.com>, Yisheng Xie <xieyisheng1@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
 
-On 10.05.2018 13:14, Peter Zijlstra wrote:
-> On Thu, May 10, 2018 at 12:42:38PM +0300, Alexey Budankov wrote:
->>> The Changelog needs to state that user_regs->bp is in fact valid and
->>
->> That actually was tested on binaries compiled without and with BP exposed 
->> and in the latter case proved the value of that change.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
-> Mostly works is not the same as 'always initialized', if there are entry
-> paths that do not store that register, then using the value might leak
-> values from the kernel stack, which would be bad.
-
-Yep, absolutely agree. Extra care needs to be taken here.
-
+> 	Please consider pulling,
 > 
-> But like said, I think much of the kernel entry code was sanitized with
-> the PTI effort and I suspect things are in fact fine now, but lets wait
-> for Andy to confirm.
+> - Arnaldo
 > 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 1504269814263c9676b4605a6a91e14dc6ceac21:
+> 
+>   Merge tag 'linux-kselftest-4.17-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest (2018-05-03 19:26:51 -1000)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-urgent-for-mingo-4.17-20180507
+> 
+> for you to fetch changes up to 4a35a9027f64d588d2fd9436dda4126e8d5647d7:
+> 
+>   Revert "perf pmu: Fix pmu events parsing rule" (2018-05-07 16:28:10 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> . Revert "perf pmu: Fix pmu events parsing rule", as it broke Intel PT
+>   event description parsing (Arnaldo Carvalho de Melo)
+> 
+> . Sync x86's cpufeatures.h and kvm UAPI headers with the kernel sources,
+>   suppressing the ABI drift warnings (Arnaldo Carvalho de Melo)
+> 
+> - Remove duplicated entry for westmereep-dp in Intel's mapfile.csv (William Cohen)
+> 
+> - Fix typo in 'perf bench numa' options description (Yisheng Xie)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (4):
+>       tools headers: Sync x86 cpufeatures.h with the kernel sources
+>       tools headers kvm: Sync uapi/linux/kvm.h with the kernel sources
+>       tools headers kvm: Sync ARM UAPI headers with the kernel sources
+>       Revert "perf pmu: Fix pmu events parsing rule"
+> 
+> William Cohen (1):
+>       perf vendor events intel: Remove duplicated entry for westmereep-dp in mapfile.csv
+> 
+> Yisheng Xie (1):
+>       perf bench numa: Fix typo in options
+> 
+>  tools/arch/arm/include/uapi/asm/kvm.h      | 6 ++++++
+>  tools/arch/arm64/include/uapi/asm/kvm.h    | 6 ++++++
+>  tools/arch/x86/include/asm/cpufeatures.h   | 1 +
+>  tools/include/uapi/linux/kvm.h             | 7 +++++++
+>  tools/perf/bench/numa.c                    | 2 +-
+>  tools/perf/pmu-events/arch/x86/mapfile.csv | 1 -
+>  tools/perf/util/parse-events.y             | 8 ++++----
+>  7 files changed, 25 insertions(+), 6 deletions(-)
 
-Thanks,
-Alexey
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
