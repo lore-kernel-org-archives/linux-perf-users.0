@@ -1,97 +1,78 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/5] perf cs-etm: Support unknown_thread in cs_etm_auxtrace
-Date: Mon, 14 May 2018 09:23:19 -0300
-Message-ID: <20180514122321.27304-4-acme@kernel.org>
-References: <20180514122321.27304-1-acme@kernel.org>
+Subject: Re: [RFC 0/6] perf probe: Attempt to improve C++ probing
+Date: Mon, 14 May 2018 13:11:54 -0300
+Message-ID: <20180514161154.GU13491@kernel.org>
+References: <20180513110617.91669-1-automatic+kernel@freyther.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180514122321.27304-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180513110617.91669-1-automatic+kernel@freyther.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Holger Freyther <automatic+kernel@freyther.de>
+Cc: linux-perf-users@vger.kernel.org, Holger Hans Peter Freyther <holgar+kernel@google.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Wang Nan <wangnan0@huawei.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+Em Sun, May 13, 2018 at 07:06:11PM +0800, Holger Freyther escreveu:
+> From: Holger Hans Peter Freyther <holgar+kernel@google.com>
+ 
+> Currently perf probe -x app --funcs will list and demangle C++ functions
+> but the other probe actions can't work with them. When asking probe to not
+> demangle it will not list any of the application symbols creating the
+> impression that there are no symbols at all.
+ 
+> Make --funcs --no-demangle list all C++ functions and modify the handling
+> for listing code, variables and adding the uprobe work with the demangled
+> C++ function name.
+ 
+> I tried to keep this as minimal as possible but having to keep the dso in
+> the debuginfo and passing it everywhere to be able to demangle the linkage
+> name isn't pretty (and for C++ demangling the struct dso is not of much
+> use. Maybe having a static "empty" dso could avoid a lot of the changes).
+ 
+> Maybe the easiest first patch is to default to --no-demangle and change
+> the DEFAULT_FUNC_FILTER to not include mangled C++ symbols. The remaining
+> tooling would work then.
+ 
+> My test set includes:
+ 
+>  ./perf probe -x . -L "std::vector<int, std::allocator<int> >::at"
+>  ./perf probe -x . -L "std::vector<int, std::allocator<int> >::at:2-3"
+> 
+>  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::at"
+>  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::at:2"
+>  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::size%return"
 
-CoreSight doesn't allocate thread structure for unknown_thread in ETM
-auxtrace, so unknown_thread is NULL pointer.  If the perf data doesn't
-contain valid tid and then cs_etm__mem_access() uses unknown_thread
-instead as thread handler, this results in a segmentation fault when
-thread__find_addr_map() accesses the thread handler.
+Great stuff! Masami already gave his Acked-by, please address Namhyung's
+concerns and consider adding a 'perf test' entry for C++ symbols found
+in libstdc++, placing some probe in place and then running some program
+that uses that function, then parsing the output of some tool using that
+probe, something like you'll find in "perf test inet_pton", see:
 
-This commit creates a new thread data which is used by unknown_thread, so
-CoreSight tracing can roll back to use unknown_thread if perf data
-doesn't include valid thread info.  This commit also releases thread
-data for initialization failure case and for normal auxtrace free flow.
+[acme@jouet perf]$ ls -la tools/perf/tests/shell/
+total 28
+drwxrwxr-x. 3 acme acme 4096 May 11 11:53 .
+drwxrwxr-x. 4 acme acme 4096 May 11 11:53 ..
+drwxrwxr-x. 2 acme acme 4096 Apr 12 14:48 lib
+-rwxrwxr-x. 1 acme acme  302 Apr 12 14:48 probe_vfs_getname.sh
+-rwxrwxr-x. 1 acme acme 2050 May 11 11:53 record+probe_libc_inet_pton.sh
+-rwxrwxr-x. 1 acme acme 1185 Apr 12 14:48 record+script_probe_vfs_getname.sh
+-rwxrwxr-x. 1 acme acme 1176 Apr 12 14:48 trace+probe_vfs_getname.sh
+[acme@jouet perf]$ 
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1525924920-4381-1-git-send-email-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+[root@jouet ~]# perf test inet_pton
+64: probe libc's inet_pton & backtrace it with ping       : Ok
+[root@jouet ~]# perf test -v inet_pton
+64: probe libc's inet_pton & backtrace it with ping       :
+--- start ---
+test child forked, pid 2441
+ping 2478 0 143807.377533: probe_libc:inet_pton: (7f7259040e40)
+113e40 __GI___inet_pton (/usr/lib64/libc-2.26.so)
+e02b4 getaddrinfo (/usr/lib64/libc-2.26.so)
+2f40 [unknown] (/usr/bin/ping)
+test child finished with 0
+---- end ----
+probe libc's inet_pton & backtrace it with ping: Ok
+[root@jouet ~]#
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 40020b1ca54f..2bf28b5acc08 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -239,6 +239,7 @@ static void cs_etm__free(struct perf_session *session)
- 	for (i = 0; i < aux->num_cpu; i++)
- 		zfree(&aux->metadata[i]);
- 
-+	thread__zput(aux->unknown_thread);
- 	zfree(&aux->metadata);
- 	zfree(&aux);
- }
-@@ -1357,6 +1358,23 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 	etm->auxtrace.free = cs_etm__free;
- 	session->auxtrace = &etm->auxtrace;
- 
-+	etm->unknown_thread = thread__new(999999999, 999999999);
-+	if (!etm->unknown_thread)
-+		goto err_free_queues;
-+
-+	/*
-+	 * Initialize list node so that at thread__zput() we can avoid
-+	 * segmentation fault at list_del_init().
-+	 */
-+	INIT_LIST_HEAD(&etm->unknown_thread->node);
-+
-+	err = thread__set_comm(etm->unknown_thread, "unknown", 0);
-+	if (err)
-+		goto err_delete_thread;
-+
-+	if (thread__init_map_groups(etm->unknown_thread, etm->machine))
-+		goto err_delete_thread;
-+
- 	if (dump_trace) {
- 		cs_etm__print_auxtrace_info(auxtrace_info->priv, num_cpu);
- 		return 0;
-@@ -1371,16 +1389,18 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 
- 	err = cs_etm__synth_events(etm, session);
- 	if (err)
--		goto err_free_queues;
-+		goto err_delete_thread;
- 
- 	err = auxtrace_queues__process_index(&etm->queues, session);
- 	if (err)
--		goto err_free_queues;
-+		goto err_delete_thread;
- 
- 	etm->data_queued = etm->queues.populated;
- 
- 	return 0;
- 
-+err_delete_thread:
-+	thread__zput(etm->unknown_thread);
- err_free_queues:
- 	auxtrace_queues__free(&etm->queues);
- 	session->auxtrace = NULL;
--- 
-2.14.3
+- Arnaldo
