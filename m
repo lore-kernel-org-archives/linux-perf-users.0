@@ -1,78 +1,74 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC 0/6] perf probe: Attempt to improve C++ probing
-Date: Mon, 14 May 2018 13:11:54 -0300
-Message-ID: <20180514161154.GU13491@kernel.org>
-References: <20180513110617.91669-1-automatic+kernel@freyther.de>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/5] perf/urgent fixes
+Date: Tue, 15 May 2018 08:21:48 +0200
+Message-ID: <20180515062148.GA7581@gmail.com>
+References: <20180514122321.27304-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180513110617.91669-1-automatic+kernel@freyther.de>
+In-Reply-To: <20180514122321.27304-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Holger Freyther <automatic+kernel@freyther.de>
-Cc: linux-perf-users@vger.kernel.org, Holger Hans Peter Freyther <holgar+kernel@google.com>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Wang Nan <wangnan0@huawei.com>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, linux-arm-kernel@lists.infradead.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Richter <tmricht@linux.ibm.com>, Wang Nan <wang>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Sun, May 13, 2018 at 07:06:11PM +0800, Holger Freyther escreveu:
-> From: Holger Hans Peter Freyther <holgar+kernel@google.com>
- 
-> Currently perf probe -x app --funcs will list and demangle C++ functions
-> but the other probe actions can't work with them. When asking probe to not
-> demangle it will not list any of the application symbols creating the
-> impression that there are no symbols at all.
- 
-> Make --funcs --no-demangle list all C++ functions and modify the handling
-> for listing code, variables and adding the uprobe work with the demangled
-> C++ function name.
- 
-> I tried to keep this as minimal as possible but having to keep the dso in
-> the debuginfo and passing it everywhere to be able to demangle the linkage
-> name isn't pretty (and for C++ demangling the struct dso is not of much
-> use. Maybe having a static "empty" dso could avoid a lot of the changes).
- 
-> Maybe the easiest first patch is to default to --no-demangle and change
-> the DEFAULT_FUNC_FILTER to not include mangled C++ symbols. The remaining
-> tooling would work then.
- 
-> My test set includes:
- 
->  ./perf probe -x . -L "std::vector<int, std::allocator<int> >::at"
->  ./perf probe -x . -L "std::vector<int, std::allocator<int> >::at:2-3"
+
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
->  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::at"
->  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::at:2"
->  ./perf probe -x . -V "std::vector<int, std::allocator<int> >::size%return"
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 49cf4a4b3f5a8b02556dd4f45c5cee598d4fc799:
+> 
+>   Merge tag 'perf-urgent-for-mingo-4.17-20180507' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-05-10 20:09:00 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180514
+> 
+> for you to fetch changes up to c23080a6e4e853cff2834436e3cf33eae7723900:
+> 
+>   perf tools: Add missing newline when parsing empty BPF proggie (2018-05-11 12:10:02 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - Fix segfault when processing unknown threads in cs-etm (Leo Yan)
+> 
+> - Fix "perf test inet_pton" on s390 failing due to missing inline (Thomas Richter)
+> 
+> - Display all available events on 'perf annotate --stdio' (Jin Yao)
+> 
+> - Add missing newline when parsing empty BPF proggie (Arnaldo Carvalho de Melo)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (1):
+>       perf tools: Add missing newline when parsing empty BPF proggie
+> 
+> Jin Yao (1):
+>       perf annotate: Display all available events on --stdio
+> 
+> Leo Yan (2):
+>       perf cs-etm: Support unknown_thread in cs_etm_auxtrace
+>       perf cs-etm: Remove redundant space
+> 
+> Thomas Richter (1):
+>       perf test: "probe libc's inet_pton" fails on s390 due to missing inline
+> 
+>  .../tests/shell/record+probe_libc_inet_pton.sh     |  2 +-
+>  tools/perf/util/annotate.c                         |  3 +++
+>  tools/perf/util/cs-etm.c                           | 28 ++++++++++++++++++----
+>  tools/perf/util/parse-events.c                     |  2 +-
+>  4 files changed, 29 insertions(+), 6 deletions(-)
 
-Great stuff! Masami already gave his Acked-by, please address Namhyung's
-concerns and consider adding a 'perf test' entry for C++ symbols found
-in libstdc++, placing some probe in place and then running some program
-that uses that function, then parsing the output of some tool using that
-probe, something like you'll find in "perf test inet_pton", see:
+Pulled, thanks a lot Arnaldo!
 
-[acme@jouet perf]$ ls -la tools/perf/tests/shell/
-total 28
-drwxrwxr-x. 3 acme acme 4096 May 11 11:53 .
-drwxrwxr-x. 4 acme acme 4096 May 11 11:53 ..
-drwxrwxr-x. 2 acme acme 4096 Apr 12 14:48 lib
--rwxrwxr-x. 1 acme acme  302 Apr 12 14:48 probe_vfs_getname.sh
--rwxrwxr-x. 1 acme acme 2050 May 11 11:53 record+probe_libc_inet_pton.sh
--rwxrwxr-x. 1 acme acme 1185 Apr 12 14:48 record+script_probe_vfs_getname.sh
--rwxrwxr-x. 1 acme acme 1176 Apr 12 14:48 trace+probe_vfs_getname.sh
-[acme@jouet perf]$ 
-
-[root@jouet ~]# perf test inet_pton
-64: probe libc's inet_pton & backtrace it with ping       : Ok
-[root@jouet ~]# perf test -v inet_pton
-64: probe libc's inet_pton & backtrace it with ping       :
---- start ---
-test child forked, pid 2441
-ping 2478 0 143807.377533: probe_libc:inet_pton: (7f7259040e40)
-113e40 __GI___inet_pton (/usr/lib64/libc-2.26.so)
-e02b4 getaddrinfo (/usr/lib64/libc-2.26.so)
-2f40 [unknown] (/usr/bin/ping)
-test child finished with 0
----- end ----
-probe libc's inet_pton & backtrace it with ping: Ok
-[root@jouet ~]#
-
-- Arnaldo
+	Ingo
