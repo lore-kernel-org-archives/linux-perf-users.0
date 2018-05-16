@@ -1,55 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/11] perf buildid-cache: Warn --purge-all failures
-Date: Wed, 16 May 2018 11:48:59 -0300
-Message-ID: <20180516144908.22212-3-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/11] perf/core improvements and fixes
+Date: Wed, 16 May 2018 17:58:19 +0200
+Message-ID: <20180516155819.GA16354@gmail.com>
 References: <20180516144908.22212-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180516144908.22212-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Agustin Vega-Frias <agustinv@codeaurora.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Dave Hansen <dave.hansen@linux.intel.com>, David Ahern <dsahern@gmail.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, "H . Peter Anvin" <hpa@zytor.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>, Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, netdev@vger.kernel.orgPeter
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Warn perf buildid-cache --purge-all failures in non verbose mode.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Ex.:
+> Hi Ingo,
+> 
+> 	Please consider pulling, more to come as I go thru Adrian's x86
+> PTI series and the C++ support improvements to 'perf probe', from
+> Holger,
+> 
+> Best Regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+>   
+> The following changes since commit 291c161f6c65530092903fbea58eb07a62b220ba:
+> 
+>   Merge remote-tracking branch 'tip/perf/urgent' into perf/core (2018-05-15 10:30:17 -0300)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.18-20180516
+> 
+> for you to fetch changes up to 7a36a287de9fbb1ba906e70573d3f2315f7fd609:
+> 
+>   perf bpf: Fix NULL return handling in bpf__prepare_load() (2018-05-16 10:01:55 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Add '-e intel_pt//u' test to the 'parse-events' 'perf test' entry,
+>   to help avoiding regressions in the events parser such as one
+>   that caused a revert in v4.17-rc (Arnaldo Carvalho de Melo)
+> 
+> - Fix NULL return handling in bpf__prepare_load() (YueHaibing)
+> 
+> - Warn about 'perf buildid-cache --purge-all' failures (Ravi Bangoria)
+> 
+> - Add infrastructure to help in writing eBPF C programs to be used
+>   with '-e name.c' type events in tools such as 'record' and 'trace',
+>   with headers for common constructs and an examples directory that
+>   will get populated as we add more such helpers and the 'perf bpf'
+>   branch that Jiri Olsa has been working on (Arnaldo Carvalho de Melo)
+> 
+> - Handle uncore event aliases in small groups properly (Kan Liang)
+> 
+> - Use the "_stest" symbol to identify the kernel map when loading kcore (Adrian Hunter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (1):
+>       perf tools: Use the "_stest" symbol to identify the kernel map when loading kcore
+> 
+> Arnaldo Carvalho de Melo (7):
+>       perf tests parse-events: Add intel_pt parse test
+>       perf llvm-utils: Add bpf include path to clang command line
+>       perf bpf: Add 'examples' directories
+>       perf bpf: Add bpf.h to be used in eBPF proggies
+>       perf bpf: Add kprobe example to catch 5s naps
+>       perf bpf: Add license(NAME) helper
+>       perf bpf: Add probe() helper to reduce kprobes boilerplate
+> 
+> Kan Liang (1):
+>       perf parse-events: Handle uncore event aliases in small groups properly
+> 
+> Ravi Bangoria (1):
+>       perf buildid-cache: Warn --purge-all failures
+> 
+> YueHaibing (1):
+>       perf bpf: Fix NULL return handling in bpf__prepare_load()
+> 
+>  tools/perf/Makefile.config         |  14 ++++
+>  tools/perf/Makefile.perf           |   8 +++
+>  tools/perf/builtin-buildid-cache.c |   8 ++-
+>  tools/perf/examples/bpf/5sec.c     |  49 ++++++++++++++
+>  tools/perf/examples/bpf/empty.c    |   3 +
+>  tools/perf/include/bpf/bpf.h       |  13 ++++
+>  tools/perf/tests/parse-events.c    |  13 ++++
+>  tools/perf/util/Build              |   2 +
+>  tools/perf/util/bpf-loader.c       |   6 +-
+>  tools/perf/util/evsel.h            |   1 +
+>  tools/perf/util/llvm-utils.c       |  19 ++++--
+>  tools/perf/util/parse-events.c     | 130 ++++++++++++++++++++++++++++++++++++-
+>  tools/perf/util/parse-events.h     |   7 +-
+>  tools/perf/util/parse-events.y     |   8 +--
+>  tools/perf/util/symbol.c           |  16 ++---
+>  15 files changed, 270 insertions(+), 27 deletions(-)
+>  create mode 100644 tools/perf/examples/bpf/5sec.c
+>  create mode 100644 tools/perf/examples/bpf/empty.c
+>  create mode 100644 tools/perf/include/bpf/bpf.h
 
-  $ sudo chown root:root /home/ravi/.debug -R
-  $ sudo chmod 700 /home/ravi/.debug/ -R
-  $ ./perf buildid-cache -P
-    Couldn't remove some caches. Error: Permission denied.
+Pulled, thanks a lot Arnaldo!
 
-Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20180510043651.12189-1-ravi.bangoria@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-buildid-cache.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index 7a7403913b57..115110a4796a 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -488,8 +488,12 @@ int cmd_buildid_cache(int argc, const char **argv)
- 		}
- 	}
- 
--	if (purge_all)
--		ret = build_id_cache__purge_all();
-+	if (purge_all) {
-+		if (build_id_cache__purge_all()) {
-+			pr_warning("Couldn't remove some caches. Error: %s.\n",
-+				str_error_r(errno, sbuf, sizeof(sbuf)));
-+		}
-+	}
- 
- 	if (missing_filename)
- 		ret = build_id_cache__fprintf_missing(session, stdout);
--- 
-2.14.3
+	Ingo
