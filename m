@@ -1,117 +1,125 @@
-From: Matt Sealey <Matt.Sealey@arm.com>
-Subject: RE: [PATCH] drivers/perf: arm-ccn: stop spamming dmesg in event_init
-Date: Thu, 17 May 2018 15:07:04 +0000
-Message-ID: <HE1PR0802MB241294860D79A65132C69382EE910@HE1PR0802MB2412.eurprd08.prod.outlook.com>
-References: <20180504104117.8086-1-mark.rutland@arm.com>
-        <20180508184050.75c60b82ba538d0ecdeb2d78@arm.com>
-        <1525882003.4199.55.camel@arm.com>
-        <20180509184154.9994df2874e7a08025b56dea@arm.com>
-        <cee9c043-3d64-56b9-4f23-e8c8370387dd@gmail.com>
- <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 01/11] perf tests parse-events: Add intel_pt parse test
+Date: Thu, 17 May 2018 17:15:53 -0300
+Message-ID: <20180517201553.GB25467@kernel.org>
+References: <20180516144908.22212-1-acme@kernel.org>
+ <20180516144908.22212-2-acme@kernel.org>
+ <20180516163355.d8e4c669ad29d416e9ffb13e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180516163355.d8e4c669ad29d416e9ffb13e@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <Kim.Phillips@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>
+To: Jiri Olsa <jolsa@kernel.org>, Kim Phillips <kim.phillips@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGkgYWxsLA0KDQo+ID4gSSBkb24ndCBoYXZlIGFueSBkb2cgaW4gdGhpcywgYnV0IG1heWJlIGlm
-IHByb3ZpZGluZyBpbmZvcm1hdGlvbiB0byB0aGUNCj4gPiB1c2VycyBpcyBzbyBlc3NlbnRpYWwg
-dG8gaGF2aW5nIGEgcGxlYXNhbnQgdXNlciBleHBlcmllbmNlLCB0aGVuDQo+ID4gcmV0aGlua2lu
-ZyB0aGUgd2hvbGUgd2F5IHRoZXNlIG1lc3NhZ2VzIGFyZSBmdW5uZWxlZCBpcyBuZWNlc3NhcnkN
-Cj4gPiBiZWNhdXNlIHRoZSBrZXJuZWwgbG9nICsgZG1lc2cgaXMgYnkgbm8gbWVhbnMgYXBwcm9w
-cmlhdGUuIFRha2UgYSBsb29rDQo+ID4gYXQgd2hhdCB0aGUgbmV0d29ya2luZyBtYWludGFpbmVy
-cyByZWNlbnRseSBkaWQgd2l0aCBuZXRsaW5rIGV4dGVuZGVkDQo+ID4gYWNrLiBZb3UgdXNlZCB0
-byBqdXN0IGdldCBhbiAidW5zdXBwb3J0ZWQiIGVycm9yLCBhbmQgbm93IHlvdSBrbm93DQo+ID4g
-ZXhhY3RseSB3aGF0IGlzIHdyb25nIHdoZW4gZXh0YWNrIGlzIGF2YWlsYWJsZS4gSXQgc2VlbXMg
-dG8gbWUgbGlrZQ0KPiA+IHNvbWV0aGluZyBsaWtlIHRoaXMgaXMgd2hhdCB5b3UgbWlnaHQgd2Fu
-dCBoZXJlIHNpbmNlIHlvdSB3YW50IHRvIGhhdmUNCj4gPiBwZXJmIGJlIGFzIHVzZXIgZnJpZW5k
-bHkgYXMgcG9zc2libGUuDQo+DQo+IFRoYW5rcywgRmxvcmlhbi4NCg0KRmxvcmlhbiwgSSdkIGxv
-dmUgdG8ga25vdyBpZiB5b3UgbWVhbiAiaW1wbGVtZW50IG5ldGxpbmsgZXh0ZW5kZWQgYWNrIGlu
-DQpwZXJmIiBvciAiZG8gc29tZXRoaW5nIGlkaW9tYXRpYyBmb3IgcGVyZiI/DQoNCkxldCB1cyBh
-c3N1bWUgd2UgYXJlIHNlbWFudGljYWxseSBjaGFsbGVuZ2VkIG92ZXIgaGVyZS4gSSdtIGdvaW5n
-IHRvDQpwcm9jZWVkIGZyb20gdGhlIGxhdHRlci4NCg0KPiBBY21lICYgb3RoZXIgcGVyZiBwZW9w
-bGUsIGRvIHlvdSBmb3Jlc2VlIGEgcHJvYmxlbSBhZGRpbmcgbmV0bGluaw0KPiBleHRlbmRlZCBh
-Y2sgc3VwcG9ydCB0byB0aGUgcGVyZiBzdWJzeXN0ZW0gZm9yIGV4dGVuZGVkIGVycm9yIG1lc3Nh
-Z2UNCj4gY29tbXVuaWNhdGlvbj8NCj4NCj4gSWYgbm90LCBpcyBzdHJ1Y3QgcGVyZl9ldmVudF9h
-dHRyIGFtZW5hYmxlIHRvIGhhdmluZyBlcnJvciByZXBvcnRpbmcNCj4gYml0KHMpIGFkZGVkPw0K
-DQpJIGRpZCBoYXZlIGEgdGhpbmsgYWJvdXQgdGhpcyB3aGVuIEtpbSBtZW50aW9uZWQgaXQgaW4g
-cGFzc2luZywgYW5kIG15DQpyZWFzb25pbmcgd2FzIHRoYXQgYSBzZXJpYWxpemVkIGVycm9yIHJl
-Y29yZCBzaW1pbGFyIHRvIEFDUEkgQVBFSSBCRVJUL0VSU1QNCnRhYmxlcyAod2l0aG91dCB0aGUg
-TlZSQU0gYWJzdHJhY3Rpb24pIHdvdWxkIGZpdCB0aGUgbmVlZC4NCg0KQXMgc29vbiBhcyBJIHdy
-b3RlIGRvd24gbXkgdGhvdWdodHMgSSByZWFsaXplZCBpdCBzY3JhdGNoIG1vcmUgaXRjaGVzIHRo
-YW4NCmp1c3Qgc29tZXRoaW5nIHVzZWZ1bCBmb3IgcGVyZi4NCg0KSXQgd291bGQgY29uY2VwdHVh
-bGx5IGJlIGEgYnVmZmVyIHBhc3NlZCBmcm9tIHVzZXJzcGFjZSB3aXRoIHRoZSBzeXNjYWxsLA0K
-d2hpY2ggd291bGQgYmUgcG9wdWxhdGVkIGluIHRoZSBrZXJuZWwgd2l0aCBhbiBpZGVudGlmeWlu
-ZyBoZWFkZXIsIGVhY2gNCnJlY29yZCBkZW5vdGluZyBpdHMgb3duIGxlbmd0aC4gVGhlIHN5c2Nh
-bGwgZmlsbHMgdGhlIGJ1ZmZlciB3aXRoIHJlY29yZHMNCm9mIHBhcnRpY3VsYXIgZm9ybWF0IGZv
-ciB0aGUgc3lzY2FsbCwgYW5kIHRoZSBlcnJubyByZXR1cm5lZCB0byB0aGUNCmFwcGxpY2F0aW9u
-IGlzIHRoZW4gdGhlIHN0YXRlIG9mIHRoZSBlcnJvciByZWNvcmRpbmcgYnVmZmVyIC0gZm9yIGlu
-c3RhbmNlLA0KaWYgdGhlIGtlcm5lbCByYW4gb3V0IG9mIHNwYWNlIGluIHRoZSBidWZmZXIgYmVm
-b3JlIHJlcG9ydGluZyBhbGwgdGhlIGVycm9ycw0KaXQgY291bGQgKC1FTk9CVUZTIG9yIC1FQUdB
-SU4pLCBpZiBpdCBzdG9wcGVkIHJlY29yZGluZyBlcnJvcnMgb24gc29tZXRoaW5nDQp0aGF0IHJl
-cXVpcmVzIGJlaW5nIGNvbnRhaW5lZCBhbmQgcmV0dXJuZWQgYXQgdGhhdCBwb2ludCAoLUVGQVVM
-VCksIGFuZCBzbw0Kb24gKGFueW9uZSB3aG8ncyBnb3QgUkFTIG9uIHRoZSBicmFpbiB3aWxsIHNl
-ZSB3aGVyZSBJJ20gY29taW5nIGZyb20pLg0KDQpJIGhhdmUgYSBkaXN0aW5jdCBkaXNsaWtlIG9m
-IGZpbGxpbmcgdGhlIGtlcm5lbCB3aXRoIGNvbnN0IHN0cmluZ3MsIHNvIHRoZQ0KcmVjb3JkcyB3
-b3VsZCBiZSBzdHJpY3RseSBtYWNoaW5lLXJlYWRhYmxlIGFuZCBjb250YWluIGluZm9ybWF0aW9u
-IGFib3V0DQp0aGUgZXJyb3IgZm9yIHRoZSByZWNvcmQgYW5kIHRoZSBzb3VyY2UuIElmIHVzZXJz
-cGFjZSBuZWVkcyB0byBwcmludCBhDQpzdHJpbmcgdGhlbiBpdCBjYW4gbG9vayB1cCB1bmlxdWUg
-aWRlbnRpZmllcnMgKFVVSUR2MSwgZ2l2ZSBvciB0YWtlLCB0bw0KcmVtb3ZlIHRoZSBuZWVkIGZv
-ciBhbnkgYXV0aG9yaXR5IG9uIG51bWJlcmluZykgaW4gYSBkYXRhYmFzZSAtIGJlIHRoYXQNCnBs
-YWludGV4dCwgZ2V0dGV4dC5wbywgYmRiLCBzcWxpdGUsIHhtbCwganNvbiwgQyBzdHJ1Y3R1cmUg
-ZW1iZWRkZWQgaW4gdGhlDQp0b29sIC0gb25lIGZvciBlYWNoIGVycm9yIHNvdXJjZS4gVGhhdCBr
-ZWVwcyBzdHJpbmdzLCB0cmFuc2xhdGlvbnMsIHN0cmluZw0KZm9ybWF0dGluZyBlbnRpcmVseSBv
-dXRzaWRlIHRoZSBrZXJuZWwsIGFuZCBrZWVwcyByZWNvcmRzIGZyb20gYmVpbmcgZnJlZWZvcm0N
-CnR5cG8tbGFkZW4gc3RyaW5ncy4NCg0KVGhhdCdkIGdpdmUgc29tZSBnZW5lcmljIFByb2R1Y2Vy
-IGNvZGUgaW4gdGhlIGtlcm5lbCwgYW5kIGltcGx5IGEgY29tcGFuaW9uDQpDb25zdW1lciBsaWJy
-YXJ5IGluIHVzZXJzcGFjZSAod2l0aCBzYWlkIGRhdGFiYXNlIGJhY2tlbmQpLCB3aGljaCBjb3Vs
-ZCBhbHNvDQpiZSByZXNwb25zaWJsZSBmb3IgbG9nZ2luZyB0aGUgYmluYXJ5IHJlY29yZHMgc29t
-ZXdoZXJlIGZvciBmdXR1cmUgcmVmZXJlbmNlDQoocGVyaGFwcyBib3VuZGVkIGJ5IGNhcGFiaWxp
-dGllcyBvciBjb250YWluZXIgcHJpdmlsZWdlcykuDQoNClByZXR0eSBtdWNoIGV2ZXJ5IHN5c2Nh
-bGwgdGhhdCBoYXMgcHJvYmxlbXMgcmV0dXJuaW5nICdqdXN0IGFuIGVycm5vJw0KY291bGQgYmVu
-ZWZpdCBmcm9tIHN1Y2ggYSBzeXN0ZW0sIHRoZSBvbmx5IGltcGVkaW1lbnQgSSBjYW4gc2VlIHRv
-IGl0IGlzDQp0aGF0IGl0J3MgYWRkaW5nIGEgbmV3IHN1YnN5c3RlbSB0byB0aGUga2VybmVsIHRv
-IHByb2R1Y2UgdGhlc2UgcmVjb3JkcywNCmFuZCBhbnkgc3lzY2FsbCB0aGF0IG5lZWRzIGl0IHdv
-dWxkIGhhdmUgdG8gZ2FpbiBlaXRoZXIgYW4gZXh0cmEgcGFyYW1ldGVyLA0Kb3IgYXR0cmlidXRl
-IHNldHRpbmcgYWRkaXRpb24gKGxpa2Ugc2V0c29ja29wdHMpIG9yIHRvIHNob2Vob3JuIHRoZSBi
-dWZmZXINCnBvaW50ZXIgaW50byBhbiBleGlzdGluZyBwYXJhbWV0ZXIgc3RydWN0dXJlIGxpa2Ug
-cGVyZl9ldmVudF9hdHRyLiBUaGF0DQp3b3VsZCBoYXZlIHRvIGJlIGxvY2tlZCBkb3duIHRvIGEg
-Y29uc2lzdGVudCBtZXRob2QgdGhhdCB3b3VsZCBiZQ0KcmVjb21tZW5kZWQgKGxpa2UgYWRkaW5n
-IGEgbmV3IHN5c2NhbGwgaW50ZXJmYWNlLCBub3QgZXZlcnlvbmUgaGFzIGFuDQphdHRyaWJ1dGUg
-aW50ZXJmYWNlIG9yIHBhcmFtZXRlciBzdHJ1Y3R1cmUpIGFsdGhvdWdoIHRoZXJlJ3Mgbm8gc3Rv
-cHBpbmcNCmtlcm5lbCBkZXZzIGFkZGluZyBpbiBhIHdheSBmb3IgbGVnYWN5IGFwcGxpY2F0aW9u
-cyB0byBlYXNpbHkgcmVjZWl2ZQ0KdGhlIHNhbWUgaW5mb3JtYXRpb24gdGhyb3VnaCBleGlzdGlu
-ZyBBQkkuDQoNCkluIHRoZSBjYXNlIG9mIHBlcmZfZXZlbnRfYXR0ciB0aGVyZSBpcyBzcGFjZSBl
-bm91Z2ggdG8gbWFyayBhIGJpdCB0byBzYXkNCnRoYXQgZXJyb3JzIGNvdWxkIGJlIHJlcG9ydGVk
-IGluIGEgYnVmZmVyLCBidXQgbm90IGVub3VnaCBpbiB0aGUgcmVzZXJ2ZWQNCnNwYWNlIHRoYXQg
-ZXhpc3RzIHRvIHN0b3JlIGEgcG9pbnRlciBmb3IgNjQtYml0IHN5c3RlbXMgKG9yIDEyOC1iaXQg
-b25lcy4uKQ0Kd2l0aG91dCBpbmNyZWFzaW5nIGl0cyBzaXplLiBCdXQsIGJlc2lkZXMgdGhhdCwg
-aXQgd291bGQgaGF2ZSB0aGUgYmVuZWZpdA0Kb2Ygc2ltcGx5IGJlaW5nIHNlcmlhbGl6ZWQgd2l0
-aCB0aGUgc3lzY2FsbCwgYW5kIG5vdCBhIHN1cHBsZW1lbnRhbCwNCnBvdGVudGlhbGx5IG5vbi10
-aHJlYWQtc2FmZSBlcnJuby9zdHJlcnJvci1saWtlIGtlcm5lbC1zaWRlIGltcGxlbWVudGF0aW9u
-LA0Kbm9yIGV4dHJhIHN5c2NhbGxzIHRvIHJldHJpZXZlIGluZm9ybWF0aW9uIG9yIGFyYml0cmFy
-eSBmb3JtYXR0ZWQgb3INCnVuZm9ybWF0dGVkIHN0cmluZ3MuDQoNCk5ldGxpbmsgZXh0ZW5kZWQg
-YWNrIGNvdWxkIGJlbmVmaXQgZnJvbSBpdCBzaW1wbHkgYnkgaGF2aW5nIGJlZW4gcGFzc2VkDQph
-biBubGF0dHIgcG9pbnRpbmcgdG8gdGhlIGJ1ZmZlciBhbmQgcmVjb3JkaW5nIGV4dGVuZGVkIGVy
-cm9yIGluZm9ybWF0aW9uDQppbiBpdCAtIHRoZSBleHRlbmRlZCBhY2sgc3RydWN0dXJlIGNhbiBy
-ZXBvcnQgdGhlIHN0YXR1cyBvZiB0aGUgYnVmZmVyDQphbmQgdXNlIHRoZSBjb29raWUgZmllbGQg
-dG8gcmVwcm9kdWNlIHNvbWUgaW5mb3JtYXRpb24gaWYgbmVjZXNzYXJ5ICh3aGljaA0KZXh0ZW5k
-cyB0aGUgUkFTIGVycm9yIHJlY29yZCBjb25jZXB0IGZ1cnRoZXIgd2hlbiBuZWVkZWQpLg0KDQpU
-aG91Z2h0cz8gRG9lcyBhbnlvbmUgaGF2ZSBhbnkgb2JqZWN0aW9ucyB0byBhIFJBUy1saWtlIGVy
-cm9yIHJlcG9ydGluZw0Kc3lzdGVtIGZvciBzeXN0ZW0gY2FsbHMsIG9yIGFueSBpZGVhcyBvbiB0
-aGluZ3MgdGhhdCB3b3VsZCBiZW5lZml0IGZyb20NCml0IGFib3ZlIGFuZCBiZXlvbmQgcGVyZj8g
-V2UgY291bGQgYWx3YXlzIGF1ZGl0IGFsbCB0aGUgc3lzdGVtIGNhbGxzIGFuZA0KdGhlaXIgYmVo
-YXZpb3JzIHNvIHdlIGNvdWxkIGRvIHNvbWUgd29ya2VkIGV4YW1wbGVzIGJ1dCBhbnlvbmUgd2hv
-J3MgZ290DQphIGdvb2QgY2FuZGlkYXRlIG91dHNpZGUgcGVyZiBpcyB3ZWxjb21lIHRvIHN1Z2dl
-c3QgaXQuDQoNClRhLA0KTWF0dA0KDQoNCg0KDQpJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVu
-dHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5k
-IG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
-cGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRp
-c2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBw
-dXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBU
-aGFuayB5b3UuDQo=
+Em Wed, May 16, 2018 at 04:33:55PM -0500, Kim Phillips escreveu:
+> On Wed, 16 May 2018 11:48:58 -0300
+> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > To avoid regressions such as the one fixed by 4a35a9027f64 ("Revert
+> > "perf pmu: Fix pmu events parsing rule""), where '-e intel_pt//u' got
+> > broken, with this new entry in this 'perf tests' subtest, we would have
+> > caught it before pushing upstream.
+> > 
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: David Ahern <dsahern@gmail.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Wang Nan <wangnan0@huawei.com>
+> > Link: https://lkml.kernel.org/n/tip-kw62fys9bwdgsp722so2ln1l@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> 
+> This causes a SEGV on Arm, and an Intel box without Intel-PT h/w:
+> 
+> (gdb) run test -F -v 6
+> Starting program: /home/kimphi01/git/linux-perf-acme/tools/perf/perf test -F -v 6
+> [Thread debugging using libthread_db enabled]
+> Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+>  6: Parse event definition strings             :
+> --- start ---
+> running test 0 'syscalls:sys_enter_openat'
+> Using CPUID GenuineIntel-6-3C
+> <SNIP>
+> running test 51 'L1-dcache-misses/name=cachepmu/'
+> running test 52 'intel_pt//u'
+> 
+> Program received signal SIGSEGV, Segmentation fault.
+> __GI___vasprintf_chk (result_ptr=0x8, flags=1, format=<optimized out>, args=args@entry=0x7fffffffbf30)
+>     at vasprintf_chk.c:88
+> 88	vasprintf_chk.c: No such file or directory.
+> (gdb) bt
+> #0  __GI___vasprintf_chk (result_ptr=0x8, flags=1, format=<optimized out>, args=args@entry=0x7fffffffbf30)
+>     at vasprintf_chk.c:88
+> #1  0x00007ffff6456e6f in __asprintf_chk (result_ptr=result_ptr@entry=0x8, flags=flags@entry=1, 
+>     format=format@entry=0x555555992e80 "Cannot find PMU `%s'. Missing kernel support?") at asprintf_chk.c:32
+> #2  0x0000555555766836 in asprintf (__fmt=0x555555992e80 "Cannot find PMU `%s'. Missing kernel support?", __ptr=0x8)
+>     at /usr/include/x86_64-linux-gnu/bits/stdio2.h:178
+> #3  parse_events_add_pmu (parse_state=parse_state@entry=0x7fffffffdda0, list=list@entry=0x555555e137d0, 
+>     name=0x5555563e84e0 "intel_pt", head_config=0x0, auto_merge_stats=auto_merge_stats@entry=false, 
+>     use_alias=use_alias@entry=false) at util/parse-events.c:1236
+
+
+Humm:
+
+        struct parse_events_error *err = parse_state->error;
+
+        pmu = perf_pmu__find(name);
+        if (!pmu) {
+                if (asprintf(&err->str,
+                                "Cannot find PMU `%s'. Missing kernel support?",
+                                name) < 0)
+
+$ pahole -C parse_events_error ~/bin/perf
+struct parse_events_error {
+	int                        idx;                  /*     0     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	char *                     str;                  /*     8     8 */
+	char *                     help;                 /*    16     8 */
+
+	/* size: 24, cachelines: 1, members: 3 */
+	/* sum members: 20, holes: 1, sum holes: 4 */
+	/* last cacheline: 24 bytes */
+};
+$
+
+So parse_state->error == NULL, Jiri, ideas?
+
+- Arnaldo
+
+> #4  0x00005555557aaaae in parse_events_parse (_parse_state=_parse_state@entry=0x7fffffffdda0, scanner=0x555555d38c40)
+>     at util/parse-events.y:235
+> #5  0x0000555555761ccf in parse_events__scanner (start_token=258, parse_state=0x7fffffffdda0, str=<optimized out>)
+>     at util/parse-events.c:1796
+> #6  parse_events (evlist=evlist@entry=0x555555d381f0, str=<optimized out>, err=err@entry=0x0)
+>     at util/parse-events.c:1836
+> #7  0x000055555571eb65 in test_event (e=0x555555bf4f80 <test.events+1248>, e=0x555555bf4f80 <test.events+1248>)
+>     at tests/parse-events.c:1695
+> #8  test_events (events=0x555555bf4aa0 <test.events>, cnt=53) at tests/parse-events.c:1717
+> #9  test__parse_events (test=<optimized out>, subtest=<optimized out>) at tests/parse-events.c:1837
+> #10 0x0000555555716a11 in run_test (subtest=-1, test=0x555555bfca78 <generic_tests+280>) at tests/builtin-test.c:348
+> #11 test_and_print (t=t@entry=0x555555bfca78 <generic_tests+280>, force_skip=force_skip@entry=false, 
+>     subtest=subtest@entry=-1) at tests/builtin-test.c:378
+> #12 0x0000555555717e2f in __cmd_test (skiplist=0x0, argv=0x7fffffffe5c0, argc=1) at tests/builtin-test.c:570
+> #13 cmd_test (argc=1, argv=0x7fffffffe5c0) at tests/builtin-test.c:709
+> #14 0x0000555555738b41 in run_builtin (p=0x555555bfd848 <commands+552>, argc=4, argv=0x7fffffffe5c0) at perf.c:303
+> #15 0x0000555555738e3e in handle_internal_command (argc=4, argv=0x7fffffffe5c0) at perf.c:355
+> #16 0x00005555556b3901 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:399
+> #17 main (argc=<optimized out>, argv=0x7fffffffe5c0) at perf.c:543
+> (gdb) 
+> 
+> Thanks,
+> 
+> Kim
