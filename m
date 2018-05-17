@@ -1,91 +1,103 @@
 From: Kim Phillips <kim.phillips@arm.com>
-Subject: Re: [PATCH 01/11] perf tests parse-events: Add intel_pt parse test
-Date: Wed, 16 May 2018 16:33:55 -0500
-Message-ID: <20180516163355.d8e4c669ad29d416e9ffb13e@arm.com>
-References: <20180516144908.22212-1-acme@kernel.org>
-        <20180516144908.22212-2-acme@kernel.org>
+Subject: Re: [PATCH] drivers/perf: arm-ccn: stop spamming dmesg in
+ event_init
+Date: Wed, 16 May 2018 19:25:28 -0500
+Message-ID: <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
+References: <20180504104117.8086-1-mark.rutland@arm.com>
+        <20180508184050.75c60b82ba538d0ecdeb2d78@arm.com>
+        <1525882003.4199.55.camel@arm.com>
+        <20180509184154.9994df2874e7a08025b56dea@arm.com>
+        <cee9c043-3d64-56b9-4f23-e8c8370387dd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516144908.22212-2-acme@kernel.org>
+In-Reply-To: <cee9c043-3d64-56b9-4f23-e8c8370387dd@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Matt Sealey <Matt.Sealey@arm.com>, mathieu.poirier@linaro.org, peterz@infradead.org, alexander.shishkin@linux.intel.com, suzuki.poulose@arm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, 16 May 2018 11:48:58 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+[adding acme, LKML, linux-perf-users, and other potentially interested]
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, 9 May 2018 17:22:42 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
+
+> On 05/09/2018 04:41 PM, Kim Phillips wrote:
+> > On Wed, 9 May 2018 17:06:43 +0100
+> > Pawel Moll <pawel.moll@arm.com> wrote:
+> > 
+> >> On Wed, 2018-05-09 at 00:40 +0100, Kim Phillips wrote:
+> >>> On Fri,  4 May 2018 11:41:17 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
+> >>>
+> >>> [adding Pawel, arm-ccn driver author]
+> >>
+> >> We had this discussion way too many times for my liking. As I said
+> >> before - *I* will be fine with the debug messages in the CCN driver.
+> >> Now, if there ever turns out to be other user of this thing and gets
+> > 
+> > Sure, this isn't just about Pawel using the driver he wrote - we know
+> > you know how to use it because you wrote it.  No, it's about all the
+> > other potential users out there, esp. first time users, as I once was.
+> > 
+> >> into problems with event configuration, I'd hope that he/she can count
+> >> on support from the knowledgable people here... (just checked and both
+> > 
+> > I abhor having to suggest our users email this list in order to find out
+> > how to use the PMU drivers.  First time users are going to tend to
+> > steer completely away if they don't have the patience to debug a silent
+> > PMU, rather than email this mailing list - sorry, but that's just
+> > adding a huge usage barrier - for what - fuzzer runner's convenience?
+> > 
+> >> RHEL 7.5 and Ubuntu 16.04.3 kernels on AArch64 come with
+> >> CONFIG_DYNAMIC_DEBUG=y, so it's a matter of explaining what has to be
+> >> enabled where; sadly this information did not find its way into the
+> >> commit description)
+> > 
+> > I can't think of a more difficult to find, more far-away, alien
+> > place for end users to find help with perf, sorry.
+> > 
+> >>>> The ARM CCN PMU driver uses dev_warn() to complain about parameters
+> >>> in
+> >>>> the user-provided perf_event_attr. This means that under normal
+> >>>> operation (e.g. a single invocation of the perf tool), dmesg may be
+> >>>> spammed with multiple messages.
+> >>
+> >> Surely Mark, in his role as maintainer of drivers/perf/ (and a few
+> >> other locations), meant to use much more technical and emotion-free
+> >> subject, along the lines of "reduce a number of dmesg warnings at event
+> >> init".
+> > 
+> > 'reduce a number' is the wrong word:  warnings are completely
+> > eliminated. Debug-level messages occur at exactly the same
+> > frequency/amount.
+> > 
+> > But I still object to the rationale overall - it seems this is about
+> > running fuzzers?  I even offered an alternative for fuzzer runners: is
+> > modifying the loglevel prior to fuzzing somehow unacceptable?
 > 
-> To avoid regressions such as the one fixed by 4a35a9027f64 ("Revert
-> "perf pmu: Fix pmu events parsing rule""), where '-e intel_pt//u' got
-> broken, with this new entry in this 'perf tests' subtest, we would have
-> caught it before pushing upstream.
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Link: https://lkml.kernel.org/n/tip-kw62fys9bwdgsp722so2ln1l@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
+> I don't have any dog in this, but maybe if providing information to the
+> users is so essential to having a pleasant user experience, then
+> rethinking the whole way these messages are funneled is necessary
+> because the kernel log + dmesg is by no means appropriate. Take a look
+> at what the networking maintainers recently did with netlink extended
+> ack. You used to just get an "unsupported" error, and now you know
+> exactly what is wrong when extack is available. It seems to me like
+> something like this is what you might want here since you want to have
+> perf be as user friendly as possible.
 
-This causes a SEGV on Arm, and an Intel box without Intel-PT h/w:
+Thanks, Florian.
 
-(gdb) run test -F -v 6
-Starting program: /home/kimphi01/git/linux-perf-acme/tools/perf/perf test -F -v 6
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
- 6: Parse event definition strings             :
---- start ---
-running test 0 'syscalls:sys_enter_openat'
-Using CPUID GenuineIntel-6-3C
-<SNIP>
-running test 51 'L1-dcache-misses/name=cachepmu/'
-running test 52 'intel_pt//u'
+Acme & other perf people, do you foresee a problem adding netlink
+extended ack support to the perf subsystem for extended error message
+communication?
 
-Program received signal SIGSEGV, Segmentation fault.
-__GI___vasprintf_chk (result_ptr=0x8, flags=1, format=<optimized out>, args=args@entry=0x7fffffffbf30)
-    at vasprintf_chk.c:88
-88	vasprintf_chk.c: No such file or directory.
-(gdb) bt
-#0  __GI___vasprintf_chk (result_ptr=0x8, flags=1, format=<optimized out>, args=args@entry=0x7fffffffbf30)
-    at vasprintf_chk.c:88
-#1  0x00007ffff6456e6f in __asprintf_chk (result_ptr=result_ptr@entry=0x8, flags=flags@entry=1, 
-    format=format@entry=0x555555992e80 "Cannot find PMU `%s'. Missing kernel support?") at asprintf_chk.c:32
-#2  0x0000555555766836 in asprintf (__fmt=0x555555992e80 "Cannot find PMU `%s'. Missing kernel support?", __ptr=0x8)
-    at /usr/include/x86_64-linux-gnu/bits/stdio2.h:178
-#3  parse_events_add_pmu (parse_state=parse_state@entry=0x7fffffffdda0, list=list@entry=0x555555e137d0, 
-    name=0x5555563e84e0 "intel_pt", head_config=0x0, auto_merge_stats=auto_merge_stats@entry=false, 
-    use_alias=use_alias@entry=false) at util/parse-events.c:1236
-#4  0x00005555557aaaae in parse_events_parse (_parse_state=_parse_state@entry=0x7fffffffdda0, scanner=0x555555d38c40)
-    at util/parse-events.y:235
-#5  0x0000555555761ccf in parse_events__scanner (start_token=258, parse_state=0x7fffffffdda0, str=<optimized out>)
-    at util/parse-events.c:1796
-#6  parse_events (evlist=evlist@entry=0x555555d381f0, str=<optimized out>, err=err@entry=0x0)
-    at util/parse-events.c:1836
-#7  0x000055555571eb65 in test_event (e=0x555555bf4f80 <test.events+1248>, e=0x555555bf4f80 <test.events+1248>)
-    at tests/parse-events.c:1695
-#8  test_events (events=0x555555bf4aa0 <test.events>, cnt=53) at tests/parse-events.c:1717
-#9  test__parse_events (test=<optimized out>, subtest=<optimized out>) at tests/parse-events.c:1837
-#10 0x0000555555716a11 in run_test (subtest=-1, test=0x555555bfca78 <generic_tests+280>) at tests/builtin-test.c:348
-#11 test_and_print (t=t@entry=0x555555bfca78 <generic_tests+280>, force_skip=force_skip@entry=false, 
-    subtest=subtest@entry=-1) at tests/builtin-test.c:378
-#12 0x0000555555717e2f in __cmd_test (skiplist=0x0, argv=0x7fffffffe5c0, argc=1) at tests/builtin-test.c:570
-#13 cmd_test (argc=1, argv=0x7fffffffe5c0) at tests/builtin-test.c:709
-#14 0x0000555555738b41 in run_builtin (p=0x555555bfd848 <commands+552>, argc=4, argv=0x7fffffffe5c0) at perf.c:303
-#15 0x0000555555738e3e in handle_internal_command (argc=4, argv=0x7fffffffe5c0) at perf.c:355
-#16 0x00005555556b3901 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:399
-#17 main (argc=<optimized out>, argv=0x7fffffffe5c0) at perf.c:543
-(gdb) 
+If not, is struct perf_event_attr amenable to having error reporting
+bit(s) added?  Recall my last attempt failed because it couldn't
+discriminate between the perf core and the PMU driver returning the
+-Evalue:
+
+https://patchwork.kernel.org/patch/10025555/
 
 Thanks,
 
