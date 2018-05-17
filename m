@@ -1,104 +1,117 @@
-From: Kim Phillips <kim.phillips@arm.com>
-Subject: Re: [PATCH] drivers/perf: arm-ccn: stop spamming dmesg in
- event_init
-Date: Wed, 16 May 2018 19:25:28 -0500
-Message-ID: <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
+From: Matt Sealey <Matt.Sealey@arm.com>
+Subject: RE: [PATCH] drivers/perf: arm-ccn: stop spamming dmesg in event_init
+Date: Thu, 17 May 2018 15:07:04 +0000
+Message-ID: <HE1PR0802MB241294860D79A65132C69382EE910@HE1PR0802MB2412.eurprd08.prod.outlook.com>
 References: <20180504104117.8086-1-mark.rutland@arm.com>
         <20180508184050.75c60b82ba538d0ecdeb2d78@arm.com>
         <1525882003.4199.55.camel@arm.com>
         <20180509184154.9994df2874e7a08025b56dea@arm.com>
         <cee9c043-3d64-56b9-4f23-e8c8370387dd@gmail.com>
+ <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cee9c043-3d64-56b9-4f23-e8c8370387dd@gmail.com>
+In-Reply-To: <20180516192528.5519d2faf59766e0544bb2ee@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Matt Sealey <Matt.Sealey@arm.com>, mathieu.poirier@linaro.org, peterz@infradead.org, alexander.shishkin@linux.intel.com, suzuki.poulose@arm.com
+To: Kim Phillips <Kim.Phillips@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-[adding acme, LKML, linux-perf-users, and other potentially interested]
-
-On Wed, 9 May 2018 17:22:42 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
-
-> On 05/09/2018 04:41 PM, Kim Phillips wrote:
-> > On Wed, 9 May 2018 17:06:43 +0100
-> > Pawel Moll <pawel.moll@arm.com> wrote:
-> > 
-> >> On Wed, 2018-05-09 at 00:40 +0100, Kim Phillips wrote:
-> >>> On Fri,  4 May 2018 11:41:17 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
-> >>>
-> >>> [adding Pawel, arm-ccn driver author]
-> >>
-> >> We had this discussion way too many times for my liking. As I said
-> >> before - *I* will be fine with the debug messages in the CCN driver.
-> >> Now, if there ever turns out to be other user of this thing and gets
-> > 
-> > Sure, this isn't just about Pawel using the driver he wrote - we know
-> > you know how to use it because you wrote it.  No, it's about all the
-> > other potential users out there, esp. first time users, as I once was.
-> > 
-> >> into problems with event configuration, I'd hope that he/she can count
-> >> on support from the knowledgable people here... (just checked and both
-> > 
-> > I abhor having to suggest our users email this list in order to find out
-> > how to use the PMU drivers.  First time users are going to tend to
-> > steer completely away if they don't have the patience to debug a silent
-> > PMU, rather than email this mailing list - sorry, but that's just
-> > adding a huge usage barrier - for what - fuzzer runner's convenience?
-> > 
-> >> RHEL 7.5 and Ubuntu 16.04.3 kernels on AArch64 come with
-> >> CONFIG_DYNAMIC_DEBUG=y, so it's a matter of explaining what has to be
-> >> enabled where; sadly this information did not find its way into the
-> >> commit description)
-> > 
-> > I can't think of a more difficult to find, more far-away, alien
-> > place for end users to find help with perf, sorry.
-> > 
-> >>>> The ARM CCN PMU driver uses dev_warn() to complain about parameters
-> >>> in
-> >>>> the user-provided perf_event_attr. This means that under normal
-> >>>> operation (e.g. a single invocation of the perf tool), dmesg may be
-> >>>> spammed with multiple messages.
-> >>
-> >> Surely Mark, in his role as maintainer of drivers/perf/ (and a few
-> >> other locations), meant to use much more technical and emotion-free
-> >> subject, along the lines of "reduce a number of dmesg warnings at event
-> >> init".
-> > 
-> > 'reduce a number' is the wrong word:  warnings are completely
-> > eliminated. Debug-level messages occur at exactly the same
-> > frequency/amount.
-> > 
-> > But I still object to the rationale overall - it seems this is about
-> > running fuzzers?  I even offered an alternative for fuzzer runners: is
-> > modifying the loglevel prior to fuzzing somehow unacceptable?
-> 
-> I don't have any dog in this, but maybe if providing information to the
-> users is so essential to having a pleasant user experience, then
-> rethinking the whole way these messages are funneled is necessary
-> because the kernel log + dmesg is by no means appropriate. Take a look
-> at what the networking maintainers recently did with netlink extended
-> ack. You used to just get an "unsupported" error, and now you know
-> exactly what is wrong when extack is available. It seems to me like
-> something like this is what you might want here since you want to have
-> perf be as user friendly as possible.
-
-Thanks, Florian.
-
-Acme & other perf people, do you foresee a problem adding netlink
-extended ack support to the perf subsystem for extended error message
-communication?
-
-If not, is struct perf_event_attr amenable to having error reporting
-bit(s) added?  Recall my last attempt failed because it couldn't
-discriminate between the perf core and the PMU driver returning the
--Evalue:
-
-https://patchwork.kernel.org/patch/10025555/
-
-Thanks,
-
-Kim
+SGkgYWxsLA0KDQo+ID4gSSBkb24ndCBoYXZlIGFueSBkb2cgaW4gdGhpcywgYnV0IG1heWJlIGlm
+IHByb3ZpZGluZyBpbmZvcm1hdGlvbiB0byB0aGUNCj4gPiB1c2VycyBpcyBzbyBlc3NlbnRpYWwg
+dG8gaGF2aW5nIGEgcGxlYXNhbnQgdXNlciBleHBlcmllbmNlLCB0aGVuDQo+ID4gcmV0aGlua2lu
+ZyB0aGUgd2hvbGUgd2F5IHRoZXNlIG1lc3NhZ2VzIGFyZSBmdW5uZWxlZCBpcyBuZWNlc3NhcnkN
+Cj4gPiBiZWNhdXNlIHRoZSBrZXJuZWwgbG9nICsgZG1lc2cgaXMgYnkgbm8gbWVhbnMgYXBwcm9w
+cmlhdGUuIFRha2UgYSBsb29rDQo+ID4gYXQgd2hhdCB0aGUgbmV0d29ya2luZyBtYWludGFpbmVy
+cyByZWNlbnRseSBkaWQgd2l0aCBuZXRsaW5rIGV4dGVuZGVkDQo+ID4gYWNrLiBZb3UgdXNlZCB0
+byBqdXN0IGdldCBhbiAidW5zdXBwb3J0ZWQiIGVycm9yLCBhbmQgbm93IHlvdSBrbm93DQo+ID4g
+ZXhhY3RseSB3aGF0IGlzIHdyb25nIHdoZW4gZXh0YWNrIGlzIGF2YWlsYWJsZS4gSXQgc2VlbXMg
+dG8gbWUgbGlrZQ0KPiA+IHNvbWV0aGluZyBsaWtlIHRoaXMgaXMgd2hhdCB5b3UgbWlnaHQgd2Fu
+dCBoZXJlIHNpbmNlIHlvdSB3YW50IHRvIGhhdmUNCj4gPiBwZXJmIGJlIGFzIHVzZXIgZnJpZW5k
+bHkgYXMgcG9zc2libGUuDQo+DQo+IFRoYW5rcywgRmxvcmlhbi4NCg0KRmxvcmlhbiwgSSdkIGxv
+dmUgdG8ga25vdyBpZiB5b3UgbWVhbiAiaW1wbGVtZW50IG5ldGxpbmsgZXh0ZW5kZWQgYWNrIGlu
+DQpwZXJmIiBvciAiZG8gc29tZXRoaW5nIGlkaW9tYXRpYyBmb3IgcGVyZiI/DQoNCkxldCB1cyBh
+c3N1bWUgd2UgYXJlIHNlbWFudGljYWxseSBjaGFsbGVuZ2VkIG92ZXIgaGVyZS4gSSdtIGdvaW5n
+IHRvDQpwcm9jZWVkIGZyb20gdGhlIGxhdHRlci4NCg0KPiBBY21lICYgb3RoZXIgcGVyZiBwZW9w
+bGUsIGRvIHlvdSBmb3Jlc2VlIGEgcHJvYmxlbSBhZGRpbmcgbmV0bGluaw0KPiBleHRlbmRlZCBh
+Y2sgc3VwcG9ydCB0byB0aGUgcGVyZiBzdWJzeXN0ZW0gZm9yIGV4dGVuZGVkIGVycm9yIG1lc3Nh
+Z2UNCj4gY29tbXVuaWNhdGlvbj8NCj4NCj4gSWYgbm90LCBpcyBzdHJ1Y3QgcGVyZl9ldmVudF9h
+dHRyIGFtZW5hYmxlIHRvIGhhdmluZyBlcnJvciByZXBvcnRpbmcNCj4gYml0KHMpIGFkZGVkPw0K
+DQpJIGRpZCBoYXZlIGEgdGhpbmsgYWJvdXQgdGhpcyB3aGVuIEtpbSBtZW50aW9uZWQgaXQgaW4g
+cGFzc2luZywgYW5kIG15DQpyZWFzb25pbmcgd2FzIHRoYXQgYSBzZXJpYWxpemVkIGVycm9yIHJl
+Y29yZCBzaW1pbGFyIHRvIEFDUEkgQVBFSSBCRVJUL0VSU1QNCnRhYmxlcyAod2l0aG91dCB0aGUg
+TlZSQU0gYWJzdHJhY3Rpb24pIHdvdWxkIGZpdCB0aGUgbmVlZC4NCg0KQXMgc29vbiBhcyBJIHdy
+b3RlIGRvd24gbXkgdGhvdWdodHMgSSByZWFsaXplZCBpdCBzY3JhdGNoIG1vcmUgaXRjaGVzIHRo
+YW4NCmp1c3Qgc29tZXRoaW5nIHVzZWZ1bCBmb3IgcGVyZi4NCg0KSXQgd291bGQgY29uY2VwdHVh
+bGx5IGJlIGEgYnVmZmVyIHBhc3NlZCBmcm9tIHVzZXJzcGFjZSB3aXRoIHRoZSBzeXNjYWxsLA0K
+d2hpY2ggd291bGQgYmUgcG9wdWxhdGVkIGluIHRoZSBrZXJuZWwgd2l0aCBhbiBpZGVudGlmeWlu
+ZyBoZWFkZXIsIGVhY2gNCnJlY29yZCBkZW5vdGluZyBpdHMgb3duIGxlbmd0aC4gVGhlIHN5c2Nh
+bGwgZmlsbHMgdGhlIGJ1ZmZlciB3aXRoIHJlY29yZHMNCm9mIHBhcnRpY3VsYXIgZm9ybWF0IGZv
+ciB0aGUgc3lzY2FsbCwgYW5kIHRoZSBlcnJubyByZXR1cm5lZCB0byB0aGUNCmFwcGxpY2F0aW9u
+IGlzIHRoZW4gdGhlIHN0YXRlIG9mIHRoZSBlcnJvciByZWNvcmRpbmcgYnVmZmVyIC0gZm9yIGlu
+c3RhbmNlLA0KaWYgdGhlIGtlcm5lbCByYW4gb3V0IG9mIHNwYWNlIGluIHRoZSBidWZmZXIgYmVm
+b3JlIHJlcG9ydGluZyBhbGwgdGhlIGVycm9ycw0KaXQgY291bGQgKC1FTk9CVUZTIG9yIC1FQUdB
+SU4pLCBpZiBpdCBzdG9wcGVkIHJlY29yZGluZyBlcnJvcnMgb24gc29tZXRoaW5nDQp0aGF0IHJl
+cXVpcmVzIGJlaW5nIGNvbnRhaW5lZCBhbmQgcmV0dXJuZWQgYXQgdGhhdCBwb2ludCAoLUVGQVVM
+VCksIGFuZCBzbw0Kb24gKGFueW9uZSB3aG8ncyBnb3QgUkFTIG9uIHRoZSBicmFpbiB3aWxsIHNl
+ZSB3aGVyZSBJJ20gY29taW5nIGZyb20pLg0KDQpJIGhhdmUgYSBkaXN0aW5jdCBkaXNsaWtlIG9m
+IGZpbGxpbmcgdGhlIGtlcm5lbCB3aXRoIGNvbnN0IHN0cmluZ3MsIHNvIHRoZQ0KcmVjb3JkcyB3
+b3VsZCBiZSBzdHJpY3RseSBtYWNoaW5lLXJlYWRhYmxlIGFuZCBjb250YWluIGluZm9ybWF0aW9u
+IGFib3V0DQp0aGUgZXJyb3IgZm9yIHRoZSByZWNvcmQgYW5kIHRoZSBzb3VyY2UuIElmIHVzZXJz
+cGFjZSBuZWVkcyB0byBwcmludCBhDQpzdHJpbmcgdGhlbiBpdCBjYW4gbG9vayB1cCB1bmlxdWUg
+aWRlbnRpZmllcnMgKFVVSUR2MSwgZ2l2ZSBvciB0YWtlLCB0bw0KcmVtb3ZlIHRoZSBuZWVkIGZv
+ciBhbnkgYXV0aG9yaXR5IG9uIG51bWJlcmluZykgaW4gYSBkYXRhYmFzZSAtIGJlIHRoYXQNCnBs
+YWludGV4dCwgZ2V0dGV4dC5wbywgYmRiLCBzcWxpdGUsIHhtbCwganNvbiwgQyBzdHJ1Y3R1cmUg
+ZW1iZWRkZWQgaW4gdGhlDQp0b29sIC0gb25lIGZvciBlYWNoIGVycm9yIHNvdXJjZS4gVGhhdCBr
+ZWVwcyBzdHJpbmdzLCB0cmFuc2xhdGlvbnMsIHN0cmluZw0KZm9ybWF0dGluZyBlbnRpcmVseSBv
+dXRzaWRlIHRoZSBrZXJuZWwsIGFuZCBrZWVwcyByZWNvcmRzIGZyb20gYmVpbmcgZnJlZWZvcm0N
+CnR5cG8tbGFkZW4gc3RyaW5ncy4NCg0KVGhhdCdkIGdpdmUgc29tZSBnZW5lcmljIFByb2R1Y2Vy
+IGNvZGUgaW4gdGhlIGtlcm5lbCwgYW5kIGltcGx5IGEgY29tcGFuaW9uDQpDb25zdW1lciBsaWJy
+YXJ5IGluIHVzZXJzcGFjZSAod2l0aCBzYWlkIGRhdGFiYXNlIGJhY2tlbmQpLCB3aGljaCBjb3Vs
+ZCBhbHNvDQpiZSByZXNwb25zaWJsZSBmb3IgbG9nZ2luZyB0aGUgYmluYXJ5IHJlY29yZHMgc29t
+ZXdoZXJlIGZvciBmdXR1cmUgcmVmZXJlbmNlDQoocGVyaGFwcyBib3VuZGVkIGJ5IGNhcGFiaWxp
+dGllcyBvciBjb250YWluZXIgcHJpdmlsZWdlcykuDQoNClByZXR0eSBtdWNoIGV2ZXJ5IHN5c2Nh
+bGwgdGhhdCBoYXMgcHJvYmxlbXMgcmV0dXJuaW5nICdqdXN0IGFuIGVycm5vJw0KY291bGQgYmVu
+ZWZpdCBmcm9tIHN1Y2ggYSBzeXN0ZW0sIHRoZSBvbmx5IGltcGVkaW1lbnQgSSBjYW4gc2VlIHRv
+IGl0IGlzDQp0aGF0IGl0J3MgYWRkaW5nIGEgbmV3IHN1YnN5c3RlbSB0byB0aGUga2VybmVsIHRv
+IHByb2R1Y2UgdGhlc2UgcmVjb3JkcywNCmFuZCBhbnkgc3lzY2FsbCB0aGF0IG5lZWRzIGl0IHdv
+dWxkIGhhdmUgdG8gZ2FpbiBlaXRoZXIgYW4gZXh0cmEgcGFyYW1ldGVyLA0Kb3IgYXR0cmlidXRl
+IHNldHRpbmcgYWRkaXRpb24gKGxpa2Ugc2V0c29ja29wdHMpIG9yIHRvIHNob2Vob3JuIHRoZSBi
+dWZmZXINCnBvaW50ZXIgaW50byBhbiBleGlzdGluZyBwYXJhbWV0ZXIgc3RydWN0dXJlIGxpa2Ug
+cGVyZl9ldmVudF9hdHRyLiBUaGF0DQp3b3VsZCBoYXZlIHRvIGJlIGxvY2tlZCBkb3duIHRvIGEg
+Y29uc2lzdGVudCBtZXRob2QgdGhhdCB3b3VsZCBiZQ0KcmVjb21tZW5kZWQgKGxpa2UgYWRkaW5n
+IGEgbmV3IHN5c2NhbGwgaW50ZXJmYWNlLCBub3QgZXZlcnlvbmUgaGFzIGFuDQphdHRyaWJ1dGUg
+aW50ZXJmYWNlIG9yIHBhcmFtZXRlciBzdHJ1Y3R1cmUpIGFsdGhvdWdoIHRoZXJlJ3Mgbm8gc3Rv
+cHBpbmcNCmtlcm5lbCBkZXZzIGFkZGluZyBpbiBhIHdheSBmb3IgbGVnYWN5IGFwcGxpY2F0aW9u
+cyB0byBlYXNpbHkgcmVjZWl2ZQ0KdGhlIHNhbWUgaW5mb3JtYXRpb24gdGhyb3VnaCBleGlzdGlu
+ZyBBQkkuDQoNCkluIHRoZSBjYXNlIG9mIHBlcmZfZXZlbnRfYXR0ciB0aGVyZSBpcyBzcGFjZSBl
+bm91Z2ggdG8gbWFyayBhIGJpdCB0byBzYXkNCnRoYXQgZXJyb3JzIGNvdWxkIGJlIHJlcG9ydGVk
+IGluIGEgYnVmZmVyLCBidXQgbm90IGVub3VnaCBpbiB0aGUgcmVzZXJ2ZWQNCnNwYWNlIHRoYXQg
+ZXhpc3RzIHRvIHN0b3JlIGEgcG9pbnRlciBmb3IgNjQtYml0IHN5c3RlbXMgKG9yIDEyOC1iaXQg
+b25lcy4uKQ0Kd2l0aG91dCBpbmNyZWFzaW5nIGl0cyBzaXplLiBCdXQsIGJlc2lkZXMgdGhhdCwg
+aXQgd291bGQgaGF2ZSB0aGUgYmVuZWZpdA0Kb2Ygc2ltcGx5IGJlaW5nIHNlcmlhbGl6ZWQgd2l0
+aCB0aGUgc3lzY2FsbCwgYW5kIG5vdCBhIHN1cHBsZW1lbnRhbCwNCnBvdGVudGlhbGx5IG5vbi10
+aHJlYWQtc2FmZSBlcnJuby9zdHJlcnJvci1saWtlIGtlcm5lbC1zaWRlIGltcGxlbWVudGF0aW9u
+LA0Kbm9yIGV4dHJhIHN5c2NhbGxzIHRvIHJldHJpZXZlIGluZm9ybWF0aW9uIG9yIGFyYml0cmFy
+eSBmb3JtYXR0ZWQgb3INCnVuZm9ybWF0dGVkIHN0cmluZ3MuDQoNCk5ldGxpbmsgZXh0ZW5kZWQg
+YWNrIGNvdWxkIGJlbmVmaXQgZnJvbSBpdCBzaW1wbHkgYnkgaGF2aW5nIGJlZW4gcGFzc2VkDQph
+biBubGF0dHIgcG9pbnRpbmcgdG8gdGhlIGJ1ZmZlciBhbmQgcmVjb3JkaW5nIGV4dGVuZGVkIGVy
+cm9yIGluZm9ybWF0aW9uDQppbiBpdCAtIHRoZSBleHRlbmRlZCBhY2sgc3RydWN0dXJlIGNhbiBy
+ZXBvcnQgdGhlIHN0YXR1cyBvZiB0aGUgYnVmZmVyDQphbmQgdXNlIHRoZSBjb29raWUgZmllbGQg
+dG8gcmVwcm9kdWNlIHNvbWUgaW5mb3JtYXRpb24gaWYgbmVjZXNzYXJ5ICh3aGljaA0KZXh0ZW5k
+cyB0aGUgUkFTIGVycm9yIHJlY29yZCBjb25jZXB0IGZ1cnRoZXIgd2hlbiBuZWVkZWQpLg0KDQpU
+aG91Z2h0cz8gRG9lcyBhbnlvbmUgaGF2ZSBhbnkgb2JqZWN0aW9ucyB0byBhIFJBUy1saWtlIGVy
+cm9yIHJlcG9ydGluZw0Kc3lzdGVtIGZvciBzeXN0ZW0gY2FsbHMsIG9yIGFueSBpZGVhcyBvbiB0
+aGluZ3MgdGhhdCB3b3VsZCBiZW5lZml0IGZyb20NCml0IGFib3ZlIGFuZCBiZXlvbmQgcGVyZj8g
+V2UgY291bGQgYWx3YXlzIGF1ZGl0IGFsbCB0aGUgc3lzdGVtIGNhbGxzIGFuZA0KdGhlaXIgYmVo
+YXZpb3JzIHNvIHdlIGNvdWxkIGRvIHNvbWUgd29ya2VkIGV4YW1wbGVzIGJ1dCBhbnlvbmUgd2hv
+J3MgZ290DQphIGdvb2QgY2FuZGlkYXRlIG91dHNpZGUgcGVyZiBpcyB3ZWxjb21lIHRvIHN1Z2dl
+c3QgaXQuDQoNClRhLA0KTWF0dA0KDQoNCg0KDQpJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVu
+dHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5k
+IG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
+cGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRp
+c2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBw
+dXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBU
+aGFuayB5b3UuDQo=
