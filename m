@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/18] tools lib api fs tracing_path: Make tracing_events_path private
-Date: Sat, 19 May 2018 07:54:57 -0300
-Message-ID: <20180519105507.16450-9-acme@kernel.org>
+Subject: [PATCH 11/18] perf tools: No need to unconditionally read the max_stack sysctls
+Date: Sat, 19 May 2018 07:55:00 -0300
+Message-ID: <20180519105507.16450-12-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
@@ -12,46 +12,125 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Not anymore accessed outside this library, keep it private.
+Let tools that need to have those variables with the sysctl current
+values use a function that will read them.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-wg1m07flfrg1rm06jjzie8si@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1ljj3oeo5kpt2n1icfd9vowe@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/api/fs/tracing_path.c | 3 +--
- tools/lib/api/fs/tracing_path.h | 2 --
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ tools/perf/builtin-top.c   |  2 +-
+ tools/perf/builtin-trace.c |  2 +-
+ tools/perf/perf.c          |  7 -------
+ tools/perf/util/evsel.c    |  2 +-
+ tools/perf/util/util.c     | 13 +++++++++++++
+ tools/perf/util/util.h     |  2 ++
+ 6 files changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
-index 9b451af0721c..120037496f77 100644
---- a/tools/lib/api/fs/tracing_path.c
-+++ b/tools/lib/api/fs/tracing_path.c
-@@ -15,8 +15,7 @@
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 3c061c57afb6..7a349fcd3864 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1264,7 +1264,7 @@ int cmd_top(int argc, const char **argv)
+ 			.proc_map_timeout    = 500,
+ 			.overwrite	= 1,
+ 		},
+-		.max_stack	     = sysctl_perf_event_max_stack,
++		.max_stack	     = sysctl__max_stack(),
+ 		.sym_pcnt_filter     = 5,
+ 		.nr_threads_synthesize = UINT_MAX,
+ 	};
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index c7effcfc40ed..560aed7da36a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3162,7 +3162,7 @@ int cmd_trace(int argc, const char **argv)
+ 		mmap_pages_user_set = false;
  
- static char tracing_mnt[PATH_MAX]  = "/sys/kernel/debug";
- static char tracing_path[PATH_MAX]        = "/sys/kernel/debug/tracing";
--char tracing_events_path[PATH_MAX] = "/sys/kernel/debug/tracing/events";
+ 	if (trace.max_stack == UINT_MAX) {
+-		trace.max_stack = input_name ? PERF_MAX_STACK_DEPTH : sysctl_perf_event_max_stack;
++		trace.max_stack = input_name ? PERF_MAX_STACK_DEPTH : sysctl__max_stack();
+ 		max_stack_user_set = false;
+ 	}
+ 
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index cefd8f74630c..51c81509a315 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -426,7 +426,6 @@ int main(int argc, const char **argv)
+ 	int err;
+ 	const char *cmd;
+ 	char sbuf[STRERR_BUFSIZE];
+-	int value;
+ 
+ 	/* libsubcmd init */
+ 	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
+@@ -435,12 +434,6 @@ int main(int argc, const char **argv)
+ 	/* The page_size is placed in util object. */
+ 	page_size = sysconf(_SC_PAGE_SIZE);
+ 
+-	if (sysctl__read_int("kernel/perf_event_max_stack", &value) == 0)
+-		sysctl_perf_event_max_stack = value;
 -
-+static char tracing_events_path[PATH_MAX] = "/sys/kernel/debug/tracing/events";
- 
- static void __tracing_path_set(const char *tracing, const char *mountpoint)
- {
-diff --git a/tools/lib/api/fs/tracing_path.h b/tools/lib/api/fs/tracing_path.h
-index 904d085b2ae7..a19136b086dc 100644
---- a/tools/lib/api/fs/tracing_path.h
-+++ b/tools/lib/api/fs/tracing_path.h
-@@ -5,8 +5,6 @@
- #include <linux/types.h>
- #include <dirent.h>
- 
--extern char tracing_events_path[];
+-	if (sysctl__read_int("kernel/perf_event_max_contexts_per_stack", &value) == 0)
+-		sysctl_perf_event_max_contexts_per_stack = value;
 -
- DIR *tracing_events__opendir(void);
+ 	cmd = extract_argv0_path(argv[0]);
+ 	if (!cmd)
+ 		cmd = "perf-help";
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4cd2cf93f726..150db5ed7400 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2862,7 +2862,7 @@ int perf_evsel__open_strerror(struct perf_evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 					 "Not enough memory to setup event with callchain.\n"
+ 					 "Hint: Try tweaking /proc/sys/kernel/perf_event_max_stack\n"
+-					 "Hint: Current value: %d", sysctl_perf_event_max_stack);
++					 "Hint: Current value: %d", sysctl__max_stack());
+ 		break;
+ 	case ENODEV:
+ 		if (target->cpu_list)
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 99ab52165680..eac5b858a371 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -62,6 +62,19 @@ int cacheline_size(void)
+ int sysctl_perf_event_max_stack = PERF_MAX_STACK_DEPTH;
+ int sysctl_perf_event_max_contexts_per_stack = PERF_MAX_CONTEXTS_PER_STACK;
  
- void tracing_path_set(const char *mountpoint);
++int sysctl__max_stack(void)
++{
++	int value;
++
++	if (sysctl__read_int("kernel/perf_event_max_stack", &value) == 0)
++		sysctl_perf_event_max_stack = value;
++
++	if (sysctl__read_int("kernel/perf_event_max_contexts_per_stack", &value) == 0)
++		sysctl_perf_event_max_contexts_per_stack = value;
++
++	return sysctl_perf_event_max_stack;
++}
++
+ bool test_attr__enabled;
+ 
+ bool perf_host  = true;
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 74d21dfe0d29..dc58254a2b69 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -45,6 +45,8 @@ int hex2u64(const char *ptr, u64 *val);
+ extern unsigned int page_size;
+ int __pure cacheline_size(void);
+ 
++int sysctl__max_stack(void);
++
+ int fetch_kernel_version(unsigned int *puint,
+ 			 char *str, size_t str_sz);
+ #define KVER_VERSION(x)		(((x) >> 16) & 0xff)
 -- 
 2.14.3
