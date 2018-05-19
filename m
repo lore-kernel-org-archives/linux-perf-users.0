@@ -1,102 +1,120 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/18] perf config: Call perf_config__init() lazily
-Date: Sat, 19 May 2018 07:54:50 -0300
-Message-ID: <20180519105507.16450-2-acme@kernel.org>
+Subject: [PATCH 04/18] tools lib api fs tracing_path: Introduce get/put_events_file() helpers
+Date: Sat, 19 May 2018 07:54:53 -0300
+Message-ID: <20180519105507.16450-5-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We check what perf_config__init() does at each perf_config() call,
-namely if the static perf_config instance was created, so instead of
-bailing out in that case, try to allocate it, bailing if it fails.
-
-Now to get the perf_config() call out of the start of perf's main()
-function, doing it also lazily.
+To make reading events files a tad more compact than with
+get_tracing_files("events/foo").
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-4bo45k6ivsmbxpfpdte4orsg@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-do6xgtwpmfl8zjs1euxsd2du@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/perf.c        |  1 -
- tools/perf/util/config.c | 16 +++++++++-------
- tools/perf/util/config.h |  1 -
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ tools/lib/api/fs/tracing_path.c    | 15 +++++++++++++++
+ tools/lib/api/fs/tracing_path.h    |  5 +++++
+ tools/perf/util/trace-event-info.c | 11 +++++------
+ 3 files changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 20a08cb32332..cd6ea55d4b0c 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -458,7 +458,6 @@ int main(int argc, const char **argv)
- 
- 	srandom(time(NULL));
- 
--	perf_config__init();
- 	err = perf_config(perf_default_config, NULL);
- 	if (err)
- 		return err;
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 84eb9393c7db..5ac157056cdf 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -707,6 +707,14 @@ struct perf_config_set *perf_config_set__new(void)
- 	return set;
+diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
+index 6f5fe942eff4..9cd282425929 100644
+--- a/tools/lib/api/fs/tracing_path.c
++++ b/tools/lib/api/fs/tracing_path.c
+@@ -86,6 +86,21 @@ void put_tracing_file(char *file)
+ 	free(file);
  }
  
-+static int perf_config__init(void)
++char *get_events_file(const char *name)
 +{
-+	if (config_set == NULL)
-+		config_set = perf_config_set__new();
++	char *file;
 +
-+	return config_set == NULL;
++	if (asprintf(&file, "%s/events/%s", tracing_path_mount(), name) < 0)
++		return NULL;
++
++	return file;
 +}
 +
- int perf_config(config_fn_t fn, void *data)
++void put_events_file(char *file)
++{
++	free(file);
++}
++
+ int tracing_path__strerror_open_tp(int err, char *buf, size_t size,
+ 				   const char *sys, const char *name)
  {
- 	int ret = 0;
-@@ -714,7 +722,7 @@ int perf_config(config_fn_t fn, void *data)
- 	struct perf_config_section *section;
- 	struct perf_config_item *item;
+diff --git a/tools/lib/api/fs/tracing_path.h b/tools/lib/api/fs/tracing_path.h
+index 1b65decedfc0..3b32fb439f12 100644
+--- a/tools/lib/api/fs/tracing_path.h
++++ b/tools/lib/api/fs/tracing_path.h
+@@ -12,5 +12,10 @@ const char *tracing_path_mount(void);
+ char *get_tracing_file(const char *name);
+ void put_tracing_file(char *file);
  
--	if (config_set == NULL)
-+	if (config_set == NULL && perf_config__init())
- 		return -1;
++char *get_events_file(const char *name);
++void put_events_file(char *file);
++
++#define zput_events_file(ptr) ({ free(*ptr); *ptr = NULL; })
++
+ int tracing_path__strerror_open_tp(int err, char *buf, size_t size, const char *sys, const char *name);
+ #endif /* __API_FS_TRACING_PATH_H */
+diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+index d7f2113462fb..c85d0d1a65ed 100644
+--- a/tools/perf/util/trace-event-info.c
++++ b/tools/perf/util/trace-event-info.c
+@@ -103,11 +103,10 @@ static int record_file(const char *file, ssize_t hdr_sz)
  
- 	perf_config_set__for_each_entry(config_set, section, item) {
-@@ -735,12 +743,6 @@ int perf_config(config_fn_t fn, void *data)
- 	return ret;
+ static int record_header_files(void)
+ {
+-	char *path;
++	char *path = get_events_file("header_page");
+ 	struct stat st;
+ 	int err = -EIO;
+ 
+-	path = get_tracing_file("events/header_page");
+ 	if (!path) {
+ 		pr_debug("can't get tracing/events/header_page");
+ 		return -ENOMEM;
+@@ -128,9 +127,9 @@ static int record_header_files(void)
+ 		goto out;
+ 	}
+ 
+-	put_tracing_file(path);
++	put_events_file(path);
+ 
+-	path = get_tracing_file("events/header_event");
++	path = get_events_file("header_event");
+ 	if (!path) {
+ 		pr_debug("can't get tracing/events/header_event");
+ 		err = -ENOMEM;
+@@ -154,7 +153,7 @@ static int record_header_files(void)
+ 
+ 	err = 0;
+ out:
+-	put_tracing_file(path);
++	put_events_file(path);
+ 	return err;
  }
  
--void perf_config__init(void)
--{
--	if (config_set == NULL)
--		config_set = perf_config_set__new();
--}
--
- void perf_config__exit(void)
- {
- 	perf_config_set__delete(config_set);
-diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
-index baf82bf227ac..bd0a5897c76a 100644
---- a/tools/perf/util/config.h
-+++ b/tools/perf/util/config.h
-@@ -38,7 +38,6 @@ struct perf_config_set *perf_config_set__new(void);
- void perf_config_set__delete(struct perf_config_set *set);
- int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
- 			     const char *var, const char *value);
--void perf_config__init(void);
- void perf_config__exit(void);
- void perf_config__refresh(void);
+@@ -243,7 +242,7 @@ static int record_ftrace_files(struct tracepoint_path *tps)
+ 	char *path;
+ 	int ret;
  
+-	path = get_tracing_file("events/ftrace");
++	path = get_events_file("ftrace");
+ 	if (!path) {
+ 		pr_debug("can't get tracing/events/ftrace");
+ 		return -ENOMEM;
 -- 
 2.14.3
