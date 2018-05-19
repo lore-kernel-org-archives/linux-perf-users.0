@@ -1,118 +1,152 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/18] perf script: Show virtual addresses instead of offsets
-Date: Sat, 19 May 2018 07:55:01 -0300
-Message-ID: <20180519105507.16450-13-acme@kernel.org>
+Subject: [PATCH 10/18] perf tools: Read the cache line size lazily
+Date: Sat, 19 May 2018 07:54:59 -0300
+Message-ID: <20180519105507.16450-11-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When perf data is recorded with the call-graph option enabled, the
-callchain shown by perf script shows the binary offsets of the symbols
-as the ip. This is incorrect for kernel symbols as the ip values are
-always off by a fixed offset depending on the architecture. If the
-offsets from the start of the symbols are printed, they are also
-incorrect for both kernel and userspace symbols.
+It is not read as commonly as 'page_size', so it makes sense to read it
+lazily, caching its value when it is first read.
 
-Without the call-graph option, the callchain shows the virtual addresses
-of the symbols rather than their binary offsets. The offsets printed in
-this case are also correct.
+Less files open unconditionally at startup.
 
-This fixes the inconsistency in perf script's output.
-
-This can be verified on a powerpc64le system running Fedora 27 as
-follows:
-
-  # cat /proc/kallsyms | grep sys_write
-  ...
-  c0000000004025a0 T sys_write
-  c0000000004025a0 T __se_sys_write
-  ...
-
-  # perf probe -a sys_write
-
-Before applying this patch:
-
-  # perf record -e probe:sys_write -g ~/test
-  # perf script -F ip,sym,symoff
-
-                    4125b0 sys_write+0x8000000000008010
-                     1b9e0 system_call+0x8000000000008058
-                    118234 __GI___libc_write+0xffff0000f52c0024
-                     92c74 _IO_file_write@@GLIBC_2.17+0xffff0000f52c0044
-                  5afbfd8a [unknown]
-                     91a60 new_do_write+0xffff0000f52c0090
-                     94638 _IO_do_write@@GLIBC_2.17+0xffff0000f52c0038
-                     94bbc _IO_file_overflow@@GLIBC_2.17+0xffff0000f52c014c
-                     95a24 __overflow+0xffff0000f52c0064
-                     84548 _IO_puts+0xffff0000f52c0218
-                       440 main+0xffffffffe0000020
-                     236a0 generic_start_main.isra.0+0xffff0000f52c0140
-                     23898 __libc_start_main+0xffff0000f52c00b8
-                         0 [unknown]
-  ...
-
-  # perf record -e probe:sys_write ~/test
-  # perf script -F ip,sym,symoff
-
-  c0000000004025b0 sys_write+0x10
-  ...
-
-After applying this patch:
-
-  # perf record -e probe:sys_write -g ~/test
-  # perf script -F ip,sym,symoff
-
-          c0000000004025b0 sys_write+0x10
-          c00000000000b9e0 system_call+0x58
-              7fffb70d8234 __GI___libc_write+0x24
-              7fffb7052c74 _IO_file_write@@GLIBC_2.17+0x44
-                  5afc1818 [unknown]
-              7fffb7051a60 new_do_write+0x90
-              7fffb7054638 _IO_do_write@@GLIBC_2.17+0x38
-              7fffb7054bbc _IO_file_overflow@@GLIBC_2.17+0x14c
-              7fffb7055a24 __overflow+0x64
-              7fffb7044548 _IO_puts+0x218
-                  10000440 main+0x20
-              7fffb6fe36a0 generic_start_main.isra.0+0x140
-              7fffb6fe3898 __libc_start_main+0xb8
-                         0 [unknown]
-  ...
-
-  # perf record -e probe:sys_write ~/test
-  # perf script -F ip,sym,symoff
-
-  c0000000004025b0 sys_write+0x10
-  ...
-
-Signed-off-by: Sandipan Das <sandipan@linux.vnet.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20180517063326.6319-1-sandipan@linux.vnet.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-35xhrq91u94uc1djtclek1ie@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/perf.c      | 11 -----------
+ tools/perf/util/sort.c |  4 ++--
+ tools/perf/util/sort.h |  4 ++--
+ tools/perf/util/util.c | 21 ++++++++++++++++++++-
+ tools/perf/util/util.h |  2 +-
+ 5 files changed, 25 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 72a351613d85..7c777cb32806 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1764,7 +1764,7 @@ static int add_callchain_ip(struct thread *thread,
- 	}
- 
- 	srcline = callchain_srcline(al.map, al.sym, al.addr);
--	return callchain_cursor_append(cursor, al.addr, al.map, al.sym,
-+	return callchain_cursor_append(cursor, ip, al.map, al.sym,
- 				       branch, flags, nr_loop_iter,
- 				       iter_cycles, branch_from, srcline);
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index d5a0878de816..cefd8f74630c 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -421,16 +421,6 @@ void pthread__unblock_sigwinch(void)
+ 	pthread_sigmask(SIG_UNBLOCK, &set, NULL);
  }
+ 
+-#ifdef _SC_LEVEL1_DCACHE_LINESIZE
+-#define cache_line_size(cacheline_sizep) *cacheline_sizep = sysconf(_SC_LEVEL1_DCACHE_LINESIZE)
+-#else
+-static void cache_line_size(int *cacheline_sizep)
+-{
+-	if (sysfs__read_int("devices/system/cpu/cpu0/cache/index0/coherency_line_size", cacheline_sizep))
+-		pr_debug("cannot determine cache line size");
+-}
+-#endif
+-
+ int main(int argc, const char **argv)
+ {
+ 	int err;
+@@ -444,7 +434,6 @@ int main(int argc, const char **argv)
+ 
+ 	/* The page_size is placed in util object. */
+ 	page_size = sysconf(_SC_PAGE_SIZE);
+-	cache_line_size(&cacheline_size);
+ 
+ 	if (sysctl__read_int("kernel/perf_event_max_stack", &value) == 0)
+ 		sysctl_perf_event_max_stack = value;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index e65903a695a6..4058ade352a5 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -2582,7 +2582,7 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+ 		if (sort__mode != SORT_MODE__MEMORY)
+ 			return -EINVAL;
+ 
+-		if (sd->entry == &sort_mem_dcacheline && cacheline_size == 0)
++		if (sd->entry == &sort_mem_dcacheline && cacheline_size() == 0)
+ 			return -EINVAL;
+ 
+ 		if (sd->entry == &sort_mem_daddr_sym)
+@@ -2628,7 +2628,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 		if (*tok) {
+ 			ret = sort_dimension__add(list, tok, evlist, level);
+ 			if (ret == -EINVAL) {
+-				if (!cacheline_size && !strncasecmp(tok, "dcacheline", strlen(tok)))
++				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
+ 					pr_err("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
+ 				else
+ 					pr_err("Invalid --sort key: `%s'", tok);
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 035b62e2c60b..9e6896293bbd 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -186,13 +186,13 @@ static inline float hist_entry__get_percent_limit(struct hist_entry *he)
+ static inline u64 cl_address(u64 address)
+ {
+ 	/* return the cacheline of the address */
+-	return (address & ~(cacheline_size - 1));
++	return (address & ~(cacheline_size() - 1));
+ }
+ 
+ static inline u64 cl_offset(u64 address)
+ {
+ 	/* return the cacheline of the address */
+-	return (address & (cacheline_size - 1));
++	return (address & (cacheline_size() - 1));
+ }
+ 
+ enum sort_mode {
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 1019bbc5dbd8..99ab52165680 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -38,7 +38,26 @@ void perf_set_multithreaded(void)
+ }
+ 
+ unsigned int page_size;
+-int cacheline_size;
++
++#ifdef _SC_LEVEL1_DCACHE_LINESIZE
++#define cache_line_size(cacheline_sizep) *cacheline_sizep = sysconf(_SC_LEVEL1_DCACHE_LINESIZE)
++#else
++static void cache_line_size(int *cacheline_sizep)
++{
++	if (sysfs__read_int("devices/system/cpu/cpu0/cache/index0/coherency_line_size", cacheline_sizep))
++		pr_debug("cannot determine cache line size");
++}
++#endif
++
++int cacheline_size(void)
++{
++	static int size;
++
++	if (!size)
++		cache_line_size(&size);
++
++	return size;
++}
+ 
+ int sysctl_perf_event_max_stack = PERF_MAX_STACK_DEPTH;
+ int sysctl_perf_event_max_contexts_per_stack = PERF_MAX_CONTEXTS_PER_STACK;
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index c9626c206208..74d21dfe0d29 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -43,7 +43,7 @@ size_t hex_width(u64 v);
+ int hex2u64(const char *ptr, u64 *val);
+ 
+ extern unsigned int page_size;
+-extern int cacheline_size;
++int __pure cacheline_size(void);
+ 
+ int fetch_kernel_version(unsigned int *puint,
+ 			 char *str, size_t str_sz);
 -- 
 2.14.3
