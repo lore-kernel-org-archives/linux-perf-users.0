@@ -1,54 +1,101 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/18] perf tools: Fix kernel_start for PTI on x86
-Date: Sat, 19 May 2018 07:55:07 -0300
-Message-ID: <20180519105507.16450-19-acme@kernel.org>
+Subject: [PATCH 14/18] perf annotate: Record the min/max cycles
+Date: Sat, 19 May 2018 07:55:03 -0300
+Message-ID: <20180519105507.16450-15-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-Opickn x86_64, PTI entry trampolines are less than the start of kernel text,
-but still above 2^63. So leave kernel_start = 1ULL << 63 for x86_64.
+Currently perf has a feature to account cycles for LBRs
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Jiri Olsa <jolsa@kernel.org>
+For example, on skylake:
+
+  perf record -b ...
+  perf report or perf annotate
+
+And then browsing the annotate browser gives average cycle counts for
+program blocks.
+
+For some analysis it would be useful if we could know not only the
+average cycles but also the min and max cycles.
+
+This patch records the min and max cycles.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/1526548928-20790-7-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1526569118-14217-2-git-send-email-yao.jin@linux.intel.com
+[ Switch from max/min to min/max ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 14 +++++++++++++-
+ tools/perf/util/annotate.h |  4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 107bae7676b1..e011a7160380 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2321,7 +2321,12 @@ int machine__get_kernel_start(struct machine *machine)
- 	machine->kernel_start = 1ULL << 63;
- 	if (map) {
- 		err = map__load(map);
--		if (!err)
-+		/*
-+		 * On x86_64, PTI entry trampolines are less than the
-+		 * start of kernel text, but still above 2^63. So leave
-+		 * kernel_start = 1ULL << 63 for x86_64.
-+		 */
-+		if (!err && !machine__is(machine, "x86_64"))
- 			machine->kernel_start = map->start;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 5d74a30fe00f..4fcfefea3bc2 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -760,6 +760,15 @@ static int __symbol__account_cycles(struct annotation *notes,
+ 	ch[offset].num_aggr++;
+ 	ch[offset].cycles_aggr += cycles;
+ 
++	if (cycles > ch[offset].cycles_max)
++		ch[offset].cycles_max = cycles;
++
++	if (ch[offset].cycles_min) {
++		if (cycles && cycles < ch[offset].cycles_min)
++			ch[offset].cycles_min = cycles;
++	} else
++		ch[offset].cycles_min = cycles;
++
+ 	if (!have_start && ch[offset].have_start)
+ 		return 0;
+ 	if (ch[offset].num) {
+@@ -953,8 +962,11 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
+ 			if (ch->have_start)
+ 				annotation__count_and_fill(notes, ch->start, offset, ch);
+ 			al = notes->offsets[offset];
+-			if (al && ch->num_aggr)
++			if (al && ch->num_aggr) {
+ 				al->cycles = ch->cycles_aggr / ch->num_aggr;
++				al->cycles_max = ch->cycles_max;
++				al->cycles_min = ch->cycles_min;
++			}
+ 			notes->have_cycles = true;
+ 		}
  	}
- 	return err;
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index f28a9e43421d..d50363d56f73 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -105,6 +105,8 @@ struct annotation_line {
+ 	int			 jump_sources;
+ 	float			 ipc;
+ 	u64			 cycles;
++	u64			 cycles_max;
++	u64			 cycles_min;
+ 	size_t			 privsize;
+ 	char			*path;
+ 	u32			 idx;
+@@ -186,6 +188,8 @@ struct cyc_hist {
+ 	u64	start;
+ 	u64	cycles;
+ 	u64	cycles_aggr;
++	u64	cycles_max;
++	u64	cycles_min;
+ 	u32	num;
+ 	u32	num_aggr;
+ 	u8	have_start;
 -- 
 2.14.3
