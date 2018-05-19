@@ -1,182 +1,182 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/18] perf script: Show symbol offsets by default
-Date: Sat, 19 May 2018 07:55:02 -0300
-Message-ID: <20180519105507.16450-14-acme@kernel.org>
+Subject: [PATCH 15/18] perf annotate: Create hotkey 'c' to show min/max cycles
+Date: Sat, 19 May 2018 07:55:04 -0300
+Message-ID: <20180519105507.16450-16-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.vnet.ibm.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-Since the ip shown for a symbol is now always a virtual address, it
-becomes difficult to correlate this with objdump output and determine
-the exact instruction address. So, we always show the offset from the
-start of the symbol.
+In the 'perf annotate' view, a new hotkey 'c' is created for showing the
+min/max cycles.
 
-This can be verified on a powerpc64le system running Fedora 27 as
-follows:
+For example, when press 'c', the annotate view is:
 
-  # perf probe -a sys_write
-  # perf record -e probe:sys_write -g ~/test
+  Percent│ IPC     Cycle(min/max)
+         │
+         │
+         │                             Disassembly of section .text:
+         │
+         │                             000000000003aab0 <random@@GLIBC_2.2.5>:
+    8.22 │3.92                           sub    $0x18,%rsp
+         │3.92                           mov    $0x1,%esi
+         │3.92                           xor    %eax,%eax
+         │3.92                           cmpl   $0x0,argp_program_version_hook@@G
+         │3.92             1(2/1)      ↓ je     20
+         │                               lock   cmpxchg %esi,__abort_msg@@GLIBC_P
+         │                             ↓ jne    29
+         │                             ↓ jmp    43
+         │1.10                     20:   cmpxchg %esi,__abort_msg@@GLIBC_PRIVATE+
+    8.93 │1.10             1(5/1)      ↓ je     43
 
-Before applying this patch:
+When press 'c' again, the annotate view is switched back:
 
-  # perf script
+  Percent│ IPC Cycle
+         │
+         │
+         │                Disassembly of section .text:
+         │
+         │                000000000003aab0 <random@@GLIBC_2.2.5>:
+    8.22 │3.92              sub    $0x18,%rsp
+         │3.92              mov    $0x1,%esi
+         │3.92              xor    %eax,%eax
+         │3.92              cmpl   $0x0,argp_program_version_hook@@GLIBC_2.2.5+0x
+         │3.92     1      ↓ je     20
+         │                  lock   cmpxchg %esi,__abort_msg@@GLIBC_PRIVATE+0x8a0
+         │                ↓ jne    29
+         │                ↓ jmp    43
+         │1.10        20:   cmpxchg %esi,__abort_msg@@GLIBC_PRIVATE+0x8a0
+    8.93 │1.10     1      ↓ je     43
 
-  test  9710 [013] 95614.332431: probe:sys_write: (c0000000004025b0)
-          c0000000004025b0 sys_write (/lib/modules/4.17.0-rc4+/build/vmlinux)
-          c00000000000b9e0 system_call (/lib/modules/4.17.0-rc4+/build/vmlinux)
-              7fffb70d8234 __GI___libc_write (/usr/lib64/libc-2.26.so)
-              7fffb7052c74 _IO_file_write@@GLIBC_2.17 (/usr/lib64/libc-2.26.so)
-                  5afc1818 [unknown] ([unknown])
-              7fffb7051a60 new_do_write (/usr/lib64/libc-2.26.so)
-              7fffb7054638 _IO_do_write@@GLIBC_2.17 (/usr/lib64/libc-2.26.so)
-              7fffb7054bbc _IO_file_overflow@@GLIBC_2.17 (/usr/lib64/libc-2.26.so)
-              7fffb7055a24 __overflow (/usr/lib64/libc-2.26.so)
-              7fffb7044548 _IO_puts (/usr/lib64/libc-2.26.so)
-                  10000440 main (/home/sandipan/test)
-              7fffb6fe36a0 generic_start_main.isra.0 (/usr/lib64/libc-2.26.so)
-              7fffb6fe3898 __libc_start_main (/usr/lib64/libc-2.26.so)
-                         0 [unknown] ([unknown])
-  ...
-
-After applying this patch:
-
-  # perf script
-
-  test  9710 [013] 95614.332431: probe:sys_write: (c0000000004025b0)
-          c0000000004025b0 sys_write+0x10 (/lib/modules/4.17.0-rc4+/build/vmlinux)
-          c00000000000b9e0 system_call+0x58 (/lib/modules/4.17.0-rc4+/build/vmlinux)
-              7fffb70d8234 __GI___libc_write+0x24 (/usr/lib64/libc-2.26.so)
-              7fffb7052c74 _IO_file_write@@GLIBC_2.17+0x44 (/usr/lib64/libc-2.26.so)
-                  5afc1818 [unknown] ([unknown])
-              7fffb7051a60 new_do_write+0x90 (/usr/lib64/libc-2.26.so)
-              7fffb7054638 _IO_do_write@@GLIBC_2.17+0x38 (/usr/lib64/libc-2.26.so)
-              7fffb7054bbc _IO_file_overflow@@GLIBC_2.17+0x14c (/usr/lib64/libc-2.26.so)
-              7fffb7055a24 __overflow+0x64 (/usr/lib64/libc-2.26.so)
-              7fffb7044548 _IO_puts+0x218 (/usr/lib64/libc-2.26.so)
-                  10000440 main+0x20 (/home/sandipan/test)
-              7fffb6fe36a0 generic_start_main.isra.0+0x140 (/usr/lib64/libc-2.26.so)
-              7fffb6fe3898 __libc_start_main+0xb8 (/usr/lib64/libc-2.26.so)
-                         0 [unknown] ([unknown])
-  ...
-
-Signed-off-by: Sandipan Das <sandipan@linux.vnet.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20180517063326.6319-2-sandipan@linux.vnet.ibm.com
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1526569118-14217-3-git-send-email-yao.jin@linux.intel.com
+[ Rename all maxmin to minmax ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c                        | 26 ++++++++++++----------
- .../tests/shell/record+probe_libc_inet_pton.sh     | 12 +++++-----
- 2 files changed, 20 insertions(+), 18 deletions(-)
+ tools/perf/ui/browsers/annotate.c |  8 ++++++++
+ tools/perf/util/annotate.c        | 37 +++++++++++++++++++++++++++++++------
+ tools/perf/util/annotate.h        |  7 ++++++-
+ 3 files changed, 45 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fa2c7a288750..cefc8813e91e 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -153,8 +153,8 @@ static struct {
- 		.fields = PERF_OUTPUT_COMM | PERF_OUTPUT_TID |
- 			      PERF_OUTPUT_CPU | PERF_OUTPUT_TIME |
- 			      PERF_OUTPUT_EVNAME | PERF_OUTPUT_IP |
--			      PERF_OUTPUT_SYM | PERF_OUTPUT_DSO |
--			      PERF_OUTPUT_PERIOD,
-+			      PERF_OUTPUT_SYM | PERF_OUTPUT_SYMOFFSET |
-+			      PERF_OUTPUT_DSO | PERF_OUTPUT_PERIOD,
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 3781d74088a7..8be40fa903aa 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -695,6 +695,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		"O             Bump offset level (jump targets -> +call -> all -> cycle thru)\n"
+ 		"s             Toggle source code view\n"
+ 		"t             Circulate percent, total period, samples view\n"
++		"c             Show min/max cycle\n"
+ 		"/             Search string\n"
+ 		"k             Toggle line numbers\n"
+ 		"P             Print to [symbol_name].annotation file.\n"
+@@ -791,6 +792,13 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 				notes->options->show_total_period = true;
+ 			annotation__update_column_widths(notes);
+ 			continue;
++		case 'c':
++			if (notes->options->show_minmax_cycle)
++				notes->options->show_minmax_cycle = false;
++			else
++				notes->options->show_minmax_cycle = true;
++			annotation__update_column_widths(notes);
++			continue;
+ 		case K_LEFT:
+ 		case K_ESC:
+ 		case 'q':
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 4fcfefea3bc2..6612c7f90af4 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2498,13 +2498,38 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+ 		else
+ 			obj__printf(obj, "%*s ", ANNOTATION__IPC_WIDTH - 1, "IPC");
  
- 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
- 	},
-@@ -165,8 +165,9 @@ static struct {
- 		.fields = PERF_OUTPUT_COMM | PERF_OUTPUT_TID |
- 			      PERF_OUTPUT_CPU | PERF_OUTPUT_TIME |
- 			      PERF_OUTPUT_EVNAME | PERF_OUTPUT_IP |
--			      PERF_OUTPUT_SYM | PERF_OUTPUT_DSO |
--			      PERF_OUTPUT_PERIOD | PERF_OUTPUT_BPF_OUTPUT,
-+			      PERF_OUTPUT_SYM | PERF_OUTPUT_SYMOFFSET |
-+			      PERF_OUTPUT_DSO | PERF_OUTPUT_PERIOD |
-+			      PERF_OUTPUT_BPF_OUTPUT,
+-		if (al->cycles)
+-			obj__printf(obj, "%*" PRIu64 " ",
++		if (!notes->options->show_minmax_cycle) {
++			if (al->cycles)
++				obj__printf(obj, "%*" PRIu64 " ",
+ 					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles);
+-		else if (!show_title)
+-			obj__printf(obj, "%*s", ANNOTATION__CYCLES_WIDTH, " ");
+-		else
+-			obj__printf(obj, "%*s ", ANNOTATION__CYCLES_WIDTH - 1, "Cycle");
++			else if (!show_title)
++				obj__printf(obj, "%*s",
++					    ANNOTATION__CYCLES_WIDTH, " ");
++			else
++				obj__printf(obj, "%*s ",
++					    ANNOTATION__CYCLES_WIDTH - 1,
++					    "Cycle");
++		} else {
++			if (al->cycles) {
++				char str[32];
++
++				scnprintf(str, sizeof(str),
++					"%" PRIu64 "(%" PRIu64 "/%" PRIu64 ")",
++					al->cycles, al->cycles_min,
++					al->cycles_max);
++
++				obj__printf(obj, "%*s ",
++					    ANNOTATION__MINMAX_CYCLES_WIDTH - 1,
++					    str);
++			} else if (!show_title)
++				obj__printf(obj, "%*s",
++					    ANNOTATION__MINMAX_CYCLES_WIDTH,
++					    " ");
++			else
++				obj__printf(obj, "%*s ",
++					    ANNOTATION__MINMAX_CYCLES_WIDTH - 1,
++					    "Cycle(min/max)");
++		}
+ 	}
  
- 		.invalid_fields = PERF_OUTPUT_TRACE,
- 	},
-@@ -185,10 +186,10 @@ static struct {
- 		.fields = PERF_OUTPUT_COMM | PERF_OUTPUT_TID |
- 			      PERF_OUTPUT_CPU | PERF_OUTPUT_TIME |
- 			      PERF_OUTPUT_EVNAME | PERF_OUTPUT_IP |
--			      PERF_OUTPUT_SYM | PERF_OUTPUT_DSO |
--			      PERF_OUTPUT_PERIOD |  PERF_OUTPUT_ADDR |
--			      PERF_OUTPUT_DATA_SRC | PERF_OUTPUT_WEIGHT |
--			      PERF_OUTPUT_PHYS_ADDR,
-+			      PERF_OUTPUT_SYM | PERF_OUTPUT_SYMOFFSET |
-+			      PERF_OUTPUT_DSO | PERF_OUTPUT_PERIOD |
-+			      PERF_OUTPUT_ADDR | PERF_OUTPUT_DATA_SRC |
-+			      PERF_OUTPUT_WEIGHT | PERF_OUTPUT_PHYS_ADDR,
+ 	obj__printf(obj, " ");
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index d50363d56f73..5080b6dd98b8 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -61,6 +61,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
  
- 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
- 	},
-@@ -199,8 +200,8 @@ static struct {
- 		.fields = PERF_OUTPUT_COMM | PERF_OUTPUT_TID |
- 			      PERF_OUTPUT_CPU | PERF_OUTPUT_TIME |
- 			      PERF_OUTPUT_EVNAME | PERF_OUTPUT_IP |
--			      PERF_OUTPUT_SYM | PERF_OUTPUT_DSO |
--			      PERF_OUTPUT_PERIOD,
-+			      PERF_OUTPUT_SYM | PERF_OUTPUT_SYMOFFSET |
-+			      PERF_OUTPUT_DSO | PERF_OUTPUT_PERIOD,
+ #define ANNOTATION__IPC_WIDTH 6
+ #define ANNOTATION__CYCLES_WIDTH 6
++#define ANNOTATION__MINMAX_CYCLES_WIDTH 19
  
- 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
- 	},
-@@ -211,8 +212,8 @@ static struct {
- 		.fields = PERF_OUTPUT_COMM | PERF_OUTPUT_TID |
- 			      PERF_OUTPUT_CPU | PERF_OUTPUT_TIME |
- 			      PERF_OUTPUT_EVNAME | PERF_OUTPUT_IP |
--			      PERF_OUTPUT_SYM | PERF_OUTPUT_DSO |
--			      PERF_OUTPUT_SYNTH,
-+			      PERF_OUTPUT_SYM | PERF_OUTPUT_SYMOFFSET |
-+			      PERF_OUTPUT_DSO | PERF_OUTPUT_SYNTH,
+ struct annotation_options {
+ 	bool hide_src_code,
+@@ -69,7 +70,8 @@ struct annotation_options {
+ 	     show_linenr,
+ 	     show_nr_jumps,
+ 	     show_nr_samples,
+-	     show_total_period;
++	     show_total_period,
++	     show_minmax_cycle;
+ 	u8   offset_level;
+ };
  
- 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
- 	},
-@@ -544,6 +545,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
- 			if (attr->sample_type & PERF_SAMPLE_CALLCHAIN) {
- 				output[j].fields |= PERF_OUTPUT_IP;
- 				output[j].fields |= PERF_OUTPUT_SYM;
-+				output[j].fields |= PERF_OUTPUT_SYMOFFSET;
- 				output[j].fields |= PERF_OUTPUT_DSO;
- 				set_print_ip_opts(attr);
- 				goto out;
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index ee86473643be..650b208f700f 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -16,18 +16,18 @@ nm -g $libc 2>/dev/null | fgrep -q inet_pton || exit 254
- trace_libc_inet_pton_backtrace() {
- 	idx=0
- 	expected[0]="ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)"
--	expected[1]=".*inet_pton[[:space:]]\($libc|inlined\)$"
-+	expected[1]=".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$"
- 	case "$(uname -m)" in
- 	s390x)
- 		eventattr='call-graph=dwarf,max-stack=4'
--		expected[2]="gaih_inet.*[[:space:]]\($libc|inlined\)$"
--		expected[3]="(__GI_)?getaddrinfo[[:space:]]\($libc|inlined\)$"
--		expected[4]="main[[:space:]]\(.*/bin/ping.*\)$"
-+		expected[2]="gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$"
-+		expected[3]="(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$"
-+		expected[4]="main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
- 		;;
- 	*)
- 		eventattr='max-stack=3'
--		expected[2]="getaddrinfo[[:space:]]\($libc\)$"
--		expected[3]=".*\(.*/bin/ping.*\)$"
-+		expected[2]="getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$"
-+		expected[3]=".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
- 		;;
- 	esac
+@@ -243,6 +245,9 @@ struct annotation {
+ 
+ static inline int annotation__cycles_width(struct annotation *notes)
+ {
++	if (notes->have_cycles && notes->options->show_minmax_cycle)
++		return ANNOTATION__IPC_WIDTH + ANNOTATION__MINMAX_CYCLES_WIDTH;
++
+ 	return notes->have_cycles ? ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH : 0;
+ }
  
 -- 
 2.14.3
