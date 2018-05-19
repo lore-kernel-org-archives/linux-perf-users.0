@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/18] perf parse-events: Use get/put_events_file()
-Date: Sat, 19 May 2018 07:54:55 -0300
-Message-ID: <20180519105507.16450-7-acme@kernel.org>
+Subject: [PATCH 05/18] perf tools: Reuse the path to the tracepoint /events/ directory
+Date: Sat, 19 May 2018 07:54:54 -0300
+Message-ID: <20180519105507.16450-6-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
@@ -12,232 +12,82 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Instead of accessing the trace_events_path variable directly, that may
-not have been properly initialized wrt detecting where tracefs is
-mounted.
+When using for_each_event() we needlessly rebuild the whole path to
+the tracepoint directory, reuse the dir_path instead, saving some cycles
+and reducing the size of the next patch.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-id7hzn1ydgkxbumeve5wapqz@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-54bcs15n0cp6gwcgpc4hptyc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/parse-events.c |  7 +++---
- tools/perf/util/parse-events.c  | 50 +++++++++++++++++++++++++++--------------
- tools/perf/util/trace-event.c   |  8 +++++--
- 3 files changed, 43 insertions(+), 22 deletions(-)
+ tools/perf/util/parse-events.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 6829dd416a99..6d57d7082637 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1328,7 +1328,7 @@ static int count_tracepoints(void)
- 	TEST_ASSERT_VAL("Can't open events dir", events_dir);
- 
- 	while ((events_ent = readdir(events_dir))) {
--		char sys_path[PATH_MAX];
-+		char *sys_path;
- 		struct dirent *sys_ent;
- 		DIR *sys_dir;
- 
-@@ -1339,8 +1339,8 @@ static int count_tracepoints(void)
- 		    || !strcmp(events_ent->d_name, "header_page"))
- 			continue;
- 
--		scnprintf(sys_path, PATH_MAX, "%s/%s",
--			  tracing_events_path, events_ent->d_name);
-+		sys_path = get_events_file(events_ent->d_name);
-+		TEST_ASSERT_VAL("Can't get sys path", sys_path);
- 
- 		sys_dir = opendir(sys_path);
- 		TEST_ASSERT_VAL("Can't open sys dir", sys_dir);
-@@ -1356,6 +1356,7 @@ static int count_tracepoints(void)
- 		}
- 
- 		closedir(sys_dir);
-+		put_events_file(sys_path);
- 	}
- 
- 	closedir(events_dir);
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index f9d5bbd63484..24668300b327 100644
+index 2fc4ee8b86c1..f9d5bbd63484 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -189,19 +189,19 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 	int fd;
- 	u64 id;
- 	char evt_path[MAXPATHLEN];
--	char dir_path[MAXPATHLEN];
-+	char *dir_path;
+@@ -156,13 +156,12 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+ 		    (strcmp(sys_dirent->d_name, ".")) &&	\
+ 		    (strcmp(sys_dirent->d_name, "..")))
  
- 	sys_dir = opendir(tracing_events_path);
- 	if (!sys_dir)
- 		return NULL;
- 
- 	for_each_subsystem(sys_dir, sys_dirent) {
--
--		snprintf(dir_path, MAXPATHLEN, "%s/%s", tracing_events_path,
--			 sys_dirent->d_name);
-+		dir_path = get_events_file(sys_dirent->d_name);
-+		if (!dir_path)
-+			continue;
- 		evt_dir = opendir(dir_path);
- 		if (!evt_dir)
--			continue;
-+			goto next;
- 
- 		for_each_event(dir_path, evt_dir, evt_dirent) {
- 
-@@ -217,6 +217,7 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 			close(fd);
- 			id = atoll(id_buf);
- 			if (id == config) {
-+				put_events_file(dir_path);
- 				closedir(evt_dir);
- 				closedir(sys_dir);
- 				path = zalloc(sizeof(*path));
-@@ -241,6 +242,8 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 			}
- 		}
- 		closedir(evt_dir);
-+next:
-+		put_events_file(dir_path);
- 	}
- 
- 	closedir(sys_dir);
-@@ -511,14 +514,19 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 				      struct parse_events_error *err,
- 				      struct list_head *head_config)
+-static int tp_event_has_id(struct dirent *sys_dir, struct dirent *evt_dir)
++static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
  {
--	char evt_path[MAXPATHLEN];
-+	char *evt_path;
- 	struct dirent *evt_ent;
- 	DIR *evt_dir;
- 	int ret = 0, found = 0;
- 
--	snprintf(evt_path, MAXPATHLEN, "%s/%s", tracing_events_path, sys_name);
-+	evt_path = get_events_file(sys_name);
-+	if (!evt_path) {
-+		tracepoint_error(err, errno, sys_name, evt_name);
-+		return -1;
-+	}
- 	evt_dir = opendir(evt_path);
- 	if (!evt_dir) {
-+		put_events_file(evt_path);
- 		tracepoint_error(err, errno, sys_name, evt_name);
- 		return -1;
- 	}
-@@ -544,6 +552,7 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 		ret = -1;
- 	}
- 
-+	put_events_file(evt_path);
- 	closedir(evt_dir);
- 	return ret;
- }
-@@ -2091,7 +2100,7 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
- 	DIR *sys_dir, *evt_dir;
- 	struct dirent *sys_dirent, *evt_dirent;
  	char evt_path[MAXPATHLEN];
--	char dir_path[MAXPATHLEN];
-+	char *dir_path;
- 	char **evt_list = NULL;
- 	unsigned int evt_i = 0, evt_num = 0;
- 	bool evt_num_known = false;
-@@ -2112,11 +2121,12 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
- 		    !strglobmatch(sys_dirent->d_name, subsys_glob))
+ 	int fd;
+ 
+-	snprintf(evt_path, MAXPATHLEN, "%s/%s/%s/id", tracing_events_path,
+-			sys_dir->d_name, evt_dir->d_name);
++	snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
+ 	fd = open(evt_path, O_RDONLY);
+ 	if (fd < 0)
+ 		return -EINVAL;
+@@ -171,12 +170,12 @@ static int tp_event_has_id(struct dirent *sys_dir, struct dirent *evt_dir)
+ 	return 0;
+ }
+ 
+-#define for_each_event(sys_dirent, evt_dir, evt_dirent)		\
++#define for_each_event(dir_path, evt_dir, evt_dirent)		\
+ 	while ((evt_dirent = readdir(evt_dir)) != NULL)		\
+ 		if (evt_dirent->d_type == DT_DIR &&		\
+ 		    (strcmp(evt_dirent->d_name, ".")) &&	\
+ 		    (strcmp(evt_dirent->d_name, "..")) &&	\
+-		    (!tp_event_has_id(sys_dirent, evt_dirent)))
++		    (!tp_event_has_id(dir_path, evt_dirent)))
+ 
+ #define MAX_EVENT_LENGTH 512
+ 
+@@ -204,7 +203,7 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+ 		if (!evt_dir)
  			continue;
  
--		snprintf(dir_path, MAXPATHLEN, "%s/%s", tracing_events_path,
--			 sys_dirent->d_name);
-+		dir_path = get_events_file(sys_dirent->d_name);
-+		if (!dir_path)
-+			continue;
- 		evt_dir = opendir(dir_path);
- 		if (!evt_dir)
--			continue;
-+			goto next;
+-		for_each_event(sys_dirent, evt_dir, evt_dirent) {
++		for_each_event(dir_path, evt_dir, evt_dirent) {
  
- 		for_each_event(dir_path, evt_dir, evt_dirent) {
+ 			scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
+ 				  evt_dirent->d_name);
+@@ -2119,7 +2118,7 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
+ 		if (!evt_dir)
+ 			continue;
+ 
+-		for_each_event(sys_dirent, evt_dir, evt_dirent) {
++		for_each_event(dir_path, evt_dir, evt_dirent) {
  			if (event_glob != NULL &&
-@@ -2132,11 +2142,15 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
- 				 sys_dirent->d_name, evt_dirent->d_name);
- 
- 			evt_list[evt_i] = strdup(evt_path);
--			if (evt_list[evt_i] == NULL)
-+			if (evt_list[evt_i] == NULL) {
-+				put_events_file(dir_path);
- 				goto out_close_evt_dir;
-+			}
- 			evt_i++;
- 		}
- 		closedir(evt_dir);
-+next:
-+		put_events_file(dir_path);
- 	}
- 	closedir(sys_dir);
- 
-@@ -2184,19 +2198,19 @@ int is_valid_tracepoint(const char *event_string)
- 	DIR *sys_dir, *evt_dir;
- 	struct dirent *sys_dirent, *evt_dirent;
- 	char evt_path[MAXPATHLEN];
--	char dir_path[MAXPATHLEN];
-+	char *dir_path;
- 
- 	sys_dir = opendir(tracing_events_path);
- 	if (!sys_dir)
- 		return 0;
- 
- 	for_each_subsystem(sys_dir, sys_dirent) {
--
--		snprintf(dir_path, MAXPATHLEN, "%s/%s", tracing_events_path,
--			 sys_dirent->d_name);
-+		dir_path = get_events_file(sys_dirent->d_name);
-+		if (!dir_path)
-+			continue;
- 		evt_dir = opendir(dir_path);
+ 			    !strglobmatch(evt_dirent->d_name, event_glob))
+ 				continue;
+@@ -2199,7 +2198,7 @@ int is_valid_tracepoint(const char *event_string)
  		if (!evt_dir)
--			continue;
-+			goto next;
+ 			continue;
  
- 		for_each_event(dir_path, evt_dir, evt_dirent) {
+-		for_each_event(sys_dirent, evt_dir, evt_dirent) {
++		for_each_event(dir_path, evt_dir, evt_dirent) {
  			snprintf(evt_path, MAXPATHLEN, "%s:%s",
-@@ -2208,6 +2222,8 @@ int is_valid_tracepoint(const char *event_string)
- 			}
- 		}
- 		closedir(evt_dir);
-+next:
-+		put_events_file(dir_path);
- 	}
- 	closedir(sys_dir);
- 	return 0;
-diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
-index 16a776371d03..1aa368603268 100644
---- a/tools/perf/util/trace-event.c
-+++ b/tools/perf/util/trace-event.c
-@@ -75,6 +75,7 @@ void trace_event__cleanup(struct trace_event *t)
- static struct event_format*
- tp_format(const char *sys, const char *name)
- {
-+	char *tp_dir = get_events_file(sys);
- 	struct pevent *pevent = tevent.pevent;
- 	struct event_format *event = NULL;
- 	char path[PATH_MAX];
-@@ -82,8 +83,11 @@ tp_format(const char *sys, const char *name)
- 	char *data;
- 	int err;
- 
--	scnprintf(path, PATH_MAX, "%s/%s/%s/format",
--		  tracing_events_path, sys, name);
-+	if (!tp_dir)
-+		return ERR_PTR(-errno);
-+
-+	scnprintf(path, PATH_MAX, "%s/%s/format", tp_dir, name);
-+	put_events_file(tp_dir);
- 
- 	err = filename__read_str(path, &data, &size);
- 	if (err)
+ 				 sys_dirent->d_name, evt_dirent->d_name);
+ 			if (!strcmp(evt_path, event_string)) {
 -- 
 2.14.3
