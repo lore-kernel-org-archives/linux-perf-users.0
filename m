@@ -1,104 +1,102 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/18] tools lib api: Unexport 'tracing_path' variable
-Date: Sat, 19 May 2018 07:54:52 -0300
-Message-ID: <20180519105507.16450-4-acme@kernel.org>
+Subject: [PATCH 01/18] perf config: Call perf_config__init() lazily
+Date: Sat, 19 May 2018 07:54:50 -0300
+Message-ID: <20180519105507.16450-2-acme@kernel.org>
 References: <20180519105507.16450-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Taeung Song <treeze.taeung@gmail.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-One should use tracing_path_mount() instead, so more things get done
-lazily instead of at every 'perf' tool call startup.
+We check what perf_config__init() does at each perf_config() call,
+namely if the static perf_config instance was created, so instead of
+bailing out in that case, try to allocate it, bailing if it fails.
+
+Now to get the perf_config() call out of the start of perf's main()
+function, doing it also lazily.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Taeung Song <treeze.taeung@gmail.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-fci4yll35idd9yuslp67vqc2@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-4bo45k6ivsmbxpfpdte4orsg@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/api/fs/tracing_path.c | 4 ++--
- tools/lib/api/fs/tracing_path.h | 1 -
- tools/perf/perf.c               | 5 +----
- tools/perf/util/probe-file.c    | 3 +--
- 4 files changed, 4 insertions(+), 9 deletions(-)
+ tools/perf/perf.c        |  1 -
+ tools/perf/util/config.c | 16 +++++++++-------
+ tools/perf/util/config.h |  1 -
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
-index 4f8ec7d476b8..6f5fe942eff4 100644
---- a/tools/lib/api/fs/tracing_path.c
-+++ b/tools/lib/api/fs/tracing_path.c
-@@ -14,7 +14,7 @@
- #include "tracing_path.h"
- 
- static char tracing_mnt[PATH_MAX]  = "/sys/kernel/debug";
--char tracing_path[PATH_MAX]        = "/sys/kernel/debug/tracing";
-+static char tracing_path[PATH_MAX]        = "/sys/kernel/debug/tracing";
- char tracing_events_path[PATH_MAX] = "/sys/kernel/debug/tracing/events";
- 
- 
-@@ -75,7 +75,7 @@ char *get_tracing_file(const char *name)
- {
- 	char *file;
- 
--	if (asprintf(&file, "%s/%s", tracing_path, name) < 0)
-+	if (asprintf(&file, "%s/%s", tracing_path_mount(), name) < 0)
- 		return NULL;
- 
- 	return file;
-diff --git a/tools/lib/api/fs/tracing_path.h b/tools/lib/api/fs/tracing_path.h
-index 0066f06cc381..1b65decedfc0 100644
---- a/tools/lib/api/fs/tracing_path.h
-+++ b/tools/lib/api/fs/tracing_path.h
-@@ -4,7 +4,6 @@
- 
- #include <linux/types.h>
- 
--extern char tracing_path[];
- extern char tracing_events_path[];
- 
- void tracing_path_set(const char *mountpoint);
 diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index cd6ea55d4b0c..d5a0878de816 100644
+index 20a08cb32332..cd6ea55d4b0c 100644
 --- a/tools/perf/perf.c
 +++ b/tools/perf/perf.c
-@@ -238,7 +238,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
- 			(*argc)--;
- 		} else if (strstarts(cmd, CMD_DEBUGFS_DIR)) {
- 			tracing_path_set(cmd + strlen(CMD_DEBUGFS_DIR));
--			fprintf(stderr, "dir: %s\n", tracing_path);
-+			fprintf(stderr, "dir: %s\n", tracing_path_mount());
- 			if (envchanged)
- 				*envchanged = 1;
- 		} else if (!strcmp(cmd, "--list-cmds")) {
-@@ -463,9 +463,6 @@ int main(int argc, const char **argv)
+@@ -458,7 +458,6 @@ int main(int argc, const char **argv)
+ 
+ 	srandom(time(NULL));
+ 
+-	perf_config__init();
+ 	err = perf_config(perf_default_config, NULL);
+ 	if (err)
  		return err;
- 	set_buildid_dir(NULL);
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 84eb9393c7db..5ac157056cdf 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -707,6 +707,14 @@ struct perf_config_set *perf_config_set__new(void)
+ 	return set;
+ }
  
--	/* get debugfs/tracefs mount point from /proc/mounts */
--	tracing_path_mount();
++static int perf_config__init(void)
++{
++	if (config_set == NULL)
++		config_set = perf_config_set__new();
++
++	return config_set == NULL;
++}
++
+ int perf_config(config_fn_t fn, void *data)
+ {
+ 	int ret = 0;
+@@ -714,7 +722,7 @@ int perf_config(config_fn_t fn, void *data)
+ 	struct perf_config_section *section;
+ 	struct perf_config_item *item;
+ 
+-	if (config_set == NULL)
++	if (config_set == NULL && perf_config__init())
+ 		return -1;
+ 
+ 	perf_config_set__for_each_entry(config_set, section, item) {
+@@ -735,12 +743,6 @@ int perf_config(config_fn_t fn, void *data)
+ 	return ret;
+ }
+ 
+-void perf_config__init(void)
+-{
+-	if (config_set == NULL)
+-		config_set = perf_config_set__new();
+-}
 -
- 	/*
- 	 * "perf-xxxx" is the same as "perf xxxx", but we obviously:
- 	 *
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 4ae1123c6794..b76088fadf3d 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -84,8 +84,7 @@ int open_trace_file(const char *trace_file, bool readwrite)
- 	char buf[PATH_MAX];
- 	int ret;
+ void perf_config__exit(void)
+ {
+ 	perf_config_set__delete(config_set);
+diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
+index baf82bf227ac..bd0a5897c76a 100644
+--- a/tools/perf/util/config.h
++++ b/tools/perf/util/config.h
+@@ -38,7 +38,6 @@ struct perf_config_set *perf_config_set__new(void);
+ void perf_config_set__delete(struct perf_config_set *set);
+ int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
+ 			     const char *var, const char *value);
+-void perf_config__init(void);
+ void perf_config__exit(void);
+ void perf_config__refresh(void);
  
--	ret = e_snprintf(buf, PATH_MAX, "%s/%s",
--			 tracing_path, trace_file);
-+	ret = e_snprintf(buf, PATH_MAX, "%s/%s", tracing_path_mount(), trace_file);
- 	if (ret >= 0) {
- 		pr_debug("Opening %s write=%d\n", buf, readwrite);
- 		if (readwrite && !probe_event_dry_run)
 -- 
 2.14.3
