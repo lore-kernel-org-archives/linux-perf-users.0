@@ -1,93 +1,120 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/18] perf tools: Reuse the path to the tracepoint /events/ directory
-Date: Sat, 19 May 2018 07:54:54 -0300
-Message-ID: <20180519105507.16450-6-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/18] perf/core improvements and fixes
+Date: Sat, 19 May 2018 13:33:58 +0200
+Message-ID: <20180519113358.GA784@gmail.com>
 References: <20180519105507.16450-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180519105507.16450-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, David Ahern <dsahern@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sandipan Das <sandipan@linux.vnet.ibm.com>, Taeung Song <treeze.taeung@gm>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When using for_each_event() we needlessly rebuild the whole path to
-the tracepoint directory, reuse the dir_path instead, saving some cycles
-and reducing the size of the next patch.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-54bcs15n0cp6gwcgpc4hptyc@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/parse-events.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 5aafae8d097e2161ee5c6a12ad532100f8885d2b:
+> 
+>   Merge tag 'perf-core-for-mingo-4.18-20180516' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-05-16 17:56:43 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.18-20180519
+> 
+> for you to fetch changes up to 19422a9f2a3be7f3a046285ffae4cbb571aa853a:
+> 
+>   perf tools: Fix kernel_start for PTI on x86 (2018-05-19 06:42:51 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> - Record min/max LBR cycles (>= skylake) and add 'perf annotate' TUI
+>   hotkey to show it (c) (Jin Yao)
+> 
+> - Fix machine->kernel_start for PTI on x86 (Adrian Hunter)
+> 
+> - Make machine->env->arch always available, e.g. in 'perf top', not
+>   just when reading that info from perf.data files (Adrian Hunter)
+> 
+> - Reduce the number of files read at 'perf' start, leaving information such as
+>   cacheline size, tracefs mount point determination, max_stack, etc, to be
+>   lazily read as tools needs then (Arnaldo Carvalho de Melo)
+> 
+> - Fixup BPF include and examples install messages (Arnaldo Carvalho de Melo)
+> 
+> - Fixup callchain addresses and symbol offsets in 'perf script', to help
+>   correlating with objdump output (Sandipan Das)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (2):
+>       perf machine: Add machine__is() to identify machine arch
+>       perf tools: Fix kernel_start for PTI on x86
+> 
+> Arnaldo Carvalho de Melo (12):
+>       perf config: Call perf_config__init() lazily
+>       tools lib api: The tracing_mnt variable doesn't need to be global
+>       tools lib api: Unexport 'tracing_path' variable
+>       tools lib api fs tracing_path: Introduce get/put_events_file() helpers
+>       perf tools: Reuse the path to the tracepoint /events/ directory
+>       perf parse-events: Use get/put_events_file()
+>       tools lib api fs tracing_path: Introduce opendir() method
+>       tools lib api fs tracing_path: Make tracing_events_path private
+>       tools include compiler-gcc: Add __pure attribute helper
+>       perf tools: Read the cache line size lazily
+>       perf tools: No need to unconditionally read the max_stack sysctls
+>       perf bpf: Fixup include and examples install messages
+> 
+> Jin Yao (2):
+>       perf annotate: Record the min/max cycles
+>       perf annotate: Create hotkey 'c' to show min/max cycles
+> 
+> Sandipan Das (2):
+>       perf script: Show virtual addresses instead of offsets
+>       perf script: Show symbol offsets by default
+> 
+>  tools/include/linux/compiler-gcc.h                 |  3 +
+>  tools/lib/api/fs/tracing_path.c                    | 40 +++++++++---
+>  tools/lib/api/fs/tracing_path.h                    |  9 ++-
+>  tools/perf/Makefile.perf                           |  2 +
+>  tools/perf/builtin-script.c                        | 26 ++++----
+>  tools/perf/builtin-top.c                           |  2 +-
+>  tools/perf/builtin-trace.c                         |  2 +-
+>  tools/perf/perf.c                                  | 24 +------
+>  tools/perf/tests/parse-events.c                    |  9 +--
+>  .../tests/shell/record+probe_libc_inet_pton.sh     | 12 ++--
+>  tools/perf/ui/browsers/annotate.c                  |  8 +++
+>  tools/perf/util/annotate.c                         | 51 ++++++++++++---
+>  tools/perf/util/annotate.h                         | 11 +++-
+>  tools/perf/util/config.c                           | 16 ++---
+>  tools/perf/util/config.h                           |  1 -
+>  tools/perf/util/env.c                              | 18 ++++++
+>  tools/perf/util/env.h                              |  2 +
+>  tools/perf/util/evsel.c                            |  2 +-
+>  tools/perf/util/machine.c                          | 18 +++++-
+>  tools/perf/util/machine.h                          |  2 +
+>  tools/perf/util/parse-events.c                     | 73 +++++++++++++---------
+>  tools/perf/util/probe-file.c                       |  3 +-
+>  tools/perf/util/sort.c                             |  4 +-
+>  tools/perf/util/sort.h                             |  4 +-
+>  tools/perf/util/trace-event-info.c                 | 11 ++--
+>  tools/perf/util/trace-event.c                      |  8 ++-
+>  tools/perf/util/util.c                             | 34 +++++++++-
+>  tools/perf/util/util.h                             |  4 +-
+>  28 files changed, 279 insertions(+), 120 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 2fc4ee8b86c1..f9d5bbd63484 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -156,13 +156,12 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
- 		    (strcmp(sys_dirent->d_name, ".")) &&	\
- 		    (strcmp(sys_dirent->d_name, "..")))
- 
--static int tp_event_has_id(struct dirent *sys_dir, struct dirent *evt_dir)
-+static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
- {
- 	char evt_path[MAXPATHLEN];
- 	int fd;
- 
--	snprintf(evt_path, MAXPATHLEN, "%s/%s/%s/id", tracing_events_path,
--			sys_dir->d_name, evt_dir->d_name);
-+	snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
- 	fd = open(evt_path, O_RDONLY);
- 	if (fd < 0)
- 		return -EINVAL;
-@@ -171,12 +170,12 @@ static int tp_event_has_id(struct dirent *sys_dir, struct dirent *evt_dir)
- 	return 0;
- }
- 
--#define for_each_event(sys_dirent, evt_dir, evt_dirent)		\
-+#define for_each_event(dir_path, evt_dir, evt_dirent)		\
- 	while ((evt_dirent = readdir(evt_dir)) != NULL)		\
- 		if (evt_dirent->d_type == DT_DIR &&		\
- 		    (strcmp(evt_dirent->d_name, ".")) &&	\
- 		    (strcmp(evt_dirent->d_name, "..")) &&	\
--		    (!tp_event_has_id(sys_dirent, evt_dirent)))
-+		    (!tp_event_has_id(dir_path, evt_dirent)))
- 
- #define MAX_EVENT_LENGTH 512
- 
-@@ -204,7 +203,7 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 		if (!evt_dir)
- 			continue;
- 
--		for_each_event(sys_dirent, evt_dir, evt_dirent) {
-+		for_each_event(dir_path, evt_dir, evt_dirent) {
- 
- 			scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
- 				  evt_dirent->d_name);
-@@ -2119,7 +2118,7 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
- 		if (!evt_dir)
- 			continue;
- 
--		for_each_event(sys_dirent, evt_dir, evt_dirent) {
-+		for_each_event(dir_path, evt_dir, evt_dirent) {
- 			if (event_glob != NULL &&
- 			    !strglobmatch(evt_dirent->d_name, event_glob))
- 				continue;
-@@ -2199,7 +2198,7 @@ int is_valid_tracepoint(const char *event_string)
- 		if (!evt_dir)
- 			continue;
- 
--		for_each_event(sys_dirent, evt_dir, evt_dirent) {
-+		for_each_event(dir_path, evt_dir, evt_dirent) {
- 			snprintf(evt_path, MAXPATHLEN, "%s:%s",
- 				 sys_dirent->d_name, evt_dirent->d_name);
- 			if (!strcmp(evt_path, event_string)) {
--- 
-2.14.3
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
