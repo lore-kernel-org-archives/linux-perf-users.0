@@ -1,49 +1,44 @@
-From: Kim Phillips <kim.phillips@arm.com>
-Subject: Re: [PATCHv2] drivers/perf: arm-ccn: don't log to dmesg in
- event_init
-Date: Mon, 21 May 2018 13:58:07 -0500
-Message-ID: <20180521135807.3b39d00979b7c416d4f65be2@arm.com>
-References: <20180521171949.31412-1-mark.rutland@arm.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v2]: perf/x86: store user space frame-pointer value on a
+ sample
+Date: Wed, 23 May 2018 13:06:58 +0300
+Message-ID: <7051f72e-2570-68c8-1488-33ad1b024031@linux.intel.com>
+References: <31205dc8-b756-e12b-0249-2ed06c2db9c9@linux.intel.com>
+ <20180509145436.GV12217@hirez.programming.kicks-ass.net>
+ <3ecedd91-1c01-6fc5-4648-89eaf5ff0930@linux.intel.com>
+ <20180510101406.GA12217@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180521171949.31412-1-mark.rutland@arm.com>
+In-Reply-To: <20180510101406.GA12217@hirez.programming.kicks-ass.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, will.deacon@arm.com, Pawel Moll <pawel.moll@arm.com>, linux-kernel@vger.kernel.org, perf group <linux-perf-users@vger.kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-[adding LKML, linux-perf-users.  Please do so from now on]
+Hi Peter,
 
-On Mon, 21 May 2018 18:19:49 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
-
-> The ARM CCN PMU driver uses dev_warn() to complain about parameters in
-> the user-provided perf_event_attr. This means that under normal
-> operation (e.g. a single invocation of the perf tool), a number of
-> messages warnings may be logged to dmesg.
+On 10.05.2018 13:14, Peter Zijlstra wrote:
+> On Thu, May 10, 2018 at 12:42:38PM +0300, Alexey Budankov wrote:
+>>> The Changelog needs to state that user_regs->bp is in fact valid and
+>>
+>> That actually was tested on binaries compiled without and with BP exposed 
+>> and in the latter case proved the value of that change.
 > 
-> Tools may issue multiple syscalls to probe for feature support, and
-> multiple applications (from multiple users) can attempt to open events
-> simultaneously, so this is not very helpful, even if a user happens to
-> have access to dmesg. Worse, this can push important information out of
-> the dmesg ring buffer, and can significantly slow down syscall fuzzers,
-> vastly increasing the time it takes to find critical bugs.
+> Mostly works is not the same as 'always initialized', if there are entry
+> paths that do not store that register, then using the value might leak
+> values from the kernel stack, which would be bad.
 > 
-> Demote the dev_warn() instances to dev_dbg(), as is the case for all
-> other PMU drivers under drivers/perf/. Users who wish to debug PMU event
-> initialisation can enable dynamic debug to receive these messages.
+> But like said, I think much of the kernel entry code was sanitized with
+> the PTI effort and I suspect things are in fact fine now, but lets wait
+> for Andy to confirm.
 > 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> ---
 
-Care to address my comments to the rationale?:
+It looks like Andy confirmed on the questions above.
 
-https://marc.info/?l=linux-arm-kernel&m=152582291919277&w=2
+Is the patch ready to be up streamed now? 
 
 Thanks,
-
-Kim
+Alexey
