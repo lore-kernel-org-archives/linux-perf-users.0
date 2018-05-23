@@ -1,76 +1,75 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/18] perf kcore_copy: Keep a count of phdrs
-Date: Wed, 23 May 2018 17:21:00 -0300
-Message-ID: <20180523202106.17286-13-acme@kernel.org>
+Subject: [PATCH 10/18] perf annotate: Show group event string for stdio
+Date: Wed, 23 May 2018 17:20:58 -0300
+Message-ID: <20180523202106.17286-11-acme@kernel.org>
 References: <20180523202106.17286-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180523202106.17286-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-In preparation to add more program headers, keep a count of phdrs.
+When we enable the group, for tui/stdio2, the output first line includes
+the group event string. While for stdio, it will show only one event.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+For example,
+
+perf record -e cycles,branches ./div
+perf annotate --group --stdio
+
+    Percent |      Source code & Disassembly of div for cycles (44407 samples)
+    ......
+
+The first line doesn't include the event 'branches'.
+
+With this patch, it will show the correct group even string.
+
+perf annotate --group --stdio
+
+    Percent |      Source code & Disassembly of div for cycles, branches (44407 samples)
+    ......
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/1526986485-6562-12-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1526989115-14435-1-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index b13873a6f368..4e7b71e8ac0e 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1398,6 +1398,7 @@ struct kcore_copy_info {
- 	u64 last_symbol;
- 	u64 first_module;
- 	u64 last_module_symbol;
-+	size_t phnum;
- 	struct phdr_data kernel_map;
- 	struct phdr_data modules_map;
- 	struct list_head phdrs;
-@@ -1517,6 +1518,8 @@ static int kcore_copy__read_maps(struct kcore_copy_info *kci, Elf *elf)
- 	if (kci->modules_map.len)
- 		list_add_tail(&kci->modules_map.node, &kci->phdrs);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 6612c7f90af4..71897689dacf 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1965,6 +1965,7 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
+ 	u64 len;
+ 	int width = symbol_conf.show_total_period ? 12 : 8;
+ 	int graph_dotted_len;
++	char buf[512];
  
-+	kci->phnum = !!kci->kernel_map.len + !!kci->modules_map.len;
-+
- 	return 0;
- }
+ 	filename = strdup(dso->long_name);
+ 	if (!filename)
+@@ -1977,8 +1978,11 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
  
-@@ -1678,7 +1681,6 @@ int kcore_copy(const char *from_dir, const char *to_dir)
- {
- 	struct kcore kcore;
- 	struct kcore extract;
--	size_t count = 2;
- 	int idx = 0, err = -1;
- 	off_t offset = page_size, sz, modules_offset = 0;
- 	struct kcore_copy_info kci = { .stext = 0, };
-@@ -1705,10 +1707,7 @@ int kcore_copy(const char *from_dir, const char *to_dir)
- 	if (kcore__init(&extract, extract_filename, kcore.elfclass, false))
- 		goto out_kcore_close;
+ 	len = symbol__size(sym);
  
--	if (!kci.modules_map.addr)
--		count -= 1;
--
--	if (kcore__copy_hdr(&kcore, &extract, count))
-+	if (kcore__copy_hdr(&kcore, &extract, kci.phnum))
- 		goto out_extract_close;
+-	if (perf_evsel__is_group_event(evsel))
++	if (perf_evsel__is_group_event(evsel)) {
+ 		width *= evsel->nr_members;
++		perf_evsel__group_desc(evsel, buf, sizeof(buf));
++		evsel_name = buf;
++	}
  
- 	if (kcore__add_phdr(&extract, idx++, offset, kci.kernel_map.addr,
+ 	graph_dotted_len = printf(" %-*.*s|	Source code & Disassembly of %s for %s (%" PRIu64 " samples)\n",
+ 				  width, width, symbol_conf.show_total_period ? "Period" :
 -- 
 2.14.3
