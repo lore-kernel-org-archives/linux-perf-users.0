@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/18] perf kcore_copy: Iterate phdrs
-Date: Wed, 23 May 2018 17:21:03 -0300
-Message-ID: <20180523202106.17286-16-acme@kernel.org>
+Subject: [PATCH 14/18] perf kcore_copy: Layout sections
+Date: Wed, 23 May 2018 17:21:02 -0300
+Message-ID: <20180523202106.17286-15-acme@kernel.org>
 References: <20180523202106.17286-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180523202106.17286-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-In preparation to add more program headers, iterate phdrs instead of
-assuming there is only one for the kernel text and one for the modules.
+In preparation to add more program headers, layout the relative offset
+of each section.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -26,66 +26,71 @@ Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/1526986485-6562-15-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1526986485-6562-14-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ tools/perf/util/symbol-elf.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 3e76a0efd15c..91b8cfb045ec 100644
+index 4aec12102e19..3e76a0efd15c 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
-@@ -1701,10 +1701,11 @@ int kcore_copy(const char *from_dir, const char *to_dir)
- 	struct kcore kcore;
- 	struct kcore extract;
- 	int idx = 0, err = -1;
--	off_t offset, sz, modules_offset = 0;
-+	off_t offset, sz;
- 	struct kcore_copy_info kci = { .stext = 0, };
- 	char kcore_filename[PATH_MAX];
- 	char extract_filename[PATH_MAX];
+@@ -1386,6 +1386,7 @@ static off_t kcore__write(struct kcore *kcore)
+ 
+ struct phdr_data {
+ 	off_t offset;
++	off_t rel;
+ 	u64 addr;
+ 	u64 len;
+ 	struct list_head node;
+@@ -1404,6 +1405,9 @@ struct kcore_copy_info {
+ 	struct list_head phdrs;
+ };
+ 
++#define kcore_copy__for_each_phdr(k, p) \
++	list_for_each_entry((p), &(k)->phdrs, node)
++
+ static int kcore_copy__process_kallsyms(void *arg, const char *name, char type,
+ 					u64 start)
+ {
+@@ -1518,11 +1522,21 @@ static int kcore_copy__read_maps(struct kcore_copy_info *kci, Elf *elf)
+ 	if (kci->modules_map.len)
+ 		list_add_tail(&kci->modules_map.node, &kci->phdrs);
+ 
+-	kci->phnum = !!kci->kernel_map.len + !!kci->modules_map.len;
+-
+ 	return 0;
+ }
+ 
++static void kcore_copy__layout(struct kcore_copy_info *kci)
++{
 +	struct phdr_data *p;
- 
- 	INIT_LIST_HEAD(&kci.phdrs);
- 
-@@ -1733,14 +1734,10 @@ int kcore_copy(const char *from_dir, const char *to_dir)
- 		 gelf_fsize(extract.elf, ELF_T_PHDR, kci.phnum, EV_CURRENT);
- 	offset = round_up(offset, page_size);
- 
--	if (kcore__add_phdr(&extract, idx++, offset, kci.kernel_map.addr,
--			    kci.kernel_map.len))
--		goto out_extract_close;
-+	kcore_copy__for_each_phdr(&kci, p) {
-+		off_t offs = p->rel + offset;
- 
--	if (kci.modules_map.addr) {
--		modules_offset = offset + kci.kernel_map.len;
--		if (kcore__add_phdr(&extract, idx, modules_offset,
--				    kci.modules_map.addr, kci.modules_map.len))
-+		if (kcore__add_phdr(&extract, idx++, offs, p->addr, p->len))
- 			goto out_extract_close;
- 	}
- 
-@@ -1748,14 +1745,12 @@ int kcore_copy(const char *from_dir, const char *to_dir)
- 	if (sz < 0 || sz > offset)
- 		goto out_extract_close;
- 
--	if (copy_bytes(kcore.fd, kci.kernel_map.offset, extract.fd, offset,
--		       kci.kernel_map.len))
--		goto out_extract_close;
-+	kcore_copy__for_each_phdr(&kci, p) {
-+		off_t offs = p->rel + offset;
- 
--	if (modules_offset && copy_bytes(kcore.fd, kci.modules_map.offset,
--					 extract.fd, modules_offset,
--					 kci.modules_map.len))
--		goto out_extract_close;
-+		if (copy_bytes(kcore.fd, p->offset, extract.fd, offs, p->len))
-+			goto out_extract_close;
++	off_t rel = 0;
++
++	kcore_copy__for_each_phdr(kci, p) {
++		p->rel = rel;
++		rel += p->len;
++		kci->phnum += 1;
 +	}
++}
++
+ static int kcore_copy__calc_maps(struct kcore_copy_info *kci, const char *dir,
+ 				 Elf *elf)
+ {
+@@ -1558,7 +1572,12 @@ static int kcore_copy__calc_maps(struct kcore_copy_info *kci, const char *dir,
+ 	if (kci->first_module && !kci->last_module_symbol)
+ 		return -1;
  
- 	if (kcore_copy__compare_file(from_dir, to_dir, "modules"))
- 		goto out_extract_close;
+-	return kcore_copy__read_maps(kci, elf);
++	if (kcore_copy__read_maps(kci, elf))
++		return -1;
++
++	kcore_copy__layout(kci);
++
++	return 0;
+ }
+ 
+ static int kcore_copy__copy_file(const char *from_dir, const char *to_dir,
 -- 
 2.14.3
