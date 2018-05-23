@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/18] perf annotate: Support '--group' option
-Date: Wed, 23 May 2018 17:20:51 -0300
-Message-ID: <20180523202106.17286-4-acme@kernel.org>
+Subject: [PATCH 01/18] perf evlist: Introduce force_leader() method
+Date: Wed, 23 May 2018 17:20:49 -0300
+Message-ID: <20180523202106.17286-2-acme@kernel.org>
 References: <20180523202106.17286-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180523202106.17286-1-acme@kernel.org>
@@ -12,64 +12,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-With the '--group' option, even for non-explicit group, 'perf annotate'
-will enable the group output.
+For non-explicit group (e.g. those created with -e '{eventA,eventB}'),
+'perf report' supports a option '--group' which can enable group output.
 
-For example,
+We also need to support 'perf annotate' with the same '--group'.
 
-  $ perf record -e cycles,branches ./div
-  $ perf annotate main --stdio --group
-
-                 :            Disassembly of section .text:
-                 :
-                 :            00000000004004b0 <main>:
-                 :            main():
-                 :
-                 :                    return i;
-                 :            }
-                 :
-                 :            int main(void)
-                 :            {
-    0.00    0.00 :   4004b0:       push   %rbx
-                 :                    int i;
-                 :                    int flag;
-                 :                    volatile double x = 1212121212, y = 121212;
-                 :
-                 :                    s_randseed = time(0);
-    0.00    0.00 :   4004b1:       xor    %edi,%edi
-                 :                    srand(s_randseed);
-    0.00    0.00 :   4004b3:       mov    $0x77359400,%ebx
-                 :
-                 :                    return i;
-                 :            }
-                 :
-
-But if without --group, there is only one event reported.
-
-  $ perf annotate main --stdio
-
-         :            Disassembly of section .text:
-         :
-         :            00000000004004b0 <main>:
-         :            main():
-         :
-         :                    return i;
-         :            }
-         :
-         :            int main(void)
-         :            {
-    0.00 :   4004b0:       push   %rbx
-         :                    int i;
-         :                    int flag;
-         :                    volatile double x = 1212121212, y = 121212;
-         :
-         :                    s_randseed = time(0);
-    0.00 :   4004b1:       xor    %edi,%edi
-         :                    srand(s_randseed);
-    0.00 :   4004b3:       mov    $0x77359400,%ebx
-         :
-         :                    return i;
-         :            }
+Create a new function perf_evlist__force_leader() which contains common
+code to force setting the group leader.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -78,43 +27,47 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1526914666-31839-4-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1526914666-31839-2-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-annotate.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/evlist.c | 15 +++++++++++++++
+ tools/perf/util/evlist.h |  3 +++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 6e5d9f718154..da5704240239 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -45,6 +45,7 @@ struct perf_annotate {
- 	bool	   print_line;
- 	bool	   skip_missing;
- 	bool	   has_br_stack;
-+	bool	   group_set;
- 	const char *sym_hist_filter;
- 	const char *cpu_list;
- 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-@@ -508,6 +509,9 @@ int cmd_annotate(int argc, const char **argv)
- 		    "Don't shorten the displayed pathnames"),
- 	OPT_BOOLEAN(0, "skip-missing", &annotate.skip_missing,
- 		    "Skip symbols that cannot be annotated"),
-+	OPT_BOOLEAN_SET(0, "group", &symbol_conf.event_group,
-+			&annotate.group_set,
-+			"Show event group information together"),
- 	OPT_STRING('C', "cpu", &annotate.cpu_list, "cpu", "list of cpus to profile"),
- 	OPT_CALLBACK(0, "symfs", NULL, "directory",
- 		     "Look for files with symbols relative to this directory",
-@@ -570,6 +574,9 @@ int cmd_annotate(int argc, const char **argv)
- 	annotate.has_br_stack = perf_header__has_feat(&annotate.session->header,
- 						      HEADER_BRANCH_STACK);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index a59281d64368..e7a4b31a84fb 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1795,3 +1795,18 @@ bool perf_evlist__exclude_kernel(struct perf_evlist *evlist)
  
-+	if (annotate.group_set)
-+		perf_evlist__force_leader(annotate.session->evlist);
+ 	return true;
+ }
 +
- 	ret = symbol__annotation_init();
- 	if (ret < 0)
- 		goto out_delete;
++/*
++ * Events in data file are not collect in groups, but we still want
++ * the group display. Set the artificial group and set the leader's
++ * forced_leader flag to notify the display code.
++ */
++void perf_evlist__force_leader(struct perf_evlist *evlist)
++{
++	if (!evlist->nr_groups) {
++		struct perf_evsel *leader = perf_evlist__first(evlist);
++
++		perf_evlist__set_leader(evlist);
++		leader->forced_leader = true;
++	}
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 6c41b2f78713..dc66436add98 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -309,4 +309,7 @@ struct perf_evsel *perf_evlist__event2evsel(struct perf_evlist *evlist,
+ 					    union perf_event *event);
+ 
+ bool perf_evlist__exclude_kernel(struct perf_evlist *evlist);
++
++void perf_evlist__force_leader(struct perf_evlist *evlist);
++
+ #endif /* __PERF_EVLIST_H */
 -- 
 2.14.3
