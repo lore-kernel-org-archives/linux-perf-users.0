@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/18] perf kcore_copy: Keep phdr data in a list
-Date: Wed, 23 May 2018 17:20:59 -0300
-Message-ID: <20180523202106.17286-12-acme@kernel.org>
+Subject: [PATCH 13/18] perf kcore_copy: Calculate offset from phnum
+Date: Wed, 23 May 2018 17:21:01 -0300
+Message-ID: <20180523202106.17286-14-acme@kernel.org>
 References: <20180523202106.17286-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180523202106.17286-1-acme@kernel.org>
@@ -12,13 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Currently, kcore_copy makes 2 program headers, one for the kernel text
-(namely kernel_map) and one for the modules (namely modules_map). Now
-more program headers are needed, but treating each program header as a
-special case results in much more code.
-
-Instead, in preparation to add more program headers, change to keep
-program header data (phdr_data) in a list.
+In preparation to add more program headers, calculate offset from the
+number of phdrs.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -31,52 +26,35 @@ Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/1526986485-6562-11-git-send-email-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/1526986485-6562-13-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/util/symbol-elf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 48943b834f11..b13873a6f368 100644
+index 4e7b71e8ac0e..4aec12102e19 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
-@@ -1388,6 +1388,7 @@ struct phdr_data {
- 	off_t offset;
- 	u64 addr;
- 	u64 len;
-+	struct list_head node;
- };
- 
- struct kcore_copy_info {
-@@ -1399,6 +1400,7 @@ struct kcore_copy_info {
- 	u64 last_module_symbol;
- 	struct phdr_data kernel_map;
- 	struct phdr_data modules_map;
-+	struct list_head phdrs;
- };
- 
- static int kcore_copy__process_kallsyms(void *arg, const char *name, char type,
-@@ -1510,6 +1512,11 @@ static int kcore_copy__read_maps(struct kcore_copy_info *kci, Elf *elf)
- 	if (elf_read_maps(elf, true, kcore_copy__read_map, kci) < 0)
- 		return -1;
- 
-+	if (kci->kernel_map.len)
-+		list_add_tail(&kci->kernel_map.node, &kci->phdrs);
-+	if (kci->modules_map.len)
-+		list_add_tail(&kci->modules_map.node, &kci->phdrs);
-+
- 	return 0;
- }
- 
-@@ -1678,6 +1685,8 @@ int kcore_copy(const char *from_dir, const char *to_dir)
+@@ -1682,7 +1682,7 @@ int kcore_copy(const char *from_dir, const char *to_dir)
+ 	struct kcore kcore;
+ 	struct kcore extract;
+ 	int idx = 0, err = -1;
+-	off_t offset = page_size, sz, modules_offset = 0;
++	off_t offset, sz, modules_offset = 0;
+ 	struct kcore_copy_info kci = { .stext = 0, };
  	char kcore_filename[PATH_MAX];
  	char extract_filename[PATH_MAX];
+@@ -1710,6 +1710,10 @@ int kcore_copy(const char *from_dir, const char *to_dir)
+ 	if (kcore__copy_hdr(&kcore, &extract, kci.phnum))
+ 		goto out_extract_close;
  
-+	INIT_LIST_HEAD(&kci.phdrs);
++	offset = gelf_fsize(extract.elf, ELF_T_EHDR, 1, EV_CURRENT) +
++		 gelf_fsize(extract.elf, ELF_T_PHDR, kci.phnum, EV_CURRENT);
++	offset = round_up(offset, page_size);
 +
- 	if (kcore_copy__copy_file(from_dir, to_dir, "kallsyms"))
- 		return -1;
- 
+ 	if (kcore__add_phdr(&extract, idx++, offset, kci.kernel_map.addr,
+ 			    kci.kernel_map.len))
+ 		goto out_extract_close;
 -- 
 2.14.3
