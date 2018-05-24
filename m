@@ -1,94 +1,65 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test 39 (Session topology) dumps core on s390
-Date: Thu, 24 May 2018 15:56:00 +0200
-Message-ID: <20180524135600.77128-1-tmricht@linux.ibm.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v3]: perf/x86: store user space frame-pointer value on a
+ sample
+Date: Thu, 24 May 2018 17:11:54 +0300
+Message-ID: <311d4a34-f81b-5535-3385-01427ac73b41@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-perf test 39 fails with core dump on s390. The root cause
-is a NULL pointer reference in function check_cpu_topology()
-line 76 (or line 82 without -v).
-The session->header.env.cpu variable is NULL because on s390
-function process_cpu_topology() returns with error:
-    socket_id number is too big.
-    You may need to upgrade the perf tool.
-and releases the env.cpu variable via zfree() and sets it to NULL.
 
-Here is the gdb output:
-(gdb) n
-76                      pr_debug("CPU %d, core %d, socket %d\n", i,
-(gdb) n
+Store user space frame-pointer value (BP register) into Perf trace 
+on a sample for a process so the value becomes available when 
+unwinding call stacks for functions gaining event samples.
 
-Program received signal SIGSEGV, Segmentation fault.
-0x00000000010f4d9e in check_cpu_topology (path=0x3ffffffd6c8
-	"/tmp/perf-test-J6CHMa", map=0x14a1740) at tests/topology.c:76
-76  pr_debug("CPU %d, core %d, socket %d\n", i,
-(gdb)
-
-Make sure the env.cpu variable is not used when its NULL.
-Test for NULL pointer and return TEST_SKIP if so.
-
-Output before:
-[root@p23lp27 perf]# ./perf test -F 39
-39: Session topology  :Segmentation fault (core dumped)
-[root@p23lp27 perf]#
-
-Output after:
-[root@p23lp27 perf]# ./perf test -vF 39
-39: Session topology                                      :
---- start ---
-templ file: /tmp/perf-test-Ajx59D
-socket_id number is too big.You may need to upgrade the perf tool.
----- end ----
-Session topology: Skip
-[root@p23lp27 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/tests/topology.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Changes in v3:
+- adjusted comment regarding saved registers on system call after 
+  recent KPTI improvements
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 17cb1bb3448c..5f366d650d2b 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -70,6 +70,9 @@ static int check_cpu_topology(char *path, struct cpu_map *map)
- 	session = perf_session__new(&data, false, NULL);
- 	TEST_ASSERT_VAL("can't get session", session);
- 
-+	if (!session->header.env.cpu)
-+		return TEST_SKIP;
-+
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
- 		if (!cpu_map__has(map, i))
- 			continue;
-@@ -95,7 +98,7 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
- {
- 	char path[PATH_MAX];
- 	struct cpu_map *map;
--	int ret = -1;
-+	int ret;
- 
- 	TEST_ASSERT_VAL("can't get templ file", !get_temp(path));
- 
-@@ -110,12 +113,9 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
- 		goto free_path;
- 	}
- 
--	if (check_cpu_topology(path, map))
--		goto free_map;
--	ret = 0;
+Changes in v2:
+- lifted restriction on frame pointer architecture so it's value is provided
+  as for i386 as for x86_64 processes
+
+MAINTAINERS file lacks references to appropriate folks for reviewing 
+  changes at arch/x86/kernel/perf_regs.c so probably it makes sense to 
+  update the file as well in this respect.
+---
+ arch/x86/kernel/perf_regs.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index e47b2dbbdef3..f54348a72add 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -151,17 +151,19 @@ void perf_get_regs_user(struct perf_regs *regs_user,
+ 	regs_user_copy->sp = user_regs->sp;
+ 	regs_user_copy->cs = user_regs->cs;
+ 	regs_user_copy->ss = user_regs->ss;
 -
--free_map:
-+	ret = check_cpu_topology(path, map);
- 	cpu_map__put(map);
+ 	/*
+-	 * Most system calls don't save these registers, don't report them.
++	 * Store user space frame-pointer value on sample
++	 * to facilitate stack unwinding for cases when
++	 * user space executable code has such support
++	 * enabled at compile time;
+ 	 */
++	regs_user_copy->bp = user_regs->bp;
 +
- free_path:
- 	unlink(path);
- 	return ret;
--- 
-2.14.3
+ 	regs_user_copy->bx = -1;
+-	regs_user_copy->bp = -1;
+ 	regs_user_copy->r12 = -1;
+ 	regs_user_copy->r13 = -1;
+ 	regs_user_copy->r14 = -1;
+ 	regs_user_copy->r15 = -1;
+-
+ 	/*
+ 	 * For this to be at all useful, we need a reasonable guess for
+ 	 * the ABI.  Be careful: we're in NMI context, and we're
