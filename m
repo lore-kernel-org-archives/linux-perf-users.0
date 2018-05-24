@@ -1,101 +1,94 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/18] perf/core improvements
-Date: Thu, 24 May 2018 07:32:44 +0200
-Message-ID: <20180524053244.GA19588@gmail.com>
-References: <20180523202106.17286-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test 39 (Session topology) dumps core on s390
+Date: Thu, 24 May 2018 15:56:00 +0200
+Message-ID: <20180524135600.77128-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180523202106.17286-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+perf test 39 fails with core dump on s390. The root cause
+is a NULL pointer reference in function check_cpu_topology()
+line 76 (or line 82 without -v).
+The session->header.env.cpu variable is NULL because on s390
+function process_cpu_topology() returns with error:
+    socket_id number is too big.
+    You may need to upgrade the perf tool.
+and releases the env.cpu variable via zfree() and sets it to NULL.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Here is the gdb output:
+(gdb) n
+76                      pr_debug("CPU %d, core %d, socket %d\n", i,
+(gdb) n
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 2996123e7e589d78e73cfeb7e7f14d49127eb1b0:
-> 
->   Merge tag 'perf-core-for-mingo-4.18-20180519' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-05-19 13:32:53 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.18-20180523
-> 
-> for you to fetch changes up to 22916fdb9c50e8fb303bdcedca88fd8798a85844:
-> 
->   perf kcore_copy: Amend the offset of sections that remap kernel text (2018-05-23 10:26:44 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements:
-> 
-> . Create extra kernel maps to help in decoding samples in x86 PTI entry
->   trampolines (Adrian Hunter)
-> 
-> . Copy x86 PTI entry trampoline sections in the kcore copy used for
->   annotation and intel_pt CPU traces decoding (Adrian Hunter)
-> 
-> - Support 'perf annotate --group' for non-explicit recorded event
->   "groups", showing multiple columns, one for each event, just like
->   when dealing with explicit event groups (those enclosed with {}) (Jin Yao)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (14):
->       perf machine: Add nr_cpus_avail()
->       perf machine: Workaround missing maps for x86 PTI entry trampolines
->       perf machine: Fix map_groups__split_kallsyms() for entry trampoline symbols
->       perf machine: Allow for extra kernel maps
->       perf machine: Create maps for x86 PTI entry trampolines
->       perf machine: Synthesize and process mmap events for x86 PTI entry trampolines
->       perf kcore_copy: Keep phdr data in a list
->       perf kcore_copy: Keep a count of phdrs
->       perf kcore_copy: Calculate offset from phnum
->       perf kcore_copy: Layout sections
->       perf kcore_copy: Iterate phdrs
->       perf kcore_copy: Get rid of kernel_map
->       perf kcore_copy: Copy x86 PTI entry trampoline sections
->       perf kcore_copy: Amend the offset of sections that remap kernel text
-> 
-> Jin Yao (4):
->       perf evlist: Introduce force_leader() method
->       perf report: Use perf_evlist__force_leader to support '--group'
->       perf annotate: Support '--group' option
->       perf annotate: Show group event string for stdio
-> 
->  tools/perf/arch/x86/util/Build     |   2 +
->  tools/perf/arch/x86/util/event.c   |  76 +++++++++++++
->  tools/perf/arch/x86/util/machine.c | 103 +++++++++++++++++
->  tools/perf/builtin-annotate.c      |   7 ++
->  tools/perf/builtin-report.c        |  13 +--
->  tools/perf/util/annotate.c         |   6 +-
->  tools/perf/util/env.c              |  13 +++
->  tools/perf/util/env.h              |   1 +
->  tools/perf/util/event.c            |  36 ++++--
->  tools/perf/util/event.h            |   8 ++
->  tools/perf/util/evlist.c           |  15 +++
->  tools/perf/util/evlist.h           |   3 +
->  tools/perf/util/machine.c          | 175 +++++++++++++++++++++++++++--
->  tools/perf/util/machine.h          |  23 ++++
->  tools/perf/util/map.c              |  22 +++-
->  tools/perf/util/map.h              |  15 ++-
->  tools/perf/util/symbol-elf.c       | 219 +++++++++++++++++++++++++++++++------
->  tools/perf/util/symbol.c           |  49 +++++++--
->  18 files changed, 711 insertions(+), 75 deletions(-)
->  create mode 100644 tools/perf/arch/x86/util/event.c
->  create mode 100644 tools/perf/arch/x86/util/machine.c
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000010f4d9e in check_cpu_topology (path=0x3ffffffd6c8
+	"/tmp/perf-test-J6CHMa", map=0x14a1740) at tests/topology.c:76
+76  pr_debug("CPU %d, core %d, socket %d\n", i,
+(gdb)
 
-Pulled, thanks a lot Arnaldo!
+Make sure the env.cpu variable is not used when its NULL.
+Test for NULL pointer and return TEST_SKIP if so.
 
-	Ingo
+Output before:
+[root@p23lp27 perf]# ./perf test -F 39
+39: Session topology  :Segmentation fault (core dumped)
+[root@p23lp27 perf]#
+
+Output after:
+[root@p23lp27 perf]# ./perf test -vF 39
+39: Session topology                                      :
+--- start ---
+templ file: /tmp/perf-test-Ajx59D
+socket_id number is too big.You may need to upgrade the perf tool.
+---- end ----
+Session topology: Skip
+[root@p23lp27 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/tests/topology.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index 17cb1bb3448c..5f366d650d2b 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -70,6 +70,9 @@ static int check_cpu_topology(char *path, struct cpu_map *map)
+ 	session = perf_session__new(&data, false, NULL);
+ 	TEST_ASSERT_VAL("can't get session", session);
+ 
++	if (!session->header.env.cpu)
++		return TEST_SKIP;
++
+ 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
+ 		if (!cpu_map__has(map, i))
+ 			continue;
+@@ -95,7 +98,7 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
+ {
+ 	char path[PATH_MAX];
+ 	struct cpu_map *map;
+-	int ret = -1;
++	int ret;
+ 
+ 	TEST_ASSERT_VAL("can't get templ file", !get_temp(path));
+ 
+@@ -110,12 +113,9 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
+ 		goto free_path;
+ 	}
+ 
+-	if (check_cpu_topology(path, map))
+-		goto free_map;
+-	ret = 0;
+-
+-free_map:
++	ret = check_cpu_topology(path, map);
+ 	cpu_map__put(map);
++
+ free_path:
+ 	unlink(path);
+ 	return ret;
+-- 
+2.14.3
