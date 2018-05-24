@@ -1,65 +1,57 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3]: perf/x86: store user space frame-pointer value on a
+Subject: Re: [PATCH v2]: perf/x86: store user space frame-pointer value on a
  sample
-Date: Thu, 24 May 2018 17:11:54 +0300
-Message-ID: <311d4a34-f81b-5535-3385-01427ac73b41@linux.intel.com>
+Date: Thu, 24 May 2018 17:37:05 +0300
+Message-ID: <137eab54-86df-cc7d-4618-bce49dfbc2d2@linux.intel.com>
+References: <31205dc8-b756-e12b-0249-2ed06c2db9c9@linux.intel.com>
+ <20180509145436.GV12217@hirez.programming.kicks-ass.net>
+ <3ecedd91-1c01-6fc5-4648-89eaf5ff0930@linux.intel.com>
+ <20180510101406.GA12217@hirez.programming.kicks-ass.net>
+ <7051f72e-2570-68c8-1488-33ad1b024031@linux.intel.com>
+ <20180523130950.GB12217@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180523130950.GB12217@hirez.programming.kicks-ass.net>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi,
 
-Store user space frame-pointer value (BP register) into Perf trace 
-on a sample for a process so the value becomes available when 
-unwinding call stacks for functions gaining event samples.
+On 23.05.2018 16:09, Peter Zijlstra wrote:
+> On Wed, May 23, 2018 at 01:06:58PM +0300, Alexey Budankov wrote:
+> 
+>> Is the patch ready to be up streamed now? 
+> 
+> Please post a new one where you modify the comment about the syscalls
+> not saving registers and ideally find the commit that made it so.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
-Changes in v3:
-- adjusted comment regarding saved registers on system call after 
-  recent KPTI improvements
+Sent v3 with adjusted comment.
+As far comments become outdated quickly tried to be terse.
 
-Changes in v2:
-- lifted restriction on frame pointer architecture so it's value is provided
-  as for i386 as for x86_64 processes
+> 
+> Also; I think Andy would appreciate a comment near the syscall code that
+> refers back to this code and states what registers we rely upon being
+> there (+BP for this patch).
 
-MAINTAINERS file lacks references to appropriate folks for reviewing 
-  changes at arch/x86/kernel/perf_regs.c so probably it makes sense to 
-  update the file as well in this respect.
----
- arch/x86/kernel/perf_regs.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Not sure if I can find all proper places to put comments there.
+However there is PUSH_AND_CLEAR_REGS macro that is employed at system 
+call implementation so it is possible to put something like this there:
 
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index e47b2dbbdef3..f54348a72add 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -151,17 +151,19 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 	regs_user_copy->sp = user_regs->sp;
- 	regs_user_copy->cs = user_regs->cs;
- 	regs_user_copy->ss = user_regs->ss;
--
- 	/*
--	 * Most system calls don't save these registers, don't report them.
-+	 * Store user space frame-pointer value on sample
-+	 * to facilitate stack unwinding for cases when
-+	 * user space executable code has such support
-+	 * enabled at compile time;
- 	 */
-+	regs_user_copy->bp = user_regs->bp;
-+
- 	regs_user_copy->bx = -1;
--	regs_user_copy->bp = -1;
- 	regs_user_copy->r12 = -1;
- 	regs_user_copy->r13 = -1;
- 	regs_user_copy->r14 = -1;
- 	regs_user_copy->r15 = -1;
--
- 	/*
- 	 * For this to be at all useful, we need a reasonable guess for
- 	 * the ABI.  Be careful: we're in NMI context, and we're
+.macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
+	/*
+	 ...
+	 * perf/core subsystem relies on bp register value stored 
+	 * at pt_regs->bp; see arch/x86/kernel/perf_regs.c: perf_get_regs_user() 
+         * for more details;
+         ...
+	 */
+
+Thanks,
+Alexey
+> 
+> 
