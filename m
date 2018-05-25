@@ -1,130 +1,121 @@
-From: Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: Perf record of mem event on kernel data address causing freeze
-Date: Fri, 25 May 2018 16:49:28 +0200
-Message-ID: <20180525144927.GE22082@lerouge>
-References: <CAC-KJC3d8aba4UMHPUE8SdM++cQXgXS_U0EvGC_aSJ3ybhbWAw@mail.gmail.com>
- <20180517143852.GD24274@krava>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf test 39 (Session topology) dumps core on s390
+Date: Fri, 25 May 2018 12:11:06 -0300
+Message-ID: <20180525151106.GB4091@kernel.org>
+References: <20180524135600.77128-1-tmricht@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180517143852.GD24274@krava>
+In-Reply-To: <20180524135600.77128-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Probir Roy <proy@email.wm.edu>, linux-perf-users@vger.kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, acme@kernel.org, mingo@redhat.com, peterz@infradead.org, Andrew Lutomirski <amluto@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, May 17, 2018 at 04:38:52PM +0200, Jiri Olsa wrote:
-> On Fri, May 11, 2018 at 02:23:14PM -0400, Probir Roy wrote:
-> > I am using perf-tool to record memory access to some kernel addresses.
-> > For some kernel addresses it freezes/lockup the system.
-> > 
-> > I am using kernel version 4.15.0 on x86_64 arch. I am running on an
-> > Intel Broadwell machine.
-> > 
-> > I am using Intel's PEBS to sample kernel memory access while running a
-> > micro-benchmark (performs repeated file operation) using following
-> > command.
-> > 
-> > $ sudo perf mem -t store record
-> > 
-> > This records memory references. After that I run a script to set HW
-> > breakpoint at the reference addresses.
-> > 
-> > $ sudo timeout 1s perf record -e mem:<0xaddress>:rw
-> > 
-> > It causes system hang at some address (for many address perf reports
-> > correctly). Nothing is written in kern.log
-> > 
-> > 
-> > I have reported it on bugzilla with detail system information:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=199697
+Em Thu, May 24, 2018 at 03:56:00PM +0200, Thomas Richter escreveu:
+> perf test 39 fails with core dump on s390. The root cause
+> is a NULL pointer reference in function check_cpu_topology()
+> line 76 (or line 82 without -v).
+> The session->header.env.cpu variable is NULL because on s390
+> function process_cpu_topology() returns with error:
+>     socket_id number is too big.
+>     You may need to upgrade the perf tool.
+> and releases the env.cpu variable via zfree() and sets it to NULL.
 > 
-> I managed to reproduce.. in my case it's caused by having rw
-> breakpoint on data which is touched within do_debug routine,
-> and after few nested do_debug I get double fault
+> Here is the gdb output:
+> (gdb) n
+> 76                      pr_debug("CPU %d, core %d, socket %d\n", i,
+> (gdb) n
 > 
-> for example I can reproduce it immediately when setting breakpoint
-> on rdtp->dynticks_nmi_nesting, which is checked in rcu_nmi_enter
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x00000000010f4d9e in check_cpu_topology (path=0x3ffffffd6c8
+> 	"/tmp/perf-test-J6CHMa", map=0x14a1740) at tests/topology.c:76
+> 76  pr_debug("CPU %d, core %d, socket %d\n", i,
+> (gdb)
 > 
-> I have some ugly patch so far that disables breakpoints during
-> do_debug processing.. it seems to fix it on my server, could you
-> try that?
+> Make sure the env.cpu variable is not used when its NULL.
+> Test for NULL pointer and return TEST_SKIP if so.
+
+Ok, but can you please add a comment just before the added lines:
+
++     if (!session->header.env.cpu)
++             return TEST_SKIP;
++
+
+Informing that this is so due to some bug, i.e. why is that
+process_cpu_topology() returns with that "socked_id is too big" message?
+
+This way people interested in auditing the tests to figure out why some
+tests are being skipped can validate that comment and possibly come up
+with some fix or better warning message after the "Skip" after that
+'perf test' entry?
+
+- Arnaldo
+ 
+> Output before:
+> [root@p23lp27 perf]# ./perf test -F 39
+> 39: Session topology  :Segmentation fault (core dumped)
+> [root@p23lp27 perf]#
 > 
-> thanks,
-> jirka
+> Output after:
+> [root@p23lp27 perf]# ./perf test -vF 39
+> 39: Session topology                                      :
+> --- start ---
+> templ file: /tmp/perf-test-Ajx59D
+> socket_id number is too big.You may need to upgrade the perf tool.
+> ---- end ----
+> Session topology: Skip
+> [root@p23lp27 perf]#
 > 
-> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 > ---
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 03f3d7695dac..14d41d59abeb 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -721,9 +721,12 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
->  {
->  	struct task_struct *tsk = current;
->  	int user_icebp = 0;
-> -	unsigned long dr6;
-> +	unsigned long dr6, dr7;
->  	int si_code;
+>  tools/perf/tests/topology.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+> index 17cb1bb3448c..5f366d650d2b 100644
+> --- a/tools/perf/tests/topology.c
+> +++ b/tools/perf/tests/topology.c
+> @@ -70,6 +70,9 @@ static int check_cpu_topology(char *path, struct cpu_map *map)
+>  	session = perf_session__new(&data, false, NULL);
+>  	TEST_ASSERT_VAL("can't get session", session);
 >  
-> +	get_debugreg(dr7, 7);
-> +	set_debugreg(0, 7);
+> +	if (!session->header.env.cpu)
+> +		return TEST_SKIP;
 > +
->  	ist_enter(regs);
+>  	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
+>  		if (!cpu_map__has(map, i))
+>  			continue;
+> @@ -95,7 +98,7 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
+>  {
+>  	char path[PATH_MAX];
+>  	struct cpu_map *map;
+> -	int ret = -1;
+> +	int ret;
 >  
->  	get_debugreg(dr6, 6);
-> @@ -818,6 +821,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
+>  	TEST_ASSERT_VAL("can't get templ file", !get_temp(path));
 >  
->  exit:
->  	ist_exit(regs);
-> +	set_debugreg(dr7, 7);
->  }
->  NOKPROBE_SYMBOL(do_debug);
-
-I'm not sure how much we touch dr7 while in the do_debug() trap, so we may be leaking
-some modifications on exit.
-
-I think about a simple do_debug() recursion protection. The problem is where we store
-that recursion flag/counter. Ideally I would prefer to have the recursion protection
-before ist_enter() which already touches many key memory data (preempt_mask, rcu_data).
-But if we set that before ist_enter(), we need the recursion flag to be per task because
-preemption is disabled on ist_enter() only, although the comments  suggest it's unsafe
-to schedule before anyway. So it could be a TIF_FLAG. But better yet, if we want to be
-able to set breakpoint on thread flags, we could add a new field in thread info.
-
-Anyway here is a very dumb version below. Can you test it Probir, to see if that's
-at least the right direction?
-
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 03f3d76..873383b 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -693,6 +693,8 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- #endif
- }
- 
-+static DEFINE_PER_CPU(int, do_debug_recursion);
-+
- /*
-  * Our handling of the processor debug registers is non-trivial.
-  * We do not clear them on entry and exit from the kernel. Therefore
-@@ -725,6 +727,10 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 	int si_code;
- 
- 	ist_enter(regs);
-+	if (__this_cpu_read(do_debug_recursion))
-+		goto exit;
-+
-+	__this_cpu_write(do_debug_recursion, 1);
- 
- 	get_debugreg(dr6, 6);
- 	/*
-@@ -817,6 +823,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 	debug_stack_usage_dec();
- 
- exit:
-+	__this_cpu_write(do_debug_recursion, 0);
- 	ist_exit(regs);
- }
- NOKPROBE_SYMBOL(do_debug);
+> @@ -110,12 +113,9 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
+>  		goto free_path;
+>  	}
+>  
+> -	if (check_cpu_topology(path, map))
+> -		goto free_map;
+> -	ret = 0;
+> -
+> -free_map:
+> +	ret = check_cpu_topology(path, map);
+>  	cpu_map__put(map);
+> +
+>  free_path:
+>  	unlink(path);
+>  	return ret;
+> -- 
+> 2.14.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-perf-users" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
