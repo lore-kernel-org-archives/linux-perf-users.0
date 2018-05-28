@@ -1,113 +1,43 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf test 39 (Session topology) dumps core on s390
-Date: Mon, 28 May 2018 09:36:57 +0200
-Message-ID: <20180528073657.11743-1-tmricht@linux.ibm.com>
+Subject: [PATCH] perf docu: Update section on cpu topology
+Date: Mon, 28 May 2018 09:44:33 +0200
+Message-ID: <20180528074433.16652-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-perf test 39 fails with core dump on s390. The root cause
-is a NULL pointer reference in function check_cpu_topology()
-line 76 (or line 82 without -v).
-The session->header.env.cpu variable is NULL because on s390
-function process_cpu_topology() returns with error:
-    socket_id number is too big.
-    You may need to upgrade the perf tool.
-and releases the env.cpu variable via zfree() and sets it to NULL.
-
-Here is the gdb output:
-(gdb) n
-76                      pr_debug("CPU %d, core %d, socket %d\n", i,
-(gdb) n
-
-Program received signal SIGSEGV, Segmentation fault.
-0x00000000010f4d9e in check_cpu_topology (path=0x3ffffffd6c8
-	"/tmp/perf-test-J6CHMa", map=0x14a1740) at tests/topology.c:76
-76  pr_debug("CPU %d, core %d, socket %d\n", i,
-(gdb)
-
-Make sure the env.cpu variable is not used when its NULL.
-Test for NULL pointer and return TEST_SKIP if so.
-
-Output before:
-[root@p23lp27 perf]# ./perf test -F 39
-39: Session topology  :Segmentation fault (core dumped)
-[root@p23lp27 perf]#
-
-Output after:
-[root@p23lp27 perf]# ./perf test -vF 39
-39: Session topology                                      :
---- start ---
-templ file: /tmp/perf-test-Ajx59D
-socket_id number is too big.You may need to upgrade the perf tool.
----- end ----
-Session topology: Skip
-[root@p23lp27 perf]#
+Add an explanation of each cpu's core and socket
+identifier to the documentation.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-
 ---
----
- tools/perf/tests/topology.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ tools/perf/Documentation/perf.data-file-format.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 17cb1bb3448c..40e30a26b23c 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -70,6 +70,27 @@ static int check_cpu_topology(char *path, struct cpu_map *map)
- 	session = perf_session__new(&data, false, NULL);
- 	TEST_ASSERT_VAL("can't get session", session);
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index d00f0d51cab8..c57904a526ce 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -153,10 +153,18 @@ struct {
+ 	HEADER_CPU_TOPOLOGY = 13,
  
-+	/* On platforms with large numbers of CPUs process_cpu_topology()
-+	 * might issue an error while reading the perf.data file section
-+	 * HEADER_CPU_TOPOLOGY and the cpu_topology_map pointed to by member
-+	 * cpu is a NULL pointer.
-+	 * Example: On s390
-+	 *   CPU 0 is on core_id 0 and physical_package_id 6
-+	 *   CPU 1 is on core_id 1 and physical_package_id 3
-+	 *
-+	 *   Core_id and physical_package_id are platform and architecture
-+	 *   dependend and might have higher numbers than the CPU id.
-+	 *   This actually depends on the configuration.
-+	 *
-+	 *  In this case process_cpu_topology() prints error message:
-+	 *  "socket_id number is too big. You may need to upgrade the
-+	 *  perf tool."
-+	 *
-+	 *  This is the reason why this test might be skipped.
-+	 */
-+	if (!session->header.env.cpu)
-+		return TEST_SKIP;
-+
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
- 		if (!cpu_map__has(map, i))
- 			continue;
-@@ -95,7 +116,7 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
- {
- 	char path[PATH_MAX];
- 	struct cpu_map *map;
--	int ret = -1;
-+	int ret = TEST_FAIL;
+ String lists defining the core and CPU threads topology.
++The string lists are followed by a variable length array
++which contains core_id and socket_id of each cpu.
++The number of entries can be determined by the size of the
++section minus the sizes of both string lists.
  
- 	TEST_ASSERT_VAL("can't get templ file", !get_temp(path));
+ struct {
+        struct perf_header_string_list cores; /* Variable length */
+        struct perf_header_string_list threads; /* Variable length */
++       struct {
++	      uint32_t core_id;
++	      uint32_t socket_id;
++       } cpus[nr]; /* Variable length records */
+ };
  
-@@ -110,12 +131,9 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
- 		goto free_path;
- 	}
- 
--	if (check_cpu_topology(path, map))
--		goto free_map;
--	ret = 0;
--
--free_map:
-+	ret = check_cpu_topology(path, map);
- 	cpu_map__put(map);
-+
- free_path:
- 	unlink(path);
- 	return ret;
+ Example:
 -- 
 2.14.3
