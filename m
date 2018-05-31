@@ -1,91 +1,110 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/7] perf/urgent fixes
-Date: Thu, 31 May 2018 12:40:14 +0200
-Message-ID: <20180531104014.GA29957@gmail.com>
-References: <20180531103220.24684-1-acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v1]: perf record: enable arbitrary event names thru name=
+ modifier
+Date: Thu, 31 May 2018 15:36:49 +0200
+Message-ID: <20180531133649.GC10491@krava>
+References: <ca21ebcd-3119-a75e-aff3-3684ebc61a68@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180531103220.24684-1-acme@kernel.org>
+In-Reply-To: <ca21ebcd-3119-a75e-aff3-3684ebc61a68@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Agustin Vega-Frias <agustinv@codeaurora.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, coresight@lists.linaro.org, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, He Kuang <hekuang@huawei.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Kan Liang <kan.liang@linux.intel.com>, kim.phillips@arm.co, Kim Phillips <kim.phillips@arm.com>, Lakshman
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On Thu, May 31, 2018 at 12:43:50PM +0300, Alexey Budankov wrote:
+> 
+> Enable complex event names containing [.:=,] symbols to be encoded into Perf 
+> trace using name= modifier e.g. like this:
+> 
+> perf record -e cpu/name=\'OFFCORE_RESPONSE:request=DEMAND_RFO:response=L3_HIT.SNOOP_HITM\',\
+> 		period=0x3567e0,event=0x3c,cmask=0x1/Duk ./futex
+> 
+> Below is how it looks like in the report output. Please note explicit escaped 
+> quoting at cmdline string in the header so that thestring can be directly reused
+> for another collection in shell:
+> 
+> perf report --header
+> 
+> # ========
+> ...
+> # cmdline : /root/abudanko/kernel/tip/tools/perf/perf record -v -e cpu/name=\'OFFCORE_RESPONSE:request=DEMAND_RFO:response=L3_HIT.SNOOP_HITM\',period=0x3567e0,event=0x3c,cmask=0x1/Duk ./futex 
+> # event : name = OFFCORE_RESPONSE:request=DEMAND_RFO:response=L3_HIT.SNOOP_HITM, , type = 4, size = 112, config = 0x100003c, { sample_period, sample_freq } = 3500000, sample_type = IP|TID|TIME, disabled = 1, inh
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+nice ;-)
 
-> Hi Ingo,
+> ...
+> # ========
+> #
+> #
+> # Total Lost Samples: 0
+> #
+> # Samples: 24K of event 'OFFCORE_RESPONSE:request=DEMAND_RFO:response=L3_HIT.SNOOP_HITM'
+> # Event count (approx.): 86492000000
+> #
+> # Overhead  Command  Shared Object     Symbol                                        
+> # ........  .......  ................  ..............................................
+> #
+>     14.75%  futex    [kernel.vmlinux]  [k] __entry_trampoline_start
+> ...
 > 
-> 	Please consider pulling,
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/util/header.c       | 19 +++++++++++++++++--
+>  tools/perf/util/parse-events.l |  8 +++++++-
+>  2 files changed, 24 insertions(+), 3 deletions(-)
 > 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit f3903c9161f0d636a7b0ff03841628928457e64c:
-> 
->   Merge tag 'perf-urgent-for-mingo-4.17-20180514' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-05-15 08:20:45 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180531
-> 
-> for you to fetch changes up to 18a7057420f8b67f15d17087bf5c0863db752c8b:
-> 
->   perf tools: Fix perf.data format description of NRCPUS header (2018-05-30 15:40:26 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Fix 'perf test Session topology' segfault on s390 (Thomas Richter)
-> 
-> - Fix NULL return handling in bpf__prepare_load() (YueHaibing)
-> 
-> - Fix indexing on Coresight ETM packet queue decoder (Mathieu Poirier)
-> 
-> - Fix perf.data format description of NRCPUS header (Arnaldo Carvalho de Melo)
-> 
-> - Update perf.data documentation section on cpu topology
-> 
-> - Handle uncore event aliases in small groups properly (Kan Liang)
-> 
-> - Add missing perf_sample.addr into python sample dictionary (Leo Yan)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (1):
->       perf tools: Fix perf.data format description of NRCPUS header
-> 
-> Kan Liang (1):
->       perf parse-events: Handle uncore event aliases in small groups properly
-> 
-> Leo Yan (1):
->       perf script python: Add addr into perf sample dict
-> 
-> Mathieu Poirier (1):
->       perf cs-etm: Fix indexing for decoder packet queue
-> 
-> Thomas Richter (2):
->       perf test: "Session topology" dumps core on s390
->       perf data: Update documentation section on cpu topology
-> 
-> YueHaibing (1):
->       perf bpf: Fix NULL return handling in bpf__prepare_load()
-> 
->  tools/perf/Documentation/perf.data-file-format.txt |  10 +-
->  tools/perf/tests/topology.c                        |  30 ++++-
->  tools/perf/util/bpf-loader.c                       |   6 +-
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  12 +-
->  tools/perf/util/evsel.h                            |   1 +
->  tools/perf/util/parse-events.c                     | 130 ++++++++++++++++++++-
->  tools/perf/util/parse-events.h                     |   7 +-
->  tools/perf/util/parse-events.y                     |   8 +-
->  .../util/scripting-engines/trace-event-python.c    |   2 +
->  9 files changed, 185 insertions(+), 21 deletions(-)
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index a8bff2178fbc..e78700385a24 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1459,8 +1459,23 @@ static void print_cmdline(struct feat_fd *ff, FILE *fp)
+>  
+>  	fprintf(fp, "# cmdline : ");
+>  
+> -	for (i = 0; i < nr; i++)
+> -		fprintf(fp, "%s ", ff->ph->env.cmdline_argv[i]);
+> +	for (i = 0; i < nr; i++) {
+> +		char *argv_i = strdup(ff->ph->env.cmdline_argv[i]);
+> +		if (!argv_i) {
+> +			fprintf(fp, "%s ", ff->ph->env.cmdline_argv[i]);
+> +		} else {
+> +			char *mem = argv_i;
+> +			do {
+> +				char *quote = strchr(argv_i, '\'');
+> +				if (!quote) break;
 
-Pulled, thanks a lot Arnaldo!
+please put break on separate line
 
-	Ingo
+> +				*quote++ = '\0';
+> +				fprintf(fp, "%s\\\'", argv_i);
+> +				argv_i = quote;
+> +			} while (1);
+> +			fprintf(fp, "%s ", argv_i);
+> +			free(mem);
+> +		}
+> +	}
+>  	fputc('\n', fp);
+>  }
+>  
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index a1a01b1ac8b8..26c28faa0f62 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -53,7 +53,11 @@ static int str(yyscan_t scanner, int token)
+>  	YYSTYPE *yylval = parse_events_get_lval(scanner);
+>  	char *text = parse_events_get_text(scanner);
+>  
+> -	yylval->str = strdup(text);
+> +	if (text[0] != '\'')
+> +		yylval->str = strdup(text);
+> +	 else
+> +		yylval->str = strndup(&text[1], strlen(text) - 2);
+
+could you please put in some comment exaplining that when
+there's \' in the begining there must be one at the end
+
+thanks,
+jirka
