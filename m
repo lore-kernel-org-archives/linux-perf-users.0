@@ -1,84 +1,67 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/4] tools headers: Synchronize prctl.h ABI header
-Date: Sat,  2 Jun 2018 11:59:25 -0300
-Message-ID: <20180602145927.23307-3-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/4] perf/urgent fixes
+Date: Sun, 3 Jun 2018 19:12:16 +0200
+Message-ID: <20180603171216.GA17473@gmail.com>
 References: <20180602145927.23307-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180602145927.23307-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Wang Nan <wangnan0@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Borislav Petkov <bp@suse.de>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Masami Hiramatsu <mhiramat@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up changes from:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-  $ git log --oneline -2 -i include/uapi/linux/prctl.h
-  356e4bfff2c5 prctl: Add force disable speculation
-  b617cfc85816 prctl: Add speculation control prctls
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 6497bbc35ac5efce3bccd31d3719bae020282da6:
+> 
+>   Merge tag 'perf-urgent-for-mingo-4.17-20180531' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-05-31 12:37:07 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.17-20180602
+> 
+> for you to fetch changes up to 0b3a18387f3e5cdcfaaf884860a4688280d09c9d:
+> 
+>   perf tools intel-pt-decoder: Update insn.h from the kernel sources (2018-06-01 16:13:18 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - Update prctl and cpufeatures.h tools/ copies with the kernel sources
+>   originals, which makes 'perf trace' know about the new prctl options
+>   for speculation control and silences the build warnings (Arnaldo Carvalho de Melo)
+> 
+> - Update insn.h in Intel-PT instruction decoder with its original from from the
+>   kernel sources, to silence build warnings, no effect on the actual tools this
+>   time around (Arnaldo Carvalho de Melo)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (4):
+>       perf trace beauty prctl: Default header_dir to cwd to work without parms
+>       tools headers: Synchronize prctl.h ABI header
+>       tools headers: Sync x86 cpufeatures.h with the kernel sources
+>       perf tools intel-pt-decoder: Update insn.h from the kernel sources
+> 
+>  tools/arch/x86/include/asm/cpufeatures.h | 20 ++++++++++++++------
+>  tools/include/uapi/linux/prctl.h         | 12 ++++++++++++
+>  tools/perf/trace/beauty/prctl_option.sh  |  2 +-
+>  tools/perf/util/intel-pt-decoder/insn.h  | 18 ++++++++++++++++++
+>  4 files changed, 45 insertions(+), 7 deletions(-)
 
-  $ tools/perf/trace/beauty/prctl_option.sh > before.c
-  $ cp include/uapi/linux/prctl.h tools/include/uapi/linux/prctl.h
-  $ tools/perf/trace/beauty/prctl_option.sh > after.c
-  $ diff -u before.c after.c
-  --- before.c	2018-06-01 10:39:53.834073962 -0300
-  +++ after.c	2018-06-01 10:42:11.307985394 -0300
-  @@ -35,6 +35,8 @@
-          [42] = "GET_THP_DISABLE",
-          [45] = "SET_FP_MODE",
-          [46] = "GET_FP_MODE",
-  +       [52] = "GET_SPECULATION_CTRL",
-  +       [53] = "SET_SPECULATION_CTRL",
-   };
-   static const char *prctl_set_mm_options[] = {
- 	  [1] = "START_CODE",
-  $
+Pulled, thanks a lot Arnaldo!
 
-This will be used by 'perf trace' to show these strings when beautifying
-the prctl syscall args. At some point we'll be able to say something
-like:
-
-	'perf trace --all-cpus -e prctl(option=*SPEC*)'
-
-To filter by arg by name.
-
-  This silences this warning when building tools/perf:
-
-    Warning: Kernel ABI header at 'tools/include/uapi/linux/prctl.h' differs from latest version at 'include/uapi/linux/prctl.h'
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-zztsptwhc264r8wg44tqh5gp@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/prctl.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
-index af5f8c2df87a..db9f15f5db04 100644
---- a/tools/include/uapi/linux/prctl.h
-+++ b/tools/include/uapi/linux/prctl.h
-@@ -207,4 +207,16 @@ struct prctl_mm_map {
- # define PR_SVE_VL_LEN_MASK		0xffff
- # define PR_SVE_VL_INHERIT		(1 << 17) /* inherit across exec */
- 
-+/* Per task speculation control */
-+#define PR_GET_SPECULATION_CTRL		52
-+#define PR_SET_SPECULATION_CTRL		53
-+/* Speculation control variants */
-+# define PR_SPEC_STORE_BYPASS		0
-+/* Return and control values for PR_SET/GET_SPECULATION_CTRL */
-+# define PR_SPEC_NOT_AFFECTED		0
-+# define PR_SPEC_PRCTL			(1UL << 0)
-+# define PR_SPEC_ENABLE			(1UL << 1)
-+# define PR_SPEC_DISABLE		(1UL << 2)
-+# define PR_SPEC_FORCE_DISABLE		(1UL << 3)
-+
- #endif /* _LINUX_PRCTL_H */
--- 
-2.14.3
+	Ingo
