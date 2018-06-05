@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/46] perf annotate: Add comment about annotated_src->nr_histograms
-Date: Tue,  5 Jun 2018 14:50:00 -0300
-Message-ID: <20180605175030.32549-17-acme@kernel.org>
+Subject: [PATCH 12/46] perf annotate: Introduce symbol__cycle_hists()
+Date: Tue,  5 Jun 2018 14:49:56 -0300
+Message-ID: <20180605175030.32549-13-acme@kernel.org>
 References: <20180605175030.32549-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
@@ -12,58 +12,78 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When we have multiple groups in an evlist, say:
-
-  $ perf stat -e '{cycles,instructions},{cache-references,cache-misses}' sleep 1
-
-   Performance counter stats for 'sleep 1':
-
-           343,134      cycles:u
-           249,292      instructions:u            #    0.73  insn per cycle
-            15,556      cache-references:u
-             8,925      cache-misses:u            #   57.373 % of all cache refs
-
-       1.000957550 seconds time elapsed
-
-  $
-
-Then the perf_evsel instances for the two group leaders ("cycles" and
-"cache-references") will have evsel->nr_members set to 2, while all the
-evsel->evlist->nr_entries will be set to 4, so we can't use
-evsel->evlist->nr_entries everywhere, as event groups need to be taken
-into account.
-
-But this probably requires us to audit at least the forced-group code,
-where we want all of the events to be in a "group", to see them all in
-the screen, one column for each, even knowing that they were not
-necessarily scheduled to count at the same time by the kernel perf
-subsystem.
+In this case we're wanting just notes->src->cycles_hist, allocating it if needed.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-2g0vwqnc49wl4ttjk8dvpgcc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pqj81aneunhftlntm66tmhz0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/util/annotate.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 7ad503fbff74..3dc4ca1d6c08 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -202,6 +202,10 @@ struct cyc_hist {
- /** struct annotated_source - symbols with hits have this attached as in sannotation
-  *
-  * @histograms: Array of addr hit histograms per event being monitored
-+ * nr_histograms: This may not be the same as evsel->evlist->nr_entries if
-+ * 		  we have more than a group in a evlist, where we will want
-+ * 		  to see each group separately, that is why symbol__annotate2()
-+ * 		  sets src->nr_histograms to evsel->nr_members.
-  * @lines: If 'print_lines' is specified, per source code line percentages
-  * @source: source parsed from a disassembler like objdump -dS
-  * @cyc_hist: Average cycles per basic block
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 467bae0279ce..f11199f0be27 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -848,19 +848,23 @@ static int __symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ 	return 0;
+ }
+ 
+-static struct annotation *symbol__get_annotation(struct symbol *sym, bool cycles)
++static struct cyc_hist *symbol__cycles_hist(struct symbol *sym)
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 
+ 	if (notes->src == NULL) {
+-		if (symbol__alloc_hist(sym) < 0)
++		notes->src = annotated_source__new();
++		if (notes->src == NULL)
+ 			return NULL;
++		goto alloc_cycles_hist;
+ 	}
+-	if (!notes->src->cycles_hist && cycles) {
+-		if (symbol__alloc_hist_cycles(sym) < 0)
+-			return NULL;
++
++	if (!notes->src->cycles_hist) {
++alloc_cycles_hist:
++		symbol__alloc_hist_cycles(sym);
+ 	}
+-	return notes;
++
++	return notes->src->cycles_hist;
+ }
+ 
+ static struct annotated_source *symbol__hists(struct symbol *sym)
+@@ -900,13 +904,13 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ static int symbol__account_cycles(u64 addr, u64 start,
+ 				  struct symbol *sym, unsigned cycles)
+ {
+-	struct annotation *notes;
++	struct cyc_hist *cycles_hist;
+ 	unsigned offset;
+ 
+ 	if (sym == NULL)
+ 		return 0;
+-	notes = symbol__get_annotation(sym, true);
+-	if (notes == NULL)
++	cycles_hist = symbol__cycles_hist(sym);
++	if (cycles_hist == NULL)
+ 		return -ENOMEM;
+ 	if (addr < sym->start || addr >= sym->end)
+ 		return -ERANGE;
+@@ -918,7 +922,7 @@ static int symbol__account_cycles(u64 addr, u64 start,
+ 			start = 0;
+ 	}
+ 	offset = addr - sym->start;
+-	return __symbol__account_cycles(notes->src->cycles_hist,
++	return __symbol__account_cycles(cycles_hist,
+ 					start ? start - sym->start : 0,
+ 					offset, cycles,
+ 					!!start);
 -- 
 2.14.3
