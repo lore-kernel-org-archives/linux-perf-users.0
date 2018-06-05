@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/46] perf report: No need to have report_callchain_help as a global
-Date: Tue,  5 Jun 2018 14:50:11 -0300
-Message-ID: <20180605175030.32549-28-acme@kernel.org>
+Subject: [PATCH 25/46] perf annotate: Move objdump_path to struct annotation_options
+Date: Tue,  5 Jun 2018 14:50:09 -0300
+Message-ID: <20180605175030.32549-26-acme@kernel.org>
 References: <20180605175030.32549-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
@@ -12,46 +12,169 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It is used in a single place, move the declaration to that function.
+One more step in grouping annotation options.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-p650ofrl8xike4dewxod51gg@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-sogzdhugoavm6fyw60jnb0vs@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ tools/perf/arch/common.c       | 4 ++--
+ tools/perf/arch/common.h       | 4 +---
+ tools/perf/builtin-annotate.c  | 7 ++++---
+ tools/perf/builtin-report.c    | 2 +-
+ tools/perf/builtin-top.c       | 7 ++++---
+ tools/perf/ui/browsers/hists.c | 3 ++-
+ tools/perf/util/annotate.c     | 3 +--
+ tools/perf/util/annotate.h     | 1 +
+ 8 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index bc133e7a7ac2..cdb5b6949832 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -946,12 +946,6 @@ parse_percent_limit(const struct option *opt, const char *str,
- 	return 0;
+diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+index c6f373508a4f..82657c01a3b8 100644
+--- a/tools/perf/arch/common.c
++++ b/tools/perf/arch/common.c
+@@ -189,7 +189,7 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
+ 	return -1;
  }
  
--#define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
--
--const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
--				     CALLCHAIN_REPORT_HELP
--				     "\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
--
- int cmd_report(int argc, const char **argv)
+-int perf_env__lookup_objdump(struct perf_env *env)
++int perf_env__lookup_objdump(struct perf_env *env, const char **path)
  {
- 	struct perf_session *session;
-@@ -960,6 +954,10 @@ int cmd_report(int argc, const char **argv)
- 	bool has_br_stack = false;
- 	int branch_mode = -1;
- 	bool branch_call_mode = false;
-+#define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
-+	const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
-+					     CALLCHAIN_REPORT_HELP
-+					     "\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
- 	char callchain_default_opt[] = CALLCHAIN_DEFAULT_OPT;
- 	const char * const report_usage[] = {
- 		"perf report [<options>]",
+ 	/*
+ 	 * For live mode, env->arch will be NULL and we can use
+@@ -198,5 +198,5 @@ int perf_env__lookup_objdump(struct perf_env *env)
+ 	if (env->arch == NULL)
+ 		return 0;
+ 
+-	return perf_env__lookup_binutils_path(env, "objdump", &objdump_path);
++	return perf_env__lookup_binutils_path(env, "objdump", path);
+ }
+diff --git a/tools/perf/arch/common.h b/tools/perf/arch/common.h
+index 2d875baa92e6..2167001b18c5 100644
+--- a/tools/perf/arch/common.h
++++ b/tools/perf/arch/common.h
+@@ -4,8 +4,6 @@
+ 
+ #include "../util/env.h"
+ 
+-extern const char *objdump_path;
+-
+-int perf_env__lookup_objdump(struct perf_env *env);
++int perf_env__lookup_objdump(struct perf_env *env, const char **path);
+ 
+ #endif /* ARCH_PERF_COMMON_H */
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 2339ae719e1d..5eb22cc56363 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -388,8 +388,9 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 			goto out;
+ 	}
+ 
+-	if (!objdump_path) {
+-		ret = perf_env__lookup_objdump(&session->header.env);
++	if (!ann->opts.objdump_path) {
++		ret = perf_env__lookup_objdump(&session->header.env,
++					       &ann->opts.objdump_path);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -521,7 +522,7 @@ int cmd_annotate(int argc, const char **argv)
+ 		    "Display raw encoding of assembly instructions (default)"),
+ 	OPT_STRING('M', "disassembler-style", &annotate.opts.disassembler_style, "disassembler style",
+ 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
+-	OPT_STRING(0, "objdump", &objdump_path, "path",
++	OPT_STRING(0, "objdump", &annotate.opts.objdump_path, "path",
+ 		   "objdump binary to use for disassembly and annotations"),
+ 	OPT_BOOLEAN(0, "group", &symbol_conf.event_group,
+ 		    "Show event group information together"),
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 14b516a3a0de..bc133e7a7ac2 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1094,7 +1094,7 @@ int cmd_report(int argc, const char **argv)
+ 		    parse_branch_mode),
+ 	OPT_BOOLEAN(0, "branch-history", &branch_call_mode,
+ 		    "add last branch records to call history"),
+-	OPT_STRING(0, "objdump", &objdump_path, "path",
++	OPT_STRING(0, "objdump", &report.annotation_opts.objdump_path, "path",
+ 		   "objdump binary to use for disassembly and annotations"),
+ 	OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
+ 		    "Disable symbol demangling"),
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index bd60a631a481..ffdc2769ff9f 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1077,8 +1077,9 @@ static int __cmd_top(struct perf_top *top)
+ 	if (top->session == NULL)
+ 		return -1;
+ 
+-	if (!objdump_path) {
+-		ret = perf_env__lookup_objdump(&top->session->header.env);
++	if (!top->annotation_opts.objdump_path) {
++		ret = perf_env__lookup_objdump(&top->session->header.env,
++					       &top->annotation_opts.objdump_path);
+ 		if (ret)
+ 			goto out_delete;
+ 	}
+@@ -1347,7 +1348,7 @@ int cmd_top(int argc, const char **argv)
+ 		    "Display raw encoding of assembly instructions (default)"),
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+ 		    "Enable kernel symbol demangling"),
+-	OPT_STRING(0, "objdump", &objdump_path, "path",
++	OPT_STRING(0, "objdump", &top.annotation_opts.objdump_path, "path",
+ 		    "objdump binary to use for disassembly and annotations"),
+ 	OPT_STRING('M', "disassembler-style", &top.annotation_opts.disassembler_style, "disassembler style",
+ 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 3af1b74608ab..22054107f1af 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2338,7 +2338,8 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	struct hist_entry *he;
+ 	int err;
+ 
+-	if (!objdump_path && perf_env__lookup_objdump(browser->env))
++	if (!browser->annotation_opts->objdump_path &&
++	    perf_env__lookup_objdump(browser->env, &browser->annotation_opts->objdump_path))
+ 		return 0;
+ 
+ 	notes = symbol__annotation(act->ms.sym);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index a90777717b60..2baa22933b0e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -51,7 +51,6 @@ struct annotation_options annotation__default_options = {
+ 	.offset_level	= ANNOTATION__OFFSET_JUMP_TARGETS,
+ };
+ 
+-const char	*objdump_path;
+ static regex_t	 file_lineno;
+ 
+ static struct ins_ops *ins__find(struct arch *arch, const char *name);
+@@ -1657,7 +1656,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		 "%s %s%s --start-address=0x%016" PRIx64
+ 		 " --stop-address=0x%016" PRIx64
+ 		 " -l -d %s %s -C \"%s\" 2>/dev/null|grep -v \"%s:\"|expand",
+-		 objdump_path ? objdump_path : "objdump",
++		 opts->objdump_path ?: "objdump",
+ 		 opts->disassembler_style ? "-M " : "",
+ 		 opts->disassembler_style ?: "",
+ 		 map__rip_2objdump(map, sym->start),
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 6e6e2a571928..a4c0d91907e6 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -80,6 +80,7 @@ struct annotation_options {
+ 	int  min_pcnt;
+ 	int  max_lines;
+ 	int  context;
++	const char *objdump_path;
+ 	const char *disassembler_style;
+ };
+ 
 -- 
 2.14.3
