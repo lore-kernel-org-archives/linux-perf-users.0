@@ -1,132 +1,64 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v3]: perf record: enable arbitrary event names thru name=
- modifier
-Date: Tue, 5 Jun 2018 09:00:17 +0300
-Message-ID: <34a15f46-0358-930b-4b73-29290d15280f@linux.intel.com>
-References: <c194b060-761d-0d50-3b21-bb4ed680002d@linux.intel.com>
- <20180604075600.GA10484@krava> <20180604135849.GE3397@kernel.org>
- <3269ec8e-88b0-8254-6419-da1896c083df@linux.intel.com>
- <20180604142340.GJ3397@kernel.org>
- <ed38dfcc-be73-e1d7-4eb5-862468955766@linux.intel.com>
- <20180604145844.GL3397@kernel.org>
- <80a37269-e54d-0992-712a-ee72555a04d4@linux.intel.com>
- <20180604191659.GM3397@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH] perf tools: Fix object code reading for PTI entry trampolines
+Date: Tue,  5 Jun 2018 10:30:00 +0300
+Message-ID: <1528183800-21577-1-git-send-email-adrian.hunter@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180604191659.GM3397@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
-On 04.06.2018 22:16, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jun 04, 2018 at 06:22:43PM +0300, Alexey Budankov escreveu:
->> On 04.06.2018 17:58, Arnaldo Carvalho de Melo wrote:
->>> Em Mon, Jun 04, 2018 at 05:51:03PM +0300, Alexey Budankov escreveu:
->>>> event names quoted there. If such cases were pointed out then they also 
->>>> could be addressed along with the unit/regression testing mentioned above.
-> 
->>> So lests stick to just the unit/regression testing, can you take a look
->>> at that?
->  
->> Sure. Is it enough to run perf record with some quoted event name to make 
->> sure it runs successfully?
-> 
-> I mentioned tools/perf/tests/attr/, for checking if the perf_event_attr
-> was setup the way you intended, and tools/perf/tests/parse-events.c,
-> which probably is what we want here, see, for instance, this cset I've
-> added recently to have we testing intel_pt event parsing:
-> 
-> $ git show b3f58c8da64bc63bd0c0a06a4e2cf258a3d20be6
-> commit b3f58c8da64bc63bd0c0a06a4e2cf258a3d20be6
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Fri May 11 11:48:54 2018 -0300
-> 
->     perf tests parse-events: Add intel_pt parse test
->     
->     To avoid regressions such as the one fixed by 4a35a9027f64 ("Revert
->     "perf pmu: Fix pmu events parsing rule""), where '-e intel_pt//u' got
->     broken, with this new entry in this 'perf tests' subtest, we would have
->     caught it before pushing upstream.
->     
->     Acked-by: Jiri Olsa <jolsa@kernel.org>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Andi Kleen <ak@linux.intel.com>
->     Cc: David Ahern <dsahern@gmail.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Kan Liang <kan.liang@linux.intel.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Wang Nan <wangnan0@huawei.com>
->     Link: https://lkml.kernel.org/n/tip-kw62fys9bwdgsp722so2ln1l@git.kernel.org
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 18b06444f230..6829dd416a99 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -1309,6 +1309,14 @@ static int test__checkevent_config_cache(struct perf_evlist *evlist)
->  	return 0;
->  }
->  
-> +static int test__intel_pt(struct perf_evlist *evlist)
-> +{
-> +	struct perf_evsel *evsel = perf_evlist__first(evlist);
-> +
-> +	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "intel_pt//u") == 0);
-> +	return 0;
-> +}
-> +
->  static int count_tracepoints(void)
->  {
->  	struct dirent *events_ent;
-> @@ -1637,6 +1645,11 @@ static struct evlist_test test__events[] = {
->  		.check = test__checkevent_config_cache,
->  		.id    = 51,
->  	},
-> +	{
-> +		.name  = "intel_pt//u",
-> +		.check = test__intel_pt,
-> +		.id    = 52,
-> +	},
->  };
->  
->  static struct evlist_test test__events_pmu[] = {
-> 
-> See also this one:
-> 
-> static int
-> test__checkevent_breakpoint_len_rw_modifier(struct perf_evlist *evlist)
-> {
->         struct perf_evsel *evsel = perf_evlist__first(evlist);
-> 
->         TEST_ASSERT_VAL("wrong exclude_user", !evsel->attr.exclude_user);
->         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->attr.exclude_kernel);
->         TEST_ASSERT_VAL("wrong exclude_hv", evsel->attr.exclude_hv);
->         TEST_ASSERT_VAL("wrong precise_ip", !evsel->attr.precise_ip);
-> 
->         return test__checkevent_breakpoint_rw(evlist);
-> }
->         {
->                 .name  = "mem:0/4:rw:u",
->                 .check = test__checkevent_breakpoint_len_rw_modifier,
->                 .id    = 44
->         },
-> 
-> 
-> I.e. have as many TEST_ASSERT_VAL as you need, checking how parsing the
-> event name ends up setting up the evsel, evlist and perf_event_attr.
+Fix object code reading and the "Object code reading" test for PTI entry
+trampolines.
 
-Ok, I see. But please expect delay in delivery since I am on vacations till 06/18.
+perf tools uses map__rip_2objdump() to calculate objdump virtual addresses.
+map__rip_2objdump() needs to be amended to deal with PTI entry trampolines.
+Also the "Object code reading" test will not create maps for the PTI entry
+trampolines unless the machine environment exists to show that the arch is
+x86_64.
 
-Thanks,
-Alexey
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/tests/code-reading.c |  1 +
+ tools/perf/util/map.c           | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-> 
-> - Arnaldo
-> 
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index afa4ce21ba7c..4892bd2dc33e 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -560,6 +560,7 @@ static int do_test_code_reading(bool try_kcore)
+ 	pid = getpid();
+ 
+ 	machine = machine__new_host();
++	machine->env = &perf_env;
+ 
+ 	ret = machine__create_kernel_maps(machine);
+ 	if (ret < 0) {
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 92abc8e248c5..89ac5b5dc218 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -449,6 +449,20 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
+  */
+ u64 map__rip_2objdump(struct map *map, u64 rip)
+ {
++	struct kmap *kmap = __map__kmap(map);
++
++	/*
++	 * vmlinux does not have program headers for PTI entry trampolines and
++	 * kcore may not either. However the trampoline object code is on the
++	 * main kernel map, so just use that instead.
++	 */
++	if (kmap && is_entry_trampoline(kmap->name) && kmap->kmaps && kmap->kmaps->machine) {
++		struct map *kernel_map = machine__kernel_map(kmap->kmaps->machine);
++
++		if (kernel_map)
++			map = kernel_map;
++	}
++
+ 	if (!map->dso->adjust_symbols)
+ 		return rip;
+ 
+-- 
+1.9.1
