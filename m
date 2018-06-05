@@ -1,57 +1,50 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/46] perf test record+probe_libc_inet_pton: Ask 'nm' for dynamic symbols
-Date: Tue,  5 Jun 2018 14:50:25 -0300
-Message-ID: <20180605175030.32549-42-acme@kernel.org>
+Subject: [PATCH 44/46] perf intel-pt: Fix decoding to accept CBR between FUP and corresponding TIP
+Date: Tue,  5 Jun 2018 14:50:28 -0300
+Message-ID: <20180605175030.32549-45-acme@kernel.org>
 References: <20180605175030.32549-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Sandipan Das <sandipan@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Adrian reported that this test fails in his system where:
+It is possible to have a CBR packet between a FUP packet and
+corresponding TIP packet. Stop treating it as an error.
 
-  probe libc's inet_pton & backtrace it with ping: FAILED!
-  root@kbl04:~/git/linux-perf# nm -g /lib/x86_64-linux-gnu/libc-2.19.so | grep inet_pton
-  nm: /lib/x86_64-linux-gnu/libc-2.19.so: no symbols
-
-This fails on ubuntu systems, with Adrian's being kubuntu 14.04, I
-tested with ubuntu 14.04.4 and 18.04, and there we need to use the
--D/--dynamic 'nm' option to have this test working. And it works as well
-with that on fedora 27, so use it.
-
-Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Sandipan Das <sandipan@linux.vnet.ibm.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-zlfnbauad3ljlmtjgo0v660u@git.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/1527762225-26024-3-git-send-email-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 650b208f700f..263057039693 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -11,7 +11,7 @@
- . $(dirname $0)/lib/probe.sh
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index f9157aed1289..e5eb91777383 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1604,7 +1604,6 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+ 		case INTEL_PT_PSB:
+ 		case INTEL_PT_TSC:
+ 		case INTEL_PT_TMA:
+-		case INTEL_PT_CBR:
+ 		case INTEL_PT_MODE_TSX:
+ 		case INTEL_PT_BAD:
+ 		case INTEL_PT_PSBEND:
+@@ -1620,6 +1619,10 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+ 			decoder->pkt_step = 0;
+ 			return -ENOENT;
  
- libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
--nm -g $libc 2>/dev/null | fgrep -q inet_pton || exit 254
-+nm -Dg $libc 2>/dev/null | fgrep -q inet_pton || exit 254
++		case INTEL_PT_CBR:
++			intel_pt_calc_cbr(decoder);
++			break;
++
+ 		case INTEL_PT_OVF:
+ 			return intel_pt_overflow(decoder);
  
- trace_libc_inet_pton_backtrace() {
- 	idx=0
 -- 
 2.14.3
