@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 29/46] perf script: Check if evsel has callchains before trying to use it
-Date: Tue,  5 Jun 2018 14:50:13 -0300
-Message-ID: <20180605175030.32549-30-acme@kernel.org>
+Subject: [PATCH 27/46] perf report: No need to have report_callchain_help as a global
+Date: Tue,  5 Jun 2018 14:50:11 -0300
+Message-ID: <20180605175030.32549-28-acme@kernel.org>
 References: <20180605175030.32549-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
@@ -12,33 +12,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were checking just if callchain processing was asked for by the
-user, not if the evsel itself has callchains, and since we can have
-some evsels with callchains and others without, check that.
+It is used in a single place, move the declaration to that function.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-inxl7k49q9f9w1se039fbxuw@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-p650ofrl8xike4dewxod51gg@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-report.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 48e940efb3cb..b3bf35512d21 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -606,7 +606,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 	if (PRINT_FIELD(COMM)) {
- 		if (latency_format)
- 			printed += fprintf(fp, "%8.8s ", thread__comm_str(thread));
--		else if (PRINT_FIELD(IP) && symbol_conf.use_callchain)
-+		else if (PRINT_FIELD(IP) && evsel__has_callchain(evsel) && symbol_conf.use_callchain)
- 			printed += fprintf(fp, "%s ", thread__comm_str(thread));
- 		else
- 			printed += fprintf(fp, "%16s ", thread__comm_str(thread));
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index bc133e7a7ac2..cdb5b6949832 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -946,12 +946,6 @@ parse_percent_limit(const struct option *opt, const char *str,
+ 	return 0;
+ }
+ 
+-#define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
+-
+-const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
+-				     CALLCHAIN_REPORT_HELP
+-				     "\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
+-
+ int cmd_report(int argc, const char **argv)
+ {
+ 	struct perf_session *session;
+@@ -960,6 +954,10 @@ int cmd_report(int argc, const char **argv)
+ 	bool has_br_stack = false;
+ 	int branch_mode = -1;
+ 	bool branch_call_mode = false;
++#define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
++	const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
++					     CALLCHAIN_REPORT_HELP
++					     "\n\t\t\t\tDefault: " CALLCHAIN_DEFAULT_OPT;
+ 	char callchain_default_opt[] = CALLCHAIN_DEFAULT_OPT;
+ 	const char * const report_usage[] = {
+ 		"perf report [<options>]",
 -- 
 2.14.3
