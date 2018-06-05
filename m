@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/46] perf annotate: Move disassembler_style global to annotation_options
-Date: Tue,  5 Jun 2018 14:50:07 -0300
-Message-ID: <20180605175030.32549-24-acme@kernel.org>
+Subject: [PATCH 24/46] perf hists browser: Pass annotation_options from tool to browser
+Date: Tue,  5 Jun 2018 14:50:08 -0300
+Message-ID: <20180605175030.32549-25-acme@kernel.org>
 References: <20180605175030.32549-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
@@ -12,105 +12,350 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Continuing to group annotation specific stuff into a struct.
+So that things changed in the command line may percolate to the browser
+code without using globals.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-p3cdhltj58jt0byjzg3g7obx@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-5daawc40zhl6gcs600com1ua@git.kernel.org
+[ Merged fix for NO_SLANG=1 build provided by Jiri Olsa ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-annotate.c | 2 +-
- tools/perf/builtin-report.c   | 2 +-
- tools/perf/builtin-top.c      | 2 +-
- tools/perf/util/annotate.c    | 5 ++---
- tools/perf/util/annotate.h    | 3 +--
- 5 files changed, 6 insertions(+), 8 deletions(-)
+ tools/perf/builtin-annotate.c     |  2 +-
+ tools/perf/builtin-report.c       |  2 +-
+ tools/perf/builtin-top.c          |  3 ++-
+ tools/perf/ui/browsers/annotate.c | 19 ++++++++++++-------
+ tools/perf/ui/browsers/hists.c    | 29 ++++++++++++++++++++---------
+ tools/perf/ui/browsers/hists.h    |  3 +++
+ tools/perf/util/annotate.h        |  7 ++++---
+ tools/perf/util/hist.h            | 20 ++++++++++++++------
+ 8 files changed, 57 insertions(+), 28 deletions(-)
 
 diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 2ca7172f0780..3ee063598364 100644
+index 3ee063598364..2339ae719e1d 100644
 --- a/tools/perf/builtin-annotate.c
 +++ b/tools/perf/builtin-annotate.c
-@@ -519,7 +519,7 @@ int cmd_annotate(int argc, const char **argv)
- 		    "Interleave source code with assembly code (default)"),
- 	OPT_BOOLEAN(0, "asm-raw", &annotate.opts.show_asm_raw,
- 		    "Display raw encoding of assembly instructions (default)"),
--	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
-+	OPT_STRING('M', "disassembler-style", &annotate.opts.disassembler_style, "disassembler style",
- 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
- 	OPT_STRING(0, "objdump", &objdump_path, "path",
- 		   "objdump binary to use for disassembly and annotations"),
+@@ -341,7 +341,7 @@ static void hists__find_annotations(struct hists *hists,
+ 			/* skip missing symbols */
+ 			nd = rb_next(nd);
+ 		} else if (use_browser == 1) {
+-			key = hist_entry__tui_annotate(he, evsel, NULL);
++			key = hist_entry__tui_annotate(he, evsel, NULL, &ann->opts);
+ 
+ 			switch (key) {
+ 			case -1:
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index bee6dbfbf11e..c74f9a219ad1 100644
+index c74f9a219ad1..14b516a3a0de 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -1083,7 +1083,7 @@ int cmd_report(int argc, const char **argv)
- 		    "Interleave source code with assembly code (default)"),
- 	OPT_BOOLEAN(0, "asm-raw", &report.annotation_opts.show_asm_raw,
- 		    "Display raw encoding of assembly instructions (default)"),
--	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
-+	OPT_STRING('M', "disassembler-style", &report.annotation_opts.disassembler_style, "disassembler style",
- 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
- 	OPT_BOOLEAN(0, "show-total-period", &symbol_conf.show_total_period,
- 		    "Show a column with the sum of periods"),
+@@ -561,7 +561,7 @@ static int report__browse_hists(struct report *rep)
+ 		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
+ 						    rep->min_percent,
+ 						    &session->header.env,
+-						    true);
++						    true, &rep->annotation_opts);
+ 		/*
+ 		 * Usually "ret" is the last pressed key, and we only
+ 		 * care if the key notifies us to switch data file.
 diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index e65e72c06a01..739c158fb39e 100644
+index 739c158fb39e..bd60a631a481 100644
 --- a/tools/perf/builtin-top.c
 +++ b/tools/perf/builtin-top.c
-@@ -1348,7 +1348,7 @@ int cmd_top(int argc, const char **argv)
- 		    "Enable kernel symbol demangling"),
- 	OPT_STRING(0, "objdump", &objdump_path, "path",
- 		    "objdump binary to use for disassembly and annotations"),
--	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
-+	OPT_STRING('M', "disassembler-style", &top.annotation_opts.disassembler_style, "disassembler style",
- 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
- 	OPT_STRING('u', "uid", &target->uid_str, "user", "user to profile"),
- 	OPT_CALLBACK(0, "percent-limit", &top, "percent",
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ff8f4f474b22..a90777717b60 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -51,7 +51,6 @@ struct annotation_options annotation__default_options = {
- 	.offset_level	= ANNOTATION__OFFSET_JUMP_TARGETS,
+@@ -606,7 +606,8 @@ static void *display_thread_tui(void *arg)
+ 	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
+ 				      top->min_percent,
+ 				      &top->session->header.env,
+-				      !top->record_opts.overwrite);
++				      !top->record_opts.overwrite,
++				      &top->annotation_opts);
+ 
+ 	done = 1;
+ 	return NULL;
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 3bfe17e176fe..3b4f1c10ff57 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -29,6 +29,7 @@ struct annotate_browser {
+ 	struct rb_node		   *curr_hot;
+ 	struct annotation_line	   *selection;
+ 	struct arch		   *arch;
++	struct annotation_options  *opts;
+ 	bool			    searching_backwards;
+ 	char			    search_bf[128];
  };
+@@ -418,7 +419,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 	}
  
--const char 	*disassembler_style;
- const char	*objdump_path;
- static regex_t	 file_lineno;
+ 	pthread_mutex_unlock(&notes->lock);
+-	symbol__tui_annotate(dl->ops.target.sym, ms->map, evsel, hbt);
++	symbol__tui_annotate(dl->ops.target.sym, ms->map, evsel, hbt, browser->opts);
+ 	sym_title(ms->sym, ms->map, title, sizeof(title));
+ 	ui_browser__show_title(&browser->b, title);
+ 	return true;
+@@ -817,24 +818,27 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ }
  
-@@ -1659,8 +1658,8 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		 " --stop-address=0x%016" PRIx64
- 		 " -l -d %s %s -C \"%s\" 2>/dev/null|grep -v \"%s:\"|expand",
- 		 objdump_path ? objdump_path : "objdump",
--		 disassembler_style ? "-M " : "",
--		 disassembler_style ? disassembler_style : "",
-+		 opts->disassembler_style ? "-M " : "",
-+		 opts->disassembler_style ?: "",
- 		 map__rip_2objdump(map, sym->start),
- 		 map__rip_2objdump(map, sym->end),
- 		 opts->show_asm_raw ? "" : "--no-show-raw",
+ int map_symbol__tui_annotate(struct map_symbol *ms, struct perf_evsel *evsel,
+-			     struct hist_browser_timer *hbt)
++			     struct hist_browser_timer *hbt,
++			     struct annotation_options *opts)
+ {
+-	return symbol__tui_annotate(ms->sym, ms->map, evsel, hbt);
++	return symbol__tui_annotate(ms->sym, ms->map, evsel, hbt, opts);
+ }
+ 
+ int hist_entry__tui_annotate(struct hist_entry *he, struct perf_evsel *evsel,
+-			     struct hist_browser_timer *hbt)
++			     struct hist_browser_timer *hbt,
++			     struct annotation_options *opts)
+ {
+ 	/* reset abort key so that it can get Ctrl-C as a key */
+ 	SLang_reset_tty();
+ 	SLang_init_tty(0, 0, 0);
+ 
+-	return map_symbol__tui_annotate(&he->ms, evsel, hbt);
++	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
+ }
+ 
+ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			 struct perf_evsel *evsel,
+-			 struct hist_browser_timer *hbt)
++			 struct hist_browser_timer *hbt,
++			 struct annotation_options *opts)
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct map_symbol ms = {
+@@ -851,6 +855,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			.priv	 = &ms,
+ 			.use_navkeypressed = true,
+ 		},
++		.opts = opts,
+ 	};
+ 	int ret = -1, err;
+ 
+@@ -860,7 +865,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 	if (map->dso->annotate_warned)
+ 		return -1;
+ 
+-	err = symbol__annotate2(sym, map, evsel, &annotation__default_options, &browser.arch);
++	err = symbol__annotate2(sym, map, evsel, opts, &browser.arch);
+ 	if (err) {
+ 		char msg[BUFSIZ];
+ 		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index e5f247247daa..3af1b74608ab 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2175,7 +2175,8 @@ struct hist_browser *hist_browser__new(struct hists *hists)
+ static struct hist_browser *
+ perf_evsel_browser__new(struct perf_evsel *evsel,
+ 			struct hist_browser_timer *hbt,
+-			struct perf_env *env)
++			struct perf_env *env,
++			struct annotation_options *annotation_opts)
+ {
+ 	struct hist_browser *browser = hist_browser__new(evsel__hists(evsel));
+ 
+@@ -2183,6 +2184,7 @@ perf_evsel_browser__new(struct perf_evsel *evsel,
+ 		browser->hbt   = hbt;
+ 		browser->env   = env;
+ 		browser->title = hists_browser__scnprintf_title;
++		browser->annotation_opts = annotation_opts;
+ 	}
+ 	return browser;
+ }
+@@ -2344,7 +2346,8 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 		return 0;
+ 
+ 	evsel = hists_to_evsel(browser->hists);
+-	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
++	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt,
++				       browser->annotation_opts);
+ 	he = hist_browser__selected_entry(browser);
+ 	/*
+ 	 * offer option to annotate the other branch source or target
+@@ -2697,10 +2700,11 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ 				    struct hist_browser_timer *hbt,
+ 				    float min_pcnt,
+ 				    struct perf_env *env,
+-				    bool warn_lost_event)
++				    bool warn_lost_event,
++				    struct annotation_options *annotation_opts)
+ {
+ 	struct hists *hists = evsel__hists(evsel);
+-	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env);
++	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env, annotation_opts);
+ 	struct branch_info *bi;
+ #define MAX_OPTIONS  16
+ 	char *options[MAX_OPTIONS];
+@@ -3062,6 +3066,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ struct perf_evsel_menu {
+ 	struct ui_browser b;
+ 	struct perf_evsel *selection;
++	struct annotation_options *annotation_opts;
+ 	bool lost_events, lost_events_warned;
+ 	float min_pcnt;
+ 	struct perf_env *env;
+@@ -3163,7 +3168,8 @@ static int perf_evsel_menu__run(struct perf_evsel_menu *menu,
+ 						       true, hbt,
+ 						       menu->min_pcnt,
+ 						       menu->env,
+-						       warn_lost_event);
++						       warn_lost_event,
++						       menu->annotation_opts);
+ 			ui_browser__show_title(&menu->b, title);
+ 			switch (key) {
+ 			case K_TAB:
+@@ -3222,7 +3228,8 @@ static int __perf_evlist__tui_browse_hists(struct perf_evlist *evlist,
+ 					   struct hist_browser_timer *hbt,
+ 					   float min_pcnt,
+ 					   struct perf_env *env,
+-					   bool warn_lost_event)
++					   bool warn_lost_event,
++					   struct annotation_options *annotation_opts)
+ {
+ 	struct perf_evsel *pos;
+ 	struct perf_evsel_menu menu = {
+@@ -3237,6 +3244,7 @@ static int __perf_evlist__tui_browse_hists(struct perf_evlist *evlist,
+ 		},
+ 		.min_pcnt = min_pcnt,
+ 		.env = env,
++		.annotation_opts = annotation_opts,
+ 	};
+ 
+ 	ui_helpline__push("Press ESC to exit");
+@@ -3257,7 +3265,8 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 				  struct hist_browser_timer *hbt,
+ 				  float min_pcnt,
+ 				  struct perf_env *env,
+-				  bool warn_lost_event)
++				  bool warn_lost_event,
++				  struct annotation_options *annotation_opts)
+ {
+ 	int nr_entries = evlist->nr_entries;
+ 
+@@ -3267,7 +3276,8 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 
+ 		return perf_evsel__hists_browse(first, nr_entries, help,
+ 						false, hbt, min_pcnt,
+-						env, warn_lost_event);
++						env, warn_lost_event,
++						annotation_opts);
+ 	}
+ 
+ 	if (symbol_conf.event_group) {
+@@ -3285,5 +3295,6 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 
+ 	return __perf_evlist__tui_browse_hists(evlist, nr_entries, help,
+ 					       hbt, min_pcnt, env,
+-					       warn_lost_event);
++					       warn_lost_event,
++					       annotation_opts);
+ }
+diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
+index 9428bee076f2..91d3e18b50aa 100644
+--- a/tools/perf/ui/browsers/hists.h
++++ b/tools/perf/ui/browsers/hists.h
+@@ -4,6 +4,8 @@
+ 
+ #include "ui/browser.h"
+ 
++struct annotation_options;
++
+ struct hist_browser {
+ 	struct ui_browser   b;
+ 	struct hists	    *hists;
+@@ -12,6 +14,7 @@ struct hist_browser {
+ 	struct hist_browser_timer *hbt;
+ 	struct pstack	    *pstack;
+ 	struct perf_env	    *env;
++	struct annotation_options *annotation_opts;
+ 	int		     print_seq;
+ 	bool		     show_dso;
+ 	bool		     show_headers;
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 476ea2a25649..71a734b86873 100644
+index 71a734b86873..6e6e2a571928 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -80,6 +80,7 @@ struct annotation_options {
- 	int  min_pcnt;
- 	int  max_lines;
- 	int  context;
-+	const char *disassembler_style;
+@@ -357,13 +357,14 @@ int symbol__tty_annotate2(struct symbol *sym, struct map *map,
+ #ifdef HAVE_SLANG_SUPPORT
+ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			 struct perf_evsel *evsel,
+-			 struct hist_browser_timer *hbt);
++			 struct hist_browser_timer *hbt,
++			 struct annotation_options *opts);
+ #else
+ static inline int symbol__tui_annotate(struct symbol *sym __maybe_unused,
+ 				struct map *map __maybe_unused,
+ 				struct perf_evsel *evsel  __maybe_unused,
+-				struct hist_browser_timer *hbt
+-				__maybe_unused)
++				struct hist_browser_timer *hbt __maybe_unused,
++				struct annotation_options *opts __maybe_unused)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index fbabfd8a215d..cafafbf2aa9f 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -419,19 +419,24 @@ struct hist_browser_timer {
+ 	int refresh;
  };
  
- enum {
-@@ -368,8 +369,6 @@ static inline int symbol__tui_annotate(struct symbol *sym __maybe_unused,
++struct annotation_options;
++
+ #ifdef HAVE_SLANG_SUPPORT
+ #include "../ui/keysyms.h"
+ int map_symbol__tui_annotate(struct map_symbol *ms, struct perf_evsel *evsel,
+-			     struct hist_browser_timer *hbt);
++			     struct hist_browser_timer *hbt,
++			     struct annotation_options *annotation_opts);
+ 
+ int hist_entry__tui_annotate(struct hist_entry *he, struct perf_evsel *evsel,
+-			     struct hist_browser_timer *hbt);
++			     struct hist_browser_timer *hbt,
++			     struct annotation_options *annotation_opts);
+ 
+ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 				  struct hist_browser_timer *hbt,
+ 				  float min_pcnt,
+ 				  struct perf_env *env,
+-				  bool warn_lost_event);
++				  bool warn_lost_event,
++				  struct annotation_options *annotation_options);
+ int script_browse(const char *script_opt);
+ #else
+ static inline
+@@ -440,20 +445,23 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist __maybe_unused,
+ 				  struct hist_browser_timer *hbt __maybe_unused,
+ 				  float min_pcnt __maybe_unused,
+ 				  struct perf_env *env __maybe_unused,
+-				  bool warn_lost_event __maybe_unused)
++				  bool warn_lost_event __maybe_unused,
++				  struct annotation_options *annotation_options __maybe_unused)
+ {
+ 	return 0;
  }
- #endif
+ static inline int map_symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
+ 					   struct perf_evsel *evsel __maybe_unused,
+-					   struct hist_browser_timer *hbt __maybe_unused)
++					   struct hist_browser_timer *hbt __maybe_unused,
++					   struct annotation_options *annotation_options __maybe_unused)
+ {
+ 	return 0;
+ }
  
--extern const char	*disassembler_style;
--
- void annotation_config__init(void);
- 
- #endif	/* __PERF_ANNOTATE_H */
+ static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
+ 					   struct perf_evsel *evsel __maybe_unused,
+-					   struct hist_browser_timer *hbt __maybe_unused)
++					   struct hist_browser_timer *hbt __maybe_unused,
++					   struct annotation_options *annotation_opts __maybe_unused)
+ {
+ 	return 0;
+ }
 -- 
 2.14.3
