@@ -1,49 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf stat: Display user and system time
-Date: Tue, 5 Jun 2018 10:23:33 -0300
-Message-ID: <20180605132333.GC4899@kernel.org>
-References: <20180605121313.31337-1-jolsa@kernel.org>
+Subject: Re: [PATCH] perf tools: Fix object code reading for PTI entry
+ trampolines
+Date: Tue, 5 Jun 2018 10:41:42 -0300
+Message-ID: <20180605134142.GE4899@kernel.org>
+References: <1528183800-21577-1-git-send-email-adrian.hunter@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180605121313.31337-1-jolsa@kernel.org>
+In-Reply-To: <1528183800-21577-1-git-send-email-adrian.hunter@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jun 05, 2018 at 02:13:13PM +0200, Jiri Olsa escreveu:
-> Adding the support to read rusage data once the
-> workload is finished and display the system/user
-> time values:
-<SNIP>
-> Those times are the very same displayed by 'time' tool.
-> They are returned by wait4 call via the getrusage struct
-> interface.
+Em Tue, Jun 05, 2018 at 10:30:00AM +0300, Adrian Hunter escreveu:
+> Fix object code reading and the "Object code reading" test for PTI entry
+> trampolines.
+> 
+> perf tools uses map__rip_2objdump() to calculate objdump virtual addresses.
+> map__rip_2objdump() needs to be amended to deal with PTI entry trampolines.
+> Also the "Object code reading" test will not create maps for the PTI entry
+> trampolines unless the machine environment exists to show that the arch is
+> x86_64.
 
-Thanks, tested it with:
+So, I split it into two patches, right at the "Also" part in your
+description:
 
-      # perf stat --null time perf bench sched pipe
-      # Running 'sched/pipe' benchmark:
-      # Executed 1000000 pipe operations between two processes
-    
-           Total time: 5.526 [sec]
-    
-             5.526534 usecs/op
-               180945 ops/sec
-      1.00user 6.25system 0:05.52elapsed 131%CPU (0avgtext+0avgdata 8056maxresident)k
-      0inputs+0outputs (0major+606minor)pagefaults 0swaps
-    
-       Performance counter stats for 'time perf bench sched pipe':
-    
-             5.530978744 seconds time elapsed
-    
-             1.004037000 seconds user
-             6.259937000 seconds sys
-    
-      #
+[acme@seventh perf]$ git log --oneline -2
+36800a71b000 (HEAD -> perf/core) perf map: Consider PTI entry trampolines in rip_2objdump()
+2f6777b74f6d perf test code-reading: Fix perf_env setup for PTI entry trampolines
+[acme@seventh perf]$
 
-:-)
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
+
+And this test fails way less often, but still does, for instance:
+
+# while true ; do perf test -v object 2>out.txt ; grep -i fail out.txt && break ; done
+dso__data_read_offset failed
+Object code reading: FAILED!
+#
+[root@seventh ~]# tail out.txt 
+File is: /proc/kcore
+On file address is: 0x7fff892300df
+kcore map tested already - skipping
+Reading object code for memory address: 0x4a020f
+File is: /home/acme/bin/perf (deleted)
+On file address is: 0xa020f
+dso__data_read_offset failed
+test child finished with -1
+---- end ----
+Object code reading: FAILED!
+[root@seventh ~]#
+
+I start that loop and then try running 'make -C tools/perf O=/tmp/build/perf install-bin',
+to generate some load.
+
+But now at least on a quiet system it works.
 
 - Arnaldo
