@@ -1,64 +1,49 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH] perf tools: Fix object code reading for PTI entry trampolines
-Date: Tue,  5 Jun 2018 10:30:00 +0300
-Message-ID: <1528183800-21577-1-git-send-email-adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf stat: Display user and system time
+Date: Tue, 5 Jun 2018 10:23:33 -0300
+Message-ID: <20180605132333.GC4899@kernel.org>
+References: <20180605121313.31337-1-jolsa@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180605121313.31337-1-jolsa@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Fix object code reading and the "Object code reading" test for PTI entry
-trampolines.
+Em Tue, Jun 05, 2018 at 02:13:13PM +0200, Jiri Olsa escreveu:
+> Adding the support to read rusage data once the
+> workload is finished and display the system/user
+> time values:
+<SNIP>
+> Those times are the very same displayed by 'time' tool.
+> They are returned by wait4 call via the getrusage struct
+> interface.
 
-perf tools uses map__rip_2objdump() to calculate objdump virtual addresses.
-map__rip_2objdump() needs to be amended to deal with PTI entry trampolines.
-Also the "Object code reading" test will not create maps for the PTI entry
-trampolines unless the machine environment exists to show that the arch is
-x86_64.
+Thanks, tested it with:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/tests/code-reading.c |  1 +
- tools/perf/util/map.c           | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+      # perf stat --null time perf bench sched pipe
+      # Running 'sched/pipe' benchmark:
+      # Executed 1000000 pipe operations between two processes
+    
+           Total time: 5.526 [sec]
+    
+             5.526534 usecs/op
+               180945 ops/sec
+      1.00user 6.25system 0:05.52elapsed 131%CPU (0avgtext+0avgdata 8056maxresident)k
+      0inputs+0outputs (0major+606minor)pagefaults 0swaps
+    
+       Performance counter stats for 'time perf bench sched pipe':
+    
+             5.530978744 seconds time elapsed
+    
+             1.004037000 seconds user
+             6.259937000 seconds sys
+    
+      #
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index afa4ce21ba7c..4892bd2dc33e 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -560,6 +560,7 @@ static int do_test_code_reading(bool try_kcore)
- 	pid = getpid();
- 
- 	machine = machine__new_host();
-+	machine->env = &perf_env;
- 
- 	ret = machine__create_kernel_maps(machine);
- 	if (ret < 0) {
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 92abc8e248c5..89ac5b5dc218 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -449,6 +449,20 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
-  */
- u64 map__rip_2objdump(struct map *map, u64 rip)
- {
-+	struct kmap *kmap = __map__kmap(map);
-+
-+	/*
-+	 * vmlinux does not have program headers for PTI entry trampolines and
-+	 * kcore may not either. However the trampoline object code is on the
-+	 * main kernel map, so just use that instead.
-+	 */
-+	if (kmap && is_entry_trampoline(kmap->name) && kmap->kmaps && kmap->kmaps->machine) {
-+		struct map *kernel_map = machine__kernel_map(kmap->kmaps->machine);
-+
-+		if (kernel_map)
-+			map = kernel_map;
-+	}
-+
- 	if (!map->dso->adjust_symbols)
- 		return rip;
- 
--- 
-1.9.1
+:-)
+
+- Arnaldo
