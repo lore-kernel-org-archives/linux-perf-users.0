@@ -1,252 +1,247 @@
-From: Paul Clarke <pc@us.ibm.com>
-Subject: Re: [PATCH 42/46] perf script powerpc: Python script for hypervisor
- call statistics
-Date: Wed, 6 Jun 2018 09:53:21 -0500
-Message-ID: <c58ba06a-2a1b-a981-b9a5-27708ea2479a@us.ibm.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/46] perf/core fixes and improvements
+Date: Thu, 7 Jun 2018 07:22:14 +0200
+Message-ID: <20180607052214.GA30148@gmail.com>
 References: <20180605175030.32549-1-acme@kernel.org>
- <20180605175030.32549-43-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605175030.32549-43-acme@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180605175030.32549-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <pet>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 06/05/2018 12:50 PM, Arnaldo Carvalho de Melo wrote:
-> From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> 
-> Add python script to show hypervisor call statistics. Ex,
-> 
->   # perf record -a -e "{powerpc:hcall_entry,powerpc:hcall_exit}"
->   # perf script -s scripts/python/powerpc-hcalls.py
->     hcall                            count   min(ns)   max(ns)   avg(ns)
->     --------------------------------------------------------------------
->     H_RANDOM                            82       838      1164       904
->     H_PUT_TCE                           47      1078      5928      2003
->     H_EOI                              266      1336      3546      1654
->     H_ENTER                             28      1646      4038      1952
->     H_PUT_TCE_INDIRECT                 230      2166     18168      6109
->     H_IPI                              238      1072      3232      1688
->     H_SEND_LOGICAL_LAN                  42      5488     21366      7694
->     H_STUFF_TCE                        294       986      6210      3591
->     H_XIRR                             266      2286      6990      3783
->     H_PROTECT                           10      2196      3556      2555
->     H_VIO_SIGNAL                       294      1028      2784      1311
->     H_ADD_LOGICAL_LAN_BUFFER            53      1978      3450      2600
->     H_SEND_CRQ                          77      1762      7240      2447
 
-This translation from HCALL code to mnemonic is more generally useful.  Is there a good way to make the "hcall_table_lookup" function more generally available, like "syscall_name" in scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py ?  It's even simpler than the syscall ID-to-name mapping, because the HCALL codes are constant, unlike syscall IDs which vary between arches.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
-> new file mode 100644
-> index 000000000000..00e0e7476e55
-> --- /dev/null
-> +++ b/tools/perf/scripts/python/powerpc-hcalls.py
-> @@ -0,0 +1,200 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +# Copyright (C) 2018 Ravi Bangoria, IBM Corporation
-> +#
-> +# Hypervisor call statisics
-> +
-> +import os
-> +import sys
-> +
-> +sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> +	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> +
-> +from perf_trace_context import *
-> +from Core import *
-> +from Util import *
-> +
-> +# output: {
-> +#	opcode: {
-> +#		'min': minimum time nsec
-> +#		'max': maximum time nsec
-> +#		'time': average time nsec
-> +#		'cnt': counter
-> +#	} ...
-> +# }
-> +output = {}
-> +
-> +# d_enter: {
-> +#	cpu: {
-> +#		opcode: nsec
-> +#	} ...
-> +# }
-> +d_enter = {}
-> +
-> +hcall_table = {
-> +	4: 'H_REMOVE',
-> +	8: 'H_ENTER',
-> +	12: 'H_READ',
-> +	16: 'H_CLEAR_MOD',
-> +	20: 'H_CLEAR_REF',
-> +	24: 'H_PROTECT',
-> +	28: 'H_GET_TCE',
-> +	32: 'H_PUT_TCE',
-> +	36: 'H_SET_SPRG0',
-> +	40: 'H_SET_DABR',
-> +	44: 'H_PAGE_INIT',
-> +	48: 'H_SET_ASR',
-> +	52: 'H_ASR_ON',
-> +	56: 'H_ASR_OFF',
-> +	60: 'H_LOGICAL_CI_LOAD',
-> +	64: 'H_LOGICAL_CI_STORE',
-> +	68: 'H_LOGICAL_CACHE_LOAD',
-> +	72: 'H_LOGICAL_CACHE_STORE',
-> +	76: 'H_LOGICAL_ICBI',
-> +	80: 'H_LOGICAL_DCBF',
-> +	84: 'H_GET_TERM_CHAR',
-> +	88: 'H_PUT_TERM_CHAR',
-> +	92: 'H_REAL_TO_LOGICAL',
-> +	96: 'H_HYPERVISOR_DATA',
-> +	100: 'H_EOI',
-> +	104: 'H_CPPR',
-> +	108: 'H_IPI',
-> +	112: 'H_IPOLL',
-> +	116: 'H_XIRR',
-> +	120: 'H_MIGRATE_DMA',
-> +	124: 'H_PERFMON',
-> +	220: 'H_REGISTER_VPA',
-> +	224: 'H_CEDE',
-> +	228: 'H_CONFER',
-> +	232: 'H_PROD',
-> +	236: 'H_GET_PPP',
-> +	240: 'H_SET_PPP',
-> +	244: 'H_PURR',
-> +	248: 'H_PIC',
-> +	252: 'H_REG_CRQ',
-> +	256: 'H_FREE_CRQ',
-> +	260: 'H_VIO_SIGNAL',
-> +	264: 'H_SEND_CRQ',
-> +	272: 'H_COPY_RDMA',
-> +	276: 'H_REGISTER_LOGICAL_LAN',
-> +	280: 'H_FREE_LOGICAL_LAN',
-> +	284: 'H_ADD_LOGICAL_LAN_BUFFER',
-> +	288: 'H_SEND_LOGICAL_LAN',
-> +	292: 'H_BULK_REMOVE',
-> +	304: 'H_MULTICAST_CTRL',
-> +	308: 'H_SET_XDABR',
-> +	312: 'H_STUFF_TCE',
-> +	316: 'H_PUT_TCE_INDIRECT',
-> +	332: 'H_CHANGE_LOGICAL_LAN_MAC',
-> +	336: 'H_VTERM_PARTNER_INFO',
-> +	340: 'H_REGISTER_VTERM',
-> +	344: 'H_FREE_VTERM',
-> +	348: 'H_RESET_EVENTS',
-> +	352: 'H_ALLOC_RESOURCE',
-> +	356: 'H_FREE_RESOURCE',
-> +	360: 'H_MODIFY_QP',
-> +	364: 'H_QUERY_QP',
-> +	368: 'H_REREGISTER_PMR',
-> +	372: 'H_REGISTER_SMR',
-> +	376: 'H_QUERY_MR',
-> +	380: 'H_QUERY_MW',
-> +	384: 'H_QUERY_HCA',
-> +	388: 'H_QUERY_PORT',
-> +	392: 'H_MODIFY_PORT',
-> +	396: 'H_DEFINE_AQP1',
-> +	400: 'H_GET_TRACE_BUFFER',
-> +	404: 'H_DEFINE_AQP0',
-> +	408: 'H_RESIZE_MR',
-> +	412: 'H_ATTACH_MCQP',
-> +	416: 'H_DETACH_MCQP',
-> +	420: 'H_CREATE_RPT',
-> +	424: 'H_REMOVE_RPT',
-> +	428: 'H_REGISTER_RPAGES',
-> +	432: 'H_DISABLE_AND_GETC',
-> +	436: 'H_ERROR_DATA',
-> +	440: 'H_GET_HCA_INFO',
-> +	444: 'H_GET_PERF_COUNT',
-> +	448: 'H_MANAGE_TRACE',
-> +	468: 'H_FREE_LOGICAL_LAN_BUFFER',
-> +	472: 'H_POLL_PENDING',
-> +	484: 'H_QUERY_INT_STATE',
-> +	580: 'H_ILLAN_ATTRIBUTES',
-> +	592: 'H_MODIFY_HEA_QP',
-> +	596: 'H_QUERY_HEA_QP',
-> +	600: 'H_QUERY_HEA',
-> +	604: 'H_QUERY_HEA_PORT',
-> +	608: 'H_MODIFY_HEA_PORT',
-> +	612: 'H_REG_BCMC',
-> +	616: 'H_DEREG_BCMC',
-> +	620: 'H_REGISTER_HEA_RPAGES',
-> +	624: 'H_DISABLE_AND_GET_HEA',
-> +	628: 'H_GET_HEA_INFO',
-> +	632: 'H_ALLOC_HEA_RESOURCE',
-> +	644: 'H_ADD_CONN',
-> +	648: 'H_DEL_CONN',
-> +	664: 'H_JOIN',
-> +	676: 'H_VASI_STATE',
-> +	688: 'H_ENABLE_CRQ',
-> +	696: 'H_GET_EM_PARMS',
-> +	720: 'H_SET_MPP',
-> +	724: 'H_GET_MPP',
-> +	748: 'H_HOME_NODE_ASSOCIATIVITY',
-> +	756: 'H_BEST_ENERGY',
-> +	764: 'H_XIRR_X',
-> +	768: 'H_RANDOM',
-> +	772: 'H_COP',
-> +	788: 'H_GET_MPP_X',
-> +	796: 'H_SET_MODE',
-> +	61440: 'H_RTAS',
-> +}
-> +
-> +def hcall_table_lookup(opcode):
-> +	if (hcall_table.has_key(opcode)):
-> +		return hcall_table[opcode]
-> +	else:
-> +		return opcode
-> +
-> +print_ptrn = '%-28s%10s%10s%10s%10s'
-> +
-> +def trace_end():
-> +	print print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)')
-> +	print '-' * 68
-> +	for opcode in output:
-> +		h_name = hcall_table_lookup(opcode)
-> +		time = output[opcode]['time']
-> +		cnt = output[opcode]['cnt']
-> +		min_t = output[opcode]['min']
-> +		max_t = output[opcode]['max']
-> +
-> +		print print_ptrn % (h_name, cnt, min_t, max_t, time/cnt)
-> +
-> +def powerpc__hcall_exit(name, context, cpu, sec, nsec, pid, comm, callchain,
-> +			opcode, retval):
-> +	if (d_enter.has_key(cpu) and d_enter[cpu].has_key(opcode)):
-> +		diff = nsecs(sec, nsec) - d_enter[cpu][opcode]
-> +
-> +		if (output.has_key(opcode)):
-> +			output[opcode]['time'] += diff
-> +			output[opcode]['cnt'] += 1
-> +			if (output[opcode]['min'] > diff):
-> +				output[opcode]['min'] = diff
-> +			if (output[opcode]['max'] < diff):
-> +				output[opcode]['max'] = diff
-> +		else:
-> +			output[opcode] = {
-> +				'time': diff,
-> +				'cnt': 1,
-> +				'min': diff,
-> +				'max': diff,
-> +			}
-> +
-> +		del d_enter[cpu][opcode]
-> +#	else:
-> +#		print "Can't find matching hcall_enter event. Ignoring sample"
-> +
-> +def powerpc__hcall_entry(event_name, context, cpu, sec, nsec, pid, comm,
-> +			 callchain, opcode):
-> +		if (d_enter.has_key(cpu)):
-> +			d_enter[cpu][opcode] = nsecs(sec, nsec)
-> +		else:
-> +			d_enter[cpu] = {opcode: nsecs(sec, nsec)}
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 7869e5889477e4e32e4024d665431b35e8b7b693:
+> 
+>   Merge remote-tracking branch 'tip/perf/urgent' into perf/core (2018-06-04 10:28:20 -0300)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.18-20180605
+> 
+> for you to fetch changes up to 03ac4e71cd120d2c3411d106d00d266114575f74:
+> 
+>   perf intel-pt: Fix "Unexpected indirect branch" error (2018-06-05 12:28:52 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf stat:
+> 
+> . Display user and system time for workload targets (Jiri Olsa)
+> 
+> perf record:
+> 
+> . Enable arbitrary event names thru name= modifier (Alexey Budankov)
+> 
+> PowerPC:
+> 
+> . Add a python script for hypervisor call statistics (Ravi Bangoria)
+> 
+> Intel PT: (Adrian Hunter)
+> 
+> . Fix sync_switch INTEL_PT_SS_NOT_TRACING
+> 
+> . Fix decoding to accept CBR between FUP and corresponding TIP
+> 
+> . Fix MTC timing after overflow
+> 
+> . Fix "Unexpected indirect branch" error
+> 
+> perf test:
+> 
+> . record+probe_libc_inet_pton:
+> 
+>   .  To get the symbol table for dynamic
+>      shared objects on ubuntu we need to pass the -D/--dynamic command line
+>      option, unlike with the fedora distros (Arnaldo Carvalho de Melo)
+> 
+> . code-reading:
+> 
+>   . Fix perf_env setup for PTI entry trampolines (Adrian Hunter)
+> 
+> . kmod-path:
+> 
+>   . Add tests for vdso32 and vdsox32 (Adrian Hunter)
+> 
+> . Use header file util/debug.h (Thomas Richter)
+> 
+> perf annotate:
+> 
+> . Make the various UI backends (stdio, TUI, gtk) use more consistently
+>   structs with annotation options as specified by the user (Arnaldo Carvalho de Melo)
+> 
+> . Move annotation specific knobs from the symbol_conf global kitchen
+>   sink to the annotation option structs (Arnaldo Carvalho de Melo)
+> 
+> Core:
+> 
+> . Fix misleading error for some unparsable events mentioning PMUs when
+>   those are not involved in the problem (Jiri Olsa)
+> 
+> - Fix symbol and object code resolution for vdso32 and vdsox32 (Adrian Hunter)
+> 
+> . No need to check for null when passing pointers to foo__get() style
+>   refcount grabbing helpers, just like in the kernel and with free(),
+>   its safe to pass a NULL pointer to avoid having to check it before
+>   each and every foo__get() call (Arnaldo Carvalho de Melo)
+> 
+> . Remove some dead code (quote.[ch]) (Arnaldo Carvalho de Melo)
+> 
+> . Remove some needless globals, making them local (Arnaldo Carvalho de Melo)
+> 
+> . Reduce usage of symbol_conf.use_callchain, using other means of
+>   finding out if callchains are in use or available for specific events,
+>   as we evolved this codebase to allow requesting callchains for just
+>   a subset of the monitored events. In time it will help polish
+>   recording and showing mixed sets accross the various tools:
+> 
+>     perf record -e cycles/call-graph=fp/,cache-misses/call-graph=dwarf/,instructions
+> 
+>   (Arnaldo Carvalho de Melo)
+> 
+> . Consider PTI entry trampolines in map__rip_2objdump() (Adrian Hunter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (8):
+>       perf tests kmod-path: Add tests for vdso32 and vdsox32
+>       perf tools: Fix symbol and object code resolution for vdso32 and vdsox32
+>       perf test code-reading: Fix perf_env setup for PTI entry trampolines
+>       perf map: Consider PTI entry trampolines in rip_2objdump()
+>       perf intel-pt: Fix sync_switch INTEL_PT_SS_NOT_TRACING
+>       perf intel-pt: Fix decoding to accept CBR between FUP and corresponding TIP
+>       perf intel-pt: Fix MTC timing after overflow
+>       perf intel-pt: Fix "Unexpected indirect branch" error
+> 
+> Alexey Budankov (1):
+>       perf record: Enable arbitrary event names thru name= modifier
+> 
+> Arnaldo Carvalho de Melo (33):
+>       perf tools: Remove dead quote.[ch] code
+>       perf probe: Use return of map__get() to make code more compact
+>       perf cgroup: Make evlist__find_cgroup() more compact
+>       perf tools: No need to check if the argument to __get() function is NULL
+>       perf annotate: Pass perf_evsel instead of just evsel->idx
+>       perf annotate: __symbol__acount_cycles doesn't need notes
+>       perf annotate: Split allocation of annotated_source struct
+>       perf annotate: Introduce constructor/destructor for annotated_source
+>       perf annotate: Introduce annotated_source__alloc_histograms
+>       perf annotate: __symbol__inc_addr_samples() needs just annotated_source
+>       perf annotate: Introduce symbol__hists()
+>       perf annotate: Introduce symbol__cycle_hists()
+>       perf annotate: Stop using symbol_conf.nr_events global in symbol__hists()
+>       perf annotate: Replace symbol__alloc_hists() with symbol__hists()
+>       perf tools: Ditch the symbol_conf.nr_events global
+>       perf annotate: Add comment about annotated_src->nr_histograms
+>       perf annotate stdio: Use annotation_options consistently
+>       perf srcline: Introduce map__srcline() to make code more compact
+>       perf sort: Introduce addr_map_symbol__srcline() to make code more compact
+>       perf srcline: Make hist_entry srcline helper consistent with map's
+>       perf annotate: Pass annotation_options to symbol__annotate()
+>       perf annotate: Adopt anotation options from symbol_conf
+>       perf annotate: Move disassembler_style global to annotation_options
+>       perf hists browser: Pass annotation_options from tool to browser
+>       perf annotate: Move objdump_path to struct annotation_options
+>       perf report: No need to have report_callchain_help as a global
+>       perf evsel: Add has_callchain() helper to make code more compact/clear
+>       perf script: Check if evsel has callchains before trying to use it
+>       perf sched: Use sched->show_callchain where appropriate
+>       perf hists: Do not allocate space for callchains for evsels without them
+>       perf hists: Introduce hist_entry__has_callchain() method
+>       perf hists: Check if a hist_entry has callchains before using them
+>       perf test record+probe_libc_inet_pton: Ask 'nm' for dynamic symbols
+> 
+> Jiri Olsa (2):
+>       perf stat: Display user and system time
+>       perf tools: Fix pmu events parsing rule
+> 
+> Ravi Bangoria (1):
+>       perf script powerpc: Python script for hypervisor call statistics
+> 
+> Thomas Richter (1):
+>       perf test: Use header file util/debug.h
+> 
+>  tools/perf/Documentation/perf-list.txt             |   6 +-
+>  tools/perf/Documentation/perf-record.txt           |   3 +
+>  tools/perf/Documentation/perf-stat.txt             |  40 +++--
+>  tools/perf/arch/common.c                           |   4 +-
+>  tools/perf/arch/common.h                           |   4 +-
+>  tools/perf/builtin-annotate.c                      |  36 ++--
+>  tools/perf/builtin-c2c.c                           |   2 +-
+>  tools/perf/builtin-kvm.c                           |   2 -
+>  tools/perf/builtin-probe.c                         |   3 +-
+>  tools/perf/builtin-report.c                        |  39 ++--
+>  tools/perf/builtin-sched.c                         |  14 +-
+>  tools/perf/builtin-script.c                        |  12 +-
+>  tools/perf/builtin-stat.c                          |  28 ++-
+>  tools/perf/builtin-top.c                           |  48 +++--
+>  tools/perf/builtin-trace.c                         |   2 +-
+>  tools/perf/perf.c                                  |   1 -
+>  .../perf/scripts/python/bin/powerpc-hcalls-record  |   2 +
+>  .../perf/scripts/python/bin/powerpc-hcalls-report  |   2 +
+>  tools/perf/scripts/python/powerpc-hcalls.py        | 200 +++++++++++++++++++++
+>  tools/perf/tests/code-reading.c                    |   1 +
+>  tools/perf/tests/kmod-path.c                       |  16 ++
+>  tools/perf/tests/parse-events.c                    |   4 +-
+>  tools/perf/tests/python-use.c                      |   3 +-
+>  .../tests/shell/record+probe_libc_inet_pton.sh     |   2 +-
+>  tools/perf/ui/browsers/annotate.c                  |  21 ++-
+>  tools/perf/ui/browsers/hists.c                     |  43 +++--
+>  tools/perf/ui/browsers/hists.h                     |   3 +
+>  tools/perf/ui/gtk/annotate.c                       |   2 +-
+>  tools/perf/ui/gtk/hists.c                          |   5 +-
+>  tools/perf/ui/hist.c                               |   2 +-
+>  tools/perf/ui/stdio/hist.c                         |   4 +-
+>  tools/perf/util/Build                              |   1 -
+>  tools/perf/util/annotate.c                         | 160 ++++++++++-------
+>  tools/perf/util/annotate.h                         |  53 ++++--
+>  tools/perf/util/cgroup.c                           |   9 +-
+>  tools/perf/util/dso.c                              |   2 +
+>  tools/perf/util/evsel.c                            |   4 +-
+>  tools/perf/util/evsel.h                            |   5 +
+>  tools/perf/util/header.c                           |  24 ++-
+>  tools/perf/util/hist.c                             |  23 ++-
+>  tools/perf/util/hist.h                             |  26 ++-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  23 ++-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |   9 +
+>  tools/perf/util/intel-pt.c                         |   5 +
+>  tools/perf/util/map.c                              |  26 ++-
+>  tools/perf/util/map.h                              |   1 +
+>  tools/perf/util/parse-events.l                     |  18 +-
+>  tools/perf/util/parse-events.y                     |  14 +-
+>  tools/perf/util/probe-event.c                      |   3 +-
+>  tools/perf/util/quote.c                            |  62 -------
+>  tools/perf/util/quote.h                            |  31 ----
+>  tools/perf/util/session.c                          |   2 +-
+>  tools/perf/util/sort.c                             |  81 +++------
+>  tools/perf/util/sort.h                             |   7 +-
+>  tools/perf/util/symbol.c                           |   1 -
+>  tools/perf/util/symbol.h                           |   3 -
+>  tools/perf/util/top.h                              |   3 +-
+>  57 files changed, 731 insertions(+), 419 deletions(-)
+>  create mode 100644 tools/perf/scripts/python/bin/powerpc-hcalls-record
+>  create mode 100644 tools/perf/scripts/python/bin/powerpc-hcalls-report
+>  create mode 100644 tools/perf/scripts/python/powerpc-hcalls.py
+>  delete mode 100644 tools/perf/util/quote.c
+>  delete mode 100644 tools/perf/util/quote.h
 
-PC
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
