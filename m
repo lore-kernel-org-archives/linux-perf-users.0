@@ -1,67 +1,106 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 42/46] perf script powerpc: Python script for hypervisor
- call statistics
-Date: Thu, 7 Jun 2018 10:45:54 -0300
-Message-ID: <20180607134554.GD30317@kernel.org>
-References: <20180605175030.32549-1-acme@kernel.org>
- <20180605175030.32549-43-acme@kernel.org>
- <c58ba06a-2a1b-a981-b9a5-27708ea2479a@us.ibm.com>
- <5856a13c-7a34-f4f4-d5f2-100f626a213f@linux.ibm.com>
- <d4b791e1-28ca-cd19-467b-a59e28a14f99@us.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Test 6 dumps core on s390
+Date: Fri,  8 Jun 2018 15:17:28 +0200
+Message-ID: <20180608131728.75084-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d4b791e1-28ca-cd19-467b-a59e28a14f99@us.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Clarke <pc@us.ibm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Jun 07, 2018 at 08:41:46AM -0500, Paul Clarke escreveu:
-> On 06/07/2018 12:34 AM, Ravi Bangoria wrote:
-> > On 06/06/2018 08:23 PM, Paul Clarke wrote:
-> >> On 06/05/2018 12:50 PM, Arnaldo Carvalho de Melo wrote:
-> >>> From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> >>>
-> >>> Add python script to show hypervisor call statistics. Ex,
-> >>>
-> >>>   # perf record -a -e "{powerpc:hcall_entry,powerpc:hcall_exit}"
-> >>>   # perf script -s scripts/python/powerpc-hcalls.py
-> >>>     hcall                            count   min(ns)   max(ns)   avg(ns)
-> >>>     --------------------------------------------------------------------
-> >>>     H_RANDOM                            82       838      1164       904
-> >>>     H_PUT_TCE                           47      1078      5928      2003
-> >>>     H_EOI                              266      1336      3546      1654
-> >>>     H_ENTER                             28      1646      4038      1952
-> >>>     H_PUT_TCE_INDIRECT                 230      2166     18168      6109
-> >>>     H_IPI                              238      1072      3232      1688
-> >>>     H_SEND_LOGICAL_LAN                  42      5488     21366      7694
-> >>>     H_STUFF_TCE                        294       986      6210      3591
-> >>>     H_XIRR                             266      2286      6990      3783
-> >>>     H_PROTECT                           10      2196      3556      2555
-> >>>     H_VIO_SIGNAL                       294      1028      2784      1311
-> >>>     H_ADD_LOGICAL_LAN_BUFFER            53      1978      3450      2600
-> >>>     H_SEND_CRQ                          77      1762      7240      2447
-> >>
-> >> This translation from HCALL code to mnemonic is more generally useful.  Is there a good way to make the "hcall_table_lookup" function more generally available, like "syscall_name" in scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py ?  It's even simpler than the syscall ID-to-name mapping, because the HCALL codes are constant, unlike syscall IDs which vary between arches.
-> >>
-> > 
-> > Right, but I don't see any other python script for hcalls. So, I thought
-> > to add it in the script itself. Let me know if you are planning to add
-> > any :) We will move it in a generic module.
- 
-> We're already doing the same thing in an external script.
-> (https://github.com/open-power-sdk/curt/blob/master/curt.py#L264
-> revision 107c97c3aadba3177bc8cf35b06ba165e6ac557f.)
- 
-> ...which reminds me that I should consider sending that script to
-> linux-perf-users to see if it's interesting enough to be included
-> upstream.
+Perf test case 6 "Parse event definition strings"
+dumps core when executed on s390.
+Root case is a NULL pointer supplied in function
 
-If you don't have any restriction, then its interesting to have it
-included, I think, this way we can find these kinds of needed common
-infrastructure more easily, and also when doing changes take into
-account existing scripts.
+ test_event()
+ +---> parse_events()
 
-- Arnaldo
+The third parameter is set to NULL:
+(gdb) where
+ #0  parse_events (evlist=0x149dc90, str=0x133242a "intel_pt//u", err=0x0)
+	at util/parse-events.c:1835
+ #1  0x00000000010d3d1c in test_event (e=0x14330e0 <test.events+1272>)
+	at tests/parse-events.c:1696
+ #2  0x00000000010d3e88 in test_events (events=0x1432be8 <test.events>, cnt=54)
+	at tests/parse-events.c:1718
+ #3  0x00000000010d44c0 in test__parse_events (test=0x142b500
+		 <generic_tests+280>, subtest=-1) at tests/parse-events.c:1838
+
+Function parse_events(xx, xx, struct parse_events_error *err) dives
+into a bison generated scanner and creates
+parser state information for it first:
+
+   struct parse_events_state parse_state = {
+      .list   = LIST_HEAD_INIT(parse_state.list),
+      .idx    = evlist->nr_entries,
+      .error  = err,   <--- NULL POINTER !!!
+      .evlist = evlist,
+   };
+
+Now various functions inside the bison scanner are called to end up in
+__parse_events_add_pmu(struct parse_events_state *parse_state, ..) with
+first parameter being a pointer to above structure definition.
+
+Now the event name is not found (because being executed on s390) and
+this function tries to create an error message with
+
+   asprintf(&parse_state->error.str, ....)
+
+which references above NULL pointer and dumps core.
+
+Fix this by providing a pointer to the necessary error information
+instead of NULL.
+Please note that the test still fails on non x86 platforms but for
+different and valid reason.
+
+Output with this fix:
+[root@s35lp76 perf]# ./perf test -vvvvv -F 6
+6: Parse event definition strings                        :
+ --- start ---
+running test 0 'syscalls:sys_enter_openat'
+Using CPUID IBM,3906,703,M03,3.5,002f
+running test 1 'syscalls:*'
+running test 2 'r1a'
+running test 3 '1:1'
+running test 4 'instructions'
+...
+running test 51 'L1-dcache-misses/name=cachepmu/'
+running test 52 'intel_pt//u'
+failed to parse event 'intel_pt//u', err 1
+omitting PMU cpu tests
+omitting PMU cpu tests
+running test 0 'config=10,config1,config2=3,umask=1'
+ ---- end ----
+Parse event definition strings: FAILED!
+
+Fixes: b3f58c8da64b ("perf tests parse-events: Add intel_pt parse test")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/tests/parse-events.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index b9ebe15afb13..f1012d7aea7a 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1686,6 +1686,7 @@ static struct terms_test test__terms[] = {
+ 
+ static int test_event(struct evlist_test *e)
+ {
++	struct parse_events_error errinfo;
+ 	struct perf_evlist *evlist;
+ 	int ret;
+ 
+@@ -1693,7 +1694,7 @@ static int test_event(struct evlist_test *e)
+ 	if (evlist == NULL)
+ 		return -ENOMEM;
+ 
+-	ret = parse_events(evlist, e->name, NULL);
++	ret = parse_events(evlist, e->name, &errinfo);
+ 	if (ret) {
+ 		pr_debug("failed to parse event '%s', err %d\n",
+ 			 e->name, ret);
+-- 
+2.14.3
