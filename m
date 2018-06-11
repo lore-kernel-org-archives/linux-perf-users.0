@@ -1,71 +1,95 @@
 From: Jiri Olsa <jolsa@kernel.org>
-Subject: [PATCH 1/2] perf tests: Add event parsing error handling to parse events test
-Date: Mon, 11 Jun 2018 11:34:21 +0200
-Message-ID: <20180611093422.1005-1-jolsa@kernel.org>
+Subject: [PATCH 2/2] perf tests: Add valid callback for parse-events test
+Date: Mon, 11 Jun 2018 11:34:22 +0200
+Message-ID: <20180611093422.1005-2-jolsa@kernel.org>
 References: <0d25bc25-ed0b-81bb-c516-12fd25442427@linux.ibm.com>
+ <20180611093422.1005-1-jolsa@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d25bc25-ed0b-81bb-c516-12fd25442427@linux.ibm.com>
+In-Reply-To: <20180611093422.1005-1-jolsa@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas-Mich Richter <tmricht@linux.ibm.com>, Kim Phillips <kim.phillips@arm.com>
 Cc: lkml <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Add missing error handling for parse_events calls in test_event
-function that led to following segfault on s390:
+Adding optional 'valid' callback for events tests in
+parse-events object, so we don't try to parse PMUs,
+which are not supported.
 
-  running test 52 'intel_pt//u'
-  perf: Segmentation fault
-  ...
-  /lib64/libc.so.6(vasprintf+0xe6) [0x3fffca3f106]
-  /lib64/libc.so.6(asprintf+0x46) [0x3fffca1aa96]
-  ./perf(parse_events_add_pmu+0xb8) [0x80132088]
-  ./perf(parse_events_parse+0xc62) [0x8019529a]
-  ./perf(parse_events+0x98) [0x801341c0]
-  ./perf(test__parse_events+0x48) [0x800cd140]
-  ./perf(cmd_test+0x26a) [0x800bd44a]
-  test child interrupted
+Following line is displayed for skipped test:
 
-Adding the struct parse_events_error argument to parse_events
-call. Also adding parse_events_print_error to get more details
-on the parsing failures, like:
+  running test 52 'intel_pt//u'... SKIP
 
-  # perf test 6 -v
-  running test 52 'intel_pt//u'failed to parse event 'intel_pt//u', err 1, str 'Cannot find PMU `intel_pt'. Missing kernel support?'
-  event syntax error: 'intel_pt//u'
-                       \___ Cannot find PMU `intel_pt'. Missing kernel support?
-
-Link: http://lkml.kernel.org/n/tip-lmrdeivfr0m34t67c6i98p1f@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-to9naisphr61z23b0br10xhh@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/tests/parse-events.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/tests/parse-events.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 7d4077068454..3b0bfdf5a594 100644
+index 3b0bfdf5a594..347378ddaa8b 100644
 --- a/tools/perf/tests/parse-events.c
 +++ b/tools/perf/tests/parse-events.c
-@@ -1686,6 +1686,7 @@ static struct terms_test test__terms[] = {
+@@ -1309,6 +1309,11 @@ static int test__checkevent_config_cache(struct perf_evlist *evlist)
+ 	return 0;
+ }
  
- static int test_event(struct evlist_test *e)
++static bool test__intel_pt_valid(void)
++{
++	return !!perf_pmu__find("intel_pt");
++}
++
+ static int test__intel_pt(struct perf_evlist *evlist)
  {
-+	struct parse_events_error err = { 0 };
+ 	struct perf_evsel *evsel = perf_evlist__first(evlist);
+@@ -1375,6 +1380,7 @@ struct evlist_test {
+ 	const char *name;
+ 	__u32 type;
+ 	const int id;
++	bool (*valid)(void);
+ 	int (*check)(struct perf_evlist *evlist);
+ };
+ 
+@@ -1648,6 +1654,7 @@ static struct evlist_test test__events[] = {
+ 	},
+ 	{
+ 		.name  = "intel_pt//u",
++		.valid = test__intel_pt_valid,
+ 		.check = test__intel_pt,
+ 		.id    = 52,
+ 	},
+@@ -1690,6 +1697,11 @@ static int test_event(struct evlist_test *e)
  	struct perf_evlist *evlist;
  	int ret;
  
-@@ -1693,10 +1694,11 @@ static int test_event(struct evlist_test *e)
++	if (e->valid && !e->valid()) {
++		pr_debug("... SKIP");
++		return 0;
++	}
++
+ 	evlist = perf_evlist__new();
  	if (evlist == NULL)
  		return -ENOMEM;
+@@ -1716,10 +1728,11 @@ static int test_events(struct evlist_test *events, unsigned cnt)
+ 	for (i = 0; i < cnt; i++) {
+ 		struct evlist_test *e = &events[i];
  
--	ret = parse_events(evlist, e->name, NULL);
-+	ret = parse_events(evlist, e->name, &err);
- 	if (ret) {
--		pr_debug("failed to parse event '%s', err %d\n",
--			 e->name, ret);
-+		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-+			 e->name, ret, err.str);
-+		parse_events_print_error(&err, e->name);
- 	} else {
- 		ret = e->check(evlist);
+-		pr_debug("running test %d '%s'\n", e->id, e->name);
++		pr_debug("running test %d '%s'", e->id, e->name);
+ 		ret1 = test_event(e);
+ 		if (ret1)
+ 			ret2 = ret1;
++		pr_debug("\n");
  	}
+ 
+ 	return ret2;
+@@ -1801,7 +1814,7 @@ static int test_pmu_events(void)
+ 	}
+ 
+ 	while (!ret && (ent = readdir(dir))) {
+-		struct evlist_test e;
++		struct evlist_test e = { 0 };
+ 		char name[2 * NAME_MAX + 1 + 12 + 3];
+ 
+ 		/* Names containing . are special and cannot be used directly */
 -- 
 2.13.6
