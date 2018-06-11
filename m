@@ -1,78 +1,68 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/12] perf hists: Save the callchain_size in struct hist_entry
-Date: Mon, 11 Jun 2018 14:47:59 -0300
-Message-ID: <20180611174810.14815-2-acme@kernel.org>
+Subject: [PATCH 05/12] perf tools: Fix error index for pmu event parser
+Date: Mon, 11 Jun 2018 14:48:03 -0300
+Message-ID: <20180611174810.14815-6-acme@kernel.org>
 References: <20180611174810.14815-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180611174810.14815-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Frederic Weisbecker <frederic@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-So that we can figure out the real size of the struct and also be able
-to tell if callchains may be present in this histogram entry.
+For events we provide specific error message we need to set error column
+index, PMU parser is missing that, adding it.
 
-Since we can't always guarantee that from hist_entry->hists we can use
-hists_to_evsel, to then look at evsel->attr.sample_type for
-PERF_SAMPLE_CALLCHAIN, like with the 'perf c2c' tool, that uses plain
-'struct hists' instances, we need another way of deciding if a specific
-hist_entry instance has callchains associated with it, i.e. if its
-hist_entry->callchain[0] has space allocated for.
+Before:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+  $ perf stat -e cycles,krava/cycles/ kill
+  event syntax error: 'cycles,krava/cycles/'
+                       \___ Cannot find PMU `krava'. Missing kernel support?
+
+After:
+
+  $ perf stat -e cycles,krava/cycles/ kill
+  event syntax error: 'cycles,krava/cycles/'
+                              \___ Cannot find PMU `krava'. Missing kernel support?
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Milian Wolff <milian.wolff@kdab.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ptvndealxs1k7myluvu9flnq@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20180606221513.11302-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.c | 6 ++++--
- tools/perf/util/sort.h | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.y | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 52e8fda93a47..0441a92b855f 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -370,9 +370,11 @@ void hists__delete_entries(struct hists *hists)
- 
- static int hist_entry__init(struct hist_entry *he,
- 			    struct hist_entry *template,
--			    bool sample_self)
-+			    bool sample_self,
-+			    size_t callchain_size)
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 155d2570274f..da8fe57691b8 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -227,11 +227,16 @@ event_def: event_pmu |
+ event_pmu:
+ PE_NAME opt_pmu_config
  {
- 	*he = *template;
-+	he->callchain_size = callchain_size;
++	struct parse_events_state *parse_state = _parse_state;
++	struct parse_events_error *error = parse_state->error;
+ 	struct list_head *list, *orig_terms, *terms;
  
- 	if (symbol_conf.cumulate_callchain) {
- 		he->stat_acc = malloc(sizeof(he->stat));
-@@ -473,7 +475,7 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template,
+ 	if (parse_events_copy_term_list($2, &orig_terms))
+ 		YYABORT;
  
- 	he = ops->new(callchain_size);
- 	if (he) {
--		err = hist_entry__init(he, template, sample_self);
-+		err = hist_entry__init(he, template, sample_self, callchain_size);
- 		if (err) {
- 			ops->free(he);
- 			he = NULL;
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 7cf2d5cc038e..9ab9257ed887 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -112,6 +112,8 @@ struct hist_entry {
- 
- 	char			level;
- 	u8			filtered;
++	if (error)
++		error->idx = @1.first_column;
 +
-+	u16			callchain_size;
- 	union {
- 		/*
- 		 * Since perf diff only supports the stdio output, TUI
+ 	ALLOC_LIST(list);
+ 	if (parse_events_add_pmu(_parse_state, list, $1, $2, false, false)) {
+ 		struct perf_pmu *pmu = NULL;
 -- 
 2.14.3
