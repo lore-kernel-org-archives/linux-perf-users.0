@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/12] perf hists: Reimplement hists__has_callchains()
-Date: Mon, 11 Jun 2018 14:48:02 -0300
-Message-ID: <20180611174810.14815-5-acme@kernel.org>
+Subject: [PATCH 03/12] perf hists browser gtk: Use hist_entry__has_callchains()
+Date: Mon, 11 Jun 2018 14:48:01 -0300
+Message-ID: <20180611174810.14815-4-acme@kernel.org>
 References: <20180611174810.14815-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180611174810.14815-1-acme@kernel.org>
@@ -12,15 +12,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There are places where we have only access to struct hists and need to
-know if any of its hist_entries has callchains, like when drawing
-headers for the various output modes (stdio, TUI, etc), so, when adding
-a new hist_entry, check if it has callchains, storing this info for
-later use by hists__has_callchains().
-
-This reimplementation is necessary because not always a 'struct hists'
-is allocated together with a 'struct perf evsel', so we can't go from
-'hists' to 'perf_event_attr.sample_type & PERF_SAMPLE_CALLCHAIN'.
+Since we can't go from struct hists to struct evsel for all cases (c2c
+is an exception) and we have access to the hist_entry, use
+hist_entry__has_callchains() in the GTK+ hists browser to figure out
+if callchains are available.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -28,52 +23,24 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-hg5g7yddjio3ljwyqnnaj5dt@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-8owkgrruzzi5emvblwh4e6le@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.c | 6 ++++--
- tools/perf/util/hist.h | 4 ++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ tools/perf/ui/gtk/hists.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 0441a92b855f..828cb9794c76 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -621,9 +621,11 @@ __hists__add_entry(struct hists *hists,
- 		.raw_data = sample->raw_data,
- 		.raw_size = sample->raw_size,
- 		.ops = ops,
--	};
-+	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
+index b085f1b3e34d..4ab663ec3e5e 100644
+--- a/tools/perf/ui/gtk/hists.c
++++ b/tools/perf/ui/gtk/hists.c
+@@ -382,7 +382,7 @@ static void perf_gtk__show_hists(GtkWidget *window, struct hists *hists,
+ 			gtk_tree_store_set(store, &iter, col_idx++, s, -1);
+ 		}
  
--	return hists__findnew_entry(hists, &entry, al, sample_self);
-+	if (!hists->has_callchains && he && he->callchain_size != 0)
-+		hists->has_callchains = true;
-+	return he;
- }
- 
- struct hist_entry *hists__add_entry(struct hists *hists,
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 06607c434949..73049f7f0f60 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -85,6 +85,7 @@ struct hists {
- 	struct events_stats	stats;
- 	u64			event_stream;
- 	u16			col_len[HISTC_NR_COLS];
-+	bool			has_callchains;
- 	int			socket_filter;
- 	struct perf_hpp_list	*hpp_list;
- 	struct list_head	hpp_formats;
-@@ -222,8 +223,7 @@ static inline struct hists *evsel__hists(struct perf_evsel *evsel)
- 
- static __pure inline bool hists__has_callchains(struct hists *hists)
- {
--	const struct perf_evsel *evsel = hists_to_evsel(hists);
--	return evsel__has_callchain(evsel);
-+	return hists->has_callchains;
- }
- 
- int hists__init(void);
+-		if (hists__has_callchains(hists) &&
++		if (hist_entry__has_callchains(h) &&
+ 		    symbol_conf.use_callchain && hists__has(hists, sym)) {
+ 			if (callchain_param.mode == CHAIN_GRAPH_REL)
+ 				total = symbol_conf.cumulate_callchain ?
 -- 
 2.14.3
