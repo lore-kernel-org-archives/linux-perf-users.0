@@ -1,53 +1,90 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf test: Test 6 dumps core on s390
-Date: Mon, 11 Jun 2018 09:00:53 +0200
-Message-ID: <0d25bc25-ed0b-81bb-c516-12fd25442427@linux.ibm.com>
-References: <20180608131728.75084-1-tmricht@linux.ibm.com>
- <20180608095318.2ba14669fdc5da2004285bcf@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/2] perf record: Support s390 random socket_id assignment
+Date: Mon, 11 Jun 2018 09:31:52 +0200
+Message-ID: <20180611073153.15592-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608095318.2ba14669fdc5da2004285bcf@arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@arm.com>, Jiri Olsa <jolsa@redhat.com>, acme@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 06/08/2018 04:53 PM, Kim Phillips wrote:
-> On Fri, 8 Jun 2018 15:17:28 +0200
-> Thomas Richter <tmricht@linux.ibm.com> wrote:
-> 
->> Perf test case 6 "Parse event definition strings"
->> dumps core when executed on s390.
-> 
-> I reported it actually fails on any $ARCH system without
-> Intel Processor Trace (PT) h/w:
-> 
-> https://www.spinics.net/lists/linux-perf-users/msg06020.html
-> 
-> There was a follow-up patch sent here:
-> 
-> https://www.spinics.net/lists/linux-perf-users/msg06029.html
-> 
-> which worked for me, but I don't know what has/has-not transpired
-> since, other than it is still broken, as you found.
-> 
-> Kim
+On s390 the socket identifier assigned to a CPU identifier is
+random and (depending on the configuration of the LPAR) may be higher
+than the CPU identifier. This is currently not supported.
 
+Fix this by allowing arbitrary socket identifiers being assigned to
+CPU id.
 
-Looks like this is still broken. I also can not find this patch on
-git clone -b perf/core git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+Output before:
 
-We actually need 2 patches
-- one to fix the core dump
-- one to test for x86 platform
+[root@p23lp27 perf]# ./perf report --header -I -v
+ ...
+ socket_id number is too big.You may need to upgrade the perf tool.
+ Error:
+ The perf.data file has no samples!
+ # ========
+ # captured on    : Tue May 29 09:29:57 2018
+ # header version : 1
+ ...
+ # Core ID and Socket ID information is not available
+ ...
+[root@p23lp27 perf]#
 
+Output after:
+[root@p23lp27 perf]# ./perf report --header -I -v
+ ...
+ Error:
+ The perf.data file has no samples!
+ # ========
+ # captured on    : Tue May 29 09:29:57 2018
+ # header version : 1
+ ...
+ # CPU 0: Core ID 0, Socket ID 6
+ # CPU 1: Core ID 1, Socket ID 3
+ # CPU 2: Core ID -1, Socket ID -1
+ ...
+[root@p23lp27 perf]#
 
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/util/header.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index a8bff2178fbc..34e9d6b9d945 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2113,6 +2113,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	int cpu_nr = ff->ph->env.nr_cpus_avail;
+ 	u64 size = 0;
+ 	struct perf_header *ph = ff->ph;
++	bool do_core_id_test = true;
+ 
+ 	ph->env.cpu = calloc(cpu_nr, sizeof(*ph->env.cpu));
+ 	if (!ph->env.cpu)
+@@ -2167,6 +2168,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 	}
+ 
++	/* On s390 the socket_id number is not related to the numbers of cpus.
++	 * The socket_id number might be higher than the numbers of cpus.
++	 * This depends on the configuration.
++	 */
++	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++		do_core_id_test = false;
++
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+@@ -2176,7 +2184,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+ 
+-		if (nr != (u32)-1 && nr > (u32)cpu_nr) {
++		if (do_core_id_test && nr != (u32)-1 && nr > (u32)cpu_nr) {
+ 			pr_debug("socket_id number is too big."
+ 				 "You may need to upgrade the perf tool.\n");
+ 			goto free_cpu;
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.14.3
