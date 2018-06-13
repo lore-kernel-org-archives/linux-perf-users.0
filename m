@@ -1,28 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/2] perf record: Support s390 random socket_id assignment
-Date: Wed, 13 Jun 2018 16:55:56 -0300
-Message-ID: <20180613195556.GD2686@kernel.org>
-References: <20180611073153.15592-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH 2/2] perf tests: Add valid callback for parse-events test
+Date: Wed, 13 Jun 2018 17:01:20 -0300
+Message-ID: <20180613200120.GF2686@kernel.org>
+References: <0d25bc25-ed0b-81bb-c516-12fd25442427@linux.ibm.com>
+ <20180611093422.1005-1-jolsa@kernel.org>
+ <20180611093422.1005-2-jolsa@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180611073153.15592-1-tmricht@linux.ibm.com>
+In-Reply-To: <20180611093422.1005-2-jolsa@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Thomas-Mich Richter <tmricht@linux.ibm.com>, Kim Phillips <kim.phillips@arm.com>, lkml <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Jun 11, 2018 at 09:31:52AM +0200, Thomas Richter escreveu:
-> On s390 the socket identifier assigned to a CPU identifier is
-> random and (depending on the configuration of the LPAR) may be higher
-> than the CPU identifier. This is currently not supported.
+Em Mon, Jun 11, 2018 at 11:34:22AM +0200, Jiri Olsa escreveu:
+> Adding optional 'valid' callback for events tests in
+> parse-events object, so we don't try to parse PMUs,
+> which are not supported.
 > 
-> Fix this by allowing arbitrary socket identifiers being assigned to
-> CPU id.
+> Following line is displayed for skipped test:
 > 
-> Output before:
+>   running test 52 'intel_pt//u'... SKIP
 
-Thanks, applied both patches in this series,
+Would be nice to test the _parsing_ of this even on machines where this
+PMU is not present, as developers using these machines as workstations
+may end up breaking this.
+
+Anyway, intel_pt now is in tons of machines, so should be caught easily,
+if not by anyone, by me ;-\
 
 - Arnaldo
+ 
+> Link: http://lkml.kernel.org/n/tip-to9naisphr61z23b0br10xhh@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/tests/parse-events.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index 3b0bfdf5a594..347378ddaa8b 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -1309,6 +1309,11 @@ static int test__checkevent_config_cache(struct perf_evlist *evlist)
+>  	return 0;
+>  }
+>  
+> +static bool test__intel_pt_valid(void)
+> +{
+> +	return !!perf_pmu__find("intel_pt");
+> +}
+> +
+>  static int test__intel_pt(struct perf_evlist *evlist)
+>  {
+>  	struct perf_evsel *evsel = perf_evlist__first(evlist);
+> @@ -1375,6 +1380,7 @@ struct evlist_test {
+>  	const char *name;
+>  	__u32 type;
+>  	const int id;
+> +	bool (*valid)(void);
+>  	int (*check)(struct perf_evlist *evlist);
+>  };
+>  
+> @@ -1648,6 +1654,7 @@ static struct evlist_test test__events[] = {
+>  	},
+>  	{
+>  		.name  = "intel_pt//u",
+> +		.valid = test__intel_pt_valid,
+>  		.check = test__intel_pt,
+>  		.id    = 52,
+>  	},
+> @@ -1690,6 +1697,11 @@ static int test_event(struct evlist_test *e)
+>  	struct perf_evlist *evlist;
+>  	int ret;
+>  
+> +	if (e->valid && !e->valid()) {
+> +		pr_debug("... SKIP");
+> +		return 0;
+> +	}
+> +
+>  	evlist = perf_evlist__new();
+>  	if (evlist == NULL)
+>  		return -ENOMEM;
+> @@ -1716,10 +1728,11 @@ static int test_events(struct evlist_test *events, unsigned cnt)
+>  	for (i = 0; i < cnt; i++) {
+>  		struct evlist_test *e = &events[i];
+>  
+> -		pr_debug("running test %d '%s'\n", e->id, e->name);
+> +		pr_debug("running test %d '%s'", e->id, e->name);
+>  		ret1 = test_event(e);
+>  		if (ret1)
+>  			ret2 = ret1;
+> +		pr_debug("\n");
+>  	}
+>  
+>  	return ret2;
+> @@ -1801,7 +1814,7 @@ static int test_pmu_events(void)
+>  	}
+>  
+>  	while (!ret && (ent = readdir(dir))) {
+> -		struct evlist_test e;
+> +		struct evlist_test e = { 0 };
+>  		char name[2 * NAME_MAX + 1 + 12 + 3];
+>  
+>  		/* Names containing . are special and cannot be used directly */
+> -- 
+> 2.13.6
