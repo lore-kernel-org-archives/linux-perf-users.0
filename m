@@ -1,114 +1,232 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/12] perf/urgent fixes and improvements
-Date: Thu, 14 Jun 2018 08:13:15 +0200
-Message-ID: <20180614061315.GA28715@gmail.com>
-References: <20180611174810.14815-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 3/3] perf stat: Remove duplicate event counting
+Date: Thu, 14 Jun 2018 13:48:45 +0200
+Message-ID: <20180614114845.41221-3-tmricht@linux.ibm.com>
+References: <20180614114845.41221-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180611174810.14815-1-acme@kernel.org>
+In-Reply-To: <20180614114845.41221-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Frederic Weisbecker <frederic@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, jolsa@redhat.com
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Perf stat shows a mismatch in perf stat regarding counter names
+on s390:
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Run command
+   [root@s35lp76 perf]# ./perf stat -e tx_nc_tend  -v --
+                ~/mytesttx 1 >/tmp/111
+   tx_nc_tend: 1 573146 573146
+   tx_nc_tend: 1 573146 573146
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 2696ec4566f598ab483a6bebc4ec841b2efb88ec:
-> 
->   Merge tag 'perf-core-for-mingo-4.18-20180606' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-06-07 07:18:51 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.18-20180611
-> 
-> for you to fetch changes up to fad76d4333fe73cf3f73704aa34d4ce523b1c458:
-> 
->   perf script: Show hw-cache events (2018-06-08 13:41:30 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes and improvements:
-> 
-> perf stat:
-> 
-> . Add --interval-clear option, to provide a 'watch' like printing (Jiri Olsa)
-> 
-> . Fix metric column header display alignment (Jiri Olsa)
-> 
-> . Improve error messages for default attributes, providing better output
->   for error in command lines such as:
-> 
->   $ perf stat -T
->   Cannot set up transaction events
->   event syntax error: '..cycles,cpu/cycles-t/,cpu/tx-start/,cpu/el-start/,cpu/cycles-ct/}'
->                                     \___ unknown term
-> 
->   Where the "event syntax error" line now appears (Jiri Olsa)
-> 
-> perf script:
-> 
-> . Show hw-cache events too (Seeteena Thoufeek)
-> 
-> perf c2c:
-> 
-> . Fix data dependency problem in layout of 'struct c2c_hist_entry', where
->   its member 'struct hist_entry' must be at the end because it has a ZLA
->   as its last member, that gets space when handling callchains (Jiri Olsa)
-> 
-> Core:
-> 
-> - We cannot assume that a 'struct perf_evsel'  is to be obtained from a
->   container_of operation on a 'struct hists' as there are tools, such as
->   'perf c2c' that uses 'struct hist' instances without having them in
->   container structs that also have 'struct perf_evsel' in a particular
->   layout, so provide a different way of figuring out if a 'struct hists'
->   and 'struct hist_entry' have callchains (Arnaldo Carvalho de Melo)
-> 
-> - Fix error index in the PMU event parser, so that error messages can
->   point to the problematic token (Jiri Olsa)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (4):
->       perf hists: Save the callchain_size in struct hist_entry
->       perf hists: Make hist_entry__has_callchains() work with 'perf c2c'
->       perf hists browser gtk: Use hist_entry__has_callchains()
->       perf hists: Reimplement hists__has_callchains()
-> 
-> Jiri Olsa (7):
->       perf tools: Fix error index for pmu event parser
->       perf stat: Add --interval-clear option
->       perf stat: Use only color_fprintf call in print_metric_only
->       perf stat: Fix metric column header display alignment
->       perf stat: Allow to specify specific metric column len
->       perf stat: Add event parsing error handling to add_default_attributes
->       perf c2c: Keep struct hist_entry at the end of struct c2c_hist_entry
-> 
-> Seeteena Thoufeek (1):
->       perf script: Show hw-cache events
-> 
->  tools/perf/Documentation/perf-stat.txt |  3 +++
->  tools/perf/builtin-c2c.c               | 10 +++----
->  tools/perf/builtin-script.c            | 12 +++++++++
->  tools/perf/builtin-stat.c              | 48 ++++++++++++++++++++--------------
->  tools/perf/ui/gtk/hists.c              |  2 +-
->  tools/perf/util/hist.c                 | 12 ++++++---
->  tools/perf/util/hist.h                 |  4 +--
->  tools/perf/util/parse-events.y         |  5 ++++
->  tools/perf/util/sort.h                 |  4 ++-
->  9 files changed, 67 insertions(+), 33 deletions(-)
+   Performance counter stats for '/root/mytesttx 1':
 
-Pulled, thanks a lot Arnaldo!
+                 3      tx_nc_tend
 
-	Ingo
+       0.001037252 seconds time elapsed
+
+   [root@s35lp76 perf]#
+
+shows transaction counter tx_nc_tend with value 3 but it
+was triggered only once as seen by the output of mytesttx.
+
+When looking up the event name tx_nc_tend the following
+function sequence is called:
+
+parse_events_multi_pmu_add()
++--> perf_pmu__scan() being called with NULL argument
+     +--> pmu_read_sysfs() scans directory ../devices/ for
+                           all PMUs
+          +--> perf_pmu__find() tries to find a PMU in the
+                           global pmu list.
+               +--> pmu_lookup() called to read all file
+                                 entries when not in global
+                                 list.
+
+pmu_lookup() causes the issue. It calls
++---> pmu_aliases() to read all the entries in the PMU directory.
+                    On s390 this is named
+                    /sys/devices/cpum_cf/events.
+      +--> pmu_aliases_parse() reads all files and creates an
+                       alias for each file name.
+
+                       So we end up with first entry created by
+                       reading the sysfs file
+                       [root@s35lp76 perf]# cat /sys/devices/cpum_cf
+                                                /events/TX_NC_TEND
+                       event=0x008d
+                       [root@s35lp76 perf]#
+
+                       Debug output shows this entry
+                       tx_nc_tend -> 'cpum_cf'/'event=0x008d
+                       '/
+                       After all files in this directory have been
+                       read and aliases created this function is called:
+      +--> pmu_add_cpu_aliases()
+                       This function looks up the CPU tables
+                       created by the json files.
+                       With json files for s390 now available all
+                       the aliases are added to
+                       the PMU alias list a second time.
+                       The second entry is added by
+                       reading the json file converted by jevent
+                       resulting in file pmu-events/pmu-events.c:
+
+                       {
+                         .name = "tx_nc_tend",
+                         .event = "event=0x8d",
+                         .desc = "Unit: cpum_cf Completed TEND \
+                                  instructions \
+                                  in non-constrained TX mode",
+                         .topic = "extended",
+                         .long_desc = "A TEND instruction has \
+                                       completed  in a \
+                                       non-constrained \
+                                       transactional-execution mode",
+                         .pmu = "cpum_cf",
+                        },
+
+                        Debug output shows this entry
+                        tx_nc_tend -> 'cpum_cf'/'event=0x8d'/
+
+Function pmu_aliases_parse() and pmu_add_cpu_aliases()
+both use __perf_pmu__new_alias() to add an alias to the
+PMU alias list. There is no check if an alias already exist
+
+So we end up with 2 entries for tx_nc_tend in the
+PMU alias list.
+
+Having set up the PMU alias list for this PMU now
+parse_events_multi_add_pmu() reads the complete alias
+list and adds each alias with parse_events_add_pmu()
+to the global perfev_list.  This causes the alias to
+be added multiple times to the event list.
+
+Fix this by making __perf_pmu__new_alias()
+to merge alias definitions if an alias is already on the
+alias list.
+Also print a debug message when the alias has mismatches
+in some fields.
+
+Output before:
+[root@s35lp76 perf]# ./perf stat -e tx_nc_tend  -v \
+                      -- ~/mytesttx 1 >/tmp/111
+tx_nc_tend: 1 551446 551446
+
+ Performance counter stats for '/root/mytesttx 1':
+
+                 3      tx_nc_tend
+
+       0.000961134 seconds time elapsed
+
+[root@s35lp76 perf]#
+
+Output after:
+[root@s35lp76 perf]#  ./perf stat -e tx_nc_tend  -v \
+                      -- ~/mytesttx 1 >/tmp/111
+tx_nc_tend: 1 551446 551446
+
+ Performance counter stats for '/root/mytesttx 1':
+
+                 1      tx_nc_tend
+
+       0.000961134 seconds time elapsed
+
+[root@s35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/pmu.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index da8f243743d3..a266da1db139 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -234,6 +234,74 @@ static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
+ 	return 0;
+ }
+ 
++static void perf_pmu_assign_str(char *name, const char *field, char **old_str,
++				char **new_str)
++{
++	if (!*old_str)
++		goto set_new;
++
++	if (*new_str) {	/* Have new string, check with old */
++		if (strcasecmp(*old_str, *new_str))
++			pr_debug("alias %s differs in field '%s'\n",
++				 name, field);
++		zfree(old_str);
++	} else		/* Nothing new --> keep old string */
++		return;
++set_new:
++	*old_str = *new_str;
++	*new_str = NULL;
++}
++
++static void perf_pmu_update_alias(struct perf_pmu_alias *old,
++				  struct perf_pmu_alias *newalias)
++{
++	perf_pmu_assign_str(old->name, "desc", &old->desc, &newalias->desc);
++	perf_pmu_assign_str(old->name, "long_desc", &old->long_desc,
++			    &newalias->long_desc);
++	perf_pmu_assign_str(old->name, "topic", &old->topic, &newalias->topic);
++	perf_pmu_assign_str(old->name, "metric_expr", &old->metric_expr,
++			    &newalias->metric_expr);
++	perf_pmu_assign_str(old->name, "metric_name", &old->metric_name,
++			    &newalias->metric_name);
++	perf_pmu_assign_str(old->name, "value", &old->str, &newalias->str);
++	old->scale = newalias->scale;
++	old->per_pkg = newalias->per_pkg;
++	old->snapshot = newalias->snapshot;
++	memcpy(old->unit, newalias->unit, sizeof(old->unit));
++}
++
++/* Delete an alias entry. */
++static void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
++{
++	zfree(&newalias->name);
++	zfree(&newalias->desc);
++	zfree(&newalias->long_desc);
++	zfree(&newalias->topic);
++	zfree(&newalias->str);
++	zfree(&newalias->metric_expr);
++	zfree(&newalias->metric_name);
++	parse_events_terms__purge(&newalias->terms);
++	free(newalias);
++}
++
++/* Merge an alias, search in alias list. If this name is already
++ * present merge both of them to combine all information.
++ */
++static bool perf_pmu_merge_alias(struct perf_pmu_alias *newalias,
++				 struct list_head *alist)
++{
++	struct perf_pmu_alias *a;
++
++	list_for_each_entry(a, alist, list) {
++		if (!strcasecmp(newalias->name, a->name)) {
++			perf_pmu_update_alias(a, newalias);
++			perf_pmu_free_alias(newalias);
++			return true;
++		}
++	}
++	return false;
++}
++
+ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+ 				 char *desc, char *val,
+ 				 char *long_desc, char *topic,
+@@ -310,7 +378,8 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+ 	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
+ 	alias->str = strdup(newval);
+ 
+-	list_add_tail(&alias->list, list);
++	if (!perf_pmu_merge_alias(alias, list))
++		list_add_tail(&alias->list, list);
+ 
+ 	return 0;
+ }
+-- 
+2.14.3
