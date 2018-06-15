@@ -1,35 +1,81 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH 1/3] perf alias: Remove trailing newline when reading
- sysfs files
-Date: Fri, 15 Jun 2018 09:10:52 +0000
-Message-ID: <30f3ac625d734674aa6697440aa3253f@AcuMS.aculab.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 2/3] perf alias: Rebuild alias expression string to make
+ it comparable
+Date: Fri, 15 Jun 2018 11:27:00 +0200
+Message-ID: <20180615092700.GH5082@krava>
 References: <20180614114845.41221-1-tmricht@linux.ibm.com>
- <c29a4b36-a2db-b1d9-a5c7-a0c0806970ab@us.ibm.com>
+ <20180614114845.41221-2-tmricht@linux.ibm.com>
+ <809ff562-511d-26e9-bac3-e8f7b84666e5@us.ibm.com>
+ <20180615081242.GF5082@krava>
+ <f78bbadb-047d-afad-eac6-b1236bd56c81@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c29a4b36-a2db-b1d9-a5c7-a0c0806970ab@us.ibm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <f78bbadb-047d-afad-eac6-b1236bd56c81@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Paul Clarke' <pc@us.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "acme@kernel.org" <acme@kernel.org>, "jolsa@redhat.com" <jolsa@redhat.com>
-Cc: "brueckner@linux.vnet.ibm.com" <brueckner@linux.vnet.ibm.com>, "schwidefsky@de.ibm.com" <schwidefsky@de.ibm.com>, "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>
+To: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc: Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-RnJvbTogUGF1bCBDbGFya2UNCj4gU2VudDogMTQgSnVuZSAyMDE4IDE0OjE4DQouLi4NCj4gPiAr
-CS8qIFJlbW92ZSB0cmFpbGluZyBuZXdsaW5lIGZyb20gc3lzZnMgZmlsZSAqLw0KPiA+ICsJY3Ag
-PSBzdHJyY2hyKGJ1ZiwgJ1xuJyk7DQo+ID4gKwlpZiAoY3ApDQo+ID4gKwkJKmNwID0gJ1wwJzsN
-Cj4gDQo+IEEgbml0LCBwZXJoYXBzLCBidXQgdGhpcyB3aWxsIHNlYXJjaCBiYWNrd2FyZHMgdGhy
-b3VnaCB0aGUgZW50aXJlIHN0cmluZyBpZiBhIG5ld2xpbmUgaXMgbm90IGZvdW5kLA0KPiB3aGlj
-aCBpcyB0aGUgbW9zdCBjb21tb24gY2FzZSwgSSBwcmVzdW1lLiAgV291bGQgaXQgYmUgbW9yZSBl
-ZmZpY2llbnQgdG8ganVzdCBsb29rIGF0IHRoZSBsYXN0DQo+IGNoYXJhY3Rlcj8gIFNvbWV0aGlu
-ZyBsaWtlOg0KPiBpID0gc3RybGVuKGJ1Zik7DQo+IGlmIChpID4gMCAmJiBidWZbaS0xXSA9PSAn
-XG4nKQ0KPiAgIGJ1ZltpLTFdID0gJ1wwJzsNCg0KV29yc2UgaXQgd2lsbCBkbyBob3JyaWQgdGhp
-bmdzIG9mIHRoZSBvdXRwdXQgaGFzIG11bHRpcGxlIGxpbmVzIG9mIHRleHQNCndpdGhvdXQgYSBu
-ZXdsaW5lIGF0IHRoZSBlbmQuDQoNCkJvdGggc3RybGVuKCkgYW5kIHN0cnJocigpIG5lZWQgdG8g
-c2NhbiB0aGUgZW50aXJlIHN0cmluZy4NCkhvd2V2ZXIgc2luY2Ugc3RybGVuIGlzIG9ubHkgbG9v
-a2luZyBmb3Igb25lIHZhbHVlIGl0IHNob3VsZCBiZSBtdWNoDQptb3JlIGVmZmljaWVudCAtIGVz
-cGVjaWFsbHkgb24gNjRiaXQgc3lzdGVtcyB3aGVyZSBzaGlmdHMgYW5kIGJpdA0Kb3BlcmF0aW9u
-cyBjYW4gYmUgdXNlZCB0byBmaW5kIHRoZSA2NGJpdCB3b3JkIGNvbnRhaW5pbmcgdGhlIGZpcnN0
-DQp6ZXJvIGJ5dGUuDQoNCkkgc3VzcGVjdCBydHJpbSgpIGhhcyBhbiBleHRyYSBkYXRhIGNhY2hl
-IG1pc3MuDQoNCglEYXZpZA0KDQo=
+On Fri, Jun 15, 2018 at 11:09:05AM +0200, Thomas-Mich Richter wrote:
+> On 06/15/2018 10:12 AM, Jiri Olsa wrote:
+> > On Thu, Jun 14, 2018 at 08:53:14AM -0500, Paul Clarke wrote:
+> > 
+> > SNIP
+> > 
+> >>> +		if (ret)
+> >>> +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> >>> +					 ",");
+> >>> +		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+> >>> +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> >>> +					 "%s=%#x", term->config, term->val.num);
+> >>> +		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+> >>> +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> >>> +					 "%s=%s", term->config, term->val.str);
+> >>
+> >> If we exceed 256, we just suddenly terminate the rebuilding without reporting any issues.
+> >>
+> >>> +	}
+> >>> +
+> >>>  	alias->name = strdup(name);
+> >>>  	if (dir) {
+> >>>  		/*
+> >>> @@ -285,7 +308,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+> >>>  		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
+> >>>  	}
+> >>>  	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
+> >>> -	alias->str = strdup(val);
+> >>> +	alias->str = strdup(newval);
+> > 
+> > hum, how is newval different from val? AFAICS it's the same
+> > 
+> 
+> Not really, depends on the platform, here is some debug output from s390:
+> root@s35lp76 perf]# ./perf stat -e tx_nc_tend -- ~/mytesttx 1 >/tmp/111
+> 
+>  Performance counter stats for '/root/mytesttx 1':
+> 
+>                  1      tx_nc_tend                                                  
+> 
+>        0.001050150 seconds time elapsed
+> 
+> [root@s35lp76 perf]# fgrep -i tx_nc_tend /tmp/111
+> __perf_pmu__new_alias TX_NC_TEND val:event=0x008d newval:event=0x8d
+> __perf_pmu__new_alias tx_nc_tend val:event=0x8d newval:event=0x8d
+> TX_NC_TEND	1 rc 8
+> [root@s35lp76 perf]# 
+> 
+> On s390 the events in the PMU sysfs file are printed with leading zeroes.
+> This means the strcmp() of alias->str differs, but the contents is logically
+> identical. (Same of some files contains spaces).
+> 
+> Thats why I do the rewrite of val into newval.
+> 
+> The alias name does not match too, but we use strcasecmp() to ignore case.
+> 
+> Hope this helps.
+
+yep.. should have read the full change log ;-) thanks
+
+jirka
