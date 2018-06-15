@@ -1,60 +1,49 @@
-From: Solio Sarabia <solio.sarabia@intel.com>
-Subject: Differences in cpu utilization reported by sar, emon
-Date: Thu, 14 Jun 2018 20:41:33 -0700
-Message-ID: <20180615034133.GA5932@ssarabia-MOBL7.amr.corp.intel.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 2/3] perf alias: Rebuild alias expression string to make
+ it comparable
+Date: Fri, 15 Jun 2018 10:12:42 +0200
+Message-ID: <20180615081242.GF5082@krava>
+References: <20180614114845.41221-1-tmricht@linux.ibm.com>
+ <20180614114845.41221-2-tmricht@linux.ibm.com>
+ <809ff562-511d-26e9-bac3-e8f7b84666e5@us.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <809ff562-511d-26e9-bac3-e8f7b84666e5@us.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, kys@microsoft.com, stephen@networkplumber.org, shiny.sebastian@intel.com, amy.l.leeland@intel.com, solio.sarabia@intel.com
+To: Paul Clarke <pc@us.ibm.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Hello --
+On Thu, Jun 14, 2018 at 08:53:14AM -0500, Paul Clarke wrote:
 
-I'm running into an issue where sar, mpstat, top, and other tools show
-less cpu utilization compared to emon [1]. Sar uses /proc/stat as its
-source, and was configured to collect in 1s intervals. Emon reads
-hardware counter MSRs in the PMU in timer intervals, 0.1s for this
-scenario.
+SNIP
 
-The platform is based on Xeon E5-2699 v3 (Haswell) 2.3GHz, 2_sockets,
-18_cores/socket, 36_cores in total, running Ubuntu 16.04, Linux
-4.4.0-128-generic. A network micro workload, ntttcp-for-linux [2],
-sends packets from client to server, through a 40GbE direct link.
-Numbers below are from server side.
+> > +		if (ret)
+> > +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> > +					 ",");
+> > +		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
+> > +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> > +					 "%s=%#x", term->config, term->val.num);
+> > +		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+> > +			ret += scnprintf(newval + ret, sizeof(newval) - ret,
+> > +					 "%s=%s", term->config, term->val.str);
+> 
+> If we exceed 256, we just suddenly terminate the rebuilding without reporting any issues.
+> 
+> > +	}
+> > +
+> >  	alias->name = strdup(name);
+> >  	if (dir) {
+> >  		/*
+> > @@ -285,7 +308,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+> >  		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
+> >  	}
+> >  	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
+> > -	alias->str = strdup(val);
+> > +	alias->str = strdup(newval);
 
-                 total %util
-           CPU11    CPU21    CPU22    CPU25
-emon       99.99    15.90    36.22    36.82
-sar        99.99     0.06     0.36     0.35
+hum, how is newval different from val? AFAICS it's the same
 
-                 interrupts/sec
-           CPU11    CPU21    CPU22    CPU25
-intrs/sec    846    28923    12844     6304
-    Contributors to /proc/interrupts:
-    CPU11: Local timer interrupts and Rescheduling interrupts
-    CPU21-CPU25: PCI MSI vector from network driver
-
-                 softirqs/sec
-           CPU11    CPU21    CPU22    CPU25
-TIMER        198        1        2        1
-NET_RX         1    28889    23553    18546
-TASKLET        0    28889    11676     6249
-
-
-Somehow hardware irqs and softirqs do not have an effect on the core's
-utilization. Another observation is that as more cores are used to
-process packets, the emon/sar gap increases.
-
-Kernels used default HZ=250. I also tried HZ=1000, which helped improve
-throughput, but difference in util is still there. Same for newer
-kernels 4.13, 4.15. I would appreciate pointers to debug this, or
-insights as what could cause this behavior.
-
-[1] https://software.intel.com/en-us/download/emon-users-guide
-[2] https://github.com/simonxiaoss/ntttcp-for-linux
-
-Thanks,
--Solio
+jirka
