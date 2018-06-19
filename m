@@ -1,44 +1,77 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 1/3 v2] perf alias: Remove trailing newline when reading sysfs files
-Date: Fri, 15 Jun 2018 12:11:03 +0200
-Message-ID: <20180615101105.47047-1-tmricht@linux.ibm.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v1]: perf tests: check that complex event name is parsed
+ correctly
+Date: Tue, 19 Jun 2018 11:45:40 +0300
+Message-ID: <ad30b774-219b-7b80-c610-4e9e298cf8a7@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Remove a trailing newline when reading sysfs file contents
-such as /sys/devices/cpum_cf/events/TX_NC_TEND.
-This shows when verbose option -v is used.
 
-Output before:
-tx_nc_tend -> 'cpum_cf'/'event=0x008d
-'/
+Extend regression testing to cover case of complex event names enabled 
+by the patch "perf record: enable arbitrary event names thru name= modifier".
 
-Output after:
-tx_nc_tend -> 'cpum_cf'/'event=0x8d'/
+tools/perf/perf test
+ 1: vmlinux symtab matches kallsyms                       : Skip
+ 2: Detect openat syscall event                           : Ok
+ 3: Detect openat syscall event on all cpus               : Ok
+ 4: Read samples using the mmap interface                 : Ok
+ 5: Test data source output                               : Ok
+ 6: Parse event definition strings                        : Ok		<===!
+ 7: Simple expression parser                              : Ok
+...
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/util/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/tests/parse-events.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7878934ebb23..6d2012405f2b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -303,6 +303,9 @@ static int perf_pmu__new_alias(struct list_head *list, char *dir, char *name, FI
- 
- 	buf[ret] = 0;
- 
-+	/* Remove trailing newline from sysfs file */
-+	rtrim(buf);
-+
- 	return __perf_pmu__new_alias(list, dir, name, NULL, buf, NULL, NULL, NULL,
- 				     NULL, NULL, NULL);
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index b9ebe15afb13..706b574f9747 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1317,6 +1317,14 @@ static int test__intel_pt(struct perf_evlist *evlist)
+ 	return 0;
  }
--- 
-2.14.3
+ 
++static int test__checkevent_complex_name(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel = perf_evlist__first(evlist);
++
++	TEST_ASSERT_VAL("wrong complex name parsing", strcmp(evsel->name, "COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks") == 0);
++	return 0;
++}
++
+ static int count_tracepoints(void)
+ {
+ 	struct dirent *events_ent;
+@@ -1651,6 +1659,11 @@ static struct evlist_test test__events[] = {
+ 		.check = test__intel_pt,
+ 		.id    = 52,
+ 	},
++	{
++		.name  = "cycles/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks'/Duk",
++		.check = test__checkevent_complex_name,
++		.id    = 53
++	}
+ };
+ 
+ static struct evlist_test test__events_pmu[] = {
+@@ -1669,6 +1682,11 @@ static struct evlist_test test__events_pmu[] = {
+ 		.check = test__checkevent_pmu_partial_time_callgraph,
+ 		.id    = 2,
+ 	},
++	{
++		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2,umask=0x3/ukp",
++		.check = test__checkevent_complex_name,
++		.id    = 3,
++	}
+ };
+ 
+ struct terms_test {
