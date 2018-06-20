@@ -1,100 +1,102 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 3/3] perf stat: Remove duplicate event counting
-Date: Tue, 19 Jun 2018 20:24:18 +0200
-Message-ID: <20180619182418.GB1926@krava>
-References: <20180614114845.41221-1-tmricht@linux.ibm.com>
- <20180614114845.41221-3-tmricht@linux.ibm.com>
- <20180615082124.GG5082@krava>
- <20180619151706.GJ20477@kernel.org>
+From: Solio Sarabia <solio.sarabia@intel.com>
+Subject: Re: Differences in cpu utilization reported by sar, emon
+Date: Wed, 20 Jun 2018 16:41:40 -0700
+Message-ID: <20180620234140.GA13040@ssarabia-MOBL7.amr.corp.intel.com>
+References: <20180615034133.GA5932@ssarabia-MOBL7.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180619151706.GJ20477@kernel.org>
+In-Reply-To: <20180615034133.GA5932@ssarabia-MOBL7.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, ak@linux.intel.com, stephen@networkplumber.org
+Cc: linux-perf-users@vger.kernel.org, kys@microsoft.com, shiny.sebastian@intel.com, amy.l.leeland@intel.com, solio.sarabia@intel.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Jun 19, 2018 at 12:17:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 15, 2018 at 10:21:24AM +0200, Jiri Olsa escreveu:
-> > On Thu, Jun 14, 2018 at 01:48:45PM +0200, Thomas Richter wrote:
-> > 
-> > SNIP
-> > 
-> > > +static void perf_pmu_assign_str(char *name, const char *field, char **old_str,
-> > > +				char **new_str)
-> > > +{
-> > > +	if (!*old_str)
-> > > +		goto set_new;
-> > > +
-> > > +	if (*new_str) {	/* Have new string, check with old */
-> > > +		if (strcasecmp(*old_str, *new_str))
-> > > +			pr_debug("alias %s differs in field '%s'\n",
-> > > +				 name, field);
-> > > +		zfree(old_str);
-> > > +	} else		/* Nothing new --> keep old string */
-> > > +		return;
-> > > +set_new:
-> > > +	*old_str = *new_str;
-> > > +	*new_str = NULL;
-> > > +}
-> > > +
-> > > +static void perf_pmu_update_alias(struct perf_pmu_alias *old,
-> > > +				  struct perf_pmu_alias *newalias)
-> > > +{
-> > > +	perf_pmu_assign_str(old->name, "desc", &old->desc, &newalias->desc);
-> > > +	perf_pmu_assign_str(old->name, "long_desc", &old->long_desc,
-> > > +			    &newalias->long_desc);
-> > > +	perf_pmu_assign_str(old->name, "topic", &old->topic, &newalias->topic);
-> > > +	perf_pmu_assign_str(old->name, "metric_expr", &old->metric_expr,
-> > > +			    &newalias->metric_expr);
-> > > +	perf_pmu_assign_str(old->name, "metric_name", &old->metric_name,
-> > > +			    &newalias->metric_name);
-> > > +	perf_pmu_assign_str(old->name, "value", &old->str, &newalias->str);
-> > > +	old->scale = newalias->scale;
-> > > +	old->per_pkg = newalias->per_pkg;
-> > > +	old->snapshot = newalias->snapshot;
-> > > +	memcpy(old->unit, newalias->unit, sizeof(old->unit));
-> > > +}
-> > > +
-> > > +/* Delete an alias entry. */
-> > > +static void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
-> > > +{
-> > > +	zfree(&newalias->name);
-> > > +	zfree(&newalias->desc);
-> > > +	zfree(&newalias->long_desc);
-> > > +	zfree(&newalias->topic);
-> > > +	zfree(&newalias->str);
-> > > +	zfree(&newalias->metric_expr);
-> > > +	zfree(&newalias->metric_name);
-> > > +	parse_events_terms__purge(&newalias->terms);
-> > > +	free(newalias);
-> > > +}
-> > > +
-> > > +/* Merge an alias, search in alias list. If this name is already
-> > > + * present merge both of them to combine all information.
-> > > + */
-> > > +static bool perf_pmu_merge_alias(struct perf_pmu_alias *newalias,
-> > > +				 struct list_head *alist)
-> > > +{
-> > > +	struct perf_pmu_alias *a;
-> > > +
-> > > +	list_for_each_entry(a, alist, list) {
-> > > +		if (!strcasecmp(newalias->name, a->name)) {
-> > > +			perf_pmu_update_alias(a, newalias);
-> > > +			perf_pmu_free_alias(newalias);
-> > > +			return true;
-> > > +		}
-> > > +	}
-> > > +	return false;
-> > > +}
-> > 
-> > ok, I like your change better.. we can rebuilt it to use
-> > rb tree later when we have this fixed
+Thanks Andi, Stephen, for your help/insights.
+
+TICK_CPU_ACCOUNTING (default option) does not account for cpu util on
+cores handling irqs and softriqs.
+
+IRQ_TIME_ACCOUNTING or VIRT_CPU_ACCOUTING_GEN helps to reduce the util
+gap. With either option, there is still a difference, for example, up to
+8% in terms of sar/emon ratio (sar shows lesser util). This is an
+improvement to the default case though.
+
+
+This is a brief description of the Kbuild options:
+
+-> General setup
+  -> CPU/Task time and stats accounting
+    -> Cputime accounting
+TICK_CPU_ACCOUNTING
+    Simple/basic tick based cpu accounting--maintains statistics about
+    user, system and idle time spent on per jiffies granularity.
+VIRT_CPU_ACCOUNTING_NATIVE (not available on my kernel)
+    Deterministic task and cpu time accounting--more accurate task
+    and cpu time accounting. Kernel reads a cpu counter on each kernel
+    entry and exit, and on transitions within the kernel between
+    system, softirq, and hardirq state, so there is a small performance
+    impact.
+VIRT_CPU_ACCOUTING_GEN
+    Full dynticks cpu time accounting--enable task and cpu time
+    accounting on full dynticks systems. Kernel watches every
+    kernel-user boundaries using the context tracking subsystem.
+    There is significant overhead. For now only useful if you are
+    working on the full dynticks subsystem development.
+IRQ_TIME_ACCOUNTING
+    Fine granularity task level irq time accounting--kernel reads a
+    timestamp on each transition between softirq and hardirq state,
+    so there can be a performance impact.
+
+-Solio
+
+
+On Thu, Jun 14, 2018 at 08:41:33PM -0700, Solio Sarabia wrote:
+> Hello --
 > 
-> Ok, can I take this as an Acked-by or Reviewed-by?
-
-yes
-
-jirka
+> I'm running into an issue where sar, mpstat, top, and other tools show
+> less cpu utilization compared to emon [1]. Sar uses /proc/stat as its
+> source, and was configured to collect in 1s intervals. Emon reads
+> hardware counter MSRs in the PMU in timer intervals, 0.1s for this
+> scenario.
+> 
+> The platform is based on Xeon E5-2699 v3 (Haswell) 2.3GHz, 2_sockets,
+> 18_cores/socket, 36_cores in total, running Ubuntu 16.04, Linux
+> 4.4.0-128-generic. A network micro workload, ntttcp-for-linux [2],
+> sends packets from client to server, through a 40GbE direct link.
+> Numbers below are from server side.
+> 
+>                  total %util
+>            CPU11    CPU21    CPU22    CPU25
+> emon       99.99    15.90    36.22    36.82
+> sar        99.99     0.06     0.36     0.35
+> 
+>                  interrupts/sec
+>            CPU11    CPU21    CPU22    CPU25
+> intrs/sec    846    28923    12844     6304
+>     Contributors to /proc/interrupts:
+>     CPU11: Local timer interrupts and Rescheduling interrupts
+>     CPU21-CPU25: PCI MSI vector from network driver
+> 
+>                  softirqs/sec
+>            CPU11    CPU21    CPU22    CPU25
+> TIMER        198        1        2        1
+> NET_RX         1    28889    23553    18546
+> TASKLET        0    28889    11676     6249
+> 
+> 
+> Somehow hardware irqs and softirqs do not have an effect on the core's
+> utilization. Another observation is that as more cores are used to
+> process packets, the emon/sar gap increases.
+> 
+> Kernels used default HZ=250. I also tried HZ=1000, which helped improve
+> throughput, but difference in util is still there. Same for newer
+> kernels 4.13, 4.15. I would appreciate pointers to debug this, or
+> insights as what could cause this behavior.
+> 
+> [1] https://software.intel.com/en-us/download/emon-users-guide
+> [2] https://github.com/simonxiaoss/ntttcp-for-linux
+> 
+> Thanks,
+> -Solio
