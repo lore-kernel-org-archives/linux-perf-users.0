@@ -1,61 +1,90 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/19] tools include powerpc: Update arch/powerpc/include/uapi/asm/unistd.h copy to get 'rseq' syscall
-Date: Mon, 25 Jun 2018 14:40:35 -0300
-Message-ID: <20180625174045.25765-10-acme@kernel.org>
+Subject: [PATCH 12/19] perf tools: Fix a clang 7.0 compilation error
+Date: Mon, 25 Jun 2018 14:40:38 -0300
+Message-ID: <20180625174045.25765-13-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Boqun Feng <boqun.feng@gmail.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Yonghong Song <yhs@fb.com>
 
-This updates the tools/perf/ copy of the powerpc file used to generate
-the syscall table file used to make 'perf trace' become aware of the new
-'rseq' syscall, no matter in which system it gets built, i.e. older
-systems where the syscalls are not available in the running kernel (via
-tracefs) or in the system headers will still be aware of these
-syscalls/.
+Arnaldo reported the perf build failure with latest llvm/clang compiler
+(7.0).
 
-From this commit:
+   $ make LIBCLANGLLVM=1 -C tools/perf/
+   <SNIP>
+    CC       /tmp/tmp.t53Qo38zci/tests/kmod-path.o
+   util/c++/clang.cpp: In function ‘std::unique_ptr<llvm::SmallVectorImpl<char> >
+       perf::getBPFObjectFromModule(llvm::Module*)’:
+   util/c++/clang.cpp:150:43: error: no matching function for call to
+       ‘llvm::TargetMachine::addPassesToEmitFile(llvm::legacy::PassManager&,
+        llvm::raw_svector_ostream&, llvm::TargetMachine::CodeGenFileType)’
+               TargetMachine::CGFT_ObjectFile)) {
+                                             ^
+   In file included from util/c++/clang.cpp:25:0:
+   /usr/local/include/llvm/Target/TargetMachine.h:254:16: note: candidate:
+       virtual bool llvm::TargetMachine::addPassesToEmitFile(
+       llvm::legacy::PassManagerBase&, llvm::raw_pwrite_stream&,
+       llvm::raw_pwrite_stream*, llvm::TargetMachine::CodeGenFileType, bool,
+       llvm::MachineModuleInfo*)
+     virtual bool addPassesToEmitFile(PassManagerBase &, raw_pwrite_stream &,
+                  ^~~~~~~~~~~~~~~~~~~
+  /usr/local/include/llvm/Target/TargetMachine.h:254:16: note:
+      candidate expects 6 arguments, 3 provided
+  mv: cannot stat '/tmp/tmp.t53Qo38zci/util/c++/.clang.o.tmp': No such file or directory
+  make[7]: *** [/home/acme/git/perf/tools/build/Makefile.build:101:
+      /tmp/tmp.t53Qo38zci/util/c++/clang.o] Error 1
+  make[6]: *** [/home/acme/git/perf/tools/build/Makefile.build:139: c++] Error 2
+  make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:139: util] Error 2
+  make[5]: *** Waiting for unfinished jobs....
+    CC       /tmp/tmp.t53Qo38zci/tests/thread-map.o
 
-  bb862b021d75 ("powerpc: Wire up restartable sequences system call")
+The function addPassesToEmitFile signature changed in llvm 7.0 and such
+a change caused the failure. This patch fixed the issue with using
+proper function signatures under different compiler versions.
 
-Silencing this tools/perf build warning:
-
-  Warning: Kernel ABI header at 'tools/arch/powerpc/include/uapi/asm/unistd.h' differs from latest version at 'arch/powerpc/include/uapi/asm/unistd.h'
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexei Starovoitov <ast@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-adtgz6u3apd76tghiu9w0k19@git.kernel.org
+Link: http://lkml.kernel.org/r/20180616174739.1076733-1-yhs@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/powerpc/include/uapi/asm/unistd.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/c++/clang.cpp | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/arch/powerpc/include/uapi/asm/unistd.h b/tools/arch/powerpc/include/uapi/asm/unistd.h
-index 389c36fd8299..ac5ba55066dd 100644
---- a/tools/arch/powerpc/include/uapi/asm/unistd.h
-+++ b/tools/arch/powerpc/include/uapi/asm/unistd.h
-@@ -398,5 +398,6 @@
- #define __NR_pkey_alloc		384
- #define __NR_pkey_free		385
- #define __NR_pkey_mprotect	386
-+#define __NR_rseq		387
+diff --git a/tools/perf/util/c++/clang.cpp b/tools/perf/util/c++/clang.cpp
+index bf31ceab33bd..89512504551b 100644
+--- a/tools/perf/util/c++/clang.cpp
++++ b/tools/perf/util/c++/clang.cpp
+@@ -146,8 +146,15 @@ getBPFObjectFromModule(llvm::Module *Module)
+ 	raw_svector_ostream ostream(*Buffer);
  
- #endif /* _UAPI_ASM_POWERPC_UNISTD_H_ */
+ 	legacy::PassManager PM;
+-	if (TargetMachine->addPassesToEmitFile(PM, ostream,
+-					       TargetMachine::CGFT_ObjectFile)) {
++	bool NotAdded;
++#if CLANG_VERSION_MAJOR < 7
++	NotAdded = TargetMachine->addPassesToEmitFile(PM, ostream,
++						      TargetMachine::CGFT_ObjectFile);
++#else
++	NotAdded = TargetMachine->addPassesToEmitFile(PM, ostream, nullptr,
++						      TargetMachine::CGFT_ObjectFile);
++#endif
++	if (NotAdded) {
+ 		llvm::errs() << "TargetMachine can't emit a file of this type\n";
+ 		return std::unique_ptr<llvm::SmallVectorImpl<char>>(nullptr);;
+ 	}
 -- 
 2.14.3
