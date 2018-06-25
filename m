@@ -1,74 +1,49 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/19] perf tools: Update x86's syscall_64.tbl, adding 'io_pgetevents' and 'rseq'
-Date: Mon, 25 Jun 2018 14:40:34 -0300
-Message-ID: <20180625174045.25765-9-acme@kernel.org>
+Subject: [PATCH 11/19] tools include uapi: Synchronize bpf.h with the kernel
+Date: Mon, 25 Jun 2018 14:40:37 -0300
+Message-ID: <20180625174045.25765-12-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christoph Hellwig <hch@lst.de>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This updates the tools/perf/ copy of the system call table for x86 which makes
-'perf trace' become aware of the new 'io_pgetevents' and 'rseq' syscalls, no
-matter in which system it gets built, i.e. older systems where the syscalls are
-not available in the running kernel (via tracefs) or in the system headers will
-still be aware of these syscalls/.
+To pick the rename in:
 
-These are the csets introducing the source drift:
+  bd3a08aaa9a3 ("bpf: flowlabel in bpf_fib_lookup should be flowinfo")
 
-  05c17cedf85b ("x86: Wire up restartable sequence system call")
-  7a074e96dee6 ("aio: implement io_pgetevents")
+Silencing this build warning:
 
-This results in this build time change:
-
-  $ diff -u /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c.old /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
-  --- /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c.old	2018-06-15 11:48:17.648948094 -0300
-  +++ /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c	2018-06-15 11:48:22.133942480 -0300
-  @@ -332,5 +332,7 @@
-          [330] = "pkey_alloc",
-          [331] = "pkey_free",
-          [332] = "statx",
-  +       [333] = "io_pgetevents",
-  +       [334] = "rseq",
-   };
-  -#define SYSCALLTBL_x86_64_MAX_ID 332
-  +#define SYSCALLTBL_x86_64_MAX_ID 334
-  $
-
-This silences the following tools/perf/ build warning:
-
-  Warning: Kernel ABI header at 'tools/perf/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
+Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-tfvyz51sabuzemrszbrhzxni@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-zd1sgtbybtjrrt7bqdybu0s0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/include/uapi/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index 4dfe42666d0c..f0b1709a5ffb 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -341,6 +341,8 @@
- 330	common	pkey_alloc		__x64_sys_pkey_alloc
- 331	common	pkey_free		__x64_sys_pkey_free
- 332	common	statx			__x64_sys_statx
-+333	common	io_pgetevents		__x64_sys_io_pgetevents
-+334	common	rseq			__x64_sys_rseq
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index e0b06784f227..59b19b6a40d7 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -2630,7 +2630,7 @@ struct bpf_fib_lookup {
+ 	union {
+ 		/* inputs to lookup */
+ 		__u8	tos;		/* AF_INET  */
+-		__be32	flowlabel;	/* AF_INET6 */
++		__be32	flowinfo;	/* AF_INET6, flow_label + priority */
  
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
+ 		/* output: metric of fib result (IPv4/IPv6 only) */
+ 		__u32	rt_metric;
 -- 
 2.14.3
