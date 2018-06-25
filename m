@@ -1,40 +1,69 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/19] perf intel-pt: Fix packet decoding of CYC packets
-Date: Mon, 25 Jun 2018 14:40:32 -0300
-Message-ID: <20180625174045.25765-7-acme@kernel.org>
+Subject: [PATCH 02/19] perf test session topology: Fix test on s390
+Date: Mon, 25 Jun 2018 14:40:28 -0300
+Message-ID: <20180625174045.25765-3-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-Use a 64-bit type so that the cycle count is not limited to 32-bits.
+On s390 this test case fails because the socket identifiction numbers
+assigned to the CPU are higher than the CPU identification numbers.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/1528371002-8862-1-git-send-email-adrian.hunter@intel.com
+F/ix this by adding the platform architecture into the perf data header
+flag information. This helps identifiing the test platform and handles
+s390 specifics in process_cpu_topology().
+
+Before:
+
+  [root@p23lp27 perf]# perf test -vvvvv -F 39
+  39: Session topology                                      :
+  --- start ---
+  templ file: /tmp/perf-test-iUv755
+  socket_id number is too big.You may need to upgrade the perf tool.
+  ---- end ----
+  Session topology: Skip
+  [root@p23lp27 perf]#
+
+After:
+
+  [root@p23lp27 perf]# perf test -vvvvv -F 39
+  39: Session topology                                      :
+  --- start ---
+  templ file: /tmp/perf-test-8X8VTs
+  CPU 0, core 0, socket 6
+  CPU 1, core 1, socket 3
+  ---- end ----
+  Session topology: Ok
+  [root@p23lp27 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Fixes: c84974ed9fb6 ("perf test: Add entry to test cpu topology")
+Link: http://lkml.kernel.org/r/20180611073153.15592-2-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-index ba4c9dd18643..d426761a549d 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-@@ -366,7 +366,7 @@ static int intel_pt_get_cyc(unsigned int byte, const unsigned char *buf,
- 		if (len < offs)
- 			return INTEL_PT_NEED_MORE_BYTES;
- 		byte = buf[offs++];
--		payload |= (byte >> 1) << shift;
-+		payload |= ((uint64_t)byte >> 1) << shift;
- 	}
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index 40e30a26b23c..9497d02f69e6 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -45,6 +45,7 @@ static int session_write_header(char *path)
  
- 	packet->type = INTEL_PT_CYC;
+ 	perf_header__set_feat(&session->header, HEADER_CPU_TOPOLOGY);
+ 	perf_header__set_feat(&session->header, HEADER_NRCPUS);
++	perf_header__set_feat(&session->header, HEADER_ARCH);
+ 
+ 	session->header.data_size += DATA_SIZE;
+ 
 -- 
 2.14.3
