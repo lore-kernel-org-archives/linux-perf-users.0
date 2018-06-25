@@ -1,79 +1,99 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/19] perf report powerpc: Fix crash if callchain is empty
-Date: Mon, 25 Jun 2018 14:40:29 -0300
-Message-ID: <20180625174045.25765-4-acme@kernel.org>
+Subject: [PATCH 01/19] perf record: Support s390 random socket_id assignment
+Date: Mon, 25 Jun 2018 14:40:27 -0300
+Message-ID: <20180625174045.25765-2-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-For some cases, the callchain provided by the kernel may be empty. So,
-the callchain ip filtering code will cause a crash if we do not check
-whether the struct ip_callchain pointer is NULL before accessing any
-members.
+On s390 the socket identifier assigned to a CPU identifier is random and
+(depending on the configuration of the LPAR) may be higher than the CPU
+identifier. This is currently not supported.
 
-This can be observed on a powerpc64le system running Fedora 27 as shown
-below.
+Fix this by allowing arbitrary socket identifiers being assigned to
+CPU id.
 
-  # perf record -b -e cycles:u ls
+Output before:
 
-Before:
-
-  # perf report --branch-history
-
-  perf: Segmentation fault
-  -------- backtrace --------
-  perf[0x1027615c]
-  linux-vdso64.so.1(__kernel_sigtramp_rt64+0x0)[0x7fff856304d8]
-  perf(arch_skip_callchain_idx+0x44)[0x10257c58]
-  perf[0x1017f2e4]
-  perf(thread__resolve_callchain+0x124)[0x1017ff5c]
-  perf(sample__resolve_callchain+0xf0)[0x10172788]
+  [root@p23lp27 perf]# ./perf report --header -I -v
   ...
-
-After:
-
-  # perf report --branch-history
-
-  Samples: 25  of event 'cycles:u', Event count (approx.): 2306870
-    Overhead  Source:Line            Symbol                   Shared Object
-  +   11.60%  _init+35736            [.] _init                ls
-  +    9.84%  strcoll_l.c:137        [.] __strcoll_l          libc-2.26.so
-  +    9.16%  memcpy.S:175           [.] __memcpy_power7      libc-2.26.so
-  +    9.01%  gconv_charset.h:54     [.] _nl_find_locale      libc-2.26.so
-  +    8.87%  dl-addr.c:52           [.] _dl_addr             libc-2.26.so
-  +    8.83%  _init+236              [.] _init                ls
+  socket_id number is too big.You may need to upgrade the perf tool.
+  Error:
+  The perf.data file has no samples!
+  # ========
+  # captured on    : Tue May 29 09:29:57 2018
+  # header version : 1
   ...
+  # Core ID and Socket ID information is not available
+  ...
+  [root@p23lp27 perf]#
 
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20180611104049.11048-1-sandipan@linux.ibm.com
+Output after:
+
+  [root@p23lp27 perf]# ./perf report --header -I -v
+  ...
+  Error:
+  The perf.data file has no samples!
+  # ========
+  # captured on    : Tue May 29 09:29:57 2018
+  # header version : 1
+  ...
+  # CPU 0: Core ID 0, Socket ID 6
+  # CPU 1: Core ID 1, Socket ID 3
+  # CPU 2: Core ID -1, Socket ID -1
+  ...
+  [root@p23lp27 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20180611073153.15592-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/skip-callchain-idx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/header.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-index 3598b8b75d27..ef5d59a5742e 100644
---- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-+++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-@@ -243,7 +243,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 	u64 ip;
- 	u64 skip_slot = -1;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 540cd2dcd3e7..59fcc790c865 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2129,6 +2129,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	int cpu_nr = ff->ph->env.nr_cpus_avail;
+ 	u64 size = 0;
+ 	struct perf_header *ph = ff->ph;
++	bool do_core_id_test = true;
  
--	if (chain->nr < 3)
-+	if (!chain || chain->nr < 3)
- 		return skip_slot;
+ 	ph->env.cpu = calloc(cpu_nr, sizeof(*ph->env.cpu));
+ 	if (!ph->env.cpu)
+@@ -2183,6 +2184,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 	}
  
- 	ip = chain->ips[2];
++	/* On s390 the socket_id number is not related to the numbers of cpus.
++	 * The socket_id number might be higher than the numbers of cpus.
++	 * This depends on the configuration.
++	 */
++	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++		do_core_id_test = false;
++
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+@@ -2192,7 +2200,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+ 
+-		if (nr != (u32)-1 && nr > (u32)cpu_nr) {
++		if (do_core_id_test && nr != (u32)-1 && nr > (u32)cpu_nr) {
+ 			pr_debug("socket_id number is too big."
+ 				 "You may need to upgrade the perf tool.\n");
+ 			goto free_cpu;
 -- 
 2.14.3
