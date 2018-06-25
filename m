@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/19] perf alias: Rebuild alias expression string to make it comparable
-Date: Mon, 25 Jun 2018 14:40:40 -0300
-Message-ID: <20180625174045.25765-15-acme@kernel.org>
+Subject: [PATCH 13/19] perf alias: Remove trailing newline when reading sysfs files
+Date: Mon, 25 Jun 2018 14:40:39 -0300
+Message-ID: <20180625174045.25765-14-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
@@ -12,80 +12,43 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Thomas Richter <tmricht@linux.ibm.com>
 
-PMU alias definitions in sysfs files may have spaces, newlines and
-numbers with leading zeroes. Some alias definitions may also appear in
-JSON files without spaces, etc.
+Remove a trailing newline when reading sysfs file contents such as
+/sys/devices/cpum_cf/events/TX_NC_TEND.  This shows when verbose option
+-v is used.
 
-Scan alias definitions and remove leading zeroes, spaces, newlines, etc
-and rebuild string to make alias->str member comparable.
+Output before:
 
-s390 for example  has terms specified as event=0x0091 (read from files
-../<PMU>/events/<FILE> and terms specified as event=0x91 (read from JSON
-files).
+  tx_nc_tend -> 'cpum_cf'/'event=0x008d
+  '/
+
+Output after:
+
+  tx_nc_tend -> 'cpum_cf'/'event=0x8d'/
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180615101105.47047-2-tmricht@linux.ibm.com
+Link: http://lkml.kernel.org/r/20180615101105.47047-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ tools/perf/util/pmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 2738fc8d200d..f321ce97d9ec 100644
+index d2fb597c9a8c..2738fc8d200d 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -241,9 +241,11 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 				 char *metric_expr,
- 				 char *metric_name)
- {
-+	struct parse_events_term *term;
- 	struct perf_pmu_alias *alias;
- 	int ret;
- 	int num;
-+	char newval[256];
+@@ -303,6 +303,9 @@ static int perf_pmu__new_alias(struct list_head *list, char *dir, char *name, FI
  
- 	alias = malloc(sizeof(*alias));
- 	if (!alias)
-@@ -262,6 +264,27 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 		return ret;
- 	}
+ 	buf[ret] = 0;
  
-+	/* Scan event and remove leading zeroes, spaces, newlines, some
-+	 * platforms have terms specified as
-+	 * event=0x0091 (read from files ../<PMU>/events/<FILE>
-+	 * and terms specified as event=0x91 (read from JSON files).
-+	 *
-+	 * Rebuild string to make alias->str member comparable.
-+	 */
-+	memset(newval, 0, sizeof(newval));
-+	ret = 0;
-+	list_for_each_entry(term, &alias->terms, list) {
-+		if (ret)
-+			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-+					 ",");
-+		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-+			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-+					 "%s=%#x", term->config, term->val.num);
-+		else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-+			ret += scnprintf(newval + ret, sizeof(newval) - ret,
-+					 "%s=%s", term->config, term->val.str);
-+	}
++	/* Remove trailing newline from sysfs file */
++	rtrim(buf);
 +
- 	alias->name = strdup(name);
- 	if (dir) {
- 		/*
-@@ -285,7 +308,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
- 	}
- 	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
--	alias->str = strdup(val);
-+	alias->str = strdup(newval);
- 
- 	list_add_tail(&alias->list, list);
- 
+ 	return __perf_pmu__new_alias(list, dir, name, NULL, buf, NULL, NULL, NULL,
+ 				     NULL, NULL, NULL);
+ }
 -- 
 2.14.3
