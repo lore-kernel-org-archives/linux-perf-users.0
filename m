@@ -1,54 +1,56 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/19] perf alias: Remove trailing newline when reading sysfs files
-Date: Mon, 25 Jun 2018 14:40:39 -0300
-Message-ID: <20180625174045.25765-14-acme@kernel.org>
+Subject: [PATCH 10/19] tools include uapi: Update if_link.h to pick IFLA_{BRPORT_ISOLATED,VXLAN_TTL_INHERIT}
+Date: Mon, 25 Jun 2018 14:40:36 -0300
+Message-ID: <20180625174045.25765-11-acme@kernel.org>
 References: <20180625174045.25765-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625174045.25765-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexei Starovoitov <ast@kernel.org>, "David S . Miller" <davem@davemloft.net>, Eric Leblond <eric@regit.org>, Hangbin Liu <liuhangbin@gmail.com>, Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Remove a trailing newline when reading sysfs file contents such as
-/sys/devices/cpum_cf/events/TX_NC_TEND.  This shows when verbose option
--v is used.
+The IFLA_BRPORT_ISOLATED and IFLA_VXLAN_TTL_INHERIT defines were added in:
 
-Output before:
+  7d850abd5f4e ("net: bridge: add support for port isolation")
+  72f6d71e491e ("vxlan: add ttl inherit support")
 
-  tx_nc_tend -> 'cpum_cf'/'event=0x008d
-  '/
+Pick them, silencing this build warning:
 
-Output after:
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/if_link.h' differs from latest version at 'include/uapi/linux/if_link.h'
 
-  tx_nc_tend -> 'cpum_cf'/'event=0x8d'/
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180615101105.47047-1-tmricht@linux.ibm.com
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Leblond <eric@regit.org>
+Cc: Hangbin Liu <liuhangbin@gmail.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Link: https://lkml.kernel.org/n/tip-ezi5u0mmdqm0wfm0y2y8176r@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/uapi/linux/if_link.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index d2fb597c9a8c..2738fc8d200d 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -303,6 +303,9 @@ static int perf_pmu__new_alias(struct list_head *list, char *dir, char *name, FI
- 
- 	buf[ret] = 0;
- 
-+	/* Remove trailing newline from sysfs file */
-+	rtrim(buf);
-+
- 	return __perf_pmu__new_alias(list, dir, name, NULL, buf, NULL, NULL, NULL,
- 				     NULL, NULL, NULL);
- }
+diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
+index 68699f654118..cf01b6824244 100644
+--- a/tools/include/uapi/linux/if_link.h
++++ b/tools/include/uapi/linux/if_link.h
+@@ -333,6 +333,7 @@ enum {
+ 	IFLA_BRPORT_BCAST_FLOOD,
+ 	IFLA_BRPORT_GROUP_FWD_MASK,
+ 	IFLA_BRPORT_NEIGH_SUPPRESS,
++	IFLA_BRPORT_ISOLATED,
+ 	__IFLA_BRPORT_MAX
+ };
+ #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+@@ -516,6 +517,7 @@ enum {
+ 	IFLA_VXLAN_COLLECT_METADATA,
+ 	IFLA_VXLAN_LABEL,
+ 	IFLA_VXLAN_GPE,
++	IFLA_VXLAN_TTL_INHERIT,
+ 	__IFLA_VXLAN_MAX
+ };
+ #define IFLA_VXLAN_MAX	(__IFLA_VXLAN_MAX - 1)
 -- 
 2.14.3
