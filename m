@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/14] perf llvm-utils: Remove bashism from kernel include fetch script
-Date: Wed, 11 Jul 2018 16:43:00 -0400
-Message-ID: <20180711204305.12924-10-acme@kernel.org>
+Subject: [PATCH 10/14] perf test shell: Prevent temporary editor files from being considered test scripts
+Date: Wed, 11 Jul 2018 16:43:01 -0400
+Message-ID: <20180711204305.12924-11-acme@kernel.org>
 References: <20180711204305.12924-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180711204305.12924-1-acme@kernel.org>
@@ -12,19 +12,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kim Phillips <kim.phillips@arm.com>
 
-Like system(), popen() calls /bin/sh, which may/may not be bash.
+Allows a perf shell test developer to concurrently edit and run their
+test scripts, avoiding perf test attempts to execute their editor
+temporary files, such as seen here:
 
-Script when run on dash and encounters the line, yields:
-
- exit: Illegal number: -1
-
-checkbashisms report on script content:
-
- possible bashism (exit|return with negative status code):
- exit -1
-
-Remove the bashism and use the more portable non-zero failure
-status code 1.
+ $ sudo taskset -c 0 ./perf test -vvvvvvvv -F 63
+ 63: 0VIM 8.0                                              :
+ --- start ---
+ sh: 1: ./tests/shell/.record+probe_libc_inet_pton.sh.swp: Permission denied
+ ---- end ----
+ 0VIM 8.0: FAILED!
 
 Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -35,35 +32,24 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Sandipan Das <sandipan@linux.vnet.ibm.com>
 Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20180629124652.8d0af7e2281fd3fd8262cacc@arm.com
+Link: http://lkml.kernel.org/r/20180629124658.15a506b41fc4539c08eb9426@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/llvm-utils.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/builtin-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 976e658e38dc..5e94857dfca2 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -266,16 +266,16 @@ static const char *kinc_fetch_script =
- "#!/usr/bin/env sh\n"
- "if ! test -d \"$KBUILD_DIR\"\n"
- "then\n"
--"	exit -1\n"
-+"	exit 1\n"
- "fi\n"
- "if ! test -f \"$KBUILD_DIR/include/generated/autoconf.h\"\n"
- "then\n"
--"	exit -1\n"
-+"	exit 1\n"
- "fi\n"
- "TMPDIR=`mktemp -d`\n"
- "if test -z \"$TMPDIR\"\n"
- "then\n"
--"    exit -1\n"
-+"    exit 1\n"
- "fi\n"
- "cat << EOF > $TMPDIR/Makefile\n"
- "obj-y := dummy.o\n"
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 2bde505e2e7e..dd850a26d579 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -422,7 +422,7 @@ static const char *shell_test__description(char *description, size_t size,
+ 
+ #define for_each_shell_test(dir, base, ent)	\
+ 	while ((ent = readdir(dir)) != NULL)	\
+-		if (!is_directory(base, ent))
++		if (!is_directory(base, ent) && ent->d_name[0] != '.')
+ 
+ static const char *shell_tests__dir(char *path, size_t size)
+ {
 -- 
 2.14.4
