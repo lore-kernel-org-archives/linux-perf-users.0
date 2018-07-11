@@ -1,132 +1,313 @@
-From: Solio Sarabia <solio.sarabia@intel.com>
-Subject: Re: Differences in cpu utilization reported by sar, emon
-Date: Tue, 10 Jul 2018 11:33:39 -0700
-Message-ID: <20180710183339.GA3796@ssarabia-MOBL7.amr.corp.intel.com>
-References: <20180615034133.GA5932@ssarabia-MOBL7.amr.corp.intel.com>
- <20180620234140.GA13040@ssarabia-MOBL7.amr.corp.intel.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL 00/14] perf/urgent fixes
+Date: Wed, 11 Jul 2018 16:42:51 -0400
+Message-ID: <20180711204305.12924-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180620234140.GA13040@ssarabia-MOBL7.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, ak@linux.intel.com, stephen@networkplumber.org
-Cc: linux-perf-users@vger.kernel.org, kys@microsoft.com, amy.l.leeland@intel.com, shiny.sebastian@intel.com, solio.sarabia@intel.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Herton Krzesinski <herton@redhat.com>, Janne Huttunen <janne.huttunen@nokia.com>, Jaroslav Skarvada <jskarvad@redhat.com>, Jeremy Cline <jcline@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>Arnaldo
 List-Id: linux-perf-users.vger.kernel.org
 
-Further analysis shows that even with CONFIG_IRQ_TIME_ACCOUNTING or
-DYNTICKS (CONFIG_VIRT_CPU_ACCOUNTING_GEN) there are some CPU cycles
-lost. This difference correlates with the number of interrupts/sec
-handled in the core, as the number increases, difference also does.
+Hi Ingo,
 
-Network example (linux baremetal):
-         sar    emon   emon-sar  interrupts/sec
-core18   19.2   20.9   1.7       11057
-core21   25.1   30.5   5.4       31472
-core27   18.3   20.1   1.8       10384
-core30    5.6   11.4   5.8       35841
-core34   17.8   20.5   2.7       10973
+	Please consider pulling,
 
-Storage example (fio, device attached directly to vm):
-         sar    perfmon   emon-perfmon  interrupts/sec
-core10   7.4    19.7      12.3          100481
+- Arnaldo
 
-In the storage case, up to 12% irq cycles were not accounted. As users
-start adopting more capable SSDs for instance, the issue will be more
-evident. I would like to understand the reason as to why this happens:
+Test results at the end of this message, as usual.
 
-What could be the reason for this issue?
-Any pointers to the kernel subsystem/code performing time accounting?
+The following changes since commit 092150a25cb7bd6a79aa00bb1ad131063f58073d:
 
-Thanks,
--Solio
+  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/jikos/hid (2018-07-09 17:16:11 -0700)
 
+are available in the Git repository at:
 
-On Wed, Jun 20, 2018 at 04:41:40PM -0700, Solio Sarabia wrote:
-> Thanks Andi, Stephen, for your help/insights.
-> 
-> TICK_CPU_ACCOUNTING (default option) does not account for cpu util on
-> cores handling irqs and softriqs.
-> 
-> IRQ_TIME_ACCOUNTING or VIRT_CPU_ACCOUTING_GEN helps to reduce the util
-> gap. With either option, there is still a difference, for example, up to
-> 8% in terms of sar/emon ratio (sar shows lesser util). This is an
-> improvement to the default case though.
-> 
-> 
-> This is a brief description of the Kbuild options:
-> 
-> -> General setup
->   -> CPU/Task time and stats accounting
->     -> Cputime accounting
-> TICK_CPU_ACCOUNTING
->     Simple/basic tick based cpu accounting--maintains statistics about
->     user, system and idle time spent on per jiffies granularity.
-> VIRT_CPU_ACCOUNTING_NATIVE (not available on my kernel)
->     Deterministic task and cpu time accounting--more accurate task
->     and cpu time accounting. Kernel reads a cpu counter on each kernel
->     entry and exit, and on transitions within the kernel between
->     system, softirq, and hardirq state, so there is a small performance
->     impact.
-> VIRT_CPU_ACCOUTING_GEN
->     Full dynticks cpu time accounting--enable task and cpu time
->     accounting on full dynticks systems. Kernel watches every
->     kernel-user boundaries using the context tracking subsystem.
->     There is significant overhead. For now only useful if you are
->     working on the full dynticks subsystem development.
-> IRQ_TIME_ACCOUNTING
->     Fine granularity task level irq time accounting--kernel reads a
->     timestamp on each transition between softirq and hardirq state,
->     so there can be a performance impact.
-> 
-> -Solio
-> 
-> 
-> On Thu, Jun 14, 2018 at 08:41:33PM -0700, Solio Sarabia wrote:
-> > Hello --
-> > 
-> > I'm running into an issue where sar, mpstat, top, and other tools show
-> > less cpu utilization compared to emon [1]. Sar uses /proc/stat as its
-> > source, and was configured to collect in 1s intervals. Emon reads
-> > hardware counter MSRs in the PMU in timer intervals, 0.1s for this
-> > scenario.
-> > 
-> > The platform is based on Xeon E5-2699 v3 (Haswell) 2.3GHz, 2_sockets,
-> > 18_cores/socket, 36_cores in total, running Ubuntu 16.04, Linux
-> > 4.4.0-128-generic. A network micro workload, ntttcp-for-linux [2],
-> > sends packets from client to server, through a 40GbE direct link.
-> > Numbers below are from server side.
-> > 
-> >                  total %util
-> >            CPU11    CPU21    CPU22    CPU25
-> > emon       99.99    15.90    36.22    36.82
-> > sar        99.99     0.06     0.36     0.35
-> > 
-> >                  interrupts/sec
-> >            CPU11    CPU21    CPU22    CPU25
-> > intrs/sec    846    28923    12844     6304
-> >     Contributors to /proc/interrupts:
-> >     CPU11: Local timer interrupts and Rescheduling interrupts
-> >     CPU21-CPU25: PCI MSI vector from network driver
-> > 
-> >                  softirqs/sec
-> >            CPU11    CPU21    CPU22    CPU25
-> > TIMER        198        1        2        1
-> > NET_RX         1    28889    23553    18546
-> > TASKLET        0    28889    11676     6249
-> > 
-> > 
-> > Somehow hardware irqs and softirqs do not have an effect on the core's
-> > utilization. Another observation is that as more cores are used to
-> > process packets, the emon/sar gap increases.
-> > 
-> > Kernels used default HZ=250. I also tried HZ=1000, which helped improve
-> > throughput, but difference in util is still there. Same for newer
-> > kernels 4.13, 4.15. I would appreciate pointers to debug this, or
-> > insights as what could cause this behavior.
-> > 
-> > [1] https://software.intel.com/en-us/download/emon-users-guide
-> > [2] https://github.com/simonxiaoss/ntttcp-for-linux
-> > 
-> > Thanks,
-> > -Solio
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.18-20180711
+
+for you to fetch changes up to 32aa928a7b817140c84987b726d5014911808fa4:
+
+  perf tools: Use python-config --includes rather than --cflags (2018-07-11 09:48:31 -0400)
+
+----------------------------------------------------------------
+perf/urgent fixes:
+
+python interface:
+
+- Make 'perf script -g python' generate scripts that are compatible
+  with both python 2 and 3 (Jeremy Cline)
+
+- Fix python dictionary reference counting (Janne Huttunen)
+
+- Add python3 support for various python scripts (Jeremy Cline)
+
+- Use python-config --includes rather than --cflags, fixing the build
+  on Fedora, where the python 3.7 started adding -flto to what
+
+perf stat:
+
+  - Remove needless extra header line in --interval_clear (Jiri Olsa)
+  python-config --cflags generate, breaking the perf build (Jeremy Cline)
+
+Build:
+
+- Fix compilation errors on gcc8 (Jiri Olsa)
+
+perf llvm-utils:
+
+- Remove bashism from kernel include fetch script (Kim Phillips)
+
+perf test: (Kim Phillips)
+
+- Replace '|&' with '2>&1 |' to work with more shells
+
+- Make perf's inet_pton test more portable
+
+- Prevent temporary editor files from being considered test scripts
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Janne Huttunen (1):
+      perf script python: Fix dict reference counting
+
+Jeremy Cline (7):
+      perf tools: Generate a Python script compatible with Python 2 and 3
+      perf scripts python: Add Python 3 support to Core.py
+      perf scripts python: Add Python 3 support to SchedGui.py
+      perf scripts python: Add Python 3 support to Util.py
+      perf scripts python: Add Python 3 support to sched-migration.py
+      perf scripts python: Add Python 3 support to EventClass.py
+      perf tools: Use python-config --includes rather than --cflags
+
+Jiri Olsa (2):
+      perf tools: Fix compilation errors on gcc8
+      perf stat: Fix --interval_clear option
+
+Kim Phillips (4):
+      perf test shell: Replace '|&' with '2>&1 |' to work with more shells
+      perf test shell: Make perf's inet_pton test more portable
+      perf llvm-utils: Remove bashism from kernel include fetch script
+      perf test shell: Prevent temporary editor files from being considered test scripts
+
+ tools/perf/Makefile.config                         |  3 +-
+ tools/perf/arch/x86/util/perf_regs.c               |  2 +-
+ tools/perf/builtin-stat.c                          |  2 +-
+ tools/perf/jvmti/jvmti_agent.c                     |  3 +-
+ .../python/Perf-Trace-Util/lib/Perf/Trace/Core.py  | 40 +++++++++-------------
+ .../Perf-Trace-Util/lib/Perf/Trace/EventClass.py   |  4 ++-
+ .../Perf-Trace-Util/lib/Perf/Trace/SchedGui.py     |  2 +-
+ .../python/Perf-Trace-Util/lib/Perf/Trace/Util.py  | 11 +++---
+ tools/perf/scripts/python/sched-migration.py       | 14 +++++---
+ tools/perf/tests/builtin-test.c                    |  2 +-
+ .../tests/shell/record+probe_libc_inet_pton.sh     | 37 +++++++++++---------
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh  |  2 +-
+ tools/perf/util/llvm-utils.c                       |  6 ++--
+ .../util/scripting-engines/trace-event-python.c    | 37 +++++++++-----------
+ 14 files changed, 84 insertions(+), 81 deletions(-)
+
+Test results:
+
+The first ones are container (docker) based builds of tools/perf with
+and without libelf support.  Where clang is available, it is also used
+to build perf with/without libelf, and building with LIBCLANGLLVM=1
+(built-in clang) with gcc and clang when clang and its devel libraries
+are installed.
+
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
+
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+  # dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)
+   7 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+   8 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+   9 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  10 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  11 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-18)
+  12 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+  13 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
+  14 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u1) 4.9.2
+  15 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+  16 debian:experimental           : Ok   gcc (Debian 7.3.0-15) 7.3.0
+  17 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 7.3.0-15) 7.3.0
+  18 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 7.3.0-19) 7.3.0
+  19 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 7.3.0-18) 7.3.0
+  20 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 7.3.0-20) 7.3.0
+  21 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  22 fedora:21                     : Ok   gcc (GCC) 4.9.2 20150212 (Red Hat 4.9.2-6)
+  23 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  24 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  25 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  26 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+  27 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
+  28 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
+  29 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+  <disneyland NMI>
+
+  # git log --oneline -1
+  32aa928a7b81 (HEAD -> perf/urgent, acme.korg/perf/urgent) perf tools: Use python-config --includes rather than --cflags
+  # perf version --build-options
+  perf version 4.18.rc4.g32aa92
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+  # uname -a
+  Linux jouet 4.18.0-rc4-00054-ga74aa9676c02 #5 SMP Wed Jul 11 14:05:26 EDT 2018 x86_64 x86_64 x86_64 GNU/Linux
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: DSO data read                                         : Ok
+  11: DSO data cache                                        : Ok
+  12: DSO data reopen                                       : Ok
+  13: Roundtrip evsel->name                                 : Ok
+  14: Parse sched tracepoints fields                        : Ok
+  15: syscalls:sys_enter_openat event fields                : Ok
+  16: Setup struct perf_event_attr                          : Ok
+  17: Match and link multiple hists                         : Ok
+  18: 'import perf' in python                               : Ok
+  19: Breakpoint overflow signal handler                    : Ok
+  20: Breakpoint overflow sampling                          : Ok
+  21: Breakpoint accounting                                 : Ok
+  22: Number of exit events of a simple workload            : Ok
+  23: Software clock events period values                   : Ok
+  24: Object code reading                                   : Ok
+  25: Sample parsing                                        : Ok
+  26: Use a dummy software event to keep tracking           : Ok
+  27: Parse with no sample_id_all bit set                   : Ok
+  28: Filter hist entries                                   : Ok
+  29: Lookup mmap thread                                    : Ok
+  30: Share thread mg                                       : Ok
+  31: Sort output of hist entries                           : Ok
+  32: Cumulate child hist entries                           : Ok
+  33: Track with sched_switch                               : Ok
+  34: Filter fds with revents mask in a fdarray             : Ok
+  35: Add fd to a fdarray, making it autogrow               : Ok
+  36: kmod_path__parse                                      : Ok
+  37: Thread map                                            : Ok
+  38: LLVM search and compile                               :
+  38.1: Basic BPF llvm compile                              : Ok
+  38.2: kbuild searching                                    : Ok
+  38.3: Compile source for BPF prologue generation          : Ok
+  38.4: Compile source for BPF relocation                   : Ok
+  39: Session topology                                      : Ok
+  40: BPF filter                                            :
+  40.1: Basic BPF filtering                                 : Ok
+  40.2: BPF pinning                                         : Ok
+  40.3: BPF prologue generation                             : Ok
+  40.4: BPF relocation checker                              : Ok
+  41: Synthesize thread map                                 : Ok
+  42: Remove thread map                                     : Ok
+  43: Synthesize cpu map                                    : Ok
+  44: Synthesize stat config                                : Ok
+  45: Synthesize stat                                       : Ok
+  46: Synthesize stat round                                 : Ok
+  47: Synthesize attr update                                : Ok
+  48: Event times                                           : Ok
+  49: Read backward ring buffer                             : Ok
+  50: Print cpu map                                         : Ok
+  51: Probe SDT events                                      : Ok
+  52: is_printable_array                                    : Ok
+  53: Print bitmap                                          : Ok
+  54: perf hooks                                            : Ok
+  55: builtin clang support                                 : Skip (not compiled in)
+  56: unit_number__scnprintf                                : Ok
+  57: mem2node                                              : Ok
+  58: x86 rdpmc                                             : Ok
+  59: Convert perf time to TSC                              : Ok
+  60: DWARF unwind                                          : Ok
+  61: x86 instruction decoder - new instructions            : Ok
+  62: Use vfs_getname probe to get syscall args filenames   : Ok
+  63: Check open filename arg using perf trace + vfs_getname: Ok
+  64: probe libc's inet_pton & backtrace it with ping       : Ok
+  65: Add vfs_getname probe to get syscall args filenames   : Ok
+  #
+
+  $ make -C tools/perf build-test
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+              make_clean_all_O: make clean all
+                 make_perf_o_O: make perf.o
+                make_no_gtk2_O: make NO_GTK2=1
+            make_no_demangle_O: make NO_DEMANGLE=1
+                   make_help_O: make help
+                    make_doc_O: make doc
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+                 make_static_O: make LDFLAGS=-static
+             make_util_map_o_O: make util/map.o
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+             make_no_libperl_O: make NO_LIBPERL=1
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+           make_no_backtrace_O: make NO_BACKTRACE=1
+           make_no_libpython_O: make NO_LIBPYTHON=1
+                   make_pure_O: make
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+         make_install_prefix_O: make install prefix=/tmp/krava
+                   make_tags_O: make tags
+               make_no_slang_O: make NO_SLANG=1
+                make_install_O: make install
+             make_no_libnuma_O: make NO_LIBNUMA=1
+              make_no_libbpf_O: make NO_LIBBPF=1
+              make_no_libelf_O: make NO_LIBELF=1
+            make_install_bin_O: make install-bin
+                  make_debug_O: make DEBUG=1
+                make_no_newt_O: make NO_NEWT=1
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $
