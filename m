@@ -1,75 +1,57 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/14] perf script python: Fix dict reference counting
-Date: Wed, 11 Jul 2018 16:43:04 -0400
-Message-ID: <20180711204305.12924-14-acme@kernel.org>
+Subject: [PATCH 14/14] perf tools: Use python-config --includes rather than --cflags
+Date: Wed, 11 Jul 2018 16:43:05 -0400
+Message-ID: <20180711204305.12924-15-acme@kernel.org>
 References: <20180711204305.12924-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180711204305.12924-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Janne Huttunen <janne.huttunen@nokia.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jaroslav Skarvada <jskarvad@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jeremy Cline <jcline@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Janne Huttunen <janne.huttunen@nokia.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-The dictionaries are attached to the parameter tuple that steals the
-references and takes care of releasing them when appropriate.  The code
-should not decrement the reference counts explicitly.  E.g. if libpython
-has been built with reference debugging enabled, the superfluous DECREFs
-will trigger this error when running perf script:
+Builds started failing in Fedora on Python 3.7 with:
 
-  Fatal Python error: Objects/tupleobject.c:238 object at
-  0x7f10f2041b40 has negative ref count -1
-  Aborted (core dumped)
+    `.gnu.debuglto_.debug_macro' referenced in section
+    `.gnu.debuglto_.debug_macro' of
+    util/scripting-engines/trace-event-python.o: defined in discarded
+    section
 
-If the reference debugging is not enabled, the superfluous DECREFs might
-cause the dict objects to be silently released while they are still in
-use. This may trigger various other assertions or just cause perf
-crashes and/or weird and unexpected data changes in the stored Python
-objects.
+In Fedora, Python 3.7 added -flto to the list of --cflags and since it
+was only applied to util/scripting-engines/trace-event-python.c and
+scripts/python/Perf-Trace-Util/Context.c, linking failed.
 
-Signed-off-by: Janne Huttunen <janne.huttunen@nokia.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+It's not the first time the addition of flags has broken builds: commit
+c6707fdef7e2 ("perf tools: Fix up build in hardnened environments")
+appears to have fixed a similar problem. "python-config --includes"
+provides the proper -I flags and doesn't introduce additional CFLAGS.
+
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jaroslav Skarvada <jskarvad@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1531133990-17485-1-git-send-email-janne.huttunen@nokia.com
+Link: http://lkml.kernel.org/r/20180710154612.6285-1-jcline@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/scripting-engines/trace-event-python.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ tools/perf/Makefile.config | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 8b2eb6dbff4d..bc32e57d17be 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -908,14 +908,11 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	if (_PyTuple_Resize(&t, n) == -1)
- 		Py_FatalError("error resizing Python tuple");
- 
--	if (!dict) {
-+	if (!dict)
- 		call_object(handler, t, handler_name);
--	} else {
-+	else
- 		call_object(handler, t, default_handler_name);
--		Py_DECREF(dict);
--	}
- 
--	Py_XDECREF(all_entries_dict);
- 	Py_DECREF(t);
- }
- 
-@@ -1235,7 +1232,6 @@ static void python_process_general_event(struct perf_sample *sample,
- 
- 	call_object(handler, t, handler_name);
- 
--	Py_DECREF(dict);
- 	Py_DECREF(t);
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b5ac356ba323..f5a3b402589e 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -207,8 +207,7 @@ ifdef PYTHON_CONFIG
+   PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
+   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
+-  PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
+-  PYTHON_EMBED_CCOPTS := $(filter-out -specs=%,$(PYTHON_EMBED_CCOPTS))
++  PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
+   FLAGS_PYTHON_EMBED := $(PYTHON_EMBED_CCOPTS) $(PYTHON_EMBED_LDOPTS)
+ endif
  
 -- 
 2.14.4
