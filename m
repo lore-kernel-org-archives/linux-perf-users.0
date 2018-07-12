@@ -1,61 +1,42 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/14] perf stat: Fix --interval_clear option
-Date: Wed, 11 Jul 2018 16:43:03 -0400
-Message-ID: <20180711204305.12924-13-acme@kernel.org>
-References: <20180711204305.12924-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711204305.12924-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf kvm: Fix subcommands on s390
+Date: Thu, 12 Jul 2018 09:09:36 +0200
+Message-ID: <20180712070936.67547-1-tmricht@linux.ibm.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>, Stefan Raspl <raspl@linux.ibm.com>, stable@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+With commit eca0fa28cd0d ("perf record: Provide detailed information on s390 CPU")
+s390 platform provides detailed type/model/capacitiy information
+in the CPU indentifier string instead of just "IBM/S390".
 
-Currently we display extra header line, like:
+This breaks perf kvm support which uses hard coded string IBM/S390 to
+compare with the CPU identifier string. Fix this by changing the comparison.
 
-  # perf stat -I 1000 -a --interval-clear
-  #           time             counts unit events
-         insn per cycle branch-misses of all branches
-       2.964917103        3855.349912      cpu-clock (msec)          #    3.855 CPUs utilized
-       2.964917103             23,993      context-switches          #    0.006 M/sec
-       2.964917103              1,301      cpu-migrations            #    0.329 K/sec
-       ...
+Fixes: eca0fa28cd0d ("perf record: Provide detailed information on s390 CPU")
+Cc: Stefan Raspl <raspl@linux.ibm.com>
+Cc: <stable@vger.kernel.org> # 4.17
 
-Fixing the condition and getting proper:
-
-  # perf stat -I 1000 -a --interval-clear
-  #           time             counts unit events
-       2.359048938        1432.492228      cpu-clock (msec)          #    1.432 CPUs utilized
-       2.359048938              7,613      context-switches          #    0.002 M/sec
-       2.359048938                419      cpu-migrations            #    0.133 K/sec
-       ...
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 9660e08ee8cb ("perf stat: Add --interval-clear option")
-Link: http://lkml.kernel.org/r/20180702134202.17745-2-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
+ tools/perf/arch/s390/util/kvm-stat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 22547a490e1f..05be023c3f0e 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1742,7 +1742,7 @@ static void print_interval(char *prefix, struct timespec *ts)
- 		}
- 	}
+diff --git a/tools/perf/arch/s390/util/kvm-stat.c b/tools/perf/arch/s390/util/kvm-stat.c
+index d233e2eb9592..aaabab5e2830 100644
+--- a/tools/perf/arch/s390/util/kvm-stat.c
++++ b/tools/perf/arch/s390/util/kvm-stat.c
+@@ -102,7 +102,7 @@ const char * const kvm_skip_events[] = {
  
--	if ((num_print_interval == 0 && metric_only) || interval_clear)
-+	if ((num_print_interval == 0 || interval_clear) && metric_only)
- 		print_metric_headers(" ", true);
- 	if (++num_print_interval == 25)
- 		num_print_interval = 0;
+ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
+ {
+-	if (strstr(cpuid, "IBM/S390")) {
++	if (strstr(cpuid, "IBM")) {
+ 		kvm->exit_reasons = sie_exit_reasons;
+ 		kvm->exit_reasons_isa = "SIE";
+ 	} else
 -- 
-2.14.4
+2.14.3
