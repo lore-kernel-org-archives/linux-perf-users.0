@@ -1,51 +1,65 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Include file bpf.h in directory /usr/lib/include/perf/bpf/bpf.h
-Date: Tue, 24 Jul 2018 10:45:54 -0300
-Message-ID: <20180724134554.GA5630@kernel.org>
-References: <e6e3b74d-5a36-e6ac-a576-0c39c03cbc64@linux.ibm.com>
- <20180723141912.GA5804@kernel.org>
- <6a78dbf0-bd6a-17de-4bd4-b4b9faad94d1@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix subtest number when showing results
+Date: Tue, 24 Jul 2018 15:48:58 +0200
+Message-ID: <20180724134858.100644-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6a78dbf0-bd6a-17de-4bd4-b4b9faad94d1@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Liebler <stli@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, Thomas-Mich Richter <tmricht@linux.ibm.com>, Stefan Liebler <stli@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jul 24, 2018 at 12:49:43PM +0200, Stefan Liebler escreveu:
-> In each case, the introduction of the subdirectory /usr/lib/include leads to
-> the regression that one can't build the glibc RPM for s390 anymore as gcc
-> can't find headers like stdbool.h.
- 
-> Should bpf.h be moved to /usr/lib/perf/include/bpf/bpf.h?
+Perf test 40 for example has several subtests numbered 1-4 when
+displaying the start of the subtest. When the subtest results
+are displayed the subtests are numbered 0-3.
 
-Thanks for the report, yes, I agree with your analysis, breaking the
-assumptions of existing setups like that is not good, can you send a
-patch, including this analysis so that this gets documented in the
-project's git changeset history?
+Use this command to generate trace output:
+[root@s35lp76 perf]# ./perf test -Fv 40 2>/tmp/bpf1
 
-I wonder if we even shouldn't go one extra step and have it in:
+Fix this by adjusting the subtest number when show the
+subtest result.
 
-/usr/lib/perf/bpf/include/bpf/bpf.h?
+Output before:
+[root@s35lp76 perf]# egrep '(^40\.[0-4]| subtest [0-4]:)' /tmp/bpf1
+40.1: Basic BPF filtering                                 :
+BPF filter subtest 0: Ok
+40.2: BPF pinning                                         :
+BPF filter subtest 1: Ok
+40.3: BPF prologue generation                             :
+BPF filter subtest 2: Ok
+40.4: BPF relocation checker                              :
+BPF filter subtest 3: Ok
+[root@s35lp76 perf]#
 
-That extra /bpf/ is to make it sure that everything below
-/usr/lib/perf/bpf/ is to be used in generating eBPF objects to be loaded
-via sys_bpf(), of which the "include/bpf" subdir and bpf.h are for basic
-BPF aspects such as the definition of maps, etc, while include/fmt/
-(below /usr/lib/perf/bpf/) could be C inline functions to be used in .c
-files to generate eBPF ELF objects, and other function "libraries" could
-live in different directories in this hierarchy.
+Output after:
+root@s35lp76 ~]# egrep '(^40\.[0-4]| subtest [0-4]:)' /tmp/bpf1
+40.1: Basic BPF filtering                                 :
+BPF filter subtest 1: Ok
+40.2: BPF pinning                                         :
+BPF filter subtest 2: Ok
+40.3: BPF prologue generation                             :
+BPF filter subtest 3: Ok
+40.4: BPF relocation checker                              :
+BPF filter subtest 4: Ok
+[root@s35lp76 ~]#
 
-One can think about /usr/lib/perf/something-else-that-requires-c-headers/
-like if we decide to create shared objects to process tracepoint events
-obtained from the kernel in a pretty format by just using the tracefs
-metadata, where we would transform a .c file into something other than
-a eBPF ELF file.
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/tests/builtin-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But yeah, to fix the problem you described we have to have it all under
-/usr/lib/perf/
-
-- Arnaldo
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index dd850a26d579..4f5de8245b32 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -599,7 +599,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 			for (subi = 0; subi < subn; subi++) {
+ 				pr_info("%2d.%1d: %-*s:", i, subi + 1, subw,
+ 					t->subtest.get_desc(subi));
+-				err = test_and_print(t, skip, subi);
++				err = test_and_print(t, skip, subi + 1);
+ 				if (err != TEST_OK && t->subtest.skip_if_fail)
+ 					skip = true;
+ 			}
+-- 
+2.14.3
