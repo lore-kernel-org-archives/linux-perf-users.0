@@ -1,70 +1,51 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf build: Build error in libbpf with EXTRA_CFLAGS="-Wp,-D_FORTIFY_SOURCE=2 -O2"
-Date: Mon, 23 Jul 2018 15:45:01 +0200
-Message-ID: <20180723134501.11180-1-tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: Include file bpf.h in directory /usr/lib/include/perf/bpf/bpf.h
+Date: Tue, 24 Jul 2018 10:45:54 -0300
+Message-ID: <20180724134554.GA5630@kernel.org>
+References: <e6e3b74d-5a36-e6ac-a576-0c39c03cbc64@linux.ibm.com>
+ <20180723141912.GA5804@kernel.org>
+ <6a78dbf0-bd6a-17de-4bd4-b4b9faad94d1@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6a78dbf0-bd6a-17de-4bd4-b4b9faad94d1@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, wangnan0@huawei.com
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Stefan Liebler <stli@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, Thomas-Mich Richter <tmricht@linux.ibm.com>, Stefan Liebler <stli@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Namhyung Kim <namhyung@kernel.org>, David Ahern <dsahern@gmail.com>, Wang Nan <wangnan0@huawei.com>, Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-commit a5b8bd47dcc57 ("bpf tools: Collect eBPF programs from their own sections")
-
-cause a compiler error when building the perf tool in the linux-next tree.
-I compile it using a FEDORA 28 installation, my gcc compiler version:
-gcc (GCC) 8.0.1 20180324 (Red Hat 8.0.1-0.20)
-
-Here is the error message:
-
-[root@p23lp27] # make V=1 EXTRA_CFLAGS="-Wp,-D_FORTIFY_SOURCE=2 -O2"
-[...]
-make -f /home6/tmricht/linux-next/tools/build/Makefile.build
-	dir=./util/scripting-engines obj=libperf
-libbpf.c: In function ‘bpf_object__elf_collect’:
-libbpf.c:811:15: error: ignoring return value of ‘strerror_r’,
-		declared with attribute warn_unused_result [-Werror=unused-result]
-     strerror_r(-err, errmsg, sizeof(errmsg));
-               ^
-cc1: all warnings being treated as errors
-mv: cannot stat './.libbpf.o.tmp': No such file or directory
-/home6/tmricht/linux-next/tools/build/Makefile.build:96: recipe for target 'libbpf.o' failed
-
-Fix this by using strerror_r return value in pr_warning statement.
-Also fixes a possible initialization issue.
-
-Cc: Wang Nan <wangnan0@huawei.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/lib/bpf/libbpf.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 955f8eafbf41..c70785ea903c 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -808,9 +808,9 @@ static int bpf_object__elf_collect(struct bpf_object *obj)
- 			if (err) {
- 				char errmsg[STRERR_BUFSIZE];
+Em Tue, Jul 24, 2018 at 12:49:43PM +0200, Stefan Liebler escreveu:
+> In each case, the introduction of the subdirectory /usr/lib/include leads to
+> the regression that one can't build the glibc RPM for s390 anymore as gcc
+> can't find headers like stdbool.h.
  
--				strerror_r(-err, errmsg, sizeof(errmsg));
- 				pr_warning("failed to alloc program %s (%s): %s",
--					   name, obj->path, errmsg);
-+					   name, obj->path,
-+					   strerror_r(-err, errmsg, sizeof(errmsg)));
- 			}
- 		} else if (sh.sh_type == SHT_REL) {
- 			void *reloc = obj->efile.reloc;
-@@ -2334,7 +2334,7 @@ bpf_perf_event_read_simple(void *mem, unsigned long size,
- 	__u64 data_tail = header->data_tail;
- 	__u64 data_head = header->data_head;
- 	void *base, *begin, *end;
--	int ret;
-+	int ret = 0;
- 
- 	asm volatile("" ::: "memory"); /* in real code it should be smp_rmb() */
- 	if (data_head == data_tail)
--- 
-2.16.4
+> Should bpf.h be moved to /usr/lib/perf/include/bpf/bpf.h?
+
+Thanks for the report, yes, I agree with your analysis, breaking the
+assumptions of existing setups like that is not good, can you send a
+patch, including this analysis so that this gets documented in the
+project's git changeset history?
+
+I wonder if we even shouldn't go one extra step and have it in:
+
+/usr/lib/perf/bpf/include/bpf/bpf.h?
+
+That extra /bpf/ is to make it sure that everything below
+/usr/lib/perf/bpf/ is to be used in generating eBPF objects to be loaded
+via sys_bpf(), of which the "include/bpf" subdir and bpf.h are for basic
+BPF aspects such as the definition of maps, etc, while include/fmt/
+(below /usr/lib/perf/bpf/) could be C inline functions to be used in .c
+files to generate eBPF ELF objects, and other function "libraries" could
+live in different directories in this hierarchy.
+
+One can think about /usr/lib/perf/something-else-that-requires-c-headers/
+like if we decide to create shared objects to process tracepoint events
+obtained from the kernel in a pretty format by just using the tracefs
+metadata, where we would transform a .c file into something other than
+a eBPF ELF file.
+
+But yeah, to fix the problem you described we have to have it all under
+/usr/lib/perf/
+
+- Arnaldo
