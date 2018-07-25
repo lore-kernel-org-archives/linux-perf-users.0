@@ -1,52 +1,60 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/27] perf kvm: Fix subcommands on s390
-Date: Wed, 25 Jul 2018 14:59:43 -0300
-Message-ID: <20180725180001.15108-10-acme@kernel.org>
+Subject: [PATCH 10/27] perf list: Add missing documentation for --desc and --debug options
+Date: Wed, 25 Jul 2018 14:59:44 -0300
+Message-ID: <20180725180001.15108-11-acme@kernel.org>
 References: <20180725180001.15108-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180725180001.15108-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sangwon Hong <qpakzk@gmail.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Sangwon Hong <qpakzk@gmail.com>
 
-With commit eca0fa28cd0d ("perf record: Provide detailed information on
-s390 CPU") s390 platform provides detailed type/model/capacity
-information in the CPU identifier string instead of just "IBM/S390".
+Add missing documentation for --desc and --debug options to the 'perf
+list' man page.
 
-This breaks 'perf kvm' support which uses hard coded string IBM/S390 to
-compare with the CPU identifier string. Fix this by changing the
-comparison.
-
-Reported-by: Stefan Raspl <raspl@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Tested-by: Stefan Raspl <raspl@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: stable@vger.kernel.org
-Fixes: eca0fa28cd0d ("perf record: Provide detailed information on s390 CPU")
-Link: http://lkml.kernel.org/r/20180712070936.67547-1-tmricht@linux.ibm.com
+Signed-off-by: Sangwon Hong <qpakzk@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lkml.kernel.org/r/20180717110738.10779-1-qpakzk@gmail.com
+[ Clarify that --desc is by default active ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/kvm-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-list.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/s390/util/kvm-stat.c b/tools/perf/arch/s390/util/kvm-stat.c
-index d233e2eb9592..aaabab5e2830 100644
---- a/tools/perf/arch/s390/util/kvm-stat.c
-+++ b/tools/perf/arch/s390/util/kvm-stat.c
-@@ -102,7 +102,7 @@ const char * const kvm_skip_events[] = {
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 14e13512c05f..236b9b97dfdb 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -18,6 +18,10 @@ various perf commands with the -e option.
  
- int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
- {
--	if (strstr(cpuid, "IBM/S390")) {
-+	if (strstr(cpuid, "IBM")) {
- 		kvm->exit_reasons = sie_exit_reasons;
- 		kvm->exit_reasons_isa = "SIE";
- 	} else
+ OPTIONS
+ -------
++-d::
++--desc::
++Print extra event descriptions. (default)
++
+ --no-desc::
+ Don't print descriptions.
+ 
+@@ -25,11 +29,13 @@ Don't print descriptions.
+ --long-desc::
+ Print longer event descriptions.
+ 
++--debug::
++Enable debugging output.
++
+ --details::
+ Print how named events are resolved internally into perf events, and also
+ any extra expressions computed by perf stat.
+ 
+-
+ [[EVENT_MODIFIERS]]
+ EVENT MODIFIERS
+ ---------------
 -- 
 2.14.4
