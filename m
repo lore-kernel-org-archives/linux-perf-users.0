@@ -1,129 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/27] perf stat: Add transaction flag (-T) support for s390
-Date: Wed, 25 Jul 2018 14:59:42 -0300
-Message-ID: <20180725180001.15108-9-acme@kernel.org>
+Subject: [PATCH 09/27] perf kvm: Fix subcommands on s390
+Date: Wed, 25 Jul 2018 14:59:43 -0300
+Message-ID: <20180725180001.15108-10-acme@kernel.org>
 References: <20180725180001.15108-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180725180001.15108-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Thomas Richter <tmricht@linux.ibm.com>
 
-The 'perf stat' command line flag -T to display transaction counters is
-currently supported for x86 only.
+With commit eca0fa28cd0d ("perf record: Provide detailed information on
+s390 CPU") s390 platform provides detailed type/model/capacity
+information in the CPU identifier string instead of just "IBM/S390".
 
-Add support for s390. It is based on the metrics flag -M transaction
-using the architecture dependent JSON files. This requires a metric
-named "transaction" in the JSON files for the platform.
+This breaks 'perf kvm' support which uses hard coded string IBM/S390 to
+compare with the CPU identifier string. Fix this by changing the
+comparison.
 
-Introduce a new function metricgroup__has_metric() to check for the
-existence of a metric_name transaction.
-
-As suggested by Andi Kleen, this is the new approach to support
-transactions counters. Other architectures will follow.
-
-Output before:
-
-  [root@p23lp27 perf]# ./perf stat -T -- sleep 1
-  Cannot set up transaction events
-  [root@p23lp27 perf]#
-
-Output after:
-
-  [root@s35lp76 perf]# ./perf stat -T -- ~/mytesttx 1 >/tmp/111
-
-   Performance counter stats for '/root/mytesttx 1':
-
-                   1      tx_c_tend           #     13.0 transaction
-                   1      tx_nc_tend
-                  11      tx_nc_tabort
-                   0      tx_c_tabort_special
-                   0      tx_c_tabort_no_special
-
-         0.001070109 seconds time elapsed
-
-  [root@s35lp76 perf]#
-
-Suggested-by: Andi Kleen <ak@linux.intel.com>
+Reported-by: Stefan Raspl <raspl@linux.ibm.com>
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Acked-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Stefan Raspl <raspl@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20180626071701.58190-1-tmricht@linux.ibm.com
+Cc: stable@vger.kernel.org
+Fixes: eca0fa28cd0d ("perf record: Provide detailed information on s390 CPU")
+Link: http://lkml.kernel.org/r/20180712070936.67547-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c     | 12 ++++++++++++
- tools/perf/util/metricgroup.c | 22 ++++++++++++++++++++++
- tools/perf/util/metricgroup.h |  1 +
- 3 files changed, 35 insertions(+)
+ tools/perf/arch/s390/util/kvm-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 05be023c3f0e..dfd13d6e2931 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2449,6 +2449,18 @@ static int add_default_attributes(void)
- 		return 0;
+diff --git a/tools/perf/arch/s390/util/kvm-stat.c b/tools/perf/arch/s390/util/kvm-stat.c
+index d233e2eb9592..aaabab5e2830 100644
+--- a/tools/perf/arch/s390/util/kvm-stat.c
++++ b/tools/perf/arch/s390/util/kvm-stat.c
+@@ -102,7 +102,7 @@ const char * const kvm_skip_events[] = {
  
- 	if (transaction_run) {
-+		/* Handle -T as -M transaction. Once platform specific metrics
-+		 * support has been added to the json files, all archictures
-+		 * will use this approach. To determine transaction support
-+		 * on an architecture test for such a metric name.
-+		 */
-+		if (metricgroup__has_metric("transaction")) {
-+			struct option opt = { .value = &evsel_list };
-+
-+			return metricgroup__parse_groups(&opt, "transaction",
-+							 &metric_events);
-+		}
-+
- 		if (pmu_have_event("cpu", "cycles-ct") &&
- 		    pmu_have_event("cpu", "el-start"))
- 			err = parse_events(evsel_list, transaction_attrs,
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 1ddc3d1d0147..96eab4ec34ff 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -490,3 +490,25 @@ int metricgroup__parse_groups(const struct option *opt,
- 	metricgroup__free_egroups(&group_list);
- 	return ret;
- }
-+
-+bool metricgroup__has_metric(const char *metric)
-+{
-+	struct pmu_events_map *map = perf_pmu__find_map(NULL);
-+	struct pmu_event *pe;
-+	int i;
-+
-+	if (!map)
-+		return false;
-+
-+	for (i = 0; ; i++) {
-+		pe = &map->table[i];
-+
-+		if (!pe->name && !pe->metric_group && !pe->metric_name)
-+			break;
-+		if (!pe->metric_expr)
-+			continue;
-+		if (match_metric(pe->metric_name, metric))
-+			return true;
-+	}
-+	return false;
-+}
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 06854e125ee7..8a155dba0581 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -28,4 +28,5 @@ int metricgroup__parse_groups(const struct option *opt,
- 			struct rblist *metric_events);
- 
- void metricgroup__print(bool metrics, bool groups, char *filter, bool raw);
-+bool metricgroup__has_metric(const char *metric);
- #endif
+ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
+ {
+-	if (strstr(cpuid, "IBM/S390")) {
++	if (strstr(cpuid, "IBM")) {
+ 		kvm->exit_reasons = sie_exit_reasons;
+ 		kvm->exit_reasons_isa = "SIE";
+ 	} else
 -- 
 2.14.4
