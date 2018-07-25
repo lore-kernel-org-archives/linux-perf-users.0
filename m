@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/27] perf machine: Add threads__get_last_match function
-Date: Wed, 25 Jul 2018 14:59:55 -0300
-Message-ID: <20180725180001.15108-22-acme@kernel.org>
+Subject: [PATCH 22/27] perf machine: Add threads__set_last_match function
+Date: Wed, 25 Jul 2018 14:59:56 -0300
+Message-ID: <20180725180001.15108-23-acme@kernel.org>
 References: <20180725180001.15108-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180725180001.15108-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Separating threads::last_match cache read/check into separate
-threads__get_last_match function. This will be useful in following
+Separating threads::last_match cache set into separate
+threads__set_last_match function.  This will be useful in following
 patch.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
@@ -25,72 +25,55 @@ Cc: Lukasz Odzioba <lukasz.odzioba@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20180719143345.12963-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180719143345.12963-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+ tools/perf/util/machine.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 22dbb6612b41..df41aa1a4cf9 100644
+index df41aa1a4cf9..8992fcf42257 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -408,23 +408,16 @@ static void machine__update_thread_pid(struct machine *machine,
+@@ -431,6 +431,12 @@ threads__get_last_match(struct threads *threads, struct machine *machine,
+ 	return NULL;
  }
  
- /*
-- * Caller must eventually drop thread->refcnt returned with a successful
-- * lookup/new thread inserted.
-+ * Front-end cache - TID lookups come in blocks,
-+ * so most of the time we dont have to look up
-+ * the full rbtree:
-  */
--static struct thread *____machine__findnew_thread(struct machine *machine,
--						  struct threads *threads,
--						  pid_t pid, pid_t tid,
--						  bool create)
-+static struct thread*
-+threads__get_last_match(struct threads *threads, struct machine *machine,
-+			int pid, int tid)
- {
--	struct rb_node **p = &threads->entries.rb_node;
--	struct rb_node *parent = NULL;
- 	struct thread *th;
- 
--	/*
--	 * Front-end cache - TID lookups come in blocks,
--	 * so most of the time we dont have to look up
--	 * the full rbtree:
--	 */
- 	th = threads->last_match;
- 	if (th != NULL) {
- 		if (th->tid == tid) {
-@@ -435,6 +428,26 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
- 		threads->last_match = NULL;
- 	}
- 
-+	return NULL;
++static void
++threads__set_last_match(struct threads *threads, struct thread *th)
++{
++	threads->last_match = th;
 +}
 +
-+/*
-+ * Caller must eventually drop thread->refcnt returned with a successful
-+ * lookup/new thread inserted.
-+ */
-+static struct thread *____machine__findnew_thread(struct machine *machine,
-+						  struct threads *threads,
-+						  pid_t pid, pid_t tid,
-+						  bool create)
-+{
-+	struct rb_node **p = &threads->entries.rb_node;
-+	struct rb_node *parent = NULL;
-+	struct thread *th;
-+
-+	th = threads__get_last_match(threads, machine, pid, tid);
-+	if (th)
-+		return th;
-+
- 	while (*p != NULL) {
- 		parent = *p;
+ /*
+  * Caller must eventually drop thread->refcnt returned with a successful
+  * lookup/new thread inserted.
+@@ -453,7 +459,7 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
  		th = rb_entry(parent, struct thread, rb_node);
+ 
+ 		if (th->tid == tid) {
+-			threads->last_match = th;
++			threads__set_last_match(threads, th);
+ 			machine__update_thread_pid(machine, th, pid);
+ 			return thread__get(th);
+ 		}
+@@ -490,7 +496,7 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
+ 		 * It is now in the rbtree, get a ref
+ 		 */
+ 		thread__get(th);
+-		threads->last_match = th;
++		threads__set_last_match(threads, th);
+ 		++threads->nr;
+ 	}
+ 
+@@ -1648,7 +1654,7 @@ static void __machine__remove_thread(struct machine *machine, struct thread *th,
+ 	struct threads *threads = machine__threads(machine, th->tid);
+ 
+ 	if (threads->last_match == th)
+-		threads->last_match = NULL;
++		threads__set_last_match(threads, NULL);
+ 
+ 	BUG_ON(refcount_read(&th->refcnt) == 0);
+ 	if (lock)
 -- 
 2.14.4
