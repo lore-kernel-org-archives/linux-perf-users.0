@@ -1,50 +1,50 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/27] perf cs-etm: Bail out immediately for instruction sample failure
-Date: Wed, 25 Jul 2018 14:59:38 -0300
-Message-ID: <20180725180001.15108-5-acme@kernel.org>
+Subject: [PATCH 05/27] Revert "perf list: Add s390 support for detailed/verbose PMU event description"
+Date: Wed, 25 Jul 2018 14:59:39 -0300
+Message-ID: <20180725180001.15108-6-acme@kernel.org>
 References: <20180725180001.15108-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180725180001.15108-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Mike Leach <mike.leach@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Robert Walker <robert.walker@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-If the instruction sample failure has happened, it isn't necessary to
-execute to the end of the function cs_etm__flush().  This commit is to
-bail out immediately and return the error code.
+This reverts commit 038586c34301578e538f6c5aa79ca82bce1b9152.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1529298599-3876-3-git-send-email-leo.yan@linaro.org
+Fix the support of detailed/verbose PMU event description by using the
+"Unit": keyword in the json files to address event names refering to the
+/sys/devices/cpum_[cs]f devices.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20180621080452.61012-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/pmu.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 822ba915d144..8b2c099e750a 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -939,6 +939,9 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
- 		err = cs_etm__synth_instruction_sample(
- 			etmq, addr,
- 			etmq->period_instructions);
-+		if (err)
-+			return err;
-+
- 		etmq->period_instructions = 0;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 3ba6a1742f91..afd68524ffa9 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -652,12 +652,6 @@ static int is_arm_pmu_core(const char *name)
+ 	if (stat(path, &st) == 0)
+ 		return 1;
  
- 		/*
+-	/* Look for cpu sysfs (specific to s390) */
+-	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s",
+-		  sysfs, name);
+-	if (stat(path, &st) == 0 && !strncmp(name, "cpum_", 5))
+-		return 1;
+-
+ 	return 0;
+ }
+ 
 -- 
 2.14.4
