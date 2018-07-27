@@ -1,80 +1,102 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Subject: Re: BPF relocation 'perf test' entries failing was: Re: [GIT PULL
- 00/27] perf/core improvements and fixes
-Date: Fri, 27 Jul 2018 08:27:27 +0200
-Message-ID: <8b7e30c5-338c-7e9b-536f-9418792936d7@linux.ibm.com>
-References: <20180726131534.GD17940@kernel.org>
- <2fbfac01-e103-8daf-6187-b94d1725dbd0@linux.ibm.com>
- <20180726185805.GA20438@kernel.org> <20180726191435.GB20438@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf build: Fix installation directory for bpf
+Date: Fri, 27 Jul 2018 08:43:56 +0200
+Message-ID: <20180727064356.76595-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726191435.GB20438@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Sandipan Das <sandipan@linux.ibm.com>
-Cc: Alexei Starovoitov <ast@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, Ingo Molnar <mingo@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Clark Williams <williams@redhat.com>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, linux-kernel@vger.kernel.org, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 07/26/2018 09:14 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jul 26, 2018 at 03:58:05PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Thu, Jul 26, 2018 at 11:04:08PM +0530, Sandipan Das escreveu:
->>> I came across the same problem. Does the following patch fix it?
-> 
->>> https://lkml.org/lkml/2018/7/26/669
->  
->> Oh my, that one was subtle... Checking...
-> 
-> Right, when it said it was running:
-> 
->   40.3: BPF prologue generation
-> 
-> In fact it was running:
-> 
->   40.4: BPF relocation checker
-> 
-> That error message in the 'perf test -v' output:
-> 
->   libbpf: Program 'func=sys_write' contains non-map related relo data pointing to section 65522
-> 
-> Was the _expected_ one for "40.4: BPF relocation checker", then it
-> failed when it couldn't run the off by one "last" subtest, duh.
-> 
-> Thomas, this was a problem introduced by a patch from you, just for
-> reference, this one:
-> 
->     Fixes: 9ef0112442bd ("perf test: Fix subtest number when showing results")
-> 
-> I should have caught this by running 'perf test' before/after applying
-> that patch, I'll now make sure this is done before sending pull reqs
-> upstream.
-> 
-> In fact I did after, and thought, hey, some BPF related regression, I
-> must've updated clang/llvm and something new appeared on the radar, so I
-> went that direction and went nowhere, well, now I have an uptodate
-> llvm/clang combo to play with BTF, pahole, etc 8-)
-> 
-> Thanks!
-> 
-> - Arnaldo
+Perf tool build and install is controlled via makefile. Make install
+creates directories and copies files. Among them are header files
+installed in /usr/lib/include/perf/bpf/.
 
+However all listed examples are installing its header files in
+  /usr/lib/<tool-name>/...[/include]/header.h
+and not in
+  /usr/lib/include/<tool-name>/.../header.h.
 
+Background information:
+Building the Fedora 28 glibc RPM on s390x and s390 fails on s390
+(gcc -m31) as gcc is not able to find header-files like stdbool.h.
+In the glibc.spec file, you can see that glibc is configured with
+"--with-headers". In this case, first -nostdinc is added to the
+CFLAGS and then further include paths are added via -isystem.
+One of those paths should contain header files like stdbool.h.
 
-Sandipan,
-thanks for fixing what I have messed up.
+In order to get this path, gcc is invoked with:
+- on Fedora 28 (with 4.18 kernel):
+  $ gcc -print-file-name=include
+  /usr/lib/gcc/s390x-redhat-linux/8/include
+  $ gcc -m31 -print-file-name=include
+  /usr/lib/gcc/s390x-redhat-linux/8/../../../../lib/include
+  => If perf is installed, this is: /usr/lib/include
+  On my machine this directory is only containing the directory "perf".
+  If perf is not installed gcc returns: /usr/lib/gcc/s390x-redhat-linux/8/\
+						include
 
-Arnaldo,
-sorry for the hickup, I should have caught this too. In fact I ran
-perf test before and after, but redirected the output and just 
-looked at the grep'ed lines on the screen....
-I should be looked more carefully...
+-on Ubuntu 18.04 (with 4.15 kernel):
+  $ gcc  -print-file-name=include
+  /usr/lib/gcc/s390x-linux-gnu/7/include
+  $ gcc -m31 -print-file-name=include
+  /usr/lib/gcc/s390x-linux-gnu/7/include
+  => gcc returns the correct path even if perf is installed.
 
-Apologies for the mess and thanks again for fixing this.
+In each case, the introduction of the subdirectory /usr/lib/include
+leads to the regression that one can not build the glibc RPM for
+s390 anymore as gcc can not find headers like stdbool.h.
 
+To remedy this install bpf.h to /usr/lib/perf/include/bpf/bpf.h
+
+Output before using command ./perf test -Fv 40:
+echo '...[bpf-program-source]...' | /usr/bin/clang ... \
+		 -I/root/lib/include/perf/bpf ...
+                             ^^^^^^^^^^^^
+...
+[root@p23lp27 perf]# ./perf test -F 40
+40: BPF filter                                            :
+40.1: Basic BPF filtering                                 : Ok
+40.2: BPF pinning                                         : Ok
+40.3: BPF prologue generation                             : Ok
+40.4: BPF relocation checker                              : Ok
+[root@p23lp27 perf]#
+
+Output after using command ./perf test -Fv 40:
+echo '...[bpf-program-source]...' | /usr/bin/clang ... \
+		 -I/root/lib/perf/include/bpf ...
+                             ^^^^^^^^^^^^
+...
+[root@p23lp27 perf]# ./perf test -F 40
+40: BPF filter                                            :
+40.1: Basic BPF filtering                                 : Ok
+40.2: BPF pinning                                         : Ok
+40.3: BPF prologue generation                             : Ok
+40.4: BPF relocation checker                              : Ok
+[root@p23lp27 perf]#
+
+Suggested-by: Stefan Liebler <stli@linux.ibm.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/Makefile.config | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index f5a3b402589e..67b042738ed7 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -905,8 +905,8 @@ bindir = $(abspath $(prefix)/$(bindir_relative))
+ mandir = share/man
+ infodir = share/info
+ perfexecdir = libexec/perf-core
+-perf_include_dir = lib/include/perf
+-perf_examples_dir = lib/examples/perf
++perf_include_dir = lib/perf/include
++perf_examples_dir = lib/perf/examples
+ sharedir = $(prefix)/share
+ template_dir = share/perf-core/templates
+ STRACE_GROUPS_DIR = share/perf-core/strace/groups
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.17.0
