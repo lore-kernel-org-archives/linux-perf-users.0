@@ -1,59 +1,54 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/5] tools headers uapi: Update tools's copy of linux/perf_event.h
-Date: Mon, 30 Jul 2018 17:50:27 -0300
-Message-ID: <20180730205031.12853-2-acme@kernel.org>
+Subject: [PATCH 2/5] tools headers powerpc: Update asm/unistd.h copy to pick new
+Date: Mon, 30 Jul 2018 17:50:28 -0300
+Message-ID: <20180730205031.12853-3-acme@kernel.org>
 References: <20180730205031.12853-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180730205031.12853-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>, Stephane Eranian <eranian@google.com>, Thomas Gleixner <tglx@linutronix.de>, Vince Weaver <vincent.weaver@maine.edu>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Breno Leitao <leitao@debian.org>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, linuxppc-dev@lists.ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+The new 'io_pgetevents' syscall was wired up in PowerPC in the following
+cset:
 
-  6cbc304f2f36 ("perf/x86/intel: Fix unwind errors from PEBS entries (mk-II)")
+  b2f82565f2ca ("powerpc: Wire up io_pgetevents")
 
-That do not imply any changes in the tooling side, the (ab)use of
-sample_type is entirely done in kernel space, nothing for userspace to
-witness here.
+Update tools/arch/powerpc/ copy of the asm/unistd.h file so that 'perf
+trace' on PowerPC gets it in its syscall table.
 
-This cures the following warning during perf's build:
+This elliminated the following perf build warning:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' differs from latest version at 'include/uapi/linux/perf_event.h'
+  Warning: Kernel ABI header at 'tools/arch/powerpc/include/uapi/asm/unistd.h' differs from latest version at 'arch/powerpc/include/uapi/asm/unistd.h'
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-o64mjoy35s9gd1gitunw1zg4@git.kernel.org
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Link: https://lkml.kernel.org/n/tip-9uvu7tz4ud3bxxfyxwryuz47@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/perf_event.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/arch/powerpc/include/uapi/asm/unistd.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index b8e288a1f740..eeb787b1c53c 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -143,6 +143,8 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+diff --git a/tools/arch/powerpc/include/uapi/asm/unistd.h b/tools/arch/powerpc/include/uapi/asm/unistd.h
+index ac5ba55066dd..985534d0b448 100644
+--- a/tools/arch/powerpc/include/uapi/asm/unistd.h
++++ b/tools/arch/powerpc/include/uapi/asm/unistd.h
+@@ -399,5 +399,6 @@
+ #define __NR_pkey_free		385
+ #define __NR_pkey_mprotect	386
+ #define __NR_rseq		387
++#define __NR_io_pgetevents	388
  
- 	PERF_SAMPLE_MAX = 1U << 20,		/* non-ABI */
-+
-+	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63,
- };
- 
- /*
+ #endif /* _UAPI_ASM_POWERPC_UNISTD_H_ */
 -- 
 2.14.4
