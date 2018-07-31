@@ -1,102 +1,79 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/5] perf tools: Fix the build on the alpine:edge distro
-Date: Mon, 30 Jul 2018 17:50:31 -0300
-Message-ID: <20180730205031.12853-6-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/5] perf/urgent fixes
+Date: Tue, 31 Jul 2018 07:51:35 +0200
+Message-ID: <20180731055135.GA29199@gmail.com>
 References: <20180730205031.12853-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20180730205031.12853-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Breno Leitao <leitao@debian.org>, Daniel Borkmann <daniel@iogearbox.net>, Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, linuxppc-dev@lists.ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>, Ravi Bangoria <ravi.bangoria@linux.v>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The UAPI file byteorder/little_endian.h uses the __always_inline define
-without including the header where it is defined, linux/stddef.h, this
-ends up working in all the other distros because that file gets included
-seemingly by luck from one of the files included from little_endian.h.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-But not on Alpine:edge, that fails for all files where perf_event.h is
-included but linux/stddef.h isn't include before that.
+> Hi Ingo,
+> 
+> 	Please consider pulling, just to get the build without warnings
+> and finishing successfully in all my test environments,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 7f635ff187ab6be0b350b3ec06791e376af238ab:
+> 
+>   perf/core: Fix crash when using HW tracing kernel filters (2018-07-25 11:46:22 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.18-20180730
+> 
+> for you to fetch changes up to 44fe619b1418ff4e9d2f9518a940fbe2fb686a08:
+> 
+>   perf tools: Fix the build on the alpine:edge distro (2018-07-30 13:15:03 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes: (Arnaldo Carvalho de Melo)
+> 
+> - Update the tools copy of several files, including perf_event.h,
+>   powerpc's asm/unistd.h (new io_pgetevents syscall), bpf.h and
+>   x86's memcpy_64.s (used in 'perf bench mem'), silencing the
+>   respective warnings during the perf tools build.
+> 
+> - Fix the build on the alpine:edge distro.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (5):
+>       tools headers uapi: Update tools's copy of linux/perf_event.h
+>       tools headers powerpc: Update asm/unistd.h copy to pick new
+>       tools headers uapi: Refresh linux/bpf.h copy
+>       tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'
+>       perf tools: Fix the build on the alpine:edge distro
+> 
+>  tools/arch/powerpc/include/uapi/asm/unistd.h |   1 +
+>  tools/arch/x86/include/asm/mcsafe_test.h     |  13 ++++
+>  tools/arch/x86/lib/memcpy_64.S               | 112 +++++++++++++--------------
+>  tools/include/uapi/linux/bpf.h               |  28 +++++--
+>  tools/include/uapi/linux/perf_event.h        |   2 +
+>  tools/perf/arch/x86/util/pmu.c               |   1 +
+>  tools/perf/arch/x86/util/tsc.c               |   1 +
+>  tools/perf/bench/Build                       |   1 +
+>  tools/perf/bench/mem-memcpy-x86-64-asm.S     |   1 +
+>  tools/perf/bench/mem-memcpy-x86-64-lib.c     |  24 ++++++
+>  tools/perf/perf.h                            |   1 +
+>  tools/perf/util/header.h                     |   1 +
+>  tools/perf/util/namespaces.h                 |   1 +
+>  13 files changed, 124 insertions(+), 63 deletions(-)
+>  create mode 100644 tools/arch/x86/include/asm/mcsafe_test.h
+>  create mode 100644 tools/perf/bench/mem-memcpy-x86-64-lib.c
 
-Adding the missing linux/stddef.h file where it breaks on Alpine:edge to
-fix that, in all other distros, that is just a very small header anyway.
+Pulled, thanks a lot Arnaldo!
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-9r1pifftxvuxms8l7ir73p5l@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/x86/util/pmu.c | 1 +
- tools/perf/arch/x86/util/tsc.c | 1 +
- tools/perf/perf.h              | 1 +
- tools/perf/util/header.h       | 1 +
- tools/perf/util/namespaces.h   | 1 +
- 5 files changed, 5 insertions(+)
-
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 63a74c32ddc5..e33ef5bc31c5 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
- 
-+#include <linux/stddef.h>
- #include <linux/perf_event.h>
- 
- #include "../../util/intel-pt.h"
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index 06bae7023a51..950539f9a4f7 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -2,6 +2,7 @@
- #include <stdbool.h>
- #include <errno.h>
- 
-+#include <linux/stddef.h>
- #include <linux/perf_event.h>
- 
- #include "../../perf.h"
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index a1a97956136f..d215714f48df 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -5,6 +5,7 @@
- #include <time.h>
- #include <stdbool.h>
- #include <linux/types.h>
-+#include <linux/stddef.h>
- #include <linux/perf_event.h>
- 
- extern bool test_attr__enabled;
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 90d4577a92dc..6d7fe44aadc0 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -2,6 +2,7 @@
- #ifndef __PERF_HEADER_H
- #define __PERF_HEADER_H
- 
-+#include <linux/stddef.h>
- #include <linux/perf_event.h>
- #include <sys/types.h>
- #include <stdbool.h>
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 760558dcfd18..cae1a9a39722 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -10,6 +10,7 @@
- #define __PERF_NAMESPACES_H
- 
- #include <sys/types.h>
-+#include <linux/stddef.h>
- #include <linux/perf_event.h>
- #include <linux/refcount.h>
- #include <linux/types.h>
--- 
-2.14.4
+	Ingo
