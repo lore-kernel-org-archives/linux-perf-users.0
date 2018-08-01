@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/21] perf beauty: Add a generator for IPPROTO_ socket's protocol constants
-Date: Wed,  1 Aug 2018 18:36:32 -0300
-Message-ID: <20180801213648.4814-6-acme@kernel.org>
+Subject: [PATCH 06/21] perf trace beauty: Do not print NULL strarray entries
+Date: Wed,  1 Aug 2018 18:36:33 -0300
+Message-ID: <20180801213648.4814-7-acme@kernel.org>
 References: <20180801213648.4814-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180801213648.4814-1-acme@kernel.org>
@@ -12,72 +12,68 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It'll use tools/include copy of linux/in.h to generate a table to be
-used by tools, initially by the 'socket' and 'socketpair' beautifiers in
-'perf trace', but that could also be used to translate from a string
-constant to the integer value to be used in a eBPF or tracefs tracepoint
-filter.
+We may have string tables where not all slots have values, in those
+cases its better to print the numeric value, for instance:
 
-When used without any args it produces:
+In the table below we would show "protocol: (null)" for
 
-  $ tools/perf/trace/beauty/socket_ipproto.sh
-  static const char *socket_ipproto[] = {
-	[0] = "IP",
-	[103] = "PIM",
-	[108] = "COMP",
-	[12] = "PUP",
-	[132] = "SCTP",
-	[136] = "UDPLITE",
-	[137] = "MPLS",
-	[17] = "UDP",
-	[1] = "ICMP",
-	[22] = "IDP",
-	[255] = "RAW",
-	[29] = "TP",
-	[2] = "IGMP",
-	[33] = "DCCP",
-	[41] = "IPV6",
-	[46] = "RSVP",
-	[47] = "GRE",
-	[4] = "IPIP",
-	[50] = "ESP",
-	[51] = "AH",
-	[6] = "TCP",
-	[8] = "EGP",
-	[92] = "MTP",
-	[94] = "BEETPH",
-	[98] = "ENCAP",
-  };
-  $
+      socket_ipproto[3]
+
+Where it would be better to show "protocol: 3".
+
+      $ tools/perf/trace/beauty/socket_ipproto.sh
+      static const char *socket_ipproto[] = {
+            [0] = "IP",
+            [103] = "PIM",
+            [108] = "COMP",
+            [12] = "PUP",
+            [132] = "SCTP",
+            [136] = "UDPLITE",
+            [137] = "MPLS",
+            [17] = "UDP",
+            [1] = "ICMP",
+            [22] = "IDP",
+            [255] = "RAW",
+            [29] = "TP",
+            [2] = "IGMP",
+            [33] = "DCCP",
+            [41] = "IPV6",
+            [46] = "RSVP",
+            [47] = "GRE",
+            [4] = "IPIP",
+            [50] = "ESP",
+            [51] = "AH",
+            [6] = "TCP",
+            [8] = "EGP",
+            [92] = "MTP",
+            [94] = "BEETPH",
+            [98] = "ENCAP",
+      };
+      $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-v9rafqh3qn6b9kp9vfvj9f8s@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-7djfak94eb3b9ltr79cpn3ti@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/socket_ipproto.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
- create mode 100755 tools/perf/trace/beauty/socket_ipproto.sh
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/socket_ipproto.sh b/tools/perf/trace/beauty/socket_ipproto.sh
-new file mode 100755
-index 000000000000..a3cc24633bec
---- /dev/null
-+++ b/tools/perf/trace/beauty/socket_ipproto.sh
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
-+
-+printf "static const char *socket_ipproto[] = {\n"
-+regex='^[[:space:]]+IPPROTO_(\w+)[[:space:]]+=[[:space:]]+([[:digit:]]+),.*'
-+
-+egrep $regex ${header_dir}/in.h | \
-+	sed -r "s/$regex/\2 \1/g"	| \
-+	sort | xargs printf "\t[%s] = \"%s\",\n"
-+printf "};\n"
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6a748eca2edb..632ef5f8f060 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -291,7 +291,7 @@ size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const cha
+ {
+ 	int idx = val - sa->offset;
+ 
+-	if (idx < 0 || idx >= sa->nr_entries)
++	if (idx < 0 || idx >= sa->nr_entries || sa->entries[idx] == NULL)
+ 		return scnprintf(bf, size, intfmt, val);
+ 
+ 	return scnprintf(bf, size, "%s", sa->entries[idx]);
 -- 
 2.14.4
