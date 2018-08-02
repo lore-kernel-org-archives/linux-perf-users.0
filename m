@@ -1,259 +1,272 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/21] perf trace beauty: Default header_dir to cwd to work without parms
-Date: Wed,  1 Aug 2018 18:36:28 -0300
-Message-ID: <20180801213648.4814-2-acme@kernel.org>
-References: <20180801213648.4814-1-acme@kernel.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/3] perf auxtrace: Support for perf report -D for s390
+Date: Thu,  2 Aug 2018 09:46:20 +0200
+Message-ID: <20180802074622.13641-2-tmricht@linux.ibm.com>
+References: <20180802074622.13641-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801213648.4814-1-acme@kernel.org>
+In-Reply-To: <20180802074622.13641-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Add initial support for s390 auxiliary traces using the
+CPU-Measurement Sampling Facility.
 
-Useful when checking the effects of header synchs for the files it uses
-as a input to generate string tables, in retrospect this is how it
-should've been done from day 1, not requiring the header_dir to be set
-on the Makefile, will change everything later, so that the only parm,
-common to all generators will be $(srctree) and $(beauty_outdir).
+Support and ignore PERF_REPORT_AUXTRACE_INFO records
+in the perf data file. Later patches will show the contents
+of the auxiliary traces.
 
-So, to see what it generates, just call it without any parameters:
+Setup the auxtrace queues and data structures for s390.
+A raw dump of the perf.data file now does not show
+an error when an auxtrace event is encountered.
 
-  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh
-  static const char *vhost_virtio_ioctl_cmds[] = {
-	[0x00] = "SET_FEATURES",
-	[0x01] = "SET_OWNER",
-	[0x02] = "RESET_OWNER",
-	[0x03] = "SET_MEM_TABLE",
-	[0x04] = "SET_LOG_BASE",
-	[0x07] = "SET_LOG_FD",
-	[0x10] = "SET_VRING_NUM",
-	[0x11] = "SET_VRING_ADDR",
-	[0x12] = "SET_VRING_BASE",
-	[0x13] = "SET_VRING_ENDIAN",
-	[0x14] = "GET_VRING_ENDIAN",
-	[0x20] = "SET_VRING_KICK",
-	[0x21] = "SET_VRING_CALL",
-	[0x22] = "SET_VRING_ERR",
-	[0x23] = "SET_VRING_BUSYLOOP_TIMEOUT",
-	[0x24] = "GET_VRING_BUSYLOOP_TIMEOUT",
-	[0x30] = "NET_SET_BACKEND",
-	[0x40] = "SCSI_SET_ENDPOINT",
-	[0x41] = "SCSI_CLEAR_ENDPOINT",
-	[0x42] = "SCSI_GET_ABI_VERSION",
-	[0x43] = "SCSI_SET_EVENTS_MISSED",
-	[0x44] = "SCSI_GET_EVENTS_MISSED",
-	[0x60] = "VSOCK_SET_GUEST_CID",
-	[0x61] = "VSOCK_SET_RUNNING",
-  };
-  static const char *vhost_virtio_ioctl_read_cmds[] = {
-	[0x00] = "GET_FEATURES",
-	[0x12] = "GET_VRING_BASE",
-  };
-  $
+Output before:
+[root@s35lp76 perf]# ./perf report -D -i perf.data.auxtrace
+0x128 [0x10]: failed to process type: 70
+Error:
+failed to process sample
 
-Or:
+0x128 [0x10]: event: 70
+.
+. ... raw event: size 16 bytes
+.  0000:  00 00 00 46 00 00 00 10 00 00 00 00 00 00 00 00  ...F............
 
-  $ tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
-  static const char *sndrv_pcm_ioctl_cmds[] = {
-	[0x00] = "PVERSION",
-	[0x01] = "INFO",
-	[0x02] = "TSTAMP",
-	[0x03] = "TTSTAMP",
-	[0x04] = "USER_PVERSION",
-	[0x10] = "HW_REFINE",
-	[0x11] = "HW_PARAMS",
-	[0x12] = "HW_FREE",
-	[0x13] = "SW_PARAMS",
-	[0x20] = "STATUS",
-	[0x21] = "DELAY",
-	[0x22] = "HWSYNC",
-	[0x23] = "SYNC_PTR",
-	[0x24] = "STATUS_EXT",
-	[0x32] = "CHANNEL_INFO",
-	[0x40] = "PREPARE",
-	[0x41] = "RESET",
-	[0x42] = "START",
-	[0x43] = "DROP",
-	[0x44] = "DRAIN",
-	[0x45] = "PAUSE",
-	[0x46] = "REWIND",
-	[0x47] = "RESUME",
-	[0x48] = "XRUN",
-	[0x49] = "FORWARD",
-	[0x50] = "WRITEI_FRAMES",
-	[0x51] = "READI_FRAMES",
-	[0x52] = "WRITEN_FRAMES",
-	[0x53] = "READN_FRAMES",
-	[0x60] = "LINK",
-	[0x61] = "UNLINK",
-  };
-  $
+0x128 [0x10]: PERF_RECORD_AUXTRACE_INFO type: 0
+[root@s35lp76 perf]#
 
-Etc.
+Output after:
+ # ./perf report -D -i perf.data.auxtrace |fgrep PERF_RECORD_AUXTRACE
+0 0 0x128 [0x10]: PERF_RECORD_AUXTRACE_INFO type: 5
+0 0 0x25a66 [0x30]: PERF_RECORD_AUXTRACE size: 0x40000
+	 offset: 0  ref: 0  idx: 4  tid: -1  cpu: 4
+....
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-90am4vm8hh1osms894dp2otr@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 ---
- tools/perf/trace/beauty/drm_ioctl.sh                | 9 +++++----
- tools/perf/trace/beauty/kcmp_type.sh                | 2 +-
- tools/perf/trace/beauty/kvm_ioctl.sh                | 4 ++--
- tools/perf/trace/beauty/madvise_behavior.sh         | 2 +-
- tools/perf/trace/beauty/perf_ioctl.sh               | 2 +-
- tools/perf/trace/beauty/pkey_alloc_access_rights.sh | 2 +-
- tools/perf/trace/beauty/sndrv_ctl_ioctl.sh          | 4 ++--
- tools/perf/trace/beauty/sndrv_pcm_ioctl.sh          | 4 ++--
- tools/perf/trace/beauty/vhost_virtio_ioctl.sh       | 6 +++---
- 9 files changed, 18 insertions(+), 17 deletions(-)
+ tools/perf/arch/s390/util/auxtrace.c |   1 +
+ tools/perf/util/Build                |   1 +
+ tools/perf/util/auxtrace.c           |   3 +
+ tools/perf/util/auxtrace.h           |   1 +
+ tools/perf/util/s390-cpumsf.c        | 123 +++++++++++++++++++++++++++
+ tools/perf/util/s390-cpumsf.h        |  21 +++++
+ 6 files changed, 150 insertions(+)
+ create mode 100644 tools/perf/util/s390-cpumsf.c
+ create mode 100644 tools/perf/util/s390-cpumsf.h
 
-diff --git a/tools/perf/trace/beauty/drm_ioctl.sh b/tools/perf/trace/beauty/drm_ioctl.sh
-index 2149d3a98e42..9d3816815e60 100755
---- a/tools/perf/trace/beauty/drm_ioctl.sh
-+++ b/tools/perf/trace/beauty/drm_ioctl.sh
-@@ -1,13 +1,14 @@
- #!/bin/sh
+diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
+index 3afe8256eff2..44c857388897 100644
+--- a/tools/perf/arch/s390/util/auxtrace.c
++++ b/tools/perf/arch/s390/util/auxtrace.c
+@@ -30,6 +30,7 @@ cpumsf_info_fill(struct auxtrace_record *itr __maybe_unused,
+ 		 struct auxtrace_info_event *auxtrace_info __maybe_unused,
+ 		 size_t priv_size __maybe_unused)
+ {
++	auxtrace_info->type = PERF_AUXTRACE_S390_CPUMSF;
+ 	return 0;
+ }
  
--drm_header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/drm/
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index b604ef334dc9..7efe15b9618d 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -87,6 +87,7 @@ libperf-$(CONFIG_AUXTRACE) += intel-pt.o
+ libperf-$(CONFIG_AUXTRACE) += intel-bts.o
+ libperf-$(CONFIG_AUXTRACE) += arm-spe.o
+ libperf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
++libperf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
+ 
+ ifdef CONFIG_LIBOPENCSD
+ libperf-$(CONFIG_AUXTRACE) += cs-etm.o
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index d056447520a2..ae8c37b219c9 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -56,6 +56,7 @@
+ #include "intel-pt.h"
+ #include "intel-bts.h"
+ #include "arm-spe.h"
++#include "s390-cpumsf.h"
+ 
+ #include "sane_ctype.h"
+ #include "symbol/kallsyms.h"
+@@ -920,6 +921,8 @@ int perf_event__process_auxtrace_info(struct perf_tool *tool __maybe_unused,
+ 		return arm_spe_process_auxtrace_info(event, session);
+ 	case PERF_AUXTRACE_CS_ETM:
+ 		return cs_etm__process_auxtrace_info(event, session);
++	case PERF_AUXTRACE_S390_CPUMSF:
++		return s390_cpumsf_process_auxtrace_info(event, session);
+ 	case PERF_AUXTRACE_UNKNOWN:
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index e731f55da072..71fc3bd74299 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -44,6 +44,7 @@ enum auxtrace_type {
+ 	PERF_AUXTRACE_INTEL_BTS,
+ 	PERF_AUXTRACE_CS_ETM,
+ 	PERF_AUXTRACE_ARM_SPE,
++	PERF_AUXTRACE_S390_CPUMSF,
+ };
+ 
+ enum itrace_period_type {
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+new file mode 100644
+index 000000000000..e9a5ea21dbbf
+--- /dev/null
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -0,0 +1,123 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright IBM Corp. 2018
++ * Auxtrace support for s390 CPU-Measurement Sampling Facility
++ *
++ * Author(s):  Thomas Richter <tmricht@linux.ibm.com>
++ */
 +
- printf "#ifndef DRM_COMMAND_BASE\n"
--grep "#define DRM_COMMAND_BASE" $drm_header_dir/drm.h
-+grep "#define DRM_COMMAND_BASE" $header_dir/drm.h
- printf "#endif\n"
- 
- printf "static const char *drm_ioctl_cmds[] = {\n"
--grep "^#define DRM_IOCTL.*DRM_IO" $drm_header_dir/drm.h | \
-+grep "^#define DRM_IOCTL.*DRM_IO" $header_dir/drm.h | \
- 	sed -r 's/^#define +DRM_IOCTL_([A-Z0-9_]+)[	 ]+DRM_IO[A-Z]* *\( *(0x[[:xdigit:]]+),*.*/	[\2] = "\1",/g'
--grep "^#define DRM_I915_[A-Z_0-9]\+[	 ]\+0x" $drm_header_dir/i915_drm.h | \
-+grep "^#define DRM_I915_[A-Z_0-9]\+[	 ]\+0x" $header_dir/i915_drm.h | \
- 	sed -r 's/^#define +DRM_I915_([A-Z0-9_]+)[	 ]+(0x[[:xdigit:]]+)/\t[DRM_COMMAND_BASE + \2] = "I915_\1",/g'
- printf "};\n"
-diff --git a/tools/perf/trace/beauty/kcmp_type.sh b/tools/perf/trace/beauty/kcmp_type.sh
-index 40d063b8c082..a3c304caa336 100755
---- a/tools/perf/trace/beauty/kcmp_type.sh
-+++ b/tools/perf/trace/beauty/kcmp_type.sh
-@@ -1,6 +1,6 @@
- #!/bin/sh
- 
--header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
- 
- printf "static const char *kcmp_types[] = {\n"
- regex='^[[:space:]]+(KCMP_(\w+)),'
-diff --git a/tools/perf/trace/beauty/kvm_ioctl.sh b/tools/perf/trace/beauty/kvm_ioctl.sh
-index bd28817afced..c4699fd46bb6 100755
---- a/tools/perf/trace/beauty/kvm_ioctl.sh
-+++ b/tools/perf/trace/beauty/kvm_ioctl.sh
-@@ -1,10 +1,10 @@
- #!/bin/sh
- 
--kvm_header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
- 
- printf "static const char *kvm_ioctl_cmds[] = {\n"
- regex='^#[[:space:]]*define[[:space:]]+KVM_(\w+)[[:space:]]+_IO[RW]*\([[:space:]]*KVMIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
--egrep $regex ${kvm_header_dir}/kvm.h	| \
-+egrep $regex ${header_dir}/kvm.h	| \
- 	sed -r "s/$regex/\2 \1/g"	| \
- 	egrep -v " ((ARM|PPC|S390)_|[GS]ET_(DEBUGREGS|PIT2|XSAVE|TSC_KHZ)|CREATE_SPAPR_TCE_64)" | \
- 	sort | xargs printf "\t[%s] = \"%s\",\n"
-diff --git a/tools/perf/trace/beauty/madvise_behavior.sh b/tools/perf/trace/beauty/madvise_behavior.sh
-index 60ef8640ee70..431639eb4d29 100755
---- a/tools/perf/trace/beauty/madvise_behavior.sh
-+++ b/tools/perf/trace/beauty/madvise_behavior.sh
-@@ -1,6 +1,6 @@
- #!/bin/sh
- 
--header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/asm-generic/
- 
- printf "static const char *madvise_advices[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MADV_([[:alnum:]_]+)[[:space:]]+([[:digit:]]+)[[:space:]]*.*'
-diff --git a/tools/perf/trace/beauty/perf_ioctl.sh b/tools/perf/trace/beauty/perf_ioctl.sh
-index faea4237c793..6492c74df928 100755
---- a/tools/perf/trace/beauty/perf_ioctl.sh
-+++ b/tools/perf/trace/beauty/perf_ioctl.sh
-@@ -1,6 +1,6 @@
- #!/bin/sh
- 
--header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
- 
- printf "static const char *perf_ioctl_cmds[] = {\n"
- regex='^#[[:space:]]*define[[:space:]]+PERF_EVENT_IOC_(\w+)[[:space:]]+_IO[RW]*[[:space:]]*\([[:space:]]*.\$.[[:space:]]*,[[:space:]]*([[:digit:]]+).*'
-diff --git a/tools/perf/trace/beauty/pkey_alloc_access_rights.sh b/tools/perf/trace/beauty/pkey_alloc_access_rights.sh
-index 62e51a02b839..e0a51aeb20b2 100755
---- a/tools/perf/trace/beauty/pkey_alloc_access_rights.sh
-+++ b/tools/perf/trace/beauty/pkey_alloc_access_rights.sh
-@@ -1,6 +1,6 @@
- #!/bin/sh
- 
--header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/asm-generic/
- 
- printf "static const char *pkey_alloc_access_rights[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+PKEY_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*'
-diff --git a/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh b/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh
-index aad5ab130539..eb511bb5fbd3 100755
---- a/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh
-+++ b/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh
-@@ -1,8 +1,8 @@
- #!/bin/sh
- 
--sound_header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/sound/
- 
- printf "static const char *sndrv_ctl_ioctl_cmds[] = {\n"
--grep "^#define[\t ]\+SNDRV_CTL_IOCTL_" $sound_header_dir/asound.h | \
-+grep "^#define[\t ]\+SNDRV_CTL_IOCTL_" $header_dir/asound.h | \
- 	sed -r 's/^#define +SNDRV_CTL_IOCTL_([A-Z0-9_]+)[\t ]+_IO[RW]*\( *.U., *(0x[[:xdigit:]]+),?.*/\t[\2] = \"\1\",/g'
- printf "};\n"
-diff --git a/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh b/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
-index b7e9ef6b2f55..6818392968b2 100755
---- a/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
-+++ b/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
-@@ -1,8 +1,8 @@
- #!/bin/sh
- 
--sound_header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/sound/
- 
- printf "static const char *sndrv_pcm_ioctl_cmds[] = {\n"
--grep "^#define[\t ]\+SNDRV_PCM_IOCTL_" $sound_header_dir/asound.h | \
-+grep "^#define[\t ]\+SNDRV_PCM_IOCTL_" $header_dir/asound.h | \
- 	sed -r 's/^#define +SNDRV_PCM_IOCTL_([A-Z0-9_]+)[\t ]+_IO[RW]*\( *.A., *(0x[[:xdigit:]]+),?.*/\t[\2] = \"\1\",/g'
- printf "};\n"
-diff --git a/tools/perf/trace/beauty/vhost_virtio_ioctl.sh b/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
-index 76f1de697787..0f6a5197d0be 100755
---- a/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
-+++ b/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
-@@ -1,17 +1,17 @@
- #!/bin/sh
- 
--vhost_virtio_header_dir=$1
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
- 
- printf "static const char *vhost_virtio_ioctl_cmds[] = {\n"
- regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
--egrep $regex ${vhost_virtio_header_dir}/vhost.h | \
-+egrep $regex ${header_dir}/vhost.h | \
- 	sed -r "s/$regex/\2 \1/g"	| \
- 	sort | xargs printf "\t[%s] = \"%s\",\n"
- printf "};\n"
- 
- printf "static const char *vhost_virtio_ioctl_read_cmds[] = {\n"
- regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?R\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
--egrep $regex ${vhost_virtio_header_dir}/vhost.h | \
-+egrep $regex ${header_dir}/vhost.h | \
- 	sed -r "s/$regex/\2 \1/g"	| \
- 	sort | xargs printf "\t[%s] = \"%s\",\n"
- printf "};\n"
++#include <endian.h>
++#include <errno.h>
++#include <byteswap.h>
++#include <inttypes.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/bitops.h>
++#include <linux/log2.h>
++
++#include "cpumap.h"
++#include "color.h"
++#include "evsel.h"
++#include "evlist.h"
++#include "machine.h"
++#include "session.h"
++#include "util.h"
++#include "thread.h"
++#include "debug.h"
++#include "auxtrace.h"
++#include "s390-cpumsf.h"
++
++struct s390_cpumsf {
++	struct auxtrace		auxtrace;
++	struct auxtrace_queues	queues;
++	struct auxtrace_heap	heap;
++	struct perf_session	*session;
++	struct machine		*machine;
++	u32			auxtrace_type;
++	u32			pmu_type;
++};
++
++static int
++s390_cpumsf_process_event(struct perf_session *session __maybe_unused,
++			  union perf_event *event __maybe_unused,
++			  struct perf_sample *sample __maybe_unused,
++			  struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static int
++s390_cpumsf_process_auxtrace_event(struct perf_session *session __maybe_unused,
++				   union perf_event *event __maybe_unused,
++				   struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static int s390_cpumsf_flush(struct perf_session *session __maybe_unused,
++			     struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static void s390_cpumsf_free_events(struct perf_session *session)
++{
++	struct s390_cpumsf *sf = container_of(session->auxtrace,
++					      struct s390_cpumsf,
++					       auxtrace);
++	struct auxtrace_queues *queues = &sf->queues;
++	unsigned int i;
++
++	for (i = 0; i < queues->nr_queues; i++)
++		zfree(&queues->queue_array[i].priv);
++	auxtrace_queues__free(queues);
++}
++
++static void s390_cpumsf_free(struct perf_session *session)
++{
++	struct s390_cpumsf *sf = container_of(session->auxtrace,
++					      struct s390_cpumsf,
++					      auxtrace);
++
++	auxtrace_heap__free(&sf->heap);
++	s390_cpumsf_free_events(session);
++	session->auxtrace = NULL;
++	free(sf);
++}
++
++int s390_cpumsf_process_auxtrace_info(union perf_event *event,
++				      struct perf_session *session)
++{
++	struct auxtrace_info_event *auxtrace_info = &event->auxtrace_info;
++	struct s390_cpumsf *sf;
++	int err;
++
++	if (auxtrace_info->header.size < sizeof(struct auxtrace_info_event))
++		return -EINVAL;
++
++	sf = zalloc(sizeof(struct s390_cpumsf));
++	if (sf == NULL)
++		return -ENOMEM;
++
++	err = auxtrace_queues__init(&sf->queues);
++	if (err)
++		goto err_free;
++
++	sf->session = session;
++	sf->machine = &session->machines.host; /* No kvm support */
++	sf->auxtrace_type = auxtrace_info->type;
++	sf->pmu_type = PERF_TYPE_RAW;
++
++	sf->auxtrace.process_event = s390_cpumsf_process_event;
++	sf->auxtrace.process_auxtrace_event = s390_cpumsf_process_auxtrace_event;
++	sf->auxtrace.flush_events = s390_cpumsf_flush;
++	sf->auxtrace.free_events = s390_cpumsf_free_events;
++	sf->auxtrace.free = s390_cpumsf_free;
++	session->auxtrace = &sf->auxtrace;
++
++	return 0;
++
++err_free:
++	free(sf);
++	return err;
++}
+diff --git a/tools/perf/util/s390-cpumsf.h b/tools/perf/util/s390-cpumsf.h
+new file mode 100644
+index 000000000000..fb64d100555c
+--- /dev/null
++++ b/tools/perf/util/s390-cpumsf.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright IBM Corp. 2018
++ * Auxtrace support for s390 CPU-Measurement Sampling Facility
++ *
++ * Author(s):  Thomas Richter <tmricht@linux.ibm.com>
++ */
++
++#ifndef INCLUDE__PERF_S390_CPUMSF_H
++#define INCLUDE__PERF_S390_CPUMSF_H
++
++union perf_event;
++struct perf_session;
++struct perf_pmu;
++
++struct auxtrace_record *
++s390_cpumsf_recording_init(int *err, struct perf_pmu *s390_cpumsf_pmu);
++
++int s390_cpumsf_process_auxtrace_info(union perf_event *event,
++				      struct perf_session *session);
++#endif
 -- 
-2.14.4
+2.17.0
