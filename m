@@ -1,222 +1,284 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/21] perf/core improvements and fixes
-Date: Thu, 2 Aug 2018 10:03:06 +0200
-Message-ID: <20180802080306.GA30142@gmail.com>
-References: <20180801213648.4814-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 1/3] perf auxtrace: Support for perf report -D for s390
+Date: Thu, 2 Aug 2018 09:49:09 -0300
+Message-ID: <20180802124909.GB7996@kernel.org>
+References: <20180802074622.13641-1-tmricht@linux.ibm.com>
+ <20180802074622.13641-2-tmricht@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180801213648.4814-1-acme@kernel.org>
+In-Reply-To: <20180802074622.13641-2-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@c-s.fr>, David Ahern <dsahern@gmail.com>, Don Zickus <dzickus@redhat.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jan Glauber <jan.glauber@cavium.com>, Jayachandran C <jnair@caviumnetworks.com>, Jiri Olsa <jolsa@redhat.com>, Joe Mario <jmario@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, Leo
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Thu, Aug 02, 2018 at 09:46:20AM +0200, Thomas Richter escreveu:
+> Add initial support for s390 auxiliary traces using the
+> CPU-Measurement Sampling Facility.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Could you please provide one or two paragraphs explaining what is this
+"CPU-Measurement Sampling Facility", in which hardware this is available
+(all s/390 hardware has it? Just the 64-bit model(s)?) and provide a
+public URL for people interested in further reading?
 
-> Hi Ingo,
+- Arnaldo
+ 
+> Support and ignore PERF_REPORT_AUXTRACE_INFO records
+> in the perf data file. Later patches will show the contents
+> of the auxiliary traces.
 > 
-> 	Please consider pulling, contains a recently merged
-> tip/perf/urgent,
+> Setup the auxtrace queues and data structures for s390.
+> A raw dump of the perf.data file now does not show
+> an error when an auxtrace event is encountered.
 > 
-> - Arnaldo
+> Output before:
+> [root@s35lp76 perf]# ./perf report -D -i perf.data.auxtrace
+> 0x128 [0x10]: failed to process type: 70
+> Error:
+> failed to process sample
 > 
-> Test results at the end of this message, as usual.
+> 0x128 [0x10]: event: 70
+> .
+> . ... raw event: size 16 bytes
+> .  0000:  00 00 00 46 00 00 00 10 00 00 00 00 00 00 00 00  ...F............
 > 
-> The following changes since commit c2586cfbb905939b79b49a9121fb0a59a5668fd6:
+> 0x128 [0x10]: PERF_RECORD_AUXTRACE_INFO type: 0
+> [root@s35lp76 perf]#
 > 
->   Merge remote-tracking branch 'tip/perf/urgent' into perf/core (2018-07-31 09:55:45 -0300)
+> Output after:
+>  # ./perf report -D -i perf.data.auxtrace |fgrep PERF_RECORD_AUXTRACE
+> 0 0 0x128 [0x10]: PERF_RECORD_AUXTRACE_INFO type: 5
+> 0 0 0x25a66 [0x30]: PERF_RECORD_AUXTRACE size: 0x40000
+> 	 offset: 0  ref: 0  idx: 4  tid: -1  cpu: 4
+> ....
 > 
-> are available in the Git repository at:
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+> ---
+>  tools/perf/arch/s390/util/auxtrace.c |   1 +
+>  tools/perf/util/Build                |   1 +
+>  tools/perf/util/auxtrace.c           |   3 +
+>  tools/perf/util/auxtrace.h           |   1 +
+>  tools/perf/util/s390-cpumsf.c        | 123 +++++++++++++++++++++++++++
+>  tools/perf/util/s390-cpumsf.h        |  21 +++++
+>  6 files changed, 150 insertions(+)
+>  create mode 100644 tools/perf/util/s390-cpumsf.c
+>  create mode 100644 tools/perf/util/s390-cpumsf.h
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.19-20180801
-> 
-> for you to fetch changes up to b912885ab75c7c8aa841c615108afd755d0b97f8:
-> 
->   perf trace: Do not require --no-syscalls to suppress strace like output (2018-08-01 16:20:28 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> perf trace: (Arnaldo Carvalho de Melo)
-> 
-> - Do not require --no-syscalls to suppress strace like output, i.e.
-> 
->      # perf trace -e sched:*switch
-> 
->   will show just sched:sched_switch events, not strace-like formatted
->   syscall events, use --syscalls to get the previous behaviour.
-> 
->   If instead:
-> 
->      # perf trace
-> 
->   is used, i.e. no events specified, then --syscalls is implied and
->   system wide strace like formatting will be applied to all syscalls.
-> 
->   The behaviour when just a syscall subset is used with '-e' is unchanged:
-> 
->      # perf trace -e *sleep,sched:*switch
-> 
->   will work as before: just the 'nanosleep' syscall will be strace-like
->   formatted plus the sched:sched_switch tracepoint event, system wide.
-> 
-> - Allow string table generators to use a default header dir, allowing
->   use of them without parameters to see the table it generates on
->   stdout, e.g.:
-> 
->     $ tools/perf/trace/beauty/kvm_ioctl.sh
->     static const char *kvm_ioctl_cmds[] = {
->         [0x00] = "GET_API_VERSION",
->         [0x01] = "CREATE_VM",
->         [0x02] = "GET_MSR_INDEX_LIST",
->         [0x03] = "CHECK_EXTENSION",
-> <BIG SNIP>
->         [0xe0] = "CREATE_DEVICE",
->         [0xe1] = "SET_DEVICE_ATTR",
->         [0xe2] = "GET_DEVICE_ATTR",
->         [0xe3] = "HAS_DEVICE_ATTR",
->     };
->     $
-> 
->   See 'ls tools/perf/trace/beauty/*.sh' to see the available string
->   table generators.
-> 
-> - Add a generator for IPPROTO_ socket's protocol constants.
-> 
-> perf record: (Kan Liang)
-> 
-> - Fix error out while applying initial delay and using LBR, due to
->   the use of a PERF_TYPE_SOFTWARE/PERF_COUNT_SW_DUMMY event to track
->   PERF_RECORD_MMAP events while waiting for the initial delay. Such
->   events fail when configured asking PERF_SAMPLE_BRANCH_STACK in
->   perf_event_attr.sample_type.
-> 
-> perf c2c: (Jiri Olsa)
-> 
-> - Fix report crash for empty browser, when processing a perf.data file
->   without events of interest, either because not asked for in
->   'perf record' or because the workload didn't triggered such events.
-> 
-> perf list: (Michael Petlan)
-> 
-> - Align metric group description format with PMU event description.
-> 
-> perf tests: (Sandipan Das)
-> 
-> - Fix indexing when invoking subtests, which caused BPF tests to
->   get results for the next test in the list, with the last one
->   reporting a failure.
-> 
-> eBPF:
-> 
-> - Fix installation directory for header files included from eBPF proggies,
->   avoiding clashing with relative paths used to build other software projects
->   such as glibc. (Thomas Richter)
-> 
-> - Show better message when failing to load an object. (Arnaldo Carvalho de Melo)
-> 
-> General: (Christophe Leroy)
-> 
-> - Allow overriding MAX_NR_CPUS at compile time, to make the tooling
->   usable in systems with less memory, in time this has to be changed
->   to properly allocate based on _NPROCESSORS_ONLN.
-> 
-> Architecture specific:
-> 
-> - Update arm64's ThunderX2 implementation defined pmu core events (Ganapatrao Kulkarni)
-> 
-> - Fix complex event name parsing in 'perf test' for PowerPC, where the 'umask' event
->   modifier isn't present. (Sandipan Das)
-> 
-> CoreSight ARM hardware tracing: (Leo Yan)
-> 
-> - Fix start tracing packet handling.
-> 
-> - Support dummy address value for CS_ETM_TRACE_ON packet.
-> 
-> - Generate branch sample when receiving a CS_ETM_TRACE_ON packet.
-> 
-> - Generate branch sample for CS_ETM_TRACE_ON packet.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (9):
->       perf trace beauty: Default header_dir to cwd to work without parms
->       tools include uapi: Grab a copy of linux/in.h
->       perf beauty: Add a generator for IPPROTO_ socket's protocol constants
->       perf trace beauty: Do not print NULL strarray entries
->       perf trace beauty: Add beautifiers for 'socket''s 'protocol' arg
->       perf trace: Beautify the AF_INET & AF_INET6 'socket' syscall 'protocol' args
->       perf bpf: Show better message when failing to load an object
->       perf bpf: Include uapi/linux/bpf.h from the 'perf trace' script's bpf.h
->       perf trace: Do not require --no-syscalls to suppress strace like output
-> 
-> Christophe Leroy (1):
->       perf tools: Allow overriding MAX_NR_CPUS at compile time
-> 
-> Ganapatrao Kulkarni (1):
->       perf vendor events arm64: Update ThunderX2 implementation defined pmu core events
-> 
-> Jiri Olsa (1):
->       perf c2c report: Fix crash for empty browser
-> 
-> Kan Liang (1):
->       perf evlist: Fix error out while applying initial delay and LBR
-> 
-> Leo Yan (4):
->       perf cs-etm: Fix start tracing packet handling
->       perf cs-etm: Support dummy address value for CS_ETM_TRACE_ON packet
->       perf cs-etm: Generate branch sample when receiving a CS_ETM_TRACE_ON packet
->       perf cs-etm: Generate branch sample for CS_ETM_TRACE_ON packet
-> 
-> Michael Petlan (1):
->       perf list: Unify metric group description format with PMU event description
-> 
-> Sandipan Das (2):
->       perf tests: Fix complex event name parsing
->       perf tests: Fix indexing when invoking subtests
-> 
-> Thomas Richter (1):
->       perf build: Fix installation directory for eBPF
-> 
->  tools/include/uapi/linux/in.h                      | 301 +++++++++++++++++++++
->  tools/perf/Makefile.config                         |   4 +-
->  tools/perf/Makefile.perf                           |  10 +
->  tools/perf/builtin-c2c.c                           |   3 +
->  tools/perf/builtin-trace.c                         |  19 +-
->  tools/perf/check-headers.sh                        |   1 +
->  tools/perf/include/bpf/bpf.h                       |   3 +
->  tools/perf/perf.h                                  |   2 +
->  .../arch/arm64/cavium/thunderx2/core-imp-def.json  |  87 +++++-
->  tools/perf/tests/builtin-test.c                    |   4 +-
->  tools/perf/tests/parse-events.c                    |   2 +-
->  tools/perf/trace/beauty/Build                      |   1 +
->  tools/perf/trace/beauty/beauty.h                   |   3 +
->  tools/perf/trace/beauty/drm_ioctl.sh               |   9 +-
->  tools/perf/trace/beauty/kcmp_type.sh               |   2 +-
->  tools/perf/trace/beauty/kvm_ioctl.sh               |   4 +-
->  tools/perf/trace/beauty/madvise_behavior.sh        |   2 +-
->  tools/perf/trace/beauty/perf_ioctl.sh              |   2 +-
->  .../perf/trace/beauty/pkey_alloc_access_rights.sh  |   2 +-
->  tools/perf/trace/beauty/sndrv_ctl_ioctl.sh         |   4 +-
->  tools/perf/trace/beauty/sndrv_pcm_ioctl.sh         |   4 +-
->  tools/perf/trace/beauty/socket.c                   |  28 ++
->  tools/perf/trace/beauty/socket_ipproto.sh          |  11 +
->  tools/perf/trace/beauty/vhost_virtio_ioctl.sh      |   6 +-
->  tools/perf/util/bpf-loader.c                       |   4 +-
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.h    |   1 +
->  tools/perf/util/cs-etm.c                           |  68 ++++-
->  tools/perf/util/evsel.c                            |  14 +
->  tools/perf/util/metricgroup.c                      |   4 +-
->  29 files changed, 556 insertions(+), 49 deletions(-)
->  create mode 100644 tools/include/uapi/linux/in.h
->  create mode 100644 tools/perf/trace/beauty/socket.c
->  create mode 100755 tools/perf/trace/beauty/socket_ipproto.sh
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+> diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
+> index 3afe8256eff2..44c857388897 100644
+> --- a/tools/perf/arch/s390/util/auxtrace.c
+> +++ b/tools/perf/arch/s390/util/auxtrace.c
+> @@ -30,6 +30,7 @@ cpumsf_info_fill(struct auxtrace_record *itr __maybe_unused,
+>  		 struct auxtrace_info_event *auxtrace_info __maybe_unused,
+>  		 size_t priv_size __maybe_unused)
+>  {
+> +	auxtrace_info->type = PERF_AUXTRACE_S390_CPUMSF;
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index b604ef334dc9..7efe15b9618d 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -87,6 +87,7 @@ libperf-$(CONFIG_AUXTRACE) += intel-pt.o
+>  libperf-$(CONFIG_AUXTRACE) += intel-bts.o
+>  libperf-$(CONFIG_AUXTRACE) += arm-spe.o
+>  libperf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
+> +libperf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
+>  
+>  ifdef CONFIG_LIBOPENCSD
+>  libperf-$(CONFIG_AUXTRACE) += cs-etm.o
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index d056447520a2..ae8c37b219c9 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -56,6 +56,7 @@
+>  #include "intel-pt.h"
+>  #include "intel-bts.h"
+>  #include "arm-spe.h"
+> +#include "s390-cpumsf.h"
+>  
+>  #include "sane_ctype.h"
+>  #include "symbol/kallsyms.h"
+> @@ -920,6 +921,8 @@ int perf_event__process_auxtrace_info(struct perf_tool *tool __maybe_unused,
+>  		return arm_spe_process_auxtrace_info(event, session);
+>  	case PERF_AUXTRACE_CS_ETM:
+>  		return cs_etm__process_auxtrace_info(event, session);
+> +	case PERF_AUXTRACE_S390_CPUMSF:
+> +		return s390_cpumsf_process_auxtrace_info(event, session);
+>  	case PERF_AUXTRACE_UNKNOWN:
+>  	default:
+>  		return -EINVAL;
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index e731f55da072..71fc3bd74299 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -44,6 +44,7 @@ enum auxtrace_type {
+>  	PERF_AUXTRACE_INTEL_BTS,
+>  	PERF_AUXTRACE_CS_ETM,
+>  	PERF_AUXTRACE_ARM_SPE,
+> +	PERF_AUXTRACE_S390_CPUMSF,
+>  };
+>  
+>  enum itrace_period_type {
+> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+> new file mode 100644
+> index 000000000000..e9a5ea21dbbf
+> --- /dev/null
+> +++ b/tools/perf/util/s390-cpumsf.c
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright IBM Corp. 2018
+> + * Auxtrace support for s390 CPU-Measurement Sampling Facility
+> + *
+> + * Author(s):  Thomas Richter <tmricht@linux.ibm.com>
+> + */
+> +
+> +#include <endian.h>
+> +#include <errno.h>
+> +#include <byteswap.h>
+> +#include <inttypes.h>
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <linux/bitops.h>
+> +#include <linux/log2.h>
+> +
+> +#include "cpumap.h"
+> +#include "color.h"
+> +#include "evsel.h"
+> +#include "evlist.h"
+> +#include "machine.h"
+> +#include "session.h"
+> +#include "util.h"
+> +#include "thread.h"
+> +#include "debug.h"
+> +#include "auxtrace.h"
+> +#include "s390-cpumsf.h"
+> +
+> +struct s390_cpumsf {
+> +	struct auxtrace		auxtrace;
+> +	struct auxtrace_queues	queues;
+> +	struct auxtrace_heap	heap;
+> +	struct perf_session	*session;
+> +	struct machine		*machine;
+> +	u32			auxtrace_type;
+> +	u32			pmu_type;
+> +};
+> +
+> +static int
+> +s390_cpumsf_process_event(struct perf_session *session __maybe_unused,
+> +			  union perf_event *event __maybe_unused,
+> +			  struct perf_sample *sample __maybe_unused,
+> +			  struct perf_tool *tool __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int
+> +s390_cpumsf_process_auxtrace_event(struct perf_session *session __maybe_unused,
+> +				   union perf_event *event __maybe_unused,
+> +				   struct perf_tool *tool __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int s390_cpumsf_flush(struct perf_session *session __maybe_unused,
+> +			     struct perf_tool *tool __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void s390_cpumsf_free_events(struct perf_session *session)
+> +{
+> +	struct s390_cpumsf *sf = container_of(session->auxtrace,
+> +					      struct s390_cpumsf,
+> +					       auxtrace);
+> +	struct auxtrace_queues *queues = &sf->queues;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < queues->nr_queues; i++)
+> +		zfree(&queues->queue_array[i].priv);
+> +	auxtrace_queues__free(queues);
+> +}
+> +
+> +static void s390_cpumsf_free(struct perf_session *session)
+> +{
+> +	struct s390_cpumsf *sf = container_of(session->auxtrace,
+> +					      struct s390_cpumsf,
+> +					      auxtrace);
+> +
+> +	auxtrace_heap__free(&sf->heap);
+> +	s390_cpumsf_free_events(session);
+> +	session->auxtrace = NULL;
+> +	free(sf);
+> +}
+> +
+> +int s390_cpumsf_process_auxtrace_info(union perf_event *event,
+> +				      struct perf_session *session)
+> +{
+> +	struct auxtrace_info_event *auxtrace_info = &event->auxtrace_info;
+> +	struct s390_cpumsf *sf;
+> +	int err;
+> +
+> +	if (auxtrace_info->header.size < sizeof(struct auxtrace_info_event))
+> +		return -EINVAL;
+> +
+> +	sf = zalloc(sizeof(struct s390_cpumsf));
+> +	if (sf == NULL)
+> +		return -ENOMEM;
+> +
+> +	err = auxtrace_queues__init(&sf->queues);
+> +	if (err)
+> +		goto err_free;
+> +
+> +	sf->session = session;
+> +	sf->machine = &session->machines.host; /* No kvm support */
+> +	sf->auxtrace_type = auxtrace_info->type;
+> +	sf->pmu_type = PERF_TYPE_RAW;
+> +
+> +	sf->auxtrace.process_event = s390_cpumsf_process_event;
+> +	sf->auxtrace.process_auxtrace_event = s390_cpumsf_process_auxtrace_event;
+> +	sf->auxtrace.flush_events = s390_cpumsf_flush;
+> +	sf->auxtrace.free_events = s390_cpumsf_free_events;
+> +	sf->auxtrace.free = s390_cpumsf_free;
+> +	session->auxtrace = &sf->auxtrace;
+> +
+> +	return 0;
+> +
+> +err_free:
+> +	free(sf);
+> +	return err;
+> +}
+> diff --git a/tools/perf/util/s390-cpumsf.h b/tools/perf/util/s390-cpumsf.h
+> new file mode 100644
+> index 000000000000..fb64d100555c
+> --- /dev/null
+> +++ b/tools/perf/util/s390-cpumsf.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright IBM Corp. 2018
+> + * Auxtrace support for s390 CPU-Measurement Sampling Facility
+> + *
+> + * Author(s):  Thomas Richter <tmricht@linux.ibm.com>
+> + */
+> +
+> +#ifndef INCLUDE__PERF_S390_CPUMSF_H
+> +#define INCLUDE__PERF_S390_CPUMSF_H
+> +
+> +union perf_event;
+> +struct perf_session;
+> +struct perf_pmu;
+> +
+> +struct auxtrace_record *
+> +s390_cpumsf_recording_init(int *err, struct perf_pmu *s390_cpumsf_pmu);
+> +
+> +int s390_cpumsf_process_auxtrace_info(union perf_event *event,
+> +				      struct perf_session *session);
+> +#endif
+> -- 
+> 2.17.0
