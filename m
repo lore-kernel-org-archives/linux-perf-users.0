@@ -1,91 +1,100 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH 2/3] perf report: Add raw report support for s390
  auxiliary trace
-Date: Wed, 8 Aug 2018 12:53:28 -0300
-Message-ID: <20180808155328.GA9543@kernel.org>
+Date: Wed, 8 Aug 2018 12:59:21 -0300
+Message-ID: <20180808155921.GB9543@kernel.org>
 References: <20180802074622.13641-1-tmricht@linux.ibm.com>
  <20180802074622.13641-3-tmricht@linux.ibm.com>
  <87r2j9bkax.fsf@concordia.ellerman.id.au>
  <eda2632e-7919-5ffd-5f68-821e77d216fa@linux.ibm.com>
+ <20180808155328.GA9543@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <eda2632e-7919-5ffd-5f68-821e77d216fa@linux.ibm.com>
+In-Reply-To: <20180808155328.GA9543@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas-Mich Richter <tmricht@linux.ibm.com>
 Cc: mpe@ellerman.id.au, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Aug 08, 2018 at 08:39:58AM +0200, Thomas-Mich Richter escreveu:
-> On 08/08/2018 05:37 AM, mpe@ellerman.id.au wrote:
-> > Thomas Richter <tmricht@linux.ibm.com> writes:
-> >> Add support for s390 auxiliary trace support.
-> >> Use 'perf record -e rbd000' to create the perf.data file.
-> >> The event also has the symbolic name SF_CYCLES_BASIC_DIAG,
-> >> using 'perf record -e SF_CYCLES_BASIC_DIAG' is equivalent.
-> > ...
-> >>
-> >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> >> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-> >> ---
-> >>  tools/perf/util/s390-cpumsf-kernel.h |  71 ++++++++
-> >>  tools/perf/util/s390-cpumsf.c        | 244 ++++++++++++++++++++++++++-
-> >>  2 files changed, 314 insertions(+), 1 deletion(-)
-> >>  create mode 100644 tools/perf/util/s390-cpumsf-kernel.h
+Em Wed, Aug 08, 2018 at 12:53:28PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Aug 08, 2018 at 08:39:58AM +0200, Thomas-Mich Richter escreveu:
+> > On 08/08/2018 05:37 AM, mpe@ellerman.id.au wrote:
+> > > Thomas Richter <tmricht@linux.ibm.com> writes:
+> > >> Add support for s390 auxiliary trace support.
+> > >> Use 'perf record -e rbd000' to create the perf.data file.
+> > >> The event also has the symbolic name SF_CYCLES_BASIC_DIAG,
+> > >> using 'perf record -e SF_CYCLES_BASIC_DIAG' is equivalent.
+> > > ...
+> > >>
+> > >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > >> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+> > >> ---
+> > >>  tools/perf/util/s390-cpumsf-kernel.h |  71 ++++++++
+> > >>  tools/perf/util/s390-cpumsf.c        | 244 ++++++++++++++++++++++++++-
+> > >>  2 files changed, 314 insertions(+), 1 deletion(-)
+> > >>  create mode 100644 tools/perf/util/s390-cpumsf-kernel.h
+> > > 
+> > > 
+> > > I'm seeing a build break on ppc64le which seems to be caused by this
+> > > commit (I haven't bisected):
+> > > 
+> > >   util/s390-cpumsf.c: In function ‘trailer_timestamp’:
+> > >   util/s390-cpumsf.c:222:2: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+> > >     return *((unsigned long long *) &te->timestamp[te->t]);
+> > >     ^
+> > > 
+> > > 
+> > > And on powerpc big endian:
+> > >   In file included from util/cpumap.h:10:0,
+> > >                    from util/s390-cpumsf.c:150:
+> > >   util/s390-cpumsf.c: In function ‘s390_cpumsf_basic_show’:
+> > >   util/s390-cpumsf.c:187:10: error: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t {aka unsigned int}’ [-Werror=format=]
+> > >      pr_err("Invalid AUX trace basic entry [%#08lx]\n", pos);
+> > >             ^
+> > > 
+> > > cheers
+> > > 
 > > 
-> > 
-> > I'm seeing a build break on ppc64le which seems to be caused by this
-> > commit (I haven't bisected):
-> > 
-> >   util/s390-cpumsf.c: In function ‘trailer_timestamp’:
-> >   util/s390-cpumsf.c:222:2: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
-> >     return *((unsigned long long *) &te->timestamp[te->t]);
-> >     ^
-> > 
-> > 
-> > And on powerpc big endian:
-> >   In file included from util/cpumap.h:10:0,
-> >                    from util/s390-cpumsf.c:150:
-> >   util/s390-cpumsf.c: In function ‘s390_cpumsf_basic_show’:
-> >   util/s390-cpumsf.c:187:10: error: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t {aka unsigned int}’ [-Werror=format=]
-> >      pr_err("Invalid AUX trace basic entry [%#08lx]\n", pos);
-> >             ^
-> > 
-> > cheers
-> > 
+> > Can you please try this patch. Thanks a lot
 > 
-> Can you please try this patch. Thanks a lot
+> Ok, this was making the build fail as well on some containers here:
 
-Ok, this was making the build fail as well on some containers here:
+Ok, failed in another container:
 
-   1    37.95 alpine:3.4                    : gcc (Alpine 5.3.0) 5.3.0
+  11 centos:6                      : gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-18)
 
-  CC       /tmp/build/perf/util/s390-cpumsf.o
-  LD       /tmp/build/perf/util/scripting-engines/libperf-in.o
-  CC       /tmp/build/perf/util/parse-branch-options.o
-  CC       /tmp/build/perf/util/dump-insn.o
-util/s390-cpumsf.c: In function 'trailer_timestamp':
-util/s390-cpumsf.c:222:2: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
-  return *((unsigned long long *) &te->timestamp[te->t]);
-  ^
+  CC       /tmp/build/perf/tests/sample-parsing.o
+cc1: warnings being treated as errors
+In file included from util/s390-cpumsf.c:161:
+util/s390-cpumsf-kernel.h:16: error: packed attribute is unnecessary for 'def'
+util/s390-cpumsf-kernel.h:25: error: packed attribute is unnecessary for 'CL'
+util/s390-cpumsf-kernel.h:28: error: packed attribute is unnecessary for 'ia'
+util/s390-cpumsf-kernel.h:29: error: packed attribute is unnecessary for 'gpp'
+util/s390-cpumsf-kernel.h:30: error: packed attribute is unnecessary for 'hpp'
+util/s390-cpumsf-kernel.h:34: error: packed attribute is unnecessary for 'def'
+mv: cannot stat `/tmp/build/perf/util/.s390-cpumsf.o.tmp': No such file or directory
+make[4]: *** [/tmp/build/perf/util/s390-cpumsf.o] Error 1
 
-   2    48.46 alpine:3.5                    : gcc (Alpine 6.2.1) 6.2.1 20160822
-  CC       /tmp/build/perf/util/parse-branch-options.o
-util/s390-cpumsf.c: In function 'trailer_timestamp':
-util/s390-cpumsf.c:222:2: error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
-  return *((unsigned long long *) &te->timestamp[te->t]);
-  ^~~~~~
-  CC       /tmp/build/perf/util/dump-insn.o
 
----------
+For reference, this is the current output of the tests so far, that I'll
+let running while I try to figure out this case:
 
-I stopped at this point when this report/patch resurfaced in my mind, so
-I came back and folded this fix into the cset introducing the problem
-since it hasn't gone Ingo's way, so that we can keep this bisectable
-when upstream.
-
-Thanks guys!
-
-- Arnaldo
+[root@seventh ~]# time dm
+   1    37.95 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2    48.46 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3    43.18 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4    46.87 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5    85.35 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6    36.86 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+   7    41.37 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+   8    30.61 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+   9    27.69 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  10    26.45 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  11    20.70 centos:6                      : FAIL gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  12    39.16 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+  13    34.18 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
+  14    37.12 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u1) 4.9.2
+  15: debian:9
