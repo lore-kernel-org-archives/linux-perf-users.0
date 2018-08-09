@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/44] perf trace: Use beautifiers on syscalls:sys_enter_ handlers
-Date: Thu,  9 Aug 2018 11:57:40 -0300
-Message-ID: <20180809145822.21391-3-acme@kernel.org>
+Subject: [PATCH 03/44] perf trace: Rename some syscall_tp methods to raw_syscall
+Date: Thu,  9 Aug 2018 11:57:41 -0300
+Message-ID: <20180809145822.21391-4-acme@kernel.org>
 References: <20180809145822.21391-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
@@ -12,34 +12,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were using the beautifiers only when processing the
-raw_syscalls:sys_enter events, but we can as well use them for the
-syscalls:sys_enter_NAME events, as the layout is the same.
+Because raw_syscalls have the field for the syscall number as 'id' while
+the syscalls:sys_{enter,exit}_NAME have it as __syscall_nr...
 
-Some more tweaking is needed as we're processing them straight away,
-i.e. there is no buffering in the sys_enter_NAME event to wait for
-things like vfs_getname to provide pointer contents and then flushing
-at sys_exit_NAME, so we need to state in the syscall_arg that this
-is unbuffered, just print the pointer values, beautifying just
-non-pointer syscall args.
-
-This just shows an alternative way of processing tracepoints, that we
-will end up using when creating "tracepoint" payloads that already copy
-pointer contents (or chunks of it, i.e. not the whole filename, but just
-the end of it, not all the bf for a read/write, but just the start,
-etc), directly in the kernel using eBPF.
-
-E.g.:
-
-  # perf trace -e syscalls:*enter*sleep,*sleep sleep 1
-     0.303 (         ): syscalls:sys_enter_nanosleep:rqtp: 0x7ffc93d5ecc0
-     0.305 (1000.229 ms): sleep/8746 nanosleep(rqtp: 0x7ffc93d5ecc0) = 0
-  # perf trace -e syscalls:*_*sleep,*sleep sleep 1
-     0.288 (         ): syscalls:sys_enter_nanosleep:rqtp: 0x7ffecde87e40
-     0.289 (         ): sleep/8748 nanosleep(rqtp: 0x7ffecde87e40) ...
-  1000.479 (         ): syscalls:sys_exit_nanosleep:0x0
-     0.289 (1000.208 ms): sleep/8748  ... [continued]: nanosleep()) = 0
-  #
+Since we want to support both for being able to enable just a
+syscalls:sys_{enter,exit}_name instead of asking for
+raw_syscalls:sys_{enter,exit} plus filters, make the method names for
+each kind of tracepoint more explicit.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -47,76 +26,78 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-jehyd2zwhw00z3p7v7mg9632@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-4rixbfzco6tsry0w9ghx3ktb@git.kernel.org
+Signef-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 47 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 44 insertions(+), 3 deletions(-)
+ tools/perf/builtin-trace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 2a85f5198da0..7336552c22cf 100644
+index 7336552c22cf..039f94467968 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1666,6 +1666,44 @@ static int trace__sys_enter(struct trace *trace, struct perf_evsel *evsel,
- 	return err;
+@@ -239,7 +239,7 @@ static void perf_evsel__delete_priv(struct perf_evsel *evsel)
+ 	perf_evsel__delete(evsel);
  }
  
-+static int trace__fprintf_sys_enter(struct trace *trace, struct perf_evsel *evsel,
-+				    struct perf_sample *sample)
-+{
-+	struct format_field *field = perf_evsel__field(evsel, "__syscall_nr");
-+	struct thread_trace *ttrace;
-+	struct thread *thread;
-+	struct syscall *sc;
-+	char msg[1024];
-+	int id, err = -1;
-+	void *args;
-+
-+	if (field == NULL)
-+		return -1;
-+
-+	id = format_field__intval(field, sample, evsel->needs_swap);
-+	sc = trace__syscall_info(trace, evsel, id);
-+
-+	if (sc == NULL)
-+		return -1;
-+
-+	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-+	ttrace = thread__trace(thread, trace->output);
-+	/*
-+	 * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
-+	 * and the rest of the beautifiers accessing it via struct syscall_arg touches it.
-+	 */
-+	if (ttrace == NULL)
-+		goto out_put;
-+
-+	args = sample->raw_data + field->offset + sizeof(u64); /* skip __syscall_nr, there is where args are */
-+	syscall__scnprintf_args(sc, msg, sizeof(msg), args, trace, thread);
-+	fprintf(trace->output, "%s", msg);
-+	err = 0;
-+out_put:
-+	thread__put(thread);
-+	return err;
-+}
-+
- static int trace__resolve_callchain(struct trace *trace, struct perf_evsel *evsel,
- 				    struct perf_sample *sample,
- 				    struct callchain_cursor *cursor)
-@@ -1964,9 +2002,12 @@ static int trace__event_handler(struct trace *trace, struct perf_evsel *evsel,
- 	if (perf_evsel__is_bpf_output(evsel)) {
- 		bpf_output__fprintf(trace, sample);
- 	} else if (evsel->tp_format) {
--		event_format__fprintf(evsel->tp_format, sample->cpu,
--				      sample->raw_data, sample->raw_size,
--				      trace->output);
-+		if (strncmp(evsel->tp_format->name, "sys_enter_", 10) ||
-+		    trace__fprintf_sys_enter(trace, evsel, sample)) {
-+			event_format__fprintf(evsel->tp_format, sample->cpu,
-+					      sample->raw_data, sample->raw_size,
-+					      trace->output);
-+		}
- 	}
+-static int perf_evsel__init_syscall_tp(struct perf_evsel *evsel, void *handler)
++static int perf_evsel__init_raw_syscall_tp(struct perf_evsel *evsel, void *handler)
+ {
+ 	evsel->priv = malloc(sizeof(struct syscall_tp));
+ 	if (evsel->priv != NULL) {
+@@ -257,7 +257,7 @@ static int perf_evsel__init_syscall_tp(struct perf_evsel *evsel, void *handler)
+ 	return -ENOENT;
+ }
  
- 	fprintf(trace->output, "\n");
+-static struct perf_evsel *perf_evsel__syscall_newtp(const char *direction, void *handler)
++static struct perf_evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *handler)
+ {
+ 	struct perf_evsel *evsel = perf_evsel__newtp("raw_syscalls", direction);
+ 
+@@ -268,7 +268,7 @@ static struct perf_evsel *perf_evsel__syscall_newtp(const char *direction, void
+ 	if (IS_ERR(evsel))
+ 		return NULL;
+ 
+-	if (perf_evsel__init_syscall_tp(evsel, handler))
++	if (perf_evsel__init_raw_syscall_tp(evsel, handler))
+ 		goto out_delete;
+ 
+ 	return evsel;
+@@ -2288,14 +2288,14 @@ static int trace__add_syscall_newtp(struct trace *trace)
+ 	struct perf_evlist *evlist = trace->evlist;
+ 	struct perf_evsel *sys_enter, *sys_exit;
+ 
+-	sys_enter = perf_evsel__syscall_newtp("sys_enter", trace__sys_enter);
++	sys_enter = perf_evsel__raw_syscall_newtp("sys_enter", trace__sys_enter);
+ 	if (sys_enter == NULL)
+ 		goto out;
+ 
+ 	if (perf_evsel__init_sc_tp_ptr_field(sys_enter, args))
+ 		goto out_delete_sys_enter;
+ 
+-	sys_exit = perf_evsel__syscall_newtp("sys_exit", trace__sys_exit);
++	sys_exit = perf_evsel__raw_syscall_newtp("sys_exit", trace__sys_exit);
+ 	if (sys_exit == NULL)
+ 		goto out_delete_sys_enter;
+ 
+@@ -2717,7 +2717,7 @@ static int trace__replay(struct trace *trace)
+ 							     "syscalls:sys_enter");
+ 
+ 	if (evsel &&
+-	    (perf_evsel__init_syscall_tp(evsel, trace__sys_enter) < 0 ||
++	    (perf_evsel__init_raw_syscall_tp(evsel, trace__sys_enter) < 0 ||
+ 	    perf_evsel__init_sc_tp_ptr_field(evsel, args))) {
+ 		pr_err("Error during initialize raw_syscalls:sys_enter event\n");
+ 		goto out;
+@@ -2729,7 +2729,7 @@ static int trace__replay(struct trace *trace)
+ 		evsel = perf_evlist__find_tracepoint_by_name(session->evlist,
+ 							     "syscalls:sys_exit");
+ 	if (evsel &&
+-	    (perf_evsel__init_syscall_tp(evsel, trace__sys_exit) < 0 ||
++	    (perf_evsel__init_raw_syscall_tp(evsel, trace__sys_exit) < 0 ||
+ 	    perf_evsel__init_sc_tp_uint_field(evsel, ret))) {
+ 		pr_err("Error during initialize raw_syscalls:sys_exit event\n");
+ 		goto out;
 -- 
 2.14.4
