@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/44] perf bpf: Add struct bpf_map struct
-Date: Thu,  9 Aug 2018 11:58:11 -0300
-Message-ID: <20180809145822.21391-34-acme@kernel.org>
+Subject: [PATCH 34/44] perf bpf: Add bpf/stdio.h wrapper to bpf_perf_event_output function
+Date: Thu,  9 Aug 2018 11:58:12 -0300
+Message-ID: <20180809145822.21391-35-acme@kernel.org>
 References: <20180809145822.21391-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
@@ -12,12 +12,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A helper structure used by eBPF C program to describe map attributes to
-elf_bpf loader, to be used initially by the special __bpf_stdout__ map
-used to print strings into the perf ring buffer in BPF scripts, e.g.:
-
-Using the upcoming stdio.h and puts() macros to use the __bpf_stdout__
-map to add strings to the ring buffer:
+That, together with the map __bpf_output__ that is already handled by
+'perf trace' to print that event's contents as strings provides a
+debugging facility, to show it in use, print a simple string everytime
+the syscalls:sys_enter_openat() syscall tracepoint is hit:
 
   # cat tools/perf/examples/bpf/hello.c
   #include <stdio.h>
@@ -30,86 +28,74 @@ map to add strings to the ring buffer:
 
   license(GPL);
   #
-  # cat ~/.perfconfig
-  [llvm]
-	dump-obj = true
-  # perf trace -e openat,tools/perf/examples/bpf/hello.c/call-graph=dwarf/ cat /etc/passwd > /dev/null
-  LLVM: dumping tools/perf/examples/bpf/hello.o
+  # perf trace -e openat,tools/perf/examples/bpf/hello.c cat /etc/passwd > /dev/null
      0.016 (         ): __bpf_stdout__:Hello, world
-     0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC           ) = 3
+     0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC) = 3
      0.057 (         ): __bpf_stdout__:Hello, world
-     0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC           ) = 3
+     0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC) = 3
      0.417 (         ): __bpf_stdout__:Hello, world
-     0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd                                ) = 3
+     0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd) = 3
   #
-  # file tools/perf/examples/bpf/hello.o
-  tools/perf/examples/bpf/hello.o: ELF 64-bit LSB relocatable, *unknown arch 0xf7* version 1 (SYSV), not stripped
-   # readelf -SW tools/perf/examples/bpf/hello.o
-  There are 10 section headers, starting at offset 0x208:
 
-  Section Headers:
-    [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
-    [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0
-    [ 1] .strtab           STRTAB          0000000000000000 000188 00007f 00      0   0  1
-    [ 2] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  4
-    [ 3] syscalls:sys_enter_openat PROGBITS        0000000000000000 000040 000088 00  AX  0   0  8
-    [ 4] .relsyscalls:sys_enter_openat REL             0000000000000000 000178 000010 10      9   3  8
-    [ 5] maps              PROGBITS        0000000000000000 0000c8 00001c 00  WA  0   0  4
-    [ 6] .rodata.str1.1    PROGBITS        0000000000000000 0000e4 00000e 01 AMS  0   0  1
-    [ 7] license           PROGBITS        0000000000000000 0000f2 000004 00  WA  0   0  1
-    [ 8] version           PROGBITS        0000000000000000 0000f8 000004 00  WA  0   0  4
-    [ 9] .symtab           SYMTAB          0000000000000000 000100 000078 18      1   1  8
-  Key to Flags:
-    W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
-    L (link order), O (extra OS processing required), G (group), T (TLS),
-    C (compressed), x (unknown), o (OS specific), E (exclude),
-    p (processor specific)
-    # readelf -s tools/perf/examples/bpf/hello.o
-
-  Symbol table '.symtab' contains 5 entries:
-   Num:    Value          Size Type    Bind   Vis      Ndx Name
-     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
-     1: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT    5 __bpf_stdout__
-     2: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT    7 _license
-     3: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT    8 _version
-     4: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT    3 syscall_enter_openat
-  #
+This is part of an ongoing experimentation on making eBPF scripts as
+consumed by perf to be as concise as possible and using familiar
+concepts such as stdio.h functions, that end up just wrapping the
+existing BPF functions, trying to hide as much boilerplate as possible
+while using just conventions and C preprocessor tricks.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-81fg60om2ifnatsybzwmiga3@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-4tiaqlx5crf0fwpe7a6j84x7@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/examples/bpf/hello.c |  9 +++++++++
+ tools/perf/include/bpf/stdio.h  | 19 +++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 tools/perf/examples/bpf/hello.c
+ create mode 100644 tools/perf/include/bpf/stdio.h
 
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index 2873cdde293f..1f632b56bb34 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -4,6 +4,20 @@
- 
- #include <uapi/linux/bpf.h>
- 
-+/*
-+ * A helper structure used by eBPF C program to describe map attributes to
-+ * elf_bpf loader, taken from tools/testing/selftests/bpf/bpf_helpers.h:
-+ */
-+struct bpf_map {
-+        unsigned int type;
-+        unsigned int key_size;
-+        unsigned int value_size;
-+        unsigned int max_entries;
-+        unsigned int map_flags;
-+        unsigned int inner_map_idx;
-+        unsigned int numa_node;
+diff --git a/tools/perf/examples/bpf/hello.c b/tools/perf/examples/bpf/hello.c
+new file mode 100644
+index 000000000000..cf3c2fdc7f79
+--- /dev/null
++++ b/tools/perf/examples/bpf/hello.c
+@@ -0,0 +1,9 @@
++#include <stdio.h>
++
++int syscall_enter(openat)(void *args)
++{
++	puts("Hello, world\n");
++	return 0;
++}
++
++license(GPL);
+diff --git a/tools/perf/include/bpf/stdio.h b/tools/perf/include/bpf/stdio.h
+new file mode 100644
+index 000000000000..2899cb7bfed8
+--- /dev/null
++++ b/tools/perf/include/bpf/stdio.h
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <bpf.h>
++
++struct bpf_map SEC("maps") __bpf_stdout__ = {
++       .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
++       .key_size = sizeof(int),
++       .value_size = sizeof(u32),
++       .max_entries = __NR_CPUS__,
 +};
 +
- #define SEC(NAME) __attribute__((section(NAME),  used))
- 
- #define probe(function, vars) \
++static int (*perf_event_output)(void *, struct bpf_map *, int, void *, unsigned long) =
++	(void *)BPF_FUNC_perf_event_output;
++
++#define puts(from) \
++	({ const int __len = sizeof(from); \
++	   char __from[__len] = from; \
++	   perf_event_output(args, &__bpf_stdout__, BPF_F_CURRENT_CPU, \
++			  &__from, __len & (sizeof(from) - 1)); })
 -- 
 2.14.4
