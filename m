@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/44] perf annotate: Make symbol__annotate_fprintf2() local
-Date: Thu,  9 Aug 2018 11:57:51 -0300
-Message-ID: <20180809145822.21391-14-acme@kernel.org>
+Subject: [PATCH 14/44] perf annotate: Make annotation_line__max_percent static
+Date: Thu,  9 Aug 2018 11:57:52 -0300
+Message-ID: <20180809145822.21391-15-acme@kernel.org>
 References: <20180809145822.21391-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
@@ -20,37 +20,38 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: https://lkml.kernel.org/r/20180804130521.11408-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180804130521.11408-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 2 +-
+ tools/perf/util/annotate.c | 3 ++-
  tools/perf/util/annotate.h | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index f91775b4bc3c..b6e7d0d56622 100644
+index b6e7d0d56622..956c9b19d81c 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -2129,7 +2129,7 @@ static void FILE__write_graph(void *fp, int graph)
- 	fputs(s, fp);
+@@ -2441,7 +2441,8 @@ bool ui__has_annotation(void)
  }
  
--int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
-+static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
+ 
+-double annotation_line__max_percent(struct annotation_line *al, struct annotation *notes)
++static double annotation_line__max_percent(struct annotation_line *al,
++					   struct annotation *notes)
  {
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct annotation_write_ops ops = {
+ 	double percent_max = 0.0;
+ 	int i;
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index a4c0d91907e6..5f24fc9dcc7c 100644
+index 5f24fc9dcc7c..a93502d0c582 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -340,7 +340,6 @@ int symbol__strerror_disassemble(struct symbol *sym, struct map *map,
- int symbol__annotate_printf(struct symbol *sym, struct map *map,
- 			    struct perf_evsel *evsel,
- 			    struct annotation_options *options);
--int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp);
- void symbol__annotate_zero_histogram(struct symbol *sym, int evidx);
- void symbol__annotate_decay_histogram(struct symbol *sym, int evidx);
- void annotated_source__purge(struct annotated_source *as);
+@@ -169,7 +169,6 @@ struct annotation_write_ops {
+ 	void (*write_graph)(void *obj, int graph);
+ };
+ 
+-double annotation_line__max_percent(struct annotation_line *al, struct annotation *notes);
+ void annotation_line__write(struct annotation_line *al, struct annotation *notes,
+ 			    struct annotation_write_ops *ops);
+ 
 -- 
 2.14.4
