@@ -1,39 +1,34 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 2/3] perf report: Add raw report support for s390
- auxiliary trace
-Date: Thu, 9 Aug 2018 12:14:22 -0300
-Message-ID: <20180809151422.GB5395@kernel.org>
-References: <20180802074622.13641-1-tmricht@linux.ibm.com>
- <20180802074622.13641-3-tmricht@linux.ibm.com>
- <87r2j9bkax.fsf@concordia.ellerman.id.au>
- <eda2632e-7919-5ffd-5f68-821e77d216fa@linux.ibm.com>
- <20180808155328.GA9543@kernel.org>
- <20180808155921.GB9543@kernel.org>
- <20180808160843.GC9543@kernel.org>
- <20180808161451.GD9543@kernel.org>
- <20180808164214.GE9543@kernel.org>
- <252202b1-bc08-a035-8de1-91136016d021@linux.ibm.com>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: [GIT PULL 00/44] perf/core improvements and fixes
+Date: Thu, 9 Aug 2018 10:27:33 -0500
+Message-ID: <20180809102733.773a02b7ac11980f65a8fe48@arm.com>
+References: <20180809145822.21391-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <252202b1-bc08-a035-8de1-91136016d021@linux.ibm.com>
+In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Cc: mpe@ellerman.id.au, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andriy Shevchenko <andriy.shevchenko@linux.intel.com>, David Ahern <dsahern@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Konstantin Khlebnikov <khlebni>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Aug 09, 2018 at 06:35:58AM +0200, Thomas-Mich Richter escreveu:
-> On 08/08/2018 06:42 PM, Arnaldo Carvalho de Melo wrote:
-> > So for those I applied this, seems to pass the ones that were failing,
-> > restarting tests...
+On Thu,  9 Aug 2018 11:57:38 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> I just updated the perf/core branch, compiled it and all works fine.
+Hi Arnaldo,
 
-Thanks for checking!
- 
-> Thanks for fixing these errors.
+> Arch specific:
+> 
+> arm64: (Sean V Kelley)
+> 
+> - Enable JSON events for Ampere Computing eMAG processor
+> 
 
-You're welcome,
+Did this one get missed?:
 
-- Arnaldo
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1745454.html
+
+Thanks,
+
+Kim
