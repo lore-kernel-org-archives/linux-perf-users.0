@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/44] perf trace: Allow setting up a syscall_tp struct without a format_field
-Date: Thu,  9 Aug 2018 11:57:42 -0300
-Message-ID: <20180809145822.21391-5-acme@kernel.org>
+Subject: [PATCH 05/44] perf trace: Setup struct syscall_tp for syscalls:sys_{enter,exit}_NAME events
+Date: Thu,  9 Aug 2018 11:57:43 -0300
+Message-ID: <20180809145822.21391-6-acme@kernel.org>
 References: <20180809145822.21391-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
@@ -12,18 +12,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To avoid having to ask libtraceevent to find a field by name when
-handling each tracepoint event, we setup a struct syscall_tp with
-a tp_field struct having an extractor function + the offset for the
-"id", "args" and "ret" raw_syscalls:sys_{enter,exit} tracepoints.
-
-Now that we want to do the same with syscalls:sys_{entry,exit}_NAME
-individual syscall tracepoints, where we have "id" as "__syscall_nr" and
-"args" as the actual series of per syscall parameters, we need more
-flexibility from the routines that set up these pre-looked up syscall
-tracepoint arg fields.
-
-The next cset will use it.
+Mapping "__syscall_nr" to "id" and setting up "args" from the offset of
+"__syscall_nr" + sizeof(u64), as the payload for syscalls:* is the same
+as for raw_syscalls:*, just the fields have different names.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
@@ -31,63 +22,90 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-v59q5e0jrlzkpl9a1c7t81ni@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ogeenrpviwcpwl3oy1l55f3m@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c | 53 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 039f94467968..7fca844ced0b 100644
+index 7fca844ced0b..41799596c045 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -156,13 +156,11 @@ TP_UINT_FIELD__SWAPPED(16);
- TP_UINT_FIELD__SWAPPED(32);
- TP_UINT_FIELD__SWAPPED(64);
- 
--static int tp_field__init_uint(struct tp_field *field,
--			       struct format_field *format_field,
--			       bool needs_swap)
-+static int __tp_field__init_uint(struct tp_field *field, int size, int offset, bool needs_swap)
- {
--	field->offset = format_field->offset;
-+	field->offset = offset;
- 
--	switch (format_field->size) {
-+	switch (size) {
- 	case 1:
- 		field->integer = tp_field__u8;
- 		break;
-@@ -182,18 +180,28 @@ static int tp_field__init_uint(struct tp_field *field,
- 	return 0;
+@@ -247,6 +247,22 @@ static void perf_evsel__delete_priv(struct perf_evsel *evsel)
+ 	perf_evsel__delete(evsel);
  }
  
-+static int tp_field__init_uint(struct tp_field *field, struct format_field *format_field, bool needs_swap)
++static int perf_evsel__init_syscall_tp(struct perf_evsel *evsel)
 +{
-+	return __tp_field__init_uint(field, format_field->size, format_field->offset, needs_swap);
++	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
++
++	if (evsel->priv != NULL) {
++		if (perf_evsel__init_tp_uint_field(evsel, &sc->id, "__syscall_nr"))
++			goto out_delete;
++		return 0;
++	}
++
++	return -ENOMEM;
++out_delete:
++	zfree(&evsel->priv);
++	return -ENOENT;
 +}
 +
- static void *tp_field__ptr(struct tp_field *field, struct perf_sample *sample)
+ static int perf_evsel__init_raw_syscall_tp(struct perf_evsel *evsel, void *handler)
  {
- 	return sample->raw_data + field->offset;
+ 	evsel->priv = malloc(sizeof(struct syscall_tp));
+@@ -2977,6 +2993,36 @@ static void evlist__set_evsel_handler(struct perf_evlist *evlist, void *handler)
+ 		evsel->handler = handler;
  }
  
--static int tp_field__init_ptr(struct tp_field *field, struct format_field *format_field)
-+static int __tp_field__init_ptr(struct tp_field *field, int offset)
- {
--	field->offset = format_field->offset;
-+	field->offset = offset;
- 	field->pointer = tp_field__ptr;
- 	return 0;
- }
- 
-+static int tp_field__init_ptr(struct tp_field *field, struct format_field *format_field)
++static int evlist__set_syscall_tp_fields(struct perf_evlist *evlist)
 +{
-+	return __tp_field__init_ptr(field, format_field->offset);
++	struct perf_evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->priv || !evsel->tp_format)
++			continue;
++
++		if (strcmp(evsel->tp_format->system, "syscalls"))
++			continue;
++
++		if (perf_evsel__init_syscall_tp(evsel))
++			return -1;
++
++		if (!strncmp(evsel->tp_format->name, "sys_enter_", 10)) {
++			struct syscall_tp *sc = evsel->priv;
++
++			if (__tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64)))
++				return -1;
++		} else if (!strncmp(evsel->tp_format->name, "sys_exit_", 9)) {
++			struct syscall_tp *sc = evsel->priv;
++
++			if (__tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap))
++				return -1;
++		}
++	}
++
++	return 0;
 +}
 +
- struct syscall_tp {
- 	struct tp_field id;
- 	union {
+ /*
+  * XXX: Hackish, just splitting the combined -e+--event (syscalls
+  * (raw_syscalls:{sys_{enter,exit}} + events (tracepoints, HW, SW, etc) to use
+@@ -3236,8 +3282,13 @@ int cmd_trace(int argc, const char **argv)
+ 		symbol_conf.use_callchain = true;
+ 	}
+ 
+-	if (trace.evlist->nr_entries > 0)
++	if (trace.evlist->nr_entries > 0) {
+ 		evlist__set_evsel_handler(trace.evlist, trace__event_handler);
++		if (evlist__set_syscall_tp_fields(trace.evlist)) {
++			perror("failed to set syscalls:* tracepoint fields");
++			goto out;
++		}
++	}
+ 
+ 	if ((argc >= 1) && (strcmp(argv[0], "record") == 0))
+ 		return trace__record(&trace, argc-1, &argv[1]);
 -- 
 2.14.4
