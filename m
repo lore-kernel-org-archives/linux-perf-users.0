@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/44] perf trace: Setup the augmented syscalls bpf-output event fields
-Date: Thu,  9 Aug 2018 11:58:19 -0300
-Message-ID: <20180809145822.21391-42-acme@kernel.org>
+Subject: [PATCH 42/44] perf trace: Wire up the augmented syscalls with the syscalls:sys_enter_FOO beautifier
+Date: Thu,  9 Aug 2018 11:58:20 -0300
+Message-ID: <20180809145822.21391-43-acme@kernel.org>
 References: <20180809145822.21391-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180809145822.21391-1-acme@kernel.org>
@@ -12,82 +12,61 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The payload that is put in place by the eBPF script attached to
-syscalls:sys_enter_openat (and other syscalls with pointers, in the
-future) can be consumed by the existing sys_enter beautifiers if
-evsel->priv is setup with a struct syscall_tp with struct tp_fields for
-the 'syscall_id' and 'args' fields expected by the beautifiers, this
-patch does just that.
+We just check that the evsel is the one we associated with the
+bpf-output event associated with the "__augmented_syscalls__" eBPF map,
+to show that the formatting is done properly:
+
+  # perf trace -e perf/tools/perf/examples/bpf/augmented_syscalls.c,openat cat /etc/passwd > /dev/null
+     0.000 (         ): __augmented_syscalls__:dfd: CWD, filename: 0x43e06da8, flags: CLOEXEC
+     0.006 (         ): syscalls:sys_enter_openat:dfd: CWD, filename: 0x43e06da8, flags: CLOEXEC
+     0.007 ( 0.004 ms): cat/11486 openat(dfd: CWD, filename: 0x43e06da8, flags: CLOEXEC                 ) = 3
+     0.029 (         ): __augmented_syscalls__:dfd: CWD, filename: 0x4400ece0, flags: CLOEXEC
+     0.030 (         ): syscalls:sys_enter_openat:dfd: CWD, filename: 0x4400ece0, flags: CLOEXEC
+     0.031 ( 0.004 ms): cat/11486 openat(dfd: CWD, filename: 0x4400ece0, flags: CLOEXEC                 ) = 3
+     0.249 (         ): __augmented_syscalls__:dfd: CWD, filename: 0xc3700d6
+     0.250 (         ): syscalls:sys_enter_openat:dfd: CWD, filename: 0xc3700d6
+     0.252 ( 0.003 ms): cat/11486 openat(dfd: CWD, filename: 0xc3700d6                                  ) = 3
+  #
+
+Now we just need to get the full blown enter/exit handlers to check if the
+evsel being processed is the augmented_syscalls one to go pick the pointer
+payloads from the end of the payload.
+
+We also need to state somehow what is the layout for multi pointer arg syscalls.
+
+Also handy would be to have a BTF file with the struct definitions used in
+syscalls, compact, generated at kernel built time and available for use in eBPF
+programs.
+
+Till we get there we can go on doing some manual coupling of the most relevant
+syscalls with some hand built beautifiers.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-xfjyog8oveg2fjys9r1yy1es@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-r6ba5izrml82nwfmwcp7jpkm@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 43a699cfcadf..06215acb1481 100644
+index 06215acb1481..22ab8e67c760 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -77,7 +77,8 @@ struct trace {
- 		struct syscall  *table;
- 		struct {
- 			struct perf_evsel *sys_enter,
--					  *sys_exit;
-+					  *sys_exit,
-+					  *augmented;
- 		}		events;
- 	} syscalls;
- 	struct record_opts	opts;
-@@ -263,6 +264,30 @@ static int perf_evsel__init_syscall_tp(struct perf_evsel *evsel)
- 	return -ENOENT;
- }
+@@ -2042,7 +2042,10 @@ static int trace__event_handler(struct trace *trace, struct perf_evsel *evsel,
+ 	fprintf(trace->output, "%s:", evsel->name);
  
-+static int perf_evsel__init_augmented_syscall_tp(struct perf_evsel *evsel)
-+{
-+	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
-+
-+	if (evsel->priv != NULL) {       /* field, sizeof_field, offsetof_field */
-+		if (__tp_field__init_uint(&sc->id, sizeof(long), sizeof(long long), evsel->needs_swap))
-+			goto out_delete;
-+
-+		return 0;
-+	}
-+
-+	return -ENOMEM;
-+out_delete:
-+	zfree(&evsel->priv);
-+	return -EINVAL;
-+}
-+
-+static int perf_evsel__init_augmented_syscall_tp_args(struct perf_evsel *evsel)
-+{
-+	struct syscall_tp *sc = evsel->priv;
-+
-+	return __tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64));
-+}
-+
- static int perf_evsel__init_raw_syscall_tp(struct perf_evsel *evsel, void *handler)
- {
- 	evsel->priv = malloc(sizeof(struct syscall_tp));
-@@ -3248,6 +3273,13 @@ int cmd_trace(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	if (evsel) {
-+		if (perf_evsel__init_augmented_syscall_tp(evsel) ||
-+		    perf_evsel__init_augmented_syscall_tp_args(evsel))
-+			goto out;
-+		trace.syscalls.events.augmented = evsel;
-+	}
-+
- 	err = bpf__setup_stdout(trace.evlist);
- 	if (err) {
- 		bpf__strerror_setup_stdout(trace.evlist, err, bf, sizeof(bf));
+ 	if (perf_evsel__is_bpf_output(evsel)) {
+-		bpf_output__fprintf(trace, sample);
++		if (evsel == trace->syscalls.events.augmented)
++			trace__fprintf_sys_enter(trace, evsel, sample);
++		else
++			bpf_output__fprintf(trace, sample);
+ 	} else if (evsel->tp_format) {
+ 		if (strncmp(evsel->tp_format->name, "sys_enter_", 10) ||
+ 		    trace__fprintf_sys_enter(trace, evsel, sample)) {
 -- 
 2.14.4
