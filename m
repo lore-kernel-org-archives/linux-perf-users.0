@@ -1,48 +1,29 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [GIT PULL 00/44] perf/core improvements and fixes
-Date: Thu, 9 Aug 2018 12:35:05 -0300
-Message-ID: <20180809153505.GC5395@kernel.org>
-References: <20180809145822.21391-1-acme@kernel.org>
- <20180809102733.773a02b7ac11980f65a8fe48@arm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 2/3] perf report: Add raw report support for s390 auxiliary trace
+Date: Fri, 10 Aug 2018 15:41:18 +1000
+Message-ID: <87va8i93sx.fsf@concordia.ellerman.id.au>
+References: <20180802074622.13641-1-tmricht@linux.ibm.com> <20180802074622.13641-3-tmricht@linux.ibm.com> <87r2j9bkax.fsf@concordia.ellerman.id.au> <eda2632e-7919-5ffd-5f68-821e77d216fa@linux.ibm.com> <20180808155328.GA9543@kernel.org> <20180808155921.GB9543@kernel.org> <20180808160843.GC9543@kernel.org> <20180808161451.GD9543@kernel.org> <20180808164214.GE9543@kernel.org> <252202b1-bc08-a035-8de1-91136016d021@linux.ibm.com> <20180809151422.GB5395@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180809102733.773a02b7ac11980f65a8fe48@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kim Phillips <kim.phillips@arm.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Thomas Richter <tmricht@linux.ibm.com>, Mike Snitzer <snitzer@redhat.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Heiko Carstens <heiko.carstens@de.ibm.com>, Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Philippe Ombredanne <pombredanne@nexb.com>, Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Matthew Wilcox <willy@infradead.org>, Clark Williams <williams@redhat.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Wang Nan <wangnan0@huawei.com>, Will Deacon <will.deacon@arm.com>, John Garry <john.garry@huawei.com>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Namhyung Kim <namhyung@ke>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180809151422.GB5395@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Aug 09, 2018 at 10:27:33AM -0500, Kim Phillips escreveu:
-> On Thu,  9 Aug 2018 11:57:38 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
-> Hi Arnaldo,
-> 
-> > Arch specific:
-> > 
-> > arm64: (Sean V Kelley)
-> > 
-> > - Enable JSON events for Ampere Computing eMAG processor
-> > 
-> 
-> Did this one get missed?:
-> 
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1745454.html
+Arnaldo Carvalho de Melo <acme@kernel.org> writes:
+> Em Thu, Aug 09, 2018 at 06:35:58AM +0200, Thomas-Mich Richter escreveu:
+>> On 08/08/2018 06:42 PM, Arnaldo Carvalho de Melo wrote:
+>> > So for those I applied this, seems to pass the ones that were failing,
+>> > restarting tests...
+>
+>> I just updated the perf/core branch, compiled it and all works fine.
+>
+> Thanks for checking!
 
-I will get to that, its just that I need to sit down and look at it more
-closely,
+Yep all building OK here too.
 
-Thanks!
+Thanks all.
 
-- Arnaldo
+cheers
