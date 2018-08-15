@@ -1,202 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/35] tools lib traceevent: Rename static variables and functions in event-parse.c
-Date: Wed, 15 Aug 2018 12:06:01 -0300
-Message-ID: <20180815150611.32080-26-acme@kernel.org>
+Subject: [PATCH 26/35] perf tools: Check for null when copying nsinfo.
+Date: Wed, 15 Aug 2018 12:06:02 -0300
+Message-ID: <20180815150611.32080-27-acme@kernel.org>
 References: <20180815150611.32080-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180815150611.32080-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Yordan Karadzhov <y.karadz@gmail.com>, linux-trace-devel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Benno Evers <bevers@mesosphere.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+From: Benno Evers <bevers@mesosphere.com>
 
-In order to make libtraceevent into a proper library, variables, data
-structures and functions require a unique prefix to prevent name space
-conflicts. That prefix will be "tep_" and not "pevent_". This changes
-static variables and functions in event-parse.c: pevent_func_params,
-__pevent_parse_format, __pevent_parse_event, pevent_error_str, pevent_search_event
+The argument to nsinfo__copy() was assumed to be valid, but some code paths
+exist that will lead to NULL being passed.
 
-Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+In particular, running 'perf script -D' on a perf.data file containing an
+PERF_RECORD_MMAP event associating the '[vdso]' dso with pid 0 earlier in
+the event stream will lead to a segfault.
+
+Since all calling code is already checking for a non-null return value,
+just return NULL for this case as well.
+
+Signed-off-by: Benno Evers <bevers@mesosphere.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Yordan Karadzhov (VMware) <y.karadz@gmail.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180808180703.575392642@goodmis.org
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20180810133614.9925-1-bevers@mesosphere.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 54 +++++++++++++++++++-------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+ tools/perf/util/namespaces.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index f723c088acca..6313e32680ff 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -92,9 +92,9 @@ struct event_handler {
- 	void				*context;
- };
- 
--struct pevent_func_params {
--	struct pevent_func_params	*next;
--	enum tep_func_arg_type		type;
-+struct func_params {
-+	struct func_params	*next;
-+	enum tep_func_arg_type	type;
- };
- 
- struct tep_function_handler {
-@@ -102,7 +102,7 @@ struct tep_function_handler {
- 	enum tep_func_arg_type		ret_type;
- 	char				*name;
- 	tep_func_handler		func;
--	struct pevent_func_params	*params;
-+	struct func_params		*params;
- 	int				nr_args;
- };
- 
-@@ -1161,7 +1161,7 @@ static enum event_type read_token(char **tok)
-  * @tok: The token to return
-  *
-  * This will parse tokens from the string given by
-- * pevent_init_data().
-+ * tep_init_data().
-  *
-  * Returns the token type.
-  */
-@@ -4133,7 +4133,7 @@ process_defined_func(struct trace_seq *s, void *data, int size,
- 		     struct event_format *event, struct print_arg *arg)
+diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+index 5be021701f34..cf8bd123cf73 100644
+--- a/tools/perf/util/namespaces.c
++++ b/tools/perf/util/namespaces.c
+@@ -139,6 +139,9 @@ struct nsinfo *nsinfo__copy(struct nsinfo *nsi)
  {
- 	struct tep_function_handler *func_handle = arg->func.func;
--	struct pevent_func_params *param;
-+	struct func_params *param;
- 	unsigned long long *args;
- 	unsigned long long ret;
- 	struct print_arg *farg;
-@@ -6023,7 +6023,7 @@ static int find_event_handle(struct tep_handle *pevent, struct event_format *eve
- }
+ 	struct nsinfo *nnsi;
  
- /**
-- * __pevent_parse_format - parse the event format
-+ * __tep_parse_format - parse the event format
-  * @buf: the buffer storing the event format string
-  * @size: the size of @buf
-  * @sys: the system the event belongs to
-@@ -6035,9 +6035,9 @@ static int find_event_handle(struct tep_handle *pevent, struct event_format *eve
-  *
-  * /sys/kernel/debug/tracing/events/.../.../format
-  */
--enum tep_errno __pevent_parse_format(struct event_format **eventp,
--				     struct tep_handle *pevent, const char *buf,
--				     unsigned long size, const char *sys)
-+enum tep_errno __tep_parse_format(struct event_format **eventp,
-+				  struct tep_handle *pevent, const char *buf,
-+				  unsigned long size, const char *sys)
- {
- 	struct event_format *event;
- 	int ret;
-@@ -6143,12 +6143,12 @@ enum tep_errno __pevent_parse_format(struct event_format **eventp,
- }
- 
- static enum tep_errno
--__pevent_parse_event(struct tep_handle *pevent,
--		     struct event_format **eventp,
--		     const char *buf, unsigned long size,
--		     const char *sys)
-+__parse_event(struct tep_handle *pevent,
-+	      struct event_format **eventp,
-+	      const char *buf, unsigned long size,
-+	      const char *sys)
- {
--	int ret = __pevent_parse_format(eventp, pevent, buf, size, sys);
-+	int ret = __tep_parse_format(eventp, pevent, buf, size, sys);
- 	struct event_format *event = *eventp;
- 
- 	if (event == NULL)
-@@ -6190,7 +6190,7 @@ enum tep_errno tep_parse_format(struct tep_handle *pevent,
- 				const char *buf,
- 				unsigned long size, const char *sys)
- {
--	return __pevent_parse_event(pevent, eventp, buf, size, sys);
-+	return __parse_event(pevent, eventp, buf, size, sys);
- }
- 
- /**
-@@ -6211,12 +6211,12 @@ enum tep_errno tep_parse_event(struct tep_handle *pevent, const char *buf,
- 			       unsigned long size, const char *sys)
- {
- 	struct event_format *event = NULL;
--	return __pevent_parse_event(pevent, &event, buf, size, sys);
-+	return __parse_event(pevent, &event, buf, size, sys);
- }
- 
- #undef _PE
- #define _PE(code, str) str
--static const char * const pevent_error_str[] = {
-+static const char * const tep_error_str[] = {
- 	TEP_ERRORS
- };
- #undef _PE
-@@ -6237,7 +6237,7 @@ int tep_strerror(struct tep_handle *pevent __maybe_unused,
- 		return -1;
- 
- 	idx = errnum - __TEP_ERRNO__START - 1;
--	msg = pevent_error_str[idx];
-+	msg = tep_error_str[idx];
- 	snprintf(buf, buflen, "%s", msg);
- 
- 	return 0;
-@@ -6463,7 +6463,7 @@ int tep_print_func_field(struct trace_seq *s, const char *fmt,
- 
- static void free_func_handle(struct tep_function_handler *func)
- {
--	struct pevent_func_params *params;
-+	struct func_params *params;
- 
- 	free(func->name);
- 
-@@ -6497,8 +6497,8 @@ int tep_register_print_function(struct tep_handle *pevent,
- 				char *name, ...)
- {
- 	struct tep_function_handler *func_handle;
--	struct pevent_func_params **next_param;
--	struct pevent_func_params *param;
-+	struct func_params **next_param;
-+	struct func_params *param;
- 	enum tep_func_arg_type type;
- 	va_list ap;
- 	int ret;
-@@ -6591,9 +6591,9 @@ int tep_unregister_print_function(struct tep_handle *pevent,
- 	return -1;
- }
- 
--static struct event_format *pevent_search_event(struct tep_handle *pevent, int id,
--						const char *sys_name,
--						const char *event_name)
-+static struct event_format *search_event(struct tep_handle *pevent, int id,
-+					 const char *sys_name,
-+					 const char *event_name)
- {
- 	struct event_format *event;
- 
-@@ -6638,7 +6638,7 @@ int tep_register_event_handler(struct tep_handle *pevent, int id,
- 	struct event_format *event;
- 	struct event_handler *handle;
- 
--	event = pevent_search_event(pevent, id, sys_name, event_name);
-+	event = search_event(pevent, id, sys_name, event_name);
- 	if (event == NULL)
- 		goto not_found;
- 
-@@ -6723,7 +6723,7 @@ int tep_unregister_event_handler(struct tep_handle *pevent, int id,
- 	struct event_handler *handle;
- 	struct event_handler **next;
- 
--	event = pevent_search_event(pevent, id, sys_name, event_name);
-+	event = search_event(pevent, id, sys_name, event_name);
- 	if (event == NULL)
- 		goto not_found;
- 
++	if (nsi == NULL)
++		return NULL;
++
+ 	nnsi = calloc(1, sizeof(*nnsi));
+ 	if (nnsi != NULL) {
+ 		nnsi->pid = nsi->pid;
 -- 
 2.14.4
