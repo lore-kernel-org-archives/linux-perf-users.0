@@ -1,52 +1,78 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/35] perf tools: Check for null when copying nsinfo.
-Date: Wed, 15 Aug 2018 12:06:02 -0300
-Message-ID: <20180815150611.32080-27-acme@kernel.org>
+Subject: [PATCH 27/35] perf tools: Fix check-headers.sh AND list path of execution
+Date: Wed, 15 Aug 2018 12:06:03 -0300
+Message-ID: <20180815150611.32080-28-acme@kernel.org>
 References: <20180815150611.32080-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180815150611.32080-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Benno Evers <bevers@mesosphere.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Benno Evers <bevers@mesosphere.com>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 
-The argument to nsinfo__copy() was assumed to be valid, but some code paths
-exist that will lead to NULL being passed.
+The '||' path of execution in the 'test' block of the check_2() function
+may also be taken if file2 does not exist, in which case the warning
+message about the ABI headers being different would still be printed
+where it should not be.  See below.
 
-In particular, running 'perf script -D' on a perf.data file containing an
-PERF_RECORD_MMAP event associating the '[vdso]' dso with pid 0 earlier in
-the event stream will lead to a segfault.
+  % file1=file1; file2=file2
+  % cmd="echo diff $file1 $file2"
+  % test -f $file2 && \
+    eval $cmd || echo "Warning: Kernel ABI header at 'tools/$file1'
+                       differs from latest version at '$file2'" >&2
+                       Warning: Kernel ABI header at 'tools/file1' differs from latest
+                       version at 'file2'
 
-Since all calling code is already checking for a non-null return value,
-just return NULL for this case as well.
+The proposed patch converts the code following the '&&' operator into a
+compound list to be executed in the current process environment only if file2
+does exist. Should the files being compared differ, a diff command to compare
+the files concerned is printed on standard output. E.g.
 
-Signed-off-by: Benno Evers <bevers@mesosphere.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+  $ diff -u tools/arch/x86/lib/memcpy_64.S arch/x86/lib/memcpy_64.S
+
+Committer testing:
+
+Remove a line from that tools/arch/x86/lib/memcpy_64.S file to test
+this:
+
+  BUILD:   Doing 'make -j4' parallel build
+Warning: Kernel ABI header at 'tools/arch/x86/lib/memcpy_64.S' differs from latest version at 'arch/x86/lib/memcpy_64.S'
+diff -u tools/arch/x86/lib/memcpy_64.S arch/x86/lib/memcpy_64.S
+  CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
+
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180810133614.9925-1-bevers@mesosphere.com
+Link: http://lkml.kernel.org/r/20180811083915.17471-1-alexander.kapshuk@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/namespaces.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/check-headers.sh | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 5be021701f34..cf8bd123cf73 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -139,6 +139,9 @@ struct nsinfo *nsinfo__copy(struct nsinfo *nsi)
- {
- 	struct nsinfo *nnsi;
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index de28466c0186..ea48aa6f8d19 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -67,8 +67,12 @@ check_2 () {
  
-+	if (nsi == NULL)
-+		return NULL;
-+
- 	nnsi = calloc(1, sizeof(*nnsi));
- 	if (nnsi != NULL) {
- 		nnsi->pid = nsi->pid;
+   cmd="diff $* $file1 $file2 > /dev/null"
+ 
+-  test -f $file2 &&
+-  eval $cmd || echo "Warning: Kernel ABI header at 'tools/$file' differs from latest version at '$file'" >&2
++  test -f $file2 && {
++    eval $cmd || {
++      echo "Warning: Kernel ABI header at 'tools/$file' differs from latest version at '$file'" >&2
++      echo diff -u tools/$file $file
++    }
++  }
+ }
+ 
+ check () {
 -- 
 2.14.4
