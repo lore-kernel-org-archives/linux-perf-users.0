@@ -1,418 +1,168 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [GIT PULL 00/35] perf/core improvements and fixes
-Date: Wed, 15 Aug 2018 12:05:36 -0300
-Message-ID: <20180815150611.32080-1-acme@kernel.org>
+Subject: [PATCH 01/35] perf probe powerpc: Fix trace event post-processing
+Date: Wed, 15 Aug 2018 12:05:37 -0300
+Message-ID: <20180815150611.32080-2-acme@kernel.org>
+References: <20180815150611.32080-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180815150611.32080-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Kapshuk <alexander.kapshuk@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>, Benno Evers <bevers@mesosphere.com>, Dave Hansen <dave.hansen@linux.intel.com>, David Ahern <dsahern@gmail.com>, Dongjiu Geng <gengdongjiu@huawei.com>, "H . Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>, Kim Phillips <kim.phillips@arm.com>, Krister Johansen <kjlx>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>, Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Sandipan Das <sandipan@linux.ibm.com>
 
-Hi Ingo,
+In some cases, a symbol may have multiple aliases. Attempting to add an
+entry probe for such symbols results in a probe being added at an
+incorrect location while it fails altogether for return probes. This is
+only applicable for binaries with debug information.
 
-	Please consider pulling, this is on top of
-perf-core-for-mingo-4.19-20180809, that is not yet in tip.
+During the arch-dependent post-processing, the offset from the start of
+the symbol at which the probe is to be attached is determined and added
+to the start address of the symbol to get the probe's location.  In case
+there are multiple aliases, this offset gets added multiple times for
+each alias of the symbol and we end up with an incorrect probe location.
 
-Thanks,
+This can be verified on a powerpc64le system as shown below.
 
-- Arnaldo
+  $ nm /lib/modules/$(uname -r)/build/vmlinux | grep "sys_open$"
+  ...
+  c000000000414290 T __se_sys_open
+  c000000000414290 T sys_open
 
-Test results at the end of this message, as usual.
+  $ objdump -d /lib/modules/$(uname -r)/build/vmlinux | grep -A 10 "<__se_sys_open>:"
 
-The following changes since commit 6a9405b56c274024564f9014bba97b92c91b34d6:
+  c000000000414290 <__se_sys_open>:
+  c000000000414290:       19 01 4c 3c     addis   r2,r12,281
+  c000000000414294:       70 c4 42 38     addi    r2,r2,-15248
+  c000000000414298:       a6 02 08 7c     mflr    r0
+  c00000000041429c:       e8 ff a1 fb     std     r29,-24(r1)
+  c0000000004142a0:       f0 ff c1 fb     std     r30,-16(r1)
+  c0000000004142a4:       f8 ff e1 fb     std     r31,-8(r1)
+  c0000000004142a8:       10 00 01 f8     std     r0,16(r1)
+  c0000000004142ac:       c1 ff 21 f8     stdu    r1,-64(r1)
+  c0000000004142b0:       78 23 9f 7c     mr      r31,r4
+  c0000000004142b4:       78 1b 7e 7c     mr      r30,r3
 
-  perf map: Optimize maps__fixup_overlappings() (2018-08-08 15:56:00 -0300)
+  For both the entry probe and the return probe, the probe location
+  should be _text+4276888 (0xc000000000414298). Since another alias
+  exists for 'sys_open', the post-processing code will end up adding
+  the offset (8 for powerpc64le) twice and perf will attempt to add
+  the probe at _text+4276896 (0xc0000000004142a0) instead.
 
-are available in the Git repository at:
+Before:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.19-20180815
+  # perf probe -v -a sys_open
 
-for you to fetch changes up to 6855dc41b24619c3d1de3dbd27dd0546b0e45272:
+  probe-definition(0): sys_open
+  symbol:sys_open file:(null) line:0 offset:0 return:0 lazy:(null)
+  0 arguments
+  Looking at the vmlinux_path (8 entries long)
+  Using /lib/modules/4.18.0-rc8+/build/vmlinux for symbols
+  Open Debuginfo file: /lib/modules/4.18.0-rc8+/build/vmlinux
+  Try to find probe point from debuginfo.
+  Symbol sys_open address found : c000000000414290
+  Matched function: __se_sys_open [2ad03a0]
+  Probe point found: __se_sys_open+0
+  Found 1 probe_trace_events.
+  Opening /sys/kernel/debug/tracing/kprobe_events write=1
+  Writing event: p:probe/sys_open _text+4276896
+  Added new event:
+    probe:sys_open       (on sys_open)
+  ...
 
-  x86: Add entry trampolines to kcore (2018-08-14 19:13:26 -0300)
+  # perf probe -v -a sys_open%return $retval
 
-----------------------------------------------------------------
-perf/core improvements ad fixes:
+  probe-definition(0): sys_open%return
+  symbol:sys_open file:(null) line:0 offset:0 return:1 lazy:(null)
+  0 arguments
+  Looking at the vmlinux_path (8 entries long)
+  Using /lib/modules/4.18.0-rc8+/build/vmlinux for symbols
+  Open Debuginfo file: /lib/modules/4.18.0-rc8+/build/vmlinux
+  Try to find probe point from debuginfo.
+  Symbol sys_open address found : c000000000414290
+  Matched function: __se_sys_open [2ad03a0]
+  Probe point found: __se_sys_open+0
+  Found 1 probe_trace_events.
+  Opening /sys/kernel/debug/tracing/README write=0
+  Opening /sys/kernel/debug/tracing/kprobe_events write=1
+  Parsing probe_events: p:probe/sys_open _text+4276896
+  Group:probe Event:sys_open probe:p
+  Writing event: r:probe/sys_open__return _text+4276896
+  Failed to write event: Invalid argument
+    Error: Failed to add events. Reason: Invalid argument (Code: -22)
 
-kernel:
+After:
 
-. kallsyms, x86: Export addresses of PTI entry trampolines (Alexander Shishkin)
+  # perf probe -v -a sys_open
 
-. kallsyms: Simplify update_iter_mod() (Adrian Hunter)
+  probe-definition(0): sys_open
+  symbol:sys_open file:(null) line:0 offset:0 return:0 lazy:(null)
+  0 arguments
+  Looking at the vmlinux_path (8 entries long)
+  Using /lib/modules/4.18.0-rc8+/build/vmlinux for symbols
+  Open Debuginfo file: /lib/modules/4.18.0-rc8+/build/vmlinux
+  Try to find probe point from debuginfo.
+  Symbol sys_open address found : c000000000414290
+  Matched function: __se_sys_open [2ad03a0]
+  Probe point found: __se_sys_open+0
+  Found 1 probe_trace_events.
+  Opening /sys/kernel/debug/tracing/kprobe_events write=1
+  Writing event: p:probe/sys_open _text+4276888
+  Added new event:
+    probe:sys_open       (on sys_open)
+  ...
 
-. x86: Add entry trampolines to kcore (Adrian Hunter)
+  # perf probe -v -a sys_open%return $retval
 
-Hardware tracing:
+  probe-definition(0): sys_open%return
+  symbol:sys_open file:(null) line:0 offset:0 return:1 lazy:(null)
+  0 arguments
+  Looking at the vmlinux_path (8 entries long)
+  Using /lib/modules/4.18.0-rc8+/build/vmlinux for symbols
+  Open Debuginfo file: /lib/modules/4.18.0-rc8+/build/vmlinux
+  Try to find probe point from debuginfo.
+  Symbol sys_open address found : c000000000414290
+  Matched function: __se_sys_open [2ad03a0]
+  Probe point found: __se_sys_open+0
+  Found 1 probe_trace_events.
+  Opening /sys/kernel/debug/tracing/README write=0
+  Opening /sys/kernel/debug/tracing/kprobe_events write=1
+  Parsing probe_events: p:probe/sys_open _text+4276888
+  Group:probe Event:sys_open probe:p
+  Writing event: r:probe/sys_open__return _text+4276888
+  Added new event:
+    probe:sys_open__return (on sys_open%return)
+  ...
 
-. Fix auxtrace queue resize (Adrian Hunter)
-
-Arch specific:
-
-. Fix uninitialized ARM SPE record error variable (Kim Phillips)
-
-. Fix trace event post-processing in powerpc (Sandipan Das)
-
-Build:
-
-. Fix check-headers.sh AND list path of execution (Alexander Kapshuk)
-
-. Remove -mcet and -fcf-protection when building the python binding
-  with older clang versions (Arnaldo Carvalho de Melo)
-
-. Make check-headers.sh check based on kernel dir (Jiri Olsa)
-
-. Move syscall_64.tbl check into check-headers.sh (Jiri Olsa)
-
-Infrastructure:
-
-. Check for null when copying nsinfo.  (Benno Evers)
-
-Libraries:
-
-. Rename libtraceevent prefixes, prep work for making it a shared
-  library generaly available (Tzvetomir Stoyanov (VMware))
-
+Reported-by: Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Fixes: 99e608b5954c ("perf probe ppc64le: Fix probe location when using DWARF")
+Link: http://lkml.kernel.org/r/20180809161929.35058-1-sandipan@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/powerpc/util/sym-handling.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-----------------------------------------------------------------
-Adrian Hunter (3):
-      perf auxtrace: Fix queue resize
-      kallsyms: Simplify update_iter_mod()
-      x86: Add entry trampolines to kcore
-
-Alexander Kapshuk (1):
-      perf tools: Fix check-headers.sh AND list path of execution
-
-Alexander Shishkin (1):
-      kallsyms, x86: Export addresses of PTI entry trampolines
-
-Arnaldo Carvalho de Melo (1):
-      perf python: Remove -mcet and -fcf-protection when building with clang
-
-Benno Evers (1):
-      perf tools: Check for null when copying nsinfo.
-
-Jiri Olsa (2):
-      perf tools: Make check-headers.sh check based on kernel dir
-      perf tools: Move syscall_64.tbl check into check-headers.sh
-
-Kim Phillips (1):
-      perf arm spe: Fix uninitialized record error variable
-
-Sandipan Das (1):
-      perf probe powerpc: Fix trace event post-processing
-
-Tzvetomir Stoyanov (VMware) (24):
-      tools lib traceevent, perf tools: Rename struct pevent to struct tep_handle
-      tools lib traceevent, perf tools: Rename 'struct pevent_record' to 'struct tep_record'
-      tools lib traceevent, perf tools: Rename pevent plugin related APIs
-      tools lib traceevent, perf tools: Rename pevent alloc / free APIs
-      tools lib traceevent, perf tools: Rename pevent find APIs
-      tools lib traceevent, perf tools: Rename pevent parse APIs
-      tools lib traceevent, perf tools: Rename pevent print APIs
-      tools lib traceevent, perf tools: Rename pevent_read_number_* APIs
-      tools lib traceevent, perf tools: Rename pevent_register_* APIs
-      tools lib traceevent, perf tools: Rename pevent_set_* APIs
-      tools lib traceevent, perf tools: Rename traceevent_* APIs
-      tools lib traceevent, perf tools: Rename 'enum pevent_flag' to 'enum tep_flag'
-      tools lib traceevent, tools lib lockdep: Rename 'enum pevent_errno' to 'enum tep_errno'
-      tools lib traceevent: Rename pevent_function* APIs
-      tools lib traceevent,  perf tools: Rename traceevent_plugin_* APIs
-      tools lib traceevent: Rename pevent_filter* APIs
-      tools lib traceevent: Rename pevent_register / unregister APIs
-      tools lib traceevent: Rename pevent_data_ APIs
-      tools lib traceevent: Rename pevent field APIs
-      tools lib traceevent: Rename pevent_find_* APIs
-      tools lib traceevent: Rename various pevent get/set/is APIs
-      tools lib traceevent: Rename internal parser related APIs
-      tools lib traceevent: Rename various pevent APIs
-      tools lib traceevent: Rename static variables and functions in event-parse.c
-
- arch/x86/mm/cpu_entry_area.c                       |  33 +
- fs/proc/kcore.c                                    |   7 +-
- include/linux/kcore.h                              |  13 +
- kernel/kallsyms.c                                  |  51 +-
- tools/lib/lockdep/Makefile                         |   4 +-
- tools/lib/traceevent/Makefile                      |   4 +-
- tools/lib/traceevent/event-parse.c                 | 696 ++++++++++-----------
- tools/lib/traceevent/event-parse.h                 | 458 +++++++-------
- tools/lib/traceevent/event-plugin.c                |  70 +--
- tools/lib/traceevent/parse-filter.c                | 288 ++++-----
- tools/lib/traceevent/plugin_cfg80211.c             |  20 +-
- tools/lib/traceevent/plugin_function.c             |  34 +-
- tools/lib/traceevent/plugin_hrtimer.c              |  56 +-
- tools/lib/traceevent/plugin_jbd2.c                 |  36 +-
- tools/lib/traceevent/plugin_kmem.c                 |  66 +-
- tools/lib/traceevent/plugin_kvm.c                  | 154 ++---
- tools/lib/traceevent/plugin_mac80211.c             |  28 +-
- tools/lib/traceevent/plugin_sched_switch.c         |  60 +-
- tools/lib/traceevent/plugin_scsi.c                 |  24 +-
- tools/lib/traceevent/plugin_xen.c                  |  20 +-
- tools/perf/arch/arm64/util/arm-spe.c               |   1 +
- tools/perf/arch/powerpc/util/sym-handling.c        |   4 +-
- tools/perf/arch/x86/Makefile                       |   3 -
- tools/perf/builtin-kmem.c                          |   6 +-
- tools/perf/builtin-report.c                        |   6 +-
- tools/perf/builtin-script.c                        |   6 +-
- tools/perf/check-headers.sh                        |  17 +-
- tools/perf/util/auxtrace.c                         |   3 +
- tools/perf/util/data-convert-bt.c                  |   6 +-
- tools/perf/util/evsel.c                            |   2 +-
- tools/perf/util/header.c                           |   6 +-
- tools/perf/util/machine.h                          |   2 +-
- tools/perf/util/namespaces.c                       |   3 +
- tools/perf/util/python.c                           |  10 +-
- .../perf/util/scripting-engines/trace-event-perl.c |   2 +-
- .../util/scripting-engines/trace-event-python.c    |   6 +-
- tools/perf/util/setup.py                           |  10 +-
- tools/perf/util/sort.c                             |  16 +-
- tools/perf/util/sort.h                             |   2 +-
- tools/perf/util/trace-event-parse.c                |  34 +-
- tools/perf/util/trace-event-read.c                 |  44 +-
- tools/perf/util/trace-event-scripting.c            |   4 +-
- tools/perf/util/trace-event.c                      |  28 +-
- tools/perf/util/trace-event.h                      |  20 +-
- 44 files changed, 1230 insertions(+), 1133 deletions(-)
-
-Test results:
-
-The first ones are container (docker) based builds of tools/perf with
-and without libelf support.  Where clang is available, it is also used
-to build perf with/without libelf, and building with LIBCLANGLLVM=1
-(built-in clang) with gcc and clang when clang and its devel libraries
-are installed.
-
-The objtool and samples/bpf/ builds are disabled now that I'm switching from
-using the sources in a local volume to fetching them from a http server to
-build it inside the container, to make it easier to build in a container cluster.
-Those will come back later.
-
-Several are cross builds, the ones with -x-ARCH and the android one, and those
-may not have all the features built, due to lack of multi-arch devel packages,
-available and being used so far on just a few, like
-debian:experimental-x-{arm64,mipsel}.
-
-The 'perf test' one will perform a variety of tests exercising
-tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
-with a variety of command line event specifications to then intercept the
-sys_perf_event syscall to check that the perf_event_attr fields are set up as
-expected, among a variety of other unit tests.
-
-Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
-with a variety of feature sets, exercising the build with an incomplete set of
-features as well as with a complete one. It is planned to have it run on each
-of the containers mentioned above, using some container orchestration
-infrastructure. Get in contact if interested in helping having this in place.
-
-  # dm
-   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
-   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
-   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
-   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
-   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0
-   6 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
-   7 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
-   8 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
-   9 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-  10 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-  11 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
-  12 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
-  13 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
-  14 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
-  15 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u1) 4.9.2
-  16 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-  17 debian:experimental           : Ok   gcc (Debian 8.2.0-1) 8.2.0
-  18 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.1.0-12) 8.1.0
-  19 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 8.1.0-12) 8.1.0
-  20 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 8.1.0-12) 8.1.0
-  21 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 8.1.0-12) 8.1.0
-  22 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
-  23 fedora:21                     : Ok   gcc (GCC) 4.9.2 20150212 (Red Hat 4.9.2-6)
-  24 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
-  25 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
-  26 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
-  27 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
-  28 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
-  29 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
-  30 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)
-  31 fedora:28                     : Ok   gcc (GCC) 8.1.1 20180712 (Red Hat 8.1.1-5)
-  32 fedora:rawhide                : Ok   gcc (GCC) 8.0.1 20180324 (Red Hat 8.0.1-0.20)
-  33 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 7.3.0-r3 p1.4) 7.3.0
-  34 mageia:5                      : Ok   gcc (GCC) 4.9.2
-  35 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0
-  36 opensuse:13.2                 : Ok   gcc (SUSE Linux) 4.8.3 20140627 [gcc-4_8-branch revision 212064]
-  37 opensuse:42.1                 : Ok   gcc (SUSE Linux) 4.8.5
-  38 opensuse:42.2                 : Ok   gcc (SUSE Linux) 4.8.5
-  39 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5
-  40 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 7.3.1 20180323 [gcc-7-branch revision 258812]
-  41 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1)
-  42 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28.0.1)
-  43 ubuntu:12.04.5                : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
-  44 ubuntu:14.04.4                : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
-  45 ubuntu:14.04.4-x-linaro-arm64 : Ok   aarch64-linux-gnu-gcc (Linaro GCC 5.5-2017.10) 5.5.0
-  46 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
-  47 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  48 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  49 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  50 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  51 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  52 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  53 ubuntu:16.10                  : Ok   gcc (Ubuntu 6.2.0-5ubuntu12) 6.2.0 20161005
-  54 ubuntu:17.10                  : Ok   gcc (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
-  55 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  56 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.3.0-16ubuntu3) 7.3.0
-  57 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.3.0-16ubuntu3) 7.3.0
-  58 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  59 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  60 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  61 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  62 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  63 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  64 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  65 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
-  66 ubuntu:18.10                  : Ok   gcc (Ubuntu 8.2.0-1ubuntu2) 8.2.0
-  # 
-
-  # uname -a
-  Linux seventh 4.18.0-rc8-00002-g1236568ee3cb #1 SMP Wed Aug 8 09:39:17 -03 2018 x86_64 x86_64 x86_64 GNU/Linux
-  # git log --oneline -1
-  6855dc41b246 (HEAD -> perf/core) x86: Add entry trampolines to kcore
-  # perf version --build-options
-  perf version 4.18.rc7.g6855dc
-                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
-           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-  # perf test
-   1: vmlinux symtab matches kallsyms                       : Ok
-   2: Detect openat syscall event                           : Ok
-   3: Detect openat syscall event on all cpus               : Ok
-   4: Read samples using the mmap interface                 : Ok
-   5: Test data source output                               : Ok
-   6: Parse event definition strings                        : Ok
-   7: Simple expression parser                              : Ok
-   8: PERF_RECORD_* events & perf_sample fields             : Ok
-   9: Parse perf pmu format                                 : Ok
-  10: DSO data read                                         : Ok
-  11: DSO data cache                                        : Ok
-  12: DSO data reopen                                       : Ok
-  13: Roundtrip evsel->name                                 : Ok
-  14: Parse sched tracepoints fields                        : Ok
-  15: syscalls:sys_enter_openat event fields                : Ok
-  16: Setup struct perf_event_attr                          : Ok
-  17: Match and link multiple hists                         : Ok
-  18: 'import perf' in python                               : Ok
-  19: Breakpoint overflow signal handler                    : Ok
-  20: Breakpoint overflow sampling                          : Ok
-  21: Breakpoint accounting                                 : Ok
-  22: Number of exit events of a simple workload            : Ok
-  23: Software clock events period values                   : Ok
-  24: Object code reading                                   : Ok
-  25: Sample parsing                                        : Ok
-  26: Use a dummy software event to keep tracking           : Ok
-  27: Parse with no sample_id_all bit set                   : Ok
-  28: Filter hist entries                                   : Ok
-  29: Lookup mmap thread                                    : Ok
-  30: Share thread mg                                       : Ok
-  31: Sort output of hist entries                           : Ok
-  32: Cumulate child hist entries                           : Ok
-  33: Track with sched_switch                               : Ok
-  34: Filter fds with revents mask in a fdarray             : Ok
-  35: Add fd to a fdarray, making it autogrow               : Ok
-  36: kmod_path__parse                                      : Ok
-  37: Thread map                                            : Ok
-  38: LLVM search and compile                               :
-  38.1: Basic BPF llvm compile                              : Ok
-  38.2: kbuild searching                                    : Ok
-  38.3: Compile source for BPF prologue generation          : Ok
-  38.4: Compile source for BPF relocation                   : Ok
-  39: Session topology                                      : Ok
-  40: BPF filter                                            :
-  40.1: Basic BPF filtering                                 : Ok
-  40.2: BPF pinning                                         : Ok
-  40.3: BPF prologue generation                             : Ok
-  40.4: BPF relocation checker                              : Ok
-  41: Synthesize thread map                                 : Ok
-  42: Remove thread map                                     : Ok
-  43: Synthesize cpu map                                    : Ok
-  44: Synthesize stat config                                : Ok
-  45: Synthesize stat                                       : Ok
-  46: Synthesize stat round                                 : Ok
-  47: Synthesize attr update                                : Ok
-  48: Event times                                           : Ok
-  49: Read backward ring buffer                             : Ok
-  50: Print cpu map                                         : Ok
-  51: Probe SDT events                                      : Ok
-  52: is_printable_array                                    : Ok
-  53: Print bitmap                                          : Ok
-  54: perf hooks                                            : Ok
-  55: builtin clang support                                 : Skip (not compiled in)
-  56: unit_number__scnprintf                                : Ok
-  57: mem2node                                              : Ok
-  58: x86 rdpmc                                             : Ok
-  59: Convert perf time to TSC                              : Ok
-  60: DWARF unwind                                          : Ok
-  61: x86 instruction decoder - new instructions            : Ok
-  62: probe libc's inet_pton & backtrace it with ping       : Ok
-  63: Check open filename arg using perf trace + vfs_getname: Ok
-  64: Use vfs_getname probe to get syscall args filenames   : Ok
-  65: Add vfs_getname probe to get syscall args filenames   : Ok
-  # 
-  
-  $ make -C tools/perf build-test
-  make: Entering directory '/home/acme/git/perf/tools/perf'
-  - tarpkg: ./tests/perf-targz-src-pkg .
-            make_no_libaudit_O: make NO_LIBAUDIT=1
-                   make_tags_O: make tags
-                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1
-              make_no_libelf_O: make NO_LIBELF=1
-              make_no_libbpf_O: make NO_LIBBPF=1
-             make_util_map_o_O: make util/map.o
-                    make_doc_O: make doc
-   make_install_prefix_slash_O: make install prefix=/tmp/krava/
-  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
-            make_no_demangle_O: make NO_DEMANGLE=1
-                 make_static_O: make LDFLAGS=-static
-                make_install_O: make install
-         make_with_clangllvm_O: make LIBCLANGLLVM=1
-            make_install_bin_O: make install-bin
-           make_no_libunwind_O: make NO_LIBUNWIND=1
-                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
-               make_no_slang_O: make NO_SLANG=1
-           make_no_libpython_O: make NO_LIBPYTHON=1
-                make_no_gtk2_O: make NO_GTK2=1
-           make_no_libbionic_O: make NO_LIBBIONIC=1
-         make_install_prefix_O: make install prefix=/tmp/krava
-                  make_debug_O: make DEBUG=1
-             make_no_libperl_O: make NO_LIBPERL=1
-                   make_pure_O: make
-             make_no_libnuma_O: make NO_LIBNUMA=1
-       make_util_pmu_bison_o_O: make util/pmu-bison.o
-                   make_help_O: make help
-                make_no_newt_O: make NO_NEWT=1
-           make_no_backtrace_O: make NO_BACKTRACE=1
-              make_clean_all_O: make clean all
-            make_no_auxtrace_O: make NO_AUXTRACE=1
-             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
-                 make_perf_o_O: make perf.o
-        make_with_babeltrace_O: make LIBBABELTRACE=1
-  OK
-  make: Leaving directory '/home/acme/git/perf/tools/perf'
-  $ 
+diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+index 53d83d7e6a09..20e7d74d86cd 100644
+--- a/tools/perf/arch/powerpc/util/sym-handling.c
++++ b/tools/perf/arch/powerpc/util/sym-handling.c
+@@ -141,8 +141,10 @@ void arch__post_process_probe_trace_events(struct perf_probe_event *pev,
+ 	for (i = 0; i < ntevs; i++) {
+ 		tev = &pev->tevs[i];
+ 		map__for_each_symbol(map, sym, tmp) {
+-			if (map->unmap_ip(map, sym->start) == tev->point.address)
++			if (map->unmap_ip(map, sym->start) == tev->point.address) {
+ 				arch__fix_tev_from_maps(pev, tev, map, sym);
++				break;
++			}
+ 		}
+ 	}
+ }
+-- 
+2.14.4
