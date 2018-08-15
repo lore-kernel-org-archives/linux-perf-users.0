@@ -1,48 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/35] perf arm spe: Fix uninitialized record error variable
-Date: Wed, 15 Aug 2018 12:06:06 -0300
-Message-ID: <20180815150611.32080-31-acme@kernel.org>
+Subject: [PATCH 31/35] perf python: Remove -mcet and -fcf-protection when building with clang
+Date: Wed, 15 Aug 2018 12:06:07 -0300
+Message-ID: <20180815150611.32080-32-acme@kernel.org>
 References: <20180815150611.32080-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180815150611.32080-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Dongjiu Geng <gengdongjiu@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kim Phillips <kim.phillips@arm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The auxtrace init variable 'err' was not being initialized, leading perf
-to abort early in an SPE record command when there was no explicit
-error, rather only based whatever memory contents were on the stack.
-Initialize it explicitly on getting an SPE successfully, the same way
-cs-etm does.
+These options are not present in older clang versions, so when we build
+for a distro that has a gcc new enough to have these options and that
+the distro python build config settings use them but clang doesn't
+support, b00m.
 
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+This is the case with fedora 28 and rawhide, so check if clang has the
+options and remove the missing ones from CFLAGS.
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dongjiu Geng <gengdongjiu@huawei.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-Link: http://lkml.kernel.org/r/20180810174512.52900813e57cbccf18ce99a2@arm.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-7asds7yn6gzg6ns1lw17ukul@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/util/arm-spe.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/setup.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 1120e39c1b00..5ccfce87e693 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -194,6 +194,7 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 	sper->itr.read_finish = arm_spe_read_finish;
- 	sper->itr.alignment = 0;
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 001be4f9d3b9..97efbcad076e 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -1,12 +1,20 @@
+ #!/usr/bin/python
  
-+	*err = 0;
- 	return &sper->itr;
- }
+ from os import getenv
++from subprocess import Popen, PIPE
++from re import sub
++
++def clang_has_option(option):
++    return [o for o in Popen(['clang', option], stderr=PIPE).stderr.readlines() if "unknown argument" in o] == [ ]
+ 
+ cc = getenv("CC")
+ if cc == "clang":
+     from _sysconfigdata import build_time_vars
+-    from re import sub
+     build_time_vars["CFLAGS"] = sub("-specs=[^ ]+", "", build_time_vars["CFLAGS"])
++    if not clang_has_option("-mcet"):
++        build_time_vars["CFLAGS"] = sub("-mcet", "", build_time_vars["CFLAGS"])
++    if not clang_has_option("-fcf-protection"):
++        build_time_vars["CFLAGS"] = sub("-fcf-protection", "", build_time_vars["CFLAGS"])
+ 
+ from distutils.core import setup, Extension
  
 -- 
 2.14.4
