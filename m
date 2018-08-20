@@ -1,225 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/21] tools lib traceevent: Change to SPDX License format
-Date: Mon, 20 Aug 2018 13:15:45 -0300
-Message-ID: <20180820161602.6830-5-acme@kernel.org>
+Subject: [PATCH 05/21] perf tools: Get rid of dso__needs_decompress() call in read_object_code()
+Date: Mon, 20 Aug 2018 13:15:46 -0300
+Message-ID: <20180820161602.6830-6-acme@kernel.org>
 References: <20180820161602.6830-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180820161602.6830-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Jiri Olsa <jolsa@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Yordan Karadzhov <y.karadz@gmail.com>, linux-trace-devel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Replace the GPL text with SPDX tags in the tools/lib/traceevent files.
+There's no need to call dso__needs_decompress() twice in the function.
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Cc: Yordan Karadzhov (VMware) <y.karadz@gmail.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180816111015.125e0f25@gandalf.local.home
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180817094813.15086-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c   | 16 +---------------
- tools/lib/traceevent/event-plugin.c  | 16 +---------------
- tools/lib/traceevent/event-utils.h   | 16 +---------------
- tools/lib/traceevent/kbuffer-parse.c | 17 +----------------
- tools/lib/traceevent/parse-filter.c  | 16 +---------------
- tools/lib/traceevent/parse-utils.c   | 16 +---------------
- tools/lib/traceevent/trace-seq.c     | 16 +---------------
- 7 files changed, 7 insertions(+), 106 deletions(-)
+ tools/perf/tests/code-reading.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 6313e32680ff..ce1e20227c64 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1,21 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  *
-  *  The parts for function graph printing was taken and modified from the
-  *  Linux Kernel that were written by
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index 8e324ed46547..f17e25097e1e 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -1,21 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 4892bd2dc33e..6b049f3f5cf4 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -232,6 +232,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	u64 objdump_addr;
+ 	const char *objdump_name;
+ 	char decomp_name[KMOD_DECOMP_LEN];
++	bool decomp = false;
+ 	int ret;
  
- #include <ctype.h>
-diff --git a/tools/lib/traceevent/event-utils.h b/tools/lib/traceevent/event-utils.h
-index d1dc2170e402..0560b96a31d1 100644
---- a/tools/lib/traceevent/event-utils.h
-+++ b/tools/lib/traceevent/event-utils.h
-@@ -1,21 +1,7 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
- /*
-  * Copyright (C) 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #ifndef __UTIL_H
- #define __UTIL_H
-diff --git a/tools/lib/traceevent/kbuffer-parse.c b/tools/lib/traceevent/kbuffer-parse.c
-index ca424b157e46..af2a1f3b7424 100644
---- a/tools/lib/traceevent/kbuffer-parse.c
-+++ b/tools/lib/traceevent/kbuffer-parse.c
-@@ -1,22 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 682a50e8b5f7..e76154c02ee7 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1,21 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/parse-utils.c b/tools/lib/traceevent/parse-utils.c
-index eda07fa31dca..77e4ec6402dd 100644
---- a/tools/lib/traceevent/parse-utils.c
-+++ b/tools/lib/traceevent/parse-utils.c
-@@ -1,21 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/trace-seq.c b/tools/lib/traceevent/trace-seq.c
-index 292dc9f1d233..e3bac4543d3b 100644
---- a/tools/lib/traceevent/trace-seq.c
-+++ b/tools/lib/traceevent/trace-seq.c
-@@ -1,21 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
+ 	pr_debug("Reading object code for memory address: %#"PRIx64"\n", addr);
+@@ -305,6 +306,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 			return -1;
+ 		}
+ 
++		decomp = true;
+ 		objdump_name = decomp_name;
+ 	}
+ 
+@@ -312,7 +314,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	objdump_addr = map__rip_2objdump(al.map, al.addr);
+ 	ret = read_via_objdump(objdump_name, objdump_addr, buf2, len);
+ 
+-	if (dso__needs_decompress(al.map->dso))
++	if (decomp)
+ 		unlink(objdump_name);
+ 
+ 	if (ret > 0) {
 -- 
 2.14.4
