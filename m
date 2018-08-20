@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/21] perf tools: Get rid of dso__needs_decompress() call in read_object_code()
-Date: Mon, 20 Aug 2018 13:15:46 -0300
-Message-ID: <20180820161602.6830-6-acme@kernel.org>
+Subject: [PATCH 06/21] perf tools: Get rid of dso__needs_decompress() call in symbol__disassemble()
+Date: Mon, 20 Aug 2018 13:15:47 -0300
+Message-ID: <20180820161602.6830-7-acme@kernel.org>
 References: <20180820161602.6830-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180820161602.6830-1-acme@kernel.org>
@@ -20,40 +20,40 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180817094813.15086-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180817094813.15086-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/code-reading.c | 4 +++-
+ tools/perf/util/annotate.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 4892bd2dc33e..6b049f3f5cf4 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -232,6 +232,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 	u64 objdump_addr;
- 	const char *objdump_name;
- 	char decomp_name[KMOD_DECOMP_LEN];
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index e4268b948e0e..20061cf42288 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1629,6 +1629,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	char symfs_filename[PATH_MAX];
+ 	struct kcore_extract kce;
+ 	bool delete_extract = false;
 +	bool decomp = false;
- 	int ret;
- 
- 	pr_debug("Reading object code for memory address: %#"PRIx64"\n", addr);
-@@ -305,6 +306,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 			return -1;
- 		}
+ 	int stdout_fd[2];
+ 	int lineno = 0;
+ 	int nline;
+@@ -1662,6 +1663,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 						 tmp, sizeof(tmp)) < 0)
+ 			goto out;
  
 +		decomp = true;
- 		objdump_name = decomp_name;
+ 		strcpy(symfs_filename, tmp);
  	}
  
-@@ -312,7 +314,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 	objdump_addr = map__rip_2objdump(al.map, al.addr);
- 	ret = read_via_objdump(objdump_name, objdump_addr, buf2, len);
+@@ -1748,7 +1750,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ out_remove_tmp:
+ 	close(stdout_fd[0]);
  
--	if (dso__needs_decompress(al.map->dso))
+-	if (dso__needs_decompress(dso))
 +	if (decomp)
- 		unlink(objdump_name);
+ 		unlink(symfs_filename);
  
- 	if (ret > 0) {
+ 	if (delete_extract)
 -- 
 2.14.4
