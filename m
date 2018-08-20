@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/21] perf tools: Get rid of dso__needs_decompress() call in __open_dso()
-Date: Mon, 20 Aug 2018 13:15:48 -0300
-Message-ID: <20180820161602.6830-8-acme@kernel.org>
+Subject: [PATCH 08/21] perf tools: Make decompress_to_file() function static
+Date: Mon, 20 Aug 2018 13:15:49 -0300
+Message-ID: <20180820161602.6830-9-acme@kernel.org>
 References: <20180820161602.6830-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180820161602.6830-1-acme@kernel.org>
@@ -12,7 +12,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need to call dso__needs_decompress() twice in the function.
+There's no outside user of it.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -20,38 +20,37 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180817094813.15086-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180817094813.15086-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/dso.c | 2 +-
+ tools/perf/util/dso.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 51cf82cf1882..8ee1faa5726f 100644
+index 8ee1faa5726f..9f4b72d8f50f 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -468,6 +468,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 	int fd = -EINVAL;
- 	char *root_dir = (char *)"";
- 	char *name = malloc(PATH_MAX);
-+	bool decomp = false;
+@@ -239,7 +239,7 @@ bool is_kernel_module(const char *pathname, int cpumode)
+ 	return m.kmod;
+ }
  
- 	if (!name)
- 		return -ENOMEM;
-@@ -491,12 +492,13 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 			goto out;
- 		}
+-bool decompress_to_file(const char *ext, const char *filename, int output_fd)
++static bool decompress_to_file(const char *ext, const char *filename, int output_fd)
+ {
+ 	unsigned i;
  
-+		decomp = true;
- 		strcpy(name, newpath);
- 	}
- 
- 	fd = do_open(name);
- 
--	if (dso__needs_decompress(dso))
-+	if (decomp)
- 		unlink(name);
- 
- out:
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index ef69de2e69ea..e1adadd1fe1e 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -252,7 +252,6 @@ int dso__read_binary_type_filename(const struct dso *dso, enum dso_binary_type t
+ 				   char *root_dir, char *filename, size_t size);
+ bool is_supported_compression(const char *ext);
+ bool is_kernel_module(const char *pathname, int cpumode);
+-bool decompress_to_file(const char *ext, const char *filename, int output_fd);
+ bool dso__needs_decompress(struct dso *dso);
+ int dso__decompress_kmodule_fd(struct dso *dso, const char *name);
+ int dso__decompress_kmodule_path(struct dso *dso, const char *name,
 -- 
 2.14.4
