@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/21] perf tools: Get rid of dso__needs_decompress() call in symbol__disassemble()
-Date: Mon, 20 Aug 2018 13:15:47 -0300
-Message-ID: <20180820161602.6830-7-acme@kernel.org>
+Subject: [PATCH 07/21] perf tools: Get rid of dso__needs_decompress() call in __open_dso()
+Date: Mon, 20 Aug 2018 13:15:48 -0300
+Message-ID: <20180820161602.6830-8-acme@kernel.org>
 References: <20180820161602.6830-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180820161602.6830-1-acme@kernel.org>
@@ -20,40 +20,38 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180817094813.15086-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180817094813.15086-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 4 +++-
+ tools/perf/util/dso.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e4268b948e0e..20061cf42288 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1629,6 +1629,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 	char symfs_filename[PATH_MAX];
- 	struct kcore_extract kce;
- 	bool delete_extract = false;
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 51cf82cf1882..8ee1faa5726f 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -468,6 +468,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
+ 	int fd = -EINVAL;
+ 	char *root_dir = (char *)"";
+ 	char *name = malloc(PATH_MAX);
 +	bool decomp = false;
- 	int stdout_fd[2];
- 	int lineno = 0;
- 	int nline;
-@@ -1662,6 +1663,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 						 tmp, sizeof(tmp)) < 0)
+ 
+ 	if (!name)
+ 		return -ENOMEM;
+@@ -491,12 +492,13 @@ static int __open_dso(struct dso *dso, struct machine *machine)
  			goto out;
+ 		}
  
 +		decomp = true;
- 		strcpy(symfs_filename, tmp);
+ 		strcpy(name, newpath);
  	}
  
-@@ -1748,7 +1750,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- out_remove_tmp:
- 	close(stdout_fd[0]);
+ 	fd = do_open(name);
  
 -	if (dso__needs_decompress(dso))
 +	if (decomp)
- 		unlink(symfs_filename);
+ 		unlink(name);
  
- 	if (delete_extract)
+ out:
 -- 
 2.14.4
