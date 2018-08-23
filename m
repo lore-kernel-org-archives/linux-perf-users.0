@@ -1,38 +1,213 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] AMD perf PMU events for AMD Family 17h.
-Date: Thu, 23 Aug 2018 16:40:59 -0300
-Message-ID: <20180823194059.GB22309@kernel.org>
-References: <3ee15066-429e-b0f2-1255-aab100fad472@suse.cz>
- <fc049074-595e-92d7-5bab-bcd00f8493e2@suse.cz>
- <20180823143141.GA22309@kernel.org>
- <40464a66-9085-f26c-88cd-8d510b07a859@redhat.com>
+From: Sean V Kelley <seanvk.dev@oregontracks.org>
+Subject: [PATCH] perf vendor events arm64: Add to core JSON events for eMAG
+Date: Thu, 23 Aug 2018 13:22:50 -0700
+Message-ID: <20180823202250.30797-1-seanvk.dev@oregontracks.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <40464a66-9085-f26c-88cd-8d510b07a859@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: William Cohen <wcohen@redhat.com>
-Cc: Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, linux-perf-users@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Martin Jambor <mjambor@suse.cz>, Jiri Olsa <jolsa@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Namhyung Kim <namhyung@kernel.org>, Sean V Kelley <seanvk.dev@oregontracks.org>, Jiri Olsa <jolsa@redhat.com>, William Cohen <wcohen@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Aug 23, 2018 at 12:16:43PM -0400, William Cohen escreveu:
-> On 08/23/2018 10:31 AM, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Aug 23, 2018 at 01:21:45PM +0200, Martin Liška escreveu:
-> >> May I please ping this.
+Adds the remainder of the supported ARMv8 recommended IMPLEMENTATION
+DEFINED events for the Ampere Computing eMAG file.
 
-> > I was waiting for someone to give some ack, perhaps Will Cohen can take
-> > a brief look and provide that? Will?
- 
-> I had already deleted the patch from my mailbox earlier, so I
-> downloaded the patch from the archive and added some inline comments
-> to the attached patch.
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: William Cohen <wcohen@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
 
-Thanks William! Really appreciate, I think we need this kind of review
-for these JSON files when they get submitted, Martin, please address his
-points and resubmit,
+Signed-off-by: Sean V Kelley <seanvk.dev@oregontracks.org>
+---
+ .../arch/arm64/ampere/emag/core-imp-def.json  | 150 +++++++++++++++++-
+ 1 file changed, 144 insertions(+), 6 deletions(-)
 
-Thanks again,
-
-- Arnaldo
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+index bc03c06c3918..d95202dbe2b2 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+@@ -9,7 +9,7 @@
+         "ArchStdEvent": "L1D_CACHE_REFILL_RD",
+     },
+     {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "ArchStdEvent": "L1D_CACHE_INVAL",
+     },
+     {
+         "ArchStdEvent": "L1D_TLB_REFILL_RD",
+@@ -18,15 +18,153 @@
+         "ArchStdEvent": "L1D_TLB_REFILL_WR",
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_RD",
++        "ArchStdEvent": "L2D_CACHE_RD",
+     },
+     {
+-        "ArchStdEvent": "L1D_TLB_WR",
++        "ArchStdEvent": "L2D_CACHE_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_INVAL",
+     },
+     {
+         "ArchStdEvent": "BUS_ACCESS_RD",
+-   },
+-   {
++    },
++    {
+         "ArchStdEvent": "BUS_ACCESS_WR",
+-   }
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NORMAL",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_PERIPH",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_RD",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_WR",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_FAIL_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_SPEC",
++    },
++    {
++        "ArchStdEvent": "LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "DP_SPEC",
++    },
++    {
++        "ArchStdEvent": "ASE_SPEC",
++    },
++    {
++        "ArchStdEvent": "VFP_SPEC",
++    },
++    {
++        "ArchStdEvent": "PC_WRITE_SPEC",
++    },
++    {
++        "ArchStdEvent": "CRYPTO_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_IMMED_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_INDIRECT_SPEC",
++    },
++    {
++        "ArchStdEvent": "ISB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DSB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DMB_SPEC",
++    },
++    {
++        "ArchStdEvent": "EXC_UNDEF",
++    },
++    {
++        "ArchStdEvent": "EXC_SVC",
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_FIQ",
++    },
++    {
++        "ArchStdEvent": "EXC_HVC",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ",
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC",
++    },
+ ]
+-- 
+2.17.1
