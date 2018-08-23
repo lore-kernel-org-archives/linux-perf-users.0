@@ -1,85 +1,140 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [BUGFIX PATCH] tracing/kprobes: Fix to check notrace function
- with correct range
-Date: Wed, 22 Aug 2018 21:39:33 -0400
-Message-ID: <20180822213933.7da87c5c@vmware.local.home>
-References: <20180821212448.d20ea26fa998b206adf4ece6@kernel.org>
-        <153485669706.16611.17726752296213785504.stgit@devbox>
-        <20180821094249.3fea76bb@gandalf.local.home>
-        <20180822085809.01da04b0@gandalf.local.home>
-        <20180823101831.6997f36954257d79d3a15d51@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/21] perf/core improvements and fixes
+Date: Thu, 23 Aug 2018 10:31:25 +0200
+Message-ID: <20180823083124.GA10800@gmail.com>
+References: <20180820161602.6830-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180823101831.6997f36954257d79d3a15d51@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180820161602.6830-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Francis Deslauriers <francis.deslauriers@efficios.com>, peterz@infradead.org, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, Michael Rodin <michael@rodin.online>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Jack Henschel <jackdev@mailbox.org>, Jan Beulich <JBeulich@suse.com>, Jaroslav =?utf-8?B?xaBrYXJ2YWRh?= <jskarvad@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Joe Mario <jmario@redhat.com>, linux-trace-devel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Feiner <pfeiner@google.com>, Peter Zijlstra <peterz@infradead.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sai
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, 23 Aug 2018 10:18:31 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> On Wed, 22 Aug 2018 08:58:09 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
-> > On Tue, 21 Aug 2018 09:42:49 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > On Tue, 21 Aug 2018 22:04:57 +0900
-> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >   
-> > > > Fix within_notrace_func() to check notrace function correctly.
-> > > > 
-> > > > Since the ftrace_location_range(start, end) function checks
-> > > > the range inclusively (start <= ftrace-loc <= end), the end
-> > > > address must not include the entry address of next function.
-> > > > 
-> > > > However, within_notrace_func() uses kallsyms_lookup_size_offset()
-> > > > to get the function size and calculate the end address from
-> > > > adding the size to the entry address. This means the end address
-> > > > is the entry address of the next function.
-> > > > 
-> > > > In the result, within_notrace_func() fails to find notrace
-> > > > function if the next function of the target function is
-> > > > ftraced.
-> > > > 
-> > > > Let's subtract 1 from the end address so that ftrace_location_range()
-> > > > can check it correctly.
-> > > > 
-> > > > Fixes: commit 45408c4f9250 ("tracing: kprobes: Prohibit probing on notrace function")
-> > > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > Reported-by: Michael Rodin <michael@rodin.online>
-> > > > ---
-> > > >    
-> > > 
-> > > Applied. Thanks Masami! I'll start testing this and send it upstream
-> > > when it's finished.
-> > >   
-> > 
-> > Hmm, this fix shows the extent of not tracing functions with notrace
-> > attched much deeper. For one thing, we can't hook kprobes to the
-> > __schedule() function (which is now what all the main schedule
-> > functions call). One of my tests used this function to test kprobes and
-> > it failed.
-> > 
-> > I'll push this to Linus, but I'm wondering if we want to perhaps add a
-> > white list of functions marked "notrace" but still kprobes can trace?  
+> 	Please consider pullimg,
 > 
-> Yes, that is what I'm thinking about. Maybe most of notrace function is
-> safe for kprobes (like __schedule()). And if it is really critical, those
-> functions must be marked by NOKPROBE_SYMBOL().
+> - Arnaldo
 > 
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 5804b11034a21e4287daaf017c5ad60ad7af8d67:
+> 
+>   Merge tag 'perf-core-for-mingo-4.19-20180815' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-08-18 13:11:51 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.19-20180820
+> 
+> for you to fetch changes up to 78303650e4cd873c6c4276c6fe3e768ff0b46d22:
+> 
+>   tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy' (2018-08-20 10:17:14 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> LLVM/clang/eBPF: (Arnaldo Carvalho de Melo)
+> 
+> - Allow passing options to llc in addition to to clang.
+> 
+> Hardware tracing: (Jack Henschel)
+> 
+> - Improve error message for PMU address filters, clarifying availability of
+>   that feature in hardware having hardware tracing such as Intel PT.
+> 
+> Python interface: (Jiri Olsa)
+> 
+> - Fix read_on_cpu() interface.
+> 
+> ELF/DWARF libraries: (Jiri Olsa)
+> 
+> - Fix handling of the combo compressed module file + decompressed associated
+>   debuginfo file.
+> 
+> Build (Rasmus Villemoes)
+> 
+> - Disable parallelism for 'make clean', avoiding multiple submakes deleting
+>   the same files and causing the build to fail on systems such as Yocto.
+> 
+> Kernel ABI copies: (Arnaldo Carvalho de Melo)
+> 
+> - Update tools's copy of x86's cpufeatures.h.
+> 
+> - Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'.
+> 
+> Miscellaneous: (Steven Rostedt)
+> 
+> - Change libtraceevent to SPDX License format.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (3):
+>       perf llvm: Allow passing options to llc in addition to clang
+>       tools arch x86: Update tools's copy of cpufeatures.h
+>       tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'
+> 
+> Jack Henschel (1):
+>       perf parser: Improve error message for PMU address filters
+> 
+> Jiri Olsa (15):
+>       perf tools: Get rid of dso__needs_decompress() call in read_object_code()
+>       perf tools: Get rid of dso__needs_decompress() call in symbol__disassemble()
+>       perf tools: Get rid of dso__needs_decompress() call in __open_dso()
+>       perf tools: Make decompress_to_file() function static
+>       perf tools: Make is_supported_compression() static
+>       perf tools: Add compression id into 'struct kmod_path'
+>       perf tools: Store compression id into struct dso
+>       perf tools: Use compression id in decompress_kmodule()
+>       perf tools: Move the temp file processing into decompress_kmodule
+>       perf tools: Add is_compressed callback to compressions array
+>       perf tools: Add lzma_is_compressed function
+>       perf tools: Add gzip_is_compressed function
+>       perf tools: Remove ext from struct kmod_path
+>       perf mmap: Store real cpu number in 'struct perf_mmap'
+>       perf python: Fix pyrf_evlist__read_on_cpu() interface
+> 
+> Rasmus Villemoes (1):
+>       perf tools: Disable parallelism for 'make clean'
+> 
+> Steven Rostedt (VMware) (1):
+>       tools lib traceevent: Change to SPDX License format
+> 
+>  tools/arch/x86/include/asm/cpufeatures.h |   3 +-
+>  tools/arch/x86/lib/memcpy_64.S           |   2 +-
+>  tools/lib/traceevent/event-parse.c       |  16 +---
+>  tools/lib/traceevent/event-plugin.c      |  16 +---
+>  tools/lib/traceevent/event-utils.h       |  16 +---
+>  tools/lib/traceevent/kbuffer-parse.c     |  17 +---
+>  tools/lib/traceevent/parse-filter.c      |  16 +---
+>  tools/lib/traceevent/parse-utils.c       |  16 +---
+>  tools/lib/traceevent/trace-seq.c         |  16 +---
+>  tools/perf/Makefile                      |   4 +-
+>  tools/perf/tests/code-reading.c          |   4 +-
+>  tools/perf/tests/kmod-path.c             | 136 +++++++++++++++----------------
+>  tools/perf/util/annotate.c               |   4 +-
+>  tools/perf/util/compress.h               |   2 +
+>  tools/perf/util/dso.c                    | 111 ++++++++++++-------------
+>  tools/perf/util/dso.h                    |  13 ++-
+>  tools/perf/util/evlist.c                 |   2 +-
+>  tools/perf/util/llvm-utils.c             |  31 ++++++-
+>  tools/perf/util/llvm-utils.h             |   9 ++
+>  tools/perf/util/lzma.c                   |  20 +++++
+>  tools/perf/util/machine.c                |   4 +-
+>  tools/perf/util/mmap.c                   |   3 +-
+>  tools/perf/util/mmap.h                   |   3 +-
+>  tools/perf/util/parse-events.c           |  20 ++---
+>  tools/perf/util/python.c                 |  20 ++++-
+>  tools/perf/util/zlib.c                   |  18 ++++
+>  26 files changed, 256 insertions(+), 266 deletions(-)
 
-Correct. This notrace was added because we want to not trace any
-function call between preempt_schedule() and where NEED_RESCHED is
-cleared. Because the function tracer does a preempt_enable_notrace()
-which triggers the preempt_schedule() call again, and we can end up in
-a recursive loop. But that is fixed, but by tracing __schedule() we do
-a song and dance of calling preempt_schedule_notrace and makes the
-trace output weird.
+Pulled, thanks a lot Arnaldo!
 
-See commit 499d79559ffe4.
-
--- Steve
+	Ingo
