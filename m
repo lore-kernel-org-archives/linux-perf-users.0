@@ -1,62 +1,128 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] Properly interpret indirect call in perf annotate.
-Date: Thu, 23 Aug 2018 11:12:19 -0300
-Message-ID: <20180823141219.GA4766@kernel.org>
-References: <bd1f3932-be2b-85f9-7582-111ee0a43b07@suse.cz>
+Subject: Re: [PATCH v1 1/2]: perf util: map data buffer for preserving
+ collected data
+Date: Thu, 23 Aug 2018 11:30:05 -0300
+Message-ID: <20180823143005.GB4766@kernel.org>
+References: <1c3fd88f-c408-2863-15b3-221829f3d383@linux.intel.com>
+ <e2c4db6b-555b-c029-5c35-986a90b284fe@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bd1f3932-be2b-85f9-7582-111ee0a43b07@suse.cz>
+In-Reply-To: <e2c4db6b-555b-c029-5c35-986a90b284fe@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Cc: linux-perf-users@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Aug 23, 2018 at 02:29:34PM +0200, Martin Liška escreveu:
-> The patch changes interpretation of:
-> callq  *0x8(%rbx)
-> 
-> from:
->   0.26 │     → callq  *8
-> to:
->   0.26 │     → callq  *0x8(%rbx)
-> 
-> in this can an address is followed by a register, thus
-> one can't parse only address.
+Em Thu, Aug 23, 2018 at 01:30:47PM +0300, Alexey Budankov escreveu:
+> +++ b/tools/perf/util/evlist.c
+> @@ -718,6 +718,8 @@ static void perf_evlist__munmap_nofree(struct perf_evlist *evlist)
+>  void perf_evlist__munmap(struct perf_evlist *evlist)
+>  {
+>  	perf_evlist__munmap_nofree(evlist);
+> +	if (&evlist->mmap_aio)
 
-Please mention one or two functions where such sequence appears, so that
-others can reproduce your before/after more quickly,
+Is the above test for evlist->mmap_aio being NULL? I think that '&' is
+not needed here, with it this test will always be true, right?
 
-- Arnaldo
- 
-> Signed-off-by: Martin Liška <mliska@suse.cz>
-> ---
->  tools/perf/util/annotate.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> 
+> +		zfree(&evlist->mmap_aio);
 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index e4268b948e0e..e32ead4744bd 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -246,8 +246,14 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
->  
->  indirect_call:
->  	tok = strchr(endptr, '*');
-> -	if (tok != NULL)
-> -		ops->target.addr = strtoull(tok + 1, NULL, 16);
-> +	if (tok != NULL) {
-> +		endptr++;
+>  	zfree(&evlist->mmap);
+>  	zfree(&evlist->overwrite_mmap);
+>  }
+> @@ -749,6 +751,13 @@ static struct perf_mmap *perf_evlist__alloc_mmap(struct perf_evlist *evlist,
+>  		 */
+>  		refcount_set(&map[i].refcnt, 0);
+>  	}
 > +
-> +		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
-> +		 * Do not parse such instruction.  */
-> +		if (strstr(endptr, "(%r") == NULL)
-> +			ops->target.addr = strtoull(endptr, NULL, 16);
+> +	evlist->mmap_aio = zalloc(evlist->nr_mmaps * sizeof(struct aiocb *));
+
+Right, and here you could have used calloc(evlist->nr_mmaps, sizeof(struct aiocb *))
+
+> +	if (!evlist->mmap_aio) {
+> +		zfree(&map);
+
+If you use zfree(&map); then map becomes NULL and you do not return NULL
+in the next line, if you insist in using the following 'return NULL;',
+then you could as well use just 'free(map);', as 'map' is a local
+variable and thus we need not set it to NULL :-)
+
+> +		return NULL;
 > +	}
->  	goto find_target;
+> +
+>  	return map;
 >  }
 >  
-> 
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index dc66436add98..f98b949561fd 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -15,6 +15,7 @@
+>  #include "util.h"
+>  #include <signal.h>
+>  #include <unistd.h>
+> +#include <aio.h>
+>  
+>  struct pollfd;
+>  struct thread_map;
+> @@ -43,6 +44,7 @@ struct perf_evlist {
+>  	} workload;
+>  	struct fdarray	 pollfd;
+>  	struct perf_mmap *mmap;
+> +	struct aiocb	 **mmap_aio;
+>  	struct perf_mmap *overwrite_mmap;
+>  	struct thread_map *threads;
+>  	struct cpu_map	  *cpus;
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index fc832676a798..e71d46cb01cc 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -155,6 +155,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
+>  
+>  void perf_mmap__munmap(struct perf_mmap *map)
+>  {
+> +	if (map->data != NULL) {
+> +		munmap(map->data, perf_mmap__mmap_len(map));
+> +		map->data = NULL;
+> +	}
+>  	if (map->base != NULL) {
+>  		munmap(map->base, perf_mmap__mmap_len(map));
+>  		map->base = NULL;
+> @@ -190,6 +194,14 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd)
+>  		map->base = NULL;
+>  		return -1;
+>  	}
+> +	map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ | PROT_WRITE,
+> +			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> +	if (map->data == MAP_FAILED) {
+> +		pr_debug2("failed to mmap perf event data buffer, error %d\n",
+> +				errno);
+> +		map->data = NULL;
+> +		return -1;
+> +	}
+>  	map->fd = fd;
+>  
+>  	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
+> diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+> index d82294db1295..1974e621e36b 100644
+> --- a/tools/perf/util/mmap.h
+> +++ b/tools/perf/util/mmap.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/types.h>
+>  #include <asm/barrier.h>
+>  #include <stdbool.h>
+> +#include <aio.h>
+>  #include "auxtrace.h"
+>  #include "event.h"
+>  
+> @@ -25,6 +26,8 @@ struct perf_mmap {
+>  	bool		 overwrite;
+>  	struct auxtrace_mmap auxtrace_mmap;
+>  	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
+> +	void 		 *data;
+> +	struct aiocb	 cblock;
+>  };
+>  
+>  /*
+>  
