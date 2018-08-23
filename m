@@ -1,24 +1,73 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: Ping [PATCH v3] perf report: Create auxiliary trace data files
- for s390
-Date: Wed, 22 Aug 2018 10:14:38 -0300
-Message-ID: <20180822131438.GC2880@kernel.org>
-References: <20180822043739.100205-1-tmricht@linux.ibm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [BUGFIX PATCH] tracing/kprobes: Fix to check notrace function
+ with correct range
+Date: Thu, 23 Aug 2018 10:18:31 +0900
+Message-ID: <20180823101831.6997f36954257d79d3a15d51@kernel.org>
+References: <20180821212448.d20ea26fa998b206adf4ece6@kernel.org>
+        <153485669706.16611.17726752296213785504.stgit@devbox>
+        <20180821094249.3fea76bb@gandalf.local.home>
+        <20180822085809.01da04b0@gandalf.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180822043739.100205-1-tmricht@linux.ibm.com>
+In-Reply-To: <20180822085809.01da04b0@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Francis Deslauriers <francis.deslauriers@efficios.com>, peterz@infradead.org, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, Michael Rodin <michael@rodin.online>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Aug 22, 2018 at 06:37:39AM +0200, Thomas Richter escreveu:
-> Create auxiliary trace data log files when invoked with option
->  --itrace=d as in
+On Wed, 22 Aug 2018 08:58:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks, applied to my local perf/core branch, should appear online after
-it goes thru testing together with the other changes I have queued up.
+> On Tue, 21 Aug 2018 09:42:49 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 21 Aug 2018 22:04:57 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > Fix within_notrace_func() to check notrace function correctly.
+> > > 
+> > > Since the ftrace_location_range(start, end) function checks
+> > > the range inclusively (start <= ftrace-loc <= end), the end
+> > > address must not include the entry address of next function.
+> > > 
+> > > However, within_notrace_func() uses kallsyms_lookup_size_offset()
+> > > to get the function size and calculate the end address from
+> > > adding the size to the entry address. This means the end address
+> > > is the entry address of the next function.
+> > > 
+> > > In the result, within_notrace_func() fails to find notrace
+> > > function if the next function of the target function is
+> > > ftraced.
+> > > 
+> > > Let's subtract 1 from the end address so that ftrace_location_range()
+> > > can check it correctly.
+> > > 
+> > > Fixes: commit 45408c4f9250 ("tracing: kprobes: Prohibit probing on notrace function")
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Reported-by: Michael Rodin <michael@rodin.online>
+> > > ---
+> > >  
+> > 
+> > Applied. Thanks Masami! I'll start testing this and send it upstream
+> > when it's finished.
+> > 
+> 
+> Hmm, this fix shows the extent of not tracing functions with notrace
+> attched much deeper. For one thing, we can't hook kprobes to the
+> __schedule() function (which is now what all the main schedule
+> functions call). One of my tests used this function to test kprobes and
+> it failed.
+> 
+> I'll push this to Linus, but I'm wondering if we want to perhaps add a
+> white list of functions marked "notrace" but still kprobes can trace?
 
-- Arnaldo
+Yes, that is what I'm thinking about. Maybe most of notrace function is
+safe for kprobes (like __schedule()). And if it is really critical, those
+functions must be marked by NOKPROBE_SYMBOL().
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
