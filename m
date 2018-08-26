@@ -1,38 +1,67 @@
-From: Kim Phillips <kim.phillips@arm.com>
-Subject: Re: [PATCH] perf annotate: fix parsing aarch64 branch instructions
- after objdump update
-Date: Fri, 24 Aug 2018 16:45:06 -0500
-Message-ID: <20180824164506.aa6e54bceb1ffb7b3dc70733@arm.com>
-References: <20180823191047.9260992844205984b75e6721@arm.com>
-        <18abf031-f803-b8e6-129e-ed50c63e73d0@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v1 2/2]: perf record: enable asynchronous trace writing
+Date: Sun, 26 Aug 2018 23:48:56 +0200
+Message-ID: <20180826214856.GA24518@krava>
+References: <dcd3ee88-57d6-8704-f5e1-7a3c75a17d8d@linux.intel.com>
+ <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <18abf031-f803-b8e6-129e-ed50c63e73d0@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Anton Blanchard <anton@samba.org>, Robin Murphy <robin.murphy@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, perf group <linux-perf-users@vger.kernel.org>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, 24 Aug 2018 09:59:22 +0200
-Thomas-Mich Richter <tmricht@linux.ibm.com> wrote:
+On Tue, Aug 21, 2018 at 11:27:03AM +0300, Alexey Budankov wrote:
 
-> On 08/24/2018 02:10 AM, Kim Phillips wrote:
-> > Tested no difference in output for sample x86_64, power arch perf.data files.
-> 
-> Tested,  no difference in output on s390. Just to let you know.
+SNIP
 
-Thanks!  An official Tested-by: tag would help keep acme from guessing
-whether he should convert these less-officially sounding types of
-emails in the future.  I doubt your official Tested-by implies you
-necessarily have had to claim you fully tested it on e.g., x86-64, esp.
-if your Tested-by is in such context as provided above.
+> -static int record__pushfn(void *to, void *bf, size_t size)
+> +static int record__pushfn(void *to, void *bf, size_t size, off_t off)
+>  {
+>  	struct record *rec = to;
+> +	struct perf_mmap *map = bf;
+>  
+>  	rec->samples++;
+> -	return record__write(rec, bf, size);
+> +	return record__aio_write(rec->session->data->file.fd, &map->cblock,
+> +			map->data, size, off);
+>  }
+>  
+>  static volatile int done;
+> @@ -528,13 +530,85 @@ static struct perf_event_header finished_round_event = {
+>  	.type = PERF_RECORD_FINISHED_ROUND,
+>  };
+>  
+> +static int record__mmap_read_sync(int trace_fd, struct aiocb **cblocks,
+> +		int cblocks_size, struct record *rec)
+> +{
+> +	size_t rem;
+> +	ssize_t size;
+> +	off_t rem_off;
+> +	int i, aio_ret, aio_errno, do_suspend;
+> +	struct perf_mmap *md;
+> +	struct timespec timeout0 = { 0, 0 };
+> +	struct timespec timeoutS = { 0, 1000 * 500  * 1 };
+> +
+> +	if (!cblocks_size)
+> +		return 0;
+> +
+> +	do {
+> +		do_suspend = 0;
+> +		nanosleep(&timeoutS, NULL);
 
-BTW, if you want to send me an s390 perf.data file and the file
-resulting from 'perf archive', and a matching vmlinux in an off-list
-email, I can add it to my perf-archives arsenal for future testing.
+why the extra sleep in here and not sleeping through aio_suspend call?
 
-Again, thanks for testing!
+jirka
 
-Kim
+> +		if (aio_suspend((const struct aiocb**)cblocks, cblocks_size, &timeout0)) {
+> +			if (errno == EAGAIN || errno == EINTR) {
+> +				do_suspend = 1;
+> +				continue;
+> +			} else {
+> +				pr_err("failed to sync perf data, error: %m\n");
+
+SNIP
