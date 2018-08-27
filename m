@@ -1,78 +1,54 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
 Subject: Re: [PATCH v2 1/2]: perf util: map data buffer for preserving
  collected data
-Date: Mon, 27 Aug 2018 11:58:56 +0300
-Message-ID: <e4a206a2-882b-c37f-e68d-80e7ed39596a@linux.intel.com>
+Date: Mon, 27 Aug 2018 12:02:35 +0300
+Message-ID: <2284a8e8-d90e-bd99-89c1-0b125ba2e205@linux.intel.com>
 References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
  <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
- <20180827082819.GC24695@krava>
+ <20180827083303.GD24695@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827082819.GC24695@krava>
+In-Reply-To: <20180827083303.GD24695@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Jiri,
+Hi,
 
-On 27.08.2018 11:28, Jiri Olsa wrote:
+On 27.08.2018 11:33, Jiri Olsa wrote:
 > On Thu, Aug 23, 2018 at 07:42:09PM +0300, Alexey Budankov wrote:
->>
->> The data buffer and accompanying AIO control block are allocated at 
->> perf_mmap object and the mapped data buffer size is equal to 
->> the kernel one.
->>
->> The buffer is then used to preserve profiling data ready for dumping 
->> and queue it for asynchronous writing into perf trace thru implemented 
->> record__aio_write() function.
->>
->> mmap_aio control structure of the size equal to the number of per-cpu 
->> kernel buffers is used to keep pointers to enqueued AIO control 
->> blocks for monitoring of completed AIO operations.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->> Changes in v2:
->> - converted zalloc() to calloc() for allocation of mmap_aio array,
->> - cleared typo and adjusted fallback branch code;
->> ---
->> tools/perf/builtin-record.c | 18 ++++++++++++++++++
->>  tools/perf/util/evlist.c    |  7 +++++++
->>  tools/perf/util/evlist.h    |  2 ++
->>  tools/perf/util/mmap.c      | 12 ++++++++++++
->>  tools/perf/util/mmap.h      |  3 +++
->>  5 files changed, 42 insertions(+)
->>
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 22ebeb92ac51..a35675e9f3aa 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -53,6 +53,7 @@
->>  #include <sys/mman.h>
->>  #include <sys/wait.h>
->>  #include <linux/time64.h>
->> +#include <aio.h>
->>  
->>  struct switch_output {
->>  	bool		 enabled;
->> @@ -121,6 +122,23 @@ static int record__write(struct record *rec, void *bf, size_t size)
->>  	return 0;
->>  }
->>  
->> +static int record__aio_write(int trace_fd, struct aiocb *cblock,
->> +		void *buf, size_t size, off_t off)
->> +{
 > 
-> this breaks bisection:
+> SNIP
 > 
-> builtin-record.c:125:12: error: ‘record__aio_write’ defined but not used [-Werror=unused-function]
->  static int record__aio_write(int trace_fd, struct aiocb *cblock,
+>> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+>> index fc832676a798..e71d46cb01cc 100644
+>> --- a/tools/perf/util/mmap.c
+>> +++ b/tools/perf/util/mmap.c
+>> @@ -155,6 +155,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
+>>  
+>>  void perf_mmap__munmap(struct perf_mmap *map)
+>>  {
+>> +	if (map->data != NULL) {
+>> +		munmap(map->data, perf_mmap__mmap_len(map));
+>> +		map->data = NULL;
+>> +	}
+>>  	if (map->base != NULL) {
+>>  		munmap(map->base, perf_mmap__mmap_len(map));
+>>  		map->base = NULL;
+>> @@ -190,6 +194,14 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd)
+>>  		map->base = NULL;
+>>  		return -1;
+>>  	}
+>> +	map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ | PROT_WRITE,
+>> +			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> 
+> hum, why does map->data need to be mmap-ed?
 
-Moving it to [PATCH v3 2/2]. Thanks!
+The same way as for kernel buffers. If you see better alternatives it could be applied.
 
 > 
 > jirka
