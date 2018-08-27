@@ -1,15 +1,15 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
-Date: Mon, 27 Aug 2018 12:12:34 +0300
-Message-ID: <8afd6aaf-45ec-e477-78bd-83b6c99da713@linux.intel.com>
-References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
- <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
- <20180827083457.GE24695@krava>
+Subject: Re: [PATCH v1 2/2]: perf record: enable asynchronous trace writing
+Date: Mon, 27 Aug 2018 12:20:50 +0300
+Message-ID: <3a8286ff-124f-fb56-1d1c-5d5e1f3b8512@linux.intel.com>
+References: <dcd3ee88-57d6-8704-f5e1-7a3c75a17d8d@linux.intel.com>
+ <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
+ <20180826214856.GA24518@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827083457.GE24695@krava>
+In-Reply-To: <20180826214856.GA24518@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
@@ -18,58 +18,72 @@ List-Id: linux-perf-users.vger.kernel.org
 
 Hi,
 
-On 27.08.2018 11:34, Jiri Olsa wrote:
-> On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
+On 27.08.2018 0:48, Jiri Olsa wrote:
+> On Tue, Aug 21, 2018 at 11:27:03AM +0300, Alexey Budankov wrote:
 > 
 > SNIP
 > 
->> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
->> index e71d46cb01cc..c8b921c88a5d 100644
->> --- a/tools/perf/util/mmap.c
->> +++ b/tools/perf/util/mmap.c
->> @@ -292,11 +292,11 @@ int perf_mmap__read_init(struct perf_mmap *map)
+>> -static int record__pushfn(void *to, void *bf, size_t size)
+>> +static int record__pushfn(void *to, void *bf, size_t size, off_t off)
+>>  {
+>>  	struct record *rec = to;
+>> +	struct perf_mmap *map = bf;
+>>  
+>>  	rec->samples++;
+>> -	return record__write(rec, bf, size);
+>> +	return record__aio_write(rec->session->data->file.fd, &map->cblock,
+>> +			map->data, size, off);
 >>  }
 >>  
->>  int perf_mmap__push(struct perf_mmap *md, void *to,
->> -		    int push(void *to, void *buf, size_t size))
->> +		    int push(void *to, void *buf, size_t size, off_t), off_t *off)
->>  {
->>  	u64 head = perf_mmap__read_head(md);
->>  	unsigned char *data = md->base + page_size;
->> -	unsigned long size;
->> +	unsigned long size, size0 = 0;
->>  	void *buf;
->>  	int rc = 0;
+>>  static volatile int done;
+>> @@ -528,13 +530,85 @@ static struct perf_event_header finished_round_event = {
+>>  	.type = PERF_RECORD_FINISHED_ROUND,
+>>  };
 >>  
->> @@ -308,23 +308,22 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
->>  
->>  	if ((md->start & md->mask) + size != (md->end & md->mask)) {
->>  		buf = &data[md->start & md->mask];
->> -		size = md->mask + 1 - (md->start & md->mask);
->> -		md->start += size;
->> -
->> -		if (push(to, buf, size) < 0) {
->> -			rc = -1;
->> -			goto out;
->> -		}
->> +		size0 = md->mask + 1 - (md->start & md->mask);
->> +		md->start += size0;
->> +		memcpy(md->data, buf, size0);
->>  	}
->>  
->>  	buf = &data[md->start & md->mask];
->>  	size = md->end - md->start;
->>  	md->start += size;
->> +	memcpy(md->data + size0, buf, size);
+>> +static int record__mmap_read_sync(int trace_fd, struct aiocb **cblocks,
+>> +		int cblocks_size, struct record *rec)
+>> +{
+>> +	size_t rem;
+>> +	ssize_t size;
+>> +	off_t rem_off;
+>> +	int i, aio_ret, aio_errno, do_suspend;
+>> +	struct perf_mmap *md;
+>> +	struct timespec timeout0 = { 0, 0 };
+>> +	struct timespec timeoutS = { 0, 1000 * 500  * 1 };
+>> +
+>> +	if (!cblocks_size)
+>> +		return 0;
+>> +
+>> +	do {
+>> +		do_suspend = 0;
+>> +		nanosleep(&timeoutS, NULL);
 > 
-> this will need more comments.. and explanation why we copy the data
-> over to another buffer.. it's interesting, it's still faster 
+> why the extra sleep in here and not sleeping through aio_suspend call?
 
-Sure. Comments will follow in v3. 
-We copy data into a buffer to release space in the kernel buffer 
-as fast as possible. That lets the kernel to store more data earlier 
-than other per-cpu buffers are handled.
+Yep. Good question. That requires explicit explanation:
+
++               /* aio_suspend() implementation inside glibc (as of v2.27) is
++                * intrusive and not just blocks waiting io requests completion
++                * but polls requests queue inducing context switches in perf
++                * tool process. When profiling in system wide mode with tracing
++                * context switches the trace may be polluted by context switches
++                * from the perf process and the trace size becomes about 3-5
++                * times bigger than that of when writing the trace serially.
++                * To limit the volume of context switches from perf tool
++                * process nonsleep() call limits aio_suspend()
++                * polling till every half of the kernel timer tick which is
++                * usually 1ms (depends on CONFIG_HZ value).
++                */
 
 > 
 > jirka
+> 
+>> +		if (aio_suspend((const struct aiocb**)cblocks, cblocks_size, &timeout0)) {
+>> +			if (errno == EAGAIN || errno == EINTR) {
+>> +				do_suspend = 1;
+>> +				continue;
+>> +			} else {
+>> +				pr_err("failed to sync perf data, error: %m\n");
+> 
+> SNIP
 > 
