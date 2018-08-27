@@ -1,96 +1,158 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
-Date: Mon, 27 Aug 2018 13:48:19 +0300
-Message-ID: <2b595b40-fe31-2ced-6077-e972e4aaf561@linux.intel.com>
-References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
- <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
- <20180827083852.GF24695@krava>
- <a34aa784-e36c-02fd-3e9d-7df4bc61ffe2@linux.intel.com>
- <20180827100536.GA8065@sejong>
- <3c0a8ecc-a68e-7e19-066c-096f7e318e1f@linux.intel.com>
- <20180827103819.GB3725@krava>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf annotate: fix parsing aarch64 branch instructions
+ after objdump update
+Date: Mon, 27 Aug 2018 09:50:49 -0300
+Message-ID: <20180827125049.GD22309@kernel.org>
+References: <20180823191047.9260992844205984b75e6721@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827103819.GB3725@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180823191047.9260992844205984b75e6721@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, kernel-team@lge.com
+To: Kim Phillips <kim.phillips@arm.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Anton Blanchard <anton@samba.org>, Robin Murphy <robin.murphy@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, perf group <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-On 27.08.2018 13:38, Jiri Olsa wrote:
-> On Mon, Aug 27, 2018 at 01:25:35PM +0300, Alexey Budankov wrote:
->> Hi Namhyung,
->>
->> On 27.08.2018 13:05, Namhyung Kim wrote:
->>> Hello,
->>>
->>> On Mon, Aug 27, 2018 at 12:33:07PM +0300, Alexey Budankov wrote:
->>>> Hi,
->>>>
->>>> On 27.08.2018 11:38, Jiri Olsa wrote:
->>>>> On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
->>>>>
->>>>> SNIP
->>>>>
->>>>>>  static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
->>>>>>  				    bool overwrite)
->>>>>>  {
->>>>>>  	u64 bytes_written = rec->bytes_written;
->>>>>> -	int i;
->>>>>> -	int rc = 0;
->>>>>> +	int i, rc = 0;
->>>>>>  	struct perf_mmap *maps;
->>>>>> +	int trace_fd = rec->session->data->file.fd;
->>>>>> +	struct aiocb **mmap_aio = rec->evlist->mmap_aio;
->>>>>> +	int mmap_aio_size = 0;
->>>>>> +	off_t off;
->>>>>>  
->>>>>>  	if (!evlist)
->>>>>>  		return 0;
->>>>>> @@ -546,14 +620,17 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
->>>>>>  	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
->>>>>>  		return 0;
->>>>>>  Hi
->>>>>> +	off = lseek(trace_fd, 0, SEEK_CUR);
->>>>>> +
->>>>>
->>>>> with async write, do we need to query/set the offset like this
->>>>> all the time?
->>>>
->>>> It looks like we need it this way. Internally glibc AIO implements writes 
->>>> using pwrite64 syscall in our case. The sycall requires offset as a parameter 
->>>> and doesn't update file position on the completion.
->>>>
->>>>>
->>>>> could we just keep/update the offset value in the 'struct perf_data_file'
->>>>> and skip both lseek calls?
->>>>
->>>> Don't see how it is possible. offset is different for every enqeued write 
->>>> operation and write areas don't intersect for the whole writing loop. 
->>>> To know the final file position it is required to iterate thru 
->>>> the loop.
->>>
->>> But as far as I can see the offset is linearly updated in
->>> perf_mmap__push() and I guess those two lseek() calls will return
->>> a same value as the last updated offset, no?
->>
->> Yes, offset is linearly calculated by perf_mmap__push() code for 
->> the next possible write operation, but file position is update by 
->> the kernel only in the second lseek() syscall after the loop. 
->> The first lseek() syscall reads that file position for 
->> the next loop iterations.
+Em Thu, Aug 23, 2018 at 07:10:47PM -0500, Kim Phillips escreveu:
+> Starting with binutils 2.28, aarch64 objdump adds comments to the
+> disassembly output to show the alternative names of a condition code [1].
 > 
-> does the file's offset need to get updated with lseek at all?
-> the async write gets offset.. so I'd think as long as we keep
-> offset value, we don't need to call lseek at all
-
-Yep, I expected the same from pwrite64() syscall which eventually 
-gets this offset but that is not the case.
-
+> It is assumed that commas in objdump comments could occur in other arches
+> now or in the future, so this fix is arch-independent.
 > 
-> jirka
+> The fix could have been done with arm64 specific jump__parse and
+> jump__scnprintf functions, but the jump__scnprintf instruction would
+> have to have its comment character be a literal, since the scnprintf
+> functions cannot receive a struct arch easily.
 > 
+> This inconvenience also applies to the generic jump__scnprintf, which
+> is why we add a raw_comment pointer to struct ins_operands, so the
+> __parse function assigns it to be re-used by its corresponding __scnprintf
+> function.
+> 
+> Example differences in 'perf annotate --stdio2' output on an
+> aarch64 perf.data file:
+> 
+> BEFORE: → b.cs   ffff200008133d1c <unwind_frame+0x18c>  // b.hs, dffff7ecc47b
+> AFTER : ↓ b.cs   18c
+> 
+> BEFORE: → b.cc   ffff200008d8d9cc <get_alloc_profile+0x31c>  // b.lo, b.ul, dffff727295b
+> AFTER : ↓ b.cc   31c
+> 
+> The branch target labels 18c and 31c also now appear in the output:
+> 
+> BEFORE:        add    x26, x29, #0x80
+> AFTER : 18c:   add    x26, x29, #0x80
+> 
+> BEFORE:        add    x21, x21, #0x8
+> AFTER : 31c:   add    x21, x21, #0x8
+> 
+> The Fixes: tag below is added so stable branches will get the update; it
+> doesn't necessarily mean that commit was broken at the time, rather it
+> didn't withstand the aarch64 objdump update.
+> 
+> Tested no difference in output for sample x86_64, power arch perf.data files.
+> 
+> [1] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=bb7eff5206e4795ac79c177a80fe9f4630aaf730
+> 
+> Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+> Cc: Anton Blanchard <anton@samba.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Taeung Song <treeze.taeung@gmail.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Fixes: b13bbeee5ee6 ("perf annotate: Fix branch instruction with multiple operands")
+> Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+> ---
+>  tools/perf/util/annotate.c | 17 ++++++++++++++++-
+>  tools/perf/util/annotate.h |  1 +
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index e32ead4744bd..b83897dafbb0 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -282,7 +282,8 @@ bool ins__is_call(const struct ins *ins)
+>  	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
+>  }
+>  
+> -static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *ops, struct map_symbol *ms)
+> +static int jump__parse(struct arch *arch, struct ins_operands *ops,
+> +		       struct map_symbol *ms)
+
+Try to refrain from reflowing, what you need to do here is just to
+remove that __maybe_unused.
+
+>  {
+>  	struct map *map = ms->map;
+>  	struct symbol *sym = ms->sym;
+> @@ -291,6 +292,15 @@ static int jump__parse(struct arch *arch __maybe_unused, struct ins_operands *op
+>  	};
+>  	const char *c = strchr(ops->raw, ',');
+>  	u64 start, end;
+> +
+> +	/*
+> +	 * Prevent from matching commas in the comment section, e.g.:
+> +	 * ffff200008446e70:       b.cs    ffff2000084470f4 <generic_exec_single+0x314>  // b.hs, b.nlast
+> +	 */
+> +	ops->raw_comment = strchr(ops->raw, arch->objdump.comment_char);
+> +	if (c && ops->raw_comment && c > ops->raw_comment)
+> +		c = NULL;
+> +
+>  	/*
+>  	 * Examples of lines to parse for the _cpp_lex_token@@Base
+>  	 * function:
+> @@ -367,6 +377,11 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+>  		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
+>  
+>  	c = strchr(ops->raw, ',');
+> +
+> +	/* Prevent from matching commas in the comment section */
+> +	if (ops->raw_comment && c && c > ops->raw_comment)
+> +		c = NULL;
+
+This is equivalent to the previous test, but why do it differently?
+
+Since both are open coded equivalents, why not do something like:
+
+	c = validate_comma(c, ops);
+
+That would translate to:
+
+static inline const char *validate_comma(const char *c, ops)
+{
+	return c > ops->raw_comment ? NULL : c;
+}
+
+Which should be a third equivalent form to check if c, having been
+found, is after ops->raw_comment, if there is a raw_comment?
+
+- Arnaldo
+
+> +
+>  	if (c != NULL) {
+>  		const char *c2 = strchr(c + 1, ',');
+>  
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 005a5fe8a8c6..5399ba2321bb 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -22,6 +22,7 @@ struct ins {
+>  
+>  struct ins_operands {
+>  	char	*raw;
+> +	char	*raw_comment;
+>  	struct {
+>  		char	*raw;
+>  		char	*name;
+> -- 
+> 2.17.1
