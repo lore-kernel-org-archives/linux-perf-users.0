@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
-Date: Mon, 27 Aug 2018 10:34:57 +0200
-Message-ID: <20180827083457.GE24695@krava>
+Date: Mon, 27 Aug 2018 10:38:52 +0200
+Message-ID: <20180827083852.GF24695@krava>
 References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
  <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
 Mime-Version: 1.0
@@ -18,46 +18,40 @@ On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
 
 SNIP
 
-> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> index e71d46cb01cc..c8b921c88a5d 100644
-> --- a/tools/perf/util/mmap.c
-> +++ b/tools/perf/util/mmap.c
-> @@ -292,11 +292,11 @@ int perf_mmap__read_init(struct perf_mmap *map)
->  }
->  
->  int perf_mmap__push(struct perf_mmap *md, void *to,
-> -		    int push(void *to, void *buf, size_t size))
-> +		    int push(void *to, void *buf, size_t size, off_t), off_t *off)
+>  static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+>  				    bool overwrite)
 >  {
->  	u64 head = perf_mmap__read_head(md);
->  	unsigned char *data = md->base + page_size;
-> -	unsigned long size;
-> +	unsigned long size, size0 = 0;
->  	void *buf;
->  	int rc = 0;
+>  	u64 bytes_written = rec->bytes_written;
+> -	int i;
+> -	int rc = 0;
+> +	int i, rc = 0;
+>  	struct perf_mmap *maps;
+> +	int trace_fd = rec->session->data->file.fd;
+> +	struct aiocb **mmap_aio = rec->evlist->mmap_aio;
+> +	int mmap_aio_size = 0;
+> +	off_t off;
 >  
-> @@ -308,23 +308,22 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+>  	if (!evlist)
+>  		return 0;
+> @@ -546,14 +620,17 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+>  	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
+>  		return 0;
 >  
->  	if ((md->start & md->mask) + size != (md->end & md->mask)) {
->  		buf = &data[md->start & md->mask];
-> -		size = md->mask + 1 - (md->start & md->mask);
-> -		md->start += size;
-> -
-> -		if (push(to, buf, size) < 0) {
-> -			rc = -1;
-> -			goto out;
-> -		}
-> +		size0 = md->mask + 1 - (md->start & md->mask);
-> +		md->start += size0;
-> +		memcpy(md->data, buf, size0);
->  	}
->  
->  	buf = &data[md->start & md->mask];
->  	size = md->end - md->start;
->  	md->start += size;
-> +	memcpy(md->data + size0, buf, size);
+> +	off = lseek(trace_fd, 0, SEEK_CUR);
+> +
 
-this will need more comments.. and explanation why we copy the data
-over to another buffer.. it's interesting, it's still faster 
+with async write, do we need to query/set the offset like this
+all the time?
+
+could we just keep/update the offset value in the 'struct perf_data_file'
+and skip both lseek calls?
 
 jirka
+
+SNIP
+
+>  
+> +	record__mmap_read_sync(trace_fd, mmap_aio, mmap_aio_size, rec);
+> +
+> +	lseek(trace_fd, off, SEEK_SET);
+> +
