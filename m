@@ -1,46 +1,63 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2 1/2]: perf util: map data buffer for preserving
- collected data
-Date: Mon, 27 Aug 2018 10:33:03 +0200
-Message-ID: <20180827083303.GD24695@krava>
+Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
+Date: Mon, 27 Aug 2018 10:34:57 +0200
+Message-ID: <20180827083457.GE24695@krava>
 References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
- <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
+ <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
+In-Reply-To: <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Aug 23, 2018 at 07:42:09PM +0300, Alexey Budankov wrote:
+On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
 
 SNIP
 
 > diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> index fc832676a798..e71d46cb01cc 100644
+> index e71d46cb01cc..c8b921c88a5d 100644
 > --- a/tools/perf/util/mmap.c
 > +++ b/tools/perf/util/mmap.c
-> @@ -155,6 +155,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
+> @@ -292,11 +292,11 @@ int perf_mmap__read_init(struct perf_mmap *map)
+>  }
 >  
->  void perf_mmap__munmap(struct perf_mmap *map)
+>  int perf_mmap__push(struct perf_mmap *md, void *to,
+> -		    int push(void *to, void *buf, size_t size))
+> +		    int push(void *to, void *buf, size_t size, off_t), off_t *off)
 >  {
-> +	if (map->data != NULL) {
-> +		munmap(map->data, perf_mmap__mmap_len(map));
-> +		map->data = NULL;
-> +	}
->  	if (map->base != NULL) {
->  		munmap(map->base, perf_mmap__mmap_len(map));
->  		map->base = NULL;
-> @@ -190,6 +194,14 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd)
->  		map->base = NULL;
->  		return -1;
+>  	u64 head = perf_mmap__read_head(md);
+>  	unsigned char *data = md->base + page_size;
+> -	unsigned long size;
+> +	unsigned long size, size0 = 0;
+>  	void *buf;
+>  	int rc = 0;
+>  
+> @@ -308,23 +308,22 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+>  
+>  	if ((md->start & md->mask) + size != (md->end & md->mask)) {
+>  		buf = &data[md->start & md->mask];
+> -		size = md->mask + 1 - (md->start & md->mask);
+> -		md->start += size;
+> -
+> -		if (push(to, buf, size) < 0) {
+> -			rc = -1;
+> -			goto out;
+> -		}
+> +		size0 = md->mask + 1 - (md->start & md->mask);
+> +		md->start += size0;
+> +		memcpy(md->data, buf, size0);
 >  	}
-> +	map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ | PROT_WRITE,
-> +			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>  
+>  	buf = &data[md->start & md->mask];
+>  	size = md->end - md->start;
+>  	md->start += size;
+> +	memcpy(md->data + size0, buf, size);
 
-hum, why does map->data need to be mmap-ed?
+this will need more comments.. and explanation why we copy the data
+over to another buffer.. it's interesting, it's still faster 
 
 jirka
