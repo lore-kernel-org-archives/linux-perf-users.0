@@ -1,163 +1,75 @@
-From: =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-Subject: Re: [PATCH] Properly interpret indirect call in perf annotate.
-Date: Mon, 27 Aug 2018 11:06:21 +0200
-Message-ID: <64684c59-492c-3310-a5d2-14b467602acc@suse.cz>
-References: <bd1f3932-be2b-85f9-7582-111ee0a43b07@suse.cz>
- <20180823141219.GA4766@kernel.org>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
+Date: Mon, 27 Aug 2018 12:12:34 +0300
+Message-ID: <8afd6aaf-45ec-e477-78bd-83b6c99da713@linux.intel.com>
+References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
+ <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
+ <20180827083457.GE24695@krava>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------8F122A30081B3AC6B8DE1ED1"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180823141219.GA4766@kernel.org>
+In-Reply-To: <20180827083457.GE24695@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------8F122A30081B3AC6B8DE1ED1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Hi,
 
-On 08/23/2018 04:12 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Aug 23, 2018 at 02:29:34PM +0200, Martin Liška escreveu:
->> The patch changes interpretation of:
->> callq  *0x8(%rbx)
->>
->> from:
->>   0.26 │     → callq  *8
->> to:
->>   0.26 │     → callq  *0x8(%rbx)
->>
->> in this can an address is followed by a register, thus
->> one can't parse only address.
+On 27.08.2018 11:34, Jiri Olsa wrote:
+> On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
 > 
-> Please mention one or two functions where such sequence appears, so that
-> others can reproduce your before/after more quickly,
-
-Sure, there's self-contained example on can compile (-O2) and test.
-It's following call in test function:
-
-test:
-.LFB1:
-        .cfi_startproc
-        movq    %rdi, %rax
-        subq    $8, %rsp
-        .cfi_def_cfa_offset 16
-        movq    %rsi, %rdi
-        movq    %rdx, %rsi
-        call    *8(%rax) <---- here
-        cmpl    $1, %eax
-        adcl    $-1, %eax
-        addq    $8, %rsp
-        .cfi_def_cfa_offset 8
-        ret
-        .cfi_endproc
-
-Martin
-
+> SNIP
 > 
-> - Arnaldo
->  
->> Signed-off-by: Martin Liška <mliska@suse.cz>
->> ---
->>  tools/perf/util/annotate.c | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->>
-> 
->> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
->> index e4268b948e0e..e32ead4744bd 100644
->> --- a/tools/perf/util/annotate.c
->> +++ b/tools/perf/util/annotate.c
->> @@ -246,8 +246,14 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
->>  
->>  indirect_call:
->>  	tok = strchr(endptr, '*');
->> -	if (tok != NULL)
->> -		ops->target.addr = strtoull(tok + 1, NULL, 16);
->> +	if (tok != NULL) {
->> +		endptr++;
->> +
->> +		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
->> +		 * Do not parse such instruction.  */
->> +		if (strstr(endptr, "(%r") == NULL)
->> +			ops->target.addr = strtoull(endptr, NULL, 16);
->> +	}
->>  	goto find_target;
+>> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+>> index e71d46cb01cc..c8b921c88a5d 100644
+>> --- a/tools/perf/util/mmap.c
+>> +++ b/tools/perf/util/mmap.c
+>> @@ -292,11 +292,11 @@ int perf_mmap__read_init(struct perf_mmap *map)
 >>  }
 >>  
->>
+>>  int perf_mmap__push(struct perf_mmap *md, void *to,
+>> -		    int push(void *to, void *buf, size_t size))
+>> +		    int push(void *to, void *buf, size_t size, off_t), off_t *off)
+>>  {
+>>  	u64 head = perf_mmap__read_head(md);
+>>  	unsigned char *data = md->base + page_size;
+>> -	unsigned long size;
+>> +	unsigned long size, size0 = 0;
+>>  	void *buf;
+>>  	int rc = 0;
+>>  
+>> @@ -308,23 +308,22 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+>>  
+>>  	if ((md->start & md->mask) + size != (md->end & md->mask)) {
+>>  		buf = &data[md->start & md->mask];
+>> -		size = md->mask + 1 - (md->start & md->mask);
+>> -		md->start += size;
+>> -
+>> -		if (push(to, buf, size) < 0) {
+>> -			rc = -1;
+>> -			goto out;
+>> -		}
+>> +		size0 = md->mask + 1 - (md->start & md->mask);
+>> +		md->start += size0;
+>> +		memcpy(md->data, buf, size0);
+>>  	}
+>>  
+>>  	buf = &data[md->start & md->mask];
+>>  	size = md->end - md->start;
+>>  	md->start += size;
+>> +	memcpy(md->data + size0, buf, size);
 > 
+> this will need more comments.. and explanation why we copy the data
+> over to another buffer.. it's interesting, it's still faster 
 
---------------8F122A30081B3AC6B8DE1ED1
-Content-Type: text/x-csrc;
- name="perf-callq.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="perf-callq.c"
+Sure. Comments will follow in v3. 
+We copy data into a buffer to release space in the kernel buffer 
+as fast as possible. That lets the kernel to store more data earlier 
+than other per-cpu buffers are handled.
 
-typedef int (*htab_eq) (const void *, const void *);
-
-static int eq (const void *a, const void *b)
-{
-  return a - b;
-}
-
-struct htab
-{
-  /* Current size (in entries) of the hash table */
-  int size;
-
-  /* Pointer to comparison function.  */
-  htab_eq eq_f;
-
-  /* Table itself.  */
-  void **entries;
-
-  /* Current number of elements including also deleted elements */
-  int n_elements;
-
-  /* Current number of deleted elements in the table */
-  int n_deleted;
-
-  /* The following member is used for debugging. Its value is number
-     of all calls of `htab_find_slot' for the hash table. */
-  unsigned int searches;
-
-  /* The following member is used for debugging.  Its value is number
-     of collisions fixed for time of work with the hash table. */
-  unsigned int collisions;
-
-  unsigned int max_size;
-
-  /* This is non-zero if we are allowed to return NULL for function calls
-     that allocate memory.  */
-  int return_allocation_failure;
-};
-
-int
-__attribute__ ((noinline))
-test(struct htab *t, int *a, int *b)
-{
-  int r = t->eq_f (a, b);
-  if (r)
-    return r - 1;
-
-  return 0;
-}
-
-struct htab mytable;
-int r;
-
-int main(int argc, char **argv)
-{
-  mytable.eq_f = &eq;
-  for (unsigned i = 0; i < 100000000; i++)
-    r += test (&mytable, &argc, &argc);
-  
-  return 0;
-}
-
---------------8F122A30081B3AC6B8DE1ED1--
+> 
+> jirka
+> 
