@@ -1,81 +1,72 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
 Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
-Date: Mon, 27 Aug 2018 12:45:38 +0300
-Message-ID: <2c525930-fbfd-2ea7-0b80-b67eff9b44cf@linux.intel.com>
+Date: Mon, 27 Aug 2018 19:05:36 +0900
+Message-ID: <20180827100536.GA8065@sejong>
 References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
  <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
- <20180827084333.GG24695@krava>
+ <20180827083852.GF24695@krava>
+ <a34aa784-e36c-02fd-3e9d-7df4bc61ffe2@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827084333.GG24695@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <a34aa784-e36c-02fd-3e9d-7df4bc61ffe2@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
+Hello,
 
-On 27.08.2018 11:43, Jiri Olsa wrote:
-> On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
+On Mon, Aug 27, 2018 at 12:33:07PM +0300, Alexey Budankov wrote:
+> Hi,
 > 
-> SNIP
+> On 27.08.2018 11:38, Jiri Olsa wrote:
+> > On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
+> > 
+> > SNIP
+> > 
+> >>  static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+> >>  				    bool overwrite)
+> >>  {
+> >>  	u64 bytes_written = rec->bytes_written;
+> >> -	int i;
+> >> -	int rc = 0;
+> >> +	int i, rc = 0;
+> >>  	struct perf_mmap *maps;
+> >> +	int trace_fd = rec->session->data->file.fd;
+> >> +	struct aiocb **mmap_aio = rec->evlist->mmap_aio;
+> >> +	int mmap_aio_size = 0;
+> >> +	off_t off;
+> >>  
+> >>  	if (!evlist)
+> >>  		return 0;
+> >> @@ -546,14 +620,17 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+> >>  	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
+> >>  		return 0;
+> >>  
+> >> +	off = lseek(trace_fd, 0, SEEK_CUR);
+> >> +
+> > 
+> > with async write, do we need to query/set the offset like this
+> > all the time?
 > 
->>  
->>  static volatile int done;
->> @@ -528,13 +530,85 @@ static struct perf_event_header finished_round_event = {
->>  	.type = PERF_RECORD_FINISHED_ROUND,
->>  };
->>  
->> +static int record__mmap_read_sync(int trace_fd, struct aiocb **cblocks,
->> +		int cblocks_size, struct record *rec)
->> +{
->> +	size_t rem;
->> +	ssize_t size;
->> +	off_t rem_off;
->> +	int i, aio_ret, aio_errno, do_suspend;
->> +	struct perf_mmap *md;
->> +	struct timespec timeout0 = { 0, 0 };
->> +	struct timespec timeoutS = { 0, 1000 * 1000  * 1 };
->> +
->> +	if (!cblocks_size)
->> +		return 0;
->> +
->> +	do {
->> +		do_suspend = 0;
->> +		nanosleep(&timeoutS, NULL);
->> +		if (aio_suspend((const struct aiocb**)cblocks, cblocks_size, &timeout0)) {
->> +			if (errno == EAGAIN || errno == EINTR) {
->> +				do_suspend = 1;
->> +				continue;
->> +			} else {
->> +				pr_err("failed to sync perf data, error: %m\n");
->> +				break;
->> +			}
->> +		}
->> +		for (i = 0; i < cblocks_size; i++) {
+> It looks like we need it this way. Internally glibc AIO implements writes 
+> using pwrite64 syscall in our case. The sycall requires offset as a parameter 
+> and doesn't update file position on the completion.
 > 
-> it looks like we could set up the async write to receive the signal
-> with the user pointer (sigev_value.sival_ptr), which would allow us
-> to get the finished descriptor right away and we wouldn't need
-> to iterate all of them and checking on them
+> > 
+> > could we just keep/update the offset value in the 'struct perf_data_file'
+> > and skip both lseek calls?
+> 
+> Don't see how it is possible. offset is different for every enqeued write 
+> operation and write areas don't intersect for the whole writing loop. 
+> To know the final file position it is required to iterate thru 
+> the loop.
 
-Yep. This mechanism is provided by AIO API, but we still need this kind of 
-synchronizing barrier to avoid memory races on mmap->data buffer between 
-calls of the loop in record__mmap_read_evlist().
+But as far as I can see the offset is linearly updated in
+perf_mmap__push() and I guess those two lseek() calls will return
+a same value as the last updated offset, no?
 
-> 
-> jirka
->> +			if (cblocks[i] == NULL) {
->> +				continue;
->> +			}
->> +			aio_errno = aio_error(cblocks[i]);
->> +			if (aio_errno == EINPROGRESS) {
->> +				do_suspend = 1;
->> +				continue;
->> +			}
-> 
-> SNIP
-> 
+Thanks,
+Namhyung
