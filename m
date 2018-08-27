@@ -1,67 +1,71 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v1 2/2]: perf record: enable asynchronous trace writing
-Date: Sun, 26 Aug 2018 23:48:56 +0200
-Message-ID: <20180826214856.GA24518@krava>
-References: <dcd3ee88-57d6-8704-f5e1-7a3c75a17d8d@linux.intel.com>
- <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
+Subject: Re: [PATCH v2 1/2]: perf util: map data buffer for preserving
+ collected data
+Date: Mon, 27 Aug 2018 10:28:19 +0200
+Message-ID: <20180827082819.GC24695@krava>
+References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
+ <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
+In-Reply-To: <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Aug 21, 2018 at 11:27:03AM +0300, Alexey Budankov wrote:
-
-SNIP
-
-> -static int record__pushfn(void *to, void *bf, size_t size)
-> +static int record__pushfn(void *to, void *bf, size_t size, off_t off)
->  {
->  	struct record *rec = to;
-> +	struct perf_mmap *map = bf;
+On Thu, Aug 23, 2018 at 07:42:09PM +0300, Alexey Budankov wrote:
+> 
+> The data buffer and accompanying AIO control block are allocated at 
+> perf_mmap object and the mapped data buffer size is equal to 
+> the kernel one.
+> 
+> The buffer is then used to preserve profiling data ready for dumping 
+> and queue it for asynchronous writing into perf trace thru implemented 
+> record__aio_write() function.
+> 
+> mmap_aio control structure of the size equal to the number of per-cpu 
+> kernel buffers is used to keep pointers to enqueued AIO control 
+> blocks for monitoring of completed AIO operations.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+> Changes in v2:
+> - converted zalloc() to calloc() for allocation of mmap_aio array,
+> - cleared typo and adjusted fallback branch code;
+> ---
+> tools/perf/builtin-record.c | 18 ++++++++++++++++++
+>  tools/perf/util/evlist.c    |  7 +++++++
+>  tools/perf/util/evlist.h    |  2 ++
+>  tools/perf/util/mmap.c      | 12 ++++++++++++
+>  tools/perf/util/mmap.h      |  3 +++
+>  5 files changed, 42 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 22ebeb92ac51..a35675e9f3aa 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -53,6 +53,7 @@
+>  #include <sys/mman.h>
+>  #include <sys/wait.h>
+>  #include <linux/time64.h>
+> +#include <aio.h>
 >  
->  	rec->samples++;
-> -	return record__write(rec, bf, size);
-> +	return record__aio_write(rec->session->data->file.fd, &map->cblock,
-> +			map->data, size, off);
+>  struct switch_output {
+>  	bool		 enabled;
+> @@ -121,6 +122,23 @@ static int record__write(struct record *rec, void *bf, size_t size)
+>  	return 0;
 >  }
 >  
->  static volatile int done;
-> @@ -528,13 +530,85 @@ static struct perf_event_header finished_round_event = {
->  	.type = PERF_RECORD_FINISHED_ROUND,
->  };
->  
-> +static int record__mmap_read_sync(int trace_fd, struct aiocb **cblocks,
-> +		int cblocks_size, struct record *rec)
+> +static int record__aio_write(int trace_fd, struct aiocb *cblock,
+> +		void *buf, size_t size, off_t off)
 > +{
-> +	size_t rem;
-> +	ssize_t size;
-> +	off_t rem_off;
-> +	int i, aio_ret, aio_errno, do_suspend;
-> +	struct perf_mmap *md;
-> +	struct timespec timeout0 = { 0, 0 };
-> +	struct timespec timeoutS = { 0, 1000 * 500  * 1 };
-> +
-> +	if (!cblocks_size)
-> +		return 0;
-> +
-> +	do {
-> +		do_suspend = 0;
-> +		nanosleep(&timeoutS, NULL);
 
-why the extra sleep in here and not sleeping through aio_suspend call?
+this breaks bisection:
+
+builtin-record.c:125:12: error: ‘record__aio_write’ defined but not used [-Werror=unused-function]
+ static int record__aio_write(int trace_fd, struct aiocb *cblock,
 
 jirka
-
-> +		if (aio_suspend((const struct aiocb**)cblocks, cblocks_size, &timeout0)) {
-> +			if (errno == EAGAIN || errno == EINTR) {
-> +				do_suspend = 1;
-> +				continue;
-> +			} else {
-> +				pr_err("failed to sync perf data, error: %m\n");
-
-SNIP
