@@ -1,15 +1,15 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v1 2/2]: perf record: enable asynchronous trace writing
-Date: Mon, 27 Aug 2018 12:20:50 +0300
-Message-ID: <3a8286ff-124f-fb56-1d1c-5d5e1f3b8512@linux.intel.com>
-References: <dcd3ee88-57d6-8704-f5e1-7a3c75a17d8d@linux.intel.com>
- <2db359cc-dc5d-c00e-a42a-12a2e9da80b7@linux.intel.com>
- <20180826214856.GA24518@krava>
+Subject: Re: [PATCH v2 2/2]: perf record: enable asynchronous trace writing
+Date: Mon, 27 Aug 2018 12:33:07 +0300
+Message-ID: <a34aa784-e36c-02fd-3e9d-7df4bc61ffe2@linux.intel.com>
+References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
+ <54cc11d7-3ef2-c856-052e-6e2c309ff743@linux.intel.com>
+ <20180827083852.GF24695@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180826214856.GA24518@krava>
+In-Reply-To: <20180827083852.GF24695@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
@@ -18,72 +18,57 @@ List-Id: linux-perf-users.vger.kernel.org
 
 Hi,
 
-On 27.08.2018 0:48, Jiri Olsa wrote:
-> On Tue, Aug 21, 2018 at 11:27:03AM +0300, Alexey Budankov wrote:
+On 27.08.2018 11:38, Jiri Olsa wrote:
+> On Thu, Aug 23, 2018 at 07:47:01PM +0300, Alexey Budankov wrote:
 > 
 > SNIP
 > 
->> -static int record__pushfn(void *to, void *bf, size_t size)
->> +static int record__pushfn(void *to, void *bf, size_t size, off_t off)
+>>  static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+>>  				    bool overwrite)
 >>  {
->>  	struct record *rec = to;
->> +	struct perf_mmap *map = bf;
+>>  	u64 bytes_written = rec->bytes_written;
+>> -	int i;
+>> -	int rc = 0;
+>> +	int i, rc = 0;
+>>  	struct perf_mmap *maps;
+>> +	int trace_fd = rec->session->data->file.fd;
+>> +	struct aiocb **mmap_aio = rec->evlist->mmap_aio;
+>> +	int mmap_aio_size = 0;
+>> +	off_t off;
 >>  
->>  	rec->samples++;
->> -	return record__write(rec, bf, size);
->> +	return record__aio_write(rec->session->data->file.fd, &map->cblock,
->> +			map->data, size, off);
->>  }
+>>  	if (!evlist)
+>>  		return 0;
+>> @@ -546,14 +620,17 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+>>  	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
+>>  		return 0;
 >>  
->>  static volatile int done;
->> @@ -528,13 +530,85 @@ static struct perf_event_header finished_round_event = {
->>  	.type = PERF_RECORD_FINISHED_ROUND,
->>  };
->>  
->> +static int record__mmap_read_sync(int trace_fd, struct aiocb **cblocks,
->> +		int cblocks_size, struct record *rec)
->> +{
->> +	size_t rem;
->> +	ssize_t size;
->> +	off_t rem_off;
->> +	int i, aio_ret, aio_errno, do_suspend;
->> +	struct perf_mmap *md;
->> +	struct timespec timeout0 = { 0, 0 };
->> +	struct timespec timeoutS = { 0, 1000 * 500  * 1 };
+>> +	off = lseek(trace_fd, 0, SEEK_CUR);
 >> +
->> +	if (!cblocks_size)
->> +		return 0;
->> +
->> +	do {
->> +		do_suspend = 0;
->> +		nanosleep(&timeoutS, NULL);
 > 
-> why the extra sleep in here and not sleeping through aio_suspend call?
+> with async write, do we need to query/set the offset like this
+> all the time?
 
-Yep. Good question. That requires explicit explanation:
+It looks like we need it this way. Internally glibc AIO implements writes 
+using pwrite64 syscall in our case. The sycall requires offset as a parameter 
+and doesn't update file position on the completion.
 
-+               /* aio_suspend() implementation inside glibc (as of v2.27) is
-+                * intrusive and not just blocks waiting io requests completion
-+                * but polls requests queue inducing context switches in perf
-+                * tool process. When profiling in system wide mode with tracing
-+                * context switches the trace may be polluted by context switches
-+                * from the perf process and the trace size becomes about 3-5
-+                * times bigger than that of when writing the trace serially.
-+                * To limit the volume of context switches from perf tool
-+                * process nonsleep() call limits aio_suspend()
-+                * polling till every half of the kernel timer tick which is
-+                * usually 1ms (depends on CONFIG_HZ value).
-+                */
+> 
+> could we just keep/update the offset value in the 'struct perf_data_file'
+> and skip both lseek calls?
+
+Don't see how it is possible. offset is different for every enqeued write 
+operation and write areas don't intersect for the whole writing loop. 
+To know the final file position it is required to iterate thru 
+the loop.
 
 > 
 > jirka
 > 
->> +		if (aio_suspend((const struct aiocb**)cblocks, cblocks_size, &timeout0)) {
->> +			if (errno == EAGAIN || errno == EINTR) {
->> +				do_suspend = 1;
->> +				continue;
->> +			} else {
->> +				pr_err("failed to sync perf data, error: %m\n");
-> 
 > SNIP
+> 
+>>  
+>> +	record__mmap_read_sync(trace_fd, mmap_aio, mmap_aio_size, rec);
+>> +
+>> +	lseek(trace_fd, off, SEEK_SET);
+>> +
 > 
