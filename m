@@ -1,43 +1,56 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf annotate: Handle arm64 move instructions
-Date: Tue, 28 Aug 2018 08:22:40 +0200
-Message-ID: <7b5ea377-91a6-d3f3-56a1-a836d5aaa7c5@linux.ibm.com>
-References: <20180827150807.304110d2e9919a17c832ca48@arm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2 1/2]: perf util: map data buffer for preserving
+ collected data
+Date: Tue, 28 Aug 2018 10:45:22 +0200
+Message-ID: <20180828084522.GD23727@krava>
+References: <e92805d0-3338-2ce5-5e88-369d406fe0a7@linux.intel.com>
+ <e5591d27-5386-1d41-b09b-421316f75d07@linux.intel.com>
+ <20180827083303.GD24695@krava>
+ <2284a8e8-d90e-bd99-89c1-0b125ba2e205@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827150807.304110d2e9919a17c832ca48@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <2284a8e8-d90e-bd99-89c1-0b125ba2e205@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, perf group <linux-perf-users@vger.kernel.org>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 08/27/2018 10:08 PM, Kim Phillips wrote:
-> Add default handler for non-jump instructions.  This really only has an
-> effect on instructions that compute a PC-relative address, such as 'adrp,'
-> as seen in these couple of examples:
+On Mon, Aug 27, 2018 at 12:02:35PM +0300, Alexey Budankov wrote:
+> Hi,
 > 
-> BEFORE: adrp   x0, ffff20000aa11000 <kallsyms_token_index+0xce000>
-> AFTER:  adrp   x0, kallsyms_token_index+0xce000
+> On 27.08.2018 11:33, Jiri Olsa wrote:
+> > On Thu, Aug 23, 2018 at 07:42:09PM +0300, Alexey Budankov wrote:
+> > 
+> > SNIP
+> > 
+> >> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> >> index fc832676a798..e71d46cb01cc 100644
+> >> --- a/tools/perf/util/mmap.c
+> >> +++ b/tools/perf/util/mmap.c
+> >> @@ -155,6 +155,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
+> >>  
+> >>  void perf_mmap__munmap(struct perf_mmap *map)
+> >>  {
+> >> +	if (map->data != NULL) {
+> >> +		munmap(map->data, perf_mmap__mmap_len(map));
+> >> +		map->data = NULL;
+> >> +	}
+> >>  	if (map->base != NULL) {
+> >>  		munmap(map->base, perf_mmap__mmap_len(map));
+> >>  		map->base = NULL;
+> >> @@ -190,6 +194,14 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd)
+> >>  		map->base = NULL;
+> >>  		return -1;
+> >>  	}
+> >> +	map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ | PROT_WRITE,
+> >> +			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> > 
+> > hum, why does map->data need to be mmap-ed?
 > 
-> BEFORE: adrp   x23, ffff20000ae94000 <__per_cpu_load>
-> AFTER:  adrp   x23, __per_cpu_load
-> 
-> The implementation is identical to that of s390, but with a slight
-> adjustment for objdump whitespace propagation (arm64 objdump puts
-> spaces after commas, whereas s390's presumably doesn't).
-> 
-> The mov__scnprintf() declaration is moved from s390's to arm64's
-> instructions.c because arm64's gets included before s390's.
-> 
+> The same way as for kernel buffers. If you see better alternatives it could be applied.
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+I meant why not just allocate them with mmaloc?
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+jirka
