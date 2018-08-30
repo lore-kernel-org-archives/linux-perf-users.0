@@ -1,15 +1,15 @@
-From: William Cohen <wcohen@redhat.com>
+From: Sean V Kelley <seanvk.dev@oregontracks.org>
 Subject: Re: [PATCH] perf vendor events arm64: Add to core JSON events for eMAG
-Date: Tue, 28 Aug 2018 14:54:57 -0400
-Message-ID: <c2432492-2a58-205b-a1a4-9cc10d833a3f@redhat.com>
+Date: Wed, 29 Aug 2018 21:14:00 -0700
+Message-ID: <A010BE97-6C96-4BE5-8CFE-83FC03B93784@oregontracks.org>
 References: <20180823202250.30797-1-seanvk.dev@oregontracks.org>
  <CAAbOPF1h1S1U2R-xxeYAH=CimZdYjOYUxaL9GDQ7yS5T6W7dpA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <c2432492-2a58-205b-a1a4-9cc10d833a3f@redhat.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAbOPF1h1S1U2R-xxeYAH=CimZdYjOYUxaL9GDQ7yS5T6W7dpA@mail.gmail.com>
-Content-Language: en-MW
+In-Reply-To: <c2432492-2a58-205b-a1a4-9cc10d833a3f@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,133 +19,239 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sean V Kelley <seanvk.dev@oregontracks.org>, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, acme@kernel.org, will.deacon@arm.com, john.garry@huawei.com
+To: wcohen@redhat.com
+Cc: linux-perf-users@vger.kernel.org, john.garry@huawei.com, will.deacon@arm.com, acme@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: linux-perf-users.vger.kernel.org
 
-T24gMDgvMjgvMjAxOCAwMToyMSBQTSwgU2VhbiBWIEtlbGxleSB3cm90ZToKPiAKPiAKPiBPbiBU
-aHUsIEF1ZyAyMywgMjAxOCBhdCAxOjIzIFBNIFNlYW4gViBLZWxsZXkgPHNlYW52ay5kZXZAb3Jl
-Z29udHJhY2tzLm9yZyA8bWFpbHRvOnNlYW52ay5kZXZAb3JlZ29udHJhY2tzLm9yZz4+IHdyb3Rl
-Ogo+IAo+ICAgICBBZGRzIHRoZSByZW1haW5kZXIgb2YgdGhlIHN1cHBvcnRlZCBBUk12OCByZWNv
-bW1lbmRlZCBJTVBMRU1FTlRBVElPTgo+ICAgICBERUZJTkVEIGV2ZW50cyBmb3IgdGhlIEFtcGVy
-ZSBDb21wdXRpbmcgZU1BRyBmaWxlLgo+IAo+IAo+IEp1c3QgY2hlY2tpbmcgaW4/wqAgUGVyaGFw
-cyBKb2huLCBXaWxsaWFtIG9yIFdpbGwgY291bGQgdGFrZSBhIGxvb2sgaWYgeW91IGhhdmUgdGlt
-ZT/CoAo+IAo+IFRoYW5rcywKPiAKPiBTZWFuCgpIaSwKCklzIHRoZXJlIHNvbWUgcHVibGljIG1h
-bnVhbCB0aGF0IGxpc3RzIHRoZSBwZXJmb3JtYW5jZSBldmVudHMgZm9yIHRoZSBBbXBlcmUgZU1B
-Rz8gIEFzIG1lbnRpb25lZCB0aGF0IHNvbWUgdW5hdmFpbGFibGUgZXZlbnRzIHdlcmUgaW5jb3Jy
-ZWN0bHkgYWRkZWQgdG8gdGhlIGxpc3RzIGZvciB0aGUgcHJvY2Vzc29yLiAgSGF2aW5nIGEgcmVm
-ZXJlbmNlIGZvciB0aGlzIHdvdWxkIGFsbG93IGNoZWNraW5nIGZvciB0aG9zZSB0eXBlcyBvZiBw
-cm9ibGVtcy4KCk9uZSBzdWdnZXN0aW9ucyB3b3VsZCBiZSB0byBzcGxpdCB0aGUgZXZlbnRzIGlu
-dG8gbXVsdGlwbGUgSlNPTiBmaWxlcyBsaWtlIHRoZSB4ODYgYW5kIGFybSBjb3J0ZXggNTMgcHJv
-Y2Vzc29ycywgc28gcmVsYXRlZCBldmVudHMgZ3JvdXBlZCBpbnRvIG1lYW5pbmdmdWwgZnVuY3Rp
-b25hbCBncm91cHMgcmF0aGVyIHRoYW4ganVzdCBvbmUgbG9uZyBhbHBoYWJldGljYWwgbGlzdC4K
-Ck90aGVyd2lzZSB0aGUgcGF0Y2ggbG9va3MgcmVhc29uYWJsZS4KCi1XaWxsaWFtIENvaGVuCj4g
-Cj4gCj4gwqAKPiAKPiAgICAgQ2M6IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUBrZXJu
-ZWwub3JnIDxtYWlsdG86YWNtZUBrZXJuZWwub3JnPj4KPiAgICAgQ2M6IEFsZXhhbmRlciBTaGlz
-aGtpbiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbSA8bWFpbHRvOmFsZXhhbmRl
-ci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+Pgo+ICAgICBDYzogR2FuYXBhdHJhbyBLdWxrYXJu
-aSA8Z2FuYXBhdHJhby5rdWxrYXJuaUBjYXZpdW0uY29tIDxtYWlsdG86Z2FuYXBhdHJhby5rdWxr
-YXJuaUBjYXZpdW0uY29tPj4KPiAgICAgQ2M6IEppcmkgT2xzYSA8am9sc2FAcmVkaGF0LmNvbSA8
-bWFpbHRvOmpvbHNhQHJlZGhhdC5jb20+Pgo+ICAgICBDYzogTmFtaHl1bmcgS2ltIDxuYW1oeXVu
-Z0BrZXJuZWwub3JnIDxtYWlsdG86bmFtaHl1bmdAa2VybmVsLm9yZz4+Cj4gICAgIENjOiBQZXRl
-ciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmcgPG1haWx0bzpwZXRlcnpAaW5mcmFkZWFk
-Lm9yZz4+Cj4gICAgIENjOiBXaWxsIERlYWNvbiA8d2lsbC5kZWFjb25AYXJtLmNvbSA8bWFpbHRv
-OndpbGwuZGVhY29uQGFybS5jb20+Pgo+ICAgICBDYzogV2lsbGlhbSBDb2hlbiA8d2NvaGVuQHJl
-ZGhhdC5jb20gPG1haWx0bzp3Y29oZW5AcmVkaGF0LmNvbT4+Cj4gICAgIENjOiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcgPG1haWx0bzpsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+Cj4gCj4gICAgIFNpZ25lZC1vZmYtYnk6IFNlYW4gViBLZWxsZXkgPHNl
-YW52ay5kZXZAb3JlZ29udHJhY2tzLm9yZyA8bWFpbHRvOnNlYW52ay5kZXZAb3JlZ29udHJhY2tz
-Lm9yZz4+Cj4gICAgIC0tLQo+ICAgICDCoC4uLi9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2NvcmUt
-aW1wLWRlZi5qc29uwqAgfCAxNTAgKysrKysrKysrKysrKysrKystCj4gICAgIMKgMSBmaWxlIGNo
-YW5nZWQsIDE0NCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+ICAgICBkaWZmIC0t
-Z2l0IGEvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvY29yZS1p
-bXAtZGVmLmpzb24gYi90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBlcmUvZW1h
-Zy9jb3JlLWltcC1kZWYuanNvbgo+ICAgICBpbmRleCBiYzAzYzA2YzM5MTguLmQ5NTIwMmRiZTJi
-MiAxMDA2NDQKPiAgICAgLS0tIGEvdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvYW1w
-ZXJlL2VtYWcvY29yZS1pbXAtZGVmLmpzb24KPiAgICAgKysrIGIvdG9vbHMvcGVyZi9wbXUtZXZl
-bnRzL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvY29yZS1pbXAtZGVmLmpzb24KPiAgICAgQEAgLTks
-NyArOSw3IEBACj4gICAgIMKgIMKgIMKgIMKgIMKgIkFyY2hTdGRFdmVudCI6ICJMMURfQ0FDSEVf
-UkVGSUxMX1JEIiwKPiAgICAgwqAgwqAgwqB9LAo+ICAgICDCoCDCoCDCoHsKPiAgICAgLcKgIMKg
-IMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiTDFEX0NBQ0hFX1JFRklMTF9XUiIsCj4gICAgICvCoCDC
-oCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkwxRF9DQUNIRV9JTlZBTCIsCj4gICAgIMKgIMKgIMKg
-fSwKPiAgICAgwqAgwqAgwqB7Cj4gICAgIMKgIMKgIMKgIMKgIMKgIkFyY2hTdGRFdmVudCI6ICJM
-MURfVExCX1JFRklMTF9SRCIsCj4gICAgIEBAIC0xOCwxNSArMTgsMTUzIEBACj4gICAgIMKgIMKg
-IMKgIMKgIMKgIkFyY2hTdGRFdmVudCI6ICJMMURfVExCX1JFRklMTF9XUiIsCj4gICAgIMKgIMKg
-IMKgfSwKPiAgICAgwqAgwqAgwqB7Cj4gICAgIC3CoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50Ijog
-IkwxRF9UTEJfUkQiLAo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJMMkRfQ0FD
-SEVfUkQiLAo+ICAgICDCoCDCoCDCoH0sCj4gICAgIMKgIMKgIMKgewo+ICAgICAtwqAgwqAgwqAg
-wqAgIkFyY2hTdGRFdmVudCI6ICJMMURfVExCX1dSIiwKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNo
-U3RkRXZlbnQiOiAiTDJEX0NBQ0hFX1dSIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7
-Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkwyRF9DQUNIRV9SRUZJTExfUkQi
-LAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNo
-U3RkRXZlbnQiOiAiTDJEX0NBQ0hFX1JFRklMTF9XUiIsCj4gICAgICvCoCDCoCB9LAo+ICAgICAr
-wqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJMMkRfQ0FDSEVfV0Jf
-VklDVElNIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDC
-oCAiQXJjaFN0ZEV2ZW50IjogIkwyRF9DQUNIRV9XQl9DTEVBTiIsCj4gICAgICvCoCDCoCB9LAo+
-ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJMMkRfQ0FD
-SEVfSU5WQUwiLAo+ICAgICDCoCDCoCDCoH0sCj4gICAgIMKgIMKgIMKgewo+ICAgICDCoCDCoCDC
-oCDCoCDCoCJBcmNoU3RkRXZlbnQiOiAiQlVTX0FDQ0VTU19SRCIsCj4gICAgIC3CoCDCoH0sCj4g
-ICAgIC3CoCDCoHsKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgIMKgIMKgIMKg
-IMKgIMKgIkFyY2hTdGRFdmVudCI6ICJCVVNfQUNDRVNTX1dSIiwKPiAgICAgLcKgIMKgfQo+ICAg
-ICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZl
-bnQiOiAiQlVTX0FDQ0VTU19TSEFSRUQiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsK
-PiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiQlVTX0FDQ0VTU19OT1RfU0hBUkVE
-IiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJj
-aFN0ZEV2ZW50IjogIkJVU19BQ0NFU1NfTk9STUFMIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvC
-oCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkJVU19BQ0NFU1NfUEVS
-SVBIIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAi
-QXJjaFN0ZEV2ZW50IjogIk1FTV9BQ0NFU1NfUkQiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8Kg
-IMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiTUVNX0FDQ0VTU19XUiIs
-Cj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hT
-dGRFdmVudCI6ICJVTkFMSUdORURfTERfU1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAg
-wqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJVTkFMSUdORURfU1RfU1BF
-QyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFy
-Y2hTdGRFdmVudCI6ICJVTkFMSUdORURfTERTVF9TUEVDIiwKPiAgICAgK8KgIMKgIH0sCj4gICAg
-ICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkxEUkVYX1NQRUMi
-LAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNo
-U3RkRXZlbnQiOiAiU1RSRVhfUEFTU19TUEVDIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDC
-oCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIlNUUkVYX0ZBSUxfU1BFQyIs
-Cj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hT
-dGRFdmVudCI6ICJTVFJFWF9TUEVDIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4g
-ICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkxEX1NQRUMiLAo+ICAgICArwqAgwqAg
-fSwKPiAgICAgK8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiU1Rf
-U1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAg
-IkFyY2hTdGRFdmVudCI6ICJMRFNUX1NQRUMiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKg
-IHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiRFBfU1BFQyIsCj4gICAgICvC
-oCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6
-ICJBU0VfU1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAg
-wqAgwqAgIkFyY2hTdGRFdmVudCI6ICJWRlBfU1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICAr
-wqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJQQ19XUklURV9TUEVD
-IiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJj
-aFN0ZEV2ZW50IjogIkNSWVBUT19TUEVDIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7
-Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkJSX0lNTUVEX1NQRUMiLAo+ICAg
-ICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZl
-bnQiOiAiQlJfUkVUVVJOX1NQRUMiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAg
-ICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiQlJfSU5ESVJFQ1RfU1BFQyIsCj4gICAg
-ICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVu
-dCI6ICJJU0JfU1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAg
-wqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJEU0JfU1BFQyIsCj4gICAgICvCoCDCoCB9LAo+ICAg
-ICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJETUJfU1BFQyIs
-Cj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hT
-dGRFdmVudCI6ICJFWENfVU5ERUYiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAg
-ICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiRVhDX1NWQyIsCj4gICAgICvCoCDCoCB9
-LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJFWENf
-UEFCT1JUIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDC
-oCAiQXJjaFN0ZEV2ZW50IjogIkVYQ19EQUJPUlQiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8Kg
-IMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiRVhDX0lSUSIsCj4gICAg
-ICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVu
-dCI6ICJFWENfRklRIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDC
-oCDCoCDCoCAiQXJjaFN0ZEV2ZW50IjogIkVYQ19IVkMiLAo+ICAgICArwqAgwqAgfSwKPiAgICAg
-K8KgIMKgIHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiRVhDX1RSQVBfUEFC
-T1JUIiwKPiAgICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAi
-QXJjaFN0ZEV2ZW50IjogIkVYQ19UUkFQX0RBQk9SVCIsCj4gICAgICvCoCDCoCB9LAo+ICAgICAr
-wqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFyY2hTdGRFdmVudCI6ICJFWENfVFJBUF9PVEhF
-UiIsCj4gICAgICvCoCDCoCB9LAo+ICAgICArwqAgwqAgewo+ICAgICArwqAgwqAgwqAgwqAgIkFy
-Y2hTdGRFdmVudCI6ICJFWENfVFJBUF9JUlEiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKg
-IHsKPiAgICAgK8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiRVhDX1RSQVBfRklRIiwKPiAg
-ICAgK8KgIMKgIH0sCj4gICAgICvCoCDCoCB7Cj4gICAgICvCoCDCoCDCoCDCoCAiQXJjaFN0ZEV2
-ZW50IjogIlJDX0xEX1NQRUMiLAo+ICAgICArwqAgwqAgfSwKPiAgICAgK8KgIMKgIHsKPiAgICAg
-K8KgIMKgIMKgIMKgICJBcmNoU3RkRXZlbnQiOiAiUkNfU1RfU1BFQyIsCj4gICAgICvCoCDCoCB9
-LAo+ICAgICDCoF0KPiAgICAgLS0gCj4gICAgIDIuMTcuMQo+IAoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On Tue, Aug 28, 2018 at 11:55 AM William Cohen <wcohen@redhat.com> wrote:
+> On 08/28/2018 01:21 PM, Sean V Kelley wrote:
+> > 
+> > 
+> > On Thu, Aug 23, 2018 at 1:23 PM Sean V Kelley <seanvk.dev@oregontracks.org <mailto:seanvk.dev@oregontracks.org>> wrote:
+> > 
+> >     Adds the remainder of the supported ARMv8 recommended IMPLEMENTATION
+> >     DEFINED events for the Ampere Computing eMAG file.
+> > 
+> > 
+> > Just checking in?  Perhaps John, William or Will could take a look if you have time? 
+> > 
+> > Thanks,
+> > 
+> > Sean
+> 
+> Hi,
+> 
+> Is there some public manual that lists the performance events for the Ampere eMAG?  As mentioned that some unavailable events were incorrectly added to the lists for the processor.  Having a reference for this would allow checking for those types of problems.
+> 
+Hi,
+
+Yes, the intent is to get the public manual published and easily accessible from a link.  And I agree it's an essential reference for patches now and when the hardware is fully available.
+ 
+> 
+> One suggestions would be to split the events into multiple JSON files like the x86 and arm cortex 53 processors, so related events grouped into meaningful functional groups rather than just one long alphabetical list.
+
+Thanks I will take a look.
+
+Sean
+
+ 
+
+Otherwise the patch looks reasonable.
+
+-William Cohen
+> 
+> 
+>  
+> 
+>     Cc: Arnaldo Carvalho de Melo <acme@kernel.org <mailto:acme@kernel.org>>
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com <mailto:alexander.shishkin@linux.intel.com>>
+>     Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com <mailto:ganapatrao.kulkarni@cavium.com>>
+>     Cc: Jiri Olsa <jolsa@redhat.com <mailto:jolsa@redhat.com>>
+>     Cc: Namhyung Kim <namhyung@kernel.org <mailto:namhyung@kernel.org>>
+>     Cc: Peter Zijlstra <peterz@infradead.org <mailto:peterz@infradead.org>>
+>     Cc: Will Deacon <will.deacon@arm.com <mailto:will.deacon@arm.com>>
+>     Cc: William Cohen <wcohen@redhat.com <mailto:wcohen@redhat.com>>
+>     Cc: linux-arm-kernel@lists.infradead.org <mailto:linux-arm-kernel@lists.infradead.org>
+> 
+>     Signed-off-by: Sean V Kelley <seanvk.dev@oregontracks.org <mailto:seanvk.dev@oregontracks.org>>
+>     ---
+>      .../arch/arm64/ampere/emag/core-imp-def.json  | 150 +++++++++++++++++-
+>      1 file changed, 144 insertions(+), 6 deletions(-)
+> 
+>     diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+>     index bc03c06c3918..d95202dbe2b2 100644
+>     --- a/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+>     +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+>     @@ -9,7 +9,7 @@
+>              "ArchStdEvent": "L1D_CACHE_REFILL_RD",
+>          },
+>          {
+>     -        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
+>     +        "ArchStdEvent": "L1D_CACHE_INVAL",
+>          },
+>          {
+>              "ArchStdEvent": "L1D_TLB_REFILL_RD",
+>     @@ -18,15 +18,153 @@
+>              "ArchStdEvent": "L1D_TLB_REFILL_WR",
+>          },
+>          {
+>     -        "ArchStdEvent": "L1D_TLB_RD",
+>     +        "ArchStdEvent": "L2D_CACHE_RD",
+>          },
+>          {
+>     -        "ArchStdEvent": "L1D_TLB_WR",
+>     +        "ArchStdEvent": "L2D_CACHE_WR",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "L2D_CACHE_INVAL",
+>          },
+>          {
+>              "ArchStdEvent": "BUS_ACCESS_RD",
+>     -   },
+>     -   {
+>     +    },
+>     +    {
+>              "ArchStdEvent": "BUS_ACCESS_WR",
+>     -   }
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BUS_ACCESS_SHARED",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BUS_ACCESS_NORMAL",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BUS_ACCESS_PERIPH",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "MEM_ACCESS_RD",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "MEM_ACCESS_WR",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "UNALIGNED_LD_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "UNALIGNED_ST_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "LDREX_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "STREX_PASS_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "STREX_FAIL_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "STREX_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "LD_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "ST_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "LDST_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "DP_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "ASE_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "VFP_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "PC_WRITE_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "CRYPTO_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BR_IMMED_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BR_RETURN_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "BR_INDIRECT_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "ISB_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "DSB_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "DMB_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_UNDEF",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_SVC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_PABORT",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_DABORT",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_IRQ",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_FIQ",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_HVC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_TRAP_PABORT",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_TRAP_DABORT",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_TRAP_OTHER",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_TRAP_IRQ",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "EXC_TRAP_FIQ",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "RC_LD_SPEC",
+>     +    },
+>     +    {
+>     +        "ArchStdEvent": "RC_ST_SPEC",
+>     +    },
+>      ]
+>     -- 
+>     2.17.1
+> 
