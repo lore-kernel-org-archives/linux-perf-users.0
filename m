@@ -1,47 +1,70 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/13] perf evsel: Fix potential null pointer dereference in perf_evsel__new_idx()
-Date: Mon,  3 Sep 2018 11:52:19 -0300
-Message-ID: <20180903145224.12318-9-acme@kernel.org>
+Subject: [PATCH 09/13] perf tools: Streamline bpf examples and headers installation
+Date: Mon,  3 Sep 2018 11:52:20 -0300
+Message-ID: <20180903145224.12318-10-acme@kernel.org>
 References: <20180903145224.12318-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903145224.12318-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hisao Tanabe <xtanabe@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Hisao Tanabe <xtanabe@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If evsel is NULL, we should return NULL to avoid a NULL pointer
-dereference a bit later in the code.
+We were emitting 4 lines, two of them misleading:
 
-Signed-off-by: Hisao Tanabe <xtanabe@gmail.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  <SNIP>
+    INSTALL  lib
+    INSTALL  include/bpf
+    INSTALL  lib
+    INSTALL  examples/bpf
+  <SNIP>
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+
+Make it more compact by showing just two lines:
+
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+    INSTALL  bpf-headers
+    INSTALL  bpf-examples
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 03e0a7df3efd ("perf tools: Introduce bpf-output event")
-LPU-Reference: 20180824154556.23428-1-xtanabe@gmail.com
-Link: https://lkml.kernel.org/n/tip-e5plzjhx6595a5yjaf22jss3@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0nvkyciqdkrgy829lony5925@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.perf | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index c980bbff6353..1a61628a1c12 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -251,8 +251,9 @@ struct perf_evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
- {
- 	struct perf_evsel *evsel = zalloc(perf_evsel__object.size);
- 
--	if (evsel != NULL)
--		perf_evsel__init(evsel, attr, idx);
-+	if (!evsel)
-+		return NULL;
-+	perf_evsel__init(evsel, attr, idx);
- 
- 	if (perf_evsel__is_bpf_output(evsel)) {
- 		evsel->attr.sample_type |= (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index b3d1b12a5081..5224ade3d5af 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -777,14 +777,12 @@ endif
+ 	$(call QUIET_INSTALL, libexec) \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)'
+ ifndef NO_LIBBPF
+-	$(call QUIET_INSTALL, lib) \
+-		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'
+-	$(call QUIET_INSTALL, include/bpf) \
+-		$(INSTALL) include/bpf/*.h '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'
+-	$(call QUIET_INSTALL, lib) \
+-		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'
+-	$(call QUIET_INSTALL, examples/bpf) \
+-		$(INSTALL) examples/bpf/*.c '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'
++	$(call QUIET_INSTALL, bpf-headers) \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'; \
++		$(INSTALL) include/bpf/*.h -t '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'
++	$(call QUIET_INSTALL, bpf-examples) \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'; \
++		$(INSTALL) examples/bpf/*.c -t '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'
+ endif
+ 	$(call QUIET_INSTALL, perf-archive) \
+ 		$(INSTALL) $(OUTPUT)perf-archive -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)'
 -- 
 2.14.4
