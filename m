@@ -1,62 +1,63 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/13] perf probe powerpc: Ignore SyS symbols irrespective of endianness
-Date: Mon,  3 Sep 2018 11:52:23 -0300
-Message-ID: <20180903145224.12318-13-acme@kernel.org>
+Subject: [PATCH 11/13] perf event-parse: Use fixed size string for comms
+Date: Mon,  3 Sep 2018 11:52:22 -0300
+Message-ID: <20180903145224.12318-12-acme@kernel.org>
 References: <20180903145224.12318-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903145224.12318-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Chris Phlipot <cphlipot0@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Chris Phlipot <cphlipot0@gmail.com>
 
-This makes sure that the SyS symbols are ignored for any powerpc system,
-not just the big endian ones.
+Some implementations of libc do not support the 'm' width modifier as
+part of the scanf string format specifier. This can cause the parsing to
+fail.  Since the parser never checks if the scanf parsing was
+successesful, this can result in a crash.
 
-Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Fixes: fb6d59423115 ("perf probe ppc: Use the right prefix when ignoring SyS symbols on ppc")
-Link: http://lkml.kernel.org/r/20180828090848.1914-1-sandipan@linux.ibm.com
+Change the comm string to be allocated as a fixed size instead of
+dynamically using 'm' scanf width modifier. This can be safely done
+since comm size is limited to 16 bytes by TASK_COMM_LEN within the
+kernel.
+
+This change prevents perf from crashing when linked against bionic as
+well as reduces the total number of heap allocations and frees invoked
+while accomplishing the same task.
+
+Signed-off-by: Chris Phlipot <cphlipot0@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180830021950.15563-1-cphlipot0@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/sym-handling.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/trace-event-parse.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 20e7d74d86cd..10a44e946f77 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -22,15 +22,16 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
- 
- #endif
- 
--#if !defined(_CALL_ELF) || _CALL_ELF != 2
- int arch__choose_best_symbol(struct symbol *syma,
- 			     struct symbol *symb __maybe_unused)
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index 920b1d58a068..e76214f8d596 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -164,16 +164,15 @@ void parse_ftrace_printk(struct tep_handle *pevent,
+ void parse_saved_cmdline(struct tep_handle *pevent,
+ 			 char *file, unsigned int size __maybe_unused)
  {
- 	char *sym = syma->name;
+-	char *comm;
++	char comm[17]; /* Max comm length in the kernel is 16. */
+ 	char *line;
+ 	char *next = NULL;
+ 	int pid;
  
-+#if !defined(_CALL_ELF) || _CALL_ELF != 2
- 	/* Skip over any initial dot */
- 	if (*sym == '.')
- 		sym++;
-+#endif
- 
- 	/* Avoid "SyS" kernel syscall aliases */
- 	if (strlen(sym) >= 3 && !strncmp(sym, "SyS", 3))
-@@ -41,6 +42,7 @@ int arch__choose_best_symbol(struct symbol *syma,
- 	return SYMBOL_A;
+ 	line = strtok_r(file, "\n", &next);
+ 	while (line) {
+-		sscanf(line, "%d %ms", &pid, &comm);
+-		tep_register_comm(pevent, comm, pid);
+-		free(comm);
++		if (sscanf(line, "%d %16s", &pid, comm) == 2)
++			tep_register_comm(pevent, comm, pid);
+ 		line = strtok_r(NULL, "\n", &next);
+ 	}
  }
- 
-+#if !defined(_CALL_ELF) || _CALL_ELF != 2
- /* Allow matching against dot variants */
- int arch__compare_symbol_names(const char *namea, const char *nameb)
- {
 -- 
 2.14.4
