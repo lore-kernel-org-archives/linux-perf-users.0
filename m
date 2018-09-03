@@ -1,107 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/13] perf arm64: Fix include path for asm-generic/unistd.h
-Date: Mon,  3 Sep 2018 11:52:18 -0300
-Message-ID: <20180903145224.12318-8-acme@kernel.org>
+Subject: [PATCH 08/13] perf evsel: Fix potential null pointer dereference in perf_evsel__new_idx()
+Date: Mon,  3 Sep 2018 11:52:19 -0300
+Message-ID: <20180903145224.12318-9-acme@kernel.org>
 References: <20180903145224.12318-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903145224.12318-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hisao Tanabe <xtanabe@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kim Phillips <kim.phillips@arm.com>
+From: Hisao Tanabe <xtanabe@gmail.com>
 
-The new syscall table support for arm64 mistakenly used the system's
-asm-generic/unistd.h file when processing the
-tools/arch/arm64/include/uapi/asm/unistd.h file's include directive:
+If evsel is NULL, we should return NULL to avoid a NULL pointer
+dereference a bit later in the code.
 
-	#include <asm-generic/unistd.h>
-
-See "Committer notes" section of commit 2b5882435606 "perf arm64:
-Generate system call table from asm/unistd.h" for more details.
-
-This patch removes the committer's temporary workaround, and instructs
-the host compiler to search the build tree's include path for the right
-copy of the unistd.h file, instead of the one on the system's
-/usr/include path.
-
-It thus fixes the committer's test that cross-builds an arm64 perf on an
-x86 platform running Ubuntu 14.04.5 LTS with an old toolchain:
-
-$ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl /gcc-linaro-5.4.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc gcc `pwd`/tools tools/arch/arm64/include/uapi/asm/unistd.h | grep bpf
-	[280] = "bpf",
-
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Signed-off-by: Hisao Tanabe <xtanabe@gmail.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Fixes: 2b5882435606 ("perf arm64: Generate system call table from asm/unistd.h")
-Link: http://lkml.kernel.org/r/20180806172800.bbcec3cfcc51e2facc978bf2@arm.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: 03e0a7df3efd ("perf tools: Introduce bpf-output event")
+LPU-Reference: 20180824154556.23428-1-xtanabe@gmail.com
+Link: https://lkml.kernel.org/n/tip-e5plzjhx6595a5yjaf22jss3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/Makefile                    | 5 +++--
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 6 +++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/util/evsel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
-index f013b115dc86..dbef716a1913 100644
---- a/tools/perf/arch/arm64/Makefile
-+++ b/tools/perf/arch/arm64/Makefile
-@@ -11,7 +11,8 @@ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index c980bbff6353..1a61628a1c12 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -251,8 +251,9 @@ struct perf_evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
+ {
+ 	struct perf_evsel *evsel = zalloc(perf_evsel__object.size);
  
- out    := $(OUTPUT)arch/arm64/include/generated/asm
- header := $(out)/syscalls.c
--sysdef := $(srctree)/tools/include/uapi/asm-generic/unistd.h
-+incpath := $(srctree)/tools
-+sysdef := $(srctree)/tools/arch/arm64/include/uapi/asm/unistd.h
- sysprf := $(srctree)/tools/perf/arch/arm64/entry/syscalls/
- systbl := $(sysprf)/mksyscalltbl
+-	if (evsel != NULL)
+-		perf_evsel__init(evsel, attr, idx);
++	if (!evsel)
++		return NULL;
++	perf_evsel__init(evsel, attr, idx);
  
-@@ -19,7 +20,7 @@ systbl := $(sysprf)/mksyscalltbl
- _dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
- 
- $(header): $(sysdef) $(systbl)
--	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(sysdef) > $@
-+	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
- 
- clean::
- 	$(call QUIET_CLEAN, arm64) $(RM) $(header)
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 52e197317d3e..2dbb8cade048 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -11,7 +11,8 @@
- 
- gcc=$1
- hostcc=$2
--input=$3
-+incpath=$3
-+input=$4
- 
- if ! test -r $input; then
- 	echo "Could not read input file" >&2
-@@ -28,7 +29,6 @@ create_table_from_c()
- 
- 	cat <<-_EoHEADER
- 		#include <stdio.h>
--		#define __ARCH_WANT_RENAMEAT
- 		#include "$input"
- 		int main(int argc, char *argv[])
- 		{
-@@ -42,7 +42,7 @@ create_table_from_c()
- 	printf "%s\n" "	printf(\"#define SYSCALLTBL_ARM64_MAX_ID %d\\n\", __NR_$last_sc);"
- 	printf "}\n"
- 
--	} | $hostcc -o $create_table_exe -x c -
-+	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
- 
- 	$create_table_exe
- 
+ 	if (perf_evsel__is_bpf_output(evsel)) {
+ 		evsel->attr.sample_type |= (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
 -- 
 2.14.4
