@@ -1,44 +1,62 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/13] perf util: Fix bad memory access in trace info.
-Date: Mon,  3 Sep 2018 11:52:21 -0300
-Message-ID: <20180903145224.12318-11-acme@kernel.org>
+Subject: [PATCH 12/13] perf probe powerpc: Ignore SyS symbols irrespective of endianness
+Date: Mon,  3 Sep 2018 11:52:23 -0300
+Message-ID: <20180903145224.12318-13-acme@kernel.org>
 References: <20180903145224.12318-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903145224.12318-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Chris Phlipot <cphlipot0@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Chris Phlipot <cphlipot0@gmail.com>
+From: Sandipan Das <sandipan@linux.ibm.com>
 
-In the write to the output_fd in the error condition of
-record_saved_cmdline(), we are writing 8 bytes from a memory location on
-the stack that contains a primitive that is only 4 bytes in size.
-Change the primitive to 8 bytes in size to match the size of the write
-in order to avoid reading unknown memory from the stack.
+This makes sure that the SyS symbols are ignored for any powerpc system,
+not just the big endian ones.
 
-Signed-off-by: Chris Phlipot <cphlipot0@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180829061954.18871-1-cphlipot0@gmail.com
+Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Fixes: fb6d59423115 ("perf probe ppc: Use the right prefix when ignoring SyS symbols on ppc")
+Link: http://lkml.kernel.org/r/20180828090848.1914-1-sandipan@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/powerpc/util/sym-handling.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index c85d0d1a65ed..7b0ca7cbb7de 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -377,7 +377,7 @@ static int record_ftrace_printk(void)
+diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+index 20e7d74d86cd..10a44e946f77 100644
+--- a/tools/perf/arch/powerpc/util/sym-handling.c
++++ b/tools/perf/arch/powerpc/util/sym-handling.c
+@@ -22,15 +22,16 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
  
- static int record_saved_cmdline(void)
+ #endif
+ 
+-#if !defined(_CALL_ELF) || _CALL_ELF != 2
+ int arch__choose_best_symbol(struct symbol *syma,
+ 			     struct symbol *symb __maybe_unused)
  {
--	unsigned int size;
-+	unsigned long long size;
- 	char *path;
- 	struct stat st;
- 	int ret, err = 0;
+ 	char *sym = syma->name;
+ 
++#if !defined(_CALL_ELF) || _CALL_ELF != 2
+ 	/* Skip over any initial dot */
+ 	if (*sym == '.')
+ 		sym++;
++#endif
+ 
+ 	/* Avoid "SyS" kernel syscall aliases */
+ 	if (strlen(sym) >= 3 && !strncmp(sym, "SyS", 3))
+@@ -41,6 +42,7 @@ int arch__choose_best_symbol(struct symbol *syma,
+ 	return SYMBOL_A;
+ }
+ 
++#if !defined(_CALL_ELF) || _CALL_ELF != 2
+ /* Allow matching against dot variants */
+ int arch__compare_symbol_names(const char *namea, const char *nameb)
+ {
 -- 
 2.14.4
