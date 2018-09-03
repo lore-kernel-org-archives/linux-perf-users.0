@@ -1,30 +1,108 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] perf annotate: fix parsing aarch64 branch
- instructions after objdump update
-Date: Thu, 30 Aug 2018 15:47:06 -0300
-Message-ID: <20180830184706.GH6097@kernel.org>
-References: <20180823191047.9260992844205984b75e6721@arm.com>
- <20180827125049.GD22309@kernel.org>
- <20180827125340.a2f7e291901d17cea05daba4@arm.com>
+Subject: [PATCH 01/13] perf annotate: Properly interpret indirect call
+Date: Mon,  3 Sep 2018 11:52:12 -0300
+Message-ID: <20180903145224.12318-2-acme@kernel.org>
+References: <20180903145224.12318-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180827125340.a2f7e291901d17cea05daba4@arm.com>
+In-Reply-To: <20180903145224.12318-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@arm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, Anton Blanchard <anton@samba.org>, Robin Murphy <robin.murphy@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Taeung Song <treeze.taeung@gmail.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, perf group <linux-perf-users@vger.kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Aug 27, 2018 at 12:53:40PM -0500, Kim Phillips escreveu:
-> v2: address acme's comments:
->     - consolidate into a validate_comma()
->     - call from an additional couple of places necessary
->     - don't listen to checkpatch wrt reflowing jump__parse definition
->       line to less than 80 characters, just rm the __maybe_unused
->     - re-tested no diff on x86_64 and power arch, arm64 conditional
->       branches fixed.
+From: Martin Liška <mliska@suse.cz>
 
-Thanks for taking into account my comments, applied.
+The patch changes the parsing of:
 
-- Arnaldo
+	callq  *0x8(%rbx)
+
+from:
+
+  0.26 │     → callq  *8
+
+to:
+
+  0.26 │     → callq  *0x8(%rbx)
+
+in this case an address is followed by a register, thus one can't parse
+only the address.
+
+Committer testing:
+
+1) run 'perf record sleep 10'
+2) before applying the patch, run:
+
+     perf annotate --stdio2 > /tmp/before
+
+3) after applying the patch, run:
+
+     perf annotate --stdio2 > /tmp/after
+
+4) diff /tmp/before /tmp/after:
+  --- /tmp/before 2018-08-28 11:16:03.238384143 -0300
+  +++ /tmp/after  2018-08-28 11:15:39.335341042 -0300
+  @@ -13274,7 +13274,7 @@
+                ↓ jle    128
+                  hash_value = hash_table->hash_func (key);
+                  mov    0x8(%rsp),%rdi
+  -  0.91       → callq  *30
+  +  0.91       → callq  *0x30(%r12)
+                  mov    $0x2,%r8d
+                  cmp    $0x2,%eax
+                  node_hash = hash_table->hashes[node_index];
+  @@ -13848,7 +13848,7 @@
+                   mov    %r14,%rdi
+                   sub    %rbx,%r13
+                   mov    %r13,%rdx
+  -              → callq  *38
+  +              → callq  *0x38(%r15)
+                   cmp    %rax,%r13
+     1.91        ↓ je     240
+            1b4:   mov    $0xffffffff,%r13d
+  @@ -14026,7 +14026,7 @@
+                   mov    %rcx,-0x500(%rbp)
+                   mov    %r15,%rsi
+                   mov    %r14,%rdi
+  -              → callq  *38
+  +              → callq  *0x38(%rax)
+                   mov    -0x500(%rbp),%rcx
+                   cmp    %rax,%rcx
+                 ↓ jne    9b0
+<SNIP tons of other such cases>
+
+Signed-off-by: Martin Liška <mliska@suse.cz>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Kim Phillips <kim.phillips@arm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/bd1f3932-be2b-85f9-7582-111ee0a43b07@suse.cz
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/annotate.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 20061cf42288..e62b69ea87cd 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -246,8 +246,14 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
+ 
+ indirect_call:
+ 	tok = strchr(endptr, '*');
+-	if (tok != NULL)
+-		ops->target.addr = strtoull(tok + 1, NULL, 16);
++	if (tok != NULL) {
++		endptr++;
++
++		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
++		 * Do not parse such instruction.  */
++		if (strstr(endptr, "(%r") == NULL)
++			ops->target.addr = strtoull(endptr, NULL, 16);
++	}
+ 	goto find_target;
+ }
+ 
+-- 
+2.14.4
