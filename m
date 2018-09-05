@@ -1,75 +1,185 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 71/77] perf augmented_syscalls: Check probe_read_str() return separately
-Date: Wed,  5 Sep 2018 19:04:34 -0300
-Message-ID: <20180905220440.20256-72-acme@kernel.org>
+Subject: [PATCH 72/77] perf augmented_syscalls: Avoid optimization to pass older BPF validators
+Date: Wed,  5 Sep 2018 19:04:35 -0300
+Message-ID: <20180905220440.20256-73-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Yonghong Song <yhs@fb.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Gianluca Borello <g.borello@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Yonghong Song <yhs@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Using a value returned from probe_read_str() to tell how many bytes to
-copy using perf_event_output() has issues in some older kernels, like
-4.17.17-100.fc27.x86_64, so separate the bounds checking done on how
-many bytes to copy to a separate variable, so that the next patch has
-only what is being done to make the test pass on older BPF validators.
+See https://www.spinics.net/lists/netdev/msg480099.html for the whole
+discussio, but to make the augmented_syscalls.c BPF program to get built
+and loaded successfully in a greater range of kernels, add an extra
+check.
 
-For reference, see the discussion in this thread:
+Related patch:
 
-  https://www.spinics.net/lists/netdev/msg480099.html
+  a60dd35d2e39 ("bpf: change bpf_perf_event_output arg5 type to ARG_CONST_SIZE_OR_ZERO")
+
+That is in the kernel since v4.15, I couldn't figure why this is hitting
+me with 4.17.17, but adding the workaround discussed there makes this
+work with this fedora kernel and with 4.18.recent.
+
+Before:
+
+  # uname -a
+  Linux seventh 4.17.17-100.fc27.x86_64 #1 SMP Mon Aug 20 15:53:11 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+  # perf trace -e tools/perf/examples/bpf/augmented_syscalls.c cat /etc/passwd > /dev/null
+  libbpf: load bpf program failed: Permission denied
+  libbpf: -- BEGIN DUMP LOG ---
+  libbpf:
+  0: (bf) r6 = r1
+  1: (b7) r1 = 0
+  2: (7b) *(u64 *)(r10 -8) = r1
+  3: (7b) *(u64 *)(r10 -16) = r1
+  4: (7b) *(u64 *)(r10 -24) = r1
+  5: (7b) *(u64 *)(r10 -32) = r1
+  6: (7b) *(u64 *)(r10 -40) = r1
+  7: (7b) *(u64 *)(r10 -48) = r1
+  8: (7b) *(u64 *)(r10 -56) = r1
+  9: (7b) *(u64 *)(r10 -64) = r1
+  10: (7b) *(u64 *)(r10 -72) = r1
+  11: (7b) *(u64 *)(r10 -80) = r1
+  12: (7b) *(u64 *)(r10 -88) = r1
+  13: (7b) *(u64 *)(r10 -96) = r1
+  14: (7b) *(u64 *)(r10 -104) = r1
+  15: (7b) *(u64 *)(r10 -112) = r1
+  16: (7b) *(u64 *)(r10 -120) = r1
+  17: (7b) *(u64 *)(r10 -128) = r1
+  18: (7b) *(u64 *)(r10 -136) = r1
+  19: (7b) *(u64 *)(r10 -144) = r1
+  20: (7b) *(u64 *)(r10 -152) = r1
+  21: (7b) *(u64 *)(r10 -160) = r1
+  22: (7b) *(u64 *)(r10 -168) = r1
+  23: (7b) *(u64 *)(r10 -176) = r1
+  24: (7b) *(u64 *)(r10 -184) = r1
+  25: (7b) *(u64 *)(r10 -192) = r1
+  26: (7b) *(u64 *)(r10 -200) = r1
+  27: (7b) *(u64 *)(r10 -208) = r1
+  28: (7b) *(u64 *)(r10 -216) = r1
+  29: (7b) *(u64 *)(r10 -224) = r1
+  30: (7b) *(u64 *)(r10 -232) = r1
+  31: (7b) *(u64 *)(r10 -240) = r1
+  32: (7b) *(u64 *)(r10 -248) = r1
+  33: (7b) *(u64 *)(r10 -256) = r1
+  34: (7b) *(u64 *)(r10 -264) = r1
+  35: (7b) *(u64 *)(r10 -272) = r1
+  36: (7b) *(u64 *)(r10 -280) = r1
+  37: (7b) *(u64 *)(r10 -288) = r1
+  38: (7b) *(u64 *)(r10 -296) = r1
+  39: (7b) *(u64 *)(r10 -304) = r1
+  40: (7b) *(u64 *)(r10 -312) = r1
+  41: (bf) r7 = r10
+  42: (07) r7 += -312
+  43: (bf) r1 = r7
+  44: (b7) r2 = 48
+  45: (bf) r3 = r6
+  46: (85) call bpf_probe_read#4
+  47: (79) r3 = *(u64 *)(r6 +24)
+  48: (bf) r1 = r10
+  49: (07) r1 += -256
+  50: (b7) r8 = 256
+  51: (b7) r2 = 256
+  52: (85) call bpf_probe_read_str#45
+  53: (bf) r1 = r0
+  54: (67) r1 <<= 32
+  55: (77) r1 >>= 32
+  56: (bf) r5 = r0
+  57: (07) r5 += 56
+  58: (2d) if r8 > r1 goto pc+1
+   R0=inv(id=0) R1=inv(id=0,umin_value=256,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R5=inv(id=0) R6=ctx(id=0,off=0,imm=0) R7=fp-312,call_-1 R8=inv256 R10=fp0,call_-1 fp-264=0
+  59: (b7) r5 = 312
+  60: (63) *(u32 *)(r10 -264) = r0
+  61: (67) r5 <<= 32
+  62: (77) r5 >>= 32
+  63: (bf) r1 = r6
+  64: (18) r2 = 0xffff8b9120cc8500
+  66: (18) r3 = 0xffffffff
+  68: (bf) r4 = r7
+  69: (85) call bpf_perf_event_output#25
+  70: (b7) r0 = 0
+  71: (95) exit
+
+  from 58 to 60: R0=inv(id=0) R1=inv(id=0,umax_value=255,var_off=(0x0; 0xff)) R5=inv(id=0) R6=ctx(id=0,off=0,imm=0) R7=fp-312,call_-1 R8=inv256 R10=fp0,call_-1 fp-264=0
+  60: (63) *(u32 *)(r10 -264) = r0
+  61: (67) r5 <<= 32
+  62: (77) r5 >>= 32
+  63: (bf) r1 = r6
+  64: (18) r2 = 0xffff8b9120cc8500
+  66: (18) r3 = 0xffffffff
+  68: (bf) r4 = r7
+  69: (85) call bpf_perf_event_output#25
+  R5 unbounded memory access, use 'var &= const' or 'if (var < const)'
+
+  libbpf: -- END LOG --
+  libbpf: failed to load program 'syscalls:sys_enter_openat'
+  libbpf: failed to load object 'tools/perf/examples/bpf/augmented_syscalls.c'
+  bpf: load objects failed: err=-4007: (Kernel verifier blocks program loading)
+  event syntax error: 'tools/perf/examples/bpf/augmented_syscalls.c'
+                       \___ Kernel verifier blocks program loading
+
+After:
+
+  # perf trace -e tools/perf/examples/bpf/augmented_syscalls.c cat /etc/passwd > /dev/null
+     0.000 cat/29249 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC)
+     0.008 cat/29249 syscalls:sys_exit_openat:0x3
+     0.021 cat/29249 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC)
+     0.025 cat/29249 syscalls:sys_exit_openat:0x3
+     0.180 cat/29249 open(filename: /usr/lib/locale/locale-archive, flags: CLOEXEC)
+     0.185 cat/29249 syscalls:sys_exit_open:0x3
+     0.242 cat/29249 openat(dfd: CWD, filename: /etc/passwd)
+     0.245 cat/29249 syscalls:sys_exit_openat:0x3
+  #
+
+It also works with a more recent kernel:
+
+  # uname -a
+  Linux jouet 4.18.0-00014-g4e67b2a5df5d #6 SMP Thu Aug 30 17:34:17 -03 2018 x86_64 x86_64 x86_64 GNU/Linux
+  # perf trace -e tools/perf/examples/bpf/augmented_syscalls.c cat /etc/passwd > /dev/null
+     0.000 cat/26451 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC)
+     0.020 cat/26451 syscalls:sys_exit_openat:0x3
+     0.039 cat/26451 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC)
+     0.044 cat/26451 syscalls:sys_exit_openat:0x3
+     0.231 cat/26451 open(filename: /usr/lib/locale/locale-archive, flags: CLOEXEC)
+     0.238 cat/26451 syscalls:sys_exit_open:0x3
+     0.278 cat/26451 openat(dfd: CWD, filename: /etc/passwd)
+     0.282 cat/26451 syscalls:sys_exit_openat:0x3
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: David Ahern <dsahern@gmail.com>
+Cc: Gianluca Borello <g.borello@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
 Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-jtsapwibyxrnv1xjfsgzp0fj@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-wkpsivs1a9afwldbul46btbv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/examples/bpf/augmented_syscalls.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ tools/perf/examples/bpf/augmented_syscalls.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/examples/bpf/augmented_syscalls.c b/tools/perf/examples/bpf/augmented_syscalls.c
-index 1419a9186937..0decbcfa8b90 100644
+index 0decbcfa8b90..2ae44813ef2d 100644
 --- a/tools/perf/examples/bpf/augmented_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_syscalls.c
-@@ -33,9 +33,9 @@ struct syscall_exit_args {
- };
- 
- struct augmented_filename {
--	int	size;
--	int	reserved;
--	char	value[256];
-+	unsigned int	size;
-+	int		reserved;
-+	char		value[256];
- };
- 
- #define augmented_filename_syscall(syscall)							\
-@@ -46,14 +46,15 @@ struct augmented_enter_##syscall##_args {			 				\
- int syscall_enter(syscall)(struct syscall_enter_##syscall##_args *args)				\
- {												\
- 	struct augmented_enter_##syscall##_args augmented_args = { .filename.reserved = 0, }; 	\
-+	unsigned int len = sizeof(augmented_args);						\
- 	probe_read(&augmented_args.args, sizeof(augmented_args.args), args);			\
+@@ -51,8 +51,10 @@ int syscall_enter(syscall)(struct syscall_enter_##syscall##_args *args)				\
  	augmented_args.filename.size = probe_read_str(&augmented_args.filename.value, 		\
  						      sizeof(augmented_args.filename.value), 	\
  						      args->filename_ptr); 			\
-+	if (augmented_args.filename.size < sizeof(augmented_args.filename.value))		\
-+		len -= sizeof(augmented_args.filename.value) - augmented_args.filename.size;	\
+-	if (augmented_args.filename.size < sizeof(augmented_args.filename.value))		\
++	if (augmented_args.filename.size < sizeof(augmented_args.filename.value)) {		\
+ 		len -= sizeof(augmented_args.filename.value) - augmented_args.filename.size;	\
++		len &= sizeof(augmented_args.filename.value) - 1;				\
++	}											\
  	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 			\
--			  &augmented_args, 							\
--			  (sizeof(augmented_args) - sizeof(augmented_args.filename.value) +	\
--			   augmented_args.filename.size));					\
-+			  &augmented_args, len);						\
+ 			  &augmented_args, len);						\
  	return 0;										\
- }												\
- int syscall_exit(syscall)(struct syscall_exit_args *args)					\
 -- 
 2.14.4
