@@ -1,331 +1,45 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/77] tools lib traceevent, perf tools: Split trace-seq related APIs in a separate header file
-Date: Wed,  5 Sep 2018 19:03:43 -0300
-Message-ID: <20180905220440.20256-21-acme@kernel.org>
+Subject: [PATCH 21/77] perf bpf: Add syscall_exit() helper
+Date: Wed,  5 Sep 2018 19:03:44 -0300
+Message-ID: <20180905220440.20256-22-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In order to make libtraceevent into a proper library, all its APIs
-should be defined in corresponding header files.  This patch splits
-trace-seq related APIs in a separate header file: trace-seq.h
+So that we can hook to the syscalls:sys_exit_SYSCALL tracepoints in
+addition to the syscalls:sys_enter_SYSCALL we hook using the
+syscall_enter() helper.
 
-Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20180828185038.2dcb2743@gandalf.local.home
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-6qh8aph1jklyvdu7w89c0izc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c         |  1 +
- tools/lib/traceevent/event-parse.h         | 46 ++-----------------------
- tools/lib/traceevent/event-plugin.c        |  1 +
- tools/lib/traceevent/plugin_function.c     |  1 +
- tools/lib/traceevent/plugin_hrtimer.c      |  1 +
- tools/lib/traceevent/plugin_jbd2.c         |  1 +
- tools/lib/traceevent/plugin_kmem.c         |  1 +
- tools/lib/traceevent/plugin_kvm.c          |  1 +
- tools/lib/traceevent/plugin_mac80211.c     |  1 +
- tools/lib/traceevent/plugin_sched_switch.c |  1 +
- tools/lib/traceevent/plugin_scsi.c         |  1 +
- tools/lib/traceevent/plugin_xen.c          |  1 +
- tools/lib/traceevent/trace-seq.c           |  2 ++
- tools/lib/traceevent/trace-seq.h           | 55 ++++++++++++++++++++++++++++++
- tools/perf/util/trace-event.h              |  1 +
- 15 files changed, 71 insertions(+), 44 deletions(-)
- create mode 100644 tools/lib/traceevent/trace-seq.h
+ tools/perf/include/bpf/bpf.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index ce1e20227c64..70a42bec6931 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -24,6 +24,7 @@
- #include <netinet/in.h>
- #include "event-parse.h"
- #include "event-utils.h"
-+#include "trace-seq.h"
+diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
+index 47897d65e799..52b6d87fe822 100644
+--- a/tools/perf/include/bpf/bpf.h
++++ b/tools/perf/include/bpf/bpf.h
+@@ -26,6 +26,9 @@ struct bpf_map {
+ #define syscall_enter(name) \
+ 	SEC("syscalls:sys_enter_" #name) syscall_enter_ ## name
  
- static const char *input_buf;
- static unsigned long long input_buf_ptr;
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 44b7c2d41f9f..fa665c66bfa4 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -26,17 +26,12 @@
- #include <regex.h>
- #include <string.h>
- 
-+#include "trace-seq.h"
++#define syscall_exit(name) \
++	SEC("syscalls:sys_exit_" #name) syscall_exit_ ## name
 +
- #ifndef __maybe_unused
- #define __maybe_unused __attribute__((unused))
- #endif
- 
--/* ----------------------- trace_seq ----------------------- */
--
--
--#ifndef TRACE_SEQ_BUF_SIZE
--#define TRACE_SEQ_BUF_SIZE 4096
--#endif
--
- #ifndef DEBUG_RECORD
- #define DEBUG_RECORD 0
- #endif
-@@ -59,43 +54,6 @@ struct tep_record {
- #endif
- };
- 
--enum trace_seq_fail {
--	TRACE_SEQ__GOOD,
--	TRACE_SEQ__BUFFER_POISONED,
--	TRACE_SEQ__MEM_ALLOC_FAILED,
--};
--
--/*
-- * Trace sequences are used to allow a function to call several other functions
-- * to create a string of data to use (up to a max of PAGE_SIZE).
-- */
--
--struct trace_seq {
--	char			*buffer;
--	unsigned int		buffer_size;
--	unsigned int		len;
--	unsigned int		readpos;
--	enum trace_seq_fail	state;
--};
--
--void trace_seq_init(struct trace_seq *s);
--void trace_seq_reset(struct trace_seq *s);
--void trace_seq_destroy(struct trace_seq *s);
--
--extern int trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
--	__attribute__ ((format (printf, 2, 3)));
--extern int trace_seq_vprintf(struct trace_seq *s, const char *fmt, va_list args)
--	__attribute__ ((format (printf, 2, 0)));
--
--extern int trace_seq_puts(struct trace_seq *s, const char *str);
--extern int trace_seq_putc(struct trace_seq *s, unsigned char c);
--
--extern void trace_seq_terminate(struct trace_seq *s);
--
--extern int trace_seq_do_fprintf(struct trace_seq *s, FILE *fp);
--extern int trace_seq_do_printf(struct trace_seq *s);
--
--
- /* ----------------------- pevent ----------------------- */
- 
- struct tep_handle;
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index f17e25097e1e..ec16a103c0cc 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -15,6 +15,7 @@
- #include <dirent.h>
- #include "event-parse.h"
- #include "event-utils.h"
-+#include "trace-seq.h"
- 
- #define LOCAL_PLUGIN_DIR ".traceevent/plugins"
- 
-diff --git a/tools/lib/traceevent/plugin_function.c b/tools/lib/traceevent/plugin_function.c
-index 424747475d37..2919042e7dc2 100644
---- a/tools/lib/traceevent/plugin_function.c
-+++ b/tools/lib/traceevent/plugin_function.c
-@@ -23,6 +23,7 @@
- 
- #include "event-parse.h"
- #include "event-utils.h"
-+#include "trace-seq.h"
- 
- static struct func_stack {
- 	int size;
-diff --git a/tools/lib/traceevent/plugin_hrtimer.c b/tools/lib/traceevent/plugin_hrtimer.c
-index b43bfec565d8..29b608076ea0 100644
---- a/tools/lib/traceevent/plugin_hrtimer.c
-+++ b/tools/lib/traceevent/plugin_hrtimer.c
-@@ -23,6 +23,7 @@
- #include <string.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- static int timer_expire_handler(struct trace_seq *s,
- 				struct tep_record *record,
-diff --git a/tools/lib/traceevent/plugin_jbd2.c b/tools/lib/traceevent/plugin_jbd2.c
-index 45a9acd19640..a5e34135dd6a 100644
---- a/tools/lib/traceevent/plugin_jbd2.c
-+++ b/tools/lib/traceevent/plugin_jbd2.c
-@@ -22,6 +22,7 @@
- #include <string.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- #define MINORBITS	20
- #define MINORMASK	((1U << MINORBITS) - 1)
-diff --git a/tools/lib/traceevent/plugin_kmem.c b/tools/lib/traceevent/plugin_kmem.c
-index 73966b05abce..a7a162575e2c 100644
---- a/tools/lib/traceevent/plugin_kmem.c
-+++ b/tools/lib/traceevent/plugin_kmem.c
-@@ -22,6 +22,7 @@
- #include <string.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- static int call_site_handler(struct trace_seq *s, struct tep_record *record,
- 			     struct event_format *event, void *context)
-diff --git a/tools/lib/traceevent/plugin_kvm.c b/tools/lib/traceevent/plugin_kvm.c
-index 1d0d15906225..a0dfd3d0f197 100644
---- a/tools/lib/traceevent/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugin_kvm.c
-@@ -23,6 +23,7 @@
- #include <stdint.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- #ifdef HAVE_UDIS86
- 
-diff --git a/tools/lib/traceevent/plugin_mac80211.c b/tools/lib/traceevent/plugin_mac80211.c
-index de50a5316203..0b7779444b63 100644
---- a/tools/lib/traceevent/plugin_mac80211.c
-+++ b/tools/lib/traceevent/plugin_mac80211.c
-@@ -22,6 +22,7 @@
- #include <string.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- #define INDENT 65
- 
-diff --git a/tools/lib/traceevent/plugin_sched_switch.c b/tools/lib/traceevent/plugin_sched_switch.c
-index eecb4bd95c11..582d3be2849b 100644
---- a/tools/lib/traceevent/plugin_sched_switch.c
-+++ b/tools/lib/traceevent/plugin_sched_switch.c
-@@ -22,6 +22,7 @@
- #include <string.h>
- 
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- static void write_state(struct trace_seq *s, int val)
- {
-diff --git a/tools/lib/traceevent/plugin_scsi.c b/tools/lib/traceevent/plugin_scsi.c
-index 5ec346f6b842..4eba25cc1431 100644
---- a/tools/lib/traceevent/plugin_scsi.c
-+++ b/tools/lib/traceevent/plugin_scsi.c
-@@ -3,6 +3,7 @@
- #include <string.h>
- #include <inttypes.h>
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- typedef unsigned long sector_t;
- typedef uint64_t u64;
-diff --git a/tools/lib/traceevent/plugin_xen.c b/tools/lib/traceevent/plugin_xen.c
-index b2acbd6e9c86..bc0496e4c296 100644
---- a/tools/lib/traceevent/plugin_xen.c
-+++ b/tools/lib/traceevent/plugin_xen.c
-@@ -3,6 +3,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include "event-parse.h"
-+#include "trace-seq.h"
- 
- #define __HYPERVISOR_set_trap_table			0
- #define __HYPERVISOR_mmu_update				1
-diff --git a/tools/lib/traceevent/trace-seq.c b/tools/lib/traceevent/trace-seq.c
-index e3bac4543d3b..8ff1d55954d1 100644
---- a/tools/lib/traceevent/trace-seq.c
-+++ b/tools/lib/traceevent/trace-seq.c
-@@ -3,6 +3,8 @@
-  * Copyright (C) 2009 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-  */
-+#include "trace-seq.h"
-+
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/lib/traceevent/trace-seq.h b/tools/lib/traceevent/trace-seq.h
-new file mode 100644
-index 000000000000..d68ec69f8d1a
---- /dev/null
-+++ b/tools/lib/traceevent/trace-seq.h
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+/*
-+ * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-+ *
-+ */
-+
-+#ifndef _TRACE_SEQ_H
-+#define _TRACE_SEQ_H
-+
-+#include <stdarg.h>
-+#include <stdio.h>
-+
-+/* ----------------------- trace_seq ----------------------- */
-+
-+#ifndef TRACE_SEQ_BUF_SIZE
-+#define TRACE_SEQ_BUF_SIZE 4096
-+#endif
-+
-+enum trace_seq_fail {
-+	TRACE_SEQ__GOOD,
-+	TRACE_SEQ__BUFFER_POISONED,
-+	TRACE_SEQ__MEM_ALLOC_FAILED,
-+};
-+
-+/*
-+ * Trace sequences are used to allow a function to call several other functions
-+ * to create a string of data to use (up to a max of PAGE_SIZE).
-+ */
-+
-+struct trace_seq {
-+	char			*buffer;
-+	unsigned int		buffer_size;
-+	unsigned int		len;
-+	unsigned int		readpos;
-+	enum trace_seq_fail	state;
-+};
-+
-+void trace_seq_init(struct trace_seq *s);
-+void trace_seq_reset(struct trace_seq *s);
-+void trace_seq_destroy(struct trace_seq *s);
-+
-+extern int trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
-+	__attribute__ ((format (printf, 2, 3)));
-+extern int trace_seq_vprintf(struct trace_seq *s, const char *fmt, va_list args)
-+	__attribute__ ((format (printf, 2, 0)));
-+
-+extern int trace_seq_puts(struct trace_seq *s, const char *str);
-+extern int trace_seq_putc(struct trace_seq *s, unsigned char c);
-+
-+extern void trace_seq_terminate(struct trace_seq *s);
-+
-+extern int trace_seq_do_fprintf(struct trace_seq *s, FILE *fp);
-+extern int trace_seq_do_printf(struct trace_seq *s);
-+
-+#endif /* _TRACE_SEQ_H */
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 40204ec3a7a2..c69d77d7cf55 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -3,6 +3,7 @@
- #define _PERF_UTIL_TRACE_EVENT_H
- 
- #include <traceevent/event-parse.h>
-+#include <traceevent/trace-seq.h>
- #include "parse-events.h"
- 
- struct machine;
+ #define license(name) \
+ char _license[] SEC("license") = #name; \
+ int _version SEC("version") = LINUX_VERSION_CODE;
 -- 
 2.14.4
