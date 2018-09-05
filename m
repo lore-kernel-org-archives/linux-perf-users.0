@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 57/77] perf stat: Move 'null_run' to 'struct perf_stat_config'
-Date: Wed,  5 Sep 2018 19:04:20 -0300
-Message-ID: <20180905220440.20256-58-acme@kernel.org>
+Subject: [PATCH 58/77] perf stat: Move 'print_free_counters_hint' to 'struct perf_stat_config'
+Date: Wed,  5 Sep 2018 19:04:21 -0300
+Message-ID: <20180905220440.20256-59-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the static 'null_run' variable to 'struct perf_stat_config', so
-that it can be passed around and used outside the 'perf stat' command.
+Move the 'print_free_counters_hint' variable to 'struct perf_stat_config',
+so that it can be passed around and used outside the 'perf stat' command.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -21,63 +21,54 @@ Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180830063252.23729-33-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180830063252.23729-34-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 7 +++----
+ tools/perf/builtin-stat.c | 5 ++---
  tools/perf/util/stat.h    | 1 +
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 381549a989b4..844c755564e3 100644
+index 844c755564e3..8748bb5e5403 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -148,7 +148,6 @@ typedef int (*aggr_get_id_t)(struct cpu_map *m, int cpu);
- #define METRIC_ONLY_LEN 20
+@@ -170,7 +170,6 @@ static bool			append_file;
+ static bool			interval_count;
+ static const char		*output_name;
+ static int			output_fd;
+-static int			print_free_counters_hint;
+ static int			print_mixed_hw_group_error;
+ static u64			*walltime_run;
+ static bool			ru_display			= false;
+@@ -1051,7 +1050,7 @@ static void printout(struct perf_stat_config *config, int id, int nr,
+ 			config->csv_sep);
  
- static volatile pid_t		child_pid			= -1;
--static bool			null_run			=  false;
- static int			detailed_run			=  0;
- static bool			transaction_run;
- static bool			topdown_run			= false;
-@@ -1676,7 +1675,7 @@ static void print_footer(struct perf_stat_config *config)
- 	FILE *output = config->output;
- 	int n;
+ 		if (counter->supported) {
+-			print_free_counters_hint = 1;
++			config->print_free_counters_hint = 1;
+ 			if (is_mixed_hw_group(counter))
+ 				print_mixed_hw_group_error = 1;
+ 		}
+@@ -1707,7 +1706,7 @@ static void print_footer(struct perf_stat_config *config)
+ 	}
+ 	fprintf(output, "\n\n");
  
--	if (!null_run)
-+	if (!config->null_run)
- 		fprintf(output, "\n");
- 
- 	if (config->run_count == 1) {
-@@ -1894,7 +1893,7 @@ static const struct option stat_options[] = {
- 		    "repeat command and print average + stddev (max: 100, forever: 0)"),
- 	OPT_BOOLEAN(0, "table", &walltime_run_table,
- 		    "display details about each run (only with -r option)"),
--	OPT_BOOLEAN('n', "null", &null_run,
-+	OPT_BOOLEAN('n', "null", &stat_config.null_run,
- 		    "null run - dont start any counters"),
- 	OPT_INCR('d', "detailed", &detailed_run,
- 		    "detailed run - start a lot of events"),
-@@ -2309,7 +2308,7 @@ static int add_default_attributes(void)
- 	struct parse_events_error errinfo;
- 
- 	/* Set attrs if no event is selected and !null_run: */
--	if (null_run)
-+	if (stat_config.null_run)
- 		return 0;
- 
- 	if (transaction_run) {
+-	if (print_free_counters_hint &&
++	if (config->print_free_counters_hint &&
+ 	    sysctl__read_int("kernel/nmi_watchdog", &n) >= 0 &&
+ 	    n > 0)
+ 		fprintf(output,
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 35550e3efd81..c198926c0e27 100644
+index c198926c0e27..8cad17363e90 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -94,6 +94,7 @@ struct perf_stat_config {
- 	bool			 csv_output;
- 	bool			 interval_clear;
- 	bool			 metric_only;
-+	bool			 null_run;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
+@@ -103,6 +103,7 @@ struct perf_stat_config {
+ 	unsigned int		 metric_only_len;
+ 	int			 times;
+ 	int			 run_count;
++	int			 print_free_counters_hint;
+ 	struct runtime_stat	*stats;
+ 	int			 stats_num;
+ 	const char		*csv_sep;
 -- 
 2.14.4
