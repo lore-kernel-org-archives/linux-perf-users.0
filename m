@@ -1,68 +1,64 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 77/77] perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo
-Date: Wed,  5 Sep 2018 19:04:40 -0300
-Message-ID: <20180905220440.20256-78-acme@kernel.org>
+Subject: [PATCH 73/77] perf trace: Introduce syscall__augmented_args() method
+Date: Wed,  5 Sep 2018 19:04:36 -0300
+Message-ID: <20180905220440.20256-74-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Kim Phillips <kim.phillips@arm.com>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sandipan Das <sandipan@linux.vnet.ibm.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Wang Nan <wangnan0>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When we don't have the iputils-debuginfo package installed, i.e. when we
-don't have the DWARF information needed to resolve ping's samples, we
-end up failing this 'perf test' entry:
-
-  # perf test ping
-  62: probe libc's inet_pton & backtrace it with ping       : Ok
-  # rpm -e iputils-debuginfo
-  # perf test ping
-  62: probe libc's inet_pton & backtrace it with ping       : FAILED!
-  #
-
-Fix it to accept "[unknown]" where the symbol + offset, when resolved,
-is expected.
-
-I think this will fail in the other arches as well, but since I can't
-test now, I'm leaving s390x and ppc cases as-is.
+That will be used by trace__sys_enter when we start combining the
+augmented syscalls:sys_enter_FOO + syscalls:sys_exit_FOO.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sandipan Das <sandipan@linux.vnet.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 7903a7086723 ("perf script: Show symbol offsets by default")
-Link: https://lkml.kernel.org/n/tip-hnizqwqrs03vcq1b74yao0f6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-iiseo3s0qbf9i3rzn8k597bv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 3013ac8f83d0..cab7b0aea6ea 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -48,7 +48,7 @@ trace_libc_inet_pton_backtrace() {
- 	*)
- 		eventattr='max-stack=3'
- 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	esac
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index c106189f4066..12356deb6046 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1677,6 +1677,17 @@ static int trace__fprintf_sample(struct trace *trace, struct perf_evsel *evsel,
+ 	return printed;
+ }
  
++static void *syscall__augmented_args(struct syscall *sc, struct perf_sample *sample, int *augmented_args_size)
++{
++	void *augmented_args = NULL;
++
++	*augmented_args_size = sample->raw_size - sc->args_size;
++	if (*augmented_args_size > 0)
++		augmented_args = sample->raw_data + sc->args_size;
++
++	return augmented_args;
++}
++
+ static int trace__sys_enter(struct trace *trace, struct perf_evsel *evsel,
+ 			    union perf_event *event __maybe_unused,
+ 			    struct perf_sample *sample)
+@@ -1762,10 +1773,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct perf_evsel *evse
+ 		goto out_put;
+ 
+ 	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
+-	augmented_args_size = sample->raw_size - sc->args_size;
+-	if (augmented_args_size > 0)
+-		augmented_args = sample->raw_data + sc->args_size;
+-
++	augmented_args = syscall__augmented_args(sc, sample, &augmented_args_size);
+ 	syscall__scnprintf_args(sc, msg, sizeof(msg), args, augmented_args, augmented_args_size, trace, thread);
+ 	fprintf(trace->output, "%s", msg);
+ 	err = 0;
 -- 
 2.14.4
