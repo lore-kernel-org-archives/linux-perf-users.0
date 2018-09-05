@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 63/77] perf stat: Move 'big_num' data to 'struct perf_stat_config'
-Date: Wed,  5 Sep 2018 19:04:26 -0300
-Message-ID: <20180905220440.20256-64-acme@kernel.org>
+Subject: [PATCH 64/77] perf stat: Move 'no_merge' data to 'struct perf_stat_config'
+Date: Wed,  5 Sep 2018 19:04:27 -0300
+Message-ID: <20180905220440.20256-65-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the static variable 'big_num' to 'struct perf_stat_config', so that
-it can be passed around and used outside 'perf stat' command.
+Move the static variable 'no_merge' to 'struct perf_stat_config', so
+that it can be passed around and used outside 'perf stat' command.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -21,63 +21,52 @@ Cc: Andi Kleen <andi@firstfloor.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180830063252.23729-39-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20180830063252.23729-40-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 8 ++++----
+ tools/perf/builtin-stat.c | 5 ++---
  tools/perf/util/stat.h    | 1 +
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 445673f688de..8ca85017a973 100644
+index 8ca85017a973..c4df076f1e54 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -151,7 +151,6 @@ static bool			transaction_run;
- static bool			topdown_run			= false;
- static bool			smi_cost			= false;
- static bool			smi_reset			= false;
--static bool			big_num				=  true;
- static int			big_num_opt			=  -1;
- static bool			group				= false;
- static const char		*pre_cmd			= NULL;
-@@ -192,6 +191,7 @@ static struct perf_stat_config stat_config = {
- 	.run_count		= 1,
- 	.metric_only_len	= METRIC_ONLY_LEN,
- 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
-+	.big_num		= true,
- };
- 
- static bool is_duration_time(struct perf_evsel *evsel)
-@@ -945,7 +945,7 @@ static void abs_printout(struct perf_stat_config *config,
- 	if (config->csv_output) {
- 		fmt = floor(sc) != sc ?  "%.2f%s" : "%.0f%s";
- 	} else {
--		if (big_num)
-+		if (config->big_num)
- 			fmt = floor(sc) != sc ? "%'18.2f%s" : "%'18.0f%s";
- 		else
- 			fmt = floor(sc) != sc ? "%18.2f%s" : "%18.0f%s";
-@@ -2847,9 +2847,9 @@ int cmd_stat(int argc, const char **argv)
- 			parse_options_usage(NULL, stat_options, "x", 1);
- 			goto out;
- 		} else /* Nope, so disable big number formatting */
--			big_num = false;
-+			stat_config.big_num = false;
- 	} else if (big_num_opt == 0) /* User passed --no-big-num */
--		big_num = false;
-+		stat_config.big_num = false;
- 
- 	setup_system_wide(argc);
- 
+@@ -158,7 +158,6 @@ static const char		*post_cmd			= NULL;
+ static bool			sync_run			= false;
+ static bool			forever				= false;
+ static bool			force_metric_only		= false;
+-static bool			no_merge			= false;
+ static bool			walltime_run_table		= false;
+ static struct timespec		ref_time;
+ static bool			append_file;
+@@ -1173,7 +1172,7 @@ static bool collect_data(struct perf_stat_config *config, struct perf_evsel *cou
+ 	if (counter->merged_stat)
+ 		return false;
+ 	cb(config, counter, data, true);
+-	if (no_merge)
++	if (config->no_merge)
+ 		uniquify_event_name(counter);
+ 	else if (counter->auto_merge_stats)
+ 		collect_all_aliases(config, counter, cb, data);
+@@ -1902,7 +1901,7 @@ static const struct option stat_options[] = {
+ 		    "list of cpus to monitor in system-wide"),
+ 	OPT_SET_UINT('A', "no-aggr", &stat_config.aggr_mode,
+ 		    "disable CPU count aggregation", AGGR_NONE),
+-	OPT_BOOLEAN(0, "no-merge", &no_merge, "Do not merge identical named events"),
++	OPT_BOOLEAN(0, "no-merge", &stat_config.no_merge, "Do not merge identical named events"),
+ 	OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
+ 		   "print counts with custom separator"),
+ 	OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index be202b066e62..843672214cca 100644
+index 843672214cca..0758107fe56f 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -103,6 +103,7 @@ struct perf_stat_config {
- 	bool			 metric_only;
+@@ -104,6 +104,7 @@ struct perf_stat_config {
  	bool			 null_run;
  	bool			 ru_display;
-+	bool			 big_num;
+ 	bool			 big_num;
++	bool			 no_merge;
  	FILE			*output;
  	unsigned int		 interval;
  	unsigned int		 timeout;
