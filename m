@@ -1,64 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 73/77] perf trace: Introduce syscall__augmented_args() method
-Date: Wed,  5 Sep 2018 19:04:36 -0300
-Message-ID: <20180905220440.20256-74-acme@kernel.org>
+Subject: [PATCH 69/77] perf trace beauty: Alias 'umount' to 'umount2'
+Date: Wed,  5 Sep 2018 19:04:32 -0300
+Message-ID: <20180905220440.20256-70-acme@kernel.org>
 References: <20180905220440.20256-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905220440.20256-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Benjamin Peterson <benjamin@python.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Benjamin Peterson <benjamin@python.org>
 
-That will be used by trace__sys_enter when we start combining the
-augmented syscalls:sys_enter_FOO + syscalls:sys_exit_FOO.
+Before:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+  # perf trace -e *mount* umount /dev/mapper/fedora-home /s
+    11.576 ( 0.004 ms) umount/3138 umount2(arg0: 94501956754656, arg1: 0, arg2: 1, arg3: 140051050083104, arg4: 4, arg5: 94501956755136) = -1 EINVAL Invalid argument
+  #
+
+After:
+
+  # perf trace -e *mount* umount /s
+     0.000 ( 9.241 ms): umount/5251 umount2(name: 0x55f74a986480) = 0
+
+Signed-off-by: Benjamin Peterson <benjamin@python.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-iiseo3s0qbf9i3rzn8k597bv@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180828035344.31500-1-benjamin@python.org
+[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c106189f4066..12356deb6046 100644
+index 97ace635bed8..c106189f4066 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1677,6 +1677,17 @@ static int trace__fprintf_sample(struct trace *trace, struct perf_evsel *evsel,
- 	return printed;
- }
- 
-+static void *syscall__augmented_args(struct syscall *sc, struct perf_sample *sample, int *augmented_args_size)
-+{
-+	void *augmented_args = NULL;
-+
-+	*augmented_args_size = sample->raw_size - sc->args_size;
-+	if (*augmented_args_size > 0)
-+		augmented_args = sample->raw_data + sc->args_size;
-+
-+	return augmented_args;
-+}
-+
- static int trace__sys_enter(struct trace *trace, struct perf_evsel *evsel,
- 			    union perf_event *event __maybe_unused,
- 			    struct perf_sample *sample)
-@@ -1762,10 +1773,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct perf_evsel *evse
- 		goto out_put;
- 
- 	args = perf_evsel__sc_tp_ptr(evsel, args, sample);
--	augmented_args_size = sample->raw_size - sc->args_size;
--	if (augmented_args_size > 0)
--		augmented_args = sample->raw_data + sc->args_size;
--
-+	augmented_args = syscall__augmented_args(sc, sample, &augmented_args_size);
- 	syscall__scnprintf_args(sc, msg, sizeof(msg), args, augmented_args, augmented_args_size, trace, thread);
- 	fprintf(trace->output, "%s", msg);
- 	err = 0;
+@@ -825,6 +825,7 @@ static struct syscall_fmt {
+ 	  .arg = { [2] = { .scnprintf = SCA_SIGNUM, /* sig */ }, }, },
+ 	{ .name	    = "tkill",
+ 	  .arg = { [1] = { .scnprintf = SCA_SIGNUM, /* sig */ }, }, },
++	{ .name     = "umount2", .alias = "umount", },
+ 	{ .name	    = "uname", .alias = "newuname", },
+ 	{ .name	    = "unlinkat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
 -- 
 2.14.4
