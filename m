@@ -1,7 +1,7 @@
 From: Sean V Kelley <seanvk.dev@oregontracks.org>
-Subject: [PATCH] perf vendor events arm64: Revise core JSON events for eMAG
-Date: Sun,  9 Sep 2018 17:08:13 -0700
-Message-ID: <20180910000813.20285-1-seanvk.dev@oregontracks.org>
+Subject: [PATCH v2] perf vendor events arm64: Revise core JSON events for eMAG
+Date: Sun,  9 Sep 2018 17:26:25 -0700
+Message-ID: <20180910002625.22253-1-seanvk.dev@oregontracks.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
