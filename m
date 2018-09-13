@@ -1,80 +1,188 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/7] perf/urgent fixes
-Date: Wed, 12 Sep 2018 21:10:54 +0200
-Message-ID: <20180912191054.GA63360@gmail.com>
-References: <20180912185509.32187-1-acme@kernel.org>
+From: Sean V Kelley <seanvk.dev@oregontracks.org>
+Subject: Re: [PATCH v2] perf vendor events arm64: Revise core JSON events for
+ eMAG
+Date: Thu, 13 Sep 2018 08:07:40 -0700
+Message-ID: <CAAbOPF1cKwmn9LzFbKVhXparjHOBu2FMcsvO1SZLUrortQYAJQ@mail.gmail.com>
+References: <20180910002625.22253-1-seanvk.dev@oregontracks.org>
+ <677aea32-d81a-222b-5766-6715f47ba319@huawei.com>
+ <CAAbOPF1xSQ_ksqWHm9UYgK_TsAPY3biu3fv9hQn_-ayvjjRk_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180912185509.32187-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>, Brian Starkey <brian.starkey@arm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Cornelia Huck <cohuck@redhat.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, David Hildenbrand <david@redhat.com>, "David S . Miller" <davem@davemloft.net>, Dongjiu Geng <gengdongjiu@huawei.com>, Eduardo Habkost <ehabkost@redhat.com>, Eric Anholt <eric@anholt.net>, Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>, Hendrik Brueckner <brueckner@linux.v>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAbOPF1xSQ_ksqWHm9UYgK_TsAPY3biu3fv9hQn_-ayvjjRk_Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: john.garry@huawei.com
+Cc: linux-perf-users@vger.kernel.org, wcohen@redhat.com, acme@kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
+On Mon, Sep 10, 2018 at 8:31 AM Sean V Kelley
+<seanvk.dev@oregontracks.org> wrote:
+>
+> On Mon, Sep 10, 2018 at 2:02 AM John Garry <john.garry@huawei.com> wrote:
+> >
+> > On 10/09/2018 01:26, Sean V Kelley wrote:
+> > > Split the PMU events into meaningful functional groups.  Update core
+> > > pmu events based on supported ARMv8 recommended IMPLEMENTATION DEFINED
+> > > events.
+> > >
+> > > The JSON files are updated with reference to a PMU table shared here:
+> > >
+> > > https://github.com/AmpereComputing/ampere-centos-kernel/blob/amp-centos-7.5-kernel/Documentation/arm64/eMAG-ARM-CoreImpDefined.pdf
+> > >
+> > > --
+> > > Changes in V2:
+> > > - Provided documentation for changes - John, William
+> > > - Broke up into meaningful groups - William
+> > > --
+> > >
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 02e184476eff848273826c1d6617bb37e5bcc7ad:
-> 
->   perf/core: Force USER_DS when recording user stack data (2018-09-10 14:01:46 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.19-20180912
-> 
-> for you to fetch changes up to 03db8b583d1c3c84963e08e2abf6c79081da5c31:
-> 
->   perf tools: Fix maps__find_symbol_by_name() (2018-09-11 14:12:51 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> - Fix finding a symbol by name when multiple maps use the same backing DSO,
->   so we must first see if that symbol name is in the DSO, then see if it is
->   inside the range of addresses for that specific map (Adrian Hunter)
-> 
-> - Update the tools copies of UAPI headers, which silences the warnings
->   emitted when building the tools and in some cases, like for the new
->   KVM ioctls, results in 'perf trace' being able to translate that
->   ioctl number to a string (Arnaldo Carvalho de Melo)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf tools: Fix maps__find_symbol_by_name()
-> 
-> Arnaldo Carvalho de Melo (6):
->       tools headers uapi: Update tools's copy of linux/perf_event.h
->       tools headers uapi: Update tools's copy of asm-generic/unistd.h
->       tools headers uapi: Update tools's copy of drm/drm.h
->       tools headers uapi: Update tools's copies of kvm headers
->       tools headers uapi: Update tools's copy of linux/vhost.h
->       tools headers uapi: Update tools's copy of linux/if_link.h
-> 
->  tools/arch/arm/include/uapi/asm/kvm.h   | 13 ++++++++++++
->  tools/arch/arm64/include/uapi/asm/kvm.h | 13 ++++++++++++
->  tools/arch/s390/include/uapi/asm/kvm.h  |  5 ++++-
->  tools/arch/x86/include/uapi/asm/kvm.h   | 37 +++++++++++++++++++++++++++++++++
->  tools/include/uapi/asm-generic/unistd.h |  4 +++-
->  tools/include/uapi/drm/drm.h            |  9 ++++++++
->  tools/include/uapi/linux/if_link.h      | 17 +++++++++++++++
->  tools/include/uapi/linux/kvm.h          |  6 ++++++
->  tools/include/uapi/linux/perf_event.h   |  2 +-
->  tools/include/uapi/linux/vhost.h        | 18 ++++++++++++++++
->  tools/perf/util/map.c                   | 11 ++++++++++
->  11 files changed, 132 insertions(+), 3 deletions(-)
+Gentle reminder for additional feedback on my V2 patch.
 
-Pulled, thanks a lot Arnaldo!
+Thanks!
 
-	Ingo
+Sean
+
+
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: William Cohen <wcohen@redhat.com>
+> > > Cc: John Garry <john.garry@huawei.com>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > >
+> > > Signed-off-by: Sean V Kelley <seanvk.dev@oregontracks.org>
+> > > ---
+> > >  .../arch/arm64/ampere/emag/branch.json        |  23 +++
+> > >  .../arch/arm64/ampere/emag/bus.json           |  26 +++
+> > >  .../arch/arm64/ampere/emag/cache.json         | 191 ++++++++++++++++++
+> > >  .../arch/arm64/ampere/emag/clock.json         |  20 ++
+> > >  .../arch/arm64/ampere/emag/core-imp-def.json  |  32 ---
+> > >  .../arch/arm64/ampere/emag/counter.json       |   8 +
+> > >  .../arch/arm64/ampere/emag/exception.json     |  50 +++++
+> > >  .../arch/arm64/ampere/emag/instruction.json   |  89 ++++++++
+> > >  .../arch/arm64/ampere/emag/intrinsic.json     |  14 ++
+> > >  .../arch/arm64/ampere/emag/memory.json        |  29 +++
+> > >  .../arch/arm64/ampere/emag/pipeline.json      |  50 +++++
+> > >  11 files changed, 500 insertions(+), 32 deletions(-)
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json
+> > >  delete mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/counter.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json
+> > >  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json
+> >
+> > I don't feel too strongly about this, but it would be better to organise
+> > all arm64 JSONs into this same structre for consistency?
+> >
+> > However I actually like a single per-chip JSON for arm64 since it allows
+> > easy diff against armv8-recommended.json, so we don't miss/replicate events.
+>
+> Well for those matching implementation defined counters, i.e.,
+> "ArchStdEvent", we could retain core-imp-def.json.
+> But allow break-out of the rest.  That would satisfy the easy diff
+> against the armv8-recommended.json.
+>
+> >
+> >
+> > >
+> > > diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+> > > new file mode 100644
+> > > index 000000000000..abc98b018446
+> > > --- /dev/null
+> > > +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+> > > @@ -0,0 +1,23 @@
+> > > +[
+> > > +    {
+> > > +        "ArchStdEvent": "BR_IMMED_SPEC",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BR_RETURN_SPEC",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BR_INDIRECT_SPEC",
+> > > +    },
+> > > +    {
+> > > +        "PublicDescription": "Mispredicted or not predicted branch speculatively executed",
+> > > +        "EventCode": "0x10",
+> > > +        "EventName": "BR_MIS_PRED",
+> > > +        "BriefDescription": "Branch mispredicted"
+> >
+> > Isn't this a common architectural event, covered by the arm64 kernel
+> > perf driver?
+> >
+>
+> Yes, it is exposed by the ARM64 perf driver, armv8_pmuv3_0.  I'm not
+> sure that an additional alias would be problematic and it actually
+> allows for descriptions.
+> Finally, I'm trying to synchronize this patch with a patch to ARM's
+> StreamLine gator daemon here with the same information:
+>
+> https://github.com/ARM-software/gator/pull/5/commits/bfd20f692ac4ff69b0363ec57d78ed7ed914adca
+>
+>
+> Thanks,
+>
+> Sean
+>
+>
+>
+>
+> >
+> > > +    },
+> > > +    {
+> > > +        "PublicDescription": "Predictable branch speculatively executed",
+> > > +        "EventCode": "0x12",
+> > > +        "EventName": "BR_PRED",
+> > > +        "BriefDescription": "Predictable branch"
+> > > +    },
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+> > > new file mode 100644
+> > > index 000000000000..687b2629e1d1
+> > > --- /dev/null
+> > > +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+> > > @@ -0,0 +1,26 @@
+> > > +[
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_RD",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_WR",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_SHARED",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_NORMAL",
+> > > +    },
+> > > +    {
+> > > +        "ArchStdEvent": "BUS_ACCESS_PERIPH",
+> > > +    },
+> > > +    {
+> > > +        "PublicDescription": "Bus access",
+> > > +        "EventCode": "0x19",
+> > > +        "EventName": "BUS_ACCESS",
+> > > +        "BriefDescription": "Bus access"
+> >
+> > > +    },
+> > > +]
+> >
+> > Thanks,
+> > John
+> >
