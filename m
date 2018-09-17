@@ -1,17 +1,17 @@
-From: William Cohen <wcohen@redhat.com>
+From: Sean V Kelley <seanvk.dev@oregontracks.org>
 Subject: Re: [PATCH v2] perf vendor events arm64: Revise core JSON events for
  eMAG
-Date: Mon, 17 Sep 2018 10:39:35 -0400
-Message-ID: <0c154237-0c1f-cc9d-c697-1ca66e9297ae@redhat.com>
+Date: Mon, 17 Sep 2018 08:40:30 -0700
+Message-ID: <43F96985-80D1-4398-8614-59678FF7B32C@oregontracks.org>
 References: <20180910002625.22253-1-seanvk.dev@oregontracks.org>
  <1d601b30-5065-b778-9927-b7d9f04f6b6f@redhat.com>
  <bb09333a-ac9c-4163-98a0-4f50b6ff9079@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <0c154237-0c1f-cc9d-c697-1ca66e9297ae@redhat.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bb09333a-ac9c-4163-98a0-4f50b6ff9079@huawei.com>
-Content-Language: en-MW
+In-Reply-To: <0c154237-0c1f-cc9d-c697-1ca66e9297ae@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,95 +21,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Garry <john.garry@huawei.com>, Sean V Kelley <seanvk.dev@oregontracks.org>, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, acme@kernel.org, Linuxarm <linuxarm@huawei.com>
+To: William Cohen <wcohen@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, acme@kernel.org, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-T24gOS8xNy8xOCA0OjUzIEFNLCBKb2huIEdhcnJ5IHdyb3RlOgo+IE9uIDE2LzA5LzIwMTggMjE6
-MzksIFdpbGxpYW0gQ29oZW4gd3JvdGU6Cj4+IE9uIDkvOS8xOCA4OjI2IFBNLCBTZWFuIFYgS2Vs
-bGV5IHdyb3RlOgo+Pj4gU3BsaXQgdGhlIFBNVSBldmVudHMgaW50byBtZWFuaW5nZnVsIGZ1bmN0
-aW9uYWwgZ3JvdXBzLsKgIFVwZGF0ZSBjb3JlCj4+PiBwbXUgZXZlbnRzIGJhc2VkIG9uIHN1cHBv
-cnRlZCBBUk12OCByZWNvbW1lbmRlZCBJTVBMRU1FTlRBVElPTiBERUZJTkVECj4+PiBldmVudHMu
-Cj4+Pgo+Pj4gVGhlIEpTT04gZmlsZXMgYXJlIHVwZGF0ZWQgd2l0aCByZWZlcmVuY2UgdG8gYSBQ
-TVUgdGFibGUgc2hhcmVkIGhlcmU6Cj4+Pgo+Pj4gaHR0cHM6Ly9naXRodWIuY29tL0FtcGVyZUNv
-bXB1dGluZy9hbXBlcmUtY2VudG9zLWtlcm5lbC9ibG9iL2FtcC1jZW50b3MtNy41LWtlcm5lbC9E
-b2N1bWVudGF0aW9uL2FybTY0L2VNQUctQVJNLUNvcmVJbXBEZWZpbmVkLnBkZgo+Pj4KPj4+IC0t
-IAo+Pj4gQ2hhbmdlcyBpbiBWMjoKPj4+IC0gUHJvdmlkZWQgZG9jdW1lbnRhdGlvbiBmb3IgY2hh
-bmdlcyAtIEpvaG4sIFdpbGxpYW0KPj4+IC0gQnJva2UgdXAgaW50byBtZWFuaW5nZnVsIGdyb3Vw
-cyAtIFdpbGxpYW0KPj4+IC0tIAo+Pj4KPj4+IENjOiBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8g
-PGFjbWVAa2VybmVsLm9yZz4KPj4+IENjOiBXaWxsaWFtIENvaGVuIDx3Y29oZW5AcmVkaGF0LmNv
-bT4KPj4+IENjOiBKb2huIEdhcnJ5IDxqb2huLmdhcnJ5QGh1YXdlaS5jb20+Cj4+PiBDYzogbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTog
-U2VhbiBWIEtlbGxleSA8c2VhbnZrLmRldkBvcmVnb250cmFja3Mub3JnPgo+Pj4gLS0tCj4+PiDC
-oC4uLi9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2JyYW5jaC5qc29uwqDCoMKgwqDCoMKgwqAgfMKg
-IDIzICsrKwo+Pj4gwqAuLi4vYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9idXMuanNvbsKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHzCoCAyNiArKysKPj4+IMKgLi4uL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcv
-Y2FjaGUuanNvbsKgwqDCoMKgwqDCoMKgwqAgfCAxOTEgKysrKysrKysrKysrKysrKysrCj4+PiDC
-oC4uLi9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2Nsb2NrLmpzb27CoMKgwqDCoMKgwqDCoMKgIHzC
-oCAyMCArKwo+Pj4gwqAuLi4vYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9jb3JlLWltcC1kZWYuanNv
-bsKgIHzCoCAzMiAtLS0KPj4+IMKgLi4uL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvY291bnRlci5q
-c29uwqDCoMKgwqDCoMKgIHzCoMKgIDggKwo+Pj4gwqAuLi4vYXJjaC9hcm02NC9hbXBlcmUvZW1h
-Zy9leGNlcHRpb24uanNvbsKgwqDCoMKgIHzCoCA1MCArKysrKwo+Pj4gwqAuLi4vYXJjaC9hcm02
-NC9hbXBlcmUvZW1hZy9pbnN0cnVjdGlvbi5qc29uwqDCoCB8wqAgODkgKysrKysrKysKPj4+IMKg
-Li4uL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvaW50cmluc2ljLmpzb27CoMKgwqDCoCB8wqAgMTQg
-KysKPj4+IMKgLi4uL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvbWVtb3J5Lmpzb27CoMKgwqDCoMKg
-wqDCoCB8wqAgMjkgKysrCj4+PiDCoC4uLi9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL3BpcGVsaW5l
-Lmpzb27CoMKgwqDCoMKgIHzCoCA1MCArKysrKwo+Pj4gwqAxMSBmaWxlcyBjaGFuZ2VkLCA1MDAg
-aW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25zKC0pCj4+PiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCB0
-b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9icmFuY2guanNvbgo+
-Pj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQv
-YW1wZXJlL2VtYWcvYnVzLmpzb24KPj4+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYv
-cG11LWV2ZW50cy9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2NhY2hlLmpzb24KPj4+IMKgY3JlYXRl
-IG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2FtcGVyZS9lbWFn
-L2Nsb2NrLmpzb24KPj4+IMKgZGVsZXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LWV2ZW50
-cy9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2NvcmUtaW1wLWRlZi5qc29uCj4+PiDCoGNyZWF0ZSBt
-b2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9j
-b3VudGVyLmpzb24KPj4+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LWV2ZW50
-cy9hcmNoL2FybTY0L2FtcGVyZS9lbWFnL2V4Y2VwdGlvbi5qc29uCj4+PiDCoGNyZWF0ZSBtb2Rl
-IDEwMDY0NCB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9pbnN0
-cnVjdGlvbi5qc29uCj4+PiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS1ldmVu
-dHMvYXJjaC9hcm02NC9hbXBlcmUvZW1hZy9pbnRyaW5zaWMuanNvbgo+Pj4gwqBjcmVhdGUgbW9k
-ZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvbWVt
-b3J5Lmpzb24KPj4+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3BlcmYvcG11LWV2ZW50cy9h
-cmNoL2FybTY0L2FtcGVyZS9lbWFnL3BpcGVsaW5lLmpzb24KPj4KPj4gSGksCj4+Cj4+IFRoZSBw
-YXRjaCBsb29rcyBva2F5IGZvciBtb3N0IHBhcnQuIEl0IHdvdWxkIGJlIGdvb2QgdG8gZmFjdG9y
-IG91dCB0aGUgZXZlbnRzIDB4MDAtMHgzOCBmcm9tICJUYWJsZSBENS04IFBNVSBjb21tb24gYXJj
-aGl0ZWN0dXJhbCBhbmQgbWljcm9hcmNoaXRlY3R1cmFsIGV2ZW50IG51bWJlcnMiIGluIGh0dHBz
-Oi8vc3RhdGljLmRvY3MuYXJtLmNvbS9kZGkwNDg3L2NhL0RESTA0ODdDX2FfYXJtdjhfYXJtLnBk
-ZiBhbmQgaGF2ZSB0aGVtIGluIGFybXY4LXJlY29tbWVuZGVkLmpzb24gc28gZXZlbnRzIGxpa2Ug
-QlJfTUlTX1BSRUQgYW5kIEJSX1BSRUQgKGFuZCBhbnl0aGluZyBlbHNlIGluIHRoZSByYW5nZSBv
-ZiAweDAwMC0weDAzOCkganVzdCBlbmQgdXAgYmUgQXJjaFN0ZEV2ZW50IGxpa2UgdGhlIG90aGVy
-IHByZWRlZmluZWQgZXZlbnRzLsKgIE1heWJlIGRvIHRoZSBmYWN0b3Jpbmcgb3V0IGFzIGEgZm9s
-bG93IG9uIHBhdGNoIHRvIHRoaXMgcGF0Y2guCj4+Cj4gCj4gSSBrbm93IGl0J3Mgbm90IGlkZWFs
-LCBidXQgSSB0aGluayBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gb25seSB1c2UgdGhlIGNvbW1vbiBh
-cmNoIGV2ZW50cyBleHBvc2VkIGJ5IHRoZSBwbXUga2VybmVsIGRyaXZlciwgYXM6Cj4gLSBpdCdz
-IGdlbmVyYWxseSBiYWQgdG8gcmVwbGljYXRlCj4gLSB0aGUgY29tbW9uIGFyY2ggZXZlbnQgc3Vw
-cG9ydCBhcmUgZGV0ZWN0ZWQgYnkgUE1DRUlEeCwgc28gdGhlcmUgaXMgbmVlZCB0byBhZGQgcGVy
-ZiB0b29sIGNodXJuIGluIGRlZmluaW5nIHBlci1Tb0Mgc3VwcG9ydAo+IC0gcG90ZW50aWFsIHBy
-b2JsZW1zIGluIGVuYWJsaW5nIHJlcGxpY2F0ZWQgZXZlbnRzCj4gCj4gVGhhbmtzLAo+IEpvaG4K
-ClllcywgZGVmaW5pdGVseSB3YW50IG1pbmltaXplIGR1cGxpY2F0aW9uLiAgSWYgdGhlIGtlcm5l
-bCBpcyBhbHJlYWR5IGRldGVybWluZyB3aGljaCBjb21tb24gZXZlbnRzIGFyZSBhdmFpbGFibGUg
-aW4gYW4gQUFSQ0g2NCBwcm9jZXNzIHRoZW4gc2hvdWxkIGJlIGFibGUgdG8gZWxpbWluYXRlIGFu
-eSBlbnRyeSB0aGF0IGlzIGJlbG93IEFSTVY4X1BNVVYzX01BWF9DT01NT05fRVZFTlRTICgweDQw
-KSBmcm9tIHRoZSBldmVudCBtYXBzOgoKaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
-bnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvaW5jbHVkZS9saW51eC9wZXJm
-L2FybV9wbXUuaCNuMTA0Cmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJu
-ZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2FyY2gvYXJtNjQva2VybmVsL3BlcmZfZXZl
-bnQuYyNuMTAwNwoKLVdpbGwgQ29oZW4KPiAKPj4gVGhlIGZvbGxvd2luZyBjb3VudGVyLmpzb24g
-d291bGRuJ3QgYmUgdGhhdCB1c2VmdWwuwqAgUGVyZiBkb2Vzbid0IGFsbG93IGxheW91dCBvZiB3
-aGF0IGdvZXMgaW4gd2hpY2ggUE1VIHJlZ2lzdGVyLiBJdCBzaG91bGQgYmUgcmVtb3ZlZDoKPj4K
-Pj4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBlcmUv
-ZW1hZy9jb3VudGVyLmpzb24gYi90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9hbXBl
-cmUvZW1hZy9jb3VudGVyLmpzb24KPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAw
-MDAwMDAwMDAwMDAuLjY1NjFlZDU4ZjEzZgo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvdG9v
-bHMvcGVyZi9wbXUtZXZlbnRzL2FyY2gvYXJtNjQvYW1wZXJlL2VtYWcvY291bnRlci5qc29uCj4+
-PiBAQCAtMCwwICsxLDggQEAKPj4+ICtbCj4+PiArwqDCoMKgIHsKPj4+ICvCoMKgwqDCoMKgwqDC
-oCAiUHVibGljRGVzY3JpcHRpb24iOiAiRm9yIG9kZC1udW1iZXJlZCBjb3VudGVycywgaW5jcmVt
-ZW50cyB0aGUgY291bnQgYnkgb25lIGZvciBlYWNoIG92ZXJmbG93IG9mIHRoZSBwcmVjZWRpbmcg
-ZXZlbi1udW1iZXJlZCBjb3VudGVyLiBGb3IgZXZlbi1udW1iZXJlZCBjb3VudGVycyB0aGVyZSBp
-cyBubyBpbmNyZW1lbnQuIiwKPj4+ICvCoMKgwqDCoMKgwqDCoCAiRXZlbnRDb2RlIjogIjB4MWUi
-LAo+Pj4gK8KgwqDCoMKgwqDCoMKgICJFdmVudE5hbWUiOiAiQ0hBSU4iLAo+Pj4gK8KgwqDCoMKg
-wqDCoMKgICJCcmllZkRlc2NyaXB0aW9uIjogIkNoYWluIGNvdW50ZXIiCj4+PiArwqDCoMKgIH0s
-Cj4+PiArXQo+Pgo+Pgo+Pgo+PiAtV2lsbCBDb2hlbgo+Pgo+PiAuCj4+Cj4gCj4gCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+Sent from my iPhone
+
+> On Sep 17, 2018, at 7:39 AM, William Cohen <wcohen@redhat.com> wrote:
+> 
+>> On 9/17/18 4:53 AM, John Garry wrote:
+>>> On 16/09/2018 21:39, William Cohen wrote:
+>>>> On 9/9/18 8:26 PM, Sean V Kelley wrote:
+>>>> Split the PMU events into meaningful functional groups.  Update core
+>>>> pmu events based on supported ARMv8 recommended IMPLEMENTATION DEFINED
+>>>> events.
+>>>> 
+>>>> The JSON files are updated with reference to a PMU table shared here:
+>>>> 
+>>>> https://github.com/AmpereComputing/ampere-centos-kernel/blob/amp-centos-7.5-kernel/Documentation/arm64/eMAG-ARM-CoreImpDefined.pdf
+>>>> 
+>>>> -- 
+>>>> Changes in V2:
+>>>> - Provided documentation for changes - John, William
+>>>> - Broke up into meaningful groups - William
+>>>> -- 
+>>>> 
+>>>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>>>> Cc: William Cohen <wcohen@redhat.com>
+>>>> Cc: John Garry <john.garry@huawei.com>
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> 
+>>>> Signed-off-by: Sean V Kelley <seanvk.dev@oregontracks.org>
+>>>> ---
+>>>>  .../arch/arm64/ampere/emag/branch.json        |  23 +++
+>>>>  .../arch/arm64/ampere/emag/bus.json           |  26 +++
+>>>>  .../arch/arm64/ampere/emag/cache.json         | 191 ++++++++++++++++++
+>>>>  .../arch/arm64/ampere/emag/clock.json         |  20 ++
+>>>>  .../arch/arm64/ampere/emag/core-imp-def.json  |  32 ---
+>>>>  .../arch/arm64/ampere/emag/counter.json       |   8 +
+>>>>  .../arch/arm64/ampere/emag/exception.json     |  50 +++++
+>>>>  .../arch/arm64/ampere/emag/instruction.json   |  89 ++++++++
+>>>>  .../arch/arm64/ampere/emag/intrinsic.json     |  14 ++
+>>>>  .../arch/arm64/ampere/emag/memory.json        |  29 +++
+>>>>  .../arch/arm64/ampere/emag/pipeline.json      |  50 +++++
+>>>>  11 files changed, 500 insertions(+), 32 deletions(-)
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/branch.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/bus.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/clock.json
+>>>>  delete mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/core-imp-def.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/counter.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/exception.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/instruction.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/intrinsic.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/memory.json
+>>>>  create mode 100644 tools/perf/pmu-events/arch/arm64/ampere/emag/pipeline.json
+>>> 
+>>> Hi,
+>>> 
+>>> The patch looks okay for most part. It would be good to factor out the events 0x00-0x38 from "Table D5-8 PMU common architectural and microarchitectural event numbers" in https://static.docs.arm.com/ddi0487/ca/DDI0487C_a_armv8_arm.pdf and have them in armv8-recommended.json so events like BR_MIS_PRED and BR_PRED (and anything else in the range of 0x000-0x038) just end up be ArchStdEvent like the other predefined events.  Maybe do the factoring out as a follow on patch to this patch.
+>>> 
+>> 
+>> I know it's not ideal, but I think it would be better to only use the common arch events exposed by the pmu kernel driver, as:
+>> - it's generally bad to replicate
+>> - the common arch event support are detected by PMCEIDx, so there is need to add perf tool churn in defining per-SoC support
+>> - potential problems in enabling replicated events
+>> 
+>> Thanks,
+>> John
+> 
+> Yes, definitely want minimize duplication.  If the kernel is already determing which common events are available in an AARCH64 process then should be able to eliminate any entry that is below ARMV8_PMUV3_MAX_COMMON_EVENTS (0x40) from the event maps:
+
+Hi
+
+Definitely would like to reduce duplication while providing descriptive and meaningful access to users. I can strip the sub 0x40 common events already exposed  in the PMU perf driver in a v4 patch for now. 
+
+But as you say, the kernel already knows what is exposed by the core pmu driver and could eliminate the duplication. 
+
+Thanks
+
+Sean 
+
+
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/perf/arm_pmu.h#n104
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/perf_event.c#n1007
+> 
+> -Will Cohen
+>> Hi 
+>>> The following counter.json wouldn't be that useful.  Perf doesn't allow layout of what goes in which PMU register. It should be removed:
+>>> 
+>>>> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/counter.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/counter.json
+>>>> new file mode 100644
+>>>> index 000000000000..6561ed58f13f
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/counter.json
+>>>> @@ -0,0 +1,8 @@
+>>>> +[
+>>>> +    {
+>>>> +        "PublicDescription": "For odd-numbered counters, increments the count by one for each overflow of the preceding even-numbered counter. For even-numbered counters there is no increment.",
+>>>> +        "EventCode": "0x1e",
+>>>> +        "EventName": "CHAIN",
+>>>> +        "BriefDescription": "Chain counter"
+>>>> +    },
+>>>> +]
+>>> 
+>>> 
+>>> 
+>>> -Will Cohen
+>>> 
+>>> .
+>>> 
+>> 
+>> 
+> 
