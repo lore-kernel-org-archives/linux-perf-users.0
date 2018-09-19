@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/13] perf tools: Remove perf_tool from event_op3
-Date: Wed, 19 Sep 2018 11:25:32 -0300
-Message-ID: <20180919142537.29985-9-acme@kernel.org>
+Subject: [PATCH 10/13] perf tools: Add 'struct perf_mmap' arg to record__write()
+Date: Wed, 19 Sep 2018 11:25:34 -0300
+Message-ID: <20180919142537.29985-11-acme@kernel.org>
 References: <20180919142537.29985-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919142537.29985-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Now that we keep a perf_tool pointer inside perf_session, there's no need
-to have a perf_tool argument in the event_op3 callback. Remove it.
+The struct perf_mmap map argument will hold the file pointer to write
+the data to.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -21,132 +21,155 @@ Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Andi Kleen <andi@firstfloor.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20180913125450.21342-3-jolsa@kernel.org
-[ Fix the builtin-inject.c build for !HAVE_AUXTRACE_SUPPORT ]
+Link: http://lkml.kernel.org/r/20180913125450.21342-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c | 11 +++++------
- tools/perf/util/auxtrace.c  |  7 +++----
- tools/perf/util/auxtrace.h  |  5 ++---
- tools/perf/util/session.c   |  8 +++-----
- tools/perf/util/tool.h      |  4 +---
- 5 files changed, 14 insertions(+), 21 deletions(-)
+ tools/perf/builtin-record.c | 24 ++++++++++++++----------
+ tools/perf/util/auxtrace.c  |  2 +-
+ tools/perf/util/auxtrace.h  |  1 +
+ tools/perf/util/mmap.c      |  6 +++---
+ tools/perf/util/mmap.h      |  2 +-
+ 5 files changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index d77ed2aea95a..b4a29f435b06 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -131,10 +131,10 @@ static int copy_bytes(struct perf_inject *inject, int fd, off_t size)
- 	return 0;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index fd8b12c5f4ae..0980dfe3396b 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -106,9 +106,12 @@ static bool switch_output_time(struct record *rec)
+ 	       trigger_is_ready(&switch_output_trigger);
  }
  
--static s64 perf_event__repipe_auxtrace(struct perf_tool *tool,
--				       union perf_event *event,
--				       struct perf_session *session)
-+static s64 perf_event__repipe_auxtrace(struct perf_session *session,
-+				       union perf_event *event)
+-static int record__write(struct record *rec, void *bf, size_t size)
++static int record__write(struct record *rec, struct perf_mmap *map __maybe_unused,
++			 void *bf, size_t size)
  {
-+	struct perf_tool *tool = session->tool;
- 	struct perf_inject *inject = container_of(tool, struct perf_inject,
- 						  tool);
- 	int ret;
-@@ -172,9 +172,8 @@ static s64 perf_event__repipe_auxtrace(struct perf_tool *tool,
- #else
+-	if (perf_data__write(rec->session->data, bf, size) < 0) {
++	struct perf_data_file *file = &rec->session->data->file;
++
++	if (perf_data_file__write(file, bf, size) < 0) {
+ 		pr_err("failed to write perf data, error: %m\n");
+ 		return -1;
+ 	}
+@@ -127,15 +130,15 @@ static int process_synthesized_event(struct perf_tool *tool,
+ 				     struct machine *machine __maybe_unused)
+ {
+ 	struct record *rec = container_of(tool, struct record, tool);
+-	return record__write(rec, event, event->header.size);
++	return record__write(rec, NULL, event, event->header.size);
+ }
  
- static s64
--perf_event__repipe_auxtrace(struct perf_tool *tool __maybe_unused,
--			    union perf_event *event __maybe_unused,
--			    struct perf_session *session __maybe_unused)
-+perf_event__repipe_auxtrace(struct perf_session *session __maybe_unused,
-+			    union perf_event *event __maybe_unused)
+-static int record__pushfn(void *to, void *bf, size_t size)
++static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size)
  {
- 	pr_err("AUX area tracing not supported\n");
- 	return -EINVAL;
+ 	struct record *rec = to;
+ 
+ 	rec->samples++;
+-	return record__write(rec, bf, size);
++	return record__write(rec, map, bf, size);
+ }
+ 
+ static volatile int done;
+@@ -170,6 +173,7 @@ static void record__sig_exit(void)
+ #ifdef HAVE_AUXTRACE_SUPPORT
+ 
+ static int record__process_auxtrace(struct perf_tool *tool,
++				    struct perf_mmap *map,
+ 				    union perf_event *event, void *data1,
+ 				    size_t len1, void *data2, size_t len2)
+ {
+@@ -197,11 +201,11 @@ static int record__process_auxtrace(struct perf_tool *tool,
+ 	if (padding)
+ 		padding = 8 - padding;
+ 
+-	record__write(rec, event, event->header.size);
+-	record__write(rec, data1, len1);
++	record__write(rec, map, event, event->header.size);
++	record__write(rec, map, data1, len1);
+ 	if (len2)
+-		record__write(rec, data2, len2);
+-	record__write(rec, &pad, padding);
++		record__write(rec, map, data2, len2);
++	record__write(rec, map, &pad, padding);
+ 
+ 	return 0;
+ }
+@@ -549,7 +553,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	 * at least one event.
+ 	 */
+ 	if (bytes_written != rec->bytes_written)
+-		rc = record__write(rec, &finished_round_event, sizeof(finished_round_event));
++		rc = record__write(rec, NULL, &finished_round_event, sizeof(finished_round_event));
+ 
+ 	if (overwrite)
+ 		perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_EMPTY);
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 86f0bc445f93..3017b205a157 100644
+index 2fecee57f555..c4617bcfd521 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -931,9 +931,8 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
- 	}
- }
+@@ -1285,7 +1285,7 @@ static int __auxtrace_mmap__read(struct perf_mmap *map,
+ 	ev.auxtrace.tid = mm->tid;
+ 	ev.auxtrace.cpu = mm->cpu;
  
--s64 perf_event__process_auxtrace(struct perf_tool *tool,
--				 union perf_event *event,
--				 struct perf_session *session)
-+s64 perf_event__process_auxtrace(struct perf_session *session,
-+				 union perf_event *event)
- {
- 	s64 err;
+-	if (fn(tool, &ev, data1, len1, data2, len2))
++	if (fn(tool, map, &ev, data1, len1, data2, len2))
+ 		return -1;
  
-@@ -949,7 +948,7 @@ s64 perf_event__process_auxtrace(struct perf_tool *tool,
- 	if (!session->auxtrace || event->header.type != PERF_RECORD_AUXTRACE)
- 		return -EINVAL;
- 
--	err = session->auxtrace->process_auxtrace_event(session, event, tool);
-+	err = session->auxtrace->process_auxtrace_event(session, event, session->tool);
- 	if (err < 0)
- 		return err;
- 
+ 	mm->prev = head;
 diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 97776470a52e..6be89776358c 100644
+index 7eeb141361b9..a86b7eab6673 100644
 --- a/tools/perf/util/auxtrace.h
 +++ b/tools/perf/util/auxtrace.h
-@@ -519,9 +519,8 @@ int perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr,
- 					 perf_event__handler_t process);
- int perf_event__process_auxtrace_info(struct perf_session *session,
- 				      union perf_event *event);
--s64 perf_event__process_auxtrace(struct perf_tool *tool,
--				 union perf_event *event,
--				 struct perf_session *session);
-+s64 perf_event__process_auxtrace(struct perf_session *session,
-+				 union perf_event *event);
- int perf_event__process_auxtrace_error(struct perf_session *session,
- 				       union perf_event *event);
- int itrace_parse_synth_opts(const struct option *opt, const char *str,
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index e781cdba845c..7d2c8ce6cfad 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -275,10 +275,8 @@ static int skipn(int fd, off_t n)
- 	return 0;
+@@ -435,6 +435,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+ 				   bool per_cpu);
+ 
+ typedef int (*process_auxtrace_t)(struct perf_tool *tool,
++				  struct perf_mmap *map,
+ 				  union perf_event *event, void *data1,
+ 				  size_t len1, void *data2, size_t len2);
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 215f69f41672..cdb95b3a1213 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -281,7 +281,7 @@ int perf_mmap__read_init(struct perf_mmap *map)
  }
  
--static s64 process_event_auxtrace_stub(struct perf_tool *tool __maybe_unused,
--				       union perf_event *event,
--				       struct perf_session *session
--				       __maybe_unused)
-+static s64 process_event_auxtrace_stub(struct perf_session *session __maybe_unused,
-+				       union perf_event *event)
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(void *to, void *buf, size_t size))
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
  {
- 	dump_printf(": unhandled!\n");
- 	if (perf_data__is_pipe(session->data))
-@@ -1376,7 +1374,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	case PERF_RECORD_AUXTRACE:
- 		/* setup for reading amidst mmap */
- 		lseek(fd, file_offset + event->header.size, SEEK_SET);
--		return tool->auxtrace(tool, event, session);
-+		return tool->auxtrace(session, event);
- 	case PERF_RECORD_AUXTRACE_ERROR:
- 		perf_session__auxtrace_error_inc(session, event);
- 		return tool->auxtrace_error(session, event);
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 9c7f78d76275..56e4ca54020a 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -27,13 +27,11 @@ typedef int (*event_attr_op)(struct perf_tool *tool,
- 			     struct perf_evlist **pevlist);
+ 	u64 head = perf_mmap__read_head(md);
+ 	unsigned char *data = md->base + page_size;
+@@ -300,7 +300,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		size = md->mask + 1 - (md->start & md->mask);
+ 		md->start += size;
  
- typedef int (*event_op2)(struct perf_session *session, union perf_event *event);
-+typedef s64 (*event_op3)(struct perf_session *session, union perf_event *event);
+-		if (push(to, buf, size) < 0) {
++		if (push(md, to, buf, size) < 0) {
+ 			rc = -1;
+ 			goto out;
+ 		}
+@@ -310,7 +310,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 	size = md->end - md->start;
+ 	md->start += size;
  
- typedef int (*event_oe)(struct perf_tool *tool, union perf_event *event,
- 			struct ordered_events *oe);
+-	if (push(to, buf, size) < 0) {
++	if (push(md, to, buf, size) < 0) {
+ 		rc = -1;
+ 		goto out;
+ 	}
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 05a6d47c7956..e603314dc792 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -93,7 +93,7 @@ union perf_event *perf_mmap__read_forward(struct perf_mmap *map);
+ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
  
--typedef s64 (*event_op3)(struct perf_tool *tool, union perf_event *event,
--			 struct perf_session *session);
--
- enum show_feature_header {
- 	SHOW_FEAT_NO_HEADER = 0,
- 	SHOW_FEAT_HEADER,
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(void *to, void *buf, size_t size));
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
+ 
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+ 
 -- 
 2.14.4
