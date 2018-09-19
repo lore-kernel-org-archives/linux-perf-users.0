@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/13] tools include: Adopt PTR_ERR_OR_ZERO from the kernel err.h header
-Date: Wed, 19 Sep 2018 11:25:29 -0300
-Message-ID: <20180919142537.29985-6-acme@kernel.org>
+Subject: [PATCH 06/13] perf bpf-loader: use PTR_ERR_OR_ZERO inetead of return code
+Date: Wed, 19 Sep 2018 11:25:30 -0300
+Message-ID: <20180919142537.29985-7-acme@kernel.org>
 References: <20180919142537.29985-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919142537.29985-1-acme@kernel.org>
@@ -12,34 +12,32 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-Add PTR_ERR_OR_ZERO, so that tools can use it, just like the kernel.
+Use PTR_ERR_OR_ZERO() in bpf__setup_stdout() return code instead of open
+coded equivalent.
 
 Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1536284082-23466-1-git-send-email-dingxiang@cmss.chinamobile.com
+Link: http://lkml.kernel.org/r/1536284082-23466-2-git-send-email-dingxiang@cmss.chinamobile.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/err.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/bpf-loader.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/err.h b/tools/include/linux/err.h
-index 7a8b61ad44cb..094649667bae 100644
---- a/tools/include/linux/err.h
-+++ b/tools/include/linux/err.h
-@@ -52,4 +52,11 @@ static inline bool __must_check IS_ERR_OR_NULL(__force const void *ptr)
- 	return unlikely(!ptr) || IS_ERR_VALUE((unsigned long)ptr);
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index 47aac41349a2..f9ae1a993806 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -1615,7 +1615,7 @@ struct perf_evsel *bpf__setup_output_event(struct perf_evlist *evlist, const cha
+ int bpf__setup_stdout(struct perf_evlist *evlist)
+ {
+ 	struct perf_evsel *evsel = bpf__setup_output_event(evlist, "__bpf_stdout__");
+-	return IS_ERR(evsel) ? PTR_ERR(evsel) : 0;
++	return PTR_ERR_OR_ZERO(evsel);
  }
  
-+static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
-+{
-+	if (IS_ERR(ptr))
-+		return PTR_ERR(ptr);
-+	else
-+		return 0;
-+}
- #endif /* _LINUX_ERR_H */
+ #define ERRNO_OFFSET(e)		((e) - __BPF_LOADER_ERRNO__START)
 -- 
 2.14.4
