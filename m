@@ -1,69 +1,240 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/13] perf: Suppress AUX/OVERWRITE records
-Date: Wed, 19 Sep 2018 11:25:25 -0300
-Message-ID: <20180919142537.29985-2-acme@kernel.org>
+Subject: [PATCH 03/13] perf ordered_events: Add 'struct ordered_events_buffer' layer
+Date: Wed, 19 Sep 2018 11:25:27 -0300
+Message-ID: <20180919142537.29985-4-acme@kernel.org>
 References: <20180919142537.29985-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919142537.29985-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Markus T Metzger <markus.t.metzger@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <andi@firstfloor.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-It has been pointed out to me many times that it is useful to be able to
-switch off AUX records to save the bandwidth for records that actually
-matter, for example, in AUX overwrite mode.
+When ordering events, we use preallocated buffers to store separate
+events.  Those buffers currently don't have their own struct, but since
+they are basically an array of 'struct ordered_event' objects, we use
+the first event to hold buffers data - list head, that holds all buffers
+together:
 
-The usefulness of PERF_RECORD_AUX is in some of its flags, like the
-TRUNCATED flag that tells the decoder where exactly gaps in the trace
-are.  The OVERWRITE flag, on the other hand will be set on every single
-record in overwrite mode. However, a PERF_RECORD_AUX[flags=OVERWRITE] is
-generated on every target task's sched_out, which over time adds up to a
-lot of useless information.
+   struct ordered_events {
+     ...
+     struct ordered_event *buffer;
+     ...
+   };
 
-If any folks out there have userspace that depends on a constant stream
-of OVERWRITE records for a good reason, they'll have to let us know.
+   struct ordered_event {
+     u64               timestamp;
+     u64               file_offset;
+     union perf_event  *event;
+     struct list_head  list;
+   };
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Markus T Metzger <markus.t.metzger@intel.com>
-Link: http://lkml.kernel.org/r/20180404145323.28651-1-alexander.shishkin@linux.intel.com
+This is quite convoluted and error prone as demonstrated by free-ing
+issue discovered and fixed by Stephane in here [1].
+
+This patch adds the 'struct ordered_events_buffer' object, that holds
+the buffer data and frees it up properly.
+
+[1] - https://marc.info/?l=linux-kernel&m=153376761329335&w=2
+
+Reported-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <andi@firstfloor.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180907102455.7030-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/ring_buffer.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/util/ordered-events.c | 83 +++++++++++++++++++++++++++++++++-------
+ tools/perf/util/ordered-events.h | 37 ++++++++++--------
+ 2 files changed, 91 insertions(+), 29 deletions(-)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5d3cf407e374..4a9937076331 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -459,10 +459,20 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 	if (size || handle->aux_flags) {
- 		/*
- 		 * Only send RECORD_AUX if we have something useful to communicate
-+		 *
-+		 * Note: the OVERWRITE records by themselves are not considered
-+		 * useful, as they don't communicate any *new* information,
-+		 * aside from the short-lived offset, that becomes history at
-+		 * the next event sched-in and therefore isn't useful.
-+		 * The userspace that needs to copy out AUX data in overwrite
-+		 * mode should know to use user_page::aux_head for the actual
-+		 * offset. So, from now on we don't output AUX records that
-+		 * have *only* OVERWRITE flag set.
- 		 */
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index bad9e0296e9a..84ce25272c13 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -80,14 +80,20 @@ static union perf_event *dup_event(struct ordered_events *oe,
+ 	return oe->copy_on_queue ? __dup_event(oe, event) : event;
+ }
  
--		perf_event_aux_event(handle->event, aux_head, size,
--		                     handle->aux_flags);
-+		if (handle->aux_flags & ~(u64)PERF_AUX_FLAG_OVERWRITE)
-+			perf_event_aux_event(handle->event, aux_head, size,
-+			                     handle->aux_flags);
+-static void free_dup_event(struct ordered_events *oe, union perf_event *event)
++static void __free_dup_event(struct ordered_events *oe, union perf_event *event)
+ {
+-	if (event && oe->copy_on_queue) {
++	if (event) {
+ 		oe->cur_alloc_size -= event->header.size;
+ 		free(event);
+ 	}
+ }
+ 
++static void free_dup_event(struct ordered_events *oe, union perf_event *event)
++{
++	if (oe->copy_on_queue)
++		__free_dup_event(oe, event);
++}
++
+ #define MAX_SAMPLE_BUFFER	(64 * 1024 / sizeof(struct ordered_event))
+ static struct ordered_event *alloc_event(struct ordered_events *oe,
+ 					 union perf_event *event)
+@@ -100,15 +106,43 @@ static struct ordered_event *alloc_event(struct ordered_events *oe,
+ 	if (!new_event)
+ 		return NULL;
+ 
++	/*
++	 * We maintain the following scheme of buffers for ordered
++	 * event allocation:
++	 *
++	 *   to_free list -> buffer1 (64K)
++	 *                   buffer2 (64K)
++	 *                   ...
++	 *
++	 * Each buffer keeps an array of ordered events objects:
++	 *    buffer -> event[0]
++	 *              event[1]
++	 *              ...
++	 *
++	 * Each allocated ordered event is linked to one of
++	 * following lists:
++	 *   - time ordered list 'events'
++	 *   - list of currently removed events 'cache'
++	 *
++	 * Allocation of the ordered event uses the following order
++	 * to get the memory:
++	 *   - use recently removed object from 'cache' list
++	 *   - use available object in current allocation buffer
++	 *   - allocate new buffer if the current buffer is full
++	 *
++	 * Removal of ordered event object moves it from events to
++	 * the cache list.
++	 */
+ 	if (!list_empty(cache)) {
+ 		new = list_entry(cache->next, struct ordered_event, list);
+ 		list_del(&new->list);
+ 	} else if (oe->buffer) {
+-		new = oe->buffer + oe->buffer_idx;
++		new = &oe->buffer->event[oe->buffer_idx];
+ 		if (++oe->buffer_idx == MAX_SAMPLE_BUFFER)
+ 			oe->buffer = NULL;
+ 	} else if (oe->cur_alloc_size < oe->max_alloc_size) {
+-		size_t size = MAX_SAMPLE_BUFFER * sizeof(*new);
++		size_t size = sizeof(*oe->buffer) +
++			      MAX_SAMPLE_BUFFER * sizeof(*new);
+ 
+ 		oe->buffer = malloc(size);
+ 		if (!oe->buffer) {
+@@ -122,11 +156,11 @@ static struct ordered_event *alloc_event(struct ordered_events *oe,
+ 		oe->cur_alloc_size += size;
+ 		list_add(&oe->buffer->list, &oe->to_free);
+ 
+-		/* First entry is abused to maintain the to_free list. */
+-		oe->buffer_idx = 2;
+-		new = oe->buffer + 1;
++		oe->buffer_idx = 1;
++		new = &oe->buffer->event[0];
+ 	} else {
+ 		pr("allocation limit reached %" PRIu64 "B\n", oe->max_alloc_size);
++		return NULL;
  	}
  
- 	rb->user_page->aux_head = rb->aux_head;
+ 	new->event = new_event;
+@@ -300,15 +334,38 @@ void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t d
+ 	oe->deliver	   = deliver;
+ }
+ 
++static void
++ordered_events_buffer__free(struct ordered_events_buffer *buffer,
++			    unsigned int max, struct ordered_events *oe)
++{
++	if (oe->copy_on_queue) {
++		unsigned int i;
++
++		for (i = 0; i < max; i++)
++			__free_dup_event(oe, buffer->event[i].event);
++	}
++
++	free(buffer);
++}
++
+ void ordered_events__free(struct ordered_events *oe)
+ {
+-	while (!list_empty(&oe->to_free)) {
+-		struct ordered_event *event;
++	struct ordered_events_buffer *buffer, *tmp;
+ 
+-		event = list_entry(oe->to_free.next, struct ordered_event, list);
+-		list_del(&event->list);
+-		free_dup_event(oe, event->event);
+-		free(event);
++	if (list_empty(&oe->to_free))
++		return;
++
++	/*
++	 * Current buffer might not have all the events allocated
++	 * yet, we need to free only allocated ones ...
++	 */
++	list_del(&oe->buffer->list);
++	ordered_events_buffer__free(oe->buffer, oe->buffer_idx, oe);
++
++	/* ... and continue with the rest */
++	list_for_each_entry_safe(buffer, tmp, &oe->to_free, list) {
++		list_del(&buffer->list);
++		ordered_events_buffer__free(buffer, MAX_SAMPLE_BUFFER, oe);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/ordered-events.h b/tools/perf/util/ordered-events.h
+index 8c7a2948593e..1338d5c345dc 100644
+--- a/tools/perf/util/ordered-events.h
++++ b/tools/perf/util/ordered-events.h
+@@ -25,23 +25,28 @@ struct ordered_events;
+ typedef int (*ordered_events__deliver_t)(struct ordered_events *oe,
+ 					 struct ordered_event *event);
+ 
++struct ordered_events_buffer {
++	struct list_head	list;
++	struct ordered_event	event[0];
++};
++
+ struct ordered_events {
+-	u64			last_flush;
+-	u64			next_flush;
+-	u64			max_timestamp;
+-	u64			max_alloc_size;
+-	u64			cur_alloc_size;
+-	struct list_head	events;
+-	struct list_head	cache;
+-	struct list_head	to_free;
+-	struct ordered_event	*buffer;
+-	struct ordered_event	*last;
+-	ordered_events__deliver_t deliver;
+-	int			buffer_idx;
+-	unsigned int		nr_events;
+-	enum oe_flush		last_flush_type;
+-	u32			nr_unordered_events;
+-	bool                    copy_on_queue;
++	u64				 last_flush;
++	u64				 next_flush;
++	u64				 max_timestamp;
++	u64				 max_alloc_size;
++	u64				 cur_alloc_size;
++	struct list_head		 events;
++	struct list_head		 cache;
++	struct list_head		 to_free;
++	struct ordered_events_buffer	*buffer;
++	struct ordered_event		*last;
++	ordered_events__deliver_t	 deliver;
++	int				 buffer_idx;
++	unsigned int			 nr_events;
++	enum oe_flush			 last_flush_type;
++	u32				 nr_unordered_events;
++	bool				 copy_on_queue;
+ };
+ 
+ int ordered_events__queue(struct ordered_events *oe, union perf_event *event,
 -- 
 2.14.4
