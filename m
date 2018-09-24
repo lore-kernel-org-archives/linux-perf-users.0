@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/27] perf db-export: Add trace begin / end branch type variants
-Date: Mon, 24 Sep 2018 12:02:37 -0300
-Message-ID: <20180924150242.14235-23-acme@kernel.org>
+Subject: [PATCH 23/27] perf tools: Improve thread_stack__event() for trace begin / end
+Date: Mon, 24 Sep 2018 12:02:38 -0300
+Message-ID: <20180924150242.14235-24-acme@kernel.org>
 References: <20180924150242.14235-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180924150242.14235-1-acme@kernel.org>
@@ -12,57 +12,118 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add branch types to cover different combinations with "trace begin" or
-"trace end".
+thread_stack__event() is used to create call stacks, by keeping track of
+calls and returns. Improve the handling of trace begin / end to allow
+for a trace that ends in a call.
 
 Previously, the Intel PT decoder would indicate begin / end by a branch
 from / to zero. That hides useful information, in particular when a
-trace ends with a call. Before remedying that, prepare the database
-export to export branch types with more combinations that include trace
-begin / end.  In those cases extend the descriptions to include 'trace
-begin' and 'trace end' separately.
+trace ends with a call. Before remedying that, enhance the thread stack
+so that it does not expect to see the 'return' for a 'call' that ends
+the trace.
+
+Committer notes:
+
+Added this:
+
+                return thread_stack__push(thread->ts, ret_addr,
+-                                         flags && PERF_IP_FLAG_TRACE_END);
++                                         flags & PERF_IP_FLAG_TRACE_END);
+
+To fix problem spotted by:
+
+debian:9:            clang version 3.8.1-24 (tags/RELEASE_381/final)
+debian:experimental: clang version 6.0.1-6 (tags/RELEASE_601/final)
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20180920130048.31432-3-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20180920130048.31432-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/db-export.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/perf/util/thread-stack.c | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 7123746edcf4..69fbb0a72d0c 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -463,6 +463,28 @@ int db_export__branch_types(struct db_export *dbe)
- 		if (err)
- 			break;
- 	}
-+
-+	/* Add trace begin / end variants */
-+	for (i = 0; branch_types[i].name ; i++) {
-+		const char *name = branch_types[i].name;
-+		u32 type = branch_types[i].branch_type;
-+		char buf[64];
-+
-+		if (type == PERF_IP_FLAG_BRANCH ||
-+		    (type & (PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END)))
-+			continue;
-+
-+		snprintf(buf, sizeof(buf), "trace begin / %s", name);
-+		err = db_export__branch_type(dbe, type | PERF_IP_FLAG_TRACE_BEGIN, buf);
-+		if (err)
-+			break;
-+
-+		snprintf(buf, sizeof(buf), "%s / trace end", name);
-+		err = db_export__branch_type(dbe, type | PERF_IP_FLAG_TRACE_END, buf);
-+		if (err)
-+			break;
-+	}
-+
- 	return err;
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index dd17d6a38d3a..e3f7dfecafa9 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -36,6 +36,7 @@
+  * @branch_count: the branch count when the entry was created
+  * @cp: call path
+  * @no_call: a 'call' was not seen
++ * @trace_end: a 'call' but trace ended
+  */
+ struct thread_stack_entry {
+ 	u64 ret_addr;
+@@ -44,6 +45,7 @@ struct thread_stack_entry {
+ 	u64 branch_count;
+ 	struct call_path *cp;
+ 	bool no_call;
++	bool trace_end;
+ };
+ 
+ /**
+@@ -112,7 +114,8 @@ static struct thread_stack *thread_stack__new(struct thread *thread,
+ 	return ts;
  }
+ 
+-static int thread_stack__push(struct thread_stack *ts, u64 ret_addr)
++static int thread_stack__push(struct thread_stack *ts, u64 ret_addr,
++			      bool trace_end)
+ {
+ 	int err = 0;
+ 
+@@ -124,6 +127,7 @@ static int thread_stack__push(struct thread_stack *ts, u64 ret_addr)
+ 		}
+ 	}
+ 
++	ts->stack[ts->cnt].trace_end = trace_end;
+ 	ts->stack[ts->cnt++].ret_addr = ret_addr;
+ 
+ 	return err;
+@@ -150,6 +154,18 @@ static void thread_stack__pop(struct thread_stack *ts, u64 ret_addr)
+ 	}
+ }
+ 
++static void thread_stack__pop_trace_end(struct thread_stack *ts)
++{
++	size_t i;
++
++	for (i = ts->cnt; i; ) {
++		if (ts->stack[--i].trace_end)
++			ts->cnt = i;
++		else
++			return;
++	}
++}
++
+ static bool thread_stack__in_kernel(struct thread_stack *ts)
+ {
+ 	if (!ts->cnt)
+@@ -254,10 +270,19 @@ int thread_stack__event(struct thread *thread, u32 flags, u64 from_ip,
+ 		ret_addr = from_ip + insn_len;
+ 		if (ret_addr == to_ip)
+ 			return 0; /* Zero-length calls are excluded */
+-		return thread_stack__push(thread->ts, ret_addr);
+-	} else if (flags & PERF_IP_FLAG_RETURN) {
+-		if (!from_ip)
+-			return 0;
++		return thread_stack__push(thread->ts, ret_addr,
++					  flags & PERF_IP_FLAG_TRACE_END);
++	} else if (flags & PERF_IP_FLAG_TRACE_BEGIN) {
++		/*
++		 * If the caller did not change the trace number (which would
++		 * have flushed the stack) then try to make sense of the stack.
++		 * Possibly, tracing began after returning to the current
++		 * address, so try to pop that. Also, do not expect a call made
++		 * when the trace ended, to return, so pop that.
++		 */
++		thread_stack__pop(thread->ts, to_ip);
++		thread_stack__pop_trace_end(thread->ts);
++	} else if ((flags & PERF_IP_FLAG_RETURN) && from_ip) {
+ 		thread_stack__pop(thread->ts, to_ip);
+ 	}
  
 -- 
 2.14.4
