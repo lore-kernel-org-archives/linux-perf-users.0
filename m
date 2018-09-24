@@ -1,158 +1,68 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/27] tools lib traceevent: Add prefix tep_ to enum filter_trivial_type
-Date: Mon, 24 Sep 2018 12:02:35 -0300
-Message-ID: <20180924150242.14235-21-acme@kernel.org>
+Subject: [PATCH 22/27] perf db-export: Add trace begin / end branch type variants
+Date: Mon, 24 Sep 2018 12:02:37 -0300
+Message-ID: <20180924150242.14235-23-acme@kernel.org>
 References: <20180924150242.14235-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180924150242.14235-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-trace-devel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-In order to make libtraceevent into a proper library, variables, data
-structures and functions require a unique prefix to prevent name space
-conflicts. That prefix will be "tep_". This adds prefix tep_ to
-enum filter_trivial_type and all its members.
+Add branch types to cover different combinations with "trace begin" or
+"trace end".
 
-Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Previously, the Intel PT decoder would indicate begin / end by a branch
+from / to zero. That hides useful information, in particular when a
+trace ends with a call. Before remedying that, prepare the database
+export to export branch types with more combinations that include trace
+begin / end.  In those cases extend the descriptions to include 'trace
+begin' and 'trace end' separately.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180919185725.076387655@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20180920130048.31432-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.h  | 14 +++++++-------
- tools/lib/traceevent/parse-filter.c | 22 +++++++++++-----------
- 2 files changed, 18 insertions(+), 18 deletions(-)
+ tools/perf/util/db-export.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 830147dc6b21..9c29a5f7aa39 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -905,10 +905,10 @@ struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent);
- #define FILTER_MISS		TEP_ERRNO__FILTER_MISS
- #define FILTER_MATCH		TEP_ERRNO__FILTER_MATCH
- 
--enum filter_trivial_type {
--	FILTER_TRIVIAL_FALSE,
--	FILTER_TRIVIAL_TRUE,
--	FILTER_TRIVIAL_BOTH,
-+enum tep_filter_trivial_type {
-+	TEP_FILTER_TRIVIAL_FALSE,
-+	TEP_FILTER_TRIVIAL_TRUE,
-+	TEP_FILTER_TRIVIAL_BOTH,
- };
- 
- enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
-@@ -926,7 +926,7 @@ int tep_event_filtered(struct tep_event_filter *filter,
- void tep_filter_reset(struct tep_event_filter *filter);
- 
- int tep_filter_clear_trivial(struct tep_event_filter *filter,
--			     enum filter_trivial_type type);
-+			     enum tep_filter_trivial_type type);
- 
- void tep_filter_free(struct tep_event_filter *filter);
- 
-@@ -937,12 +937,12 @@ int tep_filter_remove_event(struct tep_event_filter *filter,
- 
- int tep_filter_event_has_trivial(struct tep_event_filter *filter,
- 				 int event_id,
--				 enum filter_trivial_type type);
-+				 enum tep_filter_trivial_type type);
- 
- int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *source);
- 
- int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
--			enum filter_trivial_type type);
-+			enum tep_filter_trivial_type type);
- 
- int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter *filter2);
- 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 875bfaf79771..d64b6128fa7d 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1534,7 +1534,7 @@ int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *sour
-  *   events may have still been updated on error.
-  */
- int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
--		       enum filter_trivial_type type)
-+		       enum tep_filter_trivial_type type)
- {
- 	struct tep_handle *src_pevent;
- 	struct tep_handle *dest_pevent;
-@@ -1556,8 +1556,8 @@ int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *s
- 		arg = filter_type->filter;
- 		if (arg->type != TEP_FILTER_ARG_BOOLEAN)
- 			continue;
--		if ((arg->boolean.value && type == FILTER_TRIVIAL_FALSE) ||
--		    (!arg->boolean.value && type == FILTER_TRIVIAL_TRUE))
-+		if ((arg->boolean.value && type == TEP_FILTER_TRIVIAL_FALSE) ||
-+		    (!arg->boolean.value && type == TEP_FILTER_TRIVIAL_TRUE))
- 			continue;
- 
- 		event = filter_type->event;
-@@ -1593,7 +1593,7 @@ int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *s
-  * Returns 0 on success and -1 if there was a problem.
-  */
- int tep_filter_clear_trivial(struct tep_event_filter *filter,
--			     enum filter_trivial_type type)
-+			     enum tep_filter_trivial_type type)
- {
- 	struct tep_filter_type *filter_type;
- 	int count = 0;
-@@ -1614,11 +1614,11 @@ int tep_filter_clear_trivial(struct tep_event_filter *filter,
- 		if (filter_type->filter->type != TEP_FILTER_ARG_BOOLEAN)
- 			continue;
- 		switch (type) {
--		case FILTER_TRIVIAL_FALSE:
-+		case TEP_FILTER_TRIVIAL_FALSE:
- 			if (filter_type->filter->boolean.value)
- 				continue;
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 7123746edcf4..69fbb0a72d0c 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -463,6 +463,28 @@ int db_export__branch_types(struct db_export *dbe)
+ 		if (err)
  			break;
--		case FILTER_TRIVIAL_TRUE:
-+		case TEP_FILTER_TRIVIAL_TRUE:
- 			if (!filter_type->filter->boolean.value)
- 				continue;
- 		default:
-@@ -1656,7 +1656,7 @@ int tep_filter_clear_trivial(struct tep_event_filter *filter,
-  */
- int tep_filter_event_has_trivial(struct tep_event_filter *filter,
- 				 int event_id,
--				 enum filter_trivial_type type)
-+				 enum tep_filter_trivial_type type)
- {
- 	struct tep_filter_type *filter_type;
+ 	}
++
++	/* Add trace begin / end variants */
++	for (i = 0; branch_types[i].name ; i++) {
++		const char *name = branch_types[i].name;
++		u32 type = branch_types[i].branch_type;
++		char buf[64];
++
++		if (type == PERF_IP_FLAG_BRANCH ||
++		    (type & (PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END)))
++			continue;
++
++		snprintf(buf, sizeof(buf), "trace begin / %s", name);
++		err = db_export__branch_type(dbe, type | PERF_IP_FLAG_TRACE_BEGIN, buf);
++		if (err)
++			break;
++
++		snprintf(buf, sizeof(buf), "%s / trace end", name);
++		err = db_export__branch_type(dbe, type | PERF_IP_FLAG_TRACE_END, buf);
++		if (err)
++			break;
++	}
++
+ 	return err;
+ }
  
-@@ -1672,10 +1672,10 @@ int tep_filter_event_has_trivial(struct tep_event_filter *filter,
- 		return 0;
- 
- 	switch (type) {
--	case FILTER_TRIVIAL_FALSE:
-+	case TEP_FILTER_TRIVIAL_FALSE:
- 		return !filter_type->filter->boolean.value;
- 
--	case FILTER_TRIVIAL_TRUE:
-+	case TEP_FILTER_TRIVIAL_TRUE:
- 		return filter_type->filter->boolean.value;
- 	default:
- 		return 1;
-@@ -2409,8 +2409,8 @@ int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter
- 		if (filter_type1->filter->type != filter_type2->filter->type)
- 			break;
- 		switch (filter_type1->filter->type) {
--		case FILTER_TRIVIAL_FALSE:
--		case FILTER_TRIVIAL_TRUE:
-+		case TEP_FILTER_TRIVIAL_FALSE:
-+		case TEP_FILTER_TRIVIAL_TRUE:
- 			/* trivial types just need the type compared */
- 			continue;
- 		default:
 -- 
 2.14.4
