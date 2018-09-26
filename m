@@ -1,89 +1,75 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH 3/3] perf report: don't crash on invalid inline debug
- information
-Date: Wed, 26 Sep 2018 15:52:07 +0200
-Message-ID: <20180926135207.30263-3-milian.wolff@kdab.com>
-References: <20180926135207.30263-1-milian.wolff@kdab.com>
+Subject: [PATCH 1/3] perf report: don't try to map ip to invalid map
+Date: Wed, 26 Sep 2018 15:52:05 +0200
+Message-ID: <20180926135207.30263-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926135207.30263-1-milian.wolff@kdab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, jolsa@kernel.org, yao.jin@linux.intel.com, namhyung@kernel.org
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Sandipan Das <sandipan@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-When the function name for an inline frame is invalid, we must
-not try to demangle this symbol, otherwise we crash with:
+Fixes a crash when the report encounters an address that
+could not be associated with an mmaped region:
 
-#0  0x0000555555895c01 in bfd_demangle ()
-#1  0x0000555555823262 in demangle_sym (dso=3D0x555555d92b90, elf_name=3D=
-0x0, kmodule=3D0) at util/symbol-elf.c:215
-#2  dso__demangle_sym (dso=3Ddso@entry=3D0x555555d92b90, kmodule=3D<optim=
-ized out>, kmodule@entry=3D0, elf_name=3Delf_name@entry=3D0x0) at util/sy=
-mbol-elf.c:400
-#3  0x00005555557fef4b in new_inline_sym (funcname=3D0x0, base_sym=3D0x55=
-5555d92b90, dso=3D0x555555d92b90) at util/srcline.c:89
-#4  inline_list__append_dso_a2l (dso=3Ddso@entry=3D0x555555c7bb00, node=3D=
-node@entry=3D0x555555e31810, sym=3Dsym@entry=3D0x555555d92b90) at util/sr=
-cline.c:264
-#5  0x00005555557ff27f in addr2line (dso_name=3Ddso_name@entry=3D0x555555=
-d92430 "/home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d=
-24fce5/elf", addr=3Daddr@entry=3D2888, file=3Dfile@entry=3D0x0,
-    line=3Dline@entry=3D0x0, dso=3Ddso@entry=3D0x555555c7bb00, unwind_inl=
-ines=3Dunwind_inlines@entry=3Dtrue, node=3D0x555555e31810, sym=3D0x555555=
-d92b90) at util/srcline.c:313
-#6  0x00005555557ffe7c in addr2inlines (sym=3D0x555555d92b90, dso=3D0x555=
-555c7bb00, addr=3D2888, dso_name=3D0x555555d92430 "/home/milian/.debug/.b=
-uild-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf")
-    at util/srcline.c:358
-
-So instead handle the case where we get invalid function names
-for inlined frames and use a fallback '??' function name instead.
-
-While this crash was originally reported by Hadrien for rust code,
-I can now also reproduce it with trivial C++ code. Indeed, it seems
-like libbfd fails to interpret the debug information for the inline
-frame symbol name:
-
-$ addr2line -e /home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926d=
-a66033d24fce5/elf -if b48
-main
-/usr/include/c++/8.2.1/complex:610
-??
-/usr/include/c++/8.2.1/complex:618
-??
-/usr/include/c++/8.2.1/complex:675
-??
-/usr/include/c++/8.2.1/complex:685
-main
-/home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/ma=
-in.cpp:39
-
-I've reported this bug upstream and also attached a patch there
-which should fix this issue:
-https://sourceware.org/bugzilla/show_bug.cgi?id=3D23715
+#0  0x00005555557bdc4a in callchain_srcline (ip=3D<error reading variable=
+: Cannot access memory at address 0x38>, sym=3D0x0, map=3D0x0) at util/ma=
+chine.c:2329
+#1  unwind_entry (entry=3Dentry@entry=3D0x7fffffff9180, arg=3Darg@entry=3D=
+0x7ffff5642498) at util/machine.c:2329
+#2  0x00005555558370af in entry (arg=3D0x7ffff5642498, cb=3D0x5555557bdb5=
+0 <unwind_entry>, thread=3D<optimized out>, ip=3D18446744073709551615) at=
+ util/unwind-libunwind-local.c:586
+#3  get_entries (ui=3Dui@entry=3D0x7fffffff9620, cb=3D0x5555557bdb50 <unw=
+ind_entry>, arg=3D0x7ffff5642498, max_stack=3D<optimized out>) at util/un=
+wind-libunwind-local.c:703
+#4  0x0000555555837192 in _unwind__get_entries (cb=3D<optimized out>, arg=
+=3D<optimized out>, thread=3D<optimized out>, data=3D<optimized out>, max=
+_stack=3D<optimized out>) at util/unwind-libunwind-local.c:725
+#5  0x00005555557c310f in thread__resolve_callchain_unwind (max_stack=3D1=
+27, sample=3D0x7fffffff9830, evsel=3D0x555555c7b3b0, cursor=3D0x7ffff5642=
+498, thread=3D0x555555c7f6f0) at util/machine.c:2351
+#6  thread__resolve_callchain (thread=3D0x555555c7f6f0, cursor=3D0x7ffff5=
+642498, evsel=3D0x555555c7b3b0, sample=3D0x7fffffff9830, parent=3D0x7ffff=
+fff97b8, root_al=3D0x7fffffff9750, max_stack=3D127) at util/machine.c:237=
+8
+#7  0x00005555557ba4ee in sample__resolve_callchain (sample=3D<optimized =
+out>, cursor=3D<optimized out>, parent=3Dparent@entry=3D0x7fffffff97b8, e=
+vsel=3D<optimized out>, al=3Dal@entry=3D0x7fffffff9750,
+    max_stack=3D<optimized out>) at util/callchain.c:1085
 
 Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: Sandipan Das <sandipan@linux.ibm.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Reported-by: Hadrien Grasland <grasland@lal.in2p3.fr>
 ---
- tools/perf/util/srcline.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/machine.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 09d6746e6ec8..e767c4a9d4d2 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -85,6 +85,9 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 	struct symbol *inline_sym;
- 	char *demangled =3D NULL;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index c4acd2001db0..0cb4f8bf3ca7 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2312,7 +2312,7 @@ static int unwind_entry(struct unwind_entry *entry,=
+ void *arg)
+ {
+ 	struct callchain_cursor *cursor =3D arg;
+ 	const char *srcline =3D NULL;
+-	u64 addr;
++	u64 addr =3D entry->ip;
 =20
-+	if (!funcname)
-+		funcname =3D "??";
-+
- 	if (dso) {
- 		demangled =3D dso__demangle_sym(dso, 0, funcname);
- 		if (demangled)
+ 	if (symbol_conf.hide_unresolved && entry->sym =3D=3D NULL)
+ 		return 0;
+@@ -2324,7 +2324,8 @@ static int unwind_entry(struct unwind_entry *entry,=
+ void *arg)
+ 	 * Convert entry->ip from a virtual address to an offset in
+ 	 * its corresponding binary.
+ 	 */
+-	addr =3D map__map_ip(entry->map, entry->ip);
++	if (entry->map)
++		addr =3D map__map_ip(entry->map, entry->ip);
+=20
+ 	srcline =3D callchain_srcline(entry->map, entry->sym, addr);
+ 	return callchain_cursor_append(cursor, entry->ip,
 --=20
 2.19.0
