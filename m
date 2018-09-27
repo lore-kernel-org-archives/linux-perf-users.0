@@ -1,43 +1,82 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/3] perf report: don't try to map ip to invalid map
-Date: Thu, 27 Sep 2018 16:07:44 -0300
-Message-ID: <20180927190744.GF25764@kernel.org>
+Subject: Re: [PATCH 3/3] perf report: don't crash on invalid inline debug
+ information
+Date: Thu, 27 Sep 2018 16:10:37 -0300
+Message-ID: <20180927191037.GG25764@kernel.org>
 References: <20180926135207.30263-1-milian.wolff@kdab.com>
- <20180926141819.GD25764@kernel.org>
- <2962236.ln4BiC7fMR@milian-kdab2>
+ <20180926135207.30263-3-milian.wolff@kdab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2962236.ln4BiC7fMR@milian-kdab2>
+In-Reply-To: <20180926135207.30263-3-milian.wolff@kdab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Milian Wolff <milian.wolff@kdab.com>
-Cc: jolsa@kernel.org, yao.jin@linux.intel.com, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>
+Cc: jolsa@kernel.org, yao.jin@linux.intel.com, namhyung@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Sep 26, 2018 at 04:41:23PM +0200, Milian Wolff escreveu:
-> On Wednesday, September 26, 2018 4:18:19 PM CEST Arnaldo Carvalho de Melo 
-> wrote:
-> > Em Wed, Sep 26, 2018 at 03:52:05PM +0200, Milian Wolff escreveu:
-> > > Fixes a crash when the report encounters an address that
-> > 
-> > > could not be associated with an mmaped region:
-> > Milian, can you spot which cset introduced this problem? So that we can
-> > add a "Fixes: sha" tag in this (and the others, if needed) to help the
-> > stable kernel maintainers to find which kernels this has to be
-> > backported to?
+Em Wed, Sep 26, 2018 at 03:52:07PM +0200, Milian Wolff escreveu:
+> When the function name for an inline frame is invalid, we must
+> not try to demangle this symbol, otherwise we crash with:
 > 
-> The issue was introduced by
+> #0  0x0000555555895c01 in bfd_demangle ()
+> #1  0x0000555555823262 in demangle_sym (dso=0x555555d92b90, elf_name=0x0, kmodule=0) at util/symbol-elf.c:215
+> #2  dso__demangle_sym (dso=dso@entry=0x555555d92b90, kmodule=<optimized out>, kmodule@entry=0, elf_name=elf_name@entry=0x0) at util/symbol-elf.c:400
+> #3  0x00005555557fef4b in new_inline_sym (funcname=0x0, base_sym=0x555555d92b90, dso=0x555555d92b90) at util/srcline.c:89
+> #4  inline_list__append_dso_a2l (dso=dso@entry=0x555555c7bb00, node=node@entry=0x555555e31810, sym=sym@entry=0x555555d92b90) at util/srcline.c:264
+> #5  0x00005555557ff27f in addr2line (dso_name=dso_name@entry=0x555555d92430 "/home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf", addr=addr@entry=2888, file=file@entry=0x0,
+>     line=line@entry=0x0, dso=dso@entry=0x555555c7bb00, unwind_inlines=unwind_inlines@entry=true, node=0x555555e31810, sym=0x555555d92b90) at util/srcline.c:313
+> #6  0x00005555557ffe7c in addr2inlines (sym=0x555555d92b90, dso=0x555555c7bb00, addr=2888, dso_name=0x555555d92430 "/home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf")
+>     at util/srcline.c:358
 > 
-> perf script: Show correct offsets for DWARF-based unwinding
+> So instead handle the case where we get invalid function names
+> for inlined frames and use a fallback '??' function name instead.
 > 
-> This in turn got backported already a few times, at which point the 
-> 2a9d5050dc84fa2060f08a52f632976923e0fa7e sha was used when referencing the 
-> "Upstream commit".
+> While this crash was originally reported by Hadrien for rust code,
+> I can now also reproduce it with trivial C++ code. Indeed, it seems
+> like libbfd fails to interpret the debug information for the inline
+> frame symbol name:
 > 
-> Is that enough, or do you need me to find all the backported shas too?
+> $ addr2line -e /home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf -if b48
+> main
+> /usr/include/c++/8.2.1/complex:610
+> ??
+> /usr/include/c++/8.2.1/complex:618
+> ??
+> /usr/include/c++/8.2.1/complex:675
+> ??
+> /usr/include/c++/8.2.1/complex:685
+> main
+> /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39
+> 
+> I've reported this bug upstream and also attached a patch there
+> which should fix this issue:
+> https://sourceware.org/bugzilla/show_bug.cgi?id=23715
 
-I think it is enough, and I hope that the stable guys already handle
-fixes to fixes :-)
+Millian, what about this one, which is the cset it is fixing?
 
 - Arnaldo
+ 
+> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Reported-by: Hadrien Grasland <grasland@lal.in2p3.fr>
+> ---
+>  tools/perf/util/srcline.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index 09d6746e6ec8..e767c4a9d4d2 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -85,6 +85,9 @@ static struct symbol *new_inline_sym(struct dso *dso,
+>  	struct symbol *inline_sym;
+>  	char *demangled = NULL;
+>  
+> +	if (!funcname)
+> +		funcname = "??";
+> +
+>  	if (dso) {
+>  		demangled = dso__demangle_sym(dso, 0, funcname);
+>  		if (demangled)
+> -- 
+> 2.19.0
