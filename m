@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/6] perf script python: Fix export-to-postgresql.py occasional failure
-Date: Fri, 28 Sep 2018 09:25:34 -0300
-Message-ID: <20180928122539.29326-2-acme@kernel.org>
+Subject: [PATCH 2/6] perf script python: Fix export-to-sqlite.py sample columns
+Date: Fri, 28 Sep 2018 09:25:35 -0300
+Message-ID: <20180928122539.29326-3-acme@kernel.org>
 References: <20180928122539.29326-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180928122539.29326-1-acme@kernel.org>
@@ -12,46 +12,36 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Occasional export failures were found to be caused by truncating 64-bit
-pointers to 32-bits. Fix by explicitly setting types for all ctype
-arguments and results.
+With the "branches" export option, not all sample columns are exported.
+However the unwanted columns are not at the end of the tuple, as assumed
+by the code. Fix by taking the first 15 and last 3 values, instead of
+the first 18.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180911114504.28516-2-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20180911114504.28516-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-postgresql.py | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/scripts/python/export-to-sqlite.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index efcaf6cac2eb..e46f51b17513 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -204,14 +204,23 @@ from ctypes import *
- libpq = CDLL("libpq.so.5")
- PQconnectdb = libpq.PQconnectdb
- PQconnectdb.restype = c_void_p
-+PQconnectdb.argtypes = [ c_char_p ]
- PQfinish = libpq.PQfinish
-+PQfinish.argtypes = [ c_void_p ]
- PQstatus = libpq.PQstatus
-+PQstatus.restype = c_int
-+PQstatus.argtypes = [ c_void_p ]
- PQexec = libpq.PQexec
- PQexec.restype = c_void_p
-+PQexec.argtypes = [ c_void_p, c_char_p ]
- PQresultStatus = libpq.PQresultStatus
-+PQresultStatus.restype = c_int
-+PQresultStatus.argtypes = [ c_void_p ]
- PQputCopyData = libpq.PQputCopyData
-+PQputCopyData.restype = c_int
- PQputCopyData.argtypes = [ c_void_p, c_void_p, c_int ]
- PQputCopyEnd = libpq.PQputCopyEnd
-+PQputCopyEnd.restype = c_int
- PQputCopyEnd.argtypes = [ c_void_p, c_void_p ]
+diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
+index f827bf77e9d2..e4bb82c8aba9 100644
+--- a/tools/perf/scripts/python/export-to-sqlite.py
++++ b/tools/perf/scripts/python/export-to-sqlite.py
+@@ -440,7 +440,11 @@ def branch_type_table(*x):
  
- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ def sample_table(*x):
+ 	if branches:
+-		bind_exec(sample_query, 18, x)
++		for xx in x[0:15]:
++			sample_query.addBindValue(str(xx))
++		for xx in x[19:22]:
++			sample_query.addBindValue(str(xx))
++		do_query_(sample_query)
+ 	else:
+ 		bind_exec(sample_query, 22, x)
+ 
 -- 
 2.14.4
