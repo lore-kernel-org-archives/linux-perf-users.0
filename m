@@ -1,47 +1,64 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/5] perf script python: Fix export-to-sqlite.py sample columns
-Date: Fri,  5 Oct 2018 13:10:09 -0300
-Message-ID: <20181005161012.18475-3-acme@kernel.org>
+Subject: [PATCH 3/5] perf report: Don't try to map ip to invalid map
+Date: Fri,  5 Oct 2018 13:10:10 -0300
+Message-ID: <20181005161012.18475-4-acme@kernel.org>
 References: <20181005161012.18475-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005161012.18475-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 
-With the "branches" export option, not all sample columns are exported.
-However the unwanted columns are not at the end of the tuple, as assumed
-by the code. Fix by taking the first 15 and last 3 values, instead of
-the first 18.
+Fixes a crash when the report encounters an address that could not be
+associated with an mmaped region:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20180911114504.28516-3-adrian.hunter@intel.com
+  #0  0x00005555557bdc4a in callchain_srcline (ip=<error reading variable: Cannot access memory at address 0x38>, sym=0x0, map=0x0) at util/machine.c:2329
+  #1  unwind_entry (entry=entry@entry=0x7fffffff9180, arg=arg@entry=0x7ffff5642498) at util/machine.c:2329
+  #2  0x00005555558370af in entry (arg=0x7ffff5642498, cb=0x5555557bdb50 <unwind_entry>, thread=<optimized out>, ip=18446744073709551615) at util/unwind-libunwind-local.c:586
+  #3  get_entries (ui=ui@entry=0x7fffffff9620, cb=0x5555557bdb50 <unwind_entry>, arg=0x7ffff5642498, max_stack=<optimized out>) at util/unwind-libunwind-local.c:703
+  #4  0x0000555555837192 in _unwind__get_entries (cb=<optimized out>, arg=<optimized out>, thread=<optimized out>, data=<optimized out>, max_stack=<optimized out>) at util/unwind-libunwind-local.c:725
+  #5  0x00005555557c310f in thread__resolve_callchain_unwind (max_stack=127, sample=0x7fffffff9830, evsel=0x555555c7b3b0, cursor=0x7ffff5642498, thread=0x555555c7f6f0) at util/machine.c:2351
+  #6  thread__resolve_callchain (thread=0x555555c7f6f0, cursor=0x7ffff5642498, evsel=0x555555c7b3b0, sample=0x7fffffff9830, parent=0x7fffffff97b8, root_al=0x7fffffff9750, max_stack=127) at util/machine.c:2378
+  #7  0x00005555557ba4ee in sample__resolve_callchain (sample=<optimized out>, cursor=<optimized out>, parent=parent@entry=0x7fffffff97b8, evsel=<optimized out>, al=al@entry=0x7fffffff9750,
+      max_stack=<optimized out>) at util/callchain.c:1085
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Tested-by: Sandipan Das <sandipan@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 2a9d5050dc84 ("perf script: Show correct offsets for DWARF-based unwinding")
+Link: http://lkml.kernel.org/r/20180926135207.30263-1-milian.wolff@kdab.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/machine.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index f827bf77e9d2..e4bb82c8aba9 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -440,7 +440,11 @@ def branch_type_table(*x):
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index c4acd2001db0..0cb4f8bf3ca7 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2312,7 +2312,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
+ {
+ 	struct callchain_cursor *cursor = arg;
+ 	const char *srcline = NULL;
+-	u64 addr;
++	u64 addr = entry->ip;
  
- def sample_table(*x):
- 	if branches:
--		bind_exec(sample_query, 18, x)
-+		for xx in x[0:15]:
-+			sample_query.addBindValue(str(xx))
-+		for xx in x[19:22]:
-+			sample_query.addBindValue(str(xx))
-+		do_query_(sample_query)
- 	else:
- 		bind_exec(sample_query, 22, x)
+ 	if (symbol_conf.hide_unresolved && entry->sym == NULL)
+ 		return 0;
+@@ -2324,7 +2324,8 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
+ 	 * Convert entry->ip from a virtual address to an offset in
+ 	 * its corresponding binary.
+ 	 */
+-	addr = map__map_ip(entry->map, entry->ip);
++	if (entry->map)
++		addr = map__map_ip(entry->map, entry->ip);
  
+ 	srcline = callchain_srcline(entry->map, entry->sym, addr);
+ 	return callchain_cursor_append(cursor, entry->ip,
 -- 
 2.14.4
