@@ -1,55 +1,78 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/5] perf record: Use unmapped IP for inline callchain cursors
-Date: Fri,  5 Oct 2018 13:10:12 -0300
-Message-ID: <20181005161012.18475-6-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/5] perf/urgent fixes
+Date: Fri, 5 Oct 2018 18:14:50 +0200
+Message-ID: <20181005161450.GA73272@gmail.com>
 References: <20181005161012.18475-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20181005161012.18475-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Sandipan Das <sandipan@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sandipan Das <sandipan@linux.ibm.com>, stable@vger.kernel.org, Thiago Macieira <thiago.macieira@intel.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Milian Wolff <milian.wolff@kdab.com>
 
-Only use the mapped IP to find inline frames, but keep using the
-unmapped IP for the callchain cursor. This ensures we properly show the
-unmapped IP when displaying a frame we received via the
-dso__parse_addr_inlines API for a module which does not contain
-sufficient debug symbols to show the srcline.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-This is another follow-up to commit 19610184693c ("perf script: Show
-virtual addresses instead of offsets").
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 5d05dfd13f20b01a3cd5d293058baa7d5c1583b6:
+> 
+>   Merge tag 'perf-urgent-for-mingo-4.19-20180918' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-09-19 13:25:35 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.19-20181005
+> 
+> for you to fetch changes up to 7a8a8fcf7b860e4b2d4edc787c844d41cad9dfcf:
+> 
+>   perf record: Use unmapped IP for inline callchain cursors (2018-10-05 11:18:09 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> - Fix the build on Clear Linux, coping with redundant declarations of
+>   function prototypes in python3 header files by adding
+>   -Wno-redundant-decls to build with PYTHON=python3 (Arnaldo Carvalho de Melo)
+> 
+> - Fixes for processing inline frames in backtraces using DWARF based
+>   unwinding (Milian Wolff)
+> 
+> - Cope with bad DWARF info for function names for inline frames,not
+>   trying to demangle this symbol. Problem reported with rust but
+>   reproduced as well with C++. Problem reported to the libbpf
+>   maintainers (Milian Wolff)
+> 
+> - Fix python export to postgresql and sqlite code (Adrian Hunter)
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (2):
+>       perf script python: Fix export-to-postgresql.py occasional failure
+>       perf script python: Fix export-to-sqlite.py sample columns
+> 
+> Arnaldo Carvalho de Melo (1):
+>       perf python: Use -Wno-redundant-decls to build with PYTHON=python3
+> 
+> Milian Wolff (2):
+>       perf report: Don't try to map ip to invalid map
+>       perf record: Use unmapped IP for inline callchain cursors
+> 
+>  tools/perf/scripts/python/export-to-postgresql.py | 9 +++++++++
+>  tools/perf/scripts/python/export-to-sqlite.py     | 6 +++++-
+>  tools/perf/util/machine.c                         | 8 +++++---
+>  tools/perf/util/setup.py                          | 2 +-
+>  4 files changed, 20 insertions(+), 5 deletions(-)
 
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Sandipan Das <sandipan@linux.ibm.com>
-Fixes: 19610184693c ("perf script: Show virtual addresses instead of offsets")
-Link: http://lkml.kernel.org/r/20180926135207.30263-2-milian.wolff@kdab.com
-Link: http://lkml.kernel.org/r/20181002073949.3297-1-milian.wolff@kdab.com
-[ Squashed a fix from Milian for a problem reported by Ravi, fixed up space damage ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Pulled into tip:perf/urgent, thanks a lot Arnaldo!
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 0cb4f8bf3ca7..111ae858cbcb 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2286,7 +2286,8 @@ static int append_inlines(struct callchain_cursor *cursor,
- 	if (!symbol_conf.inline_name || !map || !sym)
- 		return ret;
- 
--	addr = map__rip_2objdump(map, ip);
-+	addr = map__map_ip(map, ip);
-+	addr = map__rip_2objdump(map, addr);
- 
- 	inline_node = inlines__tree_find(&map->dso->inlined_nodes, addr);
- 	if (!inline_node) {
--- 
-2.14.4
+	Ingo
