@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/12] perf tools: Free 'printk' string in parse_ftrace_printk()
-Date: Mon,  8 Oct 2018 21:54:21 -0300
-Message-ID: <20181009005427.6607-7-acme@kernel.org>
+Subject: [PATCH 08/12] perf tools: Free temporary 'sys' string in read_event_files()
+Date: Mon,  8 Oct 2018 21:54:23 -0300
+Message-ID: <20181009005427.6607-9-acme@kernel.org>
 References: <20181009005427.6607-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181009005427.6607-1-acme@kernel.org>
@@ -12,39 +12,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Sanskriti Sharma <sansharm@redhat.com>
 
-parse_ftrace_printk() tokenizes and parses a line, calling strdup() each
-iteration.  Add code to free this temporary format string duplicate.
+For each system in a given pevent, read_event_files() reads in a
+temporary 'sys' string.  Be sure to free this string before moving onto
+to the next system and/or leaving read_event_files().
 
 Fixes the following coverity complaints:
 
   Error: RESOURCE_LEAK (CWE-772):
-  tools/perf/util/trace-event-parse.c:158: overwrite_var: Overwriting
-  "printk" in "printk = strdup(fmt + 1)" leaks the storage that "printk"
-  points to.
 
-  tools/perf/util/trace-event-parse.c:162: leaked_storage: Variable
-  "printk" going out of scope leaks the storage it points to.
+  tools/perf/util/trace-event-read.c:343: overwrite_var: Overwriting
+  "sys" in "sys = read_string()" leaks the storage that "sys" points to.
+
+  tools/perf/util/trace-event-read.c:353: leaked_storage: Variable "sys"
+  going out of scope leaks the storage it points to.
 
 Signed-off-by: Sanskriti Sharma <sansharm@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Link: http://lkml.kernel.org/r/1538490554-8161-4-git-send-email-sansharm@redhat.com
+Link: http://lkml.kernel.org/r/1538490554-8161-6-git-send-email-sansharm@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-parse.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/trace-event-read.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index a4d7de1c96d1..02f97f5dd588 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -158,6 +158,7 @@ void parse_ftrace_printk(struct tep_handle *pevent,
- 		printk = strdup(fmt+1);
- 		line = strtok_r(NULL, "\n", &next);
- 		tep_register_print_string(pevent, printk, addr);
-+		free(printk);
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index a278e1eee5f5..add8441de579 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -347,9 +347,12 @@ static int read_event_files(struct tep_handle *pevent)
+ 		for (x=0; x < count; x++) {
+ 			size = read8(pevent);
+ 			ret = read_event_file(pevent, sys, size);
+-			if (ret)
++			if (ret) {
++				free(sys);
+ 				return ret;
++			}
+ 		}
++		free(sys);
  	}
+ 	return 0;
  }
- 
 -- 
 2.14.4
