@@ -1,109 +1,59 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/12] perf/core improvements and fixes
-Date: Tue, 9 Oct 2018 07:24:52 +0200
-Message-ID: <20181009052452.GA104386@gmail.com>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Subject: Re: [PATCH 02/12] perf auxtrace: Include missing asm/bitsperlong.h to
+ get BITS_PER_LONG
+Date: Tue, 9 Oct 2018 10:43:56 +0200
+Message-ID: <a73e3b15-cff3-312a-8345-c5b14dce070f@nokia.com>
 References: <20181009005427.6607-1-acme@kernel.org>
+ <20181009005427.6607-3-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181009005427.6607-1-acme@kernel.org>
+In-Reply-To: <20181009005427.6607-3-acme@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, David Ahern <dsahern@gmail.com>, Eduardo Habkost <ehabkost@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Joe Lawrence <joe.lawrence@redhat.com>, linux trace devel <linux-trace-devel@vger.kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sanskriti Sharma <sansharm@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Richter <tmricht@linux.ibm.com>, Tzvetomir Stoyanov <tz.stoyanov>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi!
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 09/10/2018 02:54, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> The auxtrace.h header references BITS_PER_LONG without including the
+> header where it is defined, getting it by luck from some other header,
+> fix it.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> Link: https://lkml.kernel.org/n/tip-v04ydmbh7tvpcctf3zld9j9s@git.kernel.org
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 7c5314b88da6d5af98239786772a1c44cc5eb67d:
-> 
->   perf/x86/intel: Add quirk for Goldmont Plus (2018-10-02 10:14:33 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.20-20181008
-> 
-> for you to fetch changes up to bb3dd7e7c4d5e024d607c0ec06c2a2fb9408cc99:
-> 
->   tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file (2018-10-08 15:05:37 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> . Fix building the python bindings with python3, which fixes some
->   problems with building with clang on Clear Linux (Eduardo Habkost)
-> 
-> . Fix coverity warnings, fixing up some error paths and plugging
->   some temporary small buffer leaks (Sanskriti Sharma)
-> 
-> . Adopt a wrapper for strerror_r() for the same reasons as recently
->   for libbpf (Steven Rostedt)
-> 
-> . S390 does not support watchpoints in 'perf test 22', check if
->   that test is supported by the arch. (Thomas Richter)
-> 
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/auxtrace.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (2):
->       tools include: Adopt linux/bits.h
->       perf auxtrace: Include missing asm/bitsperlong.h to get BITS_PER_LONG
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 0a6ce9c4fc11..d88f6e9eb461 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -23,6 +23,7 @@
+>  #include <linux/list.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/types.h>
+> +#include <asm/bitsperlong.h>
+>  
+>  #include "../perf.h"
+>  #include "event.h"
 > 
-> Eduardo Habkost (2):
->       perf python: Make clang_has_option() work on Python 3
->       perf python: More portable way to make CFLAGS work with clang
-> 
-> Sanskriti Sharma (5):
->       perf strbuf: Match va_{add,copy} with va_end
->       perf tools: Cleanup trace-event-info 'tdata' leak
->       perf tools: Free 'printk' string in parse_ftrace_printk()
->       perf tools: Avoid double free in read_event_file()
->       perf tools: Free temporary 'sys' string in read_event_files()
-> 
-> Steven Rostedt (VMware) (1):
->       tools lib traceevent: Separate out tep_strerror() for strerror_r() issues
-> 
-> Thomas Richter (1):
->       perf test: S390 does not support watchpoints in test 22
-> 
-> Tzvetomir Stoyanov (1):
->       tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file
-> 
->  tools/include/linux/bitops.h             |   7 +-
->  tools/include/linux/bits.h               |  26 +++
->  tools/lib/traceevent/Build               |   2 +
->  tools/lib/traceevent/event-parse-api.c   | 275 +++++++++++++++++++++++++++++++
->  tools/lib/traceevent/event-parse-local.h |  92 +++++++++++
->  tools/lib/traceevent/event-parse.c       |  32 +---
->  tools/lib/traceevent/event-parse.h       | 228 ++++---------------------
->  tools/lib/traceevent/event-plugin.c      |   1 +
->  tools/lib/traceevent/parse-filter.c      |   1 +
->  tools/lib/traceevent/tep_strerror.c      |  53 ++++++
->  tools/perf/check-headers.sh              |   1 +
->  tools/perf/tests/builtin-test.c          |   1 +
->  tools/perf/tests/tests.h                 |   1 +
->  tools/perf/tests/wp.c                    |  12 ++
->  tools/perf/util/auxtrace.h               |   1 +
->  tools/perf/util/setup.py                 |  16 +-
->  tools/perf/util/strbuf.c                 |  10 +-
->  tools/perf/util/trace-event-info.c       |   2 +
->  tools/perf/util/trace-event-parse.c      |  26 +--
->  tools/perf/util/trace-event-read.c       |  11 +-
->  20 files changed, 539 insertions(+), 259 deletions(-)
->  create mode 100644 tools/include/linux/bits.h
->  create mode 100644 tools/lib/traceevent/event-parse-api.c
->  create mode 100644 tools/lib/traceevent/event-parse-local.h
->  create mode 100644 tools/lib/traceevent/tep_strerror.c
 
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+-- 
+Best regards,
+Alexander Sverdlin.
