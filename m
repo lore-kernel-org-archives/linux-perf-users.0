@@ -1,118 +1,349 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf record: use unmapped IP for inline callchain cursors
-Date: Mon, 08 Oct 2018 20:49:32 +0200
-Message-ID: <5853017.W5yrxTLJX6@agathebauer>
-References: <20181002073949.3297-1-milian.wolff@kdab.com>
- <f71ed02b-1234-db9c-6a48-1a399359b5e8@linux.ibm.com>
- <20181005134831.GA20250@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5148452.kjaPzXp2qi";
- micalg="sha256"; protocol="application/pkcs7-signature"
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL 00/12] perf/core improvements and fixes
+Date: Mon,  8 Oct 2018 21:54:15 -0300
+Message-ID: <20181009005427.6607-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005134831.GA20250@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, David Ahern <dsahern@gmail.com>, Eduardo Habkost <ehabkost@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Joe Lawrence <joe.lawrence@redhat.com>, linux trace devel <linux-trace-devel@vger.kernel.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sanskriti Sharma <sansharm@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Richter <tmricht@lin>
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart5148452.kjaPzXp2qi
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Ingo,
 
-On Freitag, 5. Oktober 2018 15:48:31 CEST Arnaldo Carvalho de Melo wrote:
-> Em Wed, Oct 03, 2018 at 09:05:37AM +0530, Ravi Bangoria escreveu:
-> > LGTM.
-> > 
-> > Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> 
-> So, I've added this as a 'git rebase -i' 'fixup', i.e. kept the commit
-> log message for the patch this patch fixes, and combined the two into
-> just one patch so that we don't pollute the bisect history, since this
-> hasn't made it yet to tip, and I also added Ravi's Tested-by, since this
-> tests both.
+	Please consider pulling,
 
-Thanks a lot for the cleanup work Arnaldo.
+- Arnaldo
 
-Cheers
+Test results at the end of this message, as usual.
 
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
---nextPart5148452.kjaPzXp2qi
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+The following changes since commit 7c5314b88da6d5af98239786772a1c44cc5eb67d:
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
-ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
-IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
-QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
-ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
-YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
-gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
-/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
-RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
-8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
-fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
-Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
-QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
-dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
-Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
-BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
-AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
-lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
-bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
-XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
-SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
-dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
-4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
-1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
-OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
-bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
-OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
-IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
-A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
-BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
-bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
-BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
-bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
-b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
-lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
-G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
-iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
-pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
-AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
-6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
-ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
-68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
-3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
-LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
-y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
-cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
-c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
-BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
-EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDA4MTg0OTMyWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg3hOP66ghCOj/u3D/JgCADWZA4e+A
-rvsJQypWCly5z+MwDQYJKoZIhvcNAQEBBQAEggEAXY9vFd+UDT4P5HAfGWpkCn4ozxEXEX6GlBnJ
-E0ScDXh8fSsATbM2DkSsMwYYJlhCKKlXzck5hVgL6Vm4DUInsWeexDmwI3pKv8Xa2xzBQNU1OAKU
-VOdoFjQM/gFR85Q4M9N0Y2Msg+vMz+JRFBINjwefcLdDBVtWNA6SINg5QgU738Whr0dBpODyB1Nr
-CgYlyw+Sfo+M+RBnWu2Va59sjsXSjeOU5LZLwr06bLoRwvoFPSd6qhEarbb4G5CHrP+h+EXfJ6MM
-jZPUY8O9EDd4XVJTsXgWC8Xb1ECU2QfMdFLvRJW6LNsbqYghOBWstjW8MwQmNB1bW5JUUOEpkN8L
-JgAAAAAAAA==
+  perf/x86/intel: Add quirk for Goldmont Plus (2018-10-02 10:14:33 +0200)
 
+are available in the Git repository at:
 
---nextPart5148452.kjaPzXp2qi--
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.20-20181008
+
+for you to fetch changes up to bb3dd7e7c4d5e024d607c0ec06c2a2fb9408cc99:
+
+  tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file (2018-10-08 15:05:37 -0300)
+
+----------------------------------------------------------------
+perf/core improvements and fixes:
+
+. Fix building the python bindings with python3, which fixes some
+  problems with building with clang on Clear Linux (Eduardo Habkost)
+
+. Fix coverity warnings, fixing up some error paths and plugging
+  some temporary small buffer leaks (Sanskriti Sharma)
+
+. Adopt a wrapper for strerror_r() for the same reasons as recently
+  for libbpf (Steven Rostedt)
+
+. S390 does not support watchpoints in 'perf test 22', check if
+  that test is supported by the arch. (Thomas Richter)
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (2):
+      tools include: Adopt linux/bits.h
+      perf auxtrace: Include missing asm/bitsperlong.h to get BITS_PER_LONG
+
+Eduardo Habkost (2):
+      perf python: Make clang_has_option() work on Python 3
+      perf python: More portable way to make CFLAGS work with clang
+
+Sanskriti Sharma (5):
+      perf strbuf: Match va_{add,copy} with va_end
+      perf tools: Cleanup trace-event-info 'tdata' leak
+      perf tools: Free 'printk' string in parse_ftrace_printk()
+      perf tools: Avoid double free in read_event_file()
+      perf tools: Free temporary 'sys' string in read_event_files()
+
+Steven Rostedt (VMware) (1):
+      tools lib traceevent: Separate out tep_strerror() for strerror_r() issues
+
+Thomas Richter (1):
+      perf test: S390 does not support watchpoints in test 22
+
+Tzvetomir Stoyanov (1):
+      tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file
+
+ tools/include/linux/bitops.h             |   7 +-
+ tools/include/linux/bits.h               |  26 +++
+ tools/lib/traceevent/Build               |   2 +
+ tools/lib/traceevent/event-parse-api.c   | 275 +++++++++++++++++++++++++++++++
+ tools/lib/traceevent/event-parse-local.h |  92 +++++++++++
+ tools/lib/traceevent/event-parse.c       |  32 +---
+ tools/lib/traceevent/event-parse.h       | 228 ++++---------------------
+ tools/lib/traceevent/event-plugin.c      |   1 +
+ tools/lib/traceevent/parse-filter.c      |   1 +
+ tools/lib/traceevent/tep_strerror.c      |  53 ++++++
+ tools/perf/check-headers.sh              |   1 +
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/tests/wp.c                    |  12 ++
+ tools/perf/util/auxtrace.h               |   1 +
+ tools/perf/util/setup.py                 |  16 +-
+ tools/perf/util/strbuf.c                 |  10 +-
+ tools/perf/util/trace-event-info.c       |   2 +
+ tools/perf/util/trace-event-parse.c      |  26 +--
+ tools/perf/util/trace-event-read.c       |  11 +-
+ 20 files changed, 539 insertions(+), 259 deletions(-)
+ create mode 100644 tools/include/linux/bits.h
+ create mode 100644 tools/lib/traceevent/event-parse-api.c
+ create mode 100644 tools/lib/traceevent/event-parse-local.h
+ create mode 100644 tools/lib/traceevent/tep_strerror.c
+
+Test results:
+
+The first ones are container (docker) based builds of tools/perf with
+and without libelf support.  Where clang is available, it is also used
+to build perf with/without libelf, and building with LIBCLANGLLVM=1
+(built-in clang) with gcc and clang when clang and its devel libraries
+are installed.
+
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
+
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+The Clear Linux container is building with NO_CLANG=1, some problem
+preventing its use when building for python3 have been fixed, some more
+have been identified and the next builds will build in ClearLinux with
+both gcc and clang. This time around only gcc was used.
+
+  # dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
+   7 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+   8 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+   9 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  10 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  11 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  12 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  13 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+  14 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 8.2.1 20180502
+  15 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
+  16 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u1) 4.9.2
+  17 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+  18 debian:experimental           : Ok   gcc (Debian 8.2.0-7) 8.2.0
+  19 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.2.0-4) 8.2.0
+  20 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 8.1.0-12) 8.1.0
+  21 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 8.1.0-12) 8.1.0
+  22 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 8.1.0-12) 8.1.0
+  23 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  24 fedora:21                     : Ok   gcc (GCC) 4.9.2 20150212 (Red Hat 4.9.2-6)
+  25 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  26 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  27 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  28 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+  29 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
+  30 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
+  31 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)
+  32 fedora:28                     : Ok   gcc (GCC) 8.1.1 20180712 (Red Hat 8.1.1-5)
+  33 fedora:rawhide                : Ok   gcc (GCC) 8.2.1 20180905 (Red Hat 8.2.1-3)
+  34 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 7.3.0-r3 p1.4) 7.3.0
+  35 mageia:5                      : Ok   gcc (GCC) 4.9.2
+  36 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0
+  37 opensuse:13.2                 : Ok   gcc (SUSE Linux) 4.8.3 20140627 [gcc-4_8-branch revision 212064]
+  38 opensuse:42.1                 : Ok   gcc (SUSE Linux) 4.8.5
+  39 opensuse:42.2                 : Ok   gcc (SUSE Linux) 4.8.5
+  40 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5
+  41 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 7.3.1 20180323 [gcc-7-branch revision 258812]
+  42 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1)
+  43 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28.0.1)
+  44 ubuntu:12.04.5                : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+  45 ubuntu:14.04.4                : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+  46 ubuntu:14.04.4-x-linaro-arm64 : Ok   aarch64-linux-gnu-gcc (Linaro GCC 5.5-2017.10) 5.5.0
+  47 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  48 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  49 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  50 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  51 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  52 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  53 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  54 ubuntu:16.10                  : Ok   gcc (Ubuntu 6.2.0-5ubuntu12) 6.2.0 20161005
+  55 ubuntu:17.10                  : Ok   gcc (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
+  56 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  57 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.3.0-16ubuntu3) 7.3.0
+  58 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.3.0-16ubuntu3) 7.3.0
+  59 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  60 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  61 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  62 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  63 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  64 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  65 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  66 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+  67 ubuntu:18.10                  : Ok   gcc (Ubuntu 8.2.0-4ubuntu1) 8.2.0
+  #
+
+  # uname -a
+  Linux jouet 4.19.0-rc4-00022-gad3273d5f1b9 #1 SMP Mon Sep 17 17:18:22 -03 2018 x86_64 x86_64 x86_64 GNU/Linux
+  # git log --oneline -1
+  bb3dd7e7c4d5 tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file
+  # perf version --build-options
+  perf version 4.19.rc5.gbb3dd7
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: DSO data read                                         : Ok
+  11: DSO data cache                                        : Ok
+  12: DSO data reopen                                       : Ok
+  13: Roundtrip evsel->name                                 : Ok
+  14: Parse sched tracepoints fields                        : Ok
+  15: syscalls:sys_enter_openat event fields                : Ok
+  16: Setup struct perf_event_attr                          : Ok
+  17: Match and link multiple hists                         : Ok
+  18: 'import perf' in python                               : Ok
+  19: Breakpoint overflow signal handler                    : Ok
+  20: Breakpoint overflow sampling                          : Ok
+  21: Breakpoint accounting                                 : Ok
+  22: Watchpoint                                            :
+  22.1: Read Only Watchpoint                                : Skip
+  22.2: Write Only Watchpoint                               : Ok
+  22.3: Read / Write Watchpoint                             : Ok
+  22.4: Modify Watchpoint                                   : Ok
+  23: Number of exit events of a simple workload            : Ok
+  24: Software clock events period values                   : Ok
+  25: Object code reading                                   : Ok
+  26: Sample parsing                                        : Ok
+  27: Use a dummy software event to keep tracking           : Ok
+  28: Parse with no sample_id_all bit set                   : Ok
+  29: Filter hist entries                                   : Ok
+  30: Lookup mmap thread                                    : Ok
+  31: Share thread mg                                       : Ok
+  32: Sort output of hist entries                           : Ok
+  33: Cumulate child hist entries                           : Ok
+  34: Track with sched_switch                               : Ok
+  35: Filter fds with revents mask in a fdarray             : Ok
+  36: Add fd to a fdarray, making it autogrow               : Ok
+  37: kmod_path__parse                                      : Ok
+  38: Thread map                                            : Ok
+  39: LLVM search and compile                               :
+  39.1: Basic BPF llvm compile                              : Ok
+  39.2: kbuild searching                                    : Ok
+  39.3: Compile source for BPF prologue generation          : Ok
+  39.4: Compile source for BPF relocation                   : Ok
+  40: Session topology                                      : Ok
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Ok
+  41.2: BPF pinning                                         : Ok
+  41.3: BPF prologue generation                             : Ok
+  41.4: BPF relocation checker                              : Ok
+  42: Synthesize thread map                                 : Ok
+  43: Remove thread map                                     : Ok
+  44: Synthesize cpu map                                    : Ok
+  45: Synthesize stat config                                : Ok
+  46: Synthesize stat                                       : Ok
+  47: Synthesize stat round                                 : Ok
+  48: Synthesize attr update                                : Ok
+  49: Event times                                           : Ok
+  50: Read backward ring buffer                             : Ok
+  51: Print cpu map                                         : Ok
+  52: Probe SDT events                                      : Ok
+  53: is_printable_array                                    : Ok
+  54: Print bitmap                                          : Ok
+  55: perf hooks                                            : Ok
+  56: builtin clang support                                 : Skip (not compiled in)
+  57: unit_number__scnprintf                                : Ok
+  58: mem2node                                              : Ok
+  59: x86 rdpmc                                             : Ok
+  60: Convert perf time to TSC                              : Ok
+  61: DWARF unwind                                          : Ok
+  62: x86 instruction decoder - new instructions            : Ok
+  63: x86 bp modify                                         : Ok
+  64: Use vfs_getname probe to get syscall args filenames   : Ok
+  65: Check open filename arg using perf trace + vfs_getname: Ok
+  66: probe libc's inet_pton & backtrace it with ping       : Ok
+  67: Add vfs_getname probe to get syscall args filenames   : Ok
+
+  $ make -C tools/perf build-test
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+            make_install_bin_O: make install-bin
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1
+                make_no_gtk2_O: make NO_GTK2=1
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+                make_install_O: make install
+           make_no_backtrace_O: make NO_BACKTRACE=1
+                make_no_newt_O: make NO_NEWT=1
+             make_no_libperl_O: make NO_LIBPERL=1
+             make_util_map_o_O: make util/map.o
+              make_clean_all_O: make clean all
+                 make_static_O: make LDFLAGS=-static
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+                    make_doc_O: make doc
+              make_no_libelf_O: make NO_LIBELF=1
+                   make_pure_O: make
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+                 make_perf_o_O: make perf.o
+                   make_tags_O: make tags
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+              make_no_libbpf_O: make NO_LIBBPF=1
+           make_no_libpython_O: make NO_LIBPYTHON=1
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+             make_no_libnuma_O: make NO_LIBNUMA=1
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+                  make_debug_O: make DEBUG=1
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+               make_no_slang_O: make NO_SLANG=1
+                   make_help_O: make help
+            make_no_demangle_O: make NO_DEMANGLE=1
+         make_install_prefix_O: make install prefix=/tmp/krava
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $
