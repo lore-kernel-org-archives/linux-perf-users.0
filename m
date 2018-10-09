@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/12] tools include: Adopt linux/bits.h
-Date: Mon,  8 Oct 2018 21:54:16 -0300
-Message-ID: <20181009005427.6607-2-acme@kernel.org>
+Subject: [PATCH 02/12] perf auxtrace: Include missing asm/bitsperlong.h to get BITS_PER_LONG
+Date: Mon,  8 Oct 2018 21:54:17 -0300
+Message-ID: <20181009005427.6607-3-acme@kernel.org>
 References: <20181009005427.6607-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181009005427.6607-1-acme@kernel.org>
@@ -12,15 +12,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that we reduce the difference of tools/include/linux/bitops.h to the
-original kernel file, include/linux/bitops.h, trying to remove the need
-to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
-
-And the things removed from tools/include/linux/bitops.h are really in
-linux/bits.h, so that we can have a copy and then
-tools/perf/check_headers.sh will tell us when new stuff gets added to
-linux/bits.h so that we can check if it is useful and if any adjustment
-needs to be done to the tools/{include,arch}/ copies.
+The auxtrace.h header references BITS_PER_LONG without including the
+header where it is defined, getting it by luck from some other header,
+fix it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
@@ -28,84 +22,23 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-v04ydmbh7tvpcctf3zld9j9s@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/bitops.h |  7 ++-----
- tools/include/linux/bits.h   | 26 ++++++++++++++++++++++++++
- tools/perf/check-headers.sh  |  1 +
- 3 files changed, 29 insertions(+), 5 deletions(-)
- create mode 100644 tools/include/linux/bits.h
+ tools/perf/util/auxtrace.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
-index acc704bd3998..0b0ef3abc966 100644
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,8 +3,6 @@
- #define _TOOLS_LINUX_BITOPS_H_
- 
- #include <asm/types.h>
--#include <linux/compiler.h>
--
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
- #endif
-@@ -12,10 +10,9 @@
- #ifndef BITS_PER_LONG
- # define BITS_PER_LONG __WORDSIZE
- #endif
-+#include <linux/bits.h>
-+#include <linux/compiler.h>
- 
--#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
--#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
--#define BITS_PER_BYTE		8
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
- #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
- #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
-diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
-new file mode 100644
-index 000000000000..2b7b532c1d51
---- /dev/null
-+++ b/tools/include/linux/bits.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_BITS_H
-+#define __LINUX_BITS_H
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 0a6ce9c4fc11..d88f6e9eb461 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -23,6 +23,7 @@
+ #include <linux/list.h>
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
 +#include <asm/bitsperlong.h>
-+
-+#define BIT(nr)			(1UL << (nr))
-+#define BIT_ULL(nr)		(1ULL << (nr))
-+#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-+#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-+#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
-+#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
-+#define BITS_PER_BYTE		8
-+
-+/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-+ */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+
-+#define GENMASK_ULL(h, l) \
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-+
-+#endif	/* __LINUX_BITS_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 466540ee8ea7..c72cc73a6b09 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -14,6 +14,7 @@ include/uapi/linux/sched.h
- include/uapi/linux/stat.h
- include/uapi/linux/vhost.h
- include/uapi/sound/asound.h
-+include/linux/bits.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
+ 
+ #include "../perf.h"
+ #include "event.h"
 -- 
 2.14.4
