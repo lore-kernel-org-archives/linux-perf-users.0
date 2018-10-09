@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/12] perf tools: Cleanup trace-event-info 'tdata' leak
-Date: Mon,  8 Oct 2018 21:54:20 -0300
-Message-ID: <20181009005427.6607-6-acme@kernel.org>
+Subject: [PATCH 06/12] perf tools: Free 'printk' string in parse_ftrace_printk()
+Date: Mon,  8 Oct 2018 21:54:21 -0300
+Message-ID: <20181009005427.6607-7-acme@kernel.org>
 References: <20181009005427.6607-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181009005427.6607-1-acme@kernel.org>
@@ -12,40 +12,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Sanskriti Sharma <sansharm@redhat.com>
 
-Free tracing_data structure in tracing_data_get() error paths.
+parse_ftrace_printk() tokenizes and parses a line, calling strdup() each
+iteration.  Add code to free this temporary format string duplicate.
 
-Fixes the following coverity complaint:
+Fixes the following coverity complaints:
 
   Error: RESOURCE_LEAK (CWE-772):
-  leaked_storage: Variable "tdata" going out of scope leaks the storage
+  tools/perf/util/trace-event-parse.c:158: overwrite_var: Overwriting
+  "printk" in "printk = strdup(fmt + 1)" leaks the storage that "printk"
+  points to.
+
+  tools/perf/util/trace-event-parse.c:162: leaked_storage: Variable
+  "printk" going out of scope leaks the storage it points to.
 
 Signed-off-by: Sanskriti Sharma <sansharm@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Link: http://lkml.kernel.org/r/1538490554-8161-3-git-send-email-sansharm@redhat.com
+Link: http://lkml.kernel.org/r/1538490554-8161-4-git-send-email-sansharm@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-info.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/trace-event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index 7b0ca7cbb7de..8ad8e755127b 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -531,12 +531,14 @@ struct tracing_data *tracing_data_get(struct list_head *pattrs,
- 			 "/tmp/perf-XXXXXX");
- 		if (!mkstemp(tdata->temp_file)) {
- 			pr_debug("Can't make temp file");
-+			free(tdata);
- 			return NULL;
- 		}
- 
- 		temp_fd = open(tdata->temp_file, O_RDWR);
- 		if (temp_fd < 0) {
- 			pr_debug("Can't read '%s'", tdata->temp_file);
-+			free(tdata);
- 			return NULL;
- 		}
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index a4d7de1c96d1..02f97f5dd588 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -158,6 +158,7 @@ void parse_ftrace_printk(struct tep_handle *pevent,
+ 		printk = strdup(fmt+1);
+ 		line = strtok_r(NULL, "\n", &next);
+ 		tep_register_print_string(pevent, printk, addr);
++		free(printk);
+ 	}
+ }
  
 -- 
 2.14.4
