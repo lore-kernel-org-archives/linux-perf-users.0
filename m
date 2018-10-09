@@ -1,50 +1,44 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/12] perf tools: Avoid double free in read_event_file()
-Date: Mon,  8 Oct 2018 21:54:22 -0300
-Message-ID: <20181009005427.6607-8-acme@kernel.org>
+Subject: [PATCH 09/12] perf python: Make clang_has_option() work on Python 3
+Date: Mon,  8 Oct 2018 21:54:24 -0300
+Message-ID: <20181009005427.6607-10-acme@kernel.org>
 References: <20181009005427.6607-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181009005427.6607-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sanskriti Sharma <sansharm@redhat.com>, Joe Lawrence <joe.lawrence@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Eduardo Habkost <ehabkost@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sanskriti Sharma <sansharm@redhat.com>
+From: Eduardo Habkost <ehabkost@redhat.com>
 
-The temporary 'buf' buffer allocated in read_event_file() may be freed
-twice.  Move the free() call to the common function exit point.
+Use a bytes literal so it works with Python 3's version of Popen().
+Note that the b"..." syntax requires Python 2.6+.
 
-Fixes the following coverity complaints:
-
-  Error: USE_AFTER_FREE (CWE-825):
-  tools/perf/util/trace-event-read.c:309: double_free: Calling "free"
-  frees pointer "buf" which has already been freed.
-
-Signed-off-by: Sanskriti Sharma <sansharm@redhat.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Link: http://lkml.kernel.org/r/1538490554-8161-5-git-send-email-sansharm@redhat.com
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lkml.kernel.org/r/20181005204058.7966-2-ehabkost@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-read.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/perf/util/setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index b98ee2a2eb44..a278e1eee5f5 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -297,10 +297,8 @@ static int read_event_file(struct tep_handle *pevent, char *sys,
- 	}
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 1942f6dd24f6..261a55e7e1b2 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -5,7 +5,7 @@ from subprocess import Popen, PIPE
+ from re import sub
  
- 	ret = do_read(buf, size);
--	if (ret < 0) {
--		free(buf);
-+	if (ret < 0)
- 		goto out;
--	}
+ def clang_has_option(option):
+-    return [o for o in Popen(['clang', option], stderr=PIPE).stderr.readlines() if "unknown argument" in o] == [ ]
++    return [o for o in Popen(['clang', option], stderr=PIPE).stderr.readlines() if b"unknown argument" in o] == [ ]
  
- 	ret = parse_event_file(pevent, buf, size, sys);
- 	if (ret < 0)
+ cc = getenv("CC")
+ if cc == "clang":
 -- 
 2.14.4
