@@ -1,81 +1,62 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/11] perf evsel: Store ids for events with their own cpus perf_event__synthesize_event_update_cpus
-Date: Wed, 17 Oct 2018 19:54:55 -0300
-Message-ID: <20181017225501.32150-6-acme@kernel.org>
+Subject: [PATCH 06/11] perf tools: Fix use of alternatives to find JDIR
+Date: Wed, 17 Oct 2018 19:54:56 -0300
+Message-ID: <20181017225501.32150-7-acme@kernel.org>
 References: <20181017225501.32150-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181017225501.32150-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jarod Wilson <jarod@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, William Cohen <wcohen@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-John reported crash when recording on an event under PMU with cpumask defined:
+When a build is run from something like a cron job, the user's $PATH is
+rather minimal, of note, not including /usr/sbin in my own case. Because
+of that, an automated rpm package build ultimately fails to find
+libperf-jvmti.so, because somewhere within the build, this happens...
 
-  root@localhost:~# ./perf_debug_ record -e armv8_pmuv3_0/br_mis_pred/ sleep 1
-  perf: Segmentation fault
-  Obtained 9 stack frames.
-  ./perf_debug_() [0x4c5ef8]
-  [0xffff82ba267c]
-  ./perf_debug_() [0x4bc5a8]
-  ./perf_debug_() [0x419550]
-  ./perf_debug_() [0x41a928]
-  ./perf_debug_() [0x472f58]
-  ./perf_debug_() [0x473210]
-  ./perf_debug_() [0x4070f4]
-  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe0) [0xffff8294c8a0]
-  Segmentation fault (core dumped)
+  /bin/sh: alternatives: command not found
+  /bin/sh: alternatives: command not found
+  Makefile.config:849: No openjdk development package found, please install
+  JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
 
-We synthesize an update event that needs to touch the evsel id array, which is
-not defined at that time. Fixing this by forcing the id allocation for events
-with their own cpus.
+...and while the build continues, libperf-jvmti.so isn't built, and
+things fall down when rpm tries to find all the %files specified. Exact
+same system builds everything just fine when the job is launched from a
+login shell instead of a cron job, since alternatives is in $PATH, so
+openjdk is actually found.
 
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: John Garry <john.garry@huawei.com>
+The test required to get into this section of code actually specifies
+the full path, as does a block just above it, so let's do that here too.
+
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
-Fixes: bfd8f72c2778 ("perf record: Synthesize unit/scale/... in event update")
-Link: http://lkml.kernel.org/r/20181003212052.GA32371@krava
+Cc: Stephane Eranian <eranian@google.com>
+Cc: William Cohen <wcohen@redhat.com>
+Fixes: d4dfdf00d43e ("perf jvmti: Plug compilation into perf build")
+Link: http://lkml.kernel.org/r/20180906221812.11167-1-jarod@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 1 +
- tools/perf/util/evsel.c     | 3 +++
- 2 files changed, 4 insertions(+)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 76e12bcd1765..b2188e623e22 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -981,6 +981,7 @@ int cmd_report(int argc, const char **argv)
- 			.id_index	 = perf_event__process_id_index,
- 			.auxtrace_info	 = perf_event__process_auxtrace_info,
- 			.auxtrace	 = perf_event__process_auxtrace,
-+			.event_update	 = perf_event__process_event_update,
- 			.feature	 = process_feature_event,
- 			.ordered_events	 = true,
- 			.ordering_requires_timestamps = true,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 1a61628a1c12..e596ae358c4d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1089,6 +1089,9 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
- 		attr->exclude_user   = 1;
- 	}
- 
-+	if (evsel->own_cpus)
-+		evsel->attr.read_format |= PERF_FORMAT_ID;
-+
- 	/*
- 	 * Apply event specific term settings,
- 	 * it overloads any global configuration.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index f6d1a03c7523..e30d20fb482d 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -833,7 +833,7 @@ ifndef NO_JVMTI
+     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+   else
+     ifneq (,$(wildcard /usr/sbin/alternatives))
+-      JDIR=$(shell alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
++      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
+     endif
+   endif
+   ifndef JDIR
 -- 
 2.14.4
