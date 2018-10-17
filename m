@@ -1,56 +1,93 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/11] tools headers uapi: Sync kvm.h copy
-Date: Wed, 17 Oct 2018 19:54:52 -0300
-Message-ID: <20181017225501.32150-3-acme@kernel.org>
+Subject: [PATCH 03/11] Revert "perf tools: Fix PMU term format max value calculation"
+Date: Wed, 17 Oct 2018 19:54:53 -0300
+Message-ID: <20181017225501.32150-4-acme@kernel.org>
 References: <20181017225501.32150-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181017225501.32150-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Drew Schmitt <dasch@google.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-To pick up the changes introduced in:
+This reverts commit ac0e2cd555373ae6f8f3a3ad3fbbf5b6d1e7aaaa.
 
-  6fbbde9a1969 ("KVM: x86: Control guest reads of MSR_PLATFORM_INFO")
+Michael reported an issue with oversized terms values assignment
+and I noticed there was actually a misunderstanding of the max
+value check in the past.
 
-That is not yet used in tools such as 'perf trace'.
+The above commit's changelog says:
 
-The type of the change in this file, a simple integer parameter to the
-KVM_CHECK_EXTENSION ioctl should be easier to implement tho, adding to
-the libbeauty TODO list.
+  If bit 21 is set, there is parsing issues as below.
 
-This silences this perf build warning:
+    $ perf stat -a -e uncore_qpi_0/event=0x200002,umask=0x8/
+    event syntax error: '..pi_0/event=0x200002,umask=0x8/'
+                                      \___ value too big for format, maximum is 511
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+But there's no issue there, because the event value is distributed
+along the value defined by the format. Even if the format defines
+separated bit, the value is treated as a continual number, which
+should follow the format definition.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Drew Schmitt <dasch@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+In above case it's 9-bit value with last bit separated:
+  $ cat uncore_qpi_0/format/event
+  config:0-7,21
+
+Hence the value 0x200002 is correctly reported as format violation,
+because it exceeds 9 bits. It should have been 0x102 instead, which
+sets the 9th bit - the bit 21 of the format.
+
+  $ perf stat -vv -a -e uncore_qpi_0/event=0x102,umask=0x8/
+  Using CPUID GenuineIntel-6-2D
+  ...
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             10
+    size                             112
+    config                           0x200802
+    sample_type                      IDENTIFIER
+  ...
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-67h1bio5bihi1q6dy7hgwwx8@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: ac0e2cd55537 ("perf tools: Fix PMU term format max value calculation")
+Link: http://lkml.kernel.org/r/20181003072046.29276-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/pmu.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 07548de5c988..251be353f950 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -952,6 +952,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_HPAGE_1M 156
- #define KVM_CAP_NESTED_STATE 157
- #define KVM_CAP_ARM_INJECT_SERROR_ESR 158
-+#define KVM_CAP_MSR_PLATFORM_INFO 159
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index afd68524ffa9..7799788f662f 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -930,13 +930,14 @@ static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
  
- #ifdef KVM_CAP_IRQ_ROUTING
+ static __u64 pmu_format_max_value(const unsigned long *format)
+ {
+-	__u64 w = 0;
+-	int fbit;
+-
+-	for_each_set_bit(fbit, format, PERF_PMU_FORMAT_BITS)
+-		w |= (1ULL << fbit);
++	int w;
  
+-	return w;
++	w = bitmap_weight(format, PERF_PMU_FORMAT_BITS);
++	if (!w)
++		return 0;
++	if (w < 64)
++		return (1ULL << w) - 1;
++	return -1;
+ }
+ 
+ /*
 -- 
 2.14.4
