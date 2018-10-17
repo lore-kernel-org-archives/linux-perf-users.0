@@ -1,84 +1,42 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/11] perf report: Don't crash on invalid inline debug information
-Date: Wed, 17 Oct 2018 19:54:59 -0300
-Message-ID: <20181017225501.32150-10-acme@kernel.org>
+Subject: [PATCH 10/11] perf tools: Pass build flags to traceevent build
+Date: Wed, 17 Oct 2018 19:55:00 -0300
+Message-ID: <20181017225501.32150-11-acme@kernel.org>
 References: <20181017225501.32150-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181017225501.32150-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, "Herton R. Krzesinski" <herton@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Yordan Karadzhov <y.karadz@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Milian Wolff <milian.wolff@kdab.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-When the function name for an inline frame is invalid, we must not try
-to demangle this symbol, otherwise we crash with:
+So the extra user build flags are propagated to libtraceevent.
 
-  #0  0x0000555555895c01 in bfd_demangle ()
-  #1  0x0000555555823262 in demangle_sym (dso=0x555555d92b90, elf_name=0x0, kmodule=0) at util/symbol-elf.c:215
-  #2  dso__demangle_sym (dso=dso@entry=0x555555d92b90, kmodule=<optimized out>, kmodule@entry=0, elf_name=elf_name@entry=0x0) at util/symbol-elf.c:400
-  #3  0x00005555557fef4b in new_inline_sym (funcname=0x0, base_sym=0x555555d92b90, dso=0x555555d92b90) at util/srcline.c:89
-  #4  inline_list__append_dso_a2l (dso=dso@entry=0x555555c7bb00, node=node@entry=0x555555e31810, sym=sym@entry=0x555555d92b90) at util/srcline.c:264
-  #5  0x00005555557ff27f in addr2line (dso_name=dso_name@entry=0x555555d92430 "/home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf", addr=addr@entry=2888, file=file@entry=0x0,
-      line=line@entry=0x0, dso=dso@entry=0x555555c7bb00, unwind_inlines=unwind_inlines@entry=true, node=0x555555e31810, sym=0x555555d92b90) at util/srcline.c:313
-  #6  0x00005555557ffe7c in addr2inlines (sym=0x555555d92b90, dso=0x555555c7bb00, addr=2888, dso_name=0x555555d92430 "/home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf")
-      at util/srcline.c:358
-
-So instead handle the case where we get invalid function names for
-inlined frames and use a fallback '??' function name instead.
-
-While this crash was originally reported by Hadrien for rust code, I can
-now also reproduce it with trivial C++ code. Indeed, it seems like
-libbfd fails to interpret the debug information for the inline frame
-symbol name:
-
-  $ addr2line -e /home/milian/.debug/.build-id/f7/186d14bb94f3c6161c010926da66033d24fce5/elf -if b48
-  main
-  /usr/include/c++/8.2.1/complex:610
-  ??
-  /usr/include/c++/8.2.1/complex:618
-  ??
-  /usr/include/c++/8.2.1/complex:675
-  ??
-  /usr/include/c++/8.2.1/complex:685
-  main
-  /home/milian/projects/kdab/rnd/hotspot/tests/test-clients/cpp-inlining/main.cpp:39
-
-I've reported this bug upstream and also attached a patch there which
-should fix this issue:
-
-https://sourceware.org/bugzilla/show_bug.cgi?id=23715
-
-Reported-by: Hadrien Grasland <grasland@lal.in2p3.fr>
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: a64489c56c30 ("perf report: Find the inline stack for a given address")
-[ The above 'Fixes:' cset is where originally the problem was
-  introduced, i.e.  using a2l->funcname without checking if it is NULL,
-  but this current patch fixes the current codebase, i.e. multiple csets
-  were applied after a64489c56c30 before the problem was reported by Hadrien ]
-Link: http://lkml.kernel.org/r/20180926135207.30263-3-milian.wolff@kdab.com
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: "Herton R. Krzesinski" <herton@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Cc: Yordan Karadzhov (VMware) <y.karadz@gmail.com>
+Link: http://lkml.kernel.org/r/20181016150614.21260-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/srcline.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 09d6746e6ec8..e767c4a9d4d2 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -85,6 +85,9 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 	struct symbol *inline_sym;
- 	char *demangled = NULL;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 5224ade3d5af..0be411695379 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -635,7 +635,7 @@ $(LIBPERF_IN): prepare FORCE
+ $(LIB_FILE): $(LIBPERF_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN) $(LIB_OBJS)
  
-+	if (!funcname)
-+		funcname = "??";
-+
- 	if (dso) {
- 		demangled = dso__demangle_sym(dso, 0, funcname);
- 		if (demangled)
+-LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ)
++LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
+ 
+ $(LIBTRACEEVENT): FORCE
+ 	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent.a
 -- 
 2.14.4
