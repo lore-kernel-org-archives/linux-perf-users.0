@@ -1,79 +1,61 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 11/11] perf tools: Stop fallbacking to kallsyms for vdso
- symbols lookup
-Date: Thu, 18 Oct 2018 09:20:46 +0300
-Message-ID: <4c682937-3cee-6974-0970-68610e13ad37@intel.com>
-References: <20181017225501.32150-1-acme@kernel.org>
- <20181017225501.32150-12-acme@kernel.org>
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Subject: [PATCH V2] perf arm64: Fix generate system call table failed with /tmp mounted with noexec
+Date: Fri, 19 Oct 2018 10:16:19 +0800
+Message-ID: <1539915379-11910-1-git-send-email-hongxu.jia@windriver.com>
+References: <1c6964d0-a7d2-83ef-16f2-bdf349e3f0af@gydle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017225501.32150-12-acme@kernel.org>
-Content-Language: en-US
+In-Reply-To: <1c6964d0-a7d2-83ef-16f2-bdf349e3f0af@gydle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: kim.phillips@arm.com, brueckner@linux.ibm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, mpe@ellerman.id.au, peterz@infradead.org, ravi.bangoria@linux.vnet.ibm.com, tmricht@linux.vnet.ibm.com, acme@redhat.com, namhyung@kernel.org, hongxu.jia@windriver.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On 18/10/18 1:55 AM, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> David reports that:
-> 
-> <quote>
-> Perf has this hack where it uses the kernel symbol map as a backup when
-> a symbol can't be found in the user's symbol table(s).
+When /tmp is mounted with noexec, mksyscalltbl fails.
+[snip]
+|perf-1.0/tools/perf/arch/arm64/entry/syscalls//mksyscalltbl:
+/tmp/create-table-6VGPSt: Permission denied
+[snip]
 
-I don't think this is a complete fix because it exposes new problems.  This
-code caters for branches from kernel space to user space and vice versa.
-That is, since there is only one cpumode so it is certain to be wrong for
-either 'ip' or 'addr' when they are not both in the kernel or both in userspace.
+Add variable TMPDIR as prefix dir of the temporary file, if it is set,
+replace default /tmp
 
-> 
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Link: https://lkml.kernel.org/n/tip-cs7skq9pp0kjypiju6o7trse@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/event.c | 21 ++-------------------
->  1 file changed, 2 insertions(+), 19 deletions(-)
-> 
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 0988eb3b844b..bc646185f8d9 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -1561,26 +1561,9 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
->  
->  		return NULL;
->  	}
-> -try_again:
-> +
->  	al->map = map_groups__find(mg, al->addr);
-> -	if (al->map == NULL) {
-> -		/*
-> -		 * If this is outside of all known maps, and is a negative
-> -		 * address, try to look it up in the kernel dso, as it might be
-> -		 * a vsyscall or vdso (which executes in user-mode).
-> -		 *
-> -		 * XXX This is nasty, we should have a symbol list in the
-> -		 * "[vdso]" dso, but for now lets use the old trick of looking
-> -		 * in the whole kernel symbol list.
-> -		 */
-> -		if (cpumode == PERF_RECORD_MISC_USER && machine &&
-> -		    mg != &machine->kmaps &&
-> -		    machine__kernel_ip(machine, al->addr)) {
-> -			mg = &machine->kmaps;
-> -			load_map = true;
-> -			goto try_again;
-> -		}
-> -	} else {
-> +	if (al->map != NULL) {
->  		/*
->  		 * Kernel maps might be changed when loading symbols so loading
->  		 * must be done prior to using kernel maps.
-> 
+Remove extra slash from `syscalls//mksyscalltbl'
+
+Fixes: 2b5882435606 ("perf arm64: Generate system call table from asm/unistd.h")
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tools/perf/arch/arm64/Makefile                    | 2 +-
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
+index dbef716..bc2a284 100644
+--- a/tools/perf/arch/arm64/Makefile
++++ b/tools/perf/arch/arm64/Makefile
+@@ -13,7 +13,7 @@ out    := $(OUTPUT)arch/arm64/include/generated/asm
+ header := $(out)/syscalls.c
+ incpath := $(srctree)/tools
+ sysdef := $(srctree)/tools/arch/arm64/include/uapi/asm/unistd.h
+-sysprf := $(srctree)/tools/perf/arch/arm64/entry/syscalls/
++sysprf := $(srctree)/tools/perf/arch/arm64/entry/syscalls
+ systbl := $(sysprf)/mksyscalltbl
+ 
+ # Create output directory if not already present
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index 2dbb8cad..c88fd32 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -23,7 +23,7 @@ create_table_from_c()
+ {
+ 	local sc nr last_sc
+ 
+-	create_table_exe=`mktemp /tmp/create-table-XXXXXX`
++	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
+ 
+ 	{
+ 
+-- 
+2.7.4
