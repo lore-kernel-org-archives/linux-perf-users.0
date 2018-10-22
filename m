@@ -1,87 +1,71 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH] pfn_t: force '~' to be parsed as an unary operator
-Date: Mon, 22 Oct 2018 10:13:48 -0700
-Message-ID: <CAPcyv4iJ_bfzOtV_GAQg_tdLLuebE_1Gp420LMG0xbR2ZQdV7g@mail.gmail.com>
-References: <20181021145939.8760-1-sebhtml@videotron.qc.ca>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 2/2] perf script: flush output stream after events in
+ verbose mode
+Date: Mon, 22 Oct 2018 14:25:56 -0300
+Message-ID: <20181022172556.GM3849@kernel.org>
+References: <20181021191424.16183-1-milian.wolff@kdab.com>
+ <4444017.LnbBPIbh24@agathebauer>
+ <20181022101618.GH2452@krava>
+ <1755624.MxyOU8z0WO@agathebauer>
+ <20181022135430.GA2945@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181021145939.8760-1-sebhtml@videotron.qc.ca>
+Content-Disposition: inline
+In-Reply-To: <20181022135430.GA2945@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebhtml@videotron.qc.ca
-Cc: Steven Rostedt <rostedt@goodmis.org>, acme@redhat.com, tz.stoyanov@gmail.com, Namhyung Kim <namhyung@kernel.org>, zwisler@kernel.org, arangradient@gmail.com, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-[ added Andrew ]
+Em Mon, Oct 22, 2018 at 03:54:30PM +0200, Jiri Olsa escreveu:
+> On Mon, Oct 22, 2018 at 12:38:57PM +0200, Milian Wolff wrote:
+> 
+> SNIP
+> 
+> > > > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > > > > index bd468b90801b..ca09b7d2adb7 100644
+> > > > > > --- a/tools/perf/builtin-script.c
+> > > > > > +++ b/tools/perf/builtin-script.c
+> > > > > > @@ -1737,6 +1737,9 @@ static void process_event(struct perf_script
+> > > > > > *script,
+> > > > > > 
+> > > > > >  	if (PRINT_FIELD(METRIC))
+> > > > > >  	
+> > > > > >  		perf_sample__fprint_metric(script, thread, evsel, 
+> > sample, fp);
+> > > > > > 
+> > > > > > +
+> > > > > > +	if (verbose)
+> > > > > > +		fflush(fp);
+> > > > > 
+> > > > > should we call fflush(NULL) to dump all the streams?
+> > > > > 
+> > > > > the verbose goes to stderr and fp seems to be stdout byt default
+> > > > 
+> > > > stderr isn't buffered, so we don't need to flush it. So personally, I
+> > > > don't
+> > > > see a need to dump all streams - fp should be enough? Can you maybe
+> > > > explain
+> > > > where it would be required to flush more buffers?
+> > > 
+> > > hum, did not know stderr wasn't buffer
+> > >
+> > > I think there's perf script feature to store the events data to
+> > > separate files per each event.. but I guess we don't need to
+> > > flush them.. we just need to have stdout and stderr in sync IIUC
+> > 
+> > Exactly, and that's achieved with this patch form what I see :) Or should we 
+> > maybe instead call 
+> > 
+> > setbuf(fp, NULL);
+> > 
+> > in verbose mode?
+> 
+> I think your solution is ok
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Patch here: https://lore.kernel.org/patchwork/patch/1002234/
+Thanks, applied.
 
-On Sun, Oct 21, 2018 at 8:00 AM Sebastien Boisvert
-<sebhtml@videotron.qc.ca> wrote:
->
-> Tracing the event "fs_dax:dax_pmd_insert_mapping" with perf produces this
-> warning:
->       [fs_dax:dax_pmd_insert_mapping] unknown op '~'
->
-> It is printed in process_op (tools/lib/traceevent/event-parse.c) because '~'
-> is parsed as a binary operator.
->
-> perf reads the format of fs_dax:dax_pmd_insert_mapping ("print fmt") from
-> /sys/kernel/debug/tracing/events/fs_dax/dax_pmd_insert_mapping/format .
->
-> The format contains:
->
-> ~(((u64) ~(~(((1UL) << 12)-1)))
->          ^
->          \ interpreted as a binary operator by process_op().
->
-> This part is generated in the declaration of the event class
-> dax_pmd_insert_mapping_class in include/trace/events/fs_dax.h :
->
->                 __print_flags_u64(__entry->pfn_val & PFN_FLAGS_MASK, "|",
->                         PFN_FLAGS_TRACE),
->
-> This patch adds a pair of parentheses in the declaration of PFN_FLAGS_MASK to
-> make sure that '~' is parsed as a unary operator by perf.
->
-> The part of the format that was problematic is now:
->
-> ~(((u64) (~(~(((1UL) << 12)-1))))
->
-> Now, all the '~' are parsed as unary operators.
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
-
-
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-
-
-> Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Ross Zwisler <zwisler@kernel.org>
-> Cc: Elenie Godzaridis <arangradient@gmail.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Sebastien Boisvert <sebhtml@videotron.qc.ca>
-> ---
->  include/linux/pfn_t.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-> index 21713dc14ce2..673546ba7342 100644
-> --- a/include/linux/pfn_t.h
-> +++ b/include/linux/pfn_t.h
-> @@ -10,7 +10,7 @@
->   * PFN_DEV - pfn is not covered by system memmap by default
->   * PFN_MAP - pfn has a dynamic page mapping established by a device driver
->   */
-> -#define PFN_FLAGS_MASK (((u64) ~PAGE_MASK) << (BITS_PER_LONG_LONG - PAGE_SHIFT))
-> +#define PFN_FLAGS_MASK (((u64) (~PAGE_MASK)) << (BITS_PER_LONG_LONG - PAGE_SHIFT))
->  #define PFN_SG_CHAIN (1ULL << (BITS_PER_LONG_LONG - 1))
->  #define PFN_SG_LAST (1ULL << (BITS_PER_LONG_LONG - 2))
->  #define PFN_DEV (1ULL << (BITS_PER_LONG_LONG - 3))
-> --
-> 2.17.1
->
+- Arnaldo
