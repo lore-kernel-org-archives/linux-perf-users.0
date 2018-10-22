@@ -1,27 +1,40 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: Broken dwarf unwinding - wrong stack pointer register value?
-Date: Mon, 22 Oct 2018 06:58:17 -0700
-Message-ID: <87o9bmrsli.fsf@linux.intel.com>
-References: <2335309.gnWok9HYb4@agathebauer> <3129539.p6j0Z5hDSJ@agathebauer>
-        <1775744.0RuD2nMEIt@agathebauer>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 1/2] perf script: allow extended console debug output
+Date: Mon, 22 Oct 2018 12:09:15 -0300
+Message-ID: <20181022150915.GJ3849@kernel.org>
+References: <20181021191424.16183-1-milian.wolff@kdab.com>
+ <20181022094033.GF2452@krava>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1775744.0RuD2nMEIt@agathebauer> (Milian Wolff's message of "Mon,
-        22 Oct 2018 13:17:42 +0200")
+Content-Disposition: inline
+In-Reply-To: <20181022094033.GF2452@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Milian Wolff <mail@milianw.de>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Milian Wolff <milian.wolff@kdab.com> writes:
->
-> After more digging, it turns out that I've apparently chased a red herring. 
-> I'm running archlinux which isn't shipping debug symbols for libm.
+Em Mon, Oct 22, 2018 at 11:40:33AM +0200, Jiri Olsa escreveu:
+> On Sun, Oct 21, 2018 at 09:14:23PM +0200, Milian Wolff wrote:
+> > The script tool isn't using a browser, yet use_browser
+> > wasn't set explicitly to zero. This in turn lead to confusing
+> > output such as:
+> > 
+> > ```
+> > $ perf script -vvv ...
+> > ...
+> > overlapping maps in /home/milian/foobar (disable tui for more info)
+> > ...
+> > ```
+> > 
+> > Explicitly set use_browser to 0 now, which gives us the extended
+> > debug information now in perf script as expected.
+> > 
+> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-64bit executables normally have unwind information even when stripped.
-Unless someone forcefully stripped those too.
+Thanks, applied.
 
-You can checkout with objdump --sections.
-
--Andi
+- Arnaldo
