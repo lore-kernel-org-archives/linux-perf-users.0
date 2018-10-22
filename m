@@ -1,162 +1,60 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: Broken dwarf unwinding - wrong stack pointer register value?
-Date: Sun, 21 Oct 2018 22:32:10 +0200
-Message-ID: <1759553.TYpvCCURxk@agathebauer>
-References: <2335309.gnWok9HYb4@agathebauer>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 1/2] perf script: allow extended console debug output
+Date: Mon, 22 Oct 2018 11:40:33 +0200
+Message-ID: <20181022094033.GF2452@krava>
+References: <20181021191424.16183-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1699730.aQPqxBsjS8";
- micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2335309.gnWok9HYb4@agathebauer>
+Content-Disposition: inline
+In-Reply-To: <20181021191424.16183-1-milian.wolff@kdab.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <mail@milianw.de>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart1699730.aQPqxBsjS8
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Sonntag, 21. Oktober 2018 00:39:51 CEST Milian Wolff wrote:
-> Hey all,
-> 
-> I'm on the quest to figure out why perf regularly fails to unwind (some)
-> samples. I am seeing very strange behavior, where an apparently wrong stack
-> pointer value is read from the register - see below for more information and
-> the end of this (long) mail for my open questions. Any help would be
-> greatly appreciated.
-> 
-> I am currently using this trivial C++ code to reproduce the issue:
+On Sun, Oct 21, 2018 at 09:14:23PM +0200, Milian Wolff wrote:
+> The script tool isn't using a browser, yet use_browser
+> wasn't set explicitly to zero. This in turn lead to confusing
+> output such as:
 > 
 > ```
-> #include <cmath>
-> #include <complex>
-> #include <iostream>
-> #include <random>
-> 
-> using namespace std;
-> 
-> int main()
-> {
->     uniform_real_distribution<double> uniform(-1E5, 1E5);
->     default_random_engine engine;
->     double s = 0;
->     for (int i = 0; i < 10000000; ++i) {
->         s += norm(complex<double>(uniform(engine), uniform(engine)));
->     }
->     cout << s << '\n';
->     return 0;
-> }
+> $ perf script -vvv ...
+> ...
+> overlapping maps in /home/milian/foobar (disable tui for more info)
+> ...
 > ```
 > 
-> I compile it with `g++ -O2 -g` and then record it with `perf record --call-
-> graph dwarf`. Using perf script, I then see e.g.:
+> Explicitly set use_browser to 0 now, which gives us the extended
+> debug information now in perf script as expected.
+> 
+> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 
-With my patch to regularly flush the perf script output buffer, we can now 
-easily find all broken backtraces and the corresponding debug output via:
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-    $ perf script --ns -v |& awk -v RS='' '/\[unknown\]/ {print "\n"$0}'
+thanks,
+jirka
 
-I've pasted the output to the above command from my machine here:
-https://paste.kde.org/pmyxwkk1k
-
-This contains 139 samples with broken unwinding, out of 2350 samples in total, 
-so about 6% of all samples are broken.
-
-In many cases, the first accessed memory is 0 because a too-low offset into 
-the stack is computed from the SP value, similar to the scenario I described 
-in my initial mail. In other cases we read garbadge addresses such as 
-
-unwind: access_mem addr 0x7ffc80811cf0 val 408195dfbda90580, offset 24
-
-In all cases except for the the two samples at the very start and end of this 
-log, the last offset encountered in access_mem is lower than 72. Remember what 
-I wrote in the initial mail - if I manually hack the access_mem function to 
-use 72 for one of the broken samples, it made unwinding magically work 
-again...
-
-With this addition of data - can anyone sched some light on what's potentially 
-going on here? How can we improve this situation?
-
-Thanks
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
---nextPart1699730.aQPqxBsjS8
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
-ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
-IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
-QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
-ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
-YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
-gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
-/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
-RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
-8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
-fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
-Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
-QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
-dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
-Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
-BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
-AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
-lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
-bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
-XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
-SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
-dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
-4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
-1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
-OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
-bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
-OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
-IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
-A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
-BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
-bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
-BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
-bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
-b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
-lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
-G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
-iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
-pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
-AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
-6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
-ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
-68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
-3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
-LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
-y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
-cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
-c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
-BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
-EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDIxMjAzMjEwWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgi6SnSiVUsVREGpMm185m2vfUTcMl
-Hjt7PZW/ERqHW8kwDQYJKoZIhvcNAQEBBQAEggEATsHQuc7KIzzFlSeWrfCKp4Eud223MWci3gww
-t29c/odb+uxFgcEOEJzCdk+yCll8y15BKOilgTpyv7vjDjfGy/oSaeXtZ75J/oG51zNPezKJd1U9
-VocAUIrYq1LpefTblB9GM44EHeeNhszfl0oUKeXHzQLP0PU6qPOwfhygly3/s3url6n6KfyiWaVH
-j8dRNXXN4ZgXAUDZNUfFKvSr2nMx0hrUSA6DojjP9Gq9ejzfHefzsL6425afda5kmoT3gibtSmuf
-afcUmmUUFXiDdbYssaFThN/L+Fgj3buT+i0jG1ARRqmApoezvaZf+WEBg21S+CE32P+6npMa2w8d
-CQAAAAAAAA==
-
-
---nextPart1699730.aQPqxBsjS8--
+> ---
+>  tools/perf/builtin-script.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 4da5e32b9e03..bd468b90801b 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3417,8 +3417,10 @@ int cmd_script(int argc, const char **argv)
+>  		exit(-1);
+>  	}
+>  
+> -	if (!script_name)
+> +	if (!script_name) {
+>  		setup_pager();
+> +		use_browser = 0;
+> +	}
+>  
+>  	session = perf_session__new(&data, false, &script.tool);
+>  	if (session == NULL)
+> -- 
+> 2.19.1
