@@ -1,153 +1,26 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/stat: Handle different PMU names with common prefix
-Date: Tue, 23 Oct 2018 17:16:16 +0200
-Message-ID: <20181023151616.78193-1-tmricht@linux.ibm.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, kan.liang@linux.intel.com, Thomas Richter <tmricht@linux.ibm.com>, stable@vger.kernel.org
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: Broken dwarf unwinding - wrong stack pointer register value?
+Date: Wed, 24 Oct 2018 07:48:18 -0700
+Message-ID: <20181024144818.GF6218@tassilo.jf.intel.com>
+References: <2335309.gnWok9HYb4@agathebauer>
+ <2679413.U8bCfAhSQu@agathebauer>
+ <20181023040356.GA6218@tassilo.jf.intel.com>
+ <2086866.px82jjA6i7@agathebauer>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2086866.px82jjA6i7@agathebauer>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On s390 the CPU Measurement Facility for counters now supports
-2 PMUs named cpum_cf (CPU Measurement Facility for counters) and
-cpum_cf_diag (CPU Measurement Facility for diagnostic counters)
-for one and the same CPU.
+> 
+> Can someone at least confirm whether unwinding from a function prologue via 
+> .eh_frame (but without .debug_frame) should actually be possible?
 
-Running command
+Yes it should be possible. Asynchronous unwind tables should work
+from any instruction.
 
- [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
-	 -- ~/mytests/cf-tx-events 1
-
- Measuring transactions
- TX_C_TABORT_NO_SPECIAL: 0 expected:0
- TX_C_TABORT_SPECIAL: 0 expected:0
- TX_C_TEND: 1 expected:1
- TX_NC_TABORT: 11 expected:11
- TX_NC_TEND: 1 expected:1
-
- Performance counter stats for '/root/mytests/cf-tx-events 1':
-
-  2      tx_c_tend
-
-      0.002120091 seconds time elapsed
-
-      0.000121000 seconds user
-      0.002127000 seconds sys
-
- [root@s35lp76 perf]#
-
-displays output which is unexpected (and wrong):
-
-  2      tx_c_tend
-
-The test program definitely triggers only one transaction, as shown
-in line 'TX_C_TEND: 1 expected:1'.
-
-This is caused by the following call sequence:
-
-pmu_lookup() scans and installs a PMU.
-+--> pmu_aliases() parses all aliases in directory
-		.../<pmu-name>/events/* which are file names.
-     +--> pmu_aliases_parse() Read each file in directory and create
-                      an new alias entry. This is done with
-          +--> perf_pmu__new_alias() and
-	       +--> __perf_pmu__new_alias() which also check for
-	                   identical alias names.
-
-After pmu_aliases() returns, a complete list of event names
-for this pmu has been created. Now function
-
-pmu_add_cpu_aliases()   is called to add the events listed in the json
-|                       files to the alias list of the cpu.
-+--> perf_pmu__find_map()  Returns a pointer to the json events.
-
-Now function pmu_add_cpu_aliases() scans through all events listed
-in the JSON files for this CPU.
-Each json event pmu name is compared with the current PMU being
-built up and if they mismatch, the json event is added to the
-current PMUs alias list.
-To avoid duplicate entries the following comparison is done:
-
-	if (!is_arm_pmu_core(name)) {
-	     pname = pe->pmu ? pe->pmu : "cpu";
-	     if (strncmp(pname, name, strlen(pname)))
-		     continue;
-     }
-
-The culprit is the strncmp() function.
-
-Using current s390 PMU naming, the first PMU is 'cpum_cf'
-and a long list of events is added, among them 'tx_c_tend'
-
-When the second PMU named 'cpum_cf_diag' is added, only one event
-named 'CF_DIAG' is added by the pmu_aliases()  function.
-
-Now function pmu_add_cpu_aliases() is invoked for PMU 'cpum_cf_diag'.
-Since the CPUID string is the same for both PMUs, json file events
-for PMU named 'cpum_cf' are added to the PMU 'cpm_cf_diag'
-
-This happens because the strncmp() actually compares:
-
-     strncmp("cpum_cf", "cpum_cf_diag", 6);
-
-The first parameter is the pmu name taken from the event in
-the json file. The second parameter is the pmu name of the PMU
-currently being built.
-They are different, but the length of the compare only tests the
-common prefix and this returns 0(true) when it should return false.
-
-Now all events for PMU cpum_cf are added to the alias list for pmu
-cpum_cf_diag.
-
-Later on in function parse_events_add_pmu() the event 'tx_c_end' is
-searched in all available PMUs and found twice, adding it two
-times to the evsel_list global variable which is the root
-of all events. This results in a counter value of 2 instead
-of 1.
-
-Output with this patch:
-
- [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
-			-- ~/mytests/cf-tx-events 1
- Measuring transactions
- TX_C_TABORT_NO_SPECIAL: 0 expected:0
- TX_C_TABORT_SPECIAL: 0 expected:0
- TX_C_TEND: 1 expected:1
- TX_NC_TABORT: 11 expected:11
- TX_NC_TEND: 1 expected:1
-
- Performance counter stats for '/root/mytests/cf-tx-events 1':
-
-                  1      tx_c_tend
-
-      0.001815365 seconds time elapsed
-
-      0.000123000 seconds user
-      0.001756000 seconds sys
-
- [root@s35lp76 perf]#
-
-Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: <stable@vger.kernel.org> # 4.18+
----
- tools/perf/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7799788f662f..7e49baad304d 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -773,7 +773,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 
- 		if (!is_arm_pmu_core(name)) {
- 			pname = pe->pmu ? pe->pmu : "cpu";
--			if (strncmp(pname, name, strlen(pname)))
-+			if (strcmp(pname, name))
- 				continue;
- 		}
- 
--- 
-2.14.3
+-Andi
