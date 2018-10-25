@@ -1,53 +1,204 @@
-From: sebhtml <sebhtml@videotron.qc.ca>
-Subject: Re: [PATCH] pfn_t: force '~' to be parsed as an unary operator
-Date: Wed, 24 Oct 2018 19:52:40 -0400
-Message-ID: <d48b2b1b-201a-d350-6bda-943a66f1abfb@videotron.qc.ca>
-References: <20181021145939.8760-1-sebhtml@videotron.qc.ca>
- <CAPcyv4iJ_bfzOtV_GAQg_tdLLuebE_1Gp420LMG0xbR2ZQdV7g@mail.gmail.com>
- <FRrzgp7InaOtKFRs0geay1@videotron.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 01/37] perf record: Encode -k clockid frequency into Perf trace
+Date: Thu, 25 Oct 2018 08:09:55 -0300
+Message-ID: <20181025111031.3440-2-acme@kernel.org>
+References: <20181025111031.3440-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <FRrzgp7InaOtKFRs0geay1@videotron.ca>
-Content-Language: en-US
+In-Reply-To: <20181025111031.3440-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, acme@redhat.com, tz.stoyanov@gmail.com, Namhyung Kim <namhyung@kernel.org>, zwisler@kernel.org, arangradient@gmail.com, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2018-10-24 6:43 p.m., Andrew Morton wrote:
-> 
-> I grabbed it, and added cc:stable.
-> 
-> But aren't we fixing this in the wrong place?  That's a valid
-> expression and if this isn't addressed in perf then we may hit a
-> similar issue elsewhere...
-> 
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Right.
+Store -k clockid frequency into Perf trace to enable timestamps
+derived metrics conversion into wall clock time on reporting stage.
 
-Based on:
-     git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 01aa9d518eae8a4d75cd3049defc6ed0b6d0a658
+Below is the example of perf report output:
 
-In perf, the warning
-       [fs_dax:dax_pmd_insert_mapping] unknown op '~'
-comes from tools/lib/traceevent/event-parse.c at line 2045:
-                 do_warning_event(event, "unknown op '%s'", token);
+  tools/perf/perf record -k raw -- ../../matrix/linux/matrix.gcc
+  ...
+  [ perf record: Captured and wrote 31.222 MB perf.data (818054 samples) ]
 
-This is in this function:
+  tools/perf/perf report --header
+  # ========
+  ...
+  # event : name = cycles:ppp, , size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, use_clockid = 1, clockid = 4
+  ...
+  # clockid frequency: 1000 MHz
+  ...
+  # ========
 
-static enum tep_event_type
-process_op(struct tep_event_format *event, struct tep_print_arg *arg, char **tok);
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/23a4a1dc-b160-85a0-347d-40a2ed6d007b@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-record.c | 24 ++++++++++++++++++++++--
+ tools/perf/perf.h           |  1 +
+ tools/perf/util/env.h       |  1 +
+ tools/perf/util/header.c    | 23 +++++++++++++++++++++++
+ tools/perf/util/header.h    |  1 +
+ 5 files changed, 48 insertions(+), 2 deletions(-)
 
-The code path to reach the good '~' case needs:
-         if (arg->type == TEP_PRINT_OP && !arg->op.left) {
-
-I assume that here arg->op.left is not NULL because of (u64) on the left.
-
-~(((u64) ~(~(((1UL) << 12)-1)))
-          ^
-
-However, I fail to see where '~' is parsed as a binary operator though.
-
-Any pointer would be welcome.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0980dfe3396b..10cf889c6d75 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -592,6 +592,9 @@ static void record__init_features(struct record *rec)
+ 	if (!rec->opts.full_auxtrace)
+ 		perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
+ 
++	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
++		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
++
+ 	perf_header__clear_feat(&session->header, HEADER_STAT);
+ }
+ 
+@@ -897,6 +900,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 
+ 	record__init_features(rec);
+ 
++	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
++		session->header.env.clockid_res_ns = rec->opts.clockid_res_ns;
++
+ 	if (forks) {
+ 		err = perf_evlist__prepare_workload(rec->evlist, &opts->target,
+ 						    argv, data->is_pipe,
+@@ -1337,6 +1343,19 @@ static const struct clockid_map clockids[] = {
+ 	CLOCKID_END,
+ };
+ 
++static int get_clockid_res(clockid_t clk_id, u64 *res_ns)
++{
++	struct timespec res;
++
++	*res_ns = 0;
++	if (!clock_getres(clk_id, &res))
++		*res_ns = res.tv_nsec + res.tv_sec * NSEC_PER_SEC;
++	else
++		pr_warning("WARNING: Failed to determine specified clock resolution.\n");
++
++	return 0;
++}
++
+ static int parse_clockid(const struct option *opt, const char *str, int unset)
+ {
+ 	struct record_opts *opts = (struct record_opts *)opt->value;
+@@ -1360,7 +1379,7 @@ static int parse_clockid(const struct option *opt, const char *str, int unset)
+ 
+ 	/* if its a number, we're done */
+ 	if (sscanf(str, "%d", &opts->clockid) == 1)
+-		return 0;
++		return get_clockid_res(opts->clockid, &opts->clockid_res_ns);
+ 
+ 	/* allow a "CLOCK_" prefix to the name */
+ 	if (!strncasecmp(str, "CLOCK_", 6))
+@@ -1369,7 +1388,8 @@ static int parse_clockid(const struct option *opt, const char *str, int unset)
+ 	for (cm = clockids; cm->name; cm++) {
+ 		if (!strcasecmp(str, cm->name)) {
+ 			opts->clockid = cm->clockid;
+-			return 0;
++			return get_clockid_res(opts->clockid,
++					       &opts->clockid_res_ns);
+ 		}
+ 	}
+ 
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 21bf7f5a3cf5..0ed4a34c74c4 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -81,6 +81,7 @@ struct record_opts {
+ 	unsigned     initial_delay;
+ 	bool         use_clockid;
+ 	clockid_t    clockid;
++	u64          clockid_res_ns;
+ 	unsigned int proc_map_timeout;
+ };
+ 
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 1f3ccc368530..d01b8355f4ca 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -63,6 +63,7 @@ struct perf_env {
+ 	struct numa_node	*numa_nodes;
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
++	u64                     clockid_res_ns;
+ };
+ 
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 1ec1d9bc2d63..4fd45be95a43 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1034,6 +1034,13 @@ static int write_auxtrace(struct feat_fd *ff,
+ 	return err;
+ }
+ 
++static int write_clockid(struct feat_fd *ff,
++			 struct perf_evlist *evlist __maybe_unused)
++{
++	return do_write(ff, &ff->ph->env.clockid_res_ns,
++			sizeof(ff->ph->env.clockid_res_ns));
++}
++
+ static int cpu_cache_level__sort(const void *a, const void *b)
+ {
+ 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
+@@ -1508,6 +1515,12 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
+ 		fprintf(fp, "# Core ID and Socket ID information is not available\n");
+ }
+ 
++static void print_clockid(struct feat_fd *ff, FILE *fp)
++{
++	fprintf(fp, "# clockid frequency: %"PRIu64" MHz\n",
++		ff->ph->env.clockid_res_ns * 1000);
++}
++
+ static void free_event_desc(struct perf_evsel *events)
+ {
+ 	struct perf_evsel *evsel;
+@@ -2531,6 +2544,15 @@ static int process_mem_topology(struct feat_fd *ff,
+ 	return ret;
+ }
+ 
++static int process_clockid(struct feat_fd *ff,
++			   void *data __maybe_unused)
++{
++	if (do_read_u64(ff, &ff->ph->env.clockid_res_ns))
++		return -1;
++
++	return 0;
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2590,6 +2612,7 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPN(CACHE,		cache,		true),
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
++	FEAT_OPR(CLOCKID,       clockid,        false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index e17903caa71d..0d553ddca0a3 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -38,6 +38,7 @@ enum {
+ 	HEADER_CACHE,
+ 	HEADER_SAMPLE_TIME,
+ 	HEADER_MEM_TOPOLOGY,
++	HEADER_CLOCKID,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
+-- 
+2.14.4
