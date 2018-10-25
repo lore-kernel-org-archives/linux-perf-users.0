@@ -1,48 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/37] perf trace: Drop thread refcount in trace__event_handler()
-Date: Thu, 25 Oct 2018 08:10:05 -0300
-Message-ID: <20181025111031.3440-12-acme@kernel.org>
+Subject: [PATCH 12/37] perf stat: Poll for monitored tasks being alive
+Date: Thu, 25 Oct 2018 08:10:06 -0300
+Message-ID: <20181025111031.3440-13-acme@kernel.org>
 References: <20181025111031.3440-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181025111031.3440-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-We must pair:
+Adding the check for tasks we monitor via -p/-t options, and finish stat
+if there's no longer task to monitor.
 
-   thread = machine__findnew_thread();
-
-with thread__put(thread). Fix it.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Requested-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: c4191e55b874 ("perf trace: Show comm and tid for tracepoint events")
-Link: https://lkml.kernel.org/n/tip-dkxsb8cwg87rmkrzrbns1o4z@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/20181022093015.9106-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 77b8748ad5ed..589e0412652a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2152,8 +2152,8 @@ static int trace__event_handler(struct trace *trace, struct perf_evsel *evsel,
- 		trace__fprintf_callchain(trace, sample);
- 	else if (callchain_ret < 0)
- 		pr_err("Problem processing %s callchain, skipping...\n", perf_evsel__name(evsel));
--	thread__put(thread);
- out:
-+	thread__put(thread);
- 	return 0;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b86aba1c8028..d1028d7755bb 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -409,6 +409,28 @@ static struct perf_evsel *perf_evsel__reset_weak_group(struct perf_evsel *evsel)
+ 	return leader;
  }
  
++static bool is_target_alive(struct target *_target,
++			    struct thread_map *threads)
++{
++	struct stat st;
++	int i;
++
++	if (!target__has_task(_target))
++		return true;
++
++	for (i = 0; i < threads->nr; i++) {
++		char path[PATH_MAX];
++
++		scnprintf(path, PATH_MAX, "%s/%d", procfs__mountpoint(),
++			  threads->map[i].pid);
++
++		if (!stat(path, &st))
++			return true;
++	}
++
++	return false;
++}
++
+ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ {
+ 	int interval = stat_config.interval;
+@@ -579,6 +601,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		enable_counters();
+ 		while (!done) {
+ 			nanosleep(&ts, NULL);
++			if (!is_target_alive(&target, evsel_list->threads))
++				break;
+ 			if (timeout)
+ 				break;
+ 			if (interval) {
 -- 
 2.14.4
