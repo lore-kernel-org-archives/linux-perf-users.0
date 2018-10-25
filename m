@@ -1,61 +1,104 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/37] perf arm64: Fix generate system call table failed with /tmp mounted with noexec
-Date: Thu, 25 Oct 2018 08:09:59 -0300
-Message-ID: <20181025111031.3440-6-acme@kernel.org>
+Subject: [PATCH 06/37] tools lib subcmd: Introduce OPTION_ULONG
+Date: Thu, 25 Oct 2018 08:10:00 -0300
+Message-ID: <20181025111031.3440-7-acme@kernel.org>
 References: <20181025111031.3440-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181025111031.3440-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hongxu Jia <hongxu.jia@windriver.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, =?UTF-8?q?S=C3=A9bastien=20Boisvert?= <sboisvert@gydle.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Hongxu Jia <hongxu.jia@windriver.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When /tmp is mounted with noexec, mksyscalltbl fails.
+For completeness, will be used in 'perf trace --max-events'.
 
-  [snip]
-  |perf-1.0/tools/perf/arch/arm64/entry/syscalls//mksyscalltbl:
-  /tmp/create-table-6VGPSt: Permission denied
-  [snip]
-
-Add variable TMPDIR as prefix dir of the temporary file, if it is set,
-replace default /tmp.
-
-Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Sébastien Boisvert <sboisvert@gydle.com>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Fixes: 2b5882435606 ("perf arm64: Generate system call table from asm/unistd.h")
-LPU-Reference: 1539851173-14959-1-git-send-email-hongxu.jia@windriver.com
-Link: https://lkml.kernel.org/n/tip-1qrgq840ci0c5cy4oww957ge@git.kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-glaj3pwespxfj2fdjs9a20b6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/subcmd/parse-options.c | 19 +++++++++++++++++++
+ tools/lib/subcmd/parse-options.h |  2 ++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 2dbb8cade048..c88fd32563eb 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -23,7 +23,7 @@ create_table_from_c()
- {
- 	local sc nr last_sc
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index cb7154eccbdc..dbb9efbf718a 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -116,6 +116,7 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 		case OPTION_INTEGER:
+ 		case OPTION_UINTEGER:
+ 		case OPTION_LONG:
++		case OPTION_ULONG:
+ 		case OPTION_U64:
+ 		default:
+ 			break;
+@@ -166,6 +167,7 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 		case OPTION_INTEGER:
+ 		case OPTION_UINTEGER:
+ 		case OPTION_LONG:
++		case OPTION_ULONG:
+ 		case OPTION_U64:
+ 		default:
+ 			break;
+@@ -295,6 +297,22 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 			return opterror(opt, "expects a numerical value", flags);
+ 		return 0;
  
--	create_table_exe=`mktemp /tmp/create-table-XXXXXX`
-+	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
- 
- 	{
- 
++	case OPTION_ULONG:
++		if (unset) {
++			*(unsigned long *)opt->value = 0;
++			return 0;
++		}
++		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
++			*(unsigned long *)opt->value = opt->defval;
++			return 0;
++		}
++		if (get_arg(p, opt, flags, &arg))
++			return -1;
++		*(unsigned long *)opt->value = strtoul(arg, (char **)&s, 10);
++		if (*s)
++			return opterror(opt, "expects a numerical value", flags);
++		return 0;
++
+ 	case OPTION_U64:
+ 		if (unset) {
+ 			*(u64 *)opt->value = 0;
+@@ -703,6 +721,7 @@ static void print_option_help(const struct option *opts, int full)
+ 	case OPTION_ARGUMENT:
+ 		break;
+ 	case OPTION_LONG:
++	case OPTION_ULONG:
+ 	case OPTION_U64:
+ 	case OPTION_INTEGER:
+ 	case OPTION_UINTEGER:
+diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
+index 92fdbe1519f6..6ca2a8bfe716 100644
+--- a/tools/lib/subcmd/parse-options.h
++++ b/tools/lib/subcmd/parse-options.h
+@@ -25,6 +25,7 @@ enum parse_opt_type {
+ 	OPTION_STRING,
+ 	OPTION_INTEGER,
+ 	OPTION_LONG,
++	OPTION_ULONG,
+ 	OPTION_CALLBACK,
+ 	OPTION_U64,
+ 	OPTION_UINTEGER,
+@@ -133,6 +134,7 @@ struct option {
+ #define OPT_INTEGER(s, l, v, h)     { .type = OPTION_INTEGER, .short_name = (s), .long_name = (l), .value = check_vtype(v, int *), .help = (h) }
+ #define OPT_UINTEGER(s, l, v, h)    { .type = OPTION_UINTEGER, .short_name = (s), .long_name = (l), .value = check_vtype(v, unsigned int *), .help = (h) }
+ #define OPT_LONG(s, l, v, h)        { .type = OPTION_LONG, .short_name = (s), .long_name = (l), .value = check_vtype(v, long *), .help = (h) }
++#define OPT_ULONG(s, l, v, h)        { .type = OPTION_ULONG, .short_name = (s), .long_name = (l), .value = check_vtype(v, unsigned long *), .help = (h) }
+ #define OPT_U64(s, l, v, h)         { .type = OPTION_U64, .short_name = (s), .long_name = (l), .value = check_vtype(v, u64 *), .help = (h) }
+ #define OPT_STRING(s, l, v, a, h)   { .type = OPTION_STRING,  .short_name = (s), .long_name = (l), .value = check_vtype(v, const char **), .argh = (a), .help = (h) }
+ #define OPT_STRING_OPTARG(s, l, v, a, h, d) \
 -- 
 2.14.4
