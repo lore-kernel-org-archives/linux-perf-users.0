@@ -1,65 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/37] perf symbols: Set PLT entry/header sizes properly on Sparc
-Date: Thu, 25 Oct 2018 08:09:58 -0300
-Message-ID: <20181025111031.3440-5-acme@kernel.org>
+Subject: [PATCH 05/37] perf arm64: Fix generate system call table failed with /tmp mounted with noexec
+Date: Thu, 25 Oct 2018 08:09:59 -0300
+Message-ID: <20181025111031.3440-6-acme@kernel.org>
 References: <20181025111031.3440-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181025111031.3440-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, David Miller <davem@davemloft.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexis Berlemont <alexis.berlemont@gmail.com>, David Tolnay <dtolnay@gmail.com>, Hanjun Guo <guohanjun@huawei.com>, Hemant Kumar <hemant@linux.vnet.ibm.com>, Li Bin <huawei.libin@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, zhangmengting@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hongxu Jia <hongxu.jia@windriver.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>, =?UTF-8?q?S=C3=A9bastien=20Boisvert?= <sboisvert@gydle.com>, Thomas Richter <tmricht@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+From: Hongxu Jia <hongxu.jia@windriver.com>
 
-Using the sh_entsize for both values isn't correct.  It happens to be
-correct on x86...
+When /tmp is mounted with noexec, mksyscalltbl fails.
 
-For both 32-bit and 64-bit sparc, there are four PLT entries in the PLT
-section.
+  [snip]
+  |perf-1.0/tools/perf/arch/arm64/entry/syscalls//mksyscalltbl:
+  /tmp/create-table-6VGPSt: Permission denied
+  [snip]
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add variable TMPDIR as prefix dir of the temporary file, if it is set,
+replace default /tmp.
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexis Berlemont <alexis.berlemont@gmail.com>
-Cc: David Tolnay <dtolnay@gmail.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Hemant Kumar <hemant@linux.vnet.ibm.com>
-Cc: Li Bin <huawei.libin@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: zhangmengting@huawei.com
-Fixes: b2f7605076d6 ("perf symbols: Fix plt entry calculation for ARM and AARCH64")
-Link: http://lkml.kernel.org/r/20181017.120859.2268840244308635255.davem@davemloft.net
+Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Cc: Sébastien Boisvert <sboisvert@gydle.com>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Fixes: 2b5882435606 ("perf arm64: Generate system call table from asm/unistd.h")
+LPU-Reference: 1539851173-14959-1-git-send-email-hongxu.jia@windriver.com
+Link: https://lkml.kernel.org/n/tip-1qrgq840ci0c5cy4oww957ge@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 29770ea61768..6e70cc00c161 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -324,7 +324,17 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 			plt_entry_size = 16;
- 			break;
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index 2dbb8cade048..c88fd32563eb 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -23,7 +23,7 @@ create_table_from_c()
+ {
+ 	local sc nr last_sc
  
--		default: /* FIXME: s390/alpha/mips/parisc/poperpc/sh/sparc/xtensa need to be checked */
-+		case EM_SPARC:
-+			plt_header_size = 48;
-+			plt_entry_size = 12;
-+			break;
-+
-+		case EM_SPARCV9:
-+			plt_header_size = 128;
-+			plt_entry_size = 32;
-+			break;
-+
-+		default: /* FIXME: s390/alpha/mips/parisc/poperpc/sh/xtensa need to be checked */
- 			plt_header_size = shdr_plt.sh_entsize;
- 			plt_entry_size = shdr_plt.sh_entsize;
- 			break;
+-	create_table_exe=`mktemp /tmp/create-table-XXXXXX`
++	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
+ 
+ 	{
+ 
 -- 
 2.14.4
