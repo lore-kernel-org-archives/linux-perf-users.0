@@ -1,187 +1,202 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 00/37] perf/core improvements and fixes
-Date: Fri, 26 Oct 2018 09:25:28 +0200
-Message-ID: <20181026072528.GA5782@gmail.com>
-References: <20181025111031.3440-1-acme@kernel.org>
+From: =?UTF-8?Q?S=c3=a9bastien_Boisvert?= <sboisvert@gydle.com>
+Subject: Re: [PATCH] perf/stat: Handle different PMU names with common prefix
+Date: Fri, 26 Oct 2018 11:04:45 -0400
+Message-ID: <7b3b23b7-1c73-66bf-611b-8dd9fb274694@gydle.com>
+References: <20181023151616.78193-1-tmricht@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025111031.3440-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexis Berlemont <alexis.berlemont@gmail.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, David Tolnay <dtolnay@gmail.com>, Hanjun Guo <guohanjun@huawei.com>, Hemant Kumar <hemant@linux.vnet.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Hongxu Jia <hongxu.jia@windriver.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Leo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20181023151616.78193-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, kan.liang@linux.intel.com, stable@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On 2018-10-23 11:16 a.m., Thomas Richter wrote:
+> On s390 the CPU Measurement Facility for counters now supports
+> 2 PMUs named cpum_cf (CPU Measurement Facility for counters) and
+> cpum_cf_diag (CPU Measurement Facility for diagnostic counters)
+> for one and the same CPU.
+> 
+> Running command
+> 
+>  [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
+> 	 -- ~/mytests/cf-tx-events 1
+> 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Is tx_c_tend related to these ?
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit ce6c9da1113ad681bff27a3e376d2017f7f8a59c:
-> 
->   Merge remote-tracking branch 'tip/perf/urgent' into perf/core (2018-10-18 11:13:01 -0300)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.20-20181025
-> 
-> for you to fetch changes up to fe57120e18a1f9124ca758c89cc54f91333d1847:
-> 
->   perf script: Support total cycles count (2018-10-24 15:29:56 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> - Introduce 'perf trace --max-events' for stopping 'perf trace' when
->   that many syscalls (enter+exit), tracepoints or other events such as
->   page faults take place.
-> 
->   Support that as well on a per-event basis, e.g.:
-> 
->    perf trace -e sched:*switch/nr=2/,block:*_plug/nr=4/,block:*_unplug/nr=1/,net:*dev_queue/nr=3,max-stack=16/
-> 
->   Will stop when 2 context switches, 4 block plugs, 1 block unplug and
->   3 net_dev_queue tracepoints take place. (Arnaldo Carvalho de Melo)
-> 
-> - Poll for monitored tasks being alive in 'perf stat -p/-t', exiting when
->   those tasks all terminate (Jiri Olsa)
-> 
-> - Encode -k clockid frequency into perf.data to enable timestamps derived
->   metrics conversion into wall clock time on reporting stage. (Alexey Budankov)
-> 
-> - Improve Intel PT call graph from SQL database and GUI python scripts,
->   including adopting the Qt MDI interface to allow for multiple subwindows
->   for all the tables, helping in better visualizing the data in the SQL
->   tables, also uses, when available, the Intel XED disassembler libraries
->   to present the Intel PT data as x86 asm mnemonics. This last feature
->   is not currently working in some cases, fix is being discussed (Adrian Hunter)
-> 
-> - Implement a ftrace function_graph view in 'perf script' when processing
->   hardware trace data such as Intel PT (Andi Kleen)
-> 
-> - Better integration with the Intel XED disassembler, when available, in
->   'perf script' (Andi Kleen)
-> 
-> - Some 'perf trace' drop refcount fixes (Arnaldo Carvalho de Melo)
-> 
-> - Add Sparc support to 'perf annotate', jitdump (David Miller)
-> 
-> - Fix PLT symbols entry/header sizes properly on Sparc (David Miller)
-> 
-> - Fix generation of system call table failure with /tmp mounted with 'noexec'
->   in arm64 (Hongxu Jia)
-> 
-> - Allow extended console debug output in 'perf script' (Milian Wolff)
-> 
-> - Flush output stream after events in 'perf script' verbose mode (Milian Wolff)
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (17):
->       perf scripts python: call-graph-from-sql.py: Use SPDX license identifier
->       perf scripts python: call-graph-from-sql.py: Provide better default column sizes
->       perf scripts python: call-graph-from-sql.py: Set a minimum window size
->       perf scripts python: call-graph-from-sql.py: Change icon
->       perf scripts python: call-graph-from-sql.py: Make a "Main" function
->       perf scripts python: call-graph-from-sql.py: Separate the database details into a class
->       perf scripts python: call-graph-from-sql.py: Add a class for global data
->       perf scripts python: call-graph-from-sql.py: Remove use of setObjectName()
->       perf scripts python: call-graph-from-sql.py: Factor out CallGraphModel from TreeModel
->       perf scripts python: call-graph-from-sql.py: Add data helper functions
->       perf scripts python: call-graph-from-sql.py: Refactor TreeItem class
->       perf scripts python: call-graph-from-sql.py: Rename to exported-sql-viewer.py
->       perf scripts python: exported-sql-viewer.py: Add support for multiple sub-windows
->       perf scripts python: exported-sql-viewer.py: Add ability to find symbols in the call-graph
->       perf scripts python: exported-sql-viewer.py: Add ability to shrink / enlarge font
->       perf scripts python: exported-sql-viewer.py: Add ability to display all the database tables
->       perf scripts python: exported-sql-viewer.py: Add All branches report
-> 
-> Alexey Budankov (1):
->       perf record: Encode -k clockid frequency into Perf trace
-> 
-> Andi Kleen (5):
->       perf script: Add --insn-trace for instruction decoding
->       perf script: Make itrace script default to all calls
->       tools script: Add --call-trace and --call-ret-trace
->       perf script: Implement --graph-function
->       perf script: Support total cycles count
-> 
-> Arnaldo Carvalho de Melo (7):
->       tools lib subcmd: Introduce OPTION_ULONG
->       perf trace: Introduce --max-events
->       perf evsel: Introduce per event max_events property
->       perf evsel: Mark a evsel as disabled when asking the kernel do disable it
->       perf trace: Drop addr_location refcounts
->       perf trace: Drop thread refcount in trace__event_handler()
->       perf trace: Introduce per-event maximum number of events property
-> 
-> David Miller (3):
->       perf annotate: Add Sparc support
->       perf jitdump: Add Sparc support.
->       perf symbols: Set PLT entry/header sizes properly on Sparc
-> 
-> Hongxu Jia (1):
->       perf arm64: Fix generate system call table failed with /tmp mounted with noexec
-> 
-> Jiri Olsa (1):
->       perf stat: Poll for monitored tasks being alive
-> 
-> Milian Wolff (2):
->       perf script: Allow extended console debug output
->       perf script: Flush output stream after events in verbose mode
-> 
->  tools/lib/subcmd/parse-options.c                  |   19 +
->  tools/lib/subcmd/parse-options.h                  |    2 +
->  tools/perf/Documentation/build-xed.txt            |   19 +
->  tools/perf/Documentation/intel-pt.txt             |    2 +-
->  tools/perf/Documentation/itrace.txt               |    7 +-
->  tools/perf/Documentation/perf-script.txt          |   18 +
->  tools/perf/Documentation/perf-trace.txt           |   67 +
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl |    2 +-
->  tools/perf/arch/sparc/Makefile                    |    2 +
->  tools/perf/arch/sparc/annotate/instructions.c     |  169 ++
->  tools/perf/builtin-record.c                       |   24 +-
->  tools/perf/builtin-script.c                       |  166 +-
->  tools/perf/builtin-stat.c                         |   24 +
->  tools/perf/builtin-trace.c                        |   50 +-
->  tools/perf/perf.h                                 |    1 +
->  tools/perf/scripts/python/call-graph-from-sql.py  |  339 ----
->  tools/perf/scripts/python/export-to-postgresql.py |    2 +-
->  tools/perf/scripts/python/export-to-sqlite.py     |    2 +-
->  tools/perf/scripts/python/exported-sql-viewer.py  | 2128 +++++++++++++++++++++
->  tools/perf/util/annotate.c                        |    8 +
->  tools/perf/util/auxtrace.c                        |   17 +-
->  tools/perf/util/auxtrace.h                        |    5 +-
->  tools/perf/util/cs-etm.c                          |    3 +-
->  tools/perf/util/env.h                             |    1 +
->  tools/perf/util/evlist.c                          |    2 +-
->  tools/perf/util/evsel.c                           |   27 +-
->  tools/perf/util/evsel.h                           |    5 +
->  tools/perf/util/genelf.h                          |    6 +
->  tools/perf/util/header.c                          |   23 +
->  tools/perf/util/header.h                          |    1 +
->  tools/perf/util/intel-bts.c                       |    3 +-
->  tools/perf/util/intel-pt.c                        |    3 +-
->  tools/perf/util/parse-events.c                    |    8 +
->  tools/perf/util/parse-events.h                    |    1 +
->  tools/perf/util/parse-events.l                    |    1 +
->  tools/perf/util/symbol-elf.c                      |   12 +-
->  tools/perf/util/symbol.h                          |    3 +-
->  tools/perf/util/thread.h                          |    2 +
->  38 files changed, 2778 insertions(+), 396 deletions(-)
->  create mode 100644 tools/perf/Documentation/build-xed.txt
->  create mode 100644 tools/perf/arch/sparc/annotate/instructions.c
->  delete mode 100644 tools/perf/scripts/python/call-graph-from-sql.py
->  create mode 100755 tools/perf/scripts/python/exported-sql-viewer.py
+  tx-abort OR cpu/tx-abort/                          [Kernel PMU event]
+  tx-capacity OR cpu/tx-capacity/                    [Kernel PMU event]
+  tx-commit OR cpu/tx-commit/                        [Kernel PMU event]
+  tx-conflict OR cpu/tx-conflict/                    [Kernel PMU event]
+  tx-start OR cpu/tx-start/                          [Kernel PMU event]
 
-Pulled, thanks a lot Arnaldo!
 
-	Ingo
+>  Measuring transactions
+>  TX_C_TABORT_NO_SPECIAL: 0 expected:0
+>  TX_C_TABORT_SPECIAL: 0 expected:0
+>  TX_C_TEND: 1 expected:1
+>  TX_NC_TABORT: 11 expected:11
+>  TX_NC_TEND: 1 expected:1
+> 
+>  Performance counter stats for '/root/mytests/cf-tx-events 1':
+> 
+>   2      tx_c_tend
+> 
+>       0.002120091 seconds time elapsed
+> 
+>       0.000121000 seconds user
+>       0.002127000 seconds sys
+> 
+>  [root@s35lp76 perf]#
+> 
+> displays output which is unexpected (and wrong):
+> 
+>   2      tx_c_tend
+> 
+> The test program definitely triggers only one transaction, as shown
+> in line 'TX_C_TEND: 1 expected:1'.
+
+OK, something is done twice in perf stat, but should be done once.
+
+> 
+> This is caused by the following call sequence:
+> 
+> pmu_lookup() scans and installs a PMU.
+> +--> pmu_aliases() parses all aliases in directory
+> 		.../<pmu-name>/events/* which are file names.
+>      +--> pmu_aliases_parse() Read each file in directory and create
+>                       an new alias entry. This is done with
+>           +--> perf_pmu__new_alias() and
+> 	       +--> __perf_pmu__new_alias() which also check for
+> 	                   identical alias names.
+> 
+> After pmu_aliases() returns, a complete list of event names
+> for this pmu has been created. Now function
+> 
+> pmu_add_cpu_aliases()   is called to add the events listed in the json
+> |                       files to the alias list of the cpu.
+> +--> perf_pmu__find_map()  Returns a pointer to the json events.
+> 
+> Now function pmu_add_cpu_aliases() scans through all events listed
+> in the JSON files for this CPU.
+
+Are these JSON files temporary in nature ?
+
+> Each json event pmu name is compared with the current PMU being
+> built up and if they mismatch, the json event is added to the
+> current PMUs alias list.
+> To avoid duplicate entries the following comparison is done:
+> 
+> 	if (!is_arm_pmu_core(name)) {
+> 	     pname = pe->pmu ? pe->pmu : "cpu";
+> 	     if (strncmp(pname, name, strlen(pname)))
+> 		     continue;
+>      }
+
+Is this the test to know whether a PMU event must be added or not ?
+
+> 
+> The culprit is the strncmp() function.
+> 
+> Using current s390 PMU naming, the first PMU is 'cpum_cf'
+> and a long list of events is added, among them 'tx_c_tend'
+> 
+> When the second PMU named 'cpum_cf_diag' is added, only one event
+> named 'CF_DIAG' is added by the pmu_aliases()  function.
+> 
+> Now function pmu_add_cpu_aliases() is invoked for PMU 'cpum_cf_diag'.
+> Since the CPUID string is the same for both PMUs, json file events
+> for PMU named 'cpum_cf' are added to the PMU 'cpm_cf_diag'
+> 
+> This happens because the strncmp() actually compares:
+>>      strncmp("cpum_cf", "cpum_cf_diag", 6);
+
+I fail to see how these argument values can be generated by this code:
+
+ 	     pname = pe->pmu ? pe->pmu : "cpu";
+ 	     if (strncmp(pname, name, strlen(pname)))
+
+The 3rd argument is the length of the first argument, pname.
+
+With "cpum_cf", it should be 7, not 6.
+
+
+
+> 
+> The first parameter is the pmu name taken from the event in
+> the json file. The second parameter is the pmu name of the PMU
+> currently being built.
+> They are different, but the length of the compare only tests the
+> common prefix and this returns 0(true) when it should return false.
+> 
+
+The 6 comes from strlen(pname). In that case, it is neither the length of
+"cpum_cf" (7) or "cpum_cf_diag" (12).
+
+> Now all events for PMU cpum_cf are added to the alias list for pmu
+> cpum_cf_diag.
+> 
+> Later on in function parse_events_add_pmu() the event 'tx_c_end' is
+> searched in all available PMUs and found twice, adding it two
+> times to the evsel_list global variable which is the root
+> of all events. This results in a counter value of 2 instead
+> of 1.
+
+The counter value of 2 is 1 + 1 since both PMU events 'tx_c_end' that
+were added got a +1.
+
+> 
+> Output with this patch:
+> 
+>  [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
+> 			-- ~/mytests/cf-tx-events 1
+>  Measuring transactions
+>  TX_C_TABORT_NO_SPECIAL: 0 expected:0
+>  TX_C_TABORT_SPECIAL: 0 expected:0
+>  TX_C_TEND: 1 expected:1
+>  TX_NC_TABORT: 11 expected:11
+>  TX_NC_TEND: 1 expected:1
+> 
+>  Performance counter stats for '/root/mytests/cf-tx-events 1':
+> 
+>                   1      tx_c_tend
+> 
+
+OK, now that's 1, like in your expected test value:
+
+  TX_C_TEND: 1 expected:1
+
+>       0.001815365 seconds time elapsed
+> 
+>       0.000123000 seconds user
+>       0.001756000 seconds sys
+> 
+>  [root@s35lp76 perf]#
+> 
+> Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: <stable@vger.kernel.org> # 4.18+
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 7799788f662f..7e49baad304d 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -773,7 +773,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+>  
+>  		if (!is_arm_pmu_core(name)) {
+>  			pname = pe->pmu ? pe->pmu : "cpu";
+> -			if (strncmp(pname, name, strlen(pname)))
+> +			if (strcmp(pname, name))
+>  				continue;
+>  		}
+>  
+> 
