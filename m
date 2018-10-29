@@ -1,249 +1,35 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
+From: Sebastien Boisvert <sboisvert@gydle.com>
 Subject: Re: [PATCH] perf/stat: Handle different PMU names with common prefix
-Date: Mon, 29 Oct 2018 13:18:08 +0100
-Message-ID: <80512536-d668-489d-5f73-d7e4a4d54e2d@linux.ibm.com>
+Date: Mon, 29 Oct 2018 08:50:59 -0400
+Message-ID: <4cba8c1c-e1ec-1972-5d12-97804cf6aa14@gydle.com>
 References: <20181023151616.78193-1-tmricht@linux.ibm.com>
  <7b3b23b7-1c73-66bf-611b-8dd9fb274694@gydle.com>
+ <80512536-d668-489d-5f73-d7e4a4d54e2d@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7b3b23b7-1c73-66bf-611b-8dd9fb274694@gydle.com>
+In-Reply-To: <80512536-d668-489d-5f73-d7e4a4d54e2d@linux.ibm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=c3=a9bastien_Boisvert?= <sboisvert@gydle.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+To: Thomas-Mich Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, kan.liang@linux.intel.com, stable@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 10/26/2018 05:04 PM, Sébastien Boisvert wrote:
-> On 2018-10-23 11:16 a.m., Thomas Richter wrote:
->> On s390 the CPU Measurement Facility for counters now supports
->> 2 PMUs named cpum_cf (CPU Measurement Facility for counters) and
->> cpum_cf_diag (CPU Measurement Facility for diagnostic counters)
->> for one and the same CPU.
->>
->> Running command
->>
->>  [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
->> 	 -- ~/mytests/cf-tx-events 1
->>
-> 
-> Is tx_c_tend related to these ?
-> 
->   tx-abort OR cpu/tx-abort/                          [Kernel PMU event]
->   tx-capacity OR cpu/tx-capacity/                    [Kernel PMU event]
->   tx-commit OR cpu/tx-commit/                        [Kernel PMU event]
->   tx-conflict OR cpu/tx-conflict/                    [Kernel PMU event]
->   tx-start OR cpu/tx-start/                          [Kernel PMU event]
-> 
-> 
-
-Yes, these are the transaction counters on intel platforms, 
-tx_c_tend is a transaction counter for s390.
-
->>  Measuring transactions
->>  TX_C_TABORT_NO_SPECIAL: 0 expected:0
->>  TX_C_TABORT_SPECIAL: 0 expected:0
->>  TX_C_TEND: 1 expected:1
->>  TX_NC_TABORT: 11 expected:11
->>  TX_NC_TEND: 1 expected:1
->>
->>  Performance counter stats for '/root/mytests/cf-tx-events 1':
->>
->>   2      tx_c_tend
->>
->>       0.002120091 seconds time elapsed
->>
->>       0.000121000 seconds user
->>       0.002127000 seconds sys
->>
->>  [root@s35lp76 perf]#
->>
->> displays output which is unexpected (and wrong):
->>
->>   2      tx_c_tend
->>
->> The test program definitely triggers only one transaction, as shown
->> in line 'TX_C_TEND: 1 expected:1'.
-> 
-> OK, something is done twice in perf stat, but should be done once.
-> 
-
-Correct
-
->>
->> This is caused by the following call sequence:
->>
->> pmu_lookup() scans and installs a PMU.
->> +--> pmu_aliases() parses all aliases in directory
->> 		.../<pmu-name>/events/* which are file names.
->>      +--> pmu_aliases_parse() Read each file in directory and create
->>                       an new alias entry. This is done with
->>           +--> perf_pmu__new_alias() and
->> 	       +--> __perf_pmu__new_alias() which also check for
->> 	                   identical alias names.
->>
->> After pmu_aliases() returns, a complete list of event names
->> for this pmu has been created. Now function
->>
->> pmu_add_cpu_aliases()   is called to add the events listed in the json
->> |                       files to the alias list of the cpu.
->> +--> perf_pmu__find_map()  Returns a pointer to the json events.
->>
->> Now function pmu_add_cpu_aliases() scans through all events listed
->> in the JSON files for this CPU.
-> 
-> Are these JSON files temporary in nature ?
-
-No they are not, they are part of the perf tool, directory
-
-[root@s35lp76 linux]# ls tools/perf/pmu-events/arch/s390/cf_z14/*
-tools/perf/pmu-events/arch/s390/cf_z14/basic.json
-tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
-tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
-[root@s35lp76 linux]# 
 
 
->> Each json event pmu name is compared with the current PMU being
->> built up and if they mismatch, the json event is added to the
->> current PMUs alias list.
->> To avoid duplicate entries the following comparison is done:
->>
->> 	if (!is_arm_pmu_core(name)) {
->> 	     pname = pe->pmu ? pe->pmu : "cpu";
->> 	     if (strncmp(pname, name, strlen(pname)))
->> 		     continue;
->>      }
+On 2018-10-29 8:18 a.m., Thomas-Mich Richter wrote:
+> Yes, mistake on my side...
+> but it is the same type of error , regardless if 6 or 7 characters are 
+> compared:
 > 
-> Is this the test to know whether a PMU event must be added or not ?
-
-Correct.
-
+>       strncmp("cpmu_cf", "cpum_cf_diag", 7) 
 > 
->>
->> The culprit is the strncmp() function.
->>
->> Using current s390 PMU naming, the first PMU is 'cpum_cf'
->> and a long list of events is added, among them 'tx_c_tend'
->>
->> When the second PMU named 'cpum_cf_diag' is added, only one event
->> named 'CF_DIAG' is added by the pmu_aliases()  function.
->>
->> Now function pmu_add_cpu_aliases() is invoked for PMU 'cpum_cf_diag'.
->> Since the CPUID string is the same for both PMUs, json file events
->> for PMU named 'cpum_cf' are added to the PMU 'cpm_cf_diag'
->>
->> This happens because the strncmp() actually compares:
->>>      strncmp("cpum_cf", "cpum_cf_diag", 6);
-> 
-> I fail to see how these argument values can be generated by this code:
-> 
->  	     pname = pe->pmu ? pe->pmu : "cpu";
->  	     if (strncmp(pname, name, strlen(pname)))
-> 
-> The 3rd argument is the length of the first argument, pname.
-> 
-> With "cpum_cf", it should be 7, not 6.
-
-Yes, mistake on my side...
-but it is the same type of error , regardless if 6 or 7 characters are 
-compared:
-
-      strncmp("cpmu_cf", "cpum_cf_diag", 7) 
-
-returns 0 when it should not. The device names of both PMUs are different.
-
-> 
-> 
-> 
->>
->> The first parameter is the pmu name taken from the event in
->> the json file. The second parameter is the pmu name of the PMU
->> currently being built.
->> They are different, but the length of the compare only tests the
->> common prefix and this returns 0(true) when it should return false.
->>
-> 
-> The 6 comes from strlen(pname). In that case, it is neither the length of
-> "cpum_cf" (7) or "cpum_cf_diag" (12).
-
-Correct as said above, can not count to 7...
-
-> 
->> Now all events for PMU cpum_cf are added to the alias list for pmu
->> cpum_cf_diag.
->>
->> Later on in function parse_events_add_pmu() the event 'tx_c_end' is
->> searched in all available PMUs and found twice, adding it two
->> times to the evsel_list global variable which is the root
->> of all events. This results in a counter value of 2 instead
->> of 1.
-> 
-> The counter value of 2 is 1 + 1 since both PMU events 'tx_c_end' that
-> were added got a +1.
-
-Correct, the transaction counter is 2 becauses it was connected to PMUs,
-but only one has the counter.
-
-> 
->>
->> Output with this patch:
->>
->>  [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
->> 			-- ~/mytests/cf-tx-events 1
->>  Measuring transactions
->>  TX_C_TABORT_NO_SPECIAL: 0 expected:0
->>  TX_C_TABORT_SPECIAL: 0 expected:0
->>  TX_C_TEND: 1 expected:1
->>  TX_NC_TABORT: 11 expected:11
->>  TX_NC_TEND: 1 expected:1
->>
->>  Performance counter stats for '/root/mytests/cf-tx-events 1':
->>
->>                   1      tx_c_tend
->>
-> 
-> OK, now that's 1, like in your expected test value:
-> 
->   TX_C_TEND: 1 expected:1
-> 
->>       0.001815365 seconds time elapsed
->>
->>       0.000123000 seconds user
->>       0.001756000 seconds sys
->>
->>  [root@s35lp76 perf]#
->>
->> Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
->> Cc: Kan Liang <kan.liang@linux.intel.com>
->> Cc: <stable@vger.kernel.org> # 4.18+
->> ---
->>  tools/perf/util/pmu.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index 7799788f662f..7e49baad304d 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -773,7 +773,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
->>  
->>  		if (!is_arm_pmu_core(name)) {
->>  			pname = pe->pmu ? pe->pmu : "cpu";
->> -			if (strncmp(pname, name, strlen(pname)))
->> +			if (strcmp(pname, name))
->>  				continue;
->>  		}
->>  
->>
+> returns 0 when it should not. The device names of both PMUs are different.
 > 
 
+OK, that works then.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzende des Aufsichtsrats: Martina Koederitz 
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+You want to do a full-length comparison of PMU names, instead of comparing prefixes.
+
+Reviewed-by: Sebastien Boisvert <sboisvert@gydle.com>
