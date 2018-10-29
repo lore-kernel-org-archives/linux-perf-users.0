@@ -1,20 +1,24 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: [PATCH] perf util: take pgoff into account when reporting elf to
  libdwfl
-Date: Mon, 29 Oct 2018 15:56:40 +0100
-Message-ID: <20181029145640.GA9564@krava>
+Date: Mon, 29 Oct 2018 16:26:27 +0100
+Message-ID: <3361238.noN1Jb7VD2@milian-kdab2>
 References: <20181029141644.3907-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="nextPart3459085.tViC8COEIA";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <20181029141644.3907-1-milian.wolff@kdab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Milian Wolff <milian.wolff@kdab.com>
-Cc: acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jan Kratochvil <jan.kratochvil@redhat.com>
+Cc: acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Oct 29, 2018 at 03:16:44PM +0100, Milian Wolff wrote:
+--nextPart3459085.tViC8COEIA
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Monday, October 29, 2018 3:16:44 PM CET Milian Wolff wrote:
 > Libdwfl parses an ELF file itself and creates mappings for the
 > individual sections. Perf on the other hand sees raw mmap events which
 > represent individual sections. When we encounter an address pointing
@@ -22,188 +26,99 @@ On Mon, Oct 29, 2018 at 03:16:44PM +0100, Milian Wolff wrote:
 > report the file at the non-offset base address.
 > 
 > This fixes unwinding with libdwfl in some cases. E.g. for a file like:
-> 
-> ```
-> #include <cmath>
-> #include <complex>
-> #include <future>
-> #include <iostream>
-> #include <mutex>
-> #include <random>
-> #include <thread>
-> #include <vector>
-> 
-> using namespace std;
-> 
-> mutex g_mutex;
-> 
-> double worker()
-> {
->     lock_guard<mutex> guard(g_mutex);
->     uniform_real_distribution<double> uniform(-1E5, 1E5);
->     default_random_engine engine;
->     double s = 0;
->     for (int i = 0; i < 1000; ++i) {
->         s += norm(complex<double>(uniform(engine), uniform(engine)));
->     }
->     cout << s << endl;
->     return s;
-> }
-> 
-> int main()
-> {
->     vector<std::future<double>> results;
->     for (int i = 0; i < 10000; ++i) {
->         results.push_back(async(launch::async, worker));
->     }
->     return 0;
-> }
-> ```
-> 
-> Compile it with `g++ -g -O2`, then record it with
-> `perf record --call-graph dwarf -e sched:sched_switch`.
-> 
-> When you analyze it with `perf script` and libunwind, you should see:
-> 
-> ```
-> cpp-locking 20038 [005] 54830.236589: sched:sched_switch: prev_comm=cpp-locking prev_pid=20038 prev_prio=120 prev_state=T ==> next_comm=swapper/5 next_pid=0 next_prio=120
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1670208 schedule+0x28 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb16737cc rwsem_down_read_failed+0xec (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1665e04 call_rwsem_down_read_failed+0x14 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1672a03 down_read+0x13 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb106bd85 __do_page_fault+0x445 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb18015f5 page_fault+0x45 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->             7f38e4252591 new_heap+0x101 (/usr/lib/libc-2.28.so)
->             7f38e4252d0b arena_get2.part.4+0x2fb (/usr/lib/libc-2.28.so)
->             7f38e4255b1c tcache_init.part.6+0xec (/usr/lib/libc-2.28.so)
->             7f38e42569e5 __GI___libc_malloc+0x115 (inlined)
->             7f38e4241790 __GI__IO_file_doallocate+0x90 (inlined)
->             7f38e424fbbf __GI__IO_doallocbuf+0x4f (inlined)
->             7f38e424ee47 __GI__IO_file_overflow+0x197 (inlined)
->             7f38e424df36 _IO_new_file_xsputn+0x116 (inlined)
->             7f38e4242bfb __GI__IO_fwrite+0xdb (inlined)
->             7f38e463fa6d std::basic_streambuf<char, std::char_traits<char> >::sputn(char const*, long)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> >::_M_put(char const*, long)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> > std::__write<char>(std::ostreambuf_iterator<char, std::char_traits<char> >, char const*, int)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_float<double>(std::ostreambuf_iterator<c>
->             7f38e464bd70 std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, double) const+0x90 (inl>
->             7f38e464bd70 std::ostream& std::ostream::_M_insert<double>(double)+0x90 (/usr/lib/libstdc++.so.6.0.25)
->             563b9cb502f7 std::ostream::operator<<(double)+0xb7 (inlined)
->             563b9cb502f7 worker()+0xb7 (/ssd/milian/projects/kdab/rnd/hotspot/build/tests/test-clients/cpp-locking/cpp-locking)
->             563b9cb506fb double std::__invoke_impl<double, double (*)()>(std::__invoke_other, double (*&&)())+0x2b (inlined)
->             563b9cb506fb std::__invoke_result<double (*)()>::type std::__invoke<double (*)()>(double (*&&)())+0x2b (inlined)
->             563b9cb506fb decltype (__invoke((_S_declval<0ul>)())) std::thread::_Invoker<std::tuple<double (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)+0x2b (inlined)
->             563b9cb506fb std::thread::_Invoker<std::tuple<double (*)()> >::operator()()+0x2b (inlined)
->             563b9cb506fb std::__future_base::_Task_setter<std::unique_ptr<std::__future_base::_Result<double>, std::__future_base::_Result_base::_Deleter>, std::thread::_Invoker<std::tuple<double (*)()> >, dou>
->             563b9cb506fb std::_Function_handler<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> (), std::__future_base::_Task_setter<std::unique_ptr<std::__future_>
->             563b9cb507e8 std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>::operator()() const+0x28 (inlined)
->             563b9cb507e8 std::__future_base::_State_baseV2::_M_do_set(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*)+0x28 (/ssd/milian/>
->             7f38e46d24fe __pthread_once_slow+0xbe (/usr/lib/libpthread-2.28.so)
->             563b9cb51149 __gthread_once+0xe9 (inlined)
->             563b9cb51149 void std::call_once<void (std::__future_base::_State_baseV2::*)(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*)>
->             563b9cb51149 std::__future_base::_State_baseV2::_M_set_result(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>, bool)+0xe9 (inlined)
->             563b9cb51149 std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_impl(std::thread::_Invoker<std::tuple<double (*)()> >&&)::{lambda()#1}::op>
->             563b9cb51149 void std::__invoke_impl<void, std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_impl(std::thread::_Invoker<std::tuple<double>
->             563b9cb51149 std::__invoke_result<std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_impl(std::thread::_Invoker<std::tuple<double (*)()> >>
->             563b9cb51149 decltype (__invoke((_S_declval<0ul>)())) std::thread::_Invoker<std::tuple<std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_>
->             563b9cb51149 std::thread::_Invoker<std::tuple<std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_impl(std::thread::_Invoker<std::tuple<dou>
->             563b9cb51149 std::thread::_State_impl<std::thread::_Invoker<std::tuple<std::__future_base::_Async_state_impl<std::thread::_Invoker<std::tuple<double (*)()> >, double>::_Async_state_impl(std::thread>
->             7f38e45f0062 execute_native_thread_routine+0x12 (/usr/lib/libstdc++.so.6.0.25)
->             7f38e46caa9c start_thread+0xfc (/usr/lib/libpthread-2.28.so)
->             7f38e42ccb22 __GI___clone+0x42 (inlined)
-> ```
-> 
-> Before this patch, using libdwfl, you would see:
-> 
-> ```
-> cpp-locking 20038 [005] 54830.236589: sched:sched_switch: prev_comm=cpp-locking prev_pid=20038 prev_prio=120 prev_state=T ==> next_comm=swapper/5 next_pid=0 next_prio=120
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1670208 schedule+0x28 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb16737cc rwsem_down_read_failed+0xec (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1665e04 call_rwsem_down_read_failed+0x14 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1672a03 down_read+0x13 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb106bd85 __do_page_fault+0x445 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb18015f5 page_fault+0x45 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->             7f38e4252591 new_heap+0x101 (/usr/lib/libc-2.28.so)
->         a041161e77950c5c [unknown] ([unknown])
-> ```
-> 
-> With this patch applied, we get a bit further in unwinding:
-> 
-> ```
-> cpp-locking 20038 [005] 54830.236589: sched:sched_switch: prev_comm=cpp-locking prev_pid=20038 prev_prio=120 prev_state=T ==> next_comm=swapper/5 next_pid=0 next_prio=120
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb166fec5 __sched_text_start+0x545 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1670208 schedule+0x28 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb16737cc rwsem_down_read_failed+0xec (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1665e04 call_rwsem_down_read_failed+0x14 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb1672a03 down_read+0x13 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb106bd85 __do_page_fault+0x445 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->         ffffffffb18015f5 page_fault+0x45 (/lib/modules/4.14.78-1-lts/build/vmlinux)
->             7f38e4252591 new_heap+0x101 (/usr/lib/libc-2.28.so)
->             7f38e4252d0b arena_get2.part.4+0x2fb (/usr/lib/libc-2.28.so)
->             7f38e4255b1c tcache_init.part.6+0xec (/usr/lib/libc-2.28.so)
->             7f38e42569e5 __GI___libc_malloc+0x115 (inlined)
->             7f38e4241790 __GI__IO_file_doallocate+0x90 (inlined)
->             7f38e424fbbf __GI__IO_doallocbuf+0x4f (inlined)
->             7f38e424ee47 __GI__IO_file_overflow+0x197 (inlined)
->             7f38e424df36 _IO_new_file_xsputn+0x116 (inlined)
->             7f38e4242bfb __GI__IO_fwrite+0xdb (inlined)
->             7f38e463fa6d std::basic_streambuf<char, std::char_traits<char> >::sputn(char const*, long)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> >::_M_put(char const*, long)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> > std::__write<char>(std::ostreambuf_iterator<char, std::char_traits<char> >, char const*, int)+0x1cd (inlined)
->             7f38e463fa6d std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_float<double>(std::ostreambuf_iterator<c>
->             7f38e464bd70 std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, double) const+0x90 (inl>
->             7f38e464bd70 std::ostream& std::ostream::_M_insert<double>(double)+0x90 (/usr/lib/libstdc++.so.6.0.25)
->             563b9cb502f7 std::ostream::operator<<(double)+0xb7 (inlined)
->             563b9cb502f7 worker()+0xb7 (/ssd/milian/projects/kdab/rnd/hotspot/build/tests/test-clients/cpp-locking/cpp-locking)
->         6eab825c1ee3e4ff [unknown] ([unknown])
-> ```
-> 
+
+<snip>
+
 > Note that the backtrace is still stopping too early, when
 > compared to the nice results obtained via libunwind. It's
 > unclear so far what the reason for that is.
 
-looks good to me
+The remaining issue is due to a bug in elfutils:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+https://sourceware.org/ml/elfutils-devel/2018-q4/msg00089.html
 
-Cc-ing Jan, who helped putting this together and might have some ideas
-on what's still missing
+With both patches applied, libunwind and elfutils produce the same output for 
+the above scenario.
 
-thanks,
-jirka
+Cheers
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart3459085.tViC8COEIA
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-> 
-> Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/unwind-libdw.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> index 6f318b15950e..5eff9bfc5758 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -45,13 +45,13 @@ static int __report_module(struct addr_location *al, u64 ip,
->  		Dwarf_Addr s;
->  
->  		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
-> -		if (s != al->map->start)
-> +		if (s != al->map->start - al->map->pgoff)
->  			mod = 0;
->  	}
->  
->  	if (!mod)
->  		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
-> -				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start,
-> +				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start - al->map->pgoff,
->  				      false);
->  
->  	return mod && dwfl_addrmodule(ui->dwfl, ip) == mod ? 0 : -1;
-> -- 
-> 2.19.1
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDI5MTUyNjI3WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg24dX81ri03iNTgx+tKlI/+9oQB3c
+72G64lDcPqxuCv8wDQYJKoZIhvcNAQEBBQAEggEAGr8Ez4b+HObaynUpIqtsqoyHzCfr0mFTAKdf
+31MAGqpNdeY6WnwJ2mr6/gRd2fJrD8m25HeGxDLUeK+aa1sUX+CS+26HOAIk+XjQHkxMC5tB+Zkw
+UCfMXWHZxjyQj5nxtICscSMNppvYUWU9gMUaE1PHtLAlrSNYkbssqNgoOAPobYRy3iD+k+xhT6S3
+vgy4z+ia6ngCzw7qyIjEXNXrvr7/FBOf6ZV55hA+N/xWioGefrv//4K/3wwIzFzPVh25xcBOw2tM
+fxP2Hxm6v7Uc53+5nKQMgKEIPn6lmnKtV2JPk6jfh9+Af/4QGH77zXrvuQsn9kTpqxZF1Z/otP1f
+igAAAAAAAA==
+
+
+--nextPart3459085.tViC8COEIA--
