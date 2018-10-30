@@ -1,74 +1,182 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: [PATCH] perf util: take pgoff into account when reporting elf to
- libdwfl
-Date: Tue, 30 Oct 2018 21:36:39 +0100
-Message-ID: <2799419.aVeE0VMyCs@agathebauer>
-References: <20181029141644.3907-1-milian.wolff@kdab.com>
- <3361238.noN1Jb7VD2@milian-kdab2> <20181029174014.GG21857@kernel.org>
+Subject: Re: Broken dwarf unwinding - wrong stack pointer register value?
+Date: Tue, 30 Oct 2018 23:34:35 +0100
+Message-ID: <2122395.LD3O1NFKj8@agathebauer>
+References: <2335309.gnWok9HYb4@agathebauer> <2086866.px82jjA6i7@agathebauer>
+ <20181024144818.GF6218@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2299280.lfgxnSjn8h";
+Content-Type: multipart/signed; boundary="nextPart3302464.k7scMqzeI8";
  micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029174014.GG21857@kernel.org>
+In-Reply-To: <20181024144818.GF6218@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart2299280.lfgxnSjn8h
+--nextPart3302464.k7scMqzeI8
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Montag, 29. Oktober 2018 18:40:14 CET Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 29, 2018 at 04:26:27PM +0100, Milian Wolff escreveu:
-> > On Monday, October 29, 2018 3:16:44 PM CET Milian Wolff wrote:
-> > > Libdwfl parses an ELF file itself and creates mappings for the
-> > > individual sections. Perf on the other hand sees raw mmap events which
-> > > represent individual sections. When we encounter an address pointing
-> > > into a mapping with pgoff != 0, we must take that into account and
-> > > report the file at the non-offset base address.
-> > 
-> > > This fixes unwinding with libdwfl in some cases. E.g. for a file like:
-> > <snip>
-> > 
-> > > Note that the backtrace is still stopping too early, when
-> > > compared to the nice results obtained via libunwind. It's
-> > > unclear so far what the reason for that is.
-> > 
-> > The remaining issue is due to a bug in elfutils:
-> > 
-> > https://sourceware.org/ml/elfutils-devel/2018-q4/msg00089.html
-> > 
-> > With both patches applied, libunwind and elfutils produce the same output
-> > for the above scenario.
+On Mittwoch, 24. Oktober 2018 16:48:18 CET Andi Kleen wrote:
+> > Can someone at least confirm whether unwinding from a function prologue
+> > via
+> > .eh_frame (but without .debug_frame) should actually be possible?
 > 
-> I'm updating the patch to remove:
-> 
-> "It's unclear so far what the reason for that is."
-> 
-> Adding:
-> 
-> "See https://sourceware.org/ml/elfutils-devel/2018-q4/msg00089.html for
-> a patch fixing that."
-> 
-> Ok?
+> Yes it should be possible. Asynchronous unwind tables should work
+> from any instruction.
 
-Yes, thanks. I figured the fix for elfutils out after I submitted the perf 
-patch.
+I'm still trying to figure out what's going on here... I have remembered, that 
+libunwind has a quite helpful debug mode, which I further extended to generate 
+a more detailed report of the failed unwinding attempt. For one of the broken 
+samples, I see:
 
-> Or are you saying that that "unclear" part applies to both libunwind
-> and elfutils?
+```
+$ UNW_DEBUG_LEVEL=15 perf script -v
+...
+cpp-inlining 30227 18486.357148:     788066 cycles:ppp:  
+>_Ux86_64_init_remote: (cursor=0x7fffafa55c10)
+unwind: reg 16, val 7f91345d77b4
+unwind: reg 7, val 7ffd1e276f18
+ >_Ux86_64_step: (cursor=0x7fffafa55c10, ip=0x00007f91345d77b4, 
+cfa=0x00007ffd1e276f18)
+unwind: find_proc_info dso /usr/lib/libm-2.28.so
+               >_Ux86_64_dwarf_search_unwind_table: ip=0x7f91345d77b4, 
+start_ip=0xffffffffffeb3fbc
+ >_Ux86_64_dwarf_search_unwind_table: e->fde_offset = 4794, segbase = 
+7f91347236a4, debug_frame_base = 0, fde_addr = 7f9134727e38
+            >_Ux86_64_dwarf_extract_proc_info_from_fde: FDE @ 0x7f9134727e38
+               >_Ux86_64_dwarf_extract_proc_info_from_fde: looking for CIE at 
+address 7f91347252d8
+               >parse_cie: CIE parsed OK, augmentation = "zR", handler=0x0
+               >_Ux86_64_dwarf_extract_proc_info_from_fde: FDE covers IP 
+0x7f91345d7660-0x7f91345d79ce, LSDA=0x0
+     >_Ux86_64_fetch_frame: fetch frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
+format=0
+               >run_cfi_program: CFA_def_cfa r7+0x8
+               >run_cfi_program: CFA_offset r16 at cfa+0xfffffffffffffff8
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d7666
+               >run_cfi_program: CFA_def_cfa_offset 0x10
+               >run_cfi_program: CFA_offset r13 at cfa+0xfffffffffffffff0
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d7668
+               >run_cfi_program: CFA_def_cfa_offset 0x18
+               >run_cfi_program: CFA_offset r12 at cfa+0xffffffffffffffe8
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d7669
+               >run_cfi_program: CFA_def_cfa_offset 0x20
+               >run_cfi_program: CFA_offset r6 at cfa+0xffffffffffffffe0
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d766f
+               >run_cfi_program: CFA_def_cfa_offset 0x28
+               >run_cfi_program: CFA_offset r3 at cfa+0xffffffffffffffd8
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d768c
+               >run_cfi_program: CFA_def_cfa_offset 0x50
+               >run_cfi_program: CFA_advance_loc2 to 0x7f91345d77af
+               >run_cfi_program: CFA_remember_state
+               >run_cfi_program: CFA_def_cfa_offset 0x28
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d77b4
+               >run_cfi_program: CFA_def_cfa_offset 0x20
+               >run_cfi_program: CFA_advance_loc to 0x7f91345d77b5
+     >_Ux86_64_cache_frame: cache frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
+format=0
+     >_Ux86_64_reuse_frame: reuse frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
+format=0 addr=0x0 offset=+0
+               >apply_reg_state: CFA_REG_COLUMN[17] = 0x7, 
+DWARF_CFA_OFF_COLUMN[18] = 0x20
+               >apply_reg_state: CFA = 0x7ffd1e276f18 (pop) + 0x20 = 
+0x7ffd1e276f38
+               >apply_reg_state: 0: DWARF_WHERE_SAME = (0, 2)
+               >apply_reg_state: 1: DWARF_WHERE_SAME = (1, 2)
+               >apply_reg_state: 2: DWARF_WHERE_SAME = (2, 2)
+               >apply_reg_state: 3: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -40 = 
+(7ffd1e276f10, 0)
+               >apply_reg_state: 4: DWARF_WHERE_SAME = (4, 2)
+               >apply_reg_state: 5: DWARF_WHERE_SAME = (5, 2)
+               >apply_reg_state: 6: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -32 = 
+(7ffd1e276f18, 0)
+               >apply_reg_state: 7: DWARF_WHERE_SAME = (7, 2)
+               >apply_reg_state: 8: DWARF_WHERE_SAME = (8, 2)
+               >apply_reg_state: 9: DWARF_WHERE_SAME = (9, 2)
+               >apply_reg_state: 10: DWARF_WHERE_SAME = (a, 2)
+               >apply_reg_state: 11: DWARF_WHERE_SAME = (b, 2)
+               >apply_reg_state: 12: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -24 = 
+(7ffd1e276f20, 0)
+               >apply_reg_state: 13: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -16 = 
+(7ffd1e276f28, 0)
+               >apply_reg_state: 14: DWARF_WHERE_SAME = (e, 2)
+               >apply_reg_state: 15: DWARF_WHERE_SAME = (f, 2)
+               >apply_reg_state: 16: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -8 = 
+(7ffd1e276f30, 0)
+unwind: access_mem addr 0x7ffd1e276f30 val c0d885722245b5e4, offset 24
+               >apply_reg_state: ret_addr_column: 16, ip: c0d885722245b5e4
+               >_Ux86_64_step: dwarf_step returned 1
+  >_Ux86_64_step: returning 1
+ >_Ux86_64_step: (cursor=0x7fffafa55c10, ip=0xc0d885722245b5e4, 
+cfa=0x00007ffd1e276f38)
+               >_Ux86_64_step: dwarf_step returned -22
+  >_Ux86_64_step: returning -22
+unwind: __hypot_finite:ip = 0x7f91345d77b4 (0x297b4)
+unwind: '':ip = 0xc0d885722245b5e3 (0x0)
 
-No, libunwind worked fine without these patches for this specific case.
+            7f91345d77b4 __hypot_finite+0x154 (/usr/lib/libm-2.28.so)
+        c0d885722245b5e3 [unknown] ([unknown])
+```
 
-Cheers
+
+Now, I also tried the following:
+
+```
+$ perf probe -x /usr/lib/libm-2.28.so -a __hypot_finite+0x154
+$ perf record -F 1000 --call-graph dwarf -e probe_libm:__hypot_finite ./cpp-
+inlining
+```
+
+And all of the samples unwind correctly! This makes me believe that it's not 
+the .eh_frame information which is wrong - otherwise unwinding would always 
+fail from these locations, esp. when using the custom probe trace point. But 
+since this is not happening, what else could it be? I only see two 
+possibilities: the register values or the stack memory stored in in the sample 
+by perf.
+
+The register values is unlikely, since I now understand how the .eh_frame 
+contents get analyzed. For __hypot_finite+0x154, we will always end up asking 
+for the address at SP+24. access_mem thus will always look at the address at 
+offset 24, independent of the actual value of SP.
+
+So, what remains is that the stack dump is somehow wrong, i.e. its contents 
+are moved by some offset. Note how I can "fix" the unwinding for such broken 
+samples by manually applying some offset in access_mem. By looking at other 
+samples where unwinding works from __hypot_finite, I could figure out that the 
+correct address to be read for unwnding should be 7f91345bdaf8, e.g.:
+
+```
+            7f91345d76ed __hypot_finite+0x8d (/usr/lib/libm-2.28.so)
+            7f91345bdaf8 hypotf32x+0x18 (/usr/lib/libm-2.28.so)
+            5620579cb128 main+0x88 (/home/milian/projects/kdab/rnd/hotspot/
+build/tests/test-clients/cpp-inlining/cpp-inlining)
+```
+
+This address indeed occurs in the user stack dump (starting at 0xe0 in the raw 
+event data) for the broken sample, cf.:
+
+
+```
+.  00e0:  00 20 00 00 00 00 00 00 c0 b1 9c 57 20 56 00 00  . .........W V..
+.  00f0:  70 70 27 1e fd 7f 00 00 f9 da 5b 34 91 7f 00 00  pp'.......[4....
+.  0100:  e4 b5 45 22 72 85 d8 c0 c0 1d 16 84 43 30 bb c0  ..E"r.......C0..
+.
+```
+
+We can find `7f91345bdaf8+1 = 7f91345bdaf9" at offset 16 (search for "f9 da 5b 
+34 91 7f"). Using that address makes unwinding work for this sample. What 
+could be the reason for this shift?
+
+Thanks
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt, C++ and OpenGL Experts
---nextPart2299280.lfgxnSjn8h
+--nextPart3302464.k7scMqzeI8
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -129,18 +237,18 @@ ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
 3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
 LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
 y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
-cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+cukxggJsMIICaAIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDMwMjAzNjM5WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg1KgRULI7AxfTfBJlFDG5UuKrBE0R
-SpI9CzIoNq9jOxwwDQYJKoZIhvcNAQEBBQAEggEAOyGLzqvSlIaSVv6KHHOX+BAafR3T4fXt9F/N
-4cJ4aGY1KPSI+vd3WfOR10GyijN1OXdbVj18jTVC+Ek2wmHYbClS/cpXI50WPKrZ6z5sDBsaQxIp
-ZGcn3h8vKjfUMGV0ZwM8j38L3/iqrtF9/K8w5toyinah+c4SUa3MZygTMHRHoMWrDghKu3d/WVoD
-w9YHqODNKBuLbetAXbvPcX6Ub97WUEQDmL6msmSbKMzIAFRSJjz/3RDcHzUYGs7OI1gPZg7ZPrpt
-80V3YeHjkAI20apZeQxZ3OEZeH0/eak+d8/OnMh9p11pIgkRPpNThG/HFghmxnHUceUku8x1bqF2
-OQAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDMwMjIzNDM1WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgONQc6XwK11iiY16R7FH+SqQ0PGoT
+1JdwZ+s6aPDE7wYwDQYJKoZIhvcNAQEBBQAEgf98i3X3ES5IUL8eQcSFGrdYZNZic30OOV3abkPw
+YHOY+rXqHxLHqVoAt9YYhzdTMX7v7MoegbnRYmYHtzZSq0w0LDWEVc0fgTF1fpWUtcWv75SaQE43
+yD3zO0i0190U69GCvpJMKG4cmnSBf0WIohHDwsuQaolUVO+3PDO6H2ag270GO1sXsvBjB3HB9uNo
+4z1Ka2kFXDIDzMsyrpBqluwXlQIYOto589LK7qXynYz9+AVeh0DtxRT65jDVqhU2SFRwIp0enjTE
+YZpHVT1B3h6IhTpWMOjbfG/Crn2zy7SjT8uCo0S4DqU91wJz1t/u8XWpGIzZ8FezPzzyo1i6KBcA
+AAAAAAA=
 
 
---nextPart2299280.lfgxnSjn8h--
+--nextPart3302464.k7scMqzeI8--
