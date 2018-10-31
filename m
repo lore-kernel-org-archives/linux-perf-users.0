@@ -1,70 +1,48 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/28] tools arch uapi: Update asm-generic/unistd.h and arm64 unistd.h copies
-Date: Wed, 31 Oct 2018 13:44:56 -0300
-Message-ID: <20181031164508.4784-17-acme@kernel.org>
+Subject: [PATCH 17/28] tools include uapi: Update asound.h copy
+Date: Wed, 31 Oct 2018 13:44:57 -0300
+Message-ID: <20181031164508.4784-18-acme@kernel.org>
 References: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031164508.4784-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, Takashi Iwai <tiwai@suse.de>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+To silence this perf build warning:
 
-  82b355d161c9 ("y2038: Remove newstat family from default syscall set")
+  Warning: Kernel ABI header at 'tools/include/uapi/sound/asound.h' differs from latest version at 'include/uapi/sound/asound.h'
+  diff -u tools/include/uapi/sound/asound.h include/uapi/sound/asound.h
 
-Which will make the syscall table used by 'perf trace' for arm64 to be
-updated from the changes in that patch.
+Due to this cset:
 
-This silences these perf build warnings:
+  a98401518def ("ALSA: timer: fix wrong comment to refer to 'SNDRV_TIMER_PSFLG_*'")
 
-  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/unistd.h' differs from latest version at 'arch/arm64/include/uapi/asm/unistd.h'
-  diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
-  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
-  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
-
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-3euy7c4yy5mvnp5bm16t9vqg@git.kernel.org
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: Takashi Iwai <tiwai@suse.de>
+Link: https://lkml.kernel.org/n/tip-76gsvs0w2g0x723ivqa2xua3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm64/include/uapi/asm/unistd.h | 1 +
- tools/include/uapi/asm-generic/unistd.h    | 2 ++
- 2 files changed, 3 insertions(+)
+ tools/include/uapi/sound/asound.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
-index 5072cbd15c82..dae1584cf017 100644
---- a/tools/arch/arm64/include/uapi/asm/unistd.h
-+++ b/tools/arch/arm64/include/uapi/asm/unistd.h
-@@ -16,5 +16,6 @@
-  */
+diff --git a/tools/include/uapi/sound/asound.h b/tools/include/uapi/sound/asound.h
+index ed0a120d4f08..404d4b9ffe76 100644
+--- a/tools/include/uapi/sound/asound.h
++++ b/tools/include/uapi/sound/asound.h
+@@ -752,7 +752,7 @@ struct snd_timer_info {
+ #define SNDRV_TIMER_PSFLG_EARLY_EVENT	(1<<2)	/* write early event to the poll queue */
  
- #define __ARCH_WANT_RENAMEAT
-+#define __ARCH_WANT_NEW_STAT
- 
- #include <asm-generic/unistd.h>
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index df4bedb9b01c..538546edbfbd 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -242,10 +242,12 @@ __SYSCALL(__NR_tee, sys_tee)
- /* fs/stat.c */
- #define __NR_readlinkat 78
- __SYSCALL(__NR_readlinkat, sys_readlinkat)
-+#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
- #define __NR3264_fstatat 79
- __SC_3264(__NR3264_fstatat, sys_fstatat64, sys_newfstatat)
- #define __NR3264_fstat 80
- __SC_3264(__NR3264_fstat, sys_fstat64, sys_newfstat)
-+#endif
- 
- /* fs/sync.c */
- #define __NR_sync 81
+ struct snd_timer_params {
+-	unsigned int flags;		/* flags - SNDRV_MIXER_PSFLG_* */
++	unsigned int flags;		/* flags - SNDRV_TIMER_PSFLG_* */
+ 	unsigned int ticks;		/* requested resolution in ticks */
+ 	unsigned int queue_size;	/* total size of queue (32-1024) */
+ 	unsigned int reserved0;		/* reserved, was: failure locations */
 -- 
 2.14.4
