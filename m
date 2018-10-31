@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/28] perf beauty: Introduce strarray__scnprintf_flags()
-Date: Wed, 31 Oct 2018 13:44:44 -0300
-Message-ID: <20181031164508.4784-5-acme@kernel.org>
+Subject: [PATCH 07/28] perf trace: Consider syscall aliases too
+Date: Wed, 31 Oct 2018 13:44:47 -0300
+Message-ID: <20181031164508.4784-8-acme@kernel.org>
 References: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031164508.4784-1-acme@kernel.org>
@@ -12,8 +12,37 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Generalizing pkey_alloc__scnprintf_access_rights(), so that we can use
-it with other flags-like arguments, such as mount's mountflags argument.
+When trying to trace the 'umount' syscall on x86_64 I noticed that it
+was failing:
+
+  # trace -e umount umount /mnt
+  event syntax error: 'umount'
+                       \___ parser error
+  Run 'perf list' for a list of valid events
+
+   Usage: perf trace [<options>] [<command>]
+      or: perf trace [<options>] -- <command> [<options>]
+      or: perf trace record [<options>] [<command>]
+      or: perf trace record [<options>] -- <command> [<options>]
+
+      -e, --event <event>   event/syscall selector. use 'perf list' to list available events
+  #
+
+This is because in the x86-64 we have it just as 'umount2':
+
+  $ grep umount arch/x86/entry/syscalls/syscall_64.tbl
+  166	common	umount2			__x64_sys_umount
+  $
+
+So if the syscall name fails, try fallbacking to looking at the aliases
+we have in the syscall_fmts table to then re-lookup, now:
+
+  # trace -e umount umount -f /mnt
+  umount: /mnt: not mounted.
+     1.759 ( 0.004 ms): umount/18365 umount2(name: 0x55fbfcbc4480, flags: 1) = -1 EINVAL Invalid argument
+  #
+
+Time to beautify the flags arg :-)
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Benjamin Peterson <benjamin@python.org>
@@ -21,83 +50,63 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-o3ymi3104m8moaz9865g09w9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ukweodgzbmjd25lfkgryeft1@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/beauty.h     |  1 +
- tools/perf/trace/beauty/pkey_alloc.c | 27 ++++++++++++++++-----------
- 2 files changed, 17 insertions(+), 11 deletions(-)
+ tools/perf/builtin-trace.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 2570152d3909..a1806c4f3ccd 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -24,6 +24,7 @@ struct strarray {
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 76c14c0129fc..db8711061ca3 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -862,6 +862,18 @@ static struct syscall_fmt *syscall_fmt__find(const char *name)
+ 	return bsearch(name, syscall_fmts, nmemb, sizeof(struct syscall_fmt), syscall_fmt__cmp);
  }
  
- size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, int val);
-+size_t strarray__scnprintf_flags(struct strarray *sa, char *bf, size_t size, unsigned long flags);
- 
- struct trace;
- struct thread;
-diff --git a/tools/perf/trace/beauty/pkey_alloc.c b/tools/perf/trace/beauty/pkey_alloc.c
-index d3e5188a9bef..1b8ed4cac815 100644
---- a/tools/perf/trace/beauty/pkey_alloc.c
-+++ b/tools/perf/trace/beauty/pkey_alloc.c
-@@ -9,31 +9,28 @@
- #include <linux/kernel.h>
- #include <linux/log2.h>
- 
--static size_t pkey_alloc__scnprintf_access_rights(int access_rights, char *bf, size_t size)
-+size_t strarray__scnprintf_flags(struct strarray *sa, char *bf, size_t size, unsigned long flags)
- {
- 	int i, printed = 0;
- 
--#include "trace/beauty/generated/pkey_alloc_access_rights_array.c"
--	static DEFINE_STRARRAY(pkey_alloc_access_rights);
--
--	if (access_rights == 0) {
--		const char *s = strarray__pkey_alloc_access_rights.entries[0];
-+	if (flags == 0) {
-+		const char *s = sa->entries[0];
- 		if (s)
- 			return scnprintf(bf, size, "%s", s);
- 		return scnprintf(bf, size, "%d", 0);
- 	}
- 
--	for (i = 1; i < strarray__pkey_alloc_access_rights.nr_entries; ++i) {
--		int bit = 1 << (i - 1);
-+	for (i = 1; i < sa->nr_entries; ++i) {
-+		unsigned long bit = 1UL << (i - 1);
- 
--		if (!(access_rights & bit))
-+		if (!(flags & bit))
- 			continue;
- 
- 		if (printed != 0)
- 			printed += scnprintf(bf + printed, size - printed, "|");
- 
--		if (strarray__pkey_alloc_access_rights.entries[i] != NULL)
--			printed += scnprintf(bf + printed, size - printed, "%s", strarray__pkey_alloc_access_rights.entries[i]);
-+		if (sa->entries[i] != NULL)
-+			printed += scnprintf(bf + printed, size - printed, "%s", sa->entries[i]);
- 		else
- 			printed += scnprintf(bf + printed, size - printed, "0x%#", bit);
- 	}
-@@ -41,6 +38,14 @@ static size_t pkey_alloc__scnprintf_access_rights(int access_rights, char *bf, s
- 	return printed;
- }
- 
-+static size_t pkey_alloc__scnprintf_access_rights(int access_rights, char *bf, size_t size)
++static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
 +{
-+#include "trace/beauty/generated/pkey_alloc_access_rights_array.c"
-+	static DEFINE_STRARRAY(pkey_alloc_access_rights);
++	int i, nmemb = ARRAY_SIZE(syscall_fmts);
 +
-+	return strarray__scnprintf_flags(&strarray__pkey_alloc_access_rights, bf, size, access_rights);
++	for (i = 0; i < nmemb; ++i) {
++		if (syscall_fmts[i].alias && strcmp(syscall_fmts[i].alias, alias) == 0)
++			return &syscall_fmts[i];
++	}
++
++	return NULL;
 +}
 +
- size_t syscall_arg__scnprintf_pkey_alloc_access_rights(char *bf, size_t size, struct syscall_arg *arg)
- {
- 	unsigned long cmd = arg->val;
+ /*
+  * is_exit: is this "exit" or "exit_group"?
+  * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
+@@ -3195,6 +3207,7 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
+ 	int len = strlen(str) + 1, err = -1, list, idx;
+ 	char *strace_groups_dir = system_path(STRACE_GROUPS_DIR);
+ 	char group_name[PATH_MAX];
++	struct syscall_fmt *fmt;
+ 
+ 	if (strace_groups_dir == NULL)
+ 		return -1;
+@@ -3212,12 +3225,19 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
+ 		if (syscalltbl__id(trace->sctbl, s) >= 0 ||
+ 		    syscalltbl__strglobmatch_first(trace->sctbl, s, &idx) >= 0) {
+ 			list = 1;
++			goto do_concat;
++		}
++
++		fmt = syscall_fmt__find_by_alias(s);
++		if (fmt != NULL) {
++			list = 1;
++			s = fmt->name;
+ 		} else {
+ 			path__join(group_name, sizeof(group_name), strace_groups_dir, s);
+ 			if (access(group_name, R_OK) == 0)
+ 				list = 1;
+ 		}
+-
++do_concat:
+ 		if (lists[list]) {
+ 			sprintf(lists[list] + strlen(lists[list]), ",%s", s);
+ 		} else {
 -- 
 2.14.4
