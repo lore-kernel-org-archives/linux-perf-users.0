@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/28] perf intel-pt: Insert callchain context into synthesized callchains
-Date: Wed, 31 Oct 2018 13:45:07 -0300
-Message-ID: <20181031164508.4784-28-acme@kernel.org>
+Subject: [PATCH 28/28] perf intel-pt/bts: Calculate cpumode for synthesized samples
+Date: Wed, 31 Oct 2018 13:45:08 -0300
+Message-ID: <20181031164508.4784-29-acme@kernel.org>
 References: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031164508.4784-1-acme@kernel.org>
@@ -12,8 +12,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-In the absence of a fallback, callchains must encode also the callchain
-context. Do that now there is no fallback.
+In the absence of a fallback, samples must provide a correct cpumode for
+the 'ip'. Do that now there is no fallback.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -22,110 +22,113 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: stable@vger.kernel.org # 4.19
-Link: http://lkml.kernel.org/r/100ea2ec-ed14-b56d-d810-e0a6d2f4b069@intel.com
+Link: http://lkml.kernel.org/r/20181031091043.23465-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c     |  6 ++++--
- tools/perf/util/thread-stack.c | 44 +++++++++++++++++++++++++++++++++---------
- tools/perf/util/thread-stack.h |  2 +-
- 3 files changed, 40 insertions(+), 12 deletions(-)
+ tools/perf/util/intel-bts.c | 17 ++++++++++++-----
+ tools/perf/util/intel-pt.c  | 22 +++++++++++++---------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index ffa385a029b3..60732213d16a 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -759,7 +759,8 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
- 	if (pt->synth_opts.callchain) {
- 		size_t sz = sizeof(struct ip_callchain);
- 
--		sz += pt->synth_opts.callchain_sz * sizeof(u64);
-+		/* Add 1 to callchain_sz for callchain context */
-+		sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
- 		ptq->chain = zalloc(sz);
- 		if (!ptq->chain)
- 			goto out_free;
-@@ -1160,7 +1161,8 @@ static void intel_pt_prep_sample(struct intel_pt *pt,
- 
- 	if (pt->synth_opts.callchain) {
- 		thread_stack__sample(ptq->thread, ptq->chain,
--				     pt->synth_opts.callchain_sz, sample->ip);
-+				     pt->synth_opts.callchain_sz + 1,
-+				     sample->ip, pt->kernel_start);
- 		sample->callchain = ptq->chain;
- 	}
- 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index c091635bf7dc..61a4286a74dc 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -310,20 +310,46 @@ void thread_stack__free(struct thread *thread)
- 	}
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 3b3a3d55dca1..7b27d77306c2 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -269,6 +269,13 @@ static int intel_bts_do_fix_overlap(struct auxtrace_queue *queue,
+ 	return 0;
  }
  
-+static inline u64 callchain_context(u64 ip, u64 kernel_start)
++static inline u8 intel_bts_cpumode(struct intel_bts *bts, uint64_t ip)
 +{
-+	return ip < kernel_start ? PERF_CONTEXT_USER : PERF_CONTEXT_KERNEL;
++	return machine__kernel_ip(bts->machine, ip) ?
++	       PERF_RECORD_MISC_KERNEL :
++	       PERF_RECORD_MISC_USER;
 +}
 +
- void thread_stack__sample(struct thread *thread, struct ip_callchain *chain,
--			  size_t sz, u64 ip)
-+			  size_t sz, u64 ip, u64 kernel_start)
+ static int intel_bts_synth_branch_sample(struct intel_bts_queue *btsq,
+ 					 struct branch *branch)
  {
--	size_t i;
-+	u64 context = callchain_context(ip, kernel_start);
-+	u64 last_context;
-+	size_t i, j;
+@@ -281,12 +288,8 @@ static int intel_bts_synth_branch_sample(struct intel_bts_queue *btsq,
+ 	    bts->num_events++ <= bts->synth_opts.initial_skip)
+ 		return 0;
  
--	if (!thread || !thread->ts)
--		chain->nr = 1;
--	else
--		chain->nr = min(sz, thread->ts->cnt + 1);
-+	if (sz < 2) {
-+		chain->nr = 0;
-+		return;
-+	}
+-	event.sample.header.type = PERF_RECORD_SAMPLE;
+-	event.sample.header.misc = PERF_RECORD_MISC_USER;
+-	event.sample.header.size = sizeof(struct perf_event_header);
+-
+-	sample.cpumode = PERF_RECORD_MISC_USER;
+ 	sample.ip = le64_to_cpu(branch->from);
++	sample.cpumode = intel_bts_cpumode(bts, sample.ip);
+ 	sample.pid = btsq->pid;
+ 	sample.tid = btsq->tid;
+ 	sample.addr = le64_to_cpu(branch->to);
+@@ -298,6 +301,10 @@ static int intel_bts_synth_branch_sample(struct intel_bts_queue *btsq,
+ 	sample.insn_len = btsq->intel_pt_insn.length;
+ 	memcpy(sample.insn, btsq->intel_pt_insn.buf, INTEL_PT_INSN_BUF_SZ);
  
--	chain->ips[0] = ip;
-+	chain->ips[0] = context;
-+	chain->ips[1] = ip;
++	event.sample.header.type = PERF_RECORD_SAMPLE;
++	event.sample.header.misc = sample.cpumode;
++	event.sample.header.size = sizeof(struct perf_event_header);
 +
-+	if (!thread || !thread->ts) {
-+		chain->nr = 2;
-+		return;
-+	}
-+
-+	last_context = context;
-+
-+	for (i = 2, j = 1; i < sz && j <= thread->ts->cnt; i++, j++) {
-+		ip = thread->ts->stack[thread->ts->cnt - j].ret_addr;
-+		context = callchain_context(ip, kernel_start);
-+		if (context != last_context) {
-+			if (i >= sz - 1)
-+				break;
-+			chain->ips[i++] = context;
-+			last_context = context;
-+		}
-+		chain->ips[i] = ip;
-+	}
- 
--	for (i = 1; i < chain->nr; i++)
--		chain->ips[i] = thread->ts->stack[thread->ts->cnt - i].ret_addr;
-+	chain->nr = i;
+ 	if (bts->synth_opts.inject) {
+ 		event.sample.header.size = bts->branches_event_size;
+ 		ret = perf_event__synthesize_sample(&event,
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 60732213d16a..86cc9a64e982 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -407,6 +407,13 @@ intel_pt_cache_lookup(struct dso *dso, struct machine *machine, u64 offset)
+ 	return auxtrace_cache__lookup(dso->auxtrace_cache, offset);
  }
  
- struct call_return_processor *
-diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-index b7e41c4ebfdd..f97c00a8c251 100644
---- a/tools/perf/util/thread-stack.h
-+++ b/tools/perf/util/thread-stack.h
-@@ -84,7 +84,7 @@ int thread_stack__event(struct thread *thread, u32 flags, u64 from_ip,
- 			u64 to_ip, u16 insn_len, u64 trace_nr);
- void thread_stack__set_trace_nr(struct thread *thread, u64 trace_nr);
- void thread_stack__sample(struct thread *thread, struct ip_callchain *chain,
--			  size_t sz, u64 ip);
-+			  size_t sz, u64 ip, u64 kernel_start);
- int thread_stack__flush(struct thread *thread);
- void thread_stack__free(struct thread *thread);
- size_t thread_stack__depth(struct thread *thread);
++static inline u8 intel_pt_cpumode(struct intel_pt *pt, uint64_t ip)
++{
++	return ip >= pt->kernel_start ?
++	       PERF_RECORD_MISC_KERNEL :
++	       PERF_RECORD_MISC_USER;
++}
++
+ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 				   uint64_t *insn_cnt_ptr, uint64_t *ip,
+ 				   uint64_t to_ip, uint64_t max_insn_cnt,
+@@ -429,10 +436,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 	if (to_ip && *ip == to_ip)
+ 		goto out_no_cache;
+ 
+-	if (*ip >= ptq->pt->kernel_start)
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
++	cpumode = intel_pt_cpumode(ptq->pt, *ip);
+ 
+ 	thread = ptq->thread;
+ 	if (!thread) {
+@@ -1059,15 +1063,11 @@ static void intel_pt_prep_b_sample(struct intel_pt *pt,
+ 				   union perf_event *event,
+ 				   struct perf_sample *sample)
+ {
+-	event->sample.header.type = PERF_RECORD_SAMPLE;
+-	event->sample.header.misc = PERF_RECORD_MISC_USER;
+-	event->sample.header.size = sizeof(struct perf_event_header);
+-
+ 	if (!pt->timeless_decoding)
+ 		sample->time = tsc_to_perf_time(ptq->timestamp, &pt->tc);
+ 
+-	sample->cpumode = PERF_RECORD_MISC_USER;
+ 	sample->ip = ptq->state->from_ip;
++	sample->cpumode = intel_pt_cpumode(pt, sample->ip);
+ 	sample->pid = ptq->pid;
+ 	sample->tid = ptq->tid;
+ 	sample->addr = ptq->state->to_ip;
+@@ -1076,6 +1076,10 @@ static void intel_pt_prep_b_sample(struct intel_pt *pt,
+ 	sample->flags = ptq->flags;
+ 	sample->insn_len = ptq->insn_len;
+ 	memcpy(sample->insn, ptq->insn, INTEL_PT_INSN_BUF_SZ);
++
++	event->sample.header.type = PERF_RECORD_SAMPLE;
++	event->sample.header.misc = sample->cpumode;
++	event->sample.header.size = sizeof(struct perf_event_header);
+ }
+ 
+ static int intel_pt_inject_event(union perf_event *event,
 -- 
 2.14.4
