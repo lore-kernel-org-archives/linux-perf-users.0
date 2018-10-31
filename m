@@ -1,73 +1,70 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/28] tools include uapi: Update linux/fs.h copy
-Date: Wed, 31 Oct 2018 13:44:55 -0300
-Message-ID: <20181031164508.4784-16-acme@kernel.org>
+Subject: [PATCH 16/28] tools arch uapi: Update asm-generic/unistd.h and arm64 unistd.h copies
+Date: Wed, 31 Oct 2018 13:44:56 -0300
+Message-ID: <20181031164508.4784-17-acme@kernel.org>
 References: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031164508.4784-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, "Jason A . Donenfeld" <Jason@zx2c4.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To silence this perf build warning:
+To get the changes in:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
-  diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+  82b355d161c9 ("y2038: Remove newstat family from default syscall set")
 
-Due to just two comments added by:
+Which will make the syscall table used by 'perf trace' for arm64 to be
+updated from the changes in that patch.
 
-  Fixes: 578bdaabd015 ("crypto: speck - remove Speck")
+This silences these perf build warnings:
 
-So nothing that entails changes in tools/, that so far uses fs.h to
-generate the mount and umount syscalls 'flags' argument integer->string
-tables with:
+  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/unistd.h' differs from latest version at 'arch/arm64/include/uapi/asm/unistd.h'
+  diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
+  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
 
-  $ tools/perf/trace/beauty/mount_flags.sh
-  static const char *mount_flags[] = {
-	[4096 ? (ilog2(4096) + 1) : 0] = "BIND",
-<SNIP>
-	[30 + 1] = "ACTIVE",
-	[31 + 1] = "NOUSER",
-  };
-  $
-  # trace -e mount,umount mount --bind /proc /mnt
-     1.228 ( 2.581 ms): mount/1068 mount(dev_name: /mnt, dir_name: 0x55f011c354a0, type: 0x55f011c38170, flags: BIND) = 0
-  # trace -e mount,umount umount /proc /mnt
-  umount: /proc: target is busy.
-     1.587 ( 0.010 ms): umount/1070 umount2(name: /proc) = -1 EBUSY Device or resource busy
-     1.799 (12.660 ms): umount/1070 umount2(name: /mnt) = 0
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Link: https://lkml.kernel.org/n/tip-c00bqzclscgah26z2g5zxm73@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3euy7c4yy5mvnp5bm16t9vqg@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/arch/arm64/include/uapi/asm/unistd.h | 1 +
+ tools/include/uapi/asm-generic/unistd.h    | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/tools/include/uapi/linux/fs.h b/tools/include/uapi/linux/fs.h
-index 73e01918f996..a441ea1bfe6d 100644
---- a/tools/include/uapi/linux/fs.h
-+++ b/tools/include/uapi/linux/fs.h
-@@ -279,8 +279,8 @@ struct fsxattr {
- #define FS_ENCRYPTION_MODE_AES_256_CTS		4
- #define FS_ENCRYPTION_MODE_AES_128_CBC		5
- #define FS_ENCRYPTION_MODE_AES_128_CTS		6
--#define FS_ENCRYPTION_MODE_SPECK128_256_XTS	7
--#define FS_ENCRYPTION_MODE_SPECK128_256_CTS	8
-+#define FS_ENCRYPTION_MODE_SPECK128_256_XTS	7 /* Removed, do not use. */
-+#define FS_ENCRYPTION_MODE_SPECK128_256_CTS	8 /* Removed, do not use. */
+diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
+index 5072cbd15c82..dae1584cf017 100644
+--- a/tools/arch/arm64/include/uapi/asm/unistd.h
++++ b/tools/arch/arm64/include/uapi/asm/unistd.h
+@@ -16,5 +16,6 @@
+  */
  
- struct fscrypt_policy {
- 	__u8 version;
+ #define __ARCH_WANT_RENAMEAT
++#define __ARCH_WANT_NEW_STAT
+ 
+ #include <asm-generic/unistd.h>
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index df4bedb9b01c..538546edbfbd 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -242,10 +242,12 @@ __SYSCALL(__NR_tee, sys_tee)
+ /* fs/stat.c */
+ #define __NR_readlinkat 78
+ __SYSCALL(__NR_readlinkat, sys_readlinkat)
++#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+ #define __NR3264_fstatat 79
+ __SC_3264(__NR3264_fstatat, sys_fstatat64, sys_newfstatat)
+ #define __NR3264_fstat 80
+ __SC_3264(__NR3264_fstat, sys_fstat64, sys_newfstat)
++#endif
+ 
+ /* fs/sync.c */
+ #define __NR_sync 81
 -- 
 2.14.4
