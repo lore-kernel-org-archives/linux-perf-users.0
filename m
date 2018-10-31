@@ -1,97 +1,150 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/28] perf top: Do not use overwrite mode by default
-Date: Wed, 31 Oct 2018 13:44:51 -0300
-Message-ID: <20181031164508.4784-12-acme@kernel.org>
+Subject: [PATCH 13/28] perf cs-etm: Correct CPU mode for samples
+Date: Wed, 31 Oct 2018 13:44:53 -0300
+Message-ID: <20181031164508.4784-14-acme@kernel.org>
 References: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031164508.4784-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Miller <davem@davemloft.net>, Jiri Olsa <jolsa@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, stable@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-Enabling --overwrite mode allows us to to use just the most recent
-records, which helps in high core count machines such as Knights
-Landing/Mill, but right now is being disabled by default as the pausing
-used in this technique is leading to loss of metadata events such as
-PERF_RECORD_MMAP which makes 'perf top' unable to resolve samples,
-leading to lots of unknown samples appearing on the UI.
+Since commit edeb0c90df35 ("perf tools: Stop fallbacking to kallsyms for
+vdso symbols lookup"), the kernel address cannot be properly parsed to
+kernel symbol with command 'perf script -k vmlinux'.  The reason is
+CoreSight samples is always to set CPU mode as PERF_RECORD_MISC_USER,
+thus it fails to find corresponding map/dso in below flows:
 
-Enabling this may be useful if you are in such machines and profiling a
-workload that doesn't creates short lived threads and/or doesn't uses
-many executable mmap operations.
+  process_sample_event()
+    `-> machine__resolve()
+	  `-> thread__find_map(thread, sample->cpumode, sample->ip, al);
 
-Work is being planed to solve this situation, till then, this will
-remain disabled by default.
+In this flow it needs to pass argument 'sample->cpumode' to tell what's
+the CPU mode, before it always passed PERF_RECORD_MISC_USER but without
+any failure until the commit edeb0c90df35 ("perf tools: Stop fallbacking
+to kallsyms for vdso symbols lookup") has been merged.  The reason is
+even with the wrong CPU mode the function thread__find_map() firstly
+fails to find map but it will rollback to find kernel map for vdso
+symbols lookup.  In the latest code it has removed the fallback code,
+thus if CPU mode is PERF_RECORD_MISC_USER then it cannot find map
+anymore with kernel address.
 
-Reported-by: David Miller <davem@davemloft.net>
-Acked-by: Kan Liang <kan.liang@intel.com>
-Link: https://lkml.kernel.org/r/4f84468f-37d9-cf1b-12c1-514ef74b6a48@linux.intel.com
+This patch is to correct samples CPU mode setting, it creates a new
+helper function cs_etm__cpu_mode() to tell what's the CPU mode based on
+the address with the info from machine structure; this patch has a bit
+extension to check not only kernel and user mode, but also check for
+host/guest and hypervisor mode.  Finally this patch uses the function in
+instruction and branch samples and also apply in cs_etm__mem_access()
+for a minor polishing.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Miller <davem@davemloft.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: ebebbf082357 ("perf top: Switch default mode to overwrite mode")
-Link: https://lkml.kernel.org/n/tip-ehvf77vi1si9409r7p4wx788@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: stable@kernel.org # v4.19
+Link: http://lkml.kernel.org/r/1540883908-17018-1-git-send-email-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-top.txt | 11 ++++++++---
- tools/perf/builtin-top.c              | 11 +++++++++--
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ tools/perf/util/cs-etm.c | 39 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index d4be6061fe1c..808b664343c9 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -243,9 +243,14 @@ Default is to monitor all CPUS.
- 	Enable hierarchy output.
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 3b37d66dc533..73430b73570d 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -244,6 +244,27 @@ static void cs_etm__free(struct perf_session *session)
+ 	zfree(&aux);
+ }
  
- --overwrite::
--	This is the default, but for investigating problems with it or any other strange
--	behaviour like lots of unknown samples, we may want to disable this mode by using
--	--no-overwrite.
-+	Enable this to use just the most recent records, which helps in high core count
-+	machines such as Knights Landing/Mill, but right now is disabled by default as
-+	the pausing used in this technique is leading to loss of metadata events such
-+	as PERF_RECORD_MMAP which makes 'perf top' unable to resolve samples, leading
-+	to lots of unknown samples appearing on the UI. Enable this if you are in such
-+	machines and profiling a workload that doesn't creates short lived threads and/or
-+	doesn't uses many executable mmap operations. Work is being planed to solve
-+	this situation, till then, this will remain disabled by default.
++static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
++{
++	struct machine *machine;
++
++	machine = etmq->etm->machine;
++
++	if (address >= etmq->etm->kernel_start) {
++		if (machine__is_host(machine))
++			return PERF_RECORD_MISC_KERNEL;
++		else
++			return PERF_RECORD_MISC_GUEST_KERNEL;
++	} else {
++		if (machine__is_host(machine))
++			return PERF_RECORD_MISC_USER;
++		else if (perf_guest)
++			return PERF_RECORD_MISC_GUEST_USER;
++		else
++			return PERF_RECORD_MISC_HYPERVISOR;
++	}
++}
++
+ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 			      size_t size, u8 *buffer)
+ {
+@@ -258,10 +279,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 		return -1;
  
- --force::
- 	Don't do ownership validation.
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 214fad747b04..8e29e0cc8626 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1257,7 +1257,14 @@ int cmd_top(int argc, const char **argv)
- 				.uses_mmap   = true,
- 			},
- 			.proc_map_timeout    = 500,
--			.overwrite	= 1,
-+			/*
-+			 * FIXME: This will lose PERF_RECORD_MMAP and other metadata
-+			 * when we pause, fix that and reenable. Probably using a
-+			 * separate evlist with a dummy event, i.e. a non-overwrite
-+			 * ring buffer just for metadata events, while PERF_RECORD_SAMPLE
-+			 * stays in overwrite mode. -acme
-+			 * */
-+			.overwrite	= 0,
- 		},
- 		.max_stack	     = sysctl__max_stack(),
- 		.annotation_opts     = annotation__default_options,
-@@ -1373,7 +1380,7 @@ int cmd_top(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
- 		    "Show entries in a hierarchy"),
- 	OPT_BOOLEAN(0, "overwrite", &top.record_opts.overwrite,
--		    "Use a backward ring buffer, default: yes"),
-+		    "Use a backward ring buffer, default: no"),
- 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
- 			"number of thread to run event synthesize"),
+ 	machine = etmq->etm->machine;
+-	if (address >= etmq->etm->kernel_start)
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
++	cpumode = cs_etm__cpu_mode(etmq, address);
+ 
+ 	thread = etmq->thread;
+ 	if (!thread) {
+@@ -653,7 +671,7 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 	struct perf_sample sample = {.ip = 0,};
+ 
+ 	event->sample.header.type = PERF_RECORD_SAMPLE;
+-	event->sample.header.misc = PERF_RECORD_MISC_USER;
++	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr);
+ 	event->sample.header.size = sizeof(struct perf_event_header);
+ 
+ 	sample.ip = addr;
+@@ -665,7 +683,7 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 	sample.cpu = etmq->packet->cpu;
+ 	sample.flags = 0;
+ 	sample.insn_len = 1;
+-	sample.cpumode = event->header.misc;
++	sample.cpumode = event->sample.header.misc;
+ 
+ 	if (etm->synth_opts.last_branch) {
+ 		cs_etm__copy_last_branch_rb(etmq);
+@@ -706,12 +724,15 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq)
+ 		u64			nr;
+ 		struct branch_entry	entries;
+ 	} dummy_bs;
++	u64 ip;
++
++	ip = cs_etm__last_executed_instr(etmq->prev_packet);
+ 
+ 	event->sample.header.type = PERF_RECORD_SAMPLE;
+-	event->sample.header.misc = PERF_RECORD_MISC_USER;
++	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip);
+ 	event->sample.header.size = sizeof(struct perf_event_header);
+ 
+-	sample.ip = cs_etm__last_executed_instr(etmq->prev_packet);
++	sample.ip = ip;
+ 	sample.pid = etmq->pid;
+ 	sample.tid = etmq->tid;
+ 	sample.addr = cs_etm__first_executed_instr(etmq->packet);
+@@ -720,7 +741,7 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq)
+ 	sample.period = 1;
+ 	sample.cpu = etmq->packet->cpu;
+ 	sample.flags = 0;
+-	sample.cpumode = PERF_RECORD_MISC_USER;
++	sample.cpumode = event->sample.header.misc;
+ 
+ 	/*
+ 	 * perf report cannot handle events without a branch stack
 -- 
 2.14.4
