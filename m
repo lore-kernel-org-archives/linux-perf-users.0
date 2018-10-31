@@ -1,254 +1,468 @@
-From: Milian Wolff <milian.wolff@kdab.com>
-Subject: Re: Broken dwarf unwinding - wrong stack pointer register value?
-Date: Tue, 30 Oct 2018 23:34:35 +0100
-Message-ID: <2122395.LD3O1NFKj8@agathebauer>
-References: <2335309.gnWok9HYb4@agathebauer> <2086866.px82jjA6i7@agathebauer>
- <20181024144818.GF6218@tassilo.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3302464.k7scMqzeI8";
- micalg="sha256"; protocol="application/pkcs7-signature"
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL 00/24] perf/urgent improvements and fixes
+Date: Wed, 31 Oct 2018 13:44:40 -0300
+Message-ID: <20181031164508.4784-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024144818.GF6218@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Anshuman Khandual <anshuman.khandual@arm.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Peterson <benjamin@python.org>, coresight@lists.linaro.org, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Don Zickus <dzickus@redhat.com>, Eric Leblond <eric@regit.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Herbert Xu <herbert@gondor.apana.org.au>, "Jason A . Donenfeld" <Jason@zx2c4>
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart3302464.k7scMqzeI8
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Ingo,
 
-On Mittwoch, 24. Oktober 2018 16:48:18 CET Andi Kleen wrote:
-> > Can someone at least confirm whether unwinding from a function prologue
-> > via
-> > .eh_frame (but without .debug_frame) should actually be possible?
-> 
-> Yes it should be possible. Asynchronous unwind tables should work
-> from any instruction.
+	Please consider pulling, next ones should be concentrating just
+on bug fixes, been busy with some, so some were left in the queue,
+flushing them now.
 
-I'm still trying to figure out what's going on here... I have remembered, that 
-libunwind has a quite helpful debug mode, which I further extended to generate 
-a more detailed report of the failed unwinding attempt. For one of the broken 
-samples, I see:
+- Arnaldo
 
-```
-$ UNW_DEBUG_LEVEL=15 perf script -v
-...
-cpp-inlining 30227 18486.357148:     788066 cycles:ppp:  
->_Ux86_64_init_remote: (cursor=0x7fffafa55c10)
-unwind: reg 16, val 7f91345d77b4
-unwind: reg 7, val 7ffd1e276f18
- >_Ux86_64_step: (cursor=0x7fffafa55c10, ip=0x00007f91345d77b4, 
-cfa=0x00007ffd1e276f18)
-unwind: find_proc_info dso /usr/lib/libm-2.28.so
-               >_Ux86_64_dwarf_search_unwind_table: ip=0x7f91345d77b4, 
-start_ip=0xffffffffffeb3fbc
- >_Ux86_64_dwarf_search_unwind_table: e->fde_offset = 4794, segbase = 
-7f91347236a4, debug_frame_base = 0, fde_addr = 7f9134727e38
-            >_Ux86_64_dwarf_extract_proc_info_from_fde: FDE @ 0x7f9134727e38
-               >_Ux86_64_dwarf_extract_proc_info_from_fde: looking for CIE at 
-address 7f91347252d8
-               >parse_cie: CIE parsed OK, augmentation = "zR", handler=0x0
-               >_Ux86_64_dwarf_extract_proc_info_from_fde: FDE covers IP 
-0x7f91345d7660-0x7f91345d79ce, LSDA=0x0
-     >_Ux86_64_fetch_frame: fetch frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
-format=0
-               >run_cfi_program: CFA_def_cfa r7+0x8
-               >run_cfi_program: CFA_offset r16 at cfa+0xfffffffffffffff8
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d7666
-               >run_cfi_program: CFA_def_cfa_offset 0x10
-               >run_cfi_program: CFA_offset r13 at cfa+0xfffffffffffffff0
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d7668
-               >run_cfi_program: CFA_def_cfa_offset 0x18
-               >run_cfi_program: CFA_offset r12 at cfa+0xffffffffffffffe8
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d7669
-               >run_cfi_program: CFA_def_cfa_offset 0x20
-               >run_cfi_program: CFA_offset r6 at cfa+0xffffffffffffffe0
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d766f
-               >run_cfi_program: CFA_def_cfa_offset 0x28
-               >run_cfi_program: CFA_offset r3 at cfa+0xffffffffffffffd8
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d768c
-               >run_cfi_program: CFA_def_cfa_offset 0x50
-               >run_cfi_program: CFA_advance_loc2 to 0x7f91345d77af
-               >run_cfi_program: CFA_remember_state
-               >run_cfi_program: CFA_def_cfa_offset 0x28
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d77b4
-               >run_cfi_program: CFA_def_cfa_offset 0x20
-               >run_cfi_program: CFA_advance_loc to 0x7f91345d77b5
-     >_Ux86_64_cache_frame: cache frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
-format=0
-     >_Ux86_64_reuse_frame: reuse frame ip=0x7f91345d77b4 cfa=0x7ffd1e276f18 
-format=0 addr=0x0 offset=+0
-               >apply_reg_state: CFA_REG_COLUMN[17] = 0x7, 
-DWARF_CFA_OFF_COLUMN[18] = 0x20
-               >apply_reg_state: CFA = 0x7ffd1e276f18 (pop) + 0x20 = 
-0x7ffd1e276f38
-               >apply_reg_state: 0: DWARF_WHERE_SAME = (0, 2)
-               >apply_reg_state: 1: DWARF_WHERE_SAME = (1, 2)
-               >apply_reg_state: 2: DWARF_WHERE_SAME = (2, 2)
-               >apply_reg_state: 3: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -40 = 
-(7ffd1e276f10, 0)
-               >apply_reg_state: 4: DWARF_WHERE_SAME = (4, 2)
-               >apply_reg_state: 5: DWARF_WHERE_SAME = (5, 2)
-               >apply_reg_state: 6: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -32 = 
-(7ffd1e276f18, 0)
-               >apply_reg_state: 7: DWARF_WHERE_SAME = (7, 2)
-               >apply_reg_state: 8: DWARF_WHERE_SAME = (8, 2)
-               >apply_reg_state: 9: DWARF_WHERE_SAME = (9, 2)
-               >apply_reg_state: 10: DWARF_WHERE_SAME = (a, 2)
-               >apply_reg_state: 11: DWARF_WHERE_SAME = (b, 2)
-               >apply_reg_state: 12: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -24 = 
-(7ffd1e276f20, 0)
-               >apply_reg_state: 13: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -16 = 
-(7ffd1e276f28, 0)
-               >apply_reg_state: 14: DWARF_WHERE_SAME = (e, 2)
-               >apply_reg_state: 15: DWARF_WHERE_SAME = (f, 2)
-               >apply_reg_state: 16: DWARF_WHERE_CFAREL = 7ffd1e276f38 + -8 = 
-(7ffd1e276f30, 0)
-unwind: access_mem addr 0x7ffd1e276f30 val c0d885722245b5e4, offset 24
-               >apply_reg_state: ret_addr_column: 16, ip: c0d885722245b5e4
-               >_Ux86_64_step: dwarf_step returned 1
-  >_Ux86_64_step: returning 1
- >_Ux86_64_step: (cursor=0x7fffafa55c10, ip=0xc0d885722245b5e4, 
-cfa=0x00007ffd1e276f38)
-               >_Ux86_64_step: dwarf_step returned -22
-  >_Ux86_64_step: returning -22
-unwind: __hypot_finite:ip = 0x7f91345d77b4 (0x297b4)
-unwind: '':ip = 0xc0d885722245b5e3 (0x0)
+Test results at the end of this message, as usual.
 
-            7f91345d77b4 __hypot_finite+0x154 (/usr/lib/libm-2.28.so)
-        c0d885722245b5e3 [unknown] ([unknown])
-```
+The following changes since commit 28fa741c27e6d57f6bf594ba3c444ce79e671e09:
 
+  perf/core: Clean up inconsisent indentation (2018-10-30 09:51:58 +0100)
 
-Now, I also tried the following:
+are available in the Git repository at:
 
-```
-$ perf probe -x /usr/lib/libm-2.28.so -a __hypot_finite+0x154
-$ perf record -F 1000 --call-graph dwarf -e probe_libm:__hypot_finite ./cpp-
-inlining
-```
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.20-20181031
 
-And all of the samples unwind correctly! This makes me believe that it's not 
-the .eh_frame information which is wrong - otherwise unwinding would always 
-fail from these locations, esp. when using the custom probe trace point. But 
-since this is not happening, what else could it be? I only see two 
-possibilities: the register values or the stack memory stored in in the sample 
-by perf.
+for you to fetch changes up to 5d4f0edaa3ac4f1844ed7c64cd2bae6f1912bac5:
 
-The register values is unlikely, since I now understand how the .eh_frame 
-contents get analyzed. For __hypot_finite+0x154, we will always end up asking 
-for the address at SP+24. access_mem thus will always look at the address at 
-offset 24, independent of the actual value of SP.
+  perf intel-pt/bts: Calculate cpumode for synthesized samples (2018-10-31 12:56:26 -0300)
 
-So, what remains is that the stack dump is somehow wrong, i.e. its contents 
-are moved by some offset. Note how I can "fix" the unwinding for such broken 
-samples by manually applying some offset in access_mem. By looking at other 
-samples where unwinding works from __hypot_finite, I could figure out that the 
-correct address to be read for unwnding should be 7f91345bdaf8, e.g.:
+----------------------------------------------------------------
+perf/urgent improvements and fixes:
 
-```
-            7f91345d76ed __hypot_finite+0x8d (/usr/lib/libm-2.28.so)
-            7f91345bdaf8 hypotf32x+0x18 (/usr/lib/libm-2.28.so)
-            5620579cb128 main+0x88 (/home/milian/projects/kdab/rnd/hotspot/
-build/tests/test-clients/cpp-inlining/cpp-inlining)
-```
+- Fixes dealing with the removal of the fallback to looking up samples
+  marked as userspace in the kernel maps, done recently:
 
-This address indeed occurs in the user stack dump (starting at 0xe0 in the raw 
-event data) for the broken sample, cf.:
+  - For intel-pt, that was setting the synthesized header misc field
+    as PERF_RECORD_MISC_USER, depending thus on the fallback to take
+    place, now it sets as USER or KERNEL according to x86 specific
+    knowledge. Also now it inserts the PERF_CONTEXT_{USER,KERNEL} into
+    the PERF_SAMPLE_CALLCHAINs it synthesizes from hw traces (Adrian Hunter)
 
+  - Similar fixes for the cs-etm ARM HW trace code, that used the Intel PT
+    model as a starting point (Leo Yan)
 
-```
-.  00e0:  00 20 00 00 00 00 00 00 c0 b1 9c 57 20 56 00 00  . .........W V..
-.  00f0:  70 70 27 1e fd 7f 00 00 f9 da 5b 34 91 7f 00 00  pp'.......[4....
-.  0100:  e4 b5 45 22 72 85 d8 c0 c0 1d 16 84 43 30 bb c0  ..E"r.......C0..
-.
-```
+  - For the "caller" callchain order, where the callchain returned by the
+    kernel was simply reversed without taking into account the
+    PERF_CONTEXT_{USER,KERNEL,etc} markers from where to define if an entry
+    was for kernel or userspace, working just because the map lookup fallback
+    was in place (David S. Miller)
 
-We can find `7f91345bdaf8+1 = 7f91345bdaf9" at offset 16 (search for "f9 da 5b 
-34 91 7f"). Using that address makes unwinding work for this sample. What 
-could be the reason for this shift?
+- Allow for selecting if 'overwrite' mode should be used in 'perf top' and
+  make the default for it not to be used. This is due to problems with the
+  current implementation where the pausing used ends up making 'perf top'
+  miss PERF_RECORD_{MMAP,FORK,EXEC,etc} events, which with short lifetime
+  threads workloads leads quickly to many "unknown" maps (and thus symbols)
+  to appear in the UI. Workloads with long thread lifetimes and with few
+  metadata events can still use --overwrite to take advantage of the
+  overwrite mode (Arnaldo Carvalho de Melo)
 
-Thanks
+- Start 'perf top''s display thread earlier, so that the screen doesn't
+  remain blank for too long at tool start (David S. Miller)
 
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
---nextPart3302464.k7scMqzeI8
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+- Don't clone maps from parent when synthesizing forks, to avoid the inevitable
+  flurry of overlapping maps as we process the synthesized MMAP2 events that get
+  delivered shortly thereafter. (David S. Miller)
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
-ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
-IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
-QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
-ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
-YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
-gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
-/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
-RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
-8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
-fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
-Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
-QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
-dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
-Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
-BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
-AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
-lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
-bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
-XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
-SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
-dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
-4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
-1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
-OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
-bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
-OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
-IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
-A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
-BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
-bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
-BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
-bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
-b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
-lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
-G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
-iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
-pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
-AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
-6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
-ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
-68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
-3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
-LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
-y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
-cukxggJsMIICaAIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
-c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
-BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
-EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMDMwMjIzNDM1WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgONQc6XwK11iiY16R7FH+SqQ0PGoT
-1JdwZ+s6aPDE7wYwDQYJKoZIhvcNAQEBBQAEgf98i3X3ES5IUL8eQcSFGrdYZNZic30OOV3abkPw
-YHOY+rXqHxLHqVoAt9YYhzdTMX7v7MoegbnRYmYHtzZSq0w0LDWEVc0fgTF1fpWUtcWv75SaQE43
-yD3zO0i0190U69GCvpJMKG4cmnSBf0WIohHDwsuQaolUVO+3PDO6H2ag270GO1sXsvBjB3HB9uNo
-4z1Ka2kFXDIDzMsyrpBqluwXlQIYOto589LK7qXynYz9+AVeh0DtxRT65jDVqhU2SFRwIp0enjTE
-YZpHVT1B3h6IhTpWMOjbfG/Crn2zy7SjT8uCo0S4DqU91wJz1t/u8XWpGIzZ8FezPzzyo1i6KBcA
-AAAAAAA=
+- Take pgoff into account when reporting elf to libdwfl, now the unwinding
+  results are the same with elfutils's libdwfl and libunwind (Milian Wolff)
 
+- Update lotsa kernel ABI headers (Arnaldo Carvalho de Melo)
 
---nextPart3302464.k7scMqzeI8--
+- 'perf trace' syscall arg beautification improvements to allow for
+  handling args such as mount's 'flags', where maks have to be ignored
+  before considering what is left, that, if only zeroes, is suppressed
+  like other args without such masks (Arnaldo Carvalho de Melo)
+
+- Beautify mount's 'source' and 'flags' args (Arnaldo Carvalho de Melo)
+
+- Generate mmap's flags bit constants from linux/mman.h and all the
+  arch specific mman.h files, so that no changes in the main 'perf trace'
+  source files is required when new flags get added (Arnaldo Carvalho de Melo)
+
+- Consider syscall aliases, so that 'perf trace -e umount' works and we don't
+  have to use 'umount2' (that works as well, just not required) (Arnaldo Carvalho de Melo)
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Adrian Hunter (2):
+      perf intel-pt: Insert callchain context into synthesized callchains
+      perf intel-pt/bts: Calculate cpumode for synthesized samples
+
+Arnaldo Carvalho de Melo (21):
+      tools include uapi: Grab a copy of linux/fs.h
+      perf beauty: Add a generator for MS_ mount/umount's flag constants
+      perf beauty: Switch from GPL v2.0 to LGPL v2.1
+      perf beauty: Introduce strarray__scnprintf_flags()
+      perf trace beauty: Allow syscalls to mask an argument before considering it
+      perf trace beauty: Beautify mount/umount's 'flags' argument
+      perf trace: Consider syscall aliases too
+      perf trace: Beautify the umount's 'name' argument
+      perf trace: Beautify mount's first pathname arg
+      perf top: Allow disabling the overwrite mode
+      perf top: Do not use overwrite mode by default
+      tools include uapi: Update linux/fs.h copy
+      tools arch uapi: Update asm-generic/unistd.h and arm64 unistd.h copies
+      tools include uapi: Update asound.h copy
+      perf beauty: Add a generator for MAP_ mmap's flag constants
+      perf beauty: Wire up the mmap flags table generator to the Makefile
+      perf trace beauty: Use the mmap flags table generated from headers
+      tools include uapi: Update linux/mmap.h copy
+      tools headers: Sync the various kvm.h header copies
+      tools headers uapi: Update linux/netlink.h header copy
+      tools headers uapi: Update linux/if_link.h header copy
+
+David Miller (2):
+      perf top: Start display thread earlier
+      perf tools: Don't clone maps from parent when synthesizing forks
+
+David S. Miller (1):
+      perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}
+
+Leo Yan (1):
+      perf cs-etm: Correct CPU mode for samples
+
+Milian Wolff (1):
+      perf unwind: Take pgoff into account when reporting elf to libdwfl
+
+ include/uapi/linux/perf_event.h                    |   2 +
+ tools/arch/arm64/include/uapi/asm/unistd.h         |   1 +
+ tools/arch/powerpc/include/uapi/asm/kvm.h          |   1 +
+ tools/arch/s390/include/uapi/asm/kvm.h             |   2 +
+ tools/arch/x86/include/uapi/asm/kvm.h              |   6 +-
+ tools/include/uapi/asm-generic/unistd.h            |   2 +
+ tools/include/uapi/linux/fs.h                      | 393 +++++++++++++++++++++
+ tools/include/uapi/linux/if_link.h                 |   1 +
+ tools/include/uapi/linux/kvm.h                     |  21 +-
+ tools/include/uapi/linux/mman.h                    |   2 +
+ tools/include/uapi/linux/netlink.h                 |   1 +
+ tools/include/uapi/linux/perf_event.h              |   2 +
+ tools/include/uapi/sound/asound.h                  |   2 +-
+ tools/perf/Documentation/perf-top.txt              |  10 +
+ tools/perf/Makefile.perf                           |  19 +
+ tools/perf/builtin-top.c                           |  21 +-
+ tools/perf/builtin-trace.c                         |  48 ++-
+ tools/perf/check-headers.sh                        |   1 +
+ tools/perf/trace/beauty/Build                      |   1 +
+ tools/perf/trace/beauty/beauty.h                   |   7 +
+ tools/perf/trace/beauty/clone.c                    |   3 +-
+ tools/perf/trace/beauty/drm_ioctl.sh               |   1 +
+ tools/perf/trace/beauty/eventfd.c                  |   2 +-
+ tools/perf/trace/beauty/fcntl.c                    |   3 +-
+ tools/perf/trace/beauty/flock.c                    |   2 +-
+ tools/perf/trace/beauty/futex_op.c                 |   2 +-
+ tools/perf/trace/beauty/futex_val3.c               |   2 +-
+ tools/perf/trace/beauty/ioctl.c                    |   3 +-
+ tools/perf/trace/beauty/kcmp.c                     |   3 +-
+ tools/perf/trace/beauty/kcmp_type.sh               |   1 +
+ tools/perf/trace/beauty/kvm_ioctl.sh               |   1 +
+ tools/perf/trace/beauty/madvise_behavior.sh        |   1 +
+ tools/perf/trace/beauty/mmap.c                     |  50 +--
+ tools/perf/trace/beauty/mmap_flags.sh              |  32 ++
+ tools/perf/trace/beauty/mode_t.c                   |   2 +-
+ tools/perf/trace/beauty/mount_flags.c              |  43 +++
+ tools/perf/trace/beauty/mount_flags.sh             |  15 +
+ tools/perf/trace/beauty/msg_flags.c                |   2 +-
+ tools/perf/trace/beauty/open_flags.c               |   2 +-
+ tools/perf/trace/beauty/perf_event_open.c          |   2 +-
+ tools/perf/trace/beauty/perf_ioctl.sh              |   1 +
+ tools/perf/trace/beauty/pid.c                      |   3 +-
+ tools/perf/trace/beauty/pkey_alloc.c               |  30 +-
+ .../perf/trace/beauty/pkey_alloc_access_rights.sh  |   1 +
+ tools/perf/trace/beauty/prctl.c                    |   3 +-
+ tools/perf/trace/beauty/prctl_option.sh            |   1 +
+ tools/perf/trace/beauty/sched_policy.c             |   2 +-
+ tools/perf/trace/beauty/seccomp.c                  |   2 +-
+ tools/perf/trace/beauty/signum.c                   |   2 +-
+ tools/perf/trace/beauty/sndrv_ctl_ioctl.sh         |   1 +
+ tools/perf/trace/beauty/sndrv_pcm_ioctl.sh         |   1 +
+ tools/perf/trace/beauty/sockaddr.c                 |   2 +-
+ tools/perf/trace/beauty/socket.c                   |   2 +-
+ tools/perf/trace/beauty/socket_ipproto.sh          |   1 +
+ tools/perf/trace/beauty/socket_type.c              |   2 +-
+ tools/perf/trace/beauty/statx.c                    |   3 +-
+ tools/perf/trace/beauty/vhost_virtio_ioctl.sh      |   1 +
+ tools/perf/trace/beauty/waitid_options.c           |   2 +-
+ tools/perf/util/cs-etm.c                           |  39 +-
+ tools/perf/util/event.c                            |   1 +
+ tools/perf/util/intel-bts.c                        |  17 +-
+ tools/perf/util/intel-pt.c                         |  28 +-
+ tools/perf/util/machine.c                          |  54 ++-
+ tools/perf/util/thread-stack.c                     |  44 ++-
+ tools/perf/util/thread-stack.h                     |   2 +-
+ tools/perf/util/thread.c                           |  13 +-
+ tools/perf/util/thread.h                           |   2 +-
+ tools/perf/util/unwind-libdw.c                     |   4 +-
+ 68 files changed, 837 insertions(+), 142 deletions(-)
+ create mode 100644 tools/include/uapi/linux/fs.h
+ create mode 100755 tools/perf/trace/beauty/mmap_flags.sh
+ create mode 100644 tools/perf/trace/beauty/mount_flags.c
+ create mode 100755 tools/perf/trace/beauty/mount_flags.sh
+
+Test results:
+
+The first ones are container (docker) based builds of tools/perf with
+and without libelf support.  Where clang is available, it is also used
+to build perf with/without libelf, and building with LIBCLANGLLVM=1
+(built-in clang) with gcc and clang when clang and its devel libraries
+are installed.
+
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
+
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+The failures are minor and will be fixed soon.
+
+  50     6.21 ubuntu:16.04-x-arm64          : FAIL aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+
+This one is related to smp_load_{acquire,release} expansions in this specific
+gcc version, reported to Daniel Borkmann
+
+  60     3.70 ubuntu:18.04-x-m68k           : FAIL m68k-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  64     3.48 ubuntu:18.04-x-riscv64        : FAIL riscv64-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+
+These two need mman.h files added to its directories in tools/arch/, will fix later.
+
+  66     3.84 ubuntu:18.04-x-sh4            : FAIL sh4-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+
+Needs to normalize sh4 -> sh so that it finds
+tools/arch/sh/include/uapi/asm/mman.h.
+
+  # dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6 alpine:edge                   : Ok   gcc (Alpine 6.4.0) 6.4.0
+   7 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+   8 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+   9 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  10 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  11 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  12 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  13 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+  14 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 8.2.1 20180502
+  15 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
+  16 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u1) 4.9.2
+  17 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+  18 debian:experimental           : Ok   gcc (Debian 8.2.0-8) 8.2.0
+  19 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.2.0-7) 8.2.0
+  20 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 8.2.0-7) 8.2.0
+  21 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 8.1.0-12) 8.1.0
+  22 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 8.2.0-7) 8.2.0
+  23 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  24 fedora:21                     : Ok   gcc (GCC) 4.9.2 20150212 (Red Hat 4.9.2-6)
+  25 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  26 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  27 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  28 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+  29 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
+  30 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
+  31 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)
+  32 fedora:28                     : Ok   gcc (GCC) 8.1.1 20180712 (Red Hat 8.1.1-5)
+  33 fedora:29                     : Ok   gcc (GCC) 8.2.1 20181011 (Red Hat 8.2.1-4)
+  34 fedora:rawhide                : Ok   gcc (GCC) 8.2.1 20180905 (Red Hat 8.2.1-3)
+  35 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 7.3.0-r3 p1.4) 7.3.0
+  36 mageia:5                      : Ok   gcc (GCC) 4.9.2
+  37 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0
+  38 opensuse:13.2                 : Ok   gcc (SUSE Linux) 4.8.3 20140627 [gcc-4_8-branch revision 212064]
+  39 opensuse:42.1                 : Ok   gcc (SUSE Linux) 4.8.5
+  40 opensuse:42.2                 : Ok   gcc (SUSE Linux) 4.8.5
+  41 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5
+  42 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 7.3.1 20180323 [gcc-7-branch revision 258812]
+  43 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1)
+  44 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28.0.1)
+  45 ubuntu:12.04.5                : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+  46 ubuntu:14.04.4                : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+  47 ubuntu:14.04.4-x-linaro-arm64 : Ok   aarch64-linux-gnu-gcc (Linaro GCC 5.5-2017.10) 5.5.0
+  48 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  49 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  50 ubuntu:16.04-x-arm64          : FAIL aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  51 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  52 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  53 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  54 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  55 ubuntu:16.10                  : Ok   gcc (Ubuntu 6.2.0-5ubuntu12) 6.2.0 20161005
+  56 ubuntu:17.10                  : Ok   gcc (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
+  57 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  58 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
+  59 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
+  60 ubuntu:18.04-x-m68k           : FAIL m68k-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  61 ubuntu:17.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  62 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  63 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  64 ubuntu:18.04-x-riscv64        : FAIL riscv64-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  65 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  66 ubuntu:18.04-x-sh4            : FAIL sh4-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  67 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  68 ubuntu:18.10                  : Ok   gcc (Ubuntu 8.2.0-7ubuntu1) 8.2.0
+
+  # uname -a
+  Linux seventh 4.19.0-rc8-00014-gc0cff31be705 #1 SMP Wed Oct 17 09:00:22 -03 2018 x86_64 x86_64 x86_64 GNU/Linux
+  # git log --oneline -1
+  5d4f0edaa3ac perf intel-pt/bts: Calculate cpumode for synthesized samples
+  # perf version --build-options
+  perf version 4.19.g5d4f0e
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: DSO data read                                         : Ok
+  11: DSO data cache                                        : Ok
+  12: DSO data reopen                                       : Ok
+  13: Roundtrip evsel->name                                 : Ok
+  14: Parse sched tracepoints fields                        : Ok
+  15: syscalls:sys_enter_openat event fields                : Ok
+  16: Setup struct perf_event_attr                          : Ok
+  17: Match and link multiple hists                         : Ok
+  18: 'import perf' in python                               : Ok
+  19: Breakpoint overflow signal handler                    : Ok
+  20: Breakpoint overflow sampling                          : Ok
+  21: Breakpoint accounting                                 : Ok
+  22: Watchpoint                                            :
+  22.1: Read Only Watchpoint                                : Skip
+  22.2: Write Only Watchpoint                               : Ok
+  22.3: Read / Write Watchpoint                             : Ok
+  22.4: Modify Watchpoint                                   : Ok
+  23: Number of exit events of a simple workload            : Ok
+  24: Software clock events period values                   : Ok
+  25: Object code reading                                   : Ok
+  26: Sample parsing                                        : Ok
+  27: Use a dummy software event to keep tracking           : Ok
+  28: Parse with no sample_id_all bit set                   : Ok
+  29: Filter hist entries                                   : Ok
+  30: Lookup mmap thread                                    : Ok
+  31: Share thread mg                                       : Ok
+  32: Sort output of hist entries                           : Ok
+  33: Cumulate child hist entries                           : Ok
+  34: Track with sched_switch                               : Ok
+  35: Filter fds with revents mask in a fdarray             : Ok
+  36: Add fd to a fdarray, making it autogrow               : Ok
+  37: kmod_path__parse                                      : Ok
+  38: Thread map                                            : Ok
+  39: LLVM search and compile                               :
+  39.1: Basic BPF llvm compile                              : Ok
+  39.2: kbuild searching                                    : Ok
+  39.3: Compile source for BPF prologue generation          : Ok
+  39.4: Compile source for BPF relocation                   : Ok
+  40: Session topology                                      : Ok
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Ok
+  41.2: BPF pinning                                         : Ok
+  41.3: BPF prologue generation                             : Ok
+  41.4: BPF relocation checker                              : Ok
+  42: Synthesize thread map                                 : Ok
+  43: Remove thread map                                     : Ok
+  44: Synthesize cpu map                                    : Ok
+  45: Synthesize stat config                                : Ok
+  46: Synthesize stat                                       : Ok
+  47: Synthesize stat round                                 : Ok
+  48: Synthesize attr update                                : Ok
+  49: Event times                                           : Ok
+  50: Read backward ring buffer                             : Ok
+  51: Print cpu map                                         : Ok
+  52: Probe SDT events                                      : Ok
+  53: is_printable_array                                    : Ok
+  54: Print bitmap                                          : Ok
+  55: perf hooks                                            : Ok
+  56: builtin clang support                                 : Skip (not compiled in)
+  57: unit_number__scnprintf                                : Ok
+  58: mem2node                                              : Ok
+  59: x86 rdpmc                                             : Ok
+  60: Convert perf time to TSC                              : Ok
+  61: DWARF unwind                                          : Ok
+  62: x86 instruction decoder - new instructions            : Ok
+  63: x86 bp modify                                         : Ok
+  64: probe libc's inet_pton & backtrace it with ping       : Ok
+  65: Check open filename arg using perf trace + vfs_getname: Ok
+  66: Use vfs_getname probe to get syscall args filenames   : Ok
+  67: Add vfs_getname probe to get syscall args filenames   : Ok
+
+  $ make -C tools/perf build-test
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+             make_no_libperl_O: make NO_LIBPERL=1
+         make_install_prefix_O: make install prefix=/tmp/krava
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+           make_no_libpython_O: make NO_LIBPYTHON=1
+                 make_perf_o_O: make perf.o
+                 make_static_O: make LDFLAGS=-static
+                make_no_newt_O: make NO_NEWT=1
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+             make_util_map_o_O: make util/map.o
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1
+              make_no_libelf_O: make NO_LIBELF=1
+           make_no_backtrace_O: make NO_BACKTRACE=1
+              make_no_libbpf_O: make NO_LIBBPF=1
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+                make_no_gtk2_O: make NO_GTK2=1
+            make_install_bin_O: make install-bin
+            make_no_demangle_O: make NO_DEMANGLE=1
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+             make_no_libnuma_O: make NO_LIBNUMA=1
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+                   make_pure_O: make
+                   make_tags_O: make tags
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+                make_install_O: make install
+              make_clean_all_O: make clean all
+               make_no_slang_O: make NO_SLANG=1
+                    make_doc_O: make doc
+                  make_debug_O: make DEBUG=1
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+                   make_help_O: make help
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $
