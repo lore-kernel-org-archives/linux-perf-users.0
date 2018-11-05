@@ -1,111 +1,106 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: perf script doesn't dump a normal call trace
-Date: Mon, 5 Nov 2018 09:49:06 +0100
-Message-ID: <20181105084906.GA30951@krava>
-References: <CADvbK_dNN34=5V3qtk3_vBzKNts55ACR4c-erPafgNuAQ-eRuw@mail.gmail.com>
- <20181102102616.GC5458@krava>
- <CADvbK_cr_vhtyaid=xbECdNs+xCr4Oi8pJJc83jZa+XJOWAjJw@mail.gmail.com>
- <20181104191754.GB18517@krava>
- <CADvbK_cgp7S-8Q-6GArwViCDBhCoB9LcZvJaGM6QFAg9qNOeHw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 19/28] perf beauty: Wire up the mmap flags table
+ generator to the Makefile
+Date: Mon, 5 Nov 2018 07:44:33 -0800
+Message-ID: <20181105154433.GA11115@roeck-us.net>
+References: <20181031164508.4784-1-acme@kernel.org>
+ <20181031164508.4784-20-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CADvbK_cgp7S-8Q-6GArwViCDBhCoB9LcZvJaGM6QFAg9qNOeHw@mail.gmail.com>
+In-Reply-To: <20181031164508.4784-20-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xin Long <lucien.xin@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Nov 05, 2018 at 03:20:15PM +0900, Xin Long wrote:
-
-SNIP
-
-> > > > [root@ibm-x3650m4-02 perf]# ./perf probe 'consume_skb'
-> > > > [root@ibm-x3650m4-02 perf]# ./perf record -g -e probe:consume_skb* -aR ^C
-> > > >
-> > > Thanks Jiri,
-> > >
-> > > My debugging script is using tracepoint with some filters which I
-> > > don't think probe can support.
-> > > Any one have fixes for this tracepoint issue?
-> >
-> > trying to bisect that.. looks like orc code issue,
-> > it works for me when you switch to fp unwind:
-> >   CONFIG_UNWINDER_FRAME_POINTER
-> >
+On Wed, Oct 31, 2018 at 01:44:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> That's a good workaround, thanks.
+> Now when we run 'make -C tools/perf O=/tmp/build/perf' we end up with:
 > 
-> Another problem is when I'm using perf built manually from upstream kernel tree,
-> I couldn't see the function's names.
-> # perf --version
-> perf version 4.19.g26f1de
+>   $ cat /tmp/build/perf/trace/beauty/generated/mmap_flags_array.c
+>   static const char *mmap_flags[] = {
+> 	[ilog2(0x40) + 1] = "32BIT",
+> 	[ilog2(0x01) + 1] = "SHARED",
+> 	[ilog2(0x02) + 1] = "PRIVATE",
+> 	[ilog2(0x10) + 1] = "FIXED",
+> 	[ilog2(0x20) + 1] = "ANONYMOUS",
+> 	[ilog2(0x100000) + 1] = "FIXED_NOREPLACE",
+> 	[ilog2(0x0100) + 1] = "GROWSDOWN",
+> 	[ilog2(0x0800) + 1] = "DENYWRITE",
+> 	[ilog2(0x1000) + 1] = "EXECUTABLE",
+> 	[ilog2(0x2000) + 1] = "LOCKED",
+> 	[ilog2(0x4000) + 1] = "NORESERVE",
+> 	[ilog2(0x8000) + 1] = "POPULATE",
+> 	[ilog2(0x10000) + 1] = "NONBLOCK",
+> 	[ilog2(0x20000) + 1] = "STACK",
+> 	[ilog2(0x40000) + 1] = "HUGETLB",
+> 	[ilog2(0x80000) + 1] = "SYNC",
+>   };
+>   $
 > 
-> # perf report -T
-> # To display the perf.data header info, please use
-> --header/--header-only options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 97  of event 'probe:consume_skb'
-> # Event count (approx.): 97
-> #
-> # Children      Self  Trace output
-> # ........  ........  ..................
-> #
->    100.00%   100.00%  (ffffffff86f090f0)
->             |
->             |--93.81%--0xffffffff868000e6
->             |          0xffffffff8684ed7f
->             |          0xffffffff868e97ad
->             |          0xffffffff868e953a
->             |          0xffffffff87087623
->             |          0xffffffff8682a06f
->             |          0xffffffff870872ad
->             |          |
->             |          |--89.69%--0xffffffff8720098f
->             |          |          0xffffffff87201b69
->             |          |          0xffffffff868b9c2e
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> Link: https://lkml.kernel.org/n/tip-t3fn7u3tjsupio6e6vkufx9m@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/Makefile.perf | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> 
-> The below is with rhel7's perf
-> # perf --version
-> perf version 3.10.0-957.el7.x86_64.debug
-> # perf report -T
-> # To display the perf.data header info, please use
-> --header/--header-only options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 97  of event 'probe:consume_skb'
-> # Event count (approx.): 97
-> #
-> # Children      Self  Trace output
-> # ........  ........  ..................
-> #
->    100.00%   100.00%  (ffffffff86f090f0)
->             |
->             |--93.81%--0x2000e6
->             |          start_secondary
->             |          cpu_startup_entry
->             |          do_idle
->             |          default_idle_call
->             |          arch_cpu_idle
->             |          default_idle
->             |          |
->             |          |--89.69%--ret_from_intr
->             |          |          do_IRQ
->             |          |          irq_exit
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index a31c5c29d53a..3ccb4f0bf088 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1,4 +1,5 @@
+>  include ../scripts/Makefile.include
+> +include ../scripts/Makefile.arch
+>  
+>  # The default target of this Makefile is...
+>  all:
+> @@ -385,6 +386,8 @@ export INSTALL SHELL_PATH
+>  SHELL = $(SHELL_PATH)
+>  
+>  linux_uapi_dir := $(srctree)/tools/include/uapi/linux
+> +asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
+> +arch_asm_uapi_dir := $(srctree)/tools/arch/$(ARCH)/include/uapi/asm/
+>  
 
-I think that's already fixed on Arnaldo's perf/urgent branch,
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+This doesn't work for me. With v4.20-rc1:
 
-but perhaps this post as well:
-  https://lore.kernel.org/lkml/20181031091043.23465-1-adrian.hunter@intel.com/
-
-please give it a try.. it should be merged in soon
-
-jirka
+$ make ARCH=x86_64 defconfig
+*** Default configuration is based on 'x86_64_defconfig'
+#
+# configuration written to .config
+#
+groeck@server:~/src/linux-staging$ make ARCH=x86_64 -j30 tools/perf
+scripts/kconfig/conf  --syncconfig Kconfig
+  BUILD:   Doing 'make -j16' parallel build
+  HOSTCC   /home/groeck/src/linux-staging/tools/perf/fixdep.o
+  HOSTLD   /home/groeck/src/linux-staging/tools/perf/fixdep-in.o
+  LINK     /home/groeck/src/linux-staging/tools/perf/fixdep
+Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
+diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/ioctls.h' differs from latest version at 'include/uapi/asm-generic/ioctls.h'
+diff -u tools/include/uapi/asm-generic/ioctls.h include/uapi/asm-generic/ioctls.h
+Makefile.config:814: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+Makefile.config:851: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+make[4]: *** No rule to make target '/home/groeck/src/linux-staging/tools/arch/x86_64/include/uapi/asm//mman.h', needed by '/home/groeck/src/linux-staging/tools/perf/trace/beauty/generated/mmap_flags_array.c'.  Stop.
+make[4]: *** Waiting for unfinished jobs....
+  PERF_VERSION = 4.20.rc1.g6510223
+Makefile.perf:206: recipe for target 'sub-make' failed
+make[3]: *** [sub-make] Error 2
+Makefile:69: recipe for target 'all' failed
+make[2]: *** [all] Error 2
+Makefile:77: recipe for target 'perf' failed
+make[1]: *** [perf] Error 2
+Makefile:1688: recipe for target 'tools/perf' failed
+make: *** [tools/perf] Error 2
+groeck@server:~/src/linux-staging$ ls tools/arch
+alpha  arc  arm  arm64	h8300  hexagon	ia64  microblaze  mips	parisc	powerpc  s390  sh  sparc  x86  xtensa
