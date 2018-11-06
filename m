@@ -1,53 +1,204 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
- unwinding - wrong stack pointer register value?]
-Date: Tue, 6 Nov 2018 09:39:57 +0100
-Message-ID: <20181106083957.GB8081@krava>
-References: <2335309.gnWok9HYb4@agathebauer>
- <3227038.olIWmsCzzY@agathebauer>
- <20181105205119.GC25674@krava>
- <3799078.YBnU1OB0PF@agathebauer>
- <20181106001037.GQ6218@tassilo.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 01/18] tools headers barrier: Fix arm64 tools build failure wrt smp_load_{acquire,release}
+Date: Tue,  6 Nov 2018 09:05:55 -0300
+Message-ID: <20181106120612.8262-2-acme@kernel.org>
+References: <20181106120612.8262-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181106001037.GQ6218@tassilo.jf.intel.com>
+In-Reply-To: <20181106120612.8262-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Nov 05, 2018 at 04:10:37PM -0800, Andi Kleen wrote:
-> > > > - PMU triggers interrupt and PEBS stores RIP etc.
-> > > > - code continous to execute, possibly changing the stack
-> > > 
-> > > I dont think the code continues to execute.. the stack is ok
-> > 
-> > Are you sure about this? I mean, isn't that the whole reason why we need PEBS? 
-> > Generally, if you are sure about this, can you point me to some documentation 
-> > on this to allow me to understand it better?
-> 
-> Milian is right.
-> 
-> There is a execution window from PEBS capturing registers to actually triggering
-> the PMU, and if there is stack manipulation in that window
-> the PEBS state might be out of sync with the real stack.
+From: Will Deacon <will.deacon@arm.com>
 
-hum, is this about having 'large pebs' or there's this window
-if there's also only single pebs record allowed? which should
-be case for dwarf unwind
+Cheers for reporting this. I managed to reproduce the build failure with
+gcc version 6.3.0 20170516 (Debian 6.3.0-18+deb9u1).
 
-> The right RIP/RSP to use for the stack unwinding is always the data
-> in the PMI's exception frame on the stack.
-> 
-> Probably would need to modify perf to report those too in addition
-> to the PEBS registers.
+The code in question is the arm64 versions of smp_load_acquire() and
+smp_store_release(). Unlike other architectures, these are not built
+around READ_ONCE() and WRITE_ONCE() since we have instructions we can
+use instead of fences. Bringing our macros up-to-date with those (i.e.
+tweaking the union initialisation and using the special "uXX_alias_t"
+types) appears to fix the issue for me.
 
-ok, should not be that hard
+Committer notes:
 
-> 
-> Of course it would still mean that the stack unwinding may not exactly
-> match the sample RIP, but at least it should be consistent.
+Testing it in the systems previously failing:
 
-jirka
+  # time dm android-ndk:r12b-arm \
+         android-ndk:r15c-arm \
+         debian:experimental-x-arm64 \
+         ubuntu:14.04.4-x-linaro-arm64 \
+         ubuntu:16.04-x-arm \
+         ubuntu:16.04-x-arm64 \
+         ubuntu:18.04-x-arm \
+         ubuntu:18.04-x-arm64
+    1 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+    2 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+    3 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.2.0-7) 8.2.0
+    4 ubuntu:14.04.4-x-linaro-arm64 : Ok   aarch64-linux-gnu-gcc (Linaro GCC 5.5-2017.10) 5.5.0
+    5 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+    6 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+    7 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
+    8 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20181031174408.GA27871@arm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/arch/arm64/include/asm/barrier.h | 133 +++++++++++++++++----------------
+ 1 file changed, 67 insertions(+), 66 deletions(-)
+
+diff --git a/tools/arch/arm64/include/asm/barrier.h b/tools/arch/arm64/include/asm/barrier.h
+index 12835ea0e417..378c051fa177 100644
+--- a/tools/arch/arm64/include/asm/barrier.h
++++ b/tools/arch/arm64/include/asm/barrier.h
+@@ -14,74 +14,75 @@
+ #define wmb()		asm volatile("dmb ishst" ::: "memory")
+ #define rmb()		asm volatile("dmb ishld" ::: "memory")
+ 
+-#define smp_store_release(p, v)					\
+-do {								\
+-	union { typeof(*p) __val; char __c[1]; } __u =		\
+-		{ .__val = (__force typeof(*p)) (v) }; 		\
+-								\
+-	switch (sizeof(*p)) {					\
+-	case 1:							\
+-		asm volatile ("stlrb %w1, %0"			\
+-				: "=Q" (*p)			\
+-				: "r" (*(__u8 *)__u.__c)	\
+-				: "memory");			\
+-		break;						\
+-	case 2:							\
+-		asm volatile ("stlrh %w1, %0"			\
+-				: "=Q" (*p)			\
+-				: "r" (*(__u16 *)__u.__c)	\
+-				: "memory");			\
+-		break;						\
+-	case 4:							\
+-		asm volatile ("stlr %w1, %0"			\
+-				: "=Q" (*p)			\
+-				: "r" (*(__u32 *)__u.__c)	\
+-				: "memory");			\
+-		break;						\
+-	case 8:							\
+-		asm volatile ("stlr %1, %0"			\
+-				: "=Q" (*p)			\
+-				: "r" (*(__u64 *)__u.__c)	\
+-				: "memory");			\
+-		break;						\
+-	default:						\
+-		/* Only to shut up gcc ... */			\
+-		mb();						\
+-		break;						\
+-	}							\
++#define smp_store_release(p, v)						\
++do {									\
++	union { typeof(*p) __val; char __c[1]; } __u =			\
++		{ .__val = (v) }; 					\
++									\
++	switch (sizeof(*p)) {						\
++	case 1:								\
++		asm volatile ("stlrb %w1, %0"				\
++				: "=Q" (*p)				\
++				: "r" (*(__u8_alias_t *)__u.__c)	\
++				: "memory");				\
++		break;							\
++	case 2:								\
++		asm volatile ("stlrh %w1, %0"				\
++				: "=Q" (*p)				\
++				: "r" (*(__u16_alias_t *)__u.__c)	\
++				: "memory");				\
++		break;							\
++	case 4:								\
++		asm volatile ("stlr %w1, %0"				\
++				: "=Q" (*p)				\
++				: "r" (*(__u32_alias_t *)__u.__c)	\
++				: "memory");				\
++		break;							\
++	case 8:								\
++		asm volatile ("stlr %1, %0"				\
++				: "=Q" (*p)				\
++				: "r" (*(__u64_alias_t *)__u.__c)	\
++				: "memory");				\
++		break;							\
++	default:							\
++		/* Only to shut up gcc ... */				\
++		mb();							\
++		break;							\
++	}								\
+ } while (0)
+ 
+-#define smp_load_acquire(p)					\
+-({								\
+-	union { typeof(*p) __val; char __c[1]; } __u;		\
+-								\
+-	switch (sizeof(*p)) {					\
+-	case 1:							\
+-		asm volatile ("ldarb %w0, %1"			\
+-			: "=r" (*(__u8 *)__u.__c)		\
+-			: "Q" (*p) : "memory");			\
+-		break;						\
+-	case 2:							\
+-		asm volatile ("ldarh %w0, %1"			\
+-			: "=r" (*(__u16 *)__u.__c)		\
+-			: "Q" (*p) : "memory");			\
+-		break;						\
+-	case 4:							\
+-		asm volatile ("ldar %w0, %1"			\
+-			: "=r" (*(__u32 *)__u.__c)		\
+-			: "Q" (*p) : "memory");			\
+-		break;						\
+-	case 8:							\
+-		asm volatile ("ldar %0, %1"			\
+-			: "=r" (*(__u64 *)__u.__c)		\
+-			: "Q" (*p) : "memory");			\
+-		break;						\
+-	default:						\
+-		/* Only to shut up gcc ... */			\
+-		mb();						\
+-		break;						\
+-	}							\
+-	__u.__val;						\
++#define smp_load_acquire(p)						\
++({									\
++	union { typeof(*p) __val; char __c[1]; } __u =			\
++		{ .__c = { 0 } };					\
++									\
++	switch (sizeof(*p)) {						\
++	case 1:								\
++		asm volatile ("ldarb %w0, %1"				\
++			: "=r" (*(__u8_alias_t *)__u.__c)		\
++			: "Q" (*p) : "memory");				\
++		break;							\
++	case 2:								\
++		asm volatile ("ldarh %w0, %1"				\
++			: "=r" (*(__u16_alias_t *)__u.__c)		\
++			: "Q" (*p) : "memory");				\
++		break;							\
++	case 4:								\
++		asm volatile ("ldar %w0, %1"				\
++			: "=r" (*(__u32_alias_t *)__u.__c)		\
++			: "Q" (*p) : "memory");				\
++		break;							\
++	case 8:								\
++		asm volatile ("ldar %0, %1"				\
++			: "=r" (*(__u64_alias_t *)__u.__c)		\
++			: "Q" (*p) : "memory");				\
++		break;							\
++	default:							\
++		/* Only to shut up gcc ... */				\
++		mb();							\
++		break;							\
++	}								\
++	__u.__val;							\
+ })
+ 
+ #endif /* _TOOLS_LINUX_ASM_AARCH64_BARRIER_H */
+-- 
+2.14.4
