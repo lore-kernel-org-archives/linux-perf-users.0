@@ -1,140 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/18] perf tools: Fix undefined symbol scnprintf in libperf-jvmti.so
-Date: Tue,  6 Nov 2018 09:06:11 -0300
-Message-ID: <20181106120612.8262-18-acme@kernel.org>
+Subject: [PATCH 18/18] perf tools: Do not zero sample_id_all for group members
+Date: Tue,  6 Nov 2018 09:06:12 -0300
+Message-ID: <20181106120612.8262-19-acme@kernel.org>
 References: <20181106120612.8262-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181106120612.8262-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Gustavo Romero <gromero@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Currently jvmti agent can not be used because function scnprintf is not
-present in the agent libperf-jvmti.so. As a result the JVM when using
-such agent to record JITed code profiling information will fail on
-looking up scnprintf:
+Andi reported following malfunction:
 
-  java: symbol lookup error: lib/libperf-jvmti.so: undefined symbol: scnprintf
+  # perf record -e '{ref-cycles,cycles}:S' -a sleep 1
+  # perf script
+  non matching sample_id_all
 
-This commit fixes that by reverting to the use of snprintf, that can be
-looked up, instead of scnprintf, adding a proper check for the returned
-value in order to print a better error message when the jitdump file
-pathname is too long. Checking the returned value also helps to comply
-with some recent gcc versions, like gcc8, which will fail due to
-truncated writing checks related to the -Werror=format-truncation= flag.
+That's because we disable sample_id_all bit for non-sampling group
+members. We can't do that, because it needs to be the same over the
+whole event list. This patch keeps it untouched again.
 
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 1541117601-18937-2-git-send-email-gromero@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/n/tip-mvpxxxy7wnzaj74cq75muw3f@git.kernel.org
+Reported-by: Andi Kleen <andi@firstfloor.org>
+Tested-by: Andi Kleen <andi@firstfloor.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20180923150420.27327-1-jolsa@kernel.org
+Fixes: e9add8bac6c6 ("perf evsel: Disable write_backward for leader sampling group events")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/jvmti/jvmti_agent.c | 49 ++++++++++++++++++++++++++++++++----------
- 1 file changed, 38 insertions(+), 11 deletions(-)
+ tools/perf/tests/attr/test-record-group-sampling | 1 -
+ tools/perf/util/evsel.c                          | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
-index ac1bcdc17dae..f7eb63cbbc65 100644
---- a/tools/perf/jvmti/jvmti_agent.c
-+++ b/tools/perf/jvmti/jvmti_agent.c
-@@ -125,7 +125,7 @@ perf_get_timestamp(void)
- }
- 
- static int
--debug_cache_init(void)
-+create_jit_cache_dir(void)
- {
- 	char str[32];
- 	char *base, *p;
-@@ -144,8 +144,13 @@ debug_cache_init(void)
- 
- 	strftime(str, sizeof(str), JIT_LANG"-jit-%Y%m%d", &tm);
- 
--	snprintf(jit_path, PATH_MAX - 1, "%s/.debug/", base);
--
-+	ret = snprintf(jit_path, PATH_MAX, "%s/.debug/", base);
-+	if (ret >= PATH_MAX) {
-+		warnx("jvmti: cannot generate jit cache dir because %s/.debug/"
-+			" is too long, please check the cwd, JITDUMPDIR, and"
-+			" HOME variables", base);
-+		return -1;
-+	}
- 	ret = mkdir(jit_path, 0755);
- 	if (ret == -1) {
- 		if (errno != EEXIST) {
-@@ -154,20 +159,32 @@ debug_cache_init(void)
- 		}
+diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
+index 8a33ca4f9e1f..f0729c454f16 100644
+--- a/tools/perf/tests/attr/test-record-group-sampling
++++ b/tools/perf/tests/attr/test-record-group-sampling
+@@ -37,4 +37,3 @@ sample_freq=0
+ sample_period=0
+ freq=0
+ write_backward=0
+-sample_id_all=0
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 6d187059a373..d37bb1566cd9 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -956,7 +956,6 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 		attr->sample_freq    = 0;
+ 		attr->sample_period  = 0;
+ 		attr->write_backward = 0;
+-		attr->sample_id_all  = 0;
  	}
  
--	snprintf(jit_path, PATH_MAX - 1, "%s/.debug/jit", base);
-+	ret = snprintf(jit_path, PATH_MAX, "%s/.debug/jit", base);
-+	if (ret >= PATH_MAX) {
-+		warnx("jvmti: cannot generate jit cache dir because"
-+			" %s/.debug/jit is too long, please check the cwd,"
-+			" JITDUMPDIR, and HOME variables", base);
-+		return -1;
-+	}
- 	ret = mkdir(jit_path, 0755);
- 	if (ret == -1) {
- 		if (errno != EEXIST) {
--			warn("cannot create jit cache dir %s", jit_path);
-+			warn("jvmti: cannot create jit cache dir %s", jit_path);
- 			return -1;
- 		}
- 	}
- 
--	snprintf(jit_path, PATH_MAX - 1, "%s/.debug/jit/%s.XXXXXXXX", base, str);
--
-+	ret = snprintf(jit_path, PATH_MAX, "%s/.debug/jit/%s.XXXXXXXX", base, str);
-+	if (ret >= PATH_MAX) {
-+		warnx("jvmti: cannot generate jit cache dir because"
-+			" %s/.debug/jit/%s.XXXXXXXX is too long, please check"
-+			" the cwd, JITDUMPDIR, and HOME variables",
-+			base, str);
-+		return -1;
-+	}
- 	p = mkdtemp(jit_path);
- 	if (p != jit_path) {
--		warn("cannot create jit cache dir %s", jit_path);
-+		warn("jvmti: cannot create jit cache dir %s", jit_path);
- 		return -1;
- 	}
- 
-@@ -228,7 +245,7 @@ void *jvmti_open(void)
- {
- 	char dump_path[PATH_MAX];
- 	struct jitheader header;
--	int fd;
-+	int fd, ret;
- 	FILE *fp;
- 
- 	init_arch_timestamp();
-@@ -245,12 +262,22 @@ void *jvmti_open(void)
- 
- 	memset(&header, 0, sizeof(header));
- 
--	debug_cache_init();
-+	/*
-+	 * jitdump file dir
-+	 */
-+	if (create_jit_cache_dir() < 0)
-+		return NULL;
- 
- 	/*
- 	 * jitdump file name
- 	 */
--	scnprintf(dump_path, PATH_MAX, "%s/jit-%i.dump", jit_path, getpid());
-+	ret = snprintf(dump_path, PATH_MAX, "%s/jit-%i.dump", jit_path, getpid());
-+	if (ret >= PATH_MAX) {
-+		warnx("jvmti: cannot generate jitdump file full path because"
-+			" %s/jit-%i.dump is too long, please check the cwd,"
-+			" JITDUMPDIR, and HOME variables", jit_path, getpid());
-+		return NULL;
-+	}
- 
- 	fd = open(dump_path, O_CREAT|O_TRUNC|O_RDWR, 0666);
- 	if (fd == -1)
+ 	if (opts->no_samples)
 -- 
 2.14.4
