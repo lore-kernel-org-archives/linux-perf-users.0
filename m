@@ -1,144 +1,136 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/18] perf/urgent improvements and fixes
-Date: Tue, 6 Nov 2018 20:06:30 +0100
-Message-ID: <20181106190630.GA39226@gmail.com>
-References: <20181106120612.8262-1-acme@kernel.org>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
+ unwinding - wrong stack pointer register value?]
+Date: Tue, 06 Nov 2018 21:04:08 +0100
+Message-ID: <2102566.fCj8pZGm78@agathebauer>
+References: <2335309.gnWok9HYb4@agathebauer>
+ <20181106001037.GQ6218@tassilo.jf.intel.com> <20181106083957.GB8081@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="nextPart1644059.f7Ub7bqP93";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181106120612.8262-1-acme@kernel.org>
+In-Reply-To: <20181106083957.GB8081@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, Edward Cree <ecree@solarflare.com>, Guenter Roeck <linux@roeck-us.net>, Gustavo Romero <gromero@linux.vnet.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Martin KaFai Lau <kafai@fb.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Namhyung Kim <namhyun>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
+--nextPart1644059.f7Ub7bqP93
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Dienstag, 6. November 2018 09:39:57 CET Jiri Olsa wrote:
+> On Mon, Nov 05, 2018 at 04:10:37PM -0800, Andi Kleen wrote:
+> > > > > - PMU triggers interrupt and PEBS stores RIP etc.
+> > > > > - code continous to execute, possibly changing the stack
+> > > > 
+> > > > I dont think the code continues to execute.. the stack is ok
+> > > 
+> > > Are you sure about this? I mean, isn't that the whole reason why we need
+> > > PEBS? Generally, if you are sure about this, can you point me to some
+> > > documentation on this to allow me to understand it better?
+> > 
+> > Milian is right.
+> > 
+> > There is a execution window from PEBS capturing registers to actually
+> > triggering the PMU, and if there is stack manipulation in that window
+> > the PEBS state might be out of sync with the real stack.
+> 
+> hum, is this about having 'large pebs' or there's this window
+> if there's also only single pebs record allowed? which should
+> be case for dwarf unwind
+> 
+> > The right RIP/RSP to use for the stack unwinding is always the data
+> > in the PMI's exception frame on the stack.
+> > 
+> > Probably would need to modify perf to report those too in addition
+> > to the PEBS registers.
+> 
+> ok, should not be that hard
 
-> Hi Ingo,
-> 
-> 	Please consider pulling, mostly fixes, some late coming
-> improvements in non-core areas,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 29995d296e3e9ce4f9767963ecbef143ade26c36:
-> 
->   Merge tag 'perf-urgent-for-mingo-4.20-20181031' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2018-10-31 22:53:40 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-4.20-20181106
-> 
-> for you to fetch changes up to 8e88c29b351ed4e09dd63f825f1c8260b0cb0ab3:
-> 
->   perf tools: Do not zero sample_id_all for group members (2018-11-06 08:29:56 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent improvements and fixes:
-> 
-> Intel PT sql viewer: (Adrian Hunter)
-> 
-> - Fall back to /usr/local/lib/libxed.so
-> - Add Selected branches report
-> - Add help window
-> - Fix table find when table re-ordered
-> 
-> Intel PT debug log (Adrian Hunter)
-> 
-> - Add more event information
-> - Add MTC and CYC timestamps
-> 
-> perf record: (Andi Kleen)
-> 
-> - Support weak groups, just like with 'perf stat'
-> 
-> perf trace: (Arnaldo Carvalho de Melo)
-> 
-> - Start augmenting raw_syscalls:{sys_enter,sys_exit}: goal is to have a
->   generic, arch independent eBPF kernel component that is programmed with
->   syscall table details, what to copy, how many bytes, pid, arg filters from the
->   userspace via eBPF maps by the 'perf trace' tool that continues to use all its
->   argument beautifiers, just taking advantage of the extra pointer contents.
-> 
-> JVMTI: (Gustavo Romero)
-> 
-> - Fix undefined symbol scnprintf in libperf-jvmti.so
-> 
-> perf top: (Jin Yao)
-> 
-> - Display the LBR stats in callchain entries
-> 
-> perf stat: (Thomas Richter)
-> 
-> - Handle different PMU names with common prefix
-> 
-> arm64: Will (Deacon)
-> 
-> - Fix arm64 tools build failure wrt smp_load_{acquire,release}.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (6):
->       perf scripts python: exported-sql-viewer.py: Fall back to /usr/local/lib/libxed.so
->       perf scripts python: exported-sql-viewer.py: Add Selected branches report
->       perf scripts python: exported-sql-viewer.py: Add help window
->       perf scripts python: exported-sql-viewer.py: Fix table find when table re-ordered
->       perf intel-pt: Add more event information to debug log
->       perf intel-pt: Add MTC and CYC timestamps to debug log
-> 
-> Andi Kleen (2):
->       perf evlist: Move perf_evsel__reset_weak_group into evlist
->       perf record: Support weak groups
-> 
-> Arnaldo Carvalho de Melo (5):
->       perf examples bpf: Start augmenting raw_syscalls:sys_{start,exit}
->       perf trace: When augmenting raw_syscalls plug raw_syscalls:sys_exit too
->       perf trace: Fix setting of augmented payload when using eBPF + raw_syscalls
->       perf augmented_syscalls: Start collecting pathnames in the BPF program
->       perf beauty: Use SRCARCH, ARCH=x86_64 must map to "x86" to find the headers
-> 
-> Gustavo Romero (1):
->       perf tools: Fix undefined symbol scnprintf in libperf-jvmti.so
-> 
-> Jin Yao (1):
->       perf top: Display the LBR stats in callchain entry
-> 
-> Jiri Olsa (1):
->       perf tools: Do not zero sample_id_all for group members
-> 
-> Thomas Richter (1):
->       perf stat: Handle different PMU names with common prefix
-> 
-> Will Deacon (1):
->       tools headers barrier: Fix arm64 tools build failure wrt smp_load_{acquire,release}
-> 
->  tools/arch/arm64/include/asm/barrier.h             | 133 +++---
->  tools/perf/Documentation/perf-list.txt             |   1 -
->  tools/perf/Makefile.perf                           |   2 +-
->  tools/perf/builtin-record.c                        |   7 +-
->  tools/perf/builtin-stat.c                          |  28 +-
->  tools/perf/builtin-top.c                           |   3 +
->  tools/perf/builtin-trace.c                         |  34 +-
->  tools/perf/examples/bpf/augmented_raw_syscalls.c   | 131 ++++++
->  tools/perf/jvmti/jvmti_agent.c                     |  49 +-
->  tools/perf/scripts/python/exported-sql-viewer.py   | 493 ++++++++++++++++++++-
->  tools/perf/tests/attr/test-record-group-sampling   |   1 -
->  tools/perf/util/evlist.c                           |  27 ++
->  tools/perf/util/evlist.h                           |   3 +
->  tools/perf/util/evsel.c                            |   1 -
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |   4 +
->  tools/perf/util/intel-pt-decoder/intel-pt-log.c    |   5 +
->  tools/perf/util/intel-pt-decoder/intel-pt-log.h    |   1 +
->  tools/perf/util/intel-pt.c                         |  16 +-
->  tools/perf/util/pmu.c                              |   2 +-
->  19 files changed, 820 insertions(+), 121 deletions(-)
->  create mode 100644 tools/perf/examples/bpf/augmented_raw_syscalls.c
+Where would I look for the source to change here? So far, I only concentrated 
+on the userspace side of perf in tools/perf.
 
-Pulled, thanks a lot Arnaldo!
+Thanks
 
-	Ingo
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart1644059.f7Ub7bqP93
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTA2MjAwNDA4WjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgAwoGSzvi5DIS/6Z40HN1C7TwWt1i
+K99T231prqFkfkswDQYJKoZIhvcNAQEBBQAEggEAxZtIbyw60YsR6myt1qp7n6fn5bmJ9ofOnbgW
+XMOW4LE4iROx4WDgzSMTHORjMRHOwYmN43CHA8B79lBRPvAgFc6hWJe7Cw/W99zf1ka+FIAQ1vBK
+7/VKNQghGBMcPObIX9ziTI/E82RjZ8/k4OvGrbqKotYjFPoDOd1atujgbsf2Qkbpxl71i47eAaDt
+RY2Kgid21qX/ARQ+mOZ5zK/9BBZTkcR2RWqJWrs99oQSUeAVKtXD2IvwYZ0Qo930OdzwR04IXO9O
+P/ILi4VaHQmsq8I0CoqFZMh9akAJBumMM5Vo7bEwS8HV1e6goC36LBjpb2nKrk2bPsTOFCv4ewcm
+2QAAAAAAAA==
+
+
+--nextPart1644059.f7Ub7bqP93--
