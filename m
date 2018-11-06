@@ -1,204 +1,174 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/18] tools headers barrier: Fix arm64 tools build failure wrt smp_load_{acquire,release}
-Date: Tue,  6 Nov 2018 09:05:55 -0300
-Message-ID: <20181106120612.8262-2-acme@kernel.org>
+Subject: [PATCH 02/18] perf examples bpf: Start augmenting raw_syscalls:sys_{start,exit}
+Date: Tue,  6 Nov 2018 09:05:56 -0300
+Message-ID: <20181106120612.8262-3-acme@kernel.org>
 References: <20181106120612.8262-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181106120612.8262-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Cheers for reporting this. I managed to reproduce the build failure with
-gcc version 6.3.0 20170516 (Debian 6.3.0-18+deb9u1).
+The previous approach of attaching to each syscall showed how it is
+possible to augment tracepoints and use that augmentation, pointer
+payloads, in the existing beautifiers in 'perf trace', but for a more
+general solution we now will try to augment the main
+raw_syscalls:sys_{enter,exit} syscalls, and then pass instructions in
+maps so that it knows which syscalls and which pointer contents, and how
+many bytes for each of the arguments should be copied.
 
-The code in question is the arm64 versions of smp_load_acquire() and
-smp_store_release(). Unlike other architectures, these are not built
-around READ_ONCE() and WRITE_ONCE() since we have instructions we can
-use instead of fences. Bringing our macros up-to-date with those (i.e.
-tweaking the union initialisation and using the special "uXX_alias_t"
-types) appears to fix the issue for me.
+Start with just the bare minimum to collect what is provided by those
+two tracepoints via the __augmented_syscalls__ map + bpf-output perf
+event, which results in perf trace showing them without connecting
+enter+exit:
 
-Committer notes:
+  # perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c sleep 1
+     0.000 sleep/11563 raw_syscalls:sys_exit:NR 59 = 0
+     0.019 (         ): sleep/11563 brk() ...
+     0.021 sleep/11563 raw_syscalls:sys_exit:NR 12 = 94682642325504
+     0.033 (         ): sleep/11563 access(filename:, mode: R) ...
+     0.037 sleep/11563 raw_syscalls:sys_exit:NR 21 = -2
+     0.041 (         ): sleep/11563 openat(dfd: CWD, filename: , flags: CLOEXEC) ...
+     0.044 sleep/11563 raw_syscalls:sys_exit:NR 257 = 3
+     0.045 (         ): sleep/11563 fstat(fd: 3, statbuf: 0x7ffdbf7119b0) ...
+     0.046 sleep/11563 raw_syscalls:sys_exit:NR 5 = 0
+     0.047 (         ): sleep/11563 mmap(len: 103334, prot: READ, flags: PRIVATE, fd: 3) ...
+     0.049 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196285493248
+     0.050 (         ): sleep/11563 close(fd: 3) ...
+     0.051 sleep/11563 raw_syscalls:sys_exit:NR 3 = 0
+     0.059 (         ): sleep/11563 openat(dfd: CWD, filename: , flags: CLOEXEC) ...
+     0.062 sleep/11563 raw_syscalls:sys_exit:NR 257 = 3
+     0.063 (         ): sleep/11563 read(fd: 3, buf: 0x7ffdbf711b78, count: 832) ...
+     0.065 sleep/11563 raw_syscalls:sys_exit:NR 0 = 832
+     0.066 (         ): sleep/11563 fstat(fd: 3, statbuf: 0x7ffdbf711a10) ...
+     0.067 sleep/11563 raw_syscalls:sys_exit:NR 5 = 0
+     0.068 (         ): sleep/11563 mmap(len: 8192, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS) ...
+     0.070 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196285485056
+     0.073 (         ): sleep/11563 mmap(len: 3889792, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3) ...
+     0.076 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196279463936
+     0.077 (         ): sleep/11563 mprotect(start: 0x7f81fd8a8000, len: 2093056) ...
+     0.083 sleep/11563 raw_syscalls:sys_exit:NR 10 = 0
+     0.084 (         ): sleep/11563 mmap(addr: 0x7f81fdaa7000, len: 24576, prot: READ|WRITE, flags: PRIVATE|FIXED|DENYWRITE, fd: 3, off: 1753088) ...
+     0.088 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196283314176
+     0.091 (         ): sleep/11563 mmap(addr: 0x7f81fdaad000, len: 14976, prot: READ|WRITE, flags: PRIVATE|FIXED|ANONYMOUS) ...
+     0.093 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196283338752
+     0.097 (         ): sleep/11563 close(fd: 3) ...
+     0.098 sleep/11563 raw_syscalls:sys_exit:NR 3 = 0
+     0.107 (         ): sleep/11563 arch_prctl(option: 4098, arg2: 140196285490432) ...
+     0.108 sleep/11563 raw_syscalls:sys_exit:NR 158 = 0
+     0.143 (         ): sleep/11563 mprotect(start: 0x7f81fdaa7000, len: 16384, prot: READ) ...
+     0.146 sleep/11563 raw_syscalls:sys_exit:NR 10 = 0
+     0.157 (         ): sleep/11563 mprotect(start: 0x561d037e7000, len: 4096, prot: READ) ...
+     0.160 sleep/11563 raw_syscalls:sys_exit:NR 10 = 0
+     0.163 (         ): sleep/11563 mprotect(start: 0x7f81fdcd5000, len: 4096, prot: READ) ...
+     0.165 sleep/11563 raw_syscalls:sys_exit:NR 10 = 0
+     0.166 (         ): sleep/11563 munmap(addr: 0x7f81fdcbb000, len: 103334) ...
+     0.174 sleep/11563 raw_syscalls:sys_exit:NR 11 = 0
+     0.216 (         ): sleep/11563 brk() ...
+     0.217 sleep/11563 raw_syscalls:sys_exit:NR 12 = 94682642325504
+     0.217 (         ): sleep/11563 brk(brk: 0x561d05453000) ...
+     0.219 sleep/11563 raw_syscalls:sys_exit:NR 12 = 94682642460672
+     0.220 (         ): sleep/11563 brk() ...
+     0.221 sleep/11563 raw_syscalls:sys_exit:NR 12 = 94682642460672
+     0.224 (         ): sleep/11563 open(filename: , flags: CLOEXEC) ...
+     0.228 sleep/11563 raw_syscalls:sys_exit:NR 2 = 3
+     0.229 (         ): sleep/11563 fstat(fd: 3, statbuf: 0x7f81fdaacaa0) ...
+     0.230 sleep/11563 raw_syscalls:sys_exit:NR 5 = 0
+     0.231 (         ): sleep/11563 mmap(len: 113045344, prot: READ, flags: PRIVATE, fd: 3) ...
+     0.234 sleep/11563 raw_syscalls:sys_exit:NR 9 = 140196166418432
+     0.237 (         ): sleep/11563 close(fd: 3) ...
+     0.238 sleep/11563 raw_syscalls:sys_exit:NR 3 = 0
+     0.262 (         ): sleep/11563 nanosleep(rqtp: 0x7ffdbf7126f0) ...
+  1000.399 sleep/11563 raw_syscalls:sys_exit:NR 35 = 0
+  1000.440 (         ): sleep/11563 close(fd: 1) ...
+  1000.447 sleep/11563 raw_syscalls:sys_exit:NR 3 = 0
+  1000.454 (         ): sleep/11563 close(fd: 2) ...
+  1000.468 (         ): sleep/11563 exit_group(                                                           )
+  #
 
-Testing it in the systems previously failing:
+In the next csets we'll connect those events to the existing enter/exit
+raw_syscalls handlers in 'perf trace', just like we did with the
+syscalls:sys_{enter,exit}_* tracepoints.
 
-  # time dm android-ndk:r12b-arm \
-         android-ndk:r15c-arm \
-         debian:experimental-x-arm64 \
-         ubuntu:14.04.4-x-linaro-arm64 \
-         ubuntu:16.04-x-arm \
-         ubuntu:16.04-x-arm64 \
-         ubuntu:18.04-x-arm \
-         ubuntu:18.04-x-arm64
-    1 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-    2 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-    3 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.2.0-7) 8.2.0
-    4 ubuntu:14.04.4-x-linaro-arm64 : Ok   aarch64-linux-gnu-gcc (Linaro GCC 5.5-2017.10) 5.5.0
-    5 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-    6 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-    7 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
-    8 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
-
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20181031174408.GA27871@arm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-5nl8l4hx1tl9pqdx65nkp6pw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm64/include/asm/barrier.h | 133 +++++++++++++++++----------------
- 1 file changed, 67 insertions(+), 66 deletions(-)
+ tools/perf/examples/bpf/augmented_raw_syscalls.c | 59 ++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 tools/perf/examples/bpf/augmented_raw_syscalls.c
 
-diff --git a/tools/arch/arm64/include/asm/barrier.h b/tools/arch/arm64/include/asm/barrier.h
-index 12835ea0e417..378c051fa177 100644
---- a/tools/arch/arm64/include/asm/barrier.h
-+++ b/tools/arch/arm64/include/asm/barrier.h
-@@ -14,74 +14,75 @@
- #define wmb()		asm volatile("dmb ishst" ::: "memory")
- #define rmb()		asm volatile("dmb ishld" ::: "memory")
- 
--#define smp_store_release(p, v)					\
--do {								\
--	union { typeof(*p) __val; char __c[1]; } __u =		\
--		{ .__val = (__force typeof(*p)) (v) }; 		\
--								\
--	switch (sizeof(*p)) {					\
--	case 1:							\
--		asm volatile ("stlrb %w1, %0"			\
--				: "=Q" (*p)			\
--				: "r" (*(__u8 *)__u.__c)	\
--				: "memory");			\
--		break;						\
--	case 2:							\
--		asm volatile ("stlrh %w1, %0"			\
--				: "=Q" (*p)			\
--				: "r" (*(__u16 *)__u.__c)	\
--				: "memory");			\
--		break;						\
--	case 4:							\
--		asm volatile ("stlr %w1, %0"			\
--				: "=Q" (*p)			\
--				: "r" (*(__u32 *)__u.__c)	\
--				: "memory");			\
--		break;						\
--	case 8:							\
--		asm volatile ("stlr %1, %0"			\
--				: "=Q" (*p)			\
--				: "r" (*(__u64 *)__u.__c)	\
--				: "memory");			\
--		break;						\
--	default:						\
--		/* Only to shut up gcc ... */			\
--		mb();						\
--		break;						\
--	}							\
-+#define smp_store_release(p, v)						\
-+do {									\
-+	union { typeof(*p) __val; char __c[1]; } __u =			\
-+		{ .__val = (v) }; 					\
-+									\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile ("stlrb %w1, %0"				\
-+				: "=Q" (*p)				\
-+				: "r" (*(__u8_alias_t *)__u.__c)	\
-+				: "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile ("stlrh %w1, %0"				\
-+				: "=Q" (*p)				\
-+				: "r" (*(__u16_alias_t *)__u.__c)	\
-+				: "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile ("stlr %w1, %0"				\
-+				: "=Q" (*p)				\
-+				: "r" (*(__u32_alias_t *)__u.__c)	\
-+				: "memory");				\
-+		break;							\
-+	case 8:								\
-+		asm volatile ("stlr %1, %0"				\
-+				: "=Q" (*p)				\
-+				: "r" (*(__u64_alias_t *)__u.__c)	\
-+				: "memory");				\
-+		break;							\
-+	default:							\
-+		/* Only to shut up gcc ... */				\
-+		mb();							\
-+		break;							\
-+	}								\
- } while (0)
- 
--#define smp_load_acquire(p)					\
--({								\
--	union { typeof(*p) __val; char __c[1]; } __u;		\
--								\
--	switch (sizeof(*p)) {					\
--	case 1:							\
--		asm volatile ("ldarb %w0, %1"			\
--			: "=r" (*(__u8 *)__u.__c)		\
--			: "Q" (*p) : "memory");			\
--		break;						\
--	case 2:							\
--		asm volatile ("ldarh %w0, %1"			\
--			: "=r" (*(__u16 *)__u.__c)		\
--			: "Q" (*p) : "memory");			\
--		break;						\
--	case 4:							\
--		asm volatile ("ldar %w0, %1"			\
--			: "=r" (*(__u32 *)__u.__c)		\
--			: "Q" (*p) : "memory");			\
--		break;						\
--	case 8:							\
--		asm volatile ("ldar %0, %1"			\
--			: "=r" (*(__u64 *)__u.__c)		\
--			: "Q" (*p) : "memory");			\
--		break;						\
--	default:						\
--		/* Only to shut up gcc ... */			\
--		mb();						\
--		break;						\
--	}							\
--	__u.__val;						\
-+#define smp_load_acquire(p)						\
-+({									\
-+	union { typeof(*p) __val; char __c[1]; } __u =			\
-+		{ .__c = { 0 } };					\
-+									\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile ("ldarb %w0, %1"				\
-+			: "=r" (*(__u8_alias_t *)__u.__c)		\
-+			: "Q" (*p) : "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile ("ldarh %w0, %1"				\
-+			: "=r" (*(__u16_alias_t *)__u.__c)		\
-+			: "Q" (*p) : "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile ("ldar %w0, %1"				\
-+			: "=r" (*(__u32_alias_t *)__u.__c)		\
-+			: "Q" (*p) : "memory");				\
-+		break;							\
-+	case 8:								\
-+		asm volatile ("ldar %0, %1"				\
-+			: "=r" (*(__u64_alias_t *)__u.__c)		\
-+			: "Q" (*p) : "memory");				\
-+		break;							\
-+	default:							\
-+		/* Only to shut up gcc ... */				\
-+		mb();							\
-+		break;							\
-+	}								\
-+	__u.__val;							\
- })
- 
- #endif /* _TOOLS_LINUX_ASM_AARCH64_BARRIER_H */
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+new file mode 100644
+index 000000000000..cde91c34b101
+--- /dev/null
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Augment the raw_syscalls tracepoints with the contents of the pointer arguments.
++ *
++ * Test it with:
++ *
++ * perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c cat /etc/passwd > /dev/null
++ *
++ * This exactly matches what is marshalled into the raw_syscall:sys_enter
++ * payload expected by the 'perf trace' beautifiers.
++ *
++ * For now it just uses the existing tracepoint augmentation code in 'perf
++ * trace', in the next csets we'll hook up these with the sys_enter/sys_exit
++ * code that will combine entry/exit in a strace like way.
++ */
++
++#include <stdio.h>
++#include <linux/socket.h>
++
++/* bpf-output associated map */
++struct bpf_map SEC("maps") __augmented_syscalls__ = {
++	.type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
++	.key_size = sizeof(int),
++	.value_size = sizeof(u32),
++	.max_entries = __NR_CPUS__,
++};
++
++struct syscall_enter_args {
++	unsigned long long common_tp_fields;
++	long		   syscall_nr;
++	unsigned long	   args[6];
++};
++
++struct syscall_exit_args {
++	unsigned long long common_tp_fields;
++	long		   syscall_nr;
++	long		   ret;
++};
++
++SEC("raw_syscalls:sys_enter")
++int sys_enter(struct syscall_enter_args *args)
++{
++	struct {
++		struct syscall_enter_args args;
++	} augmented_args;
++	unsigned int len = sizeof(augmented_args);
++
++	probe_read(&augmented_args.args, sizeof(augmented_args.args), args);
++	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, &augmented_args, len);
++	return 0;
++}
++
++SEC("raw_syscalls:sys_exit")
++int sys_exit(struct syscall_exit_args *args)
++{
++	return 1; /* 0 as soon as we start copying data returned by the kernel, e.g. 'read' */
++}
++
++license(GPL);
 -- 
 2.14.4
