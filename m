@@ -1,73 +1,162 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/18] perf record: Support weak groups
-Date: Tue,  6 Nov 2018 09:06:01 -0300
-Message-ID: <20181106120612.8262-8-acme@kernel.org>
+Subject: [PATCH 08/18] perf stat: Handle different PMU names with common prefix
+Date: Tue,  6 Nov 2018 09:06:02 -0300
+Message-ID: <20181106120612.8262-9-acme@kernel.org>
 References: <20181106120612.8262-1-acme@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20181106120612.8262-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-Implement a weak group fallback for 'perf record', similar to the
-existing 'perf stat' support.  This allows to use groups that might be
-longer than the available counters without failing.
+On s390 the CPU Measurement Facility for counters now supports
+2 PMUs named cpum_cf (CPU Measurement Facility for counters) and
+cpum_cf_diag (CPU Measurement Facility for diagnostic counters)
+for one and the same CPU.
 
-Before:
+Running command
 
-  $ perf record  -e '{cycles,cache-misses,cache-references,cpu_clk_unhalted.thread,cycles,cycles,cycles}' -a sleep 1
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cycles).
-  /bin/dmesg | grep -i perf may provide additional information.
+ [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
+	 -- ~/mytests/cf-tx-events 1
 
-After:
+ Measuring transactions
+ TX_C_TABORT_NO_SPECIAL: 0 expected:0
+ TX_C_TABORT_SPECIAL: 0 expected:0
+ TX_C_TEND: 1 expected:1
+ TX_NC_TABORT: 11 expected:11
+ TX_NC_TEND: 1 expected:1
 
-  $ ./perf record  -e '{cycles,cache-misses,cache-references,cpu_clk_unhalted.thread,cycles,cycles,cycles}:W' -a sleep 1
-  WARNING: No sample_id_all support, falling back to unordered processing
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 8.136 MB perf.data (134069 samples) ]
+ Performance counter stats for '/root/mytests/cf-tx-events 1':
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20181001195927.14211-2-andi@firstfloor.org
+  2      tx_c_tend
+
+      0.002120091 seconds time elapsed
+
+      0.000121000 seconds user
+      0.002127000 seconds sys
+
+ [root@s35lp76 perf]#
+
+displays output which is unexpected (and wrong):
+
+  2      tx_c_tend
+
+The test program definitely triggers only one transaction, as shown
+in line 'TX_C_TEND: 1 expected:1'.
+
+This is caused by the following call sequence:
+
+pmu_lookup() scans and installs a PMU.
++--> pmu_aliases() parses all aliases in directory
+		.../<pmu-name>/events/* which are file names.
+     +--> pmu_aliases_parse() Read each file in directory and create
+                      an new alias entry. This is done with
+          +--> perf_pmu__new_alias() and
+	       +--> __perf_pmu__new_alias() which also check for
+	                   identical alias names.
+
+After pmu_aliases() returns, a complete list of event names
+for this pmu has been created. Now function
+
+pmu_add_cpu_aliases()   is called to add the events listed in the json
+|                       files to the alias list of the cpu.
++--> perf_pmu__find_map()  Returns a pointer to the json events.
+
+Now function pmu_add_cpu_aliases() scans through all events listed
+in the JSON files for this CPU.
+Each json event pmu name is compared with the current PMU being
+built up and if they mismatch, the json event is added to the
+current PMUs alias list.
+To avoid duplicate entries the following comparison is done:
+
+	if (!is_arm_pmu_core(name)) {
+	     pname = pe->pmu ? pe->pmu : "cpu";
+	     if (strncmp(pname, name, strlen(pname)))
+		     continue;
+     }
+
+The culprit is the strncmp() function.
+
+Using current s390 PMU naming, the first PMU is 'cpum_cf'
+and a long list of events is added, among them 'tx_c_tend'
+
+When the second PMU named 'cpum_cf_diag' is added, only one event
+named 'CF_DIAG' is added by the pmu_aliases()  function.
+
+Now function pmu_add_cpu_aliases() is invoked for PMU 'cpum_cf_diag'.
+Since the CPUID string is the same for both PMUs, json file events
+for PMU named 'cpum_cf' are added to the PMU 'cpm_cf_diag'
+
+This happens because the strncmp() actually compares:
+
+     strncmp("cpum_cf", "cpum_cf_diag", 6);
+
+The first parameter is the pmu name taken from the event in
+the json file. The second parameter is the pmu name of the PMU
+currently being built.
+They are different, but the length of the compare only tests the
+common prefix and this returns 0(true) when it should return false.
+
+Now all events for PMU cpum_cf are added to the alias list for pmu
+cpum_cf_diag.
+
+Later on in function parse_events_add_pmu() the event 'tx_c_end' is
+searched in all available PMUs and found twice, adding it two
+times to the evsel_list global variable which is the root
+of all events. This results in a counter value of 2 instead
+of 1.
+
+Output with this patch:
+
+ [root@s35lp76 perf]# ./perf stat -e tx_c_tend \
+			-- ~/mytests/cf-tx-events 1
+ Measuring transactions
+ TX_C_TABORT_NO_SPECIAL: 0 expected:0
+ TX_C_TABORT_SPECIAL: 0 expected:0
+ TX_C_TEND: 1 expected:1
+ TX_NC_TABORT: 11 expected:11
+ TX_NC_TEND: 1 expected:1
+
+ Performance counter stats for '/root/mytests/cf-tx-events 1':
+
+                  1      tx_c_tend
+
+      0.001815365 seconds time elapsed
+
+      0.000123000 seconds user
+      0.001756000 seconds sys
+
+ [root@s35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Reviewed-by: Sebastien Boisvert <sboisvert@gydle.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
+Link: http://lkml.kernel.org/r/20181023151616.78193-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-list.txt | 1 -
- tools/perf/builtin-record.c            | 7 ++++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 236b9b97dfdb..667c14e56031 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -55,7 +55,6 @@ counted. The following modifiers exist:
-  S - read sample value (PERF_SAMPLE_READ)
-  D - pin the event to the PMU
-  W - group is weak and will fallback to non-group if not schedulable,
--     only supported in 'perf stat' for now.
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 7799788f662f..7e49baad304d 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -773,7 +773,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
  
- The 'p' modifier can be used for specifying how precise the instruction
- address should be. The 'p' modifier can be specified multiple times:
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 10cf889c6d75..488779bc4c8d 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -391,7 +391,12 @@ static int record__open(struct record *rec)
- 					ui__warning("%s\n", msg);
- 				goto try_again;
- 			}
--
-+			if ((errno == EINVAL || errno == EBADF) &&
-+			    pos->leader != pos &&
-+			    pos->weak_group) {
-+			        pos = perf_evlist__reset_weak_group(evlist, pos);
-+				goto try_again;
-+			}
- 			rc = -errno;
- 			perf_evsel__open_strerror(pos, &opts->target,
- 						  errno, msg, sizeof(msg));
+ 		if (!is_arm_pmu_core(name)) {
+ 			pname = pe->pmu ? pe->pmu : "cpu";
+-			if (strncmp(pname, name, strlen(pname)))
++			if (strcmp(pname, name))
+ 				continue;
+ 		}
+ 
 -- 
 2.14.4
