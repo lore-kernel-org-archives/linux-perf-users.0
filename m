@@ -1,30 +1,66 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
- unwinding - wrong stack pointer register value?]
-Date: Tue, 6 Nov 2018 12:24:11 -0800
-Message-ID: <20181106202411.GU6218@tassilo.jf.intel.com>
-References: <2335309.gnWok9HYb4@agathebauer>
- <20181106001037.GQ6218@tassilo.jf.intel.com>
- <20181106083957.GB8081@krava>
- <2102566.fCj8pZGm78@agathebauer>
+From: Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH] perf script: add newline after uregs output
+Date: Wed,  7 Nov 2018 10:37:05 +0100
+Message-ID: <20181107093705.16346-1-milian.wolff@kdab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2102566.fCj8pZGm78@agathebauer>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: acme@kernel.org, jolsa@kernel.org
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-> Where would I look for the source to change here? So far, I only concentrated 
-> on the userspace side of perf in tools/perf.
+This change makes it much easier to easily distinguish
+between consecutive samples by keeping the empty line
+between them, like we see when we do not enable uregs
+output.
 
-Kind of similar to 
+Before:
 
-a405bad5ad20 perf/x86: Add Haswell specific transaction flag reporting
-fdfbbd07e91f perf: Add generic transaction flags
+```
+cpp-inlining 28298 [-01] 54837.342780:    3068085 cycles:pp:
+            7ffff7c96709 __hypot_finite+0xa9 (/usr/lib/libm-2.28.so)
+            ...
+ ABI:2    AX:0x0    BX:0x40f56cf6    CX:0x294a3ae7    ...
+cpp-inlining 28298 [-01] 54837.344493:    2881929 cycles:pp:
+            7ffff7c96696 __hypot_finite+0x36 (/usr/lib/libm-2.28.so)
+            ...
+ ABI:2    AX:0x40d440c7    BX:0x40d440c7    CX:0x4d45e5da    ...
+```
 
-Report the original (not overwritten) regs->ip and regs->sp
+After:
 
--Andi
+```
+cpp-inlining 28298 [-01] 54837.342780:    3068085 cycles:pp:
+            7ffff7c96709 __hypot_finite+0xa9 (/usr/lib/libm-2.28.so)
+            ...
+ ABI:2    AX:0x0    BX:0x40f56cf6    CX:0x294a3ae7    ...
+
+cpp-inlining 28298 [-01] 54837.344493:    2881929 cycles:pp:
+            7ffff7c96696 __hypot_finite+0x36 (/usr/lib/libm-2.28.so)
+            ...
+ ABI:2    AX:0x40d440c7    BX:0x40d440c7    CX:0x4d45e5da    ...
+```
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+---
+ tools/perf/builtin-script.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index b5bc85bd0bbe..daf73832743e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -603,6 +603,8 @@ static int perf_sample__fprintf_uregs(struct perf_sam=
+ple *sample,
+ 		printed +=3D fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
+ 	}
+=20
++	fprintf(fp, "\n");
++
+ 	return printed;
+ }
+=20
+--=20
+2.19.1
