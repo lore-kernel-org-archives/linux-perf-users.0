@@ -1,163 +1,142 @@
 From: Milian Wolff <milian.wolff@kdab.com>
-Subject: [PATCH] perf script: share code and output format for uregs and iregs
- output
-Date: Wed,  7 Nov 2018 23:34:37 +0100
-Message-ID: <20181107223437.9071-1-milian.wolff@kdab.com>
+Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
+ unwinding - wrong stack pointer register value?]
+Date: Wed, 07 Nov 2018 23:41:31 +0100
+Message-ID: <1584560.aXQ729uQp3@agathebauer>
+References: <2335309.gnWok9HYb4@agathebauer> <2102566.fCj8pZGm78@agathebauer>
+ <20181106202411.GU6218@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="nextPart2604735.gXIAmy9HsQ";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181106202411.GU6218@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, jolsa@kernel.org
-Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-The iregs output was missing the newline at end as well as the leading
-ABI output. This made it hard to compare the iregs and uregs values.
-Instead, use a single function to output the register values and use
-it for both, iregs and uregs, to ensure the output is consistent.
+--nextPart2604735.gXIAmy9HsQ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Before:
+On Dienstag, 6. November 2018 21:24:11 CET Andi Kleen wrote:
+> > Where would I look for the source to change here? So far, I only
+> > concentrated on the userspace side of perf in tools/perf.
+> 
+> Kind of similar to
+> 
+> a405bad5ad20 perf/x86: Add Haswell specific transaction flag reporting
+> fdfbbd07e91f perf: Add generic transaction flags
+> 
+> Report the original (not overwritten) regs->ip and regs->sp
 
-```
-perf  7049 [-01]  1343.354347:          1 cycles:ppp:
-        ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf=
--devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-=
-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.2=
-0.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-deve=
-l-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-=
-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-   AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    B=
-P:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FL=
-AGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b=
-8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xff=
-ff95bc8213a400   R15:0x1  ABI:2    AX:0xffffffffffffffda    BX:0xffffffff=
-ffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820  =
-  DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f8=
-4ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x=
-7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xfffff=
-fffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
+Thanks a lot Andi! With your help, I have managed to find the exact issue for 
+my scenario. Turns out, it really is "just" the instruction pointer that is 
+wrong. I.e. originally we have IP = 0x7feda32ca68c, but with PEBS we correct 
+that to IP = 7feda32ca688. The SP register value stays the same according to 
+my printk output. Using the original IP value, we can unwind correctly since 
+we point to the correct place in the .eh_frame section. The PEBS IP points to 
+a different position in the .eh_frame section, which is "too early".
 
-perf  7049 [-01]  1343.354363:          1 cycles:ppp:
-        ...
-```
+That brings up some questions:
 
-After:
+- I noticed `perf record --intr-regs`, but the values recorded in the 
+perf.data file are always the same. I.e. comparing uregs and iregs, I always 
+see the same values printed by `perf script`. This smells like a bug to me, 
+but so far I haven't figured out why this happens...
 
-```
-perf  7049 [-01]  1343.354347:          1 cycles:ppp:
-        ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf=
--devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-=
-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.2=
-0.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-deve=
-l-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-=
-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
-        ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1pe=
-rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
- ABI:2    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x2=
-86    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc=
-21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33=
-816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R=
-14:0xffff95bc8213a400   R15:0x1
- ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85=
-798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP=
-:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    =
-CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   =
-R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xfffff=
-fffffffffff   R15:0xffffffffffffffff
+- Independently, when I add a custom printk manually in `arch/x86/events/
+intel/ds.c` at the end of `setup_pebs_sample_data`, then I'm never seeing any 
+differences between SP in iregs/pebs/regs. Shouldn't it also be recorded via 
+PEBS? Or is it just chance that I'm never seeing any difference in 
+setup_pebs_sample_data between iregs->sp and regs->sp?
 
-perf  7049 [-01]  1343.354363:          1 cycles:ppp:
-        ...
-```
+- Generally, how do we want to handle this bug? If `--intr-regs` would 
+actually record a different IP than stored in uregs in the perf.data file, 
+then we could use that as a fallback for unwinding, when it fails the first 
+time. Or should we always unwind from that IP? How do we mark the "actual" 
+frame/IP then, if that differs?
 
-Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
----
- tools/perf/builtin-script.c | 40 ++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 23 deletions(-)
+Thanks
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index daf73832743e..04913136bac9 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -566,30 +566,10 @@ static int perf_session__check_output_opt(struct pe=
-rf_session *session)
- 	return 0;
- }
-=20
--static int perf_sample__fprintf_iregs(struct perf_sample *sample,
--				      struct perf_event_attr *attr, FILE *fp)
--{
--	struct regs_dump *regs =3D &sample->intr_regs;
--	uint64_t mask =3D attr->sample_regs_intr;
--	unsigned i =3D 0, r;
--	int printed =3D 0;
--
--	if (!regs)
--		return 0;
--
--	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
--		u64 val =3D regs->regs[i++];
--		printed +=3D fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
--	}
--
--	return printed;
--}
--
--static int perf_sample__fprintf_uregs(struct perf_sample *sample,
--				      struct perf_event_attr *attr, FILE *fp)
-+static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t ma=
-sk,
-+				     FILE *fp
-+)
- {
--	struct regs_dump *regs =3D &sample->user_regs;
--	uint64_t mask =3D attr->sample_regs_user;
- 	unsigned i =3D 0, r;
- 	int printed =3D 0;
-=20
-@@ -608,6 +588,20 @@ static int perf_sample__fprintf_uregs(struct perf_sa=
-mple *sample,
- 	return printed;
- }
-=20
-+static int perf_sample__fprintf_iregs(struct perf_sample *sample,
-+				      struct perf_event_attr *attr, FILE *fp)
-+{
-+	return perf_sample__fprintf_regs(&sample->intr_regs,
-+					 attr->sample_regs_intr, fp);
-+}
-+
-+static int perf_sample__fprintf_uregs(struct perf_sample *sample,
-+				      struct perf_event_attr *attr, FILE *fp)
-+{
-+	return perf_sample__fprintf_regs(&sample->user_regs,
-+					 attr->sample_regs_user, fp);
-+}
-+
- static int perf_sample__fprintf_start(struct perf_sample *sample,
- 				      struct thread *thread,
- 				      struct perf_evsel *evsel,
---=20
-2.19.1
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart2604735.gXIAmy9HsQ
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTA3MjI0MTMxWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgAy08xyRFEPL2fPCM+NANwV7NoqyD
+FZhj/JIJQugQepowDQYJKoZIhvcNAQEBBQAEggEAAZrhIv7b3SbvFGtw3QknDRzfApJ8qhkx2myq
+aFjNern60xw1enUu5bDsONMua++kG3kJEiYP3ewRGlPZVgXk5ThOt4i2AOdiDBxo18iJla2tB3VU
+7CvQlQPPpqB5ibbn+oGCau+AVuFBPyB8WQTkXr6QoCwRLZsFugmx1myEtV7nu8FuL4NpS74wKleW
+TgSvpo6EMpJ3OcASE0GH7IB4D6nymmKQ8EHz6BhFo3Woz7619Resd9H2B/MsCTWvwfsgJodTialb
+2xDAP47ldVu5q7tw+FokNV43RqawSqHtqLkJrY/E3VthcQeRVWQfXoqMlPl42CZu3d7L2TsMiDuS
+0AAAAAAAAA==
+
+
+--nextPart2604735.gXIAmy9HsQ--
