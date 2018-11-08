@@ -1,70 +1,89 @@
 From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
  unwinding - wrong stack pointer register value?]
-Date: Wed, 07 Nov 2018 23:41:31 +0100
-Message-ID: <1584560.aXQ729uQp3@agathebauer>
-References: <2335309.gnWok9HYb4@agathebauer> <2102566.fCj8pZGm78@agathebauer>
- <20181106202411.GU6218@tassilo.jf.intel.com>
+Date: Thu, 08 Nov 2018 13:41:50 +0100
+Message-ID: <7105958.qy8IzDpmRc@agathebauer>
+References: <2335309.gnWok9HYb4@agathebauer>
+ <20181106202411.GU6218@tassilo.jf.intel.com> <1584560.aXQ729uQp3@agathebauer>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2604735.gXIAmy9HsQ";
+Content-Type: multipart/signed; boundary="nextPart1543118.cLrsxmjIBU";
  micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106202411.GU6218@tassilo.jf.intel.com>
+In-Reply-To: <1584560.aXQ729uQp3@agathebauer>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho <acme@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
---nextPart2604735.gXIAmy9HsQ
+--nextPart1543118.cLrsxmjIBU
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-On Dienstag, 6. November 2018 21:24:11 CET Andi Kleen wrote:
-> > Where would I look for the source to change here? So far, I only
-> > concentrated on the userspace side of perf in tools/perf.
+On Mittwoch, 7. November 2018 23:41:31 CET Milian Wolff wrote:
+> On Dienstag, 6. November 2018 21:24:11 CET Andi Kleen wrote:
+> > > Where would I look for the source to change here? So far, I only
+> > > concentrated on the userspace side of perf in tools/perf.
+> > 
+> > Kind of similar to
+> > 
+> > a405bad5ad20 perf/x86: Add Haswell specific transaction flag reporting
+> > fdfbbd07e91f perf: Add generic transaction flags
+> > 
+> > Report the original (not overwritten) regs->ip and regs->sp
 > 
-> Kind of similar to
+> Thanks a lot Andi! With your help, I have managed to find the exact issue
+> for my scenario. Turns out, it really is "just" the instruction pointer
+> that is wrong. I.e. originally we have IP = 0x7feda32ca68c, but with PEBS
+> we correct that to IP = 7feda32ca688. The SP register value stays the same
+> according to my printk output. Using the original IP value, we can unwind
+> correctly since we point to the correct place in the .eh_frame section. The
+> PEBS IP points to a different position in the .eh_frame section, which is
+> "too early".
 > 
-> a405bad5ad20 perf/x86: Add Haswell specific transaction flag reporting
-> fdfbbd07e91f perf: Add generic transaction flags
+> That brings up some questions:
 > 
-> Report the original (not overwritten) regs->ip and regs->sp
+> - I noticed `perf record --intr-regs`, but the values recorded in the
+> perf.data file are always the same. I.e. comparing uregs and iregs, I always
+> see the same values printed by `perf script`. This smells like a bug to me,
+> but so far I haven't figured out why this happens...
 
-Thanks a lot Andi! With your help, I have managed to find the exact issue for 
-my scenario. Turns out, it really is "just" the instruction pointer that is 
-wrong. I.e. originally we have IP = 0x7feda32ca68c, but with PEBS we correct 
-that to IP = 7feda32ca688. The SP register value stays the same according to 
-my printk output. Using the original IP value, we can unwind correctly since 
-we point to the correct place in the .eh_frame section. The PEBS IP points to 
-a different position in the .eh_frame section, which is "too early".
+The reason seems to be that perf_event_output only takes one set of registers, 
+which then gets handed down into perf_prepare_sample where it gets sampled. 
+Thus if sample type has both PERF_SAMPLE_REGS_USER and PERF_SAMPLE_REGS_INTR 
+set, then by design both will store the same values for user space samples.
 
-That brings up some questions:
+Can we change this, such that perf_event_output also takes a second set of 
+registers (iregs) that get sampled for PERF_SAMPLE_REGS_INTR? I'm very new to 
+real kernel development, what kind of ABI/API stability guarantees exist for 
+something like "perf_event_output"?
 
-- I noticed `perf record --intr-regs`, but the values recorded in the 
-perf.data file are always the same. I.e. comparing uregs and iregs, I always 
-see the same values printed by `perf script`. This smells like a bug to me, 
-but so far I haven't figured out why this happens...
+> - Independently, when I add a custom printk manually in `arch/x86/events/
+> intel/ds.c` at the end of `setup_pebs_sample_data`, then I'm never seeing
+> any differences between SP in iregs/pebs/regs. Shouldn't it also be
+> recorded via PEBS? Or is it just chance that I'm never seeing any
+> difference in setup_pebs_sample_data between iregs->sp and regs->sp?
 
-- Independently, when I add a custom printk manually in `arch/x86/events/
-intel/ds.c` at the end of `setup_pebs_sample_data`, then I'm never seeing any 
-differences between SP in iregs/pebs/regs. Shouldn't it also be recorded via 
-PEBS? Or is it just chance that I'm never seeing any difference in 
-setup_pebs_sample_data between iregs->sp and regs->sp?
+The reason here seems to be that the registers stored in "pebs" are 
+essentially the same as iregs for the setup for `perf record --call-graph 
+dwarf`. The difference is the availability of `pebs->real_ip` which gets used 
+on my system to fixup the IP. SP stays untouched and is thus only truly valid 
+for the untouched IP (which is discarded currently - see above).
 
-- Generally, how do we want to handle this bug? If `--intr-regs` would 
-actually record a different IP than stored in uregs in the perf.data file, 
-then we could use that as a fallback for unwinding, when it fails the first 
-time. Or should we always unwind from that IP? How do we mark the "actual" 
-frame/IP then, if that differs?
+> - Generally, how do we want to handle this bug? If `--intr-regs` would
+> actually record a different IP than stored in uregs in the perf.data file,
+> then we could use that as a fallback for unwinding, when it fails the first
+> time. Or should we always unwind from that IP? How do we mark the "actual"
+> frame/IP then, if that differs?
+> 
+> Thanks
 
-Thanks
 
 -- 
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH, a KDAB Group company
 Tel: +49-30-521325470
 KDAB - The Qt, C++ and OpenGL Experts
---nextPart2604735.gXIAmy9HsQ
+--nextPart1543118.cLrsxmjIBU
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -129,14 +148,14 @@ cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
 c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
 BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
 EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTA3MjI0MTMxWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgAy08xyRFEPL2fPCM+NANwV7NoqyD
-FZhj/JIJQugQepowDQYJKoZIhvcNAQEBBQAEggEAAZrhIv7b3SbvFGtw3QknDRzfApJ8qhkx2myq
-aFjNern60xw1enUu5bDsONMua++kG3kJEiYP3ewRGlPZVgXk5ThOt4i2AOdiDBxo18iJla2tB3VU
-7CvQlQPPpqB5ibbn+oGCau+AVuFBPyB8WQTkXr6QoCwRLZsFugmx1myEtV7nu8FuL4NpS74wKleW
-TgSvpo6EMpJ3OcASE0GH7IB4D6nymmKQ8EHz6BhFo3Woz7619Resd9H2B/MsCTWvwfsgJodTialb
-2xDAP47ldVu5q7tw+FokNV43RqawSqHtqLkJrY/E3VthcQeRVWQfXoqMlPl42CZu3d7L2TsMiDuS
-0AAAAAAAAA==
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTA4MTI0MTUwWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgJlP5JaEyDAQfz9ZzoYvAR3qpTJni
+mhITJxVxQdgzuRIwDQYJKoZIhvcNAQEBBQAEggEAc/agt+U3MTfQCLY1Z4vrIfmIScmTrbvzaGNM
++/ryknfSwujWGXQXec+kTL7pSfmp3nGFmD51gHBFnXcOaIFRgYeN3jLRuFQHHOqHn/1I25OQq3Y9
+5WA3dlcJaEUf5MoKk5b0COSP/yVZFGdNv2nqiH9bZsSaQ2vSJMBhdmgKumPgSrR48M/c0DiFkZCG
+kigg1+ZbLCuE/ElfC12FnfnqF3ottSyuSukok8H3uJ/Xb+T4GvpCzzA5tgo6LqWugHdLpCsef2lD
+NXaZRkOoouKkOUCP0k4CON+a2Eq5Ueof4Y9AnwgWUNkBR8KDdBFTDH2p8C9tEgqdtwUh09fON3QO
+tgAAAAAAAA==
 
 
---nextPart2604735.gXIAmy9HsQ--
+--nextPart1543118.cLrsxmjIBU--
