@@ -1,61 +1,53 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf script: share code and output format for uregs and
- iregs output
-Date: Fri, 9 Nov 2018 09:19:45 +0100
-Message-ID: <20181109081945.GI29732@krava>
-References: <20181107223437.9071-1-milian.wolff@kdab.com>
+From: Travis Downs <travis.downs@gmail.com>
+Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
+ unwinding - wrong stack pointer register value?]
+Date: Sat, 10 Nov 2018 16:42:48 -0500
+Message-ID: <CAOBGo4za8hnGt1NUWy1Y1V12WycbxbYP0G0Sm=UT7T9dQ88vDg@mail.gmail.com>
+References: <2335309.gnWok9HYb4@agathebauer> <3227038.olIWmsCzzY@agathebauer>
+ <20181105205119.GC25674@krava> <3799078.YBnU1OB0PF@agathebauer> <20181106001037.GQ6218@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181107223437.9071-1-milian.wolff@kdab.com>
+In-Reply-To: <20181106001037.GQ6218@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: acme@kernel.org, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: ak@linux.intel.com
+Cc: milian.wolff@kdab.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Nov 07, 2018 at 11:34:37PM +0100, Milian Wolff wrote:
-> The iregs output was missing the newline at end as well as the leading
-> ABI output. This made it hard to compare the iregs and uregs values.
-> Instead, use a single function to output the register values and use
-> it for both, iregs and uregs, to ensure the output is consistent.
-> 
-> Before:
-> 
-> ```
-> perf  7049 [-01]  1343.354347:          1 cycles:ppp:
->         ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xffff95bc8213a400   R15:0x1  ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
-> 
-> perf  7049 [-01]  1343.354363:          1 cycles:ppp:
->         ...
-> ```
-> 
-> After:
-> 
-> ```
-> perf  7049 [-01]  1343.354347:          1 cycles:ppp:
->         ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->         ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
->  ABI:2    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xffff95bc8213a400   R15:0x1
->  ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
+On Mon, Nov 5, 2018 at 7:11 PM Andi Kleen <ak@linux.intel.com> wrote:
+> Milian is right.
+>
+> There is a execution window from PEBS capturing registers to actually triggering
+> the PMU, and if there is stack manipulation in that window
+> the PEBS state might be out of sync with the real stack.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+This explains some weird results I was always getting especially when
+functions were small, including
+failed unwindings when using dwarf unwinder.
 
-thanks,
-jirka
+I guess this problem doesn't occur for LBR unwinding since the LBR
+records are captured at the same
+moment in time as the PEBS record, so reflect the correct branch
+sequence. Of course, LBR doesn't
+always let you unwind fully, right?
+
+>
+> The right RIP/RSP to use for the stack unwinding is always the data
+> in the PMI's exception frame on the stack.
+>
+> Probably would need to modify perf to report those too in addition
+> to the PEBS registers.
+>
+> Of course it would still mean that the stack unwinding may not exactly
+> match the sample RIP, but at least it should be consistent.
+
+What would this fix mean for perf report when you use cycles:pp and
+cycles:ppp (or any PEBS based events)? The unwinding should generally
+work, but the IP at the top of that stack (from the PMI) will
+generally be different than that recorded by PEBS. The tree view and
+overhead calculations will be based on the captured stacks, I guess -
+but when I annotate, will the values I see correspond to the PEBS IPs
+or the PMI IPs?
+
+If someone is using cycles:pp or :ppp they probably care about
+instruction-level accuracy, so it would be a shame to throw it away.
