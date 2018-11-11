@@ -1,81 +1,64 @@
-From: Travis Downs <travis.downs@gmail.com>
-Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
- unwinding - wrong stack pointer register value?]
-Date: Sat, 10 Nov 2018 21:54:54 -0500
-Message-ID: <CAOBGo4wmMEP_uy8dHh3UvXShHDPBuac=EwJ+HqJfpuzzQRoL=g@mail.gmail.com>
-References: <2335309.gnWok9HYb4@agathebauer> <3227038.olIWmsCzzY@agathebauer>
- <20181105205119.GC25674@krava> <3799078.YBnU1OB0PF@agathebauer>
- <20181106001037.GQ6218@tassilo.jf.intel.com> <CAOBGo4za8hnGt1NUWy1Y1V12WycbxbYP0G0Sm=UT7T9dQ88vDg@mail.gmail.com>
- <20181111010702.GC6218@tassilo.jf.intel.com> <CAOBGo4zirLiKX8VcROAE=kAD0+qkF0E-cBv9DtBiQr=_obDv5w@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf script: share code and output format for uregs and
+ iregs output
+Date: Sun, 11 Nov 2018 09:21:10 -0800
+Message-ID: <20181111172110.GB1111@kernel.org>
+References: <20181107223437.9071-1-milian.wolff@kdab.com>
+ <20181109081945.GI29732@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOBGo4zirLiKX8VcROAE=kAD0+qkF0E-cBv9DtBiQr=_obDv5w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181109081945.GI29732@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ak@linux.intel.com
-Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@redhat.com, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@kernel.org, Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sat, Nov 10, 2018 at 8:07 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> On Sat, Nov 10, 2018 at 04:42:48PM -0500, Travis Downs wrote:
-> > I guess this problem doesn't occur for LBR unwinding since the LBR
-> > records are captured at the same
-> > moment in time as the PEBS record, so reflect the correct branch
-> > sequence.
->
-> Actually it happens with LBRs too, but it always gives the backtrace
-> consistently at the PMI trigger point.
+Em Fri, Nov 09, 2018 at 09:19:45AM +0100, Jiri Olsa escreveu:
+> On Wed, Nov 07, 2018 at 11:34:37PM +0100, Milian Wolff wrote:
+> > The iregs output was missing the newline at end as well as the leading
+> > ABI output. This made it hard to compare the iregs and uregs values.
+> > Instead, use a single function to output the register values and use
+> > it for both, iregs and uregs, to ensure the output is consistent.
+> > 
+> > Before:
+> > 
+> > ```
+> > perf  7049 [-01]  1343.354347:          1 cycles:ppp:
+> >         ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xffff95bc8213a400   R15:0x1  ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
+> > 
+> > perf  7049 [-01]  1343.354363:          1 cycles:ppp:
+> >         ...
+> > ```
+> > 
+> > After:
+> > 
+> > ```
+> > perf  7049 [-01]  1343.354347:          1 cycles:ppp:
+> >         ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >         ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+> >  ABI:2    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xffff95bc8213a400   R15:0x1
+> >  ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+Thanks, applied.
 
-That's weird - so the LBR records are from the PMI point, but the rest
-of the PEBS record comes from the PEBS trigger point? Or the LBR isn't
-part of PEBS at all?
-
->
-> > What would this fix mean for perf report when you use cycles:pp and
-> > cycles:ppp (or any PEBS based events)? The unwinding should generally
-> > work, but the IP at the top of that stack (from the PMI) will
-> > generally be different than that recorded by PEBS. The tree view and
-> > overhead calculations will be based on the captured stacks, I guess -
-> > but when I annotate, will the values I see correspond to the PEBS IPs
-> > or the PMI IPs?
->
-> Based on PEBS IPs.
->
-> It would be a good idea to add a check to perf report
-> that the two IPs are different, and if they differ
-> add some indicator to the sample. This could be a new sort key,
-> although that would waste some space on the screen, or something
-> else.
-
-
-In the case that PEBS events are used, the IP will differ essentially
-100% of the time, right? That is, there will always be *some* skid.
-
->
->
-> It wouldn't be cover all cases, for example if you have recursion
-> on the same function it might report the same IP even though
-> it's a different instance, but I presume that should be rare
-> enough to not be a problem.
->
-
-Well the main problem I see is that "IP inconsistency" will be the
-usual case, and it will be hard to resent in a reasonable way in the
-report. For example, the backtrace-based displays/reports may indicate
-that 80% of your samples are in function X, but based on the PEBS IP
-records, only 50% may fall in that function, so you'll always have a
-weird thing where when you are investigating within the stack-display
-you might see 1234 samples in a function, but when you annotate only
-789 samples are accounted for, or whatever.
-
-I don't think this is 100% solvable, it's mostly an issue of
-displaying it reasonably and managing expectations.
-
-If the LBR record came from PEBS (as I had thought, but perhaps you
-are indicating otherwise above), I could imagine a hybrid mode where
-LBR is used to go back some number of calls and then dwarf or FP or
-whatever unwinding takes over, because the further down the stack you
-do the more likely the PEBS trigger point and PMI point are likely to
-have a consistent stack.
+- Arnaldo
