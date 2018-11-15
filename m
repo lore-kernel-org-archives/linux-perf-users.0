@@ -1,77 +1,127 @@
-From: Travis Downs <travis.downs@gmail.com>
+From: Milian Wolff <milian.wolff@kdab.com>
 Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
  unwinding - wrong stack pointer register value?]
-Date: Wed, 14 Nov 2018 21:15:46 -0500
-Message-ID: <CAOBGo4xzvkitZvqnsPMKE3RYwfCsVSe3ng3eJkP2vdi35JSTFg@mail.gmail.com>
-References: <2335309.gnWok9HYb4@agathebauer> <3227038.olIWmsCzzY@agathebauer>
- <20181105205119.GC25674@krava> <3799078.YBnU1OB0PF@agathebauer>
- <20181106001037.GQ6218@tassilo.jf.intel.com> <CAOBGo4za8hnGt1NUWy1Y1V12WycbxbYP0G0Sm=UT7T9dQ88vDg@mail.gmail.com>
- <20181111010702.GC6218@tassilo.jf.intel.com> <CAOBGo4zirLiKX8VcROAE=kAD0+qkF0E-cBv9DtBiQr=_obDv5w@mail.gmail.com>
- <20181112032637.GG6218@tassilo.jf.intel.com>
+Date: Thu, 15 Nov 2018 10:10:13 +0100
+Message-ID: <6310843.N4ooJGWzKY@agathebauer>
+References: <2335309.gnWok9HYb4@agathebauer> <31474933.dcNFsqGoRn@agathebauer>
+ <CAOBGo4wPeobp90eqZF1apZxHUn-dnh6L3Rpt_=beR49o3XHY7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart1716263.NZ1ybqlvbz";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112032637.GG6218@tassilo.jf.intel.com>
+In-Reply-To: <CAOBGo4wPeobp90eqZF1apZxHUn-dnh6L3Rpt_=beR49o3XHY7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ak@linux.intel.com
-Cc: Milian Wolff <milian.wolff@kdab.com>, jolsa@redhat.com, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+To: Travis Downs <travis.downs@gmail.com>
+Cc: ak@linux.intel.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sun, Nov 11, 2018 at 10:26 PM Andi Kleen <ak@linux.intel.com> wrote:
-> On Sat, Nov 10, 2018 at 09:50:05PM -0500, Travis Downs wrote:
+--nextPart1716263.NZ1ybqlvbz
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-> LBR is not part of PEBS, but is collected separately in the PMI handler.
+On Donnerstag, 15. November 2018 03:05:32 CET Travis Downs wrote:
+> On Wed, Nov 14, 2018 at 8:20 AM Milian Wolff <milian.wolff@kdab.com> wrote:
+> > 3) I suggest we always keep the first frame and sample IP from the user
+> > regs, i.e. the accurate PEBS/IBS IP. Then we add the following frames
+> > from unwinding the ustack with the iregs.
+> 
+> Does this mean that the displayed unwind will sometimes be
+> "impossible" to have actually be generated from a consistent execution
+> of the user program?
 
-Thanks for clearing this up - so you can ignore any earlier
-suggestions on my part of trying to use LBR to fix the unwinding
-inconsistency.
+Yes, that is exactly what I'm saying.
 
-> >    In the case that PEBS events are used, the IP will differ essentially 100%
-> >    of the time, right? That is, there will always be *some* skid.
->
-> I wouldn't say that.  It depends on what the CPU is doing and the IPC
-> of the code.
+> For example, the top frame (from PEBS) and second frame (from iregs)
+> may be inconsistent in that the latter function never calls the first.
+> At this point it would be good to have an indication at the top frame
+> is from a different source than the rest of the frames, lest the user
+> pull is hair out trying to determine how function X seems to call
+> function Y despite that not being the case in the source.
 
-Well other than say a long-latency cache miss, it is my experience
-that the skid is generally never zero. That is, the PEBS and ireg IP
-will usually differ. This is mostly moot though: what is important is
-how often the ireg skip results in a different call chain (i.e., a
-return occurred between the PEBS point and the interrupt), as you have
-pointed out.
+I agree. I personally like your suggested approach - only add an indication 
+when the IP differs so much that it points to a different function. What do 
+others say to this?
 
->
-> Also the backtrace inconsistency can only happen if the sample races with
-> function return. If you don't then the backtrace will point
-> to the correct function, even though the unwind IP is different.
->
-> For example in the common case where you profile a long loop it
-> is unlikely to happen.
+Cheers
 
-Agreed.
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart1716263.NZ1ybqlvbz
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTE1MDkxMDEzWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgVIWVnetTqjm8fW1iegzah7wtASZt
+Ldxv6LoAgOfPKgwwDQYJKoZIhvcNAQEBBQAEggEAxiLBCToR3N+qtgxBsAZtrL7fA7v6/UKM5OCR
+Nq/iCPB9LJ7EWQ4ypo93R9wjDqeiXghg0IzCawfwCb0MAIj6QGhKYhaJi0PMTLk+Aa2dQFOoVU66
+7N5oeEAL0YepmohMUaIXF9MxjphoohJXNaGqb7qA4MZFQb7u1BozgCAsAZ/BPKtyZDkV+7pUOucp
+yIUHM2HPt/pUKhL7YoEuC8YxHztGwAEN9v9XZS9NZPJAxFXlgBqJUhDlVlk3sC9E0gyMGHb+lWJA
+U9jJ8PqysxZXa2sbjrS5nVHSYam58yjX+SC4udd3MnuHzaCBKv0rzLl6m6qo4kA8BWkWCc8edXyo
+OgAAAAAAAA==
 
 
-> Could collect numbers how often it happens, but it would surprise
-> me if anything complicated is worth it. I would just do the minimum fixes
-> to address the unwinder errors, and perhaps add the "unwind ip differs"
-> indication.
-
-As above, I think the most important UX problem is not when the IP
-differs, but when the top frame of the IP unwind is different than the
-function in which the PEBS sample occurred. I think the case where the
-skid ends up with both in the same function doesn't pose any
-presentation difficulties [1]. When they are different though, it
-seems tough to present a consistent picture.
-
-[1] Strictly speaking, this the "IPs are in the same function" is not
-sufficient. Imagine a scenario where you have T->B->A (T calls B calls
-A) and the PEBS sample happens in A, and then A and B return, and now
-C then A are called (T->C->A) and the PMI happens. Now the PEBS IP and
-the ireg IP are in the same function, but the stacks are still
-inconsistent. It is probably fine to paper this over and show the user
-the T->C->A stack, as this stack is somehow accurate (it really
-happened), but the user might be confused when he looks at the
-annotation for A, and sees code being executed (having PEBS samples)
-that he knows can never execute when C calls A (for example) since the
-annotations are based on the hidden T->B->A execution...
-
-Bleh.
+--nextPart1716263.NZ1ybqlvbz--
