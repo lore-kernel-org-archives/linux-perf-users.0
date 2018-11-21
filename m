@@ -1,134 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/7] perf tools: Restore proper cwd on return from mnt namespace
-Date: Wed, 21 Nov 2018 11:25:01 -0300
-Message-ID: <20181121142505.27379-4-acme@kernel.org>
+Subject: [PATCH 5/7] tools arch x86: Update tools's copy of cpufeatures.h
+Date: Wed, 21 Nov 2018 11:25:03 -0300
+Message-ID: <20181121142505.27379-6-acme@kernel.org>
 References: <20181121142505.27379-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181121142505.27379-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Krister Johansen <kjlx@templeofstupid.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Fenghua Yu <fenghua.yu@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When reporting on 'record' server we try to retrieve/use the mnt
-namespace of the profiled tasks. We use following API with cookie to
-hold the return namespace, roughly:
+To get the changes in the following csets:
 
-  nsinfo__mountns_enter(struct nsinfo *nsi, struct nscookie *nc)
-    setns(newns, 0);
-  ...
-  new ns related open..
-  ...
-  nsinfo__mountns_exit(struct nscookie *nc)
-    setns(nc->oldns)
+  ace6485a0326 ("x86/cpufeatures: Enumerate MOVDIR64B instruction")
+  33823f4d63f7 ("x86/cpufeatures: Enumerate MOVDIRI instruction")
 
-Once finished we setns to old namespace, which also sets the current
-working directory (cwd) to "/", trashing the cwd we had.
+No tools were affected, copy it to silence this perf tool build warning:
 
-This is mostly fine, because we use absolute paths almost everywhere,
-but it screws up 'perf diff':
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
 
-  # perf diff
-  failed to open perf.data: No such file or directory  (try 'perf record' first)
-  ...
-
-Adding the current working directory to be part of the cookie and
-restoring it in the nsinfo__mountns_exit call.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 843ff37bb59e ("perf symbols: Find symbols in different mount namespace")
-Link: http://lkml.kernel.org/r/20181101170001.30019-1-jolsa@kernel.org
-[ No need to check for NULL args for free(), use zfree() for struct members ]
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Link: https://lkml.kernel.org/n/tip-83kcyqa1qkxkhm1s7q3hbpel@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/namespaces.c | 17 +++++++++++++++--
- tools/perf/util/namespaces.h |  1 +
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ tools/arch/x86/include/asm/cpufeatures.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index cf8bd123cf73..aed170bd4384 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -18,6 +18,7 @@
- #include <stdio.h>
- #include <string.h>
- #include <unistd.h>
-+#include <asm/bug.h>
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 89a048c2faec..28c4a502b419 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -331,6 +331,8 @@
+ #define X86_FEATURE_LA57		(16*32+16) /* 5-level page tables */
+ #define X86_FEATURE_RDPID		(16*32+22) /* RDPID instruction */
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
++#define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
++#define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
  
- struct namespaces *namespaces__new(struct namespaces_event *event)
- {
-@@ -186,6 +187,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	char curpath[PATH_MAX];
- 	int oldns = -1;
- 	int newns = -1;
-+	char *oldcwd = NULL;
- 
- 	if (nc == NULL)
- 		return;
-@@ -199,9 +201,13 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (snprintf(curpath, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
- 		return;
- 
-+	oldcwd = get_current_dir_name();
-+	if (!oldcwd)
-+		return;
-+
- 	oldns = open(curpath, O_RDONLY);
- 	if (oldns < 0)
--		return;
-+		goto errout;
- 
- 	newns = open(nsi->mntns_path, O_RDONLY);
- 	if (newns < 0)
-@@ -210,11 +216,13 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (setns(newns, CLONE_NEWNS) < 0)
- 		goto errout;
- 
-+	nc->oldcwd = oldcwd;
- 	nc->oldns = oldns;
- 	nc->newns = newns;
- 	return;
- 
- errout:
-+	free(oldcwd);
- 	if (oldns > -1)
- 		close(oldns);
- 	if (newns > -1)
-@@ -223,11 +231,16 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 
- void nsinfo__mountns_exit(struct nscookie *nc)
- {
--	if (nc == NULL || nc->oldns == -1 || nc->newns == -1)
-+	if (nc == NULL || nc->oldns == -1 || nc->newns == -1 || !nc->oldcwd)
- 		return;
- 
- 	setns(nc->oldns, CLONE_NEWNS);
- 
-+	if (nc->oldcwd) {
-+		WARN_ON_ONCE(chdir(nc->oldcwd));
-+		zfree(&nc->oldcwd);
-+	}
-+
- 	if (nc->oldns > -1) {
- 		close(nc->oldns);
- 		nc->oldns = -1;
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index cae1a9a39722..d5f46c09ea31 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -38,6 +38,7 @@ struct nsinfo {
- struct nscookie {
- 	int			oldns;
- 	int			newns;
-+	char			*oldcwd;
- };
- 
- int nsinfo__init(struct nsinfo *nsi);
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
 -- 
 2.14.5
