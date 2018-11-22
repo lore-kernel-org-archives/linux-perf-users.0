@@ -1,47 +1,83 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/28] perf tools: Add Hygon Dhyana support
-Date: Thu, 22 Nov 2018 00:36:04 -0300
-Message-ID: <20181122033611.15890-22-acme@kernel.org>
+Subject: [PATCH 22/28] perf pmu: Suppress potential format-truncation warning
+Date: Thu, 22 Nov 2018 00:36:05 -0300
+Message-ID: <20181122033611.15890-23-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Pu Wen <puwen@hygon.cn>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Pu Wen <puwen@hygon.cn>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-The tool perf is useful for the performance analysis on the Hygon Dhyana
-platform. But right now there is no Hygon support for it to analyze the
-KVM guest os data. So add Hygon Dhyana support to it by checking vendor
-string to share the code path of AMD.
+Depending on which functions are inlined in util/pmu.c, the snprintf()
+calls in perf_pmu__parse_{scale,unit,per_pkg,snapshot}() might trigger a
+warning:
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
-Acked-by: Borislav Petkov <bp@suse.de>
+  util/pmu.c: In function 'pmu_aliases':
+  util/pmu.c:178:31: error: '%s' directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
+    snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
+                               ^~
+
+I found this when trying to build perf from Linux 3.16 with gcc 8.
+However I can reproduce the problem in mainline if I force
+__perf_pmu__new_alias() to be inlined.
+
+Suppress this by using scnprintf() as has been done elsewhere in perf.
+
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1542008451-31735-1-git-send-email-puwen@hygon.cn
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20181111184524.fux4taownc6ndbx6@decadent.org.uk
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/kvm-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/pmu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index b32409a0e546..081353d7b095 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -156,7 +156,7 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
- 	if (strstr(cpuid, "Intel")) {
- 		kvm->exit_reasons = vmx_exit_reasons;
- 		kvm->exit_reasons_isa = "VMX";
--	} else if (strstr(cpuid, "AMD")) {
-+	} else if (strstr(cpuid, "AMD") || strstr(cpuid, "Hygon")) {
- 		kvm->exit_reasons = svm_exit_reasons;
- 		kvm->exit_reasons_isa = "SVM";
- 	} else
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 7e49baad304d..7348eea0248f 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -145,7 +145,7 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, char *dir, char *
+ 	int fd, ret = -1;
+ 	char path[PATH_MAX];
+ 
+-	snprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
+@@ -175,7 +175,7 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, char *dir, char *n
+ 	ssize_t sret;
+ 	int fd;
+ 
+-	snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
+@@ -205,7 +205,7 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, char *dir, char *name)
+ 	char path[PATH_MAX];
+ 	int fd;
+ 
+-	snprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
+@@ -223,7 +223,7 @@ static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
+ 	char path[PATH_MAX];
+ 	int fd;
+ 
+-	snprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
 -- 
 2.14.5
