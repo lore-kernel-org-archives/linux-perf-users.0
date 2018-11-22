@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/28] perf bpf: Add simple pid_filter class accessible to BPF proggies
-Date: Thu, 22 Nov 2018 00:35:48 -0300
-Message-ID: <20181122033611.15890-6-acme@kernel.org>
+Subject: [PATCH 04/28] perf bpf: Add defines for map insertion/lookup
+Date: Thu, 22 Nov 2018 00:35:47 -0300
+Message-ID: <20181122033611.15890-5-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
@@ -12,47 +12,41 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Will be used in the augmented_raw_syscalls.c to implement 'perf trace
---filter-pids'.
+Starting with a helper for a basic pid_map(), a hash using a pid as a
+key.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-9sybmz4vchlbpqwx2am13h9e@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-gdwvq53wltvq6b3g5tdmh0cw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/pid_filter.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 tools/perf/include/bpf/pid_filter.h
+ tools/perf/include/bpf/bpf.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/include/bpf/pid_filter.h b/tools/perf/include/bpf/pid_filter.h
-new file mode 100644
-index 000000000000..6e61c4bdf548
---- /dev/null
-+++ b/tools/perf/include/bpf/pid_filter.h
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+
-+#ifndef _PERF_BPF_PID_FILTER_
-+#define _PERF_BPF_PID_FILTER_
-+
-+#include <bpf.h>
-+
-+#define pid_filter(name) pid_map(name, bool)
-+
-+static int pid_filter__add(struct bpf_map *pids, pid_t pid)
-+{
-+	bool value = true;
-+	return bpf_map_update_elem(pids, &pid, &value, BPF_NOEXIST);
+diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
+index 52b6d87fe822..04ecd425a237 100644
+--- a/tools/perf/include/bpf/bpf.h
++++ b/tools/perf/include/bpf/bpf.h
+@@ -18,6 +18,17 @@ struct bpf_map {
+         unsigned int numa_node;
+ };
+ 
++#define pid_map(name, value_type)		\
++struct bpf_map SEC("maps") name = {		\
++	.type	     = BPF_MAP_TYPE_HASH,	\
++	.key_size    = sizeof(pid_t),		\
++	.value_size  = sizeof(value_type),	\
++	.max_entries = 512,			\
 +}
 +
-+static bool pid_filter__has(struct bpf_map *pids, pid_t pid)
-+{
-+	return bpf_map_lookup_elem(pids, &pid) != NULL;
-+}
++static int (*bpf_map_update_elem)(struct bpf_map *map, void *key, void *value, u64 flags) = (void *)BPF_FUNC_map_update_elem;
++static void *(*bpf_map_lookup_elem)(struct bpf_map *map, void *key) = (void *)BPF_FUNC_map_lookup_elem;
 +
-+#endif // _PERF_BPF_PID_FILTER_
+ #define SEC(NAME) __attribute__((section(NAME),  used))
+ 
+ #define probe(function, vars) \
 -- 
 2.14.5
