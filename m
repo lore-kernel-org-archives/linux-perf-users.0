@@ -1,47 +1,179 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/28] perf stat: Use perf_evsel__is_clocki() for clock events
-Date: Thu, 22 Nov 2018 00:36:06 -0300
-Message-ID: <20181122033611.15890-24-acme@kernel.org>
+Subject: [PATCH 24/28] perf vendor events: Add stepping in CPUID string for x86
+Date: Thu, 22 Nov 2018 00:36:07 -0300
+Message-ID: <20181122033611.15890-25-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Anton Blanchard <anton@samba.org>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, yuzhoujian@didichuxing.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-We already have function to check if a given event is either
-SW_CPU_CLOCK or SW_TASK_CLOCK. Utilize it.
+The perf tools cannot find the proper event list for the Cascadelake
+server.  Because the Cascadelake server and the Skylake server have the
+same CPU model number, which are used by the perf tools to find the
+event list.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Anton Blanchard <anton@samba.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
+The stepping for Skylake server is up to 4.
+
+The stepping for Cascadelake server starts from 5.
+
+The stepping can be used to distinguish between them.
+
+The stepping is added in get_cpuid_str().
+
+The stepping information for Skylake server is updated in mapfile.csv.
+
+A x86 specific strcmp_cpuid_cmp() function is added to handle two CPUID
+formats in mapfile.csv, "vendor-family-model-stepping" and
+"vendor-family-model":
+
+- If a cpuid-regular-expression from the mapfile.csv using the new
+  stepping format, a cpuid-string generated on the machine must include
+  stepping. Otherwise, it is a mismatch.
+
+- If the cpuid-regular-expression using the old non-stepping format,
+  the stepping in the cpuid-string will be ignored.
+
+The script, using environment string "PERF_CPUID" without stepping on
+Skylake server, will be broken. If so, users must fix their scripts.
+
+Committer notes:
+
+Fixed this build error on centos:6 and debian:7:
+
+  arch/x86/util/header.c: In function 'is_full_cpuid':
+  arch/x86/util/header.c:82:39: error: declaration of 'cpuid' shadows a global declaration [-Werror=shadow]
+  arch/x86/util/header.c:12:1: error: shadowed declaration is here [-Werror=shadow]
+  arch/x86/util/header.c: In function 'strcmp_cpuid_str':
+  arch/x86/util/header.c:98:56: error: declaration of 'cpuid' shadows a global declaration [-Werror=shadow]
+  arch/x86/util/header.c:12:1: error: shadowed declaration is here [-Werror=shadow]
+  cc1: all warnings being treated as errors
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: yuzhoujian@didichuxing.com
-Link: http://lkml.kernel.org/r/20181115095533.16930-1-ravi.bangoria@linux.ibm.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20181114212416.15665-1-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/arch/x86/util/header.c          | 66 +++++++++++++++++++++++++++++-
+ tools/perf/pmu-events/arch/x86/mapfile.csv |  2 +-
+ tools/perf/util/pmu.c                      |  2 +-
+ 3 files changed, 67 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 8ad32763cfff..f0a8cec55c47 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -212,8 +212,7 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 count,
+diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+index fb0d71afee8b..af9a9f2600be 100644
+--- a/tools/perf/arch/x86/util/header.c
++++ b/tools/perf/arch/x86/util/header.c
+@@ -4,6 +4,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <regex.h>
  
- 	count *= counter->scale;
+ #include "../../util/header.h"
  
--	if (perf_evsel__match(counter, SOFTWARE, SW_TASK_CLOCK) ||
--	    perf_evsel__match(counter, SOFTWARE, SW_CPU_CLOCK))
-+	if (perf_evsel__is_clock(counter))
- 		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
- 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
- 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
+@@ -70,9 +71,72 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ {
+ 	char *buf = malloc(128);
+ 
+-	if (buf && __get_cpuid(buf, 128, "%s-%u-%X$") < 0) {
++	if (buf && __get_cpuid(buf, 128, "%s-%u-%X-%X$") < 0) {
+ 		free(buf);
+ 		return NULL;
+ 	}
+ 	return buf;
+ }
++
++/* Full CPUID format for x86 is vendor-family-model-stepping */
++static bool is_full_cpuid(const char *id)
++{
++	const char *tmp = id;
++	int count = 0;
++
++	while ((tmp = strchr(tmp, '-')) != NULL) {
++		count++;
++		tmp++;
++	}
++
++	if (count == 3)
++		return true;
++
++	return false;
++}
++
++int strcmp_cpuid_str(const char *mapcpuid, const char *id)
++{
++	regex_t re;
++	regmatch_t pmatch[1];
++	int match;
++	bool full_mapcpuid = is_full_cpuid(mapcpuid);
++	bool full_cpuid = is_full_cpuid(id);
++
++	/*
++	 * Full CPUID format is required to identify a platform.
++	 * Error out if the cpuid string is incomplete.
++	 */
++	if (full_mapcpuid && !full_cpuid) {
++		pr_info("Invalid CPUID %s. Full CPUID is required, "
++			"vendor-family-model-stepping\n", id);
++		return 1;
++	}
++
++	if (regcomp(&re, mapcpuid, REG_EXTENDED) != 0) {
++		/* Warn unable to generate match particular string. */
++		pr_info("Invalid regular expression %s\n", mapcpuid);
++		return 1;
++	}
++
++	match = !regexec(&re, id, 1, pmatch, 0);
++	regfree(&re);
++	if (match) {
++		size_t match_len = (pmatch[0].rm_eo - pmatch[0].rm_so);
++		size_t cpuid_len;
++
++		/* If the full CPUID format isn't required,
++		 * ignoring the stepping.
++		 */
++		if (!full_mapcpuid && full_cpuid)
++			cpuid_len = strrchr(id, '-') - id;
++		else
++			cpuid_len = strlen(id);
++
++		/* Verify the entire string matched. */
++		if (match_len == cpuid_len)
++			return 0;
++	}
++
++	return 1;
++}
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 7e3cce3bcf3b..183a42c99251 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -31,4 +31,4 @@ GenuineIntel-6-2A,v15,sandybridge,core
+ GenuineIntel-6-2C,v2,westmereep-dp,core
+ GenuineIntel-6-25,v2,westmereep-sp,core
+ GenuineIntel-6-2F,v2,westmereex,core
+-GenuineIntel-6-55,v1,skylakex,core
++GenuineIntel-6-55-[01234],v1,skylakex,core
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 7348eea0248f..c660625d7d4b 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -670,7 +670,7 @@ char * __weak get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+  * cpuid string generated on this platform.
+  * Otherwise return non-zero.
+  */
+-int strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
++int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
+ {
+ 	regex_t re;
+ 	regmatch_t pmatch[1];
 -- 
 2.14.5
