@@ -1,83 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/28] perf pmu: Suppress potential format-truncation warning
-Date: Thu, 22 Nov 2018 00:36:05 -0300
-Message-ID: <20181122033611.15890-23-acme@kernel.org>
+Subject: [PATCH 23/28] perf stat: Use perf_evsel__is_clocki() for clock events
+Date: Thu, 22 Nov 2018 00:36:06 -0300
+Message-ID: <20181122033611.15890-24-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Anton Blanchard <anton@samba.org>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, yuzhoujian@didichuxing.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Depending on which functions are inlined in util/pmu.c, the snprintf()
-calls in perf_pmu__parse_{scale,unit,per_pkg,snapshot}() might trigger a
-warning:
+We already have function to check if a given event is either
+SW_CPU_CLOCK or SW_TASK_CLOCK. Utilize it.
 
-  util/pmu.c: In function 'pmu_aliases':
-  util/pmu.c:178:31: error: '%s' directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
-    snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
-                               ^~
-
-I found this when trying to build perf from Linux 3.16 with gcc 8.
-However I can reproduce the problem in mainline if I force
-__perf_pmu__new_alias() to be inlined.
-
-Suppress this by using scnprintf() as has been done elsewhere in perf.
-
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Anton Blanchard <anton@samba.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20181111184524.fux4taownc6ndbx6@decadent.org.uk
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: yuzhoujian@didichuxing.com
+Link: http://lkml.kernel.org/r/20181115095533.16930-1-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/stat-shadow.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7e49baad304d..7348eea0248f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -145,7 +145,7 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, char *dir, char *
- 	int fd, ret = -1;
- 	char path[PATH_MAX];
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 8ad32763cfff..f0a8cec55c47 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -212,8 +212,7 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 count,
  
--	snprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
-+	scnprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
+ 	count *= counter->scale;
  
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
-@@ -175,7 +175,7 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, char *dir, char *n
- 	ssize_t sret;
- 	int fd;
- 
--	snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
-+	scnprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
-@@ -205,7 +205,7 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, char *dir, char *name)
- 	char path[PATH_MAX];
- 	int fd;
- 
--	snprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
-+	scnprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
-@@ -223,7 +223,7 @@ static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
- 	char path[PATH_MAX];
- 	int fd;
- 
--	snprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
-+	scnprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
+-	if (perf_evsel__match(counter, SOFTWARE, SW_TASK_CLOCK) ||
+-	    perf_evsel__match(counter, SOFTWARE, SW_CPU_CLOCK))
++	if (perf_evsel__is_clock(counter))
+ 		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+ 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
 -- 
 2.14.5
