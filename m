@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/28] perf augmented_syscalls: Remove needless linux/socket.h include
-Date: Thu, 22 Nov 2018 00:35:46 -0300
-Message-ID: <20181122033611.15890-4-acme@kernel.org>
+Subject: [PATCH 05/28] perf bpf: Add simple pid_filter class accessible to BPF proggies
+Date: Thu, 22 Nov 2018 00:35:48 -0300
+Message-ID: <20181122033611.15890-6-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
@@ -12,32 +12,47 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Leftover from when we started augmented_raw_syscalls.c from
-tools/perf/examples/bpf/augmented_syscalls.
+Will be used in the augmented_raw_syscalls.c to implement 'perf trace
+--filter-pids'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: e58a0322dbac ("perf examples bpf: Start augmenting raw_syscalls:sys_{start,exit}")
-Link: https://lkml.kernel.org/n/tip-pmts9ls2skh8n3zisb4txudd@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-9sybmz4vchlbpqwx2am13h9e@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/examples/bpf/augmented_raw_syscalls.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/include/bpf/pid_filter.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 tools/perf/include/bpf/pid_filter.h
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 2feb00018f79..ec109c12ff24 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -16,7 +16,6 @@
- 
- #include <stdio.h>
- #include <unistd.h>
--#include <linux/socket.h>
- 
- /* bpf-output associated map */
- struct bpf_map SEC("maps") __augmented_syscalls__ = {
+diff --git a/tools/perf/include/bpf/pid_filter.h b/tools/perf/include/bpf/pid_filter.h
+new file mode 100644
+index 000000000000..6e61c4bdf548
+--- /dev/null
++++ b/tools/perf/include/bpf/pid_filter.h
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: LGPL-2.1
++
++#ifndef _PERF_BPF_PID_FILTER_
++#define _PERF_BPF_PID_FILTER_
++
++#include <bpf.h>
++
++#define pid_filter(name) pid_map(name, bool)
++
++static int pid_filter__add(struct bpf_map *pids, pid_t pid)
++{
++	bool value = true;
++	return bpf_map_update_elem(pids, &pid, &value, BPF_NOEXIST);
++}
++
++static bool pid_filter__has(struct bpf_map *pids, pid_t pid)
++{
++	return bpf_map_lookup_elem(pids, &pid) != NULL;
++}
++
++#endif // _PERF_BPF_PID_FILTER_
 -- 
 2.14.5
