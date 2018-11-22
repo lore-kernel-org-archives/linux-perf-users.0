@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/28] perf bpf: Add defines for map insertion/lookup
-Date: Thu, 22 Nov 2018 00:35:47 -0300
-Message-ID: <20181122033611.15890-5-acme@kernel.org>
+Subject: [PATCH 06/28] perf augmented_syscalls: Drop 'write', 'poll' for testing without self pid filter
+Date: Thu, 22 Nov 2018 00:35:49 -0300
+Message-ID: <20181122033611.15890-7-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
@@ -12,41 +12,45 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Starting with a helper for a basic pid_map(), a hash using a pid as a
-key.
+When testing system wide tracing without filtering the syscalls called
+by 'perf trace' itself we get into a feedback loop, drop for now those
+two syscalls, that are the ones that 'perf trace' does in its loop for
+writing the syscalls it intercepts, to help with testing till we get
+that filtering in place.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-gdwvq53wltvq6b3g5tdmh0cw@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-rkbu536af66dbsfx51sr8yof@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/examples/bpf/augmented_raw_syscalls.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index 52b6d87fe822..04ecd425a237 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -18,6 +18,17 @@ struct bpf_map {
-         unsigned int numa_node;
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index ec109c12ff24..7d729319618c 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -43,7 +43,9 @@ struct augmented_filename {
+ 	char		value[256];
  };
  
-+#define pid_map(name, value_type)		\
-+struct bpf_map SEC("maps") name = {		\
-+	.type	     = BPF_MAP_TYPE_HASH,	\
-+	.key_size    = sizeof(pid_t),		\
-+	.value_size  = sizeof(value_type),	\
-+	.max_entries = 512,			\
-+}
-+
-+static int (*bpf_map_update_elem)(struct bpf_map *map, void *key, void *value, u64 flags) = (void *)BPF_FUNC_map_update_elem;
-+static void *(*bpf_map_lookup_elem)(struct bpf_map *map, void *key) = (void *)BPF_FUNC_map_lookup_elem;
-+
- #define SEC(NAME) __attribute__((section(NAME),  used))
++#define SYS_WRITE 1
+ #define SYS_OPEN 2
++#define SYS_POLL 7
+ #define SYS_OPENAT 257
  
- #define probe(function, vars) \
+ SEC("raw_syscalls:sys_enter")
+@@ -101,6 +103,8 @@ int sys_enter(struct syscall_enter_args *args)
+ 	 * 	 after the ctx memory access to prevent their down stream merging.
+ 	 */
+ 	switch (augmented_args.args.syscall_nr) {
++	case SYS_WRITE:
++	case SYS_POLL:	 return 0;
+ 	case SYS_OPEN:	 filename_arg = (const void *)args->args[0];
+ 			__asm__ __volatile__("": : :"memory");
+ 			 break;
 -- 
 2.14.5
