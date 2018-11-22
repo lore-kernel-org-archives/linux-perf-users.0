@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/28] perf evlist: Rename perf_evlist__set_filter* to perf_evlist__set_tp_filter*
-Date: Thu, 22 Nov 2018 00:35:51 -0300
-Message-ID: <20181122033611.15890-9-acme@kernel.org>
+Subject: [PATCH 10/28] perf trace: See if there is a map named "filtered_pids"
+Date: Thu, 22 Nov 2018 00:35:53 -0300
+Message-ID: <20181122033611.15890-11-acme@kernel.org>
 References: <20181122033611.15890-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122033611.15890-1-acme@kernel.org>
@@ -12,101 +12,83 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To better reflect that this is a tracepoint filter, as opposed, for
-instance to map based BPF filters.
+Lookup for the first map named "filtered_pids" and, if augmenting
+syscalls, i.e. if a BPF event is present and the
+"__augmented_syscalls__" is present, then fill in that map with the pids
+to filter, be it feedback loop ones (perf trace's pid, its father if it
+is "sshd", more auto-filtered in the future) or the ones explicitely
+stated in the tool command line via --filter-pids.
+
+The code to actually fill in the map comes next.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-9138svli6ddcphrr3ymy9oy3@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-rhzytmw7qpe6lqyjxi1ded9t@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c |  4 ++--
- tools/perf/util/evlist.c   | 10 +++++-----
- tools/perf/util/evlist.h   |  6 +++---
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 835619476370..d86ba17fcf44 100644
+index 8f966c7a7d0d..c423a78b5ecd 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -2586,7 +2586,7 @@ static int trace__set_filter_loop_pids(struct trace *trace)
- 		thread = parent;
+@@ -18,6 +18,7 @@
+ 
+ #include <traceevent/event-parse.h>
+ #include <api/fs/tracing_path.h>
++#include <bpf/bpf.h>
+ #include "builtin.h"
+ #include "util/cgroup.h"
+ #include "util/color.h"
+@@ -99,6 +100,7 @@ struct trace {
+ 	struct {
+ 		size_t		nr;
+ 		pid_t		*entries;
++		struct bpf_map  *map;
+ 	}			filter_pids;
+ 	double			duration_filter;
+ 	double			runtime_ms;
+@@ -3315,6 +3317,25 @@ static int trace__parse_cgroups(const struct option *opt, const char *str, int u
+ 	return 0;
+ }
+ 
++static struct bpf_map *bpf__find_map_by_name(const char *name)
++{
++	struct bpf_object *obj, *tmp;
++
++	bpf_object__for_each_safe(obj, tmp) {
++		struct bpf_map *map = bpf_object__find_map_by_name(obj, name);
++		if (map)
++			return map;
++
++	}
++
++	return NULL;
++}
++
++static void trace__set_bpf_map_filtered_pids(struct trace *trace)
++{
++	trace->filter_pids.map = bpf__find_map_by_name("pids_filtered");
++}
++
+ int cmd_trace(int argc, const char **argv)
+ {
+ 	const char *trace_usage[] = {
+@@ -3451,8 +3472,10 @@ int cmd_trace(int argc, const char **argv)
+ 		goto out;
  	}
  
--	return perf_evlist__set_filter_pids(trace->evlist, nr, pids);
-+	return perf_evlist__set_tp_filter_pids(trace->evlist, nr, pids);
- }
+-	if (evsel)
++	if (evsel) {
+ 		trace.syscalls.events.augmented = evsel;
++		trace__set_bpf_map_filtered_pids(&trace);
++	}
  
- static int trace__run(struct trace *trace, int argc, const char **argv)
-@@ -2702,7 +2702,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	 * we fork the workload in perf_evlist__prepare_workload.
- 	 */
- 	if (trace->filter_pids.nr > 0)
--		err = perf_evlist__set_filter_pids(evlist, trace->filter_pids.nr, trace->filter_pids.entries);
-+		err = perf_evlist__set_tp_filter_pids(evlist, trace->filter_pids.nr, trace->filter_pids.entries);
- 	else if (thread_map__pid(evlist->threads, 0) == -1)
- 		err = trace__set_filter_loop_pids(trace);
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 668d2a9ef0f4..36526d229315 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1176,7 +1176,7 @@ int perf_evlist__apply_filters(struct perf_evlist *evlist, struct perf_evsel **e
- 	return err;
- }
- 
--int perf_evlist__set_filter(struct perf_evlist *evlist, const char *filter)
-+int perf_evlist__set_tp_filter(struct perf_evlist *evlist, const char *filter)
- {
- 	struct perf_evsel *evsel;
- 	int err = 0;
-@@ -1193,7 +1193,7 @@ int perf_evlist__set_filter(struct perf_evlist *evlist, const char *filter)
- 	return err;
- }
- 
--int perf_evlist__set_filter_pids(struct perf_evlist *evlist, size_t npids, pid_t *pids)
-+int perf_evlist__set_tp_filter_pids(struct perf_evlist *evlist, size_t npids, pid_t *pids)
- {
- 	char *filter;
- 	int ret = -1;
-@@ -1214,15 +1214,15 @@ int perf_evlist__set_filter_pids(struct perf_evlist *evlist, size_t npids, pid_t
- 		}
- 	}
- 
--	ret = perf_evlist__set_filter(evlist, filter);
-+	ret = perf_evlist__set_tp_filter(evlist, filter);
- out_free:
- 	free(filter);
- 	return ret;
- }
- 
--int perf_evlist__set_filter_pid(struct perf_evlist *evlist, pid_t pid)
-+int perf_evlist__set_tp_filter_pid(struct perf_evlist *evlist, pid_t pid)
- {
--	return perf_evlist__set_filter_pids(evlist, 1, &pid);
-+	return perf_evlist__set_tp_filter_pids(evlist, 1, &pid);
- }
- 
- bool perf_evlist__valid_sample_type(struct perf_evlist *evlist)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 9919eed6d15b..d108d167eb36 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -98,9 +98,9 @@ void __perf_evlist__reset_sample_bit(struct perf_evlist *evlist,
- #define perf_evlist__reset_sample_bit(evlist, bit) \
- 	__perf_evlist__reset_sample_bit(evlist, PERF_SAMPLE_##bit)
- 
--int perf_evlist__set_filter(struct perf_evlist *evlist, const char *filter);
--int perf_evlist__set_filter_pid(struct perf_evlist *evlist, pid_t pid);
--int perf_evlist__set_filter_pids(struct perf_evlist *evlist, size_t npids, pid_t *pids);
-+int perf_evlist__set_tp_filter(struct perf_evlist *evlist, const char *filter);
-+int perf_evlist__set_tp_filter_pid(struct perf_evlist *evlist, pid_t pid);
-+int perf_evlist__set_tp_filter_pids(struct perf_evlist *evlist, size_t npids, pid_t *pids);
- 
- struct perf_evsel *
- perf_evlist__find_tracepoint_by_id(struct perf_evlist *evlist, int id);
+ 	err = bpf__setup_stdout(trace.evlist);
+ 	if (err) {
 -- 
 2.14.5
