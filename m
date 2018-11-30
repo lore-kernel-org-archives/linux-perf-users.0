@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/22] perf machine: Record if a arch has a single user/kernel address space
-Date: Fri, 30 Nov 2018 15:26:36 -0300
-Message-ID: <20181130182652.23620-7-acme@kernel.org>
+Subject: [PATCH 07/22] perf thread: Add fallback functions for cases where cpumode is insufficient
+Date: Fri, 30 Nov 2018 15:26:37 -0300
+Message-ID: <20181130182652.23620-8-acme@kernel.org>
 References: <20181130182652.23620-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,13 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Some architectures have a single address space for kernel and user
-addresses, which makes it possible to determine if an address is in
-kernel space or user space. Some don't, e.g.: sparc.
-
-Cache that info in perf_env so that, for instance, code needing to
-fallback failed symbol lookups at the kernel space in single address
-space arches can lookup at userspace.
+For branch stacks or branch samples, the sample cpumode might not be
+correct because it applies only to the sample 'ip' and not necessary to
+'addr' or branch stack addresses. Add fallback functions that can be
+used to deal with those cases
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -30,77 +27,127 @@ Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: stable@vger.kernel.org
 Link: http://lkml.kernel.org/r/20181106210712.12098-2-adrian.hunter@intel.com
-[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/common.c  | 10 ++++++++++
- tools/perf/arch/common.h  |  1 +
- tools/perf/util/machine.h |  1 +
- tools/perf/util/session.c |  4 ++++
- 4 files changed, 16 insertions(+)
+ tools/perf/util/event.c   | 27 +++++++++++++++++++++++++++
+ tools/perf/util/machine.c | 27 +++++++++++++++++++++++++++
+ tools/perf/util/machine.h |  2 ++
+ tools/perf/util/thread.h  |  4 ++++
+ 4 files changed, 60 insertions(+)
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 82657c01a3b8..5f69fd0b745a 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -200,3 +200,13 @@ int perf_env__lookup_objdump(struct perf_env *env, const char **path)
- 
- 	return perf_env__lookup_binutils_path(env, "objdump", path);
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index e9c108a6b1c3..9431b20c1337 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1577,6 +1577,24 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 	return al->map;
  }
-+
+ 
 +/*
-+ * Some architectures have a single address space for kernel and user addresses,
-+ * which makes it possible to determine if an address is in kernel space or user
-+ * space.
++ * For branch stacks or branch samples, the sample cpumode might not be correct
++ * because it applies only to the sample 'ip' and not necessary to 'addr' or
++ * branch stack addresses. If possible, use a fallback to deal with those cases.
 + */
-+bool perf_env__single_address_space(struct perf_env *env)
++struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
++				struct addr_location *al)
 +{
-+	return strcmp(perf_env__arch(env), "sparc");
++	struct map *map = thread__find_map(thread, cpumode, addr, al);
++	struct machine *machine = thread->mg->machine;
++	u8 addr_cpumode = machine__addr_cpumode(machine, cpumode, addr);
++
++	if (map || addr_cpumode == cpumode)
++		return map;
++
++	return thread__find_map(thread, addr_cpumode, addr, al);
 +}
-diff --git a/tools/perf/arch/common.h b/tools/perf/arch/common.h
-index 2167001b18c5..c298a446d1f6 100644
---- a/tools/perf/arch/common.h
-+++ b/tools/perf/arch/common.h
-@@ -5,5 +5,6 @@
- #include "../util/env.h"
++
+ struct symbol *thread__find_symbol(struct thread *thread, u8 cpumode,
+ 				   u64 addr, struct addr_location *al)
+ {
+@@ -1586,6 +1604,15 @@ struct symbol *thread__find_symbol(struct thread *thread, u8 cpumode,
+ 	return al->sym;
+ }
  
- int perf_env__lookup_objdump(struct perf_env *env, const char **path);
-+bool perf_env__single_address_space(struct perf_env *env);
++struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
++				      u64 addr, struct addr_location *al)
++{
++	al->sym = NULL;
++	if (thread__find_map_fb(thread, cpumode, addr, al))
++		al->sym = map__find_symbol(al->map, al->addr);
++	return al->sym;
++}
++
+ /*
+  * Callers need to drop the reference to al->thread, obtained in
+  * machine__findnew_thread()
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 8f36ce813bc5..9397e3f2444d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2592,6 +2592,33 @@ int machine__get_kernel_start(struct machine *machine)
+ 	return err;
+ }
  
- #endif /* ARCH_PERF_COMMON_H */
++u8 machine__addr_cpumode(struct machine *machine, u8 cpumode, u64 addr)
++{
++	u8 addr_cpumode = cpumode;
++	bool kernel_ip;
++
++	if (!machine->single_address_space)
++		goto out;
++
++	kernel_ip = machine__kernel_ip(machine, addr);
++	switch (cpumode) {
++	case PERF_RECORD_MISC_KERNEL:
++	case PERF_RECORD_MISC_USER:
++		addr_cpumode = kernel_ip ? PERF_RECORD_MISC_KERNEL :
++					   PERF_RECORD_MISC_USER;
++		break;
++	case PERF_RECORD_MISC_GUEST_KERNEL:
++	case PERF_RECORD_MISC_GUEST_USER:
++		addr_cpumode = kernel_ip ? PERF_RECORD_MISC_GUEST_KERNEL :
++					   PERF_RECORD_MISC_GUEST_USER;
++		break;
++	default:
++		break;
++	}
++out:
++	return addr_cpumode;
++}
++
+ struct dso *machine__findnew_dso(struct machine *machine, const char *filename)
+ {
+ 	return dsos__findnew(&machine->dsos, filename);
 diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index d856b85862e2..ca897a73014c 100644
+index ca897a73014c..ebde3ea70225 100644
 --- a/tools/perf/util/machine.h
 +++ b/tools/perf/util/machine.h
-@@ -42,6 +42,7 @@ struct machine {
- 	u16		  id_hdr_size;
- 	bool		  comm_exec;
- 	bool		  kptr_restrict_warned;
-+	bool		  single_address_space;
- 	char		  *root_dir;
- 	char		  *mmap_name;
- 	struct threads    threads[THREADS__TABLE_SIZE];
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 7d2c8ce6cfad..f8eab197f35c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -24,6 +24,7 @@
- #include "thread.h"
- #include "thread-stack.h"
- #include "stat.h"
-+#include "arch/common.h"
+@@ -100,6 +100,8 @@ static inline bool machine__kernel_ip(struct machine *machine, u64 ip)
+ 	return ip >= kernel_start;
+ }
  
- static int perf_session__deliver_event(struct perf_session *session,
- 				       union perf_event *event,
-@@ -150,6 +151,9 @@ struct perf_session *perf_session__new(struct perf_data *data,
- 		session->machines.host.env = &perf_env;
- 	}
- 
-+	session->machines.host.single_address_space =
-+		perf_env__single_address_space(session->machines.host.env);
++u8 machine__addr_cpumode(struct machine *machine, u8 cpumode, u64 addr);
 +
- 	if (!data || perf_data__is_write(data)) {
- 		/*
- 		 * In O_RDONLY mode this will be performed when reading the
+ struct thread *machine__find_thread(struct machine *machine, pid_t pid,
+ 				    pid_t tid);
+ struct comm *machine__thread_exec_comm(struct machine *machine,
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 30e2b4c165fe..5920c3bb8ffe 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -96,9 +96,13 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
+ 
+ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 			     struct addr_location *al);
++struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
++				struct addr_location *al);
+ 
+ struct symbol *thread__find_symbol(struct thread *thread, u8 cpumode,
+ 				   u64 addr, struct addr_location *al);
++struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
++				      u64 addr, struct addr_location *al);
+ 
+ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+ 					struct addr_location *al);
 -- 
 2.19.1
