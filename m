@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/22] perf bpf: Use ERR_CAST instead of ERR_PTR(PTR_ERR())
-Date: Fri, 30 Nov 2018 15:26:44 -0300
-Message-ID: <20181130182652.23620-15-acme@kernel.org>
+Subject: [PATCH 15/22] perf top: Allow passing a kallsyms file
+Date: Fri, 30 Nov 2018 15:26:45 -0300
+Message-ID: <20181130182652.23620-16-acme@kernel.org>
 References: <20181130182652.23620-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,61 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181130182652.23620-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Julia Lawall <julia.lawall@lip6.fr>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wen Yang <yellowriver2010@hotmail.com>, zhong.weidong@zte.com.cn, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Use ERR_CAST inlined function instead of ERR_PTR(PTR_ERR(...)).  This
-makes it more readable and also fix this warning detected by
-err_cast.cocci:
+This basically replicates what was done for 'perf report' in:
 
-  tools/perf/util/bpf-loader.c:1606:11-18: WARNING: ERR_CAST can be used with op
+   b226a5a72901 ("perf report: Allow user to specify path to kallsyms file")
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Julia Lawall <julia.lawall@lip6.fr>
+This should help with resolving eBPF symbols, that are in kallsyms but,
+of course, not in vmlinux.
+
+Reported-by: Ivan Babrou <ibobrik@gmail.com>
+Tested-by: Ivan Babrou <ibobrik@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wen Yang <yellowriver2010@hotmail.com>
-Cc: zhong.weidong@zte.com.cn
-Link: http://lkml.kernel.org/r/20181127090610.28488-1-wen.yang99@zte.com.cn
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-x52mx1ybq8128rtg9hjrj5qk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-loader.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-top.txt | 3 +++
+ tools/perf/builtin-top.c              | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index f9ae1a993806..9a280647d829 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -1603,7 +1603,7 @@ struct perf_evsel *bpf__setup_output_event(struct perf_evlist *evlist, const cha
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 808b664343c9..44d89fb9c788 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -70,6 +70,9 @@ Default is to monitor all CPUS.
+ --ignore-vmlinux::
+ 	Ignore vmlinux files.
  
- 			op = bpf_map__add_newop(map, NULL);
- 			if (IS_ERR(op))
--				return ERR_PTR(PTR_ERR(op));
-+				return ERR_CAST(op);
- 			op->op_type = BPF_MAP_OP_SET_EVSEL;
- 			op->v.evsel = evsel;
- 		}
++--kallsyms=<file>::
++	kallsyms pathname
++
+ -m <pages>::
+ --mmap-pages=<pages>::
+ 	Number of mmap data pages (must be a power of two) or size
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index aa0c73e57924..1252d1759064 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1289,6 +1289,8 @@ int cmd_top(int argc, const char **argv)
+ 		   "file", "vmlinux pathname"),
+ 	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
+ 		    "don't load vmlinux even if found"),
++	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
++		   "file", "kallsyms pathname"),
+ 	OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
+ 		    "hide kernel symbols"),
+ 	OPT_CALLBACK('m', "mmap-pages", &opts->mmap_pages, "pages",
 -- 
 2.19.1
