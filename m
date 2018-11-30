@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/22] perf test: Fix perf_event_attr test failure
-Date: Fri, 30 Nov 2018 15:26:42 -0300
-Message-ID: <20181130182652.23620-13-acme@kernel.org>
+Subject: [PATCH 13/22] tools include: Adopt ERR_CAST() from the kernel err.h header
+Date: Fri, 30 Nov 2018 15:26:43 -0300
+Message-ID: <20181130182652.23620-14-acme@kernel.org>
 References: <20181130182652.23620-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,45 +9,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181130182652.23620-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, David Howells <dhowells@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Julia Lawall <julia.lawall@lip6.fr>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, Wen Yang <yellowriver2010@hotmail.com>, zhong.weidong@zte.com.cn
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fix inconsistent use of tabs and spaces error:
+Add ERR_CAST(), so that tools can use it, just like the kernel.
 
-  # perf test 16 -v
-  16: Setup struct perf_event_attr                          :
-  --- start ---
-  test child forked, pid 20224
-    File "/usr/libexec/perf-core/tests/attr.py", line 119
-      log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
-                                                                 ^
-  TabError: inconsistent use of tabs and spaces in indentation
-  test child finished with -1
-  ---- end ----
-  Setup struct perf_event_attr: FAILED!
+This addresses coccinelle checks that are being performed to tools/ in
+addition to kernel sources, so lets add this to cover that and to get
+tools code closer to kernel coding standards.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20181122140456.16817-1-adrian.hunter@intel.com
+This originally was introduced in the kernel headers in this cset:
+
+  d1bc8e954452 ("Add an ERR_CAST() function to complement ERR_PTR and co.")
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Wen Yang <yellowriver2010@hotmail.com>
+Cc: zhong.weidong@zte.com.cn
+Link: https://lkml.kernel.org/n/tip-tlt97p066zyhzqhl5jt86og7@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/attr.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/include/linux/err.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index ff9b60b99f52..44090a9a19f3 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -116,7 +116,7 @@ class Event(dict):
-             if not self.has_key(t) or not other.has_key(t):
-                 continue
-             if not data_equal(self[t], other[t]):
--		log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
-+                log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
- 
- # Test file description needs to have following sections:
- # [config]
+diff --git a/tools/include/linux/err.h b/tools/include/linux/err.h
+index 094649667bae..2f5a12b88a86 100644
+--- a/tools/include/linux/err.h
++++ b/tools/include/linux/err.h
+@@ -59,4 +59,17 @@ static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
+ 	else
+ 		return 0;
+ }
++
++/**
++ * ERR_CAST - Explicitly cast an error-valued pointer to another pointer type
++ * @ptr: The pointer to cast.
++ *
++ * Explicitly cast an error-valued pointer to another pointer type in such a
++ * way as to make it clear that's what's going on.
++ */
++static inline void * __must_check ERR_CAST(__force const void *ptr)
++{
++	/* cast away the const */
++	return (void *) ptr;
++}
+ #endif /* _LINUX_ERR_H */
 -- 
 2.19.1
