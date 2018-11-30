@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/22] perf top: Allow passing a kallsyms file
-Date: Fri, 30 Nov 2018 15:26:45 -0300
-Message-ID: <20181130182652.23620-16-acme@kernel.org>
+Subject: [PATCH 16/22] perf intel-pt: Fix error with config term "pt=0"
+Date: Fri, 30 Nov 2018 15:26:46 -0300
+Message-ID: <20181130182652.23620-17-acme@kernel.org>
 References: <20181130182652.23620-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,61 +9,69 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181130182652.23620-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-This basically replicates what was done for 'perf report' in:
+Users should never use 'pt=0', but if they do it may give a meaningless
+error:
 
-   b226a5a72901 ("perf report: Allow user to specify path to kallsyms file")
+	$ perf record -e intel_pt/pt=0/u uname
+	Error:
+	The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
+	event (intel_pt/pt=0/u).
 
-This should help with resolving eBPF symbols, that are in kallsyms but,
-of course, not in vmlinux.
+Fix that by forcing 'pt=1'.
 
-Reported-by: Ivan Babrou <ibobrik@gmail.com>
-Tested-by: Ivan Babrou <ibobrik@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-x52mx1ybq8128rtg9hjrj5qk@git.kernel.org
+Committer testing:
+
+  # perf record -e intel_pt/pt=0/u uname
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (intel_pt/pt=0/u).
+  /bin/dmesg | grep -i perf may provide additional information.
+
+  # perf record -e intel_pt/pt=0/u uname
+  pt=0 doesn't make sense, forcing pt=1
+  Linux
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.020 MB perf.data ]
+  #
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/b7c5b4e5-9497-10e5-fd43-5f3e4a0fe51d@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-top.txt | 3 +++
- tools/perf/builtin-top.c              | 2 ++
- 2 files changed, 5 insertions(+)
+ tools/perf/arch/x86/util/intel-pt.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index 808b664343c9..44d89fb9c788 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -70,6 +70,9 @@ Default is to monitor all CPUS.
- --ignore-vmlinux::
- 	Ignore vmlinux files.
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index db0ba8caf5a2..ba8ecaf52200 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -524,10 +524,21 @@ static int intel_pt_validate_config(struct perf_pmu *intel_pt_pmu,
+ 				    struct perf_evsel *evsel)
+ {
+ 	int err;
++	char c;
  
-+--kallsyms=<file>::
-+	kallsyms pathname
+ 	if (!evsel)
+ 		return 0;
+ 
++	/*
++	 * If supported, force pass-through config term (pt=1) even if user
++	 * sets pt=0, which avoids senseless kernel errors.
++	 */
++	if (perf_pmu__scan_file(intel_pt_pmu, "format/pt", "%c", &c) == 1 &&
++	    !(evsel->attr.config & 1)) {
++		pr_warning("pt=0 doesn't make sense, forcing pt=1\n");
++		evsel->attr.config |= 1;
++	}
 +
- -m <pages>::
- --mmap-pages=<pages>::
- 	Number of mmap data pages (must be a power of two) or size
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index aa0c73e57924..1252d1759064 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1289,6 +1289,8 @@ int cmd_top(int argc, const char **argv)
- 		   "file", "vmlinux pathname"),
- 	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
- 		    "don't load vmlinux even if found"),
-+	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
-+		   "file", "kallsyms pathname"),
- 	OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
- 		    "hide kernel symbols"),
- 	OPT_CALLBACK('m', "mmap-pages", &opts->mmap_pages, "pages",
+ 	err = intel_pt_val_config_term(intel_pt_pmu, "caps/cycle_thresholds",
+ 				       "cyc_thresh", "caps/psb_cyc",
+ 				       evsel->attr.config);
 -- 
 2.19.1
