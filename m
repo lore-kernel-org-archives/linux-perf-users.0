@@ -1,7 +1,7 @@
-From: Andi Kleen <ak@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH] perf, tools: Support srccode output
-Date: Wed, 5 Dec 2018 09:33:06 -0800
-Message-ID: <20181205173306.GJ18167@tassilo.jf.intel.com>
+Date: Wed, 5 Dec 2018 19:15:49 -0300
+Message-ID: <20181205221549.GC13522@kernel.org>
 References: <20181204001848.24769-1-andi@firstfloor.org>
  <20181205122838.GH2950@krava>
 Mime-Version: 1.0
@@ -11,10 +11,10 @@ Content-Disposition: inline
 In-Reply-To: <20181205122838.GH2950@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <andi@firstfloor.org>, acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Dec 05, 2018 at 01:28:38PM +0100, Jiri Olsa wrote:
+Em Wed, Dec 05, 2018 at 01:28:38PM +0100, Jiri Olsa escreveu:
 > On Mon, Dec 03, 2018 at 04:18:48PM -0800, Andi Kleen wrote:
 > > From: Andi Kleen <ak@linux.intel.com>
 > > 
@@ -91,16 +91,31 @@ On Wed, Dec 05, 2018 at 01:28:38PM +0100, Jiri Olsa wrote:
 > nice, works nicely, especialy with --xed
 > 
 > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> I need to check, but is there a way to make this work with
-> perf-with-kcore script? looks like we endup with kcore and
-> won't allow vmlinux lookups for debug info
 
-Hmm, probably not currently. Would somehow need to point
-to the debuginfo. Perhaps if /proc/kcore was fixed
-to report the debugid, and then could find it this way.
+Trying to fix this:
 
-Or we could add an option to perf report to add a vmlinux
-only for debug info that is not used for reading the code.
-
--andi
+alpine:3.4
+Downloading http://x.x.x.x/perf/perf-4.20.0-rc3.tar.xz...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1426k  100 1426k    0     0   232M      0 --:--:-- --:--:-- --:--:--  232M
+8932875925270caf72895c32013a678e9c19aa0d
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/5.3.0/lto-wrapper
+Target: x86_64-alpine-linux-musl
+Configured with: /home/buildozer/aports/main/gcc/src/gcc-5.3.0/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --with-pkgversion='Alpine 5.3.0' --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-esp --enable-cloog-backend --enable-languages=c,c++,objc,java,fortran,ada --disable-libssp --disable-libmudflap --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-system-zlib
+Thread model: posix
+gcc version 5.3.0 (Alpine 5.3.0)
+  CC       /tmp/build/perf/util/srccode.o
+In file included from util/srccode.c:19:0:
+/usr/include/sys/fcntl.h:1:2: error: #warning redirecting incorrect #include <sys/fcntl.h> to <fcntl.h> [-Werror=cpp]
+ #warning redirecting incorrect #include <sys/fcntl.h> to <fcntl.h>
+  ^
+  CC       /tmp/build/perf/util/data.o
+cc1: all warnings being treated as errors
+mv: can't rename '/tmp/build/perf/util/.srccode.o.tmp': No such file or directory
+/git/linux/tools/build/Makefile.build:96: recipe for target '/tmp/build/perf/util/srccode.o' failed
+make[4]: *** [/tmp/build/perf/util/srccode.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+  CC       /tmp/build/perf/tests/attr.o
