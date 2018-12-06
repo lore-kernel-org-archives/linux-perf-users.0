@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 62/75] perf header: Fix unchecked usage of strncpy()
-Date: Thu,  6 Dec 2018 18:25:49 -0300
-Message-ID: <20181206212602.20474-63-acme@kernel.org>
+Subject: [PATCH 63/75] perf help: Remove needless use of strncpy()
+Date: Thu,  6 Dec 2018 18:25:50 -0300
+Message-ID: <20181206212602.20474-64-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,42 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The strncpy() function may leave the destination string buffer
-unterminated, better use strlcpy() that we have a __weak fallback
-implementation for systems without it.
+Since we make sure the destination buffer has at least strlen(orig) + 1,
+no need to do a strncpy(dest, orig, strlen(orig)), just use strcpy(dest,
+orig).
 
-This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+This silences this gcc 8.2 warning on Alpine Linux:
 
-  util/header.c: In function 'perf_event__synthesize_event_update_name':
-  util/header.c:3625:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
-    strncpy(ev->data, evsel->name, len);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/header.c:3618:15: note: length computed here
-    size_t len = strlen(evsel->name);
-                 ^~~~~~~~~~~~~~~~~~~
+  In function 'add_man_viewer',
+      inlined from 'perf_help_config' at builtin-help.c:284:3:
+  builtin-help.c:192:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy((*p)->name, name, len);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  builtin-help.c: In function 'perf_help_config':
+  builtin-help.c:187:15: note: length computed here
+    size_t len = strlen(name);
+                 ^~~~~~~~~~~~
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
-Link: https://lkml.kernel.org/n/tip-wycz66iy8dl2z3yifgqf894p@git.kernel.org
+Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
+Link: https://lkml.kernel.org/n/tip-2f69l7drca427ob4km8i7kvo@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 2 +-
+ tools/perf/builtin-help.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index c87cfe6b7c96..1171d8400bf4 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3622,7 +3622,7 @@ perf_event__synthesize_event_update_name(struct perf_tool *tool,
- 	if (ev == NULL)
- 		return -ENOMEM;
+diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
+index 1c41b4eaf73c..3d29d0524a89 100644
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -189,7 +189,7 @@ static void add_man_viewer(const char *name)
+ 	while (*p)
+ 		p = &((*p)->next);
+ 	*p = zalloc(sizeof(**p) + len + 1);
+-	strncpy((*p)->name, name, len);
++	strcpy((*p)->name, name);
+ }
  
--	strncpy(ev->data, evsel->name, len);
-+	strlcpy(ev->data, evsel->name, len + 1);
- 	err = process(tool, (union perf_event*) ev, NULL, NULL);
- 	free(ev);
- 	return err;
+ static int supported_man_viewer(const char *name, size_t len)
 -- 
 2.19.2
