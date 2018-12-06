@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/75] perf build: Give better hint about devel package for libssl
-Date: Thu,  6 Dec 2018 18:24:48 -0300
-Message-ID: <20181206212602.20474-2-acme@kernel.org>
+Subject: [PATCH 02/75] perf stat: Fix shadow stats for clock events
+Date: Thu,  6 Dec 2018 18:24:49 -0300
+Message-ID: <20181206212602.20474-3-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,39 +9,64 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.vnet.ibm.com>, yuzhoujian@didichuxing.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-In debian/ubuntu its libssl-dev, but for fedora/RHEL/Centos/etc its
-openssl-devel, fix it.
+Commit 0aa802a79469 ("perf stat: Get rid of extra clock display
+function") introduced scale and unit for clock events. Thus,
+perf_stat__update_shadow_stats() now saves scaled values of clock events
+in msecs, instead of original nsecs. But while calculating values of
+shadow stats we still consider clock event values in nsecs. This results
+in a wrong shadow stat values. Ex,
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+  # ./perf stat -e task-clock,cycles ls
+    <SNIP>
+              2.60 msec task-clock:u    #    0.877 CPUs utilized
+         2,430,564      cycles:u        # 1215282.000 GHz
+
+Fix this by saving original nsec values for clock events in
+perf_stat__update_shadow_stats(). After patch:
+
+  # ./perf stat -e task-clock,cycles ls
+    <SNIP>
+              3.14 msec task-clock:u    #    0.839 CPUs utilized
+         3,094,528      cycles:u        #    0.985 GHz
+
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Reported-by: Anton Blanchard <anton@samba.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: 8ee4646038e4 ("perf build: Add libcrypto feature detection")
-Link: https://lkml.kernel.org/n/tip-lnxqszts6aq2c9jy4b7mlnym@git.kernel.org
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: yuzhoujian@didichuxing.com
+Fixes: 0aa802a79469 ("perf stat: Get rid of extra clock display function")
+Link: http://lkml.kernel.org/r/20181116042843.24067-1-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index e110010e7faa..c643d5e0c26b 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -588,7 +588,7 @@ endif
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index f0a8cec55c47..3c22c58b3e90 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -209,11 +209,12 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 count,
+ 				    int cpu, struct runtime_stat *st)
+ {
+ 	int ctx = evsel_context(counter);
++	u64 count_ns = count;
  
- ifndef NO_LIBCRYPTO
-   ifneq ($(feature-libcrypto), 1)
--    msg := $(warning No libcrypto.h found, disables jitted code injection, please install libssl-devel or libssl-dev);
-+    msg := $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev);
-     NO_LIBCRYPTO := 1
-   else
-     CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
+ 	count *= counter->scale;
+ 
+ 	if (perf_evsel__is_clock(counter))
+-		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
++		update_runtime_stat(st, STAT_NSECS, 0, cpu, count_ns);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+ 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
+ 	else if (perf_stat_evsel__is(counter, CYCLES_IN_TX))
 -- 
 2.19.2
