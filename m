@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/75] tools lib traceevent: Add sanity check to is_timestamp_in_us()
-Date: Thu,  6 Dec 2018 18:25:09 -0300
-Message-ID: <20181206212602.20474-23-acme@kernel.org>
+Subject: [PATCH 24/75] perf annotate: Create a annotate2 flag in struct symbol
+Date: Thu,  6 Dec 2018 18:25:11 -0300
+Message-ID: <20181206212602.20474-25-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,37 +9,53 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Jiri Olsa <jolsa@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-This patch adds a sanity check to is_timestamp_in_us() input parameter
-trace_clock. It avoids a potential segfault in this function for the
-case trace_clock is NULL.
+We often use the symbol__annotate2() to annotate a specified symbol.
+While annotating may take some time, so in order to avoid annotating the
+same symbol repeatedly, the patch creates a new flag to indicate the
+symbol has been annotated.
 
-Reported-by: Slavomir Kaslev <kaslevs@vmware.com>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20181128145552.68c4f87b@gandalf.local.home
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1543586097-27632-3-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 1 +
+ tools/perf/util/symbol.h   | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index fbd6d6813fab..2b5cb33046ce 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -5409,7 +5409,7 @@ void tep_event_info(struct trace_seq *s, struct tep_event_format *event,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 4b2b1b09b8f1..f69d8e177fa3 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2798,6 +2798,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
+ 	notes->nr_events = nr_pcnt;
  
- static bool is_timestamp_in_us(char *trace_clock, bool use_trace_clock)
- {
--	if (!use_trace_clock)
-+	if (!trace_clock || !use_trace_clock)
- 		return true;
+ 	annotation__update_column_widths(notes);
++	sym->annotate2 = true;
  
- 	if (!strcmp(trace_clock, "local") || !strcmp(trace_clock, "global")
+ 	return 0;
+ 
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index d026d215bdc6..14d9d438e7e2 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -63,6 +63,7 @@ struct symbol {
+ 	u8		ignore:1;
+ 	u8		inlined:1;
+ 	u8		arch_sym;
++	bool		annotate2;
+ 	char		name[0];
+ };
+ 
 -- 
 2.19.2
