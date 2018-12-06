@@ -1,82 +1,74 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 68/75] perf vendor events intel: Fix Load_Miss_Real_Latency on SKL/SKX
-Date: Thu,  6 Dec 2018 18:25:55 -0300
-Message-ID: <20181206212602.20474-69-acme@kernel.org>
+Subject: [PATCH 74/75] perf ordered_events: Add first_time() method
+Date: Thu,  6 Dec 2018 18:26:01 -0300
+Message-ID: <20181206212602.20474-75-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Dmitry Levin <ldv@altlinux.org>, Eugene Syromiatnikov <esyr@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@uudg.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Fix incorrect event names for the Load_Miss_Real_Latency metric for
-Skylake and Skylake Server.
+To get the timestamp in the first event in the queue.
 
-Fixes https://github.com/andikleen/pmu-tools/issues/158
-
-Before:
-
-  % perf stat -M Load_Miss_Real_Latency true
-  event syntax error: '..ss.pending,mem_load_retired.l1_miss_ps,mem_load_retired.fb_hit_ps}:W'
-                                    \___ parser error
-
-   Usage: perf stat [<options>] [<command>]
-
-      -M, --metrics <metric/metric group list>
-                            monitor specified metrics or metric groups (separated by ,)
-
-After:
-
-  % perf stat -M Load_Miss_Real_Latency true
-
-   Performance counter stats for 'true':
-
-             279,204      l1d_pend_miss.pending     #     14.0 Load_Miss_Real_Latency
-               4,784      mem_load_uops_retired.l1_miss
-              15,188      mem_load_uops_retired.hit_lfb
-
-         0.000899640 seconds time elapsed
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: http://lkml.kernel.org/r/20181120050635.4215-1-andi@firstfloor.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Dmitry Levin <ldv@altlinux.org>
+Cc: Eugene Syromiatnikov <esyr@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@uudg.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/n/tip-appp27jw1ul8kgg872j43r5o@git.kernel.org
+[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json  | 2 +-
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/ordered-events.c | 11 +++++++++++
+ tools/perf/util/ordered-events.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-index 36c903faed0b..71e9737f4614 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-@@ -73,7 +73,7 @@
-     },
-     {
-         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads",
--        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS_PS + MEM_LOAD_RETIRED.FB_HIT_PS )",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
-         "MetricGroup": "Memory_Bound;Memory_Lat",
-         "MetricName": "Load_Miss_Real_Latency"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index 36c903faed0b..71e9737f4614 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -73,7 +73,7 @@
-     },
-     {
-         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads",
--        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS_PS + MEM_LOAD_RETIRED.FB_HIT_PS )",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
-         "MetricGroup": "Memory_Bound;Memory_Lat",
-         "MetricName": "Load_Miss_Real_Latency"
-     },
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index 46965643020b..897589507d97 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -343,6 +343,17 @@ int ordered_events__flush_time(struct ordered_events *oe, u64 timestamp)
+ 	return __ordered_events__flush(oe, OE_FLUSH__TIME, timestamp);
+ }
+ 
++u64 ordered_events__first_time(struct ordered_events *oe)
++{
++	struct ordered_event *event;
++
++	if (list_empty(&oe->events))
++		return 0;
++
++	event = list_first_entry(&oe->events, struct ordered_event, list);
++	return event->timestamp;
++}
++
+ void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver,
+ 			  void *data)
+ {
+diff --git a/tools/perf/util/ordered-events.h b/tools/perf/util/ordered-events.h
+index f352af20e167..0920fb0ec6cc 100644
+--- a/tools/perf/util/ordered-events.h
++++ b/tools/perf/util/ordered-events.h
+@@ -61,6 +61,7 @@ void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t d
+ 			  void *data);
+ void ordered_events__free(struct ordered_events *oe);
+ void ordered_events__reinit(struct ordered_events *oe);
++u64 ordered_events__first_time(struct ordered_events *oe);
+ 
+ static inline
+ void ordered_events__set_alloc_size(struct ordered_events *oe, u64 size)
 -- 
 2.19.2
