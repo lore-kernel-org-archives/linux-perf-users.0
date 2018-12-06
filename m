@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/75] tools lib subcmd: Fix a few source code comment typos
-Date: Thu,  6 Dec 2018 18:25:29 -0300
-Message-ID: <20181206212602.20474-43-acme@kernel.org>
+Subject: [PATCH 44/75] perf trace: We need to consider "nr" if "__syscall_nr" is not there
+Date: Thu,  6 Dec 2018 18:25:31 -0300
+Message-ID: <20181206212602.20474-45-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,55 +9,42 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Taeung Song <treeze.taeung@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ingo Molnar <mingo@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Go over the tools/ files that are maintained in Arnaldo's tree and
-fix common typos: half of them were in comments, the other half
-in JSON files.
+To cope with older kernels that don't have this patch backported:
 
-No change in functionality intended.
+  026842d148b9 ("tracing/syscalls: Rename "/format" tracepoint field name "nr" to "__syscall_nr:")
 
-Committer notes:
+This makes 'perf trace' work again in RHEL7 kernels.
 
-This was split from a larger patch as there are code that is,
-additionally, maintained outside the kernel tree, so to ease
-cherry-picking and/or backporting, split this into multiple patches.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20181203102200.GA104797@gmail.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-6h1syw2isegnhb1bjmtr9x9k@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/subcmd/parse-options.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
-index 6ca2a8bfe716..af9def589863 100644
---- a/tools/lib/subcmd/parse-options.h
-+++ b/tools/lib/subcmd/parse-options.h
-@@ -71,7 +71,7 @@ typedef int parse_opt_cb(const struct option *, const char *arg, int unset);
-  *
-  * `argh`::
-  *   token to explain the kind of argument this option wants. Keep it
-- *   homogenous across the repository.
-+ *   homogeneous across the repository.
-  *
-  * `help`::
-  *   the short help associated to what the option does.
-@@ -80,7 +80,7 @@ typedef int parse_opt_cb(const struct option *, const char *arg, int unset);
-  *
-  * `flags`::
-  *   mask of parse_opt_option_flags.
-- *   PARSE_OPT_OPTARG: says that the argument is optionnal (not for BOOLEANs)
-+ *   PARSE_OPT_OPTARG: says that the argument is optional (not for BOOLEANs)
-  *   PARSE_OPT_NOARG: says that this option takes no argument, for CALLBACKs
-  *   PARSE_OPT_NONEG: says that this option cannot be negated
-  *   PARSE_OPT_HIDDEN this option is skipped in the default usage, showed in
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 2a347ed7bdf4..98aff12af9e6 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -258,7 +258,8 @@ static int perf_evsel__init_syscall_tp(struct perf_evsel *evsel)
+ 	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
+ 
+ 	if (evsel->priv != NULL) {
+-		if (perf_evsel__init_tp_uint_field(evsel, &sc->id, "__syscall_nr"))
++		if (perf_evsel__init_tp_uint_field(evsel, &sc->id, "__syscall_nr") &&
++		    perf_evsel__init_tp_uint_field(evsel, &sc->id, "nr"))
+ 			goto out_delete;
+ 		return 0;
+ 	}
 -- 
 2.19.2
