@@ -1,74 +1,52 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 74/75] perf ordered_events: Add first_time() method
-Date: Thu,  6 Dec 2018 18:26:01 -0300
-Message-ID: <20181206212602.20474-75-acme@kernel.org>
+Subject: [PATCH 70/75] perf config: Modify size factor of snprintf
+Date: Thu,  6 Dec 2018 18:25:57 -0300
+Message-ID: <20181206212602.20474-71-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Dmitry Levin <ldv@altlinux.org>, Eugene Syromiatnikov <esyr@redhat.com>, Frederic Weisbecker <fweisbec@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@uudg.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sihyeon Jang <uneedsihyeon@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Sihyeon Jang <uneedsihyeon@gmail.com>
 
-To get the timestamp in the first event in the queue.
+According to definition of snprintf, it gets size factor including
+null('\0') byte.  So '-1' is not neccessary. Also it will be helpful
+unfied style with other cases. (eg. builtin-script.c)
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dmitry Levin <ldv@altlinux.org>
-Cc: Eugene Syromiatnikov <esyr@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Signed-off-by: Sihyeon Jang <uneedsihyeon@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@uudg.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/n/tip-appp27jw1ul8kgg872j43r5o@git.kernel.org
-[ split from a larger patch ]
+Link: http://lkml.kernel.org/r/20181201154603.10093-1-uneedsihyeon@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/ordered-events.c | 11 +++++++++++
- tools/perf/util/ordered-events.h |  1 +
- 2 files changed, 12 insertions(+)
+ tools/perf/util/config.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-index 46965643020b..897589507d97 100644
---- a/tools/perf/util/ordered-events.c
-+++ b/tools/perf/util/ordered-events.c
-@@ -343,6 +343,17 @@ int ordered_events__flush_time(struct ordered_events *oe, u64 timestamp)
- 	return __ordered_events__flush(oe, OE_FLUSH__TIME, timestamp);
- }
- 
-+u64 ordered_events__first_time(struct ordered_events *oe)
-+{
-+	struct ordered_event *event;
-+
-+	if (list_empty(&oe->events))
-+		return 0;
-+
-+	event = list_first_entry(&oe->events, struct ordered_event, list);
-+	return event->timestamp;
-+}
-+
- void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver,
- 			  void *data)
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 3beb4cf44c31..1ea8f898f1a1 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -815,14 +815,14 @@ int config_error_nonbool(const char *var)
+ void set_buildid_dir(const char *dir)
  {
-diff --git a/tools/perf/util/ordered-events.h b/tools/perf/util/ordered-events.h
-index f352af20e167..0920fb0ec6cc 100644
---- a/tools/perf/util/ordered-events.h
-+++ b/tools/perf/util/ordered-events.h
-@@ -61,6 +61,7 @@ void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t d
- 			  void *data);
- void ordered_events__free(struct ordered_events *oe);
- void ordered_events__reinit(struct ordered_events *oe);
-+u64 ordered_events__first_time(struct ordered_events *oe);
+ 	if (dir)
+-		scnprintf(buildid_dir, MAXPATHLEN-1, "%s", dir);
++		scnprintf(buildid_dir, MAXPATHLEN, "%s", dir);
  
- static inline
- void ordered_events__set_alloc_size(struct ordered_events *oe, u64 size)
+ 	/* default to $HOME/.debug */
+ 	if (buildid_dir[0] == '\0') {
+ 		char *home = getenv("HOME");
+ 
+ 		if (home) {
+-			snprintf(buildid_dir, MAXPATHLEN-1, "%s/%s",
++			snprintf(buildid_dir, MAXPATHLEN, "%s/%s",
+ 				 home, DEBUG_CACHE_DIR);
+ 		} else {
+ 			strncpy(buildid_dir, DEBUG_CACHE_DIR, MAXPATHLEN-1);
 -- 
 2.19.2
