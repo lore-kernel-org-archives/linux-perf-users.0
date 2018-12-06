@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 67/75] perf parse-events: Fix unchecked usage of strncpy()
-Date: Thu,  6 Dec 2018 18:25:54 -0300
-Message-ID: <20181206212602.20474-68-acme@kernel.org>
+Subject: [PATCH 69/75] perf record: Fix memory leak on AIO objects deallocation
+Date: Thu,  6 Dec 2018 18:25:56 -0300
+Message-ID: <20181206212602.20474-70-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,55 +9,48 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206212602.20474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-The strncpy() function may leave the destination string buffer
-unterminated, better use strlcpy() that we have a __weak fallback
-implementation for systems without it.
+Sending a part which was missed between v12 and v13 of the patch set
+introducing AIO trace streaming for perf record mode.
 
-This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+The part is essential to avoid memory leakage during deallocation of AIO
+related trace data buffers.
 
-  util/parse-events.c: In function 'print_symbol_events':
-  util/parse-events.c:2465:4: error: 'strncpy' specified bound 100 equals destination size [-Werror=stringop-truncation]
-      strncpy(name, syms->symbol, MAX_NAME_LEN);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'print_symbol_events.constprop',
-      inlined from 'print_events' at util/parse-events.c:2508:2:
-  util/parse-events.c:2465:4: error: 'strncpy' specified bound 100 equals destination size [-Werror=stringop-truncation]
-      strncpy(name, syms->symbol, MAX_NAME_LEN);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'print_symbol_events.constprop',
-      inlined from 'print_events' at util/parse-events.c:2511:2:
-  util/parse-events.c:2465:4: error: 'strncpy' specified bound 100 equals destination size [-Werror=stringop-truncation]
-      strncpy(name, syms->symbol, MAX_NAME_LEN);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 947b4ad1d198 ("perf list: Fix max event string size")
-Link: https://lkml.kernel.org/n/tip-b663e33bm6x8hrkie4uxh7u2@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/e5d3154e-1583-83bb-9527-28ddbc6dbf9d@linux.intel.com
+[ No need to test for NULL before calling zfree() ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/mmap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 59be3466d64d..920e1e6551dd 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2462,7 +2462,7 @@ void print_symbol_events(const char *event_glob, unsigned type,
- 		if (!name_only && strlen(syms->alias))
- 			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
- 		else
--			strncpy(name, syms->symbol, MAX_NAME_LEN);
-+			strlcpy(name, syms->symbol, MAX_NAME_LEN);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index ab30555d2afc..8fc39311a30d 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -207,8 +207,14 @@ static int perf_mmap__aio_mmap(struct perf_mmap *map, struct mmap_params *mp)
  
- 		evt_list[evt_i] = strdup(name);
- 		if (evt_list[evt_i] == NULL)
+ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ {
++	int i;
++
++	for (i = 0; i < map->aio.nr_cblocks; ++i)
++		zfree(&map->aio.data[i]);
+ 	if (map->aio.data)
+ 		zfree(&map->aio.data);
++	zfree(&map->aio.cblocks);
++	zfree(&map->aio.aiocb);
+ }
+ 
+ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
 -- 
 2.19.2
