@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 60/75] perf dso: Fix unchecked usage of strncpy()
-Date: Thu,  6 Dec 2018 18:25:47 -0300
-Message-ID: <20181206212602.20474-61-acme@kernel.org>
+Subject: [PATCH 61/75] perf header: Fix unchecked usage of strncpy()
+Date: Thu,  6 Dec 2018 18:25:48 -0300
+Message-ID: <20181206212602.20474-62-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -20,37 +20,36 @@ implementation for systems without it.
 
 This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
 
-  In function 'decompress_kmodule',
-      inlined from 'dso__decompress_kmodule_fd' at util/dso.c:305:9:
-  util/dso.c:298:3: error: 'strncpy' destination unchanged after copying no bytes [-Werror=stringop-truncation]
-     strncpy(pathname, tmpbuf, len);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CC       /tmp/build/perf/util/values.o
-    CC       /tmp/build/perf/util/debug.o
-  cc1: all warnings being treated as errors
+  util/header.c: In function 'perf_event__synthesize_event_update_unit':
+  util/header.c:3586:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy(ev->data, evsel->unit, size);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  util/header.c:3579:16: note: length computed here
+    size_t size = strlen(evsel->unit);
+                  ^~~~~~~~~~~~~~~~~~~
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: c9a8a6131fb6 ("perf tools: Move the temp file processing into decompress_kmodule")
-Link: https://lkml.kernel.org/n/tip-tl2hdxj64tt4k8btbi6a0ugw@git.kernel.org
+Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
+Link: https://lkml.kernel.org/n/tip-fiikh5nay70bv4zskw2aa858@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 2 +-
+ tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index bbed90e5d9bb..cee717a3794f 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -295,7 +295,7 @@ static int decompress_kmodule(struct dso *dso, const char *name,
- 		unlink(tmpbuf);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4a64739c67e7..c87cfe6b7c96 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3583,7 +3583,7 @@ perf_event__synthesize_event_update_unit(struct perf_tool *tool,
+ 	if (ev == NULL)
+ 		return -ENOMEM;
  
- 	if (pathname && (fd >= 0))
--		strncpy(pathname, tmpbuf, len);
-+		strlcpy(pathname, tmpbuf, len);
- 
- 	return fd;
- }
+-	strncpy(ev->data, evsel->unit, size);
++	strlcpy(ev->data, evsel->unit, size + 1);
+ 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
 -- 
 2.19.2
