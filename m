@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/75] tools lib traceevent: Implement new API tep_get_ref()
-Date: Thu,  6 Dec 2018 18:25:14 -0300
-Message-ID: <20181206212602.20474-28-acme@kernel.org>
+Subject: [PATCH 28/75] tools lib traceevent: Added support for pkg-config
+Date: Thu,  6 Dec 2018 18:25:15 -0300
+Message-ID: <20181206212602.20474-29-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,55 +14,103 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-This patch implements a new API of the tracevent library:
-
-  int tep_get_ref(struct tep_handle *tep);
-
-The API returns the reference counter "ref_count" of the tep handler.
-As "struct tep_handle" is internal only, its members cannot be accessed
-by the library users, the API is used to get the reference counter.
+This patch implements integration with pkg-config framework.  pkg-config
+can be used by the library users to determine required CFLAGS and
+LDFLAGS in order to use the library
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20181130154646.890615385@goodmis.org
+Link: http://lkml.kernel.org/r/20181130154647.022471992@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 7 +++++++
- tools/lib/traceevent/event-parse.h | 1 +
- 2 files changed, 8 insertions(+)
+ tools/lib/traceevent/Makefile                 | 26 ++++++++++++++++---
+ .../lib/traceevent/libtraceevent.pc.template  | 10 +++++++
+ 2 files changed, 33 insertions(+), 3 deletions(-)
+ create mode 100644 tools/lib/traceevent/libtraceevent.pc.template
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 2b5cb33046ce..d1e6ee3d43cf 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -6730,6 +6730,13 @@ void tep_ref(struct tep_handle *pevent)
- 	pevent->ref_count++;
- }
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 0b4e833088a4..adb16f845ab3 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -25,6 +25,7 @@ endef
+ $(call allow-override,CC,$(CROSS_COMPILE)gcc)
+ $(call allow-override,AR,$(CROSS_COMPILE)ar)
+ $(call allow-override,NM,$(CROSS_COMPILE)nm)
++$(call allow-override,PKG_CONFIG,pkg-config)
  
-+int tep_get_ref(struct tep_handle *tep)
-+{
-+	if (tep)
-+		return tep->ref_count;
-+	return 0;
-+}
+ EXT = -std=gnu99
+ INSTALL = install
+@@ -47,6 +48,8 @@ prefix ?= /usr/local
+ libdir = $(prefix)/$(libdir_relative)
+ man_dir = $(prefix)/share/man
+ man_dir_SQ = '$(subst ','\'',$(man_dir))'
++pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG) 		\
++			--variable pc_path pkg-config | tr ":" " "))
+ 
+ export man_dir man_dir_SQ INSTALL
+ export DESTDIR DESTDIR_SQ
+@@ -270,7 +273,19 @@ define do_generate_dynamic_list_file
+ 	fi
+ endef
+ 
+-install_lib: all_cmd install_plugins
++PKG_CONFIG_FILE = libtraceevent.pc
++define do_install_pkgconfig_file
++	if [ -n "${pkgconfig_dir}" ]; then 					\
++		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
++		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
++		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
++		$(call do_install,$(PKG_CONFIG_FILE),$(pkgconfig_dir),644); 	\
++	else 									\
++		(echo Failed to locate pkg-config directory) 1>&2;		\
++	fi
++endef
 +
- void tep_free_format_field(struct tep_format_field *field)
- {
- 	free(field->type);
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 16bf4c890b6f..44ec26c72c2e 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -581,6 +581,7 @@ struct tep_handle *tep_alloc(void);
- void tep_free(struct tep_handle *pevent);
- void tep_ref(struct tep_handle *pevent);
- void tep_unref(struct tep_handle *pevent);
-+int tep_get_ref(struct tep_handle *tep);
++install_lib: all_cmd install_plugins install_pkgconfig
+ 	$(call QUIET_INSTALL, $(LIB_TARGET)) \
+ 		$(call do_install_mkdir,$(libdir_SQ)); \
+ 		cp -fpR $(LIB_INSTALL) $(DESTDIR)$(libdir_SQ)
+@@ -279,6 +294,10 @@ install_plugins: $(PLUGINS)
+ 	$(call QUIET_INSTALL, trace_plugins) \
+ 		$(call do_install_plugins, $(PLUGINS))
  
- /* access to the internal parser */
- void tep_buffer_init(const char *buf, unsigned long long size);
++install_pkgconfig:
++	$(call QUIET_INSTALL, $(PKG_CONFIG_FILE)) \
++		$(call do_install_pkgconfig_file,$(prefix))
++
+ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+ 		$(call do_install,event-parse.h,$(prefix)/include/traceevent,644); \
+@@ -289,8 +308,9 @@ install: install_lib
+ 
+ clean:
+ 	$(call QUIET_CLEAN, libtraceevent) \
+-		$(RM) *.o *~ $(TARGETS) *.a *.so $(VERSION_FILES) .*.d .*.cmd \
+-		$(RM) TRACEEVENT-CFLAGS tags TAGS
++		$(RM) *.o *~ $(TARGETS) *.a *.so $(VERSION_FILES) .*.d .*.cmd; \
++		$(RM) TRACEEVENT-CFLAGS tags TAGS; \
++		$(RM) $(PKG_CONFIG_FILE)
+ 
+ PHONY += force plugins
+ force:
+diff --git a/tools/lib/traceevent/libtraceevent.pc.template b/tools/lib/traceevent/libtraceevent.pc.template
+new file mode 100644
+index 000000000000..42e4d6cb6b9e
+--- /dev/null
++++ b/tools/lib/traceevent/libtraceevent.pc.template
+@@ -0,0 +1,10 @@
++prefix=INSTALL_PREFIX
++libdir=${prefix}/lib64
++includedir=${prefix}/include/traceevent
++
++Name: libtraceevent
++URL: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
++Description: Linux kernel trace event library
++Version: LIB_VERSION
++Cflags: -I${includedir}
++Libs: -L${libdir} -ltraceevent
 -- 
 2.19.2
