@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 46/75] perf ordered_events: Rework show_progress for __ordered_events__flush
-Date: Thu,  6 Dec 2018 18:25:33 -0300
-Message-ID: <20181206212602.20474-47-acme@kernel.org>
+Subject: [PATCH 47/75] perf ordered_events: Add private data member
+Date: Thu,  6 Dec 2018 18:25:34 -0300
+Message-ID: <20181206212602.20474-48-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,64 +14,85 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Decide to use the progress bar one level higher, we will need this in
-following patch.
+We will need it in following patch, where we can't use the
+container_of() trick to get the higher level object.
 
 Acked-by: David S. Miller <davem@davemloft.net>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/n/tip-ocjdukp2a8ujikkmafd0j5zv@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-vgs9aoek21v14o3obza586yy@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/ordered-events.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/util/ordered-events.c | 6 ++++--
+ tools/perf/util/ordered-events.h | 4 +++-
+ tools/perf/util/session.c        | 3 ++-
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-index 1904e7f6ec84..28f0f5c95024 100644
+index 28f0f5c95024..d053aa0a7582 100644
 --- a/tools/perf/util/ordered-events.c
 +++ b/tools/perf/util/ordered-events.c
-@@ -219,13 +219,13 @@ int ordered_events__queue(struct ordered_events *oe, union perf_event *event,
- 	return 0;
+@@ -326,7 +326,8 @@ int ordered_events__flush(struct ordered_events *oe, enum oe_flush how)
+ 	return err;
  }
  
--static int __ordered_events__flush(struct ordered_events *oe)
-+static int __ordered_events__flush(struct ordered_events *oe,
-+				   bool show_progress)
+-void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver)
++void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver,
++			  void *data)
  {
- 	struct list_head *head = &oe->events;
- 	struct ordered_event *tmp, *iter;
- 	u64 limit = oe->next_flush;
- 	u64 last_ts = oe->last ? oe->last->timestamp : 0ULL;
--	bool show_progress = limit == ULLONG_MAX;
- 	struct ui_progress prog;
- 	int ret;
+ 	INIT_LIST_HEAD(&oe->events);
+ 	INIT_LIST_HEAD(&oe->cache);
+@@ -334,6 +335,7 @@ void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t d
+ 	oe->max_alloc_size = (u64) -1;
+ 	oe->cur_alloc_size = 0;
+ 	oe->deliver	   = deliver;
++	oe->data	   = data;
+ }
  
-@@ -272,6 +272,7 @@ int ordered_events__flush(struct ordered_events *oe, enum oe_flush how)
- 		"HALF ",
- 	};
- 	int err;
-+	bool show_progress = false;
+ static void
+@@ -377,5 +379,5 @@ void ordered_events__reinit(struct ordered_events *oe)
  
- 	if (oe->nr_events == 0)
- 		return 0;
-@@ -279,6 +280,7 @@ int ordered_events__flush(struct ordered_events *oe, enum oe_flush how)
- 	switch (how) {
- 	case OE_FLUSH__FINAL:
- 		oe->next_flush = ULLONG_MAX;
-+		show_progress = true;
- 		break;
+ 	ordered_events__free(oe);
+ 	memset(oe, '\0', sizeof(*oe));
+-	ordered_events__init(oe, old_deliver);
++	ordered_events__init(oe, old_deliver, oe->data);
+ }
+diff --git a/tools/perf/util/ordered-events.h b/tools/perf/util/ordered-events.h
+index 1338d5c345dc..507b4e4df79e 100644
+--- a/tools/perf/util/ordered-events.h
++++ b/tools/perf/util/ordered-events.h
+@@ -47,13 +47,15 @@ struct ordered_events {
+ 	enum oe_flush			 last_flush_type;
+ 	u32				 nr_unordered_events;
+ 	bool				 copy_on_queue;
++	void				*data;
+ };
  
- 	case OE_FLUSH__HALF:
-@@ -308,7 +310,7 @@ int ordered_events__flush(struct ordered_events *oe, enum oe_flush how)
- 		   str[how], oe->nr_events);
- 	pr_oe_time(oe->max_timestamp, "max_timestamp\n");
+ int ordered_events__queue(struct ordered_events *oe, union perf_event *event,
+ 			  u64 timestamp, u64 file_offset);
+ void ordered_events__delete(struct ordered_events *oe, struct ordered_event *event);
+ int ordered_events__flush(struct ordered_events *oe, enum oe_flush how);
+-void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver);
++void ordered_events__init(struct ordered_events *oe, ordered_events__deliver_t deliver,
++			  void *data);
+ void ordered_events__free(struct ordered_events *oe);
+ void ordered_events__reinit(struct ordered_events *oe);
  
--	err = __ordered_events__flush(oe);
-+	err = __ordered_events__flush(oe, show_progress);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f8eab197f35c..78a067777144 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -126,7 +126,8 @@ struct perf_session *perf_session__new(struct perf_data *data,
+ 	session->tool   = tool;
+ 	INIT_LIST_HEAD(&session->auxtrace_index);
+ 	machines__init(&session->machines);
+-	ordered_events__init(&session->ordered_events, ordered_events__deliver_event);
++	ordered_events__init(&session->ordered_events,
++			     ordered_events__deliver_event, NULL);
  
- 	if (!err) {
- 		if (how == OE_FLUSH__ROUND)
+ 	if (data) {
+ 		if (perf_data__open(data))
 -- 
 2.19.2
