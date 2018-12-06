@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 61/75] perf header: Fix unchecked usage of strncpy()
-Date: Thu,  6 Dec 2018 18:25:48 -0300
-Message-ID: <20181206212602.20474-62-acme@kernel.org>
+Subject: [PATCH 62/75] perf header: Fix unchecked usage of strncpy()
+Date: Thu,  6 Dec 2018 18:25:49 -0300
+Message-ID: <20181206212602.20474-63-acme@kernel.org>
 References: <20181206212602.20474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -20,35 +20,35 @@ implementation for systems without it.
 
 This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
 
-  util/header.c: In function 'perf_event__synthesize_event_update_unit':
-  util/header.c:3586:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
-    strncpy(ev->data, evsel->unit, size);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/header.c:3579:16: note: length computed here
-    size_t size = strlen(evsel->unit);
-                  ^~~~~~~~~~~~~~~~~~~
+  util/header.c: In function 'perf_event__synthesize_event_update_name':
+  util/header.c:3625:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy(ev->data, evsel->name, len);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  util/header.c:3618:15: note: length computed here
+    size_t len = strlen(evsel->name);
+                 ^~~~~~~~~~~~~~~~~~~
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
-Link: https://lkml.kernel.org/n/tip-fiikh5nay70bv4zskw2aa858@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-wycz66iy8dl2z3yifgqf894p@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4a64739c67e7..c87cfe6b7c96 100644
+index c87cfe6b7c96..1171d8400bf4 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -3583,7 +3583,7 @@ perf_event__synthesize_event_update_unit(struct perf_tool *tool,
+@@ -3622,7 +3622,7 @@ perf_event__synthesize_event_update_name(struct perf_tool *tool,
  	if (ev == NULL)
  		return -ENOMEM;
  
--	strncpy(ev->data, evsel->unit, size);
-+	strlcpy(ev->data, evsel->unit, size + 1);
- 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+-	strncpy(ev->data, evsel->name, len);
++	strlcpy(ev->data, evsel->name, len + 1);
+ 	err = process(tool, (union perf_event*) ev, NULL, NULL);
  	free(ev);
  	return err;
 -- 
