@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/63] perf cs-etm: Correct packets swapping in cs_etm__flush()
-Date: Tue, 18 Dec 2018 19:06:56 -0300
-Message-ID: <20181218220733.15839-27-acme@kernel.org>
+Subject: [PATCH 27/63] perf cs-etm: Avoid stale branch samples when flush packet
+Date: Tue, 18 Dec 2018 19:06:57 -0300
+Message-ID: <20181218220733.15839-28-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,27 +14,43 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-The structure cs_etm_queue uses 'prev_packet' to point to previous
-packet, this can be used to combine with new coming packet to generate
-samples.
+At the end of trace buffer handling, function cs_etm__flush() is invoked
+to flush any remaining branch stack entries.  As a side effect, it also
+generates branch sample, because the 'etmq->packet' doesn't contains any
+new coming packet but point to one stale packet after packets swapping,
+so it wrongly makes synthesize branch samples with stale packet info.
 
-In function cs_etm__flush() it swaps packets only when the flag
-'etm->synth_opts.last_branch' is true, this means that it will not swap
-packets if without option '--itrace=il' to generate last branch entries;
-thus for this case the 'prev_packet' doesn't point to the correct
-previous packet and the stale packet still will be used to generate
-sequential sample.  Thus if dump trace with 'perf script' command we can
-see the incorrect flow with the stale packet's address info.
+We could review below detailed flow which causes issue:
 
-This patch corrects packets swapping in cs_etm__flush(); except using
-the flag 'etm->synth_opts.last_branch' it also checks the another flag
-'etm->sample_branches', if any flag is true then it swaps packets so can
-save correct content to 'prev_packet'.  Finally this can fix the wrong
-program flow dumping issue.
+  Packet1: start_addr=0xffff000008b1fbf0 end_addr=0xffff000008b1fbfc
+  Packet2: start_addr=0xffff000008b1fb5c end_addr=0xffff000008b1fb6c
 
-The patch has a minor refactoring to use 'etm->synth_opts.last_branch'
-instead of 'etmq->etm->synth_opts.last_branch' for condition checking,
-this is consistent with that is done in cs_etm__sample().
+  step 1: cs_etm__sample():
+	sample: ip=(0xffff000008b1fbfc-4) addr=0xffff000008b1fb5c
+
+  step 2: flush packet in cs_etm__run_decoder():
+	cs_etm__run_decoder()
+	  `-> err = cs_etm__flush(etmq, false);
+	sample: ip=(0xffff000008b1fb6c-4) addr=0xffff000008b1fbf0
+
+Packet1 and packet2 are two continuous packets, when packet2 is the new
+coming packet, cs_etm__sample() generates branch sample for these two
+packets and use [packet1::end_addr - 4 => packet2::start_addr] as branch
+jump flow, thus we can see the first generated branch sample in step 1.
+At the end of cs_etm__sample() it swaps packets so 'etm->prev_packet'=
+packet2 and 'etm->packet'=packet1, so far it's okay for branch sample.
+
+If packet2 is the last one packet in trace buffer, even there have no
+any new coming packet, cs_etm__run_decoder() invokes cs_etm__flush() to
+flush branch stack entries as expected, but it also generates branch
+samples by taking 'etm->packet' as a new coming packet, thus the branch
+jump flow is as [packet2::end_addr - 4 =>  packet1::start_addr]; this
+is the second sample which is generated in step 2.  So actually the
+second sample is a stale sample and we should not generate it.
+
+This patch introduces a new function cs_etm__end_block(), at the end of
+trace block this function is invoked to only flush branch stack entries
+and thus can avoid to generate branch sample for stale packet.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -45,24 +61,64 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Robert Walker <robert.walker@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1544513908-16805-2-git-send-email-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/1544513908-16805-3-git-send-email-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 23159c33db2a..789707bc4e9e 100644
+index 789707bc4e9e..ffc4fe5c0b7e 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -1042,7 +1042,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
+@@ -1055,6 +1055,39 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
+ 	return err;
+ }
+ 
++static int cs_etm__end_block(struct cs_etm_queue *etmq)
++{
++	int err;
++
++	/*
++	 * It has no new packet coming and 'etmq->packet' contains the stale
++	 * packet which was set at the previous time with packets swapping;
++	 * so skip to generate branch sample to avoid stale packet.
++	 *
++	 * For this case only flush branch stack and generate a last branch
++	 * event for the branches left in the circular buffer at the end of
++	 * the trace.
++	 */
++	if (etmq->etm->synth_opts.last_branch &&
++	    etmq->prev_packet->sample_type == CS_ETM_RANGE) {
++		/*
++		 * Use the address of the end of the last reported execution
++		 * range.
++		 */
++		u64 addr = cs_etm__last_executed_instr(etmq->prev_packet);
++
++		err = cs_etm__synth_instruction_sample(
++			etmq, addr,
++			etmq->period_instructions);
++		if (err)
++			return err;
++
++		etmq->period_instructions = 0;
++	}
++
++	return 0;
++}
++
+ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
+ {
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+@@ -1137,7 +1170,7 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
+ 
+ 		if (err == 0)
+ 			/* Flush any remaining branch stack entries */
+-			err = cs_etm__flush(etmq);
++			err = cs_etm__end_block(etmq);
  	}
  
- swap_packet:
--	if (etmq->etm->synth_opts.last_branch) {
-+	if (etm->sample_branches || etm->synth_opts.last_branch) {
- 		/*
- 		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
- 		 * the next incoming packet.
+ 	return err;
 -- 
 2.19.2
