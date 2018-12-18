@@ -1,64 +1,66 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 62/63] perf symbols: Relax checks on perf-PID.map ownership
-Date: Tue, 18 Dec 2018 19:07:32 -0300
-Message-ID: <20181218220733.15839-63-acme@kernel.org>
+Subject: [PATCH 63/63] tools uapi asm: Update asm-generic/unistd.h copy
+Date: Tue, 18 Dec 2018 19:07:33 -0300
+Message-ID: <20181218220733.15839-64-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181218220733.15839-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Frederic Weisbecker <fweisbec@gmail.com>, =?UTF-8?q?H=C3=ADtalo=20Silva?= <hitalos@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Pekka Enberg <penberg@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Arnd Bergmann <arnd@arndb.de>, Guo Ren <ren_guo@c-sky.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Those are simple enough, and usually not produced by root, instead by
-whatever user is running java, rust, Node.js JIT code that end up
-generating those /tmp/perf-PID.map for resolution of symbols in the
-anonymous executable maps.
+To get the change in:
 
-Having to use --force to resolve symbols in 'perf top' is a distraction,
-as recently I experienced when node.js symbols were not being resolved
-by 'perf top'.
+  b7d624ab4312 ("asm-generic: unistd.h: fixup broken macro include.")
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
+That doesn't imply in any changes in the tools.
+
+This silences the following perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
+  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Hítalo Silva <hitalos@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Guo Ren <ren_guo@c-sky.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/n/tip-tk2jgo2v4v2yjuj28axbpppo@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-2e7xwm5i2qcc88jp2lyawdyd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ tools/include/uapi/asm-generic/unistd.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index dcce74bae6de..01f2c7385e38 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1537,17 +1537,6 @@ int dso__load(struct dso *dso, struct map *map)
- 	dso->adjust_symbols = 0;
- 
- 	if (perfmap) {
--		struct stat st;
--
--		if (lstat(map_path, &st) < 0)
--			goto out;
--
--		if (!symbol_conf.force && st.st_uid && (st.st_uid != geteuid())) {
--			pr_warning("File %s not owned by current user or root, "
--				   "ignoring it (use -f to override).\n", map_path);
--			goto out;
--		}
--
- 		ret = dso__load_perf_map(map_path, dso);
- 		dso->symtab_type = ret > 0 ? DSO_BINARY_TYPE__JAVA_JIT :
- 					     DSO_BINARY_TYPE__NOT_FOUND;
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 538546edbfbd..c7f3321fbe43 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -760,8 +760,10 @@ __SYSCALL(__NR_rseq, sys_rseq)
+ #define __NR_ftruncate __NR3264_ftruncate
+ #define __NR_lseek __NR3264_lseek
+ #define __NR_sendfile __NR3264_sendfile
++#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+ #define __NR_newfstatat __NR3264_fstatat
+ #define __NR_fstat __NR3264_fstat
++#endif
+ #define __NR_mmap __NR3264_mmap
+ #define __NR_fadvise64 __NR3264_fadvise64
+ #ifdef __NR3264_stat
+@@ -776,8 +778,10 @@ __SYSCALL(__NR_rseq, sys_rseq)
+ #define __NR_ftruncate64 __NR3264_ftruncate
+ #define __NR_llseek __NR3264_lseek
+ #define __NR_sendfile64 __NR3264_sendfile
++#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+ #define __NR_fstatat64 __NR3264_fstatat
+ #define __NR_fstat64 __NR3264_fstat
++#endif
+ #define __NR_mmap2 __NR3264_mmap
+ #define __NR_fadvise64_64 __NR3264_fadvise64
+ #ifdef __NR3264_stat
 -- 
 2.19.2
