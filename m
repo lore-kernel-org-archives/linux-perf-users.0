@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 50/63] perf trace: Show NULL when syscall pointer args are 0
-Date: Tue, 18 Dec 2018 19:07:20 -0300
-Message-ID: <20181218220733.15839-51-acme@kernel.org>
+Subject: [PATCH 51/63] tools include arch: Grab a copy of x86's prctl.h
+Date: Tue, 18 Dec 2018 19:07:21 -0300
+Message-ID: <20181218220733.15839-52-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,109 +15,56 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Matching strace's output format. The 'format' file for the syscall
-tracepoints have an indication if the arg is a pointer, with some
-exceptions like 'mmap' that has its first arg as an 'unsigned long', so
-use a heuristic using the argument name, i.e. if it contains the 'addr'
-substring, format it with the pointer formatter.
+We need it to generate the tables for the 'code' arch_prctl's syscall
+argument.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ddghemr8qrm6i0sb8awznbze@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-vu890pi18fpd4eyz61cazckj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 28 ++++++++++++----------------
- tools/perf/trace/beauty/beauty.h |  3 +++
- 2 files changed, 15 insertions(+), 16 deletions(-)
+ tools/arch/x86/include/uapi/asm/prctl.h | 17 +++++++++++++++++
+ tools/perf/check-headers.sh             |  1 +
+ 2 files changed, 18 insertions(+)
+ create mode 100644 tools/arch/x86/include/uapi/asm/prctl.h
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 35d8fbe47ee4..6ba8290a0794 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -444,6 +444,13 @@ size_t syscall_arg__scnprintf_hex(char *bf, size_t size, struct syscall_arg *arg
- 	return scnprintf(bf, size, "%#lx", arg->val);
- }
- 
-+size_t syscall_arg__scnprintf_ptr(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	if (arg->val == 0)
-+		return scnprintf(bf, size, "NULL");
-+	return syscall_arg__scnprintf_hex(bf, size, arg);
-+}
+diff --git a/tools/arch/x86/include/uapi/asm/prctl.h b/tools/arch/x86/include/uapi/asm/prctl.h
+new file mode 100644
+index 000000000000..5a6aac9fa41f
+--- /dev/null
++++ b/tools/arch/x86/include/uapi/asm/prctl.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _ASM_X86_PRCTL_H
++#define _ASM_X86_PRCTL_H
 +
- size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg)
- {
- 	return scnprintf(bf, size, "%d", arg->val);
-@@ -660,7 +667,7 @@ static struct syscall_fmt {
- 	{ .name	    = "bpf",
- 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
- 	{ .name	    = "brk",	    .hexret = true,
--	  .arg = { [0] = { .scnprintf = SCA_HEX, /* brk */ }, }, },
-+	  .arg = { [0] = { .scnprintf = SCA_PTR, /* brk */ }, }, },
- 	{ .name     = "clock_gettime",
- 	  .arg = { [0] = STRARRAY(clk_id, clockid), }, },
- 	{ .name	    = "clone",	    .errpid = true, .nr_args = 5,
-@@ -738,17 +745,12 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* fd */ }, }, },
- 	{ .name	    = "mknodat",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* fd */ }, }, },
--	{ .name	    = "mlock",
--	  .arg = { [0] = { .scnprintf = SCA_HEX, /* addr */ }, }, },
--	{ .name	    = "mlockall",
--	  .arg = { [0] = { .scnprintf = SCA_HEX, /* addr */ }, }, },
- 	{ .name	    = "mmap",	    .hexret = true,
- /* The standard mmap maps to old_mmap on s390x */
- #if defined(__s390x__)
- 	.alias = "old_mmap",
- #endif
--	  .arg = { [0] = { .scnprintf = SCA_HEX,	/* addr */ },
--		   [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ },
-+	  .arg = { [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ },
- 		   [3] = { .scnprintf = SCA_MMAP_FLAGS,	/* flags */ }, }, },
- 	{ .name	    = "mount",
- 	  .arg = { [0] = { .scnprintf = SCA_FILENAME, /* dev_name */ },
-@@ -760,13 +762,7 @@ static struct syscall_fmt {
- 	{ .name	    = "mq_unlink",
- 	  .arg = { [0] = { .scnprintf = SCA_FILENAME, /* u_name */ }, }, },
- 	{ .name	    = "mremap",	    .hexret = true,
--	  .arg = { [0] = { .scnprintf = SCA_HEX,	  /* addr */ },
--		   [3] = { .scnprintf = SCA_MREMAP_FLAGS, /* flags */ },
--		   [4] = { .scnprintf = SCA_HEX,	  /* new_addr */ }, }, },
--	{ .name	    = "munlock",
--	  .arg = { [0] = { .scnprintf = SCA_HEX, /* addr */ }, }, },
--	{ .name	    = "munmap",
--	  .arg = { [0] = { .scnprintf = SCA_HEX, /* addr */ }, }, },
-+	  .arg = { [3] = { .scnprintf = SCA_MREMAP_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "name_to_handle_at",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
- 	{ .name	    = "newfstatat",
-@@ -1350,8 +1346,8 @@ static int syscall__set_arg_fmts(struct syscall *sc)
- 			  strcmp(field->name, "path") == 0 ||
- 			  strcmp(field->name, "pathname") == 0))
- 			sc->arg_fmt[idx].scnprintf = SCA_FILENAME;
--		else if (field->flags & TEP_FIELD_IS_POINTER)
--			sc->arg_fmt[idx].scnprintf = syscall_arg__scnprintf_hex;
-+		else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr"))
-+			sc->arg_fmt[idx].scnprintf = SCA_PTR;
- 		else if (strcmp(field->type, "pid_t") == 0)
- 			sc->arg_fmt[idx].scnprintf = SCA_PID;
- 		else if (strcmp(field->type, "umode_t") == 0)
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index ac25b6410bc8..1a93d9c626ef 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -98,6 +98,9 @@ size_t syscall_arg__scnprintf_fd(char *bf, size_t size, struct syscall_arg *arg)
- size_t syscall_arg__scnprintf_hex(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_HEX syscall_arg__scnprintf_hex
- 
-+size_t syscall_arg__scnprintf_ptr(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_PTR syscall_arg__scnprintf_ptr
++#define ARCH_SET_GS		0x1001
++#define ARCH_SET_FS		0x1002
++#define ARCH_GET_FS		0x1003
++#define ARCH_GET_GS		0x1004
 +
- size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_INT syscall_arg__scnprintf_int
- 
++#define ARCH_GET_CPUID		0x1011
++#define ARCH_SET_CPUID		0x1012
++
++#define ARCH_MAP_VDSO_X32	0x2001
++#define ARCH_MAP_VDSO_32	0x2002
++#define ARCH_MAP_VDSO_64	0x2003
++
++#endif /* _ASM_X86_PRCTL_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 9531f7bd7d9b..10d97dc632da 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -21,6 +21,7 @@ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
+ arch/x86/include/asm/required-features.h
+ arch/x86/include/asm/cpufeatures.h
++arch/x86/include/uapi/asm/prctl.h
+ arch/arm/include/uapi/asm/perf_regs.h
+ arch/arm64/include/uapi/asm/perf_regs.h
+ arch/powerpc/include/uapi/asm/perf_regs.h
 -- 
 2.19.2
