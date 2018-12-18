@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/63] perf trace: Switch to using a struct for the aumented_raw_syscalls syscalls map values
-Date: Tue, 18 Dec 2018 19:06:55 -0300
-Message-ID: <20181218220733.15839-26-acme@kernel.org>
+Subject: [PATCH 26/63] perf cs-etm: Correct packets swapping in cs_etm__flush()
+Date: Tue, 18 Dec 2018 19:06:56 -0300
+Message-ID: <20181218220733.15839-27-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,64 +9,60 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181218220733.15839-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mike Leach <mike.leach@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-We'll start adding more perf-syscall stuff, so lets do this prep step so
-that the next ones are just about adding more fields.
+The structure cs_etm_queue uses 'prev_packet' to point to previous
+packet, this can be used to combine with new coming packet to generate
+samples.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+In function cs_etm__flush() it swaps packets only when the flag
+'etm->synth_opts.last_branch' is true, this means that it will not swap
+packets if without option '--itrace=il' to generate last branch entries;
+thus for this case the 'prev_packet' doesn't point to the correct
+previous packet and the stale packet still will be used to generate
+sequential sample.  Thus if dump trace with 'perf script' command we can
+see the incorrect flow with the stale packet's address info.
+
+This patch corrects packets swapping in cs_etm__flush(); except using
+the flag 'etm->synth_opts.last_branch' it also checks the another flag
+'etm->sample_branches', if any flag is true then it swaps packets so can
+save correct content to 'prev_packet'.  Finally this can fix the wrong
+program flow dumping issue.
+
+The patch has a minor refactoring to use 'etm->synth_opts.last_branch'
+instead of 'etmq->etm->synth_opts.last_branch' for condition checking,
+this is consistent with that is done in cs_etm__sample().
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mike Leach <mike.leach@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-vac4sn1ns1vj4y07lzj7y4b8@git.kernel.org
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/1544513908-16805-2-git-send-email-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/perf/util/cs-etm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index de81918c7ad4..096380e8c213 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -908,6 +908,10 @@ struct syscall {
- 	struct syscall_arg_fmt *arg_fmt;
- };
- 
-+struct bpf_map_syscall_entry {
-+	bool	enabled;
-+};
-+
- /*
-  * We need to have this 'calculated' boolean because in some cases we really
-  * don't know what is the duration of a syscall, for instance, when we start
-@@ -2583,7 +2587,9 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
- static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
- {
- 	int fd = bpf_map__fd(trace->syscalls.map);
--	bool value = !trace->not_ev_qualifier;
-+	struct bpf_map_syscall_entry value = {
-+		.enabled = !trace->not_ev_qualifier,
-+	};
- 	int err = 0;
- 	size_t i;
- 
-@@ -2601,10 +2607,13 @@ static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
- static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
- {
- 	int fd = bpf_map__fd(trace->syscalls.map);
-+	struct bpf_map_syscall_entry value = {
-+		.enabled = enabled,
-+	};
- 	int err = 0, key;
- 
- 	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
--		err = bpf_map_update_elem(fd, &key, &enabled, BPF_ANY);
-+		err = bpf_map_update_elem(fd, &key, &value, BPF_ANY);
- 		if (err)
- 			break;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 23159c33db2a..789707bc4e9e 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1042,7 +1042,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
  	}
+ 
+ swap_packet:
+-	if (etmq->etm->synth_opts.last_branch) {
++	if (etm->sample_branches || etm->synth_opts.last_branch) {
+ 		/*
+ 		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+ 		 * the next incoming packet.
 -- 
 2.19.2
