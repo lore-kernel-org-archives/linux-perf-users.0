@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/63] perf header: Fix up argument to ctime()
-Date: Tue, 18 Dec 2018 19:06:45 -0300
-Message-ID: <20181218220733.15839-16-acme@kernel.org>
+Subject: [PATCH 16/63] perf tools: Add missing open_memstream() prototype for systems lacking it
+Date: Tue, 18 Dec 2018 19:06:46 -0300
+Message-ID: <20181218220733.15839-17-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,49 +14,64 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reducing this noise when cross building to the Android NDK:
+There are systems such as the Android NDK API level 24 has the
+open_memstream() function but doesn't provide a prototype, adding noise
+to the build:
 
-  util/header.c: In function 'perf_header__fprintf_info':
-  util/header.c:2710:45: warning: pointer targets in passing argument 1 of 'ctime' differ in signedness [-Wpointer-sign]
-    fprintf(fp, "# captured on    : %s", ctime(&st.st_ctime));
-                                               ^
-  In file included from util/../perf.h:5:0,
-                   from util/evlist.h:11,
-                   from util/header.c:22:
-  /opt/android-ndk-r15c/platforms/android-26/arch-arm/usr/include/time.h:81:14: note: expected 'const time_t *' but argument is of type 'long unsigned int *'
-   extern char* ctime(const time_t*) __LIBC_ABI_PUBLIC__;
-                ^
+  builtin-timechart.c: In function 'cat_backtrace':
+  builtin-timechart.c:486:2: warning: implicit declaration of function 'open_memstream' [-Wimplicit-function-declaration]
+    FILE *f = open_memstream(&p, &p_len);
+    ^
+  builtin-timechart.c:486:2: warning: nested extern declaration of 'open_memstream' [-Wnested-externs]
+  builtin-timechart.c:486:12: warning: initialization makes pointer from integer without a cast
+    FILE *f = open_memstream(&p, &p_len);
+              ^
+
+Define a LACKS_OPEN_MEMSTREAM_PROTOTYPE define so that code needing that
+can get a prototype.
+
+Checked in the bionic git repo to be available since level 23:
+
+https://android.googlesource.com/platform/bionic/+/master/libc/include/stdio.h#241
+
+  FILE* open_memstream(char** __ptr, size_t* __size_ptr) __INTRODUCED_IN(23);
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-6bz74zp080yhmtiwb36enso9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-343ashae97e5bq6vizusyfno@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config     | 1 +
+ tools/perf/builtin-timechart.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 1171d8400bf4..dec6d218c31c 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2698,6 +2698,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	struct perf_header *header = &session->header;
- 	int fd = perf_data__fd(session->data);
- 	struct stat st;
-+	time_t stctime;
- 	int ret, bit;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 265a9225e5fc..07c1857c3d7a 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -295,6 +295,7 @@ ifndef NO_BIONIC
+   ifeq ($(feature-bionic), 1)
+     BIONIC := 1
+     CFLAGS += -DLACKS_SIGQUEUE_PROTOTYPE
++    CFLAGS += -DLACKS_OPEN_MEMSTREAM_PROTOTYPE
+     EXTLIBS := $(filter-out -lrt,$(EXTLIBS))
+     EXTLIBS := $(filter-out -lpthread,$(EXTLIBS))
+   endif
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index a827919c6263..775b99833e51 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -43,6 +43,10 @@
+ #include "util/data.h"
+ #include "util/debug.h"
  
- 	hd.fp = fp;
-@@ -2707,7 +2708,8 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	if (ret == -1)
- 		return -1;
++#ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
++FILE *open_memstream(char **ptr, size_t *sizeloc);
++#endif
++
+ #define SUPPORT_OLD_POWER_EVENTS 1
+ #define PWR_EVENT_EXIT -1
  
--	fprintf(fp, "# captured on    : %s", ctime(&st.st_ctime));
-+	stctime = st.st_ctime;
-+	fprintf(fp, "# captured on    : %s", ctime(&stctime));
- 
- 	fprintf(fp, "# header version : %u\n", header->version);
- 	fprintf(fp, "# data offset    : %" PRIu64 "\n", header->data_offset);
 -- 
 2.19.2
