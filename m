@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/63] perf trace: Allow configuring if the syscall start timestamp should be printed
-Date: Tue, 18 Dec 2018 19:07:10 -0300
-Message-ID: <20181218220733.15839-41-acme@kernel.org>
+Subject: [PATCH 41/63] perf trace: Allow suppressing the syscall argument names
+Date: Tue, 18 Dec 2018 19:07:11 -0300
+Message-ID: <20181218220733.15839-42-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,29 +15,35 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  # trace -e open*,close,*sleep sleep 1
-     0.000 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC           ) = 3
-     0.016 close(fd: 3                                                           ) = 0
-     0.024 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC           ) = 3
-     0.074 close(fd: 3                                                           ) = 0
-     0.235 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: CLOEXEC) = 3
-     0.251 close(fd: 3                                                           ) = 0
-     0.285 nanosleep(rqtp: 0x7ffd68e6d620, rmtp: 0                               ) = 0
-  1000.386 close(fd: 1                                                           ) = 0
-  1000.395 close(fd: 2                                                           ) = 0
-  #
+To show just the values:
 
-  # perf config trace.show_timestamp=no
+Default:
+
   # trace -e open*,close,*sleep sleep 1
   openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC           ) = 3
   close(fd: 3                                                           ) = 0
   openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC           ) = 3
   close(fd: 3                                                           ) = 0
-  openat(dfd: CWD, filename: , flags: CLOEXEC                           ) = 3
+  openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: CLOEXEC) = 3
   close(fd: 3                                                           ) = 0
-  nanosleep(rqtp: 0x7fffa79c38e0, rmtp: 0                               ) = 0
+  nanosleep(rqtp: 0x7ffc0c4ea0d0, rmtp: 0                               ) = 0
   close(fd: 1                                                           ) = 0
   close(fd: 2                                                           ) = 0
+  #
+
+Remove it:
+
+  # perf config trace.show_arg_names=no
+  # trace -e open*,close,*sleep sleep 1
+  openat(CWD, /etc/ld.so.cache, CLOEXEC                                 ) = 3
+  close(3                                                               ) = 0
+  openat(CWD, /lib64/libc.so.6, CLOEXEC                                 ) = 3
+  close(3                                                               ) = 0
+  openat(CWD, /usr/lib/locale/locale-archive, CLOEXEC                   ) = 3
+  close(3                                                               ) = 0
+  nanosleep(0x7ffced3a8c40, 0                                           ) = 0
+  close(1                                                               ) = 0
+  close(2                                                               ) = 0
   #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -45,67 +51,85 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-mjjnicy48367jah6ls4k0nk8@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ta9tbdwgodpw719sr2bjm8eb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 3 +++
- tools/perf/builtin-trace.c               | 9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-config.txt |  4 ++++
+ tools/perf/builtin-trace.c               | 22 ++++++++++++++++++----
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index cd9bf12fb255..ecd1e9514925 100644
+index ecd1e9514925..35108fd61fa6 100644
 --- a/tools/perf/Documentation/perf-config.txt
 +++ b/tools/perf/Documentation/perf-config.txt
-@@ -535,6 +535,9 @@ trace.*::
+@@ -532,6 +532,10 @@ trace.*::
+ 	trace.no_inherit::
+ 		Do not follow children threads.
+ 
++	trace.show_arg_names::
++		Should syscall argument names be printed? If not then trace.show_zeros
++		will be set.
++
  	trace.show_duration::
  		Show syscall duration.
  
-+	trace.show_timestamp::
-+		Show syscall start timestamp.
-+
- 	trace.show_zeros::
- 		Do not suppress syscall arguments that are equal to zero.
- 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a4e2290e57e0..e978ce034863 100644
+index e978ce034863..95dfcb851604 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -127,6 +127,7 @@ struct trace {
- 	bool			show_tool_stats;
- 	bool			trace_syscalls;
- 	bool			kernel_syscallchains;
-+	bool			show_tstamp;
+@@ -130,6 +130,7 @@ struct trace {
+ 	bool			show_tstamp;
  	bool			show_duration;
  	bool			show_zeros;
++	bool			show_arg_names;
  	bool			force;
-@@ -1215,7 +1216,10 @@ static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread
- static size_t trace__fprintf_entry_head(struct trace *trace, struct thread *thread,
- 					u64 duration, bool duration_calculated, u64 tstamp, FILE *fp)
- {
--	size_t printed = trace__fprintf_tstamp(trace, tstamp, fp);
-+	size_t printed = 0;
+ 	bool			vfs_getname;
+ 	int			trace_pgfaults;
+@@ -1613,8 +1614,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			      sc->arg_fmt[arg.idx].parm))
+ 				continue;
+ 
+-			printed += scnprintf(bf + printed, size - printed,
+-					     "%s%s: ", printed ? ", " : "", field->name);
++			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
 +
-+	if (trace->show_tstamp)
-+		printed = trace__fprintf_tstamp(trace, tstamp, fp);
- 	if (trace->show_duration)
- 		printed += fprintf_duration(duration, duration_calculated, fp);
- 	return printed + trace__fprintf_comm_tid(trace, thread, fp);
-@@ -3538,6 +3542,8 @@ static int trace__config(const char *var, const char *value, void *arg)
- 					       "event selector. use 'perf list' to list available events",
- 					       parse_events_option);
- 		err = parse_events_option(&o, value, 0);
-+	} else if (!strcmp(var, "trace.show_timestamp")) {
-+		trace->show_tstamp = perf_config_bool(var, value);
++			if (trace->show_arg_names)
++				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
++
+ 			printed += syscall__scnprintf_val(sc, bf + printed, size - printed, &arg, val);
+ 		}
+ 	} else if (IS_ERR(sc->tp_format)) {
+@@ -3546,12 +3550,21 @@ static int trace__config(const char *var, const char *value, void *arg)
+ 		trace->show_tstamp = perf_config_bool(var, value);
  	} else if (!strcmp(var, "trace.show_duration")) {
  		trace->show_duration = perf_config_bool(var, value);
++	} else if (!strcmp(var, "trace.show_arg_names")) {
++		trace->show_arg_names = perf_config_bool(var, value);
++		if (!trace->show_arg_names)
++			trace->show_zeros = true;
  	} else if (!strcmp(var, "trace.show_zeros")) {
-@@ -3574,6 +3580,7 @@ int cmd_trace(int argc, const char **argv)
- 		},
- 		.output = stderr,
+-		trace->show_zeros = perf_config_bool(var, value);
++		bool new_show_zeros = perf_config_bool(var, value);
++		if (!trace->show_arg_names && !new_show_zeros) {
++			pr_warning("trace.show_zeros has to be set when trace.show_arg_names=no\n");
++			goto out;
++		}
++		trace->show_zeros = new_show_zeros;
+ 	} else if (!strcmp(var, "trace.no_inherit")) {
+ 		trace->opts.no_inherit = perf_config_bool(var, value);
+ 	}
+-
++out:
+ 	return err;
+ }
+ 
+@@ -3582,6 +3595,7 @@ int cmd_trace(int argc, const char **argv)
  		.show_comm = true,
-+		.show_tstamp = true,
+ 		.show_tstamp = true,
  		.show_duration = true,
++		.show_arg_names = true,
  		.trace_syscalls = false,
  		.kernel_syscallchains = false,
+ 		.max_stack = UINT_MAX,
 -- 
 2.19.2
