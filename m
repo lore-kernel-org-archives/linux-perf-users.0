@@ -1,68 +1,47 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/63] perf stat: Avoid segfaults caused by negated options
-Date: Tue, 18 Dec 2018 19:06:34 -0300
-Message-ID: <20181218220733.15839-5-acme@kernel.org>
+Subject: [PATCH 05/63] tools lib traceevent: Fix processing of dereferenced args in bprintk events
+Date: Tue, 18 Dec 2018 19:06:35 -0300
+Message-ID: <20181218220733.15839-6-acme@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20181218220733.15839-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-trace-devel@vger.kernel.org, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Some 'perf stat' options do not make sense to be negated (event,
-cgroup), some do not have negated path implemented (metrics). Due to
-that, it is better to disable the "no-" prefix for them, since
-otherwise, the later opt-parsing segfaults.
+In the case that a bprintk event has a dereferenced pointer that is
+stored as a string, and there's more values to process (more args), the
+arg was not updated to point to the next arg after processing the
+dereferenced pointer, and it screwed up what was to be displayed.
 
-Before:
-
-  $ perf stat --no-metrics -- ls
-  Segmentation fault (core dumped)
-
-After:
-
-  $ perf stat --no-metrics -- ls
-   Error: option `no-metrics' isn't available
-   Usage: perf stat [<options>] [<command>]
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-LPU-Reference: 1485912065.62416880.1544457604340.JavaMail.zimbra@redhat.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: 37db96bb49629 ("tools lib traceevent: Handle new pointer processing of bprint strings")
+Link: http://lkml.kernel.org/r/20181210134522.3f71e2ca@gandalf.local.home
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a635abfa77b6..1410d66192f7 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -709,7 +709,7 @@ static int parse_metric_groups(const struct option *opt,
- 	return metricgroup__parse_groups(opt, str, &stat_config.metric_events);
- }
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index a5ed291b8a9f..69a96e39f0ab 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4973,6 +4973,7 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
  
--static const struct option stat_options[] = {
-+static struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
- 	OPT_CALLBACK('e', "event", &evsel_list, "event",
-@@ -1599,6 +1599,12 @@ int cmd_stat(int argc, const char **argv)
- 		return -ENOMEM;
+ 				if (arg->type == TEP_PRINT_BSTRING) {
+ 					trace_seq_puts(s, arg->string.string);
++					arg = arg->next;
+ 					break;
+ 				}
  
- 	parse_events__shrink_config_terms();
-+
-+	/* String-parsing callback-based options would segfault when negated */
-+	set_option_flag(stat_options, 'e', "event", PARSE_OPT_NONEG);
-+	set_option_flag(stat_options, 'M', "metrics", PARSE_OPT_NONEG);
-+	set_option_flag(stat_options, 'G', "cgroup", PARSE_OPT_NONEG);
-+
- 	argc = parse_options_subcommand(argc, argv, stat_options, stat_subcommands,
- 					(const char **) stat_usage,
- 					PARSE_OPT_STOP_AT_NON_OPTION);
 -- 
 2.19.2
