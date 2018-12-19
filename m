@@ -1,74 +1,34 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 57/63] perf beauty mmap: Print PROT_READ before PROT_EXEC
- to match strace output
-Date: Wed, 19 Dec 2018 18:15:00 +0900
-Message-ID: <20181219091500.GB18068@danjae.aot.lge.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 35/63] perf trace: Allow specifying a set of events to
+ add in perfconfig
+Date: Wed, 19 Dec 2018 09:50:00 -0300
+Message-ID: <20181219125000.GA16225@kernel.org>
 References: <20181218220733.15839-1-acme@kernel.org>
- <20181218220733.15839-58-acme@kernel.org>
+ <20181218220733.15839-36-acme@kernel.org>
+ <20181219084024.GA18068@danjae.aot.lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181218220733.15839-58-acme@kernel.org>
+In-Reply-To: <20181219084024.GA18068@danjae.aot.lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Luis =?utf-8?Q?Cl=C3=A1udio_Gon=C3=A7alves?= <lclaudio@redhat.com>, Wang Nan <wangnan0@huawei.com>, kernel-team@lge.com
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Luis =?iso-8859-1?Q?Cl=E1udio_Gon=E7alves?= <lclaudio@redhat.com>, Wang Nan <wangnan0@huawei.com>, kernel-team@lge.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Dec 18, 2018 at 07:07:27PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Helps with comparing 'strace' and 'perf trace' output, for mutual
-> regression testing.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Link: https://lkml.kernel.org/n/tip-va0qe95xbhep5hy52aq5qe0v@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/trace/beauty/mmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/trace/beauty/mmap.c b/tools/perf/trace/beauty/mmap.c
-> index 138f36a47fb1..eb31089790e3 100644
-> --- a/tools/perf/trace/beauty/mmap.c
-> +++ b/tools/perf/trace/beauty/mmap.c
-> @@ -17,8 +17,8 @@ static size_t syscall_arg__scnprintf_mmap_prot(char *bf, size_t size,
->  		prot &= ~PROT_##n; \
->  	}
->  
-> -	P_MMAP_PROT(EXEC);
->  	P_MMAP_PROT(READ);
-> +	P_MMAP_PROT(EXEC);
->  	P_MMAP_PROT(WRITE);
+Em Wed, Dec 19, 2018 at 05:40:24PM +0900, Namhyung Kim escreveu:
+> On Tue, Dec 18, 2018 at 07:07:05PM -0300, Arnaldo Carvalho de Melo wrote:
+> > +	if (!strcmp(var, "trace.add_events")) {
+> > +		struct trace *trace = arg;
+> > +		struct option o = OPT_CALLBACK('e', "event", &trace->evlist, "event",
+> > +					       "event selector. use 'perf list' to list available events",
+> > +					       parse_events_option);
+> > +		err = parse_events_option(&o, value, 0);
+ 
+> It's a bit strange to use parse_events_option() here IMHO.  Why not
+> using parse_events() instead?
 
-EXEC should be printed after WRITE..
+I just reused what was done a in another place in 'perf trace', will
+check and use parse_events() directly, thanks for the suggestion!
 
-  $ cat mmap.c
-  #include <sys/mman.h>
-  
-  int main(void)
-  {
-    mmap(0, 4096, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-    return 0;
-  }
-  
-  $ strace -e mmap ./a.out
-  ...
-  mmap(NULL, 4096, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f4c643ec000
-  +++ exited with 0 +++
-
-Thanks,
-Namhyung
-
-
-
->  	P_MMAP_PROT(SEM);
->  	P_MMAP_PROT(GROWSDOWN);
-> -- 
-> 2.19.2
-> 
+- Arnaldo
