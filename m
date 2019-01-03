@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/29] perf trace: Wire up ioctl's USBDEBFS_ cmd table generator
-Date: Thu,  3 Jan 2019 09:45:53 -0300
-Message-ID: <20190103124609.29672-14-acme@kernel.org>
+Subject: [PATCH 06/29] perf python: Do not force closing original perf descriptor in evlist.get_pollfd()
+Date: Thu,  3 Jan 2019 09:45:46 -0300
+Message-ID: <20190103124609.29672-7-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,101 +10,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190103124609.29672-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, =?UTF-8?q?Ond=C5=99ej=20Lyson=C4=9Bk?= <olysonek@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-That ends up generating this:
+Ondřej reported that when compiled with python3, the python extension
+regresses in evlist.get_pollfd function behaviour.
 
-  [acme@quaco perf]$ cat /tmp/build/perf/trace/beauty/generated/ioctl/usbdevfs_ioctl_array.c
-  static const char *usbdevfs_ioctl_cmds[] = {
-	[0] = "CONTROL",
-	[10] = "SUBMITURB",
-	[11] = "DISCARDURB",
-	[12] = "REAPURB",
-	[13] = "REAPURBNDELAY",
-	[14] = "DISCSIGNAL",
-	[15] = "CLAIMINTERFACE",
-	[16] = "RELEASEINTERFACE",
-	[17] = "CONNECTINFO",
-	[18] = "IOCTL",
-	[19] = "HUB_PORTINFO",
-	[2] = "BULK",
-	[20] = "RESET",
-	[21] = "CLEAR_HALT",
-	[22] = "DISCONNECT",
-	[23] = "CONNECT",
-	[24] = "CLAIM_PORT",
-	[25] = "RELEASE_PORT",
-	[26] = "GET_CAPABILITIES",
-	[27] = "DISCONNECT_CLAIM",
-	[28] = "ALLOC_STREAMS",
-	[29] = "FREE_STREAMS",
-	[3] = "RESETEP",
-	[30] = "DROP_PRIVILEGES",
-	[31] = "GET_SPEED",
-	[4] = "SETINTERFACE",
-	[5] = "SETCONFIGURATION",
-	[8] = "GETDRIVER",
-  };
+The evlist.get_pollfd function creates file objects from evlist's fds
+and returns them in a list. The python3 version also sets them to 'close
+the original descriptor' when the object dies (is closed), by passing
+True via the 'closefd' arg in the PyFile_FromFd call.
 
-  #if 0
-  static const char *usbdevfs_ioctl_32_cmds[] = {
-	[0] = "CONTROL32",
-	[10] = "SUBMITURB32",
-	[12] = "REAPURB32",
-	[13] = "REAPURBNDELAY32",
-	[14] = "DISCSIGNAL32",
-	[18] = "IOCTL32",
-	[2] = "BULK32",
-  };
-  #endif
-  $
+The python's closefd doc says:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+  If closefd is False, the underlying file descriptor will be kept open
+  when the file is closed.
+
+That's why the following line in python3 closes all evlist fds:
+
+  evlist.get_pollfd()
+
+the returned list is immediately destroyed and that takes down the
+original events fds.
+
+Passing closefd as False to PyFile_FromFd to fix this.
+
+Reported-by: Ondřej Lysoněk <olysonek@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jaroslav Škarvada <jskarvad@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-hkam6lt1g806l0p4b7buif3n@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
+Link: http://lkml.kernel.org/r/20181226112121.5285-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/python.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index bd23e3f30895..ff29c3372ec3 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -497,6 +497,12 @@ prctl_option_tbl := $(srctree)/tools/perf/trace/beauty/prctl_option.sh
- $(prctl_option_array): $(prctl_hdr_dir)/prctl.h $(prctl_option_tbl)
- 	$(Q)$(SHELL) '$(prctl_option_tbl)' $(prctl_hdr_dir) > $@
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 47628e85c5eb..dda0ac978b1e 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -939,7 +939,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
  
-+usbdevfs_ioctl_array := $(beauty_ioctl_outdir)/usbdevfs_ioctl_array.c
-+usbdevfs_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-+
-+$(usbdevfs_ioctl_array): $(linux_uapi_dir)/usbdevice_fs.h $(usbdevfs_ioctl_tbl)
-+	$(Q)$(SHELL) '$(usbdevfs_ioctl_tbl)' $(linux_uapi_dir) > $@
-+
- x86_arch_prctl_code_array := $(beauty_outdir)/x86_arch_prctl_code_array.c
- x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
- 
-@@ -624,6 +630,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(mount_flags_array) \
- 	$(perf_ioctl_array) \
- 	$(prctl_option_array) \
-+	$(usbdevfs_ioctl_array) \
- 	$(x86_arch_prctl_code_array) \
- 	$(rename_flags_array) \
- 	$(arch_errno_name_array)
-@@ -923,6 +930,7 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 		$(OUTPUT)$(vhost_virtio_ioctl_array) \
- 		$(OUTPUT)$(perf_ioctl_array) \
- 		$(OUTPUT)$(prctl_option_array) \
-+		$(OUTPUT)$(usbdevfs_ioctl_array) \
- 		$(OUTPUT)$(x86_arch_prctl_code_array) \
- 		$(OUTPUT)$(rename_flags_array) \
- 		$(OUTPUT)$(arch_errno_name_array)
+ 		file = PyFile_FromFile(fp, "perf", "r", NULL);
+ #else
+-		file = PyFile_FromFd(evlist->pollfd.entries[i].fd, "perf", "r", -1, NULL, NULL, NULL, 1);
++		file = PyFile_FromFd(evlist->pollfd.entries[i].fd, "perf", "r", -1,
++				     NULL, NULL, NULL, 0);
+ #endif
+ 		if (file == NULL)
+ 			goto free_list;
 -- 
 2.19.2
