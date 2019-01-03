@@ -1,68 +1,171 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/29] perf python: Do not force closing original perf descriptor in evlist.get_pollfd()
-Date: Thu,  3 Jan 2019 09:45:46 -0300
-Message-ID: <20190103124609.29672-7-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/29] perf/core improvements and fixes
+Date: Thu, 3 Jan 2019 14:07:07 +0100
+Message-ID: <20190103130707.GA47648@gmail.com>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20190103124609.29672-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, =?UTF-8?q?Ond=C5=99ej=20Lyson=C4=9Bk?= <olysonek@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Colin King <colin.king@canonical.com>, Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?utf-8?Q?Ond=C5=99ej_Lyson=C4=9Bk?= <olysonek@redhat.com>, Stanislav Fomichev <sdf@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
 
-Ondřej reported that when compiled with python3, the python extension
-regresses in evlist.get_pollfd function behaviour.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-The evlist.get_pollfd function creates file objects from evlist's fds
-and returns them in a list. The python3 version also sets them to 'close
-the original descriptor' when the object dies (is closed), by passing
-True via the 'closefd' arg in the PyFile_FromFd call.
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 883f4def8b77e6870ce42be279564cca0256c611:
+> 
+>   Merge tag 'perf-core-for-mingo-4.21-20181218' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2018-12-20 18:51:47 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.21-20190103
+> 
+> for you to fetch changes up to b25756df5b28cd7b6e91200fc5012e7c76e8ec69:
+> 
+>   perf session: Add comment for perf_session__register_idle_thread() (2019-01-02 11:05:06 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf c2c:
+> 
+>   Jiri Olsa:
+> 
+>   - Change the default coalesce setup to from '--coalesce pid,iaddr' to just '--coalesce iaddr'.
+> 
+>   - Increase the HITM ratio limit for displayed cachelines.
+> 
+> perf script:
+> 
+>   Andi Kleen:
+> 
+>   - Fix LBR skid dump problems in brstackinsn.
+> 
+> perf trace:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Check if the raw_syscalls:sys_{enter,exit} are setup before setting tp filter.
+> 
+>   - Do not hardcode the size of the tracepoint common_ fields.
+> 
+>   - Beautify USBDEFFS_ ioctl commands.
+> 
+>   Colin Ian King:
+> 
+>   - Use correct SECCOMP prefix spelling, "SECOMP_*" -> "SECCOMP_*".
+> 
+> perf python:
+> 
+>   Jiri Olsa:
+> 
+>   - Do not force closing original perf descriptor in evlist.get_pollfd().
+> 
+> tools misc:
+> 
+>   Jiri Olsa:
+> 
+>   - Allow overriding CFLAGS and LDFLAGS.
+> 
+> perf build:
+> 
+>   Stanislav Fomichev:
+> 
+>   - Don't unconditionally link the libbfd feature test to -liberty and -lz
+> 
+> thread-stack:
+> 
+>   Adrian Hunter:
+> 
+>   - Fix processing for the idle task, having a stack per cpu.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (8):
+>       perf thread-stack: Simplify some code in thread_stack__process()
+>       perf thread-stack: Tidy thread_stack__bottom() usage
+>       perf thread-stack: Avoid direct reference to the thread's stack
+>       perf thread-stack: Allow for a thread stack array
+>       perf thread-stack: Factor out thread_stack__init()
+>       perf thread-stack: Allocate an array of thread stacks
+>       perf thread-stack: Fix thread stack processing for the idle task
+>       perf session: Add comment for perf_session__register_idle_thread()
+> 
+> Andi Kleen (1):
+>       perf script: Fix LBR skid dump problems in brstackinsn
+> 
+> Arnaldo Carvalho de Melo (11):
+>       perf trace: Check if the raw_syscalls:sys_{enter,exit} are setup before setting tp filter
+>       perf beauty mmap: PROT_WRITE should come before PROT_EXEC
+>       perf trace: Do not hardcode the size of the tracepoint common_ fields
+>       perf trace: Rename thread_thread->paths to thread_trace->files
+>       perf trace: Move the files table resizing to outside set_pathname()
+>       perf trace: Store the major number for a file when storing its pathname
+>       tools headers uapi: Grab a copy of usbdevice_fs.h
+>       perf beauty ioctl: Add generator for USBDEVFS_ ioctl commands
+>       perf trace: Wire up ioctl's USBDEBFS_ cmd table generator
+>       perf trace beauty: Export function to get the files for a thread
+>       perf trace beauty ioctl: Beautify USBDEVFS_ commands
+> 
+> Colin Ian King (1):
+>       perf trace: Use correct SECCOMP prefix spelling, "SECOMP_*" -> "SECCOMP_*"
+> 
+> Jiri Olsa (7):
+>       perf python: Do not force closing original perf descriptor in evlist.get_pollfd()
+>       perf c2c: Change the default coalesce setup
+>       perf c2c: Increase the HITM ratio limit for displayed cachelines
+>       tools power x86_energy_perf_policy: Override CFLAGS assignments and add LDFLAGS to build command
+>       tools thermal tmon: Allow overriding CFLAGS assignments
+>       tools power turbostat: Override CFLAGS assignments and add LDFLAGS to build command
+>       tools gpio: Allow overriding CFLAGS
+> 
+> Stanislav Fomichev (1):
+>       perf build: Don't unconditionally link the libbfd feature test to -liberty and -lz
+> 
+>  tools/build/Makefile.feature                       |   4 +-
+>  tools/build/feature/Makefile                       |  10 +-
+>  tools/gpio/Makefile                                |   2 +-
+>  tools/include/uapi/linux/usbdevice_fs.h            | 201 ++++++++++++++++++
+>  tools/perf/Makefile.config                         |  44 ++--
+>  tools/perf/Makefile.perf                           |   8 +
+>  tools/perf/builtin-c2c.c                           |   4 +-
+>  tools/perf/builtin-script.c                        |  21 +-
+>  tools/perf/builtin-trace.c                         | 142 +++++++++----
+>  tools/perf/check-headers.sh                        |   1 +
+>  tools/perf/trace/beauty/beauty.h                   |   7 +
+>  tools/perf/trace/beauty/ioctl.c                    |  22 ++
+>  tools/perf/trace/beauty/mmap.c                     |   2 +-
+>  tools/perf/trace/beauty/seccomp.c                  |   4 +-
+>  tools/perf/trace/beauty/usbdevfs_ioctl.sh          |  19 ++
+>  tools/perf/util/dump-insn.c                        |   8 +
+>  tools/perf/util/dump-insn.h                        |   2 +
+>  tools/perf/util/intel-bts.c                        |   4 +-
+>  .../util/intel-pt-decoder/intel-pt-insn-decoder.c  |   8 +
+>  tools/perf/util/intel-pt.c                         |   6 +-
+>  tools/perf/util/python.c                           |   3 +-
+>  tools/perf/util/session.c                          |   7 +
+>  tools/perf/util/thread-stack.c                     | 227 +++++++++++++++------
+>  tools/perf/util/thread-stack.h                     |   8 +-
+>  tools/power/x86/turbostat/Makefile                 |   8 +-
+>  tools/power/x86/x86_energy_perf_policy/Makefile    |   6 +-
+>  tools/thermal/tmon/Makefile                        |   8 +-
+>  27 files changed, 620 insertions(+), 166 deletions(-)
+>  create mode 100644 tools/include/uapi/linux/usbdevice_fs.h
+>  create mode 100755 tools/perf/trace/beauty/usbdevfs_ioctl.sh
 
-The python's closefd doc says:
+Pulled, thanks a lot Arnaldo!
 
-  If closefd is False, the underlying file descriptor will be kept open
-  when the file is closed.
-
-That's why the following line in python3 closes all evlist fds:
-
-  evlist.get_pollfd()
-
-the returned list is immediately destroyed and that takes down the
-original events fds.
-
-Passing closefd as False to PyFile_FromFd to fix this.
-
-Reported-by: Ondřej Lysoněk <olysonek@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jaroslav Škarvada <jskarvad@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20181226112121.5285-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/python.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 47628e85c5eb..dda0ac978b1e 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -939,7 +939,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
- 
- 		file = PyFile_FromFile(fp, "perf", "r", NULL);
- #else
--		file = PyFile_FromFd(evlist->pollfd.entries[i].fd, "perf", "r", -1, NULL, NULL, NULL, 1);
-+		file = PyFile_FromFd(evlist->pollfd.entries[i].fd, "perf", "r", -1,
-+				     NULL, NULL, NULL, 0);
- #endif
- 		if (file == NULL)
- 			goto free_list;
--- 
-2.19.2
+	Ingo
