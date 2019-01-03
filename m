@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/29] perf trace: Move the files table resizing to outside set_pathname()
-Date: Thu,  3 Jan 2019 09:45:49 -0300
-Message-ID: <20190103124609.29672-10-acme@kernel.org>
+Subject: [PATCH 10/29] perf trace: Store the major number for a file when storing its pathname
+Date: Thu,  3 Jan 2019 09:45:50 -0300
+Message-ID: <20190103124609.29672-11-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,64 +15,51 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that we can have that table expanded when setting other attributes.
+We keep a table for the fds to map them back to pathnames when showing
+'fd' based APIs such as write(), store as well the major number for the
+device the path is in, to use in things like choosing the right ioctl
+'cmd' beautifier.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-hzvpe3qwafe6sqcq3bhtbxds@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-qjkds7bnk7v7fk2xhqsb0a4v@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ tools/perf/builtin-trace.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d4bca74f282c..41ab524e128b 100644
+index 41ab524e128b..4b03f66b1735 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1040,15 +1040,13 @@ void syscall_arg__set_ret_scnprintf(struct syscall_arg *arg,
+@@ -60,6 +60,7 @@
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
+ #include <fcntl.h>
++#include <sys/sysmacros.h>
  
- static const size_t trace__entry_str_size = 2048;
+ #include "sane_ctype.h"
  
--static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pathname)
-+static struct file *thread_trace__files_entry(struct thread_trace *ttrace, int fd)
- {
--	struct thread_trace *ttrace = thread__priv(thread);
--
- 	if (fd > ttrace->files.max) {
- 		struct file *nfiles = realloc(ttrace->files.table, (fd + 1) * sizeof(struct file));
+@@ -959,6 +960,7 @@ static size_t fprintf_duration(unsigned long t, bool calculated, FILE *fp)
  
- 		if (nfiles == NULL)
--			return -1;
-+			return NULL;
+ struct file {
+ 	char *pathname;
++	int  dev_maj;
+ };
  
- 		if (ttrace->files.max != -1) {
- 			memset(nfiles + ttrace->files.max + 1, 0,
-@@ -1061,9 +1059,21 @@ static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pat
- 		ttrace->files.max   = fd;
- 	}
+ /**
+@@ -1068,6 +1070,9 @@ static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pat
+ 	struct file *file = thread_trace__files_entry(ttrace, fd);
  
--	ttrace->files.table[fd].pathname = strdup(pathname);
-+	return ttrace->files.table + fd;
-+}
-+
-+static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pathname)
-+{
-+	struct thread_trace *ttrace = thread__priv(thread);
-+	struct file *file = thread_trace__files_entry(ttrace, fd);
-+
-+	if (file != NULL) {
-+		file->pathname = strdup(pathname);
-+		if (file->pathname)
-+			return 0;
-+	}
- 
--	return ttrace->files.table[fd].pathname != NULL ? 0 : -1;
-+	return -1;
- }
- 
- static int thread__read_fd_path(struct thread *thread, int fd)
+ 	if (file != NULL) {
++		struct stat st;
++		if (stat(pathname, &st) == 0)
++			file->dev_maj = major(st.st_rdev);
+ 		file->pathname = strdup(pathname);
+ 		if (file->pathname)
+ 			return 0;
 -- 
 2.19.2
