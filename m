@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/29] perf trace beauty: Export function to get the files for a thread
-Date: Thu,  3 Jan 2019 09:45:54 -0300
-Message-ID: <20190103124609.29672-15-acme@kernel.org>
+Subject: [PATCH 12/29] perf beauty ioctl: Add generator for USBDEVFS_ ioctl commands
+Date: Thu,  3 Jan 2019 09:45:52 -0300
+Message-ID: <20190103124609.29672-13-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,65 +15,93 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that beautifiers can access things like dev_maj.
+Will be associated with fds with the right device major.
+
+  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh
+  static const char *usbdevfs_ioctl_cmds[] = {
+	[0] = "CONTROL",
+	[10] = "SUBMITURB",
+	[11] = "DISCARDURB",
+	[12] = "REAPURB",
+	[13] = "REAPURBNDELAY",
+	[14] = "DISCSIGNAL",
+	[15] = "CLAIMINTERFACE",
+	[16] = "RELEASEINTERFACE",
+	[17] = "CONNECTINFO",
+	[18] = "IOCTL",
+	[19] = "HUB_PORTINFO",
+	[20] = "RESET",
+	[21] = "CLEAR_HALT",
+	[22] = "DISCONNECT",
+	[23] = "CONNECT",
+	[24] = "CLAIM_PORT",
+	[25] = "RELEASE_PORT",
+	[26] = "GET_CAPABILITIES",
+	[27] = "DISCONNECT_CLAIM",
+	[28] = "ALLOC_STREAMS",
+	[29] = "FREE_STREAMS",
+	[2] = "BULK",
+	[30] = "DROP_PRIVILEGES",
+	[31] = "GET_SPEED",
+	[3] = "RESETEP",
+	[4] = "SETINTERFACE",
+	[5] = "SETCONFIGURATION",
+	[8] = "GETDRIVER",
+  };
+
+  #if 0
+  static const char *usbdevfs_ioctl_32_cmds[] = {
+	[0] = "CONTROL32",
+	[10] = "SUBMITURB32",
+	[12] = "REAPURB32",
+	[13] = "REAPURBNDELAY32",
+	[14] = "DISCSIGNAL32",
+	[18] = "IOCTL32",
+	[2] = "BULK32",
+  };
+  #endif
+  $
+
+Leaving the '32' variants commented, later we can try to support those
+as well, from some other hint (maybe something about the thread issuing
+the ioctls) and from the _IOC_SIZE(cmd).
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-wm5o51f206c5pi063dsaeraq@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-neq1lrji5k4ku0rktn7ytnri@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 10 +++++-----
- tools/perf/trace/beauty/beauty.h |  7 +++++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ tools/perf/trace/beauty/usbdevfs_ioctl.sh | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100755 tools/perf/trace/beauty/usbdevfs_ioctl.sh
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 4b03f66b1735..adbf28183560 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -958,11 +958,6 @@ static size_t fprintf_duration(unsigned long t, bool calculated, FILE *fp)
- 	return printed + fprintf(fp, "): ");
- }
- 
--struct file {
--	char *pathname;
--	int  dev_maj;
--};
--
- /**
-  * filename.ptr: The filename char pointer that will be vfs_getname'd
-  * filename.entry_str_pos: Where to insert the string translated from
-@@ -1064,6 +1059,11 @@ static struct file *thread_trace__files_entry(struct thread_trace *ttrace, int f
- 	return ttrace->files.table + fd;
- }
- 
-+struct file *thread__files_entry(struct thread *thread, int fd)
-+{
-+	return thread_trace__files_entry(thread__priv(thread), fd);
-+}
+diff --git a/tools/perf/trace/beauty/usbdevfs_ioctl.sh b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
+new file mode 100755
+index 000000000000..930b80f422e8
+--- /dev/null
++++ b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
+@@ -0,0 +1,19 @@
++#!/bin/sh
++# SPDX-License-Identifier: LGPL-2.1
 +
- static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pathname)
- {
- 	struct thread_trace *ttrace = thread__priv(thread);
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 83c5b202e00e..139d485a6f16 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -32,6 +32,13 @@ size_t strarray__scnprintf_flags(struct strarray *sa, char *bf, size_t size, boo
- struct trace;
- struct thread;
- 
-+struct file {
-+	char *pathname;
-+	int  dev_maj;
-+};
++[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
 +
-+struct file *thread__files_entry(struct thread *thread, int fd);
-+
- struct strarrays {
- 	int		nr_entries;
- 	struct strarray **entries;
++printf "static const char *usbdevfs_ioctl_cmds[] = {\n"
++regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
++egrep $regex ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	sort | xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n\n"
++printf "#if 0\n"
++printf "static const char *usbdevfs_ioctl_32_cmds[] = {\n"
++regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
++egrep $regex ${header_dir}/usbdevice_fs.h | egrep 'USBDEVFS_\w+32[[:space:]]' | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	sort | xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n"
++printf "#endif\n"
 -- 
 2.19.2
