@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/29] perf beauty ioctl: Add generator for USBDEVFS_ ioctl commands
-Date: Thu,  3 Jan 2019 09:45:52 -0300
-Message-ID: <20190103124609.29672-13-acme@kernel.org>
+Subject: [PATCH 15/29] perf trace beauty ioctl: Beautify USBDEVFS_ commands
+Date: Thu,  3 Jan 2019 09:45:55 -0300
+Message-ID: <20190103124609.29672-16-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,93 +15,99 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Will be associated with fds with the right device major.
+For instance, while debugging the 'galileo' python utility to
+synchronize fitbit trackers:
 
-  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh
-  static const char *usbdevfs_ioctl_cmds[] = {
-	[0] = "CONTROL",
-	[10] = "SUBMITURB",
-	[11] = "DISCARDURB",
-	[12] = "REAPURB",
-	[13] = "REAPURBNDELAY",
-	[14] = "DISCSIGNAL",
-	[15] = "CLAIMINTERFACE",
-	[16] = "RELEASEINTERFACE",
-	[17] = "CONNECTINFO",
-	[18] = "IOCTL",
-	[19] = "HUB_PORTINFO",
-	[20] = "RESET",
-	[21] = "CLEAR_HALT",
-	[22] = "DISCONNECT",
-	[23] = "CONNECT",
-	[24] = "CLAIM_PORT",
-	[25] = "RELEASE_PORT",
-	[26] = "GET_CAPABILITIES",
-	[27] = "DISCONNECT_CLAIM",
-	[28] = "ALLOC_STREAMS",
-	[29] = "FREE_STREAMS",
-	[2] = "BULK",
-	[30] = "DROP_PRIVILEGES",
-	[31] = "GET_SPEED",
-	[3] = "RESETEP",
-	[4] = "SETINTERFACE",
-	[5] = "SETCONFIGURATION",
-	[8] = "GETDRIVER",
-  };
-
-  #if 0
-  static const char *usbdevfs_ioctl_32_cmds[] = {
-	[0] = "CONTROL32",
-	[10] = "SUBMITURB32",
-	[12] = "REAPURB32",
-	[13] = "REAPURBNDELAY32",
-	[14] = "DISCSIGNAL32",
-	[18] = "IOCTL32",
-	[2] = "BULK32",
-  };
-  #endif
-  $
-
-Leaving the '32' variants commented, later we can try to support those
-as well, from some other hint (maybe something about the thread issuing
-the ioctls) and from the _IOC_SIZE(cmd).
+  # perf trace -e ioctl ./run --force
+  ioctl(0</dev/pts/8>, TCSETS, 0x7ffe28666420) = 0
+  ioctl(0</dev/pts/8>, TCSETS, 0x7ffe28666290) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe28666290) = 0
+  ioctl(2</dev/pts/8>, TCSETS, 0x7ffe28666290) = 0
+  ioctl(3</home/acme/hg/galileo/run>, TCSETS, 0x7ffe286663f0) = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe286655a0) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe28665470) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe28665470) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe286654a0) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe286654a0) = 0
+  ioctl(1</dev/pts/8>, TCSETS, 0x7ffe28665400) = 0
+  ioctl(1</dev/pts/8>, TIOCSWINSZ, 0x7ffe286654c0) = 0
+  ioctl(0</dev/pts/8>, TIOCSWINSZ, 0x7ffe28665560) = 0
+  ioctl(0</dev/pts/8>, TIOCSWINSZ, 0x7ffe28665560) = 0
+  ioctl(0</dev/pts/8>, TIOCMGET, 0x7ffe28665560) = 0
+  ioctl(0</dev/pts/8>, TCSETS, 0x7ffe28665530) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_GET_CAPABILITIES, 0x561468dad048) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_GETDRIVER, 0x7ffe28665500) = -1 ENODATA (No data available)
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_GETDRIVER, 0x7ffe28665500) = -1 ENODATA (No data available)
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_SETCONFIGURATION, 0x7ffe2866513c) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_CLAIMINTERFACE, 0x7ffe286647bc) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_SUBMITURB, 0x561468dace40) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664c10) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664c10) = -1 EAGAIN (Resource temporarily unavailable)
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_SUBMITURB, 0x561468dace40) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664dd0) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664dd0) = -1 EAGAIN (Resource temporarily unavailable)
+  <SNIP>
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_SUBMITURB, 0x561468e72ec0) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664cc0) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_REAPURBNDELAY, 0x7ffe28664cc0) = -1 EAGAIN (Resource temporarily unavailable)
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_RELEASEINTERFACE, 0x7ffe2866463c) = 0
+  ioctl(10</dev/bus/usb/001/011>, USBDEVFS_RELEASEINTERFACE, 0x7ffe2866463c) = 0
+  Tracker: 813F4690C3D1: Synchronisation successful
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-neq1lrji5k4ku0rktn7ytnri@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-6x2cawak7jno3gpp5pagzj50@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/usbdevfs_ioctl.sh | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100755 tools/perf/trace/beauty/usbdevfs_ioctl.sh
+ tools/perf/trace/beauty/ioctl.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/usbdevfs_ioctl.sh b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-new file mode 100755
-index 000000000000..930b80f422e8
---- /dev/null
-+++ b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-@@ -0,0 +1,19 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: LGPL-2.1
+diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
+index 9efeb6a936c2..620350d41209 100644
+--- a/tools/perf/trace/beauty/ioctl.c
++++ b/tools/perf/trace/beauty/ioctl.c
+@@ -112,6 +112,17 @@ static size_t ioctl__scnprintf_perf_cmd(int nr, int dir, char *bf, size_t size)
+ 	return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAE, nr, dir);
+ }
+ 
++static size_t ioctl__scnprintf_usbdevfs_cmd(int nr, int dir, char *bf, size_t size)
++{
++#include "trace/beauty/generated/ioctl/usbdevfs_ioctl_array.c"
++	static DEFINE_STRARRAY(usbdevfs_ioctl_cmds, "");
 +
-+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
++	if (nr < strarray__usbdevfs_ioctl_cmds.nr_entries && strarray__usbdevfs_ioctl_cmds.entries[nr] != NULL)
++		return scnprintf(bf, size, "USBDEVFS_%s", strarray__usbdevfs_ioctl_cmds.entries[nr]);
 +
-+printf "static const char *usbdevfs_ioctl_cmds[] = {\n"
-+regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
-+egrep $regex ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
-+	sed -r "s/$regex/\2 \1/g"	| \
-+	sort | xargs printf "\t[%s] = \"%s\",\n"
-+printf "};\n\n"
-+printf "#if 0\n"
-+printf "static const char *usbdevfs_ioctl_32_cmds[] = {\n"
-+regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
-+egrep $regex ${header_dir}/usbdevice_fs.h | egrep 'USBDEVFS_\w+32[[:space:]]' | \
-+	sed -r "s/$regex/\2 \1/g"	| \
-+	sort | xargs printf "\t[%s] = \"%s\",\n"
-+printf "};\n"
-+printf "#endif\n"
++	return scnprintf(bf, size, "(%c, %#x, %#x)", 'U', nr, dir);
++}
++
+ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size, bool show_prefix)
+ {
+ 	const char *prefix = "_IOC_";
+@@ -157,9 +168,20 @@ static size_t ioctl__scnprintf_cmd(unsigned long cmd, char *bf, size_t size, boo
+ 	return printed + scnprintf(bf + printed, size - printed, ", %#x, %#x, %#x)", type, nr, sz);
+ }
+ 
++#ifndef USB_DEVICE_MAJOR
++#define USB_DEVICE_MAJOR 189
++#endif // USB_DEVICE_MAJOR
++
+ size_t syscall_arg__scnprintf_ioctl_cmd(char *bf, size_t size, struct syscall_arg *arg)
+ {
+ 	unsigned long cmd = arg->val;
++	unsigned int fd = syscall_arg__val(arg, 0);
++	struct file *file = thread__files_entry(arg->thread, fd);
++
++	if (file != NULL) {
++		if (file->dev_maj == USB_DEVICE_MAJOR)
++			return ioctl__scnprintf_usbdevfs_cmd(_IOC_NR(cmd), _IOC_DIR(cmd), bf, size);
++	}
+ 
+ 	return ioctl__scnprintf_cmd(cmd, bf, size, arg->show_string_prefix);
+ }
 -- 
 2.19.2
