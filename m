@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/29] perf thread-stack: Allocate an array of thread stacks
-Date: Thu,  3 Jan 2019 09:46:07 -0300
-Message-ID: <20190103124609.29672-28-acme@kernel.org>
+Subject: [PATCH 29/29] perf session: Add comment for perf_session__register_idle_thread()
+Date: Thu,  3 Jan 2019 09:46:09 -0300
+Message-ID: <20190103124609.29672-30-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,36 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-In preparation for fixing thread stack processing for the idle task,
-allocate an array of thread stacks.
+Add a comment to perf_session__register_idle_thread() to bring attention to
+a pitfall with the idle task thread structure. The pitfall is that there
+should really be a 'struct thread' for the idle task of each cpu, but there
+is only one that can have pid == tid == 0.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20181221120620.9659-7-adrian.hunter@intel.com
-[ No need to check for NULL when calling zfree(), noticed by Jiri Olsa ]
+Link: http://lkml.kernel.org/r/20181221120620.9659-9-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ tools/perf/util/session.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 03770af9e5cd..248ed3945bec 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -114,20 +114,25 @@ static int thread_stack__init(struct thread_stack *ts, struct thread *thread,
- static struct thread_stack *thread_stack__new(struct thread *thread,
- 					      struct call_return_processor *crp)
- {
--	struct thread_stack *ts;
--
--	ts = zalloc(sizeof(struct thread_stack));
--	if (!ts)
--		return NULL;
--
--	ts->arr_sz = 1;
--
--	if (thread_stack__init(ts, thread, crp)) {
--		free(ts);
--		return NULL;
-+	struct thread_stack *ts = thread->ts, *new_ts;
-+	unsigned int old_sz = ts ? ts->arr_sz : 0;
-+	unsigned int new_sz = 1;
-+
-+	if (!ts || new_sz > old_sz) {
-+		new_ts = calloc(new_sz, sizeof(*ts));
-+		if (!new_ts)
-+			return NULL;
-+		if (ts)
-+			memcpy(new_ts, ts, old_sz * sizeof(*ts));
-+		new_ts->arr_sz = new_sz;
-+		zfree(&thread->ts);
-+		thread->ts = new_ts;
-+		ts = new_ts;
- 	}
- 
--	thread->ts = ts;
-+	if (!ts->stack &&
-+	    thread_stack__init(ts, thread, crp))
-+		return NULL;
- 
- 	return ts;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 78a067777144..5456c84c7dd1 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1527,6 +1527,13 @@ struct thread *perf_session__findnew(struct perf_session *session, pid_t pid)
+ 	return machine__findnew_thread(&session->machines.host, -1, pid);
  }
+ 
++/*
++ * Threads are identified by pid and tid, and the idle task has pid == tid == 0.
++ * So here a single thread is created for that, but actually there is a separate
++ * idle task per cpu, so there should be one 'struct thread' per cpu, but there
++ * is only 1. That causes problems for some tools, requiring workarounds. For
++ * example get_idle_thread() in builtin-sched.c, or thread_stack__per_cpu().
++ */
+ int perf_session__register_idle_thread(struct perf_session *session)
+ {
+ 	struct thread *thread;
 -- 
 2.19.2
