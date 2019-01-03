@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/29] perf thread-stack: Tidy thread_stack__bottom() usage
-Date: Thu,  3 Jan 2019 09:46:03 -0300
-Message-ID: <20190103124609.29672-24-acme@kernel.org>
+Subject: [PATCH 21/29] tools gpio: Allow overriding CFLAGS
+Date: Thu,  3 Jan 2019 09:46:01 -0300
+Message-ID: <20190103124609.29672-22-acme@kernel.org>
 References: <20190103124609.29672-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,54 +9,37 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190103124609.29672-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hartmut Knaack <knaack.h@gmx.de>, Herton Krzesinski <herton@redhat.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-In preparation for fixing thread stack processing for the idle task,
-tidy thread_stack__bottom() usage. Specifically, the parameter 'thread'
-is not needed.
+So that the user can specify outside CFLAGS values.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20181221120620.9659-3-adrian.hunter@intel.com
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de> <knaack.h@gmx.de>
+Cc: Herton Krzesinski <herton@redhat.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Link: http://lkml.kernel.org/r/20181212102537.25902-7-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/gpio/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 115dc4b27a1b..068c7c8db4be 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -449,7 +449,7 @@ static int thread_stack__pop_cp(struct thread *thread, struct thread_stack *ts,
- 	return 1;
- }
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 240eda014b37..6ecdd1067826 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -12,7 +12,7 @@ endif
+ # (this improves performance and avoids hard-to-debug behaviour);
+ MAKEFLAGS += -r
  
--static int thread_stack__bottom(struct thread *thread, struct thread_stack *ts,
-+static int thread_stack__bottom(struct thread_stack *ts,
- 				struct perf_sample *sample,
- 				struct addr_location *from_al,
- 				struct addr_location *to_al, u64 ref)
-@@ -474,7 +474,7 @@ static int thread_stack__bottom(struct thread *thread, struct thread_stack *ts,
- 	if (!cp)
- 		return -ENOMEM;
+-CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
++override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
  
--	return thread_stack__push_cp(thread->ts, ip, sample->time, ref, cp,
-+	return thread_stack__push_cp(ts, ip, sample->time, ref, cp,
- 				     true, false);
- }
- 
-@@ -617,8 +617,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 
- 	/* If the stack is empty, put the current symbol on the stack */
- 	if (!ts->cnt) {
--		err = thread_stack__bottom(thread, ts, sample, from_al, to_al,
--					   ref);
-+		err = thread_stack__bottom(ts, sample, from_al, to_al, ref);
- 		if (err)
- 			return err;
- 	}
+ ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
 -- 
 2.19.2
