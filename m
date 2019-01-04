@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/16] perf python: Make sure the python binding output directory is in place
-Date: Fri,  4 Jan 2019 15:33:36 -0300
-Message-ID: <20190104183337.12771-16-acme@kernel.org>
+Subject: [PATCH 16/16] perf test shell: Use a fallback to get the pathname in vfs_getname
+Date: Fri,  4 Jan 2019 15:33:37 -0300
+Message-ID: <20190104183337.12771-17-acme@kernel.org>
 References: <20190104183337.12771-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,40 +14,41 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Instead of doing an unconditional mkdir, use a dummy Makefile variable
-to check if the directory is there and if not, create it.
+Some kernels, like 4.19.13-300.fc29.x86_64 in fedora 29, fail with the
+existing probe definition asking for the contents of result->name,
+working when we ask for the 'filename' variable instead, so add a
+fallback to that.
 
-This is better than what we had and will help with other python bindings
-that are in development, like one involved with python backtraces.
+Now those tests are back working on fedora 29 systems with that kernel:
+
+  # perf test vfs_getname
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-iis6us2nocw3y4uuoon9osd7@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-klt3n0i58dfqttveti09q3fi@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index ff29c3372ec3..2921f829a0f4 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -524,12 +524,14 @@ $(arch_errno_name_array): $(arch_errno_tbl)
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 1c16e56cd93e..7cb99b433888 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,7 +13,8 @@ add_probe_vfs_getname() {
+ 	local verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+-		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=result->name:string"
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+ 	fi
+ }
  
- all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- 
-+# Create python binding output directory if not already present
-+_dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
-+
- $(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST)
- 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
-         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS)' \
- 	  $(PYTHON_WORD) util/setup.py \
- 	  --quiet build_ext; \
--	mkdir -p $(OUTPUT)python && \
- 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
- 
- please_set_SHELL_PATH_to_a_more_modern_shell:
 -- 
 2.20.1
