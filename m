@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/16] tools headers x86: Sync disabled-features.h
-Date: Fri,  4 Jan 2019 15:33:23 -0300
-Message-ID: <20190104183337.12771-3-acme@kernel.org>
+Subject: [PATCH 04/16] tools beauty: Make the prctl option table generator catch all PR_ options
+Date: Fri,  4 Jan 2019 15:33:25 -0300
+Message-ID: <20190104183337.12771-5-acme@kernel.org>
 References: <20190104183337.12771-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,55 +9,80 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190104183337.12771-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Namhyung Kim <namhyung@kernel.org>, Will Deacon <will.deacon@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To silence the following tools/perf build warning:
+In ba8308856564 ("arm64: add prctl control for resetting ptrauth keys")
+the PR_PAC_RESET_KEYS prctl option was introduced, get that into the
+regex in addition to PR_GET_* and PR_SET_*:
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/disabled-features.h' differs from latest version at 'arch/x86/include/asm/disabled-features.h'
-  diff -u tools/arch/x86/include/asm/disabled-features.h arch/x86/include/asm/disabled-features.h
+So just get everything that matches '^#define PR_\w+' this ends up
+adding these entries:
 
-Picking up the changes in dae0a1059300 ("x86/cpufeatures, x86/fault:
-Mark SMAP as disabled when configured out") that didn't entail any
-functionality change in the tooling side.
+  $ tools/perf/trace/beauty/prctl_option.sh  > after
+  $ diff -u before after
+  --- before	2019-01-03 14:58:51.541807353 -0300
+  +++ after	2019-01-03 15:17:05.909583804 -0300
+  @@ -19,12 +19,18 @@
+          [20] = "SET_ENDIAN",
+          [21] = "GET_SECCOMP",
+          [22] = "SET_SECCOMP",
+  +       [23] = "CAPBSET_READ",
+  +       [24] = "CAPBSET_DROP",
+          [25] = "GET_TSC",
+          [26] = "SET_TSC",
+          [27] = "GET_SECUREBITS",
+          [28] = "SET_SECUREBITS",
+          [29] = "SET_TIMERSLACK",
+          [30] = "GET_TIMERSLACK",
+  +       [31] = "TASK_PERF_EVENTS_DISABLE",
+  +       [32] = "TASK_PERF_EVENTS_ENABLE",
+  +       [33] = "MCE_KILL",
+  +       [34] = "MCE_KILL_GET",
+          [35] = "SET_MM",
+          [36] = "SET_CHILD_SUBREAPER",
+          [37] = "GET_CHILD_SUBREAPER",
+  @@ -33,8 +39,13 @@
+          [40] = "GET_TID_ADDRESS",
+          [41] = "SET_THP_DISABLE",
+          [42] = "GET_THP_DISABLE",
+  +       [43] = "MPX_ENABLE_MANAGEMENT",
+  +       [44] = "MPX_DISABLE_MANAGEMENT",
+          [45] = "SET_FP_MODE",
+          [46] = "GET_FP_MODE",
+  +       [47] = "CAP_AMBIENT",
+  +       [50] = "SVE_SET_VL",
+  +       [51] = "SVE_GET_VL",
+          [52] = "GET_SPECULATION_CTRL",
+          [53] = "SET_SPECULATION_CTRL",
+          [54] = "PAC_RESET_KEYS",
+  $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kristina Martsenko <kristina.martsenko@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-vvge5xh6ii12oszexqknbgwp@git.kernel.org
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/n/tip-sg2pkmtjr5988bhbcp4yp6sw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/trace/beauty/prctl_option.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-index 33833d1909af..a5ea841cc6d2 100644
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ b/tools/arch/x86/include/asm/disabled-features.h
-@@ -16,6 +16,12 @@
- # define DISABLE_MPX	(1<<(X86_FEATURE_MPX & 31))
- #endif
+diff --git a/tools/perf/trace/beauty/prctl_option.sh b/tools/perf/trace/beauty/prctl_option.sh
+index d32f8f1124af..3109d7b05e11 100755
+--- a/tools/perf/trace/beauty/prctl_option.sh
++++ b/tools/perf/trace/beauty/prctl_option.sh
+@@ -4,7 +4,7 @@
+ [ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
  
-+#ifdef CONFIG_X86_SMAP
-+# define DISABLE_SMAP	0
-+#else
-+# define DISABLE_SMAP	(1<<(X86_FEATURE_SMAP & 31))
-+#endif
-+
- #ifdef CONFIG_X86_INTEL_UMIP
- # define DISABLE_UMIP	0
- #else
-@@ -68,7 +74,7 @@
- #define DISABLED_MASK6	0
- #define DISABLED_MASK7	(DISABLE_PTI)
- #define DISABLED_MASK8	0
--#define DISABLED_MASK9	(DISABLE_MPX)
-+#define DISABLED_MASK9	(DISABLE_MPX|DISABLE_SMAP)
- #define DISABLED_MASK10	0
- #define DISABLED_MASK11	0
- #define DISABLED_MASK12	0
+ printf "static const char *prctl_options[] = {\n"
+-regex='^#define[[:space:]]+PR_([GS]ET\w+)[[:space:]]*([[:xdigit:]]+).*'
++regex='^#define[[:space:]]+PR_(\w+)[[:space:]]*([[:xdigit:]]+).*'
+ egrep $regex ${header_dir}/prctl.h | grep -v PR_SET_PTRACER | \
+ 	sed -r "s/$regex/\2 \1/g"	| \
+ 	sort -n | xargs printf "\t[%s] = \"%s\",\n"
 -- 
 2.20.1
