@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/16] perf stat: Fix endless wait for child process
-Date: Fri,  4 Jan 2019 15:33:22 -0300
-Message-ID: <20190104183337.12771-2-acme@kernel.org>
+Subject: [PATCH 02/16] tools headers x86: Sync disabled-features.h
+Date: Fri,  4 Jan 2019 15:33:23 -0300
+Message-ID: <20190104183337.12771-3-acme@kernel.org>
 References: <20190104183337.12771-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,91 +9,55 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190104183337.12771-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We hit a 'perf stat' issue by using following script:
+To silence the following tools/perf build warning:
 
-  #!/bin/bash
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/disabled-features.h' differs from latest version at 'arch/x86/include/asm/disabled-features.h'
+  diff -u tools/arch/x86/include/asm/disabled-features.h arch/x86/include/asm/disabled-features.h
 
-  sleep 1000 &
-  exec perf stat -a -e cycles -I1000 -- sleep 5
+Picking up the changes in dae0a1059300 ("x86/cpufeatures, x86/fault:
+Mark SMAP as disabled when configured out") that didn't entail any
+functionality change in the tooling side.
 
-Since "perf stat" is launched by exec, the "sleep 1000" would be the
-child process of "perf stat". The wait4() call will not return because
-it's waiting for the child process "sleep 1000" to end. So 'perf stat'
-doesn't return even after 5s passes.
-
-This patch lets 'perf stat' return when the specified child process ends
-(in this case, the specified child process is "sleep 5").
-
-Committer testing:
-
-  # cat test.sh
-  #!/bin/bash
-
-  sleep 10 &
-  exec perf stat -a -e cycles -I1000 -- sleep 5
-  #
-
-Before:
-
-  # time ./test.sh
-  #           time             counts unit events
-       1.001113090        108,453,351      cycles
-       2.002062196        142,075,435      cycles
-       3.002896194        164,801,068      cycles
-       4.003731666        107,062,140      cycles
-       5.002068867        112,241,832      cycles
-
-  real	0m10.066s
-  user	0m0.016s
-  sys	0m0.101s
-  #
-
-After:
-
-  # time ./test.sh
-  #           time             counts unit events
-       1.001016096         91,412,027      cycles
-       2.002014963        124,063,708      cycles
-       3.002883964        125,993,929      cycles
-       4.003706470        120,465,734      cycles
-       5.002006778        163,560,355      cycles
-
-  real	0m5.123s
-  user	0m0.014s
-  sys	0m0.105s
-  #
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1546501245-4512-1-git-send-email-yao.jin@linux.intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-vvge5xh6ii12oszexqknbgwp@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 1410d66192f7..63a3afc7f32b 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -561,7 +561,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 					break;
- 			}
- 		}
--		wait4(child_pid, &status, 0, &stat_config.ru_data);
-+		if (child_pid != -1)
-+			wait4(child_pid, &status, 0, &stat_config.ru_data);
+diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+index 33833d1909af..a5ea841cc6d2 100644
+--- a/tools/arch/x86/include/asm/disabled-features.h
++++ b/tools/arch/x86/include/asm/disabled-features.h
+@@ -16,6 +16,12 @@
+ # define DISABLE_MPX	(1<<(X86_FEATURE_MPX & 31))
+ #endif
  
- 		if (workload_exec_errno) {
- 			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
++#ifdef CONFIG_X86_SMAP
++# define DISABLE_SMAP	0
++#else
++# define DISABLE_SMAP	(1<<(X86_FEATURE_SMAP & 31))
++#endif
++
+ #ifdef CONFIG_X86_INTEL_UMIP
+ # define DISABLE_UMIP	0
+ #else
+@@ -68,7 +74,7 @@
+ #define DISABLED_MASK6	0
+ #define DISABLED_MASK7	(DISABLE_PTI)
+ #define DISABLED_MASK8	0
+-#define DISABLED_MASK9	(DISABLE_MPX)
++#define DISABLED_MASK9	(DISABLE_MPX|DISABLE_SMAP)
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	0
+ #define DISABLED_MASK12	0
 -- 
 2.20.1
