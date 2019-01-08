@@ -1,74 +1,136 @@
-From: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: Re: [PATCH 07/16] tools headers uapi: Update i915_drm.h
-Date: Mon, 07 Jan 2019 12:53:38 +0200
-Message-ID: <154685841813.25474.9319368316047420636@jlahtine-desk.ger.corp.intel.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 00/16] perf/core improvements and fixes
+Date: Tue, 8 Jan 2019 16:32:34 +0100
+Message-ID: <20190108153234.GA110207@gmail.com>
 References: <20190104183337.12771-1-acme@kernel.org>
- <20190104183337.12771-8-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190104183337.12771-8-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190104183337.12771-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>, Jiri Olsa <jolsa@kernel.org>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Namhyung Kim <namhyung@kernel.org>, Jani Nikula <jani.nikula@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Ivan Krylov <krylov.r00t@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Mattias Jacobsson <2pi@mok.nu>
 List-Id: linux-perf-users.vger.kernel.org
 
-Quoting Arnaldo Carvalho de Melo (2019-01-04 20:33:28)
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
-> To get the changes in these csets:
+> 	Please consider pulling,
 > 
->   fe841686470d Revert "drm/i915/perf: add a parameter to control the size of OA buffer"
->   cd956bfcd0f5 drm/i915/perf: add a parameter to control the size of OA buffer
->   4bdafb9ddfa4 drm/i915: Remove i915.enable_ppgtt override
+> Best regards,
 > 
-> Not one of them result in any changes in tools/perf/, this is just to
-> silence this perf build warning:
+> - Arnaldo
 > 
->   Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
->   diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+> Test results at the end of this message, as usual.
 > 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-mdw7ta6qz7d2rl77gf00uqe8@git.kernel.org
+> The following changes since commit 2573be22e5b6f24a0cabc97715c808c47e29eaaf:
+> 
+>   Merge tag 'perf-core-for-mingo-4.21-20190103' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-01-03 14:05:16 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-4.21-20190104
+> 
+> for you to fetch changes up to 03fa483821c0b4db7c2b1453d3332f397d82313f:
+> 
+>   perf test shell: Use a fallback to get the pathname in vfs_getname (2019-01-04 15:12:29 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf annotate:
+> 
+>   Ivan Krylov:
+> 
+>   - Pass filename to objdump via execl, fixing usage with filenames
+>     with special characters.
+> 
+> perf report:
+> 
+>   Jin Yao:
+> 
+>      Fix wrong iteration count in --branch-history
+> 
+> perf stat:
+> 
+>   Jin Yao:
+> 
+>   - Fix endless wait for child process
+> 
+> perf test:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Use a fallback to get the pathname in vfs_getname in
+> 
+> tools build:
+> 
+>   Jiri Olsa:
+> 
+>   - Allow overriding CFLAGS assignments.
+> 
+> Misc:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Syncronize UAPI headers
+> 
+>   Mattias Jacobsson:
+> 
+>   - Remove redundant va_end() in strbuf_addv()
+> 
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-This is:
-
-Acked-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-
-I assume this'll be merged through tip tree along the other changes.
-
-Regards, Joonas
-
-> ---
->  tools/include/uapi/drm/i915_drm.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
 > 
-> diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-> index a4446f452040..298b2e197744 100644
-> --- a/tools/include/uapi/drm/i915_drm.h
-> +++ b/tools/include/uapi/drm/i915_drm.h
-> @@ -412,6 +412,14 @@ typedef struct drm_i915_irq_wait {
->         int irq_seq;
->  } drm_i915_irq_wait_t;
->  
-> +/*
-> + * Different modes of per-process Graphics Translation Table,
-> + * see I915_PARAM_HAS_ALIASING_PPGTT
-> + */
-> +#define I915_GEM_PPGTT_NONE    0
-> +#define I915_GEM_PPGTT_ALIASING        1
-> +#define I915_GEM_PPGTT_FULL    2
-> +
->  /* Ioctl to query kernel params:
->   */
->  #define I915_PARAM_IRQ_ACTIVE            1
-> -- 
-> 2.20.1
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (10):
+>       tools headers x86: Sync disabled-features.h
+>       tools headers uapi: Sync prctl.h with the kernel sources
+>       tools beauty: Make the prctl option table generator catch all PR_ options
+>       tools headers uapi: Update i915_drm.h
+>       tools headers uapi: Sync linux/in.h copy from the kernel sources
+>       tools headers uapi: Sync linux/kvm.h with the kernel sources
+>       tools headers uapi: Sync copy of asm-generic/unistd.h with the kernel sources
+>       tools headers x86: Sync asm/cpufeatures.h copy with the kernel sources
+>       perf python: Make sure the python binding output directory is in place
+>       perf test shell: Use a fallback to get the pathname in vfs_getname
 > 
+> Ivan Krylov (1):
+>       perf annotate: Pass filename to objdump via execl
+> 
+> Jin Yao (2):
+>       perf stat: Fix endless wait for child process
+>       perf report: Fix wrong iteration count in --branch-history
+> 
+> Jiri Olsa (2):
+>       tools thermal tmon: Use -O3 instead of -O1 if available
+>       tools iio: Override CFLAGS assignments
+> 
+> Mattias Jacobsson (1):
+>       perf strbuf: Remove redundant va_end() in strbuf_addv()
+> 
+>  tools/arch/x86/include/asm/cpufeatures.h        |  2 ++
+>  tools/arch/x86/include/asm/disabled-features.h  |  8 ++++++-
+>  tools/iio/Makefile                              |  2 +-
+>  tools/include/uapi/asm-generic/unistd.h         |  4 +++-
+>  tools/include/uapi/drm/i915_drm.h               |  8 +++++++
+>  tools/include/uapi/linux/in.h                   | 10 +++++---
+>  tools/include/uapi/linux/kvm.h                  | 19 +++++++++++++++
+>  tools/include/uapi/linux/prctl.h                |  8 +++++++
+>  tools/perf/Makefile.perf                        |  4 +++-
+>  tools/perf/builtin-stat.c                       |  3 ++-
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh |  3 ++-
+>  tools/perf/trace/beauty/prctl_option.sh         |  2 +-
+>  tools/perf/util/annotate.c                      |  8 +++----
+>  tools/perf/util/callchain.c                     | 32 +++++++++++++++----------
+>  tools/perf/util/callchain.h                     |  1 +
+>  tools/perf/util/machine.c                       |  2 +-
+>  tools/perf/util/strbuf.c                        |  1 -
+>  tools/thermal/tmon/Makefile                     |  2 +-
+>  18 files changed, 90 insertions(+), 29 deletions(-)
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
