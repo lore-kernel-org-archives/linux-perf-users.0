@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/16] tools lib traceevent: Changed return logic of trace_seq_printf() and trace_seq_vprintf() APIs
-Date: Tue,  8 Jan 2019 16:59:02 -0300
-Message-ID: <20190108195910.17726-9-acme@kernel.org>
+Subject: [PATCH 09/16] tools lib traceevent: Changed return logic of tep_register_event_handler() API
+Date: Tue,  8 Jan 2019 16:59:03 -0300
+Message-ID: <20190108195910.17726-10-acme@kernel.org>
 References: <20190108195910.17726-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,77 +14,80 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-In order to make libtraceevent into a proper library, its API should be
-straightforward.
+In order to make libtraceevent into a proper library, its API
+should be straightforward.
 
-The trace_seq_printf() and trace_seq_vprintf() APIs have inconsistent
-returned values with the other trace_seq_* APIs.
+The tep_register_event_handler() functions returns -1 in case it
+successfully registers the new event handler. Such return code is used
+by the other library APIs in case of an error.
 
-This path changes the return logic of trace_seq_printf() and
-trace_seq_vprintf() to return the number of printed characters, as the
-other trace_seq_* related APIs.
+To unify the return logic of tep_register_event_handler() with the other
+APIs, this patch introduces enum tep_reg_handler, which is used by this
+function as return value, to handle all possible successful return
+cases.
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20181201040852.485792891@goodmis.org
+Link: http://lkml.kernel.org/r/20181201040852.628034497@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/trace-seq.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/lib/traceevent/event-parse.c | 10 ++++++++--
+ tools/lib/traceevent/event-parse.h |  5 +++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/trace-seq.c b/tools/lib/traceevent/trace-seq.c
-index 8ff1d55954d1..8d5ecd2bf877 100644
---- a/tools/lib/traceevent/trace-seq.c
-+++ b/tools/lib/traceevent/trace-seq.c
-@@ -100,7 +100,8 @@ static void expand_buffer(struct trace_seq *s)
-  * @fmt: printf format string
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index a850342baf86..54d94054eef0 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -6632,6 +6632,12 @@ static struct tep_event *search_event(struct tep_handle *pevent, int id,
   *
-  * It returns 0 if the trace oversizes the buffer's free
-- * space, 1 otherwise.
-+ * space, the number of characters printed, or a negative
-+ * value in case of an error.
-  *
-  * The tracer may use either sequence operations or its own
-  * copy to user routines. To simplify formating of a trace
-@@ -129,9 +130,10 @@ trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
- 		goto try_again;
- 	}
+  * If @id is >= 0, then it is used to find the event.
+  * else @sys_name and @event_name are used.
++ *
++ * Returns:
++ *  TEP_REGISTER_SUCCESS_OVERWRITE if an existing handler is overwritten
++ *  TEP_REGISTER_SUCCESS if a new handler is registered successfully
++ *  negative TEP_ERRNO_... in case of an error
++ *
+  */
+ int tep_register_event_handler(struct tep_handle *pevent, int id,
+ 			       const char *sys_name, const char *event_name,
+@@ -6649,7 +6655,7 @@ int tep_register_event_handler(struct tep_handle *pevent, int id,
  
--	s->len += ret;
-+	if (ret > 0)
-+		s->len += ret;
+ 	event->handler = func;
+ 	event->context = context;
+-	return 0;
++	return TEP_REGISTER_SUCCESS_OVERWRITE;
  
--	return 1;
-+	return ret;
+  not_found:
+ 	/* Save for later use. */
+@@ -6679,7 +6685,7 @@ int tep_register_event_handler(struct tep_handle *pevent, int id,
+ 	pevent->handlers = handle;
+ 	handle->context = context;
+ 
+-	return -1;
++	return TEP_REGISTER_SUCCESS;
  }
  
- /**
-@@ -139,6 +141,10 @@ trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
-  * @s: trace sequence descriptor
-  * @fmt: printf format string
-  *
-+ * It returns 0 if the trace oversizes the buffer's free
-+ * space, the number of characters printed, or a negative
-+ * value in case of an error.
-+ * *
-  * The tracer may use either sequence operations or its own
-  * copy to user routines. To simplify formating of a trace
-  * trace_seq_printf is used to store strings into a special
-@@ -163,9 +169,10 @@ trace_seq_vprintf(struct trace_seq *s, const char *fmt, va_list args)
- 		goto try_again;
- 	}
+ static int handle_matches(struct event_handler *handler, int id,
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index 77a4a1dd4b4d..ac377ae99008 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -485,6 +485,11 @@ int tep_print_func_field(struct trace_seq *s, const char *fmt,
+ 			 struct tep_event *event, const char *name,
+ 			 struct tep_record *record, int err);
  
--	s->len += ret;
-+	if (ret > 0)
-+		s->len += ret;
- 
--	return len;
-+	return ret;
- }
- 
- /**
++enum tep_reg_handler {
++	TEP_REGISTER_SUCCESS = 0,
++	TEP_REGISTER_SUCCESS_OVERWRITE,
++};
++
+ int tep_register_event_handler(struct tep_handle *pevent, int id,
+ 			       const char *sys_name, const char *event_name,
+ 			       tep_event_handler_func func, void *context);
 -- 
 2.20.1
