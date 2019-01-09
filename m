@@ -1,37 +1,111 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [GIT PULL 00/16] perf/core fixes and improvements
-Date: Wed, 9 Jan 2019 10:04:44 -0300
-Message-ID: <20190109130444.GA25192@kernel.org>
+Subject: Re: [PATCH 16/16] tools include uapi: Sync linux/vhost.h with the
+ kernel sources
+Date: Wed, 9 Jan 2019 10:11:31 -0300
+Message-ID: <20190109131131.GB25192@kernel.org>
 References: <20190108195910.17726-1-acme@kernel.org>
- <20190109070528.GB29753@gmail.com>
+ <20190108195910.17726-17-acme@kernel.org>
+ <20190108230822-mutt-send-email-mst@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190109070528.GB29753@gmail.com>
+In-Reply-To: <20190108230822-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Luis =?iso-8859-1?Q?Cl=E1udio_Gon=E7alves?= <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Jan 09, 2019 at 08:05:28AM +0100, Ingo Molnar escreveu:
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >   . Update linux/{fs,vhost}.h, grab a copy o linux/mount.h, where the
-> >     MS_ mount flags were moved.
+Em Tue, Jan 08, 2019 at 11:10:10PM -0500, Michael S. Tsirkin escreveu:
+> On Tue, Jan 08, 2019 at 04:59:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> > +++ b/tools/include/uapi/linux/vhost.h
+> > @@ -11,94 +11,9 @@
+> >   * device configuration.
+> >   */
+
+> > +#include <linux/vhost_types.h>
  
-> We still have two UAPI warnings in the latest tip:perf/urgent - the patch 
-> below fixes them, at least on x86.
- 
-> The if_link.h looks trivial enough - but I'm unsure about the powerpc one 
-> and didn't test it on PowerPC.
+> Don't you then also need to import vhost_types.h?
 
-The PPC one I already pinged Ravi Bangoria, as it is used to generate
-the syscall table for 'perf trace', now it works like x86 and s390, he
-said he was a bit busy but will tackle this.
+If we were using this file as an include in a C source file, yes, but
+we're just using it to generate a string table using regular
+expressions:
 
-The if_link one I just updated in my local branch, will go in the next
-round.
+[acme@quaco perf]$ tools/perf/trace/beauty/vhost_virtio_ioctl.sh
+static const char *vhost_virtio_ioctl_cmds[] = {
+	[0x00] = "SET_FEATURES",
+	[0x01] = "SET_OWNER",
+	[0x02] = "RESET_OWNER",
+	[0x03] = "SET_MEM_TABLE",
+	[0x04] = "SET_LOG_BASE",
+	[0x07] = "SET_LOG_FD",
+	[0x10] = "SET_VRING_NUM",
+	[0x11] = "SET_VRING_ADDR",
+	[0x12] = "SET_VRING_BASE",
+	[0x13] = "SET_VRING_ENDIAN",
+	[0x14] = "GET_VRING_ENDIAN",
+	[0x20] = "SET_VRING_KICK",
+	[0x21] = "SET_VRING_CALL",
+	[0x22] = "SET_VRING_ERR",
+	[0x23] = "SET_VRING_BUSYLOOP_TIMEOUT",
+	[0x24] = "GET_VRING_BUSYLOOP_TIMEOUT",
+	[0x25] = "SET_BACKEND_FEATURES",
+	[0x30] = "NET_SET_BACKEND",
+	[0x40] = "SCSI_SET_ENDPOINT",
+	[0x41] = "SCSI_CLEAR_ENDPOINT",
+	[0x42] = "SCSI_GET_ABI_VERSION",
+	[0x43] = "SCSI_SET_EVENTS_MISSED",
+	[0x44] = "SCSI_GET_EVENTS_MISSED",
+	[0x60] = "VSOCK_SET_GUEST_CID",
+	[0x61] = "VSOCK_SET_RUNNING",
+};
+static const char *vhost_virtio_ioctl_read_cmds[] = {
+	[0x00] = "GET_FEATURES",
+	[0x12] = "GET_VRING_BASE",
+	[0x26] = "GET_BACKEND_FEATURES",
+};
+[acme@quaco perf]$
 
-Thanks,
+[acme@quaco perf]$ cat tools/perf/trace/beauty/vhost_virtio_ioctl.sh 
+#!/bin/sh
+# SPDX-License-Identifier: LGPL-2.1
+
+[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
+
+printf "static const char *vhost_virtio_ioctl_cmds[] = {\n"
+regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+egrep $regex ${header_dir}/vhost.h | \
+	sed -r "s/$regex/\2 \1/g"	| \
+	sort | xargs printf "\t[%s] = \"%s\",\n"
+printf "};\n"
+
+printf "static const char *vhost_virtio_ioctl_read_cmds[] = {\n"
+regex='^#[[:space:]]*define[[:space:]]+VHOST_(\w+)[[:space:]]+_IOW?R\([[:space:]]*VHOST_VIRTIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+egrep $regex ${header_dir}/vhost.h | \
+	sed -r "s/$regex/\2 \1/g"	| \
+	sort | xargs printf "\t[%s] = \"%s\",\n"
+printf "};\n"
+[acme@quaco perf]$
+
+This ends up being used in tools/perf/trace/beauty/ioctl.c, after that
+trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c file (with the
+vhost_virtio_ioctl_read_cmds and vhost_virtio_ioctl_cmds arrays) gets
+generated by the tools/perf/Makefile.perf build process:
+
+static size_t ioctl__scnprintf_vhost_virtio_cmd(int nr, int dir, char *bf, size_t size)
+{
+#include "trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c"
+        static DEFINE_STRARRAY(vhost_virtio_ioctl_cmds, "");
+        static DEFINE_STRARRAY(vhost_virtio_ioctl_read_cmds, "");
+        struct strarray *s = (dir & _IOC_READ) ? &strarray__vhost_virtio_ioctl_read_cmds : &strarray__vhost_virtio_ioctl_cmds;
+
+        if (nr < s->nr_entries && s->entries[nr] != NULL)
+                return scnprintf(bf, size, "VHOST_%s", s->entries[nr]);
+
+        return scnprintf(bf, size, "(%#x, %#x, %#x)", 0xAF, nr, dir);
+}
+
+So, if at some point a tool needs to really #include that file, yeah,
+then we will need to import vhost_types.h too.
 
 - Arnaldo
