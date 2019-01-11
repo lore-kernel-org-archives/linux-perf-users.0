@@ -1,88 +1,62 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/4] perf/core fixes and improvements
-Date: Fri, 11 Jan 2019 08:12:50 +0100
-Message-ID: <20190111071250.GB92116@gmail.com>
-References: <20190110165636.19338-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [Patch 1/4] perf report: Add function for verbose dump of raw data
+Date: Fri, 11 Jan 2019 12:52:56 +0100
+Message-ID: <20190111115259.99438-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110165636.19338-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Add support to call an architecture dependend function to interpret
+raw data verbatim when dumping the perf.data file with
+option -D.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+This allows to display the event's raw data more verbatim
+than just plain hex data.
 
-> Hi Ingo,
-> 
-> 	Please consider pulling, now there are no more ABI header
-> warnings,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 576b50ea235699d83758c0c514c65b8d486a159d:
-> 
->   Merge tag 'perf-core-for-mingo-5.0-20190108' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-01-09 07:59:40 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.0-20190110
-> 
-> for you to fetch changes up to 15c03092a9fbcdd041f58e5f832bf76c21c42e6a:
-> 
->   tools headers powerpc: Remove unistd.h (2019-01-10 10:42:08 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core fixes and improvements:
-> 
-> perf trace:
-> 
->   Ravi Bangoria:
-> 
->   - Rework PowerPC syscall table generation, now using a .tbl file just like
->     x86_64 and S/390, also silencing a tools build warning about headers out of
->     sync with the kernel sources.
-> 
-> tools include uapi:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Sync linux/if_link.h copy with the kernel sources, silencing a build warning.
-> 
-> perf top:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Add 'arch_cpu_idle' to the list of kernel idle symbols, noticed on a Orange
->     Pi Zero ARM board, just like with other symbols in other arches.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (2):
->       tools include uapi: Sync linux/if_link.h copy with the kernel sources
->       perf symbols: Add 'arch_cpu_idle' to the list of kernel idle symbols
-> 
-> Ravi Bangoria (2):
->       perf powerpc: Rework syscall table generation
->       tools headers powerpc: Remove unistd.h
-> 
->  tools/arch/powerpc/include/uapi/asm/unistd.h       | 404 -------------------
->  tools/include/uapi/linux/if_link.h                 |  19 +
->  tools/perf/arch/powerpc/Makefile                   |  15 +-
->  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  22 +-
->  tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 427 +++++++++++++++++++++
->  tools/perf/check-headers.sh                        |   1 -
->  tools/perf/util/symbol.c                           |   1 +
->  7 files changed, 470 insertions(+), 419 deletions(-)
->  delete mode 100644 tools/arch/powerpc/include/uapi/asm/unistd.h
->  create mode 100644 tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/session.c | 7 +++++++
+ tools/perf/util/session.h | 3 +++
+ 2 files changed, 10 insertions(+)
 
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 7d2c8ce6cfad..1c8d6d0ef300 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1050,6 +1050,12 @@ static void sample_read__printf(struct perf_sample *sample, u64 read_format)
+ 			sample->read.one.id, sample->read.one.value);
+ }
+ 
++void __weak arch__trace_event(struct perf_evlist *evlist __maybe_unused,
++			      union perf_event *event __maybe_unused,
++			      struct perf_sample *sample __maybe_unused)
++{
++}
++
+ static void dump_event(struct perf_evlist *evlist, union perf_event *event,
+ 		       u64 file_offset, struct perf_sample *sample)
+ {
+@@ -1060,6 +1066,7 @@ static void dump_event(struct perf_evlist *evlist, union perf_event *event,
+ 	       file_offset, event->header.size, event->header.type);
+ 
+ 	trace_event(event);
++	arch__trace_event(evlist, event, sample);
+ 
+ 	if (sample)
+ 		perf_evlist__print_tstamp(evlist, event, sample);
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index d96eccd7d27f..160d9cd6a3ae 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -128,4 +128,7 @@ int perf_event__synthesize_id_index(struct perf_tool *tool,
+ 				    struct perf_evlist *evlist,
+ 				    struct machine *machine);
+ 
++void arch__trace_event(struct perf_evlist *evlist __maybe_unused,
++		       union perf_event *event __maybe_unused,
++		       struct perf_sample *sample __maybe_unused);
+ #endif /* __PERF_SESSION_H */
+-- 
+2.14.3
