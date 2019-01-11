@@ -1,7 +1,7 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [Patch 3/4] perf report: Display names in s390 diagnostic counter sets
-Date: Fri, 11 Jan 2019 12:52:58 +0100
-Message-ID: <20190111115259.99438-3-tmricht@linux.ibm.com>
+Subject: [Patch 4/4] perf/report: s390 dump counter set data to file.
+Date: Fri, 11 Jan 2019 12:52:59 +0100
+Message-ID: <20190111115259.99438-4-tmricht@linux.ibm.com>
 References: <20190111115259.99438-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190111115259.99438-1-tmricht@linux.ibm.com>
@@ -10,130 +10,199 @@ To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On s390 the CPU Measurement Facility diagnostic counter sets are
-displayed by counter number and value. Add the logical counter name
-in the output (if it is avaliable). Otherwise "unknown" is shown.
+Add support for the new s390 PMU device cpum_cf_diag to extract
+the counter set diagnostic data. This data is available as event
+raw data and can be created with this command:
 
-Output before:
- [root@s35lp76 perf]# ./perf report -D --stdio
- [00000000] Counterset:0 Counters:6
-   Counter:000 Value:0x000000000085ec36 Counter:001 Value:0x0000000000796c94
-   Counter:002 Value:0x0000000000005ada Counter:003 Value:0x0000000000092460
-   Counter:004 Value:0x0000000000006073 Counter:005 Value:0x00000000001a9a73
- [0x000038] Counterset:1 Counters:2
-   Counter:000 Value:0x000000000007c59f Counter:001 Value:0x000000000002fad6
- [0x000050] Counterset:2 Counters:16
-   Counter:000 Value:000000000000000000 Counter:001 Value:000000000000000000
+  [root@s35lp76 perf]# ./perf record -R -e '{rbd000,rbc000}' --
+                                 ~/mytests/facultaet 2500
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.009 MB perf.data ]
+  [root@s35lp76 perf]#
 
-Output after:
-    [root@s35lp76 perf]# ./perf report -D --stdio
+The new event 0xbc000 generated this counter set diagnostic
+trace data. The data can be extracted using command:
 
- [00000000] Counterset:0 Counters:6
-     Counter:000 cpu_cycles Value:0x000000000085ec36
-     Counter:001 instructions Value:0x0000000000796c94
-     Counter:002 l1i_dir_writes Value:0x0000000000005ada
-     Counter:003 l1i_penalty_cycles Value:0x0000000000092460
-     Counter:004 l1d_dir_writes Value:0x0000000000006073
-     Counter:005 l1d_penalty_cycles Value:0x00000000001a9a73
- [0x000038] Counterset:1 Counters:2
-     Counter:000 problem_state_cpu_cycles Value:0x000000000007c59f
-     Counter:001 problem_state_instructions Value:0x000000000002fad6
- [0x000050] Counterset:2 Counters:16
-     Counter:000 prng_functions Value:000000000000000000
+  [root@s35lp76 perf]# ./perf report --stdio --itrace=d
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 21  of events 'anon group { rbd000, rbc000 }'
+  # Event count (approx.): 21
+  #
+  #         Overhead  Command    Shared Object      Symbol
+  # ................  .........  .................  ........................
+  #
+    80.95%   0.00%  facultaet  facultaet          [.] facultaet
+     4.76%   0.00%  facultaet  [kernel.kallsyms]  [k] check_chain_key
+     4.76%   0.00%  facultaet  [kernel.kallsyms]  [k] ftrace_likely_update
+     4.76%   0.00%  facultaet  [kernel.kallsyms]  [k] lock_release
+     4.76%   0.00%  facultaet  libc-2.26.so       [.] _dl_addr
+  [root@s35lp76 perf]# ll aux*
+  -rw-r--r-- 1 root root 3408 Oct 16 12:40 aux.ctr.02
+  -rw-r--r-- 1 root root 4096 Oct 16 12:40 aux.smp.02
+  [root@s35lp76 perf]#
+
+The files named aux.ctr.## contain the counter set diagnstic
+data and the files named aux.smp.## contain the sampling
+diagnostic data. ## stand for the CPU number the data was
+taken from.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/arch/s390/util/trace_event.c | 55 ++++++++++++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 4 deletions(-)
+ tools/perf/arch/s390/util/trace_event.c |  2 +-
+ tools/perf/util/s390-cpumcf-kernel.h    |  1 +
+ tools/perf/util/s390-cpumsf.c           | 76 +++++++++++++++++++++++++++++++--
+ 3 files changed, 74 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/arch/s390/util/trace_event.c b/tools/perf/arch/s390/util/trace_event.c
-index c69d76945f61..f7258d27a559 100644
+index f7258d27a559..25a05e707da1 100644
 --- a/tools/perf/arch/s390/util/trace_event.c
 +++ b/tools/perf/arch/s390/util/trace_event.c
-@@ -27,6 +27,7 @@
+@@ -181,7 +181,7 @@ void arch__trace_event(struct perf_evlist *evlist, union perf_event *event,
+ 		return;
+ 
+ 	ev_bc000 = perf_evlist__event2evsel(evlist, event);
+-	if (ev_bc000 == NULL || ev_bc000->attr.config != 0xbc000)
++	if (ev_bc000 == NULL || ev_bc000->attr.config != PERF_EVENT_CPUM_CF_DIAG)
+ 		return;
+ 
+ 	/* Display raw data on screen */
+diff --git a/tools/perf/util/s390-cpumcf-kernel.h b/tools/perf/util/s390-cpumcf-kernel.h
+index 6ae89f8a6efd..fe43c0beb545 100644
+--- a/tools/perf/util/s390-cpumcf-kernel.h
++++ b/tools/perf/util/s390-cpumcf-kernel.h
+@@ -10,6 +10,7 @@
+ #define S390_CPUMCF_KERNEL_H
+ 
+ #define	S390_CPUMCF_DIAG_DEF	0xfeef	/* Counter diagnostic entry ID */
++#define	PERF_EVENT_CPUM_CF_DIAG	0xBC000	/* Event: Counter sets */
+ 
+ struct cf_ctrset_entry {	/* CPU-M CF counter set entry (8 byte) */
+ 	unsigned int def:16;	/* 0-15  Data Entry Format */
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index a2eeebbfb25f..69d7223bb333 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -162,6 +162,7 @@
+ #include "auxtrace.h"
+ #include "s390-cpumsf.h"
+ #include "s390-cpumsf-kernel.h"
++#include "s390-cpumcf-kernel.h"
  #include "config.h"
- #include "color.h"
- #include "s390-cpumcf-kernel.h"
-+#include "pmu-events/pmu-events.h"
  
- static size_t ctrset_size(struct cf_ctrset_entry *set)
- {
-@@ -90,14 +91,59 @@ static void s390_cpumcfdg_dumptrail(const char *color, size_t offset,
- 		      te->tod_base, te->mach_type);
- }
+ struct s390_cpumsf {
+@@ -184,8 +185,58 @@ struct s390_cpumsf_queue {
+ 	struct auxtrace_buffer	*buffer;
+ 	int			cpu;
+ 	FILE			*logfile;
++	FILE			*logfile_ctr;
+ };
  
-+/* Return starting number of a counter set */
-+static int get_counterset_start(int setnr)
-+{
-+	switch (setnr) {
-+	case CPUMF_CTR_SET_BASIC:		/* Basic counter set */
-+		return 0;
-+	case CPUMF_CTR_SET_USER:		/* Problem state counter set */
-+		return 32;
-+	case CPUMF_CTR_SET_CRYPTO:		/* Crypto counter set */
-+		return 64;
-+	case CPUMF_CTR_SET_EXT:			/* Extended counter set */
-+		return 128;
-+	case CPUMF_CTR_SET_MT_DIAG:		/* Diagnostic counter set */
-+		return 448;
-+	default:
-+		return -1;
-+	}
-+}
-+
-+/* Scan the PMU table and extract the logical name of a counter from the
-+ * PMU events table. Input is the counter set and counter number with in the
-+ * set. Construct the event number and use this as key. If they match return
-+ * the name of this counter.
-+ * If no match is found a NULL pointer is returned.
++/* Check if the raw data should be dumped to file. If this is the case and
++ * the file to dump to has not been opened for writing, do so.
++ *
++ * Return 0 on success and greater zero on error so processing continues.
 + */
-+static const char *get_counter_name(int set, int nr, struct pmu_events_map *map)
++static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
++			       struct perf_sample *sample)
 +{
-+	int rc, event_nr, wanted = get_counterset_start(set) + nr;
-+	struct pmu_event *evp = map->table;
++	struct s390_cpumsf_queue *sfq;
++	struct auxtrace_queue *q;
++	int rc = 0;
 +
-+	if (map)
-+		for (; evp->name || evp->event || evp->desc; ++evp) {
-+			if (evp->name == NULL || evp->event == NULL)
-+				continue;
-+			rc = sscanf(evp->event, "event=%x", &event_nr);
-+			if (rc == 1 && event_nr == wanted)
-+				return evp->name;
++	if (!sf->use_logfile || sf->queues.nr_queues <= sample->cpu)
++		return rc;
++
++	q = &sf->queues.queue_array[sample->cpu];
++	sfq = q->priv;
++	if (!sfq)		/* Queue not yet allocated */
++		return rc;
++
++	if (!sfq->logfile_ctr) {
++		char *name;
++
++		rc = (sf->logdir)
++			? asprintf(&name, "%s/aux.ctr.%02x",
++				 sf->logdir, sample->cpu)
++			: asprintf(&name, "aux.ctr.%02x", sample->cpu);
++		if (rc > 0)
++			sfq->logfile_ctr = fopen(name, "w");
++		if (sfq->logfile_ctr == NULL) {
++			pr_err("Failed to open counter set log file %s, "
++			       "continue...\n", name);
++			rc = 1;
 +		}
-+	return NULL;
++		free(name);
++	}
++
++	if (sfq->logfile_ctr) {
++		/* See comment above for -4 */
++		size_t n = fwrite(sample->raw_data, sample->raw_size - 4, 1,
++				  sfq->logfile_ctr);
++		if (n != 1) {
++			pr_err("Failed to write counter set data\n");
++			rc = 1;
++		}
++	}
++	return rc;
 +}
 +
- static void s390_cpumcfdg_dump(struct perf_sample *sample)
- {
- 	size_t i, len = sample->raw_size, offset = 0;
- 	unsigned char *buf = sample->raw_data;
- 	const char *color = PERF_COLOR_BLUE;
- 	struct cf_ctrset_entry *ce;
-+	struct pmu_events_map *map;
-+	struct perf_pmu pmu;
- 	u64 *p;
- 
-+	memset(&pmu, 0, sizeof(pmu));
-+	map = perf_pmu__find_map(&pmu);
- 	while (offset < len) {
- 		ce = (struct cf_ctrset_entry *)(buf + offset);
- 
-@@ -109,11 +155,12 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
- 
- 		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
- 			      " Counters:%d\n", offset, ce->set, ce->ctr);
--		for (i = 0, p = (u64 *)(ce + 1); i < ce->ctr; i += 2, p += 2)
-+		for (i = 0, p = (u64 *)(ce + 1); i < ce->ctr; ++i, ++p) {
-+			const char *ev_name = get_counter_name(ce->set, i, map);
- 			color_fprintf(stdout, color,
--				      "\tCounter:%03d Value:%#018lx"
--				      " Counter:%03d Value:%#018lx\n",
--				      i, *p, i + 1, *(p + 1));
-+				      "\tCounter:%03d %s Value:%#018lx\n", i,
-+				      ev_name ?: "<unknown>", *p);
-+		}
- 		offset += ctrset_size(ce);
- 	}
+ /* Display s390 CPU measurement facility basic-sampling data entry */
+ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+ 				   struct hws_basic_entry *basic)
+@@ -792,7 +843,7 @@ static int s390_cpumsf_lost(struct s390_cpumsf *sf, struct perf_sample *sample)
  }
+ 
+ static int
+-s390_cpumsf_process_event(struct perf_session *session __maybe_unused,
++s390_cpumsf_process_event(struct perf_session *session,
+ 			  union perf_event *event,
+ 			  struct perf_sample *sample,
+ 			  struct perf_tool *tool)
+@@ -801,6 +852,7 @@ s390_cpumsf_process_event(struct perf_session *session __maybe_unused,
+ 					      struct s390_cpumsf,
+ 					      auxtrace);
+ 	u64 timestamp = sample->time;
++	struct perf_evsel *ev_bc000;
+ 	int err = 0;
+ 
+ 	if (dump_trace)
+@@ -811,6 +863,16 @@ s390_cpumsf_process_event(struct perf_session *session __maybe_unused,
+ 		return -EINVAL;
+ 	}
+ 
++	if (event->header.type == PERF_RECORD_SAMPLE &&
++	    sample->raw_size) {
++		/* Handle event with raw data */
++		ev_bc000 = perf_evlist__event2evsel(session->evlist, event);
++		if (ev_bc000 &&
++		    ev_bc000->attr.config == PERF_EVENT_CPUM_CF_DIAG)
++			err = s390_cpumcf_dumpctr(sf, sample);
++		return err;
++	}
++
+ 	if (event->header.type == PERF_RECORD_AUX &&
+ 	    event->aux.flags & PERF_AUX_FLAG_TRUNCATED)
+ 		return s390_cpumsf_lost(sf, sample);
+@@ -891,9 +953,15 @@ static void s390_cpumsf_free_queues(struct perf_session *session)
+ 		struct s390_cpumsf_queue *sfq = (struct s390_cpumsf_queue *)
+ 						queues->queue_array[i].priv;
+ 
+-		if (sfq != NULL && sfq->logfile) {
+-			fclose(sfq->logfile);
+-			sfq->logfile = NULL;
++		if (sfq != NULL) {
++			if (sfq->logfile) {
++				fclose(sfq->logfile);
++				sfq->logfile = NULL;
++			}
++			if (sfq->logfile_ctr) {
++				fclose(sfq->logfile_ctr);
++				sfq->logfile_ctr = NULL;
++			}
+ 		}
+ 		zfree(&queues->queue_array[i].priv);
+ 	}
 -- 
 2.14.3
