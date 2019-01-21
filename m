@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/24] perf session: Add reader__process_events function
-Date: Mon, 21 Jan 2019 20:56:49 -0300
-Message-ID: <20190121235706.20005-8-acme@kernel.org>
+Subject: [PATCH 09/24] perf tools: Remove duplicate headers
+Date: Mon, 21 Jan 2019 20:56:51 -0300
+Message-ID: <20190121235706.20005-10-acme@kernel.org>
 References: <20190121235706.20005-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,140 +9,78 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190121235706.20005-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Brajeswar Ghosh <brajeswar.linux@gmail.com>, Souptick Joarder <jrdr.linux@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Colin King <colin.king@canonical.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Sabyasachi Gupta <sabyasachi.linux@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Brajeswar Ghosh <brajeswar.linux@gmail.com>
 
-The reader object is defined by file's fd, data offset and data size.
+Remove duplicate headers which are included more than once in the same
+file.
 
-Now we can simply define a reader object for an arbitrary file data
-portion and pass it to reader__process_events().
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Brajeswar Ghosh <brajeswar.linux@gmail.com>
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Colin King <colin.king@canonical.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190110101301.6196-7-jolsa@kernel.org
+Cc: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Link: http://lkml.kernel.org/r/20190115135916.GA3629@hp-pavilion-15-notebook-pc-brajeswar
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 62 ++++++++++++++++++++++++---------------
- 1 file changed, 38 insertions(+), 24 deletions(-)
+ tools/perf/builtin-stat.c     | 1 -
+ tools/perf/tests/bp_account.c | 1 -
+ tools/perf/util/dso.h         | 1 -
+ tools/perf/util/zlib.c        | 1 -
+ 4 files changed, 4 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 173cf445475c..d6f41611f504 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1826,36 +1826,25 @@ struct reader {
- 	u64	data_offset;
- };
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 63a3afc7f32b..e587808591e8 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -83,7 +83,6 @@
+ #include <unistd.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
+-#include <sys/wait.h>
  
--static int __perf_session__process_events(struct perf_session *session)
-+static int
-+reader__process_events(struct reader *rd, struct perf_session *session,
-+		       struct ui_progress *prog)
- {
--	struct reader rd = {
--		.fd		= perf_data__fd(session->data),
--		.data_size	= session->header.data_size,
--		.data_offset	= session->header.data_offset,
--	};
--	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
--	u64 data_size = rd.data_size;
-+	u64 data_size = rd->data_size;
- 	u64 head, page_offset, file_offset, file_pos, size;
--	int err, mmap_prot, mmap_flags, map_idx = 0;
-+	int err = 0, mmap_prot, mmap_flags, map_idx = 0;
- 	size_t	mmap_size;
- 	char *buf, *mmaps[NUM_MMAPS];
- 	union perf_event *event;
--	struct ui_progress prog;
- 	s64 skip;
+ #include "sane_ctype.h"
  
--	perf_tool__fill_defaults(tool);
--
--	page_offset = page_size * (rd.data_offset / page_size);
-+	page_offset = page_size * (rd->data_offset / page_size);
- 	file_offset = page_offset;
--	head = rd.data_offset - page_offset;
-+	head = rd->data_offset - page_offset;
+diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+index a20cbc445426..57fc544aedb0 100644
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -15,7 +15,6 @@
+ #include <sys/mman.h>
+ #include <linux/compiler.h>
+ #include <linux/hw_breakpoint.h>
+-#include <sys/ioctl.h>
  
--	if (data_size == 0)
--		goto out;
-+	ui_progress__init_size(prog, data_size, "Processing events...");
+ #include "tests.h"
+ #include "debug.h"
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 8c8a7abe809d..af2eda29660f 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -8,7 +8,6 @@
+ #include <sys/types.h>
+ #include <stdbool.h>
+ #include "rwsem.h"
+-#include <linux/types.h>
+ #include <linux/bitops.h>
+ #include "map.h"
+ #include "namespaces.h"
+diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
+index 902ce6384f57..512ad7c09b13 100644
+--- a/tools/perf/util/zlib.c
++++ b/tools/perf/util/zlib.c
+@@ -6,7 +6,6 @@
+ #include <sys/mman.h>
+ #include <zlib.h>
+ #include <linux/compiler.h>
+-#include <unistd.h>
  
--	ui_progress__init_size(&prog, data_size, "Processing events...");
--
--	data_size += rd.data_offset;
-+	data_size += rd->data_offset;
- 
- 	mmap_size = MMAP_SIZE;
- 	if (mmap_size > data_size) {
-@@ -1873,12 +1862,12 @@ static int __perf_session__process_events(struct perf_session *session)
- 		mmap_flags = MAP_PRIVATE;
- 	}
- remap:
--	buf = mmap(NULL, mmap_size, mmap_prot, mmap_flags, rd.fd,
-+	buf = mmap(NULL, mmap_size, mmap_prot, mmap_flags, rd->fd,
- 		   file_offset);
- 	if (buf == MAP_FAILED) {
- 		pr_err("failed to mmap file\n");
- 		err = -errno;
--		goto out_err;
-+		goto out;
- 	}
- 	mmaps[map_idx] = buf;
- 	map_idx = (map_idx + 1) & (ARRAY_SIZE(mmaps) - 1);
-@@ -1910,7 +1899,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 		       file_offset + head, event->header.size,
- 		       event->header.type);
- 		err = -EINVAL;
--		goto out_err;
-+		goto out;
- 	}
- 
- 	if (skip)
-@@ -1919,7 +1908,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 	head += size;
- 	file_pos += size;
- 
--	ui_progress__update(&prog, size);
-+	ui_progress__update(prog, size);
- 
- 	if (session_done())
- 		goto out;
-@@ -1928,6 +1917,31 @@ static int __perf_session__process_events(struct perf_session *session)
- 		goto more;
- 
- out:
-+	return err;
-+}
-+
-+static int __perf_session__process_events(struct perf_session *session)
-+{
-+	struct reader rd = {
-+		.fd		= perf_data__fd(session->data),
-+		.data_size	= session->header.data_size,
-+		.data_offset	= session->header.data_offset,
-+	};
-+	struct ordered_events *oe = &session->ordered_events;
-+	struct perf_tool *tool = session->tool;
-+	struct ui_progress prog;
-+	int err;
-+
-+	perf_tool__fill_defaults(tool);
-+
-+	if (rd.data_size == 0)
-+		return -1;
-+
-+	ui_progress__init_size(&prog, rd.data_size, "Processing events...");
-+
-+	err = reader__process_events(&rd, session, &prog);
-+	if (err)
-+		goto out_err;
- 	/* do the final flush for ordered samples */
- 	err = ordered_events__flush(oe, OE_FLUSH__FINAL);
- 	if (err)
+ #include "util/compress.h"
+ #include "util/util.h"
 -- 
 2.20.1
