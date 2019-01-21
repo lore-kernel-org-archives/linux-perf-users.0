@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/7] perf script: Fix crash with printing mixed trace point and other events
-Date: Mon, 21 Jan 2019 15:35:02 -0300
-Message-ID: <20190121183507.23490-3-acme@kernel.org>
+Subject: [PATCH 5/7] perf tools: Handle TOPOLOGY headers with no CPU
+Date: Mon, 21 Jan 2019 15:35:05 -0300
+Message-ID: <20190121183507.23490-6-acme@kernel.org>
 References: <20190121183507.23490-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,81 +9,66 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190121183507.23490-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Stephane Eranian <eranian@google.com>
 
-'perf script' crashes currently when printing mixed trace points and
-other events because the trace format does not handle events without
-trace meta data. Add a simple check to avoid that.
+This patch fixes an issue in cpumap.c when used with the TOPOLOGY
+header. In some configurations, some NUMA nodes may have no CPU (empty
+cpulist). Yet a cpumap map must be created otherwise perf abort with an
+error. This patch handles this case by creating a dummy map.
 
-  % cat > test.c
-  main()
-  {
-      printf("Hello world\n");
-  }
-  ^D
-  % gcc -g -o test test.c
-  % sudo perf probe -x test 'test.c:3'
-  % perf record -e '{cpu/cpu-cycles,period=10000/,probe_test:main}:S' ./test
-  % perf script
-  <segfault>
+  Before:
 
-Committer testing:
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  0x6e8 [0x6c]: failed to process type: 80
 
-Before:
+  After:
 
-  # perf probe -x /lib64/libc-2.28.so malloc
-  Added new event:
-    probe_libc:malloc    (on malloc in /usr/lib64/libc-2.28.so)
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  noploop for 2 seconds
 
-  You can now use it in all perf tools, such as:
-
-	perf record -e probe_libc:malloc -aR sleep 1
-
-  # perf probe -l
-  probe_libc:malloc    (on __libc_malloc@malloc/malloc.c in /usr/lib64/libc-2.28.so)
-  # perf record -e '{cpu/cpu-cycles,period=10000/,probe_libc:*}:S' sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.023 MB perf.data (40 samples) ]
-  # perf script
-  Segmentation fault (core dumped)
-  ^C
-  #
-
-After:
-
-  # perf script | head -6
-     sleep 2888 94796.944981: 16198 cpu/cpu-cycles,period=10000/: ffffffff925dc04f get_random_u32+0x1f (/lib/modules/5.0.0-rc2+/build/vmlinux)
-     sleep 2888 [-01] 94796.944981: probe_libc:malloc:
-     sleep 2888 94796.944983:  4713 cpu/cpu-cycles,period=10000/: ffffffff922763af change_protection+0xcf (/lib/modules/5.0.0-rc2+/build/vmlinux)
-     sleep 2888 [-01] 94796.944983: probe_libc:malloc:
-     sleep 2888 94796.944986:  9934 cpu/cpu-cycles,period=10000/: ffffffff922777e0 move_page_tables+0x0 (/lib/modules/5.0.0-rc2+/build/vmlinux)
-     sleep 2888 [-01] 94796.944986: probe_libc:malloc:
-  #
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190117194834.21940-1-andi@firstfloor.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/cpumap.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index d079f36d342d..357906ed1898 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1794,7 +1794,7 @@ static void process_event(struct perf_script *script,
- 		return;
- 	}
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 1ccbd3342069..383674f448fc 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -134,7 +134,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
+ 	if (!cpu_list)
+ 		return cpu_map__read_all_cpu_map();
  
--	if (PRINT_FIELD(TRACE)) {
-+	if (PRINT_FIELD(TRACE) && sample->raw_data) {
- 		event_format__fprintf(evsel->tp_format, sample->cpu,
- 				      sample->raw_data, sample->raw_size, fp);
- 	}
+-	if (!isdigit(*cpu_list))
++	/*
++	 * must handle the case of empty cpumap to cover
++	 * TOPOLOGY header for NUMA nodes with no CPU
++	 * ( e.g., because of CPU hotplug)
++	 */
++	if (!isdigit(*cpu_list) && *cpu_list != '\0')
+ 		goto out;
+ 
+ 	while (isdigit(*cpu_list)) {
+@@ -181,8 +186,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
+ 
+ 	if (nr_cpus > 0)
+ 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-	else
++	else if (*cpu_list != '\0')
+ 		cpus = cpu_map__default_new();
++	else
++		cpus = cpu_map__dummy_new();
+ invalid:
+ 	free(tmp_cpus);
+ out:
 -- 
 2.20.1
