@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/24] perf report: Display names in s390 diagnostic counter sets
-Date: Mon, 21 Jan 2019 20:56:53 -0300
-Message-ID: <20190121235706.20005-12-acme@kernel.org>
+Subject: [PATCH 13/24] perf: Make perf_event_output() propagate the output() return
+Date: Mon, 21 Jan 2019 20:56:55 -0300
+Message-ID: <20190121235706.20005-14-acme@kernel.org>
 References: <20190121235706.20005-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,146 +9,190 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190121235706.20005-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On s390 the CPU Measurement Facility diagnostic counter sets are
-displayed by counter number and value. Add the logical counter name in
-the output (if it is available). Otherwise "unknown" is shown.
+For the original mode of operation it isn't needed, since we report back
+errors via PERF_RECORD_LOST records in the ring buffer, but for use in
+bpf_perf_event_output() it is convenient to return the errors, basically
+-ENOSPC.
 
-Output before:
+Currently bpf_perf_event_output() returns an error indication, the last
+thing it does, which is to push it to the ring buffer is that can fail
+and if so, this failure won't be reported back to its users, fix it.
 
- [root@s35lp76 perf]# ./perf report -D --stdio
- [00000000] Counterset:0 Counters:6
-   Counter:000 Value:0x000000000085ec36 Counter:001 Value:0x0000000000796c94
-   Counter:002 Value:0x0000000000005ada Counter:003 Value:0x0000000000092460
-   Counter:004 Value:0x0000000000006073 Counter:005 Value:0x00000000001a9a73
- [0x000038] Counterset:1 Counters:2
-   Counter:000 Value:0x000000000007c59f Counter:001 Value:0x000000000002fad6
- [0x000050] Counterset:2 Counters:16
-   Counter:000 Value:000000000000000000 Counter:001 Value:000000000000000000
-
-Output after:
-
-    [root@s35lp76 perf]# ./perf report -D --stdio
-
- [00000000] Counterset:0 Counters:6
-     Counter:000 cpu_cycles Value:0x000000000085ec36
-     Counter:001 instructions Value:0x0000000000796c94
-     Counter:002 l1i_dir_writes Value:0x0000000000005ada
-     Counter:003 l1i_penalty_cycles Value:0x0000000000092460
-     Counter:004 l1d_dir_writes Value:0x0000000000006073
-     Counter:005 l1d_penalty_cycles Value:0x00000000001a9a73
- [0x000038] Counterset:1 Counters:2
-     Counter:000 problem_state_cpu_cycles Value:0x000000000007c59f
-     Counter:001 problem_state_instructions Value:0x000000000002fad6
- [0x000050] Counterset:2 Counters:16
-     Counter:000 prng_functions Value:000000000000000000
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190117093003.96287-3-tmricht@linux.ibm.com
+Reported-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Tested-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/r/20190118150938.GN5823@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/s390-sample-raw.c | 59 ++++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 5 deletions(-)
+ include/linux/perf_event.h                       |  6 +++---
+ kernel/events/core.c                             | 11 +++++++----
+ kernel/trace/bpf_trace.c                         |  3 +--
+ tools/perf/examples/bpf/augmented_raw_syscalls.c |  4 ++--
+ tools/perf/examples/bpf/augmented_syscalls.c     | 14 +++++++-------
+ tools/perf/examples/bpf/etcsnoop.c               | 10 +++++-----
+ 6 files changed, 25 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index 7b4879625f01..14db2da855b7 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -29,6 +29,7 @@
- #include "color.h"
- #include "sample-raw.h"
- #include "s390-cpumcf-kernel.h"
-+#include "pmu-events/pmu-events.h"
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index f8ec36197718..4eb88065a9b5 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -978,9 +978,9 @@ extern void perf_event_output_forward(struct perf_event *event,
+ extern void perf_event_output_backward(struct perf_event *event,
+ 				       struct perf_sample_data *data,
+ 				       struct pt_regs *regs);
+-extern void perf_event_output(struct perf_event *event,
+-			      struct perf_sample_data *data,
+-			      struct pt_regs *regs);
++extern int perf_event_output(struct perf_event *event,
++			     struct perf_sample_data *data,
++			     struct pt_regs *regs);
  
- static size_t ctrset_size(struct cf_ctrset_entry *set)
- {
-@@ -112,14 +113,61 @@ static void s390_cpumcfdg_dumptrail(const char *color, size_t offset,
- 		      te.tod_base, te.mach_type);
+ static inline bool
+ is_default_overflow_handler(struct perf_event *event)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index fbe59b793b36..bc525cd1615c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6489,7 +6489,7 @@ void perf_prepare_sample(struct perf_event_header *header,
+ 		data->phys_addr = perf_virt_to_phys(data->addr);
  }
  
-+/* Return starting number of a counter set */
-+static int get_counterset_start(int setnr)
-+{
-+	switch (setnr) {
-+	case CPUMF_CTR_SET_BASIC:		/* Basic counter set */
-+		return 0;
-+	case CPUMF_CTR_SET_USER:		/* Problem state counter set */
-+		return 32;
-+	case CPUMF_CTR_SET_CRYPTO:		/* Crypto counter set */
-+		return 64;
-+	case CPUMF_CTR_SET_EXT:			/* Extended counter set */
-+		return 128;
-+	case CPUMF_CTR_SET_MT_DIAG:		/* Diagnostic counter set */
-+		return 448;
-+	default:
-+		return -1;
-+	}
-+}
-+
-+/* Scan the PMU table and extract the logical name of a counter from the
-+ * PMU events table. Input is the counter set and counter number with in the
-+ * set. Construct the event number and use this as key. If they match return
-+ * the name of this counter.
-+ * If no match is found a NULL pointer is returned.
-+ */
-+static const char *get_counter_name(int set, int nr, struct pmu_events_map *map)
-+{
-+	int rc, event_nr, wanted = get_counterset_start(set) + nr;
-+
-+	if (map) {
-+		struct pmu_event *evp = map->table;
-+
-+		for (; evp->name || evp->event || evp->desc; ++evp) {
-+			if (evp->name == NULL || evp->event == NULL)
-+				continue;
-+			rc = sscanf(evp->event, "event=%x", &event_nr);
-+			if (rc == 1 && event_nr == wanted)
-+				return evp->name;
-+		}
-+	}
-+	return NULL;
-+}
-+
- static void s390_cpumcfdg_dump(struct perf_sample *sample)
+-static __always_inline void
++static __always_inline int
+ __perf_event_output(struct perf_event *event,
+ 		    struct perf_sample_data *data,
+ 		    struct pt_regs *regs,
+@@ -6499,13 +6499,15 @@ __perf_event_output(struct perf_event *event,
  {
- 	size_t i, len = sample->raw_size, offset = 0;
- 	unsigned char *buf = sample->raw_data;
- 	const char *color = PERF_COLOR_BLUE;
- 	struct cf_ctrset_entry *cep, ce;
-+	struct pmu_events_map *map;
-+	struct perf_pmu pmu;
- 	u64 *p;
+ 	struct perf_output_handle handle;
+ 	struct perf_event_header header;
++	int err;
  
-+	memset(&pmu, 0, sizeof(pmu));
-+	map = perf_pmu__find_map(&pmu);
- 	while (offset < len) {
- 		cep = (struct cf_ctrset_entry *)(buf + offset);
+ 	/* protect the callchain buffers */
+ 	rcu_read_lock();
  
-@@ -136,12 +184,13 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
+ 	perf_prepare_sample(&header, data, event, regs);
  
- 		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
- 			      " Counters:%d\n", offset, ce.set, ce.ctr);
--		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; i += 2, p += 2)
-+		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; ++i, ++p) {
-+			const char *ev_name = get_counter_name(ce.set, i, map);
-+
- 			color_fprintf(stdout, color,
--				      "\tCounter:%03d Value:%#018lx"
--				      " Counter:%03d Value:%#018lx\n",
--				      i, be64_to_cpu(*p),
--				      i + 1, be64_to_cpu(*(p + 1)));
-+				      "\tCounter:%03d %s Value:%#018lx\n", i,
-+				      ev_name ?: "<unknown>", be64_to_cpu(*p));
-+		}
- 		offset += ctrset_size(&ce);
+-	if (output_begin(&handle, event, header.size))
++	err = output_begin(&handle, event, header.size);
++	if (err)
+ 		goto exit;
+ 
+ 	perf_output_sample(&handle, &header, data, event);
+@@ -6514,6 +6516,7 @@ __perf_event_output(struct perf_event *event,
+ 
+ exit:
+ 	rcu_read_unlock();
++	return err;
+ }
+ 
+ void
+@@ -6532,12 +6535,12 @@ perf_event_output_backward(struct perf_event *event,
+ 	__perf_event_output(event, data, regs, perf_output_begin_backward);
+ }
+ 
+-void
++int
+ perf_event_output(struct perf_event *event,
+ 		  struct perf_sample_data *data,
+ 		  struct pt_regs *regs)
+ {
+-	__perf_event_output(event, data, regs, perf_output_begin);
++	return __perf_event_output(event, data, regs, perf_output_begin);
+ }
+ 
+ /*
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 8b068adb9da1..088c2032ceaf 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -431,8 +431,7 @@ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
+ 	if (unlikely(event->oncpu != cpu))
+ 		return -EOPNOTSUPP;
+ 
+-	perf_event_output(event, sd, regs);
+-	return 0;
++	return perf_event_output(event, sd, regs);
+ }
+ 
+ BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 53c233370fae..9e9d4c66e53c 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -141,8 +141,8 @@ int sys_enter(struct syscall_enter_args *args)
+ 		len = sizeof(augmented_args.args);
  	}
+ 
+-	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, &augmented_args, len);
+-	return 0;
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, &augmented_args, len);
  }
+ 
+ SEC("raw_syscalls:sys_exit")
+diff --git a/tools/perf/examples/bpf/augmented_syscalls.c b/tools/perf/examples/bpf/augmented_syscalls.c
+index 2ae44813ef2d..b7dba114e36c 100644
+--- a/tools/perf/examples/bpf/augmented_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_syscalls.c
+@@ -55,9 +55,9 @@ int syscall_enter(syscall)(struct syscall_enter_##syscall##_args *args)				\
+ 		len -= sizeof(augmented_args.filename.value) - augmented_args.filename.size;	\
+ 		len &= sizeof(augmented_args.filename.value) - 1;				\
+ 	}											\
+-	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 			\
+-			  &augmented_args, len);						\
+-	return 0;										\
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */	\
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 		\
++				 &augmented_args, len);						\
+ }												\
+ int syscall_exit(syscall)(struct syscall_exit_args *args)					\
+ {												\
+@@ -125,10 +125,10 @@ int syscall_enter(syscall)(struct syscall_enter_##syscall##_args *args)				\
+ /*		addrlen = augmented_args.args.addrlen;				     */		\
+ /*										     */		\
+ 	probe_read(&augmented_args.addr, addrlen, args->addr_ptr); 				\
+-	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 			\
+-			  &augmented_args, 							\
+-			  sizeof(augmented_args) - sizeof(augmented_args.addr) + addrlen);	\
+-	return 0;										\
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */	\
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 		\
++				 &augmented_args, 						\
++				sizeof(augmented_args) - sizeof(augmented_args.addr) + addrlen);\
+ }												\
+ int syscall_exit(syscall)(struct syscall_exit_args *args)					\
+ {												\
+diff --git a/tools/perf/examples/bpf/etcsnoop.c b/tools/perf/examples/bpf/etcsnoop.c
+index b59e8812ee8c..550e69c2e8d1 100644
+--- a/tools/perf/examples/bpf/etcsnoop.c
++++ b/tools/perf/examples/bpf/etcsnoop.c
+@@ -49,11 +49,11 @@ int syscall_enter(syscall)(struct syscall_enter_##syscall##_args *args)				\
+ 						      args->filename_ptr); 			\
+ 	if (__builtin_memcmp(augmented_args.filename.value, etc, 4) != 0)			\
+ 		return 0;									\
+-	perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 			\
+-			  &augmented_args, 							\
+-			  (sizeof(augmented_args) - sizeof(augmented_args.filename.value) +	\
+-			   augmented_args.filename.size));					\
+-	return 0;										\
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */	\
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, 		\
++				 &augmented_args,						\
++				 (sizeof(augmented_args) - sizeof(augmented_args.filename.value) + \
++				 augmented_args.filename.size));				\
+ }
+ 
+ struct syscall_enter_openat_args {
 -- 
 2.20.1
