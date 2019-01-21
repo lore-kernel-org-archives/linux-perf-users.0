@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/7] perf top: Fix wrong hottest instruction highlighted
-Date: Mon, 21 Jan 2019 15:35:06 -0300
-Message-ID: <20190121183507.23490-7-acme@kernel.org>
+Subject: [PATCH 1/7] perf ordered_events: Fix crash in ordered_events__free
+Date: Mon, 21 Jan 2019 15:35:01 -0300
+Message-ID: <20190121183507.23490-2-acme@kernel.org>
 References: <20190121183507.23490-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,83 +9,56 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190121183507.23490-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Kuang <hekuang@huawei.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Song Liu <liu.song.a23@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: He Kuang <hekuang@huawei.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-The annotation line percentage is compared and inserted into the rbtree,
-but the percent field of 'struct annotation_data' is an array, the
-comparison result between them is the address difference.
+Song Liu reported crash in 'perf record':
 
-This patch compares the right slot of percent array according to
-opts->percent_type and makes things right.
+  > #0  0x0000000000500055 in ordered_events(float, long double,...)(...) ()
+  > #1  0x0000000000500196 in ordered_events.reinit ()
+  > #2  0x00000000004fe413 in perf_session.process_events ()
+  > #3  0x0000000000440431 in cmd_record ()
+  > #4  0x00000000004a439f in run_builtin ()
+  > #5  0x000000000042b3e5 in main ()"
 
-The problem can be reproduced by pressing 'H' in perf top annotation view.
-It should highlight the instruction line which has the highest sampling
-percentage.
+This can happen when we get out of buffers during event processing.
 
-Signed-off-by: He Kuang <hekuang@huawei.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+The subsequent ordered_events__free() call assumes oe->buffer != NULL
+and crashes. Add a check to prevent that.
+
+Reported-by: Song Liu <liu.song.a23@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Song Liu <liu.song.a23@gmail.com>
+Tested-by: Song Liu <liu.song.a23@gmail.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190120160523.4391-1-hekuang@huawei.com
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190117113017.12977-1-jolsa@kernel.org
+Fixes: d5ceb62b3654 ("perf ordered_events: Add 'struct ordered_events_buffer' layer")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ tools/perf/util/ordered-events.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 1d00e5ec7906..82e16bf84466 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -224,20 +224,24 @@ static unsigned int annotate_browser__refresh(struct ui_browser *browser)
- 	return ret;
- }
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index 897589507d97..ea523d3b248f 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -391,8 +391,10 @@ void ordered_events__free(struct ordered_events *oe)
+ 	 * Current buffer might not have all the events allocated
+ 	 * yet, we need to free only allocated ones ...
+ 	 */
+-	list_del(&oe->buffer->list);
+-	ordered_events_buffer__free(oe->buffer, oe->buffer_idx, oe);
++	if (oe->buffer) {
++		list_del(&oe->buffer->list);
++		ordered_events_buffer__free(oe->buffer, oe->buffer_idx, oe);
++	}
  
--static int disasm__cmp(struct annotation_line *a, struct annotation_line *b)
-+static double disasm__cmp(struct annotation_line *a, struct annotation_line *b,
-+						  int percent_type)
- {
- 	int i;
- 
- 	for (i = 0; i < a->data_nr; i++) {
--		if (a->data[i].percent == b->data[i].percent)
-+		if (a->data[i].percent[percent_type] == b->data[i].percent[percent_type])
- 			continue;
--		return a->data[i].percent < b->data[i].percent;
-+		return a->data[i].percent[percent_type] -
-+			   b->data[i].percent[percent_type];
- 	}
- 	return 0;
- }
- 
--static void disasm_rb_tree__insert(struct rb_root *root, struct annotation_line *al)
-+static void disasm_rb_tree__insert(struct annotate_browser *browser,
-+				struct annotation_line *al)
- {
-+	struct rb_root *root = &browser->entries;
- 	struct rb_node **p = &root->rb_node;
- 	struct rb_node *parent = NULL;
- 	struct annotation_line *l;
-@@ -246,7 +250,7 @@ static void disasm_rb_tree__insert(struct rb_root *root, struct annotation_line
- 		parent = *p;
- 		l = rb_entry(parent, struct annotation_line, rb_node);
- 
--		if (disasm__cmp(al, l))
-+		if (disasm__cmp(al, l, browser->opts->percent_type) < 0)
- 			p = &(*p)->rb_left;
- 		else
- 			p = &(*p)->rb_right;
-@@ -329,7 +333,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 			RB_CLEAR_NODE(&pos->al.rb_node);
- 			continue;
- 		}
--		disasm_rb_tree__insert(&browser->entries, &pos->al);
-+		disasm_rb_tree__insert(browser, &pos->al);
- 	}
- 	pthread_mutex_unlock(&notes->lock);
- 
+ 	/* ... and continue with the rest */
+ 	list_for_each_entry_safe(buffer, tmp, &oe->to_free, list) {
 -- 
 2.20.1
