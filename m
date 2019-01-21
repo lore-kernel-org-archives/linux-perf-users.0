@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/7] perf core: Fix perf_proc_update_handler() bug
-Date: Mon, 21 Jan 2019 15:35:03 -0300
-Message-ID: <20190121183507.23490-4-acme@kernel.org>
+Subject: [PATCH 7/7] perf script: Fix crash when processing recorded stat data
+Date: Mon, 21 Jan 2019 15:35:07 -0300
+Message-ID: <20190121183507.23490-8-acme@kernel.org>
 References: <20190121183507.23490-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,83 +9,100 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190121183507.23490-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Tony Jones <tonyj@suse.de>
 
-The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
-syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
-when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
-then no modification to sysctl_perf_event_sample_rate is allowed to prevent
-possible hang from wrong values.
+While updating perf to work with Python3 and Python2 I noticed that the
+stat-cpi script was dumping core.
 
-The problem is that the test to prevent modification is made after the
-sysctl variable is modified in perf_proc_update_handler().
+$ perf  stat -e cycles,instructions record -o /tmp/perf.data /bin/false
 
-You get an error:
+ Performance counter stats for '/bin/false':
 
-  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
-  echo: write error: invalid argument
+           802,148      cycles
 
-But the value is still modified causing all sorts of inconsistencies:
+           604,622      instructions                                                       802,148      cycles
+           604,622      instructions
 
-  $ cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
+       0.001445842 seconds time elapsed
 
-This patch fixes the problem by moving the parsing of the value after
-the test.
+$ perf script -i /tmp/perf.data -s scripts/python/stat-cpi.py
+Segmentation fault (core dumped)
+...
+...
+    rblist=rblist@entry=0xb2a200 <rt_stat>,
+    new_entry=new_entry@entry=0x7ffcb755c310) at util/rblist.c:33
+    ctx=<optimized out>, type=<optimized out>, create=<optimized out>,
+    cpu=<optimized out>, evsel=<optimized out>) at util/stat-shadow.c:118
+    ctx=<optimized out>, type=<optimized out>, st=<optimized out>)
+    at util/stat-shadow.c:196
+    count=count@entry=727442, cpu=cpu@entry=0, st=0xb2a200 <rt_stat>)
+    at util/stat-shadow.c:239
+    config=config@entry=0xafeb40 <stat_config>,
+    counter=counter@entry=0x133c6e0) at util/stat.c:372
+...
+...
+
+The issue is that since 1fcd03946b52 perf_stat__update_shadow_stats now calls
+update_runtime_stat passing rt_stat rather than calling update_stats but
+perf_stat__init_shadow_stats has never been called to initialize rt_stat in
+the script path processing recorded stat data.
+
+Since I can't see any reason why perf_stat__init_shadow_stats() is presently
+initialized like it is in builtin-script.c::perf_sample__fprint_metric()
+[4bd1bef8bba2f] I'm proposing it instead be initialized once in __cmd_script
 
 Committer testing:
 
-  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
-  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
-  -bash: echo: write error: Invalid argument
-  # cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
+After applying the patch:
+
+  # perf script -i /tmp/perf.data -s tools/perf/scripts/python/stat-cpi.py
+       0.001970: cpu -1, thread -1 -> cpi 1.709079 (1075684/629394)
   #
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+No segfault.
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Fixes: 1fcd03946b52 ("perf stat: Update per-thread shadow stats")
+Link: http://lkml.kernel.org/r/20190120191414.12925-1-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-script.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3cd13a30f732..e5ede6918050 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -436,18 +436,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
- 		void __user *buffer, size_t *lenp,
- 		loff_t *ppos)
- {
--	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
--
--	if (ret || !write)
--		return ret;
--
-+	int ret;
-+	int perf_cpu = sysctl_perf_cpu_time_max_percent;
- 	/*
- 	 * If throttling is disabled don't allow the write:
- 	 */
--	if (sysctl_perf_cpu_time_max_percent == 100 ||
--	    sysctl_perf_cpu_time_max_percent == 0)
-+	if (write && (perf_cpu == 100 || perf_cpu == 0))
- 		return -EINVAL;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 357906ed1898..ac221f137ed2 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1681,13 +1681,8 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 		.force_header = false,
+ 	};
+ 	struct perf_evsel *ev2;
+-	static bool init;
+ 	u64 val;
  
-+	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret || !write)
-+		return ret;
+-	if (!init) {
+-		perf_stat__init_shadow_stats();
+-		init = true;
+-	}
+ 	if (!evsel->stats)
+ 		perf_evlist__alloc_stats(script->session->evlist, false);
+ 	if (evsel_script(evsel->leader)->gnum++ == 0)
+@@ -2359,6 +2354,8 @@ static int __cmd_script(struct perf_script *script)
+ 
+ 	signal(SIGINT, sig_handler);
+ 
++	perf_stat__init_shadow_stats();
 +
- 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
- 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
- 	update_perf_cpu_limits();
+ 	/* override event processing functions */
+ 	if (script->show_task_events) {
+ 		script->tool.comm = process_comm_event;
 -- 
 2.20.1
