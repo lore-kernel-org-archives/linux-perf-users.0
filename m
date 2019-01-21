@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/24] perf session: Add reader object
-Date: Mon, 21 Jan 2019 20:56:46 -0300
-Message-ID: <20190121235706.20005-5-acme@kernel.org>
+Subject: [PATCH 05/24] perf session: Add 'data_size' member to reader object
+Date: Mon, 21 Jan 2019 20:56:47 -0300
+Message-ID: <20190121235706.20005-6-acme@kernel.org>
 References: <20190121235706.20005-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,50 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add a session private reader object to encapsulate the reading of the
-event data block. Starting with a 'fd' field.
+Add a  'data_size' member to the reader object. Keep the 'data_size'
+variable instead of replacing it with rd.data_size as it will be used in
+the following patch.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190110101301.6196-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190110101301.6196-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index c8c2069fb01e..06379cc87f59 100644
+index 06379cc87f59..9f29ed743425 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -1820,11 +1820,17 @@ fetch_mmaped_event(struct perf_session *session,
- #define NUM_MMAPS 128
- #endif
+@@ -1822,17 +1822,19 @@ fetch_mmaped_event(struct perf_session *session,
  
-+struct reader {
-+	int	fd;
-+};
-+
+ struct reader {
+ 	int	fd;
++	u64	data_size;
+ };
+ 
  static int __perf_session__process_events(struct perf_session *session)
  {
-+	struct reader rd = {
-+		.fd		= perf_data__fd(session->data),
-+	};
+ 	struct reader rd = {
+ 		.fd		= perf_data__fd(session->data),
++		.data_size	= session->header.data_size,
+ 	};
  	struct ordered_events *oe = &session->ordered_events;
  	struct perf_tool *tool = session->tool;
--	int fd = perf_data__fd(session->data);
  	u64 data_offset = session->header.data_offset;
- 	u64 data_size = session->header.data_size;
+-	u64 data_size = session->header.data_size;
++	u64 data_size = rd.data_size;
  	u64 head, page_offset, file_offset, file_pos, size;
-@@ -1864,7 +1870,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 		mmap_flags = MAP_PRIVATE;
- 	}
- remap:
--	buf = mmap(NULL, mmap_size, mmap_prot, mmap_flags, fd,
-+	buf = mmap(NULL, mmap_size, mmap_prot, mmap_flags, rd.fd,
- 		   file_offset);
- 	if (buf == MAP_FAILED) {
- 		pr_err("failed to mmap file\n");
+ 	int err, mmap_prot, mmap_flags, map_idx = 0;
+ 	size_t	mmap_size;
 -- 
 2.20.1
