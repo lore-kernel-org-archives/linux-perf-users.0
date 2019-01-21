@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/24] perf session: Rearrange perf_session__process_events function
-Date: Mon, 21 Jan 2019 20:56:44 -0300
-Message-ID: <20190121235706.20005-3-acme@kernel.org>
+Subject: [PATCH 03/24] perf session: Get rid of file_size variable
+Date: Mon, 21 Jan 2019 20:56:45 -0300
+Message-ID: <20190121235706.20005-4-acme@kernel.org>
 References: <20190121235706.20005-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,63 +14,61 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-To reduce function arguments and the code.
+It's not needed and removing it makes the code a little simpler for the
+upcoming changes.
+
+It's safe to replace file_size with data_size, because the
+perf_data__size() value is never smaller than data_offset + data_size.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190110101301.6196-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190110101301.6196-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ tools/perf/util/session.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5456c84c7dd1..ad14192db811 100644
+index ad14192db811..c8c2069fb01e 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -1820,13 +1820,14 @@ fetch_mmaped_event(struct perf_session *session,
- #define NUM_MMAPS 128
- #endif
- 
--static int __perf_session__process_events(struct perf_session *session,
--					  u64 data_offset, u64 data_size,
--					  u64 file_size)
-+static int __perf_session__process_events(struct perf_session *session)
- {
+@@ -1825,7 +1825,6 @@ static int __perf_session__process_events(struct perf_session *session)
  	struct ordered_events *oe = &session->ordered_events;
  	struct perf_tool *tool = session->tool;
  	int fd = perf_data__fd(session->data);
-+	u64 file_size = perf_data__size(session->data);
-+	u64 data_offset = session->header.data_offset;
-+	u64 data_size = session->header.data_size;
+-	u64 file_size = perf_data__size(session->data);
+ 	u64 data_offset = session->header.data_offset;
+ 	u64 data_size = session->header.data_size;
  	u64 head, page_offset, file_offset, file_pos, size;
- 	int err, mmap_prot, mmap_flags, map_idx = 0;
- 	size_t	mmap_size;
-@@ -1944,20 +1945,13 @@ static int __perf_session__process_events(struct perf_session *session,
+@@ -1845,14 +1844,13 @@ static int __perf_session__process_events(struct perf_session *session)
+ 	if (data_size == 0)
+ 		goto out;
  
- int perf_session__process_events(struct perf_session *session)
- {
--	u64 size = perf_data__size(session->data);
--	int err;
--
- 	if (perf_session__register_idle_thread(session) < 0)
- 		return -ENOMEM;
+-	if (data_offset + data_size < file_size)
+-		file_size = data_offset + data_size;
++	ui_progress__init_size(&prog, data_size, "Processing events...");
  
--	if (!perf_data__is_pipe(session->data))
--		err = __perf_session__process_events(session,
--						     session->header.data_offset,
--						     session->header.data_size, size);
--	else
--		err = __perf_session__process_pipe_events(session);
-+	if (perf_data__is_pipe(session->data))
-+		return __perf_session__process_pipe_events(session);
+-	ui_progress__init_size(&prog, file_size, "Processing events...");
++	data_size += data_offset;
  
--	return err;
-+	return __perf_session__process_events(session);
- }
+ 	mmap_size = MMAP_SIZE;
+-	if (mmap_size > file_size) {
+-		mmap_size = file_size;
++	if (mmap_size > data_size) {
++		mmap_size = data_size;
+ 		session->one_mmap = true;
+ 	}
  
- bool perf_session__has_traces(struct perf_session *session, const char *msg)
+@@ -1917,7 +1915,7 @@ static int __perf_session__process_events(struct perf_session *session)
+ 	if (session_done())
+ 		goto out;
+ 
+-	if (file_pos < file_size)
++	if (file_pos < data_size)
+ 		goto more;
+ 
+ out:
 -- 
 2.20.1
