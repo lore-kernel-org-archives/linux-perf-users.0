@@ -1,483 +1,432 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCHv2 1/3] perf report: Display s390 diagnostic counter sets
-Date: Mon, 21 Jan 2019 16:17:26 -0300
-Message-ID: <20190121191726.GA20269@kernel.org>
-References: <20190117093003.96287-1-tmricht@linux.ibm.com>
- <20190117093003.96287-2-tmricht@linux.ibm.com>
- <20190117140053.GJ11922@kernel.org>
- <20190120181814.GB8591@krava>
- <20190121131336.GC3852@krava>
- <20190121141748.GC15707@kernel.org>
+Subject: [GIT PULL 00/24] perf/core improvements and fixes
+Date: Mon, 21 Jan 2019 20:56:42 -0300
+Message-ID: <20190121235706.20005-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190121141748.GC15707@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Brajeswar Ghosh <brajeswar.linux@gmail.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Song Liu <songliubraving@fb.com>, Thomas Richter <tmricht@linux.ibm.com>, YueHaibing <yuehaibing@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Jan 21, 2019 at 11:17:48AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Jan 21, 2019 at 02:13:36PM +0100, Jiri Olsa escreveu:
-> > On Sun, Jan 20, 2019 at 07:18:14PM +0100, Jiri Olsa wrote:
-> > > On Thu, Jan 17, 2019 at 11:00:53AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > 
-> > > SNIP
-> > > 
-> > > > --- a/tools/perf/util/python-ext-sources
-> > > > +++ b/tools/perf/util/python-ext-sources
-> > > > @@ -25,6 +25,7 @@ util/parse-branch-options.c
-> > > >  util/rblist.c
-> > > >  util/counts.c
-> > > >  util/print_binary.c
-> > > > +util/s390-sample-raw.c
-> > > >  util/strlist.c
-> > > >  util/trace-event.c
-> > > >  ../lib/rbtree.c
-> > > 
-> > > hi,
-> > > this change breaks the python module:
-> > > 
-> > >   >>> import perf
-> > >   Traceback (most recent call last):
-> > >     File "<stdin>", line 1, in <module>
-> > >   ImportError: ./perf.so: undefined symbol: color_fprintf
-> > > 
-> > > changelog doesn't say anything about python related change
-> > 
-> > I made some chenages and movedthat raw sample code
-> > under s390.. which cured the python module, but
-> > I haven't tested it on s390.
-> 
-> Nope, I explicitely asked him to build that code for all arches, as we
-> want to process s390 perf.data files on a x86 or arm or any other arch.
-> 
-> I stumbled on this as well, I think the way to go is to get the
-> color_fprintf bits in a separate object to avoid dragging more stuff to
-> the perf binding set of objects and then add that to the python binding.
+Hi Ingo,
 
-So I changed it so that the init is done in perf_session__new(), and
-session.c isn't linked into the python binding, so no need to drag the
-s390 specific stuff that drags pmu.c, color.c, etc into the python
-binding.
+	Please consider pulling,
 
-Should be equivalent to the previous patch, but without breaking the
-python binding,
+Regards,
 
 - Arnaldo
 
+Test results at the end of this message, as usual.
 
-commit a57dad3354e18f04d0ef198771954c24ad6aed49
-Author: Thomas Richter <tmricht@linux.ibm.com>
-Date:   Thu Jan 17 10:37:17 2019 -0300
+The following changes since commit ad07c8ceb6631a83b62d405a61448bba92adac68:
 
-    perf report: Display arch specific diagnostic counter sets, starting with s390
-    
-    On s390 the event bc000 (also named CF_DIAG) extracts the CPU
-    Measurement Facility diagnostic counter sets and displays them as
-    counter number and counter value pairs sorted by counter set number.
-    
-    Output:
-     [root@s35lp76 perf]# ./perf report -D --stdio
-    
-     [00000000] Counterset:0 Counters:6
-       Counter:000 Value:0x000000000085ec36 Counter:001 Value:0x0000000000796c94
-       Counter:002 Value:0x0000000000005ada Counter:003 Value:0x0000000000092460
-       Counter:004 Value:0x0000000000006073 Counter:005 Value:0x00000000001a9a73
-     [0x000038] Counterset:1 Counters:2
-       Counter:000 Value:0x000000000007c59f Counter:001 Value:0x000000000002fad6
-     [0x000050] Counterset:2 Counters:16
-       Counter:000 Value:000000000000000000 Counter:001 Value:000000000000000000
-       Counter:002 Value:000000000000000000 Counter:003 Value:000000000000000000
-       Counter:004 Value:000000000000000000 Counter:005 Value:000000000000000000
-       Counter:006 Value:000000000000000000 Counter:007 Value:000000000000000000
-       Counter:008 Value:000000000000000000 Counter:009 Value:000000000000000000
-       Counter:010 Value:000000000000000000 Counter:011 Value:000000000000000000
-       Counter:012 Value:000000000000000000 Counter:013 Value:000000000000000000
-       Counter:014 Value:000000000000000000 Counter:015 Value:000000000000000000
-     [0x0000d8] Counterset:3 Counters:128
-       Counter:000 Value:0x000000000000020f Counter:001 Value:0x00000000000001d8
-       Counter:002 Value:0x000000000000d7fa Counter:003 Value:0x000000000000008b
-       ...
-    
-    The number in brackets is the offset into the raw data field of the
-    sample.
-    
-    New functions trace_event_sample_raw__init() and s390_sample_raw() are
-    introduced in the code path to enable interpretation on non s390
-    platforms. This event bc000 attached raw data is generated only on s390
-    platform. Correct display on other platforms requires correct endianness
-    handling.
-    
-    Committer notes:
-    
-    Added a init function that sets up a evlist function pointer to avoid
-    repeated tests on evlist->env and calls to perf_env__name() that
-    involves normalizing, etc, for each PERF_RECORD_SAMPLE.
-    
-    Removed needless __maybe_unused from the trace_event_raw()
-    prototype in session.h, move it to be an static function in evlist.
-    
-    Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-    Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-    Link: https://lkml.kernel.org/r/9c856ac0-ef23-72b5-901d-a1f815508976@linux.ibm.com
-    Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-    Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-    Link: https://lkml.kernel.org/n/tip-fezal8svianlwv93rfacvtmi@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  perf/core: Remove unused perf_flags (2019-01-21 11:01:31 +0100)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index af72be7f5b3b..3ad6a800948d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -44,6 +44,8 @@ libperf-y += machine.o
- libperf-y += map.o
- libperf-y += pstack.o
- libperf-y += session.o
-+libperf-y += sample-raw.o
-+libperf-y += s390-sample-raw.o
- libperf-$(CONFIG_TRACE) += syscalltbl.o
- libperf-y += ordered-events.o
- libperf-y += namespaces.o
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 868294491194..00ab43c6dd15 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -49,6 +49,9 @@ struct perf_evlist {
- 	struct perf_evsel *selected;
- 	struct events_stats stats;
- 	struct perf_env	*env;
-+	void (*trace_event_sample_raw)(struct perf_evlist *evlist,
-+				       union perf_event *event,
-+				       struct perf_sample *sample);
- 	u64		first_sample_time;
- 	u64		last_sample_time;
- };
-@@ -314,5 +317,4 @@ void perf_evlist__force_leader(struct perf_evlist *evlist);
- 
- struct perf_evsel *perf_evlist__reset_weak_group(struct perf_evlist *evlist,
- 						 struct perf_evsel *evsel);
--
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/s390-cpumcf-kernel.h b/tools/perf/util/s390-cpumcf-kernel.h
-new file mode 100644
-index 000000000000..d4356030b504
---- /dev/null
-+++ b/tools/perf/util/s390-cpumcf-kernel.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Support for s390 CPU measurement counter set diagnostic facility
-+ *
-+ * Copyright IBM Corp. 2019
-+   Author(s): Hendrik Brueckner <brueckner@linux.ibm.com>
-+ *		Thomas Richter <tmricht@linux.ibm.com>
-+ */
-+#ifndef S390_CPUMCF_KERNEL_H
-+#define S390_CPUMCF_KERNEL_H
-+
-+#define	S390_CPUMCF_DIAG_DEF	0xfeef	/* Counter diagnostic entry ID */
-+#define	PERF_EVENT_CPUM_CF_DIAG	0xBC000	/* Event: Counter sets */
-+
-+struct cf_ctrset_entry {	/* CPU-M CF counter set entry (8 byte) */
-+	unsigned int def:16;	/* 0-15  Data Entry Format */
-+	unsigned int set:16;	/* 16-23 Counter set identifier */
-+	unsigned int ctr:16;	/* 24-39 Number of stored counters */
-+	unsigned int res1:16;	/* 40-63 Reserved */
-+};
-+
-+struct cf_trailer_entry {	/* CPU-M CF trailer for raw traces (64 byte) */
-+	/* 0 - 7 */
-+	union {
-+		struct {
-+			unsigned int clock_base:1;	/* TOD clock base */
-+			unsigned int speed:1;		/* CPU speed */
-+			/* Measurement alerts */
-+			unsigned int mtda:1;	/* Loss of MT ctr. data alert */
-+			unsigned int caca:1;	/* Counter auth. change alert */
-+			unsigned int lcda:1;	/* Loss of counter data alert */
-+		};
-+		unsigned long flags;		/* 0-63    All indicators */
-+	};
-+	/* 8 - 15 */
-+	unsigned int cfvn:16;			/* 64-79   Ctr First Version */
-+	unsigned int csvn:16;			/* 80-95   Ctr Second Version */
-+	unsigned int cpu_speed:32;		/* 96-127  CPU speed */
-+	/* 16 - 23 */
-+	unsigned long timestamp;		/* 128-191 Timestamp (TOD) */
-+	/* 24 - 55 */
-+	union {
-+		struct {
-+			unsigned long progusage1;
-+			unsigned long progusage2;
-+			unsigned long progusage3;
-+			unsigned long tod_base;
-+		};
-+		unsigned long progusage[4];
-+	};
-+	/* 56 - 63 */
-+	unsigned int mach_type:16;		/* Machine type */
-+	unsigned int res1:16;			/* Reserved */
-+	unsigned int res2:32;			/* Reserved */
-+};
-+
-+#define	CPUMF_CTR_SET_BASIC	0	/* Basic Counter Set */
-+#define	CPUMF_CTR_SET_USER	1	/* Problem-State Counter Set */
-+#define	CPUMF_CTR_SET_CRYPTO	2	/* Crypto-Activity Counter Set */
-+#define	CPUMF_CTR_SET_EXT	3	/* Extended Counter Set */
-+#define	CPUMF_CTR_SET_MT_DIAG	4	/* MT-diagnostic Counter Set */
-+#endif
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-new file mode 100644
-index 000000000000..7b4879625f01
---- /dev/null
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright IBM Corp. 2019
-+ * Author(s): Thomas Richter <tmricht@linux.ibm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License (version 2 only)
-+ * as published by the Free Software Foundation.
-+ *
-+ * Architecture specific trace_event function. Save event's bc000 raw data
-+ * to file. File name is aux.ctr.## where ## stands for the CPU number the
-+ * sample was taken from.
-+ */
-+
-+#include <unistd.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <inttypes.h>
-+
-+#include <sys/stat.h>
-+#include <asm/byteorder.h>
-+
-+#include "debug.h"
-+#include "util.h"
-+#include "auxtrace.h"
-+#include "session.h"
-+#include "evlist.h"
-+#include "config.h"
-+#include "color.h"
-+#include "sample-raw.h"
-+#include "s390-cpumcf-kernel.h"
-+
-+static size_t ctrset_size(struct cf_ctrset_entry *set)
-+{
-+	return sizeof(*set) + set->ctr * sizeof(u64);
-+}
-+
-+static bool ctrset_valid(struct cf_ctrset_entry *set)
-+{
-+	return set->def == S390_CPUMCF_DIAG_DEF;
-+}
-+
-+/* CPU Measurement Counter Facility raw data is a byte stream. It is 8 byte
-+ * aligned and might have trailing padding bytes.
-+ * Display the raw data on screen.
-+ */
-+static bool s390_cpumcfdg_testctr(struct perf_sample *sample)
-+{
-+	size_t len = sample->raw_size, offset = 0;
-+	unsigned char *buf = sample->raw_data;
-+	struct cf_trailer_entry *te;
-+	struct cf_ctrset_entry *cep, ce;
-+
-+	if (!len)
-+		return false;
-+	while (offset < len) {
-+		cep = (struct cf_ctrset_entry *)(buf + offset);
-+		ce.def = be16_to_cpu(cep->def);
-+		ce.set = be16_to_cpu(cep->set);
-+		ce.ctr = be16_to_cpu(cep->ctr);
-+		ce.res1 = be16_to_cpu(cep->res1);
-+
-+		if (!ctrset_valid(&ce) || offset + ctrset_size(&ce) > len) {
-+			/* Raw data for counter sets are always multiple of 8
-+			 * bytes. Prepending a 4 bytes size field to the
-+			 * raw data block in the sample causes the perf tool
-+			 * to append 4 padding bytes to make the raw data part
-+			 * of the sample a multiple of eight bytes again.
-+			 *
-+			 * If the last entry (trailer) is 4 bytes off the raw
-+			 * area data end, all is good.
-+			 */
-+			if (len - offset - sizeof(*te) == 4)
-+				break;
-+			pr_err("Invalid counter set entry at %#"  PRIx64 "\n",
-+			       offset);
-+			return false;
-+		}
-+		offset += ctrset_size(&ce);
-+	}
-+	return true;
-+}
-+
-+/* Dump event bc000 on screen, already tested on correctness. */
-+static void s390_cpumcfdg_dumptrail(const char *color, size_t offset,
-+				    struct cf_trailer_entry *tep)
-+{
-+	struct cf_trailer_entry  te;
-+
-+	te.flags = be64_to_cpu(tep->flags);
-+	te.cfvn = be16_to_cpu(tep->cfvn);
-+	te.csvn = be16_to_cpu(tep->csvn);
-+	te.cpu_speed = be32_to_cpu(tep->cpu_speed);
-+	te.timestamp = be64_to_cpu(tep->timestamp);
-+	te.progusage1 = be64_to_cpu(tep->progusage1);
-+	te.progusage2 = be64_to_cpu(tep->progusage2);
-+	te.progusage3 = be64_to_cpu(tep->progusage3);
-+	te.tod_base = be64_to_cpu(tep->tod_base);
-+	te.mach_type = be16_to_cpu(tep->mach_type);
-+	te.res1 = be16_to_cpu(tep->res1);
-+	te.res2 = be32_to_cpu(tep->res2);
-+
-+	color_fprintf(stdout, color, "    [%#08zx] Trailer:%c%c%c%c%c"
-+		      " Cfvn:%d Csvn:%d Speed:%d TOD:%#llx\n",
-+		      offset, te.clock_base ? 'T' : ' ',
-+		      te.speed ? 'S' : ' ', te.mtda ? 'M' : ' ',
-+		      te.caca ? 'C' : ' ', te.lcda ? 'L' : ' ',
-+		      te.cfvn, te.csvn, te.cpu_speed, te.timestamp);
-+	color_fprintf(stdout, color, "\t\t1:%lx 2:%lx 3:%lx TOD-Base:%#llx"
-+		      " Type:%x\n\n",
-+		      te.progusage1, te.progusage2, te.progusage3,
-+		      te.tod_base, te.mach_type);
-+}
-+
-+static void s390_cpumcfdg_dump(struct perf_sample *sample)
-+{
-+	size_t i, len = sample->raw_size, offset = 0;
-+	unsigned char *buf = sample->raw_data;
-+	const char *color = PERF_COLOR_BLUE;
-+	struct cf_ctrset_entry *cep, ce;
-+	u64 *p;
-+
-+	while (offset < len) {
-+		cep = (struct cf_ctrset_entry *)(buf + offset);
-+
-+		ce.def = be16_to_cpu(cep->def);
-+		ce.set = be16_to_cpu(cep->set);
-+		ce.ctr = be16_to_cpu(cep->ctr);
-+		ce.res1 = be16_to_cpu(cep->res1);
-+
-+		if (!ctrset_valid(&ce)) {	/* Print trailer */
-+			s390_cpumcfdg_dumptrail(color, offset,
-+						(struct cf_trailer_entry *)cep);
-+			return;
-+		}
-+
-+		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
-+			      " Counters:%d\n", offset, ce.set, ce.ctr);
-+		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; i += 2, p += 2)
-+			color_fprintf(stdout, color,
-+				      "\tCounter:%03d Value:%#018lx"
-+				      " Counter:%03d Value:%#018lx\n",
-+				      i, be64_to_cpu(*p),
-+				      i + 1, be64_to_cpu(*(p + 1)));
-+		offset += ctrset_size(&ce);
-+	}
-+}
-+
-+/* S390 specific trace event function. Check for PERF_RECORD_SAMPLE events
-+ * and if the event was triggered by a counter set diagnostic event display
-+ * its raw data.
-+ * The function is only invoked when the dump flag -D is set.
-+ */
-+void perf_evlist__s390_sample_raw(struct perf_evlist *evlist, union perf_event *event,
-+				  struct perf_sample *sample)
-+{
-+	struct perf_evsel *ev_bc000;
-+
-+	if (event->header.type != PERF_RECORD_SAMPLE)
-+		return;
-+
-+	ev_bc000 = perf_evlist__event2evsel(evlist, event);
-+	if (ev_bc000 == NULL ||
-+	    ev_bc000->attr.config != PERF_EVENT_CPUM_CF_DIAG)
-+		return;
-+
-+	/* Display raw data on screen */
-+	if (!s390_cpumcfdg_testctr(sample)) {
-+		pr_err("Invalid counter set data encountered\n");
-+		return;
-+	}
-+	s390_cpumcfdg_dump(sample);
-+}
-diff --git a/tools/perf/util/sample-raw.c b/tools/perf/util/sample-raw.c
-new file mode 100644
-index 000000000000..c21e1311fb0f
---- /dev/null
-+++ b/tools/perf/util/sample-raw.c
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <string.h>
-+#include "evlist.h"
-+#include "env.h"
-+#include "sample-raw.h"
-+
-+/*
-+ * Check platform the perf data file was created on and perform platform
-+ * specific interpretation.
-+ */
-+void perf_evlist__init_trace_event_sample_raw(struct perf_evlist *evlist)
-+{
-+	const char *arch_pf = perf_env__arch(evlist->env);
-+
-+	if (arch_pf && !strcmp("s390", arch_pf))
-+		evlist->trace_event_sample_raw = perf_evlist__s390_sample_raw;
-+}
-diff --git a/tools/perf/util/sample-raw.h b/tools/perf/util/sample-raw.h
-new file mode 100644
-index 000000000000..95d445c87e93
---- /dev/null
-+++ b/tools/perf/util/sample-raw.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __SAMPLE_RAW_H
-+#define __SAMPLE_RAW_H 1
-+
-+struct perf_evlist;
-+union perf_event;
-+struct perf_sample;
-+
-+void perf_evlist__s390_sample_raw(struct perf_evlist *evlist,
-+				  union perf_event *event,
-+				  struct perf_sample *sample);
-+
-+void perf_evlist__init_trace_event_sample_raw(struct perf_evlist *evlist);
-+#endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d6f41611f504..b26bc9c54200 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -23,6 +23,7 @@
- #include "auxtrace.h"
- #include "thread.h"
- #include "thread-stack.h"
-+#include "sample-raw.h"
- #include "stat.h"
- #include "arch/common.h"
- 
-@@ -147,6 +148,8 @@ struct perf_session *perf_session__new(struct perf_data *data,
- 				perf_session__set_id_hdr_size(session);
- 				perf_session__set_comm_exec(session);
- 			}
-+
-+			perf_evlist__init_trace_event_sample_raw(session->evlist);
- 		}
- 	} else  {
- 		session->machines.host.env = &perf_env;
-@@ -1065,6 +1068,8 @@ static void dump_event(struct perf_evlist *evlist, union perf_event *event,
- 	       file_offset, event->header.size, event->header.type);
- 
- 	trace_event(event);
-+	if (event->header.type == PERF_RECORD_SAMPLE && evlist->trace_event_sample_raw)
-+		evlist->trace_event_sample_raw(evlist, event, sample);
- 
- 	if (sample)
- 		perf_evlist__print_tstamp(evlist, event, sample);
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.0-20190121
+
+for you to fetch changes up to 32e9136e37840a62c659259a394ed3735e3b3c84:
+
+  perf utils: Move perf_config using routines from color.c to separate object (2019-01-21 17:38:56 -0300)
+
+----------------------------------------------------------------
+perf/core improvements and fixes:
+
+BPF:
+
+  Song Liu:
+
+  - Introduce PERF_RECORD_KSYMBOL to allow tooling to notice the addition
+    of new kernel symbols and be able to resolve samples in such symbols.
+
+  - Introduce PERF_RECORD_BPF_EVENT to notify tooling about the loading
+    and unloading of BPF programs, making them visible and allowing for
+    the request of further information to allow for things like annotation.
+
+  - Change the userspace perf tools to handle those new events and to
+    synthesize them for pre-existing loaded BPF programs.
+
+Kernel:
+
+  Arnaldo Carvalho de Melo:
+
+  - Make perf_event_output() propagate the output() return, allowing
+    users to check for -ENOSPC in the ring buffer.
+
+perf report:
+
+  Thomas Richter:
+
+  - Display arch specific diagnostic counter sets, starting with s390
+    diagnostic counter sets.
+
+perf session:
+
+  Jiri Olsa:
+
+  - Introduce a reader object to prep for multithreaded processing
+    of recorded events.
+
+Misc:
+
+  Rasmus Villemoes:
+
+  - Replace automatic const char[] variables by statics, to avoid
+    initializing them at runtime, instead having them in .rodata,
+    reducing code size.
+
+  YueHaibing:
+
+  - Remove duplicated workqueue.h include from perf_event.h
+
+  Brajeswar Ghosh:
+
+  - Remove some more duplicated headers.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (4):
+      perf: Make perf_event_output() propagate the output() return
+      perf top: Synthesize BPF events for pre-existing loaded BPF programs
+      perf python: Remove -fstack-clash-protection when building with some clang versions
+      perf utils: Move perf_config using routines from color.c to separate object
+
+Brajeswar Ghosh (1):
+      perf tools: Remove duplicate headers
+
+Jiri Olsa (6):
+      perf session: Rearrange perf_session__process_events function
+      perf session: Get rid of file_size variable
+      perf session: Add reader object
+      perf session: Add 'data_size' member to reader object
+      perf session: Add 'data_offset' member to reader object
+      perf session: Add reader__process_events function
+
+Rasmus Villemoes (1):
+      perf tools: Replace automatic const char[] variables by statics
+
+Song Liu (8):
+      perf, bpf: Introduce PERF_RECORD_KSYMBOL
+      tools headers uapi: Sync tools/include/uapi/linux/perf_event.h
+      perf, bpf: Introduce PERF_RECORD_BPF_EVENT
+      tools headers uapi: Sync tools/include/uapi/linux/perf_event.h
+      perf tools: Handle PERF_RECORD_KSYMBOL
+      perf tools: Handle PERF_RECORD_BPF_EVENT
+      perf tools: Synthesize PERF_RECORD_* for loaded BPF programs
+      bpf: Add module name [bpf] to ksymbols for bpf programs
+
+Thomas Richter (3):
+      perf report: Display arch specific diagnostic counter sets, starting with s390
+      perf report: Display names in s390 diagnostic counter sets
+      perf report: Dump s390 counter set data to file
+
+YueHaibing (1):
+      perf: Remove duplicated workqueue.h include from perf_event.h
+
+ include/linux/filter.h                           |   7 +
+ include/linux/perf_event.h                       |  21 +-
+ include/uapi/linux/perf_event.h                  |  53 ++++-
+ kernel/bpf/core.c                                |   2 +-
+ kernel/bpf/syscall.c                             |   2 +
+ kernel/events/core.c                             | 224 +++++++++++++++++++-
+ kernel/kallsyms.c                                |   2 +-
+ kernel/trace/bpf_trace.c                         |   3 +-
+ tools/include/uapi/linux/perf_event.h            |  53 ++++-
+ tools/perf/builtin-c2c.c                         |   4 +-
+ tools/perf/builtin-kmem.c                        |   4 +-
+ tools/perf/builtin-record.c                      |   7 +
+ tools/perf/builtin-report.c                      |   6 +-
+ tools/perf/builtin-sched.c                       |   2 +-
+ tools/perf/builtin-stat.c                        |   1 -
+ tools/perf/builtin-top.c                         |   7 +
+ tools/perf/examples/bpf/augmented_raw_syscalls.c |   4 +-
+ tools/perf/examples/bpf/augmented_syscalls.c     |  14 +-
+ tools/perf/examples/bpf/etcsnoop.c               |  10 +-
+ tools/perf/perf.h                                |   1 +
+ tools/perf/tests/bp_account.c                    |   1 -
+ tools/perf/ui/browsers/header.c                  |   2 +-
+ tools/perf/ui/browsers/hists.c                   |   4 +-
+ tools/perf/util/Build                            |   5 +
+ tools/perf/util/bpf-event.c                      | 257 +++++++++++++++++++++++
+ tools/perf/util/bpf-event.h                      |  38 ++++
+ tools/perf/util/color.c                          |  39 ----
+ tools/perf/util/color_config.c                   |  47 +++++
+ tools/perf/util/dso.h                            |   1 -
+ tools/perf/util/event.c                          |  41 ++++
+ tools/perf/util/event.h                          |  36 ++++
+ tools/perf/util/evlist.h                         |   4 +-
+ tools/perf/util/evsel.c                          |  19 +-
+ tools/perf/util/evsel.h                          |   2 +
+ tools/perf/util/machine.c                        |  58 +++++
+ tools/perf/util/machine.h                        |   3 +
+ tools/perf/util/s390-cpumcf-kernel.h             |  62 ++++++
+ tools/perf/util/s390-cpumsf.c                    |  77 ++++++-
+ tools/perf/util/s390-sample-raw.c                | 222 ++++++++++++++++++++
+ tools/perf/util/sample-raw.c                     |  18 ++
+ tools/perf/util/sample-raw.h                     |  14 ++
+ tools/perf/util/session.c                        |  98 ++++++---
+ tools/perf/util/setup.py                         |   2 +
+ tools/perf/util/tool.h                           |   5 +-
+ tools/perf/util/zlib.c                           |   1 -
+ 45 files changed, 1358 insertions(+), 125 deletions(-)
+ create mode 100644 tools/perf/util/bpf-event.c
+ create mode 100644 tools/perf/util/bpf-event.h
+ create mode 100644 tools/perf/util/color_config.c
+ create mode 100644 tools/perf/util/s390-cpumcf-kernel.h
+ create mode 100644 tools/perf/util/s390-sample-raw.c
+ create mode 100644 tools/perf/util/sample-raw.c
+ create mode 100644 tools/perf/util/sample-raw.h
+
+Test results:
+
+The first ones are container based builds of tools/perf with and without libelf
+support.  Where clang is available, it is also used to build perf with/without
+libelf, and building with LIBCLANGLLVM=1 (built-in clang) with gcc and clang
+when clang and its devel libraries are installed.
+
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
+
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+  $ dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6 alpine:edge                   : Ok   gcc (Alpine 8.2.0) 8.2.0
+   7 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+   8 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
+   9 android-ndk:r12b-arm          : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  10 android-ndk:r15c-arm          : Ok   gcc (GCC) 8.2.1 20181215 (Red Hat 8.2.1-6)
+  11 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  12 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  13 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-36)
+  14 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 8.2.1 20180502
+  15 debian:7                      : Ok   gcc (Debian 4.7.2-5) 4.7.2
+  16 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u2) 4.9.2
+  17 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+  18 debian:experimental           : Ok   gcc (Debian 8.2.0-13) 8.2.0
+  19 debian:experimental-x-arm64   : Ok   gcc (Debian 8.2.0-13) 8.2.0
+  20 debian:experimental-x-mips    : Ok   gcc (Debian 8.2.0-13) 8.2.0
+  21 debian:experimental-x-mips64  : Ok   gcc (Debian 8.2.0-13) 8.2.0
+  22 debian:experimental-x-mipsel  : Ok   gcc (Debian 8.2.0-13) 8.2.0
+  23 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  24 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  25 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  26 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  27 fedora:24-x-ARC-uClibc        : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  28 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1)
+  29 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2)
+  30 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6)
+  31 fedora:28                     : Ok   gcc (GCC) 8.2.1 20181105 (Red Hat 8.2.1-5)
+  32 fedora:29                     : Ok   gcc (GCC) 8.2.1 20181105 (Red Hat 8.2.1-5)
+  33 fedora:rawhide                : Ok   gcc (GCC) 8.2.1 20190109 (Red Hat 8.2.1-7)
+  34 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 7.3.0-r3 p1.4) 7.3.0
+  35 mageia:5                      : Ok   gcc (GCC) 4.9.2
+  36 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0
+  37 opensuse:13.2                 : Ok   gcc (SUSE Linux) 4.8.3 20140627 [gcc-4_8-branch revision 212064]
+  38 opensuse:15.0                 : Ok   gcc (SUSE Linux) 7.3.1 20180323 [gcc-7-branch revision 258812]
+  39 opensuse:42.1                 : Ok   gcc (SUSE Linux) 4.8.5
+  40 opensuse:42.2                 : Ok   gcc (SUSE Linux) 4.8.5
+  41 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5
+  42 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 8.2.1 20181108 [gcc-8-branch revision 265914]
+  43 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1)
+  44 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-36.0.1)
+  45 ubuntu:12.04.5                : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+  46 ubuntu:14.04.4                : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4
+  47 ubuntu:14.04.4-x-linaro-arm64 : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4
+  48 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  49 ubuntu:16.04-x-arm            : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  50 ubuntu:16.04-x-arm64          : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  51 ubuntu:16.04-x-powerpc        : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  52 ubuntu:16.04-x-powerpc64      : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  53 ubuntu:16.04-x-powerpc64el    : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  54 ubuntu:16.04-x-s390           : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+  55 ubuntu:17.10                  : Ok   gcc (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
+  56 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  57 ubuntu:18.04-x-arm            : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  58 ubuntu:18.04-x-arm64          : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  59 ubuntu:18.04-x-m68k           : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  60 ubuntu:18.04-x-powerpc        : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  61 ubuntu:18.04-x-powerpc64      : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  62 ubuntu:18.04-x-powerpc64el    : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  63 ubuntu:18.04-x-riscv64        : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  64 ubuntu:18.04-x-s390           : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  65 ubuntu:18.04-x-sh4            : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  66 ubuntu:18.04-x-sparc64        : Ok   gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+  67 ubuntu:18.10                  : Ok   gcc (Ubuntu 8.2.0-7ubuntu1) 8.2.0
+  68 ubuntu:19.04                  : Ok   gcc (Ubuntu 8.2.0-12ubuntu1) 8.2.0
+  69 ubuntu:19.04-x-alpha          : Ok   gcc (Ubuntu 8.2.0-12ubuntu1) 8.2.0
+  70 ubuntu:19.04-x-hppa           : Ok   gcc (Ubuntu 8.2.0-12ubuntu1) 8.2.0
+  $
+
+  # uname -a
+  Linux quaco 5.0.0-rc3+ #16 SMP Mon Jan 21 12:01:36 -03 2019 x86_64 x86_64 x86_64 GNU/Linux
+  # git log --oneline -1
+  32e9136e3784 perf utils: Move perf_config using routines from color.c to separate object
+  # perf version --build-options
+  perf version 5.0.rc2.g32e9136
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: DSO data read                                         : Ok
+  11: DSO data cache                                        : Ok
+  12: DSO data reopen                                       : Ok
+  13: Roundtrip evsel->name                                 : Ok
+  14: Parse sched tracepoints fields                        : Ok
+  15: syscalls:sys_enter_openat event fields                : Ok
+  16: Setup struct perf_event_attr                          : Ok
+  17: Match and link multiple hists                         : Ok
+  18: 'import perf' in python                               : Ok
+  19: Breakpoint overflow signal handler                    : Ok
+  20: Breakpoint overflow sampling                          : Ok
+  21: Breakpoint accounting                                 : Ok
+  22: Watchpoint                                            :
+  22.1: Read Only Watchpoint                                : Skip
+  22.2: Write Only Watchpoint                               : Ok
+  22.3: Read / Write Watchpoint                             : Ok
+  22.4: Modify Watchpoint                                   : Ok
+  23: Number of exit events of a simple workload            : Ok
+  24: Software clock events period values                   : Ok
+  25: Object code reading                                   : Ok
+  26: Sample parsing                                        : Ok
+  27: Use a dummy software event to keep tracking           : Ok
+  28: Parse with no sample_id_all bit set                   : Ok
+  29: Filter hist entries                                   : Ok
+  30: Lookup mmap thread                                    : Ok
+  31: Share thread mg                                       : Ok
+  32: Sort output of hist entries                           : Ok
+  33: Cumulate child hist entries                           : Ok
+  34: Track with sched_switch                               : Ok
+  35: Filter fds with revents mask in a fdarray             : Ok
+  36: Add fd to a fdarray, making it autogrow               : Ok
+  37: kmod_path__parse                                      : Ok
+  38: Thread map                                            : Ok
+  39: LLVM search and compile                               :
+  39.1: Basic BPF llvm compile                              : Ok
+  39.2: kbuild searching                                    : Ok
+  39.3: Compile source for BPF prologue generation          : Ok
+  39.4: Compile source for BPF relocation                   : Ok
+  40: Session topology                                      : Ok
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Ok
+  41.2: BPF pinning                                         : Ok
+  41.3: BPF prologue generation                             : Ok
+  41.4: BPF relocation checker                              : Ok
+  42: Synthesize thread map                                 : Ok
+  43: Remove thread map                                     : Ok
+  44: Synthesize cpu map                                    : Ok
+  45: Synthesize stat config                                : Ok
+  46: Synthesize stat                                       : Ok
+  47: Synthesize stat round                                 : Ok
+  48: Synthesize attr update                                : Ok
+  49: Event times                                           : Ok
+  50: Read backward ring buffer                             : Ok
+  51: Print cpu map                                         : Ok
+  52: Probe SDT events                                      : Ok
+  53: is_printable_array                                    : Ok
+  54: Print bitmap                                          : Ok
+  55: perf hooks                                            : Ok
+  56: builtin clang support                                 : Skip (not compiled in)
+  57: unit_number__scnprintf                                : Ok
+  58: mem2node                                              : Ok
+  59: x86 rdpmc                                             : Ok
+  60: Convert perf time to TSC                              : Ok
+  61: DWARF unwind                                          : Ok
+  62: x86 instruction decoder - new instructions            : Ok
+  63: x86 bp modify                                         : Ok
+  64: probe libc's inet_pton & backtrace it with ping       : Ok
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+
+  $ make -C tools/perf build-test
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+                    make_doc_O: make doc
+            make_no_demangle_O: make NO_DEMANGLE=1
+                make_no_gtk2_O: make NO_GTK2=1
+              make_clean_all_O: make clean all
+                make_install_O: make install
+           make_no_libpython_O: make NO_LIBPYTHON=1
+                   make_help_O: make help
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+               make_no_slang_O: make NO_SLANG=1
+                  make_debug_O: make DEBUG=1
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+           make_no_backtrace_O: make NO_BACKTRACE=1
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+              make_no_libbpf_O: make NO_LIBBPF=1
+            make_install_bin_O: make install-bin
+             make_no_libnuma_O: make NO_LIBNUMA=1
+                   make_pure_O: make
+              make_no_libelf_O: make NO_LIBELF=1
+                 make_static_O: make LDFLAGS=-static
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+         make_install_prefix_O: make install prefix=/tmp/krava
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+             make_util_map_o_O: make util/map.o
+                 make_perf_o_O: make perf.o
+             make_no_libperl_O: make NO_LIBPERL=1
+                 make_cscope_O: make cscope
+                make_no_newt_O: make NO_NEWT=1
+                   make_tags_O: make tags
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $
