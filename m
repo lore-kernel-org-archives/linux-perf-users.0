@@ -1,78 +1,50 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCHv2 1/3] perf report: Display s390 diagnostic counter sets
-Date: Mon, 21 Jan 2019 19:34:37 +0100
-Message-ID: <20190121183437.GB11396@krava>
-References: <20190117093003.96287-1-tmricht@linux.ibm.com>
- <20190117093003.96287-2-tmricht@linux.ibm.com>
- <20190117140053.GJ11922@kernel.org>
- <20190120181814.GB8591@krava>
- <20190121131336.GC3852@krava>
- <20190121141748.GC15707@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 4/7] perf python: Remove -fstack-clash-protection when building with some clang versions
+Date: Mon, 21 Jan 2019 15:35:04 -0300
+Message-ID: <20190121183507.23490-5-acme@kernel.org>
+References: <20190121183507.23490-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190121141748.GC15707@kernel.org>
+In-Reply-To: <20190121183507.23490-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Eduardo Habkost <ehabkost@redhat.com>, Thiago Macieira <thiago.macieira@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Jan 21, 2019 at 11:17:48AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jan 21, 2019 at 02:13:36PM +0100, Jiri Olsa escreveu:
-> > On Sun, Jan 20, 2019 at 07:18:14PM +0100, Jiri Olsa wrote:
-> > > On Thu, Jan 17, 2019 at 11:00:53AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > 
-> > > SNIP
-> > > 
-> > > > --- a/tools/perf/util/python-ext-sources
-> > > > +++ b/tools/perf/util/python-ext-sources
-> > > > @@ -25,6 +25,7 @@ util/parse-branch-options.c
-> > > >  util/rblist.c
-> > > >  util/counts.c
-> > > >  util/print_binary.c
-> > > > +util/s390-sample-raw.c
-> > > >  util/strlist.c
-> > > >  util/trace-event.c
-> > > >  ../lib/rbtree.c
-> > > 
-> > > hi,
-> > > this change breaks the python module:
-> > > 
-> > >   >>> import perf
-> > >   Traceback (most recent call last):
-> > >     File "<stdin>", line 1, in <module>
-> > >   ImportError: ./perf.so: undefined symbol: color_fprintf
-> > > 
-> > > changelog doesn't say anything about python related change
-> > 
-> > I made some chenages and movedthat raw sample code
-> > under s390.. which cured the python module, but
-> > I haven't tested it on s390.
-> 
-> Nope, I explicitely asked him to build that code for all arches, as we
-> want to process s390 perf.data files on a x86 or arm or any other arch.
-> 
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-aah, so this actualy works over the s390 perf archive data on x86 host?
+These options are not present in some (all?) clang versions, so when we
+build for a distro that has a gcc new enough to have these options and
+that the distro python build config settings use them but clang doesn't
+support, b00m.
 
-I missed that in the original conversation, sry for noise
+This is the case with fedora rawhide (now gearing towards f30), so check
+if clang has the  and remove the missing ones from CFLAGS.
 
-jirka
+Cc: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Thiago Macieira <thiago.macieira@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-5q50q9w458yawgxf9ez54jbp@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> I stumbled on this as well, I think the way to go is to get the
-> color_fprintf bits in a separate object to avoid dragging more stuff to
-> the perf binding set of objects and then add that to the python binding.
->  
-> > Could you please check if code in here works for you:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   perf/s390
-> > 
-> > if it works, I'll post it
-> > 
-> > thanks,
-> > jirka
-> 
-> -- 
-> 
-> - Arnaldo
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 63f758c655d5..64d1f36dee99 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -17,6 +17,8 @@ if cc == "clang":
+             vars[var] = sub("-mcet", "", vars[var])
+         if not clang_has_option("-fcf-protection"):
+             vars[var] = sub("-fcf-protection", "", vars[var])
++        if not clang_has_option("-fstack-clash-protection"):
++            vars[var] = sub("-fstack-clash-protection", "", vars[var])
+ 
+ from distutils.core import setup, Extension
+ 
+-- 
+2.20.1
