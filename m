@@ -1,16 +1,16 @@
 From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 00/24] perf/core improvements and fixes
-Date: Tue, 22 Jan 2019 11:07:54 +0100
-Message-ID: <20190122100754.GA113758@gmail.com>
-References: <20190121235706.20005-1-acme@kernel.org>
+Subject: Re: [GIT PULL 0/7] perf/urgent fixes
+Date: Tue, 22 Jan 2019 12:30:08 +0100
+Message-ID: <20190122113008.GB113758@gmail.com>
+References: <20190121183507.23490-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190121235706.20005-1-acme@kernel.org>
+In-Reply-To: <20190121183507.23490-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Brajeswar Ghosh <brajeswar.linux@gmail.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Song Liu <songliubraving@fb.com>, Thomas Richter <tmricht@linux.ibm.com>, YueHaibing <yuehaibing@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, He Kuang <hekuang@huawei.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Song Liu <liu.song.a23@gmail.com>, Stephane Eranian <eranian@google.com>, Tony Jones <tonyj@suse.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 
@@ -26,166 +26,90 @@ List-Id: linux-perf-users.vger.kernel.org
 > 
 > Test results at the end of this message, as usual.
 > 
-> The following changes since commit ad07c8ceb6631a83b62d405a61448bba92adac68:
+> The following changes since commit 4e72ee8872279a70ebe973172133b98e8acbf54e:
 > 
->   perf/core: Remove unused perf_flags (2019-01-21 11:01:31 +0100)
+>   Merge tag 'perf-core-for-mingo-5.0-20190110' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-01-11 08:12:09 +0100)
 > 
 > are available in the Git repository at:
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.0-20190121
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.0-20190121
 > 
-> for you to fetch changes up to 32e9136e37840a62c659259a394ed3735e3b3c84:
+> for you to fetch changes up to 8bf8c6da53c2265aea365a1de6038f118f522113:
 > 
->   perf utils: Move perf_config using routines from color.c to separate object (2019-01-21 17:38:56 -0300)
+>   perf script: Fix crash when processing recorded stat data (2019-01-21 11:29:07 -0300)
 > 
 > ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> BPF:
-> 
->   Song Liu:
-> 
->   - Introduce PERF_RECORD_KSYMBOL to allow tooling to notice the addition
->     of new kernel symbols and be able to resolve samples in such symbols.
-> 
->   - Introduce PERF_RECORD_BPF_EVENT to notify tooling about the loading
->     and unloading of BPF programs, making them visible and allowing for
->     the request of further information to allow for things like annotation.
-> 
->   - Change the userspace perf tools to handle those new events and to
->     synthesize them for pre-existing loaded BPF programs.
+> perf/urgent fixes:
 > 
 > Kernel:
 > 
+>   Stephane Eranian:
+> 
+>   - Fix perf_proc_update_handler() bug.
+> 
+> perf script:
+> 
+>   Andi Kleen:
+> 
+>   - Fix crash with printing mixed trace point and other events.
+> 
+>   Tony Jones:
+> 
+>   - Fix crash when processing recorded stat data.
+> 
+> perf top:
+> 
+>   He Kuang:
+> 
+>   - Fix wrong hottest instruction highlighted.
+> 
+> perf python:
+> 
 >   Arnaldo Carvalho de Melo:
 > 
->   - Make perf_event_output() propagate the output() return, allowing
->     users to check for -ENOSPC in the ring buffer.
+>   - Remove -fstack-clash-protection when building with some clang versions.
 > 
-> perf report:
-> 
->   Thomas Richter:
-> 
->   - Display arch specific diagnostic counter sets, starting with s390
->     diagnostic counter sets.
-> 
-> perf session:
+> perf ordered_events:
 > 
 >   Jiri Olsa:
 > 
->   - Introduce a reader object to prep for multithreaded processing
->     of recorded events.
+>   - Fix out of buffers crash in ordered_events__free().
 > 
-> Misc:
+> perf cpu_map:
 > 
->   Rasmus Villemoes:
+>   Stephane Eranian:
 > 
->   - Replace automatic const char[] variables by statics, to avoid
->     initializing them at runtime, instead having them in .rodata,
->     reducing code size.
-> 
->   YueHaibing:
-> 
->   - Remove duplicated workqueue.h include from perf_event.h
-> 
->   Brajeswar Ghosh:
-> 
->   - Remove some more duplicated headers.
+>   - Handle TOPOLOGY headers with no CPU.
 > 
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
 > ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (4):
->       perf: Make perf_event_output() propagate the output() return
->       perf top: Synthesize BPF events for pre-existing loaded BPF programs
+> Andi Kleen (1):
+>       perf script: Fix crash with printing mixed trace point and other events
+> 
+> Arnaldo Carvalho de Melo (1):
 >       perf python: Remove -fstack-clash-protection when building with some clang versions
->       perf utils: Move perf_config using routines from color.c to separate object
 > 
-> Brajeswar Ghosh (1):
->       perf tools: Remove duplicate headers
+> He Kuang (1):
+>       perf top: Fix wrong hottest instruction highlighted
 > 
-> Jiri Olsa (6):
->       perf session: Rearrange perf_session__process_events function
->       perf session: Get rid of file_size variable
->       perf session: Add reader object
->       perf session: Add 'data_size' member to reader object
->       perf session: Add 'data_offset' member to reader object
->       perf session: Add reader__process_events function
+> Jiri Olsa (1):
+>       perf ordered_events: Fix crash in ordered_events__free
 > 
-> Rasmus Villemoes (1):
->       perf tools: Replace automatic const char[] variables by statics
+> Stephane Eranian (2):
+>       perf core: Fix perf_proc_update_handler() bug
+>       perf tools: Handle TOPOLOGY headers with no CPU
 > 
-> Song Liu (8):
->       perf, bpf: Introduce PERF_RECORD_KSYMBOL
->       tools headers uapi: Sync tools/include/uapi/linux/perf_event.h
->       perf, bpf: Introduce PERF_RECORD_BPF_EVENT
->       tools headers uapi: Sync tools/include/uapi/linux/perf_event.h
->       perf tools: Handle PERF_RECORD_KSYMBOL
->       perf tools: Handle PERF_RECORD_BPF_EVENT
->       perf tools: Synthesize PERF_RECORD_* for loaded BPF programs
->       bpf: Add module name [bpf] to ksymbols for bpf programs
+> Tony Jones (1):
+>       perf script: Fix crash when processing recorded stat data
 > 
-> Thomas Richter (3):
->       perf report: Display arch specific diagnostic counter sets, starting with s390
->       perf report: Display names in s390 diagnostic counter sets
->       perf report: Dump s390 counter set data to file
-> 
-> YueHaibing (1):
->       perf: Remove duplicated workqueue.h include from perf_event.h
-> 
->  include/linux/filter.h                           |   7 +
->  include/linux/perf_event.h                       |  21 +-
->  include/uapi/linux/perf_event.h                  |  53 ++++-
->  kernel/bpf/core.c                                |   2 +-
->  kernel/bpf/syscall.c                             |   2 +
->  kernel/events/core.c                             | 224 +++++++++++++++++++-
->  kernel/kallsyms.c                                |   2 +-
->  kernel/trace/bpf_trace.c                         |   3 +-
->  tools/include/uapi/linux/perf_event.h            |  53 ++++-
->  tools/perf/builtin-c2c.c                         |   4 +-
->  tools/perf/builtin-kmem.c                        |   4 +-
->  tools/perf/builtin-record.c                      |   7 +
->  tools/perf/builtin-report.c                      |   6 +-
->  tools/perf/builtin-sched.c                       |   2 +-
->  tools/perf/builtin-stat.c                        |   1 -
->  tools/perf/builtin-top.c                         |   7 +
->  tools/perf/examples/bpf/augmented_raw_syscalls.c |   4 +-
->  tools/perf/examples/bpf/augmented_syscalls.c     |  14 +-
->  tools/perf/examples/bpf/etcsnoop.c               |  10 +-
->  tools/perf/perf.h                                |   1 +
->  tools/perf/tests/bp_account.c                    |   1 -
->  tools/perf/ui/browsers/header.c                  |   2 +-
->  tools/perf/ui/browsers/hists.c                   |   4 +-
->  tools/perf/util/Build                            |   5 +
->  tools/perf/util/bpf-event.c                      | 257 +++++++++++++++++++++++
->  tools/perf/util/bpf-event.h                      |  38 ++++
->  tools/perf/util/color.c                          |  39 ----
->  tools/perf/util/color_config.c                   |  47 +++++
->  tools/perf/util/dso.h                            |   1 -
->  tools/perf/util/event.c                          |  41 ++++
->  tools/perf/util/event.h                          |  36 ++++
->  tools/perf/util/evlist.h                         |   4 +-
->  tools/perf/util/evsel.c                          |  19 +-
->  tools/perf/util/evsel.h                          |   2 +
->  tools/perf/util/machine.c                        |  58 +++++
->  tools/perf/util/machine.h                        |   3 +
->  tools/perf/util/s390-cpumcf-kernel.h             |  62 ++++++
->  tools/perf/util/s390-cpumsf.c                    |  77 ++++++-
->  tools/perf/util/s390-sample-raw.c                | 222 ++++++++++++++++++++
->  tools/perf/util/sample-raw.c                     |  18 ++
->  tools/perf/util/sample-raw.h                     |  14 ++
->  tools/perf/util/session.c                        |  98 ++++++---
->  tools/perf/util/setup.py                         |   2 +
->  tools/perf/util/tool.h                           |   5 +-
->  tools/perf/util/zlib.c                           |   1 -
->  45 files changed, 1358 insertions(+), 125 deletions(-)
->  create mode 100644 tools/perf/util/bpf-event.c
->  create mode 100644 tools/perf/util/bpf-event.h
->  create mode 100644 tools/perf/util/color_config.c
->  create mode 100644 tools/perf/util/s390-cpumcf-kernel.h
->  create mode 100644 tools/perf/util/s390-sample-raw.c
->  create mode 100644 tools/perf/util/sample-raw.c
->  create mode 100644 tools/perf/util/sample-raw.h
+>  kernel/events/core.c              | 14 +++++++-------
+>  tools/perf/builtin-script.c       |  9 +++------
+>  tools/perf/ui/browsers/annotate.c | 16 ++++++++++------
+>  tools/perf/util/cpumap.c          | 11 +++++++++--
+>  tools/perf/util/ordered-events.c  |  6 ++++--
+>  tools/perf/util/setup.py          |  2 ++
+>  6 files changed, 35 insertions(+), 23 deletions(-)
 
 Pulled, thanks a lot Arnaldo!
 
