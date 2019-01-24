@@ -1,144 +1,59 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH 6/6] perf script python: add Python3 support to tests/attr.py
-Date: Wed, 23 Jan 2019 16:52:29 -0800
-Message-ID: <20190124005229.16146-7-tonyj@suse.de>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 0/6] Fix issues with Python3 scripting
+Date: Thu, 24 Jan 2019 11:39:22 +0100
+Message-ID: <20190124103922.GB13852@krava>
 References: <20190124005229.16146-1-tonyj@suse.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20190124005229.16146-1-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@redhat.com>
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-kernel@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python 2 and Python 3 in tests/attr.py
+On Wed, Jan 23, 2019 at 04:52:23PM -0800, Tony Jones wrote:
+> Seeteena posted, earlier this week, some patches to add Python3 support
+> to scripts/python/*.py.  Unfortunately there were some issues with these
+> patches (such as: https://lkml.org/lkml/2019/1/17/351)
+> 
+> Since I already had a tested set of patches in openSUSE:Factory and 
+> SLE15-SP1 and was about to submit them, Seeteena and I that agreed I 
+> should post my patches not involving scripts/python/*.py and Seeteena 
+> will later resubmit the patches for scripts/python/*.py incorporating 
+> my review feedback under a joint signed-off-by.
+> 
+> It should be noted that the use of "from __future__ import print_function" 
+> (see: https://lkml.org/lkml/2019/1/16/641) and "except as" (see change to:
+> tests/attr.py) implies Python2 >= 2.6 as the necessary support has not 
+> been backported to prior versions.  I am not sure if it's worth detecting 
+> <2.6 at build time or whether it's sufficiently old as to be a non-issue?
+> 
+> The shebang changes were driven mostly by our build process as it scans
+> all files within an rpm and the shebangs would result in a rpm requires
+> on the python2 binary when BuildRequires was python3-devel. I think they 
+> make sense to apply upstream but understand totally if it's prefered we 
+> keep them local.
+> 
+> These changes have been tested with PYTHON=python2 (v2.7) and 
+> PYTHON=python3 (v3.6) on latest openSUSE Tumbleweed.  I did notice that 
 
-The use of "except as" syntax implies the minimum supported Python2 version is
-now v2.6
+please try latest code from Arnaldo, we just had fix in that area
 
-Signed-off-By: Tony Jones <tonyj@suse.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
----
- tools/perf/tests/attr.py | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+> test #18 "'import perf' in python" is failing on my system without these 
+> changes. I'll look at it further but didn't want to hold up Seeteena's 
+> resubmit.
+> 
+> Tony Jones (6):
+>   perf script python: Add trace_context extension module to sys,modules
+>   perf script python: Use PyBytes for attr in trace-event-python
+>   perf script python: remove explicit shebang from setup.py
+>   perf script python: remove explicit shebang from tests/attr.c
+>   perf script python: remove explicit shebang from Python scripts
+>   perf script python: add Python3 support to tests/attr.py
 
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index 3e07eee33b10..cb39ac46bc73 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+from __future__ import print_function
-+
- import os
- import sys
- import glob
-@@ -7,7 +9,11 @@ import optparse
- import tempfile
- import logging
- import shutil
--import ConfigParser
-+
-+try:
-+    import configparser
-+except ImportError:
-+    import ConfigParser as configparser
- 
- def data_equal(a, b):
-     # Allow multiple values in assignment separated by '|'
-@@ -99,20 +105,20 @@ class Event(dict):
-     def equal(self, other):
-         for t in Event.terms:
-             log.debug("      [%s] %s %s" % (t, self[t], other[t]));
--            if not self.has_key(t) or not other.has_key(t):
-+            if t not in self or t not in other:
-                 return False
-             if not data_equal(self[t], other[t]):
-                 return False
-         return True
- 
-     def optional(self):
--        if self.has_key('optional') and self['optional'] == '1':
-+        if 'optional' in self and self['optional'] == '1':
-             return True
-         return False
- 
-     def diff(self, other):
-         for t in Event.terms:
--            if not self.has_key(t) or not other.has_key(t):
-+            if t not in self or t not in other:
-                 continue
-             if not data_equal(self[t], other[t]):
-                 log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
-@@ -133,7 +139,7 @@ class Event(dict):
- #   - expected values assignments
- class Test(object):
-     def __init__(self, path, options):
--        parser = ConfigParser.SafeConfigParser()
-+        parser = configparser.SafeConfigParser()
-         parser.read(path)
- 
-         log.warning("running '%s'" % path)
-@@ -192,7 +198,7 @@ class Test(object):
-         return True
- 
-     def load_events(self, path, events):
--        parser_event = ConfigParser.SafeConfigParser()
-+        parser_event = configparser.SafeConfigParser()
-         parser_event.read(path)
- 
-         # The event record section header contains 'event' word,
-@@ -206,7 +212,7 @@ class Test(object):
-             # Read parent event if there's any
-             if (':' in section):
-                 base = section[section.index(':') + 1:]
--                parser_base = ConfigParser.SafeConfigParser()
-+                parser_base = configparser.SafeConfigParser()
-                 parser_base.read(self.test_dir + '/' + base)
-                 base_items = parser_base.items('event')
- 
-@@ -321,9 +327,9 @@ def run_tests(options):
-     for f in glob.glob(options.test_dir + '/' + options.test):
-         try:
-             Test(f, options).run()
--        except Unsup, obj:
-+        except Unsup as obj:
-             log.warning("unsupp  %s" % obj.getMsg())
--        except Notest, obj:
-+        except Notest as obj:
-             log.warning("skipped %s" % obj.getMsg())
- 
- def setup_log(verbose):
-@@ -362,7 +368,7 @@ def main():
-     parser.add_option("-p", "--perf",
-                       action="store", type="string", dest="perf")
-     parser.add_option("-v", "--verbose",
--                      action="count", dest="verbose")
-+                      default=0, action="count", dest="verbose")
- 
-     options, args = parser.parse_args()
-     if args:
-@@ -372,7 +378,7 @@ def main():
-     setup_log(options.verbose)
- 
-     if not options.test_dir:
--        print 'FAILED no -d option specified'
-+        print('FAILED no -d option specified')
-         sys.exit(-1)
- 
-     if not options.test:
-@@ -381,8 +387,8 @@ def main():
-     try:
-         run_tests(options)
- 
--    except Fail, obj:
--        print "FAILED %s" % obj.getMsg();
-+    except Fail as obj:
-+        print("FAILED %s" % obj.getMsg())
-         sys.exit(-1)
- 
-     sys.exit(0)
--- 
-2.20.1
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
