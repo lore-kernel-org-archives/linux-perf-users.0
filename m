@@ -1,76 +1,60 @@
-From: Vineet Gupta <vineet.gupta1@synopsys.com>
-Subject: Semantics of symbol address in perf report -v
-Date: Wed, 23 Jan 2019 11:55:49 -0800
-Message-ID: <da403654-f21d-9959-067f-b76581600741@synopsys.com>
+From: Tony Jones <tonyj@suse.de>
+Subject: [PATCH 0/6] Fix issues with Python3 scripting
+Date: Wed, 23 Jan 2019 16:52:23 -0800
+Message-ID: <20190124005229.16146-1-tonyj@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, arcml <linux-snps-arc@lists.infradead.org>, Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
+Seeteena posted, earlier this week, some patches to add Python3 support
+to scripts/python/*.py.  Unfortunately there were some issues with these
+patches (such as: https://lkml.org/lkml/2019/1/17/351)
 
-I noticed a small anomaly in perf report -v output on ARC and x86 as well.
+Since I already had a tested set of patches in openSUSE:Factory and 
+SLE15-SP1 and was about to submit them, Seeteena and I that agreed I 
+should post my patches not involving scripts/python/*.py and Seeteena 
+will later resubmit the patches for scripts/python/*.py incorporating 
+my review feedback under a joint signed-off-by.
 
-A simple program which sits in tight loop, compiled for x86_64
+It should be noted that the use of "from __future__ import print_function" 
+(see: https://lkml.org/lkml/2019/1/16/641) and "except as" (see change to:
+tests/attr.py) implies Python2 >= 2.6 as the necessary support has not 
+been backported to prior versions.  I am not sure if it's worth detecting 
+<2.6 at build time or whether it's sufficiently old as to be a non-issue?
 
-void main() { while(1) {} }
+The shebang changes were driven mostly by our build process as it scans
+all files within an rpm and the shebangs would result in a rpm requires
+on the python2 binary when BuildRequires was python3-devel. I think they 
+make sense to apply upstream but understand totally if it's prefered we 
+keep them local.
 
-$ gcc -g tight.c
-$ ./a.out &
-$ perf record -e cycles -p 26703
-$ perf report -n -v  --stdio  | egrep "(main|Symbol)"
+These changes have been tested with PYTHON=python2 (v2.7) and 
+PYTHON=python3 (v3.6) on latest openSUSE Tumbleweed.  I did notice that 
+test #18 "'import perf' in python" is failing on my system without these 
+changes. I'll look at it further but didn't want to hold up Seeteena's 
+resubmit.
 
-|# Overhead Samples Command  Shared Object         Symbol
+Tony Jones (6):
+  perf script python: Add trace_context extension module to sys,modules
+  perf script python: Use PyBytes for attr in trace-event-python
+  perf script python: remove explicit shebang from setup.py
+  perf script python: remove explicit shebang from tests/attr.c
+  perf script python: remove explicit shebang from Python scripts
+  perf script python: add Python3 support to tests/attr.py
 
-|  99.93%    55753   a.out   /home/arc/test/a.out  0x4da     B [.] main
+ tools/perf/Makefile.perf                      |  4 +--
+ .../scripts/python/exported-sql-viewer.py     |  1 -
+ tools/perf/scripts/python/sched-migration.py  |  2 --
+ tools/perf/scripts/python/stat-cpi.py         |  1 -
+ tools/perf/tests/attr.py                      | 33 +++++++++++--------
+ .../scripting-engines/trace-event-python.c    |  9 ++---
+ tools/perf/util/setup.py                      |  2 --
+ 7 files changed, 26 insertions(+), 26 deletions(-)
 
-|                                                  ^^^^^
-
-The printer address for Symbols is *not* the actual address in elf, but rather VMA
-start offset.
-
-0x4da = 0x4004da - 0x0000000000400000
-
-$ objdump -d ./a.out
-
-| 00000000004004d6 <main>:
-|  4004d6:	55                   	push   %rbp
-|  4004d7:	48 89 e5             	mov    %rsp,%rbp
-|  4004da:	eb fe                	jmp    4004da <main+0x4>
-|  4004dc:	0f 1f 40 00          	nopl   0x0(%rax)
-
-$ readelf -a ./a.out
-
-| Program Headers:
-|  Type           Offset             VirtAddr           PhysAddr
-|                 FileSiz            MemSiz              Flags  Align
-| Program Headers:
-|  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
-                 0x000000000000068c 0x000000000000068c  R E    200000
-
-
-This is problematic in narrowing down the hotspot instruction, when the binary
-itself is. One needs to do the offset addition manually to find the actual hotspot
-location.
-
-|   99.79%  100064  a.out  /home/arc/test/a.out  0x4da  B [.] 0x00000000000004da
-
-                                                               ^^^^^^^^^^^^^^^^
-
-Is this considered an issue ? Would the fix to print the actual symbol address
-(and recorded in raw perf event data) break some existing tooling etc.
-
--Vineet
+-- 
+2.20.1
