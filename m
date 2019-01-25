@@ -1,55 +1,45 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/29] perf bpf: Convert pid_map() to bpf_map()
-Date: Sat, 26 Jan 2019 00:18:39 +0100
-Message-ID: <20190125231843.2895-26-acme@kernel.org>
+Subject: [PATCH 20/29] perf script python: Remove explicit shebang from setup.py
+Date: Sat, 26 Jan 2019 00:18:34 +0100
+Message-ID: <20190125231843.2895-21-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125231843.2895-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Yonghong Song <yhs@fb.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Tony Jones <tonyj@suse.de>
 
-First user, pid_t as the type, lets see how this goes with the BTF
-routines.
+Makefile.perf invokes setup.py via an explicit invocation of python
+(PYTHON_WORD) so there is therefore no need for an explicit shebang.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-56eplvf86r69wt3p35nh805z@git.kernel.org
+Also most distros follow pep-0394 which recommends that /usr/bin/python
+refer only to v2 and so may not exist on the system (if PYTHON=python3).
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190124005229.16146-4-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ tools/perf/util/setup.py | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index 0482028c1d11..5df7ed9d9020 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -34,13 +34,7 @@ struct bpf_map SEC("maps") name = {				\
-  *	  For the current need, 'perf trace --filter-pids', 64 should
-  *	  be good enough, but this surely needs to be revisited.
-  */
--#define pid_map(name, value_type)		\
--struct bpf_map SEC("maps") name = {		\
--	.type	     = BPF_MAP_TYPE_HASH,	\
--	.key_size    = sizeof(pid_t),		\
--	.value_size  = sizeof(value_type),	\
--	.max_entries = 64,			\
--}
-+#define pid_map(name, value_type) bpf_map(name, HASH, pid_t, value_type, 64)
- 
- static int (*bpf_map_update_elem)(struct bpf_map *map, void *key, void *value, u64 flags) = (void *)BPF_FUNC_map_update_elem;
- static void *(*bpf_map_lookup_elem)(struct bpf_map *map, void *key) = (void *)BPF_FUNC_map_lookup_elem;
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 64d1f36dee99..d3ffc18424b5 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -1,5 +1,3 @@
+-#!/usr/bin/python
+-
+ from os import getenv
+ from subprocess import Popen, PIPE
+ from re import sub
 -- 
 2.20.1
