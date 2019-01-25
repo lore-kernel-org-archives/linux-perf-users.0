@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/29] perf script python: Add trace_context extension module to sys.modules
-Date: Sat, 26 Jan 2019 00:18:32 +0100
-Message-ID: <20190125231843.2895-19-acme@kernel.org>
+Subject: [PATCH 19/29] perf script python: Use PyBytes for attr in trace-event-python
+Date: Sat, 26 Jan 2019 00:18:33 +0100
+Message-ID: <20190125231843.2895-20-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,35 +15,25 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tony Jones <tonyj@suse.de>
 
-In Python3, the result of PyModule_Create (called from
-scripts/python/Perf-Trace-Util/Context.c) is not automatically added to
-sys.modules.  See: https://bugs.python.org/issue4592
+With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
+return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
 
-Below is the observed behavior without the fix:
+Below is the observed behavior without the fix.  Note it is first necessary
+to apply the prior fix (Add trace_context extension module to sys,modules):
 
   # ldd /usr/bin/perf | grep -i python
-	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
+          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
 
-  # perf record /bin/false
+  # perf record -e raw_syscalls:sys_enter /bin/false
   [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.015 MB perf.data (17 samples) ]
+  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
 
   # perf script -g python | cat
   generated Python script: perf-script.py
 
   # perf script -s ./perf-script.py
-  Traceback (most recent call last):
-    File "./perf-script.py", line 18, in <module>
-      from perf_trace_context import *
-  ModuleNotFoundError: No module named 'perf_trace_context'
-  Error running python script ./perf-script.py
-  #
-
-Committer notes:
-
-To build with python3 use:
-
-  $ make -C tools/perf PYTHON=python3
+  in trace_begin
+  Segmentation fault (core dumped)
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -53,51 +43,25 @@ Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20190124005229.16146-2-tonyj@suse.de
+Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/scripting-engines/trace-event-python.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 87ef16a1b17e..40300d8e80a7 100644
+index 40300d8e80a7..777c97b13905 100644
 --- a/tools/perf/util/scripting-engines/trace-event-python.c
 +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1494,6 +1494,7 @@ static void _free_command_line(wchar_t **command_line, int num)
- static int python_start_script(const char *script, int argc, const char **argv)
- {
- 	struct tables *tables = &tables_global;
-+	PyMODINIT_FUNC (*initfunc)(void);
- #if PY_MAJOR_VERSION < 3
- 	const char **command_line;
- #else
-@@ -1504,24 +1505,25 @@ static int python_start_script(const char *script, int argc, const char **argv)
- 	FILE *fp;
+@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 		Py_FatalError("couldn't create Python dictionary");
  
- #if PY_MAJOR_VERSION < 3
-+	initfunc = initperf_trace_context;
- 	command_line = malloc((argc + 1) * sizeof(const char *));
- 	command_line[0] = script;
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = argv[i - 1];
- #else
-+	initfunc = PyInit_perf_trace_context;
- 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
- 	command_line[0] = Py_DecodeLocale(script, NULL);
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
- #endif
+ 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
+-	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
+-			(const char *)&evsel->attr, sizeof(evsel->attr)));
++	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
  
-+	PyImport_AppendInittab("perf_trace_context", initfunc);
- 	Py_Initialize();
- 
- #if PY_MAJOR_VERSION < 3
--	initperf_trace_context();
- 	PySys_SetArgv(argc + 1, (char **)command_line);
- #else
--	PyInit_perf_trace_context();
- 	PySys_SetArgv(argc + 1, command_line);
- #endif
- 
+ 	pydict_set_item_string_decref(dict_sample, "pid",
+ 			_PyLong_FromLong(sample->pid));
 -- 
 2.20.1
