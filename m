@@ -1,67 +1,86 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/29] perf script python: Use PyBytes for attr in trace-event-python
-Date: Sat, 26 Jan 2019 00:18:33 +0100
-Message-ID: <20190125231843.2895-20-acme@kernel.org>
+Subject: [PATCH 22/29] perf script python: Remove explicit shebang from Python scripts
+Date: Sat, 26 Jan 2019 00:18:36 +0100
+Message-ID: <20190125231843.2895-23-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125231843.2895-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Frederic Weisbecker <fweisbec@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Tony Jones <tonyj@suse.de>
 
-With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
-return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
+The scripts in scripts/python are intended to be run from 'perf script'
+and the Python version used is dictated by how perf was built (PYTHON=).
 
-Below is the observed behavior without the fix.  Note it is first necessary
-to apply the prior fix (Add trace_context extension module to sys,modules):
+Also most distros follow pep-0394 which recommends that /usr/bin/python
+refer to Python2 and so may not exist on the system (if PYTHON=python3).
 
-  # ldd /usr/bin/perf | grep -i python
-          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
-
-  # perf record -e raw_syscalls:sys_enter /bin/false
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
-
-  # perf script -g python | cat
-  generated Python script: perf-script.py
-
-  # perf script -s ./perf-script.py
-  in trace_begin
-  Segmentation fault (core dumped)
+- Remove the explicit shebang
+- Install the scripts as mode 644
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jaroslav Škarvada <jskarvad@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
+Link: http://lkml.kernel.org/r/20190124005229.16146-6-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/Makefile.perf                         | 4 ++--
+ tools/perf/scripts/python/exported-sql-viewer.py | 1 -
+ tools/perf/scripts/python/sched-migration.py     | 2 --
+ tools/perf/scripts/python/stat-cpi.py            | 1 -
+ 4 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 40300d8e80a7..777c97b13905 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 		Py_FatalError("couldn't create Python dictionary");
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 0ee6795d82cc..09df1c8a4ec9 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -863,8 +863,8 @@ ifndef NO_LIBPYTHON
+ 	$(call QUIET_INSTALL, python-scripts) \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python/Perf-Trace-Util/lib/Perf/Trace'; \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python/bin'; \
+-		$(INSTALL) scripts/python/Perf-Trace-Util/lib/Perf/Trace/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python/Perf-Trace-Util/lib/Perf/Trace'; \
+-		$(INSTALL) scripts/python/*.py -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python'; \
++		$(INSTALL) scripts/python/Perf-Trace-Util/lib/Perf/Trace/* -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python/Perf-Trace-Util/lib/Perf/Trace'; \
++		$(INSTALL) scripts/python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python'; \
+ 		$(INSTALL) scripts/python/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python/bin'
+ endif
+ 	$(call QUIET_INSTALL, perf_completion-script) \
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index f278ce5ebab7..c3091401df91 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/python2
+ # SPDX-License-Identifier: GPL-2.0
+ # exported-sql-viewer.py: view data from sql database
+ # Copyright (c) 2014-2018, Intel Corporation.
+diff --git a/tools/perf/scripts/python/sched-migration.py b/tools/perf/scripts/python/sched-migration.py
+index 3473e7f66081..3984bf51f3c5 100644
+--- a/tools/perf/scripts/python/sched-migration.py
++++ b/tools/perf/scripts/python/sched-migration.py
+@@ -1,5 +1,3 @@
+-#!/usr/bin/python
+-#
+ # Cpu task migration overview toy
+ #
+ # Copyright (C) 2010 Frederic Weisbecker <fweisbec@gmail.com>
+diff --git a/tools/perf/scripts/python/stat-cpi.py b/tools/perf/scripts/python/stat-cpi.py
+index 8410672efb8b..a81ad8835a74 100644
+--- a/tools/perf/scripts/python/stat-cpi.py
++++ b/tools/perf/scripts/python/stat-cpi.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ # SPDX-License-Identifier: GPL-2.0
  
- 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
--	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
--			(const char *)&evsel->attr, sizeof(evsel->attr)));
-+	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
- 
- 	pydict_set_item_string_decref(dict_sample, "pid",
- 			_PyLong_FromLong(sample->pid));
+ data    = {}
 -- 
 2.20.1
