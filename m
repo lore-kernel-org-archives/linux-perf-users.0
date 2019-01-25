@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/29] perf tools: Move branch structs to branch.h
-Date: Sat, 26 Jan 2019 00:18:17 +0100
-Message-ID: <20190125231843.2895-4-acme@kernel.org>
+Subject: [PATCH 04/29] perf block-range: Add missing headers
+Date: Sat, 26 Jan 2019 00:18:18 +0100
+Message-ID: <20190125231843.2895-5-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,109 +14,49 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We already have it, move those there from events.h so that we untangle
-the header dependencies a bit more.
+Some are being obtained indirectly and as we prune unnecessary includes,
+this stops working, fix it by adding the headers for things used in
+these file.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-pnbkqo8jxbi49d4f3yd3b5w3@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1p65lyeebc2ose0lbozvemda@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/branch.h | 27 ++++++++++++++++++++++++---
- tools/perf/util/event.h  | 21 +--------------------
- tools/perf/util/symbol.h |  1 +
- 3 files changed, 26 insertions(+), 23 deletions(-)
+ tools/perf/util/block-range.c | 2 ++
+ tools/perf/util/block-range.h | 6 +++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-index 1e3c7c5cdc63..64f96b79f1d7 100644
---- a/tools/perf/util/branch.h
-+++ b/tools/perf/util/branch.h
-@@ -1,8 +1,31 @@
- #ifndef _PERF_BRANCH_H
- #define _PERF_BRANCH_H 1
+diff --git a/tools/perf/util/block-range.c b/tools/perf/util/block-range.c
+index f1451c987eec..1be432657501 100644
+--- a/tools/perf/util/block-range.c
++++ b/tools/perf/util/block-range.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "block-range.h"
+ #include "annotate.h"
++#include <assert.h>
++#include <stdlib.h>
  
-+#include <stdio.h>
- #include <stdint.h>
--#include "../perf.h"
-+#include <linux/perf_event.h>
+ struct {
+ 	struct rb_root root;
+diff --git a/tools/perf/util/block-range.h b/tools/perf/util/block-range.h
+index a5ba719d69fb..ec0fb534bf56 100644
+--- a/tools/perf/util/block-range.h
++++ b/tools/perf/util/block-range.h
+@@ -2,7 +2,11 @@
+ #ifndef __PERF_BLOCK_RANGE_H
+ #define __PERF_BLOCK_RANGE_H
+ 
+-#include "symbol.h"
++#include <stdbool.h>
++#include <linux/rbtree.h>
 +#include <linux/types.h>
 +
-+struct branch_flags {
-+	u64 mispred:1;
-+	u64 predicted:1;
-+	u64 in_tx:1;
-+	u64 abort:1;
-+	u64 cycles:16;
-+	u64 type:4;
-+	u64 reserved:40;
-+};
-+
-+struct branch_entry {
-+	u64			from;
-+	u64			to;
-+	struct branch_flags	flags;
-+};
-+
-+struct branch_stack {
-+	u64			nr;
-+	struct branch_entry	entries[0];
-+};
++struct symbol;
  
- struct branch_type_stat {
- 	bool	branch_to;
-@@ -13,8 +36,6 @@ struct branch_type_stat {
- 	u64	cross_2m;
- };
- 
--struct branch_flags;
--
- void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
- 		       u64 from, u64 to);
- 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index dad32b81fe71..feba1aa819b4 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -161,26 +161,7 @@ struct ip_callchain {
- 	u64 ips[0];
- };
- 
--struct branch_flags {
--	u64 mispred:1;
--	u64 predicted:1;
--	u64 in_tx:1;
--	u64 abort:1;
--	u64 cycles:16;
--	u64 type:4;
--	u64 reserved:40;
--};
--
--struct branch_entry {
--	u64			from;
--	u64			to;
--	struct branch_flags	flags;
--};
--
--struct branch_stack {
--	u64			nr;
--	struct branch_entry	entries[0];
--};
-+struct branch_stack;
- 
- enum {
- 	PERF_IP_FLAG_BRANCH		= 1ULL << 0,
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 277841e3dbd1..956d9916e364 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -12,6 +12,7 @@
- #include <stdio.h>
- #include <byteswap.h>
- #include <libgen.h>
-+#include "branch.h"
- #include "build-id.h"
- #include "event.h"
- #include "path.h"
+ /*
+  * struct block_range - non-overlapping parts of basic blocks
 -- 
 2.20.1
