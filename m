@@ -1,66 +1,75 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
-Date: Fri, 25 Jan 2019 08:00:56 -0800
-Message-ID: <20190125160056.GG6118@tassilo.jf.intel.com>
-References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
+From: Tony Jones <tonyj@suse.de>
+Subject: Re: [PATCH 0/6] Fix issues with Python3 scripting
+Date: Fri, 25 Jan 2019 10:09:43 -0800
+Message-ID: <f1547448-7e1a-c322-5b71-a37f4ddb2910@suse.de>
+References: <20190124005229.16146-1-tonyj@suse.de>
+ <20190125123119.GD12077@kernel.org> <20190125135730.GE12077@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
+In-Reply-To: <20190125135730.GE12077@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-> [Fri Jan 25 10:28:53 2019] perf: interrupt took too long (2501 > 2500), lowering kernel.perf_event_max_sample_rate to 79750
-> [Fri Jan 25 10:29:08 2019] perf: interrupt took too long (3136 > 3126), lowering kernel.perf_event_max_sample_rate to 63750
-> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (4140 > 3920), lowering kernel.perf_event_max_sample_rate to 48250
-> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (5231 > 5175), lowering kernel.perf_event_max_sample_rate to 38000
-> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (6736 > 6538), lowering kernel.perf_event_max_sample_rate to 29500
+On 1/25/19 5:57 AM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 25, 2019 at 01:31:19PM +0100, Arnaldo Carvalho de Melo escreveu:
+>> Em Wed, Jan 23, 2019 at 04:52:23PM -0800, Tony Jones escreveu:
+>>> Seeteena posted, earlier this week, some patches to add Python3 support
+>>> to scripts/python/*.py.  Unfortunately there were some issues with these
+>>> patches (such as: https://lkml.org/lkml/2019/1/17/351)
+>>>
+>>> Since I already had a tested set of patches in openSUSE:Factory and 
+>>> SLE15-SP1 and was about to submit them, Seeteena and I that agreed I 
+>>> should post my patches not involving scripts/python/*.py and Seeteena 
+>>> will later resubmit the patches for scripts/python/*.py incorporating 
+>>> my review feedback under a joint signed-off-by.
+>>>
+>>> It should be noted that the use of "from __future__ import print_function" 
+>>> (see: https://lkml.org/lkml/2019/1/16/641) and "except as" (see change to:
+>>> tests/attr.py) implies Python2 >= 2.6 as the necessary support has not 
+>>> been backported to prior versions.  I am not sure if it's worth detecting 
+>>> <2.6 at build time or whether it's sufficiently old as to be a non-issue?
+>>>
+>>> The shebang changes were driven mostly by our build process as it scans
+>>> all files within an rpm and the shebangs would result in a rpm requires
+>>> on the python2 binary when BuildRequires was python3-devel. I think they 
+>>> make sense to apply upstream but understand totally if it's prefered we 
+>>> keep them local.
+>>>
+>>> These changes have been tested with PYTHON=python2 (v2.7) and 
+>>> PYTHON=python3 (v3.6) on latest openSUSE Tumbleweed.  I did notice that 
+>>> test #18 "'import perf' in python" is failing on my system without these 
+>>> changes. I'll look at it further but didn't want to hold up Seeteena's 
+>>> resubmit.
+>>
+>> So it fails on AmazonLinux 1, that has python 2.6, please check if this
+>> is something we can workaround, if its difficult, I'll just use
+>> NO_PYTHON=1 there to disable it.
 
-These are fairly normal.
+Sorry about this.  I'll be sure to test more broadly next time.
 
-> [Fri Jan 25 10:32:44 2019] ------------[ cut here ]------------
-> [Fri Jan 25 10:32:44 2019] perfevents: irq loop stuck!
+>>
+>>   CC       /tmp/build/perf/util/parse-branch-options.o
+>> util/scripting-engines/trace-event-python.c: In function 'python_start_script':
+>> util/scripting-engines/trace-event-python.c:1520:2: error: passing argument 1 of 'PyImport_AppendInittab' discards 'const' qualifier from pointer target type [-Werror]
+>>   PyImport_AppendInittab("perf_trace_context", initfunc);
+>>   ^
+>> In file included from /usr/include/python2.6/Python.h:130:0,
+>>                  from util/scripting-engines/trace-event-python.c:22:
+>> /usr/include/python2.6/import.h:54:17: note: expected 'char *' but argument is of type 'const char *'
+>>  PyAPI_FUNC(int) PyImport_AppendInittab(char *name, void (*initfunc)(void));
+>>                  ^
+>> cc1: all warnings being treated as errors
+>> mv: cannot stat '/tmp/build/perf/util/scripting-engines/.trace-event-python.o.tmp': No such file or directory
+>> make[5]: *** [/tmp/build/perf/util/scripting-engines/trace-event-python.o] Error 1
+> 
+> I did a quick hack to init an auto variable with that const string and
+> then pass it, is passing everything so far:
 
-I believe it's always possible to cause an irq loop. This happens when
-the PMU is programmed to cause PMIs on multiple counters 
-too quickly. Maybe should just recover from it without printing such
-scary messages.
+I see that you already amended in cc4376422552
 
-Right now the scary message is justified because it resets the complete
-PMU. Perhaps need to be a bit more selective resetting on only
-the events that loop.
-
-> [Fri Jan 25 10:32:44 2019] WARNING: CPU: 1 PID: 0 at arch/x86/events/intel/core.c:2440 intel_pmu_handle_irq+0x158/0x170
-
-This looks independent.
-
-I would apply the following patch (cut'n'pasted, so may need manual apply) 
-and then run with
-
-cd /sys/kernel/debug/tracing
-echo 50000 > buffer_size_kb
-echo default_do_nmi > set_graph_function 
-echo 1 > events/msr/enable 
-echo 'msr != 0xc0000100 && msr != 0x6e0' > events/msr/write_msr/filter
-echo function_graph > current_tracer 
-echo printk:traceoff > set_ftrace_filter
-echo 1 > tracing_on
-
-and then collect the trace from /sys/kernel/debug/tracing/trace
-after the oops.  This should show the context of when it happens.
-
-diff --git a/kernel/events/Makefile b/kernel/events/Makefile
-index 3c022e33c109..8afc997110e0 100644
---- a/kernel/events/Makefile
-+++ b/kernel/events/Makefile
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
--endif
- 
- obj-y := core.o ring_buffer.o callchain.o
- 
+Thanks!
