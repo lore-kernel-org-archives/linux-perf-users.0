@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/29] perf bpf: Add bpf_map() helper
-Date: Sat, 26 Jan 2019 00:18:38 +0100
-Message-ID: <20190125231843.2895-25-acme@kernel.org>
+Subject: [PATCH 25/29] perf bpf: Convert pid_map() to bpf_map()
+Date: Sat, 26 Jan 2019 00:18:39 +0100
+Message-ID: <20190125231843.2895-26-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,12 +15,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To make the declaration of maps more compact, the following patches will
-make use of it.
-
-Standardizing on it will allow to add the BTF details, i.e.
-BPF_ANNOTATE_KV_PAIR() (tools/testing/selftests/bpf/bpf_helpers.h)
-transparently.
+First user, pid_t as the type, lets see how this goes with the BTF
+routines.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
@@ -30,30 +26,30 @@ Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
 Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-h3q9rxxkbzetgnbro5rclqft@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-56eplvf86r69wt3p35nh805z@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/include/bpf/bpf.h | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index e667577207dc..0482028c1d11 100644
+index 0482028c1d11..5df7ed9d9020 100644
 --- a/tools/perf/include/bpf/bpf.h
 +++ b/tools/perf/include/bpf/bpf.h
-@@ -18,6 +18,14 @@ struct bpf_map {
-         unsigned int numa_node;
- };
+@@ -34,13 +34,7 @@ struct bpf_map SEC("maps") name = {				\
+  *	  For the current need, 'perf trace --filter-pids', 64 should
+  *	  be good enough, but this surely needs to be revisited.
+  */
+-#define pid_map(name, value_type)		\
+-struct bpf_map SEC("maps") name = {		\
+-	.type	     = BPF_MAP_TYPE_HASH,	\
+-	.key_size    = sizeof(pid_t),		\
+-	.value_size  = sizeof(value_type),	\
+-	.max_entries = 64,			\
+-}
++#define pid_map(name, value_type) bpf_map(name, HASH, pid_t, value_type, 64)
  
-+#define bpf_map(name, _type, type_key, type_val, _max_entries)	\
-+struct bpf_map SEC("maps") name = {				\
-+	.type	     = BPF_MAP_TYPE_##_type,			\
-+	.key_size    = sizeof(type_key),			\
-+	.value_size  = sizeof(type_val),			\
-+	.max_entries = _max_entries,				\
-+}
-+
- /*
-  * FIXME: this should receive .max_entries as a parameter, as careful
-  *	  tuning of these limits is needed to avoid hitting limits that
+ static int (*bpf_map_update_elem)(struct bpf_map *map, void *key, void *value, u64 flags) = (void *)BPF_FUNC_map_update_elem;
+ static void *(*bpf_map_lookup_elem)(struct bpf_map *map, void *key) = (void *)BPF_FUNC_map_lookup_elem;
 -- 
 2.20.1
