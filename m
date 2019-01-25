@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/29] perf symbols: Remove some unnecessary includes from symbol.h
-Date: Sat, 26 Jan 2019 00:18:20 +0100
-Message-ID: <20190125231843.2895-7-acme@kernel.org>
+Subject: [PATCH 08/29] perf comm: Remove needless headers from comm.h
+Date: Sat, 26 Jan 2019 00:18:22 +0100
+Message-ID: <20190125231843.2895-9-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,75 +14,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-And fixup the fallout in places like annotation and jitdump that were
-using things like dirname() but weren't including libgen.h, etc.
+There we don't need rbtree, only in comm.c, also ditch perf.h, not
+needed at all.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-7ji9igrauh6ylt3p6i03bjlf@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-vr1jnwwujh99skrgldtimpmu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c |  1 +
- tools/perf/util/jitdump.c  |  1 +
- tools/perf/util/symbol.h   | 10 ++++------
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/util/comm.c | 1 +
+ tools/perf/util/comm.h | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 70de8f6b3aee..3d79add5f7ae 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -9,6 +9,7 @@
- 
- #include <errno.h>
- #include <inttypes.h>
-+#include <libgen.h>
- #include "util.h"
- #include "ui/ui.h"
- #include "sort.h"
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index bf249552a9b0..eda28d3570bc 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -2,6 +2,7 @@
- #include <sys/sysmacros.h>
- #include <sys/types.h>
- #include <errno.h>
-+#include <libgen.h>
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 31279a7bd919..1066de92af12 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -6,6 +6,7 @@
  #include <stdio.h>
- #include <stdlib.h>
  #include <string.h>
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 956d9916e364..2162a5d9b3ac 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -5,16 +5,10 @@
- #include <linux/types.h>
- #include <stdbool.h>
- #include <stdint.h>
--#include "map.h"
+ #include <linux/refcount.h>
++#include <linux/rbtree.h>
+ #include "rwsem.h"
+ 
+ struct comm_str {
+diff --git a/tools/perf/util/comm.h b/tools/perf/util/comm.h
+index 3e5c438fe85e..f35d8fbfa2dd 100644
+--- a/tools/perf/util/comm.h
++++ b/tools/perf/util/comm.h
+@@ -2,9 +2,9 @@
+ #ifndef __PERF_COMM_H
+ #define __PERF_COMM_H
+ 
 -#include "../perf.h"
+-#include <linux/rbtree.h>
  #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <stdio.h>
--#include <byteswap.h>
--#include <libgen.h>
- #include "branch.h"
--#include "build-id.h"
--#include "event.h"
- #include "path.h"
- #include "symbol_conf.h"
++#include <linux/types.h>
++#include <stdbool.h>
  
-@@ -26,6 +20,10 @@
+ struct comm_str;
  
- #include "dso.h"
- 
-+struct map;
-+struct map_groups;
-+struct option;
-+
- /*
-  * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
-  * for newer versions we can use mmap to reduce memory usage:
 -- 
 2.20.1
