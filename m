@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/29] perf comm: Remove needless headers from comm.h
-Date: Sat, 26 Jan 2019 00:18:22 +0100
-Message-ID: <20190125231843.2895-9-acme@kernel.org>
+Subject: [PATCH 09/29] perf callchain: No need to include perf.h
+Date: Sat, 26 Jan 2019 00:18:23 +0100
+Message-ID: <20190125231843.2895-10-acme@kernel.org>
 References: <20190125231843.2895-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,46 +14,28 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There we don't need rbtree, only in comm.c, also ditch perf.h, not
-needed at all.
+So ditch it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-vr1jnwwujh99skrgldtimpmu@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bodhwdvcds9ahk26dy4w8m71@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/comm.c | 1 +
- tools/perf/util/comm.h | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/callchain.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-index 31279a7bd919..1066de92af12 100644
---- a/tools/perf/util/comm.c
-+++ b/tools/perf/util/comm.c
-@@ -6,6 +6,7 @@
- #include <stdio.h>
- #include <string.h>
- #include <linux/refcount.h>
-+#include <linux/rbtree.h>
- #include "rwsem.h"
- 
- struct comm_str {
-diff --git a/tools/perf/util/comm.h b/tools/perf/util/comm.h
-index 3e5c438fe85e..f35d8fbfa2dd 100644
---- a/tools/perf/util/comm.h
-+++ b/tools/perf/util/comm.h
-@@ -2,9 +2,9 @@
- #ifndef __PERF_COMM_H
- #define __PERF_COMM_H
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 99d38ac019b8..8afe1622edf3 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -2,7 +2,6 @@
+ #ifndef __PERF_CALLCHAIN_H
+ #define __PERF_CALLCHAIN_H
  
 -#include "../perf.h"
--#include <linux/rbtree.h>
  #include <linux/list.h>
-+#include <linux/types.h>
-+#include <stdbool.h>
- 
- struct comm_str;
- 
+ #include <linux/rbtree.h>
+ #include "event.h"
 -- 
 2.20.1
