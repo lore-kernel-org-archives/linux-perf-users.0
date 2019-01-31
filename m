@@ -1,94 +1,61 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
-Date: Thu, 31 Jan 2019 09:27:11 +0100
-Message-ID: <20190131082711.GC24233@krava>
+Date: Thu, 31 Jan 2019 05:00:30 -0800
+Message-ID: <20190131130030.GW6118@tassilo.jf.intel.com>
 References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
- <20190130183648.GA24233@krava>
+ <20190125160056.GG6118@tassilo.jf.intel.com>
+ <33d300b5-f8b0-4987-4d4c-b5175b6b6c60@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190130183648.GA24233@krava>
+In-Reply-To: <33d300b5-f8b0-4987-4d4c-b5175b6b6c60@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Jan 30, 2019 at 07:36:48PM +0100, Jiri Olsa wrote:
-
-SNIP
-
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 280a72b3a553..22ec63a0782e 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4969,6 +4969,26 @@ static void __perf_event_period(struct perf_event *event,
->  	}
->  }
->  
-> +static int check_period(struct perf_event *event, u64 value)
-> +{
-> +	u64 sample_period_attr = event->attr.sample_period;
-> +	u64 sample_period_hw   = event->hw.sample_period;
-> +	int ret;
-> +
-> +	if (event->attr.freq) {
-> +		event->attr.sample_freq = value;
-> +	} else {
-> +		event->attr.sample_period = value;
-> +		event->hw.sample_period = value;
-> +	}
-
-hm, I think we need to check the period without changing the event,
-because we don't disable pmu, so it might get picked up by bts code
-
-will check
-
-jirka
-
-> +
-> +	ret = event->pmu->check_period(event);
-> +
-> +	event->attr.sample_period = sample_period_attr;
-> +	event->hw.sample_period   = sample_period_hw;
-> +	return ret;
-> +}
-> +
->  static int perf_event_period(struct perf_event *event, u64 __user *arg)
->  {
->  	u64 value;
-> @@ -4985,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
->  	if (event->attr.freq && value > sysctl_perf_event_sample_rate)
->  		return -EINVAL;
->  
-> +	if (check_period(event, value))
-> +		return -EINVAL;
-> +
->  	event_function_call(event, __perf_event_period, &value);
->  
->  	return 0;
-> @@ -9601,6 +9624,11 @@ static int perf_pmu_nop_int(struct pmu *pmu)
->  	return 0;
->  }
->  
-> +static int perf_event_nop_int(struct perf_event *event)
-> +{
-> +	return 0;
-> +}
-> +
->  static DEFINE_PER_CPU(unsigned int, nop_txn_flags);
->  
->  static void perf_pmu_start_txn(struct pmu *pmu, unsigned int flags)
-> @@ -9901,6 +9929,9 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->  		pmu->pmu_disable = perf_pmu_nop_void;
->  	}
->  
-> +	if (!pmu->check_period)
-> +		pmu->check_period = perf_event_nop_int;
-> +
->  	if (!pmu->event_idx)
->  		pmu->event_idx = perf_event_idx_default;
->  
-> -- 
-> 2.17.2
+On Thu, Jan 31, 2019 at 01:28:34PM +0530, Ravi Bangoria wrote:
+> Hi Andi,
 > 
+> On 1/25/19 9:30 PM, Andi Kleen wrote:
+> >> [Fri Jan 25 10:28:53 2019] perf: interrupt took too long (2501 > 2500), lowering kernel.perf_event_max_sample_rate to 79750
+> >> [Fri Jan 25 10:29:08 2019] perf: interrupt took too long (3136 > 3126), lowering kernel.perf_event_max_sample_rate to 63750
+> >> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (4140 > 3920), lowering kernel.perf_event_max_sample_rate to 48250
+> >> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (5231 > 5175), lowering kernel.perf_event_max_sample_rate to 38000
+> >> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (6736 > 6538), lowering kernel.perf_event_max_sample_rate to 29500
+> > 
+> > These are fairly normal.
+> 
+> I understand that throttling mechanism is designed exactly to do this.
+> But I've observed that, everytime I run the fuzzer, max_sample_rates is
+> been throttled down to 250 (which is CONFIG_HZ I guess). Doesn't this
+> mean the interrupt time is somehow increasing gradually? Is that fine?
+
+It's more like the throttling mechanism is an controller
+and it takes multiple tries to zoom in on the truely
+needed value.
+
+You can measure the PMI time by enabling the nmi:nmi_handler
+trace point. It directly reports it. From what I've seen
+it's a long tail distribution with regular large outliers.
+Most of the PMIs are not that slow, just an occassional
+few are.
+
+When I did some investigation on this a couple years back
+the outliers were either due to call stack processing,
+or due to flushing the perf ring buffer. There were some
+fixes on the the call stack case back then, but I'm sure more could
+be done.
+
+For the call stack processing there isn't much more we can do I think
+(other than switching to call stack LBR only),
+but I suspect the buffer flushing problem could be improved more.
+
+It's relatively easy to investigate with a variant of the ftrace
+recipe I posted earlier (but you need to fix the Makefile first
+to enable ftrace for all of perf) Just add a ftrace trigger on the
+nmi_handler trace point to stop tracing when the nmi_handler
+time exceeds a threshold and look at the traces.
+
+-Andi
