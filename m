@@ -1,64 +1,94 @@
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
-Date: Thu, 31 Jan 2019 13:28:34 +0530
-Message-ID: <33d300b5-f8b0-4987-4d4c-b5175b6b6c60@linux.ibm.com>
+Date: Thu, 31 Jan 2019 09:27:11 +0100
+Message-ID: <20190131082711.GC24233@krava>
 References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
- <20190125160056.GG6118@tassilo.jf.intel.com>
+ <20190130183648.GA24233@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125160056.GG6118@tassilo.jf.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190130183648.GA24233@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Andi,
+On Wed, Jan 30, 2019 at 07:36:48PM +0100, Jiri Olsa wrote:
 
-On 1/25/19 9:30 PM, Andi Kleen wrote:
->> [Fri Jan 25 10:28:53 2019] perf: interrupt took too long (2501 > 2500), lowering kernel.perf_event_max_sample_rate to 79750
->> [Fri Jan 25 10:29:08 2019] perf: interrupt took too long (3136 > 3126), lowering kernel.perf_event_max_sample_rate to 63750
->> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (4140 > 3920), lowering kernel.perf_event_max_sample_rate to 48250
->> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (5231 > 5175), lowering kernel.perf_event_max_sample_rate to 38000
->> [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (6736 > 6538), lowering kernel.perf_event_max_sample_rate to 29500
+SNIP
+
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 280a72b3a553..22ec63a0782e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4969,6 +4969,26 @@ static void __perf_event_period(struct perf_event *event,
+>  	}
+>  }
+>  
+> +static int check_period(struct perf_event *event, u64 value)
+> +{
+> +	u64 sample_period_attr = event->attr.sample_period;
+> +	u64 sample_period_hw   = event->hw.sample_period;
+> +	int ret;
+> +
+> +	if (event->attr.freq) {
+> +		event->attr.sample_freq = value;
+> +	} else {
+> +		event->attr.sample_period = value;
+> +		event->hw.sample_period = value;
+> +	}
+
+hm, I think we need to check the period without changing the event,
+because we don't disable pmu, so it might get picked up by bts code
+
+will check
+
+jirka
+
+> +
+> +	ret = event->pmu->check_period(event);
+> +
+> +	event->attr.sample_period = sample_period_attr;
+> +	event->hw.sample_period   = sample_period_hw;
+> +	return ret;
+> +}
+> +
+>  static int perf_event_period(struct perf_event *event, u64 __user *arg)
+>  {
+>  	u64 value;
+> @@ -4985,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
+>  	if (event->attr.freq && value > sysctl_perf_event_sample_rate)
+>  		return -EINVAL;
+>  
+> +	if (check_period(event, value))
+> +		return -EINVAL;
+> +
+>  	event_function_call(event, __perf_event_period, &value);
+>  
+>  	return 0;
+> @@ -9601,6 +9624,11 @@ static int perf_pmu_nop_int(struct pmu *pmu)
+>  	return 0;
+>  }
+>  
+> +static int perf_event_nop_int(struct perf_event *event)
+> +{
+> +	return 0;
+> +}
+> +
+>  static DEFINE_PER_CPU(unsigned int, nop_txn_flags);
+>  
+>  static void perf_pmu_start_txn(struct pmu *pmu, unsigned int flags)
+> @@ -9901,6 +9929,9 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+>  		pmu->pmu_disable = perf_pmu_nop_void;
+>  	}
+>  
+> +	if (!pmu->check_period)
+> +		pmu->check_period = perf_event_nop_int;
+> +
+>  	if (!pmu->event_idx)
+>  		pmu->event_idx = perf_event_idx_default;
+>  
+> -- 
+> 2.17.2
 > 
-> These are fairly normal.
-
-I understand that throttling mechanism is designed exactly to do this.
-But I've observed that, everytime I run the fuzzer, max_sample_rates is
-been throttled down to 250 (which is CONFIG_HZ I guess). Doesn't this
-mean the interrupt time is somehow increasing gradually? Is that fine?
-
-Here is the sample dmesg:
-
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (2928 > 2500), lowering kernel.perf_event_max_sample_rate to 68250
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (4363 > 3660), lowering kernel.perf_event_max_sample_rate to 45750
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 2.183 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (21382 > 5453), lowering kernel.perf_event_max_sample_rate to 9250
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (34548 > 26727), lowering kernel.perf_event_max_sample_rate to 5750
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 3.509 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (61682 > 43185), lowering kernel.perf_event_max_sample_rate to 3000
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 3.593 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (89206 > 77102), lowering kernel.perf_event_max_sample_rate to 2000
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 3.619 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (120188 > 111507), lowering kernel.perf_event_max_sample_rate to 1500
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 3.782 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (171065 > 150235), lowering kernel.perf_event_max_sample_rate to 1000
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 4.066 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (226815 > 213831), lowering kernel.perf_event_max_sample_rate to 750
-[Thu Jan 31 09:25:40 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 5.364 msecs
-[Thu Jan 31 09:25:40 2019] perf: interrupt took too long (300844 > 283518), lowering kernel.perf_event_max_sample_rate to 500
-[Thu Jan 31 09:33:43 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 6.136 msecs
-[Thu Jan 31 09:50:35 2019] perf: interrupt took too long (378352 > 376055), lowering kernel.perf_event_max_sample_rate to 500
-[Thu Jan 31 09:53:47 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 6.456 msecs
-[Thu Jan 31 09:57:31 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 11.002 msecs
-[Thu Jan 31 10:01:30 2019] perf: interrupt took too long (478447 > 472940), lowering kernel.perf_event_max_sample_rate to 250
-[Thu Jan 31 12:28:31 2019] perf: interrupt took too long (601630 > 598058), lowering kernel.perf_event_max_sample_rate to 250
-[Thu Jan 31 12:28:31 2019] perf: interrupt took too long (754288 > 752037), lowering kernel.perf_event_max_sample_rate to 250
-[Thu Jan 31 12:43:13 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 12.781 msecs
-[Thu Jan 31 12:43:13 2019] INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.583 msecs
-
-Thanks,
-Ravi
