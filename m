@@ -1,39 +1,30 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
-Date: Fri, 1 Feb 2019 18:38:16 +0100
-Message-ID: <20190201173816.GA19907@krava>
+Date: Sat, 2 Feb 2019 08:54:35 +0530
+Message-ID: <a95f952c-ed3b-4838-315b-45f758398894@linux.ibm.com>
 References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
- <20190130183648.GA24233@krava>
- <20190131082711.GC24233@krava>
+ <20190130183648.GA24233@krava> <20190131082711.GC24233@krava>
  <20190201074353.GA8778@krava>
- <alpine.DEB.2.21.1902011125290.25915@macbook-air>
+ <4e816b25-1763-ec23-0642-19e6258e6ac5@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1902011125290.25915@macbook-air>
+In-Reply-To: <4e816b25-1763-ec23-0642-19e6258e6ac5@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, eranian@google.com, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Andi Kleen <ak@linux.intel.com>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Feb 01, 2019 at 11:27:28AM -0500, Vince Weaver wrote:
-> On Fri, 1 Feb 2019, Jiri Olsa wrote:
+
+
+On 2/1/19 1:24 PM, Ravi Bangoria wrote:
+> I ran fuzzer for couple of hours but I didn't see any crash with
+> your previous patch.
 > 
-> > with attached patch I did not trigger the fuzzer crash
-> > for over a day now, could you guys try?
-> 
-> I've just started fuzzing with the patch applied.  Often it takes a few 
-> hours to trigger the bug.
+> I'll try this newer one as well.
 
-cool, thanks
+I ran fuzzer for ~8 hrs and no lockup so far.
 
-> 
-> Added question about this bug.  It appeared that the crash was triggered 
-> by the BTS driver over-writing kernel memory.  The data being written, was 
-> this user controllable?  Meaning, is this a security issue being fixed, or 
-> just a crashing issue?
-
-yea, I have an example that can trigger it immediately
-
-jirka
+Thanks.
