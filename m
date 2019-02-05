@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/8] perf symbols: Filter out hidden symbols from labels
-Date: Tue,  5 Feb 2019 12:07:06 -0300
-Message-ID: <20190205150708.9012-7-acme@kernel.org>
+Subject: [PATCH 8/8] perf script python: Add Python3 support to tests/attr.py
+Date: Tue,  5 Feb 2019 12:07:08 -0300
+Message-ID: <20190205150708.9012-9-acme@kernel.org>
 References: <20190205150708.9012-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,93 +9,180 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190205150708.9012-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, Michael Petlan <mpetlan@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Nick Clifton <nickc@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Jiri Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Tony Jones <tonyj@suse.de>
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+Support both Python 2 and Python 3 in tests/attr.py
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
+The use of "except as" syntax implies the minimum supported Python2 version is
+now v2.6
 
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
+Committer testing:
 
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
+  $ make -C tools/perf PYTHON3=python install-bin
+
+Before:
+
+  # perf test attr
+  16: Setup struct perf_event_attr                          : FAILED!
+  48: Synthesize attr update                                : Ok
+  [root@quaco ~]# perf test -v attr
+  16: Setup struct perf_event_attr                          :
   --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
+  test child forked, pid 3121
+    File "/home/acme/libexec/perf-core/tests/attr.py", line 324
+      except Unsup, obj:
+                ^
+  SyntaxError: invalid syntax
+  test child finished with -1
+  ---- end ----
+  Setup struct perf_event_attr: FAILED!
+  48: Synthesize attr update                                :
+  --- start ---
+  test child forked, pid 3124
+  test child finished with 0
+  ---- end ----
+  Synthesize attr update: Ok
+  #
 
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+After:
 
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+   # perf test attr
+  16: Setup struct perf_event_attr                          : Ok
+  48: Synthesize attr update                                : Ok
+  #
 
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190124005229.16146-7-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/tests/attr.py | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 695a73940329..dca7dfae69ad 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -101,6 +101,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index 44090a9a19f3..e952127e4fb0 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -1,6 +1,8 @@
+ #! /usr/bin/python
+ # SPDX-License-Identifier: GPL-2.0
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
++from __future__ import print_function
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -125,7 +130,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
+ import os
+ import sys
+ import glob
+@@ -8,7 +10,11 @@ import optparse
+ import tempfile
+ import logging
+ import shutil
+-import ConfigParser
++
++try:
++    import configparser
++except ImportError:
++    import ConfigParser as configparser
  
- static bool elf_sym__filter(GElf_Sym *sym)
+ def data_equal(a, b):
+     # Allow multiple values in assignment separated by '|'
+@@ -100,20 +106,20 @@ class Event(dict):
+     def equal(self, other):
+         for t in Event.terms:
+             log.debug("      [%s] %s %s" % (t, self[t], other[t]));
+-            if not self.has_key(t) or not other.has_key(t):
++            if t not in self or t not in other:
+                 return False
+             if not data_equal(self[t], other[t]):
+                 return False
+         return True
+ 
+     def optional(self):
+-        if self.has_key('optional') and self['optional'] == '1':
++        if 'optional' in self and self['optional'] == '1':
+             return True
+         return False
+ 
+     def diff(self, other):
+         for t in Event.terms:
+-            if not self.has_key(t) or not other.has_key(t):
++            if t not in self or t not in other:
+                 continue
+             if not data_equal(self[t], other[t]):
+                 log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
+@@ -134,7 +140,7 @@ class Event(dict):
+ #   - expected values assignments
+ class Test(object):
+     def __init__(self, path, options):
+-        parser = ConfigParser.SafeConfigParser()
++        parser = configparser.SafeConfigParser()
+         parser.read(path)
+ 
+         log.warning("running '%s'" % path)
+@@ -193,7 +199,7 @@ class Test(object):
+         return True
+ 
+     def load_events(self, path, events):
+-        parser_event = ConfigParser.SafeConfigParser()
++        parser_event = configparser.SafeConfigParser()
+         parser_event.read(path)
+ 
+         # The event record section header contains 'event' word,
+@@ -207,7 +213,7 @@ class Test(object):
+             # Read parent event if there's any
+             if (':' in section):
+                 base = section[section.index(':') + 1:]
+-                parser_base = ConfigParser.SafeConfigParser()
++                parser_base = configparser.SafeConfigParser()
+                 parser_base.read(self.test_dir + '/' + base)
+                 base_items = parser_base.items('event')
+ 
+@@ -322,9 +328,9 @@ def run_tests(options):
+     for f in glob.glob(options.test_dir + '/' + options.test):
+         try:
+             Test(f, options).run()
+-        except Unsup, obj:
++        except Unsup as obj:
+             log.warning("unsupp  %s" % obj.getMsg())
+-        except Notest, obj:
++        except Notest as obj:
+             log.warning("skipped %s" % obj.getMsg())
+ 
+ def setup_log(verbose):
+@@ -363,7 +369,7 @@ def main():
+     parser.add_option("-p", "--perf",
+                       action="store", type="string", dest="perf")
+     parser.add_option("-v", "--verbose",
+-                      action="count", dest="verbose")
++                      default=0, action="count", dest="verbose")
+ 
+     options, args = parser.parse_args()
+     if args:
+@@ -373,7 +379,7 @@ def main():
+     setup_log(options.verbose)
+ 
+     if not options.test_dir:
+-        print 'FAILED no -d option specified'
++        print('FAILED no -d option specified')
+         sys.exit(-1)
+ 
+     if not options.test:
+@@ -382,8 +388,8 @@ def main():
+     try:
+         run_tests(options)
+ 
+-    except Fail, obj:
+-        print "FAILED %s" % obj.getMsg();
++    except Fail as obj:
++        print("FAILED %s" % obj.getMsg())
+         sys.exit(-1)
+ 
+     sys.exit(0)
 -- 
 2.20.1
