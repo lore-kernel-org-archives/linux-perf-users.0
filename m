@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/53] perf bpf-loader: Remove unecessary includes from bpf-loader.h
-Date: Wed,  6 Feb 2019 15:48:29 -0300
-Message-ID: <20190206184903.24054-20-acme@kernel.org>
+Subject: [PATCH 20/53] perf/aux: Make perf_event accessible to setup_aux()
+Date: Wed,  6 Feb 2019 15:48:30 -0300
+Message-ID: <20190206184903.24054-21-acme@kernel.org>
 References: <20190206184903.24054-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,69 +9,173 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190206184903.24054-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H . Peter Anvin" <hpa@zytor.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-To cut the header dep tree, to get unecessary object rebuilds to be
-reduced when a change happens in headers.
+When pmu::setup_aux() is called the coresight PMU needs to know which
+sink to use for the session by looking up the information in the
+event's attr::config2 field.
 
+As such simply replace the cpu information by the complete perf_event
+structure and change all affected customers.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki Poulouse <suzuki.poulose@arm.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-ph72xhl9moqa0g1hxcyudwfn@git.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190131184714.20388-2-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-loader.c | 1 +
- tools/perf/util/bpf-loader.h | 7 +++----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c                  | 6 +++---
+ arch/x86/events/intel/bts.c                      | 4 +++-
+ arch/x86/events/intel/pt.c                       | 5 +++--
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 6 +++---
+ drivers/perf/arm_spe_pmu.c                       | 6 +++---
+ include/linux/perf_event.h                       | 2 +-
+ kernel/events/ring_buffer.c                      | 2 +-
+ 7 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 2f3eb6d293ee..6e68698aa0ad 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -15,6 +15,7 @@
- #include <errno.h>
- #include "perf.h"
- #include "debug.h"
-+#include "evlist.h"
- #include "bpf-loader.h"
- #include "bpf-prologue.h"
- #include "probe-event.h"
-diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
-index 62d245a90e1d..3f46856e3330 100644
---- a/tools/perf/util/bpf-loader.h
-+++ b/tools/perf/util/bpf-loader.h
-@@ -8,11 +8,7 @@
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index bfabeb1889cc..1266194afb02 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1600,7 +1600,7 @@ static void aux_sdb_init(unsigned long sdb)
  
- #include <linux/compiler.h>
- #include <linux/err.h>
--#include <string.h>
- #include <bpf/libbpf.h>
--#include "probe-event.h"
--#include "evlist.h"
--#include "debug.h"
+ /*
+  * aux_buffer_setup() - Setup AUX buffer for diagnostic mode sampling
+- * @cpu:	On which to allocate, -1 means current
++ * @event:	Event the buffer is setup for, event->cpu == -1 means current
+  * @pages:	Array of pointers to buffer pages passed from perf core
+  * @nr_pages:	Total pages
+  * @snapshot:	Flag for snapshot mode
+@@ -1612,8 +1612,8 @@ static void aux_sdb_init(unsigned long sdb)
+  *
+  * Return the private AUX buffer structure if success or NULL if fails.
+  */
+-static void *aux_buffer_setup(int cpu, void **pages, int nr_pages,
+-			      bool snapshot)
++static void *aux_buffer_setup(struct perf_event *event, void **pages,
++			      int nr_pages, bool snapshot)
+ {
+ 	struct sf_buffer *sfb;
+ 	struct aux_buffer *aux;
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index a01ef1b0f883..7cdd7b13bbda 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -77,10 +77,12 @@ static size_t buf_size(struct page *page)
+ }
  
- enum bpf_loader_errno {
- 	__BPF_LOADER_ERRNO__START = __LIBBPF_ERRNO__START - 100,
-@@ -44,6 +40,7 @@ enum bpf_loader_errno {
- };
+ static void *
+-bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
++bts_buffer_setup_aux(struct perf_event *event, void **pages,
++		     int nr_pages, bool overwrite)
+ {
+ 	struct bts_buffer *buf;
+ 	struct page *page;
++	int cpu = event->cpu;
+ 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+ 	unsigned long offset;
+ 	size_t size = nr_pages << PAGE_SHIFT;
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 9494ca68fd9d..c0e86ff21f81 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -1114,10 +1114,11 @@ static int pt_buffer_init_topa(struct pt_buffer *buf, unsigned long nr_pages,
+  * Return:	Our private PT buffer structure.
+  */
+ static void *
+-pt_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool snapshot)
++pt_buffer_setup_aux(struct perf_event *event, void **pages,
++		    int nr_pages, bool snapshot)
+ {
+ 	struct pt_buffer *buf;
+-	int node, ret;
++	int node, ret, cpu = event->cpu;
  
- struct perf_evsel;
-+struct perf_evlist;
- struct bpf_object;
- struct parse_events_term;
- #define PERF_BPF_PROBE_GROUP "perf_bpf_probe"
-@@ -87,6 +84,8 @@ struct perf_evsel *bpf__setup_output_event(struct perf_evlist *evlist, const cha
- int bpf__strerror_setup_output_event(struct perf_evlist *evlist, int err, char *buf, size_t size);
- #else
- #include <errno.h>
-+#include <string.h>
-+#include "debug.h"
+ 	if (!nr_pages)
+ 		return NULL;
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index abe8249b893b..f21eb28b6782 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -177,15 +177,15 @@ static void etm_free_aux(void *data)
+ 	schedule_work(&event_data->work);
+ }
  
- static inline struct bpf_object *
- bpf__prepare_load(const char *filename __maybe_unused,
+-static void *etm_setup_aux(int event_cpu, void **pages,
++static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 			   int nr_pages, bool overwrite)
+ {
+-	int cpu;
++	int cpu = event->cpu;
+ 	cpumask_t *mask;
+ 	struct coresight_device *sink;
+ 	struct etm_event_data *event_data = NULL;
+ 
+-	event_data = alloc_event_data(event_cpu);
++	event_data = alloc_event_data(cpu);
+ 	if (!event_data)
+ 		return NULL;
+ 	INIT_WORK(&event_data->work, free_event_data);
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 8e46a9dad2fa..7cb766dafe85 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -824,10 +824,10 @@ static void arm_spe_pmu_read(struct perf_event *event)
+ {
+ }
+ 
+-static void *arm_spe_pmu_setup_aux(int cpu, void **pages, int nr_pages,
+-				   bool snapshot)
++static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
++				   int nr_pages, bool snapshot)
+ {
+-	int i;
++	int i, cpu = event->cpu;
+ 	struct page **pglist;
+ 	struct arm_spe_pmu_buf *buf;
+ 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 6cb5d483ab34..d9c3610e0e25 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -410,7 +410,7 @@ struct pmu {
+ 	/*
+ 	 * Set up pmu-private data structures for an AUX area
+ 	 */
+-	void *(*setup_aux)		(int cpu, void **pages,
++	void *(*setup_aux)		(struct perf_event *event, void **pages,
+ 					 int nr_pages, bool overwrite);
+ 					/* optional */
+ 
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 805f0423ee0b..70ae2422cbaf 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -657,7 +657,7 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
+ 			goto out;
+ 	}
+ 
+-	rb->aux_priv = event->pmu->setup_aux(event->cpu, rb->aux_pages, nr_pages,
++	rb->aux_priv = event->pmu->setup_aux(event, rb->aux_pages, nr_pages,
+ 					     overwrite);
+ 	if (!rb->aux_priv)
+ 		goto out;
 -- 
 2.20.1
