@@ -1,73 +1,75 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/53] perf clang: Do not use 'return std::move(something)'
-Date: Wed,  6 Feb 2019 15:48:41 -0300
-Message-ID: <20190206184903.24054-32-acme@kernel.org>
+Subject: [PATCH 33/53] perf evsel: Add output_resort_cb method
+Date: Wed,  6 Feb 2019 15:48:43 -0300
+Message-ID: <20190206184903.24054-34-acme@kernel.org>
 References: <20190206184903.24054-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190206184903.24054-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-It prevents copy elision, generating this warning when building with
-fedora:rawhide's clang:
+Add perf_evsel__output_resort_cb() so we have an interface with a
+callback for each hist entry. It will be used in the following patch.
 
-  clang version 7.0.1 (Fedora 7.0.1-2.fc30)
-  Target: x86_64-unknown-linux-gnu
-  Thread model: posix
-  InstalledDir: /usr/bin
-  Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-redhat-linux/9
-  Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/9
-  Selected GCC installation: /usr/bin/../lib/gcc/x86_64-redhat-linux/9
-  Candidate multilib: .;@m64
-  Candidate multilib: 32;@m32
-  Selected multilib: .;@m64
-
-  $ make -C tools/perf CC=clang LIBCLANGLLVM=1
-  <SNIP>
-  util/c++/clang.cpp: In function 'std::unique_ptr<llvm::SmallVectorImpl<char> > perf::getBPFObjectFromModule(llvm::Module*)':
-  util/c++/clang.cpp:163:18: error: moving a local object in a return statement prevents copy elision [-Werror=pessimizing-move]
-    163 |  return std::move(Buffer);
-        |         ~~~~~~~~~^~~~~~~~
-  util/c++/clang.cpp:163:18: note: remove 'std::move' call
-  cc1plus: all warnings being treated as errors
-  <SNIP>
-
-References:
-
-  http://www.cplusplus.com/forum/general/186411/#msg908572
-  https://en.cppreference.com/w/cpp/language/return#Notes
-  https://en.cppreference.com/w/cpp/language/copy_elision
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-lehqf5x5q96l0o8myhb6blz6@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190204141808.23031-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/c++/clang.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/hist.c | 10 ++++++++--
+ tools/perf/util/hist.h |  2 ++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/c++/clang.cpp b/tools/perf/util/c++/clang.cpp
-index 89512504551b..39c0004f2886 100644
---- a/tools/perf/util/c++/clang.cpp
-+++ b/tools/perf/util/c++/clang.cpp
-@@ -160,7 +160,7 @@ getBPFObjectFromModule(llvm::Module *Module)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 64ad603a0592..669f961316f0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1775,7 +1775,8 @@ static void output_resort(struct hists *hists, struct ui_progress *prog,
  	}
- 	PM.run(*Module);
- 
--	return std::move(Buffer);
-+	return Buffer;
  }
  
+-void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog)
++void perf_evsel__output_resort_cb(struct perf_evsel *evsel, struct ui_progress *prog,
++				  hists__resort_cb_t cb, void *cb_arg)
+ {
+ 	bool use_callchain;
+ 
+@@ -1786,7 +1787,12 @@ void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *pro
+ 
+ 	use_callchain |= symbol_conf.show_branchflag_count;
+ 
+-	output_resort(evsel__hists(evsel), prog, use_callchain, NULL, NULL);
++	output_resort(evsel__hists(evsel), prog, use_callchain, cb, cb_arg);
++}
++
++void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog)
++{
++	return perf_evsel__output_resort_cb(evsel, prog, NULL, NULL);
  }
+ 
+ void hists__output_resort(struct hists *hists, struct ui_progress *prog)
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 69a367d4aeaf..4af27fbab24f 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -165,6 +165,8 @@ void hist_entry__delete(struct hist_entry *he);
+ 
+ typedef int (*hists__resort_cb_t)(struct hist_entry *he, void *arg);
+ 
++void perf_evsel__output_resort_cb(struct perf_evsel *evsel, struct ui_progress *prog,
++				  hists__resort_cb_t cb, void *cb_arg);
+ void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog);
+ void hists__output_resort(struct hists *hists, struct ui_progress *prog);
+ void hists__output_resort_cb(struct hists *hists, struct ui_progress *prog,
 -- 
 2.20.1
