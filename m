@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/53] perf cs-etm: Change tuple from traceID-CPU# to traceID-metadata
-Date: Wed,  6 Feb 2019 15:48:50 -0300
-Message-ID: <20190206184903.24054-41-acme@kernel.org>
+Subject: [PATCH 43/53] perf cs-etm: Set sample flags for exception return packet
+Date: Wed,  6 Feb 2019 15:48:53 -0300
+Message-ID: <20190206184903.24054-44-acme@kernel.org>
 References: <20190206184903.24054-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,22 +14,25 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-If packet processing wants to know the packet is bound with which ETM
-version, it needs to access metadata to decide that based on metadata
-magic number; but we cannot simply to use CPU logic ID number as index
-to access metadata sequential array, especially when system have
-hotplugged off CPUs, the metadata array are only allocated for online
-CPUs but not offline CPUs, so the CPU logic number doesn't match with
-its index in the array.
+When return from exception, we need to distinguish if it's system call
+return or for other type exceptions for setting sample flags.  Due to
+the exception return packet doesn't contain exception number, so we
+cannot decide sample flags based on exception number.
 
-This patch is to change tuple from traceID-CPU# to traceID-metadata,
-thus it can use the tuple to retrieve metadata pointer according to
-traceID.
+On the other hand, the exception return packet is followed by an
+instruction range packet; this range packet deliveries the start address
+after exception handling, we can check if it is a SVC instruction just
+before the start address.  If there has one SVC instruction is found
+ahead the return address, this means it's an exception return for system
+call; otherwise it is an normal return for other exceptions.
 
-For safe accessing metadata fields, this patch provides helper function
-cs_etm__get_cpu() which is used to return CPU number according to
-traceID; cs_etm_decoder__buffer_packet() is the first consumer for this
-helper function.
+This patch is to set sample flags for exception return packet, firstly
+it simply set sample flags as PERF_IP_FLAG_INTERRUPT for all exception
+returns since at this point it doesn't know what's exactly the exception
+type.  We will defer to decide if it's an exception return for system
+call when the next instruction range packet comes, it checks if there
+has one SVC instruction prior to the start address and if so we will
+change sample flags to PERF_IP_FLAG_SYSCALLRET for system call return.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -41,135 +44,73 @@ Cc: Robert Walker <robert.walker@arm.com>
 Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
 Cc: coresight ml <coresight@lists.linaro.org>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190129122842.32041-6-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190129122842.32041-9-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  8 +++---
- tools/perf/util/cs-etm.c                      | 26 ++++++++++++++-----
- tools/perf/util/cs-etm.h                      |  9 ++++++-
- 3 files changed, 31 insertions(+), 12 deletions(-)
+ tools/perf/util/cs-etm.c | 44 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 294efa76c9e3..cdd38ffd10d2 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -305,14 +305,12 @@ cs_etm_decoder__buffer_packet(struct cs_etm_decoder *decoder,
- 			      enum cs_etm_sample_type sample_type)
- {
- 	u32 et = 0;
--	struct int_node *inode = NULL;
-+	int cpu;
- 
- 	if (decoder->packet_count >= MAX_BUFFER - 1)
- 		return OCSD_RESP_FATAL_SYS_ERR;
- 
--	/* Search the RB tree for the cpu associated with this traceID */
--	inode = intlist__find(traceid_list, trace_chan_id);
--	if (!inode)
-+	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
- 		return OCSD_RESP_FATAL_SYS_ERR;
- 
- 	et = decoder->tail;
-@@ -322,7 +320,7 @@ cs_etm_decoder__buffer_packet(struct cs_etm_decoder *decoder,
- 
- 	decoder->packet_buffer[et].sample_type = sample_type;
- 	decoder->packet_buffer[et].isa = CS_ETM_ISA_UNKNOWN;
--	decoder->packet_buffer[et].cpu = *((int *)inode->priv);
-+	decoder->packet_buffer[et].cpu = cpu;
- 	decoder->packet_buffer[et].start_addr = CS_ETM_INVAL_ADDR;
- 	decoder->packet_buffer[et].end_addr = CS_ETM_INVAL_ADDR;
- 	decoder->packet_buffer[et].instr_count = 0;
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 1aa29633ce77..a5497a761db7 100644
+index a714b31656ea..8b3f882d6e2f 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -97,6 +97,20 @@ static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
- 	return CS_ETM_PROTO_ETMV3;
- }
- 
-+int cs_etm__get_cpu(u8 trace_chan_id, int *cpu)
-+{
-+	struct int_node *inode;
-+	u64 *metadata;
+@@ -1372,6 +1372,20 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq)
+ 		if (prev_packet->sample_type == CS_ETM_DISCONTINUITY)
+ 			prev_packet->flags |= PERF_IP_FLAG_BRANCH |
+ 					      PERF_IP_FLAG_TRACE_BEGIN;
 +
-+	inode = intlist__find(traceid_list, trace_chan_id);
-+	if (!inode)
-+		return -EINVAL;
-+
-+	metadata = inode->priv;
-+	*cpu = (int)metadata[CS_ETM_CPU];
-+	return 0;
-+}
-+
- static void cs_etm__packet_dump(const char *pkt_string)
- {
- 	const char *color = PERF_COLOR_BLUE;
-@@ -252,7 +266,7 @@ static void cs_etm__free(struct perf_session *session)
- 	cs_etm__free_events(session);
- 	session->auxtrace = NULL;
- 
--	/* First remove all traceID/CPU# nodes for the RB tree */
-+	/* First remove all traceID/metadata nodes for the RB tree */
- 	intlist__for_each_entry_safe(inode, tmp, traceid_list)
- 		intlist__remove(traceid_list, inode);
- 	/* Then the RB tree itself */
-@@ -1519,9 +1533,9 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 				    0xffffffff);
- 
- 	/*
--	 * Create an RB tree for traceID-CPU# tuple. Since the conversion has
--	 * to be made for each packet that gets decoded, optimizing access in
--	 * anything other than a sequential array is worth doing.
-+	 * Create an RB tree for traceID-metadata tuple.  Since the conversion
-+	 * has to be made for each packet that gets decoded, optimizing access
-+	 * in anything other than a sequential array is worth doing.
- 	 */
- 	traceid_list = intlist__new(NULL);
- 	if (!traceid_list) {
-@@ -1587,8 +1601,8 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 			err = -EINVAL;
- 			goto err_free_metadata;
- 		}
--		/* All good, associate the traceID with the CPU# */
--		inode->priv = &metadata[j][CS_ETM_CPU];
-+		/* All good, associate the traceID with the metadata pointer */
-+		inode->priv = metadata[j];
- 	}
- 
- 	/*
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 37f8d48179ca..fb5fc6538b7f 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -53,7 +53,7 @@ enum {
- 	CS_ETMV4_PRIV_MAX,
- };
- 
--/* RB tree for quick conversion between traceID and CPUs */
-+/* RB tree for quick conversion between traceID and metadata pointers */
- struct intlist *traceid_list;
- 
- #define KiB(x) ((x) * 1024)
-@@ -69,6 +69,7 @@ static const u64 __perf_cs_etmv4_magic   = 0x4040404040404040ULL;
- #ifdef HAVE_CSTRACE_SUPPORT
- int cs_etm__process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
-+int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
- #else
- static inline int
- cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
-@@ -76,6 +77,12 @@ cs_etm__process_auxtrace_info(union perf_event *event __maybe_unused,
- {
- 	return -1;
- }
-+
-+static inline int cs_etm__get_cpu(u8 trace_chan_id __maybe_unused,
-+				  int *cpu __maybe_unused)
-+{
-+	return -1;
-+}
- #endif
- 
- #endif
++		/*
++		 * If the previous packet is an exception return packet
++		 * and the return address just follows SVC instuction,
++		 * it needs to calibrate the previous packet sample flags
++		 * as PERF_IP_FLAG_SYSCALLRET.
++		 */
++		if (prev_packet->flags == (PERF_IP_FLAG_BRANCH |
++					   PERF_IP_FLAG_RETURN |
++					   PERF_IP_FLAG_INTERRUPT) &&
++		    cs_etm__is_svc_instr(etmq, packet, packet->start_addr))
++			prev_packet->flags = PERF_IP_FLAG_BRANCH |
++					     PERF_IP_FLAG_RETURN |
++					     PERF_IP_FLAG_SYSCALLRET;
+ 		break;
+ 	case CS_ETM_DISCONTINUITY:
+ 		/*
+@@ -1422,6 +1436,36 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq)
+ 			prev_packet->flags = packet->flags;
+ 		break;
+ 	case CS_ETM_EXCEPTION_RET:
++		/*
++		 * When the exception return packet is inserted, since
++		 * exception return packet is not used standalone for
++		 * generating samples and it's affiliation to the previous
++		 * instruction range packet; so set previous range packet
++		 * flags to tell perf it is an exception return branch.
++		 *
++		 * The exception return can be for either system call or
++		 * other exception types; unfortunately the packet doesn't
++		 * contain exception type related info so we cannot decide
++		 * the exception type purely based on exception return packet.
++		 * If we record the exception number from exception packet and
++		 * reuse it for excpetion return packet, this is not reliable
++		 * due the trace can be discontinuity or the interrupt can
++		 * be nested, thus the recorded exception number cannot be
++		 * used for exception return packet for these two cases.
++		 *
++		 * For exception return packet, we only need to distinguish the
++		 * packet is for system call or for other types.  Thus the
++		 * decision can be deferred when receive the next packet which
++		 * contains the return address, based on the return address we
++		 * can read out the previous instruction and check if it's a
++		 * system call instruction and then calibrate the sample flag
++		 * as needed.
++		 */
++		if (prev_packet->sample_type == CS_ETM_RANGE)
++			prev_packet->flags = PERF_IP_FLAG_BRANCH |
++					     PERF_IP_FLAG_RETURN |
++					     PERF_IP_FLAG_INTERRUPT;
++		break;
+ 	case CS_ETM_EMPTY:
+ 	default:
+ 		break;
 -- 
 2.20.1
