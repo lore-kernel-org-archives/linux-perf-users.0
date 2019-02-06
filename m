@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/53] perf cs-etm: Set sample flags for trace discontinuity
-Date: Wed,  6 Feb 2019 15:48:48 -0300
-Message-ID: <20190206184903.24054-39-acme@kernel.org>
+Subject: [PATCH 39/53] perf cs-etm: Add exception number in exception packet
+Date: Wed,  6 Feb 2019 15:48:49 -0300
+Message-ID: <20190206184903.24054-40-acme@kernel.org>
 References: <20190206184903.24054-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,21 +14,14 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-In the middle of trace stream, it might be interrupted thus the trace
-data is not continuous, the trace stream firstly is ended for previous
-trace block and restarted for next block.
+When an exception packet comes, it contains the information for
+exception number; the exception number indicates the exception types, so
+from it we can know if the exception is taken for interrupt, system call
+or other traps, etc.
 
-To display related information for showing trace is restarted, this
-patch set sample flags for trace discontinuity:
-
-- If one discontinuity packet is coming, append flag
-  PERF_IP_FLAG_TRACE_END to the previous packet to indicate the trace
-  has been ended;
-- If one instruction packet is following discontinuity packet, this
-  instruction packet is the first one packet to restarting trace.  So
-  set flag PERF_IP_FLAG_TRACE_START to discontinuity packet, this flag
-  will be used to generate sample when connect with the sequential
-  instruction packet.
+This patch simply adds a field in cs_etm_packet struct, it records
+exception number for exception packet that will then be used to properly
+identify exception types to the perf synthesize mechanic.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -40,50 +33,77 @@ Cc: Robert Walker <robert.walker@arm.com>
 Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
 Cc: coresight ml <coresight@lists.linaro.org>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190129122842.32041-4-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190129122842.32041-5-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 20 +++++++++++++++----
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.h |  1 +
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index d05cac5295f1..1aa29633ce77 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1111,6 +1111,7 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq)
- static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq)
- {
- 	struct cs_etm_packet *packet = etmq->packet;
-+	struct cs_etm_packet *prev_packet = etmq->prev_packet;
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index e98ee49a1527..294efa76c9e3 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -294,6 +294,7 @@ static void cs_etm_decoder__clear_buffer(struct cs_etm_decoder *decoder)
+ 		decoder->packet_buffer[i].last_instr_subtype = 0;
+ 		decoder->packet_buffer[i].last_instr_cond = 0;
+ 		decoder->packet_buffer[i].flags = 0;
++		decoder->packet_buffer[i].exception_number = UINT32_MAX;
+ 		decoder->packet_buffer[i].cpu = INT_MIN;
+ 	}
+ }
+@@ -331,6 +332,7 @@ cs_etm_decoder__buffer_packet(struct cs_etm_decoder *decoder,
+ 	decoder->packet_buffer[et].last_instr_subtype = 0;
+ 	decoder->packet_buffer[et].last_instr_cond = 0;
+ 	decoder->packet_buffer[et].flags = 0;
++	decoder->packet_buffer[et].exception_number = UINT32_MAX;
  
- 	switch (packet->sample_type) {
- 	case CS_ETM_RANGE:
-@@ -1170,8 +1171,26 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq)
- 		    packet->last_instr_subtype == OCSD_S_INSTR_V8_RET)
- 			packet->flags = PERF_IP_FLAG_BRANCH |
- 					PERF_IP_FLAG_RETURN;
+ 	if (decoder->packet_count == MAX_BUFFER - 1)
+ 		return OCSD_RESP_WAIT;
+@@ -406,10 +408,20 @@ cs_etm_decoder__buffer_discontinuity(struct cs_etm_decoder *decoder,
+ 
+ static ocsd_datapath_resp_t
+ cs_etm_decoder__buffer_exception(struct cs_etm_decoder *decoder,
++				 const ocsd_generic_trace_elem *elem,
+ 				 const uint8_t trace_chan_id)
+-{
+-	return cs_etm_decoder__buffer_packet(decoder, trace_chan_id,
+-					     CS_ETM_EXCEPTION);
++{	int ret = 0;
++	struct cs_etm_packet *packet;
 +
-+		/*
-+		 * Decoder might insert a discontinuity in the middle of
-+		 * instruction packets, fixup prev_packet with flag
-+		 * PERF_IP_FLAG_TRACE_BEGIN to indicate restarting trace.
-+		 */
-+		if (prev_packet->sample_type == CS_ETM_DISCONTINUITY)
-+			prev_packet->flags |= PERF_IP_FLAG_BRANCH |
-+					      PERF_IP_FLAG_TRACE_BEGIN;
++	ret = cs_etm_decoder__buffer_packet(decoder, trace_chan_id,
++					    CS_ETM_EXCEPTION);
++	if (ret != OCSD_RESP_CONT && ret != OCSD_RESP_WAIT)
++		return ret;
++
++	packet = &decoder->packet_buffer[decoder->tail];
++	packet->exception_number = elem->exception_number;
++
++	return ret;
+ }
+ 
+ static ocsd_datapath_resp_t
+@@ -443,7 +455,7 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+ 						    trace_chan_id);
  		break;
- 	case CS_ETM_DISCONTINUITY:
-+		/*
-+		 * The trace is discontinuous, if the previous packet is
-+		 * instruction packet, set flag PERF_IP_FLAG_TRACE_END
-+		 * for previous packet.
-+		 */
-+		if (prev_packet->sample_type == CS_ETM_RANGE)
-+			prev_packet->flags |= PERF_IP_FLAG_BRANCH |
-+					      PERF_IP_FLAG_TRACE_END;
-+		break;
- 	case CS_ETM_EXCEPTION:
- 	case CS_ETM_EXCEPTION_RET:
- 	case CS_ETM_EMPTY:
+ 	case OCSD_GEN_TRC_ELEM_EXCEPTION:
+-		resp = cs_etm_decoder__buffer_exception(decoder,
++		resp = cs_etm_decoder__buffer_exception(decoder, elem,
+ 							trace_chan_id);
+ 		break;
+ 	case OCSD_GEN_TRC_ELEM_EXCEPTION_RET:
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
+index 23600e57a215..012b4728a46f 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
+@@ -46,6 +46,7 @@ struct cs_etm_packet {
+ 	u32 last_instr_type;
+ 	u32 last_instr_subtype;
+ 	u32 flags;
++	u32 exception_number;
+ 	u8 last_instr_cond;
+ 	u8 last_instr_taken_branch;
+ 	u8 last_instr_size;
 -- 
 2.20.1
