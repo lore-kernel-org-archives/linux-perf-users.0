@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/53] perf evsel: Add output_resort_cb method
-Date: Wed,  6 Feb 2019 15:48:43 -0300
-Message-ID: <20190206184903.24054-34-acme@kernel.org>
+Subject: [PATCH 34/53] perf report: Move symbol annotation to the resort phase
+Date: Wed,  6 Feb 2019 15:48:44 -0300
+Message-ID: <20190206184903.24054-35-acme@kernel.org>
 References: <20190206184903.24054-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,12 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_evsel__output_resort_cb() so we have an interface with a
-callback for each hist entry. It will be used in the following patch.
+Currently we make the annotation for the IPC column during the entry
+display, already outside of the progress bar scope, so it appears like
+'perf report' is stuck.
+
+Move the annotation retrieval to the resort phase, so that all the data
+are ready for display.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -23,53 +27,76 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190204141808.23031-3-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190204141808.23031-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.c | 10 ++++++++--
- tools/perf/util/hist.h |  2 ++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/builtin-report.c | 21 +++++++++++++++++++--
+ tools/perf/util/sort.c      |  7 -------
+ 2 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 64ad603a0592..669f961316f0 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1775,7 +1775,8 @@ static void output_resort(struct hists *hists, struct ui_progress *prog,
- 	}
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index a007ea9a3874..2e8c74d6430c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -616,6 +616,21 @@ static int report__collapse_hists(struct report *rep)
+ 	return ret;
  }
  
--void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog)
-+void perf_evsel__output_resort_cb(struct perf_evsel *evsel, struct ui_progress *prog,
-+				  hists__resort_cb_t cb, void *cb_arg)
- {
- 	bool use_callchain;
- 
-@@ -1786,7 +1787,12 @@ void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *pro
- 
- 	use_callchain |= symbol_conf.show_branchflag_count;
- 
--	output_resort(evsel__hists(evsel), prog, use_callchain, NULL, NULL);
-+	output_resort(evsel__hists(evsel), prog, use_callchain, cb, cb_arg);
++static int hists__resort_cb(struct hist_entry *he, void *arg)
++{
++	struct report *rep = arg;
++	struct symbol *sym = he->ms.sym;
++
++	if (rep->symbol_ipc && sym && !sym->annotate2) {
++		struct perf_evsel *evsel = hists_to_evsel(he->hists);
++
++		symbol__annotate2(sym, he->ms.map, evsel,
++				  &annotation__default_options, NULL);
++	}
++
++	return 0;
 +}
 +
-+void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog)
-+{
-+	return perf_evsel__output_resort_cb(evsel, prog, NULL, NULL);
+ static void report__output_resort(struct report *rep)
+ {
+ 	struct ui_progress prog;
+@@ -623,8 +638,10 @@ static void report__output_resort(struct report *rep)
+ 
+ 	ui_progress__init(&prog, rep->nr_entries, "Sorting events for output...");
+ 
+-	evlist__for_each_entry(rep->session->evlist, pos)
+-		perf_evsel__output_resort(pos, &prog);
++	evlist__for_each_entry(rep->session->evlist, pos) {
++		perf_evsel__output_resort_cb(pos, &prog,
++					     hists__resort_cb, rep);
++	}
+ 
+ 	ui_progress__finish();
  }
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 79e794406bef..2b6c1ccb878c 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -429,8 +429,6 @@ static int hist_entry__sym_ipc_snprintf(struct hist_entry *he, char *bf,
+ {
  
- void hists__output_resort(struct hists *hists, struct ui_progress *prog)
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 69a367d4aeaf..4af27fbab24f 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -165,6 +165,8 @@ void hist_entry__delete(struct hist_entry *he);
+ 	struct symbol *sym = he->ms.sym;
+-	struct map *map = he->ms.map;
+-	struct perf_evsel *evsel = hists_to_evsel(he->hists);
+ 	struct annotation *notes;
+ 	double ipc = 0.0, coverage = 0.0;
+ 	char tmp[64];
+@@ -438,11 +436,6 @@ static int hist_entry__sym_ipc_snprintf(struct hist_entry *he, char *bf,
+ 	if (!sym)
+ 		return repsep_snprintf(bf, size, "%-*s", width, "-");
  
- typedef int (*hists__resort_cb_t)(struct hist_entry *he, void *arg);
+-	if (!sym->annotate2 && symbol__annotate2(sym, map, evsel,
+-		&annotation__default_options, NULL) < 0) {
+-		return 0;
+-	}
+-
+ 	notes = symbol__annotation(sym);
  
-+void perf_evsel__output_resort_cb(struct perf_evsel *evsel, struct ui_progress *prog,
-+				  hists__resort_cb_t cb, void *cb_arg);
- void perf_evsel__output_resort(struct perf_evsel *evsel, struct ui_progress *prog);
- void hists__output_resort(struct hists *hists, struct ui_progress *prog);
- void hists__output_resort_cb(struct hists *hists, struct ui_progress *prog,
+ 	if (notes->hit_cycles)
 -- 
 2.20.1
