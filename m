@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/43] perf coresight: Do not test for libopencsd by default
-Date: Thu, 14 Feb 2019 21:45:15 -0300
-Message-ID: <20190215004539.23571-20-acme@kernel.org>
+Subject: [PATCH 20/43] perf unwind: Do not put libunwind-{x86,aarch64} in FEATURE_TESTS_BASIC
+Date: Thu, 14 Feb 2019 21:45:16 -0300
+Message-ID: <20190215004539.23571-21-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,171 +9,130 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@arm.com>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@arm.com>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, He Kuang <hekuang@huawei.com>, Jean Pihet <jean.pihet@linaro.org>, Wang Nan <wangnan0@huawei.com>, Will Deacon <will.deacon@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since it is not yet that generally available, avoid testing for the
-presence of libcoresight in the fast path test-all.bin feature test.
+As it is not normally available on x86_64 not being tested on test-all.c
+but being in FEATURE_TESTS_BASIC ends up implying that those features
+are present, which leads to trying to link with those libraries and a
+build failure now that test-all.c is finally again building
+successfully:
 
-  # dnf search opencsd
-  No matches found.
-  # dnf search OpenCSD
-  No matches found.
-  # cat /etc/fedora-release
-  Fedora release 29 (Twenty Nine)
-  #
+  /usr/bin/ld: cannot find -lunwind-x86
+  /usr/bin/ld: cannot find -lunwind-aarch64
+  collect2: error: ld returned 1 exit status
+  make[3]: *** [Makefile:199: /tmp/build/perf/plugin_jbd2.so] Error 1
+  make[3]: *** Waiting for unfinished jobs....
+  /usr/bin/ld: cannot find -lunwind-x86
+  /usr/bin/ld: cannot find -lunwind-aarch64
 
-I.e. right now, in my system test-all.bin is failing all the time since
-Fedora29 doesn't have libopencsd available:
+So remove those features from there and explicitely test them.
 
-  $ cat /tmp/build/perf/feature/test-all.make.output
-  In file included from test-all.c:174:
-  test-libopencsd.c:2:10: fatal error: opencsd/c_api/opencsd_c_api.h: No such file or directory
-   #include <opencsd/c_api/opencsd_c_api.h>
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+And then move this patch to just before the last one that allows this to
+be exposed, so that we keep the tree bisectable.
+
+With all this in place we get, at this point:
+
+  $ ldd /tmp/build/perf/feature/test-libunwind.bin
+	linux-vdso.so.1 (0x00007fffa09c6000)
+	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007fbcf4451000)
+	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007fbcf4435000)
+	liblzma.so.5 => /lib64/liblzma.so.5 (0x00007fbcf440c000)
+	libelf.so.1 => /lib64/libelf.so.1 (0x00007fbcf43f2000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fbcf422c000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fbcf4211000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fbcf4491000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fbcf41ed000)
+	libz.so.1 => /lib64/libz.so.1 (0x00007fbcf41d3000)
+  $ cat /tmp/build/perf/feature/test-libunwind-x86.make.output
+  test-libunwind-x86.c:2:10: fatal error: libunwind-x86.h: No such file or directory
+   #include <libunwind-x86.h>
+            ^~~~~~~~~~~~~~~~~
   compilation terminated.
-
-See:
-
-  6ab2b762befd ("perf build: Disable libbabeltrace check by default")
-
-For the rationale, as soon as libopencsd becomes more generally packaged
-and available, we do the same thing we did with babeltrace, enabling it
-by default, as done in:
-
-  24787afbcd01 ("perf tools: Enable LIBBABELTRACE by default")
-
-For now, to explicitely ask for opencsd, make sure you have it installed
-and use:
-
-   make -C tools/perf CORESIGHT=1
-
-The feature test output will be there as an empty file:
-
-  $ ls -la /tmp/build/perf/feature/test-libopencsd.make.output
-
-Because the binary used for the feature check was successfully built:
-
-  $ ls -la /tmp/build/perf/feature/test-libopencsd.bin
-  -rwxrwxr-x. 1 acme acme 18336 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.bin
-  $ ldd /tmp/build/perf/feature/test-libopencsd.bin
-	linux-vdso.so.1 (0x00007fffe18cc000)
-	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fb8e67f6000)
-	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fb8e676f000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007fb8e65a9000)
-	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fb8e6411000)
-	libm.so.6 => /lib64/libm.so.6 (0x00007fb8e628d000)
-	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fb8e6272000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fb8e6828000)
+  $ cat /tmp/build/perf/feature/test-libunwind-aarch64.make.output
+  test-libunwind-aarch64.c:2:10: fatal error: libunwind-aarch64.h: No such file or directory
+  #include <libunwind-aarch64.h>
+           ^~~~~~~~~~~~~~~~~~~~~
+  compilation terminated.
   $
-
-And the resulting perf binary will be linked with it:
-
-  -rw-rw-r--. 1 acme acme 0 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.make.output
-  $ ldd ~/bin/perf | grep opencsd
-	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fd43097f000)
-	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fd4308f8000)
+  $ ldd ~/bin/perf | grep unwind
+	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f5ceb24b000)
+	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f5ceb22f000)
   $
-
-To make sure this gets built before pushing things upstream I have a
-ubuntu:19.04-x-arm64 container that has:
-
-  [root@quaco x-arm64]# grep CORESIGHT Dockerfile
-  ENV EXTRA_MAKE_ARGS=CORESIGHT=1
-  [root@quaco x-arm64]#
-
-So that I always build with libopencsd before pushing things upstream.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Jean Pihet <jean.pihet@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Link: https://lkml.kernel.org/n/tip-20vyy39jw9jgrijesi30fgox@git.kernel.org
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/n/tip-vs6kwqsvwk7oxhs6z9mq87pp@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature   | 2 +-
- tools/build/feature/test-all.c | 5 -----
- tools/perf/Makefile.config     | 3 ++-
- tools/perf/Makefile.perf       | 2 +-
- 4 files changed, 4 insertions(+), 8 deletions(-)
+ tools/build/Makefile.feature | 8 ++++----
+ tools/perf/Makefile.config   | 7 +++++++
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 5467c6bf9ceb..bb9dca65eb5f 100644
+index bb9dca65eb5f..61e46d54a67c 100644
 --- a/tools/build/Makefile.feature
 +++ b/tools/build/Makefile.feature
-@@ -70,7 +70,6 @@ FEATURE_TESTS_BASIC :=                  \
-         sched_getcpu			\
-         sdt				\
-         setns				\
--        libopencsd			\
-         libaio
- 
- # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
-@@ -84,6 +83,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          libbabeltrace                  \
+@@ -53,10 +53,6 @@ FEATURE_TESTS_BASIC :=                  \
+         libslang                        \
+         libcrypto                       \
+         libunwind                       \
+-        libunwind-x86                   \
+-        libunwind-x86_64                \
+-        libunwind-arm                   \
+-        libunwind-aarch64               \
+         pthread-attr-setaffinity-np     \
+         pthread-barrier     		\
+         reallocarray                    \
+@@ -84,6 +80,10 @@ FEATURE_TESTS_EXTRA :=                  \
           libbfd-liberty                 \
           libbfd-liberty-z               \
-+         libopencsd                     \
+          libopencsd                     \
++         libunwind-x86                  \
++         libunwind-x86_64               \
++         libunwind-arm                  \
++         libunwind-aarch64              \
           libunwind-debug-frame          \
           libunwind-debug-frame-arm      \
           libunwind-debug-frame-aarch64  \
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 20cdaa4fc112..74329957553a 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -170,10 +170,6 @@
- # include "test-setns.c"
- #undef main
- 
--#define main main_test_libopencsd
--# include "test-libopencsd.c"
--#undef main
--
- #define main main_test_libaio
- # include "test-libaio.c"
- #undef main
-@@ -217,7 +213,6 @@ int main(int argc, char *argv[])
- 	main_test_sched_getcpu();
- 	main_test_sdt();
- 	main_test_setns();
--	main_test_libopencsd();
- 	main_test_libaio();
- 
- 	return 0;
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index e6360d47e73a..cf4a8329c4c0 100644
+index cf4a8329c4c0..4b735042cad7 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -388,7 +388,8 @@ ifeq ($(feature-setns), 1)
-   $(call detected,CONFIG_SETNS)
- endif
+@@ -109,6 +109,11 @@ FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+ FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
  
--ifndef NO_CORESIGHT
-+ifdef CORESIGHT
-+  $(call feature_check,libopencsd)
-   ifeq ($(feature-libopencsd), 1)
-     CFLAGS += -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
-     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 09df1c8a4ec9..c2ccc54618d1 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -102,7 +102,7 @@ include ../scripts/utilities.mak
- # When selected, pass LLVM_CONFIG=/path/to/llvm-config to `make' if
- # llvm-config is not in $PATH.
- #
--# Define NO_CORESIGHT if you do not want support for CoreSight trace decoding.
-+# Define CORESIGHT if you DO WANT support for CoreSight trace decoding.
- #
- # Define NO_AIO if you do not want support of Posix AIO based trace
- # streaming for record mode. Currently Posix AIO trace streaming is
++FEATURE_CHECK_LDFLAGS-libunwind-arm = -lunwind -lunwind-arm
++FEATURE_CHECK_LDFLAGS-libunwind-aarch64 = -lunwind -lunwind-aarch64
++FEATURE_CHECK_LDFLAGS-libunwind-x86 = -lunwind -llzma -lunwind-x86
++FEATURE_CHECK_LDFLAGS-libunwind-x86_64 = -lunwind -llzma -lunwind-x86_64
++
+ ifdef CSINCLUDES
+   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
+ endif
+@@ -485,6 +490,7 @@ endif
+ ifndef NO_LIBUNWIND
+   have_libunwind :=
+ 
++  $(call feature_check,libunwind-x86)
+   ifeq ($(feature-libunwind-x86), 1)
+     $(call detected,CONFIG_LIBUNWIND_X86)
+     CFLAGS += -DHAVE_LIBUNWIND_X86_SUPPORT
+@@ -493,6 +499,7 @@ ifndef NO_LIBUNWIND
+     have_libunwind = 1
+   endif
+ 
++  $(call feature_check,libunwind-aarch64)
+   ifeq ($(feature-libunwind-aarch64), 1)
+     $(call detected,CONFIG_LIBUNWIND_AARCH64)
+     CFLAGS += -DHAVE_LIBUNWIND_AARCH64_SUPPORT
 -- 
 2.19.1
