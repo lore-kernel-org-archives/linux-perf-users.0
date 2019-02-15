@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/43] perf cs-etm: Remove unused structure field "time" and "timestamp"
-Date: Thu, 14 Feb 2019 21:45:20 -0300
-Message-ID: <20190215004539.23571-25-acme@kernel.org>
+Subject: [PATCH 25/43] perf cs-etm: Fix wrong return values in error path
+Date: Thu, 14 Feb 2019 21:45:21 -0300
+Message-ID: <20190215004539.23571-26-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Field "time" and "timestamp" in structure cs_etm_queue are no longer
-used and need to be removed.
+Function cs_etm__mem_access() is supposed to return a u32 but the error
+path returns negative values at a couple of places, something that really
+throws off the clients using it.  Fix the situation by return '0'.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -23,69 +24,33 @@ Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190212171618.25355-3-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190212171618.25355-4-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ tools/perf/util/cs-etm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index ebd68eb43da9..1d9419a0cf0c 100644
+index 1d9419a0cf0c..f396fee9bb95 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -69,8 +69,6 @@ struct cs_etm_queue {
- 	unsigned int queue_nr;
- 	pid_t pid, tid;
- 	int cpu;
--	u64 time;
--	u64 timestamp;
- 	u64 offset;
- 	u64 period_instructions;
- 	struct branch_stack *last_branch;
-@@ -82,7 +80,7 @@ struct cs_etm_queue {
+@@ -324,7 +324,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 	struct	 addr_location al;
  
- static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
--					   pid_t tid, u64 time_);
-+					   pid_t tid);
+ 	if (!etmq)
+-		return -1;
++		return 0;
  
- /* PTMs ETMIDR [11:8] set to b0011 */
- #define ETMIDR_PTM_VERSION 0x00000300
-@@ -234,7 +232,7 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	if (ret < 0)
- 		return ret;
+ 	machine = etmq->etm->machine;
+ 	cpumode = cs_etm__cpu_mode(etmq, address);
+@@ -332,7 +332,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 	thread = etmq->thread;
+ 	if (!thread) {
+ 		if (cpumode != PERF_RECORD_MISC_KERNEL)
+-			return -EINVAL;
++			return 0;
+ 		thread = etmq->etm->unknown_thread;
+ 	}
  
--	return cs_etm__process_timeless_queues(etm, -1, MAX_TIMESTAMP - 1);
-+	return cs_etm__process_timeless_queues(etm, -1);
- }
- 
- static void cs_etm__free_queue(void *priv)
-@@ -1583,7 +1581,7 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
- }
- 
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
--					   pid_t tid, u64 time_)
-+					   pid_t tid)
- {
- 	unsigned int i;
- 	struct auxtrace_queues *queues = &etm->queues;
-@@ -1593,7 +1591,6 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 		struct cs_etm_queue *etmq = queue->priv;
- 
- 		if (etmq && ((tid == -1) || (etmq->tid == tid))) {
--			etmq->time = time_;
- 			cs_etm__set_pid_tid_cpu(etm, queue);
- 			cs_etm__run_decoder(etmq);
- 		}
-@@ -1637,8 +1634,7 @@ static int cs_etm__process_event(struct perf_session *session,
- 
- 	if (event->header.type == PERF_RECORD_EXIT)
- 		return cs_etm__process_timeless_queues(etm,
--						       event->fork.tid,
--						       sample->time);
-+						       event->fork.tid);
- 
- 	return 0;
- }
 -- 
 2.19.1
