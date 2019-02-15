@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/43] perf header: Remove unused 'cpu_nr' field  from 'struct cpu_topo'
-Date: Thu, 14 Feb 2019 21:45:38 -0300
-Message-ID: <20190215004539.23571-43-acme@kernel.org>
+Subject: [PATCH 43/43] tools build feature sched_getcpu: Undef _GNU_SOURCE at the end
+Date: Thu, 14 Feb 2019 21:45:39 -0300
+Message-ID: <20190215004539.23571-44-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,42 +9,40 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, Jakub Kicinski <jakub.kicinski@netronome.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Not used at all.
+Since this feature test is included in test-all.c, the feature detection
+fast path compile/link phase, it can't leave any defines behind, as it
+can affect the tests included after it, so remove it.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexei Starovoitov <ast@fb.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190213123246.4015-9-jolsa@kernel.org
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: https://lkml.kernel.org/n/tip-lg3kpd9tzypc797vb1f42u6k@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/build/feature/test-sched_getcpu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f1508adefc16..61ce197c5362 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -563,7 +563,6 @@ static int write_cmdline(struct feat_fd *ff,
- 	"/sys/devices/system/cpu/cpu%d/topology/thread_siblings_list"
- 
- struct cpu_topo {
--	u32 cpu_nr;
- 	u32 core_sib;
- 	u32 thread_sib;
- 	char **core_siblings;
-@@ -679,7 +678,6 @@ static struct cpu_topo *build_cpu_topology(void)
- 		goto out_free;
- 
- 	tp = addr;
--	tp->cpu_nr = nr;
- 	addr += sizeof(*tp);
- 	tp->core_siblings = addr;
- 	addr += sz;
+diff --git a/tools/build/feature/test-sched_getcpu.c b/tools/build/feature/test-sched_getcpu.c
+index e448deb4124c..48995ac7911e 100644
+--- a/tools/build/feature/test-sched_getcpu.c
++++ b/tools/build/feature/test-sched_getcpu.c
+@@ -8,3 +8,5 @@ int main(void)
+ {
+ 	return sched_getcpu();
+ }
++
++#undef _GNU_SOURCE
 -- 
 2.19.1
