@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 36/43] perf tools: Compile perf with libperf-in.o instead of libperf.a
-Date: Thu, 14 Feb 2019 21:45:32 -0300
-Message-ID: <20190215004539.23571-37-acme@kernel.org>
+Subject: [PATCH 37/43] perf tools: Rename LIB_FILE to LIBPERF_A
+Date: Thu, 14 Feb 2019 21:45:33 -0300
+Message-ID: <20190215004539.23571-38-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,78 +14,48 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need for perf build to use libperf.a,
-we can use directly libperf-in.o.
-
-The libperf.a stays as a target if needed:
-
-  $ make libperf.a
-  ...
-    CC       util/pmu.o
-    CC       util/pmu-flex.o
-    LD       util/libperf-in.o
-    LD       libperf-in.o
-    AR       libperf.a
+Simple rename, no functional change.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190213123246.4015-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190213123246.4015-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/Makefile.perf | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index c2ccc54618d1..93de7c7b8007 100644
+index 93de7c7b8007..01f7555fd933 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -346,7 +346,7 @@ export PERL_PATH
+@@ -344,7 +344,7 @@ endif
  
- LIB_FILE=$(OUTPUT)libperf.a
+ export PERL_PATH
  
--PERFLIBS = $(LIB_FILE) $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
-+PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
+-LIB_FILE=$(OUTPUT)libperf.a
++LIBPERF_A=$(OUTPUT)libperf.a
+ 
+ PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
  ifndef NO_LIBBPF
-   PERFLIBS += $(LIBBPF)
- endif
-@@ -549,6 +549,8 @@ JEVENTS_IN    := $(OUTPUT)pmu-events/jevents-in.o
- 
- PMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
- 
-+LIBPERF_IN := $(OUTPUT)libperf-in.o
-+
- export JEVENTS
- 
- build := -f $(srctree)/tools/build/Makefile.build dir=. obj
-@@ -565,9 +567,12 @@ $(JEVENTS): $(JEVENTS_IN)
- $(PMU_EVENTS_IN): $(JEVENTS) FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
- 
--$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
-+$(LIBPERF_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=libperf
-+
-+$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS) \
--		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
-+		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBS) -o $@
- 
- $(GTK_IN): FORCE
- 	$(Q)$(MAKE) $(build)=gtk
-@@ -683,11 +688,6 @@ endif
+@@ -688,7 +688,7 @@ endif
  
  $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
  
--LIBPERF_IN := $(OUTPUT)libperf-in.o
--
--$(LIBPERF_IN): prepare FORCE
--	$(Q)$(MAKE) $(build)=libperf
--
- $(LIB_FILE): $(LIBPERF_IN)
+-$(LIB_FILE): $(LIBPERF_IN)
++$(LIBPERF_A): $(LIBPERF_IN)
  	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN) $(LIB_OBJS)
  
+ LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
+@@ -910,7 +910,7 @@ python-clean:
+ 	$(python-clean)
+ 
+ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean python-clean
+-	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIB_FILE) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
++	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
+ 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+ 	$(call QUIET_CLEAN, core-progs) $(RM) $(ALL_PROGRAMS) perf perf-read-vdso32 perf-read-vdsox32 $(OUTPUT)pmu-events/jevents $(OUTPUT)$(LIBJVMTI).so
 -- 
 2.19.1
