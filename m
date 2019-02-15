@@ -1,56 +1,70 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/43] perf cs-etm: Add proper header file for symbols
-Date: Thu, 14 Feb 2019 21:44:58 -0300
-Message-ID: <20190215004539.23571-3-acme@kernel.org>
+Subject: [PATCH 03/43] perf report: Add s390 diagnosic sampling descriptor size
+Date: Thu, 14 Feb 2019 21:44:59 -0300
+Message-ID: <20190215004539.23571-4-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulouse <suzuki.poulose@arm.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-RnJvbTogTWF0aGlldSBQb2lyaWVyIDxtYXRoaWV1LnBvaXJpZXJAbGluYXJvLm9yZz4KCkFmdGVy
-ICdjb21taXQgZTIyYzFjNzUxMTQwICgicGVyZiB0aHJlYWQ6IERvbid0IGluY2x1ZGUgc3ltYm9s
-LmgsCnN5bWJvbF9jb25mLmggaXMgZW5vdWdoIiknCgpDb21waWxhdGlvbiBvZiB0aGUgcGVyZiB0
-b29scyBpcyBicm9rZW4gd2hlbiB1c2luZyB0aGUgZnVuY3Rpb25hbGl0eQpwcm92aWRlZCBieSB0
-aGUgb3BlbkNTRCBsaWJyYXJ5OgoKWy4uLl0KCi4uLiAgICAgICAgICAgICAgICAgICAgICAgdGlt
-ZXJmZDogWyBvbiAgXQouLi4gICAgICAgICAgICAgICAgICBzY2hlZF9nZXRjcHU6IFsgb24gIF0K
-Li4uICAgICAgICAgICAgICAgICAgICAgICAgICAgc2R0OiBbIE9GRiBdCi4uLiAgICAgICAgICAg
-ICAgICAgICAgICAgICBzZXRuczogWyBvbiAgXQouLi4gICAgICAgICAgICAgICAgICAgIGxpYm9w
-ZW5jc2Q6IFsgb24gIF0KClsuLi5dCgogIENDICAgICAgIHV0aWwvYXJtLXNwZS5vCiAgQ0MgICAg
-ICAgdXRpbC9hcm0tc3BlLXBrdC1kZWNvZGVyLm8KICBDQyAgICAgICB1dGlsL3MzOTAtY3B1bXNm
-Lm8KICBDQyAgICAgICB1dGlsL2NzLWV0bS5vCiAgQ0MgICAgICAgdXRpbC9wYXJzZS1icmFuY2gt
-b3B0aW9ucy5vCnV0aWwvY3MtZXRtLmM6IEluIGZ1bmN0aW9uIOKAmGNzX2V0bV9fbWVtX2FjY2Vz
-c+KAmToKdXRpbC9jcy1ldG0uYzoyOTc6MjQ6IGVycm9yOiBzdG9yYWdlIHNpemUgb2Yg4oCYYWzi
-gJkgaXNu4oCZdCBrbm93bgogIHN0cnVjdCAgYWRkcl9sb2NhdGlvbiBhbDsKCkFuZCByaWdodGx5
-IHNvIHNpbmNlIGZpbGUgY3MtZXRtLmMgZG9lc24ndCBpbmNsdWRlIHN5bWJvbC5oLCBzb21ldGhp
-bmcKdGhhdCBpcyByZWN0aWZpZWQgaW4gdGhpcyBwYXRjaC4KClNpZ25lZC1vZmYtYnk6IE1hdGhp
-ZXUgUG9pcmllciA8bWF0aGlldS5wb2lyaWVyQGxpbmFyby5vcmc+CkNjOiBKaXJpIE9sc2EgPGpv
-bHNhQHJlZGhhdC5jb20+CkNjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+
-CkNjOiBTdXp1a2kgSyBQb3Vsb3VzZSA8c3V6dWtpLnBvdWxvc2VAYXJtLmNvbT4KQ2M6IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpMaW5rOiBodHRwOi8vbGttbC5rZXJuZWwu
-b3JnL3IvMjAxOTAyMDgyMjM1NDMuMzE4MzYtMS1tYXRoaWV1LnBvaXJpZXJAbGluYXJvLm9yZwpT
-aWduZWQtb2ZmLWJ5OiBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8gPGFjbWVAcmVkaGF0LmNvbT4K
-LS0tCiB0b29scy9wZXJmL3V0aWwvY3MtZXRtLmMgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9jcy1ldG0uYyBiL3Rvb2xz
-L3BlcmYvdXRpbC9jcy1ldG0uYwppbmRleCA4YjNmODgyZDZlMmYuLjBiMTFkNjUzY2ZiZSAxMDA2
-NDQKLS0tIGEvdG9vbHMvcGVyZi91dGlsL2NzLWV0bS5jCisrKyBiL3Rvb2xzL3BlcmYvdXRpbC9j
-cy1ldG0uYwpAQCAtMjUsNiArMjUsNyBAQAogI2luY2x1ZGUgIm1hY2hpbmUuaCIKICNpbmNsdWRl
-ICJtYXAuaCIKICNpbmNsdWRlICJwZXJmLmgiCisjaW5jbHVkZSAic3ltYm9sLmgiCiAjaW5jbHVk
-ZSAidGhyZWFkLmgiCiAjaW5jbHVkZSAidGhyZWFkX21hcC5oIgogI2luY2x1ZGUgInRocmVhZC1z
-dGFjay5oIgotLSAKMi4xOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Thomas Richter <tmricht@linux.ibm.com>
+
+On IBM z13 machine types 2964 and 2965 the descriptor
+sizes for sampling and diagnostic sampling entries
+might be missing in the trailer entry and are set to zero.
+
+This leads to a perf report failure when processing diagnostic
+sampling entries.
+
+This patch adds missing descriptor sizes when the trailer entry
+contains zero for these fields.
+
+Output before:
+  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
+  0xabbf0 [0x8]: failed to process type: 68
+  Error:
+  failed to process sample
+  [root@s38lp82 perf]#
+
+Output after:
+  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
+  # Total Lost Samples: 0
+  # Samples: 3K of event 'SF_CYCLES_BASIC_DIAG'
+  # Samples: 162  of event 'CF_DIAG'
+  [root@s38lp82 perf]#
+
+Fixes: 2b1444f2e28b ("perf report: Add raw report support for s390 auxiliary trace")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190211100627.85714-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/s390-cpumsf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index d9525d220db1..c215704931dc 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -352,6 +352,11 @@ static bool s390_cpumsf_validate(int machine_type,
+ 			*dsdes = 85;
+ 			*bsdes = 32;
+ 			break;
++		case 2964:
++		case 2965:
++			*dsdes = 112;
++			*bsdes = 32;
++			break;
+ 		default:
+ 			/* Illegal trailer entry */
+ 			return false;
+-- 
+2.19.1
