@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/43] perf header: Get rid of write_it label
-Date: Thu, 14 Feb 2019 21:45:37 -0300
-Message-ID: <20190215004539.23571-42-acme@kernel.org>
+Subject: [PATCH 42/43] perf header: Remove unused 'cpu_nr' field  from 'struct cpu_topo'
+Date: Thu, 14 Feb 2019 21:45:38 -0300
+Message-ID: <20190215004539.23571-43-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,35 +14,37 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Simplifying the code a bit.
+Not used at all.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190213123246.4015-8-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190213123246.4015-9-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/perf/util/header.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index dec6d218c31c..f1508adefc16 100644
+index f1508adefc16..61ce197c5362 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -1042,11 +1042,9 @@ static int write_cpuid(struct feat_fd *ff,
- 	int ret;
+@@ -563,7 +563,6 @@ static int write_cmdline(struct feat_fd *ff,
+ 	"/sys/devices/system/cpu/cpu%d/topology/thread_siblings_list"
  
- 	ret = get_cpuid(buffer, sizeof(buffer));
--	if (!ret)
--		goto write_it;
-+	if (ret)
-+		return -1;
+ struct cpu_topo {
+-	u32 cpu_nr;
+ 	u32 core_sib;
+ 	u32 thread_sib;
+ 	char **core_siblings;
+@@ -679,7 +678,6 @@ static struct cpu_topo *build_cpu_topology(void)
+ 		goto out_free;
  
--	return -1;
--write_it:
- 	return do_write_string(ff, buffer);
- }
- 
+ 	tp = addr;
+-	tp->cpu_nr = nr;
+ 	addr += sizeof(*tp);
+ 	tp->core_siblings = addr;
+ 	addr += sz;
 -- 
 2.19.1
