@@ -1,55 +1,50 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/43] tools build: Add -lrt to FEATURE_CHECK_LDFLAGS-libaio
-Date: Thu, 14 Feb 2019 21:45:13 -0300
-Message-ID: <20190215004539.23571-18-acme@kernel.org>
+Subject: [PATCH 18/43] perf trace: Filter out gnome-terminal* parent
+Date: Thu, 14 Feb 2019 21:45:14 -0300
+Message-ID: <20190215004539.23571-19-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since we need it to resolve the AIO symbols, otherwise we fail with:
+Just like it does with 'sshd', to reduce the feedback loop when doing
+system wide tracing on on a gnome GUI.
 
-  $ cat /tmp/build/perf/feature/test-all.make.output
-  /usr/bin/ld: /tmp/ccEqrj36.o: undefined reference to symbol 'aio_return64@@GLIBC_2.2.5'
-  /usr/bin/ld: //usr/lib64/librt.so.1: error adding symbols: DSO missing from command line
-  collect2: error: ld returned 1 exit status
-  $
-
-When we added the aio support in 'perf record' only the test-libaio.bin
-target got the -lrt, i.e. the feature detection slow path. Fix it.
+Need to figure out how to auto-filter the calls to other UI components
+tho.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 2a07d814747b ("tools build feature: Check if libaio is available")
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-rjopq5y92itgokppdhe8sc6z@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b441c88cafa1..e6360d47e73a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -218,6 +218,8 @@ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
- FEATURE_CHECK_CFLAGS-libpython-version := $(PYTHON_EMBED_CCOPTS)
- FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a9b51f59ab54..68a01e624ad3 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2771,7 +2771,8 @@ static int trace__set_filter_loop_pids(struct trace *trace)
+ 		if (parent == NULL)
+ 			break;
  
-+FEATURE_CHECK_LDFLAGS-libaio = -lrt
-+
- CFLAGS += -fno-omit-frame-pointer
- CFLAGS += -ggdb3
- CFLAGS += -funwind-tables
+-		if (!strcmp(thread__comm_str(parent), "sshd")) {
++		if (!strcmp(thread__comm_str(parent), "sshd") ||
++		    strstarts(thread__comm_str(parent), "gnome-terminal")) {
+ 			pids[nr++] = parent->tid;
+ 			break;
+ 		}
 -- 
 2.19.1
