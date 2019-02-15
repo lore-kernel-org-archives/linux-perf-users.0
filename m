@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/43] perf cs-etm: Modularize auxtrace_buffer fetch function
-Date: Thu, 14 Feb 2019 21:45:31 -0300
-Message-ID: <20190215004539.23571-36-acme@kernel.org>
+Subject: [PATCH 36/43] perf tools: Compile perf with libperf-in.o instead of libperf.a
+Date: Thu, 14 Feb 2019 21:45:32 -0300
+Message-ID: <20190215004539.23571-37-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,87 +9,83 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki K Poulouse <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Making the auxtrace_buffer fetch function modular so that it can be
-called from different decoding context (timeless vs. non-timeless),
-avoiding to repeat code.
+There's no need for perf build to use libperf.a,
+we can use directly libperf-in.o.
 
-No change in functionality is introduced by this patch.
+The libperf.a stays as a target if needed:
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Leo Yan <leo.yan@linaro.org>
+  $ make libperf.a
+  ...
+    CC       util/pmu.o
+    CC       util/pmu-flex.o
+    LD       util/libperf-in.o
+    LD       libperf-in.o
+    AR       libperf.a
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190212171618.25355-14-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190213123246.4015-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 41 ++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+ tools/perf/Makefile.perf | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f607bc58bd03..110804936fc3 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1152,6 +1152,32 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index c2ccc54618d1..93de7c7b8007 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -346,7 +346,7 @@ export PERL_PATH
  
- 	return 0;
- }
-+/*
-+ * cs_etm__get_data_block: Fetch a block from the auxtrace_buffer queue
-+ *			   if need be.
-+ * Returns:	< 0	if error
-+ *		= 0	if no more auxtrace_buffer to read
-+ *		> 0	if the current buffer isn't empty yet
-+ */
-+static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
-+{
-+	int ret;
+ LIB_FILE=$(OUTPUT)libperf.a
+ 
+-PERFLIBS = $(LIB_FILE) $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
++PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
+ ifndef NO_LIBBPF
+   PERFLIBS += $(LIBBPF)
+ endif
+@@ -549,6 +549,8 @@ JEVENTS_IN    := $(OUTPUT)pmu-events/jevents-in.o
+ 
+ PMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
+ 
++LIBPERF_IN := $(OUTPUT)libperf-in.o
 +
-+	if (!etmq->buf_len) {
-+		ret = cs_etm__get_trace(etmq);
-+		if (ret <= 0)
-+			return ret;
-+		/*
-+		 * We cannot assume consecutive blocks in the data file
-+		 * are contiguous, reset the decoder to force re-sync.
-+		 */
-+		ret = cs_etm_decoder__reset(etmq->decoder);
-+		if (ret)
-+			return ret;
-+	}
+ export JEVENTS
+ 
+ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+@@ -565,9 +567,12 @@ $(JEVENTS): $(JEVENTS_IN)
+ $(PMU_EVENTS_IN): $(JEVENTS) FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+ 
+-$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
++$(LIBPERF_IN): prepare FORCE
++	$(Q)$(MAKE) $(build)=libperf
 +
-+	return etmq->buf_len;
-+}
++$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
+ 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS) \
+-		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
++		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBS) -o $@
  
- static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
- 				 struct cs_etm_packet *packet,
-@@ -1591,18 +1617,9 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
+ $(GTK_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=gtk
+@@ -683,11 +688,6 @@ endif
  
- 	/* Go through each buffer in the queue and decode them one by one */
- 	while (1) {
--		if (!etmq->buf_len) {
--			err = cs_etm__get_trace(etmq);
--			if (err <= 0)
--				return err;
--			/*
--			 * We cannot assume consecutive blocks in the data file
--			 * are contiguous, reset the decoder to force re-sync.
--			 */
--			err = cs_etm_decoder__reset(etmq->decoder);
--			if (err != 0)
--				return err;
--		}
-+		err = cs_etm__get_data_block(etmq);
-+		if (err <= 0)
-+			return err;
+ $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
  
- 		/* Run trace decoder until buffer consumed or end of trace */
- 		do {
+-LIBPERF_IN := $(OUTPUT)libperf-in.o
+-
+-$(LIBPERF_IN): prepare FORCE
+-	$(Q)$(MAKE) $(build)=libperf
+-
+ $(LIB_FILE): $(LIBPERF_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN) $(LIB_OBJS)
+ 
 -- 
 2.19.1
