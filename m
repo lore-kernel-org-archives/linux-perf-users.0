@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/43] perf cs-etm: Cleaning up function cs_etm__alloc_queue()
-Date: Thu, 14 Feb 2019 21:45:26 -0300
-Message-ID: <20190215004539.23571-31-acme@kernel.org>
+Subject: [PATCH 31/43] perf cs-etm: Rethink kernel address initialisation
+Date: Thu, 14 Feb 2019 21:45:27 -0300
+Message-ID: <20190215004539.23571-32-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,9 +14,12 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Function cs_etm__alloc_queue() should only be concerned with the allocation
-of memory for the etmq and accompanying decoder.  Everything else should
-be done in the calling function.
+Moving initialisation of the kernel start address to function
+cs_etm__setup_queues(), considered to be the common denominator for
+queue initialisation.  That way we don't have to repeat the same code
+at different places.
+
+No change of functionatlity is introduced by this patch.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -24,89 +27,40 @@ Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190212171618.25355-9-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190212171618.25355-10-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+ tools/perf/util/cs-etm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 4cc9fce97a86..c9a5b4935209 100644
+index c9a5b4935209..2d2de898ea68 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -405,8 +405,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
- 	return len;
- }
+@@ -523,6 +523,9 @@ static int cs_etm__setup_queues(struct cs_etm_auxtrace *etm)
+ 	unsigned int i;
+ 	int ret;
  
--static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
--						unsigned int queue_nr)
-+static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
++	if (!etm->kernel_start)
++		etm->kernel_start = machine__kernel_start(etm->machine);
++
+ 	for (i = 0; i < etm->queues.nr_queues; i++) {
+ 		ret = cs_etm__setup_queue(etm, &etm->queues.queue_array[i], i);
+ 		if (ret)
+@@ -1490,14 +1493,10 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq)
+ 
+ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
  {
- 	struct cs_etm_decoder_params d_params;
- 	struct cs_etm_trace_params  *t_params = NULL;
-@@ -444,12 +443,6 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
- 	if (!etmq->event_buf)
- 		goto out_free;
+-	struct cs_etm_auxtrace *etm = etmq->etm;
+ 	struct cs_etm_buffer buffer;
+ 	size_t buffer_used, processed;
+ 	int err = 0;
  
--	etmq->etm = etm;
--	etmq->queue_nr = queue_nr;
--	etmq->pid = -1;
--	etmq->tid = -1;
--	etmq->cpu = -1;
+-	if (!etm->kernel_start)
+-		etm->kernel_start = machine__kernel_start(etm->machine);
 -
- 	/* Use metadata to fill in trace parameters for trace decoder */
- 	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
- 
-@@ -479,10 +472,6 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
- 		goto out_free_decoder;
- 
- 	zfree(&t_params);
--
--	etmq->offset = 0;
--	etmq->period_instructions = 0;
--
- 	return etmq;
- 
- out_free_decoder:
-@@ -503,24 +492,30 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 			       struct auxtrace_queue *queue,
- 			       unsigned int queue_nr)
- {
-+	int ret = 0;
- 	struct cs_etm_queue *etmq = queue->priv;
- 
- 	if (list_empty(&queue->head) || etmq)
--		return 0;
-+		goto out;
- 
--	etmq = cs_etm__alloc_queue(etm, queue_nr);
-+	etmq = cs_etm__alloc_queue(etm);
- 
--	if (!etmq)
--		return -ENOMEM;
-+	if (!etmq) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
- 	queue->priv = etmq;
--
--	if (queue->cpu != -1)
--		etmq->cpu = queue->cpu;
--
-+	etmq->etm = etm;
-+	etmq->queue_nr = queue_nr;
-+	etmq->cpu = queue->cpu;
- 	etmq->tid = queue->tid;
-+	etmq->pid = -1;
-+	etmq->offset = 0;
-+	etmq->period_instructions = 0;
- 
--	return 0;
-+out:
-+	return ret;
- }
- 
- static int cs_etm__setup_queues(struct cs_etm_auxtrace *etm)
+ 	/* Go through each buffer in the queue and decode them one by one */
+ 	while (1) {
+ 		buffer_used = 0;
 -- 
 2.19.1
