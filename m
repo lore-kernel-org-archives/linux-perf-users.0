@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/43] perf unwind: Do not put libunwind-{x86,aarch64} in FEATURE_TESTS_BASIC
-Date: Thu, 14 Feb 2019 21:45:16 -0300
-Message-ID: <20190215004539.23571-21-acme@kernel.org>
+Subject: [PATCH 21/43] tools build: Add test-reallocarray.c to test-all.c to fix the build
+Date: Thu, 14 Feb 2019 21:45:17 -0300
+Message-ID: <20190215004539.23571-22-acme@kernel.org>
 References: <20190215004539.23571-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,130 +9,187 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215004539.23571-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, He Kuang <hekuang@huawei.com>, Jean Pihet <jean.pihet@linaro.org>, Wang Nan <wangnan0@huawei.com>, Will Deacon <will.deacon@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, Jakub Kicinski <jakub.kicinski@netronome.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As it is not normally available on x86_64 not being tested on test-all.c
-but being in FEATURE_TESTS_BASIC ends up implying that those features
-are present, which leads to trying to link with those libraries and a
-build failure now that test-all.c is finally again building
-successfully:
+When a test is in the FEATURE_TESTS_BASIC list in tools/build/Makefile.feature
+must be added to tools/build/feature/test-all.c, because the successfull
+compilation and linking of that test-all.bin file means that all the
+features listed in FEATURE_TESTS_BASIC are present in the system, so we
+don't have to go on feature by feature test building them.
 
-  /usr/bin/ld: cannot find -lunwind-x86
-  /usr/bin/ld: cannot find -lunwind-aarch64
-  collect2: error: ld returned 1 exit status
-  make[3]: *** [Makefile:199: /tmp/build/perf/plugin_jbd2.so] Error 1
-  make[3]: *** Waiting for unfinished jobs....
-  /usr/bin/ld: cannot find -lunwind-x86
-  /usr/bin/ld: cannot find -lunwind-aarch64
+Since reallocarray() is expected to be present in modern systems, it has
+a place in FEATURE_TESTS_BASIC, so that we speed up the build process
+building just that file.
 
-So remove those features from there and explicitely test them.
+For older systems, such as ubuntu:16.04 (build failure reported by Jin
+Yao) debian:8, and for the current flagship RHEL distro, RHEL7, the
+build will fail as test-all.bin (without test-reallocarray.c included)
+passes but reallocarray() isn't present, making the build fail with:
 
-And then move this patch to just before the last one that allows this to
-be exposed, so that we keep the tree bisectable.
+    CC       /tmp/build/perf/libbpf.o
+    MKDIR    /tmp/build/perf/fs/
+    CC       /tmp/build/perf/fs/tracing_path.o
+    LD       /tmp/build/perf/fd/libapi-in.o
+    CC       /tmp/build/perf/bpf.o
+  libbpf.c: In function 'bpf_object__add_program':
+  libbpf.c:367:10: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
+    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
+            ^
+  libbpf.c:367:2: error: nested extern declaration of 'reallocarray' [-Werror=nested-externs]
+    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
+    ^
+  libbpf.c:367:8: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
+          ^
+  libbpf.c: In function 'bpf_object__elf_collect':
+  libbpf.c:887:10: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+      reloc = reallocarray(reloc, nr_reloc,
+            ^
+  libbpf.c: In function 'bpf_program__reloc_text':
+  libbpf.c:1394:12: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+     new_insn = reallocarray(prog->insns, new_cnt, sizeof(*insn));
+              ^
+    CC       /tmp/build/perf/nlattr.o
 
-With all this in place we get, at this point:
+Even with:
 
-  $ ldd /tmp/build/perf/feature/test-libunwind.bin
-	linux-vdso.so.1 (0x00007fffa09c6000)
-	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007fbcf4451000)
-	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007fbcf4435000)
-	liblzma.so.5 => /lib64/liblzma.so.5 (0x00007fbcf440c000)
-	libelf.so.1 => /lib64/libelf.so.1 (0x00007fbcf43f2000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007fbcf422c000)
-	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fbcf4211000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fbcf4491000)
-	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fbcf41ed000)
-	libz.so.1 => /lib64/libz.so.1 (0x00007fbcf41d3000)
-  $ cat /tmp/build/perf/feature/test-libunwind-x86.make.output
-  test-libunwind-x86.c:2:10: fatal error: libunwind-x86.h: No such file or directory
-   #include <libunwind-x86.h>
-            ^~~~~~~~~~~~~~~~~
-  compilation terminated.
-  $ cat /tmp/build/perf/feature/test-libunwind-aarch64.make.output
-  test-libunwind-aarch64.c:2:10: fatal error: libunwind-aarch64.h: No such file or directory
-  #include <libunwind-aarch64.h>
-           ^~~~~~~~~~~~~~~~~~~~~
-  compilation terminated.
-  $
-  $ ldd ~/bin/perf | grep unwind
-	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f5ceb24b000)
-	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f5ceb22f000)
+  $ grep reallocarray /tmp/build/perf/FEATURE-DUMP
+  feature-reallocarray=1
   $
 
+Which ubuntu:16.04.5 LTS doesn't have:
+
+  perfbuilder@38a153a1bba8:/$ head -2 /etc/os-release
+  NAME="Ubuntu"
+  VERSION="16.04.5 LTS (Xenial Xerus)"
+  perfbuilder@38a153a1bba8:/$ find /usr/include/ -name "*.h" | xargs grep -w reallocarray
+  perfbuilder@38a153a1bba8:/$
+
+Fix it by including it to test-all.c, which ends up forcing the
+individual tests to be triggered and for the build process to notice
+that indeed reallocarray() is not there:
+
+  perfbuilder@38a153a1bba8:/$ cat /tmp/build/perf/feature/test-all.make.output
+  In file included from test-all.c:178:0:
+  test-reallocarray.c: In function 'main_test_reallocarray':
+  test-reallocarray.c:7:11: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
+    return !!reallocarray(NULL, 1, 1);
+             ^
+  cc1: all warnings being treated as errors
+  perfbuilder@38a153a1bba8:/$
+
+That is the only test that is failing on Ubuntu 16.03.5 LTS, so all
+tests are forced:
+
+  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$ ls -lSr *.make.output
+  <SNIP successful tests>
+  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-dwarf.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 14:16 test-cplus-demangle.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-bpf.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-backtrace.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 104 Feb 14 15:00 test-bionic.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 107 Feb 14 15:00 test-libunwind-x86.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 115 Feb 14 15:00 test-libunwind-aarch64.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 122 Feb 14 15:00 test-libbabeltrace.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 254 Feb 14 15:00 test-reallocarray.make.output
+  -rw-r--r--. 1 perfbuilder perfbuilder 312 Feb 14 15:00 test-all.make.output
+  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$
+
+And that reallocarray() one shows:
+
+  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$ cat test-reallocarray.make.output
+  test-reallocarray.c: In function 'main':
+  test-reallocarray.c:7:11: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
+    return !!reallocarray(NULL, 1, 1);
+             ^
+  cc1: all warnings being treated as errors
+  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$
+
+Which now generates the expected result:
+
+  perfbuilder@38a153a1bba8:~$ grep reallocarray /tmp/build/perf/FEATURE-DUMP
+  feature-reallocarray=0
+  perfbuilder@38a153a1bba8:~$
+
+The fallback mechanism kicks in and libbpf and perf are again buildable
+in systems without reallocarray():
+
+  $ cat tools/include/tools/libc_compat.h
+  // SPDX-License-Identifier: (LGPL-2.0+ OR BSD-2-Clause)
+  /* Copyright (C) 2018 Netronome Systems, Inc. */
+
+  #ifndef __TOOLS_LIBC_COMPAT_H
+  #define __TOOLS_LIBC_COMPAT_H
+
+  #include <stdlib.h>
+  #include <linux/overflow.h>
+
+  #ifdef COMPAT_NEED_REALLOCARRAY
+  static inline void *reallocarray(void *ptr, size_t nmemb, size_t size)
+  {
+	  size_t bytes;
+
+	  if (unlikely(check_mul_overflow(nmemb, size, &bytes)))
+		  return NULL;
+	  return realloc(ptr, bytes);
+  }
+  #endif
+  #endif
+  $
+
+Reported-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: He Kuang <hekuang@huawei.com>
-Cc: Jean Pihet <jean.pihet@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@fb.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/n/tip-vs6kwqsvwk7oxhs6z9mq87pp@git.kernel.org
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Fixes: 531b014e7a2f ("tools: bpf: make use of reallocarray")
+Link: https://lkml.kernel.org/n/tip-aonqku8axii8rxki5g11w40b@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature | 8 ++++----
- tools/perf/Makefile.config   | 7 +++++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ tools/build/feature/test-all.c          | 5 +++++
+ tools/build/feature/test-reallocarray.c | 2 ++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index bb9dca65eb5f..61e46d54a67c 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -53,10 +53,6 @@ FEATURE_TESTS_BASIC :=                  \
-         libslang                        \
-         libcrypto                       \
-         libunwind                       \
--        libunwind-x86                   \
--        libunwind-x86_64                \
--        libunwind-arm                   \
--        libunwind-aarch64               \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-         reallocarray                    \
-@@ -84,6 +80,10 @@ FEATURE_TESTS_EXTRA :=                  \
-          libbfd-liberty                 \
-          libbfd-liberty-z               \
-          libopencsd                     \
-+         libunwind-x86                  \
-+         libunwind-x86_64               \
-+         libunwind-arm                  \
-+         libunwind-aarch64              \
-          libunwind-debug-frame          \
-          libunwind-debug-frame-arm      \
-          libunwind-debug-frame-aarch64  \
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index cf4a8329c4c0..4b735042cad7 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -109,6 +109,11 @@ FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
- FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
- FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 74329957553a..e903b86b742f 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -174,6 +174,10 @@
+ # include "test-libaio.c"
+ #undef main
  
-+FEATURE_CHECK_LDFLAGS-libunwind-arm = -lunwind -lunwind-arm
-+FEATURE_CHECK_LDFLAGS-libunwind-aarch64 = -lunwind -lunwind-aarch64
-+FEATURE_CHECK_LDFLAGS-libunwind-x86 = -lunwind -llzma -lunwind-x86
-+FEATURE_CHECK_LDFLAGS-libunwind-x86_64 = -lunwind -llzma -lunwind-x86_64
++#define main main_test_reallocarray
++# include "test-reallocarray.c"
++#undef main
 +
- ifdef CSINCLUDES
-   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
- endif
-@@ -485,6 +490,7 @@ endif
- ifndef NO_LIBUNWIND
-   have_libunwind :=
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+@@ -214,6 +218,7 @@ int main(int argc, char *argv[])
+ 	main_test_sdt();
+ 	main_test_setns();
+ 	main_test_libaio();
++	main_test_reallocarray();
  
-+  $(call feature_check,libunwind-x86)
-   ifeq ($(feature-libunwind-x86), 1)
-     $(call detected,CONFIG_LIBUNWIND_X86)
-     CFLAGS += -DHAVE_LIBUNWIND_X86_SUPPORT
-@@ -493,6 +499,7 @@ ifndef NO_LIBUNWIND
-     have_libunwind = 1
-   endif
- 
-+  $(call feature_check,libunwind-aarch64)
-   ifeq ($(feature-libunwind-aarch64), 1)
-     $(call detected,CONFIG_LIBUNWIND_AARCH64)
-     CFLAGS += -DHAVE_LIBUNWIND_AARCH64_SUPPORT
+ 	return 0;
+ }
+diff --git a/tools/build/feature/test-reallocarray.c b/tools/build/feature/test-reallocarray.c
+index 8170de35150d..8f6743e31da7 100644
+--- a/tools/build/feature/test-reallocarray.c
++++ b/tools/build/feature/test-reallocarray.c
+@@ -6,3 +6,5 @@ int main(void)
+ {
+ 	return !!reallocarray(NULL, 1, 1);
+ }
++
++#undef _GNU_SOURCE
 -- 
 2.19.1
