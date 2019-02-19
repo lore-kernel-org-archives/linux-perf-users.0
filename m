@@ -1,56 +1,68 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf: fix documentation of the Flags section in perf.data
-Date: Tue, 19 Feb 2019 15:04:59 +0100
-Message-ID: <20190219140459.GE6435@krava>
-References: <20190217232246.GB26460@krava>
- <20190218141846.2995-1-jonas.rabenstein@studium.uni-erlangen.de>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf: fix HEADER_CMDLINE description in perf.data
+ documentation
+Date: Tue, 19 Feb 2019 12:24:13 -0300
+Message-ID: <20190219152413.GB31177@kernel.org>
+References: <20190218124648.GN31177@kernel.org>
+ <20190218140203.1982-1-jonas.rabenstein@studium.uni-erlangen.de>
+ <20190219140409.GD6435@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190218141846.2995-1-jonas.rabenstein@studium.uni-erlangen.de>
+In-Reply-To: <20190219140409.GD6435@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Feb 18, 2019 at 03:18:46PM +0100, Jonas Rabenstein wrote:
-> According to the current documentation the flags section is placed after
-> the file header itself but the code assumes to find the flags section
-> after the data section. This change updates the documentation to that
-> assumption.
+Em Tue, Feb 19, 2019 at 03:04:09PM +0100, Jiri Olsa escreveu:
+> On Mon, Feb 18, 2019 at 03:02:03PM +0100, Jonas Rabenstein wrote:
+> > The content of this feature header is a perf_header_string_list of
+> > the argument vector and not a perf_header_string of the commandline.
+> 
+> missing your Signed-off-by
 
-missing your Signed-off-by
+Please provide for both and I'll apply.
+
+In such a case you could repost with what is missing (your
+Signed-off-by: your-email) and collect the Acked-by from whoever
+provides them, Jiri in this case, so just add these two lines to the
+changeset log:
 
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 
-thanks,
-jirka
+Thanks,
 
-> ---
->  tools/perf/Documentation/perf.data-file-format.txt | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+- Arnaldo
+ 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> index 5f9a3924830b..593ef49b273c 100644
-> --- a/tools/perf/Documentation/perf.data-file-format.txt
-> +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> @@ -43,11 +43,10 @@ struct perf_file_section {
->  
->  Flags section:
->  
-> -The header is followed by different optional headers, described by the bits set
-> -in flags. Only headers for which the bit is set are included. Each header
-> -consists of a perf_file_section located after the initial header.
-> -The respective perf_file_section points to the data of the additional
-> -header and defines its size.
-> +For each of the optional features a perf_file_section it placed after the data
-> +section if the feature bit is set in the perf_header flags bitset. The
-> +respective perf_file_section points to the data of the additional header and
-> +defines its size.
->  
->  Some headers consist of strings, which are defined like this:
->  
-> -- 
-> 2.19.2
+> thanks,
+> jirka
 > 
+> > ---
+> >  tools/perf/Documentation/perf.data-file-format.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+> > index dfb218feaad9..5f9a3924830b 100644
+> > --- a/tools/perf/Documentation/perf.data-file-format.txt
+> > +++ b/tools/perf/Documentation/perf.data-file-format.txt
+> > @@ -131,7 +131,7 @@ An uint64_t with the total memory in bytes.
+> >  
+> >  	HEADER_CMDLINE = 11,
+> >  
+> > -A perf_header_string with the perf command line used to collect the data.
+> > +A perf_header_string_list with the perf arg-vector used to collect the data.
+> >  
+> >  	HEADER_EVENT_DESC = 12,
+> >  
+> > -- 
+> > 2.19.2
+> > 
+
+-- 
+
+- Arnaldo
