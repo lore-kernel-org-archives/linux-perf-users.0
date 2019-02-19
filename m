@@ -1,89 +1,63 @@
-From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH 2/2] perf evsel: add inline functions to sample callchain output
-Date: Tue, 19 Feb 2019 19:38:10 +0100
-Message-ID: <6aab7b5b0816426fed3cb2f2a2ba08e73e4c51e2.1550600520.git.jonas.rabenstein@studium.uni-erlangen.de>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 0/2] perf evsel: add support for inlined function in
+ callchains
+Date: Tue, 19 Feb 2019 16:38:44 -0300
+Message-ID: <20190219193844.GB25535@kernel.org>
 References: <cover.1550600520.git.jonas.rabenstein@studium.uni-erlangen.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <cover.1550600520.git.jonas.rabenstein@studium.uni-erlangen.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Stephane Eranian <eranian@google.com>, Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, linux-kernel@vger.kernel.org
+To: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, Milian Wolff <milian.wolff@kdab.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Whenever a callchain shall be printed search for each address whether
-inline information is available and add those symbols to the output
-if symbol_conf.inline_name is enabled.
+Em Tue, Feb 19, 2019 at 07:38:08PM +0100, Jonas Rabenstein escreveu:
+> Hi,
+> sample__fprintf_callchain currently did not use the already available
+> code to get the symbols of an inlined function if such information is
+> available in a dso. This patchset adds the required logic to add
+> appropriate lines.
 
-Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
----
- tools/perf/util/evsel_fprintf.c | 46 +++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+You forgot to add the person that did lots of work in this area more
+recently, Milian, which I'm adding here so that he have the opportunity
+to comment on your work,
 
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index c710f687ddf4..9f9ece453dc4 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -168,6 +168,49 @@ static int __fprintf_callchain_link(u64 ip, struct map *map, struct symbol *symb
- 	return printed;
- }
+Thanks for working on this!
+
+- Arnaldo
  
-+static int __fprintf_callchain_inlines(struct callchain_cursor_node *node,
-+				       bool first, int left_alignment,
-+				       unsigned int print_opts, FILE *fp)
-+{
-+	int printed = 0;
-+	struct inline_node *inline_node;
-+	struct inline_list *ilist;
-+	u64 addr;
-+
-+	if (!symbol_conf.inline_name)
-+		return 0;
-+
-+	if (!node->map || !node->map->dso)
-+		return 0;
-+
-+	addr = node->map->map_ip(node->map, node->ip);
-+
-+	inline_node = inlines__tree_find(&node->map->dso->inlined_nodes,
-+					 addr);
-+	if (!inline_node) {
-+		inline_node = dso__parse_addr_inlines(node->map->dso,
-+						      addr, node->sym);
-+		if (!inline_node)
-+			return 0;
-+		inlines__tree_insert(&node->map->dso->inlined_nodes,
-+				     inline_node);
-+	}
-+
-+	list_for_each_entry(ilist, &inline_node->val, list) {
-+		if (ilist->symbol == node->sym)
-+			break;
-+
-+		printed += __fprintf_callchain_link(node->ip, node->map,
-+						    ilist->symbol,
-+						    ilist->srcline,
-+						    first, left_alignment,
-+						    print_opts, fp);
-+		first = (first && printed == 0);
-+	}
-+
-+	return printed;
-+}
-+
- int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			      unsigned int print_opts, struct callchain_cursor *cursor,
- 			      FILE *fp)
-@@ -183,6 +226,9 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (!node)
- 				break;
- 
-+			printed += __fprintf_callchain_inlines(node, (printed ==  0),
-+							       left_alignment,
-+							       print_opts, fp);
- 
- 			printed += __fprintf_callchain_link(node->ip, node->map,
- 							    node->sym, NULL,
+> As I am quite new to the code base of perf I am not sure how to test
+> that changeset in a correct way. At least the codes builds and the tools
+> that make use of sample__fprintf_callchain (perf-script, perf-trace and
+> perf-sched as far as I can see) did not fail to run - also I did not get
+> into the details of perf-trace and perf-sched as I have never used them
+> before.
+> 
+> Another thing I am not sure how to deal with are some warnings of
+> checkpatch.pl due to the 80 character line limit. Due to the long
+> function names in use the current implementation already exceeded that
+> limit in the same spots by even more characters as I have taken the
+> inner loop and put it into a separate function.
+> 
+> I hope to expand my work to perf-report but thought it might be usefull
+> to get already early feedback on those patches.
+> 
+> Thank you,
+>  Jonas
+> 
+> Jonas Rabenstein (2):
+>   perf evsel: split sample__fprintf_callchain in output and iteration
+>   perf evsel: add inline functions to sample callchain output
+> 
+>  tools/perf/util/evsel_fprintf.c | 157 ++++++++++++++++++++++----------
+>  1 file changed, 109 insertions(+), 48 deletions(-)
+> 
+> -- 
+> 2.19.2
+
 -- 
-2.19.2
+
+- Arnaldo
