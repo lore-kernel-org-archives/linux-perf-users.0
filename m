@@ -1,7 +1,7 @@
 From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH 2/3] perf machine: use map__inlines in append_inlines
-Date: Thu, 21 Feb 2019 17:06:51 +0100
-Message-ID: <20190221160652.1788-3-jonas.rabenstein@studium.uni-erlangen.de>
+Subject: [PATCH 3/3] perf machine: add inline symbols to callchains
+Date: Thu, 21 Feb 2019 17:06:52 +0100
+Message-ID: <20190221160652.1788-4-jonas.rabenstein@studium.uni-erlangen.de>
 References: <20190221160652.1788-1-jonas.rabenstein@studium.uni-erlangen.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,44 +12,153 @@ To: linux-perf-users@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, David Miller <davem@davemloft.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Gardner <rob.gardner@oracle.com>, Sandipan Das <sandipan@linux.ibm.com>, linux-kernel@vger.kernel.org, Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 List-Id: linux-perf-users.vger.kernel.org
 
-The previous patch provides a generic way to lookup the root node of the
-inlined symbols for a specific address. Reuse that implementation
-instead of a duplicated version of the required steps.
+Use map__inlines to resolve inlined functions for every entry with
+an symbol that should be added to a callchain.
 
 Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 ---
- tools/perf/util/machine.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ tools/perf/util/machine.c | 115 ++++++++++++++++++++++++++++----------
+ 1 file changed, 87 insertions(+), 28 deletions(-)
 
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 143f7057d581..dce29c21e4ea 100644
+index dce29c21e4ea..070d074482b4 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -2330,23 +2330,12 @@ static int append_inlines(struct callchain_cursor *cursor,
+@@ -1908,6 +1908,91 @@ struct iterations {
+ 	u64 cycles;
+ };
+ 
++static int __add_callchain_location(struct callchain_cursor *cursor,
++				    struct symbol **parent,
++				    struct addr_location *root_al,
++				    u64 addr, struct addr_location *al,
++				    bool branch, struct branch_flags *flags,
++				    u64 branch_from, struct iterations *iter)
++{
++	int nr_loop_iter = 0;
++	u64 iter_cycles = 0;
++
++	if (symbol_conf.hide_unresolved && al->sym == NULL)
++		return 0;
++
++	if (al->sym) {
++		if (perf_hpp_list.parent && !*parent &&
++		  symbol__match_regex(al->sym, &parent_regex))
++			*parent = al->sym;
++		else if (have_ignore_callees && root_al &&
++		  symbol__match_regex(al->sym, &ignore_callees_regex)) {
++			/* Treat this symbol as the root,
++			   forgetting its callees. */
++			*root_al = *al;
++			callchain_cursor_reset(cursor);
++		}
++	}
++
++	if (iter) {
++		nr_loop_iter = iter->nr_loop_iter;
++		iter_cycles = iter->cycles;
++	}
++	return callchain_cursor_append(cursor, addr, al->map, al->sym, branch,
++				       flags, nr_loop_iter, iter_cycles,
++				       branch_from, al->srcline);
++}
++
++static int __add_callchain_ip(struct callchain_cursor *cursor, u64 ip,
++			      struct addr_location *al, bool branch,
++			      struct branch_flags *flags, u64 branch_from,
++			      struct iterations *iter, struct symbol **parent,
++			      struct addr_location *root_al)
++{
++	struct inline_node *inline_node;
++	struct inline_list *inline_list;
++	const char *srcline;
++	struct symbol *symbol;
++	int err = 0;
++
++	al->srcline = callchain_srcline(al->map, al->sym, al->addr);
++	if (callchain_param.order == ORDER_CALLER)
++		err = __add_callchain_location(cursor, parent, root_al, ip, al,
++					       branch, flags, branch_from, iter);
++	if (err || !al->map || !al->sym)
++		goto no_inline;
++
++	inline_node = map__inlines(al->map, ip, al->sym);
++	if (!inline_node || list_empty(&inline_node->val))
++		goto no_inline;
++
++	symbol = al->sym;
++	srcline = al->srcline;
++	list_for_each_entry(inline_list, &inline_node->val, list) {
++		if (inline_list->symbol == symbol)
++			continue;
++		al->sym = inline_list->symbol;
++		al->srcline = inline_list->srcline;
++		err = __add_callchain_location(cursor, parent, root_al, ip,
++					       al, branch, flags,
++					       branch_from, iter);
++		if (err)
++			break;
++	}
++
++	if (callchain_param.order == ORDER_CALLEE) {
++		al->srcline = srcline;
++		al->sym = symbol;
++	}
++
++no_inline:
++	if (!err && callchain_param.order == ORDER_CALLEE)
++		err = __add_callchain_location(cursor, parent, root_al, ip, al,
++					       branch, flags, branch_from, iter);
++	return err;
++}
++
++
+ static int add_callchain_ip(struct thread *thread,
+ 			    struct callchain_cursor *cursor,
+ 			    struct symbol **parent,
+@@ -1920,9 +2005,6 @@ static int add_callchain_ip(struct thread *thread,
+ 			    u64 branch_from)
  {
- 	struct inline_node *inline_node;
- 	struct inline_list *ilist;
--	u64 addr;
- 	int ret = 1;
+ 	struct addr_location al;
+-	int nr_loop_iter = 0;
+-	u64 iter_cycles = 0;
+-	const char *srcline = NULL;
  
--	if (!symbol_conf.inline_name || !map || !sym)
-+	inline_node = map__inlines(map, ip, sym);
-+	if (!inline_node)
- 		return ret;
+ 	al.filtered = 0;
+ 	al.sym = NULL;
+@@ -1955,31 +2037,8 @@ static int add_callchain_ip(struct thread *thread,
+ 		thread__find_symbol(thread, *cpumode, ip, &al);
+ 	}
  
--	addr = map__map_ip(map, ip);
--	addr = map__rip_2objdump(map, addr);
--
--	inline_node = inlines__tree_find(&map->dso->inlined_nodes, addr);
--	if (!inline_node) {
--		inline_node = dso__parse_addr_inlines(map->dso, addr, sym);
--		if (!inline_node)
--			return ret;
--		inlines__tree_insert(&map->dso->inlined_nodes, inline_node);
+-	if (al.sym != NULL) {
+-		if (perf_hpp_list.parent && !*parent &&
+-		    symbol__match_regex(al.sym, &parent_regex))
+-			*parent = al.sym;
+-		else if (have_ignore_callees && root_al &&
+-		  symbol__match_regex(al.sym, &ignore_callees_regex)) {
+-			/* Treat this symbol as the root,
+-			   forgetting its callees. */
+-			*root_al = al;
+-			callchain_cursor_reset(cursor);
+-		}
 -	}
 -
- 	list_for_each_entry(ilist, &inline_node->val, list) {
- 		ret = callchain_cursor_append(cursor, ip, map,
- 					      ilist->symbol, false,
+-	if (symbol_conf.hide_unresolved && al.sym == NULL)
+-		return 0;
+-
+-	if (iter) {
+-		nr_loop_iter = iter->nr_loop_iter;
+-		iter_cycles = iter->cycles;
+-	}
+-
+-	srcline = callchain_srcline(al.map, al.sym, al.addr);
+-	return callchain_cursor_append(cursor, ip, al.map, al.sym,
+-				       branch, flags, nr_loop_iter,
+-				       iter_cycles, branch_from, srcline);
++	return __add_callchain_ip(cursor, ip, &al, branch, flags, branch_from,
++				  iter, parent, root_al);
+ }
+ 
+ struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
 -- 
 2.19.2
