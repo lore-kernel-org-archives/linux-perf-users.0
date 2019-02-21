@@ -1,72 +1,70 @@
 From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH] perf hist: fix memory leak if histogram entry is reused
-Date: Thu, 21 Feb 2019 14:53:20 +0100
-Message-ID: <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
-References: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
- <20190221123909.GG10990@krava>
+Subject: [PATCH 1/3] perf map: add function to lookup inline symbols
+Date: Thu, 21 Feb 2019 17:06:50 +0100
+Message-ID: <20190221160652.1788-2-jonas.rabenstein@studium.uni-erlangen.de>
+References: <20190221160652.1788-1-jonas.rabenstein@studium.uni-erlangen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221123909.GG10990@krava>
+In-Reply-To: <20190221160652.1788-1-jonas.rabenstein@studium.uni-erlangen.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: linux-perf-users@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, David Miller <davem@davemloft.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Gardner <rob.gardner@oracle.com>, Sandipan Das <sandipan@linux.ibm.com>, linux-kernel@vger.kernel.org, Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Feb 21, 2019 at 01:39:09PM +0100, Jiri Olsa wrote:
-> On Thu, Feb 21, 2019 at 01:23:06PM +0100, Jonas Rabenstein wrote:
-> > In __hists__add_entry the srcline of the addr_location is duplicated
-> > for the hist_entry. If hists__findnew_entry returns an already existing
-> > hist_entry the srcline has to be freed again as no further reference to
-> > that duplicated srcline would exists anymore.
-> > 
-> > Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-> > ---
-> >  tools/perf/util/hist.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index 8aad8330e392..25b8dbdbbe87 100644
-> > --- a/tools/perf/util/hist.c
-> > +++ b/tools/perf/util/hist.c
-> > @@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
-> >  		.ops = ops,
-> >  	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
-> >  
-> > +	if (he && he->srcline != entry.srcline)
-> > +		free(entry.srcline);
-> > +
-> >  	if (!hists->has_callchains && he && he->callchain_size != 0)
-> >  		hists->has_callchains = true;
-> >  	return he;
-> 
-> nice, do we have similar issue in here?
-> 
-> jirka
-> 
-> 
-> ---
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 216388003dea..e65e6822c848 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -966,7 +966,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
->  			.map = al->map,
->  			.sym = al->sym,
->  		},
-> -		.srcline = al->srcline ? strdup(al->srcline) : NULL,
-> +		.srcline = al->srcline,
-While this shouldn't leak the memory, we may end up with an al->srcline
-to get free afterwards while still having a reference on it within the
-hist_entry... Also I could not find where/how the hist_entry is freed up
-so we may get an double free if both of al and he clean the srcline.
-Of course, with your solution we could spare the useless strdup/free if
-we find an hist_entry (which should be the typical case for hotspots..).
-Taking a deeper look thus should be beneficial - but I do not have the
-time for that right now because I'm still working on the inline-symbol
-integration which is more important for me...
- - Jonas
->  		.parent = iter->parent,
->  		.raw_data = sample->raw_data,
->  		.raw_size = sample->raw_size,
+Inlined symbols should always be added to the dso's inlined_nodes tree
+in order to reuse them for a later lookup for the same address. Instead
+of repeating those steps at the different users, provide a central
+method to lookup and register inline symbols for a map.
+
+Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+---
+ tools/perf/util/map.c | 23 +++++++++++++++++++++++
+ tools/perf/util/map.h |  3 +++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 6751301a755c..0fe74e83ca8d 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -988,3 +988,26 @@ struct map_groups *map__kmaps(struct map *map)
+ 	}
+ 	return kmap->kmaps;
+ }
++
++struct inline_node *map__inlines(struct map *map, u64 addr, struct symbol *sym)
++{
++	struct inline_node *node;
++
++	if (!symbol_conf.inline_name)
++		return NULL;
++
++	if (!map->dso)
++		return NULL;
++
++	addr = map->map_ip(map, addr);
++	addr = map__rip_2objdump(map, addr);
++
++	node = inlines__tree_find(&map->dso->inlined_nodes, addr);
++	if (node)
++		return node;
++
++	node = dso__parse_addr_inlines(map->dso, addr, sym);
++	if (node)
++		inlines__tree_insert(&map->dso->inlined_nodes, node);
++	return node;
++}
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 09282aa45c80..bdcc6e77e26e 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -270,4 +270,7 @@ static inline bool is_entry_trampoline(const char *name)
+ 	return !strcmp(name, ENTRY_TRAMPOLINE_NAME);
+ }
+ 
++struct inline_node *map__inlines(struct map *map, u64 addr,
++				 struct symbol *sym);
++
+ #endif /* __PERF_MAP_H */
+-- 
+2.19.2
