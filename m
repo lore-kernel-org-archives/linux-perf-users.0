@@ -1,66 +1,38 @@
-From: Song Liu <songliubraving@fb.com>
-Subject: Re: [PATCH 15/17] perf bpf-event: Add missing new line into pr_debug
- call
-Date: Thu, 21 Feb 2019 07:12:13 +0000
-Message-ID: <1883F478-13FB-49E8-A062-997678D94860@fb.com>
-References: <20190221012549.4069-1-acme@kernel.org>
- <20190221012549.4069-16-acme@kernel.org>
+From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: [PATCH] perf hist: fix memory leak if histogram entry is reused
+Date: Thu, 21 Feb 2019 13:23:06 +0100
+Message-ID: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221012549.4069-16-acme@kernel.org>
-Content-Language: en-US
-Content-ID: <E46FE014399EDE47AC9FA03F09C18ABF@namprd15.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 List-Id: linux-perf-users.vger.kernel.org
 
+In __hists__add_entry the srcline of the addr_location is duplicated
+for the hist_entry. If hists__findnew_entry returns an already existing
+hist_entry the srcline has to be freed again as no further reference to
+that duplicated srcline would exists anymore.
 
+Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+---
+ tools/perf/util/hist.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> On Feb 20, 2019, at 5:25 PM, Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->=20
-> From: Jiri Olsa <jolsa@kernel.org>
->=20
-> Add a missing new line into pr_debug call in perf_event__synthesize_bpf_e=
-vents(),
-> so that the error message does not screw the verbose output.
->=20
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Song Liu <songliubraving@fb.com>
-> Link: http://lkml.kernel.org/r/20190220122800.864-5-jolsa@kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Acked-by: Song Liu <songliubraving@fb.com>
-
-Thanks for fixing this.
-
-Song
-
-> ---
-> tools/perf/util/bpf-event.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index 62dda96b0096..028c8ec1f62a 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -233,7 +233,7 @@ int perf_event__synthesize_bpf_events(struct perf_too=
-l *tool,
-> 				err =3D 0;
-> 				break;
-> 			}
-> -			pr_debug("%s: can't get next program: %s%s",
-> +			pr_debug("%s: can't get next program: %s%s\n",
-> 				 __func__, strerror(errno),
-> 				 errno =3D=3D EINVAL ? " -- kernel too old?" : "");
-> 			/* don't report error on old kernel or EPERM  */
-> --=20
-> 2.19.1
->=20
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 8aad8330e392..25b8dbdbbe87 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
+ 		.ops = ops,
+ 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ 
++	if (he && he->srcline != entry.srcline)
++		free(entry.srcline);
++
+ 	if (!hists->has_callchains && he && he->callchain_size != 0)
+ 		hists->has_callchains = true;
+ 	return he;
+-- 
+2.19.2
