@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/17] perf doc: Fix HEADER_CMDLINE description in perf.data documentation
-Date: Wed, 20 Feb 2019 22:25:39 -0300
-Message-ID: <20190221012549.4069-8-acme@kernel.org>
+Subject: [PATCH 08/17] perf doc: Fix documentation of the Flags section in perf.data
+Date: Wed, 20 Feb 2019 22:25:40 -0300
+Message-ID: <20190221012549.4069-9-acme@kernel.org>
 References: <20190221012549.4069-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 
-The content of the HEADER_CMDLINE feature header is a perf_header_string_list
-of the argument vector and not a perf_header_string of the commandline.
+According to the current documentation the flags section is placed after
+the file header itself but the code assumes to find the flags section
+after the data section. This change updates the documentation to that
+assumption.
 
 Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -25,24 +27,31 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20190219154515.3954-1-jonas.rabenstein@studium.uni-erlangen.de
+Link: http://lkml.kernel.org/r/20190219154515.3954-2-jonas.rabenstein@studium.uni-erlangen.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf.data-file-format.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf.data-file-format.txt | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index dfb218feaad9..5f9a3924830b 100644
+index 5f9a3924830b..593ef49b273c 100644
 --- a/tools/perf/Documentation/perf.data-file-format.txt
 +++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -131,7 +131,7 @@ An uint64_t with the total memory in bytes.
+@@ -43,11 +43,10 @@ struct perf_file_section {
  
- 	HEADER_CMDLINE = 11,
+ Flags section:
  
--A perf_header_string with the perf command line used to collect the data.
-+A perf_header_string_list with the perf arg-vector used to collect the data.
+-The header is followed by different optional headers, described by the bits set
+-in flags. Only headers for which the bit is set are included. Each header
+-consists of a perf_file_section located after the initial header.
+-The respective perf_file_section points to the data of the additional
+-header and defines its size.
++For each of the optional features a perf_file_section it placed after the data
++section if the feature bit is set in the perf_header flags bitset. The
++respective perf_file_section points to the data of the additional header and
++defines its size.
  
- 	HEADER_EVENT_DESC = 12,
+ Some headers consist of strings, which are defined like this:
  
 -- 
 2.19.1
