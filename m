@@ -1,164 +1,74 @@
-From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH 3/3] perf machine: add inline symbols to callchains
-Date: Thu, 21 Feb 2019 17:06:52 +0100
-Message-ID: <20190221160652.1788-4-jonas.rabenstein@studium.uni-erlangen.de>
-References: <20190221160652.1788-1-jonas.rabenstein@studium.uni-erlangen.de>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf hist: fix memory leak if histogram entry is reused
+Date: Thu, 21 Feb 2019 17:28:58 +0100
+Message-ID: <20190221162858.GA3940@krava>
+References: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
+ <20190221123909.GG10990@krava>
+ <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221160652.1788-1-jonas.rabenstein@studium.uni-erlangen.de>
+Content-Disposition: inline
+In-Reply-To: <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, David Miller <davem@davemloft.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Kim Phillips <kim.phillips@arm.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Milian Wolff <milian.wolff@kdab.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Gardner <rob.gardner@oracle.com>, Sandipan Das <sandipan@linux.ibm.com>, linux-kernel@vger.kernel.org, Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+To: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Use map__inlines to resolve inlined functions for every entry with
-an symbol that should be added to a callchain.
+On Thu, Feb 21, 2019 at 02:53:20PM +0100, Jonas Rabenstein wrote:
+> On Thu, Feb 21, 2019 at 01:39:09PM +0100, Jiri Olsa wrote:
+> > On Thu, Feb 21, 2019 at 01:23:06PM +0100, Jonas Rabenstein wrote:
+> > > In __hists__add_entry the srcline of the addr_location is duplicated
+> > > for the hist_entry. If hists__findnew_entry returns an already existing
+> > > hist_entry the srcline has to be freed again as no further reference to
+> > > that duplicated srcline would exists anymore.
+> > > 
+> > > Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+> > > ---
+> > >  tools/perf/util/hist.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > > index 8aad8330e392..25b8dbdbbe87 100644
+> > > --- a/tools/perf/util/hist.c
+> > > +++ b/tools/perf/util/hist.c
+> > > @@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
+> > >  		.ops = ops,
+> > >  	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+> > >  
+> > > +	if (he && he->srcline != entry.srcline)
+> > > +		free(entry.srcline);
+> > > +
+> > >  	if (!hists->has_callchains && he && he->callchain_size != 0)
+> > >  		hists->has_callchains = true;
+> > >  	return he;
+> > 
+> > nice, do we have similar issue in here?
+> > 
+> > jirka
+> > 
+> > 
+> > ---
+> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > index 216388003dea..e65e6822c848 100644
+> > --- a/tools/perf/util/hist.c
+> > +++ b/tools/perf/util/hist.c
+> > @@ -966,7 +966,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+> >  			.map = al->map,
+> >  			.sym = al->sym,
+> >  		},
+> > -		.srcline = al->srcline ? strdup(al->srcline) : NULL,
+> > +		.srcline = al->srcline,
+> While this shouldn't leak the memory, we may end up with an al->srcline
+> to get free afterwards while still having a reference on it within the
+> hist_entry... Also I could not find where/how the hist_entry is freed up
+> so we may get an double free if both of al and he clean the srcline.
+> Of course, with your solution we could spare the useless strdup/free if
+> we find an hist_entry (which should be the typical case for hotspots..).
+> Taking a deeper look thus should be beneficial - but I do not have the
+> time for that right now because I'm still working on the inline-symbol
+> integration which is more important for me...
 
-Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
----
- tools/perf/util/machine.c | 115 ++++++++++++++++++++++++++++----------
- 1 file changed, 87 insertions(+), 28 deletions(-)
+ok, I'll check it 
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index dce29c21e4ea..070d074482b4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1908,6 +1908,91 @@ struct iterations {
- 	u64 cycles;
- };
- 
-+static int __add_callchain_location(struct callchain_cursor *cursor,
-+				    struct symbol **parent,
-+				    struct addr_location *root_al,
-+				    u64 addr, struct addr_location *al,
-+				    bool branch, struct branch_flags *flags,
-+				    u64 branch_from, struct iterations *iter)
-+{
-+	int nr_loop_iter = 0;
-+	u64 iter_cycles = 0;
-+
-+	if (symbol_conf.hide_unresolved && al->sym == NULL)
-+		return 0;
-+
-+	if (al->sym) {
-+		if (perf_hpp_list.parent && !*parent &&
-+		  symbol__match_regex(al->sym, &parent_regex))
-+			*parent = al->sym;
-+		else if (have_ignore_callees && root_al &&
-+		  symbol__match_regex(al->sym, &ignore_callees_regex)) {
-+			/* Treat this symbol as the root,
-+			   forgetting its callees. */
-+			*root_al = *al;
-+			callchain_cursor_reset(cursor);
-+		}
-+	}
-+
-+	if (iter) {
-+		nr_loop_iter = iter->nr_loop_iter;
-+		iter_cycles = iter->cycles;
-+	}
-+	return callchain_cursor_append(cursor, addr, al->map, al->sym, branch,
-+				       flags, nr_loop_iter, iter_cycles,
-+				       branch_from, al->srcline);
-+}
-+
-+static int __add_callchain_ip(struct callchain_cursor *cursor, u64 ip,
-+			      struct addr_location *al, bool branch,
-+			      struct branch_flags *flags, u64 branch_from,
-+			      struct iterations *iter, struct symbol **parent,
-+			      struct addr_location *root_al)
-+{
-+	struct inline_node *inline_node;
-+	struct inline_list *inline_list;
-+	const char *srcline;
-+	struct symbol *symbol;
-+	int err = 0;
-+
-+	al->srcline = callchain_srcline(al->map, al->sym, al->addr);
-+	if (callchain_param.order == ORDER_CALLER)
-+		err = __add_callchain_location(cursor, parent, root_al, ip, al,
-+					       branch, flags, branch_from, iter);
-+	if (err || !al->map || !al->sym)
-+		goto no_inline;
-+
-+	inline_node = map__inlines(al->map, ip, al->sym);
-+	if (!inline_node || list_empty(&inline_node->val))
-+		goto no_inline;
-+
-+	symbol = al->sym;
-+	srcline = al->srcline;
-+	list_for_each_entry(inline_list, &inline_node->val, list) {
-+		if (inline_list->symbol == symbol)
-+			continue;
-+		al->sym = inline_list->symbol;
-+		al->srcline = inline_list->srcline;
-+		err = __add_callchain_location(cursor, parent, root_al, ip,
-+					       al, branch, flags,
-+					       branch_from, iter);
-+		if (err)
-+			break;
-+	}
-+
-+	if (callchain_param.order == ORDER_CALLEE) {
-+		al->srcline = srcline;
-+		al->sym = symbol;
-+	}
-+
-+no_inline:
-+	if (!err && callchain_param.order == ORDER_CALLEE)
-+		err = __add_callchain_location(cursor, parent, root_al, ip, al,
-+					       branch, flags, branch_from, iter);
-+	return err;
-+}
-+
-+
- static int add_callchain_ip(struct thread *thread,
- 			    struct callchain_cursor *cursor,
- 			    struct symbol **parent,
-@@ -1920,9 +2005,6 @@ static int add_callchain_ip(struct thread *thread,
- 			    u64 branch_from)
- {
- 	struct addr_location al;
--	int nr_loop_iter = 0;
--	u64 iter_cycles = 0;
--	const char *srcline = NULL;
- 
- 	al.filtered = 0;
- 	al.sym = NULL;
-@@ -1955,31 +2037,8 @@ static int add_callchain_ip(struct thread *thread,
- 		thread__find_symbol(thread, *cpumode, ip, &al);
- 	}
- 
--	if (al.sym != NULL) {
--		if (perf_hpp_list.parent && !*parent &&
--		    symbol__match_regex(al.sym, &parent_regex))
--			*parent = al.sym;
--		else if (have_ignore_callees && root_al &&
--		  symbol__match_regex(al.sym, &ignore_callees_regex)) {
--			/* Treat this symbol as the root,
--			   forgetting its callees. */
--			*root_al = al;
--			callchain_cursor_reset(cursor);
--		}
--	}
--
--	if (symbol_conf.hide_unresolved && al.sym == NULL)
--		return 0;
--
--	if (iter) {
--		nr_loop_iter = iter->nr_loop_iter;
--		iter_cycles = iter->cycles;
--	}
--
--	srcline = callchain_srcline(al.map, al.sym, al.addr);
--	return callchain_cursor_append(cursor, ip, al.map, al.sym,
--				       branch, flags, nr_loop_iter,
--				       iter_cycles, branch_from, srcline);
-+	return __add_callchain_ip(cursor, ip, &al, branch, flags, branch_from,
-+				  iter, parent, root_al);
- }
- 
- struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
--- 
-2.19.2
+jirka
