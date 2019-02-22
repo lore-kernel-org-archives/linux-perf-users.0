@@ -1,7 +1,7 @@
 From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH 07/15] perf script python: add Python3 support to mem-phys-addr.py
-Date: Fri, 22 Feb 2019 15:06:11 -0800
-Message-ID: <20190222230619.17887-8-tonyj@suse.de>
+Subject: [PATCH 10/15] perf script python: add Python3 support to sctop.py
+Date: Fri, 22 Feb 2019 15:06:14 -0800
+Message-ID: <20190222230619.17887-11-tonyj@suse.de>
 References: <20190222230619.17887-1-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,10 +9,10 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190222230619.17887-1-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Tom Zanussi <tzanussi@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python2 and Python3 in the mem-phys-addr.py script
+Support both Python2 and Python3 in the sctop.py script
 
 There may be differences in the ordering of output lines due to
 differences in dictionary ordering etc.  However the format within lines
@@ -23,64 +23,57 @@ is now v2.6
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Cc: Tom Zanussi <tzanussi@gmail.com>
 ---
- tools/perf/scripts/python/mem-phys-addr.py | 24 +++++++++++++---------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ tools/perf/scripts/python/sctop.py | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
-index ebee2c5ae496..fb0bbcbfa0f0 100644
---- a/tools/perf/scripts/python/mem-phys-addr.py
-+++ b/tools/perf/scripts/python/mem-phys-addr.py
-@@ -4,6 +4,8 @@
- # Copyright (c) 2018, Intel Corporation.
+diff --git a/tools/perf/scripts/python/sctop.py b/tools/perf/scripts/python/sctop.py
+index 61621b93affb..987ffae7c8ca 100644
+--- a/tools/perf/scripts/python/sctop.py
++++ b/tools/perf/scripts/python/sctop.py
+@@ -8,7 +8,14 @@
+ # will be refreshed every [interval] seconds.  The default interval is
+ # 3 seconds.
  
- from __future__ import division
+-import os, sys, thread, time
 +from __future__ import print_function
 +
- import os
- import sys
- import struct
-@@ -31,21 +33,23 @@ def parse_iomem():
- 	for i, j in enumerate(f):
- 		m = re.split('-|:',j,2)
- 		if m[2].strip() == 'System RAM':
--			system_ram.append(long(m[0], 16))
--			system_ram.append(long(m[1], 16))
-+			system_ram.append(int(m[0], 16))
-+			system_ram.append(int(m[1], 16))
- 		if m[2].strip() == 'Persistent Memory':
--			pmem.append(long(m[0], 16))
--			pmem.append(long(m[1], 16))
-+			pmem.append(int(m[0], 16))
-+			pmem.append(int(m[1], 16))
++import os, sys, time
++
++try:
++        import thread
++except ImportError:
++        import _thread as thread
  
- def print_memory_type():
--	print "Event: %s" % (event_name)
--	print "%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"),
--	print "%-40s  %10s  %10s\n" % ("----------------------------------------", \
-+	print("Event: %s" % (event_name))
-+	print("%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"), end='')
-+	print("%-40s  %10s  %10s\n" % ("----------------------------------------",
- 					"-----------", "-----------"),
-+                                        end='');
- 	total = sum(load_mem_type_cnt.values())
- 	for mem_type, count in sorted(load_mem_type_cnt.most_common(), \
--					key = lambda(k, v): (v, k), reverse = True):
--		print "%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
-+					key = lambda kv: (kv[1], kv[0]), reverse = True):
-+		print("%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
-+                        end='')
+ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ 	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+@@ -62,18 +69,19 @@ def print_syscall_totals(interval):
+ 	while 1:
+ 		clear_term()
+ 		if for_comm is not None:
+-			print "\nsyscall events for %s:\n\n" % (for_comm),
++			print("\nsyscall events for %s:\n" % (for_comm))
+ 		else:
+-			print "\nsyscall events:\n\n",
++			print("\nsyscall events:\n")
  
- def trace_begin():
- 	parse_iomem()
-@@ -80,7 +84,7 @@ def find_memory_type(phys_addr):
- 	f.seek(0, 0)
- 	for j in f:
- 		m = re.split('-|:',j,2)
--		if long(m[0], 16) <= phys_addr <= long(m[1], 16):
-+		if int(m[0], 16) <= phys_addr <= int(m[1], 16):
- 			return m[2]
- 	return "N/A"
+-		print "%-40s  %10s\n" % ("event", "count"),
+-		print "%-40s  %10s\n" % ("----------------------------------------", \
+-						 "----------"),
++		print("%-40s  %10s" % ("event", "count"))
++		print("%-40s  %10s" %
++                        ("----------------------------------------",
++                        "----------"))
  
+-		for id, val in sorted(syscalls.iteritems(), key = lambda(k, v): (v, k), \
++		for id, val in sorted(syscalls.items(), key = lambda kv: (kv[1], kv[0]), \
+ 					      reverse = True):
+ 			try:
+-				print "%-40s  %10d\n" % (syscall_name(id), val),
++				print("%-40s  %10d" % (syscall_name(id), val))
+ 			except TypeError:
+ 				pass
+ 		syscalls.clear()
 -- 
 2.20.1
