@@ -1,7 +1,7 @@
 From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH 12/15] perf script python: add Python3 support to stat-cpi.py
-Date: Fri, 22 Feb 2019 15:06:16 -0800
-Message-ID: <20190222230619.17887-13-tonyj@suse.de>
+Subject: [PATCH 11/15] perf script python: add Python3 support to stackcollapse.py
+Date: Fri, 22 Feb 2019 15:06:15 -0800
+Message-ID: <20190222230619.17887-12-tonyj@suse.de>
 References: <20190222230619.17887-1-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,10 +9,10 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190222230619.17887-1-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python2 and Python3 in the stat-cpi.py script
+Support both Python2 and Python3 in the stackcollapse.py script
 
 There may be differences in the ordering of output lines due to
 differences in dictionary ordering etc.  However the format within lines
@@ -23,48 +23,33 @@ is now v2.6
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 ---
- tools/perf/scripts/python/stat-cpi.py | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/perf/scripts/python/stackcollapse.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/scripts/python/stat-cpi.py b/tools/perf/scripts/python/stat-cpi.py
-index a81ad8835a74..01fa933ff3cf 100644
---- a/tools/perf/scripts/python/stat-cpi.py
-+++ b/tools/perf/scripts/python/stat-cpi.py
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/scripts/python/stackcollapse.py b/tools/perf/scripts/python/stackcollapse.py
+index 1697b5e18c96..5e703efaddcc 100755
+--- a/tools/perf/scripts/python/stackcollapse.py
++++ b/tools/perf/scripts/python/stackcollapse.py
+@@ -19,6 +19,8 @@
+ # Written by Paolo Bonzini <pbonzini@redhat.com>
+ # Based on Brendan Gregg's stackcollapse-perf.pl script.
  
 +from __future__ import print_function
 +
- data    = {}
- times   = []
- threads = []
-@@ -19,8 +21,8 @@ def store_key(time, cpu, thread):
-         threads.append(thread)
- 
- def store(time, event, cpu, thread, val, ena, run):
--    #print "event %s cpu %d, thread %d, time %d, val %d, ena %d, run %d" % \
--    #      (event, cpu, thread, time, val, ena, run)
-+    #print("event %s cpu %d, thread %d, time %d, val %d, ena %d, run %d" %
-+    #      (event, cpu, thread, time, val, ena, run))
- 
-     store_key(time, cpu, thread)
-     key = get_key(time, event, cpu, thread)
-@@ -58,7 +60,7 @@ def stat__interval(time):
-             if ins != 0:
-                 cpi = cyc/float(ins)
- 
--            print "%15f: cpu %d, thread %d -> cpi %f (%d/%d)" % (time/(float(1000000000)), cpu, thread, cpi, cyc, ins)
-+            print("%15f: cpu %d, thread %d -> cpi %f (%d/%d)" % (time/(float(1000000000)), cpu, thread, cpi, cyc, ins))
+ import os
+ import sys
+ from collections import defaultdict
+@@ -120,7 +122,6 @@ def process_event(param_dict):
+     lines[stack_string] = lines[stack_string] + 1
  
  def trace_end():
-     pass
-@@ -74,4 +76,4 @@ def trace_end():
- #                if ins != 0:
- #                    cpi = cyc/float(ins)
- #
--#                print "time %.9f, cpu %d, thread %d -> cpi %f" % (time/(float(1000000000)), cpu, thread, cpi)
-+#                print("time %.9f, cpu %d, thread %d -> cpi %f" % (time/(float(1000000000)), cpu, thread, cpi))
+-    list = lines.keys()
+-    list.sort()
++    list = sorted(lines)
+     for stack in list:
+-        print "%s %d" % (stack, lines[stack])
++        print("%s %d" % (stack, lines[stack]))
 -- 
 2.20.1
