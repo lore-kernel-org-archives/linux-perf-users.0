@@ -1,74 +1,24 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf hist: fix memory leak if histogram entry is reused
-Date: Thu, 21 Feb 2019 17:28:58 +0100
-Message-ID: <20190221162858.GA3940@krava>
-References: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
- <20190221123909.GG10990@krava>
- <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
+From: Tony Jones <tonyj@suse.de>
+Subject: [PATCH 00/15] perf script python: add Python3 support
+Date: Fri, 22 Feb 2019 15:06:04 -0800
+Message-ID: <20190222230619.17887-1-tonyj@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Feb 21, 2019 at 02:53:20PM +0100, Jonas Rabenstein wrote:
-> On Thu, Feb 21, 2019 at 01:39:09PM +0100, Jiri Olsa wrote:
-> > On Thu, Feb 21, 2019 at 01:23:06PM +0100, Jonas Rabenstein wrote:
-> > > In __hists__add_entry the srcline of the addr_location is duplicated
-> > > for the hist_entry. If hists__findnew_entry returns an already existing
-> > > hist_entry the srcline has to be freed again as no further reference to
-> > > that duplicated srcline would exists anymore.
-> > > 
-> > > Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-> > > ---
-> > >  tools/perf/util/hist.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > index 8aad8330e392..25b8dbdbbe87 100644
-> > > --- a/tools/perf/util/hist.c
-> > > +++ b/tools/perf/util/hist.c
-> > > @@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
-> > >  		.ops = ops,
-> > >  	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
-> > >  
-> > > +	if (he && he->srcline != entry.srcline)
-> > > +		free(entry.srcline);
-> > > +
-> > >  	if (!hists->has_callchains && he && he->callchain_size != 0)
-> > >  		hists->has_callchains = true;
-> > >  	return he;
-> > 
-> > nice, do we have similar issue in here?
-> > 
-> > jirka
-> > 
-> > 
-> > ---
-> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index 216388003dea..e65e6822c848 100644
-> > --- a/tools/perf/util/hist.c
-> > +++ b/tools/perf/util/hist.c
-> > @@ -966,7 +966,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
-> >  			.map = al->map,
-> >  			.sym = al->sym,
-> >  		},
-> > -		.srcline = al->srcline ? strdup(al->srcline) : NULL,
-> > +		.srcline = al->srcline,
-> While this shouldn't leak the memory, we may end up with an al->srcline
-> to get free afterwards while still having a reference on it within the
-> hist_entry... Also I could not find where/how the hist_entry is freed up
-> so we may get an double free if both of al and he clean the srcline.
-> Of course, with your solution we could spare the useless strdup/free if
-> we find an hist_entry (which should be the typical case for hotspots..).
-> Taking a deeper look thus should be beneficial - but I do not have the
-> time for that right now because I'm still working on the inline-symbol
-> integration which is more important for me...
+The following patches add Python3 support to the remainder of 
+the scripts under scripts/python.
 
-ok, I'll check it 
+Minimum supported Python version is now v2.6
 
-jirka
+I tested everything against v2.7 (no patch), v2.7 (patch) and 
+v3.7 (patch).  Seeteena also tested a subset (no SQL, no IPT) 
+against v2.6
+
+There are changes in order of output as key ordering is not 
+consistent between v2 and v3 but format of each line should be 
+unchanged.
