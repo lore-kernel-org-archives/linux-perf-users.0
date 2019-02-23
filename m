@@ -1,69 +1,80 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH 08/15] perf script python: add Python3 support to net_dropmonitor.py
-Date: Fri, 22 Feb 2019 15:06:12 -0800
-Message-ID: <20190222230619.17887-9-tonyj@suse.de>
-References: <20190222230619.17887-1-tonyj@suse.de>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf hist: fix memory leak if histogram entry is reused
+Date: Sat, 23 Feb 2019 12:18:18 +0900
+Message-ID: <CAM9d7cjPcBEE3dsC6vDy3AtxEjc6bW-f=KGt5nB5rJWFr_whYw@mail.gmail.com>
+References: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
+ <20190221123909.GG10990@krava> <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
+ <20190221162858.GA3940@krava>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222230619.17887-1-tonyj@suse.de>
+In-Reply-To: <20190221162858.GA3940@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Neil Horman <nhorman@tuxdriver.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, linux-perf-users <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python2 and Python3 in the net_dropmonitor.py script
+Hi,
 
-There may be differences in the ordering of output lines due to
-differences in dictionary ordering etc.  However the format within lines
-should be unchanged.
+On Fri, Feb 22, 2019 at 1:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Feb 21, 2019 at 02:53:20PM +0100, Jonas Rabenstein wrote:
+> > On Thu, Feb 21, 2019 at 01:39:09PM +0100, Jiri Olsa wrote:
+> > > On Thu, Feb 21, 2019 at 01:23:06PM +0100, Jonas Rabenstein wrote:
+> > > > In __hists__add_entry the srcline of the addr_location is duplicated
+> > > > for the hist_entry. If hists__findnew_entry returns an already existing
+> > > > hist_entry the srcline has to be freed again as no further reference to
+> > > > that duplicated srcline would exists anymore.
+> > > >
+> > > > Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+> > > > ---
+> > > >  tools/perf/util/hist.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > > > index 8aad8330e392..25b8dbdbbe87 100644
+> > > > --- a/tools/perf/util/hist.c
+> > > > +++ b/tools/perf/util/hist.c
+> > > > @@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
+> > > >           .ops = ops,
+> > > >   }, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+> > > >
+> > > > + if (he && he->srcline != entry.srcline)
+> > > > +         free(entry.srcline);
+> > > > +
+> > > >   if (!hists->has_callchains && he && he->callchain_size != 0)
+> > > >           hists->has_callchains = true;
+> > > >   return he;
+> > >
+> > > nice, do we have similar issue in here?
+> > >
+> > > jirka
+> > >
+> > >
+> > > ---
+> > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > > index 216388003dea..e65e6822c848 100644
+> > > --- a/tools/perf/util/hist.c
+> > > +++ b/tools/perf/util/hist.c
+> > > @@ -966,7 +966,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+> > >                     .map = al->map,
+> > >                     .sym = al->sym,
+> > >             },
+> > > -           .srcline = al->srcline ? strdup(al->srcline) : NULL,
+> > > +           .srcline = al->srcline,
+> > While this shouldn't leak the memory, we may end up with an al->srcline
+> > to get free afterwards while still having a reference on it within the
+> > hist_entry... Also I could not find where/how the hist_entry is freed up
+> > so we may get an double free if both of al and he clean the srcline.
+> > Of course, with your solution we could spare the useless strdup/free if
+> > we find an hist_entry (which should be the typical case for hotspots..).
+> > Taking a deeper look thus should be beneficial - but I do not have the
+> > time for that right now because I'm still working on the inline-symbol
+> > integration which is more important for me...
+>
+> ok, I'll check it
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
+I think we can defer calling strdup() to hist_entry__init().
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Cc: Neil Horman <nhorman@tuxdriver.com>
----
- tools/perf/scripts/python/net_dropmonitor.py | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/scripts/python/net_dropmonitor.py b/tools/perf/scripts/python/net_dropmonitor.py
-index a150164b44a3..212557a02c50 100755
---- a/tools/perf/scripts/python/net_dropmonitor.py
-+++ b/tools/perf/scripts/python/net_dropmonitor.py
-@@ -1,6 +1,8 @@
- # Monitor the system for dropped packets and proudce a report of drop locations and counts
- # SPDX-License-Identifier: GPL-2.0
- 
-+from __future__ import print_function
-+
- import os
- import sys
- 
-@@ -50,19 +52,19 @@ def get_sym(sloc):
- 		return (None, 0)
- 
- def print_drop_table():
--	print "%25s %25s %25s" % ("LOCATION", "OFFSET", "COUNT")
-+	print("%25s %25s %25s" % ("LOCATION", "OFFSET", "COUNT"))
- 	for i in drop_log.keys():
- 		(sym, off) = get_sym(i)
- 		if sym == None:
- 			sym = i
--		print "%25s %25s %25s" % (sym, off, drop_log[i])
-+		print("%25s %25s %25s" % (sym, off, drop_log[i]))
- 
- 
- def trace_begin():
--	print "Starting trace (Ctrl-C to dump results)"
-+	print("Starting trace (Ctrl-C to dump results)")
- 
- def trace_end():
--	print "Gathering kallsyms data"
-+	print("Gathering kallsyms data")
- 	get_kallsyms_table()
- 	print_drop_table()
- 
--- 
-2.20.1
+Thanks,
+Namhyung
