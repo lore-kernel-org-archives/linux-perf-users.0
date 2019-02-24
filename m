@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH 06/11] perf tools report: Use less for scripts output
-Date: Sun, 24 Feb 2019 07:37:17 -0800
-Message-ID: <20190224153722.27020-7-andi@firstfloor.org>
+Subject: [PATCH 02/11] perf tools script: Support insn output for normal samples
+Date: Sun, 24 Feb 2019 07:37:13 -0800
+Message-ID: <20190224153722.27020-3-andi@firstfloor.org>
 References: <20190224153722.27020-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190224153722.27020-1-andi@firstfloor.org>
@@ -12,178 +12,145 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The UI viewer for scripts output has a lot of limitations: limited size,
-no search or save function, slow, and various other issues.
+perf script -F +insn was only working for PT traces because
+the PT instruction decoder was filling in the insn/insn_len
+sample attributes. Support it for non PT samples too on x86
+using the existing x86 instruction decoder.
 
-Just use 'less' to display directly on the terminal instead.
-
-This won't work in gtk mode, but gtk doesn't support these
-context menus anyways. If that is every done could use an terminal
-for the output.
+% perf record -a sleep 1
+% perf script -F ip,sym,insn --xed
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb50 intel_bts_enable_local                retq
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+ ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
+...
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/ui/browsers/scripts.c | 125 +++++--------------------------
- 1 file changed, 17 insertions(+), 108 deletions(-)
+ tools/perf/arch/x86/util/Build      |  1 +
+ tools/perf/arch/x86/util/archinsn.c | 41 +++++++++++++++++++++++++++++
+ tools/perf/builtin-script.c         | 10 +++++++
+ tools/perf/util/archinsn.h          | 12 +++++++++
+ 4 files changed, 64 insertions(+)
+ create mode 100644 tools/perf/arch/x86/util/archinsn.c
+ create mode 100644 tools/perf/util/archinsn.h
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 90a32ac69e76..92707be174e4 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -12,24 +12,6 @@
- #include "../helpline.h"
- #include "../libslang.h"
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 7aab0be5fc5f..7b8e69bbbdfe 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -6,6 +6,7 @@ perf-y += perf_regs.o
+ perf-y += group.o
+ perf-y += machine.o
+ perf-y += event.o
++perf-y += archinsn.o
  
--/* 2048 lines should be enough for a script output */
--#define MAX_LINES		2048
--
--/* 160 bytes for one output line */
--#define AVERAGE_LINE_LEN	160
--
--struct script_line {
--	struct list_head node;
--	char line[AVERAGE_LINE_LEN];
--};
--
--struct perf_script_browser {
--	struct ui_browser b;
--	struct list_head entries;
--	const char *script_name;
--	int nr_lines;
--};
--
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
- /*
-@@ -73,69 +55,29 @@ static int list_scripts(char *script_name)
- 	return ret;
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
+new file mode 100644
+index 000000000000..9e3b0828b018
+--- /dev/null
++++ b/tools/perf/arch/x86/util/archinsn.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "perf.h"
++#include "archinsn.h"
++#include "util/intel-pt-decoder/insn.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++#include "map.h"
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine)
++{
++	struct addr_location al;
++	u8 cpumode;
++	long offset;
++	struct insn insn;
++	int len;
++
++	if (!sample->ip)
++		return;
++
++	if (machine__kernel_ip(machine, sample->ip))
++		cpumode = PERF_RECORD_MISC_KERNEL;
++	else
++		cpumode = PERF_RECORD_MISC_USER;
++	if (!thread__find_map(thread, cpumode, sample->ip, &al) || !al.map->dso)
++		return;
++	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR)
++		return;
++	map__load(al.map);
++	offset = al.map->map_ip(al.map, sample->ip);
++	len = dso__data_read_offset(al.map->dso, machine, offset, (u8 *)sample->insn,
++				   sizeof(sample->insn));
++	if (len <= 0)
++		return;
++	insn_init(&insn, sample->insn, len, al.map->dso->is_64_bit);
++	insn_get_length(&insn);
++	if (insn_complete(&insn) && insn.length <= len)
++		sample->insn_len = insn.length;
++}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 29e95a25c6e6..261055302d08 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -29,6 +29,7 @@
+ #include "util/time-utils.h"
+ #include "util/path.h"
+ #include "print_binary.h"
++#include "archinsn.h"
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/stringify.h>
+@@ -1227,6 +1228,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+ 	return len + dlen;
  }
  
--static void script_browser__write(struct ui_browser *browser,
--				   void *entry, int row)
-+static void run_script(char *cmd)
++__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
++			    struct thread *thread __maybe_unused,
++			    struct machine *machine __maybe_unused)
++{
++}
++
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+@@ -1234,6 +1241,9 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
  {
--	struct script_line *sline = list_entry(entry, struct script_line, node);
--	bool current_entry = ui_browser__is_current_entry(browser, row);
--
--	ui_browser__set_color(browser, current_entry ? HE_COLORSET_SELECTED :
--						       HE_COLORSET_NORMAL);
--
--	ui_browser__write_nstring(browser, sline->line, browser->width);
-+	pr_debug("Running %s\n", cmd);
-+	SLang_reset_tty();
-+	if (system(cmd) < 0)
-+		pr_warning("Cannot run %s\n", cmd);
-+	/*
-+	 * SLang doesn't seem to reset the whole terminal, so be more
-+	 * forceful to get back to the original state.
-+	 */
-+	printf("\033[c\033[H\033[J");
-+	fflush(stdout);
-+	SLang_init_tty(0, 0, 0);
-+	SLsmg_refresh();
- }
+ 	int printed = 0;
  
--static int script_browser__run(struct perf_script_browser *browser)
--{
--	int key;
--
--	if (ui_browser__show(&browser->b, browser->script_name,
--			     "Press ESC to exit") < 0)
--		return -1;
--
--	while (1) {
--		key = ui_browser__run(&browser->b, 0);
--
--		/* We can add some special key handling here if needed */
--		break;
--	}
--
--	ui_browser__hide(&browser->b);
--	return key;
--}
--
--
- int script_browse(const char *script_opt)
- {
- 	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
--	char *line = NULL;
--	size_t len = 0;
--	ssize_t retlen;
--	int ret = -1, nr_entries = 0;
--	FILE *fp;
--	void *buf;
--	struct script_line *sline;
--
--	struct perf_script_browser script = {
--		.b = {
--			.refresh    = ui_browser__list_head_refresh,
--			.seek	    = ui_browser__list_head_seek,
--			.write	    = script_browser__write,
--		},
--		.script_name = script_name,
--	};
--
--	INIT_LIST_HEAD(&script.entries);
--
--	/* Save each line of the output in one struct script_line object. */
--	buf = zalloc((sizeof(*sline)) * MAX_LINES);
--	if (!buf)
--		return -1;
--	sline = buf;
- 
- 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
- 	if (list_scripts(script_name))
--		goto exit;
-+		return -1;
- 
- 	sprintf(cmd, "perf script -s %s ", script_name);
- 
-@@ -147,42 +89,9 @@ int script_browse(const char *script_opt)
- 		strcat(cmd, input_name);
- 	}
- 
--	strcat(cmd, " 2>&1");
--
--	fp = popen(cmd, "r");
--	if (!fp)
--		goto exit;
--
--	while ((retlen = getline(&line, &len, fp)) != -1) {
--		strncpy(sline->line, line, AVERAGE_LINE_LEN);
--
--		/* If one output line is very large, just cut it short */
--		if (retlen >= AVERAGE_LINE_LEN) {
--			sline->line[AVERAGE_LINE_LEN - 1] = '\0';
--			sline->line[AVERAGE_LINE_LEN - 2] = '\n';
--		}
--		list_add_tail(&sline->node, &script.entries);
--
--		if (script.b.width < retlen)
--			script.b.width = retlen;
--
--		if (nr_entries++ >= MAX_LINES - 1)
--			break;
--		sline++;
--	}
--
--	if (script.b.width > AVERAGE_LINE_LEN)
--		script.b.width = AVERAGE_LINE_LEN;
--
--	free(line);
--	pclose(fp);
-+	strcat(cmd, " 2>&1 | less");
- 
--	script.nr_lines = nr_entries;
--	script.b.nr_entries = nr_entries;
--	script.b.entries = &script.entries;
-+	run_script(cmd);
- 
--	ret = script_browser__run(&script);
--exit:
--	free(buf);
--	return ret;
-+	return 0;
- }
++	if (sample->insn_len == 0)
++		arch_fetch_insn(sample, thread, machine);
++
+ 	if (PRINT_FIELD(INSNLEN))
+ 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+ 	if (PRINT_FIELD(INSN)) {
+diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
+new file mode 100644
+index 000000000000..448cbb6b8d7e
+--- /dev/null
++++ b/tools/perf/util/archinsn.h
+@@ -0,0 +1,12 @@
++#ifndef INSN_H
++#define INSN_H 1
++
++struct perf_sample;
++struct machine;
++struct thread;
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine);
++
++#endif
 -- 
 2.17.2
