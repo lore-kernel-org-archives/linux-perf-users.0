@@ -1,23 +1,55 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: Re: [PATCH 00/15] perf script python: add Python3 support
-Date: Sat, 23 Feb 2019 13:06:44 -0800
-Message-ID: <54f00e91-7dfa-6914-370a-223e73164b54@suse.de>
-References: <20190222230619.17887-1-tonyj@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Andi Kleen <andi@firstfloor.org>
+Subject: [PATCH 10/11] perf tools: Add utility function to print ns time stamps
+Date: Sun, 24 Feb 2019 07:37:21 -0800
+Message-ID: <20190224153722.27020-11-andi@firstfloor.org>
+References: <20190224153722.27020-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222230619.17887-1-tonyj@suse.de>
-Content-Language: en-US
+In-Reply-To: <20190224153722.27020-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org
+To: acme@kernel.org, linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2/22/19 3:06 PM, Tony Jones wrote:
-> The following patches add Python3 support to the remainder of 
-> the scripts under scripts/python.
+From: Andi Kleen <ak@linux.intel.com>
 
-I should possibly have labeled this V3.  Seeteena had submitted prior patches but they had issues and since I already had (better tested) patches in OpenSUSE and SLES that I was about to submit, we decided I would submit those patches under a joint signed-off-by,  which is what I've done here. Apologies for any confusion.
+Add a utility function to print nanosecond timestamps.
 
-Tony
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 6193b46050a5..a63bdf4cfd1b 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -404,6 +404,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
+ }
+ 
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64  sec = timestamp / NSEC_PER_SEC;
++	u64 nsec = timestamp % NSEC_PER_SEC;
++
++	return scnprintf(buf, sz, "%"PRIu64".%09"PRIu64, sec, nsec);
++}
++
+ int fetch_current_timestamp(char *buf, size_t sz)
+ {
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 70b177d2b98c..9266cf4a8e58 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -24,6 +24,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 				   int num, u64 timestamp);
+ 
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
+ 
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
+-- 
+2.17.2
