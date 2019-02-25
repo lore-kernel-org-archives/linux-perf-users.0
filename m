@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/37] perf thread-stack: Improve thread_stack__no_call_return()
-Date: Mon, 25 Feb 2019 18:20:00 -0300
-Message-ID: <20190225212035.24781-3-acme@kernel.org>
+Subject: [PATCH 01/37] perf annotate: Fix getting source line failure
+Date: Mon, 25 Feb 2019 18:19:59 -0300
+Message-ID: <20190225212035.24781-2-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,192 +9,175 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wei Li <liwei391@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Wei Li <liwei391@huawei.com>
 
-Improve thread_stack__no_call_return() to better handle 'returns' that
-do not match the stack i.e. 'no call'. See code comments for details.
-The example below shows how retpolines are affected:
+The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
+("perf annotate: No need to calculate notes->start twice") removed notes->start
+assignment in symbol__calc_lines(). It will get failed in
+find_address_in_section() from symbol__tty_annotate() subroutine as the
+a2l->addr is wrong. So the annotate summary doesn't report the line number of
+source code correctly.
 
-Example:
+Before fix:
 
-  $ cat simple-retpoline.c
-  __attribute__((noinline)) int bar(void)
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
+  void hotspot_1(void)
   {
-          return -1;
+	volatile int i;
+
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
   }
 
-  int foo(void)
+  int main(void)
   {
-          return bar() + 1;
+	hotspot_1();
+
+	return 0;
   }
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
 
-  __attribute__((indirect_branch("thunk"))) int main()
-  {
-          int (*volatile fn)(void) = foo;
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
 
-          fn();
-          return fn();
-  }
-  $ gcc -ggdb3 -Wall -Wextra -O2 -o simple-retpoline simple-retpoline.c
-  $ objdump -d simple-retpoline
-  <SNIP>
-  0000000000001040 <main>:
-      1040:       48 83 ec 18             sub    $0x18,%rsp
-      1044:       48 8d 05 25 01 00 00    lea    0x125(%rip),%rax        # 1170 <foo>
-      104b:       48 89 44 24 08          mov    %rax,0x8(%rsp)
-      1050:       48 8b 44 24 08          mov    0x8(%rsp),%rax
-      1055:       e8 1f 01 00 00          callq  1179 <__x86_indirect_thunk_rax>
-      105a:       48 8b 44 24 08          mov    0x8(%rsp),%rax
-      105f:       48 83 c4 18             add    $0x18,%rsp
-      1063:       e9 11 01 00 00          jmpq   1179 <__x86_indirect_thunk_rax>
-  <SNIP>
-  0000000000001160 <bar>:
-      1160:       b8 ff ff ff ff          mov    $0xffffffff,%eax
-      1165:       c3                      retq
-  <SNIP>
-  0000000000001170 <foo>:
-      1170:       e8 eb ff ff ff          callq  1160 <bar>
-      1175:       83 c0 01                add    $0x1,%eax
-      1178:       c3                      retq
-  0000000000001179 <__x86_indirect_thunk_rax>:
-      1179:       e8 07 00 00 00          callq  1185 <__x86_indirect_thunk_rax+0xc>
-      117e:       f3 90                   pause
-      1180:       0f ae e8                lfence
-      1183:       eb f9                   jmp    117e <__x86_indirect_thunk_rax+0x5>
-      1185:       48 89 04 24             mov    %rax,(%rsp)
-      1189:       c3                      retq
-  <SNIP>
-  $ perf record -o simple-retpoline.perf.data -e intel_pt/cyc/u ./simple-retpoline
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0,017 MB simple-retpoline.perf.data ]
-  $ perf script -i simple-retpoline.perf.data --itrace=be -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py simple-retpoline.db branches calls
-  2019-01-08 14:03:37.851655 Creating database...
-  2019-01-08 14:03:37.863256 Writing records...
-  2019-01-08 14:03:38.069750 Adding indexes
-  2019-01-08 14:03:38.078799 Done
-  $ ~/libexec/perf-core/scripts/python/exported-sql-viewer.py simple-retpoline.db
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
 
-Before:
+   19.30 common_while_1[32]
+   19.03 common_while_1[4e]
+   19.01 common_while_1[16]
+    5.04 common_while_1[13]
+    4.99 common_while_1[4b]
+    4.78 common_while_1[2c]
+    4.77 common_while_1[10]
+    4.66 common_while_1[2f]
+    4.59 common_while_1[51]
+    4.59 common_while_1[35]
+    4.52 common_while_1[19]
+    4.20 common_while_1[56]
+    0.51 common_while_1[48]
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
+   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
+      0.00 :   618:   jle    607 <hotspot_1+0xd>
+           :                 for (i = 0; i < 0x10000000; i++);
+  ...
 
-    main
-        -> __x86_indirect_thunk_rax
-            -> __x86_indirect_thunk_rax
-                -> __x86_indirect_thunk_rax
-                    -> bar
+After fix:
 
-After:
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
 
-    main
-        -> __x86_indirect_thunk_rax
-            -> __x86_indirect_thunk_rax
-                -> foo
-                    -> bar
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
 
-Committer testing:
+   33.34 common_while_1.c:5
+   33.34 common_while_1.c:6
+   33.32 common_while_1.c:7
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
+    4.89 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
+    0.00 :   618:   jle    607 <hotspot_1+0xd>
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
+    0.00 :   621:   jmp    62c <hotspot_1+0x32>
+    0.00 :   623:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
+    4.73 :   629:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
+  ...
 
-Chose "Reports", Then "Context-Sensitive Call Graph" and then go on
-expanding:
-
-Before:
-
-simple-retpolin
-   PID:PID
-      _start
-         _start
-            __libc_start_main
-               main
-                   __x86_indirect_thunk_rax
-                      __x86_indirect_thunk_rax
-                      bar
-
-After:
-
-Remove the "simple.retpoline.db" file, run again the 'perf script' line
-to regenerate the .db file and run the exported-sql-viewer.py again to
-get the same all the way to 'main', then, from there, including 'main':
-
-               main
-                   __x86_indirect_thunk_rax
-                       __x86_indirect_thunk_rax
-                           foo
-                               bar
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190109091835.5570-6-adrian.hunter@intel.com
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
+Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 49 +++++++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 3 deletions(-)
+ tools/perf/util/annotate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index f52c0f90915d..632c07a125ab 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -638,14 +638,57 @@ static int thread_stack__no_call_return(struct thread *thread,
- 	else
- 		parent = root;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 2468b8aa0b6b..11a8a447a3af 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1891,6 +1891,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 		     struct annotation_options *options,
+ 		     struct arch **parch)
+ {
++	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+ 		.privsize	= privsize,
+ 		.evsel		= evsel,
+@@ -1921,6 +1922,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
  
--	/* This 'return' had no 'call', so push and pop top of stack */
--	cp = call_path__findnew(cpr, parent, fsym, ip, ks);
-+	if (parent->sym == from_al->sym) {
-+		/*
-+		 * At the bottom of the stack, assume the missing 'call' was
-+		 * before the trace started. So, pop the current symbol and push
-+		 * the 'to' symbol.
-+		 */
-+		if (ts->cnt == 1) {
-+			err = thread_stack__call_return(thread, ts, --ts->cnt,
-+							tm, ref, false);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (!ts->cnt) {
-+			cp = call_path__findnew(cpr, root, tsym, addr, ks);
-+
-+			return thread_stack__push_cp(ts, addr, tm, ref, cp,
-+						     true, false);
-+		}
-+
-+		/*
-+		 * Otherwise assume the 'return' is being used as a jump (e.g.
-+		 * retpoline) and just push the 'to' symbol.
-+		 */
-+		cp = call_path__findnew(cpr, parent, tsym, addr, ks);
-+
-+		err = thread_stack__push_cp(ts, 0, tm, ref, cp, true, false);
-+		if (!err)
-+			ts->stack[ts->cnt - 1].non_call = true;
-+
-+		return err;
-+	}
-+
-+	/*
-+	 * Assume 'parent' has not yet returned, so push 'to', and then push and
-+	 * pop 'from'.
-+	 */
-+
-+	cp = call_path__findnew(cpr, parent, tsym, addr, ks);
+ 	args.ms.map = map;
+ 	args.ms.sym = sym;
++	notes->start = map__rip_2objdump(map, sym->start);
  
- 	err = thread_stack__push_cp(ts, addr, tm, ref, cp, true, false);
- 	if (err)
- 		return err;
- 
--	return thread_stack__pop_cp(thread, ts, addr, tm, ref, tsym);
-+	cp = call_path__findnew(cpr, cp, fsym, ip, ks);
-+
-+	err = thread_stack__push_cp(ts, ip, tm, ref, cp, true, false);
-+	if (err)
-+		return err;
-+
-+	return thread_stack__call_return(thread, ts, --ts->cnt, tm, ref, false);
+ 	return symbol__disassemble(sym, &args);
  }
+@@ -2796,8 +2798,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
  
- static int thread_stack__trace_begin(struct thread *thread,
+ 	symbol__calc_percent(sym, evsel);
+ 
+-	notes->start = map__rip_2objdump(map, sym->start);
+-
+ 	annotation__set_offsets(notes, size);
+ 	annotation__mark_jump_targets(notes, sym);
+ 	annotation__compute_ipc(notes, size);
 -- 
 2.20.1
