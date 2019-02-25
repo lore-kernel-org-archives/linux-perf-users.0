@@ -1,48 +1,71 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 07/11] perf tools report: Support running scripts for
- current time range
-Date: Mon, 25 Feb 2019 13:55:55 +0100
-Message-ID: <20190225125555.GF19795@krava>
+Subject: Re: [PATCH 02/11] perf tools script: Support insn output for normal
+ samples
+Date: Mon, 25 Feb 2019 13:56:00 +0100
+Message-ID: <20190225125600.GG19795@krava>
 References: <20190224153722.27020-1-andi@firstfloor.org>
- <20190224153722.27020-8-andi@firstfloor.org>
+ <20190224153722.27020-3-andi@firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190224153722.27020-8-andi@firstfloor.org>
+In-Reply-To: <20190224153722.27020-3-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andi Kleen <andi@firstfloor.org>
 Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sun, Feb 24, 2019 at 07:37:18AM -0800, Andi Kleen wrote:
+On Sun, Feb 24, 2019 at 07:37:13AM -0800, Andi Kleen wrote:
 > From: Andi Kleen <ak@linux.intel.com>
 > 
-> When using the time sort key, add new context menus to run
-> scripts for only the currently selected time range. Compute
-> the correct range for the selection add pass it as the --time option to
-> perf script.
+> perf script -F +insn was only working for PT traces because
+> the PT instruction decoder was filling in the insn/insn_len
+> sample attributes. Support it for non PT samples too on x86
+> using the existing x86 instruction decoder.
 > 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> % perf record -a sleep 1
+> % perf script -F ip,sym,insn --xed
+>  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+>  ffffffff8100bb50 intel_bts_enable_local                retq
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+>  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+>  ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+>  ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
 
-getting compilation error:
+also for samples with empty instruction, where I guess we fail
+for some reason to retrieve it, we will show default (0?) mnemonic
 
-  CC       ui/browsers/hists.o
-ui/browsers/hists.c: In function ‘perf_evsel__hists_browse’:
-ui/browsers/hists.c:2565:8: error: ‘%s’ directive output may be truncated writing up to 63 bytes into a region of size between 28 and 91 [-Werror=format-truncation=]
-   n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from /usr/include/stdio.h:862,
-                 from ui/browsers/hists.c:5:
-/usr/include/bits/stdio2.h:64:10: note: ‘__builtin___snprintf_chk’ output between 10 and 136 bytes into a destination of size 100
-   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        __bos (__s), __fmt, __va_arg_pack ());
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[jolsa@krava perf]$ ./perf script -F insn
+ insn:
+ insn:
+ insn:
+ insn:
+ insn:
+ insn:
+ insn:
+ insn: 76 ea
+ insn:
+ insn: 0f a2
+ insn: 29 c8
+ insn: 8b 04 90
+ insn: 0f a2
 
-
-[jolsa@krava perf]$ gcc --version
-gcc (GCC) 8.2.1 20181215 (Red Hat 8.2.1-6)
+[jolsa@krava perf]$ ./perf script -F insn --xed
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                addb  %al, (%rax)
+                jbe 0xffffffffffffffec
+                addb  %al, (%rax)
+                cpuid
+                sub %ecx, %eax
+                movl  (%rax,%rdx,4), %eax
+                cpuid
 
 jirka
