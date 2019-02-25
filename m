@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/37] perf script python: Add Python3 support to powerpc-hcalls.py
-Date: Mon, 25 Feb 2019 18:20:30 -0300
-Message-ID: <20190225212035.24781-33-acme@kernel.org>
+Subject: [PATCH 30/37] perf script python: Add Python3 support to mem-phys-addr.py
+Date: Mon, 25 Feb 2019 18:20:28 -0300
+Message-ID: <20190225212035.24781-31-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,12 +9,12 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Tony Jones <tonyj@suse.de>
 
-Support both Python2 and Python3 in the powerpc-hcalls.py script
+Support both Python2 and Python3 in the mem-phys-addr.py script
 
 There may be differences in the ordering of output lines due to
 differences in dictionary ordering etc.  However the format within lines
@@ -24,78 +24,67 @@ The use of 'from __future__' implies the minimum supported Python2 version
 is now v2.6
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20190222230619.17887-10-tonyj@suse.de
+Link: http://lkml.kernel.org/r/20190222230619.17887-8-tonyj@suse.de
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/powerpc-hcalls.py | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ tools/perf/scripts/python/mem-phys-addr.py | 24 +++++++++++++---------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
-index 00e0e7476e55..8b78dc790adb 100644
---- a/tools/perf/scripts/python/powerpc-hcalls.py
-+++ b/tools/perf/scripts/python/powerpc-hcalls.py
+diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
+index ebee2c5ae496..fb0bbcbfa0f0 100644
+--- a/tools/perf/scripts/python/mem-phys-addr.py
++++ b/tools/perf/scripts/python/mem-phys-addr.py
 @@ -4,6 +4,8 @@
- #
- # Hypervisor call statisics
+ # Copyright (c) 2018, Intel Corporation.
  
+ from __future__ import division
 +from __future__ import print_function
 +
  import os
  import sys
+ import struct
+@@ -31,21 +33,23 @@ def parse_iomem():
+ 	for i, j in enumerate(f):
+ 		m = re.split('-|:',j,2)
+ 		if m[2].strip() == 'System RAM':
+-			system_ram.append(long(m[0], 16))
+-			system_ram.append(long(m[1], 16))
++			system_ram.append(int(m[0], 16))
++			system_ram.append(int(m[1], 16))
+ 		if m[2].strip() == 'Persistent Memory':
+-			pmem.append(long(m[0], 16))
+-			pmem.append(long(m[1], 16))
++			pmem.append(int(m[0], 16))
++			pmem.append(int(m[1], 16))
  
-@@ -149,7 +151,7 @@ hcall_table = {
- }
+ def print_memory_type():
+-	print "Event: %s" % (event_name)
+-	print "%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"),
+-	print "%-40s  %10s  %10s\n" % ("----------------------------------------", \
++	print("Event: %s" % (event_name))
++	print("%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"), end='')
++	print("%-40s  %10s  %10s\n" % ("----------------------------------------",
+ 					"-----------", "-----------"),
++                                        end='');
+ 	total = sum(load_mem_type_cnt.values())
+ 	for mem_type, count in sorted(load_mem_type_cnt.most_common(), \
+-					key = lambda(k, v): (v, k), reverse = True):
+-		print "%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
++					key = lambda kv: (kv[1], kv[0]), reverse = True):
++		print("%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
++                        end='')
  
- def hcall_table_lookup(opcode):
--	if (hcall_table.has_key(opcode)):
-+	if (opcode in hcall_table):
- 		return hcall_table[opcode]
- 	else:
- 		return opcode
-@@ -157,8 +159,8 @@ def hcall_table_lookup(opcode):
- print_ptrn = '%-28s%10s%10s%10s%10s'
+ def trace_begin():
+ 	parse_iomem()
+@@ -80,7 +84,7 @@ def find_memory_type(phys_addr):
+ 	f.seek(0, 0)
+ 	for j in f:
+ 		m = re.split('-|:',j,2)
+-		if long(m[0], 16) <= phys_addr <= long(m[1], 16):
++		if int(m[0], 16) <= phys_addr <= int(m[1], 16):
+ 			return m[2]
+ 	return "N/A"
  
- def trace_end():
--	print print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)')
--	print '-' * 68
-+	print(print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
-+	print('-' * 68)
- 	for opcode in output:
- 		h_name = hcall_table_lookup(opcode)
- 		time = output[opcode]['time']
-@@ -166,14 +168,14 @@ def trace_end():
- 		min_t = output[opcode]['min']
- 		max_t = output[opcode]['max']
- 
--		print print_ptrn % (h_name, cnt, min_t, max_t, time/cnt)
-+		print(print_ptrn % (h_name, cnt, min_t, max_t, time//cnt))
- 
- def powerpc__hcall_exit(name, context, cpu, sec, nsec, pid, comm, callchain,
- 			opcode, retval):
--	if (d_enter.has_key(cpu) and d_enter[cpu].has_key(opcode)):
-+	if (cpu in d_enter and opcode in d_enter[cpu]):
- 		diff = nsecs(sec, nsec) - d_enter[cpu][opcode]
- 
--		if (output.has_key(opcode)):
-+		if (opcode in output):
- 			output[opcode]['time'] += diff
- 			output[opcode]['cnt'] += 1
- 			if (output[opcode]['min'] > diff):
-@@ -190,11 +192,11 @@ def powerpc__hcall_exit(name, context, cpu, sec, nsec, pid, comm, callchain,
- 
- 		del d_enter[cpu][opcode]
- #	else:
--#		print "Can't find matching hcall_enter event. Ignoring sample"
-+#		print("Can't find matching hcall_enter event. Ignoring sample")
- 
- def powerpc__hcall_entry(event_name, context, cpu, sec, nsec, pid, comm,
- 			 callchain, opcode):
--		if (d_enter.has_key(cpu)):
-+		if (cpu in d_enter):
- 			d_enter[cpu][opcode] = nsecs(sec, nsec)
- 		else:
- 			d_enter[cpu] = {opcode: nsecs(sec, nsec)}
 -- 
 2.20.1
