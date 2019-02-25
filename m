@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/37] perf script python: Add Python3 support to stackcollapse.py
-Date: Mon, 25 Feb 2019 18:20:32 -0300
-Message-ID: <20190225212035.24781-35-acme@kernel.org>
+Subject: [PATCH 36/37] perf script python: Add Python3 support to syscall-counts.py
+Date: Mon, 25 Feb 2019 18:20:34 -0300
+Message-ID: <20190225212035.24781-37-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,12 +9,12 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Paolo Bonzini <pbonzini@redhat.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Tony Jones <tonyj@suse.de>
 
-Support both Python2 and Python3 in the stackcollapse.py script
+Support both Python2 and Python3 in the syscall-counts.py script
 
 There may be differences in the ordering of output lines due to
 differences in dictionary ordering etc.  However the format within lines
@@ -24,36 +24,56 @@ The use of 'from __future__' implies the minimum supported Python2 version
 is now v2.6
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com> <pbonzini@redhat.com>
-Link: http://lkml.kernel.org/r/20190222230619.17887-12-tonyj@suse.de
+Link: http://lkml.kernel.org/r/20190222230619.17887-14-tonyj@suse.de
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/stackcollapse.py | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/scripts/python/syscall-counts.py | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/scripts/python/stackcollapse.py b/tools/perf/scripts/python/stackcollapse.py
-index 1697b5e18c96..5e703efaddcc 100755
---- a/tools/perf/scripts/python/stackcollapse.py
-+++ b/tools/perf/scripts/python/stackcollapse.py
-@@ -19,6 +19,8 @@
- # Written by Paolo Bonzini <pbonzini@redhat.com>
- # Based on Brendan Gregg's stackcollapse-perf.pl script.
+diff --git a/tools/perf/scripts/python/syscall-counts.py b/tools/perf/scripts/python/syscall-counts.py
+index e66a7730aeb5..0ebd89cfd42c 100644
+--- a/tools/perf/scripts/python/syscall-counts.py
++++ b/tools/perf/scripts/python/syscall-counts.py
+@@ -5,6 +5,8 @@
+ # Displays system-wide system call totals, broken down by syscall.
+ # If a [comm] arg is specified, only syscalls called by [comm] are displayed.
  
 +from __future__ import print_function
 +
  import os
  import sys
- from collections import defaultdict
-@@ -120,7 +122,6 @@ def process_event(param_dict):
-     lines[stack_string] = lines[stack_string] + 1
+ 
+@@ -28,7 +30,7 @@ if len(sys.argv) > 1:
+ syscalls = autodict()
+ 
+ def trace_begin():
+-	print "Press control+C to stop and show the summary"
++	print("Press control+C to stop and show the summary")
  
  def trace_end():
--    list = lines.keys()
--    list.sort()
-+    list = sorted(lines)
-     for stack in list:
--        print "%s %d" % (stack, lines[stack])
-+        print("%s %d" % (stack, lines[stack]))
+ 	print_syscall_totals()
+@@ -51,14 +53,14 @@ def syscalls__sys_enter(event_name, context, common_cpu,
+ 
+ def print_syscall_totals():
+     if for_comm is not None:
+-	    print "\nsyscall events for %s:\n\n" % (for_comm),
++	    print("\nsyscall events for %s:\n" % (for_comm))
+     else:
+-	    print "\nsyscall events:\n\n",
++	    print("\nsyscall events:\n")
+ 
+-    print "%-40s  %10s\n" % ("event", "count"),
+-    print "%-40s  %10s\n" % ("----------------------------------------", \
+-                                 "-----------"),
++    print("%-40s  %10s" % ("event", "count"))
++    print("%-40s  %10s" % ("----------------------------------------",
++                              "-----------"))
+ 
+-    for id, val in sorted(syscalls.iteritems(), key = lambda(k, v): (v, k), \
++    for id, val in sorted(syscalls.items(), key = lambda kv: (kv[1], kv[0]), \
+ 				  reverse = True):
+-	    print "%-40s  %10d\n" % (syscall_name(id), val),
++	    print("%-40s  %10d" % (syscall_name(id), val))
 -- 
 2.20.1
