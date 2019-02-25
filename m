@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 37/37] perf script python: Add Python3 support to syscall-counts-by-pid.py
-Date: Mon, 25 Feb 2019 18:20:35 -0300
-Message-ID: <20190225212035.24781-38-acme@kernel.org>
+Subject: [PATCH 25/37] perf data: Add perf_data__open_dir_data function
+Date: Mon, 25 Feb 2019 18:20:23 -0300
+Message-ID: <20190225212035.24781-26-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,79 +9,118 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Support both Python2 and Python3 in the syscall-counts-by-pid.py script
+Add perf_data__open_dir_data to open files inside 'struct perf_data'
+path directory:
 
-There may be differences in the ordering of output lines due to
-differences in dictionary ordering etc.  However the format within lines
-should be unchanged.
+   static int perf_data__open_dir(struct perf_data *data);
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
-
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Link: http://lkml.kernel.org/r/20190222230619.17887-15-tonyj@suse.de
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190224190656.30163-10-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/syscall-counts-by-pid.py   | 22 ++++++++++---------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ tools/perf/util/data.c | 59 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/data.h |  1 +
+ 2 files changed, 60 insertions(+)
 
-diff --git a/tools/perf/scripts/python/syscall-counts-by-pid.py b/tools/perf/scripts/python/syscall-counts-by-pid.py
-index daf314cc5dd3..42782487b0e9 100644
---- a/tools/perf/scripts/python/syscall-counts-by-pid.py
-+++ b/tools/perf/scripts/python/syscall-counts-by-pid.py
-@@ -5,6 +5,8 @@
- # Displays system-wide system call totals, broken down by syscall.
- # If a [comm] arg is specified, only syscalls called by [comm] are displayed.
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 005b3909d1dc..7bd5ddeb7a41 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -8,6 +8,8 @@
+ #include <unistd.h>
+ #include <string.h>
+ #include <asm/bug.h>
++#include <sys/types.h>
++#include <dirent.h>
  
-+from __future__ import print_function
+ #include "data.h"
+ #include "util.h"
+@@ -59,6 +61,63 @@ int perf_data__create_dir(struct perf_data *data, int nr)
+ 	return ret;
+ }
+ 
++int perf_data__open_dir(struct perf_data *data)
++{
++	struct perf_data_file *files = NULL;
++	struct dirent *dent;
++	int ret = -1;
++	DIR *dir;
++	int nr = 0;
 +
- import os, sys
++	dir = opendir(data->path);
++	if (!dir)
++		return -EINVAL;
++
++	while ((dent = readdir(dir)) != NULL) {
++		struct perf_data_file *file;
++		char path[PATH_MAX];
++		struct stat st;
++
++		snprintf(path, sizeof(path), "%s/%s", data->path, dent->d_name);
++		if (stat(path, &st))
++			continue;
++
++		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data", 4))
++			continue;
++
++		ret = -ENOMEM;
++
++		file = realloc(files, (nr + 1) * sizeof(*files));
++		if (!file)
++			goto out_err;
++
++		files = file;
++		file = &files[nr++];
++
++		file->path = strdup(path);
++		if (!file->path)
++			goto out_err;
++
++		ret = open(file->path, O_RDONLY);
++		if (ret < 0)
++			goto out_err;
++
++		file->fd = ret;
++		file->size = st.st_size;
++	}
++
++	if (!files)
++		return -EINVAL;
++
++	data->dir.files = files;
++	data->dir.nr    = nr;
++	return 0;
++
++out_err:
++	close_dir(files, nr);
++	return ret;
++}
++
+ static bool check_pipe(struct perf_data *data)
+ {
+ 	struct stat st;
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 2d0d015a7d4d..14b47be2bd69 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -71,5 +71,6 @@ int perf_data__switch(struct perf_data *data,
+ 			   size_t pos, bool at_exit);
  
- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-@@ -31,7 +33,7 @@ if len(sys.argv) > 1:
- syscalls = autodict()
- 
- def trace_begin():
--	print "Press control+C to stop and show the summary"
-+	print("Press control+C to stop and show the summary")
- 
- def trace_end():
- 	print_syscall_totals()
-@@ -55,20 +57,20 @@ def syscalls__sys_enter(event_name, context, common_cpu,
- 
- def print_syscall_totals():
-     if for_comm is not None:
--	    print "\nsyscall events for %s:\n\n" % (for_comm),
-+	    print("\nsyscall events for %s:\n" % (for_comm))
-     else:
--	    print "\nsyscall events by comm/pid:\n\n",
-+	    print("\nsyscall events by comm/pid:\n")
- 
--    print "%-40s  %10s\n" % ("comm [pid]/syscalls", "count"),
--    print "%-40s  %10s\n" % ("----------------------------------------", \
--                                 "----------"),
-+    print("%-40s  %10s" % ("comm [pid]/syscalls", "count"))
-+    print("%-40s  %10s" % ("----------------------------------------",
-+                            "----------"))
- 
-     comm_keys = syscalls.keys()
-     for comm in comm_keys:
- 	    pid_keys = syscalls[comm].keys()
- 	    for pid in pid_keys:
--		    print "\n%s [%d]\n" % (comm, pid),
-+		    print("\n%s [%d]" % (comm, pid))
- 		    id_keys = syscalls[comm][pid].keys()
--		    for id, val in sorted(syscalls[comm][pid].iteritems(), \
--				  key = lambda(k, v): (v, k),  reverse = True):
--			    print "  %-38s  %10d\n" % (syscall_name(id), val),
-+		    for id, val in sorted(syscalls[comm][pid].items(), \
-+				  key = lambda kv: (kv[1], kv[0]),  reverse = True):
-+			    print("  %-38s  %10d" % (syscall_name(id), val))
+ int perf_data__create_dir(struct perf_data *data, int nr);
++int perf_data__open_dir(struct perf_data *data);
+ void perf_data__close_dir(struct perf_data *data);
+ #endif /* __PERF_DATA_H */
 -- 
 2.20.1
