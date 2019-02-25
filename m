@@ -1,252 +1,161 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 06/15] perf script python: add Python3 support to
- intel-pt-events.py
-Date: Mon, 25 Feb 2019 11:03:12 -0300
-Message-ID: <20190225140312.GD31136@kernel.org>
+Subject: Re: [PATCH 02/15] perf script python: add Python3 support to
+ check-perf-trace.py
+Date: Mon, 25 Feb 2019 11:05:35 -0300
+Message-ID: <20190225140535.GE31136@kernel.org>
 References: <20190222230619.17887-1-tonyj@suse.de>
- <20190222230619.17887-7-tonyj@suse.de>
- <1cc3561f-604f-6f01-147c-89deb07d3410@intel.com>
+ <20190222230619.17887-3-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1cc3561f-604f-6f01-147c-89deb07d3410@intel.com>
+In-Reply-To: <20190222230619.17887-3-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Tony Jones <tonyj@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Tom Zanussi <tzanussi@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Feb 25, 2019 at 09:07:03AM +0200, Adrian Hunter escreveu:
-> On 23/02/19 1:06 AM, Tony Jones wrote:
-> > Support both Python2 and Python3 in the intel-pt-events.py script
-> > 
-> > There may be differences in the ordering of output lines due to
-> > differences in dictionary ordering etc.  However the format within lines
-> > should be unchanged.
-> > 
-> > Fix space/tab inconsistency as python3 enforces consistency.
+Em Fri, Feb 22, 2019 at 03:06:06PM -0800, Tony Jones escreveu:
+> Support both Python 2 and Python 3 in the check-perf-trace.py script.
 > 
-> It would be better for the white space changes to be a separate patch.
+> There may be differences in the ordering of output lines due to
+> differences in dictionary ordering etc.  However the format within lines
+> should be unchanged.
 > 
-> But I am not in favour of using spaces instead of tabs because it is the
-> opposite of what we tend to do with C.
-> 
-> Arnaldo, can you provide a guideline on this?
+> Also correct inconsistent indentation which was being flagged by Python3.
 
-Yeah, please separate things, this would help me now to pick the
-uncontroversial part while we discuss the other.
-
-And I'm in favour of being consistent with what we do for C code, i.e.
-use TABs.
-
-I'm now processing the other patches.
+When we have "Also" in a patch, usually it need to be split :-)
 
 - Arnaldo
  
-> > 
-> > The use of 'from __future__' implies the minimum supported Python2 version
-> > is now v2.6
-> > 
-> > Signed-off-by: Tony Jones <tonyj@suse.de>
-> > Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > ---
-> >  tools/perf/scripts/python/intel-pt-events.py | 138 ++++++++++---------
-> >  1 file changed, 70 insertions(+), 68 deletions(-)
-> > 
-> > diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> > index b19172d673af..aef54566af61 100644
-> > --- a/tools/perf/scripts/python/intel-pt-events.py
-> > +++ b/tools/perf/scripts/python/intel-pt-events.py
-> > @@ -10,79 +10,81 @@
-> >  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> >  # more details.
-> >  
-> > +from __future__ import print_function
-> > +
-> >  import os
-> >  import sys
-> >  import struct
-> >  
-> >  sys.path.append(os.environ['PERF_EXEC_PATH'] + \
-> > -	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> > +        '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-> >  
-> >  # These perf imports are not used at present
-> >  #from perf_trace_context import *
-> >  #from Core import *
-> >  
-> >  def trace_begin():
-> > -	print "Intel PT Power Events and PTWRITE"
-> > +        print("Intel PT Power Events and PTWRITE")
-> >  
-> >  def trace_end():
-> > -	print "End"
-> > +        print("End")
-> >  
-> >  def trace_unhandled(event_name, context, event_fields_dict):
-> > -		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
-> > +        print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
-> >  
-> >  def print_ptwrite(raw_buf):
-> > -	data = struct.unpack_from("<IQ", raw_buf)
-> > -	flags = data[0]
-> > -	payload = data[1]
-> > -	exact_ip = flags & 1
-> > -	print "IP: %u payload: %#x" % (exact_ip, payload),
-> > +        data = struct.unpack_from("<IQ", raw_buf)
-> > +        flags = data[0]
-> > +        payload = data[1]
-> > +        exact_ip = flags & 1
-> > +        print("IP: %u payload: %#x" % (exact_ip, payload), end='')
-> >  
-> >  def print_cbr(raw_buf):
-> > -	data = struct.unpack_from("<BBBBII", raw_buf)
-> > -	cbr = data[0]
-> > -	f = (data[4] + 500) / 1000
-> > -	p = ((cbr * 1000 / data[2]) + 5) / 10
-> > -	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
-> > +        data = struct.unpack_from("<BBBBII", raw_buf)
-> > +        cbr = data[0]
-> > +        f = (data[4] + 500) / 1000
-> > +        p = ((cbr * 1000 / data[2]) + 5) / 10
-> > +        print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end='')
-> >  
-> >  def print_mwait(raw_buf):
-> > -	data = struct.unpack_from("<IQ", raw_buf)
-> > -	payload = data[1]
-> > -	hints = payload & 0xff
-> > -	extensions = (payload >> 32) & 0x3
-> > -	print "hints: %#x extensions: %#x" % (hints, extensions),
-> > +        data = struct.unpack_from("<IQ", raw_buf)
-> > +        payload = data[1]
-> > +        hints = payload & 0xff
-> > +        extensions = (payload >> 32) & 0x3
-> > +        print("hints: %#x extensions: %#x" % (hints, extensions), end='')
-> >  
-> >  def print_pwre(raw_buf):
-> > -	data = struct.unpack_from("<IQ", raw_buf)
-> > -	payload = data[1]
-> > -	hw = (payload >> 7) & 1
-> > -	cstate = (payload >> 12) & 0xf
-> > -	subcstate = (payload >> 8) & 0xf
-> > -	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-> > +        data = struct.unpack_from("<IQ", raw_buf)
-> > +        payload = data[1]
-> > +        hw = (payload >> 7) & 1
-> > +        cstate = (payload >> 12) & 0xf
-> > +        subcstate = (payload >> 8) & 0xf
-> > +        print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate), end='')
-> >  
-> >  def print_exstop(raw_buf):
-> > -	data = struct.unpack_from("<I", raw_buf)
-> > -	flags = data[0]
-> > -	exact_ip = flags & 1
-> > -	print "IP: %u" % (exact_ip),
-> > +        data = struct.unpack_from("<I", raw_buf)
-> > +        flags = data[0]
-> > +        exact_ip = flags & 1
-> > +        print("IP: %u" % (exact_ip), end='')
-> >  
-> >  def print_pwrx(raw_buf):
-> > -	data = struct.unpack_from("<IQ", raw_buf)
-> > -	payload = data[1]
-> > -	deepest_cstate = payload & 0xf
-> > -	last_cstate = (payload >> 4) & 0xf
-> > -	wake_reason = (payload >> 8) & 0xf
-> > -	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
-> > +        data = struct.unpack_from("<IQ", raw_buf)
-> > +        payload = data[1]
-> > +        deepest_cstate = payload & 0xf
-> > +        last_cstate = (payload >> 4) & 0xf
-> > +        wake_reason = (payload >> 8) & 0xf
-> > +        print("deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason), end='')
-> >  
-> >  def print_common_start(comm, sample, name):
-> > -	ts = sample["time"]
-> > -	cpu = sample["cpu"]
-> > -	pid = sample["pid"]
-> > -	tid = sample["tid"]
-> > -	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-> > +        ts = sample["time"]
-> > +        cpu = sample["cpu"]
-> > +        pid = sample["pid"]
-> > +        tid = sample["tid"]
-> > +        print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name), end='')
-> >  
-> >  def print_common_ip(sample, symbol, dso):
-> > -	ip = sample["ip"]
-> > -	print "%16x %s (%s)" % (ip, symbol, dso)
-> > +        ip = sample["ip"]
-> > +        print("%16x %s (%s)" % (ip, symbol, dso))
-> >  
-> >  def process_event(param_dict):
-> >          event_attr = param_dict["attr"]
-> > @@ -92,37 +94,37 @@ def process_event(param_dict):
-> >          name       = param_dict["ev_name"]
-> >  
-> >          # Symbol and dso info are not always resolved
-> > -        if (param_dict.has_key("dso")):
-> > +        if "dso" in param_dict:
-> >                  dso = param_dict["dso"]
-> >          else:
-> >                  dso = "[unknown]"
-> >  
-> > -        if (param_dict.has_key("symbol")):
-> > +        if "symbol" in param_dict:
-> >                  symbol = param_dict["symbol"]
-> >          else:
-> >                  symbol = "[unknown]"
-> >  
-> > -	if name == "ptwrite":
-> > -		print_common_start(comm, sample, name)
-> > -		print_ptwrite(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > -	elif name == "cbr":
-> > -		print_common_start(comm, sample, name)
-> > -		print_cbr(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > -	elif name == "mwait":
-> > -		print_common_start(comm, sample, name)
-> > -		print_mwait(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > -	elif name == "pwre":
-> > -		print_common_start(comm, sample, name)
-> > -		print_pwre(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > -	elif name == "exstop":
-> > -		print_common_start(comm, sample, name)
-> > -		print_exstop(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > -	elif name == "pwrx":
-> > -		print_common_start(comm, sample, name)
-> > -		print_pwrx(raw_buf)
-> > -		print_common_ip(sample, symbol, dso)
-> > +        if name == "ptwrite":
-> > +                print_common_start(comm, sample, name)
-> > +                print_ptwrite(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > +        elif name == "cbr":
-> > +                print_common_start(comm, sample, name)
-> > +                print_cbr(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > +        elif name == "mwait":
-> > +                print_common_start(comm, sample, name)
-> > +                print_mwait(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > +        elif name == "pwre":
-> > +                print_common_start(comm, sample, name)
-> > +                print_pwre(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > +        elif name == "exstop":
-> > +                print_common_start(comm, sample, name)
-> > +                print_exstop(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > +        elif name == "pwrx":
-> > +                print_common_start(comm, sample, name)
-> > +                print_pwrx(raw_buf)
-> > +                print_common_ip(sample, symbol, dso)
-> > 
+> The use of from __future__ implies the minimum supported version of
+> Python2 is now v2.6
+> 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
+> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+> Cc: Tom Zanussi <tzanussi@gmail.com>
+> ---
+>  tools/perf/scripts/python/check-perf-trace.py | 68 ++++++++++---------
+>  1 file changed, 36 insertions(+), 32 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/check-perf-trace.py b/tools/perf/scripts/python/check-perf-trace.py
+> index 334599c6032c..2851cf0e6b4b 100644
+> --- a/tools/perf/scripts/python/check-perf-trace.py
+> +++ b/tools/perf/scripts/python/check-perf-trace.py
+> @@ -7,11 +7,13 @@
+>  # events, etc.  Basically, if this script runs successfully and
+>  # displays expected results, Python scripting support should be ok.
+>  
+> +from __future__ import print_function
+> +
+>  import os
+>  import sys
+>  
+> -sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+> -	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+> +sys.path.append(os.environ['PERF_EXEC_PATH'] +
+> +    '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+>  
+>  from Core import *
+>  from perf_trace_context import *
+> @@ -19,37 +21,38 @@ from perf_trace_context import *
+>  unhandled = autodict()
+>  
+>  def trace_begin():
+> -	print "trace_begin"
+> -	pass
+> +    print("trace_begin")
+> +    pass
+>  
+>  def trace_end():
+> -        print_unhandled()
+> +    print_unhandled()
+>  
+>  def irq__softirq_entry(event_name, context, common_cpu,
+> -	common_secs, common_nsecs, common_pid, common_comm,
+> -	common_callchain, vec):
+> -		print_header(event_name, common_cpu, common_secs, common_nsecs,
+> -			common_pid, common_comm)
+> +    common_secs, common_nsecs, common_pid, common_comm,
+> +    common_callchain, vec):
+> +
+> +    print_header(event_name, common_cpu, common_secs, common_nsecs,
+> +        common_pid, common_comm)
+>  
+> -                print_uncommon(context)
+> +    print_uncommon(context)
+>  
+> -		print "vec=%s\n" % \
+> -		(symbol_str("irq__softirq_entry", "vec", vec)),
+> +    print("vec=%s" %
+> +        (symbol_str("irq__softirq_entry", "vec", vec)))
+>  
+>  def kmem__kmalloc(event_name, context, common_cpu,
+> -	common_secs, common_nsecs, common_pid, common_comm,
+> -	common_callchain, call_site, ptr, bytes_req, bytes_alloc,
+> -	gfp_flags):
+> -		print_header(event_name, common_cpu, common_secs, common_nsecs,
+> -			common_pid, common_comm)
+> +    common_secs, common_nsecs, common_pid, common_comm,
+> +    common_callchain, call_site, ptr, bytes_req, bytes_alloc,
+> +    gfp_flags):
+>  
+> -                print_uncommon(context)
+> +    print_header(event_name, common_cpu, common_secs, common_nsecs,
+> +        common_pid, common_comm)
+>  
+> -		print "call_site=%u, ptr=%u, bytes_req=%u, " \
+> -		"bytes_alloc=%u, gfp_flags=%s\n" % \
+> -		(call_site, ptr, bytes_req, bytes_alloc,
+> +    print_uncommon(context)
+>  
+> -		flag_str("kmem__kmalloc", "gfp_flags", gfp_flags)),
+> +    print("call_site=%u, ptr=%u, bytes_req=%u, "
+> +        "bytes_alloc=%u, gfp_flags=%s\n" %
+> +        (call_site, ptr, bytes_req, bytes_alloc,
+> +        flag_str("kmem__kmalloc", "gfp_flags", gfp_flags))),
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+>      try:
+> @@ -58,25 +61,26 @@ def trace_unhandled(event_name, context, event_fields_dict):
+>          unhandled[event_name] = 1
+>  
+>  def print_header(event_name, cpu, secs, nsecs, pid, comm):
+> -	print "%-20s %5u %05u.%09u %8u %-20s " % \
+> -	(event_name, cpu, secs, nsecs, pid, comm),
+> +    print("%-20s %5u %05u.%09u %8u %-20s " %
+> +        (event_name, cpu, secs, nsecs, pid, comm),
+> +                end='')
+>  
+>  # print trace fields not included in handler args
+>  def print_uncommon(context):
+> -    print "common_preempt_count=%d, common_flags=%s, common_lock_depth=%d, " \
+> -        % (common_pc(context), trace_flag_str(common_flags(context)), \
+> -               common_lock_depth(context))
+> +    print("common_preempt_count=%d, common_flags=%s, common_lock_depth=%d, " %
+> +        (common_pc(context), trace_flag_str(common_flags(context)),
+> +        common_lock_depth(context))),
+>  
+>  def print_unhandled():
+>      keys = unhandled.keys()
+>      if not keys:
+>          return
+>  
+> -    print "\nunhandled events:\n\n",
+> +    print("\nunhandled events:\n")
+>  
+> -    print "%-40s  %10s\n" % ("event", "count"),
+> -    print "%-40s  %10s\n" % ("----------------------------------------", \
+> -                                 "-----------"),
+> +    print("%-40s  %10s" % ("event", "count"))
+> +    print("%-40s  %10s" % ("----------------------------------------",
+> +                 "-----------"))
+>  
+>      for event_name in keys:
+> -	print "%-40s  %10d\n" % (event_name, unhandled[event_name])
+> +        print("%-40s  %10d\n" % (event_name, unhandled[event_name]))
+> -- 
+> 2.20.1
 
 -- 
 
