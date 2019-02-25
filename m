@@ -1,87 +1,31 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf hist: fix memory leak if histogram entry is reused
-Date: Mon, 25 Feb 2019 14:54:30 +0100
-Message-ID: <20190225135430.GD14757@krava>
-References: <20190221122306.1511-1-jonas.rabenstein@studium.uni-erlangen.de>
- <20190221123909.GG10990@krava>
- <20190221135320.io7egcwajehfrdd5@studium.uni-erlangen.de>
- <20190221162858.GA3940@krava>
- <CAM9d7cjPcBEE3dsC6vDy3AtxEjc6bW-f=KGt5nB5rJWFr_whYw@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 08/11] perf tools: Add perf_exe() helper to find perf
+ binary
+Date: Mon, 25 Feb 2019 10:58:42 -0300
+Message-ID: <20190225135842.GC31136@kernel.org>
+References: <20190224153722.27020-1-andi@firstfloor.org>
+ <20190224153722.27020-9-andi@firstfloor.org>
+ <20190225125622.GJ19795@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cjPcBEE3dsC6vDy3AtxEjc6bW-f=KGt5nB5rJWFr_whYw@mail.gmail.com>
+In-Reply-To: <20190225125622.GJ19795@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>, linux-perf-users <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sat, Feb 23, 2019 at 12:18:18PM +0900, Namhyung Kim wrote:
-> Hi,
+Em Mon, Feb 25, 2019 at 01:56:22PM +0100, Jiri Olsa escreveu:
+> On Sun, Feb 24, 2019 at 07:37:19AM -0800, Andi Kleen wrote:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > Also convert one existing user.
+> > 
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > 
-> On Fri, Feb 22, 2019 at 1:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Thu, Feb 21, 2019 at 02:53:20PM +0100, Jonas Rabenstein wrote:
-> > > On Thu, Feb 21, 2019 at 01:39:09PM +0100, Jiri Olsa wrote:
-> > > > On Thu, Feb 21, 2019 at 01:23:06PM +0100, Jonas Rabenstein wrote:
-> > > > > In __hists__add_entry the srcline of the addr_location is duplicated
-> > > > > for the hist_entry. If hists__findnew_entry returns an already existing
-> > > > > hist_entry the srcline has to be freed again as no further reference to
-> > > > > that duplicated srcline would exists anymore.
-> > > > >
-> > > > > Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-> > > > > ---
-> > > > >  tools/perf/util/hist.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > > > index 8aad8330e392..25b8dbdbbe87 100644
-> > > > > --- a/tools/perf/util/hist.c
-> > > > > +++ b/tools/perf/util/hist.c
-> > > > > @@ -623,6 +623,9 @@ __hists__add_entry(struct hists *hists,
-> > > > >           .ops = ops,
-> > > > >   }, *he = hists__findnew_entry(hists, &entry, al, sample_self);
-> > > > >
-> > > > > + if (he && he->srcline != entry.srcline)
-> > > > > +         free(entry.srcline);
-> > > > > +
-> > > > >   if (!hists->has_callchains && he && he->callchain_size != 0)
-> > > > >           hists->has_callchains = true;
-> > > > >   return he;
-> > > >
-> > > > nice, do we have similar issue in here?
-> > > >
-> > > > jirka
-> > > >
-> > > >
-> > > > ---
-> > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > > index 216388003dea..e65e6822c848 100644
-> > > > --- a/tools/perf/util/hist.c
-> > > > +++ b/tools/perf/util/hist.c
-> > > > @@ -966,7 +966,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
-> > > >                     .map = al->map,
-> > > >                     .sym = al->sym,
-> > > >             },
-> > > > -           .srcline = al->srcline ? strdup(al->srcline) : NULL,
-> > > > +           .srcline = al->srcline,
-> > > While this shouldn't leak the memory, we may end up with an al->srcline
-> > > to get free afterwards while still having a reference on it within the
-> > > hist_entry... Also I could not find where/how the hist_entry is freed up
-> > > so we may get an double free if both of al and he clean the srcline.
-> > > Of course, with your solution we could spare the useless strdup/free if
-> > > we find an hist_entry (which should be the typical case for hotspots..).
-> > > Taking a deeper look thus should be beneficial - but I do not have the
-> > > time for that right now because I'm still working on the inline-symbol
-> > > integration which is more important for me...
-> >
-> > ok, I'll check it
-> 
-> I think we can defer calling strdup() to hist_entry__init().
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-right, thats actualy better fix even for the original patch,
-I'll try to post it soon
+Applied.
 
-thanks,
-jirka
+- Arnaldo
