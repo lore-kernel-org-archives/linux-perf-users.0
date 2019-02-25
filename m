@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/37] perf data: Add perf_data__(create_dir|close_dir) functions
-Date: Mon, 25 Feb 2019 18:20:22 -0300
-Message-ID: <20190225212035.24781-25-acme@kernel.org>
+Subject: [PATCH 27/37] perf tools: Add perf_exe() helper to find perf binary
+Date: Mon, 25 Feb 2019 18:20:25 -0300
+Message-ID: <20190225212035.24781-28-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,121 +9,80 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-Add perf_data__create_dir() to create nr files inside 'struct perf_data'
-path directory:
+Also convert one existing user.
 
-  int perf_data__create_dir(struct perf_data *data, int nr);
-
-and function to close that data:
-
-  void perf_data__close_dir(struct perf_data *data);
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190224190656.30163-9-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190224153722.27020-9-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 47 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/data.h |  8 +++++++
- 2 files changed, 55 insertions(+)
+ tools/perf/util/header.c | 12 +++---------
+ tools/perf/util/util.c   | 10 ++++++++++
+ tools/perf/util/util.h   |  2 ++
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index d008c3973012..005b3909d1dc 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -7,11 +7,58 @@
- #include <fcntl.h>
- #include <unistd.h>
- #include <string.h>
-+#include <asm/bug.h>
- 
- #include "data.h"
- #include "util.h"
- #include "debug.h"
- 
-+static void close_dir(struct perf_data_file *files, int nr)
-+{
-+	while (--nr >= 1) {
-+		close(files[nr].fd);
-+		free(files[nr].path);
-+	}
-+	free(files);
-+}
-+
-+void perf_data__close_dir(struct perf_data *data)
-+{
-+	close_dir(data->dir.files, data->dir.nr);
-+}
-+
-+int perf_data__create_dir(struct perf_data *data, int nr)
-+{
-+	struct perf_data_file *files = NULL;
-+	int i, ret = -1;
-+
-+	files = zalloc(nr * sizeof(*files));
-+	if (!files)
-+		return -ENOMEM;
-+
-+	data->dir.files = files;
-+	data->dir.nr    = nr;
-+
-+	for (i = 0; i < nr; i++) {
-+		struct perf_data_file *file = &files[i];
-+
-+		if (asprintf(&file->path, "%s/data.%d", data->path, i) < 0)
-+			goto out_err;
-+
-+		ret = open(file->path, O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
-+		if (ret < 0)
-+			goto out_err;
-+
-+		file->fd = ret;
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	close_dir(files, i);
-+	return ret;
-+}
-+
- static bool check_pipe(struct perf_data *data)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index a2323d777dae..01b324c275b9 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -527,17 +527,11 @@ static int write_event_desc(struct feat_fd *ff,
+ static int write_cmdline(struct feat_fd *ff,
+ 			 struct perf_evlist *evlist __maybe_unused)
  {
- 	struct stat st;
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 2bce28117ccf..2d0d015a7d4d 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -21,6 +21,11 @@ struct perf_data {
- 	bool			 is_pipe;
- 	bool			 force;
- 	enum perf_data_mode	 mode;
-+
-+	struct {
-+		struct perf_data_file	*files;
-+		int			 nr;
-+	} dir;
- };
+-	char buf[MAXPATHLEN];
+-	u32 n;
+-	int i, ret;
++	char pbuf[MAXPATHLEN], *buf;
++	int i, ret, n;
  
- static inline bool perf_data__is_read(struct perf_data *data)
-@@ -64,4 +69,7 @@ ssize_t perf_data_file__write(struct perf_data_file *file,
- int perf_data__switch(struct perf_data *data,
- 			   const char *postfix,
- 			   size_t pos, bool at_exit);
+ 	/* actual path to perf binary */
+-	ret = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+-	if (ret <= 0)
+-		return -1;
+-
+-	/* readlink() does not add null termination */
+-	buf[ret] = '\0';
++	buf = perf_exe(pbuf, MAXPATHLEN);
+ 
+ 	/* account for binary path */
+ 	n = perf_env.nr_cmdline + 1;
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 706818693086..d388f80d8703 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -568,3 +568,13 @@ const char *perf_tip(const char *dirpath)
+ 
+ 	return tip;
+ }
 +
-+int perf_data__create_dir(struct perf_data *data, int nr);
-+void perf_data__close_dir(struct perf_data *data);
- #endif /* __PERF_DATA_H */
++char *perf_exe(char *buf, int len)
++{
++	int n = readlink("/proc/self/exe", buf, len);
++	if (n > 0) {
++		buf[n] = 0;
++		return buf;
++	}
++	return strcpy(buf, "perf");
++}
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 01c538027c6f..09c1b0f91f65 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -77,6 +77,8 @@ extern bool perf_singlethreaded;
+ void perf_set_singlethreaded(void);
+ void perf_set_multithreaded(void);
+ 
++char *perf_exe(char *buf, int len);
++
+ #ifndef O_CLOEXEC
+ #ifdef __sparc__
+ #define O_CLOEXEC      0x400000
 -- 
 2.20.1
