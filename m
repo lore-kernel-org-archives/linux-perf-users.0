@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/37] perf scripts python: exported-sql-viewer.py: Remove SQLTableDialogDataItem
-Date: Mon, 25 Feb 2019 18:20:10 -0300
-Message-ID: <20190225212035.24781-13-acme@kernel.org>
+Subject: [PATCH 16/37] perf, pt, coresight: Fix address filters for vmas with non-zero offset
+Date: Mon, 25 Feb 2019 18:20:14 -0300
+Message-ID: <20190225212035.24781-17-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,251 +9,294 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-Remove SQLTableDialogDataItem as it is no longer used.
+Currently, the address range calculation for file-based filters works as
+long as the vma that maps the matching part of the object file starts
+from offset zero into the file (vm_pgoff==0). Otherwise, the resulting
+filter range would be off by vm_pgoff pages. Another related problem is
+that in case of a partially matching vma, that is, a vma that matches
+part of a filter region, the filter range size wouldn't be adjusted.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fix the arithmetics around address filter range calculations, taking
+into account vma offset, so that the entire calculation is done before
+the filter configuration is passed to the PMU drivers instead of having
+those drivers do the final bit of arithmetics.
+
+Based on the patch by Adrian Hunter <adrian.hunter.intel.com>.
+
+Reported-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: 375637bc5249 ("perf/core: Introduce address range filtering")
+Link: http://lkml.kernel.org/r/20190215115655.63469-3-alexander.shishkin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 221 ------------------
- 1 file changed, 221 deletions(-)
+ arch/x86/events/intel/pt.c                    |  9 ++-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  7 +-
+ include/linux/perf_event.h                    |  7 +-
+ kernel/events/core.c                          | 81 +++++++++++--------
+ 4 files changed, 62 insertions(+), 42 deletions(-)
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 63b14b80ebcd..e1c2f9e54238 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1481,227 +1481,6 @@ class BranchWindow(QMdiSubWindow):
- 		else:
- 			self.find_bar.NotFound()
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index c0e86ff21f81..fb3a2f13fc70 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -1223,7 +1223,8 @@ static int pt_event_addr_filters_validate(struct list_head *filters)
+ static void pt_event_addr_filters_sync(struct perf_event *event)
+ {
+ 	struct perf_addr_filters_head *head = perf_event_addr_filters(event);
+-	unsigned long msr_a, msr_b, *offs = event->addr_filters_offs;
++	unsigned long msr_a, msr_b;
++	struct perf_addr_filter_range *fr = event->addr_filter_ranges;
+ 	struct pt_filters *filters = event->hw.addr_filters;
+ 	struct perf_addr_filter *filter;
+ 	int range = 0;
+@@ -1232,12 +1233,12 @@ static void pt_event_addr_filters_sync(struct perf_event *event)
+ 		return;
  
--# Dialog data item converted and validated using a SQL table
--
--class SQLTableDialogDataItem():
--
--	def __init__(self, glb, label, placeholder_text, table_name, match_column, column_name1, column_name2, parent):
--		self.glb = glb
--		self.label = label
--		self.placeholder_text = placeholder_text
--		self.table_name = table_name
--		self.match_column = match_column
--		self.column_name1 = column_name1
--		self.column_name2 = column_name2
--		self.parent = parent
--
--		self.value = ""
--
--		self.widget = QLineEdit()
--		self.widget.editingFinished.connect(self.Validate)
--		self.widget.textChanged.connect(self.Invalidate)
--		self.red = False
--		self.error = ""
--		self.validated = True
--
--		self.last_id = 0
--		self.first_time = 0
--		self.last_time = 2 ** 64
--		if self.table_name == "<timeranges>":
--			query = QSqlQuery(self.glb.db)
--			QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
--			if query.next():
--				self.last_id = int(query.value(0))
--				self.last_time = int(query.value(1))
--			QueryExec(query, "SELECT time FROM samples WHERE time != 0 ORDER BY id LIMIT 1")
--			if query.next():
--				self.first_time = int(query.value(0))
--			if placeholder_text:
--				placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
--
--		if placeholder_text:
--			self.widget.setPlaceholderText(placeholder_text)
--
--	def ValueToIds(self, value):
--		ids = []
--		query = QSqlQuery(self.glb.db)
--		stmt = "SELECT id FROM " + self.table_name + " WHERE " + self.match_column + " = '" + value + "'"
--		ret = query.exec_(stmt)
--		if ret:
--			while query.next():
--				ids.append(str(query.value(0)))
--		return ids
--
--	def IdBetween(self, query, lower_id, higher_id, order):
--		QueryExec(query, "SELECT id FROM samples WHERE id > " + str(lower_id) + " AND id < " + str(higher_id) + " ORDER BY id " + order + " LIMIT 1")
--		if query.next():
--			return True, int(query.value(0))
--		else:
--			return False, 0
--
--	def BinarySearchTime(self, lower_id, higher_id, target_time, get_floor):
--		query = QSqlQuery(self.glb.db)
--		while True:
--			next_id = int((lower_id + higher_id) / 2)
--			QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
--			if not query.next():
--				ok, dbid = self.IdBetween(query, lower_id, next_id, "DESC")
--				if not ok:
--					ok, dbid = self.IdBetween(query, next_id, higher_id, "")
--					if not ok:
--						return str(higher_id)
--				next_id = dbid
--				QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
--			next_time = int(query.value(0))
--			if get_floor:
--				if target_time > next_time:
--					lower_id = next_id
--				else:
--					higher_id = next_id
--				if higher_id <= lower_id + 1:
--					return str(higher_id)
--			else:
--				if target_time >= next_time:
--					lower_id = next_id
--				else:
--					higher_id = next_id
--				if higher_id <= lower_id + 1:
--					return str(lower_id)
--
--	def ConvertRelativeTime(self, val):
--		mult = 1
--		suffix = val[-2:]
--		if suffix == "ms":
--			mult = 1000000
--		elif suffix == "us":
--			mult = 1000
--		elif suffix == "ns":
--			mult = 1
--		else:
--			return val
--		val = val[:-2].strip()
--		if not self.IsNumber(val):
--			return val
--		val = int(val) * mult
--		if val >= 0:
--			val += self.first_time
--		else:
--			val += self.last_time
--		return str(val)
--
--	def ConvertTimeRange(self, vrange):
--		if vrange[0] == "":
--			vrange[0] = str(self.first_time)
--		if vrange[1] == "":
--			vrange[1] = str(self.last_time)
--		vrange[0] = self.ConvertRelativeTime(vrange[0])
--		vrange[1] = self.ConvertRelativeTime(vrange[1])
--		if not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
--			return False
--		beg_range = max(int(vrange[0]), self.first_time)
--		end_range = min(int(vrange[1]), self.last_time)
--		if beg_range > self.last_time or end_range < self.first_time:
--			return False
--		vrange[0] = self.BinarySearchTime(0, self.last_id, beg_range, True)
--		vrange[1] = self.BinarySearchTime(1, self.last_id + 1, end_range, False)
--		return True
--
--	def AddTimeRange(self, value, ranges):
--		n = value.count("-")
--		if n == 1:
--			pass
--		elif n == 2:
--			if value.split("-")[1].strip() == "":
--				n = 1
--		elif n == 3:
--			n = 2
--		else:
--			return False
--		pos = findnth(value, "-", n)
--		vrange = [value[:pos].strip() ,value[pos+1:].strip()]
--		if self.ConvertTimeRange(vrange):
--			ranges.append(vrange)
--			return True
--		return False
--
--	def InvalidValue(self, value):
--		self.value = ""
--		palette = QPalette()
--		palette.setColor(QPalette.Text,Qt.red)
--		self.widget.setPalette(palette)
--		self.red = True
--		self.error = self.label + " invalid value '" + value + "'"
--		self.parent.ShowMessage(self.error)
--
--	def IsNumber(self, value):
--		try:
--			x = int(value)
--		except:
--			x = 0
--		return str(x) == value
--
--	def Invalidate(self):
--		self.validated = False
--
--	def Validate(self):
--		input_string = self.widget.text()
--		self.validated = True
--		if self.red:
--			palette = QPalette()
--			self.widget.setPalette(palette)
--			self.red = False
--		if not len(input_string.strip()):
--			self.error = ""
--			self.value = ""
--			return
--		if self.table_name == "<timeranges>":
--			ranges = []
--			for value in [x.strip() for x in input_string.split(",")]:
--				if not self.AddTimeRange(value, ranges):
--					return self.InvalidValue(value)
--			ranges = [("(" + self.column_name1 + " >= " + r[0] + " AND " + self.column_name1 + " <= " + r[1] + ")") for r in ranges]
--			self.value = " OR ".join(ranges)
--		elif self.table_name == "<ranges>":
--			singles = []
--			ranges = []
--			for value in [x.strip() for x in input_string.split(",")]:
--				if "-" in value:
--					vrange = value.split("-")
--					if len(vrange) != 2 or not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
--						return self.InvalidValue(value)
--					ranges.append(vrange)
--				else:
--					if not self.IsNumber(value):
--						return self.InvalidValue(value)
--					singles.append(value)
--			ranges = [("(" + self.column_name1 + " >= " + r[0] + " AND " + self.column_name1 + " <= " + r[1] + ")") for r in ranges]
--			if len(singles):
--				ranges.append(self.column_name1 + " IN (" + ",".join(singles) + ")")
--			self.value = " OR ".join(ranges)
--		elif self.table_name:
--			all_ids = []
--			for value in [x.strip() for x in input_string.split(",")]:
--				ids = self.ValueToIds(value)
--				if len(ids):
--					all_ids.extend(ids)
--				else:
--					return self.InvalidValue(value)
--			self.value = self.column_name1 + " IN (" + ",".join(all_ids) + ")"
--			if self.column_name2:
--				self.value = "( " + self.value + " OR " + self.column_name2 + " IN (" + ",".join(all_ids) + ") )"
--		else:
--			self.value = input_string.strip()
--		self.error = ""
--		self.parent.ClearMessage()
--
--	def IsValid(self):
--		if not self.validated:
--			self.Validate()
--		if len(self.error):
--			self.parent.ShowMessage(self.error)
--			return False
--		return True
--
- # Line edit data item
+ 	list_for_each_entry(filter, &head->list, entry) {
+-		if (filter->path.dentry && !offs[range]) {
++		if (filter->path.dentry && !fr[range].start) {
+ 			msr_a = msr_b = 0;
+ 		} else {
+ 			/* apply the offset */
+-			msr_a = filter->offset + offs[range];
+-			msr_b = filter->size + msr_a - 1;
++			msr_a = fr[range].start;
++			msr_b = msr_a + fr[range].size - 1;
+ 		}
  
- class LineEditDataItem(object):
+ 		filters->filter[range].msr_a  = msr_a;
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 8c88bf0a1e5f..4d5a2b9f9d6a 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -433,15 +433,16 @@ static int etm_addr_filters_validate(struct list_head *filters)
+ static void etm_addr_filters_sync(struct perf_event *event)
+ {
+ 	struct perf_addr_filters_head *head = perf_event_addr_filters(event);
+-	unsigned long start, stop, *offs = event->addr_filters_offs;
++	unsigned long start, stop;
++	struct perf_addr_filter_range *fr = event->addr_filter_ranges;
+ 	struct etm_filters *filters = event->hw.addr_filters;
+ 	struct etm_filter *etm_filter;
+ 	struct perf_addr_filter *filter;
+ 	int i = 0;
+ 
+ 	list_for_each_entry(filter, &head->list, entry) {
+-		start = filter->offset + offs[i];
+-		stop = start + filter->size;
++		start = fr[i].start;
++		stop = start + fr[i].size;
+ 		etm_filter = &filters->etm_filter[i];
+ 
+ 		switch (filter->action) {
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d9c3610e0e25..6ebc72f65017 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -490,6 +490,11 @@ struct perf_addr_filters_head {
+ 	unsigned int		nr_file_filters;
+ };
+ 
++struct perf_addr_filter_range {
++	unsigned long		start;
++	unsigned long		size;
++};
++
+ /**
+  * enum perf_event_state - the states of an event:
+  */
+@@ -666,7 +671,7 @@ struct perf_event {
+ 	/* address range filters */
+ 	struct perf_addr_filters_head	addr_filters;
+ 	/* vma address array for file-based filders */
+-	unsigned long			*addr_filters_offs;
++	struct perf_addr_filter_range	*addr_filter_ranges;
+ 	unsigned long			addr_filters_gen;
+ 
+ 	void (*destroy)(struct perf_event *);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2d89efc0a3e0..16609f6737da 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2799,7 +2799,7 @@ static int perf_event_stop(struct perf_event *event, int restart)
+  *
+  * (p1) when userspace mappings change as a result of (1) or (2) or (3) below,
+  *      we update the addresses of corresponding vmas in
+- *	event::addr_filters_offs array and bump the event::addr_filters_gen;
++ *	event::addr_filter_ranges array and bump the event::addr_filters_gen;
+  * (p2) when an event is scheduled in (pmu::add), it calls
+  *      perf_event_addr_filters_sync() which calls pmu::addr_filters_sync()
+  *      if the generation has changed since the previous call.
+@@ -4446,7 +4446,7 @@ static void _free_event(struct perf_event *event)
+ 
+ 	perf_event_free_bpf_prog(event);
+ 	perf_addr_filters_splice(event, NULL);
+-	kfree(event->addr_filters_offs);
++	kfree(event->addr_filter_ranges);
+ 
+ 	if (event->destroy)
+ 		event->destroy(event);
+@@ -6687,7 +6687,8 @@ static void perf_event_addr_filters_exec(struct perf_event *event, void *data)
+ 	raw_spin_lock_irqsave(&ifh->lock, flags);
+ 	list_for_each_entry(filter, &ifh->list, entry) {
+ 		if (filter->path.dentry) {
+-			event->addr_filters_offs[count] = 0;
++			event->addr_filter_ranges[count].start = 0;
++			event->addr_filter_ranges[count].size = 0;
+ 			restart++;
+ 		}
+ 
+@@ -7367,28 +7368,47 @@ static bool perf_addr_filter_match(struct perf_addr_filter *filter,
+ 	return true;
+ }
+ 
++static bool perf_addr_filter_vma_adjust(struct perf_addr_filter *filter,
++					struct vm_area_struct *vma,
++					struct perf_addr_filter_range *fr)
++{
++	unsigned long vma_size = vma->vm_end - vma->vm_start;
++	unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
++	struct file *file = vma->vm_file;
++
++	if (!perf_addr_filter_match(filter, file, off, vma_size))
++		return false;
++
++	if (filter->offset < off) {
++		fr->start = vma->vm_start;
++		fr->size = min(vma_size, filter->size - (off - filter->offset));
++	} else {
++		fr->start = vma->vm_start + filter->offset - off;
++		fr->size = min(vma->vm_end - fr->start, filter->size);
++	}
++
++	return true;
++}
++
+ static void __perf_addr_filters_adjust(struct perf_event *event, void *data)
+ {
+ 	struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
+ 	struct vm_area_struct *vma = data;
+-	unsigned long off = vma->vm_pgoff << PAGE_SHIFT, flags;
+-	struct file *file = vma->vm_file;
+ 	struct perf_addr_filter *filter;
+ 	unsigned int restart = 0, count = 0;
++	unsigned long flags;
+ 
+ 	if (!has_addr_filter(event))
+ 		return;
+ 
+-	if (!file)
++	if (!vma->vm_file)
+ 		return;
+ 
+ 	raw_spin_lock_irqsave(&ifh->lock, flags);
+ 	list_for_each_entry(filter, &ifh->list, entry) {
+-		if (perf_addr_filter_match(filter, file, off,
+-					     vma->vm_end - vma->vm_start)) {
+-			event->addr_filters_offs[count] = vma->vm_start;
++		if (perf_addr_filter_vma_adjust(filter, vma,
++						&event->addr_filter_ranges[count]))
+ 			restart++;
+-		}
+ 
+ 		count++;
+ 	}
+@@ -8978,26 +8998,19 @@ static void perf_addr_filters_splice(struct perf_event *event,
+  * @filter; if so, adjust filter's address range.
+  * Called with mm::mmap_sem down for reading.
+  */
+-static unsigned long perf_addr_filter_apply(struct perf_addr_filter *filter,
+-					    struct mm_struct *mm)
++static void perf_addr_filter_apply(struct perf_addr_filter *filter,
++				   struct mm_struct *mm,
++				   struct perf_addr_filter_range *fr)
+ {
+ 	struct vm_area_struct *vma;
+ 
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+-		struct file *file = vma->vm_file;
+-		unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
+-		unsigned long vma_size = vma->vm_end - vma->vm_start;
+-
+-		if (!file)
++		if (!vma->vm_file)
+ 			continue;
+ 
+-		if (!perf_addr_filter_match(filter, file, off, vma_size))
+-			continue;
+-
+-		return vma->vm_start;
++		if (perf_addr_filter_vma_adjust(filter, vma, fr))
++			return;
+ 	}
+-
+-	return 0;
+ }
+ 
+ /*
+@@ -9031,15 +9044,15 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
+ 
+ 	raw_spin_lock_irqsave(&ifh->lock, flags);
+ 	list_for_each_entry(filter, &ifh->list, entry) {
+-		event->addr_filters_offs[count] = 0;
++		event->addr_filter_ranges[count].start = 0;
++		event->addr_filter_ranges[count].size = 0;
+ 
+ 		/*
+ 		 * Adjust base offset if the filter is associated to a binary
+ 		 * that needs to be mapped:
+ 		 */
+ 		if (filter->path.dentry)
+-			event->addr_filters_offs[count] =
+-				perf_addr_filter_apply(filter, mm);
++			perf_addr_filter_apply(filter, mm, &event->addr_filter_ranges[count]);
+ 
+ 		count++;
+ 	}
+@@ -10305,10 +10318,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		goto err_pmu;
+ 
+ 	if (has_addr_filter(event)) {
+-		event->addr_filters_offs = kcalloc(pmu->nr_addr_filters,
+-						   sizeof(unsigned long),
+-						   GFP_KERNEL);
+-		if (!event->addr_filters_offs) {
++		event->addr_filter_ranges = kcalloc(pmu->nr_addr_filters,
++						    sizeof(struct perf_addr_filter_range),
++						    GFP_KERNEL);
++		if (!event->addr_filter_ranges) {
+ 			err = -ENOMEM;
+ 			goto err_per_task;
+ 		}
+@@ -10321,9 +10334,9 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 			struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
+ 
+ 			raw_spin_lock_irq(&ifh->lock);
+-			memcpy(event->addr_filters_offs,
+-			       event->parent->addr_filters_offs,
+-			       pmu->nr_addr_filters * sizeof(unsigned long));
++			memcpy(event->addr_filter_ranges,
++			       event->parent->addr_filter_ranges,
++			       pmu->nr_addr_filters * sizeof(struct perf_addr_filter_range));
+ 			raw_spin_unlock_irq(&ifh->lock);
+ 		}
+ 
+@@ -10345,7 +10358,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	return event;
+ 
+ err_addr_filters:
+-	kfree(event->addr_filters_offs);
++	kfree(event->addr_filter_ranges);
+ 
+ err_per_task:
+ 	exclusive_event_destroy(event);
 -- 
 2.20.1
