@@ -1,51 +1,54 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 06/11] perf tools report: Use less for scripts output
-Date: Mon, 25 Feb 2019 13:55:33 +0100
-Message-ID: <20190225125533.GD19795@krava>
+Subject: Re: [PATCH 04/11] perf tools report: Parse time quantum
+Date: Mon, 25 Feb 2019 13:55:44 +0100
+Message-ID: <20190225125544.GE19795@krava>
 References: <20190224153722.27020-1-andi@firstfloor.org>
- <20190224153722.27020-7-andi@firstfloor.org>
+ <20190224153722.27020-5-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190224153722.27020-7-andi@firstfloor.org>
+In-Reply-To: <20190224153722.27020-5-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andi Kleen <andi@firstfloor.org>
 Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sun, Feb 24, 2019 at 07:37:17AM -0800, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
-> 
-> The UI viewer for scripts output has a lot of limitations: limited size,
-> no search or save function, slow, and various other issues.
-> 
-> Just use 'less' to display directly on the terminal instead.
-> 
-> This won't work in gtk mode, but gtk doesn't support these
-> context menus anyways. If that is every done could use an terminal
-> for the output.
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/ui/browsers/scripts.c | 125 +++++--------------------------
->  1 file changed, 17 insertions(+), 108 deletions(-)
+On Sun, Feb 24, 2019 at 07:37:15AM -0800, Andi Kleen wrote:
 
-I like the stats ;-)
+SNIP
 
-I assume some of the current includes can be removed as well:
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 669f961316f0..d25ca5bb91e6 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -20,6 +20,8 @@
+>  #include <inttypes.h>
+>  #include <sys/param.h>
+>  
+> +unsigned long time_quantum = 100000000;
 
-#include <elf.h>
-#include <inttypes.h>
-#include <sys/ttydefaults.h>
-#include <string.h>
-#include "../../util/sort.h"
-#include "../../util/util.h"
-#include "../../util/hist.h"
-#include "../../util/debug.h"
-#include "../../util/symbol.h"
-#include "../browser.h"
-#include "../helpline.h"
-#include "../libslang.h"
+could you please put this into symbol_conf? it's not ideal,
+but at least we have all the global configs in one place
 
+thanks,
 jirka
+
+> +
+>  static bool hists__filter_entry_by_dso(struct hists *hists,
+>  				       struct hist_entry *he);
+>  static bool hists__filter_entry_by_thread(struct hists *hists,
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 4af27fbab24f..8e602b486c5c 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -531,4 +531,6 @@ static inline int hists__scnprintf_title(struct hists *hists, char *bf, size_t s
+>  	return __hists__scnprintf_title(hists, bf, size, true);
+>  }
+>  
+> +extern unsigned long time_quantum;
+> +
+>  #endif	/* __PERF_HIST_H */
+> -- 
+> 2.17.2
+> 
