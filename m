@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/37] perf scripts python: exported-sql-viewer.py: Hide Call Graph option if no calls table
-Date: Mon, 25 Feb 2019 18:20:04 -0300
-Message-ID: <20190225212035.24781-7-acme@kernel.org>
+Subject: [PATCH 07/37] perf scripts python: exported-sql-viewer.py: Move column headers
+Date: Mon, 25 Feb 2019 18:20:05 -0300
+Message-ID: <20190225212035.24781-8-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,46 +14,80 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-The Call Graph depends on the calls table which is optional when exporting
-data, so hide the Call Graph option if there is no calls table.
+Move column headers from SQLAutoTableModel into SQLTableModel so that
+they can be used for other models based on SQLTableModel.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../scripts/python/exported-sql-viewer.py     | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index c20b510ace8f..58a95241ff70 100755
+index 58a95241ff70..7bd5263d3f39 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1786,6 +1786,16 @@ def GetEventList(db):
- 		events.append(query.value(0))
- 	return events
+@@ -1821,12 +1821,13 @@ class SQLTableModel(TableModel):
  
-+# Is a table selectable
+ 	progress = Signal(object)
+ 
+-	def __init__(self, glb, sql, column_count, parent=None):
++	def __init__(self, glb, sql, column_headers, parent=None):
+ 		super(SQLTableModel, self).__init__(parent)
+ 		self.glb = glb
+ 		self.more = True
+ 		self.populated = 0
+-		self.fetcher = SQLFetcher(glb, sql, lambda x, y=column_count: SQLTableDataPrep(x, y), self.AddSample)
++		self.column_headers = column_headers
++		self.fetcher = SQLFetcher(glb, sql, lambda x, y=len(column_headers): SQLTableDataPrep(x, y), self.AddSample)
+ 		self.fetcher.done.connect(self.Update)
+ 		self.fetcher.Fetch(glb_chunk_sz)
+ 
+@@ -1864,6 +1865,12 @@ class SQLTableModel(TableModel):
+ 	def HasMoreRecords(self):
+ 		return self.more
+ 
++	def columnCount(self, parent=None):
++		return len(self.column_headers)
 +
-+def IsSelectable(db, table):
-+	query = QSqlQuery(db)
-+	try:
-+		QueryExec(query, "SELECT * FROM " + table + " LIMIT 1")
-+	except:
-+		return False
-+	return True
++	def columnHeader(self, column):
++		return self.column_headers[column]
 +
- # SQL data preparation
+ # SQL automatic table data model
  
- def SQLTableDataPrep(query, count):
-@@ -2298,7 +2308,8 @@ class MainWindow(QMainWindow):
- 		edit_menu.addAction(CreateAction("&Enlarge Font", "Make text bigger", self.EnlargeFont, self, [QKeySequence("Ctrl++")]))
+ class SQLAutoTableModel(SQLTableModel):
+@@ -1873,12 +1880,12 @@ class SQLAutoTableModel(SQLTableModel):
+ 		if table_name == "comm_threads_view":
+ 			# For now, comm_threads_view has no id column
+ 			sql = "SELECT * FROM " + table_name + " WHERE comm_id > $$last_id$$ ORDER BY comm_id LIMIT " + str(glb_chunk_sz)
+-		self.column_headers = []
++		column_headers = []
+ 		query = QSqlQuery(glb.db)
+ 		if glb.dbref.is_sqlite3:
+ 			QueryExec(query, "PRAGMA table_info(" + table_name + ")")
+ 			while query.next():
+-				self.column_headers.append(query.value(1))
++				column_headers.append(query.value(1))
+ 			if table_name == "sqlite_master":
+ 				sql = "SELECT * FROM " + table_name
+ 		else:
+@@ -1891,14 +1898,8 @@ class SQLAutoTableModel(SQLTableModel):
+ 				schema = "public"
+ 			QueryExec(query, "SELECT column_name FROM information_schema.columns WHERE table_schema = '" + schema + "' and table_name = '" + select_table_name + "'")
+ 			while query.next():
+-				self.column_headers.append(query.value(0))
+-		super(SQLAutoTableModel, self).__init__(glb, sql, len(self.column_headers), parent)
+-
+-	def columnCount(self, parent=None):
+-		return len(self.column_headers)
+-
+-	def columnHeader(self, column):
+-		return self.column_headers[column]
++				column_headers.append(query.value(0))
++		super(SQLAutoTableModel, self).__init__(glb, sql, column_headers, parent)
  
- 		reports_menu = menu.addMenu("&Reports")
--		reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
-+		if IsSelectable(glb.db, "calls"):
-+			reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
- 
- 		self.EventMenu(GetEventList(glb.db), reports_menu)
+ # Base class for custom ResizeColumnsToContents
  
 -- 
 2.20.1
