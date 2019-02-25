@@ -1,22 +1,22 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 03/15] perf script python: add Python3 support to
- event_analyzing_sample.py
-Date: Mon, 25 Feb 2019 11:08:19 -0300
-Message-ID: <20190225140819.GF31136@kernel.org>
+Subject: Re: [PATCH 04/15] perf script python: add Python3 support to
+ failed-syscalls-by-pid.py
+Date: Mon, 25 Feb 2019 11:09:06 -0300
+Message-ID: <20190225140906.GG31136@kernel.org>
 References: <20190222230619.17887-1-tonyj@suse.de>
- <20190222230619.17887-4-tonyj@suse.de>
+ <20190222230619.17887-5-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190222230619.17887-4-tonyj@suse.de>
+In-Reply-To: <20190222230619.17887-5-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Tony Jones <tonyj@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Tom Zanussi <tzanussi@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Feb 22, 2019 at 03:06:07PM -0800, Tony Jones escreveu:
-> Support both Python2 and Python3 in the event_analyzing_sample.py script
+Em Fri, Feb 22, 2019 at 03:06:08PM -0800, Tony Jones escreveu:
+> Support both Python2 and Python3 in the failed-syscalls-by-pid.py script
 > 
 > There may be differences in the ordering of output lines due to
 > differences in dictionary ordering etc.  However the format within lines
@@ -25,150 +25,68 @@ Em Fri, Feb 22, 2019 at 03:06:07PM -0800, Tony Jones escreveu:
 > The use of 'from __future__' implies the minimum supported Python2 version
 > is now v2.6
 
-This also has indentation changes :-\
-
-The first one I processed, as its already TAB based and the changes are
-just for the output part.
-
-- Arnaldo
+Applied
  
 > Signed-off-by: Tony Jones <tonyj@suse.de>
 > Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+> Cc: Tom Zanussi <tzanussi@gmail.com>
 > ---
->  .../scripts/python/event_analyzing_sample.py  | 48 ++++++++++---------
->  1 file changed, 25 insertions(+), 23 deletions(-)
+>  .../scripts/python/failed-syscalls-by-pid.py  | 21 ++++++++++---------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 > 
-> diff --git a/tools/perf/scripts/python/event_analyzing_sample.py b/tools/perf/scripts/python/event_analyzing_sample.py
-> index 4e843b9864ec..f4c4c7963451 100644
-> --- a/tools/perf/scripts/python/event_analyzing_sample.py
-> +++ b/tools/perf/scripts/python/event_analyzing_sample.py
-> @@ -15,6 +15,8 @@
->  # for a x86 HW PMU event: PEBS with load latency data.
->  #
+> diff --git a/tools/perf/scripts/python/failed-syscalls-by-pid.py b/tools/perf/scripts/python/failed-syscalls-by-pid.py
+> index cafeff3d74db..3648e8b986ec 100644
+> --- a/tools/perf/scripts/python/failed-syscalls-by-pid.py
+> +++ b/tools/perf/scripts/python/failed-syscalls-by-pid.py
+> @@ -5,6 +5,8 @@
+>  # Displays system-wide failed system call totals, broken down by pid.
+>  # If a [comm] arg is specified, only syscalls called by [comm] are displayed.
 >  
 > +from __future__ import print_function
 > +
 >  import os
 >  import sys
->  import math
-> @@ -37,7 +39,7 @@ con = sqlite3.connect("/dev/shm/perf.db")
->  con.isolation_level = None
+>  
+> @@ -32,7 +34,7 @@ if len(sys.argv) > 1:
+>  syscalls = autodict()
 >  
 >  def trace_begin():
-> -	print "In trace_begin:\n"
-> +        print("In trace_begin:\n")
->  
->          #
->          # Will create several tables at the start, pebs_ll is for PEBS data with
-> @@ -76,12 +78,12 @@ def process_event(param_dict):
->          name       = param_dict["ev_name"]
->  
->          # Symbol and dso info are not always resolved
-> -        if (param_dict.has_key("dso")):
-> +        if ("dso" in param_dict):
->                  dso = param_dict["dso"]
->          else:
->                  dso = "Unknown_dso"
->  
-> -        if (param_dict.has_key("symbol")):
-> +        if ("symbol" in param_dict):
->                  symbol = param_dict["symbol"]
->          else:
->                  symbol = "Unknown_symbol"
-> @@ -102,7 +104,7 @@ def insert_db(event):
->                                  event.ip, event.status, event.dse, event.dla, event.lat))
+> -	print "Press control+C to stop and show the summary"
+> +	print("Press control+C to stop and show the summary")
 >  
 >  def trace_end():
-> -	print "In trace_end:\n"
-> +        print("In trace_end:\n")
->          # We show the basic info for the 2 type of event classes
->          show_general_events()
->          show_pebs_ll()
-> @@ -123,29 +125,29 @@ def show_general_events():
->          # Check the total record number in the table
->          count = con.execute("select count(*) from gen_events")
->          for t in count:
-> -                print "There is %d records in gen_events table" % t[0]
-> +                print("There is %d records in gen_events table" % t[0])
->                  if t[0] == 0:
->                          return
+>  	print_error_totals()
+> @@ -57,22 +59,21 @@ def syscalls__sys_exit(event_name, context, common_cpu,
 >  
-> -        print "Statistics about the general events grouped by thread/symbol/dso: \n"
-> +        print("Statistics about the general events grouped by thread/symbol/dso: \n")
+>  def print_error_totals():
+>      if for_comm is not None:
+> -	    print "\nsyscall errors for %s:\n\n" % (for_comm),
+> +	    print("\nsyscall errors for %s:\n" % (for_comm))
+>      else:
+> -	    print "\nsyscall errors:\n\n",
+> +	    print("\nsyscall errors:\n")
 >  
->           # Group by thread
->          commq = con.execute("select comm, count(comm) from gen_events group by comm order by -count(comm)")
-> -        print "\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42)
-> +        print("\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42))
->          for row in commq:
-> -             print "%16s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%16s %8d     %s" % (row[0], row[1], num2sym(row[1])))
+> -    print "%-30s  %10s\n" % ("comm [pid]", "count"),
+> -    print "%-30s  %10s\n" % ("------------------------------", \
+> -                                 "----------"),
+> +    print("%-30s  %10s" % ("comm [pid]", "count"))
+> +    print("%-30s  %10s" % ("------------------------------", "----------"))
 >  
->          # Group by symbol
-> -        print "\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58)
-> +        print("\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58))
->          symbolq = con.execute("select symbol, count(symbol) from gen_events group by symbol order by -count(symbol)")
->          for row in symbolq:
-> -             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->          # Group by dso
-> -        print "\n%40s %8s %16s\n%s" % ("dso", "number", "histogram", "="*74)
-> +        print("\n%40s %8s %16s\n%s" % ("dso", "number", "histogram", "="*74))
->          dsoq = con.execute("select dso, count(dso) from gen_events group by dso order by -count(dso)")
->          for row in dsoq:
-> -             print "%40s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%40s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->  #
->  # This function just shows the basic info, and we could do more with the
-> @@ -156,35 +158,35 @@ def show_pebs_ll():
->  
->          count = con.execute("select count(*) from pebs_ll")
->          for t in count:
-> -                print "There is %d records in pebs_ll table" % t[0]
-> +                print("There is %d records in pebs_ll table" % t[0])
->                  if t[0] == 0:
->                          return
->  
-> -        print "Statistics about the PEBS Load Latency events grouped by thread/symbol/dse/latency: \n"
-> +        print("Statistics about the PEBS Load Latency events grouped by thread/symbol/dse/latency: \n")
->  
->          # Group by thread
->          commq = con.execute("select comm, count(comm) from pebs_ll group by comm order by -count(comm)")
-> -        print "\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42)
-> +        print("\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42))
->          for row in commq:
-> -             print "%16s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%16s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->          # Group by symbol
-> -        print "\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58)
-> +        print("\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58))
->          symbolq = con.execute("select symbol, count(symbol) from pebs_ll group by symbol order by -count(symbol)")
->          for row in symbolq:
-> -             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->          # Group by dse
->          dseq = con.execute("select dse, count(dse) from pebs_ll group by dse order by -count(dse)")
-> -        print "\n%32s %8s %16s\n%s" % ("dse", "number", "histogram", "="*58)
-> +        print("\n%32s %8s %16s\n%s" % ("dse", "number", "histogram", "="*58))
->          for row in dseq:
-> -             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->          # Group by latency
->          latq = con.execute("select lat, count(lat) from pebs_ll group by lat order by lat")
-> -        print "\n%32s %8s %16s\n%s" % ("latency", "number", "histogram", "="*58)
-> +        print("\n%32s %8s %16s\n%s" % ("latency", "number", "histogram", "="*58))
->          for row in latq:
-> -             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
-> +             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
->  
->  def trace_unhandled(event_name, context, event_fields_dict):
-> -		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
-> +        print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
+>      comm_keys = syscalls.keys()
+>      for comm in comm_keys:
+>  	    pid_keys = syscalls[comm].keys()
+>  	    for pid in pid_keys:
+> -		    print "\n%s [%d]\n" % (comm, pid),
+> +		    print("\n%s [%d]" % (comm, pid))
+>  		    id_keys = syscalls[comm][pid].keys()
+>  		    for id in id_keys:
+> -			    print "  syscall: %-16s\n" % syscall_name(id),
+> +			    print("  syscall: %-16s" % syscall_name(id))
+>  			    ret_keys = syscalls[comm][pid][id].keys()
+> -			    for ret, val in sorted(syscalls[comm][pid][id].iteritems(), key = lambda(k, v): (v, k),  reverse = True):
+> -				    print "    err = %-20s  %10d\n" % (strerror(ret), val),
+> +			    for ret, val in sorted(syscalls[comm][pid][id].items(), key = lambda kv: (kv[1], kv[0]),  reverse = True):
+> +				    print("    err = %-20s  %10d" % (strerror(ret), val))
 > -- 
 > 2.20.1
 
