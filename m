@@ -1,134 +1,238 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH 04/11] perf tools report: Parse time quantum
-Date: Sun, 24 Feb 2019 07:37:15 -0800
-Message-ID: <20190224153722.27020-5-andi@firstfloor.org>
-References: <20190224153722.27020-1-andi@firstfloor.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 06/15] perf script python: add Python3 support to
+ intel-pt-events.py
+Date: Mon, 25 Feb 2019 09:07:03 +0200
+Message-ID: <1cc3561f-604f-6f01-147c-89deb07d3410@intel.com>
+References: <20190222230619.17887-1-tonyj@suse.de>
+ <20190222230619.17887-7-tonyj@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190224153722.27020-1-andi@firstfloor.org>
+In-Reply-To: <20190222230619.17887-7-tonyj@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, jolsa@kernel.org, namhyung@kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
+To: Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On 23/02/19 1:06 AM, Tony Jones wrote:
+> Support both Python2 and Python3 in the intel-pt-events.py script
+> 
+> There may be differences in the ordering of output lines due to
+> differences in dictionary ordering etc.  However the format within lines
+> should be unchanged.
+> 
+> Fix space/tab inconsistency as python3 enforces consistency.
 
-Many workloads change over time. perf report currently aggregates
-the whole time range reported in perf.data.
+It would be better for the white space changes to be a separate patch.
 
-This patch adds an option for a time quantum to quantisize the
-perf.data over time.
+But I am not in favour of using spaces instead of tabs because it is the
+opposite of what we tend to do with C.
 
-This just adds the option, will be used in follow on patches
-for a time sort key.
+Arnaldo, can you provide a guideline on this?
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/Documentation/perf-report.txt |  4 +++
- tools/perf/builtin-report.c              | 37 ++++++++++++++++++++++++
- tools/perf/util/hist.c                   |  2 ++
- tools/perf/util/hist.h                   |  2 ++
- 4 files changed, 45 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 51dbc519dbce..9ec1702bccdd 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -497,6 +497,10 @@ include::itrace.txt[]
- 	The period/hits keywords set the base the percentage is computed
- 	on - the samples period or the number of samples (hits).
- 
-+--time-quantum::
-+	Configure time quantum for time sort key. Default 100ms.
-+	Accepts s, us, ms, ns units.
-+
- include::callchain-overhead-calculation.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index bb8918a747ba..600e168f3b99 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -47,6 +47,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <regex.h>
-+#include "sane_ctype.h"
- #include <signal.h>
- #include <linux/bitmap.h>
- #include <linux/stringify.h>
-@@ -926,6 +927,39 @@ report_parse_callchain_opt(const struct option *opt, const char *arg, int unset)
- 	return parse_callchain_report_opt(arg);
- }
- 
-+static int
-+parse_time_quantum(const struct option *opt, const char *arg,
-+		   int unset __maybe_unused)
-+{
-+	unsigned long *time_q = opt->value;
-+	char *end;
-+
-+	*time_q = strtoul(arg, &end, 0);
-+	if (end == arg)
-+		goto parse_err;
-+	while (isspace(*end))
-+		end++;
-+	if (*end == 0)
-+		return 0;
-+	if (!strcmp(end, "s")) {
-+		*time_q *= 1000000000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "ms")) {
-+		*time_q *= 1000000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "us")) {
-+		*time_q *= 1000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "ns"))
-+		return 0;
-+parse_err:
-+	pr_err("Cannot parse time quantum `%s'\n", arg);
-+	return -1;
-+}
-+
- int
- report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
- 				const char *arg, int unset __maybe_unused)
-@@ -1148,6 +1182,9 @@ int cmd_report(int argc, const char **argv)
- 		     "Set percent type local/global-period/hits",
- 		     annotate_parse_percent_type),
- 	OPT_BOOLEAN(0, "ns", &nanosecs, "Show times in nanosecs"),
-+	OPT_CALLBACK(0, "time-quantum", &time_quantum, "time (ms|us|ns)",
-+		     "Set time quantum for time sort key (default 100ms)",
-+		     parse_time_quantum),
- 	OPT_END()
- 	};
- 	struct perf_data data = {
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 669f961316f0..d25ca5bb91e6 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -20,6 +20,8 @@
- #include <inttypes.h>
- #include <sys/param.h>
- 
-+unsigned long time_quantum = 100000000;
-+
- static bool hists__filter_entry_by_dso(struct hists *hists,
- 				       struct hist_entry *he);
- static bool hists__filter_entry_by_thread(struct hists *hists,
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4af27fbab24f..8e602b486c5c 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -531,4 +531,6 @@ static inline int hists__scnprintf_title(struct hists *hists, char *bf, size_t s
- 	return __hists__scnprintf_title(hists, bf, size, true);
- }
- 
-+extern unsigned long time_quantum;
-+
- #endif	/* __PERF_HIST_H */
--- 
-2.17.2
+> 
+> The use of 'from __future__' implies the minimum supported Python2 version
+> is now v2.6
+> 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
+> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/scripts/python/intel-pt-events.py | 138 ++++++++++---------
+>  1 file changed, 70 insertions(+), 68 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
+> index b19172d673af..aef54566af61 100644
+> --- a/tools/perf/scripts/python/intel-pt-events.py
+> +++ b/tools/perf/scripts/python/intel-pt-events.py
+> @@ -10,79 +10,81 @@
+>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>  # more details.
+>  
+> +from __future__ import print_function
+> +
+>  import os
+>  import sys
+>  import struct
+>  
+>  sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+> -	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+> +        '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+>  
+>  # These perf imports are not used at present
+>  #from perf_trace_context import *
+>  #from Core import *
+>  
+>  def trace_begin():
+> -	print "Intel PT Power Events and PTWRITE"
+> +        print("Intel PT Power Events and PTWRITE")
+>  
+>  def trace_end():
+> -	print "End"
+> +        print("End")
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+> -		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
+> +        print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
+>  
+>  def print_ptwrite(raw_buf):
+> -	data = struct.unpack_from("<IQ", raw_buf)
+> -	flags = data[0]
+> -	payload = data[1]
+> -	exact_ip = flags & 1
+> -	print "IP: %u payload: %#x" % (exact_ip, payload),
+> +        data = struct.unpack_from("<IQ", raw_buf)
+> +        flags = data[0]
+> +        payload = data[1]
+> +        exact_ip = flags & 1
+> +        print("IP: %u payload: %#x" % (exact_ip, payload), end='')
+>  
+>  def print_cbr(raw_buf):
+> -	data = struct.unpack_from("<BBBBII", raw_buf)
+> -	cbr = data[0]
+> -	f = (data[4] + 500) / 1000
+> -	p = ((cbr * 1000 / data[2]) + 5) / 10
+> -	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
+> +        data = struct.unpack_from("<BBBBII", raw_buf)
+> +        cbr = data[0]
+> +        f = (data[4] + 500) / 1000
+> +        p = ((cbr * 1000 / data[2]) + 5) / 10
+> +        print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end='')
+>  
+>  def print_mwait(raw_buf):
+> -	data = struct.unpack_from("<IQ", raw_buf)
+> -	payload = data[1]
+> -	hints = payload & 0xff
+> -	extensions = (payload >> 32) & 0x3
+> -	print "hints: %#x extensions: %#x" % (hints, extensions),
+> +        data = struct.unpack_from("<IQ", raw_buf)
+> +        payload = data[1]
+> +        hints = payload & 0xff
+> +        extensions = (payload >> 32) & 0x3
+> +        print("hints: %#x extensions: %#x" % (hints, extensions), end='')
+>  
+>  def print_pwre(raw_buf):
+> -	data = struct.unpack_from("<IQ", raw_buf)
+> -	payload = data[1]
+> -	hw = (payload >> 7) & 1
+> -	cstate = (payload >> 12) & 0xf
+> -	subcstate = (payload >> 8) & 0xf
+> -	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
+> +        data = struct.unpack_from("<IQ", raw_buf)
+> +        payload = data[1]
+> +        hw = (payload >> 7) & 1
+> +        cstate = (payload >> 12) & 0xf
+> +        subcstate = (payload >> 8) & 0xf
+> +        print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate), end='')
+>  
+>  def print_exstop(raw_buf):
+> -	data = struct.unpack_from("<I", raw_buf)
+> -	flags = data[0]
+> -	exact_ip = flags & 1
+> -	print "IP: %u" % (exact_ip),
+> +        data = struct.unpack_from("<I", raw_buf)
+> +        flags = data[0]
+> +        exact_ip = flags & 1
+> +        print("IP: %u" % (exact_ip), end='')
+>  
+>  def print_pwrx(raw_buf):
+> -	data = struct.unpack_from("<IQ", raw_buf)
+> -	payload = data[1]
+> -	deepest_cstate = payload & 0xf
+> -	last_cstate = (payload >> 4) & 0xf
+> -	wake_reason = (payload >> 8) & 0xf
+> -	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
+> +        data = struct.unpack_from("<IQ", raw_buf)
+> +        payload = data[1]
+> +        deepest_cstate = payload & 0xf
+> +        last_cstate = (payload >> 4) & 0xf
+> +        wake_reason = (payload >> 8) & 0xf
+> +        print("deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason), end='')
+>  
+>  def print_common_start(comm, sample, name):
+> -	ts = sample["time"]
+> -	cpu = sample["cpu"]
+> -	pid = sample["pid"]
+> -	tid = sample["tid"]
+> -	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
+> +        ts = sample["time"]
+> +        cpu = sample["cpu"]
+> +        pid = sample["pid"]
+> +        tid = sample["tid"]
+> +        print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name), end='')
+>  
+>  def print_common_ip(sample, symbol, dso):
+> -	ip = sample["ip"]
+> -	print "%16x %s (%s)" % (ip, symbol, dso)
+> +        ip = sample["ip"]
+> +        print("%16x %s (%s)" % (ip, symbol, dso))
+>  
+>  def process_event(param_dict):
+>          event_attr = param_dict["attr"]
+> @@ -92,37 +94,37 @@ def process_event(param_dict):
+>          name       = param_dict["ev_name"]
+>  
+>          # Symbol and dso info are not always resolved
+> -        if (param_dict.has_key("dso")):
+> +        if "dso" in param_dict:
+>                  dso = param_dict["dso"]
+>          else:
+>                  dso = "[unknown]"
+>  
+> -        if (param_dict.has_key("symbol")):
+> +        if "symbol" in param_dict:
+>                  symbol = param_dict["symbol"]
+>          else:
+>                  symbol = "[unknown]"
+>  
+> -	if name == "ptwrite":
+> -		print_common_start(comm, sample, name)
+> -		print_ptwrite(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> -	elif name == "cbr":
+> -		print_common_start(comm, sample, name)
+> -		print_cbr(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> -	elif name == "mwait":
+> -		print_common_start(comm, sample, name)
+> -		print_mwait(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> -	elif name == "pwre":
+> -		print_common_start(comm, sample, name)
+> -		print_pwre(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> -	elif name == "exstop":
+> -		print_common_start(comm, sample, name)
+> -		print_exstop(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> -	elif name == "pwrx":
+> -		print_common_start(comm, sample, name)
+> -		print_pwrx(raw_buf)
+> -		print_common_ip(sample, symbol, dso)
+> +        if name == "ptwrite":
+> +                print_common_start(comm, sample, name)
+> +                print_ptwrite(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> +        elif name == "cbr":
+> +                print_common_start(comm, sample, name)
+> +                print_cbr(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> +        elif name == "mwait":
+> +                print_common_start(comm, sample, name)
+> +                print_mwait(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> +        elif name == "pwre":
+> +                print_common_start(comm, sample, name)
+> +                print_pwre(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> +        elif name == "exstop":
+> +                print_common_start(comm, sample, name)
+> +                print_exstop(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> +        elif name == "pwrx":
+> +                print_common_start(comm, sample, name)
+> +                print_pwrx(raw_buf)
+> +                print_common_ip(sample, symbol, dso)
+> 
