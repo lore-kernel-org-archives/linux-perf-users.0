@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/37] perf scripts python: exported-sql-viewer.py: Move report name into ReportVars
-Date: Mon, 25 Feb 2019 18:20:08 -0300
-Message-ID: <20190225212035.24781-11-acme@kernel.org>
+Subject: [PATCH 12/37] perf scripts python: exported-sql-viewer.py: Remove SQLTableDialogDataItem
+Date: Mon, 25 Feb 2019 18:20:10 -0300
+Message-ID: <20190225212035.24781-13-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,81 +14,246 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-The report name is a report variable so move it into into ReportVars.
+Remove SQLTableDialogDataItem as it is no longer used.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 221 ------------------
+ 1 file changed, 221 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 03428df8ddd5..ed39a0153dd3 100755
+index 63b14b80ebcd..e1c2f9e54238 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1402,7 +1402,8 @@ class BranchModel(TreeModel):
+@@ -1481,227 +1481,6 @@ class BranchWindow(QMdiSubWindow):
+ 		else:
+ 			self.find_bar.NotFound()
  
- class ReportVars():
+-# Dialog data item converted and validated using a SQL table
+-
+-class SQLTableDialogDataItem():
+-
+-	def __init__(self, glb, label, placeholder_text, table_name, match_column, column_name1, column_name2, parent):
+-		self.glb = glb
+-		self.label = label
+-		self.placeholder_text = placeholder_text
+-		self.table_name = table_name
+-		self.match_column = match_column
+-		self.column_name1 = column_name1
+-		self.column_name2 = column_name2
+-		self.parent = parent
+-
+-		self.value = ""
+-
+-		self.widget = QLineEdit()
+-		self.widget.editingFinished.connect(self.Validate)
+-		self.widget.textChanged.connect(self.Invalidate)
+-		self.red = False
+-		self.error = ""
+-		self.validated = True
+-
+-		self.last_id = 0
+-		self.first_time = 0
+-		self.last_time = 2 ** 64
+-		if self.table_name == "<timeranges>":
+-			query = QSqlQuery(self.glb.db)
+-			QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
+-			if query.next():
+-				self.last_id = int(query.value(0))
+-				self.last_time = int(query.value(1))
+-			QueryExec(query, "SELECT time FROM samples WHERE time != 0 ORDER BY id LIMIT 1")
+-			if query.next():
+-				self.first_time = int(query.value(0))
+-			if placeholder_text:
+-				placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
+-
+-		if placeholder_text:
+-			self.widget.setPlaceholderText(placeholder_text)
+-
+-	def ValueToIds(self, value):
+-		ids = []
+-		query = QSqlQuery(self.glb.db)
+-		stmt = "SELECT id FROM " + self.table_name + " WHERE " + self.match_column + " = '" + value + "'"
+-		ret = query.exec_(stmt)
+-		if ret:
+-			while query.next():
+-				ids.append(str(query.value(0)))
+-		return ids
+-
+-	def IdBetween(self, query, lower_id, higher_id, order):
+-		QueryExec(query, "SELECT id FROM samples WHERE id > " + str(lower_id) + " AND id < " + str(higher_id) + " ORDER BY id " + order + " LIMIT 1")
+-		if query.next():
+-			return True, int(query.value(0))
+-		else:
+-			return False, 0
+-
+-	def BinarySearchTime(self, lower_id, higher_id, target_time, get_floor):
+-		query = QSqlQuery(self.glb.db)
+-		while True:
+-			next_id = int((lower_id + higher_id) / 2)
+-			QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
+-			if not query.next():
+-				ok, dbid = self.IdBetween(query, lower_id, next_id, "DESC")
+-				if not ok:
+-					ok, dbid = self.IdBetween(query, next_id, higher_id, "")
+-					if not ok:
+-						return str(higher_id)
+-				next_id = dbid
+-				QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
+-			next_time = int(query.value(0))
+-			if get_floor:
+-				if target_time > next_time:
+-					lower_id = next_id
+-				else:
+-					higher_id = next_id
+-				if higher_id <= lower_id + 1:
+-					return str(higher_id)
+-			else:
+-				if target_time >= next_time:
+-					lower_id = next_id
+-				else:
+-					higher_id = next_id
+-				if higher_id <= lower_id + 1:
+-					return str(lower_id)
+-
+-	def ConvertRelativeTime(self, val):
+-		mult = 1
+-		suffix = val[-2:]
+-		if suffix == "ms":
+-			mult = 1000000
+-		elif suffix == "us":
+-			mult = 1000
+-		elif suffix == "ns":
+-			mult = 1
+-		else:
+-			return val
+-		val = val[:-2].strip()
+-		if not self.IsNumber(val):
+-			return val
+-		val = int(val) * mult
+-		if val >= 0:
+-			val += self.first_time
+-		else:
+-			val += self.last_time
+-		return str(val)
+-
+-	def ConvertTimeRange(self, vrange):
+-		if vrange[0] == "":
+-			vrange[0] = str(self.first_time)
+-		if vrange[1] == "":
+-			vrange[1] = str(self.last_time)
+-		vrange[0] = self.ConvertRelativeTime(vrange[0])
+-		vrange[1] = self.ConvertRelativeTime(vrange[1])
+-		if not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
+-			return False
+-		beg_range = max(int(vrange[0]), self.first_time)
+-		end_range = min(int(vrange[1]), self.last_time)
+-		if beg_range > self.last_time or end_range < self.first_time:
+-			return False
+-		vrange[0] = self.BinarySearchTime(0, self.last_id, beg_range, True)
+-		vrange[1] = self.BinarySearchTime(1, self.last_id + 1, end_range, False)
+-		return True
+-
+-	def AddTimeRange(self, value, ranges):
+-		n = value.count("-")
+-		if n == 1:
+-			pass
+-		elif n == 2:
+-			if value.split("-")[1].strip() == "":
+-				n = 1
+-		elif n == 3:
+-			n = 2
+-		else:
+-			return False
+-		pos = findnth(value, "-", n)
+-		vrange = [value[:pos].strip() ,value[pos+1:].strip()]
+-		if self.ConvertTimeRange(vrange):
+-			ranges.append(vrange)
+-			return True
+-		return False
+-
+-	def InvalidValue(self, value):
+-		self.value = ""
+-		palette = QPalette()
+-		palette.setColor(QPalette.Text,Qt.red)
+-		self.widget.setPalette(palette)
+-		self.red = True
+-		self.error = self.label + " invalid value '" + value + "'"
+-		self.parent.ShowMessage(self.error)
+-
+-	def IsNumber(self, value):
+-		try:
+-			x = int(value)
+-		except:
+-			x = 0
+-		return str(x) == value
+-
+-	def Invalidate(self):
+-		self.validated = False
+-
+-	def Validate(self):
+-		input_string = self.widget.text()
+-		self.validated = True
+-		if self.red:
+-			palette = QPalette()
+-			self.widget.setPalette(palette)
+-			self.red = False
+-		if not len(input_string.strip()):
+-			self.error = ""
+-			self.value = ""
+-			return
+-		if self.table_name == "<timeranges>":
+-			ranges = []
+-			for value in [x.strip() for x in input_string.split(",")]:
+-				if not self.AddTimeRange(value, ranges):
+-					return self.InvalidValue(value)
+-			ranges = [("(" + self.column_name1 + " >= " + r[0] + " AND " + self.column_name1 + " <= " + r[1] + ")") for r in ranges]
+-			self.value = " OR ".join(ranges)
+-		elif self.table_name == "<ranges>":
+-			singles = []
+-			ranges = []
+-			for value in [x.strip() for x in input_string.split(",")]:
+-				if "-" in value:
+-					vrange = value.split("-")
+-					if len(vrange) != 2 or not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
+-						return self.InvalidValue(value)
+-					ranges.append(vrange)
+-				else:
+-					if not self.IsNumber(value):
+-						return self.InvalidValue(value)
+-					singles.append(value)
+-			ranges = [("(" + self.column_name1 + " >= " + r[0] + " AND " + self.column_name1 + " <= " + r[1] + ")") for r in ranges]
+-			if len(singles):
+-				ranges.append(self.column_name1 + " IN (" + ",".join(singles) + ")")
+-			self.value = " OR ".join(ranges)
+-		elif self.table_name:
+-			all_ids = []
+-			for value in [x.strip() for x in input_string.split(",")]:
+-				ids = self.ValueToIds(value)
+-				if len(ids):
+-					all_ids.extend(ids)
+-				else:
+-					return self.InvalidValue(value)
+-			self.value = self.column_name1 + " IN (" + ",".join(all_ids) + ")"
+-			if self.column_name2:
+-				self.value = "( " + self.value + " OR " + self.column_name2 + " IN (" + ",".join(all_ids) + ") )"
+-		else:
+-			self.value = input_string.strip()
+-		self.error = ""
+-		self.parent.ClearMessage()
+-
+-	def IsValid(self):
+-		if not self.validated:
+-			self.Validate()
+-		if len(self.error):
+-			self.parent.ShowMessage(self.error)
+-			return False
+-		return True
+-
+ # Line edit data item
  
--	def __init__(self, where_clause = ""):
-+	def __init__(self, name = "", where_clause = ""):
-+		self.name = name
- 		self.where_clause = where_clause
- 
- 	def UniqueId(self):
-@@ -1412,7 +1413,7 @@ class ReportVars():
- 
- class BranchWindow(QMdiSubWindow):
- 
--	def __init__(self, glb, event_id, name, report_vars, parent=None):
-+	def __init__(self, glb, event_id, report_vars, parent=None):
- 		super(BranchWindow, self).__init__(parent)
- 
- 		model_name = "Branch Events " + str(event_id) +  " " + report_vars.UniqueId()
-@@ -1435,7 +1436,7 @@ class BranchWindow(QMdiSubWindow):
- 
- 		self.setWidget(self.vbox.Widget())
- 
--		AddSubWindow(glb.mainwindow.mdi_area, self, name + " Branch Events")
-+		AddSubWindow(glb.mainwindow.mdi_area, self, report_vars.name + " Branch Events")
- 
- 	def ResizeColumnToContents(self, column, n):
- 		# Using the view's resizeColumnToContents() here is extrememly slow
-@@ -1710,7 +1711,6 @@ class ReportDialogBase(QDialog):
- 
- 		self.glb = glb
- 
--		self.name = ""
- 		self.report_vars = ReportVars()
- 
- 		self.setWindowTitle(title)
-@@ -1751,8 +1751,8 @@ class ReportDialogBase(QDialog):
- 
- 	def Ok(self):
- 		vars = self.report_vars
--		self.name = self.data_items[0].value
--		if not self.name:
-+		vars.name = self.data_items[0].value
-+		if not vars.name:
- 			self.ShowMessage("Report name is required")
- 			return
- 		for d in self.data_items:
-@@ -2392,13 +2392,13 @@ class MainWindow(QMainWindow):
- 		CallGraphWindow(self.glb, self)
- 
- 	def NewBranchView(self, event_id):
--		BranchWindow(self.glb, event_id, "", ReportVars(), self)
-+		BranchWindow(self.glb, event_id, ReportVars(), self)
- 
- 	def NewSelectedBranchView(self, event_id):
- 		dialog = SelectedBranchDialog(self.glb, self)
- 		ret = dialog.exec_()
- 		if ret:
--			BranchWindow(self.glb, event_id, dialog.name, dialog.report_vars, self)
-+			BranchWindow(self.glb, event_id, dialog.report_vars, self)
- 
- 	def NewTableView(self, table_name):
- 		TableWindow(self.glb, table_name, self)
+ class LineEditDataItem(object):
 -- 
 2.20.1
