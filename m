@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/37] perf scripts python: exported-sql-viewer.py: Remove leftover debugging prints
-Date: Mon, 25 Feb 2019 18:20:03 -0300
-Message-ID: <20190225212035.24781-6-acme@kernel.org>
+Subject: [PATCH 06/37] perf scripts python: exported-sql-viewer.py: Hide Call Graph option if no calls table
+Date: Mon, 25 Feb 2019 18:20:04 -0300
+Message-ID: <20190225212035.24781-7-acme@kernel.org>
 References: <20190225212035.24781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,56 +14,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Remove leftover debugging prints.
+The Call Graph depends on the calls table which is optional when exporting
+data, so hide the Call Graph option if there is no calls table.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 7 -------
- 1 file changed, 7 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index b296028386a6..c20b510ace8f 100755
+index c20b510ace8f..58a95241ff70 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1560,7 +1560,6 @@ class SQLTableDialogDataItem():
- 					return str(lower_id)
+@@ -1786,6 +1786,16 @@ def GetEventList(db):
+ 		events.append(query.value(0))
+ 	return events
  
- 	def ConvertRelativeTime(self, val):
--		print "val ", val
- 		mult = 1
- 		suffix = val[-2:]
- 		if suffix == "ms":
-@@ -1582,29 +1581,23 @@ class SQLTableDialogDataItem():
- 		return str(val)
++# Is a table selectable
++
++def IsSelectable(db, table):
++	query = QSqlQuery(db)
++	try:
++		QueryExec(query, "SELECT * FROM " + table + " LIMIT 1")
++	except:
++		return False
++	return True
++
+ # SQL data preparation
  
- 	def ConvertTimeRange(self, vrange):
--		print "vrange ", vrange
- 		if vrange[0] == "":
- 			vrange[0] = str(self.first_time)
- 		if vrange[1] == "":
- 			vrange[1] = str(self.last_time)
- 		vrange[0] = self.ConvertRelativeTime(vrange[0])
- 		vrange[1] = self.ConvertRelativeTime(vrange[1])
--		print "vrange2 ", vrange
- 		if not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
- 			return False
--		print "ok1"
- 		beg_range = max(int(vrange[0]), self.first_time)
- 		end_range = min(int(vrange[1]), self.last_time)
- 		if beg_range > self.last_time or end_range < self.first_time:
- 			return False
--		print "ok2"
- 		vrange[0] = self.BinarySearchTime(0, self.last_id, beg_range, True)
- 		vrange[1] = self.BinarySearchTime(1, self.last_id + 1, end_range, False)
--		print "vrange3 ", vrange
- 		return True
+ def SQLTableDataPrep(query, count):
+@@ -2298,7 +2308,8 @@ class MainWindow(QMainWindow):
+ 		edit_menu.addAction(CreateAction("&Enlarge Font", "Make text bigger", self.EnlargeFont, self, [QKeySequence("Ctrl++")]))
  
- 	def AddTimeRange(self, value, ranges):
--		print "value ", value
- 		n = value.count("-")
- 		if n == 1:
- 			pass
+ 		reports_menu = menu.addMenu("&Reports")
+-		reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
++		if IsSelectable(glb.db, "calls"):
++			reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
+ 
+ 		self.EventMenu(GetEventList(glb.db), reports_menu)
+ 
 -- 
 2.20.1
