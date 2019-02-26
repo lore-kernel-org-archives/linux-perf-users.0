@@ -1,183 +1,205 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/37] perf annotate: Fix getting source line failure
-Date: Mon, 25 Feb 2019 18:19:59 -0300
-Message-ID: <20190225212035.24781-2-acme@kernel.org>
-References: <20190225212035.24781-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Andi Kleen <andi@firstfloor.org>
+Subject: [PATCH v2 05/11] perf tools report: Use less for scripts output
+Date: Mon, 25 Feb 2019 19:04:06 -0800
+Message-ID: <20190226030412.23485-6-andi@firstfloor.org>
+References: <20190226030412.23485-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
+In-Reply-To: <20190226030412.23485-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wei Li <liwei391@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+To: acme@kernel.org
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, eranian@google.com, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
-("perf annotate: No need to calculate notes->start twice") removed notes->start
-assignment in symbol__calc_lines(). It will get failed in
-find_address_in_section() from symbol__tty_annotate() subroutine as the
-a2l->addr is wrong. So the annotate summary doesn't report the line number of
-source code correctly.
+The UI viewer for scripts output has a lot of limitations: limited size,
+no search or save function, slow, and various other issues.
 
-Before fix:
+Just use 'less' to display directly on the terminal instead.
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
-  void hotspot_1(void)
-  {
-	volatile int i;
+This won't work in gtk mode, but gtk doesn't support these
+context menus anyways. If that is ever done could use an terminal
+for the output.
 
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-  }
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-  int main(void)
-  {
-	hotspot_1();
-
-	return 0;
-  }
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   19.30 common_while_1[32]
-   19.03 common_while_1[4e]
-   19.01 common_while_1[16]
-    5.04 common_while_1[13]
-    4.99 common_while_1[4b]
-    4.78 common_while_1[2c]
-    4.77 common_while_1[10]
-    4.66 common_while_1[2f]
-    4.59 common_while_1[51]
-    4.59 common_while_1[35]
-    4.52 common_while_1[19]
-    4.20 common_while_1[56]
-    0.51 common_while_1[48]
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
-   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
-      0.00 :   618:   jle    607 <hotspot_1+0xd>
-           :                 for (i = 0; i < 0x10000000; i++);
-  ...
-
-After fix:
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   33.34 common_while_1.c:5
-   33.34 common_while_1.c:6
-   33.32 common_while_1.c:7
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
-    4.89 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
-    0.00 :   618:   jle    607 <hotspot_1+0xd>
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
-    0.00 :   621:   jmp    62c <hotspot_1+0x32>
-    0.00 :   623:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
-    4.73 :   629:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
-  ...
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
-Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 2468b8aa0b6b..11a8a447a3af 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1891,6 +1891,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct annotation_options *options,
- 		     struct arch **parch)
- {
-+	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.evsel		= evsel,
-@@ -1921,6 +1922,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+v2:
+Remove some unneeded headers
+---
+ tools/perf/ui/browsers/scripts.c | 130 ++++---------------------------
+ 1 file changed, 17 insertions(+), 113 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 90a32ac69e76..7f36630694bf 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,35 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <elf.h>
+-#include <inttypes.h>
+-#include <sys/ttydefaults.h>
+-#include <string.h>
+ #include "../../util/sort.h"
+ #include "../../util/util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+ #include "../../util/symbol.h"
+ #include "../browser.h"
+-#include "../helpline.h"
+ #include "../libslang.h"
  
- 	args.ms.map = map;
- 	args.ms.sym = sym;
-+	notes->start = map__rip_2objdump(map, sym->start);
- 
- 	return symbol__disassemble(sym, &args);
- }
-@@ -2796,8 +2798,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
- 
- 	symbol__calc_percent(sym, evsel);
- 
--	notes->start = map__rip_2objdump(map, sym->start);
+-/* 2048 lines should be enough for a script output */
+-#define MAX_LINES		2048
 -
- 	annotation__set_offsets(notes, size);
- 	annotation__mark_jump_targets(notes, sym);
- 	annotation__compute_ipc(notes, size);
+-/* 160 bytes for one output line */
+-#define AVERAGE_LINE_LEN	160
+-
+-struct script_line {
+-	struct list_head node;
+-	char line[AVERAGE_LINE_LEN];
+-};
+-
+-struct perf_script_browser {
+-	struct ui_browser b;
+-	struct list_head entries;
+-	const char *script_name;
+-	int nr_lines;
+-};
+-
+ #define SCRIPT_NAMELEN	128
+ #define SCRIPT_MAX_NO	64
+ /*
+@@ -73,69 +50,29 @@ static int list_scripts(char *script_name)
+ 	return ret;
+ }
+ 
+-static void script_browser__write(struct ui_browser *browser,
+-				   void *entry, int row)
++static void run_script(char *cmd)
+ {
+-	struct script_line *sline = list_entry(entry, struct script_line, node);
+-	bool current_entry = ui_browser__is_current_entry(browser, row);
+-
+-	ui_browser__set_color(browser, current_entry ? HE_COLORSET_SELECTED :
+-						       HE_COLORSET_NORMAL);
+-
+-	ui_browser__write_nstring(browser, sline->line, browser->width);
++	pr_debug("Running %s\n", cmd);
++	SLang_reset_tty();
++	if (system(cmd) < 0)
++		pr_warning("Cannot run %s\n", cmd);
++	/*
++	 * SLang doesn't seem to reset the whole terminal, so be more
++	 * forceful to get back to the original state.
++	 */
++	printf("\033[c\033[H\033[J");
++	fflush(stdout);
++	SLang_init_tty(0, 0, 0);
++	SLsmg_refresh();
+ }
+ 
+-static int script_browser__run(struct perf_script_browser *browser)
+-{
+-	int key;
+-
+-	if (ui_browser__show(&browser->b, browser->script_name,
+-			     "Press ESC to exit") < 0)
+-		return -1;
+-
+-	while (1) {
+-		key = ui_browser__run(&browser->b, 0);
+-
+-		/* We can add some special key handling here if needed */
+-		break;
+-	}
+-
+-	ui_browser__hide(&browser->b);
+-	return key;
+-}
+-
+-
+ int script_browse(const char *script_opt)
+ {
+ 	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
+-	char *line = NULL;
+-	size_t len = 0;
+-	ssize_t retlen;
+-	int ret = -1, nr_entries = 0;
+-	FILE *fp;
+-	void *buf;
+-	struct script_line *sline;
+-
+-	struct perf_script_browser script = {
+-		.b = {
+-			.refresh    = ui_browser__list_head_refresh,
+-			.seek	    = ui_browser__list_head_seek,
+-			.write	    = script_browser__write,
+-		},
+-		.script_name = script_name,
+-	};
+-
+-	INIT_LIST_HEAD(&script.entries);
+-
+-	/* Save each line of the output in one struct script_line object. */
+-	buf = zalloc((sizeof(*sline)) * MAX_LINES);
+-	if (!buf)
+-		return -1;
+-	sline = buf;
+ 
+ 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
+ 	if (list_scripts(script_name))
+-		goto exit;
++		return -1;
+ 
+ 	sprintf(cmd, "perf script -s %s ", script_name);
+ 
+@@ -147,42 +84,9 @@ int script_browse(const char *script_opt)
+ 		strcat(cmd, input_name);
+ 	}
+ 
+-	strcat(cmd, " 2>&1");
+-
+-	fp = popen(cmd, "r");
+-	if (!fp)
+-		goto exit;
+-
+-	while ((retlen = getline(&line, &len, fp)) != -1) {
+-		strncpy(sline->line, line, AVERAGE_LINE_LEN);
+-
+-		/* If one output line is very large, just cut it short */
+-		if (retlen >= AVERAGE_LINE_LEN) {
+-			sline->line[AVERAGE_LINE_LEN - 1] = '\0';
+-			sline->line[AVERAGE_LINE_LEN - 2] = '\n';
+-		}
+-		list_add_tail(&sline->node, &script.entries);
+-
+-		if (script.b.width < retlen)
+-			script.b.width = retlen;
+-
+-		if (nr_entries++ >= MAX_LINES - 1)
+-			break;
+-		sline++;
+-	}
+-
+-	if (script.b.width > AVERAGE_LINE_LEN)
+-		script.b.width = AVERAGE_LINE_LEN;
+-
+-	free(line);
+-	pclose(fp);
++	strcat(cmd, " 2>&1 | less");
+ 
+-	script.nr_lines = nr_entries;
+-	script.b.nr_entries = nr_entries;
+-	script.b.entries = &script.entries;
++	run_script(cmd);
+ 
+-	ret = script_browser__run(&script);
+-exit:
+-	free(buf);
+-	return ret;
++	return 0;
+ }
 -- 
-2.20.1
+2.17.2
