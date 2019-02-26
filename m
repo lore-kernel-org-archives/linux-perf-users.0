@@ -1,72 +1,65 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Support sample context in perf report
-Date: Mon, 25 Feb 2019 19:04:01 -0800
-Message-ID: <20190226030412.23485-1-andi@firstfloor.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 34/37] perf script python: Add Python3 support to
+ stackcollapse.py
+Date: Tue, 26 Feb 2019 12:49:16 +0100
+Message-ID: <1d818ffd-6a5f-63dc-66e1-41ed18670892@redhat.com>
+References: <20190225212035.24781-1-acme@kernel.org>
+ <20190225212035.24781-35-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190225212035.24781-35-acme@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-[Changes: 
-Removed already merged patches.
-Address review feedback, see individual patches.
-Now compiles with gcc 8.
-Some minor bug fixes and improvements.]
+On 25/02/19 22:20, Arnaldo Carvalho de Melo wrote:
+> From: Tony Jones <tonyj@suse.de>
+> 
+> Support both Python2 and Python3 in the stackcollapse.py script
+> 
+> There may be differences in the ordering of output lines due to
+> differences in dictionary ordering etc.  However the format within lines
+> should be unchanged.
+> 
+> The use of 'from __future__' implies the minimum supported Python2 version
+> is now v2.6
+> 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
+> Cc: Paolo Bonzini <pbonzini@redhat.com> <pbonzini@redhat.com>
+> Link: http://lkml.kernel.org/r/20190222230619.17887-12-tonyj@suse.de
+> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/scripts/python/stackcollapse.py | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/stackcollapse.py b/tools/perf/scripts/python/stackcollapse.py
+> index 1697b5e18c96..5e703efaddcc 100755
+> --- a/tools/perf/scripts/python/stackcollapse.py
+> +++ b/tools/perf/scripts/python/stackcollapse.py
+> @@ -19,6 +19,8 @@
+>  # Written by Paolo Bonzini <pbonzini@redhat.com>
+>  # Based on Brendan Gregg's stackcollapse-perf.pl script.
+>  
+> +from __future__ import print_function
+> +
+>  import os
+>  import sys
+>  from collections import defaultdict
+> @@ -120,7 +122,6 @@ def process_event(param_dict):
+>      lines[stack_string] = lines[stack_string] + 1
+>  
+>  def trace_end():
+> -    list = lines.keys()
+> -    list.sort()
+> +    list = sorted(lines)
+>      for stack in list:
+> -        print "%s %d" % (stack, lines[stack])
+> +        print("%s %d" % (stack, lines[stack]))
+> 
 
-We currently have two ways to look at sample data in perf:
-either use perf report to aggregate everything, or use
-perf script to look at all individual samples.
-
-Both ways are useful. Of course aggregation is useful
-to quickly find the most expensive part of the code.
-
-But sometimes a single sample is not good enough to
-determine the problem and we need to look at context, either
-through branch contexts, or other previous samples (e.g. for
-correlating different micro architecture events or computing
-metrics)
-
-This can be done through perf script today, but it can
-be rather cumbersome to find the right samples to look
-at.
-
-Another problem with perf report is that it aggregates
-the whole measurement period. But many real workloads
-have phases where they behave quite differently, and it is
-often not useful to combine them into a single histogram.
-
-While this can be worked around with the --time option
-to report, it can be quite cumbersome.
-
-This patch kit attempts to address some of these
-problems in perf report by making it time aware.
-
-- It adds a new time sort key that allows perf report
-to separate samples from different regions. The time
-regions can be defined with a new --time-quantum option.
-
-- Then it extends the perf script support in the
-tui record browser to allow browsing samples for 
-different time regions from within a perf report
-session.
-
-- Extends the report browser script display
-to automatically select sensible defaults
-based on what was recorded. For example it will
-automatically show branch contexts with -b.
-
-- Support browsing the context of individual samples.
-perf report can save a limited number of random samples
-per histogram entry with the new --samples option.
-Then the browser allows directly jumping to any
-of the saved samples and browsing the context on the current
-thread or CPU.
-
-There could be probably be done more to make
-perf report even better for such use cases (e.g. a real
-time line display), but this basic support is good
-enough for many useful usages.
-
-Also available in
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-2
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
