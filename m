@@ -1,140 +1,71 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v3 03/11] perf tools report: Support nano seconds
-Date: Thu, 28 Feb 2019 10:35:42 -0800
-Message-ID: <20190228183550.14126-4-andi@firstfloor.org>
-References: <20190228183550.14126-1-andi@firstfloor.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH] tools lib traceevent: Fix buffer overflow in arg_eval
+Date: Thu, 28 Feb 2019 16:01:23 -0300
+Message-ID: <20190228190123.GK9508@kernel.org>
+References: <20190228015532.8941-1-tonyj@suse.de>
+ <20190227221250.74996869@vmware.local.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
+Content-Disposition: inline
+In-Reply-To: <20190227221250.74996869@vmware.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, linux-trace-devel@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Michael Sartain <mikesart@fastmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Em Wed, Feb 27, 2019 at 10:12:50PM -0500, Steven Rostedt escreveu:
+> On Wed, 27 Feb 2019 17:55:32 -0800
+> Tony Jones <tonyj@suse.de> wrote:
+> 
+> > Fix buffer overflow observed when running perf test.
+> > 
+> > The overflow is when trying to evaluate "1ULL << (64 - 1)" which
+> > is resulting in -9223372036854775808 which overflows the 20 character
+> > buffer.
+> > 
+> > If is possible this bug has been reported before but I still don't
+> > see any fix checked in:
+> > 
+> > See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+> > 
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: linux-perf-users@vger.kernel.org
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Tony Jones <tonyj@suse.de>
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> I have to say I've let this slide and it is not the first time a patch
+> went out with this fix. But this one has the correct fix because we
+> should use a buffer with a multiple of 4. Anyway, Tony I believe was
+> the first to report this anyway.
+> 
+> For reference we have:
+> 
+> I first heard about Tony's complaint on a post to linux-perf-users on Jan 18.
+> 
+> But then we had after that:
+> 
+>  Michael Sartain reported it on 1/24 (and fixed by Tzvetomir)
+>  https://lore.kernel.org/linux-trace-devel/20190125102014.19600-1-tstoyanov@vmware.com/
+>  
+> It was later fixed again by Mathias Krause
+>  https://lore.kernel.org/linux-trace-devel/20190223122404.21137-1-minipli@googlemail.com/
+> 
+> But since Tony was first to report it, and we discussed that it should
+> be 24 bytes, I would say this is the patch to take.
+> 
+> Again, sorry for not getting this acknowledged earlier and everyone doing
+> the same thing multiple times. :-/
+> 
+> Arnaldo, please take this patch. But also add:
+> 
+> Reported-by: Michael Sartain <mikesart@fastmail.com>
+> Reported-by: Mathias Krause <minipli@googlemail.com>
 
-Upcoming changes add timestamp output in perf report. Add a --ns
-argument similar to perf script to support nanoseconds resolution
-when needed.
+Will do.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Thanks for the credit research,
 
----
-v2:
-Move flag into symbol_conf and change all users
----
- tools/perf/Documentation/perf-report.txt |  3 +++
- tools/perf/builtin-report.c              |  1 +
- tools/perf/builtin-script.c              | 11 +++++------
- tools/perf/util/symbol.c                 |  1 +
- tools/perf/util/symbol_conf.h            |  1 +
- 5 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 1a27bfe05039..51dbc519dbce 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -477,6 +477,9 @@ include::itrace.txt[]
- 	Please note that not all mmaps are stored, options affecting which ones
- 	are include 'perf record --data', for instance.
- 
-+--ns::
-+	Show time stamps in nanoseconds.
-+
- --stats::
- 	Display overall events statistics without any further processing.
- 	(like the one at the end of the perf report -D command)
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1532ebde6c4b..09180e559ad6 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1147,6 +1147,7 @@ int cmd_report(int argc, const char **argv)
- 	OPT_CALLBACK(0, "percent-type", &report.annotation_opts, "local-period",
- 		     "Set percent type local/global-period/hits",
- 		     annotate_parse_percent_type),
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
- 	OPT_END()
- 	};
- 	struct perf_data data = {
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fbc440bdf880..6575322c61c0 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -60,7 +60,6 @@ static bool			no_callchain;
- static bool			latency_format;
- static bool			system_wide;
- static bool			print_flags;
--static bool			nanosecs;
- static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
-@@ -691,7 +690,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 		secs = nsecs / NSEC_PER_SEC;
- 		nsecs -= secs * NSEC_PER_SEC;
- 
--		if (nanosecs)
-+		if (symbol_conf.nanosecs)
- 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
- 		else {
- 			char sample_time[32];
-@@ -3244,7 +3243,7 @@ static int parse_insn_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "+insn,-event,-period", 0);
- 	itrace_parse_synth_opts(opt, "i0ns", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3262,7 +3261,7 @@ static int parse_call_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
- 	itrace_parse_synth_opts(opt, "cewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3272,7 +3271,7 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent,+flags", 0);
- 	itrace_parse_synth_opts(opt, "crewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3408,7 +3407,7 @@ int cmd_script(int argc, const char **argv)
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_INTEGER(0, "max-blocks", &max_blocks,
- 		    "Maximum number of code blocks to dump with brstackinsn"),
--	OPT_BOOLEAN(0, "ns", &nanosecs,
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs,
- 		    "Use 9 decimal places when displaying time"),
- 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
- 			    "Instruction Tracing options\n" ITRACE_HELP,
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 758bf5f74e6e..eb873ea1c405 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -39,6 +39,7 @@ int vmlinux_path__nr_entries;
- char **vmlinux_path;
- 
- struct symbol_conf symbol_conf = {
-+	.nanosecs		= false,
- 	.use_modules		= true,
- 	.try_vmlinux_path	= true,
- 	.demangle		= true,
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index fffea68c1203..095a297c8b47 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -8,6 +8,7 @@ struct strlist;
- struct intlist;
- 
- struct symbol_conf {
-+	bool		nanosecs;
- 	unsigned short	priv_size;
- 	bool		try_vmlinux_path,
- 			init_annotation,
--- 
-2.17.2
+- Arnaldo
