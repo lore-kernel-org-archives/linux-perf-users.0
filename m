@@ -1,71 +1,41 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: Support sample context in perf report
-Date: Thu, 28 Feb 2019 10:35:39 -0800
-Message-ID: <20190228183550.14126-1-andi@firstfloor.org>
+Subject: [PATCH v3 11/11] perf tools: Add some new tips describing the new options
+Date: Thu, 28 Feb 2019 10:35:50 -0800
+Message-ID: <20190228183550.14126-12-andi@firstfloor.org>
+References: <20190228183550.14126-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-[Changes: 
-v3:
-Fix compile problem on Fedora.
-Rebase on latest tip. Now hopefully no missing patches.]
+From: Andi Kleen <ak@linux.intel.com>
 
-We currently have two ways to look at sample data in perf:
-either use perf report to aggregate everything, or use
-perf script to look at all individual samples.
+And one old option.
 
-Both ways are useful. Of course aggregation is useful
-to quickly find the most expensive part of the code.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/tips.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-But sometimes a single sample is not good enough to
-determine the problem and we need to look at context, either
-through branch contexts, or other previous samples (e.g. for
-correlating different micro architecture events or computing
-metrics)
-
-This can be done through perf script today, but it can
-be rather cumbersome to find the right samples to look
-at.
-
-Another problem with perf report is that it aggregates
-the whole measurement period. But many real workloads
-have phases where they behave quite differently, and it is
-often not useful to combine them into a single histogram.
-
-While this can be worked around with the --time option
-to report, it can be quite cumbersome.
-
-This patch kit attempts to address some of these
-problems in perf report by making it time aware.
-
-- It adds a new time sort key that allows perf report
-to separate samples from different regions. The time
-regions can be defined with a new --time-quantum option.
-
-- Then it extends the perf script support in the
-tui record browser to allow browsing samples for 
-different time regions from within a perf report
-session.
-
-- Extends the report browser script display
-to automatically select sensible defaults
-based on what was recorded. For example it will
-automatically show branch contexts with -b.
-
-- Support browsing the context of individual samples.
-perf report can save a limited number of random samples
-per histogram entry with the new --samples option.
-Then the browser allows directly jumping to any
-of the saved samples and browsing the context on the current
-thread or CPU.
-
-There could be probably be done more to make
-perf report even better for such use cases (e.g. a real
-time line display), but this basic support is good
-enough for many useful usages.
-
-Also available in
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-3
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 849599f39c5e..4ec8107ed512 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -15,6 +15,7 @@ To see callchains in a more compact form: perf report -g folded
+ Show individual samples with: perf script
+ Limit to show entries above 5% only: perf report --percent-limit 5
+ Profiling branch (mis)predictions with: perf record -b / perf report
++To show assembler sample contexts use perf record -b / perf script -F +brstackinsn --xed
+ Treat branches as callchains: perf report --branch-history
+ To count events in every 1000 msec: perf stat -I 1000
+ Print event counts in CSV format with: perf stat -x,
+@@ -34,3 +35,5 @@ Show current config key-value pairs: perf config --list
+ Show user configuration overrides: perf config --user --list
+ To add Node.js USDT(User-Level Statically Defined Tracing): perf buildid-cache --add `which node`
+ To report cacheline events from previous recording: perf c2c report
++To browse sample contexts use perf report --sample 10 and select in context menu
++To separate samples by time use perf report --sort time,overhead,sym
+-- 
+2.17.2
