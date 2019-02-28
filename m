@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v3 10/11] perf tools report: Implement browsing of individual samples
-Date: Thu, 28 Feb 2019 10:35:49 -0800
-Message-ID: <20190228183550.14126-11-andi@firstfloor.org>
+Subject: [PATCH v3 08/11] perf tools report: Support builtin perf script in scripts menu
+Date: Thu, 28 Feb 2019 10:35:47 -0800
+Message-ID: <20190228183550.14126-9-andi@firstfloor.org>
 References: <20190228183550.14126-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
@@ -12,423 +12,341 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Now report can show whole time periods with perf script,
-but the user still has to find individual samples of interest
-manually.
+The scripts menu traditionally only showed custom perf scripts.
 
-It would be expensive and complicated to search for the
-right samples in the whole perf file. Typically users
-only need to look at a small number of samples for useful
-analysis.
+Allow to run standard perf script with useful default options too.
 
-Also the full scripts tend to show samples of all CPUs and all
-threads mixed up, which can be very confusing on larger systems.
+- Normal perf script
+- perf script with assembler (needs xed installed)
+- perf script with source code output (needs debuginfo)
+- perf script with custom arguments
 
-Add a new --samples option to save a small random number of samples
-per hist entry
+Then we automatically select the right options to
+display the information in the perf.data file.
 
-Use a reservoir sample technique to select a representatve
-number of samples.
+For example with -b display branch contexts.
 
-Then allow browsing the samples using perf script
-as part of the hist entry context menu. This automatically
-adds the right filters, so only the thread or cpu of the sample
-is displayed. Then we use less' search functionality
-to directly jump the to the time stamp of the selected
-sample.
-
-It uses different menus for assembler and source display.
-Assembler needs xed installed and source needs debuginfo.
-
-Currently it only supports as many samples as fit on
-the screen due to some limitations in the slang ui code.
+It's not easily possible to check for xed's existence
+in advance.  perf script usually gives sensible error messages when
+it's not available.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Free names on error path
-Pass --inline and --show-*-event to child perf as needed.
----
- tools/perf/Documentation/perf-report.txt |  4 ++
- tools/perf/builtin-report.c              |  2 +
- tools/perf/ui/browsers/Build             |  1 +
- tools/perf/ui/browsers/hists.c           | 47 ++++++++++++++
- tools/perf/ui/browsers/res_sample.c      | 80 ++++++++++++++++++++++++
- tools/perf/ui/browsers/scripts.c         |  2 +-
- tools/perf/util/hist.c                   | 36 +++++++++++
- tools/perf/util/hist.h                   | 19 ++++++
- tools/perf/util/sort.h                   |  8 +++
- tools/perf/util/symbol.c                 |  1 +
- tools/perf/util/symbol_conf.h            |  1 +
- 11 files changed, 200 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/ui/browsers/res_sample.c
+Pass --inline if needed
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 546d87221ad8..f441baa794ce 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -461,6 +461,10 @@ include::itrace.txt[]
- --socket-filter::
- 	Only report the samples on the processor socket that match with this filter
- 
-+--samples=N::
-+	Save N individual samples for each histogram entry to show context in perf
-+	report tui browser.
-+
- --raw-trace::
- 	When displaying traceevent output, do not use print fmt or plugins.
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f071f19d12d6..791eb77e41fe 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1158,6 +1158,8 @@ int cmd_report(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
- 		    "Enable kernel symbol demangling"),
- 	OPT_BOOLEAN(0, "mem-mode", &report.mem_mode, "mem access profile"),
-+	OPT_INTEGER(0, "samples", &symbol_conf.res_sample,
-+		    "Number of samples to save per histogram entry for individual browsing"),
- 	OPT_CALLBACK(0, "percent-limit", &report, "percent",
- 		     "Don't show entries under that percent", parse_percent_limit),
- 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
-diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
-index 8fee56b46502..fdf86f7981ca 100644
---- a/tools/perf/ui/browsers/Build
-+++ b/tools/perf/ui/browsers/Build
-@@ -3,6 +3,7 @@ perf-y += hists.o
- perf-y += map.o
- perf-y += scripts.o
- perf-y += header.o
-+perf-y += res_sample.o
- 
- CFLAGS_annotate.o += -DENABLE_SLFUTURE_CONST
- CFLAGS_hists.o    += -DENABLE_SLFUTURE_CONST
+squash! perf tools report: Support builtin perf script in scripts menu
+
+Avoid compiler warnings. Allocate cmd buffer dynamically.
+---
+ tools/perf/ui/browsers/annotate.c |   2 +-
+ tools/perf/ui/browsers/hists.c    |  20 +++--
+ tools/perf/ui/browsers/scripts.c  | 127 +++++++++++++++++++++++-------
+ tools/perf/util/hist.h            |   8 +-
+ 4 files changed, 119 insertions(+), 38 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 35bdfd8b1e71..98d934a36d86 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -750,7 +750,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			continue;
+ 		case 'r':
+ 			{
+-				script_browse(NULL);
++				script_browse(NULL, NULL);
+ 				continue;
+ 			}
+ 		case 'k':
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 41027284f1e1..8ca988506388 100644
+index 691056b99b76..41027284f1e1 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2344,6 +2344,7 @@ struct popup_action {
+@@ -2343,6 +2343,7 @@ struct popup_action {
+ 	struct thread 		*thread;
  	struct map_symbol 	ms;
  	int			socket;
- 	struct perf_evsel	*evsel;
-+	enum rstype		rstype;
++	struct perf_evsel	*evsel;
  
  	int (*fn)(struct hist_browser *browser, struct popup_action *act);
  };
-@@ -2571,6 +2572,19 @@ do_run_script(struct hist_browser *browser __maybe_unused,
+@@ -2565,7 +2566,7 @@ do_run_script(struct hist_browser *browser __maybe_unused,
+ 		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
+ 	}
+ 
+-	script_browse(script_opt);
++	script_browse(script_opt, act->evsel);
+ 	free(script_opt);
  	return 0;
  }
- 
-+static int
-+do_res_sample_script(struct hist_browser *browser __maybe_unused,
-+		     struct popup_action *act)
-+{
-+	struct hist_entry *he;
-+	int num_res;
-+
-+	he = hist_browser__selected_entry(browser);
-+	num_res = min(he->num_res, symbol_conf.res_sample);
-+	res_sample_browse(he->res_samples, num_res, act->evsel, act->rstype);
-+	return 0;
-+}
-+
- static int
+@@ -2574,7 +2575,7 @@ static int
  add_script_opt_2(struct hist_browser *browser __maybe_unused,
  	       struct popup_action *act, char **optstr,
-@@ -2629,6 +2643,27 @@ add_script_opt(struct hist_browser *browser,
- 	return n;
- }
+ 	       struct thread *thread, struct symbol *sym,
+-	       const char *tstr)
++	       struct perf_evsel *evsel, const char *tstr)
+ {
  
-+static int
-+add_res_sample_opt(struct hist_browser *browser __maybe_unused,
-+		   struct popup_action *act, char **optstr,
-+		   struct res_sample *res_sample,
-+		   struct perf_evsel *evsel,
-+		   enum rstype type)
-+{
-+	if (!res_sample)
-+		return 0;
-+
-+	if (asprintf(optstr, "Show context for individual samples %s",
-+		type == A_ASM ? "with assembler" :
-+		type == A_SOURCE ? "with source" : "") < 0)
-+		return 0;
-+
-+	act->fn = do_res_sample_script;
+ 	if (thread) {
+@@ -2592,6 +2593,7 @@ add_script_opt_2(struct hist_browser *browser __maybe_unused,
+ 
+ 	act->thread = thread;
+ 	act->ms.sym = sym;
 +	act->evsel = evsel;
-+	act->rstype = type;
-+	return 1;
-+}
-+
+ 	act->fn = do_run_script;
+ 	return 1;
+ }
+@@ -2599,12 +2601,13 @@ add_script_opt_2(struct hist_browser *browser __maybe_unused,
  static int
- do_switch_data(struct hist_browser *browser __maybe_unused,
- 	       struct popup_action *act __maybe_unused)
-@@ -3115,6 +3150,18 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ add_script_opt(struct hist_browser *browser,
+ 	       struct popup_action *act, char **optstr,
+-	       struct thread *thread, struct symbol *sym)
++	       struct thread *thread, struct symbol *sym,
++	       struct perf_evsel *evsel)
+ {
+ 	int n, j;
+ 	struct hist_entry *he;
+ 
+-	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
++	n = add_script_opt_2(browser, act, optstr, thread, sym, evsel, "");
+ 
+ 	he = hist_browser__selected_entry(browser);
+ 	if (sort_order && strstr(sort_order, "time")) {
+@@ -2620,7 +2623,7 @@ add_script_opt(struct hist_browser *browser,
+ 				          tstr + j,
+ 				          sizeof tstr - j);
+ 		n += add_script_opt_2(browser, act, optstr, thread, sym,
+-					  tstr);
++					  evsel, tstr);
+ 		act->time = he->time;
+ 	}
+ 	return n;
+@@ -3091,7 +3094,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ 				nr_options += add_script_opt(browser,
+ 							     &actions[nr_options],
+ 							     &options[nr_options],
+-							     thread, NULL);
++							     thread, NULL, evsel);
+ 			}
+ 			/*
+ 			 * Note that browser->selection != NULL
+@@ -3106,11 +3109,12 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ 				nr_options += add_script_opt(browser,
+ 							     &actions[nr_options],
+ 							     &options[nr_options],
+-							     NULL, browser->selection->sym);
++							     NULL, browser->selection->sym,
++							     evsel);
+ 			}
  		}
  		nr_options += add_script_opt(browser, &actions[nr_options],
- 					     &options[nr_options], NULL, NULL, evsel);
-+		nr_options += add_res_sample_opt(browser, &actions[nr_options],
-+						 &options[nr_options],
-+				 hist_browser__selected_entry(browser)->res_samples,
-+				 evsel, A_NORMAL);
-+		nr_options += add_res_sample_opt(browser, &actions[nr_options],
-+						 &options[nr_options],
-+				 hist_browser__selected_entry(browser)->res_samples,
-+				 evsel, A_ASM);
-+		nr_options += add_res_sample_opt(browser, &actions[nr_options],
-+						 &options[nr_options],
-+				 hist_browser__selected_entry(browser)->res_samples,
-+				 evsel, A_SOURCE);
+-					     &options[nr_options], NULL, NULL);
++					     &options[nr_options], NULL, NULL, evsel);
  		nr_options += add_switch_opt(browser, &actions[nr_options],
  					     &options[nr_options]);
  skip_scripting:
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-new file mode 100644
-index 000000000000..2f10c40cc7ab
---- /dev/null
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Display a menu with individual samples to browse with perf script */
-+#include "util.h"
-+#include "hist.h"
-+#include "evsel.h"
-+#include "hists.h"
-+#include "sort.h"
-+#include "time-utils.h"
-+
-+/* In ns. Could make configurable. */
-+#define CONTEXT_LEN 100000000
-+
-+int res_sample_browse(struct res_sample *res_samples, int num_res,
-+		      struct perf_evsel *evsel, enum rstype rstype)
-+{
-+	char **names;
-+	int i, n;
-+	int choice;
-+	char *cmd;
-+	char pbuf[256], tidbuf[32], cpubuf[32];
-+	const char *perf = perf_exe(pbuf, sizeof pbuf);
-+	char trange[128], tsample[64];
-+	struct res_sample *r;
-+	char extra_format[256];
-+
-+	/* For now since ui__popup_menu doesn't like lists that don't fit */
-+	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
-+
-+	names = calloc(num_res, sizeof(char *));
-+	if (!names)
-+		return -1;
-+	for (i = 0; i < num_res; i++) {
-+		char tbuf[64];
-+
-+		timestamp__scnprintf_nsec(res_samples[i].time, tbuf, sizeof tbuf);
-+		if (asprintf(&names[i], "%s: CPU %d tid %d", tbuf,
-+			     res_samples[i].cpu, res_samples[i].tid) < 0) {
-+			while (--i >= 0)
-+				free(names[i]);
-+			free(names);
-+			return -1;
-+		}
-+	}
-+	choice = ui__popup_menu(num_res, names);
-+	for (i = 0; i < num_res; i++)
-+		free(names[i]);
-+	free(names);
-+
-+	if (choice < 0 || choice >= num_res)
-+		return -1;
-+	r = &res_samples[choice];
-+
-+	n = timestamp__scnprintf_nsec(r->time - CONTEXT_LEN, trange, sizeof trange);
-+	trange[n++] = ',';
-+	timestamp__scnprintf_nsec(r->time + CONTEXT_LEN, trange + n, sizeof trange - n);
-+
-+	timestamp__scnprintf_nsec(r->time, tsample, sizeof tsample);
-+
-+	attr_to_script(extra_format, &evsel->attr);
-+
-+	if (asprintf(&cmd, "%s script %s%s --time %s %s%s %s%s --ns %s %s %s %s | less +/%s",
-+		     perf,
-+		     input_name ? "-i " : "",
-+		     input_name ? input_name : "",
-+		     trange,
-+		     r->cpu ? "--cpu " : "",
-+		     r->cpu ? (sprintf(cpubuf, "%d", r->cpu), cpubuf) : "",
-+		     r->tid ? "--tid " : "",
-+		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
-+		     extra_format,
-+		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
-+		     symbol_conf.inline_name ? "--inline" : "",
-+		     "--show-lost-events --show-switch-events --show-task-events",
-+		     tsample) < 0)
-+		return -1;
-+	run_script(cmd);
-+	free(cmd);
-+	return 0;
-+}
 diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 9e5f87558af6..cdba58447b85 100644
+index 7f36630694bf..9e5f87558af6 100644
 --- a/tools/perf/ui/browsers/scripts.c
 +++ b/tools/perf/ui/browsers/scripts.c
-@@ -125,7 +125,7 @@ static int list_scripts(char *script_name, bool *custom,
+@@ -17,36 +17,111 @@
+  */
+ #define SCRIPT_FULLPATH_LEN	256
+ 
++struct script_config {
++	const char **names;
++	char **paths;
++	int index;
++	const char *perf;
++	char extra_format[256];
++};
++
++void attr_to_script(char *extra_format, struct perf_event_attr *attr)
++{
++	extra_format[0] = 0;
++	if (attr->read_format & PERF_FORMAT_GROUP)
++		strcat(extra_format, " -F +metric");
++	if (attr->sample_type & PERF_SAMPLE_BRANCH_STACK)
++		strcat(extra_format, " -F +brstackinsn --xed");
++	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
++		strcat(extra_format, " -F +iregs");
++	if (attr->sample_type & PERF_SAMPLE_REGS_USER)
++		strcat(extra_format, " -F +uregs");
++	if (attr->sample_type & PERF_SAMPLE_PHYS_ADDR)
++		strcat(extra_format, " -F +phys_addr");
++}
++
++static int add_script_option(const char *name, const char *opt,
++			     struct script_config *c)
++{
++	c->names[c->index] = name;
++	if (asprintf(&c->paths[c->index],
++		     "%s script %s -F +metric %s %s",
++		     c->perf, opt, symbol_conf.inline_name ? " --inline" : "",
++		     c->extra_format) < 0)
++		return -1;
++	c->index++;
++	return 0;
++}
++
+ /*
+  * When success, will copy the full path of the selected script
+  * into  the buffer pointed by script_name, and return 0.
+  * Return -1 on failure.
+  */
+-static int list_scripts(char *script_name)
++static int list_scripts(char *script_name, bool *custom,
++			struct perf_evsel *evsel)
+ {
+-	char *buf, *names[SCRIPT_MAX_NO], *paths[SCRIPT_MAX_NO];
+-	int i, num, choice, ret = -1;
++	char *buf, *paths[SCRIPT_MAX_NO], *names[SCRIPT_MAX_NO];
++	int i, num, choice;
++	int ret = 0;
++	int max_std, custom_perf;
++	char pbuf[256];
++	const char *perf = perf_exe(pbuf, sizeof pbuf);
++	struct script_config scriptc = {
++		.names = (const char **)names,
++		.paths = paths,
++		.perf = perf
++	};
++
++	script_name[0] = 0;
+ 
+ 	/* Preset the script name to SCRIPT_NAMELEN */
+ 	buf = malloc(SCRIPT_MAX_NO * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN));
+ 	if (!buf)
+-		return ret;
++		return -1;
++
++	if (evsel)
++		attr_to_script(scriptc.extra_format, &evsel->attr);
++	add_script_option("Show individual samples", "", &scriptc);
++	add_script_option("Show individual samples with assembler", "-F +insn --xed",
++			  &scriptc);
++	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
++			  &scriptc);
++	custom_perf = scriptc.index;
++	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
++	i = scriptc.index;
++	max_std = i;
+ 
+-	for (i = 0; i < SCRIPT_MAX_NO; i++) {
+-		names[i] = buf + i * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN);
++	for (; i < SCRIPT_MAX_NO; i++) {
++		names[i] = buf + (i - max_std) * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN);
+ 		paths[i] = names[i] + SCRIPT_NAMELEN;
+ 	}
+ 
+-	num = find_scripts(names, paths);
+-	if (num > 0) {
+-		choice = ui__popup_menu(num, names);
+-		if (choice < num && choice >= 0) {
+-			strcpy(script_name, paths[choice]);
+-			ret = 0;
+-		}
++	num = find_scripts(names + max_std, paths + max_std);
++	if (num < 0)
++		num = 0;
++	choice = ui__popup_menu(num + max_std, (char * const *)names);
++	if (choice < 0) {
++		ret = -1;
++		goto out;
+ 	}
++	if (choice == custom_perf) {
++		char script_args[50];
++		int key = ui_browser__input_window("perf script command",
++				"Enter perf script command line (without perf script prefix)",
++				script_args, "", 0);
++		if (key != K_ENTER)
++			return -1;
++		sprintf(script_name, "%s script %s", perf, script_args);
++	} else if (choice < num + max_std) {
++		strcpy(script_name, paths[choice]);
++	}
++	*custom = choice >= max_std;
+ 
++out:
+ 	free(buf);
++	for (i = 0; i < max_std; i++)
++		free(paths[i]);
  	return ret;
  }
  
--static void run_script(char *cmd)
-+void run_script(char *cmd)
+@@ -66,27 +141,25 @@ static void run_script(char *cmd)
+ 	SLsmg_refresh();
+ }
+ 
+-int script_browse(const char *script_opt)
++int script_browse(const char *script_opt, struct perf_evsel *evsel)
  {
- 	pr_debug("Running %s\n", cmd);
- 	SLang_reset_tty();
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 6040eb49ea23..ba8a58f2cdd0 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -593,6 +593,40 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 	return he;
+-	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
++	char *cmd, script_name[SCRIPT_FULLPATH_LEN];
++	bool custom = false;
+ 
+ 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
+-	if (list_scripts(script_name))
++	if (list_scripts(script_name, &custom, evsel))
+ 		return -1;
+ 
+-	sprintf(cmd, "perf script -s %s ", script_name);
+-
+-	if (script_opt)
+-		strcat(cmd, script_opt);
+-
+-	if (input_name) {
+-		strcat(cmd, " -i ");
+-		strcat(cmd, input_name);
+-	}
+-
+-	strcat(cmd, " 2>&1 | less");
++	if (asprintf(&cmd, "%s%s %s %s%s 2>&1 | less",
++			custom ? "perf script -s " : "",
++			script_name,
++			script_opt ? script_opt : "",
++			input_name ? "-i " : "",
++			input_name ? input_name : "") < 0)
++		return -1;
+ 
+ 	run_script(cmd);
++	free(cmd);
+ 
+ 	return 0;
  }
- 
-+static unsigned random_max(unsigned high)
-+{
-+	unsigned thresh = -high % high;
-+	for (;;) {
-+		unsigned r = random();
-+		if (r >= thresh)
-+			return r % high;
-+	}
-+}
-+
-+static void hists__res_sample(struct hist_entry *he, struct perf_sample *sample)
-+{
-+	struct res_sample *r;
-+	int j;
-+
-+	if (!he->res_samples) {
-+		he->res_samples = calloc(sizeof(struct res_sample),
-+					symbol_conf.res_sample);
-+		if (!he->res_samples)
-+			return;
-+	}
-+	if (he->num_res < symbol_conf.res_sample) {
-+		j = he->num_res++;
-+	} else {
-+		j = random_max(++he->num_res + 1);
-+		if (he->num_res > symbol_conf.res_sample)
-+			return;
-+	}
-+	r = &he->res_samples[j];
-+	r->time = sample->time;
-+	r->cpu = sample->cpu;
-+	r->tid = sample->tid;
-+}
-+
- static struct hist_entry*
- __hists__add_entry(struct hists *hists,
- 		   struct addr_location *al,
-@@ -640,6 +674,8 @@ __hists__add_entry(struct hists *hists,
- 
- 	if (!hists->has_callchains && he && he->callchain_size != 0)
- 		hists->has_callchains = true;
-+	if (he && symbol_conf.res_sample)
-+		hists__res_sample(he, sample);
- 	return he;
- }
- 
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 2113a6639cea..67b9b91e92df 100644
+index 6279eca56409..2113a6639cea 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -433,6 +433,13 @@ struct hist_browser_timer {
- };
- 
- struct annotation_options;
-+struct res_sample;
-+
-+enum rstype {
-+	A_NORMAL,
-+	A_ASM,
-+	A_SOURCE
-+};
+@@ -436,6 +436,8 @@ struct annotation_options;
  
  #ifdef HAVE_SLANG_SUPPORT
  #include "../ui/keysyms.h"
-@@ -454,6 +461,10 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
- 				  struct annotation_options *annotation_options);
- 
- int script_browse(const char *script_opt, struct perf_evsel *evsel);
++void attr_to_script(char *buf, struct perf_event_attr *attr);
 +
-+void run_script(char *cmd);
-+int res_sample_browse(struct res_sample *res_samples, int num_res,
-+		      struct perf_evsel *evsel, enum rstype rstype);
+ int map_symbol__tui_annotate(struct map_symbol *ms, struct perf_evsel *evsel,
+ 			     struct hist_browser_timer *hbt,
+ 			     struct annotation_options *annotation_opts);
+@@ -450,7 +452,8 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 				  struct perf_env *env,
+ 				  bool warn_lost_event,
+ 				  struct annotation_options *annotation_options);
+-int script_browse(const char *script_opt);
++
++int script_browse(const char *script_opt, struct perf_evsel *evsel);
  #else
  static inline
  int perf_evlist__tui_browse_hists(struct perf_evlist *evlist __maybe_unused,
-@@ -488,6 +499,14 @@ static inline int script_browse(const char *script_opt __maybe_unused,
+@@ -479,7 +482,8 @@ static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
  	return 0;
  }
  
-+static inline int res_sample_browse(struct res_sample *res_samples __maybe_unused,
-+				    int num_res __maybe_unused,
-+				    struct perf_evsel *evsel __maybe_unused,
-+				    enum rstype rstype __maybe_unused)
-+{
-+	return 0;
-+}
-+
- #define K_LEFT  -1000
- #define K_RIGHT -2000
- #define K_SWITCH_INPUT_DATA -3000
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 19dceb7f6145..bb9442ab7a0c 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -47,6 +47,12 @@ extern struct sort_entry sort_srcline;
- extern enum sort_type sort__first_dimension;
- extern const char default_mem_sort_order[];
- 
-+struct res_sample {
-+	u64 time;
-+	int cpu;
-+	int tid;
-+};
-+
- struct he_stat {
- 	u64			period;
- 	u64			period_sys;
-@@ -140,6 +146,8 @@ struct hist_entry {
- 	struct mem_info		*mem_info;
- 	void			*raw_data;
- 	u32			raw_size;
-+	int			num_res;
-+	struct res_sample	*res_samples;
- 	void			*trace_output;
- 	struct perf_hpp_list	*hpp_list;
- 	struct hist_entry	*parent_he;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 0f80743a1c25..754f7f2c1650 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -50,6 +50,7 @@ struct symbol_conf symbol_conf = {
- 	.symfs			= "",
- 	.event_group		= true,
- 	.inline_name		= true,
-+	.res_sample		= 0,
- };
- 
- static enum dso_binary_type binary_type_symtab[] = {
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index a5684a71b78e..6c55fa6fccec 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -68,6 +68,7 @@ struct symbol_conf {
- 	struct intlist	*pid_list,
- 			*tid_list;
- 	const char	*symfs;
-+	int		res_sample;
- };
- 
- extern struct symbol_conf symbol_conf;
+-static inline int script_browse(const char *script_opt __maybe_unused)
++static inline int script_browse(const char *script_opt __maybe_unused,
++				struct perf_evsel *evsel __maybe_unused)
+ {
+ 	return 0;
+ }
 -- 
 2.17.2
