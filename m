@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v3 06/11] perf tools report: Use less for scripts output
-Date: Thu, 28 Feb 2019 10:35:45 -0800
-Message-ID: <20190228183550.14126-7-andi@firstfloor.org>
+Subject: [PATCH v3 01/11] perf tools: Add utility function to fetch executable
+Date: Thu, 28 Feb 2019 10:35:40 -0800
+Message-ID: <20190228183550.14126-2-andi@firstfloor.org>
 References: <20190228183550.14126-1-andi@firstfloor.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
@@ -12,194 +12,129 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The UI viewer for scripts output has a lot of limitations: limited size,
-no search or save function, slow, and various other issues.
-
-Just use 'less' to display directly on the terminal instead.
-
-This won't work in gtk mode, but gtk doesn't support these
-context menus anyways. If that is ever done could use an terminal
-for the output.
+Add a utility function to fetch executable code. Convert one
+user over to it. There are more places doing that, but they
+do significantly different actions, so they are not
+easy to fit into a single library function.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
 ---
+ tools/perf/util/Build       |  1 +
+ tools/perf/util/fetch.c     | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/fetch.h     |  7 +++++++
+ tools/perf/util/intel-bts.c | 21 +++------------------
+ 4 files changed, 39 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/util/fetch.c
+ create mode 100644 tools/perf/util/fetch.h
 
-v2:
-Remove some unneeded headers
----
- tools/perf/ui/browsers/scripts.c | 130 ++++---------------------------
- 1 file changed, 17 insertions(+), 113 deletions(-)
-
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 90a32ac69e76..7f36630694bf 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -1,35 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <elf.h>
--#include <inttypes.h>
--#include <sys/ttydefaults.h>
--#include <string.h>
- #include "../../util/sort.h"
- #include "../../util/util.h"
- #include "../../util/hist.h"
- #include "../../util/debug.h"
- #include "../../util/symbol.h"
- #include "../browser.h"
--#include "../helpline.h"
- #include "../libslang.h"
- 
--/* 2048 lines should be enough for a script output */
--#define MAX_LINES		2048
--
--/* 160 bytes for one output line */
--#define AVERAGE_LINE_LEN	160
--
--struct script_line {
--	struct list_head node;
--	char line[AVERAGE_LINE_LEN];
--};
--
--struct perf_script_browser {
--	struct ui_browser b;
--	struct list_head entries;
--	const char *script_name;
--	int nr_lines;
--};
--
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
- /*
-@@ -73,69 +50,29 @@ static int list_scripts(char *script_name)
- 	return ret;
- }
- 
--static void script_browser__write(struct ui_browser *browser,
--				   void *entry, int row)
-+static void run_script(char *cmd)
- {
--	struct script_line *sline = list_entry(entry, struct script_line, node);
--	bool current_entry = ui_browser__is_current_entry(browser, row);
--
--	ui_browser__set_color(browser, current_entry ? HE_COLORSET_SELECTED :
--						       HE_COLORSET_NORMAL);
--
--	ui_browser__write_nstring(browser, sline->line, browser->width);
-+	pr_debug("Running %s\n", cmd);
-+	SLang_reset_tty();
-+	if (system(cmd) < 0)
-+		pr_warning("Cannot run %s\n", cmd);
-+	/*
-+	 * SLang doesn't seem to reset the whole terminal, so be more
-+	 * forceful to get back to the original state.
-+	 */
-+	printf("\033[c\033[H\033[J");
-+	fflush(stdout);
-+	SLang_init_tty(0, 0, 0);
-+	SLsmg_refresh();
- }
- 
--static int script_browser__run(struct perf_script_browser *browser)
--{
--	int key;
--
--	if (ui_browser__show(&browser->b, browser->script_name,
--			     "Press ESC to exit") < 0)
--		return -1;
--
--	while (1) {
--		key = ui_browser__run(&browser->b, 0);
--
--		/* We can add some special key handling here if needed */
--		break;
--	}
--
--	ui_browser__hide(&browser->b);
--	return key;
--}
--
--
- int script_browse(const char *script_opt)
- {
- 	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
--	char *line = NULL;
--	size_t len = 0;
--	ssize_t retlen;
--	int ret = -1, nr_entries = 0;
--	FILE *fp;
--	void *buf;
--	struct script_line *sline;
--
--	struct perf_script_browser script = {
--		.b = {
--			.refresh    = ui_browser__list_head_refresh,
--			.seek	    = ui_browser__list_head_seek,
--			.write	    = script_browser__write,
--		},
--		.script_name = script_name,
--	};
--
--	INIT_LIST_HEAD(&script.entries);
--
--	/* Save each line of the output in one struct script_line object. */
--	buf = zalloc((sizeof(*sline)) * MAX_LINES);
--	if (!buf)
--		return -1;
--	sline = buf;
- 
- 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
- 	if (list_scripts(script_name))
--		goto exit;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 8dd3102301ea..649321fc3fb9 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -65,6 +65,7 @@ perf-y += trace-event-scripting.o
+ perf-y += trace-event.o
+ perf-y += svghelper.o
+ perf-y += sort.o
++perf-y += fetch.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += xyarray.o
+diff --git a/tools/perf/util/fetch.c b/tools/perf/util/fetch.c
+new file mode 100644
+index 000000000000..1430083e7eca
+--- /dev/null
++++ b/tools/perf/util/fetch.c
+@@ -0,0 +1,28 @@
++#include "perf.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++#include "map.h"
++#include "fetch.h"
++
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit)
++{
++	struct addr_location al;
++	u8 cpumode;
++	long offset;
++
++	if (machine__kernel_ip(machine, ip))
++		cpumode = PERF_RECORD_MISC_KERNEL;
++	else
++		cpumode = PERF_RECORD_MISC_USER;
++	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
 +		return -1;
++	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR)
++		return -1;
++	map__load(al.map);
++	offset = al.map->map_ip(al.map, ip);
++	if (is64bit)
++		*is64bit = al.map->dso->is_64_bit;
++	return dso__data_read_offset(al.map->dso, machine, offset, (u8 *)buf, len);
++}
+diff --git a/tools/perf/util/fetch.h b/tools/perf/util/fetch.h
+new file mode 100644
+index 000000000000..7b77b8cee55a
+--- /dev/null
++++ b/tools/perf/util/fetch.h
+@@ -0,0 +1,7 @@
++#ifndef FETCH_H
++#define FETCH_H 1
++
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit);
++
++#endif
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..915f4662e52e 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -38,6 +38,7 @@
+ #include "auxtrace.h"
+ #include "intel-pt-decoder/intel-pt-insn-decoder.h"
+ #include "intel-bts.h"
++#include "fetch.h"
  
- 	sprintf(cmd, "perf script -s %s ", script_name);
+ #define MAX_TIMESTAMP (~0ULL)
  
-@@ -147,42 +84,9 @@ int script_browse(const char *script_opt)
- 		strcat(cmd, input_name);
- 	}
+@@ -328,35 +329,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
+ {
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
  
--	strcat(cmd, " 2>&1");
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
 -
--	fp = popen(cmd, "r");
--	if (!fp)
--		goto exit;
--
--	while ((retlen = getline(&line, &len, fp)) != -1) {
--		strncpy(sline->line, line, AVERAGE_LINE_LEN);
--
--		/* If one output line is very large, just cut it short */
--		if (retlen >= AVERAGE_LINE_LEN) {
--			sline->line[AVERAGE_LINE_LEN - 1] = '\0';
--			sline->line[AVERAGE_LINE_LEN - 2] = '\n';
--		}
--		list_add_tail(&sline->node, &script.entries);
--
--		if (script.b.width < retlen)
--			script.b.width = retlen;
--
--		if (nr_entries++ >= MAX_LINES - 1)
--			break;
--		sline++;
--	}
--
--	if (script.b.width > AVERAGE_LINE_LEN)
--		script.b.width = AVERAGE_LINE_LEN;
--
--	free(line);
--	pclose(fp);
-+	strcat(cmd, " 2>&1 | less");
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
  
--	script.nr_lines = nr_entries;
--	script.b.nr_entries = nr_entries;
--	script.b.entries = &script.entries;
-+	run_script(cmd);
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = fetch_exe(ip, thread, machine, (char*)buf, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
  
--	ret = script_browser__run(&script);
--exit:
--	free(buf);
--	return ret;
-+	return 0;
- }
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
+ 
 -- 
 2.17.2
