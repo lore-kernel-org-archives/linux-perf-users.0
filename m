@@ -1,49 +1,41 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH] perf intel-pt: Fix divide by zero
-Date: Fri, 1 Mar 2019 14:49:39 -0300
-Message-ID: <20190301174939.GJ13100@kernel.org>
-References: <20190301103536.7197-1-adrian.hunter@intel.com>
+From: Tony Jones <tonyj@suse.de>
+Subject: [PATCH v2 0/7] perf script python: add Python3 support
+Date: Fri,  1 Mar 2019 17:18:56 -0800
+Message-ID: <20190302011903.2416-1-tonyj@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190301103536.7197-1-adrian.hunter@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Feng Tang <feng.tang@intel.com>, Tom Zanussi <tzanussi@gmail.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Mar 01, 2019 at 12:35:36PM +0200, Adrian Hunter escreveu:
-> When tsc is not available, "timeless" decoding is used but a divide by
-> zero occurs if perf_time_to_tsc() is called. Ensure the divisor is not
-> zero.
+This is v2 of my version of the patchset.  Incorporating the 
+previous feedback.  Some changes from v1 were already merged.
 
-Thanks, applied.
+Patch 1/7 deals with the existing inconsistent indentation.
+Indentation is now consistent per file but varying styles (tabs,
+4 spaces and 8 spaces).   
+I will followup at a later date with changes to checkpatch to ensure
+that the syntax per file is maintained.
 
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org # v4.9+
-> ---
->  tools/perf/util/intel-pt.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index 3b497bab4324..6d288237887b 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -2531,6 +2531,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->  	}
->  
->  	pt->timeless_decoding = intel_pt_timeless_decoding(pt);
-> +	if (pt->timeless_decoding && !pt->tc.time_mult)
-> +		pt->tc.time_mult = 1;
->  	pt->have_tsc = intel_pt_have_tsc(pt);
->  	pt->sampling_mode = false;
->  	pt->est_tsc = !pt->timeless_decoding;
-> -- 
-> 2.17.1
+Patches 2/7 through 5/7 were sent in v1,  they have been changed 
+to remove the previous indentation changes
 
--- 
+Patch 6/7 was sent in v1.  I had previously *not* been able to test 
+export-to-postgresql.py.  I was able to do so this time and found
+that more changes were needed.    The author of the original code
+seems concerned about code-style so I would suggest you only merge 
+with his explicit ACK.
 
-- Arnaldo
+Patch 7/7 was not in v1, it cleans up some repeated use of date
+functions in the SQL exporters.  It is not mandatory for Python3
+support.  It is dependent on Patch#6.
+
+I hope I've got everything correct, I've retested until I feel I 
+can't look at Python code anymore for a while :-). Hopefully I've 
+not made any more mistakes.  If I have, please LMK and I'll do v3.
+
+Thanks
+
+Tony
