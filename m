@@ -1,155 +1,51 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH v2 7/7] perf script python: add printdate function to SQL exporters
-Date: Fri,  1 Mar 2019 17:19:03 -0800
-Message-ID: <20190302011903.2416-8-tonyj@suse.de>
-References: <20190302011903.2416-1-tonyj@suse.de>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v3 10/11] perf tools report: Implement browsing of
+ individual samples
+Date: Mon, 4 Mar 2019 15:47:55 +0100
+Message-ID: <20190304144755.GF30476@krava>
+References: <20190228183550.14126-1-andi@firstfloor.org>
+ <20190228183550.14126-11-andi@firstfloor.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302011903.2416-1-tonyj@suse.de>
+Content-Disposition: inline
+In-Reply-To: <20190228183550.14126-11-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Introduce a printdate function to eliminate the repetitive use of
-datetime.datetime.today() in the SQL exporting scripts.
+On Thu, Feb 28, 2019 at 10:35:49AM -0800, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Now report can show whole time periods with perf script,
+> but the user still has to find individual samples of interest
+> manually.
+> 
+> It would be expensive and complicated to search for the
+> right samples in the whole perf file. Typically users
+> only need to look at a small number of samples for useful
+> analysis.
+> 
+> Also the full scripts tend to show samples of all CPUs and all
+> threads mixed up, which can be very confusing on larger systems.
+> 
+> Add a new --samples option to save a small random number of samples
+> per hist entry
+> 
+> Use a reservoir sample technique to select a representatve
+> number of samples.
+> 
+> Then allow browsing the samples using perf script
+> as part of the hist entry context menu. This automatically
+> adds the right filters, so only the thread or cpu of the sample
+> is displayed. Then we use less' search functionality
+> to directly jump the to the time stamp of the selected
+> sample.
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/scripts/python/export-to-postgresql.py | 19 +++++++++++--------
- tools/perf/scripts/python/export-to-sqlite.py     | 13 ++++++++-----
- 2 files changed, 19 insertions(+), 13 deletions(-)
+I'm getting this error for workload sampling:
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 439bbbf1e036..515dc5506427 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -249,6 +249,9 @@ perf_db_export_callchains = False
- def printerr(*args, **kw_args):
- 	print(*args, file=sys.stderr, **kw_args)
- 
-+def printdate(*args, **kw_args):
-+        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-+
- def usage():
- 	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
- 	printerr("where:	columns		'all' or 'branches'")
-@@ -287,7 +290,7 @@ def do_query(q, s):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print(datetime.datetime.today(), "Creating database...")
-+printdate("Creating database...")
- 
- db = QSqlDatabase.addDatabase('QPSQL')
- query = QSqlQuery(db)
-@@ -580,7 +583,7 @@ if perf_db_export_calls:
- 	call_file		= open_output_file("call_table.bin")
- 
- def trace_begin():
--	print(datetime.datetime.today(), "Writing to intermediate files...")
-+	printdate("Writing to intermediate files...")
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
- 	machine_table(0, 0, "unknown")
-@@ -596,7 +599,7 @@ def trace_begin():
- unhandled_count = 0
- 
- def trace_end():
--	print(datetime.datetime.today(), "Copying to database...")
-+	printdate("Copying to database...")
- 	copy_output_file(evsel_file,		"selected_events")
- 	copy_output_file(machine_file,		"machines")
- 	copy_output_file(thread_file,		"threads")
-@@ -611,7 +614,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		copy_output_file(call_file,		"calls")
- 
--	print(datetime.datetime.today(), "Removing intermediate files...")
-+	printdate("Removing intermediate files...")
- 	remove_output_file(evsel_file)
- 	remove_output_file(machine_file)
- 	remove_output_file(thread_file)
-@@ -626,7 +629,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		remove_output_file(call_file)
- 	os.rmdir(output_dir_name)
--	print(datetime.datetime.today(), "Adding primary keys")
-+	printdate("Adding primary keys")
- 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
-@@ -641,7 +644,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
- 
--	print(datetime.datetime.today(), "Adding foreign keys")
-+	printdate("Adding foreign keys")
- 	do_query(query, 'ALTER TABLE threads '
- 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
- 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
-@@ -677,8 +680,8 @@ def trace_end():
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
--	print(datetime.datetime.today(), "Done")
-+		printdate("Warning: ", unhandled_count, " unhandled events")
-+	printdate("Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 3da338243aed..3b71902a5a21 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -65,6 +65,9 @@ perf_db_export_callchains = False
- def printerr(*args, **keyword_args):
- 	print(*args, file=sys.stderr, **keyword_args)
- 
-+def printdate(*args, **kw_args):
-+        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-+
- def usage():
- 	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
- 	printerr("where:	columns		'all' or 'branches'");
-@@ -105,7 +108,7 @@ def do_query_(q):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print(datetime.datetime.today(), "Creating database ...")
-+printdate("Creating database ...")
- 
- db_exists = False
- try:
-@@ -383,7 +386,7 @@ if perf_db_export_calls:
- 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
- 
- def trace_begin():
--	print(datetime.datetime.today(), "Writing records...")
-+	printdate("Writing records...")
- 	do_query(query, 'BEGIN TRANSACTION')
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
-@@ -402,14 +405,14 @@ unhandled_count = 0
- def trace_end():
- 	do_query(query, 'END TRANSACTION')
- 
--	print(datetime.datetime.today(), "Adding indexes")
-+	printdate("Adding indexes")
- 	if perf_db_export_calls:
- 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
--	print(datetime.datetime.today(), "Done")
-+		printdate("Warning: ", unhandled_count, " unhandled events")
-+	printdate("Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
--- 
-2.16.4
+File does not contain CPU events. Remove -C option to proceed.
+
+
+jirka
