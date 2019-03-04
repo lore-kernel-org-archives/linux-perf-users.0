@@ -1,12 +1,13 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v3 10/11] perf tools report: Implement browsing of
  individual samples
-Date: Mon, 4 Mar 2019 15:47:55 +0100
-Message-ID: <20190304144755.GF30476@krava>
+Date: Mon, 4 Mar 2019 15:48:12 +0100
+Message-ID: <20190304144812.GG30476@krava>
 References: <20190228183550.14126-1-andi@firstfloor.org>
  <20190228183550.14126-11-andi@firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20190228183550.14126-11-andi@firstfloor.org>
@@ -43,9 +44,37 @@ On Thu, Feb 28, 2019 at 10:35:49AM -0800, Andi Kleen wrote:
 > to directly jump the to the time stamp of the selected
 > sample.
 
-I'm getting this error for workload sampling:
+when I choose:
 
-File does not contain CPU events. Remove -C option to proceed.
+148156.305096328: CPU 0 tid 16402                                                                                                                                                                                  ▒
 
+I'm getting:
+
+ sched-messaging 16402 [000] 148156.305096328:     886205 cycles:ppp:  ffffffff93a001ad syscall_return_via_sysret+0xbc ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305344526:     887134 cycles:ppp:  ffffffff933f8c7d avc_has_perm+0xcd ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305594286:     888614 cycles:ppp:  ffffffff93208a02 stackleak_erase+0xa2 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305843034:     888750 cycles:ppp:  ffffffff93986d30 _raw_spin_lock+0x10 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306091824:     889265 cycles:ppp:  ffffffff932c623e __vfs_write+0xbe ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306340739:     889802 cycles:ppp:  ffffffff937eaee4 skb_set_owner_w+0x54 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306590950:     890449 cycles:ppp:  ffffffff93291e33 __kmalloc_node_track_caller+0xc3 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306840144:     890348 cycles:ppp:  ffffffff932089a9 stackleak_erase+0x49 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.307089348:     890707 cycles:ppp:  ffffffff932e60e6 __fget_light+0x46 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.307338691:     891063 cycles:ppp:  ffffffff938ed2a3 unix_stream_sendmsg+0x213 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.323855201:     916081 cycles:ppp:  ffffffff93208a05 stackleak_erase+0xa5 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.324104737:     916330 cycles:ppp:  ffffffff93986d30 _raw_spin_lock+0x10 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.324354188:     916467 cycles:ppp:  ffffffff9324192f kmalloc_slab+0x4f ([kernel.kallsyms])
+ systemd-journal   882 [005] 148156.373698788: PERF_RECORD_FORK(882:16422):(882:882)
+ systemd-journal   882 [005] 148156.373718699: PERF_RECORD_FORK(882:16423):(882:882)
+ journal-offline 16422 [002] 148156.373720344: PERF_RECORD_COMM: journal-offline:882/16422
+ journal-offline 16423 [005] 148156.373766480: PERF_RECORD_COMM: journal-offline:882/16423
+ journal-offline 16423 [005] 148156.385947319: PERF_RECORD_EXIT(882:16423):(882:16423)
+ systemd-journal   882 [002] 148156.386052146: PERF_RECORD_FORK(882:16424):(882:882)
+ journal-offline 16424 [001] 148156.386069865: PERF_RECORD_COMM: journal-offline:882/16424
+ journal-offline 16422 [002] 148156.386132447: PERF_RECORD_EXIT(882:16422):(882:16422)
+ journal-offline 16424 [001] 148156.389171176: PERF_RECORD_EXIT(882:16424):(882:16424)
+ systemd-journal   882 [002] 148156.389263406: PERF_RECORD_FORK(882:16425):(882:882)
+
+
+some other cpus and threads mixed in
 
 jirka
