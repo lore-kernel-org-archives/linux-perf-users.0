@@ -1,55 +1,33 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Andi Kleen <andi@firstfloor.org>
 Subject: Re: [PATCH v3 10/11] perf tools report: Implement browsing of
  individual samples
-Date: Mon, 4 Mar 2019 16:27:33 +0100
-Message-ID: <20190304152733.GM19809@krava>
+Date: Mon, 4 Mar 2019 10:13:06 -0800
+Message-ID: <20190304181305.vrauc44yxv43rwir@two.firstfloor.org>
 References: <20190228183550.14126-1-andi@firstfloor.org>
  <20190228183550.14126-11-andi@firstfloor.org>
+ <20190304144855.GL30476@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190228183550.14126-11-andi@firstfloor.org>
+In-Reply-To: <20190304144855.GL30476@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <andi@firstfloor.org>, acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Feb 28, 2019 at 10:35:49AM -0800, Andi Kleen wrote:
+> > +--samples=N::
+> > +	Save N individual samples for each histogram entry to show context in perf
+> > +	report tui browser.
+> 
+> maybe we could set some default value (50?)
 
-SNIP
+50 wouldn't fit on the screen.
 
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 6040eb49ea23..ba8a58f2cdd0 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -593,6 +593,40 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
->  	return he;
->  }
->  
-> +static unsigned random_max(unsigned high)
-> +{
-> +	unsigned thresh = -high % high;
-> +	for (;;) {
-> +		unsigned r = random();
-> +		if (r >= thresh)
-> +			return r % high;
-> +	}
-> +}
-> +
-> +static void hists__res_sample(struct hist_entry *he, struct perf_sample *sample)
-> +{
-> +	struct res_sample *r;
-> +	int j;
-> +
-> +	if (!he->res_samples) {
-> +		he->res_samples = calloc(sizeof(struct res_sample),
-> +					symbol_conf.res_sample);
-> +		if (!he->res_samples)
-> +			return;
-> +	}
+I turned it off by default intentionally because it will increase the
+memory consumption of perf report quite a bit.
 
-please allocate this in hist_entry__init
+It might be possible to set some small default though, but right
+now I guess whoever wants it can enable it.
 
-thanks,
-jirka
+-Andi
