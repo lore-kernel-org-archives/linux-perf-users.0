@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events by CPU
-Date: Tue,  5 Mar 2019 06:47:46 -0800
-Message-ID: <20190305144758.12397-4-andi@firstfloor.org>
+Subject: [PATCH v4 10/15] perf tools: Add utility function to print ns time stamps
+Date: Tue,  5 Mar 2019 06:47:53 -0800
+Message-ID: <20190305144758.12397-11-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,98 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The --cpu option only filtered samples. Filter other perf events,
-such as COMM, FORK, SWITCH by the CPU too.
+Add a utility function to print nanosecond timestamps.
 
-Reported-by: Jiri Olsa <jolsa@kernel.org>
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fbc440bdf880..3813f60d1dc0 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 	int ret = -1;
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 6193b46050a5..a63bdf4cfd1b 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -404,6 +404,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
+ }
  
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64  sec = timestamp / NSEC_PER_SEC;
++	u64 nsec = timestamp % NSEC_PER_SEC;
 +
- 	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
- 	if (thread == NULL) {
- 		pr_debug("problem processing COMM event, skipping it.\n");
-@@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 	int ret = -1;
- 
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
++	return scnprintf(buf, sz, "%"PRIu64".%09"PRIu64, sec, nsec);
++}
 +
- 	thread = machine__findnew_thread(machine, event->namespaces.pid,
- 					 event->namespaces.tid);
- 	if (thread == NULL) {
-@@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
- 	struct perf_session *session = script->session;
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ int fetch_current_timestamp(char *buf, size_t sz)
+ {
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 70b177d2b98c..9266cf4a8e58 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -24,6 +24,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 				   int num, u64 timestamp);
  
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	if (perf_event__process_fork(tool, event, sample, machine) < 0)
- 		return -1;
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
  
-@@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
- 	struct perf_session *session = script->session;
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ int fetch_current_timestamp(char *buf, size_t sz);
  
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
- 	if (thread == NULL) {
- 		pr_debug("problem processing EXIT event, skipping it.\n");
-@@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
- 	struct perf_session *session = script->session;
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
- 		return -1;
- 
-@@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
- 	struct perf_session *session = script->session;
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
- 		return -1;
- 
-@@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
- 	struct perf_session *session = script->session;
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
- 		return -1;
- 
-@@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
- 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 	struct thread *thread;
- 
-+	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+		return 0;
-+
- 	thread = machine__findnew_thread(machine, sample->pid,
- 					 sample->tid);
- 	if (thread == NULL)
 -- 
 2.20.1
