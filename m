@@ -1,79 +1,111 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: Support sample context in perf report
-Date: Tue,  5 Mar 2019 06:47:43 -0800
-Message-ID: <20190305144758.12397-1-andi@firstfloor.org>
+Subject: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events by CPU
+Date: Tue,  5 Mar 2019 06:47:46 -0800
+Message-ID: <20190305144758.12397-4-andi@firstfloor.org>
+References: <20190305144758.12397-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
-Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-[Changes: 
-v4:
-Address review comments. 
-Fix --cpu filtering.
-Fix a sampling bug.
-Add support for configuring custom script menu entries in perfconfig.
-Fix display of more samples than fit on screen.
-Fix some buffer overruns in legacy code.
-Add more tips
-]
+From: Andi Kleen <ak@linux.intel.com>
 
-We currently have two ways to look at sample data in perf:
-either use perf report to aggregate everything, or use
-perf script to look at all individual samples.
+The --cpu option only filtered samples. Filter other perf events,
+such as COMM, FORK, SWITCH by the CPU too.
 
-Both ways are useful. Of course aggregation is useful
-to quickly find the most expensive part of the code.
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-But sometimes a single sample is not good enough to
-determine the problem and we need to look at context, either
-through branch contexts, or other previous samples (e.g. for
-correlating different micro architecture events or computing
-metrics)
-
-This can be done through perf script today, but it can
-be rather cumbersome to find the right samples to look
-at.
-
-Another problem with perf report is that it aggregates
-the whole measurement period. But many real workloads
-have phases where they behave quite differently, and it is
-often not useful to combine them into a single histogram.
-
-While this can be worked around with the --time option
-to report, it can be quite cumbersome.
-
-This patch kit attempts to address some of these
-problems in perf report by making it time aware.
-
-- It adds a new time sort key that allows perf report
-to separate samples from different regions. The time
-regions can be defined with a new --time-quantum option.
-
-- Then it extends the perf script support in the
-tui record browser to allow browsing samples for 
-different time regions from within a perf report
-session.
-
-- Extends the report browser script display
-to automatically select sensible defaults
-based on what was recorded. For example it will
-automatically show branch contexts with -b.
-
-- Support browsing the context of individual samples.
-perf report can save a limited number of random samples
-per histogram entry with the new --samples option.
-Then the browser allows directly jumping to any
-of the saved samples and browsing the context on the current
-thread or CPU.
-
-There could be probably be done more to make
-perf report even better for such use cases (e.g. a real
-time line display), but this basic support is good
-enough for many useful usages.
-
-Also available in
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-4
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index fbc440bdf880..3813f60d1dc0 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 	int ret = -1;
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
+ 	if (thread == NULL) {
+ 		pr_debug("problem processing COMM event, skipping it.\n");
+@@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 	int ret = -1;
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	thread = machine__findnew_thread(machine, event->namespaces.pid,
+ 					 event->namespaces.tid);
+ 	if (thread == NULL) {
+@@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
+ 	struct perf_session *session = script->session;
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	if (perf_event__process_fork(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+@@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
+ 	struct perf_session *session = script->session;
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
+ 	if (thread == NULL) {
+ 		pr_debug("problem processing EXIT event, skipping it.\n");
+@@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
+ 	struct perf_session *session = script->session;
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+@@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
+ 	struct perf_session *session = script->session;
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+@@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
+ 	struct perf_session *session = script->session;
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+@@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
+ 	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 	struct thread *thread;
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++		return 0;
++
+ 	thread = machine__findnew_thread(machine, sample->pid,
+ 					 sample->tid);
+ 	if (thread == NULL)
+-- 
+2.20.1
