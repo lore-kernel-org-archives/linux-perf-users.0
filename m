@@ -1,94 +1,70 @@
 From: Tony Jones <tonyj@suse.de>
-Subject: Re: [PATCH v2 0/7] perf script python: add Python3 support
-Date: Tue, 5 Mar 2019 07:18:30 -0800
-Message-ID: <59f76d80-ed24-dd88-b3ae-baea39f08499@suse.de>
+Subject: Re: [PATCH v2 5/7] perf script python: add Python3 support to
+ intel-pt-events.py
+Date: Tue, 5 Mar 2019 08:10:09 -0800
+Message-ID: <18913237-75f2-731b-940d-1fccc43d1b4a@suse.de>
 References: <20190302011903.2416-1-tonyj@suse.de>
- <ef75a243-cf15-b763-8aeb-387f105377c6@intel.com>
- <962077f0-71c6-e2e8-7274-875b55470a3e@suse.de>
+ <20190302011903.2416-6-tonyj@suse.de>
+ <6fe06c75-5f98-4829-e139-af2bfcda24f3@intel.com>
+ <dfa719d4-0d9e-ad08-536f-17b3da116b19@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <962077f0-71c6-e2e8-7274-875b55470a3e@suse.de>
+In-Reply-To: <dfa719d4-0d9e-ad08-536f-17b3da116b19@suse.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Feng Tang <feng.tang@intel.com>, Tom Zanussi <tzanussi@gmail.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 3/5/19 6:53 AM, Tony Jones wrote:
-> On 3/5/19 1:55 AM, Adrian Hunter wrote:
-> 
->> perf tools link against python2 so have the scripts been tested with python3?
-> 
-> Not if PYTHON=python3 is specified on the build line.   Yes, of course they were tested.
+On 3/5/19 7:02 AM, Tony Jones wrote:
 
-See below for exporter.  The viewer also works but obviously harder to demonstrate via log.
+> I tested the patch on a Skylake system but it was not connected to our standard
+> network so I had to move files manually.  It seems I managed to somehow mess up
+> and not attach the correct patch :(
 
-$ make PYTHON=python3 prefix=/tmp/perf install
-$ ldd /tmp/perf/bin/perf | grep python
-	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f90d32c3000)
+Sure enough, I managed to attach the wrong patch. Sorry. I'll attach revised (v3) 
+to this thread as the change is trivial.
 
-# /tmp/perf/bin/perf record -o /tmp/perf.data -e cycles,instructions,branches /bin/false
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.017 MB /tmp/perf.data (39 samples) ]
+I am seeing a lot of "instruction trace errors" on this Skylake system.  I see them
+using Python2 without any of the changes.  I've not looked at this.
 
-postgres@svr1:~> id
-uid=26(postgres) gid=26(postgres) groups=26(postgres)
+Output of v3.
 
-postgres@svr1:~> ldd /tmp/perf/bin/perf | grep python
-	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f7714156000)
+# head /proc/cpuinfo 
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Xeon(R) CPU E3-1240 v5 @ 3.50GHz
+stepping	: 3
+microcode	: 0xc6
+cpu MHz		: 1600.887
+cache size	: 8192 KB
+physical id	: 0
 
-postgres@svr1:~> /tmp/perf/bin/perf script -i /tmp/perf.data -s /tmp/perf/libexec/perf-core/scripts/python/export-to-postgresql.py db1
-2019-03-05 07:14:04.243419 Creating database...
-This version of PostgreSQL is not supported and may not work.
-This version of PostgreSQL is not supported and may not work.
-2019-03-05 07:14:05.122981 Writing to intermediate files...
-2019-03-05 07:14:05.187927 Copying to database...
-2019-03-05 07:14:05.222272 Removing intermediate files...
-2019-03-05 07:14:05.222766 Adding primary keys
-2019-03-05 07:14:05.714776 Adding foreign keys
+# ldd /tmp/perf/bin/perf | grep python
+	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007fd8fdaae000)
 
-postgres@svr1:~> pg_dump -a -t public.comms -t public.dsos db1
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 10.6
--- Dumped by pg_dump version 10.6
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- Data for Name: comms; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.comms (id, comm) FROM stdin;
-0	unknown
-1	perf
-2	false
-\.
-
-
---
--- Data for Name: dsos; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.dsos (id, machine_id, short_name, long_name, build_id) FROM stdin;
-0	0	unknown	unknown	
-1	1	[kernel.kallsyms]	[kernel.kallsyms]	0621827fb34281c413e26a0c2d6ba1c0abd706b9
-2	1	ld-2.26.so	/lib64/ld-2.26.so	bca321ae4ce1ab788b186e2085f60c1c9723cc14
-\.
-
-
---
--- PostgreSQL database dump complete
---
+# /tmp/perf/bin/perf script report intel-pt-events -i /tmp/perf.data | tail -20
+         swapper     0/0     [006]     17424.535324338     cbr:  27  freq: 2703 MHz  ( 77%)                0 [unknown] ([unknown])
+            perf 20899/20899 [003]     17424.535324363     cbr:  27  freq: 2703 MHz  ( 77%)                0 [unknown] ([unknown])
+         swapper     0/0     [004]     17424.535324387     cbr:  27  freq: 2703 MHz  ( 77%)                0 [unknown] ([unknown])
+         swapper     0/0     [000]     17424.535324867     cbr:  27  freq: 2703 MHz  ( 77%)                0 [unknown] ([unknown])
+         swapper     0/0     [006]     17424.543315376     cbr:  24  freq: 2403 MHz  ( 69%)                0 [unknown] ([unknown])
+            perf 20899/20899 [003]     17424.699315686     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [006]     17424.714915068     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [005]     17424.779321732     cbr:   9  freq:  901 MHz  ( 26%)                0 [unknown] ([unknown])
+         swapper     0/0     [001]     17424.779322738     cbr:   9  freq:  901 MHz  ( 26%)                0 [unknown] ([unknown])
+         swapper     0/0     [003]     17424.903321958     cbr:   9  freq:  901 MHz  ( 26%)                0 [unknown] ([unknown])
+         swapper     0/0     [000]     17425.099316258     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [003]     17425.107316167     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [004]     17425.519574381     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [001]     17425.519796998     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [002]     17425.519828095     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [005]     17425.519897417     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+         swapper     0/0     [007]     17425.519936473     cbr:  16  freq: 1602 MHz  ( 46%)                0 [unknown] ([unknown])
+Warning:
+260 instruction trace errors
+End
