@@ -1,50 +1,170 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 5/7] perf script python: add Python3 support to
- intel-pt-events.py
-Date: Wed, 6 Mar 2019 18:12:56 -0300
-Message-ID: <20190306211256.GQ30734@kernel.org>
+Subject: Re: [PATCH v2 7/7] perf script python: add printdate function to SQL
+ exporters
+Date: Wed, 6 Mar 2019 18:13:59 -0300
+Message-ID: <20190306211359.GR30734@kernel.org>
 References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-6-tonyj@suse.de>
- <6fe06c75-5f98-4829-e139-af2bfcda24f3@intel.com>
- <dfa719d4-0d9e-ad08-536f-17b3da116b19@suse.de>
- <18913237-75f2-731b-940d-1fccc43d1b4a@suse.de>
- <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
- <d3920c9a-3990-6111-ca4f-58d96a929bf4@intel.com>
+ <20190302011903.2416-8-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d3920c9a-3990-6111-ca4f-58d96a929bf4@intel.com>
+In-Reply-To: <20190302011903.2416-8-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Mar 06, 2019 at 11:28:35AM +0200, Adrian Hunter escreveu:
-> On 5/03/19 6:19 PM, Tony Jones wrote:
-> > On 3/5/19 8:10 AM, Tony Jones wrote:
-> > 
-> >>
-> >> Sure enough, I managed to attach the wrong patch. Sorry. I'll attach revised (v3) 
-> >> to this thread as the change is trivial.
-> > 
-> > From: Tony Jones <tonyj@suse.de>
-> > Date: Tue, 05 Mar 2019 08:31:30 -0800
-> > Subject: [PATCH v3] perf script python: add Python3 support to intel-pt-events.py
-> > 
-> > Support both Python2 and Python3 in the intel-pt-events.py script
-> > 
-> > There may be differences in the ordering of output lines due to
-> > differences in dictionary ordering etc.  However the format within lines
-> > should be unchanged.
-> > 
-> > The use of 'from __future__' implies the minimum supported Python2 version
-> > is now v2.6
-> > 
-> > Signed-off-by: Tony Jones <tonyj@suse.de>
-> > Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Fri, Mar 01, 2019 at 05:19:03PM -0800, Tony Jones escreveu:
+> Introduce a printdate function to eliminate the repetitive use of
+> datetime.datetime.today() in the SQL exporting scripts.
 
-Thanks, applied.
+Seems easy enough, but since Adrian provided the Acked-by to the other
+patch, can this be done this time again?
+
+Thanks,
+
+- Arnaldo
+ 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/scripts/python/export-to-postgresql.py | 19 +++++++++++--------
+>  tools/perf/scripts/python/export-to-sqlite.py     | 13 ++++++++-----
+>  2 files changed, 19 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+> index 439bbbf1e036..515dc5506427 100644
+> --- a/tools/perf/scripts/python/export-to-postgresql.py
+> +++ b/tools/perf/scripts/python/export-to-postgresql.py
+> @@ -249,6 +249,9 @@ perf_db_export_callchains = False
+>  def printerr(*args, **kw_args):
+>  	print(*args, file=sys.stderr, **kw_args)
+>  
+> +def printdate(*args, **kw_args):
+> +        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
+> +
+>  def usage():
+>  	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
+>  	printerr("where:	columns		'all' or 'branches'")
+> @@ -287,7 +290,7 @@ def do_query(q, s):
+>  		return
+>  	raise Exception("Query failed: " + q.lastError().text())
+>  
+> -print(datetime.datetime.today(), "Creating database...")
+> +printdate("Creating database...")
+>  
+>  db = QSqlDatabase.addDatabase('QPSQL')
+>  query = QSqlQuery(db)
+> @@ -580,7 +583,7 @@ if perf_db_export_calls:
+>  	call_file		= open_output_file("call_table.bin")
+>  
+>  def trace_begin():
+> -	print(datetime.datetime.today(), "Writing to intermediate files...")
+> +	printdate("Writing to intermediate files...")
+>  	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
+>  	evsel_table(0, "unknown")
+>  	machine_table(0, 0, "unknown")
+> @@ -596,7 +599,7 @@ def trace_begin():
+>  unhandled_count = 0
+>  
+>  def trace_end():
+> -	print(datetime.datetime.today(), "Copying to database...")
+> +	printdate("Copying to database...")
+>  	copy_output_file(evsel_file,		"selected_events")
+>  	copy_output_file(machine_file,		"machines")
+>  	copy_output_file(thread_file,		"threads")
+> @@ -611,7 +614,7 @@ def trace_end():
+>  	if perf_db_export_calls:
+>  		copy_output_file(call_file,		"calls")
+>  
+> -	print(datetime.datetime.today(), "Removing intermediate files...")
+> +	printdate("Removing intermediate files...")
+>  	remove_output_file(evsel_file)
+>  	remove_output_file(machine_file)
+>  	remove_output_file(thread_file)
+> @@ -626,7 +629,7 @@ def trace_end():
+>  	if perf_db_export_calls:
+>  		remove_output_file(call_file)
+>  	os.rmdir(output_dir_name)
+> -	print(datetime.datetime.today(), "Adding primary keys")
+> +	printdate("Adding primary keys")
+>  	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
+>  	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
+>  	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
+> @@ -641,7 +644,7 @@ def trace_end():
+>  	if perf_db_export_calls:
+>  		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
+>  
+> -	print(datetime.datetime.today(), "Adding foreign keys")
+> +	printdate("Adding foreign keys")
+>  	do_query(query, 'ALTER TABLE threads '
+>  					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
+>  					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
+> @@ -677,8 +680,8 @@ def trace_end():
+>  		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+>  
+>  	if (unhandled_count):
+> -		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
+> -	print(datetime.datetime.today(), "Done")
+> +		printdate("Warning: ", unhandled_count, " unhandled events")
+> +	printdate("Done")
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+>  	global unhandled_count
+> diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
+> index 3da338243aed..3b71902a5a21 100644
+> --- a/tools/perf/scripts/python/export-to-sqlite.py
+> +++ b/tools/perf/scripts/python/export-to-sqlite.py
+> @@ -65,6 +65,9 @@ perf_db_export_callchains = False
+>  def printerr(*args, **keyword_args):
+>  	print(*args, file=sys.stderr, **keyword_args)
+>  
+> +def printdate(*args, **kw_args):
+> +        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
+> +
+>  def usage():
+>  	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
+>  	printerr("where:	columns		'all' or 'branches'");
+> @@ -105,7 +108,7 @@ def do_query_(q):
+>  		return
+>  	raise Exception("Query failed: " + q.lastError().text())
+>  
+> -print(datetime.datetime.today(), "Creating database ...")
+> +printdate("Creating database ...")
+>  
+>  db_exists = False
+>  try:
+> @@ -383,7 +386,7 @@ if perf_db_export_calls:
+>  	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+>  
+>  def trace_begin():
+> -	print(datetime.datetime.today(), "Writing records...")
+> +	printdate("Writing records...")
+>  	do_query(query, 'BEGIN TRANSACTION')
+>  	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
+>  	evsel_table(0, "unknown")
+> @@ -402,14 +405,14 @@ unhandled_count = 0
+>  def trace_end():
+>  	do_query(query, 'END TRANSACTION')
+>  
+> -	print(datetime.datetime.today(), "Adding indexes")
+> +	printdate("Adding indexes")
+>  	if perf_db_export_calls:
+>  		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
+>  		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+>  
+>  	if (unhandled_count):
+> -		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
+> -	print(datetime.datetime.today(), "Done")
+> +		printdate("Warning: ", unhandled_count, " unhandled events")
+> +	printdate("Done")
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+>  	global unhandled_count
+> -- 
+> 2.16.4
+
+-- 
+
+- Arnaldo
