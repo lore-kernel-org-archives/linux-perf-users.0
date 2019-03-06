@@ -1,170 +1,66 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 7/7] perf script python: add printdate function to SQL
- exporters
-Date: Wed, 6 Mar 2019 18:13:59 -0300
-Message-ID: <20190306211359.GR30734@kernel.org>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-8-tonyj@suse.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
+Date: Thu, 7 Mar 2019 00:09:53 +0100
+Message-ID: <20190306230953.GC7915@amd>
+References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
+ <20190125160056.GG6118@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190302011903.2416-8-tonyj@suse.de>
+In-Reply-To: <20190125160056.GG6118@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Jones <tonyj@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, eranian@google.com, vincent.weaver@maine.edu, "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Mar 01, 2019 at 05:19:03PM -0800, Tony Jones escreveu:
-> Introduce a printdate function to eliminate the repetitive use of
-> datetime.datetime.today() in the SQL exporting scripts.
 
-Seems easy enough, but since Adrian provided the Acked-by to the other
-patch, can this be done this time again?
+--Sr1nOIr3CvdE5hEN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Fri 2019-01-25 08:00:56, Andi Kleen wrote:
+> > [Fri Jan 25 10:28:53 2019] perf: interrupt took too long (2501 > 2500),=
+ lowering kernel.perf_event_max_sample_rate to 79750
+> > [Fri Jan 25 10:29:08 2019] perf: interrupt took too long (3136 > 3126),=
+ lowering kernel.perf_event_max_sample_rate to 63750
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (4140 > 3920),=
+ lowering kernel.perf_event_max_sample_rate to 48250
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (5231 > 5175),=
+ lowering kernel.perf_event_max_sample_rate to 38000
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (6736 > 6538),=
+ lowering kernel.perf_event_max_sample_rate to 29500
+>=20
+> These are fairly normal.
 
-- Arnaldo
- 
-> Signed-off-by: Tony Jones <tonyj@suse.de>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/scripts/python/export-to-postgresql.py | 19 +++++++++++--------
->  tools/perf/scripts/python/export-to-sqlite.py     | 13 ++++++++-----
->  2 files changed, 19 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-> index 439bbbf1e036..515dc5506427 100644
-> --- a/tools/perf/scripts/python/export-to-postgresql.py
-> +++ b/tools/perf/scripts/python/export-to-postgresql.py
-> @@ -249,6 +249,9 @@ perf_db_export_callchains = False
->  def printerr(*args, **kw_args):
->  	print(*args, file=sys.stderr, **kw_args)
->  
-> +def printdate(*args, **kw_args):
-> +        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-> +
->  def usage():
->  	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
->  	printerr("where:	columns		'all' or 'branches'")
-> @@ -287,7 +290,7 @@ def do_query(q, s):
->  		return
->  	raise Exception("Query failed: " + q.lastError().text())
->  
-> -print(datetime.datetime.today(), "Creating database...")
-> +printdate("Creating database...")
->  
->  db = QSqlDatabase.addDatabase('QPSQL')
->  query = QSqlQuery(db)
-> @@ -580,7 +583,7 @@ if perf_db_export_calls:
->  	call_file		= open_output_file("call_table.bin")
->  
->  def trace_begin():
-> -	print(datetime.datetime.today(), "Writing to intermediate files...")
-> +	printdate("Writing to intermediate files...")
->  	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
->  	evsel_table(0, "unknown")
->  	machine_table(0, 0, "unknown")
-> @@ -596,7 +599,7 @@ def trace_begin():
->  unhandled_count = 0
->  
->  def trace_end():
-> -	print(datetime.datetime.today(), "Copying to database...")
-> +	printdate("Copying to database...")
->  	copy_output_file(evsel_file,		"selected_events")
->  	copy_output_file(machine_file,		"machines")
->  	copy_output_file(thread_file,		"threads")
-> @@ -611,7 +614,7 @@ def trace_end():
->  	if perf_db_export_calls:
->  		copy_output_file(call_file,		"calls")
->  
-> -	print(datetime.datetime.today(), "Removing intermediate files...")
-> +	printdate("Removing intermediate files...")
->  	remove_output_file(evsel_file)
->  	remove_output_file(machine_file)
->  	remove_output_file(thread_file)
-> @@ -626,7 +629,7 @@ def trace_end():
->  	if perf_db_export_calls:
->  		remove_output_file(call_file)
->  	os.rmdir(output_dir_name)
-> -	print(datetime.datetime.today(), "Adding primary keys")
-> +	printdate("Adding primary keys")
->  	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
->  	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
->  	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
-> @@ -641,7 +644,7 @@ def trace_end():
->  	if perf_db_export_calls:
->  		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
->  
-> -	print(datetime.datetime.today(), "Adding foreign keys")
-> +	printdate("Adding foreign keys")
->  	do_query(query, 'ALTER TABLE threads '
->  					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
->  					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
-> @@ -677,8 +680,8 @@ def trace_end():
->  		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
->  
->  	if (unhandled_count):
-> -		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-> -	print(datetime.datetime.today(), "Done")
-> +		printdate("Warning: ", unhandled_count, " unhandled events")
-> +	printdate("Done")
->  
->  def trace_unhandled(event_name, context, event_fields_dict):
->  	global unhandled_count
-> diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-> index 3da338243aed..3b71902a5a21 100644
-> --- a/tools/perf/scripts/python/export-to-sqlite.py
-> +++ b/tools/perf/scripts/python/export-to-sqlite.py
-> @@ -65,6 +65,9 @@ perf_db_export_callchains = False
->  def printerr(*args, **keyword_args):
->  	print(*args, file=sys.stderr, **keyword_args)
->  
-> +def printdate(*args, **kw_args):
-> +        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-> +
->  def usage():
->  	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
->  	printerr("where:	columns		'all' or 'branches'");
-> @@ -105,7 +108,7 @@ def do_query_(q):
->  		return
->  	raise Exception("Query failed: " + q.lastError().text())
->  
-> -print(datetime.datetime.today(), "Creating database ...")
-> +printdate("Creating database ...")
->  
->  db_exists = False
->  try:
-> @@ -383,7 +386,7 @@ if perf_db_export_calls:
->  	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
->  
->  def trace_begin():
-> -	print(datetime.datetime.today(), "Writing records...")
-> +	printdate("Writing records...")
->  	do_query(query, 'BEGIN TRANSACTION')
->  	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
->  	evsel_table(0, "unknown")
-> @@ -402,14 +405,14 @@ unhandled_count = 0
->  def trace_end():
->  	do_query(query, 'END TRANSACTION')
->  
-> -	print(datetime.datetime.today(), "Adding indexes")
-> +	printdate("Adding indexes")
->  	if perf_db_export_calls:
->  		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
->  		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
->  
->  	if (unhandled_count):
-> -		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-> -	print(datetime.datetime.today(), "Done")
-> +		printdate("Warning: ", unhandled_count, " unhandled events")
-> +	printdate("Done")
->  
->  def trace_unhandled(event_name, context, event_fields_dict):
->  	global unhandled_count
-> -- 
-> 2.16.4
+Unfortunately, they are. Could we set up our defaults so that they
+don't normally happen?
 
--- 
+pavel@amd:~/g/unicsy_demo$ dmesg | grep "took too"
+[  761.507893] perf: interrupt took too long (2516 > 2500), lowering
+kernel.perf_event_max_sample_rate to 79250
+[ 4736.674595] perf: interrupt took too long (3209 > 3145), lowering
+kernel.perf_event_max_sample_rate to 62250
+pavel@amd:~/g/unicsy_demo$
 
-- Arnaldo
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Sr1nOIr3CvdE5hEN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyAU0EACgkQMOfwapXb+vJTEQCghbIoqocOdk1rDwJsoRb7+0Jp
+IbMAoL+bib41Od+R688k6MrE2rLmkTxQ
+=14SK
+-----END PGP SIGNATURE-----
+
+--Sr1nOIr3CvdE5hEN--
