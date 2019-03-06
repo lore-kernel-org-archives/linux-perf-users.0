@@ -1,119 +1,84 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events by
- CPU
-Date: Wed, 6 Mar 2019 16:23:40 +0200
-Message-ID: <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
-References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190305144758.12397-4-andi@firstfloor.org>
+From: Tony Jones <tonyj@suse.de>
+Subject: Re: [PATCH v2 6/7] perf script python: add Python3 support to sql
+ scripts
+Date: Wed, 6 Mar 2019 08:32:42 -0800
+Message-ID: <72ea2e3d-1b82-549e-741f-d2b532e4c33b@suse.de>
+References: <20190302011903.2416-1-tonyj@suse.de>
+ <20190302011903.2416-7-tonyj@suse.de>
+ <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190305144758.12397-4-andi@firstfloor.org>
+In-Reply-To: <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>, acme@kernel.org
-Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 5/03/19 4:47 PM, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
+On 3/6/19 1:26 AM, Adrian Hunter wrote:
+> On 2/03/19 3:19 AM, Tony Jones wrote:
+>> Support both Python2 and Python3 in the exported-sql-viewer.py,
+>> export-to-postgresql.py and export-to-sqlite.py scripts
+>>
+>> There may be differences in the ordering of output lines due to
+>> differences in dictionary ordering etc.  However the format within lines
+>> should be unchanged.
+>>
+>> The use of 'from __future__' implies the minimum supported Python2 version
+>> is now v2.6
+>>
+>> Signed-off-by: Tony Jones <tonyj@suse.de>
+>> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+>> Cc: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> The --cpu option only filtered samples. Filter other perf events,
-> such as COMM, FORK, SWITCH by the CPU too.
+> Apart from one issue (see below), it looks good, thank you!
+> 
+>> ---
+>>  tools/perf/scripts/python/export-to-postgresql.py | 65 +++++++++++++++--------
+>>  tools/perf/scripts/python/export-to-sqlite.py     | 23 ++++----
+>>  tools/perf/scripts/python/exported-sql-viewer.py  | 42 ++++++++++-----
+>>  3 files changed, 84 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+>> index 390a351d15ea..439bbbf1e036 100644
+>> --- a/tools/perf/scripts/python/export-to-postgresql.py
+>> +++ b/tools/perf/scripts/python/export-to-postgresql.py
+>> @@ -10,6 +10,8 @@
+>>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>>  # more details.
+>>  
+>> +from __future__ import print_function
+>> +
+>>  import os
+>>  import sys
+>>  import struct
+>> @@ -199,6 +201,16 @@ import datetime
+>>  
+>>  from PySide.QtSql import *
+>>  
+>> +if sys.version_info < (3, 0):
+>> +	def tobytes(str):
+>> +		return str
+>> +else:
+>> +	def tobytes(str):
+>> +		# Use latin-1 (ISO-8859-1) so all code-points 0-255 will result
+>> +		# in one byte (note utf-8 is 2 bytes for values > 128 and
+>> +		# ascii is limited to values <= 128)
+>> +		return bytes(str, "ISO-8859-1")
+> 
+> Probably this should be the server_encoding, but python2 allowed UTF-8
+> so let's just use UTF-8 for now.  That will also mean doing the conversion
+> before getting the len(), otherwise len() can be wrong.
 
-Because tasks can migrate from cpu to cpu, we probably need to process most
-of the events anyway, even if they are not printed.
+I'm not totally understanding what you're saying here.  The rationale for 
+using latin-1 and not UTF-8 was clearly expressed in the comment.  Else you 
+do indeed run into length issues.
 
-> 
-> Reported-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index fbc440bdf880..3813f60d1dc0 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  	int ret = -1;
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
->  	if (thread == NULL) {
->  		pr_debug("problem processing COMM event, skipping it.\n");
-> @@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  	int ret = -1;
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	thread = machine__findnew_thread(machine, event->namespaces.pid,
->  					 event->namespaces.tid);
->  	if (thread == NULL) {
-> @@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	if (perf_event__process_fork(tool, event, sample, machine) < 0)
->  		return -1;
->  
-> @@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
->  	if (thread == NULL) {
->  		pr_debug("problem processing EXIT event, skipping it.\n");
-> @@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
->  		return -1;
->  
-> @@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
->  		return -1;
->  
-> @@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
->  	struct perf_session *session = script->session;
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	if (perf_event__process_switch(tool, event, sample, machine) < 0)
->  		return -1;
->  
-> @@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
->  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
->  	struct thread *thread;
->  
-> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> +		return 0;
-> +
->  	thread = machine__findnew_thread(machine, sample->pid,
->  					 sample->tid);
->  	if (thread == NULL)
-> 
+Would it be easier, since you have a) more familiarity with the code b) some
+specific issues I'm not fully understanding if you just took this patch and
+made the changes you want yourself.  I doubt I'll ever use these scripta, my
+interest is purely in eliminating Python2 as a fixed requirement.
+
+Tony
