@@ -1,32 +1,26 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: [PATCH v4 01/15] perf tools: Add utility function to fetch
- executable
-Date: Wed, 6 Mar 2019 13:08:29 -0800
-Message-ID: <20190306210828.yvhifeczc7mfloqi@two.firstfloor.org>
-References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190305144758.12397-2-andi@firstfloor.org>
- <20190306205337.GK30734@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH v2 1/7] perf script python: remove mixed indentation
+Date: Wed, 6 Mar 2019 18:09:34 -0300
+Message-ID: <20190306210934.GM30734@kernel.org>
+References: <20190302011903.2416-1-tonyj@suse.de>
+ <20190302011903.2416-2-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190306205337.GK30734@kernel.org>
+In-Reply-To: <20190302011903.2416-2-tonyj@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-> . No need to cast around, make 'buf' be a void pointer
-> 
-> . Rename it to thread__memcpy() to reflect the fact it is about copying
->   a chunk of memory from a thread, i.e. from its address space.
-> 
-> . No need to have it in a separate object file, move it to thread.[ch]
-> 
-> . Check the return of map__load(), the original code didn't do it, but
->   since we're moving this around, check that as well, could be moved to
->   a separate patch tho.
+Em Fri, Mar 01, 2019 at 05:18:57PM -0800, Tony Jones escreveu:
+> Remove mixed indentation in Python scripts.  Revert to either all 
+> tabs (most common form) or all spaces (4 or 8) depending on what 
+> was the intent of the original commit.  This is necessary to 
+> complete Python3 support as it will flag an error if it encounters 
+> mixed indentation.
 
-Changes look good. Thanks Arnaldo.
+Thanks, applied.
 
--Andi
+- Arnaldo
