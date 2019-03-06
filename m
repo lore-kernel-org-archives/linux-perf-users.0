@@ -1,84 +1,147 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: Re: [PATCH v2 6/7] perf script python: add Python3 support to sql
- scripts
-Date: Wed, 6 Mar 2019 08:32:42 -0800
-Message-ID: <72ea2e3d-1b82-549e-741f-d2b532e4c33b@suse.de>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-7-tonyj@suse.de>
- <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH v4 01/15] perf tools: Add utility function to fetch
+ executable
+Date: Wed, 6 Mar 2019 17:53:37 -0300
+Message-ID: <20190306205337.GK30734@kernel.org>
+References: <20190305144758.12397-1-andi@firstfloor.org>
+ <20190305144758.12397-2-andi@firstfloor.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190305144758.12397-2-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 3/6/19 1:26 AM, Adrian Hunter wrote:
-> On 2/03/19 3:19 AM, Tony Jones wrote:
->> Support both Python2 and Python3 in the exported-sql-viewer.py,
->> export-to-postgresql.py and export-to-sqlite.py scripts
->>
->> There may be differences in the ordering of output lines due to
->> differences in dictionary ordering etc.  However the format within lines
->> should be unchanged.
->>
->> The use of 'from __future__' implies the minimum supported Python2 version
->> is now v2.6
->>
->> Signed-off-by: Tony Jones <tonyj@suse.de>
->> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
->> Cc: Adrian Hunter <adrian.hunter@intel.com>
+Em Tue, Mar 05, 2019 at 06:47:44AM -0800, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> Apart from one issue (see below), it looks good, thank you!
+> Add a utility function to fetch executable code. Convert one
+> user over to it. There are more places doing that, but they
+> do significantly different actions, so they are not
+> easy to fit into a single library function.
 > 
->> ---
->>  tools/perf/scripts/python/export-to-postgresql.py | 65 +++++++++++++++--------
->>  tools/perf/scripts/python/export-to-sqlite.py     | 23 ++++----
->>  tools/perf/scripts/python/exported-sql-viewer.py  | 42 ++++++++++-----
->>  3 files changed, 84 insertions(+), 46 deletions(-)
->>
->> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
->> index 390a351d15ea..439bbbf1e036 100644
->> --- a/tools/perf/scripts/python/export-to-postgresql.py
->> +++ b/tools/perf/scripts/python/export-to-postgresql.py
->> @@ -10,6 +10,8 @@
->>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->>  # more details.
->>  
->> +from __future__ import print_function
->> +
->>  import os
->>  import sys
->>  import struct
->> @@ -199,6 +201,16 @@ import datetime
->>  
->>  from PySide.QtSql import *
->>  
->> +if sys.version_info < (3, 0):
->> +	def tobytes(str):
->> +		return str
->> +else:
->> +	def tobytes(str):
->> +		# Use latin-1 (ISO-8859-1) so all code-points 0-255 will result
->> +		# in one byte (note utf-8 is 2 bytes for values > 128 and
->> +		# ascii is limited to values <= 128)
->> +		return bytes(str, "ISO-8859-1")
-> 
-> Probably this should be the server_encoding, but python2 allowed UTF-8
-> so let's just use UTF-8 for now.  That will also mean doing the conversion
-> before getting the len(), otherwise len() can be wrong.
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/util/Build       |  1 +
+>  tools/perf/util/fetch.c     | 28 ++++++++++++++++++++++++++++
+>  tools/perf/util/fetch.h     |  7 +++++++
+>  tools/perf/util/intel-bts.c | 21 +++------------------
+>  4 files changed, 39 insertions(+), 18 deletions(-)
+>  create mode 100644 tools/perf/util/fetch.c
+>  create mode 100644 tools/perf/util/fetch.h
 
-I'm not totally understanding what you're saying here.  The rationale for 
-using latin-1 and not UTF-8 was clearly expressed in the comment.  Else you 
-do indeed run into length issues.
+So I've made some changes and the end result is below, will fixup the
+following patches, holler if you find any problems:
 
-Would it be easier, since you have a) more familiarity with the code b) some
-specific issues I'm not fully understanding if you just took this patch and
-made the changes you want yourself.  I doubt I'll ever use these scripta, my
-interest is purely in eliminating Python2 as a fixed requirement.
+Changes:
 
-Tony
+. No need to cast around, make 'buf' be a void pointer
+
+. Rename it to thread__memcpy() to reflect the fact it is about copying
+  a chunk of memory from a thread, i.e. from its address space.
+
+. No need to have it in a separate object file, move it to thread.[ch]
+
+. Check the return of map__load(), the original code didn't do it, but
+  since we're moving this around, check that as well, could be moved to
+  a separate patch tho.
+
+- Arnaldo
+
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..47025bc727e1 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -328,35 +328,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
+ {
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
+ 
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
+-
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
+ 
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = thread__memcpy(thread, machine, buf, ip, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
+ 
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 4c179fef442d..50678d318185 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -12,6 +12,7 @@
+ #include "debug.h"
+ #include "namespaces.h"
+ #include "comm.h"
++#include "map.h"
+ #include "symbol.h"
+ #include "unwind.h"
+ 
+@@ -393,3 +394,25 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
+ 
+ 	return machine__find_thread(machine, thread->pid_, thread->pid_);
+ }
++
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit)
++{
++       u8 cpumode = PERF_RECORD_MISC_USER;
++       struct addr_location al;
++       long offset;
++
++       if (machine__kernel_ip(machine, ip))
++               cpumode = PERF_RECORD_MISC_KERNEL;
++
++       if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso ||
++	   al.map->dso->data.status == DSO_DATA_STATUS_ERROR ||
++	   map__load(al.map) < 0)
++               return -1;
++
++       offset = al.map->map_ip(al.map, ip);
++       if (is64bit)
++               *is64bit = al.map->dso->is_64_bit;
++
++       return dso__data_read_offset(al.map->dso, machine, offset, buf, len);
++}
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 8276ffeec556..cf8375c017a0 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -113,6 +113,9 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
+ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+ 					struct addr_location *al);
+ 
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit);
++
+ static inline void *thread__priv(struct thread *thread)
+ {
+ 	return thread->priv;
